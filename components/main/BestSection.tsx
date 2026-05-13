@@ -7,6 +7,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { BEST_PRODUCTS, BEST_TAB_LABELS, formatKRW, type BestPeriod } from "@/lib/products";
 import styles from "./best.module.css";
 
@@ -132,6 +133,17 @@ export default function BestSection() {
                             </a>
                         );
                     })}
+                </div>
+
+                {/* 우측 하단 — 전체 보기 */}
+                <div className="flex justify-end mt-6 md:mt-7">
+                    <Link
+                        href="#best-all"
+                        className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
+                    >
+                        베스트 상품 보기
+                        <i className="fa-solid fa-arrow-right text-[10px]" />
+                    </Link>
                 </div>
             </div>
         </section>
