@@ -29,32 +29,34 @@ export default function BestSection() {
     return (
         <section id="best" className="py-16 md:py-24">
             <div className="max-w-[1400px] mx-auto px-6">
-                {/* 섹션 헤더 */}
-                <div className="mb-8">
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                        댕다방 베스트
-                    </h2>
-                    <p className="text-sm text-neutral-500">
-                        지금 가장 많이 사랑받는 댕댕이 아이템
-                    </p>
-                </div>
+                {/* 섹션 헤더 — 좌측 타이틀 / 우측 탭 (모바일에선 세로) */}
+                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 md:mb-8">
+                    <div>
+                        <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
+                            댕다방 베스트
+                        </h2>
+                        <p className="text-sm text-neutral-500">
+                            지금 가장 많이 사랑받는 댕댕이 아이템
+                        </p>
+                    </div>
 
-                {/* 탭 */}
-                <div className="inline-flex bg-white/70 backdrop-blur-md rounded-full p-1 mb-8 shadow-card">
-                    {TABS.map((p) => (
-                        <button
-                            key={p}
-                            type="button"
-                            onClick={() => setPeriod(p)}
-                            className={`px-5 py-2.5 rounded-full text-sm font-bold transition ${
-                                period === p
-                                    ? "bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white shadow-card"
-                                    : "text-neutral-600 hover:text-aurora-indigo"
-                            }`}
-                        >
-                            {BEST_TAB_LABELS[p]}
-                        </button>
-                    ))}
+                    {/* 탭 */}
+                    <div className="inline-flex bg-white/70 backdrop-blur-md rounded-full p-1 shadow-card self-start md:self-auto">
+                        {TABS.map((p) => (
+                            <button
+                                key={p}
+                                type="button"
+                                onClick={() => setPeriod(p)}
+                                className={`px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-bold transition ${
+                                    period === p
+                                        ? "bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white shadow-card"
+                                        : "text-neutral-600 hover:text-aurora-indigo"
+                                }`}
+                            >
+                                {BEST_TAB_LABELS[p]}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* 4상품 그리드 */}
