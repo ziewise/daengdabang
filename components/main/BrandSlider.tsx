@@ -112,18 +112,18 @@ export default function BrandSlider() {
                     {/* 다크 오버레이 (텍스트 가독성) */}
                     <div className={styles.overlay} />
 
-                    {/* 좌하단(PC) / 하단(mobile) 정보 */}
+                    {/* 좌측 가운데(PC) / 하단(mobile) 정보 */}
                     <div
                         key={idx}
-                        className="absolute z-10 left-6 md:left-12 right-6 md:right-12 bottom-20 md:bottom-12 text-white animate-in fade-in slide-in-from-bottom-2 duration-500"
+                        className="absolute z-10 left-6 md:left-10 right-6 md:right-10 bottom-16 md:bottom-auto md:top-1/2 md:-translate-y-1/2 text-white animate-in fade-in slide-in-from-bottom-2 duration-500"
                     >
-                        <p className="text-[10px] md:text-xs font-extrabold tracking-[0.3em] text-white/80 mb-2">
+                        <p className="text-[10px] md:text-[11px] font-extrabold tracking-[0.3em] text-white/80 mb-1.5">
                             FEATURED BRAND
                         </p>
-                        <h3 className="text-3xl md:text-5xl font-black tracking-tight mb-2 md:mb-3 drop-shadow-md">
+                        <h3 className="text-3xl md:text-4xl font-black tracking-tight mb-2 drop-shadow-md">
                             {current.brandName}
                         </h3>
-                        <p className="text-sm md:text-base text-white/90 mb-4 max-w-md drop-shadow">
+                        <p className="text-sm md:text-[15px] text-white/90 mb-4 max-w-md drop-shadow">
                             {current.desc}
                         </p>
                         <Link
@@ -135,8 +135,8 @@ export default function BrandSlider() {
                         </Link>
                     </div>
 
-                    {/* 페이지네이션 — 우하단(PC) / 우상단(mobile) */}
-                    <div className="absolute z-10 right-6 md:right-12 bottom-6 md:bottom-12 flex gap-4 md:gap-6">
+                    {/* 페이지네이션 — 우하단 */}
+                    <div className="absolute z-10 right-6 md:right-10 bottom-5 md:bottom-6 flex gap-4 md:gap-6">
                         <PagGroup
                             label="RUFFWEAR"
                             active={current.brandId === "ruffwear"}

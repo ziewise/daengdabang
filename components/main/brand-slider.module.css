@@ -8,14 +8,19 @@
 .wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 1920 / 800;
+    aspect-ratio: 16 / 5;          /* 더 컴팩트한 cinematic 비율 */
+    max-height: 440px;             /* 큰 화면에서도 너무 커지지 않게 */
     border-radius: 20px;
     overflow: hidden;
     isolation: isolate;
     box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
 }
 @media (max-width: 768px) {
-    .wrap { aspect-ratio: 4 / 5; border-radius: 16px; }
+    .wrap {
+        aspect-ratio: 4 / 5;       /* 모바일은 그대로 세로형 */
+        max-height: none;
+        border-radius: 16px;
+    }
 }
 
 .slide {
