@@ -13,7 +13,6 @@
  *   6. 글로벌 오로라 배경 + 글래스 카드 유틸
  * ===================================================================== */
 
-/* TODO Phase 2: Wanted Sans Variable self-host (public/fonts) — 일단 system font fallback */
 @import "tailwindcss";
 
 /* =====================================================
@@ -63,9 +62,10 @@
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
-    /* 폰트 패밀리 — Geist(영문) + Wanted Sans(한글) 함께 fallback */
-    --font-sans:    var(--font-geist-sans), "Wanted Sans Variable", system-ui, -apple-system, sans-serif;
-    --font-display: var(--font-geist-sans), "Wanted Sans Variable", system-ui, -apple-system, sans-serif;
+    /* 폰트 패밀리 — Geist(영문/숫자) 우선, Wanted Sans(한글) fallback
+       두 폰트 모두 next/font 로 self-host (layout.tsx) */
+    --font-sans:    var(--font-geist-sans), var(--font-wanted-sans), system-ui, -apple-system, sans-serif;
+    --font-display: var(--font-geist-sans), var(--font-wanted-sans), system-ui, -apple-system, sans-serif;
     --font-mono:    var(--font-geist-mono), ui-monospace, monospace;
 
     /* 오로라 컬러 */

@@ -1,0 +1,137 @@
+/**
+ * lib/menu-data.ts — 헤더·푸터·모바일 패널 공용 메뉴 데이터
+ * ---------------------------------------------------------------------
+ * 메뉴/카테고리 변경 시 이 파일만 수정.
+ * 카테고리·브랜드·기획전·고객센터의 4개 드롭다운 컨텐츠 + 메인 nav 항목 정의.
+ */
+
+export interface MenuItem {
+    label: string;
+    href: string;
+}
+
+export interface CategoryGroup {
+    title: string;
+    href: string;
+    items: MenuItem[];
+}
+
+export interface BrandCard {
+    initial: string;       // "R", "Rx" 같은
+    name: string;
+    tagline: string;
+    href: string;
+    accent: "ruff" | "rex";  // 컬러 변형
+}
+
+export interface PromoCard {
+    icon: string;          // fontawesome 클래스
+    title: string;
+    desc: string;
+    href: string;
+    color: "indigo" | "blue" | "purple" | "green" | "pink";
+}
+
+export interface CSLink {
+    icon: string;
+    label: string;
+    href: string;
+}
+
+// ============ 카테고리 메가메뉴 (5개 그룹) ============
+export const CATEGORY_GROUPS: CategoryGroup[] = [
+    {
+        title: "산책/아웃도어", href: "#cat-outdoor",
+        items: [
+            { label: "하네스", href: "#harness" },
+            { label: "리드줄/목줄", href: "#leash" },
+            { label: "의류/보호장비", href: "#wear" },
+            { label: "고글/안전용품", href: "#goggles" },
+            { label: "이동가방/유모차", href: "#carrier" },
+        ],
+    },
+    {
+        title: "먹거리", href: "#cat-food",
+        items: [
+            { label: "사료", href: "#food" },
+            { label: "간식", href: "#treats" },
+            { label: "영양/보조", href: "#supplement" },
+            { label: "디저트/음료", href: "#dessert" },
+        ],
+    },
+    {
+        title: "생활용품", href: "#cat-life",
+        items: [
+            { label: "쿠션/침구", href: "#cushion" },
+            { label: "식기/급식용품", href: "#bowl" },
+        ],
+    },
+    {
+        title: "장난감/놀이", href: "#cat-toy",
+        items: [
+            { label: "노즈워크/지능", href: "#nosework" },
+            { label: "원반/터그", href: "#tug" },
+            { label: "라텍스/봉제", href: "#latex" },
+        ],
+    },
+    {
+        title: "케어", href: "#cat-care",
+        items: [
+            { label: "스킨/크림", href: "#cream" },
+            { label: "발바닥 케어", href: "#paw" },
+            { label: "위생/배변", href: "#hygiene" },
+        ],
+    },
+];
+
+// ============ 브랜드 드롭다운 ============
+export const BRAND_CARDS: BrandCard[] = [
+    {
+        initial: "R", name: "Ruffwear",
+        tagline: "활동견을 위한\n프리미엄 아웃도어 기어",
+        href: "#ruffwear", accent: "ruff",
+    },
+    {
+        initial: "Rx", name: "Rex Specs",
+        tagline: "강아지 눈 보호 전문\n아이웨어 솔루션",
+        href: "#rexspecs", accent: "rex",
+    },
+];
+
+// ============ 기획전 드롭다운 ============
+export const PROMO_CARDS: PromoCard[] = [
+    { icon: "fa-person-running", title: "활동견 추천", desc: "산책·야외활동이 많은 댕댕이를 위한 셀렉션", href: "#active", color: "indigo" },
+    { icon: "fa-shoe-prints", title: "산책 필수템", desc: "하네스·리드줄·보호장비 모음", href: "#walking", color: "blue" },
+    { icon: "fa-glasses", title: "눈 보호 아이템", desc: "Rex Specs 고글 중심 추천", href: "#eye", color: "purple" },
+    { icon: "fa-leaf", title: "계절별 추천", desc: "여름·겨울·장마·여행 시즌", href: "#season", color: "green" },
+    { icon: "fa-tags", title: "할인/이벤트", desc: "지금 진행 중인 프로모션", href: "#sale", color: "pink" },
+];
+
+// ============ 고객센터 드롭다운 ============
+export const CS_LINKS: CSLink[] = [
+    { icon: "fa-bullhorn", label: "공지사항", href: "#notice" },
+    { icon: "fa-circle-question", label: "자주 묻는 질문", href: "#faq" },
+    { icon: "fa-comments", label: "1:1 문의", href: "#inquiry" },
+    { icon: "fa-truck", label: "배송 조회", href: "#shipping" },
+    { icon: "fa-rotate-left", label: "교환·반품 안내", href: "#return" },
+];
+
+// ============ 인기 검색어 (검색 모달용) ============
+export const POPULAR_KEYWORDS: string[] = [
+    "하네스", "리드줄", "사료", "간식", "고글", "유모차", "쿠션",
+];
+
+// ============ 푸터 메타 링크 ============
+export const FOOTER_META_LINKS: MenuItem[] = [
+    { label: "브랜드 스토리", href: "#about" },
+    { label: "입점 문의", href: "#partner" },
+    { label: "대량 구매 문의", href: "#bulk" },
+    { label: "채용", href: "#career" },
+];
+
+export const FOOTER_LEGAL_LINKS: MenuItem[] = [
+    { label: "이용약관", href: "#terms" },
+    { label: "개인정보처리방침", href: "#privacy" },
+    { label: "환불·반품 정책", href: "#refund" },
+    { label: "분쟁해결 기준", href: "#dispute" },
+];

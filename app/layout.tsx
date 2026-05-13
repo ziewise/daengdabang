@@ -11,6 +11,9 @@
  */
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,6 +26,15 @@ const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
     display: "swap",
+});
+
+// Wanted Sans Variable — 한국어 (self-hosted woff2)
+// 100~900 가변 weight, OFL 1.1 라이센스 (재배포 OK)
+const wantedSans = localFont({
+    src: "../public/fonts/WantedSansVariable.woff2",
+    variable: "--font-wanted-sans",
+    display: "swap",
+    weight: "100 900",
 });
 
 export const metadata: Metadata = {
@@ -49,12 +61,17 @@ export default function RootLayout({
     return (
         <html
             lang="ko"
-            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} h-full antialiased`}
         >
             <body className="min-h-full flex flex-col">
                 {/* 모든 페이지 뒤로 깔리는 오로라 배경 */}
                 <div className="global-aurora" aria-hidden="true" />
-                {children}
+                <Header />
+                {/* 헤더 fixed 라 페이지 콘텐츠는 header-height 만큼 padding */}
+                <main className="flex-1 pt-[var(--header-height)] flex flex-col">
+                    {children}
+                </main>
+                <Footer />
             </body>
         </html>
     );

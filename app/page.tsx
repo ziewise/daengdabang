@@ -6,7 +6,7 @@
  */
 export default function Home() {
     return (
-        <main className="flex flex-1 flex-col items-center justify-center px-6 py-20">
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-20">
             <div className="glass-card max-w-2xl w-full rounded-2xl p-10 text-center">
                 <p className="text-xs font-bold tracking-[0.3em] text-aurora-indigo mb-3">
                     PHASE 1 · SETUP
@@ -32,6 +32,6 @@ export default function Home() {
                     회원 등급 컬러 토큰 · 글래스 카드 · 오로라 배경이 모두 작동하면 셋업 성공!
                 </p>
             </div>
-        </main>
+        </div>
     );
 }

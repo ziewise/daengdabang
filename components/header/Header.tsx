@@ -1,0 +1,272 @@
+/**
+ * Header — 사이트 메인 헤더 (글래스 + 메가메뉴 + 모바일 토글)
+ * ---------------------------------------------------------------------
+ * 데스크탑: 로고 + 5개 nav(베스트·신상품·카테고리·브랜드·기획전·고객센터) + 검색·장바구니·로그인
+ * 모바일: 로고 + 햄버거 토글만 (전체 메뉴는 MobilePanel)
+ *
+ * client component (드롭다운 toggle, 검색·모바일 모달 trigger, 인증 상태 표시).
+ */
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
+import {
+    CATEGORY_GROUPS,
+    BRAND_CARDS,
+    PROMO_CARDS,
+    CS_LINKS,
+} from "@/lib/menu-data";
+import BrandLogo from "./BrandLogo";
+import MobilePanel from "./MobilePanel";
+import SearchModal from "./SearchModal";
+
+type DropKey = "category" | "brand" | "promo" | "cs" | null;
+
+export default function Header() {
+    const [openDrop, setOpenDrop] = useState<DropKey>(null);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const { isLoggedIn, hydrated } = useAuth();
+
+    return (
+        <>
+            <header className="fixed inset-x-0 top-0 z-[1000] h-[var(--header-height)] backdrop-blur-xl bg-white/65 border-b border-white/60">
+                <div className="max-w-[1400px] h-full mx-auto px-6 flex items-center justify-between gap-6">
+
+                    {/* 로고 */}
+                    <BrandLogo />
+
+                    {/* 데스크탑 메인 nav (md+ 만 노출) */}
+                    <nav className="hidden lg:flex items-center gap-1">
+                        <NavLink href="/main#best">베스트</NavLink>
+                        <NavLink href="/main#new">신상품</NavLink>
+
+                        {/* 카테고리 — 5컬럼 메가메뉴 */}
+                        <NavDropdown
+                            label="카테고리"
+                            open={openDrop === "category"}
+                            onEnter={() => setOpenDrop("category")}
+                            onLeave={() => setOpenDrop(null)}
+                            wide
+                        >
+                            <div className="grid grid-cols-5 gap-6 p-6 min-w-[680px]">
+                                {CATEGORY_GROUPS.map((g) => (
+                                    <div key={g.title}>
+                                        <Link
+                                            href={g.href}
+                                            className="block mb-3 text-sm font-extrabold text-foreground hover:text-aurora-indigo"
+                                        >
+                                            {g.title}
+                                        </Link>
+                                        <ul className="space-y-1.5">
+                                            {g.items.map((it) => (
+                                                <li key={it.label}>
+                                                    <Link
+                                                        href={it.href}
+                                                        className="text-xs text-neutral-500 hover:text-aurora-indigo block py-0.5"
+                                                    >
+                                                        {it.label}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        </NavDropdown>
+
+                        {/* 브랜드 — 2 카드 + 전체 보기 링크 */}
+                        <NavDropdown
+                            label="브랜드"
+                            open={openDrop === "brand"}
+                            onEnter={() => setOpenDrop("brand")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <div className="p-5 min-w-[420px]">
+                                <div className="grid grid-cols-2 gap-3 mb-3">
+                                    {BRAND_CARDS.map((b) => (
+                                        <Link
+                                            key={b.name}
+                                            href={b.href}
+                                            className={`p-4 rounded-xl border bg-white hover:shadow-card transition-all
+                                                ${b.accent === "ruff" ? "border-orange-200 hover:border-orange-400" : "border-blue-200 hover:border-blue-400"}`}
+                                        >
+                                            <span className={`inline-block text-xs font-black tracking-wider mb-2 ${b.accent === "ruff" ? "text-orange-600" : "text-blue-600"}`}>
+                                                {b.initial}
+                                            </span>
+                                            <h3 className="text-sm font-extrabold mb-1">{b.name}</h3>
+                                            <p className="text-[11px] text-neutral-500 leading-snug whitespace-pre-line">
+                                                {b.tagline}
+                                            </p>
+                                        </Link>
+                                    ))}
+                                </div>
+                                <Link
+                                    href="#brands-all"
+                                    className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 hover:bg-neutral-100 text-xs font-bold"
+                                >
+                                    <span>전체 브랜드 보기</span>
+                                    <i className="fa-solid fa-arrow-right text-aurora-indigo" />
+                                </Link>
+                            </div>
+                        </NavDropdown>
+
+                        {/* 기획전 — 5개 promo 카드 */}
+                        <NavDropdown
+                            label="기획전"
+                            open={openDrop === "promo"}
+                            onEnter={() => setOpenDrop("promo")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <ul className="p-3 min-w-[340px]">
+                                {PROMO_CARDS.map((p) => (
+                                    <li key={p.title}>
+                                        <Link
+                                            href={p.href}
+                                            className="flex gap-3 p-3 rounded-lg hover:bg-neutral-50"
+                                        >
+                                            <span className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-white text-base
+                                                ${p.color === "indigo" && "bg-aurora-indigo"}
+                                                ${p.color === "blue" && "bg-aurora-blue"}
+                                                ${p.color === "purple" && "bg-aurora-purple"}
+                                                ${p.color === "green" && "bg-success"}
+                                                ${p.color === "pink" && "bg-aurora-pink"}`}
+                                            >
+                                                <i className={`fa-solid ${p.icon}`} />
+                                            </span>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm font-extrabold mb-0.5">{p.title}</h4>
+                                                <p className="text-[11px] text-neutral-500 line-clamp-1">{p.desc}</p>
+                                            </div>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </NavDropdown>
+
+                        {/* 고객센터 — 단순 리스트 */}
+                        <NavDropdown
+                            label="고객센터"
+                            open={openDrop === "cs"}
+                            onEnter={() => setOpenDrop("cs")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <ul className="p-2 min-w-[200px]">
+                                {CS_LINKS.map((c) => (
+                                    <li key={c.label}>
+                                        <Link
+                                            href={c.href}
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-sm font-medium"
+                                        >
+                                            <i className={`fa-solid ${c.icon} text-aurora-indigo w-4 text-center`} />
+                                            <span>{c.label}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </NavDropdown>
+                    </nav>
+
+                    {/* 우측 유틸리티 */}
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setSearchOpen(true)}
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
+                            aria-label="검색"
+                        >
+                            <i className="fa-solid fa-magnifying-glass" />
+                        </button>
+                        <Link
+                            href="#cart"
+                            className="relative w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
+                            aria-label="장바구니"
+                        >
+                            <i className="fa-solid fa-bag-shopping" />
+                            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger text-white text-[10px] font-bold flex items-center justify-center">
+                                0
+                            </span>
+                        </Link>
+
+                        {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지) */}
+                        {hydrated && (
+                            <Link
+                                href={isLoggedIn ? "/mypage" : "/login"}
+                                className="hidden sm:inline-flex items-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
+                            >
+                                <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
+                                <span>{isLoggedIn ? "마이페이지" : "로그인"}</span>
+                            </Link>
+                        )}
+
+                        <button
+                            type="button"
+                            onClick={() => setMobileOpen(true)}
+                            className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
+                            aria-label="메뉴 열기"
+                        >
+                            <i className="fa-solid fa-bars" />
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <MobilePanel open={mobileOpen} onClose={() => setMobileOpen(false)} />
+            <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+        </>
+    );
+}
+
+/* ============ 단순 nav 링크 ============ */
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+    return (
+        <Link
+            href={href}
+            className="px-4 py-2 text-sm font-bold text-foreground hover:text-aurora-indigo transition rounded-lg"
+        >
+            {children}
+        </Link>
+    );
+}
+
+/* ============ 드롭다운 nav 항목 (hover/focus 로 열림) ============ */
+function NavDropdown({
+    label,
+    open,
+    onEnter,
+    onLeave,
+    children,
+    wide = false,
+}: {
+    label: string;
+    open: boolean;
+    onEnter: () => void;
+    onLeave: () => void;
+    children: React.ReactNode;
+    wide?: boolean;
+}) {
+    return (
+        <div
+            className="relative"
+            onMouseEnter={onEnter}
+            onMouseLeave={onLeave}
+        >
+            <button
+                type="button"
+                className="px-4 py-2 text-sm font-bold text-foreground hover:text-aurora-indigo transition rounded-lg inline-flex items-center gap-1"
+            >
+                {label}
+                <i className={`fa-solid fa-chevron-down text-[10px] transition-transform ${open ? "rotate-180" : ""}`} />
+            </button>
+            {open && (
+                <div
+                    className={`absolute top-full ${wide ? "left-1/2 -translate-x-1/2" : "left-0"} mt-2 glass-card rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150`}
+                    style={{ background: "rgba(255,255,255,0.95)" }}
+                >
+                    {children}
+                </div>
+            )}
+        </div>
+    );
+}
