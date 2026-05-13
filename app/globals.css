@@ -1,0 +1,158 @@
+/* =====================================================================
+ * globals.css — 댕다방 글로벌 스타일 (Tailwind v4 + @theme 토큰)
+ * ---------------------------------------------------------------------
+ * Tailwind v4 는 CSS-first 설정: @theme inline 안의 변수가 곧
+ *   tailwind 유틸리티 클래스로 노출된다 (예: --color-aurora-blue → bg-aurora-blue)
+ *
+ * 구성:
+ *   1. Tailwind 임포트
+ *   2. 한국어 폰트 Wanted Sans Variable (jsDelivr CDN)
+ *   3. CSS 변수 (디자인 토큰: 색상·그라데이션·shadow)
+ *   4. @theme — Tailwind 에 토큰 노출
+ *   5. body 기본 스타일
+ *   6. 글로벌 오로라 배경 + 글래스 카드 유틸
+ * ===================================================================== */
+
+/* TODO Phase 2: Wanted Sans Variable self-host (public/fonts) — 일단 system font fallback */
+@import "tailwindcss";
+
+/* =====================================================
+ * 1. 디자인 토큰 (CSS 변수)
+ * ===================================================== */
+:root {
+    /* 배경·전경 */
+    --background: #fafbff;
+    --foreground: #0f172a;
+
+    /* 브랜드 컬러 — 오로라 글래스 (블루 → 퍼플 → 핑크) */
+    --aurora-blue:   #3b82f6;
+    --aurora-indigo: #6366f1;
+    --aurora-purple: #a855f7;
+    --aurora-pink:   #ec4899;
+    --aurora-amber:  #fbbf24;
+
+    /* 회원 등급 컬러 */
+    --grade-1: #10b981;   /* 댕린이 — 새싹 그린 */
+    --grade-2: #3b82f6;   /* 댕친구 — 블루 */
+    --grade-3: #a855f7;   /* 댕단짝 — 퍼플 */
+    --grade-4: #ec4899;   /* 댕가족 — 핑크 */
+    --grade-5: #f59e0b;   /* 댕마스터 — 골드 */
+
+    /* 시스템 */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger:  #ef4444;
+    --info:    #3b82f6;
+
+    /* shadow */
+    --shadow-card:  0 12px 30px rgba(15, 23, 42, 0.05);
+    --shadow-hover: 0 16px 36px rgba(15, 23, 42, 0.08);
+    --shadow-modal: 0 24px 60px rgba(15, 23, 42, 0.08);
+    --shadow-fab:   0 12px 32px rgba(99, 102, 241, 0.4);
+
+    /* 헤더 높이 (마이페이지 등 콘텐츠 padding 기준) */
+    --header-height: 72px;
+}
+
+/* =====================================================
+ * 2. @theme — Tailwind 유틸리티 클래스로 노출
+ *    여기에 등록된 토큰은 그대로 `bg-aurora-blue`, `text-grade-1` 등으로 사용 가능
+ * ===================================================== */
+@theme inline {
+    /* 배경·전경 */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    /* 폰트 패밀리 — Geist(영문) + Wanted Sans(한글) 함께 fallback */
+    --font-sans:    var(--font-geist-sans), "Wanted Sans Variable", system-ui, -apple-system, sans-serif;
+    --font-display: var(--font-geist-sans), "Wanted Sans Variable", system-ui, -apple-system, sans-serif;
+    --font-mono:    var(--font-geist-mono), ui-monospace, monospace;
+
+    /* 오로라 컬러 */
+    --color-aurora-blue:   var(--aurora-blue);
+    --color-aurora-indigo: var(--aurora-indigo);
+    --color-aurora-purple: var(--aurora-purple);
+    --color-aurora-pink:   var(--aurora-pink);
+    --color-aurora-amber:  var(--aurora-amber);
+
+    /* 등급 컬러 */
+    --color-grade-1: var(--grade-1);
+    --color-grade-2: var(--grade-2);
+    --color-grade-3: var(--grade-3);
+    --color-grade-4: var(--grade-4);
+    --color-grade-5: var(--grade-5);
+
+    /* 시스템 */
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-danger:  var(--danger);
+    --color-info:    var(--info);
+
+    /* shadow */
+    --shadow-card:  var(--shadow-card);
+    --shadow-hover: var(--shadow-hover);
+    --shadow-modal: var(--shadow-modal);
+    --shadow-fab:   var(--shadow-fab);
+}
+
+/* =====================================================
+ * 3. body 기본
+ * ===================================================== */
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* 한국어 글자 살짝 더 또렷하게 + 단어 단위 줄바꿈 */
+:lang(ko) {
+    word-break: keep-all;
+    letter-spacing: -0.01em;
+}
+
+/* =====================================================
+ * 4. 글로벌 오로라 배경 — 모든 페이지 공통
+ *    body 의 fixed 배경처럼 떠있는 그라데이션 블롭들.
+ * ===================================================== */
+.global-aurora {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(99, 102, 241, 0.18), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(236, 72, 153, 0.14), transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(59, 130, 246, 0.16), transparent 50%),
+        linear-gradient(180deg, #fafbff 0%, #f4f6ff 50%, #fff5f9 100%);
+}
+
+/* =====================================================
+ * 5. 글래스 카드 (자주 쓰는 패턴 — utility 클래스화)
+ * ===================================================== */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: var(--shadow-card);
+}
+
+/* =====================================================
+ * 6. 스크롤바 (윈도우/엣지) — 부드러운 톤
+ * ===================================================== */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5);
+    border-radius: 50px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.6);
+    background-clip: content-box;
+}

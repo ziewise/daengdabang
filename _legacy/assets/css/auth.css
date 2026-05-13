@@ -1,0 +1,477 @@
+/* =====================================================================
+ * auth.css
+ * ---------------------------------------------------------------------
+ * 로그인·회원가입·비밀번호 찾기 페이지 공통 스타일.
+ *
+ *   - 인증 페이지 레이아웃 (.auth-page) — 글로벌 오로라 배경 + 중앙 글래스 카드
+ *   - 인증 카드 (.auth-card)
+ *   - 폼 요소 (.auth-input, .auth-label 등)
+ *   - 소셜 로그인 버튼 (.btn-social — google·naver·kakao)
+ *   - Stepper UI (.signup-stepper) — 회원가입 단계 표시
+ *   - 약관 동의 체크박스
+ *   - 본인인증 영역
+ *
+ * 공통 폰트·로고·오로라 배경은 common.css 에서 가져옴.
+ * 임시(mock) 동작: 모든 검증 통과, 다음 단계로 자유롭게 이동 가능.
+ * 백엔드 연동 시 폼 submit·소셜 OAuth·본인인증 API 만 교체하면 됨.
+ * ===================================================================== */
+
+/* ============ 페이지 레이아웃 ============ */
+.auth-page {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px;
+}
+
+/* 상단 로고 영역 (헤더 대용 — 메뉴 없는 미니멀) */
+.auth-header {
+    margin-bottom: 32px;
+}
+
+/* 인증 카드 — 중앙 글래스 박스 */
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.10);
+    padding: 40px 36px;
+}
+.auth-card.wide { max-width: 560px; }
+
+.auth-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin: 0 0 8px;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+}
+.auth-sub {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0 0 28px;
+    line-height: 1.5;
+}
+
+/* ============ 폼 요소 ============ */
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.auth-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.3px;
+}
+.auth-input {
+    height: 46px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.7);
+    font-family: inherit;
+    font-size: 14px;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.auth-input::placeholder { color: #94a3b8; }
+.auth-input:focus {
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+.auth-input:disabled { background: #f1f5f9; color: #64748b; cursor: not-allowed; }
+
+/* 인풋 + 보조 버튼 (예: 본인인증 번호 받기, 중복확인) */
+.auth-input-row {
+    display: flex;
+    gap: 8px;
+}
+.auth-input-row .auth-input { flex: 1; }
+.auth-input-row .btn-secondary {
+    flex-shrink: 0;
+    padding: 0 16px;
+    height: 46px;
+    border-radius: 12px;
+    background: #0f172a;
+    color: white;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+.auth-input-row .btn-secondary:hover { background: #1e293b; }
+.auth-input-row .btn-secondary:disabled { background: #94a3b8; cursor: not-allowed; }
+
+/* 폼 체크박스 (이용약관·로그인 상태 유지 등) */
+.auth-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.5;
+}
+.auth-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    accent-color: #6366f1;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.auth-check.required strong { color: #ef4444; font-weight: 700; }
+.auth-check .link {
+    color: #2563eb;
+    text-decoration: underline;
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ============ 주요 버튼 ============ */
+.btn-primary-full {
+    width: 100%;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    color: white;
+    border: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+    margin-top: 8px;
+}
+.btn-primary-full:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(99, 102, 241, 0.35);
+}
+.btn-primary-full:disabled {
+    background: #cbd5e1;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+.btn-ghost-full {
+    width: 100%;
+    height: 46px;
+    border-radius: 12px;
+    background: transparent;
+    color: #475569;
+    border: 1.5px solid #e2e8f0;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-ghost-full:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+/* ============ 또는 구분선 ============ */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+}
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+/* ============ 소셜 로그인 버튼 ============ */
+.social-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1.5px solid transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    position: relative;
+}
+.btn-social i { font-size: 18px; }
+.btn-social.google {
+    background: white;
+    border-color: #e2e8f0;
+    color: #1f2937;
+}
+.btn-social.google:hover { background: #f9fafb; border-color: #cbd5e1; }
+.btn-social.google i { color: #ea4335; }
+.btn-social.kakao {
+    background: #fee500;
+    color: #3c1e1e;
+}
+.btn-social.kakao:hover { background: #ffd700; }
+.btn-social.naver {
+    background: #03c75a;
+    color: white;
+}
+.btn-social.naver:hover { background: #02b350; }
+
+/* 로딩 상태 */
+.btn-social.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+.btn-social.loading i { animation: spin 0.8s linear infinite; }
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* ============ 하단 링크 영역 ============ */
+.auth-footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 22px;
+    font-size: 13px;
+}
+.auth-footer-links a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.auth-footer-links a:hover { color: #0f172a; }
+.auth-footer-links a.bold {
+    color: #2563eb;
+    font-weight: 700;
+}
+.auth-footer-links .sep { color: #cbd5e1; font-size: 12px; }
+
+/* ============ Stepper UI (회원가입 단계 표시) ============ */
+.signup-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    gap: 4px;
+}
+.step-dot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+}
+.step-dot::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: #e2e8f0;
+    z-index: 0;
+}
+.step-dot:last-child::after { display: none; }
+.step-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+}
+.step-label {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 700;
+    text-align: center;
+    transition: color 0.3s;
+}
+.step-dot.active .step-circle {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+}
+.step-dot.active .step-label { color: #2563eb; }
+.step-dot.done .step-circle { background: #6366f1; }
+.step-dot.done .step-circle::after {
+    content: '✓';
+    color: white;
+    position: absolute;
+}
+.step-dot.done .step-circle span { display: none; }
+
+/* 단계 콘텐츠 영역 */
+.signup-step { display: none; }
+.signup-step.active { display: block; }
+
+.step-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin: 0 0 6px;
+    color: #0f172a;
+}
+.step-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 24px;
+    line-height: 1.6;
+}
+
+/* 단계 하단 버튼들 (이전·다음) */
+.step-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+}
+.step-actions button { flex: 1; }
+.step-actions .btn-ghost-full { flex: 0 0 110px; }
+
+/* ============ 약관 영역 ============ */
+.terms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.terms-all {
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.terms-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 8px 0;
+}
+
+/* ============ 본인인증 영역 ============ */
+.auth-info-box {
+    padding: 12px 14px;
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+    font-size: 12px;
+    color: #1e40af;
+    line-height: 1.55;
+    margin-top: 8px;
+}
+.auth-info-box.mock {
+    background: rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #92400e;
+}
+.auth-info-box strong { font-weight: 800; }
+.auth-info-box code {
+    background: rgba(0,0,0,0.06);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Pretendard', monospace;
+    font-weight: 700;
+}
+
+/* ============ 완료 화면 ============ */
+.welcome-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+}
+.welcome-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin: 0 0 8px;
+    text-align: center;
+    color: #0f172a;
+}
+.welcome-sub {
+    font-size: 14px;
+    color: #64748b;
+    text-align: center;
+    margin: 0 0 24px;
+    line-height: 1.6;
+}
+.welcome-coupon {
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(236,72,153,0.08) 100%);
+    border: 1px dashed rgba(99, 102, 241, 0.4);
+    border-radius: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.welcome-coupon strong {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #3b82f6, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 4px;
+}
+.welcome-coupon span {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ============ 반응형 ============ */
+@media (max-width: 640px) {
+    .auth-page { padding: 24px 16px; }
+    .auth-card { padding: 28px 22px; border-radius: 20px; }
+    .auth-title { font-size: 1.5rem; }
+    .signup-stepper { margin-bottom: 24px; }
+    .step-circle { width: 22px; height: 22px; font-size: 11px; }
+    .step-label { font-size: 10px; }
+    .step-dot::after { top: 10px; }
+    .step-actions { flex-direction: column; }
+    .step-actions .btn-ghost-full { flex: 1; }
+}
