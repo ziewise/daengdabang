@@ -21,16 +21,16 @@ export default function NewsletterForm() {
     };
 
     return (
-        <div className="md:w-[340px]">
-            <p className="text-[11px] tracking-[0.25em] font-black text-aurora-indigo mb-1">
+        <div className="md:w-[300px]">
+            <p className="text-[9px] tracking-[0.3em] font-black text-aurora-indigo mb-0.5">
                 NEWSLETTER
             </p>
-            <p className="text-xs text-neutral-500 mb-3">
-                신상품 입고 소식과 할인 정보를 가장 먼저 받아보세요
+            <p className="text-[11px] text-neutral-500 mb-2">
+                신상품·할인 소식을 가장 먼저 받아보세요
             </p>
             <form
                 onSubmit={submit}
-                className="flex gap-2 p-1 bg-white border border-neutral-200 rounded-full"
+                className="flex gap-1.5 p-1 bg-white border border-neutral-200 rounded-full"
             >
                 <input
                     type="email"
@@ -38,13 +38,13 @@ export default function NewsletterForm() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="이메일을 입력해주세요"
-                    className="flex-1 px-4 text-sm outline-none bg-transparent placeholder:text-neutral-400"
+                    className="flex-1 px-3.5 text-xs outline-none bg-transparent placeholder:text-neutral-400"
                 />
                 <button
                     type="submit"
-                    className="px-5 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-xs font-bold hover:opacity-90 transition whitespace-nowrap"
+                    className="px-4 h-8 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-[11px] font-bold hover:opacity-90 transition whitespace-nowrap"
                 >
-                    {subscribed ? "구독 완료!" : "구독하기"}
+                    {subscribed ? "완료!" : "구독하기"}
                 </button>
             </form>
         </div>
