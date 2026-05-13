@@ -1,0 +1,196 @@
+/* =====================================================================
+ * intro.module.css — 인트로 페이지 전용 스타일
+ * ---------------------------------------------------------------------
+ * 비디오 풀스크린 스플래시 + 좌우 검정띠 가리는 video-bar 오버레이
+ * + 오로라 글래스 인트로 섹션 (회전 블롭 + 글래스 박스).
+ * ===================================================================== */
+
+/* ============ 시그니처 로고 (좌상단) ============ */
+.signatureLogo {
+    position: fixed;
+    top: 32px;
+    left: 40px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+}
+.logoWrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+    background: white;
+    flex-shrink: 0;
+}
+.logoWrapper img { width: 100%; height: 100%; object-fit: cover; }
+.crayonText {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    display: inline-flex;
+    align-items: baseline;
+}
+.crayonText span:nth-child(1) { color: #3b82f6; }
+.crayonText span:nth-child(2) { color: #a855f7; }
+.crayonText span:nth-child(3) { color: #ec4899; }
+
+/* ============ 비디오 스플래시 ============ */
+.splash {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #fefae0;
+    cursor: pointer;
+    transition: opacity 1s ease-out;
+    overflow: hidden;
+}
+.splash video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #fefae0;
+}
+/* 좌우 검정띠 가리기 (영상 자체에 baked 된 검정 띠 보정) */
+.videoBar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(0px, calc(50vw - 56vh), 19vw);
+    background: #fefae0;
+    z-index: 1;
+}
+.videoBar.left  { left: 0; }
+.videoBar.right { right: 0; }
+.skipText {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    padding: 8px 20px;
+    border-radius: 50px;
+    background: rgba(15, 23, 42, 0.6);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+    animation: skipPulse 2s ease-in-out infinite;
+}
+@keyframes skipPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.6; }
+}
+.splashHidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============ 인트로 메인 섹션 ============ */
+.intro {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+.intro.active { opacity: 1; }
+
+/* 회전 블롭 배경 */
+.auroraBg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.blob1, .blob2 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.55;
+}
+.blob1 {
+    top: -10%;
+    left: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, #c7d2fe, transparent 60%);
+    animation: blobFloat 14s ease-in-out infinite;
+}
+.blob2 {
+    bottom: -15%;
+    right: -10%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, #fbcfe8, transparent 60%);
+    animation: blobFloat 18s ease-in-out infinite reverse;
+}
+@keyframes blobFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33%      { transform: translate(40px, -30px) rotate(120deg); }
+    66%      { transform: translate(-30px, 40px) rotate(240deg); }
+}
+
+/* 글래스 박스 */
+.glassBox {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 28px;
+    box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.glassBox:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
+}
+
+/* CTA 보조 — Skip to Store */
+.cyberSkip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 10px 22px;
+    border-radius: 50px;
+    background: rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    color: #475569;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    transition: all 0.25s;
+}
+.cyberSkip:hover {
+    background: #0f172a;
+    color: white;
+    border-color: #0f172a;
+}
+.cyberArrow {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s;
+}
+.cyberSkip:hover .cyberArrow {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .signatureLogo { top: 16px; left: 16px; }
+    .logoWrapper { width: 44px; height: 44px; }
+    .crayonText { font-size: 1.8rem; }
+}

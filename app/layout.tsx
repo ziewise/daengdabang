@@ -1,20 +1,15 @@
 /**
- * RootLayout — 댕다방 글로벌 레이아웃
+ * RootLayout — 최상위 레이아웃
  * ---------------------------------------------------------------------
- * 모든 페이지를 감싸는 루트.
- *   - lang="ko" 한국어 사이트
- *   - Geist + Geist Mono (next/font/google) — 영문/숫자
- *   - Wanted Sans Variable — 한글 (globals.css 에서 CDN import)
- *   - .global-aurora — 모든 페이지 뒤에 깔리는 오로라 그라데이션
- * ---------------------------------------------------------------------
- * 페이지별 메타데이터는 각 page.tsx 의 `export const metadata` 로 오버라이드.
+ * - lang="ko" 한국어
+ * - Geist (영문) + Wanted Sans Variable (한글) 글로벌 폰트
+ * - .global-aurora 모든 페이지 뒤에 깔리는 오로라 그라데이션
+ * - 헤더/푸터/펫렌즈 FAB 는 (shop) 라우트 그룹의 layout 에서 마운트
+ *   (인트로 페이지는 풀스크린 영상이라 헤더/푸터 미노출)
  */
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
-import PetlensProvider from "@/components/petlens/PetlensProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,8 +24,6 @@ const geistMono = Geist_Mono({
     display: "swap",
 });
 
-// Wanted Sans Variable — 한국어 (self-hosted woff2)
-// 100~900 가변 weight, OFL 1.1 라이센스 (재배포 OK)
 const wantedSans = localFont({
     src: "../public/fonts/WantedSansVariable.woff2",
     variable: "--font-wanted-sans",
@@ -65,16 +58,8 @@ export default function RootLayout({
             className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} h-full antialiased`}
         >
             <body className="min-h-full flex flex-col">
-                {/* 모든 페이지 뒤로 깔리는 오로라 배경 */}
                 <div className="global-aurora" aria-hidden="true" />
-                <PetlensProvider>
-                    <Header />
-                    {/* 헤더 fixed 라 페이지 콘텐츠는 header-height 만큼 padding */}
-                    <main className="flex-1 pt-[var(--header-height)] flex flex-col">
-                        {children}
-                    </main>
-                    <Footer />
-                </PetlensProvider>
+                {children}
             </body>
         </html>
     );
