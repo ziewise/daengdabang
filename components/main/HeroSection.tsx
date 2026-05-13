@@ -53,8 +53,8 @@ export default function HeroSection() {
             {/* 어두운 그라데이션 오버레이 — 텍스트 가독성 */}
             <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/10 to-transparent pointer-events-none" />
 
-            {/* 좌상단 텍스트 */}
-            <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 h-full flex items-start pt-32 md:pt-40">
+            {/* 좌측 텍스트 (세로 가운데 정렬) */}
+            <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 h-full flex items-center">
                 <div className="max-w-xl text-white">
                     <p
                         data-hero-eyebrow
