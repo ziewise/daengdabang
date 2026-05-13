@@ -39,7 +39,7 @@ export default function MypageShell({
             <MypageHello />
             <div className="grid md:grid-cols-[240px_1fr] gap-4 md:gap-6 items-start">
                 <MypageSidebar />
-                <section className="glass-card rounded-2xl p-5 md:p-7 min-h-[400px]">
+                <section className="glass-card rounded-2xl p-5 md:p-7 min-h-[400px] md:min-h-[500px]">
                     {children}
                 </section>
             </div>
