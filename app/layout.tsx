@@ -14,6 +14,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import PetlensProvider from "@/components/petlens/PetlensProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -66,12 +67,14 @@ export default function RootLayout({
             <body className="min-h-full flex flex-col">
                 {/* 모든 페이지 뒤로 깔리는 오로라 배경 */}
                 <div className="global-aurora" aria-hidden="true" />
-                <Header />
-                {/* 헤더 fixed 라 페이지 콘텐츠는 header-height 만큼 padding */}
-                <main className="flex-1 pt-[var(--header-height)] flex flex-col">
-                    {children}
-                </main>
-                <Footer />
+                <PetlensProvider>
+                    <Header />
+                    {/* 헤더 fixed 라 페이지 콘텐츠는 header-height 만큼 padding */}
+                    <main className="flex-1 pt-[var(--header-height)] flex flex-col">
+                        {children}
+                    </main>
+                    <Footer />
+                </PetlensProvider>
             </body>
         </html>
     );
