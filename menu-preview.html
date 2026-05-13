@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<!--
+    =====================================================================
+    menu-preview.html — 헤더 / 메뉴 인터랙션 검증 페이지
+    ---------------------------------------------------------------------
+    실제 페이지(main.html)에 합치기 전 헤더 인터랙션을 독립적으로 검증하기 위한
+    데모 페이지. 메가메뉴·드롭다운·모바일 슬라이드 패널·검색 모달·로그인 토글을
+    한 곳에서 확인할 수 있다.
+
+    데모 컨트롤:
+      - 본문에 "로그인 시뮬레이트" 버튼 (#demo-auth-toggle)
+        클릭 시 헤더 + 모바일 풋터의 로그인 ↔ 마이페이지 토글
+      - 화면 너비 1024px 이하로 줄이면 햄버거 모드 자동 전환
+
+    의존 파일은 main.html 과 동일 (common.css + header.css + header.js).
+    상품/히어로 등 콘텐츠 섹션은 없음 — 헤더 검증 전용.
+    =====================================================================
+-->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댕다방 - 메뉴 프리뷰</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+</head>
+<body>
+    <div class="global-aurora"></div>
+
+    <!-- ============ 사이트 헤더 ============ -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="brand-logo">
+                <div class="brand-logo-circle"><img src="assets/images/logo.png" alt="댕다방"></div>
+                <div class="brand-logo-text">
+                    <span class="char-1">댕</span><span class="char-2">다</span><span class="char-3">방</span>
+                </div>
+            </a>
+
+            <nav class="main-nav">
+                <div class="nav-item"><a href="#best" class="nav-link">베스트</a></div>
+                <div class="nav-item"><a href="#new" class="nav-link">신상품</a></div>
+
+                <!-- 카테고리: 메가 메뉴 -->
+                <div class="nav-item has-dropdown">
+                    <a href="#category" class="nav-link">카테고리<span class="chev"></span></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <!-- 1. 산책/아웃도어 -->
+                            <div class="mega-group">
+                                <h4><a href="#cat-outdoor">산책/아웃도어</a></h4>
+                                <ul>
+                                    <li><a href="#harness">하네스</a></li>
+                                    <li><a href="#leash">리드줄/목줄</a></li>
+                                    <li><a href="#wear">의류/보호장비</a></li>
+                                    <li><a href="#goggles">고글/안전용품</a></li>
+                                    <li><a href="#carrier">이동가방/유모차</a></li>
+                                </ul>
+                            </div>
+                            <!-- 2. 먹거리 -->
+                            <div class="mega-group">
+                                <h4><a href="#cat-food">먹거리</a></h4>
+                                <ul>
+                                    <li><a href="#food">사료</a></li>
+                                    <li><a href="#treats">간식</a></li>
+                                    <li><a href="#supplement">영양/보조</a></li>
+                                    <li><a href="#dessert">디저트/음료</a></li>
+                                </ul>
+                            </div>
+                            <!-- 3. 생활용품 -->
+                            <div class="mega-group">
+                                <h4><a href="#cat-life">생활용품</a></h4>
+                                <ul>
+                                    <li><a href="#cushion">쿠션/침구</a></li>
+                                    <li><a href="#bowl">식기/급식용품</a></li>
+                                </ul>
+                            </div>
+                            <!-- 4. 장난감/놀이 (신규) -->
+                            <div class="mega-group">
+                                <h4><a href="#cat-toy">장난감/놀이</a></h4>
+                                <ul>
+                                    <li><a href="#nosework">노즈워크/지능</a></li>
+                                    <li><a href="#tug">원반/터그</a></li>
+                                    <li><a href="#latex">라텍스/봉제</a></li>
+                                </ul>
+                            </div>
+                            <!-- 5. 케어 -->
+                            <div class="mega-group">
+                                <h4><a href="#cat-care">케어</a></h4>
+                                <ul>
+                                    <li><a href="#cream">스킨/크림</a></li>
+                                    <li><a href="#paw">발바닥 케어</a></li>
+                                    <li><a href="#hygiene">위생/배변</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 브랜드: 카드형 드롭다운 -->
+                <div class="nav-item has-dropdown">
+                    <a href="#brand" class="nav-link">브랜드<span class="chev"></span></a>
+                    <div class="dropdown-wrap">
+                        <div class="brand-dropdown">
+                            <div class="brand-cards">
+                                <a href="#ruffwear" class="brand-card ruff">
+                                    <span class="brand-card-initial">R</span>
+                                    <h3 class="brand-card-name">Ruffwear</h3>
+                                    <p class="brand-card-tagline">활동견을 위한<br>프리미엄 아웃도어 기어</p>
+                                    <span class="brand-card-cta">제품 보기 <i class="fa-solid fa-arrow-right"></i></span>
+                                </a>
+                                <a href="#rexspecs" class="brand-card rex">
+                                    <span class="brand-card-initial">Rx</span>
+                                    <h3 class="brand-card-name">Rex Specs</h3>
+                                    <p class="brand-card-tagline">강아지 눈 보호 전문<br>아이웨어 솔루션</p>
+                                    <span class="brand-card-cta">제품 보기 <i class="fa-solid fa-arrow-right"></i></span>
+                                </a>
+                            </div>
+                            <a href="#brands-all" class="brand-all-link">
+                                <span>전체 브랜드 보기</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 기획전: 상황별 카드 드롭다운 -->
+                <div class="nav-item has-dropdown">
+                    <a href="#promo" class="nav-link">기획전<span class="chev"></span></a>
+                    <div class="dropdown-wrap">
+                        <div class="promo-dropdown">
+                            <a href="#active" class="promo-card">
+                                <div class="promo-icon icon-1"><i class="fa-solid fa-person-running"></i></div>
+                                <div class="promo-text"><h4>활동견 추천</h4><p>산책·야외활동이 많은 댕댕이를 위한 셀렉션</p></div>
+                            </a>
+                            <a href="#walking" class="promo-card">
+                                <div class="promo-icon icon-2"><i class="fa-solid fa-shoe-prints"></i></div>
+                                <div class="promo-text"><h4>산책 필수템</h4><p>하네스·리드줄·보호장비 모음</p></div>
+                            </a>
+                            <a href="#eye" class="promo-card">
+                                <div class="promo-icon icon-3"><i class="fa-solid fa-glasses"></i></div>
+                                <div class="promo-text"><h4>눈 보호 아이템</h4><p>Rex Specs 고글 중심 추천</p></div>
+                            </a>
+                            <a href="#season" class="promo-card">
+                                <div class="promo-icon icon-4"><i class="fa-solid fa-leaf"></i></div>
+                                <div class="promo-text"><h4>계절별 추천</h4><p>여름·겨울·장마·여행 시즌</p></div>
+                            </a>
+                            <a href="#sale" class="promo-card">
+                                <div class="promo-icon icon-5"><i class="fa-solid fa-tags"></i></div>
+                                <div class="promo-text"><h4>할인/이벤트</h4><p>지금 진행 중인 프로모션</p></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 고객센터: 단순 리스트 드롭다운 5항목 -->
+                <div class="nav-item has-dropdown">
+                    <a href="#cs" class="nav-link">고객센터<span class="chev"></span></a>
+                    <div class="dropdown-wrap">
+                        <div class="cs-dropdown">
+                            <a href="#notice"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
+                            <a href="#faq"><i class="fa-solid fa-circle-question"></i> 자주 묻는 질문</a>
+                            <a href="#inquiry"><i class="fa-solid fa-comments"></i> 1:1 문의</a>
+                            <a href="#shipping"><i class="fa-solid fa-truck"></i> 배송 조회</a>
+                            <a href="#return"><i class="fa-solid fa-rotate-left"></i> 교환·반품 안내</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-utils">
+                <button class="icon-btn" data-search-trigger aria-label="검색">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <a href="#cart" class="icon-btn" aria-label="장바구니">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+                <a href="#login" class="btn-auth" data-auth-btn>
+                    <i class="fa-solid fa-right-to-bracket"></i><span>로그인</span>
+                </a>
+                <button class="mobile-toggle" aria-label="메뉴 열기">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ 모바일 슬라이드 패널 ============ -->
+    <div class="mobile-overlay"></div>
+    <aside class="mobile-panel">
+        <div class="mobile-panel-header">
+            <a href="index.html" class="brand-logo">
+                <div class="brand-logo-circle"><img src="assets/images/logo.png" alt="댕다방"></div>
+                <div class="brand-logo-text">
+                    <span class="char-1">댕</span><span class="char-2">다</span><span class="char-3">방</span>
+                </div>
+            </a>
+            <button class="mobile-panel-close" aria-label="닫기"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="mobile-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="search" placeholder="어떤 상품을 찾으세요?">
+        </div>
+
+        <ul class="mobile-menu-list">
+            <li><a href="#best">베스트 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+            <li><a href="#new">신상품 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+
+            <li>
+                <button class="submenu-toggle">카테고리 <i class="fa-solid fa-chevron-down chev"></i></button>
+                <div class="mobile-submenu">
+                    <div class="group-block">
+                        <h5>산책/아웃도어</h5>
+                        <ul>
+                            <li><a href="#harness">하네스</a></li>
+                            <li><a href="#leash">리드줄/목줄</a></li>
+                            <li><a href="#wear">의류/보호장비</a></li>
+                            <li><a href="#goggles">고글/안전용품</a></li>
+                            <li><a href="#carrier">이동가방/유모차</a></li>
+                        </ul>
+                    </div>
+                    <div class="group-block">
+                        <h5>먹거리</h5>
+                        <ul>
+                            <li><a href="#food">사료</a></li>
+                            <li><a href="#treats">간식</a></li>
+                            <li><a href="#supplement">영양/보조</a></li>
+                            <li><a href="#dessert">디저트/음료</a></li>
+                        </ul>
+                    </div>
+                    <div class="group-block">
+                        <h5>생활용품</h5>
+                        <ul>
+                            <li><a href="#cushion">쿠션/침구</a></li>
+                            <li><a href="#bowl">식기/급식용품</a></li>
+                        </ul>
+                    </div>
+                    <div class="group-block">
+                        <h5>장난감/놀이</h5>
+                        <ul>
+                            <li><a href="#nosework">노즈워크/지능</a></li>
+                            <li><a href="#tug">원반/터그</a></li>
+                            <li><a href="#latex">라텍스/봉제</a></li>
+                        </ul>
+                    </div>
+                    <div class="group-block">
+                        <h5>케어</h5>
+                        <ul>
+                            <li><a href="#cream">스킨/크림</a></li>
+                            <li><a href="#paw">발바닥 케어</a></li>
+                            <li><a href="#hygiene">위생/배변</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <button class="submenu-toggle">브랜드 <i class="fa-solid fa-chevron-down chev"></i></button>
+                <div class="mobile-submenu">
+                    <div class="group-block">
+                        <ul>
+                            <li><a href="#ruffwear">러프웨어 (Ruffwear)</a></li>
+                            <li><a href="#rexspecs">렉스스펙스 (Rex Specs)</a></li>
+                            <li><a href="#brands-all">전체 브랜드 보기</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <button class="submenu-toggle">기획전 <i class="fa-solid fa-chevron-down chev"></i></button>
+                <div class="mobile-submenu">
+                    <div class="group-block">
+                        <ul>
+                            <li><a href="#active">활동견 추천</a></li>
+                            <li><a href="#walking">산책 필수템</a></li>
+                            <li><a href="#eye">눈 보호 아이템</a></li>
+                            <li><a href="#season">계절별 추천</a></li>
+                            <li><a href="#sale">할인/이벤트</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <button class="submenu-toggle">고객센터 <i class="fa-solid fa-chevron-down chev"></i></button>
+                <div class="mobile-submenu">
+                    <div class="group-block">
+                        <ul>
+                            <li><a href="#notice">공지사항</a></li>
+                            <li><a href="#faq">자주 묻는 질문</a></li>
+                            <li><a href="#inquiry">1:1 문의</a></li>
+                            <li><a href="#shipping">배송 조회</a></li>
+                            <li><a href="#return">교환·반품 안내</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="mobile-panel-footer">
+            <a href="#cart" class="btn-auth btn-cart"><i class="fa-solid fa-bag-shopping"></i><span>장바구니</span></a>
+            <a href="#login" class="btn-auth" data-auth-btn><i class="fa-solid fa-right-to-bracket"></i><span>로그인</span></a>
+        </div>
+    </aside>
+
+    <!-- ============ 검색 모달 ============ -->
+    <div class="search-modal-overlay"></div>
+    <div class="search-modal" role="dialog" aria-modal="true" aria-labelledby="search-modal-input">
+        <div class="search-modal-inner">
+            <div class="search-modal-header">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="search-modal-input" type="search" placeholder="어떤 상품을 찾으세요?" autocomplete="off">
+                <button class="search-modal-close" aria-label="검색 닫기">ESC</button>
+            </div>
+            <div class="search-modal-body">
+                <section>
+                    <h3><i class="fa-solid fa-fire"></i> 인기 검색어</h3>
+                    <div class="tag-list">
+                        <a href="#" class="tag" data-search-tag="러프웨어"><span class="rank">1</span>러프웨어</a>
+                        <a href="#" class="tag" data-search-tag="고글"><span class="rank">2</span>고글</a>
+                        <a href="#" class="tag" data-search-tag="하네스"><span class="rank">3</span>하네스</a>
+                        <a href="#" class="tag" data-search-tag="우비"><span class="rank">4</span>우비</a>
+                        <a href="#" class="tag" data-search-tag="사료"><span class="rank">5</span>사료</a>
+                        <a href="#" class="tag" data-search-tag="쿠션"><span class="rank">6</span>쿠션</a>
+                        <a href="#" class="tag" data-search-tag="발바닥 크림"><span class="rank">7</span>발바닥 크림</a>
+                        <a href="#" class="tag" data-search-tag="산책 가방"><span class="rank">8</span>산책 가방</a>
+                    </div>
+                </section>
+
+                <section class="recent-section" hidden>
+                    <h3>
+                        <i class="fa-regular fa-clock"></i> 최근 검색어
+                        <button class="clear-recent">전체 삭제</button>
+                    </h3>
+                    <ul class="recent-list"></ul>
+                </section>
+
+                <section>
+                    <h3><i class="fa-solid fa-bolt"></i> 빠른 이동</h3>
+                    <div class="quick-links">
+                        <a href="#walking" class="quick-link">
+                            <i class="fa-solid fa-shoe-prints"></i>
+                            <span>산책 필수템</span>
+                        </a>
+                        <a href="#eye" class="quick-link">
+                            <i class="fa-solid fa-glasses"></i>
+                            <span>눈 보호 아이템</span>
+                        </a>
+                        <a href="#active" class="quick-link">
+                            <i class="fa-solid fa-person-running"></i>
+                            <span>활동견 추천</span>
+                        </a>
+                        <a href="#best" class="quick-link">
+                            <i class="fa-solid fa-medal"></i>
+                            <span>베스트</span>
+                        </a>
+                        <a href="#new" class="quick-link">
+                            <i class="fa-solid fa-sparkles"></i>
+                            <span>신상품</span>
+                        </a>
+                        <a href="#sale" class="quick-link">
+                            <i class="fa-solid fa-tags"></i>
+                            <span>할인/이벤트</span>
+                        </a>
+                    </div>
+                </section>
+            </div>
+            <div class="search-modal-footer">
+                <span><kbd>↵</kbd> 검색</span>
+                <span><kbd>esc</kbd> 닫기</span>
+                <span class="footer-tip"><kbd>Ctrl</kbd> + <kbd>K</kbd> 로 빠르게 열기</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ 데모 콘텐츠 ============ -->
+    <main class="page-content">
+        <section style="max-width: 1100px; margin: 60px auto; padding: 0 32px;">
+            <div class="glass-panel" style="padding: 44px 48px;">
+                <p style="font-size: 13px; font-weight: 800; letter-spacing: 2px; color: #2563eb; margin: 0 0 12px;">MENU PREVIEW</p>
+                <h1 style="font-size: 2.4rem; font-weight: 900; margin: 0 0 14px; line-height: 1.2;">
+                    헤더·메가메뉴·드롭다운·모바일 패널<br>인터랙션 검증 페이지
+                </h1>
+                <p style="color: #475569; margin: 0 0 28px; line-height: 1.7;">
+                    <b>PC</b> — 상단 메뉴에 마우스 오버 시 카테고리(메가 메뉴), 브랜드(카드형), 기획전(상황별 카드)가 열립니다.<br>
+                    <b>모바일</b> — 브라우저 너비를 1024px 이하로 줄이면 햄버거 버튼이 나타나고, 우측 슬라이드 패널이 열립니다. 카테고리/브랜드/기획전은 아코디언으로 동작.<br>
+                    <b>스크롤</b> — 헤더가 좀 더 진해지고 그림자가 강해집니다.
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button id="demo-auth-toggle" style="background: #2563eb; color: white; padding: 11px 22px; border-radius: 50px; border: none; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 14px;">
+                        로그인 시뮬레이트
+                    </button>
+                    <a href="index.html" style="padding: 11px 22px; border-radius: 50px; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.8); color: #0f172a; font-weight: 700; text-decoration: none; font-size: 14px;">
+                        ← 인트로 페이지
+                    </a>
+                </div>
+            </div>
+
+            <!-- 스크롤 효과 확인용 더미 콘텐츠 -->
+            <div style="height: 600px;"></div>
+            <div class="glass-panel" style="padding: 32px;">
+                <h2 style="margin: 0 0 8px; font-size: 1.4rem; font-weight: 800;">스크롤 시 헤더 변화 확인</h2>
+                <p style="color: #475569; margin: 0;">위로 스크롤하면 헤더의 배경이 진해지고 그림자가 또렷해집니다.</p>
+            </div>
+            <div style="height: 400px;"></div>
+        </section>
+    </main>
+
+    <script src="assets/js/header.js"></script>
+</body>
+</html>

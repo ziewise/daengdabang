@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+    =====================================================================
+    login.html — 로그인 페이지
+    ---------------------------------------------------------------------
+    쇼핑몰 계정 로그인 + 소셜 로그인(Google · 카카오 · 네이버) 페이지.
+
+    구조:
+      1. 상단 로고 (큰 시그니처 — 인트로와 동일 톤)
+      2. 글래스 카드 안에:
+         - 이메일·비밀번호 폼
+         - 로그인 상태 유지 체크박스
+         - 로그인 버튼 (그라데이션 풀폭)
+         - "또는" 구분선
+         - 소셜 로그인 3개 버튼
+         - 하단: 비밀번호 찾기 | 회원가입
+
+    임시(Mock) 동작:
+      - 이메일·비번 비워도 로그인 가능 (또는 데모 계정 안내)
+      - 소셜 로그인 클릭 시 짧은 로딩 후 main.html 로 이동
+      - 백엔드 연동 시 form submit 핸들러만 교체
+
+    의존: common.css + auth.css + auth.js
+    =====================================================================
+-->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - 댕다방</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+    <div class="global-aurora"></div>
+
+    <div class="auth-page">
+
+        <!-- 상단 로고 -->
+        <a href="main.html" class="brand-logo auth-header">
+            <div class="brand-logo-circle"><img src="assets/images/logo.png" alt="댕다방"></div>
+            <div class="brand-logo-text">
+                <span class="char-1">댕</span><span class="char-2">다</span><span class="char-3">방</span>
+            </div>
+        </a>
+
+        <!-- 로그인 카드 -->
+        <div class="auth-card">
+            <h1 class="auth-title">환영합니다</h1>
+            <p class="auth-sub">우리 댕댕이를 위한 큐레이션 쇼핑몰에 오신 것을 환영해요</p>
+
+            <!-- 로그인 폼 -->
+            <form class="auth-form" id="login-form" autocomplete="on">
+                <div class="auth-field">
+                    <label class="auth-label" for="login-email">이메일</label>
+                    <input class="auth-input" id="login-email" type="email" placeholder="email@example.com" autocomplete="email">
+                </div>
+
+                <div class="auth-field">
+                    <label class="auth-label" for="login-password">비밀번호</label>
+                    <input class="auth-input" id="login-password" type="password" placeholder="비밀번호" autocomplete="current-password">
+                </div>
+
+                <label class="auth-check" style="margin-top: 4px;">
+                    <input type="checkbox" id="remember-me">
+                    <span>로그인 상태 유지</span>
+                </label>
+
+                <button type="submit" class="btn-primary-full">로그인</button>
+            </form>
+
+            <!-- 임시 안내: 백엔드 연동 전 -->
+            <div class="auth-info-box mock" style="margin-top: 14px;">
+                <strong>임시 모드</strong> — 이메일·비번 비워도 로그인 됩니다.<br>
+                실 동작 검증용 데모 계정: <code>demo@daengdabang.com</code> / <code>1234</code>
+            </div>
+
+            <!-- 또는 구분선 -->
+            <div class="auth-divider">또는</div>
+
+            <!-- 소셜 로그인 -->
+            <div class="social-list">
+                <button type="button" class="btn-social google" data-social="google">
+                    <i class="fa-brands fa-google"></i>
+                    <span>Google로 로그인</span>
+                </button>
+                <button type="button" class="btn-social kakao" data-social="kakao">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>카카오 계정으로 로그인</span>
+                </button>
+                <button type="button" class="btn-social naver" data-social="naver">
+                    <i class="fa-solid fa-n" style="font-weight: 900;"></i>
+                    <span>네이버 계정으로 로그인</span>
+                </button>
+            </div>
+
+            <!-- 하단 링크 -->
+            <div class="auth-footer-links">
+                <a href="forgot-password.html">비밀번호 찾기</a>
+                <span class="sep">·</span>
+                <a href="signup.html" class="bold">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>

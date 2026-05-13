@@ -1,0 +1,32 @@
+{
+    "// ============================================": "공유 VS Code 설정 (저장소에 포함됨)",
+    "files.eol": "\n",
+    "files.encoding": "utf8",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": false,
+
+    "html.format.indentInnerHtml": true,
+    "html.format.wrapAttributes": "auto",
+    "css.lint.unknownAtRules": "ignore",
+
+    "// Live Server": "포트 + 자동 브라우저 열기 끔 (수동 제어)",
+    "liveServer.settings.port": 8765,
+    "liveServer.settings.NoBrowser": false,
+    "liveServer.settings.donotShowInfoMsg": true,
+
+    "// 검색 제외": "node_modules / .git / dist 자동 제외",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/.vercel": true,
+        "**/assets/videos/**": true
+    },
+
+    "// 한글 파일명·코멘트 정상 표시": true,
+    "terminal.integrated.defaultProfile.windows": "PowerShell"
+}

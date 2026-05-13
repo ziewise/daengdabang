@@ -1,0 +1,44 @@
+# =====================================================================
+# .gitignore — 댕다방 쇼핑몰
+# =====================================================================
+
+# ----- OS -----
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# ----- IDE -----
+# .vscode 전체가 아닌, 개인 설정만 제외 — settings.json/extensions.json 은 공유
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# ----- Node / 빌드 산출물 (미래 대비) -----
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----- Vercel -----
+.vercel/
+
+# ----- 환경 변수 -----
+.env
+.env.local
+.env.*.local
+
+# ----- 임시 / 백업 -----
+*.tmp
+*.bak
+*~
+.~*

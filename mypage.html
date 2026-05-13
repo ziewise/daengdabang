@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<!--
+    =====================================================================
+    mypage.html — 댕다방 마이페이지
+    ---------------------------------------------------------------------
+    회원이 로그인한 뒤 자신의 정보를 한눈에 보는 페이지.
+
+    핵심:
+      1. 비로그인 진입 → 차단 카드 ("로그인이 필요합니다")
+      2. 좌측 사이드바 메뉴 ↔ 우측 콘텐츠 패널 (탭 전환)
+      3. 펫 프로필 탭이 가장 중요 — 펫렌즈 분석 결과가 다견 카드로 표시
+      4. 그 외 주문/배송지/찜/리뷰/적립금/회원정보 = 모두 mock data
+
+    헤더·푸터·펫렌즈 모달은 main.html 과 동일 구조 (스크립트 공용).
+    카테고리/브랜드 메뉴 클릭 시에는 main.html 의 해당 섹션으로 이동.
+    =====================================================================
+-->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - 댕다방</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="assets/css/petlens.css">
+    <link rel="stylesheet" href="assets/css/mypage.css?v=20260513d">
+</head>
+<body>
+    <div class="global-aurora"></div>
+
+    <!-- ============ 사이트 헤더 (main.html 과 동일) ============ -->
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="main.html" class="brand-logo">
+                <div class="brand-logo-circle"><img src="assets/images/logo.png" alt="댕다방"></div>
+                <div class="brand-logo-text">
+                    <span class="char-1">댕</span><span class="char-2">다</span><span class="char-3">방</span>
+                </div>
+            </a>
+
+            <nav class="main-nav">
+                <div class="nav-item"><a href="main.html#best" class="nav-link">베스트</a></div>
+                <div class="nav-item"><a href="main.html#new" class="nav-link">신상품</a></div>
+
+                <div class="nav-item has-dropdown">
+                    <a href="main.html#category" class="nav-link">카테고리<span class="chev"></span></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-inner">
+                            <div class="mega-group">
+                                <h4><a href="main.html#cat-outdoor">산책/아웃도어</a></h4>
+                                <ul>
+                                    <li><a href="main.html#harness">하네스</a></li>
+                                    <li><a href="main.html#leash">리드줄/목줄</a></li>
+                                    <li><a href="main.html#wear">의류/보호장비</a></li>
+                                    <li><a href="main.html#goggles">고글/안전용품</a></li>
+                                    <li><a href="main.html#carrier">이동가방/유모차</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-group">
+                                <h4><a href="main.html#cat-food">먹거리</a></h4>
+                                <ul>
+                                    <li><a href="main.html#food">사료</a></li>
+                                    <li><a href="main.html#treats">간식</a></li>
+                                    <li><a href="main.html#supplement">영양/보조</a></li>
+                                    <li><a href="main.html#dessert">디저트/음료</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-group">
+                                <h4><a href="main.html#cat-life">생활용품</a></h4>
+                                <ul>
+                                    <li><a href="main.html#cushion">쿠션/침구</a></li>
+                                    <li><a href="main.html#bowl">식기/급식용품</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-group">
+                                <h4><a href="main.html#cat-toy">장난감/놀이</a></h4>
+                                <ul>
+                                    <li><a href="main.html#nosework">노즈워크/지능</a></li>
+                                    <li><a href="main.html#tug">원반/터그</a></li>
+                                    <li><a href="main.html#latex">라텍스/봉제</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-group">
+                                <h4><a href="main.html#cat-care">케어</a></h4>
+                                <ul>
+                                    <li><a href="main.html#cream">스킨/크림</a></li>
+                                    <li><a href="main.html#paw">발바닥 케어</a></li>
+                                    <li><a href="main.html#hygiene">위생/배변</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-item has-dropdown">
+                    <a href="main.html#brand" class="nav-link">브랜드<span class="chev"></span></a>
+                    <div class="dropdown-wrap">
+                        <div class="brand-dropdown">
+                            <div class="brand-cards">
+                                <a href="main.html#ruffwear" class="brand-card ruff">
+                                    <span class="brand-card-initial">R</span>
+                                    <h3 class="brand-card-name">Ruffwear</h3>
+                                    <p class="brand-card-tagline">활동견을 위한<br>프리미엄 아웃도어 기어</p>
+                                    <span class="brand-card-cta">제품 보기 <i class="fa-solid fa-arrow-right"></i></span>
+                                </a>
+                                <a href="main.html#rexspecs" class="brand-card rex">
+                                    <span class="brand-card-initial">Rx</span>
+                                    <h3 class="brand-card-name">Rex Specs</h3>
+                                    <p class="brand-card-tagline">강아지 눈 보호 전문<br>아이웨어 솔루션</p>
+                                    <span class="brand-card-cta">제품 보기 <i class="fa-solid fa-arrow-right"></i></span>
+                                </a>
+                            </div>
+                            <a href="main.html#brands-all" class="brand-all-link">
+                                <span>전체 브랜드 보기</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-item has-dropdown">
+                    <a href="main.html#promo" class="nav-link">기획전<span class="chev"></span></a>
+                    <div class="dropdown-wrap">
+                        <div class="promo-dropdown">
+                            <a href="main.html#active" class="promo-card">
+                                <div class="promo-icon icon-1"><i class="fa-solid fa-person-running"></i></div>
+                                <div class="promo-text"><h4>활동견 추천</h4><p>산책·야외활동이 많은 댕댕이를 위한 셀렉션</p></div>
+                            </a>
+                            <a href="main.html#walking" class="promo-card">
+                                <div class="promo-icon icon-2"><i class="fa-solid fa-shoe-prints"></i></div>
+                                <div class="promo-text"><h4>산책 필수템</h4><p>하네스·리드줄·보호장비 모음</p></div>
+                            </a>
+                            <a href="main.html#eye" class="promo-card">
+                                <div class="promo-icon icon-3"><i class="fa-solid fa-glasses"></i></div>
+                                <div class="promo-text"><h4>눈 보호 아이템</h4><p>Rex Specs 고글 중심 추천</p></div>
+                            </a>
+                            <a href="main.html#season" class="promo-card">
+                                <div class="promo-icon icon-4"><i class="fa-solid fa-leaf"></i></div>
+                                <div class="promo-text"><h4>계절별 추천</h4><p>여름·겨울·장마·여행 시즌</p></div>
+                            </a>
+                            <a href="main.html#sale" class="promo-card">
+                                <div class="promo-icon icon-5"><i class="fa-solid fa-tags"></i></div>
+                                <div class="promo-text"><h4>할인/이벤트</h4><p>지금 진행 중인 프로모션</p></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-item has-dropdown">
+                    <a href="#cs" class="nav-link">고객센터<span class="chev"></span></a>
+                    <div class="dropdown-wrap">
+                        <div class="cs-dropdown">
+                            <a href="#notice"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
+                            <a href="#faq"><i class="fa-solid fa-circle-question"></i> 자주 묻는 질문</a>
+                            <a href="#inquiry"><i class="fa-solid fa-comments"></i> 1:1 문의</a>
+                            <a href="#shipping"><i class="fa-solid fa-truck"></i> 배송 조회</a>
+                            <a href="#return"><i class="fa-solid fa-rotate-left"></i> 교환·반품 안내</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-utils">
+                <button class="icon-btn" data-search-trigger aria-label="검색">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <a href="#cart" class="icon-btn" aria-label="장바구니">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+                <a href="#login" class="btn-auth" data-auth-btn>
+                    <i class="fa-solid fa-right-to-bracket"></i><span>로그인</span>
+                </a>
+                <button class="mobile-toggle" aria-label="메뉴 열기">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ 모바일 슬라이드 패널 ============ -->
+    <div class="mobile-overlay"></div>
+    <aside class="mobile-panel">
+        <div class="mobile-panel-header">
+            <a href="main.html" class="brand-logo">
+                <div class="brand-logo-circle"><img src="assets/images/logo.png" alt="댕다방"></div>
+                <div class="brand-logo-text">
+                    <span class="char-1">댕</span><span class="char-2">다</span><span class="char-3">방</span>
+                </div>
+            </a>
+            <button class="mobile-panel-close" aria-label="닫기"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="mobile-search">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="search" placeholder="어떤 상품을 찾으세요?">
+        </div>
+        <ul class="mobile-menu-list">
+            <li><a href="main.html#best">베스트 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+            <li><a href="main.html#new">신상품 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+            <li><a href="main.html#category">카테고리 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+            <li><a href="main.html#brand">브랜드 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+            <li><a href="main.html#promo">기획전 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+            <li><a href="mypage.html">마이페이지 <i class="fa-solid fa-chevron-right chev"></i></a></li>
+        </ul>
+    </aside>
+
+    <!-- ============ 마이페이지 본문 ============ -->
+    <main class="mypage-main">
+
+        <!-- 비회원 진입 차단 카드 (JS 가 토글) -->
+        <div class="mypage-guest-gate" id="mypage-guest-gate" hidden>
+            <div class="gate-icon"><i class="fa-solid fa-lock"></i></div>
+            <h2>로그인이 필요해요</h2>
+            <p>마이페이지는 회원만 이용할 수 있어요.<br>로그인하시면 펫 프로필·주문 내역·찜 목록을 한곳에서 관리할 수 있어요.</p>
+            <div class="gate-actions">
+                <a href="login.html" class="btn-login">로그인</a>
+                <a href="signup.html" class="btn-signup">회원가입</a>
+            </div>
+        </div>
+
+        <!-- 회원 본문 (로그인 상태에서만 노출) -->
+        <div class="mypage-body" id="mypage-body" hidden>
+
+            <!-- 상단 인사 카드 -->
+            <section class="mypage-hello">
+                <div class="hello-avatar"><i class="fa-solid fa-user"></i></div>
+                <div class="hello-text">
+                    <h1>안녕하세요, <span id="user-name">댕댕이 가족</span>님</h1>
+                    <p><span id="user-email">댕다방 회원</span> · 가입일 <span id="user-since">2026.05.13</span></p>
+                    <!-- 회원 등급 배지 — JS 가 emoji + 이름 + 배경색 채움 -->
+                    <span class="grade-badge" id="grade-badge"></span>
+                </div>
+                <div class="hello-stats">
+                    <div><strong id="stat-pets">0</strong><span>댕댕이</span></div>
+                    <div><strong id="stat-orders">0</strong><span>주문</span></div>
+                    <div><strong id="stat-points">0</strong><span>포인트</span></div>
+                </div>
+            </section>
+
+            <!-- 좌사이드바 + 우콘텐츠 -->
+            <div class="mypage-layout">
+
+                <!-- 좌측 사이드바 메뉴 -->
+                <aside class="mypage-sidebar">
+                    <nav>
+                        <button type="button" data-tab="dashboard" class="active"><i class="fa-solid fa-house"></i> 대시보드</button>
+                        <button type="button" data-tab="pets"><i class="fa-solid fa-paw"></i> 펫 프로필</button>
+                        <button type="button" data-tab="petlens-log"><i class="fa-solid fa-wand-magic-sparkles"></i> 펫렌즈 기록</button>
+                        <button type="button" data-tab="orders"><i class="fa-solid fa-bag-shopping"></i> 주문 내역</button>
+                        <button type="button" data-tab="address"><i class="fa-solid fa-location-dot"></i> 배송지 관리</button>
+                        <button type="button" data-tab="wishlist"><i class="fa-solid fa-heart"></i> 찜한 상품</button>
+                        <button type="button" data-tab="reviews"><i class="fa-solid fa-star"></i> 내 리뷰</button>
+                        <button type="button" data-tab="points"><i class="fa-solid fa-coins"></i> 적립금</button>
+                        <button type="button" data-tab="grade"><i class="fa-solid fa-crown"></i> 등급 / 혜택</button>
+                        <div class="nav-divider"></div>
+                        <button type="button" data-tab="profile"><i class="fa-solid fa-user-pen"></i> 회원정보 수정</button>
+                        <button type="button" data-logout><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</button>
+                    </nav>
+                </aside>
+
+                <!-- 우측 콘텐츠 패널 -->
+                <section class="mypage-content">
+
+                    <!-- ─── 대시보드 ─── -->
+                    <div data-pane="dashboard" class="active">
+                        <div class="pane-head">
+                            <div>
+                                <h2>대시보드</h2>
+                                <p>한눈에 보는 내 활동</p>
+                            </div>
+                        </div>
+                        <div class="dash-grid">
+                            <div class="dash-card highlight">
+                                <h3>회원 등급</h3>
+                                <strong class="big" id="dash-grade-name">🌱 댕린이</strong>
+                                <p>구매·활동으로 더 높은 등급을 노려보세요</p>
+                                <a href="#grade" class="more" data-tab-link="grade">등급 혜택 보기 →</a>
+                            </div>
+                            <div class="dash-card">
+                                <h3>최근 주문</h3>
+                                <strong class="big">3</strong>
+                                <p>최근 30일 주문 건수</p>
+                                <a href="#orders" class="more" data-tab-link="orders">자세히 보기 →</a>
+                            </div>
+                            <div class="dash-card">
+                                <h3>등록된 댕댕이</h3>
+                                <strong class="big" id="dash-pet-count">0</strong>
+                                <p>분석 완료된 펫 프로필</p>
+                                <a href="#pets" class="more" data-tab-link="pets">자세히 보기 →</a>
+                            </div>
+                            <div class="dash-card">
+                                <h3>펫렌즈 기록</h3>
+                                <strong class="big" id="dash-log-count">0</strong>
+                                <p>지금까지의 AI 분석 횟수</p>
+                                <a href="#petlens-log" class="more" data-tab-link="petlens-log">기록 보기 →</a>
+                            </div>
+                            <div class="dash-card">
+                                <h3>찜한 상품</h3>
+                                <strong class="big">12</strong>
+                                <p>위시리스트에 담긴 상품</p>
+                                <a href="#wishlist" class="more" data-tab-link="wishlist">자세히 보기 →</a>
+                            </div>
+                            <div class="dash-card">
+                                <h3>사용 가능 포인트</h3>
+                                <strong class="big">1,200</strong>
+                                <p>적립금 · 다음 구매 시 사용 가능</p>
+                                <a href="#points" class="more" data-tab-link="points">자세히 보기 →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── 펫 프로필 ─── -->
+                    <div data-pane="pets">
+                        <div class="pane-head">
+                            <div>
+                                <h2>펫 프로필</h2>
+                                <p>펫렌즈로 분석한 우리 댕댕이들</p>
+                            </div>
+                        </div>
+                        <!-- JS 가 펫 카드 / 빈 상태 그려넣음 -->
+                        <div id="pets-container" class="pets-grid"></div>
+                    </div>
+
+                    <!-- ─── 펫렌즈 기록 (분석 이력 타임라인) ─── -->
+                    <div data-pane="petlens-log">
+                        <div class="pane-head">
+                            <div>
+                                <h2>펫렌즈 기록</h2>
+                                <p>지금까지의 AI 분석 이력을 시간순으로 모아봤어요</p>
+                            </div>
+                        </div>
+                        <div id="petlens-log-content"></div>
+                    </div>
+
+                    <!-- ─── 주문 내역 ─── -->
+                    <div data-pane="orders">
+                        <div class="pane-head">
+                            <div>
+                                <h2>주문 내역</h2>
+                                <p>최근 1년간의 주문</p>
+                            </div>
+                        </div>
+                        <div id="orders-list" class="order-list"></div>
+                    </div>
+
+                    <!-- ─── 배송지 관리 ─── -->
+                    <div data-pane="address">
+                        <div class="pane-head">
+                            <div>
+                                <h2>배송지 관리</h2>
+                                <p>기본 배송지 + 자주 사용하는 주소</p>
+                            </div>
+                        </div>
+                        <div class="pane-empty">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <h3>등록된 배송지가 없어요</h3>
+                            <p>주문 시 사용할 기본 배송지를 등록해보세요.</p>
+                        </div>
+                    </div>
+
+                    <!-- ─── 찜한 상품 ─── -->
+                    <div data-pane="wishlist">
+                        <div class="pane-head">
+                            <div>
+                                <h2>찜한 상품</h2>
+                                <p>나중에 사고 싶은 아이템</p>
+                            </div>
+                        </div>
+                        <div class="pane-empty">
+                            <i class="fa-solid fa-heart"></i>
+                            <h3>아직 찜한 상품이 없어요</h3>
+                            <p>상품 카드의 ♡ 버튼을 눌러 찜해보세요.</p>
+                        </div>
+                    </div>
+
+                    <!-- ─── 내 리뷰 ─── -->
+                    <div data-pane="reviews">
+                        <div class="pane-head">
+                            <div>
+                                <h2>내 리뷰</h2>
+                                <p>작성한 리뷰 / 작성 가능한 리뷰</p>
+                            </div>
+                        </div>
+                        <div class="pane-empty">
+                            <i class="fa-solid fa-star"></i>
+                            <h3>아직 작성한 리뷰가 없어요</h3>
+                            <p>구매한 상품에 리뷰를 남겨 다른 보호자에게 도움을 줄 수 있어요.</p>
+                        </div>
+                    </div>
+
+                    <!-- ─── 적립금 ─── -->
+                    <div data-pane="points">
+                        <div class="pane-head">
+                            <div>
+                                <h2>적립금</h2>
+                                <p>사용 가능 포인트와 적립 내역</p>
+                            </div>
+                        </div>
+                        <div class="dash-grid">
+                            <div class="dash-card">
+                                <h3>사용 가능</h3>
+                                <strong class="big">1,200<span style="font-size:1rem;color:#64748b;font-weight:700"> P</span></strong>
+                                <p>다음 구매 시 즉시 사용 가능</p>
+                            </div>
+                            <div class="dash-card">
+                                <h3>총 적립</h3>
+                                <strong class="big">8,400<span style="font-size:1rem;color:#64748b;font-weight:700"> P</span></strong>
+                                <p>가입 이후 누적 적립금</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ─── 등급 / 혜택 ─── -->
+                    <div data-pane="grade">
+                        <div class="pane-head">
+                            <div>
+                                <h2>등급 / 혜택</h2>
+                                <p>댕다방 회원 등급과 등급별 혜택</p>
+                            </div>
+                        </div>
+                        <!-- JS 가 현재 등급 + 진행률 + 5개 등급 카드 렌더 -->
+                        <div id="grade-pane-content"></div>
+                    </div>
+
+                    <!-- ─── 회원정보 수정 ─── -->
+                    <div data-pane="profile">
+                        <div class="pane-head">
+                            <div>
+                                <h2>회원정보 수정</h2>
+                                <p>이름·연락처·비밀번호 변경</p>
+                            </div>
+                        </div>
+                        <form class="profile-form" onsubmit="event.preventDefault(); alert('회원정보가 저장되었습니다. (데모)');">
+                            <div>
+                                <label>이름</label>
+                                <input type="text" value="댕댕이 가족">
+                            </div>
+                            <div>
+                                <label>이메일</label>
+                                <input type="email" value="user@daengdabang.com" disabled>
+                            </div>
+                            <div>
+                                <label>휴대폰 번호</label>
+                                <input type="tel" value="010-0000-0000">
+                            </div>
+                            <div>
+                                <label>비밀번호 변경</label>
+                                <input type="password" placeholder="새 비밀번호">
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit">변경사항 저장</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============ 사이트 푸터 ============ -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="footer-brand-info">
+                    <a href="main.html" class="brand-logo">
+                        <div class="brand-logo-circle"><img src="assets/images/logo.png" alt="댕다방"></div>
+                        <div class="brand-logo-text">
+                            <span class="char-1">댕</span><span class="char-2">다</span><span class="char-3">방</span>
+                        </div>
+                    </a>
+                    <p class="footer-tagline">
+                        우리 댕댕이의 매일을 더 특별하게 — <strong>큐레이션 펫 쇼핑몰</strong>
+                    </p>
+                </div>
+                <div class="footer-newsletter">
+                    <p class="footer-newsletter-title">NEWSLETTER</p>
+                    <p class="footer-newsletter-sub">신상품 입고 소식과 할인 정보를 가장 먼저 받아보세요</p>
+                    <form class="footer-newsletter-form" onsubmit="event.preventDefault(); alert('뉴스레터 구독 신청이 완료되었습니다. (데모)');">
+                        <input type="email" placeholder="이메일을 입력해주세요" required>
+                        <button type="submit">구독하기</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-meta">
+                <div class="footer-meta-links">
+                    <a href="#about">브랜드 스토리</a>
+                    <a href="#partner">입점 문의</a>
+                    <a href="#bulk">대량 구매 문의</a>
+                    <a href="#career">채용</a>
+                </div>
+                <div class="footer-sns">
+                    <a href="https://instagram.com/daengdabang" target="_blank" rel="noopener" class="insta" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#youtube" class="youtube" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#blog" class="blog" aria-label="블로그"><i class="fa-solid fa-blog"></i></a>
+                    <a href="#kakao" class="kakao" aria-label="카카오톡"><i class="fa-solid fa-comment"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-cs">
+                <span class="footer-cs-label">CUSTOMER CENTER</span>
+                <a href="tel:1577-0000" class="footer-cs-phone">1577-0000</a>
+                <div class="footer-cs-meta">
+                    <strong>평일</strong> 10:00 ~ 18:00 (점심 12:30 ~ 13:30) · <strong>주말·공휴일 휴무</strong><br>
+                    문의 메일 <strong>help@daengdabang.com</strong>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <a href="#terms">이용약관</a>
+                    <a href="#privacy" class="bold">개인정보처리방침</a>
+                    <a href="#refund">환불·반품 정책</a>
+                    <a href="#dispute">분쟁해결 기준</a>
+                </div>
+                <p class="footer-copy">© 2026 Daengdabang. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============ 펫렌즈 FAB + 모달 (재분석용) ============ -->
+    <button type="button" class="petlens-fab" id="petlens-fab" aria-label="펫렌즈 분석 시작">
+        <i class="fa-solid fa-paw"></i>
+        <span>펫렌즈</span>
+    </button>
+
+    <div class="petlens-modal-overlay" id="petlens-modal-overlay"></div>
+    <div class="petlens-modal" id="petlens-modal" role="dialog" aria-modal="true" aria-labelledby="petlens-modal-title">
+        <div class="petlens-modal-header">
+            <h3 class="petlens-modal-title" id="petlens-modal-title">
+                <i class="fa-solid fa-paw"></i> 펫렌즈 — AI 분석
+            </h3>
+            <button type="button" class="petlens-modal-close" aria-label="닫기">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="petlens-modal-body">
+            <div class="camera-error" id="camera-error">
+                <strong>📷 카메라 사용 불가</strong><br>
+                카메라 권한이 거부됐거나 HTTPS 환경이 아니에요.<br>
+                <small>모바일에서 LAN IP 로 접속하면 카메라가 차단돼요. "불러오기"로 진행해주세요.</small>
+            </div>
+
+            <!-- 모달 Step: 입력 방식 선택 -->
+            <div class="modal-step active" data-modal-step="mode-select">
+                <h2 class="modal-mode-title">어떻게 사진을 가져올까요?</h2>
+                <p class="modal-mode-desc">3장 모두 같은 방식으로 입력해요</p>
+                <div class="modal-mode-cards">
+                    <button type="button" class="mode-card" data-input-mode="camera">
+                        <div class="mode-icon"><i class="fa-solid fa-camera"></i></div>
+                        <strong>촬영하기</strong>
+                        <span>카메라로 바로 찍기</span>
+                    </button>
+                    <button type="button" class="mode-card" data-input-mode="file">
+                        <div class="mode-icon"><i class="fa-solid fa-image"></i></div>
+                        <strong>불러오기</strong>
+                        <span>기존 사진 선택</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 모달 Step: 업로드 (슬롯 3개) -->
+            <div class="modal-step" data-modal-step="upload">
+                <h2 class="modal-mode-title" id="upload-mode-title">사진 업로드</h2>
+                <p class="modal-mode-desc" id="upload-mode-desc">각 부위에 맞는 사진을 추가해주세요</p>
+
+                <!-- 카메라 라이브 뷰 -->
+                <div class="camera-view" id="camera-view">
+                    <video id="camera-video" autoplay playsinline muted></video>
+                    <div class="camera-overlay"></div>
+                    <div class="camera-target-slot" id="camera-target-slot">촬영 중</div>
+                    <!-- 가이드 프레임 + 4코너 마커 + 안내 텍스트 -->
+                    <div class="camera-guide-frame" id="camera-guide-frame">
+                        <span class="corner tl"></span>
+                        <span class="corner tr"></span>
+                        <span class="corner bl"></span>
+                        <span class="corner br"></span>
+                        <div class="guide-hint" id="camera-guide-hint">얼굴을 이 프레임에 맞춰주세요</div>
+                    </div>
+                    <div class="camera-actions">
+                        <button type="button" class="btn-cancel-camera" id="btn-cancel-camera">취소</button>
+                        <button type="button" class="btn-capture" id="btn-capture" aria-label="촬영"></button>
+                    </div>
+                </div>
+
+                <!-- 슬롯 3개 -->
+                <div class="modal-slots">
+                    <div class="modal-slot" data-slot="0" data-label="얼굴">
+                        <div class="slot-ratio-box ratio-face"><span class="ratio-label">1:1</span></div>
+                        <div class="modal-slot-label">얼굴</div>
+                        <div class="modal-slot-hint">정면 클로즈업</div>
+                        <button type="button" class="modal-slot-remove"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-slot" data-slot="1" data-label="측면">
+                        <div class="slot-ratio-box ratio-side"><span class="ratio-label">16:10</span></div>
+                        <div class="modal-slot-label">측면</div>
+                        <div class="modal-slot-hint">옆에서 본 전신</div>
+                        <button type="button" class="modal-slot-remove"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="modal-slot" data-slot="2" data-label="정면 (전체)">
+                        <div class="slot-ratio-box ratio-front"><span class="ratio-label">3:4</span></div>
+                        <div class="modal-slot-label">정면 (전체)</div>
+                        <div class="modal-slot-hint">정면에서 본 전신</div>
+                        <button type="button" class="modal-slot-remove"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+
+                <input type="file" id="modal-file-input" accept="image/*" hidden>
+
+                <div class="modal-upload-actions">
+                    <button type="button" class="btn-mode-switch" id="btn-mode-switch">
+                        <i class="fa-solid fa-rotate-left"></i> 입력 방식 변경
+                    </button>
+                    <button type="button" class="btn-analyze-modal" id="btn-analyze-modal">
+                        분석 시작 <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 모달 Step: 분석 중 -->
+            <div class="modal-step" data-modal-step="analyzing">
+                <div class="modal-analyzing">
+                    <div class="scan-icon"><i class="fa-solid fa-magnifying-glass-chart" style="font-size:64px;color:#6366f1;"></i></div>
+                    <h2>분석 중이에요</h2>
+                    <p class="step-text" id="modal-step-text">강아지 영역 인식 중...</p>
+                    <div class="modal-progress">
+                        <div class="modal-progress-fill" id="modal-progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 모달 Step: 결과 -->
+            <div class="modal-step" data-modal-step="result">
+                <div class="modal-result-header">
+                    <div class="modal-result-avatar" id="modal-result-avatar">
+                        <i class="fa-solid fa-dog"></i>
+                    </div>
+                    <div class="modal-result-summary">
+                        <p class="eyebrow">AI 분석 결과</p>
+                        <h2 id="modal-result-breed">골든리트리버</h2>
+                        <div class="confidence" id="modal-result-confidence">유사도 92%</div>
+                    </div>
+                </div>
+
+                <div class="modal-result-quick" id="modal-result-quick"></div>
+
+                <div class="modal-pet-name">
+                    <label for="modal-pet-name-input">이름을 지어주세요 <span>(선택)</span></label>
+                    <input type="text" id="modal-pet-name-input" maxlength="20" placeholder="예) 초코, 콩이, 보리…">
+                </div>
+
+                <div class="modal-save-status" id="modal-save-status"></div>
+
+                <div class="modal-result-actions">
+                    <button type="button" class="btn-secondary-modal" id="btn-modal-retry">
+                        <i class="fa-solid fa-rotate-left"></i> 다시 분석
+                    </button>
+                    <a href="mypage.html#pets" class="btn-primary-modal" id="btn-modal-detail">
+                        마이페이지에서 보기 <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="assets/js/header.js?v=20260513d"></script>
+    <script src="assets/js/mypage.js?v=20260513d"></script>
+    <script src="assets/js/petlens-modal.js?v=20260513d"></script>
+</body>
+</html>

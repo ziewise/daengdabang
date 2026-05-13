@@ -1,0 +1,12 @@
+{
+    "// ============================================": "프로젝트 추천 확장 — VS Code 가 자동으로 설치 권유",
+    "recommendations": [
+        "ritwickdey.LiveServer",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "ecmel.vscode-html-css",
+        "formulahendry.auto-rename-tag",
+        "naumovs.color-highlight",
+        "streetsidesoftware.code-spell-checker"
+    ]
+}
