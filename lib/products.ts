@@ -54,16 +54,20 @@ export const BEST_PRODUCTS: Record<BestPeriod, Product[]> = {
     ],
 };
 
-/** 신상품 (자동 캐러셀용) */
+/** 신상품 (자동 캐러셀용, 12종 — 무한 루프 3x 클론) */
 export const NEW_PRODUCTS: Product[] = [
-    { brand: "RUFFWEAR",  name: "Cloud Chaser 소프트 하네스",        price: 84000,  original: null,   discount: null, ph: 1, icon: "fa-shirt" },
-    { brand: "댕다방",     name: "쿨토시 산책용 양말 (4족)",          price: 14800,  original: null,   discount: null, ph: 2, icon: "fa-socks" },
-    { brand: "REX SPECS", name: "Sun Visor 강아지 모자",             price: 38000,  original: null,   discount: null, ph: 3, icon: "fa-hat-cowboy" },
-    { brand: "댕다방",     name: "여름 시원 쿨매트 (L)",             price: 42000,  original: 48000,  discount: 12,   ph: 4, icon: "fa-snowflake" },
-    { brand: "댕다방",     name: "무알콜 데일리 워시 200ml",          price: 16800,  original: null,   discount: null, ph: 5, icon: "fa-droplet" },
-    { brand: "RUFFWEAR",  name: "Knot-a-Hitch 차량 안전벨트",        price: 68000,  original: null,   discount: null, ph: 6, icon: "fa-car" },
-    { brand: "댕다방",     name: "관절 영양제 츄어블 60정",           price: 32000,  original: 38000,  discount: 16,   ph: 1, icon: "fa-capsules" },
-    { brand: "댕다방",     name: "프리미엄 덴탈껌 라지",               price: 18900,  original: null,   discount: null, ph: 2, icon: "fa-tooth" },
+    { brand: "RUFFWEAR", name: "릿지라인 하네스 (2026)",             price: 270000, original: null, discount: null, ph: 1, icon: "fa-medal" },
+    { brand: "RUFFWEAR", name: "팔리세이드 팩 반려견 배낭 (2026)",    price: 226000, original: null, discount: null, ph: 2, icon: "fa-bag-shopping" },
+    { brand: "RUFFWEAR", name: "버트 커버올 스노우 슈트 (2025FW)",    price: 208000, original: null, discount: null, ph: 3, icon: "fa-snowflake" },
+    { brand: "RUFFWEAR", name: "팔리세이드 슬립 판초 (2026)",         price: 168000, original: null, discount: null, ph: 4, icon: "fa-cloud-rain" },
+    { brand: "RUFFWEAR", name: "선 샤워 커버올 레인 슈트 (2025FW)",   price: 164000, original: null, discount: null, ph: 5, icon: "fa-umbrella" },
+    { brand: "RUFFWEAR", name: "릿지라인 리드줄 (2026)",              price: 106000, original: null, discount: null, ph: 6, icon: "fa-link" },
+    { brand: "RUFFWEAR", name: "클라이메이트 체인저 재킷 (2025FW)",   price: 104000, original: null, discount: null, ph: 1, icon: "fa-shirt" },
+    { brand: "RUFFWEAR", name: "히치 하이커 리드줄 (2026)",            price: 98000,  original: null, discount: null, ph: 2, icon: "fa-link" },
+    { brand: "RUFFWEAR", name: "프론트 레인지 플렉스 하네스 (2026)",  price: 92000,  original: null, discount: null, ph: 3, icon: "fa-medal" },
+    { brand: "RUFFWEAR", name: "클라이메이트 체인저 베스트 (2025FW)", price: 89000,  original: null, discount: null, ph: 4, icon: "fa-shirt" },
+    { brand: "RUFFWEAR", name: "릿지라인 반려견 슈즈 (2026)",          price: 89000,  original: null, discount: null, ph: 5, icon: "fa-shoe-prints" },
+    { brand: "RUFFWEAR", name: "릿지라인 목줄 (2026)",                 price: 76000,  original: null, discount: null, ph: 6, icon: "fa-circle-nodes" },
 ];
 
 /** 가격 천단위 콤마 포맷 */
