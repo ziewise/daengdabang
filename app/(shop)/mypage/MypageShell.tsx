@@ -23,23 +23,23 @@ export default function MypageShell({
 
     // hydrate 전: 깜빡임 방지용 빈 영역 (헤더·푸터는 (shop) layout 에서 이미 노출)
     if (!hydrated) {
-        return <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-8 md:py-10 min-h-[60vh]" />;
+        return <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6 py-8 md:py-10 min-h-[60vh]" />;
     }
 
     if (!isLoggedIn) {
         return (
-            <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-6 md:py-10">
+            <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6 py-6 md:py-10">
                 <MypageGuestGate />
             </div>
         );
     }
 
     return (
-        <div className="max-w-[1280px] mx-auto px-4 md:px-6 py-6 md:py-10">
+        <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6 py-6 md:py-10">
             <MypageHello />
             <div className="grid md:grid-cols-[240px_1fr] gap-4 md:gap-6 items-start">
                 <MypageSidebar />
-                <section className="glass-card rounded-2xl p-5 md:p-7 min-h-[400px] md:min-h-[500px]">
+                <section className="glass-card rounded-2xl p-5 md:p-7 min-h-[400px] md:min-h-[560px]">
                     {children}
                 </section>
             </div>
