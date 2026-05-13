@@ -62,8 +62,12 @@ export default function PetlensModal({ open, onClose }: Props) {
     }, [open, onClose]);
 
     // 모달 닫힐 때 상태 reset (재오픈 시 처음부터)
+    // — 외부 prop 에 따른 정당한 상태 sync 패턴
     useEffect(() => {
-        if (!open) reset();
+        if (!open) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            reset();
+        }
     }, [open, reset]);
 
     /** 분석 시작 — 가짜 데이터 + 결과 저장 */

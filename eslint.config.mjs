@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 마이그레이션 참고용 정적 코드 — 빌드에 포함되지 않으므로 lint 도 제외
+    "_legacy/**",
   ]),
 ]);
 

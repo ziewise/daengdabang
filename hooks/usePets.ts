@@ -1,87 +1,64 @@
 /**
  * hooks/usePets — 회원의 펫 목록 + CRUD
  * ---------------------------------------------------------------------
- * 다른 탭/페이지에서 변경 시 storage 이벤트로 자동 동기화.
+ * useSyncExternalStore — 다른 탭/페이지의 localStorage 변경 자동 동기화.
+ * 같은 탭에서 add/update/remove 후엔 dispatchEvent 로 강제 알림.
  */
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import { petsStorage, onStorageChange, pendingPetStorage } from "@/lib/storage";
+import { useSyncExternalStore } from "react";
+import { petsStorage, pendingPetStorage, snapshots, subscribeStorage } from "@/lib/storage";
 import type { PetProfile } from "@/lib/types";
 
+function notify(key: string) {
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new StorageEvent("storage", { key }));
+    }
+}
+
+const subscribePets = (cb: () => void) => subscribeStorage("PETS", cb);
+const subscribePending = (cb: () => void) => subscribeStorage("PET_PENDING", cb);
+const getServerPetsSnapshot = (): PetProfile[] => [];
+const getServerPendingSnapshot = (): PetProfile | null => null;
+
 export function usePets() {
-    const [pets, setPets] = useState<PetProfile[]>([]);
-    const [hydrated, setHydrated] = useState(false);
+    const pets = useSyncExternalStore(subscribePets, snapshots.pets, getServerPetsSnapshot);
+    const hydrated = typeof window !== "undefined";
 
-    const reload = useCallback(() => {
-        setPets(petsStorage.list());
-    }, []);
-
-    useEffect(() => {
-        reload();
-        setHydrated(true);
-        const unsubscribe = onStorageChange("PETS", reload);
-        return unsubscribe;
-    }, [reload]);
-
-    /** 펫 추가/덮어쓰기 (같은 id 면 갱신) */
-    const add = useCallback(
-        (pet: PetProfile) => {
-            petsStorage.add(pet);
-            reload();
-        },
-        [reload]
-    );
-
-    /** 부분 업데이트 (이름 변경 등) */
-    const update = useCallback(
-        (id: string, patch: Partial<PetProfile>) => {
-            petsStorage.update(id, patch);
-            reload();
-        },
-        [reload]
-    );
-
-    /** 삭제 */
-    const remove = useCallback(
-        (id: string) => {
-            petsStorage.remove(id);
-            reload();
-        },
-        [reload]
-    );
-
-    return {
-        pets,
-        hydrated,
-        add,
-        update,
-        remove,
+    const add = (pet: PetProfile) => {
+        petsStorage.add(pet);
+        notify("daengdabang_pets");
     };
+    const update = (id: string, patch: Partial<PetProfile>) => {
+        petsStorage.update(id, patch);
+        notify("daengdabang_pets");
+    };
+    const remove = (id: string) => {
+        petsStorage.remove(id);
+        notify("daengdabang_pets");
+    };
+
+    return { pets, hydrated, add, update, remove };
 }
 
 /**
  * 비회원 임시 펫 저장/조회 — 펫렌즈 모달이 사용.
  */
 export function usePendingPet() {
-    const [pending, setPending] = useState<PetProfile | null>(null);
-
-    useEffect(() => {
-        setPending(pendingPetStorage.get());
-        const unsubscribe = onStorageChange("PET_PENDING", () =>
-            setPending(pendingPetStorage.get())
-        );
-        return unsubscribe;
-    }, []);
+    const pending = useSyncExternalStore(
+        subscribePending,
+        snapshots.pendingPet,
+        getServerPendingSnapshot
+    );
 
     return {
         pending,
         set: (pet: PetProfile) => {
             pendingPetStorage.set(pet);
-            setPending(pet);
+            notify("daengdabang_pet_pending");
         },
         clear: () => {
             pendingPetStorage.clear();
-            setPending(null);
+            notify("daengdabang_pet_pending");
         },
     };
 }

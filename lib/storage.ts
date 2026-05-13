@@ -133,3 +133,38 @@ export function onStorageChange(key: StorageKey, handler: () => void): () => voi
     window.addEventListener("storage", listener);
     return () => window.removeEventListener("storage", listener);
 }
+
+// ============ useSyncExternalStore 헬퍼 ============
+/**
+ * React 의 useSyncExternalStore 는 getSnapshot 이 매 호출마다 같은 reference 를
+ * 반환해야 한다 (변경 없을 때). JSON.parse 는 매번 새 객체라 캐시 필요.
+ *
+ * raw string 을 비교해서 같으면 캐시된 파싱 결과를 그대로 반환.
+ */
+type SnapshotCache<T> = { raw: string | null; parsed: T };
+function makeSnapshot<T>(key: string, fallback: T): () => T {
+    const cache: SnapshotCache<T> = { raw: null, parsed: fallback };
+    return () => {
+        if (!isClient()) return fallback;
+        const raw = window.localStorage.getItem(key);
+        if (raw === cache.raw) return cache.parsed;
+        cache.raw = raw;
+        try {
+            cache.parsed = raw === null ? fallback : JSON.parse(raw);
+        } catch {
+            cache.parsed = fallback;
+        }
+        return cache.parsed;
+    };
+}
+
+export const snapshots = {
+    auth:        makeSnapshot<import("./types").LoginState | null>(KEYS.AUTH, null),
+    pets:        makeSnapshot<import("./types").PetProfile[]>(KEYS.PETS, []),
+    pendingPet:  makeSnapshot<import("./types").PetProfile | null>(KEYS.PET_PENDING, null),
+};
+
+/** useSyncExternalStore 의 subscribe 헬퍼 — storage 이벤트 구독 */
+export function subscribeStorage(key: StorageKey, callback: () => void): () => void {
+    return onStorageChange(key, callback);
+}

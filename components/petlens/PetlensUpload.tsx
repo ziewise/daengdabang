@@ -135,7 +135,7 @@ export default function PetlensUpload({
                 <div className="mb-4 p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 text-xs leading-relaxed">
                     <strong className="font-extrabold block mb-1">📷 카메라 사용 불가</strong>
                     카메라 권한이 거부됐거나 HTTPS 환경이 아니에요.<br />
-                    <span className="text-neutral-500">모바일에서 LAN IP 로 접속하면 카메라가 차단돼요. "불러오기"로 진행해주세요.</span>
+                    <span className="text-neutral-500">모바일에서 LAN IP 로 접속하면 카메라가 차단돼요. &ldquo;불러오기&rdquo;로 진행해주세요.</span>
                 </div>
             )}
 

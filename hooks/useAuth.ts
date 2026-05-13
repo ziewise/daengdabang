@@ -1,43 +1,45 @@
 /**
  * hooks/useAuth — 클라이언트 인증 상태 hook
  * ---------------------------------------------------------------------
- * localStorage 변화 (다른 탭/페이지)도 storage 이벤트로 자동 반영.
+ * useSyncExternalStore 패턴 — localStorage 변화가 자동 sync.
+ * SSR 시점엔 null, 마운트 후 실제 값으로 hydrate.
  */
 "use client";
-import { useEffect, useState } from "react";
-import { authStorage, migratePendingPet, onStorageChange } from "@/lib/storage";
-import type { LoginState, AuthProvider } from "@/lib/types";
+import { useSyncExternalStore } from "react";
+import { authStorage, migratePendingPet, snapshots, subscribeStorage } from "@/lib/storage";
+import type { AuthProvider } from "@/lib/types";
+
+const subscribe = (cb: () => void) => subscribeStorage("AUTH", cb);
+const getServerSnapshot = () => null;
 
 export function useAuth() {
-    const [state, setState] = useState<LoginState | null>(null);
-    const [hydrated, setHydrated] = useState(false);
-
-    // 마운트 시 로컬 상태 동기화 (SSR 직후 hydrate)
-    useEffect(() => {
-        setState(authStorage.get());
-        setHydrated(true);
-        const unsubscribe = onStorageChange("AUTH", () => {
-            setState(authStorage.get());
-        });
-        return unsubscribe;
-    }, []);
+    const state = useSyncExternalStore(subscribe, snapshots.auth, getServerSnapshot);
+    // hydrated — useSyncExternalStore 자체가 SSR/CSR 불일치 처리하지만,
+    // 컴포넌트에서 "첫 paint vs mount 후" 구분이 필요할 때 사용.
+    // CSR 에선 마운트 시점부터 항상 true, SSR snapshot 은 null 반환하므로 hydration 안전.
+    const hydrated = typeof window !== "undefined";
 
     const login = (provider: AuthProvider = "email") => {
-        const next: LoginState = { provider, ts: Date.now() };
-        authStorage.set(next);
-        migratePendingPet();   // 비회원 분석 결과 자동 이관
-        setState(next);
+        authStorage.set({ provider, ts: Date.now() });
+        migratePendingPet();
+        // useSyncExternalStore 가 storage 이벤트로 자동 갱신 — 다만 같은 탭은
+        // storage 이벤트 발화 안 함. 강제 갱신 위해 dispatchEvent.
+        if (typeof window !== "undefined") {
+            window.dispatchEvent(new StorageEvent("storage", { key: "daengdabang_logged_in" }));
+        }
     };
 
     const logout = () => {
         authStorage.clear();
-        setState(null);
+        if (typeof window !== "undefined") {
+            window.dispatchEvent(new StorageEvent("storage", { key: "daengdabang_logged_in" }));
+        }
     };
 
     return {
         state,
         isLoggedIn: !!state,
-        hydrated,            // SSR 깜빡임 방지 — 첫 paint 에서 false
+        hydrated,
         login,
         logout,
     };

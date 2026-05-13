@@ -6,7 +6,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { POPULAR_KEYWORDS } from "@/lib/menu-data";
 import { searchRecent } from "@/lib/storage";
 
@@ -24,6 +23,8 @@ export default function SearchModal({ open, onClose }: Props) {
     useEffect(() => {
         if (!open) return;
         document.body.style.overflow = "hidden";
+        // 모달 열림 → localStorage 의 최신 검색어 sync (외부 시스템 sync 패턴)
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRecent(searchRecent.list());
         setTimeout(() => inputRef.current?.focus(), 50);
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();

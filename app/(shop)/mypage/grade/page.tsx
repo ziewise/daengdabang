@@ -72,7 +72,7 @@ function StatBox({ big, label }: { big: string; label: string }) {
 
 /* ============ 다음 등급 진행률 ============ */
 function NextProgressBlock({
-    current, next, spend, points,
+    next, spend, points,
 }: { current: GradeDefinition; next: GradeDefinition; spend: number; points: number }) {
     const spendPct = Math.min(100, (spend / next.requireSpend) * 100);
     const pointsPct = Math.min(100, (points / next.requirePoints) * 100);
