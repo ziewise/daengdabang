@@ -189,14 +189,16 @@ export default function Header() {
                             </span>
                         </Link>
 
-                        {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지) */}
+                        {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지)
+                            모바일에선 아이콘만, 데스크탑 (sm+) 에선 텍스트 포함 */}
                         {hydrated && (
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/login"}
-                                className="hidden sm:inline-flex items-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
+                                className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
+                                aria-label={isLoggedIn ? "마이페이지" : "로그인"}
                             >
                                 <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
-                                <span>{isLoggedIn ? "마이페이지" : "로그인"}</span>
+                                <span className="hidden sm:inline">{isLoggedIn ? "마이페이지" : "로그인"}</span>
                             </Link>
                         )}
 

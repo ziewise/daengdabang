@@ -9,6 +9,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import styles from "./hero.module.css";
 
 export default function HeroSection() {
     const rootRef = useRef<HTMLElement>(null);
@@ -46,8 +47,7 @@ export default function HeroSection() {
                 muted
                 loop
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ objectPosition: "77% center" }}
+                className={`absolute inset-0 w-full h-full object-cover ${styles.heroVideo}`}
             />
 
             {/* 어두운 그라데이션 오버레이 — 텍스트 가독성 */}
