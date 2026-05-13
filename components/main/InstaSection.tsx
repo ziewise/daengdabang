@@ -27,7 +27,7 @@ const INSTA_URL = "https://instagram.com/daengdabang";
 
 export default function InstaSection() {
     return (
-        <section id="insta" className="py-12 md:py-20">
+        <section id="insta" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
                 {/* 헤드 */}
                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6 md:mb-8">

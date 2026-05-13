@@ -28,7 +28,7 @@ export default function BestSection() {
     };
 
     return (
-        <section id="best" className="py-16 md:py-24">
+        <section id="best" className="py-10 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
                 {/* 섹션 헤더 — 좌측 타이틀 / 우측 탭 (모바일에선 세로) */}
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 md:mb-8">

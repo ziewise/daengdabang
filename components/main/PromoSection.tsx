@@ -53,7 +53,7 @@ const TILES: PromoTile[] = [
 
 export default function PromoSection() {
     return (
-        <section id="promo" className="py-12 md:py-20">
+        <section id="promo" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
                 <div className="mb-6 md:mb-8">
                     <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">

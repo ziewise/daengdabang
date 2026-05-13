@@ -26,7 +26,7 @@ const SIMPLE_TEXT_THRESHOLD = 80;
 
 export default function ReviewSection() {
     return (
-        <section id="review" className="py-12 md:py-20">
+        <section id="review" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
                 {/* 헤드 + 통계 */}
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-8">

@@ -139,7 +139,7 @@ export default function NewArrivalsSection() {
     ];
 
     return (
-        <section id="new" className="py-12 md:py-20">
+        <section id="new" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
                 {/* 섹션 헤드 + 좌우 버튼 */}
                 <div className="flex items-end justify-between mb-6 md:mb-8">
@@ -217,7 +217,7 @@ export default function NewArrivalsSection() {
                         href="#new-all"
                         className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
-                        신상품 모두 보기
+                        신상품 보기
                         <i className="fa-solid fa-arrow-right text-[10px]" />
                     </a>
                 </div>
