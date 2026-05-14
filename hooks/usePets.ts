@@ -9,11 +9,8 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { petsStorage, pendingPetStorage, snapshots, subscribeStorage } from "@/lib/storage";
 import type { PetProfile } from "@/lib/types";
 
-function notify(key: string) {
-    if (typeof window !== "undefined") {
-        window.dispatchEvent(new StorageEvent("storage", { key }));
-    }
-}
+// storage.ts 의 writeJSON/removeKey 가 같은 탭 구독자에게 자동 통지하므로
+// 별도의 dispatchEvent 호출 불필요.
 
 const subscribePets = (cb: () => void) => subscribeStorage("PETS", cb);
 const subscribePending = (cb: () => void) => subscribeStorage("PET_PENDING", cb);
@@ -35,15 +32,12 @@ export function usePets() {
 
     const add = (pet: PetProfile) => {
         petsStorage.add(pet);
-        notify("daengdabang_pets");
     };
     const update = (id: string, patch: Partial<PetProfile>) => {
         petsStorage.update(id, patch);
-        notify("daengdabang_pets");
     };
     const remove = (id: string) => {
         petsStorage.remove(id);
-        notify("daengdabang_pets");
     };
 
     return { pets, hydrated, add, update, remove };
@@ -63,11 +57,9 @@ export function usePendingPet() {
         pending,
         set: (pet: PetProfile) => {
             pendingPetStorage.set(pet);
-            notify("daengdabang_pet_pending");
         },
         clear: () => {
             pendingPetStorage.clear();
-            notify("daengdabang_pet_pending");
         },
     };
 }

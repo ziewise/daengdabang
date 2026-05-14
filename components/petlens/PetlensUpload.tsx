@@ -14,6 +14,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import type { PetlensInputMode, PetlensSlot } from "@/lib/types";
+import { compressDataUrl } from "@/lib/image-compress";
 import { SLOT_CONFIG } from "./petlens-data";
 import styles from "./petlens.module.css";
 
@@ -124,8 +125,9 @@ export default function PetlensUpload({
      *   1) 영상을 화면 크기 캔버스에 object-fit:cover 동일하게 렌더링
      *   2) 가이드의 화면 좌표 그대로 사용해서 잘라내기
      *   source 좌표계 변환을 거치지 않아 살짝의 좌표 어긋남이 없음.
+     *   compressDataUrl 호출을 위해 async.
      */
-    const capture = () => {
+    const capture = async () => {
         const video = videoRef.current;
         const guide = guideRef.current;
         if (!video || !guide || !video.videoWidth) return;
@@ -179,8 +181,10 @@ export default function PetlensUpload({
         }
 
         const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        // localStorage 용량 절약 — 추가 압축 (512px / 0.75q)
+        const compressed = await compressDataUrl(dataUrl, { maxSize: 512, quality: 0.75 });
         const next = [...photos];
-        next[step] = dataUrl;
+        next[step] = compressed;
         setPhotos(next);
         stopCamera();
     };
@@ -241,7 +245,7 @@ export default function PetlensUpload({
      *     drawImage 는 CSS object-fit 을 무시하고 원본을 destination 박스에 강제 fill 하므로
      *     letterbox 보정 없이 그리면 비율 깨짐(세로 사진이 가로 가이드에 늘어남).
      *     → 실제 이미지 콘텐츠 영역(visibleW/H)을 계산해서 그 영역에만 그려야 함. */
-    const applyAdjust = () => {
+    const applyAdjust = async () => {
         const img = editImgRef.current;
         const guide = cropGuideRef.current;
         if (!img || !guide || !img.naturalWidth) return;
@@ -298,8 +302,10 @@ export default function PetlensUpload({
         if (isCircle) ctx.restore();
 
         const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+        // localStorage 용량 절약 — 추가 압축
+        const compressed = await compressDataUrl(dataUrl, { maxSize: 512, quality: 0.75 });
         const next = [...photos];
-        next[step] = dataUrl;
+        next[step] = compressed;
         setPhotos(next);
         setEditingImage(null);
         setTransform({ x: 0, y: 0, scale: 1 });

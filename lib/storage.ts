@@ -28,19 +28,89 @@ function readJSON<T>(key: string, fallback: T): T {
     }
 }
 
-/** localStorage 에 JSON 안전하게 쓰기 */
-function writeJSON(key: string, value: unknown): void {
-    if (!isClient()) return;
+/** localStorage 에 JSON 안전하게 쓰기 + 같은 탭 구독자 즉시 통지
+ *  quota 초과 시 PETS 의 경우 자동 복구 (오래된 analyzed 펫 삭제 후 재시도)
+ */
+function writeJSON(key: string, value: unknown): boolean {
+    if (!isClient()) return false;
     try {
-        window.localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-        /* 용량 초과 등은 silent fail */
+        const serialized = JSON.stringify(value);
+        window.localStorage.setItem(key, serialized);
+        notifyChange(key);
+        return true;
+    } catch (err) {
+        // quota 초과 추정 — PETS 키면 자동 복구 시도
+        const isQuota = err instanceof Error && /quota|storage/i.test(err.name + err.message);
+        if (isQuota && key === KEYS.PETS && Array.isArray(value)) {
+            console.warn("[storage.writeJSON] quota exceeded — attempting auto-cleanup");
+            const reclaimed = reclaimPetsSpace();
+            if (reclaimed) {
+                // 재시도 (현재 value 는 이미 가지고 있으니 그대로 setItem)
+                try {
+                    window.localStorage.setItem(key, JSON.stringify(value));
+                    notifyChange(key);
+                    return true;
+                } catch (err2) {
+                    console.error("[storage.writeJSON] retry FAILED after cleanup", err2);
+                }
+            }
+        }
+        console.error("[storage.writeJSON] FAILED", { key, err });
+        return false;
+    }
+}
+
+/**
+ * PETS 용 공간 회수 — quota 초과 시 호출.
+ * 순서: 1) analyzed 펫의 photos 잘라내기 → 2) 가장 오래된 analyzed 펫 삭제.
+ * 한 번이라도 정리되면 true 반환.
+ */
+function reclaimPetsSpace(): boolean {
+    try {
+        const raw = window.localStorage.getItem(KEYS.PETS);
+        if (!raw) return false;
+        const list = JSON.parse(raw) as PetProfile[];
+        if (!Array.isArray(list) || list.length === 0) return false;
+
+        // 1차: analyzed 펫의 photos 배열 비우기 (avatar 는 유지 — UI 썸네일용)
+        let changed = false;
+        for (const p of list) {
+            const isAnalyzed = p.source !== "registered";
+            if (isAnalyzed && Array.isArray(p.photos) && p.photos.length > 0) {
+                p.photos = [];
+                changed = true;
+            }
+        }
+        if (changed) {
+            try {
+                window.localStorage.setItem(KEYS.PETS, JSON.stringify(list));
+                return true;
+            } catch {
+                /* 1차로 부족 → 2차 진행 */
+            }
+        }
+
+        // 2차: 가장 오래된 analyzed 펫부터 삭제 (절반 정도)
+        const analyzed = list
+            .map((p, i) => ({ p, i }))
+            .filter((x) => x.p.source !== "registered")
+            .sort((a, b) => (a.p.analyzedAt ?? 0) - (b.p.analyzedAt ?? 0));
+        if (analyzed.length === 0) return changed;
+        const removeCount = Math.max(1, Math.ceil(analyzed.length / 2));
+        const removeIds = new Set(analyzed.slice(0, removeCount).map((x) => x.p.id));
+        const filtered = list.filter((p) => !removeIds.has(p.id));
+        window.localStorage.setItem(KEYS.PETS, JSON.stringify(filtered));
+        return true;
+    } catch (err) {
+        console.error("[reclaimPetsSpace] failed", err);
+        return false;
     }
 }
 
 function removeKey(key: string): void {
     if (!isClient()) return;
     window.localStorage.removeItem(key);
+    notifyChange(key);
 }
 
 // ============ 인증 ============
@@ -122,16 +192,40 @@ export const searchRecent = {
     clear: () => removeKey(KEYS.SEARCH_RECENT),
 };
 
-// ============ storage 이벤트 구독 (다른 탭/페이지에서 변경 시) ============
+// ============ storage 변경 구독 — 같은 탭 + 다른 탭 모두 ============
 type StorageKey = keyof typeof KEYS;
+type StorageListener = () => void;
 
-export function onStorageChange(key: StorageKey, handler: () => void): () => void {
+/** 같은 탭 내 구독자 — Set 으로 직접 통지 (DOM dispatchEvent 비신뢰성 회피) */
+const listenersByKey = new Map<string, Set<StorageListener>>();
+
+/** 같은 탭에서 writeJSON/removeKey 호출 시 즉시 호출됨 (writeJSON 내부에서 사용) */
+function notifyChange(rawKey: string) {
+    const set = listenersByKey.get(rawKey);
+    if (!set) return;
+    // 반복 중 unsubscribe 호출되어도 안전하도록 배열 복사 후 순회
+    for (const cb of [...set]) cb();
+}
+
+// 다른 탭에서의 storage 변경 — 브라우저가 자동 발화하는 storage 이벤트
+if (typeof window !== "undefined") {
+    window.addEventListener("storage", (e) => {
+        if (e.key) notifyChange(e.key);
+    });
+}
+
+export function onStorageChange(key: StorageKey, handler: StorageListener): () => void {
     if (!isClient()) return () => {};
-    const listener = (e: StorageEvent) => {
-        if (e.key === KEYS[key]) handler();
+    const rawKey = KEYS[key];
+    let set = listenersByKey.get(rawKey);
+    if (!set) {
+        set = new Set();
+        listenersByKey.set(rawKey, set);
+    }
+    set.add(handler);
+    return () => {
+        set!.delete(handler);
     };
-    window.addEventListener("storage", listener);
-    return () => window.removeEventListener("storage", listener);
 }
 
 // ============ useSyncExternalStore 헬퍼 ============

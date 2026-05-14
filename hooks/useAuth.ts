@@ -23,21 +23,15 @@ export function useAuth() {
         setHydrated(true);
     }, []);
 
+    // storage.ts 의 writeJSON/removeKey 가 같은 탭 구독자에게 자동 통지하므로
+    // 별도의 dispatchEvent 호출 불필요.
     const login = (provider: AuthProvider = "email") => {
         authStorage.set({ provider, ts: Date.now() });
         migratePendingPet();
-        // useSyncExternalStore 가 storage 이벤트로 자동 갱신 — 다만 같은 탭은
-        // storage 이벤트 발화 안 함. 강제 갱신 위해 dispatchEvent.
-        if (typeof window !== "undefined") {
-            window.dispatchEvent(new StorageEvent("storage", { key: "daengdabang_logged_in" }));
-        }
     };
 
     const logout = () => {
         authStorage.clear();
-        if (typeof window !== "undefined") {
-            window.dispatchEvent(new StorageEvent("storage", { key: "daengdabang_logged_in" }));
-        }
     };
 
     return {

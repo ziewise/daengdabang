@@ -12,6 +12,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePets } from "@/hooks/usePets";
 import { MOCK_PETS } from "@/lib/mypage-data";
+import { compressDataUrl } from "@/lib/image-compress";
 import type { PetProfile } from "@/lib/types";
 
 interface Props {
@@ -32,7 +33,7 @@ function ensureOption(list: string[], value: string | undefined): string[] {
 }
 
 export default function PetRegisterModal({ open, onClose, pet }: Props) {
-    const { add, update } = usePets();
+    const { pets: allPets, add, update } = usePets();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const isEdit = !!pet;
 
@@ -91,7 +92,12 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
         const file = e.target.files?.[0];
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = (ev) => setAvatar(ev.target?.result as string);
+        reader.onload = async (ev) => {
+            const raw = ev.target?.result as string;
+            // localStorage 용량 절약 — 512px JPEG 0.8 로 압축
+            const compressed = await compressDataUrl(raw, { maxSize: 512, quality: 0.8 });
+            setAvatar(compressed);
+        };
         reader.readAsDataURL(file);
         e.target.value = "";
     };
@@ -150,7 +156,19 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                 analyzedAt: Date.now(),
                 source: "registered",
             };
+
+            // ⚠️ 데모 펫(mock) 보존 처리:
+            // 등록된 펫이 0개일 때만 마이페이지에 mock 3마리가 fallback 으로 표시됨.
+            // 신규 1개 등록하면 fallback 해제로 mock 들이 갑자기 사라져서
+            // 사용자에게는 "등록 안 됨" / "mock 이 제거됨" 으로 보임.
+            // → 첫 등록 시 mock 들도 함께 registered 로 promote 해서 자연스럽게 누적되게 함.
+            const hadAnyRegistered = allPets.some((p) => p.source === "registered");
             add(profile);
+            if (!hadAnyRegistered) {
+                for (const m of MOCK_PETS) {
+                    add({ ...m, source: "registered" });
+                }
+            }
         }
         // 약간의 딜레이 후 닫기 (저장됨 피드백)
         setTimeout(() => {
