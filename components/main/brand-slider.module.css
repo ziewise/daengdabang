@@ -17,7 +17,9 @@
 }
 @media (max-width: 768px) {
     .wrap {
-        aspect-ratio: 4 / 5;       /* 모바일은 그대로 세로형 */
+        /* 4/5 (세로형) → 5/3 (가로 cinematic) — 세로 사이즈 대폭 축소
+           360w 기준 약 450px → 216px */
+        aspect-ratio: 5 / 3;
         max-height: none;
         border-radius: 16px;
     }
@@ -30,46 +32,52 @@
     transition: opacity 0.8s ease-in-out;
 }
 .slide.active { opacity: 1; }
+/* .slide 내부에 Next.js Image (fill + object-cover) 가 들어가 실제 브랜드 사진 노출 */
 
-.ruff1 {
-    background:
-        radial-gradient(circle at 30% 35%, rgba(255,255,255,0.18), transparent 55%),
-        linear-gradient(135deg, #0f172a 0%, #1e3a8a 35%, #3b82f6 75%, #60a5fa 100%);
-}
-.ruff2 {
-    background:
-        radial-gradient(circle at 70% 60%, rgba(255,255,255,0.15), transparent 55%),
-        linear-gradient(135deg, #0c4a6e 0%, #1e40af 40%, #2563eb 70%, #06b6d4 100%);
-}
-.rex1 {
-    background:
-        radial-gradient(circle at 25% 50%, rgba(255,255,255,0.20), transparent 55%),
-        linear-gradient(135deg, #134e4a 0%, #0f766e 35%, #14b8a6 70%, #5eead4 100%);
-}
-.rex2 {
-    background:
-        radial-gradient(circle at 75% 30%, rgba(255,255,255,0.15), transparent 55%),
-        linear-gradient(135deg, #064e3b 0%, #0d9488 40%, #2dd4bf 75%, #99f6e4 100%);
-}
-
-/* 텍스트 가독성 위한 다크 그라데이션 오버레이 */
+/* 텍스트 가독성 위한 다크 그라데이션 오버레이
+   브랜드별로 텍스트 위치가 좌/우 다르므로 어두운 쪽도 두 종류 */
 .overlay {
     position: absolute;
     inset: 0;
+    pointer-events: none;
+}
+
+/* Ruffwear — 텍스트가 우측이므로 우측을 어둡게 (gradient: to left = 우→좌 어두움 감소) */
+.overlayRight {
+    composes: overlay;
+    background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.25) 45%,
+        transparent 70%
+    );
+}
+
+/* Rex Specs — 텍스트가 좌측이므로 좌측을 어둡게 (gradient: to right = 좌→우 어두움 감소) */
+.overlayLeft {
+    composes: overlay;
     background: linear-gradient(
         to right,
         rgba(0, 0, 0, 0.55) 0%,
         rgba(0, 0, 0, 0.25) 45%,
         transparent 70%
     );
-    pointer-events: none;
 }
+
 @media (max-width: 768px) {
-    .overlay {
+    .overlayRight {
         background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, 0.65) 0%,
-            rgba(0, 0, 0, 0.30) 50%,
+            to left,
+            rgba(0, 0, 0, 0.60) 0%,
+            rgba(0, 0, 0, 0.25) 50%,
+            transparent 80%
+        );
+    }
+    .overlayLeft {
+        background: linear-gradient(
+            to right,
+            rgba(0, 0, 0, 0.60) 0%,
+            rgba(0, 0, 0, 0.25) 50%,
             transparent 80%
         );
     }

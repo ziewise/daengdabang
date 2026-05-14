@@ -18,28 +18,25 @@ export default function IntroPage() {
     const router = useRouter();
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    /** 메인 페이지로 이동 (영상 종료 또는 사용자 클릭) */
+    // 영상 자동 재생 + 끝나면 자동으로 메인 이동
+    useEffect(() => {
+        const v = videoRef.current;
+        if (!v) return;
+        const playPromise = v.play();
+        if (playPromise !== undefined) playPromise.catch(() => {});
+        const onEnded = () => router.push("/main");
+        v.addEventListener("ended", onEnded);
+        return () => v.removeEventListener("ended", onEnded);
+    }, [router]);
+
     const goToMain = () => {
         videoRef.current?.pause();
         router.push("/main");
     };
 
-    // 영상 자동 재생 + 끝나면 자동 이동
-    useEffect(() => {
-        const v = videoRef.current;
-        if (!v) return;
-        const playPromise = v.play();
-        // 모바일 autoplay 차단되어도 무시 (사용자가 클릭으로 진입 가능)
-        if (playPromise !== undefined) playPromise.catch(() => {});
-        const onEnded = () => goToMain();
-        v.addEventListener("ended", onEnded);
-        return () => v.removeEventListener("ended", onEnded);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
         <>
-            {/* 좌상단 시그니처 로고 (영상 위에 오버레이) */}
+            {/* 좌상단 시그니처 로고 */}
             <div className={styles.signatureLogo}>
                 <div className={styles.logoWrapper}>
                     <Image
@@ -55,12 +52,15 @@ export default function IntroPage() {
                 </div>
             </div>
 
-            {/* 영상 풀스크린 — 클릭 또는 종료 시 /main */}
-            <div
+            {/* 영상 풀스크린 — 순수 <a> 태그로 감싸 hydration 실패 시에도 네이티브 네비게이션 작동
+                onClick: 비디오 일시정지 + 클라이언트 라우팅 (성공 시), 실패해도 href 가 폴백 */}
+            <a
+                href="/main"
                 className={styles.splash}
-                onClick={goToMain}
-                role="button"
-                tabIndex={0}
+                onClick={(e) => {
+                    e.preventDefault();
+                    goToMain();
+                }}
                 aria-label="메인으로 이동"
             >
                 <video
@@ -74,7 +74,7 @@ export default function IntroPage() {
                     화면을 클릭하면 메인으로 이동합니다{" "}
                     <i className="fa-solid fa-angles-right ml-1" />
                 </div>
-            </div>
+            </a>
         </>
     );
 }

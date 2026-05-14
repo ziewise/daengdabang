@@ -25,6 +25,7 @@ const geistMono = Geist_Mono({
     display: "swap",
 });
 
+
 const wantedSans = localFont({
     src: "../public/fonts/WantedSansVariable.woff2",
     variable: "--font-wanted-sans",
@@ -65,3 +66,4 @@ export default function RootLayout({
         </html>
     );
 }
+

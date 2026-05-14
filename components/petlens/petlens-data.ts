@@ -45,7 +45,15 @@ export const SLOT_CONFIG: Record<
 
 export interface MockResult {
     breed: { primary: string; confidence: number };
+    /** 견종 평균 — 일반적인 그 견종의 특성 */
     body: { size: string; weight: string; coat: string; activity: string };
+    /** AI 가 업로드된 사진에서 직접 인식한 정보
+     *  사진만으로 신뢰 가능한 두 항목만 노출 — 추정 체중·사진상 모질.
+     *  연령/건강은 단순 사진으론 부정확해서 제외. */
+    photoAnalysis: {
+        estimatedWeight: string;
+        observedCoat: string;
+    };
 }
 
 export const MOCK_RESULT: MockResult = {
@@ -55,6 +63,10 @@ export const MOCK_RESULT: MockResult = {
         weight: "25~30kg",
         coat: "장모·이중모",
         activity: "활동량 높음",
+    },
+    photoAnalysis: {
+        estimatedWeight: "약 27kg",
+        observedCoat: "장모 · 황금색 윤기",
     },
 };
 

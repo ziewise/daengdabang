@@ -168,19 +168,21 @@ export default function Header() {
                         </NavDropdown>
                     </nav>
 
-                    {/* 우측 유틸리티 */}
+                    {/* 우측 유틸리티
+                        모바일(<lg): 햄버거만 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
+                        데스크탑(lg+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
                     <div className="flex items-center gap-2">
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
-                            className="w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="hidden lg:flex w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label="검색"
                         >
                             <i className="fa-solid fa-magnifying-glass" />
                         </button>
                         <Link
                             href="#cart"
-                            className="relative w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="hidden lg:flex relative w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label="장바구니"
                         >
                             <i className="fa-solid fa-bag-shopping" />
@@ -189,16 +191,15 @@ export default function Header() {
                             </span>
                         </Link>
 
-                        {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지)
-                            모바일에선 아이콘만, 데스크탑 (sm+) 에선 텍스트 포함 */}
+                        {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지) */}
                         {hydrated && (
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/login"}
-                                className="inline-flex items-center justify-center gap-2 px-3 sm:px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
+                                className="hidden lg:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
                                 aria-label={isLoggedIn ? "마이페이지" : "로그인"}
                             >
                                 <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
-                                <span className="hidden sm:inline">{isLoggedIn ? "마이페이지" : "로그인"}</span>
+                                <span>{isLoggedIn ? "마이페이지" : "로그인"}</span>
                             </Link>
                         )}
 
@@ -232,7 +233,10 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     );
 }
 
-/* ============ 드롭다운 nav 항목 (hover/focus 로 열림) ============ */
+/* ============ 드롭다운 nav 항목 (hover/focus 로 열림) ============
+ * hover bridge — nav 버튼과 드롭다운 카드 사이의 8px 영역도
+ * 동일 wrapper 의 자식으로 두어 마우스가 그 위를 지나도 hover 유지.
+ * (mt-2 margin 대신 pt-2 padding 으로 outer absolute 자체가 영역을 차지) */
 function NavDropdown({
     label,
     open,
@@ -263,10 +267,14 @@ function NavDropdown({
             </button>
             {open && (
                 <div
-                    className={`absolute top-full ${wide ? "left-1/2 -translate-x-1/2" : "left-0"} mt-2 glass-card rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150`}
-                    style={{ background: "rgba(255,255,255,0.95)" }}
+                    className={`absolute top-full ${wide ? "left-1/2 -translate-x-1/2" : "left-0"} pt-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150`}
                 >
-                    {children}
+                    <div
+                        className="glass-card rounded-2xl overflow-hidden"
+                        style={{ background: "rgba(255,255,255,0.95)" }}
+                    >
+                        {children}
+                    </div>
                 </div>
             )}
         </div>

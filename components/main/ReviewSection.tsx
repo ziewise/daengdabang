@@ -45,15 +45,15 @@ export default function ReviewSection() {
                     </div>
                 </div>
 
-                {/* 포토 리뷰 4개 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-4 md:mb-5">
+                {/* 포토 리뷰 4개 — 모바일 2열, 데스크탑 4열 */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 mb-3 md:mb-5">
                     {PHOTO_REVIEWS.map((r, i) => (
                         <PhotoReviewCard key={i} review={r} priority={i === 0} />
                     ))}
                 </div>
 
-                {/* 간단 리뷰 4개 — 컴팩트, 사진 없음 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                {/* 간단 리뷰 4개 — 모바일 2열, 데스크탑 4열 (사진 없음) */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                     {SIMPLE_REVIEWS.map((r, i) => (
                         <SimpleReviewCard key={i} review={r} />
                     ))}
@@ -98,15 +98,15 @@ function PhotoReviewCard({ review, priority }: { review: PhotoReview; priority: 
                     src={review.image}
                     alt={`${review.author}의 리뷰 사진`}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"
                     priority={priority}
                 />
             </div>
-            <div className="p-4">
-                <p className="text-amber-400 text-sm mb-2 tracking-wider">{stars(review.rating)}</p>
+            <div className="p-3 md:p-4">
+                <p className="text-amber-400 text-xs md:text-sm mb-1.5 md:mb-2 tracking-wider">{stars(review.rating)}</p>
                 <p
-                    className={`text-xs md:text-sm text-neutral-700 leading-relaxed ${
+                    className={`text-[11px] md:text-sm text-neutral-700 leading-relaxed ${
                         isLong && !expanded ? "line-clamp-2" : ""
                     }`}
                 >
@@ -116,12 +116,12 @@ function PhotoReviewCard({ review, priority }: { review: PhotoReview; priority: 
                     <button
                         type="button"
                         onClick={() => setExpanded((e) => !e)}
-                        className="mt-1 text-[11px] font-bold text-aurora-indigo hover:underline"
+                        className="mt-1 text-[10px] md:text-[11px] font-bold text-aurora-indigo hover:underline"
                     >
                         {expanded ? "접기" : "더보기"}
                     </button>
                 )}
-                <p className="text-[10px] md:text-[11px] text-neutral-400 mt-3">
+                <p className="text-[10px] md:text-[11px] text-neutral-400 mt-2 md:mt-3 truncate">
                     {review.author} · {review.product}
                 </p>
             </div>
@@ -134,10 +134,10 @@ function SimpleReviewCard({ review }: { review: SimpleReview }) {
     const [expanded, setExpanded] = useState(false);
     const isLong = review.text.length > SIMPLE_TEXT_THRESHOLD;
     return (
-        <article className="bg-white rounded-2xl p-4 shadow-card hover:shadow-hover transition">
-            <p className="text-amber-400 text-sm mb-2 tracking-wider">{stars(review.rating)}</p>
+        <article className="bg-white rounded-2xl p-3 md:p-4 shadow-card hover:shadow-hover transition">
+            <p className="text-amber-400 text-xs md:text-sm mb-1.5 md:mb-2 tracking-wider">{stars(review.rating)}</p>
             <p
-                className={`text-xs md:text-sm text-neutral-700 leading-relaxed ${
+                className={`text-[11px] md:text-sm text-neutral-700 leading-relaxed ${
                     isLong && !expanded ? "line-clamp-2" : ""
                 }`}
             >
@@ -147,12 +147,12 @@ function SimpleReviewCard({ review }: { review: SimpleReview }) {
                 <button
                     type="button"
                     onClick={() => setExpanded((e) => !e)}
-                    className="mt-1 text-[11px] font-bold text-aurora-indigo hover:underline"
+                    className="mt-1 text-[10px] md:text-[11px] font-bold text-aurora-indigo hover:underline"
                 >
                     {expanded ? "접기" : "더보기"}
                 </button>
             )}
-            <p className="text-[10px] md:text-[11px] text-neutral-400 mt-3">
+            <p className="text-[10px] md:text-[11px] text-neutral-400 mt-2 md:mt-3 truncate">
                 {review.author} · {review.product}
             </p>
         </article>

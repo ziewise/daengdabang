@@ -13,6 +13,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
 import { NEW_PRODUCTS, formatKRW } from "@/lib/products";
 import bestStyles from "./best.module.css";
 
@@ -182,19 +183,30 @@ export default function NewArrivalsSection() {
                             data-new-card
                             className="snap-start flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px] block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all"
                         >
-                            <div className={`relative aspect-square ${bestStyles[`ph${p.ph}`]} flex items-center justify-center`}>
-                                <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-aurora-indigo to-aurora-pink text-white text-[10px] font-black tracking-wider">
+                            {/* 이미지 영역 — image 있으면 사진 + 베이지 배경, 없으면 ph 컬러 placeholder + 아이콘 */}
+                            <div className={`relative aspect-square overflow-hidden flex items-center justify-center ${p.image ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}>
+                                {p.image ? (
+                                    <Image
+                                        src={p.image}
+                                        alt={p.name}
+                                        fill
+                                        sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
+                                        className="object-cover"
+                                    />
+                                ) : (
+                                    <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
+                                )}
+                                <span className="absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-full bg-gradient-to-r from-aurora-indigo to-aurora-pink text-white text-[10px] font-black tracking-wider">
                                     NEW
                                 </span>
                                 <button
                                     type="button"
                                     onClick={(e) => e.preventDefault()}
-                                    className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-card flex items-center justify-center"
+                                    className="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-card flex items-center justify-center"
                                     aria-label="찜하기"
                                 >
                                     <i className="fa-regular fa-heart text-neutral-400 text-xs" />
                                 </button>
-                                <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
                             </div>
                             <div className="p-3 md:p-4">
                                 <p className="text-[10px] font-extrabold tracking-wider text-aurora-indigo mb-1">

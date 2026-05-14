@@ -30,33 +30,34 @@ export default function MypageSidebar() {
 
     return (
         <aside className="md:sticky md:top-[calc(var(--header-height)+24px)] md:self-start">
-            <nav className="glass-card rounded-2xl p-3 md:p-4">
-                {/* PC: 세로 / 모바일: 가로 스크롤 */}
-                <ul className="flex md:flex-col md:gap-0.5 gap-1.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-1 px-1">
+            <nav className="glass-card rounded-2xl p-2.5 md:p-4">
+                {/* 모바일: 2 열 그리드 (가로 스크롤 X, 모든 항목 한눈에)
+                    데스크탑: 세로 1 열 리스트 (기존) */}
+                <ul className="grid grid-cols-2 gap-1.5 md:flex md:flex-col md:gap-0.5">
                     {MYPAGE_MENU.map((item) => (
-                        <li key={item.href} className="flex-shrink-0 md:flex-shrink">
+                        <li key={item.href}>
                             {item.divider && <div className="hidden md:block h-px bg-neutral-200/70 my-2" />}
                             <Link
                                 href={item.href}
-                                className={`flex items-center gap-3 px-4 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold transition whitespace-nowrap ${
+                                className={`flex items-center gap-2 md:gap-3 px-2.5 md:px-4 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold transition ${
                                     isActive(item.href)
                                         ? "bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white shadow-card"
                                         : "text-neutral-600 hover:bg-aurora-indigo/[0.06] hover:text-aurora-indigo"
                                 }`}
                             >
-                                <i className={`fa-solid ${item.icon} text-[12px] md:text-sm`} />
-                                <span>{item.label}</span>
+                                <i className={`fa-solid ${item.icon} text-[12px] md:text-sm w-4 text-center flex-shrink-0`} />
+                                <span className="truncate">{item.label}</span>
                             </Link>
                         </li>
                     ))}
-                    {/* 로그아웃 */}
-                    <li className="flex-shrink-0 md:flex-shrink">
+                    {/* 로그아웃 — 모바일에선 2칸 전부 차지 (홀수항목 처리), 데스크탑은 1줄 */}
+                    <li className="col-span-2 md:col-span-1">
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="w-full flex items-center gap-3 px-4 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold text-danger hover:bg-danger/[0.08] transition whitespace-nowrap"
+                            className="w-full flex items-center justify-center md:justify-start gap-2 md:gap-3 px-2.5 md:px-4 py-2.5 md:py-3 rounded-xl text-xs md:text-sm font-bold text-danger hover:bg-danger/[0.08] transition"
                         >
-                            <i className="fa-solid fa-right-from-bracket text-[12px] md:text-sm" />
+                            <i className="fa-solid fa-right-from-bracket text-[12px] md:text-sm w-4 text-center" />
                             <span>로그아웃</span>
                         </button>
                     </li>

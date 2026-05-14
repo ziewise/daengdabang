@@ -11,6 +11,9 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import PetlensProvider from "@/components/petlens/PetlensProvider";
+import ChatbotProvider from "@/components/chatbot/ChatbotProvider";
+import PreviewProvider from "@/components/preview/PreviewProvider";
+import SidePetDock from "@/components/layout/SidePetDock";
 
 export default function ShopLayout({
     children,
@@ -18,12 +21,18 @@ export default function ShopLayout({
     children: React.ReactNode;
 }) {
     return (
-        <PetlensProvider>
-            <Header />
-            <main className="flex-1 pt-[var(--header-height)] flex flex-col">
-                {children}
-            </main>
-            <Footer />
-        </PetlensProvider>
+        <PreviewProvider>
+            <PetlensProvider>
+                <ChatbotProvider>
+                    <Header />
+                    <main className="flex-1 pt-[var(--header-height)] flex flex-col">
+                        {children}
+                    </main>
+                    <Footer />
+                    {/* PC 좌측 여백에 등록 펫 카드 고정 노출 (1500px+ 화면) */}
+                    <SidePetDock />
+                </ChatbotProvider>
+            </PetlensProvider>
+        </PreviewProvider>
     );
 }

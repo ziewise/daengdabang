@@ -5,16 +5,21 @@
  * 슬롯 비율 박스, 글래스 모달 등) CSS Module 로.
  * ===================================================================== */
 
-/* ============ FAB ============ */
+/* ============ FAB — 우측 중앙 살짝 위 (그 아래에 챗봇 FAB 배치 위해)
+   min-width 로 챗봇 FAB(text "챗봇" 2글자) 와 가로 폭 일치 */
 .fab {
     position: fixed;
     right: 24px;
-    bottom: 24px;
+    /* 화면 세로 중앙에서 FAB 높이의 절반 + 간격의 절반(=34px) 만큼 위로 */
+    top: calc(50% - 34px);
+    transform: translateY(-50%);
     z-index: 1500;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     height: 56px;
+    min-width: 120px;       /* 챗봇 FAB 와 동일 폭 */
     padding: 0 22px;
     border-radius: 50px;
     border: none;
@@ -30,7 +35,8 @@
     transition: transform 0.2s, box-shadow 0.2s;
 }
 .fab:hover {
-    transform: translateY(-3px) scale(1.03);
+    /* translateY(-50%) 는 위치 고정, 추가 호버 효과는 scale 만 */
+    transform: translateY(-50%) scale(1.04);
     box-shadow: 0 18px 44px rgba(99, 102, 241, 0.5);
 }
 .fab i { font-size: 18px; }
@@ -79,12 +85,31 @@
     padding: 24px;
 }
 
-/* ============ 슬롯 비율 박스 (업로드 화면) ============ */
+/* ============ 파일 업로드 조정(crop) 가이드 — 슬롯 5/3 내부에 가이드 영역 표시
+   ratioBox/guideFrame 둘 다 다른 맥락이라 별도 클래스. box-shadow 트릭으로 바깥 어둡게 */
+.cropGuide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+    z-index: 2;
+    transition: width 0.2s, height 0.2s, border-radius 0.2s;
+}
+/* 슬롯 aspect = 가이드 aspect 통일됐으므로 가이드는 슬롯 거의 전체를 차지
+   face — 정사각 슬롯 안 원형 가이드(코너 검정) / side·front — 슬롯과 같은 모양 */
+.cropGuide.face  { width: 100%; aspect-ratio: 1/1;   border-radius: 50%; }
+.cropGuide.side  { width: 100%; aspect-ratio: 16/10; border-radius: 10px; }
+.cropGuide.front { width: 100%; aspect-ratio: 3/4;   border-radius: 10px; }
+
+/* ============ 슬롯 비율 박스 (업로드 화면) — 슬롯 정중앙 정렬 ============ */
 .ratioBox {
     position: absolute;
-    top: 16px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     border: 2px dashed #6366f1;
     background: rgba(99, 102, 241, 0.08);
     border-radius: 8px;
@@ -92,12 +117,11 @@
     align-items: center;
     justify-content: center;
     color: #6366f1;
-    font-size: 11px;
     font-weight: 700;
 }
-.ratioFace  { width: 50%; aspect-ratio: 1/1; border-radius: 50%; }
-.ratioSide  { width: 80%; aspect-ratio: 16/10; }
-.ratioFront { width: 42%; aspect-ratio: 3/4; }
+.ratioFace  { width: 100%; aspect-ratio: 1/1;   border-radius: 50%; }
+.ratioSide  { width: 100%; aspect-ratio: 16/10; }
+.ratioFront { width: 100%; aspect-ratio: 3/4; }
 
 /* ============ 카메라 라이브뷰 (활성 시 풀스크린) ============ */
 .cameraView {
@@ -144,9 +168,10 @@
 .corner.br { bottom: -3px; right: -3px; border-left: none;  border-top: none; border-bottom-right-radius: 6px; }
 .guideFrame.face .corner { display: none; }
 
+/* 가이드 힌트 — 프레임 위쪽으로 (하단은 촬영 버튼과 겹쳤음) */
 .guideHint {
     position: absolute;
-    bottom: -42px;
+    top: -42px;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;

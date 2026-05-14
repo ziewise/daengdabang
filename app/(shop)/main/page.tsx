@@ -12,6 +12,7 @@
  */
 import type { Metadata } from "next";
 import HeroSection from "@/components/main/HeroSection";
+import RecommendSection from "@/components/main/RecommendSection";
 import BestSection from "@/components/main/BestSection";
 import BrandSlider from "@/components/main/BrandSlider";
 import PromoSection from "@/components/main/PromoSection";
@@ -27,6 +28,7 @@ export default function MainPage() {
     return (
         <>
             <HeroSection />
+            <RecommendSection />
             <BestSection />
             <BrandSlider />
             <PromoSection />

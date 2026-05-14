@@ -1,7 +1,8 @@
 /* =====================================================================
  * intro.module.css — 인트로 페이지 전용 스타일
  * ---------------------------------------------------------------------
- * 풀스크린 영상 + 좌상단 시그니처 로고만 노출하는 단순 구조.
+ * 풀스크린 영상 + 좌상단 시그니처 로고
+ * 모바일: object-fit:contain 으로 영상 전체 보존 (잘림 최소화)
  * ===================================================================== */
 
 /* ============ 시그니처 로고 (좌상단) ============ */
@@ -42,17 +43,32 @@
     position: fixed;
     inset: 0;
     z-index: 10;
-    background: #000;
+    /* 영상 letterbox 색(크림 베이지)과 같게 — 여백이 영상 연장처럼 보임 */
+    background: #fefae0;
     cursor: pointer;
     overflow: hidden;
 }
+
+/* cover 로 풀스크린 채움 — 영상 좌우 배경 letterbox 부분은 잘리고 콘텐츠 가득
+   pointer-events: none → 비디오가 탭을 흡수하지 않고 부모 .splash 의 onClick/onTouchEnd 로 전달 */
 .splash video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    pointer-events: none;
 }
 
-/* 클릭 안내 (하단 가운데) */
+/* 모바일 — cover 로 viewport 가득 (원래 상태) */
+@media (max-width: 768px) {
+    .splash video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
 .skipText {
     position: absolute;
     bottom: 32px;
@@ -69,6 +85,7 @@
     -webkit-backdrop-filter: blur(8px);
     animation: skipPulse 2s ease-in-out infinite;
     white-space: nowrap;
+    pointer-events: none; /* splash 의 onClick 을 가리지 않도록 */
 }
 @keyframes skipPulse {
     0%, 100% { opacity: 1; }

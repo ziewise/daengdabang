@@ -5,7 +5,7 @@
  * SSR 시점엔 null, 마운트 후 실제 값으로 hydrate.
  */
 "use client";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { authStorage, migratePendingPet, snapshots, subscribeStorage } from "@/lib/storage";
 import type { AuthProvider } from "@/lib/types";
 
@@ -14,10 +14,14 @@ const getServerSnapshot = () => null;
 
 export function useAuth() {
     const state = useSyncExternalStore(subscribe, snapshots.auth, getServerSnapshot);
-    // hydrated — useSyncExternalStore 자체가 SSR/CSR 불일치 처리하지만,
-    // 컴포넌트에서 "첫 paint vs mount 후" 구분이 필요할 때 사용.
-    // CSR 에선 마운트 시점부터 항상 true, SSR snapshot 은 null 반환하므로 hydration 안전.
-    const hydrated = typeof window !== "undefined";
+
+    // hydrated — 서버 첫 렌더와 클라이언트 첫 렌더 모두 false → 동일.
+    // useEffect 는 클라이언트에서만 실행되므로 마운트 직후 true 로 전환.
+    // typeof window 체크는 클라 첫 렌더에서 곧장 true 가 되어 hydration mismatch 유발 → 사용 금지.
+    const [hydrated, setHydrated] = useState(false);
+    useEffect(() => {
+        setHydrated(true);
+    }, []);
 
     const login = (provider: AuthProvider = "email") => {
         authStorage.set({ provider, ts: Date.now() });

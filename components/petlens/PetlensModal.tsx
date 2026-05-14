@@ -19,6 +19,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { PetlensInputMode, PetlensStep, PetProfile } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
 import { usePets, usePendingPet } from "@/hooks/usePets";
+import { MOCK_PETS } from "@/lib/mypage-data";
+import PetlensPetSelect from "./PetlensPetSelect";
 import PetlensModeSelect from "./PetlensModeSelect";
 import PetlensUpload from "./PetlensUpload";
 import PetlensAnalyzing from "./PetlensAnalyzing";
@@ -32,22 +34,33 @@ interface Props {
 }
 
 export default function PetlensModal({ open, onClose }: Props) {
-    const [step, setStep] = useState<PetlensStep>("mode-select");
+    const { isLoggedIn } = useAuth();
+    const { pets: allPets, add: addPet, update: updatePet } = usePets();
+    const { set: setPending } = usePendingPet();
+
+    // 회원이 등록한 펫만 (분석은 제외) — 실제 등록 0개면 데모용 MOCK_PETS fallback
+    const realRegistered = allPets.filter((p) => p.source === "registered");
+    const registeredPets = realRegistered.length > 0 ? realRegistered : MOCK_PETS;
+    const hasRegisteredPets = isLoggedIn && registeredPets.length > 0;
+
+    // 등록된 펫 있을 때만 pet-select 부터 시작, 아니면 mode-select 부터
+    const initialStep: PetlensStep = hasRegisteredPets ? "pet-select" : "mode-select";
+
+    const [step, setStep] = useState<PetlensStep>(initialStep);
     const [inputMode, setInputMode] = useState<PetlensInputMode | null>(null);
     const [photos, setPhotos] = useState<(string | null)[]>([null, null, null]);
+    /** 선택한 펫의 id — analyzed entry 의 linkedPetId 로 저장됨. null = 연결 안 함 */
+    const [linkedPetId, setLinkedPetId] = useState<string | null>(null);
     const lastProfileIdRef = useRef<string | null>(null);
-
-    const { isLoggedIn } = useAuth();
-    const { add: addPet, update: updatePet } = usePets();
-    const { set: setPending } = usePendingPet();
 
     /** 새 분석 시작 — 모든 상태 초기화 */
     const reset = useCallback(() => {
-        setStep("mode-select");
+        setStep(hasRegisteredPets ? "pet-select" : "mode-select");
         setInputMode(null);
         setPhotos([null, null, null]);
+        setLinkedPetId(null);
         lastProfileIdRef.current = null;
-    }, []);
+    }, [hasRegisteredPets]);
 
     // 모달 열림 → body 스크롤 잠금 + Escape 닫기
     useEffect(() => {
@@ -61,13 +74,11 @@ export default function PetlensModal({ open, onClose }: Props) {
         };
     }, [open, onClose]);
 
-    // 모달 닫힐 때 상태 reset (재오픈 시 처음부터)
-    // — 외부 prop 에 따른 정당한 상태 sync 패턴
+    // 모달 열릴 때마다 상태 reset (현재 hasRegisteredPets 기반으로 시작 단계 결정)
+    // 닫힐 때도 reset (다음 열림에 잔여 상태 없도록)
     useEffect(() => {
-        if (!open) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            reset();
-        }
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        reset();
     }, [open, reset]);
 
     /** 분석 시작 — 가짜 데이터 + 결과 저장 */
@@ -75,23 +86,30 @@ export default function PetlensModal({ open, onClose }: Props) {
         setStep("analyzing");
     }, []);
 
-    /** 분석 단계 완료 시 호출 — 결과 객체 생성 + 저장 */
+    /** 분석 단계 완료 시 호출 — 결과 객체 생성 + 저장
+     *  source: "analyzed" + linkedPetId 로 펫 프로필과 연결 */
     const finishAnalysis = useCallback(() => {
+        // 연결된 펫의 이름을 분석 결과에도 복사 (편의)
+        const linkedPet = linkedPetId
+            ? registeredPets.find((p) => p.id === linkedPetId)
+            : null;
         const profile: PetProfile = {
             id: "pet_" + Date.now(),
-            name: "",
+            name: linkedPet?.name ?? "",
             breed: MOCK_RESULT.breed.primary,
             confidence: MOCK_RESULT.breed.confidence,
             body: MOCK_RESULT.body,
             avatar: photos[0],
             photos: photos.filter((p): p is string => !!p),
             analyzedAt: Date.now(),
+            source: "analyzed",
+            linkedPetId: linkedPetId ?? undefined,
         };
         lastProfileIdRef.current = profile.id;
         if (isLoggedIn) addPet(profile);
         else setPending(profile);
         setStep("result");
-    }, [photos, isLoggedIn, addPet, setPending]);
+    }, [photos, isLoggedIn, linkedPetId, registeredPets, addPet, setPending]);
 
     /** 결과 단계에서 이름 입력 시 — 회원/비회원 어느 쪽이든 갱신 */
     const handleNameChange = useCallback(
@@ -112,6 +130,7 @@ export default function PetlensModal({ open, onClose }: Props) {
                     avatar: photos[0],
                     photos: photos.filter((p): p is string => !!p),
                     analyzedAt: Date.now(),
+                    source: "analyzed",
                 });
             }
         },
@@ -148,6 +167,16 @@ export default function PetlensModal({ open, onClose }: Props) {
                 </header>
 
                 <div className={styles.modalBody}>
+                    {step === "pet-select" && (
+                        <PetlensPetSelect
+                            pets={registeredPets}
+                            onSelect={(id) => {
+                                setLinkedPetId(id);
+                                setStep("mode-select");
+                            }}
+                        />
+                    )}
+
                     {step === "mode-select" && (
                         <PetlensModeSelect
                             onSelect={(m) => {
@@ -162,7 +191,12 @@ export default function PetlensModal({ open, onClose }: Props) {
                             inputMode={inputMode}
                             photos={photos}
                             setPhotos={setPhotos}
-                            onChangeMode={() => setStep("mode-select")}
+                            onChangeMode={() => {
+                                // 입력 방식 변경 — 진행 중이던 사진/모드 초기화
+                                setPhotos([null, null, null]);
+                                setInputMode(null);
+                                setStep("mode-select");
+                            }}
                             onAnalyze={startAnalysis}
                         />
                     )}
@@ -174,6 +208,11 @@ export default function PetlensModal({ open, onClose }: Props) {
                     {step === "result" && (
                         <PetlensResult
                             photos={photos}
+                            linkedPetName={
+                                linkedPetId
+                                    ? registeredPets.find((p) => p.id === linkedPetId)?.name ?? null
+                                    : null
+                            }
                             onNameChange={handleNameChange}
                             onRetry={reset}
                         />

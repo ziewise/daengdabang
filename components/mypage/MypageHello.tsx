@@ -1,14 +1,14 @@
 /**
  * MypageHello — 마이페이지 상단 인사 카드
  * ---------------------------------------------------------------------
- * 아바타 + 이름 + 가입일 + 등급 배지 + 통계 3개 (댕댕이·주문·포인트)
+ * 아바타 + 이름(등급 배지 인라인) + 가입일 + 통계 한 줄 (댕댕이·주문·포인트)
  */
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { computeGrade } from "@/lib/grades";
-import { MOCK_ORDERS, MOCK_USER_STATS, getJoinDate } from "@/lib/mypage-data";
+import { MOCK_ORDERS, MOCK_USER_STATS, getJoinDate, petsOrMock } from "@/lib/mypage-data";
 
 const PROVIDER_LABEL: Record<string, string> = {
     google: "Google 회원",
@@ -20,51 +20,71 @@ const PROVIDER_LABEL: Record<string, string> = {
 
 export default function MypageHello() {
     const { state } = useAuth();
-    const { pets } = usePets();
+    const { pets: realPets } = usePets();
+    const pets = petsOrMock(realPets);
     const grade = computeGrade(MOCK_USER_STATS.annualSpend, MOCK_USER_STATS.activityPoints);
     const providerLabel = state ? (PROVIDER_LABEL[state.provider] || "댕다방 회원") : "댕다방 회원";
 
     return (
-        <section className="glass-card rounded-3xl px-6 md:px-7 py-5 md:py-6 mb-6">
-            <div className="grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] gap-4 md:gap-6 items-center">
-                {/* 아바타 */}
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-aurora-indigo to-aurora-pink text-white flex items-center justify-center text-2xl">
-                    <i className="fa-solid fa-user" />
-                </div>
-
-                {/* 이름 + 등급 배지 */}
-                <div className="min-w-0">
-                    <h1 className="text-lg md:text-xl font-black tracking-tight">
-                        안녕하세요, <span className="text-aurora-indigo">댕댕이 가족</span>님
-                    </h1>
-                    <p className="text-[11px] md:text-xs text-neutral-500 mt-0.5">
-                        {providerLabel} · 가입일 {getJoinDate(state?.ts)}
-                    </p>
+        <section className="glass-card rounded-3xl px-4 md:px-7 py-4 md:py-6 mb-4 md:mb-6">
+            <div className="grid grid-cols-[auto_1fr] md:grid-cols-[auto_1fr_auto] gap-3 md:gap-6 items-center">
+                {/* 아바타 + 등급 배지(모바일에선 아바타 우하단 오버레이) */}
+                <div className="relative flex-shrink-0">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-aurora-indigo to-aurora-pink text-white flex items-center justify-center text-xl md:text-2xl">
+                        <i className="fa-solid fa-user" />
+                    </div>
+                    {/* 모바일 전용 — 아바타 우하단 작은 등급 배지 (이름 옆 배지는 모바일에선 숨김) */}
                     <span
-                        className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 rounded-full text-[11px] font-extrabold text-white shadow-sm"
+                        className="md:hidden absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-sm border-2 border-white"
                         style={{ background: grade.color }}
+                        aria-label={grade.name}
                     >
-                        <span className="text-sm leading-none">{grade.emoji}</span>
-                        <span>{grade.name}</span>
+                        {grade.emoji}
                     </span>
                 </div>
 
-                {/* 통계 3개 — 모바일에선 다음 row 로 */}
-                <div className="col-span-2 md:col-span-1 flex gap-2 mt-1 md:mt-0">
-                    <Stat strong={pets.length} sub="댕댕이" />
-                    <Stat strong={MOCK_ORDERS.length} sub="주문" />
-                    <Stat strong={MOCK_USER_STATS.points.toLocaleString()} sub="포인트" />
+                {/* 이름 + 등급 배지(데스크탑만 인라인) + 가입일 */}
+                <div className="min-w-0">
+                    <h1 className="text-base md:text-xl font-black tracking-tight flex items-center gap-2 flex-wrap">
+                        <span className="truncate">
+                            <span className="text-aurora-indigo">댕댕이 가족</span>님
+                        </span>
+                        {/* 등급 배지 — 데스크탑만 (모바일은 아바타 위로) */}
+                        <span
+                            className="hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold text-white shadow-sm"
+                            style={{ background: grade.color }}
+                        >
+                            <span className="text-[13px] leading-none">{grade.emoji}</span>
+                            <span>{grade.name}</span>
+                        </span>
+                    </h1>
+                    <p className="text-[10px] md:text-xs text-neutral-500 mt-0.5 md:mt-1 truncate">
+                        {providerLabel} · 가입일 {getJoinDate(state?.ts)}
+                    </p>
+                </div>
+
+                {/* 통계 — 모바일은 다음 row 로 떨어지며 균등 분할, 데스크탑은 우측 인라인 */}
+                <div className="col-span-2 md:col-span-1 grid grid-cols-3 md:flex md:items-center gap-2 md:gap-5 mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-t-0 border-neutral-200/60">
+                    <Stat value={pets.length} label="댕댕이" />
+                    <Divider />
+                    <Stat value={MOCK_ORDERS.length} label="주문" />
+                    <Divider />
+                    <Stat value={MOCK_USER_STATS.points.toLocaleString()} label="포인트" />
                 </div>
             </div>
         </section>
     );
 }
 
-function Stat({ strong, sub }: { strong: number | string; sub: string }) {
+function Stat({ value, label }: { value: number | string; label: string }) {
     return (
-        <div className="flex-1 min-w-[64px] px-3 py-2.5 rounded-xl bg-aurora-indigo/[0.06] text-center">
-            <strong className="block text-lg md:text-xl font-black tracking-tight">{strong}</strong>
-            <span className="text-[10px] md:text-[11px] text-neutral-500 font-bold">{sub}</span>
+        <div className="flex flex-col md:flex-row items-center md:items-baseline gap-0.5 md:gap-1.5 text-center md:text-left">
+            <strong className="text-base md:text-xl font-black tracking-tight order-2 md:order-1">{value}</strong>
+            <span className="text-[10px] md:text-xs text-neutral-500 font-bold order-1 md:order-2">{label}</span>
         </div>
     );
+}
+
+function Divider() {
+    return <span className="hidden md:block w-px h-4 bg-neutral-200" />;
 }

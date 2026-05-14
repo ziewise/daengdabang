@@ -35,11 +35,11 @@ export default function MypageShell({
     }
 
     return (
-        <div className="w-full max-w-[1280px] mx-auto px-4 md:px-6 py-6 md:py-10">
+        <div className="w-full max-w-[1280px] mx-auto px-3 md:px-6 py-4 md:py-10">
             <MypageHello />
-            <div className="grid md:grid-cols-[240px_1fr] gap-4 md:gap-6 items-start">
+            <div className="grid md:grid-cols-[240px_1fr] gap-3 md:gap-6 items-start">
                 <MypageSidebar />
-                <section className="glass-card rounded-2xl p-5 md:p-7 min-h-[400px] md:min-h-[560px]">
+                <section className="glass-card rounded-2xl p-4 md:p-7 min-h-[400px] md:min-h-[560px]">
                     {children}
                 </section>
             </div>

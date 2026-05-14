@@ -1,18 +1,26 @@
 /**
  * /mypage/petlens-log — 펫렌즈 분석 이력 타임라인
  * ---------------------------------------------------------------------
- * daengdabang_pets 를 분석일자 역순으로 정렬. 각 행 펼침 토글.
- * "펫 프로필" 탭은 펫 단위 카드 그리드, 여기는 분석 단위 시간순 로그.
+ * 펫 프로필이 회원 직접 입력으로 바뀌었지만, 펫렌즈 기록은 AI 분석 이력.
+ * 각 행: 핵심 요약 (분류·체중·취약질환 칩) + "자세히 보기" → /petlens
  */
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { usePets } from "@/hooks/usePets";
+import { petsOrMock } from "@/lib/mypage-data";
+import { HEALTH_RISKS } from "@/lib/petlens-recs";
 import type { PetProfile } from "@/lib/types";
 import { PaneHead } from "../page";
 
 export default function MypagePetlensLogPage() {
-    const { pets, remove } = usePets();
+    const { pets: allPets, remove } = usePets();
+    // 펫렌즈 기록 = 분석으로 생성된 entry 만 (직접 등록한 펫은 제외)
+    // legacy 데이터(source 없음)는 분석으로 간주 — 모두 노출
+    const analyzedPets = allPets.filter((p) => p.source !== "registered");
+    const pets = petsOrMock(analyzedPets);
+    const isMock = analyzedPets.length === 0;
     const list = [...pets].sort((a, b) => b.analyzedAt - a.analyzedAt);
 
     if (list.length === 0) {
@@ -31,17 +39,31 @@ export default function MypagePetlensLogPage() {
     return (
         <>
             <PaneHead title="펫렌즈 기록" sub="지금까지의 AI 분석 이력을 시간순으로 모아봤어요" />
+
+            {isMock && (
+                <div className="mb-4 p-3 rounded-xl bg-aurora-indigo/[0.06] border border-aurora-indigo/20 text-[11px] text-neutral-600">
+                    <i className="fa-solid fa-circle-info text-aurora-indigo mr-1.5" />
+                    데모 데이터입니다. 펫렌즈로 분석하면 실제 분석 이력으로 교체돼요.
+                </div>
+            )}
+
             <p className="text-xs text-neutral-500 mb-4">
                 총 <strong className="text-foreground font-extrabold">{list.length}</strong>개의 분석 기록
             </p>
 
             <ul className="space-y-3 md:space-y-0 md:relative">
                 {list.map((p, i) => (
-                    <LogRow key={p.id} pet={p} isLast={i === list.length - 1} onDelete={() => {
-                        if (confirm("이 분석 기록을 삭제할까요? (펫 프로필도 함께 삭제됩니다)")) {
-                            remove(p.id);
-                        }
-                    }} />
+                    <LogRow
+                        key={p.id}
+                        pet={p}
+                        isLast={i === list.length - 1}
+                        isMock={isMock}
+                        onDelete={() => {
+                            if (confirm("이 분석 기록을 삭제할까요? (펫 프로필도 함께 삭제됩니다)")) {
+                                remove(p.id);
+                            }
+                        }}
+                    />
                 ))}
             </ul>
         </>
@@ -49,18 +71,18 @@ export default function MypagePetlensLogPage() {
 }
 
 /* ============ 타임라인 행 ============ */
-function LogRow({ pet, isLast, onDelete }: { pet: PetProfile; isLast: boolean; onDelete: () => void }) {
+function LogRow({ pet, isLast, isMock, onDelete }: { pet: PetProfile; isLast: boolean; isMock: boolean; onDelete: () => void }) {
     const [open, setOpen] = useState(false);
     const d = new Date(pet.analyzedAt);
     const dateStr = d.toLocaleDateString("ko-KR");
     const timeStr = d.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
     const name = pet.name?.trim() || "이름 없음";
+    // 취약 질환 상위 3개만 칩으로 노출
+    const topRisks = HEALTH_RISKS.filter((r) => r.severity >= 2).slice(0, 3);
 
     return (
         <li className="md:grid md:grid-cols-[80px_20px_1fr] md:gap-3.5 relative pb-5 md:pb-6">
-            {/* 모바일: 단순 카드 / 데스크탑: 좌측 날짜 + 도트 + 우측 카드 */}
-
-            {/* 좌측 날짜 (모바일 카드 위) */}
+            {/* 좌측 날짜 */}
             <div className="md:text-right md:pt-3.5 mb-1.5 md:mb-0">
                 <span className="text-xs font-extrabold text-foreground">{dateStr}</span>
                 <span className="md:block ml-1.5 md:ml-0 text-[10px] text-neutral-400 mt-0 md:mt-0.5">{timeStr}</span>
@@ -87,36 +109,70 @@ function LogRow({ pet, isLast, onDelete }: { pet: PetProfile; isLast: boolean; o
                     </div>
                     <div className="min-w-0">
                         <h4 className="text-sm font-extrabold tracking-tight truncate">
-                            {name} <span className="text-[11px] font-bold text-aurora-indigo ml-1">{pet.breed}</span>
+                            {name}
+                            <span className="text-[11px] font-bold text-aurora-indigo ml-1.5">{pet.breed}</span>
                         </h4>
                         <p className="text-[11px] text-neutral-500 truncate">
-                            유사도 {pet.confidence}% · {pet.body.size} · {pet.body.weight} · {pet.body.coat} · {pet.body.activity}
+                            {pet.body.size} · {pet.body.weight} · {pet.body.coat} · {pet.body.activity}
                         </p>
                     </div>
                     <button
                         type="button"
                         onClick={() => setOpen((o) => !o)}
                         aria-expanded={open}
-                        className="w-8 h-8 rounded-full border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo flex items-center justify-center text-xs transition"
+                        className="w-8 h-8 rounded-full border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo flex items-center justify-center text-xs transition flex-shrink-0"
                     >
                         <i className={`fa-solid fa-chevron-down transition-transform ${open ? "rotate-180" : ""}`} />
                     </button>
                 </div>
 
-                {/* 펼침 영역 */}
+                {/* 펼침 영역 — 취약 질환 칩 + 자세히 보기 */}
                 {open && (
-                    <div className="px-3.5 pb-3.5 border-t border-neutral-100 pt-3.5 animate-in fade-in slide-in-from-top-1 duration-200">
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-                            <StatChip v={pet.body.size}     l="분류" />
-                            <StatChip v={pet.body.weight}   l="체중" />
-                            <StatChip v={pet.body.coat}     l="모질" />
-                            <StatChip v={pet.body.activity} l="활동량" />
+                    <div className="px-3.5 pb-3.5 border-t border-neutral-100 pt-3.5 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                        {/* 신체 특성 (4 칩) */}
+                        <div>
+                            <p className="text-[10px] font-extrabold text-neutral-500 tracking-wider mb-1.5">신체 특성</p>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <StatChip v={pet.body.size}     l="분류" />
+                                <StatChip v={pet.body.weight}   l="체중" />
+                                <StatChip v={pet.body.coat}     l="모질" />
+                                <StatChip v={pet.body.activity} l="활동량" />
+                            </div>
                         </div>
-                        <div className="flex justify-end">
+
+                        {/* 취약 질환 칩 */}
+                        <div>
+                            <p className="text-[10px] font-extrabold text-neutral-500 tracking-wider mb-1.5">
+                                견종별 취약 질환 <span className="text-aurora-indigo">(상위 3)</span>
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {topRisks.map((r) => (
+                                    <span
+                                        key={r.name}
+                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-aurora-indigo/[0.08] text-aurora-indigo text-[11px] font-bold"
+                                    >
+                                        <i className={`fa-solid ${r.icon} text-[10px]`} />
+                                        {r.name}
+                                        <span className="text-amber-500 text-[9px]">{"★".repeat(r.severity)}</span>
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 액션 — 자세히 보기 + 삭제 */}
+                        <div className="flex items-center justify-between gap-2 pt-1">
+                            <Link
+                                href="/petlens"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-[11px] font-extrabold hover:opacity-90 transition"
+                            >
+                                <i className="fa-solid fa-wand-magic-sparkles text-[10px]" />
+                                상세 분석 보기
+                            </Link>
                             <button
                                 type="button"
                                 onClick={onDelete}
-                                className="px-3 py-1.5 rounded-lg border border-danger/20 hover:bg-danger/[0.06] text-[11px] font-bold text-danger transition"
+                                disabled={isMock}
+                                className="px-3 py-2 rounded-lg border border-danger/20 hover:bg-danger/[0.06] text-[11px] font-bold text-danger transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <i className="fa-solid fa-trash mr-1" /> 이 기록 삭제
                             </button>

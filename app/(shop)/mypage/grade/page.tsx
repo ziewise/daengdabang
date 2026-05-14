@@ -113,28 +113,50 @@ function ProgressRow({ label, pct, left, color }: { label: string; pct: number; 
     );
 }
 
-/* ============ 등급 비교 카드 ============ */
+/* ============ 등급 비교 카드 ============
+ * 현재 등급 표시:
+ *   - 상단 컬러 그라데이션 띠 (4px)
+ *   - scale 1.03 + 강한 shadow + 컬러 글로우 (color/0.25)
+ *   - 우상단 작은 체크 마크 (원형)
+ *   - 카드 배경 컬러 약하게 (-tint, glass 느낌)
+ *   ※ 텍스트 영역을 가리지 않으면서 시각적으로 명확히 구분 */
 function GradeCard({ grade, isCurrent }: { grade: GradeDefinition; isCurrent: boolean }) {
     const shipText =
         grade.freeShipMin === null ? "—" : grade.freeShipMin === 0 ? "모든 주문" : `${(grade.freeShipMin / 10000).toFixed(0)}만원↑`;
 
     return (
         <div
-            className="relative p-4 md:p-5 rounded-2xl bg-white border-2 transition"
+            className="relative pt-5 pb-4 px-4 md:pt-6 md:pb-5 md:px-5 rounded-2xl border-2 transition-all overflow-hidden"
             style={{
+                background: isCurrent
+                    ? `linear-gradient(180deg, ${grade.color}10 0%, rgba(255,255,255,0.95) 30%, white 100%)`
+                    : "white",
                 borderColor: isCurrent ? grade.color : "rgba(226, 232, 240, 0.7)",
-                boxShadow: isCurrent ? "0 12px 28px rgba(15,23,42,0.10)" : undefined,
-                transform: isCurrent ? "translateY(-2px)" : undefined,
+                boxShadow: isCurrent
+                    ? `0 14px 32px ${grade.color}33, 0 0 0 4px ${grade.color}1a`
+                    : "0 4px 10px rgba(15,23,42,0.04)",
+                transform: isCurrent ? "translateY(-4px) scale(1.02)" : undefined,
             }}
         >
+            {/* 상단 컬러 띠 — 현재 등급만 */}
             {isCurrent && (
                 <span
-                    className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[9px] font-black tracking-wider text-white"
+                    className="absolute top-0 left-0 right-0 h-1"
+                    style={{ background: `linear-gradient(90deg, ${grade.color} 0%, ${grade.color}99 100%)` }}
+                />
+            )}
+
+            {/* 우상단 체크 마크 — 텍스트 영역 안 가림 */}
+            {isCurrent && (
+                <span
+                    className="absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] shadow-md ring-4 ring-white"
                     style={{ background: grade.color }}
+                    aria-label="현재 등급"
                 >
-                    CURRENT
+                    <i className="fa-solid fa-check" />
                 </span>
             )}
+
             <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl leading-none">{grade.emoji}</span>
                 <strong className="text-base font-black tracking-tight">{grade.name}</strong>

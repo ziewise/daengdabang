@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { computeGrade } from "@/lib/grades";
-import { MOCK_ORDERS, MOCK_USER_STATS } from "@/lib/mypage-data";
+import { MOCK_ORDERS, MOCK_USER_STATS, MOCK_WISHLIST } from "@/lib/mypage-data";
 
 export default function MypageDashboardPage() {
     const { isLoggedIn } = useAuth();
@@ -22,7 +22,7 @@ export default function MypageDashboardPage() {
         <>
             <PaneHead title="대시보드" sub="한눈에 보는 내 활동" />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 md:gap-4">
                 <DashCard
                     highlight
                     label="회원 등급"
@@ -52,7 +52,7 @@ export default function MypageDashboardPage() {
                 />
                 <DashCard
                     label="찜한 상품"
-                    big={MOCK_USER_STATS.wishlist}
+                    big={MOCK_WISHLIST.length}
                     desc="위시리스트에 담긴 상품"
                     href="/mypage/wishlist"
                 />
@@ -92,22 +92,22 @@ function DashCard({
 }) {
     return (
         <div
-            className={`p-5 rounded-2xl border ${
+            className={`p-3.5 md:p-5 rounded-2xl border ${
                 highlight
                     ? "bg-gradient-to-br from-aurora-indigo/[0.08] to-aurora-pink/[0.08] border-aurora-indigo/20"
                     : "bg-white border-neutral-200/70"
             }`}
         >
-            <h3 className="text-[10px] font-black tracking-[0.2em] text-neutral-500 mb-3 uppercase">
+            <h3 className="text-[9px] md:text-[10px] font-black tracking-[0.15em] md:tracking-[0.2em] text-neutral-500 mb-2 md:mb-3 uppercase">
                 {label}
             </h3>
-            <strong className="block text-2xl md:text-3xl font-black tracking-tight mb-1">
+            <strong className="block text-lg md:text-3xl font-black tracking-tight mb-0.5 md:mb-1 truncate">
                 {big}
             </strong>
-            <p className="text-xs text-neutral-500 mb-3">{desc}</p>
+            <p className="text-[11px] md:text-xs text-neutral-500 mb-2.5 md:mb-3 line-clamp-2 md:line-clamp-none">{desc}</p>
             <Link
                 href={href}
-                className="inline-flex items-center gap-1 text-[11px] font-extrabold text-aurora-indigo hover:underline"
+                className="inline-flex items-center gap-1 text-[10px] md:text-[11px] font-extrabold text-aurora-indigo hover:underline"
             >
                 {cta} <i className="fa-solid fa-arrow-right text-[9px]" />
             </Link>

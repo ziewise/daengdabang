@@ -1,5 +1,11 @@
-import { MOCK_USER_STATS } from "@/lib/mypage-data";
+import { MOCK_POINT_HISTORY, MOCK_USER_STATS } from "@/lib/mypage-data";
 import { PaneHead } from "../page";
+
+const TYPE_LABEL = {
+    earn:   { label: "적립",   color: "text-success",  bg: "bg-success/10",  sign: "+" },
+    use:    { label: "사용",   color: "text-danger",   bg: "bg-danger/10",   sign: "" },
+    expire: { label: "만료",   color: "text-neutral-400", bg: "bg-neutral-100", sign: "" },
+} as const;
 
 export default function MypagePointsPage() {
     return (
@@ -20,10 +26,36 @@ export default function MypagePointsPage() {
                 />
             </div>
 
-            <div className="text-center py-10 text-neutral-500 text-sm">
-                <i className="fa-solid fa-receipt text-3xl text-neutral-300 mb-3" />
-                <p>최근 적립 내역이 표시될 예정입니다.</p>
-            </div>
+            {/* 적립 내역 */}
+            <h3 className="text-xs font-extrabold mb-2.5 text-neutral-500 tracking-wider">
+                💰 최근 적립 내역
+            </h3>
+            <ul className="space-y-1.5">
+                {MOCK_POINT_HISTORY.map((h) => {
+                    const t = TYPE_LABEL[h.type];
+                    return (
+                        <li
+                            key={h.id}
+                            className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-3 py-3 rounded-xl bg-white border border-neutral-200/70"
+                        >
+                            <span className={`inline-block w-12 text-center py-1 rounded-full text-[10px] font-extrabold ${t.bg} ${t.color}`}>
+                                {t.label}
+                            </span>
+                            <div className="min-w-0">
+                                <p className="text-xs md:text-sm font-bold text-foreground truncate">{h.title}</p>
+                                <p className="text-[10px] text-neutral-400 mt-0.5">{h.date}</p>
+                            </div>
+                            <strong className={`text-sm md:text-base font-black ${t.color}`}>
+                                {t.sign}{h.amount.toLocaleString()}P
+                            </strong>
+                        </li>
+                    );
+                })}
+            </ul>
+
+            <p className="text-[11px] text-neutral-400 mt-4 text-center">
+                * 적립금은 적립일로부터 1년 후 자동 만료됩니다.
+            </p>
         </>
     );
 }

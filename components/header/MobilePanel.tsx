@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 import {
     CATEGORY_GROUPS,
     BRAND_CARDS,
@@ -23,6 +24,7 @@ interface Props {
 
 export default function MobilePanel({ open, onClose }: Props) {
     const [expanded, setExpanded] = useState<string | null>(null);
+    const { isLoggedIn, hydrated } = useAuth();
 
     // 패널 열린 동안 body 스크롤 잠금 + Escape 키로 닫기
     useEffect(() => {
@@ -141,7 +143,16 @@ export default function MobilePanel({ open, onClose }: Props) {
                         ))}
                     </MobileGroup>
 
-                    <MobileLink href="/mypage" icon="fa-user" onClick={onClose}>마이페이지</MobileLink>
+                    {/* 장바구니 */}
+                    <MobileLink href="#cart" icon="fa-bag-shopping" onClick={onClose}>장바구니</MobileLink>
+
+                    {/* 로그인/마이페이지 — hydrate 후 인증 상태 반영
+                        hydrate 전엔 placeholder 로 로그인 표시 (깜빡임 최소화, mismatch 없음) */}
+                    {hydrated && isLoggedIn ? (
+                        <MobileLink href="/mypage" icon="fa-user" onClick={onClose}>마이페이지</MobileLink>
+                    ) : (
+                        <MobileLink href="/login" icon="fa-right-to-bracket" onClick={onClose}>로그인</MobileLink>
+                    )}
                 </nav>
             </aside>
         </>
@@ -190,6 +201,9 @@ function MobileGroup({
                 onClick={onToggle}
                 className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 rounded-xl"
             >
+                {/* 아이콘 없는 그룹 — 아이콘 자리(w-4) 만큼 빈 공간 차지해서
+                    아이콘 있는 항목(베스트/신상품/장바구니/마이페이지)과 텍스트 시작 위치 정렬 */}
+                <span className="w-4" aria-hidden="true" />
                 <span>{label}</span>
                 <i className={`fa-solid fa-chevron-down text-[10px] text-neutral-400 ml-auto transition-transform ${expanded ? "rotate-180" : ""}`} />
             </button>

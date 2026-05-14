@@ -10,6 +10,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import styles from "./hero.module.css";
+import PreviewToggle from "@/components/preview/PreviewToggle";
 
 export default function HeroSection() {
     const rootRef = useRef<HTMLElement>(null);
@@ -53,8 +54,14 @@ export default function HeroSection() {
             {/* 어두운 그라데이션 오버레이 — 텍스트 가독성 */}
             <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/10 to-transparent pointer-events-none" />
 
-            {/* 좌측 텍스트 (세로 가운데 정렬) */}
-            <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 h-full flex items-center">
+            {/* 데모용 Preview 토글 — 헤더 아래 좌상단 (고객 데모 후 컴포넌트 삭제만 하면 정리됨) */}
+            <div className="absolute top-[calc(var(--header-height)+16px)] left-4 md:left-10 z-20">
+                <PreviewToggle />
+            </div>
+
+            {/* 좌측 텍스트 — 모바일: 좌상단(헤더 아래 여백), 데스크탑: 좌측 세로 가운데
+                pointer-events-none: 텍스트는 클릭 받을 필요 없음 → 히어로 영역 위 어디든 헤더/메뉴 클릭이 통하도록 */}
+            <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-10 h-full flex items-start md:items-center pt-[calc(var(--header-height)+20px)] md:pt-0 pointer-events-none">
                 <div className="max-w-xl text-white">
                     <p
                         data-hero-eyebrow
