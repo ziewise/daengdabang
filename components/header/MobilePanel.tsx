@@ -8,7 +8,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { searchRecent } from "@/lib/storage";
 import {
     CATEGORY_GROUPS,
     BRAND_CARDS,
@@ -24,7 +26,20 @@ interface Props {
 
 export default function MobilePanel({ open, onClose }: Props) {
     const [expanded, setExpanded] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const { isLoggedIn, hydrated } = useAuth();
+    const router = useRouter();
+
+    /** 검색 submit — /products?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
+    const submitSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        const t = searchTerm.trim();
+        if (!t) return;
+        searchRecent.add(t);
+        setSearchTerm("");
+        onClose();
+        router.push(`/products?q=${encodeURIComponent(t)}`);
+    };
 
     // 패널 열린 동안 body 스크롤 잠금 + Escape 키로 닫기
     useEffect(() => {
@@ -71,22 +86,33 @@ export default function MobilePanel({ open, onClose }: Props) {
                     </button>
                 </div>
 
-                {/* 간이 검색 */}
+                {/* 검색 — submit 시 /products?q=... 로 이동 */}
                 <div className="px-5 py-4 border-b border-neutral-100">
-                    <label className="flex items-center gap-3 px-4 py-3 bg-neutral-100 rounded-xl">
+                    <form onSubmit={submitSearch} className="flex items-center gap-3 px-4 py-3 bg-neutral-100 rounded-xl">
                         <i className="fa-solid fa-magnifying-glass text-neutral-400" />
                         <input
                             type="search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="어떤 상품을 찾으세요?"
                             className="flex-1 bg-transparent text-sm placeholder:text-neutral-400 outline-none"
                         />
-                    </label>
+                        {searchTerm && (
+                            <button
+                                type="submit"
+                                className="text-aurora-indigo text-xs font-extrabold"
+                                aria-label="검색"
+                            >
+                                검색
+                            </button>
+                        )}
+                    </form>
                 </div>
 
                 {/* 메뉴 리스트 — 스크롤 가능 */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3">
-                    <MobileLink href="/main#best" icon="fa-trophy" onClick={onClose}>베스트</MobileLink>
-                    <MobileLink href="/main#new" icon="fa-sparkles" onClick={onClose}>신상품</MobileLink>
+                    <MobileLink href="/best" icon="fa-trophy" onClick={onClose}>베스트</MobileLink>
+                    <MobileLink href="/new" icon="fa-sparkles" onClick={onClose}>신상품</MobileLink>
 
                     <MobileGroup
                         label="카테고리"
@@ -117,6 +143,9 @@ export default function MobilePanel({ open, onClose }: Props) {
                                 {b.name}
                             </SubLink>
                         ))}
+                        <SubLink href="/brands" onClick={onClose}>
+                            기타 브랜드 보기
+                        </SubLink>
                     </MobileGroup>
 
                     <MobileGroup

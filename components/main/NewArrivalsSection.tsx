@@ -14,6 +14,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { NEW_PRODUCTS, formatKRW } from "@/lib/products";
 import bestStyles from "./best.module.css";
 
@@ -225,13 +226,13 @@ export default function NewArrivalsSection() {
 
                 {/* 우측 하단 — 신상품 모두 보기 */}
                 <div className="flex justify-end mt-6 md:mt-7">
-                    <a
-                        href="#new-all"
+                    <Link
+                        href="/new"
                         className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
                         신상품 보기
                         <i className="fa-solid fa-arrow-right text-[10px]" />
-                    </a>
+                    </Link>
                 </div>
 
                 {/* 스크롤바 hide */}

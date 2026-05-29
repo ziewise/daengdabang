@@ -39,47 +39,50 @@ export interface CSLink {
 }
 
 // ============ 카테고리 메가메뉴 (5개 그룹) ============
+// href 는 catalog.ts 의 CategorySlug / SubcategorySlug 와 매핑됨.
+// 카테고리 그룹 헤더 → /category/{slug}
+// 서브카테고리 → /category/{slug}?sub={subslug}
 export const CATEGORY_GROUPS: CategoryGroup[] = [
     {
-        title: "산책/아웃도어", href: "#cat-outdoor",
+        title: "산책/아웃도어", href: "/category/outdoor",
         items: [
-            { label: "하네스", href: "#harness" },
-            { label: "리드줄/목줄", href: "#leash" },
-            { label: "의류/보호장비", href: "#wear" },
-            { label: "고글/안전용품", href: "#goggles" },
-            { label: "이동가방/유모차", href: "#carrier" },
+            { label: "하네스",          href: "/category/outdoor?sub=harness" },
+            { label: "리드줄/목줄",     href: "/category/outdoor?sub=leash" },
+            { label: "의류/보호장비",   href: "/category/outdoor?sub=wear" },
+            { label: "고글/안전용품",   href: "/category/outdoor?sub=goggles" },
+            { label: "이동가방/유모차", href: "/category/outdoor?sub=carrier" },
         ],
     },
     {
-        title: "먹거리", href: "#cat-food",
+        title: "먹거리", href: "/category/food",
         items: [
-            { label: "사료", href: "#food" },
-            { label: "간식", href: "#treats" },
-            { label: "영양/보조", href: "#supplement" },
-            { label: "디저트/음료", href: "#dessert" },
+            { label: "사료",       href: "/category/food?sub=drysoy" },
+            { label: "간식",       href: "/category/food?sub=treats" },
+            { label: "영양/보조",  href: "/category/food?sub=supplement" },
+            { label: "디저트/음료", href: "/category/food?sub=dessert" },
         ],
     },
     {
-        title: "생활용품", href: "#cat-life",
+        title: "생활용품", href: "/category/life",
         items: [
-            { label: "쿠션/침구", href: "#cushion" },
-            { label: "식기/급식용품", href: "#bowl" },
+            { label: "쿠션/침구",    href: "/category/life?sub=cushion" },
+            { label: "식기/급식용품", href: "/category/life?sub=bowl" },
         ],
     },
     {
-        title: "장난감/놀이", href: "#cat-toy",
+        title: "장난감/놀이", href: "/category/toy",
         items: [
-            { label: "노즈워크/지능", href: "#nosework" },
-            { label: "원반/터그", href: "#tug" },
-            { label: "라텍스/봉제", href: "#latex" },
+            { label: "노즈워크/지능", href: "/category/toy?sub=nosework" },
+            { label: "원반/터그",     href: "/category/toy?sub=tug" },
+            { label: "라텍스/봉제",   href: "/category/toy?sub=latex" },
         ],
     },
     {
-        title: "케어", href: "#cat-care",
+        title: "케어", href: "/category/care",
         items: [
-            { label: "스킨/크림", href: "#cream" },
-            { label: "발바닥 케어", href: "#paw" },
-            { label: "위생/배변", href: "#hygiene" },
+            { label: "스킨/크림",   href: "/category/care?sub=cream" },
+            { label: "발바닥 케어", href: "/category/care?sub=paw" },
+            { label: "위생/배변",   href: "/category/care?sub=hygiene" },
         ],
     },
 ];
@@ -89,22 +92,23 @@ export const BRAND_CARDS: BrandCard[] = [
     {
         initial: "R", name: "Ruffwear",
         tagline: "활동견을 위한\n프리미엄 아웃도어 기어",
-        href: "#ruffwear", accent: "ruff",
+        href: "/brand/ruffwear", accent: "ruff",
     },
     {
         initial: "Rx", name: "Rex Specs",
         tagline: "강아지 눈 보호 전문\n아이웨어 솔루션",
-        href: "#rexspecs", accent: "rex",
+        href: "/brand/rex-specs", accent: "rex",
     },
 ];
 
 // ============ 기획전 드롭다운 — 메인 페이지 PromoSection 5개 카드와 일치 ============
+// href 는 catalog.ts 의 PromoSlug 와 매핑됨.
 export const PROMO_CARDS: PromoCard[] = [
-    { icon: "fa-person-running", title: "활동견 셀렉션",     desc: "산책·하이킹·달리기 — 활동 많은 댕댕이 큐레이션", href: "#promo-active",   color: "indigo" },
-    { icon: "fa-cloud-rain",     title: "장마·우천 필수템",  desc: "방수 의류·우천 산책 가이드",                       href: "#promo-rainy",    color: "blue" },
-    { icon: "fa-glasses",        title: "눈·청력 보호",      desc: "Rex Specs 전문 아이웨어",                          href: "#promo-eye",      color: "purple" },
-    { icon: "fa-bone",           title: "프리미엄 푸드",     desc: "엄선된 사료·간식 큐레이션",                        href: "#promo-food",     color: "green" },
-    { icon: "fa-ice-cream",      title: "댕스크림 컬렉션",   desc: "한정 시즌 — 아이스크림·음료",                      href: "#promo-seasonal", color: "pink" },
+    { icon: "fa-person-running", title: "활동견 셀렉션",     desc: "산책·하이킹·달리기 — 활동 많은 댕댕이 큐레이션", href: "/promo/active",   color: "indigo" },
+    { icon: "fa-cloud-rain",     title: "장마·우천 필수템",  desc: "방수 의류·우천 산책 가이드",                       href: "/promo/rainy",    color: "blue" },
+    { icon: "fa-glasses",        title: "눈·청력 보호",      desc: "Rex Specs 전문 아이웨어",                          href: "/promo/eye",      color: "purple" },
+    { icon: "fa-bone",           title: "프리미엄 푸드",     desc: "엄선된 사료·간식 큐레이션",                        href: "/promo/food",     color: "green" },
+    { icon: "fa-ice-cream",      title: "댕스크림 컬렉션",   desc: "한정 시즌 — 아이스크림·음료",                      href: "/promo/seasonal", color: "pink" },
 ];
 
 // ============ 고객센터 드롭다운 ============

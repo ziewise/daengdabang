@@ -84,7 +84,7 @@ export default function BestSection() {
                 {/* 우측 하단 — 전체 보기 */}
                 <div className="flex justify-end mt-6 md:mt-7">
                     <Link
-                        href="#best-all"
+                        href="/best"
                         className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
                         베스트 상품 보기

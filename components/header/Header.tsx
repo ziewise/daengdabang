@@ -39,8 +39,8 @@ export default function Header() {
 
                     {/* 데스크탑 메인 nav (md+ 만 노출) */}
                     <nav className="hidden lg:flex items-center gap-1">
-                        <NavLink href="/main#best">베스트</NavLink>
-                        <NavLink href="/main#new">신상품</NavLink>
+                        <NavLink href="/best">베스트</NavLink>
+                        <NavLink href="/new">신상품</NavLink>
 
                         {/* 카테고리 — 5컬럼 메가메뉴 */}
                         <NavDropdown
@@ -50,29 +50,41 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                             wide
                         >
-                            <div className="grid grid-cols-5 gap-6 p-6 min-w-[680px]">
-                                {CATEGORY_GROUPS.map((g) => (
-                                    <div key={g.title}>
-                                        <Link
-                                            href={g.href}
-                                            className="block mb-3 text-sm font-extrabold text-foreground hover:text-aurora-indigo"
-                                        >
-                                            {g.title}
-                                        </Link>
-                                        <ul className="space-y-1.5">
-                                            {g.items.map((it) => (
-                                                <li key={it.label}>
-                                                    <Link
-                                                        href={it.href}
-                                                        className="text-xs text-neutral-500 hover:text-aurora-indigo block py-0.5"
-                                                    >
-                                                        {it.label}
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ))}
+                            <div className="p-6 min-w-[680px]">
+                                <div className="grid grid-cols-5 gap-6">
+                                    {CATEGORY_GROUPS.map((g) => (
+                                        <div key={g.title}>
+                                            <Link
+                                                href={g.href}
+                                                className="block mb-3 text-sm font-extrabold text-foreground hover:text-aurora-indigo"
+                                            >
+                                                {g.title}
+                                            </Link>
+                                            <ul className="space-y-1.5">
+                                                {g.items.map((it) => (
+                                                    <li key={it.label}>
+                                                        <Link
+                                                            href={it.href}
+                                                            className="text-xs text-neutral-500 hover:text-aurora-indigo block py-0.5"
+                                                        >
+                                                            {it.label}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* 우하단 — 전체 상품 보기 (333개 통합 페이지) */}
+                                <div className="mt-5 pt-4 border-t border-neutral-100 flex justify-end">
+                                    <Link
+                                        href="/products"
+                                        className="inline-flex items-center gap-1.5 text-xs font-extrabold text-aurora-indigo hover:text-aurora-pink transition"
+                                    >
+                                        전체 상품 보기
+                                        <i className="fa-solid fa-arrow-right text-[10px]" />
+                                    </Link>
+                                </div>
                             </div>
                         </NavDropdown>
 
@@ -103,10 +115,10 @@ export default function Header() {
                                     ))}
                                 </div>
                                 <Link
-                                    href="#brands-all"
+                                    href="/brands"
                                     className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 hover:bg-neutral-100 text-xs font-bold"
                                 >
-                                    <span>전체 브랜드 보기</span>
+                                    <span>기타 브랜드 보기</span>
                                     <i className="fa-solid fa-arrow-right text-aurora-indigo" />
                                 </Link>
                             </div>

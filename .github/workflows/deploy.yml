@@ -1,0 +1,70 @@
+#
+# GitHub Pages 자동 배포 워크플로우 (Next.js 정적 export)
+# ---------------------------------------------------------------------
+# main 브랜치 push 시 자동 빌드 → GitHub Pages 로 배포.
+# Settings → Pages → Source 를 "GitHub Actions" 로 설정해야 동작.
+#
+# next.config.ts 의 output: 'export' 가 켜져 있어야 out/ 산출됨.
+# public/CNAME 에 도메인이 적혀 있으면 빌드 시 out/CNAME 으로 복사되어
+# GitHub Pages 가 Custom domain 으로 인식.
+#
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pages 배포에 필요한 권한 (저장소 read + pages write + OIDC id-token)
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 동시 배포 방지 — 진행 중인 배포가 있으면 새 푸시는 큐잉
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # Next.js 빌드 시 NODE_ENV=production 자동 설정됨
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # next.config.ts 의 output: 'export' 산출물 폴더 (기본 out/)
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
