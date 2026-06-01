@@ -30,6 +30,9 @@ export interface CatalogRow {
     categorizeNote: string;
     sourceUrl: string;
     verifyNote: string;
+    /** 상품 이미지 경로 — 폴더목록.xlsx 의 폴더명을 기준으로 link-product-images.mjs 로 채움.
+     *  없으면 ph(placeholder) 색상 + 아이콘으로 fallback. */
+    image?: string;
 }
 
 /** UI 노출용 정규화 상품 타입 — id, slug, category, promo, placeholder 추가 */
@@ -320,6 +323,7 @@ function buildCatalog(): CatalogProduct[] {
             icon: SUBCAT_ICON[sub],
             season: r.season || undefined,
             seasonalFlag: r.seasonalFlag,
+            image: r.image,  // 폴더목록.xlsx 기반 매핑 (없으면 undefined → ProductCard 가 placeholder 로 fallback)
             raw: r,
             ...meta,
         };
