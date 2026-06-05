@@ -19,16 +19,17 @@
  * 1. 디자인 토큰 (CSS 변수)
  * ===================================================== */
 :root {
-    /* 배경·전경 */
-    --background: #fafbff;
+    /* 배경·전경 — 크레파스 종이 톤 */
+    --background: #f9faff;
     --foreground: #0f172a;
 
-    /* 브랜드 컬러 — 오로라 글래스 (블루 → 퍼플 → 핑크) */
-    --aurora-blue:   #3b82f6;
-    --aurora-indigo: #6366f1;
-    --aurora-purple: #a855f7;
-    --aurora-pink:   #ec4899;
-    --aurora-amber:  #fbbf24;
+    /* 브랜드 컬러 — 부드러운 크레파스 톤 (블루 → 퍼플 → 핑크)
+       변수 이름은 기존 'aurora-*' 유지 (전역 사용 일관성) */
+    --aurora-blue:   #4F8FF6;
+    --aurora-indigo: #7679EE;
+    --aurora-purple: #B370F5;
+    --aurora-pink:   #F058A6;
+    --aurora-amber:  #FBBF24;
 
     /* 회원 등급 컬러 */
     --grade-1: #10b981;   /* 댕린이 — 새싹 그린 */
@@ -114,8 +115,13 @@ body {
 }
 
 /* =====================================================
- * 4. 글로벌 오로라 배경 — 모든 페이지 공통
- *    body 의 fixed 배경처럼 떠있는 그라데이션 블롭들.
+ * 4. 글로벌 크레파스 배경 — 모든 페이지 공통
+ *    파스텔 크레파스 종이 톤 + SVG 패치 (코너·엣지 + 작은 낙서)
+ *    body 의 fixed 배경처럼 떠있는 layer.
+ *
+ *    각 패치 = 사선 평행 stroke 여러 줄을 turbulence/displacement 로 흔든 결과.
+ *    엣지·코너에 색 패치, 가운데는 비움, 작은 낙서(하트/별/꽃) 흩뿌림.
+ *    파스텔 베이지 베이스 + 종이 noise multiply.
  * ===================================================== */
 .global-aurora {
     position: fixed;
@@ -123,37 +129,6 @@ body {
     z-index: -1;
     pointer-events: none;
     overflow: hidden;
-    background:
-        radial-gradient(circle at 20% 10%, rgba(99, 102, 241, 0.18), transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(236, 72, 153, 0.14), transparent 45%),
-        radial-gradient(circle at 50% 90%, rgba(59, 130, 246, 0.16), transparent 50%),
-        linear-gradient(180deg, #fafbff 0%, #f4f6ff 50%, #fff5f9 100%);
-}
-
-/* =====================================================
- * 7. Preview 2 — 크레파스 테마 (오로라를 크레파스로 칠한 듯)
- *    오로라 컬러·라이트 베이스는 유지, 그 위에 크레파스 결·종이 질감 추가.
- *    폰트·카드·버튼 외관은 기본 그대로.
- * ===================================================== */
-
-html.theme-crayon {
-    /* 배경/전경은 오로라와 거의 동일 — 맑은 라이트 */
-    --background: #f9faff;
-    --foreground: #0f172a;
-
-    /* aurora 컬러도 그대로 유지 (살짝만 부드럽게) — 버튼·뱃지 톤 일관성 */
-    --aurora-blue:   #4F8FF6;
-    --aurora-indigo: #7679EE;
-    --aurora-purple: #B370F5;
-    --aurora-pink:   #F058A6;
-    --aurora-amber:  #FBBF24;
-}
-
-/* 글로벌 배경 — 레퍼런스(파스텔 크레파스 종이) 톤
-   각 패치 = 사선 평행 stroke 여러 줄을 turbulence/displacement 로 흔든 결과.
-   엣지·코너에 색 패치, 가운데는 비움, 작은 낙서(하트/별/꽃) 흩뿌림.
-   파스텔 베이지 베이스 + 종이 noise multiply */
-html.theme-crayon .global-aurora {
     background-image:
         /* 각 패치 필터 = displacement(거친 모서리) + 종이 grain mask(밀랍 사이로 종이 비침)
            feComposite operator='in' 으로 noise alpha 마스크 적용해 wax-on-paper 표현 */
