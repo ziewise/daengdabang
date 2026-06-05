@@ -182,37 +182,35 @@ export default function ProductCard({
                         {p.name}
                     </p>
 
-                    {/* 가격 */}
+                    {/* 가격 — 할인 row 는 항상 공간 차지 (카드 높이 일관) */}
                     <div className="text-right">
-                        {p.discountRate > 0 && p.originalPrice ? (
-                            <>
-                                <div className="flex items-center justify-end gap-1.5 mb-0.5">
+                        <div className="flex items-center justify-end gap-1.5 mb-0.5 h-[14px] md:h-[16px]">
+                            {p.discountRate > 0 && p.originalPrice && (
+                                <>
                                     <span className="text-[11px] md:text-xs font-extrabold text-danger">
                                         {p.discountRate}%
                                     </span>
                                     <span className="text-[10px] md:text-[11px] text-neutral-400 line-through">
                                         {formatKRW(p.originalPrice)}원
                                     </span>
-                                </div>
-                                <p className="text-sm md:text-base font-black">
-                                    {formatKRW(p.price)}원
-                                </p>
-                            </>
-                        ) : (
-                            <p className="text-sm md:text-base font-black">
-                                {formatKRW(p.price)}원
-                            </p>
-                        )}
+                                </>
+                            )}
+                        </div>
+                        <p className="text-sm md:text-base font-black">
+                            {formatKRW(p.price)}원
+                        </p>
                     </div>
 
-                    {/* 평점 + 리뷰 수 */}
-                    {p.reviewCount > 0 && (
-                        <div className="flex items-center justify-end gap-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500">
-                            <i className="fa-solid fa-star text-amber-400" />
-                            <span className="font-bold text-neutral-700">{p.rating.toFixed(1)}</span>
-                            <span className="text-neutral-400">({p.reviewCount})</span>
-                        </div>
-                    )}
+                    {/* 평점 + 리뷰 수 — 항상 자리 (리뷰 0 시 빈 영역) */}
+                    <div className="flex items-center justify-end gap-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500 h-[14px] md:h-[16px]">
+                        {p.reviewCount > 0 && (
+                            <>
+                                <i className="fa-solid fa-star text-amber-400" />
+                                <span className="font-bold text-neutral-700">{p.rating.toFixed(1)}</span>
+                                <span className="text-neutral-400">({p.reviewCount})</span>
+                            </>
+                        )}
+                    </div>
                 </div>
             </Link>
         </article>
