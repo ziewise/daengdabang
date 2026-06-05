@@ -1,67 +1,133 @@
 /**
- * ProductTabs — 상세정보 / 리뷰 / Q&A 탭
+ * ProductTabs — 상세정보 / 리뷰 / Q&A 섹션 + sticky 점프 탭
  * ---------------------------------------------------------------------
- * 상세정보 탭:
- *   - details[] 배열의 이미지를 세로로 쌓아 표시
- *   - 접힘 상태: max-height 800px + 하단 페이드 그라데이션 + "상세정보 펼쳐보기" 버튼
- *   - 펼친 상태: 전부 표시 + 하단 "접기" 버튼
- *   - details 0개: 아무것도 안 보임 (안내 문구 X)
+ * 무신사·쿠팡 패턴 — 탭이 콘텐츠를 가르는 게 아니라 점프 버튼.
+ * 모든 섹션이 한 페이지에 펼쳐져 있고, 탭 클릭 시 해당 섹션으로 부드러운 스크롤.
+ * 스크롤 위치에 따라 활성 탭 자동 변경 (IntersectionObserver).
+ *
+ * 상세 정보:
+ *   - details[] 세로 쌓기
+ *   - 접힘 상태 800px + 페이드 + "펼쳐보기" 버튼
+ *   - details 0개 시 빈 영역 (안내 문구 X)
  *
  * 리뷰 / Q&A:
- *   - 빈 상태 + 작성/문의 버튼 (mock)
+ *   - 빈 상태 mock + 작성/문의 CTA
  */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 
-type TabKey = "detail" | "review" | "qna";
+type SectionKey = "detail" | "review" | "qna";
+
+const SECTIONS: { key: SectionKey; label: string }[] = [
+    { key: "detail", label: "상세 정보" },
+    { key: "review", label: "리뷰" },
+    { key: "qna",    label: "Q&A" },
+];
 
 interface Props {
     product: CatalogProduct;
 }
 
 export default function ProductTabs({ product: p }: Props) {
-    const [tab, setTab] = useState<TabKey>("detail");
-    const reviewCount = p.reviewCount;
-    const qnaCount = 0; // mock
+    const [active, setActive] = useState<SectionKey>("detail");
+    const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
+        detail: null, review: null, qna: null,
+    });
+
+    /** 활성 탭 자동 감지 — 화면 상단 1/3 지점에 가장 가까운 섹션 */
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        // IntersectionObserver — 헤더 높이 + 탭바 높이 만큼 위에서 감지
+        const headerOffset = 72 + 56;  // 헤더 + 탭바
+        const observer = new IntersectionObserver(
+            (entries) => {
+                // 화면 상단에 가장 가까운(top 이 양수면서 가장 작은) entry 선택
+                const visible = entries
+                    .filter((e) => e.isIntersecting)
+                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+                if (visible[0]) {
+                    const id = (visible[0].target as HTMLElement).id;
+                    if (id === "tab-detail") setActive("detail");
+                    else if (id === "tab-review") setActive("review");
+                    else if (id === "tab-qna") setActive("qna");
+                }
+            },
+            {
+                // 화면 상단(헤더+탭바 아래) 부터 약 50% 지점까지 의미
+                rootMargin: `-${headerOffset}px 0px -50% 0px`,
+                threshold: 0,
+            }
+        );
+        Object.values(sectionRefs.current).forEach((el) => el && observer.observe(el));
+        return () => observer.disconnect();
+    }, []);
+
+    /** 탭 클릭 → 부드러운 스크롤 */
+    const scrollToSection = (key: SectionKey) => {
+        const el = sectionRefs.current[key];
+        if (!el) return;
+        const headerOffset = 72 + 56 + 12;
+        const y = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+    };
 
     return (
-        <section className="mt-10 md:mt-14">
-            {/* 탭 바 — sticky 가능 */}
-            <div className="sticky top-[var(--header-height)] z-10 bg-background/95 backdrop-blur border-b border-neutral-200">
+        <div className="mt-10 md:mt-14">
+            {/* sticky 탭 바 — 클릭 시 섹션으로 점프 */}
+            <nav
+                className="sticky top-[var(--header-height)] z-20 -mx-4 md:-mx-6 px-4 md:px-6 bg-background/95 backdrop-blur border-b border-neutral-200"
+                aria-label="페이지 내 섹션"
+            >
                 <div className="flex gap-1">
-                    <TabButton
-                        active={tab === "detail"}
-                        onClick={() => setTab("detail")}
-                        label="상세 정보"
-                    />
-                    <TabButton
-                        active={tab === "review"}
-                        onClick={() => setTab("review")}
-                        label="리뷰"
-                        badge={reviewCount > 0 ? reviewCount.toLocaleString() : undefined}
-                    />
-                    <TabButton
-                        active={tab === "qna"}
-                        onClick={() => setTab("qna")}
-                        label="Q&A"
-                        badge={qnaCount > 0 ? String(qnaCount) : undefined}
-                    />
+                    {SECTIONS.map((s) => (
+                        <TabButton
+                            key={s.key}
+                            active={active === s.key}
+                            onClick={() => scrollToSection(s.key)}
+                            label={s.label}
+                            badge={s.key === "review" && p.reviewCount > 0
+                                ? p.reviewCount.toLocaleString()
+                                : undefined}
+                        />
+                    ))}
                 </div>
-            </div>
+            </nav>
 
-            {/* 탭 콘텐츠 */}
-            <div className="pt-8 md:pt-10">
-                {tab === "detail" && <DetailContent product={p} />}
-                {tab === "review" && <ReviewContent />}
-                {tab === "qna" && <QnaContent />}
-            </div>
-        </section>
+            {/* 섹션들 — 모두 펼쳐진 상태로 세로로 쌓임 */}
+            <section
+                id="tab-detail"
+                ref={(el) => { sectionRefs.current.detail = el; }}
+                className="pt-8 md:pt-12 scroll-mt-[calc(var(--header-height)+56px)]"
+            >
+                <SectionTitle title="상세 정보" />
+                <DetailContent product={p} />
+            </section>
+
+            <section
+                id="tab-review"
+                ref={(el) => { sectionRefs.current.review = el; }}
+                className="pt-12 md:pt-16 scroll-mt-[calc(var(--header-height)+56px)]"
+            >
+                <SectionTitle title="리뷰" badge={p.reviewCount > 0 ? p.reviewCount.toLocaleString() : undefined} />
+                <ReviewContent product={p} />
+            </section>
+
+            <section
+                id="tab-qna"
+                ref={(el) => { sectionRefs.current.qna = el; }}
+                className="pt-12 md:pt-16 scroll-mt-[calc(var(--header-height)+56px)]"
+            >
+                <SectionTitle title="Q&A" />
+                <QnaContent />
+            </section>
+        </div>
     );
 }
 
+/* ============ 공용 ============ */
 function TabButton({
     active, onClick, label, badge,
 }: {
@@ -74,7 +140,7 @@ function TabButton({
         <button
             type="button"
             onClick={onClick}
-            aria-pressed={active}
+            aria-current={active}
             className={`relative px-5 md:px-6 py-3.5 md:py-4 text-sm md:text-base font-extrabold transition ${
                 active ? "text-foreground" : "text-neutral-400 hover:text-neutral-700"
             }`}
@@ -96,19 +162,31 @@ function TabButton({
     );
 }
 
-/* ============ 상세 정보 탭 ============ */
+function SectionTitle({ title, badge }: { title: string; badge?: string }) {
+    return (
+        <header className="mb-5 md:mb-6 flex items-baseline gap-2">
+            <h2 className="text-xl md:text-2xl font-black tracking-tight">{title}</h2>
+            {badge && (
+                <span className="text-xs md:text-sm font-extrabold text-neutral-400">
+                    {badge}
+                </span>
+            )}
+        </header>
+    );
+}
+
+/* ============ 상세 정보 영역 ============ */
 function DetailContent({ product: p }: { product: CatalogProduct }) {
     const [expanded, setExpanded] = useState(false);
     const details = p.details ?? [];
 
     // 이미지 없으면 빈 영역 (안내 문구 X)
     if (details.length === 0) {
-        return <div className="min-h-[200px]" aria-hidden="true" />;
+        return <div className="min-h-[80px]" aria-hidden="true" />;
     }
 
     return (
         <div className="relative max-w-3xl mx-auto">
-            {/* 이미지 영역 — 접힘 시 max-height 제한, 펼친 시 무제한 */}
             <div
                 className={`relative overflow-hidden transition-all duration-300 ${
                     expanded ? "max-h-none" : "max-h-[800px]"
@@ -141,7 +219,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                 )}
             </div>
 
-            {/* 토글 버튼 */}
+            {/* 펼침/접기 버튼 */}
             <div className="flex justify-center mt-4">
                 <button
                     type="button"
@@ -165,14 +243,30 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     );
 }
 
-/* ============ 리뷰 탭 ============ */
-function ReviewContent() {
+/* ============ 리뷰 영역 ============ */
+function ReviewContent({ product: p }: { product: CatalogProduct }) {
     return (
-        <div className="text-center py-16 md:py-24 max-w-md mx-auto">
-            <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-500 text-2xl">
+        <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-8 md:p-12 text-center max-w-2xl mx-auto">
+            {p.reviewCount > 0 && (
+                <div className="flex items-center justify-center gap-2 mb-5">
+                    <div className="flex">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                            <i
+                                key={s}
+                                className={`fa-solid fa-star text-base ${s <= Math.round(p.rating) ? "text-amber-400" : "text-neutral-200"}`}
+                            />
+                        ))}
+                    </div>
+                    <span className="text-2xl font-black">{p.rating.toFixed(1)}</span>
+                    <span className="text-sm text-neutral-400 font-bold">/ 5.0</span>
+                </div>
+            )}
+            <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-500 text-xl">
                 <i className="fa-regular fa-star" />
             </div>
-            <h3 className="text-base md:text-lg font-extrabold mb-1.5">아직 리뷰가 없습니다</h3>
+            <h3 className="text-base md:text-lg font-extrabold mb-1.5">
+                {p.reviewCount > 0 ? "리뷰 작성 가능" : "아직 리뷰가 없습니다"}
+            </h3>
             <p className="text-sm text-neutral-500 mb-6">
                 첫 번째 리뷰를 작성해 주세요.<br className="hidden md:block" />
                 다른 구매자에게 큰 도움이 됩니다.
@@ -188,11 +282,11 @@ function ReviewContent() {
     );
 }
 
-/* ============ Q&A 탭 ============ */
+/* ============ Q&A 영역 ============ */
 function QnaContent() {
     return (
-        <div className="text-center py-16 md:py-24 max-w-md mx-auto">
-            <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-aurora-indigo text-2xl">
+        <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-8 md:p-12 text-center max-w-2xl mx-auto">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-aurora-indigo text-xl">
                 <i className="fa-regular fa-comment-dots" />
             </div>
             <h3 className="text-base md:text-lg font-extrabold mb-1.5">아직 문의가 없습니다</h3>
