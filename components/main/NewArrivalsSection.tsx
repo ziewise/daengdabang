@@ -1,31 +1,36 @@
 /**
- * NewArrivalsSection — 신상품 가로 캐러셀 (자동 + 무한 루프 + 양방향)
+ * NewArrivalsSection — 메인 페이지 신상품 가로 캐러셀
  * ---------------------------------------------------------------------
- * 핵심 트릭:
+ * 카탈로그 단일 출처 — getNewProducts() (큐레이션된 신상품 17~18개)
+ *
+ * 캐러셀 트릭:
  *   카드 3세트 (앞 클론 + 실제 + 뒤 클론) 를 렌더 → 중앙 부분만 사용자에게 보임.
  *   양 끝 클론에 진입하면 scrollBehavior auto 로 silent jump → 무한 느낌.
  *
  * 자동: 2.8초 간격, hover 시에도 멈추지 않음 (사용자 피드백 반영)
  * 수동: prev/next 버튼 → 2.5초 일시정지 → 재개
  *
- * 카드 디자인은 BestSection 의 그것과 일관 (NEW 배지 + 단순 가격).
+ * 카드는 공용 ProductCard 사용 — 영상 호버 자동 적용.
  */
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { NEW_PRODUCTS, formatKRW } from "@/lib/products";
-import bestStyles from "./best.module.css";
+import { getNewProducts } from "@/lib/catalog";
+import ProductCard from "@/components/products/ProductCard";
 
 const AUTO_INTERVAL = 2800;
 const MANUAL_PAUSE = 2500;
 const RESUME_DELAY = 500;
+const NEW_LIMIT = 8;
 
 export default function NewArrivalsSection() {
     const trackRef = useRef<HTMLDivElement>(null);
     const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const manualPauseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    // 카탈로그에서 최신 신상품 8개 (큐레이션 순서 그대로)
+    const items = getNewProducts().slice(0, NEW_LIMIT);
 
     /** 카드 1장 + gap 너비 (한 칸 스크롤 단위) */
     const getCardStep = useCallback((): number => {
@@ -37,10 +42,10 @@ export default function NewArrivalsSection() {
         return card.getBoundingClientRect().width + gap;
     }, []);
 
-    /** 1세트(12개 카드) 총 너비 */
+    /** 1세트(items.length 개) 총 너비 */
     const getOneSetWidth = useCallback(
-        () => getCardStep() * NEW_PRODUCTS.length,
-        [getCardStep]
+        () => getCardStep() * items.length,
+        [getCardStep, items.length]
     );
 
     /** 초기 중앙 정렬 — 실제 영역 시작점으로 */
@@ -111,7 +116,6 @@ export default function NewArrivalsSection() {
     );
 
     useEffect(() => {
-        // 첫 paint 직후 중앙 정렬
         const t = setTimeout(initScrollPosition, 50);
         return () => clearTimeout(t);
     }, [initScrollPosition]);
@@ -124,7 +128,6 @@ export default function NewArrivalsSection() {
         };
     }, [startAuto, stopAuto]);
 
-    // 스크롤 → 양끝 진입 시 silent jump
     useEffect(() => {
         const track = trackRef.current;
         if (!track) return;
@@ -133,12 +136,8 @@ export default function NewArrivalsSection() {
         return () => track.removeEventListener("scroll", onScroll);
     }, [checkInfiniteJump]);
 
-    // 3 세트 = 36 카드
-    const tripleSet = [
-        ...NEW_PRODUCTS,
-        ...NEW_PRODUCTS,
-        ...NEW_PRODUCTS,
-    ];
+    // 3 세트 = N*3 카드 (무한 루프)
+    const tripleSet = [...items, ...items, ...items];
 
     return (
         <section id="new" className="py-8 md:py-12">
@@ -171,56 +170,20 @@ export default function NewArrivalsSection() {
                     </div>
                 </div>
 
-                {/* 캐러셀 트랙 — overflow-x scroll, snap, 스크롤바 숨김 */}
+                {/* 캐러셀 트랙 — overflow-x scroll, snap, 공용 ProductCard 사용 */}
                 <div
                     ref={trackRef}
                     className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
                     style={{ scrollbarWidth: "none" }}
                 >
                     {tripleSet.map((p, i) => (
-                        <a
-                            key={i}
-                            href={`#new-${(i % NEW_PRODUCTS.length) + 1}`}
+                        <div
+                            key={`${p.id}-${i}`}
                             data-new-card
-                            className="snap-start flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px] block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all"
+                            className="snap-start flex-shrink-0 w-[160px] sm:w-[200px] md:w-[230px]"
                         >
-                            {/* 이미지 영역 — image 있으면 사진 + 베이지 배경, 없으면 ph 컬러 placeholder + 아이콘 */}
-                            <div className={`relative aspect-square overflow-hidden flex items-center justify-center ${p.image ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}>
-                                {p.image ? (
-                                    <Image
-                                        src={p.image}
-                                        alt={p.name}
-                                        fill
-                                        sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
-                                        className="object-cover"
-                                    />
-                                ) : (
-                                    <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
-                                )}
-                                <span className="absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-full bg-gradient-to-r from-aurora-indigo to-aurora-pink text-white text-[10px] font-black tracking-wider">
-                                    NEW
-                                </span>
-                                <button
-                                    type="button"
-                                    onClick={(e) => e.preventDefault()}
-                                    className="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-card flex items-center justify-center"
-                                    aria-label="찜하기"
-                                >
-                                    <i className="fa-regular fa-heart text-neutral-400 text-xs" />
-                                </button>
-                            </div>
-                            <div className="p-3 md:p-4">
-                                <p className="text-[10px] font-extrabold tracking-wider text-aurora-indigo mb-1">
-                                    {p.brand}
-                                </p>
-                                <p className="text-xs md:text-sm font-bold line-clamp-2 mb-2 min-h-[2.6em]">
-                                    {p.name}
-                                </p>
-                                <p className="text-right text-sm md:text-base font-black">
-                                    {formatKRW(p.price)}원
-                                </p>
-                            </div>
-                        </a>
+                            <ProductCard product={p} />
+                        </div>
                     ))}
                 </div>
 

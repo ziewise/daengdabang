@@ -1,7 +1,7 @@
 "use client";
 
 import { MOCK_WISHLIST } from "@/lib/mypage-data";
-import { formatKRW } from "@/lib/products";
+import { formatKRW } from "@/lib/catalog";
 import bestStyles from "@/components/main/best.module.css";
 import { PaneHead } from "../page";
 

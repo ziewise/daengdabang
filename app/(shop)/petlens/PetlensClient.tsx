@@ -13,7 +13,7 @@ import { useState } from "react";
 import { usePets } from "@/hooks/usePets";
 import { petsOrMock } from "@/lib/mypage-data";
 import { usePetlens } from "@/components/petlens/PetlensProvider";
-import { formatKRW } from "@/lib/products";
+import { formatKRW } from "@/lib/catalog";
 import {
     HEALTH_RISKS, BODY_TRAITS, SUPPLEMENT_RECS, SIZE_GUIDE,
     INTERNAL_RECS, EXTERNAL_RECS, SEASONAL_RECS,

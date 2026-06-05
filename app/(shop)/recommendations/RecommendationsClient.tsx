@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { petsOrMock } from "@/lib/mypage-data";
-import { formatKRW } from "@/lib/products";
+import { formatKRW } from "@/lib/catalog";
 import { groupByCategory, CATEGORY_LABEL } from "@/lib/recommendations";
 import bestStyles from "@/components/main/best.module.css";
 import LoginModal from "@/components/auth/LoginModal";

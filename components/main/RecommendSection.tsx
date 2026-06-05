@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { petsOrMock } from "@/lib/mypage-data";
-import { formatKRW } from "@/lib/products";
+import { formatKRW } from "@/lib/catalog";
 import { topRecommendations, CATEGORY_LABEL } from "@/lib/recommendations";
 import bestStyles from "./best.module.css";
 
@@ -74,7 +74,7 @@ export default function RecommendSection() {
                     {recs.map((p, i) => (
                         <a
                             key={`${p.name}-${i}`}
-                            href={`#recommend-${i + 1}`}
+                            href="/recommendations"
                             className="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all"
                         >
                             <div className={`relative aspect-square ${bestStyles[`ph${p.ph}`]} flex items-center justify-center`}>

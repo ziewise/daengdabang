@@ -2,7 +2,7 @@
  * /mypage/orders — 주문 내역
  */
 import { MOCK_ORDERS, ORDER_STATUS_LABEL } from "@/lib/mypage-data";
-import { formatKRW } from "@/lib/products";
+import { formatKRW } from "@/lib/catalog";
 import { PaneHead } from "../page";
 
 const STATUS_STYLE: Record<keyof typeof ORDER_STATUS_LABEL, string> = {
