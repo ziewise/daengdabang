@@ -92,29 +92,13 @@ def write_header(ws, headers, fill_color="4B5563"):
 
 
 def build_products_sheet(ws, catalog, excel_by_norm):
-    """products 시트: 상단 안내 영역 + 333행 데이터 테이블."""
-    # ====== 상단 안내 영역 ======
-    last_info_row = write_products_info(ws)
-    header_row = last_info_row + 2  # 안내 + 빈 줄 + 헤더
-
-    # ====== 컬럼 헤더 ======
+    """products 시트: 깔끔한 표 (헤더 + 333행). 안내는 별도 guide 시트."""
     headers = ["no", "product_name", "folder_name", "main_image", "detail_path", "detail_url"]
-    header_font = Font(bold=True, color="FFFFFF", size=11)
-    header_fill = PatternFill("solid", fgColor="4B5563")
-    header_alignment = Alignment(horizontal="center", vertical="center")
+    write_header(ws, headers)
     border = get_borders()
 
-    for col_idx, h in enumerate(headers, start=1):
-        cell = ws.cell(row=header_row, column=col_idx, value=h)
-        cell.font = header_font
-        cell.fill = header_fill
-        cell.alignment = header_alignment
-        cell.border = border
-
-    # ====== 데이터 ======
     matched_count = 0
     no5_assigned = False
-    current_row = header_row
 
     for c in sorted(catalog, key=lambda x: x["no"]):
         no = c["no"]
@@ -136,161 +120,22 @@ def build_products_sheet(ws, catalog, excel_by_norm):
             detail_path = ""
             detail_url = f"{BASE_URL}/product/p_{no}"
 
-        current_row += 1
+        row_idx = ws.max_row + 1
         for col_idx, value in enumerate(
             [no, name, folder, main_image, detail_path, detail_url],
             start=1,
         ):
-            cell = ws.cell(row=current_row, column=col_idx, value=value)
+            cell = ws.cell(row=row_idx, column=col_idx, value=value)
             cell.border = border
             cell.alignment = Alignment(vertical="center")
 
-    # ====== 컬럼 너비 + 헤더 freeze ======
     widths = {1: 6, 2: 60, 3: 32, 4: 28, 5: 30, 6: 60}
     for col_idx, w in widths.items():
         ws.column_dimensions[openpyxl.utils.get_column_letter(col_idx)].width = w
-    ws.freeze_panes = f"A{header_row + 1}"  # 헤더 + 안내 영역 고정
-    ws.row_dimensions[header_row].height = 24
+    ws.freeze_panes = "A2"
+    ws.row_dimensions[1].height = 24
 
     return matched_count
-
-
-def write_products_info(ws):
-    """products 시트 상단에 작업 안내 영역 작성. 마지막 행 번호 반환."""
-    title_font = Font(bold=True, color="FFFFFF", size=14)
-    title_fill = PatternFill("solid", fgColor="4F46E5")
-    section_font = Font(bold=True, color="111827", size=11)
-    section_fill = PatternFill("solid", fgColor="EEF2FF")
-    warn_fill = PatternFill("solid", fgColor="FEF3C7")
-    body_font = Font(color="374151", size=10)
-    code_font = Font(color="0F172A", size=10, name="Consolas")
-
-    align_left = Alignment(horizontal="left", vertical="center", wrap_text=False, indent=1)
-    align_center = Alignment(horizontal="center", vertical="center")
-
-    # ────── Row 1: 타이틀 ──────
-    ws.merge_cells("A1:F1")
-    cell = ws.cell(row=1, column=1, value="댕다방 상품 목록  (product_list.xlsx)")
-    cell.font = title_font
-    cell.fill = title_fill
-    cell.alignment = align_center
-    ws.row_dimensions[1].height = 30
-
-    # ────── Row 2: 빈 줄 ──────
-    ws.row_dimensions[2].height = 8
-
-    # ────── 섹션 1: 작업 위치 ──────
-    ws.merge_cells("A3:F3")
-    c = ws.cell(row=3, column=1, value="■ 이미지 작업 위치")
-    c.font = section_font
-    c.fill = section_fill
-    c.alignment = align_left
-    ws.row_dimensions[3].height = 22
-
-    section1 = [
-        "  모든 상품 이미지는 git 저장소 안의 아래 폴더에 저장합니다:",
-        "    Daengdabang_Shop/public/images/products/catalog/{folder_name}/",
-        "  folder_name 은 아래 표의 folder_name 컬럼에서 확인.",
-        "  git clone 으로 받으면 모든 자산이 함께 따라옵니다 — 별도 폴더 공유 불필요.",
-    ]
-    row = 3
-    for line in section1:
-        row += 1
-        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-        c = ws.cell(row=row, column=1, value=line)
-        c.font = code_font if line.strip().startswith("Daengdabang") else body_font
-        c.alignment = align_left
-        ws.row_dimensions[row].height = 18
-
-    # 빈 줄
-    row += 1
-    ws.row_dimensions[row].height = 8
-
-    # ────── 섹션 2: 폴더 안 파일 구조 ──────
-    row += 1
-    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-    c = ws.cell(row=row, column=1, value="■ 폴더 안 파일 구조 (예: rw_notarock)")
-    c.font = section_font
-    c.fill = section_fill
-    c.alignment = align_left
-    ws.row_dimensions[row].height = 22
-
-    folder_structure = [
-        "  rw_notarock/",
-        "  ├── rw_notarock.png    ← 메인 이미지 (필수, folder_name + .png)",
-        "  ├── 2.png              ← 갤러리 2번째 (옵션, 정사각형 권장)",
-        "  ├── 3.png, 4.png, ...  ← 추가 갤러리 (필요한 만큼)",
-        "  ├── size.png           ← 사이즈 차트 (옵션)",
-        "  ├── video.mp4          ← 영상 (옵션, mp4 + h.264)",
-        "  └── details/           ← 상세 페이지 본문 (긴 세로 이미지들)",
-        "       ├── 1.png         ← 상세 1번째 (헤더/배너)",
-        "       ├── 2.png         ← 상세 2번째",
-        "       └── 3.png, ...    ← 갯수 제한 없음, 1.png 부터 순서대로 표시됨",
-    ]
-    for line in folder_structure:
-        row += 1
-        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-        c = ws.cell(row=row, column=1, value=line)
-        c.font = code_font
-        c.alignment = align_left
-        ws.row_dimensions[row].height = 16
-
-    # 빈 줄
-    row += 1
-    ws.row_dimensions[row].height = 8
-
-    # ────── 섹션 3: Excel 사용 규칙 ──────
-    row += 1
-    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-    c = ws.cell(row=row, column=1, value="⚠ Excel 사용 규칙 (반드시 지켜주세요)")
-    c.font = section_font
-    c.fill = warn_fill
-    c.alignment = align_left
-    ws.row_dimensions[row].height = 22
-
-    rules = [
-        "  · no 컬럼은 시스템 ID — 절대 변경하지 마세요 (catalog.json 과 매칭됨)",
-        "  · 중간에 행 추가·삭제 금지 — 새 상품은 가장 마지막 행 다음에 추가 (no = 334 부터)",
-        "  · folder_name 은 영문 소문자 + 언더스코어만 사용 (한글·공백·하이픈 X)",
-        "  · main_image, detail_path, detail_url 은 folder_name 으로부터 자동 결정됨 — 수동 편집 불필요",
-    ]
-    for line in rules:
-        row += 1
-        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-        c = ws.cell(row=row, column=1, value=line)
-        c.font = body_font
-        c.alignment = align_left
-        ws.row_dimensions[row].height = 18
-
-    # 빈 줄
-    row += 1
-    ws.row_dimensions[row].height = 8
-
-    # ────── 섹션 4: 자동 반영 흐름 ──────
-    row += 1
-    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-    c = ws.cell(row=row, column=1, value="✓ 작업 → 사이트 자동 반영 흐름")
-    c.font = section_font
-    c.fill = section_fill
-    c.alignment = align_left
-    ws.row_dimensions[row].height = 22
-
-    flow = [
-        "  1. 위 폴더에 파일 추가/수정",
-        "  2. npm run dev (또는 npm run build) — sync-images 가 자동 실행되어 catalog.json 갱신",
-        "  3. git add . / git commit / git push",
-        "  4. 1~2분 후 detail_url 에서 확인",
-        "  세부 안내·FAQ 는 옆 시트 'guide' 참고.",
-    ]
-    for line in flow:
-        row += 1
-        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-        c = ws.cell(row=row, column=1, value=line)
-        c.font = body_font
-        c.alignment = align_left
-        ws.row_dimensions[row].height = 18
-
-    return row
 
 
 def build_guide_sheet(ws):
@@ -344,6 +189,14 @@ def build_guide_sheet(ws):
         ("  상세 본문:  details/ 폴더 안에 1.png 부터 순서대로",),
         ("  사이즈:     size.png (고정 파일명)",),
         ("  영상:       video.mp4 (고정 파일명, mp4 권장)",),
+        ("",),
+        ("● products 시트 사용 규칙 (반드시 지켜주세요)",),
+        ("",),
+        ("  · no 컬럼은 시스템 ID — 절대 변경하지 마세요 (catalog.json 과 매칭되는 키)",),
+        ("  · 중간에 행 추가·삭제 금지 — 새 상품은 가장 마지막 행 다음에 추가 (no = 334 부터)",),
+        ("  · folder_name 은 영문 소문자 + 언더스코어만 (한글·공백·하이픈 X)",),
+        ("  · main_image / detail_path / detail_url 은 folder_name 으로부터 자동 결정 — 수동 편집 불필요",),
+        ("  · 시트 자체는 협업·확인용 문서 — 사이트 데이터는 catalog.json 이 정본",),
         ("",),
         ("● 작업 → 사이트 반영 흐름",),
         ("",),
