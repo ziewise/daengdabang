@@ -13,15 +13,19 @@ Daengdabang_Shop/data/product_list.xlsx 를 생성한다.
 - "cats" 시트:     12개 고양이 상품 (원본 Excel no 보존, 별도 분류)
 
 컬럼 (products 시트):
-  no | product_name | folder_name | main_image | detail_image | detail_url
+  no | product_name | folder_name | main_image | detail_path | detail_url
 
 컬럼 (cats 시트):
   original_no | brand | product_name | folder_name | note
 
+시트 (guide 시트):
+  전체 폴더 구조 + 명명 규칙 정리 (작업자 자급자족 매뉴얼)
+
 규칙:
-- main_image = {folder_name}.png
-- detail_image = info.png (고정)
-- detail_url = https://www.daengdabang.com/product/{folder_name}
+- main_image  = {folder_name}.png
+- detail_path = details/1.png, 2.png, ...
+- detail_url  = https://www.daengdabang.com/product/{folder_name}
+- 갤러리(2.png, 3.png), 사이즈(size.png), 영상(video.mp4)은 자동 감지 (가이드 시트 참고)
 - 고양이 시트는 비활성 상품 — 향후 활성화 시 강아지 시트로 옮김
 """
 import json
@@ -88,7 +92,7 @@ def write_header(ws, headers, fill_color="4B5563"):
 
 
 def build_products_sheet(ws, catalog, excel_by_norm):
-    headers = ["no", "product_name", "folder_name", "main_image", "detail_image", "detail_url"]
+    headers = ["no", "product_name", "folder_name", "main_image", "detail_path", "detail_url"]
     write_header(ws, headers)
     border = get_borders()
 
@@ -110,29 +114,116 @@ def build_products_sheet(ws, catalog, excel_by_norm):
         if folder:
             matched_count += 1
             main_image = f"{folder}.png"
-            detail_image = "info.png"
+            detail_path = "details/1.png, 2.png, 3.png, ..."
             detail_url = f"{BASE_URL}/product/{folder}"
         else:
             main_image = ""
-            detail_image = ""
+            detail_path = ""
             detail_url = f"{BASE_URL}/product/p_{no}"
 
         row_idx = ws.max_row + 1
         for col_idx, value in enumerate(
-            [no, name, folder, main_image, detail_image, detail_url],
+            [no, name, folder, main_image, detail_path, detail_url],
             start=1,
         ):
             cell = ws.cell(row=row_idx, column=col_idx, value=value)
             cell.border = border
             cell.alignment = Alignment(vertical="center")
 
-    widths = {1: 6, 2: 60, 3: 32, 4: 28, 5: 12, 6: 60}
+    widths = {1: 6, 2: 60, 3: 32, 4: 28, 5: 30, 6: 60}
     for col_idx, w in widths.items():
         ws.column_dimensions[openpyxl.utils.get_column_letter(col_idx)].width = w
     ws.freeze_panes = "A2"
     ws.row_dimensions[1].height = 24
 
     return matched_count
+
+
+def build_guide_sheet(ws):
+    """명명 규칙 + 폴더 구조 안내 시트"""
+    header_font = Font(bold=True, color="FFFFFF", size=12)
+    header_fill = PatternFill("solid", fgColor="4F46E5")
+    section_font = Font(bold=True, size=11, color="111827")
+    section_fill = PatternFill("solid", fgColor="EEF2FF")
+    body_font = Font(size=10, color="374151")
+    code_font = Font(size=10, color="0F172A", name="Consolas")
+    border = get_borders()
+
+    # 타이틀
+    ws.merge_cells("A1:E1")
+    cell = ws.cell(row=1, column=1, value="product_list.xlsx 작업 가이드")
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = Alignment(horizontal="center", vertical="center")
+    ws.row_dimensions[1].height = 32
+
+    rows = [
+        ("",),
+        ("● 작업 위치",),
+        ("",),
+        ("  각 제품의 자산은 D:/Daengdabang/products/{folder_name}/ 폴더에 보관합니다.",),
+        ("  folder_name 은 products 시트의 folder_name 컬럼에서 확인.",),
+        ("",),
+        ("● 폴더 구조 (예시: rw_notarock)",),
+        ("",),
+        ("  D:/Daengdabang/products/rw_notarock/",),
+        ("  ├── rw_notarock.png    ← 메인 이미지 (필수, folder_name + .png)",),
+        ("  ├── 2.png              ← 갤러리 2번째 (옵션, 정사각형 권장)",),
+        ("  ├── 3.png              ← 갤러리 3번째",),
+        ("  ├── 4.png, 5.png, ...  ← 추가 갤러리 (필요한 만큼)",),
+        ("  ├── size.png           ← 사이즈 차트 (옵션)",),
+        ("  ├── video.mp4          ← 영상 (옵션, mp4 + h.264)",),
+        ("  └── details/           ← 상세 페이지 본문 (긴 세로 이미지들)",),
+        ("      ├── 1.png          ← 상세 1번째 (헤더/배너)",),
+        ("      ├── 2.png          ← 상세 2번째 (제품 소개)",),
+        ("      ├── 3.png          ← 상세 3번째 (특징)",),
+        ("      └── ...            ← 필요한 만큼 (사이트가 1.png 부터 순서대로 표시)",),
+        ("",),
+        ("● 파일 명명 규칙",),
+        ("",),
+        ("  메인 이미지: folder_name 과 동일 + .png",),
+        ("              예) folder_name = 'rw_notarock' → rw_notarock.png",),
+        ("  갤러리:     2.png 부터 시작 (메인이 1번째이므로)",),
+        ("  상세 본문:  details/ 폴더 안에 1.png 부터 순서대로",),
+        ("  사이즈:     size.png (고정 파일명)",),
+        ("  영상:       video.mp4 (고정 파일명, mp4 권장)",),
+        ("",),
+        ("● 업로드 후 사이트 반영",),
+        ("",),
+        ("  1. 파일을 위 폴더에 저장",),
+        ("  2. GitHub 에 push (또는 RPA 자동)",),
+        ("  3. 1~2분 후 detail_url 에서 확인",),
+        ("",),
+        ("● 자주 묻는 질문",),
+        ("",),
+        ("  Q. 폴더 안에 파일을 넣었는데 사이트에 안 보입니다.",),
+        ("  A. 1~2분 정도 빌드/배포 시간 필요. 그래도 안 보이면 파일명 확인 (오타·확장자).",),
+        ("",),
+        ("  Q. 갤러리 사진 갯수에 제한이 있나요?",),
+        ("  A. 제한 없음. 2.png 부터 빈 번호 없이 연속으로 추가.",),
+        ("",),
+        ("  Q. 상세 이미지 1번 위에 헤더, 마지막에 푸터 같은 게 있어야 하나요?",),
+        ("  A. 자유. 사이트는 1.png 부터 순서대로만 보여줍니다. 디자인은 자유.",),
+        ("",),
+        ("  Q. 모든 제품에 영상이나 사이즈 차트가 필요한가요?",),
+        ("  A. 아니요. 있으면 표시, 없으면 그 영역 자체가 안 보임. 옵션입니다.",),
+    ]
+
+    for i, row in enumerate(rows, start=2):
+        text = row[0]
+        cell = ws.cell(row=i, column=1, value=text)
+        if text.startswith("●"):
+            cell.font = section_font
+            cell.fill = section_fill
+            ws.merge_cells(start_row=i, start_column=1, end_row=i, end_column=5)
+        elif text.startswith("  D:") or text.startswith("  ├") or text.startswith("  │") or text.startswith("  └") or text.startswith("      "):
+            cell.font = code_font
+        else:
+            cell.font = body_font
+        cell.alignment = Alignment(vertical="center", wrap_text=False)
+        ws.row_dimensions[i].height = 18
+
+    ws.column_dimensions["A"].width = 120
 
 
 def build_cats_sheet(ws):
@@ -203,6 +294,10 @@ def main():
     ws_cats = wb.create_sheet(title="cats")
     cat_count = build_cats_sheet(ws_cats)
 
+    # 시트 3: guide (명명 규칙 + 폴더 구조 안내)
+    ws_guide = wb.create_sheet(title="guide")
+    build_guide_sheet(ws_guide)
+
     wb.save(OUT_PATH)
 
     # 결과 출력 (cp949 호환 — 이모지 X)
@@ -210,7 +305,8 @@ def main():
     print(f"  - 위치: {OUT_PATH}")
     print(f"  - products 시트: {len(catalog)} 행 (no=1~{len(catalog)})")
     print(f"  - products 시트 folder_name 매칭됨: {matched}")
-    print(f"  - cats sheet: {cat_count} rows (cats - 보류)")
+    print(f"  - cats sheet: {cat_count} rows")
+    print(f"  - guide sheet: 폴더 구조 + 명명 규칙 안내")
 
 
 if __name__ == "__main__":

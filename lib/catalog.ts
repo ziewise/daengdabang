@@ -36,14 +36,14 @@ export interface CatalogRow {
     /** 메인 상품 이미지 경로 — `/images/products/catalog/{folder}/{folder}.png` 패턴.
      *  없으면 ph(placeholder) 색상 + 아이콘으로 fallback. */
     image?: string;
-    /** 상세 설명 이미지 — `/images/products/catalog/{folder}/info.png`.
-     *  RPA 가 추후 추가. 빌드 시 sync-images 스크립트가 자동 감지. */
-    detailImage?: string;
-    /** 갤러리 추가 이미지 배열 — 2.png, 3.png, ... 자동 감지 */
+    /** 갤러리 추가 이미지 배열 — `{folder}/2.png`, `{folder}/3.png` ... 자동 감지 */
     gallery?: string[];
-    /** 사이즈 차트 (옵션) */
+    /** 상세 설명 이미지 배열 — `{folder}/details/1.png`, `{folder}/details/2.png` ... 자동 감지.
+     *  상세 페이지에서 위에서 아래로 순서대로 렌더. */
+    details?: string[];
+    /** 사이즈 차트 — `{folder}/size.png` */
     sizeImage?: string;
-    /** 영상 (옵션) */
+    /** 영상 — `{folder}/video.mp4` */
     video?: string;
 }
 
@@ -73,10 +73,10 @@ export interface CatalogProduct {
     folder?: string;
     /** 메인 이미지 — `/images/products/catalog/{folder}/{folder}.png` */
     image?: string;
-    /** 상세 설명 긴 이미지 — `/images/products/catalog/{folder}/info.png` */
-    detailImage?: string;
     /** 갤러리 추가 이미지 배열 */
     gallery?: string[];
+    /** 상세 설명 이미지 배열 — `{folder}/details/1.png`, `{folder}/details/2.png`... 순서대로 */
+    details?: string[];
     /** 사이즈 차트 (옵션) */
     sizeImage?: string;
     /** 영상 (옵션) */
@@ -347,8 +347,8 @@ function buildCatalog(): CatalogProduct[] {
             seasonalFlag: r.seasonalFlag,
             folder: r.folder,           // URL 슬러그 + 이미지 자산 키
             image: r.image,             // 메인 이미지 — sync-images 가 채움
-            detailImage: r.detailImage, // 상세 설명 — 작업자/RPA 가 채움
             gallery: r.gallery,         // 갤러리 — sync-images 자동 감지
+            details: r.details,         // 상세 페이지 본문 (세로 쌓기) — details/ 폴더 자동 감지
             sizeImage: r.sizeImage,     // 사이즈 차트 (옵션)
             video: r.video,             // 영상 (옵션)
             raw: r,
