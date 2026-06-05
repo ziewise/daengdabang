@@ -6,8 +6,13 @@
     "sync-images": "node scripts/sync-images.mjs",
     "predev": "node scripts/sync-images.mjs",
     "prebuild": "node scripts/sync-images.mjs",
+    "prebuild:cf": "node scripts/sync-images.mjs",
     "dev": "next dev -p 4000",
     "build": "next build",
+    "build:cf:next": "next build --webpack",
+    "build:cf": "npm run build:cf:next && opennextjs-cloudflare build --skipNextBuild",
+    "preview:cf": "wrangler dev",
+    "deploy:cf": "wrangler deploy",
     "start": "next start",
     "lint": "eslint"
   },
@@ -19,6 +24,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.19.11",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -26,6 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.98.0"
   }
 }

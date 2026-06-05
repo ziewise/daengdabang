@@ -1,5 +1,5 @@
 import { MOCK_POINT_HISTORY, MOCK_USER_STATS } from "@/lib/mypage-data";
-import { PaneHead } from "../page";
+import { PaneHead } from "../_components/PaneHead";
 
 const TYPE_LABEL = {
     earn:   { label: "적립",   color: "text-success",  bg: "bg-success/10",  sign: "+" },

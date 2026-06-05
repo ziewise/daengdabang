@@ -3,7 +3,7 @@
  */
 import { MOCK_ORDERS, ORDER_STATUS_LABEL } from "@/lib/mypage-data";
 import { formatKRW } from "@/lib/catalog";
-import { PaneHead } from "../page";
+import { PaneHead } from "../_components/PaneHead";
 
 const STATUS_STYLE: Record<keyof typeof ORDER_STATUS_LABEL, string> = {
     shipped:   "bg-success/15 text-emerald-700",
