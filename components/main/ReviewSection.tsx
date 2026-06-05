@@ -62,7 +62,7 @@ export default function ReviewSection() {
                 {/* 전체 리뷰 보기 */}
                 <div className="text-center mt-8 md:mt-10">
                     <Link
-                        href="#review-all"
+                        href="/reviews"
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-neutral-300 hover:border-aurora-indigo hover:text-aurora-indigo text-sm font-bold transition"
                     >
                         전체 리뷰 보기
