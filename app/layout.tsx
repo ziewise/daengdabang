@@ -8,7 +8,7 @@
  *   (인트로 페이지는 풀스크린 영상이라 헤더/푸터 미노출)
  */
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Gaegu } from "next/font/google";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
@@ -31,6 +31,15 @@ const wantedSans = localFont({
     variable: "--font-wanted-sans",
     display: "swap",
     weight: "100 900",
+});
+
+/** Gaegu (개구) — 거친 손글씨 한글 폰트, 로고의 크레파스 느낌 매칭.
+ *  헤더 "댕다방" 로고 워드마크에 사용. */
+const gaegu = Gaegu({
+    variable: "--font-crayon",
+    subsets: ["latin"],
+    weight: ["400", "700"],
+    display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -57,7 +66,7 @@ export default function RootLayout({
     return (
         <html
             lang="ko"
-            className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} ${gaegu.variable} h-full antialiased`}
         >
             <body className="min-h-full flex flex-col">
                 <div className="global-aurora" aria-hidden="true" />

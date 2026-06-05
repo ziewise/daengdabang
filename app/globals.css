@@ -68,6 +68,8 @@
     --font-sans:    var(--font-geist-sans), var(--font-wanted-sans), system-ui, -apple-system, sans-serif;
     --font-display: var(--font-geist-sans), var(--font-wanted-sans), system-ui, -apple-system, sans-serif;
     --font-mono:    var(--font-geist-mono), ui-monospace, monospace;
+    /* 크레파스 손글씨 — Gaegu (Google Fonts) */
+    --font-crayon:  var(--font-crayon), system-ui, sans-serif;
 
     /* 오로라 컬러 */
     --color-aurora-blue:   var(--aurora-blue);
