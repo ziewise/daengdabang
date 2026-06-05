@@ -3,8 +3,8 @@
 > 강아지 큐레이션 쇼핑몰 — AI 펫렌즈로 견종·체형을 분석해 우리 댕댕이에게 맞춤 추천.
 
 - **운영 URL**: https://www.daengdabang.com
-- **저장소**: https://github.com/ziewise/daengdabang
-- **기술 스택**: Next.js 16 (정적 export) + TypeScript + Tailwind v4 + GitHub Pages
+- **저장소**: https://github.com/ziewisemin/daengdabang
+- **기술 스택**: Next.js 16 (정적 export) + TypeScript + Tailwind v4 + Cloudflare Pages
 
 ---
 
@@ -27,13 +27,11 @@
 ```
 [사용자] → https://www.daengdabang.com
               ↓
-         Cloudflare CDN (proxy + DNS + SSL)
+         Cloudflare (DNS + CDN + SSL + 정적 호스팅)
               ↓
-         GitHub Pages (정적 호스팅)
+         Cloudflare Pages (자동 빌드 + 배포)
               ↑
-         GitHub Actions (자동 빌드)
-              ↑
-         ziewise/daengdabang (main 브랜치)
+         ziewisemin/daengdabang (main 브랜치)
               ↑
          git push (협업자 작업물)
 ```
@@ -85,7 +83,7 @@ public/images/products/catalog/{folder}/  ← 이미지 자산
 
 ```bash
 # 1. 저장소 복제
-git clone https://github.com/ziewise/daengdabang.git Daengdabang_Shop
+git clone https://github.com/ziewisemin/daengdabang.git Daengdabang_Shop
 cd Daengdabang_Shop
 
 # 2. 의존성 설치 (한 번만)
@@ -173,7 +171,6 @@ Daengdabang_Shop/
 │   └── usePets.ts               펫 프로필 목록
 │
 ├── public/                      ← 정적 자산 (그대로 서빙됨)
-│   ├── CNAME                    Custom domain (www.daengdabang.com)
 │   ├── fonts/                   Wanted Sans 한글 폰트
 │   ├── videos/                  히어로 영상 등
 │   └── images/                  ★ 상품 이미지·기타
@@ -208,9 +205,6 @@ Daengdabang_Shop/
 │   ├── 02-메뉴-구조-검토.md
 │   ├── 03-제외-보류-항목.md
 │   └── 04-기획전-구성.md
-│
-├── .github/workflows/           ← GitHub Actions
-│   └── deploy.yml               main push → 자동 빌드 → Pages 배포
 │
 ├── next.config.ts               ← Next.js 설정 (output: 'export')
 ├── tsconfig.json                ← TypeScript 설정
@@ -361,13 +355,13 @@ isNewProduct(product): boolean
 
 ```ts
 {
-    output: "export",              // 정적 HTML 생성 (GitHub Pages용)
+    output: "export",              // 정적 HTML 생성
     images: { unoptimized: true }, // next/image 자동 최적화 OFF
-    trailingSlash: true,           // URL 끝 / (Pages 호환)
+    trailingSlash: true,           // URL 끝 / (정적 호스팅 안정성)
 }
 ```
 
-이 설정으로 `npm run build` 가 `out/` 폴더에 정적 산출. GitHub Actions 가 이걸 Pages 에 배포.
+이 설정으로 `npm run build` 가 `out/` 폴더에 정적 산출. Cloudflare Pages 가 이걸 자동 배포.
 
 ---
 
@@ -518,35 +512,60 @@ public/images/products/catalog/{folder}/ 스캔
 ```
 git push origin main
    ↓
-GitHub Actions (.github/workflows/deploy.yml)
-   ↓ (1~2분)
+Cloudflare Pages 가 webhook 으로 감지 (~30초)
+   ↓
 npm ci                         # 의존성 설치
 npm run build                  # prebuild → sync-images → build
    ↓
-out/ 폴더를 GitHub Pages 에 업로드
+out/ 폴더를 Cloudflare 글로벌 엣지에 배포 (~1~2분)
    ↓
-ziewise.github.io/daengdabang  (또는 www.daengdabang.com)
-   ↓
-Cloudflare CDN 통해 사용자에게 응답
+https://www.daengdabang.com 에서 즉시 반영
 ```
+
+### Cloudflare Pages 빌드 설정
+
+| 항목 | 값 |
+|------|-----|
+| Production branch | `main` |
+| Framework preset | `None` (또는 Next.js Static HTML Export) |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Root directory | `/` |
+| Env: `NODE_VERSION` | `20` |
+| Env: `NEXT_TELEMETRY_DISABLED` | `1` |
+
+PR 브랜치는 미리보기로 자동 배포됨 (예: `feat-x.daengdabang.pages.dev`).
 
 ### DNS 구조 (Cloudflare)
 
 ```
-Cloudflare DNS:
-- www.daengdabang.com → CNAME → ziewise.github.io (proxied)
-- daengdabang.com → A 4개 → 185.199.108~111.153 (GitHub Pages IP, proxied)
-- admin.daengdabang.com → CNAME → daengdabang-console.pages.dev (별도 관리자)
+www.daengdabang.com  → CNAME → daengdabang.pages.dev  (proxied)
+daengdabang.com      → CNAME → daengdabang.pages.dev  (proxied)
 ```
+
+DNS·SSL·CDN·호스팅이 모두 Cloudflare 안에서 일원화. 도메인 추가/변경은
+대시보드 → Pages 프로젝트 → Custom domains 에서 처리.
 
 ### 운영 모니터링
 
 | 항목 | 위치 |
 |---|---|
-| 빌드 로그 | https://github.com/ziewise/daengdabang/actions |
-| 배포 상태 | https://github.com/ziewise/daengdabang/deployments |
-| Pages 설정 | https://github.com/ziewise/daengdabang/settings/pages |
-| Cloudflare DNS | https://dash.cloudflare.com → daengdabang.com |
+| 빌드 로그·배포 이력 | dash.cloudflare.com → Compute → Pages → daengdabang |
+| 미리보기 배포 | 각 PR 마다 자동 발급 (`<branch>.daengdabang.pages.dev`) |
+| DNS · Custom domain | Cloudflare 대시보드 → daengdabang.com |
+| 캐시 무효화 | Cloudflare 대시보드 → Caching → Purge Everything |
+| GitHub 저장소 | https://github.com/ziewisemin/daengdabang |
+
+### 향후 백엔드 추가 시
+
+지금은 100% 정적 (`output: 'export'`). API 라우트·DB·SSR 도입하려면:
+
+1. `next.config.ts` 의 `output: "export"` 제거
+2. `npm i -D @opennextjs/cloudflare wrangler`
+3. `wrangler.toml` + `open-next.config.ts` 작성
+4. Cloudflare Pages 빌드 설정의 build command 를 어댑터 명령으로 변경
+
+이 시점에 DB 도 함께 결정 (D1 / Supabase / Neon 등).
 
 ---
 
@@ -554,7 +573,7 @@ Cloudflare DNS:
 
 ### Q. 협업자가 새로 들어오면?
 
-1. GitHub `ziewise` org 또는 저장소에 멤버로 초대
+1. GitHub `ziewisemin` org 또는 저장소에 멤버로 초대
 2. 협업자가 `git clone` 후 `npm install`
 3. README 안내 따라 작업
 
@@ -573,13 +592,14 @@ Cloudflare DNS:
 1. 파일명 맞나? (folder_name 정확히, 대소문자, 확장자)
 2. `npm run sync-images` 실행됐나? (catalog.json 갱신됐는지)
 3. git push 했나?
-4. GitHub Actions 빌드 성공했나? (Actions 탭)
+4. Cloudflare Pages 빌드 성공했나? (대시보드 → Compute → Pages → daengdabang)
 5. 1~2분 기다렸나?
 6. 브라우저 캐시? (Ctrl+F5)
 
-### Q. 사이트 로컬에서만 잘 보이고 GitHub Pages 에서 안 보임
+### Q. 사이트 로컬에선 잘 보이는데 운영에선 안 보임
 
-`npm run build` 가 로컬에서 성공하는지 확인. 실패하면 GitHub Actions 도 실패함.
+`npm run build` 가 로컬에서 성공하는지 확인. 실패하면 Cloudflare Pages 빌드도 실패함.
+빌드 로그는 Cloudflare 대시보드 → Pages 프로젝트 → Deployments 에서 확인.
 
 ### Q. 이미지 파일 크기는?
 
@@ -622,4 +642,4 @@ Cloudflare DNS:
 
 ## 문의·이슈
 
-저장소 이슈: https://github.com/ziewise/daengdabang/issues
+저장소 이슈: https://github.com/ziewisemin/daengdabang/issues

@@ -3,20 +3,24 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     /**
      * 정적 export 모드 — `next build` 가 out/ 폴더에 HTML/CSS/JS 산출.
-     * GitHub Pages, Cloudflare Pages 등 정적 호스팅에 그대로 업로드 가능.
+     * Cloudflare Pages 가 out/ 을 그대로 정적 호스팅.
      *
-     * 변경 시 영향:
-     * - Server Components: 빌드 시점에 한 번 렌더링 (SSG 처럼 동작)
-     * - Route Handlers / Server Actions / Middleware: 사용 불가
-     * - 동적 라우트([slug] 등): generateStaticParams() 필수
-     * - next/image: 자동 최적화 OFF (images.unoptimized 또는 custom loader)
+     * 향후 백엔드(API Routes / Server Actions / SSR)를 도입하려면:
+     *   1) 이 줄 제거
+     *   2) @opennextjs/cloudflare 어댑터 설치
+     *   3) wrangler.toml + open-next.config.ts 추가
+     *
+     * 현재 상태(정적)에서 작동하지 않는 기능:
+     * - Route Handlers (app/api/*) / Server Actions / Middleware
+     * - 동적 라우트는 generateStaticParams() 로 빌드 시점 사전 생성만 가능
+     * - next/image 자동 최적화 OFF
      */
     output: "export",
 
     /** next/image 자동 리사이즈/포맷 변환 OFF (정적 export 모드 필수) */
     images: { unoptimized: true },
 
-    /** URL 끝에 슬래시 (예: /products/) — GitHub Pages 호환성 ↑ */
+    /** URL 끝에 슬래시 (예: /products/) — 정적 호스팅 라우팅 안정성 ↑ */
     trailingSlash: true,
 
     /**
