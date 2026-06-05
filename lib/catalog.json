@@ -81,7 +81,7 @@
   },
   {
     "no": 5,
-    "brandKo": "리프웨어",
+    "brandKo": "러프웨어",
     "brandEn": "Ruffwear",
     "target": "공용/확인필요",
     "useMain": "산책/외출",
@@ -91,7 +91,7 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "리프웨어 릿지라인 리드줄(2026)",
+    "name": "러프웨어 릿지라인 리드줄(2026)",
     "priceText": "106,000원",
     "priceNum": 106000,
     "categorizeNote": "상품명 키워드 기반",
@@ -170,12 +170,13 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": false,
-    "name": "리프웨어 버트 베이스캠프 강아지",
+    "name": "러프웨어 베드 베이스캠프 강아지",
     "priceText": "144,000원",
     "priceNum": 144000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": "용도 확인필요"
+    "verifyNote": "용도 확인필요",
+    "image": "/images/products/catalog/rw_basecamp_bed.png"
   },
   {
     "no": 10,
@@ -865,7 +866,7 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "팩트(PACKT) 1.5m 언더베 울트라 방수리드줄",
+    "name": "팩트(PACKT) 1.5m 엔데버 올테란 방수리드줄",
     "priceText": "44,000원",
     "priceNum": 44000,
     "categorizeNote": "레인·방수·방풍 키워드",
@@ -1942,7 +1943,7 @@
     "image": "/images/products/catalog/rs_lens_original.png"
   },
   {
-    "no": 100,
+    "no": 99,
     "brandKo": "렉스스펙스",
     "brandEn": "Rex Specs",
     "target": "강아지",
@@ -1962,7 +1963,7 @@
     "image": "/images/products/catalog/rs_v2_volcanored.png"
   },
   {
-    "no": 101,
+    "no": 100,
     "brandKo": "렉스스펙스",
     "brandEn": "Rex Specs",
     "target": "강아지",
@@ -1982,7 +1983,7 @@
     "image": "/images/products/catalog/rs_v2_appalachianorange.png"
   },
   {
-    "no": 102,
+    "no": 101,
     "brandKo": "렉스스펙스",
     "brandEn": "Rex Specs",
     "target": "강아지",
@@ -2002,7 +2003,7 @@
     "image": "/images/products/catalog/rs_v2_himalayapink.png"
   },
   {
-    "no": 103,
+    "no": 102,
     "brandKo": "렉스스펙스",
     "brandEn": "Rex Specs",
     "target": "강아지",
@@ -2022,7 +2023,7 @@
     "image": "/images/products/catalog/rs_v2_vulcanblue.png"
   },
   {
-    "no": 104,
+    "no": 103,
     "brandKo": "렉스스펙스",
     "brandEn": "Rex Specs",
     "target": "강아지",
@@ -2042,7 +2043,7 @@
     "image": "/images/products/catalog/rs_v2_avalanchewhite.png"
   },
   {
-    "no": 105,
+    "no": 104,
     "brandKo": "렉스스펙스",
     "brandEn": "Rex Specs",
     "target": "강아지",
@@ -2062,7 +2063,7 @@
     "image": "/images/products/catalog/rs_v2_coyote.png"
   },
   {
-    "no": 106,
+    "no": 105,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2082,7 +2083,7 @@
     "image": "/images/products/catalog/rw_everest_coat.png"
   },
   {
-    "no": 107,
+    "no": 106,
     "brandKo": "폴카독베이커리",
     "brandEn": "Polkadog Bakery",
     "target": "공용/확인필요",
@@ -2101,7 +2102,7 @@
     "verifyNote": ""
   },
   {
-    "no": 108,
+    "no": 107,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2121,7 +2122,7 @@
     "image": "/images/products/catalog/rw_porcini_toy.png"
   },
   {
-    "no": 109,
+    "no": 108,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2141,7 +2142,7 @@
     "image": "/images/products/catalog/rw_morel_toy.png"
   },
   {
-    "no": 110,
+    "no": 109,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2161,7 +2162,7 @@
     "image": "/images/products/catalog/rw_toadstool_toy.png"
   },
   {
-    "no": 111,
+    "no": 110,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2181,7 +2182,7 @@
     "image": "/images/products/catalog/rw_collar_toprope.png"
   },
   {
-    "no": 112,
+    "no": 111,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2201,7 +2202,7 @@
     "image": "/images/products/catalog/rw_collar_nota.png"
   },
   {
-    "no": 113,
+    "no": 112,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2220,7 +2221,7 @@
     "verifyNote": ""
   },
   {
-    "no": 114,
+    "no": 113,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2240,7 +2241,7 @@
     "image": "/images/products/catalog/rw_leash_nota_long.png"
   },
   {
-    "no": 115,
+    "no": 114,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2251,15 +2252,16 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "리프웨어 방수 방풍 보온 버트 자켓 강아지 블루풀 미네랄 옐로우",
+    "name": "러프웨어 방수 방풍 보온 버트 재킷 강아지",
     "priceText": "148,000원",
     "priceNum": 148000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "image": "/images/products/catalog/rw_vert_jacket.png"
   },
   {
-    "no": 116,
+    "no": 115,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "공용/확인필요",
@@ -2279,7 +2281,7 @@
     "image": "/images/products/catalog/rw_sunshower_jacket.png"
   },
   {
-    "no": 117,
+    "no": 116,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2299,7 +2301,7 @@
     "image": "/images/products/catalog/rw_quinzee_jacket_24.png"
   },
   {
-    "no": 118,
+    "no": 117,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2319,7 +2321,7 @@
     "image": "/images/products/catalog/rw_quinzee_jacket.png"
   },
   {
-    "no": 119,
+    "no": 118,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2339,7 +2341,7 @@
     "image": "/images/products/catalog/rw_furness_jacket.png"
   },
   {
-    "no": 120,
+    "no": 119,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2350,15 +2352,16 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "리프웨어 오버코트 퓨즈 하네스 코트 재킷 강아지",
+    "name": "러프웨어 오버코트 퓨즈 하네스 콤보 재킷 강아지",
     "priceText": "134,000원",
     "priceNum": 134000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "image": "/images/products/catalog/rw_overcoat_fuse_jacket.png"
   },
   {
-    "no": 121,
+    "no": 120,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2377,7 +2380,7 @@
     "verifyNote": ""
   },
   {
-    "no": 122,
+    "no": 121,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2397,7 +2400,7 @@
     "image": "/images/products/catalog/rw_hemphound_sweater.png"
   },
   {
-    "no": 123,
+    "no": 122,
     "brandKo": "툴레",
     "brandEn": "Thule",
     "target": "강아지",
@@ -2416,7 +2419,7 @@
     "verifyNote": ""
   },
   {
-    "no": 124,
+    "no": 123,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -2435,7 +2438,7 @@
     "verifyNote": ""
   },
   {
-    "no": 125,
+    "no": 124,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -2454,7 +2457,7 @@
     "verifyNote": ""
   },
   {
-    "no": 126,
+    "no": 125,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -2473,7 +2476,7 @@
     "verifyNote": ""
   },
   {
-    "no": 127,
+    "no": 126,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -2492,7 +2495,7 @@
     "verifyNote": ""
   },
   {
-    "no": 128,
+    "no": 127,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2512,7 +2515,7 @@
     "image": "/images/products/catalog/rw_switchback_harness.png"
   },
   {
-    "no": 131,
+    "no": 128,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -2531,7 +2534,7 @@
     "verifyNote": ""
   },
   {
-    "no": 132,
+    "no": 129,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -2550,7 +2553,7 @@
     "verifyNote": ""
   },
   {
-    "no": 133,
+    "no": 130,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -2570,7 +2573,7 @@
     "image": "/images/products/catalog/yora_wet_carrotpotato_390g.png"
   },
   {
-    "no": 134,
+    "no": 131,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -2590,7 +2593,7 @@
     "image": "/images/products/catalog/yora_wet_appleparsnip_390g_2.png"
   },
   {
-    "no": 135,
+    "no": 132,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -2610,7 +2613,7 @@
     "image": "/images/products/catalog/yora_wet_beetrootswede_390g.png"
   },
   {
-    "no": 136,
+    "no": 133,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -2630,7 +2633,7 @@
     "image": "/images/products/catalog/yora_activebar_35g_12.png"
   },
   {
-    "no": 137,
+    "no": 134,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -2650,7 +2653,7 @@
     "image": "/images/products/catalog/yora_reward_treat.png"
   },
   {
-    "no": 138,
+    "no": 135,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -2670,7 +2673,7 @@
     "image": "/images/products/catalog/yora_dreamer_treat.png"
   },
   {
-    "no": 139,
+    "no": 136,
     "brandKo": "휴고앤셀리",
     "brandEn": "Hugo & Celine",
     "target": "강아지",
@@ -2689,7 +2692,7 @@
     "verifyNote": ""
   },
   {
-    "no": 141,
+    "no": 137,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -2708,7 +2711,7 @@
     "verifyNote": ""
   },
   {
-    "no": 142,
+    "no": 138,
     "brandKo": "댕스크림",
     "brandEn": "Daengscream",
     "target": "강아지",
@@ -2727,7 +2730,7 @@
     "verifyNote": ""
   },
   {
-    "no": 143,
+    "no": 139,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2747,7 +2750,7 @@
     "image": "/images/products/catalog/rw_loadup_harness_24.png"
   },
   {
-    "no": 144,
+    "no": 140,
     "brandKo": "빌리앤마것",
     "brandEn": "Billy + Margot",
     "target": "강아지",
@@ -2766,7 +2769,7 @@
     "verifyNote": ""
   },
   {
-    "no": 145,
+    "no": 141,
     "brandKo": "빌리앤마것",
     "brandEn": "Billy + Margot",
     "target": "강아지",
@@ -2786,7 +2789,7 @@
     "image": "/images/products/catalog/bm_wet_100g_3.png"
   },
   {
-    "no": 146,
+    "no": 142,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2806,7 +2809,7 @@
     "image": "/images/products/catalog/rw_collar_chainreaction_martingale_24.png"
   },
   {
-    "no": 147,
+    "no": 143,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2826,7 +2829,7 @@
     "image": "/images/products/catalog/rw_frontrange_harness_24.png"
   },
   {
-    "no": 148,
+    "no": 144,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2846,7 +2849,7 @@
     "image": "/images/products/catalog/rw_leash_switchback_24.png"
   },
   {
-    "no": 149,
+    "no": 145,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2866,7 +2869,7 @@
     "image": "/images/products/catalog/rw_frontrange_daypack_24.png"
   },
   {
-    "no": 150,
+    "no": 146,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2886,7 +2889,7 @@
     "image": "/images/products/catalog/rw_leash_frontrange_short_24.png"
   },
   {
-    "no": 151,
+    "no": 147,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2906,7 +2909,7 @@
     "image": "/images/products/catalog/rw_quencher_24.png"
   },
   {
-    "no": 152,
+    "no": 148,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2926,7 +2929,7 @@
     "image": "/images/products/catalog/rw_collar_crag_23.png"
   },
   {
-    "no": 153,
+    "no": 149,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -2946,7 +2949,7 @@
     "image": "/images/products/catalog/rw_leash_cragex_23.png"
   },
   {
-    "no": 154,
+    "no": 150,
     "brandKo": "미티본/미티븐",
     "brandEn": "Mittyborn",
     "target": "공용/확인필요",
@@ -2966,7 +2969,7 @@
     "image": "/images/products/catalog/mb_vegemix_100g_4.png"
   },
   {
-    "no": 155,
+    "no": 151,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -2986,7 +2989,7 @@
     "image": "/images/products/catalog/id_treat_sturgeon.png"
   },
   {
-    "no": 156,
+    "no": 152,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -3006,7 +3009,7 @@
     "image": "/images/products/catalog/id_treat_sardine.png"
   },
   {
-    "no": 157,
+    "no": 153,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -3026,7 +3029,7 @@
     "image": "/images/products/catalog/id_treat_guineafowl.png"
   },
   {
-    "no": 158,
+    "no": 154,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3045,7 +3048,7 @@
     "verifyNote": ""
   },
   {
-    "no": 159,
+    "no": 155,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3065,7 +3068,7 @@
     "image": "/images/products/catalog/rw_climatechanger_fleece.png"
   },
   {
-    "no": 160,
+    "no": 156,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3085,7 +3088,7 @@
     "image": "/images/products/catalog/rw_shoes_hiandlight_23.png"
   },
   {
-    "no": 161,
+    "no": 157,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3105,7 +3108,7 @@
     "image": "/images/products/catalog/rw_leash_justacinch.png"
   },
   {
-    "no": 162,
+    "no": 158,
     "brandKo": "페그너티",
     "brandEn": "Pugnutty",
     "target": "공용/확인필요",
@@ -3124,7 +3127,7 @@
     "verifyNote": ""
   },
   {
-    "no": 163,
+    "no": 159,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3144,7 +3147,7 @@
     "image": "/images/products/catalog/rw_hydroplane_disc.png"
   },
   {
-    "no": 164,
+    "no": 160,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3164,7 +3167,7 @@
     "image": "/images/products/catalog/rw_pacificloop_toy.png"
   },
   {
-    "no": 165,
+    "no": 161,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3184,7 +3187,7 @@
     "image": "/images/products/catalog/rw_trailrunnerbowl.png"
   },
   {
-    "no": 166,
+    "no": 162,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -3204,7 +3207,7 @@
     "image": "/images/products/catalog/rw_stashbag_mini_2.png"
   },
   {
-    "no": 167,
+    "no": 163,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -3224,7 +3227,7 @@
     "image": "/images/products/catalog/yora_smallbreed_6kg.png"
   },
   {
-    "no": 168,
+    "no": 164,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -3244,7 +3247,7 @@
     "image": "/images/products/catalog/yora_smallbreed_2.5kg.png"
   },
   {
-    "no": 169,
+    "no": 165,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3263,7 +3266,7 @@
     "verifyNote": ""
   },
   {
-    "no": 170,
+    "no": 166,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -3283,7 +3286,7 @@
     "image": "/images/products/catalog/yora_puppy_2.5kg.png"
   },
   {
-    "no": 171,
+    "no": 167,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3303,7 +3306,7 @@
     "image": "/images/products/catalog/yora_stew_carrotpotato_390g.png"
   },
   {
-    "no": 172,
+    "no": 168,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3323,7 +3326,7 @@
     "image": "/images/products/catalog/yora_wet_appleparsnip_390g.png"
   },
   {
-    "no": 173,
+    "no": 169,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3343,7 +3346,7 @@
     "image": "/images/products/catalog/yora_lightsenior_12kg.png"
   },
   {
-    "no": 174,
+    "no": 170,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3363,7 +3366,7 @@
     "image": "/images/products/catalog/yora_lightsenior_6kg.png"
   },
   {
-    "no": 175,
+    "no": 171,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3383,7 +3386,7 @@
     "image": "/images/products/catalog/yora_lightsenior_2.5kg.png"
   },
   {
-    "no": 176,
+    "no": 172,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -3403,7 +3406,7 @@
     "image": "/images/products/catalog/yora_largebreed_12kg.png"
   },
   {
-    "no": 177,
+    "no": 173,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3423,7 +3426,7 @@
     "image": "/images/products/catalog/yora_dental_s_56g.png"
   },
   {
-    "no": 178,
+    "no": 174,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3443,7 +3446,7 @@
     "image": "/images/products/catalog/yora_dental_l_270g.png"
   },
   {
-    "no": 182,
+    "no": 175,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "공용/확인필요",
@@ -3463,7 +3466,7 @@
     "image": "/images/products/catalog/yora_allbreed_12kg.png"
   },
   {
-    "no": 183,
+    "no": 176,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -3483,7 +3486,7 @@
     "image": "/images/products/catalog/yora_allbreed_6kg.png"
   },
   {
-    "no": 184,
+    "no": 177,
     "brandKo": "요라",
     "brandEn": "YORA",
     "target": "강아지",
@@ -3503,7 +3506,7 @@
     "image": "/images/products/catalog/yora_allbreed_2.5kg.png"
   },
   {
-    "no": 186,
+    "no": 178,
     "brandKo": "탑라이프",
     "brandEn": "Tam Life",
     "target": "공용/확인필요",
@@ -3522,7 +3525,7 @@
     "verifyNote": ""
   },
   {
-    "no": 187,
+    "no": 179,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3542,7 +3545,7 @@
     "image": "/images/products/catalog/sk_ft_working30_15kg.png"
   },
   {
-    "no": 188,
+    "no": 180,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3562,7 +3565,7 @@
     "image": "/images/products/catalog/sk_ft_working26_15kg.png"
   },
   {
-    "no": 189,
+    "no": 181,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3582,7 +3585,7 @@
     "image": "/images/products/catalog/sk_ft_salmon_pate_390g.png"
   },
   {
-    "no": 190,
+    "no": 182,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3602,7 +3605,7 @@
     "image": "/images/products/catalog/sk_ft_puppy_pate_390g.png"
   },
   {
-    "no": 191,
+    "no": 183,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3622,7 +3625,7 @@
     "image": "/images/products/catalog/sk_ft_maintenance_15kg.png"
   },
   {
-    "no": 192,
+    "no": 184,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3642,7 +3645,7 @@
     "image": "/images/products/catalog/sk_ft_chicken_pate_390g.png"
   },
   {
-    "no": 193,
+    "no": 185,
     "brandKo": "스키너즈",
     "brandEn": "Skinner's",
     "target": "공용/확인필요",
@@ -3662,7 +3665,7 @@
     "image": "/images/products/catalog/sk_ft_chickenrice_15kg.png"
   },
   {
-    "no": 194,
+    "no": 186,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3682,7 +3685,7 @@
     "image": "/images/products/catalog/nd_feelgood_wf.png"
   },
   {
-    "no": 195,
+    "no": 187,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3702,7 +3705,7 @@
     "image": "/images/products/catalog/nd_feelgood_tc.png"
   },
   {
-    "no": 196,
+    "no": 188,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3722,7 +3725,7 @@
     "image": "/images/products/catalog/nd_feelgood_sl.png"
   },
   {
-    "no": 197,
+    "no": 189,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3742,7 +3745,7 @@
     "image": "/images/products/catalog/nd_feelgood_s.png"
   },
   {
-    "no": 198,
+    "no": 190,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3762,7 +3765,7 @@
     "image": "/images/products/catalog/nd_feelgood_p.png"
   },
   {
-    "no": 199,
+    "no": 191,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3782,7 +3785,7 @@
     "image": "/images/products/catalog/nd_feelgood_c.png"
   },
   {
-    "no": 200,
+    "no": 192,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3802,7 +3805,7 @@
     "image": "/images/products/catalog/nd_purely_sw.png"
   },
   {
-    "no": 201,
+    "no": 193,
     "brandKo": "네이처다이어트",
     "brandEn": "Naturediet",
     "target": "공용/확인필요",
@@ -3822,7 +3825,7 @@
     "image": "/images/products/catalog/nd_purely_bc.png"
   },
   {
-    "no": 202,
+    "no": 194,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -3841,7 +3844,7 @@
     "verifyNote": ""
   },
   {
-    "no": 204,
+    "no": 195,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -3860,7 +3863,7 @@
     "verifyNote": ""
   },
   {
-    "no": 205,
+    "no": 196,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -3879,7 +3882,7 @@
     "verifyNote": ""
   },
   {
-    "no": 207,
+    "no": 197,
     "brandKo": "카나간",
     "brandEn": "Canagan",
     "target": "강아지",
@@ -3898,7 +3901,7 @@
     "verifyNote": ""
   },
   {
-    "no": 208,
+    "no": 198,
     "brandKo": "원티그리스",
     "brandEn": "OneTigris",
     "target": "강아지",
@@ -3917,7 +3920,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 210,
+    "no": 199,
     "brandKo": "원티그리스",
     "brandEn": "OneTigris",
     "target": "강아지",
@@ -3936,7 +3939,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 211,
+    "no": 200,
     "brandKo": "원티그리스",
     "brandEn": "OneTigris",
     "target": "강아지",
@@ -3947,7 +3950,7 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "원티그리스 앞침방지 하네스 대형견 진돗개 가슴줄 앞고리 훈련 K9",
+    "name": "원티그리스 앞섬방지 하네스 대형견 진돗개 가슴줄 앞고리 골리앗 K9",
     "priceText": "36,900원",
     "priceNum": 36900,
     "categorizeNote": "상품명 키워드 기반",
@@ -3955,7 +3958,7 @@
     "verifyNote": ""
   },
   {
-    "no": 212,
+    "no": 201,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -3974,7 +3977,7 @@
     "verifyNote": ""
   },
   {
-    "no": 213,
+    "no": 202,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -3993,7 +3996,7 @@
     "verifyNote": ""
   },
   {
-    "no": 214,
+    "no": 203,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -4012,7 +4015,7 @@
     "verifyNote": ""
   },
   {
-    "no": 215,
+    "no": 204,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -4031,7 +4034,7 @@
     "verifyNote": ""
   },
   {
-    "no": 216,
+    "no": 205,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -4050,7 +4053,7 @@
     "verifyNote": ""
   },
   {
-    "no": 217,
+    "no": 206,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -4069,7 +4072,7 @@
     "verifyNote": ""
   },
   {
-    "no": 218,
+    "no": 207,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -4088,7 +4091,7 @@
     "verifyNote": ""
   },
   {
-    "no": 219,
+    "no": 208,
     "brandKo": "페리티",
     "brandEn": "PERITY",
     "target": "공용",
@@ -4107,7 +4110,7 @@
     "verifyNote": ""
   },
   {
-    "no": 220,
+    "no": 209,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4126,7 +4129,7 @@
     "verifyNote": ""
   },
   {
-    "no": 221,
+    "no": 210,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4145,7 +4148,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 222,
+    "no": 211,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4164,7 +4167,7 @@
     "verifyNote": ""
   },
   {
-    "no": 223,
+    "no": 212,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4183,7 +4186,7 @@
     "verifyNote": ""
   },
   {
-    "no": 224,
+    "no": 213,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4202,7 +4205,7 @@
     "verifyNote": ""
   },
   {
-    "no": 225,
+    "no": 214,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4221,7 +4224,7 @@
     "verifyNote": ""
   },
   {
-    "no": 226,
+    "no": 215,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4240,7 +4243,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 227,
+    "no": 216,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4259,7 +4262,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 228,
+    "no": 217,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4278,7 +4281,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 229,
+    "no": 218,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4297,7 +4300,7 @@
     "verifyNote": "상품명 잘림; 중복 2건"
   },
   {
-    "no": 230,
+    "no": 219,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4308,7 +4311,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": true,
-    "name": "펌블펫솝 강아지 산책미스트 바이벅바이스프레이 벌레가...",
+    "name": "펌블펫솝_강아지 산책미스트 바이벅비비스프레이 벌레가 싫어하는 아로마오일 150ml",
     "priceText": "18,000원",
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
@@ -4316,7 +4319,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 231,
+    "no": 220,
     "brandKo": "펌블펫솝",
     "brandEn": "Pumble Pet Soap",
     "target": "강아지",
@@ -4335,7 +4338,7 @@
     "verifyNote": ""
   },
   {
-    "no": 232,
+    "no": 221,
     "brandKo": "원티그리스",
     "brandEn": "OneTigris",
     "target": "공용/확인필요",
@@ -4354,7 +4357,7 @@
     "verifyNote": ""
   },
   {
-    "no": 233,
+    "no": 222,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4374,7 +4377,7 @@
     "image": "/images/products/catalog/rw_leash_roamer.png"
   },
   {
-    "no": 234,
+    "no": 223,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4394,7 +4397,7 @@
     "image": "/images/products/catalog/rw_bivybowl_23.png"
   },
   {
-    "no": 235,
+    "no": 224,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4414,7 +4417,7 @@
     "image": "/images/products/catalog/rw_campflyer_disc.png"
   },
   {
-    "no": 236,
+    "no": 225,
     "brandKo": "원티그리스",
     "brandEn": "OneTigris",
     "target": "공용/확인필요",
@@ -4425,7 +4428,7 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "원티그리스 파이어워처K9 하네스 추가 상품",
+    "name": "원티그리스 파이어워쳐K9 하네스",
     "priceText": "45,900원",
     "priceNum": 45900,
     "categorizeNote": "상품명 키워드 기반",
@@ -4433,7 +4436,7 @@
     "verifyNote": ""
   },
   {
-    "no": 237,
+    "no": 226,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4453,7 +4456,7 @@
     "image": "/images/products/catalog/rw_treattrader_23.png"
   },
   {
-    "no": 238,
+    "no": 227,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4473,7 +4476,7 @@
     "image": "/images/products/catalog/rw_trailrunner_belt_23.png"
   },
   {
-    "no": 239,
+    "no": 228,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4493,7 +4496,7 @@
     "image": "/images/products/catalog/rw_leash_trailrunner_23.png"
   },
   {
-    "no": 240,
+    "no": 229,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -4513,7 +4516,7 @@
     "image": "/images/products/catalog/soopa_dental_bananapumpkin.png"
   },
   {
-    "no": 241,
+    "no": 230,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -4533,7 +4536,7 @@
     "image": "/images/products/catalog/soopa_dental_appleblueberry.png"
   },
   {
-    "no": 242,
+    "no": 231,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -4553,7 +4556,7 @@
     "image": "/images/products/catalog/soopa_healthybites_appleblueberry.png"
   },
   {
-    "no": 243,
+    "no": 232,
     "brandKo": "수제/기타",
     "brandEn": "Handmade/Other",
     "target": "강아지",
@@ -4573,7 +4576,7 @@
     "image": "/images/products/catalog/smoothie_rainbow_30ml_3.png"
   },
   {
-    "no": 244,
+    "no": 233,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4593,7 +4596,7 @@
     "image": "/images/products/catalog/rw_collar_chainreaction_martingale.png"
   },
   {
-    "no": 245,
+    "no": 234,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4613,7 +4616,7 @@
     "image": "/images/products/catalog/rw_collar_webreaction_martingale.png"
   },
   {
-    "no": 246,
+    "no": 235,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4633,7 +4636,7 @@
     "image": "/images/products/catalog/rw_leash_flatout.png"
   },
   {
-    "no": 247,
+    "no": 236,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -4653,7 +4656,7 @@
     "image": "/images/products/catalog/rw_leash_crag.png"
   },
   {
-    "no": 248,
+    "no": 237,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4672,7 +4675,7 @@
     "verifyNote": ""
   },
   {
-    "no": 249,
+    "no": 238,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4691,7 +4694,7 @@
     "verifyNote": ""
   },
   {
-    "no": 250,
+    "no": 239,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4710,7 +4713,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 251,
+    "no": 240,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용",
@@ -4721,7 +4724,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": false,
-    "name": "이비야야 스너글러 펫누크방석 FB2011 2컬러 복숭아 더스트블루",
+    "name": "이비야야 스너글러 펫누크방석 FB2011 2컬러 복숭아 더스티블루",
     "priceText": "38,000원",
     "priceNum": 38000,
     "categorizeNote": "상품명 키워드 기반",
@@ -4729,7 +4732,7 @@
     "verifyNote": ""
   },
   {
-    "no": 252,
+    "no": 241,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용",
@@ -4748,7 +4751,7 @@
     "verifyNote": ""
   },
   {
-    "no": 253,
+    "no": 242,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4767,7 +4770,7 @@
     "verifyNote": ""
   },
   {
-    "no": 254,
+    "no": 243,
     "brandKo": "와우",
     "brandEn": "WOW",
     "target": "공용/확인필요",
@@ -4778,15 +4781,16 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "와우 신나라슈즈 일회용신발 소형 중형 80매(20입세트)",
+    "name": "와우 신나라슈즈 일회용신발 소형 중형 80매(20일세트)",
     "priceText": "18,000원",
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "image": "/images/products/catalog/wow_shoes_80.png"
   },
   {
-    "no": 255,
+    "no": 244,
     "brandKo": "와우",
     "brandEn": "WOW",
     "target": "공용/확인필요",
@@ -4797,15 +4801,16 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "와우 신나라슈즈 일회용신발 소형 중형 20매(5입세트)",
+    "name": "와우 신나라슈즈 일회용신발 소형 중형 20매(5일세트)",
     "priceText": "5,000원",
     "priceNum": 5000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "image": "/images/products/catalog/wow_shoes_20.png"
   },
   {
-    "no": 256,
+    "no": 245,
     "brandKo": "애나펫",
     "brandEn": "Anapet",
     "target": "강아지",
@@ -4825,7 +4830,7 @@
     "image": "/images/products/catalog/annapet_wine.png"
   },
   {
-    "no": 257,
+    "no": 246,
     "brandKo": "애나펫",
     "brandEn": "Anapet",
     "target": "강아지",
@@ -4845,7 +4850,7 @@
     "image": "/images/products/catalog/annapet_soju.png"
   },
   {
-    "no": 258,
+    "no": 247,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4864,7 +4869,7 @@
     "verifyNote": ""
   },
   {
-    "no": 259,
+    "no": 248,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용",
@@ -4875,7 +4880,7 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "이비야야 데님펫백팩2.0 FC2131",
+    "name": "이비야야 데님펀백팩2.0 FC2131",
     "priceText": "80,000원",
     "priceNum": 80000,
     "categorizeNote": "상품명 키워드 기반",
@@ -4883,7 +4888,7 @@
     "verifyNote": ""
   },
   {
-    "no": 260,
+    "no": 249,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4902,7 +4907,7 @@
     "verifyNote": ""
   },
   {
-    "no": 261,
+    "no": 250,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4921,7 +4926,7 @@
     "verifyNote": ""
   },
   {
-    "no": 262,
+    "no": 251,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4940,7 +4945,7 @@
     "verifyNote": ""
   },
   {
-    "no": 263,
+    "no": 252,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4959,7 +4964,7 @@
     "verifyNote": ""
   },
   {
-    "no": 264,
+    "no": 253,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4978,7 +4983,7 @@
     "verifyNote": ""
   },
   {
-    "no": 265,
+    "no": 254,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -4997,7 +5002,7 @@
     "verifyNote": ""
   },
   {
-    "no": 266,
+    "no": 255,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용",
@@ -5008,7 +5013,7 @@
     "isWalk": true,
     "isFood": false,
     "isHygiene": false,
-    "name": "이비야야 젠틀펫왜건 FS1880 2컬러 더티피치 아이그린",
+    "name": "이비야야 젠틀펫왜건 FS1880 2컬러 더티피치 아미그린",
     "priceText": "300,000원",
     "priceNum": 300000,
     "categorizeNote": "상품명 키워드 기반",
@@ -5016,7 +5021,7 @@
     "verifyNote": ""
   },
   {
-    "no": 267,
+    "no": 256,
     "brandKo": "이비야야",
     "brandEn": "Ibiyaya",
     "target": "공용/확인필요",
@@ -5035,7 +5040,7 @@
     "verifyNote": ""
   },
   {
-    "no": 268,
+    "no": 257,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용",
@@ -5054,7 +5059,7 @@
     "verifyNote": ""
   },
   {
-    "no": 269,
+    "no": 258,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용",
@@ -5073,7 +5078,7 @@
     "verifyNote": ""
   },
   {
-    "no": 270,
+    "no": 259,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5093,7 +5098,7 @@
     "image": "/images/products/catalog/aff_pad_l_20_6.png"
   },
   {
-    "no": 271,
+    "no": 260,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5113,7 +5118,7 @@
     "image": "/images/products/catalog/aff_pad_l_20_1.png"
   },
   {
-    "no": 272,
+    "no": 261,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5133,7 +5138,7 @@
     "image": "/images/products/catalog/aff_pad_s_50_6.png"
   },
   {
-    "no": 273,
+    "no": 262,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5153,7 +5158,7 @@
     "image": "/images/products/catalog/aff_pad_s_50_1.png"
   },
   {
-    "no": 274,
+    "no": 263,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5172,7 +5177,7 @@
     "verifyNote": ""
   },
   {
-    "no": 275,
+    "no": 264,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5191,7 +5196,7 @@
     "verifyNote": ""
   },
   {
-    "no": 276,
+    "no": 265,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5210,7 +5215,7 @@
     "verifyNote": ""
   },
   {
-    "no": 277,
+    "no": 266,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5229,7 +5234,7 @@
     "verifyNote": ""
   },
   {
-    "no": 278,
+    "no": 267,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5248,7 +5253,7 @@
     "verifyNote": ""
   },
   {
-    "no": 279,
+    "no": 268,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5267,7 +5272,7 @@
     "verifyNote": ""
   },
   {
-    "no": 280,
+    "no": 269,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5286,7 +5291,7 @@
     "verifyNote": ""
   },
   {
-    "no": 281,
+    "no": 270,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5305,7 +5310,7 @@
     "verifyNote": ""
   },
   {
-    "no": 282,
+    "no": 271,
     "brandKo": "아페토",
     "brandEn": "Affetto",
     "target": "공용/확인필요",
@@ -5324,7 +5329,7 @@
     "verifyNote": ""
   },
   {
-    "no": 283,
+    "no": 272,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -5344,7 +5349,7 @@
     "image": "/images/products/catalog/rw_sierracup_310.png"
   },
   {
-    "no": 284,
+    "no": 273,
     "brandKo": "핏드림하우스",
     "brandEn": "FitDreamHouse",
     "target": "공용/확인필요",
@@ -5363,7 +5368,7 @@
     "verifyNote": ""
   },
   {
-    "no": 285,
+    "no": 274,
     "brandKo": "핏드림하우스",
     "brandEn": "FitDreamHouse",
     "target": "공용/확인필요",
@@ -5382,8 +5387,8 @@
     "verifyNote": ""
   },
   {
-    "no": 286,
-    "brandKo": "핏드림하우스",
+    "no": 275,
+    "brandKo": "펫드림하우스",
     "brandEn": "FitDreamHouse",
     "target": "공용/확인필요",
     "useMain": "식기/급수",
@@ -5393,7 +5398,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": false,
-    "name": "핏드림하우스 리킹매트 PAD 곱체방지 스트레스 해소",
+    "name": "펫드림하우스 리킹매트 PAD 급체방지 스트레스 해소",
     "priceText": "9,000원",
     "priceNum": 9000,
     "categorizeNote": "상품명 키워드 기반",
@@ -5401,8 +5406,8 @@
     "verifyNote": ""
   },
   {
-    "no": 287,
-    "brandKo": "핏드림하우스",
+    "no": 276,
+    "brandKo": "펫드림하우스",
     "brandEn": "FitDreamHouse",
     "target": "공용/확인필요",
     "useMain": "식기/급수",
@@ -5412,7 +5417,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": false,
-    "name": "핏드림하우스 스펀 플라잉 디스크 Lick Pad 슬로우식기 리킹매트...",
+    "name": "펫드림하우스 스핀 플라잉 디스크 Lick Pad 슬로우식기 리킹매트 급체방지 스트레스해소",
     "priceText": "13,000원",
     "priceNum": 13000,
     "categorizeNote": "상품명 키워드 기반",
@@ -5420,7 +5425,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 288,
+    "no": 277,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -5440,7 +5445,7 @@
     "image": "/images/products/catalog/rw_audiblebeacon_light.png"
   },
   {
-    "no": 289,
+    "no": 278,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -5460,7 +5465,7 @@
     "image": "/images/products/catalog/rw_beacon_light.png"
   },
   {
-    "no": 290,
+    "no": 279,
     "brandKo": "주스누드",
     "brandEn": "Zoo Snoods",
     "target": "공용/확인필요",
@@ -5479,7 +5484,7 @@
     "verifyNote": ""
   },
   {
-    "no": 291,
+    "no": 280,
     "brandKo": "주스누드",
     "brandEn": "Zoo Snoods",
     "target": "공용/확인필요",
@@ -5498,7 +5503,7 @@
     "verifyNote": ""
   },
   {
-    "no": 292,
+    "no": 281,
     "brandKo": "주스누드",
     "brandEn": "Zoo Snoods",
     "target": "공용/확인필요",
@@ -5517,7 +5522,7 @@
     "verifyNote": ""
   },
   {
-    "no": 293,
+    "no": 282,
     "brandKo": "주스누드",
     "brandEn": "Zoo Snoods",
     "target": "공용/확인필요",
@@ -5536,7 +5541,7 @@
     "verifyNote": ""
   },
   {
-    "no": 294,
+    "no": 283,
     "brandKo": "주스누드",
     "brandEn": "Zoo Snoods",
     "target": "공용/확인필요",
@@ -5555,7 +5560,7 @@
     "verifyNote": ""
   },
   {
-    "no": 295,
+    "no": 284,
     "brandKo": "폴카독베이커리",
     "brandEn": "Polkadog Bakery",
     "target": "공용/확인필요",
@@ -5574,7 +5579,7 @@
     "verifyNote": ""
   },
   {
-    "no": 296,
+    "no": 285,
     "brandKo": "폴카독베이커리",
     "brandEn": "Polkadog Bakery",
     "target": "공용/확인필요",
@@ -5593,7 +5598,7 @@
     "verifyNote": ""
   },
   {
-    "no": 297,
+    "no": 286,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5613,7 +5618,7 @@
     "image": "/images/products/catalog/soopa_chew_3set.png"
   },
   {
-    "no": 298,
+    "no": 287,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5633,7 +5638,7 @@
     "image": "/images/products/catalog/soopa_dental_6set.png"
   },
   {
-    "no": 299,
+    "no": 288,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5653,7 +5658,7 @@
     "image": "/images/products/catalog/soopa_chew_coconut.png"
   },
   {
-    "no": 300,
+    "no": 289,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5673,7 +5678,7 @@
     "image": "/images/products/catalog/soopa_chew_sweetpotato.png"
   },
   {
-    "no": 301,
+    "no": 290,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5693,7 +5698,7 @@
     "image": "/images/products/catalog/soopa_chew_papaya.png"
   },
   {
-    "no": 302,
+    "no": 291,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5713,7 +5718,7 @@
     "image": "/images/products/catalog/soopa_dental_kaleapple.png"
   },
   {
-    "no": 303,
+    "no": 292,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5733,7 +5738,7 @@
     "image": "/images/products/catalog/soopa_dental_coconutchia.png"
   },
   {
-    "no": 304,
+    "no": 293,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5753,7 +5758,7 @@
     "image": "/images/products/catalog/soopa_dental_cranberrysweetpotato.png"
   },
   {
-    "no": 305,
+    "no": 294,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5773,7 +5778,7 @@
     "image": "/images/products/catalog/soopa_dental_carrotpumpkin.png"
   },
   {
-    "no": 306,
+    "no": 295,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5793,7 +5798,7 @@
     "image": "/images/products/catalog/soopa_healthybites_cranberrysweetpotato.png"
   },
   {
-    "no": 307,
+    "no": 296,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5813,7 +5818,7 @@
     "image": "/images/products/catalog/soopa_healthybites_carrotpumpkin.png"
   },
   {
-    "no": 308,
+    "no": 297,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5833,7 +5838,7 @@
     "image": "/images/products/catalog/soopa_healthybites_kaleapple.png"
   },
   {
-    "no": 309,
+    "no": 298,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5853,7 +5858,7 @@
     "image": "/images/products/catalog/soopa_healthybites_coconutchia.png"
   },
   {
-    "no": 310,
+    "no": 299,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5872,7 +5877,7 @@
     "verifyNote": "상품명 잘림"
   },
   {
-    "no": 311,
+    "no": 300,
     "brandKo": "수파",
     "brandEn": "Soopa",
     "target": "공용/확인필요",
@@ -5892,7 +5897,7 @@
     "image": "/images/products/catalog/soopa_healthybites_bananapumpkin.png"
   },
   {
-    "no": 312,
+    "no": 301,
     "brandKo": "스윗펫",
     "brandEn": "Sweet Pet",
     "target": "강아지",
@@ -5911,7 +5916,7 @@
     "verifyNote": ""
   },
   {
-    "no": 313,
+    "no": 302,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -5930,7 +5935,7 @@
     "verifyNote": "용도 확인필요"
   },
   {
-    "no": 314,
+    "no": 303,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -5949,7 +5954,7 @@
     "verifyNote": "용도 확인필요"
   },
   {
-    "no": 315,
+    "no": 304,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -5968,7 +5973,7 @@
     "verifyNote": "용도 확인필요"
   },
   {
-    "no": 316,
+    "no": 305,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -5987,7 +5992,7 @@
     "verifyNote": "용도 확인필요"
   },
   {
-    "no": 317,
+    "no": 306,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -6006,7 +6011,7 @@
     "verifyNote": ""
   },
   {
-    "no": 318,
+    "no": 307,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -6025,7 +6030,7 @@
     "verifyNote": ""
   },
   {
-    "no": 319,
+    "no": 308,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "공용",
@@ -6036,7 +6041,7 @@
     "isWalk": false,
     "isFood": true,
     "isHygiene": false,
-    "name": "인더스트리펫 트로비스 플라이어스틱 플런처",
+    "name": "인더스트리펫 트로비즈 플라잉스틱 볼런쳐",
     "priceText": "18,000원",
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
@@ -6044,7 +6049,7 @@
     "verifyNote": ""
   },
   {
-    "no": 321,
+    "no": 309,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "강아지",
@@ -6063,7 +6068,7 @@
     "verifyNote": ""
   },
   {
-    "no": 322,
+    "no": 310,
     "brandKo": "인더스트리펫",
     "brandEn": "Industry Pet",
     "target": "강아지",
@@ -6082,7 +6087,7 @@
     "verifyNote": ""
   },
   {
-    "no": 323,
+    "no": 311,
     "brandKo": "헤이렉스",
     "brandEn": "Heyrex",
     "target": "공용",
@@ -6101,7 +6106,7 @@
     "verifyNote": ""
   },
   {
-    "no": 324,
+    "no": 312,
     "brandKo": "헤이렉스",
     "brandEn": "Heyrex",
     "target": "공용",
@@ -6120,7 +6125,7 @@
     "verifyNote": ""
   },
   {
-    "no": 325,
+    "no": 313,
     "brandKo": "헤이렉스",
     "brandEn": "Heyrex",
     "target": "공용",
@@ -6139,7 +6144,7 @@
     "verifyNote": ""
   },
   {
-    "no": 326,
+    "no": 314,
     "brandKo": "핏드림하우스",
     "brandEn": "FitDreamHouse",
     "target": "공용/확인필요",
@@ -6158,7 +6163,7 @@
     "verifyNote": ""
   },
   {
-    "no": 327,
+    "no": 315,
     "brandKo": "폴카독베이커리",
     "brandEn": "Polkadog Bakery",
     "target": "공용/확인필요",
@@ -6177,7 +6182,7 @@
     "verifyNote": ""
   },
   {
-    "no": 328,
+    "no": 316,
     "brandKo": "미티본/미티븐",
     "brandEn": "Mittyborn",
     "target": "공용/확인필요",
@@ -6188,15 +6193,16 @@
     "isWalk": false,
     "isFood": true,
     "isHygiene": false,
-    "name": "미티븐 베지믹스 475g",
+    "name": "미티본 베지믹스 475g",
     "priceText": "21,000원",
     "priceNum": 21000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "image": "/images/products/catalog/mb_vegemix_475g.png"
   },
   {
-    "no": 329,
+    "no": 317,
     "brandKo": "조아루",
     "brandEn": "Joaru",
     "target": "공용",
@@ -6207,7 +6213,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": true,
-    "name": "조아루 반려동물 주제향수-캐시미어 인 러브 향",
+    "name": "조아루 반려동물 수제향수 - 캐시미어 인 러브 향",
     "priceText": "30,000원",
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
@@ -6215,7 +6221,7 @@
     "verifyNote": ""
   },
   {
-    "no": 330,
+    "no": 318,
     "brandKo": "조아루",
     "brandEn": "Joaru",
     "target": "공용",
@@ -6226,7 +6232,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": true,
-    "name": "조아루 반려동물 주제향수-아쿠아 라일락 향",
+    "name": "조아루 반려동물 수제향수 - 아쿠아 라일락 향",
     "priceText": "30,000원",
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
@@ -6234,7 +6240,7 @@
     "verifyNote": ""
   },
   {
-    "no": 331,
+    "no": 319,
     "brandKo": "조아루",
     "brandEn": "Joaru",
     "target": "공용",
@@ -6245,7 +6251,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": true,
-    "name": "조아루 반려동물 주제향수-소프트 코튼 향",
+    "name": "조아루 반려동물 수제향수 - 소프트 코튼 향",
     "priceText": "30,000원",
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
@@ -6253,7 +6259,7 @@
     "verifyNote": ""
   },
   {
-    "no": 332,
+    "no": 320,
     "brandKo": "조아루",
     "brandEn": "Joaru",
     "target": "공용",
@@ -6264,7 +6270,7 @@
     "isWalk": false,
     "isFood": false,
     "isHygiene": true,
-    "name": "조아루 반려동물 주제향수-리즈 프롬 데이지 향",
+    "name": "조아루 반려동물 수제향수 - 리프 프롬 데이지 향",
     "priceText": "30,000원",
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
@@ -6272,7 +6278,7 @@
     "verifyNote": ""
   },
   {
-    "no": 333,
+    "no": 321,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -6292,7 +6298,7 @@
     "image": "/images/products/catalog/id_treat_trout.png"
   },
   {
-    "no": 334,
+    "no": 322,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -6312,7 +6318,7 @@
     "image": "/images/products/catalog/id_treat_duck.png"
   },
   {
-    "no": 335,
+    "no": 323,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -6332,7 +6338,7 @@
     "image": "/images/products/catalog/id_treat_turkey.png"
   },
   {
-    "no": 336,
+    "no": 324,
     "brandKo": "아임디퍼런트",
     "brandEn": "I'm Different",
     "target": "공용/확인필요",
@@ -6352,7 +6358,7 @@
     "image": "/images/products/catalog/id_treat_chicken.png"
   },
   {
-    "no": 337,
+    "no": 325,
     "brandKo": "수제/기타",
     "brandEn": "Handmade/Other",
     "target": "강아지",
@@ -6371,7 +6377,7 @@
     "verifyNote": ""
   },
   {
-    "no": 338,
+    "no": 326,
     "brandKo": "짜요",
     "brandEn": "Jjayo",
     "target": "공용/확인필요",
@@ -6390,7 +6396,7 @@
     "verifyNote": ""
   },
   {
-    "no": 339,
+    "no": 327,
     "brandKo": "짜요",
     "brandEn": "Jjayo",
     "target": "공용/확인필요",
@@ -6409,7 +6415,7 @@
     "verifyNote": ""
   },
   {
-    "no": 340,
+    "no": 328,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -6429,7 +6435,7 @@
     "image": "/images/products/catalog/rw_hiandlight_harness_24.png"
   },
   {
-    "no": 341,
+    "no": 329,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -6449,7 +6455,7 @@
     "image": "/images/products/catalog/rw_collar_frontrange.png"
   },
   {
-    "no": 342,
+    "no": 330,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -6469,7 +6475,7 @@
     "image": "/images/products/catalog/rw_frontrange_harness.png"
   },
   {
-    "no": 343,
+    "no": 331,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -6488,7 +6494,7 @@
     "verifyNote": ""
   },
   {
-    "no": 344,
+    "no": 332,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "강아지",
@@ -6507,7 +6513,7 @@
     "verifyNote": ""
   },
   {
-    "no": 345,
+    "no": 333,
     "brandKo": "리프웨어",
     "brandEn": "Ruffwear",
     "target": "공용/확인필요",
