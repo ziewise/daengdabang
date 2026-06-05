@@ -9,7 +9,7 @@ import { useState } from "react";
 import { usePets } from "@/hooks/usePets";
 import { petsOrMock, MOCK_PETS } from "@/lib/mypage-data";
 import PetRegisterModal from "@/components/mypage/PetRegisterModal";
-import { PaneHead } from "../page";
+import { PaneHead } from "../_components/PaneHead";
 import type { PetProfile } from "@/lib/types";
 
 export default function MypagePetsPage() {

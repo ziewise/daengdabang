@@ -26,6 +26,11 @@ node_modules/
 .cache/
 .parcel-cache/
 
+# ----- Cloudflare Workers 빌드 산출물 (@opennextjs/cloudflare) -----
+/.open-next/
+.wrangler/
+/.dev.vars
+
 # ----- 테스트 -----
 /coverage
 

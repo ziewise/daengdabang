@@ -2,25 +2,35 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     /**
-     * 정적 export 모드 — `next build` 가 out/ 폴더에 HTML/CSS/JS 산출.
-     * Cloudflare Pages 가 out/ 을 그대로 정적 호스팅.
+     * 하이브리드 모드 — @opennextjs/cloudflare 어댑터로 Cloudflare Workers 에 빌드.
      *
-     * 향후 백엔드(API Routes / Server Actions / SSR)를 도입하려면:
-     *   1) 이 줄 제거
-     *   2) @opennextjs/cloudflare 어댑터 설치
-     *   3) wrangler.toml + open-next.config.ts 추가
+     * 빌드 명령:
+     *   npm run build:cf   (= sync-images + next build --webpack + OpenNext 번들)
      *
-     * 현재 상태(정적)에서 작동하지 않는 기능:
-     * - Route Handlers (app/api/*) / Server Actions / Middleware
-     * - 동적 라우트는 generateStaticParams() 로 빌드 시점 사전 생성만 가능
-     * - next/image 자동 최적화 OFF
+     * 출력:
+     *   .open-next/worker.js  — Workers 엔트리 (라우팅·SSR)
+     *   .open-next/assets/    — 정적 자산
+     *
+     * 현재 동작 가능한 기능 (output:'export' 제거로 해금됨):
+     * - Route Handlers (app/api/*) — 서버 함수
+     * - Server Actions — 폼 처리
+     * - Middleware — 라우트 가드/리다이렉트
+     * - SSR / ISR / 부분 사전 렌더링 (PPR)
+     * - next/image 동적 최적화 (단, IMAGES 바인딩 활성화 필요)
+     *
+     * 페이지별 렌더링 선택:
+     * - 기본: 빌드 시점 정적 (SSG) — 333 상품, 카테고리, 브랜드, 기획전
+     * - export const revalidate = N → ISR (N초마다 백그라운드 갱신)
+     * - export const dynamic = 'force-dynamic' → 매 요청 SSR
+     *
+     * Note: Turbopack 으로 빌드 시 OpenNext 가 청크 로딩 실패하므로 webpack 모드 사용.
      */
-    output: "export",
+    output: "standalone",
 
-    /** next/image 자동 리사이즈/포맷 변환 OFF (정적 export 모드 필수) */
+    /** next/image 자동 최적화 OFF — Cloudflare Images 바인딩 도입 시 false 로 변경 */
     images: { unoptimized: true },
 
-    /** URL 끝에 슬래시 (예: /products/) — 정적 호스팅 라우팅 안정성 ↑ */
+    /** URL 끝에 슬래시 (예: /products/) — 라우팅 안정성 + SEO 일관성 */
     trailingSlash: true,
 
     /**

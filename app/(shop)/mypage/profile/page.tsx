@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { PaneHead } from "../page";
+import { PaneHead } from "../_components/PaneHead";
 import PasswordChangeModal from "@/components/mypage/PasswordChangeModal";
 
 export default function MypageProfilePage() {
