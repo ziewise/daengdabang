@@ -25,25 +25,25 @@ const SLIDES: BrandSlide[] = [
     {
         brandId: "ruffwear", brandName: "Ruffwear",
         desc: "활동견을 위한 프리미엄 아웃도어 기어",
-        cta: "브랜드 둘러보기", href: "#brand-ruffwear",
+        cta: "브랜드 둘러보기", href: "/brand/ruffwear",
         image: "/images/brands/Ruffwear01.png",
     },
     {
         brandId: "ruffwear", brandName: "Ruffwear",
         desc: "Front Range · Roamer · Cloud Chaser — 베스트셀러 라인",
-        cta: "브랜드 둘러보기", href: "#brand-ruffwear",
+        cta: "브랜드 둘러보기", href: "/brand/ruffwear",
         image: "/images/brands/Ruffwear02.png",
     },
     {
         brandId: "rexspecs", brandName: "Rex Specs",
         desc: "강아지 눈 보호 전문 아이웨어 솔루션",
-        cta: "고글 라인업", href: "#brand-rexspecs",
+        cta: "고글 라인업", href: "/brand/rex-specs",
         image: "/images/brands/Rexspecs01.png",
     },
     {
         brandId: "rexspecs", brandName: "Rex Specs",
         desc: "V2 · Air · Sun Visor — 활동량과 날씨에 맞춰",
-        cta: "고글 라인업", href: "#brand-rexspecs",
+        cta: "고글 라인업", href: "/brand/rex-specs",
         image: "/images/brands/Rexspecs02.png",
     },
 ];

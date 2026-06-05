@@ -29,7 +29,7 @@ interface PromoTile {
 
 const TILES: PromoTile[] = [
     {
-        href: "#promo-active",
+        href: "/promo/active",
         eyebrow: "FEATURED COLLECTION",
         title: "활동견을 위한\n최고의 셀렉션",
         desc: "산책·하이킹·달리기까지 — 활동이 많은 댕댕이를 위한 큐레이션",
@@ -37,25 +37,25 @@ const TILES: PromoTile[] = [
         featured: true,
     },
     {
-        href: "#promo-rainy",
+        href: "/promo/rainy",
         title: "장마·우천 필수템",
         desc: "방수 의류·우천 산책 가이드",
         image: "/images/promo/rain.png",
     },
     {
-        href: "#promo-eye",
+        href: "/promo/eye",
         title: "눈·청력 보호",
         desc: "Rex Specs 전문 아이웨어",
         image: "/images/promo/eye.png",
     },
     {
-        href: "#promo-food",
+        href: "/promo/food",
         title: "프리미엄 푸드",
         desc: "엄선된 사료·간식 큐레이션",
         images: ["/images/promo/food1.png", "/images/promo/food2.png"],
     },
     {
-        href: "#promo-seasonal",
+        href: "/promo/seasonal",
         title: "댕스크림 컬렉션",
         desc: "한정 시즌 — 아이스크림·음료",
         video: "https://res.cloudinary.com/dapuu4gsc/video/upload/v1778710437/icecream_yhwaog.mp4",
