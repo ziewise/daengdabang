@@ -36,19 +36,25 @@ export default function IntroPage() {
 
     return (
         <>
-            {/* 좌상단 시그니처 로고 */}
+            {/* 좌상단 시그니처 로고 — 둥근 아이콘 + 크레파스 워드마크 이미지 */}
             <div className={styles.signatureLogo}>
                 <div className={styles.logoWrapper}>
                     <Image
                         src="/images/logo.png"
-                        alt="댕다방"
+                        alt=""
                         width={60}
                         height={60}
                         priority
                     />
                 </div>
-                <div className={`${styles.crayonText} font-display`}>
-                    <span>댕</span><span>다</span><span>방</span>
+                <div className={styles.wordmarkWrapper} aria-label="댕다방">
+                    <Image
+                        src="/images/wordmark.png"
+                        alt=""
+                        width={300}
+                        height={118}
+                        priority
+                    />
                 </div>
             </div>
 
