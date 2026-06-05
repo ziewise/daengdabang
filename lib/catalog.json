@@ -17,7 +17,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hiandlight_harness_26.png"
+    "image": "/images/products/catalog/rw_hiandlight_harness_26/rw_hiandlight_harness_26.png",
+    "folder": "rw_hiandlight_harness_26"
   },
   {
     "no": 2,
@@ -37,7 +38,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hiandlight_leash_26.png"
+    "image": "/images/products/catalog/rw_hiandlight_leash_26/rw_hiandlight_leash_26.png",
+    "folder": "rw_hiandlight_leash_26"
   },
   {
     "no": 3,
@@ -57,7 +59,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_campflyer_disc_26.png"
+    "image": "/images/products/catalog/rw_campflyer_disc_26/rw_campflyer_disc_26.png",
+    "folder": "rw_campflyer_disc_26"
   },
   {
     "no": 4,
@@ -77,7 +80,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_frontrangeflex_harness_26.png"
+    "image": "/images/products/catalog/rw_frontrangeflex_harness_26/rw_frontrangeflex_harness_26.png",
+    "folder": "rw_frontrangeflex_harness_26"
   },
   {
     "no": 5,
@@ -96,7 +100,8 @@
     "priceNum": 106000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "rw_ridgeline_leash_26"
   },
   {
     "no": 6,
@@ -116,7 +121,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_ridgeline_harness_26.png"
+    "image": "/images/products/catalog/rw_ridgeline_harness_26/rw_ridgeline_harness_26.png",
+    "folder": "rw_ridgeline_harness_26"
   },
   {
     "no": 7,
@@ -136,7 +142,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_webmaster_harness.png"
+    "image": "/images/products/catalog/rw_webmaster_harness/rw_webmaster_harness.png",
+    "folder": "rw_webmaster_harness"
   },
   {
     "no": 8,
@@ -156,7 +163,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_nota.png"
+    "image": "/images/products/catalog/rw_leash_nota/rw_leash_nota.png",
+    "folder": "rw_leash_nota"
   },
   {
     "no": 9,
@@ -176,7 +184,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "용도 확인필요",
-    "image": "/images/products/catalog/rw_basecamp_bed.png"
+    "image": "/images/products/catalog/rw_basecamp_bed/rw_basecamp_bed.png",
+    "folder": "rw_basecamp_bed"
   },
   {
     "no": 10,
@@ -195,7 +204,8 @@
     "priceNum": 18000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_aloe_essence"
   },
   {
     "no": 11,
@@ -215,7 +225,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_frontrange_24.png"
+    "image": "/images/products/catalog/rw_collar_frontrange_24/rw_collar_frontrange_24.png",
+    "folder": "rw_collar_frontrange_24"
   },
   {
     "no": 12,
@@ -235,7 +246,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_crag_23.png"
+    "image": "/images/products/catalog/rw_leash_crag_23/rw_leash_crag_23.png",
+    "folder": "rw_leash_crag_23"
   },
   {
     "no": 13,
@@ -254,7 +266,8 @@
     "priceNum": 14000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "fumble_deodorizer"
   },
   {
     "no": 14,
@@ -274,7 +287,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_crag.png"
+    "image": "/images/products/catalog/rw_collar_crag/rw_collar_crag.png",
+    "folder": "rw_collar_crag"
   },
   {
     "no": 15,
@@ -293,7 +307,8 @@
     "priceNum": 16000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": "용도 확인필요"
+    "verifyNote": "용도 확인필요",
+    "folder": "ip_slowdog"
   },
   {
     "no": 16,
@@ -312,7 +327,8 @@
     "priceNum": 15000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "pdh_slowfeeder_paw"
   },
   {
     "no": 17,
@@ -332,7 +348,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_hiandlight_24.png"
+    "image": "/images/products/catalog/rw_collar_hiandlight_24/rw_collar_hiandlight_24.png",
+    "folder": "rw_collar_hiandlight_24"
   },
   {
     "no": 18,
@@ -352,7 +369,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_flagline_24.png"
+    "image": "/images/products/catalog/rw_leash_flagline_24/rw_leash_flagline_24.png",
+    "folder": "rw_leash_flagline_24"
   },
   {
     "no": 19,
@@ -372,7 +390,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_hiandlight_24.png"
+    "image": "/images/products/catalog/rw_leash_hiandlight_24/rw_leash_hiandlight_24.png",
+    "folder": "rw_leash_hiandlight_24"
   },
   {
     "no": 20,
@@ -392,7 +411,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_flagline_harness_24.png"
+    "image": "/images/products/catalog/rw_flagline_harness_24/rw_flagline_harness_24.png",
+    "folder": "rw_flagline_harness_24"
   },
   {
     "no": 21,
@@ -412,7 +432,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_frontrange_24.png"
+    "image": "/images/products/catalog/rw_leash_frontrange_24/rw_leash_frontrange_24.png",
+    "folder": "rw_leash_frontrange_24"
   },
   {
     "no": 22,
@@ -432,7 +453,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_swampcooler_harness_2.png"
+    "image": "/images/products/catalog/rw_swampcooler_harness_2/rw_swampcooler_harness_2.png",
+    "folder": "rw_swampcooler_harness_2"
   },
   {
     "no": 23,
@@ -452,7 +474,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/rw_everest_coat_25fw.png"
+    "image": "/images/products/catalog/rw_everest_coat_25fw/rw_everest_coat_25fw.png",
+    "folder": "rw_everest_coat_25fw"
   },
   {
     "no": 24,
@@ -472,7 +495,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_remix_balltoy_s_26.png"
+    "image": "/images/products/catalog/rw_remix_balltoy_s_26/rw_remix_balltoy_s_26.png",
+    "folder": "rw_remix_balltoy_s_26"
   },
   {
     "no": 25,
@@ -492,7 +516,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_remix_balltoy_m_26.png"
+    "image": "/images/products/catalog/rw_remix_balltoy_m_26/rw_remix_balltoy_m_26.png",
+    "folder": "rw_remix_balltoy_m_26"
   },
   {
     "no": 26,
@@ -512,7 +537,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_remix_tugtoy_s_26.png"
+    "image": "/images/products/catalog/rw_remix_tugtoy_s_26/rw_remix_tugtoy_s_26.png",
+    "folder": "rw_remix_tugtoy_s_26"
   },
   {
     "no": 27,
@@ -532,7 +558,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_remix_tugtoy_m_26.png"
+    "image": "/images/products/catalog/rw_remix_tugtoy_m_26/rw_remix_tugtoy_m_26.png",
+    "folder": "rw_remix_tugtoy_m_26"
   },
   {
     "no": 28,
@@ -552,7 +579,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "용도 확인필요",
-    "image": "/images/products/catalog/rw_palisades_pack_26.png"
+    "image": "/images/products/catalog/rw_palisades_pack_26/rw_palisades_pack_26.png",
+    "folder": "rw_palisades_pack_26"
   },
   {
     "no": 29,
@@ -572,7 +600,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "용도 확인필요",
-    "image": "/images/products/catalog/rw_palisades_poncho_26.png"
+    "image": "/images/products/catalog/rw_palisades_poncho_26/rw_palisades_poncho_26.png",
+    "folder": "rw_palisades_poncho_26"
   },
   {
     "no": 30,
@@ -592,7 +621,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hitchhiker_leash_26.png"
+    "image": "/images/products/catalog/rw_hitchhiker_leash_26/rw_hitchhiker_leash_26.png",
+    "folder": "rw_hitchhiker_leash_26"
   },
   {
     "no": 31,
@@ -612,7 +642,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_frontrangeflex_leash_26.png"
+    "image": "/images/products/catalog/rw_frontrangeflex_leash_26/rw_frontrangeflex_leash_26.png",
+    "folder": "rw_frontrangeflex_leash_26"
   },
   {
     "no": 32,
@@ -632,7 +663,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_frontrangeflex_collar_26.png"
+    "image": "/images/products/catalog/rw_frontrangeflex_collar_26/rw_frontrangeflex_collar_26.png",
+    "folder": "rw_frontrangeflex_collar_26"
   },
   {
     "no": 33,
@@ -652,7 +684,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_ridgeline_shoes_26.png"
+    "image": "/images/products/catalog/rw_ridgeline_shoes_26/rw_ridgeline_shoes_26.png",
+    "folder": "rw_ridgeline_shoes_26"
   },
   {
     "no": 34,
@@ -672,7 +705,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_ridgeline_collar_26.png"
+    "image": "/images/products/catalog/rw_ridgeline_collar_26/rw_ridgeline_collar_26.png",
+    "folder": "rw_ridgeline_collar_26"
   },
   {
     "no": 35,
@@ -692,7 +726,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hydroplane_disc_m_25.png"
+    "image": "/images/products/catalog/rw_hydroplane_disc_m_25/rw_hydroplane_disc_m_25.png",
+    "folder": "rw_hydroplane_disc_m_25"
   },
   {
     "no": 36,
@@ -712,7 +747,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_climatechanger_vest_25fw.png"
+    "image": "/images/products/catalog/rw_climatechanger_vest_25fw/rw_climatechanger_vest_25fw.png",
+    "folder": "rw_climatechanger_vest_25fw"
   },
   {
     "no": 37,
@@ -732,7 +768,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_climatechanger_jacket_25fw.png"
+    "image": "/images/products/catalog/rw_climatechanger_jacket_25fw/rw_climatechanger_jacket_25fw.png",
+    "folder": "rw_climatechanger_jacket_25fw"
   },
   {
     "no": 38,
@@ -752,7 +789,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_sunshower_coverall_25fw.png"
+    "image": "/images/products/catalog/rw_sunshower_coverall_25fw/rw_sunshower_coverall_25fw.png",
+    "folder": "rw_sunshower_coverall_25fw"
   },
   {
     "no": 39,
@@ -772,7 +810,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "용도 확인필요",
-    "image": "/images/products/catalog/rw_coverall_snow_25fw.png"
+    "image": "/images/products/catalog/rw_coverall_snow_25fw/rw_coverall_snow_25fw.png",
+    "folder": "rw_coverall_snow_25fw"
   },
   {
     "no": 40,
@@ -792,7 +831,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_kibblecaddy.png"
+    "image": "/images/products/catalog/rw_kibblecaddy/rw_kibblecaddy.png",
+    "folder": "rw_kibblecaddy"
   },
   {
     "no": 41,
@@ -812,7 +852,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_treattrader_bag.png"
+    "image": "/images/products/catalog/rw_treattrader_bag/rw_treattrader_bag.png",
+    "folder": "rw_treattrader_bag"
   },
   {
     "no": 42,
@@ -832,7 +873,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hometrail_hippack.png"
+    "image": "/images/products/catalog/rw_hometrail_hippack/rw_hometrail_hippack.png",
+    "folder": "rw_hometrail_hippack"
   },
   {
     "no": 43,
@@ -852,7 +894,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_headwater_collar.png"
+    "image": "/images/products/catalog/rw_headwater_collar/rw_headwater_collar.png",
+    "folder": "rw_headwater_collar"
   },
   {
     "no": 44,
@@ -871,7 +914,8 @@
     "priceNum": 44000,
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "packt_endeavor_leash_1.5m"
   },
   {
     "no": 45,
@@ -891,7 +935,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_basecamp_mat.png"
+    "image": "/images/products/catalog/rw_basecamp_mat/rw_basecamp_mat.png",
+    "folder": "rw_basecamp_mat"
   },
   {
     "no": 46,
@@ -910,7 +955,8 @@
     "priceNum": 28000,
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "packt_endeavor_collar"
   },
   {
     "no": 47,
@@ -930,7 +976,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_confluence_collar.png"
+    "image": "/images/products/catalog/rw_confluence_collar/rw_confluence_collar.png",
+    "folder": "rw_confluence_collar"
   },
   {
     "no": 48,
@@ -950,7 +997,8 @@
     "categorizeNote": "구명·물놀이 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_floatcoat_lifejacket.png"
+    "image": "/images/products/catalog/rw_floatcoat_lifejacket/rw_floatcoat_lifejacket.png",
+    "folder": "rw_floatcoat_lifejacket"
   },
   {
     "no": 49,
@@ -970,7 +1018,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_undercoat_jacket.png"
+    "image": "/images/products/catalog/rw_undercoat_jacket/rw_undercoat_jacket.png",
+    "folder": "rw_undercoat_jacket"
   },
   {
     "no": 50,
@@ -990,7 +1039,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_corecooler_pad.png"
+    "image": "/images/products/catalog/rw_corecooler_pad/rw_corecooler_pad.png",
+    "folder": "rw_corecooler_pad"
   },
   {
     "no": 51,
@@ -1010,7 +1060,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_swampcooler_zipvest.png"
+    "image": "/images/products/catalog/rw_swampcooler_zipvest/rw_swampcooler_zipvest.png",
+    "folder": "rw_swampcooler_zipvest"
   },
   {
     "no": 52,
@@ -1030,7 +1081,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_swampcooler_vest.png"
+    "image": "/images/products/catalog/rw_swampcooler_vest/rw_swampcooler_vest.png",
+    "folder": "rw_swampcooler_vest"
   },
   {
     "no": 53,
@@ -1050,7 +1102,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_swampcooler_neckgaiter_2.png"
+    "image": "/images/products/catalog/rw_swampcooler_neckgaiter_2/rw_swampcooler_neckgaiter_2.png",
+    "folder": "rw_swampcooler_neckgaiter_2"
   },
   {
     "no": 54,
@@ -1070,7 +1123,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_swampcooler_harness.png"
+    "image": "/images/products/catalog/rw_swampcooler_harness/rw_swampcooler_harness.png",
+    "folder": "rw_swampcooler_harness"
   },
   {
     "no": 55,
@@ -1090,7 +1144,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_notastick.png"
+    "image": "/images/products/catalog/rw_notastick/rw_notastick.png",
+    "folder": "rw_notastick"
   },
   {
     "no": 56,
@@ -1110,7 +1165,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_lunker.png"
+    "image": "/images/products/catalog/rw_lunker/rw_lunker.png",
+    "folder": "rw_lunker"
   },
   {
     "no": 57,
@@ -1130,7 +1186,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_notarock.png"
+    "image": "/images/products/catalog/rw_notarock/rw_notarock.png",
+    "folder": "rw_notarock"
   },
   {
     "no": 58,
@@ -1150,7 +1207,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_notacone.png"
+    "image": "/images/products/catalog/rw_notacone/rw_notacone.png",
+    "folder": "rw_notacone"
   },
   {
     "no": 59,
@@ -1170,7 +1228,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hookacone.png"
+    "image": "/images/products/catalog/rw_hookacone/rw_hookacone.png",
+    "folder": "rw_hookacone"
   },
   {
     "no": 60,
@@ -1190,7 +1249,8 @@
     "categorizeNote": "구명·물놀이 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_confluence_lifejacket.png"
+    "image": "/images/products/catalog/rw_confluence_lifejacket/rw_confluence_lifejacket.png",
+    "folder": "rw_confluence_lifejacket"
   },
   {
     "no": 61,
@@ -1210,7 +1270,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_stashbag_mini.png"
+    "image": "/images/products/catalog/rw_stashbag_mini/rw_stashbag_mini.png",
+    "folder": "rw_stashbag_mini"
   },
   {
     "no": 62,
@@ -1230,7 +1291,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hitchhiker_carrier.png"
+    "image": "/images/products/catalog/rw_hitchhiker_carrier/rw_hitchhiker_carrier.png",
+    "folder": "rw_hitchhiker_carrier"
   },
   {
     "no": 63,
@@ -1249,7 +1311,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_pandabear"
   },
   {
     "no": 64,
@@ -1268,7 +1331,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_unicorn"
   },
   {
     "no": 65,
@@ -1287,7 +1351,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_rhino"
   },
   {
     "no": 66,
@@ -1306,7 +1371,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_reindeer"
   },
   {
     "no": 67,
@@ -1325,7 +1391,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_lion"
   },
   {
     "no": 68,
@@ -1344,7 +1411,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_jackrabbit"
   },
   {
     "no": 69,
@@ -1363,7 +1431,8 @@
     "priceNum": 30000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_horse"
   },
   {
     "no": 70,
@@ -1382,7 +1451,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_giraffe"
   },
   {
     "no": 71,
@@ -1401,7 +1471,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_fox"
   },
   {
     "no": 72,
@@ -1420,7 +1491,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_dinosaur"
   },
   {
     "no": 73,
@@ -1440,7 +1512,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_spokespup_tag.png"
+    "image": "/images/products/catalog/rw_spokespup_tag/rw_spokespup_tag.png",
+    "folder": "rw_spokespup_tag"
   },
   {
     "no": 74,
@@ -1460,7 +1533,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_brachy_lens.png"
+    "image": "/images/products/catalog/rs_brachy_lens/rs_brachy_lens.png",
+    "folder": "rs_brachy_lens"
   },
   {
     "no": 75,
@@ -1480,7 +1554,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_lenslab_original.png"
+    "image": "/images/products/catalog/rs_lenslab_original/rs_lenslab_original.png",
+    "folder": "rs_lenslab_original"
   },
   {
     "no": 76,
@@ -1500,7 +1575,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_lens_v2.png"
+    "image": "/images/products/catalog/rs_lens_v2/rs_lens_v2.png",
+    "folder": "rs_lens_v2"
   },
   {
     "no": 77,
@@ -1520,7 +1596,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_black.png"
+    "image": "/images/products/catalog/rs_v2_black/rs_v2_black.png",
+    "folder": "rs_v2_black"
   },
   {
     "no": 78,
@@ -1540,7 +1617,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_banditorange.png"
+    "image": "/images/products/catalog/rs_v2_banditorange/rs_v2_banditorange.png",
+    "folder": "rs_v2_banditorange"
   },
   {
     "no": 79,
@@ -1560,7 +1638,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_atlasblue.png"
+    "image": "/images/products/catalog/rs_v2_atlasblue/rs_v2_atlasblue.png",
+    "folder": "rs_v2_atlasblue"
   },
   {
     "no": 80,
@@ -1580,7 +1659,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_tazerteal.png"
+    "image": "/images/products/catalog/rs_v2_tazerteal/rs_v2_tazerteal.png",
+    "folder": "rs_v2_tazerteal"
   },
   {
     "no": 81,
@@ -1600,7 +1680,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_yazberry.png"
+    "image": "/images/products/catalog/rs_v2_yazberry/rs_v2_yazberry.png",
+    "folder": "rs_v2_yazberry"
   },
   {
     "no": 82,
@@ -1620,7 +1701,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_neon_ltd.png"
+    "image": "/images/products/catalog/rs_v2_neon_ltd/rs_v2_neon_ltd.png",
+    "folder": "rs_v2_neon_ltd"
   },
   {
     "no": 83,
@@ -1640,7 +1722,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_hardcase.png"
+    "image": "/images/products/catalog/rs_hardcase/rs_hardcase.png",
+    "folder": "rs_hardcase"
   },
   {
     "no": 84,
@@ -1660,7 +1743,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_brachy_black.png"
+    "image": "/images/products/catalog/rs_brachy_black/rs_brachy_black.png",
+    "folder": "rs_brachy_black"
   },
   {
     "no": 85,
@@ -1680,7 +1764,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_trailhead_collar.png"
+    "image": "/images/products/catalog/rs_trailhead_collar/rs_trailhead_collar.png",
+    "folder": "rs_trailhead_collar"
   },
   {
     "no": 86,
@@ -1700,7 +1785,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_trailhead_leash_single_18m.png"
+    "image": "/images/products/catalog/rs_trailhead_leash_single_18m/rs_trailhead_leash_single_18m.png",
+    "folder": "rs_trailhead_leash_single_18m"
   },
   {
     "no": 87,
@@ -1720,7 +1806,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_trailhead_leash_dual_24m.png"
+    "image": "/images/products/catalog/rs_trailhead_leash_dual_24m/rs_trailhead_leash_dual_24m.png",
+    "folder": "rs_trailhead_leash_dual_24m"
   },
   {
     "no": 88,
@@ -1740,7 +1827,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_bowl.png"
+    "image": "/images/products/catalog/rs_bowl/rs_bowl.png",
+    "folder": "rs_bowl"
   },
   {
     "no": 89,
@@ -1760,7 +1848,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_pikepurple.png"
+    "image": "/images/products/catalog/rs_v2_pikepurple/rs_v2_pikepurple.png",
+    "folder": "rs_v2_pikepurple"
   },
   {
     "no": 90,
@@ -1780,7 +1869,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_bighornblue.png"
+    "image": "/images/products/catalog/rs_v2_bighornblue/rs_v2_bighornblue.png",
+    "folder": "rs_v2_bighornblue"
   },
   {
     "no": 91,
@@ -1800,7 +1890,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_gallatingray.png"
+    "image": "/images/products/catalog/rs_v2_gallatingray/rs_v2_gallatingray.png",
+    "folder": "rs_v2_gallatingray"
   },
   {
     "no": 92,
@@ -1820,7 +1911,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_rangerred.png"
+    "image": "/images/products/catalog/rs_v2_rangerred/rs_v2_rangerred.png",
+    "folder": "rs_v2_rangerred"
   },
   {
     "no": 93,
@@ -1840,7 +1932,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_ozarkorange.png"
+    "image": "/images/products/catalog/rs_v2_ozarkorange/rs_v2_ozarkorange.png",
+    "folder": "rs_v2_ozarkorange"
   },
   {
     "no": 94,
@@ -1860,7 +1953,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "상품명 잘림; 용도 확인필요",
-    "image": "/images/products/catalog/rs_v2_cloudycoral_ltd.png"
+    "image": "/images/products/catalog/rs_v2_cloudycoral_ltd/rs_v2_cloudycoral_ltd.png",
+    "folder": "rs_v2_cloudycoral_ltd"
   },
   {
     "no": 95,
@@ -1880,7 +1974,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_lenslab.png"
+    "image": "/images/products/catalog/rs_v2_lenslab/rs_v2_lenslab.png",
+    "folder": "rs_v2_lenslab"
   },
   {
     "no": 96,
@@ -1900,7 +1995,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_earpro.png"
+    "image": "/images/products/catalog/rs_earpro/rs_earpro.png",
+    "folder": "rs_earpro"
   },
   {
     "no": 97,
@@ -1920,7 +2016,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_2024ltd.png"
+    "image": "/images/products/catalog/rs_v2_2024ltd/rs_v2_2024ltd.png",
+    "folder": "rs_v2_2024ltd"
   },
   {
     "no": 98,
@@ -1940,7 +2037,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_lens_original.png"
+    "image": "/images/products/catalog/rs_lens_original/rs_lens_original.png",
+    "folder": "rs_lens_original"
   },
   {
     "no": 99,
@@ -1960,7 +2058,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_volcanored.png"
+    "image": "/images/products/catalog/rs_v2_volcanored/rs_v2_volcanored.png",
+    "folder": "rs_v2_volcanored"
   },
   {
     "no": 100,
@@ -1980,7 +2079,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_appalachianorange.png"
+    "image": "/images/products/catalog/rs_v2_appalachianorange/rs_v2_appalachianorange.png",
+    "folder": "rs_v2_appalachianorange"
   },
   {
     "no": 101,
@@ -2000,7 +2100,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_himalayapink.png"
+    "image": "/images/products/catalog/rs_v2_himalayapink/rs_v2_himalayapink.png",
+    "folder": "rs_v2_himalayapink"
   },
   {
     "no": 102,
@@ -2020,7 +2121,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_vulcanblue.png"
+    "image": "/images/products/catalog/rs_v2_vulcanblue/rs_v2_vulcanblue.png",
+    "folder": "rs_v2_vulcanblue"
   },
   {
     "no": 103,
@@ -2040,7 +2142,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_avalanchewhite.png"
+    "image": "/images/products/catalog/rs_v2_avalanchewhite/rs_v2_avalanchewhite.png",
+    "folder": "rs_v2_avalanchewhite"
   },
   {
     "no": 104,
@@ -2060,7 +2163,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.rexspecs.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/rs_v2_coyote.png"
+    "image": "/images/products/catalog/rs_v2_coyote/rs_v2_coyote.png",
+    "folder": "rs_v2_coyote"
   },
   {
     "no": 105,
@@ -2080,7 +2184,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_everest_coat.png"
+    "image": "/images/products/catalog/rw_everest_coat/rw_everest_coat.png",
+    "folder": "rw_everest_coat"
   },
   {
     "no": 106,
@@ -2099,7 +2204,8 @@
     "priceNum": 21000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "polkadog_codchips_99g"
   },
   {
     "no": 107,
@@ -2119,7 +2225,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_porcini_toy.png"
+    "image": "/images/products/catalog/rw_porcini_toy/rw_porcini_toy.png",
+    "folder": "rw_porcini_toy"
   },
   {
     "no": 108,
@@ -2139,7 +2246,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_morel_toy.png"
+    "image": "/images/products/catalog/rw_morel_toy/rw_morel_toy.png",
+    "folder": "rw_morel_toy"
   },
   {
     "no": 109,
@@ -2159,7 +2267,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_toadstool_toy.png"
+    "image": "/images/products/catalog/rw_toadstool_toy/rw_toadstool_toy.png",
+    "folder": "rw_toadstool_toy"
   },
   {
     "no": 110,
@@ -2179,7 +2288,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_toprope.png"
+    "image": "/images/products/catalog/rw_collar_toprope/rw_collar_toprope.png",
+    "folder": "rw_collar_toprope"
   },
   {
     "no": 111,
@@ -2199,7 +2309,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_nota.png"
+    "image": "/images/products/catalog/rw_collar_nota/rw_collar_nota.png",
+    "folder": "rw_collar_nota"
   },
   {
     "no": 112,
@@ -2218,7 +2329,8 @@
     "priceNum": 148000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "rw_dirtbag_seatcover"
   },
   {
     "no": 113,
@@ -2238,7 +2350,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_nota_long.png"
+    "image": "/images/products/catalog/rw_leash_nota_long/rw_leash_nota_long.png",
+    "folder": "rw_leash_nota_long"
   },
   {
     "no": 114,
@@ -2258,7 +2371,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_vert_jacket.png"
+    "image": "/images/products/catalog/rw_vert_jacket/rw_vert_jacket.png",
+    "folder": "rw_vert_jacket"
   },
   {
     "no": 115,
@@ -2278,7 +2392,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_sunshower_jacket.png"
+    "image": "/images/products/catalog/rw_sunshower_jacket/rw_sunshower_jacket.png",
+    "folder": "rw_sunshower_jacket"
   },
   {
     "no": 116,
@@ -2298,7 +2413,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_quinzee_jacket_24.png"
+    "image": "/images/products/catalog/rw_quinzee_jacket_24/rw_quinzee_jacket_24.png",
+    "folder": "rw_quinzee_jacket_24"
   },
   {
     "no": 117,
@@ -2318,7 +2434,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_quinzee_jacket.png"
+    "image": "/images/products/catalog/rw_quinzee_jacket/rw_quinzee_jacket.png",
+    "folder": "rw_quinzee_jacket"
   },
   {
     "no": 118,
@@ -2338,7 +2455,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_furness_jacket.png"
+    "image": "/images/products/catalog/rw_furness_jacket/rw_furness_jacket.png",
+    "folder": "rw_furness_jacket"
   },
   {
     "no": 119,
@@ -2358,7 +2476,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_overcoat_fuse_jacket.png"
+    "image": "/images/products/catalog/rw_overcoat_fuse_jacket/rw_overcoat_fuse_jacket.png",
+    "folder": "rw_overcoat_fuse_jacket"
   },
   {
     "no": 120,
@@ -2377,7 +2496,8 @@
     "priceNum": 168000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "rw_powderhound_jacket"
   },
   {
     "no": 121,
@@ -2397,7 +2517,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hemphound_sweater.png"
+    "image": "/images/products/catalog/rw_hemphound_sweater/rw_hemphound_sweater.png",
+    "folder": "rw_hemphound_sweater"
   },
   {
     "no": 122,
@@ -2416,7 +2537,8 @@
     "priceNum": 1549000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.thule.com/en-us/bike-trailers/bike-trailer-accessories/thule-courier-dog-trailer-kit-_-20301001",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "thule_courier_trailer"
   },
   {
     "no": 123,
@@ -2435,7 +2557,8 @@
     "priceNum": 128000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_dental_6kg"
   },
   {
     "no": 124,
@@ -2454,7 +2577,8 @@
     "priceNum": 105000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_luxury_xl"
   },
   {
     "no": 125,
@@ -2473,7 +2597,8 @@
     "priceNum": 61000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_luxury_m"
   },
   {
     "no": 126,
@@ -2492,7 +2617,8 @@
     "priceNum": 55000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_chewisty_l_pinkgray"
   },
   {
     "no": 127,
@@ -2512,7 +2638,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_switchback_harness.png"
+    "image": "/images/products/catalog/rw_switchback_harness/rw_switchback_harness.png",
+    "folder": "rw_switchback_harness"
   },
   {
     "no": 128,
@@ -2531,7 +2658,8 @@
     "priceNum": 128000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_highland_6kg"
   },
   {
     "no": 129,
@@ -2550,7 +2678,8 @@
     "priceNum": 128000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_salmon_6kg"
   },
   {
     "no": 130,
@@ -2570,7 +2699,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/yora_wet_carrotpotato_390g.png"
+    "image": "/images/products/catalog/yora_wet_carrotpotato_390g/yora_wet_carrotpotato_390g.png",
+    "folder": "yora_wet_carrotpotato_390g"
   },
   {
     "no": 131,
@@ -2590,7 +2720,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_wet_appleparsnip_390g_2.png"
+    "image": "/images/products/catalog/yora_wet_appleparsnip_390g_2/yora_wet_appleparsnip_390g_2.png",
+    "folder": "yora_wet_appleparsnip_390g_2"
   },
   {
     "no": 132,
@@ -2610,7 +2741,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/yora_wet_beetrootswede_390g.png"
+    "image": "/images/products/catalog/yora_wet_beetrootswede_390g/yora_wet_beetrootswede_390g.png",
+    "folder": "yora_wet_beetrootswede_390g"
   },
   {
     "no": 133,
@@ -2630,7 +2762,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_activebar_35g_12.png"
+    "image": "/images/products/catalog/yora_activebar_35g_12/yora_activebar_35g_12.png",
+    "folder": "yora_activebar_35g_12"
   },
   {
     "no": 134,
@@ -2650,7 +2783,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_reward_treat.png"
+    "image": "/images/products/catalog/yora_reward_treat/yora_reward_treat.png",
+    "folder": "yora_reward_treat"
   },
   {
     "no": 135,
@@ -2670,7 +2804,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_dreamer_treat.png"
+    "image": "/images/products/catalog/yora_dreamer_treat/yora_dreamer_treat.png",
+    "folder": "yora_dreamer_treat"
   },
   {
     "no": 136,
@@ -2689,7 +2824,8 @@
     "priceNum": 36000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "hugo_icecream_salmon"
   },
   {
     "no": 137,
@@ -2708,7 +2844,8 @@
     "priceNum": 25000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_aloe_shampoo"
   },
   {
     "no": 138,
@@ -2727,7 +2864,8 @@
     "priceNum": 30000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "dangcream_strawberry"
   },
   {
     "no": 139,
@@ -2747,7 +2885,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_loadup_harness_24.png"
+    "image": "/images/products/catalog/rw_loadup_harness_24/rw_loadup_harness_24.png",
+    "folder": "rw_loadup_harness_24"
   },
   {
     "no": 140,
@@ -2766,7 +2905,8 @@
     "priceNum": 145000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "bm_kibble_9kg"
   },
   {
     "no": 141,
@@ -2786,7 +2926,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/bm_wet_100g_3.png"
+    "image": "/images/products/catalog/bm_wet_100g_3/bm_wet_100g_3.png",
+    "folder": "bm_wet_100g_3"
   },
   {
     "no": 142,
@@ -2806,7 +2947,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_chainreaction_martingale_24.png"
+    "image": "/images/products/catalog/rw_collar_chainreaction_martingale_24/rw_collar_chainreaction_martingale_24.png",
+    "folder": "rw_collar_chainreaction_martingale_24"
   },
   {
     "no": 143,
@@ -2826,7 +2968,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_frontrange_harness_24.png"
+    "image": "/images/products/catalog/rw_frontrange_harness_24/rw_frontrange_harness_24.png",
+    "folder": "rw_frontrange_harness_24"
   },
   {
     "no": 144,
@@ -2846,7 +2989,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "중복 2건",
-    "image": "/images/products/catalog/rw_leash_switchback_24.png"
+    "image": "/images/products/catalog/rw_leash_switchback_24/rw_leash_switchback_24.png",
+    "folder": "rw_leash_switchback_24"
   },
   {
     "no": 145,
@@ -2866,7 +3010,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_frontrange_daypack_24.png"
+    "image": "/images/products/catalog/rw_frontrange_daypack_24/rw_frontrange_daypack_24.png",
+    "folder": "rw_frontrange_daypack_24"
   },
   {
     "no": 146,
@@ -2886,7 +3031,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_frontrange_short_24.png"
+    "image": "/images/products/catalog/rw_leash_frontrange_short_24/rw_leash_frontrange_short_24.png",
+    "folder": "rw_leash_frontrange_short_24"
   },
   {
     "no": 147,
@@ -2906,7 +3052,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_quencher_24.png"
+    "image": "/images/products/catalog/rw_quencher_24/rw_quencher_24.png",
+    "folder": "rw_quencher_24"
   },
   {
     "no": 148,
@@ -2926,7 +3073,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_crag_23.png"
+    "image": "/images/products/catalog/rw_collar_crag_23/rw_collar_crag_23.png",
+    "folder": "rw_collar_crag_23"
   },
   {
     "no": 149,
@@ -2946,7 +3094,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_cragex_23.png"
+    "image": "/images/products/catalog/rw_leash_cragex_23/rw_leash_cragex_23.png",
+    "folder": "rw_leash_cragex_23"
   },
   {
     "no": 150,
@@ -2966,7 +3115,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/mb_vegemix_100g_4.png"
+    "image": "/images/products/catalog/mb_vegemix_100g_4/mb_vegemix_100g_4.png",
+    "folder": "mb_vegemix_100g_4"
   },
   {
     "no": 151,
@@ -2986,7 +3136,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_sturgeon.png"
+    "image": "/images/products/catalog/id_treat_sturgeon/id_treat_sturgeon.png",
+    "folder": "id_treat_sturgeon"
   },
   {
     "no": 152,
@@ -3006,7 +3157,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_sardine.png"
+    "image": "/images/products/catalog/id_treat_sardine/id_treat_sardine.png",
+    "folder": "id_treat_sardine"
   },
   {
     "no": 153,
@@ -3026,7 +3178,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_guineafowl.png"
+    "image": "/images/products/catalog/id_treat_guineafowl/id_treat_guineafowl.png",
+    "folder": "id_treat_guineafowl"
   },
   {
     "no": 154,
@@ -3045,7 +3198,8 @@
     "priceNum": 126000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "rw_stumptown_jacket"
   },
   {
     "no": 155,
@@ -3065,7 +3219,8 @@
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_climatechanger_fleece.png"
+    "image": "/images/products/catalog/rw_climatechanger_fleece/rw_climatechanger_fleece.png",
+    "folder": "rw_climatechanger_fleece"
   },
   {
     "no": 156,
@@ -3085,7 +3240,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_shoes_hiandlight_23.png"
+    "image": "/images/products/catalog/rw_shoes_hiandlight_23/rw_shoes_hiandlight_23.png",
+    "folder": "rw_shoes_hiandlight_23"
   },
   {
     "no": 157,
@@ -3105,7 +3261,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_justacinch.png"
+    "image": "/images/products/catalog/rw_leash_justacinch/rw_leash_justacinch.png",
+    "folder": "rw_leash_justacinch"
   },
   {
     "no": 158,
@@ -3124,7 +3281,8 @@
     "priceNum": 5900,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "pegnaty_woodstick"
   },
   {
     "no": 159,
@@ -3144,7 +3302,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hydroplane_disc.png"
+    "image": "/images/products/catalog/rw_hydroplane_disc/rw_hydroplane_disc.png",
+    "folder": "rw_hydroplane_disc"
   },
   {
     "no": 160,
@@ -3164,7 +3323,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_pacificloop_toy.png"
+    "image": "/images/products/catalog/rw_pacificloop_toy/rw_pacificloop_toy.png",
+    "folder": "rw_pacificloop_toy"
   },
   {
     "no": 161,
@@ -3184,7 +3344,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_trailrunnerbowl.png"
+    "image": "/images/products/catalog/rw_trailrunnerbowl/rw_trailrunnerbowl.png",
+    "folder": "rw_trailrunnerbowl"
   },
   {
     "no": 162,
@@ -3204,7 +3365,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_stashbag_mini_2.png"
+    "image": "/images/products/catalog/rw_stashbag_mini_2/rw_stashbag_mini_2.png",
+    "folder": "rw_stashbag_mini_2"
   },
   {
     "no": 163,
@@ -3224,7 +3386,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/yora_smallbreed_6kg.png"
+    "image": "/images/products/catalog/yora_smallbreed_6kg/yora_smallbreed_6kg.png",
+    "folder": "yora_smallbreed_6kg"
   },
   {
     "no": 164,
@@ -3244,7 +3407,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/yora_smallbreed_2.5kg.png"
+    "image": "/images/products/catalog/yora_smallbreed_2.5kg/yora_smallbreed_2.5kg.png",
+    "folder": "yora_smallbreed_2.5kg"
   },
   {
     "no": 165,
@@ -3263,7 +3427,8 @@
     "priceNum": 247200,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "yora_puppy_12kg"
   },
   {
     "no": 166,
@@ -3283,7 +3448,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_puppy_2.5kg.png"
+    "image": "/images/products/catalog/yora_puppy_2.5kg/yora_puppy_2.5kg.png",
+    "folder": "yora_puppy_2.5kg"
   },
   {
     "no": 167,
@@ -3303,7 +3469,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_stew_carrotpotato_390g.png"
+    "image": "/images/products/catalog/yora_stew_carrotpotato_390g/yora_stew_carrotpotato_390g.png",
+    "folder": "yora_stew_carrotpotato_390g"
   },
   {
     "no": 168,
@@ -3323,7 +3490,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_wet_appleparsnip_390g.png"
+    "image": "/images/products/catalog/yora_wet_appleparsnip_390g/yora_wet_appleparsnip_390g.png",
+    "folder": "yora_wet_appleparsnip_390g"
   },
   {
     "no": 169,
@@ -3343,7 +3511,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_lightsenior_12kg.png"
+    "image": "/images/products/catalog/yora_lightsenior_12kg/yora_lightsenior_12kg.png",
+    "folder": "yora_lightsenior_12kg"
   },
   {
     "no": 170,
@@ -3363,7 +3532,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_lightsenior_6kg.png"
+    "image": "/images/products/catalog/yora_lightsenior_6kg/yora_lightsenior_6kg.png",
+    "folder": "yora_lightsenior_6kg"
   },
   {
     "no": 171,
@@ -3383,7 +3553,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_lightsenior_2.5kg.png"
+    "image": "/images/products/catalog/yora_lightsenior_2.5kg/yora_lightsenior_2.5kg.png",
+    "folder": "yora_lightsenior_2.5kg"
   },
   {
     "no": 172,
@@ -3403,7 +3574,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_largebreed_12kg.png"
+    "image": "/images/products/catalog/yora_largebreed_12kg/yora_largebreed_12kg.png",
+    "folder": "yora_largebreed_12kg"
   },
   {
     "no": 173,
@@ -3423,7 +3595,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_dental_s_56g.png"
+    "image": "/images/products/catalog/yora_dental_s_56g/yora_dental_s_56g.png",
+    "folder": "yora_dental_s_56g"
   },
   {
     "no": 174,
@@ -3443,7 +3616,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_dental_l_270g.png"
+    "image": "/images/products/catalog/yora_dental_l_270g/yora_dental_l_270g.png",
+    "folder": "yora_dental_l_270g"
   },
   {
     "no": 175,
@@ -3463,7 +3637,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_allbreed_12kg.png"
+    "image": "/images/products/catalog/yora_allbreed_12kg/yora_allbreed_12kg.png",
+    "folder": "yora_allbreed_12kg"
   },
   {
     "no": 176,
@@ -3483,7 +3658,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_allbreed_6kg.png"
+    "image": "/images/products/catalog/yora_allbreed_6kg/yora_allbreed_6kg.png",
+    "folder": "yora_allbreed_6kg"
   },
   {
     "no": 177,
@@ -3503,7 +3679,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://yorapets.com/us-en/dog-food",
     "verifyNote": "",
-    "image": "/images/products/catalog/yora_allbreed_2.5kg.png"
+    "image": "/images/products/catalog/yora_allbreed_2.5kg/yora_allbreed_2.5kg.png",
+    "folder": "yora_allbreed_2.5kg"
   },
   {
     "no": 178,
@@ -3522,7 +3699,8 @@
     "priceNum": 58000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "toplife_goatmilk_adult_200ml"
   },
   {
     "no": 179,
@@ -3542,7 +3720,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "",
-    "image": "/images/products/catalog/sk_ft_working30_15kg.png"
+    "image": "/images/products/catalog/sk_ft_working30_15kg/sk_ft_working30_15kg.png",
+    "folder": "sk_ft_working30_15kg"
   },
   {
     "no": 180,
@@ -3562,7 +3741,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "",
-    "image": "/images/products/catalog/sk_ft_working26_15kg.png"
+    "image": "/images/products/catalog/sk_ft_working26_15kg/sk_ft_working26_15kg.png",
+    "folder": "sk_ft_working26_15kg"
   },
   {
     "no": 181,
@@ -3582,7 +3762,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "",
-    "image": "/images/products/catalog/sk_ft_salmon_pate_390g.png"
+    "image": "/images/products/catalog/sk_ft_salmon_pate_390g/sk_ft_salmon_pate_390g.png",
+    "folder": "sk_ft_salmon_pate_390g"
   },
   {
     "no": 182,
@@ -3602,7 +3783,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/sk_ft_puppy_pate_390g.png"
+    "image": "/images/products/catalog/sk_ft_puppy_pate_390g/sk_ft_puppy_pate_390g.png",
+    "folder": "sk_ft_puppy_pate_390g"
   },
   {
     "no": 183,
@@ -3622,7 +3804,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "",
-    "image": "/images/products/catalog/sk_ft_maintenance_15kg.png"
+    "image": "/images/products/catalog/sk_ft_maintenance_15kg/sk_ft_maintenance_15kg.png",
+    "folder": "sk_ft_maintenance_15kg"
   },
   {
     "no": 184,
@@ -3642,7 +3825,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "",
-    "image": "/images/products/catalog/sk_ft_chicken_pate_390g.png"
+    "image": "/images/products/catalog/sk_ft_chicken_pate_390g/sk_ft_chicken_pate_390g.png",
+    "folder": "sk_ft_chicken_pate_390g"
   },
   {
     "no": 185,
@@ -3662,7 +3846,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.skinners.co.uk/",
     "verifyNote": "",
-    "image": "/images/products/catalog/sk_ft_chickenrice_15kg.png"
+    "image": "/images/products/catalog/sk_ft_chickenrice_15kg/sk_ft_chickenrice_15kg.png",
+    "folder": "sk_ft_chickenrice_15kg"
   },
   {
     "no": 186,
@@ -3682,7 +3867,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "",
-    "image": "/images/products/catalog/nd_feelgood_wf.png"
+    "image": "/images/products/catalog/nd_feelgood_wf/nd_feelgood_wf.png",
+    "folder": "nd_feelgood_wf"
   },
   {
     "no": 187,
@@ -3702,7 +3888,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "",
-    "image": "/images/products/catalog/nd_feelgood_tc.png"
+    "image": "/images/products/catalog/nd_feelgood_tc/nd_feelgood_tc.png",
+    "folder": "nd_feelgood_tc"
   },
   {
     "no": 188,
@@ -3722,7 +3909,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/nd_feelgood_sl.png"
+    "image": "/images/products/catalog/nd_feelgood_sl/nd_feelgood_sl.png",
+    "folder": "nd_feelgood_sl"
   },
   {
     "no": 189,
@@ -3742,7 +3930,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "",
-    "image": "/images/products/catalog/nd_feelgood_s.png"
+    "image": "/images/products/catalog/nd_feelgood_s/nd_feelgood_s.png",
+    "folder": "nd_feelgood_s"
   },
   {
     "no": 190,
@@ -3762,7 +3951,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "",
-    "image": "/images/products/catalog/nd_feelgood_p.png"
+    "image": "/images/products/catalog/nd_feelgood_p/nd_feelgood_p.png",
+    "folder": "nd_feelgood_p"
   },
   {
     "no": 191,
@@ -3782,7 +3972,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "",
-    "image": "/images/products/catalog/nd_feelgood_c.png"
+    "image": "/images/products/catalog/nd_feelgood_c/nd_feelgood_c.png",
+    "folder": "nd_feelgood_c"
   },
   {
     "no": 192,
@@ -3802,7 +3993,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/nd_purely_sw.png"
+    "image": "/images/products/catalog/nd_purely_sw/nd_purely_sw.png",
+    "folder": "nd_purely_sw"
   },
   {
     "no": 193,
@@ -3822,7 +4014,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.naturediet.co.uk/cat/natural-wet-dog-food/",
     "verifyNote": "",
-    "image": "/images/products/catalog/nd_purely_bc.png"
+    "image": "/images/products/catalog/nd_purely_bc/nd_purely_bc.png",
+    "folder": "nd_purely_bc"
   },
   {
     "no": 194,
@@ -3841,7 +4034,8 @@
     "priceNum": 55000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_salmon_2kg"
   },
   {
     "no": 195,
@@ -3860,7 +4054,8 @@
     "priceNum": 55000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_highland_2kg"
   },
   {
     "no": 196,
@@ -3879,7 +4074,8 @@
     "priceNum": 52000,
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_chicken_2kg"
   },
   {
     "no": 197,
@@ -3898,7 +4094,8 @@
     "priceNum": 55000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://canagan.com/uk/dog-food/scottish-salmon-small-breed-dry-dog-food/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "canagan_dog_dental_2kg"
   },
   {
     "no": 198,
@@ -3917,7 +4114,8 @@
     "priceNum": 44900,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "ot_sleepingmat"
   },
   {
     "no": 199,
@@ -3936,7 +4134,8 @@
     "priceNum": 19900,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "ot_bowl_foldable"
   },
   {
     "no": 200,
@@ -3955,7 +4154,8 @@
     "priceNum": 36900,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ot_goliath_harness"
   },
   {
     "no": 201,
@@ -3974,7 +4174,8 @@
     "priceNum": 45500,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_broccoli_shampoo_set_750ml"
   },
   {
     "no": 202,
@@ -3993,7 +4194,8 @@
     "priceNum": 27000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_broccoli_shampoo_refill_500ml"
   },
   {
     "no": 203,
@@ -4012,7 +4214,8 @@
     "priceNum": 36000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_carrot_shampoo_refill_500ml"
   },
   {
     "no": 204,
@@ -4031,7 +4234,8 @@
     "priceNum": 45500,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_carrot_shampoo_set_750ml"
   },
   {
     "no": 205,
@@ -4050,7 +4254,8 @@
     "priceNum": 25600,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_carrot_shampoo_250ml"
   },
   {
     "no": 206,
@@ -4069,7 +4274,8 @@
     "priceNum": 19200,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_broccoli_shampoo_250ml"
   },
   {
     "no": 207,
@@ -4088,7 +4294,8 @@
     "priceNum": 11400,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_broccoli_mist"
   },
   {
     "no": 208,
@@ -4107,7 +4314,8 @@
     "priceNum": 14400,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://perity.co.kr/product/제주-브로콜리-릴리프-펫-샴푸-set-750ml/26/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "perity_carrot_mist"
   },
   {
     "no": 209,
@@ -4126,7 +4334,8 @@
     "priceNum": 12000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "fumble_toothpaste"
   },
   {
     "no": 210,
@@ -4145,7 +4354,8 @@
     "priceNum": 18000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "fumble_brushingmist"
   },
   {
     "no": 211,
@@ -4164,7 +4374,8 @@
     "priceNum": 19000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "fumble_bath"
   },
   {
     "no": 212,
@@ -4183,7 +4394,8 @@
     "priceNum": 43000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "fumble_shampoo_laurel"
   },
   {
     "no": 213,
@@ -4202,7 +4414,8 @@
     "priceNum": 22000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "fumble_brushingmist_perfume"
   },
   {
     "no": 214,
@@ -4221,7 +4434,8 @@
     "priceNum": 20000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "fumble_footcleanser_200ml"
   },
   {
     "no": 215,
@@ -4240,7 +4454,8 @@
     "priceNum": 16000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "fumble_shampoobar_herbtea"
   },
   {
     "no": 216,
@@ -4259,7 +4474,8 @@
     "priceNum": 16000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "fumble_shampoobar_turkeygreen"
   },
   {
     "no": 217,
@@ -4278,7 +4494,8 @@
     "priceNum": 16000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "fumble_shampoobar_camelrose"
   },
   {
     "no": 218,
@@ -4297,7 +4514,8 @@
     "priceNum": 10500,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림; 중복 2건"
+    "verifyNote": "상품명 잘림; 중복 2건",
+    "folder": "fumble_footsoap_calamine_2"
   },
   {
     "no": 219,
@@ -4316,7 +4534,8 @@
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "fumble_bugmist"
   },
   {
     "no": 220,
@@ -4335,7 +4554,8 @@
     "priceNum": 38000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "fumble_footcleanser_set"
   },
   {
     "no": 221,
@@ -4354,7 +4574,8 @@
     "priceNum": 82900,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ot_destroyer_harness"
   },
   {
     "no": 222,
@@ -4374,7 +4595,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_roamer.png"
+    "image": "/images/products/catalog/rw_leash_roamer/rw_leash_roamer.png",
+    "folder": "rw_leash_roamer"
   },
   {
     "no": 223,
@@ -4394,7 +4616,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_bivybowl_23.png"
+    "image": "/images/products/catalog/rw_bivybowl_23/rw_bivybowl_23.png",
+    "folder": "rw_bivybowl_23"
   },
   {
     "no": 224,
@@ -4414,7 +4637,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_campflyer_disc.png"
+    "image": "/images/products/catalog/rw_campflyer_disc/rw_campflyer_disc.png",
+    "folder": "rw_campflyer_disc"
   },
   {
     "no": 225,
@@ -4433,7 +4657,8 @@
     "priceNum": 45900,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ot_firewatcher_harness"
   },
   {
     "no": 226,
@@ -4453,7 +4678,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_treattrader_23.png"
+    "image": "/images/products/catalog/rw_treattrader_23/rw_treattrader_23.png",
+    "folder": "rw_treattrader_23"
   },
   {
     "no": 227,
@@ -4473,7 +4699,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_trailrunner_belt_23.png"
+    "image": "/images/products/catalog/rw_trailrunner_belt_23/rw_trailrunner_belt_23.png",
+    "folder": "rw_trailrunner_belt_23"
   },
   {
     "no": 228,
@@ -4493,7 +4720,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_trailrunner_23.png"
+    "image": "/images/products/catalog/rw_leash_trailrunner_23/rw_leash_trailrunner_23.png",
+    "folder": "rw_leash_trailrunner_23"
   },
   {
     "no": 229,
@@ -4513,7 +4741,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림; 중복 2건",
-    "image": "/images/products/catalog/soopa_dental_bananapumpkin.png"
+    "image": "/images/products/catalog/soopa_dental_bananapumpkin/soopa_dental_bananapumpkin.png",
+    "folder": "soopa_dental_bananapumpkin"
   },
   {
     "no": 230,
@@ -4533,7 +4762,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_dental_appleblueberry.png"
+    "image": "/images/products/catalog/soopa_dental_appleblueberry/soopa_dental_appleblueberry.png",
+    "folder": "soopa_dental_appleblueberry"
   },
   {
     "no": 231,
@@ -4553,7 +4783,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_healthybites_appleblueberry.png"
+    "image": "/images/products/catalog/soopa_healthybites_appleblueberry/soopa_healthybites_appleblueberry.png",
+    "folder": "soopa_healthybites_appleblueberry"
   },
   {
     "no": 232,
@@ -4573,7 +4804,8 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/smoothie_rainbow_30ml_3.png"
+    "image": "/images/products/catalog/smoothie_rainbow_30ml_3/smoothie_rainbow_30ml_3.png",
+    "folder": "smoothie_rainbow_30ml_3"
   },
   {
     "no": 233,
@@ -4593,7 +4825,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_chainreaction_martingale.png"
+    "image": "/images/products/catalog/rw_collar_chainreaction_martingale/rw_collar_chainreaction_martingale.png",
+    "folder": "rw_collar_chainreaction_martingale"
   },
   {
     "no": 234,
@@ -4613,7 +4846,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_webreaction_martingale.png"
+    "image": "/images/products/catalog/rw_collar_webreaction_martingale/rw_collar_webreaction_martingale.png",
+    "folder": "rw_collar_webreaction_martingale"
   },
   {
     "no": 235,
@@ -4633,7 +4867,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_flatout.png"
+    "image": "/images/products/catalog/rw_leash_flatout/rw_leash_flatout.png",
+    "folder": "rw_leash_flatout"
   },
   {
     "no": 236,
@@ -4653,7 +4888,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_leash_crag.png"
+    "image": "/images/products/catalog/rw_leash_crag/rw_leash_crag.png",
+    "folder": "rw_leash_crag"
   },
   {
     "no": 237,
@@ -4672,7 +4908,8 @@
     "priceNum": 160000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_stroller_fs1617"
   },
   {
     "no": 238,
@@ -4691,7 +4928,8 @@
     "priceNum": 390000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_stroller_fs1616"
   },
   {
     "no": 239,
@@ -4710,7 +4948,8 @@
     "priceNum": 300000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "iby_stroller_fs1670"
   },
   {
     "no": 240,
@@ -4729,7 +4968,8 @@
     "priceNum": 38000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_bed_fb2011"
   },
   {
     "no": 241,
@@ -4748,7 +4988,8 @@
     "priceNum": 200000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_bed_fb2292"
   },
   {
     "no": 242,
@@ -4767,7 +5008,8 @@
     "priceNum": 90000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_backpack_fc1752"
   },
   {
     "no": 243,
@@ -4787,7 +5029,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/wow_shoes_80.png"
+    "image": "/images/products/catalog/wow_shoes_80/wow_shoes_80.png",
+    "folder": "wow_shoes_80"
   },
   {
     "no": 244,
@@ -4807,7 +5050,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/wow_shoes_20.png"
+    "image": "/images/products/catalog/wow_shoes_20/wow_shoes_20.png",
+    "folder": "wow_shoes_20"
   },
   {
     "no": 245,
@@ -4827,7 +5071,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "용도 확인필요",
-    "image": "/images/products/catalog/annapet_wine.png"
+    "image": "/images/products/catalog/annapet_wine/annapet_wine.png",
+    "folder": "annapet_wine"
   },
   {
     "no": 246,
@@ -4847,7 +5092,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "용도 확인필요",
-    "image": "/images/products/catalog/annapet_soju.png"
+    "image": "/images/products/catalog/annapet_soju/annapet_soju.png",
+    "folder": "annapet_soju"
   },
   {
     "no": 247,
@@ -4866,7 +5112,8 @@
     "priceNum": 169000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_backpack_fc2297"
   },
   {
     "no": 248,
@@ -4885,7 +5132,8 @@
     "priceNum": 80000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_backpack_fc2131"
   },
   {
     "no": 249,
@@ -4904,7 +5152,8 @@
     "priceNum": 85000,
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_backpack_fc2106"
   },
   {
     "no": 250,
@@ -4923,7 +5172,8 @@
     "priceNum": 150000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_backpack_fc1705"
   },
   {
     "no": 251,
@@ -4942,7 +5192,8 @@
     "priceNum": 490000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_trailer_fs2080"
   },
   {
     "no": 252,
@@ -4961,7 +5212,8 @@
     "priceNum": 690000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_stroller_fs2180"
   },
   {
     "no": 253,
@@ -4980,7 +5232,8 @@
     "priceNum": 190000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_stroller_fs2011"
   },
   {
     "no": 254,
@@ -4999,7 +5252,8 @@
     "priceNum": 380000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_stroller_fs2191"
   },
   {
     "no": 255,
@@ -5018,7 +5272,8 @@
     "priceNum": 300000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_wagon_fs1880"
   },
   {
     "no": 256,
@@ -5037,7 +5292,8 @@
     "priceNum": 550000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://us.ibiyaya.com/products/ultralight-pro-pet-backpack-carrier-front-facing-cat-dog-travel-bag",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "iby_stroller_fs2102"
   },
   {
     "no": 257,
@@ -5056,7 +5312,8 @@
     "priceNum": 55000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_carseat_donutkit_l"
   },
   {
     "no": 258,
@@ -5075,7 +5332,8 @@
     "priceNum": 59000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_carseat_sugarwing"
   },
   {
     "no": 259,
@@ -5095,7 +5353,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/aff_pad_l_20_6.png"
+    "image": "/images/products/catalog/aff_pad_l_20_6/aff_pad_l_20_6.png",
+    "folder": "aff_pad_l_20_6"
   },
   {
     "no": 260,
@@ -5115,7 +5374,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/aff_pad_l_20_1.png"
+    "image": "/images/products/catalog/aff_pad_l_20_1/aff_pad_l_20_1.png",
+    "folder": "aff_pad_l_20_1"
   },
   {
     "no": 261,
@@ -5135,7 +5395,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/aff_pad_s_50_6.png"
+    "image": "/images/products/catalog/aff_pad_s_50_6/aff_pad_s_50_6.png",
+    "folder": "aff_pad_s_50_6"
   },
   {
     "no": 262,
@@ -5155,7 +5416,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/aff_pad_s_50_1.png"
+    "image": "/images/products/catalog/aff_pad_s_50_1/aff_pad_s_50_1.png",
+    "folder": "aff_pad_s_50_1"
   },
   {
     "no": 263,
@@ -5174,7 +5436,8 @@
     "priceNum": 69000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_stepbystep_3tier"
   },
   {
     "no": 264,
@@ -5193,7 +5456,8 @@
     "priceNum": 53000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_stepbystep_2tier"
   },
   {
     "no": 265,
@@ -5212,7 +5476,8 @@
     "priceNum": 42000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_santa_pocket"
   },
   {
     "no": 266,
@@ -5231,7 +5496,8 @@
     "priceNum": 120000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_microbeads_cloud"
   },
   {
     "no": 267,
@@ -5250,7 +5516,8 @@
     "priceNum": 95000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_microbeads_round"
   },
   {
     "no": 268,
@@ -5269,7 +5536,8 @@
     "priceNum": 84000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_luxury_l"
   },
   {
     "no": 269,
@@ -5288,7 +5556,8 @@
     "priceNum": 63000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_original_brown"
   },
   {
     "no": 270,
@@ -5307,7 +5576,8 @@
     "priceNum": 63000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_original_pink"
   },
   {
     "no": 271,
@@ -5326,7 +5596,8 @@
     "priceNum": 63000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "aff_donut_original_gray"
   },
   {
     "no": 272,
@@ -5346,7 +5617,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_sierracup_310.png"
+    "image": "/images/products/catalog/rw_sierracup_310/rw_sierracup_310.png",
+    "folder": "rw_sierracup_310"
   },
   {
     "no": 273,
@@ -5365,7 +5637,8 @@
     "priceNum": 35000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "pdh_spin_ufo"
   },
   {
     "no": 274,
@@ -5384,7 +5657,8 @@
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "pdh_slowfeeder_paw_mini"
   },
   {
     "no": 275,
@@ -5403,7 +5677,8 @@
     "priceNum": 9000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "pdh_lickingmat"
   },
   {
     "no": 276,
@@ -5422,7 +5697,8 @@
     "priceNum": 13000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "pdh_spin_flyingdisc"
   },
   {
     "no": 277,
@@ -5442,7 +5718,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_audiblebeacon_light.png"
+    "image": "/images/products/catalog/rw_audiblebeacon_light/rw_audiblebeacon_light.png",
+    "folder": "rw_audiblebeacon_light"
   },
   {
     "no": 278,
@@ -5462,7 +5739,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_beacon_light.png"
+    "image": "/images/products/catalog/rw_beacon_light/rw_beacon_light.png",
+    "folder": "rw_beacon_light"
   },
   {
     "no": 279,
@@ -5481,7 +5759,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_blackbear"
   },
   {
     "no": 280,
@@ -5500,7 +5779,8 @@
     "priceNum": 26000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_grizzlybear"
   },
   {
     "no": 281,
@@ -5519,7 +5799,8 @@
     "priceNum": 30000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_bull"
   },
   {
     "no": 282,
@@ -5538,7 +5819,8 @@
     "priceNum": 30000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_bunnyrabbit"
   },
   {
     "no": 283,
@@ -5557,7 +5839,8 @@
     "priceNum": 30000,
     "categorizeNote": "보온·패딩·니트·스노우 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "zs_alien"
   },
   {
     "no": 284,
@@ -5576,7 +5859,8 @@
     "priceNum": 57750,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "polkadog_haddockskin_453g"
   },
   {
     "no": 285,
@@ -5595,7 +5879,8 @@
     "priceNum": 16800,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "polkadog_henpenny_biscuit_142g"
   },
   {
     "no": 286,
@@ -5615,7 +5900,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_chew_3set.png"
+    "image": "/images/products/catalog/soopa_chew_3set/soopa_chew_3set.png",
+    "folder": "soopa_chew_3set"
   },
   {
     "no": 287,
@@ -5635,7 +5921,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/soopa_dental_6set.png"
+    "image": "/images/products/catalog/soopa_dental_6set/soopa_dental_6set.png",
+    "folder": "soopa_dental_6set"
   },
   {
     "no": 288,
@@ -5655,7 +5942,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/soopa_chew_coconut.png"
+    "image": "/images/products/catalog/soopa_chew_coconut/soopa_chew_coconut.png",
+    "folder": "soopa_chew_coconut"
   },
   {
     "no": 289,
@@ -5675,7 +5963,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/soopa_chew_sweetpotato.png"
+    "image": "/images/products/catalog/soopa_chew_sweetpotato/soopa_chew_sweetpotato.png",
+    "folder": "soopa_chew_sweetpotato"
   },
   {
     "no": 290,
@@ -5695,7 +5984,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "",
-    "image": "/images/products/catalog/soopa_chew_papaya.png"
+    "image": "/images/products/catalog/soopa_chew_papaya/soopa_chew_papaya.png",
+    "folder": "soopa_chew_papaya"
   },
   {
     "no": 291,
@@ -5715,7 +6005,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_dental_kaleapple.png"
+    "image": "/images/products/catalog/soopa_dental_kaleapple/soopa_dental_kaleapple.png",
+    "folder": "soopa_dental_kaleapple"
   },
   {
     "no": 292,
@@ -5735,7 +6026,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_dental_coconutchia.png"
+    "image": "/images/products/catalog/soopa_dental_coconutchia/soopa_dental_coconutchia.png",
+    "folder": "soopa_dental_coconutchia"
   },
   {
     "no": 293,
@@ -5755,7 +6047,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_dental_cranberrysweetpotato.png"
+    "image": "/images/products/catalog/soopa_dental_cranberrysweetpotato/soopa_dental_cranberrysweetpotato.png",
+    "folder": "soopa_dental_cranberrysweetpotato"
   },
   {
     "no": 294,
@@ -5775,7 +6068,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_dental_carrotpumpkin.png"
+    "image": "/images/products/catalog/soopa_dental_carrotpumpkin/soopa_dental_carrotpumpkin.png",
+    "folder": "soopa_dental_carrotpumpkin"
   },
   {
     "no": 295,
@@ -5795,7 +6089,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_healthybites_cranberrysweetpotato.png"
+    "image": "/images/products/catalog/soopa_healthybites_cranberrysweetpotato/soopa_healthybites_cranberrysweetpotato.png",
+    "folder": "soopa_healthybites_cranberrysweetpotato"
   },
   {
     "no": 296,
@@ -5815,7 +6110,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_healthybites_carrotpumpkin.png"
+    "image": "/images/products/catalog/soopa_healthybites_carrotpumpkin/soopa_healthybites_carrotpumpkin.png",
+    "folder": "soopa_healthybites_carrotpumpkin"
   },
   {
     "no": 297,
@@ -5835,7 +6131,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_healthybites_kaleapple.png"
+    "image": "/images/products/catalog/soopa_healthybites_kaleapple/soopa_healthybites_kaleapple.png",
+    "folder": "soopa_healthybites_kaleapple"
   },
   {
     "no": 298,
@@ -5855,7 +6152,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_healthybites_coconutchia.png"
+    "image": "/images/products/catalog/soopa_healthybites_coconutchia/soopa_healthybites_coconutchia.png",
+    "folder": "soopa_healthybites_coconutchia"
   },
   {
     "no": 299,
@@ -5874,7 +6172,8 @@
     "priceNum": 8000,
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
-    "verifyNote": "상품명 잘림"
+    "verifyNote": "상품명 잘림",
+    "folder": "soopa_healthybites_bananapumpkin"
   },
   {
     "no": 300,
@@ -5894,7 +6193,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://soopapets.com/",
     "verifyNote": "상품명 잘림",
-    "image": "/images/products/catalog/soopa_healthybites_bananapumpkin.png"
+    "image": "/images/products/catalog/soopa_healthybites_bananapumpkin/soopa_healthybites_bananapumpkin.png",
+    "folder": "soopa_healthybites_bananapumpkin"
   },
   {
     "no": 301,
@@ -5913,7 +6213,8 @@
     "priceNum": 30000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "sweetpet_icecream_strawberry"
   },
   {
     "no": 302,
@@ -5932,7 +6233,8 @@
     "priceNum": 14000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": "용도 확인필요"
+    "verifyNote": "용도 확인필요",
+    "folder": "ip_trovbiz_nightday"
   },
   {
     "no": 303,
@@ -5951,7 +6253,8 @@
     "priceNum": 14000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": "용도 확인필요"
+    "verifyNote": "용도 확인필요",
+    "folder": "ip_trovbiz_adventure"
   },
   {
     "no": 304,
@@ -5970,7 +6273,8 @@
     "priceNum": 14000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": "용도 확인필요"
+    "verifyNote": "용도 확인필요",
+    "folder": "ip_trovbiz_bigdog"
   },
   {
     "no": 305,
@@ -5989,7 +6293,8 @@
     "priceNum": 12000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": "용도 확인필요"
+    "verifyNote": "용도 확인필요",
+    "folder": "ip_trovbiz_puppy"
   },
   {
     "no": 306,
@@ -6008,7 +6313,8 @@
     "priceNum": 11000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ip_trovbiz_pigball"
   },
   {
     "no": 307,
@@ -6027,7 +6333,8 @@
     "priceNum": 11000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ip_trovbiz_chickenball"
   },
   {
     "no": 308,
@@ -6046,7 +6353,8 @@
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ip_trovbiz_flyingstick"
   },
   {
     "no": 309,
@@ -6065,7 +6373,8 @@
     "priceNum": 26000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ip_obowl_l"
   },
   {
     "no": 310,
@@ -6084,7 +6393,8 @@
     "priceNum": 18000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "https://www.industrypet.com/",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "ip_obowl_m"
   },
   {
     "no": 311,
@@ -6103,7 +6413,8 @@
     "priceNum": 25000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "heyrex_taurus_filter_5p"
   },
   {
     "no": 312,
@@ -6122,7 +6433,8 @@
     "priceNum": 77000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "heyrex_taurus_2l"
   },
   {
     "no": 313,
@@ -6141,7 +6453,8 @@
     "priceNum": 66000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "heyrex_taurus_1l"
   },
   {
     "no": 314,
@@ -6160,7 +6473,8 @@
     "priceNum": 22000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "pdh_slowfeeder_paw_2in1"
   },
   {
     "no": 315,
@@ -6179,7 +6493,8 @@
     "priceNum": 93450,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "polkadog_codskin_907g"
   },
   {
     "no": 316,
@@ -6199,7 +6514,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/mb_vegemix_475g.png"
+    "image": "/images/products/catalog/mb_vegemix_475g/mb_vegemix_475g.png",
+    "folder": "mb_vegemix_475g"
   },
   {
     "no": 317,
@@ -6218,7 +6534,8 @@
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "joaru_perfume_cashmere"
   },
   {
     "no": 318,
@@ -6237,7 +6554,8 @@
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "joaru_perfume_lilac"
   },
   {
     "no": 319,
@@ -6256,7 +6574,8 @@
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "joaru_perfume_cotton"
   },
   {
     "no": 320,
@@ -6275,7 +6594,8 @@
     "priceNum": 30000,
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "joaru_perfume_daisy"
   },
   {
     "no": 321,
@@ -6295,7 +6615,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_trout.png"
+    "image": "/images/products/catalog/id_treat_trout/id_treat_trout.png",
+    "folder": "id_treat_trout"
   },
   {
     "no": 322,
@@ -6315,7 +6636,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_duck.png"
+    "image": "/images/products/catalog/id_treat_duck/id_treat_duck.png",
+    "folder": "id_treat_duck"
   },
   {
     "no": 323,
@@ -6335,7 +6657,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_turkey.png"
+    "image": "/images/products/catalog/id_treat_turkey/id_treat_turkey.png",
+    "folder": "id_treat_turkey"
   },
   {
     "no": 324,
@@ -6355,7 +6678,8 @@
     "categorizeNote": "상품명 키워드 기반",
     "sourceUrl": "업로드 md 기반",
     "verifyNote": "",
-    "image": "/images/products/catalog/id_treat_chicken.png"
+    "image": "/images/products/catalog/id_treat_chicken/id_treat_chicken.png",
+    "folder": "id_treat_chicken"
   },
   {
     "no": 325,
@@ -6374,7 +6698,8 @@
     "priceNum": 25500,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "icecream_realcheese"
   },
   {
     "no": 326,
@@ -6393,7 +6718,8 @@
     "priceNum": 24000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "jjayo_icecream_blueberry_100ml"
   },
   {
     "no": 327,
@@ -6412,7 +6738,8 @@
     "priceNum": 24000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "업로드 md 기반",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "jjayo_icecream_mini_blueberry_50ml"
   },
   {
     "no": 328,
@@ -6432,7 +6759,8 @@
     "categorizeNote": "야간 산책 안전 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_hiandlight_harness_24.png"
+    "image": "/images/products/catalog/rw_hiandlight_harness_24/rw_hiandlight_harness_24.png",
+    "folder": "rw_hiandlight_harness_24"
   },
   {
     "no": 329,
@@ -6452,7 +6780,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_collar_frontrange.png"
+    "image": "/images/products/catalog/rw_collar_frontrange/rw_collar_frontrange.png",
+    "folder": "rw_collar_frontrange"
   },
   {
     "no": 330,
@@ -6472,7 +6801,8 @@
     "categorizeNote": "레인·방수·방풍 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_frontrange_harness.png"
+    "image": "/images/products/catalog/rw_frontrange_harness/rw_frontrange_harness.png",
+    "folder": "rw_frontrange_harness"
   },
   {
     "no": 331,
@@ -6491,7 +6821,8 @@
     "priceNum": 106000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "rw_swampcooler_vest_2"
   },
   {
     "no": 332,
@@ -6510,7 +6841,8 @@
     "priceNum": 78000,
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
-    "verifyNote": ""
+    "verifyNote": "",
+    "folder": "rw_swampcooler_zipvest_2"
   },
   {
     "no": 333,
@@ -6530,6 +6862,7 @@
     "categorizeNote": "더위·쿨링·수분/여름 간식 키워드",
     "sourceUrl": "https://ruffwear.com/products/front-range-day-pack",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_swampcooler_neckgaiter.png"
+    "image": "/images/products/catalog/rw_swampcooler_neckgaiter/rw_swampcooler_neckgaiter.png",
+    "folder": "rw_swampcooler_neckgaiter"
   }
 ]

@@ -30,9 +30,21 @@ export interface CatalogRow {
     categorizeNote: string;
     sourceUrl: string;
     verifyNote: string;
-    /** 상품 이미지 경로 — 폴더목록.xlsx 의 폴더명을 기준으로 link-product-images.mjs 로 채움.
+    /** 영문 폴더명 — product_list.xlsx 의 folder_name 컬럼.
+     *  URL 슬러그 + 이미지 폴더 + 파일명 prefix 통합 키. */
+    folder?: string;
+    /** 메인 상품 이미지 경로 — `/images/products/catalog/{folder}/{folder}.png` 패턴.
      *  없으면 ph(placeholder) 색상 + 아이콘으로 fallback. */
     image?: string;
+    /** 상세 설명 이미지 — `/images/products/catalog/{folder}/info.png`.
+     *  RPA 가 추후 추가. 빌드 시 sync-images 스크립트가 자동 감지. */
+    detailImage?: string;
+    /** 갤러리 추가 이미지 배열 — 2.png, 3.png, ... 자동 감지 */
+    gallery?: string[];
+    /** 사이즈 차트 (옵션) */
+    sizeImage?: string;
+    /** 영상 (옵션) */
+    video?: string;
 }
 
 /** UI 노출용 정규화 상품 타입 — id, slug, category, promo, placeholder 추가 */
@@ -57,8 +69,18 @@ export interface CatalogProduct {
     icon: string;
     season?: string;
     seasonalFlag: boolean;
-    /** 실제 상품 이미지 (옵션) — 추후 등록 시 채움 */
+    /** 영문 폴더명 — URL 슬러그 + 이미지 자산 키 */
+    folder?: string;
+    /** 메인 이미지 — `/images/products/catalog/{folder}/{folder}.png` */
     image?: string;
+    /** 상세 설명 긴 이미지 — `/images/products/catalog/{folder}/info.png` */
+    detailImage?: string;
+    /** 갤러리 추가 이미지 배열 */
+    gallery?: string[];
+    /** 사이즈 차트 (옵션) */
+    sizeImage?: string;
+    /** 영상 (옵션) */
+    video?: string;
     /** 원본 raw 참조 (필요 시 분류근거 등 조회) */
     raw: CatalogRow;
 
@@ -323,7 +345,12 @@ function buildCatalog(): CatalogProduct[] {
             icon: SUBCAT_ICON[sub],
             season: r.season || undefined,
             seasonalFlag: r.seasonalFlag,
-            image: r.image,  // 폴더목록.xlsx 기반 매핑 (없으면 undefined → ProductCard 가 placeholder 로 fallback)
+            folder: r.folder,           // URL 슬러그 + 이미지 자산 키
+            image: r.image,             // 메인 이미지 — sync-images 가 채움
+            detailImage: r.detailImage, // 상세 설명 — 작업자/RPA 가 채움
+            gallery: r.gallery,         // 갤러리 — sync-images 자동 감지
+            sizeImage: r.sizeImage,     // 사이즈 차트 (옵션)
+            video: r.video,             // 영상 (옵션)
             raw: r,
             ...meta,
         };
