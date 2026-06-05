@@ -12,7 +12,7 @@ import { usePets } from "@/hooks/usePets";
 import { petsOrMock } from "@/lib/mypage-data";
 import { HEALTH_RISKS } from "@/lib/petlens-recs";
 import type { PetProfile } from "@/lib/types";
-import { PaneHead } from "../_components/PaneHead";
+import { PaneHead } from "../page";
 
 export default function MypagePetlensLogPage() {
     const { pets: allPets, remove } = usePets();

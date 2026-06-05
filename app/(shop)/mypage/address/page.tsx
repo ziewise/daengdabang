@@ -1,5 +1,5 @@
 import { MOCK_ADDRESSES } from "@/lib/mypage-data";
-import { PaneHead } from "../_components/PaneHead";
+import { PaneHead } from "../page";
 
 export default function MypageAddressPage() {
     return (

@@ -3,7 +3,7 @@
 import { MOCK_WISHLIST } from "@/lib/mypage-data";
 import { formatKRW } from "@/lib/catalog";
 import bestStyles from "@/components/main/best.module.css";
-import { PaneHead } from "../_components/PaneHead";
+import { PaneHead } from "../page";
 
 export default function MypageWishlistPage() {
     return (

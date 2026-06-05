@@ -1,6 +1,6 @@
 import { MOCK_MY_REVIEWS, MOCK_PENDING_REVIEWS } from "@/lib/mypage-data";
 import { stars } from "@/lib/reviews";
-import { PaneHead } from "../_components/PaneHead";
+import { PaneHead } from "../page";
 
 export default function MypageReviewsPage() {
     return (

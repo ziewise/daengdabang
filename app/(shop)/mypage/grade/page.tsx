@@ -8,7 +8,7 @@
 import { GRADES, computeGrade, nextGrade } from "@/lib/grades";
 import { MOCK_USER_STATS } from "@/lib/mypage-data";
 import type { GradeDefinition } from "@/lib/types";
-import { PaneHead } from "../_components/PaneHead";
+import { PaneHead } from "../page";
 
 export default function MypageGradePage() {
     const { annualSpend, activityPoints } = MOCK_USER_STATS;

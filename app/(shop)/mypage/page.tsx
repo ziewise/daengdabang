@@ -10,7 +10,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { computeGrade } from "@/lib/grades";
 import { MOCK_ORDERS, MOCK_USER_STATS, MOCK_WISHLIST } from "@/lib/mypage-data";
-import { PaneHead } from "./_components/PaneHead";
 
 export default function MypageDashboardPage() {
     const { isLoggedIn } = useAuth();
@@ -65,6 +64,18 @@ export default function MypageDashboardPage() {
                 />
             </div>
         </>
+    );
+}
+
+/* ============ 공통 — pane head ============ */
+export function PaneHead({ title, sub }: { title: string; sub?: string }) {
+    return (
+        <header className="flex items-end justify-between border-b border-neutral-200/70 pb-4 mb-5 md:mb-6">
+            <div>
+                <h2 className="text-xl md:text-2xl font-black tracking-tight">{title}</h2>
+                {sub && <p className="text-xs md:text-sm text-neutral-500 mt-0.5">{sub}</p>}
+            </div>
+        </header>
     );
 }
 
