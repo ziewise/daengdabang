@@ -17,7 +17,10 @@ const TABS: BestPeriod[] = ["realtime", "daily", "weekly", "monthly"];
 
 export default function BestSection() {
     const [period, setPeriod] = useState<BestPeriod>("realtime");
-    const items = getBestProducts(period).slice(0, 4);
+    // 임시: 영상 호버 효과 있는 상품만 메인 페이지 베스트에 노출 (실 운영 전 마케팅 효과).
+    // 실 판매 데이터 연결 시 .filter 제거하고 .slice(0, 4) 만 사용.
+    const withVideo = getBestProducts(period).filter((p) => p.video);
+    const items = withVideo.length >= 4 ? withVideo.slice(0, 4) : getBestProducts(period).slice(0, 4);
 
     return (
         <section id="best" className="py-10 md:py-12">
