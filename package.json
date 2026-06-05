@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sync-images": "node scripts/sync-images.mjs",
+    "predev": "node scripts/sync-images.mjs",
+    "prebuild": "node scripts/sync-images.mjs",
     "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start",
