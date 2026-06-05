@@ -46,7 +46,7 @@ export default function ProductCard({
     const showBest = effectiveRank !== null && rankStyle !== "off";
     return (
         <Link
-            href={`/product/${p.id}`}
+            href={`/product/${p.folder ?? p.id}`}
             className={`block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all ${sizeClass ?? ""}`}
         >
             {/* 이미지 영역 — aspect-square (정사각형) 통일 */}
