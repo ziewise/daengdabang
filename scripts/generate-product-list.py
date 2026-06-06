@@ -4,7 +4,7 @@ scripts/generate-product-list.py
 Daengdabang_Shop/data/product_list.xlsx 를 생성한다.
 
 데이터 소스:
-- lib/catalog.json: 333개 카탈로그 (정정 + 재번호 1~333 완료)
+- lib/catalog/raw.json: 333개 카탈로그 (정정 + 재번호 1~333 완료)
 - scripts/folder_list.json: Excel 폴더목록 (folder_name 매칭용)
 - 원본 Excel (C:\\Users\\lee\\Downloads\\pet_products_brand_purpose_season_detail.xlsx): 고양이 12개 추출용
 
@@ -192,24 +192,40 @@ def build_guide_sheet(ws):
         ("",),
         ("● products 시트 사용 규칙 (반드시 지켜주세요)",),
         ("",),
-        ("  · no 컬럼은 시스템 ID — 절대 변경하지 마세요 (catalog.json 과 매칭되는 키)",),
+        ("  · no 컬럼은 시스템 ID — 절대 변경하지 마세요 (lib/catalog/raw.json 과 매칭되는 키)",),
         ("  · 중간에 행 추가·삭제 금지 — 새 상품은 가장 마지막 행 다음에 추가 (no = 334 부터)",),
         ("  · folder_name 은 영문 소문자 + 언더스코어만 (한글·공백·하이픈 X)",),
         ("  · main_image / detail_path / detail_url 은 folder_name 으로부터 자동 결정 — 수동 편집 불필요",),
-        ("  · 시트 자체는 협업·확인용 문서 — 사이트 데이터는 catalog.json 이 정본",),
+        ("  · 시트 자체는 협업·확인용 문서 — 사이트 데이터는 lib/catalog/raw.json 이 정본",),
+        ("",),
+        ("● 베스트/신상품 큐레이션 갱신 (RPA 친화)",),
+        ("",),
+        ("  파일: lib/catalog/curations.json (JSON, TypeScript 코드 안 건드림)",),
+        ("",),
+        ("  베스트 30 변경:",),
+        ("    {\"bestRanks\": [{\"rank\": 1, \"no\": 31, \"name\": \"메모(옵션)\"}, ...]}",),
+        ("    rank=1~30 연속, no=raw.json 의 No, name=가독성 메모(사이트 표시 안 함)",),
+        ("",),
+        ("  신상품 18개 변경:",),
+        ("    {\"newProducts\": [{\"no\": 23, \"name\": \"메모(옵션)\"}, ...]}",),
+        ("    배열 순서 = 사이트 노출 순서",),
+        ("",),
+        ("  편집 후 검증:",),
+        ("    npm run validate-catalog",),
+        ("    rank 중복·없는 no·필수 필드 누락 등 즉시 차단",),
         ("",),
         ("● 작업 → 사이트 반영 흐름",),
         ("",),
         ("  1. 위 폴더에 파일 추가/수정",),
         ("  2. npm run dev (또는 npm run build) — sync-images 가 자동 실행되어",),
-        ("     catalog.json 의 image/gallery/details/sizeImage/video 필드가 자동 갱신됩니다",),
+        ("     lib/catalog/raw.json 의 image/gallery/details/sizeImage/video 필드가 자동 갱신됩니다",),
         ("  3. git add . / git commit / git push",),
         ("  4. 1~2분 후 detail_url 에서 확인",),
         ("",),
         ("● 자주 묻는 질문",),
         ("",),
         ("  Q. 폴더 안에 파일을 넣었는데 사이트에 안 보입니다.",),
-        ("  A. npm run sync-images 실행 후 catalog.json 변경분도 같이 commit 했는지 확인.",),
+        ("  A. npm run sync-images 실행 후 lib/catalog/raw.json 변경분도 같이 commit 했는지 확인.",),
         ("     1~2분 정도 빌드/배포 시간 필요. 그래도 안 보이면 파일명 확인 (오타·확장자).",),
         ("",),
         ("  Q. 갤러리 사진 갯수에 제한이 있나요?",),
@@ -224,7 +240,7 @@ def build_guide_sheet(ws):
         ("",),
         ("  Q. npm run sync-images 가 무슨 일을 하나요?",),
         ("  A. catalog/ 폴더를 스캔해서 각 제품의 image/gallery/details/sizeImage/video",),
-        ("     필드를 catalog.json 에 자동으로 채워줍니다. npm run dev/build 직전 자동 실행.",),
+        ("     필드를 lib/catalog/raw.json 에 자동으로 채워줍니다. npm run dev/build 직전 자동 실행.",),
     ]
 
     for i, row in enumerate(rows, start=2):

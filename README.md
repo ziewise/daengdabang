@@ -59,11 +59,15 @@ data/product_list.xlsx       ← 사람이 보는 사양 (333개 상품 + 12 cat
                               ↓
 public/images/products/catalog/{folder}/  ← 이미지 자산
                               ↓
-              npm run sync-images (자동)
+              npm run sync-images (자동, predev/prebuild 훅)
                               ↓
-              lib/catalog.json    ← 모든 페이지의 단일 데이터 출처
+              lib/catalog/raw.json    ← 333 상품 원본
+                              +
+              lib/catalog/curations.json  ← 베스트 30 + 신상품 18 (RPA 편집)
                               ↓
-              모든 컴포넌트가 여기서 데이터 가져옴
+              npm run validate-catalog (자동, Zod 무결성)
+                              ↓
+              모든 컴포넌트는 from "@/lib/catalog" 로 import
 ```
 
 ---
@@ -154,8 +158,15 @@ Daengdabang_Shop/
 │           └── RelatedProducts.tsx    관련 상품 추천
 │
 ├── lib/                         ← 데이터 + 비즈니스 로직
-│   ├── catalog.json             ★ 단일 진실원 (333 상품)
-│   ├── catalog.ts               ★ 카탈로그 헬퍼 + 베스트/신상품 함수
+│   ├── catalog/                 ★ 카탈로그 모듈 (분리됨)
+│   │   ├── index.ts                 외부 import (@/lib/catalog) 호환 hub
+│   │   ├── types.ts                 인터페이스 + 슬러그 union
+│   │   ├── labels.ts                한글 라벨 + 카테고리 계층 + 아이콘
+│   │   ├── data.ts                  raw.json 로딩 + CATALOG 빌드
+│   │   ├── queries.ts               by*, search, listBrands, sort, format
+│   │   ├── curations.ts             베스트/신상품 로직
+│   │   ├── curations.json       ⭐ RPA 편집 — 베스트 30 + 신상품 18
+│   │   └── raw.json                 333 상품 원본 데이터 (단일 진실원)
 │   ├── menu-data.ts             헤더 메가메뉴 데이터
 │   ├── recommendations.ts       AI 추천 상품 mock
 │   ├── reviews.ts               리뷰 mock
@@ -193,12 +204,12 @@ Daengdabang_Shop/
 ├── data/                        ← 소스 데이터 (사람이 편집)
 │   └── product_list.xlsx        ★ 333 상품 + 12 cats + 작업 가이드 (3 시트)
 │
-├── scripts/                     ← 자동화 스크립트
-│   ├── sync-images.mjs          ★ catalog 자산 폴더 스캔 → catalog.json 자동 갱신
+├── scripts/                     ← 자동화 스크립트 (활성 4개)
+│   ├── sync-images.mjs          ★ 자산 폴더 스캔 → raw.json 자동 갱신 (predev/prebuild)
+│   ├── validate-catalog.mjs     ★ Zod 무결성 검증 (prebuild 자동 실행)
 │   ├── generate-product-list.py product_list.xlsx 재생성
-│   ├── parse-catalog.py         원본 Excel → catalog.json (초기 셋업용)
-│   ├── folder_list.json         파싱된 폴더-상품 매핑 (참조용)
-│   └── (...이전 마이그레이션 스크립트들)
+│   ├── folder_list.json         참조 데이터
+│   └── _archive/                과거 마이그레이션 12개 + README (역사 기록)
 │
 ├── docs/                        ← 의사결정 기록 (역사 추적)
 │   ├── 01-카탈로그-분석.md
@@ -249,8 +260,9 @@ Next.js 16 App Router. **폴더 = URL 경로**.
 
 | 파일 | 역할 |
 |---|---|
-| **`catalog.json`** | 333개 상품의 raw 데이터. **모든 페이지의 데이터 출처** |
-| **`catalog.ts`** | catalog.json 을 가공해서 컴포넌트가 쓸 형태로 제공 + 헬퍼 함수 |
+| **`catalog/`** | 카탈로그 모듈 (7개 파일). 외부는 `from "@/lib/catalog"` 만 알면 됨 |
+| **`catalog/raw.json`** | 333개 상품 raw 데이터 (단일 진실원) |
+| **`catalog/curations.json`** | ⭐ RPA · 관리자 편집용 — 베스트 30 + 신상품 18 |
 | `menu-data.ts` | 헤더 메가메뉴 (카테고리/브랜드/기획전 링크) |
 | `recommendations.ts` | AI 맞춤 추천 mock |
 | `storage.ts` | localStorage 안전 래퍼 (펫·로그인 상태) |
@@ -271,15 +283,17 @@ public/images/products/catalog/
 └── (각 제품마다 폴더)
 ```
 
-**작업자는 이 폴더만 만지면 됩니다.** sync-images 가 catalog.json 알아서 채워줌.
+**작업자는 이 폴더만 만지면 됩니다.** sync-images 가 raw.json 알아서 채워줌.
 
 ---
 
 ## 5. 핵심 파일 가이드
 
-### `lib/catalog.json` (단일 진실원)
+### `lib/catalog/raw.json` (단일 진실원)
 
 333개 상품 raw 데이터. **수동 편집 주의 — image/gallery/details/sizeImage/video 필드는 sync-images가 자동 갱신.**
+
+편집 후 `npm run validate-catalog` 로 무결성 확인 (no 중복·필수 필드 누락 등 자동 차단).
 
 각 상품 항목:
 ```json
@@ -306,7 +320,21 @@ public/images/products/catalog/
 - `folder` — 영문 폴더명 (URL 슬러그 + 이미지 키 통합)
 - `image, gallery, details, sizeImage, video` — sync-images 가 자동 채움
 
-### `lib/catalog.ts` (헬퍼)
+### `lib/catalog/` (모듈)
+
+7개 파일로 분리. 외부 코드는 `from "@/lib/catalog"` 하나로 모든 export 접근 가능 (index.ts 가 hub).
+
+```
+lib/catalog/
+├── index.ts        외부 import 호환 hub
+├── types.ts        인터페이스 + 슬러그 union
+├── labels.ts       한글 라벨 + 카테고리 계층 + 아이콘
+├── data.ts         raw.json 로딩 + CATALOG 빌드
+├── queries.ts      by*, search, listBrands, sort, format
+├── curations.ts    베스트/신상품 로직 (curations.json 로드)
+├── curations.json  ⭐ 데이터 — RPA 가 직접 편집
+└── raw.json        333 상품 원본
+```
 
 컴포넌트가 호출하는 함수들:
 
@@ -401,49 +429,64 @@ isNewProduct(product): boolean
 ### 💰 작업 2: 가격 변경
 
 **옵션 A: 수동 (한두 개)**
-1. `lib/catalog.json` 열기
+1. `lib/catalog/raw.json` 열기
 2. 해당 `no` 항목 찾기
 3. `priceNum` (숫자) 수정
 4. `priceText` ("44,000원" 형태) 같이 수정
-5. commit + push
+5. `npm run validate-catalog` 로 검증 통과 확인
+6. commit + push
 
 **옵션 B: 일괄 변경 (RPA/스크립트로)**
 - scripts 폴더에 가격 업데이트 스크립트 추가
-- 외부 데이터 → catalog.json 자동 반영
+- 외부 데이터 → raw.json 자동 반영
+- validate-catalog 가 prebuild 단계에서 자동 무결성 검증
 
 ### 🆕 작업 3: 신규 상품 등록
 
-1. **lib/catalog.json** 에 새 항목 추가 (no=334 부터)
+1. **lib/catalog/raw.json** 에 새 항목 추가 (no=334 부터)
 2. **product_list.xlsx** 의 products 시트에 행 추가
 3. **이미지 폴더 생성**: `public/images/products/catalog/{새folder}/`
-4. `npm run dev` → 자동 반영
+4. `npm run validate-catalog` → 무결성 확인
+5. `npm run dev` → 자동 반영
 
 또는 대량 등록:
 ```bash
-python scripts/generate-product-list.py   # Excel 재생성
+python scripts/generate-product-list.py   # Excel 재생성 (raw.json 기준)
 ```
 
-### 🏆 작업 4: 베스트 순위 변경
+### 🏆 작업 4: 베스트 순위 변경 ⭐ RPA 친화
 
-`lib/catalog.ts` 의 `BEST_RANKS` 배열 편집:
+**`lib/catalog/curations.json`** 의 `bestRanks` 배열 편집 — TypeScript 코드 안 건드림:
 
-```ts
-const BEST_RANKS = [
-    { rank: 1,  no: 31  },  // 새 1위로 바꿀 상품의 no
-    { rank: 2,  no: 32  },
-    ...
-];
+```jsonc
+{
+    "bestRanks": [
+        { "rank": 1, "no": 31, "name": "리프웨어 프론트 레인지 플렉스 리드줄(2026)" },
+        { "rank": 2, "no": 32, "name": "..." },
+        // ...총 30개
+    ]
+}
 ```
 
-→ 메인 페이지 + /best 페이지 동시 반영.
+- `name` 은 가독성용 메모 (사이트 표시 안 함, 빼도 무관)
+- `npm run validate-catalog` 가 rank 1~30 연속 + no 실존 + 중복 X 검증
+- → 메인 페이지 + /best 페이지 동시 반영
 
-### 🆕 작업 5: 신상품 큐레이션 변경
+### 🆕 작업 5: 신상품 큐레이션 변경 ⭐ RPA 친화
 
-`lib/catalog.ts` 의 `NEW_PRODUCT_NOS` 배열 편집:
+**`lib/catalog/curations.json`** 의 `newProducts` 배열 편집:
 
-```ts
-const NEW_PRODUCT_NOS = [23, 1, 2, 24, 25, ...];  // catalog no 순서
+```jsonc
+{
+    "newProducts": [
+        { "no": 23, "name": "리프웨어 마운틴 에버레스트..." },
+        { "no": 1,  "name": "리프웨어 하이 앤 라이트..." },
+        // ...
+    ]
+}
 ```
+
+배열 순서가 곧 사이트 노출 순서. `name` 은 메모.
 
 ### 📁 작업 6: 카테고리 메뉴 변경
 
@@ -471,29 +514,29 @@ const NEW_PRODUCT_NOS = [23, 1, 2, 24, 25, ...];  // catalog no 순서
 ### 일상 명령어
 
 ```bash
-npm run dev          # 개발 서버 (http://localhost:4000)
-                     # predev 훅 → sync-images 자동 실행
-npm run build        # 프로덕션 빌드 (out/ 폴더)
-                     # prebuild 훅 → sync-images 자동 실행
-npm run sync-images  # 자산 폴더 → catalog.json 수동 동기화
+npm run dev               # 개발 서버 (http://localhost:4000)
+                          # predev 훅: sync-images + validate-catalog
+npm run build             # 프로덕션 빌드 (out/ 폴더)
+                          # prebuild 훅: sync-images + validate-catalog
+npm run sync-images       # 자산 폴더 → raw.json 수동 동기화
+npm run validate-catalog  # raw.json + curations.json Zod 무결성 검증
 ```
 
 ### 데이터 셋업 명령어 (드물게 사용)
 
 ```bash
-# product_list.xlsx 재생성 (catalog.json 기준)
+# product_list.xlsx 재생성 (raw.json 기준)
 python scripts/generate-product-list.py
-
-# 원본 Excel → catalog.json 재생성 (대규모 변경 시)
-python scripts/parse-catalog.py
 ```
+
+> 원본 Excel → catalog 재생성은 `scripts/_archive/parse-catalog.py` 에 보존됨 (1회성 마이그레이션이라 평소엔 실행 X)
 
 ### sync-images.mjs 가 하는 일
 
 ```
 public/images/products/catalog/{folder}/ 스캔
   ↓
-파일 발견 시 catalog.json 자동 갱신:
+파일 발견 시 lib/catalog/raw.json 자동 갱신:
   - {folder}.png      → image
   - 2.png, 3.png, ... → gallery[]
   - size.png          → sizeImage
@@ -581,16 +624,21 @@ DNS·SSL·CDN·호스팅이 모두 Cloudflare 안에서 일원화. 도메인 추
 
 **항상 `git pull` 먼저, 그다음 `git push`.** 다른 사람과 같은 파일 수정하면 충돌 알림 → 협의 후 해결.
 
-### Q. catalog.json 직접 수정해도 되나?
+### Q. raw.json 직접 수정해도 되나?
 
 - 이름·가격·브랜드·카테고리 등 메타데이터: 수동 편집 OK
 - image/gallery/details/sizeImage/video 필드: sync-images 가 자동 덮어쓰니 수동 편집 의미 없음. 이미지 파일을 폴더에 넣으면 자동 갱신.
+- 편집 후 `npm run validate-catalog` 로 무결성 확인 권장.
+
+### Q. 베스트/신상품 갱신은?
+
+`lib/catalog/curations.json` 만 편집하면 됩니다. TypeScript 코드 안 건드림 — RPA · 관리자가 직접 가능. 자세한 건 작업 가이드 #4, #5 참고.
 
 ### Q. 이미지 추가했는데 사이트에 안 보임
 
 체크리스트:
 1. 파일명 맞나? (folder_name 정확히, 대소문자, 확장자)
-2. `npm run sync-images` 실행됐나? (catalog.json 갱신됐는지)
+2. `npm run sync-images` 실행됐나? (raw.json 갱신됐는지)
 3. git push 했나?
 4. Cloudflare Pages 빌드 성공했나? (대시보드 → Compute → Pages → daengdabang)
 5. 1~2분 기다렸나?
