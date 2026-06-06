@@ -25,7 +25,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const CATALOG_DIR = path.join(ROOT, "public", "images", "products", "catalog");
-const CATALOG_JSON_PATH = path.join(ROOT, "lib", "catalog.json");
+const CATALOG_JSON_PATH = path.join(ROOT, "lib", "catalog", "raw.json");
 
 const URL_BASE = "/images/products/catalog";
 const IMG_EXTS = [".png", ".jpg", ".jpeg", ".webp"];

@@ -36,7 +36,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
 ROOT = Path(__file__).resolve().parent.parent
-CATALOG_PATH = ROOT / "lib" / "catalog.json"
+CATALOG_PATH = ROOT / "lib" / "catalog" / "raw.json"
 FOLDER_LIST_PATH = ROOT / "scripts" / "folder_list.json"
 ORIGINAL_EXCEL = Path(r"C:\Users\lee\Downloads\pet_products_brand_purpose_season_detail.xlsx")
 DATA_DIR = ROOT / "data"
