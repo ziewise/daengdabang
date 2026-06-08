@@ -7156,29 +7156,6 @@
     ]
   },
   {
-    "no": 299,
-    "brandKo": "수파",
-    "brandEn": "Soopa",
-    "target": "공용/확인필요",
-    "useMain": "간식/영양",
-    "useSub": "덴탈간식",
-    "seasonalFlag": true,
-    "season": "우천/장마",
-    "isWalk": false,
-    "isFood": true,
-    "isHygiene": false,
-    "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 바나나&호박 50g",
-    "priceText": "8,000원",
-    "priceNum": 8000,
-    "categorizeNote": "레인·방수·방풍 키워드",
-    "sourceUrl": "https://soopapets.com/",
-    "verifyNote": "상품명 잘림",
-    "folder": "soopa_healthybites_bananapumpkin",
-    "details": [
-      "/images/products/catalog/soopa_healthybites_bananapumpkin/details/1.webp"
-    ]
-  },
-  {
     "no": 300,
     "brandKo": "수파",
     "brandEn": "Soopa",
