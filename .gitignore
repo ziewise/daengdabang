@@ -75,3 +75,9 @@ $RECYCLE.BIN/
 # ----- 마이그레이션 임시 -----
 .gitignore.original
 README.original.md
+
+# ----- 작업자 로컬 이미지 스테이징 -----
+# products_main: 메인 이미지를 catalog/{folder}/{folder}.png 로 복사하기 전
+# 임시 보관 폴더 (한 곳에 모아놓고 매칭 자동화에 쓰기 위함).
+# 매칭된 파일은 자동 복사되어 catalog/ 에 들어가므로 이 폴더는 push 불필요.
+/public/images/products_main/
