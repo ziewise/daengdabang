@@ -1,0 +1,52 @@
+# .gitattributes — 줄바꿈·인코딩 표준 (Windows · macOS · Linux 환경 공통)
+# ---------------------------------------------------------------------
+# 협업자가 다른 OS 에서 작업해도 텍스트 파일이 동일한 라인 엔딩(LF)으로
+# 저장·체크아웃되도록 강제. 의미 없는 diff(CRLF vs LF) 방지.
+#
+# 적용 후 일괄 정규화하려면:
+#   git add --renormalize .
+#   git commit -m "chore: renormalize line endings"
+
+# 기본: 자동 감지 (대부분의 텍스트)
+* text=auto eol=lf
+
+# 명시적 텍스트 (LF 강제) — 카탈로그 데이터·소스 코드·설정
+*.json     text eol=lf
+*.jsonc    text eol=lf
+*.ts       text eol=lf
+*.tsx      text eol=lf
+*.js       text eol=lf
+*.mjs      text eol=lf
+*.cjs      text eol=lf
+*.py       text eol=lf
+*.md       text eol=lf
+*.css      text eol=lf
+*.scss     text eol=lf
+*.html     text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.toml     text eol=lf
+*.sh       text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# 바이너리 — 충돌 방지 (line ending 변환 X)
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.webp     binary
+*.svg      text eol=lf
+*.mp4      binary
+*.webm     binary
+*.mp3      binary
+*.pdf      binary
+*.xlsx     binary
+*.xlsm     binary
+*.docx     binary
+*.zip      binary
+*.woff     binary
+*.woff2    binary
+*.ttf      binary
+*.otf      binary
+*.ico      binary
