@@ -24,13 +24,33 @@ export default function ProductGallery({ product: p }: Props) {
     // 모든 이미지 합치기: 메인 + 갤러리
     const images = [p.image, ...(p.gallery ?? [])].filter(Boolean) as string[];
     const [activeIdx, setActiveIdx] = useState(0);
+    const [showVideo, setShowVideo] = useState(false);
     const activeImage = images[activeIdx];
+    const videoSrc = p.video;
+    const isVideoVisible = Boolean(videoSrc && showVideo);
 
     return (
         <div className="space-y-3">
             {/* 메인 이미지 영역 — 정사각형, 큰 둥근 모서리 */}
-            <div className={`relative aspect-square rounded-3xl overflow-hidden shadow-card ${activeImage ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}>
-                {activeImage ? (
+            <div
+                className={`relative aspect-square rounded-3xl overflow-hidden shadow-card ${activeImage ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}
+                onMouseEnter={() => setShowVideo(true)}
+                onMouseLeave={() => setShowVideo(false)}
+                onFocus={() => setShowVideo(true)}
+                onBlur={() => setShowVideo(false)}
+            >
+                {isVideoVisible ? (
+                    <video
+                        key={videoSrc}
+                        src={videoSrc}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                    />
+                ) : activeImage ? (
                     <Image
                         key={activeImage}
                         src={activeImage}
@@ -43,6 +63,11 @@ export default function ProductGallery({ product: p }: Props) {
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <i className={`fa-solid ${p.icon} text-7xl text-white/95 drop-shadow-md`} />
+                    </div>
+                )}
+                {videoSrc && (
+                    <div className="absolute right-3 top-3 rounded-full bg-black/55 px-3 py-1 text-[11px] font-black text-white backdrop-blur">
+                        HOVER VIDEO
                     </div>
                 )}
             </div>
