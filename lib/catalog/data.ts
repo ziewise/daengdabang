@@ -174,6 +174,13 @@ function buildCatalog(): CatalogProduct[] {
             details: r.details,
             sizeImage: r.sizeImage,
             video: r.video,
+            externalReviewSource: r.externalReviewSource,
+            externalReviewUrl: r.externalReviewUrl,
+            externalReviewCount: r.externalReviewCount,
+            externalReviewAverage: r.externalReviewAverage,
+            externalReviewThemes: r.externalReviewThemes,
+            externalReviewSnippets: r.externalReviewSnippets,
+            externalReviewDisclosure: r.externalReviewDisclosure,
             raw: r,
             ...meta,
         };

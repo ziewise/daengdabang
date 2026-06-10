@@ -42,6 +42,13 @@ export interface CatalogRow {
     sizeImage?: string;
     /** 영상 — `{folder}/video.mp4` 또는 외부 URL */
     video?: string;
+    externalReviewSource?: string;
+    externalReviewUrl?: string;
+    externalReviewCount?: number;
+    externalReviewAverage?: number | null;
+    externalReviewThemes?: string[];
+    externalReviewSnippets?: Array<{ rating?: string; summary?: string; text: string }>;
+    externalReviewDisclosure?: string;
 }
 
 /** UI 노출용 정규화 상품 타입 — id/slug/카테고리/promo/placeholder 추가 */
@@ -78,6 +85,13 @@ export interface CatalogProduct {
     sizeImage?: string;
     /** 영상 (옵션) */
     video?: string;
+    externalReviewSource?: string;
+    externalReviewUrl?: string;
+    externalReviewCount?: number;
+    externalReviewAverage?: number | null;
+    externalReviewThemes?: string[];
+    externalReviewSnippets?: Array<{ rating?: string; summary?: string; text: string }>;
+    externalReviewDisclosure?: string;
     /** 원본 raw 참조 (필요 시 분류근거 등 조회) */
     raw: CatalogRow;
 

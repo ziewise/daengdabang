@@ -33,6 +33,8 @@ interface Props {
 
 export default function ProductTabs({ product: p }: Props) {
     const [active, setActive] = useState<SectionKey>("detail");
+    const externalReviewCount = p.externalReviewCount ?? 0;
+    const reviewBadge = externalReviewCount > 0 ? externalReviewCount.toLocaleString() : undefined;
     const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
         detail: null, review: null, qna: null,
     });
@@ -88,9 +90,7 @@ export default function ProductTabs({ product: p }: Props) {
                             active={active === s.key}
                             onClick={() => scrollToSection(s.key)}
                             label={s.label}
-                            badge={s.key === "review" && p.reviewCount > 0
-                                ? p.reviewCount.toLocaleString()
-                                : undefined}
+                            badge={s.key === "review" ? reviewBadge : undefined}
                         />
                     ))}
                 </div>
@@ -111,7 +111,7 @@ export default function ProductTabs({ product: p }: Props) {
                 ref={(el) => { sectionRefs.current.review = el; }}
                 className="pt-12 md:pt-16 scroll-mt-[calc(var(--header-height)+56px)]"
             >
-                <SectionTitle title="리뷰" badge={p.reviewCount > 0 ? p.reviewCount.toLocaleString() : undefined} />
+                <SectionTitle title="리뷰" badge={reviewBadge} />
                 <ReviewContent product={p} />
             </section>
 
@@ -245,31 +245,127 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
 
 /* ============ 리뷰 영역 ============ */
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
+    const externalSnippets = p.externalReviewSnippets ?? [];
+    const externalThemes = p.externalReviewThemes ?? [];
+    const hasExternalReviews = externalSnippets.length > 0 || externalThemes.length > 0;
+    const externalCount = p.externalReviewCount ?? externalSnippets.length;
+    const externalAverage = typeof p.externalReviewAverage === "number" ? p.externalReviewAverage : null;
+
+    if (hasExternalReviews) {
+        return (
+            <div className="max-w-3xl mx-auto space-y-5">
+                <div className="rounded-2xl bg-white/80 backdrop-blur border border-neutral-100 p-6 md:p-8">
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                        <div>
+                            <p className="text-xs font-black text-aurora-indigo mb-2">
+                                네이버 스마트스토어 후기 기반 참고 요약
+                            </p>
+                            <h3 className="text-lg md:text-xl font-black tracking-tight">
+                                공개 후기에서 반복 언급된 의견
+                            </h3>
+                            <p className="mt-2 text-sm text-neutral-500 leading-6">
+                                후기 원문을 복사하지 않고, 상품 선택에 도움이 되는 공통 의견만 요약했습니다.
+                            </p>
+                        </div>
+                        <div className="shrink-0 grid grid-cols-2 gap-2 text-center">
+                            <div className="rounded-xl bg-neutral-50 border border-neutral-100 px-4 py-3">
+                                <div className="text-[11px] font-black text-neutral-400">평균</div>
+                                <div className="mt-1 text-xl font-black">
+                                    {externalAverage !== null ? externalAverage.toFixed(1) : "-"}
+                                </div>
+                            </div>
+                            <div className="rounded-xl bg-neutral-50 border border-neutral-100 px-4 py-3">
+                                <div className="text-[11px] font-black text-neutral-400">후기</div>
+                                <div className="mt-1 text-xl font-black">{externalCount.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {externalThemes.length > 0 && (
+                        <div className="mb-6">
+                            <h4 className="text-sm font-black mb-3">자주 언급된 포인트</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {externalThemes.map((theme) => (
+                                    <span
+                                        key={theme}
+                                        className="inline-flex items-center rounded-full bg-amber-50 border border-amber-100 px-3 py-1.5 text-xs font-extrabold text-amber-700"
+                                    >
+                                        {theme}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {externalSnippets.length > 0 && (
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-black">요약 의견</h4>
+                            {externalSnippets.slice(0, 5).map((snippet, index) => (
+                                <div
+                                    key={`${snippet.text}-${index}`}
+                                    className="rounded-xl bg-neutral-50 border border-neutral-100 p-4 text-left"
+                                >
+                                    <div className="flex items-center justify-between gap-3 mb-2">
+                                        <span className="text-xs font-black text-neutral-400">
+                                            {snippet.rating ? `별점 ${snippet.rating}` : "후기 요약"}
+                                        </span>
+                                        {snippet.summary && (
+                                            <span className="text-[11px] font-extrabold text-neutral-400 truncate">
+                                                {snippet.summary}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-sm font-bold text-neutral-700 leading-6">{snippet.text}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-t border-neutral-100 pt-4">
+                        <p className="text-xs text-neutral-500 leading-5">
+                            {p.externalReviewDisclosure ??
+                                "네이버 스마트스토어 공개 후기에서 반복 언급된 의견을 요약했습니다. 자사몰 작성 댓글이 아닙니다."}
+                        </p>
+                        {p.externalReviewUrl && (
+                            <a
+                                href={p.externalReviewUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs font-black hover:border-aurora-indigo hover:text-aurora-indigo transition"
+                            >
+                                <i className="fa-solid fa-arrow-up-right-from-square" />
+                                출처 보기
+                            </a>
+                        )}
+                    </div>
+                </div>
+
+                <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-6 md:p-8 text-center">
+                    <h3 className="text-base md:text-lg font-extrabold mb-1.5">자사몰 리뷰 작성</h3>
+                    <p className="text-sm text-neutral-500 mb-5">
+                        구매 후 실제 사용 후기를 남겨주시면 다른 고객에게 도움이 됩니다.
+                    </p>
+                    <button
+                        type="button"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold shadow-card hover:shadow-hover transition"
+                    >
+                        <i className="fa-solid fa-pen-to-square" />
+                        리뷰 작성하기
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-8 md:p-12 text-center max-w-2xl mx-auto">
-            {p.reviewCount > 0 && (
-                <div className="flex items-center justify-center gap-2 mb-5">
-                    <div className="flex">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                            <i
-                                key={s}
-                                className={`fa-solid fa-star text-base ${s <= Math.round(p.rating) ? "text-amber-400" : "text-neutral-200"}`}
-                            />
-                        ))}
-                    </div>
-                    <span className="text-2xl font-black">{p.rating.toFixed(1)}</span>
-                    <span className="text-sm text-neutral-400 font-bold">/ 5.0</span>
-                </div>
-            )}
             <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-500 text-xl">
                 <i className="fa-regular fa-star" />
             </div>
-            <h3 className="text-base md:text-lg font-extrabold mb-1.5">
-                {p.reviewCount > 0 ? "리뷰 작성 가능" : "아직 리뷰가 없습니다"}
-            </h3>
+            <h3 className="text-base md:text-lg font-extrabold mb-1.5">아직 자사몰 리뷰가 없습니다</h3>
             <p className="text-sm text-neutral-500 mb-6">
-                첫 번째 리뷰를 작성해 주세요.<br className="hidden md:block" />
-                다른 구매자에게 큰 도움이 됩니다.
+                구매 후 실제 사용 후기를 남겨주시면<br className="hidden md:block" />
+                다른 고객에게 도움이 됩니다.
             </p>
             <button
                 type="button"
