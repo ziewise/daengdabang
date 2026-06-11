@@ -15,6 +15,7 @@ import { useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import bestStyles from "@/components/main/best.module.css";
+import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
     product: CatalogProduct;
@@ -70,6 +71,7 @@ export default function ProductGallery({ product: p }: Props) {
                         HOVER VIDEO
                     </div>
                 )}
+                {isVideoVisible && <VideoBrandOverlay />}
             </div>
 
             {/* 썸네일 슬라이더 — 2장 이상일 때만 */}

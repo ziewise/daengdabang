@@ -17,7 +17,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import type { CatalogProduct } from "@/lib/catalog";
+import { CATEGORY_LABEL, SUBCATEGORY_LABEL, type CatalogProduct } from "@/lib/catalog";
 
 type SectionKey = "detail" | "review" | "qna";
 
@@ -244,12 +244,52 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
 }
 
 /* ============ 리뷰 영역 ============ */
+function getPurchaseGuidePoints(p: CatalogProduct): string[] {
+    const subLabel = SUBCATEGORY_LABEL[p.subcategory] ?? "상품";
+    const categoryLabel = CATEGORY_LABEL[p.category] ?? "상품";
+    const points = [
+        `${subLabel} 특성에 맞춰 ${categoryLabel} 용도와 반려견 생활 패턴을 먼저 확인해 주세요.`,
+    ];
+
+    if (p.category === "outdoor") {
+        points.push(
+            p.sizeImage
+                ? "상세페이지의 사이즈표를 기준으로 목둘레, 가슴둘레, 등길이를 재고 여유분까지 확인해 주세요."
+                : "착용 상품은 같은 체중이라도 체형 차이가 커서 목둘레, 가슴둘레, 등길이를 함께 확인하는 것이 좋습니다.",
+            "산책 강도, 당김 습관, 야간·우천 사용 여부에 맞춰 소재와 고정 방식을 함께 봐주세요."
+        );
+    } else if (p.category === "food") {
+        points.push(
+            "새 간식이나 사료는 소량부터 급여하면서 알레르기 반응과 소화 상태를 확인해 주세요.",
+            "특정 질환, 처방식, 체중 관리 중인 반려견은 급여 전 수의사 상담을 권장합니다."
+        );
+    } else if (p.category === "care") {
+        points.push(
+            "피부·발바닥 케어 제품은 넓게 사용하기 전 작은 부위에 먼저 테스트해 주세요.",
+            "상처, 염증, 지속적인 가려움이 있다면 제품 사용보다 수의사 진료가 먼저입니다."
+        );
+    } else if (p.category === "toy") {
+        points.push(
+            "장난감은 반려견의 씹는 힘과 놀이 습관에 맞춰 선택하고, 첫 사용은 보호자 관찰 아래 진행해 주세요.",
+            "손상된 부품이 보이면 삼킴 사고를 막기 위해 바로 교체하거나 사용을 중단해 주세요."
+        );
+    } else {
+        points.push(
+            "생활용품은 설치 공간, 세척 방식, 미끄럼 방지 여부를 함께 확인하면 실패 확률을 줄일 수 있습니다.",
+            "반려견이 처음 쓰는 제품은 짧은 시간부터 익숙하게 만들어 주는 편이 좋습니다."
+        );
+    }
+
+    return points.slice(0, 3);
+}
+
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
     const externalSnippets = p.externalReviewSnippets ?? [];
     const externalThemes = p.externalReviewThemes ?? [];
     const hasExternalReviews = externalSnippets.length > 0 || externalThemes.length > 0;
     const externalCount = p.externalReviewCount ?? externalSnippets.length;
     const externalAverage = typeof p.externalReviewAverage === "number" ? p.externalReviewAverage : null;
+    const guidePoints = getPurchaseGuidePoints(p);
 
     if (hasExternalReviews) {
         return (
@@ -358,22 +398,54 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
     }
 
     return (
-        <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-8 md:p-12 text-center max-w-2xl mx-auto">
-            <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center text-amber-500 text-xl">
-                <i className="fa-regular fa-star" />
+        <div className="max-w-3xl mx-auto space-y-5">
+            <div className="rounded-2xl bg-white/80 backdrop-blur border border-neutral-100 p-6 md:p-8">
+                <div className="mb-5">
+                    <p className="text-xs font-black text-aurora-indigo mb-2">
+                        상품 정보 기반 구매 가이드
+                    </p>
+                    <h3 className="text-lg md:text-xl font-black tracking-tight">
+                        구매 전 체크포인트
+                    </h3>
+                    <p className="mt-2 text-sm text-neutral-500 leading-6">
+                        아직 연결된 공개 후기가 없는 상품입니다. 실제 구매후기가 아닌 상품 정보 기반 선택 가이드를 먼저 보여드립니다.
+                    </p>
+                </div>
+
+                <div className="grid gap-3 md:grid-cols-3">
+                    {guidePoints.map((point, index) => (
+                        <div
+                            key={point}
+                            className="rounded-xl bg-neutral-50 border border-neutral-100 p-4 text-left"
+                        >
+                            <div className="mb-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs font-black text-aurora-indigo shadow-sm">
+                                {index + 1}
+                            </div>
+                            <p className="text-sm font-bold leading-6 text-neutral-700">{point}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-5 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-left">
+                    <p className="text-xs font-bold leading-5 text-amber-800">
+                        이 영역은 후기를 임의로 만든 내용이 아니라, 상품 카테고리와 상세정보를 바탕으로 한 구매 전 안내입니다.
+                    </p>
+                </div>
             </div>
-            <h3 className="text-base md:text-lg font-extrabold mb-1.5">아직 자사몰 리뷰가 없습니다</h3>
-            <p className="text-sm text-neutral-500 mb-6">
-                구매 후 실제 사용 후기를 남겨주시면<br className="hidden md:block" />
-                다른 고객에게 도움이 됩니다.
-            </p>
-            <button
-                type="button"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold shadow-card hover:shadow-hover transition"
-            >
-                <i className="fa-solid fa-pen-to-square" />
-                리뷰 작성하기
-            </button>
+
+            <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-6 md:p-8 text-center">
+                <h3 className="text-base md:text-lg font-extrabold mb-1.5">자사몰 리뷰 작성</h3>
+                <p className="text-sm text-neutral-500 mb-5">
+                    구매 후 실제 사용 후기를 남겨주시면 다른 고객에게 도움이 됩니다.
+                </p>
+                <button
+                    type="button"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold shadow-card hover:shadow-hover transition"
+                >
+                    <i className="fa-solid fa-pen-to-square" />
+                    리뷰 작성하기
+                </button>
+            </div>
         </div>
     );
 }

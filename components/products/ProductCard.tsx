@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { formatKRW, getBestRank, isNewProduct } from "@/lib/catalog";
 import bestStyles from "@/components/main/best.module.css";
+import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
     product: CatalogProduct;
@@ -127,6 +128,7 @@ export default function ProductCard({
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
+                {hasVideo && videoActive && <VideoBrandOverlay />}
 
                 {/* 좌상단 배지 — BEST + NEW */}
                 {(showBest || shouldShowNew) && (
