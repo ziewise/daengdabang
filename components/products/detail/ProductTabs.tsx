@@ -286,7 +286,7 @@ function getPurchaseGuidePoints(p: CatalogProduct): string[] {
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
     const externalSnippets = p.externalReviewSnippets ?? [];
     const externalThemes = p.externalReviewThemes ?? [];
-    const hasExternalReviews = externalSnippets.length > 0 || externalThemes.length > 0;
+    const hasExternalReviews = externalSnippets.length > 0;
     const externalCount = p.externalReviewCount ?? externalSnippets.length;
     const externalAverage = typeof p.externalReviewAverage === "number" ? p.externalReviewAverage : null;
     const guidePoints = getPurchaseGuidePoints(p);
@@ -304,7 +304,7 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                                 실제 구매자 후기
                             </h3>
                             <p className="mt-2 text-sm text-neutral-500 leading-6">
-                                댕다방 네이버 스마트스토어에 남겨진 공개 구매 후기를 그대로 가져왔습니다.
+                                네이버 스마트스토어 구매후기를 확인해 보세요.
                             </p>
                         </div>
                         <div className="shrink-0 grid grid-cols-2 gap-2 text-center">
@@ -361,12 +361,8 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                         </div>
                     )}
 
-                    <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-t border-neutral-100 pt-4">
-                        <p className="text-xs text-neutral-500 leading-5">
-                            {p.externalReviewDisclosure ??
-                                "댕다방 네이버 스마트스토어의 공개 구매 후기를 출처와 함께 표시했습니다. 자사몰 작성 댓글이 아닙니다."}
-                        </p>
-                        {p.externalReviewUrl && (
+                    {p.externalReviewUrl && (
+                        <div className="mt-6 flex justify-end border-t border-neutral-100 pt-4">
                             <a
                                 href={p.externalReviewUrl}
                                 target="_blank"
@@ -376,8 +372,8 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                                 <i className="fa-solid fa-arrow-up-right-from-square" />
                                 출처 보기
                             </a>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-6 md:p-8 text-center">
@@ -402,13 +398,13 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
             <div className="rounded-2xl bg-white/80 backdrop-blur border border-neutral-100 p-6 md:p-8">
                 <div className="mb-5">
                     <p className="text-xs font-black text-aurora-indigo mb-2">
-                        상품 정보 기반 구매 가이드
+                        구매 전 체크포인트
                     </p>
                     <h3 className="text-lg md:text-xl font-black tracking-tight">
-                        구매 전 체크포인트
+                        아직 등록된 구매후기가 없어요
                     </h3>
                     <p className="mt-2 text-sm text-neutral-500 leading-6">
-                        아직 연결된 공개 후기가 없는 상품입니다. 실제 구매후기가 아닌 상품 정보 기반 선택 가이드를 먼저 보여드립니다.
+                        사이즈, 용도, 사용 환경을 먼저 확인해 주세요.
                     </p>
                 </div>
 
@@ -426,11 +422,6 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                     ))}
                 </div>
 
-                <div className="mt-5 rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-left">
-                    <p className="text-xs font-bold leading-5 text-amber-800">
-                        이 영역은 후기를 임의로 만든 내용이 아니라, 상품 카테고리와 상세정보를 바탕으로 한 구매 전 안내입니다.
-                    </p>
-                </div>
             </div>
 
             <div className="rounded-2xl bg-white/70 backdrop-blur border border-neutral-100 p-6 md:p-8 text-center">
