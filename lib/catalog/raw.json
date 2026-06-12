@@ -19,7 +19,7 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_hiandlight_harness_26/rw_hiandlight_harness_26.png",
     "folder": "rw_hiandlight_harness_26",
-    "video": "https://res.cloudinary.com/dapuu4gsc/video/upload/v1778663400/hnl_zab0ii.mp4",
+    "video": "/images/products/catalog/rw_hiandlight_harness_26/videos/hover.mp4",
     "details": [
       "/images/products/catalog/rw_hiandlight_harness_26/details/1.webp",
       "/images/products/catalog/rw_hiandlight_harness_26/details/2.webp",
@@ -389,7 +389,7 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_collar_frontrange_24/rw_collar_frontrange_24.png",
     "folder": "rw_collar_frontrange_24",
-    "video": "https://res.cloudinary.com/dapuu4gsc/video/upload/v1778663427/pr_d2ftfs.mp4",
+    "video": "/images/products/catalog/rw_collar_frontrange_24/videos/hover.mp4",
     "details": [
       "/images/products/catalog/rw_collar_frontrange_24/details/1.webp",
       "/images/products/catalog/rw_collar_frontrange_24/details/2.webp"
@@ -718,7 +718,7 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_flagline_harness_24/rw_flagline_harness_24.png",
     "folder": "rw_flagline_harness_24",
-    "video": "https://res.cloudinary.com/dapuu4gsc/video/upload/v1778663410/pl_kts718.mp4",
+    "video": "/images/products/catalog/rw_flagline_harness_24/videos/hover.mp4",
     "details": [
       "/images/products/catalog/rw_flagline_harness_24/details/1.webp"
     ]
@@ -3481,7 +3481,8 @@
       "/images/products/catalog/rw_quinzee_jacket/details/1.webp",
       "/images/products/catalog/rw_quinzee_jacket/details/2.webp",
       "/images/products/catalog/rw_quinzee_jacket/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_quinzee_jacket/videos/hover.mp4"
   },
   {
     "no": 118,
@@ -3508,7 +3509,8 @@
       "/images/products/catalog/rw_furness_jacket/details/2.webp",
       "/images/products/catalog/rw_furness_jacket/details/3.webp",
       "/images/products/catalog/rw_furness_jacket/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_furness_jacket/videos/hover.mp4"
   },
   {
     "no": 119,
@@ -8599,7 +8601,7 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_beacon_light/rw_beacon_light.png",
     "folder": "rw_beacon_light",
-    "video": "https://res.cloudinary.com/dapuu4gsc/video/upload/v1778663419/light_bon82k.mp4",
+    "video": "/images/products/catalog/rw_beacon_light/videos/hover.mp4",
     "details": [
       "/images/products/catalog/rw_beacon_light/details/1.webp",
       "/images/products/catalog/rw_beacon_light/details/2.webp",
