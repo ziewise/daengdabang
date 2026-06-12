@@ -298,13 +298,13 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
                         <div>
                             <p className="text-xs font-black text-aurora-indigo mb-2">
-                                네이버 스마트스토어 후기 기반 참고 요약
+                                네이버 스마트스토어 구매 후기
                             </p>
                             <h3 className="text-lg md:text-xl font-black tracking-tight">
-                                공개 후기에서 반복 언급된 의견
+                                실제 구매자 후기
                             </h3>
                             <p className="mt-2 text-sm text-neutral-500 leading-6">
-                                후기 원문을 복사하지 않고, 상품 선택에 도움이 되는 공통 의견만 요약했습니다.
+                                댕다방 네이버 스마트스토어에 남겨진 공개 구매 후기를 그대로 가져왔습니다.
                             </p>
                         </div>
                         <div className="shrink-0 grid grid-cols-2 gap-2 text-center">
@@ -339,15 +339,15 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
 
                     {externalSnippets.length > 0 && (
                         <div className="space-y-3">
-                            <h4 className="text-sm font-black">요약 의견</h4>
-                            {externalSnippets.slice(0, 5).map((snippet, index) => (
+                            <h4 className="text-sm font-black">후기 원문</h4>
+                            {externalSnippets.slice(0, 12).map((snippet, index) => (
                                 <div
                                     key={`${snippet.text}-${index}`}
                                     className="rounded-xl bg-neutral-50 border border-neutral-100 p-4 text-left"
                                 >
                                     <div className="flex items-center justify-between gap-3 mb-2">
                                         <span className="text-xs font-black text-neutral-400">
-                                            {snippet.rating ? `별점 ${snippet.rating}` : "후기 요약"}
+                                            {snippet.rating ? `별점 ${snippet.rating}` : "구매 후기"}
                                         </span>
                                         {snippet.summary && (
                                             <span className="text-[11px] font-extrabold text-neutral-400 truncate">
@@ -364,7 +364,7 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                     <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-t border-neutral-100 pt-4">
                         <p className="text-xs text-neutral-500 leading-5">
                             {p.externalReviewDisclosure ??
-                                "네이버 스마트스토어 공개 후기에서 반복 언급된 의견을 요약했습니다. 자사몰 작성 댓글이 아닙니다."}
+                                "댕다방 네이버 스마트스토어의 공개 구매 후기를 출처와 함께 표시했습니다. 자사몰 작성 댓글이 아닙니다."}
                         </p>
                         {p.externalReviewUrl && (
                             <a
