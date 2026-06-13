@@ -484,7 +484,8 @@
       "/images/products/catalog/perity_aloe_essence/details/4.webp",
       "/images/products/catalog/perity_aloe_essence/details/5.webp"
     ],
-    "image": "/images/products/catalog/perity_aloe_essence/perity_aloe_essence.png"
+    "image": "/images/products/catalog/perity_aloe_essence/perity_aloe_essence.png",
+    "video": "/images/products/catalog/perity_aloe_essence/videos/hover.mp4"
   },
   {
     "no": 11,
@@ -3755,7 +3756,8 @@
     "externalReviewCount": 2,
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_morel_toy/videos/hover.mp4"
   },
   {
     "no": 109,
@@ -4304,7 +4306,8 @@
       "/images/products/catalog/aff_donut_luxury_xl/details/5.webp",
       "/images/products/catalog/aff_donut_luxury_xl/details/6.webp"
     ],
-    "image": "/images/products/catalog/aff_donut_luxury_xl/aff_donut_luxury_xl.png"
+    "image": "/images/products/catalog/aff_donut_luxury_xl/aff_donut_luxury_xl.png",
+    "video": "/images/products/catalog/aff_donut_luxury_xl/videos/hover.mp4"
   },
   {
     "no": 125,
@@ -8771,7 +8774,8 @@
       "/images/products/catalog/iby_stroller_fs1670/details/2.webp",
       "/images/products/catalog/iby_stroller_fs1670/details/3.webp"
     ],
-    "image": "/images/products/catalog/iby_stroller_fs1670/iby_stroller_fs1670.png"
+    "image": "/images/products/catalog/iby_stroller_fs1670/iby_stroller_fs1670.png",
+    "video": "/images/products/catalog/iby_stroller_fs1670/videos/hover.mp4"
   },
   {
     "no": 240,
@@ -9266,7 +9270,8 @@
       "/images/products/catalog/iby_stroller_fs2102/details/1.webp",
       "/images/products/catalog/iby_stroller_fs2102/details/2.webp"
     ],
-    "image": "/images/products/catalog/iby_stroller_fs2102/iby_stroller_fs2102.png"
+    "image": "/images/products/catalog/iby_stroller_fs2102/iby_stroller_fs2102.png",
+    "video": "/images/products/catalog/iby_stroller_fs2102/videos/hover.mp4"
   },
   {
     "no": 257,
