@@ -950,7 +950,8 @@
     "externalReviewCount": 5,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_leash_hiandlight_24/videos/hover.mp4"
   },
   {
     "no": 20,
@@ -1005,7 +1006,8 @@
     "externalReviewCount": 8,
     "externalReviewAverage": 4.88,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_leash_frontrange_24/videos/hover.mp4"
   },
   {
     "no": 22,
@@ -1296,7 +1298,8 @@
     "externalReviewCount": 1,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_hitchhiker_leash_26/videos/hover.mp4"
   },
   {
     "no": 31,
@@ -1351,7 +1354,8 @@
       "/images/products/catalog/rw_frontrangeflex_collar_26/details/2.webp",
       "/images/products/catalog/rw_frontrangeflex_collar_26/details/3.webp",
       "/images/products/catalog/rw_frontrangeflex_collar_26/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_frontrangeflex_collar_26/videos/hover.mp4"
   },
   {
     "no": 33,
@@ -1377,7 +1381,8 @@
       "/images/products/catalog/rw_ridgeline_shoes_26/details/1.webp",
       "/images/products/catalog/rw_ridgeline_shoes_26/details/2.webp",
       "/images/products/catalog/rw_ridgeline_shoes_26/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_ridgeline_shoes_26/videos/hover.mp4"
   },
   {
     "no": 34,
