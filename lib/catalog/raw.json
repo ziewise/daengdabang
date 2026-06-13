@@ -6213,7 +6213,8 @@
     "folder": "yora_dental_l_270g",
     "details": [
       "/images/products/catalog/yora_dental_l_270g/details/1.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/yora_dental_l_270g/videos/hover.mp4"
   },
   {
     "no": 175,
@@ -6420,7 +6421,8 @@
       "/images/products/catalog/sk_ft_salmon_pate_390g/details/1.webp",
       "/images/products/catalog/sk_ft_salmon_pate_390g/details/2.webp",
       "/images/products/catalog/sk_ft_salmon_pate_390g/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/sk_ft_salmon_pate_390g/videos/hover.mp4"
   },
   {
     "no": 182,
@@ -6460,7 +6462,8 @@
         "summary": "BEST",
         "text": "chor*****23.09.08."
       }
-    ]
+    ],
+    "video": "/images/products/catalog/sk_ft_puppy_pate_390g/videos/hover.mp4"
   },
   {
     "no": 183,
@@ -6513,7 +6516,8 @@
       "/images/products/catalog/sk_ft_chicken_pate_390g/details/1.webp",
       "/images/products/catalog/sk_ft_chicken_pate_390g/details/2.webp",
       "/images/products/catalog/sk_ft_chicken_pate_390g/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/sk_ft_chicken_pate_390g/videos/hover.mp4"
   },
   {
     "no": 185,
@@ -7050,7 +7054,8 @@
         "text": "sc****24.03.16."
       }
     ],
-    "image": "/images/products/catalog/ot_sleepingmat/ot_sleepingmat.png"
+    "image": "/images/products/catalog/ot_sleepingmat/ot_sleepingmat.png",
+    "video": "/images/products/catalog/ot_sleepingmat/videos/hover.mp4"
   },
   {
     "no": 199,
