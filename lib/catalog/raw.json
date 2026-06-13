@@ -2254,7 +2254,8 @@
       "/images/products/catalog/rw_stashbag_mini/details/2.webp",
       "/images/products/catalog/rw_stashbag_mini/details/3.webp",
       "/images/products/catalog/rw_stashbag_mini/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_stashbag_mini/videos/hover.mp4"
   },
   {
     "no": 62,
@@ -3157,7 +3158,8 @@
       "/images/products/catalog/rs_bowl/details/1.webp",
       "/images/products/catalog/rs_bowl/details/2.webp",
       "/images/products/catalog/rs_bowl/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_bowl/videos/hover.mp4"
   },
   {
     "no": 89,
@@ -3691,7 +3693,8 @@
       "/images/products/catalog/polkadog_codchips_99g/details/1.webp",
       "/images/products/catalog/polkadog_codchips_99g/details/2.webp"
     ],
-    "image": "/images/products/catalog/polkadog_codchips_99g/polkadog_codchips_99g.png"
+    "image": "/images/products/catalog/polkadog_codchips_99g/polkadog_codchips_99g.png",
+    "video": "/images/products/catalog/polkadog_codchips_99g/videos/hover.mp4"
   },
   {
     "no": 107,
@@ -3718,7 +3721,8 @@
       "/images/products/catalog/rw_porcini_toy/details/2.webp",
       "/images/products/catalog/rw_porcini_toy/details/3.webp",
       "/images/products/catalog/rw_porcini_toy/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_porcini_toy/videos/hover.mp4"
   },
   {
     "no": 108,
@@ -3778,7 +3782,8 @@
       "/images/products/catalog/rw_toadstool_toy/details/2.webp",
       "/images/products/catalog/rw_toadstool_toy/details/3.webp",
       "/images/products/catalog/rw_toadstool_toy/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_toadstool_toy/videos/hover.mp4"
   },
   {
     "no": 110,
