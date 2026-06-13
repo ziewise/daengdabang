@@ -11033,7 +11033,8 @@
       "/images/products/catalog/ip_trovbiz_pigball/details/2.webp",
       "/images/products/catalog/ip_trovbiz_pigball/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_trovbiz_pigball/ip_trovbiz_pigball.png"
+    "image": "/images/products/catalog/ip_trovbiz_pigball/ip_trovbiz_pigball.png",
+    "video": "/images/products/catalog/ip_trovbiz_pigball/videos/hover.mp4"
   },
   {
     "no": 307,
@@ -11059,7 +11060,8 @@
       "/images/products/catalog/ip_trovbiz_chickenball/details/2.webp",
       "/images/products/catalog/ip_trovbiz_chickenball/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_trovbiz_chickenball/ip_trovbiz_chickenball.png"
+    "image": "/images/products/catalog/ip_trovbiz_chickenball/ip_trovbiz_chickenball.png",
+    "video": "/images/products/catalog/ip_trovbiz_chickenball/videos/hover.mp4"
   },
   {
     "no": 308,
@@ -11104,7 +11106,8 @@
         "text": "benn******25.12.19."
       }
     ],
-    "image": "/images/products/catalog/ip_trovbiz_flyingstick/ip_trovbiz_flyingstick.png"
+    "image": "/images/products/catalog/ip_trovbiz_flyingstick/ip_trovbiz_flyingstick.png",
+    "video": "/images/products/catalog/ip_trovbiz_flyingstick/videos/hover.mp4"
   },
   {
     "no": 309,
@@ -11130,7 +11133,8 @@
       "/images/products/catalog/ip_obowl_l/details/2.webp",
       "/images/products/catalog/ip_obowl_l/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_obowl_l/ip_obowl_l.png"
+    "image": "/images/products/catalog/ip_obowl_l/ip_obowl_l.png",
+    "video": "/images/products/catalog/ip_obowl_l/videos/hover.mp4"
   },
   {
     "no": 310,
@@ -11156,7 +11160,8 @@
       "/images/products/catalog/ip_obowl_m/details/2.webp",
       "/images/products/catalog/ip_obowl_m/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_obowl_m/ip_obowl_m.png"
+    "image": "/images/products/catalog/ip_obowl_m/ip_obowl_m.png",
+    "video": "/images/products/catalog/ip_obowl_m/videos/hover.mp4"
   },
   {
     "no": 311,
