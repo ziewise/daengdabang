@@ -3,7 +3,15 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { loginCustomer, savePetProfileSmart, setCustomerToken, signupCustomer } from "@/lib/customer-api";
+import {
+    customerApiErrorMessage,
+    ddbApiReady,
+    loadPetProfilesSmart,
+    loginCustomer,
+    savePetProfileSmart,
+    setCustomerToken,
+    signupCustomer,
+} from "@/lib/customer-api";
 import { resizePetPhoto } from "@/lib/pet-photo";
 import { useAuth, type PetProfile } from "@/lib/store";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
@@ -26,6 +34,10 @@ export default function SignupPage() {
     const [petPhotoDataUrl, setPetPhotoDataUrl] = useState<string | undefined>();
     const [photoLoading, setPhotoLoading] = useState(false);
     const [photoError, setPhotoError] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [agreeTerms, setAgreeTerms] = useState(false);
+    const [agreePrivacy, setAgreePrivacy] = useState(false);
 
     const toggleConcern = (concern: string) => {
         setPetConcerns((prev) =>
@@ -47,6 +59,20 @@ export default function SignupPage() {
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
+        setError("");
+        if (!ddbApiReady()) {
+            setCustomerToken();
+            setError("회원가입을 사용하려면 운영 API 주소가 먼저 연결되어야 합니다.");
+            return;
+        }
+        if (password.trim().length < 8) {
+            setError("비밀번호는 8자 이상 입력해 주세요.");
+            return;
+        }
+        if (!agreeTerms || !agreePrivacy) {
+            setError("필수 약관과 개인정보 수집·이용에 동의해 주세요.");
+            return;
+        }
         const shouldCreatePet = Boolean(petName.trim() || petPhotoDataUrl);
         const pets: PetProfile[] = shouldCreatePet
             ? [{
@@ -60,43 +86,39 @@ export default function SignupPage() {
                 lastAnalyzedAt: new Date().toISOString(),
             }]
             : [];
-        let apiAccessToken = "";
-        let apiUserId: number | undefined;
 
-        if (email.trim() && password.trim().length >= 8) {
-            try {
-                const apiUser = await signupCustomer({
-                    email: email.trim(),
-                    password: password.trim(),
-                    name: name.trim() || "댕다방 회원",
-                });
-                apiUserId = apiUser?.id;
-                const token = await loginCustomer({ email: email.trim(), password: password.trim() });
-                apiAccessToken = token?.access_token || "";
-                setCustomerToken(apiAccessToken);
-                if (apiAccessToken && pets[0]) await savePetProfileSmart(pets[0], apiAccessToken);
-            } catch {
-                try {
-                    const token = await loginCustomer({ email: email.trim(), password: password.trim() });
-                    apiAccessToken = token?.access_token || "";
-                    setCustomerToken(apiAccessToken);
-                    if (apiAccessToken && pets[0]) await savePetProfileSmart(pets[0], apiAccessToken);
-                } catch {
-                    setCustomerToken();
-                }
+        setLoading(true);
+        try {
+            const apiUser = await signupCustomer({
+                email: email.trim(),
+                password: password.trim(),
+                name: name.trim() || "댕다방 회원",
+            });
+            const token = await loginCustomer({ email: email.trim(), password: password.trim() });
+            const apiAccessToken = token.access_token;
+            setCustomerToken(apiAccessToken);
+
+            if (pets[0]) {
+                await savePetProfileSmart(pets[0], apiAccessToken);
             }
-        }
+            const savedPets = (await loadPetProfilesSmart(apiAccessToken).catch(() => null)) || pets;
 
-        login({
-            apiUserId,
-            apiAccessToken,
-            name: name.trim() || "댕다방 회원",
-            email: email.trim(),
-            phone: phone.trim(),
-            joinedAt: new Date().toISOString(),
-            pets,
-        });
-        router.push("/mypage");
+            login({
+                apiUserId: apiUser.id,
+                apiAccessToken,
+                name: apiUser.name || name.trim() || "댕다방 회원",
+                email: apiUser.email,
+                phone: phone.trim(),
+                joinedAt: new Date().toISOString(),
+                pets: savedPets,
+            });
+            router.push("/mypage");
+        } catch (err) {
+            setCustomerToken();
+            setError(customerApiErrorMessage(err));
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -104,6 +126,16 @@ export default function SignupPage() {
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
             <SocialAuthButtons mode="signup" />
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
+                {!ddbApiReady() && (
+                    <p className="rounded-md bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-800">
+                        운영 API와 OAuth 설정이 연결되면 이메일 가입과 간편가입이 활성화됩니다.
+                    </p>
+                )}
+                {error && (
+                    <p className="rounded-md bg-rose-50 px-3 py-2 text-sm font-bold leading-6 text-rose-700">
+                        {error}
+                    </p>
+                )}
                 <div className="grid gap-4 md:grid-cols-2">
                     <label>
                         <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
@@ -208,9 +240,43 @@ export default function SignupPage() {
                         </div>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary w-full" disabled={photoLoading}>
+                <section className="grid gap-3 rounded-lg border border-neutral-200 bg-white p-4">
+                    <h2 className="text-sm font-black text-neutral-950">필수 동의</h2>
+                    <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
+                        <input
+                            type="checkbox"
+                            checked={agreeTerms}
+                            onChange={(event) => setAgreeTerms(event.target.checked)}
+                            className="mt-1 h-4 w-4 accent-indigo-600"
+                        />
+                        <span>
+                            <b className="font-black text-neutral-950">[필수] 이용약관에 동의합니다.</b>{" "}
+                            <Link href="/terms" className="font-black text-indigo-700">
+                                보기
+                            </Link>
+                        </span>
+                    </label>
+                    <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
+                        <input
+                            type="checkbox"
+                            checked={agreePrivacy}
+                            onChange={(event) => setAgreePrivacy(event.target.checked)}
+                            className="mt-1 h-4 w-4 accent-indigo-600"
+                        />
+                        <span>
+                            <b className="font-black text-neutral-950">[필수] 개인정보 수집·이용에 동의합니다.</b>{" "}
+                            <Link href="/privacy" className="font-black text-indigo-700">
+                                보기
+                            </Link>
+                        </span>
+                    </label>
+                    <p className="text-xs font-bold leading-5 text-neutral-500">
+                        회원가입과 PetLens 개인화 제공에 필요한 최소 정보만 처리합니다.
+                    </p>
+                </section>
+                <button type="submit" className="btn btn-primary w-full" disabled={photoLoading || loading}>
                     <i className="fa-solid fa-user-plus text-xs" />
-                    가입하기
+                    {loading ? "가입 처리 중" : "가입하기"}
                 </button>
             </form>
             <p className="mt-5 text-center text-sm font-bold text-neutral-600">

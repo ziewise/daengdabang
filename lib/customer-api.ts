@@ -24,6 +24,18 @@ type TokenResponse = {
     expires_in: number;
 };
 
+export class DdbApiError extends Error {
+    code?: "missing_api_base" | "http_error";
+    status?: number;
+
+    constructor(message: string, options: { code?: DdbApiError["code"]; status?: number } = {}) {
+        super(message);
+        this.name = "DdbApiError";
+        this.code = options.code;
+        this.status = options.status;
+    }
+}
+
 type ApiPetProfile = {
     id: number;
     name: string;
@@ -44,6 +56,10 @@ export function ddbApiBase() {
     const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || process.env.NEXT_PUBLIC_API_URL || "";
     if (typeof window === "undefined") return envBase;
     return window.localStorage.getItem("ddb.apiBase") || envBase;
+}
+
+export function ddbApiReady() {
+    return Boolean(ddbApiBase());
 }
 
 export function getCustomerToken() {
@@ -73,6 +89,19 @@ export function startSocialLogin(provider: SocialProvider, returnTo = "/mypage")
     return true;
 }
 
+export function customerApiErrorMessage(error: unknown) {
+    if (error instanceof DdbApiError) {
+        if (error.code === "missing_api_base") {
+            return "회원 기능을 사용하려면 운영 API 주소가 먼저 연결되어야 합니다.";
+        }
+        if (error.status === 401) return "이메일 또는 비밀번호를 확인해 주세요.";
+        if (error.status === 403) return "사용할 수 없는 회원 계정입니다.";
+        if (error.status === 409) return "이미 가입된 이메일입니다. 로그인으로 진행해 주세요.";
+        return error.message;
+    }
+    return "회원 API 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+}
+
 export async function loadSocialProviders() {
     const data = await apiJson<{ providers: SocialProviderStatus[] }>("/api/v1/auth/social/providers", {
         method: "GET",
@@ -80,9 +109,19 @@ export async function loadSocialProviders() {
     return data?.providers || null;
 }
 
-async function apiJson<T>(path: string, init: RequestInit = {}, token?: string): Promise<T | null> {
+async function apiJson<T>(
+    path: string,
+    init: RequestInit = {},
+    token?: string,
+    options: { requireBase?: boolean } = {}
+): Promise<T | null> {
     const base = ddbApiBase();
-    if (!base) return null;
+    if (!base) {
+        if (options.requireBase) {
+            throw new DdbApiError("DaengDaBang API base is not configured.", { code: "missing_api_base" });
+        }
+        return null;
+    }
     const headers = new Headers(init.headers);
     headers.set("Content-Type", "application/json");
     const accessToken = token || getCustomerToken();
@@ -92,22 +131,41 @@ async function apiJson<T>(path: string, init: RequestInit = {}, token?: string):
         ...init,
         headers,
     });
-    if (!response.ok) throw new Error(`DaengDaBang API ${response.status}`);
+    if (!response.ok) {
+        let message = `DaengDaBang API ${response.status}`;
+        try {
+            const body = await response.clone().json();
+            if (typeof body?.detail === "string") message = body.detail;
+        } catch {
+            // Keep the HTTP status fallback.
+        }
+        throw new DdbApiError(message, { code: "http_error", status: response.status });
+    }
     return response.json() as Promise<T>;
 }
 
 export async function signupCustomer(payload: { email: string; password: string; name?: string }) {
-    return apiJson<ApiUser>("/api/v1/auth/signup", {
+    const user = await apiJson<ApiUser>("/api/v1/auth/signup", {
         method: "POST",
         body: JSON.stringify(payload),
-    });
+    }, undefined, { requireBase: true });
+    if (!user) throw new DdbApiError("Signup failed.", { code: "http_error" });
+    return user;
 }
 
 export async function loginCustomer(payload: { email: string; password: string }) {
-    return apiJson<TokenResponse>("/api/v1/auth/login", {
+    const token = await apiJson<TokenResponse>("/api/v1/auth/login", {
         method: "POST",
         body: JSON.stringify(payload),
-    });
+    }, undefined, { requireBase: true });
+    if (!token) throw new DdbApiError("Login failed.", { code: "http_error" });
+    return token;
+}
+
+export async function loadCurrentCustomer(token?: string) {
+    return apiJson<ApiUser>("/api/v1/auth/me", {
+        method: "GET",
+    }, token, { requireBase: true });
 }
 
 export async function savePetProfileSmart(pet: PetProfile, token?: string) {
