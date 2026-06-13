@@ -174,7 +174,8 @@
     "externalReviewCount": 3,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_campflyer_disc_26/videos/hover.mp4"
   },
   {
     "no": 4,
@@ -704,7 +705,8 @@
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "image": "/images/products/catalog/fumble_deodorizer/fumble_deodorizer.png"
+    "image": "/images/products/catalog/fumble_deodorizer/fumble_deodorizer.png",
+    "video": "/images/products/catalog/fumble_deodorizer/videos/hover.mp4"
   },
   {
     "no": 14,
@@ -828,7 +830,8 @@
       "/images/products/catalog/ip_slowdog/details/2.webp",
       "/images/products/catalog/ip_slowdog/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_slowdog/ip_slowdog.png"
+    "image": "/images/products/catalog/ip_slowdog/ip_slowdog.png",
+    "video": "/images/products/catalog/ip_slowdog/videos/hover.mp4"
   },
   {
     "no": 16,
@@ -872,7 +875,8 @@
         "text": "hyun*****23.05.24."
       }
     ],
-    "image": "/images/products/catalog/pdh_slowfeeder_paw/pdh_slowfeeder_paw.png"
+    "image": "/images/products/catalog/pdh_slowfeeder_paw/pdh_slowfeeder_paw.png",
+    "video": "/images/products/catalog/pdh_slowfeeder_paw/videos/hover.mp4"
   },
   {
     "no": 17,
@@ -11831,7 +11835,8 @@
         "text": "엊그제도 구매했습니다,여름에 좋을 것 같습니다"
       }
     ],
-    "image": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/jjayo_icecream_mini_blueberry_50ml.png"
+    "image": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/jjayo_icecream_mini_blueberry_50ml.png",
+    "video": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/videos/hover.mp4"
   },
   {
     "no": 328,
