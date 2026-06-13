@@ -1,0 +1,99 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { answerShopQuestion } from "@/lib/daengdabang-llm";
+import { productHref } from "@/lib/shop";
+
+type Message = {
+    role: "user" | "assistant";
+    text: string;
+    products?: ReturnType<typeof answerShopQuestion>["products"];
+};
+
+export default function ChatWidget() {
+    const [open, setOpen] = useState(false);
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState<Message[]>([
+        { role: "assistant", text: "무엇을 찾고 계신가요? 하네스, 간식, 케어처럼 말해 주세요." },
+    ]);
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        const question = input.trim();
+        if (!question) return;
+        const result = answerShopQuestion(question);
+        setMessages((prev) => [
+            ...prev,
+            { role: "user", text: question },
+            { role: "assistant", text: result.answer, products: result.products },
+        ]);
+        setInput("");
+    };
+
+    return (
+        <div className="fixed bottom-4 right-4 z-50">
+            {open && (
+                <section className="mb-3 flex h-[520px] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl">
+                    <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
+                        <b className="text-sm font-black">댕다방 LLM</b>
+                        <button
+                            type="button"
+                            onClick={() => setOpen(false)}
+                            className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-100"
+                            aria-label="챗봇 닫기"
+                        >
+                            <i className="fa-solid fa-xmark" />
+                        </button>
+                    </header>
+                    <div className="flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-3">
+                        {messages.map((message, index) => (
+                            <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
+                                <div className={`inline-block max-w-[86%] rounded-lg px-3 py-2 text-sm font-bold leading-6 ${
+                                    message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
+                                }`}>
+                                    {message.text}
+                                </div>
+                                {message.products && message.products.length > 0 && (
+                                    <div className="mt-2 grid gap-2">
+                                        {message.products.slice(0, 3).map((product) => (
+                                            <Link
+                                                key={product.id}
+                                                href={productHref(product)}
+                                                className="block rounded-md border border-neutral-200 bg-white px-3 py-2 text-left text-xs font-extrabold text-neutral-800 hover:border-indigo-300"
+                                            >
+                                                {product.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 p-3">
+                        <input
+                            value={input}
+                            onChange={(event) => setInput(event.target.value)}
+                            className="input h-10 flex-1"
+                            placeholder="상품이나 고민 입력"
+                            aria-label="챗봇 질문"
+                        />
+                        <button type="submit" className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-950 text-white" aria-label="전송">
+                            <i className="fa-solid fa-paper-plane text-xs" />
+                        </button>
+                    </form>
+                </section>
+            )}
+
+            <button
+                type="button"
+                onClick={() => setOpen((value) => !value)}
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700"
+                aria-label={open ? "챗봇 닫기" : "챗봇 열기"}
+                title={open ? "챗봇 닫기" : "챗봇 열기"}
+            >
+                <i className={`fa-solid ${open ? "fa-xmark" : "fa-comments"} text-lg`} />
+            </button>
+        </div>
+    );
+}

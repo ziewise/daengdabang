@@ -1,34 +1,19 @@
-/**
- * ProductCard — 공용 상품 카드 (영상 호버 지원)
- * ---------------------------------------------------------------------
- * 사용처: 모든 페이지의 상품 카드 (메인 베스트/신상품, /products, /category, ...)
- *
- * 영상 호버:
- *   - p.video 있는 경우 mousemove 시 영상 페이드 인 + 자동 재생
- *   - 모바일(터치) → 첫 탭 = 영상 토글, 두 번째 탭 = 상세 이동 (또는 정보 영역 탭)
- *   - 영상 없으면 정적 이미지만
- *
- * 영상 호버는 미래에 모든 상품이 영상 갖게 될 것을 전제로 일관 적용.
- * sync-images.mjs 가 products/{folder}/video.mp4 감지 시 catalog.video 자동 채움.
- */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { formatKRW, getBestRank, isNewProduct } from "@/lib/catalog";
+import { productHref } from "@/lib/shop";
+import { useCart, useStore } from "@/lib/store";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
     product: CatalogProduct;
-    /** NEW 배지 강제 — undefined 면 자동 (큐레이션 신상품 리스트로 판단) */
     showNewBadge?: boolean;
-    /** 베스트 랭킹 강제 표시 — 명시 안 하면 자동(getBestRank) */
     rank?: number;
-    /** 랭킹 표시 스타일 — "large" (베스트 페이지) | "label" (다른) | "off" */
     rankStyle?: "large" | "label" | "off";
     sizeClass?: string;
 }
@@ -40,19 +25,18 @@ export default function ProductCard({
     rankStyle = "label",
     sizeClass,
 }: Props) {
-    const router = useRouter();
-    const effectiveRank = rank ?? getBestRank(p);
-    const shouldShowNew = showNewBadge ?? isNewProduct(p);
-    const showBest = effectiveRank !== null && rankStyle !== "off";
-    const detailHref = `/product/${p.folder ?? p.id}`;
-
-    // ===== 영상 호버 로직 =====
+    const href = productHref(p);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoActive, setVideoActive] = useState(false);
     const [isTouch, setIsTouch] = useState(false);
-    const hasVideo = !!p.video;
+    const { addToCart } = useCart();
+    const { toggleWishlist, isWished } = useStore();
+    const wished = isWished(p.id);
+    const effectiveRank = rank ?? getBestRank(p);
+    const shouldShowNew = showNewBadge ?? isNewProduct(p);
+    const showBest = effectiveRank !== null && rankStyle !== "off";
+    const hasVideo = Boolean(p.video);
 
-    /** 터치 디바이스 감지 (mount 후 한 번) */
     useEffect(() => {
         if (typeof window === "undefined") return;
         setIsTouch(window.matchMedia("(hover: none)").matches);
@@ -63,60 +47,46 @@ export default function ProductCard({
         setVideoActive(true);
         videoRef.current?.play().catch(() => {});
     };
+
     const deactivate = () => {
         if (!hasVideo) return;
         setVideoActive(false);
-        const v = videoRef.current;
-        if (!v) return;
-        v.pause();
-        v.currentTime = 0;
+        const video = videoRef.current;
+        if (!video) return;
+        video.pause();
+        video.currentTime = 0;
     };
 
-    /** 이미지 영역 클릭
-     *  - 모바일 + 영상 있음 → 토글 (네비게이션 X)
-     *  - 그 외 → 상세 페이지로 이동 */
-    const handleImageClick = (e: React.MouseEvent) => {
-        if (isTouch && hasVideo) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (videoActive) deactivate();
-            else activate();
-            return;
+    const handleMediaClick = (event: React.MouseEvent) => {
+        if (!isTouch || !hasVideo) return;
+        if (!videoActive) {
+            event.preventDefault();
+            activate();
         }
-        router.push(detailHref);
     };
 
     return (
-        <article
-            className={`block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all ${sizeClass ?? ""}`}
-        >
-            {/* 이미지 영역 — 영상 호버 인터랙션 영역 */}
-            <div
-                onClick={handleImageClick}
+        <article className={`group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${sizeClass ?? ""}`}>
+            <Link
+                href={href}
+                onClick={handleMediaClick}
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
-                role="button"
-                tabIndex={0}
-                aria-label={
-                    isTouch && hasVideo
-                        ? videoActive ? "영상 정지" : "영상 재생"
-                        : `${p.name} 상세 보기`
-                }
-                className={`relative aspect-square overflow-hidden cursor-pointer flex items-center justify-center ${p.image ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative flex aspect-square items-center justify-center overflow-hidden ${p.image ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
+                aria-label={`${p.name} 상세보기`}
             >
                 {p.image ? (
                     <Image
                         src={p.image}
                         alt={p.name}
                         fill
-                        sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
-                        className={`object-cover transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"
+                        className={`object-cover transition duration-300 group-hover:scale-[1.03] ${videoActive ? "opacity-0" : "opacity-100"}`}
                     />
                 ) : (
-                    <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
+                    <i className={`fa-solid ${p.icon} text-5xl text-white drop-shadow`} />
                 )}
 
-                {/* 영상 — videoActive 시 fade in. preload=metadata 로 처음에 메타데이터만 다운로드 */}
                 {hasVideo && (
                     <video
                         ref={videoRef}
@@ -125,96 +95,87 @@ export default function ProductCard({
                         loop
                         playsInline
                         preload="metadata"
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
+                        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
                 {hasVideo && videoActive && <VideoBrandOverlay />}
 
-                {/* 좌상단 배지 — BEST + NEW */}
                 {(showBest || shouldShowNew) && (
-                    <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start pointer-events-none">
+                    <div className="absolute left-2 top-2 z-10 flex flex-col items-start gap-1">
                         {showBest && (
-                            rankStyle === "large" ? (
-                                <span className="min-w-[26px] h-[26px] px-1.5 rounded-md bg-foreground/85 text-white text-xs font-black flex items-center justify-center backdrop-blur-sm shadow-md">
-                                    {effectiveRank}
-                                </span>
-                            ) : (
-                                <span className="px-1.5 py-0.5 rounded-full bg-gradient-to-r from-danger to-orange-500 text-white text-[9px] font-black tracking-wider shadow">
-                                    BEST
-                                </span>
-                            )
+                            <span className={rankStyle === "large"
+                                ? "flex h-7 min-w-7 items-center justify-center rounded-md bg-neutral-950/85 px-2 text-xs font-black text-white"
+                                : "rounded-full bg-rose-600 px-2 py-0.5 text-[10px] font-black text-white"}
+                            >
+                                {rankStyle === "large" ? effectiveRank : "BEST"}
+                            </span>
                         )}
                         {shouldShowNew && (
-                            <span className="px-1.5 py-0.5 rounded-full bg-gradient-to-r from-aurora-indigo to-aurora-pink text-white text-[9px] font-black tracking-wider shadow">
+                            <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-black text-white">
                                 NEW
                             </span>
                         )}
                     </div>
                 )}
 
-                {/* 찜 버튼 */}
-                <button
-                    type="button"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        // TODO: wishlist toggle (백엔드 단계)
-                    }}
-                    className="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-card flex items-center justify-center"
-                    aria-label="찜하기"
-                >
-                    <i className="fa-regular fa-heart text-neutral-400 text-xs" />
-                </button>
-
-                {/* 영상 재생 인디케이터 — 모바일에서 영상 있을 때만 표시 */}
-                {hasVideo && isTouch && !videoActive && (
-                    <div className="absolute bottom-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-foreground/70 backdrop-blur-sm flex items-center justify-center pointer-events-none">
-                        <i className="fa-solid fa-play text-white text-[10px] ml-0.5" />
-                    </div>
+                {hasVideo && (
+                    <span className="absolute bottom-2 right-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-950/70 text-white backdrop-blur">
+                        <i className="fa-solid fa-play text-[10px]" />
+                    </span>
                 )}
-            </div>
+            </Link>
 
-            {/* 정보 영역 — 상세 페이지로 이동 */}
-            <Link href={detailHref} className="block hover:bg-neutral-50/40 transition-colors">
-                <div className="p-3 md:p-4">
-                    <p className="text-[10px] font-extrabold tracking-wider text-aurora-indigo mb-1 uppercase">
-                        {p.brandEn || p.brandKo}
-                    </p>
-                    <p className="text-xs md:text-sm font-bold line-clamp-2 mb-2 min-h-[2.6em]">
-                        {p.name}
-                    </p>
-
-                    {/* 가격 — 할인 row 는 항상 공간 차지 (카드 높이 일관) */}
-                    <div className="text-right">
-                        <div className="flex items-center justify-end gap-1.5 mb-0.5 h-[14px] md:h-[16px]">
-                            {p.discountRate > 0 && p.originalPrice && (
-                                <>
-                                    <span className="text-[11px] md:text-xs font-extrabold text-danger">
-                                        {p.discountRate}%
-                                    </span>
-                                    <span className="text-[10px] md:text-[11px] text-neutral-400 line-through">
-                                        {formatKRW(p.originalPrice)}원
-                                    </span>
-                                </>
-                            )}
-                        </div>
-                        <p className="text-sm md:text-base font-black">
-                            {formatKRW(p.price)}원
+            <div className="p-3">
+                <div className="mb-2 flex items-start justify-between gap-2">
+                    <Link href={href} className="min-w-0 flex-1">
+                        <p className="truncate text-[11px] font-black uppercase text-indigo-600">
+                            {p.brandEn || p.brandKo}
                         </p>
-                    </div>
+                        <h3 className="mt-1 min-h-[2.5rem] text-sm font-extrabold leading-5 text-neutral-950 line-clamp-2">
+                            {p.name}
+                        </h3>
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={() => toggleWishlist(p.id)}
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 transition hover:border-rose-300 hover:text-rose-600"
+                        aria-label={wished ? "찜 해제" : "찜하기"}
+                        title={wished ? "찜 해제" : "찜하기"}
+                    >
+                        <i className={`${wished ? "fa-solid text-rose-600" : "fa-regular"} fa-heart text-sm`} />
+                    </button>
+                </div>
 
-                    {/* 평점 + 리뷰 수 — 항상 자리 (리뷰 0 시 빈 영역) */}
-                    <div className="flex items-center justify-end gap-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500 h-[14px] md:h-[16px]">
+                <div className="flex min-h-6 items-center justify-end gap-1.5">
+                    {p.discountRate > 0 && p.originalPrice && (
+                        <>
+                            <span className="text-xs font-black text-rose-600">{p.discountRate}%</span>
+                            <span className="text-[11px] text-neutral-400 line-through">{formatKRW(p.originalPrice)}원</span>
+                        </>
+                    )}
+                </div>
+                <div className="flex items-end justify-between gap-2">
+                    <div className="min-h-5 text-[11px] text-neutral-500">
                         {p.reviewCount > 0 && (
-                            <>
+                            <span className="inline-flex items-center gap-1">
                                 <i className="fa-solid fa-star text-amber-400" />
-                                <span className="font-bold text-neutral-700">{p.rating.toFixed(1)}</span>
-                                <span className="text-neutral-400">({p.reviewCount})</span>
-                            </>
+                                <b className="text-neutral-700">{p.rating.toFixed(1)}</b>
+                                <span>({p.reviewCount.toLocaleString()})</span>
+                            </span>
                         )}
                     </div>
+                    <p className="text-base font-black text-neutral-950">{formatKRW(p.price)}원</p>
                 </div>
-            </Link>
+
+                <button
+                    type="button"
+                    onClick={() => addToCart(p.id, 1)}
+                    className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-indigo-700"
+                >
+                    <i className="fa-solid fa-bag-shopping text-xs" />
+                    담기
+                </button>
+            </div>
         </article>
     );
 }
