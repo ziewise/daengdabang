@@ -11515,7 +11515,8 @@
       "/images/products/catalog/joaru_perfume_cotton/details/1.webp",
       "/images/products/catalog/joaru_perfume_cotton/details/2.webp"
     ],
-    "image": "/images/products/catalog/joaru_perfume_cotton/joaru_perfume_cotton.png"
+    "image": "/images/products/catalog/joaru_perfume_cotton/joaru_perfume_cotton.png",
+    "video": "/images/products/catalog/joaru_perfume_cotton/videos/hover.mp4"
   },
   {
     "no": 320,
@@ -11569,7 +11570,8 @@
         "text": "def0***23.10.29."
       }
     ],
-    "image": "/images/products/catalog/joaru_perfume_daisy/joaru_perfume_daisy.png"
+    "image": "/images/products/catalog/joaru_perfume_daisy/joaru_perfume_daisy.png",
+    "video": "/images/products/catalog/joaru_perfume_daisy/videos/hover.mp4"
   },
   {
     "no": 321,
@@ -11595,7 +11597,8 @@
       "/images/products/catalog/id_treat_trout/details/1.webp",
       "/images/products/catalog/id_treat_trout/details/2.webp",
       "/images/products/catalog/id_treat_trout/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/id_treat_trout/videos/hover.mp4"
   },
   {
     "no": 322,
@@ -11621,7 +11624,8 @@
       "/images/products/catalog/id_treat_duck/details/1.webp",
       "/images/products/catalog/id_treat_duck/details/2.webp",
       "/images/products/catalog/id_treat_duck/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/id_treat_duck/videos/hover.mp4"
   },
   {
     "no": 323,
@@ -11647,7 +11651,8 @@
       "/images/products/catalog/id_treat_turkey/details/1.webp",
       "/images/products/catalog/id_treat_turkey/details/2.webp",
       "/images/products/catalog/id_treat_turkey/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/id_treat_turkey/videos/hover.mp4"
   },
   {
     "no": 324,
