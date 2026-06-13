@@ -7704,7 +7704,8 @@
       "/images/products/catalog/fumble_shampoobar_camelrose/details/1.webp",
       "/images/products/catalog/fumble_shampoobar_camelrose/details/2.webp"
     ],
-    "image": "/images/products/catalog/fumble_shampoobar_camelrose/fumble_shampoobar_camelrose.png"
+    "image": "/images/products/catalog/fumble_shampoobar_camelrose/fumble_shampoobar_camelrose.png",
+    "video": "/images/products/catalog/fumble_shampoobar_camelrose/videos/hover.mp4"
   },
   {
     "no": 218,
@@ -7748,7 +7749,8 @@
         "text": "ju****23.09.20."
       }
     ],
-    "image": "/images/products/catalog/fumble_footsoap_calamine_2/fumble_footsoap_calamine_2.png"
+    "image": "/images/products/catalog/fumble_footsoap_calamine_2/fumble_footsoap_calamine_2.png",
+    "video": "/images/products/catalog/fumble_footsoap_calamine_2/videos/hover.mp4"
   },
   {
     "no": 219,
@@ -7777,7 +7779,8 @@
       "/images/products/catalog/fumble_bugmist/details/5.webp",
       "/images/products/catalog/fumble_bugmist/details/6.webp"
     ],
-    "image": "/images/products/catalog/fumble_bugmist/fumble_bugmist.png"
+    "image": "/images/products/catalog/fumble_bugmist/fumble_bugmist.png",
+    "video": "/images/products/catalog/fumble_bugmist/videos/hover.mp4"
   },
   {
     "no": 220,
@@ -7803,7 +7806,8 @@
       "/images/products/catalog/fumble_footcleanser_set/details/2.webp",
       "/images/products/catalog/fumble_footcleanser_set/details/3.webp"
     ],
-    "image": "/images/products/catalog/fumble_footcleanser_set/fumble_footcleanser_set.png"
+    "image": "/images/products/catalog/fumble_footcleanser_set/fumble_footcleanser_set.png",
+    "video": "/images/products/catalog/fumble_footcleanser_set/videos/hover.mp4"
   },
   {
     "no": 221,
@@ -8023,7 +8027,8 @@
         "summary": null,
         "text": "선물하기도 좋고 안 딱딱해서 이빨나갈 걱정 없음이에요..!"
       }
-    ]
+    ],
+    "video": "/images/products/catalog/rw_campflyer_disc/videos/hover.mp4"
   },
   {
     "no": 225,
