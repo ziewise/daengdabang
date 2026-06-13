@@ -10275,7 +10275,8 @@
       "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/1.webp",
       "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/2.webp"
     ],
-    "image": "/images/products/catalog/polkadog_henpenny_biscuit_142g/polkadog_henpenny_biscuit_142g.png"
+    "image": "/images/products/catalog/polkadog_henpenny_biscuit_142g/polkadog_henpenny_biscuit_142g.png",
+    "video": "/images/products/catalog/polkadog_henpenny_biscuit_142g/videos/hover.mp4"
   },
   {
     "no": 286,
@@ -10905,7 +10906,8 @@
       "/images/products/catalog/ip_trovbiz_nightday/details/2.webp",
       "/images/products/catalog/ip_trovbiz_nightday/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_trovbiz_nightday/ip_trovbiz_nightday.png"
+    "image": "/images/products/catalog/ip_trovbiz_nightday/ip_trovbiz_nightday.png",
+    "video": "/images/products/catalog/ip_trovbiz_nightday/videos/hover.mp4"
   },
   {
     "no": 303,
@@ -10950,7 +10952,8 @@
         "text": "benn******25.12.19."
       }
     ],
-    "image": "/images/products/catalog/ip_trovbiz_adventure/ip_trovbiz_adventure.png"
+    "image": "/images/products/catalog/ip_trovbiz_adventure/ip_trovbiz_adventure.png",
+    "video": "/images/products/catalog/ip_trovbiz_adventure/videos/hover.mp4"
   },
   {
     "no": 304,
@@ -10976,7 +10979,8 @@
       "/images/products/catalog/ip_trovbiz_bigdog/details/2.webp",
       "/images/products/catalog/ip_trovbiz_bigdog/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_trovbiz_bigdog/ip_trovbiz_bigdog.png"
+    "image": "/images/products/catalog/ip_trovbiz_bigdog/ip_trovbiz_bigdog.png",
+    "video": "/images/products/catalog/ip_trovbiz_bigdog/videos/hover.mp4"
   },
   {
     "no": 305,
@@ -11002,7 +11006,8 @@
       "/images/products/catalog/ip_trovbiz_puppy/details/2.webp",
       "/images/products/catalog/ip_trovbiz_puppy/details/3.webp"
     ],
-    "image": "/images/products/catalog/ip_trovbiz_puppy/ip_trovbiz_puppy.png"
+    "image": "/images/products/catalog/ip_trovbiz_puppy/ip_trovbiz_puppy.png",
+    "video": "/images/products/catalog/ip_trovbiz_puppy/videos/hover.mp4"
   },
   {
     "no": 306,
