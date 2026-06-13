@@ -4,6 +4,8 @@ import { CATEGORY_ORDER, productHref } from "@/lib/shop";
 
 const BASE_URL = "https://www.daengdabang.com";
 
+export const dynamic = "force-static";
+
 function url(path: string) {
     return `${BASE_URL}${path}`;
 }
