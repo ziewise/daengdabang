@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { answerShopQuestion } from "@/lib/daengdabang-llm";
+import { answerShopQuestionSmart } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -16,31 +16,34 @@ export default function ChatPageClient() {
     const params = useSearchParams();
     const initialized = useRef(false);
     const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: "assistant", text: "상품명, 용도, 반려견 고민을 입력해 주세요. 등록된 333개 상품 기준으로 답변합니다." },
+        { role: "assistant", text: "상품명, 용도, 반려견 고민을 입력해 주세요. LLaMA가 가능하면 먼저 답하고, 아니면 333개 카탈로그 기준으로 답변합니다." },
     ]);
 
-    const ask = useCallback((question: string) => {
+    const ask = useCallback(async (question: string) => {
         const trimmed = question.trim();
-        if (!trimmed) return;
-        const result = answerShopQuestion(trimmed);
+        if (!trimmed || loading) return;
+        setLoading(true);
+        setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
+        const result = await answerShopQuestionSmart(trimmed);
         setMessages((prev) => [
             ...prev,
-            { role: "user", text: trimmed },
             { role: "assistant", text: result.answer, products: result.products },
         ]);
-    }, []);
+        setLoading(false);
+    }, [loading]);
 
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
         const initialQuestion = params.get("q");
-        if (initialQuestion) ask(initialQuestion);
+        if (initialQuestion) void ask(initialQuestion);
     }, [params, ask]);
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
-        ask(input);
+        void ask(input);
         setInput("");
     };
 
@@ -65,6 +68,13 @@ export default function ChatPageClient() {
                                 </div>
                             </div>
                         ))}
+                        {loading && (
+                            <div className="text-left">
+                                <div className="inline-block rounded-lg bg-white px-4 py-3 text-sm font-bold text-neutral-500 shadow-sm">
+                                    LLaMA와 카탈로그를 함께 확인하는 중입니다.
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 bg-white p-4">
                         <input
@@ -74,7 +84,7 @@ export default function ChatPageClient() {
                             placeholder="예: 산책 많이 하는 중형견 하네스 추천"
                             aria-label="챗봇 질문"
                         />
-                        <button type="submit" className="btn btn-primary h-12">
+                        <button type="submit" disabled={loading} className="btn btn-primary h-12 disabled:opacity-50">
                             <i className="fa-solid fa-paper-plane text-xs" />
                             전송
                         </button>

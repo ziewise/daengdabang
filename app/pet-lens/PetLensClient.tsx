@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { analyzePetLens } from "@/lib/daengdabang-llm";
+import { analyzePetLensSmart } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import { useAuth, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
@@ -26,7 +26,9 @@ export default function PetLensClient() {
     const [concerns, setConcerns] = useState<string[]>(["산책 안전"]);
     const [imageName, setImageName] = useState("");
     const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [result, setResult] = useState<Result | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const toggleConcern = (concern: string) => {
         setConcerns((current) =>
@@ -38,15 +40,17 @@ export default function PetLensClient() {
 
     const handleFile = (file?: File) => {
         if (!file) return;
+        setImageFile(file);
         setImageName(file.name);
         const reader = new FileReader();
         reader.onload = () => setPhotoDataUrl(typeof reader.result === "string" ? reader.result : undefined);
         reader.readAsDataURL(file);
     };
 
-    const submit = (event: FormEvent) => {
+    const submit = async (event: FormEvent) => {
         event.preventDefault();
-        const analysis = analyzePetLens({
+        setLoading(true);
+        const analysis = await analyzePetLensSmart({
             name,
             age,
             size,
@@ -55,9 +59,10 @@ export default function PetLensClient() {
             concerns,
             imageName,
             photoDataUrl,
-        });
+        }, imageFile);
         setResult(analysis);
         if (user) upsertPet(analysis.profile);
+        setLoading(false);
     };
 
     return (
@@ -66,7 +71,7 @@ export default function PetLensClient() {
                 <p className="text-sm font-black text-indigo-700">댕다방 LLM</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
                 <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                    사진과 생활 정보를 기준으로 333개 상품 중 추천 후보를 골라드립니다.
+                    사진과 생활 정보를 기준으로 333개 상품 중 추천 후보를 골라드립니다. API가 연결되어 있으면 LLaMA 하이브리드 해석을 먼저 사용합니다.
                 </p>
             </header>
 
@@ -147,9 +152,9 @@ export default function PetLensClient() {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-full">
+                    <button type="submit" disabled={loading} className="btn btn-primary w-full disabled:opacity-50">
                         <i className="fa-solid fa-wand-magic-sparkles text-xs" />
-                        추천 받기
+                        {loading ? "분석 중" : "추천 받기"}
                     </button>
                 </form>
 

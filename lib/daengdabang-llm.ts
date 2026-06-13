@@ -1,6 +1,17 @@
 import { CATALOG, applySort, searchCatalog, type CatalogProduct } from "@/lib/catalog";
 import type { PetProfile } from "@/lib/store";
 
+type PetLensInput = {
+    name: string;
+    size: PetProfile["size"];
+    age: string;
+    coat: PetProfile["coat"];
+    activity: PetProfile["activity"];
+    concerns: string[];
+    imageName?: string;
+    photoDataUrl?: string;
+};
+
 function unique(products: CatalogProduct[]) {
     const seen = new Set<string>();
     return products.filter((product) => {
@@ -8,6 +19,21 @@ function unique(products: CatalogProduct[]) {
         seen.add(product.id);
         return true;
     });
+}
+
+function apiBase() {
+    const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || "";
+    if (typeof window === "undefined") return envBase;
+    return window.localStorage.getItem("ddb.apiBase") || envBase;
+}
+
+function productFromApi(item: { id?: string; folder?: string; no?: number; name?: string }) {
+    return CATALOG.find((product) =>
+        product.id === item.id ||
+        product.folder === item.folder ||
+        product.no === item.no ||
+        product.name === item.name
+    );
 }
 
 function sizeLabel(size: PetProfile["size"]) {
@@ -34,16 +60,7 @@ export function recommendForPet(profile: Pick<PetProfile, "size" | "coat" | "act
     return unique(products).slice(0, 8);
 }
 
-export function analyzePetLens(input: {
-    name: string;
-    size: PetProfile["size"];
-    age: string;
-    coat: PetProfile["coat"];
-    activity: PetProfile["activity"];
-    concerns: string[];
-    imageName?: string;
-    photoDataUrl?: string;
-}) {
+export function analyzePetLens(input: PetLensInput) {
     const concerns = input.concerns.length ? input.concerns : ["일상 케어"];
     const profile: PetProfile = {
         name: input.name || "우리 아이",
@@ -57,16 +74,52 @@ export function analyzePetLens(input: {
     };
     const products = recommendForPet(profile);
     const summary = [
-        `${profile.name}은 ${sizeLabel(profile.size)}견 기준으로 보고 추천을 구성했습니다.`,
+        `${profile.name}은 ${sizeLabel(profile.size)}견 기준으로 추천을 구성했습니다.`,
         profile.activity === "high"
             ? "활동량이 높아 산책/아웃도어 제품과 안전 장비를 먼저 확인하는 편이 좋습니다."
             : "일상 케어와 편안한 사용감을 우선으로 추천했습니다.",
         `관심 포인트: ${concerns.join(", ")}`,
     ];
 
-    if (input.imageName) summary.push(`업로드 이미지(${input.imageName})는 프로필 기록과 추천 문맥으로만 사용했습니다.`);
+    if (input.imageName) summary.push(`업로드 이미지(${input.imageName})는 프로필 기록과 추천 문맥으로 사용했습니다.`);
 
     return { profile, products, summary };
+}
+
+export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File | null) {
+    const base = apiBase();
+    if (!base || !imageFile) return analyzePetLens(input);
+
+    try {
+        const form = new FormData();
+        form.append("file", imageFile);
+        const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/analyze-pet`, {
+            method: "POST",
+            body: form,
+        });
+        if (!response.ok) throw new Error(`PetLens API ${response.status}`);
+        const data = await response.json();
+        const apiConcerns = Array.isArray(data.concerns) && data.concerns.length ? data.concerns : input.concerns;
+        const apiCoat = ["short", "medium", "long"].includes(data.coat) ? data.coat : input.coat;
+        const profile: PetProfile = {
+            name: input.name || "우리 아이",
+            size: input.size,
+            age: input.age || "성견",
+            coat: apiCoat,
+            activity: input.activity,
+            concerns: apiConcerns,
+            photoDataUrl: input.photoDataUrl,
+            lastAnalyzedAt: new Date().toISOString(),
+        };
+        const summary = [
+            data.breed ? `사진 분석 결과 ${data.breed} 계열로 추정했습니다.` : `${profile.name}의 사진을 분석했습니다.`,
+            data.summary || "LLaMA 하이브리드 해석을 바탕으로 추천을 구성했습니다.",
+            `해석 엔진: ${data.interpreter || "fallback"}${data.interpreter_model ? ` · ${data.interpreter_model}` : ""}`,
+        ];
+        return { profile, products: recommendForPet(profile), summary };
+    } catch {
+        return analyzePetLens(input);
+    }
 }
 
 export function answerShopQuestion(message: string) {
@@ -109,4 +162,29 @@ export function answerShopQuestion(message: string) {
     else products = applySort(products, "popular");
 
     return { answer, products: unique(products).slice(0, 6) };
+}
+
+export async function answerShopQuestionSmart(message: string) {
+    const fallback = answerShopQuestion(message);
+    const base = apiBase();
+    if (!base) return fallback;
+
+    try {
+        const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message, limit: 6 }),
+        });
+        if (!response.ok) throw new Error(`shop-chat ${response.status}`);
+        const data = await response.json();
+        const apiProducts = Array.isArray(data.products)
+            ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
+            : [];
+        return {
+            answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
+            products: apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products,
+        };
+    } catch {
+        return fallback;
+    }
 }

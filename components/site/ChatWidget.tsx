@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { answerShopQuestion } from "@/lib/daengdabang-llm";
+import { answerShopQuestion, answerShopQuestionSmart } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 
 type Message = {
@@ -14,21 +14,21 @@ type Message = {
 export default function ChatWidget() {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         { role: "assistant", text: "무엇을 찾고 계신가요? 하네스, 간식, 케어처럼 말해 주세요." },
     ]);
 
-    const submit = (event: FormEvent) => {
+    const submit = async (event: FormEvent) => {
         event.preventDefault();
         const question = input.trim();
-        if (!question) return;
-        const result = answerShopQuestion(question);
-        setMessages((prev) => [
-            ...prev,
-            { role: "user", text: question },
-            { role: "assistant", text: result.answer, products: result.products },
-        ]);
+        if (!question || loading) return;
         setInput("");
+        setLoading(true);
+        setMessages((prev) => [...prev, { role: "user", text: question }]);
+        const result = await answerShopQuestionSmart(question);
+        setMessages((prev) => [...prev, { role: "assistant", text: result.answer, products: result.products }]);
+        setLoading(false);
     };
 
     return (
@@ -69,6 +69,13 @@ export default function ChatWidget() {
                                 )}
                             </div>
                         ))}
+                        {loading && (
+                            <div className="text-left">
+                                <div className="inline-block rounded-lg bg-white px-3 py-2 text-sm font-bold text-neutral-500 shadow-sm">
+                                    답변을 정리하는 중입니다.
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 p-3">
                         <input
@@ -78,7 +85,12 @@ export default function ChatWidget() {
                             placeholder="상품이나 고민 입력"
                             aria-label="챗봇 질문"
                         />
-                        <button type="submit" className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-950 text-white" aria-label="전송">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-950 text-white disabled:opacity-50"
+                            aria-label="전송"
+                        >
                             <i className="fa-solid fa-paper-plane text-xs" />
                         </button>
                     </form>
