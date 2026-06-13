@@ -9456,7 +9456,7 @@
       "/images/products/catalog/aff_stepbystep_2tier/details/6.webp",
       "/images/products/catalog/aff_stepbystep_2tier/details/7.webp"
     ],
-    "video": "/images/products/catalog/aff_stepbystep_2tier/videos/hover.mp4",
+    "video": "https://raw.githubusercontent.com/ziewise/daengdabang/main/public/images/products/catalog/aff_stepbystep_2tier/videos/hover.mp4",
     "image": "/images/products/catalog/aff_stepbystep_2tier/aff_stepbystep_2tier.png"
   },
   {
@@ -9520,7 +9520,7 @@
       "/images/products/catalog/aff_microbeads_cloud/details/6.webp",
       "/images/products/catalog/aff_microbeads_cloud/details/7.webp"
     ],
-    "video": "/images/products/catalog/aff_microbeads_cloud/videos/hover.mp4",
+    "video": "https://raw.githubusercontent.com/ziewise/daengdabang/main/public/images/products/catalog/aff_microbeads_cloud/videos/hover.mp4",
     "image": "/images/products/catalog/aff_microbeads_cloud/aff_microbeads_cloud.png"
   },
   {
@@ -9551,7 +9551,7 @@
       "/images/products/catalog/aff_microbeads_round/details/6.webp",
       "/images/products/catalog/aff_microbeads_round/details/7.webp"
     ],
-    "video": "/images/products/catalog/aff_microbeads_round/videos/hover.mp4",
+    "video": "https://raw.githubusercontent.com/ziewise/daengdabang/main/public/images/products/catalog/aff_microbeads_round/videos/hover.mp4",
     "image": "/images/products/catalog/aff_microbeads_round/aff_microbeads_round.png"
   },
   {
@@ -9581,7 +9581,7 @@
       "/images/products/catalog/aff_donut_luxury_l/details/5.webp",
       "/images/products/catalog/aff_donut_luxury_l/details/6.webp"
     ],
-    "video": "/images/products/catalog/aff_donut_luxury_l/videos/hover.mp4",
+    "video": "https://raw.githubusercontent.com/ziewise/daengdabang/main/public/images/products/catalog/aff_donut_luxury_l/videos/hover.mp4",
     "image": "/images/products/catalog/aff_donut_luxury_l/aff_donut_luxury_l.png"
   },
   {
