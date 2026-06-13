@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loadPetProfilesSmart, loginCustomer, setCustomerToken } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
+import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -43,6 +44,7 @@ export default function LoginPage() {
     return (
         <main className="mx-auto max-w-md px-4 py-10">
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">로그인</h1>
+            <SocialAuthButtons mode="login" />
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 <label>
                     <span className="mb-1 block text-xs font-black text-neutral-500">이메일</span>

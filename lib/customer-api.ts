@@ -2,6 +2,8 @@ import type { PetProfile } from "@/lib/store";
 
 const TOKEN_KEY = "ddb.api.accessToken";
 
+export type SocialProvider = "naver" | "kakao" | "google";
+
 export type ApiUser = {
     id: number;
     email: string;
@@ -47,6 +49,22 @@ export function setCustomerToken(token?: string) {
     if (typeof window === "undefined") return;
     if (token) window.localStorage.setItem(TOKEN_KEY, token);
     else window.localStorage.removeItem(TOKEN_KEY);
+}
+
+export function socialLoginHref(provider: SocialProvider, returnTo = "/mypage") {
+    const base = ddbApiBase();
+    if (!base) return "";
+    const path = `/api/v1/auth/social/${provider}/start`;
+    const query = new URLSearchParams({ return_to: returnTo });
+    return `${base.replace(/\/$/, "")}${path}?${query.toString()}`;
+}
+
+export function startSocialLogin(provider: SocialProvider, returnTo = "/mypage") {
+    if (typeof window === "undefined") return false;
+    const href = socialLoginHref(provider, returnTo);
+    if (!href) return false;
+    window.location.href = href;
+    return true;
 }
 
 async function apiJson<T>(path: string, init: RequestInit = {}, token?: string): Promise<T | null> {

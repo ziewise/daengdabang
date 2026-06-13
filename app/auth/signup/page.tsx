@@ -6,6 +6,7 @@ import Link from "next/link";
 import { loginCustomer, savePetProfileSmart, setCustomerToken, signupCustomer } from "@/lib/customer-api";
 import { resizePetPhoto } from "@/lib/pet-photo";
 import { useAuth, type PetProfile } from "@/lib/store";
+import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
@@ -101,6 +102,7 @@ export default function SignupPage() {
     return (
         <main className="mx-auto max-w-2xl px-4 py-10">
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
+            <SocialAuthButtons mode="signup" />
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 <div className="grid gap-4 md:grid-cols-2">
                     <label>

@@ -22,7 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         "/recommendations",
         "/pet-lens",
         "/chat",
-        "/social",
         "/campaign/sns-launch",
         "/auth/signup",
     ].map((path) => ({
