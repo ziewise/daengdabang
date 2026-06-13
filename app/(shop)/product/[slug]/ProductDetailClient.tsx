@@ -4,6 +4,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import ProductGallery from "@/components/products/detail/ProductGallery";
 import ProductInfo from "@/components/products/detail/ProductInfo";
 import ProductTabs from "@/components/products/detail/ProductTabs";
+import PetTryOnPreview from "@/components/products/detail/PetTryOnPreview";
 import RelatedProducts from "@/components/products/detail/RelatedProducts";
 
 interface Props {
@@ -20,6 +21,7 @@ export default function ProductDetailClient({ product }: Props) {
                 <ProductInfo product={product} />
             </section>
 
+            <PetTryOnPreview product={product} />
             <ProductTabs product={product} />
             <RelatedProducts product={product} />
         </main>

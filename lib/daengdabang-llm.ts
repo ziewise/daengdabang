@@ -12,6 +12,10 @@ type PetLensInput = {
     photoDataUrl?: string;
 };
 
+type ShopQuestionContext = {
+    pet?: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
+};
+
 function unique(products: CatalogProduct[]) {
     const seen = new Set<string>();
     return products.filter((product) => {
@@ -34,6 +38,16 @@ function productFromApi(item: { id?: string; folder?: string; no?: number; name?
         product.no === item.no ||
         product.name === item.name
     );
+}
+
+function petContextText(context?: ShopQuestionContext) {
+    const pet = context?.pet;
+    if (!pet) return "";
+    const size = sizeLabel(pet.size);
+    const activity = pet.activity === "high" ? "활동량 높음" : pet.activity === "low" ? "활동량 낮음" : "활동량 보통";
+    const coat = pet.coat === "long" ? "장모" : pet.coat === "short" ? "단모" : "보통 모질";
+    const concerns = pet.concerns?.length ? pet.concerns.join(", ") : "특이사항 없음";
+    return `반려견 프로필: 이름 ${pet.name || "우리 아이"}, 크기 ${size}, 모질 ${coat}, ${activity}, 관심사 ${concerns}`;
 }
 
 function sizeLabel(size: PetProfile["size"]) {
@@ -122,11 +136,12 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
     }
 }
 
-export function answerShopQuestion(message: string) {
+export function answerShopQuestion(message: string, context?: ShopQuestionContext) {
     const text = message.trim();
     const lower = text.toLowerCase();
     let products: CatalogProduct[] = [];
     let answer = "댕다방 LLM이 현재 등록된 333개 상품 기준으로 답변드릴게요.";
+    const petContext = petContextText(context);
 
     if (!text) return { answer: "궁금한 점을 입력해 주세요.", products: [] };
 
@@ -161,19 +176,25 @@ export function answerShopQuestion(message: string) {
     else if (lower.includes("리뷰")) products = applySort(products, "reviewDesc");
     else products = applySort(products, "popular");
 
+    if (petContext && products.length > 0) {
+        answer = `${context?.pet?.name || "우리 아이"} 프로필까지 함께 보고 추천드리면, ${answer}`;
+    }
+
     return { answer, products: unique(products).slice(0, 6) };
 }
 
-export async function answerShopQuestionSmart(message: string) {
-    const fallback = answerShopQuestion(message);
+export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext) {
+    const fallback = answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
+    const petContext = petContextText(context);
+    const apiMessage = petContext ? `${message}\n\n${petContext}` : message;
 
     try {
         const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message, limit: 6 }),
+            body: JSON.stringify({ message: apiMessage, limit: 6, petProfile: context?.pet ?? null }),
         });
         if (!response.ok) throw new Error(`shop-chat ${response.status}`);
         const data = await response.json();

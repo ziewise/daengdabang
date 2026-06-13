@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { answerShopQuestion, answerShopQuestionSmart } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
+import { useAuth } from "@/lib/store";
 
 type Message = {
     role: "user" | "assistant";
@@ -12,6 +13,7 @@ type Message = {
 };
 
 export default function ChatWidget() {
+    const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
@@ -26,7 +28,7 @@ export default function ChatWidget() {
         setInput("");
         setLoading(true);
         setMessages((prev) => [...prev, { role: "user", text: question }]);
-        const result = await answerShopQuestionSmart(question);
+        const result = await answerShopQuestionSmart(question, { pet: user?.pets?.[0] ?? null });
         setMessages((prev) => [...prev, { role: "assistant", text: result.answer, products: result.products }]);
         setLoading(false);
     };

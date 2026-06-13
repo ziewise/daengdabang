@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { answerShopQuestionSmart } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
+import { useAuth } from "@/lib/store";
 
 type Message = {
     role: "user" | "assistant";
@@ -14,6 +15,7 @@ type Message = {
 
 export default function ChatPageClient() {
     const params = useSearchParams();
+    const { user } = useAuth();
     const initialized = useRef(false);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
@@ -26,13 +28,13 @@ export default function ChatPageClient() {
         if (!trimmed || loading) return;
         setLoading(true);
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
-        const result = await answerShopQuestionSmart(trimmed);
+        const result = await answerShopQuestionSmart(trimmed, { pet: user?.pets?.[0] ?? null });
         setMessages((prev) => [
             ...prev,
             { role: "assistant", text: result.answer, products: result.products },
         ]);
         setLoading(false);
-    }, [loading]);
+    }, [loading, user]);
 
     useEffect(() => {
         if (initialized.current) return;
