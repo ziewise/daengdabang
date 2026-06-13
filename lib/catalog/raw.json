@@ -10601,7 +10601,8 @@
       "/images/products/catalog/soopa_healthybites_kaleapple/details/5.webp",
       "/images/products/catalog/soopa_healthybites_kaleapple/details/6.webp",
       "/images/products/catalog/soopa_healthybites_kaleapple/details/7.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/soopa_healthybites_kaleapple/videos/hover.mp4"
   },
   {
     "no": 298,
@@ -10630,7 +10631,8 @@
       "/images/products/catalog/soopa_healthybites_coconutchia/details/4.webp",
       "/images/products/catalog/soopa_healthybites_coconutchia/details/5.webp",
       "/images/products/catalog/soopa_healthybites_coconutchia/details/6.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/hover.mp4"
   },
   {
     "no": 299,
@@ -10666,7 +10668,8 @@
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "image": "/images/products/catalog/soopa_healthybites_bananapumpkin/soopa_healthybites_bananapumpkin.png"
+    "image": "/images/products/catalog/soopa_healthybites_bananapumpkin/soopa_healthybites_bananapumpkin.png",
+    "video": "/images/products/catalog/soopa_healthybites_bananapumpkin/videos/hover.mp4"
   },
   {
     "no": 300,
@@ -10806,7 +10809,8 @@
         "text": "잘 먹어요 잘시킨거같아요!! 다먹으면 또 시키려구요"
       }
     ],
-    "image": "/images/products/catalog/sweetpet_icecream_strawberry/sweetpet_icecream_strawberry.png"
+    "image": "/images/products/catalog/sweetpet_icecream_strawberry/sweetpet_icecream_strawberry.png",
+    "video": "/images/products/catalog/sweetpet_icecream_strawberry/videos/hover.mp4"
   },
   {
     "no": 302,
