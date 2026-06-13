@@ -2069,7 +2069,8 @@
       "/images/products/catalog/rw_notastick/details/2.webp",
       "/images/products/catalog/rw_notastick/details/3.webp",
       "/images/products/catalog/rw_notastick/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_notastick/videos/hover.mp4"
   },
   {
     "no": 56,
@@ -2096,7 +2097,8 @@
       "/images/products/catalog/rw_lunker/details/2.webp",
       "/images/products/catalog/rw_lunker/details/3.webp",
       "/images/products/catalog/rw_lunker/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_lunker/videos/hover.mp4"
   },
   {
     "no": 57,
@@ -2129,7 +2131,8 @@
     "externalReviewCount": 1,
     "externalReviewAverage": 4.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_notarock/videos/hover.mp4"
   },
   {
     "no": 58,
@@ -2162,7 +2165,8 @@
     "externalReviewCount": 2,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_notacone/videos/hover.mp4"
   },
   {
     "no": 59,
@@ -2189,7 +2193,8 @@
       "/images/products/catalog/rw_hookacone/details/2.webp",
       "/images/products/catalog/rw_hookacone/details/3.webp",
       "/images/products/catalog/rw_hookacone/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_hookacone/videos/hover.mp4"
   },
   {
     "no": 60,
