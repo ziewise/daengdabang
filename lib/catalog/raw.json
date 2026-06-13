@@ -9800,7 +9800,8 @@
         "summary": null,
         "text": "좋아요 쓰고 있는데 여분으로 하나 더 구매했어요"
       }
-    ]
+    ],
+    "video": "/images/products/catalog/rw_sierracup_310/videos/hover.mp4"
   },
   {
     "no": 273,
@@ -9834,7 +9835,8 @@
       "/images/products/catalog/pdh_spin_ufo/details/10.webp",
       "/images/products/catalog/pdh_spin_ufo/details/11.webp"
     ],
-    "image": "/images/products/catalog/pdh_spin_ufo/pdh_spin_ufo.png"
+    "image": "/images/products/catalog/pdh_spin_ufo/pdh_spin_ufo.png",
+    "video": "/images/products/catalog/pdh_spin_ufo/videos/hover.mp4"
   },
   {
     "no": 274,
@@ -9861,7 +9863,8 @@
       "/images/products/catalog/pdh_slowfeeder_paw_mini/details/3.webp",
       "/images/products/catalog/pdh_slowfeeder_paw_mini/details/4.webp"
     ],
-    "image": "/images/products/catalog/pdh_slowfeeder_paw_mini/pdh_slowfeeder_paw_mini.png"
+    "image": "/images/products/catalog/pdh_slowfeeder_paw_mini/pdh_slowfeeder_paw_mini.png",
+    "video": "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/hover.mp4"
   },
   {
     "no": 275,
@@ -9888,7 +9891,8 @@
       "/images/products/catalog/pdh_lickingmat/details/3.webp",
       "/images/products/catalog/pdh_lickingmat/details/4.webp"
     ],
-    "image": "/images/products/catalog/pdh_lickingmat/pdh_lickingmat.png"
+    "image": "/images/products/catalog/pdh_lickingmat/pdh_lickingmat.png",
+    "video": "/images/products/catalog/pdh_lickingmat/videos/hover.mp4"
   },
   {
     "no": 276,
@@ -9916,7 +9920,8 @@
       "/images/products/catalog/pdh_spin_flyingdisc/details/4.webp",
       "/images/products/catalog/pdh_spin_flyingdisc/details/5.webp"
     ],
-    "image": "/images/products/catalog/pdh_spin_flyingdisc/pdh_spin_flyingdisc.png"
+    "image": "/images/products/catalog/pdh_spin_flyingdisc/pdh_spin_flyingdisc.png",
+    "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/hover.mp4"
   },
   {
     "no": 277,
