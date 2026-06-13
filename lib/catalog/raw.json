@@ -2761,7 +2761,8 @@
     "externalReviewCount": 3,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rs_v2_black/videos/hover.mp4"
   },
   {
     "no": 78,
@@ -2795,7 +2796,8 @@
       "/images/products/catalog/rs_v2_banditorange/details/9.webp",
       "/images/products/catalog/rs_v2_banditorange/details/10.webp",
       "/images/products/catalog/rs_v2_banditorange/details/11.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_banditorange/videos/hover.mp4"
   },
   {
     "no": 79,
@@ -2829,7 +2831,8 @@
       "/images/products/catalog/rs_v2_atlasblue/details/9.webp",
       "/images/products/catalog/rs_v2_atlasblue/details/10.webp",
       "/images/products/catalog/rs_v2_atlasblue/details/11.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_atlasblue/videos/hover.mp4"
   },
   {
     "no": 80,
@@ -2863,7 +2866,8 @@
       "/images/products/catalog/rs_v2_tazerteal/details/9.webp",
       "/images/products/catalog/rs_v2_tazerteal/details/10.webp",
       "/images/products/catalog/rs_v2_tazerteal/details/11.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_tazerteal/videos/hover.mp4"
   },
   {
     "no": 81,
@@ -2897,7 +2901,8 @@
       "/images/products/catalog/rs_v2_yazberry/details/9.webp",
       "/images/products/catalog/rs_v2_yazberry/details/10.webp",
       "/images/products/catalog/rs_v2_yazberry/details/11.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_yazberry/videos/hover.mp4"
   },
   {
     "no": 82,
