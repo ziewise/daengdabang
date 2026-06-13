@@ -3491,7 +3491,8 @@
       "/images/products/catalog/rs_v2_himalayapink/details/2.webp",
       "/images/products/catalog/rs_v2_himalayapink/details/3.webp",
       "/images/products/catalog/rs_v2_himalayapink/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_himalayapink/videos/hover.mp4"
   },
   {
     "no": 102,
@@ -3518,7 +3519,8 @@
       "/images/products/catalog/rs_v2_vulcanblue/details/2.webp",
       "/images/products/catalog/rs_v2_vulcanblue/details/3.webp",
       "/images/products/catalog/rs_v2_vulcanblue/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_vulcanblue/videos/hover.mp4"
   },
   {
     "no": 103,
@@ -3551,7 +3553,8 @@
     "externalReviewCount": 1,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rs_v2_avalanchewhite/videos/hover.mp4"
   },
   {
     "no": 104,
@@ -3584,7 +3587,8 @@
     "externalReviewCount": 4,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rs_v2_coyote/videos/hover.mp4"
   },
   {
     "no": 105,
@@ -3747,7 +3751,8 @@
     "folder": "rw_collar_toprope",
     "details": [
       "/images/products/catalog/rw_collar_toprope/details/1.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_collar_toprope/videos/hover.mp4"
   },
   {
     "no": 111,
