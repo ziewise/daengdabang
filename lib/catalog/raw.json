@@ -2439,7 +2439,8 @@
       "/images/products/catalog/zs_jackrabbit/details/2.webp",
       "/images/products/catalog/zs_jackrabbit/details/3.webp",
       "/images/products/catalog/zs_jackrabbit/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_jackrabbit/videos/hover.mp4"
   },
   {
     "no": 69,
@@ -2465,7 +2466,8 @@
       "/images/products/catalog/zs_horse/details/2.webp",
       "/images/products/catalog/zs_horse/details/3.webp",
       "/images/products/catalog/zs_horse/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_horse/videos/hover.mp4"
   },
   {
     "no": 70,
@@ -2491,7 +2493,8 @@
       "/images/products/catalog/zs_giraffe/details/2.webp",
       "/images/products/catalog/zs_giraffe/details/3.webp",
       "/images/products/catalog/zs_giraffe/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_giraffe/videos/hover.mp4"
   },
   {
     "no": 71,
@@ -2517,7 +2520,8 @@
       "/images/products/catalog/zs_fox/details/2.webp",
       "/images/products/catalog/zs_fox/details/3.webp",
       "/images/products/catalog/zs_fox/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_fox/videos/hover.mp4"
   },
   {
     "no": 72,
@@ -2543,7 +2547,8 @@
       "/images/products/catalog/zs_dinosaur/details/2.webp",
       "/images/products/catalog/zs_dinosaur/details/3.webp",
       "/images/products/catalog/zs_dinosaur/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_dinosaur/videos/hover.mp4"
   },
   {
     "no": 73,
