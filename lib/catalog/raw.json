@@ -7546,7 +7546,8 @@
       "/images/products/catalog/fumble_bath/details/8.webp",
       "/images/products/catalog/fumble_bath/details/9.webp"
     ],
-    "image": "/images/products/catalog/fumble_bath/fumble_bath.png"
+    "image": "/images/products/catalog/fumble_bath/fumble_bath.png",
+    "video": "/images/products/catalog/fumble_bath/videos/hover.mp4"
   },
   {
     "no": 212,
@@ -7572,7 +7573,8 @@
       "/images/products/catalog/fumble_shampoo_laurel/details/2.webp",
       "/images/products/catalog/fumble_shampoo_laurel/details/3.webp"
     ],
-    "image": "/images/products/catalog/fumble_shampoo_laurel/fumble_shampoo_laurel.png"
+    "image": "/images/products/catalog/fumble_shampoo_laurel/fumble_shampoo_laurel.png",
+    "video": "/images/products/catalog/fumble_shampoo_laurel/videos/hover.mp4"
   },
   {
     "no": 213,
@@ -7624,7 +7626,8 @@
       "/images/products/catalog/fumble_footcleanser_200ml/details/2.webp",
       "/images/products/catalog/fumble_footcleanser_200ml/details/3.webp"
     ],
-    "image": "/images/products/catalog/fumble_footcleanser_200ml/fumble_footcleanser_200ml.png"
+    "image": "/images/products/catalog/fumble_footcleanser_200ml/fumble_footcleanser_200ml.png",
+    "video": "/images/products/catalog/fumble_footcleanser_200ml/videos/hover.mp4"
   },
   {
     "no": 215,
@@ -7649,7 +7652,8 @@
       "/images/products/catalog/fumble_shampoobar_herbtea/details/1.webp",
       "/images/products/catalog/fumble_shampoobar_herbtea/details/2.webp"
     ],
-    "image": "/images/products/catalog/fumble_shampoobar_herbtea/fumble_shampoobar_herbtea.png"
+    "image": "/images/products/catalog/fumble_shampoobar_herbtea/fumble_shampoobar_herbtea.png",
+    "video": "/images/products/catalog/fumble_shampoobar_herbtea/videos/hover.mp4"
   },
   {
     "no": 216,
@@ -7674,7 +7678,8 @@
       "/images/products/catalog/fumble_shampoobar_turkeygreen/details/1.webp",
       "/images/products/catalog/fumble_shampoobar_turkeygreen/details/2.webp"
     ],
-    "image": "/images/products/catalog/fumble_shampoobar_turkeygreen/fumble_shampoobar_turkeygreen.png"
+    "image": "/images/products/catalog/fumble_shampoobar_turkeygreen/fumble_shampoobar_turkeygreen.png",
+    "video": "/images/products/catalog/fumble_shampoobar_turkeygreen/videos/hover.mp4"
   },
   {
     "no": 217,
