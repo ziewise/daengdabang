@@ -2935,7 +2935,8 @@
     "externalReviewCount": 1,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rs_v2_neon_ltd/videos/hover.mp4"
   },
   {
     "no": 83,
@@ -3002,7 +3003,8 @@
       "/images/products/catalog/rs_brachy_black/details/2.webp",
       "/images/products/catalog/rs_brachy_black/details/3.webp",
       "/images/products/catalog/rs_brachy_black/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_brachy_black/videos/hover.mp4"
   },
   {
     "no": 85,
@@ -3136,7 +3138,8 @@
       "/images/products/catalog/rs_v2_pikepurple/details/3.webp",
       "/images/products/catalog/rs_v2_pikepurple/details/4.webp",
       "/images/products/catalog/rs_v2_pikepurple/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_pikepurple/videos/hover.mp4"
   },
   {
     "no": 90,
@@ -3164,7 +3167,8 @@
       "/images/products/catalog/rs_v2_bighornblue/details/3.webp",
       "/images/products/catalog/rs_v2_bighornblue/details/4.webp",
       "/images/products/catalog/rs_v2_bighornblue/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_bighornblue/videos/hover.mp4"
   },
   {
     "no": 91,
@@ -3192,7 +3196,8 @@
       "/images/products/catalog/rs_v2_gallatingray/details/3.webp",
       "/images/products/catalog/rs_v2_gallatingray/details/4.webp",
       "/images/products/catalog/rs_v2_gallatingray/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_v2_gallatingray/videos/hover.mp4"
   },
   {
     "no": 92,
