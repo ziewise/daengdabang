@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { analyzePetLensSmart } from "@/lib/daengdabang-llm";
@@ -31,6 +31,18 @@ export default function PetLensClient() {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [result, setResult] = useState<Result | null>(null);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const pet = user?.pets?.[0];
+        if (!pet) return;
+        setName((current) => current || pet.name || "");
+        setAge((current) => current || pet.age || "");
+        setSize(pet.size || "medium");
+        setCoat(pet.coat || "medium");
+        setActivity(pet.activity || "normal");
+        if (pet.concerns?.length) setConcerns(pet.concerns);
+        if (pet.photoDataUrl) setPhotoDataUrl((current) => current || pet.photoDataUrl);
+    }, [user]);
 
     const toggleConcern = (concern: string) => {
         setConcerns((current) =>

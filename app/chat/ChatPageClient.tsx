@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { answerShopQuestionSmart } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
@@ -16,6 +16,9 @@ type Message = {
 export default function ChatPageClient() {
     const params = useSearchParams();
     const { user } = useAuth();
+    const pets = useMemo(() => user?.pets ?? [], [user]);
+    const [selectedPetIndex, setSelectedPetIndex] = useState(0);
+    const selectedPet = pets[selectedPetIndex] ?? pets[0] ?? null;
     const initialized = useRef(false);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
@@ -28,13 +31,17 @@ export default function ChatPageClient() {
         if (!trimmed || loading) return;
         setLoading(true);
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
-        const result = await answerShopQuestionSmart(trimmed, { pet: user?.pets?.[0] ?? null });
+        const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet });
         setMessages((prev) => [
             ...prev,
             { role: "assistant", text: result.answer, products: result.products },
         ]);
         setLoading(false);
-    }, [loading, user]);
+    }, [loading, selectedPet]);
+
+    useEffect(() => {
+        if (selectedPetIndex >= pets.length) setSelectedPetIndex(0);
+    }, [pets.length, selectedPetIndex]);
 
     useEffect(() => {
         if (initialized.current) return;
@@ -56,6 +63,22 @@ export default function ChatPageClient() {
             <header className="mb-6">
                 <p className="text-sm font-black text-indigo-700">댕다방 LLM</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">챗봇</h1>
+                {pets.length > 0 && (
+                    <label className="mt-4 inline-flex max-w-full items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-black text-neutral-700">
+                        <span className="shrink-0 text-neutral-500">개인화 기준</span>
+                        <select
+                            value={selectedPetIndex}
+                            onChange={(event) => setSelectedPetIndex(Number(event.target.value))}
+                            className="min-w-0 bg-transparent font-black text-neutral-950 outline-none"
+                        >
+                            {pets.map((pet, index) => (
+                                <option key={`${pet.name}-${pet.lastAnalyzedAt ?? index}`} value={index}>
+                                    {pet.name}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                )}
             </header>
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
