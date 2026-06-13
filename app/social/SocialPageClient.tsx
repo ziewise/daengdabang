@@ -138,6 +138,9 @@ export default function SocialPageClient() {
                     <i className="fa-solid fa-table-cells-large text-xs" />
                     상품 고르기
                 </Link>
+                <Link href="/campaign/sns-launch" className="btn btn-secondary">
+                    캠페인 랜딩
+                </Link>
             </header>
 
             <section className="mt-8 grid gap-3 md:grid-cols-3">

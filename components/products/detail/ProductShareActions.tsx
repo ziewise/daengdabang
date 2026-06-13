@@ -8,15 +8,19 @@ export default function ProductShareActions({ product }: { product: CatalogProdu
     const [copied, setCopied] = useState("");
     const href = productHref(product);
     const absoluteUrl = useMemo(() => `https://www.daengdabang.com${href}`, [href]);
+    const campaignUrl = useMemo(
+        () => `${absoluteUrl}?utm_source=social&utm_medium=share&utm_campaign=sns_launch`,
+        [absoluteUrl]
+    );
     const caption = [
         product.name,
         `${product.brandKo || product.brandEn} · ${product.priceText}`,
-        absoluteUrl,
+        campaignUrl,
         "#댕다방 #반려견용품 #강아지용품",
     ].join("\n");
 
     const copy = async (type: "link" | "caption") => {
-        const text = type === "link" ? absoluteUrl : caption;
+        const text = type === "link" ? campaignUrl : caption;
         try {
             await navigator.clipboard.writeText(text);
             setCopied(type);
@@ -32,7 +36,7 @@ export default function ProductShareActions({ product }: { product: CatalogProdu
             return;
         }
         try {
-            await navigator.share({ title: product.name, text: product.name, url: absoluteUrl });
+            await navigator.share({ title: product.name, text: product.name, url: campaignUrl });
         } catch {
             // Ignore cancelled native share sheets.
         }
