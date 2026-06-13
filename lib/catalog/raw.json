@@ -4511,7 +4511,8 @@
       "/images/products/catalog/yora_wet_carrotpotato_390g/details/3.webp",
       "/images/products/catalog/yora_wet_carrotpotato_390g/details/4.webp",
       "/images/products/catalog/yora_wet_carrotpotato_390g/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/hover.mp4"
   },
   {
     "no": 131,
@@ -4539,7 +4540,8 @@
       "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/3.webp",
       "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/4.webp",
       "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/yora_wet_appleparsnip_390g_2/videos/hover.mp4"
   },
   {
     "no": 132,
@@ -4567,7 +4569,8 @@
       "/images/products/catalog/yora_wet_beetrootswede_390g/details/3.webp",
       "/images/products/catalog/yora_wet_beetrootswede_390g/details/4.webp",
       "/images/products/catalog/yora_wet_beetrootswede_390g/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/hover.mp4"
   },
   {
     "no": 133,
@@ -4877,7 +4880,8 @@
       "/images/products/catalog/bm_wet_100g_3/details/3.webp",
       "/images/products/catalog/bm_wet_100g_3/details/4.webp",
       "/images/products/catalog/bm_wet_100g_3/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/bm_wet_100g_3/videos/hover.mp4"
   },
   {
     "no": 142,
@@ -5205,7 +5209,8 @@
     "externalReviewCount": 2,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_quencher_24/videos/hover.mp4"
   },
   {
     "no": 148,
