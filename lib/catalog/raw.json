@@ -7080,7 +7080,8 @@
       "/images/products/catalog/ot_bowl_foldable/details/1.webp",
       "/images/products/catalog/ot_bowl_foldable/details/2.webp"
     ],
-    "image": "/images/products/catalog/ot_bowl_foldable/ot_bowl_foldable.png"
+    "image": "/images/products/catalog/ot_bowl_foldable/ot_bowl_foldable.png",
+    "video": "/images/products/catalog/ot_bowl_foldable/videos/hover.mp4"
   },
   {
     "no": 200,
@@ -7144,7 +7145,8 @@
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "image": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/perity_broccoli_shampoo_set_750ml.png"
+    "image": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/perity_broccoli_shampoo_set_750ml.png",
+    "video": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/videos/hover.mp4"
   },
   {
     "no": 202,
@@ -7216,7 +7218,8 @@
         "text": "일단 리필제품이어서 선택하게 되었는데, 생각보다 향이며 세정력이 맘에 들어서 재구매해야겠다."
       }
     ],
-    "image": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/perity_broccoli_shampoo_refill_500ml.png"
+    "image": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/perity_broccoli_shampoo_refill_500ml.png",
+    "video": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/videos/hover.mp4"
   },
   {
     "no": 203,
@@ -7245,7 +7248,8 @@
       "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/5.webp",
       "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/6.webp"
     ],
-    "image": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/perity_carrot_shampoo_refill_500ml.png"
+    "image": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/perity_carrot_shampoo_refill_500ml.png",
+    "video": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/videos/hover.mp4"
   },
   {
     "no": 204,
@@ -7278,7 +7282,8 @@
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "image": "/images/products/catalog/perity_carrot_shampoo_set_750ml/perity_carrot_shampoo_set_750ml.png"
+    "image": "/images/products/catalog/perity_carrot_shampoo_set_750ml/perity_carrot_shampoo_set_750ml.png",
+    "video": "/images/products/catalog/perity_carrot_shampoo_set_750ml/videos/hover.mp4"
   },
   {
     "no": 205,
