@@ -14,6 +14,7 @@ const mainLinks = [
     { href: "/brands", label: "브랜드" },
     { href: "/pet-lens", label: "펫렌즈" },
     { href: "/chat", label: "챗봇" },
+    { href: "/social", label: "콘텐츠" },
 ];
 
 export default function Header() {

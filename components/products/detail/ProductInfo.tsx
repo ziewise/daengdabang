@@ -12,6 +12,7 @@ import {
     type CatalogProduct,
 } from "@/lib/catalog";
 import { useCart, useStore } from "@/lib/store";
+import ProductShareActions from "./ProductShareActions";
 
 interface Props {
     product: CatalogProduct;
@@ -173,6 +174,8 @@ export default function ProductInfo({ product: p }: Props) {
                     바로구매
                 </button>
             </div>
+
+            <ProductShareActions product={p} />
         </div>
     );
 }

@@ -30,6 +30,7 @@ export default function Footer() {
                         <div className="mt-3 grid gap-2 font-bold text-neutral-600">
                             <Link href="/pet-lens">펫렌즈</Link>
                             <Link href="/chat">챗봇</Link>
+                            <Link href="/social">콘텐츠룸</Link>
                         </div>
                     </div>
                     <div>
