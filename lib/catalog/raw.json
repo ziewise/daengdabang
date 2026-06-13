@@ -5429,7 +5429,8 @@
       "/images/products/catalog/mb_vegemix_100g_4/details/4.webp",
       "/images/products/catalog/mb_vegemix_100g_4/details/5.webp",
       "/images/products/catalog/mb_vegemix_100g_4/details/6.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/mb_vegemix_100g_4/videos/hover.mp4"
   },
   {
     "no": 151,
@@ -5455,7 +5456,8 @@
       "/images/products/catalog/id_treat_sturgeon/details/1.webp",
       "/images/products/catalog/id_treat_sturgeon/details/2.webp",
       "/images/products/catalog/id_treat_sturgeon/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/id_treat_sturgeon/videos/hover.mp4"
   },
   {
     "no": 152,
@@ -5481,7 +5483,8 @@
       "/images/products/catalog/id_treat_sardine/details/1.webp",
       "/images/products/catalog/id_treat_sardine/details/2.webp",
       "/images/products/catalog/id_treat_sardine/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/id_treat_sardine/videos/hover.mp4"
   },
   {
     "no": 153,
@@ -5507,7 +5510,8 @@
       "/images/products/catalog/id_treat_guineafowl/details/1.webp",
       "/images/products/catalog/id_treat_guineafowl/details/2.webp",
       "/images/products/catalog/id_treat_guineafowl/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/id_treat_guineafowl/videos/hover.mp4"
   },
   {
     "no": 154,
@@ -5671,7 +5675,8 @@
       "/images/products/catalog/pegnaty_woodstick/details/2.webp",
       "/images/products/catalog/pegnaty_woodstick/details/3.webp"
     ],
-    "image": "/images/products/catalog/pegnaty_woodstick/pegnaty_woodstick.png"
+    "image": "/images/products/catalog/pegnaty_woodstick/pegnaty_woodstick.png",
+    "video": "/images/products/catalog/pegnaty_woodstick/videos/hover.mp4"
   },
   {
     "no": 159,
