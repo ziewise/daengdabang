@@ -17,6 +17,9 @@ export default function Footer() {
                         <h3 className="font-black text-neutral-950">쇼핑</h3>
                         <div className="mt-3 grid gap-2 font-bold text-neutral-600">
                             <Link href="/products">전체상품</Link>
+                            <Link href="/best">베스트</Link>
+                            <Link href="/new">신상품</Link>
+                            <Link href="/brands">브랜드</Link>
                             {CATEGORY_ORDER.slice(0, 4).map((slug) => (
                                 <Link key={slug} href={`/category/${slug}`}>{CATEGORY_LABEL[slug]}</Link>
                             ))}

@@ -9,6 +9,9 @@ import { useAuth, useCart } from "@/lib/store";
 
 const mainLinks = [
     { href: "/products", label: "전체상품" },
+    { href: "/best", label: "베스트" },
+    { href: "/new", label: "신상품" },
+    { href: "/brands", label: "브랜드" },
     { href: "/pet-lens", label: "펫렌즈" },
     { href: "/chat", label: "챗봇" },
 ];
