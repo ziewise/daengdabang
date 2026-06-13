@@ -4,6 +4,12 @@ const TOKEN_KEY = "ddb.api.accessToken";
 
 export type SocialProvider = "naver" | "kakao" | "google";
 
+export type SocialProviderStatus = {
+    id: SocialProvider;
+    label: string;
+    enabled: boolean;
+};
+
 export type ApiUser = {
     id: number;
     email: string;
@@ -35,7 +41,7 @@ type ApiPetProfile = {
 };
 
 export function ddbApiBase() {
-    const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || "";
+    const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || process.env.NEXT_PUBLIC_API_URL || "";
     if (typeof window === "undefined") return envBase;
     return window.localStorage.getItem("ddb.apiBase") || envBase;
 }
@@ -65,6 +71,13 @@ export function startSocialLogin(provider: SocialProvider, returnTo = "/mypage")
     if (!href) return false;
     window.location.href = href;
     return true;
+}
+
+export async function loadSocialProviders() {
+    const data = await apiJson<{ providers: SocialProviderStatus[] }>("/api/v1/auth/social/providers", {
+        method: "GET",
+    });
+    return data?.providers || null;
 }
 
 async function apiJson<T>(path: string, init: RequestInit = {}, token?: string): Promise<T | null> {
