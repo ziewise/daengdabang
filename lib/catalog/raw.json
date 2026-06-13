@@ -8798,7 +8798,8 @@
       "/images/products/catalog/iby_bed_fb2011/details/3.webp",
       "/images/products/catalog/iby_bed_fb2011/details/4.webp"
     ],
-    "image": "/images/products/catalog/iby_bed_fb2011/iby_bed_fb2011.png"
+    "image": "/images/products/catalog/iby_bed_fb2011/iby_bed_fb2011.png",
+    "video": "/images/products/catalog/iby_bed_fb2011/videos/hover.mp4"
   },
   {
     "no": 241,
@@ -8945,7 +8946,8 @@
       "/images/products/catalog/annapet_wine/details/3.webp",
       "/images/products/catalog/annapet_wine/details/4.webp",
       "/images/products/catalog/annapet_wine/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/annapet_wine/videos/hover.mp4"
   },
   {
     "no": 246,
@@ -8973,7 +8975,8 @@
       "/images/products/catalog/annapet_soju/details/3.webp",
       "/images/products/catalog/annapet_soju/details/4.webp",
       "/images/products/catalog/annapet_soju/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/annapet_soju/videos/hover.mp4"
   },
   {
     "no": 247,
@@ -9390,7 +9393,8 @@
       "/images/products/catalog/aff_pad_l_20_1/details/7.webp",
       "/images/products/catalog/aff_pad_l_20_1/details/8.webp",
       "/images/products/catalog/aff_pad_l_20_1/details/9.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/aff_pad_l_20_1/videos/hover.mp4"
   },
   {
     "no": 261,
@@ -9454,7 +9458,8 @@
       "/images/products/catalog/aff_pad_s_50_1/details/6.webp",
       "/images/products/catalog/aff_pad_s_50_1/details/7.webp",
       "/images/products/catalog/aff_pad_s_50_1/details/8.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/aff_pad_s_50_1/videos/hover.mp4"
   },
   {
     "no": 263,
