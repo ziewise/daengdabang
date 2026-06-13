@@ -1,4 +1,5 @@
 import type { CatalogProduct } from "@/lib/catalog";
+import { ddbApiBase } from "@/lib/customer-api";
 import type { PetProfile } from "@/lib/store";
 
 export type PetTryOnResult = {
@@ -15,9 +16,7 @@ export type PetTryOnResult = {
 };
 
 function apiBase() {
-    const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || "";
-    if (typeof window === "undefined") return envBase;
-    return window.localStorage.getItem("ddb.apiBase") || envBase;
+    return ddbApiBase();
 }
 
 function localCacheKey(product: CatalogProduct, pet: PetProfile) {
