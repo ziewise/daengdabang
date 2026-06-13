@@ -797,7 +797,8 @@
         "summary": "내구성튼튼해요",
         "text": "단단하고 색감도 좋고 밤빈이에게 딱 어울립니다"
       }
-    ]
+    ],
+    "video": "/images/products/catalog/rw_collar_crag/videos/hover.mp4"
   },
   {
     "no": 15,
@@ -920,7 +921,8 @@
     "externalReviewCount": 2,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_leash_flagline_24/videos/hover.mp4"
   },
   {
     "no": 19,
@@ -2575,7 +2577,8 @@
       "/images/products/catalog/rw_spokespup_tag/details/2.webp",
       "/images/products/catalog/rw_spokespup_tag/details/3.webp",
       "/images/products/catalog/rw_spokespup_tag/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_spokespup_tag/videos/hover.mp4"
   },
   {
     "no": 74,
@@ -2601,7 +2604,8 @@
       "/images/products/catalog/rs_brachy_lens/details/1.webp",
       "/images/products/catalog/rs_brachy_lens/details/2.webp",
       "/images/products/catalog/rs_brachy_lens/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rs_brachy_lens/videos/hover.mp4"
   },
   {
     "no": 75,
@@ -11918,6 +11922,7 @@
     "externalReviewCount": 3,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/rw_swampcooler_neckgaiter/videos/hover.mp4"
   }
 ]
