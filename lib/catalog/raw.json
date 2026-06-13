@@ -2285,7 +2285,8 @@
       "/images/products/catalog/zs_pandabear/details/2.webp",
       "/images/products/catalog/zs_pandabear/details/3.webp",
       "/images/products/catalog/zs_pandabear/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_pandabear/videos/hover.mp4"
   },
   {
     "no": 64,
@@ -2311,7 +2312,8 @@
       "/images/products/catalog/zs_unicorn/details/2.webp",
       "/images/products/catalog/zs_unicorn/details/3.webp",
       "/images/products/catalog/zs_unicorn/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_unicorn/videos/hover.mp4"
   },
   {
     "no": 65,
@@ -2356,7 +2358,8 @@
         "summary": "BEST",
         "text": "ctme****25.11.12."
       }
-    ]
+    ],
+    "video": "/images/products/catalog/zs_rhino/videos/hover.mp4"
   },
   {
     "no": 66,
@@ -2382,7 +2385,8 @@
       "/images/products/catalog/zs_reindeer/details/2.webp",
       "/images/products/catalog/zs_reindeer/details/3.webp",
       "/images/products/catalog/zs_reindeer/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_reindeer/videos/hover.mp4"
   },
   {
     "no": 67,
@@ -2408,7 +2412,8 @@
       "/images/products/catalog/zs_lion/details/2.webp",
       "/images/products/catalog/zs_lion/details/3.webp",
       "/images/products/catalog/zs_lion/details/4.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/zs_lion/videos/hover.mp4"
   },
   {
     "no": 68,
