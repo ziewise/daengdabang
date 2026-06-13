@@ -1566,7 +1566,8 @@
       "/images/products/catalog/rw_coverall_snow_25fw/details/1.webp",
       "/images/products/catalog/rw_coverall_snow_25fw/details/2.webp",
       "/images/products/catalog/rw_coverall_snow_25fw/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/rw_coverall_snow_25fw/videos/hover.mp4"
   },
   {
     "no": 40,
@@ -5952,7 +5953,8 @@
       "/images/products/catalog/yora_lightsenior_12kg/details/1.webp",
       "/images/products/catalog/yora_lightsenior_12kg/details/2.webp",
       "/images/products/catalog/yora_lightsenior_12kg/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/yora_lightsenior_12kg/videos/hover.mp4"
   },
   {
     "no": 170,
@@ -5978,7 +5980,8 @@
       "/images/products/catalog/yora_lightsenior_6kg/details/1.webp",
       "/images/products/catalog/yora_lightsenior_6kg/details/2.webp",
       "/images/products/catalog/yora_lightsenior_6kg/details/3.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/yora_lightsenior_6kg/videos/hover.mp4"
   },
   {
     "no": 171,
@@ -8697,7 +8700,8 @@
       "/images/products/catalog/wow_shoes_80/details/3.webp",
       "/images/products/catalog/wow_shoes_80/details/4.webp",
       "/images/products/catalog/wow_shoes_80/details/5.webp"
-    ]
+    ],
+    "video": "/images/products/catalog/wow_shoes_80/videos/hover.mp4"
   },
   {
     "no": 244,
@@ -8731,7 +8735,8 @@
     "externalReviewCount": 2,
     "externalReviewAverage": 5.0,
     "externalReviewThemes": [],
-    "externalReviewSnippets": []
+    "externalReviewSnippets": [],
+    "video": "/images/products/catalog/wow_shoes_20/videos/hover.mp4"
   },
   {
     "no": 245,
