@@ -3,22 +3,39 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/store";
+import { loadPetProfilesSmart, loginCustomer, setCustomerToken } from "@/lib/customer-api";
+import { useAuth, type PetProfile } from "@/lib/store";
 
 export default function LoginPage() {
     const router = useRouter();
     const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
 
-    const submit = (event: FormEvent) => {
+    const submit = async (event: FormEvent) => {
         event.preventDefault();
         const userName = name.trim() || email.split("@")[0] || "댕다방 회원";
+        let apiAccessToken = "";
+        let pets: PetProfile[] = [];
+
+        if (email.trim() && password.trim()) {
+            try {
+                const token = await loginCustomer({ email: email.trim(), password: password.trim() });
+                apiAccessToken = token?.access_token || "";
+                setCustomerToken(apiAccessToken);
+                pets = (await loadPetProfilesSmart(apiAccessToken)) || [];
+            } catch {
+                setCustomerToken();
+            }
+        }
+
         login({
+            apiAccessToken,
             name: userName,
             email: email.trim(),
             joinedAt: new Date().toISOString(),
-            pets: [],
+            pets,
         });
         router.push("/mypage");
     };
@@ -45,6 +62,17 @@ export default function LoginPage() {
                         onChange={(event) => setName(event.target.value)}
                         className="input"
                         autoComplete="name"
+                    />
+                </label>
+                <label>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">비밀번호</span>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        className="input"
+                        autoComplete="current-password"
+                        placeholder="서버 계정 연동 시 입력"
                     />
                 </label>
                 <button type="submit" className="btn btn-primary w-full">

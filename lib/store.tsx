@@ -22,6 +22,8 @@ export type PetProfile = {
     lastAnalyzedAt?: string;
 };
 export type User = {
+    apiUserId?: number;
+    apiAccessToken?: string;
     name: string;
     email: string;
     phone?: string;
@@ -59,6 +61,7 @@ type Action =
     | { type: "ADD_ORDER"; order: Order };
 
 const STORAGE_KEY = "daengdabang.store.v2";
+const API_TOKEN_KEY = "ddb.api.accessToken";
 const INITIAL: State = { cart: [], wishlist: [], user: null, orders: [] };
 
 function reducer(state: State, action: Action): State {
@@ -163,7 +166,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             toggleWishlist: (productId) => dispatch({ type: "TOGGLE_WISHLIST", productId }),
             isWished: (productId) => state.wishlist.includes(productId),
             login: (user) => dispatch({ type: "LOGIN", user }),
-            logout: () => dispatch({ type: "LOGOUT" }),
+            logout: () => {
+                window.localStorage.removeItem(API_TOKEN_KEY);
+                dispatch({ type: "LOGOUT" });
+            },
             upsertPet: (pet) => dispatch({ type: "UPSERT_PET", pet }),
             addOrder: (order) => dispatch({ type: "ADD_ORDER", order }),
         }),

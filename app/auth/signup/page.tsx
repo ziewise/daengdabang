@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { loginCustomer, savePetProfileSmart, setCustomerToken, signupCustomer } from "@/lib/customer-api";
 import { resizePetPhoto } from "@/lib/pet-photo";
 import { useAuth, type PetProfile } from "@/lib/store";
 
@@ -13,6 +14,7 @@ export default function SignupPage() {
     const { login } = useAuth();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [petName, setPetName] = useState("");
     const [petAge, setPetAge] = useState("성견");
@@ -42,7 +44,7 @@ export default function SignupPage() {
             .finally(() => setPhotoLoading(false));
     };
 
-    const submit = (event: FormEvent) => {
+    const submit = async (event: FormEvent) => {
         event.preventDefault();
         const shouldCreatePet = Boolean(petName.trim() || petPhotoDataUrl);
         const pets: PetProfile[] = shouldCreatePet
@@ -57,8 +59,36 @@ export default function SignupPage() {
                 lastAnalyzedAt: new Date().toISOString(),
             }]
             : [];
+        let apiAccessToken = "";
+        let apiUserId: number | undefined;
+
+        if (email.trim() && password.trim().length >= 8) {
+            try {
+                const apiUser = await signupCustomer({
+                    email: email.trim(),
+                    password: password.trim(),
+                    name: name.trim() || "댕다방 회원",
+                });
+                apiUserId = apiUser?.id;
+                const token = await loginCustomer({ email: email.trim(), password: password.trim() });
+                apiAccessToken = token?.access_token || "";
+                setCustomerToken(apiAccessToken);
+                if (apiAccessToken && pets[0]) await savePetProfileSmart(pets[0], apiAccessToken);
+            } catch {
+                try {
+                    const token = await loginCustomer({ email: email.trim(), password: password.trim() });
+                    apiAccessToken = token?.access_token || "";
+                    setCustomerToken(apiAccessToken);
+                    if (apiAccessToken && pets[0]) await savePetProfileSmart(pets[0], apiAccessToken);
+                } catch {
+                    setCustomerToken();
+                }
+            }
+        }
 
         login({
+            apiUserId,
+            apiAccessToken,
             name: name.trim() || "댕다방 회원",
             email: email.trim(),
             phone: phone.trim(),
@@ -85,6 +115,18 @@ export default function SignupPage() {
                 <label>
                     <span className="mb-1 block text-xs font-black text-neutral-500">휴대폰</span>
                     <input value={phone} onChange={(event) => setPhone(event.target.value)} className="input" autoComplete="tel" />
+                </label>
+                <label>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">비밀번호</span>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        className="input"
+                        minLength={8}
+                        autoComplete="new-password"
+                        placeholder="서버 계정 연동 시 8자 이상"
+                    />
                 </label>
                 <div className="grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                     <div className="grid gap-4 md:grid-cols-[120px_1fr]">

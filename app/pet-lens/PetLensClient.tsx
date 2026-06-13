@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { analyzePetLensSmart } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
+import { savePetProfileSmart } from "@/lib/customer-api";
 import { resizePetPhoto } from "@/lib/pet-photo";
 import { useAuth, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
@@ -66,7 +67,10 @@ export default function PetLensClient() {
             photoDataUrl,
         }, imageFile);
         setResult(analysis);
-        if (user) upsertPet(analysis.profile);
+        if (user) {
+            upsertPet(analysis.profile);
+            savePetProfileSmart(analysis.profile, user.apiAccessToken).catch(() => undefined);
+        }
         setLoading(false);
     };
 
