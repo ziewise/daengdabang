@@ -119,6 +119,16 @@ button:disabled {
     color: #4338ca;
 }
 
+.btn-hero-light {
+    background: #ffffff;
+    color: #111827;
+}
+
+.btn-hero-light:hover {
+    background: #fff2b8;
+    color: #111827;
+}
+
 .surface {
     border: 1px solid #e5e7eb;
     border-radius: 8px;

@@ -125,7 +125,7 @@ export default function HeroSection({ featuredProducts }: Props) {
                         {body}
                     </p>
                     <div className="mt-7 flex flex-wrap gap-2">
-                        <Link href="/products" className="btn bg-white text-neutral-950 hover:bg-[#fff2b8]">
+                        <Link href="/products" className="btn btn-hero-light">
                             <i className="fa-solid fa-table-cells-large text-xs" />
                             전체상품
                         </Link>
