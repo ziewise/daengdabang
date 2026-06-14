@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { formatKRW, getBestRank, isNewProduct } from "@/lib/catalog";
-import { productHref } from "@/lib/shop";
+import { productHref, versionProductImage } from "@/lib/shop";
 import { useCart, useStore } from "@/lib/store";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
@@ -77,7 +77,7 @@ export default function ProductCard({
             >
                 {p.image ? (
                     <Image
-                        src={p.image}
+                        src={versionProductImage(p.image)}
                         alt={p.name}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"

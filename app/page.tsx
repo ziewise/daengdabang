@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CATALOG, CATEGORY_LABEL, getBestProducts, getNewProducts } from "@/lib/catalog";
-import { CATEGORY_ORDER, categoryTiles } from "@/lib/shop";
+import { CATEGORY_ORDER, categoryTiles, versionProductImage } from "@/lib/shop";
 import ProductCard from "@/components/products/ProductCard";
 
 export default function HomePage() {
@@ -40,7 +40,7 @@ export default function HomePage() {
                     {hero && (
                         <Link href={`/product/${hero.folder || hero.id}`} className="relative min-h-[320px] overflow-hidden rounded-lg border border-neutral-200 bg-[#f7f2e8]">
                             {hero.image ? (
-                                <Image src={hero.image} alt={hero.name} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" priority />
+                                <Image src={versionProductImage(hero.image)} alt={hero.name} fill sizes="(max-width: 768px) 100vw, 520px" className="object-cover" priority />
                             ) : (
                                 <div className="absolute inset-0 flex items-center justify-center text-7xl text-white">
                                     <i className={`fa-solid ${hero.icon}`} />

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/lib/catalog";
-import { cartProducts, findProduct, productHref } from "@/lib/shop";
+import { cartProducts, findProduct, productHref, versionProductImage } from "@/lib/shop";
 import { useAuth, useStore, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -180,7 +180,7 @@ export default function MyPage() {
                                     >
                                         <div className="aspect-square overflow-hidden rounded-md bg-neutral-50">
                                             {product.image ? (
-                                                <img src={product.image} alt={product.name} className="h-full w-full object-contain p-3 transition group-hover:scale-105" />
+                                                <img src={versionProductImage(product.image)} alt={product.name} className="h-full w-full object-contain p-3 transition group-hover:scale-105" />
                                             ) : (
                                                 <div className="grid h-full place-items-center text-neutral-300">
                                                     <i className="fa-solid fa-shirt text-2xl" />

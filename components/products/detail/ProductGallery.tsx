@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
+import { versionProductImage } from "@/lib/shop";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
@@ -15,6 +16,7 @@ export default function ProductGallery({ product: p }: Props) {
     const [activeIdx, setActiveIdx] = useState(0);
     const [showVideo, setShowVideo] = useState(false);
     const activeImage = images[activeIdx];
+    const activeImageSrc = versionProductImage(activeImage);
     const isVideoVisible = Boolean(p.video && showVideo);
 
     return (
@@ -39,7 +41,7 @@ export default function ProductGallery({ product: p }: Props) {
                 ) : activeImage ? (
                     <Image
                         key={activeImage}
-                        src={activeImage}
+                        src={activeImageSrc}
                         alt={p.name}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
@@ -59,6 +61,7 @@ export default function ProductGallery({ product: p }: Props) {
                 <div className="flex gap-2 overflow-x-auto pb-1">
                     {images.map((img, index) => {
                         const active = index === activeIdx;
+                        const imageSrc = versionProductImage(img);
                         return (
                             <button
                                 key={img}
@@ -73,7 +76,7 @@ export default function ProductGallery({ product: p }: Props) {
                                         : "opacity-70 ring-1 ring-neutral-200 hover:opacity-100 hover:ring-indigo-300"
                                 }`}
                             >
-                                <Image src={img} alt={`${p.name} ${index + 1}`} fill sizes="80px" className="object-cover" />
+                                <Image src={imageSrc} alt={`${p.name} ${index + 1}`} fill sizes="80px" className="object-cover" />
                             </button>
                         );
                     })}

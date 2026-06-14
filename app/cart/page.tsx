@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
-import { cartProducts, cartTotal, productHref } from "@/lib/shop";
+import { cartProducts, cartTotal, productHref, versionProductImage } from "@/lib/shop";
 import { useCart } from "@/lib/store";
 
 export default function CartPage() {
@@ -32,7 +32,7 @@ export default function CartPage() {
                         <article key={product.id} className="surface grid grid-cols-[88px_1fr] gap-4 p-3 md:grid-cols-[112px_1fr_auto]">
                             <Link href={productHref(product)} className="relative aspect-square overflow-hidden rounded-md bg-[#f7f2e8]">
                                 {product.image ? (
-                                    <Image src={product.image} alt={product.name} fill sizes="112px" className="object-cover" />
+                                    <Image src={versionProductImage(product.image)} alt={product.name} fill sizes="112px" className="object-cover" />
                                 ) : (
                                     <div className="flex h-full items-center justify-center text-3xl text-white">
                                         <i className={`fa-solid ${product.icon}`} />

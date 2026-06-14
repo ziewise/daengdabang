@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CATALOG, getBestProducts, getNewProducts } from "@/lib/catalog";
-import { productHref } from "@/lib/shop";
+import { productHref, versionProductImage } from "@/lib/shop";
 
 export const metadata: Metadata = {
     title: "댕다방 시작하기 | 펫렌즈와 반려견 상품 추천",
@@ -60,7 +60,7 @@ export default function SnsLaunchCampaignPage() {
                         {products.slice(0, 4).map((product) => (
                             <a key={product.id} href={`${productHref(product)}?utm_source=social&utm_medium=profile&utm_campaign=sns_launch`} className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
                                 <div className="aspect-square overflow-hidden rounded-md bg-white">
-                                    <img src={product.image} alt={product.name} className="h-full w-full object-contain p-3" />
+                                    <img src={versionProductImage(product.image)} alt={product.name} className="h-full w-full object-contain p-3" />
                                 </div>
                                 <p className="mt-3 line-clamp-2 text-sm font-black text-neutral-950">{product.name}</p>
                                 <p className="mt-1 text-xs font-bold text-neutral-500">{product.priceText}</p>
