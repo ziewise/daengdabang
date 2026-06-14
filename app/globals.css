@@ -381,50 +381,68 @@ button:disabled {
 
 .hero-ziewcore-badge {
     position: absolute;
-    right: clamp(22px, 3vw, 54px);
-    bottom: clamp(22px, 3vw, 48px);
+    right: clamp(6px, 0.8vw, 14px);
+    bottom: clamp(16px, 2.2vw, 34px);
     z-index: 4;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
-    min-width: 184px;
-    min-height: 46px;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: clamp(208px, 11.2vw, 226px);
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.38);
     border-radius: 999px;
     background:
-        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.44), transparent 28%),
-        linear-gradient(112deg, rgba(255, 255, 255, 0.22), rgba(95, 180, 210, 0.18) 48%, rgba(255, 219, 140, 0.16));
-    color: rgba(255, 255, 255, 0.82);
-    padding: 0 18px;
+        radial-gradient(circle at 24% 20%, rgba(255, 255, 255, 0.34), transparent 28%),
+        linear-gradient(128deg, rgba(17, 24, 39, 0.78), rgba(71, 85, 105, 0.72) 52%, rgba(13, 148, 136, 0.44));
+    color: rgba(255, 255, 255, 0.94);
+    padding: 0 16px;
     box-shadow:
-        0 14px 38px rgba(15, 23, 42, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px);
-    text-shadow: 0 1px 8px rgba(15, 23, 42, 0.32);
+        0 14px 34px rgba(15, 23, 42, 0.26),
+        0 0 28px rgba(125, 211, 252, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.34),
+        inset 0 -1px 0 rgba(15, 23, 42, 0.28);
+    backdrop-filter: blur(14px) saturate(1.16);
+    -webkit-backdrop-filter: blur(14px) saturate(1.16);
+    text-shadow: 0 1px 8px rgba(15, 23, 42, 0.38);
+    white-space: nowrap;
 }
 
 .hero-ziewcore-badge::before {
     position: absolute;
     content: "";
-    inset: -18px -24px;
+    inset: -10px -12px;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(255, 244, 184, 0.16), transparent 62%);
+    background:
+        radial-gradient(circle at 72% 48%, rgba(125, 211, 252, 0.18), transparent 58%),
+        radial-gradient(circle at 18% 50%, rgba(250, 204, 21, 0.1), transparent 64%);
+    filter: blur(5px);
     z-index: -1;
 }
 
 .hero-ziewcore-badge span {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
     font-size: 11px;
     font-weight: 900;
+    line-height: 1;
     letter-spacing: 0;
-    opacity: 0.74;
+    opacity: 0.82;
 }
 
 .hero-ziewcore-badge strong {
-    font-size: 15px;
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
     font-weight: 1000;
+    line-height: 1;
     letter-spacing: 0;
     box-shadow:
-        inset 0 -5px 0 rgba(94, 234, 212, 0.12);
+        inset 0 -5px 0 rgba(94, 234, 212, 0.14);
 }
 
 .hero-weather-effect {
@@ -599,7 +617,21 @@ button:disabled {
     }
 
     .hero-ziewcore-badge {
-        display: none;
+        right: 8px;
+        bottom: 10px;
+        width: 158px;
+        height: 32px;
+        gap: 5px;
+        padding: 0 11px;
+        opacity: 0.86;
+    }
+
+    .hero-ziewcore-badge span {
+        font-size: 9px;
+    }
+
+    .hero-ziewcore-badge strong {
+        font-size: 12px;
     }
 }
 
