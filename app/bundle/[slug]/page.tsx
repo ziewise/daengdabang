@@ -149,7 +149,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                             다양한 강아지에게 맞춰본 세트 스타일
                         </h2>
                     </div>
-                    <p className="text-sm font-bold text-neutral-500">Flow 이미지가 들어오면 자동으로 교체됩니다</p>
+                    <p className="text-sm font-bold text-neutral-500">체형과 털 길이에 맞춰 참고해보세요</p>
                 </header>
                 <div className="grid gap-3 md:grid-cols-3">
                     {showroomScenes.map((scene, sceneIndex) => {
@@ -186,7 +186,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                                                     )}
                                                 </span>
                                             ))}
-                                            <span className="bundle-showroom-tag">AI 쇼룸 {sceneIndex + 1}</span>
+                                            <span className="bundle-showroom-tag">쇼룸 {sceneIndex + 1}</span>
                                         </div>
                                     )}
                                 </div>
