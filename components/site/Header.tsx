@@ -12,7 +12,6 @@ const mainLinks = [
     { href: "/best", label: "베스트" },
     { href: "/new", label: "신상품" },
     { href: "/brands", label: "브랜드" },
-    { href: "/pet-lens", label: "펫렌즈" },
 ];
 
 export default function Header() {
@@ -25,8 +24,8 @@ export default function Header() {
     return (
         <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
             <div className="mx-auto flex h-[var(--header-height)] max-w-[1280px] items-center gap-4 px-4 md:px-6">
-                <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="댕다방 홈">
-                    <Image src="/images/logo.png?v=20260614-tight" alt="" width={38} height={38} className="h-9 w-9 object-contain" priority />
+                <Link href="/" className="flex shrink-0 items-center gap-1.5" aria-label="댕다방">
+                    <Image src="/images/logo.png?v=20260614-tight" alt="" width={76} height={76} className="h-16 w-16 object-contain" priority />
                     <Image src="/images/wordmark.png" alt="댕다방" width={112} height={32} className="hidden h-8 w-auto sm:block" priority />
                 </Link>
 

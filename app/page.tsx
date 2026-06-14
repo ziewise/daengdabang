@@ -5,13 +5,12 @@ import HeroSection from "@/components/home/HeroSection";
 import ProductCard from "@/components/products/ProductCard";
 
 export default function HomePage() {
-    const heroProducts = getBestProducts(4);
     const best = getBestProducts(8);
     const newest = getNewProducts(8);
 
     return (
         <main>
-            <HeroSection featuredProducts={heroProducts} />
+            <HeroSection />
 
             <section className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
