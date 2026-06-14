@@ -118,11 +118,6 @@ export default function ProductCard({
                     </div>
                 )}
 
-                {hasVideo && (
-                    <span className="absolute bottom-2 right-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-950/70 text-white backdrop-blur">
-                        <i className="fa-solid fa-play text-[10px]" />
-                    </span>
-                )}
             </Link>
 
             <div className="p-3">

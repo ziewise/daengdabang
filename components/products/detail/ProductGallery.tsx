@@ -52,11 +52,6 @@ export default function ProductGallery({ product: p }: Props) {
                     </div>
                 )}
 
-                {p.video && (
-                    <span className="absolute right-3 top-3 rounded-full bg-neutral-950/70 px-3 py-1 text-[11px] font-black text-white backdrop-blur">
-                        HOVER VIDEO
-                    </span>
-                )}
                 {isVideoVisible && <VideoBrandOverlay />}
             </div>
 

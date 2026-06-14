@@ -13,7 +13,6 @@ const mainLinks = [
     { href: "/new", label: "신상품" },
     { href: "/brands", label: "브랜드" },
     { href: "/pet-lens", label: "펫렌즈" },
-    { href: "/chat", label: "챗봇" },
 ];
 
 export default function Header() {
@@ -27,8 +26,8 @@ export default function Header() {
         <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
             <div className="mx-auto flex h-[var(--header-height)] max-w-[1280px] items-center gap-4 px-4 md:px-6">
                 <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="댕다방 홈">
-                    <Image src="/images/logo.png" alt="댕다방" width={38} height={38} className="rounded-md" priority />
-                    <Image src="/images/wordmark.png" alt="댕다방" width={102} height={26} className="hidden sm:block" priority />
+                    <Image src="/images/logo-symbol.png" alt="" width={38} height={38} className="h-9 w-9 object-contain" priority />
+                    <Image src="/images/wordmark.png" alt="댕다방" width={112} height={32} className="hidden h-8 w-auto sm:block" priority />
                 </Link>
 
                 <nav className="hide-scrollbar flex flex-1 items-center gap-1 overflow-x-auto text-sm font-black">
@@ -36,8 +35,10 @@ export default function Header() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`shrink-0 rounded-md px-3 py-2 transition ${
-                                active(link.href) ? "bg-neutral-950 text-white" : "text-neutral-700 hover:bg-neutral-100"
+                            className={`relative shrink-0 px-3 py-2 text-[15px] transition after:absolute after:bottom-0.5 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:transition ${
+                                active(link.href)
+                                    ? "text-neutral-950 after:bg-neutral-950"
+                                    : "text-neutral-600 after:bg-transparent hover:text-neutral-950 hover:after:bg-neutral-300"
                             }`}
                         >
                             {link.label}
@@ -47,8 +48,10 @@ export default function Header() {
                         <Link
                             key={slug}
                             href={`/category/${slug}`}
-                            className={`hidden shrink-0 rounded-md px-3 py-2 transition md:inline-flex ${
-                                active(`/category/${slug}`) ? "bg-indigo-50 text-indigo-700" : "text-neutral-600 hover:bg-neutral-100"
+                            className={`relative hidden shrink-0 px-3 py-2 transition after:absolute after:bottom-0.5 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:transition md:inline-flex ${
+                                active(`/category/${slug}`)
+                                    ? "text-indigo-700 after:bg-indigo-600"
+                                    : "text-neutral-600 after:bg-transparent hover:text-neutral-950 hover:after:bg-neutral-300"
                             }`}
                         >
                             {CATEGORY_LABEL[slug]}
