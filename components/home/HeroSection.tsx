@@ -14,7 +14,9 @@ import {
     timeBucketLabel,
     type HeroAccountState,
     type HeroContext,
+    type HeroWeather,
 } from "@/lib/hero-assets";
+import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
 import { productHref, versionProductImage } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
 
@@ -33,23 +35,27 @@ const overlayClass = {
     cool: "from-[#071820]/80 via-[#0d3340]/45 to-transparent",
     rain: "from-[#07151c]/85 via-[#164252]/50 to-[#0b1b22]/20",
     snow: "from-[#102132]/80 via-[#31506a]/35 to-white/10",
+    storm: "from-[#05070c]/90 via-[#102838]/64 to-[#071018]/30",
+    fog: "from-[#26323b]/72 via-[#70808b]/30 to-white/10",
 };
 
-function resolveClientContext(): HeroContext {
+function readManualHeroWeather(): HeroWeather | null {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        return (
+            normalizeHeroWeather(params.get("heroWeather")) ??
+            normalizeHeroWeather(window.localStorage.getItem("ddb.hero.weather"))
+        );
+    } catch {
+        return null;
+    }
+}
+
+function resolveClientContext(weatherOverride?: HeroWeather): HeroContext {
     const now = new Date();
     const season = getHeroSeason(now);
     const timeBucket = getHeroTimeBucket(now);
-    let weather = fallbackHeroWeather(season);
-
-    try {
-        const params = new URLSearchParams(window.location.search);
-        weather =
-            normalizeHeroWeather(params.get("heroWeather")) ??
-            normalizeHeroWeather(window.localStorage.getItem("ddb.hero.weather")) ??
-            weather;
-    } catch {
-        // Keep deterministic fallback when browser storage is unavailable.
-    }
+    const weather = weatherOverride ?? readManualHeroWeather() ?? fallbackHeroWeather(season);
 
     return { weather, season, timeBucket };
 }
@@ -63,21 +69,37 @@ function accountState(user: ReturnType<typeof useAuth>["user"]): HeroAccountStat
 export default function HeroSection({ featuredProducts }: Props) {
     const { user } = useAuth();
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
+    const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
 
     useEffect(() => {
-        setContext(resolveClientContext());
+        const initialContext = resolveClientContext();
+        setContext(initialContext);
+
+        if (readManualHeroWeather()) return;
+
+        let active = true;
+        fetchHeroWeatherReport().then((report) => {
+            if (!active || !report) return;
+            setWeatherReport(report);
+            setContext(resolveClientContext(report.weather));
+        });
+
+        return () => {
+            active = false;
+        };
     }, []);
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
+    const weatherSummary = heroWeatherSummary(weatherReport);
     const primaryPet = user?.pets.find((pet) => pet.name);
     const state = accountState(user);
     const headline = primaryPet ? `${primaryPet.name}의 오늘 산책` : user ? `${user.name}님의 댕다방` : "댕다방";
     const body =
         state === "pet"
-            ? `${primaryPet?.name}의 프로필과 오늘의 산책 무드에 맞춰 필요한 용품을 먼저 보여드릴게요.`
+            ? `${primaryPet?.name}의 프로필과 지금 날씨를 함께 보고 필요한 용품을 먼저 보여드릴게요.`
             : state === "member"
-              ? "저장된 취향과 장바구니 흐름을 이어 받아 오늘 필요한 반려견 용품을 빠르게 찾을 수 있어요."
-              : "산책, 먹거리, 생활용품까지 오늘의 날씨와 계절감에 맞춰 고르기 쉽게 정리했습니다.";
+              ? "저장된 취향과 오늘의 날씨 흐름을 이어 받아 필요한 반려견 용품을 빠르게 찾을 수 있어요."
+              : "산책, 먹거리, 생활용품까지 실시간 날씨와 계절감에 맞춰 고르기 쉽게 정리했습니다.";
     const contextLabel = `${seasonLabel(context.season)} ${timeBucketLabel(context.timeBucket)}`;
     const products = featuredProducts.filter((product) => product.image).slice(0, 3);
 
@@ -99,6 +121,9 @@ export default function HeroSection({ featuredProducts }: Props) {
                     </video>
                 )}
                 <div className={`absolute inset-0 bg-gradient-to-r ${overlayClass[scene.overlay]}`} />
+                {scene.effect !== "none" && (
+                    <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
+                )}
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
 
@@ -117,6 +142,11 @@ export default function HeroSection({ featuredProducts }: Props) {
                         <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
                             {contextLabel}
                         </span>
+                        {weatherSummary && (
+                            <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
+                                {weatherSummary}
+                            </span>
+                        )}
                     </div>
                     <h1 className="mt-4 text-5xl font-black leading-none text-white md:text-7xl">
                         {headline}

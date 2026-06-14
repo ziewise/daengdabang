@@ -1,7 +1,16 @@
-export type HeroWeather = "clear" | "cloudy" | "rain" | "snow" | "wind" | "storm" | "fog";
+export type HeroWeather =
+    | "clear"
+    | "cloudy"
+    | "drizzle"
+    | "rain"
+    | "snow"
+    | "wind"
+    | "storm"
+    | "fog";
 export type HeroSeason = "spring" | "summer" | "autumn" | "winter";
 export type HeroTimeBucket = "morning" | "day" | "evening" | "night";
 export type HeroAccountState = "guest" | "member" | "pet";
+export type HeroVisualEffect = "none" | "cloud" | "fog" | "wind" | "drizzle" | "rain" | "storm" | "snow";
 
 export type HeroContext = {
     weather: HeroWeather;
@@ -15,10 +24,20 @@ export type HeroScene = {
     video?: string;
     poster: string;
     accentImage?: string;
-    overlay: "warm" | "cool" | "rain" | "snow";
+    overlay: "warm" | "cool" | "rain" | "snow" | "storm" | "fog";
+    effect: HeroVisualEffect;
 };
 
-export const HERO_WEATHERS: HeroWeather[] = ["clear", "cloudy", "rain", "snow", "wind", "storm", "fog"];
+export const HERO_WEATHERS: HeroWeather[] = [
+    "clear",
+    "cloudy",
+    "drizzle",
+    "rain",
+    "snow",
+    "wind",
+    "storm",
+    "fog",
+];
 
 export function normalizeHeroWeather(value: string | null | undefined): HeroWeather | null {
     if (!value) return null;
@@ -57,27 +76,75 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             poster: "/images/hero/snow-neighborhood.png?v=20260614",
             accentImage: "/images/hero/winter-sketch.png?v=20260614",
             overlay: "snow",
+            effect: "snow",
         };
     }
 
-    if (context.weather === "rain" || context.weather === "storm") {
+    if (context.weather === "storm") {
+        return {
+            key: "storm",
+            label: "거센 비 산책 주의",
+            poster: "/images/hero/rain-neighborhood.png?v=20260614",
+            accentImage: "/images/hero/walker-cutout.png?v=20260614",
+            overlay: "storm",
+            effect: "storm",
+        };
+    }
+
+    if (context.weather === "rain") {
         return {
             key: "rain",
             label: "비 오는 산책길",
             poster: "/images/hero/rain-neighborhood.png?v=20260614",
             accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "rain",
+            effect: "rain",
         };
     }
 
-    if (context.weather === "cloudy" || context.weather === "fog" || context.weather === "wind") {
+    if (context.weather === "drizzle") {
         return {
-            key: "cloudy",
-            label: "차분한 산책길",
+            key: "drizzle",
+            label: "가랑비 산책길",
+            poster: "/images/hero/rain-neighborhood.png?v=20260614",
+            accentImage: "/images/hero/walker-cutout.png?v=20260614",
+            overlay: "rain",
+            effect: "drizzle",
+        };
+    }
+
+    if (context.weather === "fog") {
+        return {
+            key: "fog",
+            label: "안개 낀 산책길",
+            poster: "/images/hero/winter-sketch.png?v=20260614",
+            accentImage: "/images/hero/walker-cutout.png?v=20260614",
+            overlay: "fog",
+            effect: "fog",
+        };
+    }
+
+    if (context.weather === "wind") {
+        return {
+            key: "wind",
+            label: "바람 부는 산책길",
             video: "/images/hero/default.mp4?v=20260614",
             poster: "/images/hero/clear-evening.png?v=20260614",
             accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "cool",
+            effect: "wind",
+        };
+    }
+
+    if (context.weather === "cloudy") {
+        return {
+            key: "cloudy",
+            label: "구름 많은 산책길",
+            video: "/images/hero/default.mp4?v=20260614",
+            poster: "/images/hero/clear-evening.png?v=20260614",
+            accentImage: "/images/hero/walker-cutout.png?v=20260614",
+            overlay: "cool",
+            effect: "cloud",
         };
     }
 
@@ -88,6 +155,7 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         poster: "/images/hero/clear-evening.png?v=20260614",
         accentImage: "/images/hero/walker-cutout.png?v=20260614",
         overlay: context.timeBucket === "evening" || context.timeBucket === "night" ? "warm" : "cool",
+        effect: "none",
     };
 }
 
