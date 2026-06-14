@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
-import { versionProductImage } from "@/lib/shop";
+import { productVideoSrc, versionProductImage } from "@/lib/shop";
 import bestStyles from "@/components/main/best.module.css";
+import ProductMotionOverlay from "@/components/products/ProductMotionOverlay";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
@@ -17,7 +18,9 @@ export default function ProductGallery({ product: p }: Props) {
     const [showVideo, setShowVideo] = useState(false);
     const activeImage = images[activeIdx];
     const activeImageSrc = versionProductImage(activeImage);
-    const isVideoVisible = Boolean(p.video && showVideo);
+    const videoSrc = productVideoSrc(p);
+    const isVideoVisible = Boolean(videoSrc && showVideo);
+    const showMotionFallback = Boolean(activeImage && !videoSrc && showVideo);
 
     return (
         <div className="space-y-3">
@@ -30,7 +33,7 @@ export default function ProductGallery({ product: p }: Props) {
             >
                 {isVideoVisible ? (
                     <video
-                        src={p.video}
+                        src={videoSrc}
                         className="absolute inset-0 h-full w-full object-cover"
                         autoPlay
                         muted
@@ -45,7 +48,7 @@ export default function ProductGallery({ product: p }: Props) {
                         alt={p.name}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover"
+                        className={`object-cover transition duration-300 ${showMotionFallback ? "scale-[1.025]" : ""}`}
                         priority
                     />
                 ) : (
@@ -55,6 +58,7 @@ export default function ProductGallery({ product: p }: Props) {
                 )}
 
                 {isVideoVisible && <VideoBrandOverlay />}
+                {showMotionFallback && <ProductMotionOverlay product={p} active detail />}
             </div>
 
             {images.length > 1 && (

@@ -118,8 +118,13 @@ export function analyzePetLens(input: PetLensInput) {
 
 export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File | null) {
     const base = apiBase();
-    if (!base) throw new Error("PetLens API is not configured.");
-    if (!imageFile) throw new Error("PetLens requires a dog photo.");
+    if (!base || !imageFile) {
+        const fallback = analyzePetLens(input);
+        const reason = !base
+            ? "사진 분석 연결 전이라 입력 정보를 기준으로 추천했습니다."
+            : "업로드 사진 파일을 확인하지 못해 입력 정보를 기준으로 추천했습니다.";
+        return { ...fallback, summary: [reason, ...fallback.summary] };
+    }
 
     try {
         const form = new FormData();

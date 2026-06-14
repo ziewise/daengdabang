@@ -130,10 +130,10 @@ export default function HeroSection() {
     const state = accountState(user);
     const body =
         state === "pet"
-            ? `${primaryPet?.name}에게 맞는 산책용품과 오늘 날씨에 어울리는 추천을 먼저 보여드릴게요.`
+            ? `${primaryPet?.name} 사진과 프로필로 펫렌즈 초개인화 추천을 받고, 오늘 날씨에 맞는 산책템까지 바로 골라보세요.`
             : state === "member"
-              ? "저장된 취향과 오늘 날씨를 이어 받아 반려견 상품을 빠르게 찾을 수 있어요."
-              : "산책, 먹거리, 생활용품까지 실시간 날씨와 계절감에 맞춰 고르기 쉽게 정리했습니다.";
+              ? "저장된 아이 정보에 펫렌즈 분석을 더해, 우리 아이에게 맞는 상품을 더 빠르게 추천해 드릴게요."
+              : "사진 한 장으로 우리 아이에게 맞춘 펫렌즈 초개인화 추천을 받고, 날씨에 맞는 산책·간식·케어 기획전까지 한 번에 확인하세요.";
     const contextLabel = `${seasonLabel(context.season)} ${timeBucketLabel(context.timeBucket)}`;
 
     return (
@@ -154,11 +154,20 @@ export default function HeroSection() {
                         <source src={scene.video} type="video/mp4" />
                     </video>
                 )}
-                {isNight && <div className="hero-night-layer" aria-hidden="true" />}
+                {isNight && (
+                    <>
+                        <div className="hero-night-layer" aria-hidden="true" />
+                        <div className="hero-moon-crescent" aria-hidden="true" />
+                        <div className="hero-stars" aria-hidden="true" />
+                    </>
+                )}
                 <div className={`absolute inset-0 bg-gradient-to-r ${overlayClass[scene.overlay]}`} />
                 {scene.effect !== "none" && (
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
                 )}
+                <div className="hero-watermark-cover" aria-hidden="true">
+                    <span />
+                </div>
             </div>
 
             <div className="hero-content relative z-10 mx-auto flex max-w-[1280px] flex-col justify-end px-4 pb-10 pt-20 md:px-6 md:pb-12">
@@ -214,9 +223,9 @@ export default function HeroSection() {
                         {body}
                     </p>
                     <div className="mt-7 flex flex-wrap gap-2">
-                        <Link href="/products" className="btn btn-hero-light">
-                            <i className="fa-solid fa-table-cells-large text-xs" />
-                            전체상품
+                        <Link href="#special-bundles" className="btn btn-hero-light">
+                            <i className="fa-solid fa-tags text-xs" />
+                            기획전
                         </Link>
                         <Link href="/recommendations" className="btn border border-white/35 bg-neutral-950/30 text-white backdrop-blur hover:bg-neutral-950/40">
                             추천 보기

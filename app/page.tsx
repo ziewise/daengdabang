@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CATALOG, CATEGORY_LABEL, getBestProducts, getNewProducts } from "@/lib/catalog";
 import { CATEGORY_ORDER, categoryTiles } from "@/lib/shop";
 import HeroSection from "@/components/home/HeroSection";
+import SpecialBundles from "@/components/home/SpecialBundles";
 import ProductCard from "@/components/products/ProductCard";
 
 export default function HomePage() {
@@ -11,6 +12,7 @@ export default function HomePage() {
     return (
         <main>
             <HeroSection />
+            <SpecialBundles />
 
             <section className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
