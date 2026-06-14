@@ -351,29 +351,17 @@ button:disabled {
 
 .hero-moon-crescent {
     position: absolute;
-    right: clamp(360px, 29vw, 620px);
-    top: clamp(82px, 13vh, 132px);
+    right: clamp(430px, 32vw, 700px);
+    top: clamp(98px, 14.5vh, 154px);
     z-index: 2;
-    width: 58px;
+    width: 42px;
     height: 58px;
     border-radius: 999px;
-    background: #fff4b8;
+    background: transparent;
     box-shadow:
-        0 0 0 18px rgba(255, 244, 184, 0.05),
-        0 0 38px rgba(255, 244, 184, 0.22);
-    opacity: 0.78;
-}
-
-.hero-moon-crescent::after {
-    position: absolute;
-    content: "";
-    left: -16px;
-    top: -5px;
-    width: 58px;
-    height: 68px;
-    border-radius: 999px;
-    background: rgba(8, 18, 39, 0.86);
-    filter: blur(0.5px);
+        17px 0 0 0 rgba(255, 244, 184, 0.92),
+        22px 0 36px rgba(255, 244, 184, 0.24);
+    opacity: 0.74;
 }
 
 .hero-stars {
@@ -598,17 +586,13 @@ button:disabled {
     }
 
     .hero-moon-crescent {
-        right: 62px;
-        top: 28px;
-        width: 38px;
+        right: 74px;
+        top: 42px;
+        width: 28px;
         height: 38px;
-    }
-
-    .hero-moon-crescent::after {
-        left: -11px;
-        top: -4px;
-        width: 39px;
-        height: 46px;
+        box-shadow:
+            11px 0 0 0 rgba(255, 244, 184, 0.92),
+            15px 0 24px rgba(255, 244, 184, 0.2);
     }
 
     .hero-stars {
