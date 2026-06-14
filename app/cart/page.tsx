@@ -3,12 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
-import { cartProducts, cartTotal, productHref, versionProductImage } from "@/lib/shop";
+import { cartBundleAdjustments, cartBundleSavings } from "@/lib/bundles";
+import { cartProducts, cartSubtotal, cartTotal, productHref, versionProductImage } from "@/lib/shop";
 import { useCart } from "@/lib/store";
 
 export default function CartPage() {
     const cart = useCart();
     const lines = cartProducts(cart.lines);
+    const subtotal = cartSubtotal(cart.lines);
+    const bundleAdjustments = cartBundleAdjustments(cart.lines);
+    const bundleSavings = cartBundleSavings(cart.lines);
     const total = cartTotal(cart.lines);
 
     if (lines.length === 0) {
@@ -68,8 +72,22 @@ export default function CartPage() {
                     <h2 className="text-lg font-black text-neutral-950">주문 합계</h2>
                     <div className="mt-4 flex items-center justify-between text-sm font-bold text-neutral-600">
                         <span>상품 금액</span>
-                        <b className="text-neutral-950">{formatKRW(total)}원</b>
+                        <b className="text-neutral-950">{formatKRW(subtotal)}원</b>
                     </div>
+                    {bundleSavings > 0 && (
+                        <div className="mt-2 grid gap-1 text-sm font-bold text-rose-600">
+                            <div className="flex items-center justify-between">
+                                <span>묶음 배송 할인</span>
+                                <b>-{formatKRW(bundleSavings)}원</b>
+                            </div>
+                            {bundleAdjustments.map((adjustment) => (
+                                <p key={adjustment.bundle.slug} className="text-xs font-black text-rose-500">
+                                    {adjustment.bundle.title}
+                                    {adjustment.sets > 1 ? ` x ${adjustment.sets}` : ""} 적용
+                                </p>
+                            ))}
+                        </div>
+                    )}
                     <div className="mt-2 flex items-center justify-between text-sm font-bold text-neutral-600">
                         <span>배송비</span>
                         <b className="text-neutral-950">0원</b>

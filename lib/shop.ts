@@ -1,4 +1,5 @@
 import { CATALOG, CATEGORY_LABEL, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
+import { cartBundleSavings } from "@/lib/bundles";
 
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
@@ -73,6 +74,10 @@ export function cartProducts(lines: Array<{ productId: string; qty: number }>) {
         .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; subtotal: number }>;
 }
 
-export function cartTotal(lines: Array<{ productId: string; qty: number }>) {
+export function cartSubtotal(lines: Array<{ productId: string; qty: number }>) {
     return cartProducts(lines).reduce((sum, line) => sum + line.subtotal, 0);
+}
+
+export function cartTotal(lines: Array<{ productId: string; qty: number }>) {
+    return Math.max(0, cartSubtotal(lines) - cartBundleSavings(lines));
 }
