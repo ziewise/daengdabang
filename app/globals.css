@@ -379,57 +379,52 @@ button:disabled {
     animation: hero-stars-twinkle 3.8s ease-in-out infinite;
 }
 
-.hero-watermark-cover {
+.hero-ziewcore-badge {
     position: absolute;
-    right: clamp(18px, 3vw, 52px);
-    bottom: clamp(18px, 3.2vw, 42px);
+    right: clamp(22px, 3vw, 54px);
+    bottom: clamp(22px, 3vw, 48px);
     z-index: 4;
-    width: clamp(118px, 10vw, 168px);
-    height: clamp(42px, 3.8vw, 62px);
-    border-radius: 999px 999px 999px 28px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 184px;
+    min-height: 46px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
     background:
-        radial-gradient(circle at 20% 68%, rgba(120, 138, 94, 0.34) 0 9px, transparent 10px),
-        radial-gradient(circle at 40% 58%, rgba(120, 138, 94, 0.28) 0 8px, transparent 9px),
-        linear-gradient(180deg, rgba(246, 241, 227, 0.78), rgba(229, 224, 209, 0.7));
-    box-shadow: 0 10px 24px rgba(31, 41, 55, 0.1);
-    backdrop-filter: blur(2px);
-    opacity: 0.92;
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.44), transparent 28%),
+        linear-gradient(112deg, rgba(255, 255, 255, 0.22), rgba(95, 180, 210, 0.18) 48%, rgba(255, 219, 140, 0.16));
+    color: rgba(255, 255, 255, 0.82);
+    padding: 0 18px;
+    box-shadow:
+        0 14px 38px rgba(15, 23, 42, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    text-shadow: 0 1px 8px rgba(15, 23, 42, 0.32);
 }
 
-.hero-watermark-cover::before,
-.hero-watermark-cover::after,
-.hero-watermark-cover span {
+.hero-ziewcore-badge::before {
     position: absolute;
     content: "";
+    inset: -18px -24px;
     border-radius: 999px;
-    background: rgba(104, 124, 82, 0.55);
+    background: radial-gradient(circle, rgba(255, 244, 184, 0.16), transparent 62%);
+    z-index: -1;
 }
 
-.hero-watermark-cover::before {
-    left: 22%;
-    bottom: 18%;
-    width: 54%;
-    height: 3px;
-    transform: rotate(-4deg);
+.hero-ziewcore-badge span {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0;
+    opacity: 0.74;
 }
 
-.hero-watermark-cover::after {
-    left: 30%;
-    bottom: 33%;
-    width: 38%;
-    height: 2px;
-    opacity: 0.62;
-    transform: rotate(3deg);
-}
-
-.hero-watermark-cover span {
-    right: 18%;
-    bottom: 18%;
-    width: 8px;
-    height: 8px;
+.hero-ziewcore-badge strong {
+    font-size: 15px;
+    font-weight: 1000;
+    letter-spacing: 0;
     box-shadow:
-        -18px -4px 0 rgba(104, 124, 82, 0.48),
-        -34px 2px 0 rgba(104, 124, 82, 0.38);
+        inset 0 -5px 0 rgba(94, 234, 212, 0.12);
 }
 
 .hero-weather-effect {
@@ -603,7 +598,7 @@ button:disabled {
         opacity: 0.58;
     }
 
-    .hero-watermark-cover {
+    .hero-ziewcore-badge {
         display: none;
     }
 }

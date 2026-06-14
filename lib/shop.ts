@@ -4,11 +4,7 @@ export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy",
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
 export const PRODUCT_VIDEO_VERSION = "20260615-video-match";
 
-const VIDEO_BLOCKLIST = new Set([
-    "heyrex_taurus_2l",
-    "fumble_shampoo_laurel",
-    "rw_lunker",
-]);
+const VIDEO_BLOCKLIST = new Set<string>();
 
 export function versionProductImage(src: string | null | undefined): string {
     if (!src) return "";

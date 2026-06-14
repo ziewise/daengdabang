@@ -165,8 +165,9 @@ export default function HeroSection() {
                 {scene.effect !== "none" && (
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
                 )}
-                <div className="hero-watermark-cover" aria-hidden="true">
-                    <span />
+                <div className="hero-ziewcore-badge" aria-hidden="true">
+                    <span>Powered by</span>
+                    <strong>Ziewcore</strong>
                 </div>
             </div>
 
