@@ -222,6 +222,7 @@ button:disabled {
     font-weight: 900;
     line-height: 1.05;
     color: rgba(255, 255, 255, 0.78);
+    white-space: nowrap;
 }
 
 .petlens-illo {
@@ -463,7 +464,7 @@ button:disabled {
     }
 
     .hero-wordmark-image {
-        width: min(238px, 58vw);
+        width: min(206px, 54vw);
     }
 
     .hero-petlens-badge {
@@ -473,7 +474,7 @@ button:disabled {
     }
 
     .hero-petlens-copy {
-        min-width: 54px;
+        min-width: 66px;
     }
 
     .hero-petlens-copy strong {
