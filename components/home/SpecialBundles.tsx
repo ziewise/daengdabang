@@ -1,15 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { formatKRW } from "@/lib/catalog";
 import {
     BUNDLES,
     bundleHref,
+    bundleHoverPosterPath,
+    bundleHoverVideoPath,
     bundleListPrice,
     bundleProducts,
     bundleSalePrice,
     bundleSavings,
 } from "@/lib/bundles";
 import { versionProductImage } from "@/lib/shop";
+
+function publicAssetExists(path: string) {
+    return existsSync(join(process.cwd(), "public", path.replace(/^\//, "")));
+}
 
 export default function SpecialBundles() {
     return (
@@ -30,10 +38,27 @@ export default function SpecialBundles() {
                     const total = bundleListPrice(products);
                     const displayPrice = bundleSalePrice(bundle, products);
                     const savings = bundleSavings(bundle, products);
+                    const hoverVideo = bundleHoverVideoPath(bundle);
+                    const hoverPoster = bundleHoverPosterPath(bundle);
+                    const hasHoverVideo = publicAssetExists(hoverVideo);
+                    const hasHoverPoster = publicAssetExists(hoverPoster);
                     return (
                         <Link key={bundle.slug} href={bundleHref(bundle)} className={`bundle-card bundle-card-${bundle.mood}`}>
                             <div className="bundle-media">
                                 <span className="bundle-discount-badge">{bundle.discountRate}% 묶음 할인</span>
+                                {hasHoverVideo && (
+                                    <video
+                                        className="bundle-hover-video"
+                                        poster={hasHoverPoster ? hoverPoster : undefined}
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        preload="metadata"
+                                    >
+                                        <source src={hoverVideo} type="video/mp4" />
+                                    </video>
+                                )}
                                 {products.slice(0, 4).map((product, index) => (
                                     <span key={product.id} className={`bundle-image bundle-image-${index + 1}`}>
                                         {product.image && (

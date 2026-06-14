@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { notFound } from "next/navigation";
 import { formatKRW } from "@/lib/catalog";
 import {
@@ -10,6 +12,7 @@ import {
     bundleProducts,
     bundleSalePrice,
     bundleSavings,
+    bundleShowroomScenes,
     findBundle,
 } from "@/lib/bundles";
 import { productHref, versionProductImage } from "@/lib/shop";
@@ -18,6 +21,10 @@ import BundleAddButton from "./BundleAddButton";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
+}
+
+function publicAssetExists(path: string) {
+    return existsSync(join(process.cwd(), "public", path.replace(/^\//, "")));
 }
 
 export function generateStaticParams() {
@@ -49,6 +56,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
     const savings = bundleSavings(bundle, products);
     const productIds = products.map((product) => product.id);
     const heroProducts = products.slice(0, 4);
+    const showroomScenes = bundleShowroomScenes(bundle);
 
     return (
         <main>
@@ -130,6 +138,66 @@ export default async function BundleDetailPage({ params }: PageProps) {
                             <p className="mt-2 text-sm font-black text-neutral-950">{benefit}</p>
                         </div>
                     ))}
+                </div>
+            </section>
+
+            <section className="mx-auto max-w-[1280px] px-4 pb-10 md:px-6">
+                <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <p className="text-sm font-black text-indigo-700">쇼룸 착용 컷</p>
+                        <h2 className="mt-1 text-2xl font-black tracking-tight text-neutral-950">
+                            다양한 강아지에게 맞춰본 세트 스타일
+                        </h2>
+                    </div>
+                    <p className="text-sm font-bold text-neutral-500">Flow 이미지가 들어오면 자동으로 교체됩니다</p>
+                </header>
+                <div className="grid gap-3 md:grid-cols-3">
+                    {showroomScenes.map((scene, sceneIndex) => {
+                        const hasImage = publicAssetExists(scene.image);
+                        return (
+                            <article key={scene.slug} className="bundle-showroom-card">
+                                <div className="bundle-showroom-media">
+                                    {hasImage ? (
+                                        <Image
+                                            src={scene.image}
+                                            alt={`${bundle.title} ${scene.title}`}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                            className="object-cover"
+                                        />
+                                    ) : (
+                                        <div className={`bundle-showroom-fallback bundle-showroom-fallback-${bundle.mood}`}>
+                                            <div className="bundle-showroom-dog">
+                                                <i className="fa-solid fa-dog" />
+                                            </div>
+                                            {products.slice(0, 4).map((product, productIndex) => (
+                                                <span
+                                                    key={product.id}
+                                                    className={`bundle-showroom-product bundle-showroom-product-${productIndex + 1}`}
+                                                >
+                                                    {product.image && (
+                                                        <Image
+                                                            src={versionProductImage(product.image)}
+                                                            alt=""
+                                                            fill
+                                                            sizes="80px"
+                                                            className="object-cover"
+                                                        />
+                                                    )}
+                                                </span>
+                                            ))}
+                                            <span className="bundle-showroom-tag">AI 쇼룸 {sceneIndex + 1}</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-4">
+                                    <p className="text-xs font-black text-indigo-700">{scene.dog}</p>
+                                    <h3 className="mt-1 text-lg font-black text-neutral-950">{scene.title}</h3>
+                                    <p className="mt-2 text-sm font-bold leading-5 text-neutral-600">{scene.setting}</p>
+                                </div>
+                            </article>
+                        );
+                    })}
                 </div>
             </section>
 

@@ -15,6 +15,14 @@ export type Bundle = {
     benefits: string[];
 };
 
+export type BundleShowroomScene = {
+    slug: string;
+    title: string;
+    dog: string;
+    setting: string;
+    image: string;
+};
+
 export const BUNDLES: Bundle[] = [
     {
         slug: "summer-hydration",
@@ -116,6 +124,69 @@ export const BUNDLES: Bundle[] = [
 
 export function bundleHref(bundle: Bundle) {
     return `/bundle/${bundle.slug}`;
+}
+
+export function bundleAssetBase(bundle: Bundle) {
+    return `/images/bundles/${bundle.slug}`;
+}
+
+export function bundleHoverVideoPath(bundle: Bundle) {
+    return `${bundleAssetBase(bundle)}/hover.mp4`;
+}
+
+export function bundleHoverPosterPath(bundle: Bundle) {
+    return `${bundleAssetBase(bundle)}/poster.png`;
+}
+
+const SHOWROOM_DOGS_BY_MOOD: Record<BundleMood, Array<Omit<BundleShowroomScene, "slug" | "image">>> = {
+    summer: [
+        { title: "시원한 낮 산책", dog: "중형 보더콜리", setting: "햇빛이 있는 동네 산책길" },
+        { title: "공원 휴식 컷", dog: "소형 토이푸들", setting: "그늘진 공원 벤치 옆" },
+        { title: "물 마시는 컷", dog: "대형 골든 리트리버", setting: "산책 후 휴대 식기 앞" },
+    ],
+    night: [
+        { title: "골목길 야간 산책", dog: "중형 비글", setting: "조명이 낮은 주택가 골목" },
+        { title: "반사광 체크", dog: "소형 포메라니안", setting: "가로등 아래 횡단보도 앞" },
+        { title: "보호자 동행 컷", dog: "중형 시바견", setting: "달빛이 있는 조용한 산책로" },
+    ],
+    rain: [
+        { title: "가벼운 비 산책", dog: "중형 코카스패니얼", setting: "젖은 보도와 낮은 구름" },
+        { title: "우비 착용 컷", dog: "소형 말티즈", setting: "비 온 뒤 공원 입구" },
+        { title: "방수 장비 컷", dog: "대형 래브라도", setting: "물웅덩이가 있는 산책길" },
+    ],
+    snack: [
+        { title: "훈련 보상 컷", dog: "소형 치와와", setting: "밝은 실내 매트 위" },
+        { title: "아그작 간식 컷", dog: "중형 웰시코기", setting: "주방 옆 낮은 테이블" },
+        { title: "덴탈 루틴 컷", dog: "대형 사모예드", setting: "깨끗한 거실 러그 위" },
+    ],
+    care: [
+        { title: "귀가 후 발 케어", dog: "소형 비숑프리제", setting: "현관 발매트 옆" },
+        { title: "피부 진정 루틴", dog: "중형 푸들 믹스", setting: "욕실 앞 밝은 공간" },
+        { title: "보습 마무리 컷", dog: "대형 스탠더드푸들", setting: "따뜻한 실내 조명" },
+    ],
+    play: [
+        { title: "노즈워크 집중", dog: "중형 잭러셀테리어", setting: "실내 놀이방" },
+        { title: "천천히 먹기 컷", dog: "소형 닥스훈트", setting: "식사 공간 매트 위" },
+        { title: "에너지 소모 컷", dog: "대형 허스키", setting: "넓은 거실" },
+    ],
+    travel: [
+        { title: "차량 탑승 준비", dog: "중형 프렌치불독", setting: "차량 뒷좌석 앞" },
+        { title: "카시트 안정 컷", dog: "소형 요크셔테리어", setting: "밝은 차량 내부" },
+        { title: "여행 출발 컷", dog: "대형 리트리버 믹스", setting: "주차장 옆 캐리어 공간" },
+    ],
+    walk: [
+        { title: "햇빛 강한 산책", dog: "중형 오스트레일리안 셰퍼드", setting: "맑은 공원 산책로" },
+        { title: "먼지 많은 길 보호", dog: "소형 슈나우저", setting: "마른 흙길과 낮은 풀밭" },
+        { title: "아웃도어 준비 컷", dog: "대형 말라뮤트", setting: "넓은 야외 데크" },
+    ],
+};
+
+export function bundleShowroomScenes(bundle: Bundle): BundleShowroomScene[] {
+    return SHOWROOM_DOGS_BY_MOOD[bundle.mood].map((scene, index) => ({
+        ...scene,
+        slug: `showroom-${index + 1}`,
+        image: `${bundleAssetBase(bundle)}/showroom-${index + 1}.png`,
+    }));
 }
 
 export function findBundle(slug: string) {
