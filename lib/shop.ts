@@ -38,9 +38,9 @@ export function productVideoSrc(product: CatalogProduct): string {
 
 export function productVolumeBadge(product: CatalogProduct): string | null {
     const text = `${product.name} ${product.folder ?? ""}`;
+    if (/필터|filter/i.test(text)) return "교체 필터";
     if (/2\s*리터|2l/i.test(text)) return "대용량 2L";
     if (/1\s*리터|1l/i.test(text)) return "컴팩트 1L";
-    if (/필터|filter/i.test(text)) return "교체 필터";
     return null;
 }
 
