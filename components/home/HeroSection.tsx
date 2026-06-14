@@ -31,12 +31,12 @@ const DEFAULT_CONTEXT: HeroContext = {
 };
 
 const overlayClass = {
-    warm: "from-[#22180f]/80 via-[#3f2612]/50 to-transparent",
-    cool: "from-[#071820]/80 via-[#0d3340]/45 to-transparent",
-    rain: "from-[#07151c]/85 via-[#164252]/50 to-[#0b1b22]/20",
-    snow: "from-[#102132]/80 via-[#31506a]/35 to-white/10",
-    storm: "from-[#05070c]/90 via-[#102838]/64 to-[#071018]/30",
-    fog: "from-[#26323b]/72 via-[#70808b]/30 to-white/10",
+    warm: "from-neutral-950/58 via-neutral-900/18 to-transparent",
+    cool: "from-neutral-950/60 via-slate-900/18 to-transparent",
+    rain: "from-slate-950/66 via-slate-900/28 to-transparent",
+    snow: "from-slate-950/58 via-slate-800/16 to-transparent",
+    storm: "from-neutral-950/74 via-slate-950/36 to-transparent",
+    fog: "from-slate-950/52 via-slate-700/18 to-transparent",
 };
 
 function readManualHeroWeather(): HeroWeather | null {
@@ -90,6 +90,7 @@ export default function HeroSection({ featuredProducts }: Props) {
     }, []);
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
+    const isNight = context.timeBucket === "night";
     const weatherSummary = heroWeatherSummary(weatherReport);
     const primaryPet = user?.pets.find((pet) => pet.name);
     const state = accountState(user);
@@ -104,13 +105,14 @@ export default function HeroSection({ featuredProducts }: Props) {
     const products = featuredProducts.filter((product) => product.image).slice(0, 3);
 
     return (
-        <section className="relative isolate overflow-hidden bg-neutral-950 text-white">
-            <div className="absolute inset-0">
-                <Image src={scene.poster} alt="" fill sizes="100vw" className="object-cover" priority />
+        <section className={`hero-section relative isolate overflow-hidden bg-neutral-950 text-white ${isNight ? "hero-section-night" : ""}`}>
+            <div className="hero-media-plane">
+                <Image src={scene.poster} alt="" fill sizes="100vw" className="hero-media-backdrop" priority />
+                <Image src={scene.poster} alt="" fill sizes="100vw" className="hero-media-main" priority />
                 {scene.video && (
                     <video
                         key={scene.video}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className="hero-media-main"
                         poster={scene.poster}
                         autoPlay
                         muted
@@ -120,6 +122,7 @@ export default function HeroSection({ featuredProducts }: Props) {
                         <source src={scene.video} type="video/mp4" />
                     </video>
                 )}
+                {isNight && <div className="hero-night-layer" aria-hidden="true" />}
                 <div className={`absolute inset-0 bg-gradient-to-r ${overlayClass[scene.overlay]}`} />
                 {scene.effect !== "none" && (
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
@@ -127,13 +130,7 @@ export default function HeroSection({ featuredProducts }: Props) {
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
 
-            {scene.accentImage && (
-                <div className="pointer-events-none absolute bottom-6 right-6 hidden h-[42%] w-[38%] max-w-[520px] opacity-95 md:block xl:right-[calc((100vw-1280px)/2+24px)]">
-                    <Image src={scene.accentImage} alt="" fill sizes="38vw" className="object-contain object-right-bottom" />
-                </div>
-            )}
-
-            <div className="relative z-10 mx-auto flex min-h-[520px] max-w-[1280px] flex-col justify-end px-4 pb-8 pt-20 md:min-h-[560px] md:px-6 md:pb-10 lg:min-h-[600px]">
+            <div className="hero-content relative z-10 mx-auto flex max-w-[1280px] flex-col justify-end px-4 pb-8 pt-20 md:px-6 md:pb-10">
                 <div className="max-w-[680px]">
                     <div className="flex flex-wrap gap-2">
                         <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
@@ -170,7 +167,7 @@ export default function HeroSection({ featuredProducts }: Props) {
                 </div>
 
                 {products.length > 0 && (
-                    <div className="mt-8 flex max-w-3xl gap-2 overflow-x-auto pb-1">
+                    <div className="hero-products mt-8 flex max-w-3xl gap-2 overflow-x-auto pb-1">
                         {products.map((product) => (
                             <Link
                                 key={product.id}

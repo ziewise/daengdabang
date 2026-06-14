@@ -23,7 +23,6 @@ export type HeroScene = {
     label: string;
     video?: string;
     poster: string;
-    accentImage?: string;
     overlay: "warm" | "cool" | "rain" | "snow" | "storm" | "fog";
     effect: HeroVisualEffect;
 };
@@ -74,7 +73,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             label: "눈 오는 산책길",
             video: "/images/hero/snow.mp4?v=20260614",
             poster: "/images/hero/snow-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/winter-sketch.png?v=20260614",
             overlay: "snow",
             effect: "snow",
         };
@@ -85,7 +83,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             key: "storm",
             label: "거센 비 산책 주의",
             poster: "/images/hero/rain-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "storm",
             effect: "storm",
         };
@@ -96,7 +93,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             key: "rain",
             label: "비 오는 산책길",
             poster: "/images/hero/rain-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "rain",
             effect: "rain",
         };
@@ -107,7 +103,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             key: "drizzle",
             label: "가랑비 산책길",
             poster: "/images/hero/rain-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "rain",
             effect: "drizzle",
         };
@@ -118,7 +113,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             key: "fog",
             label: "안개 낀 산책길",
             poster: "/images/hero/winter-sketch.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "fog",
             effect: "fog",
         };
@@ -130,7 +124,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             label: "바람 부는 산책길",
             video: "/images/hero/default.mp4?v=20260614",
             poster: "/images/hero/clear-evening.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "cool",
             effect: "wind",
         };
@@ -142,7 +135,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
             label: "구름 많은 산책길",
             video: "/images/hero/default.mp4?v=20260614",
             poster: "/images/hero/clear-evening.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
             overlay: "cool",
             effect: "cloud",
         };
@@ -153,7 +145,6 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         label: context.timeBucket === "night" ? "밤 산책 준비" : "오늘의 산책 준비",
         video: "/images/hero/default.mp4?v=20260614",
         poster: "/images/hero/clear-evening.png?v=20260614",
-        accentImage: "/images/hero/walker-cutout.png?v=20260614",
         overlay: context.timeBucket === "evening" || context.timeBucket === "night" ? "warm" : "cool",
         effect: "none",
     };
