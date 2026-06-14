@@ -30,6 +30,7 @@ export default function PetLensClient() {
     const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [result, setResult] = useState<Result | null>(null);
+    const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -68,31 +69,40 @@ export default function PetLensClient() {
     const submit = async (event: FormEvent) => {
         event.preventDefault();
         setLoading(true);
-        const analysis = await analyzePetLensSmart({
-            name,
-            age,
-            size,
-            coat,
-            activity,
-            concerns,
-            imageName,
-            photoDataUrl,
-        }, imageFile);
-        setResult(analysis);
-        if (user) {
-            upsertPet(analysis.profile);
-            savePetProfileSmart(analysis.profile, user.apiAccessToken).catch(() => undefined);
+        setAnalysisError("");
+        try {
+            const analysis = await analyzePetLensSmart({
+                name,
+                age,
+                size,
+                coat,
+                activity,
+                concerns,
+                imageName,
+                photoDataUrl,
+            }, imageFile);
+            setResult(analysis);
+            if (user) {
+                upsertPet(analysis.profile);
+                savePetProfileSmart(analysis.profile, user.apiAccessToken)
+                    .catch(() => setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다. 잠시 후 다시 시도해 주세요."));
+            }
+        } catch (error) {
+            setResult(null);
+            const message = error instanceof Error ? error.message : "PetLens analysis failed.";
+            setAnalysisError(`정밀 PetLens 분석을 완료하지 못했습니다. ${message}`);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">댕다방 LLM</p>
+                <p className="text-sm font-black text-indigo-700">펫렌즈 AI</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
                 <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                    사진과 생활 정보를 기준으로 333개 상품 중 추천 후보를 골라드립니다. API가 연결되어 있으면 LLaMA 하이브리드 해석을 먼저 사용합니다.
+                    사진과 생활 정보를 기준으로 333개 상품 중 어울리는 추천 후보를 골라드립니다. 정밀 분석이 연결되어 있으면 사진 기반 해석을 먼저 사용합니다.
                 </p>
             </header>
 
@@ -177,6 +187,11 @@ export default function PetLensClient() {
                         <i className="fa-solid fa-wand-magic-sparkles text-xs" />
                         {loading ? "분석 중" : "추천 받기"}
                     </button>
+                    {analysisError && (
+                        <p className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm font-bold leading-6 text-rose-700">
+                            {analysisError}
+                        </p>
+                    )}
                 </form>
 
                 <section>

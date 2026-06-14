@@ -18,7 +18,7 @@ export default function ChatWidget() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: "assistant", text: "무엇을 찾고 계신가요? 하네스, 간식, 케어처럼 말해 주세요." },
+        { role: "assistant", text: "무엇이 궁금하신가요? 상품 추천도, 아이가 아플 때 확인할 점도 차분히 도와드릴게요." },
     ]);
 
     const submit = async (event: FormEvent) => {
@@ -38,7 +38,7 @@ export default function ChatWidget() {
             {open && (
                 <section className="mb-3 flex h-[520px] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl">
                     <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
-                        <b className="text-sm font-black">댕다방 LLM</b>
+                        <b className="text-sm font-black">댕다방 케어톡</b>
                         <button
                             type="button"
                             onClick={() => setOpen(false)}
@@ -84,7 +84,7 @@ export default function ChatWidget() {
                             value={input}
                             onChange={(event) => setInput(event.target.value)}
                             className="input h-10 flex-1"
-                            placeholder="상품이나 고민 입력"
+                            placeholder="증상이나 상품 고민 입력"
                             aria-label="챗봇 질문"
                         />
                         <button

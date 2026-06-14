@@ -23,7 +23,7 @@ export default function ChatPageClient() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: "assistant", text: "상품명, 용도, 반려견 고민을 입력해 주세요. LLaMA가 가능하면 먼저 답하고, 아니면 333개 카탈로그 기준으로 답변합니다." },
+        { role: "assistant", text: "상품명, 용도, 반려견 증상이나 고민을 입력해 주세요. 건강 질문은 먼저 안전하게 확인하고, 상품은 필요할 때만 추천합니다." },
     ]);
 
     const ask = useCallback(async (question: string) => {
@@ -61,8 +61,8 @@ export default function ChatPageClient() {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">댕다방 LLM</p>
-                <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">챗봇</h1>
+                <p className="text-sm font-black text-indigo-700">댕다방 케어톡</p>
+                <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">상담</h1>
                 {pets.length > 0 && (
                     <label className="mt-4 inline-flex max-w-full items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-black text-neutral-700">
                         <span className="shrink-0 text-neutral-500">개인화 기준</span>
@@ -96,7 +96,7 @@ export default function ChatPageClient() {
                         {loading && (
                             <div className="text-left">
                                 <div className="inline-block rounded-lg bg-white px-4 py-3 text-sm font-bold text-neutral-500 shadow-sm">
-                                    LLaMA와 카탈로그를 함께 확인하는 중입니다.
+                                    답변을 차분히 정리하는 중입니다.
                                 </div>
                             </div>
                         )}
@@ -106,7 +106,7 @@ export default function ChatPageClient() {
                             value={input}
                             onChange={(event) => setInput(event.target.value)}
                             className="input h-12 flex-1"
-                            placeholder="예: 산책 많이 하는 중형견 하네스 추천"
+                            placeholder="예: 우리 강아지가 아파요 / 중형견 하네스 추천"
                             aria-label="챗봇 질문"
                         />
                         <button type="submit" disabled={loading} className="btn btn-primary h-12 disabled:opacity-50">
@@ -117,7 +117,7 @@ export default function ChatPageClient() {
                 </section>
 
                 <aside>
-                    <h2 className="mb-4 text-lg font-black text-neutral-950">추천 상품</h2>
+                    <h2 className="mb-4 text-lg font-black text-neutral-950">필요할 때만 추천 상품</h2>
                     {latestProducts.length > 0 ? (
                         <div className="grid grid-cols-2 gap-3">
                             {latestProducts.slice(0, 4).map((product) => (

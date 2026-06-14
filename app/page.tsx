@@ -81,7 +81,7 @@ export default function HomePage() {
             <section className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
                     <div className="surface p-5">
-                        <p className="text-xs font-black text-indigo-700">댕다방 LLM</p>
+                        <p className="text-xs font-black text-indigo-700">펫렌즈 AI</p>
                         <h2 className="mt-2 text-2xl font-black text-neutral-950">아이 정보로 바로 추천</h2>
                         <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
                             사진과 생활 정보를 넣으면 등록된 상품 중 어울리는 후보를 골라줍니다.

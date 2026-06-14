@@ -55,6 +55,23 @@ function sizeLabel(size: PetProfile["size"]) {
     return "중형";
 }
 
+function medicalSafetyFallback(message: string): { answer: string; products: CatalogProduct[] } | null {
+    const text = message.toLowerCase();
+    const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose)/i.test(text);
+    if (!medical) return null;
+    const emergency = /(호흡|숨|잇몸.*파|쓰러|의식|발작|경련|중독|자일리톨|초콜릿|포도|건포도|출혈|피가.*멈추|골절|열사병|breath|collapse|seizure|poison|xylitol|grape|bloat)/i.test(text);
+    if (emergency) {
+        return {
+            answer: "응급 가능성이 있습니다. 상품 추천보다 먼저 가까운 동물병원 또는 24시 응급병원에 즉시 연락하세요. 증상 시작 시간, 먹은 것, 복용한 약, 사진/영상을 준비해 병원에 전달하는 것이 좋습니다.",
+            products: [],
+        };
+    }
+    return {
+        answer: "걱정되시겠어요. 지금은 상품 추천보다 증상 확인이 먼저입니다. 언제부터 아픈지, 구토/설사 여부, 호흡 상태, 식욕과 물 섭취, 기력 변화, 통증을 보이는 부위, 최근 먹은 것이나 삼킨 물건이 있는지 확인해 주세요. 호흡이 힘들거나 의식이 처지고, 반복 발작·중독 의심·피가 섞인 구토/설사·심한 통증·걷지 못함이 있으면 바로 동물병원 또는 24시 응급병원에 연락해야 합니다. 증상이 가볍더라도 계속되거나 악화되면 수의사 진료가 우선입니다.",
+        products: [],
+    };
+}
+
 export function recommendForPet(profile: Pick<PetProfile, "size" | "coat" | "activity" | "concerns">) {
     const products: CatalogProduct[] = [];
     const concerns = profile.concerns.join(" ");
@@ -101,7 +118,8 @@ export function analyzePetLens(input: PetLensInput) {
 
 export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File | null) {
     const base = apiBase();
-    if (!base || !imageFile) return analyzePetLens(input);
+    if (!base) throw new Error("PetLens API is not configured.");
+    if (!imageFile) throw new Error("PetLens requires a dog photo.");
 
     try {
         const form = new FormData();
@@ -122,16 +140,21 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             activity: input.activity,
             concerns: apiConcerns,
             photoDataUrl: input.photoDataUrl,
+            rawAnalysis: data,
             lastAnalyzedAt: new Date().toISOString(),
         };
         const summary = [
             data.breed ? `사진 분석 결과 ${data.breed} 계열로 추정했습니다.` : `${profile.name}의 사진을 분석했습니다.`,
-            data.summary || "LLaMA 하이브리드 해석을 바탕으로 추천을 구성했습니다.",
+            data.summary || "사진 기반 해석을 바탕으로 추천을 구성했습니다.",
             `해석 엔진: ${data.interpreter || "fallback"}${data.interpreter_model ? ` · ${data.interpreter_model}` : ""}`,
         ];
+        if (data.size_estimate && data.size_estimate !== "unknown") summary.push(`AI size estimate: ${data.size_estimate}`);
+        if (Array.isArray(data.care_notes)) summary.push(...data.care_notes.slice(0, 3));
+        if (Array.isArray(data.risk_flags) && data.risk_flags.length) summary.push(`Caution: ${data.risk_flags.slice(0, 3).join(", ")}`);
+        if (data.image_stored) summary.push(`Photo stored: ${data.image_storage_key || "ok"}`);
         return { profile, products: recommendForPet(profile), summary };
-    } catch {
-        return analyzePetLens(input);
+    } catch (error) {
+        throw error instanceof Error ? error : new Error("PetLens API analysis failed.");
     }
 }
 
@@ -139,7 +162,7 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     const text = message.trim();
     const lower = text.toLowerCase();
     let products: CatalogProduct[] = [];
-    let answer = "댕다방 LLM이 현재 등록된 333개 상품 기준으로 답변드릴게요.";
+    let answer = "댕다방 케어톡이 현재 등록된 333개 상품 기준으로 답변드릴게요.";
     const petContext = petContextText(context);
 
     if (!text) return { answer: "궁금한 점을 입력해 주세요.", products: [] };
@@ -183,7 +206,8 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
 }
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext) {
-    const fallback = answerShopQuestion(message, context);
+    const medicalFallback = medicalSafetyFallback(message);
+    const fallback = medicalFallback || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
     const petContext = petContextText(context);
@@ -200,11 +224,12 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         const apiProducts = Array.isArray(data.products)
             ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
             : [];
+        const medicalMode = Boolean(data.medical && typeof data.medical === "object" && data.medical.mode);
         return {
             answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
-            products: apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products,
+            products: medicalMode ? unique(apiProducts).slice(0, 6) : (apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products),
         };
     } catch {
-        return fallback;
+        return medicalFallback || fallback;
     }
 }
