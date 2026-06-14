@@ -19,6 +19,7 @@ export type PetProfile = {
     activity: "low" | "normal" | "high";
     concerns: string[];
     photoDataUrl?: string;
+    rawAnalysis?: Record<string, unknown>;
     lastAnalyzedAt?: string;
 };
 export type User = {
