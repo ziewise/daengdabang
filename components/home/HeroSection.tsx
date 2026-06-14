@@ -166,7 +166,7 @@ export default function HeroSection() {
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
                 )}
                 <div className="hero-ziewcore-badge" aria-hidden="true">
-                    <span>Powered by</span>
+                    <span>Powered by</span>{" "}
                     <strong>Ziewcore</strong>
                 </div>
             </div>
