@@ -28,6 +28,7 @@ export default function ProductCard({
     const href = productHref(p);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoActive, setVideoActive] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const [isTouch, setIsTouch] = useState(false);
     const { addToCart } = useCart();
     const { toggleWishlist, isWished } = useStore();
@@ -42,10 +43,15 @@ export default function ProductCard({
         setIsTouch(window.matchMedia("(hover: none)").matches);
     }, []);
 
+    useEffect(() => {
+        if (!videoActive || !videoLoaded) return;
+        videoRef.current?.play().catch(() => {});
+    }, [videoActive, videoLoaded]);
+
     const activate = () => {
         if (!hasVideo) return;
+        setVideoLoaded(true);
         setVideoActive(true);
-        videoRef.current?.play().catch(() => {});
     };
 
     const deactivate = () => {
@@ -87,14 +93,14 @@ export default function ProductCard({
                     <i className={`fa-solid ${p.icon} text-5xl text-white drop-shadow`} />
                 )}
 
-                {hasVideo && (
+                {hasVideo && videoLoaded && (
                     <video
                         ref={videoRef}
                         src={p.video}
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
                         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
