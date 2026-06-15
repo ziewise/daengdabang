@@ -3,7 +3,7 @@ import { cartBundleSavings } from "@/lib/bundles";
 
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
-export const PRODUCT_VIDEO_VERSION = "20260615-video-match";
+export const PRODUCT_VIDEO_VERSION = "20260615-detail-matched-v2";
 
 const VIDEO_BLOCKLIST = new Set<string>();
 
