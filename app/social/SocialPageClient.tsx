@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { CATALOG, getBestProducts, getNewProducts, type CatalogProduct } from "@/lib/catalog";
-import { productHref, versionProductImage } from "@/lib/shop";
+import { productHref } from "@/lib/shop";
 
 type SocialPost = {
     id: string;
@@ -171,7 +171,7 @@ export default function SocialPageClient() {
                         <article key={post.id} className="grid gap-4 rounded-lg border border-neutral-200 bg-white p-4 md:grid-cols-[168px_1fr]">
                             <Link href={post.ctaHref} className="aspect-square overflow-hidden rounded-md bg-neutral-50">
                                 {post.product?.image ? (
-                                    <img src={versionProductImage(post.product.image)} alt={post.product.name} className="h-full w-full object-contain p-3" />
+                                    <img src={post.product.image} alt={post.product.name} className="h-full w-full object-contain p-3" />
                                 ) : (
                                     <div className="grid h-full place-items-center text-neutral-300">
                                         <i className={`${post.icon} text-3xl`} />

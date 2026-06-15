@@ -3,17 +3,13 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
-import { cartBundleAdjustments, cartBundleSavings } from "@/lib/bundles";
-import { cartProducts, cartSubtotal, cartTotal } from "@/lib/shop";
+import { cartProducts, cartTotal } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 
 export default function CheckoutPage() {
     const cart = useCart();
     const { user } = useAuth();
     const lines = cartProducts(cart.lines);
-    const subtotal = cartSubtotal(cart.lines);
-    const bundleAdjustments = cartBundleAdjustments(cart.lines);
-    const bundleSavings = cartBundleSavings(cart.lines);
     const total = cartTotal(cart.lines);
     const [receiver, setReceiver] = useState(user?.name ?? "");
     const [address, setAddress] = useState("");
@@ -93,24 +89,6 @@ export default function CheckoutPage() {
                             </div>
                         ))}
                     </div>
-                    {bundleSavings > 0 && (
-                        <div className="mt-4 grid gap-2 border-t border-neutral-200 pt-4">
-                            <div className="flex items-center justify-between text-sm font-bold text-neutral-600">
-                                <span>상품 금액</span>
-                                <b className="text-neutral-950">{formatKRW(subtotal)}원</b>
-                            </div>
-                            <div className="flex items-center justify-between text-sm font-bold text-rose-600">
-                                <span>묶음 배송 할인</span>
-                                <b>-{formatKRW(bundleSavings)}원</b>
-                            </div>
-                            {bundleAdjustments.map((adjustment) => (
-                                <p key={adjustment.bundle.slug} className="text-xs font-black text-rose-500">
-                                    {adjustment.bundle.title}
-                                    {adjustment.sets > 1 ? ` x ${adjustment.sets}` : ""} 적용
-                                </p>
-                            ))}
-                        </div>
-                    )}
                     <div className="mt-4 border-t border-neutral-200 pt-4 flex items-center justify-between">
                         <span className="font-black">총 결제</span>
                         <b className="text-2xl font-black text-indigo-700">{formatKRW(total)}원</b>

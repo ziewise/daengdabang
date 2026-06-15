@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { BUNDLES, bundleHref } from "@/lib/bundles";
 import { CATALOG, CATEGORY_LABEL, listBrands } from "@/lib/catalog";
 import { CATEGORY_ORDER, productHref } from "@/lib/shop";
 
@@ -53,12 +52,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: product.video ? 0.8 : 0.7,
     }));
 
-    const bundlePages: MetadataRoute.Sitemap = BUNDLES.map((bundle) => ({
-        url: url(bundleHref(bundle)),
-        lastModified: now,
-        changeFrequency: "weekly",
-        priority: 0.82,
-    }));
-
-    return [...staticPages, ...categoryPages, ...brandPages, ...productPages, ...bundlePages];
+    return [...staticPages, ...categoryPages, ...brandPages, ...productPages];
 }

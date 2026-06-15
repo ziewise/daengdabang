@@ -12,34 +12,7 @@ function has(text: string, pattern: RegExp) {
 }
 
 function mapSubcategory(row: CatalogRow): SubcategorySlug {
-    const useMain = row.useMain || "";
-    const useSub = row.useSub || "";
-    const primary = `${useMain} ${useSub}`;
     const text = textOf(row);
-
-    // Trust the curated category fields first. Free-text notes can contain
-    // seasonal or promotional words that should not override product taxonomy.
-    if (/하네스/i.test(primary)) return "harness";
-    if (/리드줄|목줄|초크|Leash|Collar/i.test(primary)) return "leash";
-    if (/고글|렌즈|청력보호|아이웨어|보호안경|Rex Specs/i.test(primary)) return "goggles";
-    if (/이동\/캐리어|유모차|트레일러|백팩|캐리어|카시트|이동가방|웨건/i.test(primary)) return "carrier";
-    if (/의류\/계절|보온 의류|방수\/우천 의류|쿨링 의류|신발|슈즈|구명조끼|물놀이 안전|웨어|자켓|재킷|코트|베스트|부츠|패딩/i.test(primary)) return "wear";
-
-    if (/디저트|음료|아이스크림|요거트|댕크림/i.test(primary)) return "dessert";
-    if (/영양\/보조|영양제|보조제|오메가|유산균|비타민/i.test(primary)) return "supplement";
-    if (/간식\/영양|간식\/트릿|덴탈간식|간식|트릿|츄|껌|비스킷|저키/i.test(primary)) return "treats";
-    if (/사료\/급여|건사료|습식사료|사료|푸드/i.test(primary) || row.isFood) return "drysoy";
-
-    if (/식기\/급수|식기|보울|급수|급식|정수기|물병/i.test(primary)) return "bowl";
-    if (/침구\/생활|방석|침대|매트|쿠션/i.test(primary)) return "cushion";
-
-    if (/장난감\/놀이|노즈워크|퍼즐|지능/i.test(primary)) return "nosework";
-    if (/터그|로프|당기기/i.test(primary)) return "tug";
-    if (/라텍스|공|볼|장난감|토이|인형/i.test(primary)) return "latex";
-
-    if (/발\/치아 케어|발바닥|발 케어|치아|치약|칫솔/i.test(primary)) return "paw";
-    if (/위생\/배변|배변|패드|봉투|기저귀|물티슈/i.test(primary)) return "hygiene";
-    if (/위생\/미용|샴푸|목욕|미스트|향수|탈취|브러쉬|스킨|크림|밤|입욕|비누/i.test(primary) || row.isHygiene) return "cream";
 
     if (has(text, /하네스/i)) return "harness";
     if (has(text, /리드|목줄|초크|Leash|Collar/i)) return "leash";

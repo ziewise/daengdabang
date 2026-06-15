@@ -5,10 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { formatKRW, getBestRank, isNewProduct } from "@/lib/catalog";
-import { productHref, productVideoSrc, productVolumeBadge, versionProductImage } from "@/lib/shop";
+import { productHref } from "@/lib/shop";
 import { useCart, useStore } from "@/lib/store";
 import bestStyles from "@/components/main/best.module.css";
-import ProductMotionOverlay from "@/components/products/ProductMotionOverlay";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
@@ -36,10 +35,7 @@ export default function ProductCard({
     const effectiveRank = rank ?? getBestRank(p);
     const shouldShowNew = showNewBadge ?? isNewProduct(p);
     const showBest = effectiveRank !== null && rankStyle !== "off";
-    const videoSrc = productVideoSrc(p);
-    const hasVideo = Boolean(videoSrc);
-    const volumeBadge = productVolumeBadge(p);
-    const hasMotionFallback = Boolean(p.image && !hasVideo);
+    const hasVideo = Boolean(p.video);
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -81,11 +77,11 @@ export default function ProductCard({
             >
                 {p.image ? (
                     <Image
-                        src={versionProductImage(p.image)}
+                        src={p.image}
                         alt={p.name}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"
-                        className={`product-card-image object-cover transition duration-300 group-hover:scale-[1.03] ${videoActive ? "opacity-0" : "opacity-100"}`}
+                        className={`object-cover transition duration-300 group-hover:scale-[1.03] ${videoActive ? "opacity-0" : "opacity-100"}`}
                     />
                 ) : (
                     <i className={`fa-solid ${p.icon} text-5xl text-white drop-shadow`} />
@@ -94,7 +90,7 @@ export default function ProductCard({
                 {hasVideo && (
                     <video
                         ref={videoRef}
-                        src={videoSrc}
+                        src={p.video}
                         muted
                         loop
                         playsInline
@@ -103,10 +99,6 @@ export default function ProductCard({
                     />
                 )}
                 {hasVideo && videoActive && <VideoBrandOverlay />}
-                {hasMotionFallback && <ProductMotionOverlay product={p} />}
-                {volumeBadge && hasVideo && (
-                    <span className="product-volume-badge product-volume-badge-static">{volumeBadge}</span>
-                )}
 
                 {(showBest || shouldShowNew) && (
                     <div className="absolute left-2 top-2 z-10 flex flex-col items-start gap-1">
@@ -125,6 +117,7 @@ export default function ProductCard({
                         )}
                     </div>
                 )}
+
             </Link>
 
             <div className="p-3">

@@ -3,9 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
-import { productVideoSrc, versionProductImage } from "@/lib/shop";
 import bestStyles from "@/components/main/best.module.css";
-import ProductMotionOverlay from "@/components/products/ProductMotionOverlay";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
@@ -17,10 +15,7 @@ export default function ProductGallery({ product: p }: Props) {
     const [activeIdx, setActiveIdx] = useState(0);
     const [showVideo, setShowVideo] = useState(false);
     const activeImage = images[activeIdx];
-    const activeImageSrc = versionProductImage(activeImage);
-    const videoSrc = productVideoSrc(p);
-    const isVideoVisible = Boolean(videoSrc && showVideo);
-    const showMotionFallback = Boolean(activeImage && !videoSrc && showVideo);
+    const isVideoVisible = Boolean(p.video && showVideo);
 
     return (
         <div className="space-y-3">
@@ -33,7 +28,7 @@ export default function ProductGallery({ product: p }: Props) {
             >
                 {isVideoVisible ? (
                     <video
-                        src={videoSrc}
+                        src={p.video}
                         className="absolute inset-0 h-full w-full object-cover"
                         autoPlay
                         muted
@@ -44,11 +39,11 @@ export default function ProductGallery({ product: p }: Props) {
                 ) : activeImage ? (
                     <Image
                         key={activeImage}
-                        src={activeImageSrc}
+                        src={activeImage}
                         alt={p.name}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
-                        className={`object-cover transition duration-300 ${showMotionFallback ? "scale-[1.025]" : ""}`}
+                        className="object-cover"
                         priority
                     />
                 ) : (
@@ -58,14 +53,12 @@ export default function ProductGallery({ product: p }: Props) {
                 )}
 
                 {isVideoVisible && <VideoBrandOverlay />}
-                {showMotionFallback && <ProductMotionOverlay product={p} active detail />}
             </div>
 
             {images.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
                     {images.map((img, index) => {
                         const active = index === activeIdx;
-                        const imageSrc = versionProductImage(img);
                         return (
                             <button
                                 key={img}
@@ -80,7 +73,7 @@ export default function ProductGallery({ product: p }: Props) {
                                         : "opacity-70 ring-1 ring-neutral-200 hover:opacity-100 hover:ring-indigo-300"
                                 }`}
                             >
-                                <Image src={imageSrc} alt={`${p.name} ${index + 1}`} fill sizes="80px" className="object-cover" />
+                                <Image src={img} alt={`${p.name} ${index + 1}`} fill sizes="80px" className="object-cover" />
                             </button>
                         );
                     })}

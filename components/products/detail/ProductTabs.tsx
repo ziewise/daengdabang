@@ -168,12 +168,10 @@ function getPurchaseGuidePoints(p: CatalogProduct): string[] {
 }
 
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
-    const [expanded, setExpanded] = useState(false);
     const snippets = p.externalReviewSnippets ?? [];
     const themes = p.externalReviewThemes ?? [];
     const count = p.externalReviewCount ?? snippets.length;
     const average = typeof p.externalReviewAverage === "number" ? p.externalReviewAverage : null;
-    const visibleSnippets = expanded ? snippets : snippets.slice(0, 8);
 
     if (snippets.length > 0) {
         return (
@@ -181,8 +179,8 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                 <div className="rounded-lg border border-neutral-200 bg-white p-5 md:p-7">
                     <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                         <div>
-                            <p className="text-xs font-black text-indigo-600">구매 후기</p>
-                            <h3 className="mt-2 text-lg font-black text-neutral-950">자사몰에서 확인하는 후기 모음</h3>
+                            <p className="text-xs font-black text-indigo-600">네이버 스마트스토어 구매 후기</p>
+                            <h3 className="mt-2 text-lg font-black text-neutral-950">실제 구매 후기 요약</h3>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-center">
                             <div className="rounded-md bg-neutral-50 px-4 py-3">
@@ -207,10 +205,10 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                     )}
 
                     <div className="space-y-3">
-                        {visibleSnippets.map((snippet, index) => (
+                        {snippets.slice(0, 8).map((snippet, index) => (
                             <div key={`${snippet.text}-${index}`} className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
                                 <div className="mb-2 flex items-center justify-between gap-3 text-xs font-black text-neutral-500">
-                                    <span>{snippet.rating ? `평점 ${snippet.rating}` : "구매 후기"}</span>
+                                    <span>{snippet.rating ? `별점 ${snippet.rating}` : "구매 후기"}</span>
                                     {snippet.summary && <span className="truncate">{snippet.summary}</span>}
                                 </div>
                                 <p className="text-sm font-bold leading-6 text-neutral-800">{snippet.text}</p>
@@ -218,16 +216,17 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                         ))}
                     </div>
 
-                    {snippets.length > 8 && (
-                        <div className="mt-5 flex justify-center border-t border-neutral-200 pt-4">
-                            <button
-                                type="button"
-                                onClick={() => setExpanded((value) => !value)}
-                                className="inline-flex h-10 items-center gap-2 rounded-md border border-neutral-300 bg-white px-4 text-xs font-black text-neutral-900 transition hover:border-indigo-400 hover:text-indigo-700"
+                    {p.externalReviewUrl && (
+                        <div className="mt-5 flex justify-end border-t border-neutral-200 pt-4">
+                            <a
+                                href={p.externalReviewUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex h-10 items-center gap-2 rounded-md border border-neutral-200 px-4 text-xs font-black hover:border-indigo-300 hover:text-indigo-700"
                             >
-                                {expanded ? "후기 접기" : `후기 ${snippets.length.toLocaleString()}개 모두 보기`}
-                                <i className={`fa-solid ${expanded ? "fa-chevron-up" : "fa-chevron-down"} text-[10px]`} />
-                            </button>
+                                <i className="fa-solid fa-arrow-up-right-from-square" />
+                                원문 보기
+                            </a>
                         </div>
                     )}
                 </div>
@@ -262,11 +261,10 @@ function QnaContent({ product: p }: { product: CatalogProduct }) {
             </p>
             <Link
                 href={`/chat?q=${encodeURIComponent(p.name)}`}
-                className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-indigo-600 px-5 text-sm font-black text-white shadow-sm transition hover:bg-indigo-700"
-                style={{ color: "#fff" }}
+                className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
             >
-                <i className="fa-solid fa-comment-dots text-xs" />
-                상품 문의하기
+                <i className="fa-solid fa-circle-question text-xs" />
+                챗봇에 문의
             </Link>
         </div>
     );

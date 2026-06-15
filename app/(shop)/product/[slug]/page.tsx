@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CATALOG, formatKRW } from "@/lib/catalog";
-import { findProduct, productHref, versionProductImage } from "@/lib/shop";
+import { findProduct, productHref } from "@/lib/shop";
 import ProductDetailClient from "./ProductDetailClient";
 
 interface PageProps {
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const title = `${product.name} | 댕다방`;
     const description = `${product.brandKo || product.brandEn} ${product.name} ${formatKRW(product.price)}원`;
-    const image = product.image ? [{ url: versionProductImage(product.image), alt: product.name }] : undefined;
+    const image = product.image ? [{ url: product.image, alt: product.name }] : undefined;
     const url = productHref(product);
 
     return {
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             card: product.image ? "summary_large_image" : "summary",
             title,
             description,
-            images: product.image ? [versionProductImage(product.image)] : undefined,
+            images: product.image ? [product.image] : undefined,
         },
     };
 }
