@@ -4,6 +4,7 @@ import { cartBundleSavings } from "@/lib/bundles";
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
 export const PRODUCT_VIDEO_VERSION = "20260615-detail-matched-v2";
+export const PRODUCT_HOVER_VIDEO_ENABLED = false;
 
 const VIDEO_BLOCKLIST = new Set<string>();
 
@@ -23,6 +24,9 @@ export function versionProductVideo(src: string | null | undefined): string {
 }
 
 export function productVideoSrc(product: CatalogProduct): string {
+    // Suspended until hover videos are rebuilt as exact dog-wearing/use-scene clips.
+    // The detail-matched product-only batch is intentionally not shown to customers.
+    if (!PRODUCT_HOVER_VIDEO_ENABLED) return "";
     if (!product.video || !product.folder || VIDEO_BLOCKLIST.has(product.folder)) return "";
     const localFromGithub = product.video.replace(
         "https://raw.githubusercontent.com/ziewise/daengdabang/main/public",

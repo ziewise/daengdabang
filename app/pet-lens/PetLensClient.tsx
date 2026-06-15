@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { analyzePetLensSmart } from "@/lib/daengdabang-llm";
@@ -18,6 +18,15 @@ type Result = {
     summary: string[];
 };
 
+type CapturePose = "front" | "left" | "right" | "back";
+
+const CAPTURE_STEPS: Array<{ key: CapturePose; label: string; guide: string }> = [
+    { key: "front", label: "전면", guide: "얼굴과 가슴이 보이게" },
+    { key: "left", label: "좌측", guide: "왼쪽 몸통 라인이 보이게" },
+    { key: "right", label: "우측", guide: "오른쪽 몸통 라인이 보이게" },
+    { key: "back", label: "뒤", guide: "등 길이와 꼬리 쪽이 보이게" },
+];
+
 function customerPetLensMessage(error: unknown) {
     const message = error instanceof Error ? error.message : "";
     if (
@@ -26,6 +35,160 @@ function customerPetLensMessage(error: unknown) {
         return "사진 및 정보를 입력해 주세요.";
     }
     return "추천을 불러오지 못했습니다. 입력 내용을 확인한 뒤 다시 시도해 주세요.";
+}
+
+function dataUrlToFile(dataUrl: string, filename: string) {
+    const [meta, payload] = dataUrl.split(",");
+    const mime = meta.match(/data:(.*?);base64/)?.[1] || "image/jpeg";
+    if (!payload) return new File([], filename, { type: mime });
+    const binary = atob(payload);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+    return new File([bytes], filename, { type: mime });
+}
+
+function PetLensCameraCapture({
+    captures,
+    onCapture,
+}: {
+    captures: Partial<Record<CapturePose, string>>;
+    onCapture: (pose: CapturePose, dataUrl: string, file: File) => void;
+}) {
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const streamRef = useRef<MediaStream | null>(null);
+    const [activePose, setActivePose] = useState<CapturePose>("front");
+    const [cameraOpen, setCameraOpen] = useState(false);
+    const [cameraError, setCameraError] = useState("");
+
+    useEffect(() => {
+        return () => {
+            streamRef.current?.getTracks().forEach((track) => track.stop());
+            streamRef.current = null;
+        };
+    }, []);
+
+    const openCamera = async () => {
+        setCameraError("");
+        if (!navigator.mediaDevices?.getUserMedia) {
+            setCameraError("이 기기에서는 카메라를 바로 열 수 없습니다. 사진 업로드로 진행해 주세요.");
+            return;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 960 } },
+                audio: false,
+            });
+            streamRef.current?.getTracks().forEach((track) => track.stop());
+            streamRef.current = stream;
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+                await videoRef.current.play();
+            }
+            setCameraOpen(true);
+        } catch {
+            setCameraError("카메라 권한을 허용한 뒤 다시 시도해 주세요.");
+        }
+    };
+
+    const capture = () => {
+        const video = videoRef.current;
+        if (!video || video.readyState < 2) {
+            setCameraError("카메라 화면이 준비되면 다시 촬영해 주세요.");
+            return;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth || 1280;
+        canvas.height = video.videoHeight || 960;
+        const context = canvas.getContext("2d");
+        if (!context) return;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.9);
+        const file = dataUrlToFile(dataUrl, `petlens-${activePose}.jpg`);
+        onCapture(activePose, dataUrl, file);
+        const currentIndex = CAPTURE_STEPS.findIndex((step) => step.key === activePose);
+        const nextStep = CAPTURE_STEPS[currentIndex + 1];
+        if (nextStep) setActivePose(nextStep.key);
+    };
+
+    const completed = CAPTURE_STEPS.filter((step) => captures[step.key]).length;
+
+    return (
+        <section className="md:hidden">
+            <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
+                <div className="flex items-start justify-between gap-3">
+                    <div>
+                        <span className="text-xs font-black text-neutral-500">모바일 촬영</span>
+                        <p className="mt-1 text-sm font-black text-neutral-950">전면, 좌측, 우측, 뒤를 순서대로 찍어 주세요.</p>
+                    </div>
+                    <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-indigo-700">
+                        {completed}/4
+                    </span>
+                </div>
+
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                    {CAPTURE_STEPS.map((step) => (
+                        <button
+                            key={step.key}
+                            type="button"
+                            onClick={() => setActivePose(step.key)}
+                            className={`rounded-md border px-2 py-2 text-xs font-black ${
+                                activePose === step.key
+                                    ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                                    : captures[step.key]
+                                      ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                                      : "border-neutral-200 bg-white text-neutral-700"
+                            }`}
+                        >
+                            {step.label}
+                        </button>
+                    ))}
+                </div>
+
+                <p className="mt-3 rounded-md bg-white px-3 py-2 text-xs font-bold leading-5 text-neutral-600">
+                    {CAPTURE_STEPS.find((step) => step.key === activePose)?.guide}
+                </p>
+
+                <div className="mt-3 overflow-hidden rounded-lg border border-neutral-200 bg-black">
+                    <video ref={videoRef} className="aspect-[4/3] w-full object-cover" muted playsInline />
+                </div>
+
+                <div className="mt-3 flex gap-2">
+                    <button type="button" onClick={openCamera} className="btn btn-secondary flex-1">
+                        <i className="fa-solid fa-camera text-xs" />
+                        카메라 열기
+                    </button>
+                    <button type="button" onClick={capture} disabled={!cameraOpen} className="btn btn-primary flex-1 disabled:opacity-50">
+                        <i className="fa-solid fa-circle-dot text-xs" />
+                        {CAPTURE_STEPS.find((step) => step.key === activePose)?.label} 촬영
+                    </button>
+                </div>
+
+                {cameraError && (
+                    <p className="mt-3 rounded-md border border-rose-200 bg-rose-50 p-3 text-xs font-bold leading-5 text-rose-700">
+                        {cameraError}
+                    </p>
+                )}
+
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                    {CAPTURE_STEPS.map((step) => (
+                        <div key={step.key} className="overflow-hidden rounded-md border border-neutral-200 bg-white">
+                            <div className="aspect-square bg-neutral-100">
+                                {captures[step.key] ? (
+                                    <img src={captures[step.key]} alt={`${step.label} 촬영 사진`} className="h-full w-full object-cover" />
+                                ) : (
+                                    <div className="flex h-full items-center justify-center text-[10px] font-black text-neutral-400">
+                                        {step.label}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
 }
 
 export default function PetLensClient() {
@@ -39,6 +202,7 @@ export default function PetLensClient() {
     const [imageName, setImageName] = useState("");
     const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [capturedViews, setCapturedViews] = useState<Partial<Record<CapturePose, string>>>({});
     const [result, setResult] = useState<Result | null>(null);
     const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -75,6 +239,16 @@ export default function PetLensClient() {
                 reader.onload = () => setPhotoDataUrl(typeof reader.result === "string" ? reader.result : undefined);
                 reader.readAsDataURL(file);
             });
+    };
+
+    const handleCameraCapture = (pose: CapturePose, dataUrl: string, file: File) => {
+        setAnalysisError("");
+        setCapturedViews((current) => ({ ...current, [pose]: dataUrl }));
+        if (pose === "front" || !photoDataUrl) {
+            setPhotoDataUrl(dataUrl);
+            setImageFile(file);
+            setImageName(file.name);
+        }
     };
 
     const submit = async (event: FormEvent) => {
@@ -125,22 +299,6 @@ export default function PetLensClient() {
 
             <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface grid h-fit gap-4 p-5">
-                    <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(event) => handleFile(event.target.files?.[0])}
-                            className="block w-full text-sm font-bold text-neutral-600 file:mr-3 file:h-10 file:rounded-md file:border-0 file:bg-neutral-950 file:px-4 file:text-sm file:font-black file:text-white"
-                        />
-                    </label>
-
-                    {photoDataUrl && (
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
-                            <Image src={photoDataUrl} alt="업로드한 반려견 사진" fill sizes="420px" className="object-cover" unoptimized />
-                        </div>
-                    )}
-
                     <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-1">
                         <label>
                             <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
@@ -199,6 +357,26 @@ export default function PetLensClient() {
                             ))}
                         </div>
                     </div>
+
+                    <div className="hidden md:block">
+                        <label>
+                            <span className="mb-1 block text-xs font-black text-neutral-500">사진 업로드</span>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(event) => handleFile(event.target.files?.[0])}
+                                className="block w-full text-sm font-bold text-neutral-600 file:mr-3 file:h-10 file:rounded-md file:border-0 file:bg-neutral-950 file:px-4 file:text-sm file:font-black file:text-white"
+                            />
+                        </label>
+
+                        {photoDataUrl && (
+                            <div className="relative mt-3 aspect-[4/3] overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+                                <Image src={photoDataUrl} alt="업로드한 반려견 사진" fill sizes="420px" className="object-cover" unoptimized />
+                            </div>
+                        )}
+                    </div>
+
+                    <PetLensCameraCapture captures={capturedViews} onCapture={handleCameraCapture} />
 
                     <button type="submit" disabled={loading} className="btn btn-primary w-full disabled:opacity-50">
                         <i className="fa-solid fa-wand-magic-sparkles text-xs" />
