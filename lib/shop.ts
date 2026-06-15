@@ -1,6 +1,15 @@
 import { CATALOG, CATEGORY_LABEL, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
 
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
+export const PRODUCT_IMAGE_VERSION = "20260614-representative";
+
+export function versionProductImage(src: string | null | undefined): string {
+    if (!src) return "";
+    if (src.startsWith("data:") || src.startsWith("blob:")) return src;
+    if (!src.includes("/images/products/catalog/")) return src;
+    if (/[?&]v=/.test(src)) return src;
+    return `${src}${src.includes("?") ? "&" : "?"}v=${PRODUCT_IMAGE_VERSION}`;
+}
 
 export function productSlug(product: CatalogProduct): string {
     return product.folder || product.id;
