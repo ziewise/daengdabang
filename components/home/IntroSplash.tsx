@@ -10,7 +10,12 @@ export default function IntroSplash() {
 
     useEffect(() => {
         try {
-            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            const introMode = new URLSearchParams(window.location.search).get("intro");
+            if (introMode === "0") return;
+            if (introMode === "1") {
+                setVisible(true);
+                return;
+            }
             if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) return;
             setVisible(true);
         } catch {
