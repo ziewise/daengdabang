@@ -143,6 +143,22 @@ header + main .hero-shell {
     min-height: calc(100svh - var(--header-height));
 }
 
+.hero-video-scene {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #f4f1e9;
+}
+
+.hero-scene-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+}
+
 .hero-color-scene {
     position: absolute;
     inset: 0;
@@ -1045,11 +1061,11 @@ header + main .hero-shell {
 
 @media (min-width: 1024px) {
     .hero-shell {
-        min-height: clamp(620px, 43vw, 780px);
+        min-height: clamp(720px, 50vw, 900px);
     }
 
     .hero-content-stage {
-        min-height: clamp(620px, 43vw, 780px);
+        min-height: clamp(720px, 50vw, 900px);
     }
 }
 
@@ -1061,6 +1077,10 @@ header + main .hero-shell {
 
     .hero-content-stage {
         padding-bottom: max(96px, calc(env(safe-area-inset-bottom) + 88px));
+    }
+
+    .hero-scene-media {
+        object-position: 72% bottom;
     }
 
     .hero-color-sun {

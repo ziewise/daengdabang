@@ -20,23 +20,13 @@ export default function ProductGallery({ product: p }: Props) {
     return (
         <div className="space-y-3">
             <div
-                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative aspect-video overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
                 onMouseEnter={() => setShowVideo(true)}
                 onMouseLeave={() => setShowVideo(false)}
                 onFocus={() => setShowVideo(true)}
                 onBlur={() => setShowVideo(false)}
             >
-                {isVideoVisible ? (
-                    <video
-                        src={p.video}
-                        className="absolute inset-0 h-full w-full bg-[#f7f2e8] object-contain"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                    />
-                ) : activeImage ? (
+                {activeImage ? (
                     <Image
                         key={activeImage}
                         src={activeImage}
@@ -50,6 +40,17 @@ export default function ProductGallery({ product: p }: Props) {
                     <div className="absolute inset-0 flex items-center justify-center">
                         <i className={`fa-solid ${p.icon} text-7xl text-white drop-shadow`} />
                     </div>
+                )}
+                {p.video && (
+                    <video
+                        src={p.video}
+                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${isVideoVisible ? "opacity-100" : "opacity-0"}`}
+                        autoPlay={isVideoVisible}
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                    />
                 )}
 
                 {isVideoVisible && <VideoBrandOverlay />}

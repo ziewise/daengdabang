@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
 import { bundleHref, bundleImageCandidates, type Bundle } from "@/lib/bundles";
+import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 type Props = {
     bundle: Bundle;
@@ -14,7 +15,7 @@ export default function BundleCard({ bundle, priority }: Props) {
 
     return (
         <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-            <Link href={bundleHref(bundle)} className="relative block aspect-[16/10] overflow-hidden bg-[#f7f2e8]">
+            <Link href={bundleHref(bundle)} className="relative block aspect-video overflow-hidden bg-[#f7f2e8]">
                 {candidates[0] ? (
                     <Image
                         src={candidates[0]}
@@ -46,8 +47,13 @@ export default function BundleCard({ bundle, priority }: Props) {
                         loop
                         playsInline
                         preload="metadata"
-                        className="absolute inset-0 h-full w-full bg-[#f7f2e8] object-contain opacity-0 transition duration-300 group-hover:opacity-100"
+                        className="absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover opacity-0 transition duration-100 group-hover:opacity-100"
                     />
+                )}
+                {videoReady && (
+                    <div className="opacity-0 transition duration-100 group-hover:opacity-100">
+                        <VideoBrandOverlay />
+                    </div>
                 )}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">
                     <div className="flex flex-wrap gap-1.5">

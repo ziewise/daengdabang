@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/products/ProductCard";
+import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 import { BUNDLES, bundleImageCandidates, getBundleBySlug } from "@/lib/bundles";
 import { formatKRW } from "@/lib/catalog";
 import BundleAddButton from "./BundleAddButton";
@@ -40,7 +41,10 @@ export default async function BundleDetailPage({ params }: PageProps) {
                 <div className="absolute inset-0">
                     {heroImage && <Image src={heroImage} alt="" fill sizes="100vw" className="object-cover opacity-72" priority />}
                     {bundle.video && (
-                        <video src={bundle.video} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full bg-neutral-950 object-contain opacity-78" />
+                        <>
+                            <video src={bundle.video} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full bg-neutral-950 object-cover opacity-78" />
+                            <VideoBrandOverlay />
+                        </>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/90 via-neutral-950/58 to-neutral-950/10" />
                     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f7f8fb] to-transparent" />

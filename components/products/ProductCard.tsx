@@ -28,7 +28,6 @@ export default function ProductCard({
     const href = productHref(p);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoActive, setVideoActive] = useState(false);
-    const [videoLoaded, setVideoLoaded] = useState(false);
     const [isTouch, setIsTouch] = useState(false);
     const { addToCart } = useCart();
     const { toggleWishlist, isWished } = useStore();
@@ -44,14 +43,14 @@ export default function ProductCard({
     }, []);
 
     useEffect(() => {
-        if (!videoActive || !videoLoaded) return;
+        if (!videoActive) return;
         videoRef.current?.play().catch(() => {});
-    }, [videoActive, videoLoaded]);
+    }, [videoActive]);
 
     const activate = () => {
         if (!hasVideo) return;
-        setVideoLoaded(true);
         setVideoActive(true);
+        window.requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
     };
 
     const deactivate = () => {
@@ -78,7 +77,7 @@ export default function ProductCard({
                 onClick={handleMediaClick}
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
-                className={`relative flex aspect-square items-center justify-center overflow-hidden ${p.image ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative flex aspect-video items-center justify-center overflow-hidden ${p.image ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
                 aria-label={`${p.name} 상세보기`}
             >
                 {p.image ? (
@@ -93,15 +92,15 @@ export default function ProductCard({
                     <i className={`fa-solid ${p.icon} text-5xl text-white drop-shadow`} />
                 )}
 
-                {hasVideo && videoLoaded && (
+                {hasVideo && (
                     <video
                         ref={videoRef}
                         src={p.video}
                         muted
                         loop
                         playsInline
-                        preload="none"
-                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-contain transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
+                        preload="metadata"
+                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
                 {hasVideo && videoActive && <VideoBrandOverlay />}
