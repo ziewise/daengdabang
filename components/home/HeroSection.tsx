@@ -141,7 +141,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
 
             <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-end px-4 pb-8 pt-20 md:px-6 md:pb-10">
                 <div className="max-w-[720px]">
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
                             {scene.label}
                         </span>
@@ -153,6 +153,15 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                                 {weatherSummary}
                             </span>
                         )}
+                        <Link href="/pet-lens" className="hero-petlens-cta hero-petlens-pill" aria-label="펫렌즈로 사진 추천 받기">
+                            <span className="hero-petlens-icon" aria-hidden="true">
+                                <i className="fa-solid fa-camera" />
+                            </span>
+                            <span className="hero-petlens-copy">
+                                <strong>펫렌즈</strong>
+                                <small>사진으로 추천</small>
+                            </span>
+                        </Link>
                     </div>
                     <div className="hero-title-lockup mt-4">
                         <h1 className="hero-wordmark-title" aria-label={headline}>
@@ -171,15 +180,6 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                                 />
                             )}
                         </h1>
-                        <Link href="/pet-lens" className="hero-petlens-cta" aria-label="펫렌즈로 사진 추천 받기">
-                            <span className="hero-petlens-icon" aria-hidden="true">
-                                <i className="fa-solid fa-camera" />
-                            </span>
-                            <span className="hero-petlens-copy">
-                                <strong>펫렌즈</strong>
-                                <small>사진으로 초개인화 추천</small>
-                            </span>
-                        </Link>
                     </div>
                     <p className="mt-5 max-w-xl text-base font-bold leading-7 text-white/88 md:text-lg md:leading-8">
                         {body}
