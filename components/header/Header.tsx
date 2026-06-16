@@ -193,7 +193,7 @@ export default function Header() {
                             <i className="fa-solid fa-magnifying-glass" />
                         </button>
                         <Link
-                            href="#cart"
+                            href="/cart"
                             className="hidden lg:flex relative w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label="장바구니"
                         >
@@ -206,7 +206,7 @@ export default function Header() {
                         {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지) */}
                         {hydrated && (
                             <Link
-                                href={isLoggedIn ? "/mypage" : "/login"}
+                                href={isLoggedIn ? "/mypage" : "/auth/login"}
                                 className="hidden lg:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
                                 aria-label={isLoggedIn ? "마이페이지" : "로그인"}
                             >

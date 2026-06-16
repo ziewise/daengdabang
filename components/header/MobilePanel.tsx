@@ -172,15 +172,16 @@ export default function MobilePanel({ open, onClose }: Props) {
                         ))}
                     </MobileGroup>
 
-                    {/* 장바구니 */}
-                    <MobileLink href="#cart" icon="fa-bag-shopping" onClick={onClose}>장바구니</MobileLink>
+                    {/* 장바구니 — 협업자 장바구니 페이지 */}
+                    <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>장바구니</MobileLink>
 
                     {/* 로그인/마이페이지 — hydrate 후 인증 상태 반영
-                        hydrate 전엔 placeholder 로 로그인 표시 (깜빡임 최소화, mismatch 없음) */}
+                        hydrate 전엔 placeholder 로 로그인 표시 (깜빡임 최소화, mismatch 없음)
+                        로그인은 협업자 소셜 로그인 페이지(/auth/login) 사용 */}
                     {hydrated && isLoggedIn ? (
                         <MobileLink href="/mypage" icon="fa-user" onClick={onClose}>마이페이지</MobileLink>
                     ) : (
-                        <MobileLink href="/login" icon="fa-right-to-bracket" onClick={onClose}>로그인</MobileLink>
+                        <MobileLink href="/auth/login" icon="fa-right-to-bracket" onClick={onClose}>로그인</MobileLink>
                     )}
                 </nav>
             </aside>
