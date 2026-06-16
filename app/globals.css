@@ -636,14 +636,14 @@ header + main .hero-shell {
 }
 
 .hero-petlens-cta.hero-petlens-pill {
-    min-height: 34px;
-    gap: 7px;
-    padding: 4px 11px 4px 7px;
+    min-height: 54px;
+    gap: 11px;
+    padding: 8px 18px 8px 10px;
 }
 
 .hero-petlens-pill .hero-petlens-icon {
-    width: 26px;
-    height: 26px;
+    width: 40px;
+    height: 40px;
 }
 
 .hero-petlens-pill .hero-petlens-icon::before,
@@ -652,15 +652,15 @@ header + main .hero-shell {
 }
 
 .hero-petlens-pill .hero-petlens-icon i {
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .hero-petlens-pill .hero-petlens-copy strong {
-    font-size: 12px;
+    font-size: 17px;
 }
 
 .hero-petlens-pill .hero-petlens-copy small {
-    font-size: 9px;
+    font-size: 12px;
 }
 
 .hero-petlens-icon {

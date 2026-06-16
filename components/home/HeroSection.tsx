@@ -153,13 +153,13 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                                 {weatherSummary}
                             </span>
                         )}
-                        <Link href="/pet-lens" className="hero-petlens-cta hero-petlens-pill" aria-label="펫렌즈로 사진 추천 받기">
+                        <Link href="/pet-lens" className="hero-petlens-cta hero-petlens-pill" aria-label="펫렌즈로 우리 아이 맞춤 추천 받기">
                             <span className="hero-petlens-icon" aria-hidden="true">
                                 <i className="fa-solid fa-camera" />
                             </span>
                             <span className="hero-petlens-copy">
                                 <strong>펫렌즈</strong>
-                                <small>사진으로 추천</small>
+                                <small>우리 아이 맞춤 추천</small>
                             </span>
                         </Link>
                     </div>
