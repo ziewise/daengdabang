@@ -39,14 +39,14 @@ export default function PrivacyPage() {
             <p className="text-sm font-black text-indigo-700">Privacy</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">개인정보처리방침</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                시행일: {LEGAL_UPDATED_AT}. 본 문서는 운영 전 법무 검토와 실제 사업자 정보 입력이 필요합니다.
+                시행일: {LEGAL_UPDATED_AT}.
             </p>
 
             <section className="mt-8 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">1. 개인정보 처리자</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
                     {BUSINESS_INFO.companyName}은 회원 서비스와 쇼핑몰 운영을 위해 필요한 범위에서 개인정보를 처리합니다.
-                    개인정보 관련 문의는 {BUSINESS_INFO.customerServiceEmail} 또는 {BUSINESS_INFO.customerServicePhone}으로 접수합니다.
+                    개인정보 관련 문의는 고객센터 {BUSINESS_INFO.customerServicePhone}으로 접수합니다.
                 </p>
             </section>
 

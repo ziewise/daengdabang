@@ -15,7 +15,7 @@ export default function Footer() {
                     <div className="mt-4 grid gap-1 text-xs font-bold leading-5 text-neutral-500">
                         <p>상호: {BUSINESS_INFO.companyName} · 대표자: {BUSINESS_INFO.representative}</p>
                         <p>주소: {BUSINESS_INFO.address}</p>
-                        <p>고객센터: {BUSINESS_INFO.customerServicePhone} · {BUSINESS_INFO.customerServiceEmail}</p>
+                        <p>고객센터: {BUSINESS_INFO.customerServicePhone}</p>
                         <p>사업자등록번호: {BUSINESS_INFO.businessNumber}</p>
                         <p>통신판매업신고번호: {BUSINESS_INFO.mailOrderNumber}</p>
                         <p>호스팅서비스 제공자: {BUSINESS_INFO.hostingProvider}</p>

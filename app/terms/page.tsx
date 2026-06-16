@@ -41,7 +41,7 @@ const sections = [
     },
     {
         title: "제9조 사업자 정보",
-        body: `상호: ${BUSINESS_INFO.companyName}, 대표자: ${BUSINESS_INFO.representative}, 주소: ${BUSINESS_INFO.address}, 고객센터: ${BUSINESS_INFO.customerServicePhone}, 이메일: ${BUSINESS_INFO.customerServiceEmail}, 사업자등록번호: ${BUSINESS_INFO.businessNumber}, 통신판매업신고번호: ${BUSINESS_INFO.mailOrderNumber}`,
+        body: `상호: ${BUSINESS_INFO.companyName}, 대표자: ${BUSINESS_INFO.representative}, 주소: ${BUSINESS_INFO.address}, 고객센터: ${BUSINESS_INFO.customerServicePhone}, 사업자등록번호: ${BUSINESS_INFO.businessNumber}, 통신판매업신고번호: ${BUSINESS_INFO.mailOrderNumber}, 호스팅서비스 제공자: ${BUSINESS_INFO.hostingProvider}`,
     },
 ];
 
@@ -51,7 +51,7 @@ export default function TermsPage() {
             <p className="text-sm font-black text-indigo-700">Legal</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">이용약관</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                시행일: {LEGAL_UPDATED_AT}. 본 문서는 운영 전 법무 검토와 실제 사업자 정보 입력이 필요합니다.
+                시행일: {LEGAL_UPDATED_AT}.
             </p>
             <div className="mt-8 grid gap-5">
                 {sections.map((section) => (
