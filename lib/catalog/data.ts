@@ -2,6 +2,8 @@ import rawCatalog from "./raw.json";
 import { SUBCAT_ICON, SUBCAT_TO_CAT } from "./labels";
 import type { CatalogProduct, CatalogRow, PromoSlug, SubcategorySlug } from "./types";
 
+const CATALOG_DATA_REVISION = "video-cdn-20260616";
+
 const textOf = (row: CatalogRow) =>
     [row.useMain, row.useSub, row.name, row.categorizeNote, row.season, row.target]
         .filter(Boolean)
@@ -81,7 +83,7 @@ function buildMeta(row: CatalogRow) {
     return { popularity, addedAt, salesCount, reviewCount, rating, discountRate, originalPrice };
 }
 
-function buildCatalog(): CatalogProduct[] {
+function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
     return (rawCatalog as CatalogRow[]).map((row) => {
         const subcategory = mapSubcategory(row);
         const category = SUBCAT_TO_CAT[subcategory];
@@ -107,7 +109,7 @@ function buildCatalog(): CatalogProduct[] {
             gallery: row.gallery,
             details: row.details,
             sizeImage: row.sizeImage,
-            video: row.video,
+            video: row.video ? `${row.video}${revision ? "" : ""}` : row.video,
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
             externalReviewCount: row.externalReviewCount,
