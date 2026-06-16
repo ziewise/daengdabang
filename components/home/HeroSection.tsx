@@ -163,7 +163,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         {body}
                     </p>
                     <div className="mt-7 flex flex-wrap gap-2">
-                        <Link href="/promo/active" className="btn btn-hero-light">
+                        <Link href="/bundles" className="btn btn-hero-light">
                             <i className="fa-solid fa-gift text-xs" />
                             기획전 보기
                         </Link>

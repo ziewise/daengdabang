@@ -3,6 +3,7 @@ import { CATALOG, CATEGORY_LABEL, getBestProducts, getNewProducts } from "@/lib/
 import { CATEGORY_ORDER, categoryTiles } from "@/lib/shop";
 import HeroSection from "@/components/home/HeroSection";
 import IntroSplash from "@/components/home/IntroSplash";
+import SpecialBundles from "@/components/home/SpecialBundles";
 import ProductCard from "@/components/products/ProductCard";
 
 export default function HomePage() {
@@ -28,6 +29,8 @@ export default function HomePage() {
                     ))}
                 </div>
             </section>
+
+            <SpecialBundles />
 
             <section className="mx-auto max-w-[1280px] px-4 py-6 md:px-6">
                 <SectionHeader title="인기 상품" href="/products?sort=popular" />

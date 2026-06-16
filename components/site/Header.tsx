@@ -13,6 +13,7 @@ const mainLinks = [
     { href: "/best", label: "베스트" },
     { href: "/new", label: "신상품" },
     { href: "/brands", label: "브랜드" },
+    { href: "/bundles", label: "기획전" },
 ];
 
 export default function Header() {
