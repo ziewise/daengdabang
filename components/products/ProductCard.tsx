@@ -115,16 +115,8 @@ export default function ProductCard({
                         loop
                         playsInline
                         preload="none"
-                        onLoadedMetadata={(event) => {
-                            const video = event.currentTarget;
-                            if (video.dataset.ddbWarm !== "1") return;
-                            if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
-                            if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-                            video.currentTime = Math.min(0.08, Math.max(0.01, video.duration / 100));
-                        }}
                         onLoadedData={() => setVideoReady(true)}
                         onCanPlay={() => setVideoReady(true)}
-                        onSeeked={() => setVideoReady(true)}
                         className={`absolute inset-0 z-0 h-full w-full bg-[#f7f2e8] object-cover ${p.image ? "opacity-100" : videoVisible ? "opacity-100" : "opacity-0"}`}
                     />
                 )}

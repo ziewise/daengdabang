@@ -92,16 +92,8 @@ export default function BundleCard({ bundle, priority }: Props) {
                         loop
                         playsInline
                         preload="none"
-                        onLoadedMetadata={(event) => {
-                            const video = event.currentTarget;
-                            if (video.dataset.ddbWarm !== "1") return;
-                            if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
-                            if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-                            video.currentTime = Math.min(0.08, Math.max(0.01, video.duration / 100));
-                        }}
                         onLoadedData={() => setVideoLoaded(true)}
                         onCanPlay={() => setVideoLoaded(true)}
-                        onSeeked={() => setVideoLoaded(true)}
                         className="absolute inset-0 z-0 h-full w-full bg-[#f7f2e8] object-cover opacity-100"
                     />
                 )}
