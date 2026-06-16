@@ -30,7 +30,7 @@ export default function Header() {
     }));
 
     return (
-        <header className="sticky top-0 isolate z-50 border-b border-neutral-200 bg-white shadow-[0_1px_0_rgba(15,23,42,0.04)]">
+        <header className="relative z-50 border-b border-neutral-200 bg-white shadow-[0_1px_0_rgba(15,23,42,0.04)]">
             <div className="mx-auto flex h-[var(--header-height)] max-w-[1280px] items-center gap-2 px-4 md:gap-4 md:px-6">
                 <button
                     type="button"

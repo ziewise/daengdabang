@@ -132,6 +132,7 @@ button:disabled {
 .hero-shell {
     margin-top: 0;
     min-height: calc(100svh - var(--header-height));
+    background: #f4f1e9;
 }
 
 header + main .hero-shell {
@@ -155,8 +156,8 @@ header + main .hero-shell {
 }
 
 .hero-scene-media {
-    object-fit: cover;
-    object-position: 72% bottom;
+    object-fit: contain;
+    object-position: center center;
 }
 
 .hero-scene-video {
