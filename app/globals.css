@@ -499,7 +499,7 @@ button:disabled {
     .hero-scene-media {
         object-fit: contain;
         object-position: center top;
-        transform: scale(1.2);
+        transform: translateX(-26vw) scale(2);
         transform-origin: top center;
     }
 
