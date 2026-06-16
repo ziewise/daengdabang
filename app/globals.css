@@ -130,7 +130,12 @@ button:disabled {
 }
 
 .hero-shell {
+    margin-top: 0;
     min-height: calc(100svh - var(--header-height));
+}
+
+header + main .hero-shell {
+    margin-top: 0;
 }
 
 .hero-content-stage {
