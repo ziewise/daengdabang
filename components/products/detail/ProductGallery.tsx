@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import bestStyles from "@/components/main/best.module.css";
@@ -12,19 +12,43 @@ interface Props {
 
 export default function ProductGallery({ product: p }: Props) {
     const images = [p.image, ...(p.gallery ?? [])].filter(Boolean) as string[];
+    const videoRef = useRef<HTMLVideoElement>(null);
     const [activeIdx, setActiveIdx] = useState(0);
     const [showVideo, setShowVideo] = useState(false);
+    const [videoReady, setVideoReady] = useState(false);
     const activeImage = images[activeIdx];
-    const isVideoVisible = Boolean(p.video && showVideo);
+    const isVideoVisible = Boolean(p.video && showVideo && videoReady);
+
+    const activateVideo = () => {
+        if (!p.video) return;
+        const video = videoRef.current;
+        setShowVideo(true);
+        if (!video) return;
+        video.preload = "auto";
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            setVideoReady(true);
+        } else {
+            video.load();
+        }
+        window.requestAnimationFrame(() => video.play().catch(() => {}));
+    };
+
+    const deactivateVideo = () => {
+        setShowVideo(false);
+        const video = videoRef.current;
+        if (!video) return;
+        video.pause();
+        video.currentTime = 0;
+    };
 
     return (
         <div className="space-y-3">
             <div
                 className={`relative aspect-video overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
-                onMouseEnter={() => setShowVideo(true)}
-                onMouseLeave={() => setShowVideo(false)}
-                onFocus={() => setShowVideo(true)}
-                onBlur={() => setShowVideo(false)}
+                onMouseEnter={activateVideo}
+                onMouseLeave={deactivateVideo}
+                onFocus={activateVideo}
+                onBlur={deactivateVideo}
             >
                 {activeImage ? (
                     <Image
@@ -43,13 +67,15 @@ export default function ProductGallery({ product: p }: Props) {
                 )}
                 {p.video && (
                     <video
+                        ref={videoRef}
                         src={p.video}
                         className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${isVideoVisible ? "opacity-100" : "opacity-0"}`}
-                        autoPlay={isVideoVisible}
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="auto"
+                        onLoadedData={() => setVideoReady(true)}
+                        onCanPlay={() => setVideoReady(true)}
                     />
                 )}
 

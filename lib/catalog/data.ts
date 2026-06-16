@@ -4,6 +4,16 @@ import type { CatalogProduct, CatalogRow, PromoSlug, SubcategorySlug } from "./t
 
 const CATALOG_DATA_REVISION = "video-cdn-20260616";
 
+function storefrontVideoUrl(video: string | undefined): string | undefined {
+    if (!video) return video;
+    const publicMarker = "/public/";
+    const publicIndex = video.indexOf(publicMarker);
+    if (publicIndex >= 0) {
+        return `/${video.slice(publicIndex + publicMarker.length)}`;
+    }
+    return video;
+}
+
 const textOf = (row: CatalogRow) =>
     [row.useMain, row.useSub, row.name, row.categorizeNote, row.season, row.target]
         .filter(Boolean)
@@ -109,7 +119,7 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             gallery: row.gallery,
             details: row.details,
             sizeImage: row.sizeImage,
-            video: row.video ? `${row.video}${revision ? "" : ""}` : row.video,
+            video: storefrontVideoUrl(row.video ? `${row.video}${revision ? "" : ""}` : row.video),
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
             externalReviewCount: row.externalReviewCount,

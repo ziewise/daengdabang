@@ -26,8 +26,10 @@ export default function ProductCard({
     sizeClass,
 }: Props) {
     const href = productHref(p);
+    const mediaRef = useRef<HTMLAnchorElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoActive, setVideoActive] = useState(false);
+    const [videoReady, setVideoReady] = useState(false);
     const [isTouch, setIsTouch] = useState(false);
     const { addToCart } = useCart();
     const { toggleWishlist, isWished } = useStore();
@@ -47,10 +49,52 @@ export default function ProductCard({
         videoRef.current?.play().catch(() => {});
     }, [videoActive]);
 
+    useEffect(() => {
+        if (!hasVideo || typeof window === "undefined") return;
+        const media = mediaRef.current;
+        if (!media) return;
+
+        const warmVideo = () => {
+            const warmWindow = window as Window & { __ddbVideoWarmCount?: number };
+            if ((warmWindow.__ddbVideoWarmCount ?? 0) >= 6) return;
+            warmWindow.__ddbVideoWarmCount = (warmWindow.__ddbVideoWarmCount ?? 0) + 1;
+            const video = videoRef.current;
+            if (!video) return;
+            video.preload = "auto";
+            if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+                video.load();
+            }
+        };
+
+        if (!("IntersectionObserver" in window)) {
+            warmVideo();
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                warmVideo();
+                observer.disconnect();
+            },
+            { rootMargin: "640px" },
+        );
+        observer.observe(media);
+        return () => observer.disconnect();
+    }, [hasVideo, p.video]);
+
     const activate = () => {
         if (!hasVideo) return;
+        const video = videoRef.current;
         setVideoActive(true);
-        window.requestAnimationFrame(() => videoRef.current?.play().catch(() => {}));
+        if (!video) return;
+        video.preload = "auto";
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            setVideoReady(true);
+        } else {
+            video.load();
+        }
+        window.requestAnimationFrame(() => video.play().catch(() => {}));
     };
 
     const deactivate = () => {
@@ -69,10 +113,12 @@ export default function ProductCard({
             activate();
         }
     };
+    const videoVisible = videoActive && videoReady;
 
     return (
         <article className={`group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${sizeClass ?? ""}`}>
             <Link
+                ref={mediaRef}
                 href={href}
                 onClick={handleMediaClick}
                 onMouseEnter={activate}
@@ -86,7 +132,7 @@ export default function ProductCard({
                         alt={p.name}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"
-                        className={`object-cover transition duration-300 group-hover:scale-[1.03] ${videoActive ? "opacity-0" : "opacity-100"}`}
+                        className={`object-cover transition duration-150 group-hover:scale-[1.03] ${videoVisible ? "opacity-0" : "opacity-100"}`}
                     />
                 ) : (
                     <i className={`fa-solid ${p.icon} text-5xl text-white drop-shadow`} />
@@ -100,10 +146,12 @@ export default function ProductCard({
                         loop
                         playsInline
                         preload="metadata"
-                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${videoActive ? "opacity-100" : "opacity-0"}`}
+                        onLoadedData={() => setVideoReady(true)}
+                        onCanPlay={() => setVideoReady(true)}
+                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${videoVisible ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
-                {hasVideo && videoActive && <VideoBrandOverlay />}
+                {hasVideo && videoVisible && <VideoBrandOverlay />}
 
                 {(showBest || shouldShowNew) && (
                     <div className="absolute left-2 top-2 z-10 flex flex-col items-start gap-1">

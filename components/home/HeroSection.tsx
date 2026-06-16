@@ -155,8 +155,21 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         )}
                     </div>
                     <div className="hero-title-lockup mt-4">
-                        <h1 className="text-5xl font-black leading-none text-white md:text-7xl">
-                            {headline}
+                        <h1 className="hero-wordmark-title" aria-label={headline}>
+                            {primaryPet ? (
+                                <span className="text-5xl font-black leading-none text-white md:text-7xl">
+                                    {headline}
+                                </span>
+                            ) : (
+                                <Image
+                                    src="/images/wordmark.png"
+                                    alt="댕다방"
+                                    width={2048}
+                                    height={768}
+                                    className="hero-wordmark-image"
+                                    priority
+                                />
+                            )}
                         </h1>
                         <Link href="/pet-lens" className="hero-petlens-cta" aria-label="펫렌즈로 사진 추천 받기">
                             <span className="hero-petlens-icon" aria-hidden="true">

@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
@@ -10,19 +13,89 @@ type Props = {
 };
 
 export default function BundleCard({ bundle, priority }: Props) {
+    const mediaRef = useRef<HTMLAnchorElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [videoActive, setVideoActive] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const candidates = bundleImageCandidates(bundle).slice(0, 4);
     const videoReady = bundle.assetStatus === "ready" && Boolean(bundle.video);
+    const videoVisible = videoReady && videoActive && videoLoaded;
+
+    useEffect(() => {
+        if (!videoReady || typeof window === "undefined") return;
+        const media = mediaRef.current;
+        if (!media) return;
+
+        const warmVideo = () => {
+            const warmWindow = window as Window & { __ddbBundleVideoWarmCount?: number };
+            if ((warmWindow.__ddbBundleVideoWarmCount ?? 0) >= 4) return;
+            warmWindow.__ddbBundleVideoWarmCount = (warmWindow.__ddbBundleVideoWarmCount ?? 0) + 1;
+            const video = videoRef.current;
+            if (!video) return;
+            video.preload = "auto";
+            if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+                video.load();
+            }
+        };
+
+        if (!("IntersectionObserver" in window)) {
+            warmVideo();
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                warmVideo();
+                observer.disconnect();
+            },
+            { rootMargin: "640px" },
+        );
+        observer.observe(media);
+        return () => observer.disconnect();
+    }, [videoReady, bundle.video]);
+
+    const activate = () => {
+        if (!videoReady) return;
+        const video = videoRef.current;
+        setVideoActive(true);
+        if (!video) return;
+        video.preload = "auto";
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            setVideoLoaded(true);
+        } else {
+            video.load();
+        }
+        window.requestAnimationFrame(() => video.play().catch(() => {}));
+    };
+
+    const deactivate = () => {
+        if (!videoReady) return;
+        setVideoActive(false);
+        const video = videoRef.current;
+        if (!video) return;
+        video.pause();
+        video.currentTime = 0;
+    };
 
     return (
         <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-            <Link href={bundleHref(bundle)} className="relative block aspect-video overflow-hidden bg-[#f7f2e8]">
+            <Link
+                ref={mediaRef}
+                href={bundleHref(bundle)}
+                className="relative block aspect-video overflow-hidden bg-[#f7f2e8]"
+                onMouseEnter={activate}
+                onMouseLeave={deactivate}
+                onFocus={activate}
+                onBlur={deactivate}
+            >
                 {candidates[0] ? (
                     <Image
                         src={candidates[0]}
                         alt=""
                         fill
                         sizes="(max-width: 768px) 100vw, 360px"
-                        className={`object-cover transition duration-300 group-hover:scale-[1.03] ${videoReady ? "group-hover:opacity-0" : ""}`}
+                        className={`object-cover transition duration-150 group-hover:scale-[1.03] ${videoVisible ? "opacity-0" : "opacity-100"}`}
                         priority={priority}
                     />
                 ) : (
@@ -41,17 +114,19 @@ export default function BundleCard({ bundle, priority }: Props) {
                 )}
                 {videoReady && (
                     <video
+                        ref={videoRef}
                         src={bundle.video}
-                        autoPlay
                         muted
                         loop
                         playsInline
                         preload="metadata"
-                        className="absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover opacity-0 transition duration-100 group-hover:opacity-100"
+                        onLoadedData={() => setVideoLoaded(true)}
+                        onCanPlay={() => setVideoLoaded(true)}
+                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition duration-100 ${videoVisible ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
-                {videoReady && (
-                    <div className="opacity-0 transition duration-100 group-hover:opacity-100">
+                {videoVisible && (
+                    <div>
                         <VideoBrandOverlay />
                     </div>
                 )}
