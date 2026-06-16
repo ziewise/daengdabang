@@ -40,7 +40,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                 <div className="absolute inset-0">
                     {heroImage && <Image src={heroImage} alt="" fill sizes="100vw" className="object-cover opacity-72" priority />}
                     {bundle.video && (
-                        <video src={bundle.video} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover opacity-78" />
+                        <video src={bundle.video} autoPlay muted loop playsInline className="absolute inset-0 h-full w-full bg-neutral-950 object-contain opacity-78" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/90 via-neutral-950/58 to-neutral-950/10" />
                     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f7f8fb] to-transparent" />

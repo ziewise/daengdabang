@@ -104,21 +104,41 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     return (
         <section className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
             <div className="absolute inset-0">
-                <Image src={scene.poster} alt="" fill sizes="100vw" className="hero-scene-backdrop" aria-hidden="true" />
-                <Image src={scene.poster} alt="" fill sizes="100vw" className="hero-scene-media" priority />
-                {scene.video && (
-                    <video
-                        key={scene.video}
-                        className="hero-scene-media hero-scene-video"
-                        poster={scene.poster}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                    >
-                        <source src={scene.video} type="video/mp4" />
-                    </video>
-                )}
+                <div className={`hero-color-scene hero-color-${context.timeBucket}`} aria-hidden="true">
+                    <div className="hero-color-sun" />
+                    <div className="hero-color-cloud hero-color-cloud-a" />
+                    <div className="hero-color-cloud hero-color-cloud-b" />
+                    <div className="hero-color-cloud hero-color-cloud-c" />
+                    <div className="hero-color-hill hero-color-hill-back" />
+                    <div className="hero-color-hill hero-color-hill-front" />
+                    <div className="hero-color-house hero-color-house-a">
+                        <span className="hero-house-roof" />
+                        <span className="hero-house-body" />
+                        <span className="hero-house-window" />
+                        <span className="hero-house-door" />
+                    </div>
+                    <div className="hero-color-house hero-color-house-b">
+                        <span className="hero-house-roof" />
+                        <span className="hero-house-body" />
+                        <span className="hero-house-window" />
+                        <span className="hero-house-door" />
+                    </div>
+                    <div className="hero-color-path" />
+                    <Image
+                        src="/images/hero/clear-evening.png?v=20260616-summer"
+                        alt=""
+                        fill
+                        sizes="100vw"
+                        className="hero-summer-art"
+                        priority
+                    />
+                    <div className="hero-summer-glow" />
+                    <div className="hero-color-paws">
+                        <span />
+                        <span />
+                        <span />
+                    </div>
+                </div>
                 <div className={`absolute inset-0 bg-gradient-to-r ${overlayClass[scene.overlay]}`} />
                 {scene.effect !== "none" && (
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />

@@ -29,7 +29,7 @@ export default function ProductGallery({ product: p }: Props) {
                 {isVideoVisible ? (
                     <video
                         src={p.video}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className="absolute inset-0 h-full w-full bg-[#f7f2e8] object-contain"
                         autoPlay
                         muted
                         loop

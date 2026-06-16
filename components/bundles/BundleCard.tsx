@@ -46,7 +46,7 @@ export default function BundleCard({ bundle, priority }: Props) {
                         loop
                         playsInline
                         preload="metadata"
-                        className="absolute inset-0 h-full w-full object-cover opacity-0 transition duration-300 group-hover:opacity-100"
+                        className="absolute inset-0 h-full w-full bg-[#f7f2e8] object-contain opacity-0 transition duration-300 group-hover:opacity-100"
                     />
                 )}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">

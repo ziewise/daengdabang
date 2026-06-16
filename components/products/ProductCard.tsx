@@ -101,7 +101,7 @@ export default function ProductCard({
                         loop
                         playsInline
                         preload="none"
-                        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
+                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-contain transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
                 {hasVideo && videoActive && <VideoBrandOverlay />}
