@@ -778,15 +778,15 @@ header + main .hero-shell {
 
 .hero-ziewcore-badge {
     position: absolute;
-    right: clamp(18px, 4vw, 56px);
-    bottom: clamp(18px, 4vh, 44px);
+    right: clamp(84px, 8vw, 150px);
+    bottom: clamp(22px, 4.2vh, 48px);
     z-index: 5;
     display: flex;
-    min-width: 300px;
-    height: 66px;
+    min-width: 232px;
+    height: 48px;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 8px;
     border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 999px;
     background:
@@ -794,17 +794,17 @@ header + main .hero-shell {
         radial-gradient(circle at 24% 26%, rgba(255, 255, 255, 0.36), transparent 32%);
     color: white;
     box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.28),
+        0 12px 26px rgba(0, 0, 0, 0.24),
         inset 0 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 -12px 22px rgba(0, 0, 0, 0.16);
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+        inset 0 -8px 16px rgba(0, 0, 0, 0.16);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
 }
 
 .hero-ziewcore-badge::before {
     content: "";
     position: absolute;
-    inset: 7px 12px auto 18px;
-    height: 18px;
+    inset: 5px 10px auto 14px;
+    height: 13px;
     border-radius: 999px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.04));
     filter: blur(1px);
@@ -820,13 +820,13 @@ header + main .hero-shell {
 }
 
 .hero-ziewcore-badge span {
-    font-size: 17px;
+    font-size: 13px;
     font-weight: 900;
     opacity: 0.92;
 }
 
 .hero-ziewcore-badge strong {
-    font-size: 27px;
+    font-size: 22px;
     font-weight: 1000;
 }
 
@@ -1247,17 +1247,17 @@ header + main .hero-shell {
     .hero-ziewcore-badge {
         right: auto;
         bottom: max(16px, env(safe-area-inset-bottom));
-        left: 16px;
-        min-width: 174px;
-        height: 42px;
-        gap: 7px;
+        left: 18px;
+        min-width: 148px;
+        height: 34px;
+        gap: 5px;
     }
 
     .hero-ziewcore-badge span {
-        font-size: 11px;
+        font-size: 9px;
     }
 
     .hero-ziewcore-badge strong {
-        font-size: 17px;
+        font-size: 14px;
     }
 }
