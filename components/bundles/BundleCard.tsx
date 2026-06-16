@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
@@ -19,47 +19,14 @@ export default function BundleCard({ bundle, priority }: Props) {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const candidates = bundleImageCandidates(bundle).slice(0, 4);
     const videoReady = bundle.assetStatus === "ready" && Boolean(bundle.video);
-    const videoVisible = videoReady && videoActive && videoLoaded;
-
-    useEffect(() => {
-        if (!videoReady || typeof window === "undefined") return;
-        const media = mediaRef.current;
-        if (!media) return;
-
-        const warmVideo = () => {
-            const warmWindow = window as Window & { __ddbBundleVideoWarmCount?: number };
-            if ((warmWindow.__ddbBundleVideoWarmCount ?? 0) >= 4) return;
-            warmWindow.__ddbBundleVideoWarmCount = (warmWindow.__ddbBundleVideoWarmCount ?? 0) + 1;
-            const video = videoRef.current;
-            if (!video) return;
-            video.preload = "auto";
-            if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-                video.load();
-            }
-        };
-
-        if (!("IntersectionObserver" in window)) {
-            warmVideo();
-            return;
-        }
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (!entries.some((entry) => entry.isIntersecting)) return;
-                warmVideo();
-                observer.disconnect();
-            },
-            { rootMargin: "640px" },
-        );
-        observer.observe(media);
-        return () => observer.disconnect();
-    }, [videoReady, bundle.video]);
+    const videoVisible = videoReady && videoActive;
 
     const activate = () => {
         if (!videoReady) return;
         const video = videoRef.current;
         setVideoActive(true);
         if (!video) return;
+        video.dataset.ddbWarm = "1";
         video.preload = "auto";
         if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
             setVideoLoaded(true);
@@ -95,7 +62,8 @@ export default function BundleCard({ bundle, priority }: Props) {
                         alt=""
                         fill
                         sizes="(max-width: 768px) 100vw, 360px"
-                        className={`object-cover transition duration-150 group-hover:scale-[1.03] ${videoVisible ? "opacity-0" : "opacity-100"}`}
+                        style={{ display: videoVisible ? "none" : "block" }}
+                        className="z-10 object-cover transition duration-150 group-hover:scale-[1.03]"
                         priority={priority}
                     />
                 ) : (
@@ -104,7 +72,10 @@ export default function BundleCard({ bundle, priority }: Props) {
                     </div>
                 )}
                 {!bundle.poster && candidates.length > 1 && (
-                    <div className="absolute inset-0 grid grid-cols-2 gap-1 bg-white p-1">
+                    <div
+                        className="absolute inset-0 z-10 grid grid-cols-2 gap-1 bg-white p-1 transition duration-100"
+                        style={{ display: videoVisible ? "none" : "grid" }}
+                    >
                         {candidates.map((src, index) => (
                             <div key={`${src}-${index}`} className="relative overflow-hidden rounded-md bg-[#f7f2e8]">
                                 <Image src={src} alt="" fill sizes="160px" className="object-cover" />
@@ -116,13 +87,22 @@ export default function BundleCard({ bundle, priority }: Props) {
                     <video
                         ref={videoRef}
                         src={bundle.video}
+                        poster={candidates[0] || undefined}
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
+                        onLoadedMetadata={(event) => {
+                            const video = event.currentTarget;
+                            if (video.dataset.ddbWarm !== "1") return;
+                            if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
+                            if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+                            video.currentTime = Math.min(0.08, Math.max(0.01, video.duration / 100));
+                        }}
                         onLoadedData={() => setVideoLoaded(true)}
                         onCanPlay={() => setVideoLoaded(true)}
-                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition duration-100 ${videoVisible ? "opacity-100" : "opacity-0"}`}
+                        onSeeked={() => setVideoLoaded(true)}
+                        className="absolute inset-0 z-0 h-full w-full bg-[#f7f2e8] object-cover opacity-100"
                     />
                 )}
                 {videoVisible && (
@@ -130,7 +110,7 @@ export default function BundleCard({ bundle, priority }: Props) {
                         <VideoBrandOverlay />
                     </div>
                 )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">
+                <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">
                     <div className="flex flex-wrap gap-1.5">
                         <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-neutral-950">{bundle.badge}</span>
                         <span className="rounded-full bg-neutral-950/45 px-2 py-0.5 text-[10px] font-black text-white ring-1 ring-white/20">

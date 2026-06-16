@@ -49,45 +49,12 @@ export default function ProductCard({
         videoRef.current?.play().catch(() => {});
     }, [videoActive]);
 
-    useEffect(() => {
-        if (!hasVideo || typeof window === "undefined") return;
-        const media = mediaRef.current;
-        if (!media) return;
-
-        const warmVideo = () => {
-            const warmWindow = window as Window & { __ddbVideoWarmCount?: number };
-            if ((warmWindow.__ddbVideoWarmCount ?? 0) >= 6) return;
-            warmWindow.__ddbVideoWarmCount = (warmWindow.__ddbVideoWarmCount ?? 0) + 1;
-            const video = videoRef.current;
-            if (!video) return;
-            video.preload = "auto";
-            if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-                video.load();
-            }
-        };
-
-        if (!("IntersectionObserver" in window)) {
-            warmVideo();
-            return;
-        }
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (!entries.some((entry) => entry.isIntersecting)) return;
-                warmVideo();
-                observer.disconnect();
-            },
-            { rootMargin: "640px" },
-        );
-        observer.observe(media);
-        return () => observer.disconnect();
-    }, [hasVideo, p.video]);
-
     const activate = () => {
         if (!hasVideo) return;
         const video = videoRef.current;
         setVideoActive(true);
         if (!video) return;
+        video.dataset.ddbWarm = "1";
         video.preload = "auto";
         if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
             setVideoReady(true);
@@ -113,7 +80,7 @@ export default function ProductCard({
             activate();
         }
     };
-    const videoVisible = videoActive && videoReady;
+    const videoVisible = videoActive && hasVideo;
 
     return (
         <article className={`group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${sizeClass ?? ""}`}>
@@ -132,7 +99,8 @@ export default function ProductCard({
                         alt={p.name}
                         fill
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 240px"
-                        className={`object-cover transition duration-150 group-hover:scale-[1.03] ${videoVisible ? "opacity-0" : "opacity-100"}`}
+                        style={{ display: videoVisible ? "none" : "block" }}
+                        className="z-10 object-cover transition duration-150 group-hover:scale-[1.03]"
                     />
                 ) : (
                     <i className={`fa-solid ${p.icon} text-5xl text-white drop-shadow`} />
@@ -142,13 +110,22 @@ export default function ProductCard({
                     <video
                         ref={videoRef}
                         src={p.video}
+                        poster={p.image || undefined}
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
+                        onLoadedMetadata={(event) => {
+                            const video = event.currentTarget;
+                            if (video.dataset.ddbWarm !== "1") return;
+                            if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return;
+                            if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+                            video.currentTime = Math.min(0.08, Math.max(0.01, video.duration / 100));
+                        }}
                         onLoadedData={() => setVideoReady(true)}
                         onCanPlay={() => setVideoReady(true)}
-                        className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${videoVisible ? "opacity-100" : "opacity-0"}`}
+                        onSeeked={() => setVideoReady(true)}
+                        className={`absolute inset-0 z-0 h-full w-full bg-[#f7f2e8] object-cover ${p.image ? "opacity-100" : videoVisible ? "opacity-100" : "opacity-0"}`}
                     />
                 )}
                 {hasVideo && videoVisible && <VideoBrandOverlay />}
