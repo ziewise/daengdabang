@@ -17,7 +17,6 @@ import {
     type HeroWeather,
 } from "@/lib/hero-assets";
 import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
-import { productHref, versionProductImage } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
 
 type Props = {
@@ -66,7 +65,7 @@ function accountState(user: ReturnType<typeof useAuth>["user"]): HeroAccountStat
     return "guest";
 }
 
-export default function HeroSection({ featuredProducts }: Props) {
+export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
     const { user } = useAuth();
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
@@ -93,24 +92,24 @@ export default function HeroSection({ featuredProducts }: Props) {
     const weatherSummary = heroWeatherSummary(weatherReport);
     const primaryPet = user?.pets.find((pet) => pet.name);
     const state = accountState(user);
-    const headline = primaryPet ? `${primaryPet.name}의 오늘 산책` : user ? `${user.name}님의 댕다방` : "댕다방";
+    const headline = primaryPet ? `${primaryPet.name}와 오늘 산책` : "댕다방";
     const body =
         state === "pet"
-            ? `${primaryPet?.name}의 프로필과 지금 날씨를 함께 보고 필요한 용품을 먼저 보여드릴게요.`
+            ? `${primaryPet?.name} 사진과 오늘 날씨를 함께 보고, 산책 준비부터 먹거리와 생활용품까지 딱 맞게 추천해드려요.`
             : state === "member"
-              ? "저장된 취향과 오늘의 날씨 흐름을 이어 받아 필요한 반려견 용품을 빠르게 찾을 수 있어요."
-              : "산책, 먹거리, 생활용품까지 실시간 날씨와 계절감에 맞춰 고르기 쉽게 정리했습니다.";
+              ? "펫렌즈로 우리 아이 사진을 더하면, 날씨와 취향에 맞춘 초개인화 추천을 바로 받아볼 수 있어요."
+              : "펫렌즈로 우리 아이를 알아보고, 오늘 날씨와 계절에 맞는 산책용품부터 먹거리까지 쉽게 고르세요.";
     const contextLabel = `${seasonLabel(context.season)} ${timeBucketLabel(context.timeBucket)}`;
-    const products = featuredProducts.filter((product) => product.image).slice(0, 3);
 
     return (
-        <section className="relative isolate overflow-hidden bg-neutral-950 text-white">
+        <section className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
             <div className="absolute inset-0">
-                <Image src={scene.poster} alt="" fill sizes="100vw" className="object-cover" priority />
+                <Image src={scene.poster} alt="" fill sizes="100vw" className="hero-scene-backdrop" aria-hidden="true" />
+                <Image src={scene.poster} alt="" fill sizes="100vw" className="hero-scene-media" priority />
                 {scene.video && (
                     <video
                         key={scene.video}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className="hero-scene-media hero-scene-video"
                         poster={scene.poster}
                         autoPlay
                         muted
@@ -124,17 +123,15 @@ export default function HeroSection({ featuredProducts }: Props) {
                 {scene.effect !== "none" && (
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
                 )}
+                <div className="hero-ziewcore-badge" aria-hidden="true">
+                    <span>Powered by</span>
+                    <strong>Ziewcore</strong>
+                </div>
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
 
-            {scene.accentImage && (
-                <div className="pointer-events-none absolute bottom-6 right-6 hidden h-[42%] w-[38%] max-w-[520px] opacity-95 md:block xl:right-[calc((100vw-1280px)/2+24px)]">
-                    <Image src={scene.accentImage} alt="" fill sizes="38vw" className="object-contain object-right-bottom" />
-                </div>
-            )}
-
-            <div className="relative z-10 mx-auto flex min-h-[520px] max-w-[1280px] flex-col justify-end px-4 pb-8 pt-20 md:min-h-[560px] md:px-6 md:pb-10 lg:min-h-[600px]">
-                <div className="max-w-[680px]">
+            <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-end px-4 pb-8 pt-20 md:px-6 md:pb-10">
+                <div className="max-w-[720px]">
                     <div className="flex flex-wrap gap-2">
                         <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
                             {scene.label}
@@ -148,48 +145,33 @@ export default function HeroSection({ featuredProducts }: Props) {
                             </span>
                         )}
                     </div>
-                    <h1 className="mt-4 text-5xl font-black leading-none text-white md:text-7xl">
-                        {headline}
-                    </h1>
-                    <p className="mt-5 max-w-xl text-base font-bold leading-7 text-white/85 md:text-lg md:leading-8">
+                    <div className="hero-title-lockup mt-4">
+                        <h1 className="text-5xl font-black leading-none text-white md:text-7xl">
+                            {headline}
+                        </h1>
+                        <Link href="/pet-lens" className="hero-petlens-cta" aria-label="펫렌즈로 사진 추천 받기">
+                            <span className="hero-petlens-icon" aria-hidden="true">
+                                <i className="fa-solid fa-camera" />
+                            </span>
+                            <span className="hero-petlens-copy">
+                                <strong>펫렌즈</strong>
+                                <small>사진으로 초개인화 추천</small>
+                            </span>
+                        </Link>
+                    </div>
+                    <p className="mt-5 max-w-xl text-base font-bold leading-7 text-white/88 md:text-lg md:leading-8">
                         {body}
                     </p>
                     <div className="mt-7 flex flex-wrap gap-2">
-                        <Link href="/products" className="btn btn-hero-light">
-                            <i className="fa-solid fa-table-cells-large text-xs" />
-                            전체상품
-                        </Link>
-                        <Link href="/pet-lens" className="btn border border-white/45 bg-white/10 text-white backdrop-blur hover:bg-white/20">
-                            <i className="fa-solid fa-camera text-xs" />
-                            펫렌즈
+                        <Link href="/promo/active" className="btn btn-hero-light">
+                            <i className="fa-solid fa-gift text-xs" />
+                            기획전 보기
                         </Link>
                         <Link href="/recommendations" className="btn border border-white/35 bg-neutral-950/30 text-white backdrop-blur hover:bg-neutral-950/40">
                             추천 보기
                         </Link>
                     </div>
                 </div>
-
-                {products.length > 0 && (
-                    <div className="mt-8 flex max-w-3xl gap-2 overflow-x-auto pb-1">
-                        {products.map((product) => (
-                            <Link
-                                key={product.id}
-                                href={productHref(product)}
-                                className="grid min-w-[210px] grid-cols-[56px_1fr] items-center gap-3 rounded-lg border border-white/20 bg-white/15 p-2 text-white backdrop-blur transition hover:bg-white/20"
-                            >
-                                <span className="relative aspect-square overflow-hidden rounded-md bg-white">
-                                    <Image src={versionProductImage(product.image)} alt="" fill sizes="56px" className="object-cover" />
-                                </span>
-                                <span className="min-w-0">
-                                    <span className="block truncate text-[11px] font-black uppercase text-white/72">
-                                        {product.brandEn || product.brandKo}
-                                    </span>
-                                    <span className="mt-0.5 block truncate text-sm font-black">{product.name}</span>
-                                </span>
-                            </Link>
-                        ))}
-                    </div>
-                )}
             </div>
         </section>
     );
