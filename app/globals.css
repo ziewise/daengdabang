@@ -1513,3 +1513,10 @@ body {
     background-clip: content-box;
 }
 
+
+/* nav 메가메뉴 트리거(button) 폰트를 본문과 통일.
+   협업자 'font: inherit' shorthand 가 일부 환경에서 한글 폰트를 본문과
+   다르게 렌더하는 문제 보강 — 명시적으로 우리 폰트 스택 적용. */
+button, input, select, textarea, optgroup {
+    font-family: var(--font-sans);
+}
