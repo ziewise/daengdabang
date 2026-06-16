@@ -44,7 +44,7 @@ export default function ProductGallery({ product: p }: Props) {
     return (
         <div className="space-y-3">
             <div
-                className={`relative aspect-video overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
                 onMouseEnter={activateVideo}
                 onMouseLeave={deactivateVideo}
                 onFocus={activateVideo}

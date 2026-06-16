@@ -725,6 +725,57 @@ header + main .hero-shell {
     font-weight: 900;
 }
 
+.ddb-watermark-cover {
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    z-index: 30;
+    display: flex;
+    width: 102px;
+    height: 32px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+}
+
+.ddb-watermark-logo {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 102px;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1px;
+    filter:
+        drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45))
+        drop-shadow(0 0 2px rgba(255, 255, 255, 0.75));
+}
+
+.ddb-watermark-symbol {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.ddb-watermark-wordmark {
+    width: 50px;
+    height: auto;
+    object-fit: contain;
+}
+
+.ddb-watermark-strip {
+    position: absolute;
+    right: 0;
+    bottom: 4px;
+    z-index: 1;
+    width: 50px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(82, 82, 82, 0.88);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.16);
+}
+
 .hero-ziewcore-badge {
     position: absolute;
     right: clamp(18px, 4vw, 56px);

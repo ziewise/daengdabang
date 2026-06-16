@@ -50,7 +50,7 @@ export default function BundleCard({ bundle, priority }: Props) {
             <Link
                 ref={mediaRef}
                 href={bundleHref(bundle)}
-                className="relative block aspect-video overflow-hidden bg-[#f7f2e8]"
+                className="relative block aspect-square overflow-hidden bg-[#f7f2e8]"
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
                 onFocus={activate}

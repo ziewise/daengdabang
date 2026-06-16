@@ -90,7 +90,7 @@ export default function ProductCard({
                 onClick={handleMediaClick}
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
-                className={`relative flex aspect-video items-center justify-center overflow-hidden ${p.image ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative flex aspect-square items-center justify-center overflow-hidden ${p.image ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
                 aria-label={`${p.name} 상세보기`}
             >
                 {p.image ? (
