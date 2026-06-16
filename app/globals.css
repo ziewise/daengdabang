@@ -145,12 +145,13 @@ button:disabled {
 .hero-scene-backdrop {
     object-fit: cover;
     filter: blur(18px) saturate(1.04);
-    opacity: 0;
+    opacity: 0.82;
     transform: scale(1.08);
 }
 
 .hero-scene-media {
     object-fit: cover;
+    object-position: 72% bottom;
 }
 
 .hero-scene-video {
@@ -492,6 +493,15 @@ button:disabled {
 }
 
 @media (max-width: 767px) {
+    .hero-shell,
+    .hero-content-stage {
+        min-height: calc(100svh - var(--header-height) - 1px);
+    }
+
+    .hero-content-stage {
+        padding-bottom: max(96px, calc(env(safe-area-inset-bottom) + 88px));
+    }
+
     .hero-scene-backdrop {
         opacity: 0.72;
     }
@@ -499,8 +509,7 @@ button:disabled {
     .hero-scene-media {
         object-fit: contain;
         object-position: center top;
-        transform: translateX(-26vw) scale(2);
-        transform-origin: top center;
+        transform: none;
     }
 
     .hero-title-lockup {
@@ -528,8 +537,9 @@ button:disabled {
     }
 
     .hero-ziewcore-badge {
-        right: 64px;
-        bottom: max(12px, env(safe-area-inset-bottom));
+        right: auto;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        left: 16px;
         min-width: 174px;
         height: 42px;
         gap: 7px;

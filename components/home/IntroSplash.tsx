@@ -1,25 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/app/intro.module.css";
 
-const INTRO_SEEN_KEY = "ddb.intro.seen.v1";
+const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
+const MIN_INTRO_MS = 2200;
 
 export default function IntroSplash() {
     const [visible, setVisible] = useState(false);
+    const shownAtRef = useRef(0);
 
     useEffect(() => {
+        const show = () => {
+            shownAtRef.current = Date.now();
+            setVisible(true);
+        };
+
         try {
             const introMode = new URLSearchParams(window.location.search).get("intro");
             if (introMode === "0") return;
             if (introMode === "1") {
-                setVisible(true);
+                show();
                 return;
             }
-            if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) return;
-            setVisible(true);
+            const viewportKey = window.matchMedia("(max-width: 767px)").matches
+                ? `${INTRO_SEEN_KEY}.mobile`
+                : `${INTRO_SEEN_KEY}.desktop`;
+            if (window.sessionStorage.getItem(viewportKey)) return;
+            show();
         } catch {
-            setVisible(true);
+            show();
         }
     }, []);
 
@@ -34,11 +44,20 @@ export default function IntroSplash() {
 
     const close = () => {
         try {
-            window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+            const viewportKey = window.matchMedia("(max-width: 767px)").matches
+                ? `${INTRO_SEEN_KEY}.mobile`
+                : `${INTRO_SEEN_KEY}.desktop`;
+            window.sessionStorage.setItem(viewportKey, "1");
         } catch {
             // Non-critical; the splash can still close for this render.
         }
         setVisible(false);
+    };
+
+    const closeAfterMinimum = () => {
+        const elapsed = Date.now() - shownAtRef.current;
+        const remaining = Math.max(0, MIN_INTRO_MS - elapsed);
+        window.setTimeout(close, remaining);
     };
 
     if (!visible) return null;
@@ -55,7 +74,7 @@ export default function IntroSplash() {
             tabIndex={0}
             aria-label="인트로 건너뛰기"
         >
-            <video src="/videos/intro.mp4?v=20260615-origin" autoPlay muted playsInline onEnded={close} />
+            <video src="/videos/intro.mp4?v=20260615-origin" autoPlay muted playsInline onEnded={closeAfterMinimum} />
             <span className={styles.skipText}>탭하면 바로 쇼핑하기</span>
         </div>
     );

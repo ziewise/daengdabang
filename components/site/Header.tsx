@@ -30,7 +30,7 @@ export default function Header() {
 
     return (
         <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
-            <div className="mx-auto flex h-[var(--header-height)] max-w-[1280px] items-center gap-3 px-4 md:gap-4 md:px-6">
+            <div className="mx-auto flex h-[var(--header-height)] max-w-[1280px] items-center gap-2 px-4 md:gap-4 md:px-6">
                 <button
                     type="button"
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-800 md:hidden"
@@ -40,13 +40,13 @@ export default function Header() {
                 >
                     <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`} />
                 </button>
-                <Link href="/" className="flex shrink-0 items-center gap-1.5" aria-label="댕다방 홈">
+                <Link href="/" className="flex min-w-0 shrink-0 items-center gap-1.5" aria-label="댕다방 홈">
                     <Image
                         src="/images/logo.png?v=20260614-tight"
                         alt=""
                         width={76}
                         height={76}
-                        className="h-16 w-16 object-contain"
+                        className="h-12 w-12 object-contain md:h-16 md:w-16"
                         priority
                     />
                     <Image
@@ -54,7 +54,7 @@ export default function Header() {
                         alt="댕다방"
                         width={112}
                         height={32}
-                        className="hidden h-8 w-auto sm:block"
+                        className="block h-7 w-auto max-w-[96px] object-contain sm:h-8 sm:max-w-[112px]"
                         priority
                     />
                 </Link>
@@ -90,7 +90,7 @@ export default function Header() {
 
                 <button
                     type="button"
-                    className="ml-auto shrink-0 rounded-full bg-neutral-950 px-3 py-2 text-sm font-black text-white md:hidden"
+                    className="ml-auto shrink-0 rounded-full bg-neutral-950 px-2.5 py-2 text-xs font-black text-white sm:px-3 sm:text-sm md:hidden"
                     onClick={() => setMenuOpen((open) => !open)}
                 >
                     전체메뉴
