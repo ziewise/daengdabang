@@ -1261,3 +1261,255 @@ header + main .hero-shell {
         font-size: 14px;
     }
 }
+
+/* ============================================================
+ * [restore/mainpage] 우리 UI 호환 레이어
+ * ------------------------------------------------------------
+ * 위쪽 = 협업자 스타일 (surface/btn 등, 협업자 페이지용) — 보존.
+ * 아래 = 우리 헤더/푸터/메인 섹션용 디자인 토큰 + 크레파스 배경(.global-aurora)
+ *        + glass 유틸. CSS 캐스케이드상 아래 정의가 우선 적용됨.
+ * ============================================================ */
+:root {
+    /* 배경·전경 — 크레파스 종이 톤 */
+    --background: #f9faff;
+    --foreground: #0f172a;
+
+    /* 브랜드 컬러 — 부드러운 크레파스 톤 (블루 → 퍼플 → 핑크)
+       변수 이름은 기존 'aurora-*' 유지 (전역 사용 일관성) */
+    --aurora-blue:   #4F8FF6;
+    --aurora-indigo: #7679EE;
+    --aurora-purple: #B370F5;
+    --aurora-pink:   #F058A6;
+    --aurora-amber:  #FBBF24;
+
+    /* 회원 등급 컬러 */
+    --grade-1: #10b981;   /* 댕린이 — 새싹 그린 */
+    --grade-2: #3b82f6;   /* 댕친구 — 블루 */
+    --grade-3: #a855f7;   /* 댕단짝 — 퍼플 */
+    --grade-4: #ec4899;   /* 댕가족 — 핑크 */
+    --grade-5: #f59e0b;   /* 댕마스터 — 골드 */
+
+    /* 시스템 */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger:  #ef4444;
+    --info:    #3b82f6;
+
+    /* shadow */
+    --shadow-card:  0 12px 30px rgba(15, 23, 42, 0.05);
+    --shadow-hover: 0 16px 36px rgba(15, 23, 42, 0.08);
+    --shadow-modal: 0 24px 60px rgba(15, 23, 42, 0.08);
+    --shadow-fab:   0 12px 32px rgba(99, 102, 241, 0.4);
+
+    /* 헤더 높이 (마이페이지 등 콘텐츠 padding 기준) */
+    --header-height: 72px;
+}
+
+/* =====================================================
+ * 2. @theme — Tailwind 유틸리티 클래스로 노출
+ *    여기에 등록된 토큰은 그대로 `bg-aurora-blue`, `text-grade-1` 등으로 사용 가능
+ * ===================================================== */
+@theme inline {
+    /* 배경·전경 */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    /* 폰트 패밀리 — Geist(영문/숫자) 우선, Wanted Sans(한글) fallback
+       두 폰트 모두 next/font 로 self-host (layout.tsx) */
+    --font-sans:    var(--font-geist-sans), var(--font-wanted-sans), system-ui, -apple-system, sans-serif;
+    --font-display: var(--font-geist-sans), var(--font-wanted-sans), system-ui, -apple-system, sans-serif;
+    --font-mono:    var(--font-geist-mono), ui-monospace, monospace;
+    /* 크레파스 손글씨 — Gaegu (Google Fonts) */
+    --font-crayon:  var(--font-crayon), system-ui, sans-serif;
+
+    /* 오로라 컬러 */
+    --color-aurora-blue:   var(--aurora-blue);
+    --color-aurora-indigo: var(--aurora-indigo);
+    --color-aurora-purple: var(--aurora-purple);
+    --color-aurora-pink:   var(--aurora-pink);
+    --color-aurora-amber:  var(--aurora-amber);
+
+    /* 등급 컬러 */
+    --color-grade-1: var(--grade-1);
+    --color-grade-2: var(--grade-2);
+    --color-grade-3: var(--grade-3);
+    --color-grade-4: var(--grade-4);
+    --color-grade-5: var(--grade-5);
+
+    /* 시스템 */
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-danger:  var(--danger);
+    --color-info:    var(--info);
+
+    /* shadow */
+    --shadow-card:  var(--shadow-card);
+    --shadow-hover: var(--shadow-hover);
+    --shadow-modal: var(--shadow-modal);
+    --shadow-fab:   var(--shadow-fab);
+}
+
+/* =====================================================
+ * 3. body 기본
+ * ===================================================== */
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* 한국어 글자 살짝 더 또렷하게 + 단어 단위 줄바꿈 */
+:lang(ko) {
+    word-break: keep-all;
+    letter-spacing: -0.01em;
+}
+
+/* =====================================================
+ * 4. 글로벌 크레파스 배경 — 모든 페이지 공통
+ *    파스텔 크레파스 종이 톤 + SVG 패치 (코너·엣지 + 작은 낙서)
+ *    body 의 fixed 배경처럼 떠있는 layer.
+ *
+ *    각 패치 = 사선 평행 stroke 여러 줄을 turbulence/displacement 로 흔든 결과.
+ *    엣지·코너에 색 패치, 가운데는 비움, 작은 낙서(하트/별/꽃) 흩뿌림.
+ *    파스텔 베이지 베이스 + 종이 noise multiply.
+ * ===================================================== */
+.global-aurora {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background-image:
+        /* 각 패치 필터 = displacement(거친 모서리) + 종이 grain mask(밀랍 사이로 종이 비침)
+           feComposite operator='in' 으로 noise alpha 마스크 적용해 wax-on-paper 표현 */
+
+        /* 1) 좌상 — 핑크 사선 크레파스 패치 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 220'><defs><filter id='a1'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='1' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='10' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a1)' stroke='%23f9a8d4' stroke-linecap='round' fill='none'><line x1='0' y1='10' x2='280' y2='-100' stroke-width='18' opacity='0.8'/><line x1='-10' y1='35' x2='270' y2='-75' stroke-width='16' opacity='0.75'/><line x1='0' y1='60' x2='280' y2='-50' stroke-width='18' opacity='0.8'/><line x1='-10' y1='85' x2='270' y2='-25' stroke-width='17' opacity='0.7'/><line x1='0' y1='110' x2='250' y2='-5' stroke-width='18' opacity='0.75'/><line x1='-10' y1='135' x2='230' y2='25' stroke-width='16' opacity='0.65'/><line x1='0' y1='160' x2='220' y2='55' stroke-width='17' opacity='0.7'/><line x1='-10' y1='185' x2='200' y2='80' stroke-width='16' opacity='0.6'/><line x1='0' y1='210' x2='180' y2='110' stroke-width='17' opacity='0.65'/></g></svg>"),
+        /* 2) 우상 — 노랑 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 200'><defs><filter id='a2'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='3' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='14' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a2)' stroke='%23fde68a' stroke-linecap='round' fill='none'><line x1='40' y1='-20' x2='300' y2='100' stroke-width='18' opacity='0.85'/><line x1='60' y1='-10' x2='310' y2='115' stroke-width='17' opacity='0.75'/><line x1='80' y1='-5' x2='320' y2='130' stroke-width='18' opacity='0.8'/><line x1='100' y1='0' x2='310' y2='145' stroke-width='16' opacity='0.7'/><line x1='120' y1='5' x2='300' y2='160' stroke-width='17' opacity='0.75'/><line x1='140' y1='10' x2='290' y2='175' stroke-width='16' opacity='0.65'/><line x1='160' y1='15' x2='280' y2='190' stroke-width='17' opacity='0.7'/></g></svg>"),
+        /* 3) 우중 — 세이지 그린 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 180'><defs><filter id='a3'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='6' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='17' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a3)' stroke='%23a7f3d0' stroke-linecap='round' fill='none'><line x1='30' y1='10' x2='250' y2='130' stroke-width='18' opacity='0.85'/><line x1='15' y1='35' x2='235' y2='155' stroke-width='17' opacity='0.75'/><line x1='30' y1='55' x2='250' y2='175' stroke-width='18' opacity='0.8'/><line x1='15' y1='80' x2='225' y2='200' stroke-width='16' opacity='0.7'/><line x1='30' y1='100' x2='220' y2='210' stroke-width='17' opacity='0.75'/></g></svg>"),
+        /* 4) 우하 — 라벤더 (세로) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 280'><defs><filter id='a4'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='8' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='19' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a4)' stroke='%23c4b5fd' stroke-linecap='round' fill='none'><line x1='50' y1='-10' x2='200' y2='280' stroke-width='18' opacity='0.8'/><line x1='80' y1='-10' x2='220' y2='280' stroke-width='16' opacity='0.7'/><line x1='110' y1='-10' x2='240' y2='280' stroke-width='17' opacity='0.75'/><line x1='140' y1='-10' x2='260' y2='280' stroke-width='16' opacity='0.65'/><line x1='170' y1='-10' x2='280' y2='280' stroke-width='17' opacity='0.7'/><line x1='200' y1='-10' x2='300' y2='280' stroke-width='18' opacity='0.75'/></g></svg>"),
+        /* 5) 좌하 — 옐로+핑크 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 240'><defs><filter id='a5'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='2' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='21' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a5)' stroke-linecap='round' fill='none'><g stroke='%23fde68a'><line x1='-20' y1='40' x2='200' y2='-50' stroke-width='18' opacity='0.85'/><line x1='-10' y1='70' x2='210' y2='-20' stroke-width='17' opacity='0.75'/><line x1='-20' y1='100' x2='200' y2='10' stroke-width='18' opacity='0.8'/><line x1='-10' y1='130' x2='195' y2='40' stroke-width='16' opacity='0.7'/></g><g stroke='%23fda4af'><line x1='-20' y1='160' x2='180' y2='75' stroke-width='17' opacity='0.65'/><line x1='-10' y1='190' x2='165' y2='105' stroke-width='16' opacity='0.6'/><line x1='-20' y1='220' x2='150' y2='140' stroke-width='17' opacity='0.65'/></g></g></svg>"),
+        /* 6) 중하 — 블루 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 140'><defs><filter id='a6'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='5' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='23' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a6)' stroke='%2393c5fd' stroke-linecap='round' fill='none'><line x1='0' y1='20' x2='280' y2='100' stroke-width='17' opacity='0.75'/><line x1='-10' y1='40' x2='270' y2='120' stroke-width='16' opacity='0.65'/><line x1='0' y1='60' x2='280' y2='140' stroke-width='17' opacity='0.7'/><line x1='-10' y1='80' x2='270' y2='160' stroke-width='16' opacity='0.6'/></g></svg>"),
+        /* 7) 우상 안쪽 — 작은 블루 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 120'><defs><filter id='a7'><feTurbulence baseFrequency='0.05' numOctaves='2' seed='9' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='4' result='d'/><feTurbulence baseFrequency='1.8' numOctaves='2' seed='25' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a7)' stroke='%23bae6fd' stroke-linecap='round' fill='none'><line x1='10' y1='30' x2='140' y2='-30' stroke-width='15' opacity='0.7'/><line x1='5' y1='55' x2='135' y2='-5' stroke-width='14' opacity='0.6'/><line x1='10' y1='80' x2='140' y2='20' stroke-width='15' opacity='0.65'/><line x1='5' y1='105' x2='130' y2='45' stroke-width='14' opacity='0.55'/></g></svg>"),
+        /* 7b) 중상 — 코랄 가로결 패치 (가운데 영역에 자연스럽게) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120'><defs><filter id='a7b'><feTurbulence baseFrequency='0.05' numOctaves='2' seed='11' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='4' result='d'/><feTurbulence baseFrequency='1.7' numOctaves='2' seed='27' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a7b)' stroke='%23fdba74' stroke-linecap='round' fill='none'><line x1='0' y1='20' x2='200' y2='40' stroke-width='14' opacity='0.7'/><line x1='-10' y1='45' x2='210' y2='62' stroke-width='13' opacity='0.6'/><line x1='0' y1='70' x2='200' y2='88' stroke-width='14' opacity='0.65'/><line x1='-10' y1='95' x2='210' y2='110' stroke-width='13' opacity='0.55'/></g></svg>"),
+        /* 7c) 좌중 — 라일락 사선 패치 (왼쪽 가운데) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'><defs><filter id='a7c'><feTurbulence baseFrequency='0.04' numOctaves='2' seed='13' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='5' result='d'/><feTurbulence baseFrequency='1.6' numOctaves='2' seed='29' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a7c)' stroke='%23ddd6fe' stroke-linecap='round' fill='none'><line x1='10' y1='30' x2='180' y2='-30' stroke-width='16' opacity='0.75'/><line x1='5' y1='60' x2='185' y2='0' stroke-width='15' opacity='0.65'/><line x1='10' y1='90' x2='190' y2='30' stroke-width='16' opacity='0.7'/><line x1='5' y1='120' x2='180' y2='60' stroke-width='15' opacity='0.6'/><line x1='10' y1='150' x2='175' y2='90' stroke-width='16' opacity='0.65'/></g></svg>"),
+        /* 7d) 정중앙 — 옅은 민트 작은 패치 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 130'><defs><filter id='a7d'><feTurbulence baseFrequency='0.05' numOctaves='2' seed='15' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='4' result='d'/><feTurbulence baseFrequency='1.7' numOctaves='2' seed='31' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.7 0.7 0.7 0 -0.25' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23a7d)' stroke='%23bbf7d0' stroke-linecap='round' fill='none'><line x1='10' y1='10' x2='170' y2='90' stroke-width='14' opacity='0.6'/><line x1='5' y1='40' x2='175' y2='115' stroke-width='13' opacity='0.5'/><line x1='10' y1='70' x2='170' y2='140' stroke-width='14' opacity='0.55'/></g></svg>"),
+        /* 작은 낙서 — 모두 채워진(fill) 형태 + 종이 grain 필터로 크레파스 칠한 느낌 */
+        /* 8) 채워진 하트 (코랄) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 40'><defs><filter id='h1'><feTurbulence baseFrequency='0.1' numOctaves='2' seed='3' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='1.5' result='d'/><feTurbulence baseFrequency='2' numOctaves='2' seed='30' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.8 0.8 0.8 0 -0.3' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23h1)'><path d='M22,36 C7,24 2,14 9,6 C14,2 20,4 22,10 C24,4 30,2 35,6 C42,14 37,24 22,36z' fill='%23fda4af' opacity='0.85'/></g></svg>"),
+        /* 9) 채워진 별 (옐로) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><defs><filter id='s1'><feTurbulence baseFrequency='0.1' numOctaves='2' seed='4' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='1.5' result='d'/><feTurbulence baseFrequency='2' numOctaves='2' seed='32' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.8 0.8 0.8 0 -0.3' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23s1)'><path d='M22,4 L27,17 L41,18 L29,26 L33,40 L22,32 L11,40 L15,26 L3,18 L17,17z' fill='%23fcd34d' opacity='0.85'/></g></svg>"),
+        /* 10) 채워진 꽃 (라벤더) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><defs><filter id='fl'><feTurbulence baseFrequency='0.1' numOctaves='2' seed='2' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='1.5' result='d'/><feTurbulence baseFrequency='2' numOctaves='2' seed='34' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.8 0.8 0.8 0 -0.3' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23fl)' opacity='0.85'><g fill='%23c4b5fd'><ellipse cx='22' cy='9' rx='5' ry='7'/><ellipse cx='34' cy='22' rx='7' ry='5'/><ellipse cx='22' cy='35' rx='5' ry='7'/><ellipse cx='10' cy='22' rx='7' ry='5'/></g><circle cx='22' cy='22' r='3.5' fill='%23fcd34d'/></g></svg>"),
+        /* 11) 핑크 블롭 (작은 색칠 영역) — 비정형 둥근 형태 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'><defs><filter id='sq1'><feTurbulence baseFrequency='0.1' numOctaves='2' seed='5' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='2' result='d'/><feTurbulence baseFrequency='1.8' numOctaves='2' seed='36' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.75 0.75 0.75 0 -0.28' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23sq1)'><path d='M10,22 Q8,12 18,10 Q30,4 42,12 Q54,18 50,30 Q52,42 38,42 Q22,46 14,38 Q8,32 10,22z' fill='%23fda4af' opacity='0.8'/></g></svg>"),
+        /* 12) 블루 블롭 (작은 색칠 영역) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'><defs><filter id='sq2'><feTurbulence baseFrequency='0.1' numOctaves='2' seed='8' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='2' result='d'/><feTurbulence baseFrequency='1.8' numOctaves='2' seed='38' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.75 0.75 0.75 0 -0.28' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23sq2)'><path d='M12,24 Q10,14 22,10 Q34,6 44,14 Q54,22 48,32 Q52,42 38,44 Q24,46 16,40 Q8,32 12,24z' fill='%2393c5fd' opacity='0.8'/></g></svg>"),
+        /* 13) 핑크 점들 (필 + grain) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><defs><filter id='dt1'><feTurbulence baseFrequency='0.15' numOctaves='2' seed='6' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='1' result='d'/><feTurbulence baseFrequency='2.5' numOctaves='2' seed='40' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.8 0.8 0.8 0 -0.3' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23dt1)' fill='%23fda4af' opacity='0.85'><circle cx='12' cy='10' r='3'/><circle cx='24' cy='14' r='2.5'/><circle cx='10' cy='22' r='2.5'/><circle cx='22' cy='26' r='3'/><circle cx='16' cy='17' r='1.8'/></g></svg>"),
+        /* 14) 블루 점들 (필 + grain) */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><defs><filter id='dt2'><feTurbulence baseFrequency='0.15' numOctaves='2' seed='10' result='w'/><feDisplacementMap in='SourceGraphic' in2='w' scale='1' result='d'/><feTurbulence baseFrequency='2.5' numOctaves='2' seed='42' result='g'/><feColorMatrix in='g' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.8 0.8 0.8 0 -0.3' result='m'/><feComposite in='d' in2='m' operator='in'/></filter></defs><g filter='url(%23dt2)' fill='%2393c5fd' opacity='0.85'><circle cx='12' cy='10' r='3'/><circle cx='24' cy='14' r='2.5'/><circle cx='10' cy='22' r='2.5'/><circle cx='22' cy='26' r='3'/><circle cx='16' cy='17' r='1.8'/></g></svg>"),
+        /* 15) 종이 noise — multiply 로 종이 결 */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'><filter id='pp'><feTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.50 0 0 0 0 0.45 0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23pp)'/></svg>"),
+        /* 베이스 — 맑은 페이퍼화이트 (살짝 차가운 톤) */
+        linear-gradient(180deg, #fafcff 0%, #f4f7fc 50%, #faf9ff 100%);
+    background-position:
+        /* 코너·엣지 패치 7개 */
+        -3% -8%,        /* 1 좌상 핑크 */
+        103% -8%,       /* 2 우상 노랑 */
+        102% 55%,       /* 3 우중 그린 */
+        103% 108%,      /* 4 우하 라벤더 */
+        -5% 108%,       /* 5 좌하 옐로+핑크 */
+        50% 108%,       /* 6 중하 블루 */
+        95% 28%,        /* 7 우상안쪽 블루 */
+        /* 가운데 영역 패치 — 자연스럽게 안쪽에도 칠해진 느낌 */
+        50% 22%,        /* 7b 중상 코랄 가로결 */
+        4% 48%,         /* 7c 좌중 라일락 사선 */
+        58% 58%,        /* 7d 정중앙 민트 (옅게) */
+        /* 작은 낙서 — 더 분산된 위치 */
+        78% 14%,        /* 8 하트 */
+        22% 32%,        /* 9 별 */
+        92% 88%,        /* 10 꽃 */
+        82% 42%,        /* 11 핑크 squiggle */
+        22% 78%,        /* 12 블루 squiggle */
+        38% 10%,        /* 13 핑크 점들 */
+        62% 92%,        /* 14 블루 점들 */
+        center, center;    /* noise, base */
+    background-repeat:
+        no-repeat, no-repeat, no-repeat, no-repeat,
+        no-repeat, no-repeat, no-repeat,
+        no-repeat, no-repeat, no-repeat,
+        no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+        no-repeat, no-repeat,
+        repeat, no-repeat;
+    background-size:
+        420px auto,    /* 1 */
+        380px auto,    /* 2 */
+        280px auto,    /* 3 */
+        320px auto,    /* 4 */
+        360px auto,    /* 5 */
+        340px auto,    /* 6 */
+        200px auto,    /* 7 */
+        260px auto,    /* 7b 중상 코랄 */
+        240px auto,    /* 7c 좌중 라일락 */
+        220px auto,    /* 7d 중앙 민트 */
+        38px auto,     /* 8 하트 */
+        38px auto,     /* 9 별 */
+        42px auto,     /* 10 꽃 */
+        55px auto,     /* 11 핑크 블롭 */
+        55px auto,     /* 12 블루 블롭 */
+        34px auto,     /* 13 핑크 점들 */
+        34px auto,     /* 14 블루 점들 */
+        300px 300px,   /* 15 noise */
+        auto;          /* 16 base */
+    background-blend-mode:
+        normal, normal, normal, normal,
+        normal, normal, normal,
+        normal, normal, normal,
+        normal, normal, normal, normal, normal,
+        normal, normal,
+        multiply,
+        normal;
+}
+
+/* glass-card 는 기본과 동일 (오로라 톤 카드 그대로) */
+
+/* =====================================================
+ * 5. 글래스 카드 (자주 쓰는 패턴 — utility 클래스화)
+ * ===================================================== */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: var(--shadow-card);
+}
+
+/* =====================================================
+ * 6. 스크롤바 (윈도우/엣지) — 부드러운 톤
+ * ===================================================== */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5);
+    border-radius: 50px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.6);
+    background-clip: content-box;
+}
+

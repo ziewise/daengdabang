@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
-import Header from "@/components/site/Header";
-import Footer from "@/components/site/Footer";
+// 헤더·푸터는 우리 UI 로 교체 (메가메뉴 + 크레파스 톤)
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+// 협업자 기능 유지 — 챗봇 위젯 + 전역 스토어(장바구니 등)
 import ChatWidget from "@/components/site/ChatWidget";
 import { StoreProvider } from "@/lib/store";
 
@@ -37,10 +39,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
             </head>
-            <body>
+            <body className="min-h-full flex flex-col">
+                {/* 우리 크레파스 배경 — fixed z-index:-1 레이어 (globals.css .global-aurora) */}
+                <div className="global-aurora" aria-hidden="true" />
                 <StoreProvider>
                     <Header />
-                    {children}
+                    {/* 우리 헤더가 fixed 글래스바 — 본문에 헤더 높이만큼 상단 여백 */}
+                    <main className="flex-1 pt-[var(--header-height)] flex flex-col">
+                        {children}
+                    </main>
                     <Footer />
                     <ChatWidget />
                 </StoreProvider>
