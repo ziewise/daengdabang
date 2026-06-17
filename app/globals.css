@@ -44,7 +44,9 @@ button,
 input,
 select,
 textarea {
-    font: inherit;
+    /* font-family 만 상속 — font shorthand 는 font-size/weight 까지 묶어
+       Tailwind utility(text-sm/font-bold)를 무력화하므로 family 만 상속. */
+    font-family: inherit;
 }
 
 button {
