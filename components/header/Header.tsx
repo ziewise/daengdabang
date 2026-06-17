@@ -16,12 +16,13 @@ import {
     BRAND_CARDS,
     PROMO_CARDS,
     CS_LINKS,
+    AI_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
 
-type DropKey = "category" | "brand" | "promo" | "cs" | null;
+type DropKey = "category" | "brand" | "promo" | "ai" | "cs" | null;
 
 export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
@@ -151,6 +152,30 @@ export default function Header() {
                                                 <h4 className="text-sm font-extrabold mb-0.5">{p.title}</h4>
                                                 <p className="text-[11px] text-neutral-500 line-clamp-1">{p.desc}</p>
                                             </div>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </NavDropdown>
+
+                        {/* AI — 펫렌즈/챗봇 (협업자 기능) */}
+                        <NavDropdown
+                            label="AI"
+                            open={openDrop === "ai"}
+                            onEnter={() => setOpenDrop("ai")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <ul className="p-2 min-w-[240px]">
+                                {AI_LINKS.map((a) => (
+                                    <li key={a.label}>
+                                        <Link
+                                            href={a.href}
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-aurora-indigo/5 text-sm font-bold"
+                                        >
+                                            <span className="w-7 h-7 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white flex items-center justify-center shrink-0">
+                                                <i className={`fa-solid ${a.icon} text-xs`} />
+                                            </span>
+                                            <span>{a.label}</span>
                                         </Link>
                                     </li>
                                 ))}

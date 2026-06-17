@@ -16,6 +16,7 @@ import {
     BRAND_CARDS,
     PROMO_CARDS,
     CS_LINKS,
+    AI_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 
@@ -156,6 +157,18 @@ export default function MobilePanel({ open, onClose }: Props) {
                         {PROMO_CARDS.map((p) => (
                             <SubLink key={p.title} href={p.href} onClick={onClose}>
                                 {p.title}
+                            </SubLink>
+                        ))}
+                    </MobileGroup>
+
+                    <MobileGroup
+                        label="AI"
+                        expanded={expanded === "ai"}
+                        onToggle={() => setExpanded(expanded === "ai" ? null : "ai")}
+                    >
+                        {AI_LINKS.map((a) => (
+                            <SubLink key={a.label} href={a.href} icon={a.icon} onClick={onClose}>
+                                {a.label}
                             </SubLink>
                         ))}
                     </MobileGroup>
