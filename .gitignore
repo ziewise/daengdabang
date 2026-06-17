@@ -84,3 +84,7 @@ README.original.md
 /public/images/products_main1/
 /public/images/products_main2/
 /public/images/products_main3/
+
+# pnpm 파일 — 이 프로젝트는 npm 사용 (Cloudflare 빌드가 pnpm 오인 방지)
+pnpm-lock.yaml
+pnpm-workspace.yaml
