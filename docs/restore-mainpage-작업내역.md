@@ -331,5 +331,3 @@ git push origin main --force-with-lease
 - 머지 시 `restore/mainpage` 의 7개 커밋이 main 에 들어감.
 
 ---
-
-**문의**: 이 작업 관련 질문은 smlee@ziewise.com
