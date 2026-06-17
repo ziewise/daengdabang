@@ -92,48 +92,100 @@ git checkout -b restore/mainpage origin/main
 
 ## 5. Phase 2 — 메인 페이지 섹션 (commit `05d0636`)
 
-### 변경 파일
-| 파일 | 작업 |
-|------|------|
-| `app/page.tsx` | 재작성 — 메인 구성을 우리 섹션으로 |
-| `components/main/RecommendSection.tsx` | 복원 (ziewisemin/main 에서) |
-| `components/main/BestSection.tsx` | 복원 + 호환 수정 |
-| `components/main/BrandSlider.tsx` | 복원 |
-| `components/main/PromoSection.tsx` | 복원 |
-| `components/main/NewArrivalsSection.tsx` | 복원 |
-| `components/main/ReviewSection.tsx` | 복원 |
-| `components/main/InstaSection.tsx` | 복원 |
+메인 페이지의 entry 파일(`app/page.tsx`)을 우리 구성으로 재작성하고, 협업자가
+삭제했던 우리 섹션 컴포넌트 7개를 되살려 연결했다.
 
-### `app/page.tsx` 새 구성
-```
-<IntroSplash />          ← 협업자 (인트로 스플래시) 유지
-<HeroSection />          ← 협업자 (동적 날씨/시간/계절) 유지, featuredProducts={getBestProducts(4)}
-<RecommendSection />     ← 우리 (로그인+펫 기반 추천, 비로그인 시 미노출)
-<BestSection />          ← 우리 (베스트 4탭 × 4상품)
-<BrandSlider />          ← 우리 (대표 브랜드 자동 페이드)
-<PromoSection />         ← 우리 (기획전)
-<NewArrivalsSection />   ← 우리 (신상품 무한 캐러셀)
-<ReviewSection />        ← 우리 (리뷰)
-<InstaSection />         ← 우리 (인스타그램 그리드)
-```
+### 5-1. `app/page.tsx` — 메인 페이지 골격 재작성
 
-> **히어로만 협업자 것**(동적 기능 유지), 나머지 섹션은 우리 구성.
+협업자 버전은 `IntroSplash → HeroSection → 카테고리타일 → SpecialBundles →
+인기상품 → 펫렌즈CTA → 신상품 → 카테고리바로가기` 였다.
+이것을 아래처럼 **히어로(협업자 동적) + 우리 7개 섹션**으로 다시 짰다.
 
-### 복원 방법
-협업자가 우리 섹션 `.tsx` 를 삭제했으므로, 우리 마지막 버전(`ziewisemin/main`)에서 가져옴:
-```bash
-git checkout ziewisemin/main -- components/main/RecommendSection.tsx \
-  components/main/BestSection.tsx components/main/BrandSlider.tsx ... (7개)
+```tsx
+const heroProducts = getBestProducts(4);   // 협업자 히어로에 넘길 추천 4개
+
+<IntroSplash />          ← [협업자 유지] 인트로 스플래시 애니메이션
+<HeroSection            ← [협업자 유지] 날씨/시간/계절 반응 동적 히어로
+   featuredProducts={heroProducts} />        featuredProducts 로 베스트 4개 전달
+<RecommendSection />     ← [우리] 로그인 회원 맞춤 추천
+<BestSection />          ← [우리] 베스트 4탭 × 4상품
+<BrandSlider />          ← [우리] 대표 브랜드 슬라이더
+<PromoSection />         ← [우리] 기획전
+<NewArrivalsSection />   ← [우리] 신상품 캐러셀
+<ReviewSection />        ← [우리] 리뷰 갤러리
+<InstaSection />         ← [우리] 인스타그램 그리드
 ```
 
-### 호환 수정 — BestSection
-- 문제: 우리 BestSection 은 `getBestProducts(period)` 가 `rank` 포함 배열을 반환한다고 가정.
-- 협업자 버전은 `rank` 없는 `CatalogProduct[]` 반환.
-- 해결: `rank={p.rank}` → `map((p, index) => rank={index + 1})` 로 순위 부여.
+> 히어로만 협업자 것을 그대로 두어 **날씨/시간/계절 동적 기능을 보존**했고,
+> 그 아래 7개 섹션을 우리 구성으로 바꿨다.
 
-### 검증
-- 의존성(hooks/useAuth, usePets, lib/recommendations, lib/reviews, ProductCard) 전부 협업자 버전에 존재·호환 확인.
-- `npm run build` 성공 (421 페이지).
+### 5-2. 각 섹션이 무엇을·어떻게 (히어로 아래 순서대로)
+
+각 섹션은 협업자가 삭제했던 파일이라 우리 마지막 버전(`ziewisemin/main`)에서
+`git checkout ziewisemin/main -- <파일>` 으로 되살렸다. 데이터는 모두 협업자
+`lib/catalog` 에서 가져온다 (외부 리뷰·CDN 영상 통합된 버전).
+
+#### ① RecommendSection — 로그인 회원 맞춤 추천
+- **파일**: `components/main/RecommendSection.tsx`
+- **표시 조건**: 로그인 + 등록된 펫이 있을 때만 노출. **비로그인 시 섹션 자체가 안 보임**
+  (`if (!hydrated || !isLoggedIn) return null`).
+- **내용**: 펫렌즈 분석 기반 추천 상품 6개를 카드로 미리보기.
+- **데이터**: `topRecommendations()` (`lib/recommendations`), 로그인/펫 상태는
+  `useAuth`·`usePets` 훅, 없으면 `petsOrMock` 으로 데모 fallback.
+- **링크**: "전체 보기" → `/recommendations`
+- → 사용자가 강조한 *"로그인하면 등록한 펫에 따라 자동 추가되는 섹션"* 이 바로 이것.
+
+#### ② BestSection — 베스트 (4탭 × 4상품)
+- **파일**: `components/main/BestSection.tsx`
+- **내용**: 실시간/일간/주간/월간 4개 탭, 각 탭마다 상품 4개. 탭 클릭 시 전환.
+- **데이터**: `getBestProducts(period)` (`lib/catalog`).
+  현재는 영상 있는 상품 우선 노출(`.filter(p => p.video)`), 4개 미만이면 일반 베스트로 채움.
+- **카드**: 공용 `ProductCard` — 영상 호버·BEST 배지·순위(1~4) 자동.
+- **링크**: "베스트 상품 보기" → `/best`
+- **호환 수정**: 우리 코드는 `getBestProducts()` 가 `rank` 포함 배열을 반환한다고
+  가정했으나, 협업자 버전은 `rank` 없는 `CatalogProduct[]` 반환 →
+  `rank={p.rank}` 를 `map((p, index) => rank={index + 1})` 로 변경(섹션 내 1~4위 부여).
+
+#### ③ BrandSlider — 대표 브랜드 슬라이더
+- **파일**: `components/main/BrandSlider.tsx`
+- **내용**: Ruffwear / Rex Specs 4개 슬라이드(브랜드당 2장), **4.5초마다 자동 전환**.
+  브랜드명·태그라인·"브랜드 둘러보기" 버튼이 슬라이드에 동기화. dot 클릭 시 자동전환
+  일시정지 후 5초 뒤 재개.
+- **링크**: "브랜드 둘러보기" → `/brand/ruffwear`, `/brand/rex-specs`
+- (버튼 글자색 가독성 이슈는 Phase 6 에서 별도 수정 — 섹션 6-5 참고)
+
+#### ④ PromoSection — 기획전 (1 featured + 4 small)
+- **파일**: `components/main/PromoSection.tsx`
+- **내용**: 큰 카드 1개 + 작은 카드 4개. 각 카드 배경 미디어 3종 지원 —
+  `video`(mp4 자동재생), `images`(3초 간격 cross-fade), `image`(단일 정적).
+  위에 다크 그라데이션 + 타이틀·설명·CTA 오버레이.
+- **링크**: 각 기획전 → `/promo/active`, `/promo/rainy`, `/promo/eye`, `/promo/food`, `/promo/seasonal`
+
+#### ⑤ NewArrivalsSection — 신상품 무한 캐러셀
+- **파일**: `components/main/NewArrivalsSection.tsx`
+- **내용**: 신상품 17~18개를 가로 캐러셀로. 카드 3세트(앞 클론+실제+뒤 클론) 렌더 후
+  양 끝에서 silent jump 로 **무한 스크롤 느낌**. 자동 2.8초 간격(hover 시에도 안 멈춤),
+  prev/next 버튼은 2.5초 일시정지 후 재개.
+- **데이터**: `getNewProducts()` (`lib/catalog`)
+- **카드**: 공용 `ProductCard` (영상 호버 자동)
+- **링크**: "신상품 더보기" → `/new`
+
+#### ⑥ ReviewSection — 리뷰 갤러리
+- **파일**: `components/main/ReviewSection.tsx`
+- **내용**: 상단 통계(평점·총 리뷰·추천율) + 포토 리뷰 4개(이미지+텍스트, 큰 카드) +
+  간단 리뷰 4개(텍스트만). 텍스트 길면 "더보기" 토글.
+- **데이터**: `PHOTO_REVIEWS`, `SIMPLE_REVIEWS`, `REVIEW_STATS` (`lib/reviews`)
+- **링크**: "전체 리뷰 보기" → `/reviews`
+
+#### ⑦ InstaSection — 인스타그램 그리드
+- **파일**: `components/main/InstaSection.tsx`
+- **내용**: 정사각 타일 8장 그리드(모바일 2열 / sm 3열 / lg 4열). hover 시 좋아요·댓글
+  카운트 오버레이.
+
+### 5-3. 검증
+- 위 섹션들이 의존하는 것(`useAuth`, `usePets`, `lib/recommendations`,
+  `lib/reviews`, `ProductCard` props)이 전부 협업자 버전에 존재·호환됨을 확인.
+- `npm run build` 성공 (421 페이지 정적 생성).
 
 ---
 
@@ -203,6 +255,33 @@ children 을 <main pt-[var(--header-height)]> 로 감쌈 (fixed 헤더 대응)
 - **펫렌즈·챗봇 기능은 협업자 것 그대로 사용** (페이지 링크로 연결).
 - 우하단 협업자 챗봇 위젯(ChatWidget)도 상시 노출 유지.
 
+### 6-5. 대표 브랜드 버튼 글자색 가독성 (commit `5c99a9c`, `d848e3e`)
+
+| 파일 | 작업 |
+|------|------|
+| `components/main/BrandSlider.tsx` | "브랜드 둘러보기" 버튼 글자색 강제 |
+
+- **증상**: 대표 브랜드 슬라이더의 "브랜드 둘러보기" 버튼이 **흰 배경 + 흰 글자**라 내용이 안 보임.
+- **1차 시도**(`5c99a9c`): `text-foreground` → `text-neutral-900` 으로 변경. **실패** —
+  여전히 흰 글자.
+- **진단**(preview inspect 실측): 버튼 `color: rgb(255,255,255)`. `text-neutral-900` 이 적용 안 됨.
+- **근본 원인**: 협업자 `globals.css` 의 `a { color: inherit }` (unlayered 규칙)가
+  Tailwind `text-neutral-900`(@layer utilities)을 무력화 → a 태그가 부모(`text-white`)
+  색을 상속해 흰 글자.
+- **해결**(`d848e3e`): `text-neutral-900` → `text-neutral-900!` (Tailwind v4 `!important`).
+  `!important` 가 unlayered a 규칙을 이김. + `bg-white` + `shadow-md` 로 대비 강화.
+  → 실측 재확인: `color: lab(7.78...)` = neutral-900 검정 ✅
+
+> ⚠ **이것은 6-3(메뉴 폰트)과 동일한 메커니즘이다.**
+> 협업자가 `a { color: inherit }`·`button { font: inherit }` 같은 reset 을
+> **unlayered(레이어 밖) 로 선언**해서, Tailwind utility(@layer utilities)보다
+> 우선순위가 높아진다. 그래서 어두운 배경 위 a/button 의 색·폰트 utility 가 무력화된다.
+>
+> **향후 같은 증상**(이미지·어두운 배경 위 글자 안 보임)이 또 나오면:
+> - 임시: 해당 클래스에 `!` 붙여 강제 (예: `text-neutral-900!`)
+> - 근본: `globals.css` 호환 레이어에서 `a { color: inherit }` 를 `@layer base` 로
+>   감싸 Tailwind utility 가 정상적으로 이기도록 조정 (전역 1회 수정).
+
 ---
 
 ## 7. Phase 4 — 라우트·서브카테고리 검증 (코드 변경 없음)
@@ -234,37 +313,46 @@ children 을 <main pt-[var(--header-height)]> 로 감쌈 (fixed 헤더 대응)
 | 파일 | Phase | 변경 내용 |
 |------|-------|-----------|
 | `app/page.tsx` | 2 | 메인 구성을 우리 섹션으로 재작성 |
-| `components/main/RecommendSection.tsx` | 2 | 복원 (로그인+펫 추천) |
-| `components/main/BestSection.tsx` | 2 | 복원 + rank 호환 수정 |
-| `components/main/BrandSlider.tsx` | 2 | 복원 |
-| `components/main/PromoSection.tsx` | 2 | 복원 |
-| `components/main/NewArrivalsSection.tsx` | 2 | 복원 |
-| `components/main/ReviewSection.tsx` | 2 | 복원 |
-| `components/main/InstaSection.tsx` | 2 | 복원 |
-| `app/layout.tsx` | 3 | 헤더/푸터 교체 + 폰트 복원 + 크레파스 배경 div |
-| `app/globals.css` | 3 | 우리 토큰·배경·glass 병합 + button 폰트 근본 수정 |
-| `components/header/Header.tsx` | 3 | 로그인/장바구니 라우트 + AI 메뉴 드롭다운 |
-| `components/header/MobilePanel.tsx` | 3 | 로그인/장바구니 라우트 + AI 그룹 |
-| `lib/menu-data.ts` | 3 | AI_LINKS 추가 |
-| `.gitignore` | 3 | pnpm 파일 재생성 방지 |
-| `.claude/launch.json` | 3 | preview 서버 npm 설정 |
+| `components/main/RecommendSection.tsx` | 2 | 우리 섹션 되살림 — 로그인+펫 추천(topRecommendations), /recommendations |
+| `components/main/BestSection.tsx` | 2 | 우리 섹션 되살림 — 베스트 4탭(getBestProducts), rank 호환 수정, /best |
+| `components/main/BrandSlider.tsx` | 2,6 | 우리 섹션 되살림 — 브랜드 슬라이더 + 버튼 글자색 !important 수정 |
+| `components/main/PromoSection.tsx` | 2 | 우리 섹션 되살림 — 기획전 1+4 카드, /promo/* |
+| `components/main/NewArrivalsSection.tsx` | 2 | 우리 섹션 되살림 — 신상품 무한 캐러셀(getNewProducts), /new |
+| `components/main/ReviewSection.tsx` | 2 | 우리 섹션 되살림 — 리뷰 갤러리(PHOTO/SIMPLE_REVIEWS), /reviews |
+| `components/main/InstaSection.tsx` | 2 | 우리 섹션 되살림 — 인스타그램 8장 그리드 |
+| `app/layout.tsx` | 3 | 헤더/푸터를 우리 것으로 교체 + 글로벌 폰트(Geist/WantedSans/Gaegu) 복원 + 크레파스 배경 div |
+| `app/globals.css` | 3 | 우리 디자인 토큰·크레파스 배경·glass 유틸 병합(252줄) + button `font:inherit`→`font-family:inherit`(폰트 통일) |
+| `components/header/Header.tsx` | 3 | 로그인 `/login`→`/auth/login`, 장바구니 `#cart`→`/cart` + AI 메가메뉴 드롭다운 추가 |
+| `components/header/MobilePanel.tsx` | 3 | 모바일 로그인/장바구니 라우트 + AI 그룹 추가 |
+| `lib/menu-data.ts` | 3 | `AI_LINKS` 추가 (펫렌즈 /pet-lens, 챗봇 /chat) |
+| `.gitignore` | 3 | pnpm-lock.yaml/pnpm-workspace.yaml 재생성 방지 |
+| `.claude/launch.json` | 3 | preview 서버 실행을 pnpm→npm 으로 |
 
-> **협업자 파일(app/api, lib/store, lib/daengdabang-llm, components/site, app/cart 등)은
->  하나도 수정하지 않았다.**
+> **협업자 파일(app/api, lib/store, lib/daengdabang-llm, lib/customer-api,
+>  components/site, app/cart, app/checkout, app/bundle 등)은 하나도 수정하지 않았다.**
 
 ---
 
 ## 9. 커밋 히스토리 (restore/mainpage)
 
+오래된 → 최신 순. 각 커밋이 무엇을 했는지:
+
 ```
-f292ef4  feat(header): AI 메뉴 추가 — 펫렌즈/챗봇 (Phase 3b)
-4c3369c  fix: pnpm 파일 재제거 + gitignore
-fc7f11a  fix(globals): button font shorthand → font-family (메뉴 폰트 통일 근본 해결)
-60b8473  fix(header): nav 메가메뉴 트리거 button 폰트 통일 (시도)
-acfd104  fix(header): 폰트 복원 + 로그인/장바구니 협업자 라우트 연결 (Phase 3a-fix)
-066b0d6  feat(layout): 헤더·푸터 우리 UI 로 교체 + 크레파스 배경 (Phase 3a)
-05d0636  feat(main): 메인 페이지 섹션을 우리 구성으로 (Phase 2)
+05d0636  feat(main):  메인 페이지 app/page.tsx 재작성 + 우리 7개 섹션 되살림 (Phase 2)
+066b0d6  feat(layout): 헤더·푸터를 우리 것으로 교체 + globals.css 에 크레파스 배경 병합 (Phase 3a)
+acfd104  fix(header):  글로벌 폰트 복원(Arial 깨짐 해결) + 로그인/장바구니를 협업자 라우트로 연결
+60b8473  fix(header):  메뉴 폰트 통일 1차 시도 (button 폰트 명시) — 실패
+fc7f11a  fix(globals): 메뉴 폰트 통일 근본 해결 — button `font:inherit`→`font-family:inherit`
+4c3369c  fix:         preview 가 재생성한 pnpm 파일 제거 + gitignore (Cloudflare 빌드 오인 방지)
+f292ef4  feat(header): AI 메뉴(펫렌즈/챗봇) 메가메뉴 + 모바일 그룹 추가 (Phase 3b)
+592c6a1  docs:        이 작업 내역 문서 추가
+5c99a9c  fix(brand):  브랜드 버튼 글자색 1차 시도 (text-foreground→text-neutral-900) — 실패
+d848e3e  fix(brand):  브랜드 버튼 글자색 근본 해결 — text-neutral-900! (a color:inherit 무력화)
 ```
+
+> 폰트(`fc7f11a`)·색상(`d848e3e`) 두 번 모두 **1차 시도 실패 → preview 실측 →
+> 근본 원인(unlayered reset 이 Tailwind utility 무력화) 발견 → !important/longhand 로 해결**
+> 의 흐름을 거쳤다. 추측이 아니라 측정으로 해결했다는 점이 핵심.
 
 ---
 
