@@ -113,11 +113,11 @@ export const PROMO_CARDS: PromoCard[] = [
 
 // ============ 고객센터 드롭다운 ============
 export const CS_LINKS: CSLink[] = [
-    { icon: "fa-bullhorn", label: "공지사항", href: "#notice" },
-    { icon: "fa-circle-question", label: "자주 묻는 질문", href: "#faq" },
-    { icon: "fa-comments", label: "1:1 문의", href: "#inquiry" },
-    { icon: "fa-truck", label: "배송 조회", href: "#shipping" },
-    { icon: "fa-rotate-left", label: "교환·반품 안내", href: "#return" },
+    // 배송 조회는 마이페이지(주문 내역)에서만 제공 → 고객센터 메뉴에서 제외
+    { icon: "fa-bullhorn", label: "공지사항", href: "/notice" },
+    { icon: "fa-circle-question", label: "자주 묻는 질문", href: "/faq" },
+    { icon: "fa-envelope", label: "1:1 문의", href: "/inquiry" },
+    { icon: "fa-rotate-left", label: "교환·반품 안내", href: "/return" },
 ];
 
 // ============ AI 메뉴 드롭다운 ============
@@ -142,8 +142,9 @@ export const FOOTER_META_LINKS: MenuItem[] = [
 ];
 
 export const FOOTER_LEGAL_LINKS: MenuItem[] = [
-    { label: "이용약관", href: "#terms" },
-    { label: "개인정보처리방침", href: "#privacy" },
+    // 약관·개인정보는 협업자가 만든 실제 페이지(/terms, /privacy)로 연결
+    { label: "이용약관", href: "/terms" },
+    { label: "개인정보처리방침", href: "/privacy" },
     { label: "환불·반품 정책", href: "#refund" },
     { label: "분쟁해결 기준", href: "#dispute" },
 ];

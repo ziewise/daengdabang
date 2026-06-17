@@ -11,6 +11,7 @@
 import Link from "next/link";
 import BrandLogo from "@/components/header/BrandLogo";
 import { FOOTER_META_LINKS, FOOTER_LEGAL_LINKS } from "@/lib/menu-data";
+import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
 import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
@@ -64,10 +65,10 @@ export default function Footer() {
                         </p>
                         {/* 2) 큰 번호 */}
                         <a
-                            href="tel:1577-0000"
+                            href={`tel:${BUSINESS_INFO.customerServicePhone}`}
                             className="text-xl md:text-2xl font-black tracking-tight text-foreground hover:text-aurora-indigo transition whitespace-nowrap"
                         >
-                            1577-0000
+                            {BUSINESS_INFO.customerServicePhone}
                         </a>
                         {/* 3) 시간 + 메일 (2줄) */}
                         <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap border-l border-neutral-200/70 pl-4 md:pl-5">
@@ -90,13 +91,13 @@ export default function Footer() {
                 {/* 3. 사업자 정보 (한국 쇼핑몰 법적 필수) */}
                 <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-1 text-[10px] md:text-[11px] text-neutral-500">
                     {[
-                        ["상호", "댕다방"],
-                        ["대표자", "홍길동"],
-                        ["사업자등록번호", "000-00-00000"],
-                        ["통신판매업신고", "제2026-서울XX-0000호"],
-                        ["주소", "서울특별시 XX구 XX로 00, 0층"],
-                        ["호스팅 제공자", "Vercel"],
-                        ["개인정보 관리책임자", "홍길동 (privacy@daengdabang.com)"],
+                        ["상호", BUSINESS_INFO.companyName],
+                        ["대표자", BUSINESS_INFO.representative],
+                        ["사업자등록번호", BUSINESS_INFO.businessNumber],
+                        ["통신판매업신고", BUSINESS_INFO.mailOrderNumber],
+                        ["주소", BUSINESS_INFO.address],
+                        ["호스팅 제공자", BUSINESS_INFO.hostingProvider],
+                        ["개인정보 관리책임자", BUSINESS_INFO.representative],
                         ["입점 / 제휴 문의", "partner@daengdabang.com"],
                     ].map(([k, v]) => (
                         <div key={k}>
@@ -124,7 +125,7 @@ export default function Footer() {
                         ))}
                     </div>
                     <p className="text-[10px] text-neutral-400">
-                        © 2026 Daengdabang. All rights reserved.
+                        {COPYRIGHT_NOTICE}
                     </p>
                 </div>
             </div>
