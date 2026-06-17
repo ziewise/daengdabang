@@ -144,7 +144,7 @@ export default function BrandSlider() {
                         </p>
                         <Link
                             href={current.href}
-                            className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-1.5 md:py-2.5 rounded-full bg-white/95 text-foreground text-[11px] md:text-sm font-extrabold hover:bg-white transition"
+                            className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-1.5 md:py-2.5 rounded-full bg-white text-neutral-900 text-[11px] md:text-sm font-extrabold hover:bg-neutral-100 shadow-md transition"
                         >
                             {current.cta}
                             <i className="fa-solid fa-arrow-right text-[10px] md:text-xs" />
