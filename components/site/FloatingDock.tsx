@@ -17,10 +17,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import ChatWidget from "@/components/site/ChatWidget";
 
 export default function FloatingDock() {
+    const pathname = usePathname();
     const { open: openPetLens } = usePetLensModal();
     const [shown, setShown] = useState(false);
 
@@ -43,6 +45,9 @@ export default function FloatingDock() {
             window.removeEventListener("resize", update);
         };
     }, []);
+
+    // 인증 페이지(로그인/회원가입/비밀번호 등 /auth/*)에서는 FAB(펫렌즈·챗봇) 숨김
+    if (pathname?.startsWith("/auth")) return null;
 
     // ⚠ dock 에 transform(translate)을 쓰면 자식 챗봇 채팅창(fixed)의 기준이 dock 으로
     //   갇혀 폭이 깨진다. 그래서 가운데 정렬은 transform 없이 inset-x-0 + justify-center 로,

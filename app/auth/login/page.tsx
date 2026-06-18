@@ -117,12 +117,16 @@ export default function LoginPage() {
                     {loading ? "로그인 중" : "로그인"}
                 </button>
             </form>
-            <p className="mt-5 text-center text-sm font-bold text-neutral-600">
-                처음이라면{" "}
-                <Link href="/auth/signup" className="font-black text-indigo-700">
+            {/* 회원가입 — 보조 액션이라 로그인보다 작은 아웃라인 버튼 */}
+            <div className="mt-5 flex justify-center">
+                <Link
+                    href="/auth/signup"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 px-4 py-2 text-sm font-bold text-neutral-600 transition-colors hover:border-aurora-indigo hover:text-aurora-indigo"
+                >
+                    <i className="fa-solid fa-user-plus text-xs" />
                     회원가입
                 </Link>
-            </p>
+            </div>
         </main>
     );
 }
