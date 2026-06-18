@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getNewProducts } from "@/lib/catalog";
-import ProductCard from "@/components/products/ProductCard";
+import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
 
 export const metadata: Metadata = {
     title: "신상품 | 댕다방",
@@ -14,10 +14,9 @@ export default function NewPage() {
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <p className="text-sm font-black text-indigo-700">NEW</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">신상품</h1>
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
+            <div className="mt-6">
+                {/* 30개씩 페이지네이션 (36개 → 2페이지) */}
+                <PaginatedProductGrid products={products} />
             </div>
         </main>
     );

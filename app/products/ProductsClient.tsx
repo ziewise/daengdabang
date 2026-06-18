@@ -16,6 +16,7 @@ import {
 } from "@/lib/catalog";
 import { CATEGORY_ORDER } from "@/lib/shop";
 import ProductCard from "@/components/products/ProductCard";
+import Pagination from "@/components/products/Pagination";
 
 type Props = {
     initialCategory?: CategorySlug;
@@ -28,23 +29,6 @@ type SubcategoryFilter = SubcategorySlug | "all";
 const SORT_OPTIONS = Object.keys(SORT_LABEL) as SortKey[];
 const SUBCATEGORY_OPTIONS = Object.keys(SUBCATEGORY_LABEL) as SubcategorySlug[];
 const PAGE_SIZE = 30; // 한 페이지에 보여줄 상품 수
-
-/** 페이지 번호 배열 생성 — 현재 페이지 주변 + 처음/끝, 사이는 "..." 로 축약 */
-function getPageNumbers(current: number, total: number): (number | "...")[] {
-    const pages: (number | "...")[] = [];
-    const left = Math.max(1, current - 1);
-    const right = Math.min(total, current + 1);
-    for (let i = left; i <= right; i++) pages.push(i);
-    if (left > 1) {
-        if (left > 2) pages.unshift("...");
-        pages.unshift(1);
-    }
-    if (right < total) {
-        if (right < total - 1) pages.push("...");
-        pages.push(total);
-    }
-    return pages;
-}
 
 function isCategory(value: string | null): value is CategorySlug {
     return Boolean(value && CATEGORY_ORDER.includes(value as CategorySlug));
@@ -181,48 +165,8 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                         ))}
                     </div>
 
-                    {/* 페이지 네비게이션 — 2페이지 이상일 때만 노출 */}
-                    {totalPages > 1 && (
-                        <nav className="mt-8 flex flex-wrap items-center justify-center gap-1.5" aria-label="페이지 이동">
-                            <button
-                                type="button"
-                                onClick={() => changePage(currentPage - 1)}
-                                disabled={currentPage === 1}
-                                className="flex h-9 items-center rounded-lg border border-neutral-200 px-3 text-sm font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
-                            >
-                                이전
-                            </button>
-                            {getPageNumbers(currentPage, totalPages).map((n, i) =>
-                                n === "..." ? (
-                                    <span key={`ellipsis-${i}`} className="px-1 text-sm text-neutral-400">
-                                        …
-                                    </span>
-                                ) : (
-                                    <button
-                                        key={n}
-                                        type="button"
-                                        onClick={() => changePage(n)}
-                                        aria-current={n === currentPage ? "page" : undefined}
-                                        className={`h-9 w-9 rounded-lg text-sm font-bold ${
-                                            n === currentPage
-                                                ? "bg-aurora-indigo text-white"
-                                                : "border border-neutral-200 text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo"
-                                        }`}
-                                    >
-                                        {n}
-                                    </button>
-                                ),
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => changePage(currentPage + 1)}
-                                disabled={currentPage === totalPages}
-                                className="flex h-9 items-center rounded-lg border border-neutral-200 px-3 text-sm font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
-                            >
-                                다음
-                            </button>
-                        </nav>
-                    )}
+                    {/* 페이지 네비게이션 — 공용 컴포넌트 (2페이지 이상일 때만 자동 노출) */}
+                    <Pagination currentPage={currentPage} totalPages={totalPages} onChange={changePage} />
                 </>
             ) : (
                 <div className="surface p-10 text-center">
