@@ -27,6 +27,24 @@ type SubcategoryFilter = SubcategorySlug | "all";
 
 const SORT_OPTIONS = Object.keys(SORT_LABEL) as SortKey[];
 const SUBCATEGORY_OPTIONS = Object.keys(SUBCATEGORY_LABEL) as SubcategorySlug[];
+const PAGE_SIZE = 30; // 한 페이지에 보여줄 상품 수
+
+/** 페이지 번호 배열 생성 — 현재 페이지 주변 + 처음/끝, 사이는 "..." 로 축약 */
+function getPageNumbers(current: number, total: number): (number | "...")[] {
+    const pages: (number | "...")[] = [];
+    const left = Math.max(1, current - 1);
+    const right = Math.min(total, current + 1);
+    for (let i = left; i <= right; i++) pages.push(i);
+    if (left > 1) {
+        if (left > 2) pages.unshift("...");
+        pages.unshift(1);
+    }
+    if (right < total) {
+        if (right < total - 1) pages.push("...");
+        pages.push(total);
+    }
+    return pages;
+}
 
 function isCategory(value: string | null): value is CategorySlug {
     return Boolean(value && CATEGORY_ORDER.includes(value as CategorySlug));
@@ -64,6 +82,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const [category, setCategory] = useState<CategoryFilter>(categoryFromParams(params, initialCategory));
     const [subcategory, setSubcategory] = useState<SubcategoryFilter>(subcategoryFromParams(params));
     const [sort, setSort] = useState<SortKey>(sortFromParams(params));
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         setQuery(params.get("q") ?? "");
@@ -84,6 +103,20 @@ export default function ProductsClient({ initialCategory, title }: Props) {
 
         return applySort(list, sort);
     }, [query, category, subcategory, sort]);
+
+    // 필터/정렬/검색이 바뀌면 첫 페이지로
+    useEffect(() => {
+        setPage(1);
+    }, [query, category, subcategory, sort]);
+
+    // 페이지네이션 — 현재 페이지의 30개만 렌더 (영상/이미지 동시 로드 부담 ↓)
+    const totalPages = Math.max(1, Math.ceil(products.length / PAGE_SIZE));
+    const currentPage = Math.min(page, totalPages);
+    const pagedProducts = products.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+    const changePage = (next: number) => {
+        setPage(next);
+        if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
@@ -141,11 +174,56 @@ export default function ProductsClient({ initialCategory, title }: Props) {
             </section>
 
             {products.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                    {products.map((product) => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
-                </div>
+                <>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                        {pagedProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+
+                    {/* 페이지 네비게이션 — 2페이지 이상일 때만 노출 */}
+                    {totalPages > 1 && (
+                        <nav className="mt-8 flex flex-wrap items-center justify-center gap-1.5" aria-label="페이지 이동">
+                            <button
+                                type="button"
+                                onClick={() => changePage(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="flex h-9 items-center rounded-lg border border-neutral-200 px-3 text-sm font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
+                            >
+                                이전
+                            </button>
+                            {getPageNumbers(currentPage, totalPages).map((n, i) =>
+                                n === "..." ? (
+                                    <span key={`ellipsis-${i}`} className="px-1 text-sm text-neutral-400">
+                                        …
+                                    </span>
+                                ) : (
+                                    <button
+                                        key={n}
+                                        type="button"
+                                        onClick={() => changePage(n)}
+                                        aria-current={n === currentPage ? "page" : undefined}
+                                        className={`h-9 w-9 rounded-lg text-sm font-bold ${
+                                            n === currentPage
+                                                ? "bg-aurora-indigo text-white"
+                                                : "border border-neutral-200 text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo"
+                                        }`}
+                                    >
+                                        {n}
+                                    </button>
+                                ),
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => changePage(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="flex h-9 items-center rounded-lg border border-neutral-200 px-3 text-sm font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
+                            >
+                                다음
+                            </button>
+                        </nav>
+                    )}
+                </>
             ) : (
                 <div className="surface p-10 text-center">
                     <i className="fa-regular fa-face-meh text-3xl text-neutral-400" />

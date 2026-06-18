@@ -119,7 +119,7 @@ export default function ProductCard({
                     <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
                 )}
 
-                {/* 영상 — videoActive 시 fade in. preload=metadata 로 처음에 메타데이터만 다운로드 */}
+                {/* 영상 — videoActive 시 fade in. preload=none: 초기 다운로드 0, 호버(play) 시 로드 */}
                 {hasVideo && (
                     <video
                         ref={videoRef}
@@ -127,7 +127,7 @@ export default function ProductCard({
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="none"
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />
                 )}

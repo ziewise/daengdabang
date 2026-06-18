@@ -104,7 +104,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
             {isOpen && (
                 <div
                     // 반투명 배경 — 바깥(배경) 클릭 시 닫힘
-                    className="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm p-3 sm:p-6"
+                    className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm p-3 sm:p-6"
                     role="dialog"
                     aria-modal="true"
                     aria-label="펫렌즈 AI 분석"
@@ -112,7 +112,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                 >
                     {/* 모달 패널 — 안쪽 클릭은 닫힘 방지. 컴팩트하게 폭 제한(max-w-md) */}
                     <div
-                        className="relative my-2 w-full max-w-md rounded-2xl bg-white shadow-2xl"
+                        className="relative my-auto w-full max-w-md rounded-2xl bg-white shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* 닫기 버튼 — 우상단 고정 */}
