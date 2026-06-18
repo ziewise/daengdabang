@@ -42,6 +42,9 @@ export default function HomePage() {
             <IntroSplash />
             <HeroSection featuredProducts={heroProducts} />
 
+            {/* 플로팅 FAB(FloatingDock) 등장 기준점 — 히어로를 지나면 펫렌즈/챗봇 버튼 노출 */}
+            <div id="fab-reveal-sentinel" aria-hidden="true" />
+
             {/* 우리 구성 — 메인 섹션 (로그인 시 추천 섹션 자동 노출) */}
             <RecommendSection />
             <BestSection />

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import {
     fallbackHeroWeather,
@@ -12,12 +11,10 @@ import {
     resolveHeroScene,
     seasonLabel,
     timeBucketLabel,
-    type HeroAccountState,
     type HeroContext,
     type HeroWeather,
 } from "@/lib/hero-assets";
 import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
-import { useAuth } from "@/lib/store";
 
 type Props = {
     featuredProducts: CatalogProduct[];
@@ -27,15 +24,6 @@ const DEFAULT_CONTEXT: HeroContext = {
     weather: "clear",
     season: "summer",
     timeBucket: "day",
-};
-
-const overlayClass = {
-    warm: "from-[#22180f]/80 via-[#3f2612]/50 to-transparent",
-    cool: "from-[#071820]/80 via-[#0d3340]/45 to-transparent",
-    rain: "from-[#07151c]/85 via-[#164252]/50 to-[#0b1b22]/20",
-    snow: "from-[#102132]/80 via-[#31506a]/35 to-white/10",
-    storm: "from-[#05070c]/90 via-[#102838]/64 to-[#071018]/30",
-    fog: "from-[#26323b]/72 via-[#70808b]/30 to-white/10",
 };
 
 function readManualHeroWeather(): HeroWeather | null {
@@ -59,14 +47,7 @@ function resolveClientContext(weatherOverride?: HeroWeather): HeroContext {
     return { weather, season, timeBucket };
 }
 
-function accountState(user: ReturnType<typeof useAuth>["user"]): HeroAccountState {
-    if (user?.pets.some((pet) => pet.name)) return "pet";
-    if (user) return "member";
-    return "guest";
-}
-
 export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
-    const { user } = useAuth();
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
 
@@ -90,15 +71,6 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
     const weatherSummary = heroWeatherSummary(weatherReport);
-    const primaryPet = user?.pets.find((pet) => pet.name);
-    const state = accountState(user);
-    const headline = primaryPet ? `${primaryPet.name}와 오늘 산책` : "댕다방";
-    const body =
-        state === "pet"
-            ? `${primaryPet?.name} 사진과 오늘 날씨를 함께 보고, 산책 준비부터 먹거리와 생활용품까지 딱 맞게 추천해드려요.`
-            : state === "member"
-              ? "펫렌즈로 우리 아이 사진을 더하면, 날씨와 취향에 맞춘 초개인화 추천을 바로 받아볼 수 있어요."
-              : "펫렌즈로 우리 아이를 알아보고, 오늘 날씨와 계절에 맞는 산책용품부터 먹거리까지 쉽게 고르세요.";
     const contextLabel = `${seasonLabel(context.season)} ${timeBucketLabel(context.timeBucket)}`;
 
     return (
@@ -128,7 +100,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         />
                     )}
                 </div>
-                <div className={`absolute inset-0 bg-gradient-to-r ${overlayClass[scene.overlay]}`} />
+                {/* 배경 위 어두운 그라데이션 overlay 제거 — 배경 원본 톤 유지 */}
                 {scene.effect !== "none" && (
                     <div className={`hero-weather-effect hero-weather-${scene.effect}`} aria-hidden="true" />
                 )}
@@ -139,59 +111,37 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
 
-            <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-end px-4 pb-8 pt-20 md:px-6 md:pb-10">
+            <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-center px-4 py-20 md:px-6">
                 <div className="max-w-[720px]">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
+                        <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                             {scene.label}
                         </span>
-                        <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
+                        <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                             {contextLabel}
                         </span>
                         {weatherSummary && (
-                            <span className="rounded-full bg-white/16 px-3 py-1 text-xs font-black text-white ring-1 ring-white/28 backdrop-blur">
+                            <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                                 {weatherSummary}
                             </span>
                         )}
-                        <Link href="/pet-lens" className="hero-petlens-cta hero-petlens-pill" aria-label="펫렌즈로 우리 아이 맞춤 추천 받기">
-                            <span className="hero-petlens-icon" aria-hidden="true">
-                                <i className="fa-solid fa-camera" />
-                            </span>
-                            <span className="hero-petlens-copy">
-                                <strong>펫렌즈</strong>
-                                <small>우리 아이 맞춤 추천</small>
-                            </span>
-                        </Link>
+                        {/* 펫렌즈 진입은 우하단 플로팅 FAB(FloatingDock)로 이동 — 히어로 버튼 제거 */}
                     </div>
-                    <div className="hero-title-lockup mt-4">
-                        <h1 className="hero-wordmark-title" aria-label={headline}>
-                            {primaryPet ? (
-                                <span className="text-5xl font-black leading-none text-white md:text-7xl">
-                                    {headline}
-                                </span>
-                            ) : (
-                                <Image
-                                    src="/images/wordmark.png"
-                                    alt="댕다방"
-                                    width={2048}
-                                    height={768}
-                                    className="hero-wordmark-image"
-                                    priority
-                                />
-                            )}
+                    {/* hero-title-lockup(flex) 제거 — 라벨/제목을 세로로, 왼쪽 끝선 정렬 */}
+                    <div className="mt-4">
+                        {/* 컬렉션 라벨 */}
+                        <p className="text-xs font-black uppercase tracking-[0.25em] text-white md:text-sm [text-shadow:0_1px_3px_rgb(0_0_0_/_75%),0_2px_12px_rgb(0_0_0_/_55%)]">
+                            DAENGDABANG · COLLECTION
+                        </p>
+                        {/* 메인 카피 — 첨부 이미지 색상: 윗줄 흰색, 아랫줄 핑크. 밝은 배경 가독성 위해 다중 text-shadow */}
+                        <h1 className="mt-3 font-black leading-[1.08]" aria-label="매일이 더 특별한 댕댕이의 일상">
+                            <span className="block text-4xl text-white md:text-6xl [text-shadow:0_2px_5px_rgb(0_0_0_/_80%),0_5px_28px_rgb(0_0_0_/_50%)]">
+                                매일이 더 특별한
+                            </span>
+                            <span className="block text-4xl text-aurora-pink md:text-6xl [text-shadow:0_2px_6px_rgb(0_0_0_/_45%),0_5px_22px_rgb(0_0_0_/_30%)]">
+                                댕댕이의 일상
+                            </span>
                         </h1>
-                    </div>
-                    <p className="mt-5 max-w-xl text-base font-bold leading-7 text-white/88 md:text-lg md:leading-8">
-                        {body}
-                    </p>
-                    <div className="mt-7 flex flex-wrap gap-2">
-                        <Link href="/bundles" className="btn btn-hero-light">
-                            <i className="fa-solid fa-gift text-xs" />
-                            기획전 보기
-                        </Link>
-                        <Link href="/recommendations" className="btn border border-white/35 bg-neutral-950/30 text-white backdrop-blur hover:bg-neutral-950/40">
-                            추천 보기
-                        </Link>
                     </div>
                 </div>
             </div>

@@ -6,9 +6,12 @@ import "./globals.css";
 // 헤더·푸터는 우리 UI 로 교체 (메가메뉴 + 크레파스 톤)
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-// 협업자 기능 유지 — 챗봇 위젯 + 전역 스토어(장바구니 등)
-import ChatWidget from "@/components/site/ChatWidget";
+// 협업자 기능 유지 — 전역 스토어(장바구니 등)
 import { StoreProvider } from "@/lib/store";
+// 우하단 플로팅 도크 — 펫렌즈 FAB + 협업자 챗봇(ChatWidget)을 함께 배치
+import FloatingDock from "@/components/site/FloatingDock";
+// 협업자 펫렌즈(LLM 분석)를 "모달"로 띄우는 런처 — 협업자 코드는 그대로, 껍데기만 우리 것
+import PetLensModalProvider from "@/components/petlens/PetLensModalLauncher";
 
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
@@ -60,13 +63,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {/* 우리 크레파스 배경 — fixed z-index:-1 레이어 (globals.css .global-aurora) */}
                 <div className="global-aurora" aria-hidden="true" />
                 <StoreProvider>
-                    <Header />
-                    {/* 우리 헤더가 fixed 글래스바 — 본문에 헤더 높이만큼 상단 여백 */}
-                    <main className="flex-1 pt-[var(--header-height)] flex flex-col">
-                        {children}
-                    </main>
-                    <Footer />
-                    <ChatWidget />
+                    {/* 펫렌즈 모달 런처 — 헤더 AI 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
+                    <PetLensModalProvider>
+                        <Header />
+                        {/* 우리 헤더가 fixed 글래스바 — 본문에 헤더 높이만큼 상단 여백 */}
+                        <main className="flex-1 pt-[var(--header-height)] flex flex-col">
+                            {children}
+                        </main>
+                        <Footer />
+                        <FloatingDock />
+                    </PetLensModalProvider>
                 </StoreProvider>
             </body>
         </html>

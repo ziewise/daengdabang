@@ -21,6 +21,7 @@ import {
 import BrandLogo from "./BrandLogo";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
+import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 
 type DropKey = "category" | "brand" | "promo" | "ai" | "cs" | null;
 
@@ -29,6 +30,8 @@ export default function Header() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const { isLoggedIn, hydrated } = useAuth();
+    // 펫렌즈는 /pet-lens 페이지 대신 모달로 띄운다 (협업자 PetLensClient 를 모달에 담음)
+    const { open: openPetLens } = usePetLensModal();
 
     return (
         <>
@@ -166,19 +169,33 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                         >
                             <ul className="p-2 min-w-[240px]">
-                                {AI_LINKS.map((a) => (
-                                    <li key={a.label}>
-                                        <Link
-                                            href={a.href}
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-aurora-indigo/5 text-sm font-bold"
-                                        >
+                                {AI_LINKS.map((a) => {
+                                    // 펫렌즈만 모달로(페이지 이동 X). 나머지(챗봇)는 기존 링크 그대로.
+                                    const isPetLens = a.href === "/pet-lens";
+                                    const cls =
+                                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-aurora-indigo/5 text-sm font-bold text-left";
+                                    const inner = (
+                                        <>
                                             <span className="w-7 h-7 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white flex items-center justify-center shrink-0">
                                                 <i className={`fa-solid ${a.icon} text-xs`} />
                                             </span>
                                             <span>{a.label}</span>
-                                        </Link>
-                                    </li>
-                                ))}
+                                        </>
+                                    );
+                                    return (
+                                        <li key={a.label}>
+                                            {isPetLens ? (
+                                                <button type="button" onClick={openPetLens} className={cls}>
+                                                    {inner}
+                                                </button>
+                                            ) : (
+                                                <Link href={a.href} className={cls}>
+                                                    {inner}
+                                                </Link>
+                                            )}
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         </NavDropdown>
 

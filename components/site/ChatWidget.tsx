@@ -34,9 +34,13 @@ export default function ChatWidget() {
     };
 
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        // 위치/정렬은 상위 FloatingDock 이 관리 — 여기선 버튼 기준 relative 컨테이너만.
+        // 채팅창은 토글 버튼 위(bottom-full)에 absolute 로 띄운다.
+        <div className="relative">
             {open && (
-                <section className="mb-3 flex h-[520px] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl">
+                // 모바일: 화면 하단 가운데 고정(dock 이 가운데라 우측 기준이면 화면을 벗어남)
+                // 데스크탑(sm+): 토글 버튼 위에 우측 정렬로 띄움
+                <section className="fixed inset-x-3 bottom-[5.25rem] flex h-[min(520px,calc(100vh-9rem))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:bottom-full sm:mb-3 sm:h-[min(520px,calc(100vh-7rem))] sm:w-[min(360px,calc(100vw-32px))]">
                     <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
                         <b className="text-sm font-black">댕다방 케어톡</b>
                         <button
