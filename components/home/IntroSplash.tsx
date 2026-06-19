@@ -8,9 +8,14 @@ const MIN_INTRO_MS = 2200;
 
 export default function IntroSplash() {
     const [visible, setVisible] = useState(false);
+    const [isMobile, setIsMobile] = useState(false); // 모바일이면 9:16 인트로 영상(intro_m)
     const shownAtRef = useRef(0);
 
     useEffect(() => {
+        // 모바일 여부 1회 판단 (영상 선택 + 인트로 본 기록 키에 공통 사용)
+        const mobile = window.matchMedia("(max-width: 767px)").matches;
+        setIsMobile(mobile);
+
         const show = () => {
             shownAtRef.current = Date.now();
             setVisible(true);
@@ -23,7 +28,7 @@ export default function IntroSplash() {
                 show();
                 return;
             }
-            const viewportKey = window.matchMedia("(max-width: 767px)").matches
+            const viewportKey = mobile
                 ? `${INTRO_SEEN_KEY}.mobile`
                 : `${INTRO_SEEN_KEY}.desktop`;
             if (window.sessionStorage.getItem(viewportKey)) return;
@@ -74,7 +79,13 @@ export default function IntroSplash() {
             tabIndex={0}
             aria-label="인트로 건너뛰기"
         >
-            <video src="/videos/intro.mp4?v=20260615-origin" autoPlay muted playsInline onEnded={closeAfterMinimum} />
+            <video
+                src={isMobile ? "/videos/intro_m.mp4?v=20260619" : "/videos/intro.mp4?v=20260615-origin"}
+                autoPlay
+                muted
+                playsInline
+                onEnded={closeAfterMinimum}
+            />
             <span className={styles.skipText}>탭하면 바로 쇼핑하기</span>
         </div>
     );
