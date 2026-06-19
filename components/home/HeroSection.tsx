@@ -115,7 +115,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
 
-            <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-end px-4 py-20 md:px-6 md:justify-center">
+            <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-start px-4 py-20 md:px-6 md:justify-center">
                 <div className="max-w-[720px]">
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
