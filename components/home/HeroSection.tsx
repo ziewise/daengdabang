@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import {
     fallbackHeroWeather,
@@ -15,6 +14,8 @@ import {
     type HeroWeather,
 } from "@/lib/hero-assets";
 import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
+// 우리 영상 매핑 — 협업자 날씨/시간 감지 결과로 여름 영상 24종(PC/모바일) 중 선택
+import { pickHeroVideo } from "@/lib/hero-summer-video";
 
 type Props = {
     featuredProducts: CatalogProduct[];
@@ -50,6 +51,16 @@ function resolveClientContext(weatherOverride?: HeroWeather): HeroContext {
 export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
+    // 모바일(세로) 여부 — 9:16 영상, 데스크탑은 16:9 영상
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 767px)");
+        const update = () => setIsMobile(mq.matches);
+        update();
+        mq.addEventListener("change", update);
+        return () => mq.removeEventListener("change", update);
+    }, []);
 
     useEffect(() => {
         const initialContext = resolveClientContext();
@@ -70,6 +81,8 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     }, []);
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
+    // 협업자가 감지한 날씨/시간 → 우리 여름 영상 경로 (PC/모바일)
+    const heroVideo = pickHeroVideo(context.weather, context.timeBucket, isMobile);
     const weatherSummary = heroWeatherSummary(weatherReport);
     const contextLabel = `${seasonLabel(context.season)} ${timeBucketLabel(context.timeBucket)}`;
 
@@ -77,28 +90,19 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
         <section className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
             <div className="absolute inset-0">
                 <div className="hero-video-scene" aria-hidden="true">
-                    {scene.video ? (
-                        <video
-                            key={scene.video}
-                            src={scene.video}
-                            poster={scene.poster}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            preload="auto"
-                            className="hero-scene-media"
-                        />
-                    ) : (
-                        <Image
-                            src={scene.poster}
-                            alt=""
-                            fill
-                            sizes="100vw"
-                            className="hero-scene-media"
-                            priority
-                        />
-                    )}
+                    {/* 여름 영상 24종(날씨×시간×PC/모바일) 중 선택. 로딩 전엔 협업자 poster 표시.
+                        key={heroVideo} 로 날씨/시간/기기 바뀌면 영상 자동 교체 */}
+                    <video
+                        key={heroVideo}
+                        src={heroVideo}
+                        poster={scene.poster}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                        className="hero-scene-media"
+                    />
                 </div>
                 {/* 배경 위 어두운 그라데이션 overlay 제거 — 배경 원본 톤 유지 */}
                 {scene.effect !== "none" && (
