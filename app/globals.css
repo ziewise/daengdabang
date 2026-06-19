@@ -26,6 +26,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden; /* 안드로이드: fixed 배경/헤더가 스크롤바 폭만큼 가로로 넘쳐 우측 여백 생기는 것 방지 */
 }
 
 body {
