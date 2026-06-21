@@ -30,7 +30,7 @@ function mapSubcategory(row: CatalogRow): SubcategorySlug {
     const usageText = usageTextOf(row);
     const nameText = nameTextOf(row);
     const feedingText = has(text, /식기|급식|급수|보울|그릇|물병|정수기|오볼|타우러스|피더|리킹|Lick|밥그릇|급체|천천히 먹|슬로우독|slowdog|slow dog/i);
-    const carrierText = has(text, /이동|가방|백팩|카시트|유모차|캐리어|트레일러|웨건/i);
+    const carrierText = has(text, /이동|가방|백팩|배낭|힙\s*팩|데이팩|카시트|유모차|캐리어|트레일러|웨건/i);
     const dessertText = !carrierText && has(nameText, /아이스크림|댕크림|요거트|소주|와인|맥주|음료/i);
     const treatPouchText = has(nameText, /트릿백|트릿 트레이더|간식주머니|treattrader/i);
     const explicitToyText =
@@ -54,7 +54,7 @@ function mapSubcategory(row: CatalogRow): SubcategorySlug {
 
     if (has(text, /하네스/i)) return "harness";
     if (has(text, /리드줄|목줄|초크|Leash|Collar/i)) return "leash";
-    if (has(text, /고글|안경|아이웨어|보호안경/i)) return "goggles";
+    if (has(text, /고글|안경|아이웨어|보호안경|비콘|세이프티\s*라이트|안전\s*라이트|야간산책.*라이트/i)) return "goggles";
     if (carrierText) return "carrier";
     if (has(text, /의류|자켓|재킷|코트|베스트|쿨러|부츠|신발|양말|보호대|후디|패딩|구명 ?조끼|우비|판초|스노우 슈트/i)) return "wear";
 
