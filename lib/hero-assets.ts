@@ -10,7 +10,6 @@ export type HeroWeather =
 export type HeroSeason = "spring" | "summer" | "autumn" | "winter";
 export type HeroTimeBucket = "morning" | "day" | "evening" | "night";
 export type HeroAccountState = "guest" | "member" | "pet";
-export type HeroVisualEffect = "none" | "cloud" | "fog" | "wind" | "drizzle" | "rain" | "storm" | "snow";
 
 export type HeroContext = {
     weather: HeroWeather;
@@ -18,14 +17,18 @@ export type HeroContext = {
     timeBucket: HeroTimeBucket;
 };
 
+export type HeroWatermarkCover = {
+    right: string;
+    bottom: string;
+    width: string;
+    height: string;
+};
+
 export type HeroScene = {
     key: string;
     label: string;
-    video?: string;
-    poster: string;
-    accentImage?: string;
-    overlay: "warm" | "cool" | "rain" | "snow" | "storm" | "fog";
-    effect: HeroVisualEffect;
+    video: string;
+    watermarkCover: HeroWatermarkCover;
 };
 
 export const HERO_WEATHERS: HeroWeather[] = [
@@ -39,10 +42,61 @@ export const HERO_WEATHERS: HeroWeather[] = [
     "fog",
 ];
 
+export const HERO_TIME_BUCKETS: HeroTimeBucket[] = ["morning", "day", "evening", "night"];
+
+const HERO_MOVIE_VERSION = "20260617-weather-source-v2";
+
+function heroMovie(filename: string): string {
+    return `/images/hero/${filename}?v=${HERO_MOVIE_VERSION}`;
+}
+
+const WATERMARK_COVER: Record<"standard" | "low" | "wide", HeroWatermarkCover> = {
+    standard: {
+        right: "clamp(18px, 3vw, 54px)",
+        bottom: "clamp(24px, 4vh, 48px)",
+        width: "clamp(250px, 22vw, 350px)",
+        height: "clamp(58px, 6.4vh, 76px)",
+    },
+    low: {
+        right: "clamp(14px, 2.4vw, 42px)",
+        bottom: "clamp(12px, 2.4vh, 28px)",
+        width: "clamp(260px, 24vw, 370px)",
+        height: "clamp(60px, 6.8vh, 80px)",
+    },
+    wide: {
+        right: "clamp(12px, 2.2vw, 38px)",
+        bottom: "clamp(14px, 2.6vh, 34px)",
+        width: "clamp(300px, 28vw, 430px)",
+        height: "clamp(64px, 7.2vh, 88px)",
+    },
+};
+
+function pickTimeMovie(
+    context: HeroContext,
+    movies: {
+        morning?: string;
+        day: string;
+        evening?: string;
+        night?: string;
+    },
+): string {
+    if (context.timeBucket === "morning" && movies.morning) return heroMovie(movies.morning);
+    if (context.timeBucket === "night" && movies.night) return heroMovie(movies.night);
+    if (context.timeBucket === "evening" && movies.evening) return heroMovie(movies.evening);
+    return heroMovie(movies.day);
+}
+
 export function normalizeHeroWeather(value: string | null | undefined): HeroWeather | null {
     if (!value) return null;
     const normalized = value.toLowerCase().trim();
     if (HERO_WEATHERS.includes(normalized as HeroWeather)) return normalized as HeroWeather;
+    return null;
+}
+
+export function normalizeHeroTimeBucket(value: string | null | undefined): HeroTimeBucket | null {
+    if (!value) return null;
+    const normalized = value.toLowerCase().trim();
+    if (HERO_TIME_BUCKETS.includes(normalized as HeroTimeBucket)) return normalized as HeroTimeBucket;
     return null;
 }
 
@@ -63,7 +117,7 @@ export function getHeroTimeBucket(date: Date): HeroTimeBucket {
 }
 
 export function fallbackHeroWeather(season: HeroSeason): HeroWeather {
-    if (season === "winter") return "snow";
+    void season;
     return "clear";
 }
 
@@ -72,11 +126,13 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "snow",
             label: "눈 오는 산책길",
-            video: "/images/hero/snow.mp4?v=20260614",
-            poster: "/images/hero/snow-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/winter-sketch.png?v=20260614",
-            overlay: "snow",
-            effect: "snow",
+            video: pickTimeMovie(context, {
+                morning: "weather-snow-day-v1.mp4",
+                day: "weather-snow-day-v2.mp4",
+                evening: "weather-snow-day-v1.mp4",
+                night: "weather-snow-night.mp4",
+            }),
+            watermarkCover: context.timeBucket === "night" ? WATERMARK_COVER.low : WATERMARK_COVER.standard,
         };
     }
 
@@ -84,10 +140,13 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "storm",
             label: "거센 비 산책 주의",
-            poster: "/images/hero/rain-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
-            overlay: "storm",
-            effect: "storm",
+            video: pickTimeMovie(context, {
+                morning: "weather-rain-day-v1.mp4",
+                day: "weather-rain-day-v1.mp4",
+                evening: "weather-rain-night-v1.mp4",
+                night: "weather-rain-night-v1.mp4",
+            }),
+            watermarkCover: context.timeBucket === "evening" || context.timeBucket === "night" ? WATERMARK_COVER.low : WATERMARK_COVER.wide,
         };
     }
 
@@ -95,10 +154,13 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "rain",
             label: "비 오는 산책길",
-            poster: "/images/hero/rain-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
-            overlay: "rain",
-            effect: "rain",
+            video: pickTimeMovie(context, {
+                morning: "weather-rain-day-v2.mp4",
+                day: "weather-rain-day-v1.mp4",
+                evening: "weather-rain-night-v1.mp4",
+                night: "weather-rain-night-v1.mp4",
+            }),
+            watermarkCover: context.timeBucket === "evening" || context.timeBucket === "night" ? WATERMARK_COVER.low : WATERMARK_COVER.wide,
         };
     }
 
@@ -106,10 +168,13 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "drizzle",
             label: "가랑비 산책길",
-            poster: "/images/hero/rain-neighborhood.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
-            overlay: "rain",
-            effect: "drizzle",
+            video: pickTimeMovie(context, {
+                morning: "weather-rain-day-v2.mp4",
+                day: "weather-rain-day-v2.mp4",
+                evening: "weather-rain-night-v1.mp4",
+                night: "weather-rain-night-v1.mp4",
+            }),
+            watermarkCover: context.timeBucket === "evening" || context.timeBucket === "night" ? WATERMARK_COVER.low : WATERMARK_COVER.wide,
         };
     }
 
@@ -117,10 +182,8 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "fog",
             label: "안개 낀 산책길",
-            poster: "/images/hero/winter-sketch.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
-            overlay: "fog",
-            effect: "fog",
+            video: heroMovie("weather-fog-morning.mp4"),
+            watermarkCover: WATERMARK_COVER.standard,
         };
     }
 
@@ -128,11 +191,8 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "wind",
             label: "바람 부는 산책길",
-            video: "/images/hero/default.mp4?v=20260614",
-            poster: "/images/hero/clear-evening.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
-            overlay: "cool",
-            effect: "wind",
+            video: heroMovie("weather-wind-day.mp4"),
+            watermarkCover: WATERMARK_COVER.wide,
         };
     }
 
@@ -140,22 +200,26 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
         return {
             key: "cloudy",
             label: "구름 많은 산책길",
-            video: "/images/hero/default.mp4?v=20260614",
-            poster: "/images/hero/clear-evening.png?v=20260614",
-            accentImage: "/images/hero/walker-cutout.png?v=20260614",
-            overlay: "cool",
-            effect: "cloud",
+            video: pickTimeMovie(context, {
+                morning: "weather-clear-day-v1.mp4",
+                day: "weather-clear-day-v1.mp4",
+                evening: "weather-clear-evening-ltr-v2.mp4",
+                night: "weather-clear-night.mp4",
+            }),
+            watermarkCover: context.timeBucket === "night" ? WATERMARK_COVER.low : WATERMARK_COVER.standard,
         };
     }
 
     return {
         key: `clear-${context.timeBucket}`,
         label: context.timeBucket === "night" ? "밤 산책 준비" : "오늘의 산책 준비",
-        video: "/images/hero/default.mp4?v=20260614",
-        poster: "/images/hero/clear-evening.png?v=20260614",
-        accentImage: "/images/hero/walker-cutout.png?v=20260614",
-        overlay: context.timeBucket === "evening" || context.timeBucket === "night" ? "warm" : "cool",
-        effect: "none",
+        video: pickTimeMovie(context, {
+            morning: "weather-clear-day-v1.mp4",
+            day: "weather-clear-day-v2.mp4",
+            evening: "weather-clear-evening-rtl.mp4",
+            night: "weather-clear-night.mp4",
+        }),
+        watermarkCover: context.timeBucket === "night" ? WATERMARK_COVER.low : WATERMARK_COVER.standard,
     };
 }
 
