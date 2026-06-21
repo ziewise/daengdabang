@@ -13,18 +13,50 @@ const textOf = (row: CatalogRow) =>
         .filter(Boolean)
         .join(" ");
 
+const categoryTextOf = (row: CatalogRow) =>
+    [row.useMain, row.useSub, row.name, row.folder]
+        .filter(Boolean)
+        .join(" ");
+
+const usageTextOf = (row: CatalogRow) => [row.useMain, row.useSub].filter(Boolean).join(" ");
+const nameTextOf = (row: CatalogRow) => [row.name, row.folder].filter(Boolean).join(" ");
+
 function has(text: string, pattern: RegExp) {
     return pattern.test(text);
 }
 
 function mapSubcategory(row: CatalogRow): SubcategorySlug {
-    const text = textOf(row);
+    const text = categoryTextOf(row);
+    const usageText = usageTextOf(row);
+    const nameText = nameTextOf(row);
+    const feedingText = has(text, /식기|급식|급수|보울|그릇|물병|정수기|오볼|타우러스|피더|리킹|Lick|밥그릇|급체|천천히 먹|슬로우독|slowdog|slow dog/i);
+    const carrierText = has(text, /이동|가방|백팩|카시트|유모차|캐리어|트레일러|웨건/i);
+    const dessertText = !carrierText && has(nameText, /아이스크림|댕크림|요거트|소주|와인|맥주|음료/i);
+    const treatPouchText = has(nameText, /트릿백|트릿 트레이더|간식주머니|treattrader/i);
+    const explicitToyText =
+        has(usageText, /장난감/i) ||
+        has(nameText, /장난감|토이|toy|트로비즈|trovbiz|피그볼|치킨볼|볼런쳐|볼\s*토이|ball\s*toy|런커|낫 어 스틱|낫어스틱|우드스틱|포시니|모렐|토드스툴|퍼시픽 루프/i) ||
+        (has(nameText, /원반|프리스비|플라이어|디스크/i) && !feedingText);
+
+    if (dessertText) return "dessert";
+    if (has(text, /발바닥|발 세정|풋|패드 케어|발세정|프리풋/i)) return "paw";
+    if (has(nameText, /크림|밤|미스트|향수|샴푸|브러시|스킨|입욕|비누|클렌저|에센스|퍼퓸|모발영양|브러싱/i)) return "cream";
+    if (row.isHygiene || has(text, /위생|배변|배변패드|배변봉투|기저귀|탈취|칫솔|치약|물티슈/i)) return "hygiene";
+
+    if (explicitToyText) {
+        if (has(nameText, /노즈워크|퍼즐|지능/i)) return "nosework";
+        if (has(nameText, /터그|로프|tug|당기기|루프/i)) return "tug";
+        return "latex";
+    }
+
+    if (feedingText) return "bowl";
+    if (treatPouchText) return "carrier";
 
     if (has(text, /하네스/i)) return "harness";
-    if (has(text, /리드|목줄|초크|Leash|Collar/i)) return "leash";
-    if (has(text, /고글|안경|아이웨어|보호안경|Rex Specs/i)) return "goggles";
-    if (has(text, /이동|가방|백팩|카시트|유모차|캐리어|트레일러|웨건/i)) return "carrier";
-    if (has(text, /웨어|의류|자켓|재킷|코트|베스트|쿨러|부츠|신발|양말|보호대|후디|패딩/i)) return "wear";
+    if (has(text, /리드줄|목줄|초크|Leash|Collar/i)) return "leash";
+    if (has(text, /고글|안경|아이웨어|보호안경/i)) return "goggles";
+    if (carrierText) return "carrier";
+    if (has(text, /의류|자켓|재킷|코트|베스트|쿨러|부츠|신발|양말|보호대|후디|패딩|구명 ?조끼|우비|판초|스노우 슈트/i)) return "wear";
 
     if (has(text, /디저트|음료|아이스크림|소주|와인|맥주|요거트|댕크림/i)) return "dessert";
     if (has(text, /간식|트릿|츄|껌|캔디|비스킷|저키/i)) return "treats";
@@ -32,15 +64,10 @@ function mapSubcategory(row: CatalogRow): SubcategorySlug {
     if (row.isFood || has(text, /사료|푸드|건식|습식|스튜|바프|키블|Yora|요라/i)) return "drysoy";
 
     if (has(text, /쿠션|침대|방석|매트|카페트|침구|베드|도넛/i)) return "cushion";
-    if (has(text, /식기|급식|급수|보울|그릇|물병|정수기|오볼|타우러스/i)) return "bowl";
 
-    if (has(text, /노즈워크|퍼즐|지능|슬로우/i)) return "nosework";
+    if (has(text, /노즈워크|퍼즐|지능/i)) return "nosework";
     if (has(text, /터그|로프|당기기/i)) return "tug";
-    if (has(text, /라텍스|공|볼|장난감|토이|인형/i)) return "latex";
-
-    if (has(text, /발바닥|발 세정|풋|패드 케어/i)) return "paw";
-    if (row.isHygiene || has(text, /위생|배변|패드|기저귀|탈취|칫솔|치약|물티슈/i)) return "hygiene";
-    if (has(text, /크림|밤|미스트|샴푸|브러시|스킨|케어|입욕|비누|클렌저/i)) return "cream";
+    if (has(nameText, /라텍스|인형/i)) return "latex";
 
     return "etc";
 }
