@@ -52,22 +52,22 @@ function heroMovie(filename: string): string {
 
 const WATERMARK_COVER: Record<"standard" | "low" | "wide", HeroWatermarkCover> = {
     standard: {
-        right: "clamp(18px, 3vw, 54px)",
-        bottom: "clamp(24px, 4vh, 48px)",
-        width: "clamp(250px, 22vw, 350px)",
-        height: "clamp(58px, 6.4vh, 76px)",
+        right: "clamp(22px, 3.2vw, 58px)",
+        bottom: "clamp(22px, 4vh, 52px)",
+        width: "clamp(72px, 6.8vw, 98px)",
+        height: "clamp(72px, 6.8vw, 98px)",
     },
     low: {
-        right: "clamp(14px, 2.4vw, 42px)",
-        bottom: "clamp(12px, 2.4vh, 28px)",
-        width: "clamp(260px, 24vw, 370px)",
-        height: "clamp(60px, 6.8vh, 80px)",
+        right: "clamp(16px, 2.5vw, 44px)",
+        bottom: "clamp(12px, 2.4vh, 30px)",
+        width: "clamp(74px, 7vw, 100px)",
+        height: "clamp(74px, 7vw, 100px)",
     },
     wide: {
-        right: "clamp(12px, 2.2vw, 38px)",
-        bottom: "clamp(14px, 2.6vh, 34px)",
-        width: "clamp(300px, 28vw, 430px)",
-        height: "clamp(64px, 7.2vh, 88px)",
+        right: "clamp(14px, 2.2vw, 40px)",
+        bottom: "clamp(14px, 2.6vh, 36px)",
+        width: "clamp(82px, 7.6vw, 108px)",
+        height: "clamp(82px, 7.6vw, 108px)",
     },
 };
 

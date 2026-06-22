@@ -18,7 +18,7 @@ import {
     type HeroWeather,
 } from "@/lib/hero-assets";
 import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
-import { useAuth } from "@/lib/store";
+import { useAuth, type PetProfile } from "@/lib/store";
 
 type Props = {
     featuredProducts: CatalogProduct[];
@@ -63,6 +63,30 @@ function accountState(user: ReturnType<typeof useAuth>["user"]): HeroAccountStat
     return "guest";
 }
 
+function petAnalysisText(pet: PetProfile | undefined, key: string): string {
+    const value = pet?.rawAnalysis?.[key];
+    return typeof value === "string" ? value.toLowerCase() : "";
+}
+
+function heroPetBreedKey(pet: PetProfile | undefined): string {
+    const breed = [
+        petAnalysisText(pet, "breed"),
+        petAnalysisText(pet, "breed_group"),
+        petAnalysisText(pet, "primary_breed"),
+    ].join(" ");
+
+    if (/푸들|poodle|비숑|bichon/.test(breed)) return "poodle";
+    if (/말티|maltese|스피츠|spitz|포메|pomeranian/.test(breed)) return "white";
+    if (/리트리버|retriever|골든|golden|래브라도|labrador/.test(breed)) return "retriever";
+    if (/웰시|코기|corgi|닥스|dachshund/.test(breed)) return "corgi";
+    if (/진돗|jindo|시바|shiba/.test(breed)) return "jindo";
+    if (!pet) return "guest";
+    if (pet.coat === "long") return "white";
+    if (pet.size === "large") return "retriever";
+    if (pet.size === "small") return "corgi";
+    return "jindo";
+}
+
 export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
     const { user } = useAuth();
     const [context, setContext] = useState<HeroContext>(() => {
@@ -99,6 +123,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const weatherSummary = heroWeatherSummary(weatherReport);
     const primaryPet = user?.pets.find((pet) => pet.name);
     const state = accountState(user);
+    const petWatermarkBreed = heroPetBreedKey(primaryPet);
     const headline = primaryPet ? `${primaryPet.name}와 오늘 산책` : "댕다방";
     const body =
         state === "pet"
@@ -124,9 +149,24 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                     />
                 </div>
                 <div className="hero-readability-scrim" aria-hidden="true" />
-                <div className="hero-ziewcore-badge" style={watermarkCoverStyle} aria-hidden="true">
-                    <span>Powered by</span>
-                    <strong>Ziewcore</strong>
+                <div
+                    className={`hero-pet-watermark hero-pet-watermark-${petWatermarkBreed}`}
+                    style={watermarkCoverStyle}
+                    aria-hidden="true"
+                >
+                    <span className="hero-pet-diamond" />
+                    <span className="hero-pet-head">
+                        <span className="hero-pet-ear hero-pet-ear-left" />
+                        <span className="hero-pet-ear hero-pet-ear-right" />
+                        <span className="hero-pet-face">
+                            <span className="hero-pet-fluff hero-pet-fluff-a" />
+                            <span className="hero-pet-fluff hero-pet-fluff-b" />
+                            <span className="hero-pet-eye hero-pet-eye-left" />
+                            <span className="hero-pet-eye hero-pet-eye-right" />
+                            <span className="hero-pet-muzzle" />
+                            <span className="hero-pet-nose" />
+                        </span>
+                    </span>
                 </div>
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
