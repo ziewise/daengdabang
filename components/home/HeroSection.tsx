@@ -99,8 +99,9 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         key={heroVideo} 로 날씨/시간/기기 바뀌면 영상 자동 교체.
                         poster 는 협업자 HeroScene 에 없어 생략(preload="auto" 로 첫 프레임 빠르게).
                         모바일(9:16): 협업자 기본 object-position(72% 100% = 하단 정렬)을 top 으로 바꾸고
-                        살짝 확대해 영상 "하단"을 화면 밖으로 잘라낸다 → 영상마다 위치가 다른 모바일
-                        워터마크(✦)가 아예 안 보이게 한다. 강아지·인물은 중상단이라 그대로 보인다.
+                        scale 1.1 로 확대해 영상 맨 하단(워터마크 ✦)만 화면 밖으로 잘라낸다.
+                        (밤 영상 3종 확인: ✦ 는 영상 맨 하단이라 scale 1.1 로 잘려 안 보임)
+                        scale 1.18 은 강아지·인물 발까지 잘려서 1.1 로 낮춤 → 발·발 아래까지 자연스럽게 노출.
                         PC(16:9)는 협업자 기본 유지(워터마크는 배지가 동적 추적해 가림). */}
                     <video
                         key={heroVideo}
@@ -113,7 +114,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         className="hero-scene-media"
                         style={
                             isMobile
-                                ? { objectPosition: "top center", transform: "scale(1.18)", transformOrigin: "top center" }
+                                ? { objectPosition: "top center", transform: "scale(1.1)", transformOrigin: "top center" }
                                 : undefined
                         }
                     />
