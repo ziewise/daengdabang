@@ -122,8 +122,8 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 <WatermarkBadge
                     src={heroBreedVideo}
                     xRatio={isMobile ? 0.8 : 0.88}
-                    yRatio={isMobile ? 0.89 : 0.78}
-                    sizeRatio={isMobile ? 0.2 : 0.09}
+                    yRatio={isMobile ? 0.905 : 0.78}
+                    sizeRatio={isMobile ? 0.24 : 0.09}
                     videoAspect={isMobile ? 9 / 16 : 16 / 9}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
