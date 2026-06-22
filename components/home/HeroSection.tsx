@@ -116,11 +116,14 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 {/* 견종 얼굴 영상 배지 — 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는다.
                     좌표(가로 88%·세로 78%)는 여름 영상 24종 공통. PC 16:9 / 모바일 9:16 비율로
                     object-cover 변환하여 워터마크의 현재 화면 위치/크기에 배지를 정확히 맞춘다. */}
+                {/* 워터마크 좌표·배지 크기는 PC(16:9)와 모바일(9:16) 영상이 달라 분리한다.
+                    PC 워터마크 ≈ (88%, 78%) / 모바일 워터마크 ≈ (80%, 89%).
+                    모바일은 견종 얼굴이 "재미 요소"라 배지를 더 크게(가독성 + 워터마크 가림). */}
                 <WatermarkBadge
                     src={heroBreedVideo}
-                    xRatio={0.88}
-                    yRatio={0.78}
-                    sizeRatio={0.09}
+                    xRatio={isMobile ? 0.8 : 0.88}
+                    yRatio={isMobile ? 0.89 : 0.78}
+                    sizeRatio={isMobile ? 0.2 : 0.09}
                     videoAspect={isMobile ? 9 / 16 : 16 / 9}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />

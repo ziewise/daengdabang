@@ -131,7 +131,7 @@ export default function PetLensModalContent() {
     // ============================================================
     if (result) {
         return (
-            <div className="p-4 md:p-5">
+            <div className="p-3 sm:p-5">
                 {/* 헤더 + 다시 분석 */}
                 <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
@@ -196,7 +196,7 @@ export default function PetLensModalContent() {
     // 입력 단계
     // ============================================================
     return (
-        <div className="p-4 md:p-5">
+        <div className="p-3 sm:p-5">
             <header className="mb-3 text-center">
                 <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 AI</p>
                 <h2 className="mt-0.5 text-lg font-black text-neutral-950">우리 아이 분석하기</h2>
@@ -205,12 +205,12 @@ export default function PetLensModalContent() {
                 </p>
             </header>
 
-            <form onSubmit={submit} className="grid gap-2.5">
+            <form onSubmit={submit} className="grid gap-2 sm:gap-2.5">
                 {/* 사진 — PC 파일 / 모바일 카메라·앨범 (input 클릭 영역 전체 덮음) */}
                 <label className="block">
                     <span className="mb-1.5 block text-xs font-black text-neutral-500">사진</span>
                     {photoDataUrl ? (
-                        <div className="relative aspect-[2/1] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
+                        <div className="relative aspect-[5/2] sm:aspect-[2/1] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
                             <Image src={photoDataUrl} alt="업로드한 반려견 사진" fill sizes="420px" className="object-cover" unoptimized />
                             <span className="absolute bottom-2 right-2 rounded-full bg-neutral-900/70 px-3 py-1 text-[11px] font-bold text-white">
                                 사진 변경
@@ -218,7 +218,7 @@ export default function PetLensModalContent() {
                             <input type="file" accept="image/*" onChange={(e) => handleFile(e.target.files?.[0])} className="absolute inset-0 cursor-pointer opacity-0" />
                         </div>
                     ) : (
-                        <div className="relative flex aspect-[2/1] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-200 bg-neutral-50 text-neutral-400">
+                        <div className="relative flex aspect-[5/2] sm:aspect-[2/1] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-200 bg-neutral-50 text-neutral-400">
                             <i className="fa-solid fa-camera text-2xl" />
                             <span className="text-xs font-bold">사진 선택 (촬영 / 앨범)</span>
                             <input type="file" accept="image/*" onChange={(e) => handleFile(e.target.files?.[0])} className="absolute inset-0 cursor-pointer opacity-0" />
@@ -227,7 +227,7 @@ export default function PetLensModalContent() {
                 </label>
 
                 {/* 이름 / 나이 */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                     <label className="block">
                         <span className="mb-1.5 block text-xs font-black text-neutral-500">이름</span>
                         <input value={name} onChange={(e) => setName(e.target.value)} className="input" placeholder="우리 아이" />
@@ -239,7 +239,7 @@ export default function PetLensModalContent() {
                 </div>
 
                 {/* 크기 / 모질 / 활동량 — 협업자와 동일 option 값 */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2.5">
                     <label className="block">
                         <span className="mb-1.5 block text-xs font-black text-neutral-500">크기</span>
                         <select value={size} onChange={(e) => setSize(e.target.value as PetProfile["size"])} className="input">
