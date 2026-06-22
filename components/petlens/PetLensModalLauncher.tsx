@@ -104,29 +104,32 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
             {isOpen && (
                 <div
                     // 반투명 배경 — 바깥(배경) 클릭 시 닫힘
-                    className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm p-3 sm:p-6"
+                    className="fixed inset-0 z-[1100] flex items-center justify-center bg-neutral-950/55 backdrop-blur-sm p-3 sm:p-6"
                     role="dialog"
                     aria-modal="true"
                     aria-label="펫렌즈 AI 분석"
                     onClick={close}
                 >
-                    {/* 모달 패널 — 안쪽 클릭은 닫힘 방지. 컴팩트하게 폭 제한(max-w-md) */}
+                    {/* 모달 패널 — 화면 높이 내로 제한(max-h) + 내부만 스크롤. 모바일에서 화면 밖으로 안 넘침 */}
                     <div
-                        className="relative my-auto w-full max-w-md rounded-2xl bg-white shadow-2xl"
+                        className="relative my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)]"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* 닫기 버튼 — 우상단 고정 */}
+                        {/* 닫기 버튼 — 패널 우상단 고정 (본문을 스크롤해도 항상 보임) */}
                         <button
                             type="button"
                             onClick={close}
                             aria-label="닫기"
-                            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-600 shadow-card hover:bg-white hover:text-neutral-900 transition-colors"
+                            className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-600 shadow-card hover:bg-white hover:text-neutral-900 transition-colors"
                         >
                             <i className="fa-solid fa-xmark text-base" />
                         </button>
 
-                        {/* 입력→결과 단계 전환 본문 (분석은 협업자 LLM 함수 호출) */}
-                        <PetLensModalContent />
+                        {/* 본문 — 내용이 길면 이 영역만 스크롤(닫기 버튼은 패널에 고정) */}
+                        <div className="overflow-y-auto">
+                            {/* 입력→결과 단계 전환 본문 (분석은 협업자 LLM 함수 호출) */}
+                            <PetLensModalContent />
+                        </div>
                     </div>
                 </div>
             )}
