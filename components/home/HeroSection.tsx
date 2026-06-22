@@ -97,7 +97,11 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 <div className="hero-video-scene" aria-hidden="true">
                     {/* 여름 영상 24종(날씨×시간×PC/모바일) 중 선택.
                         key={heroVideo} 로 날씨/시간/기기 바뀌면 영상 자동 교체.
-                        poster 는 협업자 HeroScene 에 없어 생략(preload="auto" 로 첫 프레임 빠르게). */}
+                        poster 는 협업자 HeroScene 에 없어 생략(preload="auto" 로 첫 프레임 빠르게).
+                        모바일(9:16): 협업자 기본 object-position(72% 100% = 하단 정렬)을 top 으로 바꾸고
+                        살짝 확대해 영상 "하단"을 화면 밖으로 잘라낸다 → 영상마다 위치가 다른 모바일
+                        워터마크(✦)가 아예 안 보이게 한다. 강아지·인물은 중상단이라 그대로 보인다.
+                        PC(16:9)는 협업자 기본 유지(워터마크는 배지가 동적 추적해 가림). */}
                     <video
                         key={heroVideo}
                         src={heroVideo}
@@ -107,6 +111,11 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         playsInline
                         preload="auto"
                         className="hero-scene-media"
+                        style={
+                            isMobile
+                                ? { objectPosition: "top center", transform: "scale(1.18)", transformOrigin: "top center" }
+                                : undefined
+                        }
                     />
                 </div>
                 {/* 배경 위 어두운 그라데이션 overlay 제거 — 배경 원본 톤 유지 */}
@@ -116,14 +125,15 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 {/* 견종 얼굴 영상 배지 — 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는다.
                     좌표(가로 88%·세로 78%)는 여름 영상 24종 공통. PC 16:9 / 모바일 9:16 비율로
                     object-cover 변환하여 워터마크의 현재 화면 위치/크기에 배지를 정확히 맞춘다. */}
-                {/* 워터마크 좌표·배지 크기는 PC(16:9)와 모바일(9:16) 영상이 달라 분리한다.
-                    PC 워터마크 ≈ (88%, 78%) / 모바일 워터마크 ≈ (80%, 89%).
-                    모바일은 견종 얼굴이 "재미 요소"라 배지를 더 크게(가독성 + 워터마크 가림). */}
+                {/* 견종 얼굴 배지.
+                    PC(16:9): 워터마크(88%, 78%)를 배지가 동적 추적해 가린다.
+                    모바일(9:16): 위 video 에서 영상 하단을 잘라내 워터마크가 안 보이므로, 배지는
+                    "가림"이 아니라 "재미 요소"다. 잘 보이고 화면 하단에 안 잘리는 우측 중하단(78%)에 둔다. */}
                 <WatermarkBadge
                     src={heroBreedVideo}
-                    xRatio={isMobile ? 0.8 : 0.88}
-                    yRatio={isMobile ? 0.905 : 0.78}
-                    sizeRatio={isMobile ? 0.24 : 0.09}
+                    xRatio={isMobile ? 0.82 : 0.88}
+                    yRatio={isMobile ? 0.78 : 0.78}
+                    sizeRatio={isMobile ? 0.2 : 0.09}
                     videoAspect={isMobile ? 9 / 16 : 16 / 9}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
