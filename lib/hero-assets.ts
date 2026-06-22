@@ -44,7 +44,7 @@ export const HERO_WEATHERS: HeroWeather[] = [
 
 export const HERO_TIME_BUCKETS: HeroTimeBucket[] = ["morning", "day", "evening", "night"];
 
-const HERO_MOVIE_VERSION = "20260617-weather-source-v2";
+const HERO_MOVIE_VERSION = "20260622-weather-watermark-cover-v3";
 
 function heroMovie(filename: string): string {
     return `/images/hero/${filename}?v=${HERO_MOVIE_VERSION}`;
@@ -52,22 +52,22 @@ function heroMovie(filename: string): string {
 
 const WATERMARK_COVER: Record<"standard" | "low" | "wide", HeroWatermarkCover> = {
     standard: {
-        right: "clamp(22px, 3.2vw, 58px)",
-        bottom: "clamp(22px, 4vh, 52px)",
-        width: "clamp(72px, 6.8vw, 98px)",
-        height: "clamp(72px, 6.8vw, 98px)",
+        right: "clamp(8px, 1.1vw, 18px)",
+        bottom: "clamp(8px, 1.2vh, 16px)",
+        width: "clamp(74px, 6.6vw, 92px)",
+        height: "clamp(74px, 6.6vw, 92px)",
     },
     low: {
-        right: "clamp(16px, 2.5vw, 44px)",
-        bottom: "clamp(12px, 2.4vh, 30px)",
-        width: "clamp(74px, 7vw, 100px)",
-        height: "clamp(74px, 7vw, 100px)",
+        right: "clamp(8px, 1vw, 16px)",
+        bottom: "clamp(8px, 1.1vh, 14px)",
+        width: "clamp(74px, 6.8vw, 96px)",
+        height: "clamp(74px, 6.8vw, 96px)",
     },
     wide: {
-        right: "clamp(14px, 2.2vw, 40px)",
-        bottom: "clamp(14px, 2.6vh, 36px)",
-        width: "clamp(82px, 7.6vw, 108px)",
-        height: "clamp(82px, 7.6vw, 108px)",
+        right: "clamp(8px, 1.1vw, 18px)",
+        bottom: "clamp(8px, 1.2vh, 16px)",
+        width: "clamp(82px, 7.2vw, 102px)",
+        height: "clamp(82px, 7.2vw, 102px)",
     },
 };
 
