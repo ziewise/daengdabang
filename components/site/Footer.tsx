@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CATEGORY_LABEL } from "@/lib/catalog";
 import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
 import { CATEGORY_ORDER } from "@/lib/shop";
+import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
 
 export default function Footer() {
     return (
@@ -22,7 +23,7 @@ export default function Footer() {
                         <p>{COPYRIGHT_NOTICE}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6 text-sm md:grid-cols-3">
+                <div className="grid grid-cols-2 gap-6 text-sm md:grid-cols-4">
                     <div>
                         <h3 className="font-black text-neutral-950">쇼핑</h3>
                         <div className="mt-3 grid gap-2 font-bold text-neutral-600">
@@ -51,6 +52,24 @@ export default function Footer() {
                             <Link href="/cart">장바구니</Link>
                             <Link href="/terms">이용약관</Link>
                             <Link href="/privacy">개인정보처리방침</Link>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="font-black text-neutral-950">SNS</h3>
+                        <div className="mt-3 grid gap-2 font-bold text-neutral-600">
+                            {PUBLIC_SOCIAL_CHANNELS.map((channel) => (
+                                <a
+                                    key={channel.key}
+                                    href={channel.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-2 transition hover:text-neutral-950"
+                                    aria-label={`댕다방 ${channel.label} ${channel.handle}`}
+                                >
+                                    <i className={`${channel.iconClassName} w-4 text-center text-neutral-500`} aria-hidden="true" />
+                                    <span>{channel.label}</span>
+                                </a>
+                            ))}
                         </div>
                     </div>
                 </div>
