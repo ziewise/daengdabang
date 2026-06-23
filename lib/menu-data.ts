@@ -145,6 +145,9 @@ export const FOOTER_LEGAL_LINKS: MenuItem[] = [
     // 약관·개인정보는 협업자가 만든 실제 페이지(/terms, /privacy)로 연결
     { label: "이용약관", href: "/terms" },
     { label: "개인정보처리방침", href: "/privacy" },
-    { label: "환불·반품 정책", href: "#refund" },
-    { label: "분쟁해결 기준", href: "#dispute" },
+    { label: "사업자 정보 확인", href: "/legal/business" },
+    { label: "구매안전서비스", href: "/legal/escrow" },
+    { label: "법적고지", href: "/legal" },
+    { label: "환불·반품 정책", href: "/legal#refund" },
+    { label: "분쟁해결 기준", href: "/legal#dispute" },
 ];

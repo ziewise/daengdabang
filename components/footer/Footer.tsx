@@ -73,7 +73,7 @@ export default function Footer() {
                         {/* 3) 시간 + 메일 (2줄) */}
                         <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap border-l border-neutral-200/70 pl-4 md:pl-5">
                             평일 10:00~18:00 · 주말 휴무<br />
-                            help@daengdabang.com
+                            {BUSINESS_INFO.customerServiceEmail}
                         </p>
                     </div>
 
@@ -97,8 +97,8 @@ export default function Footer() {
                         ["통신판매업신고", BUSINESS_INFO.mailOrderNumber],
                         ["주소", BUSINESS_INFO.address],
                         ["호스팅 제공자", BUSINESS_INFO.hostingProvider],
-                        ["개인정보 관리책임자", BUSINESS_INFO.representative],
-                        ["입점 / 제휴 문의", "partner@daengdabang.com"],
+                        ["개인정보 관리책임자", BUSINESS_INFO.privacyOfficer],
+                        ["입점 / 제휴 문의", BUSINESS_INFO.partnerEmail],
                     ].map(([k, v]) => (
                         <div key={k}>
                             <strong className="font-bold text-neutral-600 mr-1">{k}</strong>
