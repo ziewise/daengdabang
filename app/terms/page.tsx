@@ -225,9 +225,23 @@ export default function TermsPage() {
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
                 시행일: {LEGAL_UPDATED_AT}.
             </p>
+            <nav
+                aria-label="이용약관 목차"
+                className="mt-8 grid gap-2 rounded-lg border border-neutral-200 bg-white p-4 text-sm font-bold text-neutral-600 md:grid-cols-2"
+            >
+                {sections.map((section, index) => (
+                    <a key={section.title} href={`#terms-${index + 1}`} className="hover:text-indigo-700">
+                        {section.title}
+                    </a>
+                ))}
+            </nav>
             <div className="mt-8 grid gap-5">
-                {sections.map((section) => (
-                    <section key={section.title} className="border-t border-neutral-200 pt-5">
+                {sections.map((section, index) => (
+                    <section
+                        key={section.title}
+                        id={`terms-${index + 1}`}
+                        className="scroll-mt-24 border-t border-neutral-200 pt-5"
+                    >
                         <h2 className="text-lg font-black text-neutral-950">{section.title}</h2>
                         <p className="mt-2 whitespace-pre-line text-sm font-bold leading-7 text-neutral-600">
                             {section.body}

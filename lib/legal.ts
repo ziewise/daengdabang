@@ -1,5 +1,11 @@
 export const LEGAL_UPDATED_AT = "2026-06-24";
 
+export const FTC_BUSINESS_INFO_URL =
+    "https://www.ftc.go.kr/www/selectBizCommView.do?pageUnit=10&pageIndex=1&searchCnd=BRNO&searchKrwd=8738103438&key=254&opnSn=2026378039430200950";
+
+export const FTC_BUSINESS_SEARCH_URL =
+    "https://www.ftc.go.kr/www/selectBizCommList.do?key=254&searchCnd=BRNO&searchKrwd=8738103438";
+
 export const BUSINESS_INFO = {
     mallName: process.env.NEXT_PUBLIC_DDB_MALL_NAME || "댕다방",
     companyName: process.env.NEXT_PUBLIC_DDB_COMPANY_NAME || "주식회사 포엔치",

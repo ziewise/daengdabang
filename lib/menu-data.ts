@@ -148,6 +148,7 @@ export const FOOTER_LEGAL_LINKS: MenuItem[] = [
     { label: "사업자 정보 확인", href: "/legal/business" },
     { label: "구매안전서비스", href: "/legal/escrow" },
     { label: "법적고지", href: "/legal" },
+    { label: "이메일 무단 수집 금지", href: "/legal#email" },
     { label: "환불·반품 정책", href: "/legal#refund" },
     { label: "분쟁해결 기준", href: "/legal#dispute" },
 ];
