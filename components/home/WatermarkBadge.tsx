@@ -33,6 +33,10 @@ interface WatermarkBadgeProps {
     sizeRatio: number;
     /** 현재 영상 비율(가로/세로). PC 16:9 → 16/9, 모바일 9:16 → 9/16 */
     videoAspect: number;
+    /** 영상 object-position 가로 정렬(0~1). left=0, center=0.5, right=1 */
+    posX: number;
+    /** 영상 object-position 세로 정렬(0~1). top=0, center=0.5, bottom=1 */
+    posY: number;
 }
 
 export default function WatermarkBadge({
@@ -41,6 +45,8 @@ export default function WatermarkBadge({
     yRatio,
     sizeRatio,
     videoAspect,
+    posX,
+    posY,
 }: WatermarkBadgeProps) {
     // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼 ref — 이 크기가 곧 영상 컨테이너 크기
     const wrapRef = useRef<HTMLDivElement>(null);
@@ -67,15 +73,18 @@ export default function WatermarkBadge({
                 // 컨테이너가 영상보다 가로로 넓음 → 가로를 꽉 채우고 위아래가 잘림
                 renderW = W;
                 renderH = W / videoAspect;
-                offsetX = 0;
-                offsetY = (H - renderH) / 2;
             } else {
                 // 컨테이너가 영상보다 세로로 김 → 세로를 꽉 채우고 좌우가 잘림
                 renderH = H;
                 renderW = H * videoAspect;
-                offsetX = (W - renderW) / 2;
-                offsetY = 0;
             }
+            // object-cover 정렬 기준을 영상 object-position(posX/posY)에 맞춘다.
+            // 안 잘리는 축은 (W-renderW)=0 / (H-renderH)=0 이라 offset 0,
+            // 잘리는 축은 잘린 양을 posX/posY 비율로 분배 → 영상 실제 크롭과 배지가 정확히 일치.
+            // (예전엔 항상 50%/50% 중앙 크롭으로 가정 → PC object-position 이 "center bottom"이라
+            //  와이드 화면일수록 세로로 어긋나 워터마크를 벗어나던 버그를 수정)
+            offsetX = (W - renderW) * posX;
+            offsetY = (H - renderH) * posY;
 
             setBox({
                 left: offsetX + xRatio * renderW, // 워터마크 화면 X (배지 중심)
@@ -95,7 +104,7 @@ export default function WatermarkBadge({
             ro.disconnect();
             window.removeEventListener("resize", compute);
         };
-    }, [xRatio, yRatio, sizeRatio, videoAspect]);
+    }, [xRatio, yRatio, sizeRatio, videoAspect, posX, posY]);
 
     return (
         // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼(클릭 통과)

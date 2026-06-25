@@ -124,8 +124,10 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                     표현돼 있어 중복이라 끔. 협업자 엔진(hero-assets 의 scene.effect)은
                     그대로 두고, 여기서 오버레이 div 만 렌더하지 않는다. */}
                 {/* 견종 얼굴 영상 배지 — 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는다.
-                    좌표(가로 88%·세로 78%)는 여름 영상 24종 공통. PC 16:9 / 모바일 9:16 비율로
-                    object-cover 변환하여 워터마크의 현재 화면 위치/크기에 배지를 정확히 맞춘다. */}
+                    영상 object-position(posX/posY)까지 반영해 object-cover 변환하므로, 창을 확대/축소/줌
+                    해도 영상의 실제 크롭을 따라가 배지가 워터마크에서 벗어나지 않는다.
+                    PC: "center bottom"(posX 0.5, posY 1) / 모바일: "top center"(posY 0, 세로는 꽉 차 무관).
+                    sizeRatio 0.12 로 키워 영상마다 조금씩 다른 워터마크 위치 편차도 흡수한다. */}
                 {/* 견종 얼굴 배지.
                     PC(16:9): 워터마크(88%, 78%)를 배지가 동적 추적해 가린다.
                     모바일(9:16): 위 video 에서 영상 하단을 잘라내 워터마크가 안 보이므로, 배지는
@@ -134,8 +136,10 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                     src={heroBreedVideo}
                     xRatio={isMobile ? 0.82 : 0.88}
                     yRatio={isMobile ? 0.78 : 0.78}
-                    sizeRatio={isMobile ? 0.2 : 0.09}
+                    sizeRatio={isMobile ? 0.2 : 0.12}
                     videoAspect={isMobile ? 9 / 16 : 16 / 9}
+                    posX={0.5}
+                    posY={isMobile ? 0 : 1}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
