@@ -1177,22 +1177,20 @@ header + main .hero-shell {
 }
 
 @media (min-width: 768px) {
-    .hero-shell {
-        min-height: 560px;
-    }
-
+    /* 히어로 높이를 화면 세로(viewport)에 맞춰 축소되게 — 단 너무 납작/과대하지 않게 상·하한 둠.
+       창을 줄이면 히어로도 같이 줄어 영상이 viewport 밖으로 잘리지 않는다(영상은 cover 로 꽉 채우고,
+       object-position 하단 정렬이라 강아지·발 등 하단 콘텐츠가 우선 보임). 배지도 영상 폭에 비례해 같이 축소. */
+    .hero-shell,
     .hero-content-stage {
-        min-height: 560px;
+        min-height: clamp(360px, calc(100svh - var(--header-height)), 720px);
     }
 }
 
 @media (min-width: 1024px) {
-    .hero-shell {
-        min-height: clamp(720px, 50vw, 900px);
-    }
-
+    /* 데스크탑: 화면 세로에 맞추되 최대 900px 로 제한(큰 모니터에서 과대 방지). */
+    .hero-shell,
     .hero-content-stage {
-        min-height: clamp(720px, 50vw, 900px);
+        min-height: clamp(360px, calc(100svh - var(--header-height)), 900px);
     }
 }
 
