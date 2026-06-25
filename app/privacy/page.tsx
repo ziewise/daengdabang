@@ -3,7 +3,7 @@ import { BUSINESS_INFO, LEGAL_UPDATED_AT } from "@/lib/legal";
 
 export const metadata: Metadata = {
     title: "개인정보처리방침 | 댕다방",
-    description: "댕다방 개인정보 처리 기준",
+    description: "주식회사 포엔치가 운영하는 댕다방 개인정보 처리 기준",
 };
 
 const toc = [
@@ -27,20 +27,26 @@ const toc = [
 
 const noConsentRows = [
     [
+        "회원 가입·관리",
+        "이름, 생년월일, 회원ID, 비밀번호, 휴대전화번호, 이메일주소, 연계정보(CI)",
+        "회원 식별, 로그인, 계정 관리, 고지사항 전달",
+        "회원 탈퇴 후 30일 또는 관계 법령상 보존기간",
+    ],
+    [
         "주문·배송",
-        "주문 상품, 수량, 금액, 수령인, 배송지, 연락처, 공동현관 출입방법 등 배송 요청사항",
+        "주문 상품, 수량, 금액, 수령인정보, 배송지주소, 휴대전화번호, 공동현관 출입방법, 배송 요청사항",
         "주문 접수, 배송, 교환·반품, 고객 고지",
         "계약·청약철회 및 재화 공급 기록 5년",
     ],
     [
         "결제·환불",
-        "결제수단, 승인·취소 기록, 현금영수증 정보, 환불계좌 정보(환불 시)",
+        "회원ID, 주문내역, 신용카드 결제시(카드사명, 카드번호), 계좌이체/환불시(계좌정보, 입금자이름), 휴대폰결제시(휴대전화번호, 통신사명), 간편결제서비스 이용시(이름, 휴대전화번호, 이메일주소), 현금영수증 신청시(휴대전화번호, 현금영수증 카드번호), 승인·취소 기록",
         "대금 결제, 취소, 환불, 정산, 부정거래 확인",
         "대금결제 및 재화 공급 기록 5년",
     ],
     [
         "고객 상담",
-        "이름, 연락처, 이메일, 주문번호, 상담 내용, 첨부자료",
+        "이름, 휴대전화번호, 이메일주소, 주문번호, 상담 내용, 첨부자료",
         "문의 응대, 불만 처리, 분쟁 대응",
         "소비자 불만 또는 분쟁처리 기록 3년",
     ],
@@ -50,21 +56,15 @@ const noConsentRows = [
         "보안, 장애 대응, 비정상 이용 방지, 서비스 품질 개선",
         "접속 로그 3개월, 보안 사고 대응에 필요한 기록은 관련 법령상 기간",
     ],
-];
-
-const consentRows = [
-    [
-        "회원가입",
-        "이메일, 이름 또는 닉네임, 암호화된 비밀번호, 약관 동의 내역",
-        "회원 식별, 로그인, 계정 관리, 고지사항 전달",
-        "회원 탈퇴 후 30일 또는 관계 법령상 보존기간",
-    ],
     [
         "간편로그인",
-        "간편로그인 제공자, 제공자 회원 식별값, 이메일, 이름 또는 닉네임",
+        "간편로그인 제공자, 제공자 회원 식별값, 이메일주소, 이름, 생년월일, 휴대전화번호",
         "네이버·카카오·구글 등 외부 계정 기반 가입 및 로그인",
         "회원 탈퇴 또는 연결 해제 시까지",
     ],
+];
+
+const consentRows = [
     [
         "PetLens 프로필",
         "반려견 이름, 견종, 나이, 크기, 체형, 활동량, 관심 케어, 알레르기·건강 메모(입력 시)",
@@ -85,7 +85,7 @@ const consentRows = [
     ],
     [
         "이벤트·리뷰",
-        "이름, 연락처, SNS ID, 배송지(경품 발송 시), 리뷰 내용 및 사진",
+        "이름, 휴대전화번호, SNS ID, 배송지(경품 발송 시), 리뷰 내용 및 사진",
         "이벤트 운영, 당첨 안내, 경품 발송, 리뷰 게시",
         "이벤트 종료 후 90일 또는 관련 법령상 보존기간",
     ],
@@ -146,8 +146,10 @@ export default function PrivacyPage() {
             <p className="text-sm font-black text-indigo-700">Privacy</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">개인정보처리방침</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                {BUSINESS_INFO.companyName}은 개인정보 보호법 및 관계 법령을 준수하며, 이용자의 개인정보가 어떤
-                기준으로 처리되는지 쉽게 확인할 수 있도록 본 방침을 공개합니다. 시행일: {LEGAL_UPDATED_AT}.
+                {BUSINESS_INFO.companyName}은 개인정보 보호법 및 관계 법령이 정한 바를 준수하며, 적법하게
+                개인정보를 처리하고 안전하게 관리하고 있습니다. 이에 개인정보 보호법 제30조에 따라 정보주체에게
+                개인정보의 처리와 보호에 관한 절차 및 기준을 안내하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수
+                있도록 다음과 같이 개인정보처리방침을 수립·공개합니다. 시행일: {LEGAL_UPDATED_AT}.
             </p>
 
             <nav
@@ -164,9 +166,9 @@ export default function PrivacyPage() {
             <section id="purpose" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제1조 개인정보의 처리목적 및 수집 항목</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    댕다방은 쇼핑몰 서비스 제공, 회원관리, 주문·배송, 고객상담, 반려견 맞춤 추천, 이벤트 및 마케팅
-                    안내를 위해 필요한 범위에서 개인정보를 처리합니다. 계약 이행에 필요한 항목과 별도 동의가 필요한
-                    항목을 구분하여 관리합니다.
+                    {BUSINESS_INFO.companyName}은 쇼핑몰 서비스 제공, 회원 가입 및 관리, 물품 주문·배송, 본인인증,
+                    연령인증, 요금결제·정산, 서비스 제공, 콘텐츠 제공, 고객상담, 맞춤형 추천서비스 제공, 이벤트 및
+                    마케팅 안내, 서비스 분석 및 개선, 서비스 개발을 위해 필요한 범위에서 개인정보를 처리합니다.
                 </p>
                 <h3 className="mt-6 text-base font-black text-neutral-950">1. 정보주체의 동의 없이 처리하는 항목</h3>
                 <DataTable headers={["구분", "처리 항목", "처리 목적", "보유 및 이용기간"]} rows={noConsentRows} />
@@ -177,18 +179,19 @@ export default function PrivacyPage() {
             <section id="children" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제2조 만 14세 미만 아동의 개인정보</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    댕다방은 원칙적으로 만 14세 미만 아동을 대상으로 회원가입을 제공하지 않습니다. 향후 만 14세 미만
-                    아동의 개인정보 처리가 필요한 기능을 제공하는 경우 법정대리인의 동의를 확인하고, 법정대리인의
-                    열람·정정·삭제·처리정지 요구 절차를 별도로 안내합니다.
+                    {BUSINESS_INFO.companyName}은 원칙적으로 만 14세 미만 아동을 대상으로 회원가입을 제공하지
+                    않습니다. 향후 만 14세 미만 아동의 개인정보 처리가 필요한 기능을 제공하는 경우 법정대리인의 동의를
+                    확인하고, 법정대리인의 열람·정정·삭제·처리정지 요구 절차를 별도로 안내합니다.
                 </p>
             </section>
 
             <section id="retention" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제3조 보유 및 이용기간, 파기방법</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    개인정보는 처리 목적 달성, 동의 철회, 회원 탈퇴, 보유기간 경과 시 지체 없이 파기합니다. 전자적
-                    파일은 복구하기 어렵도록 삭제하고, 종이 문서는 분쇄 또는 이에 준하는 방법으로 파기합니다. 관계
-                    법령에 따라 보존해야 하는 정보는 다른 개인정보와 분리하여 보관합니다.
+                    개인정보는 처리 목적 달성, 보유기간 경과, 동의 철회, 회원 탈퇴 등 개인정보가 불필요하게 되었을 때
+                    지체 없이 파기합니다. 전자적 파일은 복구 또는 재생되지 않도록 안전하게 삭제하고, 종이 문서는 분쇄
+                    또는 소각 등 이에 준하는 방법으로 파기합니다. 관계 법령에 따라 일정 기간 보존해야 하는 정보는 해당
+                    기간 동안 다른 개인정보와 분리하여 보관합니다.
                 </p>
                 <ul className="mt-3 grid gap-2 text-sm font-bold leading-7 text-neutral-600">
                     <li>계약 또는 청약철회 등에 관한 기록: 5년</li>
@@ -201,9 +204,10 @@ export default function PrivacyPage() {
             <section id="outsourcing" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제4조 개인정보 처리위탁</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    서비스 제공에 필요한 일부 업무는 외부 전문업체에 위탁할 수 있습니다. 위탁계약 체결 시 개인정보의
-                    목적 외 처리 금지, 안전성 확보조치, 재위탁 제한, 관리·감독, 손해배상 책임을 계약서에 반영합니다.
-                    실제 운영 연동이 확정된 수탁자는 본 표에 즉시 반영합니다.
+                    {BUSINESS_INFO.companyName}은 서비스 제공을 위해 필요한 일부 업무를 외부 전문업체에 위탁할 수
+                    있습니다. 위탁계약 체결 시 개인정보 보호법에 따라 개인정보가 안전하게 관리될 수 있도록 위탁업무
+                    수행 목적 외 처리 금지, 안전성 확보조치, 재위탁 제한, 수탁자 관리·감독, 손해배상 등 책임에 관한
+                    사항을 문서에 반영합니다. 실제 운영 연동이 확정된 수탁자는 본 표에 즉시 반영합니다.
                 </p>
                 <DataTable headers={["위탁 업무", "수탁자", "위탁 내용"]} rows={outsourcingRows} />
             </section>
@@ -211,19 +215,20 @@ export default function PrivacyPage() {
             <section id="third-party" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제5조 개인정보 제3자 제공</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    댕다방은 이용자의 사전 동의가 있거나 법령에 근거가 있는 경우를 제외하고 개인정보를 제3자에게
-                    제공하지 않습니다. 제3자 제공이 필요한 제휴, 이벤트, 보험·A/S 등 기능을 운영하는 경우 제공받는 자,
-                    제공 목적, 제공 항목, 보유 및 이용기간, 동의 거부권을 별도 화면과 본 방침에 고지합니다.
+                    {BUSINESS_INFO.companyName}은 이용자의 사전 동의가 있거나 법률에 특별한 규정이 있는 경우를
+                    제외하고 개인정보를 제3자에게 제공하지 않습니다. 제3자 제공이 필요한 제휴, 이벤트, 보험·A/S 등
+                    기능을 운영하는 경우 제공받는 자, 제공 목적, 제공 항목, 보유 및 이용기간, 동의 거부권을 별도 화면과
+                    본 방침에 고지합니다.
                 </p>
             </section>
 
             <section id="overseas" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제6조 개인정보 국외이전</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    현재 댕다방은 이용자 개인정보를 상시적으로 국외 이전하지 않습니다. 다만 글로벌 클라우드, 보안,
-                    AI 이미지 분석 등 국외 이전이 필요한 기능을 운영 환경에 연결하는 경우 이전받는 자, 이전 국가,
-                    이전 항목, 이전 일시·방법, 이용 목적, 보유기간, 이전 거부 방법을 별도 고지하고 필요한 동의를
-                    받습니다.
+                    현재 {BUSINESS_INFO.companyName}은 이용자 개인정보를 상시적으로 국외 이전하지 않습니다. 다만
+                    글로벌 클라우드, 보안, AI 이미지 분석 등 국외 이전이 필요한 기능을 운영 환경에 연결하는 경우
+                    이전받는 자, 이전 국가, 이전 항목, 이전 일시·방법, 이용 목적, 보유기간, 이전 거부 방법을 별도
+                    고지하고 필요한 동의를 받습니다.
                 </p>
             </section>
 
@@ -240,20 +245,20 @@ export default function PrivacyPage() {
             <section id="sensitive" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제8조 반려견 사진·건강정보 등 민감 가능 정보</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    댕다방은 사람의 민감정보를 의도적으로 수집하지 않습니다. 다만 반려견 사진에는 보호자 얼굴, 거주지,
-                    위치 단서가 포함될 수 있고, 반려견 건강 메모에는 질병·복약 등 민감하게 느껴질 수 있는 내용이 포함될
-                    수 있습니다. 이용자는 업로드 전 불필요한 배경이나 사람 얼굴을 제외할 수 있으며, 업로드한 사진과
-                    프로필 정보는 마이페이지 또는 고객센터를 통해 삭제를 요청할 수 있습니다.
+                    {BUSINESS_INFO.companyName}은 사람의 민감정보를 의도적으로 수집하지 않습니다. 다만 반려견
+                    사진에는 보호자 얼굴, 거주지, 위치 단서가 포함될 수 있고, 반려견 건강 메모에는 질병·복약 등 민감하게
+                    느껴질 수 있는 내용이 포함될 수 있습니다. 이용자는 업로드 전 불필요한 배경이나 사람 얼굴을 제외할 수
+                    있으며, 업로드한 사진과 프로필 정보는 마이페이지 또는 고객센터를 통해 삭제를 요청할 수 있습니다.
                 </p>
             </section>
 
             <section id="rights" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제9조 정보주체 및 법정대리인의 권리</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    이용자는 언제든지 개인정보 열람, 정정, 삭제, 처리정지, 동의 철회를 요구할 수 있습니다. 회원정보와
-                    반려견 프로필은 서비스 화면에서 직접 수정하거나 삭제할 수 있고, 직접 처리하기 어려운 경우 고객센터로
-                    요청할 수 있습니다. 댕다방은 본인 확인 후 지체 없이 조치하며, 법령상 보존이 필요한 정보는 처리정지
-                    또는 분리보관 방식으로 관리합니다.
+                    정보주체는 {BUSINESS_INFO.companyName}에 대해 개인정보 열람, 정정·삭제, 처리정지, 동의 철회를
+                    요구할 수 있습니다. 회원정보와 반려견 프로필은 서비스 화면에서 직접 수정하거나 삭제할 수 있고, 직접
+                    처리하기 어려운 경우 고객센터로 요청할 수 있습니다. {BUSINESS_INFO.companyName}은 본인 확인 후
+                    지체 없이 조치하며, 법령상 보존이 필요한 정보는 처리정지 또는 분리보관 방식으로 관리합니다.
                 </p>
             </section>
 
@@ -265,7 +270,7 @@ export default function PrivacyPage() {
                             {[
                                 ["개인정보 보호책임자", BUSINESS_INFO.privacyOfficer],
                                 ["소속 및 담당", `${BUSINESS_INFO.companyName} 고객보호 및 개인정보 처리 담당`],
-                                ["연락처", `${BUSINESS_INFO.customerServicePhone} / ${BUSINESS_INFO.customerServiceEmail}`],
+                                ["휴대전화번호", `${BUSINESS_INFO.customerServicePhone} / ${BUSINESS_INFO.customerServiceEmail}`],
                                 ["주소", BUSINESS_INFO.address],
                             ].map(([label, value]) => (
                                 <tr key={label} className="border-b border-neutral-100 align-top">
@@ -281,9 +286,10 @@ export default function PrivacyPage() {
             <section id="cookies" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제11조 자동 수집 장치의 운영 및 거부</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    댕다방은 로그인 상태 유지, 장바구니, 보안, 서비스 이용 통계 등을 위해 쿠키와 유사 기술을 사용할 수
-                    있습니다. 이용자는 브라우저 설정에서 쿠키 저장을 거부하거나 삭제할 수 있습니다. 다만 쿠키를 차단하면
-                    로그인, 장바구니, 맞춤 추천 등 일부 기능이 정상적으로 작동하지 않을 수 있습니다.
+                    {BUSINESS_INFO.companyName}은 로그인 상태 유지, 장바구니, 보안, 서비스 이용 통계 등을 위해 쿠키와
+                    유사 기술을 사용할 수 있습니다. 이용자는 브라우저 설정에서 쿠키 저장을 거부하거나 삭제할 수
+                    있습니다. 다만 쿠키를 차단하면 로그인, 장바구니, 맞춤 추천 등 일부 기능이 정상적으로 작동하지 않을 수
+                    있습니다.
                 </p>
             </section>
 
@@ -308,19 +314,19 @@ export default function PrivacyPage() {
             </section>
 
             <section id="security" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">제14조 안전성 확보조치</h2>
+                <h2 className="text-lg font-black text-neutral-950">제14조 개인정보의 안전성 확보조치</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    댕다방은 개인정보 보호를 위해 접근권한 최소화, 관리자 인증 관리, 전송구간 암호화, 비밀번호 단방향
-                    암호화, 접속기록 보관, 보안 업데이트, 위탁업체 관리·감독, 사고 대응 절차를 운영합니다. 개인정보를
-                    처리하는 임직원과 협력업체에는 필요한 범위의 접근권한만 부여합니다.
+                    {BUSINESS_INFO.companyName}은 개인정보 보호를 위해 접근권한 최소화, 관리자 인증 관리, 전송구간
+                    암호화, 비밀번호 단방향 암호화, 접속기록 보관, 보안 업데이트, 위탁업체 관리·감독, 사고 대응 절차를
+                    운영합니다. 개인정보를 처리하는 임직원과 협력업체에는 필요한 범위의 접근권한만 부여합니다.
                 </p>
             </section>
 
             <section id="remedy" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제15조 개인정보침해 상담 및 신고</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    개인정보 침해에 대한 신고나 상담이 필요한 경우 아래 기관에 문의할 수 있습니다. 댕다방 관련 문의는
-                    제10조의 개인정보 보호책임자 및 고객센터로도 접수할 수 있습니다.
+                    개인정보 침해에 대한 신고나 상담이 필요한 경우 아래 기관에 문의할 수 있습니다. {BUSINESS_INFO.companyName}
+                    관련 문의는 제10조의 개인정보 보호책임자 및 고객센터로도 접수할 수 있습니다.
                 </p>
                 <div className="mt-4 overflow-x-auto">
                     <table className="w-full min-w-[760px] border-collapse text-left text-sm">
