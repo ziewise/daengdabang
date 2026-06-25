@@ -37,6 +37,8 @@ interface WatermarkBadgeProps {
     posX: number;
     /** 영상 object-position 세로 정렬(0~1). top=0, center=0.5, bottom=1 */
     posY: number;
+    /** 있으면 배지를 클릭 가능한 버튼으로 만든다(예: 펫렌즈 실행). 없으면 순수 장식(클릭 통과). */
+    onClick?: () => void;
 }
 
 export default function WatermarkBadge({
@@ -47,6 +49,7 @@ export default function WatermarkBadge({
     videoAspect,
     posX,
     posY,
+    onClick,
 }: WatermarkBadgeProps) {
     // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼 ref — 이 크기가 곧 영상 컨테이너 크기
     const wrapRef = useRef<HTMLDivElement>(null);
@@ -106,19 +109,45 @@ export default function WatermarkBadge({
         };
     }, [xRatio, yRatio, sizeRatio, videoAspect, posX, posY]);
 
+    // onClick 이 있으면 배지를 클릭 가능한 버튼으로 만든다(예: 펫렌즈 실행).
+    const interactive = Boolean(onClick);
     return (
-        // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼(클릭 통과)
-        <div ref={wrapRef} aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]">
+        // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼(영역 자체는 클릭 통과)
+        <div
+            ref={wrapRef}
+            aria-hidden={interactive ? undefined : true}
+            className="pointer-events-none absolute inset-0 z-[5]"
+        >
             {box && (
-                // 원형 배지 — 중심을 워터마크 좌표에 맞춤(translate -50%)
+                // 원형 배지 — 중심을 워터마크 좌표에 맞춤(translate -50%).
+                // interactive 면 배지만 pointer-events-auto 로 클릭 받고, hover 확대로 클릭 힌트를 준다.
                 <div
-                    className="absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-2 border-white/75 shadow-[0_8px_22px_rgba(0,0,0,0.32)]"
+                    className={`absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-2 border-white/75 shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
+                        interactive
+                            ? " pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-105"
+                            : ""
+                    }`}
                     style={{
                         left: `${box.left}px`,
                         top: `${box.top}px`,
                         width: `${box.size}px`,
                         height: `${box.size}px`,
                     }}
+                    role={interactive ? "button" : undefined}
+                    tabIndex={interactive ? 0 : undefined}
+                    aria-label={interactive ? "펫렌즈 실행" : undefined}
+                    title={interactive ? "펫렌즈 실행" : undefined}
+                    onClick={onClick}
+                    onKeyDown={
+                        interactive
+                            ? (e) => {
+                                  if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      onClick?.();
+                                  }
+                              }
+                            : undefined
+                    }
                 >
                     {/* 견종 얼굴 영상 — 16:9 가운데만 원형으로(양옆 잘림), 자동재생 루프 */}
                     <video

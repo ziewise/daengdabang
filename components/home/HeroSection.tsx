@@ -19,6 +19,8 @@ import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } fr
 import { pickHeroVideo, pickHeroBreedVideo } from "@/lib/hero-summer-video";
 // 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는 견종 얼굴 배지
 import WatermarkBadge from "./WatermarkBadge";
+// 펫렌즈 모달 런처 — 배지 클릭 시 펫렌즈 실행(Header·FloatingDock 과 동일한 런처)
+import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 
 type Props = {
     featuredProducts: CatalogProduct[];
@@ -52,6 +54,8 @@ function resolveClientContext(weatherOverride?: HeroWeather): HeroContext {
 }
 
 export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
+    // 펫렌즈 모달 열기 — 히어로 배지 클릭 시 실행
+    const { open: openPetLens } = usePetLensModal();
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
     // 모바일(세로) 여부 — 9:16 영상, 데스크탑은 16:9 영상
@@ -140,6 +144,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                     videoAspect={isMobile ? 9 / 16 : 16 / 9}
                     posX={0.5}
                     posY={isMobile ? 0 : 1}
+                    onClick={openPetLens}
                 />
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
             </div>
