@@ -25,11 +25,13 @@
 }
 
 html {
+    overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
+    overflow-x: hidden;
     background: var(--background);
     color: var(--foreground);
     font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
@@ -675,6 +677,34 @@ header + main .hero-shell {
 
 .hero-petlens-pill .hero-petlens-copy small {
     font-size: 12px;
+}
+
+.hero-region-select {
+    min-height: 26px;
+    max-width: 118px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    background: rgba(23, 23, 23, 0.4);
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.2;
+    outline: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.hero-region-select:focus-visible {
+    border-color: rgba(255, 255, 255, 0.72);
+    box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.2),
+        0 0 0 4px rgba(244, 114, 182, 0.24);
+}
+
+.hero-region-select option {
+    color: #111827;
 }
 
 .hero-petlens-icon {

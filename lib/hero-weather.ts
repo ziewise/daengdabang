@@ -3,7 +3,7 @@ import { type HeroWeather } from "@/lib/hero-assets";
 export type HeroWeatherReport = {
     weather: HeroWeather;
     locationName: string;
-    locationSource: "device" | "default" | "manual";
+    locationSource: "device" | "default" | "manual" | "selected";
     temperatureC: number | null;
     apparentTemperatureC: number | null;
     weatherCode: number | null;
@@ -40,6 +40,14 @@ type HeroWeatherLocation = {
     source: HeroWeatherReport["locationSource"];
 };
 
+export type HeroWeatherRegionOption = {
+    id: string;
+    name: string;
+    latitude: number;
+    longitude: number;
+};
+
+export const HERO_AUTO_REGION_ID = "auto";
 const CACHE_KEY_PREFIX = "ddb.hero.openmeteo.v2";
 const CACHE_MS = 15 * 60 * 1000;
 const GEOLOCATION_TIMEOUT_MS = 2600;
@@ -63,27 +71,27 @@ const DEFAULT_LOCATION: HeroWeatherLocation = {
     source: "default",
 };
 
-const KOREA_LOCATION_LABELS = [
-    { name: "서울", latitude: 37.5665, longitude: 126.978 },
-    { name: "부산", latitude: 35.1796, longitude: 129.0756 },
-    { name: "인천", latitude: 37.4563, longitude: 126.7052 },
-    { name: "대구", latitude: 35.8714, longitude: 128.6014 },
-    { name: "대전", latitude: 36.3504, longitude: 127.3845 },
-    { name: "광주", latitude: 35.1595, longitude: 126.8526 },
-    { name: "울산", latitude: 35.5384, longitude: 129.3114 },
-    { name: "세종", latitude: 36.4801, longitude: 127.289 },
-    { name: "제주", latitude: 33.4996, longitude: 126.5312 },
-    { name: "수원", latitude: 37.2636, longitude: 127.0286 },
-    { name: "고양", latitude: 37.6584, longitude: 126.832 },
-    { name: "용인", latitude: 37.2411, longitude: 127.1776 },
-    { name: "창원", latitude: 35.228, longitude: 128.6811 },
-    { name: "청주", latitude: 36.6424, longitude: 127.489 },
-    { name: "전주", latitude: 35.8242, longitude: 127.148 },
-    { name: "천안", latitude: 36.8151, longitude: 127.1139 },
-    { name: "춘천", latitude: 37.8813, longitude: 127.7298 },
-    { name: "강릉", latitude: 37.7519, longitude: 128.8761 },
-    { name: "포항", latitude: 36.019, longitude: 129.3435 },
-    { name: "여수", latitude: 34.7604, longitude: 127.6622 },
+export const HERO_WEATHER_REGION_OPTIONS: HeroWeatherRegionOption[] = [
+    { id: "seoul", name: "서울", latitude: 37.5665, longitude: 126.978 },
+    { id: "busan", name: "부산", latitude: 35.1796, longitude: 129.0756 },
+    { id: "incheon", name: "인천", latitude: 37.4563, longitude: 126.7052 },
+    { id: "daegu", name: "대구", latitude: 35.8714, longitude: 128.6014 },
+    { id: "daejeon", name: "대전", latitude: 36.3504, longitude: 127.3845 },
+    { id: "gwangju", name: "광주", latitude: 35.1595, longitude: 126.8526 },
+    { id: "ulsan", name: "울산", latitude: 35.5384, longitude: 129.3114 },
+    { id: "sejong", name: "세종", latitude: 36.4801, longitude: 127.289 },
+    { id: "jeju", name: "제주", latitude: 33.4996, longitude: 126.5312 },
+    { id: "suwon", name: "수원", latitude: 37.2636, longitude: 127.0286 },
+    { id: "goyang", name: "고양", latitude: 37.6584, longitude: 126.832 },
+    { id: "yongin", name: "용인", latitude: 37.2411, longitude: 127.1776 },
+    { id: "changwon", name: "창원", latitude: 35.228, longitude: 128.6811 },
+    { id: "cheongju", name: "청주", latitude: 36.6424, longitude: 127.489 },
+    { id: "jeonju", name: "전주", latitude: 35.8242, longitude: 127.148 },
+    { id: "cheonan", name: "천안", latitude: 36.8151, longitude: 127.1139 },
+    { id: "chuncheon", name: "춘천", latitude: 37.8813, longitude: 127.7298 },
+    { id: "gangneung", name: "강릉", latitude: 37.7519, longitude: 128.8761 },
+    { id: "pohang", name: "포항", latitude: 36.019, longitude: 129.3435 },
+    { id: "yeosu", name: "여수", latitude: 34.7604, longitude: 127.6622 },
 ];
 
 function numberOrNull(value: unknown): number | null {
@@ -93,6 +101,16 @@ function numberOrNull(value: unknown): number | null {
 function readManualLocation(): HeroWeatherLocation | null {
     try {
         const params = new URLSearchParams(window.location.search);
+        const region = resolveHeroWeatherRegion(params.get("heroRegion"));
+        if (region) {
+            return {
+                latitude: region.latitude,
+                longitude: region.longitude,
+                name: region.name,
+                source: "manual",
+            };
+        }
+
         const latitudeText = params.get("heroLat");
         const longitudeText = params.get("heroLon");
         if (!latitudeText || !longitudeText) return null;
@@ -108,6 +126,13 @@ function readManualLocation(): HeroWeatherLocation | null {
     } catch {
         return null;
     }
+}
+
+export function resolveHeroWeatherRegion(regionId: string | null | undefined): HeroWeatherRegionOption | null {
+    if (!regionId) return null;
+    const normalized = regionId.trim().toLowerCase();
+    if (!normalized || normalized === HERO_AUTO_REGION_ID) return null;
+    return HERO_WEATHER_REGION_OPTIONS.find((region) => region.id === normalized || region.name === regionId.trim()) ?? null;
 }
 
 function toRad(value: number) {
@@ -127,13 +152,24 @@ function distanceKm(a: Pick<HeroWeatherLocation, "latitude" | "longitude">, b: P
 }
 
 function nearestKoreanLocationName(latitude: number, longitude: number): string {
-    const nearest = KOREA_LOCATION_LABELS
+    const nearest = HERO_WEATHER_REGION_OPTIONS
         .map((location) => ({
             ...location,
             distance: distanceKm({ latitude, longitude }, location),
         }))
         .sort((a, b) => a.distance - b.distance)[0];
     return nearest && nearest.distance <= 90 ? nearest.name : "현재 위치";
+}
+
+function selectedRegionLocation(regionId: string | null | undefined): HeroWeatherLocation | null {
+    const region = resolveHeroWeatherRegion(regionId);
+    if (!region) return null;
+    return {
+        latitude: region.latitude,
+        longitude: region.longitude,
+        name: region.name,
+        source: "selected",
+    };
 }
 
 function getDeviceLocation(): Promise<HeroWeatherLocation | null> {
@@ -231,8 +267,10 @@ function setCachedReport(location: HeroWeatherLocation, report: HeroWeatherRepor
     }
 }
 
-export async function fetchHeroWeatherReport(): Promise<HeroWeatherReport | null> {
-    const location = readManualLocation() ?? (await getDeviceLocation()) ?? DEFAULT_LOCATION;
+export async function fetchHeroWeatherReport(options: { regionId?: string | null } = {}): Promise<HeroWeatherReport | null> {
+    const manualLocation = readManualLocation();
+    const selectedLocation = manualLocation ? null : selectedRegionLocation(options.regionId);
+    const location = manualLocation ?? selectedLocation ?? (await getDeviceLocation()) ?? DEFAULT_LOCATION;
     const cached = getCachedReport(location);
     if (cached) return cached;
 
