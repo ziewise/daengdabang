@@ -25,13 +25,11 @@
 }
 
 html {
-    overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
 body {
     margin: 0;
-    overflow-x: hidden;
     background: var(--background);
     color: var(--foreground);
     font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
@@ -46,12 +44,7 @@ button,
 input,
 select,
 textarea {
-    /* font-family/size 만 상속하고 font-weight 는 제외 — 그래야 Tailwind
-       utility(font-bold 등)가 button 에도 적용된다. (font: inherit 는 unlayered CSS 라
-       utility layer 보다 우선해서 드롭다운 메뉴 button 의 font-bold 가 무시됐었음) */
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
+    font: inherit;
 }
 
 button {
@@ -124,6 +117,16 @@ button:disabled {
 .btn-secondary:hover {
     border-color: #a5b4fc;
     color: #4338ca;
+}
+
+@keyframes ddb-outbound-progress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
 .btn-hero-light {
@@ -677,34 +680,6 @@ header + main .hero-shell {
 
 .hero-petlens-pill .hero-petlens-copy small {
     font-size: 12px;
-}
-
-.hero-region-select {
-    min-height: 26px;
-    max-width: 118px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 999px;
-    background: rgba(23, 23, 23, 0.4);
-    color: #fff;
-    padding: 4px 8px;
-    font-size: 12px;
-    font-weight: 900;
-    line-height: 1.2;
-    outline: none;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-.hero-region-select:focus-visible {
-    border-color: rgba(255, 255, 255, 0.72);
-    box-shadow:
-        0 0 0 2px rgba(255, 255, 255, 0.2),
-        0 0 0 4px rgba(244, 114, 182, 0.24);
-}
-
-.hero-region-select option {
-    color: #111827;
 }
 
 .hero-petlens-icon {

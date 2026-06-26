@@ -15,8 +15,9 @@ import {
     type SubcategorySlug,
 } from "@/lib/catalog";
 import { CATEGORY_ORDER } from "@/lib/shop";
+import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
+import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ProductCard from "@/components/products/ProductCard";
-import Pagination from "@/components/products/Pagination";
 
 type Props = {
     initialCategory?: CategorySlug;
@@ -28,7 +29,6 @@ type SubcategoryFilter = SubcategorySlug | "all";
 
 const SORT_OPTIONS = Object.keys(SORT_LABEL) as SortKey[];
 const SUBCATEGORY_OPTIONS = Object.keys(SUBCATEGORY_LABEL) as SubcategorySlug[];
-const PAGE_SIZE = 30; // 한 페이지에 보여줄 상품 수
 
 function isCategory(value: string | null): value is CategorySlug {
     return Boolean(value && CATEGORY_ORDER.includes(value as CategorySlug));
@@ -66,7 +66,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const [category, setCategory] = useState<CategoryFilter>(categoryFromParams(params, initialCategory));
     const [subcategory, setSubcategory] = useState<SubcategoryFilter>(subcategoryFromParams(params));
     const [sort, setSort] = useState<SortKey>(sortFromParams(params));
-    const [page, setPage] = useState(1);
+    const [externalProducts, setExternalProducts] = useState<ExternalProductResult[]>([]);
 
     useEffect(() => {
         setQuery(params.get("q") ?? "");
@@ -88,24 +88,37 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         return applySort(list, sort);
     }, [query, category, subcategory, sort]);
 
-    // 필터/정렬/검색이 바뀌면 첫 페이지로
-    useEffect(() => {
-        setPage(1);
-    }, [query, category, subcategory, sort]);
+    const externalFilter = useMemo(() => ({
+        category: category === "all" ? undefined : category,
+        subcategory: subcategory === "all" ? undefined : subcategory,
+        sort,
+        limit: 12,
+    }), [category, subcategory, sort]);
 
-    // 페이지네이션 — 현재 페이지의 30개만 렌더 (영상/이미지 동시 로드 부담 ↓)
-    const totalPages = Math.max(1, Math.ceil(products.length / PAGE_SIZE));
-    const currentPage = Math.min(page, totalPages);
-    const pagedProducts = products.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-    const changePage = (next: number) => {
-        setPage(next);
-        if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    useEffect(() => {
+        const cleanQuery = query.trim();
+        if (!cleanQuery) {
+            setExternalProducts([]);
+            return;
+        }
+
+        let cancelled = false;
+        setExternalProducts(searchExternalProducts(cleanQuery, externalFilter));
+        loadExternalProducts(cleanQuery, externalFilter).then((results) => {
+            if (!cancelled) setExternalProducts(results);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [query, externalFilter]);
+
+    const hasSearch = query.trim().length > 0;
+    const visibleCount = products.length + (hasSearch ? externalProducts.length : 0);
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">상품 {products.length.toLocaleString()}개</p>
+                <p className="text-sm font-black text-indigo-700">상품 {visibleCount.toLocaleString()}개</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">
                     {title ?? "전체상품"}
                 </h1>
@@ -157,18 +170,37 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                 </label>
             </section>
 
-            {products.length > 0 ? (
-                <>
+            {products.length > 0 && (
+                <section>
+                    {hasSearch && externalProducts.length > 0 && (
+                        <div className="mb-3 flex items-end justify-between gap-3">
+                            <h2 className="text-lg font-black text-neutral-950">댕다방 상품</h2>
+                            <span className="text-xs font-black text-neutral-500">{products.length.toLocaleString()}개</span>
+                        </div>
+                    )}
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                        {pagedProducts.map((product) => (
+                        {products.map((product) => (
                             <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
+                </section>
+            )}
 
-                    {/* 페이지 네비게이션 — 공용 컴포넌트 (2페이지 이상일 때만 자동 노출) */}
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onChange={changePage} />
-                </>
-            ) : (
+            {hasSearch && externalProducts.length > 0 && (
+                <section className="mt-10">
+                    <div className="mb-3 flex items-end justify-between gap-3">
+                        <h2 className="text-lg font-black text-neutral-950">외부 판매처</h2>
+                        <span className="text-xs font-black text-neutral-500">{externalProducts.length.toLocaleString()}개</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                        {externalProducts.map((product) => (
+                            <ExternalProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {products.length === 0 && (!hasSearch || externalProducts.length === 0) && (
                 <div className="surface p-10 text-center">
                     <i className="fa-regular fa-face-meh text-3xl text-neutral-400" />
                     <p className="mt-3 text-sm font-black text-neutral-700">조건에 맞는 상품이 없습니다.</p>
