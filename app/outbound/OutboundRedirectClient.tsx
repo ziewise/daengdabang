@@ -4,11 +4,16 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { safeOutboundTarget } from "@/lib/outbound";
+import { OUTBOUND_AFFILIATE_STOPS, safeOutboundTarget } from "@/lib/outbound";
+
+const DEFAULT_DELAY_MS = 2400;
+const AFFILIATE_DELAY_MS = 2900;
 
 export default function OutboundRedirectClient() {
     const params = useSearchParams();
     const target = useMemo(() => safeOutboundTarget(params.get("to")), [params]);
+    const showAffiliateTrail = params.get("via") === "partners";
+    const redirectDelay = showAffiliateTrail ? AFFILIATE_DELAY_MS : DEFAULT_DELAY_MS;
     const host = useMemo(() => {
         if (!target) return "";
         try {
@@ -18,24 +23,33 @@ export default function OutboundRedirectClient() {
         }
     }, [target]);
     const [remaining, setRemaining] = useState(3);
+    const [activePartner, setActivePartner] = useState(0);
 
     useEffect(() => {
         if (!target) return;
+        const startedAt = Date.now();
         const tick = window.setInterval(() => {
-            setRemaining((value) => Math.max(1, value - 1));
-        }, 850);
+            const elapsed = Date.now() - startedAt;
+            setRemaining(Math.max(1, Math.ceil((redirectDelay - elapsed) / 1000)));
+            if (showAffiliateTrail) {
+                setActivePartner(Math.min(
+                    OUTBOUND_AFFILIATE_STOPS.length - 1,
+                    Math.floor(elapsed / 700)
+                ));
+            }
+        }, 250);
         const redirect = window.setTimeout(() => {
             window.location.assign(target);
-        }, 2400);
+        }, redirectDelay);
         return () => {
             window.clearInterval(tick);
             window.clearTimeout(redirect);
         };
-    }, [target]);
+    }, [redirectDelay, showAffiliateTrail, target]);
 
     return (
         <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center px-4 py-12">
-            <section className="w-full max-w-md rounded-lg border border-neutral-200 bg-white p-6 text-center shadow-card">
+            <section className="w-full max-w-lg rounded-lg border border-neutral-200 bg-white p-6 text-center shadow-card">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#f7f2e8]">
                     <Image
                         src="/images/logo.png?v=20260614-tight"
@@ -51,11 +65,47 @@ export default function OutboundRedirectClient() {
                 {target ? (
                     <>
                         <p className="mt-2 text-sm font-bold text-neutral-500">{host}</p>
+                        {showAffiliateTrail && (
+                            <div className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-left">
+                                <p className="mb-2 text-xs font-black text-neutral-500">제휴사 안내</p>
+                                <div className="grid gap-2">
+                                    {OUTBOUND_AFFILIATE_STOPS.map((partner, index) => {
+                                        const active = index === activePartner;
+                                        return (
+                                            <div
+                                                key={partner.id}
+                                                className={`flex items-center gap-3 rounded-md border px-3 py-2 transition ${
+                                                    active
+                                                        ? "border-neutral-950 bg-white shadow-sm"
+                                                        : "border-neutral-200 bg-white/60"
+                                                }`}
+                                            >
+                                                <span className={`flex h-9 w-20 shrink-0 items-center justify-center rounded-md text-[11px] font-black ${
+                                                    active ? "bg-neutral-950 text-white" : "bg-neutral-100 text-neutral-700"
+                                                }`}>
+                                                    {partner.mark}
+                                                </span>
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="block truncate text-sm font-black text-neutral-950">{partner.name}</span>
+                                                    <span className="block truncate text-[11px] font-bold text-neutral-500">
+                                                        {partner.url.replace(/^https?:\/\//, "")}
+                                                    </span>
+                                                </span>
+                                                <i className={`fa-solid fa-circle text-[7px] ${active ? "text-emerald-500" : "text-neutral-300"}`} />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                         <div className="mt-5 h-2 overflow-hidden rounded-full bg-neutral-100">
-                            <div className="h-full animate-[ddb-outbound-progress_2.4s_linear_forwards] rounded-full bg-neutral-950" />
+                            <div
+                                className="h-full rounded-full bg-neutral-950"
+                                style={{ animation: `ddb-outbound-progress ${redirectDelay}ms linear forwards` }}
+                            />
                         </div>
                         <p className="mt-4 text-xs font-bold text-neutral-500">
-                            약 {remaining}초 후 새 구매 페이지로 이동합니다.
+                            {showAffiliateTrail ? "제휴사 안내 후 " : ""}약 {remaining}초 뒤 새 구매 페이지로 이동합니다.
                         </p>
                         <a
                             href={target}
