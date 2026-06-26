@@ -25,6 +25,12 @@ export default function ExternalProductCard({ product }: Props) {
                     src={product.thumbnail}
                     alt={product.title}
                     loading="lazy"
+                    onError={(event) => {
+                        const image = event.currentTarget;
+                        if (image.dataset.fallbackApplied || !image.src.includes(".webp")) return;
+                        image.dataset.fallbackApplied = "1";
+                        image.src = image.src.replace(/\.webp($|\?)/, ".png$1");
+                    }}
                     className="h-full w-full object-cover transition duration-150 group-hover:scale-[1.03]"
                 />
                 <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-neutral-950/85 px-2 py-0.5 text-[10px] font-black text-white">
