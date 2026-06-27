@@ -4,6 +4,7 @@ import feed from "./feed.json";
 
 export type ExternalProductResult = {
     id: string;
+    offerId?: string;
     title: string;
     brand: string;
     category: CategorySlug;

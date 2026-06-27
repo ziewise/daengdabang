@@ -17,6 +17,7 @@ import {
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
 import ExternalProductCard from "@/components/products/ExternalProductCard";
+import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
 import ProductCard from "@/components/products/ProductCard";
 
 type Props = {
@@ -213,11 +214,14 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                         </div>
                     </div>
                     {externalProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                            {externalProducts.map((product) => (
-                                <ExternalProductCard key={product.id} product={product} />
-                            ))}
-                        </div>
+                        <>
+                            <ExternalProductComparisonTable products={externalProducts} />
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                                {externalProducts.map((product) => (
+                                    <ExternalProductCard key={product.id} product={product} />
+                                ))}
+                            </div>
+                        </>
                     ) : (
                         <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
                             <p className="text-sm font-black text-neutral-700">
