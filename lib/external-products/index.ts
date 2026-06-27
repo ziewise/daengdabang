@@ -12,6 +12,7 @@ export type ExternalProductResult = {
     priceText: string;
     thumbnail: string;
     purchaseUrl: string;
+    outboundUrl?: string;
     keywords: string[];
     rank: number;
     updatedAt?: string;

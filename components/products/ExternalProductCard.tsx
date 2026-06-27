@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function ExternalProductCard({ product }: Props) {
-    const href = outboundHref(product.purchaseUrl, {
+    const href = product.outboundUrl || outboundHref(product.purchaseUrl, {
         source: product.sourceName,
         product: product.title,
     });
@@ -19,7 +19,7 @@ export default function ExternalProductCard({ product }: Props) {
             <Link
                 href={href}
                 className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
-                aria-label={`${product.title} 외부 판매처 보기`}
+                aria-label={`${product.title} 외부 가격비교 보기`}
             >
                 <img
                     src={product.thumbnail}
@@ -34,7 +34,7 @@ export default function ExternalProductCard({ product }: Props) {
                     className="h-full w-full object-cover transition duration-150 group-hover:scale-[1.03]"
                 />
                 <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-neutral-950/85 px-2 py-0.5 text-[10px] font-black text-white">
-                    외부
+                    가격비교
                 </div>
                 <div className="absolute bottom-2 right-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-neutral-700 shadow-sm">
                     {product.sourceName}
@@ -57,7 +57,7 @@ export default function ExternalProductCard({ product }: Props) {
                     className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
-                    판매처 보기
+                    제휴 경유로 보기
                 </Link>
             </div>
         </article>

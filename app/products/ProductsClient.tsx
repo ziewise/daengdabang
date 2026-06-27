@@ -67,6 +67,8 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const [subcategory, setSubcategory] = useState<SubcategoryFilter>(subcategoryFromParams(params));
     const [sort, setSort] = useState<SortKey>(sortFromParams(params));
     const [externalProducts, setExternalProducts] = useState<ExternalProductResult[]>([]);
+    const [externalLoading, setExternalLoading] = useState(false);
+    const [externalSearched, setExternalSearched] = useState(false);
 
     useEffect(() => {
         setQuery(params.get("q") ?? "");
@@ -99,13 +101,20 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         const cleanQuery = query.trim();
         if (!cleanQuery) {
             setExternalProducts([]);
+            setExternalLoading(false);
+            setExternalSearched(false);
             return;
         }
 
         let cancelled = false;
-        setExternalProducts(searchExternalProducts(cleanQuery, externalFilter));
+        const fallback = searchExternalProducts(cleanQuery, externalFilter);
+        setExternalProducts(fallback);
+        setExternalSearched(true);
+        setExternalLoading(true);
         loadExternalProducts(cleanQuery, externalFilter).then((results) => {
             if (!cancelled) setExternalProducts(results);
+        }).finally(() => {
+            if (!cancelled) setExternalLoading(false);
         });
         return () => {
             cancelled = true;
@@ -186,21 +195,43 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                 </section>
             )}
 
-            {hasSearch && externalProducts.length > 0 && (
-                <section className="mt-10">
-                    <div className="mb-3 flex items-end justify-between gap-3">
-                        <h2 className="text-lg font-black text-neutral-950">외부 판매처</h2>
-                        <span className="text-xs font-black text-neutral-500">{externalProducts.length.toLocaleString()}개</span>
+            {hasSearch && (
+                <section className="mt-10 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
+                    <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Price Compare</p>
+                            <h2 className="mt-1 text-xl font-black text-neutral-950">외부 가격비교</h2>
+                            <p className="mt-1 text-xs font-bold text-neutral-500">
+                                댕다방 상품이 부족한 검색어는 외부 판매처 후보를 함께 보여주고, 클릭은 제휴 경유 페이지를 거칩니다.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700">제휴 경유</span>
+                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
+                                {externalLoading ? "검색 중" : `${externalProducts.length.toLocaleString()}개`}
+                            </span>
+                        </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                        {externalProducts.map((product) => (
-                            <ExternalProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    {externalProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                            {externalProducts.map((product) => (
+                                <ExternalProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
+                            <p className="text-sm font-black text-neutral-700">
+                                {externalLoading || !externalSearched ? "외부 가격비교 후보를 찾는 중입니다." : "아직 연결된 외부 가격비교 후보가 없습니다."}
+                            </p>
+                            <p className="mt-1 text-xs font-bold text-neutral-500">
+                                RPA 시장조사 피드가 갱신되면 이 영역에 자동으로 추가됩니다.
+                            </p>
+                        </div>
+                    )}
                 </section>
             )}
 
-            {products.length === 0 && (!hasSearch || externalProducts.length === 0) && (
+            {products.length === 0 && !hasSearch && (
                 <div className="surface p-10 text-center">
                     <i className="fa-regular fa-face-meh text-3xl text-neutral-400" />
                     <p className="mt-3 text-sm font-black text-neutral-700">조건에 맞는 상품이 없습니다.</p>

@@ -107,12 +107,13 @@ export default function OutboundRedirectClient() {
                         <p className="mt-4 text-xs font-bold text-neutral-500">
                             {showAffiliateTrail ? "제휴사 안내 후 " : ""}약 {remaining}초 뒤 새 구매 페이지로 이동합니다.
                         </p>
-                        <a
-                            href={target}
+                        <button
+                            type="button"
+                            onClick={() => window.location.assign(target)}
                             className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-emerald-700"
                         >
-                            바로 이동
-                        </a>
+                            제휴 안내 확인 후 이동
+                        </button>
                     </>
                 ) : (
                     <>
