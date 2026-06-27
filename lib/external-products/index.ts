@@ -16,6 +16,32 @@ export type ExternalProductResult = {
     keywords: string[];
     rank: number;
     updatedAt?: string;
+    sellerName?: string;
+    sourceSite?: string;
+    sourceKind?: string;
+    crawlSource?: string;
+    liveCrawlStatus?: string;
+    currency?: "KRW" | string;
+    basePrice?: number | null;
+    priceLow?: number | null;
+    priceHigh?: number | null;
+    shippingFee?: number;
+    couponDiscount?: number;
+    optionName?: string;
+    optionPriceDelta?: number;
+    totalPrice?: number | null;
+    specGroup?: string;
+    specs?: Record<string, string>;
+    priceHistory?: Array<Record<string, string | number | null>>;
+    historyStats?: {
+        sampleCount?: number;
+        lowest?: number;
+        highest?: number;
+        latest?: number;
+        previous?: number;
+        delta?: number;
+    };
+    collectedAt?: string;
 };
 
 type ExternalFilter = {
@@ -66,8 +92,11 @@ function sortResults(list: ExternalProductResult[], sort?: SortKey): ExternalPro
     if (sort === "newest") {
         return copy.sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || "") || b.rank - a.rank);
     }
-    if (sort === "priceAsc" || sort === "priceDesc") {
-        return copy.sort((a, b) => b.rank - a.rank);
+    if (sort === "priceAsc") {
+        return copy.sort((a, b) => (a.totalPrice ?? Number.MAX_SAFE_INTEGER) - (b.totalPrice ?? Number.MAX_SAFE_INTEGER) || b.rank - a.rank);
+    }
+    if (sort === "priceDesc") {
+        return copy.sort((a, b) => (b.totalPrice ?? -1) - (a.totalPrice ?? -1) || b.rank - a.rank);
     }
     return copy.sort((a, b) => b.rank - a.rank);
 }
