@@ -36,6 +36,14 @@ export class DdbApiError extends Error {
     }
 }
 
+function inferredApiBase() {
+    if (typeof window === "undefined") return "";
+    if (window.location.hostname === "daengdabang.com" || window.location.hostname === "www.daengdabang.com") {
+        return "https://api.daengdabang.com";
+    }
+    return "";
+}
+
 type ApiPetProfile = {
     id: number;
     name: string;
@@ -55,7 +63,7 @@ type ApiPetProfile = {
 export function ddbApiBase() {
     const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || process.env.NEXT_PUBLIC_API_URL || "";
     if (typeof window === "undefined") return envBase;
-    return window.localStorage.getItem("ddb.apiBase") || envBase;
+    return window.localStorage.getItem("ddb.apiBase") || envBase || inferredApiBase();
 }
 
 export function ddbApiReady() {
@@ -179,6 +187,7 @@ export async function savePetProfileSmart(pet: PetProfile, token?: string) {
             activity: pet.activity,
             concerns: pet.concerns,
             photoDataUrl: pet.photoDataUrl,
+            rawAnalysis: pet.rawAnalysis,
             source: "storefront",
             lastAnalyzedAt: pet.lastAnalyzedAt,
         }),
@@ -198,6 +207,7 @@ export async function loadPetProfilesSmart(token?: string): Promise<PetProfile[]
         activity: row.activity,
         concerns: row.concerns || [],
         photoDataUrl: row.photoDataUrl || undefined,
+        rawAnalysis: row.rawAnalysis || undefined,
         lastAnalyzedAt: row.lastAnalyzedAt || row.updatedAt,
     }));
 }
