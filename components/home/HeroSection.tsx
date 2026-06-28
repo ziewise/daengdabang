@@ -173,14 +173,16 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 <WatermarkBadge
                     src={heroBreedVideo}
                     xRatio={isMobile ? 0.82 : 0.88}
-                    yRatio={isMobile ? 0.78 : 0.78}
+                    yRatio={isMobile ? 0.58 : 0.78}
                     sizeRatio={isMobile ? 0.2 : 0.12}
                     videoAspect={isMobile ? 9 / 16 : 16 / 9}
                     posX={0.5}
                     posY={isMobile ? 0 : 1}
                     onClick={openPetLens}
                 />
-                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/45 to-transparent" />
+                {/* 하단 그라데이션 — 다음 섹션 전환 + 영상 맨 하단 워터마크(✦) 가림.
+                    모바일은 더 높고(h-44) 진하게(via 65%) 해서 svh 가 작아도 워터마크가 비치지 않게 한다. */}
+                <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#f7f8fb] via-[#f7f8fb]/65 to-transparent sm:h-32 sm:via-[#f7f8fb]/45" />
             </div>
 
             <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-start px-4 pt-6 pb-20 md:px-6 md:py-20 md:justify-center">

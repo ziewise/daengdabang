@@ -104,7 +104,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
             {isOpen && (
                 <div
                     // 반투명 배경 — 바깥(배경) 클릭 시 닫힘
-                    className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm p-3 sm:p-6"
+                    className="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm px-3 pb-6 pt-20 sm:items-center sm:p-6"
                     role="dialog"
                     aria-modal="true"
                     aria-label="펫렌즈 AI 분석"
@@ -112,10 +112,10 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                 >
                     {/* 모달 패널 — 안쪽 클릭은 닫힘 방지. 컴팩트하게 폭 제한(max-w-md) */}
                     <div
-                        className="relative my-auto w-full max-w-md rounded-2xl bg-white shadow-2xl"
+                        className="relative my-auto flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[88vh]"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* 닫기 버튼 — 우상단 고정 */}
+                        {/* 닫기 버튼 — 우상단 고정(내용 스크롤해도 항상 보임) */}
                         <button
                             type="button"
                             onClick={close}
@@ -125,8 +125,10 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                             <i className="fa-solid fa-xmark text-base" />
                         </button>
 
-                        {/* 입력→결과 단계 전환 본문 (분석은 협업자 LLM 함수 호출) */}
-                        <PetLensModalContent />
+                        {/* 입력→결과 단계 전환 본문 — 길면 이 영역만 스크롤(모달은 항상 화면 안) */}
+                        <div className="overflow-y-auto overscroll-contain">
+                            <PetLensModalContent />
+                        </div>
                     </div>
                 </div>
             )}
