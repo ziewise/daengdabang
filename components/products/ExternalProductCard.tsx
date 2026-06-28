@@ -106,7 +106,7 @@ export default function ExternalProductCard({ product }: Props) {
                 )}
                 <Link
                     href={href}
-                    className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
+                    className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-emerald-600 text-sm font-black text-white transition hover:bg-emerald-700"
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
                     제휴 경유로 보기

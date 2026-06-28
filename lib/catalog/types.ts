@@ -103,4 +103,16 @@ export interface CatalogProduct {
     reviewCount: number;
     discountRate: number;
     originalPrice: number | null;
+    /** 색상 변형(있는 제품만) — 칩 클릭 시 메인 이미지 교체 + 구매 옵션 한글명 */
+    colors?: ProductColor[];
+}
+
+/** 제품 색상 변형 1개 — colors/ 폴더의 색상별 제품 이미지 + 칩(원형 버튼) + 한글명. */
+export interface ProductColor {
+    /** 색상별 메인 이미지 경로(칩 클릭 시 좌측 교체) */
+    image: string;
+    /** 색상 한글명(구매 옵션 드롭다운 표시) */
+    name: string;
+    /** 색상 칩(원형 버튼) 이미지 경로 */
+    chip: string;
 }

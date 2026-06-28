@@ -261,7 +261,7 @@ function QnaContent({ product: p }: { product: CatalogProduct }) {
             </p>
             <Link
                 href={`/chat?q=${encodeURIComponent(p.name)}`}
-                className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
+                className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-indigo-600 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
             >
                 <i className="fa-solid fa-circle-question text-xs" />
                 챗봇에 문의

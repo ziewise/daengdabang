@@ -35,15 +35,24 @@ export function categoryTiles() {
     }));
 }
 
-export function cartProducts(lines: Array<{ productId: string; qty: number }>) {
+export function cartProducts(lines: Array<{ productId: string; qty: number; color?: string }>) {
     return lines
         .map((line) => {
             const product = findProduct(line.productId);
-            return product ? { product, qty: line.qty, subtotal: product.price * line.qty } : null;
+            if (!product) return null;
+            // 색상 옵션이 있으면 그 색상 이미지를 장바구니 썸네일로(없으면 기본 이미지)
+            const colorImage = line.color ? product.colors?.find((c) => c.name === line.color)?.image : undefined;
+            return {
+                product,
+                qty: line.qty,
+                subtotal: product.price * line.qty,
+                color: line.color,
+                image: colorImage ?? product.image,
+            };
         })
-        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; subtotal: number }>;
+        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; subtotal: number; color?: string; image?: string }>;
 }
 
-export function cartTotal(lines: Array<{ productId: string; qty: number }>) {
+export function cartTotal(lines: Array<{ productId: string; qty: number; color?: string }>) {
     return cartProducts(lines).reduce((sum, line) => sum + line.subtotal, 0);
 }

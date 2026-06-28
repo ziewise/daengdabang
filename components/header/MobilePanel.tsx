@@ -16,10 +16,8 @@ import {
     BRAND_CARDS,
     PROMO_CARDS,
     CS_LINKS,
-    AI_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
-import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 
 interface Props {
     open: boolean;
@@ -31,8 +29,6 @@ export default function MobilePanel({ open, onClose }: Props) {
     const [searchTerm, setSearchTerm] = useState("");
     const { isLoggedIn, hydrated } = useAuth();
     const router = useRouter();
-    // 펫렌즈는 페이지 대신 모달로 — 패널 닫고 모달 열기
-    const { open: openPetLens } = usePetLensModal();
 
     /** 검색 submit — /products?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
     const submitSearch = (e: React.FormEvent) => {
@@ -162,34 +158,6 @@ export default function MobilePanel({ open, onClose }: Props) {
                                 {p.title}
                             </SubLink>
                         ))}
-                    </MobileGroup>
-
-                    <MobileGroup
-                        label="AI"
-                        expanded={expanded === "ai"}
-                        onToggle={() => setExpanded(expanded === "ai" ? null : "ai")}
-                    >
-                        {AI_LINKS.map((a) =>
-                            // 펫렌즈만 모달 열기(+패널 닫기), 나머지(챗봇)는 링크 그대로
-                            a.href === "/pet-lens" ? (
-                                <button
-                                    key={a.label}
-                                    type="button"
-                                    onClick={() => {
-                                        onClose();
-                                        openPetLens();
-                                    }}
-                                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-neutral-600 hover:text-aurora-indigo rounded-lg text-left"
-                                >
-                                    <i className={`fa-solid ${a.icon} text-neutral-400 w-3 text-center text-[10px]`} />
-                                    <span>{a.label}</span>
-                                </button>
-                            ) : (
-                                <SubLink key={a.label} href={a.href} icon={a.icon} onClick={onClose}>
-                                    {a.label}
-                                </SubLink>
-                            ),
-                        )}
                     </MobileGroup>
 
                     <MobileGroup

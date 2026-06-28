@@ -88,3 +88,12 @@ README.original.md
 # pnpm 파일 — 이 프로젝트는 npm 사용 (Cloudflare 빌드가 pnpm 오인 방지)
 pnpm-lock.yaml
 pnpm-workspace.yaml
+
+# ----- 색상 변환 원본(png) — webp 만 배포 -----
+# colors/*.png(색상 원본) + chips.png(칩 분할 소스)는 용량이 커(약 505MB) git·배포에서 제외하고
+# 로컬에만 보관한다. scripts/build-colors.py 가 png→webp 변환 + chips.png 분할 후 webp 만 커밋한다.
+# 색상 추가·수정 시 로컬 png 로 스크립트를 다시 돌려 재변환하면 된다.
+public/images/products/catalog/**/colors/*.png
+
+# 색상 칩 분할 작업 산출물(미리보기/샘플)
+data/chips_*.png

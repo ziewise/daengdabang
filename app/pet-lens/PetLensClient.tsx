@@ -114,7 +114,7 @@ export default function PetLensClient() {
                             type="file"
                             accept="image/*"
                             onChange={(event) => handleFile(event.target.files?.[0])}
-                            className="block w-full text-sm font-bold text-neutral-600 file:mr-3 file:h-10 file:rounded-md file:border-0 file:bg-neutral-950 file:px-4 file:text-sm file:font-black file:text-white"
+                            className="block w-full text-sm font-bold text-neutral-600 file:mr-3 file:h-10 file:rounded-md file:border-0 file:bg-indigo-600 file:px-4 file:text-sm file:font-black file:text-white"
                         />
                     </label>
 

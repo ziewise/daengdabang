@@ -148,8 +148,11 @@ export default function MyPage() {
                                                 <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-black text-indigo-700">접수</span>
                                             </div>
                                             <div className="mt-3 grid gap-1 text-sm font-bold text-neutral-600">
-                                                {lines.map(({ product, qty }) => (
-                                                    <span key={product.id}>{product.name} x {qty}</span>
+                                                {lines.map(({ product, qty, color }) => (
+                                                    <span key={`${product.id}-${color ?? ""}`}>
+                                                        {product.name}
+                                                        {color && <span className="text-neutral-400"> · {color}</span>} x {qty}
+                                                    </span>
                                                 ))}
                                             </div>
                                             <p className="mt-3 text-right text-lg font-black text-neutral-950">{formatKRW(order.total)}원</p>

@@ -17,14 +17,14 @@ export default function BrandLogo({ className = "" }: { className?: string }) {
             className={`inline-flex items-center gap-2.5 no-underline ${className}`}
             aria-label="댕다방 홈"
         >
-            {/* 동그란 로고 아이콘 */}
-            <span className="relative inline-flex w-10 h-10 rounded-full overflow-hidden bg-white shadow-[0_4px_12px_rgba(15,23,42,0.08)]">
+            {/* 강아지 로고 — 배경 없이(투명) 헤더 색이 비치게, 좀 더 크게 */}
+            <span className="relative inline-flex w-12 h-12 shrink-0 md:w-14 md:h-14">
                 <Image
                     src="/images/logo.png"
                     alt=""
                     fill
-                    sizes="40px"
-                    className="object-cover"
+                    sizes="56px"
+                    className="object-contain"
                     priority
                 />
             </span>

@@ -16,7 +16,6 @@ import {
     BRAND_CARDS,
     PROMO_CARDS,
     CS_LINKS,
-    AI_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 import MobilePanel from "./MobilePanel";
@@ -60,7 +59,7 @@ export default function Header() {
                                         <div key={g.title}>
                                             <Link
                                                 href={g.href}
-                                                className="block mb-3 text-sm font-extrabold text-foreground hover:text-aurora-indigo"
+                                                className="block mb-3 text-sm font-bold text-foreground hover:text-aurora-indigo"
                                             >
                                                 {g.title}
                                             </Link>
@@ -111,7 +110,7 @@ export default function Header() {
                                             <span className={`inline-block text-xs font-black tracking-wider mb-2 ${b.accent === "ruff" ? "text-orange-600" : "text-blue-600"}`}>
                                                 {b.initial}
                                             </span>
-                                            <h3 className="text-sm font-extrabold mb-1">{b.name}</h3>
+                                            <h3 className="text-sm font-bold mb-1">{b.name}</h3>
                                             <p className="text-[11px] text-neutral-500 leading-snug whitespace-pre-line">
                                                 {b.tagline}
                                             </p>
@@ -152,50 +151,12 @@ export default function Header() {
                                                 <i className={`fa-solid ${p.icon}`} />
                                             </span>
                                             <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-extrabold mb-0.5">{p.title}</h4>
+                                                <h4 className="text-sm font-bold mb-0.5">{p.title}</h4>
                                                 <p className="text-[11px] text-neutral-500 line-clamp-1">{p.desc}</p>
                                             </div>
                                         </Link>
                                     </li>
                                 ))}
-                            </ul>
-                        </NavDropdown>
-
-                        {/* AI — 펫렌즈/챗봇 (협업자 기능) */}
-                        <NavDropdown
-                            label="AI"
-                            open={openDrop === "ai"}
-                            onEnter={() => setOpenDrop("ai")}
-                            onLeave={() => setOpenDrop(null)}
-                        >
-                            <ul className="p-2 min-w-[240px]">
-                                {AI_LINKS.map((a) => {
-                                    // 펫렌즈만 모달로(페이지 이동 X). 나머지(챗봇)는 기존 링크 그대로.
-                                    const isPetLens = a.href === "/pet-lens";
-                                    const cls =
-                                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-aurora-indigo/5 text-sm font-bold text-left";
-                                    const inner = (
-                                        <>
-                                            <span className="w-7 h-7 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white flex items-center justify-center shrink-0">
-                                                <i className={`fa-solid ${a.icon} text-xs`} />
-                                            </span>
-                                            <span>{a.label}</span>
-                                        </>
-                                    );
-                                    return (
-                                        <li key={a.label}>
-                                            {isPetLens ? (
-                                                <button type="button" onClick={openPetLens} className={cls}>
-                                                    {inner}
-                                                </button>
-                                            ) : (
-                                                <Link href={a.href} className={cls}>
-                                                    {inner}
-                                                </Link>
-                                            )}
-                                        </li>
-                                    );
-                                })}
                             </ul>
                         </NavDropdown>
 
@@ -211,7 +172,7 @@ export default function Header() {
                                     <li key={c.label}>
                                         <Link
                                             href={c.href}
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-sm font-medium"
+                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-sm font-bold"
                                         >
                                             <i className={`fa-solid ${c.icon} text-aurora-indigo w-4 text-center`} />
                                             <span>{c.label}</span>
@@ -226,6 +187,16 @@ export default function Header() {
                         모바일(<lg): 햄버거만 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         데스크탑(lg+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
                     <div className="flex items-center gap-2">
+                        {/* 펫렌즈 — AI 분석 모달(검색 버튼 좌측). 챗봇은 우하단 FloatingDock 에 있음 */}
+                        <button
+                            type="button"
+                            onClick={openPetLens}
+                            className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white shadow-[0_2px_14px_-2px_rgba(192,38,211,0.5)] transition-all hover:-translate-y-px hover:shadow-[0_5px_20px_-2px_rgba(192,38,211,0.7)]"
+                            aria-label="펫렌즈 분석 열기"
+                            title="펫렌즈 — 반려견 사진 분석"
+                        >
+                            <i className="fa-solid fa-camera text-sm transition-transform group-hover:scale-110" />
+                        </button>
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
@@ -314,10 +285,9 @@ function NavDropdown({
         >
             <button
                 type="button"
-                className="px-4 py-2 text-sm font-bold text-foreground hover:text-aurora-indigo transition rounded-lg inline-flex items-center gap-1"
+                className="rounded-lg px-4 py-2 text-sm font-bold text-foreground transition hover:text-aurora-indigo"
             >
                 {label}
-                <i className={`fa-solid fa-chevron-down text-[10px] transition-transform ${open ? "rotate-180" : ""}`} />
             </button>
             {open && (
                 <div

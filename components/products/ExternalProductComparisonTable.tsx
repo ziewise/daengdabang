@@ -280,7 +280,7 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                 <td className="px-3 py-3 text-center">
                                     <Link
                                         href={linkFor(product)}
-                                        className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"
+                                        className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white transition hover:bg-emerald-700"
                                         aria-label={`${product.title} 판매처 열기`}
                                     >
                                         <i className="fa-solid fa-arrow-up-right-from-square text-xs" />

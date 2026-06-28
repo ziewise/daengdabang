@@ -8,15 +8,18 @@ import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
     product: CatalogProduct;
+    /** 색상 변형 선택 시 메인에 띄울 이미지(있으면 활성 이미지보다 우선) */
+    colorImage?: string;
 }
 
-export default function ProductGallery({ product: p }: Props) {
+export default function ProductGallery({ product: p, colorImage }: Props) {
     const images = [p.image, ...(p.gallery ?? [])].filter(Boolean) as string[];
     const videoRef = useRef<HTMLVideoElement>(null);
     const [activeIdx, setActiveIdx] = useState(0);
     const [showVideo, setShowVideo] = useState(false);
     const [videoReady, setVideoReady] = useState(false);
-    const activeImage = images[activeIdx];
+    // 색상 선택 시 그 색상 이미지를 메인으로(없으면 기존 활성 이미지)
+    const activeImage = colorImage ?? images[activeIdx];
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
 
     const activateVideo = () => {

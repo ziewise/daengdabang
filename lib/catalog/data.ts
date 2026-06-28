@@ -1,6 +1,7 @@
 import rawCatalog from "./raw.json";
 import { SUBCAT_ICON, SUBCAT_TO_CAT } from "./labels";
-import type { CatalogProduct, CatalogRow, PromoSlug, SubcategorySlug } from "./types";
+import type { CatalogProduct, CatalogRow, ProductColor, PromoSlug, SubcategorySlug } from "./types";
+import colorsData from "./colors.json";
 
 const CATALOG_DATA_REVISION = "video-cdn-20260616";
 
@@ -127,6 +128,18 @@ function cleanProductName(name: string): string {
     return name.replace(/\s*강아지\s*\d*\s*$/, "").trim();
 }
 
+type RawColorEntry = { file: string; name: string; chip: string };
+
+// colors.json(제품 folder → 색상 목록)을 CatalogProduct.colors 로 변환 — 이미지 경로를 완성해서.
+// colors 폴더가 준비된(=sub_image 입력된) 제품만 colors 가 채워지고, 없으면 undefined.
+function buildColors(folder: string | undefined): ProductColor[] | undefined {
+    if (!folder) return undefined;
+    const entries = (colorsData as Record<string, RawColorEntry[]>)[folder];
+    if (!entries || entries.length === 0) return undefined;
+    const dir = `/images/products/catalog/${folder}/colors`;
+    return entries.map((c) => ({ image: `${dir}/${c.file}`, name: c.name, chip: `${dir}/${c.chip}` }));
+}
+
 function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
     return (rawCatalog as CatalogRow[]).map((row) => {
         const subcategory = mapSubcategory(row);
@@ -162,6 +175,7 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             externalReviewSnippets: row.externalReviewSnippets,
             externalReviewDisclosure: row.externalReviewDisclosure,
             raw: row,
+            colors: buildColors(row.folder),
             ...buildMeta(row),
         };
     });

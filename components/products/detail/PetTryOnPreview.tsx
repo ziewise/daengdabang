@@ -93,7 +93,7 @@ export default function PetTryOnPreview({ product }: { product: CatalogProduct }
                     <p>
                         가입 후 펫렌즈에서 반려견 사진을 업로드하면 하네스/웨어/고글 같은 착용 상품에서 자동 피팅 이미지를 볼 수 있습니다.
                     </p>
-                    <Link href="/auth/signup" className="inline-flex h-10 items-center justify-center rounded-md bg-neutral-950 px-4 text-sm font-black text-white hover:bg-indigo-700">
+                    <Link href="/auth/signup" className="inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-black text-white hover:bg-indigo-700">
                         가입하기
                     </Link>
                 </div>

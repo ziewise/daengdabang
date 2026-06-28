@@ -10,7 +10,7 @@ import {
     useState,
 } from "react";
 
-export type CartLine = { productId: string; qty: number };
+export type CartLine = { productId: string; qty: number; color?: string };
 export type PetProfile = {
     name: string;
     size: "small" | "medium" | "large";
@@ -51,9 +51,9 @@ type State = {
 
 type Action =
     | { type: "HYDRATE"; state: State }
-    | { type: "ADD_TO_CART"; productId: string; qty: number }
-    | { type: "SET_QTY"; productId: string; qty: number }
-    | { type: "REMOVE_FROM_CART"; productId: string }
+    | { type: "ADD_TO_CART"; productId: string; qty: number; color?: string }
+    | { type: "SET_QTY"; productId: string; qty: number; color?: string }
+    | { type: "REMOVE_FROM_CART"; productId: string; color?: string }
     | { type: "CLEAR_CART" }
     | { type: "TOGGLE_WISHLIST"; productId: string }
     | { type: "LOGIN"; user: User }
@@ -65,33 +65,41 @@ const STORAGE_KEY = "daengdabang.store.v2";
 const API_TOKEN_KEY = "ddb.api.accessToken";
 const INITIAL: State = { cart: [], wishlist: [], user: null, orders: [] };
 
+// 장바구니 라인 식별 — 같은 제품도 색상(옵션)이 다르면 다른 라인으로 본다.
+function sameLine(line: CartLine, productId: string, color?: string): boolean {
+    return line.productId === productId && (line.color ?? "") === (color ?? "");
+}
+
 function reducer(state: State, action: Action): State {
     switch (action.type) {
         case "HYDRATE":
             return action.state;
         case "ADD_TO_CART": {
-            const existing = state.cart.find((line) => line.productId === action.productId);
+            const existing = state.cart.find((line) => sameLine(line, action.productId, action.color));
             if (existing) {
                 return {
                     ...state,
                     cart: state.cart.map((line) =>
-                        line.productId === action.productId
+                        sameLine(line, action.productId, action.color)
                             ? { ...line, qty: Math.min(99, line.qty + action.qty) }
                             : line
                     ),
                 };
             }
-            return { ...state, cart: [...state.cart, { productId: action.productId, qty: action.qty }] };
+            return {
+                ...state,
+                cart: [...state.cart, { productId: action.productId, qty: action.qty, color: action.color }],
+            };
         }
         case "SET_QTY":
             return {
                 ...state,
                 cart: state.cart
-                    .map((line) => (line.productId === action.productId ? { ...line, qty: action.qty } : line))
+                    .map((line) => (sameLine(line, action.productId, action.color) ? { ...line, qty: action.qty } : line))
                     .filter((line) => line.qty > 0),
             };
         case "REMOVE_FROM_CART":
-            return { ...state, cart: state.cart.filter((line) => line.productId !== action.productId) };
+            return { ...state, cart: state.cart.filter((line) => !sameLine(line, action.productId, action.color)) };
         case "CLEAR_CART":
             return { ...state, cart: [] };
         case "TOGGLE_WISHLIST": {
@@ -122,9 +130,9 @@ function reducer(state: State, action: Action): State {
 type StoreValue = {
     state: State;
     hydrated: boolean;
-    addToCart: (productId: string, qty?: number) => void;
-    setQty: (productId: string, qty: number) => void;
-    removeFromCart: (productId: string) => void;
+    addToCart: (productId: string, qty?: number, color?: string) => void;
+    setQty: (productId: string, qty: number, color?: string) => void;
+    removeFromCart: (productId: string, color?: string) => void;
     clearCart: () => void;
     toggleWishlist: (productId: string) => void;
     isWished: (productId: string) => boolean;
@@ -160,9 +168,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         () => ({
             state,
             hydrated,
-            addToCart: (productId, qty = 1) => dispatch({ type: "ADD_TO_CART", productId, qty }),
-            setQty: (productId, qty) => dispatch({ type: "SET_QTY", productId, qty }),
-            removeFromCart: (productId) => dispatch({ type: "REMOVE_FROM_CART", productId }),
+            addToCart: (productId, qty = 1, color) => dispatch({ type: "ADD_TO_CART", productId, qty, color }),
+            setQty: (productId, qty, color) => dispatch({ type: "SET_QTY", productId, qty, color }),
+            removeFromCart: (productId, color) => dispatch({ type: "REMOVE_FROM_CART", productId, color }),
             clearCart: () => dispatch({ type: "CLEAR_CART" }),
             toggleWishlist: (productId) => dispatch({ type: "TOGGLE_WISHLIST", productId }),
             isWished: (productId) => state.wishlist.includes(productId),

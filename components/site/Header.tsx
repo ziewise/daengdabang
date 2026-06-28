@@ -91,7 +91,7 @@ export default function Header() {
 
                 <button
                     type="button"
-                    className="ml-auto shrink-0 rounded-full bg-neutral-950 px-2.5 py-2 text-xs font-black text-white sm:px-3 sm:text-sm md:hidden"
+                    className="ml-auto shrink-0 rounded-full bg-indigo-600 px-2.5 py-2 text-xs font-black text-white sm:px-3 sm:text-sm md:hidden"
                     onClick={() => setMenuOpen((open) => !open)}
                 >
                     전체메뉴

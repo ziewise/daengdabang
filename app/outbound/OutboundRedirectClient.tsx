@@ -110,7 +110,7 @@ export default function OutboundRedirectClient() {
                         <button
                             type="button"
                             onClick={() => window.location.assign(target)}
-                            className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-emerald-700"
+                            className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-emerald-600 px-5 text-sm font-black text-white transition hover:bg-emerald-700"
                         >
                             제휴 안내 확인 후 이동
                         </button>
@@ -120,7 +120,7 @@ export default function OutboundRedirectClient() {
                         <p className="mt-3 text-sm font-bold text-neutral-600">이동할 주소를 확인할 수 없습니다.</p>
                         <Link
                             href="/products"
-                            className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white"
+                            className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-indigo-600 px-5 text-sm font-black text-white"
                         >
                             상품 검색으로 돌아가기
                         </Link>

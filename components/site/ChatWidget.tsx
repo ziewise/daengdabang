@@ -94,7 +94,7 @@ export default function ChatWidget() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-950 text-white disabled:opacity-50"
+                            className="flex h-10 w-10 items-center justify-center rounded-md bg-indigo-600 text-white disabled:opacity-50"
                             aria-label="전송"
                         >
                             <i className="fa-solid fa-paper-plane text-xs" />
@@ -106,7 +106,7 @@ export default function ChatWidget() {
             <button
                 type="button"
                 onClick={() => setOpen((value) => !value)}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl transition hover:bg-indigo-700"
                 aria-label={open ? "챗봇 닫기" : "챗봇 열기"}
                 title={open ? "챗봇 닫기" : "챗봇 열기"}
             >

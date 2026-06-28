@@ -82,9 +82,12 @@ export default function CheckoutPage() {
                 <aside className="surface h-fit p-5">
                     <h2 className="text-lg font-black text-neutral-950">주문 상품</h2>
                     <div className="mt-4 grid gap-3">
-                        {lines.map(({ product, qty }) => (
-                            <div key={product.id} className="flex items-start justify-between gap-3 text-sm">
-                                <span className="font-bold leading-5 text-neutral-700">{product.name} x {qty}</span>
+                        {lines.map(({ product, qty, color }) => (
+                            <div key={`${product.id}-${color ?? ""}`} className="flex items-start justify-between gap-3 text-sm">
+                                <span className="font-bold leading-5 text-neutral-700">
+                                    {product.name}
+                                    {color && <span className="text-neutral-400"> · {color}</span>} x {qty}
+                                </span>
                                 <b className="shrink-0 text-neutral-950">{formatKRW(product.price * qty)}원</b>
                             </div>
                         ))}

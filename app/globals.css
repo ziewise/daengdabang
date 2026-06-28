@@ -40,14 +40,18 @@ a {
     text-decoration: none;
 }
 
-button,
 input,
 select,
 textarea {
     font: inherit;
 }
 
+/* button 은 font shorthand(inherit) 대신 font-family 만 상속한다.
+   `font: inherit` 는 레이어 밖 규칙이라 Tailwind 의 text-sm, font-bold 같은 유틸을 이겨버려,
+   메뉴 드롭다운 button 에서 그 유틸이 무시되고 body 기본(16px/400)이 적용되는 문제가 있었다.
+   font-family 만 상속하면 크기·두께는 유틸(클래스)이 정상 적용된다. */
 button {
+    font-family: inherit;
     cursor: pointer;
 }
 
@@ -100,12 +104,12 @@ button:disabled {
 }
 
 .btn-primary {
-    background: #111827;
+    background: #4f46e5;
     color: #ffffff;
 }
 
 .btn-primary:hover {
-    background: #4f46e5;
+    background: #4338ca;
 }
 
 .btn-secondary {
@@ -137,6 +141,13 @@ button:disabled {
 .btn-hero-light:hover {
     background: #fff2b8;
     color: #111827;
+}
+
+/* Tailwind preflight 의 a { color: inherit } 때문에, 배경색 있는 링크 버튼(text-white)이
+   부모 글자색(예: text-neutral-600 박스)을 상속해 흰 글자가 안 먹는 문제 보정.
+   a.text-white 로 specificity 를 높여 링크 버튼의 흰 글자를 확실히 적용한다. */
+a.text-white {
+    color: #ffffff;
 }
 
 .hero-shell {
