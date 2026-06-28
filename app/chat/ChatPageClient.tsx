@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { answerShopQuestionSmart } from "@/lib/daengdabang-llm";
+import { answerShopQuestionSmart, type ShopChatMedical, type ShopChatSource } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
@@ -11,6 +11,8 @@ type Message = {
     role: "user" | "assistant";
     text: string;
     products?: CatalogProduct[];
+    medical?: ShopChatMedical;
+    sources?: ShopChatSource[];
 };
 
 export default function ChatPageClient() {
@@ -34,7 +36,7 @@ export default function ChatPageClient() {
         const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet });
         setMessages((prev) => [
             ...prev,
-            { role: "assistant", text: result.answer, products: result.products },
+            { role: "assistant", text: result.answer, products: result.products, medical: result.medical, sources: result.sources },
         ]);
         setLoading(false);
     }, [loading, selectedPet]);
@@ -91,6 +93,35 @@ export default function ChatPageClient() {
                                 }`}>
                                     {message.text}
                                 </div>
+                                {message.role === "assistant" && message.medical?.followUpQuestions && message.medical.followUpQuestions.length > 0 && (
+                                    <div className="mt-2 flex max-w-[82%] flex-wrap gap-2">
+                                        {message.medical.followUpQuestions.slice(0, 4).map((question) => (
+                                            <button
+                                                key={question}
+                                                type="button"
+                                                onClick={() => void ask(question)}
+                                                className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-left text-xs font-black leading-5 text-sky-800"
+                                            >
+                                                {question}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                                {message.role === "assistant" && message.sources && message.sources.length > 0 && (
+                                    <div className="mt-2 flex max-w-[82%] flex-wrap gap-2">
+                                        {message.sources.slice(0, 4).map((source) => (
+                                            <a
+                                                key={`${source.name}-${source.url}`}
+                                                href={source.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-black text-neutral-600 shadow-sm"
+                                            >
+                                                {source.name}
+                                            </a>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                         {loading && (

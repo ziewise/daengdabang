@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { answerShopQuestion, answerShopQuestionSmart } from "@/lib/daengdabang-llm";
+import { answerShopQuestion, answerShopQuestionSmart, type ShopChatMedical, type ShopChatSource } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
 
@@ -10,6 +10,8 @@ type Message = {
     role: "user" | "assistant";
     text: string;
     products?: ReturnType<typeof answerShopQuestion>["products"];
+    medical?: ShopChatMedical;
+    sources?: ShopChatSource[];
 };
 
 export default function ChatWidget() {
@@ -29,18 +31,14 @@ export default function ChatWidget() {
         setLoading(true);
         setMessages((prev) => [...prev, { role: "user", text: question }]);
         const result = await answerShopQuestionSmart(question, { pet: user?.pets?.[0] ?? null });
-        setMessages((prev) => [...prev, { role: "assistant", text: result.answer, products: result.products }]);
+        setMessages((prev) => [...prev, { role: "assistant", text: result.answer, products: result.products, medical: result.medical, sources: result.sources }]);
         setLoading(false);
     };
 
     return (
-        // 위치/정렬은 상위 FloatingDock 이 관리 — 여기선 버튼 기준 relative 컨테이너만.
-        // 채팅창은 토글 버튼 위(bottom-full)에 absolute 로 띄운다.
-        <div className="relative">
+        <div className="fixed bottom-4 right-4 z-50">
             {open && (
-                // 모바일: 화면 하단 가운데 고정(dock 이 가운데라 우측 기준이면 화면을 벗어남)
-                // 데스크탑(sm+): 토글 버튼 위에 우측 정렬로 띄움
-                <section className="fixed inset-x-3 bottom-[5.25rem] flex h-[min(520px,calc(100vh-9rem))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl sm:absolute sm:inset-x-auto sm:right-0 sm:bottom-full sm:mb-3 sm:h-[min(520px,calc(100vh-7rem))] sm:w-[min(360px,calc(100vw-32px))]">
+                <section className="mb-3 flex h-[520px] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl">
                     <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
                         <b className="text-sm font-black">댕다방 케어톡</b>
                         <button
@@ -73,6 +71,35 @@ export default function ChatWidget() {
                                         ))}
                                     </div>
                                 )}
+                                {message.role === "assistant" && message.medical?.followUpQuestions && message.medical.followUpQuestions.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-1.5">
+                                        {message.medical.followUpQuestions.slice(0, 3).map((question) => (
+                                            <button
+                                                key={question}
+                                                type="button"
+                                                onClick={() => setInput(question)}
+                                                className="rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-left text-[11px] font-extrabold leading-4 text-sky-800"
+                                            >
+                                                {question}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                                {message.role === "assistant" && message.sources && message.sources.length > 0 && (
+                                    <div className="mt-2 flex flex-wrap gap-1.5">
+                                        {message.sources.slice(0, 3).map((source) => (
+                                            <a
+                                                key={`${source.name}-${source.url}`}
+                                                href={source.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-extrabold text-neutral-600"
+                                            >
+                                                {source.name}
+                                            </a>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                         {loading && (
@@ -94,7 +121,7 @@ export default function ChatWidget() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex h-10 w-10 items-center justify-center rounded-md bg-indigo-600 text-white disabled:opacity-50"
+                            className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-950 text-white disabled:opacity-50"
                             aria-label="전송"
                         >
                             <i className="fa-solid fa-paper-plane text-xs" />
@@ -106,7 +133,7 @@ export default function ChatWidget() {
             <button
                 type="button"
                 onClick={() => setOpen((value) => !value)}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-xl transition hover:bg-indigo-700"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700"
                 aria-label={open ? "챗봇 닫기" : "챗봇 열기"}
                 title={open ? "챗봇 닫기" : "챗봇 열기"}
             >

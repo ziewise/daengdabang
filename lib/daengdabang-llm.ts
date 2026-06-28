@@ -17,6 +17,36 @@ type ShopQuestionContext = {
     pet?: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
 };
 
+export type ShopChatSource = {
+    name: string;
+    url: string;
+};
+
+export type ShopChatMedical = {
+    mode?: boolean;
+    triage?: string;
+    topic?: string;
+    topicLabel?: string;
+    followUpQuestions?: string[];
+    followUpSlots?: Array<{ key: string; label: string; prompt: string; required?: boolean }>;
+    redFlags?: string[];
+    firstSteps?: string[];
+    knowledgeLevel?: string;
+    disclaimer?: string;
+};
+
+export type ShopChatAnswer = {
+    answer: string;
+    products: CatalogProduct[];
+    medical?: ShopChatMedical;
+    sources?: ShopChatSource[];
+};
+
+const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
+    { name: "AVMA pet first aid", url: "https://www.avma.org/resources-tools/pet-owners/emergencycare/first-aid-tips-pet-owners" },
+    { name: "Merck Veterinary Manual pet emergencies", url: "https://www.merckvetmanual.com/special-pet-topics/emergencies/what-to-do-in-a-dog-or-cat-emergency" },
+];
+
 function unique(products: CatalogProduct[]) {
     const seen = new Set<string>();
     return products.filter((product) => {
@@ -55,7 +85,7 @@ function sizeLabel(size: PetProfile["size"]) {
     return "중형";
 }
 
-function medicalSafetyFallback(message: string): { answer: string; products: CatalogProduct[] } | null {
+function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     const text = message.toLowerCase();
     const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose)/i.test(text);
     if (!medical) return null;
@@ -64,11 +94,36 @@ function medicalSafetyFallback(message: string): { answer: string; products: Cat
         return {
             answer: "응급 가능성이 있습니다. 상품 추천보다 먼저 가까운 동물병원 또는 24시 응급병원에 즉시 연락하세요. 증상 시작 시간, 먹은 것, 복용한 약, 사진/영상을 준비해 병원에 전달하는 것이 좋습니다.",
             products: [],
+            medical: {
+                mode: true,
+                triage: "emergency",
+                followUpQuestions: ["지금 이동 가능한 24시 병원이 있나요?", "언제부터 증상이 시작됐나요?", "먹은 물질이나 사고 가능성이 있나요?"],
+                followUpSlots: [
+                    { key: "nearest_er", label: "응급 병원", prompt: "지금 이동 가능한 24시 병원이 있나요?", required: true },
+                    { key: "duration", label: "기간", prompt: "언제부터 증상이 시작됐나요?", required: true },
+                    { key: "core_symptoms", label: "핵심 증상", prompt: "호흡, 의식, 발작, 구토, 통증 중 무엇이 있나요?", required: true },
+                ],
+                disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
+            },
+            sources: HEALTH_SOURCE_FALLBACK,
         };
     }
     return {
         answer: "걱정되시겠어요. 지금은 상품 추천보다 증상 확인이 먼저입니다. 언제부터 아픈지, 구토/설사 여부, 호흡 상태, 식욕과 물 섭취, 기력 변화, 통증을 보이는 부위, 최근 먹은 것이나 삼킨 물건이 있는지 확인해 주세요. 호흡이 힘들거나 의식이 처지고, 반복 발작·중독 의심·피가 섞인 구토/설사·심한 통증·걷지 못함이 있으면 바로 동물병원 또는 24시 응급병원에 연락해야 합니다. 증상이 가볍더라도 계속되거나 악화되면 수의사 진료가 우선입니다.",
         products: [],
+        medical: {
+            mode: true,
+            triage: "general_health",
+            followUpQuestions: ["언제부터 어떤 모습이 달라졌나요?", "구토, 설사, 기침, 통증, 무기력, 식욕 변화 중 무엇이 있나요?", "나이, 체중, 기존 질환이나 복용약이 있나요?"],
+            followUpSlots: [
+                { key: "age", label: "나이", prompt: "나이 또는 개월 수가 어떻게 되나요?", required: true },
+                { key: "weight", label: "체중", prompt: "대략 체중이 몇 kg인가요?", required: true },
+                { key: "duration", label: "기간", prompt: "언제부터, 얼마나 자주 보이나요?", required: true },
+                { key: "core_symptoms", label: "핵심 증상", prompt: "구토, 설사, 기침, 통증, 무기력, 식욕 변화 중 무엇이 있나요?", required: true },
+            ],
+            disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
+        },
+        sources: HEALTH_SOURCE_FALLBACK,
     };
 }
 
@@ -158,7 +213,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
     }
 }
 
-export function answerShopQuestion(message: string, context?: ShopQuestionContext) {
+export function answerShopQuestion(message: string, context?: ShopQuestionContext): ShopChatAnswer {
     const text = message.trim();
     const lower = text.toLowerCase();
     let products: CatalogProduct[] = [];
@@ -205,7 +260,7 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     return { answer, products: unique(products).slice(0, 6) };
 }
 
-export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext) {
+export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const medicalFallback = medicalSafetyFallback(message);
     const fallback = medicalFallback || answerShopQuestion(message, context);
     const base = apiBase();
@@ -225,9 +280,16 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
             : [];
         const medicalMode = Boolean(data.medical && typeof data.medical === "object" && data.medical.mode);
+        const apiSources = Array.isArray(data.sources)
+            ? data.sources
+                .filter((source: { name?: unknown; url?: unknown }) => typeof source?.name === "string" && typeof source?.url === "string")
+                .map((source: { name: string; url: string }) => ({ name: source.name, url: source.url }))
+            : [];
         return {
             answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
             products: medicalMode ? unique(apiProducts).slice(0, 6) : (apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products),
+            medical: medicalMode ? data.medical as ShopChatMedical : fallback.medical,
+            sources: apiSources.length ? apiSources : fallback.sources,
         };
     } catch {
         return medicalFallback || fallback;
