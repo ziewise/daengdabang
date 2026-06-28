@@ -23,6 +23,7 @@ import {
 import { useStore } from "@/lib/store";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
+import ColorSelect from "./ColorSelect";
 
 interface Props {
     product: CatalogProduct;
@@ -152,36 +153,13 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     </li>
                 </ul>
 
-                {/* 색상 미리보기 — 칩 클릭 시 좌측 메인 이미지 교체(부모). 실제 담기는 시트에서 */}
-                {hasColors && (
-                    <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
-                        <div className="mb-3 flex items-center justify-between">
-                            <span className="text-sm font-black text-neutral-600">색상</span>
-                            <span className="text-sm font-bold text-neutral-900">
-                                {colorIdx != null ? colors[colorIdx]?.name : <span className="text-neutral-400">선택하세요</span>}
-                            </span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {colors.map((c, i) => (
-                                <button
-                                    key={c.image}
-                                    type="button"
-                                    onClick={() => onColorChange?.(i)}
-                                    aria-label={c.name}
-                                    aria-current={i === colorIdx}
-                                    title={c.name}
-                                    className={`relative h-9 w-9 overflow-hidden rounded-full transition ${
-                                        i === colorIdx
-                                            ? "ring-2 ring-indigo-600 ring-offset-2"
-                                            : "ring-1 ring-neutral-300 hover:ring-indigo-300"
-                                    }`}
-                                >
-                                    <Image src={c.chip} alt={c.name} fill sizes="36px" className="object-cover" />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
+                {/* 색상 — PC(lg+)는 여기(우측 구매정보), 모바일은 이미지 바로 아래(ProductDetailClient)에서 표시 */}
+                <ColorSelect
+                    colors={colors}
+                    colorIdx={colorIdx}
+                    onColorChange={onColorChange}
+                    className="hidden lg:block"
+                />
 
                 {/* 메인 액션 — 누르면 옵션 시트. 이 영역이 화면 밖이면 하단 바 노출 */}
                 <div ref={actionRef} className="grid grid-cols-[56px_1fr_1fr] gap-2">

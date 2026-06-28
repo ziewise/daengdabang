@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductGallery from "@/components/products/detail/ProductGallery";
+import ColorSelect from "@/components/products/detail/ColorSelect";
 import ProductInfo from "@/components/products/detail/ProductInfo";
 import ProductTabs from "@/components/products/detail/ProductTabs";
 import PetTryOnPreview from "@/components/products/detail/PetTryOnPreview";
@@ -22,6 +23,13 @@ export default function ProductDetailClient({ product }: Props) {
             <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
                 <div className="lg:sticky lg:top-[calc(var(--header-height)+24px)] lg:self-start">
                     <ProductGallery product={product} colorImage={colorImage} />
+                    {/* 모바일 전용 — 색상 칩을 이미지 바로 아래에(위아래로 오갈 필요 없게). PC 는 우측 구매정보에 표시 */}
+                    <ColorSelect
+                        colors={product.colors ?? []}
+                        colorIdx={colorIdx}
+                        onColorChange={setColorIdx}
+                        className="mt-4 lg:hidden"
+                    />
                 </div>
                 <ProductInfo product={product} colorIdx={colorIdx} onColorChange={setColorIdx} />
             </section>
