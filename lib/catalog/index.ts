@@ -3,6 +3,7 @@ export type {
     CatalogProduct,
     CatalogRow,
     CategorySlug,
+    ProductColor,
     PromoSlug,
     SortKey,
     SubcategorySlug,
