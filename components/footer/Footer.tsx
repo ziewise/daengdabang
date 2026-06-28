@@ -44,8 +44,8 @@ export default function Footer() {
 
                 {/* 2. 뉴스레터(좌) · CS(중앙) · SNS(우) — 3컬럼 균등 분배 */}
                 <div className="grid md:grid-cols-3 gap-5 md:gap-6 items-center">
-                    {/* 좌: NEWSLETTER 라벨+설명+폼 */}
-                    <div className="md:justify-self-start flex items-center gap-4">
+                    {/* 좌: NEWSLETTER 라벨+설명+폼 (모바일은 세로) */}
+                    <div className="md:justify-self-start flex flex-col items-start gap-3 md:flex-row md:items-center md:gap-4">
                         <div className="flex-shrink-0">
                             <p className="text-[9px] tracking-[0.3em] font-black text-aurora-indigo mb-0.5">
                                 NEWSLETTER
@@ -57,8 +57,8 @@ export default function Footer() {
                         <NewsletterForm />
                     </div>
 
-                    {/* 중앙: CS — 라벨 · 번호 · 시간/메일 3 가로 영역 */}
-                    <div className="md:justify-self-center flex items-center gap-4 md:gap-5">
+                    {/* 중앙: CS — 라벨 · 번호 · 시간/메일 (모바일은 세로, md+ 가로) */}
+                    <div className="md:justify-self-center flex flex-col items-start gap-1.5 md:flex-row md:items-center md:gap-5">
                         {/* 1) 라벨 */}
                         <p className="text-[9px] tracking-[0.3em] font-black text-aurora-indigo leading-tight whitespace-nowrap">
                             CUSTOMER<br />CENTER
@@ -71,7 +71,7 @@ export default function Footer() {
                             {BUSINESS_INFO.customerServicePhone}
                         </a>
                         {/* 3) 시간 + 메일 (2줄) */}
-                        <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap border-l border-neutral-200/70 pl-4 md:pl-5">
+                        <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap md:border-l md:border-neutral-200/70 md:pl-5">
                             평일 10:00~18:00 · 주말 휴무<br />
                             {BUSINESS_INFO.customerServiceEmail}
                         </p>
