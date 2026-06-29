@@ -143,6 +143,18 @@ button:disabled {
     color: #111827;
 }
 
+/* Keep the native hero region dropdown readable when the popup uses a white surface. */
+.hero-region-select option,
+.hero-region-select optgroup {
+    background-color: #ffffff;
+    color: #111827;
+}
+
+.hero-region-select option:checked {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
 /* Tailwind preflight 의 a { color: inherit } 때문에, 배경색 있는 링크 버튼(text-white)이
    부모 글자색(예: text-neutral-600 박스)을 상속해 흰 글자가 안 먹는 문제 보정.
    a.text-white 로 specificity 를 높여 링크 버튼의 흰 글자를 확실히 적용한다. */
