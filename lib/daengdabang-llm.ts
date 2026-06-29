@@ -31,7 +31,9 @@ export type ShopChatMedical = {
     followUpSlots?: Array<{ key: string; label: string; prompt: string; required?: boolean }>;
     redFlags?: string[];
     firstSteps?: string[];
+    careWindow?: string;
     knowledgeLevel?: string;
+    confidence?: string;
     disclaimer?: string;
 };
 
@@ -103,6 +105,10 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
                     { key: "duration", label: "기간", prompt: "언제부터 증상이 시작됐나요?", required: true },
                     { key: "core_symptoms", label: "핵심 증상", prompt: "호흡, 의식, 발작, 구토, 통증 중 무엇이 있나요?", required: true },
                 ],
+                redFlags: ["호흡 곤란, 의식 저하, 발작", "중독 의심, 피 섞인 구토/설사", "심한 통증, 걷지 못함, 멈추지 않는 출혈"],
+                firstSteps: ["가까운 24시 병원에 먼저 연락하세요.", "먹은 것, 시간, 체중, 사진/영상을 정리하세요.", "사람 약이나 임의 처치는 피하세요."],
+                careWindow: "지금 즉시 24시 응급병원 또는 가까운 동물병원에 연락해야 하는 단계입니다.",
+                knowledgeLevel: "canine-health-triage-v2.1",
                 disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
             },
             sources: HEALTH_SOURCE_FALLBACK,
@@ -121,6 +127,10 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
                 { key: "duration", label: "기간", prompt: "언제부터, 얼마나 자주 보이나요?", required: true },
                 { key: "core_symptoms", label: "핵심 증상", prompt: "구토, 설사, 기침, 통증, 무기력, 식욕 변화 중 무엇이 있나요?", required: true },
             ],
+            redFlags: ["호흡 곤란, 의식 저하, 발작", "피 섞인 구토/설사 또는 중독 의심", "심한 통증, 걷지 못함, 멈추지 않는 출혈"],
+            firstSteps: ["증상 시작 시간과 동반 증상을 기록하세요.", "사람 약을 임의로 먹이지 마세요.", "위험 신호가 있으면 바로 병원에 연락하세요."],
+            careWindow: "위험 신호가 있으면 즉시, 없더라도 지속되거나 악화되면 병원 상담이 우선입니다.",
+            knowledgeLevel: "canine-health-triage-v2.1",
             disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
         },
         sources: HEALTH_SOURCE_FALLBACK,

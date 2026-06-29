@@ -15,6 +15,19 @@ type Message = {
     sources?: ShopChatSource[];
 };
 
+const QUICK_QUESTIONS = [
+    "우리 강아지가 아파요",
+    "강아지가 토하고 설사를 해요",
+    "자일리톨 껌을 먹었어요",
+    "입냄새가 심하고 밥을 잘 못 씹어요",
+    "중형견 하네스 추천",
+];
+
+function triageLabel(medical?: ShopChatMedical) {
+    if (!medical?.mode) return "";
+    return medical.triage === "emergency" ? "응급 가능성" : "건강 상담";
+}
+
 export default function ChatPageClient() {
     const params = useSearchParams();
     const { user } = useAuth();
@@ -81,6 +94,18 @@ export default function ChatPageClient() {
                         </select>
                     </label>
                 )}
+                <div className="mt-4 flex flex-wrap gap-2">
+                    {QUICK_QUESTIONS.map((question) => (
+                        <button
+                            key={question}
+                            type="button"
+                            onClick={() => void ask(question)}
+                            className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-black text-neutral-700 shadow-sm hover:border-indigo-300 hover:text-indigo-700"
+                        >
+                            {question}
+                        </button>
+                    ))}
+                </div>
             </header>
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
@@ -88,11 +113,65 @@ export default function ChatPageClient() {
                     <div className="flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4">
                         {messages.map((message, index) => (
                             <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
-                                <div className={`inline-block max-w-[82%] rounded-lg px-4 py-3 text-sm font-bold leading-6 ${
+                                <div className={`inline-block max-w-[82%] whitespace-pre-line rounded-lg px-4 py-3 text-sm font-bold leading-6 ${
                                     message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
                                 }`}>
                                     {message.text}
                                 </div>
+                                {message.role === "assistant" && message.medical?.mode && (
+                                    <div className="mt-2 max-w-[82%] rounded-lg border border-sky-100 bg-white p-3 text-left shadow-sm">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className={`rounded-full px-2.5 py-1 text-xs font-black ${
+                                                message.medical.triage === "emergency" ? "bg-red-50 text-red-700" : "bg-sky-50 text-sky-800"
+                                            }`}>
+                                                {triageLabel(message.medical)}
+                                            </span>
+                                            {message.medical.topicLabel && (
+                                                <span className="text-xs font-black text-neutral-700">{message.medical.topicLabel}</span>
+                                            )}
+                                            {message.medical.knowledgeLevel && (
+                                                <span className="text-[11px] font-black text-neutral-400">{message.medical.knowledgeLevel}</span>
+                                            )}
+                                        </div>
+                                        {message.medical.careWindow && (
+                                            <p className="mt-2 text-xs font-black leading-5 text-neutral-700">{message.medical.careWindow}</p>
+                                        )}
+                                        {message.medical.redFlags && message.medical.redFlags.length > 0 && (
+                                            <div className="mt-3">
+                                                <p className="text-[11px] font-black uppercase text-red-600">바로 병원 신호</p>
+                                                <ul className="mt-1 space-y-1 text-xs font-bold leading-5 text-neutral-700">
+                                                    {message.medical.redFlags.slice(0, 3).map((item) => (
+                                                        <li key={item}>- {item}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        {message.medical.firstSteps && message.medical.firstSteps.length > 0 && (
+                                            <div className="mt-3">
+                                                <p className="text-[11px] font-black uppercase text-sky-700">지금 할 일</p>
+                                                <ul className="mt-1 space-y-1 text-xs font-bold leading-5 text-neutral-700">
+                                                    {message.medical.firstSteps.slice(0, 3).map((item) => (
+                                                        <li key={item}>- {item}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        {message.medical.followUpSlots && message.medical.followUpSlots.length > 0 && (
+                                            <div className="mt-3 flex flex-wrap gap-1.5">
+                                                {message.medical.followUpSlots.slice(0, 6).map((slot) => (
+                                                    <button
+                                                        key={`${slot.key}-${slot.label}`}
+                                                        type="button"
+                                                        onClick={() => void ask(slot.prompt)}
+                                                        className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-left text-[11px] font-black text-neutral-600"
+                                                    >
+                                                        {slot.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                                 {message.role === "assistant" && message.medical?.followUpQuestions && message.medical.followUpQuestions.length > 0 && (
                                     <div className="mt-2 flex max-w-[82%] flex-wrap gap-2">
                                         {message.medical.followUpQuestions.slice(0, 4).map((question) => (
