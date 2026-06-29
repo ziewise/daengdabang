@@ -36,7 +36,7 @@ export default function ChatWidget() {
     };
 
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="relative">
             {open && (
                 <section className="mb-3 flex h-[520px] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl">
                     <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">

@@ -116,7 +116,7 @@ export default function WatermarkBadge({
         <div
             ref={wrapRef}
             aria-hidden={interactive ? undefined : true}
-            className="pointer-events-none absolute inset-0 z-[5]"
+            className="pointer-events-none absolute inset-0 z-20"
         >
             {box && (
                 // 원형 배지 — 중심을 워터마크 좌표에 맞춤(translate -50%).

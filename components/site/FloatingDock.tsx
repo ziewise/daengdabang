@@ -53,15 +53,14 @@ export default function FloatingDock() {
     // 인증 페이지(로그인/회원가입/비밀번호 등 /auth/*)에서는 FAB(펫렌즈·챗봇) 숨김
     if (pathname?.startsWith("/auth")) return null;
 
-    // ⚠ dock 에 transform(translate)을 쓰면 자식 챗봇 채팅창(fixed)의 기준이 dock 으로
-    //   갇혀 폭이 깨진다. 그래서 가운데 정렬은 transform 없이 inset-x-0 + justify-center 로,
-    //   fade 도 translate 없이 opacity 로만 처리한다.
-    //   또한 dock 은 화면 전폭이라 pointer-events-none 으로 빈 공간 클릭을 통과시키고,
-    //   실제 버튼만 pointer-events-auto(노출 시) 로 받는다.
+    // dock 이 위치(모바일·PC 모두 우측 하단)·등장·buybar 회피를 관리한다.
+    //   ChatWidget 은 relative 라 dock 기준으로 배치된다(예전엔 ChatWidget 이 자체 fixed 라
+    //   buybar 회피가 안 먹혀 하단 구매 바와 겹쳤음). fade 는 translate 없이 opacity 로만
+    //   처리한다(자식 채팅창 폭 깨짐 방지). dock 자체는 pointer-events-none, 노출 시 버튼만 auto.
     const interactive = shown ? "pointer-events-auto" : "pointer-events-none";
     return (
         <div
-            className={`pointer-events-none fixed inset-x-0 z-50 flex items-end justify-center gap-3 transition-[opacity,bottom] duration-300 sm:left-auto sm:right-4 sm:inset-x-auto sm:justify-end ${
+            className={`pointer-events-none fixed right-4 z-50 flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${
                 buybar ? "bottom-[5.5rem]" : "bottom-4"
             } ${shown ? "opacity-100" : "opacity-0"}`}
         >
