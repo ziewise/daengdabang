@@ -18,7 +18,7 @@ import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
 import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
-import ProductCard from "@/components/products/ProductCard";
+import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
 
 type Props = {
     initialCategory?: CategorySlug;
@@ -188,11 +188,10 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                             <span className="text-xs font-black text-neutral-500">{products.length.toLocaleString()}개</span>
                         </div>
                     )}
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                        {products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    <PaginatedProductGrid
+                        key={`${query}-${category}-${subcategory}-${sort}`}
+                        products={products}
+                    />
                 </section>
             )}
 
