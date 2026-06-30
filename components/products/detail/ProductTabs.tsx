@@ -130,43 +130,6 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     );
 }
 
-function getPurchaseGuidePoints(p: CatalogProduct): string[] {
-    const subLabel = SUBCATEGORY_LABEL[p.subcategory] ?? "상품";
-    const categoryLabel = CATEGORY_LABEL[p.category] ?? "상품";
-    const points = [`${subLabel} 특성에 맞춰 ${categoryLabel} 용도와 반려견 생활 패턴을 먼저 확인해 주세요.`];
-
-    if (p.category === "outdoor") {
-        points.push(
-            p.sizeImage
-                ? "상세페이지의 사이즈표를 기준으로 목둘레, 가슴둘레, 착용 여유분을 확인해 주세요."
-                : "착용 제품은 체형 차이가 커서 둘레와 조절 범위를 함께 보는 것이 좋습니다.",
-            "야간 산책이나 비 오는 날에는 반사 소재, 고정 방식, 방수 여부를 같이 확인해 주세요."
-        );
-    } else if (p.category === "food") {
-        points.push(
-            "간식과 사료는 알러지, 급여량, 기존 식단과의 충돌 여부를 먼저 확인해 주세요.",
-            "질환, 처방식, 체중 관리 중인 반려견은 수의사 상담 후 급여하는 것이 안전합니다."
-        );
-    } else if (p.category === "care") {
-        points.push(
-            "케어 제품은 처음 사용할 때 작은 부위에 먼저 테스트해 주세요.",
-            "상처, 염증, 지속적인 가려움이 있으면 제품 사용보다 진료가 우선입니다."
-        );
-    } else if (p.category === "toy") {
-        points.push(
-            "장난감은 무는 힘과 삼킴 위험을 기준으로 고르고, 첫 사용은 보호자가 보는 자리에서 진행해 주세요.",
-            "손상된 부분이 보이면 삼킴 사고를 막기 위해 바로 교체하거나 사용을 중단해 주세요."
-        );
-    } else {
-        points.push(
-            "생활용품은 설치 공간, 청소 방식, 미끄럼 방지 여부를 확인하면 실패 확률을 줄일 수 있습니다.",
-            "처음 쓰는 제품은 짧은 시간부터 익숙하게 만들어 주는 편이 좋습니다."
-        );
-    }
-
-    return points.slice(0, 3);
-}
-
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
     const snippets = p.externalReviewSnippets ?? [];
     const themes = p.externalReviewThemes ?? [];
@@ -234,17 +197,9 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
         );
     }
 
-    const guidePoints = getPurchaseGuidePoints(p);
     return (
-        <div className="mx-auto grid max-w-3xl gap-3 md:grid-cols-3">
-            {guidePoints.map((point, index) => (
-                <div key={point} className="rounded-lg border border-neutral-200 bg-white p-4">
-                    <div className="mb-3 flex h-7 w-7 items-center justify-center rounded-full bg-indigo-50 text-xs font-black text-indigo-700">
-                        {index + 1}
-                    </div>
-                    <p className="text-sm font-bold leading-6 text-neutral-700">{point}</p>
-                </div>
-            ))}
+        <div className="mx-auto max-w-3xl rounded-lg border border-dashed border-neutral-200 bg-white p-8 text-center text-sm font-bold text-neutral-500">
+            등록된 리뷰가 없습니다.
         </div>
     );
 }
@@ -261,7 +216,7 @@ function QnaContent({ product: p }: { product: CatalogProduct }) {
             </p>
             <Link
                 href={`/chat?q=${encodeURIComponent(p.name)}`}
-                className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-indigo-600 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
+                className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
             >
                 <i className="fa-solid fa-circle-question text-xs" />
                 챗봇에 문의
