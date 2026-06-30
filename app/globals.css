@@ -40,10 +40,20 @@ a {
     text-decoration: none;
 }
 
+/* input/select/textarea 도 button 과 동일하게 font-family 만 상속한다.
+   `font: inherit`(shorthand)는 레이어 밖 규칙이라 Tailwind 의 text-sm·font-bold 를 이겨버려
+   select 가 본문 16px 로 커지는 문제가 있었다. font-family 만 상속하면 크기·두께는 유틸/.input 이 적용된다. */
 input,
 select,
 textarea {
-    font: inherit;
+    font-family: inherit;
+}
+
+/* 네이티브 select 의 펼친 목록(option)은 OS 기본 폰트로 렌더돼 사이트와 달라 보이므로,
+   본문 폰트를 명시해 드롭다운 사이즈 글자를 사이트와 통일한다(Chrome/Edge 등에서 적용). */
+option {
+    font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-weight: 700;
 }
 
 /* button 은 font shorthand(inherit) 대신 font-family 만 상속한다.

@@ -1,7 +1,9 @@
 import rawCatalog from "./raw.json";
 import { SUBCAT_ICON, SUBCAT_TO_CAT } from "./labels";
-import type { CatalogProduct, CatalogRow, ProductColor, PromoSlug, SubcategorySlug } from "./types";
+import type { CatalogProduct, CatalogRow, ProductColor, ProductSize, PromoSlug, SubcategorySlug } from "./types";
 import colorsData from "./colors.json";
+import sizesData from "./sizes.json";
+import pricesData from "./prices.json";
 
 const CATALOG_DATA_REVISION = "video-cdn-20260616";
 
@@ -107,10 +109,9 @@ function buildMeta(row: CatalogRow) {
     const salesCount = Math.round(popularity * 0.35 + seededRand(row.no, 2) * 180);
     const reviewCount = Number(row.externalReviewCount || 0);
     const rating = typeof row.externalReviewAverage === "number" ? row.externalReviewAverage : 0;
-    const hasDiscount = row.priceNum > 0 && seededRand(row.no, 5) < 0.18;
-    const discountRate = hasDiscount ? Math.round(5 + seededRand(row.no, 6) * 20) : 0;
-    const originalPrice =
-        discountRate > 0 ? Math.round(row.priceNum / (1 - discountRate / 100) / 100) * 100 : null;
+    // 할인 표시 제거 — 적힌 가격이 원래가라 가짜 할인(원가 취소선·할인율)을 노출하지 않는다.
+    const discountRate = 0;
+    const originalPrice = null;
 
     return { popularity, addedAt, salesCount, reviewCount, rating, discountRate, originalPrice };
 }
@@ -140,6 +141,32 @@ function buildColors(folder: string | undefined): ProductColor[] | undefined {
     return entries.map((c) => ({ image: `${dir}/${c.file}`, name: c.name, chip: `${dir}/${c.chip}` }));
 }
 
+// sizes.json(제품 folder → 사이즈 이름 목록)을 CatalogProduct.sizes 로 변환.
+// 사이즈가 입력된 제품만 채워지고, 없으면 undefined(=구매 시 사이즈 옵션 미노출).
+function buildSizes(folder: string | undefined): ProductSize[] | undefined {
+    if (!folder) return undefined;
+    const sizes = (sizesData as Record<string, ProductSize[]>)[folder];
+    return sizes && sizes.length > 0 ? sizes : undefined;
+}
+
+// 엑셀 price 컬럼 override — 입력된 제품만 기본가를 덮어쓴다(빈칸은 raw.json 가격 유지).
+function buildPrice(folder: string | undefined): number | undefined {
+    if (!folder) return undefined;
+    const p = (pricesData as Record<string, number>)[folder];
+    return typeof p === "number" ? p : undefined;
+}
+const wonText = (n: number) => `${n.toLocaleString("ko-KR")}원`;
+
+// 옵션2(드롭다운) 종류명 — OptionSheet 의 placeholder/라벨에 쓰인다. 미지정이면 "사이즈"가 기본.
+// sizes 컬럼에 사이즈가 아닌 값(모양·용량 등)을 넣은 제품만 여기 지정한다.
+const OPTION2_LABELS: Record<string, string> = {
+    ot_sleepingmat: "모양",
+    smoothie_rainbow_30ml_3: "용량",
+};
+function buildOptionLabel(folder: string | undefined): string | undefined {
+    return folder ? OPTION2_LABELS[folder] : undefined;
+}
+
 function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
     return (rawCatalog as CatalogRow[]).map((row) => {
         const subcategory = mapSubcategory(row);
@@ -152,8 +179,8 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             brandKo: row.brandKo,
             brandEn: row.brandEn,
             brandSlug: brandSlug(row),
-            price: row.priceNum || 0,
-            priceText: row.priceText,
+            price: buildPrice(row.folder) ?? (row.priceNum || 0),
+            priceText: buildPrice(row.folder) != null ? wonText(buildPrice(row.folder)!) : row.priceText,
             category,
             subcategory,
             promos: mapPromos(row),
@@ -176,6 +203,8 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             externalReviewDisclosure: row.externalReviewDisclosure,
             raw: row,
             colors: buildColors(row.folder),
+            sizes: buildSizes(row.folder),
+            optionLabel: buildOptionLabel(row.folder),
             ...buildMeta(row),
         };
     });

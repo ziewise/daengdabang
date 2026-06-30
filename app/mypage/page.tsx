@@ -148,10 +148,11 @@ export default function MyPage() {
                                                 <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-black text-indigo-700">접수</span>
                                             </div>
                                             <div className="mt-3 grid gap-1 text-sm font-bold text-neutral-600">
-                                                {lines.map(({ product, qty, color }) => (
-                                                    <span key={`${product.id}-${color ?? ""}`}>
+                                                {lines.map(({ product, qty, color, size }) => (
+                                                    <span key={`${product.id}-${color ?? ""}-${size ?? ""}`}>
                                                         {product.name}
-                                                        {color && <span className="text-neutral-400"> · {color}</span>} x {qty}
+                                                        {color && <span className="text-neutral-400"> · {color}</span>}
+                                                        {size && <span className="text-neutral-400"> · {size}</span>} x {qty}
                                                     </span>
                                                 ))}
                                             </div>

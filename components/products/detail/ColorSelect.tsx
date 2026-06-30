@@ -23,12 +23,6 @@ export default function ColorSelect({ colors, colorIdx, onColorChange, className
     if (colors.length === 0) return null;
     return (
         <div className={`rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
-            <div className="mb-3 flex items-center justify-between">
-                <span className="text-sm font-black text-neutral-600">색상</span>
-                <span className="text-sm font-bold text-neutral-900">
-                    {colorIdx != null ? colors[colorIdx]?.name : <span className="text-neutral-400">선택하세요</span>}
-                </span>
-            </div>
             <div className="flex flex-wrap gap-2">
                 {colors.map((c, i) => (
                     <button

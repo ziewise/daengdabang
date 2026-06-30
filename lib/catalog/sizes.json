@@ -1,0 +1,2228 @@
+{
+ "rw_hiandlight_harness_26": [
+  {
+   "name": "XXXS",
+   "delta": 0
+  },
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_frontrangeflex_harness_26": [
+  {
+   "name": "XXXS",
+   "delta": 0
+  },
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_ridgeline_harness_26": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_webmaster_harness": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_leash_nota": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_basecamp_bed": [
+  {
+   "name": "S",
+   "delta": -50000
+  },
+  {
+   "name": "M",
+   "delta": -22000
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_collar_frontrange_24": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_collar_crag": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_collar_hiandlight_24": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_flagline_harness_24": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_harness_2": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_palisades_pack_26": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_palisades_poncho_26": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_frontrangeflex_collar_26": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_ridgeline_shoes_26": [
+  {
+   "name": "1.5in",
+   "delta": 0
+  },
+  {
+   "name": "1.75in",
+   "delta": 0
+  },
+  {
+   "name": "2.0in",
+   "delta": 0
+  },
+  {
+   "name": "2.25in",
+   "delta": 0
+  },
+  {
+   "name": "2.5in",
+   "delta": 0
+  },
+  {
+   "name": "2.75in",
+   "delta": 0
+  },
+  {
+   "name": "3.0in",
+   "delta": 0
+  },
+  {
+   "name": "3.25in",
+   "delta": 0
+  }
+ ],
+ "rw_ridgeline_collar_26": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_climatechanger_vest_25fw": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_climatechanger_jacket_25fw": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_sunshower_coverall_25fw": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_coverall_snow_25fw": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_headwater_collar": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "packt_endeavor_collar": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_confluence_collar": [
+  {
+   "name": "M(36~51cm)",
+   "delta": 0
+  },
+  {
+   "name": "L(51~66cm)",
+   "delta": 0
+  }
+ ],
+ "rw_floatcoat_lifejacket": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_undercoat_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_corecooler_pad": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_zipvest": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_vest": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_neckgaiter_2": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_harness": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_confluence_lifejacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_hitchhiker_carrier": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  }
+ ],
+ "zs_pandabear": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_unicorn": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_rhino": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_reindeer": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_lion": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_jackrabbit": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_horse": [
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 2000
+  }
+ ],
+ "zs_giraffe": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_fox": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_dinosaur": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "rs_lenslab_original": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_lens_v2": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_black": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_banditorange": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_atlasblue": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_tazerteal": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_yazberry": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_neon_ltd": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_hardcase": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "SM-MD-SW",
+   "delta": 0
+  },
+  {
+   "name": "LG-XL",
+   "delta": 0
+  }
+ ],
+ "rs_brachy_black": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  }
+ ],
+ "rs_trailhead_collar": [
+  {
+   "name": "2",
+   "delta": 0
+  },
+  {
+   "name": "3",
+   "delta": 0
+  },
+  {
+   "name": "4",
+   "delta": 0
+  }
+ ],
+ "rs_v2_pikepurple": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_bighornblue": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_gallatingray": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_rangerred": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_ozarkorange": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_cloudycoral_ltd": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_lenslab": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_earpro": [
+  {
+   "name": "2",
+   "delta": 0
+  },
+  {
+   "name": "3",
+   "delta": 0
+  },
+  {
+   "name": "4",
+   "delta": 0
+  }
+ ],
+ "rs_v2_2024ltd": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_lens_original": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_volcanored": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_appalachianorange": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_himalayapink": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_vulcanblue": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_avalanchewhite": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rs_v2_coyote": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_collar_toprope": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_collar_nota": [
+  {
+   "name": "M(36~51cm)",
+   "delta": 0
+  },
+  {
+   "name": "L(51~66cm)",
+   "delta": 0
+  }
+ ],
+ "rw_vert_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_sunshower_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_quinzee_jacket_24": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_quinzee_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_furness_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_overcoat_fuse_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_powderhound_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_hemphound_sweater": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_switchback_harness": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_loadup_harness_24": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_collar_chainreaction_martingale_24": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_frontrange_harness_24": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_frontrange_daypack_24": [
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_collar_crag_23": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_stumptown_jacket": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_climatechanger_fleece": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_shoes_hiandlight_23": [
+  {
+   "name": "38mm",
+   "delta": 0
+  },
+  {
+   "name": "44mm",
+   "delta": 0
+  },
+  {
+   "name": "51mm",
+   "delta": 0
+  },
+  {
+   "name": "57mm",
+   "delta": 0
+  },
+  {
+   "name": "64mm",
+   "delta": 0
+  },
+  {
+   "name": "70mm",
+   "delta": 0
+  },
+  {
+   "name": "76mm",
+   "delta": 0
+  },
+  {
+   "name": "83mm",
+   "delta": 0
+  }
+ ],
+ "pegnaty_woodstick": [
+  {
+   "name": "SS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 2000
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 7600
+  },
+  {
+   "name": "XL",
+   "delta": 13000
+  },
+  {
+   "name": "2XL",
+   "delta": 21100
+  }
+ ],
+ "rw_hydroplane_disc": [
+  {
+   "name": "M",
+   "delta": -6000
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "ot_sleepingmat": [
+  {
+   "name": "사각형",
+   "delta": 0
+  },
+  {
+   "name": "원형",
+   "delta": 0
+  }
+ ],
+ "ot_bowl_foldable": [
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "ot_goliath_harness": [
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "ot_destroyer_harness": [
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_leash_roamer": [
+  {
+   "name": "M=1.7~2.1m",
+   "delta": 0
+  },
+  {
+   "name": "L=2.2~3.4m",
+   "delta": 0
+  }
+ ],
+ "ot_firewatcher_harness": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 3000
+  },
+  {
+   "name": "L",
+   "delta": 6400
+  },
+  {
+   "name": "XL",
+   "delta": 8000
+  }
+ ],
+ "rw_trailrunner_belt_23": [
+  {
+   "name": "S/M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "smoothie_rainbow_30ml_3": [
+  {
+   "name": "100ml 1개",
+   "delta": 0
+  },
+  {
+   "name": "30ml 3개",
+   "delta": 0
+  }
+ ],
+ "rw_collar_chainreaction_martingale": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_collar_webreaction_martingale": [
+  {
+   "name": "XS(28~36cm)",
+   "delta": 0
+  },
+  {
+   "name": "S(36~43cm)",
+   "delta": 0
+  },
+  {
+   "name": "M(43~51cm)",
+   "delta": 0
+  },
+  {
+   "name": "L(51~58cm)",
+   "delta": 0
+  },
+  {
+   "name": "XL(58~66cm)",
+   "delta": 0
+  }
+ ],
+ "iby_bed_fb2292": [
+  {
+   "name": "M",
+   "delta": -30000
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 70000
+  }
+ ],
+ "wow_shoes_80": [
+  {
+   "name": "소형(옐로우)",
+   "delta": 0
+  },
+  {
+   "name": "중형(옐로우)",
+   "delta": 0
+  }
+ ],
+ "wow_shoes_20": [
+  {
+   "name": "소형(옐로우)",
+   "delta": 0
+  },
+  {
+   "name": "중형(옐로우)",
+   "delta": 0
+  }
+ ],
+ "aff_carseat_sugarwing": [
+  {
+   "name": "SL",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 20000
+  }
+ ],
+ "aff_donut_original_brown": [
+  {
+   "name": "M",
+   "delta": -15000
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 16000
+  }
+ ],
+ "aff_donut_original_pink": [
+  {
+   "name": "M",
+   "delta": -15000
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 16000
+  }
+ ],
+ "aff_donut_original_gray": [
+  {
+   "name": "M",
+   "delta": -15000
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 16000
+  }
+ ],
+ "zs_blackbear": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_grizzlybear": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 4000
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_bull": [
+  {
+   "name": "S",
+   "delta": -4000
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_bunnyrabbit": [
+  {
+   "name": "S",
+   "delta": -4000
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "zs_alien": [
+  {
+   "name": "S",
+   "delta": -4000
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 6000
+  }
+ ],
+ "rw_hiandlight_harness_24": [
+  {
+   "name": "XXXS",
+   "delta": 0
+  },
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L/XL",
+   "delta": 0
+  }
+ ],
+ "rw_collar_frontrange": [
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_vest_2": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_zipvest_2": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ],
+ "rw_swampcooler_neckgaiter": [
+  {
+   "name": "XXS",
+   "delta": 0
+  },
+  {
+   "name": "XS",
+   "delta": 0
+  },
+  {
+   "name": "S",
+   "delta": 0
+  },
+  {
+   "name": "M",
+   "delta": 0
+  },
+  {
+   "name": "L",
+   "delta": 0
+  },
+  {
+   "name": "XL",
+   "delta": 0
+  }
+ ]
+}

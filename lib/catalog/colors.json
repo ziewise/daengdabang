@@ -242,6 +242,28 @@
    "chip": "chips/midnight_wave.webp"
   }
  ],
+ "fumble_deodorizer": [
+  {
+   "file": "chamaecyparis_obtusa.webp",
+   "name": "편백",
+   "chip": "chips/chamaecyparis_obtusa.webp"
+  },
+  {
+   "file": "lotus.webp",
+   "name": "연꽃",
+   "chip": "chips/lotus.webp"
+  },
+  {
+   "file": "lavender.webp",
+   "name": "라벤더",
+   "chip": "chips/lavender.webp"
+  },
+  {
+   "file": "petitgrain.webp",
+   "name": "패티그레인",
+   "chip": "chips/petitgrain.webp"
+  }
+ ],
  "rw_collar_crag": [
   {
    "file": "granite_gray.webp",
@@ -272,6 +294,30 @@
    "file": "green_hills.webp",
    "name": "그린 힐스",
    "chip": "chips/green_hills.webp"
+  }
+ ],
+ "ip_slowdog": [
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  }
+ ],
+ "pdh_slowfeeder_paw": [
+  {
+   "file": "baby_blue.webp",
+   "name": "베이피 블루",
+   "chip": "chips/baby_blue.webp"
+  },
+  {
+   "file": "baby_pink.webp",
+   "name": "베이비 핑크",
+   "chip": "chips/baby_pink.webp"
   }
  ],
  "rw_collar_hiandlight_24": [
@@ -965,6 +1011,104 @@
    "chip": "chips/red_clay.webp"
   }
  ],
+ "rs_brachy_lens": [
+  {
+   "file": "blue_mirror.webp",
+   "name": "블루 미러 렌즈",
+   "chip": "chips/blue_mirror.webp"
+  },
+  {
+   "file": "red_mirror.webp",
+   "name": "레드 미러 렌즈",
+   "chip": "chips/red_mirror.webp"
+  }
+ ],
+ "rs_lenslab_original": [
+  {
+   "file": "googly_eyes.webp",
+   "name": "구글리 아이즈",
+   "chip": "chips/googly_eyes.webp"
+  },
+  {
+   "file": "skull_crossbones.webp",
+   "name": "해적",
+   "chip": "chips/skull_crossbones.webp"
+  },
+  {
+   "file": "usa_flag.webp",
+   "name": "성조기",
+   "chip": "chips/usa_flag.webp"
+  }
+ ],
+ "rs_lens_v2": [
+  {
+   "file": "clear.webp",
+   "name": "클리어",
+   "chip": "chips/clear.webp"
+  },
+  {
+   "file": "smoke.webp",
+   "name": "스모크",
+   "chip": "chips/smoke.webp"
+  },
+  {
+   "file": "red_mirror.webp",
+   "name": "레드 미러",
+   "chip": "chips/red_mirror.webp"
+  },
+  {
+   "file": "silver_mirror.webp",
+   "name": "실버 미러",
+   "chip": "chips/silver_mirror.webp"
+  },
+  {
+   "file": "blue_mirror.webp",
+   "name": "블루 미러",
+   "chip": "chips/blue_mirror.webp"
+  },
+  {
+   "file": "green_mirror.webp",
+   "name": "그린 미러",
+   "chip": "chips/green_mirror.webp"
+  },
+  {
+   "file": "yellow.webp",
+   "name": "옐로우 미러",
+   "chip": "chips/yellow.webp"
+  },
+  {
+   "file": "pink_mirror.webp",
+   "name": "핑크 미러",
+   "chip": "chips/pink_mirror.webp"
+  },
+  {
+   "file": "purple_mirror.webp",
+   "name": "퍼플 미러",
+   "chip": "chips/purple_mirror.webp"
+  }
+ ],
+ "rs_v2_neon_ltd": [
+  {
+   "file": "neon_blue.webp",
+   "name": "네온 블루",
+   "chip": "chips/neon_blue.webp"
+  },
+  {
+   "file": "neon_yellow.webp",
+   "name": "네온 옐로우",
+   "chip": "chips/neon_yellow.webp"
+  },
+  {
+   "file": "neon_pink.webp",
+   "name": "네온 핑크",
+   "chip": "chips/neon_pink.webp"
+  },
+  {
+   "file": "neon_green.webp",
+   "name": "네온 그린",
+   "chip": "chips/neon_green.webp"
+  }
+ ],
  "rs_trailhead_collar": [
   {
    "file": "coyote.webp",
@@ -1044,6 +1188,106 @@
    "file": "yazberry.webp",
    "name": "야즈베리",
    "chip": "chips/yazberry.webp"
+  }
+ ],
+ "rs_v2_cloudycoral_ltd": [
+  {
+   "file": "coral_reef.webp",
+   "name": "코랄 리프",
+   "chip": "chips/coral_reef.webp"
+  },
+  {
+   "file": "partly_cloudy.webp",
+   "name": "파틀리 클라우디",
+   "chip": "chips/partly_cloudy.webp"
+  }
+ ],
+ "rs_v2_lenslab": [
+  {
+   "file": "heart.webp",
+   "name": "하트 아이즈",
+   "chip": "chips/heart.webp"
+  },
+  {
+   "file": "blue_googly.webp",
+   "name": "블루 구글리 아이즈",
+   "chip": "chips/blue_googly.webp"
+  },
+  {
+   "file": "purple_googly.webp",
+   "name": "퍼플 구글리 아이즈",
+   "chip": "chips/purple_googly.webp"
+  },
+  {
+   "file": "mean.webp",
+   "name": "민 아이즈",
+   "chip": "chips/mean.webp"
+  },
+  {
+   "file": "pirate.webp",
+   "name": "파이어리트 아이즈",
+   "chip": "chips/pirate.webp"
+  },
+  {
+   "file": "sheriff.webp",
+   "name": "쉐리프 아이즈",
+   "chip": "chips/sheriff.webp"
+  }
+ ],
+ "rs_earpro": [
+  {
+   "file": "black.webp",
+   "name": "블랙",
+   "chip": "chips/black.webp"
+  },
+  {
+   "file": "coyote.webp",
+   "name": "코요테",
+   "chip": "chips/coyote.webp"
+  }
+ ],
+ "rs_v2_2024ltd": [
+  {
+   "file": "glacier_blue.webp",
+   "name": "글래시어 블루",
+   "chip": "chips/glacier_blue.webp"
+  },
+  {
+   "file": "riptide_purple.webp",
+   "name": "립타이드 퍼플",
+   "chip": "chips/riptide_purple.webp"
+  }
+ ],
+ "rs_lens_original": [
+  {
+   "file": "clear.webp",
+   "name": "클리어",
+   "chip": "chips/clear.webp"
+  },
+  {
+   "file": "smoke.webp",
+   "name": "스모크",
+   "chip": "chips/smoke.webp"
+  },
+  {
+   "file": "red_mirror.webp",
+   "name": "레드 미러",
+   "chip": "chips/red_mirror.webp"
+  },
+  {
+   "file": "blue_mirror.webp",
+   "name": "블루 미러",
+   "chip": "chips/blue_mirror.webp"
+  },
+  {
+   "file": "green_mirror.webp",
+   "name": "그린 미러",
+   "chip": "chips/green_mirror.webp"
+  },
+  {
+   "file": "silver_mirror.webp",
+   "name": "실버 미러",
+   "chip": "chips/silver_mirror.webp"
   }
  ],
  "rw_porcini_toy": [
@@ -1178,6 +1422,28 @@
    "chip": "chips/fireweed_pink.webp"
   }
  ],
+ "rw_vert_jacket": [
+  {
+   "file": "blue_pool.webp",
+   "name": "블루 풀",
+   "chip": "chips/blue_pool.webp"
+  },
+  {
+   "file": "mineral_yellow.webp",
+   "name": "미네랄 옐로우",
+   "chip": "chips/mineral_yellow.webp"
+  },
+  {
+   "file": "aurora_teal.webp",
+   "name": "오로라 틸",
+   "chip": "chips/aurora_teal.webp"
+  },
+  {
+   "file": "canyonlands_orange.webp",
+   "name": "캐니언랜드 오렌지",
+   "chip": "chips/canyonlands_orange.webp"
+  }
+ ],
  "rw_sunshower_jacket": [
   {
    "file": "earth_brown.webp",
@@ -1193,6 +1459,23 @@
    "file": "midnight_blue.webp",
    "name": "미드나잇 블루",
    "chip": "chips/midnight_blue.webp"
+  }
+ ],
+ "rw_quinzee_jacket_24": [
+  {
+   "file": "obsidian_black.webp",
+   "name": "옵시디앙 블랙",
+   "chip": "chips/obsidian_black.webp"
+  },
+  {
+   "file": "riverrock_green.webp",
+   "name": "리버 락 그린",
+   "chip": "chips/riverrock_green.webp"
+  },
+  {
+   "file": "fireweed_pink.webp",
+   "name": "파이어위드 핑크",
+   "chip": "chips/fireweed_pink.webp"
   }
  ],
  "rw_quinzee_jacket": [
@@ -1275,6 +1558,62 @@
    "chip": "chips/fired_brick.webp"
   }
  ],
+ "aff_donut_luxury_xl": [
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  },
+  {
+   "file": "brown.webp",
+   "name": "브라운",
+   "chip": "chips/brown.webp"
+  },
+  {
+   "file": "ivory.webp",
+   "name": "아이보리",
+   "chip": "chips/ivory.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  }
+ ],
+ "aff_donut_luxury_m": [
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  },
+  {
+   "file": "brown.webp",
+   "name": "브라운",
+   "chip": "chips/brown.webp"
+  },
+  {
+   "file": "ivory.webp",
+   "name": "아이보리",
+   "chip": "chips/ivory.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  }
+ ],
+ "aff_donut_chewisty_l_pinkgray": [
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  }
+ ],
  "rw_switchback_harness": [
   {
    "file": "granite_gray.webp",
@@ -1290,6 +1629,101 @@
    "file": "red_sumac.webp",
    "name": "레드 수막",
    "chip": "chips/red_sumac.webp"
+  }
+ ],
+ "yora_reward_treat": [
+  {
+   "file": "apple_carrot.webp",
+   "name": "애플 & 캐롯",
+   "chip": "chips/apple_carrot.webp"
+  },
+  {
+   "file": "peanutbutter_banana.webp",
+   "name": "피넛버터 & 바나나",
+   "chip": "chips/peanutbutter_banana.webp"
+  }
+ ],
+ "hugo_icecream_salmon": [
+  {
+   "file": "salmon.webp",
+   "name": "연어 맛",
+   "chip": "chips/salmon.webp"
+  },
+  {
+   "file": "cod.webp",
+   "name": "대구 맛",
+   "chip": "chips/cod.webp"
+  },
+  {
+   "file": "herring.webp",
+   "name": "청어 맛",
+   "chip": "chips/herring.webp"
+  }
+ ],
+ "dangcream_strawberry": [
+  {
+   "file": "strawberry.webp",
+   "name": "딸기",
+   "chip": "chips/strawberry.webp"
+  },
+  {
+   "file": "blueberry.webp",
+   "name": "블루베리",
+   "chip": "chips/blueberry.webp"
+  },
+  {
+   "file": "mango_papaya.webp",
+   "name": "망고파파야",
+   "chip": "chips/mango_papaya.webp"
+  },
+  {
+   "file": "carob_banana.webp",
+   "name": "캐롭바나나",
+   "chip": "chips/carob_banana.webp"
+  }
+ ],
+ "bm_kibble_9kg": [
+  {
+   "file": "beef_salmon.webp",
+   "name": "비프 & 연어",
+   "chip": "chips/beef_salmon.webp"
+  },
+  {
+   "file": "lamb.webp",
+   "name": "양",
+   "chip": "chips/lamb.webp"
+  },
+  {
+   "file": "salmon.webp",
+   "name": "연어",
+   "chip": "chips/salmon.webp"
+  },
+  {
+   "file": "beef.webp",
+   "name": "소고기",
+   "chip": "chips/beef.webp"
+  },
+  {
+   "file": "kangaroo.webp",
+   "name": "캥거루",
+   "chip": "chips/kangaroo.webp"
+  }
+ ],
+ "bm_wet_100g_3": [
+  {
+   "file": "beef.webp",
+   "name": "소고기",
+   "chip": "chips/beef.webp"
+  },
+  {
+   "file": "lamb.webp",
+   "name": "양고기",
+   "chip": "chips/lamb.webp"
+  },
+  {
+   "file": "kangaroo.webp",
+   "name": "캥거루 고기",
+   "chip": "chips/kangaroo.webp"
   }
  ],
  "rw_collar_chainreaction_martingale_24": [
@@ -1502,6 +1936,18 @@
    "chip": "chips/strata.webp"
   }
  ],
+ "rw_shoes_hiandlight_23": [
+  {
+   "file": "riverrock_green.webp",
+   "name": "리버 락 그린",
+   "chip": "chips/riverrock_green.webp"
+  },
+  {
+   "file": "blue_pool.webp",
+   "name": "블루 풀",
+   "chip": "chips/blue_pool.webp"
+  }
+ ],
  "rw_leash_justacinch": [
   {
    "file": "obsidian_black.webp",
@@ -1560,6 +2006,30 @@
    "chip": "chips/aurora_teal.webp"
   }
  ],
+ "ot_sleepingmat": [
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  },
+  {
+   "file": "coyote_brown.webp",
+   "name": "코요테 브라운",
+   "chip": "chips/coyote_brown.webp"
+  }
+ ],
+ "ot_destroyer_harness": [
+  {
+   "file": "coyote_brown.webp",
+   "name": "코요테 브라운",
+   "chip": "chips/coyote_brown.webp"
+  },
+  {
+   "file": "black.webp",
+   "name": "블랙",
+   "chip": "chips/black.webp"
+  }
+ ],
  "rw_leash_roamer": [
   {
    "file": "orion_blue.webp",
@@ -1589,6 +2059,28 @@
    "chip": "chips/red_sumac.webp"
   }
  ],
+ "ot_firewatcher_harness": [
+  {
+   "file": "black.webp",
+   "name": "블랙",
+   "chip": "chips/black.webp"
+  },
+  {
+   "file": "coyote_brown.webp",
+   "name": "코요테 브라운",
+   "chip": "chips/coyote_brown.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "ranger_green.webp",
+   "name": "레인저 그린",
+   "chip": "chips/ranger_green.webp"
+  }
+ ],
  "rw_trailrunner_belt_23": [
   {
    "file": "lichen_green.webp",
@@ -1599,6 +2091,28 @@
    "file": "blue_pool.webp",
    "name": "블루 풀",
    "chip": "chips/blue_pool.webp"
+  }
+ ],
+ "smoothie_rainbow_30ml_3": [
+  {
+   "file": "red.webp",
+   "name": "빨강",
+   "chip": "chips/red.webp"
+  },
+  {
+   "file": "yellow.webp",
+   "name": "노랑",
+   "chip": "chips/yellow.webp"
+  },
+  {
+   "file": "green.webp",
+   "name": "초록",
+   "chip": "chips/green.webp"
+  },
+  {
+   "file": "purple.webp",
+   "name": "보라",
+   "chip": "chips/purple.webp"
   }
  ],
  "rw_collar_chainreaction_martingale": [
@@ -1739,6 +2253,172 @@
    "chip": "chips/sunset.webp"
   }
  ],
+ "iby_stroller_fs1617": [
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "red.webp",
+   "name": "레드",
+   "chip": "chips/red.webp"
+  }
+ ],
+ "iby_stroller_fs1670": [
+  {
+   "file": "camouflage.webp",
+   "name": "카무플라주",
+   "chip": "chips/camouflage.webp"
+  },
+  {
+   "file": "gray_jeans.webp",
+   "name": "그레이데님",
+   "chip": "chips/gray_jeans.webp"
+  }
+ ],
+ "iby_bed_fb2011": [
+  {
+   "file": "peach.webp",
+   "name": "복숭아",
+   "chip": "chips/peach.webp"
+  },
+  {
+   "file": "dusty_blue.webp",
+   "name": "더스티 블루",
+   "chip": "chips/dusty_blue.webp"
+  }
+ ],
+ "iby_bed_fb2292": [
+  {
+   "file": "tan_beige.webp",
+   "name": "탄 베이지",
+   "chip": "chips/tan_beige.webp"
+  },
+  {
+   "file": "brick_red.webp",
+   "name": "브릭 레드",
+   "chip": "chips/brick_red.webp"
+  },
+  {
+   "file": "royal_blue.webp",
+   "name": "로얄 블루",
+   "chip": "chips/royal_blue.webp"
+  }
+ ],
+ "iby_backpack_fc2106": [
+  {
+   "file": "navy_blue.webp",
+   "name": "네이비 블루",
+   "chip": "chips/navy_blue.webp"
+  },
+  {
+   "file": "coral_pink.webp",
+   "name": "코랄 핑크",
+   "chip": "chips/coral_pink.webp"
+  }
+ ],
+ "iby_backpack_fc1705": [
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "brown.webp",
+   "name": "브라운",
+   "chip": "chips/brown.webp"
+  }
+ ],
+ "iby_trailer_fs2080": [
+  {
+   "file": "blue.webp",
+   "name": "블루",
+   "chip": "chips/blue.webp"
+  },
+  {
+   "file": "latte.webp",
+   "name": "라떼",
+   "chip": "chips/latte.webp"
+  }
+ ],
+ "iby_stroller_fs2011": [
+  {
+   "file": "mint.webp",
+   "name": "민트",
+   "chip": "chips/mint.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  }
+ ],
+ "iby_stroller_fs2191": [
+  {
+   "file": "blue_jeans.webp",
+   "name": "데님 블루",
+   "chip": "chips/blue_jeans.webp"
+  },
+  {
+   "file": "coral_pink.webp",
+   "name": "코랄 핑크",
+   "chip": "chips/coral_pink.webp"
+  }
+ ],
+ "iby_wagon_fs1880": [
+  {
+   "file": "army_green.webp",
+   "name": "아미 그린",
+   "chip": "chips/army_green.webp"
+  },
+  {
+   "file": "dirty_peach.webp",
+   "name": "더티 피치",
+   "chip": "chips/dirty_peach.webp"
+  }
+ ],
+ "iby_stroller_fs2102": [
+  {
+   "file": "soft_sage.webp",
+   "name": "소프트 세이지",
+   "chip": "chips/soft_sage.webp"
+  },
+  {
+   "file": "prism_black.webp",
+   "name": "프리즘 블랙",
+   "chip": "chips/prism_black.webp"
+  }
+ ],
+ "aff_carseat_donutkit_l": [
+  {
+   "file": "khaki.webp",
+   "name": "카키",
+   "chip": "chips/khaki.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "wine.webp",
+   "name": "와인",
+   "chip": "chips/wine.webp"
+  }
+ ],
+ "aff_carseat_sugarwing": [
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  }
+ ],
  "aff_stepbystep_3tier": [
   {
    "file": "beige.webp",
@@ -1749,6 +2429,240 @@
    "file": "gray.webp",
    "name": "그레이",
    "chip": "chips/gray.webp"
+  },
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  }
+ ],
+ "aff_stepbystep_2tier": [
+  {
+   "file": "beige.webp",
+   "name": "베이지",
+   "chip": "chips/beige.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  }
+ ],
+ "aff_microbeads_round": [
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  },
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  },
+  {
+   "file": "navy.webp",
+   "name": "네이비",
+   "chip": "chips/navy.webp"
+  }
+ ],
+ "aff_donut_luxury_l": [
+  {
+   "file": "pink.webp",
+   "name": "핑크",
+   "chip": "chips/pink.webp"
+  },
+  {
+   "file": "brown.webp",
+   "name": "브라운",
+   "chip": "chips/brown.webp"
+  },
+  {
+   "file": "ivory.webp",
+   "name": "아이보리",
+   "chip": "chips/ivory.webp"
+  },
+  {
+   "file": "gray.webp",
+   "name": "그레이",
+   "chip": "chips/gray.webp"
+  }
+ ],
+ "pdh_slowfeeder_paw_mini": [
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  },
+  {
+   "file": "blue.webp",
+   "name": "블루",
+   "chip": "chips/blue.webp"
+  },
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "baby_pink.webp",
+   "name": "베이지 핑크",
+   "chip": "chips/baby_pink.webp"
+  },
+  {
+   "file": "baby_blue.webp",
+   "name": "베이비 블루",
+   "chip": "chips/baby_blue.webp"
+  }
+ ],
+ "pdh_lickingmat": [
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  },
+  {
+   "file": "blue.webp",
+   "name": "블루",
+   "chip": "chips/blue.webp"
+  },
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "baby_pink.webp",
+   "name": "베이지 핑크",
+   "chip": "chips/baby_pink.webp"
+  },
+  {
+   "file": "baby_blue.webp",
+   "name": "베이비 블루",
+   "chip": "chips/baby_blue.webp"
+  }
+ ],
+ "pdh_spin_flyingdisc": [
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "blue.webp",
+   "name": "블루",
+   "chip": "chips/blue.webp"
+  }
+ ],
+ "soopa_chew_3set": [
+  {
+   "file": "coconut.webp",
+   "name": "코코넛 100g",
+   "chip": "chips/coconut.webp"
+  },
+  {
+   "file": "sweet_potato.webp",
+   "name": "고구마 100g",
+   "chip": "chips/sweet_potato.webp"
+  },
+  {
+   "file": "papaya.webp",
+   "name": "파파야 85g",
+   "chip": "chips/papaya.webp"
+  }
+ ],
+ "soopa_dental_6set": [
+  {
+   "file": "banana_pumpkin.webp",
+   "name": "바나나 & 호박",
+   "chip": "chips/banana_pumpkin.webp"
+  },
+  {
+   "file": "cranberry_sweetpotato.webp",
+   "name": "크랜베리 & 고구마",
+   "chip": "chips/cranberry_sweetpotato.webp"
+  },
+  {
+   "file": "carrot_pumpkin.webp",
+   "name": "당근 & 호박",
+   "chip": "chips/carrot_pumpkin.webp"
+  },
+  {
+   "file": "banana_peautbutter.webp",
+   "name": "바나나 & 땅콩버터",
+   "chip": "chips/banana_peautbutter.webp"
+  },
+  {
+   "file": "kale_apple.webp",
+   "name": "케일 & 사과",
+   "chip": "chips/kale_apple.webp"
+  },
+  {
+   "file": "coconut_chiaseed.webp",
+   "name": "코코넛 & 치아씨드",
+   "chip": "chips/coconut_chiaseed.webp"
+  }
+ ],
+ "sweetpet_icecream_strawberry": [
+  {
+   "file": "strawberry.webp",
+   "name": "딸기",
+   "chip": "chips/strawberry.webp"
+  },
+  {
+   "file": "blueberry.webp",
+   "name": "블루베리",
+   "chip": "chips/blueberry.webp"
+  },
+  {
+   "file": "mango_papaya.webp",
+   "name": "망고파파야",
+   "chip": "chips/mango_papaya.webp"
+  },
+  {
+   "file": "carob_banana.webp",
+   "name": "캐롭바나나",
+   "chip": "chips/carob_banana.webp"
+  }
+ ],
+ "ip_trovbiz_flyingstick": [
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  }
+ ],
+ "ip_obowl_l": [
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  }
+ ],
+ "ip_obowl_m": [
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  },
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
   },
   {
    "file": "pink.webp",
@@ -1793,6 +2707,77 @@
    "file": "blue.webp",
    "name": "블루",
    "chip": "chips/blue.webp"
+  }
+ ],
+ "pdh_slowfeeder_paw_2in1": [
+  {
+   "file": "blue.webp",
+   "name": "블루",
+   "chip": "chips/blue.webp"
+  },
+  {
+   "file": "green.webp",
+   "name": "그린",
+   "chip": "chips/green.webp"
+  },
+  {
+   "file": "orange.webp",
+   "name": "오렌지",
+   "chip": "chips/orange.webp"
+  }
+ ],
+ "jjayo_icecream_blueberry_100ml": [
+  {
+   "file": "blueberry.webp",
+   "name": "블루베리",
+   "chip": "chips/blueberry.webp"
+  },
+  {
+   "file": "mango.webp",
+   "name": "망고",
+   "chip": "chips/mango.webp"
+  },
+  {
+   "file": "banana.webp",
+   "name": "바나나",
+   "chip": "chips/banana.webp"
+  },
+  {
+   "file": "strawberry.webp",
+   "name": "딸기",
+   "chip": "chips/strawberry.webp"
+  },
+  {
+   "file": "strawberry_banana.webp",
+   "name": "딸기바나나",
+   "chip": "chips/strawberry_banana.webp"
+  }
+ ],
+ "jjayo_icecream_mini_blueberry_50ml": [
+  {
+   "file": "blueberry.webp",
+   "name": "블루베리",
+   "chip": "chips/blueberry.webp"
+  },
+  {
+   "file": "mango.webp",
+   "name": "망고",
+   "chip": "chips/mango.webp"
+  },
+  {
+   "file": "banana.webp",
+   "name": "바나나",
+   "chip": "chips/banana.webp"
+  },
+  {
+   "file": "strawberry.webp",
+   "name": "딸기",
+   "chip": "chips/strawberry.webp"
+  },
+  {
+   "file": "strawberry_banana.webp",
+   "name": "딸기바나나",
+   "chip": "chips/strawberry_banana.webp"
   }
  ],
  "rw_hiandlight_harness_24": [

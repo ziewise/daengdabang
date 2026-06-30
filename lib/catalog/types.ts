@@ -105,6 +105,10 @@ export interface CatalogProduct {
     originalPrice: number | null;
     /** 색상 변형(있는 제품만) — 칩 클릭 시 메인 이미지 교체 + 구매 옵션 한글명 */
     colors?: ProductColor[];
+    /** 사이즈 옵션(있는 제품만) — 이름 + 사이즈별 가격 증감(원) */
+    sizes?: ProductSize[];
+    /** 옵션2(드롭다운) 종류명 — 기본 "사이즈", 일부 제품은 "모양"/"용량" 등 */
+    optionLabel?: string;
 }
 
 /** 제품 색상 변형 1개 — colors/ 폴더의 색상별 제품 이미지 + 칩(원형 버튼) + 한글명. */
@@ -115,4 +119,10 @@ export interface ProductColor {
     name: string;
     /** 색상 칩(원형 버튼) 이미지 경로 */
     chip: string;
+}
+
+/** 사이즈(옵션2) 1개 — 이름 + 기본가 대비 증감액(원). 0 = 기본가와 동일. */
+export interface ProductSize {
+    name: string;
+    delta: number;
 }

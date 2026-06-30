@@ -238,7 +238,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 product={p}
                 open={sheetMode !== null}
                 mode={sheetMode ?? "cart"}
-                initialColorIdx={colorIdx ?? 0}
+                initialColorIdx={colorIdx}
                 onClose={() => setSheetMode(null)}
                 onCommitted={handleCommitted}
             />

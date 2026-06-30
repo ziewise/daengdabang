@@ -10,7 +10,7 @@ import {
     useState,
 } from "react";
 
-export type CartLine = { productId: string; qty: number; color?: string };
+export type CartLine = { productId: string; qty: number; color?: string; size?: string };
 export type PetProfile = {
     name: string;
     size: "small" | "medium" | "large";
@@ -51,9 +51,9 @@ type State = {
 
 type Action =
     | { type: "HYDRATE"; state: State }
-    | { type: "ADD_TO_CART"; productId: string; qty: number; color?: string }
-    | { type: "SET_QTY"; productId: string; qty: number; color?: string }
-    | { type: "REMOVE_FROM_CART"; productId: string; color?: string }
+    | { type: "ADD_TO_CART"; productId: string; qty: number; color?: string; size?: string }
+    | { type: "SET_QTY"; productId: string; qty: number; color?: string; size?: string }
+    | { type: "REMOVE_FROM_CART"; productId: string; color?: string; size?: string }
     | { type: "CLEAR_CART" }
     | { type: "TOGGLE_WISHLIST"; productId: string }
     | { type: "LOGIN"; user: User }
@@ -65,9 +65,13 @@ const STORAGE_KEY = "daengdabang.store.v2";
 const API_TOKEN_KEY = "ddb.api.accessToken";
 const INITIAL: State = { cart: [], wishlist: [], user: null, orders: [] };
 
-// 장바구니 라인 식별 — 같은 제품도 색상(옵션)이 다르면 다른 라인으로 본다.
-function sameLine(line: CartLine, productId: string, color?: string): boolean {
-    return line.productId === productId && (line.color ?? "") === (color ?? "");
+// 장바구니 라인 식별 — 같은 제품도 색상/사이즈(옵션)가 다르면 다른 라인으로 본다.
+function sameLine(line: CartLine, productId: string, color?: string, size?: string): boolean {
+    return (
+        line.productId === productId &&
+        (line.color ?? "") === (color ?? "") &&
+        (line.size ?? "") === (size ?? "")
+    );
 }
 
 function reducer(state: State, action: Action): State {
@@ -75,12 +79,12 @@ function reducer(state: State, action: Action): State {
         case "HYDRATE":
             return action.state;
         case "ADD_TO_CART": {
-            const existing = state.cart.find((line) => sameLine(line, action.productId, action.color));
+            const existing = state.cart.find((line) => sameLine(line, action.productId, action.color, action.size));
             if (existing) {
                 return {
                     ...state,
                     cart: state.cart.map((line) =>
-                        sameLine(line, action.productId, action.color)
+                        sameLine(line, action.productId, action.color, action.size)
                             ? { ...line, qty: Math.min(99, line.qty + action.qty) }
                             : line
                     ),
@@ -88,18 +92,18 @@ function reducer(state: State, action: Action): State {
             }
             return {
                 ...state,
-                cart: [...state.cart, { productId: action.productId, qty: action.qty, color: action.color }],
+                cart: [...state.cart, { productId: action.productId, qty: action.qty, color: action.color, size: action.size }],
             };
         }
         case "SET_QTY":
             return {
                 ...state,
                 cart: state.cart
-                    .map((line) => (sameLine(line, action.productId, action.color) ? { ...line, qty: action.qty } : line))
+                    .map((line) => (sameLine(line, action.productId, action.color, action.size) ? { ...line, qty: action.qty } : line))
                     .filter((line) => line.qty > 0),
             };
         case "REMOVE_FROM_CART":
-            return { ...state, cart: state.cart.filter((line) => !sameLine(line, action.productId, action.color)) };
+            return { ...state, cart: state.cart.filter((line) => !sameLine(line, action.productId, action.color, action.size)) };
         case "CLEAR_CART":
             return { ...state, cart: [] };
         case "TOGGLE_WISHLIST": {
@@ -130,9 +134,9 @@ function reducer(state: State, action: Action): State {
 type StoreValue = {
     state: State;
     hydrated: boolean;
-    addToCart: (productId: string, qty?: number, color?: string) => void;
-    setQty: (productId: string, qty: number, color?: string) => void;
-    removeFromCart: (productId: string, color?: string) => void;
+    addToCart: (productId: string, qty?: number, color?: string, size?: string) => void;
+    setQty: (productId: string, qty: number, color?: string, size?: string) => void;
+    removeFromCart: (productId: string, color?: string, size?: string) => void;
     clearCart: () => void;
     toggleWishlist: (productId: string) => void;
     isWished: (productId: string) => boolean;
@@ -168,9 +172,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         () => ({
             state,
             hydrated,
-            addToCart: (productId, qty = 1, color) => dispatch({ type: "ADD_TO_CART", productId, qty, color }),
-            setQty: (productId, qty, color) => dispatch({ type: "SET_QTY", productId, qty, color }),
-            removeFromCart: (productId, color) => dispatch({ type: "REMOVE_FROM_CART", productId, color }),
+            addToCart: (productId, qty = 1, color, size) => dispatch({ type: "ADD_TO_CART", productId, qty, color, size }),
+            setQty: (productId, qty, color, size) => dispatch({ type: "SET_QTY", productId, qty, color, size }),
+            removeFromCart: (productId, color, size) => dispatch({ type: "REMOVE_FROM_CART", productId, color, size }),
             clearCart: () => dispatch({ type: "CLEAR_CART" }),
             toggleWishlist: (productId) => dispatch({ type: "TOGGLE_WISHLIST", productId }),
             isWished: (productId) => state.wishlist.includes(productId),
