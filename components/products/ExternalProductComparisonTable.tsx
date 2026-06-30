@@ -64,6 +64,10 @@ function formatKRW(value?: number | null): string {
     return `${value.toLocaleString("ko-KR")}원`;
 }
 
+function formatSignedKRW(value: number): string {
+    return `+${value.toLocaleString("ko-KR")}원`;
+}
+
 function signedKRW(value?: number): string {
     if (!value) return "0원";
     const sign = value > 0 ? "+" : "-";
@@ -174,6 +178,23 @@ function adjustmentText(product: ExternalProductResult): string {
     return parts.join(" / ") || "-";
 }
 
+function priceDelta(product: ExternalProductResult, minTotal: number): { label: string; detail: string; tone: "best" | "high" | "unknown" } {
+    const total = getTotal(product);
+    if (total === Number.MAX_SAFE_INTEGER || minTotal === Number.MAX_SAFE_INTEGER) {
+        return { label: "비교불가", detail: "가격 확인 필요", tone: "unknown" };
+    }
+    const diff = total - minTotal;
+    if (diff <= 0) {
+        return { label: "최저가", detail: "기준가", tone: "best" };
+    }
+    const percent = minTotal > 0 ? Math.round((diff / minTotal) * 100) : null;
+    return {
+        label: formatSignedKRW(diff),
+        detail: percent !== null ? `${percent}% 비쌈` : "더 비쌈",
+        tone: "high",
+    };
+}
+
 export default function ExternalProductComparisonTable({ products }: Props) {
     const groups = useMemo(() => buildGroups(products), [products]);
     const [activeKey, setActiveKey] = useState("");
@@ -191,6 +212,14 @@ export default function ExternalProductComparisonTable({ products }: Props) {
     const activeGroup = groups.find((group) => group.key === activeKey) ?? groups[0];
     const rows = activeGroup?.rows.slice(0, 8) ?? [];
     const specColumns = useMemo(() => specColumnsFor(rows), [rows]);
+    const validTotals = rows
+        .map((product) => getTotal(product))
+        .filter((total) => total !== Number.MAX_SAFE_INTEGER);
+    const minVisibleTotal = validTotals.length ? Math.min(...validTotals) : Number.MAX_SAFE_INTEGER;
+    const maxVisibleTotal = validTotals.length ? Math.max(...validTotals) : Number.MAX_SAFE_INTEGER;
+    const priceSpread = maxVisibleTotal !== Number.MAX_SAFE_INTEGER && minVisibleTotal !== Number.MAX_SAFE_INTEGER
+        ? maxVisibleTotal - minVisibleTotal
+        : 0;
 
     if (!activeGroup || rows.length === 0) return null;
 
@@ -200,6 +229,19 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                 <div>
                     <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Lowest Table</p>
                     <h3 className="mt-1 text-lg font-black text-neutral-950">상품군 최저가 비교</h3>
+                    {validTotals.length > 1 && (
+                        <div className="mt-2 flex flex-wrap gap-2 text-xs font-black">
+                            <span className="rounded-md bg-emerald-50 px-2 py-1 text-emerald-700">
+                                최저 {formatKRW(minVisibleTotal)}
+                            </span>
+                            <span className="rounded-md bg-neutral-100 px-2 py-1 text-neutral-700">
+                                최고 {formatKRW(maxVisibleTotal)}
+                            </span>
+                            <span className="rounded-md bg-rose-50 px-2 py-1 text-rose-700">
+                                차이 {formatSignedKRW(priceSpread)}
+                            </span>
+                        </div>
+                    )}
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {groups.slice(0, 5).map((group) => (
@@ -220,13 +262,14 @@ export default function ExternalProductComparisonTable({ products }: Props) {
             </div>
 
             <div className="overflow-x-auto border-y border-neutral-200">
-                <table className="min-w-[980px] w-full table-fixed border-collapse text-left">
+                <table className="min-w-[1100px] w-full table-fixed border-collapse text-left">
                     <thead className="bg-neutral-50 text-[11px] font-black uppercase text-neutral-500">
                         <tr>
                             <th className="w-16 px-3 py-3">순위</th>
                             <th className="w-40 px-3 py-3">판매처</th>
                             <th className="w-64 px-3 py-3">상품</th>
                             <th className="w-28 px-3 py-3 text-right">총액</th>
+                            <th className="w-32 px-3 py-3">최저가 대비</th>
                             <th className="w-28 px-3 py-3 text-right">상품가</th>
                             <th className="w-44 px-3 py-3">배송/쿠폰/옵션</th>
                             {specColumns.map((key) => (
@@ -237,8 +280,10 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-neutral-100 text-sm">
-                        {rows.map((product, index) => (
-                            <tr key={`${product.id}-${product.optionName ?? ""}`} className="bg-white align-top hover:bg-emerald-50/45">
+                        {rows.map((product, index) => {
+                            const delta = priceDelta(product, minVisibleTotal);
+                            return (
+                            <tr key={`${product.id}-${product.optionName ?? ""}`} className={`${delta.tone === "best" ? "bg-emerald-50/55" : "bg-white"} align-top hover:bg-emerald-50/45`}>
                                 <td className="px-3 py-3">
                                     <span className={`inline-flex h-7 min-w-7 items-center justify-center rounded-md px-2 text-xs font-black ${
                                         index === 0 ? "bg-neutral-950 text-white" : "bg-neutral-100 text-neutral-700"
@@ -267,7 +312,26 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                 </td>
                                 <td className="px-3 py-3 text-right">
                                     <div className="text-base font-black text-neutral-950">{formatKRW(product.totalPrice)}</div>
-                                    {index === 0 && <div className="mt-1 text-[10px] font-black text-rose-600">최저</div>}
+                                </td>
+                                <td className="px-3 py-3">
+                                    <span className={`inline-flex min-h-7 items-center rounded-md border px-2 text-xs font-black ${
+                                        delta.tone === "best"
+                                            ? "border-emerald-600 bg-emerald-600 text-white"
+                                            : delta.tone === "high"
+                                                ? "border-rose-200 bg-rose-50 text-rose-700"
+                                                : "border-neutral-200 bg-neutral-50 text-neutral-500"
+                                    }`}>
+                                        {delta.label}
+                                    </span>
+                                    <div className={`mt-1 text-[10px] font-black ${
+                                        delta.tone === "best"
+                                            ? "text-emerald-700"
+                                            : delta.tone === "high"
+                                                ? "text-rose-600"
+                                                : "text-neutral-400"
+                                    }`}>
+                                        {delta.detail}
+                                    </div>
                                 </td>
                                 <td className="px-3 py-3 text-right font-bold text-neutral-700">{formatKRW(product.basePrice)}</td>
                                 <td className="px-3 py-3 text-xs font-bold leading-5 text-neutral-600">{adjustmentText(product)}</td>
@@ -280,14 +344,17 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                 <td className="px-3 py-3 text-center">
                                     <Link
                                         href={linkFor(product)}
-                                        className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600 text-white transition hover:bg-emerald-700"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"
                                         aria-label={`${product.title} 판매처 열기`}
                                     >
                                         <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
                                     </Link>
                                 </td>
                             </tr>
-                        ))}
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

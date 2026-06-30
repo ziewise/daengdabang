@@ -42,6 +42,8 @@ export default function ExternalProductCard({ product }: Props) {
         <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <Link
                 href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
                 aria-label={`${product.title} 외부 가격비교 보기`}
             >
@@ -106,7 +108,9 @@ export default function ExternalProductCard({ product }: Props) {
                 )}
                 <Link
                     href={href}
-                    className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-emerald-600 text-sm font-black text-white transition hover:bg-emerald-700"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
                     제휴 경유로 보기
