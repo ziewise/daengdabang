@@ -25,6 +25,7 @@ export default function ExternalProductCard({ product }: Props) {
         product: product.title,
     });
     const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
+    const hasMarketplacePreview = product.previewStatus === "fetched" && /^https?:\/\//.test(product.thumbnail);
     const displayUrl = displayExternalProductUrl(product);
     const totalPrice = typeof product.totalPrice === "number" ? product.totalPrice : null;
     const history = product.historyStats;
@@ -59,7 +60,7 @@ export default function ExternalProductCard({ product }: Props) {
                         image.dataset.fallbackApplied = "1";
                         image.src = image.src.replace(/\.webp($|\?)/, ".png$1");
                     }}
-                    className={`${isMarketplaceSearch ? "h-[72%] w-[72%] object-contain" : "h-full w-full object-cover"} transition duration-150 group-hover:scale-[1.03]`}
+                    className={`${isMarketplaceSearch && !hasMarketplacePreview ? "h-[72%] w-[72%] object-contain" : "h-full w-full object-cover"} transition duration-150 group-hover:scale-[1.03]`}
                 />
                 <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-neutral-950/85 px-2 py-0.5 text-[10px] font-black text-white">
                     가격비교

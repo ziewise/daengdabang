@@ -44,6 +44,11 @@ export type ExternalProductResult = {
         delta?: number;
     };
     collectedAt?: string;
+    previewStatus?: string;
+    previewTitle?: string;
+    previewSource?: string;
+    previewImageCount?: number;
+    marketplacePreviewImages?: string[];
 };
 
 export function displayExternalProductUrl(product: ExternalProductResult): string {
