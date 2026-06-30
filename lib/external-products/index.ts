@@ -14,6 +14,7 @@ export type ExternalProductResult = {
     thumbnail: string;
     purchaseUrl: string;
     outboundUrl?: string;
+    displayUrl?: string;
     keywords: string[];
     rank: number;
     updatedAt?: string;
@@ -44,6 +45,18 @@ export type ExternalProductResult = {
     };
     collectedAt?: string;
 };
+
+export function displayExternalProductUrl(product: ExternalProductResult): string {
+    if (product.displayUrl) return product.displayUrl;
+    if (product.sourceSite) return product.sourceSite;
+    try {
+        const url = new URL(product.purchaseUrl);
+        const display = `${url.hostname.replace(/^www\./, "")}${url.pathname}${decodeURIComponent(url.search)}`;
+        return display.length > 180 ? `${display.slice(0, 177)}...` : display;
+    } catch {
+        return product.purchaseUrl;
+    }
+}
 
 type ExternalFilter = {
     category?: CategorySlug;

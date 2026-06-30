@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { CATEGORY_LABEL, SUBCATEGORY_LABEL } from "@/lib/catalog";
-import type { ExternalProductResult } from "@/lib/external-products";
+import { displayExternalProductUrl, type ExternalProductResult } from "@/lib/external-products";
 import { outboundHref } from "@/lib/outbound";
 
 type Props = {
@@ -293,7 +293,9 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                 </td>
                                 <td className="px-3 py-3">
                                     <div className="truncate font-black text-neutral-950">{product.sellerName || product.sourceName}</div>
-                                    <div className="mt-1 truncate text-xs font-bold text-neutral-500">{product.sourceSite || product.sourceKind}</div>
+                                    <div className="mt-1 truncate text-xs font-bold text-neutral-500" title={displayExternalProductUrl(product)}>
+                                        {displayExternalProductUrl(product)}
+                                    </div>
                                 </td>
                                 <td className="px-3 py-3">
                                     <div className="line-clamp-2 font-black leading-5 text-neutral-950">{product.title}</div>

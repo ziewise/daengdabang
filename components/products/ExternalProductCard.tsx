@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { ExternalProductResult } from "@/lib/external-products";
+import { displayExternalProductUrl, type ExternalProductResult } from "@/lib/external-products";
 import { outboundHref } from "@/lib/outbound";
 
 type Props = {
@@ -25,6 +25,7 @@ export default function ExternalProductCard({ product }: Props) {
         product: product.title,
     });
     const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
+    const displayUrl = displayExternalProductUrl(product);
     const totalPrice = typeof product.totalPrice === "number" ? product.totalPrice : null;
     const history = product.historyStats;
     const specEntries = Object.entries(product.specs ?? {})
@@ -58,7 +59,7 @@ export default function ExternalProductCard({ product }: Props) {
                         image.dataset.fallbackApplied = "1";
                         image.src = image.src.replace(/\.webp($|\?)/, ".png$1");
                     }}
-                    className="h-full w-full object-cover transition duration-150 group-hover:scale-[1.03]"
+                    className={`${isMarketplaceSearch ? "h-[72%] w-[72%] object-contain" : "h-full w-full object-cover"} transition duration-150 group-hover:scale-[1.03]`}
                 />
                 <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-neutral-950/85 px-2 py-0.5 text-[10px] font-black text-white">
                     가격비교
@@ -70,6 +71,7 @@ export default function ExternalProductCard({ product }: Props) {
 
             <div className="p-3">
                 <p className="truncate text-[11px] font-black uppercase text-emerald-700">{product.brand}</p>
+                <p className="mt-1 truncate text-[11px] font-bold text-neutral-500" title={displayUrl}>{displayUrl}</p>
                 <h3 className="mt-1 min-h-[2.5rem] text-sm font-extrabold leading-5 text-neutral-950 line-clamp-2">
                     {product.title}
                 </h3>
