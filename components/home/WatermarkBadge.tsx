@@ -122,7 +122,7 @@ export default function WatermarkBadge({
                 // 원형 배지 — 중심을 워터마크 좌표에 맞춤(translate -50%).
                 // interactive 면 배지만 pointer-events-auto 로 클릭 받고, hover 확대로 클릭 힌트를 준다.
                 <div
-                    className={`absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-2 border-white/75 shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
+                    className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-2 border-white/75 shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
                         interactive
                             ? " pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-105"
                             : ""
@@ -149,15 +149,33 @@ export default function WatermarkBadge({
                             : undefined
                     }
                 >
-                    {/* 견종 얼굴 영상 — 16:9 가운데만 원형으로(양옆 잘림), 자동재생 루프 */}
+                    {/* 견종 얼굴 영상 — 16:9 가운데만 원형으로(양옆 잘림), 자동재생 루프.
+                        interactive 면 hover 시 페이드아웃되며 아래 펫렌즈 카메라 버튼이 드러난다. */}
                     <video
                         src={src}
                         autoPlay
                         muted
                         loop
                         playsInline
-                        className="h-full w-full object-cover"
+                        className={`h-full w-full object-cover${
+                            interactive ? " transition-opacity duration-300 group-hover:opacity-0" : ""
+                        }`}
                     />
+                    {/* hover 오버레이 — 펫렌즈 버튼(파랑·인디고·핑크 그라데이션 + 카메라 아이콘).
+                        펫렌즈 FAB(petlens.module.css .fab)와 동일 그라데이션이라 브랜드가 일관된다.
+                        평소엔 숨고(opacity-0) hover 시 떠올라 배지가 "펫렌즈 실행" 버튼처럼 보인다.
+                        아이콘 크기는 배지 지름(box.size)에 비례시켜 영상 배율과 함께 커진다. */}
+                    {interactive && (
+                        <div
+                            className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                            style={{ background: "linear-gradient(135deg, #3b82f6, #6366f1, #ec4899)" }}
+                        >
+                            <i
+                                className="fa-solid fa-camera text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]"
+                                style={{ fontSize: `${box.size * 0.4}px` }}
+                            />
+                        </div>
+                    )}
                 </div>
             )}
         </div>

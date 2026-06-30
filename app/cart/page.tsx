@@ -2,14 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatKRW } from "@/lib/catalog";
 import { cartProducts, cartTotal, productHref } from "@/lib/shop";
-import { useCart } from "@/lib/store";
+import { useAuth, useCart } from "@/lib/store";
+import SimplePayButtons from "@/components/shop/SimplePayButtons";
 
 export default function CartPage() {
+    const router = useRouter();
     const cart = useCart();
+    const { user } = useAuth();
     const lines = cartProducts(cart.lines);
     const total = cartTotal(cart.lines);
+    // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원 주문도 선택 가능)으로
+    const goCheckout = () => router.push(user ? "/checkout" : "/auth/login?redirect=/checkout");
 
     if (lines.length === 0) {
         return (
@@ -93,9 +99,11 @@ export default function CartPage() {
                         <span className="font-black">결제 예정</span>
                         <b className="text-2xl font-black text-indigo-700">{formatKRW(total)}원</b>
                     </div>
-                    <Link href="/checkout" className="btn btn-primary mt-5 w-full">
+                    <button type="button" onClick={goCheckout} className="btn btn-primary mt-5 w-full">
                         결제하기
-                    </Link>
+                    </button>
+                    {/* 간편결제 — 네이버페이·카카오페이 */}
+                    <SimplePayButtons />
                 </aside>
             </div>
         </main>

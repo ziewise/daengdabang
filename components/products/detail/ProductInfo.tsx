@@ -124,17 +124,22 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     </div>
                 )}
 
-                <div>
-                    {p.discountRate > 0 && p.originalPrice && (
-                        <div className="mb-1 flex items-center gap-2">
-                            <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
-                            <span className="text-sm text-neutral-400 line-through">{formatKRW(p.originalPrice)}원</span>
-                        </div>
-                    )}
-                    <p className="text-4xl font-black text-neutral-950">
-                        {formatKRW(p.price)}
-                        <span className="text-2xl">원</span>
-                    </p>
+                {/* 가격 라인 — 우측 끝에 링크/공유 아이콘(ProductShareActions)을 둔다 */}
+                <div className="flex items-center justify-between gap-3">
+                    <div>
+                        {p.discountRate > 0 && p.originalPrice && (
+                            <div className="mb-1 flex items-center gap-2">
+                                <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
+                                <span className="text-sm text-neutral-400 line-through">{formatKRW(p.originalPrice)}원</span>
+                            </div>
+                        )}
+                        <p className="text-4xl font-black text-neutral-950">
+                            {formatKRW(p.price)}
+                            <span className="text-2xl">원</span>
+                        </p>
+                    </div>
+                    {/* 링크·공유 — 금액 라인 우측 끝(아이콘만) */}
+                    <ProductShareActions product={p} />
                 </div>
 
                 <div className="h-px bg-neutral-200" />
@@ -193,13 +198,11 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         구매하기
                     </button>
                 </div>
-
-                <ProductShareActions product={p} />
             </div>
 
             {/* 스크롤 추적 하단 고정 바 — 버튼을 누르면 옵션 시트가 열린다 */}
             <div
-                className={`fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur transition-transform duration-300 ${
+                className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/60 bg-white/65 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-transform duration-300 ${
                     showBar ? "translate-y-0" : "pointer-events-none translate-y-full"
                 }`}
             >

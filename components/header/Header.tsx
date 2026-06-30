@@ -11,6 +11,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/lib/store";
 import {
     CATEGORY_GROUPS,
     BRAND_CARDS,
@@ -29,6 +30,8 @@ export default function Header() {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const { isLoggedIn, hydrated } = useAuth();
+    // 장바구니 수량 배지 — StoreContext(useCart) 라인 qty 합. hydrate 전엔 0(SSR 일치)
+    const { count: cartCount, hydrated: cartHydrated } = useCart();
     // 펫렌즈는 /pet-lens 페이지 대신 모달로 띄운다 (협업자 PetLensClient 를 모달에 담음)
     const { open: openPetLens } = usePetLensModal();
 
@@ -211,9 +214,12 @@ export default function Header() {
                             aria-label="장바구니"
                         >
                             <i className="fa-solid fa-bag-shopping" />
-                            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger text-white text-[10px] font-bold flex items-center justify-center">
-                                0
-                            </span>
+                            {/* 담긴 수량 배지 — 0이면 숨김, 99 초과는 99+ */}
+                            {cartHydrated && cartCount > 0 && (
+                                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger text-white text-[10px] font-bold flex items-center justify-center">
+                                    {cartCount > 99 ? "99+" : cartCount}
+                                </span>
+                            )}
                         </Link>
 
                         {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지) */}

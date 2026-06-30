@@ -29,7 +29,14 @@ const PROVIDERS: Array<{
     },
 ];
 
-export default function SocialAuthButtons({ mode }: { mode: "login" | "signup" }) {
+export default function SocialAuthButtons({
+    mode,
+    variant = "full",
+}: {
+    mode: "login" | "signup";
+    /** full = 라벨 있는 직사각(기본) / compact = 로그인 카드용 원형 아이콘 */
+    variant?: "full" | "compact";
+}) {
     const apiReady = Boolean(ddbApiBase());
     const [enabledByProvider, setEnabledByProvider] = useState<Record<SocialProvider, boolean> | null>(null);
     const [statusChecked, setStatusChecked] = useState(false);
@@ -76,6 +83,33 @@ export default function SocialAuthButtons({ mode }: { mode: "login" | "signup" }
         if (!apiReady || enabledByProvider?.[provider] === false) return;
         startSocialLogin(provider, "/mypage");
     };
+
+    // compact — 로그인 카드용 원형 아이콘(라벨 없음, 비활성은 흐리게)
+    if (variant === "compact") {
+        return (
+            <div className="flex items-center justify-center gap-3">
+                {PROVIDERS.map((provider) => {
+                    const disabled = !apiReady || enabledByProvider?.[provider.id] === false;
+                    return (
+                        <button
+                            key={provider.id}
+                            type="button"
+                            disabled={disabled}
+                            onClick={() => start(provider.id)}
+                            aria-label={`${provider.label} ${mode === "signup" ? "간편가입" : "간편로그인"}`}
+                            title={provider.label}
+                            className={[
+                                "flex h-11 w-11 items-center justify-center rounded-full border text-base font-black shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50",
+                                provider.className,
+                            ].join(" ")}
+                        >
+                            {provider.icon === "N" ? <span>N</span> : <i className={provider.icon} />}
+                        </button>
+                    );
+                })}
+            </div>
+        );
+    }
 
     return (
         <section className="surface mt-6 grid gap-3 p-5">

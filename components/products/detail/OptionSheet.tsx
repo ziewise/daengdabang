@@ -16,7 +16,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { formatKRW, type CatalogProduct } from "@/lib/catalog";
-import { useCart } from "@/lib/store";
+import { useAuth, useCart } from "@/lib/store";
+import SimplePayButtons from "@/components/shop/SimplePayButtons";
 
 interface Props {
     product: CatalogProduct;
@@ -35,6 +36,7 @@ type Pick = { colorIdx: number; sizeIdx: number; qty: number };
 export default function OptionSheet({ product: p, open, mode, initialColorIdx = null, onClose, onCommitted }: Props) {
     const router = useRouter();
     const { addToCart } = useCart();
+    const { user } = useAuth();
     const colors = p.colors ?? [];
     const sizes = p.sizes ?? [];
     const hasColors = colors.length > 0;
@@ -113,7 +115,8 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
         }
         onClose();
         onCommitted?.(mode);
-        if (mode === "buy") router.push("/checkout");
+        // 비로그인 구매 시 로그인 화면으로(거기서 회원 로그인/비회원 주문 선택 → 결제로 이어짐)
+        if (mode === "buy") router.push(user ? "/checkout" : "/auth/login?redirect=/checkout");
     };
 
     return (
@@ -275,6 +278,9 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                     >
                         {!canConfirm ? "옵션을 선택하세요" : mode === "buy" ? "구매하기" : "장바구니 담기"}
                     </button>
+
+                    {/* 구매 모드 — 간편결제(네이버페이·카카오페이). 옵션 미선택 시 함께 비활성 */}
+                    {mode === "buy" && <SimplePayButtons disabled={!canConfirm} />}
                 </div>
             </div>
         </>
