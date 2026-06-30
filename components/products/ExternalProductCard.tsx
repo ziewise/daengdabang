@@ -24,6 +24,7 @@ export default function ExternalProductCard({ product }: Props) {
         source: product.sourceName,
         product: product.title,
     });
+    const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
     const totalPrice = typeof product.totalPrice === "number" ? product.totalPrice : null;
     const history = product.historyStats;
     const specEntries = Object.entries(product.specs ?? {})
@@ -45,7 +46,7 @@ export default function ExternalProductCard({ product }: Props) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
-                aria-label={`${product.title} 외부 가격비교 보기`}
+                aria-label={`${product.title} ${isMarketplaceSearch ? "외부 검색" : "외부 가격비교"} 보기`}
             >
                 <img
                     src={product.thumbnail}
@@ -113,7 +114,7 @@ export default function ExternalProductCard({ product }: Props) {
                     className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
-                    제휴 경유로 보기
+                    {isMarketplaceSearch ? "외부 검색으로 보기" : "제휴 경유로 보기"}
                 </Link>
             </div>
         </article>
