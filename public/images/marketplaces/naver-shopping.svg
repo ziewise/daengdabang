@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Naver Shopping">
+  <rect width="640" height="640" rx="48" fill="#03c75a"/>
+  <circle cx="320" cy="250" r="118" fill="#ffffff" opacity=".18"/>
+  <path d="M190 190h64l124 173V190h72v260h-64L262 277v173h-72z" fill="#ffffff"/>
+  <text x="320" y="512" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800" fill="#ffffff">NAVER</text>
+</svg>

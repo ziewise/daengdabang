@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Enuri">
+  <rect width="640" height="640" rx="48" fill="#0ea5e9"/>
+  <rect x="150" y="170" width="340" height="210" rx="32" fill="#ffffff"/>
+  <path d="M210 240h220v56H210z" fill="#0ea5e9"/>
+  <path d="M210 316h150v42H210z" fill="#0ea5e9" opacity=".72"/>
+  <text x="320" y="514" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="900" fill="#ffffff">ENURI</text>
+</svg>
