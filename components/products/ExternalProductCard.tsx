@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { displayExternalProductUrl, type ExternalProductResult } from "@/lib/external-products";
+import { type ExternalProductResult } from "@/lib/external-products";
 import { outboundHref } from "@/lib/outbound";
 
 type Props = {
@@ -26,20 +26,12 @@ export default function ExternalProductCard({ product }: Props) {
     });
     const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
     const hasMarketplacePreview = product.previewStatus === "fetched" && /^https?:\/\//.test(product.thumbnail);
-    const displayUrl = displayExternalProductUrl(product);
     const totalPrice = typeof product.totalPrice === "number" ? product.totalPrice : null;
-    const history = product.historyStats;
-    const specEntries = Object.entries(product.specs ?? {})
-        .filter(([key]) => !["brand", "category", "subcategory"].includes(key))
-        .slice(0, 3);
-    const adjustments = [
-        typeof product.shippingFee === "number" ? `배송 ${formatKRW(product.shippingFee)}원` : "",
+    const priceNote = [
+        typeof product.shippingFee === "number" && product.shippingFee > 0 ? `배송 ${formatKRW(product.shippingFee)}원` : "",
         product.couponDiscount ? `쿠폰 -${formatKRW(product.couponDiscount)}원` : "",
         product.optionName ? `${product.optionName} ${signedKRW(product.optionPriceDelta)}` : "",
-    ].filter(Boolean);
-    const historyText = history?.sampleCount && history.sampleCount > 1
-        ? `최근 ${signedKRW(history.delta)} · 최저 ${formatKRW(history.lowest)}원`
-        : "";
+    ].filter(Boolean).join(" · ");
 
     return (
         <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
@@ -62,62 +54,39 @@ export default function ExternalProductCard({ product }: Props) {
                     }}
                     className={`${isMarketplaceSearch && !hasMarketplacePreview ? "h-[72%] w-[72%] object-contain" : "h-full w-full object-cover"} transition duration-150 group-hover:scale-[1.03]`}
                 />
-                <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-neutral-950/85 px-2 py-0.5 text-[10px] font-black text-white">
-                    가격비교
-                </div>
                 <div className="absolute bottom-2 right-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-neutral-700 shadow-sm">
                     {product.sellerName || product.sourceName}
                 </div>
             </Link>
 
             <div className="p-3">
-                <p className="truncate text-[11px] font-black uppercase text-emerald-700">{product.brand}</p>
-                <p className="mt-1 truncate text-[11px] font-bold text-neutral-500" title={displayUrl}>{displayUrl}</p>
-                <h3 className="mt-1 min-h-[2.5rem] text-sm font-extrabold leading-5 text-neutral-950 line-clamp-2">
+                <div className="flex min-w-0 items-center gap-1.5 text-[11px] font-black">
+                    <span className="truncate uppercase text-emerald-700">{product.brand}</span>
+                    <span className="h-1 w-1 shrink-0 rounded-full bg-neutral-300" />
+                    <span className="truncate text-neutral-500">{product.sourceName}</span>
+                </div>
+                <h3 className="mt-2 min-h-[2.5rem] text-sm font-extrabold leading-5 text-neutral-950 line-clamp-2">
                     {product.title}
                 </h3>
-                <div className="mt-3 flex items-end justify-between gap-2">
-                    <div>
-                        <p className="text-[10px] font-black text-neutral-400">
-                            {totalPrice !== null ? "배송/쿠폰/옵션 반영" : "판매처 표시가"}
-                        </p>
-                        <p className="text-base font-black text-neutral-950">
-                            {totalPrice !== null ? `${formatKRW(totalPrice)}원` : product.priceText}
-                        </p>
-                    </div>
-                    {product.updatedAt && (
-                        <span className="text-[10px] font-bold text-neutral-400">{product.updatedAt}</span>
+                <div className="mt-2">
+                    <p className={`${totalPrice !== null ? "text-xl text-neutral-950" : "text-base text-neutral-700"} font-black leading-tight line-clamp-2`}>
+                        {totalPrice !== null ? `${formatKRW(totalPrice)}원` : product.priceText}
+                    </p>
+                    {priceNote && (
+                        <p className="mt-1 truncate text-[11px] font-bold text-neutral-500">{priceNote}</p>
                     )}
                 </div>
-                {adjustments.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                        {adjustments.map((label) => (
-                            <span key={label} className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-bold text-neutral-600">
-                                {label}
-                            </span>
-                        ))}
-                    </div>
-                )}
-                {specEntries.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                        {specEntries.map(([key, value]) => (
-                            <span key={key} className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                                {key}: {value}
-                            </span>
-                        ))}
-                    </div>
-                )}
-                {historyText && (
-                    <p className="mt-2 truncate text-[10px] font-bold text-neutral-500">{historyText}</p>
+                {totalPrice === null && (
+                    <p className="mt-1 text-[11px] font-bold text-neutral-400">판매처에서 최종 가격 확인</p>
                 )}
                 <Link
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
+                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
-                    {isMarketplaceSearch ? "외부 검색으로 보기" : "제휴 경유로 보기"}
+                    보러가기
                 </Link>
             </div>
         </article>

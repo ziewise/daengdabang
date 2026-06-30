@@ -201,12 +201,8 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                         <div>
                             <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Price Compare</p>
                             <h2 className="mt-1 text-xl font-black text-neutral-950">외부 가격비교</h2>
-                            <p className="mt-1 text-xs font-bold text-neutral-500">
-                                댕다방 상품이 부족한 검색어는 외부 판매처 후보를 함께 보여주고, 클릭은 제휴 경유 페이지를 거칩니다.
-                            </p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700">제휴 경유</span>
                             <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
                                 {externalLoading ? "검색 중" : `${externalProducts.length.toLocaleString()}개`}
                             </span>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { CATEGORY_LABEL, SUBCATEGORY_LABEL } from "@/lib/catalog";
-import { displayExternalProductUrl, type ExternalProductResult } from "@/lib/external-products";
+import { type ExternalProductResult } from "@/lib/external-products";
 import { outboundHref } from "@/lib/outbound";
 
 type Props = {
@@ -18,47 +18,6 @@ type ProductGroup = {
     rows: ExternalProductResult[];
 };
 
-const META_SPEC_KEYS = new Set([
-    "brand",
-    "category",
-    "subcategory",
-    "type",
-    "productNo",
-    "categoryPath",
-    "catalogNo",
-    "catalogName",
-    "productStatus",
-    "matchScore",
-    "reviewCount",
-    "sellerManagementCode",
-]);
-
-const SPEC_PRIORITY = [
-    "size",
-    "사이즈",
-    "weightRange",
-    "권장무게",
-    "무게",
-    "weight",
-    "color",
-    "색상",
-    "material",
-    "소재",
-    "원산지",
-    "lifeStage",
-    "용량",
-    "중량",
-];
-
-const SPEC_LABELS: Record<string, string> = {
-    size: "사이즈",
-    weightRange: "권장무게",
-    weight: "무게",
-    color: "색상",
-    material: "소재",
-    lifeStage: "연령",
-};
-
 function formatKRW(value?: number | null): string {
     if (typeof value !== "number" || !Number.isFinite(value)) return "-";
     return `${value.toLocaleString("ko-KR")}원`;
@@ -66,12 +25,6 @@ function formatKRW(value?: number | null): string {
 
 function formatSignedKRW(value: number): string {
     return `+${value.toLocaleString("ko-KR")}원`;
-}
-
-function signedKRW(value?: number): string {
-    if (!value) return "0원";
-    const sign = value > 0 ? "+" : "-";
-    return `${sign}${Math.abs(value).toLocaleString("ko-KR")}원`;
 }
 
 function getTotal(product: ExternalProductResult): number {
@@ -123,59 +76,19 @@ function buildGroups(products: ExternalProductResult[]): ProductGroup[] {
         .sort((a, b) => b.count - a.count || a.minTotal - b.minTotal || a.label.localeCompare(b.label));
 }
 
-function isUsefulSpec(key: string, value: string): boolean {
-    const cleanValue = value.trim();
-    if (!cleanValue || cleanValue === "-") return false;
-    if (META_SPEC_KEYS.has(key)) return false;
-    if (key.length > 24 || cleanValue.length > 80) return false;
-    return true;
+function totalPriceLabel(product: ExternalProductResult): string {
+    if (typeof product.totalPrice === "number") return formatKRW(product.totalPrice);
+    if (typeof product.basePrice === "number") return formatKRW(product.basePrice);
+    return product.priceText || "-";
 }
 
-function specColumnsFor(rows: ExternalProductResult[]): string[] {
-    const counts = new Map<string, number>();
-    for (const row of rows) {
-        for (const [key, value] of Object.entries(row.specs ?? {})) {
-            const text = String(value ?? "");
-            if (!isUsefulSpec(key, text)) continue;
-            counts.set(key, (counts.get(key) ?? 0) + 1);
-        }
-    }
-
-    const columns: string[] = [];
-    for (const key of SPEC_PRIORITY) {
-        if (counts.has(key) && !columns.includes(key)) columns.push(key);
-    }
-    for (const [key] of Array.from(counts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))) {
-        if (!columns.includes(key)) columns.push(key);
-        if (columns.length >= 4) break;
-    }
-    return columns.slice(0, 4);
-}
-
-function specValue(product: ExternalProductResult, key: string): string {
-    const value = product.specs?.[key];
-    return value ? String(value) : "-";
-}
-
-function historyText(product: ExternalProductResult): string {
-    const stats = product.historyStats;
-    if (stats?.sampleCount && stats.sampleCount > 1) {
-        const delta = typeof stats.delta === "number" ? signedKRW(stats.delta) : "0원";
-        return `${delta} / 최저 ${formatKRW(stats.lowest)}`;
-    }
-    if (Array.isArray(product.priceHistory) && product.priceHistory.length > 0) {
-        return `${product.priceHistory.length}회 기록`;
-    }
-    return "신규";
-}
-
-function adjustmentText(product: ExternalProductResult): string {
+function priceNote(product: ExternalProductResult): string {
     const parts = [
-        `배송 ${formatKRW(product.shippingFee ?? 0)}`,
+        typeof product.shippingFee === "number" && product.shippingFee > 0 ? `배송 ${formatKRW(product.shippingFee)}` : "",
         product.couponDiscount ? `쿠폰 -${formatKRW(product.couponDiscount)}` : "",
-        product.optionName ? `${product.optionName} ${signedKRW(product.optionPriceDelta)}` : "",
+        product.optionName || "",
     ].filter(Boolean);
-    return parts.join(" / ") || "-";
+    return parts.join(" · ");
 }
 
 function priceDelta(product: ExternalProductResult, minTotal: number): { label: string; detail: string; tone: "best" | "high" | "unknown" } {
@@ -211,7 +124,6 @@ export default function ExternalProductComparisonTable({ products }: Props) {
 
     const activeGroup = groups.find((group) => group.key === activeKey) ?? groups[0];
     const rows = activeGroup?.rows.slice(0, 8) ?? [];
-    const specColumns = useMemo(() => specColumnsFor(rows), [rows]);
     const validTotals = rows
         .map((product) => getTotal(product))
         .filter((total) => total !== Number.MAX_SAFE_INTEGER);
@@ -262,20 +174,14 @@ export default function ExternalProductComparisonTable({ products }: Props) {
             </div>
 
             <div className="overflow-x-auto border-y border-neutral-200">
-                <table className="min-w-[1100px] w-full table-fixed border-collapse text-left">
+                <table className="min-w-[760px] w-full table-fixed border-collapse text-left">
                     <thead className="bg-neutral-50 text-[11px] font-black uppercase text-neutral-500">
                         <tr>
                             <th className="w-16 px-3 py-3">순위</th>
-                            <th className="w-40 px-3 py-3">판매처</th>
-                            <th className="w-64 px-3 py-3">상품</th>
-                            <th className="w-28 px-3 py-3 text-right">총액</th>
+                            <th className="w-[44%] px-3 py-3">상품</th>
+                            <th className="w-36 px-3 py-3 text-right">가격</th>
                             <th className="w-32 px-3 py-3">최저가 대비</th>
-                            <th className="w-28 px-3 py-3 text-right">상품가</th>
-                            <th className="w-44 px-3 py-3">배송/쿠폰/옵션</th>
-                            {specColumns.map((key) => (
-                                <th key={key} className="w-28 px-3 py-3">{SPEC_LABELS[key] ?? key}</th>
-                            ))}
-                            <th className="w-36 px-3 py-3">가격기록</th>
+                            <th className="w-36 px-3 py-3">판매처</th>
                             <th className="w-24 px-3 py-3 text-center">이동</th>
                         </tr>
                     </thead>
@@ -292,28 +198,37 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                     </span>
                                 </td>
                                 <td className="px-3 py-3">
-                                    <div className="truncate font-black text-neutral-950">{product.sellerName || product.sourceName}</div>
-                                    <div className="mt-1 truncate text-xs font-bold text-neutral-500" title={displayExternalProductUrl(product)}>
-                                        {displayExternalProductUrl(product)}
-                                    </div>
-                                </td>
-                                <td className="px-3 py-3">
-                                    <div className="line-clamp-2 font-black leading-5 text-neutral-950">{product.title}</div>
-                                    <div className="mt-1 flex flex-wrap gap-1">
-                                        {product.optionName && (
-                                            <span className="rounded-md bg-neutral-100 px-1.5 py-0.5 text-[10px] font-black text-neutral-600">
-                                                {product.optionName}
-                                            </span>
-                                        )}
-                                        {product.offerId && (
-                                            <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-black text-emerald-700">
-                                                {product.offerId}
-                                            </span>
-                                        )}
+                                    <div className="flex min-w-0 gap-3">
+                                        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#f7f2e8]">
+                                            <img
+                                                src={product.thumbnail}
+                                                alt={product.title}
+                                                loading="lazy"
+                                                onError={(event) => {
+                                                    const image = event.currentTarget;
+                                                    if (image.dataset.fallbackApplied || !image.src.includes(".webp")) return;
+                                                    image.dataset.fallbackApplied = "1";
+                                                    image.src = image.src.replace(/\.webp($|\?)/, ".png$1");
+                                                }}
+                                                className={`${/^https?:\/\//.test(product.thumbnail) ? "h-full w-full object-cover" : "h-[72%] w-[72%] object-contain"}`}
+                                            />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="line-clamp-2 font-black leading-5 text-neutral-950">{product.title}</div>
+                                            <div className="mt-1 flex min-w-0 flex-wrap gap-1.5 text-[11px] font-black">
+                                                <span className="max-w-[8rem] truncate text-emerald-700">{product.brand}</span>
+                                                {priceNote(product) && (
+                                                    <span className="max-w-[12rem] truncate text-neutral-500">{priceNote(product)}</span>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td className="px-3 py-3 text-right">
-                                    <div className="text-base font-black text-neutral-950">{formatKRW(product.totalPrice)}</div>
+                                    <div className="text-lg font-black leading-tight text-neutral-950">{totalPriceLabel(product)}</div>
+                                    {typeof product.basePrice === "number" && typeof product.totalPrice === "number" && product.basePrice !== product.totalPrice && (
+                                        <div className="mt-1 text-[11px] font-bold text-neutral-500">상품가 {formatKRW(product.basePrice)}</div>
+                                    )}
                                 </td>
                                 <td className="px-3 py-3">
                                     <span className={`inline-flex min-h-7 items-center rounded-md border px-2 text-xs font-black ${
@@ -335,14 +250,10 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                         {delta.detail}
                                     </div>
                                 </td>
-                                <td className="px-3 py-3 text-right font-bold text-neutral-700">{formatKRW(product.basePrice)}</td>
-                                <td className="px-3 py-3 text-xs font-bold leading-5 text-neutral-600">{adjustmentText(product)}</td>
-                                {specColumns.map((key) => (
-                                    <td key={key} className="px-3 py-3 text-xs font-bold leading-5 text-neutral-700">
-                                        {specValue(product, key)}
-                                    </td>
-                                ))}
-                                <td className="px-3 py-3 text-xs font-bold leading-5 text-neutral-600">{historyText(product)}</td>
+                                <td className="px-3 py-3">
+                                    <div className="truncate font-black text-neutral-950">{product.sellerName || product.sourceName}</div>
+                                    <div className="mt-1 truncate text-[11px] font-bold text-neutral-500">{product.sourceName}</div>
+                                </td>
                                 <td className="px-3 py-3 text-center">
                                     <Link
                                         href={linkFor(product)}
