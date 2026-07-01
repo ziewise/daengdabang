@@ -6,6 +6,7 @@ import { outboundHref } from "@/lib/outbound";
 
 type Props = {
     product: ExternalProductResult;
+    query?: string;
 };
 
 function formatKRW(value?: number | null): string {
@@ -19,14 +20,24 @@ function signedKRW(value?: number): string {
     return `${sign}${Math.abs(value).toLocaleString("ko-KR")}원`;
 }
 
-export default function ExternalProductCard({ product }: Props) {
-    const href = product.outboundUrl || outboundHref(product.purchaseUrl, {
-        source: product.sourceName,
-        product: product.title,
-    });
+export default function ExternalProductCard({ product, query = "" }: Props) {
     const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
     const hasMarketplacePreview = product.previewStatus === "fetched" && /^https?:\/\//.test(product.thumbnail);
     const totalPrice = typeof product.totalPrice === "number" ? product.totalPrice : null;
+    const href = product.purchaseUrl ? outboundHref(product.purchaseUrl, {
+        source: product.sourceName,
+        product: product.title,
+        query,
+        productId: product.id,
+        offerId: product.offerId,
+        seller: product.sellerName,
+        kind: product.sourceKind,
+        price: totalPrice ?? product.basePrice ?? product.priceLow ?? null,
+        priceText: product.priceText,
+        hasThumbnail: Boolean(product.thumbnail),
+        rank: product.rank,
+        surface: "card",
+    }) : product.outboundUrl || "";
     const priceNote = [
         typeof product.shippingFee === "number" && product.shippingFee > 0 ? `배송 ${formatKRW(product.shippingFee)}원` : "",
         product.couponDiscount ? `쿠폰 -${formatKRW(product.couponDiscount)}원` : "",

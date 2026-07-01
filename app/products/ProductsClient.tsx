@@ -16,6 +16,7 @@ import {
 } from "@/lib/catalog";
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
+import { trackExternalSearchResults } from "@/lib/storefront-analytics";
 import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
 import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
@@ -113,14 +114,24 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         setExternalSearched(true);
         setExternalLoading(true);
         loadExternalProducts(cleanQuery, externalFilter).then((results) => {
-            if (!cancelled) setExternalProducts(results);
+            if (!cancelled) {
+                setExternalProducts(results);
+                trackExternalSearchResults({
+                    query: cleanQuery,
+                    category,
+                    subcategory,
+                    sort,
+                    ownResultCount: products.length,
+                    externalProducts: results,
+                });
+            }
         }).finally(() => {
             if (!cancelled) setExternalLoading(false);
         });
         return () => {
             cancelled = true;
         };
-    }, [query, externalFilter]);
+    }, [query, externalFilter, category, subcategory, sort, products.length]);
 
     const hasSearch = query.trim().length > 0;
     const visibleCount = products.length + (hasSearch ? externalProducts.length : 0);
@@ -210,10 +221,10 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                     </div>
                     {externalProducts.length > 0 ? (
                         <>
-                            <ExternalProductComparisonTable products={externalProducts} />
+                            <ExternalProductComparisonTable products={externalProducts} query={query.trim()} />
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                                 {externalProducts.map((product) => (
-                                    <ExternalProductCard key={product.id} product={product} />
+                                    <ExternalProductCard key={product.id} product={product} query={query.trim()} />
                                 ))}
                             </div>
                         </>

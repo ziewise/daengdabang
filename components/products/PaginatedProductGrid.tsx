@@ -16,7 +16,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "./ProductCard";
 import Pagination from "./Pagination";
 
-const PAGE_SIZE = 30; // 한 페이지에 보여줄 상품 수 (전체상품과 동일)
+const PAGE_SIZE = 30;
 const DEFAULT_GRID = "grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5";
 
 export default function PaginatedProductGrid({
@@ -47,7 +47,6 @@ export default function PaginatedProductGrid({
                     <ProductCard
                         key={product.id}
                         product={product}
-                        // 베스트 순위: 전역 인덱스(현재 페이지 시작 + i + 1)로 31, 32… 이어짐
                         rank={showRank ? start + i + 1 : undefined}
                     />
                 ))}

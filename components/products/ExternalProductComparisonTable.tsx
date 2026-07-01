@@ -8,6 +8,7 @@ import { outboundHref } from "@/lib/outbound";
 
 type Props = {
     products: ExternalProductResult[];
+    query?: string;
 };
 
 type ProductGroup = {
@@ -31,11 +32,21 @@ function getTotal(product: ExternalProductResult): number {
     return typeof product.totalPrice === "number" ? product.totalPrice : Number.MAX_SAFE_INTEGER;
 }
 
-function linkFor(product: ExternalProductResult): string {
-    return product.outboundUrl || outboundHref(product.purchaseUrl, {
+function linkFor(product: ExternalProductResult, query = ""): string {
+    return product.purchaseUrl ? outboundHref(product.purchaseUrl, {
         source: product.sourceName,
         product: product.title,
-    });
+        query,
+        productId: product.id,
+        offerId: product.offerId,
+        seller: product.sellerName,
+        kind: product.sourceKind,
+        price: product.totalPrice ?? product.basePrice ?? product.priceLow ?? null,
+        priceText: product.priceText,
+        hasThumbnail: Boolean(product.thumbnail),
+        rank: product.rank,
+        surface: "comparison",
+    }) : product.outboundUrl || "";
 }
 
 function groupKeyFor(product: ExternalProductResult): string {
@@ -108,7 +119,7 @@ function priceDelta(product: ExternalProductResult, minTotal: number): { label: 
     };
 }
 
-export default function ExternalProductComparisonTable({ products }: Props) {
+export default function ExternalProductComparisonTable({ products, query = "" }: Props) {
     const groups = useMemo(() => buildGroups(products), [products]);
     const [activeKey, setActiveKey] = useState("");
 
@@ -256,7 +267,7 @@ export default function ExternalProductComparisonTable({ products }: Props) {
                                 </td>
                                 <td className="px-3 py-3 text-center">
                                     <Link
-                                        href={linkFor(product)}
+                                        href={linkFor(product, query)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"

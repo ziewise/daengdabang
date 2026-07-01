@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { OUTBOUND_AFFILIATE_STOPS, type AffiliateStop, safeOutboundTarget } from "@/lib/outbound";
+import { trackOutboundRedirect } from "@/lib/storefront-analytics";
 
 const DEFAULT_DELAY_MS = 2400;
 const AFFILIATE_DELAY_MS = 2900;
@@ -53,6 +54,20 @@ export default function OutboundRedirectClient() {
     const params = useSearchParams();
     const target = useMemo(() => safeOutboundTarget(params.get("to")), [params]);
     const showAffiliateTrail = params.get("via") === "partners";
+    const query = params.get("query") || "";
+    const sourceName = params.get("source") || "";
+    const sellerName = params.get("seller") || "";
+    const productTitle = params.get("product") || "";
+    const productId = params.get("productId") || "";
+    const offerId = params.get("offerId") || "";
+    const sourceKind = params.get("kind") || "";
+    const surface = params.get("surface") || "outbound";
+    const priceText = params.get("priceText") || "";
+    const hasThumbnail = params.get("hasThumbnail") === "1";
+    const priceParam = params.get("price");
+    const rankParam = params.get("rank");
+    const totalPrice = priceParam && Number.isFinite(Number(priceParam)) ? Number(priceParam) : null;
+    const rank = rankParam && Number.isFinite(Number(rankParam)) ? Number(rankParam) : null;
     const redirectDelay = showAffiliateTrail ? AFFILIATE_DELAY_MS : DEFAULT_DELAY_MS;
     const host = useMemo(() => {
         if (!target) return "";
@@ -64,6 +79,27 @@ export default function OutboundRedirectClient() {
     }, [target]);
     const [remaining, setRemaining] = useState(3);
     const [activePartner, setActivePartner] = useState(0);
+
+    useEffect(() => {
+        if (!target) return;
+        trackOutboundRedirect({
+            query,
+            targetUrl: target,
+            outboundUrl: typeof window !== "undefined" ? window.location.href : "",
+            sourceName,
+            sellerName,
+            productTitle,
+            productId,
+            offerId,
+            sourceKind,
+            totalPrice,
+            priceText,
+            hasThumbnail,
+            rank,
+            surface,
+            viaPartners: showAffiliateTrail,
+        });
+    }, [target, query, sourceName, sellerName, productTitle, productId, offerId, sourceKind, totalPrice, priceText, hasThumbnail, rank, surface, showAffiliateTrail]);
 
     useEffect(() => {
         if (!target) return;

@@ -7,7 +7,6 @@
  */
 "use client";
 
-/** 표시할 페이지 번호 배열 — 현재 ±1 + 처음/끝, 사이는 "..." 축약 */
 function getPageNumbers(current: number, total: number): (number | "...")[] {
     const pages: (number | "...")[] = [];
     const left = Math.max(1, current - 1);
@@ -33,7 +32,6 @@ export default function Pagination({
     totalPages: number;
     onChange: (page: number) => void;
 }) {
-    // 페이지가 하나뿐이면 네비게이션 숨김 (상품 30개 이하)
     if (totalPages <= 1) return null;
 
     return (
