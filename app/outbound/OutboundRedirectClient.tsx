@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { OUTBOUND_AFFILIATE_STOPS, contractedPartnerHitUrls, type AffiliateStop, safeOutboundTarget } from "@/lib/outbound";
+import { ddbApiBase } from "@/lib/customer-api";
+import { OUTBOUND_AFFILIATE_STOPS, affiliateStopsFromPublicConfig, contractedPartnerHitUrls, type AffiliateStop, safeOutboundTarget } from "@/lib/outbound";
 import { trackOutboundRedirect } from "@/lib/storefront-analytics";
 
 const DEFAULT_DELAY_MS = 2400;
@@ -101,12 +102,57 @@ export default function OutboundRedirectClient() {
     }, [target]);
     const [remaining, setRemaining] = useState(3);
     const [activePartner, setActivePartner] = useState(0);
+    const [affiliateStops, setAffiliateStops] = useState<AffiliateStop[]>(OUTBOUND_AFFILIATE_STOPS);
+    const [affiliateConfigReady, setAffiliateConfigReady] = useState(false);
     const hitFiredRef = useRef("");
 
     useEffect(() => {
+        if (!showAffiliateTrail) {
+            setAffiliateStops(OUTBOUND_AFFILIATE_STOPS);
+            setAffiliateConfigReady(true);
+            return;
+        }
+        const base = ddbApiBase();
+        if (!base) {
+            setAffiliateStops(OUTBOUND_AFFILIATE_STOPS);
+            setAffiliateConfigReady(true);
+            return;
+        }
+        let cancelled = false;
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 700);
+        setAffiliateConfigReady(false);
+        fetch(`${base.replace(/\/$/, "")}/api/v1/partners/outbound-hit-config`, {
+            method: "GET",
+            cache: "no-store",
+            credentials: "omit",
+            signal: controller.signal,
+        })
+            .then((response) => response.ok ? response.json() : null)
+            .then((data) => {
+                if (cancelled) return;
+                const configuredStops = affiliateStopsFromPublicConfig(data?.partners);
+                setAffiliateStops(configuredStops.length ? configuredStops : OUTBOUND_AFFILIATE_STOPS);
+            })
+            .catch(() => {
+                if (!cancelled) setAffiliateStops(OUTBOUND_AFFILIATE_STOPS);
+            })
+            .finally(() => {
+                window.clearTimeout(timeout);
+                if (!cancelled) setAffiliateConfigReady(true);
+            });
+        return () => {
+            cancelled = true;
+            window.clearTimeout(timeout);
+            controller.abort();
+        };
+    }, [showAffiliateTrail]);
+
+    useEffect(() => {
         if (!target) return;
+        if (showAffiliateTrail && !affiliateConfigReady) return;
         const partnerHitTargets = showAffiliateTrail
-            ? contractedPartnerHitUrls(target, { query, source: sourceName, product: productTitle, surface })
+            ? contractedPartnerHitUrls(target, { query, source: sourceName, product: productTitle, surface }, affiliateStops)
             : [];
         const hitKey = `${target}|${partnerHitTargets.map((item) => item.id).join(",")}`;
         if (partnerHitTargets.length && hitFiredRef.current !== hitKey) {
@@ -133,7 +179,7 @@ export default function OutboundRedirectClient() {
             partnerHitIds: partnerHitTargets.map((item) => item.id),
             partnerHitMode: partnerHitTargets.length ? "contracted_click" : "",
         });
-    }, [target, query, sourceName, sellerName, productTitle, productId, offerId, sourceKind, totalPrice, priceText, hasThumbnail, rank, surface, showAffiliateTrail]);
+    }, [target, query, sourceName, sellerName, productTitle, productId, offerId, sourceKind, totalPrice, priceText, hasThumbnail, rank, surface, showAffiliateTrail, affiliateConfigReady, affiliateStops]);
 
     useEffect(() => {
         if (!target) return;
@@ -143,7 +189,7 @@ export default function OutboundRedirectClient() {
             setRemaining(Math.max(1, Math.ceil((redirectDelay - elapsed) / 1000)));
             if (showAffiliateTrail) {
                 setActivePartner(Math.min(
-                    OUTBOUND_AFFILIATE_STOPS.length - 1,
+                    Math.max(0, affiliateStops.length - 1),
                     Math.floor(elapsed / 700)
                 ));
             }
@@ -155,7 +201,7 @@ export default function OutboundRedirectClient() {
             window.clearInterval(tick);
             window.clearTimeout(redirect);
         };
-    }, [redirectDelay, showAffiliateTrail, target]);
+    }, [affiliateStops.length, redirectDelay, showAffiliateTrail, target]);
 
     return (
         <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center px-4 py-12">
@@ -179,7 +225,7 @@ export default function OutboundRedirectClient() {
                             <div className="mt-5 rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-left">
                                 <p className="mb-2 text-xs font-black text-neutral-500">제휴사 안내</p>
                                 <div className="grid gap-2">
-                                    {OUTBOUND_AFFILIATE_STOPS.map((partner, index) => {
+                                    {affiliateStops.map((partner, index) => {
                                         const active = index === activePartner;
                                         return (
                                             <div

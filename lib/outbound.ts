@@ -7,6 +7,8 @@ export type AffiliateStop = {
     logoSrc?: string;
     logoAlt?: string;
     logoText?: string;
+    campaignCode?: string;
+    hitEnabled?: boolean;
 };
 
 export const OUTBOUND_AFFILIATE_STOPS: AffiliateStop[] = [
@@ -86,6 +88,39 @@ export function safeOutboundTarget(rawTarget: string | null): string {
     }
 }
 
+function textValue(value: unknown, limit: number): string {
+    return String(value ?? "").trim().slice(0, limit);
+}
+
+export function affiliateStopsFromPublicConfig(items: unknown): AffiliateStop[] {
+    if (!Array.isArray(items)) return [];
+    const defaultsById = new Map(OUTBOUND_AFFILIATE_STOPS.map((partner) => [partner.id, partner]));
+    const rows: AffiliateStop[] = [];
+    items.forEach((item, index) => {
+        if (!item || typeof item !== "object") return;
+        const record = item as Record<string, unknown>;
+        if (record.hitEnabled === false) return;
+        const id = textValue(record.id, 80) || `partner-${index + 1}`;
+        const hitUrl = safeOutboundTarget(textValue(record.hitUrl, 1000));
+        const url = safeOutboundTarget(textValue(record.url, 1000)) || hitUrl;
+        if (!hitUrl && !url) return;
+        const base = defaultsById.get(id);
+        const name = textValue(record.name, 80) || base?.name || id;
+        const mark = textValue(record.mark, 24) || base?.mark || name.slice(0, 12).toUpperCase();
+        rows.push({
+            ...(base || {}),
+            id,
+            name,
+            url,
+            hitUrl: hitUrl || url,
+            mark,
+            campaignCode: textValue(record.campaignCode, 120) || base?.campaignCode,
+            hitEnabled: true,
+        });
+    });
+    return rows;
+}
+
 export function contractedPartnerHitUrls(
     targetUrl: string,
     meta: {
@@ -93,7 +128,8 @@ export function contractedPartnerHitUrls(
         source?: string;
         product?: string;
         surface?: string;
-    } = {}
+    } = {},
+    stops: AffiliateStop[] = OUTBOUND_AFFILIATE_STOPS
 ): { id: string; url: string }[] {
     let targetHost = "";
     try {
@@ -102,19 +138,24 @@ export function contractedPartnerHitUrls(
         targetHost = "";
     }
 
-    return OUTBOUND_AFFILIATE_STOPS
-        .filter((partner) => Boolean(partner.hitUrl || partner.url))
-        .map((partner) => {
-            const url = new URL(partner.hitUrl || partner.url);
+    return stops
+        .filter((partner) => partner.hitEnabled !== false && Boolean(partner.hitUrl || partner.url))
+        .flatMap((partner) => {
+            let url: URL;
+            try {
+                url = new URL(partner.hitUrl || partner.url);
+            } catch {
+                return [];
+            }
             url.searchParams.set("utm_source", "daengdabang");
             url.searchParams.set("utm_medium", "outbound_bridge");
-            url.searchParams.set("utm_campaign", "partner_contract_hit");
+            url.searchParams.set("utm_campaign", partner.campaignCode || "partner_contract_hit");
             url.searchParams.set("ddb_partner_hit", "1");
             if (targetHost) url.searchParams.set("ddb_target_host", targetHost);
             if (meta.query) url.searchParams.set("ddb_query", meta.query.slice(0, 80));
             if (meta.source) url.searchParams.set("ddb_source", meta.source.slice(0, 80));
             if (meta.product) url.searchParams.set("ddb_product", meta.product.slice(0, 120));
             if (meta.surface) url.searchParams.set("ddb_surface", meta.surface.slice(0, 60));
-            return { id: partner.id, url: url.toString() };
+            return [{ id: partner.id, url: url.toString() }];
         });
 }
