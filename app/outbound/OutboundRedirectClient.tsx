@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { OUTBOUND_AFFILIATE_STOPS, type AffiliateStop, safeOutboundTarget } from "@/lib/outbound";
+import { OUTBOUND_AFFILIATE_STOPS, contractedPartnerHitUrls, type AffiliateStop, safeOutboundTarget } from "@/lib/outbound";
 import { trackOutboundRedirect } from "@/lib/storefront-analytics";
 
 const DEFAULT_DELAY_MS = 2400;
@@ -50,6 +50,28 @@ function openTargetWindow(target: string) {
     window.location.assign(target);
 }
 
+function fireContractedPartnerHits(urls: { id: string; url: string }[]) {
+    for (const item of urls) {
+        try {
+            void fetch(item.url, {
+                method: "GET",
+                mode: "no-cors",
+                cache: "no-store",
+                credentials: "omit",
+                keepalive: true,
+            }).catch(() => undefined);
+        } catch {
+            try {
+                const image = new window.Image();
+                image.referrerPolicy = "no-referrer-when-downgrade";
+                image.src = item.url;
+            } catch {
+                // Contract hit attempts must never block the shopper's redirect.
+            }
+        }
+    }
+}
+
 export default function OutboundRedirectClient() {
     const params = useSearchParams();
     const target = useMemo(() => safeOutboundTarget(params.get("to")), [params]);
@@ -79,9 +101,18 @@ export default function OutboundRedirectClient() {
     }, [target]);
     const [remaining, setRemaining] = useState(3);
     const [activePartner, setActivePartner] = useState(0);
+    const hitFiredRef = useRef("");
 
     useEffect(() => {
         if (!target) return;
+        const partnerHitTargets = showAffiliateTrail
+            ? contractedPartnerHitUrls(target, { query, source: sourceName, product: productTitle, surface })
+            : [];
+        const hitKey = `${target}|${partnerHitTargets.map((item) => item.id).join(",")}`;
+        if (partnerHitTargets.length && hitFiredRef.current !== hitKey) {
+            hitFiredRef.current = hitKey;
+            fireContractedPartnerHits(partnerHitTargets);
+        }
         trackOutboundRedirect({
             query,
             targetUrl: target,
@@ -98,6 +129,9 @@ export default function OutboundRedirectClient() {
             rank,
             surface,
             viaPartners: showAffiliateTrail,
+            partnerHitCount: partnerHitTargets.length,
+            partnerHitIds: partnerHitTargets.map((item) => item.id),
+            partnerHitMode: partnerHitTargets.length ? "contracted_click" : "",
         });
     }, [target, query, sourceName, sellerName, productTitle, productId, offerId, sourceKind, totalPrice, priceText, hasThumbnail, rank, surface, showAffiliateTrail]);
 

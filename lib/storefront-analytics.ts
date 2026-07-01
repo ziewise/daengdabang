@@ -122,6 +122,9 @@ export function trackOutboundRedirect(payload: {
     rank?: number | null;
     surface?: string;
     viaPartners?: boolean;
+    partnerHitCount?: number;
+    partnerHitIds?: string[];
+    partnerHitMode?: string;
 }) {
     if (!payload.targetUrl) return;
     postAnalytics("/api/v1/analytics/outbound", {
@@ -140,5 +143,8 @@ export function trackOutboundRedirect(payload: {
         rank: payload.rank ?? null,
         surface: payload.surface || "",
         viaPartners: Boolean(payload.viaPartners),
+        partnerHitCount: payload.partnerHitCount ?? 0,
+        partnerHitIds: payload.partnerHitIds || [],
+        partnerHitMode: payload.partnerHitMode || "",
     });
 }

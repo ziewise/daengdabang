@@ -2,6 +2,7 @@ export type AffiliateStop = {
     id: string;
     name: string;
     url: string;
+    hitUrl?: string;
     mark: string;
     logoSrc?: string;
     logoAlt?: string;
@@ -13,6 +14,7 @@ export const OUTBOUND_AFFILIATE_STOPS: AffiliateStop[] = [
         id: "daengdabang-smartstore",
         name: "댕다방 스마트스토어",
         url: "https://smartstore.naver.com/daengdabang",
+        hitUrl: "https://smartstore.naver.com/daengdabang",
         mark: "SmartStore",
         logoSrc: "/images/partners/naver-smartstore-icon.png",
         logoAlt: "네이버 스마트스토어",
@@ -22,6 +24,7 @@ export const OUTBOUND_AFFILIATE_STOPS: AffiliateStop[] = [
         id: "urhey",
         name: "URHEY",
         url: "https://www.urhey.co.kr/index.html",
+        hitUrl: "https://www.urhey.co.kr/index.html",
         mark: "URHEY",
         logoSrc: "/images/partners/urhey-logo.png",
         logoAlt: "URHEY",
@@ -30,6 +33,7 @@ export const OUTBOUND_AFFILIATE_STOPS: AffiliateStop[] = [
         id: "inclear",
         name: "INCLEAR",
         url: "https://inclear.co.kr/index.html",
+        hitUrl: "https://inclear.co.kr/index.html",
         mark: "INCLEAR",
         logoSrc: "/images/partners/inclear-logo.png",
         logoAlt: "INCLEAR",
@@ -80,4 +84,37 @@ export function safeOutboundTarget(rawTarget: string | null): string {
     } catch {
         return "";
     }
+}
+
+export function contractedPartnerHitUrls(
+    targetUrl: string,
+    meta: {
+        query?: string;
+        source?: string;
+        product?: string;
+        surface?: string;
+    } = {}
+): { id: string; url: string }[] {
+    let targetHost = "";
+    try {
+        targetHost = new URL(targetUrl).hostname.replace(/^www\./, "");
+    } catch {
+        targetHost = "";
+    }
+
+    return OUTBOUND_AFFILIATE_STOPS
+        .filter((partner) => Boolean(partner.hitUrl || partner.url))
+        .map((partner) => {
+            const url = new URL(partner.hitUrl || partner.url);
+            url.searchParams.set("utm_source", "daengdabang");
+            url.searchParams.set("utm_medium", "outbound_bridge");
+            url.searchParams.set("utm_campaign", "partner_contract_hit");
+            url.searchParams.set("ddb_partner_hit", "1");
+            if (targetHost) url.searchParams.set("ddb_target_host", targetHost);
+            if (meta.query) url.searchParams.set("ddb_query", meta.query.slice(0, 80));
+            if (meta.source) url.searchParams.set("ddb_source", meta.source.slice(0, 80));
+            if (meta.product) url.searchParams.set("ddb_product", meta.product.slice(0, 120));
+            if (meta.surface) url.searchParams.set("ddb_surface", meta.surface.slice(0, 60));
+            return { id: partner.id, url: url.toString() };
+        });
 }
