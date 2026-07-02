@@ -35,7 +35,7 @@ export function categoryTiles() {
     }));
 }
 
-export function cartProducts(lines: Array<{ productId: string; qty: number; color?: string; size?: string }>) {
+export function cartProducts(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean }>) {
     return lines
         .map((line) => {
             const product = findProduct(line.productId);
@@ -53,11 +53,21 @@ export function cartProducts(lines: Array<{ productId: string; qty: number; colo
                 color: line.color,
                 size: line.size,
                 image: colorImage ?? product.image,
+                // 결제 대상 선택 여부(미지정 = 선택) — 장바구니 체크박스/checkout 필터용
+                selected: line.selected !== false,
             };
         })
-        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; unitPrice: number; subtotal: number; color?: string; size?: string; image?: string }>;
+        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; unitPrice: number; subtotal: number; color?: string; size?: string; image?: string; selected: boolean }>;
 }
 
-export function cartTotal(lines: Array<{ productId: string; qty: number; color?: string; size?: string }>) {
+export function cartTotal(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean }>) {
     return cartProducts(lines).reduce((sum, line) => sum + line.subtotal, 0);
+}
+
+/** 도착 예정일 텍스트 — 무료배송 1~2일 내 출고 기준(오늘 +2일). 예: "7/4(토) 도착 예정" */
+export function arrivalDateText(): string {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+    return `${d.getMonth() + 1}/${d.getDate()}(${days[d.getDay()]}) 도착 예정`;
 }

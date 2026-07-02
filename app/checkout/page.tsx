@@ -3,14 +3,15 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
-import { cartProducts, cartTotal } from "@/lib/shop";
+import { cartProducts } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 
 export default function CheckoutPage() {
     const cart = useCart();
     const { user } = useAuth();
-    const lines = cartProducts(cart.lines);
-    const total = cartTotal(cart.lines);
+    // 장바구니에서 "선택된" 라인만 결제 대상(체크 해제 상품은 장바구니에 남는다)
+    const lines = cartProducts(cart.lines).filter((line) => line.selected);
+    const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
     const [receiver, setReceiver] = useState(user?.name ?? "");
     const [address, setAddress] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("card");
@@ -20,17 +21,19 @@ export default function CheckoutPage() {
         event.preventDefault();
         if (lines.length === 0) return;
         const id = `DDB-${Date.now().toString(36).toUpperCase()}`;
+        const ordered = cart.lines.filter((line) => line.selected !== false);
         cart.addOrder({
             id,
             createdAt: new Date().toISOString(),
-            lines: cart.lines,
+            lines: ordered,
             total,
             receiver: receiver.trim(),
             address: address.trim(),
             paymentMethod,
             status: "paid",
         });
-        cart.clearCart();
+        // 주문된(선택된) 상품만 장바구니에서 제거 — 미선택 상품은 남긴다
+        ordered.forEach((line) => cart.removeFromCart(line.productId, line.color, line.size));
         setOrderId(id);
     };
 

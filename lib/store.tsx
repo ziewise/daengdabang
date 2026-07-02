@@ -14,7 +14,8 @@ import {
 // "로그인" 버튼을 유지하던 버그 수정 — login/logout 에서 함께 갱신한다.
 import { authStorage } from "@/lib/storage";
 
-export type CartLine = { productId: string; qty: number; color?: string; size?: string };
+// selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
+export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean };
 export type PetProfile = {
     name: string;
     size: "small" | "medium" | "large";
@@ -58,6 +59,8 @@ type Action =
     | { type: "ADD_TO_CART"; productId: string; qty: number; color?: string; size?: string }
     | { type: "SET_QTY"; productId: string; qty: number; color?: string; size?: string }
     | { type: "REMOVE_FROM_CART"; productId: string; color?: string; size?: string }
+    | { type: "SET_SELECTED"; productId: string; color?: string; size?: string; selected: boolean }
+    | { type: "SET_ALL_SELECTED"; selected: boolean }
     | { type: "CLEAR_CART" }
     | { type: "TOGGLE_WISHLIST"; productId: string }
     | { type: "LOGIN"; user: User }
@@ -96,7 +99,7 @@ function reducer(state: State, action: Action): State {
             }
             return {
                 ...state,
-                cart: [...state.cart, { productId: action.productId, qty: action.qty, color: action.color, size: action.size }],
+                cart: [...state.cart, { productId: action.productId, qty: action.qty, color: action.color, size: action.size, selected: true }],
             };
         }
         case "SET_QTY":
@@ -108,6 +111,16 @@ function reducer(state: State, action: Action): State {
             };
         case "REMOVE_FROM_CART":
             return { ...state, cart: state.cart.filter((line) => !sameLine(line, action.productId, action.color, action.size)) };
+        // 결제 대상 선택 토글(라인 단위 / 전체)
+        case "SET_SELECTED":
+            return {
+                ...state,
+                cart: state.cart.map((line) =>
+                    sameLine(line, action.productId, action.color, action.size) ? { ...line, selected: action.selected } : line
+                ),
+            };
+        case "SET_ALL_SELECTED":
+            return { ...state, cart: state.cart.map((line) => ({ ...line, selected: action.selected })) };
         case "CLEAR_CART":
             return { ...state, cart: [] };
         case "TOGGLE_WISHLIST": {
@@ -141,6 +154,8 @@ type StoreValue = {
     addToCart: (productId: string, qty?: number, color?: string, size?: string) => void;
     setQty: (productId: string, qty: number, color?: string, size?: string) => void;
     removeFromCart: (productId: string, color?: string, size?: string) => void;
+    setSelected: (productId: string, selected: boolean, color?: string, size?: string) => void;
+    setAllSelected: (selected: boolean) => void;
     clearCart: () => void;
     toggleWishlist: (productId: string) => void;
     isWished: (productId: string) => boolean;
@@ -161,6 +176,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             const raw = window.localStorage.getItem(STORAGE_KEY);
             if (raw) {
                 const parsed = { ...INITIAL, ...JSON.parse(raw) };
+                // 선택 플래그 도입 전 저장분 보정 — 미지정(undefined)은 선택된 것으로
+                parsed.cart = (parsed.cart ?? []).map((line: CartLine) => ({ ...line, selected: line.selected !== false }));
                 dispatch({ type: "HYDRATE", state: parsed });
                 // 과거(플래그 동기화 전)에 로그인한 사용자 보정 — user 는 있는데
                 // 헤더용 로그인 플래그가 없으면 지금 세팅해 헤더를 마이페이지로 전환
@@ -187,6 +204,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             addToCart: (productId, qty = 1, color, size) => dispatch({ type: "ADD_TO_CART", productId, qty, color, size }),
             setQty: (productId, qty, color, size) => dispatch({ type: "SET_QTY", productId, qty, color, size }),
             removeFromCart: (productId, color, size) => dispatch({ type: "REMOVE_FROM_CART", productId, color, size }),
+            setSelected: (productId, selected, color, size) => dispatch({ type: "SET_SELECTED", productId, color, size, selected }),
+            setAllSelected: (selected) => dispatch({ type: "SET_ALL_SELECTED", selected }),
             clearCart: () => dispatch({ type: "CLEAR_CART" }),
             toggleWishlist: (productId) => dispatch({ type: "TOGGLE_WISHLIST", productId }),
             isWished: (productId) => state.wishlist.includes(productId),
