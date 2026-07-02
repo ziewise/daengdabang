@@ -1,9 +1,12 @@
 /**
- * RecommendSection — 로그인 회원의 펫렌즈 분석 기반 맞춤 추천 상품
+ * RecommendSection — 로그인 회원의 등록 펫 견종 기반 맞춤 추천.
  * ---------------------------------------------------------------------
- * 표시 조건: 로그인 + 펫 분석 데이터 보유 (mock 데이터로 fallback)
- * 위치: 메인 페이지 히어로 바로 아래
- * 동작: 6개 카드 미리보기 + "전체 보기" 버튼 → /recommendations
+ * 표시 조건: 로그인 + 등록 펫 보유 (없으면 mock fallback).
+ * 위치: 메인 페이지 히어로 아래.
+ * 카드: 실제 카탈로그 제품(공용 ProductCard) — 추천 페이지(/recommendations)와
+ *   동일하게 등록된 제품에서 가져온다.
+ *   (이전엔 lib/recommendations 의 mock 데이터(아이콘 placeholder)를 써서
+ *    메인 카드가 실제 제품과 달랐음 → 실제 제품으로 교체)
  */
 "use client";
 
@@ -11,9 +14,8 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { petsOrMock } from "@/lib/mypage-data";
-import { formatKRW } from "@/lib/catalog";
-import { topRecommendations, CATEGORY_LABEL } from "@/lib/recommendations";
-import bestStyles from "./best.module.css";
+import { getBestProducts } from "@/lib/catalog";
+import ProductCard from "@/components/products/ProductCard";
 
 export default function RecommendSection() {
     const { isLoggedIn, hydrated } = useAuth();
@@ -31,8 +33,7 @@ export default function RecommendSection() {
     const current = pets[0];
     const petName = current.name?.trim() || "댕댕이";
 
-    // 추천 상품 = 연결된 펫렌즈 분석 데이터 기반 (가장 최근)
-    // 분석이 있으면 그 body 정보 우선, 없으면 등록 시 입력값
+    // 추천 상품 = 연결된 펫렌즈 분석 데이터 기반(있으면 우선, 없으면 등록 시 입력값)
     const linkedAnalyses = allPets
         .filter((p) => p.source === "analyzed" && p.linkedPetId === current.id)
         .sort((a, b) => b.analyzedAt - a.analyzedAt);
@@ -40,7 +41,8 @@ export default function RecommendSection() {
     const bodyInfo = latestAnalysis?.body ?? current.body;
     const hasAnalysis = !!latestAnalysis;
 
-    const recs = topRecommendations(6);
+    // 실제 카탈로그 제품 — 추천 페이지(/recommendations)와 동일하게 등록 제품에서 가져온다
+    const recs = getBestProducts(6);
 
     return (
         <section id="recommend" className="py-10 md:py-12">
@@ -69,51 +71,10 @@ export default function RecommendSection() {
                     </Link>
                 </div>
 
-                {/* 6개 카드 그리드 — 모바일 2열, sm 3열, lg 6열 */}
+                {/* 6개 실제 제품 카드 — 공용 ProductCard(이미지·영상 호버). 모바일 2열·sm 3열·lg 6열 */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-                    {recs.map((p, i) => (
-                        <a
-                            key={`${p.name}-${i}`}
-                            href="/recommendations"
-                            className="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all"
-                        >
-                            <div className={`relative aspect-square ${bestStyles[`ph${p.ph}`]} flex items-center justify-center`}>
-                                {/* 카테고리 칩 — 좌상 */}
-                                <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-white/95 text-[9px] font-extrabold text-aurora-indigo shadow-sm">
-                                    <i className={`fa-solid ${CATEGORY_LABEL[p.category].icon} text-[8px] mr-1`} />
-                                    {CATEGORY_LABEL[p.category].label}
-                                </span>
-                                <i className={`fa-solid ${p.icon} text-3xl md:text-4xl text-white/95 drop-shadow-md`} />
-                            </div>
-                            <div className="p-3">
-                                <p className="text-[10px] font-extrabold tracking-wider text-aurora-indigo mb-1">
-                                    {p.brand}
-                                </p>
-                                <p className="text-xs md:text-sm font-bold line-clamp-2 mb-1.5 min-h-[2.4em]">
-                                    {p.name}
-                                </p>
-                                {/* 추천 이유 — 칩 */}
-                                <p className="inline-block text-[9px] font-bold text-aurora-indigo bg-aurora-indigo/[0.08] px-1.5 py-0.5 rounded mb-2">
-                                    <i className="fa-solid fa-sparkles text-[8px] mr-0.5" />
-                                    {p.reason}
-                                </p>
-                                <div className="flex items-baseline justify-end gap-1.5 flex-wrap">
-                                    {p.discount !== null && (
-                                        <span className="text-[10px] font-extrabold text-danger">
-                                            {p.discount}%
-                                        </span>
-                                    )}
-                                    {p.original !== null && (
-                                        <span className="text-[10px] text-neutral-400 line-through">
-                                            {formatKRW(p.original)}
-                                        </span>
-                                    )}
-                                    <span className="text-sm md:text-base font-black">
-                                        {formatKRW(p.price)}원
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
+                    {recs.map((product) => (
+                        <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
             </div>

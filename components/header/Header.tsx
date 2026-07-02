@@ -107,16 +107,10 @@ export default function Header() {
                                         <Link
                                             key={b.name}
                                             href={b.href}
-                                            className={`p-4 rounded-xl border bg-white hover:shadow-card transition-all
+                                            className={`flex h-11 items-center justify-center rounded-xl border bg-white hover:shadow-card transition-all
                                                 ${b.accent === "ruff" ? "border-orange-200 hover:border-orange-400" : "border-blue-200 hover:border-blue-400"}`}
                                         >
-                                            <span className={`inline-block text-xs font-black tracking-wider mb-2 ${b.accent === "ruff" ? "text-orange-600" : "text-blue-600"}`}>
-                                                {b.initial}
-                                            </span>
-                                            <h3 className="text-sm font-bold mb-1">{b.name}</h3>
-                                            <p className="text-[11px] text-neutral-500 leading-snug whitespace-pre-line">
-                                                {b.tagline}
-                                            </p>
+                                            <h3 className="text-sm font-bold">{b.name}</h3>
                                         </Link>
                                     ))}
                                 </div>
@@ -137,12 +131,12 @@ export default function Header() {
                             onEnter={() => setOpenDrop("promo")}
                             onLeave={() => setOpenDrop(null)}
                         >
-                            <ul className="p-3 min-w-[340px]">
+                            <ul className="p-3 min-w-[240px]">
                                 {PROMO_CARDS.map((p) => (
                                     <li key={p.title}>
                                         <Link
                                             href={p.href}
-                                            className="flex gap-3 p-3 rounded-lg hover:bg-neutral-50"
+                                            className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50"
                                         >
                                             <span className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-white text-base
                                                 ${p.color === "indigo" && "bg-aurora-indigo"}
@@ -153,10 +147,7 @@ export default function Header() {
                                             >
                                                 <i className={`fa-solid ${p.icon}`} />
                                             </span>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-bold mb-0.5">{p.title}</h4>
-                                                <p className="text-[11px] text-neutral-500 line-clamp-1">{p.desc}</p>
-                                            </div>
+                                            <h4 className="flex-1 min-w-0 text-sm font-bold">{p.title}</h4>
                                         </Link>
                                     </li>
                                 ))}

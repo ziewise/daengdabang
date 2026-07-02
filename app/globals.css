@@ -10,6 +10,9 @@
     --color-aurora-indigo: #4f46e5;
     --color-aurora-pink: #db2777;
     --color-aurora-amber: #d97706;
+    /* 기획전 카드 색 — 눈·청력(purple)·프리미엄 푸드(success) 배경/아이콘용 */
+    --color-aurora-purple: #9333ea;
+    --color-success: #16a34a;
     --shadow-card: 0 12px 30px rgba(15, 23, 42, 0.08);
     --shadow-hover: 0 18px 40px rgba(15, 23, 42, 0.14);
 }

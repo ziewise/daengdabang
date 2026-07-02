@@ -25,11 +25,18 @@ export interface BrandCard {
 }
 
 export interface PromoCard {
-    icon: string;          // fontawesome 클래스
-    title: string;
+    icon: string;          // fontawesome 클래스 (드롭다운 + 미디어 없는 섹션 카드)
+    title: string;         // 드롭다운·섹션 공용 짧은 제목
     desc: string;
     href: string;
     color: "indigo" | "blue" | "purple" | "green" | "pink";
+    // ↓ 메인 PromoSection(큰 카드) 전용 — 헤더 드롭다운은 위 icon/title 만 사용
+    titleFull?: string;    // 섹션 featured 긴 제목(\n 가능, 없으면 title)
+    eyebrow?: string;
+    image?: string;
+    images?: string[];
+    video?: string;
+    featured?: boolean;
 }
 
 export interface CSLink {
@@ -104,11 +111,27 @@ export const BRAND_CARDS: BrandCard[] = [
 // ============ 기획전 드롭다운 — 메인 페이지 PromoSection 5개 카드와 일치 ============
 // href 는 catalog.ts 의 PromoSlug 와 매핑됨.
 export const PROMO_CARDS: PromoCard[] = [
-    { icon: "fa-person-running", title: "활동견 셀렉션",     desc: "산책·하이킹·달리기 — 활동 많은 댕댕이 큐레이션", href: "/promo/active",   color: "indigo" },
-    { icon: "fa-cloud-rain",     title: "장마·우천 필수템",  desc: "방수 의류·우천 산책 가이드",                       href: "/promo/rainy",    color: "blue" },
-    { icon: "fa-glasses",        title: "눈·청력 보호",      desc: "Rex Specs 전문 아이웨어",                          href: "/promo/eye",      color: "purple" },
-    { icon: "fa-bone",           title: "프리미엄 푸드",     desc: "엄선된 사료·간식 큐레이션",                        href: "/promo/food",     color: "green" },
-    { icon: "fa-ice-cream",      title: "댕스크림 컬렉션",   desc: "한정 시즌 — 아이스크림·음료",                      href: "/promo/seasonal", color: "pink" },
+    {
+        icon: "fa-person-running", title: "활동견 셀렉션", desc: "산책·하이킹·달리기 — 활동 많은 댕댕이 큐레이션", href: "/promo/active", color: "indigo",
+        titleFull: "활동견을 위한\n최고의 셀렉션", eyebrow: "FEATURED COLLECTION",
+        video: "https://res.cloudinary.com/dapuu4gsc/video/upload/v1778710428/swim_qc9zon.mp4", featured: true,
+    },
+    {
+        icon: "fa-cloud-rain", title: "계절 상품", desc: "방수 의류·우천 산책 가이드", href: "/promo/rainy", color: "blue",
+        image: "/images/promo/rain.png",
+    },
+    {
+        icon: "fa-glasses", title: "눈·청력 보호", desc: "Rex Specs 전문 아이웨어", href: "/promo/eye", color: "purple",
+        image: "/images/promo/eye.png",
+    },
+    {
+        icon: "fa-bone", title: "프리미엄 푸드", desc: "엄선된 사료·간식 큐레이션", href: "/promo/food", color: "green",
+        images: ["/images/promo/food1.png", "/images/promo/food2.png"],
+    },
+    {
+        icon: "fa-boxes-stacked", title: "세트 상품", desc: "함께 사면 더 좋은 묶음 구성", href: "/bundles", color: "pink",
+        image: "/images/promo/bundles.png",
+    },
 ];
 
 // ============ 고객센터 드롭다운 ============
