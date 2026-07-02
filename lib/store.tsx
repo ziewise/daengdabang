@@ -9,6 +9,10 @@ import {
     useReducer,
     useState,
 } from "react";
+// 헤더(hooks/useAuth)가 보는 로그인 플래그(daengdabang_logged_in)와 동기화용.
+// 로그인/로그아웃이 이 store 에만 기록되고 플래그가 안 바뀌어 헤더가
+// "로그인" 버튼을 유지하던 버그 수정 — login/logout 에서 함께 갱신한다.
+import { authStorage } from "@/lib/storage";
 
 export type CartLine = { productId: string; qty: number; color?: string; size?: string };
 export type PetProfile = {
@@ -155,7 +159,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         try {
             const raw = window.localStorage.getItem(STORAGE_KEY);
-            if (raw) dispatch({ type: "HYDRATE", state: { ...INITIAL, ...JSON.parse(raw) } });
+            if (raw) {
+                const parsed = { ...INITIAL, ...JSON.parse(raw) };
+                dispatch({ type: "HYDRATE", state: parsed });
+                // 과거(플래그 동기화 전)에 로그인한 사용자 보정 — user 는 있는데
+                // 헤더용 로그인 플래그가 없으면 지금 세팅해 헤더를 마이페이지로 전환
+                if (parsed.user && !authStorage.get()) {
+                    authStorage.set({ provider: "email", ts: Date.now() });
+                }
+            }
         } catch {
             // Ignore corrupt local storage.
         } finally {
@@ -178,9 +190,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             clearCart: () => dispatch({ type: "CLEAR_CART" }),
             toggleWishlist: (productId) => dispatch({ type: "TOGGLE_WISHLIST", productId }),
             isWished: (productId) => state.wishlist.includes(productId),
-            login: (user) => dispatch({ type: "LOGIN", user }),
+            login: (user) => {
+                // 헤더/추천 섹션이 보는 로그인 플래그도 함께 세팅(마이페이지 버튼 전환)
+                authStorage.set({ provider: "email", ts: Date.now() });
+                dispatch({ type: "LOGIN", user });
+            },
             logout: () => {
                 window.localStorage.removeItem(API_TOKEN_KEY);
+                authStorage.clear();
                 dispatch({ type: "LOGOUT" });
             },
             upsertPet: (pet) => dispatch({ type: "UPSERT_PET", pet }),
