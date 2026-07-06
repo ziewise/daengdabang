@@ -11,33 +11,14 @@ import { trackOutboundRedirect } from "@/lib/storefront-analytics";
 const DEFAULT_DELAY_MS = 2400;
 const AFFILIATE_DELAY_MS = 2900;
 
-function PartnerMark({ partner, active }: { partner: AffiliateStop; active: boolean }) {
+function PartnerMark({ active }: { active: boolean }) {
     const chipClass = `flex h-9 w-24 shrink-0 items-center justify-center gap-1 rounded-md border bg-white px-1.5 ${
         active ? "border-neutral-950 shadow-sm" : "border-neutral-200"
     }`;
 
-    if (!partner.logoSrc) {
-        return (
-            <span className={`${chipClass} text-[11px] font-black text-neutral-700`}>
-                {partner.mark}
-            </span>
-        );
-    }
-
     return (
-        <span className={chipClass}>
-            <img
-                src={partner.logoSrc}
-                alt={partner.logoAlt ?? partner.name}
-                className={partner.logoText ? "h-5 w-5 object-contain" : "h-5 w-full object-contain"}
-                loading="eager"
-                decoding="sync"
-            />
-            {partner.logoText && (
-                <span className="whitespace-nowrap text-[9px] font-black leading-none tracking-normal text-[#03c75a]">
-                    {partner.logoText}
-                </span>
-            )}
+        <span className={`${chipClass} text-[11px] font-black text-neutral-700`} aria-label="제휴 경유 확인">
+            제휴 확인
         </span>
     );
 }
@@ -236,11 +217,11 @@ export default function OutboundRedirectClient() {
                                                         : "border-neutral-200 bg-white/60"
                                                 }`}
                                             >
-                                                <PartnerMark partner={partner} active={active} />
+                                                <PartnerMark active={active} />
                                                 <span className="min-w-0 flex-1">
-                                                    <span className="block truncate text-sm font-black text-neutral-950">{partner.name}</span>
+                                                    <span className="block truncate text-sm font-black text-neutral-950">제휴 경유 {index + 1}</span>
                                                     <span className="block truncate text-[11px] font-bold text-neutral-500">
-                                                        {partner.url.replace(/^https?:\/\//, "")}
+                                                        외부 구매 연결을 확인하는 중
                                                     </span>
                                                 </span>
                                                 <i className={`fa-solid fa-circle text-[7px] ${active ? "text-emerald-500" : "text-neutral-300"}`} />

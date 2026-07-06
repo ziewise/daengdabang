@@ -2,7 +2,12 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { answerShopQuestionSmart, type ShopChatMedical, type ShopChatSource } from "@/lib/daengdabang-llm";
+import {
+    answerShopQuestionSmart,
+    type ShopChatAction,
+    type ShopChatMedical,
+    type ShopChatSource,
+} from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
@@ -13,19 +18,59 @@ type Message = {
     products?: CatalogProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
+    actions?: ShopChatAction[];
 };
+
+const INITIAL_MESSAGES: Message[] = [
+    {
+        role: "assistant",
+        text: "강아지 건강, 생활 습관, 훈련, 산책, 급여, 상품 비교까지 물어보세요. 먼저 질문 의도를 확인하고 필요한 경우 자료를 찾아 정리해드릴게요.",
+    },
+];
 
 const QUICK_QUESTIONS = [
     "우리 강아지가 아파요",
     "강아지가 토하고 설사를 해요",
     "자일리톨 껌을 먹었어요",
-    "입냄새가 심하고 밥을 잘 못 씹어요",
+    "강아지 산책은 하루 몇 번 해야 해?",
     "중형견 하네스 추천",
+];
+
+const THINKING_ACTIONS: ShopChatAction[] = [
+    { label: "질문 의도 분류", status: "running", detail: "쇼핑/건강/강아지 지식 구분" },
+    { label: "댕다방 보유 지식 확인", status: "running", detail: "RAG와 상품 후보 분리" },
+    { label: "인터넷 자료 검색", status: "running", detail: "필요한 경우 공식/권위 자료 확인" },
+    { label: "답변 정리", status: "running", detail: "근거와 다음 행동 정리" },
 ];
 
 function triageLabel(medical?: ShopChatMedical) {
     if (!medical?.mode) return "";
     return medical.triage === "emergency" ? "응급 가능성" : "건강 상담";
+}
+
+function ActionList({ actions }: { actions?: ShopChatAction[] }) {
+    if (!actions?.length) return null;
+    return (
+        <div className="mt-2 max-w-[82%] space-y-1 rounded-lg border border-neutral-200 bg-white p-3 text-left shadow-sm">
+            {actions.slice(0, 6).map((action, index) => (
+                <div key={`${action.label}-${index}`} className="flex gap-2 text-xs font-bold leading-5 text-neutral-600">
+                    <span
+                        className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+                            action.status === "warn"
+                                ? "bg-amber-500"
+                                : action.status === "running"
+                                  ? "animate-pulse bg-sky-500"
+                                  : "bg-emerald-500"
+                        }`}
+                    />
+                    <span>
+                        <b className="text-neutral-900">{action.label}</b>
+                        {action.detail ? <span className="block text-[11px] text-neutral-500">{action.detail}</span> : null}
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
 }
 
 export default function ChatPageClient() {
@@ -35,24 +80,57 @@ export default function ChatPageClient() {
     const [selectedPetIndex, setSelectedPetIndex] = useState(0);
     const selectedPet = pets[selectedPetIndex] ?? pets[0] ?? null;
     const initialized = useRef(false);
+    const thinkingTimers = useRef<number[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([
-        { role: "assistant", text: "상품명, 용도, 반려견 증상이나 고민을 입력해 주세요. 건강 질문은 먼저 안전하게 확인하고, 상품은 필요할 때만 추천합니다." },
-    ]);
+    const [thinkingActions, setThinkingActions] = useState<ShopChatAction[]>([]);
+    const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+
+    const stopThinking = useCallback(() => {
+        thinkingTimers.current.forEach((timer) => window.clearTimeout(timer));
+        thinkingTimers.current = [];
+        setThinkingActions([]);
+    }, []);
+
+    const startThinking = useCallback(() => {
+        stopThinking();
+        setThinkingActions([THINKING_ACTIONS[0]]);
+        thinkingTimers.current = THINKING_ACTIONS.slice(1).map((action, index) =>
+            window.setTimeout(() => setThinkingActions((prev) => [...prev, action]), 700 * (index + 1))
+        );
+    }, [stopThinking]);
+
+    const clearChat = () => {
+        stopThinking();
+        setInput("");
+        setLoading(false);
+        setMessages(INITIAL_MESSAGES);
+    };
 
     const ask = useCallback(async (question: string) => {
         const trimmed = question.trim();
         if (!trimmed || loading) return;
         setLoading(true);
+        startThinking();
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
-        const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet });
-        setMessages((prev) => [
-            ...prev,
-            { role: "assistant", text: result.answer, products: result.products, medical: result.medical, sources: result.sources },
-        ]);
-        setLoading(false);
-    }, [loading, selectedPet]);
+        try {
+            const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet });
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    text: result.answer,
+                    products: result.products,
+                    medical: result.medical,
+                    sources: result.sources,
+                    actions: result.actions,
+                },
+            ]);
+        } finally {
+            stopThinking();
+            setLoading(false);
+        }
+    }, [loading, selectedPet, startThinking, stopThinking]);
 
     useEffect(() => {
         if (selectedPetIndex >= pets.length) setSelectedPetIndex(0);
@@ -76,8 +154,20 @@ export default function ChatPageClient() {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">댕다방 케어톡</p>
-                <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">상담</h1>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <p className="text-sm font-black text-indigo-700">댕다방 케어톡</p>
+                        <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">상담</h1>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={clearChat}
+                        className="inline-flex h-10 items-center gap-2 rounded-md border border-neutral-200 bg-white px-3 text-sm font-black text-neutral-700 shadow-sm hover:border-indigo-300 hover:text-indigo-700"
+                    >
+                        <i className="fa-solid fa-trash-can text-xs" />
+                        비우기
+                    </button>
+                </div>
                 {pets.length > 0 && (
                     <label className="mt-4 inline-flex max-w-full items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-black text-neutral-700">
                         <span className="shrink-0 text-neutral-500">개인화 기준</span>
@@ -113,11 +203,14 @@ export default function ChatPageClient() {
                     <div className="flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4">
                         {messages.map((message, index) => (
                             <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
-                                <div className={`inline-block max-w-[82%] whitespace-pre-line rounded-lg px-4 py-3 text-sm font-bold leading-6 ${
-                                    message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
-                                }`}>
+                                <div
+                                    className={`inline-block max-w-[82%] whitespace-pre-line rounded-lg px-4 py-3 text-sm font-bold leading-6 ${
+                                        message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
+                                    }`}
+                                >
                                     {message.text}
                                 </div>
+                                {message.role === "assistant" && <ActionList actions={message.actions} />}
                                 {message.role === "assistant" && message.medical?.mode && (
                                     <div className="mt-2 max-w-[82%] rounded-lg border border-sky-100 bg-white p-3 text-left shadow-sm">
                                         <div className="flex flex-wrap items-center gap-2">
@@ -205,8 +298,9 @@ export default function ChatPageClient() {
                         ))}
                         {loading && (
                             <div className="text-left">
-                                <div className="inline-block rounded-lg bg-white px-4 py-3 text-sm font-bold text-neutral-500 shadow-sm">
-                                    답변을 차분히 정리하는 중입니다.
+                                <div className="inline-block max-w-[82%] rounded-lg bg-white px-4 py-3 text-sm font-bold text-neutral-500 shadow-sm">
+                                    <div>정보 확인 중입니다.</div>
+                                    <ActionList actions={thinkingActions} />
                                 </div>
                             </div>
                         )}
@@ -216,8 +310,8 @@ export default function ChatPageClient() {
                             value={input}
                             onChange={(event) => setInput(event.target.value)}
                             className="input h-12 flex-1"
-                            placeholder="예: 우리 강아지가 아파요 / 중형견 하네스 추천"
-                            aria-label="챗봇 질문"
+                            placeholder="예: 강아지 산책은 얼마나 해야 해? / 중형견 하네스 추천"
+                            aria-label="채팅 질문"
                         />
                         <button type="submit" disabled={loading} className="btn btn-primary h-12 disabled:opacity-50">
                             <i className="fa-solid fa-paper-plane text-xs" />
@@ -236,7 +330,7 @@ export default function ChatPageClient() {
                         </div>
                     ) : (
                         <div className="surface p-6 text-sm font-bold leading-6 text-neutral-600">
-                            질문을 보내면 관련 상품이 표시됩니다.
+                            상품이 필요한 질문일 때만 추천을 표시합니다. 건강/생활 질문에는 제품을 억지로 붙이지 않습니다.
                         </div>
                     )}
                 </aside>

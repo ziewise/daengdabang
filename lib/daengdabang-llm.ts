@@ -37,16 +37,35 @@ export type ShopChatMedical = {
     disclaimer?: string;
 };
 
+export type ShopChatAction = {
+    label: string;
+    status?: "running" | "done" | "warn" | "error" | string;
+    detail?: string;
+};
+
+export type ShopChatResearch = {
+    mode?: string;
+    sourceCount?: number;
+    domains?: string[];
+};
+
 export type ShopChatAnswer = {
     answer: string;
     products: CatalogProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
+    actions?: ShopChatAction[];
+    research?: ShopChatResearch;
 };
 
 const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "AVMA pet first aid", url: "https://www.avma.org/resources-tools/pet-owners/emergencycare/first-aid-tips-pet-owners" },
     { name: "Merck Veterinary Manual pet emergencies", url: "https://www.merckvetmanual.com/special-pet-topics/emergencies/what-to-do-in-a-dog-or-cat-emergency" },
+];
+
+const GENERAL_DOG_SOURCE_FALLBACK: ShopChatSource[] = [
+    { name: "AVMA pet care", url: "https://www.avma.org/resources-tools/pet-owners/petcare" },
+    { name: "AKC dog owner resources", url: "https://www.akc.org/expert-advice/" },
 ];
 
 function unique(products: CatalogProduct[]) {
@@ -134,6 +153,61 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
             disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
         },
         sources: HEALTH_SOURCE_FALLBACK,
+    };
+}
+
+function isCanineKnowledgeQuestion(message: string) {
+    return /(강아지|반려견|댕댕이|멍멍이|퍼피|puppy|dog|산책|훈련|짖|물어|무는|사회화|분리불안|배변|목욕|양치|치아|털갈이|빗질|발톱|귀청소|수면|스트레스|더위|추위|급여|사료|물|체중|예방접종|중성화|심장사상충|진드기|벼룩|노령견)/i.test(message);
+}
+
+function isShoppingIntent(message: string) {
+    return /(추천|상품|제품|구매|가격|최저가|비교|골라|사도|살만|브랜드|사이즈|배송|주문|할인)/i.test(message);
+}
+
+function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
+    if (!isCanineKnowledgeQuestion(message) || isShoppingIntent(message)) return null;
+    return {
+        answer: "이 질문은 상품 추천보다 강아지 생활/행동 정보에 가까워서 제품은 붙이지 않았어요. 지금 API 검색 연결이 불안정하면 우선 검증된 반려견 자료 기준으로 답변드릴게요. 나이, 체중, 품종, 언제부터 그랬는지, 식욕/활력 변화가 있으면 더 정확히 정리할 수 있습니다. 통증, 호흡 이상, 반복 구토/설사, 의식 저하, 중독 가능성이 있으면 생활 팁보다 동물병원 상담이 먼저입니다.",
+        products: [],
+        medical: {
+            mode: false,
+            triage: "canine_knowledge",
+            topic: "canine_general",
+            disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
+        },
+        sources: GENERAL_DOG_SOURCE_FALLBACK,
+        actions: [
+            { label: "질문 의도 분류", status: "done", detail: "강아지 지식 질문" },
+            { label: "인터넷 자료 검색", status: "warn", detail: "API 연결 실패로 기본 검증 출처 표시" },
+            { label: "답변 정리", status: "done", detail: "상품 추천 차단" },
+        ],
+        research: { mode: "client-fallback", sourceCount: GENERAL_DOG_SOURCE_FALLBACK.length },
+    };
+}
+
+function normalizeActions(value: unknown): ShopChatAction[] {
+    if (!Array.isArray(value)) return [];
+    return value.slice(0, 8).flatMap((item) => {
+        if (typeof item === "string") return [{ label: item, status: "done" }];
+        if (!item || typeof item !== "object") return [];
+        const record = item as Record<string, unknown>;
+        const label = typeof record.label === "string" ? record.label : "";
+        if (!label) return [];
+        return [{
+            label,
+            status: typeof record.status === "string" ? record.status : "done",
+            detail: typeof record.detail === "string" ? record.detail : "",
+        }];
+    });
+}
+
+function normalizeResearch(value: unknown): ShopChatResearch | undefined {
+    if (!value || typeof value !== "object") return undefined;
+    const record = value as Record<string, unknown>;
+    return {
+        mode: typeof record.mode === "string" ? record.mode : "",
+        sourceCount: typeof record.sourceCount === "number" ? record.sourceCount : undefined,
+        domains: Array.isArray(record.domains) ? record.domains.filter((item): item is string => typeof item === "string").slice(0, 6) : undefined,
     };
 }
 
@@ -272,7 +346,8 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const medicalFallback = medicalSafetyFallback(message);
-    const fallback = medicalFallback || answerShopQuestion(message, context);
+    const knowledgeFallback = canineKnowledgeFallback(message);
+    const fallback = medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
     const petContext = petContextText(context);
@@ -295,13 +370,17 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 .filter((source: { name?: unknown; url?: unknown }) => typeof source?.name === "string" && typeof source?.url === "string")
                 .map((source: { name: string; url: string }) => ({ name: source.name, url: source.url }))
             : [];
+        const actions = normalizeActions(data.actions);
+        const research = normalizeResearch(data.research);
         return {
             answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
             products: medicalMode ? unique(apiProducts).slice(0, 6) : (apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products),
             medical: medicalMode ? data.medical as ShopChatMedical : fallback.medical,
             sources: apiSources.length ? apiSources : fallback.sources,
+            actions: actions.length ? actions : fallback.actions,
+            research: research || fallback.research,
         };
     } catch {
-        return medicalFallback || fallback;
+        return medicalFallback || knowledgeFallback || fallback;
     }
 }
