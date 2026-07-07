@@ -106,6 +106,162 @@ function sizeLabel(size: PetProfile["size"]) {
     return "중형";
 }
 
+function completedActions(topic: string, detail = "상품 추천 없이 답변") {
+    return [
+        { label: "질문 의도 분류", status: "done", detail: topic },
+        { label: "안전 확인", status: "done", detail: "무관한 상품 추천 차단" },
+        { label: "답변 정리", status: "done", detail },
+    ];
+}
+
+function scopeGuardFallback(message: string): ShopChatAnswer | null {
+    const text = message.toLowerCase();
+    const hasDogContext = /(강아지|반려견|댕댕|멍멍|퍼피|노견|노령견|시니어견|우리\s*개|dog|puppy|canine)/i.test(message);
+    const vetLocator = /(동물\s*병원|응급\s*병원|24시\s*병원|수의사|animal hospital|vet|veterinary)/i.test(message)
+        && /(근처|주변|가까운|인근|찾|알려|어디|위치|지도|검색|24시|응급|near)/i.test(message);
+    if (vetLocator) {
+        const searchText = encodeURIComponent(message.replace(/알려줘|알려주세요|찾아줘|찾아주세요|어디|있나|있나요|\?/g, " ").trim() || "동물병원");
+        return {
+            answer: "동물병원을 찾는 질문으로 이해했어요. 실시간 영업 여부와 야간/응급 진료 여부는 지도 결과가 바뀔 수 있으니, 지도 검색을 연 뒤 전화로 먼저 확인하는 흐름이 가장 안전합니다. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
+            products: [],
+            medical: { mode: false, triage: "vet_locator", topic: "nearby_vet", disclaimer: "지도 검색 보조이며 진료 품질, 대기 시간, 영업 여부를 보증하지 않습니다." },
+            sources: [
+                { name: "카카오맵 검색", url: `https://map.kakao.com/link/search/${searchText}` },
+                { name: "네이버지도 검색", url: `https://map.naver.com/p/search/${searchText}` },
+                { name: "Google Maps 검색", url: `https://www.google.com/maps/search/${searchText}` },
+            ],
+            actions: completedActions("동물병원 위치 찾기", "지도 검색 링크 제공"),
+            research: { mode: "map-search", sourceCount: 3 },
+        };
+    }
+    if (/(사주|운세|타로|로또|복권)/i.test(message)) {
+        return {
+            answer: "이 질문은 강아지 건강, 생활 케어, 훈련, 산책, 급여, 상품 비교 범위를 벗어난 요청으로 보여요. 댕다방 케어톡은 근거를 확인하기 어려운 내용으로 답을 꾸미지 않고, 강아지에게 실제로 도움이 되는 정보가 있을 때만 정리하겠습니다.",
+            products: [],
+            medical: { mode: false, triage: "needs_clarification", topic: "unsupported_fun_request", disclaimer: "" },
+            sources: [],
+            actions: completedActions("범위 밖 요청"),
+            research: { mode: "scope-guard", sourceCount: 0 },
+        };
+    }
+    if (/(앵무새|고양이|냥이|토끼|햄스터|기니피그|거북이|물고기|페럿|parrot|cat|rabbit|hamster|bird|fish)/i.test(message) && !hasDogContext) {
+        return {
+            answer: "이 질문은 강아지가 아닌 다른 반려동물에 대한 내용으로 보여요. 댕다방 케어톡은 강아지 건강/생활/상품 기준으로 제한되어 있어서 다른 동물에게 강아지 기준 답변이나 상품을 억지로 붙이지 않겠습니다. 해당 종을 진료하는 동물병원이나 종별 전문 자료를 확인하는 편이 안전합니다.",
+            products: [],
+            medical: { mode: false, triage: "unsupported_pet", topic: "non_dog_pet", disclaimer: "DaengDaBang chatbot is dog-focused." },
+            sources: [],
+            actions: completedActions("강아지 외 반려동물 질문"),
+            research: { mode: "scope-guard", sourceCount: 0 },
+        };
+    }
+    if (!hasDogContext && /(전세|월세|계약|특약|부동산|법률|소송|주식|코딩|숙제|레시피|김치찌개|human|contract|legal)/i.test(text)) {
+        return {
+            answer: "질문을 상품 추천으로 연결하지 않았어요. 댕다방 케어톡은 강아지 건강, 생활, 훈련, 산책, 급여, 상품 비교를 돕는 범위로 제한되어 있습니다. 강아지 질문이라면 품종, 나이, 체중, 증상이나 상황을 다시 적어 주세요.",
+            products: [],
+            medical: { mode: false, triage: "needs_clarification", topic: "out_of_scope", disclaimer: "" },
+            sources: [],
+            actions: completedActions("강아지 범위 밖 질문"),
+            research: { mode: "scope-guard", sourceCount: 0 },
+        };
+    }
+    return null;
+}
+
+function healthRuleAnswer(
+    answer: string,
+    topic: string,
+    topicLabel: string,
+    options: {
+        triage?: "general_health" | "emergency";
+        followUpQuestions: string[];
+        redFlags: string[];
+        firstSteps: string[];
+        careWindow?: string;
+    }
+): ShopChatAnswer {
+    const triage = options.triage || "general_health";
+    return {
+        answer,
+        products: [],
+        medical: {
+            mode: true,
+            triage,
+            topic,
+            topicLabel,
+            followUpQuestions: options.followUpQuestions,
+            followUpSlots: options.followUpQuestions.map((question, index) => ({
+                key: `${topic}_${index + 1}`,
+                label: index === 0 ? "상황" : index === 1 ? "증상" : "추가 확인",
+                prompt: question,
+                required: index < 2,
+            })),
+            redFlags: options.redFlags,
+            firstSteps: options.firstSteps,
+            careWindow: options.careWindow || (triage === "emergency" ? "지금 즉시 동물병원에 연락해야 하는 단계입니다." : "위험 신호가 있으면 즉시, 없더라도 지속되거나 악화되면 병원 상담이 우선입니다."),
+            knowledgeLevel: "client-rare-health-rules",
+            disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
+        },
+        sources: HEALTH_SOURCE_FALLBACK,
+        actions: completedActions("강아지 건강/안전 질문", "제품 추천 없이 건강 안내"),
+        research: { mode: "client-rare-rules", sourceCount: HEALTH_SOURCE_FALLBACK.length },
+    };
+}
+
+function rareHealthFallback(message: string): ShopChatAnswer | null {
+    if (/(송충|곤충|벌에\s*쏘|벌\s*쏘|두꺼비|개구리|caterpillar|bee sting|insect)/i.test(message) && /(핥|먹|씹|물|닿|쏘)/i.test(message)) {
+        return healthRuleAnswer(
+            "송충이, 벌, 일부 곤충이나 두꺼비 접촉은 입안 자극, 침 흘림, 구토, 얼굴 부기, 피부 염증을 만들 수 있어요. 핥았거나 씹은 상황이면 제품보다 먼저 입 주변·호흡·부기·구토 여부를 확인해 주세요. 얼굴이나 입술이 붓거나 숨이 불편해 보이면 바로 동물병원에 연락하는 게 안전합니다.",
+            "insect_or_caterpillar_contact",
+            "곤충, 송충이 또는 벌 접촉",
+            {
+                followUpQuestions: ["정확히 무엇을 핥거나 먹었고, 몇 분 또는 몇 시간이 지났나요?", "침 흘림, 구토, 얼굴/눈 주변 부기, 호흡 이상이 있나요?", "가능하면 접촉한 곤충이나 물체 사진이 있나요?"],
+                redFlags: ["얼굴, 눈 주변, 입술이 빠르게 붓거나 두드러기가 퍼짐", "호흡이 힘들어 보임, 침을 많이 흘림, 반복 구토", "비틀거림, 무기력, 의식 저하"],
+                firstSteps: ["입 주변과 발, 피부에 남은 이물질을 부드럽게 확인하세요.", "입안을 깊게 만지거나 임의로 토하게 하지 마세요.", "부기, 호흡 이상, 반복 구토가 있으면 즉시 병원에 연락하세요."],
+            }
+        );
+    }
+    if (/(제설제|염화칼슘|road salt|ice melt)/i.test(message)) {
+        return healthRuleAnswer(
+            "제설제나 염화칼슘은 발바닥을 따갑게 만들고, 핥아 먹으면 입안 자극이나 위장 불편을 일으킬 수 있어요. 먼저 미지근한 물로 발바닥과 발가락 사이를 충분히 헹구고 잘 말린 뒤 더 핥지 못하게 관찰해 주세요. 반복 구토, 심한 침 흘림, 비틀거림, 발바닥 통증이 있으면 병원에 연락해야 합니다.",
+            "deicing_salt_or_chemical_paw",
+            "제설제, 염화칼슘 또는 발바닥 화학 자극",
+            {
+                triage: /구토|비틀|못\s*서|침을\s*많이|딛지\s*못/i.test(message) ? "emergency" : "general_health",
+                followUpQuestions: ["발에 묻은 것을 바로 씻겼나요, 얼마나 오래 핥았나요?", "구토, 침 흘림, 입 주변 통증, 발바닥 붉어짐이나 절뚝거림이 있나요?", "제설제 종류나 포장 정보를 알 수 있나요?"],
+                redFlags: ["반복 구토, 심한 침 흘림, 비틀거림, 무기력", "발바닥이 심하게 붉거나 벗겨짐, 통증 때문에 딛지 못함", "먹은 양이 많거나 제설제 성분을 알 수 없음"],
+                firstSteps: ["미지근한 물로 발바닥과 발가락 사이를 충분히 헹구고 잘 말려 주세요.", "더 핥지 못하게 잠시 관찰하고 사람 약이나 임의 처치는 피하세요.", "구토, 심한 침 흘림, 통증, 비틀거림이 있으면 병원에 연락하세요."],
+            }
+        );
+    }
+    if (/(눈.*(뿌예|뿌옇|파랗|흐려|하얗)|뿌예.*눈|cloudy eye)/i.test(message)) {
+        return healthRuleAnswer(
+            "눈이 갑자기 뿌옇거나 파랗게 보이면 각막 손상, 염증, 안압 문제처럼 빠른 확인이 필요한 원인이 있을 수 있어요. 눈은 악화가 빠를 수 있어서 사람용 안약이나 남은 안약을 임의로 넣지 말고, 비비지 못하게 하면서 오늘 안에 동물병원에 연락하는 쪽이 안전합니다.",
+            "acute_eye_cloudiness",
+            "갑작스러운 눈 혼탁 또는 색 변화",
+            {
+                triage: /갑자기|눈을\s*못|외상|부딪/i.test(message) ? "emergency" : "general_health",
+                followUpQuestions: ["한쪽 눈인가요, 양쪽 눈인가요? 언제부터 갑자기 보였나요?", "눈을 못 뜨거나 비비기, 눈물, 눈곱, 통증 반응이 있나요?", "최근 산책 중 풀/먼지/충돌, 목욕, 샴푸, 외상이 있었나요?"],
+                redFlags: ["눈을 못 뜸, 심하게 비빔, 통증 반응", "갑작스러운 혼탁, 파란빛/하얀빛 변화, 시야 이상 의심", "외상 뒤 시작됐거나 눈물/분비물이 급격히 늘어남"],
+                firstSteps: ["눈을 비비지 못하게 하고 사람용 안약이나 남은 안약을 임의로 넣지 마세요.", "빛이 강한 곳과 먼지를 피하고 변화가 보이는 사진을 찍어 두세요.", "갑작스러운 혼탁이나 통증이 있으면 오늘 안에 동물병원에 연락하세요."],
+                careWindow: "갑작스러운 눈 색 변화나 통증이 있으면 오늘 안에 동물병원 상담을 잡는 것이 좋습니다.",
+            }
+        );
+    }
+    if (/강아지.*고양이\s*사료|고양이\s*사료.*강아지/i.test(message)) {
+        return healthRuleAnswer(
+            "강아지가 고양이 사료를 조금 먹은 정도라면 바로 큰일로 단정하진 않지만, 고양이 사료는 지방과 단백질 비율이 달라 배탈을 만들 수 있어요. 제품 추천보다 먼저 먹은 양, 구토/설사, 복통, 췌장염 병력 여부를 봐 주세요. 반복 구토, 심한 설사, 배 통증, 무기력이 있으면 병원에 문의하세요.",
+            "dog_ate_cat_food",
+            "고양이 사료 섭취",
+            {
+                followUpQuestions: ["얼마나 먹었고 언제 먹었나요?", "구토, 설사, 복통, 무기력, 식욕 저하가 있나요?", "췌장염, 알레르기, 위장 질환 병력이 있나요?"],
+                redFlags: ["반복 구토 또는 심한 설사", "배를 만지면 아파함, 웅크림, 무기력", "췌장염 병력이나 기존 질환이 있음"],
+                firstSteps: ["추가로 먹지 못하게 치우고 물은 평소처럼 마시게 하세요.", "증상과 배변 상태를 24시간 정도 관찰하세요.", "반복 구토, 통증, 무기력이 있으면 병원에 연락하세요."],
+            }
+        );
+    }
+    return null;
+}
+
 function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     const text = message.toLowerCase();
     const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose)/i.test(text);
@@ -161,6 +317,7 @@ function isCanineKnowledgeQuestion(message: string) {
 }
 
 function isShoppingIntent(message: string) {
+    if (/(추천\s*말고|상품\s*말고|제품\s*말고|구매\s*말고|사지\s*말고)/i.test(message)) return false;
     return /(추천|상품|제품|구매|가격|최저가|비교|골라|사도|살만|브랜드|사이즈|배송|주문|할인)/i.test(message);
 }
 
@@ -345,9 +502,11 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
 }
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
-    const medicalFallback = medicalSafetyFallback(message);
+    const scopeFallback = scopeGuardFallback(message);
+    const rareFallback = rareHealthFallback(message);
+    const medicalFallback = rareFallback || medicalSafetyFallback(message);
     const knowledgeFallback = canineKnowledgeFallback(message);
-    const fallback = medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
+    const fallback = scopeFallback || medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
     const petContext = petContextText(context);
@@ -381,6 +540,6 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             research: research || fallback.research,
         };
     } catch {
-        return medicalFallback || knowledgeFallback || fallback;
+        return scopeFallback || medicalFallback || knowledgeFallback || fallback;
     }
 }

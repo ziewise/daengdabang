@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
     answerShopQuestion,
@@ -20,13 +20,6 @@ type Message = {
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
 };
-
-const INITIAL_MESSAGES: Message[] = [
-    {
-        role: "assistant",
-        text: "무엇이 궁금하세요? 상품 추천이든 강아지 생활/건강 질문이든 먼저 의도를 확인하고 필요한 경우 자료를 찾아 정리해드릴게요.",
-    },
-];
 
 const THINKING_ACTIONS: ShopChatAction[] = [
     { label: "질문 의도 분류", status: "running", detail: "쇼핑/건강/강아지 지식 구분" },
@@ -65,9 +58,23 @@ export default function ChatWidget() {
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [thinkingActions, setThinkingActions] = useState<ShopChatAction[]>([]);
+    const messagesRef = useRef<HTMLDivElement>(null);
     const thinkingTimers = useRef<number[]>([]);
+
+    const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+        const container = messagesRef.current;
+        if (!container) return;
+        window.requestAnimationFrame(() => {
+            container.scrollTo({ top: container.scrollHeight, behavior });
+        });
+    };
+
+    useEffect(() => {
+        if (!open) return;
+        scrollToBottom(messages.length <= 1 ? "auto" : "smooth");
+    }, [open, messages, loading, thinkingActions.length]);
 
     const stopThinking = () => {
         thinkingTimers.current.forEach((timer) => window.clearTimeout(timer));
@@ -85,7 +92,7 @@ export default function ChatWidget() {
 
     const clearChat = () => {
         stopThinking();
-        setMessages(INITIAL_MESSAGES);
+        setMessages([]);
         setInput("");
         setLoading(false);
     };
@@ -118,9 +125,9 @@ export default function ChatWidget() {
     };
 
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="relative z-50">
             {open && (
-                <section className="mb-3 flex h-[520px] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl">
+                <section className="absolute bottom-[calc(100%+12px)] right-0 z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl max-sm:fixed max-sm:inset-x-3 max-sm:bottom-[calc(88px+env(safe-area-inset-bottom))] max-sm:top-[calc(env(safe-area-inset-top)+12px)] max-sm:h-auto max-sm:w-auto">
                     <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
                         <b className="text-sm font-black">댕다방 케어톡</b>
                         <div className="flex items-center gap-1">
@@ -144,7 +151,7 @@ export default function ChatWidget() {
                             </button>
                         </div>
                     </header>
-                    <div className="flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-3">
+                    <div ref={messagesRef} className="flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-3 overscroll-contain scroll-smooth">
                         {messages.map((message, index) => (
                             <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
                                 <div
@@ -207,6 +214,7 @@ export default function ChatWidget() {
                                 </div>
                             </div>
                         )}
+                        <div aria-hidden="true" className="h-px" />
                     </div>
                     <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 p-3">
                         <input

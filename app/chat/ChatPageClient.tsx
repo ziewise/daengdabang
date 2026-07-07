@@ -21,13 +21,6 @@ type Message = {
     actions?: ShopChatAction[];
 };
 
-const INITIAL_MESSAGES: Message[] = [
-    {
-        role: "assistant",
-        text: "강아지 건강, 생활 습관, 훈련, 산책, 급여, 상품 비교까지 물어보세요. 먼저 질문 의도를 확인하고 필요한 경우 자료를 찾아 정리해드릴게요.",
-    },
-];
-
 const QUICK_QUESTIONS = [
     "우리 강아지가 아파요",
     "강아지가 토하고 설사를 해요",
@@ -80,11 +73,12 @@ export default function ChatPageClient() {
     const [selectedPetIndex, setSelectedPetIndex] = useState(0);
     const selectedPet = pets[selectedPetIndex] ?? pets[0] ?? null;
     const initialized = useRef(false);
+    const messagesRef = useRef<HTMLDivElement>(null);
     const thinkingTimers = useRef<number[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [thinkingActions, setThinkingActions] = useState<ShopChatAction[]>([]);
-    const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     const stopThinking = useCallback(() => {
         thinkingTimers.current.forEach((timer) => window.clearTimeout(timer));
@@ -104,7 +98,7 @@ export default function ChatPageClient() {
         stopThinking();
         setInput("");
         setLoading(false);
-        setMessages(INITIAL_MESSAGES);
+        setMessages([]);
     };
 
     const ask = useCallback(async (question: string) => {
@@ -142,6 +136,14 @@ export default function ChatPageClient() {
         const initialQuestion = params.get("q");
         if (initialQuestion) void ask(initialQuestion);
     }, [params, ask]);
+
+    useEffect(() => {
+        const container = messagesRef.current;
+        if (!container) return;
+        window.requestAnimationFrame(() => {
+            container.scrollTo({ top: container.scrollHeight, behavior: messages.length <= 1 ? "auto" : "smooth" });
+        });
+    }, [messages, loading, thinkingActions.length]);
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
@@ -200,7 +202,7 @@ export default function ChatPageClient() {
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
                 <section className="surface flex min-h-[620px] flex-col overflow-hidden">
-                    <div className="flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4">
+                    <div ref={messagesRef} className="flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4 overscroll-contain scroll-smooth">
                         {messages.map((message, index) => (
                             <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
                                 <div
@@ -304,6 +306,7 @@ export default function ChatPageClient() {
                                 </div>
                             </div>
                         )}
+                        <div aria-hidden="true" className="h-px" />
                     </div>
                     <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 bg-white p-4">
                         <input

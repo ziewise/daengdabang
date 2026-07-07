@@ -60,7 +60,7 @@ export default function FloatingDock() {
     const interactive = shown ? "pointer-events-auto" : "pointer-events-none";
     return (
         <div
-            className={`pointer-events-none fixed right-4 z-50 flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${
+            className={`pointer-events-none fixed right-4 z-[2200] flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${
                 buybar ? "bottom-[5.5rem]" : "bottom-4"
             } ${shown ? "opacity-100" : "opacity-0"}`}
         >
