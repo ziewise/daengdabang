@@ -2,6 +2,7 @@
 
 import { ddbApiBase } from "@/lib/customer-api";
 import type { ExternalProductResult } from "@/lib/external-products";
+import type { CartPetAssignment } from "@/lib/pet-attribution";
 
 const SESSION_KEY = "ddb.analytics.sessionId";
 
@@ -147,4 +148,91 @@ export function trackOutboundRedirect(payload: {
         partnerHitIds: payload.partnerHitIds || [],
         partnerHitMode: payload.partnerHitMode || "",
     });
+}
+
+export type TwinOrderLinePayload = {
+    lineId: string;
+    productId: string;
+    productName: string;
+    qty: number;
+    unitPrice: number;
+    subtotal: number;
+    petAssignment?: CartPetAssignment;
+};
+
+export type TwinProductStat = {
+    productId: string;
+    productName: string;
+    queryCohortKey: string;
+    matchedCohortKey: string;
+    cohortLevel: string;
+    sampleSize: number;
+    repurchasePetCount: number;
+    repurchaseRate: number | null;
+    wilsonLowerBound: number | null;
+    orderCount: number;
+    unitCount: number;
+    revenue: number;
+    lastPurchasedAt: string;
+    dataState: string;
+};
+
+export function trackTwinOrderAttribution(payload: {
+    orderId: string;
+    customerName?: string;
+    customerEmail?: string;
+    total: number;
+    paymentMethod: string;
+    lines: TwinOrderLinePayload[];
+}) {
+    if (!payload.orderId || payload.lines.length === 0) return;
+    postAnalytics("/api/v1/analytics/twin-order-attribution", {
+        orderId: payload.orderId,
+        customerName: payload.customerName || "",
+        customerEmail: payload.customerEmail || "",
+        total: payload.total,
+        paymentMethod: payload.paymentMethod,
+        channel: "storefront",
+        lines: payload.lines.map((line) => ({
+            lineId: line.lineId,
+            productId: line.productId,
+            productName: line.productName,
+            qty: line.qty,
+            unitPrice: line.unitPrice,
+            subtotal: line.subtotal,
+            petAssignment: line.petAssignment
+                ? {
+                    petId: line.petAssignment.petId,
+                    petKey: line.petAssignment.petKey,
+                    petName: line.petAssignment.petName,
+                    cohortKey: line.petAssignment.cohortKey,
+                    profileSnapshot: line.petAssignment.profileSnapshot,
+                }
+                : null,
+        })),
+    });
+}
+
+export async function loadTwinProductStats(args: {
+    cohortKey: string;
+    productIds?: string[];
+    days?: number;
+    limit?: number;
+}): Promise<TwinProductStat[]> {
+    const base = ddbApiBase();
+    if (!base || !args.cohortKey) return [];
+    const query = new URLSearchParams({
+        cohortKey: args.cohortKey,
+        days: String(args.days ?? 365),
+        limit: String(args.limit ?? 10000),
+    });
+    (args.productIds || []).forEach((productId) => query.append("productIds", productId));
+    try {
+        const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/analytics/twin-product-stats?${query.toString()}`);
+        if (!response.ok) return [];
+        const data = await response.json();
+        return Array.isArray(data?.stats) ? data.stats : [];
+    } catch {
+        return [];
+    }
 }

@@ -1,4 +1,5 @@
 import { CATALOG, CATEGORY_LABEL, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
+import type { CartPetAssignment } from "@/lib/pet-attribution";
 
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
@@ -35,7 +36,7 @@ export function categoryTiles() {
     }));
 }
 
-export function cartProducts(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean }>) {
+export function cartProducts(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment }>) {
     return lines
         .map((line) => {
             const product = findProduct(line.productId);
@@ -55,12 +56,13 @@ export function cartProducts(lines: Array<{ productId: string; qty: number; colo
                 image: colorImage ?? product.image,
                 // 결제 대상 선택 여부(미지정 = 선택) — 장바구니 체크박스/checkout 필터용
                 selected: line.selected !== false,
+                petAssignment: line.petAssignment,
             };
         })
-        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; unitPrice: number; subtotal: number; color?: string; size?: string; image?: string; selected: boolean }>;
+        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; unitPrice: number; subtotal: number; color?: string; size?: string; image?: string; selected: boolean; petAssignment?: CartPetAssignment }>;
 }
 
-export function cartTotal(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean }>) {
+export function cartTotal(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment }>) {
     return cartProducts(lines).reduce((sum, line) => sum + line.subtotal, 0);
 }
 

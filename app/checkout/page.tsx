@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
 import { cartProducts } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
+import { trackTwinOrderAttribution } from "@/lib/storefront-analytics";
 
 export default function CheckoutPage() {
     const cart = useCart();
@@ -22,6 +23,7 @@ export default function CheckoutPage() {
         if (lines.length === 0) return;
         const id = `DDB-${Date.now().toString(36).toUpperCase()}`;
         const ordered = cart.lines.filter((line) => line.selected !== false);
+        const orderedLines = cartProducts(ordered);
         cart.addOrder({
             id,
             createdAt: new Date().toISOString(),
@@ -31,6 +33,22 @@ export default function CheckoutPage() {
             address: address.trim(),
             paymentMethod,
             status: "paid",
+        });
+        trackTwinOrderAttribution({
+            orderId: id,
+            customerName: user?.name || receiver.trim(),
+            customerEmail: user?.email || "",
+            total,
+            paymentMethod,
+            lines: orderedLines.map((line) => ({
+                lineId: `${line.product.id}-${line.color ?? ""}-${line.size ?? ""}`,
+                productId: line.product.id,
+                productName: line.product.name,
+                qty: line.qty,
+                unitPrice: line.unitPrice,
+                subtotal: line.subtotal,
+                petAssignment: line.petAssignment,
+            })),
         });
         // 주문된(선택된) 상품만 장바구니에서 제거 — 미선택 상품은 남긴다
         ordered.forEach((line) => cart.removeFromCart(line.productId, line.color, line.size));

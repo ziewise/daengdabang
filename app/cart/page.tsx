@@ -16,6 +16,8 @@ import { useRouter } from "next/navigation";
 import { formatKRW } from "@/lib/catalog";
 import { arrivalDateText, cartProducts, productHref } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
+import { usePets } from "@/hooks/usePets";
+import { cartPetOptions } from "@/lib/pet-attribution";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
@@ -42,7 +44,10 @@ export default function CartPage() {
     const router = useRouter();
     const cart = useCart();
     const { user } = useAuth();
+    const { pets: profilePets } = usePets();
     const lines = cartProducts(cart.lines);
+    const petOptions = cartPetOptions(user?.pets ?? [], profilePets);
+    const hasPets = petOptions.length > 0;
 
     // 선택된 라인만 합계·결제 대상
     const selectedLines = lines.filter((l) => l.selected);
@@ -103,7 +108,7 @@ export default function CartPage() {
                     </div>
 
                     <div className="grid gap-3">
-                        {lines.map(({ product, qty, subtotal, color, size, image, selected }) => (
+                        {lines.map(({ product, qty, subtotal, color, size, image, selected, petAssignment }) => (
                             <article key={`${product.id}-${color ?? ""}-${size ?? ""}`} className="surface relative flex gap-3.5 p-4">
                                 {/* 결제 대상 체크 */}
                                 <CheckBtn
@@ -147,6 +152,40 @@ export default function CartPage() {
                                         <i className="fa-solid fa-truck-fast mr-1 text-[10px]" />
                                         {arrival}
                                     </p>
+                                    <div className="mt-2.5 rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-2">
+                                        <label className="block">
+                                            <span className="mb-1 block text-[11px] font-black text-indigo-700">
+                                                누구를 위한 상품인가요?
+                                            </span>
+                                            {hasPets ? (
+                                                <select
+                                                    value={petAssignment?.petKey || ""}
+                                                    onChange={(event) => {
+                                                        const option = petOptions.find((item) => item.value === event.target.value);
+                                                        cart.setLinePet(product.id, option?.assignment, color, size);
+                                                    }}
+                                                    className="h-9 w-full rounded-md border border-indigo-100 bg-white px-2.5 text-xs font-bold text-neutral-800 outline-none transition focus:border-indigo-500"
+                                                    aria-label={`${product.name} 반려견 선택`}
+                                                >
+                                                    <option value="">선택해주세요</option>
+                                                    {petOptions.map((option) => (
+                                                        <option key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            ) : (
+                                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                                    <p className="text-xs font-bold leading-5 text-indigo-900">
+                                                        프로필을 등록하면 트윈 재구매 데이터가 쌓여요.
+                                                    </p>
+                                                    <Link href={user ? "/pet-lens" : "/auth/signup"} className="rounded-md bg-neutral-950 px-2.5 py-1.5 text-[11px] font-black text-white">
+                                                        등록
+                                                    </Link>
+                                                </div>
+                                            )}
+                                        </label>
+                                    </div>
                                     <p className="mt-1.5 text-lg font-black text-neutral-950">
                                         {formatKRW(subtotal)}
                                         <span className="text-sm">원</span>

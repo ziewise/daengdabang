@@ -20,7 +20,10 @@ import {
     isNewProduct,
     type CatalogProduct,
 } from "@/lib/catalog";
-import { useStore } from "@/lib/store";
+import { useAuth, useStore } from "@/lib/store";
+import { usePets } from "@/hooks/usePets";
+import { cartPetOptions } from "@/lib/pet-attribution";
+import { loadTwinProductStats, type TwinProductStat } from "@/lib/storefront-analytics";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
@@ -34,6 +37,8 @@ interface Props {
 
 export default function ProductInfo({ product: p, colorIdx = null, onColorChange }: Props) {
     const { toggleWishlist, isWished } = useStore();
+    const { user } = useAuth();
+    const { pets: profilePets } = usePets();
     const wished = isWished(p.id);
     const bestRank = getBestRank(p);
     const isNew = isNewProduct(p);
@@ -45,6 +50,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     // 옵션 선택 시트 모드(null=닫힘) + 담기 완료 토스트
     const [sheetMode, setSheetMode] = useState<null | "cart" | "buy">(null);
     const [toast, setToast] = useState(false);
+    const [twinStat, setTwinStat] = useState<TwinProductStat | null>(null);
 
     // 메인 액션 버튼이 스크롤로 화면을 벗어나면 하단 고정 바 노출
     const actionRef = useRef<HTMLDivElement>(null);
@@ -64,6 +70,26 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
             window.dispatchEvent(new CustomEvent("ddb:buybar", { detail: false }));
         };
     }, [showBar]);
+
+    useEffect(() => {
+        const petOption = cartPetOptions(user?.pets ?? [], profilePets)[0];
+        if (!petOption) {
+            setTwinStat(null);
+            return;
+        }
+        let ignore = false;
+        loadTwinProductStats({
+            cohortKey: petOption.assignment.cohortKey,
+            productIds: [p.id],
+            limit: 1,
+        }).then((stats) => {
+            if (ignore) return;
+            setTwinStat(stats[0] ?? null);
+        });
+        return () => {
+            ignore = true;
+        };
+    }, [p.id, profilePets, user?.pets]);
 
     // 시트에서 담기가 확정되면 토스트(구매는 결제 페이지로 이동하므로 토스트 없음)
     const handleCommitted = (mode: "cart" | "buy") => {
@@ -121,6 +147,22 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         <a href="#tab-review" className="font-bold text-neutral-600 hover:text-indigo-600">
                             리뷰 {p.reviewCount.toLocaleString()}개
                         </a>
+                    </div>
+                )}
+
+                {twinStat && twinStat.sampleSize >= 5 && typeof twinStat.repurchaseRate === "number" && (
+                    <div className="rounded-lg border border-indigo-100 bg-indigo-50/70 px-4 py-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-xs font-black text-indigo-700">우리 애 트윈</span>
+                            <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-indigo-700">
+                                표본 {twinStat.sampleSize}마리
+                            </span>
+                        </div>
+                        <p className="mt-1 text-sm font-bold leading-6 text-neutral-700">
+                            비슷한 프로필 아이들의 재구매율{" "}
+                            <b className="text-neutral-950">{Math.round(twinStat.repurchaseRate * 100)}%</b>
+                            {twinStat.cohortLevel && <span className="text-neutral-500"> · {twinStat.cohortLevel}</span>}
+                        </p>
                     </div>
                 )}
 

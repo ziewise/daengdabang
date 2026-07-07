@@ -13,9 +13,10 @@ import {
 // 로그인/로그아웃이 이 store 에만 기록되고 플래그가 안 바뀌어 헤더가
 // "로그인" 버튼을 유지하던 버그 수정 — login/logout 에서 함께 갱신한다.
 import { authStorage } from "@/lib/storage";
+import type { CartPetAssignment } from "@/lib/pet-attribution";
 
 // selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
-export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean };
+export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
 export type PetProfile = {
     name: string;
     size: "small" | "medium" | "large";
@@ -60,6 +61,7 @@ type Action =
     | { type: "SET_QTY"; productId: string; qty: number; color?: string; size?: string }
     | { type: "REMOVE_FROM_CART"; productId: string; color?: string; size?: string }
     | { type: "SET_SELECTED"; productId: string; color?: string; size?: string; selected: boolean }
+    | { type: "SET_LINE_PET"; productId: string; color?: string; size?: string; petAssignment?: CartPetAssignment }
     | { type: "SET_ALL_SELECTED"; selected: boolean }
     | { type: "CLEAR_CART" }
     | { type: "TOGGLE_WISHLIST"; productId: string }
@@ -119,6 +121,15 @@ function reducer(state: State, action: Action): State {
                     sameLine(line, action.productId, action.color, action.size) ? { ...line, selected: action.selected } : line
                 ),
             };
+        case "SET_LINE_PET":
+            return {
+                ...state,
+                cart: state.cart.map((line) =>
+                    sameLine(line, action.productId, action.color, action.size)
+                        ? { ...line, petAssignment: action.petAssignment }
+                        : line
+                ),
+            };
         case "SET_ALL_SELECTED":
             return { ...state, cart: state.cart.map((line) => ({ ...line, selected: action.selected })) };
         case "CLEAR_CART":
@@ -155,6 +166,7 @@ type StoreValue = {
     setQty: (productId: string, qty: number, color?: string, size?: string) => void;
     removeFromCart: (productId: string, color?: string, size?: string) => void;
     setSelected: (productId: string, selected: boolean, color?: string, size?: string) => void;
+    setLinePet: (productId: string, petAssignment?: CartPetAssignment, color?: string, size?: string) => void;
     setAllSelected: (selected: boolean) => void;
     clearCart: () => void;
     toggleWishlist: (productId: string) => void;
@@ -205,6 +217,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             setQty: (productId, qty, color, size) => dispatch({ type: "SET_QTY", productId, qty, color, size }),
             removeFromCart: (productId, color, size) => dispatch({ type: "REMOVE_FROM_CART", productId, color, size }),
             setSelected: (productId, selected, color, size) => dispatch({ type: "SET_SELECTED", productId, color, size, selected }),
+            setLinePet: (productId, petAssignment, color, size) => dispatch({ type: "SET_LINE_PET", productId, color, size, petAssignment }),
             setAllSelected: (selected) => dispatch({ type: "SET_ALL_SELECTED", selected }),
             clearCart: () => dispatch({ type: "CLEAR_CART" }),
             toggleWishlist: (productId) => dispatch({ type: "TOGGLE_WISHLIST", productId }),
