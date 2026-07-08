@@ -4,7 +4,7 @@ export type HeroWeatherReport = {
     weather: HeroWeather;
     locationName: string;
     locationNameEn?: string;
-    locationSource: "device" | "default" | "manual" | "selected" | "timezone";
+    locationSource: "default" | "ip" | "manual" | "selected" | "timezone";
     temperatureC: number | null;
     apparentTemperatureC: number | null;
     weatherCode: number | null;
@@ -48,6 +48,17 @@ type OpenMeteoGeocodingResponse = {
     }>;
 };
 
+type FreeIpApiResponse = {
+    latitude?: number;
+    longitude?: number;
+    cityName?: string;
+    regionName?: string;
+    countryName?: string;
+    countryCode?: string;
+    timeZones?: string[];
+    isProxy?: boolean;
+};
+
 type HeroWeatherLocation = {
     latitude: number;
     longitude: number;
@@ -68,10 +79,9 @@ export type HeroWeatherRegionOption = {
 };
 
 export const HERO_AUTO_REGION_ID = "auto";
-export const HERO_DEVICE_REGION_ID = "device";
-const CACHE_KEY_PREFIX = "ddb.hero.openmeteo.v4";
+const CACHE_KEY_PREFIX = "ddb.hero.openmeteo.v5";
 const CACHE_MS = 15 * 60 * 1000;
-const GEOLOCATION_TIMEOUT_MS = 2600;
+const IP_GEO_TIMEOUT_MS = 3200;
 const GEOCODING_TIMEOUT_MS = 3200;
 const DEFAULT_LATITUDE = 37.5665;
 const DEFAULT_LONGITUDE = 126.978;
@@ -300,7 +310,7 @@ function readManualLocation(): HeroWeatherLocation | null {
 export function resolveHeroWeatherRegion(regionId: string | null | undefined): HeroWeatherRegionOption | null {
     if (!regionId) return null;
     const normalized = regionId.trim().toLowerCase();
-    if (!normalized || normalized === HERO_AUTO_REGION_ID || normalized === HERO_DEVICE_REGION_ID) return null;
+    if (!normalized || normalized === HERO_AUTO_REGION_ID) return null;
     return HERO_TIMEZONE_REGION_OPTIONS.find((region) => (
         region.id === normalized ||
         region.name === regionId.trim() ||
@@ -425,31 +435,40 @@ async function geocodedTimezoneLocation(): Promise<HeroWeatherLocation | null> {
     }
 }
 
-function getDeviceLocation(): Promise<HeroWeatherLocation | null> {
-    if (typeof navigator === "undefined" || !navigator.geolocation) return Promise.resolve(null);
+async function ipGeoLocation(): Promise<HeroWeatherLocation | null> {
+    if (typeof fetch === "undefined") return null;
 
-    return new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = Number(position.coords.latitude.toFixed(3));
-                const longitude = Number(position.coords.longitude.toFixed(3));
-                const nearest = nearestGlobalLocationName(latitude, longitude);
-                resolve({
-                    latitude,
-                    longitude,
-                    name: nearest.name,
-                    nameEn: nearest.nameEn,
-                    source: "device",
-                });
-            },
-            () => resolve(null),
-            {
-                enableHighAccuracy: false,
-                maximumAge: CACHE_MS,
-                timeout: GEOLOCATION_TIMEOUT_MS,
-            },
-        );
-    });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), IP_GEO_TIMEOUT_MS);
+
+    try {
+        const response = await fetch("https://free.freeipapi.com/api/json", {
+            signal: controller.signal,
+            cache: "no-store",
+        });
+        if (!response.ok) return null;
+        const data = (await response.json()) as FreeIpApiResponse;
+        const latitude = numberOrNull(data.latitude);
+        const longitude = numberOrNull(data.longitude);
+        if (latitude === null || longitude === null) return null;
+
+        const nearest = nearestGlobalLocationName(latitude, longitude);
+        const fallbackName = data.cityName || data.regionName || data.countryName || "Current location";
+        const timeZone = Array.isArray(data.timeZones) ? data.timeZones[0] : undefined;
+
+        return {
+            latitude,
+            longitude,
+            name: nearest.nameEn === "Current location" ? fallbackName : nearest.name,
+            nameEn: nearest.nameEn === "Current location" ? fallbackName : nearest.nameEn,
+            timeZone,
+            source: "ip",
+        };
+    } catch {
+        return null;
+    } finally {
+        window.clearTimeout(timeout);
+    }
 }
 
 function locationCacheKey(location: HeroWeatherLocation): string {
@@ -535,15 +554,14 @@ function setCachedReport(location: HeroWeatherLocation, report: HeroWeatherRepor
 export async function fetchHeroWeatherReport(options: { regionId?: string | null } = {}): Promise<HeroWeatherReport | null> {
     const manualLocation = readManualLocation();
     const selectedLocation = manualLocation ? null : selectedRegionLocation(options.regionId);
-    const useDeviceLocation = options.regionId === HERO_DEVICE_REGION_ID;
-    const deviceLocation = useDeviceLocation ? await getDeviceLocation() : null;
-    const mappedTimezoneLocation = manualLocation || selectedLocation || deviceLocation ? null : timezoneLocation();
-    const geocodedLocation = manualLocation || selectedLocation || deviceLocation || mappedTimezoneLocation
+    const ipLocation = manualLocation || selectedLocation ? null : await ipGeoLocation();
+    const mappedTimezoneLocation = manualLocation || selectedLocation || ipLocation ? null : timezoneLocation();
+    const geocodedLocation = manualLocation || selectedLocation || ipLocation || mappedTimezoneLocation
         ? null
         : await geocodedTimezoneLocation();
     const location = manualLocation
         ?? selectedLocation
-        ?? deviceLocation
+        ?? ipLocation
         ?? mappedTimezoneLocation
         ?? geocodedLocation
         ?? DEFAULT_LOCATION;
