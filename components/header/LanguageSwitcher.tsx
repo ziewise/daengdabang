@@ -13,12 +13,21 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
 
     return (
         <div
-            className={`inline-flex shrink-0 items-center rounded-full border border-neutral-200 bg-white/85 p-0.5 shadow-sm backdrop-blur ${
+            className={`inline-flex shrink-0 items-center rounded-full border border-white/70 bg-white/75 p-1 shadow-[0_8px_24px_-18px_rgba(15,23,42,0.7)] backdrop-blur-xl ring-1 ring-neutral-950/5 ${
                 compact ? "h-9" : "h-10"
             }`}
             aria-label={t("language")}
             role="group"
         >
+            <span
+                className={`items-center gap-1.5 pl-2 pr-1 text-[11px] font-black text-neutral-500 ${
+                    compact ? "sr-only" : "hidden xl:inline-flex"
+                }`}
+                aria-hidden="true"
+            >
+                <i className="fa-solid fa-globe text-[10px] text-aurora-indigo" />
+                <span>{t("language")}</span>
+            </span>
             {OPTIONS.map((option) => {
                 const active = option.locale === locale;
                 return (
@@ -29,45 +38,20 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
                         aria-pressed={active}
                         aria-label={t(option.labelKey)}
                         title={t(option.labelKey)}
-                        className={`flex h-full min-w-9 items-center justify-center gap-1 rounded-full px-2 text-xs font-black transition ${
+                        className={`inline-flex h-full items-center justify-center rounded-full text-xs font-black transition ${
                             active
-                                ? "bg-neutral-950 text-white"
-                                : "text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+                                ? "bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white shadow-[0_6px_16px_-10px_rgba(67,56,202,0.8)]"
+                                : "text-neutral-500 hover:bg-white hover:text-neutral-950"
+                        } ${
+                            compact
+                                ? "min-w-9 px-2"
+                                : "min-w-9 px-2.5"
                         }`}
                     >
-                        <FlagIcon locale={option.locale} />
-                        <span className={compact ? "sr-only" : ""}>{option.short}</span>
+                        <span className={compact ? "text-[11px]" : "text-xs"}>{option.short}</span>
                     </button>
                 );
             })}
         </div>
-    );
-}
-
-function FlagIcon({ locale }: { locale: Locale }) {
-    if (locale === "ko") {
-        return (
-            <span aria-hidden="true" className="relative h-4 w-5 overflow-hidden rounded-[3px] bg-white ring-1 ring-neutral-200">
-                <span className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full">
-                    <span className="absolute inset-x-0 top-0 h-1/2 bg-rose-500" />
-                    <span className="absolute inset-x-0 bottom-0 h-1/2 bg-blue-600" />
-                </span>
-                <span className="absolute left-0.5 top-0.5 h-0.5 w-1 bg-neutral-800 rotate-[-24deg]" />
-                <span className="absolute right-0.5 bottom-0.5 h-0.5 w-1 bg-neutral-800 rotate-[-24deg]" />
-            </span>
-        );
-    }
-
-    return (
-        <span
-            aria-hidden="true"
-            className="relative h-4 w-5 overflow-hidden rounded-[3px] bg-white ring-1 ring-neutral-200"
-            style={{
-                backgroundImage: "repeating-linear-gradient(to bottom, #ef4444 0 2px, #ffffff 2px 4px)",
-            }}
-        >
-            <span className="absolute left-0 top-0 h-2.5 w-2.5 bg-blue-700" />
-            <span className="absolute left-[3px] top-[2px] h-0.5 w-0.5 rounded-full bg-white shadow-[4px_0_0_white,0_3px_0_white,4px_3px_0_white]" />
-        </span>
     );
 }
