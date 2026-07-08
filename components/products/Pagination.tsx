@@ -7,6 +7,8 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 function getPageNumbers(current: number, total: number): (number | "...")[] {
     const pages: (number | "...")[] = [];
     const left = Math.max(1, current - 1);
@@ -32,17 +34,18 @@ export default function Pagination({
     totalPages: number;
     onChange: (page: number) => void;
 }) {
+    const { locale } = useI18n();
     if (totalPages <= 1) return null;
 
     return (
-        <nav className="mt-8 flex flex-wrap items-center justify-center gap-1.5" aria-label="페이지 이동">
+        <nav className="mt-8 flex flex-wrap items-center justify-center gap-1.5" aria-label={locale === "en" ? "Page navigation" : "페이지 이동"}>
             <button
                 type="button"
                 onClick={() => onChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 className="flex h-9 items-center rounded-lg border border-neutral-200 px-3 text-sm font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
             >
-                이전
+                {locale === "en" ? "Prev" : "이전"}
             </button>
             {getPageNumbers(currentPage, totalPages).map((n, i) =>
                 n === "..." ? (
@@ -71,7 +74,7 @@ export default function Pagination({
                 disabled={currentPage === totalPages}
                 className="flex h-9 items-center rounded-lg border border-neutral-200 px-3 text-sm font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-600"
             >
-                다음
+                {locale === "en" ? "Next" : "다음"}
             </button>
         </nav>
     );

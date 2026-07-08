@@ -5,12 +5,14 @@ import Link from "next/link";
 import {
     answerShopQuestion,
     answerShopQuestionSmart,
+    type ShopChatCta,
     type ShopChatAction,
     type ShopChatMedical,
     type ShopChatSource,
 } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
+import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 
 type Message = {
     role: "user" | "assistant";
@@ -19,6 +21,7 @@ type Message = {
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
+    ctas?: ShopChatCta[];
 };
 
 const THINKING_ACTIONS: ShopChatAction[] = [
@@ -97,16 +100,15 @@ export default function ChatWidget() {
         setLoading(false);
     };
 
-    const submit = async (event: FormEvent) => {
-        event.preventDefault();
-        const question = input.trim();
-        if (!question || loading) return;
+    const ask = async (question: string) => {
+        const trimmed = question.trim();
+        if (!trimmed || loading) return;
         setInput("");
         setLoading(true);
         startThinking();
-        setMessages((prev) => [...prev, { role: "user", text: question }]);
+        setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
-            const result = await answerShopQuestionSmart(question, { pet: user?.pets?.[0] ?? null });
+            const result = await answerShopQuestionSmart(trimmed, { pet: user?.pets?.[0] ?? null });
             setMessages((prev) => [
                 ...prev,
                 {
@@ -116,12 +118,18 @@ export default function ChatWidget() {
                     medical: result.medical,
                     sources: result.sources,
                     actions: result.actions,
+                    ctas: result.ctas,
                 },
             ]);
         } finally {
             stopThinking();
             setLoading(false);
         }
+    };
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        void ask(input);
     };
 
     return (
@@ -161,6 +169,15 @@ export default function ChatWidget() {
                                 >
                                     {message.text}
                                 </div>
+                                {message.role === "assistant" && (
+                                    <ChatResponseExtras
+                                        medical={message.medical}
+                                        sources={message.sources}
+                                        ctas={message.ctas}
+                                        onAsk={ask}
+                                        compact
+                                    />
+                                )}
                                 {message.role === "assistant" && <ActionList actions={message.actions} />}
                                 {message.products && message.products.length > 0 && (
                                     <div className="mt-2 grid gap-2">
@@ -172,35 +189,6 @@ export default function ChatWidget() {
                                             >
                                                 {product.name}
                                             </Link>
-                                        ))}
-                                    </div>
-                                )}
-                                {message.role === "assistant" && message.medical?.followUpQuestions && message.medical.followUpQuestions.length > 0 && (
-                                    <div className="mt-2 flex flex-wrap gap-1.5">
-                                        {message.medical.followUpQuestions.slice(0, 3).map((question) => (
-                                            <button
-                                                key={question}
-                                                type="button"
-                                                onClick={() => setInput(question)}
-                                                className="rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-left text-[11px] font-extrabold leading-4 text-sky-800"
-                                            >
-                                                {question}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                                {message.role === "assistant" && message.sources && message.sources.length > 0 && (
-                                    <div className="mt-2 flex flex-wrap gap-1.5">
-                                        {message.sources.slice(0, 3).map((source) => (
-                                            <a
-                                                key={`${source.name}-${source.url}`}
-                                                href={source.url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-extrabold text-neutral-600"
-                                            >
-                                                {source.name}
-                                            </a>
                                         ))}
                                     </div>
                                 )}

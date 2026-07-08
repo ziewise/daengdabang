@@ -6,10 +6,12 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 export default function NewsletterForm() {
     const [email, setEmail] = useState("");
     const [subscribed, setSubscribed] = useState(false);
+    const { locale } = useI18n();
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,14 +32,14 @@ export default function NewsletterForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="이메일을 입력해주세요"
+                placeholder={locale === "en" ? "Enter your email" : "이메일을 입력해주세요"}
                 className="flex-1 min-w-0 px-3.5 text-xs outline-none bg-transparent placeholder:text-neutral-400"
             />
             <button
                 type="submit"
                 className="flex-shrink-0 px-4 h-8 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-[11px] font-bold hover:opacity-90 transition whitespace-nowrap"
             >
-                {subscribed ? "완료!" : "구독하기"}
+                {subscribed ? (locale === "en" ? "Done" : "완료!") : (locale === "en" ? "Subscribe" : "구독하기")}
             </button>
         </form>
     );

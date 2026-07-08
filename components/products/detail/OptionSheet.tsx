@@ -15,8 +15,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { formatKRW, type CatalogProduct } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog";
 import { useAuth, useCart } from "@/lib/store";
+import { useI18n } from "@/lib/i18n";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
 
 interface Props {
@@ -37,6 +38,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     const router = useRouter();
     const { addToCart } = useCart();
     const { user } = useAuth();
+    const { t, locale, formatPrice, productName } = useI18n();
     const colors = p.colors ?? [];
     const sizes = p.sizes ?? [];
     const hasColors = colors.length > 0;
@@ -47,6 +49,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     const [sizeIdx, setSizeIdx] = useState<number | null>(null);
     const [qty, setQty] = useState(1);
     const [picks, setPicks] = useState<Pick[]>([]);
+    const displayName = productName(p);
 
     // 열릴 때마다 페이지에서 고른 색상으로 초기화(없으면 미선택)
     useEffect(() => {
@@ -67,7 +70,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     // 누적 라벨 — "색상 · 사이즈"(있는 옵션만)
     const optionLabel = (ci: number, si: number) =>
         [hasColors ? colors[ci]?.name : null, hasSizes ? sizes[si]?.name : null].filter(Boolean).join(" · ");
-    const addLabel = "추가";
+    const addLabel = t("add");
 
     const addPick = () => {
         if (!selectionComplete) return;
@@ -134,15 +137,15 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-label={mode === "buy" ? "구매 옵션 선택" : "장바구니 옵션 선택"}
+                aria-label={mode === "buy" ? t("buyNow") : t("addToCart")}
                 className={`fixed z-[61] flex flex-col bg-white shadow-2xl transition-transform duration-300 inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl sm:inset-x-auto sm:bottom-0 sm:right-0 sm:top-0 sm:h-full sm:max-h-none sm:w-[320px] sm:max-w-[92vw] sm:rounded-l-2xl sm:rounded-tr-none ${
                     open ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-y-0 sm:translate-x-full"
                 }`}
             >
                 {/* 헤더 */}
                 <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-5 pb-3 pt-5">
-                    <h2 className="text-lg font-black text-neutral-950">{mode === "buy" ? "구매하기" : "장바구니 넣기"}</h2>
-                    <button type="button" onClick={onClose} aria-label="닫기" className="text-neutral-400 transition hover:text-neutral-700">
+                    <h2 className="text-lg font-black text-neutral-950">{mode === "buy" ? t("buyNow") : t("addToCart")}</h2>
+                    <button type="button" onClick={onClose} aria-label={t("close")} className="text-neutral-400 transition hover:text-neutral-700">
                         <i className="fa-solid fa-xmark text-xl" />
                     </button>
                 </div>
@@ -153,7 +156,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                     <div className="flex gap-3 sm:block">
                         <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-[#f7f2e8] sm:mb-3 sm:aspect-square sm:h-auto sm:w-full">
                             {previewImage ? (
-                                <Image key={previewImage} src={previewImage} alt={p.name} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
+                                <Image key={previewImage} src={previewImage} alt={displayName} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
                             ) : (
                                 <div className="flex h-full items-center justify-center text-3xl text-neutral-300">
                                     <i className={`fa-solid ${p.icon}`} />
@@ -161,11 +164,11 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                             )}
                         </div>
                         <div className="min-w-0 flex-1">
-                            <p className="line-clamp-2 text-sm font-bold leading-snug text-neutral-800 sm:line-clamp-none">{p.name}</p>
+                            <p className="line-clamp-2 text-sm font-bold leading-snug text-neutral-800 sm:line-clamp-none">{displayName}</p>
                             {hasColors && (
                                 <>
                                     <p className="mt-2 text-xs font-black text-neutral-500">
-                                        옵션 1 <span className="text-rose-500">(필수)</span>
+                                        {t("option")} 1 <span className="text-rose-500">({t("optionRequired")})</span>
                                         {colorIdx != null && (
                                             <span className="text-neutral-900"> · {colors[colorIdx]?.name}</span>
                                         )}
@@ -198,12 +201,12 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                     {hasSizes && (
                         <div className="mt-4">
                             <label className="mb-1.5 block text-xs font-black text-neutral-500">
-                                옵션 2 <span className="text-rose-500">(필수)</span>
+                                {t("option")} 2 <span className="text-rose-500">({t("optionRequired")})</span>
                             </label>
                             <select
                                 value={sizeIdx ?? ""}
                                 onChange={(e) => setSizeIdx(e.target.value === "" ? null : Number(e.target.value))}
-                                aria-label="사이즈 선택"
+                                aria-label={t("chooseOption")}
                                 className={`h-11 w-full rounded-md border bg-white px-3 text-sm font-bold text-neutral-900 transition focus:border-indigo-500 focus:outline-none ${
                                     sizeIdx != null ? "border-neutral-200" : "border-rose-200"
                                 }`}
@@ -212,7 +215,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                 {sizes.map((s, i) => (
                                     <option key={s.name} value={i} className="text-neutral-900">
                                         {s.name}
-                                        {s.delta ? ` (${s.delta > 0 ? "+" : "−"}${Math.abs(s.delta).toLocaleString("ko-KR")}원)` : ""}
+                                        {s.delta ? ` (${s.delta > 0 ? "+" : "−"}${formatPrice(Math.abs(s.delta))})` : ""}
                                     </option>
                                 ))}
                             </select>
@@ -255,7 +258,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                         )}
                                         {optionLabel(x.colorIdx, x.sizeIdx)} <span className="text-neutral-400">×</span> {x.qty}
                                     </span>
-                                    <button type="button" onClick={() => removePick(x.colorIdx, x.sizeIdx)} aria-label="삭제" className="text-neutral-400 transition hover:text-rose-600">
+                                    <button type="button" onClick={() => removePick(x.colorIdx, x.sizeIdx)} aria-label={t("delete")} className="text-neutral-400 transition hover:text-rose-600">
                                         <i className="fa-solid fa-trash text-xs" />
                                     </button>
                                 </li>
@@ -267,8 +270,10 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                 {/* 하단 고정 — 합계 + 확정(옵션 미선택 시 비활성) */}
                 <div className="shrink-0 border-t border-neutral-200 px-5 pb-5 pt-3">
                     <div className="flex items-baseline justify-between">
-                        <span className="text-sm font-black text-neutral-600">합계 {totalQty}개</span>
-                        <b className="text-2xl font-black text-indigo-700">{formatKRW(totalPrice)}원</b>
+                        <span className="text-sm font-black text-neutral-600">
+                            {t("total")} {locale === "en" ? `${totalQty} ${t("countSuffix")}` : `${totalQty}${t("countSuffix")}`}
+                        </span>
+                        <b className="text-2xl font-black text-indigo-700">{formatPrice(totalPrice)}</b>
                     </div>
                     <button
                         type="button"
@@ -276,7 +281,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                         disabled={!canConfirm}
                         className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
                     >
-                        {!canConfirm ? "옵션을 선택하세요" : mode === "buy" ? "구매하기" : "장바구니 담기"}
+                        {!canConfirm ? t("chooseOption") : mode === "buy" ? t("buyNow") : t("addToCart")}
                     </button>
 
                     {/* 구매 모드 — 간편결제(네이버페이·카카오페이). 옵션 미선택 시 함께 비활성 */}

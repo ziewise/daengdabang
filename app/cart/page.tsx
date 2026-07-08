@@ -13,12 +13,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatKRW } from "@/lib/catalog";
 import { arrivalDateText, cartProducts, productHref } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 import { usePets } from "@/hooks/usePets";
 import { cartPetOptions } from "@/lib/pet-attribution";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
+import { useI18n } from "@/lib/i18n";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
 function CheckBtn({ checked, onToggle, label }: { checked: boolean; onToggle: () => void; label: string }) {
@@ -45,6 +45,7 @@ export default function CartPage() {
     const cart = useCart();
     const { user } = useAuth();
     const { pets: profilePets } = usePets();
+    const { t, locale, formatPrice, productName } = useI18n();
     const lines = cartProducts(cart.lines);
     const petOptions = cartPetOptions(user?.pets ?? [], profilePets);
     const hasPets = petOptions.length > 0;
@@ -53,7 +54,8 @@ export default function CartPage() {
     const selectedLines = lines.filter((l) => l.selected);
     const selectedTotal = selectedLines.reduce((sum, l) => sum + l.subtotal, 0);
     const allSelected = lines.length > 0 && selectedLines.length === lines.length;
-    const arrival = arrivalDateText();
+    const arrival = arrivalDateText(locale);
+    const countText = (count: number) => locale === "en" ? `${count} ${t("countSuffix")}` : `${count}${t("countSuffix")}`;
 
     // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원 주문도 선택 가능)으로
     const goCheckout = () => {
@@ -64,7 +66,10 @@ export default function CartPage() {
     // 선택삭제 — 체크된 라인 일괄 삭제(실수 방지 confirm)
     const removeSelected = () => {
         if (selectedLines.length === 0) return;
-        if (!window.confirm(`선택한 ${selectedLines.length}개 상품을 삭제할까요?`)) return;
+        const message = locale === "en"
+            ? `Remove ${selectedLines.length} selected item(s)?`
+            : `선택한 ${selectedLines.length}개 상품을 삭제할까요?`;
+        if (!window.confirm(message)) return;
         selectedLines.forEach((l) => cart.removeFromCart(l.product.id, l.color, l.size));
     };
 
@@ -72,9 +77,9 @@ export default function CartPage() {
         return (
             <main className="mx-auto max-w-[760px] px-4 py-14 text-center">
                 <i className="fa-solid fa-bag-shopping text-4xl text-neutral-300" />
-                <h1 className="mt-4 text-2xl font-black text-neutral-950">장바구니가 비어 있습니다.</h1>
+                <h1 className="mt-4 text-2xl font-black text-neutral-950">{t("emptyCart")}</h1>
                 <Link href="/products" className="btn btn-primary mt-6">
-                    상품 보러가기
+                    {t("shopNow")}
                 </Link>
             </main>
         );
@@ -82,7 +87,7 @@ export default function CartPage() {
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
-            <h1 className="text-3xl font-black tracking-tight text-neutral-950">장바구니</h1>
+            <h1 className="text-3xl font-black tracking-tight text-neutral-950">{t("cart")}</h1>
             <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section>
                     {/* 전체선택 / 선택삭제 바 */}
@@ -90,9 +95,9 @@ export default function CartPage() {
                         {/* label 은 클릭을 내부 버튼으로 전달하므로 토글은 CheckBtn(onToggle) 한 곳에만.
                             (label 자체에 onClick 을 두면 전달 클릭까지 두 번 발화 → 토글이 즉시 되돌아가는 버그) */}
                         <label className="flex cursor-pointer items-center gap-2.5">
-                            <CheckBtn checked={allSelected} onToggle={() => cart.setAllSelected(!allSelected)} label="전체선택" />
+                            <CheckBtn checked={allSelected} onToggle={() => cart.setAllSelected(!allSelected)} label={t("selectedAll")} />
                             <span className="text-sm font-black text-neutral-800">
-                                전체선택 <span className="text-indigo-600">{selectedLines.length}</span>
+                                {t("selectedAll")} <span className="text-indigo-600">{selectedLines.length}</span>
                                 <span className="text-neutral-400">/{lines.length}</span>
                             </span>
                         </label>
@@ -103,7 +108,7 @@ export default function CartPage() {
                             className="text-xs font-black text-neutral-500 transition hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             <i className="fa-solid fa-trash-can mr-1 text-[10px]" />
-                            선택삭제
+                            {t("deleteSelected")}
                         </button>
                     </div>
 
@@ -114,7 +119,7 @@ export default function CartPage() {
                                 <CheckBtn
                                     checked={selected}
                                     onToggle={() => cart.setSelected(product.id, !selected, color, size)}
-                                    label={`${product.name} 선택`}
+                                    label={`${productName(product)} ${locale === "en" ? "select" : "선택"}`}
                                 />
 
                                 {/* 썸네일 */}
@@ -123,7 +128,7 @@ export default function CartPage() {
                                     className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-100 bg-[#f7f2e8] md:h-28 md:w-28"
                                 >
                                     {image ? (
-                                        <Image src={image} alt={product.name} fill sizes="112px" className="object-cover" />
+                                        <Image src={image} alt={productName(product)} fill sizes="112px" className="object-cover" />
                                     ) : (
                                         <div className="flex h-full items-center justify-center text-3xl text-white">
                                             <i className={`fa-solid ${product.icon}`} />
@@ -140,11 +145,11 @@ export default function CartPage() {
                                         href={productHref(product)}
                                         className="mt-0.5 block pr-12 text-sm font-black leading-5 text-neutral-950 md:text-[15px]"
                                     >
-                                        {product.name}
+                                        {productName(product)}
                                     </Link>
                                     {(color || size) && (
                                         <p className="mt-1 text-xs font-bold text-neutral-500">
-                                            옵션: {[color, size].filter(Boolean).join(", ")}
+                                            {t("option")}: {[color, size].filter(Boolean).join(", ")}
                                         </p>
                                     )}
                                     {/* 도착 예정일 — 무료배송 1~2일 출고 기준 */}
@@ -155,7 +160,7 @@ export default function CartPage() {
                                     <div className="mt-2.5 rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-2">
                                         <label className="block">
                                             <span className="mb-1 block text-[11px] font-black text-indigo-700">
-                                                누구를 위한 상품인가요?
+                                                {t("whoFor")}
                                             </span>
                                             {hasPets ? (
                                                 <select
@@ -165,9 +170,9 @@ export default function CartPage() {
                                                         cart.setLinePet(product.id, option?.assignment, color, size);
                                                     }}
                                                     className="h-9 w-full rounded-md border border-indigo-100 bg-white px-2.5 text-xs font-bold text-neutral-800 outline-none transition focus:border-indigo-500"
-                                                    aria-label={`${product.name} 반려견 선택`}
+                                                    aria-label={`${productName(product)} ${t("choosePet")}`}
                                                 >
-                                                    <option value="">선택해주세요</option>
+                                                    <option value="">{t("choosePet")}</option>
                                                     {petOptions.map((option) => (
                                                         <option key={option.value} value={option.value}>
                                                             {option.label}
@@ -177,18 +182,17 @@ export default function CartPage() {
                                             ) : (
                                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                                     <p className="text-xs font-bold leading-5 text-indigo-900">
-                                                        프로필을 등록하면 트윈 재구매 데이터가 쌓여요.
+                                                        {t("petProfileBenefit")}
                                                     </p>
                                                     <Link href={user ? "/pet-lens" : "/auth/signup"} className="rounded-md bg-neutral-950 px-2.5 py-1.5 text-[11px] font-black text-white">
-                                                        등록
+                                                        {t("register")}
                                                     </Link>
                                                 </div>
                                             )}
                                         </label>
                                     </div>
                                     <p className="mt-1.5 text-lg font-black text-neutral-950">
-                                        {formatKRW(subtotal)}
-                                        <span className="text-sm">원</span>
+                                        {formatPrice(subtotal)}
                                     </p>
                                     {/* 수량 — 1이면 마이너스 비활성(삭제는 삭제 버튼으로) */}
                                     <div className="mt-2.5 inline-flex h-9 items-center rounded-lg border border-neutral-200 bg-white">
@@ -220,7 +224,7 @@ export default function CartPage() {
                                     onClick={() => cart.removeFromCart(product.id, color, size)}
                                     className="absolute right-4 top-4 rounded-md border border-neutral-200 bg-white px-2.5 py-1 text-xs font-black text-neutral-500 transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600"
                                 >
-                                    삭제
+                                    {t("delete")}
                                 </button>
                             </article>
                         ))}
@@ -229,20 +233,20 @@ export default function CartPage() {
 
                 {/* 주문 합계 — 선택된 상품 기준 */}
                 <aside className="surface h-fit p-5">
-                    <h2 className="text-lg font-black text-neutral-950">주문 합계</h2>
+                    <h2 className="text-lg font-black text-neutral-950">{t("orderSummary")}</h2>
                     <div className="mt-4 flex items-center justify-between text-sm font-bold text-neutral-600">
                         <span>
-                            상품 금액 <span className="text-indigo-600">{selectedLines.length}개</span>
+                            {t("productAmount")} <span className="text-indigo-600">{countText(selectedLines.length)}</span>
                         </span>
-                        <b className="text-neutral-950">{formatKRW(selectedTotal)}원</b>
+                        <b className="text-neutral-950">{formatPrice(selectedTotal)}</b>
                     </div>
                     <div className="mt-2 flex items-center justify-between text-sm font-bold text-neutral-600">
-                        <span>배송비</span>
-                        <b className="text-neutral-950">0원</b>
+                        <span>{t("shippingFee")}</span>
+                        <b className="text-neutral-950">{formatPrice(0)}</b>
                     </div>
                     <div className="mt-4 border-t border-neutral-200 pt-4 flex items-center justify-between">
-                        <span className="font-black">결제 예정</span>
-                        <b className="text-2xl font-black text-indigo-700">{formatKRW(selectedTotal)}원</b>
+                        <span className="font-black">{t("paymentDue")}</span>
+                        <b className="text-2xl font-black text-indigo-700">{formatPrice(selectedTotal)}</b>
                     </div>
                     <button
                         type="button"
@@ -250,7 +254,9 @@ export default function CartPage() {
                         disabled={selectedLines.length === 0}
                         className="btn btn-primary mt-5 w-full disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                        {selectedLines.length === 0 ? "상품을 선택하세요" : `결제하기 (${selectedLines.length}개)`}
+                        {selectedLines.length === 0
+                            ? t("selectProducts")
+                            : `${t("checkout")} (${countText(selectedLines.length)})`}
                     </button>
                     {/* 간편결제 — 네이버페이·카카오페이 */}
                     <SimplePayButtons disabled={selectedLines.length === 0} />

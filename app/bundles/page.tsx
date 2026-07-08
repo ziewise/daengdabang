@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BundleCard from "@/components/bundles/BundleCard";
+import LocalizedText from "@/components/i18n/LocalizedText";
 import { BUNDLES, bundleCountSummary } from "@/lib/bundles";
 
 export const metadata: Metadata = {
@@ -15,20 +16,25 @@ export default function BundlesPage() {
             <p className="text-sm font-black text-indigo-700">PROMO</p>
             <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">세트 상품</h1>
+                    <LocalizedText
+                        as="h1"
+                        ko="세트 상품"
+                        en="Bundle Sets"
+                        className="text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"
+                    />
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="surface px-4 py-3">
                         <p className="text-lg font-black text-neutral-950">{summary.total}</p>
-                        <p className="text-[11px] font-bold text-neutral-500">전체 세트</p>
+                        <LocalizedText ko="전체 세트" en="Total sets" className="text-[11px] font-bold text-neutral-500" />
                     </div>
                     <div className="surface px-4 py-3">
                         <p className="text-lg font-black text-neutral-950">{summary.ready}</p>
-                        <p className="text-[11px] font-bold text-neutral-500">영상 완료</p>
+                        <LocalizedText ko="영상 완료" en="Video ready" className="text-[11px] font-bold text-neutral-500" />
                     </div>
                     <div className="surface px-4 py-3">
                         <p className="text-lg font-black text-neutral-950">{summary.needsVideo}</p>
-                        <p className="text-[11px] font-bold text-neutral-500">영상 대기</p>
+                        <LocalizedText ko="영상 대기" en="Video pending" className="text-[11px] font-bold text-neutral-500" />
                     </div>
                 </div>
             </div>

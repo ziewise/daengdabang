@@ -67,9 +67,13 @@ export function cartTotal(lines: Array<{ productId: string; qty: number; color?:
 }
 
 /** 도착 예정일 텍스트 — 무료배송 1~2일 내 출고 기준(오늘 +2일). 예: "7/4(토) 도착 예정" */
-export function arrivalDateText(): string {
+export function arrivalDateText(locale: "ko" | "en" = "ko"): string {
     const d = new Date();
     d.setDate(d.getDate() + 2);
+    if (locale === "en") {
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        return `Arrives ${d.getMonth() + 1}/${d.getDate()} (${days[d.getDay()]})`;
+    }
     const days = ["일", "월", "화", "수", "목", "금", "토"];
     return `${d.getMonth() + 1}/${d.getDate()}(${days[d.getDay()]}) 도착 예정`;
 }

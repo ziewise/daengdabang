@@ -29,6 +29,7 @@ export type ShopChatMedical = {
     topicLabel?: string;
     followUpQuestions?: string[];
     followUpSlots?: Array<{ key: string; label: string; prompt: string; required?: boolean }>;
+    choiceGroups?: ShopChatChoiceGroup[];
     redFlags?: string[];
     firstSteps?: string[];
     careWindow?: string;
@@ -49,18 +50,41 @@ export type ShopChatResearch = {
     domains?: string[];
 };
 
+export type ShopChatChoiceGroup = {
+    title: string;
+    choices: Array<{ label: string; prompt: string; description?: string }>;
+};
+
+export type ShopChatCta = {
+    kind: "geo_vet_search" | "external_link" | "prompt";
+    label: string;
+    url?: string;
+    query?: string;
+    prompt?: string;
+    helperText?: string;
+    icon?: string;
+};
+
 export type ShopChatAnswer = {
     answer: string;
     products: CatalogProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
+    ctas?: ShopChatCta[];
     research?: ShopChatResearch;
 };
 
 const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "AVMA pet first aid", url: "https://www.avma.org/resources-tools/pet-owners/emergencycare/first-aid-tips-pet-owners" },
     { name: "Merck Veterinary Manual pet emergencies", url: "https://www.merckvetmanual.com/special-pet-topics/emergencies/what-to-do-in-a-dog-or-cat-emergency" },
+];
+
+const HEARTWORM_SOURCE_FALLBACK: ShopChatSource[] = [
+    { name: "American Heartworm Society", url: "https://www.heartwormsociety.org/pet-owner-resources/heartworm-basics" },
+    { name: "AHS preventives", url: "https://www.heartwormsociety.org/preventives" },
+    { name: "AVMA heartworm disease", url: "https://www.avma.org/resources-tools/pet-owners/petcare/heartworm-disease" },
+    { name: "FDA heartworm facts", url: "https://www.fda.gov/animal-veterinary/animal-health-literacy/keep-worms-out-your-pets-heart-facts-about-heartworm-disease" },
 ];
 
 const GENERAL_DOG_SOURCE_FALLBACK: ShopChatSource[] = [
@@ -122,13 +146,29 @@ function scopeGuardFallback(message: string): ShopChatAnswer | null {
     if (vetLocator) {
         const searchText = encodeURIComponent(message.replace(/알려줘|알려주세요|찾아줘|찾아주세요|어디|있나|있나요|\?/g, " ").trim() || "동물병원");
         return {
-            answer: "동물병원을 찾는 질문으로 이해했어요. 실시간 영업 여부와 야간/응급 진료 여부는 지도 결과가 바뀔 수 있으니, 지도 검색을 연 뒤 전화로 먼저 확인하는 흐름이 가장 안전합니다. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
+            answer: "동물병원을 찾는 질문으로 이해했어요. 아래 버튼을 누르면 현재 위치 기준으로 가까운 동물병원 후보를 먼저 보여드릴게요. 실시간 영업 여부와 야간/응급 진료 여부는 지도 결과가 바뀔 수 있으니, 이동 전 전화로 먼저 확인하는 흐름이 가장 안전합니다. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
             products: [],
             medical: { mode: false, triage: "vet_locator", topic: "nearby_vet", disclaimer: "지도 검색 보조이며 진료 품질, 대기 시간, 영업 여부를 보증하지 않습니다." },
             sources: [
                 { name: "카카오맵 검색", url: `https://map.kakao.com/link/search/${searchText}` },
                 { name: "네이버지도 검색", url: `https://map.naver.com/p/search/${searchText}` },
                 { name: "Google Maps 검색", url: `https://www.google.com/maps/search/${searchText}` },
+            ],
+            ctas: [
+                {
+                    kind: "geo_vet_search",
+                    label: "현재 위치로 동물병원 찾기",
+                    query: "동물병원",
+                    helperText: "브라우저 위치 권한을 허용하면 가까운 후보를 챗봇 안에 보여줍니다.",
+                    icon: "fa-location-crosshairs",
+                },
+                {
+                    kind: "external_link",
+                    label: "지도 검색 열기",
+                    url: `https://map.kakao.com/link/search/${searchText}`,
+                    helperText: "위치 권한이 불편하면 일반 지도 검색을 먼저 열어도 됩니다.",
+                    icon: "fa-map-location-dot",
+                },
             ],
             actions: completedActions("동물병원 위치 찾기", "지도 검색 링크 제공"),
             research: { mode: "map-search", sourceCount: 3 },
@@ -180,6 +220,12 @@ function healthRuleAnswer(
     }
 ): ShopChatAnswer {
     const triage = options.triage || "general_health";
+    const followUpSlots = options.followUpQuestions.map((question, index) => ({
+        key: `${topic}_${index + 1}`,
+        label: index === 0 ? "상황" : index === 1 ? "증상" : "추가 확인",
+        prompt: question,
+        required: index < 2,
+    }));
     return {
         answer,
         products: [],
@@ -189,12 +235,17 @@ function healthRuleAnswer(
             topic,
             topicLabel,
             followUpQuestions: options.followUpQuestions,
-            followUpSlots: options.followUpQuestions.map((question, index) => ({
-                key: `${topic}_${index + 1}`,
-                label: index === 0 ? "상황" : index === 1 ? "증상" : "추가 확인",
-                prompt: question,
-                required: index < 2,
-            })),
+            followUpSlots,
+            choiceGroups: [
+                {
+                    title: "바로 확인할 내용",
+                    choices: followUpSlots.map((slot, index) => ({
+                        label: slot.label,
+                        prompt: slot.prompt,
+                        description: options.followUpQuestions[index],
+                    })),
+                },
+            ],
             redFlags: options.redFlags,
             firstSteps: options.firstSteps,
             careWindow: options.careWindow || (triage === "emergency" ? "지금 즉시 동물병원에 연락해야 하는 단계입니다." : "위험 신호가 있으면 즉시, 없더라도 지속되거나 악화되면 병원 상담이 우선입니다."),
@@ -262,6 +313,64 @@ function rareHealthFallback(message: string): ShopChatAnswer | null {
     return null;
 }
 
+function heartwormPreventionFallback(message: string): ShopChatAnswer | null {
+    if (!/(심장\s*사상충|하트웜|heart\s*worm|heartworm)/i.test(message)) return null;
+
+    const asksLargeDog = /(대형견|큰\s*개|대형\s*강아지|large)/i.test(message);
+    const asksTiming = /(언제|몇\s*개월|시작|먹이|먹여|복용|투약|주기|매달|한\s*달|놓쳤|빠뜨|검사)/i.test(message);
+    const opening = asksLargeDog
+        ? "대형견도 심장사상충 예방약을 먹이는 '시기와 주기' 자체는 소형견과 크게 다르지 않고, 차이는 현재 체중에 맞는 용량 구간입니다."
+        : "심장사상충 예방약은 치료제가 아니라 예방약에 가깝고, 모기로 감염된 유충이 성충으로 자리 잡기 전에 차단하는 목적입니다.";
+    const timing = asksTiming
+        ? "보통 먹는 예방약은 매월 같은 날짜에 꾸준히 쓰는 방식이 많고, 주사형 예방은 병원에서 정한 6개월 또는 12개월 주기를 따릅니다."
+        : "예방은 계절에만 잠깐 하기보다 수의사와 상의해 연중 지속하는 쪽이 권장됩니다.";
+
+    return {
+        answer: `${opening}\n\n${timing} 대형견은 체중이 빠르게 변하거나 용량 경계에 걸릴 수 있으니 최근 체중을 재고 제품의 체중 구간을 맞춰야 합니다. 임의로 쪼개 먹이거나 작은 용량을 여러 개 조합하는 방식은 피하고, 제품 설명서와 병원 지시를 따르는 게 안전합니다.\n\n처음 시작하거나 오래 쉬었다가 다시 시작하는 경우에는 검사가 중요합니다. 특히 7개월령 이상이거나 예방을 놓친 기간이 길다면, 예방약을 바로 먹이기 전에 심장사상충 검사를 먼저 상담하세요. 이미 감염된 상태에서 예방약만 먹이면 성충은 해결되지 않고, 일부 상황에서는 부작용 위험이 커질 수 있습니다.\n\n기침, 쉽게 지침, 운동을 싫어함, 호흡 곤란, 실신, 배가 부어 보임 같은 증상이 있으면 예방 일정 질문보다 병원 검사가 먼저입니다.`,
+        products: [],
+        medical: {
+            mode: true,
+            triage: "preventive_care",
+            topic: "heartworm_prevention",
+            topicLabel: "심장사상충 예방",
+            followUpQuestions: [
+                "대형견 체중 구간에 맞춰 어떤 기준으로 고르면 되나요?",
+                "한 달 이상 심장사상충약을 놓쳤을 때는 어떻게 해야 하나요?",
+                "처음 시작하기 전에 검사가 꼭 필요한가요?",
+            ],
+            followUpSlots: [
+                { key: "large_dog_weight", label: "대형견 용량", prompt: "대형견 심장사상충약은 체중 구간을 어떻게 맞춰야 하나요?", required: false },
+                { key: "start_age", label: "시작 시기", prompt: "강아지는 심장사상충 예방을 언제부터 시작하나요?", required: false },
+                { key: "missed_dose", label: "놓쳤을 때", prompt: "심장사상충약을 한 달 이상 놓쳤으면 어떻게 해야 하나요?", required: false },
+                { key: "testing", label: "검사 필요", prompt: "심장사상충 예방약 시작 전에 검사가 필요한 경우를 알려줘", required: false },
+            ],
+            choiceGroups: [
+                {
+                    title: "어느 상황에 가까워요?",
+                    choices: [
+                        { label: "대형견 용량이 궁금해요", prompt: "대형견 심장사상충약은 체중 구간을 어떻게 맞춰야 하나요?", description: "체중 경계와 용량 선택" },
+                        { label: "처음 시작하려고 해요", prompt: "강아지는 심장사상충 예방을 언제부터 시작하나요?", description: "개월 수와 사전 검사" },
+                        { label: "약을 놓쳤어요", prompt: "심장사상충약을 한 달 이상 놓쳤으면 어떻게 해야 하나요?", description: "재시작 전 확인" },
+                        { label: "증상이 있어 보여요", prompt: "강아지가 기침하고 쉽게 지치는데 심장사상충일 수 있나요?", description: "병원 검사 우선 신호" },
+                    ],
+                },
+            ],
+            redFlags: ["기침, 호흡 곤란, 쉽게 지침", "실신, 심한 무기력, 운동 거부", "배가 부어 보이거나 체중 감소가 동반됨"],
+            firstSteps: ["최근 체중을 재고 제품의 체중 구간을 확인하세요.", "7개월령 이상이거나 예방을 오래 쉬었다면 시작 전 검사를 상담하세요.", "놓친 약을 한 번에 두 배로 먹이지 말고 병원에 재시작 기준을 물어보세요."],
+            careWindow: "증상이 없더라도 예방은 정기 관리 영역입니다. 처음 시작, 재시작, 체중 구간 변경은 병원이나 수의사와 확인하는 편이 안전합니다.",
+            knowledgeLevel: "AHS/AVMA/FDA 기준 예방 안내",
+            disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
+        },
+        sources: HEARTWORM_SOURCE_FALLBACK,
+        actions: completedActions("심장사상충 예방 질문", "제품 추천 없이 예방/검사 기준 안내"),
+        ctas: [
+            { kind: "prompt", label: "대형견 기준 더 보기", prompt: "대형견 심장사상충약은 체중 구간을 어떻게 맞춰야 하나요?", icon: "fa-dog" },
+            { kind: "prompt", label: "놓쳤을 때 기준", prompt: "심장사상충약을 한 달 이상 놓쳤으면 어떻게 해야 하나요?", icon: "fa-calendar-check" },
+        ],
+        research: { mode: "client-heartworm-rules", sourceCount: HEARTWORM_SOURCE_FALLBACK.length },
+    };
+}
+
 function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     const text = message.toLowerCase();
     const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose)/i.test(text);
@@ -280,6 +389,17 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
                     { key: "duration", label: "기간", prompt: "언제부터 증상이 시작됐나요?", required: true },
                     { key: "core_symptoms", label: "핵심 증상", prompt: "호흡, 의식, 발작, 구토, 통증 중 무엇이 있나요?", required: true },
                 ],
+                choiceGroups: [
+                    {
+                        title: "지금 무엇이 보여요?",
+                        choices: [
+                            { label: "호흡이 이상해요", prompt: "강아지가 호흡이 힘들어 보이거나 숨을 이상하게 쉬어요", description: "숨참, 잇몸색 변화" },
+                            { label: "발작/의식 저하", prompt: "강아지가 발작했거나 의식이 처져 보여요", description: "즉시 병원 신호" },
+                            { label: "중독 의심", prompt: "강아지가 자일리톨, 초콜릿, 포도, 사람 약을 먹었을 수 있어요", description: "먹은 것 확인" },
+                            { label: "출혈/골절 의심", prompt: "강아지가 다쳤고 출혈이나 골절이 의심돼요", description: "이동 전 확인" },
+                        ],
+                    },
+                ],
                 redFlags: ["호흡 곤란, 의식 저하, 발작", "중독 의심, 피 섞인 구토/설사", "심한 통증, 걷지 못함, 멈추지 않는 출혈"],
                 firstSteps: ["가까운 24시 병원에 먼저 연락하세요.", "먹은 것, 시간, 체중, 사진/영상을 정리하세요.", "사람 약이나 임의 처치는 피하세요."],
                 careWindow: "지금 즉시 24시 응급병원 또는 가까운 동물병원에 연락해야 하는 단계입니다.",
@@ -297,10 +417,23 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
             triage: "general_health",
             followUpQuestions: ["언제부터 어떤 모습이 달라졌나요?", "구토, 설사, 기침, 통증, 무기력, 식욕 변화 중 무엇이 있나요?", "나이, 체중, 기존 질환이나 복용약이 있나요?"],
             followUpSlots: [
-                { key: "age", label: "나이", prompt: "나이 또는 개월 수가 어떻게 되나요?", required: true },
-                { key: "weight", label: "체중", prompt: "대략 체중이 몇 kg인가요?", required: true },
-                { key: "duration", label: "기간", prompt: "언제부터, 얼마나 자주 보이나요?", required: true },
-                { key: "core_symptoms", label: "핵심 증상", prompt: "구토, 설사, 기침, 통증, 무기력, 식욕 변화 중 무엇이 있나요?", required: true },
+                { key: "digestive", label: "구토/설사", prompt: "구토나 설사가 있어요. 언제부터 몇 번 했고 피가 섞였나요?", required: true },
+                { key: "breathing", label: "호흡/기침", prompt: "기침이나 호흡 이상이 있어요. 숨쉬기 힘들어 보이나요?", required: true },
+                { key: "pain_limping", label: "통증/절뚝임", prompt: "만지면 아파하거나 절뚝거려요. 어느 부위이고 외상이 있었나요?", required: true },
+                { key: "appetite_energy", label: "식욕/기력 저하", prompt: "밥을 안 먹거나 기운이 없어요. 언제부터이고 물은 마시나요?", required: true },
+                { key: "ate_something", label: "먹은 것 의심", prompt: "먹으면 안 되는 것을 먹었을 수 있어요. 무엇을 언제 얼마나 먹었나요?", required: true },
+            ],
+            choiceGroups: [
+                {
+                    title: "가장 가까운 증상을 골라주세요",
+                    choices: [
+                        { label: "구토/설사", prompt: "구토나 설사가 있어요. 언제부터 몇 번 했고 피가 섞였나요?", description: "배탈, 혈변, 반복 여부" },
+                        { label: "호흡/기침", prompt: "기침이나 호흡 이상이 있어요. 숨쉬기 힘들어 보이나요?", description: "숨참, 기침, 잇몸색" },
+                        { label: "통증/절뚝임", prompt: "만지면 아파하거나 절뚝거려요. 어느 부위이고 외상이 있었나요?", description: "다리, 허리, 발바닥" },
+                        { label: "식욕/기력 저하", prompt: "밥을 안 먹거나 기운이 없어요. 언제부터이고 물은 마시나요?", description: "무기력, 발열 의심" },
+                        { label: "먹은 것 의심", prompt: "먹으면 안 되는 것을 먹었을 수 있어요. 무엇을 언제 얼마나 먹었나요?", description: "초콜릿, 약, 포도 등" },
+                    ],
+                },
             ],
             redFlags: ["호흡 곤란, 의식 저하, 발작", "피 섞인 구토/설사 또는 중독 의심", "심한 통증, 걷지 못함, 멈추지 않는 출혈"],
             firstSteps: ["증상 시작 시간과 동반 증상을 기록하세요.", "사람 약을 임의로 먹이지 마세요.", "위험 신호가 있으면 바로 병원에 연락하세요."],
@@ -366,6 +499,52 @@ function normalizeResearch(value: unknown): ShopChatResearch | undefined {
         sourceCount: typeof record.sourceCount === "number" ? record.sourceCount : undefined,
         domains: Array.isArray(record.domains) ? record.domains.filter((item): item is string => typeof item === "string").slice(0, 6) : undefined,
     };
+}
+
+function normalizeCtas(value: unknown): ShopChatCta[] {
+    if (!Array.isArray(value)) return [];
+    return value.slice(0, 6).flatMap((item) => {
+        if (!item || typeof item !== "object") return [];
+        const record = item as Record<string, unknown>;
+        const kind = typeof record.kind === "string" ? record.kind : "";
+        if (!["geo_vet_search", "external_link", "prompt"].includes(kind)) return [];
+        const label = typeof record.label === "string" ? record.label.trim() : "";
+        if (!label) return [];
+        return [{
+            kind: kind as ShopChatCta["kind"],
+            label,
+            url: typeof record.url === "string" ? record.url : undefined,
+            query: typeof record.query === "string" ? record.query : undefined,
+            prompt: typeof record.prompt === "string" ? record.prompt : undefined,
+            helperText: typeof record.helperText === "string" ? record.helperText : undefined,
+            icon: typeof record.icon === "string" ? record.icon : undefined,
+        }];
+    });
+}
+
+function normalizeChoiceGroups(value: unknown): ShopChatChoiceGroup[] {
+    if (!Array.isArray(value)) return [];
+    return value.slice(0, 4).flatMap((group) => {
+        if (!group || typeof group !== "object") return [];
+        const record = group as Record<string, unknown>;
+        const title = typeof record.title === "string" ? record.title.trim() : "";
+        const choices = Array.isArray(record.choices)
+            ? record.choices.slice(0, 8).flatMap((choice) => {
+                if (!choice || typeof choice !== "object") return [];
+                const choiceRecord = choice as Record<string, unknown>;
+                const label = typeof choiceRecord.label === "string" ? choiceRecord.label.trim() : "";
+                const prompt = typeof choiceRecord.prompt === "string" ? choiceRecord.prompt.trim() : "";
+                if (!label || !prompt) return [];
+                return [{
+                    label,
+                    prompt,
+                    description: typeof choiceRecord.description === "string" ? choiceRecord.description : undefined,
+                }];
+            })
+            : [];
+        if (!title || choices.length === 0) return [];
+        return [{ title, choices }];
+    });
 }
 
 export function recommendForPet(profile: Pick<PetProfile, "size" | "coat" | "activity" | "concerns">) {
@@ -504,10 +683,12 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const scopeFallback = scopeGuardFallback(message);
     const rareFallback = rareHealthFallback(message);
-    const medicalFallback = rareFallback || medicalSafetyFallback(message);
+    const heartwormFallback = heartwormPreventionFallback(message);
+    const medicalFallback = rareFallback || heartwormFallback || medicalSafetyFallback(message);
     const knowledgeFallback = canineKnowledgeFallback(message);
     const fallback = scopeFallback || medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
+    if (scopeFallback || medicalFallback) return fallback;
     if (!base) return fallback;
     const petContext = petContextText(context);
     const apiMessage = petContext ? `${message}\n\n${petContext}` : message;
@@ -531,12 +712,18 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             : [];
         const actions = normalizeActions(data.actions);
         const research = normalizeResearch(data.research);
+        const ctas = normalizeCtas(data.ctas);
+        const apiMedical = medicalMode ? data.medical as ShopChatMedical : fallback.medical;
+        if (apiMedical && apiMedical.choiceGroups) {
+            apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
+        }
         return {
             answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
             products: medicalMode ? unique(apiProducts).slice(0, 6) : (apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products),
-            medical: medicalMode ? data.medical as ShopChatMedical : fallback.medical,
+            medical: apiMedical,
             sources: apiSources.length ? apiSources : fallback.sources,
             actions: actions.length ? actions : fallback.actions,
+            ctas: ctas.length ? ctas : fallback.ctas,
             research: research || fallback.research,
         };
     } catch {

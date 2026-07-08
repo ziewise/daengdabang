@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "re
 import { useSearchParams } from "next/navigation";
 import {
     answerShopQuestionSmart,
+    type ShopChatCta,
     type ShopChatAction,
     type ShopChatMedical,
     type ShopChatSource,
@@ -11,6 +12,7 @@ import {
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
+import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 
 type Message = {
     role: "user" | "assistant";
@@ -19,6 +21,7 @@ type Message = {
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
+    ctas?: ShopChatCta[];
 };
 
 const QUICK_QUESTIONS = [
@@ -35,11 +38,6 @@ const THINKING_ACTIONS: ShopChatAction[] = [
     { label: "인터넷 자료 검색", status: "running", detail: "필요한 경우 공식/권위 자료 확인" },
     { label: "답변 정리", status: "running", detail: "근거와 다음 행동 정리" },
 ];
-
-function triageLabel(medical?: ShopChatMedical) {
-    if (!medical?.mode) return "";
-    return medical.triage === "emergency" ? "응급 가능성" : "건강 상담";
-}
 
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     if (!actions?.length) return null;
@@ -118,6 +116,7 @@ export default function ChatPageClient() {
                     medical: result.medical,
                     sources: result.sources,
                     actions: result.actions,
+                    ctas: result.ctas,
                 },
             ]);
         } finally {
@@ -213,88 +212,13 @@ export default function ChatPageClient() {
                                     {message.text}
                                 </div>
                                 {message.role === "assistant" && <ActionList actions={message.actions} />}
-                                {message.role === "assistant" && message.medical?.mode && (
-                                    <div className="mt-2 max-w-[82%] rounded-lg border border-sky-100 bg-white p-3 text-left shadow-sm">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <span className={`rounded-full px-2.5 py-1 text-xs font-black ${
-                                                message.medical.triage === "emergency" ? "bg-red-50 text-red-700" : "bg-sky-50 text-sky-800"
-                                            }`}>
-                                                {triageLabel(message.medical)}
-                                            </span>
-                                            {message.medical.topicLabel && (
-                                                <span className="text-xs font-black text-neutral-700">{message.medical.topicLabel}</span>
-                                            )}
-                                            {message.medical.knowledgeLevel && (
-                                                <span className="text-[11px] font-black text-neutral-400">{message.medical.knowledgeLevel}</span>
-                                            )}
-                                        </div>
-                                        {message.medical.careWindow && (
-                                            <p className="mt-2 text-xs font-black leading-5 text-neutral-700">{message.medical.careWindow}</p>
-                                        )}
-                                        {message.medical.redFlags && message.medical.redFlags.length > 0 && (
-                                            <div className="mt-3">
-                                                <p className="text-[11px] font-black uppercase text-red-600">바로 병원 신호</p>
-                                                <ul className="mt-1 space-y-1 text-xs font-bold leading-5 text-neutral-700">
-                                                    {message.medical.redFlags.slice(0, 3).map((item) => (
-                                                        <li key={item}>- {item}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-                                        {message.medical.firstSteps && message.medical.firstSteps.length > 0 && (
-                                            <div className="mt-3">
-                                                <p className="text-[11px] font-black uppercase text-sky-700">지금 할 일</p>
-                                                <ul className="mt-1 space-y-1 text-xs font-bold leading-5 text-neutral-700">
-                                                    {message.medical.firstSteps.slice(0, 3).map((item) => (
-                                                        <li key={item}>- {item}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-                                        {message.medical.followUpSlots && message.medical.followUpSlots.length > 0 && (
-                                            <div className="mt-3 flex flex-wrap gap-1.5">
-                                                {message.medical.followUpSlots.slice(0, 6).map((slot) => (
-                                                    <button
-                                                        key={`${slot.key}-${slot.label}`}
-                                                        type="button"
-                                                        onClick={() => void ask(slot.prompt)}
-                                                        className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-left text-[11px] font-black text-neutral-600"
-                                                    >
-                                                        {slot.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                                {message.role === "assistant" && message.medical?.followUpQuestions && message.medical.followUpQuestions.length > 0 && (
-                                    <div className="mt-2 flex max-w-[82%] flex-wrap gap-2">
-                                        {message.medical.followUpQuestions.slice(0, 4).map((question) => (
-                                            <button
-                                                key={question}
-                                                type="button"
-                                                onClick={() => void ask(question)}
-                                                className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1.5 text-left text-xs font-black leading-5 text-sky-800"
-                                            >
-                                                {question}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                                {message.role === "assistant" && message.sources && message.sources.length > 0 && (
-                                    <div className="mt-2 flex max-w-[82%] flex-wrap gap-2">
-                                        {message.sources.slice(0, 4).map((source) => (
-                                            <a
-                                                key={`${source.name}-${source.url}`}
-                                                href={source.url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-black text-neutral-600 shadow-sm"
-                                            >
-                                                {source.name}
-                                            </a>
-                                        ))}
-                                    </div>
+                                {message.role === "assistant" && (
+                                    <ChatResponseExtras
+                                        medical={message.medical}
+                                        sources={message.sources}
+                                        ctas={message.ctas}
+                                        onAsk={ask}
+                                    />
                                 )}
                             </div>
                         ))}

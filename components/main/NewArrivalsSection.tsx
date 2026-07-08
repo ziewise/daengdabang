@@ -18,6 +18,7 @@ import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getNewProducts } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
+import { useI18n } from "@/lib/i18n";
 
 const AUTO_INTERVAL = 2800;
 const MANUAL_PAUSE = 2500;
@@ -28,6 +29,7 @@ export default function NewArrivalsSection() {
     const trackRef = useRef<HTMLDivElement>(null);
     const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const manualPauseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { locale } = useI18n();
 
     // 카탈로그에서 최신 신상품 8개 (큐레이션 순서 그대로)
     const items = getNewProducts().slice(0, NEW_LIMIT);
@@ -146,16 +148,18 @@ export default function NewArrivalsSection() {
                 <div className="flex items-end justify-between mb-6 md:mb-8">
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                            신상품
+                            {locale === "en" ? "New Arrivals" : "신상품"}
                         </h2>
-                        <p className="text-sm text-neutral-500">2026 새로 들어온 컬렉션</p>
+                        <p className="text-sm text-neutral-500">
+                            {locale === "en" ? "Fresh picks for 2026" : "2026 새로 들어온 컬렉션"}
+                        </p>
                     </div>
                     <div className="flex gap-2">
                         <button
                             type="button"
                             onClick={() => manualMove(-1)}
                             className="w-10 h-10 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo shadow-card flex items-center justify-center transition"
-                            aria-label="이전"
+                            aria-label={locale === "en" ? "Previous" : "이전"}
                         >
                             <i className="fa-solid fa-chevron-left text-sm" />
                         </button>
@@ -163,7 +167,7 @@ export default function NewArrivalsSection() {
                             type="button"
                             onClick={() => manualMove(1)}
                             className="w-10 h-10 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo shadow-card flex items-center justify-center transition"
-                            aria-label="다음"
+                            aria-label={locale === "en" ? "Next" : "다음"}
                         >
                             <i className="fa-solid fa-chevron-right text-sm" />
                         </button>
@@ -193,7 +197,7 @@ export default function NewArrivalsSection() {
                         href="/new"
                         className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
-                        신상품 보기
+                        {locale === "en" ? "View New Arrivals" : "신상품 보기"}
                         <i className="fa-solid fa-arrow-right text-[10px]" />
                     </Link>
                 </div>

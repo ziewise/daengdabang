@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CATEGORY_LABEL, SUBCATEGORY_LABEL } from "@/lib/catalog";
 import { type ExternalProductResult } from "@/lib/external-products";
 import { outboundHref } from "@/lib/outbound";
+import { useI18n } from "@/lib/i18n";
 
 type Props = {
     products: ExternalProductResult[];
@@ -19,13 +20,13 @@ type ProductGroup = {
     rows: ExternalProductResult[];
 };
 
-function formatKRW(value?: number | null): string {
+function formatMoney(value?: number | null, formatter?: (value: number) => string): string {
     if (typeof value !== "number" || !Number.isFinite(value)) return "-";
-    return `${value.toLocaleString("ko-KR")}원`;
+    return formatter ? formatter(value) : `${value.toLocaleString("ko-KR")}원`;
 }
 
-function formatSignedKRW(value: number): string {
-    return `+${value.toLocaleString("ko-KR")}원`;
+function formatSignedMoney(value: number, formatter?: (value: number) => string): string {
+    return `+${formatter ? formatter(value) : `${value.toLocaleString("ko-KR")}원`}`;
 }
 
 function getTotal(product: ExternalProductResult): number {
@@ -53,13 +54,21 @@ function groupKeyFor(product: ExternalProductResult): string {
     return [product.category, product.subcategory, product.specGroup || product.category].join(":");
 }
 
-function groupLabelFor(product: ExternalProductResult): string {
-    const category = CATEGORY_LABEL[product.category] ?? product.category;
-    const subcategory = SUBCATEGORY_LABEL[product.subcategory] ?? product.subcategory;
+function groupLabelFor(
+    product: ExternalProductResult,
+    categoryLabel: (slug: ExternalProductResult["category"], fallback?: string) => string,
+    subcategoryLabel: (slug: ExternalProductResult["subcategory"], fallback?: string) => string,
+): string {
+    const category = categoryLabel(product.category, CATEGORY_LABEL[product.category] ?? product.category);
+    const subcategory = subcategoryLabel(product.subcategory, SUBCATEGORY_LABEL[product.subcategory] ?? product.subcategory);
     return `${category} / ${subcategory}`;
 }
 
-function buildGroups(products: ExternalProductResult[]): ProductGroup[] {
+function buildGroups(
+    products: ExternalProductResult[],
+    categoryLabel: (slug: ExternalProductResult["category"], fallback?: string) => string,
+    subcategoryLabel: (slug: ExternalProductResult["subcategory"], fallback?: string) => string,
+): ProductGroup[] {
     const groupMap = new Map<string, ProductGroup>();
     for (const product of products) {
         const key = groupKeyFor(product);
@@ -72,7 +81,7 @@ function buildGroups(products: ExternalProductResult[]): ProductGroup[] {
         }
         groupMap.set(key, {
             key,
-            label: groupLabelFor(product),
+            label: groupLabelFor(product, categoryLabel, subcategoryLabel),
             count: 1,
             minTotal: getTotal(product),
             rows: [product],
@@ -87,40 +96,45 @@ function buildGroups(products: ExternalProductResult[]): ProductGroup[] {
         .sort((a, b) => b.count - a.count || a.minTotal - b.minTotal || a.label.localeCompare(b.label));
 }
 
-function totalPriceLabel(product: ExternalProductResult): string {
-    if (typeof product.totalPrice === "number") return formatKRW(product.totalPrice);
-    if (typeof product.basePrice === "number") return formatKRW(product.basePrice);
+function totalPriceLabel(product: ExternalProductResult, formatter: (value: number) => string): string {
+    if (typeof product.totalPrice === "number") return formatMoney(product.totalPrice, formatter);
+    if (typeof product.basePrice === "number") return formatMoney(product.basePrice, formatter);
     return product.priceText || "-";
 }
 
-function priceNote(product: ExternalProductResult): string {
+function priceNote(product: ExternalProductResult, formatter: (value: number) => string, locale: "ko" | "en"): string {
     const parts = [
-        typeof product.shippingFee === "number" && product.shippingFee > 0 ? `배송 ${formatKRW(product.shippingFee)}` : "",
-        product.couponDiscount ? `쿠폰 -${formatKRW(product.couponDiscount)}` : "",
+        typeof product.shippingFee === "number" && product.shippingFee > 0 ? `${locale === "en" ? "Shipping" : "배송"} ${formatMoney(product.shippingFee, formatter)}` : "",
+        product.couponDiscount ? `${locale === "en" ? "Coupon" : "쿠폰"} -${formatMoney(product.couponDiscount, formatter)}` : "",
         product.optionName || "",
     ].filter(Boolean);
     return parts.join(" · ");
 }
 
-function priceDelta(product: ExternalProductResult, minTotal: number): { label: string; detail: string; tone: "best" | "high" | "unknown" } {
+function priceDelta(product: ExternalProductResult, minTotal: number, formatter: (value: number) => string, locale: "ko" | "en"): { label: string; detail: string; tone: "best" | "high" | "unknown" } {
     const total = getTotal(product);
     if (total === Number.MAX_SAFE_INTEGER || minTotal === Number.MAX_SAFE_INTEGER) {
-        return { label: "비교불가", detail: "가격 확인 필요", tone: "unknown" };
+        return {
+            label: locale === "en" ? "N/A" : "비교불가",
+            detail: locale === "en" ? "Check price" : "가격 확인 필요",
+            tone: "unknown",
+        };
     }
     const diff = total - minTotal;
     if (diff <= 0) {
-        return { label: "최저가", detail: "기준가", tone: "best" };
+        return { label: locale === "en" ? "Lowest" : "최저가", detail: locale === "en" ? "Base price" : "기준가", tone: "best" };
     }
     const percent = minTotal > 0 ? Math.round((diff / minTotal) * 100) : null;
     return {
-        label: formatSignedKRW(diff),
-        detail: percent !== null ? `${percent}% 비쌈` : "더 비쌈",
+        label: formatSignedMoney(diff, formatter),
+        detail: percent !== null ? (locale === "en" ? `${percent}% higher` : `${percent}% 비쌈`) : (locale === "en" ? "Higher" : "더 비쌈"),
         tone: "high",
     };
 }
 
 export default function ExternalProductComparisonTable({ products, query = "" }: Props) {
-    const groups = useMemo(() => buildGroups(products), [products]);
+    const { locale, formatPrice, categoryLabel, subcategoryLabel } = useI18n();
+    const groups = useMemo(() => buildGroups(products, categoryLabel, subcategoryLabel), [products, categoryLabel, subcategoryLabel]);
     const [activeKey, setActiveKey] = useState("");
 
     useEffect(() => {
@@ -151,17 +165,19 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div>
                     <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Lowest Table</p>
-                    <h3 className="mt-1 text-lg font-black text-neutral-950">상품군 최저가 비교</h3>
+                    <h3 className="mt-1 text-lg font-black text-neutral-950">
+                        {locale === "en" ? "Lowest Price by Product Group" : "상품군 최저가 비교"}
+                    </h3>
                     {validTotals.length > 1 && (
                         <div className="mt-2 flex flex-wrap gap-2 text-xs font-black">
                             <span className="rounded-md bg-emerald-50 px-2 py-1 text-emerald-700">
-                                최저 {formatKRW(minVisibleTotal)}
+                                {locale === "en" ? "Lowest" : "최저"} {formatMoney(minVisibleTotal, formatPrice)}
                             </span>
                             <span className="rounded-md bg-neutral-100 px-2 py-1 text-neutral-700">
-                                최고 {formatKRW(maxVisibleTotal)}
+                                {locale === "en" ? "Highest" : "최고"} {formatMoney(maxVisibleTotal, formatPrice)}
                             </span>
                             <span className="rounded-md bg-rose-50 px-2 py-1 text-rose-700">
-                                차이 {formatSignedKRW(priceSpread)}
+                                {locale === "en" ? "Gap" : "차이"} {formatSignedMoney(priceSpread, formatPrice)}
                             </span>
                         </div>
                     )}
@@ -188,17 +204,18 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 <table className="min-w-[760px] w-full table-fixed border-collapse text-left">
                     <thead className="bg-neutral-50 text-[11px] font-black uppercase text-neutral-500">
                         <tr>
-                            <th className="w-16 px-3 py-3">순위</th>
-                            <th className="w-[44%] px-3 py-3">상품</th>
-                            <th className="w-36 px-3 py-3 text-right">가격</th>
-                            <th className="w-32 px-3 py-3">최저가 대비</th>
-                            <th className="w-36 px-3 py-3">판매처</th>
-                            <th className="w-24 px-3 py-3 text-center">이동</th>
+                            <th className="w-16 px-3 py-3">{locale === "en" ? "Rank" : "순위"}</th>
+                            <th className="w-[44%] px-3 py-3">{locale === "en" ? "Product" : "상품"}</th>
+                            <th className="w-36 px-3 py-3 text-right">{locale === "en" ? "Price" : "가격"}</th>
+                            <th className="w-32 px-3 py-3">{locale === "en" ? "Vs. lowest" : "최저가 대비"}</th>
+                            <th className="w-36 px-3 py-3">{locale === "en" ? "Seller" : "판매처"}</th>
+                            <th className="w-24 px-3 py-3 text-center">{locale === "en" ? "Open" : "이동"}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-neutral-100 text-sm">
                         {rows.map((product, index) => {
-                            const delta = priceDelta(product, minVisibleTotal);
+                            const delta = priceDelta(product, minVisibleTotal, formatPrice, locale);
+                            const note = priceNote(product, formatPrice, locale);
                             return (
                             <tr key={`${product.id}-${product.optionName ?? ""}`} className={`${delta.tone === "best" ? "bg-emerald-50/55" : "bg-white"} align-top hover:bg-emerald-50/45`}>
                                 <td className="px-3 py-3">
@@ -228,17 +245,19 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                             <div className="line-clamp-2 font-black leading-5 text-neutral-950">{product.title}</div>
                                             <div className="mt-1 flex min-w-0 flex-wrap gap-1.5 text-[11px] font-black">
                                                 <span className="max-w-[8rem] truncate text-emerald-700">{product.brand}</span>
-                                                {priceNote(product) && (
-                                                    <span className="max-w-[12rem] truncate text-neutral-500">{priceNote(product)}</span>
+                                                {note && (
+                                                    <span className="max-w-[12rem] truncate text-neutral-500">{note}</span>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-3 py-3 text-right">
-                                    <div className="text-lg font-black leading-tight text-neutral-950">{totalPriceLabel(product)}</div>
+                                    <div className="text-lg font-black leading-tight text-neutral-950">{totalPriceLabel(product, formatPrice)}</div>
                                     {typeof product.basePrice === "number" && typeof product.totalPrice === "number" && product.basePrice !== product.totalPrice && (
-                                        <div className="mt-1 text-[11px] font-bold text-neutral-500">상품가 {formatKRW(product.basePrice)}</div>
+                                        <div className="mt-1 text-[11px] font-bold text-neutral-500">
+                                            {locale === "en" ? "Item price" : "상품가"} {formatMoney(product.basePrice, formatPrice)}
+                                        </div>
                                     )}
                                 </td>
                                 <td className="px-3 py-3">
@@ -271,7 +290,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"
-                                        aria-label={`${product.title} 판매처 열기`}
+                                        aria-label={`${product.title} ${locale === "en" ? "open seller" : "판매처 열기"}`}
                                     >
                                         <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
                                     </Link>

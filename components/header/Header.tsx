@@ -19,9 +19,11 @@ import {
     CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
+import LanguageSwitcher from "./LanguageSwitcher";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
+import { useI18n } from "@/lib/i18n";
 
 type DropKey = "category" | "brand" | "promo" | "ai" | "cs" | null;
 
@@ -34,6 +36,7 @@ export default function Header() {
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     // 펫렌즈는 /pet-lens 페이지 대신 모달로 띄운다 (협업자 PetLensClient 를 모달에 담음)
     const { open: openPetLens } = usePetLensModal();
+    const { t, menuLabel } = useI18n();
 
     return (
         <>
@@ -45,12 +48,12 @@ export default function Header() {
 
                     {/* 데스크탑 메인 nav (md+ 만 노출) */}
                     <nav className="hidden lg:flex items-center gap-1">
-                        <NavLink href="/best">베스트</NavLink>
-                        <NavLink href="/new">신상품</NavLink>
+                        <NavLink href="/best">{t("best")}</NavLink>
+                        <NavLink href="/new">{t("new")}</NavLink>
 
                         {/* 카테고리 — 5컬럼 메가메뉴 */}
                         <NavDropdown
-                            label="카테고리"
+                            label={t("category")}
                             open={openDrop === "category"}
                             onEnter={() => setOpenDrop("category")}
                             onLeave={() => setOpenDrop(null)}
@@ -64,7 +67,7 @@ export default function Header() {
                                                 href={g.href}
                                                 className="block mb-3 text-sm font-bold text-foreground hover:text-aurora-indigo"
                                             >
-                                                {g.title}
+                                                {menuLabel(g.title)}
                                             </Link>
                                             <ul className="space-y-1.5">
                                                 {g.items.map((it) => (
@@ -73,7 +76,7 @@ export default function Header() {
                                                             href={it.href}
                                                             className="text-xs text-neutral-500 hover:text-aurora-indigo block py-0.5"
                                                         >
-                                                            {it.label}
+                                                            {menuLabel(it.label)}
                                                         </Link>
                                                     </li>
                                                 ))}
@@ -87,7 +90,7 @@ export default function Header() {
                                         href="/products"
                                         className="inline-flex items-center gap-1.5 text-xs font-extrabold text-aurora-indigo hover:text-aurora-pink transition"
                                     >
-                                        전체 상품 보기
+                                        {t("allProducts")}
                                         <i className="fa-solid fa-arrow-right text-[10px]" />
                                     </Link>
                                 </div>
@@ -96,7 +99,7 @@ export default function Header() {
 
                         {/* 브랜드 — 2 카드 + 전체 보기 링크 */}
                         <NavDropdown
-                            label="브랜드"
+                            label={t("brand")}
                             open={openDrop === "brand"}
                             onEnter={() => setOpenDrop("brand")}
                             onLeave={() => setOpenDrop(null)}
@@ -118,7 +121,7 @@ export default function Header() {
                                     href="/brands"
                                     className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 hover:bg-neutral-100 text-xs font-bold"
                                 >
-                                    <span>기타 브랜드 보기</span>
+                                    <span>{menuLabel("기타 브랜드 보기")}</span>
                                     <i className="fa-solid fa-arrow-right text-aurora-indigo" />
                                 </Link>
                             </div>
@@ -126,7 +129,7 @@ export default function Header() {
 
                         {/* 기획전 — 5개 promo 카드 */}
                         <NavDropdown
-                            label="기획전"
+                            label={t("promotion")}
                             open={openDrop === "promo"}
                             onEnter={() => setOpenDrop("promo")}
                             onLeave={() => setOpenDrop(null)}
@@ -147,7 +150,7 @@ export default function Header() {
                                             >
                                                 <i className={`fa-solid ${p.icon}`} />
                                             </span>
-                                            <h4 className="flex-1 min-w-0 text-sm font-bold">{p.title}</h4>
+                                            <h4 className="flex-1 min-w-0 text-sm font-bold">{menuLabel(p.title)}</h4>
                                         </Link>
                                     </li>
                                 ))}
@@ -156,7 +159,7 @@ export default function Header() {
 
                         {/* 고객센터 — 단순 리스트 */}
                         <NavDropdown
-                            label="고객센터"
+                            label={t("customerCenter")}
                             open={openDrop === "cs"}
                             onEnter={() => setOpenDrop("cs")}
                             onLeave={() => setOpenDrop(null)}
@@ -169,7 +172,7 @@ export default function Header() {
                                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-sm font-bold"
                                         >
                                             <i className={`fa-solid ${c.icon} text-aurora-indigo w-4 text-center`} />
-                                            <span>{c.label}</span>
+                                            <span>{menuLabel(c.label)}</span>
                                         </Link>
                                     </li>
                                 ))}
@@ -186,23 +189,26 @@ export default function Header() {
                             type="button"
                             onClick={openPetLens}
                             className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white shadow-[0_2px_14px_-2px_rgba(192,38,211,0.5)] transition-all hover:-translate-y-px hover:shadow-[0_5px_20px_-2px_rgba(192,38,211,0.7)]"
-                            aria-label="펫렌즈 분석 열기"
-                            title="펫렌즈 — 반려견 사진 분석"
+                            aria-label="PetLens"
+                            title="PetLens"
                         >
                             <i className="fa-solid fa-camera text-sm transition-transform group-hover:scale-110" />
                         </button>
+                        <div className="hidden lg:block">
+                            <LanguageSwitcher />
+                        </div>
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
                             className="hidden lg:flex w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
-                            aria-label="검색"
+                            aria-label={t("search")}
                         >
                             <i className="fa-solid fa-magnifying-glass" />
                         </button>
                         <Link
                             href="/cart"
                             className="hidden lg:flex relative w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
-                            aria-label="장바구니"
+                            aria-label={t("cart")}
                         >
                             <i className="fa-solid fa-bag-shopping" />
                             {/* 담긴 수량 배지 — 0이면 숨김, 99 초과는 99+ */}
@@ -218,10 +224,10 @@ export default function Header() {
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/auth/login"}
                                 className="hidden lg:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
-                                aria-label={isLoggedIn ? "마이페이지" : "로그인"}
+                                aria-label={isLoggedIn ? t("mypage") : t("login")}
                             >
                                 <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
-                                <span>{isLoggedIn ? "마이페이지" : "로그인"}</span>
+                                <span>{isLoggedIn ? t("mypage") : t("login")}</span>
                             </Link>
                         )}
 
@@ -229,7 +235,7 @@ export default function Header() {
                             type="button"
                             onClick={() => setMobileOpen(true)}
                             className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
-                            aria-label="메뉴 열기"
+                            aria-label={t("menu")}
                         >
                             <i className="fa-solid fa-bars" />
                         </button>

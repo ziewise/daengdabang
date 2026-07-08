@@ -3,24 +3,15 @@
 import Link from "next/link";
 import { type ExternalProductResult } from "@/lib/external-products";
 import { outboundHref } from "@/lib/outbound";
+import { useI18n } from "@/lib/i18n";
 
 type Props = {
     product: ExternalProductResult;
     query?: string;
 };
 
-function formatKRW(value?: number | null): string {
-    if (typeof value !== "number" || !Number.isFinite(value)) return "";
-    return value.toLocaleString("ko-KR");
-}
-
-function signedKRW(value?: number): string {
-    if (!value) return "0원";
-    const sign = value > 0 ? "+" : "-";
-    return `${sign}${Math.abs(value).toLocaleString("ko-KR")}원`;
-}
-
 export default function ExternalProductCard({ product, query = "" }: Props) {
+    const { locale, formatPrice } = useI18n();
     const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
     const hasMarketplacePreview = product.previewStatus === "fetched" && /^https?:\/\//.test(product.thumbnail);
     const totalPrice = typeof product.totalPrice === "number" ? product.totalPrice : null;
@@ -39,9 +30,11 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
         surface: "card",
     }) : product.outboundUrl || "";
     const priceNote = [
-        typeof product.shippingFee === "number" && product.shippingFee > 0 ? `배송 ${formatKRW(product.shippingFee)}원` : "",
-        product.couponDiscount ? `쿠폰 -${formatKRW(product.couponDiscount)}원` : "",
-        product.optionName ? `${product.optionName} ${signedKRW(product.optionPriceDelta)}` : "",
+        typeof product.shippingFee === "number" && product.shippingFee > 0
+            ? `${locale === "en" ? "Shipping" : "배송"} ${formatPrice(product.shippingFee)}`
+            : "",
+        product.couponDiscount ? `${locale === "en" ? "Coupon" : "쿠폰"} -${formatPrice(product.couponDiscount)}` : "",
+        product.optionName ? `${product.optionName} ${product.optionPriceDelta && product.optionPriceDelta > 0 ? "+" : ""}${formatPrice(product.optionPriceDelta ?? 0)}` : "",
     ].filter(Boolean).join(" · ");
 
     return (
@@ -51,7 +44,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
-                aria-label={`${product.title} ${isMarketplaceSearch ? "외부 검색" : "외부 가격비교"} 보기`}
+                aria-label={`${product.title} ${isMarketplaceSearch ? "external search" : "external price comparison"}`}
             >
                 <img
                     src={product.thumbnail}
@@ -81,14 +74,16 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                 </h3>
                 <div className="mt-2">
                     <p className={`${totalPrice !== null ? "text-xl text-neutral-950" : "text-base text-neutral-700"} font-black leading-tight line-clamp-2`}>
-                        {totalPrice !== null ? `${formatKRW(totalPrice)}원` : product.priceText}
+                        {totalPrice !== null ? formatPrice(totalPrice) : product.priceText}
                     </p>
                     {priceNote && (
                         <p className="mt-1 truncate text-[11px] font-bold text-neutral-500">{priceNote}</p>
                     )}
                 </div>
                 {totalPrice === null && (
-                    <p className="mt-1 text-[11px] font-bold text-neutral-400">판매처에서 최종 가격 확인</p>
+                    <p className="mt-1 text-[11px] font-bold text-neutral-400">
+                        {locale === "en" ? "Check final price at the seller" : "판매처에서 최종 가격 확인"}
+                    </p>
                 )}
                 <Link
                     href={href}
@@ -97,7 +92,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                     className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
-                    보러가기
+                    {locale === "en" ? "View" : "보러가기"}
                 </Link>
             </div>
         </article>

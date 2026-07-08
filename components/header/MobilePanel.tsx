@@ -18,6 +18,8 @@ import {
     CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
     open: boolean;
@@ -29,6 +31,7 @@ export default function MobilePanel({ open, onClose }: Props) {
     const [searchTerm, setSearchTerm] = useState("");
     const { isLoggedIn, hydrated } = useAuth();
     const router = useRouter();
+    const { t, menuLabel } = useI18n();
 
     /** 검색 submit — /products?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
     const submitSearch = (e: React.FormEvent) => {
@@ -71,19 +74,22 @@ export default function MobilePanel({ open, onClose }: Props) {
                 }`}
                 role="dialog"
                 aria-modal="true"
-                aria-label="메뉴"
+                aria-label={t("menu")}
             >
                 {/* 헤더 */}
                 <div className="flex items-center justify-between px-5 h-[var(--header-height)] border-b border-neutral-200">
                     <BrandLogo />
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-neutral-100"
-                        aria-label="닫기"
-                    >
-                        <i className="fa-solid fa-xmark text-lg" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <LanguageSwitcher compact />
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-neutral-100"
+                            aria-label={t("close")}
+                        >
+                            <i className="fa-solid fa-xmark text-lg" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* 검색 — submit 시 /products?q=... 로 이동 */}
@@ -94,16 +100,16 @@ export default function MobilePanel({ open, onClose }: Props) {
                             type="search"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="어떤 상품을 찾으세요?"
+                            placeholder={t("searchPlaceholder")}
                             className="flex-1 bg-transparent text-sm placeholder:text-neutral-400 outline-none"
                         />
                         {searchTerm && (
                             <button
                                 type="submit"
                                 className="text-aurora-indigo text-xs font-extrabold"
-                                aria-label="검색"
+                                aria-label={t("search")}
                             >
-                                검색
+                                {t("search")}
                             </button>
                         )}
                     </form>
@@ -111,22 +117,22 @@ export default function MobilePanel({ open, onClose }: Props) {
 
                 {/* 메뉴 리스트 — 스크롤 가능 */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3">
-                    <MobileLink href="/best" icon="fa-trophy" onClick={onClose}>베스트</MobileLink>
-                    <MobileLink href="/new" icon="fa-sparkles" onClick={onClose}>신상품</MobileLink>
+                    <MobileLink href="/best" icon="fa-trophy" onClick={onClose}>{t("best")}</MobileLink>
+                    <MobileLink href="/new" icon="fa-sparkles" onClick={onClose}>{t("new")}</MobileLink>
 
                     <MobileGroup
-                        label="카테고리"
+                        label={t("category")}
                         expanded={expanded === "cat"}
                         onToggle={() => setExpanded(expanded === "cat" ? null : "cat")}
                     >
                         {CATEGORY_GROUPS.map((g) => (
                             <div key={g.title} className="mb-3 last:mb-0">
                                 <p className="px-4 pt-2 pb-1 text-[11px] font-extrabold text-neutral-400 uppercase tracking-wider">
-                                    {g.title}
+                                    {menuLabel(g.title)}
                                 </p>
                                 {g.items.map((it) => (
                                     <SubLink key={it.label} href={it.href} onClick={onClose}>
-                                        {it.label}
+                                        {menuLabel(it.label)}
                                     </SubLink>
                                 ))}
                             </div>
@@ -134,7 +140,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                     </MobileGroup>
 
                     <MobileGroup
-                        label="브랜드"
+                        label={t("brand")}
                         expanded={expanded === "brand"}
                         onToggle={() => setExpanded(expanded === "brand" ? null : "brand")}
                     >
@@ -144,44 +150,44 @@ export default function MobilePanel({ open, onClose }: Props) {
                             </SubLink>
                         ))}
                         <SubLink href="/brands" onClick={onClose}>
-                            기타 브랜드 보기
+                            {menuLabel("기타 브랜드 보기")}
                         </SubLink>
                     </MobileGroup>
 
                     <MobileGroup
-                        label="기획전"
+                        label={t("promotion")}
                         expanded={expanded === "promo"}
                         onToggle={() => setExpanded(expanded === "promo" ? null : "promo")}
                     >
                         {PROMO_CARDS.map((p) => (
                             <SubLink key={p.title} href={p.href} onClick={onClose}>
-                                {p.title}
+                                {menuLabel(p.title)}
                             </SubLink>
                         ))}
                     </MobileGroup>
 
                     <MobileGroup
-                        label="고객센터"
+                        label={t("customerCenter")}
                         expanded={expanded === "cs"}
                         onToggle={() => setExpanded(expanded === "cs" ? null : "cs")}
                     >
                         {CS_LINKS.map((c) => (
                             <SubLink key={c.label} href={c.href} icon={c.icon} onClick={onClose}>
-                                {c.label}
+                                {menuLabel(c.label)}
                             </SubLink>
                         ))}
                     </MobileGroup>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}
-                    <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>장바구니</MobileLink>
+                    <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>
 
                     {/* 로그인/마이페이지 — hydrate 후 인증 상태 반영
                         hydrate 전엔 placeholder 로 로그인 표시 (깜빡임 최소화, mismatch 없음)
                         로그인은 협업자 소셜 로그인 페이지(/auth/login) 사용 */}
                     {hydrated && isLoggedIn ? (
-                        <MobileLink href="/mypage" icon="fa-user" onClick={onClose}>마이페이지</MobileLink>
+                        <MobileLink href="/mypage" icon="fa-user" onClick={onClose}>{t("mypage")}</MobileLink>
                     ) : (
-                        <MobileLink href="/auth/login" icon="fa-right-to-bracket" onClick={onClose}>로그인</MobileLink>
+                        <MobileLink href="/auth/login" icon="fa-right-to-bracket" onClick={onClose}>{t("login")}</MobileLink>
                     )}
                 </nav>
             </aside>

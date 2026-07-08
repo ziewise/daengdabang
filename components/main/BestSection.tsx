@@ -12,11 +12,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { getBestProducts, BEST_PERIOD_LABEL, type BestPeriod } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
+import { useI18n } from "@/lib/i18n";
 
 const TABS: BestPeriod[] = ["realtime", "daily", "weekly", "monthly"];
 
 export default function BestSection() {
     const [period, setPeriod] = useState<BestPeriod>("realtime");
+    const { locale, menuLabel } = useI18n();
     // 임시: 영상 호버 효과 있는 상품만 메인 페이지 베스트에 노출 (실 운영 전 마케팅 효과).
     // 실 판매 데이터 연결 시 .filter 제거하고 .slice(0, 4) 만 사용.
     const withVideo = getBestProducts(period).filter((p) => p.video);
@@ -29,10 +31,10 @@ export default function BestSection() {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 md:mb-8">
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                            댕다방 베스트
+                            {locale === "en" ? "DaengDaBang Best" : "댕다방 베스트"}
                         </h2>
                         <p className="text-sm text-neutral-500">
-                            지금 가장 많이 사랑받는 댕댕이 아이템
+                            {locale === "en" ? "Most-loved picks right now" : "지금 가장 많이 사랑받는 댕댕이 아이템"}
                         </p>
                     </div>
 
@@ -49,7 +51,7 @@ export default function BestSection() {
                                         : "text-neutral-600 hover:text-aurora-indigo"
                                 }`}
                             >
-                                {BEST_PERIOD_LABEL[p]}
+                                {menuLabel(BEST_PERIOD_LABEL[p])}
                             </button>
                         ))}
                     </div>
@@ -76,7 +78,7 @@ export default function BestSection() {
                         href="/best"
                         className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
-                        베스트 상품 보기
+                        {locale === "en" ? "View Best Sellers" : "베스트 상품 보기"}
                         <i className="fa-solid fa-arrow-right text-[10px]" />
                     </Link>
                 </div>

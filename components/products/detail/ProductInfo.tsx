@@ -13,9 +13,6 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-    CATEGORY_LABEL,
-    SUBCATEGORY_LABEL,
-    formatKRW,
     getBestRank,
     isNewProduct,
     type CatalogProduct,
@@ -24,6 +21,7 @@ import { useAuth, useStore } from "@/lib/store";
 import { usePets } from "@/hooks/usePets";
 import { cartPetOptions } from "@/lib/pet-attribution";
 import { loadTwinProductStats, type TwinProductStat } from "@/lib/storefront-analytics";
+import { useI18n } from "@/lib/i18n";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
@@ -39,10 +37,12 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     const { toggleWishlist, isWished } = useStore();
     const { user } = useAuth();
     const { pets: profilePets } = usePets();
+    const { t, formatPrice, productName, categoryLabel, subcategoryLabel } = useI18n();
     const wished = isWished(p.id);
     const bestRank = getBestRank(p);
     const isNew = isNewProduct(p);
     const point = Math.floor(p.price * 0.01);
+    const displayName = productName(p);
 
     const colors = p.colors ?? [];
     const hasColors = colors.length > 0;
@@ -105,14 +105,14 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
         <>
             <div className="space-y-6">
                 <nav className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-neutral-500">
-                    <Link href="/" className="hover:text-indigo-600">홈</Link>
+                    <Link href="/" className="hover:text-indigo-600">{t("home")}</Link>
                     <i className="fa-solid fa-chevron-right text-[8px]" />
                     <Link href={`/category/${p.category}`} className="hover:text-indigo-600">
-                        {CATEGORY_LABEL[p.category]}
+                        {categoryLabel(p.category)}
                     </Link>
                     <i className="fa-solid fa-chevron-right text-[8px]" />
                     <Link href={`/products?sub=${p.subcategory}`} className="hover:text-indigo-600">
-                        {SUBCATEGORY_LABEL[p.subcategory]}
+                        {subcategoryLabel(p.subcategory)}
                     </Link>
                 </nav>
 
@@ -121,7 +121,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         {p.brandEn || p.brandKo}
                     </p>
                     <h1 className="mt-2 text-2xl font-black leading-tight text-neutral-950 md:text-3xl">
-                        {p.name}
+                        {displayName}
                     </h1>
                     {(bestRank !== null || isNew) && (
                         <div className="mt-3 flex flex-wrap gap-1.5">
@@ -145,7 +145,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         <span className="font-black">{p.rating.toFixed(1)}</span>
                         <span className="text-neutral-300">|</span>
                         <a href="#tab-review" className="font-bold text-neutral-600 hover:text-indigo-600">
-                            리뷰 {p.reviewCount.toLocaleString()}개
+                            {t("reviews")} {p.reviewCount.toLocaleString()}
                         </a>
                     </div>
                 )}
@@ -153,13 +153,13 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 {twinStat && twinStat.sampleSize >= 5 && typeof twinStat.repurchaseRate === "number" && (
                     <div className="rounded-lg border border-indigo-100 bg-indigo-50/70 px-4 py-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                            <span className="text-xs font-black text-indigo-700">우리 애 트윈</span>
+                            <span className="text-xs font-black text-indigo-700">{t("twin")}</span>
                             <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-indigo-700">
-                                표본 {twinStat.sampleSize}마리
+                                {t("sample")} {twinStat.sampleSize}
                             </span>
                         </div>
                         <p className="mt-1 text-sm font-bold leading-6 text-neutral-700">
-                            비슷한 프로필 아이들의 재구매율{" "}
+                            {t("repurchaseRate")}{" "}
                             <b className="text-neutral-950">{Math.round(twinStat.repurchaseRate * 100)}%</b>
                             {twinStat.cohortLevel && <span className="text-neutral-500"> · {twinStat.cohortLevel}</span>}
                         </p>
@@ -172,12 +172,11 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         {p.discountRate > 0 && p.originalPrice && (
                             <div className="mb-1 flex items-center gap-2">
                                 <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
-                                <span className="text-sm text-neutral-400 line-through">{formatKRW(p.originalPrice)}원</span>
+                                <span className="text-sm text-neutral-400 line-through">{formatPrice(p.originalPrice)}</span>
                             </div>
                         )}
                         <p className="text-4xl font-black text-neutral-950">
-                            {formatKRW(p.price)}
-                            <span className="text-2xl">원</span>
+                            {formatPrice(p.price)}
                         </p>
                     </div>
                     {/* 링크·공유 — 금액 라인 우측 끝(아이콘만) */}
@@ -189,14 +188,14 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 <ul className="space-y-2 text-sm text-neutral-700">
                     <li className="flex items-center gap-2">
                         <i className="fa-solid fa-coins text-amber-500" />
-                        <span>적립금</span>
-                        <b className="text-neutral-950">{formatKRW(point)}원</b>
+                        <span>{t("point")}</span>
+                        <b className="text-neutral-950">{formatPrice(point)}</b>
                     </li>
                     <li className="flex items-center gap-2">
                         <i className="fa-solid fa-truck text-indigo-600" />
-                        <span>배송</span>
-                        <b className="text-neutral-950">무료배송</b>
-                        <span className="text-neutral-500">1~2일 내 출고</span>
+                        <span>{t("shipping")}</span>
+                        <b className="text-neutral-950">{t("freeShipping")}</b>
+                        <span className="text-neutral-500">{t("shipsIn")}</span>
                     </li>
                 </ul>
 
@@ -218,8 +217,8 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                                 ? "border-rose-500 bg-rose-50 text-rose-600"
                                 : "border-neutral-200 bg-white text-neutral-500 hover:border-rose-300 hover:text-rose-600"
                         }`}
-                        aria-label={wished ? "찜 해제" : "찜하기"}
-                        title={wished ? "찜 해제" : "찜하기"}
+                        aria-label={wished ? t("wishlistRemove") : t("wishlistAdd")}
+                        title={wished ? t("wishlistRemove") : t("wishlistAdd")}
                     >
                         <i className={`${wished ? "fa-solid" : "fa-regular"} fa-heart text-lg`} />
                     </button>
@@ -229,7 +228,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         className="h-14 rounded-md border-2 border-neutral-200 bg-white text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
                     >
                         <i className="fa-solid fa-bag-shopping mr-2 text-sm" />
-                        장바구니 담기
+                        {t("addToCart")}
                     </button>
                     <button
                         type="button"
@@ -237,7 +236,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         className="h-14 rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700"
                     >
                         <i className="fa-solid fa-credit-card mr-2 text-sm" />
-                        구매하기
+                        {t("buyNow")}
                     </button>
                 </div>
             </div>
@@ -251,14 +250,14 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 py-2.5 md:px-6">
                     <div className="relative hidden h-12 w-12 shrink-0 overflow-hidden rounded-md border border-neutral-200 bg-[#f7f2e8] sm:block">
                         {barImage ? (
-                            <Image key={barImage} src={barImage} alt={p.name} fill sizes="48px" className="object-cover" />
+                            <Image key={barImage} src={barImage} alt={displayName} fill sizes="48px" className="object-cover" />
                         ) : (
                             <div className="flex h-full items-center justify-center text-neutral-300"><i className={`fa-solid ${p.icon}`} /></div>
                         )}
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-black text-neutral-900">{p.name}</p>
-                        <p className="text-sm font-black text-indigo-700">{formatKRW(p.price)}원</p>
+                        <p className="truncate text-sm font-black text-neutral-900">{displayName}</p>
+                        <p className="text-sm font-black text-indigo-700">{formatPrice(p.price)}</p>
                     </div>
                     <button
                         type="button"
@@ -266,14 +265,14 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         className="h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition hover:border-indigo-500 hover:text-indigo-700 sm:px-4"
                     >
                         <i className="fa-solid fa-bag-shopping text-sm sm:mr-1.5" />
-                        <span className="hidden sm:inline">장바구니</span>
+                        <span className="hidden sm:inline">{t("cart")}</span>
                     </button>
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
                         className="h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >
-                        구매하기
+                        {t("buyNow")}
                     </button>
                 </div>
             </div>
@@ -295,7 +294,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 }`}
             >
                 <i className="fa-solid fa-circle-check mr-1.5 text-emerald-400" />
-                장바구니에 담았어요
+                {t("addedToCart")}
             </div>
         </>
     );

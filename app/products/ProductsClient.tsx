@@ -17,6 +17,7 @@ import {
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
 import { trackExternalSearchResults } from "@/lib/storefront-analytics";
+import { useI18n } from "@/lib/i18n";
 import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
 import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
@@ -71,6 +72,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const [externalProducts, setExternalProducts] = useState<ExternalProductResult[]>([]);
     const [externalLoading, setExternalLoading] = useState(false);
     const [externalSearched, setExternalSearched] = useState(false);
+    const { t, locale, categoryLabel, subcategoryLabel, menuLabel } = useI18n();
 
     useEffect(() => {
         setQuery(params.get("q") ?? "");
@@ -135,28 +137,30 @@ export default function ProductsClient({ initialCategory, title }: Props) {
 
     const hasSearch = query.trim().length > 0;
     const visibleCount = products.length + (hasSearch ? externalProducts.length : 0);
+    const countText = (count: number) => locale === "en" ? `${count.toLocaleString()} ${t("countSuffix")}` : `${count.toLocaleString()}${t("countSuffix")}`;
+    const heading = title ? menuLabel(title) : t("allProducts");
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">상품 {visibleCount.toLocaleString()}개</p>
+                <p className="text-sm font-black text-indigo-700">{t("productCount")} {countText(visibleCount)}</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">
-                    {title ?? "전체상품"}
+                    {heading}
                 </h1>
             </header>
 
             <section className="surface mb-6 grid gap-3 p-4 md:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]">
                 <label className="block">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">검색</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{t("search")}</span>
                     <input
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         className="input"
-                        placeholder="상품명, 브랜드, 용도"
+                        placeholder={t("searchFieldPlaceholder")}
                     />
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">카테고리</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{t("categoryFilter")}</span>
                     <select
                         value={category}
                         onChange={(event) => {
@@ -166,26 +170,26 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                         disabled={Boolean(initialCategory)}
                         className="input"
                     >
-                        <option value="all">전체</option>
+                        <option value="all">{t("all")}</option>
                         {CATEGORY_ORDER.map((slug) => (
-                            <option key={slug} value={slug}>{CATEGORY_LABEL[slug]}</option>
+                            <option key={slug} value={slug}>{categoryLabel(slug, CATEGORY_LABEL[slug])}</option>
                         ))}
                     </select>
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">세부</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{t("subcategoryFilter")}</span>
                     <select value={subcategory} onChange={(event) => setSubcategory(event.target.value as SubcategoryFilter)} className="input">
-                        <option value="all">전체</option>
+                        <option value="all">{t("all")}</option>
                         {availableSubcategories.map((slug) => (
-                            <option key={slug} value={slug}>{SUBCATEGORY_LABEL[slug]}</option>
+                            <option key={slug} value={slug}>{subcategoryLabel(slug, SUBCATEGORY_LABEL[slug])}</option>
                         ))}
                     </select>
                 </label>
                 <label className="block">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">정렬</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{t("sort")}</span>
                     <select value={sort} onChange={(event) => setSort(event.target.value as SortKey)} className="input">
                         {SORT_OPTIONS.map((slug) => (
-                            <option key={slug} value={slug}>{SORT_LABEL[slug]}</option>
+                            <option key={slug} value={slug}>{menuLabel(SORT_LABEL[slug])}</option>
                         ))}
                     </select>
                 </label>
@@ -195,8 +199,8 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                 <section>
                     {hasSearch && externalProducts.length > 0 && (
                         <div className="mb-3 flex items-end justify-between gap-3">
-                            <h2 className="text-lg font-black text-neutral-950">댕다방 상품</h2>
-                            <span className="text-xs font-black text-neutral-500">{products.length.toLocaleString()}개</span>
+                            <h2 className="text-lg font-black text-neutral-950">{t("daengdabangProducts")}</h2>
+                            <span className="text-xs font-black text-neutral-500">{countText(products.length)}</span>
                         </div>
                     )}
                     <PaginatedProductGrid
@@ -211,11 +215,11 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                     <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
                         <div>
                             <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Price Compare</p>
-                            <h2 className="mt-1 text-xl font-black text-neutral-950">외부 가격비교</h2>
+                            <h2 className="mt-1 text-xl font-black text-neutral-950">{t("priceCompare")}</h2>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
-                                {externalLoading ? "검색 중" : `${externalProducts.length.toLocaleString()}개`}
+                                {externalLoading ? t("searching") : countText(externalProducts.length)}
                             </span>
                         </div>
                     </div>
@@ -231,10 +235,10 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                     ) : (
                         <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
                             <p className="text-sm font-black text-neutral-700">
-                                {externalLoading || !externalSearched ? "외부 가격비교 후보를 찾는 중입니다." : "아직 연결된 외부 가격비교 후보가 없습니다."}
+                                {externalLoading || !externalSearched ? t("externalCompareLoading") : t("externalCompareEmpty")}
                             </p>
                             <p className="mt-1 text-xs font-bold text-neutral-500">
-                                RPA 시장조사 피드가 갱신되면 이 영역에 자동으로 추가됩니다.
+                                {t("externalCompareFeedNote")}
                             </p>
                         </div>
                     )}
@@ -244,7 +248,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
             {products.length === 0 && !hasSearch && (
                 <div className="surface p-10 text-center">
                     <i className="fa-regular fa-face-meh text-3xl text-neutral-400" />
-                    <p className="mt-3 text-sm font-black text-neutral-700">조건에 맞는 상품이 없습니다.</p>
+                    <p className="mt-3 text-sm font-black text-neutral-700">{t("noProducts")}</p>
                 </div>
             )}
         </main>

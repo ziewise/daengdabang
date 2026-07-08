@@ -3,15 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORY_LABEL, SUBCATEGORY_LABEL, type CatalogProduct } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog";
+import { useI18n } from "@/lib/i18n";
 
 type SectionKey = "detail" | "review" | "qna";
-
-const SECTIONS: { key: SectionKey; label: string }[] = [
-    { key: "detail", label: "상세정보" },
-    { key: "review", label: "리뷰" },
-    { key: "qna", label: "Q&A" },
-];
 
 interface Props {
     product: CatalogProduct;
@@ -19,16 +14,22 @@ interface Props {
 
 export default function ProductTabs({ product: p }: Props) {
     const [active, setActive] = useState<SectionKey>("detail");
+    const { t } = useI18n();
     const reviewBadge = p.externalReviewCount ? p.externalReviewCount.toLocaleString() : undefined;
+    const sections: { key: SectionKey; label: string }[] = [
+        { key: "detail", label: t("detailInfo") },
+        { key: "review", label: t("reviews") },
+        { key: "qna", label: t("qna") },
+    ];
 
     return (
         <div className="mt-12 md:mt-16">
             <nav
                 className="sticky top-[var(--header-height)] z-20 -mx-4 border-y border-neutral-200 bg-background/95 px-4 backdrop-blur md:-mx-6 md:px-6"
-                aria-label="상품 상세 섹션"
+                aria-label={t("detailInfo")}
             >
                 <div className="mx-auto flex max-w-[1280px] gap-1">
-                    {SECTIONS.map((section) => (
+                    {sections.map((section) => (
                         <a
                             key={section.key}
                             href={`#tab-${section.key}`}
@@ -53,17 +54,17 @@ export default function ProductTabs({ product: p }: Props) {
             </nav>
 
             <section id="tab-detail" className="scroll-mt-32 pt-10">
-                <SectionTitle title="상세정보" />
+                <SectionTitle title={t("detailInfo")} />
                 <DetailContent product={p} />
             </section>
 
             <section id="tab-review" className="scroll-mt-32 pt-14">
-                <SectionTitle title="리뷰" badge={reviewBadge} />
+                <SectionTitle title={t("reviews")} badge={reviewBadge} />
                 <ReviewContent product={p} />
             </section>
 
             <section id="tab-qna" className="scroll-mt-32 pt-14">
-                <SectionTitle title="Q&A" />
+                <SectionTitle title={t("qna")} />
                 <QnaContent product={p} />
             </section>
         </div>
@@ -81,12 +82,14 @@ function SectionTitle({ title, badge }: { title: string; badge?: string }) {
 
 function DetailContent({ product: p }: { product: CatalogProduct }) {
     const [expanded, setExpanded] = useState(false);
+    const { t, productName } = useI18n();
     const details = p.details ?? [];
+    const displayName = productName(p);
 
     if (details.length === 0) {
         return (
             <div className="rounded-lg border border-dashed border-neutral-200 bg-white p-8 text-center text-sm font-bold text-neutral-500">
-                등록된 상세 이미지가 없습니다.
+                {t("noDetailImages")}
             </div>
         );
     }
@@ -99,7 +102,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                         <Image
                             key={src}
                             src={src}
-                            alt={`${p.name} 상세 ${index + 1}`}
+                            alt={`${displayName} ${t("detailInfo")} ${index + 1}`}
                             width={1200}
                             height={1600}
                             sizes="(max-width: 768px) 100vw, 768px"
@@ -122,7 +125,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     onClick={() => setExpanded((value) => !value)}
                     className="inline-flex h-11 items-center gap-2 rounded-md border border-neutral-200 bg-white px-5 text-sm font-black shadow-sm transition hover:border-indigo-300 hover:text-indigo-700"
                 >
-                    {expanded ? "접기" : "상세정보 더보기"}
+                    {expanded ? t("fold") : t("moreDetail")}
                     <i className={`fa-solid ${expanded ? "fa-chevron-up" : "fa-chevron-down"} text-[10px]`} />
                 </button>
             </div>
@@ -131,6 +134,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
 }
 
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
+    const { t, locale } = useI18n();
     const snippets = p.externalReviewSnippets ?? [];
     const themes = p.externalReviewThemes ?? [];
     const count = p.externalReviewCount ?? snippets.length;
@@ -142,16 +146,18 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                 <div className="rounded-lg border border-neutral-200 bg-white p-5 md:p-7">
                     <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                         <div>
-                            <p className="text-xs font-black text-indigo-600">네이버 스마트스토어 구매 후기</p>
-                            <h3 className="mt-2 text-lg font-black text-neutral-950">실제 구매 후기 요약</h3>
+                            <p className="text-xs font-black text-indigo-600">
+                                {locale === "en" ? "Naver Smart Store purchase reviews" : "네이버 스마트스토어 구매 후기"}
+                            </p>
+                            <h3 className="mt-2 text-lg font-black text-neutral-950">{t("originalReview")}</h3>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-center">
                             <div className="rounded-md bg-neutral-50 px-4 py-3">
-                                <div className="text-[11px] font-black text-neutral-400">평균</div>
+                                <div className="text-[11px] font-black text-neutral-400">{t("rating")}</div>
                                 <div className="mt-1 text-xl font-black">{average !== null ? average.toFixed(1) : "-"}</div>
                             </div>
                             <div className="rounded-md bg-neutral-50 px-4 py-3">
-                                <div className="text-[11px] font-black text-neutral-400">후기</div>
+                                <div className="text-[11px] font-black text-neutral-400">{t("reviewCount")}</div>
                                 <div className="mt-1 text-xl font-black">{count.toLocaleString()}</div>
                             </div>
                         </div>
@@ -171,7 +177,7 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                         {snippets.slice(0, 8).map((snippet, index) => (
                             <div key={`${snippet.text}-${index}`} className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
                                 <div className="mb-2 flex items-center justify-between gap-3 text-xs font-black text-neutral-500">
-                                    <span>{snippet.rating ? `별점 ${snippet.rating}` : "구매 후기"}</span>
+                                    <span>{snippet.rating ? `${t("rating")} ${snippet.rating}` : t("reviews")}</span>
                                     {snippet.summary && <span className="truncate">{snippet.summary}</span>}
                                 </div>
                                 <p className="text-sm font-bold leading-6 text-neutral-800">{snippet.text}</p>
@@ -188,7 +194,7 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                                 className="inline-flex h-10 items-center gap-2 rounded-md border border-neutral-200 px-4 text-xs font-black hover:border-indigo-300 hover:text-indigo-700"
                             >
                                 <i className="fa-solid fa-arrow-up-right-from-square" />
-                                원문 보기
+                                {t("viewOriginal")}
                             </a>
                         </div>
                     )}
@@ -199,27 +205,31 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
 
     return (
         <div className="mx-auto max-w-3xl rounded-lg border border-dashed border-neutral-200 bg-white p-8 text-center text-sm font-bold text-neutral-500">
-            등록된 리뷰가 없습니다.
+            {t("noReviews")}
         </div>
     );
 }
 
 function QnaContent({ product: p }: { product: CatalogProduct }) {
+    const { t, locale, productName } = useI18n();
+    const displayName = productName(p);
     return (
         <div className="mx-auto max-w-2xl rounded-lg border border-neutral-200 bg-white p-7 text-center md:p-10">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-50 text-xl text-indigo-700">
                 <i className="fa-regular fa-comment-dots" />
             </div>
-            <h3 className="text-lg font-black text-neutral-950">상품 문의</h3>
+            <h3 className="text-lg font-black text-neutral-950">{t("productInquiry")}</h3>
             <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                {p.name} 기준으로 사이즈, 용도, 비교 상품을 바로 물어볼 수 있습니다.
+                {locale === "en"
+                    ? `Ask about sizing, use cases, and comparison products for ${displayName}.`
+                    : `${displayName} 기준으로 사이즈, 용도, 비교 상품을 바로 물어볼 수 있습니다.`}
             </p>
             <Link
-                href={`/chat?q=${encodeURIComponent(p.name)}`}
+                href={`/chat?q=${encodeURIComponent(displayName)}`}
                 className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
             >
                 <i className="fa-solid fa-circle-question text-xs" />
-                챗봇에 문의
+                {t("askChatbot")}
             </Link>
         </div>
     );

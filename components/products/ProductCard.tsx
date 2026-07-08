@@ -18,9 +18,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
-import { formatKRW, getBestRank, isNewProduct } from "@/lib/catalog";
+import { getBestRank, isNewProduct } from "@/lib/catalog";
 import { productHref } from "@/lib/shop";          // 운영 사이트 라우트 호환
 import { useStore } from "@/lib/store";            // 운영 사이트 위시리스트 기능
+import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 
 interface Props {
@@ -43,11 +44,13 @@ export default function ProductCard({
 }: Props) {
     const router = useRouter();
     const { toggleWishlist, isWished } = useStore();   // 운영 사이트 위시리스트
+    const { t, productName, formatPrice } = useI18n();
     const wished = isWished(p.id);
     const effectiveRank = rank ?? getBestRank(p);
     const shouldShowNew = showNewBadge ?? isNewProduct(p);
     const showBest = effectiveRank !== null && rankStyle !== "off";
     const detailHref = productHref(p);                 // 운영 사이트 라우트(/product/{slug})
+    const displayName = productName(p);
 
     // ===== 영상 호버 로직 =====
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -102,15 +105,15 @@ export default function ProductCard({
                 tabIndex={0}
                 aria-label={
                     isTouch && hasVideo
-                        ? videoActive ? "영상 정지" : "영상 재생"
-                        : `${p.name} 상세 보기`
+                        ? videoActive ? t("videoStop") : t("videoPlay")
+                        : `${displayName} ${t("detailInfo")}`
                 }
                 className={`relative aspect-square overflow-hidden cursor-pointer flex items-center justify-center ${p.image ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}
             >
                 {p.image ? (
                     <Image
                         src={p.image}
-                        alt={p.name}
+                        alt={displayName}
                         fill
                         sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
                         className={`object-cover transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
@@ -165,7 +168,7 @@ export default function ProductCard({
                         toggleWishlist(p.id);
                     }}
                     className="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white shadow-card flex items-center justify-center"
-                    aria-label={wished ? "찜 해제" : "찜하기"}
+                    aria-label={wished ? t("wishlistRemove") : t("wishlistAdd")}
                 >
                     <i className={`fa-heart text-xs ${wished ? "fa-solid text-rose-500" : "fa-regular text-neutral-400"}`} />
                 </button>
@@ -185,7 +188,7 @@ export default function ProductCard({
                         {p.brandEn || p.brandKo}
                     </p>
                     <p className="text-xs md:text-sm font-bold line-clamp-2 mb-2 min-h-[2.6em]">
-                        {p.name}
+                        {displayName}
                     </p>
 
                     {/* 가격 — 할인 row 는 항상 공간 차지 (카드 높이 일관) */}
@@ -197,13 +200,13 @@ export default function ProductCard({
                                         {p.discountRate}%
                                     </span>
                                     <span className="text-[10px] md:text-[11px] text-neutral-400 line-through">
-                                        {formatKRW(p.originalPrice)}원
+                                        {formatPrice(p.originalPrice)}
                                     </span>
                                 </>
                             )}
                         </div>
                         <p className="text-sm md:text-base font-black">
-                            {formatKRW(p.price)}원
+                            {formatPrice(p.price)}
                         </p>
                     </div>
 

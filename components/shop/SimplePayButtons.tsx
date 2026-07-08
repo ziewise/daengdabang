@@ -8,10 +8,13 @@
  * disabled — 옵션 미선택 등으로 결제 불가일 때 함께 비활성(시트에서 사용).
  */
 
+import { useI18n } from "@/lib/i18n";
+
 export default function SimplePayButtons({ disabled = false }: { disabled?: boolean }) {
+    const { locale } = useI18n();
     const pay = (provider: "naver" | "kakao") => {
         const label = provider === "naver" ? "네이버페이" : "카카오페이";
-        window.alert(`${label} 간편결제는 준비 중입니다. 곧 제공될 예정이에요!`);
+        window.alert(locale === "en" ? `${label} is coming soon.` : `${label} 간편결제는 준비 중입니다. 곧 제공될 예정이에요!`);
     };
 
     return (
@@ -24,7 +27,7 @@ export default function SimplePayButtons({ disabled = false }: { disabled?: bool
                 className="flex h-12 items-center justify-center gap-1.5 rounded-md bg-[#03C75A] text-sm font-black text-black transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
             >
                 <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-black text-[10px] font-black leading-none text-white">N</span>
-                pay 결제
+                {locale === "en" ? "Pay" : "pay 결제"}
             </button>
             {/* 카카오페이 — 카카오 옐로 + 말풍선 */}
             <button
@@ -34,7 +37,7 @@ export default function SimplePayButtons({ disabled = false }: { disabled?: bool
                 className="flex h-12 items-center justify-center gap-1.5 rounded-md bg-[#FFEB00] text-sm font-black text-[#3A1D1D] transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
             >
                 <i className="fa-solid fa-comment text-[15px]" />
-                pay 결제
+                {locale === "en" ? "Pay" : "pay 결제"}
             </button>
         </div>
     );

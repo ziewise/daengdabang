@@ -2,14 +2,15 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { formatKRW } from "@/lib/catalog";
 import { cartProducts } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 import { trackTwinOrderAttribution } from "@/lib/storefront-analytics";
+import { useI18n } from "@/lib/i18n";
 
 export default function CheckoutPage() {
     const cart = useCart();
     const { user } = useAuth();
+    const { t, formatPrice, productName } = useI18n();
     // 장바구니에서 "선택된" 라인만 결제 대상(체크 해제 상품은 장바구니에 남는다)
     const lines = cartProducts(cart.lines).filter((line) => line.selected);
     const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
@@ -59,11 +60,11 @@ export default function CheckoutPage() {
         return (
             <main className="mx-auto max-w-[720px] px-4 py-14 text-center">
                 <i className="fa-regular fa-circle-check text-5xl text-indigo-600" />
-                <h1 className="mt-4 text-3xl font-black text-neutral-950">주문이 접수되었습니다.</h1>
-                <p className="mt-2 text-sm font-bold text-neutral-600">주문번호 {orderId}</p>
+                <h1 className="mt-4 text-3xl font-black text-neutral-950">{t("orderComplete")}</h1>
+                <p className="mt-2 text-sm font-bold text-neutral-600">{t("orderNumber")} {orderId}</p>
                 <div className="mt-6 flex justify-center gap-2">
-                    <Link href="/mypage" className="btn btn-primary">마이페이지</Link>
-                    <Link href="/products" className="btn btn-secondary">계속 쇼핑</Link>
+                    <Link href="/mypage" className="btn btn-primary">{t("mypage")}</Link>
+                    <Link href="/products" className="btn btn-secondary">{t("keepShopping")}</Link>
                 </div>
             </main>
         );
@@ -72,53 +73,53 @@ export default function CheckoutPage() {
     if (lines.length === 0) {
         return (
             <main className="mx-auto max-w-[720px] px-4 py-14 text-center">
-                <h1 className="text-2xl font-black text-neutral-950">결제할 상품이 없습니다.</h1>
-                <Link href="/products" className="btn btn-primary mt-6">상품 보러가기</Link>
+                <h1 className="text-2xl font-black text-neutral-950">{t("noCheckoutItems")}</h1>
+                <Link href="/products" className="btn btn-primary mt-6">{t("shopNow")}</Link>
             </main>
         );
     }
 
     return (
         <main className="mx-auto max-w-[1080px] px-4 py-8 md:px-6">
-            <h1 className="text-3xl font-black tracking-tight text-neutral-950">주문/결제</h1>
+            <h1 className="text-3xl font-black tracking-tight text-neutral-950">{t("checkoutTitle")}</h1>
             <form onSubmit={submit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section className="surface grid gap-4 p-5">
                     <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">받는 분</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500">{t("receiver")}</span>
                         <input value={receiver} onChange={(event) => setReceiver(event.target.value)} className="input" required />
                     </label>
                     <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">주소</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500">{t("address")}</span>
                         <input value={address} onChange={(event) => setAddress(event.target.value)} className="input" required />
                     </label>
                     <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">결제수단</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500">{t("paymentMethod")}</span>
                         <select value={paymentMethod} onChange={(event) => setPaymentMethod(event.target.value)} className="input">
-                            <option value="card">카드</option>
-                            <option value="transfer">무통장입금</option>
-                            <option value="phone">휴대폰</option>
+                            <option value="card">{t("card")}</option>
+                            <option value="transfer">{t("transfer")}</option>
+                            <option value="phone">{t("phone")}</option>
                         </select>
                     </label>
                 </section>
                 <aside className="surface h-fit p-5">
-                    <h2 className="text-lg font-black text-neutral-950">주문 상품</h2>
+                    <h2 className="text-lg font-black text-neutral-950">{t("orderedProducts")}</h2>
                     <div className="mt-4 grid gap-3">
                         {lines.map(({ product, qty, color, size, subtotal }) => (
                             <div key={`${product.id}-${color ?? ""}-${size ?? ""}`} className="flex items-start justify-between gap-3 text-sm">
                                 <span className="font-bold leading-5 text-neutral-700">
-                                    {product.name}
+                                    {productName(product)}
                                     {color && <span className="text-neutral-400"> · {color}</span>}
                                     {size && <span className="text-neutral-400"> · {size}</span>} x {qty}
                                 </span>
-                                <b className="shrink-0 text-neutral-950">{formatKRW(subtotal)}원</b>
+                                <b className="shrink-0 text-neutral-950">{formatPrice(subtotal)}</b>
                             </div>
                         ))}
                     </div>
                     <div className="mt-4 border-t border-neutral-200 pt-4 flex items-center justify-between">
-                        <span className="font-black">총 결제</span>
-                        <b className="text-2xl font-black text-indigo-700">{formatKRW(total)}원</b>
+                        <span className="font-black">{t("totalPayment")}</span>
+                        <b className="text-2xl font-black text-indigo-700">{formatPrice(total)}</b>
                     </div>
-                    <button type="submit" className="btn btn-primary mt-5 w-full">주문 접수</button>
+                    <button type="submit" className="btn btn-primary mt-5 w-full">{t("placeOrder")}</button>
                 </aside>
             </form>
         </main>

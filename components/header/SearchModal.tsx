@@ -12,7 +12,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { POPULAR_KEYWORDS } from "@/lib/menu-data";
 import { searchRecent } from "@/lib/storage";
-import { searchCatalog, formatKRW } from "@/lib/catalog";
+import { searchCatalog } from "@/lib/catalog";
+import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 
 interface Props {
@@ -27,6 +28,7 @@ export default function SearchModal({ open, onClose }: Props) {
     const [recent, setRecent] = useState<string[]>([]);
     const [term, setTerm] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
+    const { t, locale, formatPrice, productName, menuLabel } = useI18n();
 
     // 열림 → body 스크롤 잠금 + Escape 닫기 + autofocus + 최근 검색어 reload
     useEffect(() => {
@@ -91,7 +93,7 @@ export default function SearchModal({ open, onClose }: Props) {
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-label="검색"
+                aria-label={t("search")}
                 className="fixed left-1/2 top-[88px] -translate-x-1/2 z-[2001] w-[min(640px,calc(100vw-32px))] max-h-[calc(100vh-120px)] overflow-y-auto bg-white rounded-2xl shadow-modal animate-in zoom-in-95 fade-in slide-in-from-top-2 duration-200"
             >
                 {/* 검색 input — 모달 헤더 역할 */}
@@ -103,14 +105,14 @@ export default function SearchModal({ open, onClose }: Props) {
                             type="search"
                             value={term}
                             onChange={(e) => setTerm(e.target.value)}
-                            placeholder="어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)"
+                            placeholder={locale === "en" ? "Search products (e.g. harness, food, Ruffwear)" : "어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)"}
                             className="w-full pl-12 pr-12 h-12 bg-neutral-50 border-2 border-transparent rounded-xl text-sm font-medium focus:outline-none focus:border-aurora-indigo focus:bg-white transition"
                         />
                         <button
                             type="button"
                             onClick={onClose}
                             className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center hover:bg-neutral-200 text-neutral-500"
-                            aria-label="닫기"
+                            aria-label={t("close")}
                         >
                             <i className="fa-solid fa-xmark text-sm" />
                         </button>
@@ -123,10 +125,10 @@ export default function SearchModal({ open, onClose }: Props) {
                         <section>
                             <div className="flex items-center justify-between mb-3">
                                 <h3 className="text-[10px] font-black text-neutral-400 tracking-[0.2em]">
-                                    검색 결과
+                                    {locale === "en" ? "Search Results" : "검색 결과"}
                                 </h3>
                                 <span className="text-[10px] text-neutral-400 font-bold">
-                                    {results.length}개 발견
+                                    {locale === "en" ? `${results.length} found` : `${results.length}개 발견`}
                                 </span>
                             </div>
 
@@ -134,7 +136,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                 <div className="text-center py-8">
                                     <i className="fa-solid fa-circle-question text-2xl text-neutral-300 mb-2" />
                                     <p className="text-xs text-neutral-500">
-                                        결과가 없어요. 다른 키워드를 시도해 보세요.
+                                        {locale === "en" ? "No results. Try another keyword." : "결과가 없어요. 다른 키워드를 시도해 보세요."}
                                     </p>
                                 </div>
                             ) : (
@@ -152,7 +154,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                                         {p.image ? (
                                                             <Image
                                                                 src={p.image}
-                                                                alt={p.name}
+                                                                alt={productName(p)}
                                                                 fill
                                                                 sizes="48px"
                                                                 className="object-cover"
@@ -165,10 +167,10 @@ export default function SearchModal({ open, onClose }: Props) {
                                                         <p className="text-[10px] font-extrabold tracking-wider text-aurora-indigo uppercase">
                                                             {p.brandEn || p.brandKo}
                                                         </p>
-                                                        <p className="text-xs font-bold truncate">{p.name}</p>
+                                                        <p className="text-xs font-bold truncate">{productName(p)}</p>
                                                     </div>
                                                     <span className="text-xs font-black flex-shrink-0">
-                                                        {formatKRW(p.price)}원
+                                                        {formatPrice(p.price)}
                                                     </span>
                                                 </button>
                                             </li>
@@ -180,7 +182,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                             onClick={() => goSearch(term)}
                                             className="w-full px-4 py-2.5 rounded-xl bg-aurora-indigo/[0.08] hover:bg-aurora-indigo/[0.12] text-aurora-indigo text-xs font-extrabold transition flex items-center justify-center gap-1.5"
                                         >
-                                            전체 결과 {results.length}개 모두 보기
+                                            {locale === "en" ? `View all ${results.length} results` : `전체 결과 ${results.length}개 모두 보기`}
                                             <i className="fa-solid fa-arrow-right text-[10px]" />
                                         </button>
                                     )}
@@ -192,7 +194,7 @@ export default function SearchModal({ open, onClose }: Props) {
                         <>
                             <section className="mb-5">
                                 <h3 className="text-[10px] font-black text-neutral-400 mb-2 tracking-[0.2em]">
-                                    인기 검색어
+                                    {locale === "en" ? "Popular Searches" : "인기 검색어"}
                                 </h3>
                                 <div className="flex flex-wrap gap-1.5">
                                     {POPULAR_KEYWORDS.map((k, i) => (
@@ -205,7 +207,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                             <span className="text-aurora-indigo group-hover:text-white text-[10px] font-bold">
                                                 {i + 1}
                                             </span>
-                                            <span>{k}</span>
+                                            <span>{menuLabel(k)}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -215,7 +217,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                 <section>
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="text-[10px] font-black text-neutral-400 tracking-[0.2em]">
-                                            최근 검색어
+                                            {locale === "en" ? "Recent Searches" : "최근 검색어"}
                                         </h3>
                                         <button
                                             type="button"
@@ -225,7 +227,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                             }}
                                             className="text-[10px] text-neutral-400 hover:text-danger font-bold"
                                         >
-                                            전체 삭제
+                                            {locale === "en" ? "Clear all" : "전체 삭제"}
                                         </button>
                                     </div>
                                     <div className="flex flex-wrap gap-1.5">
@@ -240,7 +242,7 @@ export default function SearchModal({ open, onClose }: Props) {
                                                     type="button"
                                                     onClick={(e) => removeRecent(e, k)}
                                                     className="text-neutral-400 hover:text-danger ml-0.5"
-                                                    aria-label={`${k} 삭제`}
+                                                    aria-label={`${k} ${t("delete")}`}
                                                 >
                                                     <i className="fa-solid fa-xmark text-[9px]" />
                                                 </button>

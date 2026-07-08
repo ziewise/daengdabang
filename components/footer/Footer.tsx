@@ -10,6 +10,8 @@
  */
 import Link from "next/link";
 import BrandLogo from "@/components/header/BrandLogo";
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
+import LocalizedText from "@/components/i18n/LocalizedText";
 import { FOOTER_META_LINKS, FOOTER_LEGAL_LINKS } from "@/lib/menu-data";
 import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
 import NewsletterForm from "./NewsletterForm";
@@ -24,7 +26,10 @@ export default function Footer() {
                     <div>
                         <BrandLogo className="mb-1.5" />
                         <p className="text-xs md:text-sm text-neutral-600 leading-relaxed max-w-md">
-                            우리 댕댕이의 매일을 더 특별하게 — <strong className="font-bold">큐레이션 펫 쇼핑몰</strong>
+                            <LocalizedText
+                                ko={<>우리 댕댕이의 매일을 더 특별하게 — <strong className="font-bold">큐레이션 펫 쇼핑몰</strong></>}
+                                en={<>Make every day better for your dog — <strong className="font-bold">curated pet shopping</strong></>}
+                            />
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-x-5 gap-y-1.5">
@@ -34,7 +39,7 @@ export default function Footer() {
                                 href={l.href}
                                 className="text-xs md:text-sm font-medium text-neutral-600 hover:text-aurora-indigo"
                             >
-                                {l.label}
+                                <LocalizedMenuLabel label={l.label} />
                             </Link>
                         ))}
                     </div>
@@ -51,7 +56,10 @@ export default function Footer() {
                                 NEWSLETTER
                             </p>
                             <p className="text-[11px] text-neutral-500 leading-snug">
-                                신상품·할인 소식을<br />가장 먼저 받아보세요
+                                <LocalizedText
+                                    ko={<>신상품·할인 소식을<br />가장 먼저 받아보세요</>}
+                                    en={<>New arrivals and deals,<br />sent first</>}
+                                />
                             </p>
                         </div>
                         <NewsletterForm />
@@ -72,8 +80,10 @@ export default function Footer() {
                         </a>
                         {/* 3) 시간 + 메일 (2줄) */}
                         <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap md:border-l md:border-neutral-200/70 md:pl-5">
-                            평일 10:00~18:00 · 주말 휴무<br />
-                            {BUSINESS_INFO.customerServiceEmail}
+                            <LocalizedText
+                                ko={<>평일 10:00~18:00 · 주말 휴무<br />{BUSINESS_INFO.customerServiceEmail}</>}
+                                en={<>Weekdays 10:00-18:00 · Closed weekends<br />{BUSINESS_INFO.customerServiceEmail}</>}
+                            />
                         </p>
                     </div>
 
@@ -91,16 +101,16 @@ export default function Footer() {
                 {/* 3. 사업자 정보 (한국 쇼핑몰 법적 필수) */}
                 <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-1 text-[10px] md:text-[11px] text-neutral-500">
                     {[
-                        ["상호", BUSINESS_INFO.companyName],
-                        ["대표자", BUSINESS_INFO.representative],
-                        ["사업자등록번호", BUSINESS_INFO.businessNumber],
-                        ["통신판매업신고", BUSINESS_INFO.mailOrderNumber],
-                        ["주소", BUSINESS_INFO.address],
-                        ["호스팅 제공자", BUSINESS_INFO.hostingProvider],
-                        ["개인정보 관리책임자", BUSINESS_INFO.privacyOfficer],
-                        ["입점 / 제휴 문의", BUSINESS_INFO.partnerEmail],
-                    ].map(([k, v]) => (
-                        <div key={k}>
+                        [<LocalizedText key="company" ko="상호" en="Company" />, BUSINESS_INFO.companyName],
+                        [<LocalizedText key="ceo" ko="대표자" en="Representative" />, BUSINESS_INFO.representative],
+                        [<LocalizedText key="biz" ko="사업자등록번호" en="Business No." />, BUSINESS_INFO.businessNumber],
+                        [<LocalizedText key="mail" ko="통신판매업신고" en="Mail-order registration" />, BUSINESS_INFO.mailOrderNumber],
+                        [<LocalizedText key="addr" ko="주소" en="Address" />, BUSINESS_INFO.address],
+                        [<LocalizedText key="host" ko="호스팅 제공자" en="Hosting provider" />, BUSINESS_INFO.hostingProvider],
+                        [<LocalizedText key="privacy" ko="개인정보 관리책임자" en="Privacy officer" />, BUSINESS_INFO.privacyOfficer],
+                        [<LocalizedText key="partner" ko="입점 / 제휴 문의" en="Partner inquiries" />, BUSINESS_INFO.partnerEmail],
+                    ].map(([k, v], index) => (
+                        <div key={index}>
                             <strong className="font-bold text-neutral-600 mr-1">{k}</strong>
                             <span>{v}</span>
                         </div>
@@ -120,7 +130,7 @@ export default function Footer() {
                                         : "text-neutral-500 hover:text-aurora-indigo"
                                 }`}
                             >
-                                {l.label}
+                                <LocalizedMenuLabel label={l.label} />
                             </Link>
                         ))}
                     </div>
