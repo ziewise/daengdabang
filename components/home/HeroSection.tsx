@@ -15,11 +15,13 @@ import {
 } from "@/lib/hero-assets";
 import {
     HERO_AUTO_REGION_ID,
+    HERO_DEVICE_REGION_ID,
     HERO_WEATHER_REGION_OPTIONS,
     fetchHeroWeatherReport,
     heroWeatherSummary,
     type HeroWeatherReport,
 } from "@/lib/hero-weather";
+import { useI18n } from "@/lib/i18n";
 // 우리 영상 매핑 — 협업자 날씨/시간 감지 결과로 여름 영상 24종(PC/모바일) 중 선택,
 // 그리고 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 선택
 import { pickHeroVideo, pickHeroBreedVideo } from "@/lib/hero-summer-video";
@@ -42,6 +44,7 @@ const HERO_REGION_STORAGE_KEY = "ddb.hero.weather.region.v1";
 function normalizeStoredHeroRegion(value: string | null | undefined): string {
     const normalized = value?.trim().toLowerCase();
     if (!normalized || normalized === HERO_AUTO_REGION_ID) return HERO_AUTO_REGION_ID;
+    if (normalized === HERO_DEVICE_REGION_ID) return HERO_DEVICE_REGION_ID;
     return HERO_WEATHER_REGION_OPTIONS.some((region) => region.id === normalized) ? normalized : HERO_AUTO_REGION_ID;
 }
 
@@ -74,8 +77,16 @@ function readManualHeroWeather(): HeroWeather | null {
     }
 }
 
-function resolveClientContext(weatherOverride?: HeroWeather): HeroContext {
-    const now = new Date();
+function parseOpenMeteoLocalDate(value: string | null | undefined): Date | null {
+    if (!value) return null;
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (!match) return null;
+    const [, year, month, day, hour, minute] = match;
+    return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+}
+
+function resolveClientContext(weatherOverride?: HeroWeather, basisDate?: Date | null): HeroContext {
+    const now = basisDate ?? new Date();
     const season = getHeroSeason(now);
     const timeBucket = getHeroTimeBucket(now);
     const weather = weatherOverride ?? readManualHeroWeather() ?? fallbackHeroWeather(season);
@@ -83,9 +94,29 @@ function resolveClientContext(weatherOverride?: HeroWeather): HeroContext {
     return { weather, season, timeBucket };
 }
 
+function regionOptionLabel(region: { name: string; nameEn?: string }, locale: "ko" | "en") {
+    return locale === "en" ? region.nameEn || region.name : region.name;
+}
+
+function localizedSceneLabel(key: string, fallback: string, locale: "ko" | "en") {
+    if (locale === "ko") return fallback;
+    const base = key.split("-")[0];
+    return {
+        snow: "Snowy walk",
+        storm: "Heavy rain caution",
+        rain: "Rainy walk",
+        drizzle: "Light rain walk",
+        fog: "Misty walk",
+        wind: "Breezy walk",
+        cloudy: "Cloudy walk",
+        clear: "Walk-ready weather",
+    }[base] || "Walk-ready weather";
+}
+
 export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
     // 펫렌즈 모달 열기 — 히어로 배지 클릭 시 실행
     const { open: openPetLens } = usePetLensModal();
+    const { locale } = useI18n();
     const [weatherRegion, setWeatherRegion] = useState(readStoredHeroRegion);
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
@@ -111,7 +142,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
         fetchHeroWeatherReport({ regionId: weatherRegion }).then((report) => {
             if (!active || !report) return;
             setWeatherReport(report);
-            setContext(resolveClientContext(report.weather));
+            setContext(resolveClientContext(report.weather, parseOpenMeteoLocalDate(report.localTime)));
         });
 
         return () => {
@@ -130,8 +161,9 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const heroVideo = pickHeroVideo(context.weather, context.timeBucket, isMobile);
     // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (비로그인 = 영상 견종, 로그인 펫 견종은 추후)
     const heroBreedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
-    const weatherSummary = heroWeatherSummary(weatherReport);
-    const contextLabel = `${seasonLabel(context.season)} ${timeBucketLabel(context.timeBucket)}`;
+    const weatherSummary = heroWeatherSummary(weatherReport, locale);
+    const contextLabel = `${seasonLabel(context.season, locale)} ${timeBucketLabel(context.timeBucket, locale)}`;
+    const sceneLabel = localizedSceneLabel(scene.key, scene.label, locale);
 
     return (
         <section className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
@@ -189,7 +221,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                 <div className="max-w-[720px]">
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
-                            {scene.label}
+                            {sceneLabel}
                         </span>
                         <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                             {contextLabel}
@@ -198,12 +230,17 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                             className="hero-region-select"
                             value={weatherRegion}
                             onChange={handleWeatherRegionChange}
-                            aria-label="히어로 날씨 지역"
+                            aria-label={locale === "en" ? "Hero weather location" : "히어로 날씨 지역"}
                         >
-                            <option value={HERO_AUTO_REGION_ID}>현재 위치</option>
+                            <option value={HERO_AUTO_REGION_ID}>
+                                {locale === "en" ? "Auto location" : "자동 위치"}
+                            </option>
+                            <option value={HERO_DEVICE_REGION_ID}>
+                                {locale === "en" ? "Precise current location" : "정확한 현재 위치"}
+                            </option>
                             {HERO_WEATHER_REGION_OPTIONS.map((region) => (
                                 <option key={region.id} value={region.id}>
-                                    {region.name}
+                                    {regionOptionLabel(region, locale)}
                                 </option>
                             ))}
                         </select>
@@ -221,12 +258,15 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                             DAENGDABANG · COLLECTION
                         </p>
                         {/* 메인 카피 — 첨부 이미지 색상: 윗줄 흰색, 아랫줄 핑크. 밝은 배경 가독성 위해 다중 text-shadow */}
-                        <h1 className="mt-3 font-black leading-[1.08]" aria-label="매일이 더 특별한 댕댕이의 일상">
+                        <h1
+                            className="mt-3 font-black leading-[1.08]"
+                            aria-label={locale === "en" ? "Every day made special for your dog" : "매일이 더 특별한 댕댕이의 일상"}
+                        >
                             <span className="block text-4xl text-white md:text-6xl [text-shadow:0_2px_5px_rgb(0_0_0_/_80%),0_5px_28px_rgb(0_0_0_/_50%)]">
-                                매일이 더 특별한
+                                {locale === "en" ? "Every day made special" : "매일이 더 특별한"}
                             </span>
                             <span className="block text-4xl text-aurora-pink md:text-6xl [text-shadow:0_2px_6px_rgb(0_0_0_/_45%),0_5px_22px_rgb(0_0_0_/_30%)]">
-                                댕댕이의 일상
+                                {locale === "en" ? "for your dog" : "댕댕이의 일상"}
                             </span>
                         </h1>
                     </div>

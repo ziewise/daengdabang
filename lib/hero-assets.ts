@@ -223,7 +223,15 @@ export function resolveHeroScene(context: HeroContext): HeroScene {
     };
 }
 
-export function seasonLabel(season: HeroSeason): string {
+export function seasonLabel(season: HeroSeason, locale: "ko" | "en" = "ko"): string {
+    if (locale === "en") {
+        return {
+            spring: "Spring",
+            summer: "Summer",
+            autumn: "Autumn",
+            winter: "Winter",
+        }[season];
+    }
     return {
         spring: "봄",
         summer: "여름",
@@ -232,7 +240,15 @@ export function seasonLabel(season: HeroSeason): string {
     }[season];
 }
 
-export function timeBucketLabel(timeBucket: HeroTimeBucket): string {
+export function timeBucketLabel(timeBucket: HeroTimeBucket, locale: "ko" | "en" = "ko"): string {
+    if (locale === "en") {
+        return {
+            morning: "Morning",
+            day: "Daytime",
+            evening: "Evening",
+            night: "Night",
+        }[timeBucket];
+    }
     return {
         morning: "아침",
         day: "낮",
