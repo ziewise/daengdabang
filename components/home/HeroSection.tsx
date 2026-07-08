@@ -57,6 +57,21 @@ function readStoredHeroRegion(): string {
     }
 }
 
+function readQueryHeroRegion(): string | null {
+    if (typeof window === "undefined") return null;
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.has("heroRegion")) return null;
+        return normalizeStoredHeroRegion(params.get("heroRegion"));
+    } catch {
+        return null;
+    }
+}
+
+function readInitialHeroRegion(): string {
+    return readQueryHeroRegion() ?? readStoredHeroRegion();
+}
+
 function writeStoredHeroRegion(regionId: string) {
     try {
         window.localStorage.setItem(HERO_REGION_STORAGE_KEY, normalizeStoredHeroRegion(regionId));
@@ -117,7 +132,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     // 펫렌즈 모달 열기 — 히어로 배지 클릭 시 실행
     const { open: openPetLens } = usePetLensModal();
     const { locale } = useI18n();
-    const [weatherRegion, setWeatherRegion] = useState(readStoredHeroRegion);
+    const [weatherRegion, setWeatherRegion] = useState(readInitialHeroRegion);
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
     // 모바일(세로) 여부 — 9:16 영상, 데스크탑은 16:9 영상
