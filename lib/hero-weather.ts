@@ -81,6 +81,8 @@ export type HeroWeatherRegionOption = {
 export const HERO_AUTO_REGION_ID = "auto";
 const CACHE_KEY_PREFIX = "ddb.hero.openmeteo.v5";
 const CACHE_MS = 15 * 60 * 1000;
+const IP_GEO_CACHE_KEY = "ddb.hero.ipgeo.v1";
+const IP_GEO_CACHE_MS = 6 * 60 * 60 * 1000;
 const IP_GEO_TIMEOUT_MS = 3200;
 const GEOCODING_TIMEOUT_MS = 3200;
 const DEFAULT_LATITUDE = 37.5665;
@@ -435,8 +437,57 @@ async function geocodedTimezoneLocation(): Promise<HeroWeatherLocation | null> {
     }
 }
 
+function freeIpApiLocation(data: FreeIpApiResponse): HeroWeatherLocation | null {
+    const latitude = numberOrNull(data.latitude);
+    const longitude = numberOrNull(data.longitude);
+    if (latitude === null || longitude === null) return null;
+
+    const nearest = nearestGlobalLocationName(latitude, longitude);
+    const fallbackName = data.cityName || data.regionName || data.countryName || "Current location";
+    const timeZone = Array.isArray(data.timeZones) ? data.timeZones[0] : undefined;
+
+    return {
+        latitude,
+        longitude,
+        name: nearest.nameEn === "Current location" ? fallbackName : nearest.name,
+        nameEn: nearest.nameEn === "Current location" ? fallbackName : nearest.nameEn,
+        timeZone,
+        source: "ip",
+    };
+}
+
+function getCachedIpGeoLocation(): HeroWeatherLocation | null {
+    try {
+        const raw = window.localStorage.getItem(IP_GEO_CACHE_KEY);
+        if (!raw) return null;
+        const cached = JSON.parse(raw) as HeroWeatherLocation & { fetchedAt?: number };
+        if (!cached.fetchedAt || Date.now() - cached.fetchedAt > IP_GEO_CACHE_MS) return null;
+        if (!Number.isFinite(cached.latitude) || !Number.isFinite(cached.longitude)) return null;
+        return {
+            latitude: cached.latitude,
+            longitude: cached.longitude,
+            name: cached.name,
+            nameEn: cached.nameEn,
+            timeZone: cached.timeZone,
+            source: "ip",
+        };
+    } catch {
+        return null;
+    }
+}
+
+function setCachedIpGeoLocation(location: HeroWeatherLocation) {
+    try {
+        window.localStorage.setItem(IP_GEO_CACHE_KEY, JSON.stringify({ ...location, fetchedAt: Date.now() }));
+    } catch {
+        // GeoIP cache is only a rate-limit guard; location fallback still works without it.
+    }
+}
+
 async function ipGeoLocation(): Promise<HeroWeatherLocation | null> {
     if (typeof fetch === "undefined") return null;
+    const cached = getCachedIpGeoLocation();
+    if (cached) return cached;
 
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), IP_GEO_TIMEOUT_MS);
@@ -448,22 +499,9 @@ async function ipGeoLocation(): Promise<HeroWeatherLocation | null> {
         });
         if (!response.ok) return null;
         const data = (await response.json()) as FreeIpApiResponse;
-        const latitude = numberOrNull(data.latitude);
-        const longitude = numberOrNull(data.longitude);
-        if (latitude === null || longitude === null) return null;
-
-        const nearest = nearestGlobalLocationName(latitude, longitude);
-        const fallbackName = data.cityName || data.regionName || data.countryName || "Current location";
-        const timeZone = Array.isArray(data.timeZones) ? data.timeZones[0] : undefined;
-
-        return {
-            latitude,
-            longitude,
-            name: nearest.nameEn === "Current location" ? fallbackName : nearest.name,
-            nameEn: nearest.nameEn === "Current location" ? fallbackName : nearest.nameEn,
-            timeZone,
-            source: "ip",
-        };
+        const location = freeIpApiLocation(data);
+        if (location) setCachedIpGeoLocation(location);
+        return location;
     } catch {
         return null;
     } finally {
