@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { ddbApiBase } from "@/lib/customer-api";
 import type { ShopChatCta, ShopChatMedical, ShopChatSource } from "@/lib/daengdabang-llm";
 
 type ChatResponseExtrasProps = {
@@ -26,6 +27,7 @@ type VetPlace = {
     lat: number;
     lon: number;
     mapUrl: string;
+    source?: "naver" | "openstreetmap";
 };
 
 type VetSearchState =
@@ -86,6 +88,13 @@ function compactAddress(tags: Record<string, string>) {
 
 async function fetchNearbyVetPlaces(latitude: number, longitude: number, query = "동물병원") {
     const fallbackUrl = buildMapUrl(query, latitude, longitude);
+    try {
+        const daengdabangPlaces = await fetchDaengDaBangVetPlaces(latitude, longitude, query);
+        if (daengdabangPlaces?.places.length) return daengdabangPlaces;
+    } catch {
+        // Keep the public map fallback path below.
+    }
+
     const radius = 6000;
     const overpassQuery = `[out:json][timeout:9];(node(around:${radius},${latitude},${longitude})["amenity"="veterinary"];way(around:${radius},${latitude},${longitude})["amenity"="veterinary"];relation(around:${radius},${latitude},${longitude})["amenity"="veterinary"];);out center tags 20;`;
     const endpoints = [
@@ -112,7 +121,7 @@ async function fetchNearbyVetPlaces(latitude: number, longitude: number, query =
                     tags?: Record<string, string>;
                 }>;
             };
-            const places = (data.elements ?? []).flatMap((element) => {
+            const places: VetPlace[] = (data.elements ?? []).flatMap((element): VetPlace[] => {
                 const lat = element.lat ?? element.center?.lat;
                 const lon = element.lon ?? element.center?.lon;
                 if (typeof lat !== "number" || typeof lon !== "number") return [];
@@ -131,6 +140,7 @@ async function fetchNearbyVetPlaces(latitude: number, longitude: number, query =
                     lat,
                     lon,
                     mapUrl,
+                    source: "openstreetmap",
                     distanceMeters: distanceMeters(
                         { latitude, longitude },
                         { latitude: lat, longitude: lon }
@@ -154,6 +164,59 @@ async function fetchNearbyVetPlaces(latitude: number, longitude: number, query =
     }
 
     throw lastError instanceof Error ? lastError : new Error("place search failed");
+}
+
+async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, query = "동물병원") {
+    const base = ddbApiBase();
+    if (!base) return null;
+
+    const params = new URLSearchParams({
+        lat: String(latitude),
+        lon: String(longitude),
+        query,
+        limit: "5",
+    });
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/local/vets?${params}`, {
+        headers: { "Accept": "application/json" },
+    });
+    if (!response.ok) return null;
+    const data = await response.json() as {
+        configured?: boolean;
+        places?: Array<{
+            id?: string;
+            name?: string;
+            address?: string;
+            phone?: string;
+            lat?: number | null;
+            lon?: number | null;
+            distanceMeters?: number | null;
+            mapUrl?: string;
+            source?: string;
+        }>;
+    };
+    if (!data.configured || !Array.isArray(data.places)) return null;
+
+    const places = data.places.flatMap((place, index): VetPlace[] => {
+        const lat = Number(place.lat);
+        const lon = Number(place.lon);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return [];
+        const name = String(place.name || "이름 미확인 동물병원").trim();
+        return [{
+            id: place.id || `naver-${index}-${name}`,
+            name,
+            address: String(place.address || "").trim(),
+            phone: place.phone ? String(place.phone) : undefined,
+            lat,
+            lon,
+            distanceMeters: typeof place.distanceMeters === "number"
+                ? place.distanceMeters
+                : distanceMeters({ latitude, longitude }, { latitude: lat, longitude: lon }),
+            mapUrl: place.mapUrl || `https://map.naver.com/p/search/${encodeURIComponent(name)}`,
+            source: place.source === "naver" ? "naver" : "openstreetmap",
+        }];
+    });
+
+    return { fallbackUrl: buildMapUrl(query, latitude, longitude), places };
 }
 
 async function fetchNominatimVetPlaces(latitude: number, longitude: number) {
@@ -204,6 +267,7 @@ async function fetchNominatimVetPlaces(latitude: number, longitude: number) {
                     { latitude: lat, longitude: lon }
                 ),
                 mapUrl: `https://www.google.com/maps/search/${encodeURIComponent(name)}/@${lat},${lon},17z`,
+                source: "openstreetmap",
             });
         }
         if (places.length >= 5) break;
@@ -339,6 +403,9 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
                         </span>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-black leading-5 text-neutral-950">{place.name}</p>
+                            <p className="mt-0.5 text-[10px] font-black text-indigo-700">
+                                {place.source === "naver" ? "네이버 지역검색" : "공개 지도"}
+                            </p>
                             <p className="mt-0.5 text-[11px] font-bold leading-4 text-neutral-600">
                                 {formatDistance(place.distanceMeters)}
                                 {place.address ? ` · ${place.address}` : " · 주소는 지도에서 확인"}
