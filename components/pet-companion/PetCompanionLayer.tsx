@@ -7,6 +7,7 @@ import {
     useRef,
     useState,
     type ChangeEvent,
+    type PointerEvent as ReactPointerEvent,
 } from "react";
 import { savePetProfileSmart } from "@/lib/customer-api";
 import { useStore } from "@/lib/store";
@@ -53,7 +54,21 @@ type MoveEvent = CustomEvent<{
     y: number;
     motion?: PetCompanionMotion;
     faceX?: number;
+    instant?: boolean;
+    manual?: boolean;
+    preserveFacing?: boolean;
 }>;
+
+type CompanionDragState = {
+    pointerId: number;
+    startClientX: number;
+    startClientY: number;
+    offsetX: number;
+    offsetY: number;
+    x: number;
+    y: number;
+    moved: boolean;
+};
 
 const MOVE_EVENT = "ddb:pet-companion-move";
 const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v1";
@@ -143,8 +158,18 @@ export default function PetCompanionLayer({
     const recommendationCountRef = useRef(0);
     const promptOpenRef = useRef(false);
     const interactionEpochRef = useRef(0);
+    const dragStateRef = useRef<CompanionDragState | null>(null);
+    const dragListenerCleanupRef = useRef<(() => void) | null>(null);
+    const suppressClickRef = useRef(false);
     const selectedBreedId = useMemo(() => resolvePetBreedId(draft.breedId), [draft.breedId]);
     const selectedBreed = useMemo(() => getPetBreedVisual(selectedBreedId), [selectedBreedId]);
+    const forceMotionPreview = process.env.NODE_ENV !== "production"
+        && typeof window !== "undefined"
+        && new URLSearchParams(window.location.search).get("petPreview") === "1";
+
+    useEffect(() => () => {
+        dragListenerCleanupRef.current?.();
+    }, []);
 
     useEffect(() => {
         if (!panelOpen) return;
@@ -199,23 +224,38 @@ export default function PetCompanionLayer({
         const forcePreview = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
         let reducedMotion = forcePreview ? false : motionQuery.matches;
+        walker.dataset.petForceMotion = forcePreview ? "true" : "false";
         const liveBox = () => ({
             width: walker.offsetWidth || LIVE_BOX_WIDTH,
             height: walker.offsetHeight || LIVE_BOX_HEIGHT,
         });
         const initialBox = liveBox();
         const initialYBounds = liveYBounds(initialBox.height);
+        const rememberedX = Number(walker.dataset.petX);
+        const rememberedY = Number(walker.dataset.petY);
         const position = {
-            x: clamp(window.innerWidth * .18, 12, Math.max(12, window.innerWidth - initialBox.width)),
-            y: clamp(window.innerHeight - 190, initialYBounds.min, initialYBounds.max),
+            x: clamp(
+                Number.isFinite(rememberedX) ? rememberedX : window.innerWidth * .18,
+                12,
+                Math.max(12, window.innerWidth - initialBox.width),
+            ),
+            y: clamp(
+                Number.isFinite(rememberedY) ? rememberedY : window.innerHeight - 190,
+                initialYBounds.min,
+                initialYBounds.max,
+            ),
         };
         let lastScrollY = window.scrollY;
         let stopTimer = 0;
+        let arrivalTimer = 0;
+        let actionTimer = 0;
         let roamTimer = 0;
         let visibilityFrame = 0;
         let visibilitySettleTimer = 0;
         let dialogWasOpen = false;
         let scrollIntentUntil = 0;
+        let manualHoldUntil = 0;
+        let roamStep = 0;
 
         const updateVisibility = () => {
             const hidden = externalDialogIsOpen();
@@ -244,13 +284,27 @@ export default function PetCompanionLayer({
             });
         };
 
-        const moveTo = (x: number, y: number, nextMotion: PetCompanionMotion = "walk") => {
+        const moveTo = (
+            x: number,
+            y: number,
+            nextMotion: PetCompanionMotion = "walk",
+            options: { instant?: boolean; preserveFacing?: boolean } = {},
+        ) => {
             const box = liveBox();
             const nextX = clamp(x, 8, Math.max(8, window.innerWidth - box.width));
             const yBounds = liveYBounds(box.height);
             const nextY = clamp(y, yBounds.min, yBounds.max);
-            setFacing(nextX < position.x ? "left" : "right");
+            // A new guide or scroll can retarget the dog before its previous
+            // transition finishes. Measure from the painted position so the
+            // paws keep the same world speed instead of inheriting stale goals.
+            const currentRect = walker.getBoundingClientRect();
+            const distance = Math.hypot(nextX - currentRect.left, nextY - currentRect.top);
+            const horizontalTravel = nextX - currentRect.left;
             const mobile = window.innerWidth <= 680;
+            const directionThreshold = mobile ? 18 : 28;
+            if (!options.preserveFacing && Math.abs(horizontalTravel) >= directionThreshold) {
+                setFacing(horizontalTravel < 0 ? "left" : "right");
+            }
             const speechWidth = Math.min(
                 mobile ? 210 : 224,
                 window.innerWidth - (mobile ? 24 : 32),
@@ -260,13 +314,43 @@ export default function PetCompanionLayer({
             const normalFits = normalLeft + speechWidth <= window.innerWidth - 8;
             const flippedFits = flippedLeft >= 8;
             setBubbleSide(!normalFits && flippedFits ? "left" : "right");
-            setMotion(reducedMotion ? "idle" : nextMotion);
+
+            const pixelsPerSecond = nextMotion === "run"
+                ? (mobile ? 430 : 620)
+                : (mobile ? 86 : 148);
+            const minimumDuration = nextMotion === "run" ? 145 : 520;
+            const maximumDuration = nextMotion === "run" ? 380 : 2800;
+            const duration = reducedMotion || options.instant || distance < 5
+                ? 1
+                : Math.round(clamp(distance / pixelsPerSecond * 1000, minimumDuration, maximumDuration));
+
+            window.clearTimeout(arrivalTimer);
+            window.clearTimeout(actionTimer);
+            setMotion(reducedMotion || distance < 5 ? "idle" : nextMotion);
             position.x = nextX;
             position.y = nextY;
-            walker.style.transitionDuration = reducedMotion ? "1ms" : nextMotion === "run" ? "180ms" : "850ms";
+            walker.dataset.petX = String(nextX);
+            walker.dataset.petY = String(nextY);
+            walker.dataset.petTravelMs = String(duration);
+            walker.style.transitionTimingFunction = "linear";
+            walker.style.setProperty(
+                "transition-duration",
+                `${duration}ms`,
+                forcePreview ? "important" : "",
+            );
             walker.style.transform = `translate3d(${Math.round(nextX)}px, ${Math.round(nextY)}px, 0)`;
+            if (duration > 1 && (nextMotion === "walk" || nextMotion === "run")) {
+                arrivalTimer = window.setTimeout(() => {
+                    if (walker.dataset.dragging === "true") return;
+                    setMotion("idle");
+                    walker.dataset.petMotionStatus = "arrived";
+                }, duration + 34);
+            }
+            return duration;
         };
 
+        walker.dataset.petX = String(position.x);
+        walker.dataset.petY = String(position.y);
         walker.style.transform = `translate3d(${Math.round(position.x)}px, ${Math.round(position.y)}px, 0)`;
         updateVisibility();
 
@@ -277,13 +361,37 @@ export default function PetCompanionLayer({
                 || externalDialogIsOpen()
                 || promptOpenRef.current
                 || walker.matches(":focus-within")
+                || walker.dataset.dragging === "true"
+                || performance.now() < manualHoldUntil
             ) return;
             const box = liveBox();
-            const width = Math.max(1, window.innerWidth - box.width - 24);
-            const x = 16 + Math.random() * width;
+            roamStep += 1;
+            const scheduledAction = roamStep % 3 === 0;
+            if (scheduledAction || Math.random() < .12) {
+                const nextAction = scheduledAction
+                    ? (roamStep % 6 === 0 ? "sniff" : "curious")
+                    : (Math.random() < .5 ? "sniff" : "curious");
+                setMotion(nextAction);
+                walker.dataset.petMotionStatus = `action:${nextAction}`;
+                window.clearTimeout(actionTimer);
+                actionTimer = window.setTimeout(() => {
+                    setMotion("idle");
+                    walker.dataset.petMotionStatus = "resting";
+                }, 1450);
+                return;
+            }
+
+            const mobile = window.innerWidth <= 680;
+            const step = (mobile ? 62 : 96) + Math.random() * (mobile ? 92 : 184);
+            const direction = Math.random() * Math.PI * 2;
+            const x = position.x + Math.cos(direction) * step;
             const lowerTop = Math.max(96, window.innerHeight * .55);
-            const y = lowerTop + Math.random() * Math.max(1, window.innerHeight - lowerTop - box.height);
-            moveTo(x, y, Math.random() > .28 ? "walk" : "sniff");
+            const y = clamp(
+                position.y + Math.sin(direction) * step * .42,
+                lowerTop,
+                Math.max(lowerTop, window.innerHeight - box.height),
+            );
+            moveTo(x, y, "walk");
         };
 
         const onScroll = () => {
@@ -302,16 +410,16 @@ export default function PetCompanionLayer({
             setRecommendation(null);
             walker.dataset.petGuideStatus = "cancelled:user-scroll";
             const travel = clamp(Math.abs(delta) * .72, 24, 150);
-            moveTo(
-                position.x + (Math.random() - .5) * 54,
+            const runDuration = moveTo(
+                position.x,
                 position.y + (delta > 0 ? travel : -travel),
                 "run",
+                { preserveFacing: true },
             );
             window.clearTimeout(stopTimer);
             stopTimer = window.setTimeout(() => {
-                setMotion("walk");
-                roam();
-            }, 280);
+                setMotion("idle");
+            }, runDuration + 45);
         };
 
         const onResize = () => moveTo(position.x, position.y, "idle");
@@ -333,7 +441,11 @@ export default function PetCompanionLayer({
         };
         const onMoveRequest = (event: Event) => {
             const detail = (event as MoveEvent).detail;
-            moveTo(detail.x, detail.y, detail.motion || "walk");
+            if (detail.manual) manualHoldUntil = performance.now() + 6500;
+            moveTo(detail.x, detail.y, detail.motion || "walk", {
+                instant: detail.instant,
+                preserveFacing: detail.preserveFacing,
+            });
             if (typeof detail.faceX === "number") {
                 setFacing(detail.faceX < position.x ? "left" : "right");
             }
@@ -383,6 +495,8 @@ export default function PetCompanionLayer({
 
         return () => {
             window.clearTimeout(stopTimer);
+            window.clearTimeout(arrivalTimer);
+            window.clearTimeout(actionTimer);
             window.clearTimeout(firstRoam);
             window.clearTimeout(visibilitySettleTimer);
             window.clearInterval(roamTimer);
@@ -416,6 +530,7 @@ export default function PetCompanionLayer({
         if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = "waiting";
 
         const dismissGuide = () => {
+            if (!promptOpenRef.current) return;
             const activeElement = document.activeElement as HTMLElement | null;
             if (activeElement?.closest("[data-pet-companion-speech]")) {
                 dismissTimer = window.setTimeout(dismissGuide, 3000);
@@ -477,6 +592,7 @@ export default function PetCompanionLayer({
             window.dispatchEvent(new CustomEvent(MOVE_EVENT, {
                 detail: { x, y, motion: "walk", faceX: rect.left + rect.width / 2 },
             }));
+            const travelMs = Number(walkerRef.current?.dataset.petTravelMs || 850);
 
             window.clearTimeout(revealTimer);
             revealTimer = window.setTimeout(() => {
@@ -514,9 +630,9 @@ export default function PetCompanionLayer({
                 setGuidePrompt(prompt);
                 setMotion("point");
                 if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = `shown:${prompt.id}`;
-            }, 820);
-            window.clearTimeout(dismissTimer);
-            dismissTimer = window.setTimeout(dismissGuide, 8200);
+                window.clearTimeout(dismissTimer);
+                dismissTimer = window.setTimeout(dismissGuide, 8200);
+            }, travelMs + 80);
         };
 
         // Dev preview waits long enough for the persisted store/header to hydrate,
@@ -540,6 +656,7 @@ export default function PetCompanionLayer({
         let revealTimer = 0;
 
         const dismissRecommendation = () => {
+            if (!promptOpenRef.current) return;
             const activeElement = document.activeElement as HTMLElement | null;
             if (activeElement?.closest("[data-pet-companion-speech]")) {
                 dismissTimer = window.setTimeout(dismissRecommendation, 3000);
@@ -604,6 +721,7 @@ export default function PetCompanionLayer({
                     faceX: rect.left + rect.width / 2,
                 },
             }));
+            const travelMs = Number(currentWalker?.dataset.petTravelMs || 850);
             window.clearTimeout(revealTimer);
             revealTimer = window.setTimeout(() => {
                 const activeElement = document.activeElement as HTMLElement | null;
@@ -631,9 +749,9 @@ export default function PetCompanionLayer({
                     name,
                     message: reason,
                 });
-            }, 720);
-            window.clearTimeout(dismissTimer);
-            dismissTimer = window.setTimeout(dismissRecommendation, 6800);
+                window.clearTimeout(dismissTimer);
+                dismissTimer = window.setTimeout(dismissRecommendation, 6800);
+            }, travelMs + 70);
         };
 
         const first = window.setTimeout(showRecommendation, 42000);
@@ -701,6 +819,116 @@ export default function PetCompanionLayer({
             && document.contains(target)
             && target.getAttribute("aria-expanded") !== "true"
         ) target.click();
+    };
+
+    const beginCompanionDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+        if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+        const walker = walkerRef.current;
+        if (!walker) return;
+        const rect = walker.getBoundingClientRect();
+        dragStateRef.current = {
+            pointerId: event.pointerId,
+            startClientX: event.clientX,
+            startClientY: event.clientY,
+            offsetX: event.clientX - rect.left,
+            offsetY: event.clientY - rect.top,
+            x: rect.left,
+            y: rect.top,
+            moved: false,
+        };
+        event.currentTarget.setPointerCapture(event.pointerId);
+        dragListenerCleanupRef.current?.();
+        const button = event.currentTarget;
+        const onWindowPointerMove = (pointerEvent: PointerEvent) => {
+            moveCompanionDragTo(
+                pointerEvent.pointerId,
+                pointerEvent.clientX,
+                pointerEvent.clientY,
+                () => pointerEvent.preventDefault(),
+            );
+        };
+        const onWindowPointerEnd = (pointerEvent: PointerEvent) => {
+            settleCompanionDrag(button, pointerEvent.pointerId);
+        };
+        window.addEventListener("pointermove", onWindowPointerMove, { passive: false });
+        window.addEventListener("pointerup", onWindowPointerEnd);
+        window.addEventListener("pointercancel", onWindowPointerEnd);
+        dragListenerCleanupRef.current = () => {
+            window.removeEventListener("pointermove", onWindowPointerMove);
+            window.removeEventListener("pointerup", onWindowPointerEnd);
+            window.removeEventListener("pointercancel", onWindowPointerEnd);
+            dragListenerCleanupRef.current = null;
+        };
+    };
+
+    const settleCompanionDrag = (button: HTMLButtonElement, pointerId: number) => {
+        const drag = dragStateRef.current;
+        const walker = walkerRef.current;
+        if (!drag || drag.pointerId !== pointerId) return;
+        dragStateRef.current = null;
+        dragListenerCleanupRef.current?.();
+        if (button.hasPointerCapture(pointerId)) button.releasePointerCapture(pointerId);
+        if (!drag.moved || !walker) return;
+        suppressClickRef.current = true;
+        walker.dataset.dragging = "false";
+        button.blur();
+        window.dispatchEvent(new CustomEvent(MOVE_EVENT, {
+            detail: {
+                x: drag.x,
+                y: drag.y,
+                motion: "idle",
+                instant: true,
+                manual: true,
+                preserveFacing: true,
+            },
+        }));
+        window.setTimeout(() => {
+            suppressClickRef.current = false;
+        }, 450);
+    };
+
+    const moveCompanionDragTo = (
+        pointerId: number,
+        clientX: number,
+        clientY: number,
+        preventDefault: () => void,
+    ) => {
+        const drag = dragStateRef.current;
+        const walker = walkerRef.current;
+        if (!drag || !walker || drag.pointerId !== pointerId) return;
+        const distance = Math.hypot(
+            clientX - drag.startClientX,
+            clientY - drag.startClientY,
+        );
+        if (!drag.moved && distance < 6) return;
+        preventDefault();
+        if (!drag.moved) {
+            drag.moved = true;
+            interactionEpochRef.current += 1;
+            promptOpenRef.current = false;
+            setGuidePrompt(null);
+            setRecommendation(null);
+            setMotion("idle");
+            walker.dataset.dragging = "true";
+        }
+        const width = walker.offsetWidth || LIVE_BOX_WIDTH;
+        const height = walker.offsetHeight || LIVE_BOX_HEIGHT;
+        const yBounds = liveYBounds(height);
+        drag.x = clamp(clientX - drag.offsetX, 8, Math.max(8, window.innerWidth - width));
+        drag.y = clamp(clientY - drag.offsetY, yBounds.min, yBounds.max);
+        walker.style.setProperty(
+            "transition-duration",
+            "0ms",
+            process.env.NODE_ENV !== "production"
+                && new URLSearchParams(window.location.search).get("petPreview") === "1"
+                ? "important"
+                : "",
+        );
+        walker.style.transform = `translate3d(${Math.round(drag.x)}px, ${Math.round(drag.y)}px, 0)`;
+    };
+
+    const endCompanionDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+        settleCompanionDrag(event.currentTarget, event.pointerId);
     };
 
     const hideCompanion = () => {
@@ -777,9 +1005,19 @@ export default function PetCompanionLayer({
                     <button
                         type="button"
                         className={styles.dogButton}
-                        onClick={hideCompanion}
-                        aria-label={`${settings.activePetName} 산책 친구 잠시 숨기기`}
-                        title="클릭하면 산책 친구가 잠시 쉬어요"
+                        onPointerDown={beginCompanionDrag}
+                        onPointerUp={endCompanionDrag}
+                        onPointerCancel={endCompanionDrag}
+                        onLostPointerCapture={endCompanionDrag}
+                        onClick={() => {
+                            if (suppressClickRef.current) {
+                                suppressClickRef.current = false;
+                                return;
+                            }
+                            hideCompanion();
+                        }}
+                        aria-label={`${settings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 잠시 숨기기`}
+                        title="드래그해서 옮기고, 클릭하면 잠시 쉬어요"
                     >
                         <PetCompanionCharacter
                             breedId={settings.breedId}
@@ -788,6 +1026,7 @@ export default function PetCompanionLayer({
                             accessoryId={settings.accessoryId}
                             motion={displayMotion}
                             facing={facing}
+                            forceMotion={forceMotionPreview}
                         />
                         <span className={styles.nameTag}>{settings.activePetName}</span>
                     </button>

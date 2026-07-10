@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import {
     getPetBreedVisual,
     legacyCharacterBreedId,
@@ -13,7 +16,7 @@ import PetCompanionSpriteCanvas, {
 } from "./PetCompanionSpriteCanvas";
 import styles from "./PetCompanionCharacter.module.css";
 
-export type PetCompanionMotion = "idle" | "walk" | "run" | "sniff" | "point" | "recommend";
+export type PetCompanionMotion = "idle" | "walk" | "run" | "sniff" | "curious" | "point" | "recommend";
 
 type Props = {
     breedId?: string;
@@ -22,6 +25,7 @@ type Props = {
     accessoryId: CompanionAccessoryId;
     motion?: PetCompanionMotion;
     facing?: "left" | "right";
+    forceMotion?: boolean;
     variant?: "live" | "preview" | "card";
     className?: string;
 };
@@ -29,6 +33,7 @@ type Props = {
 const ASSET_ROOT = "/images/pet-companion/cute-v2";
 const MOTION_ASSET_ROOT = "/images/pet-companion/cute-v3-motion";
 const MOTION_RIGS = new Set(Array.from({ length: 14 }, (_, index) => `r${String(index + 1).padStart(2, "0")}`));
+type TurnPhase = "rest" | "out" | "in";
 
 export default function PetCompanionCharacter({
     breedId,
@@ -37,9 +42,45 @@ export default function PetCompanionCharacter({
     accessoryId,
     motion = "idle",
     facing = "right",
+    forceMotion = false,
     variant = "live",
     className = "",
 }: Props) {
+    const [displayFacing, setDisplayFacing] = useState(facing);
+    const [turnPhase, setTurnPhase] = useState<TurnPhase>("rest");
+    const displayFacingRef = useRef(facing);
+
+    useEffect(() => {
+        if (facing === displayFacingRef.current) {
+            // A rapid left-right correction can cancel a pending turn.
+            const resetTimer = window.setTimeout(() => setTurnPhase("rest"), 0);
+            return () => window.clearTimeout(resetTimer);
+        }
+        if (!forceMotion && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            const reducedTimer = window.setTimeout(() => {
+                displayFacingRef.current = facing;
+                setDisplayFacing(facing);
+                setTurnPhase("rest");
+            }, 0);
+            return () => window.clearTimeout(reducedTimer);
+        }
+
+        // Keep the old side visible while the plush body turns away. Swap the
+        // mirrored bitmap only at the hidden midpoint, then settle the new side.
+        const startTimer = window.setTimeout(() => setTurnPhase("out"), 0);
+        const swapTimer = window.setTimeout(() => {
+            displayFacingRef.current = facing;
+            setDisplayFacing(facing);
+            setTurnPhase("in");
+        }, 96);
+        const settleTimer = window.setTimeout(() => setTurnPhase("rest"), 260);
+        return () => {
+            window.clearTimeout(startTimer);
+            window.clearTimeout(swapTimer);
+            window.clearTimeout(settleTimer);
+        };
+    }, [facing, forceMotion]);
+
     const breed = getPetBreedVisual(breedId || legacyCharacterBreedId(characterId));
     const rigAsset = breed.rigId.toLowerCase();
     const coreMotion: PetCompanionSpriteMotion = motion === "walk"
@@ -69,7 +110,9 @@ export default function PetCompanionCharacter({
             data-family={breed.family}
             data-rig={breed.rigId}
             data-motion={motion}
-            data-facing={facing}
+            data-facing={displayFacing}
+            data-turn-phase={turnPhase}
+            data-force-motion={forceMotion ? "true" : "false"}
             data-tone={toneId}
             data-accessory={accessoryId}
         >

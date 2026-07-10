@@ -19,7 +19,6 @@ type Props = {
 
 const GRID_COLUMNS = 4;
 const GRID_ROWS = 4;
-const FRAME_COUNT = 4;
 const MAX_DEVICE_PIXEL_RATIO = 2;
 
 const MOTION_ROW: Record<PetCompanionSpriteMotion, number> = {
@@ -29,11 +28,41 @@ const MOTION_ROW: Record<PetCompanionSpriteMotion, number> = {
     sniff: 3,
 };
 
-const MOTION_FPS: Record<PetCompanionSpriteMotion, number> = {
-    idle: 4,
-    walk: 7,
-    run: 11,
-    sniff: 5,
+type MotionFrame = {
+    frame: number;
+    duration: number;
+};
+
+/**
+ * Contact frames stay on screen a little longer than passing frames. This
+ * keeps a planted paw readable instead of making the four generated poses
+ * flip past at one mechanical cadence.
+ */
+const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> = {
+    idle: [
+        { frame: 0, duration: 900 },
+        { frame: 1, duration: 720 },
+        { frame: 2, duration: 220 },
+        { frame: 3, duration: 1080 },
+    ],
+    walk: [
+        { frame: 0, duration: 155 },
+        { frame: 1, duration: 112 },
+        { frame: 2, duration: 155 },
+        { frame: 3, duration: 112 },
+    ],
+    run: [
+        { frame: 0, duration: 88 },
+        { frame: 1, duration: 68 },
+        { frame: 2, duration: 88 },
+        { frame: 3, duration: 68 },
+    ],
+    sniff: [
+        { frame: 0, duration: 360 },
+        { frame: 1, duration: 250 },
+        { frame: 2, duration: 340 },
+        { frame: 3, duration: 610 },
+    ],
 };
 
 type CanvasSize = {
@@ -59,6 +88,7 @@ export default function PetCompanionSpriteCanvas({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const motionRef = useRef<PetCompanionSpriteMotion>(motion);
     const frameRef = useRef(0);
+    const stepRef = useRef(0);
     const lastFrameAtRef = useRef(0);
     const drawFrameRef = useRef<((frame: number) => void) | null>(null);
     const pausedRef = useRef(paused);
@@ -68,6 +98,7 @@ export default function PetCompanionSpriteCanvas({
     useEffect(() => {
         motionRef.current = motion;
         frameRef.current = 0;
+        stepRef.current = 0;
         lastFrameAtRef.current = 0;
         drawFrameRef.current?.(0);
     }, [motion]);
@@ -133,6 +164,7 @@ export default function PetCompanionSpriteCanvas({
                 drawHeight,
             );
             canvas.dataset.petFrame = String(frame);
+            root.dataset.petFrame = String(frame);
             canvas.dataset.petSpriteStatus = "ready";
             root.dataset.spriteReady = "true";
             return true;
@@ -163,14 +195,21 @@ export default function PetCompanionSpriteCanvas({
             animationFrame = 0;
             if (cancelled || pausedRef.current || reducedMotion || document.hidden || !image) return;
 
-            const frameDuration = 1000 / MOTION_FPS[motionRef.current];
+            const timeline = MOTION_TIMELINE[motionRef.current];
+            const frameDuration = timeline[stepRef.current].duration;
             if (!lastFrameAtRef.current) lastFrameAtRef.current = now;
             const elapsed = now - lastFrameAtRef.current;
 
             if (elapsed >= frameDuration) {
-                const framesElapsed = Math.max(1, Math.floor(elapsed / frameDuration));
-                frameRef.current = (frameRef.current + framesElapsed) % FRAME_COUNT;
-                lastFrameAtRef.current = now - (elapsed % frameDuration);
+                let remainder = elapsed;
+                let guard = 0;
+                while (remainder >= MOTION_TIMELINE[motionRef.current][stepRef.current].duration && guard < 32) {
+                    remainder -= MOTION_TIMELINE[motionRef.current][stepRef.current].duration;
+                    stepRef.current = (stepRef.current + 1) % MOTION_TIMELINE[motionRef.current].length;
+                    guard += 1;
+                }
+                frameRef.current = MOTION_TIMELINE[motionRef.current][stepRef.current].frame;
+                lastFrameAtRef.current = now - remainder;
                 drawFrame(frameRef.current);
             }
             animationFrame = window.requestAnimationFrame(tick);
@@ -212,6 +251,7 @@ export default function PetCompanionSpriteCanvas({
 
             image = nextImage;
             frameRef.current = 0;
+            stepRef.current = 0;
             lastFrameAtRef.current = 0;
             resizeCanvas();
             drawFrame(0);

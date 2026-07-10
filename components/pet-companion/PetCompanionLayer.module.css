@@ -72,8 +72,13 @@
     pointer-events: none;
     will-change: transform;
     transition-property: transform, opacity;
-    transition-timing-function: cubic-bezier(.22, .78, .25, 1);
+    transition-timing-function: linear;
     transition-duration: .85s;
+}
+
+.walker[data-dragging="true"] {
+    z-index: 2220;
+    transition-duration: 0ms !important;
 }
 
 .dogButton {
@@ -86,9 +91,16 @@
     padding: 0;
     border: 0;
     background: transparent;
-    cursor: pointer;
+    cursor: grab;
     pointer-events: auto;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
+
+.walker[data-dragging="true"] .dogButton { cursor: grabbing; }
+
+.dogButton:hover .nameTag { box-shadow: 0 4px 12px rgb(35 27 24 / 16%); }
 
 .nameTag {
     position: absolute;

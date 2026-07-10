@@ -1,9 +1,11 @@
 .character {
+    --pet-step-lift: 1.5px;
     position: relative;
     display: block;
     width: 174px;
     height: 148px;
     transform-origin: 50% 100%;
+    perspective: 560px;
     pointer-events: none;
     isolation: isolate;
 }
@@ -34,6 +36,7 @@
     background: radial-gradient(ellipse, rgb(72 51 40 / 24%) 0 28%, rgb(72 51 40 / 10%) 54%, transparent 75%);
     filter: blur(1.8px);
     transform-origin: center;
+    transition: opacity 90ms linear, transform 90ms linear, filter 90ms linear;
 }
 
 .spriteMotion {
@@ -41,6 +44,7 @@
     z-index: 1;
     inset: -20px -8px -2px;
     transform-origin: 50% 82%;
+    transform-style: preserve-3d;
     will-change: transform;
 }
 
@@ -48,7 +52,15 @@
     position: absolute;
     inset: 0;
     transform-origin: center;
-    transition: transform .16s ease;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+.character[data-facing="right"] { --pet-turn-angle: -3deg; }
+.character[data-facing="left"] { --pet-turn-angle: 3deg; }
+
+.character[data-facing="right"] .spriteMirror {
+    transform: scaleX(1);
 }
 
 .character[data-facing="left"] .spriteMirror {
@@ -59,6 +71,8 @@
     position: absolute;
     inset: 0;
     display: block;
+    transform-origin: 50% 84%;
+    will-change: transform;
 }
 
 .spriteCanvas {
@@ -69,7 +83,7 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    filter: drop-shadow(0 5px 5px rgb(62 42 31 / 16%));
+    filter: drop-shadow(0 7px 5px rgb(62 42 31 / 18%));
     transition: opacity .12s ease;
 }
 
@@ -83,8 +97,24 @@
 
 /* A ready sheet already contains real body/leg motion. Avoid stacking the old
    whole-image bounce on top of those frames; the static fallback keeps it. */
-.character:not([data-motion="point"]):has(.spriteStack[data-sprite-ready="true"]) .spriteMotion {
+.character:not([data-motion="point"]):not([data-motion="curious"]):has(.spriteStack[data-sprite-ready="true"]) .spriteMotion {
     animation: none;
+}
+
+.character[data-turn-phase="out"] .spriteMotion {
+    animation: plush-turn-out 96ms cubic-bezier(.45, 0, .8, .55) both !important;
+}
+
+.character[data-turn-phase="in"] .spriteMotion {
+    animation: plush-turn-in 164ms cubic-bezier(.16, .7, .2, 1) both !important;
+}
+
+.character[data-turn-phase="out"] .groundShadow {
+    animation: plush-turn-shadow-out 96ms ease-in both !important;
+}
+
+.character[data-turn-phase="in"] .groundShadow {
+    animation: plush-turn-shadow-in 164ms ease-out both !important;
 }
 
 .sprite,
@@ -150,10 +180,11 @@
 .character[data-accessory="rose"] { --pet-accessory: #e98296; }
 .character[data-accessory="mint"] { --pet-accessory: #68ad91; }
 .character:not([data-accessory="none"]) .accessory { opacity: 1; }
+.live .accessory { display: none; }
 
-.character[data-tone="apricot"] :is(.sprite, .spriteCanvas) { filter: sepia(.05) saturate(1.06) drop-shadow(0 5px 5px rgb(62 42 31 / 16%)); }
-.character[data-tone="caramel"] :is(.sprite, .spriteCanvas) { filter: sepia(.1) saturate(1.1) brightness(.94) drop-shadow(0 5px 5px rgb(62 42 31 / 16%)); }
-.character[data-tone="charcoal"] :is(.sprite, .spriteCanvas) { filter: grayscale(.45) saturate(.78) brightness(.82) contrast(1.04) drop-shadow(0 5px 5px rgb(62 42 31 / 16%)); }
+.character[data-tone="apricot"] :is(.sprite, .spriteCanvas) { filter: sepia(.05) saturate(1.06) drop-shadow(0 7px 5px rgb(62 42 31 / 18%)); }
+.character[data-tone="caramel"] :is(.sprite, .spriteCanvas) { filter: sepia(.1) saturate(1.1) brightness(.94) drop-shadow(0 7px 5px rgb(62 42 31 / 18%)); }
+.character[data-tone="charcoal"] :is(.sprite, .spriteCanvas) { filter: grayscale(.45) saturate(.78) brightness(.82) contrast(1.04) drop-shadow(0 7px 5px rgb(62 42 31 / 18%)); }
 
 .recommendFx {
     position: absolute;
@@ -210,23 +241,78 @@
 }
 
 .character[data-motion="walk"] .spriteMotion {
-    animation: plush-walk .66s ease-in-out infinite;
+    animation: plush-walk .534s linear infinite;
 }
 
 .character[data-motion="walk"] .groundShadow {
-    animation: plush-shadow .66s ease-in-out infinite;
+    animation: plush-shadow .534s linear infinite;
 }
 
 .character[data-motion="run"] .spriteMotion {
-    animation: plush-run .38s ease-in-out infinite;
+    animation: plush-run .312s linear infinite;
 }
 
 .character[data-motion="run"] .groundShadow {
-    animation: plush-shadow .38s ease-in-out infinite;
+    animation: plush-shadow .312s linear infinite;
 }
 
 .character[data-motion="sniff"] .spriteMotion {
     animation: plush-sniff 1.55s ease-in-out infinite;
+}
+
+.character[data-motion="curious"] .spriteMotion {
+    animation: plush-curious 1.4s cubic-bezier(.36, .06, .24, 1) 1 both;
+}
+
+/* The sheet supplies the leg poses; these tiny root offsets add weight transfer
+   and keep the shadow in phase with the planted and passing paws. */
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="0"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * .45), 2px) rotate(-.28deg) scale3d(1.006, .994, 1);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="1"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * -1), 5px) rotate(.34deg) scale3d(.997, 1.008, 1);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="2"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * .4), 2px) rotate(.26deg) scale3d(1.006, .994, 1);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="3"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.9), 5px) rotate(-.32deg) scale3d(.997, 1.008, 1);
+}
+
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="0"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="2"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * .55), 1px) scale3d(1.012, .986, 1);
+}
+
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="1"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="3"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * -1.65), 7px) scale3d(.99, 1.018, 1);
+}
+
+.character[data-motion="walk"]:has(.spriteStack[data-sprite-ready="true"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-sprite-ready="true"]) .groundShadow {
+    animation: none;
+}
+
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="0"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="0"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow {
+    opacity: .82;
+    filter: blur(1.6px);
+    transform: scaleX(1.02);
+}
+
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="1"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="3"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="1"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="3"]) .groundShadow {
+    opacity: .5;
+    filter: blur(2.2px);
+    transform: scaleX(.8);
 }
 
 .character[data-motion="point"] .spriteMotion {
@@ -254,6 +340,28 @@
     50% { transform: translateY(-2px) rotate(.4deg) scale(1.006); }
 }
 
+@keyframes plush-turn-out {
+    0% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale3d(1, 1, 1); }
+    48% { opacity: .84; transform: translate3d(0, -1px, 5px) rotate(var(--pet-turn-angle)) scale3d(.97, 1.015, 1); }
+    100% { opacity: .08; transform: translate3d(0, 3px, -12px) rotate(var(--pet-turn-angle)) scale3d(.88, .95, 1); }
+}
+
+@keyframes plush-turn-in {
+    0% { opacity: .08; transform: translate3d(0, 3px, -12px) rotate(var(--pet-turn-angle)) scale3d(.88, .95, 1); }
+    58% { opacity: 1; transform: translate3d(0, -1px, 7px) rotate(-.5deg) scale3d(1.018, 1.008, 1); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0) rotate(0) scale3d(1, 1, 1); }
+}
+
+@keyframes plush-turn-shadow-out {
+    0% { opacity: .78; transform: scaleX(1); }
+    100% { opacity: .34; transform: scaleX(.62); }
+}
+
+@keyframes plush-turn-shadow-in {
+    0% { opacity: .34; transform: scaleX(.62); }
+    100% { opacity: .78; transform: scaleX(1); }
+}
+
 @keyframes plush-walk {
     0%, 100% { transform: translateY(0) rotate(-1.2deg) scaleY(1); }
     25% { transform: translateY(-4px) rotate(.9deg) scaleY(1.015); }
@@ -275,6 +383,15 @@
     0%, 100% { transform: translate(0, 0) rotate(0); }
     38%, 70% { transform: translate(7px, 7px) rotate(5deg); }
     52% { transform: translate(9px, 9px) rotate(7deg) scale(.99); }
+}
+
+@keyframes plush-curious {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0) scale(1); }
+    18% { transform: translate3d(0, -1px, 3px) rotate(-2.6deg) scale(1.006); }
+    34% { transform: translate3d(0, 0, 1px) rotate(-1.5deg) scale(1); }
+    52% { transform: translate3d(0, -1px, 4px) rotate(2.8deg) scale(1.008); }
+    68% { transform: translate3d(0, 0, 1px) rotate(1.1deg) scale(1); }
+    84% { transform: translate3d(0, -.5px, 2px) rotate(-.7deg) scale(1.003); }
 }
 
 @keyframes plush-point {
@@ -301,6 +418,8 @@
 }
 
 @media (max-width: 680px) {
+    .character { --pet-step-lift: .8px; }
+
     .live {
         width: 64px;
         height: 56px;
@@ -314,15 +433,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .spriteMotion,
-    .groundShadow,
-    .recommendFx,
-    .sparkle {
+    .character:not([data-force-motion="true"]) .spriteMotion,
+    .character:not([data-force-motion="true"]) .spriteMirror,
+    .character:not([data-force-motion="true"]) .groundShadow,
+    .character:not([data-force-motion="true"]) .recommendFx,
+    .character:not([data-force-motion="true"]) .sparkle {
         animation: none !important;
         transition-duration: 1ms !important;
     }
 
-    .character[data-motion="recommend"] .recommendFx {
+    .character:not([data-force-motion="true"])[data-motion="recommend"] .recommendFx {
         opacity: 1;
         transform: none;
     }
