@@ -88,6 +88,20 @@ function liveYBounds(boxHeight = LIVE_BOX_HEIGHT) {
     return { min: Math.min(92, max), max };
 }
 
+function moveCompanionToRest(walker: HTMLElement | null) {
+    if (!walker || typeof window === "undefined") return;
+    const width = walker.offsetWidth || LIVE_BOX_WIDTH;
+    const height = walker.offsetHeight || LIVE_BOX_HEIGHT;
+    const yBounds = liveYBounds(height);
+    window.dispatchEvent(new CustomEvent(MOVE_EVENT, {
+        detail: {
+            x: clamp(window.innerWidth * .68, 12, Math.max(12, window.innerWidth - width - 12)),
+            y: Math.max(yBounds.min, yBounds.max - 18),
+            motion: "walk",
+        },
+    }));
+}
+
 function externalDialogIsOpen() {
     return Array.from(document.querySelectorAll<HTMLElement>("[role='dialog']"))
         .some((dialog) => {
@@ -410,6 +424,7 @@ export default function PetCompanionLayer({
             promptOpenRef.current = false;
             setGuidePrompt(null);
             setMotion("idle");
+            moveCompanionToRest(walkerRef.current);
         };
 
         const showGuide = () => {
@@ -533,6 +548,7 @@ export default function PetCompanionLayer({
             promptOpenRef.current = false;
             setRecommendation(null);
             setMotion("idle");
+            moveCompanionToRest(walkerRef.current);
         };
 
         const showRecommendation = () => {
@@ -674,6 +690,7 @@ export default function PetCompanionLayer({
         setGuidePrompt(null);
         setRecommendation(null);
         setMotion("idle");
+        moveCompanionToRest(walkerRef.current);
     };
 
     const activateGuideTarget = () => {
