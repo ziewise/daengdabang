@@ -229,7 +229,7 @@ export function companionCharacterIdForHeroBreed(
 
 function petBreedText(pet?: PetProfile | null) {
     const raw = isRecord(pet?.rawAnalysis) ? pet.rawAnalysis : {};
-    return [pet?.breed, raw.breed, raw.breed_ko, raw.breed_en]
+    return [raw.breedId, pet?.breed, raw.breed, raw.breed_ko, raw.breed_en]
         .filter((value): value is string => typeof value === "string")
         .join(" ")
         .toLowerCase();
@@ -237,7 +237,7 @@ function petBreedText(pet?: PetProfile | null) {
 
 function petBreedIdentity(pet?: PetProfile | null) {
     const raw = isRecord(pet?.rawAnalysis) ? pet.rawAnalysis : {};
-    const value = [raw.breed_en, pet?.breed, raw.breed_ko, raw.breed]
+    const value = [raw.breedId, raw.breed_en, pet?.breed, raw.breed_ko, raw.breed]
         .find((item) => typeof item === "string" && item.trim());
     return typeof value === "string" ? value.trim() : "";
 }
@@ -296,6 +296,9 @@ function normalizeSettings(
     const toneId = value.toneId;
     const accessoryId = value.accessoryId;
     const motion = value.motion;
+    const storedBreedId = typeof value.breedId === "string"
+        ? resolvePetBreedId(value.breedId, "")
+        : "";
     return {
         version: 1,
         ownerKey,
@@ -303,8 +306,8 @@ function normalizeSettings(
             ? value.activePetName.trim()
             : fallback.activePetName,
         enabled: typeof value.enabled === "boolean" ? value.enabled : fallback.enabled,
-        breedId: typeof value.breedId === "string" && value.breedId.trim()
-            ? value.breedId.trim()
+        breedId: storedBreedId && isPetBreedId(storedBreedId)
+            ? storedBreedId
             : fallback.breedId,
         characterId: typeof characterId === "string" && CHARACTER_IDS.has(characterId as CompanionCharacterId)
             ? characterId as CompanionCharacterId

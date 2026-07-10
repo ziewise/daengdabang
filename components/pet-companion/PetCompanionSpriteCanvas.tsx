@@ -13,6 +13,8 @@ type Props = {
     walkSrc?: string;
     motion: PetCompanionSpriteMotion;
     fallback: ReactNode;
+    /** Rendered in the same frame-transform layer as the active sprite. */
+    overlay?: ReactNode;
     className?: string;
     canvasClassName?: string;
     paused?: boolean;
@@ -95,6 +97,7 @@ export default function PetCompanionSpriteCanvas({
     walkSrc,
     motion,
     fallback,
+    overlay,
     className = "",
     canvasClassName = "",
     paused = false,
@@ -448,6 +451,7 @@ export default function PetCompanionSpriteCanvas({
                 data-pet-sprite-status="loading"
                 data-pet-frame="0"
             />
+            {overlay}
         </span>
     );
 }

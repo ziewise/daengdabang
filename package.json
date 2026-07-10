@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "node scripts/gen-hero-manifest.mjs",
     "dev": "next dev -p 4000",
-    "prebuild": "node scripts/gen-hero-manifest.mjs",
+    "prebuild": "node scripts/gen-hero-manifest.mjs && node scripts/verify-pet-companion-assets.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

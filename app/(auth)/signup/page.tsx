@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SignupForm from "./SignupForm";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "회원가입",
@@ -7,5 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default function SignupPage() {
-    return <SignupForm />;
+    // Keep old links on the single, API-backed signup flow so photo/breed
+    // confirmation cannot be bypassed through the legacy mock stepper.
+    redirect("/auth/signup");
 }

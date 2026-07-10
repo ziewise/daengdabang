@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
     getPetBreedVisual,
+    getPetBreedRenderTokens,
     legacyCharacterBreedId,
+    PET_BREED_RIG_IDS,
 } from "@/lib/pet-companion-breeds";
 import type {
     CompanionAccessoryId,
@@ -32,7 +34,7 @@ type Props = {
 
 const ASSET_ROOT = "/images/pet-companion/cute-v2";
 const MOTION_ASSET_ROOT = "/images/pet-companion/cute-v3-motion";
-const MOTION_RIGS = new Set(Array.from({ length: 14 }, (_, index) => `r${String(index + 1).padStart(2, "0")}`));
+const MOTION_RIGS = new Set(PET_BREED_RIG_IDS.map((rigId) => rigId.toLowerCase()));
 type TurnPhase = "rest" | "out" | "in";
 
 export default function PetCompanionCharacter({
@@ -83,6 +85,16 @@ export default function PetCompanionCharacter({
 
     const breed = getPetBreedVisual(breedId || legacyCharacterBreedId(characterId));
     const rigAsset = breed.rigId.toLowerCase();
+    const renderTokens = getPetBreedRenderTokens(breed);
+    const characterStyle = {
+        "--pet-breed-primary": renderTokens.primary,
+        "--pet-breed-secondary": renderTokens.secondary,
+        "--pet-breed-accent": renderTokens.accent,
+        "--pet-breed-filter": renderTokens.filter,
+        "--pet-breed-scale-x": String(renderTokens.scaleX),
+        "--pet-breed-scale-y": String(renderTokens.scaleY),
+        "--pet-breed-mask": `url("${ASSET_ROOT}/${rigAsset}-idle.webp")`,
+    } as CSSProperties;
     const coreMotion: PetCompanionSpriteMotion = motion === "walk"
         || motion === "run"
         || motion === "sniff"
@@ -106,9 +118,16 @@ export default function PetCompanionCharacter({
         <span
             aria-hidden="true"
             className={`${styles.character} ${styles[variant]} ${className}`}
+            style={characterStyle}
             data-breed={breed.id}
             data-family={breed.family}
             data-rig={breed.rigId}
+            data-ear={breed.ear}
+            data-tail={breed.tail}
+            data-muzzle={breed.muzzle}
+            data-coat={breed.coat}
+            data-marking={breed.marking}
+            data-breed-visual="profile-v1"
             data-motion={motion}
             data-facing={displayFacing}
             data-turn-phase={turnPhase}
@@ -118,31 +137,40 @@ export default function PetCompanionCharacter({
         >
             <span className={styles.groundShadow} />
             <span className={styles.spriteMotion} data-pet-part="dog">
-                <span className={styles.spriteMirror}>
-                    {useCoreSprite ? (
-                        <PetCompanionSpriteCanvas
-                            src={`${MOTION_ASSET_ROOT}/${rigAsset}-core.webp`}
-                            walkSrc={`${MOTION_ASSET_ROOT}/${rigAsset}-walk.webp`}
-                            motion={coreMotion}
-                            fallback={idleFallback}
-                            className={styles.spriteStack}
-                            canvasClassName={styles.spriteCanvas}
-                            paused={motion === "point" || motion === "recommend"}
-                        />
-                    ) : idleFallback}
-                    <span className={styles.recommendPose} data-part="thumb-paw">
-                        <Image
-                            src={`${ASSET_ROOT}/${rigAsset}-recommend.webp`}
-                            alt=""
-                            width={384}
-                            height={384}
-                            draggable={false}
-                            className={styles.sprite}
-                            loading="lazy"
-                            unoptimized
-                        />
+                <span className={styles.breedMorph}>
+                    <span className={styles.spriteMirror}>
+                        {useCoreSprite ? (
+                            <PetCompanionSpriteCanvas
+                                src={`${MOTION_ASSET_ROOT}/${rigAsset}-core.webp`}
+                                walkSrc={`${MOTION_ASSET_ROOT}/${rigAsset}-walk.webp`}
+                                motion={coreMotion}
+                                fallback={idleFallback}
+                                overlay={(
+                                    <span className={styles.breedProfile} aria-hidden="true">
+                                        <span className={styles.breedTint} />
+                                        <span className={styles.breedMarking} />
+                                        <span className={styles.breedTexture} />
+                                    </span>
+                                )}
+                                className={styles.spriteStack}
+                                canvasClassName={styles.spriteCanvas}
+                                paused={motion === "point" || motion === "recommend"}
+                            />
+                        ) : idleFallback}
+                        <span className={styles.recommendPose} data-part="thumb-paw">
+                            <Image
+                                src={`${ASSET_ROOT}/${rigAsset}-recommend.webp`}
+                                alt=""
+                                width={384}
+                                height={384}
+                                draggable={false}
+                                className={styles.sprite}
+                                loading="lazy"
+                                unoptimized
+                            />
+                        </span>
+                        <span className={styles.accessory} />
                     </span>
-                    <span className={styles.accessory} />
                 </span>
             </span>
             <span className={styles.recommendFx} data-part="recommend-fx">

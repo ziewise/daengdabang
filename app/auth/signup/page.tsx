@@ -12,7 +12,14 @@ import {
     setCustomerToken,
     signupCustomer,
 } from "@/lib/customer-api";
+import { analyzePetLensSmart } from "@/lib/daengdabang-llm";
 import { resizePetPhoto } from "@/lib/pet-photo";
+import {
+    getPetBreedVisual,
+    isPetBreedId,
+    PET_BREEDS,
+    resolvePetBreedId,
+} from "@/lib/pet-companion-breeds";
 import { useAuth, type PetProfile } from "@/lib/store";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
@@ -32,6 +39,10 @@ export default function SignupPage() {
     const [petActivity, setPetActivity] = useState<PetProfile["activity"]>("normal");
     const [petConcerns, setPetConcerns] = useState<string[]>(["일상 케어"]);
     const [petPhotoDataUrl, setPetPhotoDataUrl] = useState<string | undefined>();
+    const [petBreedId, setPetBreedId] = useState("");
+    const [petBreedSource, setPetBreedSource] = useState<"" | "ai" | "manual">("");
+    const [petBreedMessage, setPetBreedMessage] = useState("");
+    const [petRawAnalysis, setPetRawAnalysis] = useState<Record<string, unknown> | undefined>();
     const [photoLoading, setPhotoLoading] = useState(false);
     const [photoError, setPhotoError] = useState("");
     const [error, setError] = useState("");
@@ -47,14 +58,56 @@ export default function SignupPage() {
         );
     };
 
-    const handlePetPhoto = (file?: File) => {
+    const handlePetPhoto = async (file?: File) => {
         if (!file) return;
         setPhotoLoading(true);
         setPhotoError("");
-        resizePetPhoto(file)
-            .then((dataUrl) => setPetPhotoDataUrl(dataUrl))
-            .catch(() => setPhotoError("사진을 불러오지 못했습니다. 다른 이미지를 선택해 주세요."))
-            .finally(() => setPhotoLoading(false));
+        setPetBreedId("");
+        setPetBreedSource("");
+        setPetBreedMessage("");
+        setPetRawAnalysis(undefined);
+        try {
+            const dataUrl = await resizePetPhoto(file);
+            setPetPhotoDataUrl(dataUrl);
+
+            // The server classifier is helpful when configured, but its result
+            // is always shown as an editable candidate. A missing/unavailable
+            // model must never silently turn a member's dog into a poodle.
+            if (!ddbApiReady()) {
+                setPetBreedMessage("사진을 준비했습니다. 견종을 직접 선택해 주세요.");
+                return;
+            }
+
+            try {
+                const analysis = await analyzePetLensSmart({
+                    name: petName,
+                    age: petAge,
+                    size: petSize,
+                    coat: petCoat,
+                    activity: petActivity,
+                    concerns: petConcerns,
+                    imageName: file.name,
+                    photoDataUrl: dataUrl,
+                }, file);
+                const candidateId = resolvePetBreedId(analysis.profile.breed || "", "");
+                if (candidateId && isPetBreedId(candidateId)) {
+                    const candidate = getPetBreedVisual(candidateId);
+                    setPetBreedId(candidateId);
+                    setPetBreedSource("ai");
+                    setPetRawAnalysis(analysis.profile.rawAnalysis);
+                    setPetCoat(analysis.profile.coat);
+                    setPetBreedMessage(`사진 분석 후보: ${candidate.ko} · ${candidate.en}. 아래에서 꼭 확인하거나 수정해 주세요.`);
+                } else {
+                    setPetBreedMessage("사진 분석 결과를 확정하지 못했습니다. 아래 120종 중 견종을 직접 선택해 주세요.");
+                }
+            } catch {
+                setPetBreedMessage("사진은 저장되었지만 견종 분석을 확정하지 못했습니다. 아래에서 직접 선택해 주세요.");
+            }
+        } catch {
+            setPhotoError("사진을 불러오지 못했습니다. 다른 이미지를 선택해 주세요.");
+        } finally {
+            setPhotoLoading(false);
+        }
     };
 
     const submit = async (event: FormEvent) => {
@@ -74,15 +127,32 @@ export default function SignupPage() {
             return;
         }
         const shouldCreatePet = Boolean(petName.trim() || petPhotoDataUrl);
+        if (shouldCreatePet && !isPetBreedId(petBreedId)) {
+            setError("반려견 사진 또는 정보를 등록하셨다면, 아래에서 우리 아이의 견종을 확인해 주세요.");
+            return;
+        }
+        const selectedBreed = isPetBreedId(petBreedId)
+            ? getPetBreedVisual(petBreedId)
+            : null;
         const pets: PetProfile[] = shouldCreatePet
             ? [{
                 name: petName.trim() || "우리 아이",
+                breed: selectedBreed?.ko,
                 size: petSize,
                 age: petAge.trim() || "성견",
                 coat: petCoat,
                 activity: petActivity,
                 concerns: petConcerns.length > 0 ? petConcerns : ["일상 케어"],
                 photoDataUrl: petPhotoDataUrl,
+                rawAnalysis: selectedBreed
+                    ? {
+                        ...(petRawAnalysis || {}),
+                        breedId: selectedBreed.id,
+                        breed_ko: selectedBreed.ko,
+                        breed_en: selectedBreed.en,
+                        breedSource: petBreedSource || "manual",
+                    }
+                    : undefined,
                 lastAnalyzedAt: new Date().toISOString(),
             }]
             : [];
@@ -185,6 +255,33 @@ export default function SignupPage() {
                             <label>
                                 <span className="mb-1 block text-xs font-black text-neutral-500">나이</span>
                                 <input value={petAge} onChange={(event) => setPetAge(event.target.value)} className="input" />
+                            </label>
+                            <label className="md:col-span-2">
+                                <span className="mb-1 block text-xs font-black text-neutral-500">견종 캐릭터</span>
+                                <select
+                                    value={petBreedId}
+                                    onChange={(event) => {
+                                        setPetBreedId(event.target.value);
+                                        setPetBreedSource(event.target.value ? "manual" : "");
+                                        if (event.target.value) {
+                                            const selected = getPetBreedVisual(event.target.value);
+                                            setPetBreedMessage(`선택됨: ${selected.ko} · ${selected.en}`);
+                                        } else {
+                                            setPetBreedMessage("");
+                                        }
+                                    }}
+                                    className="input"
+                                >
+                                    <option value="">사진 분석 결과 확인 또는 직접 선택</option>
+                                    {PET_BREEDS.map((breed) => (
+                                        <option key={breed.id} value={breed.id}>
+                                            {breed.ko} · {breed.en}
+                                        </option>
+                                    ))}
+                                </select>
+                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">
+                                    {petBreedMessage || "사진 분석 결과는 후보입니다. 120종 중 실제 견종으로 확인해 주세요."}
+                                </span>
                             </label>
                             <label>
                                 <span className="mb-1 block text-xs font-black text-neutral-500">크기</span>

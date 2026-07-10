@@ -17,6 +17,16 @@ export type PetBreedRigId =
     | "R01" | "R02" | "R03" | "R04" | "R05" | "R06" | "R07"
     | "R08" | "R09" | "R10" | "R11" | "R12" | "R13" | "R14";
 
+/**
+ * The animated atlases are intentionally shared by the closest silhouette
+ * groups. Individual breeds still carry their own palette, coat, marking and
+ * proportions, which the companion renderer applies on top of the atlas.
+ */
+export const PET_BREED_RIG_IDS = [
+    "R01", "R02", "R03", "R04", "R05", "R06", "R07",
+    "R08", "R09", "R10", "R11", "R12", "R13", "R14",
+] as const satisfies readonly PetBreedRigId[];
+
 export type PetEarShape = "point" | "bat" | "button" | "rose" | "drop" | "long";
 export type PetTailShape = "curl" | "plume" | "sickle" | "long" | "docked" | "bob";
 export type PetMuzzleShape = "tiny" | "short" | "medium" | "long" | "square";
@@ -41,6 +51,17 @@ export type PetBreedVisual = {
     headScale: number;
     bodyScale: number;
     bodyLength: number;
+};
+
+export type PetBreedRenderTokens = {
+    primary: string;
+    secondary: string;
+    accent: string;
+    /** A restrained colour correction that preserves the plush atlas shading. */
+    filter: string;
+    /** Kept deliberately subtle so walk-cycle feet stay grounded. */
+    scaleX: number;
+    scaleY: number;
 };
 
 type VisualSeed = Omit<PetBreedVisual, "id" | "en" | "ko" | "aliases" | "family" | "rigId">;
@@ -326,6 +347,39 @@ if (PET_BREEDS.length !== 120 || UNIQUE_BREED_IDS.size !== 120) {
     throw new Error(`Pet companion breed catalog must contain 120 unique breeds; received ${PET_BREEDS.length}/${UNIQUE_BREED_IDS.size}.`);
 }
 
+const UNIQUE_VISUAL_PROFILES = new Set(PET_BREEDS.map((breed) => [
+    breed.rigId,
+    breed.ear,
+    breed.tail,
+    breed.muzzle,
+    breed.coat,
+    breed.marking,
+    breed.primary,
+    breed.secondary,
+    breed.accent,
+    breed.headScale,
+    breed.bodyScale,
+    breed.bodyLength,
+].join("|")));
+if (UNIQUE_VISUAL_PROFILES.size !== 120) {
+    throw new Error(`Pet companion needs 120 distinct visual profiles; received ${UNIQUE_VISUAL_PROFILES.size}.`);
+}
+
+const VALID_RIG_IDS = new Set<string>(PET_BREED_RIG_IDS);
+const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+const invalidBreedVisual = PET_BREEDS.find((breed) => (
+    !VALID_RIG_IDS.has(breed.rigId)
+    || !HEX_COLOR.test(breed.primary)
+    || !HEX_COLOR.test(breed.secondary)
+    || !HEX_COLOR.test(breed.accent)
+    || !Number.isFinite(breed.headScale)
+    || !Number.isFinite(breed.bodyScale)
+    || !Number.isFinite(breed.bodyLength)
+));
+if (invalidBreedVisual) {
+    throw new Error(`Pet companion visual profile is incomplete for ${invalidBreedVisual.id}.`);
+}
+
 const BREED_BY_ID = new Map(PET_BREEDS.map((breed) => [breed.id, breed]));
 const BREED_SEARCH = PET_BREEDS.flatMap((breed) => [breed.id, breed.en, breed.ko, ...breed.aliases]
     .filter(Boolean)
@@ -340,6 +394,59 @@ export function getPetBreedVisual(breedId?: string | null): PetBreedVisual {
     const direct = breedId ? BREED_BY_ID.get(breedId) : undefined;
     const resolved = breedId ? BREED_BY_ID.get(resolvePetBreedId(breedId)) : undefined;
     return direct || resolved || BREED_BY_ID.get("toy-poodle") || PET_BREEDS[0];
+}
+
+function clamp(value: number, min: number, max: number) {
+    return Math.min(Math.max(value, min), max);
+}
+
+function hexToHsl(hex: string) {
+    const red = Number.parseInt(hex.slice(1, 3), 16) / 255;
+    const green = Number.parseInt(hex.slice(3, 5), 16) / 255;
+    const blue = Number.parseInt(hex.slice(5, 7), 16) / 255;
+    const max = Math.max(red, green, blue);
+    const min = Math.min(red, green, blue);
+    const lightness = (max + min) / 2;
+    const delta = max - min;
+    if (delta === 0) return { hue: 0, saturation: 0, lightness };
+
+    let hue = 0;
+    if (max === red) hue = ((green - blue) / delta) % 6;
+    else if (max === green) hue = (blue - red) / delta + 2;
+    else hue = (red - green) / delta + 4;
+    hue = (hue * 60 + 360) % 360;
+    const saturation = delta / (1 - Math.abs(2 * lightness - 1));
+    return { hue, saturation, lightness };
+}
+
+/**
+ * Converts the 120 canonical breed profiles into lightweight render tokens.
+ * No new bitmap needs to be downloaded for a colour/coat variation; the
+ * shared motion atlas retains smooth gait while these tokens make the breed
+ * identity visible in every live, preview and card rendering.
+ */
+export function getPetBreedRenderTokens(
+    breedOrId?: PetBreedVisual | string | null,
+): PetBreedRenderTokens {
+    const breed = typeof breedOrId === "object" && breedOrId
+        ? breedOrId
+        : getPetBreedVisual(breedOrId);
+    const palette = hexToHsl(breed.primary);
+    const hueShift = Math.round(((palette.hue - 32 + 540) % 360) - 180);
+    const saturation = clamp(0.86 + palette.saturation * 0.52, 0.82, 1.34);
+    const brightness = clamp(0.88 + palette.lightness * 0.28, 0.91, 1.06);
+    const lowSaturation = palette.saturation < 0.18;
+
+    return {
+        primary: breed.primary,
+        secondary: breed.secondary,
+        accent: breed.accent,
+        filter: lowSaturation
+            ? `grayscale(${clamp(0.24 + (0.18 - palette.saturation) * 1.6, 0.24, 0.5).toFixed(3)}) saturate(${saturation.toFixed(3)}) brightness(${brightness.toFixed(3)})`
+            : `sepia(.045) saturate(${saturation.toFixed(3)}) hue-rotate(${hueShift}deg) brightness(${brightness.toFixed(3)})`,
+        scaleX: clamp(1 + (breed.bodyLength - 1) * 0.42, 0.92, 1.1),
+        scaleY: clamp(1 + (breed.bodyScale - 1) * 0.34 + (breed.headScale - 1) * 0.12, 0.94, 1.1),
+    };
 }
 
 export function resolvePetBreedId(text: string, fallback = "toy-poodle") {
