@@ -83,7 +83,7 @@ export default function PetTryOnPreview({ product }: { product: CatalogProduct }
     if (!eligible) return null;
 
     return (
-        <section className="mt-10 border-y border-neutral-200 py-8">
+        <section data-pet-guide-target="try-on" className="mt-10 border-y border-neutral-200 py-8">
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
                     <p className="text-xs font-black text-indigo-700">{locale === "en" ? "PetLens Auto Fit" : "펫렌즈 자동 피팅"}</p>
@@ -104,7 +104,7 @@ export default function PetTryOnPreview({ product }: { product: CatalogProduct }
                             ? "After signing up, upload your dog's photo in PetLens to preview wearable products like harnesses, apparel, and goggles."
                             : "가입 후 펫렌즈에서 반려견 사진을 업로드하면 하네스/웨어/고글 같은 착용 상품에서 자동 피팅 이미지를 볼 수 있습니다."}
                     </p>
-                    <Link href="/auth/signup" className="inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-black text-white hover:bg-indigo-700">
+                    <Link data-pet-guide-target="signup" href="/auth/signup" className="inline-flex h-10 items-center justify-center rounded-md bg-indigo-600 px-4 text-sm font-black text-white hover:bg-indigo-700">
                         {locale === "en" ? "Sign up" : "가입하기"}
                     </Link>
                 </div>

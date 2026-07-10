@@ -228,6 +228,8 @@ export default function ChatWidget() {
                 type="button"
                 onClick={() => setOpen((value) => !value)}
                 className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700"
+                data-pet-guide-target="chatbot"
+                aria-expanded={open}
                 aria-label={open ? "채팅 닫기" : "채팅 열기"}
                 title={open ? "채팅 닫기" : "채팅 열기"}
             >

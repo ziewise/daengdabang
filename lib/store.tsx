@@ -19,6 +19,7 @@ import type { CartPetAssignment } from "@/lib/pet-attribution";
 export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
 export type PetProfile = {
     name: string;
+    breed?: string;
     size: "small" | "medium" | "large";
     age: string;
     coat: "short" | "medium" | "long";

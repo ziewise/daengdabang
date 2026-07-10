@@ -609,6 +609,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
         const apiCoat = ["short", "medium", "long"].includes(data.coat) ? data.coat : input.coat;
         const profile: PetProfile = {
             name: input.name || "우리 아이",
+            breed: typeof data.breed === "string" ? data.breed : undefined,
             size: input.size,
             age: input.age || "성견",
             coat: apiCoat,

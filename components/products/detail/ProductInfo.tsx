@@ -208,7 +208,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 />
 
                 {/* 메인 액션 — 누르면 옵션 시트. 이 영역이 화면 밖이면 하단 바 노출 */}
-                <div ref={actionRef} className="grid grid-cols-[56px_1fr_1fr] gap-2">
+                <div ref={actionRef} data-pet-guide-target="product-actions" className="grid grid-cols-[56px_1fr_1fr] gap-2">
                     <button
                         type="button"
                         onClick={() => toggleWishlist(p.id)}
@@ -243,6 +243,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
 
             {/* 스크롤 추적 하단 고정 바 — 버튼을 누르면 옵션 시트가 열린다 */}
             <div
+                data-pet-guide-target="product-actions"
                 className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/60 bg-white/65 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-transform duration-300 ${
                     showBar ? "translate-y-0" : "pointer-events-none translate-y-full"
                 }`}

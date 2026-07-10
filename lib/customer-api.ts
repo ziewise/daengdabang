@@ -47,6 +47,7 @@ function inferredApiBase() {
 type ApiPetProfile = {
     id: number;
     name: string;
+    breed?: string | null;
     size: PetProfile["size"];
     age?: string | null;
     coat: PetProfile["coat"];
@@ -181,6 +182,7 @@ export async function savePetProfileSmart(pet: PetProfile, token?: string) {
         method: "POST",
         body: JSON.stringify({
             name: pet.name,
+            breed: pet.breed,
             size: pet.size,
             age: pet.age,
             coat: pet.coat,
@@ -201,6 +203,7 @@ export async function loadPetProfilesSmart(token?: string): Promise<PetProfile[]
     if (!rows) return null;
     return rows.map((row) => ({
         name: row.name,
+        breed: row.breed || undefined,
         size: row.size,
         age: row.age || "성견",
         coat: row.coat,

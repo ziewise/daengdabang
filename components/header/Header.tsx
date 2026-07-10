@@ -223,6 +223,7 @@ export default function Header() {
                         {hydrated && (
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/auth/login"}
+                                data-pet-guide-target={isLoggedIn ? undefined : "signup"}
                                 className="hidden lg:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
                                 aria-label={isLoggedIn ? t("mypage") : t("login")}
                             >
@@ -234,6 +235,7 @@ export default function Header() {
                         <button
                             type="button"
                             onClick={() => setMobileOpen(true)}
+                            data-pet-guide-target={!isLoggedIn ? "signup" : undefined}
                             className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label={t("menu")}
                         >

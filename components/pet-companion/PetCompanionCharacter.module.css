@@ -1,0 +1,329 @@
+.character {
+    position: relative;
+    display: block;
+    width: 174px;
+    height: 148px;
+    transform-origin: 50% 100%;
+    pointer-events: none;
+    isolation: isolate;
+}
+
+.live {
+    width: 128px;
+    height: 110px;
+}
+
+.preview {
+    width: 168px;
+    height: 144px;
+}
+
+.card {
+    width: 84px;
+    height: 72px;
+}
+
+.groundShadow {
+    position: absolute;
+    z-index: 0;
+    right: 16%;
+    bottom: 5px;
+    left: 16%;
+    height: 13px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgb(72 51 40 / 24%) 0 28%, rgb(72 51 40 / 10%) 54%, transparent 75%);
+    filter: blur(1.8px);
+    transform-origin: center;
+}
+
+.spriteMotion {
+    position: absolute;
+    z-index: 1;
+    inset: -20px -8px -2px;
+    transform-origin: 50% 82%;
+    will-change: transform;
+}
+
+.spriteMirror {
+    position: absolute;
+    inset: 0;
+    transform-origin: center;
+    transition: transform .16s ease;
+}
+
+.character[data-facing="left"] .spriteMirror {
+    transform: scaleX(-1);
+}
+
+.spriteStack {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.spriteCanvas {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    filter: drop-shadow(0 5px 5px rgb(62 42 31 / 16%));
+    transition: opacity .12s ease;
+}
+
+.spriteStack[data-sprite-ready="true"] .spriteCanvas {
+    opacity: 1;
+}
+
+.spriteStack[data-sprite-ready="true"] .idleSprite {
+    opacity: 0;
+}
+
+/* A ready sheet already contains real body/leg motion. Avoid stacking the old
+   whole-image bounce on top of those frames; the static fallback keeps it. */
+.character:not([data-motion="point"]):has(.spriteStack[data-sprite-ready="true"]) .spriteMotion {
+    animation: none;
+}
+
+.sprite,
+.recommendPose {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.sprite {
+    object-fit: contain;
+    object-position: 50% 100%;
+    filter: drop-shadow(0 5px 5px rgb(62 42 31 / 16%));
+    user-select: none;
+}
+
+.idleSprite {
+    opacity: 1;
+    transition: opacity .12s ease;
+}
+
+.recommendPose {
+    opacity: 0;
+    transform: scale(.96) translateY(4px);
+    transform-origin: 50% 84%;
+    transition: opacity .12s ease, transform .18s cubic-bezier(.2, .8, .2, 1);
+}
+
+.character[data-motion="recommend"] .idleSprite,
+.character[data-motion="point"] .idleSprite {
+    opacity: 0;
+}
+
+.character[data-motion="recommend"] .recommendPose,
+.character[data-motion="point"] .recommendPose {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+.character[data-motion="point"] .spriteStack,
+.character[data-motion="recommend"] .spriteStack {
+    opacity: 0;
+}
+
+.accessory {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 67%;
+    width: 11px;
+    height: 11px;
+    border: 2px solid rgb(255 255 255 / 88%);
+    border-radius: 50% 50% 48% 48%;
+    background: var(--pet-accessory, transparent);
+    box-shadow: 0 2px 5px rgb(57 38 28 / 20%);
+    opacity: 0;
+    transform: translateX(-50%);
+}
+
+.character[data-accessory="sky"] { --pet-accessory: #62a7d5; }
+.character[data-accessory="rose"] { --pet-accessory: #e98296; }
+.character[data-accessory="mint"] { --pet-accessory: #68ad91; }
+.character:not([data-accessory="none"]) .accessory { opacity: 1; }
+
+.character[data-tone="apricot"] :is(.sprite, .spriteCanvas) { filter: sepia(.05) saturate(1.06) drop-shadow(0 5px 5px rgb(62 42 31 / 16%)); }
+.character[data-tone="caramel"] :is(.sprite, .spriteCanvas) { filter: sepia(.1) saturate(1.1) brightness(.94) drop-shadow(0 5px 5px rgb(62 42 31 / 16%)); }
+.character[data-tone="charcoal"] :is(.sprite, .spriteCanvas) { filter: grayscale(.45) saturate(.78) brightness(.82) contrast(1.04) drop-shadow(0 5px 5px rgb(62 42 31 / 16%)); }
+
+.recommendFx {
+    position: absolute;
+    z-index: 5;
+    top: -7px;
+    right: -4px;
+    width: 68px;
+    height: 54px;
+    opacity: 0;
+    transform: translateY(7px) scale(.8);
+    transform-origin: 50% 100%;
+    pointer-events: none;
+}
+
+.pickBadge {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    display: flex;
+    min-width: 49px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0 8px;
+    border: 2px solid rgb(255 255 255 / 92%);
+    border-radius: 999px;
+    background: linear-gradient(145deg, #94a97c, #71855c);
+    color: #fff;
+    box-shadow: 0 5px 12px rgb(66 79 49 / 24%);
+    font-size: 9px;
+    font-weight: 950;
+    letter-spacing: -.03em;
+    white-space: nowrap;
+}
+
+.pickBadge > span {
+    font-size: 10px;
+}
+
+.sparkle {
+    position: absolute;
+    color: #f5c95c;
+    font-size: 15px;
+    line-height: 1;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.sparkleA { top: 0; left: 9px; }
+.sparkleB { top: 10px; right: 0; font-size: 11px; }
+
+.character[data-motion="idle"] .spriteMotion {
+    animation: plush-idle 3.4s ease-in-out infinite;
+}
+
+.character[data-motion="walk"] .spriteMotion {
+    animation: plush-walk .66s ease-in-out infinite;
+}
+
+.character[data-motion="walk"] .groundShadow {
+    animation: plush-shadow .66s ease-in-out infinite;
+}
+
+.character[data-motion="run"] .spriteMotion {
+    animation: plush-run .38s ease-in-out infinite;
+}
+
+.character[data-motion="run"] .groundShadow {
+    animation: plush-shadow .38s ease-in-out infinite;
+}
+
+.character[data-motion="sniff"] .spriteMotion {
+    animation: plush-sniff 1.55s ease-in-out infinite;
+}
+
+.character[data-motion="point"] .spriteMotion {
+    animation: plush-point 1.3s ease-in-out infinite alternate;
+}
+
+.character[data-motion="recommend"] .spriteMotion {
+    animation: plush-recommend .95s cubic-bezier(.2, .82, .22, 1) 1 both;
+}
+
+.character[data-motion="recommend"] .recommendFx {
+    animation: plush-pick-badge 1.05s .26s cubic-bezier(.2, .82, .22, 1) 1 both;
+}
+
+.character[data-motion="recommend"] .sparkleA {
+    animation: plush-sparkle .76s .44s ease-out 1 both;
+}
+
+.character[data-motion="recommend"] .sparkleB {
+    animation: plush-sparkle .76s .56s ease-out 1 both;
+}
+
+@keyframes plush-idle {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-2px) rotate(.4deg) scale(1.006); }
+}
+
+@keyframes plush-walk {
+    0%, 100% { transform: translateY(0) rotate(-1.2deg) scaleY(1); }
+    25% { transform: translateY(-4px) rotate(.9deg) scaleY(1.015); }
+    50% { transform: translateY(-1px) rotate(1.2deg) scaleY(.99); }
+    75% { transform: translateY(-4px) rotate(-.8deg) scaleY(1.015); }
+}
+
+@keyframes plush-run {
+    0%, 100% { transform: translateY(1px) rotate(-3deg) scale(1.015, .985); }
+    50% { transform: translateY(-8px) rotate(3deg) scale(.985, 1.025); }
+}
+
+@keyframes plush-shadow {
+    0%, 100% { opacity: .82; transform: scaleX(1); }
+    50% { opacity: .5; transform: scaleX(.78); }
+}
+
+@keyframes plush-sniff {
+    0%, 100% { transform: translate(0, 0) rotate(0); }
+    38%, 70% { transform: translate(7px, 7px) rotate(5deg); }
+    52% { transform: translate(9px, 9px) rotate(7deg) scale(.99); }
+}
+
+@keyframes plush-point {
+    to { transform: translateY(-3px) rotate(-4deg); }
+}
+
+@keyframes plush-recommend {
+    0% { transform: translateY(2px) scale(.96) rotate(0); }
+    44% { transform: translateY(-7px) scale(1.04) rotate(-4deg); }
+    72% { transform: translateY(-2px) scale(.995) rotate(2deg); }
+    100% { transform: translateY(0) scale(1) rotate(0); }
+}
+
+@keyframes plush-pick-badge {
+    0% { opacity: 0; transform: translateY(8px) scale(.72); }
+    58% { opacity: 1; transform: translateY(-2px) scale(1.08); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes plush-sparkle {
+    0% { opacity: 0; transform: scale(.2) rotate(0); }
+    52% { opacity: 1; transform: scale(1.24) rotate(38deg); }
+    100% { opacity: .92; transform: scale(1) rotate(22deg); }
+}
+
+@media (max-width: 680px) {
+    .live {
+        width: 64px;
+        height: 56px;
+    }
+
+    .live .recommendFx {
+        top: -17px;
+        right: -24px;
+        transform: scale(.68);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spriteMotion,
+    .groundShadow,
+    .recommendFx,
+    .sparkle {
+        animation: none !important;
+        transition-duration: 1ms !important;
+    }
+
+    .character[data-motion="recommend"] .recommendFx {
+        opacity: 1;
+        transform: none;
+    }
+}

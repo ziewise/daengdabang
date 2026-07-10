@@ -54,11 +54,19 @@ export function pickHeroVideo(
     return (isMobile ? entry.m : entry.pc) ?? FALLBACK_VIDEO;
 }
 
+/** 협업자 날씨/시간 → 그 영상 속 강아지 견종 ID */
+export function pickHeroBreed(
+    weather: HeroWeather,
+    timeBucket: HeroTimeBucket,
+): string {
+    return MANIFEST[sceneKey(weather, timeBucket)]?.breed ?? FALLBACK_BREED;
+}
+
 /** 협업자 날씨/시간 → 그 영상 속 강아지 견종의 얼굴 배지 영상 경로 */
 export function pickHeroBreedVideo(
     weather: HeroWeather,
     timeBucket: HeroTimeBucket,
 ): string {
-    const breed = MANIFEST[sceneKey(weather, timeBucket)]?.breed ?? FALLBACK_BREED;
+    const breed = pickHeroBreed(weather, timeBucket);
     return `/images/breeds/${breed}.mp4`;
 }

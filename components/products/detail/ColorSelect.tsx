@@ -22,7 +22,7 @@ interface Props {
 export default function ColorSelect({ colors, colorIdx, onColorChange, className = "" }: Props) {
     if (colors.length === 0) return null;
     return (
-        <div className={`rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
+        <div data-pet-guide-target="color" className={`rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
             <div className="flex flex-wrap gap-2">
                 {colors.map((c, i) => (
                     <button

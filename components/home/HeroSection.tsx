@@ -17,7 +17,7 @@ import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } fr
 import { useI18n } from "@/lib/i18n";
 // 우리 영상 매핑 — 협업자 날씨/시간 감지 결과로 여름 영상 24종(PC/모바일) 중 선택,
 // 그리고 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 선택
-import { pickHeroVideo, pickHeroBreedVideo } from "@/lib/hero-summer-video";
+import { pickHeroBreed, pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
 // 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는 견종 얼굴 배지
 import WatermarkBadge from "./WatermarkBadge";
 // 펫렌즈 모달 런처 — 배지 클릭 시 펫렌즈 실행(Header·FloatingDock 과 동일한 런처)
@@ -116,6 +116,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const scene = useMemo(() => resolveHeroScene(context), [context]);
     // 협업자가 감지한 날씨/시간 → 우리 여름 영상 경로 (PC/모바일)
     const heroVideo = pickHeroVideo(context.weather, context.timeBucket, isMobile);
+    const heroBreed = pickHeroBreed(context.weather, context.timeBucket);
     // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (비로그인 = 영상 견종, 로그인 펫 견종은 추후)
     const heroBreedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
     const weatherSummary = heroWeatherSummary(weatherReport, locale);
@@ -123,7 +124,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const sceneLabel = localizedSceneLabel(scene.key, scene.label, locale);
 
     return (
-        <section className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
+        <section data-hero-breed={heroBreed} className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
             <div className="absolute inset-0">
                 <div className="hero-video-scene" aria-hidden="true">
                     {/* 여름 영상 24종(날씨×시간×PC/모바일) 중 선택.

@@ -166,7 +166,11 @@ export default function PetLensModalContent() {
                         ))}
                     </ul>
                     {!user && (
-                        <Link href="/auth/signup" className="btn btn-secondary mt-4 inline-flex">
+                        <Link
+                            href="/auth/signup"
+                            className="btn btn-secondary mt-4 inline-flex"
+                            data-pet-guide-target="signup"
+                        >
                             회원가입하고 프로필 저장
                         </Link>
                     )}

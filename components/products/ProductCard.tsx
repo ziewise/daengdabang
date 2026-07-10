@@ -94,6 +94,11 @@ export default function ProductCard({
 
     return (
         <article
+            data-pet-product="true"
+            data-pet-name={displayName}
+            data-pet-category={p.category}
+            data-pet-subcategory={p.subcategory}
+            data-pet-href={detailHref}
             className={`block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover hover:-translate-y-1 transition-all ${sizeClass ?? ""}`}
         >
             {/* 이미지 영역 — 영상 호버 인터랙션 영역 */}
