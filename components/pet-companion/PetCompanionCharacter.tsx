@@ -122,6 +122,7 @@ export default function PetCompanionCharacter({
                     {useCoreSprite ? (
                         <PetCompanionSpriteCanvas
                             src={`${MOTION_ASSET_ROOT}/${rigAsset}-core.webp`}
+                            walkSrc={`${MOTION_ASSET_ROOT}/${rigAsset}-walk.webp`}
                             motion={coreMotion}
                             fallback={idleFallback}
                             className={styles.spriteStack}

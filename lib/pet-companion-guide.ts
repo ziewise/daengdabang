@@ -10,12 +10,28 @@ export type PetGuidePrompt = {
     activatesTarget?: boolean;
 };
 
-const SESSION_KEY = "ddb.petGuide.session.v4";
-const DAILY_KEY = "ddb.petGuide.daily.v4";
+const SESSION_KEY = "ddb.petGuide.session.v5";
+const DAILY_KEY = "ddb.petGuide.daily.v5";
+
+// Guidance should stay useful throughout a shopping session without becoming a
+// repetitive pop-up. The v5 state replaces the old three-prompt hard stop with
+// a short global gap plus a route-and-target cooldown.
+const SESSION_LIMIT = 12;
+const DAILY_LIMIT = 24;
+const AUTO_GUIDE_GAP_MS = 12_000;
+const ROUTE_GUIDE_COOLDOWN_MS = 15 * 60_000;
+const HISTORY_RETENTION_MS = 24 * 60 * 60_000;
+
+type GuideHistoryEntry = {
+    route: string;
+    id: PetGuideId;
+    shownAt: number;
+};
 
 type SessionState = {
     count: number;
-    seen: PetGuideId[];
+    lastShownAt: number;
+    history: GuideHistoryEntry[];
 };
 
 type DailyState = {
@@ -26,8 +42,9 @@ type DailyState = {
 const MEMBER_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "product-actions", "chatbot", "signup"];
 const GUEST_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "chatbot", "signup", "product-actions"];
 const ALL_GUIDE_IDS = new Set<PetGuideId>([...MEMBER_GUIDE_ORDER, ...GUEST_GUIDE_ORDER]);
-const memorySeen = new Set<PetGuideId>();
 let memorySessionCount = 0;
+let memoryLastShownAt = 0;
+let memoryHistory: GuideHistoryEntry[] = [];
 let memoryDailyState: DailyState = { date: todayKey(), count: 0 };
 
 function todayKey() {
@@ -39,20 +56,58 @@ function normalizeCount(value: unknown) {
     return typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0;
 }
 
+function normalizeTimestamp(value: unknown) {
+    return typeof value === "number" && Number.isFinite(value)
+        ? Math.min(Date.now(), Math.max(0, value))
+        : 0;
+}
+
+function currentRoute() {
+    if (typeof window === "undefined") return "/";
+    const path = window.location.pathname.replace(/\/+$/, "");
+    return path || "/";
+}
+
+function normalizeHistory(value: unknown): GuideHistoryEntry[] {
+    if (!Array.isArray(value)) return [];
+    const oldestAllowed = Date.now() - HISTORY_RETENTION_MS;
+    return value.flatMap((item): GuideHistoryEntry[] => {
+        if (!item || typeof item !== "object") return [];
+        const entry = item as Partial<GuideHistoryEntry>;
+        if (
+            typeof entry.route !== "string"
+            || typeof entry.id !== "string"
+            || !ALL_GUIDE_IDS.has(entry.id as PetGuideId)
+        ) return [];
+        const shownAt = normalizeTimestamp(entry.shownAt);
+        if (shownAt < oldestAllowed) return [];
+        return [{ route: entry.route || "/", id: entry.id as PetGuideId, shownAt }];
+    });
+}
+
+function mergeHistory(...sources: GuideHistoryEntry[][]) {
+    const latest = new Map<string, GuideHistoryEntry>();
+    for (const entry of sources.flat()) {
+        const key = `${entry.route}\n${entry.id}`;
+        const previous = latest.get(key);
+        if (!previous || previous.shownAt < entry.shownAt) latest.set(key, entry);
+    }
+    return Array.from(latest.values());
+}
+
 function readSession(): SessionState {
-    if (typeof window === "undefined") return { count: 0, seen: [] };
+    if (typeof window === "undefined") return { count: 0, lastShownAt: 0, history: [] };
     try {
         const parsed: unknown = JSON.parse(window.sessionStorage.getItem(SESSION_KEY) || "null");
-        if (!parsed || typeof parsed !== "object") return { count: 0, seen: [] };
+        if (!parsed || typeof parsed !== "object") return { count: 0, lastShownAt: 0, history: [] };
         const value = parsed as Partial<SessionState>;
         return {
             count: normalizeCount(value.count),
-            seen: Array.isArray(value.seen)
-                ? value.seen.filter((item): item is PetGuideId => typeof item === "string" && ALL_GUIDE_IDS.has(item as PetGuideId))
-                : [],
+            lastShownAt: normalizeTimestamp(value.lastShownAt),
+            history: normalizeHistory(value.history),
         };
     } catch {
-        return { count: 0, seen: [] };
+        return { count: 0, lastShownAt: 0, history: [] };
     }
 }
 
@@ -70,31 +125,43 @@ function readDaily(): DailyState {
     }
 }
 
-export function petGuideHasBudget() {
+export function petGuideHasBudget({
+    bypass = false,
+    ignoreGap = false,
+}: {
+    bypass?: boolean;
+    ignoreGap?: boolean;
+} = {}) {
+    if (bypass) return true;
     const session = readSession();
     const daily = readDaily();
     memorySessionCount = Math.max(memorySessionCount, session.count);
+    memoryLastShownAt = Math.max(memoryLastShownAt, session.lastShownAt);
+    memoryHistory = mergeHistory(memoryHistory, session.history);
     if (memoryDailyState.date !== daily.date) memoryDailyState = { date: daily.date, count: 0 };
     memoryDailyState.count = Math.max(memoryDailyState.count, daily.count);
-    return memorySessionCount < 3 && memoryDailyState.count < 4;
+    if (memorySessionCount >= SESSION_LIMIT || memoryDailyState.count >= DAILY_LIMIT) return false;
+    return ignoreGap || Date.now() - memoryLastShownAt >= AUTO_GUIDE_GAP_MS;
 }
 
 export function markPetGuideShown(id: PetGuideId) {
     if (typeof window === "undefined") return;
     const session = readSession();
     const daily = readDaily();
-    if (memorySeen.has(id) || session.seen.includes(id)) {
-        memorySeen.add(id);
-        return;
-    }
-
-    memorySeen.add(id);
+    const shownAt = Date.now();
+    const history = mergeHistory(memoryHistory, session.history).filter((entry) => (
+        entry.route !== currentRoute() || entry.id !== id
+    ));
+    history.push({ route: currentRoute(), id, shownAt });
+    memoryHistory = history;
     memorySessionCount = Math.max(memorySessionCount, session.count) + 1;
+    memoryLastShownAt = shownAt;
     if (memoryDailyState.date !== daily.date) memoryDailyState = { date: daily.date, count: 0 };
     memoryDailyState.count = Math.max(memoryDailyState.count, daily.count) + 1;
     const nextSession: SessionState = {
         count: memorySessionCount,
-        seen: Array.from(new Set([...session.seen, id])),
+        lastShownAt: shownAt,
+        history,
     };
     try {
         window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextSession));
@@ -181,16 +248,27 @@ function visibleTarget(id: PetGuideId) {
 export function findPetGuidePrompt({
     isGuest,
     hasPetPhoto,
+    bypassBudget = false,
 }: {
     isGuest: boolean;
     hasPetPhoto: boolean;
+    bypassBudget?: boolean;
 }): PetGuidePrompt | null {
-    if (typeof window === "undefined" || !petGuideHasBudget()) return null;
-    const seen = new Set([...readSession().seen, ...memorySeen]);
+    // The layer checks the global budget/gap immediately before calling this
+    // selector. Keep target selection side-effect free so a second budget read
+    // cannot race hydration or another scheduled guide attempt.
+    if (typeof window === "undefined") return null;
+    const history = mergeHistory(readSession().history, memoryHistory);
+    const route = currentRoute();
+    const now = Date.now();
 
     const guideOrder = isGuest ? GUEST_GUIDE_ORDER : MEMBER_GUIDE_ORDER;
     for (const id of guideOrder) {
-        if (seen.has(id)) continue;
+        if (!bypassBudget && history.some((entry) => (
+            entry.route === route
+            && entry.id === id
+            && now - entry.shownAt < ROUTE_GUIDE_COOLDOWN_MS
+        ))) continue;
         const target = visibleTarget(id);
         if (!target) continue;
 

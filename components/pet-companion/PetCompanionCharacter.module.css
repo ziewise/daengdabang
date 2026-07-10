@@ -267,19 +267,35 @@
 /* The sheet supplies the leg poses; these tiny root offsets add weight transfer
    and keep the shadow in phase with the planted and passing paws. */
 .character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="0"] {
-    transform: translate3d(0, calc(var(--pet-step-lift) * .45), 2px) rotate(-.28deg) scale3d(1.006, .994, 1);
+    transform: translate3d(0, calc(var(--pet-step-lift) * .22), 2px) rotate(-.12deg);
 }
 
 .character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="1"] {
-    transform: translate3d(0, calc(var(--pet-step-lift) * -1), 5px) rotate(.34deg) scale3d(.997, 1.008, 1);
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.38), 4px) rotate(.14deg);
 }
 
 .character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="2"] {
-    transform: translate3d(0, calc(var(--pet-step-lift) * .4), 2px) rotate(.26deg) scale3d(1.006, .994, 1);
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.12), 3px) rotate(.08deg);
 }
 
 .character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="3"] {
-    transform: translate3d(0, calc(var(--pet-step-lift) * -.9), 5px) rotate(-.32deg) scale3d(.997, 1.008, 1);
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.32), 4px) rotate(-.1deg);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="4"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * .22), 2px) rotate(.12deg);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="5"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.38), 4px) rotate(-.14deg);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="6"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.12), 3px) rotate(-.08deg);
+}
+
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"][data-pet-frame="7"] {
+    transform: translate3d(0, calc(var(--pet-step-lift) * -.32), 4px) rotate(.1deg);
 }
 
 .character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="0"],
@@ -298,7 +314,7 @@
 }
 
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="0"]) .groundShadow,
-.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="4"]) .groundShadow,
 .character[data-motion="run"]:has(.spriteStack[data-pet-frame="0"]) .groundShadow,
 .character[data-motion="run"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow {
     opacity: .82;
@@ -307,7 +323,11 @@
 }
 
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="1"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow,
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="3"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="5"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="6"]) .groundShadow,
+.character[data-motion="walk"]:has(.spriteStack[data-pet-frame="7"]) .groundShadow,
 .character[data-motion="run"]:has(.spriteStack[data-pet-frame="1"]) .groundShadow,
 .character[data-motion="run"]:has(.spriteStack[data-pet-frame="3"]) .groundShadow {
     opacity: .5;

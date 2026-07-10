@@ -10,6 +10,7 @@ export type PetCompanionSpriteMotion = "idle" | "walk" | "run" | "sniff";
 
 type Props = {
     src: string;
+    walkSrc?: string;
     motion: PetCompanionSpriteMotion;
     fallback: ReactNode;
     className?: string;
@@ -19,6 +20,8 @@ type Props = {
 
 const GRID_COLUMNS = 4;
 const GRID_ROWS = 4;
+const WALK_GRID_COLUMNS = 8;
+const WALK_GRID_ROWS = 1;
 const MAX_DEVICE_PIXEL_RATIO = 2;
 
 const MOTION_ROW: Record<PetCompanionSpriteMotion, number> = {
@@ -46,10 +49,14 @@ const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> 
         { frame: 3, duration: 1080 },
     ],
     walk: [
-        { frame: 0, duration: 155 },
-        { frame: 1, duration: 112 },
-        { frame: 2, duration: 155 },
-        { frame: 3, duration: 112 },
+        { frame: 0, duration: 76 },
+        { frame: 1, duration: 64 },
+        { frame: 2, duration: 60 },
+        { frame: 3, duration: 67 },
+        { frame: 4, duration: 76 },
+        { frame: 5, duration: 64 },
+        { frame: 6, duration: 60 },
+        { frame: 7, duration: 67 },
     ],
     run: [
         { frame: 0, duration: 88 },
@@ -65,6 +72,13 @@ const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> 
     ],
 };
 
+const LEGACY_WALK_TIMELINE: readonly MotionFrame[] = [
+    { frame: 0, duration: 155 },
+    { frame: 1, duration: 112 },
+    { frame: 2, duration: 155 },
+    { frame: 3, duration: 112 },
+];
+
 type CanvasSize = {
     width: number;
     height: number;
@@ -78,6 +92,7 @@ type CanvasSize = {
  */
 export default function PetCompanionSpriteCanvas({
     src,
+    walkSrc,
     motion,
     fallback,
     className = "",
@@ -92,16 +107,26 @@ export default function PetCompanionSpriteCanvas({
     const lastFrameAtRef = useRef(0);
     const drawFrameRef = useRef<((frame: number) => void) | null>(null);
     const pausedRef = useRef(paused);
+    const walkStartOffsetRef = useRef(4);
     const startAnimationRef = useRef<(() => void) | null>(null);
     const stopAnimationRef = useRef<(() => void) | null>(null);
 
     useEffect(() => {
+        const enteredWalk = motion === "walk" && motionRef.current !== "walk";
         motionRef.current = motion;
-        frameRef.current = 0;
-        stepRef.current = 0;
+        if (enteredWalk) {
+            // Alternate the starting contact foot across short walks, instead
+            // of restarting every hop on the same leading paw.
+            walkStartOffsetRef.current = walkStartOffsetRef.current === 0 ? 4 : 0;
+        }
+        const timeline = motion === "walk" && !walkSrc
+            ? LEGACY_WALK_TIMELINE
+            : MOTION_TIMELINE[motion];
+        stepRef.current = motion === "walk" && walkSrc ? walkStartOffsetRef.current : 0;
+        frameRef.current = timeline[stepRef.current].frame;
         lastFrameAtRef.current = 0;
-        drawFrameRef.current?.(0);
-    }, [motion]);
+        drawFrameRef.current?.(frameRef.current);
+    }, [motion, walkSrc]);
 
     useEffect(() => {
         const root = rootRef.current;
@@ -114,7 +139,9 @@ export default function PetCompanionSpriteCanvas({
         let cancelled = false;
         let prepared = false;
         let animationFrame = 0;
-        let image: HTMLImageElement | null = null;
+        let coreImage: HTMLImageElement | null = null;
+        let walkImage: HTMLImageElement | null = null;
+        let walkUnavailable = !walkSrc;
         const forcePreview = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
         let reducedMotion = forcePreview
@@ -123,7 +150,9 @@ export default function PetCompanionSpriteCanvas({
         let canvasSize: CanvasSize = { width: 0, height: 0, dpr: 1 };
 
         root.dataset.spriteReady = "false";
+        root.dataset.walkSpriteReady = "false";
         canvas.dataset.petSpriteStatus = "loading";
+        canvas.dataset.petAtlas = "core";
         canvas.dataset.petFrame = "0";
 
         const stopAnimation = () => {
@@ -133,12 +162,27 @@ export default function PetCompanionSpriteCanvas({
         };
 
         const drawFrame = (frame: number) => {
-            if (!image || !image.naturalWidth || !canvasSize.width || !canvasSize.height) return false;
+            if (!coreImage || !coreImage.naturalWidth || !canvasSize.width || !canvasSize.height) return false;
 
-            const sourceWidth = image.naturalWidth / GRID_COLUMNS;
-            const sourceHeight = image.naturalHeight / GRID_ROWS;
-            const sourceX = frame * sourceWidth;
-            const sourceY = MOTION_ROW[motionRef.current] * sourceHeight;
+            const useWalkAtlas = motionRef.current === "walk" && Boolean(walkImage?.naturalWidth);
+            const useCoreWalkFallback = motionRef.current === "walk" && walkUnavailable;
+            const activeImage = useWalkAtlas ? walkImage! : coreImage;
+            const columns = useWalkAtlas ? WALK_GRID_COLUMNS : GRID_COLUMNS;
+            const rows = useWalkAtlas ? WALK_GRID_ROWS : GRID_ROWS;
+            const sourceWidth = activeImage.naturalWidth / columns;
+            const sourceHeight = activeImage.naturalHeight / rows;
+            // Do not replay the legacy same-paw walk while the small dedicated
+            // atlas is decoding.  Hold a neutral idle pose for that brief gap.
+            const sourceFrame = motionRef.current === "walk" && !useWalkAtlas && !useCoreWalkFallback
+                ? 0
+                : frame % columns;
+            const sourceRow = useWalkAtlas
+                ? 0
+                : motionRef.current === "walk" && !useCoreWalkFallback
+                    ? MOTION_ROW.idle
+                    : MOTION_ROW[motionRef.current];
+            const sourceX = sourceFrame * sourceWidth;
+            const sourceY = sourceRow * sourceHeight;
             const scale = Math.min(
                 canvasSize.width / sourceWidth,
                 canvasSize.height / sourceHeight,
@@ -153,7 +197,7 @@ export default function PetCompanionSpriteCanvas({
             context.imageSmoothingEnabled = true;
             context.imageSmoothingQuality = "high";
             context.drawImage(
-                image,
+                activeImage,
                 sourceX,
                 sourceY,
                 sourceWidth,
@@ -164,7 +208,9 @@ export default function PetCompanionSpriteCanvas({
                 drawHeight,
             );
             canvas.dataset.petFrame = String(frame);
+            canvas.dataset.petAtlas = useWalkAtlas ? "walk-v2" : "core";
             root.dataset.petFrame = String(frame);
+            root.dataset.walkSpriteReady = walkImage ? "true" : "false";
             canvas.dataset.petSpriteStatus = "ready";
             root.dataset.spriteReady = "true";
             return true;
@@ -193,9 +239,16 @@ export default function PetCompanionSpriteCanvas({
 
         const tick = (now: number) => {
             animationFrame = 0;
-            if (cancelled || pausedRef.current || reducedMotion || document.hidden || !image) return;
+            if (cancelled || pausedRef.current || reducedMotion || document.hidden || !coreImage) return;
 
-            const timeline = MOTION_TIMELINE[motionRef.current];
+            const timeline = motionRef.current === "walk" && walkUnavailable
+                ? LEGACY_WALK_TIMELINE
+                : MOTION_TIMELINE[motionRef.current];
+            if (stepRef.current >= timeline.length) {
+                stepRef.current %= timeline.length;
+                frameRef.current = timeline[stepRef.current].frame;
+                drawFrame(frameRef.current);
+            }
             const frameDuration = timeline[stepRef.current].duration;
             if (!lastFrameAtRef.current) lastFrameAtRef.current = now;
             const elapsed = now - lastFrameAtRef.current;
@@ -203,12 +256,12 @@ export default function PetCompanionSpriteCanvas({
             if (elapsed >= frameDuration) {
                 let remainder = elapsed;
                 let guard = 0;
-                while (remainder >= MOTION_TIMELINE[motionRef.current][stepRef.current].duration && guard < 32) {
-                    remainder -= MOTION_TIMELINE[motionRef.current][stepRef.current].duration;
-                    stepRef.current = (stepRef.current + 1) % MOTION_TIMELINE[motionRef.current].length;
+                while (remainder >= timeline[stepRef.current].duration && guard < 32) {
+                    remainder -= timeline[stepRef.current].duration;
+                    stepRef.current = (stepRef.current + 1) % timeline.length;
                     guard += 1;
                 }
-                frameRef.current = MOTION_TIMELINE[motionRef.current][stepRef.current].frame;
+                frameRef.current = timeline[stepRef.current].frame;
                 lastFrameAtRef.current = now - remainder;
                 drawFrame(frameRef.current);
             }
@@ -216,7 +269,7 @@ export default function PetCompanionSpriteCanvas({
         };
 
         const startAnimation = () => {
-            if (animationFrame || cancelled || pausedRef.current || reducedMotion || document.hidden || !image) return;
+            if (animationFrame || cancelled || pausedRef.current || reducedMotion || document.hidden || !coreImage) return;
             animationFrame = window.requestAnimationFrame(tick);
         };
 
@@ -249,7 +302,7 @@ export default function PetCompanionSpriteCanvas({
                 return;
             }
 
-            image = nextImage;
+            coreImage = nextImage;
             frameRef.current = 0;
             stepRef.current = 0;
             lastFrameAtRef.current = 0;
@@ -265,6 +318,55 @@ export default function PetCompanionSpriteCanvas({
         spriteImage.src = src;
         if (spriteImage.complete && spriteImage.naturalWidth) {
             void prepareImage(spriteImage);
+        }
+
+        let walkSpriteImage: HTMLImageElement | null = null;
+        if (walkSrc) {
+            walkSpriteImage = new window.Image();
+            walkSpriteImage.decoding = "async";
+            walkSpriteImage.onload = async () => {
+                if (!walkSpriteImage || cancelled) return;
+                try {
+                    await walkSpriteImage.decode();
+                } catch {
+                    // Keep the successfully loaded image on older browsers.
+                }
+                // A previous src effect may finish decoding after cleanup.
+                // Never let that stale continuation reset the new rig canvas.
+                if (cancelled || !walkSpriteImage) return;
+                if (
+                    !walkSpriteImage.naturalWidth
+                    || !walkSpriteImage.naturalHeight
+                    || walkSpriteImage.naturalWidth % WALK_GRID_COLUMNS !== 0
+                    || walkSpriteImage.naturalHeight % WALK_GRID_ROWS !== 0
+                    || walkSpriteImage.naturalWidth / WALK_GRID_COLUMNS
+                        !== walkSpriteImage.naturalHeight / WALK_GRID_ROWS
+                ) {
+                    walkUnavailable = true;
+                    stepRef.current = 0;
+                    frameRef.current = 0;
+                    root.dataset.walkSpriteReady = "false";
+                    drawFrame(0);
+                    return;
+                }
+                walkUnavailable = false;
+                walkImage = walkSpriteImage;
+                root.dataset.walkSpriteReady = "true";
+                drawFrame(frameRef.current);
+                startAnimation();
+            };
+            walkSpriteImage.onerror = () => {
+                walkUnavailable = true;
+                stepRef.current = 0;
+                frameRef.current = 0;
+                root.dataset.walkSpriteReady = "false";
+                drawFrame(0);
+                startAnimation();
+            };
+            walkSpriteImage.src = walkSrc;
+            if (walkSpriteImage.complete && walkSpriteImage.naturalWidth) {
+                walkSpriteImage.onload(new Event("load"));
+            }
         }
 
         const resizeObserver = new ResizeObserver(resizeCanvas);
@@ -298,6 +400,10 @@ export default function PetCompanionSpriteCanvas({
             stopAnimation();
             spriteImage.onload = null;
             spriteImage.onerror = null;
+            if (walkSpriteImage) {
+                walkSpriteImage.onload = null;
+                walkSpriteImage.onerror = null;
+            }
             resizeObserver.disconnect();
             window.removeEventListener("resize", resizeCanvas);
             document.removeEventListener("visibilitychange", onVisibilityChange);
@@ -306,7 +412,7 @@ export default function PetCompanionSpriteCanvas({
             if (startAnimationRef.current === startAnimation) startAnimationRef.current = null;
             if (stopAnimationRef.current === stopAnimation) stopAnimationRef.current = null;
         };
-    }, [src]);
+    }, [src, walkSrc]);
 
     useEffect(() => {
         pausedRef.current = paused;

@@ -69,8 +69,6 @@ export default function WatermarkBadge({
             const containerAspect = W / H;
             let renderW: number;
             let renderH: number;
-            let offsetX: number;
-            let offsetY: number;
 
             if (containerAspect > videoAspect) {
                 // 컨테이너가 영상보다 가로로 넓음 → 가로를 꽉 채우고 위아래가 잘림
@@ -86,8 +84,8 @@ export default function WatermarkBadge({
             // 잘리는 축은 잘린 양을 posX/posY 비율로 분배 → 영상 실제 크롭과 배지가 정확히 일치.
             // (예전엔 항상 50%/50% 중앙 크롭으로 가정 → PC object-position 이 "center bottom"이라
             //  와이드 화면일수록 세로로 어긋나 워터마크를 벗어나던 버그를 수정)
-            offsetX = (W - renderW) * posX;
-            offsetY = (H - renderH) * posY;
+            const offsetX = (W - renderW) * posX;
+            const offsetY = (H - renderH) * posY;
 
             setBox({
                 left: offsetX + xRatio * renderW, // 워터마크 화면 X (배지 중심)
@@ -122,6 +120,7 @@ export default function WatermarkBadge({
                 // 원형 배지 — 중심을 워터마크 좌표에 맞춤(translate -50%).
                 // interactive 면 배지만 pointer-events-auto 로 클릭 받고, hover 확대로 클릭 힌트를 준다.
                 <div
+                    data-pet-companion-origin="hero-lens"
                     className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-2 border-white/75 shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
                         interactive
                             ? " pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-105"
