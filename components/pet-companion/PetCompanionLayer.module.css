@@ -9,15 +9,16 @@
 
 .settingsLaunch {
     position: fixed;
-    right: 76px;
-    bottom: 18px;
+    right: 0;
+    bottom: 86px;
     z-index: 2210;
     display: grid;
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 42px;
     place-items: center;
     border: 1px solid rgb(52 43 38 / 12%);
-    border-radius: 50%;
+    border-right: 0;
+    border-radius: 18px 0 0 18px;
     background: rgb(255 255 255 / 94%);
     color: #654b3e;
     box-shadow: 0 5px 18px rgb(40 31 27 / 14%);
@@ -38,15 +39,10 @@
 }
 
 .settingsLaunch[data-companion-enabled="false"] {
-    right: 0;
-    bottom: 86px;
-    width: 34px;
-    height: 42px;
-    border-right: 0;
-    border-radius: 18px 0 0 18px;
     opacity: .86;
 }
 
+.settingsLaunch:hover,
 .settingsLaunch[data-companion-enabled="false"]:hover {
     opacity: 1;
     transform: translateX(-2px);
@@ -82,27 +78,56 @@
     transition: none !important;
 }
 
-.walker[data-pet-entry-phase="lens"] .dogButton {
-    transform-origin: 50% 64%;
-    animation: pet-lens-peek 1.28s cubic-bezier(.2, .72, .22, 1) both;
-}
-
-.entryPortal {
-    position: fixed;
-    z-index: 2100;
-    display: block;
-    overflow: hidden;
-    border-radius: 50%;
-    clip-path: polygon(0 48%, 18% 44%, 50% 46%, 82% 44%, 100% 48%, 100% 100%, 0 100%);
-    border: 2px solid rgb(255 255 255 / 72%);
-    background: linear-gradient(180deg, rgb(255 255 255 / 90%), rgb(250 248 244 / 98%));
+.walker[data-pet-entry-phase="lens"] {
+    opacity: 0 !important;
     pointer-events: none;
-    filter: drop-shadow(0 5px 8px rgb(42 31 25 / 12%));
 }
 
-:global([data-pet-companion-origin="hero-lens"][data-pet-companion-emerging="true"] > video) {
-    opacity: .12;
-    transform: scale(.98);
+.walker[data-pet-entry-phase="lens"] .dogButton {
+    pointer-events: none;
+}
+
+.walker[data-pet-entry-phase="handoff"] {
+    opacity: 1 !important;
+    transition: opacity .14s ease-out !important;
+}
+
+:global([data-pet-companion-stage="hero-lens"][data-pet-companion-emerging="true"]) {
+    overflow: visible !important;
+    isolation: isolate;
+}
+
+:global([data-pet-companion-stage="hero-lens"][data-pet-companion-emerging="true"] > [data-pet-companion-origin="hero-lens"]) {
+    z-index: 2;
+}
+
+.entryBehindLens {
+    position: absolute;
+    z-index: 1;
+    display: block;
+    width: 154px;
+    height: 154px;
+    opacity: 0;
+    transform-origin: 50% 72%;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: pet-lens-emerge-behind var(--pet-entry-duration) cubic-bezier(.38, 0, .18, 1) both;
+}
+
+.entryDogFrame {
+    position: absolute;
+    right: 9px;
+    bottom: 0;
+    display: grid;
+    width: 136px;
+    height: 128px;
+    place-items: end center;
+    opacity: 1;
+    transition: opacity .14s ease-out;
+}
+
+.entryBehindLens[data-pet-entry-handoff="true"] .entryDogFrame {
+    opacity: 0;
 }
 
 .walker[data-dragging="true"] {
@@ -174,6 +199,11 @@
     right: 46px;
     left: auto;
     border-radius: 15px 15px 4px;
+}
+
+.walker[data-pet-guide-zone="header"] .speech {
+    top: 142px;
+    bottom: auto;
 }
 
 .speechName {
@@ -560,16 +590,13 @@
     }
 
     .settingsLaunch {
-        right: 70px;
-        bottom: 17px;
-        width: 36px;
-        height: 36px;
-    }
-    .settingsLaunch[data-companion-enabled="false"] {
         right: 0;
         bottom: 78px;
         width: 31px;
         height: 38px;
+    }
+    .settingsLaunch[data-companion-enabled="false"] {
+        opacity: .86;
     }
 
     .dialogBackdrop { padding: 8px; }
@@ -603,10 +630,23 @@
         width: 96px;
         height: 84px;
     }
+    .entryBehindLens {
+        width: 120px;
+        height: 120px;
+    }
+    .entryDogFrame {
+        right: 12px;
+        width: 96px;
+        height: 84px;
+    }
     .speech {
         bottom: 88px;
         left: 10px;
         width: min(210px, calc(100vw - 24px));
+    }
+    .walker[data-pet-guide-zone="header"] .speech {
+        top: 104px;
+        bottom: auto;
     }
     .walker[data-bubble-side="left"] .speech {
         right: 20px;
@@ -634,34 +674,36 @@
         transition-duration: 1ms !important;
     }
 
-    .walker[data-pet-entry-phase="lens"] .dogButton {
-        animation: none;
-    }
+    .entryBehindLens:not([data-pet-force-motion="true"]) { animation: none; }
 }
 
-@keyframes pet-lens-peek {
+@keyframes pet-lens-emerge-behind {
     0% {
         opacity: 0;
-        transform: translate3d(0, 62px, 0) rotate(-1deg) scale(.74);
-        filter: saturate(.94) blur(.3px);
+        transform: translate3d(12px, 10px, 0) rotate(0) scale(.94);
     }
-    24% {
+    14% {
         opacity: 1;
-        transform: translate3d(0, 52px, 2px) rotate(-1deg) scale(.78);
-        filter: saturate(1) blur(0);
+        transform: translate3d(-4px, 2px, 2px) rotate(-.8deg) scale(.955);
+    }
+    26% {
+        opacity: 1;
+        transform: translate3d(-30px, -4px, 6px) rotate(-2.4deg) scale(.975);
+    }
+    40% {
+        transform: translate3d(-39px, -7px, 8px) rotate(-4deg) scale(.985);
     }
     52% {
-        transform: translate3d(0, 22px, 8px) rotate(-2.4deg) scale(.91);
+        transform: translate3d(-42px, -6px, 8px) rotate(2.4deg) scale(.99);
     }
-    68% {
-        transform: translate3d(0, 4px, 10px) rotate(2.2deg) scale(.94);
+    62% {
+        transform: translate3d(-43px, -4px, 7px) rotate(-.8deg) scale(.995);
     }
-    82% {
-        transform: translate3d(0, -2px, 10px) rotate(-.8deg) scale(1.015);
+    72% {
+        transform: translate3d(-58px, -2px, 5px) rotate(-.4deg) scale(.998);
     }
     100% {
         opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-        filter: none;
+        transform: translate3d(var(--pet-entry-travel-x), var(--pet-entry-travel-y), 0) rotate(0) scale(1);
     }
 }

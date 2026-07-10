@@ -1,4 +1,4 @@
-export type PetGuideId = "chatbot" | "color" | "try-on" | "product-actions" | "signup";
+export type PetGuideId = "chatbot" | "color" | "try-on" | "product-actions" | "signup" | "pet-lens";
 
 export type PetGuidePrompt = {
     id: PetGuideId;
@@ -8,6 +8,7 @@ export type PetGuidePrompt = {
     actionLabel?: string;
     href?: string;
     activatesTarget?: boolean;
+    placement?: "header" | "content";
 };
 
 const SESSION_KEY = "ddb.petGuide.session.v5";
@@ -39,8 +40,8 @@ type DailyState = {
     count: number;
 };
 
-const MEMBER_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "product-actions", "chatbot", "signup"];
-const GUEST_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "chatbot", "signup", "product-actions"];
+const MEMBER_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "product-actions", "pet-lens", "chatbot", "signup"];
+const GUEST_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "signup", "pet-lens", "chatbot", "product-actions"];
 const ALL_GUIDE_IDS = new Set<PetGuideId>([...MEMBER_GUIDE_ORDER, ...GUEST_GUIDE_ORDER]);
 let memorySessionCount = 0;
 let memoryLastShownAt = 0;
@@ -229,12 +230,17 @@ function targetIsHitTestVisible(target: HTMLElement, rect: DOMRect) {
 }
 
 function visibleTarget(id: PetGuideId) {
-    const targets = Array.from(document.querySelectorAll<HTMLElement>(`[data-pet-guide-target="${id}"]`));
+    const targets = Array.from(document.querySelectorAll<HTMLElement>(`[data-pet-guide-target="${id}"]`))
+        // Header onboarding is useful only while the visitor is still near the
+        // hero. When scrolled down, prefer an in-content target with the same
+        // id (for example a signup button beside try-on) instead of forcing
+        // the dog back to the fixed header.
+        .filter((target) => window.scrollY <= 160 || !target.closest("header"));
     return targets.find((target) => {
         if (target.getAttribute("aria-expanded") === "true") return false;
         if (!targetAndAncestorsAreVisible(target) || target.getClientRects().length === 0) return false;
         const rect = target.getBoundingClientRect();
-        const minimumBottom = id === "signup" ? 8 : 84;
+        const minimumBottom = id === "signup" || id === "pet-lens" ? 8 : 84;
         return rect.width >= 24
             && rect.height >= 24
             && rect.bottom > minimumBottom
@@ -249,10 +255,14 @@ export function findPetGuidePrompt({
     isGuest,
     hasPetPhoto,
     bypassBudget = false,
+    onlyId,
+    bypassRouteCooldownForId,
 }: {
     isGuest: boolean;
     hasPetPhoto: boolean;
     bypassBudget?: boolean;
+    onlyId?: PetGuideId;
+    bypassRouteCooldownForId?: PetGuideId;
 }): PetGuidePrompt | null {
     // The layer checks the global budget/gap immediately before calling this
     // selector. Keep target selection side-effect free so a second budget read
@@ -262,33 +272,40 @@ export function findPetGuidePrompt({
     const route = currentRoute();
     const now = Date.now();
 
-    const guideOrder = isGuest ? GUEST_GUIDE_ORDER : MEMBER_GUIDE_ORDER;
+    const guideOrder = onlyId ? [onlyId] : (isGuest ? GUEST_GUIDE_ORDER : MEMBER_GUIDE_ORDER);
     for (const id of guideOrder) {
-        if (!bypassBudget && history.some((entry) => (
+        if (!bypassBudget && bypassRouteCooldownForId !== id && history.some((entry) => (
             entry.route === route
             && entry.id === id
             && now - entry.shownAt < ROUTE_GUIDE_COOLDOWN_MS
         ))) continue;
         const target = visibleTarget(id);
         if (!target) continue;
+        const placement = target.closest("header") ? "header" : "content";
+        const isHeroRoute = route === "/" || route === "/main";
+        // Header onboarding belongs to the opening hero experience. Once the
+        // visitor is deep in the page, contextual product/chat guidance wins.
+        if (id === "pet-lens" && (!isHeroRoute || placement !== "header")) continue;
 
         if (id === "color") {
             return {
                 id,
                 target,
+                placement,
                 name: "색상 미리보기",
-                message: "마음에 드는 색을 골라봐. 상품 사진이 바로 바뀌어!",
+                message: "마음에 드시는 색을 골라 보세요. 상품 사진이 바로 바뀝니다!",
             };
         }
         if (id === "try-on") {
             return {
                 id,
                 target,
+                placement,
                 name: "우리 아이 착용 미리보기",
                 message: hasPetPhoto
-                    ? "우리 사진으로 직접 입혀보자. 핏과 위치를 여기서 천천히 볼 수 있어."
-                    : "강아지 사진 한 장을 올리면 여기서 직접 입혀볼 수 있어.",
-                actionLabel: hasPetPhoto ? undefined : "사진 등록 알아보기",
+                    ? "우리 아이 사진으로 직접 입혀 보세요. 핏과 위치를 여기서 천천히 확인하실 수 있어요."
+                    : "강아지 사진 한 장을 올리시면 여기서 직접 입혀 보실 수 있어요.",
+                actionLabel: hasPetPhoto ? undefined : "사진 등록 안내",
                 href: hasPetPhoto ? undefined : (isGuest ? "/auth/signup" : "/pet-lens"),
             };
         }
@@ -296,27 +313,57 @@ export function findPetGuidePrompt({
             return {
                 id,
                 target,
+                placement,
                 name: "옵션 선택",
-                message: "마음에 들면 여기서 색상과 수량부터 천천히 골라봐.",
+                message: "마음에 드시면 여기서 색상과 수량부터 천천히 골라 주세요.",
             };
         }
         if (id === "chatbot") {
             return {
                 id,
                 target,
+                placement,
                 name: "댕다방 챗봇",
-                message: "궁금한 건 여기서 뭐든 물어봐. 상품부터 생활 정보까지 같이 찾아볼게!",
-                actionLabel: "질문해 보기",
+                message: "궁금하신 점은 여기서 무엇이든 물어보세요. 상품부터 생활 정보까지 함께 찾아드릴게요!",
+                actionLabel: "질문하기",
+                activatesTarget: true,
+            };
+        }
+        if (id === "pet-lens") {
+            return {
+                id,
+                target,
+                placement,
+                name: "펫렌즈로 우리 아이 등록",
+                message: hasPetPhoto
+                    ? "위의 분홍 카메라를 누르시면 우리 아이 사진을 다시 분석하고 맞춤 추천을 받으실 수 있어요."
+                    : "위의 분홍 카메라를 누르고 강아지 사진을 올리시면 견종과 맞춤 상품을 찾아드릴게요!",
+                actionLabel: "펫렌즈 열기",
                 activatesTarget: true,
             };
         }
         if (id === "signup" && isGuest) {
+            const mobileMenuTarget = placement === "header"
+                && window.innerWidth < 1024
+                && Boolean(target.querySelector(".fa-bars"));
+            if (mobileMenuTarget) {
+                return {
+                    id,
+                    target,
+                    placement,
+                    name: "회원가입 메뉴",
+                    message: "오른쪽 위 메뉴 버튼을 누르시면 로그인과 회원가입 메뉴를 바로 찾으실 수 있어요!",
+                    actionLabel: "메뉴 열기",
+                    activatesTarget: true,
+                };
+            }
             return {
                 id,
                 target,
+                placement,
                 name: "나만의 산책 친구",
-                message: "가입하면 네 강아지 견종으로 바뀌고 사진에 맞춘 기능도 쓸 수 있어.",
-                actionLabel: "가입 내용 보기",
+                message: "가입하시면 반려견 견종으로 바뀌고 사진에 맞춘 기능도 이용하실 수 있어요.",
+                actionLabel: "가입 안내 보기",
                 href: "/auth/signup",
             };
         }

@@ -188,6 +188,7 @@ export default function Header() {
                         <button
                             type="button"
                             onClick={openPetLens}
+                            data-pet-guide-target="pet-lens"
                             className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white shadow-[0_2px_14px_-2px_rgba(192,38,211,0.5)] transition-all hover:-translate-y-px hover:shadow-[0_5px_20px_-2px_rgba(192,38,211,0.7)]"
                             aria-label="PetLens"
                             title="PetLens"
@@ -238,6 +239,7 @@ export default function Header() {
                             data-pet-guide-target={!isLoggedIn ? "signup" : undefined}
                             className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label={t("menu")}
+                            aria-expanded={mobileOpen}
                         >
                             <i className="fa-solid fa-bars" />
                         </button>

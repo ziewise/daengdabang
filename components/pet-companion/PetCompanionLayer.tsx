@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import {
     useEffect,
     useMemo,
     useRef,
     useState,
+    type CSSProperties,
     type ChangeEvent,
     type PointerEvent as ReactPointerEvent,
 } from "react";
@@ -15,6 +17,7 @@ import {
     findPetGuidePrompt,
     markPetGuideShown,
     petGuideHasBudget,
+    type PetGuideId,
     type PetGuidePrompt,
 } from "@/lib/pet-companion-guide";
 import {
@@ -57,6 +60,7 @@ type MoveEvent = CustomEvent<{
     instant?: boolean;
     manual?: boolean;
     preserveFacing?: boolean;
+    allowHeader?: boolean;
 }>;
 
 type CompanionDragState = {
@@ -71,9 +75,19 @@ type CompanionDragState = {
 };
 
 type EntryPortal = {
+    target: HTMLElement;
     left: number;
     top: number;
-    size: number;
+    travelX: number;
+    travelY: number;
+    duration: number;
+    handoff: boolean;
+};
+
+type EntryPortalStyle = CSSProperties & {
+    "--pet-entry-travel-x": string;
+    "--pet-entry-travel-y": string;
+    "--pet-entry-duration": string;
 };
 
 const MOVE_EVENT = "ddb:pet-companion-move";
@@ -158,8 +172,9 @@ export default function PetCompanionLayer({
     const [guidePrompt, setGuidePrompt] = useState<PetGuidePrompt | null>(null);
     const [saveStatus, setSaveStatus] = useState("");
     const [placementReady, setPlacementReady] = useState(false);
-    const [entryPhase, setEntryPhase] = useState<"waiting" | "lens" | "ready">("waiting");
+    const [entryPhase, setEntryPhase] = useState<"waiting" | "lens" | "handoff" | "ready">("waiting");
     const [entryPortal, setEntryPortal] = useState<EntryPortal | null>(null);
+    const entryCloneRef = useRef<HTMLSpanElement>(null);
     const walkerRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const lastFocusRef = useRef<HTMLElement | null>(null);
@@ -168,7 +183,9 @@ export default function PetCompanionLayer({
     const promptOpenRef = useRef(false);
     const guideInFlightRef = useRef(false);
     const guideRunRef = useRef(0);
+    const guidePlacementRef = useRef<PetGuidePrompt["placement"]>("content");
     const entryPlayedRef = useRef(false);
+    const entryInProgressRef = useRef(false);
     const positionRef = useRef<{ x: number; y: number } | null>(null);
     const interactionEpochRef = useRef(0);
     const dragStateRef = useRef<CompanionDragState | null>(null);
@@ -204,6 +221,7 @@ export default function PetCompanionLayer({
         promptOpenRef.current = false;
         guideInFlightRef.current = false;
         guideRunRef.current += 1;
+        guidePlacementRef.current = "content";
         interactionEpochRef.current += 1;
         setSaveStatus("");
         requestAnimationFrame(() => closeRef.current?.focus());
@@ -256,6 +274,7 @@ export default function PetCompanionLayer({
         const rememberedX = positionRef.current?.x ?? Number(walker.dataset.petX);
         const rememberedY = positionRef.current?.y ?? Number(walker.dataset.petY);
         let heroLens: HTMLElement | null = null;
+        let heroStage: HTMLElement | null = null;
         let heroLensRect: DOMRect | null = null;
         let shouldPlayLensEntry = false;
         const heroRoute = window.location.pathname === "/"
@@ -266,6 +285,9 @@ export default function PetCompanionLayer({
             heroLens = document.querySelector<HTMLElement>(
                 '[data-pet-companion-origin="hero-lens"]',
             );
+            heroStage = heroLens?.closest<HTMLElement>(
+                '[data-pet-companion-stage="hero-lens"]',
+            ) || null;
             heroLensRect = heroLens?.getBoundingClientRect() || null;
             const visible = Boolean(
                 heroLensRect
@@ -302,11 +324,14 @@ export default function PetCompanionLayer({
         let entryWaitTimer = 0;
         let entryWatchdogTimer = 0;
         let entrySettleFrame = 0;
+        let handoffFrame = 0;
         let stableLensKey = "";
         let stableLensFrames = 0;
         let entryStarted = false;
         let lensWaitExpired = false;
         let entrySequenceComplete = false;
+        let activeEntryTarget: HTMLElement | null = null;
+        let activeEntryExit: { x: number; y: number } | null = null;
         let roamTimer = 0;
         let visibilityFrame = 0;
         let visibilitySettleTimer = 0;
@@ -330,6 +355,7 @@ export default function PetCompanionLayer({
                 promptOpenRef.current = false;
                 guideInFlightRef.current = false;
                 guideRunRef.current += 1;
+                guidePlacementRef.current = "content";
                 setGuidePrompt(null);
                 setRecommendation(null);
                 setMotion("idle");
@@ -349,11 +375,14 @@ export default function PetCompanionLayer({
             x: number,
             y: number,
             nextMotion: PetCompanionMotion = "walk",
-            options: { instant?: boolean; preserveFacing?: boolean } = {},
+            options: { instant?: boolean; preserveFacing?: boolean; allowHeader?: boolean } = {},
         ) => {
             const box = liveBox();
+            const mobile = window.innerWidth <= 680;
             const nextX = clamp(x, 8, Math.max(8, window.innerWidth - box.width));
-            const yBounds = liveYBounds(box.height);
+            const yBounds = options.allowHeader
+                ? { min: mobile ? -26 : -20, max: Math.max(8, window.innerHeight - box.height) }
+                : liveYBounds(box.height);
             const nextY = clamp(y, yBounds.min, yBounds.max);
             // A new guide or scroll can retarget the dog before its previous
             // transition finishes. Measure from the painted position so the
@@ -361,7 +390,6 @@ export default function PetCompanionLayer({
             const currentRect = walker.getBoundingClientRect();
             const distance = Math.hypot(nextX - currentRect.left, nextY - currentRect.top);
             const horizontalTravel = nextX - currentRect.left;
-            const mobile = window.innerWidth <= 680;
             const directionThreshold = mobile ? 18 : 28;
             if (!options.preserveFacing && Math.abs(horizontalTravel) >= directionThreshold) {
                 setFacing(horizontalTravel < 0 ? "left" : "right");
@@ -378,9 +406,9 @@ export default function PetCompanionLayer({
 
             const pixelsPerSecond = nextMotion === "run"
                 ? (mobile ? 430 : 620)
-                : (mobile ? 86 : 148);
-            const minimumDuration = nextMotion === "run" ? 145 : 520;
-            const maximumDuration = nextMotion === "run" ? 380 : 2800;
+                : (mobile ? 80 : 136);
+            const minimumDuration = nextMotion === "run" ? 160 : 620;
+            const maximumDuration = nextMotion === "run" ? 420 : 3100;
             const duration = reducedMotion || options.instant || distance < 5
                 ? 1
                 : Math.round(clamp(distance / pixelsPerSecond * 1000, minimumDuration, maximumDuration));
@@ -394,7 +422,11 @@ export default function PetCompanionLayer({
             walker.dataset.petX = String(nextX);
             walker.dataset.petY = String(nextY);
             walker.dataset.petTravelMs = String(duration);
-            walker.style.transitionTimingFunction = "linear";
+            walker.style.transitionTimingFunction = reducedMotion || options.instant
+                ? "linear"
+                : nextMotion === "run"
+                    ? "cubic-bezier(.2, .68, .28, 1)"
+                    : "cubic-bezier(.42, 0, .22, 1)";
             walker.style.setProperty(
                 "transition-duration",
                 `${duration}ms`,
@@ -411,6 +443,19 @@ export default function PetCompanionLayer({
             return duration;
         };
 
+        const placeWalkerInstantly = (x: number, y: number) => {
+            const nextX = clamp(x, 8, Math.max(8, window.innerWidth - initialBox.width));
+            const yBounds = liveYBounds(initialBox.height);
+            const nextY = clamp(y, yBounds.min, yBounds.max);
+            position.x = nextX;
+            position.y = nextY;
+            walker.dataset.petX = String(nextX);
+            walker.dataset.petY = String(nextY);
+            positionRef.current = { x: nextX, y: nextY };
+            walker.style.setProperty("transition-duration", "0ms", "important");
+            walker.style.transform = `translate3d(${Math.round(nextX)}px, ${Math.round(nextY)}px, 0)`;
+        };
+
         const beginInitialEntry = () => {
             if (entryStarted) return;
             entryStarted = true;
@@ -425,63 +470,109 @@ export default function PetCompanionLayer({
             refreshHeroLens();
 
             const entryHeroLens = heroLens;
+            const entryHeroStage = heroStage;
             const entryLensRect = heroLensRect;
-            if (shouldPlayLensEntry && entryLensRect) {
-                position.x = clamp(
-                    entryLensRect.left + entryLensRect.width / 2 - initialBox.width / 2,
-                    12,
-                    Math.max(12, window.innerWidth - initialBox.width),
+            const entryStageRect = entryHeroStage?.getBoundingClientRect() || null;
+            const canPlayBehindLens = Boolean(
+                shouldPlayLensEntry
+                && entryHeroLens
+                && entryHeroStage
+                && entryLensRect
+                && entryStageRect
+                && entryStageRect.width > 0
+                && entryStageRect.height > 0,
+            );
+            let entryExitX = position.x;
+            let entryExitY = position.y;
+
+            if (canPlayBehindLens && entryLensRect) {
+                const startX = entryLensRect.left + entryLensRect.width / 2 - initialBox.width / 2;
+                const startY = entryLensRect.top + entryLensRect.height / 2 - initialBox.height / 2;
+                entryExitX = clamp(
+                    entryLensRect.left - initialBox.width * .96,
+                    8,
+                    Math.max(8, window.innerWidth - initialBox.width),
                 );
-                position.y = clamp(
-                    entryLensRect.top + entryLensRect.height / 2
-                        - initialBox.height / 2
-                        - initialBox.height * .28,
+                entryExitY = clamp(
+                    entryLensRect.top - initialBox.height * .05,
                     initialYBounds.min,
                     initialYBounds.max,
                 );
+                position.x = reducedMotion ? entryExitX : startX;
+                position.y = reducedMotion ? entryExitY : startY;
             } else if (!Number.isFinite(manualHoldUntil)) {
                 manualHoldUntil = 0;
             }
 
-            walker.dataset.petX = String(position.x);
-            walker.dataset.petY = String(position.y);
-            positionRef.current = { x: position.x, y: position.y };
-            walker.style.setProperty("transition-duration", "0ms", "important");
-            walker.style.transform = `translate3d(${Math.round(position.x)}px, ${Math.round(position.y)}px, 0)`;
+            placeWalkerInstantly(position.x, position.y);
             updateVisibility();
             // Reveal only after the first transform is in place. This removes
             // the browser's initial 0,0 -> destination transition on refresh.
             setPlacementReady(true);
-            if (shouldPlayLensEntry && entryHeroLens && entryLensRect) {
+            if (
+                canPlayBehindLens
+                && entryHeroStage
+                && entryLensRect
+                && entryStageRect
+                && !reducedMotion
+            ) {
                 entryPlayedRef.current = true;
+                entryInProgressRef.current = true;
+                const entryDuration = forcePreview ? 1380 : 1760;
                 // Keep autonomous roaming from stealing the staged first step
-                // while the dog is still peeking out of the hero lens.
-                manualHoldUntil = performance.now() + (forcePreview ? 2100 : 2600);
-                entryHeroLens.dataset.petCompanionEmerging = "true";
+                // while the decorative clone is still walking behind the lens.
+                manualHoldUntil = performance.now() + entryDuration + 720;
+                activeEntryTarget = entryHeroStage;
+                activeEntryExit = { x: entryExitX, y: entryExitY };
+                entryHeroStage.dataset.petCompanionEmerging = "true";
+                setFacing("left");
                 setEntryPortal({
-                    left: entryLensRect.left,
-                    top: entryLensRect.top,
-                    size: Math.min(entryLensRect.width, entryLensRect.height),
+                    target: entryHeroStage,
+                    left: position.x - entryStageRect.left,
+                    top: position.y - entryStageRect.top,
+                    travelX: entryExitX - position.x,
+                    travelY: entryExitY - position.y,
+                    duration: entryDuration,
+                    handoff: false,
                 });
                 setEntryPhase("lens");
-                setMotion("curious");
+                setMotion("walk");
                 entryTimer = window.setTimeout(() => {
-                    setEntryPhase("ready");
-                    walker.style.removeProperty("transition-duration");
-                    const box = liveBox();
-                    moveTo(
-                        entryLensRect.left - box.width * .62,
-                        entryLensRect.top - box.height * .05,
-                        "walk",
-                    );
+                    const cloneRect = entryCloneRef.current?.getBoundingClientRect();
+                    const handoffX = cloneRect?.width
+                        ? cloneRect.left
+                        : entryExitX;
+                    const handoffY = cloneRect?.height
+                        ? cloneRect.top
+                        : entryExitY;
+                    placeWalkerInstantly(handoffX, handoffY);
+                    setEntryPortal((current) => current?.target === entryHeroStage
+                        ? { ...current, handoff: true }
+                        : current);
+                    setEntryPhase("handoff");
                     portalTimer = window.setTimeout(() => {
                         setEntryPortal(null);
-                        delete entryHeroLens.dataset.petCompanionEmerging;
-                        entrySequenceComplete = true;
-                    }, 420);
-                }, forcePreview ? 980 : 1280);
+                        delete entryHeroStage.dataset.petCompanionEmerging;
+                        activeEntryTarget = null;
+                        activeEntryExit = null;
+                        setEntryPhase("ready");
+                        walker.style.removeProperty("transition-duration");
+                        handoffFrame = window.requestAnimationFrame(() => {
+                            handoffFrame = window.requestAnimationFrame(() => {
+                                handoffFrame = 0;
+                                if (!entryInProgressRef.current) return;
+                                const box = liveBox();
+                                moveTo(handoffX - box.width * .16, handoffY, "walk");
+                                entrySequenceComplete = true;
+                                entryInProgressRef.current = false;
+                            });
+                        });
+                    }, 140);
+                }, entryDuration + 34);
             } else {
+                if (canPlayBehindLens) entryPlayedRef.current = true;
                 entrySequenceComplete = true;
+                entryInProgressRef.current = false;
                 setEntryPhase("ready");
                 setEntryPortal(null);
                 walker.style.removeProperty("transition-duration");
@@ -578,7 +669,7 @@ export default function PetCompanionLayer({
         startInitialEntryWhenReady();
 
         const interruptInitialEntry = () => {
-            if (entrySequenceComplete) return;
+            if (entrySequenceComplete && !handoffFrame) return;
             if (!entryStarted) {
                 lensWaitExpired = true;
                 beginInitialEntry();
@@ -586,13 +677,24 @@ export default function PetCompanionLayer({
             entrySequenceComplete = true;
             window.clearTimeout(entryTimer);
             window.clearTimeout(portalTimer);
+            if (handoffFrame) window.cancelAnimationFrame(handoffFrame);
             entryTimer = 0;
             portalTimer = 0;
+            handoffFrame = 0;
             manualHoldUntil = 0;
+            const cloneRect = entryCloneRef.current?.getBoundingClientRect();
+            if (cloneRect?.width && cloneRect.height) {
+                placeWalkerInstantly(cloneRect.left, cloneRect.top);
+            } else if (activeEntryExit) {
+                placeWalkerInstantly(activeEntryExit.x, activeEntryExit.y);
+            }
             setEntryPortal(null);
             setEntryPhase("ready");
             walker.style.removeProperty("transition-duration");
-            if (heroLens) delete heroLens.dataset.petCompanionEmerging;
+            if (activeEntryTarget) delete activeEntryTarget.dataset.petCompanionEmerging;
+            activeEntryTarget = null;
+            activeEntryExit = null;
+            entryInProgressRef.current = false;
         };
         cancelEntryRef.current = interruptInitialEntry;
 
@@ -651,6 +753,7 @@ export default function PetCompanionLayer({
             promptOpenRef.current = false;
             guideInFlightRef.current = false;
             guideRunRef.current += 1;
+            guidePlacementRef.current = "content";
             setGuidePrompt(null);
             setRecommendation(null);
             walker.dataset.petGuideStatus = "cancelled:user-scroll";
@@ -673,7 +776,13 @@ export default function PetCompanionLayer({
             }, runDuration + 45);
         };
 
-        const onResize = () => moveTo(position.x, position.y, "idle");
+        const onResize = () => {
+            interruptInitialEntry();
+            moveTo(position.x, position.y, "idle", {
+                allowHeader: guidePlacementRef.current === "header"
+                    && (guideInFlightRef.current || promptOpenRef.current),
+            });
+        };
         const markScrollIntent = () => {
             scrollIntentUntil = performance.now() + 1200;
         };
@@ -689,6 +798,7 @@ export default function PetCompanionLayer({
             promptOpenRef.current = false;
             guideInFlightRef.current = false;
             guideRunRef.current += 1;
+            guidePlacementRef.current = "content";
             setGuidePrompt(null);
             setRecommendation(null);
             setMotion("idle");
@@ -702,6 +812,7 @@ export default function PetCompanionLayer({
             moveTo(detail.x, detail.y, detail.motion || "walk", {
                 instant: detail.instant,
                 preserveFacing: detail.preserveFacing,
+                allowHeader: detail.allowHeader,
             });
             if (typeof detail.faceX === "number") {
                 setFacing(detail.faceX < position.x ? "left" : "right");
@@ -715,7 +826,13 @@ export default function PetCompanionLayer({
         const onMotionPreferenceChange = (event: MediaQueryListEvent) => {
             if (forcePreview) return;
             reducedMotion = event.matches;
-            if (reducedMotion) moveTo(position.x, position.y, "idle");
+            if (reducedMotion) {
+                interruptInitialEntry();
+                moveTo(position.x, position.y, "idle", {
+                    allowHeader: guidePlacementRef.current === "header"
+                        && (guideInFlightRef.current || promptOpenRef.current),
+                });
+            }
         };
 
         window.addEventListener("scroll", onScroll, { passive: true });
@@ -759,7 +876,9 @@ export default function PetCompanionLayer({
             window.clearTimeout(entryWaitTimer);
             window.clearTimeout(entryWatchdogTimer);
             if (entrySettleFrame) window.cancelAnimationFrame(entrySettleFrame);
-            if (heroLens) delete heroLens.dataset.petCompanionEmerging;
+            if (handoffFrame) window.cancelAnimationFrame(handoffFrame);
+            entryInProgressRef.current = false;
+            if (activeEntryTarget) delete activeEntryTarget.dataset.petCompanionEmerging;
             window.clearTimeout(firstRoam);
             window.clearTimeout(visibilitySettleTimer);
             window.clearInterval(roamTimer);
@@ -795,9 +914,12 @@ export default function PetCompanionLayer({
         let targetRetryCount = 0;
         let activeGuideRun = 0;
         let shownGuideRun = 0;
+        let shownGuideId: PetGuideId | null = null;
+        let shownGuidePlacement: PetGuidePrompt["placement"];
+        let pendingGuideId: PetGuideId | null = null;
         const previewMode = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
-        const firstGuideAt = performance.now() + (previewMode ? 2200 : 7000);
+        const firstGuideAt = performance.now() + (previewMode ? 2200 : 3200);
         if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = "waiting";
 
         const dismissGuide = (expectedRun: number) => {
@@ -812,15 +934,49 @@ export default function PetCompanionLayer({
                 dismissTimer = window.setTimeout(() => dismissGuide(expectedRun), 3000);
                 return;
             }
+            const followHeroPetLens = shownGuideId === "signup"
+                && shownGuidePlacement === "header";
             shownGuideRun = 0;
+            shownGuideId = null;
+            shownGuidePlacement = undefined;
+            pendingGuideId = null;
             promptOpenRef.current = false;
+            guidePlacementRef.current = "content";
             setGuidePrompt(null);
             setMotion("idle");
             moveCompanionToRest(walkerRef.current);
+            window.clearTimeout(retryTimer);
+            retryTimer = window.setTimeout(
+                () => showGuide(followHeroPetLens
+                    ? { onlyId: "pet-lens", bypassRouteCooldownForId: "pet-lens" }
+                    : {}),
+                previewMode ? 1200 : 4200,
+            );
         };
 
-        const showGuide = ({ force = false }: { force?: boolean } = {}) => {
+        const showGuide = ({
+            force = false,
+            onlyId,
+            bypassRouteCooldownForId,
+        }: {
+            force?: boolean;
+            onlyId?: PetGuideId;
+            bypassRouteCooldownForId?: PetGuideId;
+        } = {}) => {
             const walker = walkerRef.current;
+            if (
+                entryInProgressRef.current
+                || walker?.dataset.petEntryPhase === "lens"
+                || walker?.dataset.petEntryPhase === "handoff"
+            ) {
+                if (walker) walker.dataset.petGuideStatus = "blocked:entry-in-progress";
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                    previewMode ? 450 : 800,
+                );
+                return;
+            }
             if (guideInFlightRef.current) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:guide-in-flight";
                 return;
@@ -836,7 +992,10 @@ export default function PetCompanionLayer({
             if (!force && !petGuideHasBudget()) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:cooldown";
                 window.clearTimeout(retryTimer);
-                retryTimer = window.setTimeout(() => showGuide(), previewMode ? 1200 : 3500);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                    previewMode ? 1200 : 3500,
+                );
                 return;
             }
             const activeElement = document.activeElement as HTMLElement | null;
@@ -853,6 +1012,25 @@ export default function PetCompanionLayer({
                 return;
             }
 
+            const onHeroRoute = window.location.pathname === "/"
+                || window.location.pathname === "/main"
+                || window.location.pathname === "/main/";
+            const headerAuthReady = Boolean(document.querySelector(
+                "header a[href^='/auth/login'], header a[href^='/mypage']",
+            ));
+            // Header auth links hydrate independently of the companion. Do not
+            // accidentally treat a guest as a member and jump straight to
+            // PetLens before the signup/menu target has rendered.
+            if (onHeroRoute && !headerAuthReady) {
+                if (walker) walker.dataset.petGuideStatus = "blocked:header-auth-pending";
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                    previewMode ? 450 : 800,
+                );
+                return;
+            }
+
             // The header's rendered auth target is the authoritative browser
             // signal while persisted store hydration is still settling.
             const hasSignupTarget = Boolean(
@@ -862,13 +1040,19 @@ export default function PetCompanionLayer({
                 isGuest: !state.user || hasSignupTarget,
                 hasPetPhoto: Boolean(state.user?.pets.some((pet) => pet.photoDataUrl)),
                 bypassBudget: force,
+                onlyId,
+                bypassRouteCooldownForId,
             });
             if (!prompt) {
+                pendingGuideId = null;
                 if (walker) walker.dataset.petGuideStatus = "blocked:no-eligible-target";
                 if (targetRetryCount < 2) {
                     targetRetryCount += 1;
                     window.clearTimeout(retryTimer);
-                    retryTimer = window.setTimeout(() => showGuide(), previewMode ? 1200 : 3500);
+                    retryTimer = window.setTimeout(
+                        () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                        previewMode ? 1200 : 3500,
+                    );
                 }
                 return;
             }
@@ -877,17 +1061,25 @@ export default function PetCompanionLayer({
             const rect = prompt.target.getBoundingClientRect();
             const targetIsRight = rect.left > window.innerWidth * .58;
             const x = targetIsRight ? rect.left - 126 : rect.right + 12;
-            const y = rect.top < 84
-                ? (window.innerWidth <= 680 ? 136 : 110)
+            const y = prompt.placement === "header"
+                ? (window.innerWidth <= 680 ? -26 : -20)
                 : rect.top + rect.height / 2 - 88;
             const revealEpoch = interactionEpochRef.current;
             const guideRun = guideRunRef.current + 1;
             guideRunRef.current = guideRun;
             activeGuideRun = guideRun;
             guideInFlightRef.current = true;
+            guidePlacementRef.current = prompt.placement;
+            pendingGuideId = prompt.id;
             if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = `moving:${prompt.id}`;
             window.dispatchEvent(new CustomEvent(MOVE_EVENT, {
-                detail: { x, y, motion: "walk", faceX: rect.left + rect.width / 2 },
+                detail: {
+                    x,
+                    y,
+                    motion: "walk",
+                    faceX: rect.left + rect.width / 2,
+                    allowHeader: prompt.placement === "header",
+                },
             }));
             const travelMs = Number(walkerRef.current?.dataset.petTravelMs || 850);
 
@@ -914,7 +1106,9 @@ export default function PetCompanionLayer({
                                         ? "target-open"
                                         : targetRect.width < 24 || targetRect.height < 24
                                             ? "target-size"
-                                            : targetRect.bottom <= (prompt.id === "signup" ? 8 : 84)
+                                            : targetRect.bottom <= (
+                                                prompt.id === "signup" || prompt.id === "pet-lens" ? 8 : 84
+                                            )
                                                 || targetRect.top >= window.innerHeight - 24
                                                 ? "target-offscreen"
                                                 : externalDialogIsOpen()
@@ -924,11 +1118,16 @@ export default function PetCompanionLayer({
                     if (walkerRef.current) {
                         walkerRef.current.dataset.petGuideStatus = `cancelled:${cancellationReason}`;
                     }
+                    pendingGuideId = null;
+                    guidePlacementRef.current = "content";
                     setMotion("idle");
                     return;
                 }
                 markPetGuideShown(prompt.id);
                 shownGuideRun = guideRun;
+                shownGuideId = prompt.id;
+                shownGuidePlacement = prompt.placement;
+                pendingGuideId = null;
                 promptOpenRef.current = true;
                 setGuidePrompt(prompt);
                 setMotion("point");
@@ -948,7 +1147,52 @@ export default function PetCompanionLayer({
             targetRetryCount = 0;
             scheduleSettledGuide(previewMode ? 650 : 1250);
         };
-        const onResize = () => scheduleSettledGuide(previewMode ? 450 : 900);
+        const onResize = () => {
+            // `promptOpenRef` is also used by product recommendations. Only
+            // reuse an id when this exact guide run still owns it; a scroll,
+            // drag, focus change, or recommendation may otherwise leave the
+            // effect-local id stale.
+            const activeShownGuideId = shownGuideRun
+                && guideRunRef.current === shownGuideRun
+                ? shownGuideId
+                : null;
+            const activePendingGuideId = activeGuideRun
+                && guideRunRef.current === activeGuideRun
+                ? pendingGuideId
+                : null;
+            const repositionGuideId = activeShownGuideId || activePendingGuideId;
+            if ((guideInFlightRef.current || promptOpenRef.current) && repositionGuideId) {
+                // Header geometry can move hundreds of pixels when a handset
+                // rotates. Close this run and resolve the exact same target from
+                // its new rect instead of leaving the pointing pose behind.
+                interactionEpochRef.current += 1;
+                guideRunRef.current += 1;
+                guideInFlightRef.current = false;
+                promptOpenRef.current = false;
+                activeGuideRun = 0;
+                shownGuideRun = 0;
+                shownGuideId = null;
+                shownGuidePlacement = undefined;
+                pendingGuideId = null;
+                guidePlacementRef.current = "content";
+                setGuidePrompt(null);
+                setMotion("idle");
+                window.clearTimeout(revealTimer);
+                window.clearTimeout(dismissTimer);
+                window.clearTimeout(retryTimer);
+                window.clearTimeout(settleTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({
+                        force: true,
+                        onlyId: repositionGuideId,
+                        bypassRouteCooldownForId: repositionGuideId,
+                    }),
+                    previewMode ? 80 : 160,
+                );
+                return;
+            }
+            scheduleSettledGuide(previewMode ? 450 : 900);
+        };
         const onManualGuideRequest = () => showGuide({ force: true });
         const targetObserver = new MutationObserver((mutations) => {
             const addedGuideTarget = mutations.some((mutation) => (
@@ -964,7 +1208,7 @@ export default function PetCompanionLayer({
         // keeping visual QA deterministic without changing production timing.
         const first = window.setTimeout(
             () => showGuide({ force: previewMode }),
-            previewMode ? 2200 : 7000,
+            previewMode ? 2200 : 3200,
         );
         const interval = window.setInterval(() => showGuide(), 35000);
         window.addEventListener("scroll", onScroll, { passive: true });
@@ -982,6 +1226,8 @@ export default function PetCompanionLayer({
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onResize);
             window.removeEventListener("ddb:pet-guide-now", onManualGuideRequest);
+            pendingGuideId = null;
+            guidePlacementRef.current = "content";
             if (activeGuideRun && guideRunRef.current === activeGuideRun) {
                 guideRunRef.current += 1;
                 guideInFlightRef.current = false;
@@ -1048,11 +1294,11 @@ export default function PetCompanionLayer({
             const category = selected.dataset.petCategory || "";
             const rect = selected.getBoundingClientRect();
             const revealEpoch = interactionEpochRef.current;
-            let reason = "내 댕픽은 이거야! 같이 구경할까?";
-            if (category === "outdoor" && pet?.activity === "high") reason = "산책 갈 때 눈여겨볼까?";
-            else if (category === "care" && pet?.coat === "long") reason = "털 관리할 때 살펴볼까?";
-            else if (category === "toy" && pet?.activity === "high") reason = "꼬리가 먼저 반응했어!";
-            else if (category === "food" && /체중|식단|알레르기/.test(concerns)) reason = "원료와 급여 기준부터 같이 보자!";
+            let reason = `${settings.activePetName}의 댕픽은 이 상품이에요. 함께 살펴보실까요?`;
+            if (category === "outdoor" && pet?.activity === "high") reason = "산책하실 때 눈여겨보시면 좋을 것 같아요.";
+            else if (category === "care" && pet?.coat === "long") reason = "털 관리하실 때 함께 살펴보세요.";
+            else if (category === "toy" && pet?.activity === "high") reason = "활동량이 많은 아이에게 잘 어울릴 것 같아요!";
+            else if (category === "food" && /체중|식단|알레르기/.test(concerns)) reason = "원료와 급여 기준부터 함께 확인해 보세요.";
 
             const currentWalker = walkerRef.current;
             const boxWidth = currentWalker?.offsetWidth || LIVE_BOX_WIDTH;
@@ -1249,6 +1495,7 @@ export default function PetCompanionLayer({
                 instant: true,
                 manual: true,
                 preserveFacing: true,
+                allowHeader: true,
             },
         }));
         window.setTimeout(() => {
@@ -1285,7 +1532,10 @@ export default function PetCompanionLayer({
         }
         const width = walker.offsetWidth || LIVE_BOX_WIDTH;
         const height = walker.offsetHeight || LIVE_BOX_HEIGHT;
-        const yBounds = liveYBounds(height);
+        const yBounds = {
+            min: window.innerWidth <= 680 ? -26 : -20,
+            max: Math.max(8, window.innerHeight - height),
+        };
         drag.x = clamp(clientX - drag.offsetX, 8, Math.max(8, window.innerWidth - width));
         drag.y = clamp(clientY - drag.offsetY, yBounds.min, yBounds.max);
         walker.style.setProperty(
@@ -1327,18 +1577,35 @@ export default function PetCompanionLayer({
             data-pet-companion-root
             data-pet-speech-enabled={settings.speechEnabled ? "true" : "false"}
         >
-            {entryPortal && (
+            {entryPortal && createPortal(
                 <span
+                    ref={entryCloneRef}
                     aria-hidden="true"
-                    className={styles.entryPortal}
+                    className={styles.entryBehindLens}
+                    data-pet-entry-clone
+                    data-pet-entry-handoff={entryPortal.handoff ? "true" : "false"}
+                    data-pet-force-motion={forceMotionPreview ? "true" : "false"}
                     style={{
                         left: `${entryPortal.left}px`,
                         top: `${entryPortal.top}px`,
-                        width: `${entryPortal.size}px`,
-                        height: `${entryPortal.size}px`,
-                    }}
+                        "--pet-entry-travel-x": `${entryPortal.travelX}px`,
+                        "--pet-entry-travel-y": `${entryPortal.travelY}px`,
+                        "--pet-entry-duration": `${entryPortal.duration}ms`,
+                    } as EntryPortalStyle}
                 >
-                </span>
+                    <span className={styles.entryDogFrame}>
+                        <PetCompanionCharacter
+                            breedId={settings.breedId}
+                            characterId={settings.characterId}
+                            toneId={settings.toneId}
+                            accessoryId={settings.accessoryId}
+                            motion="walk"
+                            facing="left"
+                            forceMotion={forceMotionPreview}
+                        />
+                    </span>
+                </span>,
+                entryPortal.target,
             )}
             {settings.enabled && !panelOpen && (
                 <div
@@ -1346,6 +1613,7 @@ export default function PetCompanionLayer({
                     className={styles.walker}
                     data-pet-motion={displayMotion}
                     data-bubble-side={bubbleSide}
+                    data-pet-guide-zone={guidePrompt?.placement || "content"}
                     data-pet-position-ready={placementReady ? "true" : "false"}
                     data-pet-entry-phase={entryPhase}
                 >

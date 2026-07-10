@@ -113,6 +113,7 @@ export default function WatermarkBadge({
         // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼(영역 자체는 클릭 통과)
         <div
             ref={wrapRef}
+            data-pet-companion-stage="hero-lens"
             aria-hidden={interactive ? undefined : true}
             className="pointer-events-none absolute inset-0 z-20"
         >

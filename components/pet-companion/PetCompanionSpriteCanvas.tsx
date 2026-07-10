@@ -108,6 +108,10 @@ export default function PetCompanionSpriteCanvas({
     const drawFrameRef = useRef<((frame: number) => void) | null>(null);
     const pausedRef = useRef(paused);
     const walkStartOffsetRef = useRef(4);
+    // The optional 8-frame atlas can fail independently of the core rig. Keep
+    // that failure across motion changes so a later short walk starts on the
+    // four-frame legacy timeline instead of carrying an 8-frame step index.
+    const walkUnavailableRef = useRef(!walkSrc);
     const startAnimationRef = useRef<(() => void) | null>(null);
     const stopAnimationRef = useRef<(() => void) | null>(null);
 
@@ -119,11 +123,13 @@ export default function PetCompanionSpriteCanvas({
             // of restarting every hop on the same leading paw.
             walkStartOffsetRef.current = walkStartOffsetRef.current === 0 ? 4 : 0;
         }
-        const timeline = motion === "walk" && !walkSrc
+        const usesDedicatedWalk = motion === "walk" && Boolean(walkSrc) && !walkUnavailableRef.current;
+        const timeline = motion === "walk" && !usesDedicatedWalk
             ? LEGACY_WALK_TIMELINE
             : MOTION_TIMELINE[motion];
-        stepRef.current = motion === "walk" && walkSrc ? walkStartOffsetRef.current : 0;
-        frameRef.current = timeline[stepRef.current].frame;
+        stepRef.current = usesDedicatedWalk ? walkStartOffsetRef.current : 0;
+        stepRef.current %= timeline.length;
+        frameRef.current = timeline[stepRef.current]?.frame ?? 0;
         lastFrameAtRef.current = 0;
         drawFrameRef.current?.(frameRef.current);
     }, [motion, walkSrc]);
@@ -142,6 +148,7 @@ export default function PetCompanionSpriteCanvas({
         let coreImage: HTMLImageElement | null = null;
         let walkImage: HTMLImageElement | null = null;
         let walkUnavailable = !walkSrc;
+        walkUnavailableRef.current = walkUnavailable;
         const forcePreview = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
         let reducedMotion = forcePreview
@@ -244,8 +251,8 @@ export default function PetCompanionSpriteCanvas({
             const timeline = motionRef.current === "walk" && walkUnavailable
                 ? LEGACY_WALK_TIMELINE
                 : MOTION_TIMELINE[motionRef.current];
-            if (stepRef.current >= timeline.length) {
-                stepRef.current %= timeline.length;
+            if (stepRef.current < 0 || stepRef.current >= timeline.length) {
+                stepRef.current = ((stepRef.current % timeline.length) + timeline.length) % timeline.length;
                 frameRef.current = timeline[stepRef.current].frame;
                 drawFrame(frameRef.current);
             }
@@ -343,6 +350,7 @@ export default function PetCompanionSpriteCanvas({
                         !== walkSpriteImage.naturalHeight / WALK_GRID_ROWS
                 ) {
                     walkUnavailable = true;
+                    walkUnavailableRef.current = true;
                     stepRef.current = 0;
                     frameRef.current = 0;
                     root.dataset.walkSpriteReady = "false";
@@ -350,6 +358,7 @@ export default function PetCompanionSpriteCanvas({
                     return;
                 }
                 walkUnavailable = false;
+                walkUnavailableRef.current = false;
                 walkImage = walkSpriteImage;
                 root.dataset.walkSpriteReady = "true";
                 drawFrame(frameRef.current);
@@ -357,6 +366,7 @@ export default function PetCompanionSpriteCanvas({
             };
             walkSpriteImage.onerror = () => {
                 walkUnavailable = true;
+                walkUnavailableRef.current = true;
                 stepRef.current = 0;
                 frameRef.current = 0;
                 root.dataset.walkSpriteReady = "false";
