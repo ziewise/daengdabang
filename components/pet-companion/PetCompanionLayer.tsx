@@ -32,6 +32,7 @@ import {
     defaultCompanionSettings,
     withCompanionSettings,
     writeLocalCompanionSettings,
+    type CompanionCharacterId,
     type CompanionMotionId,
     type CompanionToneId,
     type PetCompanionSettings,
@@ -41,6 +42,9 @@ import styles from "./PetCompanionLayer.module.css";
 
 type Props = {
     settings: PetCompanionSettings;
+    /** Guest-home visual only; never persisted into a member or panel profile. */
+    visualBreedId?: string;
+    visualCharacterId?: CompanionCharacterId;
     panelOpen: boolean;
     onPanelOpenChange: (open: boolean) => void;
     onSettingsChange: (settings: PetCompanionSettings) => void;
@@ -159,6 +163,8 @@ function externalDialogIsOpen() {
 
 export default function PetCompanionLayer({
     settings,
+    visualBreedId,
+    visualCharacterId,
     panelOpen,
     onPanelOpenChange,
     onSettingsChange,
@@ -194,6 +200,8 @@ export default function PetCompanionLayer({
     const suppressClickRef = useRef(false);
     const selectedBreedId = useMemo(() => resolvePetBreedId(draft.breedId), [draft.breedId]);
     const selectedBreed = useMemo(() => getPetBreedVisual(selectedBreedId), [selectedBreedId]);
+    const displayBreedId = visualBreedId || settings.breedId;
+    const displayCharacterId = visualCharacterId || settings.characterId;
     const forceMotionPreview = process.env.NODE_ENV !== "production"
         && typeof window !== "undefined"
         && new URLSearchParams(window.location.search).get("petPreview") === "1";
@@ -1133,7 +1141,13 @@ export default function PetCompanionLayer({
                 setMotion("point");
                 if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = `shown:${prompt.id}`;
                 window.clearTimeout(dismissTimer);
-                dismissTimer = window.setTimeout(() => dismissGuide(guideRun), 8200);
+                const desktopSignupGuide = prompt.id === "signup"
+                    && prompt.placement === "header"
+                    && window.innerWidth >= 1024;
+                dismissTimer = window.setTimeout(
+                    () => dismissGuide(guideRun),
+                    desktopSignupGuide ? 12_000 : 8200,
+                );
             }, travelMs + 80);
         };
 
@@ -1595,8 +1609,8 @@ export default function PetCompanionLayer({
                 >
                     <span className={styles.entryDogFrame}>
                         <PetCompanionCharacter
-                            breedId={settings.breedId}
-                            characterId={settings.characterId}
+                            breedId={displayBreedId}
+                            characterId={displayCharacterId}
                             toneId={settings.toneId}
                             accessoryId={settings.accessoryId}
                             motion="walk"
@@ -1675,8 +1689,8 @@ export default function PetCompanionLayer({
                         title="드래그해서 옮기고, 클릭하면 잠시 쉬어요"
                     >
                         <PetCompanionCharacter
-                            breedId={settings.breedId}
-                            characterId={settings.characterId}
+                            breedId={displayBreedId}
+                            characterId={displayCharacterId}
                             toneId={settings.toneId}
                             accessoryId={settings.accessoryId}
                             motion={displayMotion}

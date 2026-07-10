@@ -1,5 +1,10 @@
 import type { PetProfile, User } from "@/lib/store";
-import { isPetBreedId } from "@/lib/pet-companion-breeds";
+import {
+    getPetBreedVisual,
+    isPetBreedId,
+    resolvePetBreedId,
+    type PetBreedFamily,
+} from "@/lib/pet-companion-breeds";
 
 export type CompanionCharacterId = "poodle" | "retriever" | "corgi" | "bulldog";
 export type CompanionToneId = "cream" | "apricot" | "caramel" | "charcoal";
@@ -38,6 +43,18 @@ const HERO_CHARACTER_IDS: Record<PetCompanionHeroBreedKey, CompanionCharacterId>
     poodle: "poodle",
     englishbulldog: "bulldog",
     welshcorgi: "corgi",
+};
+
+const HERO_FAMILY_CHARACTER_IDS: Partial<Record<PetBreedFamily, CompanionCharacterId>> = {
+    poodle: "poodle",
+    corgi: "corgi",
+    bully: "bulldog",
+    retriever: "retriever",
+};
+
+export type PetCompanionHeroVisual = {
+    breedId: string;
+    characterId: CompanionCharacterId;
 };
 
 const sessionBreedFallback = new Map<PetCompanionHeroBreedKey, string>();
@@ -86,6 +103,36 @@ function normalizeHeroBreedKey(value: string | null | undefined): PetCompanionHe
     return normalized && Object.prototype.hasOwnProperty.call(HERO_BREED_CANDIDATES, normalized)
         ? normalized as PetCompanionHeroBreedKey
         : null;
+}
+
+/**
+ * Resolves the breed rendered in a hero video to the companion's visual rig.
+ * This reads the current hero attribute directly (no session fallback), so a
+ * weather/season scene swap cannot leave the previous hero's pet on screen.
+ * Known video aliases retain their curated canonical representatives; future
+ * manifest breeds fall back to the 120-breed catalog when an alias exists.
+ */
+export function resolveHeroCompanionVisual(
+    heroBreedKey: string | null | undefined,
+): PetCompanionHeroVisual | null {
+    const normalizedKey = normalizeHeroBreedKey(heroBreedKey);
+    if (normalizedKey) {
+        const breedId = HERO_BREED_CANDIDATES[normalizedKey].find(isPetBreedId);
+        if (breedId) {
+            return {
+                breedId,
+                characterId: HERO_CHARACTER_IDS[normalizedKey],
+            };
+        }
+    }
+
+    const breedId = resolvePetBreedId(heroBreedKey || "", "");
+    if (!breedId || !isPetBreedId(breedId)) return null;
+    const visual = getPetBreedVisual(breedId);
+    return {
+        breedId,
+        characterId: HERO_FAMILY_CHARACTER_IDS[visual.family] || "poodle",
+    };
 }
 
 function readSessionBreedSelections(): Record<string, unknown> {

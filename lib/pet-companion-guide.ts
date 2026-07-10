@@ -11,11 +11,14 @@ export type PetGuidePrompt = {
     placement?: "header" | "content";
 };
 
-const SESSION_KEY = "ddb.petGuide.session.v5";
-const DAILY_KEY = "ddb.petGuide.daily.v5";
+// v6 starts a fresh onboarding history after the desktop guest signup-first
+// flow was introduced. Old v5 records could otherwise suppress the new
+// first-visit message for up to fifteen minutes.
+const SESSION_KEY = "ddb.petGuide.session.v6";
+const DAILY_KEY = "ddb.petGuide.daily.v6";
 
 // Guidance should stay useful throughout a shopping session without becoming a
-// repetitive pop-up. The v5 state replaces the old three-prompt hard stop with
+// repetitive pop-up. The v6 state replaces the old three-prompt hard stop with
 // a short global gap plus a route-and-target cooldown.
 const SESSION_LIMIT = 12;
 const DAILY_LIMIT = 24;
@@ -42,6 +45,7 @@ type DailyState = {
 
 const MEMBER_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "product-actions", "pet-lens", "chatbot", "signup"];
 const GUEST_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "signup", "pet-lens", "chatbot", "product-actions"];
+const HERO_GUEST_GUIDE_ORDER: PetGuideId[] = ["signup", "pet-lens", "color", "try-on", "chatbot", "product-actions"];
 const ALL_GUIDE_IDS = new Set<PetGuideId>([...MEMBER_GUIDE_ORDER, ...GUEST_GUIDE_ORDER]);
 let memorySessionCount = 0;
 let memoryLastShownAt = 0;
@@ -272,7 +276,15 @@ export function findPetGuidePrompt({
     const route = currentRoute();
     const now = Date.now();
 
-    const guideOrder = onlyId ? [onlyId] : (isGuest ? GUEST_GUIDE_ORDER : MEMBER_GUIDE_ORDER);
+    const isHeroRoute = route === "/" || route === "/main";
+    // On the opening hero, a guest should always hear the membership path
+    // before PetLens or contextual shopping hints. Other routes retain their
+    // existing contextual order.
+    const guideOrder: readonly PetGuideId[] = onlyId
+        ? [onlyId]
+        : isGuest && isHeroRoute
+            ? HERO_GUEST_GUIDE_ORDER
+            : (isGuest ? GUEST_GUIDE_ORDER : MEMBER_GUIDE_ORDER);
     for (const id of guideOrder) {
         if (!bypassBudget && bypassRouteCooldownForId !== id && history.some((entry) => (
             entry.route === route
@@ -282,7 +294,6 @@ export function findPetGuidePrompt({
         const target = visibleTarget(id);
         if (!target) continue;
         const placement = target.closest("header") ? "header" : "content";
-        const isHeroRoute = route === "/" || route === "/main";
         // Header onboarding belongs to the opening hero experience. Once the
         // visitor is deep in the page, contextual product/chat guidance wins.
         if (id === "pet-lens" && (!isHeroRoute || placement !== "header")) continue;
@@ -361,8 +372,8 @@ export function findPetGuidePrompt({
                 id,
                 target,
                 placement,
-                name: "나만의 산책 친구",
-                message: "가입하시면 반려견 견종으로 바뀌고 사진에 맞춘 기능도 이용하실 수 있어요.",
+                name: "회원가입하고 우리 아이 등록",
+                message: "오른쪽 로그인 버튼을 누른 뒤 회원가입하시면, 우리 아이 견종에 맞춘 캐릭터와 맞춤 상품을 이용하실 수 있어요.",
                 actionLabel: "가입 안내 보기",
                 href: "/auth/signup",
             };
