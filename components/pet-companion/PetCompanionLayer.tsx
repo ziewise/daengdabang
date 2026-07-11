@@ -383,19 +383,26 @@ export default function PetCompanionLayer({
             x: number,
             y: number,
             nextMotion: PetCompanionMotion = "walk",
-            options: { instant?: boolean; preserveFacing?: boolean; allowHeader?: boolean } = {},
+            options: {
+                instant?: boolean;
+                preserveFacing?: boolean;
+                allowHeader?: boolean;
+                relativeToPainted?: boolean;
+            } = {},
         ) => {
             const box = liveBox();
             const mobile = window.innerWidth <= 680;
-            const nextX = clamp(x, 8, Math.max(8, window.innerWidth - box.width));
-            const yBounds = options.allowHeader
-                ? { min: mobile ? -26 : -20, max: Math.max(8, window.innerHeight - box.height) }
-                : liveYBounds(box.height);
-            const nextY = clamp(y, yBounds.min, yBounds.max);
             // A new guide or scroll can retarget the dog before its previous
             // transition finishes. Measure from the painted position so the
             // paws keep the same world speed instead of inheriting stale goals.
             const currentRect = walker.getBoundingClientRect();
+            const requestedX = options.relativeToPainted ? currentRect.left + x : x;
+            const requestedY = options.relativeToPainted ? currentRect.top + y : y;
+            const nextX = clamp(requestedX, 8, Math.max(8, window.innerWidth - box.width));
+            const yBounds = options.allowHeader
+                ? { min: mobile ? -26 : -20, max: Math.max(8, window.innerHeight - box.height) }
+                : liveYBounds(box.height);
+            const nextY = clamp(requestedY, yBounds.min, yBounds.max);
             const distance = Math.hypot(nextX - currentRect.left, nextY - currentRect.top);
             const horizontalTravel = nextX - currentRect.left;
             const directionThreshold = mobile ? 18 : 28;
@@ -434,7 +441,7 @@ export default function PetCompanionLayer({
                 ? "linear"
                 : nextMotion === "run"
                     ? "cubic-bezier(.2, .68, .28, 1)"
-                    : "cubic-bezier(.42, 0, .22, 1)";
+                    : "cubic-bezier(.3, 0, .7, 1)";
             walker.style.setProperty(
                 "transition-duration",
                 `${duration}ms`,
@@ -773,10 +780,10 @@ export default function PetCompanionLayer({
             }
             const travel = clamp(Math.abs(delta) * .72, 24, 150);
             const runDuration = moveTo(
-                position.x,
-                position.y + (delta > 0 ? travel : -travel),
+                0,
+                delta > 0 ? travel : -travel,
                 "run",
-                { preserveFacing: true },
+                { preserveFacing: true, relativeToPainted: true },
             );
             window.clearTimeout(stopTimer);
             stopTimer = window.setTimeout(() => {

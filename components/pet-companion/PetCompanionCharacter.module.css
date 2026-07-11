@@ -88,6 +88,12 @@
     will-change: transform;
 }
 
+.character[data-motion="idle"] .spriteStack[data-sprite-ready="true"],
+.character[data-motion="walk"] .spriteStack[data-sprite-ready="true"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"] {
+    transition: transform 48ms cubic-bezier(.3, 0, .7, 1);
+}
+
 .spriteCanvas {
     position: absolute;
     z-index: 1;
@@ -566,6 +572,7 @@
 @media (prefers-reduced-motion: reduce) {
     .character:not([data-force-motion="true"]) .spriteMotion,
     .character:not([data-force-motion="true"]) .spriteMirror,
+    .character:not([data-force-motion="true"]) .spriteStack,
     .character:not([data-force-motion="true"]) .groundShadow,
     .character:not([data-force-motion="true"]) .recommendFx,
     .character:not([data-force-motion="true"]) .sparkle {
