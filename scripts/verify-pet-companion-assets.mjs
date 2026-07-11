@@ -107,7 +107,12 @@ if (!existsSync(breedAssetDirectory)) {
 
 const expectedCoreFiles = breedIds.map((breedId) => `${breedId}-core.webp`).sort();
 const expectedPosterFiles = breedIds.map((breedId) => `${breedId}-poster.webp`).sort();
-const expectedBreedFiles = [...expectedCoreFiles, ...expectedPosterFiles].sort();
+const expectedVerticalFiles = breedIds.map((breedId) => `${breedId}-vertical.webp`).sort();
+const expectedBreedFiles = [
+    ...expectedCoreFiles,
+    ...expectedPosterFiles,
+    ...expectedVerticalFiles,
+].sort();
 const actualBreedFiles = readdirSync(breedAssetDirectory)
     .filter((fileName) => fileName.endsWith(".webp"))
     .sort();
@@ -115,7 +120,7 @@ const missingBreedFiles = expectedBreedFiles.filter((fileName) => !actualBreedFi
 const unexpectedBreedFiles = actualBreedFiles.filter((fileName) => !expectedBreedFiles.includes(fileName));
 if (missingBreedFiles.length || unexpectedBreedFiles.length) {
     throw new Error([
-        `Breed-specific asset coverage is incomplete (${actualBreedFiles.length}/240).`,
+        `Breed-specific asset coverage is incomplete (${actualBreedFiles.length}/360).`,
         missingBreedFiles.length ? `Missing: ${missingBreedFiles.join(", ")}` : "",
         unexpectedBreedFiles.length ? `Unexpected: ${unexpectedBreedFiles.join(", ")}` : "",
     ].filter(Boolean).join(" "));
@@ -128,14 +133,22 @@ if (!existsSync(manifestPath)) {
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 if (
     manifest.version !== "cute-v4-breeds"
-    || manifest.cacheVersion !== "20260712-1"
+    || manifest.cacheVersion !== "20260712-2"
     || manifest.assetCount !== 120
-    || manifest.frameCount !== 1_920
+    || manifest.frameCount !== 3_840
     || manifest.layout?.columns !== 4
     || manifest.layout?.rows !== 4
     || manifest.layout?.cell?.[0] !== 256
     || manifest.layout?.cell?.[1] !== 256
     || JSON.stringify(manifest.layout?.motions) !== JSON.stringify(["idle", "walk", "run", "sniff"])
+    || manifest.verticalLayout?.columns !== 4
+    || manifest.verticalLayout?.rows !== 4
+    || manifest.verticalLayout?.cell?.[0] !== 256
+    || manifest.verticalLayout?.cell?.[1] !== 256
+    || JSON.stringify(manifest.verticalLayout?.upRows) !== JSON.stringify([0, 2])
+    || JSON.stringify(manifest.verticalLayout?.downRows) !== JSON.stringify([1, 3])
+    || manifest.verticalLayout?.framesPerDirection !== 8
+    || JSON.stringify(manifest.verticalLayout?.motions) !== JSON.stringify(["run-up", "run-down"])
     || manifest.style?.rendering !== "premium-plush-chibi"
     || manifest.style?.proportions !== "oversized-head-short-compact-body"
     || JSON.stringify(manifest.style?.targetIdleHeadHeightRatio) !== JSON.stringify([0.4, 0.45])
@@ -151,6 +164,7 @@ if (manifestByFile.size !== 120) {
 
 const seenBreedHashes = new Map();
 const seenPosterHashes = new Map();
+const seenVerticalHashes = new Map();
 for (const fileName of expectedCoreFiles) {
     const asset = path.join(breedAssetDirectory, fileName);
     const bytes = assertWebp(asset, { expectedSize: [1024, 1024], requireAlpha: true });
@@ -202,8 +216,43 @@ for (const fileName of expectedCoreFiles) {
         throw new Error(`Breed posters must be unique: ${duplicatePoster} and ${posterFileName}`);
     }
     seenPosterHashes.set(posterDigest, posterFileName);
+
+    const verticalFileName = `${expectedBreedId}-vertical.webp`;
+    const verticalPath = path.join(breedAssetDirectory, verticalFileName);
+    const verticalBytes = assertWebp(verticalPath, {
+        expectedSize: [1024, 1024],
+        requireAlpha: true,
+    });
+    if (verticalBytes.length < 20_000 || verticalBytes.length > 650_000) {
+        throw new Error(
+            `Vertical breed atlas size is outside the quality budget (${verticalBytes.length} bytes): ${path.relative(root, verticalPath)}`,
+        );
+    }
+    const verticalDigest = createHash("sha256").update(verticalBytes).digest("hex");
+    if (
+        manifestAsset.vertical !== verticalFileName
+        || manifestAsset.verticalFrames !== 16
+        || manifestAsset.verticalBytes !== verticalBytes.length
+        || manifestAsset.verticalSha256 !== verticalDigest
+    ) {
+        throw new Error(`Vertical breed atlas does not match manifest: ${verticalFileName}`);
+    }
+    const duplicateVertical = seenVerticalHashes.get(verticalDigest);
+    if (duplicateVertical) {
+        throw new Error(`Vertical breed atlases must be unique: ${duplicateVertical} and ${verticalFileName}`);
+    }
+    seenVerticalHashes.set(verticalDigest, verticalFileName);
+}
+
+for (const [digest, verticalFileName] of seenVerticalHashes) {
+    const coreFileName = seenBreedHashes.get(digest);
+    if (coreFileName) {
+        throw new Error(
+            `Vertical atlas must not reuse a side-profile core atlas: ${verticalFileName} and ${coreFileName}`,
+        );
+    }
 }
 
 console.log(
-    "Pet companion coverage verified: 120 breed core atlases, 120 independent posters (1,920 frames), 14 legacy source rigs, 296 WebP assets.",
+    "Pet companion coverage verified: 120 breed core atlases, 120 vertical atlases, 120 independent posters (3,840 frames), 14 legacy source rigs, 416 WebP assets.",
 );

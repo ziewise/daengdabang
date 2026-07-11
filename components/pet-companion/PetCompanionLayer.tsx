@@ -37,7 +37,10 @@ import {
     type CompanionToneId,
     type PetCompanionSettings,
 } from "@/lib/pet-companion";
-import PetCompanionCharacter, { type PetCompanionMotion } from "./PetCompanionCharacter";
+import PetCompanionCharacter, {
+    type PetCompanionMotion,
+    type PetCompanionTravelDirection,
+} from "./PetCompanionCharacter";
 import styles from "./PetCompanionLayer.module.css";
 
 type Props = {
@@ -173,6 +176,7 @@ export default function PetCompanionLayer({
     const [draft, setDraft] = useState(settings);
     const [motion, setMotion] = useState<PetCompanionMotion>("idle");
     const [facing, setFacing] = useState<"left" | "right">("right");
+    const [travelDirection, setTravelDirection] = useState<PetCompanionTravelDirection>("side");
     const [bubbleSide, setBubbleSide] = useState<"left" | "right">("right");
     const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
     const [guidePrompt, setGuidePrompt] = useState<PetGuidePrompt | null>(null);
@@ -226,6 +230,7 @@ export default function PetCompanionLayer({
         setGuidePrompt(null);
         setRecommendation(null);
         setMotion("idle");
+        setTravelDirection("side");
         promptOpenRef.current = false;
         guideInFlightRef.current = false;
         guideRunRef.current += 1;
@@ -273,6 +278,8 @@ export default function PetCompanionLayer({
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
         let reducedMotion = forcePreview ? false : motionQuery.matches;
         walker.dataset.petForceMotion = forcePreview ? "true" : "false";
+        walker.dataset.petReducedMotion = reducedMotion ? "true" : "false";
+        walker.dataset.petMotionSource = "idle";
         const liveBox = () => ({
             width: walker.offsetWidth || LIVE_BOX_WIDTH,
             height: walker.offsetHeight || LIVE_BOX_HEIGHT,
@@ -388,6 +395,8 @@ export default function PetCompanionLayer({
                 preserveFacing?: boolean;
                 allowHeader?: boolean;
                 relativeToPainted?: boolean;
+                travelDirection?: PetCompanionTravelDirection;
+                motionSource?: "entry" | "guide" | "move" | "roam" | "scroll";
             } = {},
         ) => {
             const box = liveBox();
@@ -430,7 +439,20 @@ export default function PetCompanionLayer({
 
             window.clearTimeout(arrivalTimer);
             window.clearTimeout(actionTimer);
+            window.clearTimeout(stopTimer);
+            const nextTravelDirection = reducedMotion
+                || distance < 5
+                || nextMotion !== "run"
+                ? "side"
+                : options.travelDirection || "side";
             setMotion(reducedMotion || distance < 5 ? "idle" : nextMotion);
+            setTravelDirection(nextTravelDirection);
+            walker.dataset.petScrollDirection = nextTravelDirection === "side"
+                ? "none"
+                : nextTravelDirection;
+            walker.dataset.petMotionSource = reducedMotion || distance < 5
+                ? "idle"
+                : options.motionSource || "move";
             position.x = nextX;
             position.y = nextY;
             positionRef.current = { x: nextX, y: nextY };
@@ -452,6 +474,9 @@ export default function PetCompanionLayer({
                 arrivalTimer = window.setTimeout(() => {
                     if (walker.dataset.dragging === "true") return;
                     setMotion("idle");
+                    setTravelDirection("side");
+                    walker.dataset.petScrollDirection = "none";
+                    walker.dataset.petMotionSource = "idle";
                     walker.dataset.petMotionStatus = "arrived";
                 }, duration + 34);
             }
@@ -467,6 +492,9 @@ export default function PetCompanionLayer({
             walker.dataset.petX = String(nextX);
             walker.dataset.petY = String(nextY);
             positionRef.current = { x: nextX, y: nextY };
+            setTravelDirection("side");
+            walker.dataset.petScrollDirection = "none";
+            walker.dataset.petMotionSource = "entry";
             walker.style.setProperty("transition-duration", "0ms", "important");
             walker.style.transform = `translate3d(${Math.round(nextX)}px, ${Math.round(nextY)}px, 0)`;
         };
@@ -732,10 +760,14 @@ export default function PetCompanionLayer({
                     ? (roamStep % 6 === 0 ? "sniff" : "curious")
                     : (Math.random() < .5 ? "sniff" : "curious");
                 setMotion(nextAction);
+                setTravelDirection("side");
+                walker.dataset.petScrollDirection = "none";
+                walker.dataset.petMotionSource = "roam";
                 walker.dataset.petMotionStatus = `action:${nextAction}`;
                 window.clearTimeout(actionTimer);
                 actionTimer = window.setTimeout(() => {
                     setMotion("idle");
+                    walker.dataset.petMotionSource = "idle";
                     walker.dataset.petMotionStatus = "resting";
                 }, 1450);
                 return;
@@ -751,7 +783,7 @@ export default function PetCompanionLayer({
                 lowerTop,
                 Math.max(lowerTop, window.innerHeight - box.height),
             );
-            moveTo(x, y, "walk");
+            moveTo(x, y, "walk", { motionSource: "roam" });
         };
 
         const onScroll = () => {
@@ -776,6 +808,19 @@ export default function PetCompanionLayer({
             // they simply skip the decorative run that follows the scroll.
             if (reducedMotion) {
                 setMotion("idle");
+                setTravelDirection("side");
+                walker.dataset.petScrollDirection = "none";
+                walker.dataset.petMotionSource = "idle";
+                return;
+            }
+            if (!walker.querySelector("[data-sprite-ready='true'][data-vertical-sprite-ready='true']")) {
+                // A missing/slow core or front-rear atlas must never make the
+                // static poster/side-view fallback slide vertically. Skip this
+                // decorative step; the selected-breed atlases will serve the next.
+                setMotion("idle");
+                setTravelDirection("side");
+                walker.dataset.petScrollDirection = "none";
+                walker.dataset.petMotionSource = "vertical-loading";
                 return;
             }
             const travel = clamp(Math.abs(delta) * .72, 24, 150);
@@ -783,11 +828,19 @@ export default function PetCompanionLayer({
                 0,
                 delta > 0 ? travel : -travel,
                 "run",
-                { preserveFacing: true, relativeToPainted: true },
+                {
+                    preserveFacing: true,
+                    relativeToPainted: true,
+                    travelDirection: delta > 0 ? "down" : "up",
+                    motionSource: "scroll",
+                },
             );
             window.clearTimeout(stopTimer);
             stopTimer = window.setTimeout(() => {
                 setMotion("idle");
+                setTravelDirection("side");
+                walker.dataset.petScrollDirection = "none";
+                walker.dataset.petMotionSource = "idle";
             }, runDuration + 45);
         };
 
@@ -841,6 +894,7 @@ export default function PetCompanionLayer({
         const onMotionPreferenceChange = (event: MediaQueryListEvent) => {
             if (forcePreview) return;
             reducedMotion = event.matches;
+            walker.dataset.petReducedMotion = reducedMotion ? "true" : "false";
             if (reducedMotion) {
                 interruptInitialEntry();
                 moveTo(position.x, position.y, "idle", {
@@ -1591,6 +1645,9 @@ export default function PetCompanionLayer({
             : guidePrompt
                 ? "point"
                 : motion;
+    const displayTravelDirection = displayMotion === "run"
+        ? travelDirection
+        : "side";
 
     return (
         <div
@@ -1633,6 +1690,7 @@ export default function PetCompanionLayer({
                     ref={walkerRef}
                     className={styles.walker}
                     data-pet-motion={displayMotion}
+                    data-pet-scroll-direction={displayTravelDirection === "side" ? "none" : displayTravelDirection}
                     data-bubble-side={bubbleSide}
                     data-pet-guide-zone={guidePrompt?.placement || "content"}
                     data-pet-position-ready={placementReady ? "true" : "false"}
@@ -1702,6 +1760,7 @@ export default function PetCompanionLayer({
                             accessoryId={settings.accessoryId}
                             motion={displayMotion}
                             facing={facing}
+                            travelDirection={displayTravelDirection}
                             forceMotion={forceMotionPreview}
                         />
                         <span className={styles.nameTag}>{settings.activePetName}</span>

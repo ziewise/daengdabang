@@ -50,6 +50,23 @@
     will-change: transform;
 }
 
+.travelHeading {
+    position: absolute;
+    inset: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+    transform-origin: 50% 84%;
+    transition: transform 96ms cubic-bezier(.2, .72, .28, 1);
+    will-change: transform;
+}
+
+.character[data-motion="run"][data-travel-direction="up"] .travelHeading {
+    transform: translate3d(0, -2px, 0) scale(.97);
+}
+
+.character[data-motion="run"][data-travel-direction="down"] .travelHeading {
+    transform: translate3d(0, 2px, 0) scale(1.025);
+}
+
 /* The generated atlas already carries the breed identity. This wrapper keeps
    the catalog's restrained proportion correction aligned with every frame. */
 .breedMorph {
@@ -332,12 +349,16 @@
 }
 
 .character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="0"],
-.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="2"] {
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="2"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="4"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="6"] {
     transform: translate3d(0, calc(var(--pet-step-lift) * .55), 1px) scale3d(1.012, .986, 1);
 }
 
 .character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="1"],
-.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="3"] {
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="3"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="5"],
+.character[data-motion="run"] .spriteStack[data-sprite-ready="true"][data-pet-frame="7"] {
     transform: translate3d(0, calc(var(--pet-step-lift) * -1.65), 7px) scale3d(.99, 1.018, 1);
 }
 
@@ -349,7 +370,9 @@
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="0"]) .groundShadow,
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="4"]) .groundShadow,
 .character[data-motion="run"]:has(.spriteStack[data-pet-frame="0"]) .groundShadow,
-.character[data-motion="run"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow {
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="2"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="4"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="6"]) .groundShadow {
     opacity: .82;
     filter: blur(1.6px);
     transform: scaleX(1.02);
@@ -362,7 +385,9 @@
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="6"]) .groundShadow,
 .character[data-motion="walk"]:has(.spriteStack[data-pet-frame="7"]) .groundShadow,
 .character[data-motion="run"]:has(.spriteStack[data-pet-frame="1"]) .groundShadow,
-.character[data-motion="run"]:has(.spriteStack[data-pet-frame="3"]) .groundShadow {
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="3"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="5"]) .groundShadow,
+.character[data-motion="run"]:has(.spriteStack[data-pet-frame="7"]) .groundShadow {
     opacity: .5;
     filter: blur(2.2px);
     transform: scaleX(.8);
@@ -487,6 +512,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .character:not([data-force-motion="true"]) .spriteMotion,
+    .character:not([data-force-motion="true"]) .travelHeading,
     .character:not([data-force-motion="true"]) .spriteMirror,
     .character:not([data-force-motion="true"]) .spriteStack,
     .character:not([data-force-motion="true"]) .groundShadow,

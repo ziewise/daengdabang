@@ -7,11 +7,13 @@ import {
 } from "react";
 
 export type PetCompanionSpriteMotion = "idle" | "walk" | "run" | "sniff";
+export type PetCompanionTravelDirection = "side" | "up" | "down";
 
 type Props = {
     src: string;
-    walkSrc?: string;
+    verticalSrc?: string;
     motion: PetCompanionSpriteMotion;
+    travelDirection?: PetCompanionTravelDirection;
     fallback: ReactNode;
     className?: string;
     canvasClassName?: string;
@@ -20,8 +22,7 @@ type Props = {
 
 const GRID_COLUMNS = 4;
 const GRID_ROWS = 4;
-const WALK_GRID_COLUMNS = 8;
-const WALK_GRID_ROWS = 1;
+const VERTICAL_SEQUENCE_LENGTH = 8;
 const MAX_DEVICE_PIXEL_RATIO = 2;
 
 const MOTION_ROW: Record<PetCompanionSpriteMotion, number> = {
@@ -38,8 +39,8 @@ type MotionFrame = {
 
 /**
  * Contact frames stay on screen a little longer than passing frames. This
- * keeps a planted paw readable instead of making the four generated poses
- * flip past at one mechanical cadence.
+ * keeps a planted paw readable instead of making generated poses flip past at
+ * one mechanical cadence.
  */
 const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> = {
     idle: [
@@ -49,14 +50,10 @@ const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> 
         { frame: 3, duration: 1080 },
     ],
     walk: [
-        { frame: 0, duration: 76 },
-        { frame: 1, duration: 64 },
-        { frame: 2, duration: 60 },
-        { frame: 3, duration: 67 },
-        { frame: 4, duration: 76 },
-        { frame: 5, duration: 64 },
-        { frame: 6, duration: 60 },
-        { frame: 7, duration: 67 },
+        { frame: 0, duration: 155 },
+        { frame: 1, duration: 112 },
+        { frame: 2, duration: 155 },
+        { frame: 3, duration: 112 },
     ],
     run: [
         { frame: 0, duration: 88 },
@@ -72,13 +69,27 @@ const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> 
     ],
 };
 
-// Breed-specific core atlases carry four deliberate walk contacts in row two.
-const CORE_WALK_TIMELINE: readonly MotionFrame[] = [
-    { frame: 0, duration: 155 },
-    { frame: 1, duration: 112 },
-    { frame: 2, duration: 155 },
-    { frame: 3, duration: 112 },
+// Vertical travel alternates two four-contact rows for a smoother front/rear
+// run while keeping the proven 4x4 atlas and single-canvas rendering path.
+const VERTICAL_RUN_TIMELINE: readonly MotionFrame[] = [
+    { frame: 0, duration: 76 },
+    { frame: 1, duration: 62 },
+    { frame: 2, duration: 70 },
+    { frame: 3, duration: 64 },
+    { frame: 4, duration: 76 },
+    { frame: 5, duration: 62 },
+    { frame: 6, duration: 70 },
+    { frame: 7, duration: 64 },
 ];
+
+function motionTimeline(
+    motion: PetCompanionSpriteMotion,
+    travelDirection: PetCompanionTravelDirection,
+) {
+    return motion === "run" && travelDirection !== "side"
+        ? VERTICAL_RUN_TIMELINE
+        : MOTION_TIMELINE[motion];
+}
 
 type CanvasSize = {
     width: number;
@@ -87,14 +98,15 @@ type CanvasSize = {
 };
 
 /**
- * Plays a transparent 4x4 pet sprite sheet without causing React renders per frame.
- * The supplied fallback remains visible until the sheet has decoded and its first
- * frame has been painted, so a missing or malformed optional asset degrades cleanly.
+ * Plays transparent breed-specific atlases without causing React renders per
+ * frame. Core, vertical, and poster fallback are mutually exclusive visual
+ * sources; a vertical direction swaps source cells inside this same canvas.
  */
 export default function PetCompanionSpriteCanvas({
     src,
-    walkSrc,
+    verticalSrc,
     motion,
+    travelDirection = "side",
     fallback,
     className = "",
     canvasClassName = "",
@@ -103,37 +115,32 @@ export default function PetCompanionSpriteCanvas({
     const rootRef = useRef<HTMLSpanElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const motionRef = useRef<PetCompanionSpriteMotion>(motion);
+    const travelDirectionRef = useRef<PetCompanionTravelDirection>(travelDirection);
     const frameRef = useRef(0);
     const stepRef = useRef(0);
     const lastFrameAtRef = useRef(0);
     const drawFrameRef = useRef<((frame: number) => void) | null>(null);
     const pausedRef = useRef(paused);
-    const walkStartOffsetRef = useRef(4);
-    // The optional 8-frame atlas can fail independently of the core rig. Keep
-    // that failure across motion changes so a later short walk starts on the
-    // four-frame core timeline instead of carrying an 8-frame step index.
-    const walkUnavailableRef = useRef(!walkSrc);
     const startAnimationRef = useRef<(() => void) | null>(null);
     const stopAnimationRef = useRef<(() => void) | null>(null);
 
     useEffect(() => {
-        const enteredWalk = motion === "walk" && motionRef.current !== "walk";
+        const previousMotion = motionRef.current;
+        const previousDirection = travelDirectionRef.current;
         motionRef.current = motion;
-        if (enteredWalk) {
-            // Alternate the starting contact foot across short walks, instead
-            // of restarting every hop on the same leading paw.
-            walkStartOffsetRef.current = walkStartOffsetRef.current === 0 ? 4 : 0;
-        }
-        const usesDedicatedWalk = motion === "walk" && Boolean(walkSrc) && !walkUnavailableRef.current;
-        const timeline = motion === "walk" && !usesDedicatedWalk
-            ? CORE_WALK_TIMELINE
-            : MOTION_TIMELINE[motion];
-        stepRef.current = usesDedicatedWalk ? walkStartOffsetRef.current : 0;
+        travelDirectionRef.current = travelDirection;
+
+        const timeline = motionTimeline(motion, travelDirection);
+        const preserveVerticalPhase = previousMotion === "run"
+            && motion === "run"
+            && previousDirection !== "side"
+            && travelDirection !== "side";
+        if (!preserveVerticalPhase) stepRef.current = 0;
         stepRef.current %= timeline.length;
         frameRef.current = timeline[stepRef.current]?.frame ?? 0;
         lastFrameAtRef.current = 0;
         drawFrameRef.current?.(frameRef.current);
-    }, [motion, walkSrc]);
+    }, [motion, travelDirection]);
 
     useEffect(() => {
         const root = rootRef.current;
@@ -144,12 +151,11 @@ export default function PetCompanionSpriteCanvas({
         if (!context) return;
 
         let cancelled = false;
-        let prepared = false;
+        let corePrepared = false;
+        let verticalPrepared = false;
         let animationFrame = 0;
         let coreImage: HTMLImageElement | null = null;
-        let walkImage: HTMLImageElement | null = null;
-        let walkUnavailable = !walkSrc;
-        walkUnavailableRef.current = walkUnavailable;
+        let verticalImage: HTMLImageElement | null = null;
         const forcePreview = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
         let reducedMotion = forcePreview
@@ -158,9 +164,10 @@ export default function PetCompanionSpriteCanvas({
         let canvasSize: CanvasSize = { width: 0, height: 0, dpr: 1 };
 
         root.dataset.spriteReady = "false";
-        root.dataset.walkSpriteReady = "false";
+        root.dataset.verticalSpriteReady = "false";
         canvas.dataset.petSpriteStatus = "loading";
         canvas.dataset.petAtlas = "core";
+        canvas.dataset.petMotionRow = "idle";
         canvas.dataset.petFrame = "0";
 
         const stopAnimation = () => {
@@ -170,25 +177,36 @@ export default function PetCompanionSpriteCanvas({
         };
 
         const drawFrame = (frame: number) => {
-            if (!coreImage || !coreImage.naturalWidth || !canvasSize.width || !canvasSize.height) return false;
+            if (!coreImage || !coreImage.naturalWidth || !canvasSize.width || !canvasSize.height) {
+                return false;
+            }
 
-            const useWalkAtlas = motionRef.current === "walk" && Boolean(walkImage?.naturalWidth);
-            const useCoreWalkFallback = motionRef.current === "walk" && walkUnavailable;
-            const activeImage = useWalkAtlas ? walkImage! : coreImage;
-            const columns = useWalkAtlas ? WALK_GRID_COLUMNS : GRID_COLUMNS;
-            const rows = useWalkAtlas ? WALK_GRID_ROWS : GRID_ROWS;
-            const sourceWidth = activeImage.naturalWidth / columns;
-            const sourceHeight = activeImage.naturalHeight / rows;
-            // Do not replay the legacy same-paw walk while the small dedicated
-            // atlas is decoding.  Hold a neutral idle pose for that brief gap.
-            const sourceFrame = motionRef.current === "walk" && !useWalkAtlas && !useCoreWalkFallback
-                ? 0
-                : frame % columns;
-            const sourceRow = useWalkAtlas
-                ? 0
-                : motionRef.current === "walk" && !useCoreWalkFallback
-                    ? MOTION_ROW.idle
-                    : MOTION_ROW[motionRef.current];
+            const verticalRequested = motionRef.current === "run"
+                && travelDirectionRef.current !== "side";
+            const useVerticalAtlas = verticalRequested && Boolean(verticalImage?.naturalWidth);
+            const activeImage = useVerticalAtlas ? verticalImage! : coreImage;
+            const sourceWidth = activeImage.naturalWidth / GRID_COLUMNS;
+            const sourceHeight = activeImage.naturalHeight / GRID_ROWS;
+            let sourceFrame: number;
+            let sourceRow: number;
+
+            if (useVerticalAtlas) {
+                const verticalFrame = frame % VERTICAL_SEQUENCE_LENGTH;
+                sourceFrame = verticalFrame % GRID_COLUMNS;
+                const alternateRow = Math.floor(verticalFrame / GRID_COLUMNS);
+                sourceRow = travelDirectionRef.current === "up"
+                    ? (alternateRow === 0 ? 0 : 2)
+                    : (alternateRow === 0 ? 1 : 3);
+            } else if (verticalRequested) {
+                // Avoid replaying the known-wrong side run while the selected
+                // breed's front/rear atlas finishes decoding.
+                sourceFrame = 0;
+                sourceRow = MOTION_ROW.idle;
+            } else {
+                sourceFrame = frame % GRID_COLUMNS;
+                sourceRow = MOTION_ROW[motionRef.current];
+            }
+
             const sourceX = sourceFrame * sourceWidth;
             const sourceY = sourceRow * sourceHeight;
             const scale = Math.min(
@@ -215,10 +233,22 @@ export default function PetCompanionSpriteCanvas({
                 drawWidth,
                 drawHeight,
             );
+
+            const atlasName = useVerticalAtlas
+                ? "vertical-v1"
+                : verticalRequested
+                    ? "core-hold"
+                    : "core";
+            const motionRow = useVerticalAtlas
+                ? "run-" + travelDirectionRef.current
+                : verticalRequested
+                    ? "vertical-loading"
+                    : motionRef.current;
             canvas.dataset.petFrame = String(frame);
-            canvas.dataset.petAtlas = useWalkAtlas ? "walk-v2" : "core";
+            canvas.dataset.petAtlas = atlasName;
+            canvas.dataset.petMotionRow = motionRow;
             root.dataset.petFrame = String(frame);
-            root.dataset.walkSpriteReady = walkImage ? "true" : "false";
+            root.dataset.verticalSpriteReady = verticalImage ? "true" : "false";
             canvas.dataset.petSpriteStatus = "ready";
             root.dataset.spriteReady = "true";
             return true;
@@ -249,9 +279,7 @@ export default function PetCompanionSpriteCanvas({
             animationFrame = 0;
             if (cancelled || pausedRef.current || reducedMotion || document.hidden || !coreImage) return;
 
-            const timeline = motionRef.current === "walk" && walkUnavailable
-                ? CORE_WALK_TIMELINE
-                : MOTION_TIMELINE[motionRef.current];
+            const timeline = motionTimeline(motionRef.current, travelDirectionRef.current);
             if (stepRef.current < 0 || stepRef.current >= timeline.length) {
                 stepRef.current = ((stepRef.current % timeline.length) + timeline.length) % timeline.length;
                 frameRef.current = timeline[stepRef.current].frame;
@@ -277,23 +305,25 @@ export default function PetCompanionSpriteCanvas({
         };
 
         const startAnimation = () => {
-            if (animationFrame || cancelled || pausedRef.current || reducedMotion || document.hidden || !coreImage) return;
+            if (animationFrame || cancelled || pausedRef.current || reducedMotion || document.hidden || !coreImage) {
+                return;
+            }
             animationFrame = window.requestAnimationFrame(tick);
         };
 
         startAnimationRef.current = startAnimation;
         stopAnimationRef.current = stopAnimation;
 
-        const markUnavailable = () => {
+        const markCoreUnavailable = () => {
             stopAnimation();
             root.dataset.spriteReady = "false";
             canvas.dataset.petSpriteStatus = "error";
             canvas.dataset.petFrame = "0";
         };
 
-        const prepareImage = async (nextImage: HTMLImageElement) => {
-            if (prepared) return;
-            prepared = true;
+        const prepareCoreImage = async (nextImage: HTMLImageElement) => {
+            if (corePrepared) return;
+            corePrepared = true;
             try {
                 await nextImage.decode();
             } catch {
@@ -305,8 +335,10 @@ export default function PetCompanionSpriteCanvas({
                 || !nextImage.naturalHeight
                 || nextImage.naturalWidth % GRID_COLUMNS !== 0
                 || nextImage.naturalHeight % GRID_ROWS !== 0
+                || nextImage.naturalWidth / GRID_COLUMNS
+                    !== nextImage.naturalHeight / GRID_ROWS
             ) {
-                markUnavailable();
+                markCoreUnavailable();
                 return;
             }
 
@@ -321,62 +353,53 @@ export default function PetCompanionSpriteCanvas({
 
         const spriteImage = new window.Image();
         spriteImage.decoding = "async";
-        spriteImage.onload = () => void prepareImage(spriteImage);
-        spriteImage.onerror = markUnavailable;
+        spriteImage.onload = () => void prepareCoreImage(spriteImage);
+        spriteImage.onerror = markCoreUnavailable;
         spriteImage.src = src;
         if (spriteImage.complete && spriteImage.naturalWidth) {
-            void prepareImage(spriteImage);
+            void prepareCoreImage(spriteImage);
         }
 
-        let walkSpriteImage: HTMLImageElement | null = null;
-        if (walkSrc) {
-            walkSpriteImage = new window.Image();
-            walkSpriteImage.decoding = "async";
-            walkSpriteImage.onload = async () => {
-                if (!walkSpriteImage || cancelled) return;
+        let verticalSpriteImage: HTMLImageElement | null = null;
+        if (verticalSrc) {
+            const markVerticalUnavailable = () => {
+                root.dataset.verticalSpriteReady = "false";
+                drawFrame(frameRef.current);
+            };
+            const prepareVerticalImage = async (nextImage: HTMLImageElement) => {
+                if (verticalPrepared || cancelled) return;
+                verticalPrepared = true;
                 try {
-                    await walkSpriteImage.decode();
+                    await nextImage.decode();
                 } catch {
-                    // Keep the successfully loaded image on older browsers.
+                    // Keep successfully loaded images on older browsers.
                 }
-                // A previous src effect may finish decoding after cleanup.
-                // Never let that stale continuation reset the new rig canvas.
-                if (cancelled || !walkSpriteImage) return;
+                if (cancelled) return;
                 if (
-                    !walkSpriteImage.naturalWidth
-                    || !walkSpriteImage.naturalHeight
-                    || walkSpriteImage.naturalWidth % WALK_GRID_COLUMNS !== 0
-                    || walkSpriteImage.naturalHeight % WALK_GRID_ROWS !== 0
-                    || walkSpriteImage.naturalWidth / WALK_GRID_COLUMNS
-                        !== walkSpriteImage.naturalHeight / WALK_GRID_ROWS
+                    !nextImage.naturalWidth
+                    || !nextImage.naturalHeight
+                    || nextImage.naturalWidth % GRID_COLUMNS !== 0
+                    || nextImage.naturalHeight % GRID_ROWS !== 0
+                    || nextImage.naturalWidth / GRID_COLUMNS
+                        !== nextImage.naturalHeight / GRID_ROWS
                 ) {
-                    walkUnavailable = true;
-                    walkUnavailableRef.current = true;
-                    stepRef.current = 0;
-                    frameRef.current = 0;
-                    root.dataset.walkSpriteReady = "false";
-                    drawFrame(0);
+                    markVerticalUnavailable();
                     return;
                 }
-                walkUnavailable = false;
-                walkUnavailableRef.current = false;
-                walkImage = walkSpriteImage;
-                root.dataset.walkSpriteReady = "true";
+                verticalImage = nextImage;
+                root.dataset.verticalSpriteReady = "true";
                 drawFrame(frameRef.current);
                 startAnimation();
             };
-            walkSpriteImage.onerror = () => {
-                walkUnavailable = true;
-                walkUnavailableRef.current = true;
-                stepRef.current = 0;
-                frameRef.current = 0;
-                root.dataset.walkSpriteReady = "false";
-                drawFrame(0);
-                startAnimation();
+            verticalSpriteImage = new window.Image();
+            verticalSpriteImage.decoding = "async";
+            verticalSpriteImage.onload = () => {
+                if (verticalSpriteImage) void prepareVerticalImage(verticalSpriteImage);
             };
-            walkSpriteImage.src = walkSrc;
-            if (walkSpriteImage.complete && walkSpriteImage.naturalWidth) {
-                walkSpriteImage.onload(new Event("load"));
+            verticalSpriteImage.onerror = markVerticalUnavailable;
+            verticalSpriteImage.src = verticalSrc;
+            if (verticalSpriteImage.complete && verticalSpriteImage.naturalWidth) {
+                void prepareVerticalImage(verticalSpriteImage);
             }
         }
 
@@ -411,9 +434,9 @@ export default function PetCompanionSpriteCanvas({
             stopAnimation();
             spriteImage.onload = null;
             spriteImage.onerror = null;
-            if (walkSpriteImage) {
-                walkSpriteImage.onload = null;
-                walkSpriteImage.onerror = null;
+            if (verticalSpriteImage) {
+                verticalSpriteImage.onload = null;
+                verticalSpriteImage.onerror = null;
             }
             resizeObserver.disconnect();
             window.removeEventListener("resize", resizeCanvas);
@@ -423,7 +446,7 @@ export default function PetCompanionSpriteCanvas({
             if (startAnimationRef.current === startAnimation) startAnimationRef.current = null;
             if (stopAnimationRef.current === stopAnimation) stopAnimationRef.current = null;
         };
-    }, [src, walkSrc]);
+    }, [src, verticalSrc]);
 
     useEffect(() => {
         pausedRef.current = paused;
@@ -440,7 +463,9 @@ export default function PetCompanionSpriteCanvas({
             ref={rootRef}
             className={className}
             data-sprite-ready="false"
+            data-vertical-sprite-ready="false"
             data-pet-sprite-src={src}
+            data-pet-vertical-src={verticalSrc}
         >
             {fallback}
             <canvas
@@ -448,6 +473,8 @@ export default function PetCompanionSpriteCanvas({
                 className={canvasClassName}
                 aria-hidden="true"
                 data-pet-sprite-status="loading"
+                data-pet-atlas="core"
+                data-pet-motion-row="idle"
                 data-pet-frame="0"
             />
         </span>
