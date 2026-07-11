@@ -29,6 +29,7 @@ type StoredPetCompanionSettings = Omit<PetCompanionSettings, "ownerKey">;
 export const PET_COMPANION_STORAGE_KEY = "ddb.petCompanion.v1";
 export const PET_COMPANION_OPEN_EVENT = "ddb:pet-companion-open";
 export const PET_COMPANION_GUEST_BREED_SESSION_KEY = "ddb.petCompanion.guestBreed.v1";
+export const PET_COMPANION_GUEST_HERO_VISUAL_SESSION_KEY = "ddb.petCompanion.guestHeroVisual.v1";
 const PET_COMPANION_ACTIVE_HERO_BREED_KEY = "activeHeroBreedKey";
 
 const HERO_BREED_CANDIDATES = {
@@ -59,6 +60,7 @@ export type PetCompanionHeroVisual = {
 
 const sessionBreedFallback = new Map<PetCompanionHeroBreedKey, string>();
 let sessionHeroBreedKeyFallback: PetCompanionHeroBreedKey | null = null;
+let sessionGuestHeroVisualFallback: PetCompanionHeroVisual | null = null;
 
 export const COMPANION_CHARACTERS: Array<{
     id: CompanionCharacterId;
@@ -96,6 +98,55 @@ const MOTION_IDS = new Set<CompanionMotionId>(["calm", "lively"]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizeGuestHeroCompanionVisual(value: unknown): PetCompanionHeroVisual | null {
+    if (!isRecord(value)) return null;
+    const { breedId, characterId } = value;
+    if (typeof breedId !== "string" || !isPetBreedId(breedId)) return null;
+    if (
+        typeof characterId !== "string"
+        || !CHARACTER_IDS.has(characterId as CompanionCharacterId)
+    ) return null;
+    return {
+        breedId,
+        characterId: characterId as CompanionCharacterId,
+    };
+}
+
+export function readGuestHeroCompanionVisual(): PetCompanionHeroVisual | null {
+    if (sessionGuestHeroVisualFallback) return sessionGuestHeroVisualFallback;
+    if (typeof window === "undefined") return null;
+    try {
+        const visual = normalizeGuestHeroCompanionVisual(JSON.parse(
+            window.sessionStorage.getItem(PET_COMPANION_GUEST_HERO_VISUAL_SESSION_KEY) || "null",
+        ));
+        if (visual) sessionGuestHeroVisualFallback = visual;
+        return visual;
+    } catch {
+        return null;
+    }
+}
+
+export function writeGuestHeroCompanionVisual(visual: PetCompanionHeroVisual) {
+    const normalized = normalizeGuestHeroCompanionVisual(visual);
+    if (!normalized) return false;
+    if (
+        sessionGuestHeroVisualFallback?.breedId === normalized.breedId
+        && sessionGuestHeroVisualFallback.characterId === normalized.characterId
+    ) return true;
+    sessionGuestHeroVisualFallback = normalized;
+    if (typeof window === "undefined") return false;
+    try {
+        window.sessionStorage.setItem(
+            PET_COMPANION_GUEST_HERO_VISUAL_SESSION_KEY,
+            JSON.stringify(normalized),
+        );
+        return true;
+    } catch {
+        // The module cache still carries the visual during client-side navigation.
+        return false;
+    }
 }
 
 function normalizeHeroBreedKey(value: string | null | undefined): PetCompanionHeroBreedKey | null {

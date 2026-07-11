@@ -2,13 +2,15 @@
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useStore } from "@/lib/store";
 import {
     PET_COMPANION_OPEN_EVENT,
     defaultCompanionSettings,
+    readGuestHeroCompanionVisual,
     resolveCompanionSettings,
     resolveHeroCompanionVisual,
+    writeGuestHeroCompanionVisual,
     writeLocalCompanionSettings,
     type PetCompanionHeroVisual,
     type PetCompanionSettings,
@@ -29,14 +31,30 @@ export default function PetCompanionGate() {
     const [settings, setSettings] = useState<PetCompanionSettings | null>(null);
     const [panelOpen, setPanelOpen] = useState(false);
     const [heroVisual, setHeroVisual] = useState<PetCompanionHeroVisual | null>(null);
+    const [sessionHeroVisual, setSessionHeroVisual] = useState<PetCompanionHeroVisual | null>(null);
+    const [guestSessionVisualChecked, setGuestSessionVisualChecked] = useState(false);
     const [guestInteracted, setGuestInteracted] = useState(false);
     const panelOpenRef = useRef(false);
     const heroActive = isHeroRoute(pathname);
-    const guestHeroActive = !state.user && heroActive && Boolean(heroVisual);
+    const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
+    const heroVisualScopeRef = useRef<string | null>(null);
+    const guestVisual = !state.user
+        ? (heroActive ? heroVisual : sessionHeroVisual)
+        : null;
+    const guestVisualActive = Boolean(guestVisual);
     // Never paint a saved/default guest model for a frame before the actual
-    // hero video has published its breed. The tab remains available while the
-    // scene resolves, but the walker waits for the matching visual.
-    const waitingForGuestHeroVisual = hydrated && !state.user && heroActive && !heroVisual;
+    // hero video or the current tab's carried visual has been resolved.
+    const waitingForGuestVisual = hydrated && !state.user && (
+        heroActive
+            ? !heroVisual
+            : !sessionHeroVisual && !guestSessionVisualChecked
+    );
+
+    useLayoutEffect(() => {
+        if (heroVisualScopeRef.current === heroVisualScope) return;
+        heroVisualScopeRef.current = heroVisualScope;
+        setHeroVisual(null);
+    }, [heroVisualScope]);
 
     useEffect(() => {
         if (!hydrated) return;
@@ -48,6 +66,20 @@ export default function PetCompanionGate() {
         // make the companion absent on every later visit.
         setGuestInteracted(false);
     }, [hydrated, state.user]);
+
+    useEffect(() => {
+        if (!hydrated) return;
+        const animationFrame = window.requestAnimationFrame(() => {
+            if (state.user || heroActive) {
+                if (state.user) setSessionHeroVisual(null);
+                setGuestSessionVisualChecked(false);
+                return;
+            }
+            setSessionHeroVisual(readGuestHeroCompanionVisual());
+            setGuestSessionVisualChecked(true);
+        });
+        return () => window.cancelAnimationFrame(animationFrame);
+    }, [heroActive, hydrated, state.user]);
 
     useEffect(() => {
         if (!hydrated || state.user || !heroActive) {
@@ -66,6 +98,12 @@ export default function PetCompanionGate() {
             // required before changing the on-screen companion.
             const next = resolveHeroCompanionVisual(hero?.dataset.heroBreed);
             if (!next) return;
+            writeGuestHeroCompanionVisual(next);
+            setSessionHeroVisual((current) => (
+                current?.breedId === next.breedId && current.characterId === next.characterId
+                    ? current
+                    : next
+            ));
             setHeroVisual((current) => (
                 current?.breedId === next.breedId && current.characterId === next.characterId
                     ? current
@@ -105,7 +143,7 @@ export default function PetCompanionGate() {
         return null;
     }
 
-    const effectiveSettings = settings && guestHeroActive
+    const effectiveSettings = settings && guestVisualActive
         ? {
             ...settings,
             // A guest sees the pet immediately on each new visit, even if an
@@ -153,19 +191,19 @@ export default function PetCompanionGate() {
             >
                 <span aria-hidden="true">🐾</span>
             </button>
-            {!waitingForGuestHeroVisual && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
+            {!waitingForGuestVisual && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
                 <PetCompanionLayer
                     key={pathname || "root"}
                     settings={effectiveSettings}
-                    visualBreedId={guestHeroActive ? heroVisual?.breedId : undefined}
-                    visualCharacterId={guestHeroActive ? heroVisual?.characterId : undefined}
+                    visualBreedId={guestVisual?.breedId}
+                    visualCharacterId={guestVisual?.characterId}
                     panelOpen={panelOpen}
                     onPanelOpenChange={(open) => {
                         panelOpenRef.current = open;
                         setPanelOpen(open);
                     }}
                     onSettingsChange={(next) => {
-                        if (!state.user && heroActive) setGuestInteracted(true);
+                        if (!state.user && guestVisualActive) setGuestInteracted(true);
                         setSettings(next);
                     }}
                 />
