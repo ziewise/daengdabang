@@ -1727,7 +1727,7 @@ export default function PetCompanionLayer({
                             <div>
                                 <span className={styles.eyebrow}>DDB WALKING FRIEND</span>
                                 <h2 id="pet-companion-title">산책 친구 설정</h2>
-                                <p>미리 만든 가벼운 캐릭터 중 우리 아이와 가까운 친구를 골라 주세요.</p>
+                                <p>120견종별로 만든 큰 머리 치비 모션 캐릭터 중 우리 아이와 가까운 친구를 골라 주세요.</p>
                             </div>
                             <button
                                 ref={closeRef}
@@ -1786,7 +1786,7 @@ export default function PetCompanionLayer({
                                         ))}
                                     </select>
                                     <small className={styles.breedHint}>
-                                        {selectedBreed.ko} 캐릭터 · {PET_BREED_FAMILY_LABELS[selectedBreed.family]} 리그
+                                        {selectedBreed.ko} 전용 큰 머리 치비 캐릭터 · 16프레임 모션
                                     </small>
                                 </label>
 

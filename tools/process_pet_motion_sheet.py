@@ -19,13 +19,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 from dataclasses import dataclass
+from itertools import combinations
 from pathlib import Path
 import re
 from statistics import median
 import sys
 from typing import Iterable, Sequence
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter, ImageStat
 
 
 GRID_SIZE = 4
@@ -37,6 +38,13 @@ BASELINE_Y = 232
 SAFE_MARGIN = 12
 MAX_HEIGHT_DEVIATION = 0.08
 MIN_WEBP_QUALITY = 92
+MOTION_DIFFERENCE_LIMITS = {
+    "walk": (0.08, 0.02),
+    "run": (0.10, 0.025),
+    "sniff": (0.10, 0.025),
+}
+MAX_REMOTE_TRANSLUCENT_PIXEL_RATIO = 0.02
+MAX_REMOTE_TRANSLUCENT_ALPHA_RATIO = 0.01
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = REPO_ROOT / "artifacts" / "pet-companion" / "cute-v2"
@@ -197,6 +205,99 @@ def suppress_green_spill(
     return Image.frombytes("RGBA", result.size, bytes(cleaned))
 
 
+def trim_disconnected_alpha_noise(
+    image: Image.Image,
+    *,
+    strong_threshold: int,
+    alpha_cutoff: int,
+) -> Image.Image:
+    """Remove faint generated fragments that are detached from the dog.
+
+    Soft fur edges remain when they sit within two pixels of the strong alpha
+    matte. Low-alpha islands elsewhere are chroma/compression debris and would
+    otherwise flash as small dots between animation frames.
+    """
+
+    rgba = image.convert("RGBA")
+    alpha = rgba.getchannel("A")
+    strong = alpha.point(lambda value: 255 if value >= strong_threshold else 0)
+    near_character = strong.filter(ImageFilter.MaxFilter(5)).tobytes()
+    cleaned = bytearray(rgba.tobytes())
+    for index, nearby in enumerate(near_character):
+        offset = index * 4
+        pixel_alpha = cleaned[offset + 3]
+        if pixel_alpha < alpha_cutoff or (pixel_alpha < strong_threshold and not nearby):
+            cleaned[offset : offset + 4] = b"\x00\x00\x00\x00"
+    return Image.frombytes("RGBA", rgba.size, bytes(cleaned))
+
+
+def _alpha_components(image: Image.Image, threshold: int) -> list[list[int]]:
+    """Return connected strong-alpha pixel indexes, largest first."""
+
+    alpha = image.getchannel("A")
+    width, height = image.size
+    visible = bytearray(1 if value >= threshold else 0 for value in alpha.tobytes())
+    components: list[list[int]] = []
+    for start in range(width * height):
+        if not visible[start]:
+            continue
+        visible[start] = 0
+        stack = [start]
+        component: list[int] = []
+        while stack:
+            index = stack.pop()
+            component.append(index)
+            x = index % width
+            y = index // width
+            neighbours = (
+                index - 1 if x else -1,
+                index + 1 if x + 1 < width else -1,
+                index - width if y else -1,
+                index + width if y + 1 < height else -1,
+            )
+            for neighbour in neighbours:
+                if neighbour >= 0 and visible[neighbour]:
+                    visible[neighbour] = 0
+                    stack.append(neighbour)
+        components.append(component)
+    return sorted(components, key=len, reverse=True)
+
+
+def trim_small_alpha_components(
+    image: Image.Image,
+    *,
+    strong_threshold: int,
+    minimum_area: int = 32,
+    minimum_ratio: float = 0.015,
+) -> Image.Image:
+    """Drop tiny opaque islands while preserving antialiasing around the dog."""
+
+    rgba = image.convert("RGBA")
+    components = _alpha_components(rgba, strong_threshold)
+    if not components:
+        return rgba
+    minimum_kept = max(minimum_area, round(len(components[0]) * minimum_ratio))
+    kept = [component for component in components if len(component) >= minimum_kept]
+    if len(kept) == len(components):
+        return rgba
+
+    width, height = rgba.size
+    strong_mask = bytearray(width * height)
+    for component in kept:
+        for index in component:
+            strong_mask[index] = 255
+    near_kept = Image.frombytes("L", rgba.size, bytes(strong_mask)).filter(
+        ImageFilter.MaxFilter(7)
+    ).tobytes()
+    cleaned = bytearray(rgba.tobytes())
+    for index, nearby in enumerate(near_kept):
+        if nearby:
+            continue
+        offset = index * 4
+        cleaned[offset : offset + 4] = b"\x00\x00\x00\x00"
+    return Image.frombytes("RGBA", rgba.size, bytes(cleaned))
+
+
 def split_source(
     atlas: Image.Image,
     *,
@@ -236,6 +337,15 @@ def split_source(
                 transparent_excess=transparent_excess,
                 alpha_cutoff=alpha_cutoff,
                 spill_allowance=spill_allowance,
+            )
+            keyed = trim_disconnected_alpha_noise(
+                keyed,
+                strong_threshold=bbox_threshold,
+                alpha_cutoff=alpha_cutoff,
+            )
+            keyed = trim_small_alpha_components(
+                keyed,
+                strong_threshold=bbox_threshold,
             )
             bounds = alpha_bounds(keyed, bbox_threshold)
             if not bounds:
@@ -393,6 +503,15 @@ def build_motion_sheet(source: Image.Image, args: argparse.Namespace) -> Image.I
                 spill_allowance=args.spill_allowance,
                 alpha_cutoff=args.alpha_cutoff,
             )
+            resized = trim_disconnected_alpha_noise(
+                resized,
+                strong_threshold=args.bbox_threshold,
+                alpha_cutoff=args.alpha_cutoff,
+            )
+            resized = trim_small_alpha_components(
+                resized,
+                strong_threshold=args.bbox_threshold,
+            )
             paste_x = round((CELL_SIZE - size[0]) / 2)
             if (
                 paste_x < SAFE_MARGIN
@@ -442,6 +561,73 @@ def _max_edge_green_fringe(image: Image.Image) -> int:
     return max(0, maximum)
 
 
+def _motion_pair_metrics(first: Image.Image, second: Image.Image) -> tuple[float, float]:
+    downsampled_size = (64, 64)
+    first_alpha = first.getchannel("A").resize(
+        downsampled_size, Image.Resampling.LANCZOS
+    )
+    second_alpha = second.getchannel("A").resize(
+        downsampled_size, Image.Resampling.LANCZOS
+    )
+    first_values = first_alpha.get_flattened_data()
+    second_values = second_alpha.get_flattened_data()
+    alpha_difference = sum(
+        abs(first_value - second_value)
+        for first_value, second_value in zip(first_values, second_values)
+    )
+    alpha_union = sum(
+        max(first_value, second_value)
+        for first_value, second_value in zip(first_values, second_values)
+    )
+
+    composites: list[Image.Image] = []
+    for cell in (first, second):
+        composite = Image.new("RGBA", (CELL_SIZE, CELL_SIZE), (242, 242, 242, 255))
+        composite.alpha_composite(cell)
+        composites.append(
+            composite.convert("RGB")
+            .resize(downsampled_size, Image.Resampling.LANCZOS)
+            .filter(ImageFilter.GaussianBlur(0.6))
+        )
+    visual_difference = ImageChops.difference(composites[0], composites[1])
+    visual_sum = sum(ImageStat.Stat(visual_difference).sum)
+    return (
+        alpha_difference / max(1, alpha_union),
+        visual_sum / (64 * 64 * 3 * 255),
+    )
+
+
+def _row_motion_metrics(cells: Sequence[Image.Image]) -> tuple[float, float]:
+    pair_metrics = [
+        _motion_pair_metrics(cells[first], cells[second])
+        for first, second in combinations(range(GRID_SIZE), 2)
+    ]
+    return (
+        max(metric[0] for metric in pair_metrics),
+        max(metric[1] for metric in pair_metrics),
+    )
+
+
+def _remote_translucent_metrics(cell: Image.Image) -> tuple[float, float]:
+    alpha = cell.getchannel("A")
+    histogram = alpha.histogram()
+    strong_count = sum(histogram[48:])
+    opaque = alpha.point(lambda value: 255 if value >= 192 else 0)
+    near_opaque = opaque.filter(ImageFilter.MaxFilter(17))
+    translucent = alpha.point(lambda value: 255 if 16 <= value < 192 else 0)
+    remote = ImageChops.multiply(translucent, ImageChops.invert(near_opaque))
+    alpha_values = alpha.get_flattened_data()
+    remote_values = remote.get_flattened_data()
+    remote_pixels = sum(1 for value in remote_values if value)
+    remote_alpha = sum(
+        value for value, is_remote in zip(alpha_values, remote_values) if is_remote
+    )
+    return (
+        remote_pixels / max(1, strong_count),
+        remote_alpha / max(1, 255 * strong_count),
+    )
+
+
 def validate_output(path: Path, args: argparse.Namespace) -> ValidationReport:
     file_bytes = path.stat().st_size if path.exists() else 0
     if file_bytes <= 0:
@@ -475,6 +661,7 @@ def validate_output(path: Path, args: argparse.Namespace) -> ValidationReport:
     for row in range(GRID_SIZE):
         row_metrics: list[OutputFrameMetrics] = []
         row_hashes: list[bytes] = []
+        row_cells: list[Image.Image] = []
         for column in range(GRID_SIZE):
             cell = image.crop(
                 (
@@ -484,6 +671,7 @@ def validate_output(path: Path, args: argparse.Namespace) -> ValidationReport:
                     (row + 1) * CELL_SIZE,
                 )
             )
+            row_cells.append(cell)
             row_hashes.append(hashlib.sha256(cell.tobytes()).digest())
             bounds = alpha_bounds(cell, args.bbox_threshold)
             if not bounds:
@@ -505,10 +693,41 @@ def validate_output(path: Path, args: argparse.Namespace) -> ValidationReport:
             row_metrics.append(frame)
             metrics.append(frame)
 
+            components = _alpha_components(cell, args.bbox_threshold)
+            if len(components) > 1:
+                minimum_significant = max(32, round(len(components[0]) * 0.015))
+                if len(components[1]) >= minimum_significant:
+                    raise ProcessingError(
+                        f"Output {ROW_NAMES[row]} frame {column + 1} has a "
+                        f"detached alpha component ({len(components[1])}px)"
+                    )
+
+            remote_pixel_ratio, remote_alpha_ratio = _remote_translucent_metrics(cell)
+            if (
+                remote_pixel_ratio > MAX_REMOTE_TRANSLUCENT_PIXEL_RATIO
+                or remote_alpha_ratio > MAX_REMOTE_TRANSLUCENT_ALPHA_RATIO
+            ):
+                raise ProcessingError(
+                    f"Output {ROW_NAMES[row]} frame {column + 1} has a remote "
+                    f"translucent silhouette ({remote_pixel_ratio:.2%} pixels, "
+                    f"{remote_alpha_ratio:.2%} alpha weight)"
+                )
+
         if len(set(row_hashes)) != GRID_SIZE:
             raise ProcessingError(
                 f"{ROW_NAMES[row]} contains duplicate output frames"
             )
+
+        row_name = ROW_NAMES[row]
+        if row_name in MOTION_DIFFERENCE_LIMITS:
+            alpha_change, visual_change = _row_motion_metrics(row_cells)
+            alpha_limit, visual_limit = MOTION_DIFFERENCE_LIMITS[row_name]
+            if alpha_change < alpha_limit and visual_change < visual_limit:
+                raise ProcessingError(
+                    f"{row_name} motion is nearly static: alpha {alpha_change:.4f} "
+                    f"< {alpha_limit:.4f}, visual {visual_change:.4f} "
+                    f"< {visual_limit:.4f}"
+                )
 
         center_x_deviation = max(
             abs(frame.center_x - CELL_SIZE / 2) for frame in row_metrics

@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
     getPetBreedVisual,
     getPetBreedRenderTokens,
     legacyCharacterBreedId,
-    PET_BREED_RIG_IDS,
 } from "@/lib/pet-companion-breeds";
 import type {
     CompanionAccessoryId,
@@ -32,9 +30,8 @@ type Props = {
     className?: string;
 };
 
-const ASSET_ROOT = "/images/pet-companion/cute-v2";
-const MOTION_ASSET_ROOT = "/images/pet-companion/cute-v3-motion";
-const MOTION_RIGS = new Set(PET_BREED_RIG_IDS.map((rigId) => rigId.toLowerCase()));
+const BREED_MOTION_ASSET_ROOT = "/images/pet-companion/cute-v4-breeds";
+const BREED_MOTION_ASSET_VERSION = "20260712-1";
 type TurnPhase = "rest" | "out" | "in";
 
 export default function PetCompanionCharacter({
@@ -84,34 +81,22 @@ export default function PetCompanionCharacter({
     }, [facing, forceMotion]);
 
     const breed = getPetBreedVisual(breedId || legacyCharacterBreedId(characterId));
-    const rigAsset = breed.rigId.toLowerCase();
     const renderTokens = getPetBreedRenderTokens(breed);
+    const breedCoreSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.id}-core.webp?v=${BREED_MOTION_ASSET_VERSION}`;
+    const breedPosterSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.id}-poster.webp?v=${BREED_MOTION_ASSET_VERSION}`;
     const characterStyle = {
-        "--pet-breed-primary": renderTokens.primary,
-        "--pet-breed-secondary": renderTokens.secondary,
-        "--pet-breed-accent": renderTokens.accent,
-        "--pet-breed-filter": renderTokens.filter,
         "--pet-breed-scale-x": String(renderTokens.scaleX),
         "--pet-breed-scale-y": String(renderTokens.scaleY),
-        "--pet-breed-mask": `url("${ASSET_ROOT}/${rigAsset}-idle.webp")`,
+        "--pet-poster-image": `url("${breedPosterSrc}")`,
     } as CSSProperties;
     const coreMotion: PetCompanionSpriteMotion = motion === "walk"
         || motion === "run"
         || motion === "sniff"
         ? motion
         : "idle";
-    const useCoreSprite = variant !== "card" && MOTION_RIGS.has(rigAsset);
+    const useCoreSprite = variant !== "card";
     const idleFallback = (
-        <Image
-            src={`${ASSET_ROOT}/${rigAsset}-idle.webp`}
-            alt=""
-            width={384}
-            height={384}
-            draggable={false}
-            className={`${styles.sprite} ${styles.idleSprite}`}
-            loading={variant === "live" ? "eager" : "lazy"}
-            unoptimized
-        />
+        <span className={`${styles.sprite} ${styles.posterFrame} ${styles.idleSprite}`} />
     );
 
     return (
@@ -127,7 +112,10 @@ export default function PetCompanionCharacter({
             data-muzzle={breed.muzzle}
             data-coat={breed.coat}
             data-marking={breed.marking}
-            data-breed-visual="profile-v1"
+            data-breed-visual="breed-core-v4"
+            data-breed-style="oversized-head-plush-chibi"
+            data-breed-asset={breedCoreSrc}
+            data-breed-poster={breedPosterSrc}
             data-motion={motion}
             data-facing={displayFacing}
             data-turn-phase={turnPhase}
@@ -141,33 +129,17 @@ export default function PetCompanionCharacter({
                     <span className={styles.spriteMirror}>
                         {useCoreSprite ? (
                             <PetCompanionSpriteCanvas
-                                src={`${MOTION_ASSET_ROOT}/${rigAsset}-core.webp`}
-                                walkSrc={`${MOTION_ASSET_ROOT}/${rigAsset}-walk.webp`}
+                                key={breed.id}
+                                src={breedCoreSrc}
                                 motion={coreMotion}
                                 fallback={idleFallback}
-                                overlay={(
-                                    <span className={styles.breedProfile} aria-hidden="true">
-                                        <span className={styles.breedTint} />
-                                        <span className={styles.breedMarking} />
-                                        <span className={styles.breedTexture} />
-                                    </span>
-                                )}
                                 className={styles.spriteStack}
                                 canvasClassName={styles.spriteCanvas}
                                 paused={motion === "point" || motion === "recommend"}
                             />
                         ) : idleFallback}
                         <span className={styles.recommendPose} data-part="thumb-paw">
-                            <Image
-                                src={`${ASSET_ROOT}/${rigAsset}-recommend.webp`}
-                                alt=""
-                                width={384}
-                                height={384}
-                                draggable={false}
-                                className={styles.sprite}
-                                loading="lazy"
-                                unoptimized
-                            />
+                            <span className={`${styles.sprite} ${styles.posterFrame}`} />
                         </span>
                         <span className={styles.accessory} />
                     </span>

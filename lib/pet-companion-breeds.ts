@@ -17,11 +17,8 @@ export type PetBreedRigId =
     | "R01" | "R02" | "R03" | "R04" | "R05" | "R06" | "R07"
     | "R08" | "R09" | "R10" | "R11" | "R12" | "R13" | "R14";
 
-/**
- * The animated atlases are intentionally shared by the closest silhouette
- * groups. Individual breeds still carry their own palette, coat, marking and
- * proportions, which the companion renderer applies on top of the atlas.
- */
+/** Legacy style lineages retained for source/reference auditing. Runtime
+ * rendering uses one breed-specific core atlas per catalog ID. */
 export const PET_BREED_RIG_IDS = [
     "R01", "R02", "R03", "R04", "R05", "R06", "R07",
     "R08", "R09", "R10", "R11", "R12", "R13", "R14",
@@ -158,8 +155,8 @@ const FAMILY_VISUALS: Record<PetBreedFamily, VisualSeed> = {
     },
 };
 
-// Exact Stanford Dogs/PetLens 120-class catalog. The rig is shared, but every breed
-// has its own canonical identity plus silhouette, coat, marking, and palette tokens.
+// Exact Stanford Dogs/PetLens 120-class catalog. Every ID resolves to its own
+// breed-specific core atlas; rig lineage remains only as generation provenance.
 const BREED_DEFINITIONS: BreedDefinition[] = [
     // R01 · toy/drop/silky
     ["japanese-spaniel", "Japanese Spaniel", "재패니즈 스패니얼", "toy", ["재패니즈 친", "japanese chin"], { ear: "long", coat: "long", marking: "patches", primary: "#3f3a39", secondary: "#fff5e5", accent: "#bd6c52" }],
@@ -419,12 +416,8 @@ function hexToHsl(hex: string) {
     return { hue, saturation, lightness };
 }
 
-/**
- * Converts the 120 canonical breed profiles into lightweight render tokens.
- * No new bitmap needs to be downloaded for a colour/coat variation; the
- * shared motion atlas retains smooth gait while these tokens make the breed
- * identity visible in every live, preview and card rendering.
- */
+/** Converts canonical proportions and palette metadata into lightweight UI
+ * tokens. Breed identity itself comes from the breed-specific core atlas. */
 export function getPetBreedRenderTokens(
     breedOrId?: PetBreedVisual | string | null,
 ): PetBreedRenderTokens {

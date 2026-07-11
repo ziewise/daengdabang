@@ -13,8 +13,6 @@ type Props = {
     walkSrc?: string;
     motion: PetCompanionSpriteMotion;
     fallback: ReactNode;
-    /** Rendered in the same frame-transform layer as the active sprite. */
-    overlay?: ReactNode;
     className?: string;
     canvasClassName?: string;
     paused?: boolean;
@@ -74,7 +72,8 @@ const MOTION_TIMELINE: Record<PetCompanionSpriteMotion, readonly MotionFrame[]> 
     ],
 };
 
-const LEGACY_WALK_TIMELINE: readonly MotionFrame[] = [
+// Breed-specific core atlases carry four deliberate walk contacts in row two.
+const CORE_WALK_TIMELINE: readonly MotionFrame[] = [
     { frame: 0, duration: 155 },
     { frame: 1, duration: 112 },
     { frame: 2, duration: 155 },
@@ -97,7 +96,6 @@ export default function PetCompanionSpriteCanvas({
     walkSrc,
     motion,
     fallback,
-    overlay,
     className = "",
     canvasClassName = "",
     paused = false,
@@ -113,7 +111,7 @@ export default function PetCompanionSpriteCanvas({
     const walkStartOffsetRef = useRef(4);
     // The optional 8-frame atlas can fail independently of the core rig. Keep
     // that failure across motion changes so a later short walk starts on the
-    // four-frame legacy timeline instead of carrying an 8-frame step index.
+    // four-frame core timeline instead of carrying an 8-frame step index.
     const walkUnavailableRef = useRef(!walkSrc);
     const startAnimationRef = useRef<(() => void) | null>(null);
     const stopAnimationRef = useRef<(() => void) | null>(null);
@@ -128,7 +126,7 @@ export default function PetCompanionSpriteCanvas({
         }
         const usesDedicatedWalk = motion === "walk" && Boolean(walkSrc) && !walkUnavailableRef.current;
         const timeline = motion === "walk" && !usesDedicatedWalk
-            ? LEGACY_WALK_TIMELINE
+            ? CORE_WALK_TIMELINE
             : MOTION_TIMELINE[motion];
         stepRef.current = usesDedicatedWalk ? walkStartOffsetRef.current : 0;
         stepRef.current %= timeline.length;
@@ -252,7 +250,7 @@ export default function PetCompanionSpriteCanvas({
             if (cancelled || pausedRef.current || reducedMotion || document.hidden || !coreImage) return;
 
             const timeline = motionRef.current === "walk" && walkUnavailable
-                ? LEGACY_WALK_TIMELINE
+                ? CORE_WALK_TIMELINE
                 : MOTION_TIMELINE[motionRef.current];
             if (stepRef.current < 0 || stepRef.current >= timeline.length) {
                 stepRef.current = ((stepRef.current % timeline.length) + timeline.length) % timeline.length;
@@ -442,6 +440,7 @@ export default function PetCompanionSpriteCanvas({
             ref={rootRef}
             className={className}
             data-sprite-ready="false"
+            data-pet-sprite-src={src}
         >
             {fallback}
             <canvas
@@ -451,7 +450,6 @@ export default function PetCompanionSpriteCanvas({
                 data-pet-sprite-status="loading"
                 data-pet-frame="0"
             />
-            {overlay}
         </span>
     );
 }

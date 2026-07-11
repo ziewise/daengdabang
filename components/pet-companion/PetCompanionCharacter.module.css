@@ -50,9 +50,8 @@
     will-change: transform;
 }
 
-/* Each of the 120 breed profiles reuses a lightweight motion rig but retains
-   its own palette, markings and proportions. Keeping this layer inside the
-   sprite stack means it follows every animated frame without extra requests. */
+/* The generated atlas already carries the breed identity. This wrapper keeps
+   the catalog's restrained proportion correction aligned with every frame. */
 .breedMorph {
     position: absolute;
     inset: 0;
@@ -103,7 +102,6 @@
     height: 100%;
     opacity: 0;
     filter: var(--pet-breed-filter) var(--pet-tone-filter) drop-shadow(0 7px 5px rgb(62 42 31 / 18%));
-    transition: opacity .12s ease;
 }
 
 .spriteStack[data-sprite-ready="true"] .spriteCanvas {
@@ -154,100 +152,18 @@
 
 .idleSprite {
     opacity: 1;
-    transition: opacity .12s ease;
 }
 
-.breedProfile,
-.breedTint,
-.breedMarking,
-.breedTexture {
-    position: absolute;
-    inset: 0;
-    display: block;
-    pointer-events: none;
-}
-
-.breedProfile {
-    z-index: 2;
-    overflow: hidden;
-    -webkit-mask-image: var(--pet-breed-mask);
-    -webkit-mask-position: 50% 100%;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: contain;
-    mask-image: var(--pet-breed-mask);
-    mask-position: 50% 100%;
-    mask-repeat: no-repeat;
-    mask-size: contain;
-}
-
-.breedTint {
-    background: var(--pet-breed-primary);
-    mix-blend-mode: color;
-    opacity: .11;
-}
-
-.breedMarking {
-    opacity: 0;
-    mix-blend-mode: screen;
-}
-
-.character[data-marking="blaze"] .breedMarking {
-    background: linear-gradient(90deg, transparent 39%, rgb(255 255 255 / 14%) 42%, var(--pet-breed-secondary) 47% 53%, rgb(255 255 255 / 14%) 58%, transparent 61%);
-    opacity: .34;
-}
-
-.character[data-marking="mask"] .breedMarking {
-    background: radial-gradient(ellipse 30% 22% at 50% 39%, var(--pet-breed-accent) 0 48%, transparent 58%);
-    opacity: .28;
-    mix-blend-mode: multiply;
-}
-
-.character[data-marking="points"] .breedMarking {
-    background:
-        radial-gradient(ellipse 16% 13% at 33% 50%, var(--pet-breed-accent) 0 54%, transparent 61%),
-        radial-gradient(ellipse 16% 13% at 67% 50%, var(--pet-breed-accent) 0 54%, transparent 61%),
-        radial-gradient(ellipse 23% 16% at 50% 77%, var(--pet-breed-accent) 0 52%, transparent 60%);
-    opacity: .24;
-    mix-blend-mode: multiply;
-}
-
-.character[data-marking="saddle"] .breedMarking {
-    background: radial-gradient(ellipse 52% 29% at 53% 63%, var(--pet-breed-accent) 0 52%, transparent 61%);
-    opacity: .25;
-    mix-blend-mode: multiply;
-}
-
-.character[data-marking="patches"] .breedMarking {
-    background:
-        radial-gradient(ellipse 25% 18% at 32% 44%, var(--pet-breed-secondary) 0 50%, transparent 59%),
-        radial-gradient(ellipse 28% 20% at 67% 68%, var(--pet-breed-secondary) 0 48%, transparent 58%);
-    opacity: .36;
-}
-
-.character[data-marking="tuxedo"] .breedMarking {
-    background: linear-gradient(90deg, transparent 36%, rgb(255 255 255 / 12%) 41%, var(--pet-breed-secondary) 46% 54%, rgb(255 255 255 / 12%) 59%, transparent 64%);
-    opacity: .32;
-}
-
-.breedTexture {
-    opacity: 0;
-    mix-blend-mode: soft-light;
-}
-
-.character[data-coat="curly"] .breedTexture {
-    background-image: radial-gradient(circle, rgb(255 255 255 / 42%) 0 17%, transparent 19%);
-    background-size: 10px 10px;
-    opacity: .16;
-}
-
-.character[data-coat="wire"] .breedTexture {
-    background-image: repeating-linear-gradient(120deg, transparent 0 4px, rgb(255 255 255 / 26%) 5px 6px, transparent 7px 10px);
-    opacity: .13;
-}
-
-.character[data-coat="long"] .breedTexture {
-    background-image: repeating-linear-gradient(104deg, transparent 0 7px, rgb(255 255 255 / 24%) 8px 10px, transparent 11px 15px);
-    opacity: .12;
+.posterFrame {
+    inset: auto auto 0 50%;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 1;
+    background-image: var(--pet-poster-image);
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    transform: translateX(-50%);
 }
 
 .character[data-coat="fluffy"],
@@ -259,7 +175,7 @@
     opacity: 0;
     transform: scale(.96) translateY(4px);
     transform-origin: 50% 84%;
-    transition: opacity .12s ease, transform .18s cubic-bezier(.2, .8, .2, 1);
+    transition: transform .18s cubic-bezier(.2, .8, .2, 1);
 }
 
 .character[data-motion="recommend"] .idleSprite,
