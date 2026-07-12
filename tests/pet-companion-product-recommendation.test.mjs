@@ -40,8 +40,11 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /MAX_RECOMMENDATIONS_PER_SESSION = 3/);
     assert.match(source, /recommendationShownCountThisSession/);
     assert.match(source, /window\.addEventListener\(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT/);
+    assert.match(source, /document\.addEventListener\("input", onSearchRecommendationInput, true\)/);
     assert.match(source, /new MutationObserver/);
     assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
+    assert.match(source, /target\.closest\("\[data-pet-companion-allow='search'\]"\)/);
+    assert.match(source, /!force && revealEpoch !== interactionEpochRef\.current/);
     assert.match(source, /!force && activeElement\?\.matches\("input, textarea, select, \[contenteditable='true'\]"\)/);
     assert.match(source, /data-pet-companion-allow/);
 });

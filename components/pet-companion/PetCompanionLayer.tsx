@@ -909,6 +909,7 @@ export default function PetCompanionLayer({
         const onFocusIn = (event: FocusEvent) => {
             const target = event.target as HTMLElement | null;
             if (!target?.matches("input, textarea, select, [contenteditable='true']")) return;
+            if (target.closest("[data-pet-companion-allow='search']")) return;
             interactionEpochRef.current += 1;
             promptOpenRef.current = false;
             guideInFlightRef.current = false;
@@ -1459,7 +1460,7 @@ export default function PetCompanionLayer({
                 const activeElement = document.activeElement as HTMLElement | null;
                 const latestRect = selected.getBoundingClientRect();
                 if (
-                    revealEpoch !== interactionEpochRef.current
+                    (!force && revealEpoch !== interactionEpochRef.current)
                     || promptOpenRef.current
                     || document.hidden
                     || (!force && activeElement?.matches("input, textarea, select, [contenteditable='true']"))
@@ -1502,6 +1503,13 @@ export default function PetCompanionLayer({
             scheduleRecommendationRequest();
         };
 
+        const onSearchRecommendationInput = (event: Event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (!target.closest("[data-pet-companion-allow='search']")) return;
+            scheduleRecommendationRequest(900);
+        };
+
         const productObserver = new MutationObserver((mutations) => {
             const addedProduct = mutations.some((mutation) => (
                 Array.from(mutation.addedNodes).some((node) => (
@@ -1521,6 +1529,8 @@ export default function PetCompanionLayer({
         }, 2600);
         const interval = window.setInterval(showRecommendation, 90000);
         window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
+        document.addEventListener("focusin", onSearchRecommendationInput, true);
+        document.addEventListener("input", onSearchRecommendationInput, true);
         productObserver.observe(document.body, { childList: true, subtree: true });
         return () => {
             window.clearTimeout(first);
@@ -1530,6 +1540,8 @@ export default function PetCompanionLayer({
             window.clearInterval(interval);
             productObserver.disconnect();
             window.removeEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
+            document.removeEventListener("focusin", onSearchRecommendationInput, true);
+            document.removeEventListener("input", onSearchRecommendationInput, true);
             if (activeRecommendationRun && guideRunRef.current === activeRecommendationRun) {
                 guideRunRef.current += 1;
                 guideInFlightRef.current = false;
