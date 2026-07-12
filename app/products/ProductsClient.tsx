@@ -17,6 +17,7 @@ import {
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
 import { trackExternalSearchResults } from "@/lib/storefront-analytics";
+import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
 import { useI18n } from "@/lib/i18n";
 import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
@@ -93,6 +94,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
 
         return applySort(list, sort);
     }, [query, category, subcategory, sort]);
+    const hasSearch = query.trim().length > 0;
 
     const externalFilter = useMemo(() => ({
         category: category === "all" ? undefined : category,
@@ -135,7 +137,16 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         };
     }, [query, externalFilter, category, subcategory, sort, products.length]);
 
-    const hasSearch = query.trim().length > 0;
+    useEffect(() => {
+        if (!hasSearch || products.length === 0) return;
+        const timer = window.setTimeout(() => {
+            window.dispatchEvent(new CustomEvent(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, {
+                detail: { source: "products-search", query: query.trim() },
+            }));
+        }, 700);
+        return () => window.clearTimeout(timer);
+    }, [hasSearch, products.length, query, category, subcategory, sort]);
+
     const visibleCount = products.length + (hasSearch ? externalProducts.length : 0);
     const countText = (count: number) => locale === "en" ? `${count.toLocaleString()} ${t("countSuffix")}` : `${count.toLocaleString()}${t("countSuffix")}`;
     const heading = title ? menuLabel(title) : t("allProducts");

@@ -28,6 +28,7 @@ type StoredPetCompanionSettings = Omit<PetCompanionSettings, "ownerKey">;
 
 export const PET_COMPANION_STORAGE_KEY = "ddb.petCompanion.v1";
 export const PET_COMPANION_OPEN_EVENT = "ddb:pet-companion-open";
+export const PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT = "ddb:pet-product-recommendation-request";
 export const PET_COMPANION_GUEST_BREED_SESSION_KEY = "ddb.petCompanion.guestBreed.v1";
 export const PET_COMPANION_GUEST_HERO_VISUAL_SESSION_KEY = "ddb.petCompanion.guestHeroVisual.v1";
 const PET_COMPANION_ACTIVE_HERO_BREED_KEY = "activeHeroBreedKey";

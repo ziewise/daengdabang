@@ -29,6 +29,7 @@ import {
 } from "@/lib/pet-companion-breeds";
 import {
     COMPANION_TONES,
+    PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT,
     defaultCompanionSettings,
     withCompanionSettings,
     writeLocalCompanionSettings,
@@ -99,28 +100,32 @@ type EntryPortalStyle = CSSProperties & {
 };
 
 const MOVE_EVENT = "ddb:pet-companion-move";
-const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v1";
+const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v2";
+const MAX_RECOMMENDATIONS_PER_SESSION = 3;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
-let memoryRecommendationShown = false;
+let memoryRecommendationShownCount = 0;
 
 function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
 }
 
-function recommendationWasShownThisSession() {
-    if (memoryRecommendationShown) return true;
+function recommendationShownCountThisSession() {
+    if (memoryRecommendationShownCount) return memoryRecommendationShownCount;
     try {
-        return window.sessionStorage.getItem(RECOMMENDATION_SESSION_KEY) === "1";
+        const count = Number(window.sessionStorage.getItem(RECOMMENDATION_SESSION_KEY) || "0");
+        memoryRecommendationShownCount = Number.isFinite(count) && count > 0 ? count : 0;
+        return memoryRecommendationShownCount;
     } catch {
-        return false;
+        return 0;
     }
 }
 
 function markRecommendationShownThisSession() {
-    memoryRecommendationShown = true;
+    const next = recommendationShownCountThisSession() + 1;
+    memoryRecommendationShownCount = next;
     try {
-        window.sessionStorage.setItem(RECOMMENDATION_SESSION_KEY, "1");
+        window.sessionStorage.setItem(RECOMMENDATION_SESSION_KEY, String(next));
     } catch {
         // In-memory state still protects the current document in privacy modes.
     }
@@ -145,10 +150,15 @@ function moveCompanionToRest(walker: HTMLElement | null) {
     }));
 }
 
-function externalDialogIsOpen() {
+function externalDialogIsOpen({
+    ignoreCompanionAllowed = true,
+}: {
+    ignoreCompanionAllowed?: boolean;
+} = {}) {
     return Array.from(document.querySelectorAll<HTMLElement>("[role='dialog']"))
         .some((dialog) => {
             if (dialog.closest("[data-pet-companion-dialog]")) return false;
+            if (ignoreCompanionAllowed && dialog.closest("[data-pet-companion-allow]")) return false;
             const style = window.getComputedStyle(dialog);
             const rect = dialog.getBoundingClientRect();
             const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
@@ -782,7 +792,7 @@ export default function PetCompanionLayer({
             if (
                 reducedMotion
                 || document.hidden
-                || externalDialogIsOpen()
+                || externalDialogIsOpen({ ignoreCompanionAllowed: false })
                 || promptOpenRef.current
                 || guideInFlightRef.current
                 || walker.matches(":focus-within")
@@ -1113,7 +1123,7 @@ export default function PetCompanionLayer({
                 if (walker) walker.dataset.petGuideStatus = "blocked:document-hidden";
                 return;
             }
-            if (externalDialogIsOpen()) {
+            if (externalDialogIsOpen({ ignoreCompanionAllowed: false })) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:dialog-open";
                 return;
             }
@@ -1217,7 +1227,7 @@ export default function PetCompanionLayer({
                                             )
                                                 || targetRect.top >= window.innerHeight - 24
                                                 ? "target-offscreen"
-                                                : externalDialogIsOpen()
+                                                : externalDialogIsOpen({ ignoreCompanionAllowed: false })
                                                     ? "dialog-open"
                                                     : "";
                 if (cancellationReason) {
@@ -1374,15 +1384,21 @@ export default function PetCompanionLayer({
             moveCompanionToRest(walkerRef.current);
         };
 
-        const showRecommendation = () => {
-            if (recommendationCountRef.current >= 1 || recommendationWasShownThisSession()) return;
+        const showRecommendation = ({ force = false }: { force?: boolean } = {}) => {
+            if (
+                recommendationCountRef.current >= MAX_RECOMMENDATIONS_PER_SESSION
+                || (!force && recommendationShownCountThisSession() >= MAX_RECOMMENDATIONS_PER_SESSION)
+            ) return;
             if (promptOpenRef.current || guideInFlightRef.current) {
                 window.clearTimeout(retryTimer);
-                retryTimer = window.setTimeout(showRecommendation, 12000);
+                retryTimer = window.setTimeout(
+                    () => showRecommendation({ force }),
+                    force ? 1600 : 12000,
+                );
                 return;
             }
             const activeElement = document.activeElement as HTMLElement | null;
-            if (activeElement?.matches("input, textarea, select, [contenteditable='true']")) return;
+            if (!force && activeElement?.matches("input, textarea, select, [contenteditable='true']")) return;
             if (externalDialogIsOpen()) return;
             const pet = state.user?.pets.find((item) => item.name === settings.activePetName) || state.user?.pets[0];
             const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-pet-product]"))
@@ -1446,7 +1462,7 @@ export default function PetCompanionLayer({
                     revealEpoch !== interactionEpochRef.current
                     || promptOpenRef.current
                     || document.hidden
-                    || activeElement?.matches("input, textarea, select, [contenteditable='true']")
+                    || (!force && activeElement?.matches("input, textarea, select, [contenteditable='true']"))
                     || !document.contains(selected)
                     || latestRect.width < 80
                     || latestRect.bottom <= 90
@@ -1474,14 +1490,46 @@ export default function PetCompanionLayer({
             }, travelMs + 70);
         };
 
-        const first = window.setTimeout(showRecommendation, 42000);
+        const scheduleRecommendationRequest = (delay = 450) => {
+            window.clearTimeout(retryTimer);
+            retryTimer = window.setTimeout(
+                () => showRecommendation({ force: true }),
+                delay,
+            );
+        };
+
+        const onRecommendationRequest = () => {
+            scheduleRecommendationRequest();
+        };
+
+        const productObserver = new MutationObserver((mutations) => {
+            const addedProduct = mutations.some((mutation) => (
+                Array.from(mutation.addedNodes).some((node) => (
+                    node instanceof Element
+                    && (node.matches("[data-pet-product]") || node.querySelector("[data-pet-product]"))
+                ))
+            ));
+            if (addedProduct) scheduleRecommendationRequest(700);
+        });
+
+        const first = window.setTimeout(() => {
+            if (document.querySelector("[data-pet-product]")) {
+                showRecommendation({ force: true });
+                return;
+            }
+            showRecommendation();
+        }, 2600);
         const interval = window.setInterval(showRecommendation, 90000);
+        window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
+        productObserver.observe(document.body, { childList: true, subtree: true });
         return () => {
             window.clearTimeout(first);
             window.clearTimeout(revealTimer);
             window.clearTimeout(dismissTimer);
             window.clearTimeout(retryTimer);
             window.clearInterval(interval);
+            productObserver.disconnect();
+            window.removeEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
             if (activeRecommendationRun && guideRunRef.current === activeRecommendationRun) {
                 guideRunRef.current += 1;
                 guideInFlightRef.current = false;

@@ -13,6 +13,8 @@ import Image from "next/image";
 import { POPULAR_KEYWORDS } from "@/lib/menu-data";
 import { searchRecent } from "@/lib/storage";
 import { searchCatalog } from "@/lib/catalog";
+import { productHref } from "@/lib/shop";
+import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 
@@ -54,6 +56,16 @@ export default function SearchModal({ open, onClose }: Props) {
     const previewResults = results.slice(0, PREVIEW_LIMIT);
     const hasQuery = term.trim().length > 0;
 
+    useEffect(() => {
+        if (!open || !hasQuery || previewResults.length === 0) return;
+        const timer = window.setTimeout(() => {
+            window.dispatchEvent(new CustomEvent(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, {
+                detail: { source: "search-modal", query: term.trim() },
+            }));
+        }, 650);
+        return () => window.clearTimeout(timer);
+    }, [hasQuery, open, previewResults.length, term]);
+
     /** 검색 결과 페이지로 이동 + 최근 검색어 등록 + 모달 닫기 */
     const goSearch = (q: string) => {
         const t = q.trim();
@@ -94,6 +106,7 @@ export default function SearchModal({ open, onClose }: Props) {
                 role="dialog"
                 aria-modal="true"
                 aria-label={t("search")}
+                data-pet-companion-allow="search"
                 className="fixed left-1/2 top-[88px] -translate-x-1/2 z-[2001] w-[min(640px,calc(100vw-32px))] max-h-[calc(100vh-120px)] overflow-y-auto bg-white rounded-2xl shadow-modal animate-in zoom-in-95 fade-in slide-in-from-top-2 duration-200"
             >
                 {/* 검색 input — 모달 헤더 역할 */}
@@ -147,6 +160,11 @@ export default function SearchModal({ open, onClose }: Props) {
                                                 <button
                                                     type="button"
                                                     onClick={() => goSearch(p.name)}
+                                                    data-pet-product="true"
+                                                    data-pet-name={productName(p)}
+                                                    data-pet-category={p.category}
+                                                    data-pet-subcategory={p.subcategory}
+                                                    data-pet-href={productHref(p)}
                                                     className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-50 text-left transition"
                                                 >
                                                     {/* 썸네일 — image 있으면 사진, 없으면 ph + 아이콘 */}
