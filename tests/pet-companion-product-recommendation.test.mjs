@@ -43,6 +43,8 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /blocked:product-surface/);
     assert.match(source, /recommendationInFlightRef/);
     assert.match(source, /!recommendationInFlightRef\.current/);
+    assert.match(source, /movementLooksSettled/);
+    assert.match(source, /petMotionStatus/);
     assert.match(source, /window\.addEventListener\(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT/);
     assert.match(source, /document\.addEventListener\("input", onSearchRecommendationInput, true\)/);
     assert.match(source, /new MutationObserver/);

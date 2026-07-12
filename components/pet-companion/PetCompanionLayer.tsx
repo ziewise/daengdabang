@@ -1417,6 +1417,20 @@ export default function PetCompanionLayer({
                 promptOpenRef.current = false;
             }
             const productSurfaceVisible = hasVisibleProductSurface();
+            if (force && productSurfaceVisible && guideInFlightRef.current && !document.querySelector("[data-pet-companion-speech]")) {
+                const walker = walkerRef.current;
+                const movementLooksSettled = !walker
+                    || walker.dataset.petMotion === "idle"
+                    || walker.dataset.petMotionStatus === "arrived";
+                if (movementLooksSettled) {
+                    guideRunRef.current += 1;
+                    guideInFlightRef.current = false;
+                    recommendationInFlightRef.current = false;
+                    guidePlacementRef.current = "content";
+                    setGuidePrompt(null);
+                    setRecommendation(null);
+                }
+            }
             if (force && productSurfaceVisible && (promptOpenRef.current || (guideInFlightRef.current && !recommendationInFlightRef.current))) {
                 const activeSpeech = document.querySelector("[data-pet-companion-speech]");
                 const activeGuide = document.querySelector("[data-pet-guide-bubble]");
