@@ -1,6 +1,13 @@
 import { CATALOG, applySort, searchCatalog, type CatalogProduct } from "@/lib/catalog";
 import { ddbApiBase } from "@/lib/customer-api";
+import {
+    getPetLensReviewOnlyBreedCandidate,
+    isPetLensUnknownBreedAttributeCandidate,
+    type PetLensReviewOnlyBreedCandidate,
+} from "@/lib/petlens-review-breed";
 import type { PetProfile } from "@/lib/store";
+
+export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
 
 type PetLensInput = {
     name: string;
@@ -12,6 +19,192 @@ type PetLensInput = {
     imageName?: string;
     photoDataUrl?: string;
 };
+
+export type PetLensWeightEstimate = {
+    minKg: number;
+    maxKg: number;
+    confidence?: number;
+    basis?: string;
+    source?: string;
+    requiresUserConfirmation: true;
+};
+
+export type PetLensStorefrontCandidates = {
+    reviewOnlyBreed?: PetLensReviewOnlyBreedCandidate;
+    size?: PetProfile["size"];
+    coat?: PetProfile["coat"];
+    coatColor?: string;
+    weightEstimate?: PetLensWeightEstimate;
+};
+
+const PETLENS_SIZE_CONFIDENCE_MIN = 0.6;
+const PETLENS_COAT_COLOR_CONFIDENCE_MIN = 0.45;
+const PETLENS_BREED_CONFIDENCE_MIN = 0.65;
+
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+    return value as Record<string, unknown>;
+}
+
+function finiteNumber(value: unknown): number | undefined {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string" && value.trim()) {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) return parsed;
+    }
+    return undefined;
+}
+
+function recordValue(record: Record<string, unknown>, snakeKey: string, camelKey: string) {
+    return record[snakeKey] ?? record[camelKey];
+}
+
+function isTrustworthyPetLensCandidate(data: Record<string, unknown>) {
+    const presence = recordValue(data, "pet_presence", "petPresence");
+    const quality = recordValue(data, "analysis_quality", "analysisQuality");
+    const ready = recordValue(data, "ready_for_recommendation", "readyForRecommendation");
+    const breedResolutionStatus = recordValue(
+        data,
+        "breed_resolution_status",
+        "breedResolutionStatus",
+    );
+    const canonicalCandidateReady = (
+        ready === true &&
+        !["unknown", "ambiguous", "conflict"].includes(String(breedResolutionStatus))
+    );
+    return (
+        presence === "dog" &&
+        (quality === "high" || quality === "medium") &&
+        (canonicalCandidateReady || isPetLensUnknownBreedAttributeCandidate(data))
+    );
+}
+
+function isTrustworthyCanonicalBreedCandidate(data: Record<string, unknown>) {
+    const ready = recordValue(data, "ready_for_recommendation", "readyForRecommendation");
+    const breedResolutionStatus = recordValue(
+        data,
+        "breed_resolution_status",
+        "breedResolutionStatus",
+    );
+    return (
+        isTrustworthyPetLensCandidate(data) &&
+        ready === true &&
+        !["unknown", "ambiguous", "conflict"].includes(String(breedResolutionStatus))
+    );
+}
+
+function petLensSizeCandidate(data: Record<string, unknown>): PetProfile["size"] | undefined {
+    if (!isTrustworthyPetLensCandidate(data)) return undefined;
+    const confidence = finiteNumber(recordValue(data, "size_estimate_confidence", "sizeEstimateConfidence"));
+    if (confidence === undefined || confidence < PETLENS_SIZE_CONFIDENCE_MIN) return undefined;
+    const estimate = recordValue(data, "size_estimate", "sizeEstimate");
+    if (estimate === "toy" || estimate === "small") return "small";
+    if (estimate === "medium") return "medium";
+    if (estimate === "large" || estimate === "giant") return "large";
+    return undefined;
+}
+
+function petLensCoatColorCandidate(data: Record<string, unknown>): string | undefined {
+    if (!isTrustworthyPetLensCandidate(data)) return undefined;
+    const confidence = finiteNumber(recordValue(data, "coat_color_confidence", "coatColorConfidence"));
+    const requiresConfirmation = recordValue(
+        data,
+        "coat_color_requires_user_confirmation",
+        "coatColorRequiresUserConfirmation",
+    );
+    if (
+        confidence === undefined ||
+        confidence < PETLENS_COAT_COLOR_CONFIDENCE_MIN ||
+        requiresConfirmation !== true
+    ) {
+        return undefined;
+    }
+    const raw = recordValue(data, "coat_color", "coatColor");
+    if (typeof raw !== "string") return undefined;
+    const candidate = raw.trim().slice(0, 80);
+    if (!candidate || /^(unknown|unclear|none|미상|알 수 없음)$/i.test(candidate)) return undefined;
+    return candidate;
+}
+
+export function getPetLensWeightEstimate(rawAnalysis: unknown): PetLensWeightEstimate | undefined {
+    const raw = asRecord(rawAnalysis);
+    if (!raw) return undefined;
+    const storefrontCandidates = asRecord(raw.storefrontCandidates);
+    const value = storefrontCandidates
+        ? storefrontCandidates.weightEstimate
+        : raw.weight_estimate ?? raw.weightEstimate;
+    const estimate = asRecord(value);
+    if (!estimate) return undefined;
+    let minKg = finiteNumber(estimate.min_kg ?? estimate.minKg);
+    let maxKg = finiteNumber(estimate.max_kg ?? estimate.maxKg);
+    if (
+        minKg === undefined ||
+        maxKg === undefined ||
+        minKg < 0.1 ||
+        maxKg < 0.1 ||
+        minKg > 120 ||
+        maxKg > 120
+    ) {
+        return undefined;
+    }
+    if (minKg > maxKg) [minKg, maxKg] = [maxKg, minKg];
+    const confidenceValue = finiteNumber(estimate.confidence);
+    const basis = typeof estimate.basis === "string" ? estimate.basis.trim().slice(0, 180) : undefined;
+    const source = typeof estimate.source === "string" ? estimate.source.trim().slice(0, 80) : undefined;
+    return {
+        minKg: Math.round(minKg * 10) / 10,
+        maxKg: Math.round(maxKg * 10) / 10,
+        confidence: confidenceValue === undefined
+            ? undefined
+            : Math.round(Math.max(0, Math.min(confidenceValue, 0.55)) * 100) / 100,
+        basis: basis || undefined,
+        source: source || undefined,
+        requiresUserConfirmation: true,
+    };
+}
+
+export function getPetLensStorefrontCandidates(rawAnalysis: unknown): PetLensStorefrontCandidates {
+    const raw = asRecord(rawAnalysis);
+    const candidates = asRecord(raw?.storefrontCandidates);
+    if (!candidates) return {};
+    const size = ["small", "medium", "large"].includes(String(candidates.size))
+        ? candidates.size as PetProfile["size"]
+        : undefined;
+    const coat = ["short", "medium", "long"].includes(String(candidates.coat))
+        ? candidates.coat as PetProfile["coat"]
+        : undefined;
+    const coatColor = typeof candidates.coatColor === "string" && candidates.coatColor.trim()
+        ? candidates.coatColor.trim().slice(0, 80)
+        : undefined;
+    return {
+        reviewOnlyBreed: asRecord(candidates.reviewOnlyBreed)
+            ? getPetLensReviewOnlyBreedCandidate(raw)
+            : undefined,
+        size,
+        coat,
+        coatColor,
+        weightEstimate: getPetLensWeightEstimate(rawAnalysis),
+    };
+}
+
+export function mergePetLensAnalysisWithConfirmedProfile(
+    analysis: PetProfile,
+    confirmed: PetProfile,
+): PetProfile {
+    return {
+        ...analysis,
+        apiProfileId: confirmed.apiProfileId,
+        // Existing member-entered identity and measured fields outrank photo candidates.
+        breed: confirmed.breed || analysis.breed,
+        birthMonth: confirmed.birthMonth,
+        weightKg: confirmed.weightKg,
+        sex: confirmed.sex || "unknown",
+        coatColor: confirmed.coatColor,
+        allergies: confirmed.allergies,
+        neutered: confirmed.neutered,
+        lifeStage: confirmed.lifeStage,
+    };
+}
 
 type ShopQuestionContext = {
     pet?: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
@@ -604,29 +797,81 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             body: form,
         });
         if (!response.ok) throw new Error(`PetLens API ${response.status}`);
-        const data = await response.json();
-        const apiConcerns = Array.isArray(data.concerns) && data.concerns.length ? data.concerns : input.concerns;
-        const apiCoat = ["short", "medium", "long"].includes(data.coat) ? data.coat : input.coat;
+        const data = await response.json() as Record<string, unknown>;
+        const trustworthyCandidate = isTrustworthyPetLensCandidate(data);
+        const trustworthyCanonicalBreed = isTrustworthyCanonicalBreedCandidate(data);
+        const apiConcerns = Array.isArray(data.concerns) && data.concerns.length
+            ? data.concerns.filter((item): item is string => typeof item === "string")
+            : input.concerns;
+        const coatCandidate = trustworthyCandidate && ["short", "medium", "long"].includes(String(data.coat))
+            ? data.coat as PetProfile["coat"]
+            : undefined;
+        const sizeCandidate = petLensSizeCandidate(data);
+        const coatColorCandidate = petLensCoatColorCandidate(data);
+        const weightEstimate = trustworthyCandidate ? getPetLensWeightEstimate(data) : undefined;
+        const reviewOnlyBreed = getPetLensReviewOnlyBreedCandidate(data);
+        const rawAnalysis: Record<string, unknown> = {
+            ...data,
+            storefrontCandidates: {
+                ...(reviewOnlyBreed ? { reviewOnlyBreed } : {}),
+                ...(sizeCandidate ? { size: sizeCandidate } : {}),
+                ...(coatCandidate ? { coat: coatCandidate } : {}),
+                ...(coatColorCandidate ? { coatColor: coatColorCandidate } : {}),
+                ...(weightEstimate ? { weightEstimate } : {}),
+                requiresUserConfirmation: true,
+            },
+        };
+        const rawBreed = typeof data.breed === "string" ? data.breed.trim() : "";
+        const breedConfidence = finiteNumber(data.confidence);
+        const canonicalBreed = trustworthyCanonicalBreed &&
+            breedConfidence !== undefined &&
+            breedConfidence >= PETLENS_BREED_CONFIDENCE_MIN &&
+            rawBreed &&
+            !/^(unknown|unclear|none)$/i.test(rawBreed)
+            ? rawBreed
+            : undefined;
+        const breed = canonicalBreed ?? reviewOnlyBreed?.label;
         const profile: PetProfile = {
             name: input.name || "우리 아이",
-            breed: typeof data.breed === "string" ? data.breed : undefined,
-            size: input.size,
+            breed,
+            size: sizeCandidate ?? input.size,
             age: input.age || "성견",
-            coat: apiCoat,
+            sex: "unknown",
+            coatColor: coatColorCandidate,
+            coat: coatCandidate ?? input.coat,
             activity: input.activity,
             concerns: apiConcerns,
             photoDataUrl: input.photoDataUrl,
-            rawAnalysis: data,
+            rawAnalysis,
             lastAnalyzedAt: new Date().toISOString(),
         };
+        const apiSummary = typeof data.summary === "string" && data.summary.trim()
+            ? data.summary
+            : "사진 기반 해석을 바탕으로 추천을 구성했습니다.";
+        const interpreter = typeof data.interpreter === "string" && data.interpreter.trim()
+            ? data.interpreter
+            : "fallback";
+        const interpreterModel = typeof data.interpreter_model === "string" && data.interpreter_model.trim()
+            ? ` · ${data.interpreter_model}`
+            : "";
         const summary = [
-            data.breed ? `사진 분석 결과 ${data.breed} 계열로 추정했습니다.` : `${profile.name}의 사진을 분석했습니다.`,
-            data.summary || "사진 기반 해석을 바탕으로 추천을 구성했습니다.",
-            `해석 엔진: ${data.interpreter || "fallback"}${data.interpreter_model ? ` · ${data.interpreter_model}` : ""}`,
+            canonicalBreed
+                ? `사진 분석 결과 ${canonicalBreed} 계열 후보로 분류했습니다. 회원 정보에서 꼭 확인해 주세요.`
+                : reviewOnlyBreed
+                    ? `사진에서 ${reviewOnlyBreed.label} 후보를 감지했습니다. 목록 외 견종 입력값을 꼭 직접 확인해 주세요.`
+                    : `${profile.name}의 사진을 분석했습니다.`,
+            apiSummary,
+            `해석 엔진: ${interpreter}${interpreterModel}`,
         ];
-        if (data.size_estimate && data.size_estimate !== "unknown") summary.push(`AI size estimate: ${data.size_estimate}`);
-        if (Array.isArray(data.care_notes)) summary.push(...data.care_notes.slice(0, 3));
-        if (Array.isArray(data.risk_flags) && data.risk_flags.length) summary.push(`Caution: ${data.risk_flags.slice(0, 3).join(", ")}`);
+        if (sizeCandidate) summary.push(`AI 크기 후보: ${sizeLabel(sizeCandidate)} (확인 필요)`);
+        if (weightEstimate) summary.push(`AI 예상 체중 범위: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg (사진 기반 후보 · 확인 필요)`);
+        if (coatColorCandidate) summary.push(`AI 털 색상 후보: ${coatColorCandidate} (확인 필요)`);
+        if (Array.isArray(data.care_notes)) {
+            summary.push(...data.care_notes.filter((item): item is string => typeof item === "string").slice(0, 3));
+        }
+        if (Array.isArray(data.risk_flags) && data.risk_flags.length) {
+            summary.push(`Caution: ${data.risk_flags.filter((item): item is string => typeof item === "string").slice(0, 3).join(", ")}`);
+        }
         if (data.image_stored) summary.push(`Photo stored: ${data.image_storage_key || "ok"}`);
         return { profile, products: recommendForPet(profile), summary };
     } catch (error) {

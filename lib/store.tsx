@@ -2,7 +2,6 @@
 
 import {
     createContext,
-    useCallback,
     useContext,
     useEffect,
     useMemo,
@@ -18,13 +17,21 @@ import type { CartPetAssignment } from "@/lib/pet-attribution";
 // selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
 export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
 export type PetProfile = {
+    apiProfileId?: number;
     name: string;
     breed?: string;
     size: "small" | "medium" | "large";
     age: string;
+    birthMonth?: string;
+    weightKg?: number;
+    sex?: "male" | "female" | "unknown";
+    coatColor?: string;
     coat: "short" | "medium" | "long";
     activity: "low" | "normal" | "high";
     concerns: string[];
+    allergies?: string[];
+    neutered?: "yes" | "no" | "unknown";
+    lifeStage?: "puppy" | "adult" | "senior" | "unknown";
     photoDataUrl?: string;
     rawAnalysis?: Record<string, unknown>;
     lastAnalyzedAt?: string;
@@ -150,7 +157,10 @@ function reducer(state: State, action: Action): State {
             return { ...state, user: null };
         case "UPSERT_PET": {
             if (!state.user) return state;
-            const pets = state.user.pets.filter((pet) => pet.name !== action.pet.name);
+            const pets = state.user.pets.filter((pet) => {
+                if (action.pet.apiProfileId && pet.apiProfileId === action.pet.apiProfileId) return false;
+                return pet.name !== action.pet.name;
+            });
             return { ...state, user: { ...state.user, pets: [action.pet, ...pets] } };
         }
         case "ADD_ORDER":

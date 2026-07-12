@@ -5,6 +5,7 @@ import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/li
 import { cartProducts, findProduct, productHref } from "@/lib/shop";
 import { useAuth, useStore, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
+import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
 
 const TRY_ON_SUBCATEGORIES = new Set(["harness", "leash", "wear", "goggles"]);
 const TRY_ON_PRODUCTS = CATALOG.filter((product) => TRY_ON_SUBCATEGORIES.has(product.subcategory) && product.image).slice(0, 8);
@@ -27,8 +28,14 @@ function activityLabel(activity: PetProfile["activity"]) {
     return "보통 활동량";
 }
 
+function sexLabel(sex: PetProfile["sex"]) {
+    if (sex === "female") return "암컷";
+    if (sex === "male") return "수컷";
+    return "성별 미입력";
+}
+
 function petKey(pet: PetProfile) {
-    return `${pet.name}-${pet.lastAnalyzedAt ?? pet.photoDataUrl?.length ?? "profile"}`;
+    return `pet-profile-${pet.name}`;
 }
 
 function firstTryOnProduct(): CatalogProduct | undefined {
@@ -95,10 +102,16 @@ export default function MyPage() {
                                             </div>
                                             <div>
                                                 <h3 className="font-black text-neutral-950">{pet.name}</h3>
+                                                {pet.breed && <p className="mt-1 text-sm font-black text-indigo-700">{pet.breed}</p>}
                                                 <p className="mt-1 text-sm font-bold text-neutral-600">
                                                     {sizeLabel(pet.size)} · {pet.age} · {coatLabel(pet.coat)}
                                                 </p>
-                                                <p className="mt-1 text-xs font-bold text-neutral-500">{activityLabel(pet.activity)}</p>
+                                                <p className="mt-1 text-xs font-bold text-neutral-500">
+                                                    {pet.weightKg !== undefined ? `${pet.weightKg}kg` : "체중 미입력"} · {sexLabel(pet.sex)}
+                                                </p>
+                                                <p className="mt-1 text-xs font-bold text-neutral-500">
+                                                    {pet.coatColor ? `${pet.coatColor} · ` : ""}{activityLabel(pet.activity)}
+                                                </p>
                                                 {pet.photoDataUrl ? (
                                                     <p className="mt-2 text-xs font-black text-indigo-700">착용 상품 자동 피팅 가능</p>
                                                 ) : (
@@ -115,6 +128,7 @@ export default function MyPage() {
                                                 ))}
                                             </div>
                                         )}
+                                        <MemberPetProfileEditor pet={pet} />
                                     </article>
                                 ))}
                             </div>

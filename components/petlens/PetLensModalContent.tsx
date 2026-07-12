@@ -24,10 +24,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { analyzePetLensSmart } from "@/lib/daengdabang-llm";   // 협업자 LLM 분석 (수정 X)
+import {
+    analyzePetLensSmart,
+    mergePetLensAnalysisWithConfirmedProfile,
+} from "@/lib/daengdabang-llm";   // 협업자 LLM 분석 (수정 X)
 import type { CatalogProduct } from "@/lib/catalog";
 import { savePetProfileSmart } from "@/lib/customer-api";      // 협업자 프로필 저장 (수정 X)
 import { resizePetPhoto } from "@/lib/pet-photo";              // 협업자 사진 리사이즈 (수정 X)
+import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
 import { useAuth, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
 import ProductCard from "@/components/products/ProductCard";
 
@@ -63,13 +67,16 @@ export default function PetLensModalContent() {
     useEffect(() => {
         const pet = user?.pets?.[0];
         if (!pet) return;
-        setName((c) => c || pet.name || "");
-        setAge((c) => c || pet.age || "");
-        setSize(pet.size || "medium");
-        setCoat(pet.coat || "medium");
-        setActivity(pet.activity || "normal");
-        if (pet.concerns?.length) setConcerns(pet.concerns);
-        if (pet.photoDataUrl) setPhotoDataUrl((c) => c || pet.photoDataUrl);
+        const hydrateId = window.setTimeout(() => {
+            setName((c) => c || pet.name || "");
+            setAge((c) => c || pet.age || "");
+            setSize(pet.size || "medium");
+            setCoat(pet.coat || "medium");
+            setActivity(pet.activity || "normal");
+            if (pet.concerns?.length) setConcerns(pet.concerns);
+            if (pet.photoDataUrl) setPhotoDataUrl((c) => c || pet.photoDataUrl);
+        }, 0);
+        return () => window.clearTimeout(hydrateId);
     }, [user]);
 
     const toggleConcern = (concern: string) => {
@@ -104,12 +111,19 @@ export default function PetLensModalContent() {
                 { name, age, size, coat, activity, concerns, imageName, photoDataUrl },
                 imageFile,
             );
-            setResult(analysis); // result 세팅 = 결과 단계로 전환
+            const confirmedPet = user?.pets.find((pet) => pet.name === analysis.profile.name);
+            const profile = confirmedPet
+                ? mergePetLensAnalysisWithConfirmedProfile(analysis.profile, confirmedPet)
+                : analysis.profile;
+            const resultWithConfirmedProfile = { ...analysis, profile };
+            setResult(resultWithConfirmedProfile); // result 세팅 = 결과 단계로 전환
             if (user) {
-                upsertPet(analysis.profile);
-                savePetProfileSmart(analysis.profile, user.apiAccessToken).catch(() =>
+                upsertPet(profile);
+                savePetProfileSmart(profile, user.apiAccessToken).catch(() =>
                     setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다."),
                 );
+            } else {
+                savePetLensSignupDraft(profile);
             }
         } catch (error) {
             setResult(null);
@@ -170,6 +184,8 @@ export default function PetLensModalContent() {
                             href="/auth/signup"
                             className="btn btn-secondary mt-4 inline-flex"
                             data-pet-guide-target="signup"
+                            data-petlens-signup-draft-cta
+                            onClick={() => savePetLensSignupDraft(result.profile)}
                         >
                             회원가입하고 프로필 저장
                         </Link>

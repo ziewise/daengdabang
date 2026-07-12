@@ -8,7 +8,8 @@
     "prebuild": "node scripts/gen-hero-manifest.mjs && node scripts/verify-pet-companion-assets.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:pet-companion-guest-save": "node --test tests/pet-companion-guest-save-access.test.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",

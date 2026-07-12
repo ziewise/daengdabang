@@ -37,6 +37,7 @@ import {
     type CompanionToneId,
     type PetCompanionSettings,
 } from "@/lib/pet-companion";
+import { resolvePetCompanionSaveAccess } from "@/lib/pet-companion-save-access";
 import PetCompanionCharacter, {
     type PetCompanionMotion,
     type PetCompanionTravelDirection,
@@ -187,6 +188,7 @@ export default function PetCompanionLayer({
     const entryCloneRef = useRef<HTMLSpanElement>(null);
     const walkerRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
+    const guestSignupRef = useRef<HTMLAnchorElement>(null);
     const lastFocusRef = useRef<HTMLElement | null>(null);
     const recommendedNamesRef = useRef(new Set<string>());
     const recommendationCountRef = useRef(0);
@@ -206,6 +208,8 @@ export default function PetCompanionLayer({
     const selectedBreed = useMemo(() => getPetBreedVisual(selectedBreedId), [selectedBreedId]);
     const displayBreedId = visualBreedId || settings.breedId;
     const displayCharacterId = visualCharacterId || settings.characterId;
+    const saveAccess = resolvePetCompanionSaveAccess(state.user);
+    const guestSavePromptOpen = !saveAccess.allowed && saveStatus === saveAccess.message;
     const forceMotionPreview = process.env.NODE_ENV !== "production"
         && typeof window !== "undefined"
         && new URLSearchParams(window.location.search).get("petPreview") === "1";
@@ -268,6 +272,39 @@ export default function PetCompanionLayer({
             lastFocusRef.current?.focus();
         };
     }, [panelOpen, settings, onPanelOpenChange]);
+
+    useEffect(() => {
+        if (!guestSavePromptOpen) return;
+        const previouslyFocused = document.activeElement as HTMLElement | null;
+        const focusFrame = window.requestAnimationFrame(() => guestSignupRef.current?.focus());
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                event.stopPropagation();
+                setSaveStatus("");
+                return;
+            }
+            if (event.key !== "Tab") return;
+            const prompt = guestSignupRef.current?.closest<HTMLElement>("[role='alertdialog']");
+            const focusable = Array.from(prompt?.querySelectorAll<HTMLElement>(
+                "button:not([disabled]), a[href]",
+            ) || []).filter((element) => element.offsetParent !== null);
+            if (!focusable.length) return;
+            event.preventDefault();
+            event.stopPropagation();
+            const currentIndex = focusable.indexOf(document.activeElement as HTMLElement);
+            const nextIndex = event.shiftKey
+                ? (currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1)
+                : (currentIndex < 0 || currentIndex === focusable.length - 1 ? 0 : currentIndex + 1);
+            focusable[nextIndex]?.focus();
+        };
+        window.addEventListener("keydown", onKeyDown, true);
+        return () => {
+            window.cancelAnimationFrame(focusFrame);
+            window.removeEventListener("keydown", onKeyDown, true);
+            if (previouslyFocused?.isConnected) previouslyFocused.focus();
+        };
+    }, [guestSavePromptOpen]);
 
     useEffect(() => {
         if (!settings.enabled || panelOpen) return;
@@ -1466,6 +1503,11 @@ export default function PetCompanionLayer({
     };
 
     const save = async () => {
+        const currentSaveAccess = resolvePetCompanionSaveAccess(state.user);
+        if (!currentSaveAccess.allowed) {
+            setSaveStatus(currentSaveAccess.message);
+            return;
+        }
         const next = {
             ...draft,
             breedId: resolvePetBreedId(draft.breedId),
@@ -1909,6 +1951,45 @@ export default function PetCompanionLayer({
                             <button type="button" className={styles.cancelButton} onClick={() => onPanelOpenChange(false)}>취소</button>
                             <button type="button" className={styles.saveButton} onClick={save}>저장하고 산책하기</button>
                         </footer>
+                        {guestSavePromptOpen && !saveAccess.allowed && (
+                            <div
+                                className={styles.guestSaveOverlay}
+                                onMouseDown={(event) => {
+                                    if (event.target === event.currentTarget) setSaveStatus("");
+                                }}
+                            >
+                                <div
+                                    className={styles.guestSavePrompt}
+                                    role="alertdialog"
+                                    aria-modal="true"
+                                    aria-labelledby="pet-companion-guest-save-title"
+                                    aria-describedby="pet-companion-guest-save-message"
+                                    data-pet-companion-guest-save-alert
+                                >
+                                    <span className={styles.guestSaveIcon} aria-hidden="true">🐾</span>
+                                    <h3 id="pet-companion-guest-save-title">{saveAccess.title}</h3>
+                                    <p id="pet-companion-guest-save-message">{saveAccess.message}</p>
+                                    <div className={styles.guestSaveActions}>
+                                        <button
+                                            type="button"
+                                            className={styles.guestSaveSecondary}
+                                            onClick={() => setSaveStatus("")}
+                                        >
+                                            계속 둘러보기
+                                        </button>
+                                        <Link
+                                            ref={guestSignupRef}
+                                            href={saveAccess.href}
+                                            className={styles.guestSavePrimary}
+                                            data-pet-companion-signup-cta
+                                            onClick={() => onPanelOpenChange(false)}
+                                        >
+                                            {saveAccess.actionLabel}
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </section>
                 </div>
             )}

@@ -51,6 +51,7 @@
 .settingsLaunch:focus-visible,
 .dogButton:focus-visible,
 .dialog button:focus-visible,
+.dialog a:focus-visible,
 .dialog input:focus-visible,
 .dialog select:focus-visible {
     outline: 3px solid rgb(89 169 230 / 38%);
@@ -270,6 +271,7 @@
 }
 
 .dialog {
+    position: relative;
     width: min(760px, 100%);
     max-height: min(820px, calc(100dvh - 40px));
     overflow: hidden;
@@ -583,6 +585,92 @@
     box-shadow: 0 5px 14px rgb(48 39 34 / 16%);
 }
 
+.guestSaveOverlay {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgb(39 31 27 / 46%);
+    backdrop-filter: blur(4px);
+}
+
+.guestSavePrompt {
+    display: grid;
+    width: min(420px, 100%);
+    justify-items: center;
+    padding: 28px;
+    border: 1px solid rgb(104 87 72 / 14%);
+    border-radius: 20px;
+    background: #fffdf9;
+    box-shadow: 0 24px 64px rgb(40 30 24 / 28%);
+    text-align: center;
+}
+
+.guestSaveIcon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: #edf2e6;
+    font-size: 24px;
+}
+
+.guestSavePrompt h3 {
+    margin: 0;
+    color: #342e2a;
+    font-size: 20px;
+    font-weight: 950;
+    letter-spacing: -.03em;
+}
+
+.guestSavePrompt p {
+    max-width: 330px;
+    margin: 10px 0 0;
+    color: #70655e;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.65;
+}
+
+.guestSaveActions {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 22px;
+}
+
+.guestSaveSecondary,
+.guestSavePrimary {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 17px;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.guestSaveSecondary {
+    border: 1px solid #ddd5cd;
+    background: #fff;
+    color: #675c54;
+    cursor: pointer;
+}
+
+.guestSavePrimary {
+    border: 1px solid #2f2a27;
+    background: #342e2a;
+    color: #fff;
+    box-shadow: 0 5px 14px rgb(48 39 34 / 16%);
+}
+
 @media (max-width: 680px) {
     .walker {
         width: 120px;
@@ -625,6 +713,12 @@
     .saveStatus { display: none; }
     .cancelButton { margin-left: auto; }
     .saveButton { padding-inline: 13px; }
+    .guestSaveOverlay { padding: 16px; }
+    .guestSavePrompt { padding: 24px 18px 20px; border-radius: 17px; }
+    .guestSavePrompt h3 { font-size: 18px; }
+    .guestSaveActions { display: grid; grid-template-columns: 1fr 1fr; }
+    .guestSaveSecondary,
+    .guestSavePrimary { padding-inline: 10px; }
     .dogButton {
         right: 12px;
         width: 96px;

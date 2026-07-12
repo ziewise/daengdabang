@@ -50,9 +50,16 @@ type ApiPetProfile = {
     breed?: string | null;
     size: PetProfile["size"];
     age?: string | null;
+    birthMonth?: string | null;
+    weightKg?: number | null;
+    sex?: PetProfile["sex"] | null;
+    coatColor?: string | null;
     coat: PetProfile["coat"];
     activity: PetProfile["activity"];
     concerns: string[];
+    allergies?: string[];
+    neutered?: PetProfile["neutered"] | null;
+    lifeStage?: PetProfile["lifeStage"] | null;
     photoDataUrl?: string | null;
     rawAnalysis?: Record<string, unknown> | null;
     source?: string;
@@ -178,16 +185,29 @@ export async function loadCurrentCustomer(token?: string) {
 }
 
 export async function savePetProfileSmart(pet: PetProfile, token?: string) {
-    return apiJson<ApiPetProfile>("/api/v1/pet-profiles", {
-        method: "POST",
+    const profileId = Number.isInteger(pet.apiProfileId) && Number(pet.apiProfileId) > 0
+        ? Number(pet.apiProfileId)
+        : undefined;
+    const path = profileId
+        ? `/api/v1/pet-profiles/${profileId}`
+        : "/api/v1/pet-profiles";
+    return apiJson<ApiPetProfile>(path, {
+        method: profileId ? "PUT" : "POST",
         body: JSON.stringify({
             name: pet.name,
             breed: pet.breed,
             size: pet.size,
             age: pet.age,
+            birthMonth: pet.birthMonth,
+            weightKg: pet.weightKg ?? null,
+            sex: pet.sex ?? "unknown",
+            coatColor: pet.coatColor || null,
             coat: pet.coat,
             activity: pet.activity,
             concerns: pet.concerns,
+            allergies: pet.allergies ?? [],
+            neutered: pet.neutered ?? "unknown",
+            lifeStage: pet.lifeStage ?? "unknown",
             photoDataUrl: pet.photoDataUrl,
             rawAnalysis: pet.rawAnalysis,
             source: "storefront",
@@ -202,13 +222,21 @@ export async function loadPetProfilesSmart(token?: string): Promise<PetProfile[]
     }, token);
     if (!rows) return null;
     return rows.map((row) => ({
+        apiProfileId: row.id,
         name: row.name,
         breed: row.breed || undefined,
         size: row.size,
         age: row.age || "성견",
+        birthMonth: row.birthMonth || undefined,
+        weightKg: typeof row.weightKg === "number" ? row.weightKg : undefined,
+        sex: row.sex || "unknown",
+        coatColor: row.coatColor || undefined,
         coat: row.coat,
         activity: row.activity,
         concerns: row.concerns || [],
+        allergies: row.allergies || [],
+        neutered: row.neutered || "unknown",
+        lifeStage: row.lifeStage || "unknown",
         photoDataUrl: row.photoDataUrl || undefined,
         rawAnalysis: row.rawAnalysis || undefined,
         lastAnalyzedAt: row.lastAnalyzedAt || row.updatedAt,

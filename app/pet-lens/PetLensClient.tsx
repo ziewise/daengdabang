@@ -3,10 +3,14 @@
 import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { analyzePetLensSmart } from "@/lib/daengdabang-llm";
+import {
+    analyzePetLensSmart,
+    mergePetLensAnalysisWithConfirmedProfile,
+} from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import { savePetProfileSmart } from "@/lib/customer-api";
 import { resizePetPhoto } from "@/lib/pet-photo";
+import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
 import { useAuth, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -36,13 +40,16 @@ export default function PetLensClient() {
     useEffect(() => {
         const pet = user?.pets?.[0];
         if (!pet) return;
-        setName((current) => current || pet.name || "");
-        setAge((current) => current || pet.age || "");
-        setSize(pet.size || "medium");
-        setCoat(pet.coat || "medium");
-        setActivity(pet.activity || "normal");
-        if (pet.concerns?.length) setConcerns(pet.concerns);
-        if (pet.photoDataUrl) setPhotoDataUrl((current) => current || pet.photoDataUrl);
+        const hydrateId = window.setTimeout(() => {
+            setName((current) => current || pet.name || "");
+            setAge((current) => current || pet.age || "");
+            setSize(pet.size || "medium");
+            setCoat(pet.coat || "medium");
+            setActivity(pet.activity || "normal");
+            if (pet.concerns?.length) setConcerns(pet.concerns);
+            if (pet.photoDataUrl) setPhotoDataUrl((current) => current || pet.photoDataUrl);
+        }, 0);
+        return () => window.clearTimeout(hydrateId);
     }, [user]);
 
     const toggleConcern = (concern: string) => {
@@ -81,11 +88,18 @@ export default function PetLensClient() {
                 imageName,
                 photoDataUrl,
             }, imageFile);
-            setResult(analysis);
+            const confirmedPet = user?.pets.find((pet) => pet.name === analysis.profile.name);
+            const profile = confirmedPet
+                ? mergePetLensAnalysisWithConfirmedProfile(analysis.profile, confirmedPet)
+                : analysis.profile;
+            const resultWithConfirmedProfile = { ...analysis, profile };
+            setResult(resultWithConfirmedProfile);
             if (user) {
-                upsertPet(analysis.profile);
-                savePetProfileSmart(analysis.profile, user.apiAccessToken)
+                upsertPet(profile);
+                savePetProfileSmart(profile, user.apiAccessToken)
                     .catch(() => setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다. 잠시 후 다시 시도해 주세요."));
+            } else {
+                savePetLensSignupDraft(profile);
             }
         } catch (error) {
             setResult(null);
@@ -208,7 +222,12 @@ export default function PetLensClient() {
                                     ))}
                                 </ul>
                                 {!user && (
-                                    <Link href="/auth/signup" className="btn btn-secondary mt-4">
+                                    <Link
+                                        href="/auth/signup"
+                                        className="btn btn-secondary mt-4"
+                                        data-petlens-signup-draft-cta
+                                        onClick={() => savePetLensSignupDraft(result.profile)}
+                                    >
                                         회원가입하고 프로필 저장
                                     </Link>
                                 )}

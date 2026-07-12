@@ -378,6 +378,9 @@ if (invalidBreedVisual) {
 }
 
 const BREED_BY_ID = new Map(PET_BREEDS.map((breed) => [breed.id, breed]));
+const BREED_EXACT_SEARCH = PET_BREEDS.flatMap((breed) => [breed.id, breed.en, breed.ko]
+    .filter(Boolean)
+    .map((label) => ({ key: normalizeBreedText(label), breed })));
 const BREED_SEARCH = PET_BREEDS.flatMap((breed) => [breed.id, breed.en, breed.ko, ...breed.aliases]
     .filter(Boolean)
     .map((alias) => ({ key: normalizeBreedText(alias), breed })))
@@ -452,6 +455,17 @@ export function resolvePetBreedId(text: string, fallback = "toy-poodle") {
         return item.key.length >= minimumLength && normalized.includes(item.key);
     });
     return partial?.breed.id || fallback;
+}
+
+/**
+ * Resolve AI photo output only when it names one canonical 120-breed entry.
+ * Broad aliases such as "푸들" / "Poodle" intentionally do not resolve because
+ * they could silently turn Standard or Miniature Poodle into Toy Poodle.
+ */
+export function resolvePetBreedIdExact(text: string, fallback = "") {
+    const normalized = normalizeBreedText(text);
+    if (!normalized) return fallback;
+    return BREED_EXACT_SEARCH.find((item) => item.key === normalized)?.breed.id || fallback;
 }
 
 export function legacyCharacterBreedId(characterId?: string | null) {
