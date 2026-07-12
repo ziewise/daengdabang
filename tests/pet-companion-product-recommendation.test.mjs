@@ -64,5 +64,5 @@ test("companion gate can mount recommendation layer on product/search surfaces",
     assert.match(source, /productRecommendationActiveRef/);
     assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
     assert.match(source, /new MutationObserver/);
-    assert.match(source, /!waitingForGuestVisual \|\| productRecommendationActive \|\| panelOpen/);
+    assert.match(source, /!waitingForGuestVisual \|\| productRecommendationActive \|\| signupGuideActive \|\| panelOpen/);
 });

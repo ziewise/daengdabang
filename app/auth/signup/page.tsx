@@ -318,7 +318,9 @@ export default function SignupPage() {
     return (
         <main className="mx-auto max-w-2xl px-4 py-10">
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
-            <SocialAuthButtons mode="signup" />
+            <div data-pet-guide-target="signup-provider">
+                <SocialAuthButtons mode="signup" />
+            </div>
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 {!ddbApiReady() && (
                     <p className="rounded-md bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-800">
@@ -330,7 +332,7 @@ export default function SignupPage() {
                         {error}
                     </p>
                 )}
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 md:grid-cols-2" data-pet-guide-target="signup-account">
                     <label>
                         <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
                         <input value={name} onChange={(event) => setName(event.target.value)} className="input" required autoComplete="name" />
@@ -358,7 +360,7 @@ export default function SignupPage() {
                 </label>
                 <div className="grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                     <div className="grid gap-4 md:grid-cols-[120px_1fr]">
-                        <label className="block">
+                        <label className="block" data-pet-guide-target="signup-pet-photo">
                             <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
                             <span className="grid aspect-square cursor-pointer place-items-center overflow-hidden rounded-md border border-dashed border-neutral-300 bg-white text-neutral-400 hover:border-indigo-300">
                                 {petPhotoDataUrl ? (
@@ -381,7 +383,7 @@ export default function SignupPage() {
                                 <input value={petAge} onChange={(event) => setPetAge(event.target.value)} className="input" />
                                 <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진으로 나이를 확정하지 않습니다. 직접 입력해 주세요.</span>
                             </label>
-                            <label className="md:col-span-2">
+                            <label className="md:col-span-2" data-pet-guide-target="signup-breed">
                                 <span className="mb-1 block text-xs font-black text-neutral-500">견종 캐릭터</span>
                                 <select
                                     value={petBreedId}
@@ -452,7 +454,7 @@ export default function SignupPage() {
                                 </select>
                                 <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">AI 후보가 반영될 수 있으니 실제 크기로 확인해 주세요.</span>
                             </label>
-                            <label>
+                            <label data-pet-guide-target="signup-weight">
                                 <span className="mb-1 block text-xs font-black text-neutral-500">현재 체중 (kg)</span>
                                 <input
                                     type="number"
@@ -544,7 +546,7 @@ export default function SignupPage() {
                         </div>
                     </div>
                 </div>
-                <section className="grid gap-3 rounded-lg border border-neutral-200 bg-white p-4">
+                <section className="grid gap-3 rounded-lg border border-neutral-200 bg-white p-4" data-pet-guide-target="signup-submit">
                     <h2 className="text-sm font-black text-neutral-950">필수 동의</h2>
                     <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
                         <input

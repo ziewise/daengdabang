@@ -21,9 +21,19 @@ import styles from "./PetCompanionLayer.module.css";
 const PetCompanionLayer = dynamic(() => import("./PetCompanionLayer"), { ssr: false });
 
 const HIDDEN_PATHS = ["/auth", "/checkout", "/cart", "/chat", "/pet-lens"];
+const SIGNUP_GUIDE_PATHS = ["/auth/signup", "/signup"];
 
 function isHeroRoute(pathname: string | null) {
     return pathname === "/" || pathname === "/main" || pathname === "/main/";
+}
+
+function isSignupGuideRoute(pathname: string | null) {
+    return SIGNUP_GUIDE_PATHS.some((path) => pathname === path || pathname?.startsWith(`${path}/`));
+}
+
+function isHiddenRoute(pathname: string | null) {
+    if (isSignupGuideRoute(pathname)) return false;
+    return HIDDEN_PATHS.some((path) => pathname === path || pathname?.startsWith(`${path}/`));
 }
 
 export default function PetCompanionGate() {
@@ -39,6 +49,7 @@ export default function PetCompanionGate() {
     const panelOpenRef = useRef(false);
     const productRecommendationActiveRef = useRef(false);
     const heroActive = isHeroRoute(pathname);
+    const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
     const heroVisualScopeRef = useRef<string | null>(null);
     const guestVisual = !state.user
@@ -192,20 +203,22 @@ export default function PetCompanionGate() {
         };
     }, [pathname]);
 
-    if (HIDDEN_PATHS.some((path) => pathname === path || pathname?.startsWith(`${path}/`))) {
+    if (isHiddenRoute(pathname)) {
         return null;
     }
 
-    const effectiveSettings = settings && guestVisualActive
+    const baseSettings = settings || (signupGuideActive ? defaultCompanionSettings("guest") : null);
+    const shouldForceGuestCompanion = !state.user && (guestVisualActive || signupGuideActive);
+    const effectiveSettings = baseSettings && shouldForceGuestCompanion
         ? {
-            ...settings,
-            // A guest sees the pet immediately on each new visit, even if an
-            // old local setting had left it hidden. A fresh in-page hide still
-            // works until the next visit.
-            enabled: guestInteracted ? settings.enabled : true,
-            speechEnabled: guestInteracted ? settings.speechEnabled : true,
+            ...baseSettings,
+            // A guest sees the pet immediately on each new visit or signup
+            // guide, even if an old local setting had left it hidden. A fresh
+            // in-page hide still works until the next visit.
+            enabled: guestInteracted ? baseSettings.enabled : true,
+            speechEnabled: guestInteracted ? baseSettings.speechEnabled : true,
         }
-        : settings;
+        : baseSettings;
     const companionEnabled = effectiveSettings?.enabled ?? true;
     const settingsLaunchLabel = companionEnabled
         ? "산책 친구 설정 열기"
@@ -244,7 +257,7 @@ export default function PetCompanionGate() {
             >
                 <span aria-hidden="true">🐾</span>
             </button>
-            {(!waitingForGuestVisual || productRecommendationActive || panelOpen) && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
+            {(!waitingForGuestVisual || productRecommendationActive || signupGuideActive || panelOpen) && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
                 <PetCompanionLayer
                     key={pathname || "root"}
                     settings={effectiveSettings}

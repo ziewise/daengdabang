@@ -1,4 +1,16 @@
-export type PetGuideId = "chatbot" | "color" | "try-on" | "product-actions" | "signup" | "pet-lens";
+export type PetGuideId =
+    | "chatbot"
+    | "color"
+    | "try-on"
+    | "product-actions"
+    | "signup"
+    | "pet-lens"
+    | "signup-provider"
+    | "signup-account"
+    | "signup-pet-photo"
+    | "signup-breed"
+    | "signup-weight"
+    | "signup-submit";
 
 export type PetGuidePrompt = {
     id: PetGuideId;
@@ -46,7 +58,19 @@ type DailyState = {
 const MEMBER_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "product-actions", "pet-lens", "chatbot", "signup"];
 const GUEST_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "signup", "pet-lens", "chatbot", "product-actions"];
 const HERO_GUEST_GUIDE_ORDER: PetGuideId[] = ["signup", "pet-lens", "color", "try-on", "chatbot", "product-actions"];
-const ALL_GUIDE_IDS = new Set<PetGuideId>([...MEMBER_GUIDE_ORDER, ...GUEST_GUIDE_ORDER]);
+const SIGNUP_GUIDE_ORDER: PetGuideId[] = [
+    "signup-provider",
+    "signup-account",
+    "signup-pet-photo",
+    "signup-breed",
+    "signup-weight",
+    "signup-submit",
+];
+const ALL_GUIDE_IDS = new Set<PetGuideId>([
+    ...MEMBER_GUIDE_ORDER,
+    ...GUEST_GUIDE_ORDER,
+    ...SIGNUP_GUIDE_ORDER,
+]);
 let memorySessionCount = 0;
 let memoryLastShownAt = 0;
 let memoryHistory: GuideHistoryEntry[] = [];
@@ -277,11 +301,14 @@ export function findPetGuidePrompt({
     const now = Date.now();
 
     const isHeroRoute = route === "/" || route === "/main";
+    const isSignupRoute = route === "/auth/signup" || route === "/signup";
     // On the opening hero, a guest should always hear the membership path
     // before PetLens or contextual shopping hints. Other routes retain their
     // existing contextual order.
     const guideOrder: readonly PetGuideId[] = onlyId
         ? [onlyId]
+        : isSignupRoute
+            ? SIGNUP_GUIDE_ORDER
         : isGuest && isHeroRoute
             ? HERO_GUEST_GUIDE_ORDER
             : (isGuest ? GUEST_GUIDE_ORDER : MEMBER_GUIDE_ORDER);
@@ -351,6 +378,60 @@ export function findPetGuidePrompt({
                     : "위의 분홍 카메라를 누르고 강아지 사진을 올리시면 견종과 맞춤 상품을 찾아드릴게요!",
                 actionLabel: "펫렌즈 열기",
                 activatesTarget: true,
+            };
+        }
+        if (id === "signup-provider") {
+            return {
+                id,
+                target,
+                placement,
+                name: "간편가입부터 확인해요",
+                message: "네이버·카카오·구글 가입이 준비되면 가장 빠른 길이에요. 아직 제공사 설정 대기라면 아래 이메일 가입을 계속 진행해 주세요.",
+            };
+        }
+        if (id === "signup-account") {
+            return {
+                id,
+                target,
+                placement,
+                name: "기본 정보는 짧게만",
+                message: "이름, 이메일, 휴대폰, 비밀번호를 먼저 입력해 주세요. 비밀번호는 서버 계정 연동을 위해 8자 이상이면 좋아요.",
+            };
+        }
+        if (id === "signup-pet-photo") {
+            return {
+                id,
+                target,
+                placement,
+                name: "사진을 올리면 제가 도와드려요",
+                message: "반려견 사진을 올리면 PetLens가 견종·크기·털색·예상 체중 후보를 불러와요. 나이와 성별, 현재 체중은 보호자가 직접 확인해 주세요.",
+            };
+        }
+        if (id === "signup-breed") {
+            return {
+                id,
+                target,
+                placement,
+                name: "견종은 꼭 확인해 주세요",
+                message: "사진 분석 결과는 후보예요. 120종 캐릭터 중 맞는 견종을 고르거나, 목록 밖 견종·믹스견이면 직접 입력해 주세요.",
+            };
+        }
+        if (id === "signup-weight") {
+            return {
+                id,
+                target,
+                placement,
+                name: "체중은 직접 확인값이 좋아요",
+                message: "사진으로 보이는 체급과 예상 체중은 참고용이에요. 하네스·의류 사이즈 추천에는 실제 현재 체중이 가장 안전합니다.",
+            };
+        }
+        if (id === "signup-submit") {
+            return {
+                id,
+                target,
+                placement,
+                name: "마지막으로 필수 동의",
+                message: "필수 약관과 개인정보 동의를 체크한 뒤 가입하기를 누르면, 입력한 아이 정보로 마이페이지와 추천이 시작돼요.",
             };
         }
         if (id === "signup" && isGuest) {
