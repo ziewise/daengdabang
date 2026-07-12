@@ -13,6 +13,7 @@ import {
 // "로그인" 버튼을 유지하던 버그 수정 — login/logout 에서 함께 갱신한다.
 import { authStorage } from "@/lib/storage";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
+import type { AuthProvider } from "@/lib/types";
 
 // selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
 export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
@@ -39,6 +40,7 @@ export type PetProfile = {
 export type User = {
     apiUserId?: number;
     apiAccessToken?: string;
+    authProvider?: AuthProvider;
     name: string;
     email: string;
     phone?: string;
@@ -235,7 +237,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             isWished: (productId) => state.wishlist.includes(productId),
             login: (user) => {
                 // 헤더/추천 섹션이 보는 로그인 플래그도 함께 세팅(마이페이지 버튼 전환)
-                authStorage.set({ provider: "email", ts: Date.now() });
+                authStorage.set({ provider: user.authProvider ?? "email", ts: Date.now() });
                 dispatch({ type: "LOGIN", user });
             },
             logout: () => {
