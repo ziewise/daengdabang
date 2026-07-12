@@ -39,12 +39,28 @@ test("companion recommendation layer allows search focus without becoming spammy
 
     assert.match(source, /MAX_RECOMMENDATIONS_PER_SESSION = 3/);
     assert.match(source, /recommendationShownCountThisSession/);
+    assert.match(source, /hasVisibleProductSurface/);
+    assert.match(source, /blocked:product-surface/);
+    assert.match(source, /recommendationInFlightRef/);
+    assert.match(source, /!recommendationInFlightRef\.current/);
     assert.match(source, /window\.addEventListener\(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT/);
     assert.match(source, /document\.addEventListener\("input", onSearchRecommendationInput, true\)/);
     assert.match(source, /new MutationObserver/);
     assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
+    assert.match(source, /!document\.querySelector\("\[data-pet-companion-speech\]"\)/);
     assert.match(source, /target\.closest\("\[data-pet-companion-allow='search'\]"\)/);
     assert.match(source, /!force && revealEpoch !== interactionEpochRef\.current/);
     assert.match(source, /!force && activeElement\?\.matches\("input, textarea, select, \[contenteditable='true'\]"\)/);
     assert.match(source, /data-pet-companion-allow/);
+});
+
+test("companion gate can mount recommendation layer on product/search surfaces", async () => {
+    const source = await readSource("components/pet-companion/PetCompanionGate.tsx");
+
+    assert.match(source, /PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT/);
+    assert.match(source, /productRecommendationActive/);
+    assert.match(source, /productRecommendationActiveRef/);
+    assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
+    assert.match(source, /new MutationObserver/);
+    assert.match(source, /!waitingForGuestVisual \|\| productRecommendationActive \|\| panelOpen/);
 });

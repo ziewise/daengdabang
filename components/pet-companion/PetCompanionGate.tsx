@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useStore } from "@/lib/store";
 import {
     PET_COMPANION_OPEN_EVENT,
+    PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT,
     defaultCompanionSettings,
     readGuestHeroCompanionVisual,
     resolveCompanionSettings,
@@ -34,7 +35,9 @@ export default function PetCompanionGate() {
     const [sessionHeroVisual, setSessionHeroVisual] = useState<PetCompanionHeroVisual | null>(null);
     const [guestSessionVisualChecked, setGuestSessionVisualChecked] = useState(false);
     const [guestInteracted, setGuestInteracted] = useState(false);
+    const [productRecommendationActive, setProductRecommendationActive] = useState(false);
     const panelOpenRef = useRef(false);
+    const productRecommendationActiveRef = useRef(false);
     const heroActive = isHeroRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
     const heroVisualScopeRef = useRef<string | null>(null);
@@ -139,6 +142,56 @@ export default function PetCompanionGate() {
         return () => window.removeEventListener(PET_COMPANION_OPEN_EVENT, open);
     }, []);
 
+    useEffect(() => {
+        productRecommendationActiveRef.current = productRecommendationActive;
+    }, [productRecommendationActive]);
+
+    useEffect(() => {
+        let cancelled = false;
+        let animationFrame = 0;
+        let observer: MutationObserver | null = null;
+
+        const activateIfProductSurface = () => {
+            if (cancelled || productRecommendationActiveRef.current) return;
+            if (document.querySelector("[data-pet-product]")) {
+                productRecommendationActiveRef.current = true;
+                setProductRecommendationActive(true);
+            }
+        };
+        const handleRecommendationRequest = () => {
+            if (!cancelled) {
+                productRecommendationActiveRef.current = true;
+                setProductRecommendationActive(true);
+            }
+        };
+
+        productRecommendationActiveRef.current = false;
+        setProductRecommendationActive(false);
+        window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, handleRecommendationRequest);
+        animationFrame = window.requestAnimationFrame(() => {
+            animationFrame = 0;
+            activateIfProductSurface();
+            observer = new MutationObserver((mutations) => {
+                if (cancelled || productRecommendationActiveRef.current) return;
+                if (mutations.some((mutation) => Array.from(mutation.addedNodes).some((node) => (
+                    node instanceof HTMLElement
+                    && (node.matches("[data-pet-product]") || node.querySelector("[data-pet-product]"))
+                )))) {
+                    productRecommendationActiveRef.current = true;
+                    setProductRecommendationActive(true);
+                }
+            });
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+        });
+
+        return () => {
+            cancelled = true;
+            if (animationFrame) window.cancelAnimationFrame(animationFrame);
+            observer?.disconnect();
+            window.removeEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, handleRecommendationRequest);
+        };
+    }, [pathname]);
+
     if (HIDDEN_PATHS.some((path) => pathname === path || pathname?.startsWith(`${path}/`))) {
         return null;
     }
@@ -191,7 +244,7 @@ export default function PetCompanionGate() {
             >
                 <span aria-hidden="true">🐾</span>
             </button>
-            {!waitingForGuestVisual && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
+            {(!waitingForGuestVisual || productRecommendationActive || panelOpen) && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
                 <PetCompanionLayer
                     key={pathname || "root"}
                     settings={effectiveSettings}

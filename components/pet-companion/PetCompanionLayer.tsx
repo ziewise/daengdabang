@@ -131,6 +131,19 @@ function markRecommendationShownThisSession() {
     }
 }
 
+function visibleProductCards() {
+    if (typeof document === "undefined") return [];
+    return Array.from(document.querySelectorAll<HTMLElement>("[data-pet-product]"))
+        .filter((card) => {
+            const rect = card.getBoundingClientRect();
+            return rect.bottom > 90 && rect.top < window.innerHeight - 50 && rect.width > 80;
+        });
+}
+
+function hasVisibleProductSurface() {
+    return visibleProductCards().length > 0;
+}
+
 function liveYBounds(boxHeight = LIVE_BOX_HEIGHT) {
     const max = Math.max(8, window.innerHeight - boxHeight);
     return { min: Math.min(92, max), max };
@@ -206,6 +219,7 @@ export default function PetCompanionLayer({
     const guideInFlightRef = useRef(false);
     const guideRunRef = useRef(0);
     const guidePlacementRef = useRef<PetGuidePrompt["placement"]>("content");
+    const recommendationInFlightRef = useRef(false);
     const entryPlayedRef = useRef(false);
     const entryInProgressRef = useRef(false);
     const positionRef = useRef<{ x: number; y: number } | null>(null);
@@ -1102,6 +1116,15 @@ export default function PetCompanionLayer({
                 if (walker) walker.dataset.petGuideStatus = "blocked:prompt-open";
                 return;
             }
+            if (!(force && !previewMode) && hasVisibleProductSurface()) {
+                if (walker) walker.dataset.petGuideStatus = "blocked:product-surface";
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                    previewMode ? 3500 : 12000,
+                );
+                return;
+            }
             if (!force && !petGuideHasBudget({ ignoreGap: true })) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:budget";
                 return;
@@ -1390,6 +1413,22 @@ export default function PetCompanionLayer({
                 recommendationCountRef.current >= MAX_RECOMMENDATIONS_PER_SESSION
                 || (!force && recommendationShownCountThisSession() >= MAX_RECOMMENDATIONS_PER_SESSION)
             ) return;
+            if (promptOpenRef.current && !document.querySelector("[data-pet-companion-speech]")) {
+                promptOpenRef.current = false;
+            }
+            const productSurfaceVisible = hasVisibleProductSurface();
+            if (force && productSurfaceVisible && (promptOpenRef.current || (guideInFlightRef.current && !recommendationInFlightRef.current))) {
+                const activeSpeech = document.querySelector("[data-pet-companion-speech]");
+                const activeGuide = document.querySelector("[data-pet-guide-bubble]");
+                if (activeGuide || !activeSpeech) {
+                    guideRunRef.current += 1;
+                    guideInFlightRef.current = false;
+                    promptOpenRef.current = false;
+                    guidePlacementRef.current = "content";
+                    setGuidePrompt(null);
+                    setRecommendation(null);
+                }
+            }
             if (promptOpenRef.current || guideInFlightRef.current) {
                 window.clearTimeout(retryTimer);
                 retryTimer = window.setTimeout(
@@ -1402,11 +1441,7 @@ export default function PetCompanionLayer({
             if (!force && activeElement?.matches("input, textarea, select, [contenteditable='true']")) return;
             if (externalDialogIsOpen()) return;
             const pet = state.user?.pets.find((item) => item.name === settings.activePetName) || state.user?.pets[0];
-            const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-pet-product]"))
-                .filter((card) => {
-                    const rect = card.getBoundingClientRect();
-                    return rect.bottom > 90 && rect.top < window.innerHeight - 50 && rect.width > 80;
-                });
+            const cards = visibleProductCards();
             if (!cards.length) return;
 
             const concerns = pet?.concerns.join(" ") || "";
@@ -1437,6 +1472,7 @@ export default function PetCompanionLayer({
             guideRunRef.current = recommendationRun;
             activeRecommendationRun = recommendationRun;
             guideInFlightRef.current = true;
+            recommendationInFlightRef.current = true;
             window.dispatchEvent(new CustomEvent(MOVE_EVENT, {
                 detail: {
                     x: clamp(rect.left - 96, 12, Math.max(12, window.innerWidth - boxWidth)),
@@ -1454,8 +1490,16 @@ export default function PetCompanionLayer({
             revealTimer = window.setTimeout(() => {
                 // Do not let an older recommendation arrival stop a newer
                 // guide or user-directed movement.
-                if (guideRunRef.current !== recommendationRun) return;
+                if (guideRunRef.current !== recommendationRun) {
+                    if (activeRecommendationRun === recommendationRun) {
+                        activeRecommendationRun = 0;
+                        recommendationInFlightRef.current = false;
+                        guideInFlightRef.current = false;
+                    }
+                    return;
+                }
                 guideInFlightRef.current = false;
+                recommendationInFlightRef.current = false;
                 activeRecommendationRun = 0;
                 const activeElement = document.activeElement as HTMLElement | null;
                 const latestRect = selected.getBoundingClientRect();
@@ -1545,6 +1589,7 @@ export default function PetCompanionLayer({
             if (activeRecommendationRun && guideRunRef.current === activeRecommendationRun) {
                 guideRunRef.current += 1;
                 guideInFlightRef.current = false;
+                recommendationInFlightRef.current = false;
             }
         };
     }, [panelOpen, settings.activePetName, settings.enabled, settings.speechEnabled, state.user]);
