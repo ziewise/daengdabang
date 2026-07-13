@@ -26,6 +26,21 @@ type PetLensInput = {
     }>;
 };
 
+const PETLENS_REAL_INTERPRETERS = new Set(["llama", "openai", "gemini"]);
+const PETLENS_INTERNAL_SUMMARY_PATTERNS = [
+    /full petlens vision pipeline/i,
+    /customer-facing result/i,
+    /analysis fallback/i,
+    /visual_subject_unclear/i,
+    /dummy/i,
+    /echo/i,
+    /photo stored/i,
+    /image_storage/i,
+    /storage/i,
+    /caution:/i,
+    /use the full/i,
+];
+
 export type PetLensWeightEstimate = {
     minKg: number;
     maxKg: number;
@@ -63,6 +78,73 @@ function finiteNumber(value: unknown): number | undefined {
 
 function recordValue(record: Record<string, unknown>, snakeKey: string, camelKey: string) {
     return record[snakeKey] ?? record[camelKey];
+}
+
+function stringList(value: unknown, limit = 4): string[] {
+    if (!Array.isArray(value)) return [];
+    return value
+        .filter((item): item is string => typeof item === "string")
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .slice(0, limit);
+}
+
+function isCustomerSafePetLensLine(line: string) {
+    const text = line.trim();
+    if (!text) return false;
+    return !PETLENS_INTERNAL_SUMMARY_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+function isModelBackedPetLensResult(data: Record<string, unknown>) {
+    const interpreter = String(recordValue(data, "interpreter", "interpreter") || "").trim().toLowerCase();
+    return PETLENS_REAL_INTERPRETERS.has(interpreter);
+}
+
+export function isPetLensAnalysisReadyForProfileSave(rawAnalysis: unknown) {
+    const raw = asRecord(rawAnalysis);
+    if (!raw) return false;
+    const ready = recordValue(raw, "ready_for_recommendation", "readyForRecommendation");
+    return ready === true && isModelBackedPetLensResult(raw);
+}
+
+function petLensRetakeAdvice(data: Record<string, unknown>) {
+    const retakeReasons = stringList(recordValue(data, "retake_reasons", "retakeReasons"), 3);
+    if (retakeReasons.length > 0) {
+        return `다시 촬영 팁: ${retakeReasons.join(" · ")}`;
+    }
+    return "다시 촬영 팁: 밝은 털과 밝은 배경이 겹치면 윤곽이 약해질 수 있어요. 베이지·회색 매트처럼 배경과 털이 분리되는 곳에서 얼굴과 몸통이 크게 보이게 찍어 주세요.";
+}
+
+function petLensCareNotes(profile: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns" | "coatColor">) {
+    const name = profile.name || "우리 아이";
+    const concerns = profile.concerns.join(" ");
+    const notes = [
+        `${name} 프로필은 사진 후보와 보호자 입력값을 함께 보고 구성합니다. 품종·체중·사이즈는 저장 전 확인이 필요합니다.`,
+    ];
+    if (profile.size === "small") {
+        notes.push("소형견은 목줄보다 가슴을 고르게 받쳐주는 하네스를 먼저 맞춰 보고, 침대·소파 점프와 미끄러운 바닥은 조심해 주세요.");
+    } else if (profile.size === "large") {
+        notes.push("대형견은 관절 부담과 체중 관리가 중요해요. 하네스는 가슴둘레 기준으로 여유 있게 맞추고 장시간 산책 후 발바닥을 확인해 주세요.");
+    } else {
+        notes.push("중형견은 활동량에 따라 하네스·리드줄 내구성과 발바닥 마찰 관리가 중요합니다.");
+    }
+    if (profile.coat === "long") {
+        notes.push("긴 털은 엉킴과 피부 습기가 생기기 쉬워 산책 후 빗질·건조·발바닥 확인을 같이 해 주세요.");
+    } else if (profile.coat === "medium") {
+        notes.push("보통 모질도 목욕 후 속털 건조와 정기 빗질이 중요합니다. 흰 털 계열은 눈가·입가 착색도 함께 봐 주세요.");
+    } else {
+        notes.push("단모라도 피부 자극과 발바닥 건조는 생길 수 있어 저자극 케어와 보습을 가볍게 챙겨 주세요.");
+    }
+    if (/산책|안전|하네스|목줄|리드|외출|야간/.test(concerns)) {
+        notes.push("산책 안전을 선택했으니 첫 추천은 하네스·리드줄·야간 안전 용품을 우선으로 봅니다.");
+    }
+    if (/눈|고글|자외선|보호/.test(concerns)) {
+        notes.push("눈 보호 관심이 있으면 자외선·바람·먼지 노출이 많은 산책 환경에서 고글/눈가 케어를 우선 확인해 주세요.");
+    }
+    if (/피부|발바닥|털|목욕|케어/.test(concerns)) {
+        notes.push("피부·발바닥 케어 관심이 있으면 산책 후 발 세척, 완전 건조, 저자극 샴푸 사용 여부를 함께 확인해 주세요.");
+    }
+    return notes.slice(0, 6);
 }
 
 function isTrustworthyPetLensCandidate(data: Record<string, unknown>) {
@@ -747,21 +829,63 @@ function normalizeChoiceGroups(value: unknown): ShopChatChoiceGroup[] {
 }
 
 export function recommendForPet(profile: Pick<PetProfile, "size" | "coat" | "activity" | "concerns">) {
-    const products: CatalogProduct[] = [];
     const concerns = profile.concerns.join(" ");
+    const wantsWalkSafety = /산책|안전|하네스|목줄|리드|외출|야간/.test(concerns);
+    const wantsEye = /눈|고글|자외선|보호/.test(concerns);
+    const wantsCare = /피부|발바닥|털|목욕|케어/.test(concerns);
+    const wantsFood = /체중|식단|알러지|간식|사료/.test(concerns);
+    const wantsToy = /놀이|분리불안|에너지/.test(concerns);
 
-    if (profile.activity === "high") products.push(...CATALOG.filter((p) => p.category === "outdoor"));
-    if (profile.activity === "low") products.push(...CATALOG.filter((p) => p.category === "life"));
-    if (profile.coat === "long") products.push(...CATALOG.filter((p) => p.category === "care"));
-    if (/눈|고글|자외선|보호/.test(concerns)) products.push(...CATALOG.filter((p) => p.subcategory === "goggles"));
-    if (/피부|발바닥|털|목욕|케어/.test(concerns)) products.push(...CATALOG.filter((p) => p.category === "care"));
-    if (/체중|식단|알러지|간식|사료/.test(concerns)) products.push(...CATALOG.filter((p) => p.category === "food"));
-    if (/놀이|분리불안|에너지/.test(concerns)) products.push(...CATALOG.filter((p) => p.category === "toy"));
-    if (profile.size === "small") products.push(...searchCatalog("소형"));
-    if (profile.size === "large") products.push(...searchCatalog("대형"));
+    const scored = CATALOG.map((product) => {
+        const text = [
+            product.name,
+            product.brandKo,
+            product.brandEn,
+            product.raw.target,
+            product.raw.useMain,
+            product.raw.useSub,
+            product.raw.categorizeNote,
+            product.season,
+        ].join(" ").toLowerCase();
+        let score = product.popularity / 100;
+        if (wantsWalkSafety) {
+            if (product.category === "outdoor") score += 120;
+            if (["harness", "leash", "wear", "goggles", "carrier"].includes(product.subcategory)) score += 40;
+            if (/하네스|리드|목줄|야간|안전|산책|외출|러프웨어|ruffwear/.test(text)) score += 35;
+        }
+        if (wantsEye) {
+            if (product.subcategory === "goggles") score += 120;
+            if (/눈|고글|자외선|먼지|바람/.test(text)) score += 35;
+        }
+        if (wantsCare || profile.coat === "long" || profile.coat === "medium") {
+            if (product.category === "care") score += wantsCare ? 90 : 30;
+            if (["cream", "paw", "hygiene"].includes(product.subcategory)) score += 28;
+            if (/피부|발바닥|샴푸|미스트|브러시|털|보습|저자극|케어/.test(text)) score += 24;
+        }
+        if (wantsFood) {
+            if (product.category === "food") score += 95;
+            if (["drysoy", "treats", "supplement", "dessert"].includes(product.subcategory)) score += 30;
+        }
+        if (wantsToy || profile.activity === "high") {
+            if (product.category === "toy") score += wantsToy ? 85 : 25;
+            if (product.category === "outdoor" && profile.activity === "high") score += 55;
+        }
+        if (profile.activity === "low" && product.category === "life") score += 40;
+        if (profile.size === "small") {
+            if (/소형|small|xs|s\b|초소형/.test(text)) score += 25;
+            if (/대형|large|xl|xxl|중대형/.test(text)) score -= 30;
+        }
+        if (profile.size === "large") {
+            if (/대형|large|xl|xxl|중대형/.test(text)) score += 25;
+            if (/소형|small|xs|s\b|초소형/.test(text)) score -= 20;
+        }
+        return { product, score };
+    });
 
-    products.push(...applySort(CATALOG, "popular").slice(0, 24));
-    return unique(products).slice(0, 8);
+    const ranked = scored
+        .sort((a, b) => b.score - a.score)
+        .map((item) => item.product);
+    return unique(ranked).slice(0, 8);
 }
 
 export function analyzePetLens(input: PetLensInput) {
@@ -804,9 +928,11 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
         });
         if (!response.ok) throw new Error(`PetLens API ${response.status}`);
         const data = await response.json() as Record<string, unknown>;
+        const modelBacked = isModelBackedPetLensResult(data);
+        const readyForRecommendation = recordValue(data, "ready_for_recommendation", "readyForRecommendation") === true;
         const trustworthyCandidate = isTrustworthyPetLensCandidate(data);
         const trustworthyCanonicalBreed = isTrustworthyCanonicalBreedCandidate(data);
-        const apiConcerns = Array.isArray(data.concerns) && data.concerns.length
+        const apiConcerns = trustworthyCandidate && Array.isArray(data.concerns) && data.concerns.length
             ? data.concerns.filter((item): item is string => typeof item === "string")
             : input.concerns;
         const coatCandidate = trustworthyCandidate && ["short", "medium", "long"].includes(String(data.coat))
@@ -861,35 +987,28 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             rawAnalysis,
             lastAnalyzedAt: new Date().toISOString(),
         };
-        const apiSummary = typeof data.summary === "string" && data.summary.trim()
-            ? data.summary
-            : "사진 기반 해석을 바탕으로 추천을 구성했습니다.";
-        const interpreter = typeof data.interpreter === "string" && data.interpreter.trim()
-            ? data.interpreter
-            : "fallback";
-        const interpreterModel = typeof data.interpreter_model === "string" && data.interpreter_model.trim()
-            ? ` · ${data.interpreter_model}`
-            : "";
         const summary = [
-            canonicalBreed
-                ? `사진 분석 결과 ${canonicalBreed} 계열 후보로 분류했습니다. 회원 정보에서 꼭 확인해 주세요.`
-                : reviewOnlyBreed
-                    ? `사진에서 ${reviewOnlyBreed.label} 후보를 감지했습니다. 목록 외 견종 입력값을 꼭 직접 확인해 주세요.`
-                    : `${profile.name}의 사진을 분석했습니다.`,
-            apiSummary,
-            `해석 엔진: ${interpreter}${interpreterModel}`,
+            modelBacked && readyForRecommendation && canonicalBreed
+                ? `사진 분석 결과 ${canonicalBreed} 계열 후보를 찾았습니다. 저장 전 실제 견종과 맞는지 확인해 주세요.`
+                : modelBacked && readyForRecommendation && reviewOnlyBreed
+                    ? `사진에서 ${reviewOnlyBreed.label} 후보를 찾았습니다. 목록 외 견종/믹스견일 수 있어 직접 확인이 필요합니다.`
+                    : `${profile.name}의 사진은 받았지만, 현재 정밀 AI가 품종을 확정할 만큼 안정적인 결과를 만들지 못했습니다.`,
         ];
-        if (sizeCandidate) summary.push(`AI 크기 후보: ${sizeLabel(sizeCandidate)} (확인 필요)`);
-        if (weightEstimate) summary.push(`AI 예상 체중 범위: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg (사진 기반 후보 · 확인 필요)`);
-        if (coatColorCandidate) summary.push(`AI 털 색상 후보: ${coatColorCandidate} (확인 필요)`);
-        if (input.photoViews?.length && input.photoViews.length > 1) summary.push(`정면/좌/우/뒷면 중 ${input.photoViews.length}개 방향 사진을 묶어 분석했습니다.`);
-        if (Array.isArray(data.care_notes)) {
-            summary.push(...data.care_notes.filter((item): item is string => typeof item === "string").slice(0, 3));
+        const apiSummary = typeof data.summary === "string" && isCustomerSafePetLensLine(data.summary)
+            ? data.summary.trim()
+            : "";
+        if (apiSummary && modelBacked) summary.push(apiSummary);
+        if (input.photoViews?.length && input.photoViews.length > 1) {
+            summary.push(`정면/좌/우/뒷면 중 ${input.photoViews.length}개 방향 사진을 함께 확인했습니다.`);
         }
-        if (Array.isArray(data.risk_flags) && data.risk_flags.length) {
-            summary.push(`Caution: ${data.risk_flags.filter((item): item is string => typeof item === "string").slice(0, 3).join(", ")}`);
-        }
-        if (data.image_stored) summary.push(`Photo stored: ${data.image_storage_key || "ok"}`);
+        if (!modelBacked || !readyForRecommendation) summary.push(petLensRetakeAdvice(data));
+        if (sizeCandidate) summary.push(`크기 후보: ${sizeLabel(sizeCandidate)} · 보호자 확인 필요`);
+        if (weightEstimate) summary.push(`예상 체중 후보: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg · 사진 기반 참고값`);
+        if (coatColorCandidate) summary.push(`털 색상 후보: ${coatColorCandidate} · 보호자 확인 필요`);
+        const providerCareNotes = modelBacked
+            ? stringList(data.care_notes, 3).filter(isCustomerSafePetLensLine)
+            : [];
+        summary.push(...(providerCareNotes.length > 0 ? providerCareNotes : petLensCareNotes(profile)));
         return { profile, products: recommendForPet(profile), summary };
     } catch (error) {
         throw error instanceof Error ? error : new Error("PetLens API analysis failed.");

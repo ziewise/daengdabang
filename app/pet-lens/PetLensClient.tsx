@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
     analyzePetLensSmart,
+    isPetLensAnalysisReadyForProfileSave,
     mergePetLensAnalysisWithConfirmedProfile,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
@@ -126,9 +127,19 @@ export default function PetLensClient() {
             const profile = confirmedPet
                 ? mergePetLensAnalysisWithConfirmedProfile(analysis.profile, confirmedPet)
                 : analysis.profile;
-            const resultWithConfirmedProfile = { ...analysis, profile };
+            const canAutoSaveProfile = isPetLensAnalysisReadyForProfileSave(profile.rawAnalysis) && Boolean(profile.breed?.trim());
+            const resultWithConfirmedProfile = {
+                ...analysis,
+                profile,
+                summary: canAutoSaveProfile
+                    ? analysis.summary
+                    : [
+                        ...analysis.summary,
+                        "분석 신뢰도가 충분하지 않아 회원 프로필과 산책 친구 캐릭터는 자동 변경하지 않았습니다. 견종을 직접 확인한 뒤 저장해 주세요.",
+                    ],
+            };
             setResult(resultWithConfirmedProfile);
-            if (user) {
+            if (user && canAutoSaveProfile) {
                 upsertPet(profile);
                 savePetProfileSmart(profile, user.apiAccessToken)
                     .catch(() => setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다. 잠시 후 다시 시도해 주세요."));

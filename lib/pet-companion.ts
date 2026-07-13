@@ -294,6 +294,12 @@ function petBreedIdentity(pet?: PetProfile | null) {
     return typeof value === "string" ? value.trim() : "";
 }
 
+function petHasCompanionIdentity(pet?: PetProfile | null) {
+    if (!pet) return false;
+    const raw = isRecord(pet.rawAnalysis) ? pet.rawAnalysis : {};
+    return Boolean(petBreedIdentity(pet) || isRecord(raw.companion));
+}
+
 function legacyBreedId(characterId: CompanionCharacterId) {
     if (characterId === "retriever") return "golden-retriever";
     if (characterId === "corgi") return "pembroke";
@@ -384,6 +390,7 @@ export function companionSettingsFromPet(
     ownerKey: string,
 ): PetCompanionSettings | null {
     if (!pet || !isRecord(pet.rawAnalysis)) return null;
+    if (!petHasCompanionIdentity(pet)) return null;
     const fallback = defaultCompanionSettings(ownerKey, pet);
     return normalizeSettings(pet.rawAnalysis.companion, fallback, ownerKey);
 }
@@ -400,6 +407,7 @@ export function readLocalCompanionSettings(
         const activePet = typeof value.activePetName === "string"
             ? pets.find((candidate) => candidate.name === value.activePetName) || pet
             : pet;
+        if (activePet && !petHasCompanionIdentity(activePet)) return null;
         return normalizeSettings(value, defaultCompanionSettings(ownerKey, activePet), ownerKey);
     } catch {
         return null;
@@ -424,7 +432,7 @@ export function resolveCompanionSettings(user: User | null): PetCompanionSetting
     const usableLocal = user && local && !localPet ? null : local;
     const activePet = localPet
         || user?.pets.find((pet) => companionSettingsFromPet(pet, ownerKey)?.enabled)
-        || user?.pets[0]
+        || user?.pets.find(petHasCompanionIdentity)
         || null;
     return usableLocal
         || companionSettingsFromPet(activePet, ownerKey)
