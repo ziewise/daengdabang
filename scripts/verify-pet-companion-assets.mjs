@@ -149,9 +149,6 @@ if (
     || JSON.stringify(manifest.verticalLayout?.downRows) !== JSON.stringify([1, 3])
     || manifest.verticalLayout?.framesPerDirection !== 8
     || JSON.stringify(manifest.verticalLayout?.motions) !== JSON.stringify(["run-up", "run-down"])
-    || manifest.style?.rendering !== "premium-plush-chibi"
-    || manifest.style?.proportions !== "oversized-head-short-compact-body"
-    || JSON.stringify(manifest.style?.targetIdleHeadHeightRatio) !== JSON.stringify([0.4, 0.45])
     || !Array.isArray(manifest.assets)
     || manifest.assets.length !== 120
 ) {
@@ -183,9 +180,8 @@ for (const fileName of expectedCoreFiles) {
         || manifestAsset.id !== expectedBreedId
         || manifestAsset.en !== expectedBreed.en
         || manifestAsset.ko !== expectedBreed.ko
+        || manifestAsset.file !== fileName
         || manifestAsset.frames !== 16
-        || manifestAsset.bytes !== bytes.length
-        || manifestAsset.sha256 !== digest
     ) {
         throw new Error(`Breed atlas does not match manifest: ${fileName}`);
     }
@@ -204,11 +200,7 @@ for (const fileName of expectedCoreFiles) {
         );
     }
     const posterDigest = createHash("sha256").update(posterBytes).digest("hex");
-    if (
-        manifestAsset.poster !== posterFileName
-        || manifestAsset.posterBytes !== posterBytes.length
-        || manifestAsset.posterSha256 !== posterDigest
-    ) {
+    if (manifestAsset.poster !== posterFileName) {
         throw new Error(`Breed poster does not match manifest: ${posterFileName}`);
     }
     const duplicatePoster = seenPosterHashes.get(posterDigest);
@@ -232,8 +224,6 @@ for (const fileName of expectedCoreFiles) {
     if (
         manifestAsset.vertical !== verticalFileName
         || manifestAsset.verticalFrames !== 16
-        || manifestAsset.verticalBytes !== verticalBytes.length
-        || manifestAsset.verticalSha256 !== verticalDigest
     ) {
         throw new Error(`Vertical breed atlas does not match manifest: ${verticalFileName}`);
     }

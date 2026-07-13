@@ -24,7 +24,7 @@
     "marketItemId": "rec-market-001-사료-건식-일반-전연령-사료",
     "gapLevel": "partial",
     "priorityScore": 565.61,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-002-배변-위생-배변패드",
@@ -51,7 +51,7 @@
     "marketItemId": "rec-market-002-배변-위생-배변패드",
     "gapLevel": "missing",
     "priorityScore": 531.7,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-003-사료-건식-기능성-시니어-처방식형-사료",
@@ -79,7 +79,7 @@
     "marketItemId": "rec-market-003-사료-건식-기능성-시니어-처방식형-사료",
     "gapLevel": "needs_boost",
     "priorityScore": 247.07,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-004-이동-가구-침대-방석-매트",
@@ -106,7 +106,7 @@
     "marketItemId": "rec-market-004-이동-가구-침대-방석-매트",
     "gapLevel": "partial",
     "priorityScore": 124.95,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-006-간식-덴탈껌-덴탈스틱",
@@ -132,7 +132,7 @@
     "marketItemId": "rec-market-006-간식-덴탈껌-덴탈스틱",
     "gapLevel": "partial",
     "priorityScore": 83.92,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-007-간식-져키-육포-소프트트릿",
@@ -160,7 +160,7 @@
     "marketItemId": "rec-market-007-간식-져키-육포-소프트트릿",
     "gapLevel": "weak",
     "priorityScore": 111.96,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-008-장난감-라텍스-봉제-삑삑이",
@@ -187,7 +187,7 @@
     "marketItemId": "rec-market-008-장난감-라텍스-봉제-삑삑이",
     "gapLevel": "weak",
     "priorityScore": 107.95,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-009-배변-위생-물티슈-발세정-타월",
@@ -214,7 +214,7 @@
     "marketItemId": "rec-market-009-배변-위생-물티슈-발세정-타월",
     "gapLevel": "needs_boost",
     "priorityScore": 100.15,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-011-이동-가구-이동가방-캐리어",
@@ -241,7 +241,7 @@
     "marketItemId": "rec-market-011-이동-가구-이동가방-캐리어",
     "gapLevel": "partial",
     "priorityScore": 73.28,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-013-사료-습식-캔-파우치",
@@ -268,7 +268,7 @@
     "marketItemId": "rec-market-013-사료-습식-캔-파우치",
     "gapLevel": "weak",
     "priorityScore": 85.83,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-015-배변-위생-탈취제-소취제",
@@ -294,7 +294,7 @@
     "marketItemId": "rec-market-015-배변-위생-탈취제-소취제",
     "gapLevel": "missing",
     "priorityScore": 109.75,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-016-케어-샴푸-린스",
@@ -319,7 +319,7 @@
     "marketItemId": "rec-market-016-케어-샴푸-린스",
     "gapLevel": "partial",
     "priorityScore": 70.1,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-017-장난감-노즈워크-매트",
@@ -344,7 +344,7 @@
     "marketItemId": "rec-market-017-장난감-노즈워크-매트",
     "gapLevel": "needs_boost",
     "priorityScore": 78.83,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-021-배변-위생-배변봉투",
@@ -370,7 +370,7 @@
     "marketItemId": "rec-market-021-배변-위생-배변봉투",
     "gapLevel": "needs_boost",
     "priorityScore": 70.35,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-022-케어-치약-칫솔-구강스프레이",
@@ -398,7 +398,7 @@
     "marketItemId": "rec-market-022-케어-치약-칫솔-구강스프레이",
     "gapLevel": "needs_boost",
     "priorityScore": 70.2,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   },
   {
     "id": "rpa-rec-market-023-케어-브러쉬-클리퍼-미용도구",
@@ -426,6 +426,6 @@
     "marketItemId": "rec-market-023-케어-브러쉬-클리퍼-미용도구",
     "gapLevel": "missing",
     "priorityScore": 92.55,
-    "sourceKind": "market-intelligence-rpa"
+    "sourceKind": "market"
   }
 ]

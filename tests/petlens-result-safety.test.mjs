@@ -16,6 +16,8 @@ test("PetLens customer result hides internal provider, storage, and fallback dia
     assert.match(source, /petLensRetakeAdvice/);
     assert.match(source, /petLensCareNotes/);
     assert.match(source, /isPetLensAnalysisReadyForProfileSave/);
+    assert.match(source, /profile_save_allowed/);
+    assert.match(source, /analysis_ready/);
     assert.match(source, /const apiConcerns = trustworthyCandidate/);
     assert.doesNotMatch(source, /`해석 엔진:/);
     assert.doesNotMatch(source, /summary\.push\(`Photo stored:/);

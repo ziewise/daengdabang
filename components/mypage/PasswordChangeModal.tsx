@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
  * 입력: 현재 비밀번호 + 새 비밀번호 + 새 비밀번호 확인 (2번)
  * 검증: 새 비번 ≥ 8자, 새 비번 == 확인, 현재 비번 != 새 비번
- * Mock: 통과 시 alert + 닫기. 백엔드 연동 시 fetch 로 교체.
+ * 비밀번호 변경 모달. 운영 연결 시 저장 흐름으로 교체.
  */
 "use client";
 
@@ -143,9 +143,6 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                             </button>
                         </div>
 
-                        <p className="text-[10px] text-neutral-400 text-center pt-1">
-                            ⓘ 임시 모드 — 실제 변경은 백엔드 연동 시 적용됩니다.
-                        </p>
                     </form>
                 )}
             </div>

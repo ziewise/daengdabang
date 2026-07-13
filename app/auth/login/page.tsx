@@ -6,7 +6,7 @@
  * 중앙 카드: 좌 9:16 브랜드 영상(public/videos/login.mp4) + 우 로그인 폼.
  * 색 톤은 영상(따뜻한 크림 방 + 흰 강아지 + 하늘 반다나)에 맞춰 크림/허니 앰버로 통일.
  * 폼: 이메일/아이디 · 비밀번호(눈 토글) · 로그인 · 간편로그인(원형) · 회원가입.
- * 로그인 로직(운영 API 연동)은 기존 그대로 유지.
+ * 로그인 로직은 기존 흐름을 유지.
  */
 
 import { FormEvent, useEffect, useState } from "react";
@@ -47,7 +47,7 @@ export default function LoginPage() {
         setError("");
         if (!ddbApiReady()) {
             setCustomerToken();
-            setError("회원 로그인을 사용하려면 운영 API 주소가 먼저 연결되어야 합니다.");
+            setError("지금은 회원 로그인을 사용할 수 없습니다. 잠시 후 다시 이용해 주세요.");
             return;
         }
         if (!email.trim() || !password.trim()) {
@@ -130,7 +130,7 @@ export default function LoginPage() {
 
                     {!ddbApiReady() && (
                         <p className="mb-4 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-6 text-amber-800">
-                            운영 API가 연결되면 이메일 로그인과 간편로그인이 활성화됩니다.
+                            지금은 회원 로그인을 준비 중입니다. 잠시 후 다시 이용해 주세요.
                         </p>
                     )}
                     {error && (

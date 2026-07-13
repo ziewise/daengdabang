@@ -32,6 +32,16 @@ const PETLENS_INTERNAL_SUMMARY_PATTERNS = [
     /customer-facing result/i,
     /analysis fallback/i,
     /visual_subject_unclear/i,
+    /gemini/i,
+    /openai/i,
+    /llama/i,
+    /interpreter/i,
+    /model/i,
+    /token/i,
+    /cost/i,
+    /latency/i,
+    /backend/i,
+    /\bapi\b/i,
     /dummy/i,
     /echo/i,
     /photo stored/i,
@@ -96,6 +106,9 @@ function isCustomerSafePetLensLine(line: string) {
 }
 
 function isModelBackedPetLensResult(data: Record<string, unknown>) {
+    const profileSaveAllowed = recordValue(data, "profile_save_allowed", "profileSaveAllowed") === true;
+    const analysisReady = recordValue(data, "analysis_ready", "analysisReady") === true;
+    if (profileSaveAllowed || analysisReady) return true;
     const interpreter = String(recordValue(data, "interpreter", "interpreter") || "").trim().toLowerCase();
     return PETLENS_REAL_INTERPRETERS.has(interpreter);
 }
@@ -103,6 +116,7 @@ function isModelBackedPetLensResult(data: Record<string, unknown>) {
 export function isPetLensAnalysisReadyForProfileSave(rawAnalysis: unknown) {
     const raw = asRecord(rawAnalysis);
     if (!raw) return false;
+    if (recordValue(raw, "profile_save_allowed", "profileSaveAllowed") === true) return true;
     const ready = recordValue(raw, "ready_for_recommendation", "readyForRecommendation");
     return ready === true && isModelBackedPetLensResult(raw);
 }
@@ -150,7 +164,11 @@ function petLensCareNotes(profile: Pick<PetProfile, "name" | "size" | "coat" | "
 function isTrustworthyPetLensCandidate(data: Record<string, unknown>) {
     const presence = recordValue(data, "pet_presence", "petPresence");
     const quality = recordValue(data, "analysis_quality", "analysisQuality");
-    const ready = recordValue(data, "ready_for_recommendation", "readyForRecommendation");
+    const ready = (
+        recordValue(data, "ready_for_recommendation", "readyForRecommendation") ??
+        recordValue(data, "analysis_ready", "analysisReady") ??
+        recordValue(data, "profile_save_allowed", "profileSaveAllowed")
+    );
     const breedResolutionStatus = recordValue(
         data,
         "breed_resolution_status",
@@ -168,7 +186,11 @@ function isTrustworthyPetLensCandidate(data: Record<string, unknown>) {
 }
 
 function isTrustworthyCanonicalBreedCandidate(data: Record<string, unknown>) {
-    const ready = recordValue(data, "ready_for_recommendation", "readyForRecommendation");
+    const ready = (
+        recordValue(data, "ready_for_recommendation", "readyForRecommendation") ??
+        recordValue(data, "analysis_ready", "analysisReady") ??
+        recordValue(data, "profile_save_allowed", "profileSaveAllowed")
+    );
     const breedResolutionStatus = recordValue(
         data,
         "breed_resolution_status",
@@ -738,7 +760,7 @@ function isShoppingIntent(message: string) {
 function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
     if (!isCanineKnowledgeQuestion(message) || isShoppingIntent(message)) return null;
     return {
-        answer: "이 질문은 상품 추천보다 강아지 생활/행동 정보에 가까워서 제품은 붙이지 않았어요. 지금 API 검색 연결이 불안정하면 우선 검증된 반려견 자료 기준으로 답변드릴게요. 나이, 체중, 품종, 언제부터 그랬는지, 식욕/활력 변화가 있으면 더 정확히 정리할 수 있습니다. 통증, 호흡 이상, 반복 구토/설사, 의식 저하, 중독 가능성이 있으면 생활 팁보다 동물병원 상담이 먼저입니다.",
+        answer: "이 질문은 상품 추천보다 강아지 생활/행동 정보에 가까워서 제품은 붙이지 않았어요. 자료 확인이 잠시 불안정하면 우선 검증된 반려견 자료 기준으로 답변드릴게요. 나이, 체중, 품종, 언제부터 그랬는지, 식욕/활력 변화가 있으면 더 정확히 정리할 수 있습니다. 통증, 호흡 이상, 반복 구토/설사, 의식 저하, 중독 가능성이 있으면 생활 팁보다 동물병원 상담이 먼저입니다.",
         products: [],
         medical: {
             mode: false,
@@ -749,7 +771,7 @@ function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
         sources: GENERAL_DOG_SOURCE_FALLBACK,
         actions: [
             { label: "질문 의도 분류", status: "done", detail: "강아지 지식 질문" },
-            { label: "인터넷 자료 검색", status: "warn", detail: "API 연결 실패로 기본 검증 출처 표시" },
+            { label: "인터넷 자료 확인", status: "warn", detail: "자료 확인이 불안정해 기본 검증 출처를 표시합니다" },
             { label: "답변 정리", status: "done", detail: "상품 추천 차단" },
         ],
         research: { mode: "client-fallback", sourceCount: GENERAL_DOG_SOURCE_FALLBACK.length },
@@ -916,8 +938,8 @@ export function analyzePetLens(input: PetLensInput) {
 
 export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File | null) {
     const base = apiBase();
-    if (!base) throw new Error("PetLens API is not configured.");
-    if (!imageFile) throw new Error("PetLens requires a dog photo.");
+    if (!base) throw new Error("지금은 사진 분석을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.");
+    if (!imageFile) throw new Error("반려견 사진을 먼저 올려 주세요.");
 
     try {
         const form = new FormData();
@@ -926,10 +948,14 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             method: "POST",
             body: form,
         });
-        if (!response.ok) throw new Error(`PetLens API ${response.status}`);
+        if (!response.ok) throw new Error("사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.");
         const data = await response.json() as Record<string, unknown>;
         const modelBacked = isModelBackedPetLensResult(data);
-        const readyForRecommendation = recordValue(data, "ready_for_recommendation", "readyForRecommendation") === true;
+        const readyForRecommendation = (
+            recordValue(data, "ready_for_recommendation", "readyForRecommendation") ??
+            recordValue(data, "analysis_ready", "analysisReady") ??
+            recordValue(data, "profile_save_allowed", "profileSaveAllowed")
+        ) === true;
         const trustworthyCandidate = isTrustworthyPetLensCandidate(data);
         const trustworthyCanonicalBreed = isTrustworthyCanonicalBreedCandidate(data);
         const apiConcerns = trustworthyCandidate && Array.isArray(data.concerns) && data.concerns.length
@@ -992,7 +1018,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
                 ? `사진 분석 결과 ${canonicalBreed} 계열 후보를 찾았습니다. 저장 전 실제 견종과 맞는지 확인해 주세요.`
                 : modelBacked && readyForRecommendation && reviewOnlyBreed
                     ? `사진에서 ${reviewOnlyBreed.label} 후보를 찾았습니다. 목록 외 견종/믹스견일 수 있어 직접 확인이 필요합니다.`
-                    : `${profile.name}의 사진은 받았지만, 현재 정밀 AI가 품종을 확정할 만큼 안정적인 결과를 만들지 못했습니다.`,
+                    : `${profile.name}의 사진은 받았지만, 품종을 확정할 만큼 안정적인 결과를 만들지 못했습니다.`,
         ];
         const apiSummary = typeof data.summary === "string" && isCustomerSafePetLensLine(data.summary)
             ? data.summary.trim()
@@ -1011,7 +1037,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
         summary.push(...(providerCareNotes.length > 0 ? providerCareNotes : petLensCareNotes(profile)));
         return { profile, products: recommendForPet(profile), summary };
     } catch (error) {
-        throw error instanceof Error ? error : new Error("PetLens API analysis failed.");
+        throw error instanceof Error ? error : new Error("사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.");
     }
 }
 
@@ -1038,7 +1064,7 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
         answer = "케어 제품은 작은 부위 테스트와 사용 빈도가 중요합니다. 상처나 염증이 있으면 제품보다 진료가 먼저입니다.";
     } else if (/배송|교환|반품|주문|결제/.test(text)) {
         return {
-            answer: "현재 자사몰 주문 흐름은 데모 결제 상태로 저장됩니다. 실 결제/배송 연동 전까지는 주문 검수와 운영 정책 연결이 필요합니다.",
+            answer: "주문·결제·배송 문의는 고객센터에서 확인해드릴게요. 주문번호나 결제 시 사용한 연락처가 있으면 더 빠르게 안내받을 수 있습니다.",
             products: [],
         };
     } else {

@@ -38,7 +38,8 @@ test("PetLens only applies vetted candidates and keeps weight as review metadata
 });
 
 test("signup requires member-confirmed weight and never claims photo-derived sex or age", () => {
-    assert.match(signup, /AI 예상 \{petWeightEstimate\.minKg\}~\{petWeightEstimate\.maxKg\}kg · 확인 필요/);
+    assert.match(signup, /예상 \{petWeightEstimate\.minKg\}~\{petWeightEstimate\.maxKg\}kg · 확인 필요/);
+    assert.doesNotMatch(signup, /AI 예상/);
     assert.match(signup, /weightKg: confirmedWeightKg/);
     assert.match(signup, /사진으로 실제 체중을 측정하지 않습니다/);
     assert.match(signup, /사진으로 성별을 추정하지 않습니다/);

@@ -45,7 +45,7 @@ export default function MemberPetProfileEditor({ pet }: Props) {
             return;
         }
         if (!ddbApiReady()) {
-            setError("운영 API가 연결되지 않아 프로필을 저장할 수 없습니다.");
+            setError("지금은 프로필을 저장할 수 없습니다. 잠시 후 다시 시도해 주세요.");
             return;
         }
         const weightText = weightKg.trim();
@@ -99,7 +99,7 @@ export default function MemberPetProfileEditor({ pet }: Props) {
         setSaving(true);
         try {
             const saved = await savePetProfileSmart(updatedPet, user.apiAccessToken);
-            if (!saved) throw new Error("Pet profile API is not configured.");
+            if (!saved) throw new Error("profile_save_unavailable");
             upsertPet({ ...updatedPet, apiProfileId: saved.id });
             setSuccess("반려견 정보가 저장되었습니다. 추천과 펫렌즈에 바로 반영됩니다.");
         } catch (saveError) {
@@ -194,7 +194,7 @@ export default function MemberPetProfileEditor({ pet }: Props) {
                     />
                     {weightEstimate && (
                         <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">
-                            AI 예상 {weightEstimate.minKg}~{weightEstimate.maxKg}kg · 확인 필요
+                            예상 {weightEstimate.minKg}~{weightEstimate.maxKg}kg · 확인 필요
                         </span>
                     )}
                 </label>

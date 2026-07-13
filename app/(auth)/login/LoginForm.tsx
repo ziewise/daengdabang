@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import type { AuthProvider } from "@/lib/types";
-import { AuthField, inputClass, AuthMockBox, PrimaryButton } from "@/components/auth/AuthFields";
+import { AuthField, inputClass, PrimaryButton } from "@/components/auth/AuthFields";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -56,13 +56,6 @@ export default function LoginPage() {
 
                 <PrimaryButton>로그인</PrimaryButton>
             </form>
-
-            <div className="mt-4">
-                <AuthMockBox>
-                    <strong className="font-extrabold">임시 모드</strong> — 이메일·비번 비워도 로그인 됩니다.<br />
-                    데모 계정: <code className="font-bold">demo@daengdabang.com</code> / <code className="font-bold">1234</code>
-                </AuthMockBox>
-            </div>
 
             <Divider />
 

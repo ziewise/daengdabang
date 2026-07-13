@@ -6,7 +6,6 @@ export type SignupAgreementRow = {
 
 export const SIGNUP_TERMS_AGREEMENT = {
     title: "[필수] 이용약관 동의",
-    sourceDocument: "260608_이용약관_댕다방.docx",
     href: "/terms",
     summary: [
         "회원가입, 서비스 이용, 구매신청 및 계약 성립 기준을 확인합니다.",
@@ -17,7 +16,6 @@ export const SIGNUP_TERMS_AGREEMENT = {
 
 export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
     title: "[필수] 개인정보 수집·이용 동의",
-    sourceDocument: "260709_개인정보수집이용동의_댕다방용.docx",
     href: "/privacy",
     intro: "회사는 상품 주문, 배송, 회원관리 및 고객서비스 제공을 위하여 아래와 같이 개인정보를 수집·이용합니다.",
     refusalNotice:
@@ -63,7 +61,6 @@ export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
 
 export const SIGNUP_PETLENS_PRIVACY_CONSENT = {
     title: "[선택] PetLens 반려동물 정보 수집·이용 동의",
-    sourceDocument: "260709_개인정보수집이용동의_댕다방용.docx",
     intro:
         "반려동물 정보는 맞춤형 상품 추천과 서비스 개선을 위한 선택 항목입니다. 동의하지 않아도 회원가입과 기본 쇼핑몰 이용은 가능합니다.",
     refusalNotice:

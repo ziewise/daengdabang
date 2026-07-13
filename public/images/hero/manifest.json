@@ -1,46 +1,30 @@
 {
-  "sourceRoot": "D:\\DaengDaBangData\\hero-section-assets",
-  "targetRoot": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero",
-  "copied": [
+  "assets": [
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\ChatGPT Image 2026년 6월 1일 오후 05_49_55.png",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\clear-evening.png",
       "publicPath": "/images/hero/clear-evening.png",
       "bytes": 2539869
     },
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\ChatGPT Image 2026년 6월 1일 오후 05_50_00 (1).png",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\snow-neighborhood.png",
       "publicPath": "/images/hero/snow-neighborhood.png",
       "bytes": 2792659
     },
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\ChatGPT Image 2026년 6월 1일 오후 05_50_01 (2).png",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\rain-neighborhood.png",
       "publicPath": "/images/hero/rain-neighborhood.png",
       "bytes": 3103628
     },
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\ChatGPT Image 2026년 6월 2일 오후 03_04_54.png",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\walker-cutout.png",
       "publicPath": "/images/hero/walker-cutout.png",
       "bytes": 1330408
     },
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\ChatGPT Image 2026년 6월 2일 오후 12_53_02 (2).png",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\winter-sketch.png",
       "publicPath": "/images/hero/winter-sketch.png",
       "bytes": 2577393
     },
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\default.mp4",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\default.mp4",
       "publicPath": "/images/hero/default.mp4",
       "bytes": 5640030
     },
     {
-      "source": "D:\\DaengDaBangData\\hero-section-assets\\snow.mp4",
-      "target": "C:\\DaengDaBang\\external\\daengdabang-public-src\\public\\images\\hero\\snow.mp4",
       "publicPath": "/images/hero/snow.mp4",
       "bytes": 7105832
     }

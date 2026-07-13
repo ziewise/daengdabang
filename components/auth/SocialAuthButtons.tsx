@@ -117,10 +117,10 @@ export default function SocialAuthButtons({
                 <h2 className="text-sm font-black text-neutral-950">
                     {mode === "signup" ? "간편가입" : "간편로그인"}
                 </h2>
-                {!apiReady && <span className="text-xs font-black text-amber-700">API 연결 필요</span>}
-                {apiReady && !statusChecked && <span className="text-xs font-black text-neutral-500">상태 확인 중</span>}
+                {!apiReady && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
+                {apiReady && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
                 {apiReady && statusChecked && disabledCount > 0 && (
-                    <span className="text-xs font-black text-amber-700">제공사 설정 대기</span>
+                    <span className="text-xs font-black text-amber-700">준비 중</span>
                 )}
             </div>
             <div className="grid gap-2 sm:grid-cols-3">

@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AuthField, inputClass, AuthMockBox, PrimaryButton, GhostButton } from "@/components/auth/AuthFields";
+import { AuthField, inputClass, PrimaryButton, GhostButton } from "@/components/auth/AuthFields";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");
@@ -40,10 +40,9 @@ export default function ForgotPasswordPage() {
                         />
                     </AuthField>
 
-                    <AuthMockBox>
-                        <strong className="font-extrabold">임시 모드</strong> — 실제 메일이 발송되지는 않아요.<br />
-                        백엔드 연동 시 SMTP/SES 로 전환됩니다.
-                    </AuthMockBox>
+                    <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-xs font-bold leading-5 text-emerald-700">
+                        입력하신 이메일로 비밀번호 재설정 안내를 확인해 주세요.
+                    </p>
 
                     <PrimaryButton>재설정 링크 받기</PrimaryButton>
                     <Link

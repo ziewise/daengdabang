@@ -108,14 +108,14 @@ export function startSocialLogin(provider: SocialProvider, returnTo = "/mypage")
 export function customerApiErrorMessage(error: unknown) {
     if (error instanceof DdbApiError) {
         if (error.code === "missing_api_base") {
-            return "회원 기능을 사용하려면 운영 API 주소가 먼저 연결되어야 합니다.";
+            return "지금은 회원 기능을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.";
         }
         if (error.status === 401) return "이메일 또는 비밀번호를 확인해 주세요.";
         if (error.status === 403) return "사용할 수 없는 회원 계정입니다.";
         if (error.status === 409) return "이미 가입된 이메일입니다. 로그인으로 진행해 주세요.";
-        return error.message;
+        return "회원 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
     }
-    return "회원 API 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+    return "회원 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
 }
 
 export async function loadSocialProviders() {
@@ -134,7 +134,7 @@ async function apiJson<T>(
     const base = ddbApiBase();
     if (!base) {
         if (options.requireBase) {
-            throw new DdbApiError("DaengDaBang API base is not configured.", { code: "missing_api_base" });
+            throw new DdbApiError("지금은 회원 기능을 사용할 수 없습니다.", { code: "missing_api_base" });
         }
         return null;
     }
@@ -148,12 +148,12 @@ async function apiJson<T>(
         headers,
     });
     if (!response.ok) {
-        let message = `DaengDaBang API ${response.status}`;
+        let message = "회원 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
         try {
             const body = await response.clone().json();
             if (typeof body?.detail === "string") message = body.detail;
         } catch {
-            // Keep the HTTP status fallback.
+            // Keep the customer-safe fallback.
         }
         throw new DdbApiError(message, { code: "http_error", status: response.status });
     }

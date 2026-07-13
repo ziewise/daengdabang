@@ -8,7 +8,7 @@ async function readSource(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("signup renders required legal agreements from the attached DaengDaBang documents", async () => {
+test("signup renders required legal agreements without exposing attached document filenames", async () => {
     const [signupSource, agreementSource] = await Promise.all([
         readSource("app/auth/signup/page.tsx"),
         readSource("lib/signup-agreements.ts"),
@@ -23,8 +23,10 @@ test("signup renders required legal agreements from the attached DaengDaBang doc
     assert.match(signupSource, /checked=\{agreePrivacy\}/);
     assert.doesNotMatch(signupSource, /defaultChecked/);
 
-    assert.match(agreementSource, /260608_이용약관_댕다방\.docx/);
-    assert.match(agreementSource, /260709_개인정보수집이용동의_댕다방용\.docx/);
+    assert.doesNotMatch(signupSource, /기준 문서/);
+    assert.doesNotMatch(agreementSource, /260608_이용약관_댕다방\.docx/);
+    assert.doesNotMatch(agreementSource, /260709_개인정보수집이용동의_댕다방용\.docx/);
+    assert.doesNotMatch(agreementSource, /sourceDocument/);
     assert.match(agreementSource, /회원 탈퇴 후 5일 또는 관계 법령에 따른 보존기간까지/);
     assert.match(agreementSource, /주문 및 결제 정보/);
     assert.match(agreementSource, /귀하는 개인정보 수집·이용에 대한 동의를 거부할 권리/);

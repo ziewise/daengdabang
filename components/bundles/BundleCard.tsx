@@ -114,7 +114,7 @@ export default function BundleCard({ bundle, priority }: Props) {
             <div className="p-4">
                 <Link href={bundleHref(bundle)} className="block">
                     <p className="text-[11px] font-black uppercase text-indigo-600">
-                        {bundle.source === "ai" ? "AI SMART SET" : "CURATED SET"}
+                        {bundle.source === "ai" ? "SMART CARE SET" : "CURATED SET"}
                     </p>
                     <h3 className="mt-1 min-h-[2.5rem] text-base font-black leading-5 text-neutral-950 line-clamp-2">{bundle.title}</h3>
                     <p className="mt-2 min-h-[2.5rem] text-xs font-bold leading-5 text-neutral-500 line-clamp-2">{bundle.subtitle}</p>

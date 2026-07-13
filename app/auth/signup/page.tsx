@@ -340,7 +340,7 @@ export default function SignupPage() {
                     setPetCoatColorSource("ai");
                 }
                 setPetAnalysisMessage(
-                    `${petLensCandidateMessage(rawAnalysis)}${viewMeta.length > 1 ? " 여러 방향 사진을 하나의 분석 시트로 묶어 AI가 함께 확인했습니다." : ""}`
+                    `${petLensCandidateMessage(rawAnalysis)}${viewMeta.length > 1 ? " 여러 방향 사진을 함께 비교해 확인했습니다." : ""}`
                 );
                 const rawBreedCandidate = (analysis.profile.breed || "").trim();
                 const candidateId = resolvePetBreedIdExact(rawBreedCandidate, "");
@@ -373,7 +373,7 @@ export default function SignupPage() {
         setError("");
         if (!ddbApiReady()) {
             setCustomerToken();
-            setError("회원가입을 사용하려면 운영 API 주소가 먼저 연결되어야 합니다.");
+            setError("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.");
             return;
         }
         if (password.trim().length < 8) {
@@ -503,7 +503,7 @@ export default function SignupPage() {
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 {!ddbApiReady() && (
                     <p className="rounded-md bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-800">
-                        운영 API와 OAuth 설정이 연결되면 이메일 가입과 간편가입이 활성화됩니다.
+                        지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.
                     </p>
                 )}
                 {error && (
@@ -534,7 +534,7 @@ export default function SignupPage() {
                         className="input"
                         minLength={8}
                         autoComplete="new-password"
-                        placeholder="서버 계정 연동 시 8자 이상"
+                        placeholder="8자 이상 입력"
                     />
                 </label>
                 <div className="grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
@@ -573,7 +573,7 @@ export default function SignupPage() {
                                 })}
                             </div>
                             <span className="mt-2 block text-[11px] font-bold leading-5 text-neutral-500">
-                                모바일에서는 카메라가 바로 열립니다. 정면은 대표 사진으로 쓰고, 좌·우·뒷면까지 찍으면 AI가 네 방향을 한 번에 보고 견종·체형·털색 후보를 더 꼼꼼히 확인합니다.
+                                모바일에서는 카메라가 바로 열립니다. 정면은 대표 사진으로 쓰고, 좌·우·뒷면까지 찍으면 네 방향 사진을 함께 비교해 견종·체형·털색 후보를 더 꼼꼼히 확인합니다.
                             </span>
                             {photoLoading && <span className="mt-2 block text-xs font-black text-indigo-700">사진 분석 중</span>}
                             {photoError && <span className="mt-2 block text-xs font-black text-rose-600">{photoError}</span>}
@@ -657,7 +657,7 @@ export default function SignupPage() {
                                     <option value="medium">중형</option>
                                     <option value="large">대형</option>
                                 </select>
-                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">AI 후보가 반영될 수 있으니 실제 크기로 확인해 주세요.</span>
+                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진 후보가 반영될 수 있으니 실제 크기로 확인해 주세요.</span>
                             </label>
                             <label data-pet-guide-target="signup-weight">
                                 <span className="mb-1 block text-xs font-black text-neutral-500">현재 체중 (kg)</span>
@@ -674,7 +674,7 @@ export default function SignupPage() {
                                 />
                                 {petWeightEstimate ? (
                                     <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">
-                                        AI 예상 {petWeightEstimate.minKg}~{petWeightEstimate.maxKg}kg · 확인 필요
+                                        예상 {petWeightEstimate.minKg}~{petWeightEstimate.maxKg}kg · 확인 필요
                                     </span>
                                 ) : (
                                     <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진으로 실제 체중을 측정하지 않습니다.</span>
@@ -701,7 +701,7 @@ export default function SignupPage() {
                                     placeholder="예: 크림, 검정·갈색"
                                 />
                                 {petCoatColorSource === "ai" && (
-                                    <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">AI 사진 후보 · 확인 필요</span>
+                                    <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">사진 분석 후보 · 확인 필요</span>
                                 )}
                             </label>
                             <label>
@@ -785,9 +785,6 @@ export default function SignupPage() {
                                 </li>
                             ))}
                         </ul>
-                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-400">
-                            기준 문서: {SIGNUP_TERMS_AGREEMENT.sourceDocument}
-                        </p>
                     </div>
 
                     <div className="grid gap-3 rounded-md border border-neutral-200 bg-neutral-50 p-3" data-signup-privacy-consent>
@@ -825,9 +822,6 @@ export default function SignupPage() {
                         <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-500">
                             {SIGNUP_REQUIRED_PRIVACY_CONSENT.refusalNotice}
                         </p>
-                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-400">
-                            기준 문서: {SIGNUP_REQUIRED_PRIVACY_CONSENT.sourceDocument}
-                        </p>
                     </div>
 
                     <div className="grid gap-3 rounded-md border border-indigo-100 bg-indigo-50/50 p-3" data-signup-petlens-optional-consent>
@@ -862,9 +856,6 @@ export default function SignupPage() {
                         </div>
                         <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-500">
                             {SIGNUP_PETLENS_PRIVACY_CONSENT.refusalNotice}
-                        </p>
-                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-400">
-                            기준 문서: {SIGNUP_PETLENS_PRIVACY_CONSENT.sourceDocument}
                         </p>
                     </div>
                 </section>

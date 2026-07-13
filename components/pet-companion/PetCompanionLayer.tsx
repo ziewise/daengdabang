@@ -1647,7 +1647,7 @@ export default function PetCompanionLayer({
             const saved = await savePetProfileSmart(updatedPet, state.user?.apiAccessToken);
             setSaveStatus(saved ? "회원 반려견 설정으로 저장했어요." : "이 기기에 저장했어요.");
         } catch {
-            setSaveStatus("서버 연결 전이라 이 기기에 안전하게 저장했어요.");
+            setSaveStatus("지금은 이 기기에 안전하게 저장했어요.");
         }
         window.setTimeout(() => onPanelOpenChange(false), 520);
     };

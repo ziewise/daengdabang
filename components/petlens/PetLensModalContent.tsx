@@ -179,7 +179,7 @@ export default function PetLensModalContent() {
             }
         } catch (error) {
             setResult(null);
-            const message = error instanceof Error ? error.message : "PetLens analysis failed.";
+            const message = error instanceof Error ? error.message : "사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
             setAnalysisError(`분석을 완료하지 못했습니다. ${message}`);
         } finally {
             setLoading(false);
@@ -201,7 +201,7 @@ export default function PetLensModalContent() {
                 {/* 헤더 + 다시 분석 */}
                 <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
-                        <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 AI · 분석 결과</p>
+                        <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 케어 · 분석 결과</p>
                         <h2 className="mt-0.5 text-lg font-black text-neutral-950">
                             {result.profile.name || "우리 아이"} 추천
                         </h2>
@@ -270,10 +270,10 @@ export default function PetLensModalContent() {
     return (
         <div className="p-3 sm:p-5">
             <header className="mb-3 text-center">
-                <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 AI</p>
+                <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 케어</p>
                 <h2 className="mt-0.5 text-lg font-black text-neutral-950">우리 아이 분석하기</h2>
                 <p className="mt-0.5 text-[11px] font-bold text-neutral-500">
-                    사진과 정보를 입력하면 어울리는 상품을 추천해드려요
+                    네 방향 사진과 생활 정보를 함께 보고 케어 포인트와 맞춤 추천을 정리해드려요
                 </p>
             </header>
 
@@ -313,7 +313,7 @@ export default function PetLensModalContent() {
                         })}
                     </div>
                     <p className="mt-1.5 text-[10px] font-bold leading-4 text-neutral-500">
-                        모바일에서는 카메라가 열립니다. 정면·왼쪽·오른쪽·뒷면을 찍으면 AI가 네 방향을 묶어 분석합니다.
+                        모바일에서는 카메라가 열립니다. 네 방향 사진을 함께 올리면 얼굴·몸통·털 상태를 더 꼼꼼히 비교합니다.
                     </p>
                     {photoLoading && <p className="mt-1.5 text-[11px] font-black text-aurora-indigo">사진 준비 중</p>}
                 </div>

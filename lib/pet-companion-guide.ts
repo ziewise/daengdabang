@@ -386,7 +386,7 @@ export function findPetGuidePrompt({
                 target,
                 placement,
                 name: "간편가입부터 확인해요",
-                message: "네이버·카카오·구글 가입이 준비되면 가장 빠른 길이에요. 아직 제공사 설정 대기라면 아래 이메일 가입을 계속 진행해 주세요.",
+                message: "네이버·카카오·구글 가입이 보이면 가장 빠른 길이에요. 사용할 수 없는 버튼이 있다면 아래 이메일 가입을 계속 진행해 주세요.",
             };
         }
         if (id === "signup-account") {
@@ -395,7 +395,7 @@ export function findPetGuidePrompt({
                 target,
                 placement,
                 name: "기본 정보는 짧게만",
-                message: "이름, 이메일, 휴대폰, 비밀번호를 먼저 입력해 주세요. 비밀번호는 서버 계정 연동을 위해 8자 이상이면 좋아요.",
+                message: "이름, 이메일, 휴대폰, 비밀번호를 먼저 입력해 주세요. 비밀번호는 안전하게 8자 이상으로 만들어 주세요.",
             };
         }
         if (id === "signup-pet-photo") {

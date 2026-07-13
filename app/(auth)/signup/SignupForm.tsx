@@ -7,7 +7,7 @@
  * 4. 펫 정보 (이름·견종·체중·성별) — 선택
  * 5. 완료
  *
- * 임시 모드 — 검증 없이 다음 진행 가능. 마지막 단계에서 authStorage.set.
+ * 이전 단계형 화면. 현재 공개 가입 흐름은 /auth/signup 으로 모은다.
  */
 "use client";
 
@@ -15,7 +15,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { AuthField, inputClass, AuthMockBox, PrimaryButton, GhostButton } from "@/components/auth/AuthFields";
+import { AuthField, inputClass, PrimaryButton, GhostButton } from "@/components/auth/AuthFields";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -142,9 +142,6 @@ function Step1Terms({ onNext }: { onNext: () => void }) {
                     />
                 ))}
             </div>
-            <AuthMockBox>
-                <strong className="font-extrabold">임시 모드</strong> — 약관 미동의 상태로도 다음 단계로 넘어갑니다.
-            </AuthMockBox>
             <div className="grid grid-cols-2 gap-2 mt-5">
                 <Link
                     href="/login"
@@ -198,10 +195,9 @@ function Step2Identity({ onPrev, onNext }: { onPrev: () => void; onNext: () => v
                 )}
             </div>
             {codeSent && (
-                <AuthMockBox>
-                    <strong className="font-extrabold">테스트 인증번호: <code>123456</code></strong><br />
-                    임시 모드는 어떤 번호라도 통과합니다.
-                </AuthMockBox>
+                <p className="rounded-2xl bg-aurora-indigo/5 px-4 py-3 text-xs font-bold leading-5 text-aurora-indigo">
+                    인증번호를 입력해 주세요.
+                </p>
             )}
             <div className="grid grid-cols-2 gap-2 mt-5">
                 <GhostButton onClick={onPrev}>이전</GhostButton>
@@ -233,9 +229,6 @@ function Step3Info({ onPrev, onNext }: { onPrev: () => void; onNext: () => void 
                     <input type="password" placeholder="비밀번호 재입력" className={inputClass} />
                 </AuthField>
             </div>
-            <AuthMockBox>
-                <strong className="font-extrabold">임시 모드</strong> — 비밀번호 강도·확인 검증 통과시킵니다.
-            </AuthMockBox>
             <div className="grid grid-cols-2 gap-2 mt-5">
                 <GhostButton onClick={onPrev}>이전</GhostButton>
                 <PrimaryButton type="button" onClick={onNext}>다음</PrimaryButton>
@@ -269,9 +262,9 @@ function Step4Pet({ onPrev, onNext }: { onPrev: () => void; onNext: () => void }
                     </div>
                 </AuthField>
             </div>
-            <AuthMockBox>
-                <strong className="font-extrabold">건너뛰기 가능</strong> — 마이페이지에서 펫렌즈로 정밀 분석도 가능해요.
-            </AuthMockBox>
+            <p className="rounded-2xl bg-aurora-indigo/5 px-4 py-3 text-xs font-bold leading-5 text-aurora-indigo">
+                반려견 정보는 가입 후 마이페이지에서도 다시 등록할 수 있어요.
+            </p>
             <div className="grid grid-cols-2 gap-2 mt-5">
                 <GhostButton onClick={onPrev}>이전</GhostButton>
                 <PrimaryButton type="button" onClick={onNext}>다음</PrimaryButton>

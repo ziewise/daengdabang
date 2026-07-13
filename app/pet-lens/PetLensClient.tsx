@@ -148,8 +148,8 @@ export default function PetLensClient() {
             }
         } catch (error) {
             setResult(null);
-            const message = error instanceof Error ? error.message : "PetLens analysis failed.";
-            setAnalysisError(`정밀 PetLens 분석을 완료하지 못했습니다. ${message}`);
+            const message = error instanceof Error ? error.message : "사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+            setAnalysisError(`펫렌즈 분석을 완료하지 못했습니다. ${message}`);
         } finally {
             setLoading(false);
         }
@@ -158,10 +158,10 @@ export default function PetLensClient() {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">펫렌즈 AI</p>
+                <p className="text-sm font-black text-indigo-700">펫렌즈 케어</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
                 <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                    사진과 생활 정보를 기준으로 333개 상품 중 어울리는 추천 후보를 골라드립니다. 정밀 분석이 연결되어 있으면 사진 기반 해석을 먼저 사용합니다.
+                    정면·왼쪽·오른쪽·뒷면 사진과 생활 정보를 함께 보고, 견종 후보·체형 후보·주의할 케어 포인트·맞춤 추천을 정리해 드립니다. 결과는 보호자 확인 후 저장됩니다.
                 </p>
             </header>
 
@@ -201,7 +201,7 @@ export default function PetLensClient() {
                             })}
                         </div>
                         <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-500">
-                            모바일에서는 각 칸을 누르면 카메라가 열립니다. 정면·왼쪽·오른쪽·뒷면을 찍으면 AI가 네 방향을 묶어 분석합니다.
+                            모바일에서는 각 칸을 누르면 카메라가 열립니다. 네 방향 사진을 함께 올리면 얼굴·몸통·털 상태를 더 꼼꼼히 비교합니다.
                         </p>
                         {photoLoading && <p className="mt-2 text-xs font-black text-indigo-700">사진 준비 중</p>}
                     </div>

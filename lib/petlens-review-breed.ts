@@ -41,8 +41,15 @@ export function getPetLensReviewOnlyBreedCandidate(
     const resolutionStatus = recordValue(data, "breed_resolution_status", "breedResolutionStatus");
     if (resolutionStatus !== "unknown" && resolutionStatus !== "ambiguous") return undefined;
 
+    const publicReady = (
+        recordValue(data, "profile_save_allowed", "profileSaveAllowed") === true ||
+        recordValue(data, "analysis_ready", "analysisReady") === true
+    );
     const interpreter = recordValue(data, "interpreter", "interpreter");
-    if (typeof interpreter !== "string" || !REAL_VISION_INTERPRETERS.has(interpreter.trim().toLowerCase())) {
+    if (
+        !publicReady &&
+        (typeof interpreter !== "string" || !REAL_VISION_INTERPRETERS.has(interpreter.trim().toLowerCase()))
+    ) {
         return undefined;
     }
     if (recordValue(data, "pet_presence", "petPresence") !== "dog") return undefined;
