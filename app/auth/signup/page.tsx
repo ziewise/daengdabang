@@ -24,6 +24,11 @@ import {
     loadPetLensSignupDraft,
 } from "@/lib/petlens-signup-draft";
 import {
+    SIGNUP_PETLENS_PRIVACY_CONSENT,
+    SIGNUP_REQUIRED_PRIVACY_CONSENT,
+    SIGNUP_TERMS_AGREEMENT,
+} from "@/lib/signup-agreements";
+import {
     getPetBreedVisual,
     isPetBreedId,
     PET_BREEDS,
@@ -80,6 +85,7 @@ export default function SignupPage() {
     const [loading, setLoading] = useState(false);
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [agreePrivacy, setAgreePrivacy] = useState(false);
+    const [agreePetLensPrivacy, setAgreePetLensPrivacy] = useState(false);
 
     useEffect(() => {
         const draft = loadPetLensSignupDraft();
@@ -235,6 +241,10 @@ export default function SignupPage() {
             petCoatColor.trim() ||
             petSex !== "unknown"
         );
+        if (shouldCreatePet && !agreePetLensPrivacy) {
+            setError("반려동물 사진·품종·체중 등 PetLens 프로필을 함께 저장하려면 선택 개인정보 수집·이용 동의가 필요합니다. 동의하지 않아도 회원가입은 가능하며, 가입 후 마이페이지에서 다시 등록할 수 있습니다.");
+            return;
+        }
         const customBreed = petBreedId === CUSTOM_BREED_OPTION ? petBreedCustom.trim().slice(0, 100) : "";
         if (shouldCreatePet && !isPetBreedId(petBreedId) && customBreed.length < 2) {
             setError("반려견 사진 또는 정보를 등록하셨다면, 아래에서 우리 아이의 견종을 확인해 주세요.");
@@ -546,39 +556,122 @@ export default function SignupPage() {
                         </div>
                     </div>
                 </div>
-                <section className="grid gap-3 rounded-lg border border-neutral-200 bg-white p-4" data-pet-guide-target="signup-submit">
-                    <h2 className="text-sm font-black text-neutral-950">필수 동의</h2>
-                    <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
-                        <input
-                            type="checkbox"
-                            checked={agreeTerms}
-                            onChange={(event) => setAgreeTerms(event.target.checked)}
-                            className="mt-1 h-4 w-4 accent-indigo-600"
-                        />
-                        <span>
-                            <b className="font-black text-neutral-950">[필수] 이용약관에 동의합니다.</b>{" "}
-                            <Link href="/terms" className="font-black text-indigo-700">
-                                보기
-                            </Link>
-                        </span>
-                    </label>
-                    <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
-                        <input
-                            type="checkbox"
-                            checked={agreePrivacy}
-                            onChange={(event) => setAgreePrivacy(event.target.checked)}
-                            className="mt-1 h-4 w-4 accent-indigo-600"
-                        />
-                        <span>
-                            <b className="font-black text-neutral-950">[필수] 개인정보 수집·이용에 동의합니다.</b>{" "}
-                            <Link href="/privacy" className="font-black text-indigo-700">
-                                보기
-                            </Link>
-                        </span>
-                    </label>
-                    <p className="text-xs font-bold leading-5 text-neutral-500">
-                        회원가입과 PetLens 개인화 제공에 필요한 최소 정보만 처리합니다.
-                    </p>
+                <section
+                    className="grid gap-4 rounded-lg border border-neutral-200 bg-white p-4"
+                    data-pet-guide-target="signup-submit"
+                    data-signup-required-agreements
+                >
+                    <div>
+                        <h2 className="text-sm font-black text-neutral-950">약관 및 개인정보 동의</h2>
+                        <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
+                            필수 동의는 회원가입에 필요하며, 선택 동의는 PetLens 프로필 저장을 원하는 경우에만 사용합니다.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-3 rounded-md border border-neutral-200 bg-neutral-50 p-3" data-signup-terms-agreement>
+                        <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
+                            <input
+                                type="checkbox"
+                                checked={agreeTerms}
+                                onChange={(event) => setAgreeTerms(event.target.checked)}
+                                className="mt-1 h-4 w-4 accent-indigo-600"
+                            />
+                            <span>
+                                <b className="font-black text-neutral-950">{SIGNUP_TERMS_AGREEMENT.title}</b>{" "}
+                                <Link href={SIGNUP_TERMS_AGREEMENT.href} className="font-black text-indigo-700">
+                                    전체보기
+                                </Link>
+                            </span>
+                        </label>
+                        <ul className="grid gap-1 pl-7 text-xs font-bold leading-5 text-neutral-600">
+                            {SIGNUP_TERMS_AGREEMENT.summary.map((item) => (
+                                <li key={item} className="list-disc">
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-400">
+                            기준 문서: {SIGNUP_TERMS_AGREEMENT.sourceDocument}
+                        </p>
+                    </div>
+
+                    <div className="grid gap-3 rounded-md border border-neutral-200 bg-neutral-50 p-3" data-signup-privacy-consent>
+                        <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
+                            <input
+                                type="checkbox"
+                                checked={agreePrivacy}
+                                onChange={(event) => setAgreePrivacy(event.target.checked)}
+                                className="mt-1 h-4 w-4 accent-indigo-600"
+                            />
+                            <span>
+                                <b className="font-black text-neutral-950">{SIGNUP_REQUIRED_PRIVACY_CONSENT.title}</b>{" "}
+                                <Link href={SIGNUP_REQUIRED_PRIVACY_CONSENT.href} className="font-black text-indigo-700">
+                                    처리방침 보기
+                                </Link>
+                            </span>
+                        </label>
+                        <p className="pl-7 text-xs font-bold leading-5 text-neutral-600">
+                            {SIGNUP_REQUIRED_PRIVACY_CONSENT.intro}
+                        </p>
+                        <div className="ml-7 overflow-hidden rounded-md border border-neutral-200 bg-white text-xs font-bold text-neutral-600">
+                            <div className="grid grid-cols-[1fr_1.2fr_1.3fr] bg-neutral-100 text-[11px] font-black text-neutral-500">
+                                <span className="border-r border-neutral-200 px-2 py-2">수집 항목</span>
+                                <span className="border-r border-neutral-200 px-2 py-2">이용 목적</span>
+                                <span className="px-2 py-2">보유 및 이용기간</span>
+                            </div>
+                            {SIGNUP_REQUIRED_PRIVACY_CONSENT.rows.map((row) => (
+                                <div key={row.item} className="grid grid-cols-[1fr_1.2fr_1.3fr] border-t border-neutral-100">
+                                    <span className="border-r border-neutral-100 px-2 py-2">{row.item}</span>
+                                    <span className="border-r border-neutral-100 px-2 py-2">{row.purpose}</span>
+                                    <span className="px-2 py-2">{row.retention}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-500">
+                            {SIGNUP_REQUIRED_PRIVACY_CONSENT.refusalNotice}
+                        </p>
+                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-400">
+                            기준 문서: {SIGNUP_REQUIRED_PRIVACY_CONSENT.sourceDocument}
+                        </p>
+                    </div>
+
+                    <div className="grid gap-3 rounded-md border border-indigo-100 bg-indigo-50/50 p-3" data-signup-petlens-optional-consent>
+                        <label className="flex items-start gap-3 text-sm font-bold leading-6 text-neutral-700">
+                            <input
+                                type="checkbox"
+                                checked={agreePetLensPrivacy}
+                                onChange={(event) => setAgreePetLensPrivacy(event.target.checked)}
+                                className="mt-1 h-4 w-4 accent-indigo-600"
+                            />
+                            <span>
+                                <b className="font-black text-neutral-950">{SIGNUP_PETLENS_PRIVACY_CONSENT.title}</b>
+                            </span>
+                        </label>
+                        <p className="pl-7 text-xs font-bold leading-5 text-neutral-600">
+                            {SIGNUP_PETLENS_PRIVACY_CONSENT.intro}
+                        </p>
+                        <div className="ml-7 overflow-hidden rounded-md border border-indigo-100 bg-white text-xs font-bold text-neutral-600">
+                            {SIGNUP_PETLENS_PRIVACY_CONSENT.rows.map((row) => (
+                                <div key={row.item} className="grid gap-1 p-3">
+                                    <p>
+                                        <b className="text-neutral-950">수집 항목:</b> {row.item}
+                                    </p>
+                                    <p>
+                                        <b className="text-neutral-950">이용 목적:</b> {row.purpose}
+                                    </p>
+                                    <p>
+                                        <b className="text-neutral-950">보유기간:</b> {row.retention}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-500">
+                            {SIGNUP_PETLENS_PRIVACY_CONSENT.refusalNotice}
+                        </p>
+                        <p className="pl-7 text-[11px] font-bold leading-5 text-neutral-400">
+                            기준 문서: {SIGNUP_PETLENS_PRIVACY_CONSENT.sourceDocument}
+                        </p>
+                    </div>
                 </section>
                 <button type="submit" className="btn btn-primary w-full" disabled={photoLoading || loading}>
                     <i className="fa-solid fa-user-plus text-xs" />
