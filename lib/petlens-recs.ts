@@ -255,15 +255,12 @@ export const SIMILAR_STATS = {
 };
 
 // ============ 검색 안내 (외부 검색 — 사용자가 직접 탐색) ============
-export const SEARCH_KEYWORDS = ["골든리트리버 관절 영양제", "대형견 하네스 L", "장모견 케어"];
+export interface PetLensSearchEngine {
+    name: string;
+    icon: string;
+    color: string;
+    build: (query: string) => string;
+}
 
-export const SEARCH_ENGINES = [
-    { name: "네이버 쇼핑", icon: "fa-n", color: "bg-emerald-500",
-      build: (q: string) => `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(q)}` },
-    { name: "쿠팡",       icon: "fa-bag-shopping", color: "bg-red-500",
-      build: (q: string) => `https://www.coupang.com/np/search?q=${encodeURIComponent(q)}` },
-    { name: "11번가",     icon: "fa-shop", color: "bg-pink-500",
-      build: (q: string) => `https://search.11st.co.kr/Search.tmall?kwd=${encodeURIComponent(q)}` },
-    { name: "다나와",     icon: "fa-magnifying-glass-dollar", color: "bg-blue-500",
-      build: (q: string) => `https://search.danawa.com/dsearch.php?query=${encodeURIComponent(q)}` },
-];
+export const SEARCH_KEYWORDS: string[] = [];
+export const SEARCH_ENGINES: PetLensSearchEngine[] = [];

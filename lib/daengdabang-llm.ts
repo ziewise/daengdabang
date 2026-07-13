@@ -105,6 +105,12 @@ function isCustomerSafePetLensLine(line: string) {
     return !PETLENS_INTERNAL_SUMMARY_PATTERNS.some((pattern) => pattern.test(text));
 }
 
+function publicPetLensLines(value: unknown, limit = 3) {
+    return stringList(value, limit)
+        .filter(isCustomerSafePetLensLine)
+        .filter((item) => !/[a-z]+_[a-z_]+/i.test(item));
+}
+
 function isModelBackedPetLensResult(data: Record<string, unknown>) {
     const profileSaveAllowed = recordValue(data, "profile_save_allowed", "profileSaveAllowed") === true;
     const analysisReady = recordValue(data, "analysis_ready", "analysisReady") === true;
@@ -850,64 +856,148 @@ function normalizeChoiceGroups(value: unknown): ShopChatChoiceGroup[] {
     });
 }
 
-export function recommendForPet(profile: Pick<PetProfile, "size" | "coat" | "activity" | "concerns">) {
+function petLensPublicSignalList(rawAnalysis: unknown, limit = 10) {
+    const raw = asRecord(rawAnalysis);
+    if (!raw) return [];
+    const values: string[] = [];
+    const add = (value: unknown, itemLimit = 6) => {
+        for (const item of stringList(value, itemLimit)) {
+            if (isCustomerSafePetLensLine(item) && !/[a-z]+_[a-z_]+/i.test(item)) values.push(item);
+        }
+    };
+    add(recordValue(raw, "recommendation_signals", "recommendationSignals"), 8);
+    add(recordValue(raw, "care_notes", "careNotes"), 6);
+    add(recordValue(raw, "breed_traits", "breedTraits"), 5);
+    add(recordValue(raw, "visible_features", "visibleFeatures"), 5);
+    add(raw.concerns, 6);
+    add(recordValue(raw, "risk_flags", "riskFlags"), 4);
+    const summary = recordValue(raw, "summary", "summary");
+    if (typeof summary === "string" && isCustomerSafePetLensLine(summary)) values.push(summary);
+    for (const key of ["breed", "breed_en", "coat_color", "coatColor", "size_estimate", "sizeEstimate"]) {
+        const value = raw[key];
+        if (typeof value === "string" && value.trim()) values.push(value.trim());
+    }
+    const body = asRecord(raw.body);
+    if (typeof body?.note === "string" && isCustomerSafePetLensLine(body.note)) values.push(body.note);
+    const weight = asRecord(raw.weight_estimate ?? raw.weightEstimate);
+    if (typeof weight?.basis === "string" && isCustomerSafePetLensLine(weight.basis)) values.push(weight.basis);
+    return [...new Set(values.map((item) => item.trim()).filter(Boolean))].slice(0, limit);
+}
+
+function petLensRecommendationText(profile: Pick<PetProfile, "size" | "coat" | "activity" | "concerns">, rawAnalysis?: unknown) {
+    return [
+        profile.size,
+        profile.coat,
+        profile.activity,
+        profile.concerns.join(" "),
+        ...petLensPublicSignalList(rawAnalysis, 18),
+    ].join(" ").toLowerCase();
+}
+
+function productRecommendationText(product: CatalogProduct) {
+    return [
+        product.name,
+        product.brandKo,
+        product.brandEn,
+        product.category,
+        product.subcategory,
+        product.raw.target,
+        product.raw.useMain,
+        product.raw.useSub,
+        product.raw.categorizeNote,
+        product.season,
+        ...(product.externalReviewThemes || []),
+        ...(product.details || []),
+    ].join(" ").toLowerCase();
+}
+
+function diversifyPetLensProducts(scored: Array<{ product: CatalogProduct; score: number }>, limit = 8) {
+    const sorted = [...scored].sort((a, b) => b.score - a.score);
+    const selected: CatalogProduct[] = [];
+    const categoryCount = new Map<string, number>();
+    const subcategoryCount = new Map<string, number>();
+    const pick = (strict: boolean) => {
+        for (const { product } of sorted) {
+            if (selected.some((item) => item.id === product.id)) continue;
+            const categorySeen = categoryCount.get(product.category) || 0;
+            const subcategorySeen = subcategoryCount.get(product.subcategory) || 0;
+            if (strict && (categorySeen >= 4 || subcategorySeen >= 2)) continue;
+            selected.push(product);
+            categoryCount.set(product.category, categorySeen + 1);
+            subcategoryCount.set(product.subcategory, subcategorySeen + 1);
+            if (selected.length >= limit) return;
+        }
+    };
+    pick(true);
+    pick(false);
+    return selected.slice(0, limit);
+}
+
+export function recommendForPet(
+    profile: Pick<PetProfile, "size" | "coat" | "activity" | "concerns">,
+    rawAnalysis?: unknown,
+) {
     const concerns = profile.concerns.join(" ");
+    const analysisText = petLensRecommendationText(profile, rawAnalysis);
     const wantsWalkSafety = /산책|안전|하네스|목줄|리드|외출|야간/.test(concerns);
     const wantsEye = /눈|고글|자외선|보호/.test(concerns);
     const wantsCare = /피부|발바닥|털|목욕|케어/.test(concerns);
     const wantsFood = /체중|식단|알러지|간식|사료/.test(concerns);
     const wantsToy = /놀이|분리불안|에너지/.test(concerns);
+    const photoSuggestsWalkSafety = /산책|외출|하네스|리드|목줄|야간|시인성|착용|실측|가슴둘레|목둘레/.test(analysisText);
+    const photoSuggestsEye = /눈|눈가|자외선|바람|먼지|고글|아이웨어|tear|눈물/.test(analysisText);
+    const photoSuggestsCare = /피부|발바닥|털|피모|샴푸|목욕|브러시|빗질|보습|저자극|착색|오염|흰 털|화이트|밝은 털|건조/.test(analysisText);
+    const photoSuggestsFood = /체중|식단|알러지|알레르기|간식|사료|영양|비만|저칼로리/.test(analysisText);
+    const photoSuggestsToy = /놀이|분리불안|에너지|활동량|노즈워크|터그/.test(analysisText);
+    const photoSuggestsHygiene = /배변|봉투|위생|탈취|냄새|패드|세척/.test(analysisText);
+    const photoSuggestsSmallFit = /소형|초소형|toy|small|테리어|말티즈|비숑|푸들|포메|치와와|웨스트/.test(analysisText);
+    const photoSuggestsLargeFit = /대형|중대형|large|giant|리트리버|허스키|셰퍼드|골든/.test(analysisText);
 
     const scored = CATALOG.map((product) => {
-        const text = [
-            product.name,
-            product.brandKo,
-            product.brandEn,
-            product.raw.target,
-            product.raw.useMain,
-            product.raw.useSub,
-            product.raw.categorizeNote,
-            product.season,
-        ].join(" ").toLowerCase();
+        const text = productRecommendationText(product);
         let score = product.popularity / 100;
-        if (wantsWalkSafety) {
+        if (wantsWalkSafety || photoSuggestsWalkSafety) {
             if (product.category === "outdoor") score += 120;
             if (["harness", "leash", "wear", "goggles", "carrier"].includes(product.subcategory)) score += 40;
             if (/하네스|리드|목줄|야간|안전|산책|외출|러프웨어|ruffwear/.test(text)) score += 35;
         }
-        if (wantsEye) {
+        if (wantsEye || photoSuggestsEye) {
             if (product.subcategory === "goggles") score += 120;
-            if (/눈|고글|자외선|먼지|바람/.test(text)) score += 35;
+            if (/눈|눈가|고글|자외선|먼지|바람|아이웨어|렉스스펙스|rex specs/.test(text)) score += 35;
         }
-        if (wantsCare || profile.coat === "long" || profile.coat === "medium") {
+        if (wantsCare || photoSuggestsCare || profile.coat === "long" || profile.coat === "medium") {
             if (product.category === "care") score += wantsCare ? 90 : 30;
             if (["cream", "paw", "hygiene"].includes(product.subcategory)) score += 28;
             if (/피부|발바닥|샴푸|미스트|브러시|털|보습|저자극|케어/.test(text)) score += 24;
         }
-        if (wantsFood) {
+        if (photoSuggestsHygiene) {
+            if (product.category === "care") score += 45;
+            if (product.subcategory === "hygiene") score += 55;
+            if (/배변|봉투|위생|탈취|패드|냄새|세척/.test(text)) score += 28;
+        }
+        if (wantsFood || photoSuggestsFood) {
             if (product.category === "food") score += 95;
             if (["drysoy", "treats", "supplement", "dessert"].includes(product.subcategory)) score += 30;
         }
-        if (wantsToy || profile.activity === "high") {
+        if (wantsToy || photoSuggestsToy || profile.activity === "high") {
             if (product.category === "toy") score += wantsToy ? 85 : 25;
             if (product.category === "outdoor" && profile.activity === "high") score += 55;
         }
         if (profile.activity === "low" && product.category === "life") score += 40;
-        if (profile.size === "small") {
+        if (profile.size === "small" || photoSuggestsSmallFit) {
             if (/소형|small|xs|s\b|초소형/.test(text)) score += 25;
             if (/대형|large|xl|xxl|중대형/.test(text)) score -= 30;
         }
-        if (profile.size === "large") {
+        if (profile.size === "large" || photoSuggestsLargeFit) {
             if (/대형|large|xl|xxl|중대형/.test(text)) score += 25;
             if (/소형|small|xs|s\b|초소형/.test(text)) score -= 20;
         }
+        if ((photoSuggestsCare || photoSuggestsEye) && product.category === "food" && !wantsFood) score -= 18;
+        if ((photoSuggestsWalkSafety || wantsWalkSafety) && product.category === "care" && !photoSuggestsCare && !wantsCare) score -= 15;
         return { product, score };
     });
 
-    const ranked = scored
-        .sort((a, b) => b.score - a.score)
-        .map((item) => item.product);
-    return unique(ranked).slice(0, 8);
+    return unique(diversifyPetLensProducts(scored, 8));
 }
 
 export function analyzePetLens(input: PetLensInput) {
@@ -1031,11 +1121,27 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
         if (sizeCandidate) summary.push(`크기 후보: ${sizeLabel(sizeCandidate)} · 보호자 확인 필요`);
         if (weightEstimate) summary.push(`예상 체중 후보: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg · 사진 기반 참고값`);
         if (coatColorCandidate) summary.push(`털 색상 후보: ${coatColorCandidate} · 보호자 확인 필요`);
+        const visibleFeatures = modelBacked
+            ? publicPetLensLines(recordValue(data, "visible_features", "visibleFeatures"), 3)
+            : [];
+        const shoppingSignals = modelBacked
+            ? publicPetLensLines(recordValue(data, "recommendation_signals", "recommendationSignals"), 3)
+            : [];
+        const breedTraits = modelBacked
+            ? publicPetLensLines(recordValue(data, "breed_traits", "breedTraits"), 2)
+            : [];
+        const riskNotes = modelBacked
+            ? publicPetLensLines(recordValue(data, "risk_flags", "riskFlags"), 2)
+            : [];
+        if (visibleFeatures.length > 0) summary.push(`사진에서 확인한 특징: ${visibleFeatures.join(", ")}`);
+        if (breedTraits.length > 0) summary.push(`외형/품종 참고: ${breedTraits.join(", ")}`);
+        if (shoppingSignals.length > 0) summary.push(`추천 기준: ${shoppingSignals.join(", ")}`);
+        if (riskNotes.length > 0) summary.push(`주의해서 볼 점: ${riskNotes.join(", ")}`);
         const providerCareNotes = modelBacked
-            ? stringList(data.care_notes, 3).filter(isCustomerSafePetLensLine)
+            ? publicPetLensLines(recordValue(data, "care_notes", "careNotes"), 3)
             : [];
         summary.push(...(providerCareNotes.length > 0 ? providerCareNotes : petLensCareNotes(profile)));
-        return { profile, products: recommendForPet(profile), summary };
+        return { profile, products: recommendForPet(profile, rawAnalysis), summary };
     } catch (error) {
         throw error instanceof Error ? error : new Error("사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.");
     }

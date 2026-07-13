@@ -51,3 +51,18 @@ test("PetLens recommendations prioritize walking safety when selected", async ()
     assert.match(source, /\["harness", "leash", "wear", "goggles", "carrier"\]/);
     assert.match(source, /하네스\|리드\|목줄\|야간\|안전\|산책\|외출/);
 });
+
+test("PetLens recommendations use photo analysis signals without exposing internals", async () => {
+    const source = await readSource("lib/daengdabang-llm.ts");
+
+    assert.match(source, /petLensPublicSignalList/);
+    assert.match(source, /recommendation_signals/);
+    assert.match(source, /visible_features/);
+    assert.match(source, /breed_traits/);
+    assert.match(source, /diversifyPetLensProducts/);
+    assert.match(source, /recommendForPet\(profile, rawAnalysis\)/);
+    assert.match(source, /추천 기준:/);
+    assert.match(source, /사진에서 확인한 특징:/);
+    assert.doesNotMatch(source, /추천 기준:.*interpreter/);
+    assert.doesNotMatch(source, /사진에서 확인한 특징:.*Photo stored/);
+});
