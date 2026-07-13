@@ -9,8 +9,8 @@
  *   - 분석/저장/사진 처리 로직은 협업자 함수를 그대로 import 해서 "호출"만 한다.
  *     · analyzePetLensSmart (lib/daengdabang-llm) — 사진 AI 분석   (수정 X)
  *     · savePetProfileSmart (lib/customer-api)    — 회원 프로필 저장 (수정 X)
- *     · resizePetPhoto      (lib/pet-photo)       — 사진 리사이즈   (수정 X)
- *   - 협업자 PetLensClient.tsx 원본은 0 수정(/pet-lens 페이지는 그대로 유지).
+ *     · petlens-multiview  (lib/petlens-multiview) — 4방향 사진 준비/분석 시트
+ *   - PetLensClient.tsx 페이지와 같은 4방향 사진 입력 모델을 사용한다.
  *   - 우리가 새로 만드는 것은 입력 폼 UI + 단계 전환 래핑뿐. 입력 필드/분석
  *     입력값(PetLensInput)은 협업자와 동일하게 맞춰 LLM 호환을 보장한다.
  *
@@ -30,7 +30,16 @@ import {
 } from "@/lib/daengdabang-llm";   // 협업자 LLM 분석 (수정 X)
 import type { CatalogProduct } from "@/lib/catalog";
 import { savePetProfileSmart } from "@/lib/customer-api";      // 협업자 프로필 저장 (수정 X)
-import { resizePetPhoto } from "@/lib/pet-photo";              // 협업자 사진 리사이즈 (수정 X)
+import {
+    buildPetLensAnalysisImage,
+    PETLENS_PHOTO_VIEWS,
+    petLensPhotoViewCount,
+    petLensPhotoViewMetadata,
+    preparePetLensPhotoCapture,
+    primaryPetLensPhotoEntry,
+    type PetLensPhotoCaptures,
+    type PetLensPhotoViewId,
+} from "@/lib/petlens-multiview";
 import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
 import { useAuth, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
 import ProductCard from "@/components/products/ProductCard";
@@ -54,14 +63,14 @@ export default function PetLensModalContent() {
     const [coat, setCoat] = useState<PetProfile["coat"]>("medium");
     const [activity, setActivity] = useState<PetProfile["activity"]>("normal");
     const [concerns, setConcerns] = useState<string[]>(["산책 안전"]);
-    const [imageName, setImageName] = useState("");
     const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>();
-    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [photoViews, setPhotoViews] = useState<PetLensPhotoCaptures>({});
 
     // ----- 분석/단계 상태 (result 존재 = 결과 단계) -----
     const [result, setResult] = useState<Result | null>(null);
     const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [photoLoading, setPhotoLoading] = useState(false);
 
     // 로그인 + 등록 펫 있으면 첫 펫 정보로 초기값 채움 (협업자 동작과 동일)
     useEffect(() => {
@@ -74,7 +83,18 @@ export default function PetLensModalContent() {
             setCoat(pet.coat || "medium");
             setActivity(pet.activity || "normal");
             if (pet.concerns?.length) setConcerns(pet.concerns);
-            if (pet.photoDataUrl) setPhotoDataUrl((c) => c || pet.photoDataUrl);
+            if (pet.photoDataUrl) {
+                setPhotoDataUrl((c) => c || pet.photoDataUrl);
+                setPhotoViews((current) => Object.keys(current).length
+                    ? current
+                    : {
+                        front: {
+                            dataUrl: pet.photoDataUrl!,
+                            imageName: "저장된 펫렌즈 사진",
+                            restored: true,
+                        },
+                    });
+            }
         }, 0);
         return () => window.clearTimeout(hydrateId);
     }, [user]);
@@ -85,20 +105,24 @@ export default function PetLensModalContent() {
         );
     };
 
-    // 사진 선택 — PC: 파일 / 모바일: OS 카메라·앨범 시트 (협업자 input 과 동일 accept)
-    const handleFile = (file?: File) => {
+    // 사진 선택 — PC: 파일 / 모바일: OS 카메라·앨범 시트
+    const handleFile = async (viewId: PetLensPhotoViewId, file?: File) => {
         if (!file) return;
-        setImageFile(file);
-        setImageName(file.name);
-        resizePetPhoto(file)
-            .then((dataUrl) => setPhotoDataUrl(dataUrl))
-            .catch(() => {
-                // 리사이즈 실패 시 원본 dataURL fallback (협업자 동작과 동일)
-                const reader = new FileReader();
-                reader.onload = () =>
-                    setPhotoDataUrl(typeof reader.result === "string" ? reader.result : undefined);
-                reader.readAsDataURL(file);
-            });
+        setPhotoLoading(true);
+        setAnalysisError("");
+        try {
+            const capture = await preparePetLensPhotoCapture(file);
+            const nextViews: PetLensPhotoCaptures = {
+                ...photoViews,
+                [viewId]: capture,
+            };
+            setPhotoViews(nextViews);
+            setPhotoDataUrl(primaryPetLensPhotoEntry(nextViews)?.[1].dataUrl || capture.dataUrl);
+        } catch {
+            setAnalysisError("사진을 불러오지 못했습니다. 다른 사진으로 다시 시도해 주세요.");
+        } finally {
+            setPhotoLoading(false);
+        }
     };
 
     // 추천 받기 — 협업자 analyzePetLensSmart 호출(LLM). 성공 시 result → 결과 단계로 전환.
@@ -107,9 +131,26 @@ export default function PetLensModalContent() {
         setLoading(true);
         setAnalysisError("");
         try {
+            if (petLensPhotoViewCount(photoViews) === 0) {
+                throw new Error("정면 사진부터 촬영해 주세요.");
+            }
+            const analysisImage = await buildPetLensAnalysisImage(photoViews);
+            if (!analysisImage) throw new Error("분석할 사진을 준비하지 못했습니다.");
+            const photoViewMeta = petLensPhotoViewMetadata(photoViews);
+            const primaryPhoto = primaryPetLensPhotoEntry(photoViews)?.[1];
             const analysis = await analyzePetLensSmart(
-                { name, age, size, coat, activity, concerns, imageName, photoDataUrl },
-                imageFile,
+                {
+                    name,
+                    age,
+                    size,
+                    coat,
+                    activity,
+                    concerns,
+                    imageName: analysisImage.imageName,
+                    photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
+                    photoViews: photoViewMeta,
+                },
+                analysisImage.file,
             );
             const confirmedPet = user?.pets.find((pet) => pet.name === analysis.profile.name);
             const profile = confirmedPet
@@ -226,25 +267,45 @@ export default function PetLensModalContent() {
             </header>
 
             <form onSubmit={submit} className="grid gap-2 sm:gap-2.5">
-                {/* 사진 — PC 파일 / 모바일 카메라·앨범 (input 클릭 영역 전체 덮음) */}
-                <label className="block">
+                {/* 사진 — 모바일에서는 각 슬롯 터치 시 카메라 실행 */}
+                <div data-petlens-modal-multiview-upload>
                     <span className="mb-1.5 block text-xs font-black text-neutral-500">사진</span>
-                    {photoDataUrl ? (
-                        <div className="relative aspect-[5/2] sm:aspect-[2/1] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
-                            <Image src={photoDataUrl} alt="업로드한 반려견 사진" fill sizes="420px" className="object-cover" unoptimized />
-                            <span className="absolute bottom-2 right-2 rounded-full bg-neutral-900/70 px-3 py-1 text-[11px] font-bold text-white">
-                                사진 변경
-                            </span>
-                            <input type="file" accept="image/*" onChange={(e) => handleFile(e.target.files?.[0])} className="absolute inset-0 cursor-pointer opacity-0" />
-                        </div>
-                    ) : (
-                        <div className="relative flex aspect-[5/2] sm:aspect-[2/1] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-neutral-200 bg-neutral-50 text-neutral-400">
-                            <i className="fa-solid fa-camera text-2xl" />
-                            <span className="text-xs font-bold">사진 선택 (촬영 / 앨범)</span>
-                            <input type="file" accept="image/*" onChange={(e) => handleFile(e.target.files?.[0])} className="absolute inset-0 cursor-pointer opacity-0" />
-                        </div>
-                    )}
-                </label>
+                    <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                        {PETLENS_PHOTO_VIEWS.map((view) => {
+                            const photo = photoViews[view.id];
+                            return (
+                                <label key={view.id} className="block" data-petlens-photo-view={view.id}>
+                                    <span className="mb-1 block text-center text-[10px] font-black text-neutral-500">{view.label}</span>
+                                    <span className="relative grid aspect-square cursor-pointer place-items-center overflow-hidden rounded-xl border border-dashed border-neutral-300 bg-neutral-50 text-neutral-400 hover:border-aurora-indigo">
+                                        {photo ? (
+                                            <Image src={photo.dataUrl} alt={`${view.label} 반려견 사진`} fill sizes="96px" className="object-cover" unoptimized />
+                                        ) : (
+                                            <span className="grid place-items-center gap-1 text-center">
+                                                <i className="fa-solid fa-camera text-lg" />
+                                                <span className="text-[9px] font-bold leading-3">{view.helper}</span>
+                                            </span>
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            capture="environment"
+                                            data-petlens-mobile-camera-capture
+                                            className="absolute inset-0 cursor-pointer opacity-0"
+                                            onChange={(e) => {
+                                                void handleFile(view.id, e.target.files?.[0]);
+                                                e.currentTarget.value = "";
+                                            }}
+                                        />
+                                    </span>
+                                </label>
+                            );
+                        })}
+                    </div>
+                    <p className="mt-1.5 text-[10px] font-bold leading-4 text-neutral-500">
+                        모바일에서는 카메라가 열립니다. 정면·왼쪽·오른쪽·뒷면을 찍으면 AI가 네 방향을 묶어 분석합니다.
+                    </p>
+                    {photoLoading && <p className="mt-1.5 text-[11px] font-black text-aurora-indigo">사진 준비 중</p>}
+                </div>
 
                 {/* 이름 / 나이 */}
                 <div className="grid grid-cols-2 gap-2.5">
