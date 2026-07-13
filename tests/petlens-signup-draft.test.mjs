@@ -133,3 +133,30 @@ test("signup only auto-selects an exact canonical 120-breed name", async () => {
     assert.match(signupSource, /목록 외 견종 · 믹스견 직접 입력/);
     assert.match(signupSource, /breed: confirmedBreed/);
 });
+
+test("signup PetLens captures four mobile camera views and sends a multi-view analysis sheet", async () => {
+    const [signupSource, llmSource] = await Promise.all([
+        readFile(new URL("../app/auth/signup/page.tsx", import.meta.url), "utf8"),
+        readFile(new URL("../lib/daengdabang-llm.ts", import.meta.url), "utf8"),
+    ]);
+
+    assert.match(signupSource, /PET_PHOTO_VIEWS/);
+    assert.match(signupSource, /id: "front", label: "정면"/);
+    assert.match(signupSource, /id: "left", label: "왼쪽"/);
+    assert.match(signupSource, /id: "right", label: "오른쪽"/);
+    assert.match(signupSource, /id: "back", label: "뒷면"/);
+    assert.match(signupSource, /data-petlens-multiview-upload/);
+    assert.match(signupSource, /data-petlens-photo-view=\{view\.id\}/);
+    assert.match(signupSource, /capture="environment"/);
+    assert.match(signupSource, /data-petlens-mobile-camera-capture/);
+    assert.match(signupSource, /buildPetLensViewSheet\(nextViews\)/);
+    assert.match(signupSource, /daengdabang-petlens-four-view\.jpg/);
+    assert.match(signupSource, /signup_multiview_contact_sheet/);
+    assert.match(signupSource, /petPhotoViewCount/);
+    assert.match(signupSource, /petPhotoViews: photoViewMeta/);
+    assert.match(signupSource, /모바일에서는 카메라가 바로 열립니다/);
+
+    assert.match(llmSource, /photoViews\?: Array/);
+    assert.match(llmSource, /petPhotoViews: input\.photoViews/);
+    assert.match(llmSource, /정면\/좌\/우\/뒷면 중/);
+});

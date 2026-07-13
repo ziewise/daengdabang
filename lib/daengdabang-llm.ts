@@ -18,6 +18,12 @@ type PetLensInput = {
     concerns: string[];
     imageName?: string;
     photoDataUrl?: string;
+    photoViews?: Array<{
+        viewId: string;
+        label: string;
+        imageName?: string;
+        usedForPetLensAnalysis?: boolean;
+    }>;
 };
 
 export type PetLensWeightEstimate = {
@@ -812,6 +818,16 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
         const reviewOnlyBreed = getPetLensReviewOnlyBreedCandidate(data);
         const rawAnalysis: Record<string, unknown> = {
             ...data,
+            ...(input.photoViews?.length ? {
+                petPhotoViews: input.photoViews,
+                petPhotoViewCount: input.photoViews.length,
+                multiViewAnalysis: {
+                    enabled: input.photoViews.length > 1,
+                    source: input.photoViews.length > 1 ? "signup_multiview_contact_sheet" : "signup_single_photo",
+                    imageName: input.imageName,
+                    requiresUserConfirmation: true,
+                },
+            } : {}),
             storefrontCandidates: {
                 ...(reviewOnlyBreed ? { reviewOnlyBreed } : {}),
                 ...(sizeCandidate ? { size: sizeCandidate } : {}),
@@ -866,6 +882,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
         if (sizeCandidate) summary.push(`AI 크기 후보: ${sizeLabel(sizeCandidate)} (확인 필요)`);
         if (weightEstimate) summary.push(`AI 예상 체중 범위: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg (사진 기반 후보 · 확인 필요)`);
         if (coatColorCandidate) summary.push(`AI 털 색상 후보: ${coatColorCandidate} (확인 필요)`);
+        if (input.photoViews?.length && input.photoViews.length > 1) summary.push(`정면/좌/우/뒷면 중 ${input.photoViews.length}개 방향 사진을 묶어 분석했습니다.`);
         if (Array.isArray(data.care_notes)) {
             summary.push(...data.care_notes.filter((item): item is string => typeof item === "string").slice(0, 3));
         }

@@ -39,6 +39,25 @@ import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 const CUSTOM_BREED_OPTION = "__custom";
+const PET_PHOTO_VIEWS = [
+    { id: "front", label: "정면", helper: "얼굴·가슴" },
+    { id: "left", label: "왼쪽", helper: "옆선·다리" },
+    { id: "right", label: "오른쪽", helper: "반대 옆선" },
+    { id: "back", label: "뒷면", helper: "등선·꼬리" },
+] as const;
+type PetPhotoViewId = typeof PET_PHOTO_VIEWS[number]["id"];
+type PetPhotoCapture = {
+    dataUrl: string;
+    imageName: string;
+    file?: File;
+    restored?: boolean;
+};
+type PetPhotoCaptures = Partial<Record<PetPhotoViewId, PetPhotoCapture>>;
+
+const PET_PHOTO_VIEW_LABELS = PET_PHOTO_VIEWS.reduce((acc, view) => {
+    acc[view.id] = view.label;
+    return acc;
+}, {} as Record<PetPhotoViewId, string>);
 
 function petLensCandidateMessage(rawAnalysis: unknown) {
     const candidates = getPetLensStorefrontCandidates(rawAnalysis);
@@ -52,6 +71,108 @@ function petLensCandidateMessage(rawAnalysis: unknown) {
         return "신뢰 가능한 자동 후보를 확정하지 못해 기존 입력값을 유지했습니다. 실제 정보를 직접 확인해 주세요.";
     }
     return `사진 분석 후보(${labels.join("·")})를 불러왔습니다. 가입 전에 실제 정보와 맞는지 확인해 주세요.`;
+}
+
+function petPhotoViewEntries(views: PetPhotoCaptures): Array<[PetPhotoViewId, PetPhotoCapture]> {
+    return PET_PHOTO_VIEWS
+        .map((view): [PetPhotoViewId, PetPhotoCapture | undefined] => [view.id, views[view.id]])
+        .filter((entry): entry is [PetPhotoViewId, PetPhotoCapture] => Boolean(entry[1]));
+}
+
+function petPhotoViewCount(views: PetPhotoCaptures) {
+    return petPhotoViewEntries(views).length;
+}
+
+function primaryPetPhotoEntry(views: PetPhotoCaptures): [PetPhotoViewId, PetPhotoCapture] | undefined {
+    if (views.front) return ["front", views.front];
+    return petPhotoViewEntries(views)[0];
+}
+
+function petPhotoViewMetadata(views: PetPhotoCaptures) {
+    return petPhotoViewEntries(views).map(([viewId, photo]) => ({
+        viewId,
+        label: PET_PHOTO_VIEW_LABELS[viewId],
+        imageName: photo.imageName,
+        usedForPetLensAnalysis: true,
+    }));
+}
+
+function loadSignupImage(dataUrl: string) {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("PetLens image could not be loaded."));
+        image.src = dataUrl;
+    });
+}
+
+function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number) {
+    return new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("PetLens contact sheet could not be generated."));
+        }, type, quality);
+    });
+}
+
+async function buildPetLensViewSheet(views: PetPhotoCaptures) {
+    const entries = petPhotoViewEntries(views);
+    if (entries.length === 0) return undefined;
+    if (entries.length === 1 && entries[0][1].file) {
+        const [viewId, photo] = entries[0];
+        return {
+            file: photo.file,
+            imageName: `${PET_PHOTO_VIEW_LABELS[viewId]}_${photo.imageName}`,
+        };
+    }
+
+    const cellSize = 480;
+    const labelHeight = 48;
+    const padding = 18;
+    const canvas = document.createElement("canvas");
+    canvas.width = cellSize * 2;
+    canvas.height = cellSize * 2;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("PetLens contact sheet is not supported.");
+    ctx.fillStyle = "#fffaf3";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "#e8ddd2";
+    ctx.lineWidth = 3;
+    ctx.font = "700 28px sans-serif";
+    ctx.textBaseline = "middle";
+
+    await Promise.all(entries.map(async ([viewId, photo], index) => {
+        const image = await loadSignupImage(photo.dataUrl);
+        const column = index % 2;
+        const row = Math.floor(index / 2);
+        const x = column * cellSize;
+        const y = row * cellSize;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(x + 6, y + 6, cellSize - 12, cellSize - 12);
+        ctx.strokeRect(x + 6, y + 6, cellSize - 12, cellSize - 12);
+        ctx.fillStyle = "#2f2926";
+        ctx.fillText(PET_PHOTO_VIEW_LABELS[viewId], x + padding, y + labelHeight / 2);
+
+        const drawX = x + padding;
+        const drawY = y + labelHeight;
+        const drawWidth = cellSize - padding * 2;
+        const drawHeight = cellSize - labelHeight - padding;
+        const scale = Math.min(drawWidth / image.width, drawHeight / image.height);
+        const width = image.width * scale;
+        const height = image.height * scale;
+        const offsetX = drawX + (drawWidth - width) / 2;
+        const offsetY = drawY + (drawHeight - height) / 2;
+        ctx.drawImage(image, offsetX, offsetY, width, height);
+    }));
+
+    const blob = await canvasToBlob(canvas, "image/jpeg", 0.88);
+    return {
+        file: new File([blob], "daengdabang-petlens-four-view.jpg", {
+            type: "image/jpeg",
+            lastModified: Date.now(),
+        }),
+        imageName: "정면-좌-우-뒷면 PetLens 분석 시트.jpg",
+    };
 }
 
 export default function SignupPage() {
@@ -73,6 +194,7 @@ export default function SignupPage() {
     const [petActivity, setPetActivity] = useState<PetProfile["activity"]>("normal");
     const [petConcerns, setPetConcerns] = useState<string[]>(["일상 케어"]);
     const [petPhotoDataUrl, setPetPhotoDataUrl] = useState<string | undefined>();
+    const [petPhotoViews, setPetPhotoViews] = useState<PetPhotoCaptures>({});
     const [petBreedId, setPetBreedId] = useState("");
     const [petBreedCustom, setPetBreedCustom] = useState("");
     const [petBreedSource, setPetBreedSource] = useState<"" | "ai" | "manual">("");
@@ -98,6 +220,15 @@ export default function SignupPage() {
             setPetActivity(draft.activity);
             setPetConcerns(draft.concerns.length > 0 ? draft.concerns : ["일상 케어"]);
             setPetPhotoDataUrl(draft.photoDataUrl);
+            if (draft.photoDataUrl) {
+                setPetPhotoViews({
+                    front: {
+                        dataUrl: draft.photoDataUrl,
+                        imageName: "펫렌즈 저장 사진",
+                        restored: true,
+                    },
+                });
+            }
             setPetRawAnalysis(draft.rawAnalysis);
             setPetWeightEstimate(getPetLensWeightEstimate(draft.rawAnalysis));
             setPetSex("unknown");
@@ -134,7 +265,7 @@ export default function SignupPage() {
         );
     };
 
-    const handlePetPhoto = async (file?: File) => {
+    const handlePetPhotoView = async (viewId: PetPhotoViewId, file?: File) => {
         if (!file) return;
         setPhotoLoading(true);
         setPhotoError("");
@@ -151,17 +282,32 @@ export default function SignupPage() {
         }
         try {
             const dataUrl = await resizePetPhoto(file);
-            setPetPhotoDataUrl(dataUrl);
+            const nextViews: PetPhotoCaptures = {
+                ...petPhotoViews,
+                [viewId]: {
+                    dataUrl,
+                    imageName: file.name,
+                    file,
+                },
+            };
+            const primaryEntry = primaryPetPhotoEntry(nextViews);
+            const primaryPhoto = primaryEntry?.[1];
+            const viewMeta = petPhotoViewMetadata(nextViews);
+            const viewCount = petPhotoViewCount(nextViews);
+            setPetPhotoViews(nextViews);
+            setPetPhotoDataUrl(primaryPhoto?.dataUrl || dataUrl);
 
             // The server classifier is helpful when configured, but its result
             // is always shown as an editable candidate. A missing/unavailable
             // model must never silently turn a member's dog into a poodle.
             if (!ddbApiReady()) {
-                setPetBreedMessage("사진을 준비했습니다. 견종을 직접 선택해 주세요.");
+                setPetBreedMessage(`사진 ${viewCount}장을 준비했습니다. 견종을 직접 선택해 주세요.`);
                 return;
             }
 
             try {
+                const analysisImage = await buildPetLensViewSheet(nextViews);
+                if (!analysisImage) return;
                 const analysis = await analyzePetLensSmart({
                     name: petName,
                     age: petAge,
@@ -169,18 +315,33 @@ export default function SignupPage() {
                     coat: petCoat,
                     activity: petActivity,
                     concerns: petConcerns,
-                    imageName: file.name,
-                    photoDataUrl: dataUrl,
-                }, file);
-                setPetRawAnalysis(analysis.profile.rawAnalysis);
+                    imageName: analysisImage.imageName,
+                    photoDataUrl: primaryPhoto?.dataUrl || dataUrl,
+                    photoViews: viewMeta,
+                }, analysisImage.file);
+                const rawAnalysis = {
+                    ...(analysis.profile.rawAnalysis || {}),
+                    petPhotoViews: viewMeta,
+                    petPhotoViewCount: viewMeta.length,
+                    petPhotoPrimaryView: primaryEntry?.[0] || viewId,
+                    multiViewAnalysis: {
+                        enabled: viewMeta.length > 1,
+                        source: viewMeta.length > 1 ? "signup_multiview_contact_sheet" : "signup_single_photo",
+                        imageName: analysisImage.imageName,
+                        requiresUserConfirmation: true,
+                    },
+                };
+                setPetRawAnalysis(rawAnalysis);
                 setPetSize(analysis.profile.size);
                 setPetCoat(analysis.profile.coat);
-                setPetWeightEstimate(getPetLensWeightEstimate(analysis.profile.rawAnalysis));
+                setPetWeightEstimate(getPetLensWeightEstimate(rawAnalysis));
                 if (analysis.profile.coatColor) {
                     setPetCoatColor(analysis.profile.coatColor);
                     setPetCoatColorSource("ai");
                 }
-                setPetAnalysisMessage(petLensCandidateMessage(analysis.profile.rawAnalysis));
+                setPetAnalysisMessage(
+                    `${petLensCandidateMessage(rawAnalysis)}${viewMeta.length > 1 ? " 여러 방향 사진을 하나의 분석 시트로 묶어 AI가 함께 확인했습니다." : ""}`
+                );
                 const rawBreedCandidate = (analysis.profile.breed || "").trim();
                 const candidateId = resolvePetBreedIdExact(rawBreedCandidate, "");
                 if (candidateId && isPetBreedId(candidateId)) {
@@ -198,7 +359,7 @@ export default function SignupPage() {
                     setPetBreedMessage("사진 분석 결과를 확정하지 못했습니다. 아래 120종 중 견종을 직접 선택해 주세요.");
                 }
             } catch {
-                setPetBreedMessage("사진은 저장되었지만 견종 분석을 확정하지 못했습니다. 아래에서 직접 선택해 주세요.");
+                setPetBreedMessage(`사진 ${viewCount}장은 준비되었지만 견종 분석을 확정하지 못했습니다. 아래에서 직접 선택해 주세요.`);
             }
         } catch {
             setPhotoError("사진을 불러오지 못했습니다. 다른 이미지를 선택해 주세요.");
@@ -232,9 +393,12 @@ export default function SignupPage() {
             setError("현재 체중은 직접 확인한 값으로 0.1~120kg 사이를 입력해 주세요.");
             return;
         }
+        const photoViewMeta = petPhotoViewMetadata(petPhotoViews);
+        const primaryPhotoView = primaryPetPhotoEntry(petPhotoViews)?.[0];
         const shouldCreatePet = Boolean(
             petName.trim() ||
             petPhotoDataUrl ||
+            photoViewMeta.length > 0 ||
             petBreedId ||
             petBreedCustom.trim() ||
             confirmedWeightKg !== undefined ||
@@ -270,6 +434,11 @@ export default function SignupPage() {
                 rawAnalysis: confirmedBreed
                     ? {
                         ...(petRawAnalysis || {}),
+                        ...(photoViewMeta.length > 0 ? {
+                            petPhotoViews: photoViewMeta,
+                            petPhotoViewCount: photoViewMeta.length,
+                            petPhotoPrimaryView: primaryPhotoView,
+                        } : {}),
                         ...(selectedBreed ? {
                         breedId: selectedBreed.id,
                         breed_ko: selectedBreed.ko,
@@ -369,20 +538,46 @@ export default function SignupPage() {
                     />
                 </label>
                 <div className="grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
-                    <div className="grid gap-4 md:grid-cols-[120px_1fr]">
-                        <label className="block" data-pet-guide-target="signup-pet-photo">
+                    <div className="grid gap-4 md:grid-cols-[260px_1fr]">
+                        <div className="block" data-pet-guide-target="signup-pet-photo" data-petlens-multiview-upload>
                             <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
-                            <span className="grid aspect-square cursor-pointer place-items-center overflow-hidden rounded-md border border-dashed border-neutral-300 bg-white text-neutral-400 hover:border-indigo-300">
-                                {petPhotoDataUrl ? (
-                                    <img src={petPhotoDataUrl} alt="반려견 사진" className="h-full w-full object-cover" />
-                                ) : (
-                                    <i className="fa-solid fa-camera text-2xl" />
-                                )}
-                                <input type="file" accept="image/*" className="hidden" onChange={(event) => handlePetPhoto(event.target.files?.[0])} />
+                            <div className="grid grid-cols-2 gap-2">
+                                {PET_PHOTO_VIEWS.map((view) => {
+                                    const photo = petPhotoViews[view.id];
+                                    return (
+                                        <label key={view.id} className="block" data-petlens-photo-view={view.id}>
+                                            <span className="mb-1 block text-[11px] font-black text-neutral-500">{view.label}</span>
+                                            <span className="grid aspect-square cursor-pointer place-items-center overflow-hidden rounded-md border border-dashed border-neutral-300 bg-white text-neutral-400 hover:border-indigo-300">
+                                                {photo ? (
+                                                    <img src={photo.dataUrl} alt={`${view.label} 반려견 사진`} className="h-full w-full object-cover" />
+                                                ) : (
+                                                    <i className="fa-solid fa-camera text-xl" />
+                                                )}
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    capture="environment"
+                                                    className="hidden"
+                                                    data-petlens-mobile-camera-capture
+                                                    onChange={(event) => {
+                                                        void handlePetPhotoView(view.id, event.target.files?.[0]);
+                                                        event.currentTarget.value = "";
+                                                    }}
+                                                />
+                                            </span>
+                                            <span className="mt-1 block text-[10px] font-bold leading-4 text-neutral-500">
+                                                {photo ? "다시 선택" : view.helper}
+                                            </span>
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                            <span className="mt-2 block text-[11px] font-bold leading-5 text-neutral-500">
+                                모바일에서는 카메라가 바로 열립니다. 정면은 대표 사진으로 쓰고, 좌·우·뒷면까지 찍으면 AI가 네 방향을 한 번에 보고 견종·체형·털색 후보를 더 꼼꼼히 확인합니다.
                             </span>
-                            {photoLoading && <span className="mt-2 block text-xs font-black text-indigo-700">사진 준비 중</span>}
+                            {photoLoading && <span className="mt-2 block text-xs font-black text-indigo-700">사진 분석 중</span>}
                             {photoError && <span className="mt-2 block text-xs font-black text-rose-600">{photoError}</span>}
-                        </label>
+                        </div>
                         <div className="grid gap-4 md:grid-cols-2">
                             <label>
                                 <span className="mb-1 block text-xs font-black text-neutral-500">반려견 이름</span>
