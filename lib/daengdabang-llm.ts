@@ -122,9 +122,7 @@ function isModelBackedPetLensResult(data: Record<string, unknown>) {
 export function isPetLensAnalysisReadyForProfileSave(rawAnalysis: unknown) {
     const raw = asRecord(rawAnalysis);
     if (!raw) return false;
-    if (recordValue(raw, "profile_save_allowed", "profileSaveAllowed") === true) return true;
-    const ready = recordValue(raw, "ready_for_recommendation", "readyForRecommendation");
-    return ready === true && isModelBackedPetLensResult(raw);
+    return recordValue(raw, "profile_save_allowed", "profileSaveAllowed") === true;
 }
 
 function petLensRetakeAdvice(data: Record<string, unknown>) {
@@ -133,6 +131,13 @@ function petLensRetakeAdvice(data: Record<string, unknown>) {
         return `다시 촬영 팁: ${retakeReasons.join(" · ")}`;
     }
     return "다시 촬영 팁: 밝은 털과 밝은 배경이 겹치면 윤곽이 약해질 수 있어요. 베이지·회색 매트처럼 배경과 털이 분리되는 곳에서 얼굴과 몸통이 크게 보이게 찍어 주세요.";
+}
+
+function reviewOnlyBreedSummary(label: string) {
+    if (/푸들|poodle/i.test(label)) {
+        return `사진에서 ${label} 계열 후보를 찾았습니다. 토이·미니어처·스탠더드 구분은 사진만으로 확정하기 어려워 보호자 확인이 필요합니다.`;
+    }
+    return `사진에서 ${label} 후보를 찾았습니다. 목록 외 견종/믹스견일 수 있어 직접 확인이 필요합니다.`;
 }
 
 function petLensCareNotes(profile: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns" | "coatColor">) {
@@ -1107,7 +1112,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             modelBacked && readyForRecommendation && canonicalBreed
                 ? `사진 분석 결과 ${canonicalBreed} 계열 후보를 찾았습니다. 저장 전 실제 견종과 맞는지 확인해 주세요.`
                 : modelBacked && readyForRecommendation && reviewOnlyBreed
-                    ? `사진에서 ${reviewOnlyBreed.label} 후보를 찾았습니다. 목록 외 견종/믹스견일 수 있어 직접 확인이 필요합니다.`
+                    ? reviewOnlyBreedSummary(reviewOnlyBreed.label)
                     : `${profile.name}의 사진은 받았지만, 품종을 확정할 만큼 안정적인 결과를 만들지 못했습니다.`,
         ];
         const apiSummary = typeof data.summary === "string" && isCustomerSafePetLensLine(data.summary)

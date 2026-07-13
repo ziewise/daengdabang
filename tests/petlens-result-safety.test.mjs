@@ -15,9 +15,12 @@ test("PetLens customer result hides internal provider, storage, and fallback dia
     assert.match(source, /isCustomerSafePetLensLine/);
     assert.match(source, /petLensRetakeAdvice/);
     assert.match(source, /petLensCareNotes/);
+    assert.match(source, /reviewOnlyBreedSummary/);
+    assert.match(source, /토이·미니어처·스탠더드 구분은 사진만으로 확정하기 어려워/);
     assert.match(source, /isPetLensAnalysisReadyForProfileSave/);
     assert.match(source, /profile_save_allowed/);
     assert.match(source, /analysis_ready/);
+    assert.match(source, /return recordValue\(raw, "profile_save_allowed", "profileSaveAllowed"\) === true/);
     assert.match(source, /const apiConcerns = trustworthyCandidate/);
     assert.doesNotMatch(source, /`해석 엔진:/);
     assert.doesNotMatch(source, /summary\.push\(`Photo stored:/);
