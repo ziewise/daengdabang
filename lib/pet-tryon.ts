@@ -63,7 +63,7 @@ export async function requestPetTryOn(product: CatalogProduct, pet: PetProfile):
     if (cached) return cached;
 
     const controller = new AbortController();
-    // GPT Image 고품질 편집은 복잡한 입력에서 최대 약 2분이 걸릴 수 있다.
+    // 고품질 입혀보기는 복잡한 입력에서 최대 약 2분이 걸릴 수 있다.
     const timeout = window.setTimeout(() => controller.abort(), 135000);
     try {
         const response = await fetch(`${base}/api/v1/pet-tryon/render`, {

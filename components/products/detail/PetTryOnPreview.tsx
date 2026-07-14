@@ -142,10 +142,10 @@ export default function PetTryOnPreview({
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
                             <p className="text-xs font-black text-indigo-700">
-                                {locale === "en" ? "AI FITTING" : "AI 실착 피팅"}
+                                {locale === "en" ? "SMART FITTING" : "스마트 입혀보기"}
                             </p>
                             <span className="rounded-full bg-indigo-50 px-2 py-1 text-[10px] font-black text-indigo-700">
-                                GPT IMAGE
+                                DDB SMART FIT
                             </span>
                         </div>
                         <h2 id="pet-tryon-title" className="mt-1 text-xl font-black text-neutral-950 sm:text-2xl">
@@ -250,7 +250,7 @@ export default function PetTryOnPreview({
                             {resultImage && !loading && (
                                 <div className="absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-2 text-xs font-black text-emerald-700 shadow-lg backdrop-blur">
                                     <i className="fa-solid fa-circle-check mr-1.5" />
-                                    {locale === "en" ? "AI fitting complete" : "AI 실착 피팅 완료"}
+                                    {locale === "en" ? "Fitting complete" : "입혀보기 완료"}
                                 </div>
                             )}
                         </div>
@@ -276,12 +276,12 @@ export default function PetTryOnPreview({
 
                             <div className="mt-5 rounded-lg border border-indigo-100 bg-indigo-50/70 p-4">
                                 <p className="text-sm font-black text-indigo-950">
-                                    {locale === "en" ? "Real AI image fitting" : "실제 AI 이미지 피팅"}
+                                    {locale === "en" ? "Natural fitting preview" : "자연스러운 착용 미리보기"}
                                 </p>
                                 <p className="mt-2 text-xs font-bold leading-5 text-indigo-900/75">
                                     {locale === "en"
-                                        ? "OpenAI edits your dog's photo using the selected product as a high-fidelity reference. It is not a flat image overlay."
-                                        : "강아지 사진과 선택한 상품을 고품질 참조 이미지로 사용해 OpenAI가 실제 착용 모습으로 편집합니다. 상품 사진을 평면으로 얹지 않습니다."}
+                                        ? "Your dog's photo and the selected product's shape, color, and details are reflected to create a natural fitting preview."
+                                        : "우리 아이 사진과 선택한 상품의 형태·색상·디테일을 함께 반영해 자연스러운 착용 이미지를 만들어 드립니다."}
                                 </p>
                             </div>
 
@@ -309,7 +309,7 @@ export default function PetTryOnPreview({
                                     <i className="fa-solid fa-wand-magic-sparkles" />
                                     {resultImage || error
                                         ? locale === "en" ? "Create again" : "다시 입혀보기"
-                                        : locale === "en" ? "Start AI fitting" : "AI 피팅 시작하기"}
+                                        : locale === "en" ? "Start fitting" : "입혀보기 시작하기"}
                                 </button>
                             )}
                         </aside>
