@@ -10,6 +10,7 @@ export type CompanionCharacterId = "poodle" | "retriever" | "corgi" | "bulldog";
 export type CompanionToneId = "cream" | "apricot" | "caramel" | "charcoal";
 export type CompanionAccessoryId = "none" | "sky" | "rose" | "mint";
 export type CompanionMotionId = "calm" | "lively";
+export type CompanionBreedSource = "profile" | "member_companion_selection";
 
 export type PetCompanionSettings = {
     version: 1;
@@ -17,6 +18,7 @@ export type PetCompanionSettings = {
     activePetName: string;
     enabled: boolean;
     breedId: string;
+    breedSource?: CompanionBreedSource;
     characterId: CompanionCharacterId;
     toneId: CompanionToneId;
     accessoryId: CompanionAccessoryId;
@@ -281,15 +283,29 @@ export function companionCharacterIdForHeroBreed(
 
 function petBreedText(pet?: PetProfile | null) {
     const raw = isRecord(pet?.rawAnalysis) ? pet.rawAnalysis : {};
-    return [raw.breedId, pet?.breed, raw.breed, raw.breed_ko, raw.breed_en]
+    return [pet?.breed, raw.breedId, raw.breed, raw.breed_ko, raw.breed_en]
         .filter((value): value is string => typeof value === "string")
         .join(" ")
         .toLowerCase();
 }
 
+export function resolvePetProfileBreedId(pet?: PetProfile | null) {
+    if (!pet) return "";
+    const raw = isRecord(pet.rawAnalysis) ? pet.rawAnalysis : {};
+    const candidates = [pet.breed, raw.breedId, raw.breed_ko, raw.breed_en, raw.breed];
+    for (const candidate of candidates) {
+        if (typeof candidate !== "string" || !candidate.trim()) continue;
+        const resolved = resolvePetBreedId(candidate, "");
+        if (resolved && isPetBreedId(resolved)) return resolved;
+    }
+    return "";
+}
+
 function petBreedIdentity(pet?: PetProfile | null) {
+    const canonical = resolvePetProfileBreedId(pet);
+    if (canonical) return canonical;
     const raw = isRecord(pet?.rawAnalysis) ? pet.rawAnalysis : {};
-    const value = [raw.breedId, raw.breed_en, pet?.breed, raw.breed_ko, raw.breed]
+    const value = [pet?.breed, raw.breedId, raw.breed_en, raw.breed_ko, raw.breed]
         .find((item) => typeof item === "string" && item.trim());
     return typeof value === "string" ? value.trim() : "";
 }
@@ -336,6 +352,7 @@ export function defaultCompanionSettings(ownerKey: string, pet?: PetProfile | nu
         activePetName: pet?.name?.trim() || "몽이",
         enabled: true,
         breedId: petBreedIdentity(pet) || legacyBreedId(characterId),
+        breedSource: resolvePetProfileBreedId(pet) ? "profile" : undefined,
         characterId,
         toneId: suggestCompanionTone(pet),
         accessoryId: "sky",
@@ -348,6 +365,7 @@ function normalizeSettings(
     value: unknown,
     fallback: PetCompanionSettings,
     ownerKey: string,
+    profileBreedId = "",
 ): PetCompanionSettings | null {
     if (!isRecord(value)) return null;
     const characterId = value.characterId;
@@ -357,6 +375,10 @@ function normalizeSettings(
     const storedBreedId = typeof value.breedId === "string"
         ? resolvePetBreedId(value.breedId, "")
         : "";
+    const explicitMemberBreed = value.breedSource === "member_companion_selection";
+    const resolvedBreedId = explicitMemberBreed && storedBreedId && isPetBreedId(storedBreedId)
+        ? storedBreedId
+        : profileBreedId || (storedBreedId && isPetBreedId(storedBreedId) ? storedBreedId : fallback.breedId);
     return {
         version: 1,
         ownerKey,
@@ -364,9 +386,10 @@ function normalizeSettings(
             ? value.activePetName.trim()
             : fallback.activePetName,
         enabled: typeof value.enabled === "boolean" ? value.enabled : fallback.enabled,
-        breedId: storedBreedId && isPetBreedId(storedBreedId)
-            ? storedBreedId
-            : fallback.breedId,
+        breedId: resolvedBreedId,
+        breedSource: explicitMemberBreed
+            ? "member_companion_selection"
+            : profileBreedId ? "profile" : fallback.breedSource,
         characterId: typeof characterId === "string" && CHARACTER_IDS.has(characterId as CompanionCharacterId)
             ? characterId as CompanionCharacterId
             : fallback.characterId,
@@ -392,7 +415,7 @@ export function companionSettingsFromPet(
     if (!pet || !isRecord(pet.rawAnalysis)) return null;
     if (!petHasCompanionIdentity(pet)) return null;
     const fallback = defaultCompanionSettings(ownerKey, pet);
-    return normalizeSettings(pet.rawAnalysis.companion, fallback, ownerKey);
+    return normalizeSettings(pet.rawAnalysis.companion, fallback, ownerKey, resolvePetProfileBreedId(pet));
 }
 
 export function readLocalCompanionSettings(
@@ -408,7 +431,12 @@ export function readLocalCompanionSettings(
             ? pets.find((candidate) => candidate.name === value.activePetName) || pet
             : pet;
         if (activePet && !petHasCompanionIdentity(activePet)) return null;
-        return normalizeSettings(value, defaultCompanionSettings(ownerKey, activePet), ownerKey);
+        return normalizeSettings(
+            value,
+            defaultCompanionSettings(ownerKey, activePet),
+            ownerKey,
+            resolvePetProfileBreedId(activePet),
+        );
     } catch {
         return null;
     }

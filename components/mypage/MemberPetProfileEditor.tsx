@@ -68,6 +68,14 @@ export default function MemberPetProfileEditor({ pet }: Props) {
             rawAnalysis.breed_ko = selectedBreed.ko;
             rawAnalysis.breed_en = selectedBreed.en;
             rawAnalysis.breedSource = "member_correction";
+            const storedCompanion = rawAnalysis.companion;
+            if (storedCompanion && typeof storedCompanion === "object" && !Array.isArray(storedCompanion)) {
+                rawAnalysis.companion = {
+                    ...(storedCompanion as Record<string, unknown>),
+                    breedId: selectedBreed.id,
+                    breedSource: "profile",
+                };
+            }
         } else {
             delete rawAnalysis.breedId;
             delete rawAnalysis.breed_ko;

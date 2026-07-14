@@ -31,6 +31,7 @@ import {
     COMPANION_TONES,
     PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT,
     defaultCompanionSettings,
+    resolvePetProfileBreedId,
     withCompanionSettings,
     writeLocalCompanionSettings,
     type CompanionCharacterId,
@@ -1627,14 +1628,19 @@ export default function PetCompanionLayer({
             setSaveStatus(currentSaveAccess.message);
             return;
         }
+        const pet = state.user?.pets.find((item) => item.name === draft.activePetName);
+        const selectedBreedId = resolvePetBreedId(draft.breedId);
+        const profileBreedId = resolvePetProfileBreedId(pet);
         const next = {
             ...draft,
-            breedId: resolvePetBreedId(draft.breedId),
+            breedId: selectedBreedId,
+            breedSource: profileBreedId && selectedBreedId === profileBreedId
+                ? "profile" as const
+                : "member_companion_selection" as const,
             activePetName: draft.activePetName.trim() || "몽이",
         };
         writeLocalCompanionSettings(next);
         onSettingsChange(next);
-        const pet = state.user?.pets.find((item) => item.name === next.activePetName);
         if (!pet) {
             setSaveStatus("이 기기에 저장했어요.");
             window.setTimeout(() => onPanelOpenChange(false), 380);

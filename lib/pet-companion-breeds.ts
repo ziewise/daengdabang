@@ -224,7 +224,15 @@ const BREED_DEFINITIONS: BreedDefinition[] = [
     ["miniature-schnauzer", "Miniature Schnauzer", "미니어처 슈나우저", "terrier", ["미니 슈나우저"], { ear: "button", marking: "points", primary: "#777573", secondary: "#d4cfc3", accent: "#444342", bodyScale: .8 }],
     ["giant-schnauzer", "Giant Schnauzer", "자이언트 슈나우저", "terrier", [], { ear: "button", marking: "solid", primary: "#454342", secondary: "#696665", accent: "#262525", bodyScale: 1.06 }],
     ["standard-schnauzer", "Standard Schnauzer", "스탠더드 슈나우저", "terrier", [], { ear: "button", marking: "points", primary: "#6c6a68", secondary: "#beb8aa", accent: "#3c3b3b" }],
-    ["west-highland-white-terrier", "West Highland White Terrier", "웨스트 하이랜드 화이트 테리어", "terrier", ["웨스티", "westie"], { ear: "point", primary: "#eeeadd", secondary: "#fffaf0", accent: "#aaa396", bodyScale: .8 }],
+    ["west-highland-white-terrier", "West Highland White Terrier", "웨스트 하이랜드 화이트 테리어", "terrier", [
+        "웨스티",
+        "화이트 테리어",
+        "화이트테리어",
+        "웨스트 하이랜드 화이트테리어",
+        "웨스트하이랜드화이트테리어",
+        "westie",
+        "west highland terrier",
+    ], { ear: "point", primary: "#eeeadd", secondary: "#fffaf0", accent: "#aaa396", bodyScale: .8 }],
 
     // R08 · sporting/gundog
     ["weimaraner", "Weimaraner", "와이마라너", "retriever", [], { ear: "drop", coat: "smooth", tail: "docked", primary: "#92918e", secondary: "#c1bbb0", accent: "#555553" }],
