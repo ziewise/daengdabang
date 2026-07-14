@@ -177,10 +177,10 @@ export default function PetCompanionGate() {
         };
 
         productRecommendationActiveRef.current = false;
-        setProductRecommendationActive(false);
         window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, handleRecommendationRequest);
         animationFrame = window.requestAnimationFrame(() => {
             animationFrame = 0;
+            setProductRecommendationActive(false);
             activateIfProductSurface();
             observer = new MutationObserver((mutations) => {
                 if (cancelled || productRecommendationActiveRef.current) return;
@@ -222,7 +222,7 @@ export default function PetCompanionGate() {
     const companionEnabled = effectiveSettings?.enabled ?? true;
     const settingsLaunchLabel = companionEnabled
         ? "산책 친구 설정 열기"
-        : "산책 친구 다시 불러오기";
+        : "산책 친구 다시 불러와 설정 열기";
 
     const handleSettingsLaunch = () => {
         const current = settings || (state.user
@@ -233,11 +233,9 @@ export default function PetCompanionGate() {
             writeLocalCompanionSettings(restored);
             setGuestInteracted(true);
             setSettings(restored);
-            panelOpenRef.current = false;
-            setPanelOpen(false);
-            return;
+        } else if (!settings) {
+            setSettings(current);
         }
-        if (!settings) setSettings(current);
         panelOpenRef.current = true;
         setPanelOpen(true);
     };
@@ -250,7 +248,7 @@ export default function PetCompanionGate() {
                 onClick={handleSettingsLaunch}
                 aria-label={settingsLaunchLabel}
                 title={settingsLaunchLabel}
-                aria-haspopup={companionEnabled ? "dialog" : undefined}
+                aria-haspopup="dialog"
                 data-pet-companion-settings
                 data-companion-enabled={companionEnabled ? "true" : "false"}
                 data-panel-open={panelOpen}

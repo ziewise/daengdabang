@@ -1795,16 +1795,6 @@ export default function PetCompanionLayer({
         settleCompanionDrag(event.currentTarget, event.pointerId);
     };
 
-    const hideCompanion = () => {
-        const next = { ...settings, enabled: false };
-        closePrompt();
-        writeLocalCompanionSettings(next);
-        onSettingsChange(next);
-        window.requestAnimationFrame(() => {
-            document.querySelector<HTMLElement>("[data-pet-companion-settings]")?.focus();
-        });
-    };
-
     const displayMotion = motion === "run"
         ? "run"
         : recommendation
@@ -1915,10 +1905,11 @@ export default function PetCompanionLayer({
                                 suppressClickRef.current = false;
                                 return;
                             }
-                            hideCompanion();
+                            closePrompt();
+                            onPanelOpenChange(true);
                         }}
-                        aria-label={`${settings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 잠시 숨기기`}
-                        title="드래그해서 옮기고, 클릭하면 잠시 쉬어요"
+                        aria-label={`${settings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 설정 열기`}
+                        title="드래그해서 옮기고, 클릭하면 설정이 열려요"
                     >
                         <PetCompanionCharacter
                             breedId={displayBreedId}
