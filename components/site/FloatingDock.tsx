@@ -8,8 +8,8 @@
  * 배치: 데스크탑(sm+) 우측 하단 / 모바일 하단 가운데.
  *
  * 등장 규칙:
- *   · 히어로 구간에서는 숨김. 스크롤을 내려 히어로 끝(#fab-reveal-sentinel)이
- *     화면 상단을 지나면 fade-in 으로 등장. 다시 히어로로 올라오면 숨김.
+ *   · 히어로 첫 화면에서는 숨김. 사용자가 아래로 스크롤을 시작하면 즉시 fade-in.
+ *   · 다시 페이지 맨 위로 올라오면 숨김.
  *   · 히어로가 없는 다른 페이지(sentinel 없음)에서는 항상 노출.
  *   · 제품 상세 하단 구매 바(ddb:buybar)가 뜨면 그 위로 비켜 올라간다.
  */
@@ -30,7 +30,7 @@ export default function FloatingDock() {
         return () => window.removeEventListener("ddb:buybar", onBuybar);
     }, []);
 
-    // 히어로 끝 sentinel 이 화면 상단(top<=0)을 지나면 FAB 노출
+    // 히어로가 있는 페이지는 첫 화면만 숨기고, 스크롤이 시작되는 즉시 FAB 노출
     useEffect(() => {
         const update = () => {
             const sentinel = document.getElementById("fab-reveal-sentinel");
@@ -39,7 +39,7 @@ export default function FloatingDock() {
                 setShown(true);
                 return;
             }
-            setShown(sentinel.getBoundingClientRect().top <= 0);
+            setShown(window.scrollY > 0);
         };
         update(); // 초기 1회
         window.addEventListener("scroll", update, { passive: true });

@@ -26,23 +26,27 @@ import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
 
+const WEARABLE_SUBCATEGORIES = new Set(["wear", "harness", "goggles", "leash"]);
+
 interface Props {
     product: CatalogProduct;
     /** 색상 변형 선택 인덱스(null=미선택 → 진입 시 대표 이미지). 부모와 공유 */
     colorIdx?: number | null;
     onColorChange?: (idx: number) => void;
+    onTryOn?: () => void;
 }
 
-export default function ProductInfo({ product: p, colorIdx = null, onColorChange }: Props) {
+export default function ProductInfo({ product: p, colorIdx = null, onColorChange, onTryOn }: Props) {
     const { toggleWishlist, isWished } = useStore();
     const { user } = useAuth();
     const { pets: profilePets } = usePets();
-    const { t, formatPrice, productName, categoryLabel, subcategoryLabel } = useI18n();
+    const { locale, t, formatPrice, productName, categoryLabel, subcategoryLabel } = useI18n();
     const wished = isWished(p.id);
     const bestRank = getBestRank(p);
     const isNew = isNewProduct(p);
     const point = Math.floor(p.price * 0.01);
     const displayName = productName(p);
+    const canTryOn = WEARABLE_SUBCATEGORIES.has(p.subcategory) && Boolean(p.image);
 
     const colors = p.colors ?? [];
     const hasColors = colors.length > 0;
@@ -74,8 +78,8 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     useEffect(() => {
         const petOption = cartPetOptions(user?.pets ?? [], profilePets)[0];
         if (!petOption) {
-            setTwinStat(null);
-            return;
+            const timer = window.setTimeout(() => setTwinStat(null), 0);
+            return () => window.clearTimeout(timer);
         }
         let ignore = false;
         loadTwinProductStats({
@@ -166,18 +170,30 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     </div>
                 )}
 
-                {/* 가격 라인 — 우측 끝에 링크/공유 아이콘(ProductShareActions)을 둔다 */}
-                <div className="flex items-center justify-between gap-3">
-                    <div>
-                        {p.discountRate > 0 && p.originalPrice && (
-                            <div className="mb-1 flex items-center gap-2">
-                                <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
-                                <span className="text-sm text-neutral-400 line-through">{formatPrice(p.originalPrice)}</span>
-                            </div>
+                {/* 가격 라인 — 착용 가능 상품은 금액 옆에서 바로 AI 피팅을 시작한다 */}
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div className="flex flex-wrap items-end gap-3">
+                        <div>
+                            {p.discountRate > 0 && p.originalPrice && (
+                                <div className="mb-1 flex items-center gap-2">
+                                    <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
+                                    <span className="text-sm text-neutral-400 line-through">{formatPrice(p.originalPrice)}</span>
+                                </div>
+                            )}
+                            <p className="text-4xl font-black text-neutral-950">
+                                {formatPrice(p.price)}
+                            </p>
+                        </div>
+                        {canTryOn && onTryOn && (
+                            <button
+                                type="button"
+                                onClick={onTryOn}
+                                className="inline-flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-indigo-600 px-3 text-xs font-black text-white shadow-sm transition hover:bg-indigo-700 md:px-4 md:text-sm"
+                            >
+                                <i className="fa-solid fa-paw text-xs" />
+                                {locale === "en" ? "Try it on my dog" : "우리 아이에게 바로 입혀보기"}
+                            </button>
                         )}
-                        <p className="text-4xl font-black text-neutral-950">
-                            {formatPrice(p.price)}
-                        </p>
                     </div>
                     {/* 링크·공유 — 금액 라인 우측 끝(아이콘만) */}
                     <ProductShareActions product={p} />

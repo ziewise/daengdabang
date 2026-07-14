@@ -22,7 +22,7 @@ function apiBase() {
 function localCacheKey(product: CatalogProduct, pet: PetProfile) {
     const photo = pet.photoDataUrl ?? "";
     return [
-        "ddb.tryon.v1",
+        "ddb.tryon.v2",
         product.id,
         product.image ?? "",
         pet.name,
@@ -45,6 +45,7 @@ function readCached(product: CatalogProduct, pet: PetProfile): PetTryOnResult | 
 
 function writeCached(product: CatalogProduct, pet: PetProfile, result: PetTryOnResult) {
     if (typeof window === "undefined") return;
+    if (result.status !== "ready" || !result.imageDataUrl) return;
     if (result.imageDataUrl && result.imageDataUrl.length > 2_000_000) return;
     try {
         window.sessionStorage.setItem(localCacheKey(product, pet), JSON.stringify(result));
@@ -62,7 +63,8 @@ export async function requestPetTryOn(product: CatalogProduct, pet: PetProfile):
     if (cached) return cached;
 
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    // GPT Image 고품질 편집은 복잡한 입력에서 최대 약 2분이 걸릴 수 있다.
+    const timeout = window.setTimeout(() => controller.abort(), 135000);
     try {
         const response = await fetch(`${base}/api/v1/pet-tryon/render`, {
             method: "POST",
