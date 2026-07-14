@@ -12,6 +12,7 @@ import {
 // 로그인/로그아웃이 이 store 에만 기록되고 플래그가 안 바뀌어 헤더가
 // "로그인" 버튼을 유지하던 버그 수정 — login/logout 에서 함께 갱신한다.
 import { authStorage } from "@/lib/storage";
+import { loadPetProfilesSmart } from "@/lib/customer-api";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
 import type { AuthProvider } from "@/lib/types";
 
@@ -78,6 +79,7 @@ type Action =
     | { type: "LOGIN"; user: User }
     | { type: "LOGOUT" }
     | { type: "UPSERT_PET"; pet: PetProfile }
+    | { type: "SET_PETS"; pets: PetProfile[] }
     | { type: "ADD_ORDER"; order: Order };
 
 const STORAGE_KEY = "daengdabang.store.v2";
@@ -165,6 +167,8 @@ function reducer(state: State, action: Action): State {
             });
             return { ...state, user: { ...state.user, pets: [action.pet, ...pets] } };
         }
+        case "SET_PETS":
+            return state.user ? { ...state, user: { ...state.user, pets: action.pets } } : state;
         case "ADD_ORDER":
             return { ...state, orders: [action.order, ...state.orders] };
         default:
@@ -195,6 +199,8 @@ const StoreContext = createContext<StoreValue | null>(null);
 export function StoreProvider({ children }: { children: React.ReactNode }) {
     const [state, dispatch] = useReducer(reducer, INITIAL);
     const [hydrated, setHydrated] = useState(false);
+    const memberRefreshIdentity = state.user?.email || "";
+    const memberRefreshToken = state.user?.apiAccessToken;
 
     useEffect(() => {
         try {
@@ -221,6 +227,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         if (!hydrated) return;
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }, [state, hydrated]);
+
+    useEffect(() => {
+        if (!hydrated || !memberRefreshIdentity) return;
+        let cancelled = false;
+        loadPetProfilesSmart(memberRefreshToken)
+            .then((pets) => {
+                if (!cancelled && pets) dispatch({ type: "SET_PETS", pets });
+            })
+            .catch(() => {
+                // Keep the last local snapshot when the customer API is offline
+                // or the saved session needs a fresh login.
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [hydrated, memberRefreshIdentity, memberRefreshToken]);
 
     const value = useMemo<StoreValue>(
         () => ({
