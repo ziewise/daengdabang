@@ -376,9 +376,11 @@ function normalizeSettings(
         ? resolvePetBreedId(value.breedId, "")
         : "";
     const explicitMemberBreed = value.breedSource === "member_companion_selection";
-    const resolvedBreedId = explicitMemberBreed && storedBreedId && isPetBreedId(storedBreedId)
-        ? storedBreedId
-        : profileBreedId || (storedBreedId && isPetBreedId(storedBreedId) ? storedBreedId : fallback.breedId);
+    // The authenticated pet profile is the canonical identity. Older browser
+    // settings may still carry a previously selected Poodle (or another
+    // breed), so never let that stale cache override a confirmed profile.
+    const resolvedBreedId = profileBreedId
+        || (storedBreedId && isPetBreedId(storedBreedId) ? storedBreedId : fallback.breedId);
     return {
         version: 1,
         ownerKey,
@@ -387,9 +389,9 @@ function normalizeSettings(
             : fallback.activePetName,
         enabled: typeof value.enabled === "boolean" ? value.enabled : fallback.enabled,
         breedId: resolvedBreedId,
-        breedSource: explicitMemberBreed
-            ? "member_companion_selection"
-            : profileBreedId ? "profile" : fallback.breedSource,
+        breedSource: profileBreedId
+            ? "profile"
+            : explicitMemberBreed ? "member_companion_selection" : fallback.breedSource,
         characterId: typeof characterId === "string" && CHARACTER_IDS.has(characterId as CompanionCharacterId)
             ? characterId as CompanionCharacterId
             : fallback.characterId,
@@ -471,11 +473,13 @@ export function withCompanionSettings(
     pet: PetProfile,
     settings: PetCompanionSettings,
 ): PetProfile {
+    const selectedBreed = getPetBreedVisual(settings.breedId);
     const stored: StoredPetCompanionSettings = {
         version: 1,
         activePetName: pet.name,
         enabled: settings.enabled,
-        breedId: settings.breedId,
+        breedId: selectedBreed.id,
+        breedSource: settings.breedSource,
         characterId: settings.characterId,
         toneId: settings.toneId,
         accessoryId: settings.accessoryId,
@@ -484,8 +488,16 @@ export function withCompanionSettings(
     };
     return {
         ...pet,
+        // A member's explicit settings-panel choice becomes the profile's new
+        // source of truth. That keeps server, local cache, and rendered atlas
+        // aligned on the next login instead of creating a permanent override.
+        breed: selectedBreed.ko,
         rawAnalysis: {
             ...(isRecord(pet.rawAnalysis) ? pet.rawAnalysis : {}),
+            breedId: selectedBreed.id,
+            breed_ko: selectedBreed.ko,
+            breed_en: selectedBreed.en,
+            breedSource: settings.breedSource || "profile",
             companion: stored,
         },
     };

@@ -6,6 +6,7 @@ import {
     answerShopQuestionSmart,
     type ShopChatCta,
     type ShopChatAction,
+    type ShopChatHistoryTurn,
     type ShopChatMedical,
     type ShopChatSource,
 } from "@/lib/daengdabang-llm";
@@ -104,9 +105,13 @@ export default function ChatPageClient() {
         if (!trimmed || loading) return;
         setLoading(true);
         startThinking();
+        const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
+            role: item.role,
+            content: item.text,
+        }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
-            const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet });
+            const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet, history });
             setMessages((prev) => [
                 ...prev,
                 {
@@ -123,17 +128,15 @@ export default function ChatPageClient() {
             stopThinking();
             setLoading(false);
         }
-    }, [loading, selectedPet, startThinking, stopThinking]);
-
-    useEffect(() => {
-        if (selectedPetIndex >= pets.length) setSelectedPetIndex(0);
-    }, [pets.length, selectedPetIndex]);
+    }, [loading, messages, selectedPet, startThinking, stopThinking]);
 
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
         const initialQuestion = params.get("q");
-        if (initialQuestion) void ask(initialQuestion);
+        if (!initialQuestion) return;
+        const timer = window.setTimeout(() => void ask(initialQuestion), 0);
+        return () => window.clearTimeout(timer);
     }, [params, ask]);
 
     useEffect(() => {

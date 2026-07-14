@@ -327,8 +327,14 @@ export function mergePetLensAnalysisWithConfirmedProfile(
     };
 }
 
+export type ShopChatHistoryTurn = {
+    role: "user" | "assistant";
+    content: string;
+};
+
 type ShopQuestionContext = {
     pet?: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
+    history?: ShopChatHistoryTurn[];
 };
 
 export type ShopChatSource = {
@@ -1207,16 +1213,17 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const knowledgeFallback = canineKnowledgeFallback(message);
     const fallback = scopeFallback || medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
-    if (scopeFallback || medicalFallback) return fallback;
     if (!base) return fallback;
-    const petContext = petContextText(context);
-    const apiMessage = petContext ? `${message}\n\n${petContext}` : message;
+    const history = (context?.history || [])
+        .filter((turn) => (turn.role === "user" || turn.role === "assistant") && turn.content.trim())
+        .map((turn) => ({ role: turn.role, content: turn.content.trim().slice(0, 500) }))
+        .slice(-12);
 
     try {
         const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: apiMessage, limit: 6, petProfile: context?.pet ?? null }),
+            body: JSON.stringify({ message, limit: 6, petProfile: context?.pet ?? null, history }),
         });
         if (!response.ok) throw new Error(`shop-chat ${response.status}`);
         const data = await response.json();

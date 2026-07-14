@@ -7,6 +7,7 @@ import {
     answerShopQuestionSmart,
     type ShopChatCta,
     type ShopChatAction,
+    type ShopChatHistoryTurn,
     type ShopChatMedical,
     type ShopChatSource,
 } from "@/lib/daengdabang-llm";
@@ -106,9 +107,13 @@ export default function ChatWidget() {
         setInput("");
         setLoading(true);
         startThinking();
+        const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
+            role: item.role,
+            content: item.text,
+        }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
-            const result = await answerShopQuestionSmart(trimmed, { pet: user?.pets?.[0] ?? null });
+            const result = await answerShopQuestionSmart(trimmed, { pet: user?.pets?.[0] ?? null, history });
             setMessages((prev) => [
                 ...prev,
                 {
