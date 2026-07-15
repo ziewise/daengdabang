@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/lib/catalog";
 import { cartProducts, findProduct, productHref } from "@/lib/shop";
 import { useAuth, useStore, type PetProfile } from "@/lib/store";
+import { memberAccountDisplay } from "@/lib/member-account-display";
 import ProductCard from "@/components/products/ProductCard";
 import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
 
@@ -68,7 +69,9 @@ export default function MyPage() {
                 <div>
                     <p className="text-sm font-black text-indigo-700">마이페이지</p>
                     <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">{user.name}님</h1>
-                    <p className="mt-1 text-sm font-bold text-neutral-600">{user.email}</p>
+                    <p className="mt-1 text-sm font-bold text-neutral-600">
+                        {memberAccountDisplay(user.email, user.authProvider)}
+                    </p>
                 </div>
                 <button type="button" onClick={logout} className="btn btn-secondary">
                     로그아웃

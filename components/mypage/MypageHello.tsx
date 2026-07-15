@@ -11,9 +11,9 @@ import { computeGrade } from "@/lib/grades";
 import { MOCK_ORDERS, MOCK_USER_STATS, getJoinDate, petsOrMock } from "@/lib/mypage-data";
 
 const PROVIDER_LABEL: Record<string, string> = {
-    google: "Google 회원",
-    kakao:  "카카오 회원",
-    naver:  "네이버 회원",
+    google: "구글 간편가입 회원",
+    kakao:  "카카오 간편가입 회원",
+    naver:  "네이버 간편가입 회원",
     email:  "이메일 회원",
     demo:   "데모 회원",
 };
