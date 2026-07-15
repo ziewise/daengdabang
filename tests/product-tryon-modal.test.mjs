@@ -55,6 +55,10 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(layout, /<PetTryOnTaskProvider>/);
     assert.match(background, /ddb\.tryon\.background\.v1/);
     assert.match(background, /Notification\.requestPermission\(\)/);
+    assert.match(background, /try \{[\s\S]*new Notification/);
+    assert.match(background, /Optional OS notifications must never downgrade a completed fitting/);
+    assert.match(background, /Notification\.requestPermission\(\)[\s\S]*catch \{/);
+    assert.match(background, /setNotificationEnabled\(false\)/);
     assert.match(background, /petImage: undefined/);
     assert.match(background, /getPetTryOnJob/);
     assert.match(background, /productHref: storefrontProductHref\(product\)/);

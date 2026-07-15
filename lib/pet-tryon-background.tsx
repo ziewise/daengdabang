@@ -261,11 +261,15 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             && Notification.permission === "granted"
             && document.visibilityState !== "visible"
         ) {
-            new Notification(`${completed.petName || "우리 아이"}의 입혀보기가 완성됐어요`, {
-                body: `${completed.productName} 착용 결과를 확인해 보세요.`,
-                icon: "/images/logo-symbol.png",
-                tag: completed.taskKey,
-            });
+            try {
+                new Notification(`${completed.petName || "우리 아이"}의 입혀보기가 완성됐어요`, {
+                    body: `${completed.productName} 착용 결과를 확인해 보세요.`,
+                    icon: "/images/logo-symbol.png",
+                    tag: completed.taskKey,
+                });
+            } catch {
+                // Optional OS notifications must never downgrade a completed fitting.
+            }
         }
     }, []);
 
@@ -450,12 +454,17 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
 
     const requestCompletionNotification = useCallback(async () => {
         if (typeof Notification === "undefined") return false;
-        const permission = Notification.permission === "default"
-            ? await Notification.requestPermission()
-            : Notification.permission;
-        const enabled = permission === "granted";
-        setNotificationEnabled(enabled);
-        return enabled;
+        try {
+            const permission = Notification.permission === "default"
+                ? await Notification.requestPermission()
+                : Notification.permission;
+            const enabled = permission === "granted";
+            setNotificationEnabled(enabled);
+            return enabled;
+        } catch {
+            setNotificationEnabled(false);
+            return false;
+        }
     }, []);
 
     const dismiss = useCallback(() => {
