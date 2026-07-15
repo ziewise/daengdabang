@@ -69,7 +69,7 @@ export default function MypageHello() {
                     <Divider />
                     <Stat value={MOCK_ORDERS.length} label="주문" />
                     <Divider />
-                    <Stat value={MOCK_USER_STATS.points.toLocaleString()} label="포인트" />
+                    <Stat value={MOCK_USER_STATS.points.toLocaleString("ko-KR")} label="포인트" />
                 </div>
             </div>
         </section>

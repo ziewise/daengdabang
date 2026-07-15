@@ -14,6 +14,7 @@ import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import LocalizedText from "@/components/i18n/LocalizedText";
 import { FOOTER_META_LINKS, FOOTER_LEGAL_LINKS } from "@/lib/menu-data";
 import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
+import CloudflareSafeEmail from "./CloudflareSafeEmail";
 import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
@@ -81,8 +82,8 @@ export default function Footer() {
                         {/* 3) 시간 + 메일 (2줄) */}
                         <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap md:border-l md:border-neutral-200/70 md:pl-5">
                             <LocalizedText
-                                ko={<>평일 10:00~18:00 · 주말 휴무<br />{BUSINESS_INFO.customerServiceEmail}</>}
-                                en={<>Weekdays 10:00-18:00 · Closed weekends<br />{BUSINESS_INFO.customerServiceEmail}</>}
+                                ko={<>평일 10:00~18:00 · 주말 휴무<br /><CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>}
+                                en={<>Weekdays 10:00-18:00 · Closed weekends<br /><CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>}
                             />
                         </p>
                     </div>
@@ -108,7 +109,7 @@ export default function Footer() {
                         [<LocalizedText key="addr" ko="주소" en="Address" />, BUSINESS_INFO.address],
                         [<LocalizedText key="host" ko="호스팅 제공자" en="Hosting provider" />, BUSINESS_INFO.hostingProvider],
                         [<LocalizedText key="privacy" ko="개인정보 관리책임자" en="Privacy officer" />, BUSINESS_INFO.privacyOfficer],
-                        [<LocalizedText key="partner" ko="입점 / 제휴 문의" en="Partner inquiries" />, BUSINESS_INFO.partnerEmail],
+                        [<LocalizedText key="partner" ko="입점 / 제휴 문의" en="Partner inquiries" />, <CloudflareSafeEmail key="partner-email" email={BUSINESS_INFO.partnerEmail} />],
                     ].map(([k, v], index) => (
                         <div key={index}>
                             <strong className="font-bold text-neutral-600 mr-1">{k}</strong>

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import {
     BUSINESS_INFO,
     FTC_BUSINESS_INFO_URL,
@@ -18,7 +20,7 @@ const toc = [
     ["documents", "증빙 문서"],
 ] as const;
 
-const rows = [
+const rows: Array<[string, ReactNode]> = [
     ["상호", BUSINESS_INFO.companyName],
     ["쇼핑몰명", BUSINESS_INFO.mallName],
     ["대표자", BUSINESS_INFO.representative],
@@ -34,15 +36,15 @@ const rows = [
     ["운영상태", "통신판매업신고"],
 ];
 
-const displayRows = [
-    ["고객센터", `${BUSINESS_INFO.customerServicePhone} / ${BUSINESS_INFO.customerServiceEmail}`],
+const displayRows: Array<[string, ReactNode]> = [
+    ["고객센터", <>{BUSINESS_INFO.customerServicePhone} / <CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>],
     ["개인정보 보호책임자", BUSINESS_INFO.privacyOfficer],
     ["호스팅서비스 제공자", BUSINESS_INFO.hostingProvider],
     ["도메인", BUSINESS_INFO.domain],
-    ["입점·제휴 문의", BUSINESS_INFO.partnerEmail],
+    ["입점·제휴 문의", <CloudflareSafeEmail key="partner-email" email={BUSINESS_INFO.partnerEmail} />],
 ];
 
-function InfoTable({ rows }: { rows: string[][] }) {
+function InfoTable({ rows }: { rows: Array<[string, ReactNode]> }) {
     return (
         <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-left text-sm">

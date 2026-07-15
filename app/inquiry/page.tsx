@@ -7,6 +7,8 @@
  */
 import type { Metadata } from "next";
 import Link from "next/link";
+import MailtoButton from "@/components/contact/MailtoButton";
+import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -19,8 +21,6 @@ const CS_EMAIL = BUSINESS_INFO.customerServiceEmail || "help@daengdabang.com";
 const CS_PHONE = BUSINESS_INFO.customerServicePhone;
 
 export default function InquiryPage() {
-    const mailto = `mailto:${CS_EMAIL}?subject=${encodeURIComponent("[댕다방 문의]")}`;
-
     return (
         <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6">
             <p className="text-sm font-black text-aurora-indigo">CONTACT</p>
@@ -32,9 +32,10 @@ export default function InquiryPage() {
             {/* 연락 방법 — 이메일 / 전화 2카드 */}
             <div className="mt-8 grid sm:grid-cols-2 gap-4">
                 {/* 이메일 */}
-                <a
-                    href={mailto}
-                    className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-card p-6 hover:shadow-hover hover:-translate-y-0.5 transition group"
+                <MailtoButton
+                    email={CS_EMAIL}
+                    subject="[댕다방 문의]"
+                    className="group rounded-2xl border border-white/60 bg-white/70 p-6 text-left shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:shadow-hover"
                 >
                     <span className="w-11 h-11 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white flex items-center justify-center mb-3">
                         <i className="fa-solid fa-envelope" />
@@ -44,9 +45,9 @@ export default function InquiryPage() {
                         버튼을 누르면 메일 작성 창이 열립니다.
                     </p>
                     <p className="mt-3 text-sm font-extrabold text-aurora-indigo group-hover:underline">
-                        {CS_EMAIL}
+                        <CloudflareSafeEmail email={CS_EMAIL} />
                     </p>
-                </a>
+                </MailtoButton>
 
                 {/* 전화 */}
                 <a

@@ -149,7 +149,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         <span className="font-black">{p.rating.toFixed(1)}</span>
                         <span className="text-neutral-300">|</span>
                         <a href="#tab-review" className="font-bold text-neutral-600 hover:text-indigo-600">
-                            {t("reviews")} {p.reviewCount.toLocaleString()}
+                            {t("reviews")} {p.reviewCount.toLocaleString(locale === "en" ? "en-US" : "ko-KR")}
                         </a>
                     </div>
                 )}

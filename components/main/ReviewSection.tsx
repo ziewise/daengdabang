@@ -39,7 +39,7 @@ export default function ReviewSection() {
                     <div className="flex items-center gap-3 md:gap-6 px-4 py-3 md:py-0 bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none rounded-xl md:rounded-none shadow-card md:shadow-none">
                         <Stat strong="4.9" sub={<span className="text-amber-400 text-sm">{stars(REVIEW_STATS.avg)}</span>} />
                         <Divider />
-                        <Stat strong={REVIEW_STATS.total.toLocaleString()} sub="총 리뷰" />
+                        <Stat strong={REVIEW_STATS.total.toLocaleString("ko-KR")} sub="총 리뷰" />
                         <Divider />
                         <Stat strong={`${REVIEW_STATS.recommend}%`} sub="추천율" />
                     </div>

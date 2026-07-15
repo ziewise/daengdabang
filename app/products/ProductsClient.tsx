@@ -76,6 +76,8 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const { t, locale, categoryLabel, subcategoryLabel, menuLabel } = useI18n();
 
     useEffect(() => {
+        // URL navigation is an external source that intentionally rehydrates the filter controls.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setQuery(params.get("q") ?? "");
         setCategory(categoryFromParams(params, initialCategory));
         setSubcategory(subcategoryFromParams(params));
@@ -106,6 +108,8 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     useEffect(() => {
         const cleanQuery = query.trim();
         if (!cleanQuery) {
+            // Clearing the URL query intentionally clears results from the previous async search.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setExternalProducts([]);
             setExternalLoading(false);
             setExternalSearched(false);
@@ -148,7 +152,10 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     }, [hasSearch, products.length, query, category, subcategory, sort]);
 
     const visibleCount = products.length + (hasSearch ? externalProducts.length : 0);
-    const countText = (count: number) => locale === "en" ? `${count.toLocaleString()} ${t("countSuffix")}` : `${count.toLocaleString()}${t("countSuffix")}`;
+    const countText = (count: number) => {
+        const formattedCount = count.toLocaleString(locale === "en" ? "en-US" : "ko-KR");
+        return locale === "en" ? `${formattedCount} ${t("countSuffix")}` : `${formattedCount}${t("countSuffix")}`;
+    };
     const heading = title ? menuLabel(title) : t("allProducts");
 
     return (

@@ -14,8 +14,10 @@ interface Props {
 
 export default function ProductTabs({ product: p }: Props) {
     const [active, setActive] = useState<SectionKey>("detail");
-    const { t } = useI18n();
-    const reviewBadge = p.externalReviewCount ? p.externalReviewCount.toLocaleString() : undefined;
+    const { t, locale } = useI18n();
+    const reviewBadge = p.externalReviewCount
+        ? p.externalReviewCount.toLocaleString(locale === "en" ? "en-US" : "ko-KR")
+        : undefined;
     const sections: { key: SectionKey; label: string }[] = [
         { key: "detail", label: t("detailInfo") },
         { key: "review", label: t("reviews") },
@@ -158,7 +160,9 @@ function ReviewContent({ product: p }: { product: CatalogProduct }) {
                             </div>
                             <div className="rounded-md bg-neutral-50 px-4 py-3">
                                 <div className="text-[11px] font-black text-neutral-400">{t("reviewCount")}</div>
-                                <div className="mt-1 text-xl font-black">{count.toLocaleString()}</div>
+                                <div className="mt-1 text-xl font-black">
+                                    {count.toLocaleString(locale === "en" ? "en-US" : "ko-KR")}
+                                </div>
                             </div>
                         </div>
                     </div>

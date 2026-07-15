@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO, LEGAL_UPDATED_AT } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -104,6 +106,13 @@ const complaintRows = [
     ["개인정보분쟁조정위원회", "1833-6972", "https://www.kopico.go.kr"],
     ["대검찰청", "국번없이 1301", "https://www.spo.go.kr"],
     ["경찰청 사이버범죄 신고시스템", "국번없이 182", "https://ecrm.police.go.kr"],
+];
+
+const privacyOfficerRows: Array<[string, ReactNode]> = [
+    ["개인정보 보호책임자", BUSINESS_INFO.privacyOfficer],
+    ["소속 및 담당", `${BUSINESS_INFO.companyName} 고객보호 및 개인정보 처리 담당`],
+    ["휴대전화번호", <>{BUSINESS_INFO.customerServicePhone} / <CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>],
+    ["주소", BUSINESS_INFO.address],
 ];
 
 function DataTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
@@ -267,12 +276,7 @@ export default function PrivacyPage() {
                 <div className="mt-4 overflow-x-auto">
                     <table className="w-full min-w-[680px] border-collapse text-left text-sm">
                         <tbody>
-                            {[
-                                ["개인정보 보호책임자", BUSINESS_INFO.privacyOfficer],
-                                ["소속 및 담당", `${BUSINESS_INFO.companyName} 고객보호 및 개인정보 처리 담당`],
-                                ["휴대전화번호", `${BUSINESS_INFO.customerServicePhone} / ${BUSINESS_INFO.customerServiceEmail}`],
-                                ["주소", BUSINESS_INFO.address],
-                            ].map(([label, value]) => (
+                            {privacyOfficerRows.map(([label, value]) => (
                                 <tr key={label} className="border-b border-neutral-100 align-top">
                                     <th className="w-56 py-4 pr-4 font-black text-neutral-950">{label}</th>
                                     <td className="py-4 font-bold leading-6 text-neutral-600">{value}</td>

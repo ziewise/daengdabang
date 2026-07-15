@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ReactNode } from "react";
+import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import {
     BUSINESS_INFO,
     ESCROW_INFO,
@@ -26,7 +28,7 @@ const toc = [
     ["documents", "증빙 문서"],
 ] as const;
 
-const businessRows = [
+const businessRows: Array<[string, ReactNode]> = [
     ["상호", BUSINESS_INFO.companyName],
     ["쇼핑몰명", BUSINESS_INFO.mallName],
     ["대표자", BUSINESS_INFO.representative],
@@ -34,7 +36,7 @@ const businessRows = [
     ["법인등록번호", BUSINESS_INFO.corporateRegistrationNumber],
     ["통신판매업신고번호", BUSINESS_INFO.mailOrderNumber],
     ["사업장 소재지", BUSINESS_INFO.address],
-    ["고객센터", `${BUSINESS_INFO.customerServicePhone} / ${BUSINESS_INFO.customerServiceEmail}`],
+    ["고객센터", <>{BUSINESS_INFO.customerServicePhone} / <CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>],
     ["개인정보 보호책임자", BUSINESS_INFO.privacyOfficer],
     ["호스팅서비스 제공자", BUSINESS_INFO.hostingProvider],
 ];
