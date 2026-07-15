@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
-import { requestPetTryOn, type PetTryOnResult, type PetTryOnStage } from "@/lib/pet-tryon";
+import type { PetTryOnProgressStage } from "@/lib/pet-tryon";
+import { usePetTryOnTask } from "@/lib/pet-tryon-background";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 
@@ -19,21 +20,32 @@ function petOptionLabel(pet: PetProfile) {
     return `${pet.name || "우리 아이"} · ${size}`;
 }
 
-function loadingLabel(progress: number, locale: "ko" | "en", stage: PetTryOnStage) {
-    if (stage === "queued") {
-        return locale === "en" ? "Waiting for the fitting workspace" : "입혀보기 작업 순서를 기다리고 있어요";
-    }
-    if (locale === "en") {
-        if (progress < 28) return "Checking your dog's photo";
-        if (progress < 52) return "Analyzing product details";
-        if (progress < 82) return "Creating a natural fit";
-        return "Finishing the quality pass";
-    }
-    if (progress < 28) return "우리 아이 사진을 확인하고 있어요";
-    if (progress < 52) return "상품의 형태와 디테일을 분석하고 있어요";
-    if (progress < 82) return "몸에 맞게 자연스럽게 입히고 있어요";
-    return "착용 결과의 품질을 마무리하고 있어요";
+function loadingLabel(locale: "ko" | "en", stage: PetTryOnProgressStage) {
+    const labels = locale === "en"
+        ? {
+            queued: "Waiting for the fitting room",
+            preparing: "Checking your dog's photo and exact product",
+            generating: "Creating a natural fit on your dog",
+            finalizing: "Finishing fur, shadows, and product details",
+            ready: "Fitting complete",
+            failed: "Fitting needs another try",
+        }
+        : {
+            queued: "입혀보기 작업 순서를 기다리고 있어요",
+            preparing: "우리 아이 사진과 선택 상품을 확인하고 있어요",
+            generating: "몸에 맞게 자연스럽게 입히고 있어요",
+            finalizing: "털·그림자·상품 디테일을 마무리하고 있어요",
+            ready: "입혀보기가 완성됐어요",
+            failed: "입혀보기를 다시 시도해 주세요",
+        };
+    return labels[stage];
 }
+
+function formatElapsed(seconds: number) {
+    return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
+const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
 
 export default function PetTryOnPreview({
     product,
@@ -44,61 +56,62 @@ export default function PetTryOnPreview({
 }) {
     const { user } = useAuth();
     const { locale, productName } = useI18n();
+    const {
+        task,
+        notificationEnabled,
+        start,
+        isTaskFor,
+        requestCompletionNotification,
+        setPanelOpen,
+    } = usePetTryOnTask();
     const eligible = canTryOn(product);
     const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
-    const [result, setResult] = useState<PetTryOnResult | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [stage, setStage] = useState<PetTryOnStage>("queued");
     const [error, setError] = useState("");
+    const [now, setNow] = useState(0);
     const started = useRef(false);
-    const inFlight = useRef(false);
-    const requestAbort = useRef<AbortController | null>(null);
 
     const pet = pets[selected] ?? pets[0];
+    const currentTask = pet?.apiProfileId && isTaskFor(product.id, pet.apiProfileId) ? task : null;
+    const result = currentTask?.result ?? null;
+    const loading = Boolean(currentTask?.submitting || result?.status === "queued" || result?.status === "running");
+    const progress = result?.progressPercent ?? (currentTask?.submitting ? 4 : 0);
+    const stage: PetTryOnProgressStage = result?.progressStage ?? "queued";
+    const elapsed = currentTask ? Math.max(0, Math.floor((now - currentTask.startedAt) / 1000)) : 0;
     const resultImage = result?.status === "ready" ? result.imageDataUrl : undefined;
     const displayName = productName(product);
+    const progressStageIndex = stage === "queued" ? -1 : PROGRESS_STAGES.indexOf(stage);
+    const progressStageLabels = locale === "en"
+        ? ["Check photos", "Create fitting", "Quality pass", "Ready"]
+        : ["사진 확인", "자연스럽게 입히기", "품질 마무리", "완성"];
+    const waitTips = locale === "en"
+        ? [
+            "A harness should allow about two fingers of room around the chest.",
+            "Compare the size chart with your dog's chest girth before ordering.",
+            "Your actual dog photo and the exact selected product are being used as references.",
+        ]
+        : [
+            "하네스는 가슴과 스트랩 사이에 손가락 두 개 정도 여유가 좋아요.",
+            "구매 전 상세 사이즈표와 우리 아이 가슴둘레를 함께 확인해 주세요.",
+            "고객님의 실제 강아지 사진과 선택한 상품을 기준으로 작업하고 있어요.",
+        ];
+    const waitTip = waitTips[Math.floor(elapsed / 15) % waitTips.length];
 
     const generate = useCallback(async () => {
-        if (!eligible || !pet || !product.image || inFlight.current) return;
-        inFlight.current = true;
-        setResult(null);
+        if (!eligible || !pet || !product.image) return;
         setError("");
-        setProgress(8);
-        setStage("queued");
-        setLoading(true);
-        requestAbort.current?.abort();
-        const controller = new AbortController();
-        requestAbort.current = controller;
-        try {
-            const next = await requestPetTryOn(product, pet, {
-                signal: controller.signal,
-                onStatus: (status) => {
-                    setStage(status.status);
-                    if (status.status === "queued") setProgress((value) => Math.max(value, 16));
-                    if (status.status === "running") setProgress((value) => Math.max(value, 38));
-                    if (status.status === "ready") setProgress(100);
-                },
-            });
-            if (next?.status === "ready" && next.imageDataUrl) {
-                setResult(next);
-                setProgress(100);
-            } else {
-                setProgress(0);
-                setError(
-                    next?.message ||
-                        (locale === "en"
-                            ? "We couldn't create a reliable fitting image. Please try again shortly."
-                            : "신뢰할 수 있는 착용 이미지를 만들지 못했어요. 잠시 후 다시 시도해 주세요."),
-                );
-            }
-        } finally {
-            inFlight.current = false;
-            setLoading(false);
-            if (requestAbort.current === controller) requestAbort.current = null;
+        const outcome = await start(product, pet);
+        if (outcome === "blocked") {
+            setError(locale === "en"
+                ? "Another fitting is already in progress. Check the floating Smart Fit status first."
+                : "다른 입혀보기가 진행 중이에요. 화면 아래의 Smart Fit 상태를 먼저 확인해 주세요.");
+            setPanelOpen(true);
+        } else if (outcome === "failed") {
+            setError(locale === "en"
+                ? "We couldn't start a reliable fitting. Please try again shortly."
+                : "입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.");
         }
-    }, [eligible, locale, pet, product]);
+    }, [eligible, locale, pet, product, setPanelOpen, start]);
 
     // 모달은 가격 옆 버튼을 눌렀을 때만 마운트된다. 첫 마운트에서 한 번만 실제 생성을 시작한다.
     useEffect(() => {
@@ -109,26 +122,22 @@ export default function PetTryOnPreview({
 
     useEffect(() => {
         if (!loading) return;
-        const timer = window.setInterval(() => {
-            setProgress((value) => {
-                if (value >= 92) return value;
-                if (value < 40) return Math.min(92, value + 5);
-                if (value < 72) return Math.min(92, value + 3);
-                return Math.min(92, value + 1);
-            });
-        }, 700);
-        return () => window.clearInterval(timer);
+        const firstTick = window.setTimeout(() => setNow(Date.now()), 0);
+        const timer = window.setInterval(() => setNow(Date.now()), 1000);
+        return () => {
+            window.clearTimeout(firstTick);
+            window.clearInterval(timer);
+        };
     }, [loading]);
 
     useEffect(() => {
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape" && !inFlight.current) onClose();
+            if (event.key === "Escape") onClose();
         };
         window.addEventListener("keydown", onKeyDown);
         return () => {
-            requestAbort.current?.abort();
             document.body.style.overflow = previousOverflow;
             window.removeEventListener("keydown", onKeyDown);
         };
@@ -139,16 +148,14 @@ export default function PetTryOnPreview({
     const handlePetChange = (index: number) => {
         if (loading) return;
         setSelected(index);
-        setResult(null);
         setError("");
-        setProgress(0);
     };
 
     return (
         <div
             className="fixed inset-0 z-[2400] flex items-center justify-center overflow-y-auto bg-neutral-950/60 px-3 py-5 backdrop-blur-sm sm:px-6"
             onMouseDown={(event) => {
-                if (event.target === event.currentTarget && !loading) onClose();
+                if (event.target === event.currentTarget) onClose();
             }}
         >
             <section
@@ -174,9 +181,8 @@ export default function PetTryOnPreview({
                     <button
                         type="button"
                         onClick={onClose}
-                        disabled={loading}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition hover:bg-neutral-200 disabled:cursor-wait disabled:opacity-40"
-                        aria-label={locale === "en" ? "Close" : "닫기"}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition hover:bg-neutral-200"
+                        aria-label={locale === "en" ? "Close; fitting continues" : "닫기; 입혀보기는 계속 진행"}
                     >
                         <i className="fa-solid fa-xmark" />
                     </button>
@@ -239,11 +245,21 @@ export default function PetTryOnPreview({
                             />
 
                             {loading && (
-                                <div className="absolute inset-0 flex items-end bg-neutral-950/48 p-5 sm:p-7">
-                                    <div className="w-full rounded-xl bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
-                                        <div className="flex items-center justify-between gap-3 text-sm font-black text-neutral-900">
-                                            <span>{loadingLabel(progress, locale, stage)}</span>
-                                            <span className="text-indigo-700">{Math.round(progress)}%</span>
+                                <div className="absolute inset-0 flex items-end bg-neutral-950/52 p-4 sm:p-7">
+                                    <div className="w-full rounded-2xl bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div>
+                                                <p className="text-[11px] font-black tracking-wide text-indigo-700">DDB SMART FIT</p>
+                                                <p className="mt-1 text-sm font-black text-neutral-950 sm:text-base">
+                                                    {loadingLabel(locale, stage)}
+                                                </p>
+                                            </div>
+                                            <div className="shrink-0 text-right">
+                                                <p className="text-xs font-black text-neutral-500">
+                                                    {locale === "en" ? "Average 1–2 min" : "평균 1~2분"}
+                                                </p>
+                                                <p className="mt-0.5 font-mono text-sm font-black text-indigo-700">{formatElapsed(elapsed)}</p>
+                                            </div>
                                         </div>
                                         <div
                                             className="mt-3 h-2.5 overflow-hidden rounded-full bg-neutral-200"
@@ -257,11 +273,65 @@ export default function PetTryOnPreview({
                                                 style={{ width: `${progress}%` }}
                                             />
                                         </div>
+
+                                        <div className="mt-3 grid grid-cols-4 gap-1.5" aria-label={locale === "en" ? "Fitting progress stages" : "입혀보기 진행 단계"}>
+                                            {progressStageLabels.map((label, index) => {
+                                                const completed = progressStageIndex > index;
+                                                const current = progressStageIndex === index;
+                                                return (
+                                                    <div
+                                                        key={label}
+                                                        className={`rounded-lg border px-1.5 py-2 text-center text-[10px] font-black sm:text-[11px] ${
+                                                            completed
+                                                                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                                                                : current
+                                                                    ? "border-indigo-300 bg-indigo-50 text-indigo-800"
+                                                                    : "border-neutral-200 bg-neutral-50 text-neutral-400"
+                                                        }`}
+                                                    >
+                                                        <i className={`fa-solid mr-1 ${completed ? "fa-check" : current ? "fa-spinner fa-spin" : "fa-circle"}`} />
+                                                        {label}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <p className="mt-3 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-bold leading-5 text-indigo-950">
+                                            <i className="fa-solid fa-lightbulb mr-2 text-amber-500" />
+                                            {waitTip}
+                                        </p>
+                                        {elapsed >= 120 && (
+                                            <p className="mt-2 text-xs font-bold leading-5 text-neutral-500">
+                                                {locale === "en"
+                                                    ? "The final quality pass is taking longer. You can keep shopping; the result stays in Smart Fit."
+                                                    : "정교한 마무리에 조금 더 시간이 걸리고 있어요. 쇼핑을 계속하셔도 결과는 Smart Fit에 보관됩니다."}
+                                            </p>
+                                        )}
+
                                         <p className="mt-3 text-xs font-bold leading-5 text-neutral-500">
                                             {locale === "en"
-                                                ? "The browser fitting worker usually finishes in a few minutes. Please keep this window open."
-                                                : "브라우저 입혀보기 작업은 보통 몇 분 안에 완료됩니다. 이 창을 열어 두고 잠시 기다려 주세요."}
+                                                ? "You may close this window. The fitting continues in the background."
+                                                : "이 창을 닫아도 입혀보기는 계속 진행됩니다."}
                                         </p>
+                                        <div className="mt-3 grid grid-cols-2 gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={onClose}
+                                                className="h-10 rounded-lg border border-neutral-200 bg-white text-xs font-black text-neutral-700 hover:border-indigo-300 hover:text-indigo-700"
+                                            >
+                                                {locale === "en" ? "Keep shopping" : "계속 쇼핑"}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => void requestCompletionNotification()}
+                                                className="h-10 rounded-lg bg-indigo-600 px-2 text-xs font-black text-white hover:bg-indigo-700"
+                                            >
+                                                <i className="fa-regular fa-bell mr-1.5" />
+                                                {notificationEnabled
+                                                    ? locale === "en" ? "Notification on" : "완료 알림 켜짐"
+                                                    : locale === "en" ? "Notify me" : "완성되면 알려줘"}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -326,9 +396,11 @@ export default function PetTryOnPreview({
                                     className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700"
                                 >
                                     <i className="fa-solid fa-wand-magic-sparkles" />
-                                    {resultImage || error
-                                        ? locale === "en" ? "Create again" : "다시 입혀보기"
-                                        : locale === "en" ? "Start fitting" : "입혀보기 시작하기"}
+                                    {error
+                                        ? locale === "en" ? "Try again" : "다시 시도하기"
+                                        : resultImage
+                                            ? locale === "en" ? "View result again" : "결과 다시 보기"
+                                            : locale === "en" ? "Start fitting" : "입혀보기 시작하기"}
                                 </button>
                             )}
                         </aside>

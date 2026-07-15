@@ -3,6 +3,7 @@ import { ddbApiBase, getCustomerToken } from "@/lib/customer-api";
 import type { PetProfile } from "@/lib/store";
 
 export type PetTryOnStage = "queued" | "running" | "ready" | "failed";
+export type PetTryOnProgressStage = "queued" | "preparing" | "generating" | "finalizing" | "ready" | "failed";
 
 export type PetTryOnResult = {
     status: PetTryOnStage;
@@ -11,6 +12,9 @@ export type PetTryOnResult = {
     renderer: string;
     cacheKey: string;
     pollAfterSeconds: number;
+    progressStage: PetTryOnProgressStage;
+    progressPercent: number;
+    estimatedSeconds: number;
     quality: {
         score: number;
         tier: "pending" | "auto" | "fallback";
@@ -24,44 +28,51 @@ type RequestOptions = {
     onStatus?: (result: PetTryOnResult) => void;
 };
 
+const LEGACY_LOCAL_CACHE_PREFIX = "ddb.tryon.rpa.v1|";
+const START_REQUEST_TIMEOUT_MS = 45_000;
+const STATUS_REQUEST_TIMEOUT_MS = 20_000;
+
 function apiBase() {
     return ddbApiBase();
 }
 
-function localCacheKey(product: CatalogProduct, pet: PetProfile) {
-    const photo = pet.photoDataUrl ?? "";
-    return [
-        "ddb.tryon.rpa.v1",
-        product.id,
-        product.image ?? "",
-        pet.apiProfileId ?? "",
-        pet.name,
-        pet.lastAnalyzedAt ?? "",
-        photo.length,
-        photo.slice(0, 48),
-        photo.slice(-48),
-    ].join("|");
+function authHeaders() {
+    const token = getCustomerToken();
+    if (!token) return null;
+    return {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+    };
 }
 
-function readCached(product: CatalogProduct, pet: PetProfile): PetTryOnResult | null {
-    if (typeof window === "undefined") return null;
+async function fetchWithTimeout(
+    input: RequestInfo | URL,
+    init: RequestInit,
+    externalSignal: AbortSignal | undefined,
+    timeoutMs: number,
+) {
+    const controller = new AbortController();
+    const abortFromCaller = () => controller.abort();
+    if (externalSignal?.aborted) controller.abort();
+    else externalSignal?.addEventListener("abort", abortFromCaller, { once: true });
+    const timeout = globalThis.setTimeout(() => controller.abort(), timeoutMs);
     try {
-        const raw = window.sessionStorage.getItem(localCacheKey(product, pet));
-        const value = raw ? JSON.parse(raw) as PetTryOnResult : null;
-        return value?.status === "ready" && value.imageDataUrl ? value : null;
-    } catch {
-        return null;
+        return await fetch(input, { ...init, signal: controller.signal });
+    } finally {
+        globalThis.clearTimeout(timeout);
+        externalSignal?.removeEventListener("abort", abortFromCaller);
     }
 }
 
-function writeCached(product: CatalogProduct, pet: PetProfile, result: PetTryOnResult) {
+export function clearPetTryOnSessionCache() {
     if (typeof window === "undefined") return;
-    if (result.status !== "ready" || !result.imageDataUrl) return;
-    if (result.imageDataUrl.length > 2_500_000) return;
     try {
-        window.sessionStorage.setItem(localCacheKey(product, pet), JSON.stringify(result));
+        for (let index = window.sessionStorage.length - 1; index >= 0; index -= 1) {
+            const key = window.sessionStorage.key(index);
+            if (key?.startsWith(LEGACY_LOCAL_CACHE_PREFIX)) window.sessionStorage.removeItem(key);
+        }
     } catch {
-        // Session storage is best-effort only.
+        // Legacy cache cleanup is best-effort; new generated images are never persisted here.
     }
 }
 
@@ -74,6 +85,10 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
         ? data.quality as Record<string, unknown>
         : {};
     const rawTier = String(quality.tier || "fallback");
+    const rawProgressStage = String(data.progress_stage || rawStatus);
+    const progressStage: PetTryOnProgressStage = ["queued", "preparing", "generating", "finalizing", "ready"].includes(rawProgressStage)
+        ? rawProgressStage as PetTryOnProgressStage
+        : "failed";
     return {
         status,
         jobId: String(data.job_id || ""),
@@ -81,6 +96,9 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
         renderer: String(data.renderer || "ddb-smart-fit"),
         cacheKey: String(data.cache_key || ""),
         pollAfterSeconds: Math.max(1, Math.min(30, Number(data.poll_after_seconds || 3))),
+        progressStage,
+        progressPercent: Math.max(0, Math.min(100, Number(data.progress_percent ?? 0))),
+        estimatedSeconds: Math.max(30, Math.min(900, Number(data.estimated_seconds || 90))),
         quality: {
             score: Number(quality.score ?? 0),
             tier: rawTier === "auto" ? "auto" : rawTier === "pending" ? "pending" : "fallback",
@@ -88,6 +106,55 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
         },
         message: String(data.message || ""),
     };
+}
+
+export async function startPetTryOn(
+    product: CatalogProduct,
+    pet: PetProfile,
+    signal?: AbortSignal,
+): Promise<PetTryOnResult | null> {
+    if (!product.image || !pet.photoDataUrl || !pet.apiProfileId) return null;
+    const base = apiBase().replace(/\/$/, "");
+    const headers = authHeaders();
+    if (!base || !headers) return null;
+
+    try {
+        const response = await fetchWithTimeout(`${base}/api/v1/pet-tryon/render`, {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                pet_profile_id: pet.apiProfileId,
+                product_id: product.id,
+                product_name: product.name,
+                product_image: product.image,
+                subcategory: product.subcategory,
+            }),
+        }, signal, START_REQUEST_TIMEOUT_MS);
+        if (!response.ok) return null;
+        return parseResult(await response.json());
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return null;
+        return null;
+    }
+}
+
+export async function getPetTryOnJob(jobId: string, signal?: AbortSignal): Promise<PetTryOnResult | null> {
+    const base = apiBase().replace(/\/$/, "");
+    const headers = authHeaders();
+    if (!base || !headers || !jobId) return null;
+    try {
+        const response = await fetchWithTimeout(
+            `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(jobId)}`,
+            { method: "GET", headers },
+            signal,
+            STATUS_REQUEST_TIMEOUT_MS,
+        );
+        if (!response.ok) return null;
+        return parseResult(await response.json());
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return null;
+        return null;
+    }
 }
 
 async function wait(ms: number, signal?: AbortSignal) {
@@ -110,47 +177,20 @@ export async function requestPetTryOn(
     options: RequestOptions = {},
 ): Promise<PetTryOnResult | null> {
     if (!product.image || !pet.photoDataUrl || !pet.apiProfileId) return null;
-    const base = apiBase().replace(/\/$/, "");
-    const token = getCustomerToken();
-    if (!base || !token) return null;
-
-    const cached = readCached(product, pet);
-    if (cached) return cached;
-
-    const headers = {
-        "content-type": "application/json",
-        authorization: `Bearer ${token}`,
-    };
     try {
-        const response = await fetch(`${base}/api/v1/pet-tryon/render`, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-                pet_profile_id: pet.apiProfileId,
-                product_id: product.id,
-                product_name: product.name,
-                product_image: product.image,
-                subcategory: product.subcategory,
-            }),
-            signal: options.signal,
-        });
-        if (!response.ok) return null;
-        let result = parseResult(await response.json());
+        let result = await startPetTryOn(product, pet, options.signal);
+        if (!result) return null;
         options.onStatus?.(result);
 
         const deadline = Date.now() + 15 * 60 * 1000;
         while (["queued", "running"].includes(result.status) && result.jobId && Date.now() < deadline) {
             await wait(result.pollAfterSeconds * 1000, options.signal);
-            const statusResponse = await fetch(
-                `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(result.jobId)}`,
-                { method: "GET", headers, signal: options.signal },
-            );
-            if (!statusResponse.ok) return null;
-            result = parseResult(await statusResponse.json());
+            const next = await getPetTryOnJob(result.jobId, options.signal);
+            if (!next) return null;
+            result = next;
             options.onStatus?.(result);
         }
         if (result.status === "ready" && result.imageDataUrl) {
-            writeCached(product, pet, result);
             return result;
         }
         return result.status === "failed" ? result : null;

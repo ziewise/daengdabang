@@ -10,6 +10,7 @@ import { StoreProvider } from "@/lib/store";
 import { LanguageProvider } from "@/lib/i18n";
 // 협업자 펫렌즈(LLM 분석)를 "모달"로 띄우는 런처 — 협업자 코드는 그대로, 껍데기만 우리 것
 import PetLensModalProvider from "@/components/petlens/PetLensModalLauncher";
+import { PetTryOnTaskProvider } from "@/lib/pet-tryon-background";
 
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
@@ -64,8 +65,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <StoreProvider>
                         {/* 펫렌즈 모달 런처 — 헤더 AI 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
                         <PetLensModalProvider>
-                            {/* 경로별로 헤더/푸터/도크 토글 — 로그인 등 풀스크린 페이지는 크롬 없이 */}
-                            <ConditionalChrome>{children}</ConditionalChrome>
+                            {/* 입혀보기는 상품 페이지를 떠나도 전역에서 계속 진행하고 완료 상태를 알려준다. */}
+                            <PetTryOnTaskProvider>
+                                {/* 경로별로 헤더/푸터/도크 토글 — 로그인 등 풀스크린 페이지는 크롬 없이 */}
+                                <ConditionalChrome>{children}</ConditionalChrome>
+                            </PetTryOnTaskProvider>
                         </PetLensModalProvider>
                     </StoreProvider>
                 </LanguageProvider>
