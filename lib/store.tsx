@@ -12,7 +12,7 @@ import {
 // 로그인/로그아웃이 이 store 에만 기록되고 플래그가 안 바뀌어 헤더가
 // "로그인" 버튼을 유지하던 버그 수정 — login/logout 에서 함께 갱신한다.
 import { authStorage } from "@/lib/storage";
-import { loadPetProfilesSmart } from "@/lib/customer-api";
+import { DdbApiError, loadPetProfilesSmart } from "@/lib/customer-api";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
 import type { AuthProvider } from "@/lib/types";
 
@@ -240,9 +240,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             .then((pets) => {
                 if (!cancelled && pets) dispatch({ type: "SET_PETS", pets });
             })
-            .catch(() => {
-                // Keep the last local snapshot when the customer API is offline
-                // or the saved session needs a fresh login.
+            .catch((error) => {
+                if (!cancelled && error instanceof DdbApiError && error.status === 401) {
+                    window.localStorage.removeItem(API_TOKEN_KEY);
+                    authStorage.clear();
+                    dispatch({ type: "LOGOUT" });
+                }
+                // Keep the last local snapshot only for transient/offline failures.
+                // An expired API session must not keep impersonating a signed-in member.
             });
         return () => {
             cancelled = true;
