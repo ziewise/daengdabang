@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import { requestPetTryOn, type PetTryOnResult } from "@/lib/pet-tryon";
-import { useAuth, type PetProfile } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 
 const WEARABLE_SUBCATEGORIES = new Set(["wear", "harness", "goggles", "leash"]);
@@ -42,7 +42,7 @@ export default function PetTryOnPreview({
     const { user } = useAuth();
     const { locale, productName } = useI18n();
     const eligible = canTryOn(product);
-    const pets = useMemo(() => (user?.pets ?? []).filter((item) => item.photoDataUrl), [user]);
+    const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
     const [result, setResult] = useState<PetTryOnResult | null>(null);
     const [loading, setLoading] = useState(false);

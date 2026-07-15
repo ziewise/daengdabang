@@ -238,6 +238,7 @@ export async function loadPetProfilesSmart(token?: string): Promise<PetProfile[]
         neutered: row.neutered || "unknown",
         lifeStage: row.lifeStage || "unknown",
         photoDataUrl: row.photoDataUrl || undefined,
+        photoServerVerified: Boolean(row.photoDataUrl),
         rawAnalysis: row.rawAnalysis || undefined,
         lastAnalyzedAt: row.lastAnalyzedAt || row.updatedAt,
     }));

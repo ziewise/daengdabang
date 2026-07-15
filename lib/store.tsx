@@ -35,9 +35,14 @@ export type PetProfile = {
     neutered?: "yes" | "no" | "unknown";
     lifeStage?: "puppy" | "adult" | "senior" | "unknown";
     photoDataUrl?: string;
+    photoServerVerified?: boolean;
     rawAnalysis?: Record<string, unknown>;
     lastAnalyzedAt?: string;
 };
+
+export function hasVerifiedPetPhoto(pet: PetProfile): boolean {
+    return Boolean(pet.photoDataUrl && pet.photoServerVerified);
+}
 export type User = {
     apiUserId?: number;
     apiAccessToken?: string;

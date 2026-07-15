@@ -21,7 +21,7 @@ import {
     type PetLensPhotoViewId,
 } from "@/lib/petlens-multiview";
 import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
-import { useAuth, type PetProfile } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -57,7 +57,7 @@ export default function PetLensClient() {
             setCoat(pet.coat || "medium");
             setActivity(pet.activity || "normal");
             if (pet.concerns?.length) setConcerns(pet.concerns);
-            if (pet.photoDataUrl) {
+            if (hasVerifiedPetPhoto(pet)) {
                 setPhotoDataUrl((current) => current || pet.photoDataUrl);
                 setPhotoViews((current) => Object.keys(current).length
                     ? current
@@ -140,9 +140,18 @@ export default function PetLensClient() {
             };
             setResult(resultWithConfirmedProfile);
             if (user && canAutoSaveProfile) {
-                upsertPet(profile);
-                savePetProfileSmart(profile, user.apiAccessToken)
-                    .catch(() => setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다. 잠시 후 다시 시도해 주세요."));
+                try {
+                    const saved = await savePetProfileSmart(profile, user.apiAccessToken);
+                    if (!saved) throw new Error("profile_save_unavailable");
+                    upsertPet({
+                        ...profile,
+                        apiProfileId: saved.id,
+                        photoDataUrl: saved.photoDataUrl || undefined,
+                        photoServerVerified: Boolean(saved.photoDataUrl),
+                    });
+                } catch {
+                    setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+                }
             } else {
                 savePetLensSignupDraft(profile);
             }

@@ -12,7 +12,7 @@ import {
     type PointerEvent as ReactPointerEvent,
 } from "react";
 import { savePetProfileSmart } from "@/lib/customer-api";
-import { useStore } from "@/lib/store";
+import { hasVerifiedPetPhoto, useStore } from "@/lib/store";
 import {
     findPetGuidePrompt,
     markPetGuideShown,
@@ -1179,7 +1179,7 @@ export default function PetCompanionLayer({
             );
             const prompt = findPetGuidePrompt({
                 isGuest: !state.user || hasSignupTarget,
-                hasPetPhoto: Boolean(state.user?.pets.some((pet) => pet.photoDataUrl)),
+                hasPetPhoto: Boolean(state.user?.pets.some(hasVerifiedPetPhoto)),
                 bypassBudget: force,
                 onlyId,
                 bypassRouteCooldownForId,
@@ -1650,7 +1650,13 @@ export default function PetCompanionLayer({
         const updatedPet = withCompanionSettings(pet, next);
         upsertPet(updatedPet);
         try {
-            const saved = await savePetProfileSmart(updatedPet, state.user?.apiAccessToken);
+            const saved = await savePetProfileSmart(
+                {
+                    ...updatedPet,
+                    photoDataUrl: updatedPet.photoServerVerified ? updatedPet.photoDataUrl : undefined,
+                },
+                state.user?.apiAccessToken,
+            );
             setSaveStatus(saved ? "회원 반려견 설정으로 저장했어요." : "이 기기에 저장했어요.");
         } catch {
             setSaveStatus("지금은 이 기기에 안전하게 저장했어요.");

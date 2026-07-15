@@ -42,7 +42,7 @@ import {
     type PetLensPhotoViewId,
 } from "@/lib/petlens-multiview";
 import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
-import { useAuth, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
+import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
 import ProductCard from "@/components/products/ProductCard";
 
 // 관심 포인트 — 협업자 PetLensClient 와 동일하게 유지(분석 입력 호환)
@@ -84,7 +84,7 @@ export default function PetLensModalContent() {
             setCoat(pet.coat || "medium");
             setActivity(pet.activity || "normal");
             if (pet.concerns?.length) setConcerns(pet.concerns);
-            if (pet.photoDataUrl) {
+            if (hasVerifiedPetPhoto(pet)) {
                 setPhotoDataUrl((c) => c || pet.photoDataUrl);
                 setPhotoViews((current) => Object.keys(current).length
                     ? current
@@ -170,10 +170,18 @@ export default function PetLensModalContent() {
             };
             setResult(resultWithConfirmedProfile); // result 세팅 = 결과 단계로 전환
             if (user && canAutoSaveProfile) {
-                upsertPet(profile);
-                savePetProfileSmart(profile, user.apiAccessToken).catch(() =>
-                    setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다."),
-                );
+                try {
+                    const saved = await savePetProfileSmart(profile, user.apiAccessToken);
+                    if (!saved) throw new Error("profile_save_unavailable");
+                    upsertPet({
+                        ...profile,
+                        apiProfileId: saved.id,
+                        photoDataUrl: saved.photoDataUrl || undefined,
+                        photoServerVerified: Boolean(saved.photoDataUrl),
+                    });
+                } catch {
+                    setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다.");
+                }
             } else {
                 savePetLensSignupDraft(profile);
             }

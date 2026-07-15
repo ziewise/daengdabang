@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/lib/catalog";
 import { cartProducts, findProduct, productHref } from "@/lib/shop";
-import { useAuth, useStore, type PetProfile } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/store";
 import { memberAccountDisplay } from "@/lib/member-account-display";
 import ProductCard from "@/components/products/ProductCard";
 import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
@@ -47,7 +47,7 @@ export default function MyPage() {
     const { user, logout } = useAuth();
     const store = useStore();
     const wishedProducts = store.state.wishlist.map(findProduct).filter(Boolean);
-    const hasTryOnProfile = Boolean(user?.pets.some((pet) => pet.photoDataUrl));
+    const hasTryOnProfile = Boolean(user?.pets.some(hasVerifiedPetPhoto));
     const heroTryOnProduct = firstTryOnProduct();
 
     if (!user) {
@@ -95,7 +95,7 @@ export default function MyPage() {
                                     <article key={petKey(pet)} className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                                         <div className="grid grid-cols-[76px_1fr] gap-3">
                                             <div className="relative h-[76px] overflow-hidden rounded-md bg-white">
-                                                {pet.photoDataUrl ? (
+                                                {hasVerifiedPetPhoto(pet) ? (
                                                     <img src={pet.photoDataUrl} alt={`${pet.name} 사진`} className="h-full w-full object-cover" />
                                                 ) : (
                                                     <div className="grid h-full place-items-center text-neutral-300">
@@ -115,7 +115,7 @@ export default function MyPage() {
                                                 <p className="mt-1 text-xs font-bold text-neutral-500">
                                                     {pet.coatColor ? `${pet.coatColor} · ` : ""}{activityLabel(pet.activity)}
                                                 </p>
-                                                {pet.photoDataUrl ? (
+                                                {hasVerifiedPetPhoto(pet) ? (
                                                     <p className="mt-2 text-xs font-black text-indigo-700">착용 상품 자동 피팅 가능</p>
                                                 ) : (
                                                     <p className="mt-2 text-xs font-black text-neutral-500">사진을 올리면 자동 피팅이 켜집니다</p>

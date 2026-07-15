@@ -101,6 +101,7 @@ export default function MemberPetProfileEditor({ pet }: Props) {
             coatColor: coatColor.trim().slice(0, 80) || undefined,
             coat,
             activity,
+            photoDataUrl: pet.photoServerVerified ? pet.photoDataUrl : undefined,
             rawAnalysis,
         };
 
@@ -108,7 +109,12 @@ export default function MemberPetProfileEditor({ pet }: Props) {
         try {
             const saved = await savePetProfileSmart(updatedPet, user.apiAccessToken);
             if (!saved) throw new Error("profile_save_unavailable");
-            upsertPet({ ...updatedPet, apiProfileId: saved.id });
+            upsertPet({
+                ...updatedPet,
+                apiProfileId: saved.id,
+                photoDataUrl: saved.photoDataUrl || undefined,
+                photoServerVerified: Boolean(saved.photoDataUrl),
+            });
             setSuccess("반려견 정보가 저장되었습니다. 추천과 펫렌즈에 바로 반영됩니다.");
         } catch (saveError) {
             setError(customerApiErrorMessage(saveError));
