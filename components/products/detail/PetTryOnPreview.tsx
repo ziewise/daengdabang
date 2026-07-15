@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
-import { requestPetTryOn, type PetTryOnResult } from "@/lib/pet-tryon";
+import { requestPetTryOn, type PetTryOnResult, type PetTryOnStage } from "@/lib/pet-tryon";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 
@@ -19,7 +19,10 @@ function petOptionLabel(pet: PetProfile) {
     return `${pet.name || "우리 아이"} · ${size}`;
 }
 
-function loadingLabel(progress: number, locale: "ko" | "en") {
+function loadingLabel(progress: number, locale: "ko" | "en", stage: PetTryOnStage) {
+    if (stage === "queued") {
+        return locale === "en" ? "Waiting for the fitting workspace" : "입혀보기 작업 순서를 기다리고 있어요";
+    }
     if (locale === "en") {
         if (progress < 28) return "Checking your dog's photo";
         if (progress < 52) return "Analyzing product details";
@@ -47,9 +50,11 @@ export default function PetTryOnPreview({
     const [result, setResult] = useState<PetTryOnResult | null>(null);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [stage, setStage] = useState<PetTryOnStage>("queued");
     const [error, setError] = useState("");
     const started = useRef(false);
     const inFlight = useRef(false);
+    const requestAbort = useRef<AbortController | null>(null);
 
     const pet = pets[selected] ?? pets[0];
     const resultImage = result?.status === "ready" ? result.imageDataUrl : undefined;
@@ -61,9 +66,21 @@ export default function PetTryOnPreview({
         setResult(null);
         setError("");
         setProgress(8);
+        setStage("queued");
         setLoading(true);
+        requestAbort.current?.abort();
+        const controller = new AbortController();
+        requestAbort.current = controller;
         try {
-            const next = await requestPetTryOn(product, pet);
+            const next = await requestPetTryOn(product, pet, {
+                signal: controller.signal,
+                onStatus: (status) => {
+                    setStage(status.status);
+                    if (status.status === "queued") setProgress((value) => Math.max(value, 16));
+                    if (status.status === "running") setProgress((value) => Math.max(value, 38));
+                    if (status.status === "ready") setProgress(100);
+                },
+            });
             if (next?.status === "ready" && next.imageDataUrl) {
                 setResult(next);
                 setProgress(100);
@@ -79,6 +96,7 @@ export default function PetTryOnPreview({
         } finally {
             inFlight.current = false;
             setLoading(false);
+            if (requestAbort.current === controller) requestAbort.current = null;
         }
     }, [eligible, locale, pet, product]);
 
@@ -110,6 +128,7 @@ export default function PetTryOnPreview({
         };
         window.addEventListener("keydown", onKeyDown);
         return () => {
+            requestAbort.current?.abort();
             document.body.style.overflow = previousOverflow;
             window.removeEventListener("keydown", onKeyDown);
         };
@@ -223,7 +242,7 @@ export default function PetTryOnPreview({
                                 <div className="absolute inset-0 flex items-end bg-neutral-950/48 p-5 sm:p-7">
                                     <div className="w-full rounded-xl bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
                                         <div className="flex items-center justify-between gap-3 text-sm font-black text-neutral-900">
-                                            <span>{loadingLabel(progress, locale)}</span>
+                                            <span>{loadingLabel(progress, locale, stage)}</span>
                                             <span className="text-indigo-700">{Math.round(progress)}%</span>
                                         </div>
                                         <div
@@ -240,8 +259,8 @@ export default function PetTryOnPreview({
                                         </div>
                                         <p className="mt-3 text-xs font-bold leading-5 text-neutral-500">
                                             {locale === "en"
-                                                ? "High-quality fitting may take up to about two minutes. Please keep this window open."
-                                                : "고품질 피팅은 최대 약 2분 정도 걸릴 수 있어요. 이 창을 닫지 말고 잠시 기다려 주세요."}
+                                                ? "The browser fitting worker usually finishes in a few minutes. Please keep this window open."
+                                                : "브라우저 입혀보기 작업은 보통 몇 분 안에 완료됩니다. 이 창을 열어 두고 잠시 기다려 주세요."}
                                         </p>
                                     </div>
                                 </div>

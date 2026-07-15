@@ -1,18 +1,27 @@
 import type { CatalogProduct } from "@/lib/catalog";
-import { ddbApiBase } from "@/lib/customer-api";
+import { ddbApiBase, getCustomerToken } from "@/lib/customer-api";
 import type { PetProfile } from "@/lib/store";
 
+export type PetTryOnStage = "queued" | "running" | "ready" | "failed";
+
 export type PetTryOnResult = {
-    status: "ready" | "fallback";
+    status: PetTryOnStage;
+    jobId: string;
     imageDataUrl?: string;
     renderer: string;
     cacheKey: string;
+    pollAfterSeconds: number;
     quality: {
         score: number;
-        tier: "auto" | "fallback";
+        tier: "pending" | "auto" | "fallback";
         checks: string[];
     };
     message: string;
+};
+
+type RequestOptions = {
+    signal?: AbortSignal;
+    onStatus?: (result: PetTryOnResult) => void;
 };
 
 function apiBase() {
@@ -22,9 +31,10 @@ function apiBase() {
 function localCacheKey(product: CatalogProduct, pet: PetProfile) {
     const photo = pet.photoDataUrl ?? "";
     return [
-        "ddb.tryon.v2",
+        "ddb.tryon.rpa.v1",
         product.id,
         product.image ?? "",
+        pet.apiProfileId ?? "",
         pet.name,
         pet.lastAnalyzedAt ?? "",
         photo.length,
@@ -37,7 +47,8 @@ function readCached(product: CatalogProduct, pet: PetProfile): PetTryOnResult | 
     if (typeof window === "undefined") return null;
     try {
         const raw = window.sessionStorage.getItem(localCacheKey(product, pet));
-        return raw ? JSON.parse(raw) as PetTryOnResult : null;
+        const value = raw ? JSON.parse(raw) as PetTryOnResult : null;
+        return value?.status === "ready" && value.imageDataUrl ? value : null;
     } catch {
         return null;
     }
@@ -46,7 +57,7 @@ function readCached(product: CatalogProduct, pet: PetProfile): PetTryOnResult | 
 function writeCached(product: CatalogProduct, pet: PetProfile, result: PetTryOnResult) {
     if (typeof window === "undefined") return;
     if (result.status !== "ready" || !result.imageDataUrl) return;
-    if (result.imageDataUrl && result.imageDataUrl.length > 2_000_000) return;
+    if (result.imageDataUrl.length > 2_500_000) return;
     try {
         window.sessionStorage.setItem(localCacheKey(product, pet), JSON.stringify(result));
     } catch {
@@ -54,50 +65,97 @@ function writeCached(product: CatalogProduct, pet: PetProfile, result: PetTryOnR
     }
 }
 
-export async function requestPetTryOn(product: CatalogProduct, pet: PetProfile): Promise<PetTryOnResult | null> {
-    if (!product.image || !pet.photoDataUrl) return null;
+function parseResult(data: Record<string, unknown>): PetTryOnResult {
+    const rawStatus = String(data.status || "failed");
+    const status: PetTryOnStage = ["queued", "running", "ready"].includes(rawStatus)
+        ? rawStatus as PetTryOnStage
+        : "failed";
+    const quality = data.quality && typeof data.quality === "object"
+        ? data.quality as Record<string, unknown>
+        : {};
+    const rawTier = String(quality.tier || "fallback");
+    return {
+        status,
+        jobId: String(data.job_id || ""),
+        imageDataUrl: typeof data.image_data_url === "string" ? data.image_data_url : undefined,
+        renderer: String(data.renderer || "ddb-smart-fit"),
+        cacheKey: String(data.cache_key || ""),
+        pollAfterSeconds: Math.max(1, Math.min(30, Number(data.poll_after_seconds || 3))),
+        quality: {
+            score: Number(quality.score ?? 0),
+            tier: rawTier === "auto" ? "auto" : rawTier === "pending" ? "pending" : "fallback",
+            checks: Array.isArray(quality.checks) ? quality.checks.map(String) : [],
+        },
+        message: String(data.message || ""),
+    };
+}
+
+async function wait(ms: number, signal?: AbortSignal) {
+    await new Promise<void>((resolve, reject) => {
+        if (signal?.aborted) {
+            reject(new DOMException("Aborted", "AbortError"));
+            return;
+        }
+        const timer = window.setTimeout(resolve, ms);
+        signal?.addEventListener("abort", () => {
+            window.clearTimeout(timer);
+            reject(new DOMException("Aborted", "AbortError"));
+        }, { once: true });
+    });
+}
+
+export async function requestPetTryOn(
+    product: CatalogProduct,
+    pet: PetProfile,
+    options: RequestOptions = {},
+): Promise<PetTryOnResult | null> {
+    if (!product.image || !pet.photoDataUrl || !pet.apiProfileId) return null;
     const base = apiBase().replace(/\/$/, "");
-    if (!base) return null;
+    const token = getCustomerToken();
+    if (!base || !token) return null;
 
     const cached = readCached(product, pet);
     if (cached) return cached;
 
-    const controller = new AbortController();
-    // 고품질 입혀보기는 복잡한 입력에서 최대 약 2분이 걸릴 수 있다.
-    const timeout = window.setTimeout(() => controller.abort(), 135000);
+    const headers = {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+    };
     try {
         const response = await fetch(`${base}/api/v1/pet-tryon/render`, {
             method: "POST",
-            headers: { "content-type": "application/json" },
+            headers,
             body: JSON.stringify({
+                pet_profile_id: pet.apiProfileId,
                 product_id: product.id,
                 product_name: product.name,
                 product_image: product.image,
                 subcategory: product.subcategory,
-                pet_name: pet.name,
-                pet_photo_data_url: pet.photoDataUrl,
             }),
-            signal: controller.signal,
+            signal: options.signal,
         });
         if (!response.ok) return null;
-        const data = await response.json();
-        const result: PetTryOnResult = {
-            status: data.status === "ready" ? "ready" : "fallback",
-            imageDataUrl: typeof data.image_data_url === "string" ? data.image_data_url : undefined,
-            renderer: String(data.renderer || "auto-fit"),
-            cacheKey: String(data.cache_key || ""),
-            quality: {
-                score: Number(data.quality?.score ?? 0),
-                tier: data.quality?.tier === "auto" ? "auto" : "fallback",
-                checks: Array.isArray(data.quality?.checks) ? data.quality.checks.map(String) : [],
-            },
-            message: String(data.message || ""),
-        };
-        writeCached(product, pet, result);
-        return result;
-    } catch {
+        let result = parseResult(await response.json());
+        options.onStatus?.(result);
+
+        const deadline = Date.now() + 15 * 60 * 1000;
+        while (["queued", "running"].includes(result.status) && result.jobId && Date.now() < deadline) {
+            await wait(result.pollAfterSeconds * 1000, options.signal);
+            const statusResponse = await fetch(
+                `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(result.jobId)}`,
+                { method: "GET", headers, signal: options.signal },
+            );
+            if (!statusResponse.ok) return null;
+            result = parseResult(await statusResponse.json());
+            options.onStatus?.(result);
+        }
+        if (result.status === "ready" && result.imageDataUrl) {
+            writeCached(product, pet, result);
+            return result;
+        }
+        return result.status === "failed" ? result : null;
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return null;
         return null;
-    } finally {
-        window.clearTimeout(timeout);
     }
 }
