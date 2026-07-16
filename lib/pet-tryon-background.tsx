@@ -25,6 +25,10 @@ import {
     type PetTryOnProgressStage,
     type PetTryOnResult,
 } from "@/lib/pet-tryon";
+import {
+    petTryOnReferenceKey,
+    savePetTryOnFitMaster,
+} from "@/lib/pet-tryon-fit-master";
 import { productHref as storefrontProductHref } from "@/lib/shop";
 import { useStore, type PetProfile, type User } from "@/lib/store";
 
@@ -274,6 +278,21 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
 
     const announceReady = useCallback((completed: BackgroundPetTryOnTask) => {
         if (accountKeyRef.current !== completed.accountKey) return;
+        const jobId = completed.result?.status === "ready" ? completed.result.jobId : "";
+        if (jobId) {
+            savePetTryOnFitMaster(
+                {
+                    ownerKey: completed.ownerKey,
+                    petProfileId: completed.petProfileId,
+                    productId: completed.productId,
+                    petReferenceKey: completed.petReferenceKey,
+                },
+                {
+                    jobId,
+                    productImage: completed.productImage,
+                },
+            );
+        }
         setPanelOpen(true);
         if (
             notificationRef.current
@@ -414,7 +433,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         if (!accountKey || !product.image || !pet.apiProfileId || !petReferenceImage) return "failed";
         const ownerKey = taskOwnerKey(userRef.current, pet.apiProfileId);
         if (!ownerKey) return "failed";
-        const petReferenceKey = identityFingerprint(petReferenceImage);
+        const petReferenceKey = petTryOnReferenceKey(petReferenceImage);
         const key = taskKey(product.id, pet.apiProfileId, product.image, petReferenceImage, correctionIssues);
         if (taskRef.current && taskRef.current.accountKey !== accountKey) {
             clearTaskForAccountChange();
@@ -592,7 +611,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             && visibleTask.productId === productId
             && (!petProfileId || visibleTask.petProfileId === petProfileId)
             && (!productImage || visibleTask.productImage === productImage)
-            && (!petReferenceImage || visibleTask.petReferenceKey === identityFingerprint(petReferenceImage))
+            && (!petReferenceImage || visibleTask.petReferenceKey === petTryOnReferenceKey(petReferenceImage))
         ),
         setPanelOpen,
         requestCompletionNotification,

@@ -12,6 +12,13 @@ import {
     type PetTryOnCorrectionIssue,
     type PetTryOnProgressStage,
 } from "@/lib/pet-tryon";
+import {
+    petTryOnReferenceKey,
+    readPetTryOnFitMasterWithLegacy,
+    removePetTryOnFitMaster,
+    savePetTryOnFitMaster,
+    type PetTryOnFitMasterIdentity,
+} from "@/lib/pet-tryon-fit-master";
 import { usePetTryOnTask } from "@/lib/pet-tryon-background";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
@@ -54,7 +61,6 @@ function formatElapsed(seconds: number) {
 }
 
 const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
-const FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.v1";
 const CORRECTION_OPTIONS: Array<{ value: PetTryOnCorrectionIssue; ko: string; en: string }> = [
     { value: "back_length", ko: "등길이", en: "Back length" },
     { value: "belly_line", ko: "배 부분", en: "Belly line" },
@@ -76,18 +82,6 @@ function preciseCacheKey(petProfileId: number, productId: string, productImage: 
 
 function fastPreviewCacheKey(sourceJobId: string, productImage: string) {
     return `${sourceJobId}:${productImage}`;
-}
-
-function referenceFingerprint(value: string) {
-    let hash = 0x811c9dc5;
-    for (let index = 0; index < value.length; index += 1) {
-        hash = Math.imul(hash ^ value.charCodeAt(index), 0x01000193);
-    }
-    return (hash >>> 0).toString(36);
-}
-
-function fitMasterStorageKey(petProfileId: number, productId: string, petReferenceImage: string) {
-    return `${FIT_MASTER_STORAGE_PREFIX}:${petProfileId}:${productId}:${referenceFingerprint(petReferenceImage)}`;
 }
 
 export default function PetTryOnPreview({
@@ -131,10 +125,20 @@ export default function PetTryOnPreview({
     const [mismatchOpen, setMismatchOpen] = useState(false);
     const [correctionIssues, setCorrectionIssues] = useState<PetTryOnCorrectionIssue[]>([]);
     const [fitMasterRestorePending, setFitMasterRestorePending] = useState(true);
+    const [fitMasterRestoreBlocked, setFitMasterRestoreBlocked] = useState(false);
     const started = useRef(false);
 
     const pet = pets[selected] ?? pets[0];
     const petReferenceImage = pet ? petTryOnReferencePhoto(tryOnProduct, pet) : undefined;
+    const fitMasterIdentity = useMemo<PetTryOnFitMasterIdentity | null>(() => {
+        if (!pet?.apiProfileId || !petReferenceImage) return null;
+        return {
+            ownerKey: user?.apiUserId ? `user:${user.apiUserId}` : `pet:${pet.apiProfileId}`,
+            petProfileId: pet.apiProfileId,
+            productId: product.id,
+            petReferenceKey: petTryOnReferenceKey(petReferenceImage),
+        };
+    }, [pet?.apiProfileId, petReferenceImage, product.id, user?.apiUserId]);
     const sameProductTask = pet?.apiProfileId && isTaskFor(
         product.id,
         pet.apiProfileId,
@@ -222,48 +226,40 @@ export default function PetTryOnPreview({
             }
             return { ...previous, [key]: liveReadyFit };
         });
-        if (petReferenceImage) {
-            try {
-                window.sessionStorage.setItem(
-                    fitMasterStorageKey(pet.apiProfileId, product.id, petReferenceImage),
-                    JSON.stringify({
-                        jobId: liveReadyFit.jobId,
-                        productImage: liveReadyFit.productImage,
-                    }),
-                );
-            } catch {
-                // The live result remains available even when session storage is disabled.
-            }
+        if (fitMasterIdentity) {
+            savePetTryOnFitMaster(fitMasterIdentity, {
+                jobId: liveReadyFit.jobId,
+                productImage: liveReadyFit.productImage,
+            });
         }
-    }, [liveReadyFit, pet?.apiProfileId, petReferenceImage, product.id]);
+    }, [fitMasterIdentity, liveReadyFit, pet?.apiProfileId, product.id]);
 
     useEffect(() => {
         setFitMasterRestorePending(true);
-        if (!pet?.apiProfileId || !petReferenceImage || liveReadyFit) {
+        setFitMasterRestoreBlocked(false);
+        if (!pet?.apiProfileId || !petReferenceImage || !fitMasterIdentity || liveReadyFit) {
             setFitMasterRestorePending(false);
             return;
         }
-        const storageKey = fitMasterStorageKey(pet.apiProfileId, product.id, petReferenceImage);
-        let saved: { jobId?: string; productImage?: string } | null = null;
-        try {
-            saved = JSON.parse(window.sessionStorage.getItem(storageKey) || "null") as {
-                jobId?: string;
-                productImage?: string;
-            } | null;
-        } catch {
+        const lookup = readPetTryOnFitMasterWithLegacy(fitMasterIdentity, petReferenceImage);
+        if (lookup.status === "missing") {
             setFitMasterRestorePending(false);
             return;
         }
-        if (!saved?.jobId || !saved.productImage) {
+        if (lookup.status !== "found") {
+            if (lookup.status === "invalid") removePetTryOnFitMaster(fitMasterIdentity);
+            setFitMasterRestoreBlocked(true);
             setFitMasterRestorePending(false);
             return;
         }
-        const approvedImages = new Set([
+        const saved = lookup.value;
+        const approvedImages = new Set<string>([
             product.image,
             ...(product.colors || []).map((color) => color.image),
-        ].filter(Boolean));
+        ].filter((image): image is string => Boolean(image)));
         if (!approvedImages.has(saved.productImage)) {
-            window.sessionStorage.removeItem(storageKey);
+            removePetTryOnFitMaster(fitMasterIdentity);
+            setFitMasterRestoreBlocked(true);
             setFitMasterRestorePending(false);
             return;
         }
@@ -272,18 +268,25 @@ export default function PetTryOnPreview({
         void getPetTryOnJob(saved.jobId, controller.signal).then((restored) => {
             if (!active || controller.signal.aborted) return;
             if (restored?.status !== "ready" || !restored.imageDataUrl) {
-                window.sessionStorage.removeItem(storageKey);
+                // A null result is intentionally treated as indeterminate: the
+                // client cannot distinguish a timeout or temporary 5xx from a
+                // confirmed missing job. Keep the master and never spend AI
+                // again until the customer explicitly requests it.
+                setFitMasterRestoreBlocked(true);
                 return;
             }
             const restoredFit: ReadyFit = {
                 jobId: restored.jobId,
-                productImage: saved!.productImage!,
+                productImage: saved.productImage,
                 imageDataUrl: restored.imageDataUrl,
             };
             setPreciseFits((previous) => ({
                 ...previous,
                 [preciseCacheKey(pet.apiProfileId!, product.id, restoredFit.productImage)]: restoredFit,
             }));
+            setFitMasterRestoreBlocked(false);
+        }).catch(() => {
+            if (active && !controller.signal.aborted) setFitMasterRestoreBlocked(true);
         }).finally(() => {
             if (active) setFitMasterRestorePending(false);
         });
@@ -291,7 +294,7 @@ export default function PetTryOnPreview({
             active = false;
             controller.abort();
         };
-    }, [liveReadyFit, pet?.apiProfileId, petReferenceImage, product.id]);
+    }, [fitMasterIdentity, liveReadyFit, pet?.apiProfileId, petReferenceImage, product.colors, product.id, product.image]);
 
     useEffect(() => {
         if (
@@ -394,9 +397,9 @@ export default function PetTryOnPreview({
         started.current = true;
         // 색상 상품은 사용자가 고른 실제 변형만 생성한다. 기존 완성본이 있으면
         // 색상 변경 효과가 AI 0회 빠른 비교를 준비하므로 새 생성을 자동 시작하지 않는다.
-        if (explicitColorRequired || sourceFit) return;
+        if (explicitColorRequired || sourceFit || fitMasterRestoreBlocked) return;
         void generate(false);
-    }, [explicitColorRequired, fitMasterRestorePending, generate, pet, sourceFit]);
+    }, [explicitColorRequired, fitMasterRestoreBlocked, fitMasterRestorePending, generate, pet, sourceFit]);
 
     useEffect(() => {
         if (!loading) return;
@@ -742,6 +745,15 @@ export default function PetTryOnPreview({
                                     {locale === "en"
                                         ? "A zero-AI recolor is limited to clothing for now. This product needs one precise check for the selected color."
                                         : "AI 없는 색상 변경은 현재 의류만 지원해요. 이 상품은 선택한 색상으로 정밀 확인 1회가 필요해요."}
+                                </div>
+                            )}
+
+                            {fitMasterRestoreBlocked && !sourceFit && (
+                                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
+                                    <i className="fa-solid fa-shield-halved mr-2" />
+                                    {locale === "en"
+                                        ? "We could not safely reconnect the previous precise result. No new AI fitting was started. Use the explicit 1-AI button below only if you want a new result."
+                                        : "이전 정밀 결과를 안전하게 다시 연결하지 못했어요. 새 AI 입혀보기는 자동으로 시작하지 않았습니다. 새 결과가 필요할 때만 아래 AI 1회 버튼을 눌러 주세요."}
                                 </div>
                             )}
 
