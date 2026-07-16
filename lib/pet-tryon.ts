@@ -45,6 +45,18 @@ function authHeaders() {
     };
 }
 
+export function petTryOnReferencePhoto(product: CatalogProduct, pet: PetProfile) {
+    const views = pet.photoViews || [];
+    const order = product.subcategory === "goggles"
+        ? ["front", "left", "right", "back"]
+        : ["left", "right"];
+    for (const viewId of order) {
+        const match = views.find((photo) => photo.viewId === viewId);
+        if (match?.dataUrl) return match.dataUrl;
+    }
+    return product.subcategory === "goggles" ? pet.photoDataUrl : undefined;
+}
+
 async function fetchWithTimeout(
     input: RequestInfo | URL,
     init: RequestInit,
@@ -113,7 +125,7 @@ export async function startPetTryOn(
     pet: PetProfile,
     signal?: AbortSignal,
 ): Promise<PetTryOnResult | null> {
-    if (!product.image || !pet.photoDataUrl || !pet.apiProfileId) return null;
+    if (!product.image || !petTryOnReferencePhoto(product, pet) || !pet.apiProfileId) return null;
     const base = apiBase().replace(/\/$/, "");
     const headers = authHeaders();
     if (!base || !headers) return null;
@@ -176,7 +188,7 @@ export async function requestPetTryOn(
     pet: PetProfile,
     options: RequestOptions = {},
 ): Promise<PetTryOnResult | null> {
-    if (!product.image || !pet.photoDataUrl || !pet.apiProfileId) return null;
+    if (!product.image || !petTryOnReferencePhoto(product, pet) || !pet.apiProfileId) return null;
     try {
         let result = await startPetTryOn(product, pet, options.signal);
         if (!result) return null;

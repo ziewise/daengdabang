@@ -18,6 +18,12 @@ export type PetLensPhotoCapture = {
 
 export type PetLensPhotoCaptures = Partial<Record<PetLensPhotoViewId, PetLensPhotoCapture>>;
 
+export type PersistedPetLensPhotoView = {
+    viewId: PetLensPhotoViewId;
+    dataUrl: string;
+    imageName: string;
+};
+
 export const PETLENS_PHOTO_VIEW_LABELS = PETLENS_PHOTO_VIEWS.reduce((acc, view) => {
     acc[view.id] = view.label;
     return acc;
@@ -71,6 +77,38 @@ export function petLensPhotoViewMetadata(views: PetLensPhotoCaptures) {
         imageName: photo.imageName,
         usedForPetLensAnalysis: true,
     }));
+}
+
+export function persistPetLensPhotoViews(views: PetLensPhotoCaptures): PersistedPetLensPhotoView[] {
+    return petLensPhotoViewEntries(views).map(([viewId, photo]) => ({
+        viewId,
+        dataUrl: photo.dataUrl,
+        imageName: photo.imageName,
+    }));
+}
+
+export function restorePetLensPhotoViews(
+    views: PersistedPetLensPhotoView[] | undefined,
+    fallbackPhotoDataUrl?: string,
+): PetLensPhotoCaptures {
+    const restored: PetLensPhotoCaptures = {};
+    for (const photo of views || []) {
+        if (!PETLENS_PHOTO_VIEWS.some((view) => view.id === photo.viewId)) continue;
+        if (!/^data:image\/[a-z0-9.+-]+;base64,/i.test(photo.dataUrl || "")) continue;
+        restored[photo.viewId] = {
+            dataUrl: photo.dataUrl,
+            imageName: photo.imageName || `${photo.viewId}-pet-photo.jpg`,
+            restored: true,
+        };
+    }
+    if (Object.keys(restored).length === 0 && fallbackPhotoDataUrl) {
+        restored.front = {
+            dataUrl: fallbackPhotoDataUrl,
+            imageName: "저장된 펫렌즈 사진",
+            restored: true,
+        };
+    }
+    return restored;
 }
 
 function loadPetLensImage(dataUrl: string) {

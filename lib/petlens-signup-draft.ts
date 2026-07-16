@@ -34,6 +34,24 @@ function cleanPhotoDataUrl(value: unknown) {
     return /^data:image\/[a-z0-9.+-]+;base64,/i.test(value) ? value : undefined;
 }
 
+function cleanPhotoViews(value: unknown): PetProfile["photoViews"] {
+    if (!Array.isArray(value)) return undefined;
+    const allowed = new Set(["front", "left", "right", "back"]);
+    const seen = new Set<string>();
+    return value.flatMap((item) => {
+        if (!isRecord(item)) return [];
+        const viewId = cleanText(item.viewId, 10);
+        const dataUrl = cleanPhotoDataUrl(item.dataUrl);
+        if (!viewId || !allowed.has(viewId) || seen.has(viewId) || !dataUrl) return [];
+        seen.add(viewId);
+        return [{
+            viewId: viewId as NonNullable<PetProfile["photoViews"]>[number]["viewId"],
+            dataUrl,
+            imageName: cleanText(item.imageName, 240) || `${viewId}-pet-photo.jpg`,
+        }];
+    }).slice(0, 4);
+}
+
 function sanitizeProfile(value: unknown): PetProfile | undefined {
     if (!isRecord(value)) return undefined;
     const size = value.size;
@@ -58,6 +76,7 @@ function sanitizeProfile(value: unknown): PetProfile | undefined {
             ? value.concerns.filter((item): item is string => typeof item === "string").map((item) => item.trim()).filter(Boolean).slice(0, 20)
             : [],
         photoDataUrl: cleanPhotoDataUrl(value.photoDataUrl),
+        photoViews: cleanPhotoViews(value.photoViews),
         rawAnalysis,
         lastAnalyzedAt: cleanText(value.lastAnalyzedAt, 40),
     };
@@ -77,9 +96,17 @@ export function savePetLensSignupDraft(profile: PetProfile): boolean {
         try {
             storage.setItem(STORAGE_KEY, JSON.stringify({
                 ...envelope,
-                profile: { ...envelope.profile, photoDataUrl: undefined },
+                profile: {
+                    ...envelope.profile,
+                    photoDataUrl: undefined,
+                    photoViews: undefined,
+                    rawAnalysis: {
+                        ...(envelope.profile.rawAnalysis || {}),
+                        petLensDraftPhotosDropped: true,
+                    },
+                },
             }));
-            return true;
+            return false;
         } catch {
             return false;
         }

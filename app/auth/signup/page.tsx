@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -206,6 +206,8 @@ export default function SignupPage() {
     const [photoError, setPhotoError] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const petPhotoViewsRef = useRef<PetPhotoCaptures>({});
+    const photoCaptureInFlight = useRef(false);
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [agreePrivacy, setAgreePrivacy] = useState(false);
     const [agreePetLensPrivacy, setAgreePetLensPrivacy] = useState(false);
@@ -222,16 +224,30 @@ export default function SignupPage() {
             setPetActivity(draft.activity);
             setPetConcerns(draft.concerns.length > 0 ? draft.concerns : ["일상 케어"]);
             setPetPhotoDataUrl(draft.photoDataUrl);
-            if (draft.photoDataUrl) {
-                setPetPhotoViews({
-                    front: {
-                        dataUrl: draft.photoDataUrl,
-                        imageName: "펫렌즈 저장 사진",
+            if (draft.photoViews?.length) {
+                const restored = draft.photoViews.reduce<PetPhotoCaptures>((views, photo) => {
+                    views[photo.viewId] = {
+                        dataUrl: photo.dataUrl,
+                        imageName: photo.imageName,
                         restored: true,
-                    },
-                });
+                    };
+                    return views;
+                }, {});
+                if (Object.keys(petPhotoViewsRef.current).length === 0) {
+                    petPhotoViewsRef.current = restored;
+                    setPetPhotoViews(restored);
+                }
+            } else if (draft.photoDataUrl) {
+                const restored = { front: { dataUrl: draft.photoDataUrl, imageName: "펫렌즈 저장 사진", restored: true } };
+                if (Object.keys(petPhotoViewsRef.current).length === 0) {
+                    petPhotoViewsRef.current = restored;
+                    setPetPhotoViews(restored);
+                }
             }
             setPetRawAnalysis(draft.rawAnalysis);
+            if (draft.rawAnalysis?.petLensDraftPhotosDropped === true) {
+                setPhotoError("브라우저 저장 공간이 부족해 이전 사진은 옮기지 못했습니다. 네 방향 사진을 다시 등록해 주세요.");
+            }
             setPetWeightEstimate(getPetLensWeightEstimate(draft.rawAnalysis));
             setPetSex("unknown");
             if (draft.coatColor) {
@@ -268,7 +284,8 @@ export default function SignupPage() {
     };
 
     const handlePetPhotoView = async (viewId: PetPhotoViewId, file?: File) => {
-        if (!file) return;
+        if (!file || photoCaptureInFlight.current) return;
+        photoCaptureInFlight.current = true;
         setPhotoLoading(true);
         setPhotoError("");
         setPetBreedId("");
@@ -285,13 +302,14 @@ export default function SignupPage() {
         try {
             const dataUrl = await resizePetPhoto(file);
             const nextViews: PetPhotoCaptures = {
-                ...petPhotoViews,
+                ...petPhotoViewsRef.current,
                 [viewId]: {
                     dataUrl,
                     imageName: file.name,
                     file,
                 },
             };
+            petPhotoViewsRef.current = nextViews;
             const primaryEntry = primaryPetPhotoEntry(nextViews);
             const primaryPhoto = primaryEntry?.[1];
             const viewMeta = petPhotoViewMetadata(nextViews);
@@ -366,6 +384,7 @@ export default function SignupPage() {
         } catch {
             setPhotoError("사진을 불러오지 못했습니다. 다른 이미지를 선택해 주세요.");
         } finally {
+            photoCaptureInFlight.current = false;
             setPhotoLoading(false);
         }
     };
@@ -433,6 +452,11 @@ export default function SignupPage() {
                 activity: petActivity,
                 concerns: petConcerns.length > 0 ? petConcerns : ["일상 케어"],
                 photoDataUrl: petPhotoDataUrl,
+                photoViews: petPhotoViewEntries(petPhotoViews).map(([viewId, photo]) => ({
+                    viewId,
+                    dataUrl: photo.dataUrl,
+                    imageName: photo.imageName,
+                })),
                 rawAnalysis: confirmedBreed
                     ? {
                         ...(petRawAnalysis || {}),
@@ -561,6 +585,7 @@ export default function SignupPage() {
                                                     capture="environment"
                                                     className="hidden"
                                                     data-petlens-mobile-camera-capture
+                                                    disabled={photoLoading || loading}
                                                     onChange={(event) => {
                                                         void handlePetPhotoView(view.id, event.target.files?.[0]);
                                                         event.currentTarget.value = "";

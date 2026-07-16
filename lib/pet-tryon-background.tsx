@@ -19,6 +19,7 @@ import { useI18n } from "@/lib/i18n";
 import {
     clearPetTryOnSessionCache,
     getPetTryOnJob,
+    petTryOnReferencePhoto,
     startPetTryOn,
     type PetTryOnProgressStage,
     type PetTryOnResult,
@@ -39,6 +40,7 @@ export type BackgroundPetTryOnTask = {
     productImage: string;
     productHref: string;
     petProfileId: number;
+    petReferenceKey: string;
     petName: string;
     petImage?: string;
     startedAt: number;
@@ -54,7 +56,12 @@ type PetTryOnTaskContextValue = {
     panelOpen: boolean;
     notificationEnabled: boolean;
     start: (product: CatalogProduct, pet: PetProfile) => Promise<StartOutcome>;
-    isTaskFor: (productId: string, petProfileId?: number) => boolean;
+    isTaskFor: (
+        productId: string,
+        petProfileId?: number,
+        productImage?: string,
+        petReferenceImage?: string,
+    ) => boolean;
     setPanelOpen: (open: boolean) => void;
     requestCompletionNotification: () => Promise<boolean>;
     dismiss: () => void;
@@ -62,8 +69,8 @@ type PetTryOnTaskContextValue = {
 
 const PetTryOnTaskContext = createContext<PetTryOnTaskContextValue | null>(null);
 
-function taskKey(productId: string, petProfileId: number) {
-    return `${productId}:${petProfileId}`;
+function taskKey(productId: string, petProfileId: number, productImage: string, petReferenceImage: string) {
+    return `${productId}:${petProfileId}:${identityFingerprint(productImage)}:${identityFingerprint(petReferenceImage)}`;
 }
 
 function identityFingerprint(value: string) {
@@ -386,10 +393,12 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
     }, [monitor]);
 
     const start = useCallback(async (product: CatalogProduct, pet: PetProfile): Promise<StartOutcome> => {
-        if (!accountKey || !product.image || !pet.apiProfileId || !pet.photoDataUrl) return "failed";
+        const petReferenceImage = petTryOnReferencePhoto(product, pet);
+        if (!accountKey || !product.image || !pet.apiProfileId || !petReferenceImage) return "failed";
         const ownerKey = taskOwnerKey(userRef.current, pet.apiProfileId);
         if (!ownerKey) return "failed";
-        const key = taskKey(product.id, pet.apiProfileId);
+        const petReferenceKey = identityFingerprint(petReferenceImage);
+        const key = taskKey(product.id, pet.apiProfileId, product.image, petReferenceImage);
         if (taskRef.current && taskRef.current.accountKey !== accountKey) {
             clearTaskForAccountChange();
         }
@@ -407,8 +416,9 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             productImage: product.image,
             productHref: storefrontProductHref(product),
             petProfileId: pet.apiProfileId,
+            petReferenceKey,
             petName: pet.name || "우리 아이",
-            petImage: pet.photoDataUrl,
+            petImage: petReferenceImage,
             startedAt: Date.now(),
             submitting: true,
             result: null,
@@ -559,10 +569,12 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         panelOpen,
         notificationEnabled,
         start,
-        isTaskFor: (productId, petProfileId) => Boolean(
+        isTaskFor: (productId, petProfileId, productImage, petReferenceImage) => Boolean(
             visibleTask
             && visibleTask.productId === productId
             && (!petProfileId || visibleTask.petProfileId === petProfileId)
+            && (!productImage || visibleTask.productImage === productImage)
+            && (!petReferenceImage || visibleTask.petReferenceKey === identityFingerprint(petReferenceImage))
         ),
         setPanelOpen,
         requestCompletionNotification,

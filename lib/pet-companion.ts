@@ -301,19 +301,19 @@ export function resolvePetProfileBreedId(pet?: PetProfile | null) {
     return "";
 }
 
-function petBreedIdentity(pet?: PetProfile | null) {
-    const canonical = resolvePetProfileBreedId(pet);
-    if (canonical) return canonical;
+function memberSelectedCompanionBreedId(pet?: PetProfile | null) {
     const raw = isRecord(pet?.rawAnalysis) ? pet.rawAnalysis : {};
-    const value = [pet?.breed, raw.breedId, raw.breed_en, raw.breed_ko, raw.breed]
-        .find((item) => typeof item === "string" && item.trim());
-    return typeof value === "string" ? value.trim() : "";
+    const companion = isRecord(raw.companion) ? raw.companion : {};
+    if (companion.breedSource !== "member_companion_selection") return "";
+    const resolved = typeof companion.breedId === "string"
+        ? resolvePetBreedId(companion.breedId, "")
+        : "";
+    return resolved && isPetBreedId(resolved) ? resolved : "";
 }
 
 function petHasCompanionIdentity(pet?: PetProfile | null) {
     if (!pet) return false;
-    const raw = isRecord(pet.rawAnalysis) ? pet.rawAnalysis : {};
-    return Boolean(petBreedIdentity(pet) || isRecord(raw.companion));
+    return Boolean(resolvePetProfileBreedId(pet) || memberSelectedCompanionBreedId(pet));
 }
 
 function legacyBreedId(characterId: CompanionCharacterId) {
@@ -346,13 +346,21 @@ export function suggestCompanionTone(pet?: PetProfile | null): CompanionToneId {
 
 export function defaultCompanionSettings(ownerKey: string, pet?: PetProfile | null): PetCompanionSettings {
     const characterId = suggestCompanionCharacter(pet);
+    const profileBreedId = resolvePetProfileBreedId(pet);
+    const memberBreedId = memberSelectedCompanionBreedId(pet);
     return {
         version: 1,
         ownerKey,
         activePetName: pet?.name?.trim() || "몽이",
-        enabled: true,
-        breedId: petBreedIdentity(pet) || legacyBreedId(characterId),
-        breedSource: resolvePetProfileBreedId(pet) ? "profile" : undefined,
+        // Never silently depict an authenticated pet as the Poodle fallback.
+        // Until the profile has a canonical breed (or an explicit member
+        // selection), the settings launcher remains available but the walking
+        // character stays hidden.
+        enabled: !pet || Boolean(profileBreedId || memberBreedId),
+        breedId: profileBreedId || memberBreedId || legacyBreedId(characterId),
+        breedSource: profileBreedId
+            ? "profile"
+            : memberBreedId ? "member_companion_selection" : undefined,
         characterId,
         toneId: suggestCompanionTone(pet),
         accessoryId: "sky",
@@ -463,6 +471,7 @@ export function resolveCompanionSettings(user: User | null): PetCompanionSetting
     const activePet = localPet
         || user?.pets.find((pet) => companionSettingsFromPet(pet, ownerKey)?.enabled)
         || user?.pets.find(petHasCompanionIdentity)
+        || user?.pets[0]
         || null;
     return usableLocal
         || companionSettingsFromPet(activePet, ownerKey)

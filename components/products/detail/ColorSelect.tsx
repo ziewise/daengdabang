@@ -32,13 +32,13 @@ export default function ColorSelect({ colors, colorIdx, onColorChange, className
                         aria-label={c.name}
                         aria-current={i === colorIdx}
                         title={c.name}
-                        className={`relative h-9 w-9 overflow-hidden rounded-full transition ${
+                        className={`relative h-11 w-11 overflow-hidden rounded-full transition ${
                             i === colorIdx
                                 ? "ring-2 ring-indigo-600 ring-offset-2"
                                 : "ring-1 ring-neutral-300 hover:ring-indigo-300"
                         }`}
                     >
-                        <Image src={c.chip} alt={c.name} fill sizes="36px" className="object-cover" />
+                        <Image src={c.chip} alt={c.name} fill sizes="44px" className="object-cover" />
                     </button>
                 ))}
             </div>

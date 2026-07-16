@@ -41,7 +41,12 @@ export default function ProductDetailClient({ product }: Props) {
             </section>
 
             {tryOnOpen && (
-                <PetTryOnPreview product={product} onClose={() => setTryOnOpen(false)} />
+                <PetTryOnPreview
+                    product={product}
+                    colorIdx={colorIdx}
+                    onColorChange={setColorIdx}
+                    onClose={() => setTryOnOpen(false)}
+                />
             )}
             <ProductTabs product={product} />
             <RelatedProducts product={product} />

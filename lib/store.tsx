@@ -18,6 +18,11 @@ import type { AuthProvider } from "@/lib/types";
 
 // selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
 export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
+export type PetProfilePhotoView = {
+    viewId: "front" | "left" | "right" | "back";
+    dataUrl: string;
+    imageName: string;
+};
 export type PetProfile = {
     apiProfileId?: number;
     name: string;
@@ -35,6 +40,7 @@ export type PetProfile = {
     neutered?: "yes" | "no" | "unknown";
     lifeStage?: "puppy" | "adult" | "senior" | "unknown";
     photoDataUrl?: string;
+    photoViews?: PetProfilePhotoView[];
     photoServerVerified?: boolean;
     rawAnalysis?: Record<string, unknown>;
     lastAnalyzedAt?: string;
@@ -90,6 +96,27 @@ type Action =
 const STORAGE_KEY = "daengdabang.store.v2";
 const API_TOKEN_KEY = "ddb.api.accessToken";
 const INITIAL: State = { cart: [], wishlist: [], user: null, orders: [] };
+
+function stateForLocalStorage(snapshot: State): State {
+    if (!snapshot.user) return snapshot;
+    return {
+        ...snapshot,
+        user: {
+            ...snapshot.user,
+            // The bearer token already has one dedicated storage key. Do not
+            // duplicate it inside the broader storefront state snapshot.
+            apiAccessToken: undefined,
+            pets: snapshot.user.pets.map((pet) => {
+                const safePet = { ...pet };
+                delete safePet.photoDataUrl;
+                delete safePet.photoViews;
+                delete safePet.photoServerVerified;
+                delete safePet.rawAnalysis;
+                return safePet;
+            }),
+        },
+    };
+}
 
 function withoutMemberData(snapshot: State): State {
     return {
@@ -262,6 +289,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             const raw = window.localStorage.getItem(STORAGE_KEY);
             if (raw) {
                 const parsed = { ...INITIAL, ...JSON.parse(raw) };
+                if (parsed.user) {
+                    parsed.user.apiAccessToken = window.localStorage.getItem(API_TOKEN_KEY) || parsed.user.apiAccessToken;
+                }
                 // 선택 플래그 도입 전 저장분 보정 — 미지정(undefined)은 선택된 것으로
                 parsed.cart = (parsed.cart ?? []).map((line: CartLine) => ({ ...line, selected: line.selected !== false }));
                 dispatch({ type: "HYDRATE", state: parsed });
@@ -280,7 +310,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         if (!hydrated) return;
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stateForLocalStorage(state)));
+        } catch {
+            // The server remains the source of truth. A quota failure must not
+            // break the live member session or discard in-memory photos.
+        }
     }, [state, hydrated]);
 
     useEffect(() => {

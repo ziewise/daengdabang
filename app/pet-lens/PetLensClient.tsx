@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,14 +9,16 @@ import {
     mergePetLensAnalysisWithConfirmedProfile,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
-import { savePetProfileSmart } from "@/lib/customer-api";
+import { savePetProfilePhotosSmart } from "@/lib/customer-api";
 import {
     buildPetLensAnalysisImage,
     PETLENS_PHOTO_VIEWS,
     petLensPhotoViewCount,
     petLensPhotoViewMetadata,
+    persistPetLensPhotoViews,
     preparePetLensPhotoCapture,
     primaryPetLensPhotoEntry,
+    restorePetLensPhotoViews,
     type PetLensPhotoCaptures,
     type PetLensPhotoViewId,
 } from "@/lib/petlens-multiview";
@@ -46,32 +48,44 @@ export default function PetLensClient() {
     const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
+    const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>(user?.pets[0]?.apiProfileId);
+    const photoViewsRef = useRef<PetLensPhotoCaptures>({});
+    const photoCaptureInFlight = useRef(false);
+    const editingOwnerKeyRef = useRef(user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "");
+    const hydratedTargetRef = useRef(false);
 
     useEffect(() => {
-        const pet = user?.pets?.[0];
+        const ownerKey = user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "";
+        const ownerChanged = editingOwnerKeyRef.current !== ownerKey;
+        const pet = ownerChanged
+            ? user?.pets?.[0]
+            : user?.pets.find((candidate) => candidate.apiProfileId === editingPetProfileId)
+                || (!editingPetProfileId ? user?.pets?.[0] : undefined);
         if (!pet) return;
+        const resetTarget = ownerChanged || !hydratedTargetRef.current;
         const hydrateId = window.setTimeout(() => {
-            setName((current) => current || pet.name || "");
-            setAge((current) => current || pet.age || "");
-            setSize(pet.size || "medium");
-            setCoat(pet.coat || "medium");
-            setActivity(pet.activity || "normal");
-            if (pet.concerns?.length) setConcerns(pet.concerns);
-            if (hasVerifiedPetPhoto(pet)) {
-                setPhotoDataUrl((current) => current || pet.photoDataUrl);
-                setPhotoViews((current) => Object.keys(current).length
-                    ? current
-                    : {
-                        front: {
-                            dataUrl: pet.photoDataUrl!,
-                            imageName: "저장된 펫렌즈 사진",
-                            restored: true,
-                        },
-                    });
-            }
+            editingOwnerKeyRef.current = ownerKey;
+            hydratedTargetRef.current = true;
+            setEditingPetProfileId((current) => resetTarget ? pet.apiProfileId : current || pet.apiProfileId);
+            setName((current) => resetTarget ? pet.name || "" : current || pet.name || "");
+            setAge((current) => resetTarget ? pet.age || "" : current || pet.age || "");
+            setSize((current) => resetTarget ? pet.size || "medium" : current);
+            setCoat((current) => resetTarget ? pet.coat || "medium" : current);
+            setActivity((current) => resetTarget ? pet.activity || "normal" : current);
+            setConcerns((current) => resetTarget ? pet.concerns?.length ? pet.concerns : ["산책 안전"] : current);
+            const restored = hasVerifiedPetPhoto(pet)
+                ? restorePetLensPhotoViews(pet.photoViews, pet.photoDataUrl)
+                : {};
+            const primary = primaryPetLensPhotoEntry(restored)?.[1].dataUrl || pet.photoDataUrl;
+            setPhotoDataUrl((current) => resetTarget ? primary : current || primary);
+            setPhotoViews((current) => {
+                const next = resetTarget || !Object.keys(current).length ? restored : current;
+                photoViewsRef.current = next;
+                return next;
+            });
         }, 0);
         return () => window.clearTimeout(hydrateId);
-    }, [user]);
+    }, [editingPetProfileId, user]);
 
     const toggleConcern = (concern: string) => {
         setConcerns((current) =>
@@ -82,20 +96,23 @@ export default function PetLensClient() {
     };
 
     const handleFile = async (viewId: PetLensPhotoViewId, file?: File) => {
-        if (!file) return;
+        if (!file || photoCaptureInFlight.current) return;
+        photoCaptureInFlight.current = true;
         setPhotoLoading(true);
         setAnalysisError("");
         try {
             const capture = await preparePetLensPhotoCapture(file);
             const nextViews: PetLensPhotoCaptures = {
-                ...photoViews,
+                ...photoViewsRef.current,
                 [viewId]: capture,
             };
+            photoViewsRef.current = nextViews;
             setPhotoViews(nextViews);
             setPhotoDataUrl(primaryPetLensPhotoEntry(nextViews)?.[1].dataUrl || capture.dataUrl);
         } catch {
             setAnalysisError("사진을 불러오지 못했습니다. 다른 사진으로 다시 시도해 주세요.");
         } finally {
+            photoCaptureInFlight.current = false;
             setPhotoLoading(false);
         }
     };
@@ -111,6 +128,7 @@ export default function PetLensClient() {
             const analysisImage = await buildPetLensAnalysisImage(photoViews);
             if (!analysisImage) throw new Error("분석할 사진을 준비하지 못했습니다.");
             const photoViewMeta = petLensPhotoViewMetadata(photoViews);
+            const persistedPhotoViews = persistPetLensPhotoViews(photoViews);
             const primaryPhoto = primaryPetLensPhotoEntry(photoViews)?.[1];
             const analysis = await analyzePetLensSmart({
                 name,
@@ -123,37 +141,53 @@ export default function PetLensClient() {
                 photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
                 photoViews: photoViewMeta,
             }, analysisImage.file);
-            const confirmedPet = user?.pets.find((pet) => pet.name === analysis.profile.name);
+            const analyzedProfile = {
+                ...analysis.profile,
+                photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
+                photoViews: persistedPhotoViews,
+            };
+            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId);
             const profile = confirmedPet
-                ? mergePetLensAnalysisWithConfirmedProfile(analysis.profile, confirmedPet)
-                : analysis.profile;
+                ? mergePetLensAnalysisWithConfirmedProfile(analyzedProfile, confirmedPet)
+                : analyzedProfile;
             const canAutoSaveProfile = isPetLensAnalysisReadyForProfileSave(profile.rawAnalysis) && Boolean(profile.breed?.trim());
             const resultWithConfirmedProfile = {
                 ...analysis,
                 profile,
-                summary: canAutoSaveProfile
-                    ? analysis.summary
-                    : [
-                        ...analysis.summary,
-                        "분석 신뢰도가 충분하지 않아 회원 프로필과 산책 친구 캐릭터는 자동 변경하지 않았습니다. 견종을 직접 확인한 뒤 저장해 주세요.",
-                    ],
+                summary: [
+                    ...analysis.summary,
+                    canAutoSaveProfile
+                        ? "분석 후보를 준비했습니다. 견종·체형 변경은 보호자가 확인한 뒤에만 프로필에 반영됩니다."
+                        : "분석 신뢰도가 충분하지 않아 회원 프로필과 산책 친구 캐릭터는 자동 변경하지 않았습니다. 견종을 직접 확인한 뒤 저장해 주세요.",
+                ],
             };
             setResult(resultWithConfirmedProfile);
-            if (user && canAutoSaveProfile) {
+            if (user && confirmedPet?.apiProfileId) {
                 try {
-                    const saved = await savePetProfileSmart(profile, user.apiAccessToken);
+                    const profileToSave = {
+                        ...confirmedPet!,
+                        photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
+                        photoViews: persistedPhotoViews,
+                    };
+                    const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
                     if (!saved) throw new Error("profile_save_unavailable");
                     upsertPet({
-                        ...profile,
+                        ...profileToSave,
                         apiProfileId: saved.id,
                         photoDataUrl: saved.photoDataUrl || undefined,
+                        photoViews: saved.photoViews || undefined,
                         photoServerVerified: Boolean(saved.photoDataUrl),
                     });
                 } catch {
-                    setAnalysisError("분석은 완료됐지만 회원 프로필 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+                    setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
                 }
             } else {
-                savePetLensSignupDraft(profile);
+                const draftSaved = savePetLensSignupDraft(profile);
+                if (user) {
+                    setAnalysisError("새 반려견의 견종을 먼저 확인해 주세요. 사진은 이 화면에 유지되며 아직 회원 프로필에는 저장하지 않았습니다.");
+                } else if (!draftSaved) {
+                    setAnalysisError("브라우저 저장 공간이 부족해 사진 임시 저장을 완료하지 못했습니다. 회원가입 화면에서 사진을 다시 등록해 주세요.");
+                }
             }
         } catch (error) {
             setResult(null);
@@ -198,6 +232,7 @@ export default function PetLensClient() {
                                                 accept="image/*"
                                                 capture="environment"
                                                 data-petlens-mobile-camera-capture
+                                                disabled={photoLoading || loading}
                                                 className="absolute inset-0 cursor-pointer opacity-0"
                                                 onChange={(event) => {
                                                     void handleFile(view.id, event.target.files?.[0]);
@@ -274,7 +309,7 @@ export default function PetLensClient() {
                         </div>
                     </div>
 
-                    <button type="submit" disabled={loading} className="btn btn-primary w-full disabled:opacity-50">
+                    <button type="submit" disabled={loading || photoLoading} className="btn btn-primary w-full disabled:opacity-50">
                         <i className="fa-solid fa-wand-magic-sparkles text-xs" />
                         {loading ? "분석 중" : "추천 받기"}
                     </button>

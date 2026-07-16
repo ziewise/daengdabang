@@ -61,6 +61,7 @@ type ApiPetProfile = {
     neutered?: PetProfile["neutered"] | null;
     lifeStage?: PetProfile["lifeStage"] | null;
     photoDataUrl?: string | null;
+    photoViews?: PetProfile["photoViews"] | null;
     rawAnalysis?: Record<string, unknown> | null;
     source?: string;
     lastAnalyzedAt?: string | null;
@@ -209,9 +210,29 @@ export async function savePetProfileSmart(pet: PetProfile, token?: string) {
             neutered: pet.neutered ?? "unknown",
             lifeStage: pet.lifeStage ?? "unknown",
             photoDataUrl: pet.photoDataUrl,
+            photoViews: pet.photoViews,
             rawAnalysis: pet.rawAnalysis,
             source: "storefront",
             lastAnalyzedAt: pet.lastAnalyzedAt,
+        }),
+    }, token);
+}
+
+export async function savePetProfilePhotosSmart(pet: PetProfile, token?: string) {
+    const profileId = Number.isInteger(pet.apiProfileId) && Number(pet.apiProfileId) > 0
+        ? Number(pet.apiProfileId)
+        : undefined;
+    if (!profileId || !pet.photoViews?.length) {
+        throw new DdbApiError("A verified pet profile and directional photos are required.", {
+            code: "http_error",
+            status: 400,
+        });
+    }
+    return apiJson<ApiPetProfile>(`/api/v1/pet-profiles/${profileId}/photos`, {
+        method: "PATCH",
+        body: JSON.stringify({
+            photoDataUrl: pet.photoDataUrl,
+            photoViews: pet.photoViews,
         }),
     }, token);
 }
@@ -238,6 +259,7 @@ export async function loadPetProfilesSmart(token?: string): Promise<PetProfile[]
         neutered: row.neutered || "unknown",
         lifeStage: row.lifeStage || "unknown",
         photoDataUrl: row.photoDataUrl || undefined,
+        photoViews: row.photoViews || undefined,
         photoServerVerified: Boolean(row.photoDataUrl),
         rawAnalysis: row.rawAnalysis || undefined,
         lastAnalyzedAt: row.lastAnalyzedAt || row.updatedAt,

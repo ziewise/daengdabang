@@ -1650,13 +1650,11 @@ export default function PetCompanionLayer({
         const updatedPet = withCompanionSettings(pet, next);
         upsertPet(updatedPet);
         try {
-            const saved = await savePetProfileSmart(
-                {
-                    ...updatedPet,
-                    photoDataUrl: updatedPet.photoServerVerified ? updatedPet.photoDataUrl : undefined,
-                },
-                state.user?.apiAccessToken,
-            );
+            const updatedPetForProfile = {
+                ...updatedPet,
+                photoDataUrl: updatedPet.photoServerVerified ? updatedPet.photoDataUrl : undefined,
+            };
+            const saved = await savePetProfileSmart(updatedPetForProfile, state.user?.apiAccessToken);
             setSaveStatus(saved ? "회원 반려견 설정으로 저장했어요." : "이 기기에 저장했어요.");
         } catch {
             setSaveStatus("지금은 이 기기에 안전하게 저장했어요.");

@@ -5,9 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import type { PetTryOnProgressStage } from "@/lib/pet-tryon";
+import { petTryOnReferencePhoto } from "@/lib/pet-tryon";
 import { usePetTryOnTask } from "@/lib/pet-tryon-background";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
+import ColorSelect from "./ColorSelect";
 
 const WEARABLE_SUBCATEGORIES = new Set(["wear", "harness", "goggles", "leash"]);
 
@@ -49,9 +51,13 @@ const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "fi
 
 export default function PetTryOnPreview({
     product,
+    colorIdx,
+    onColorChange,
     onClose,
 }: {
     product: CatalogProduct;
+    colorIdx: number | null;
+    onColorChange: (index: number) => void;
     onClose: () => void;
 }) {
     const { user } = useAuth();
@@ -64,7 +70,12 @@ export default function PetTryOnPreview({
         requestCompletionNotification,
         setPanelOpen,
     } = usePetTryOnTask();
-    const eligible = canTryOn(product);
+    const selectedColor = colorIdx == null ? undefined : product.colors?.[colorIdx];
+    const tryOnProduct = useMemo(
+        () => selectedColor?.image ? { ...product, image: selectedColor.image } : product,
+        [product, selectedColor],
+    );
+    const eligible = canTryOn(tryOnProduct);
     const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
     const [error, setError] = useState("");
@@ -72,7 +83,13 @@ export default function PetTryOnPreview({
     const started = useRef(false);
 
     const pet = pets[selected] ?? pets[0];
-    const currentTask = pet?.apiProfileId && isTaskFor(product.id, pet.apiProfileId) ? task : null;
+    const petReferenceImage = pet ? petTryOnReferencePhoto(tryOnProduct, pet) : undefined;
+    const currentTask = pet?.apiProfileId && isTaskFor(
+        product.id,
+        pet.apiProfileId,
+        tryOnProduct.image,
+        petReferenceImage,
+    ) ? task : null;
     const result = currentTask?.result ?? null;
     const loading = Boolean(currentTask?.submitting || result?.status === "queued" || result?.status === "running");
     const progress = result?.progressPercent ?? (currentTask?.submitting ? 4 : 0);
@@ -98,9 +115,18 @@ export default function PetTryOnPreview({
     const waitTip = waitTips[Math.floor(elapsed / 15) % waitTips.length];
 
     const generate = useCallback(async () => {
-        if (!eligible || !pet || !product.image) return;
+        if (!eligible || !pet || !tryOnProduct.image) return;
         setError("");
-        const outcome = await start(product, pet);
+        if (
+            tryOnProduct.subcategory !== "goggles"
+            && !petReferenceImage
+        ) {
+            setError(locale === "en"
+                ? "Add a left or right full-body photo first. Clothing Smart Fit uses a side view, not the front photo."
+                : "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.");
+            return;
+        }
+        const outcome = await start(tryOnProduct, pet);
         if (outcome === "blocked") {
             setError(locale === "en"
                 ? "Another fitting is already in progress. Check the floating Smart Fit status first."
@@ -111,7 +137,7 @@ export default function PetTryOnPreview({
                 ? "We couldn't start a reliable fitting. Please try again shortly."
                 : "입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.");
         }
-    }, [eligible, locale, pet, product, setPanelOpen, start]);
+    }, [eligible, locale, pet, petReferenceImage, setPanelOpen, start, tryOnProduct]);
 
     // 모달은 가격 옆 버튼을 눌렀을 때만 마운트된다. 첫 마운트에서 한 번만 실제 생성을 시작한다.
     useEffect(() => {
@@ -232,7 +258,7 @@ export default function PetTryOnPreview({
                     <div className="grid max-h-[calc(100dvh-150px)] overflow-y-auto lg:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.65fr)]">
                         <div className="relative min-h-[360px] bg-neutral-100 sm:min-h-[520px]">
                             <Image
-                                src={resultImage || pet.photoDataUrl!}
+                                src={resultImage || petReferenceImage || pet.photoDataUrl!}
                                 alt={
                                     resultImage
                                         ? `${pet.name || "우리 아이"} ${displayName} 착용 결과`
@@ -362,6 +388,33 @@ export default function PetTryOnPreview({
                                     ))}
                                 </select>
                             </label>
+
+                            {Boolean(product.colors?.length) && (
+                                <div className="mt-5">
+                                    <div className="mb-2 flex items-center justify-between gap-3">
+                                        <span className="text-xs font-black text-neutral-500">
+                                            {locale === "en" ? "Fitting color" : "입혀볼 색상"}
+                                        </span>
+                                        <span className="truncate text-xs font-black text-indigo-700">
+                                            {selectedColor?.name || (locale === "en" ? "Main color" : "대표 색상")}
+                                        </span>
+                                    </div>
+                                    <ColorSelect
+                                        colors={product.colors || []}
+                                        colorIdx={colorIdx}
+                                        onColorChange={loading ? undefined : (index) => {
+                                            setError("");
+                                            onColorChange(index);
+                                        }}
+                                        className={loading ? "pointer-events-none opacity-60" : ""}
+                                    />
+                                    <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-500">
+                                        {locale === "en"
+                                            ? "Choose a color, then start fitting. Each color creates a separate preview."
+                                            : "색상을 고른 뒤 입혀보기를 눌러 주세요. 색상마다 별도 결과로 만들어집니다."}
+                                    </p>
+                                </div>
+                            )}
 
                             <div className="mt-5 rounded-lg border border-indigo-100 bg-indigo-50/70 p-4">
                                 <p className="text-sm font-black text-indigo-950">
