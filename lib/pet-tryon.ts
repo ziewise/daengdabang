@@ -4,6 +4,13 @@ import type { PetProfile } from "@/lib/store";
 
 export type PetTryOnStage = "queued" | "running" | "ready" | "failed";
 export type PetTryOnProgressStage = "queued" | "preparing" | "generating" | "finalizing" | "ready" | "failed";
+export type PetTryOnCorrectionIssue =
+    | "rear_leg"
+    | "back_length"
+    | "belly_line"
+    | "front_sleeve"
+    | "neckline"
+    | "pattern";
 
 export type PetTryOnResult = {
     status: PetTryOnStage;
@@ -21,6 +28,15 @@ export type PetTryOnResult = {
         checks: string[];
     };
     message: string;
+};
+
+export type PetTryOnColorPreview = {
+    imageDataUrl: string;
+    sourceJobId: string;
+    productImage: string;
+    mode: "approximate_color_only";
+    confidence: number;
+    notice: string;
 };
 
 type RequestOptions = {
@@ -124,6 +140,7 @@ export async function startPetTryOn(
     product: CatalogProduct,
     pet: PetProfile,
     signal?: AbortSignal,
+    correctionIssues: PetTryOnCorrectionIssue[] = [],
 ): Promise<PetTryOnResult | null> {
     if (!product.image || !petTryOnReferencePhoto(product, pet) || !pet.apiProfileId) return null;
     const base = apiBase().replace(/\/$/, "");
@@ -140,6 +157,7 @@ export async function startPetTryOn(
                 product_name: product.name,
                 product_image: product.image,
                 subcategory: product.subcategory,
+                ...(correctionIssues.length > 0 ? { correction_issues: correctionIssues } : {}),
             }),
         }, signal, START_REQUEST_TIMEOUT_MS);
         if (!response.ok) return null;
@@ -163,6 +181,43 @@ export async function getPetTryOnJob(jobId: string, signal?: AbortSignal): Promi
         );
         if (!response.ok) return null;
         return parseResult(await response.json());
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return null;
+        return null;
+    }
+}
+
+export async function requestPetTryOnColorPreview(
+    sourceJobId: string,
+    productImage: string,
+    signal?: AbortSignal,
+): Promise<PetTryOnColorPreview | null> {
+    const base = apiBase().replace(/\/$/, "");
+    const headers = authHeaders();
+    if (!base || !headers || !sourceJobId || !productImage) return null;
+    try {
+        const response = await fetchWithTimeout(
+            `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(sourceJobId)}/color-preview`,
+            {
+                method: "POST",
+                headers,
+                body: JSON.stringify({ product_image: productImage }),
+            },
+            signal,
+            STATUS_REQUEST_TIMEOUT_MS,
+        );
+        if (!response.ok) return null;
+        const data = await response.json() as Record<string, unknown>;
+        const imageDataUrl = typeof data.image_data_url === "string" ? data.image_data_url : "";
+        if (!imageDataUrl) return null;
+        return {
+            imageDataUrl,
+            sourceJobId: String(data.source_job_id || sourceJobId),
+            productImage: String(data.product_image || productImage),
+            mode: "approximate_color_only",
+            confidence: Math.max(0, Math.min(1, Number(data.confidence ?? 0))),
+            notice: String(data.notice || ""),
+        };
     } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return null;
         return null;

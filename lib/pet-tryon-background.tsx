@@ -21,6 +21,7 @@ import {
     getPetTryOnJob,
     petTryOnReferencePhoto,
     startPetTryOn,
+    type PetTryOnCorrectionIssue,
     type PetTryOnProgressStage,
     type PetTryOnResult,
 } from "@/lib/pet-tryon";
@@ -41,6 +42,7 @@ export type BackgroundPetTryOnTask = {
     productHref: string;
     petProfileId: number;
     petReferenceKey: string;
+    correctionIssues?: PetTryOnCorrectionIssue[];
     petName: string;
     petImage?: string;
     startedAt: number;
@@ -55,7 +57,11 @@ type PetTryOnTaskContextValue = {
     task: BackgroundPetTryOnTask | null;
     panelOpen: boolean;
     notificationEnabled: boolean;
-    start: (product: CatalogProduct, pet: PetProfile) => Promise<StartOutcome>;
+    start: (
+        product: CatalogProduct,
+        pet: PetProfile,
+        correctionIssues?: PetTryOnCorrectionIssue[],
+    ) => Promise<StartOutcome>;
     isTaskFor: (
         productId: string,
         petProfileId?: number,
@@ -69,8 +75,15 @@ type PetTryOnTaskContextValue = {
 
 const PetTryOnTaskContext = createContext<PetTryOnTaskContextValue | null>(null);
 
-function taskKey(productId: string, petProfileId: number, productImage: string, petReferenceImage: string) {
-    return `${productId}:${petProfileId}:${identityFingerprint(productImage)}:${identityFingerprint(petReferenceImage)}`;
+function taskKey(
+    productId: string,
+    petProfileId: number,
+    productImage: string,
+    petReferenceImage: string,
+    correctionIssues: PetTryOnCorrectionIssue[] = [],
+) {
+    const correctionKey = [...correctionIssues].sort().join(",") || "standard";
+    return `${productId}:${petProfileId}:${identityFingerprint(productImage)}:${identityFingerprint(petReferenceImage)}:${correctionKey}`;
 }
 
 function identityFingerprint(value: string) {
@@ -392,13 +405,17 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         monitorRef.current = monitor;
     }, [monitor]);
 
-    const start = useCallback(async (product: CatalogProduct, pet: PetProfile): Promise<StartOutcome> => {
+    const start = useCallback(async (
+        product: CatalogProduct,
+        pet: PetProfile,
+        correctionIssues: PetTryOnCorrectionIssue[] = [],
+    ): Promise<StartOutcome> => {
         const petReferenceImage = petTryOnReferencePhoto(product, pet);
         if (!accountKey || !product.image || !pet.apiProfileId || !petReferenceImage) return "failed";
         const ownerKey = taskOwnerKey(userRef.current, pet.apiProfileId);
         if (!ownerKey) return "failed";
         const petReferenceKey = identityFingerprint(petReferenceImage);
-        const key = taskKey(product.id, pet.apiProfileId, product.image, petReferenceImage);
+        const key = taskKey(product.id, pet.apiProfileId, product.image, petReferenceImage, correctionIssues);
         if (taskRef.current && taskRef.current.accountKey !== accountKey) {
             clearTaskForAccountChange();
         }
@@ -417,6 +434,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             productHref: storefrontProductHref(product),
             petProfileId: pet.apiProfileId,
             petReferenceKey,
+            correctionIssues,
             petName: pet.name || "우리 아이",
             petImage: petReferenceImage,
             startedAt: Date.now(),
@@ -429,7 +447,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         submitAbort.current?.abort();
         const submitController = new AbortController();
         submitAbort.current = submitController;
-        const first = await startPetTryOn(product, pet, submitController.signal);
+        const first = await startPetTryOn(product, pet, submitController.signal, correctionIssues);
         if (submitAbort.current === submitController) submitAbort.current = null;
         if (
             submitController.signal.aborted

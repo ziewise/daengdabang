@@ -4,8 +4,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
-import type { PetTryOnProgressStage } from "@/lib/pet-tryon";
-import { petTryOnReferencePhoto } from "@/lib/pet-tryon";
+import {
+    getPetTryOnJob,
+    petTryOnReferencePhoto,
+    requestPetTryOnColorPreview,
+    type PetTryOnColorPreview,
+    type PetTryOnCorrectionIssue,
+    type PetTryOnProgressStage,
+} from "@/lib/pet-tryon";
 import { usePetTryOnTask } from "@/lib/pet-tryon-background";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
@@ -48,6 +54,41 @@ function formatElapsed(seconds: number) {
 }
 
 const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
+const FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.v1";
+const CORRECTION_OPTIONS: Array<{ value: PetTryOnCorrectionIssue; ko: string; en: string }> = [
+    { value: "back_length", ko: "등길이", en: "Back length" },
+    { value: "belly_line", ko: "배 부분", en: "Belly line" },
+    { value: "front_sleeve", ko: "앞소매", en: "Front sleeves" },
+    { value: "rear_leg", ko: "뒷다리", en: "Rear legs" },
+    { value: "neckline", ko: "목 부분", en: "Neckline" },
+    { value: "pattern", ko: "색상·무늬", en: "Color / pattern" },
+];
+
+type ReadyFit = {
+    jobId: string;
+    productImage: string;
+    imageDataUrl: string;
+};
+
+function preciseCacheKey(petProfileId: number, productId: string, productImage: string) {
+    return `${petProfileId}:${productId}:${productImage}`;
+}
+
+function fastPreviewCacheKey(sourceJobId: string, productImage: string) {
+    return `${sourceJobId}:${productImage}`;
+}
+
+function referenceFingerprint(value: string) {
+    let hash = 0x811c9dc5;
+    for (let index = 0; index < value.length; index += 1) {
+        hash = Math.imul(hash ^ value.charCodeAt(index), 0x01000193);
+    }
+    return (hash >>> 0).toString(36);
+}
+
+function fitMasterStorageKey(petProfileId: number, productId: string, petReferenceImage: string) {
+    return `${FIT_MASTER_STORAGE_PREFIX}:${petProfileId}:${productId}:${referenceFingerprint(petReferenceImage)}`;
+}
 
 export default function PetTryOnPreview({
     product,
@@ -70,21 +111,37 @@ export default function PetTryOnPreview({
         requestCompletionNotification,
         setPanelOpen,
     } = usePetTryOnTask();
+    const hasColorVariants = Boolean(product.colors?.length);
     const selectedColor = colorIdx == null ? undefined : product.colors?.[colorIdx];
+    const explicitColorRequired = hasColorVariants && !selectedColor?.image;
     const tryOnProduct = useMemo(
         () => selectedColor?.image ? { ...product, image: selectedColor.image } : product,
         [product, selectedColor],
     );
+    const fastColorSupported = tryOnProduct.subcategory === "wear";
     const eligible = canTryOn(tryOnProduct);
     const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
     const [error, setError] = useState("");
     const [now, setNow] = useState(0);
+    const [preciseFits, setPreciseFits] = useState<Record<string, ReadyFit>>({});
+    const [fastPreviews, setFastPreviews] = useState<Record<string, PetTryOnColorPreview>>({});
+    const [fastPreviewLoadingKey, setFastPreviewLoadingKey] = useState("");
+    const [fastPreviewUnavailableKey, setFastPreviewUnavailableKey] = useState("");
+    const [mismatchOpen, setMismatchOpen] = useState(false);
+    const [correctionIssues, setCorrectionIssues] = useState<PetTryOnCorrectionIssue[]>([]);
+    const [fitMasterRestorePending, setFitMasterRestorePending] = useState(true);
     const started = useRef(false);
 
     const pet = pets[selected] ?? pets[0];
     const petReferenceImage = pet ? petTryOnReferencePhoto(tryOnProduct, pet) : undefined;
-    const currentTask = pet?.apiProfileId && isTaskFor(
+    const sameProductTask = pet?.apiProfileId && isTaskFor(
+        product.id,
+        pet.apiProfileId,
+        undefined,
+        petReferenceImage,
+    ) ? task : null;
+    const currentTask = !explicitColorRequired && pet?.apiProfileId && isTaskFor(
         product.id,
         pet.apiProfileId,
         tryOnProduct.image,
@@ -95,7 +152,48 @@ export default function PetTryOnPreview({
     const progress = result?.progressPercent ?? (currentTask?.submitting ? 4 : 0);
     const stage: PetTryOnProgressStage = result?.progressStage ?? "queued";
     const elapsed = currentTask ? Math.max(0, Math.floor((now - currentTask.startedAt) / 1000)) : 0;
-    const resultImage = result?.status === "ready" ? result.imageDataUrl : undefined;
+    const liveReadyFit = useMemo<ReadyFit | null>(() => (
+        sameProductTask?.result?.status === "ready" && sameProductTask.result.imageDataUrl
+            ? {
+                jobId: sameProductTask.result.jobId,
+                productImage: sameProductTask.productImage,
+                imageDataUrl: sameProductTask.result.imageDataUrl,
+            }
+            : null
+    ), [sameProductTask]);
+    const selectedPreciseKey = pet?.apiProfileId && tryOnProduct.image
+        ? preciseCacheKey(pet.apiProfileId, product.id, tryOnProduct.image)
+        : "";
+    const cachedSelectedFit = selectedPreciseKey ? preciseFits[selectedPreciseKey] : undefined;
+    const selectedPreciseFit = liveReadyFit?.productImage === tryOnProduct.image
+        ? liveReadyFit
+        : cachedSelectedFit;
+    const cachedSourceFit = pet?.apiProfileId
+        ? Object.entries(preciseFits).find(([key]) => key.startsWith(`${pet.apiProfileId}:${product.id}:`))?.[1]
+        : undefined;
+    const sourceFit = liveReadyFit || cachedSourceFit;
+    const selectedFastKey = sourceFit && tryOnProduct.image
+        ? fastPreviewCacheKey(sourceFit.jobId, tryOnProduct.image)
+        : "";
+    const selectedFastPreview = selectedFastKey ? fastPreviews[selectedFastKey] : undefined;
+    const isFastPreview = Boolean(!selectedPreciseFit && selectedFastPreview);
+    const isFastPreviewLoading = Boolean(
+        selectedFastKey
+        && fastPreviewLoadingKey === selectedFastKey
+        && !selectedFastPreview,
+    );
+    const showingSourceWhilePreparing = Boolean(
+        !explicitColorRequired
+        && !selectedPreciseFit
+        && !selectedFastPreview
+        && isFastPreviewLoading
+        && sourceFit
+        && sourceFit.productImage !== tryOnProduct.image
+        && fastPreviewUnavailableKey !== selectedFastKey
+    );
+    const resultImage = selectedPreciseFit?.imageDataUrl
+        || selectedFastPreview?.imageDataUrl
+        || (showingSourceWhilePreparing ? sourceFit?.imageDataUrl : undefined);
     const displayName = productName(product);
     const progressStageIndex = stage === "queued" ? -1 : PROGRESS_STAGES.indexOf(stage);
     const progressStageLabels = locale === "en"
@@ -114,9 +212,140 @@ export default function PetTryOnPreview({
         ];
     const waitTip = waitTips[Math.floor(elapsed / 15) % waitTips.length];
 
-    const generate = useCallback(async () => {
+    useEffect(() => {
+        if (!pet?.apiProfileId || !liveReadyFit) return;
+        const key = preciseCacheKey(pet.apiProfileId, product.id, liveReadyFit.productImage);
+        setPreciseFits((previous) => {
+            const existing = previous[key];
+            if (existing?.jobId === liveReadyFit.jobId && existing.imageDataUrl === liveReadyFit.imageDataUrl) {
+                return previous;
+            }
+            return { ...previous, [key]: liveReadyFit };
+        });
+        if (petReferenceImage) {
+            try {
+                window.sessionStorage.setItem(
+                    fitMasterStorageKey(pet.apiProfileId, product.id, petReferenceImage),
+                    JSON.stringify({
+                        jobId: liveReadyFit.jobId,
+                        productImage: liveReadyFit.productImage,
+                    }),
+                );
+            } catch {
+                // The live result remains available even when session storage is disabled.
+            }
+        }
+    }, [liveReadyFit, pet?.apiProfileId, petReferenceImage, product.id]);
+
+    useEffect(() => {
+        setFitMasterRestorePending(true);
+        if (!pet?.apiProfileId || !petReferenceImage || liveReadyFit) {
+            setFitMasterRestorePending(false);
+            return;
+        }
+        const storageKey = fitMasterStorageKey(pet.apiProfileId, product.id, petReferenceImage);
+        let saved: { jobId?: string; productImage?: string } | null = null;
+        try {
+            saved = JSON.parse(window.sessionStorage.getItem(storageKey) || "null") as {
+                jobId?: string;
+                productImage?: string;
+            } | null;
+        } catch {
+            setFitMasterRestorePending(false);
+            return;
+        }
+        if (!saved?.jobId || !saved.productImage) {
+            setFitMasterRestorePending(false);
+            return;
+        }
+        const approvedImages = new Set([
+            product.image,
+            ...(product.colors || []).map((color) => color.image),
+        ].filter(Boolean));
+        if (!approvedImages.has(saved.productImage)) {
+            window.sessionStorage.removeItem(storageKey);
+            setFitMasterRestorePending(false);
+            return;
+        }
+        const controller = new AbortController();
+        let active = true;
+        void getPetTryOnJob(saved.jobId, controller.signal).then((restored) => {
+            if (!active || controller.signal.aborted) return;
+            if (restored?.status !== "ready" || !restored.imageDataUrl) {
+                window.sessionStorage.removeItem(storageKey);
+                return;
+            }
+            const restoredFit: ReadyFit = {
+                jobId: restored.jobId,
+                productImage: saved!.productImage!,
+                imageDataUrl: restored.imageDataUrl,
+            };
+            setPreciseFits((previous) => ({
+                ...previous,
+                [preciseCacheKey(pet.apiProfileId!, product.id, restoredFit.productImage)]: restoredFit,
+            }));
+        }).finally(() => {
+            if (active) setFitMasterRestorePending(false);
+        });
+        return () => {
+            active = false;
+            controller.abort();
+        };
+    }, [liveReadyFit, pet?.apiProfileId, petReferenceImage, product.id]);
+
+    useEffect(() => {
+        if (
+            explicitColorRequired
+            || !fastColorSupported
+            || !sourceFit
+            || !tryOnProduct.image
+            || sourceFit.productImage === tryOnProduct.image
+            || selectedPreciseFit
+            || !selectedFastKey
+            || fastPreviews[selectedFastKey]
+        ) return;
+
+        const controller = new AbortController();
+        let active = true;
+        setFastPreviewLoadingKey(selectedFastKey);
+        setFastPreviewUnavailableKey((key) => key === selectedFastKey ? "" : key);
+        void requestPetTryOnColorPreview(sourceFit.jobId, tryOnProduct.image, controller.signal)
+            .then((preview) => {
+                if (!active || controller.signal.aborted) return;
+                if (!preview) {
+                    setFastPreviewUnavailableKey(selectedFastKey);
+                    return;
+                }
+                setFastPreviews((previous) => ({ ...previous, [selectedFastKey]: preview }));
+                setFastPreviewUnavailableKey("");
+            })
+            .finally(() => {
+                if (!active) return;
+                setFastPreviewLoadingKey((key) => key === selectedFastKey ? "" : key);
+            });
+        return () => {
+            active = false;
+            controller.abort();
+        };
+    }, [
+        explicitColorRequired,
+        fastColorSupported,
+        fastPreviews,
+        selectedFastKey,
+        selectedPreciseFit,
+        sourceFit,
+        tryOnProduct.image,
+    ]);
+
+    const generate = useCallback(async (applyCorrections = false) => {
         if (!eligible || !pet || !tryOnProduct.image) return;
         setError("");
+        if (explicitColorRequired) {
+            setError(locale === "en"
+                ? "Choose the exact product color first. Smart Fit never guesses a color from the main image."
+                : "먼저 실제 상품 색상을 선택해 주세요. 대표 이미지만 보고 색상을 임의로 정하지 않아요.");
+            return;
+        }
         if (
             tryOnProduct.subcategory !== "goggles"
             && !petReferenceImage
@@ -126,7 +355,15 @@ export default function PetTryOnPreview({
                 : "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.");
             return;
         }
-        const outcome = await start(tryOnProduct, pet);
+        if (liveReadyFit && pet.apiProfileId) {
+            const key = preciseCacheKey(pet.apiProfileId, product.id, liveReadyFit.productImage);
+            setPreciseFits((previous) => ({ ...previous, [key]: liveReadyFit }));
+        }
+        const outcome = await start(
+            tryOnProduct,
+            pet,
+            applyCorrections ? correctionIssues : [],
+        );
         if (outcome === "blocked") {
             setError(locale === "en"
                 ? "Another fitting is already in progress. Check the floating Smart Fit status first."
@@ -137,14 +374,29 @@ export default function PetTryOnPreview({
                 ? "We couldn't start a reliable fitting. Please try again shortly."
                 : "입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.");
         }
-    }, [eligible, locale, pet, petReferenceImage, setPanelOpen, start, tryOnProduct]);
+    }, [
+        correctionIssues,
+        eligible,
+        explicitColorRequired,
+        liveReadyFit,
+        locale,
+        pet,
+        petReferenceImage,
+        product.id,
+        setPanelOpen,
+        start,
+        tryOnProduct,
+    ]);
 
     // 모달은 가격 옆 버튼을 눌렀을 때만 마운트된다. 첫 마운트에서 한 번만 실제 생성을 시작한다.
     useEffect(() => {
-        if (started.current || !pet) return;
+        if (started.current || !pet || fitMasterRestorePending) return;
         started.current = true;
-        void generate();
-    }, [generate, pet]);
+        // 색상 상품은 사용자가 고른 실제 변형만 생성한다. 기존 완성본이 있으면
+        // 색상 변경 효과가 AI 0회 빠른 비교를 준비하므로 새 생성을 자동 시작하지 않는다.
+        if (explicitColorRequired || sourceFit) return;
+        void generate(false);
+    }, [explicitColorRequired, fitMasterRestorePending, generate, pet, sourceFit]);
 
     useEffect(() => {
         if (!loading) return;
@@ -363,9 +615,22 @@ export default function PetTryOnPreview({
                             )}
 
                             {resultImage && !loading && (
-                                <div className="absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-2 text-xs font-black text-emerald-700 shadow-lg backdrop-blur">
-                                    <i className="fa-solid fa-circle-check mr-1.5" />
-                                    {locale === "en" ? "Fitting complete" : "입혀보기 완료"}
+                                <div className={`absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-2 text-xs font-black shadow-lg backdrop-blur ${
+                                    isFastPreview || showingSourceWhilePreparing ? "text-indigo-700" : "text-emerald-700"
+                                }`}>
+                                    <i className={`fa-solid mr-1.5 ${isFastPreview || showingSourceWhilePreparing ? "fa-palette" : "fa-circle-check"}`} />
+                                    {isFastPreview
+                                        ? locale === "en" ? "0 AI uses · quick color preview" : "AI 사용 0회 · 빠른 색상 비교"
+                                        : showingSourceWhilePreparing
+                                            ? locale === "en" ? "Preparing quick color preview" : "빠른 색상 비교 준비 중"
+                                            : locale === "en" ? "Precise fitting complete" : "정밀 입혀보기 완료"}
+                                </div>
+                            )}
+
+                            {isFastPreviewLoading && (
+                                <div className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-2 text-xs font-black text-indigo-700 shadow-lg backdrop-blur">
+                                    <i className="fa-solid fa-spinner fa-spin mr-1.5" />
+                                    {locale === "en" ? "Changing color without AI" : "AI 없이 색상만 바꾸는 중"}
                                 </div>
                             )}
                         </div>
@@ -409,10 +674,74 @@ export default function PetTryOnPreview({
                                         className={loading ? "pointer-events-none opacity-60" : ""}
                                     />
                                     <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-500">
-                                        {locale === "en"
-                                            ? "Choose a color, then start fitting. Each color creates a separate preview."
-                                            : "색상을 고른 뒤 입혀보기를 눌러 주세요. 색상마다 별도 결과로 만들어집니다."}
+                                        {explicitColorRequired
+                                            ? locale === "en"
+                                                ? "Choose an exact color first. We do not guess from the main product image."
+                                                : "먼저 실제 상품 색상을 골라 주세요. 대표 이미지만 보고 색상을 임의로 정하지 않아요."
+                                            : sourceFit && fastColorSupported
+                                                ? locale === "en"
+                                                    ? "Other colors are shown first as a zero-AI quick comparison. Precise generation only starts when you request it."
+                                                    : "다른 색상은 먼저 AI 사용 0회로 빠르게 비교해요. 정밀 생성은 요청할 때만 시작합니다."
+                                                : sourceFit
+                                                    ? locale === "en"
+                                                        ? "This product type needs a precise check for each color to protect your dog's photo."
+                                                        : "이 상품 종류는 강아지 사진을 안전하게 지키기 위해 색상마다 정밀 확인이 필요해요."
+                                                : locale === "en"
+                                                    ? "The first precise fitting uses the exact color you selected."
+                                                    : "처음 정밀 입혀보기에는 지금 고른 실제 색상 사진을 사용해요."}
                                     </p>
+                                </div>
+                            )}
+
+                            {isFastPreview && (
+                                <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-indigo-100 bg-white">
+                                            <Image
+                                                src={tryOnProduct.image!}
+                                                alt={selectedColor?.name || displayName}
+                                                fill
+                                                sizes="56px"
+                                                className="object-contain"
+                                            />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="flex flex-wrap gap-1.5">
+                                                <span className="rounded-full bg-indigo-700 px-2 py-1 text-[10px] font-black text-white">
+                                                    {locale === "en" ? "0 AI uses" : "AI 사용 0회"}
+                                                </span>
+                                                <span className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
+                                                    {locale === "en" ? "Color comparison" : "색감 비교용"}
+                                                </span>
+                                            </div>
+                                            <p className="mt-2 text-xs font-black leading-5 text-indigo-950">
+                                                {locale === "en"
+                                                    ? "The pose and garment shape stay fixed; only the color is compared quickly."
+                                                    : "처음 결과의 자세와 옷 모양은 그대로 두고 색감만 빠르게 비교했어요."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <p className="mt-3 text-[11px] font-bold leading-5 text-indigo-900/75">
+                                        {locale === "en"
+                                            ? "Use the product photo for patterns and small construction details."
+                                            : "무늬와 세부 모양은 상품사진 기준으로 확인해 주세요."}
+                                    </p>
+                                </div>
+                            )}
+
+                            {selectedFastKey && fastPreviewUnavailableKey === selectedFastKey && !selectedPreciseFit && (
+                                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
+                                    {locale === "en"
+                                        ? "A reliable zero-AI color preview was not available for this combination. You can request one precise check below."
+                                        : "이 조합은 색상만 안전하게 바꾸기 어려워 빠른 비교를 만들지 않았어요. 아래에서 정밀 확인을 한 번 요청할 수 있어요."}
+                                </div>
+                            )}
+
+                            {!fastColorSupported && sourceFit && sourceFit.productImage !== tryOnProduct.image && !selectedPreciseFit && (
+                                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
+                                    {locale === "en"
+                                        ? "A zero-AI recolor is limited to clothing for now. This product needs one precise check for the selected color."
+                                        : "AI 없는 색상 변경은 현재 의류만 지원해요. 이 상품은 선택한 색상으로 정밀 확인 1회가 필요해요."}
                                 </div>
                             )}
 
@@ -434,26 +763,96 @@ export default function PetTryOnPreview({
                                 </div>
                             )}
 
-                            {resultImage && !loading && (
-                                <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold leading-6 text-emerald-800">
-                                    {locale === "en"
-                                        ? "The fitting image is ready. Check the size chart and body measurements before purchase."
-                                        : "착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
-                                </div>
+                            {(selectedPreciseFit || selectedFastPreview) && !loading && (
+                                <>
+                                    <div className={`mt-4 rounded-lg border p-4 text-sm font-bold leading-6 ${
+                                        isFastPreview
+                                            ? "border-indigo-200 bg-indigo-50 text-indigo-900"
+                                            : "border-emerald-200 bg-emerald-50 text-emerald-800"
+                                    }`}>
+                                        {isFastPreview
+                                            ? locale === "en"
+                                                ? "This quick preview costs no AI generation. Request a precise check only for the color you are seriously considering."
+                                                : "이 빠른 비교에는 AI 생성이 들지 않았어요. 실제로 고민 중인 색상만 정밀 확인해 보세요."
+                                            : locale === "en"
+                                                ? "The precise fitting is ready. Check the size chart and body measurements before purchase."
+                                                : "정밀 착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
+                                    </div>
+
+                                    <div className="mt-3 rounded-lg border border-neutral-200 bg-white">
+                                        <button
+                                            type="button"
+                                            onClick={() => setMismatchOpen((open) => !open)}
+                                            className="flex min-h-11 w-full items-center justify-between gap-3 px-4 py-3 text-left text-xs font-black text-neutral-800"
+                                            aria-expanded={mismatchOpen}
+                                        >
+                                            <span>
+                                                <i className="fa-solid fa-ruler-combined mr-2 text-amber-500" />
+                                                {locale === "en" ? "Looks different from the real product" : "실제 상품과 달라요"}
+                                            </span>
+                                            <i className={`fa-solid fa-chevron-${mismatchOpen ? "up" : "down"} text-neutral-400`} />
+                                        </button>
+                                        {mismatchOpen && (
+                                            <div className="border-t border-neutral-100 px-4 pb-4 pt-3">
+                                                <p className="text-[11px] font-bold leading-5 text-neutral-600">
+                                                    {locale === "en"
+                                                        ? "Select every area that differs. The choices are sent only when you regenerate the precise preview below and are not posted publicly."
+                                                        : "다른 부분을 모두 골라 주세요. 선택 내용은 아래에서 다시 정밀 확인할 때만 전달되며 공개되지 않아요."}
+                                                </p>
+                                                <div className="mt-3 flex flex-wrap gap-2">
+                                                    {CORRECTION_OPTIONS.map((option) => {
+                                                        const selectedIssue = correctionIssues.includes(option.value);
+                                                        return (
+                                                            <button
+                                                                key={option.value}
+                                                                type="button"
+                                                                onClick={() => setCorrectionIssues((issues) => (
+                                                                    issues.includes(option.value)
+                                                                        ? issues.filter((issue) => issue !== option.value)
+                                                                        : [...issues, option.value]
+                                                                ))}
+                                                                aria-pressed={selectedIssue}
+                                                                className={`min-h-9 rounded-full border px-3 py-2 text-[11px] font-black transition ${
+                                                                    selectedIssue
+                                                                        ? "border-amber-500 bg-amber-50 text-amber-900"
+                                                                        : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-amber-300"
+                                                                }`}
+                                                            >
+                                                                {locale === "en" ? option.en : option.ko}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                                <p className="mt-3 text-[11px] font-bold leading-5 text-neutral-500">
+                                                    {locale === "en"
+                                                        ? "A new precise image is generated with these construction rules, so the pose or framing may change slightly."
+                                                        : "선택한 실제 상품 구조 규칙을 반영해 정밀 이미지를 새로 만들기 때문에 자세나 구도가 조금 달라질 수 있어요."}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
                             )}
 
                             {!loading && (
                                 <button
                                     type="button"
-                                    onClick={() => void generate()}
-                                    className="mt-5 inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700"
+                                    onClick={() => void generate(correctionIssues.length > 0)}
+                                    disabled={Boolean(selectedPreciseFit && correctionIssues.length === 0)}
+                                    className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-3 text-sm font-black text-white transition hover:bg-indigo-700 disabled:cursor-default disabled:bg-emerald-600"
                                 >
-                                    <i className="fa-solid fa-wand-magic-sparkles" />
-                                    {error
-                                        ? locale === "en" ? "Try again" : "다시 시도하기"
-                                        : resultImage
-                                            ? locale === "en" ? "View result again" : "결과 다시 보기"
-                                            : locale === "en" ? "Start fitting" : "입혀보기 시작하기"}
+                                    <i className={`fa-solid ${selectedPreciseFit && correctionIssues.length === 0 ? "fa-circle-check" : "fa-wand-magic-sparkles"}`} />
+                                    {explicitColorRequired
+                                        ? locale === "en" ? "Choose a color first" : "먼저 색상을 선택해 주세요"
+                                        : correctionIssues.length > 0
+                                            ? locale === "en" ? "Regenerate precisely with these fixes (1 AI use)" : "선택 내용 반영해 다시 정밀 확인 (AI 1회)"
+                                            : selectedPreciseFit
+                                                ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
+                                                : sourceFit
+                                                    ? locale === "en" ? "Check this color precisely (1 AI use)" : "이 색상으로 정밀 확인 (AI 1회)"
+                                                    : error
+                                                        ? locale === "en" ? "Try again (1 AI use)" : "다시 시도하기 (AI 1회)"
+                                                        : locale === "en" ? "Start precise fitting (1 AI use)" : "정밀 입혀보기 시작 (AI 1회)"}
                                 </button>
                             )}
                         </aside>
