@@ -48,8 +48,9 @@ test("signup requires member-confirmed weight and never claims photo-derived sex
 
 test("mypage editor persists first, then updates local state, while keeping name fixed", () => {
     const saveIndex = editor.indexOf("await savePetProfileSmart(updatedPet");
-    const upsertIndex = editor.indexOf("upsertPet({ ...updatedPet");
+    const upsertIndex = editor.indexOf("upsertPet({");
     assert.ok(saveIndex >= 0 && upsertIndex > saveIndex);
+    assert.match(editor.slice(upsertIndex), /upsertPet\(\{\s*\.\.\.updatedPet,/);
     assert.match(editor, /name: pet\.name/);
     assert.match(editor, /중복 프로필 방지를 위해 이름은 이 화면에서 변경하지 않습니다/);
     for (const field of ["breed", "size", "age", "weightKg", "sex", "coatColor", "coat", "activity"]) {

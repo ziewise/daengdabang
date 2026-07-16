@@ -8,7 +8,7 @@ async function readSource(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("PetLens customer result hides internal provider, storage, and fallback diagnostics", async () => {
+test("PetLens customer results hide provider and fallback diagnostics", async () => {
     const source = await readSource("lib/daengdabang-llm.ts");
 
     assert.match(source, /PETLENS_INTERNAL_SUMMARY_PATTERNS/);
@@ -27,23 +27,46 @@ test("PetLens customer result hides internal provider, storage, and fallback dia
     assert.doesNotMatch(source, /summary\.push\(`Caution:/);
 });
 
-test("PetLens profile auto-save is blocked unless model-backed breed is reliable", async () => {
-    const [pageSource, modalSource, companionSource] = await Promise.all([
+test("PetLens only patches photos for an explicitly matched existing pet", async () => {
+    const [pageSource, modalSource, customerApi, companionSource] = await Promise.all([
         readSource("app/pet-lens/PetLensClient.tsx"),
         readSource("components/petlens/PetLensModalContent.tsx"),
+        readSource("lib/customer-api.ts"),
         readSource("lib/pet-companion.ts"),
     ]);
 
     for (const source of [pageSource, modalSource]) {
         assert.match(source, /isPetLensAnalysisReadyForProfileSave\(profile\.rawAnalysis\) && Boolean\(profile\.breed\?\.trim\(\)\)/);
-        assert.match(source, /user && canAutoSaveProfile/);
-        assert.match(source, /회원 프로필과 산책 친구 캐릭터는 자동 변경하지 않았습니다/);
+        assert.match(source, /const confirmedPet = user\?\.pets\.find\(/);
+        assert.match(source, /if \(user && confirmedPet\?\.apiProfileId\)/);
+        assert.match(source, /const profileToSave = \{[\s\S]*?\.\.\.confirmedPet/);
+        assert.match(source, /photoViews: persistedPhotoViews/);
+        assert.match(source, /await savePetProfilePhotosSmart\(profileToSave, user\.apiAccessToken\)/);
+        assert.doesNotMatch(source, /await savePetProfileSmart\(/);
+
+        const submitStart = source.indexOf("const submit = async");
+        const submitEnd = source.indexOf("return (", submitStart);
+        assert.ok(submitStart >= 0 && submitEnd > submitStart);
+        const submitSource = source.slice(submitStart, submitEnd);
+        assert.doesNotMatch(submitSource, /(?:\?\?|\|\|)\s*user\?\.pets\[0\]/);
+        assert.match(submitSource, /const draftSaved = savePetLensSignupDraft\(profile\)/);
+        assert.match(submitSource, /if \(user\) \{/);
     }
+
+    const photoPatchStart = customerApi.indexOf("export async function savePetProfilePhotosSmart");
+    const photoPatchEnd = customerApi.indexOf("export async function loadPetProfilesSmart", photoPatchStart);
+    assert.ok(photoPatchStart >= 0 && photoPatchEnd > photoPatchStart);
+    const photoPatch = customerApi.slice(photoPatchStart, photoPatchEnd);
+    assert.match(photoPatch, /`\/api\/v1\/pet-profiles\/\$\{profileId\}\/photos`/);
+    assert.match(photoPatch, /method: "PATCH"/);
+    assert.match(photoPatch, /photoDataUrl: pet\.photoDataUrl/);
+    assert.match(photoPatch, /photoViews: pet\.photoViews/);
+    assert.doesNotMatch(photoPatch, /breed:|rawAnalysis:|weightKg:|concerns:/);
 
     assert.match(companionSource, /function petHasCompanionIdentity/);
     assert.match(companionSource, /if \(!petHasCompanionIdentity\(pet\)\) return null/);
     assert.match(companionSource, /user\?\.pets\.find\(petHasCompanionIdentity\)/);
-    assert.doesNotMatch(companionSource, /\|\| user\?\.pets\[0\]\s*\|\| null/);
+    assert.match(companionSource, /enabled: !pet \|\| Boolean\(profileBreedId \|\| memberBreedId\)/);
 });
 
 test("PetLens recommendations prioritize walking safety when selected", async () => {
@@ -55,7 +78,7 @@ test("PetLens recommendations prioritize walking safety when selected", async ()
     assert.match(source, /하네스\|리드\|목줄\|야간\|안전\|산책\|외출/);
 });
 
-test("PetLens recommendations use photo analysis signals without exposing internals", async () => {
+test("PetLens recommendations use public photo signals and diversified products", async () => {
     const source = await readSource("lib/daengdabang-llm.ts");
 
     assert.match(source, /petLensPublicSignalList/);

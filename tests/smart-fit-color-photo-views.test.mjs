@@ -68,7 +68,7 @@ test("color changes use a zero-AI preview until the customer explicitly requests
     assert.match(client, /startPetTryOn\(product, pet, options\.signal, \[\], true\)/);
     assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked\)/);
     assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
-    assert.match(modal, /자세나 구도가 조금 달라질 수 있어요/);
+    assert.match(modal, /보정은 자동 실행되지 않아요/);
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,120}generate\(/);
 });
 
@@ -91,13 +91,13 @@ test("every wearable color switch tries automatic zero-AI preview before optiona
     assert.match(modal, /AI 0회로 이 색상을 비교하고 있어요\. 새 이미지는 생성하지 않습니다/);
     assert.match(modal, /선택 기능: 새 정밀 이미지가 꼭 필요한가요/);
     assert.match(modal, /위 색상 변경은 AI 0회입니다/);
-    assert.match(modal, /!isFastPreviewLoading && confirmedRegenerationRequired && !preciseRegenerationOpen/);
+    assert.match(modal, /!isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !preciseRegenerationOpen/);
     assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
 
     // Server refusal stays fail-closed and never turns a color tap into an
     // implicit paid/full render.
     assert.match(modal, /if \(!preview\) \{[\s\S]{0,120}setFastPreviewUnavailableKey\(selectedFastKey\)/);
-    assert.match(modal, /이 조합은 안전한 자동 색상 비교를 만들지 못했어요/);
+    assert.match(modal, /색상만 안전하게 바꾸기 어려워 기존 입혀보기 결과를 그대로 보여드려요/);
     assert.doesNotMatch(modal, /AI 없는 색상 변경은 현재 의류만 지원해요/);
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,160}generate\(/);
 
