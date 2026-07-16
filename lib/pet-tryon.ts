@@ -30,6 +30,8 @@ export type PetTryOnResult = {
     message: string;
     productImage: string;
     reusedMasterForColorPreview: boolean;
+    /** Missing on legacy responses and therefore parsed fail-closed as false. */
+    geometryVerified: boolean;
 };
 
 export type PetTryOnMasterLookup =
@@ -61,6 +63,7 @@ type RequestOptions = {
 const LEGACY_LOCAL_CACHE_PREFIX = "ddb.tryon.rpa.v1|";
 const START_REQUEST_TIMEOUT_MS = 45_000;
 const STATUS_REQUEST_TIMEOUT_MS = 20_000;
+const MIN_SAFE_COLOR_PREVIEW_CONFIDENCE = 0.72;
 const MASTER_MISSING_DETAIL = "현재 사진으로 만든 입혀보기 기준본이 없어요.";
 
 function apiBase() {
@@ -150,6 +153,7 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
         message: String(data.message || ""),
         productImage: String(data.product_image || ""),
         reusedMasterForColorPreview: Boolean(data.reused_master_for_color_preview),
+        geometryVerified: data.geometry_verified === true,
     };
 }
 
@@ -174,6 +178,9 @@ export async function startPetTryOn(
                 product_id: product.id,
                 product_name: product.name,
                 product_image: product.image,
+                ...(product.details?.[0]
+                    ? { product_construction_image: product.details[0] }
+                    : {}),
                 subcategory: product.subcategory,
                 ...(correctionIssues.length > 0 ? { correction_issues: correctionIssues } : {}),
                 ...(confirmPreciseRegeneration ? { confirm_precise_regeneration: true } : {}),
@@ -253,6 +260,35 @@ export async function getPetTryOnJob(jobId: string, signal?: AbortSignal): Promi
     }
 }
 
+export async function reviewPetTryOnGeometry(
+    jobId: string,
+    approved: boolean,
+    signal?: AbortSignal,
+): Promise<boolean> {
+    const base = apiBase().replace(/\/$/, "");
+    const headers = authHeaders();
+    if (!base || !headers || !jobId) return false;
+    try {
+        const response = await fetchWithTimeout(
+            `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(jobId)}/geometry-review`,
+            {
+                method: "POST",
+                headers,
+                body: JSON.stringify({ approved }),
+            },
+            signal,
+            STATUS_REQUEST_TIMEOUT_MS,
+        );
+        if (!response.ok) return false;
+        const data = await response.json() as Record<string, unknown>;
+        return String(data.job_id || "") === jobId
+            && data.geometry_verified === approved;
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return false;
+        return false;
+    }
+}
+
 export async function requestPetTryOnColorPreview(
     sourceJobId: string,
     productImage: string,
@@ -275,13 +311,28 @@ export async function requestPetTryOnColorPreview(
         if (!response.ok) return null;
         const data = await response.json() as Record<string, unknown>;
         const imageDataUrl = typeof data.image_data_url === "string" ? data.image_data_url : "";
-        if (!imageDataUrl) return null;
+        const mode = String(data.mode || "");
+        const returnedSourceJobId = String(data.source_job_id || "");
+        const returnedProductImage = String(data.product_image || "");
+        const confidence = Math.max(0, Math.min(1, Number(data.confidence ?? 0)));
+        // Defense in depth: even if an older/misconfigured API returns 200,
+        // never display an untrusted, stale, mismatched, or low-confidence
+        // recolor to the member.
+        if (
+            !imageDataUrl.startsWith("data:image/")
+            || returnedSourceJobId !== sourceJobId
+            || returnedProductImage !== productImage
+            || mode !== "approximate_color_only"
+            || confidence < MIN_SAFE_COLOR_PREVIEW_CONFIDENCE
+        ) {
+            return null;
+        }
         return {
             imageDataUrl,
-            sourceJobId: String(data.source_job_id || sourceJobId),
-            productImage: String(data.product_image || productImage),
+            sourceJobId: returnedSourceJobId,
+            productImage: returnedProductImage,
             mode: "approximate_color_only",
-            confidence: Math.max(0, Math.min(1, Number(data.confidence ?? 0))),
+            confidence,
             notice: String(data.notice || ""),
         };
     } catch (error) {

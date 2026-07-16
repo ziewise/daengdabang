@@ -9,6 +9,7 @@ import {
     getPetTryOnJob,
     petTryOnReferencePhoto,
     requestPetTryOnColorPreview,
+    reviewPetTryOnGeometry,
     type PetTryOnColorPreview,
     type PetTryOnCorrectionIssue,
     type PetTryOnProgressStage,
@@ -57,12 +58,17 @@ function formatElapsed(seconds: number) {
 }
 
 const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
-const CORRECTION_OPTIONS: Array<{ value: PetTryOnCorrectionIssue; ko: string; en: string }> = [
-    { value: "back_length", ko: "등길이", en: "Back length" },
-    { value: "belly_line", ko: "배 부분", en: "Belly line" },
-    { value: "front_sleeve", ko: "앞소매", en: "Front sleeves" },
-    { value: "rear_leg", ko: "뒷다리", en: "Rear legs" },
+type CorrectionOption = { value: PetTryOnCorrectionIssue; ko: string; en: string };
+
+const PRODUCT_SHAPE_CORRECTION_OPTIONS: CorrectionOption[] = [
+    { value: "back_length", ko: "등·밑단 길이", en: "Back / hem length" },
+    { value: "belly_line", ko: "배 부분·아랫단", en: "Belly / lower hem" },
+    { value: "front_sleeve", ko: "앞다리 구멍·앞소매", en: "Front leg holes / sleeves" },
+    { value: "rear_leg", ko: "뒷다리 구멍·하반신", en: "Rear leg holes / lower body" },
     { value: "neckline", ko: "목 부분", en: "Neckline" },
+];
+
+const COLOR_PATTERN_CORRECTION_OPTIONS: CorrectionOption[] = [
     { value: "pattern", ko: "색상·무늬", en: "Color / pattern" },
 ];
 
@@ -70,6 +76,7 @@ type ReadyFit = {
     jobId: string;
     productImage: string;
     imageDataUrl: string;
+    geometryVerified: boolean;
 };
 
 function preciseCacheKey(petProfileId: number, productId: string, productImage: string) {
@@ -125,9 +132,13 @@ export default function PetTryOnPreview({
     const [correctionIssues, setCorrectionIssues] = useState<PetTryOnCorrectionIssue[]>([]);
     const [preciseRegenerationOpen, setPreciseRegenerationOpen] = useState(false);
     const [generationRequestPending, setGenerationRequestPending] = useState(false);
+    const [geometryReviewOverrides, setGeometryReviewOverrides] = useState<Record<string, boolean>>({});
+    const [geometryReviewSubmitting, setGeometryReviewSubmitting] = useState(false);
+    const [geometryReviewError, setGeometryReviewError] = useState("");
     const [fitMasterRestorePending, setFitMasterRestorePending] = useState(true);
     const [fitMasterRestoreBlocked, setFitMasterRestoreBlocked] = useState(false);
     const generationRequestPendingRef = useRef(false);
+    const geometryReviewPendingRef = useRef(false);
 
     const pet = pets[selected] ?? pets[0];
     const petReferenceImage = pet ? petTryOnReferencePhoto(tryOnProduct, pet) : undefined;
@@ -163,9 +174,11 @@ export default function PetTryOnPreview({
                 jobId: sameProductTask.result.jobId,
                 productImage: sameProductTask.productImage,
                 imageDataUrl: sameProductTask.result.imageDataUrl,
+                geometryVerified: geometryReviewOverrides[sameProductTask.result.jobId]
+                    ?? sameProductTask.result.geometryVerified === true,
             }
             : null
-    ), [sameProductTask]);
+    ), [geometryReviewOverrides, sameProductTask]);
     const selectedPreciseKey = pet?.apiProfileId && tryOnProduct.image
         ? preciseCacheKey(pet.apiProfileId, product.id, tryOnProduct.image)
         : "";
@@ -176,16 +189,22 @@ export default function PetTryOnPreview({
     const cachedSourceFit = pet?.apiProfileId
         ? Object.entries(preciseFits).find(([key]) => key.startsWith(`${pet.apiProfileId}:${product.id}:`))?.[1]
         : undefined;
-    const sourceFit = liveReadyFit || cachedSourceFit;
+    // When the member is looking at an exact cached precise result, that
+    // displayed result is the one whose geometry must be reviewed/revoked.
+    const sourceFit = selectedPreciseFit || liveReadyFit || cachedSourceFit;
     const selectedFastKey = sourceFit && tryOnProduct.image
         ? fastPreviewCacheKey(sourceFit.jobId, tryOnProduct.image)
         : "";
-    const selectedFastPreview = selectedFastKey ? fastPreviews[selectedFastKey] : undefined;
+    const selectedFastPreview = selectedFastKey && sourceFit?.geometryVerified === true
+        ? fastPreviews[selectedFastKey]
+        : undefined;
     const isFastPreview = Boolean(!selectedPreciseFit && selectedFastPreview);
+    const geometryReviewNeeded = Boolean(sourceFit && sourceFit.geometryVerified !== true);
     const shouldRequestFastPreview = Boolean(
         !explicitColorRequired
         && zeroAiColorPreviewEnabled
         && sourceFit
+        && sourceFit.geometryVerified === true
         && tryOnProduct.image
         && sourceFit.productImage !== tryOnProduct.image
         && !selectedPreciseFit
@@ -196,6 +215,7 @@ export default function PetTryOnPreview({
         shouldRequestFastPreview
         && fastPreviewUnavailableKey !== selectedFastKey,
     );
+    const geometryDecisionPending = Boolean(geometryReviewNeeded && correctionIssues.length === 0);
     const confirmedRegenerationRequired = Boolean(
         !explicitColorRequired
         && !fitMasterRestorePending
@@ -218,9 +238,26 @@ export default function PetTryOnPreview({
         && sourceFit.productImage !== tryOnProduct.image
         && fastPreviewUnavailableKey !== selectedFastKey
     );
+    const retainingSourceAfterRejectedPreview = Boolean(
+        selectedFastKey
+        && fastPreviewUnavailableKey === selectedFastKey
+        && !selectedPreciseFit
+        && !selectedFastPreview
+        && sourceFit
+        && sourceFit.productImage !== tryOnProduct.image
+    );
+    const retainingSourceUntilGeometryReview = Boolean(
+        geometryReviewNeeded
+        && !selectedPreciseFit
+        && !selectedFastPreview
+        && sourceFit
+        && sourceFit.productImage !== tryOnProduct.image
+    );
     const resultImage = selectedPreciseFit?.imageDataUrl
         || selectedFastPreview?.imageDataUrl
-        || (showingSourceWhilePreparing ? sourceFit?.imageDataUrl : undefined);
+        || (showingSourceWhilePreparing || retainingSourceAfterRejectedPreview || retainingSourceUntilGeometryReview
+            ? sourceFit?.imageDataUrl
+            : undefined);
     const displayName = productName(product);
     const progressStageIndex = stage === "queued" ? -1 : PROGRESS_STAGES.indexOf(stage);
     const progressStageLabels = locale === "en"
@@ -294,6 +331,7 @@ export default function PetTryOnPreview({
                         jobId: remote.sourceJobId,
                         productImage: remote.productImage,
                         imageDataUrl: remote.result.imageDataUrl,
+                        geometryVerified: remote.result.geometryVerified === true,
                     };
                     setPreciseFits((previous) => ({
                         ...previous,
@@ -342,6 +380,7 @@ export default function PetTryOnPreview({
                 jobId: restored.jobId,
                 productImage: saved.productImage,
                 imageDataUrl: restored.imageDataUrl,
+                geometryVerified: restored.geometryVerified === true,
             };
             setPreciseFits((previous) => ({
                 ...previous,
@@ -482,6 +521,78 @@ export default function PetTryOnPreview({
         setCorrectionIssues([]);
         setPreciseRegenerationOpen(false);
         setFastPreviewUnavailableKey("");
+        setGeometryReviewError("");
+    };
+
+    const toggleCorrectionIssue = (issue: PetTryOnCorrectionIssue) => {
+        setPreciseRegenerationOpen(false);
+        setCorrectionIssues((issues) => (
+            issues.includes(issue)
+                ? issues.filter((selectedIssue) => selectedIssue !== issue)
+                : [...issues, issue]
+        ));
+    };
+
+    const setLocalGeometryReview = (jobId: string, verified: boolean) => {
+        setGeometryReviewOverrides((reviews) => ({ ...reviews, [jobId]: verified }));
+        setPreciseFits((fits) => Object.fromEntries(
+            Object.entries(fits).map(([key, fit]) => [
+                key,
+                fit.jobId === jobId ? { ...fit, geometryVerified: verified } : fit,
+            ]),
+        ));
+        if (!verified) {
+            setFastPreviews((previews) => Object.fromEntries(
+                Object.entries(previews).filter(([key]) => !key.startsWith(`${jobId}:`)),
+            ));
+        }
+        setFastPreviewUnavailableKey("");
+    };
+
+    const approveCurrentGeometry = async () => {
+        if (!sourceFit || sourceFit.geometryVerified === true || geometryReviewPendingRef.current) return;
+        const jobId = sourceFit.jobId;
+        geometryReviewPendingRef.current = true;
+        setGeometryReviewSubmitting(true);
+        setGeometryReviewError("");
+        try {
+            const approved = await reviewPetTryOnGeometry(jobId, true);
+            if (!approved) {
+                setGeometryReviewError(locale === "en"
+                    ? "We could not save your product-shape approval. The original result is still shown and no new image was generated."
+                    : "상품 모양 확인을 저장하지 못했어요. 기존 결과는 그대로 유지되며 새 이미지는 생성하지 않았습니다.");
+                return;
+            }
+            setLocalGeometryReview(jobId, true);
+            setMismatchOpen(false);
+        } finally {
+            geometryReviewPendingRef.current = false;
+            setGeometryReviewSubmitting(false);
+        }
+    };
+
+    const markCurrentGeometryMismatch = async () => {
+        if (!sourceFit || geometryReviewPendingRef.current) return;
+        const jobId = sourceFit.jobId;
+        // Stop using the disputed master immediately, including any cached
+        // zero-AI color previews, while the revocation is saved remotely.
+        setLocalGeometryReview(jobId, false);
+        setPreciseRegenerationOpen(false);
+        setMismatchOpen(true);
+        geometryReviewPendingRef.current = true;
+        setGeometryReviewSubmitting(true);
+        setGeometryReviewError("");
+        try {
+            const revoked = await reviewPetTryOnGeometry(jobId, false);
+            if (!revoked) {
+                setGeometryReviewError(locale === "en"
+                    ? "We could not save that the product shape is different. Color comparison remains locked for safety, and no new image was generated."
+                    : "상품 모양이 다르다는 확인을 저장하지 못했어요. 안전을 위해 색상 비교는 계속 잠겨 있으며 새 이미지는 생성하지 않았습니다.");
+            }
+        } finally {
+            geometryReviewPendingRef.current = false;
+            setGeometryReviewSubmitting(false);
+        }
     };
 
     return (
@@ -671,10 +782,18 @@ export default function PetTryOnPreview({
 
                             {resultImage && !loading && (
                                 <div className={`absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-2 text-xs font-black shadow-lg backdrop-blur ${
-                                    isFastPreview || showingSourceWhilePreparing ? "text-indigo-700" : "text-emerald-700"
+                                    geometryReviewNeeded || retainingSourceAfterRejectedPreview
+                                        ? "text-amber-800"
+                                        : isFastPreview || showingSourceWhilePreparing
+                                            ? "text-indigo-700"
+                                            : "text-emerald-700"
                                 }`}>
-                                    <i className={`fa-solid mr-1.5 ${isFastPreview || showingSourceWhilePreparing ? "fa-palette" : "fa-circle-check"}`} />
-                                    {isFastPreview
+                                    <i className={`fa-solid mr-1.5 ${geometryReviewNeeded || retainingSourceAfterRejectedPreview ? "fa-shield-halved" : isFastPreview || showingSourceWhilePreparing ? "fa-palette" : "fa-circle-check"}`} />
+                                    {geometryReviewNeeded
+                                        ? locale === "en" ? "Product shape needs your review" : "상품 모양 확인 필요"
+                                        : retainingSourceAfterRejectedPreview
+                                        ? locale === "en" ? "Color unchanged · original result kept" : "색상 변경 안 함 · 기존 결과 유지"
+                                        : isFastPreview
                                         ? locale === "en" ? "0 AI uses · quick color preview" : "AI 사용 0회 · 빠른 색상 비교"
                                         : showingSourceWhilePreparing
                                             ? locale === "en" ? "Preparing quick color preview" : "빠른 색상 비교 준비 중"
@@ -728,6 +847,7 @@ export default function PetTryOnPreview({
                                             setCorrectionIssues([]);
                                             setPreciseRegenerationOpen(false);
                                             setFastPreviewUnavailableKey("");
+                                            setGeometryReviewError("");
                                             onColorChange(index);
                                         }}
                                         className={loading ? "pointer-events-none opacity-60" : ""}
@@ -784,11 +904,64 @@ export default function PetTryOnPreview({
                                 </div>
                             )}
 
+                            {sourceFit && geometryReviewNeeded && !loading && (
+                                <div className="mt-4 rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
+                                    <p className="text-sm font-black text-amber-950">
+                                        <i className="fa-solid fa-ruler-combined mr-2" />
+                                        {locale === "en" ? "Product shape needs your review" : "상품 모양 확인 필요"}
+                                    </p>
+                                    <p className="mt-2 text-xs font-bold leading-5 text-amber-900">
+                                        {locale === "en"
+                                            ? "Before comparing colors, compare the product photo with this fitting—especially the hem, belly, leg holes, and length."
+                                            : "색상을 비교하기 전에 상품 사진과 현재 착용 결과의 밑단·배 부분·다리 구멍·길이가 맞는지 확인해 주세요."}
+                                    </p>
+                                    {sourceFit.productImage !== tryOnProduct.image && (
+                                        <p className="mt-2 text-[11px] font-bold leading-5 text-amber-800">
+                                            {locale === "en"
+                                                ? "The original fitting remains unchanged until you finish this review."
+                                                : "확인이 끝날 때까지 원래 입혀보기 결과를 변경 없이 보여드려요."}
+                                        </p>
+                                    )}
+                                    <div className="mt-3 grid grid-cols-2 gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => void approveCurrentGeometry()}
+                                            disabled={geometryReviewSubmitting}
+                                            className="min-h-11 rounded-md bg-emerald-600 px-3 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-wait disabled:bg-emerald-300"
+                                        >
+                                            <i className={`fa-solid mr-1.5 ${geometryReviewSubmitting ? "fa-spinner fa-spin" : "fa-check"}`} />
+                                            {geometryReviewSubmitting
+                                                ? locale === "en" ? "Saving…" : "저장 중…"
+                                                : locale === "en" ? "Product shape matches" : "제품 모양 맞아요"}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPreciseRegenerationOpen(false);
+                                                setMismatchOpen(true);
+                                            }}
+                                            disabled={geometryReviewSubmitting}
+                                            className="min-h-11 rounded-md border border-amber-400 bg-white px-3 py-2 text-xs font-black text-amber-950 hover:bg-amber-100 disabled:opacity-60"
+                                        >
+                                            <i className="fa-solid fa-pen-ruler mr-1.5" />
+                                            {locale === "en" ? "Looks different" : "실제 상품과 달라요"}
+                                        </button>
+                                    </div>
+                                    {geometryReviewError && (
+                                        <p className="mt-3 rounded-lg border border-rose-200 bg-white px-3 py-2 text-[11px] font-bold leading-5 text-rose-800">
+                                            <i className="fa-solid fa-triangle-exclamation mr-1.5" />
+                                            {geometryReviewError}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+
                             {selectedFastKey && fastPreviewUnavailableKey === selectedFastKey && !selectedPreciseFit && (
                                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
+                                    <i className="fa-solid fa-shield-halved mr-2" />
                                     {locale === "en"
-                                        ? "We could not make a safe automatic color comparison for this combination. Check the product color photo first. The optional 1-AI action below creates a completely new image only if you choose it."
-                                        : "이 조합은 안전한 자동 색상 비교를 만들지 못했어요. 먼저 상품 색상 사진으로 비교해 주세요. 아래 AI 1회 기능은 꼭 필요할 때만 새 이미지를 만드는 선택 기능입니다."}
+                                        ? "This color could not be changed safely, so the original fitting remains on screen. Check the selected color in the product photo. No new image was generated automatically."
+                                        : "색상만 안전하게 바꾸기 어려워 기존 입혀보기 결과를 그대로 보여드려요. 선택한 실제 색상은 상품 사진으로 확인해 주세요. 새 이미지는 자동 생성하지 않았습니다."}
                                 </div>
                             )}
 
@@ -819,35 +992,49 @@ export default function PetTryOnPreview({
                                 </div>
                             )}
 
-                            {(selectedPreciseFit || selectedFastPreview) && !loading && (
+                            {(selectedPreciseFit || selectedFastPreview || retainingSourceAfterRejectedPreview || retainingSourceUntilGeometryReview) && !loading && (
                                 <>
                                     <div className={`mt-4 rounded-lg border p-4 text-sm font-bold leading-6 ${
-                                        isFastPreview
+                                        geometryReviewNeeded || retainingSourceAfterRejectedPreview
+                                            ? "border-amber-200 bg-amber-50 text-amber-900"
+                                            : isFastPreview
                                             ? "border-indigo-200 bg-indigo-50 text-indigo-900"
                                             : "border-emerald-200 bg-emerald-50 text-emerald-800"
                                     }`}>
-                                        {isFastPreview
+                                        {geometryReviewNeeded
                                             ? locale === "en"
-                                                ? "This quick preview costs no AI generation. Request a precise check only for the color you are seriously considering."
-                                                : "이 빠른 비교에는 AI 생성이 들지 않았어요. 실제로 고민 중인 색상만 정밀 확인해 보세요."
+                                                ? "This fitting is the unchanged original result. Confirm its product shape before using it for color comparisons."
+                                                : "현재 화면은 변경하지 않은 원래 입혀보기 결과예요. 색상 비교에 사용하기 전에 상품 모양을 먼저 확인해 주세요."
+                                            : retainingSourceAfterRejectedPreview
+                                            ? locale === "en"
+                                                ? "This is your original precise result, kept unchanged because the selected color could not be changed safely."
+                                                : "선택한 색상을 안전하게 바꿀 수 없어, 원래 정밀 결과를 색상 변경 없이 유지하고 있어요."
+                                            : isFastPreview
+                                            ? locale === "en"
+                                                ? "This color comparison used no AI generation. Check the product photo for the exact pattern and construction details."
+                                                : "이 색상 비교는 AI 생성 없이 완료됐어요. 실제 무늬와 세부 모양은 상품 사진에서 함께 확인해 주세요."
                                             : locale === "en"
                                                 ? "The precise fitting is ready. Check the size chart and body measurements before purchase."
                                                 : "정밀 착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
                                     </div>
 
+                                    {(!geometryReviewNeeded || mismatchOpen) && (
                                     <div className="mt-3 rounded-lg border border-neutral-200 bg-white">
-                                        <button
-                                            type="button"
-                                            onClick={() => setMismatchOpen((open) => !open)}
-                                            className="flex min-h-11 w-full items-center justify-between gap-3 px-4 py-3 text-left text-xs font-black text-neutral-800"
-                                            aria-expanded={mismatchOpen}
-                                        >
-                                            <span>
-                                                <i className="fa-solid fa-ruler-combined mr-2 text-amber-500" />
-                                                {locale === "en" ? "Looks different from the real product" : "실제 상품과 달라요"}
-                                            </span>
-                                            <i className={`fa-solid fa-chevron-${mismatchOpen ? "up" : "down"} text-neutral-400`} />
-                                        </button>
+                                        {!geometryReviewNeeded && (
+                                            <button
+                                                type="button"
+                                                onClick={() => void markCurrentGeometryMismatch()}
+                                                disabled={geometryReviewSubmitting}
+                                                className="flex min-h-11 w-full items-center justify-between gap-3 px-4 py-3 text-left text-xs font-black text-neutral-800 disabled:cursor-wait disabled:opacity-60"
+                                                aria-expanded={mismatchOpen}
+                                            >
+                                                <span>
+                                                    <i className="fa-solid fa-ruler-combined mr-2 text-amber-500" />
+                                                    {locale === "en" ? "Looks different from the real product" : "실제 상품과 달라요"}
+                                                </span>
+                                                <i className={`fa-solid fa-chevron-${mismatchOpen ? "up" : "down"} text-neutral-400`} />
+                                            </button>
+                                        )}
                                         {mismatchOpen && (
                                             <div className="border-t border-neutral-100 px-4 pb-4 pt-3">
                                                 <p className="text-[11px] font-bold leading-5 text-neutral-600">
@@ -855,41 +1042,70 @@ export default function PetTryOnPreview({
                                                         ? "Select every area that differs. The choices are sent only when you regenerate the precise preview below and are not posted publicly."
                                                         : "다른 부분을 모두 골라 주세요. 선택 내용은 아래에서 다시 정밀 확인할 때만 전달되며 공개되지 않아요."}
                                                 </p>
-                                                <div className="mt-3 flex flex-wrap gap-2">
-                                                    {CORRECTION_OPTIONS.map((option) => {
-                                                        const selectedIssue = correctionIssues.includes(option.value);
-                                                        return (
-                                                            <button
-                                                                key={option.value}
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setPreciseRegenerationOpen(false);
-                                                                    setCorrectionIssues((issues) => (
-                                                                        issues.includes(option.value)
-                                                                        ? issues.filter((issue) => issue !== option.value)
-                                                                        : [...issues, option.value]
-                                                                    ));
-                                                                }}
-                                                                aria-pressed={selectedIssue}
-                                                                className={`min-h-9 rounded-full border px-3 py-2 text-[11px] font-black transition ${
-                                                                    selectedIssue
-                                                                        ? "border-amber-500 bg-amber-50 text-amber-900"
-                                                                        : "border-neutral-200 bg-neutral-50 text-neutral-600 hover:border-amber-300"
-                                                                }`}
-                                                            >
-                                                                {locale === "en" ? option.en : option.ko}
-                                                            </button>
-                                                        );
-                                                    })}
+                                                <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3">
+                                                    <p className="text-[11px] font-black text-amber-950">
+                                                        {locale === "en" ? "Correct product shape" : "제품 형태 보정"}
+                                                    </p>
+                                                    <p className="mt-1 text-[10px] font-bold leading-4 text-amber-900/75">
+                                                        {locale === "en"
+                                                            ? "Choose the lower body, hem, belly, leg holes, or length that differs from the real product."
+                                                            : "실제 상품과 다른 하반신·밑단·배 부분·다리 구멍·길이를 골라 주세요."}
+                                                    </p>
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        {PRODUCT_SHAPE_CORRECTION_OPTIONS.map((option) => {
+                                                            const selectedIssue = correctionIssues.includes(option.value);
+                                                            return (
+                                                                <button
+                                                                    key={option.value}
+                                                                    type="button"
+                                                                    onClick={() => toggleCorrectionIssue(option.value)}
+                                                                    aria-pressed={selectedIssue}
+                                                                    className={`min-h-9 rounded-full border px-3 py-2 text-[11px] font-black transition ${
+                                                                        selectedIssue
+                                                                            ? "border-amber-500 bg-amber-100 text-amber-950"
+                                                                            : "border-amber-200 bg-white text-neutral-700 hover:border-amber-400"
+                                                                    }`}
+                                                                >
+                                                                    {locale === "en" ? option.en : option.ko}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                                <div className="mt-3 rounded-lg border border-indigo-100 bg-indigo-50/50 p-3">
+                                                    <p className="text-[11px] font-black text-indigo-950">
+                                                        {locale === "en" ? "Correct color or pattern" : "색상·무늬 보정"}
+                                                    </p>
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        {COLOR_PATTERN_CORRECTION_OPTIONS.map((option) => {
+                                                            const selectedIssue = correctionIssues.includes(option.value);
+                                                            return (
+                                                                <button
+                                                                    key={option.value}
+                                                                    type="button"
+                                                                    onClick={() => toggleCorrectionIssue(option.value)}
+                                                                    aria-pressed={selectedIssue}
+                                                                    className={`min-h-9 rounded-full border px-3 py-2 text-[11px] font-black transition ${
+                                                                        selectedIssue
+                                                                            ? "border-indigo-500 bg-indigo-100 text-indigo-950"
+                                                                            : "border-indigo-100 bg-white text-neutral-700 hover:border-indigo-300"
+                                                                    }`}
+                                                                >
+                                                                    {locale === "en" ? option.en : option.ko}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
                                                 </div>
                                                 <p className="mt-3 text-[11px] font-bold leading-5 text-neutral-500">
                                                     {locale === "en"
-                                                        ? "A new precise image is generated with these construction rules, so the pose or framing may change slightly."
-                                                        : "선택한 실제 상품 구조 규칙을 반영해 정밀 이미지를 새로 만들기 때문에 자세나 구도가 조금 달라질 수 있어요."}
+                                                        ? "Corrections never run automatically. They are sent only after you open the optional action and explicitly confirm 1 AI use."
+                                                        : "보정은 자동 실행되지 않아요. 아래 선택 기능을 열고 AI 1회 사용을 직접 확인한 경우에만 전달됩니다."}
                                                 </p>
                                             </div>
                                         )}
                                     </div>
+                                    )}
                                 </>
                             )}
 
@@ -911,7 +1127,7 @@ export default function PetTryOnPreview({
                                 </div>
                             )}
 
-                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && confirmedRegenerationRequired && !preciseRegenerationOpen && (
+                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !preciseRegenerationOpen && (
                                 <button
                                     type="button"
                                     onClick={() => setPreciseRegenerationOpen(true)}
@@ -926,7 +1142,7 @@ export default function PetTryOnPreview({
                                 </button>
                             )}
 
-                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && confirmedRegenerationRequired && preciseRegenerationOpen && (
+                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && preciseRegenerationOpen && (
                                 <div className="mt-5 rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
                                     <p className="text-xs font-black text-amber-950">
                                         <i className="fa-solid fa-triangle-exclamation mr-2" />
@@ -968,7 +1184,7 @@ export default function PetTryOnPreview({
                                 </div>
                             )}
 
-                            {!loading && !fitMasterRestorePending && !confirmedRegenerationRequired && (
+                            {!loading && !fitMasterRestorePending && !geometryDecisionPending && !confirmedRegenerationRequired && (
                                 <button
                                     type="button"
                                     onClick={() => void generate(correctionIssues.length > 0)}
