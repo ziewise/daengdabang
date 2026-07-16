@@ -42,13 +42,18 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(modal, /role="progressbar"/);
     assert.match(modal, /사진과 선택 상품을 확인하고 있어요/);
     assert.match(modal, /자연스럽게 입히고 있어요/);
-    assert.match(modal, /start\(product, pet\)/);
+    assert.match(modal, /start\(\s*tryOnProduct,\s*pet,/);
+    assert.match(modal, /입혀볼 색상/);
+    assert.match(modal, /AI 사용 0회/);
+    assert.match(modal, /색감 비교용/);
+    assert.match(modal, /무늬와 세부 모양은 상품사진 기준/);
+    assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
     assert.match(modal, /DDB SMART FIT/);
     assert.match(modal, /자연스러운 착용 미리보기/);
     assert.match(modal, /이 창을 닫아도 입혀보기는 계속 진행됩니다/);
     assert.match(modal, /계속 쇼핑/);
     assert.match(modal, /완성되면 알려줘/);
-    assert.match(modal, /결과 다시 보기/);
+    assert.match(modal, /정밀 결과 확인됨/);
     assert.doesNotMatch(modal, /Create again|다시 입혀보기/);
     assert.match(modal, /회원가입하고 우리 아이 등록하기/);
     assert.match(modal, /이미 회원이면 로그인/);
@@ -117,7 +122,7 @@ test("background async responses are guarded before state updates", async () => 
     ], "monitor guard");
     assertOrdered(background, [
         "const start = useCallback",
-        "const first = await startPetTryOn(product, pet, submitController.signal)",
+        "const first = await startPetTryOn(",
         "submitController.signal.aborted",
         "if (!first)",
         "setTask(failed)",
@@ -161,7 +166,7 @@ test("try-on only uses a member photo after the customer API confirms it", async
     assert.match(modal, /filter\(hasVerifiedPetPhoto\)/);
     assert.doesNotMatch(modal, /filter\(\(item\) => item\.photoDataUrl\)/);
     for (const client of [page, modalLens]) {
-        assert.match(client, /const saved = await savePetProfileSmart/);
+        assert.match(client, /const saved = await savePetProfilePhotosSmart/);
         assert.match(client, /photoServerVerified: Boolean\(saved\.photoDataUrl\)/);
     }
 });

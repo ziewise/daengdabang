@@ -28,7 +28,19 @@ export type PetTryOnResult = {
         checks: string[];
     };
     message: string;
+    productImage: string;
+    reusedMasterForColorPreview: boolean;
 };
+
+export type PetTryOnMasterLookup =
+    | {
+        status: "found";
+        sourceJobId: string;
+        productImage: string;
+        result: PetTryOnResult;
+    }
+    | { status: "missing" }
+    | { status: "indeterminate" };
 
 export type PetTryOnColorPreview = {
     imageDataUrl: string;
@@ -42,11 +54,14 @@ export type PetTryOnColorPreview = {
 type RequestOptions = {
     signal?: AbortSignal;
     onStatus?: (result: PetTryOnResult) => void;
+    /** Required so this helper can never become a silent full-generation path. */
+    confirmPreciseGeneration: true;
 };
 
 const LEGACY_LOCAL_CACHE_PREFIX = "ddb.tryon.rpa.v1|";
 const START_REQUEST_TIMEOUT_MS = 45_000;
 const STATUS_REQUEST_TIMEOUT_MS = 20_000;
+const MASTER_MISSING_DETAIL = "현재 사진으로 만든 입혀보기 기준본이 없어요.";
 
 function apiBase() {
     return ddbApiBase();
@@ -133,6 +148,8 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
             checks: Array.isArray(quality.checks) ? quality.checks.map(String) : [],
         },
         message: String(data.message || ""),
+        productImage: String(data.product_image || ""),
+        reusedMasterForColorPreview: Boolean(data.reused_master_for_color_preview),
     };
 }
 
@@ -141,6 +158,7 @@ export async function startPetTryOn(
     pet: PetProfile,
     signal?: AbortSignal,
     correctionIssues: PetTryOnCorrectionIssue[] = [],
+    confirmPreciseRegeneration = false,
 ): Promise<PetTryOnResult | null> {
     if (!product.image || !petTryOnReferencePhoto(product, pet) || !pet.apiProfileId) return null;
     const base = apiBase().replace(/\/$/, "");
@@ -158,6 +176,7 @@ export async function startPetTryOn(
                 product_image: product.image,
                 subcategory: product.subcategory,
                 ...(correctionIssues.length > 0 ? { correction_issues: correctionIssues } : {}),
+                ...(confirmPreciseRegeneration ? { confirm_precise_regeneration: true } : {}),
             }),
         }, signal, START_REQUEST_TIMEOUT_MS);
         if (!response.ok) return null;
@@ -165,6 +184,53 @@ export async function startPetTryOn(
     } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return null;
         return null;
+    }
+}
+
+export async function getLatestPetTryOnMaster(
+    petProfileId: number,
+    productId: string,
+    signal?: AbortSignal,
+): Promise<PetTryOnMasterLookup> {
+    const base = apiBase().replace(/\/$/, "");
+    const headers = authHeaders();
+    if (!base || !headers || !petProfileId || !productId) return { status: "indeterminate" };
+    const params = new URLSearchParams({
+        pet_profile_id: String(petProfileId),
+        product_id: productId,
+    });
+    try {
+        const response = await fetchWithTimeout(
+            `${base}/api/v1/pet-tryon/masters/latest?${params.toString()}`,
+            { method: "GET", headers },
+            signal,
+            STATUS_REQUEST_TIMEOUT_MS,
+        );
+        if (response.status === 404) {
+            try {
+                const data = await response.json() as Record<string, unknown>;
+                return data.detail === MASTER_MISSING_DETAIL
+                    ? { status: "missing" }
+                    : { status: "indeterminate" };
+            } catch {
+                return { status: "indeterminate" };
+            }
+        }
+        if (!response.ok) return { status: "indeterminate" };
+        const data = await response.json() as Record<string, unknown>;
+        const rawResult = data.result && typeof data.result === "object"
+            ? data.result as Record<string, unknown>
+            : {};
+        const result = parseResult(rawResult);
+        const sourceJobId = String(data.source_job_id || result.jobId || "");
+        const productImage = String(data.product_image || result.productImage || "");
+        if (!sourceJobId || !productImage || result.status !== "ready" || !result.imageDataUrl) {
+            return { status: "indeterminate" };
+        }
+        return { status: "found", sourceJobId, productImage, result };
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return { status: "indeterminate" };
+        return { status: "indeterminate" };
     }
 }
 
@@ -241,11 +307,12 @@ async function wait(ms: number, signal?: AbortSignal) {
 export async function requestPetTryOn(
     product: CatalogProduct,
     pet: PetProfile,
-    options: RequestOptions = {},
+    options: RequestOptions,
 ): Promise<PetTryOnResult | null> {
+    if (options.confirmPreciseGeneration !== true) return null;
     if (!product.image || !petTryOnReferencePhoto(product, pet) || !pet.apiProfileId) return null;
     try {
-        let result = await startPetTryOn(product, pet, options.signal);
+        let result = await startPetTryOn(product, pet, options.signal, [], true);
         if (!result) return null;
         options.onStatus?.(result);
 

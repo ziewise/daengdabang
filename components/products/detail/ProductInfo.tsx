@@ -22,11 +22,10 @@ import { usePets } from "@/hooks/usePets";
 import { cartPetOptions } from "@/lib/pet-attribution";
 import { loadTwinProductStats, type TwinProductStat } from "@/lib/storefront-analytics";
 import { useI18n } from "@/lib/i18n";
+import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
-
-const WEARABLE_SUBCATEGORIES = new Set(["wear", "harness", "goggles", "leash"]);
 
 interface Props {
     product: CatalogProduct;
@@ -46,7 +45,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     const isNew = isNewProduct(p);
     const point = Math.floor(p.price * 0.01);
     const displayName = productName(p);
-    const canTryOn = WEARABLE_SUBCATEGORIES.has(p.subcategory) && Boolean(p.image);
+    const canTryOn = getPetTryOnEligibility(p).eligible;
 
     const colors = p.colors ?? [];
     const hasColors = colors.length > 0;

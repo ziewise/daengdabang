@@ -50,6 +50,12 @@ test("an indeterminate master restore never auto-starts another AI fitting", asy
     assert.ok(restoreStart >= 0 && restoreEnd > restoreStart);
     const restore = modal.slice(restoreStart, restoreEnd);
     assert.match(restore, /if \(lookup\.status === "missing"\)/);
+    assert.match(restore, /getLatestPetTryOnMaster\(pet\.apiProfileId, product\.id, controller\.signal\)/);
+    assert.match(restore, /remote\.status === "missing"/);
+    assert.match(restore, /remote\.status !== "found"[\s\S]*setFitMasterRestoreBlocked\(true\)/);
+    assert.match(restore, /jobId: remote\.sourceJobId/);
+    assert.match(restore, /productImage: remote\.productImage/);
+    assert.match(restore, /savePetTryOnFitMaster\(fitMasterIdentity/);
     assert.match(restore, /if \(lookup\.status !== "found"\)[\s\S]*setFitMasterRestoreBlocked\(true\)/);
     assert.match(
         restore,
@@ -63,9 +69,31 @@ test("an indeterminate master restore never auto-starts another AI fitting", asy
     assert.doesNotMatch(ambiguousResult, /removePetTryOnFitMaster/);
     assert.doesNotMatch(ambiguousResult, /sessionStorage\.removeItem/);
 
-    assert.match(modal, /if \(explicitColorRequired \|\| sourceFit \|\| fitMasterRestoreBlocked\) return/);
+    assert.match(modal, /if \(fitMasterRestorePending\) return/);
+    assert.match(modal, /!fitMasterRestorePending[\s\S]*fitMasterRestoreBlocked[\s\S]*!sourceFit/);
+    assert.doesNotMatch(modal, /void generate\(false\)/);
     assert.match(modal, /새 AI 입혀보기는 자동으로 시작하지 않았습니다/);
     assert.match(modal, /새 결과가 필요할 때만 아래 AI 1회 버튼/);
+});
+
+test("server master lookup distinguishes a real miss from an unsafe transient failure", async () => {
+    const [client, modal] = await Promise.all([
+        source("lib/pet-tryon.ts"),
+        source("components/products/detail/PetTryOnPreview.tsx"),
+    ]);
+
+    assert.match(client, /pet-tryon\/masters\/latest\?\$\{params\.toString\(\)\}/);
+    assert.match(client, /data\.detail === MASTER_MISSING_DETAIL/);
+    assert.match(client, /catch \{\s*return \{ status: "indeterminate" \}/);
+    assert.match(client, /if \(!response\.ok\) return \{ status: "indeterminate" \}/);
+    assert.match(client, /status: "found", sourceJobId, productImage, result/);
+
+    const restoreStart = modal.indexOf("const lookup = readPetTryOnFitMasterWithLegacy");
+    assert.ok(restoreStart >= 0);
+    assert.match(modal, /getLatestPetTryOnMaster/);
+    assert.match(modal, /setFitMasterRestorePending\(false\)/);
+    assert.match(modal, /if \(fitMasterRestorePending\) return/);
+    assert.doesNotMatch(modal, /void generate\(false\)/);
 });
 
 test("a legacy v1 fit master migrates without persisting the pet photo", async () => {

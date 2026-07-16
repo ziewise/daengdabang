@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import {
+    getLatestPetTryOnMaster,
     getPetTryOnJob,
     petTryOnReferencePhoto,
     requestPetTryOnColorPreview,
@@ -19,16 +20,11 @@ import {
     savePetTryOnFitMaster,
     type PetTryOnFitMasterIdentity,
 } from "@/lib/pet-tryon-fit-master";
+import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
 import { usePetTryOnTask } from "@/lib/pet-tryon-background";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import ColorSelect from "./ColorSelect";
-
-const WEARABLE_SUBCATEGORIES = new Set(["wear", "harness", "goggles", "leash"]);
-
-function canTryOn(product: CatalogProduct) {
-    return WEARABLE_SUBCATEGORIES.has(product.subcategory) && Boolean(product.image);
-}
 
 function petOptionLabel(pet: PetProfile) {
     const size = pet.size === "small" ? "소형" : pet.size === "large" ? "대형" : "중형";
@@ -112,21 +108,26 @@ export default function PetTryOnPreview({
         () => selectedColor?.image ? { ...product, image: selectedColor.image } : product,
         [product, selectedColor],
     );
-    const fastColorSupported = tryOnProduct.subcategory === "wear";
-    const eligible = canTryOn(tryOnProduct);
+    const eligibility = getPetTryOnEligibility(tryOnProduct);
+    const eligible = eligibility.eligible;
+    // Every wearable asks the authenticated zero-AI preview endpoint first.
+    // The server remains the authority and fails closed when a particular
+    // product/photo pair cannot be recolored without touching the dog.
+    const zeroAiColorPreviewEnabled = eligibility.zeroAiColorPreview === "server_verified";
     const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
     const [error, setError] = useState("");
     const [now, setNow] = useState(0);
     const [preciseFits, setPreciseFits] = useState<Record<string, ReadyFit>>({});
     const [fastPreviews, setFastPreviews] = useState<Record<string, PetTryOnColorPreview>>({});
-    const [fastPreviewLoadingKey, setFastPreviewLoadingKey] = useState("");
     const [fastPreviewUnavailableKey, setFastPreviewUnavailableKey] = useState("");
     const [mismatchOpen, setMismatchOpen] = useState(false);
     const [correctionIssues, setCorrectionIssues] = useState<PetTryOnCorrectionIssue[]>([]);
+    const [preciseRegenerationOpen, setPreciseRegenerationOpen] = useState(false);
+    const [generationRequestPending, setGenerationRequestPending] = useState(false);
     const [fitMasterRestorePending, setFitMasterRestorePending] = useState(true);
     const [fitMasterRestoreBlocked, setFitMasterRestoreBlocked] = useState(false);
-    const started = useRef(false);
+    const generationRequestPendingRef = useRef(false);
 
     const pet = pets[selected] ?? pets[0];
     const petReferenceImage = pet ? petTryOnReferencePhoto(tryOnProduct, pet) : undefined;
@@ -181,10 +182,32 @@ export default function PetTryOnPreview({
         : "";
     const selectedFastPreview = selectedFastKey ? fastPreviews[selectedFastKey] : undefined;
     const isFastPreview = Boolean(!selectedPreciseFit && selectedFastPreview);
+    const shouldRequestFastPreview = Boolean(
+        !explicitColorRequired
+        && zeroAiColorPreviewEnabled
+        && sourceFit
+        && tryOnProduct.image
+        && sourceFit.productImage !== tryOnProduct.image
+        && !selectedPreciseFit
+        && selectedFastKey
+        && !selectedFastPreview
+    );
     const isFastPreviewLoading = Boolean(
-        selectedFastKey
-        && fastPreviewLoadingKey === selectedFastKey
-        && !selectedFastPreview,
+        shouldRequestFastPreview
+        && fastPreviewUnavailableKey !== selectedFastKey,
+    );
+    const confirmedRegenerationRequired = Boolean(
+        !explicitColorRequired
+        && !fitMasterRestorePending
+        && (
+            correctionIssues.length > 0
+            || fitMasterRestoreBlocked
+            || !sourceFit
+            || (
+                sourceFit.productImage !== tryOnProduct.image
+                && !selectedPreciseFit
+            )
+        )
     );
     const showingSourceWhilePreparing = Boolean(
         !explicitColorRequired
@@ -242,9 +265,53 @@ export default function PetTryOnPreview({
             return;
         }
         const lookup = readPetTryOnFitMasterWithLegacy(fitMasterIdentity, petReferenceImage);
+        const approvedImages = new Set<string>([
+            product.image,
+            ...(product.colors || []).map((color) => color.image),
+        ].filter((image): image is string => Boolean(image)));
         if (lookup.status === "missing") {
-            setFitMasterRestorePending(false);
-            return;
+            const controller = new AbortController();
+            let active = true;
+            void getLatestPetTryOnMaster(pet.apiProfileId, product.id, controller.signal)
+                .then((remote) => {
+                    if (!active || controller.signal.aborted) return;
+                    if (remote.status === "missing") {
+                        setFitMasterRestoreBlocked(false);
+                        return;
+                    }
+                    if (
+                        remote.status !== "found"
+                        || !approvedImages.has(remote.productImage)
+                        || remote.result.status !== "ready"
+                        || !remote.result.imageDataUrl
+                    ) {
+                        // A timeout/5xx or an unknown source image must never
+                        // be interpreted as permission to spend another AI use.
+                        setFitMasterRestoreBlocked(true);
+                        return;
+                    }
+                    const restoredFit: ReadyFit = {
+                        jobId: remote.sourceJobId,
+                        productImage: remote.productImage,
+                        imageDataUrl: remote.result.imageDataUrl,
+                    };
+                    setPreciseFits((previous) => ({
+                        ...previous,
+                        [preciseCacheKey(pet.apiProfileId!, product.id, restoredFit.productImage)]: restoredFit,
+                    }));
+                    savePetTryOnFitMaster(fitMasterIdentity, {
+                        jobId: restoredFit.jobId,
+                        productImage: restoredFit.productImage,
+                    });
+                    setFitMasterRestoreBlocked(false);
+                })
+                .finally(() => {
+                    if (active) setFitMasterRestorePending(false);
+                });
+            return () => {
+                active = false;
+                controller.abort();
+            };
         }
         if (lookup.status !== "found") {
             if (lookup.status === "invalid") removePetTryOnFitMaster(fitMasterIdentity);
@@ -253,10 +320,6 @@ export default function PetTryOnPreview({
             return;
         }
         const saved = lookup.value;
-        const approvedImages = new Set<string>([
-            product.image,
-            ...(product.colors || []).map((color) => color.image),
-        ].filter((image): image is string => Boolean(image)));
         if (!approvedImages.has(saved.productImage)) {
             removePetTryOnFitMaster(fitMasterIdentity);
             setFitMasterRestoreBlocked(true);
@@ -297,20 +360,10 @@ export default function PetTryOnPreview({
     }, [fitMasterIdentity, liveReadyFit, pet?.apiProfileId, petReferenceImage, product.colors, product.id, product.image]);
 
     useEffect(() => {
-        if (
-            explicitColorRequired
-            || !fastColorSupported
-            || !sourceFit
-            || !tryOnProduct.image
-            || sourceFit.productImage === tryOnProduct.image
-            || selectedPreciseFit
-            || !selectedFastKey
-            || fastPreviews[selectedFastKey]
-        ) return;
+        if (!shouldRequestFastPreview || !sourceFit || !tryOnProduct.image || !selectedFastKey) return;
 
         const controller = new AbortController();
         let active = true;
-        setFastPreviewLoadingKey(selectedFastKey);
         setFastPreviewUnavailableKey((key) => key === selectedFastKey ? "" : key);
         void requestPetTryOnColorPreview(sourceFit.jobId, tryOnProduct.image, controller.signal)
             .then((preview) => {
@@ -321,27 +374,21 @@ export default function PetTryOnPreview({
                 }
                 setFastPreviews((previous) => ({ ...previous, [selectedFastKey]: preview }));
                 setFastPreviewUnavailableKey("");
-            })
-            .finally(() => {
-                if (!active) return;
-                setFastPreviewLoadingKey((key) => key === selectedFastKey ? "" : key);
             });
         return () => {
             active = false;
             controller.abort();
         };
     }, [
-        explicitColorRequired,
-        fastColorSupported,
-        fastPreviews,
         selectedFastKey,
-        selectedPreciseFit,
+        shouldRequestFastPreview,
         sourceFit,
         tryOnProduct.image,
     ]);
 
     const generate = useCallback(async (applyCorrections = false) => {
         if (!eligible || !pet || !tryOnProduct.image) return;
+        if (fitMasterRestorePending) return;
         setError("");
         if (explicitColorRequired) {
             setError(locale === "en"
@@ -362,25 +409,35 @@ export default function PetTryOnPreview({
             const key = preciseCacheKey(pet.apiProfileId, product.id, liveReadyFit.productImage);
             setPreciseFits((previous) => ({ ...previous, [key]: liveReadyFit }));
         }
+        if (generationRequestPendingRef.current) return;
+        generationRequestPendingRef.current = true;
+        setGenerationRequestPending(true);
+        try {
         const outcome = await start(
             tryOnProduct,
             pet,
             applyCorrections ? correctionIssues : [],
+            Boolean(sourceFit || fitMasterRestoreBlocked),
         );
-        if (outcome === "blocked") {
-            setError(locale === "en"
-                ? "Another fitting is already in progress. Check the floating Smart Fit status first."
-                : "다른 입혀보기가 진행 중이에요. 화면 아래의 Smart Fit 상태를 먼저 확인해 주세요.");
-            setPanelOpen(true);
-        } else if (outcome === "failed") {
-            setError(locale === "en"
-                ? "We couldn't start a reliable fitting. Please try again shortly."
-                : "입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.");
+            if (outcome === "blocked") {
+                setError(locale === "en"
+                    ? "Another fitting is already in progress. Check the floating Smart Fit status first."
+                    : "다른 입혀보기가 진행 중이에요. 화면 아래의 Smart Fit 상태를 먼저 확인해 주세요.");
+                setPanelOpen(true);
+            } else if (outcome === "failed") {
+                setError(locale === "en"
+                    ? "We couldn't start a reliable fitting. Please try again shortly."
+                    : "입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.");
+            }
+        } finally {
+            generationRequestPendingRef.current = false;
+            setGenerationRequestPending(false);
         }
     }, [
         correctionIssues,
         eligible,
         explicitColorRequired,
+        fitMasterRestorePending,
         liveReadyFit,
         locale,
         pet,
@@ -388,18 +445,9 @@ export default function PetTryOnPreview({
         product.id,
         setPanelOpen,
         start,
+        sourceFit,
         tryOnProduct,
     ]);
-
-    // 모달은 가격 옆 버튼을 눌렀을 때만 마운트된다. 첫 마운트에서 한 번만 실제 생성을 시작한다.
-    useEffect(() => {
-        if (started.current || !pet || fitMasterRestorePending) return;
-        started.current = true;
-        // 색상 상품은 사용자가 고른 실제 변형만 생성한다. 기존 완성본이 있으면
-        // 색상 변경 효과가 AI 0회 빠른 비교를 준비하므로 새 생성을 자동 시작하지 않는다.
-        if (explicitColorRequired || sourceFit || fitMasterRestoreBlocked) return;
-        void generate(false);
-    }, [explicitColorRequired, fitMasterRestoreBlocked, fitMasterRestorePending, generate, pet, sourceFit]);
 
     useEffect(() => {
         if (!loading) return;
@@ -430,6 +478,10 @@ export default function PetTryOnPreview({
         if (loading) return;
         setSelected(index);
         setError("");
+        setMismatchOpen(false);
+        setCorrectionIssues([]);
+        setPreciseRegenerationOpen(false);
+        setFastPreviewUnavailableKey("");
     };
 
     return (
@@ -672,6 +724,10 @@ export default function PetTryOnPreview({
                                         colorIdx={colorIdx}
                                         onColorChange={loading ? undefined : (index) => {
                                             setError("");
+                                            setMismatchOpen(false);
+                                            setCorrectionIssues([]);
+                                            setPreciseRegenerationOpen(false);
+                                            setFastPreviewUnavailableKey("");
                                             onColorChange(index);
                                         }}
                                         className={loading ? "pointer-events-none opacity-60" : ""}
@@ -681,14 +737,10 @@ export default function PetTryOnPreview({
                                             ? locale === "en"
                                                 ? "Choose an exact color first. We do not guess from the main product image."
                                                 : "먼저 실제 상품 색상을 골라 주세요. 대표 이미지만 보고 색상을 임의로 정하지 않아요."
-                                            : sourceFit && fastColorSupported
+                                            : sourceFit
                                                 ? locale === "en"
-                                                    ? "Other colors are shown first as a zero-AI quick comparison. Precise generation only starts when you request it."
-                                                    : "다른 색상은 먼저 AI 사용 0회로 빠르게 비교해요. 정밀 생성은 요청할 때만 시작합니다."
-                                                : sourceFit
-                                                    ? locale === "en"
-                                                        ? "This product type needs a precise check for each color to protect your dog's photo."
-                                                        : "이 상품 종류는 강아지 사진을 안전하게 지키기 위해 색상마다 정밀 확인이 필요해요."
+                                                    ? "Tap another color to compare it automatically with zero AI use. No new image is generated."
+                                                    : "다른 색상은 색상 원만 누르면 AI 사용 0회로 자동 비교돼요. 새 이미지를 만들지 않습니다."
                                                 : locale === "en"
                                                     ? "The first precise fitting uses the exact color you selected."
                                                     : "처음 정밀 입혀보기에는 지금 고른 실제 색상 사진을 사용해요."}
@@ -735,16 +787,8 @@ export default function PetTryOnPreview({
                             {selectedFastKey && fastPreviewUnavailableKey === selectedFastKey && !selectedPreciseFit && (
                                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
                                     {locale === "en"
-                                        ? "A reliable zero-AI color preview was not available for this combination. You can request one precise check below."
-                                        : "이 조합은 색상만 안전하게 바꾸기 어려워 빠른 비교를 만들지 않았어요. 아래에서 정밀 확인을 한 번 요청할 수 있어요."}
-                                </div>
-                            )}
-
-                            {!fastColorSupported && sourceFit && sourceFit.productImage !== tryOnProduct.image && !selectedPreciseFit && (
-                                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
-                                    {locale === "en"
-                                        ? "A zero-AI recolor is limited to clothing for now. This product needs one precise check for the selected color."
-                                        : "AI 없는 색상 변경은 현재 의류만 지원해요. 이 상품은 선택한 색상으로 정밀 확인 1회가 필요해요."}
+                                        ? "We could not make a safe automatic color comparison for this combination. Check the product color photo first. The optional 1-AI action below creates a completely new image only if you choose it."
+                                        : "이 조합은 안전한 자동 색상 비교를 만들지 못했어요. 먼저 상품 색상 사진으로 비교해 주세요. 아래 AI 1회 기능은 꼭 필요할 때만 새 이미지를 만드는 선택 기능입니다."}
                                 </div>
                             )}
 
@@ -818,11 +862,14 @@ export default function PetTryOnPreview({
                                                             <button
                                                                 key={option.value}
                                                                 type="button"
-                                                                onClick={() => setCorrectionIssues((issues) => (
-                                                                    issues.includes(option.value)
+                                                                onClick={() => {
+                                                                    setPreciseRegenerationOpen(false);
+                                                                    setCorrectionIssues((issues) => (
+                                                                        issues.includes(option.value)
                                                                         ? issues.filter((issue) => issue !== option.value)
                                                                         : [...issues, option.value]
-                                                                ))}
+                                                                    ));
+                                                                }}
                                                                 aria-pressed={selectedIssue}
                                                                 className={`min-h-9 rounded-full border px-3 py-2 text-[11px] font-black transition ${
                                                                     selectedIssue
@@ -846,14 +893,93 @@ export default function PetTryOnPreview({
                                 </>
                             )}
 
-                            {!loading && (
+                            {!loading && fitMasterRestorePending && (
+                                <div className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-xs font-black leading-5 text-indigo-900">
+                                    <i className="fa-solid fa-spinner fa-spin mr-2" />
+                                    {locale === "en"
+                                        ? "Checking for your existing fitting. No new AI image is being started."
+                                        : "기존 입혀보기 결과를 확인하고 있어요. 새 AI 이미지는 시작하지 않습니다."}
+                                </div>
+                            )}
+
+                            {!loading && !fitMasterRestorePending && isFastPreviewLoading && confirmedRegenerationRequired && (
+                                <div className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-xs font-black leading-5 text-indigo-900">
+                                    <i className="fa-solid fa-spinner fa-spin mr-2" />
+                                    {locale === "en"
+                                        ? "Comparing this color with zero AI use. No new image is being generated."
+                                        : "AI 0회로 이 색상을 비교하고 있어요. 새 이미지는 생성하지 않습니다."}
+                                </div>
+                            )}
+
+                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && confirmedRegenerationRequired && !preciseRegenerationOpen && (
+                                <button
+                                    type="button"
+                                    onClick={() => setPreciseRegenerationOpen(true)}
+                                    className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-neutral-300 bg-white px-4 py-3 text-xs font-black text-neutral-600 transition hover:border-amber-400 hover:bg-amber-50 hover:text-amber-900"
+                                >
+                                    <i className="fa-solid fa-chevron-down" />
+                                    {correctionIssues.length > 0
+                                        ? locale === "en" ? "Optional: create a corrected precise image" : "선택 기능: 보정한 새 정밀 이미지 만들기"
+                                        : !sourceFit
+                                            ? locale === "en" ? "Open: create a new fitting with 1 AI use" : "AI 1회로 새 착용 이미지 만들기"
+                                            : locale === "en" ? "Optional: create another precise image" : "선택 기능: 새 정밀 이미지가 꼭 필요한가요?"}
+                                </button>
+                            )}
+
+                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && confirmedRegenerationRequired && preciseRegenerationOpen && (
+                                <div className="mt-5 rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
+                                    <p className="text-xs font-black text-amber-950">
+                                        <i className="fa-solid fa-triangle-exclamation mr-2" />
+                                        {locale === "en" ? "Confirm a new full AI generation" : "새 AI 전체 생성을 확인해 주세요"}
+                                    </p>
+                                    <p className="mt-2 text-[11px] font-bold leading-5 text-amber-900">
+                                        {correctionIssues.length > 0
+                                            ? locale === "en"
+                                                ? "This uses 1 AI generation to redraw the full image with your selected corrections. It is not a normal color switch."
+                                                : "선택한 보정을 반영해 전체 이미지를 다시 그리며 AI 1회를 사용합니다. 일반 색상 변경 기능이 아닙니다."
+                                            : !sourceFit
+                                                ? locale === "en"
+                                                    ? "This creates one new fitting image from your dog's side photo and the selected product, using 1 AI generation."
+                                                    : "우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 만들며 AI 1회를 사용합니다."
+                                            : locale === "en"
+                                                ? "Color switching above is free. Continue only if you want to spend 1 AI use to redraw the entire image."
+                                                : "위 색상 변경은 AI 0회입니다. 전체 이미지를 다시 그리는 데 AI 1회를 사용하려는 경우에만 계속해 주세요."}
+                                    </p>
+                                    <div className="mt-3 grid grid-cols-2 gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setPreciseRegenerationOpen(false)}
+                                            className="min-h-11 rounded-md border border-neutral-300 bg-white px-3 py-2 text-xs font-black text-neutral-700 hover:bg-neutral-50"
+                                        >
+                                            {locale === "en" ? "Cancel" : "취소"}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => void generate(correctionIssues.length > 0)}
+                                            disabled={generationRequestPending}
+                                            className="min-h-11 rounded-md bg-amber-600 px-3 py-2 text-xs font-black text-white hover:bg-amber-700 disabled:cursor-wait disabled:bg-amber-300"
+                                        >
+                                            <i className={`fa-solid mr-1.5 ${generationRequestPending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"}`} />
+                                            {generationRequestPending
+                                                ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
+                                                : locale === "en" ? "Confirm: use 1 AI to create a new image" : "확인: AI 1회 사용해 새 이미지 만들기"}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {!loading && !fitMasterRestorePending && !confirmedRegenerationRequired && (
                                 <button
                                     type="button"
                                     onClick={() => void generate(correctionIssues.length > 0)}
-                                    disabled={Boolean(selectedPreciseFit && correctionIssues.length === 0)}
+                                    disabled={Boolean(
+                                        explicitColorRequired
+                                        || generationRequestPending
+                                        || (selectedPreciseFit && correctionIssues.length === 0)
+                                    )}
                                     className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-3 text-sm font-black text-white transition hover:bg-indigo-700 disabled:cursor-default disabled:bg-emerald-600"
                                 >
-                                    <i className={`fa-solid ${selectedPreciseFit && correctionIssues.length === 0 ? "fa-circle-check" : "fa-wand-magic-sparkles"}`} />
+                                    <i className={`fa-solid ${generationRequestPending ? "fa-spinner fa-spin" : selectedPreciseFit && correctionIssues.length === 0 ? "fa-circle-check" : "fa-wand-magic-sparkles"}`} />
                                     {explicitColorRequired
                                         ? locale === "en" ? "Choose a color first" : "먼저 색상을 선택해 주세요"
                                         : correctionIssues.length > 0
@@ -861,7 +987,7 @@ export default function PetTryOnPreview({
                                             : selectedPreciseFit
                                                 ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                 : sourceFit
-                                                    ? locale === "en" ? "Check this color precisely (1 AI use)" : "이 색상으로 정밀 확인 (AI 1회)"
+                                                    ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                     : error
                                                         ? locale === "en" ? "Try again (1 AI use)" : "다시 시도하기 (AI 1회)"
                                                         : locale === "en" ? "Start precise fitting (1 AI use)" : "정밀 입혀보기 시작 (AI 1회)"}

@@ -65,6 +65,7 @@ type PetTryOnTaskContextValue = {
         product: CatalogProduct,
         pet: PetProfile,
         correctionIssues?: PetTryOnCorrectionIssue[],
+        confirmPreciseRegeneration?: boolean,
     ) => Promise<StartOutcome>;
     isTaskFor: (
         productId: string,
@@ -428,6 +429,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         product: CatalogProduct,
         pet: PetProfile,
         correctionIssues: PetTryOnCorrectionIssue[] = [],
+        confirmPreciseRegeneration = false,
     ): Promise<StartOutcome> => {
         const petReferenceImage = petTryOnReferencePhoto(product, pet);
         if (!accountKey || !product.image || !pet.apiProfileId || !petReferenceImage) return "failed";
@@ -466,7 +468,13 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         submitAbort.current?.abort();
         const submitController = new AbortController();
         submitAbort.current = submitController;
-        const first = await startPetTryOn(product, pet, submitController.signal, correctionIssues);
+        const first = await startPetTryOn(
+            product,
+            pet,
+            submitController.signal,
+            correctionIssues,
+            confirmPreciseRegeneration,
+        );
         if (submitAbort.current === submitController) submitAbort.current = null;
         if (
             submitController.signal.aborted
@@ -486,7 +494,12 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             setPanelOpen(true);
             return "failed";
         }
-        const started = { ...baseTask, submitting: false, result: first };
+        const started = {
+            ...baseTask,
+            productImage: first.productImage || baseTask.productImage,
+            submitting: false,
+            result: first,
+        };
         taskRef.current = started;
         setTask(started);
         if (first.status === "ready") {
