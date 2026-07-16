@@ -35,6 +35,7 @@ import {
     resolvePetBreedIdExact,
 } from "@/lib/pet-companion-breeds";
 import { useAuth, type PetProfile } from "@/lib/store";
+import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -208,6 +209,7 @@ export default function SignupPage() {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [agreePrivacy, setAgreePrivacy] = useState(false);
     const [agreePetLensPrivacy, setAgreePetLensPrivacy] = useState(false);
+    const apiReady = useDdbApiReady();
 
     useEffect(() => {
         const draft = loadPetLensSignupDraft();
@@ -501,7 +503,7 @@ export default function SignupPage() {
                 <SocialAuthButtons mode="signup" />
             </div>
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
-                {!ddbApiReady() && (
+                {apiReady === false && (
                     <p className="rounded-md bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-800">
                         지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.
                     </p>

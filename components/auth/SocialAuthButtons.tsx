@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ddbApiBase, loadSocialProviders, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
+import { loadSocialProviders, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
+import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 
 const PROVIDERS: Array<{
     id: SocialProvider;
@@ -37,18 +38,15 @@ export default function SocialAuthButtons({
     /** full = 라벨 있는 직사각(기본) / compact = 로그인 카드용 원형 아이콘 */
     variant?: "full" | "compact";
 }) {
-    const apiReady = Boolean(ddbApiBase());
+    const apiReady = useDdbApiReady();
     const [enabledByProvider, setEnabledByProvider] = useState<Record<SocialProvider, boolean> | null>(null);
     const [statusChecked, setStatusChecked] = useState(false);
 
     useEffect(() => {
         let alive = true;
-        if (!apiReady) {
-            setEnabledByProvider(null);
-            setStatusChecked(false);
+        if (apiReady !== true) {
             return;
         }
-        setStatusChecked(false);
         loadSocialProviders()
             .then((rows) => {
                 if (!alive) return;
@@ -75,12 +73,12 @@ export default function SocialAuthButtons({
     }, [apiReady]);
 
     const disabledCount = useMemo(() => {
-        if (!apiReady || !enabledByProvider) return 0;
+        if (apiReady !== true || !enabledByProvider) return 0;
         return PROVIDERS.filter((provider) => enabledByProvider[provider.id] === false).length;
     }, [apiReady, enabledByProvider]);
 
     const start = (provider: SocialProvider) => {
-        if (!apiReady || enabledByProvider?.[provider] === false) return;
+        if (apiReady !== true || enabledByProvider?.[provider] === false) return;
         startSocialLogin(provider, "/mypage");
     };
 
@@ -89,7 +87,7 @@ export default function SocialAuthButtons({
         return (
             <div className="flex items-center justify-center gap-3">
                 {PROVIDERS.map((provider) => {
-                    const disabled = !apiReady || enabledByProvider?.[provider.id] === false;
+                    const disabled = apiReady !== true || enabledByProvider?.[provider.id] === false;
                     return (
                         <button
                             key={provider.id}
@@ -117,15 +115,15 @@ export default function SocialAuthButtons({
                 <h2 className="text-sm font-black text-neutral-950">
                     {mode === "signup" ? "간편가입" : "간편로그인"}
                 </h2>
-                {!apiReady && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
-                {apiReady && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
-                {apiReady && statusChecked && disabledCount > 0 && (
+                {apiReady === false && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
+                {apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
+                {apiReady === true && statusChecked && disabledCount > 0 && (
                     <span className="text-xs font-black text-amber-700">준비 중</span>
                 )}
             </div>
             <div className="grid gap-2 sm:grid-cols-3">
                 {PROVIDERS.map((provider) => {
-                    const disabled = !apiReady || enabledByProvider?.[provider.id] === false;
+                    const disabled = apiReady !== true || enabledByProvider?.[provider.id] === false;
                     return (
                         <button
                             key={provider.id}

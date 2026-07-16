@@ -11,6 +11,7 @@ test("social OAuth callback accepts provider from fragment, query, or JWT claim"
     assert.match(callbackSource, /window\.location\.search/);
     assert.match(callbackSource, /params\.get\("access_token"\) \|\| params\.get\("token"\)/);
     assert.match(callbackSource, /cleanSocialProvider\(params\.get\("provider"\)\) \|\| providerFromJwt\(token\)/);
+    assert.match(callbackSource, /safeInternalRedirect\(value, window\.location\.origin\) \|\| "\/mypage"/);
 });
 
 test("store login preserves social provider for member session UI", () => {

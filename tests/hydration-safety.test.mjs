@@ -61,3 +61,26 @@ test("hydrated number formatting always uses an explicit locale", async () => {
         assert.doesNotMatch(content, /\.toLocaleString\(\s*\)/, files[index]);
     }
 });
+
+test("auth API readiness waits for a hydration-safe browser snapshot", async () => {
+    const [hook, login, signup, social] = await Promise.all([
+        source("hooks/useDdbApiReady.ts"),
+        source("app/auth/login/page.tsx"),
+        source("app/auth/signup/page.tsx"),
+        source("components/auth/SocialAuthButtons.tsx"),
+    ]);
+
+    assert.match(hook, /useSyncExternalStore/);
+    assert.match(hook, /getServerSnapshot = \(\) => null/);
+    assert.match(hook, /getClientSnapshot = \(\) => ddbApiReady\(\)/);
+    assert.match(login, /const apiReady = useDdbApiReady\(\)/);
+    assert.match(login, /apiReady === false/);
+    assert.doesNotMatch(login, /\{!ddbApiReady\(\)/);
+    assert.match(login, /const redirect = useSyncExternalStore\(/);
+    assert.doesNotMatch(login, /setRedirect/);
+    assert.match(signup, /const apiReady = useDdbApiReady\(\)/);
+    assert.match(signup, /apiReady === false/);
+    assert.doesNotMatch(signup, /\{!ddbApiReady\(\)/);
+    assert.match(social, /const apiReady = useDdbApiReady\(\)/);
+    assert.doesNotMatch(social, /Boolean\(ddbApiBase\(\)\)/);
+});

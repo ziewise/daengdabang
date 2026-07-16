@@ -9,7 +9,7 @@
  * 로그인 로직은 기존 흐름을 유지.
  */
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -21,8 +21,18 @@ import {
     setCustomerToken,
 } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
+import { safeInternalRedirect } from "@/lib/internal-redirect";
+import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import BrandLogo from "@/components/header/BrandLogo";
+
+const subscribeToLocation = () => () => {};
+const getServerRedirect = () => null;
+const getClientRedirect = () => {
+    if (typeof window === "undefined") return null;
+    const redirect = new URLSearchParams(window.location.search).get("redirect");
+    return safeInternalRedirect(redirect, window.location.origin);
+};
 
 export default function LoginPage() {
     const router = useRouter();
@@ -32,12 +42,9 @@ export default function LoginPage() {
     const [showPw, setShowPw] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const apiReady = useDdbApiReady();
     // 구매 흐름 등에서 ?redirect=/checkout 로 넘어오면 로그인/비회원 주문 후 그 경로로 보낸다(내부 경로만 허용 — 오픈 리다이렉트 방지)
-    const [redirect, setRedirect] = useState<string | null>(null);
-    useEffect(() => {
-        const r = new URLSearchParams(window.location.search).get("redirect");
-        if (r && r.startsWith("/") && !r.startsWith("//")) setRedirect(r);
-    }, []);
+    const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
 
     // 비회원 주문 — 회원가입/로그인 없이 바로 결제로(현재 checkout 은 게스트 주문 허용)
     const guestCheckout = () => router.push(redirect || "/checkout");
@@ -128,7 +135,7 @@ export default function LoginPage() {
                         <h1 className="sr-only">로그인</h1>
                     </div>
 
-                    {!ddbApiReady() && (
+                    {apiReady === false && (
                         <p className="mb-4 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-6 text-amber-800">
                             지금은 회원 로그인을 준비 중입니다. 잠시 후 다시 이용해 주세요.
                         </p>

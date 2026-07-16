@@ -91,6 +91,56 @@ const STORAGE_KEY = "daengdabang.store.v2";
 const API_TOKEN_KEY = "ddb.api.accessToken";
 const INITIAL: State = { cart: [], wishlist: [], user: null, orders: [] };
 
+function withoutMemberData(snapshot: State): State {
+    return {
+        ...snapshot,
+        cart: snapshot.cart.map((line) => {
+            const guestLine = { ...line };
+            delete guestLine.petAssignment;
+            return guestLine;
+        }),
+        user: null,
+        wishlist: [],
+        orders: [],
+    };
+}
+
+function persistLoggedOutState(currentState?: State): void {
+    let snapshot = currentState ?? INITIAL;
+    if (!currentState) {
+        try {
+            const raw = window.localStorage.getItem(STORAGE_KEY);
+            if (raw) snapshot = { ...INITIAL, ...JSON.parse(raw) };
+        } catch {
+            snapshot = INITIAL;
+        }
+    }
+    try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(withoutMemberData(snapshot)));
+    } catch {
+        // A failed rewrite must not leave a stale member snapshot recoverable.
+        try {
+            window.localStorage.removeItem(STORAGE_KEY);
+        } catch {
+            // The in-memory logout below still has to complete.
+        }
+    }
+}
+
+function clearPersistedMemberSession(currentState?: State): void {
+    persistLoggedOutState(currentState);
+    try {
+        window.localStorage.removeItem(API_TOKEN_KEY);
+    } catch {
+        // Continue clearing the remaining session surfaces.
+    }
+    try {
+        authStorage.clear();
+    } catch {
+        // Continue to the in-memory logout even if storage is unavailable.
+    }
+}
+
 // 장바구니 라인 식별 — 같은 제품도 색상/사이즈(옵션)가 다르면 다른 라인으로 본다.
 function sameLine(line: CartLine, productId: string, color?: string, size?: string): boolean {
     return (
@@ -161,9 +211,9 @@ function reducer(state: State, action: Action): State {
             };
         }
         case "LOGIN":
-            return { ...state, user: action.user };
+            return { ...withoutMemberData(state), user: action.user };
         case "LOGOUT":
-            return { ...state, user: null };
+            return withoutMemberData(state);
         case "UPSERT_PET": {
             if (!state.user) return state;
             const pets = state.user.pets.filter((pet) => {
@@ -234,6 +284,25 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }, [state, hydrated]);
 
     useEffect(() => {
+        if (!memberRefreshIdentity) return;
+        const onStorage = (event: StorageEvent) => {
+            if (event.key !== STORAGE_KEY) return;
+            if (event.newValue === null) {
+                dispatch({ type: "LOGOUT" });
+                return;
+            }
+            try {
+                const next = JSON.parse(event.newValue) as Partial<State>;
+                if (!next.user) dispatch({ type: "LOGOUT" });
+            } catch {
+                // Ignore malformed writes from another tab.
+            }
+        };
+        window.addEventListener("storage", onStorage);
+        return () => window.removeEventListener("storage", onStorage);
+    }, [memberRefreshIdentity]);
+
+    useEffect(() => {
         if (!hydrated || !memberRefreshIdentity) return;
         let cancelled = false;
         loadPetProfilesSmart(memberRefreshToken)
@@ -242,8 +311,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             })
             .catch((error) => {
                 if (!cancelled && error instanceof DdbApiError && error.status === 401) {
-                    window.localStorage.removeItem(API_TOKEN_KEY);
-                    authStorage.clear();
+                    clearPersistedMemberSession();
                     dispatch({ type: "LOGOUT" });
                 }
                 // Keep the last local snapshot only for transient/offline failures.
@@ -273,8 +341,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
                 dispatch({ type: "LOGIN", user });
             },
             logout: () => {
-                window.localStorage.removeItem(API_TOKEN_KEY);
-                authStorage.clear();
+                clearPersistedMemberSession(state);
                 dispatch({ type: "LOGOUT" });
             },
             upsertPet: (pet) => dispatch({ type: "UPSERT_PET", pet }),

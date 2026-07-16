@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loadPetProfilesSmart, setCustomerToken, type SocialProvider } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
+import { safeInternalRedirect } from "@/lib/internal-redirect";
 
 const SOCIAL_PROVIDERS = new Set<SocialProvider>(["naver", "kakao", "google"]);
 
 function cleanReturnTo(value: string | null) {
-    if (!value || !value.startsWith("/") || value.startsWith("//")) return "/mypage";
-    return value;
+    return safeInternalRedirect(value, window.location.origin) || "/mypage";
 }
 
 function parseCallbackParams() {

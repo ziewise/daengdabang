@@ -8,7 +8,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/lib/store";
 import { MYPAGE_MENU } from "@/lib/mypage-data";
 
 export default function MypageSidebar() {
