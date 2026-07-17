@@ -6,6 +6,7 @@ import {
     answerShopQuestionSmart,
     type ShopChatCta,
     type ShopChatAction,
+    type ShopChatConversation,
     type ShopChatHistoryTurn,
     type ShopChatMedical,
     type ShopChatSource,
@@ -14,6 +15,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
 import ChatResponseExtras from "@/components/site/ChatResponseExtras";
+import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 
 type Message = {
     role: "user" | "assistant";
@@ -23,6 +25,7 @@ type Message = {
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
     ctas?: ShopChatCta[];
+    conversation?: ShopChatConversation;
 };
 
 const QUICK_QUESTIONS = [
@@ -31,13 +34,6 @@ const QUICK_QUESTIONS = [
     "자일리톨 껌을 먹었어요",
     "강아지 산책은 하루 몇 번 해야 해?",
     "중형견 하네스 추천",
-];
-
-const THINKING_ACTIONS: ShopChatAction[] = [
-    { label: "질문 의도 분류", status: "running", detail: "쇼핑/건강/강아지 지식 구분" },
-    { label: "댕다방 보유 지식 확인", status: "running", detail: "RAG와 상품 후보 분리" },
-    { label: "인터넷 자료 검색", status: "running", detail: "필요한 경우 공식/권위 자료 확인" },
-    { label: "답변 정리", status: "running", detail: "근거와 다음 행동 정리" },
 ];
 
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
@@ -52,7 +48,9 @@ function ActionList({ actions }: { actions?: ShopChatAction[] }) {
                                 ? "bg-amber-500"
                                 : action.status === "running"
                                   ? "animate-pulse bg-sky-500"
-                                  : "bg-emerald-500"
+                                  : action.status === "done"
+                                    ? "bg-emerald-500"
+                                    : "bg-neutral-300"
                         }`}
                     />
                     <span>
@@ -73,28 +71,11 @@ export default function ChatPageClient() {
     const selectedPet = pets[selectedPetIndex] ?? pets[0] ?? null;
     const initialized = useRef(false);
     const messagesRef = useRef<HTMLDivElement>(null);
-    const thinkingTimers = useRef<number[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [thinkingActions, setThinkingActions] = useState<ShopChatAction[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
 
-    const stopThinking = useCallback(() => {
-        thinkingTimers.current.forEach((timer) => window.clearTimeout(timer));
-        thinkingTimers.current = [];
-        setThinkingActions([]);
-    }, []);
-
-    const startThinking = useCallback(() => {
-        stopThinking();
-        setThinkingActions([THINKING_ACTIONS[0]]);
-        thinkingTimers.current = THINKING_ACTIONS.slice(1).map((action, index) =>
-            window.setTimeout(() => setThinkingActions((prev) => [...prev, action]), 700 * (index + 1))
-        );
-    }, [stopThinking]);
-
     const clearChat = () => {
-        stopThinking();
         setInput("");
         setLoading(false);
         setMessages([]);
@@ -104,7 +85,6 @@ export default function ChatPageClient() {
         const trimmed = question.trim();
         if (!trimmed || loading) return;
         setLoading(true);
-        startThinking();
         const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
             role: item.role,
             content: item.text,
@@ -122,13 +102,13 @@ export default function ChatPageClient() {
                     sources: result.sources,
                     actions: result.actions,
                     ctas: result.ctas,
+                    conversation: result.conversation,
                 },
             ]);
         } finally {
-            stopThinking();
             setLoading(false);
         }
-    }, [loading, messages, selectedPet, startThinking, stopThinking]);
+    }, [loading, messages, selectedPet]);
 
     useEffect(() => {
         if (initialized.current) return;
@@ -145,7 +125,7 @@ export default function ChatPageClient() {
         window.requestAnimationFrame(() => {
             container.scrollTo({ top: container.scrollHeight, behavior: messages.length <= 1 ? "auto" : "smooth" });
         });
-    }, [messages, loading, thinkingActions.length]);
+    }, [messages, loading]);
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
@@ -215,6 +195,12 @@ export default function ChatPageClient() {
                                     {message.text}
                                 </div>
                                 {message.role === "assistant" && <ActionList actions={message.actions} />}
+                                {message.role === "assistant" && message.conversation?.continued && (
+                                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-black text-indigo-700">
+                                        <span aria-hidden="true">↳</span>
+                                        앞 대화와 연결한 답변
+                                    </div>
+                                )}
                                 {message.role === "assistant" && (
                                     <ChatResponseExtras
                                         medical={message.medical}
@@ -227,9 +213,8 @@ export default function ChatPageClient() {
                         ))}
                         {loading && (
                             <div className="text-left">
-                                <div className="inline-block max-w-[82%] rounded-lg bg-white px-4 py-3 text-sm font-bold text-neutral-500 shadow-sm">
-                                    <div>정보 확인 중입니다.</div>
-                                    <ActionList actions={thinkingActions} />
+                                <div className="inline-block max-w-[86%] rounded-lg bg-white px-4 py-4 shadow-sm">
+                                    <ChatThinkingProgress hasHistory={messages.length > 1} />
                                 </div>
                             </div>
                         )}

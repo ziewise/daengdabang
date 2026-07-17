@@ -7,6 +7,7 @@ import {
     answerShopQuestionSmart,
     type ShopChatCta,
     type ShopChatAction,
+    type ShopChatConversation,
     type ShopChatHistoryTurn,
     type ShopChatMedical,
     type ShopChatSource,
@@ -14,6 +15,7 @@ import {
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
 import ChatResponseExtras from "@/components/site/ChatResponseExtras";
+import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 
 type Message = {
     role: "user" | "assistant";
@@ -23,14 +25,8 @@ type Message = {
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
     ctas?: ShopChatCta[];
+    conversation?: ShopChatConversation;
 };
-
-const THINKING_ACTIONS: ShopChatAction[] = [
-    { label: "질문 의도 분류", status: "running", detail: "쇼핑/건강/강아지 지식 구분" },
-    { label: "댕다방 보유 지식 확인", status: "running", detail: "상품 추천이 필요한지 판단" },
-    { label: "인터넷 자료 검색", status: "running", detail: "필요한 경우 공식/권위 자료 확인" },
-    { label: "답변 정리", status: "running", detail: "근거와 다음 행동 정리" },
-];
 
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     if (!actions?.length) return null;
@@ -44,7 +40,9 @@ function ActionList({ actions }: { actions?: ShopChatAction[] }) {
                                 ? "bg-amber-500"
                                 : action.status === "running"
                                   ? "animate-pulse bg-sky-500"
-                                  : "bg-emerald-500"
+                                  : action.status === "done"
+                                    ? "bg-emerald-500"
+                                    : "bg-neutral-300"
                         }`}
                     />
                     <span>
@@ -63,9 +61,7 @@ export default function ChatWidget() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
-    const [thinkingActions, setThinkingActions] = useState<ShopChatAction[]>([]);
     const messagesRef = useRef<HTMLDivElement>(null);
-    const thinkingTimers = useRef<number[]>([]);
 
     const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
         const container = messagesRef.current;
@@ -78,24 +74,9 @@ export default function ChatWidget() {
     useEffect(() => {
         if (!open) return;
         scrollToBottom(messages.length <= 1 ? "auto" : "smooth");
-    }, [open, messages, loading, thinkingActions.length]);
-
-    const stopThinking = () => {
-        thinkingTimers.current.forEach((timer) => window.clearTimeout(timer));
-        thinkingTimers.current = [];
-        setThinkingActions([]);
-    };
-
-    const startThinking = () => {
-        stopThinking();
-        setThinkingActions([THINKING_ACTIONS[0]]);
-        thinkingTimers.current = THINKING_ACTIONS.slice(1).map((action, index) =>
-            window.setTimeout(() => setThinkingActions((prev) => [...prev, action]), 650 * (index + 1))
-        );
-    };
+    }, [open, messages, loading]);
 
     const clearChat = () => {
-        stopThinking();
         setMessages([]);
         setInput("");
         setLoading(false);
@@ -106,7 +87,6 @@ export default function ChatWidget() {
         if (!trimmed || loading) return;
         setInput("");
         setLoading(true);
-        startThinking();
         const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
             role: item.role,
             content: item.text,
@@ -124,10 +104,10 @@ export default function ChatWidget() {
                     sources: result.sources,
                     actions: result.actions,
                     ctas: result.ctas,
+                    conversation: result.conversation,
                 },
             ]);
         } finally {
-            stopThinking();
             setLoading(false);
         }
     };
@@ -184,6 +164,12 @@ export default function ChatWidget() {
                                     />
                                 )}
                                 {message.role === "assistant" && <ActionList actions={message.actions} />}
+                                {message.role === "assistant" && message.conversation?.continued && (
+                                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black text-indigo-700">
+                                        <span aria-hidden="true">↳</span>
+                                        앞 대화와 연결한 답변
+                                    </div>
+                                )}
                                 {message.products && message.products.length > 0 && (
                                     <div className="mt-2 grid gap-2">
                                         {message.products.slice(0, 3).map((product) => (
@@ -201,9 +187,8 @@ export default function ChatWidget() {
                         ))}
                         {loading && (
                             <div className="text-left">
-                                <div className="inline-block max-w-[86%] rounded-lg bg-white px-3 py-2 text-sm font-bold text-neutral-500 shadow-sm">
-                                    <div>정보 확인 중입니다.</div>
-                                    <ActionList actions={thinkingActions} />
+                                <div className="inline-block max-w-[90%] rounded-lg bg-white px-3 py-3 shadow-sm">
+                                    <ChatThinkingProgress compact hasHistory={messages.length > 1} />
                                 </div>
                             </div>
                         )}

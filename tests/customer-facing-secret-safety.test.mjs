@@ -112,3 +112,31 @@ test("customer-facing storefront copy uses plain feature names instead of AI lab
         assert.doesNotMatch(source, /\bAI\b|인공지능|에이아이/, `${path} exposes an artificial feature label`);
     }
 });
+
+test("customer chat progress uses active plain-language steps", async () => {
+    const paths = [
+        "components/site/ChatThinkingProgress.tsx",
+        "components/site/ChatWidget.tsx",
+        "app/chat/ChatPageClient.tsx",
+    ];
+    const sources = await Promise.all(paths.map(async (path) => [path, await readSource(path)]));
+
+    for (const [path, source] of sources) {
+        const customerCopySource = source.replaceAll("@/lib/daengdabang-llm", "");
+        assert.doesNotMatch(
+            customerCopySource,
+            /\b(?:llama|openai|gemini|llm|rag|model|token|backend|provider|router|pipeline|fallback)\b/i,
+            `${path} exposes an internal chat term`,
+        );
+    }
+
+    const progress = await readSource("components/site/ChatThinkingProgress.tsx");
+    assert.match(progress, /답변을 준비하고 있어요/);
+    assert.match(progress, /초째/);
+    assert.match(progress, /조금 더 걸리고 있지만 멈추지 않았어요/);
+
+    const widget = await readSource("components/site/ChatWidget.tsx");
+    const page = await readSource("app/chat/ChatPageClient.tsx");
+    assert.match(widget, /앞 대화와 연결한 답변/);
+    assert.match(page, /앞 대화와 연결한 답변/);
+});

@@ -364,6 +364,12 @@ export type ShopChatAction = {
     detail?: string;
 };
 
+export type ShopChatConversation = {
+    continued: boolean;
+    anchorKind?: "shopping" | "health" | "canine_knowledge" | "vet_locator" | string;
+    turnsUsed?: number;
+};
+
 export type ShopChatResearch = {
     mode?: string;
     sourceCount?: number;
@@ -393,6 +399,7 @@ export type ShopChatAnswer = {
     actions?: ShopChatAction[];
     ctas?: ShopChatCta[];
     research?: ShopChatResearch;
+    conversation?: ShopChatConversation;
 };
 
 const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
@@ -795,20 +802,56 @@ function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
     };
 }
 
+const CUSTOMER_ACTION_INTERNAL_RE = /\b(?:llama|openai|gemini|llm|model|token|backend|provider|router|pipeline|fallback|rules)\b/i;
+
+function customerActionText(value: unknown, fallback: string) {
+    if (typeof value !== "string") return "";
+    const original = value.trim();
+    if (!original) return "";
+    if (/^(?:llama|fallback|catalog-rules|web-research-(?:llama|rules)|source-(?:long-summary|guided-care))$/i.test(original)) {
+        return fallback;
+    }
+    if (/^(?:canine-health-rag|35b|llm\s|규칙형)/i.test(original)) return fallback;
+
+    const normalized = original
+        .replace(/^질문\s*의도\s*분류$/i, "질문 이해")
+        .replace(/^댕다방\s*보유\s*지식\s*확인$/i, "관련 정보 확인")
+        .replace(/^상품\s*후보\s*검색$/i, "상품 살펴보기")
+        .replace(/^인터넷\s*자료\s*검색$/i, "관련 자료 확인")
+        .replace(/댕다방\s*수의학\s*RAG\s*검색/gi, "반려견 건강 정보 확인")
+        .replace(/\bRAG\b/gi, "관련 정보")
+        .replace(/\bAPI\b/gi, "연동 자료")
+        .replace(/35B로\s*출처\s*요약/gi, "확인한 자료를 바탕으로 정리")
+        .trim();
+
+    return CUSTOMER_ACTION_INTERNAL_RE.test(normalized) ? fallback : normalized;
+}
+
 function normalizeActions(value: unknown): ShopChatAction[] {
     if (!Array.isArray(value)) return [];
     return value.slice(0, 8).flatMap((item) => {
-        if (typeof item === "string") return [{ label: item, status: "done" }];
+        if (typeof item === "string") return [{ label: customerActionText(item, "확인 과정"), status: "done" }];
         if (!item || typeof item !== "object") return [];
         const record = item as Record<string, unknown>;
-        const label = typeof record.label === "string" ? record.label : "";
+        const label = customerActionText(record.label, "확인 과정");
         if (!label) return [];
         return [{
             label,
             status: typeof record.status === "string" ? record.status : "done",
-            detail: typeof record.detail === "string" ? record.detail : "",
+            detail: customerActionText(record.detail, "확인한 내용을 바탕으로 정리"),
         }];
     });
+}
+
+function normalizeConversation(value: unknown): ShopChatConversation | undefined {
+    if (!value || typeof value !== "object") return undefined;
+    const record = value as Record<string, unknown>;
+    if (record.continued !== true) return { continued: false };
+    return {
+        continued: true,
+        anchorKind: typeof record.anchorKind === "string" ? record.anchorKind : undefined,
+        turnsUsed: typeof record.turnsUsed === "number" ? record.turnsUsed : undefined,
+    };
 }
 
 function normalizeResearch(value: unknown): ShopChatResearch | undefined {
@@ -1239,6 +1282,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         const actions = normalizeActions(data.actions);
         const research = normalizeResearch(data.research);
         const ctas = normalizeCtas(data.ctas);
+        const conversation = normalizeConversation(data.conversation);
         const apiMedical = medicalMode ? data.medical as ShopChatMedical : fallback.medical;
         if (apiMedical && apiMedical.choiceGroups) {
             apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
@@ -1251,6 +1295,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             actions: actions.length ? actions : fallback.actions,
             ctas: ctas.length ? ctas : fallback.ctas,
             research: research || fallback.research,
+            conversation,
         };
     } catch {
         return scopeFallback || medicalFallback || knowledgeFallback || fallback;
