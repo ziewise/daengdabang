@@ -253,8 +253,7 @@ export default function PetCompanionGate() {
         if (homeTransitionTimerRef.current !== null) {
             window.clearTimeout(homeTransitionTimerRef.current);
         }
-        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const transitionDuration = reducedMotion ? 80 : 780;
+        const transitionDuration = 3250;
 
         if (companionEnabled) {
             setHomeTransition("leaving");

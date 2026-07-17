@@ -257,16 +257,21 @@ export default function PetCompanionSpriteCanvas({
         drawFrameRef.current = drawFrame;
 
         const resizeCanvas = () => {
-            const rect = canvas.getBoundingClientRect();
-            if (rect.width <= 0 || rect.height <= 0) return;
+            // Use the untransformed layout box. During the home-entry animation
+            // the walker starts at scale(.07); getBoundingClientRect() would
+            // bake that temporary scale into a tiny backing store and the
+            // browser would then stretch a ~20px canvas to the full dog size.
+            const layoutWidth = canvas.clientWidth;
+            const layoutHeight = canvas.clientHeight;
+            if (layoutWidth <= 0 || layoutHeight <= 0) return;
 
             const dpr = Math.min(
                 Math.max(window.devicePixelRatio || 1, 1),
                 MAX_DEVICE_PIXEL_RATIO,
             );
-            const backingWidth = Math.max(1, Math.round(rect.width * dpr));
-            const backingHeight = Math.max(1, Math.round(rect.height * dpr));
-            canvasSize = { width: rect.width, height: rect.height, dpr };
+            const backingWidth = Math.max(1, Math.round(layoutWidth * dpr));
+            const backingHeight = Math.max(1, Math.round(layoutHeight * dpr));
+            canvasSize = { width: layoutWidth, height: layoutHeight, dpr };
 
             if (canvas.width !== backingWidth || canvas.height !== backingHeight) {
                 canvas.width = backingWidth;

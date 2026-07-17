@@ -54,22 +54,22 @@
     bottom: 134px;
     z-index: 2211;
     display: grid;
-    width: 42px;
-    height: 48px;
+    width: 34px;
+    height: 42px;
     place-items: center;
     padding: 0;
-    border: 1px solid rgb(99 70 52 / 14%);
+    border: 1px solid rgb(52 43 38 / 12%);
     border-right: 0;
-    border-radius: 19px 0 0 19px;
+    border-radius: 18px 0 0 18px;
     background: linear-gradient(145deg, rgb(255 252 246 / 98%), rgb(255 241 222 / 96%));
-    box-shadow: 0 6px 20px rgb(72 45 31 / 16%);
+    box-shadow: 0 5px 18px rgb(40 31 27 / 14%);
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
 }
 
 .homeLaunch:hover {
-    transform: translateX(-3px) translateY(-1px);
-    box-shadow: 0 9px 24px rgb(72 45 31 / 21%);
+    transform: translateX(-2px);
+    box-shadow: 0 8px 22px rgb(40 31 27 / 18%);
 }
 
 .homeLaunch:disabled { cursor: wait; }
@@ -81,7 +81,7 @@
 
 .homeLaunch[data-home-occupied="true"] {
     background: linear-gradient(145deg, #fff9ec, #ffe3b5);
-    box-shadow: 0 6px 20px rgb(136 79 33 / 20%), inset 0 0 0 1px rgb(255 255 255 / 72%);
+    box-shadow: 0 5px 18px rgb(40 31 27 / 14%), inset 0 0 0 1px rgb(255 255 255 / 72%);
 }
 
 .dogHouseIcon {
@@ -90,10 +90,12 @@
     width: 25px;
     height: 27px;
     filter: drop-shadow(0 2px 2px rgb(72 42 27 / 18%));
+    transform: scale(.68);
+    transform-origin: center;
     transition: transform .22s ease;
 }
 
-.homeLaunch:hover .dogHouseIcon { transform: scale(1.06); }
+.homeLaunch:hover .dogHouseIcon { transform: scale(.72); }
 
 .dogHouseRoof {
     position: absolute;
@@ -255,11 +257,11 @@
 }
 
 .walker[data-pet-home-transition="leaving"] {
-    animation: pet-companion-go-home .74s cubic-bezier(.42, 0, .2, 1) both;
+    animation: pet-companion-go-home 3.2s cubic-bezier(.42, 0, .2, 1) both;
 }
 
 .walker[data-pet-home-transition="entering"] {
-    animation: pet-companion-leave-home .74s cubic-bezier(.2, .72, .25, 1) both;
+    animation: pet-companion-leave-home 3.2s cubic-bezier(.2, .72, .25, 1) both;
 }
 
 .dogButton {
@@ -812,9 +814,9 @@
     }
     .homeLaunch {
         bottom: 128px;
-        width: 44px;
-        height: 48px;
-        border-radius: 21px 0 0 21px;
+        width: 40px;
+        height: 44px;
+        border-radius: 20px 0 0 20px;
     }
     .homeBark {
         top: -10px;
@@ -904,11 +906,6 @@
     .settingsLaunch,
     .homeLaunch {
         transition-duration: 1ms !important;
-    }
-
-    .walker[data-pet-home-transition="leaving"],
-    .walker[data-pet-home-transition="entering"] {
-        animation-duration: 1ms !important;
     }
 
     .homeBark,
