@@ -102,9 +102,10 @@ type EntryPortalStyle = CSSProperties & {
 };
 
 const MOVE_EVENT = "ddb:pet-companion-move";
-const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v2";
-const MAX_RECOMMENDATIONS_PER_SESSION = 3;
-const MAX_RECOMMENDATIONS_PER_MOUNT = 6;
+const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v3";
+const MAX_RECOMMENDATIONS_PER_SESSION = 6;
+const MAX_RECOMMENDATIONS_PER_MOUNT = 8;
+const MIN_AUTOMATIC_RECOMMENDATION_GAP_MS = 18_000;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
 let memoryRecommendationShownCount = 0;
@@ -219,6 +220,7 @@ export default function PetCompanionLayer({
     const lastFocusRef = useRef<HTMLElement | null>(null);
     const recommendedNamesRef = useRef(new Set<string>());
     const recommendationCountRef = useRef(0);
+    const lastRecommendationShownAtRef = useRef(0);
     const promptOpenRef = useRef(false);
     const guideInFlightRef = useRef(false);
     const guideRunRef = useRef(0);
@@ -1420,7 +1422,7 @@ export default function PetCompanionLayer({
             () => showGuide({ force: previewMode }),
             previewMode ? 2200 : 3200,
         );
-        const interval = window.setInterval(() => showGuide(), 35000);
+        const interval = window.setInterval(() => showGuide(), 22000);
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("resize", onResize);
         window.addEventListener("ddb:pet-guide-now", onManualGuideRequest);
@@ -1455,6 +1457,14 @@ export default function PetCompanionLayer({
         let activeRecommendationRun = 0;
         let shownRecommendationRun = 0;
         const firstRecommendationAt = performance.now() + 2600;
+        const automaticRecommendationGapRemaining = () => {
+            if (!lastRecommendationShownAtRef.current) return 0;
+            return Math.max(
+                0,
+                MIN_AUTOMATIC_RECOMMENDATION_GAP_MS
+                    - (performance.now() - lastRecommendationShownAtRef.current),
+            );
+        };
 
         const dismissRecommendation = (expectedRun: number) => {
             if (
@@ -1487,6 +1497,14 @@ export default function PetCompanionLayer({
                         ? "blocked:mount-cap"
                         : "blocked:automatic-cap";
                 }
+                return;
+            }
+            const automaticGapRemaining = automaticRecommendationGapRemaining();
+            if (!force && automaticGapRemaining > 0) {
+                if (walkerRef.current) {
+                    walkerRef.current.dataset.petRecommendationStatus = "blocked:automatic-gap";
+                }
+                scheduleAutomaticRecommendation(Math.ceil(automaticGapRemaining));
                 return;
             }
             if (promptOpenRef.current && !document.querySelector("[data-pet-companion-speech]")) {
@@ -1618,6 +1636,9 @@ export default function PetCompanionLayer({
                 recommendedNamesRef.current.add(name);
                 recommendationCountRef.current += 1;
                 markRecommendationShownThisSession();
+                // Explicit search recommendations bypass the wait before they
+                // appear, but still reset the next automatic prompt's gap.
+                lastRecommendationShownAtRef.current = performance.now();
                 shownRecommendationRun = recommendationRun;
                 promptOpenRef.current = true;
                 setRecommendation({
@@ -1635,10 +1656,11 @@ export default function PetCompanionLayer({
 
         const scheduleAutomaticRecommendation = (delay = 700) => {
             const initialDelay = Math.max(0, firstRecommendationAt - performance.now());
+            const gapDelay = Math.ceil(automaticRecommendationGapRemaining());
             window.clearTimeout(settleTimer);
             settleTimer = window.setTimeout(
                 () => showRecommendation(),
-                Math.max(delay, initialDelay),
+                Math.max(delay, initialDelay, gapDelay),
             );
         };
 
@@ -1716,7 +1738,7 @@ export default function PetCompanionLayer({
         const hasInitialProduct = Boolean(document.querySelector("[data-pet-product]"));
         observeProductCards(document);
         if (hasInitialProduct && !intersectionObserver) scheduleAutomaticRecommendation(2600);
-        const interval = window.setInterval(() => showRecommendation(), 90000);
+        const interval = window.setInterval(() => showRecommendation(), 30000);
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
         document.addEventListener("focusin", onSearchRecommendationInput, true);

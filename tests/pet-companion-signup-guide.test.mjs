@@ -35,6 +35,17 @@ test("signup guide has a dedicated field-by-field sequence", async () => {
     assert.match(source, /필수 약관과 개인정보 동의/);
 });
 
+test("companion navigator uses the refreshed, more frequent guidance budget", async () => {
+    const source = await readSource("lib/pet-companion-guide.ts");
+
+    assert.match(source, /const SESSION_KEY = "ddb\.petGuide\.session\.v7"/);
+    assert.match(source, /const DAILY_KEY = "ddb\.petGuide\.daily\.v7"/);
+    assert.match(source, /const SESSION_LIMIT = 20/);
+    assert.match(source, /const DAILY_LIMIT = 40/);
+    assert.match(source, /const AUTO_GUIDE_GAP_MS = 8_000/);
+    assert.match(source, /const ROUTE_GUIDE_COOLDOWN_MS = 5 \* 60_000/);
+});
+
 test("signup page exposes guide targets for confusing form sections", async () => {
     const source = await readSource("app/auth/signup/page.tsx");
 

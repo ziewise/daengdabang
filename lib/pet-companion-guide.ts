@@ -23,19 +23,18 @@ export type PetGuidePrompt = {
     placement?: "header" | "content";
 };
 
-// v6 starts a fresh onboarding history after the desktop guest signup-first
-// flow was introduced. Old v5 records could otherwise suppress the new
-// first-visit message for up to fifteen minutes.
-const SESSION_KEY = "ddb.petGuide.session.v6";
-const DAILY_KEY = "ddb.petGuide.daily.v6";
+// v7 starts a fresh guidance history with the higher navigator budget. Old v6
+// records could otherwise keep an already exhausted session or day suppressed.
+const SESSION_KEY = "ddb.petGuide.session.v7";
+const DAILY_KEY = "ddb.petGuide.daily.v7";
 
 // Guidance should stay useful throughout a shopping session without becoming a
-// repetitive pop-up. The v6 state replaces the old three-prompt hard stop with
+// repetitive pop-up. The v7 state replaces the old three-prompt hard stop with
 // a short global gap plus a route-and-target cooldown.
-const SESSION_LIMIT = 12;
-const DAILY_LIMIT = 24;
-const AUTO_GUIDE_GAP_MS = 12_000;
-const ROUTE_GUIDE_COOLDOWN_MS = 15 * 60_000;
+const SESSION_LIMIT = 20;
+const DAILY_LIMIT = 40;
+const AUTO_GUIDE_GAP_MS = 8_000;
+const ROUTE_GUIDE_COOLDOWN_MS = 5 * 60_000;
 const HISTORY_RETENTION_MS = 24 * 60 * 60_000;
 
 type GuideHistoryEntry = {
