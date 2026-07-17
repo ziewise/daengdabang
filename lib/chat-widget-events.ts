@@ -1,4 +1,5 @@
 export const CHAT_WIDGET_OPEN_EVENT = "ddb:open-chat-widget";
+export const CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT = "ddb:reveal-chat-widget-for-navigator";
 
 export type ChatWidgetOpenDetail = {
     productName?: string;

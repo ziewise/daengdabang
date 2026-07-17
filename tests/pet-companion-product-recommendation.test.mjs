@@ -40,7 +40,7 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /RECOMMENDATION_SESSION_KEY = "ddb\.petCompanion\.recommendationShown\.v4"/);
     assert.match(source, /MAX_RECOMMENDATIONS_PER_SESSION = 6/);
     assert.match(source, /MAX_RECOMMENDATIONS_PER_MOUNT = 8/);
-    assert.match(source, /MIN_NAVIGATOR_PROMPT_GAP_MS = 10_000/);
+    assert.match(source, /MIN_NAVIGATOR_PROMPT_GAP_MS = 8_000/);
     assert.match(source, /lastNavigatorPromptAtRef/);
     assert.match(source, /recommendationShownCountThisSession/);
     assert.match(source, /hasVisibleProductSurface/);
@@ -68,9 +68,9 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /if \(promptOpenRef\.current \|\| guideInFlightRef\.current\)/);
     assert.match(source, /force \? 900 : 1800/);
     assert.match(source, /const firstGuideAt = performance\.now\(\) \+ \(previewMode \? 1200 : 1800\)/);
-    assert.match(source, /\(\) => showGuide\(\),[\s\S]{0,80}previewMode \? 900 : 2600/);
-    assert.match(source, /window\.setInterval\(\(\) => showRecommendation\(\), 15000\)/);
-    assert.match(source, /window\.setInterval\(\(\) => showGuide\(\), 14000\)/);
+    assert.match(source, /\(\) => showGuide\(\),[\s\S]{0,80}previewMode \? 700 : 1200/);
+    assert.match(source, /window\.setInterval\(\(\) => showRecommendation\(\), 12000\)/);
+    assert.match(source, /window\.setInterval\(\(\) => showGuide\(\), 12000\)/);
     assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
     assert.match(source, /!document\.querySelector\("\[data-pet-companion-speech\]"\)/);
     assert.match(source, /target\.closest\("\[data-pet-companion-allow='search'\]"\)/);

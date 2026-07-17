@@ -18,16 +18,24 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import ChatWidget from "@/components/site/ChatWidget";
+import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
 
 export default function FloatingDock() {
     const pathname = usePathname();
     const [shown, setShown] = useState(false);
+    const [navigatorReveal, setNavigatorReveal] = useState(false);
     // 제품 상세의 하단 구매 바가 떠 있으면(ddb:buybar) 그 위로 비켜 올라간다
     const [buybar, setBuybar] = useState(false);
     useEffect(() => {
         const onBuybar = (e: Event) => setBuybar(Boolean((e as CustomEvent).detail));
         window.addEventListener("ddb:buybar", onBuybar);
         return () => window.removeEventListener("ddb:buybar", onBuybar);
+    }, []);
+
+    useEffect(() => {
+        const revealForNavigator = () => setNavigatorReveal(true);
+        window.addEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, revealForNavigator);
+        return () => window.removeEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, revealForNavigator);
     }, []);
 
     // 히어로가 있는 페이지는 첫 화면만 숨기고, 스크롤이 시작되는 즉시 FAB 노출
@@ -48,7 +56,7 @@ export default function FloatingDock() {
             window.removeEventListener("scroll", update);
             window.removeEventListener("resize", update);
         };
-    }, []);
+    }, [pathname]);
 
     // 인증 페이지(로그인/회원가입/비밀번호 등 /auth/*)에서는 FAB(펫렌즈·챗봇) 숨김
     if (pathname?.startsWith("/auth")) return null;
@@ -57,12 +65,13 @@ export default function FloatingDock() {
     //   ChatWidget 은 relative 라 dock 기준으로 배치된다(예전엔 ChatWidget 이 자체 fixed 라
     //   buybar 회피가 안 먹혀 하단 구매 바와 겹쳤음). fade 는 translate 없이 opacity 로만
     //   처리한다(자식 채팅창 폭 깨짐 방지). dock 자체는 pointer-events-none, 노출 시 버튼만 auto.
-    const interactive = shown ? "pointer-events-auto" : "pointer-events-none";
+    const dockVisible = shown || navigatorReveal;
+    const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
     return (
         <div
             className={`pointer-events-none fixed right-4 z-[2200] flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${
                 buybar ? "bottom-[5.5rem]" : "bottom-4"
-            } ${shown ? "opacity-100" : "opacity-0"}`}
+            } ${dockVisible ? "opacity-100" : "opacity-0"}`}
         >
             {/* 챗봇 — 위치는 dock 이 관리, 내부 토글/대화 로직은 협업자 ChatWidget 그대로 */}
             <div className={interactive}>

@@ -48,9 +48,11 @@ test("the companion home control hides and restores the dog without opening sett
 });
 
 test("the navigator explains the home and settings controls without outranking product guidance", async () => {
-    const [guide, layer] = await Promise.all([
+    const [guide, layer, dock, chatEvents] = await Promise.all([
         readSource("lib/pet-companion-guide.ts"),
         readSource("components/pet-companion/PetCompanionLayer.tsx"),
+        readSource("components/site/FloatingDock.tsx"),
+        readSource("lib/chat-widget-events.ts"),
     ]);
 
     assert.match(guide, /\| "home"/);
@@ -70,6 +72,12 @@ test("the navigator explains the home and settings controls without outranking p
     assert.match(layer, /bypassRouteCooldownForId: detail\?\.force \? detail\.id : undefined/);
     assert.match(layer, /scheduleSettledGuide\(previewMode \? 450 : 700\)/);
     assert.match(layer, /scheduleSettledGuide\(previewMode \? 350 : 500\)/);
+    assert.match(layer, /window\.dispatchEvent\(new Event\(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT\)\)/);
+    assert.match(layer, /\(\) => dismissGuide\(guideRun\),[\s\S]{0,40}6800/);
+    assert.match(chatEvents, /CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT = "ddb:reveal-chat-widget-for-navigator"/);
+    assert.match(dock, /window\.addEventListener\(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, revealForNavigator\)/);
+    assert.match(dock, /const dockVisible = shown \|\| navigatorReveal/);
+    assert.match(dock, /\}, \[pathname\]\);/);
 });
 
 test("the dog returns with matched sizing, a full-resolution canvas, and explicit timing", async () => {

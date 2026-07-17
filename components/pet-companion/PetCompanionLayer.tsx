@@ -12,6 +12,7 @@ import {
     type PointerEvent as ReactPointerEvent,
 } from "react";
 import { savePetProfileSmart } from "@/lib/customer-api";
+import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
 import { hasVerifiedPetPhoto, useStore } from "@/lib/store";
 import {
     findPetGuidePrompt,
@@ -105,7 +106,7 @@ const MOVE_EVENT = "ddb:pet-companion-move";
 const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v4";
 const MAX_RECOMMENDATIONS_PER_SESSION = 6;
 const MAX_RECOMMENDATIONS_PER_MOUNT = 8;
-const MIN_NAVIGATOR_PROMPT_GAP_MS = 10_000;
+const MIN_NAVIGATOR_PROMPT_GAP_MS = 8_000;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
 let memoryRecommendationShownCount = 0;
@@ -1108,6 +1109,15 @@ export default function PetCompanionLayer({
         let pendingGuideId: PetGuideId | null = null;
         const previewMode = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
+        const chatbotRevealTimer = (
+            window.location.pathname === "/"
+            || window.location.pathname === "/main"
+            || window.location.pathname === "/main/"
+        )
+            ? window.setTimeout(() => {
+                window.dispatchEvent(new Event(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT));
+            }, 0)
+            : 0;
         const firstGuideAt = performance.now() + (previewMode ? 1200 : 1800);
         const navigatorPromptGapRemaining = () => {
             if (!lastNavigatorPromptAtRef.current) return 0;
@@ -1142,7 +1152,7 @@ export default function PetCompanionLayer({
             window.clearTimeout(retryTimer);
             retryTimer = window.setTimeout(
                 () => showGuide(),
-                previewMode ? 900 : 2600,
+                previewMode ? 700 : 1200,
             );
         };
 
@@ -1345,12 +1355,9 @@ export default function PetCompanionLayer({
                 setMotion("point");
                 if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = `shown:${prompt.id}`;
                 window.clearTimeout(dismissTimer);
-                const desktopSignupGuide = prompt.id === "signup"
-                    && prompt.placement === "header"
-                    && window.innerWidth >= 1024;
                 dismissTimer = window.setTimeout(
                     () => dismissGuide(guideRun),
-                    desktopSignupGuide ? 12_000 : 8200,
+                    6800,
                 );
             }, travelMs + 80);
         };
@@ -1447,7 +1454,7 @@ export default function PetCompanionLayer({
             () => showGuide({ force: previewMode }),
             previewMode ? 1200 : 1800,
         );
-        const interval = window.setInterval(() => showGuide(), 14000);
+        const interval = window.setInterval(() => showGuide(), 12000);
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("resize", onResize);
         window.addEventListener("ddb:pet-guide-now", onManualGuideRequest);
@@ -1456,6 +1463,7 @@ export default function PetCompanionLayer({
         targetObserver.observe(document.body, { childList: true, subtree: true });
         return () => {
             window.clearTimeout(first);
+            window.clearTimeout(chatbotRevealTimer);
             window.clearTimeout(revealTimer);
             window.clearTimeout(dismissTimer);
             window.clearTimeout(retryTimer);
@@ -1767,7 +1775,7 @@ export default function PetCompanionLayer({
         const hasInitialProduct = Boolean(document.querySelector("[data-pet-product]"));
         observeProductCards(document);
         if (hasInitialProduct && !intersectionObserver) scheduleAutomaticRecommendation(2600);
-        const interval = window.setInterval(() => showRecommendation(), 15000);
+        const interval = window.setInterval(() => showRecommendation(), 12000);
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
         document.addEventListener("focusin", onSearchRecommendationInput, true);
