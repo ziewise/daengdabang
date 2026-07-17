@@ -14,6 +14,7 @@ import {
 } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
+import { CHAT_WIDGET_OPEN_EVENT, type ChatWidgetOpenDetail } from "@/lib/chat-widget-events";
 import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 
@@ -61,7 +62,9 @@ export default function ChatWidget() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    const [productContext, setProductContext] = useState("");
     const messagesRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
         const container = messagesRef.current;
@@ -76,6 +79,18 @@ export default function ChatWidget() {
         scrollToBottom(messages.length <= 1 ? "auto" : "smooth");
     }, [open, messages, loading]);
 
+    useEffect(() => {
+        const openFromPage = (event: Event) => {
+            const detail = (event as CustomEvent<ChatWidgetOpenDetail>).detail;
+            setProductContext(typeof detail?.productName === "string" ? detail.productName.trim() : "");
+            setInput("");
+            setOpen(true);
+            window.setTimeout(() => inputRef.current?.focus(), 0);
+        };
+        window.addEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
+        return () => window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
+    }, []);
+
     const clearChat = () => {
         setMessages([]);
         setInput("");
@@ -85,6 +100,9 @@ export default function ChatWidget() {
     const ask = async (question: string) => {
         const trimmed = question.trim();
         if (!trimmed || loading) return;
+        const questionForAnswer = productContext
+            ? `${productContext} 상품 문의: ${trimmed}`
+            : trimmed;
         setInput("");
         setLoading(true);
         const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
@@ -93,7 +111,7 @@ export default function ChatWidget() {
         }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
-            const result = await answerShopQuestionSmart(trimmed, { pet: user?.pets?.[0] ?? null, history });
+            const result = await answerShopQuestionSmart(questionForAnswer, { pet: user?.pets?.[0] ?? null, history });
             setMessages((prev) => [
                 ...prev,
                 {
@@ -144,7 +162,21 @@ export default function ChatWidget() {
                             </button>
                         </div>
                     </header>
-                    <div ref={messagesRef} className="flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-3 overscroll-contain scroll-smooth">
+                    {productContext ? (
+                        <div className="flex shrink-0 items-center gap-2 border-b border-indigo-100 bg-indigo-50 px-3 py-2 text-[11px] font-bold text-indigo-900">
+                            <span className="shrink-0 rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-black text-white">상품 문의</span>
+                            <span className="min-w-0 flex-1 truncate" title={productContext}>{productContext}</span>
+                            <button
+                                type="button"
+                                onClick={() => setProductContext("")}
+                                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-indigo-500 hover:bg-indigo-100 hover:text-indigo-900"
+                                aria-label="상품 문의 대상 지우기"
+                            >
+                                <i className="fa-solid fa-xmark text-[10px]" />
+                            </button>
+                        </div>
+                    ) : null}
+                    <div ref={messagesRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-3 overscroll-contain scroll-smooth">
                         {messages.map((message, index) => (
                             <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
                                 <div
@@ -196,10 +228,11 @@ export default function ChatWidget() {
                     </div>
                     <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 p-3">
                         <input
+                            ref={inputRef}
                             value={input}
                             onChange={(event) => setInput(event.target.value)}
                             className="input h-10 flex-1"
-                            placeholder="증상, 생활 질문, 상품 고민을 입력"
+                            placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "증상, 생활 질문, 상품 고민을 입력"}
                             aria-label="채팅 질문"
                         />
                         <button

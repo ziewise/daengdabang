@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
+import { openChatWidget } from "@/lib/chat-widget-events";
 
 type SectionKey = "detail" | "review" | "qna";
 
@@ -228,13 +228,14 @@ function QnaContent({ product: p }: { product: CatalogProduct }) {
                     ? `Ask about sizing, use cases, and comparison products for ${displayName}.`
                     : `${displayName} 기준으로 사이즈, 용도, 비교 상품을 바로 물어볼 수 있습니다.`}
             </p>
-            <Link
-                href={`/chat?q=${encodeURIComponent(displayName)}`}
+            <button
+                type="button"
+                onClick={() => openChatWidget({ productName: displayName })}
                 className="mt-5 inline-flex h-11 items-center gap-2 rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-indigo-700"
             >
                 <i className="fa-solid fa-circle-question text-xs" />
                 {t("askChatbot")}
-            </Link>
+            </button>
         </div>
     );
 }

@@ -138,19 +138,9 @@ export default function ChatPageClient() {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                        <p className="text-sm font-black text-indigo-700">댕다방 케어톡</p>
-                        <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">상담</h1>
-                    </div>
-                    <button
-                        type="button"
-                        onClick={clearChat}
-                        className="inline-flex h-10 items-center gap-2 rounded-md border border-neutral-200 bg-white px-3 text-sm font-black text-neutral-700 shadow-sm hover:border-indigo-300 hover:text-indigo-700"
-                    >
-                        <i className="fa-solid fa-trash-can text-xs" />
-                        비우기
-                    </button>
+                <div>
+                    <p className="text-sm font-black text-indigo-700">댕다방 케어톡</p>
+                    <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">상담</h1>
                 </div>
                 {pets.length > 0 && (
                     <label className="mt-4 inline-flex max-w-full items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-black text-neutral-700">
@@ -183,8 +173,26 @@ export default function ChatPageClient() {
             </header>
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
-                <section className="surface flex min-h-[620px] flex-col overflow-hidden">
-                    <div ref={messagesRef} className="flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4 overscroll-contain scroll-smooth">
+                <section className="surface flex h-[min(720px,calc(100dvh-180px))] min-h-[420px] flex-col overflow-hidden">
+                    <div className="flex h-12 shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-4">
+                        <div>
+                            <b className="text-sm font-black text-neutral-900">대화 내용</b>
+                            {messages.length > 0 ? (
+                                <span className="ml-2 text-xs font-bold text-neutral-400">{messages.length}개</span>
+                            ) : null}
+                        </div>
+                        <button
+                            type="button"
+                            onClick={clearChat}
+                            disabled={messages.length === 0 || loading}
+                            className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-black text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-35"
+                            aria-label="대화 내용 비우기"
+                        >
+                            <i className="fa-solid fa-trash-can text-[11px]" />
+                            비우기
+                        </button>
+                    </div>
+                    <div ref={messagesRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4 overscroll-contain scroll-smooth">
                         {messages.map((message, index) => (
                             <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
                                 <div
@@ -220,7 +228,7 @@ export default function ChatPageClient() {
                         )}
                         <div aria-hidden="true" className="h-px" />
                     </div>
-                    <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 bg-white p-4">
+                    <form onSubmit={submit} className="flex shrink-0 gap-2 border-t border-neutral-200 bg-white p-4">
                         <input
                             value={input}
                             onChange={(event) => setInput(event.target.value)}

@@ -15,6 +15,7 @@ type ChatResponseExtrasProps = {
 type ChoiceViewGroup = {
     title: string;
     choices: Array<{ label: string; prompt: string; description?: string }>;
+    answerInput?: boolean;
 };
 
 type VetPlace = {
@@ -279,11 +280,17 @@ async function fetchNominatimVetPlaces(latitude: number, longitude: number) {
 function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps, "medical" | "onAsk" | "compact">) {
     const [customGroupTitle, setCustomGroupTitle] = useState<string | null>(null);
     const [customText, setCustomText] = useState("");
+    const [answerSlot, setAnswerSlot] = useState<{ label: string; prompt: string } | null>(null);
     const groups: ChoiceViewGroup[] = medical?.choiceGroups?.filter((group) => group.choices.length > 0) ?? [];
     const fallbackChoices: ChoiceViewGroup[] = !groups.length && medical?.followUpSlots?.length
         ? [{
-            title: "바로 선택",
-            choices: medical.followUpSlots.map((slot) => ({ label: slot.label, prompt: slot.prompt })),
+            title: "추가로 알려주실 내용",
+            choices: medical.followUpSlots.map((slot) => ({
+                label: slot.label,
+                prompt: slot.prompt,
+                description: slot.prompt,
+            })),
+            answerInput: true,
         }]
         : [];
     const allGroups = groups.length ? groups : fallbackChoices;
@@ -295,6 +302,7 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
         if (!value) return;
         setCustomText("");
         setCustomGroupTitle(null);
+        setAnswerSlot(null);
         void onAsk(value);
     };
 
@@ -308,7 +316,15 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
                             <button
                                 key={`${group.title}-${choice.label}`}
                                 type="button"
-                                onClick={() => void onAsk(choice.prompt)}
+                                onClick={() => {
+                                    if (group.answerInput) {
+                                        setCustomGroupTitle(group.title);
+                                        setAnswerSlot({ label: choice.label, prompt: choice.prompt });
+                                        setCustomText("");
+                                        return;
+                                    }
+                                    void onAsk(choice.prompt);
+                                }}
                                 className="rounded-md border border-sky-200 bg-white px-2.5 py-2 text-left text-[11px] font-extrabold leading-4 text-sky-900 shadow-sm transition hover:border-sky-400 hover:bg-sky-100"
                             >
                                 <span className="block">{choice.label}</span>
@@ -318,29 +334,40 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
                             </button>
                         ))}
                     </div>
-                    <button
-                        type="button"
-                        onClick={() => setCustomGroupTitle((current) => current === group.title ? null : group.title)}
-                        className="mt-2 w-full rounded-md border border-dashed border-sky-300 bg-white/70 px-2.5 py-2 text-left text-[11px] font-black text-sky-900 transition hover:bg-white"
-                    >
-                        답이 없어요. 직접 적을게요
-                    </button>
+                    {!group.answerInput ? (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setAnswerSlot(null);
+                                setCustomGroupTitle((current) => current === group.title ? null : group.title);
+                            }}
+                            className="mt-2 w-full rounded-md border border-dashed border-sky-300 bg-white/70 px-2.5 py-2 text-left text-[11px] font-black text-sky-900 transition hover:bg-white"
+                        >
+                            답이 없어요. 직접 적을게요
+                        </button>
+                    ) : null}
                     {customGroupTitle === group.title ? (
-                        <form onSubmit={submitCustom} className="mt-2 flex gap-1.5">
-                            <input
-                                value={customText}
-                                onChange={(event) => setCustomText(event.target.value)}
-                                className="min-w-0 flex-1 rounded-md border border-sky-200 bg-white px-2.5 py-2 text-[11px] font-bold text-neutral-900 outline-none focus:border-sky-500"
-                                placeholder="상황을 직접 입력"
-                                aria-label="객관식에 없는 답 직접 입력"
-                            />
-                            <button
-                                type="submit"
-                                className="shrink-0 rounded-md bg-sky-700 px-2.5 py-2 text-[11px] font-black text-white disabled:opacity-50"
-                                disabled={!customText.trim()}
-                            >
-                                보내기
-                            </button>
+                        <form onSubmit={submitCustom} className="mt-2 rounded-md border border-sky-200 bg-white p-2">
+                            {answerSlot ? (
+                                <label className="mb-1.5 block text-[11px] font-black text-sky-900">{answerSlot.label} 답변</label>
+                            ) : null}
+                            <div className="flex gap-1.5">
+                                <input
+                                    value={customText}
+                                    onChange={(event) => setCustomText(event.target.value)}
+                                    className="min-w-0 flex-1 rounded-md border border-sky-200 bg-white px-2.5 py-2 text-[11px] font-bold text-neutral-900 outline-none focus:border-sky-500"
+                                    placeholder={answerSlot?.prompt || "상황을 직접 입력"}
+                                    aria-label={answerSlot ? `${answerSlot.label} 답변 입력` : "객관식에 없는 답 직접 입력"}
+                                    autoFocus
+                                />
+                                <button
+                                    type="submit"
+                                    className="shrink-0 rounded-md bg-sky-700 px-2.5 py-2 text-[11px] font-black text-white disabled:opacity-50"
+                                    disabled={!customText.trim()}
+                                >
+                                    답변 보내기
+                                </button>
+                            </div>
                         </form>
                     ) : null}
                 </div>
@@ -534,9 +561,6 @@ export default function ChatResponseExtras({ medical, sources, ctas, onAsk, comp
                         ) : null}
                         {medical?.topicLabel ? (
                             <span className="text-xs font-black text-neutral-700">{medical.topicLabel}</span>
-                        ) : null}
-                        {medical?.knowledgeLevel ? (
-                            <span className="text-[11px] font-black text-neutral-400">{medical.knowledgeLevel}</span>
                         ) : null}
                     </div>
                     {medical?.careWindow ? (
