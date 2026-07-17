@@ -1270,7 +1270,8 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         });
         if (!response.ok) throw new Error(`shop-chat ${response.status}`);
         const data = await response.json();
-        const apiProducts = Array.isArray(data.products)
+        const apiReturnedProducts = Array.isArray(data.products);
+        const apiProducts = apiReturnedProducts
             ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
             : [];
         const medicalMode = Boolean(data.medical && typeof data.medical === "object" && data.medical.mode);
@@ -1289,7 +1290,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         }
         return {
             answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
-            products: medicalMode ? unique(apiProducts).slice(0, 6) : (apiProducts.length ? unique(apiProducts).slice(0, 6) : fallback.products),
+            products: apiReturnedProducts ? unique(apiProducts).slice(0, 6) : fallback.products,
             medical: apiMedical,
             sources: apiSources.length ? apiSources : fallback.sources,
             actions: actions.length ? actions : fallback.actions,

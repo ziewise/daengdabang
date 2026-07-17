@@ -140,3 +140,11 @@ test("customer chat progress uses active plain-language steps", async () => {
     assert.match(widget, /앞 대화와 연결한 답변/);
     assert.match(page, /앞 대화와 연결한 답변/);
 });
+
+test("chat respects an intentional empty product result", async () => {
+    const source = await readSource("lib/daengdabang-llm.ts");
+
+    assert.match(source, /const apiReturnedProducts = Array\.isArray\(data\.products\)/);
+    assert.match(source, /products: apiReturnedProducts \? unique\(apiProducts\)\.slice\(0, 6\) : fallback\.products/);
+    assert.doesNotMatch(source, /apiProducts\.length \? unique\(apiProducts\)/);
+});
