@@ -7,8 +7,8 @@ import {
     analyzePetLensSmart,
     isPetLensAnalysisReadyForProfileSave,
     mergePetLensAnalysisWithConfirmedProfile,
+    type PetLensAnalysisResult,
 } from "@/lib/daengdabang-llm";
-import type { CatalogProduct } from "@/lib/catalog";
 import { savePetProfilePhotosSmart } from "@/lib/customer-api";
 import {
     buildPetLensAnalysisImage,
@@ -25,14 +25,11 @@ import {
 import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
+import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
-type Result = {
-    profile: PetProfile;
-    products: CatalogProduct[];
-    summary: string[];
-};
+type Result = PetLensAnalysisResult;
 
 export default function PetLensClient() {
     const { user, upsertPet } = useAuth();
@@ -154,12 +151,15 @@ export default function PetLensClient() {
             const resultWithConfirmedProfile = {
                 ...analysis,
                 profile,
-                summary: [
-                    ...analysis.summary,
-                    canAutoSaveProfile
-                        ? "분석 후보를 준비했습니다. 견종·체형 변경은 보호자가 확인한 뒤에만 프로필에 반영됩니다."
-                        : "분석 신뢰도가 충분하지 않아 회원 프로필과 산책 친구 캐릭터는 자동 변경하지 않았습니다. 견종을 직접 확인한 뒤 저장해 주세요.",
-                ],
+                details: {
+                    ...analysis.details,
+                    ownerChecks: Array.from(new Set([
+                        ...analysis.details.ownerChecks,
+                        canAutoSaveProfile
+                            ? "후보가 실제 정보와 맞는지 확인한 뒤 프로필에 반영"
+                            : "견종을 직접 확인한 뒤 프로필에 저장",
+                    ])),
+                },
             };
             setResult(resultWithConfirmedProfile);
             if (user && confirmedPet?.apiProfileId) {
@@ -324,15 +324,7 @@ export default function PetLensClient() {
                     {result ? (
                         <div className="grid gap-5">
                             <div className="surface p-5">
-                                <h2 className="text-xl font-black text-neutral-950">{result.profile.name} 추천 요약</h2>
-                                <ul className="mt-3 grid gap-2 text-sm font-bold leading-6 text-neutral-700">
-                                    {result.summary.map((line) => (
-                                        <li key={line} className="flex gap-2">
-                                            <i className="fa-solid fa-check mt-1 text-xs text-indigo-600" />
-                                            <span>{line}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <PetLensAnalysisSummary profile={result.profile} details={result.details} />
                                 {!user && (
                                     <Link
                                         href="/auth/signup"
@@ -344,11 +336,24 @@ export default function PetLensClient() {
                                     </Link>
                                 )}
                             </div>
-                            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
-                                {result.products.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))}
-                            </div>
+                            {result.products.length > 0 ? (
+                                <section>
+                                    <div className="mb-3">
+                                        <h2 className="text-lg font-black text-neutral-950">확인된 정보로 골라본 상품</h2>
+                                        <p className="mt-1 text-xs font-bold text-neutral-500">사진 근거와 입력한 생활 정보를 함께 반영했습니다.</p>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
+                                        {result.products.map((product) => (
+                                            <ProductCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
+                                </section>
+                            ) : (
+                                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+                                    <p className="text-sm font-black text-amber-900">견종과 체형을 확인하면 상품 추천을 이어갈게요.</p>
+                                    <p className="mt-1 text-xs font-bold leading-5 text-amber-800">불확실한 사진 결과만으로 상품을 먼저 권하지 않습니다.</p>
+                                </div>
+                            )}
                         </div>
                     ) : (
                         <div className="surface p-8 text-center">

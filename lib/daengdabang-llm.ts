@@ -68,6 +68,36 @@ export type PetLensStorefrontCandidates = {
     weightEstimate?: PetLensWeightEstimate;
 };
 
+export type PetLensBreedCandidateView = {
+    label: string;
+    confidenceLabel: "근거 충분" | "가까운 후보" | "비교 필요";
+    reason?: string;
+};
+
+export type PetLensResultDetails = {
+    status: "ready" | "review" | "retake";
+    statusLabel: "근거 충분" | "후보 비교 필요" | "사진 보완 필요";
+    title: string;
+    description: string;
+    analyzedViewCount: number;
+    photoQualityLabel: "사진 상태 좋음" | "사진 상태 보통" | "사진 보완 필요";
+    observations: string[];
+    breedCandidates: PetLensBreedCandidateView[];
+    profileCandidates: string[];
+    ownerChecks: string[];
+    careActions: string[];
+    recommendationSignals: string[];
+    retakeReasons: string[];
+    canRecommendProducts: boolean;
+};
+
+export type PetLensAnalysisResult = {
+    profile: PetProfile;
+    products: CatalogProduct[];
+    summary: string[];
+    details: PetLensResultDetails;
+};
+
 const PETLENS_SIZE_CONFIDENCE_MIN = 0.6;
 const PETLENS_COAT_COLOR_CONFIDENCE_MIN = 0.45;
 const PETLENS_BREED_CONFIDENCE_MIN = 0.65;
@@ -109,6 +139,10 @@ function publicPetLensLines(value: unknown, limit = 3) {
     return stringList(value, limit)
         .filter(isCustomerSafePetLensLine)
         .filter((item) => !/[a-z]+_[a-z_]+/i.test(item));
+}
+
+function uniquePetLensLines(lines: string[], limit = 6) {
+    return Array.from(new Set(lines.map((line) => line.trim()).filter(Boolean))).slice(0, limit);
 }
 
 function isModelBackedPetLensResult(data: Record<string, unknown>) {
@@ -1080,7 +1114,7 @@ export function analyzePetLens(input: PetLensInput) {
     return { profile, products, summary };
 }
 
-export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File | null) {
+export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File | null): Promise<PetLensAnalysisResult> {
     const base = apiBase();
     if (!base) throw new Error("지금은 사진 분석을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.");
     if (!imageFile) throw new Error("반려견 사진을 먼저 올려 주세요.");
@@ -1157,45 +1191,150 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             rawAnalysis,
             lastAnalyzedAt: new Date().toISOString(),
         };
-        const summary = [
-            modelBacked && readyForRecommendation && canonicalBreed
-                ? `사진 분석 결과 ${canonicalBreed} 계열 후보를 찾았습니다. 저장 전 실제 견종과 맞는지 확인해 주세요.`
-                : modelBacked && readyForRecommendation && reviewOnlyBreed
-                    ? reviewOnlyBreedSummary(reviewOnlyBreed.label)
-                    : `${profile.name}의 사진은 받았지만, 품종을 확정할 만큼 안정적인 결과를 만들지 못했습니다.`,
-        ];
-        const apiSummary = typeof data.summary === "string" && isCustomerSafePetLensLine(data.summary)
-            ? data.summary.trim()
-            : "";
-        if (apiSummary && modelBacked) summary.push(apiSummary);
-        if (input.photoViews?.length && input.photoViews.length > 1) {
-            summary.push(`정면/좌/우/뒷면 중 ${input.photoViews.length}개 방향 사진을 함께 확인했습니다.`);
-        }
-        if (!modelBacked || !readyForRecommendation) summary.push(petLensRetakeAdvice(data));
-        if (sizeCandidate) summary.push(`크기 후보: ${sizeLabel(sizeCandidate)} · 보호자 확인 필요`);
-        if (weightEstimate) summary.push(`예상 체중 후보: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg · 사진 기반 참고값`);
-        if (coatColorCandidate) summary.push(`털 색상 후보: ${coatColorCandidate} · 보호자 확인 필요`);
         const visibleFeatures = modelBacked
             ? publicPetLensLines(recordValue(data, "visible_features", "visibleFeatures"), 3)
             : [];
         const shoppingSignals = modelBacked
             ? publicPetLensLines(recordValue(data, "recommendation_signals", "recommendationSignals"), 3)
             : [];
-        const breedTraits = modelBacked
-            ? publicPetLensLines(recordValue(data, "breed_traits", "breedTraits"), 2)
-            : [];
-        const riskNotes = modelBacked
-            ? publicPetLensLines(recordValue(data, "risk_flags", "riskFlags"), 2)
-            : [];
-        if (visibleFeatures.length > 0) summary.push(`사진에서 확인한 특징: ${visibleFeatures.join(", ")}`);
-        if (breedTraits.length > 0) summary.push(`외형/품종 참고: ${breedTraits.join(", ")}`);
-        if (shoppingSignals.length > 0) summary.push(`추천 기준: ${shoppingSignals.join(", ")}`);
-        if (riskNotes.length > 0) summary.push(`주의해서 볼 점: ${riskNotes.join(", ")}`);
         const providerCareNotes = modelBacked
             ? publicPetLensLines(recordValue(data, "care_notes", "careNotes"), 3)
             : [];
-        summary.push(...(providerCareNotes.length > 0 ? providerCareNotes : petLensCareNotes(profile)));
-        return { profile, products: recommendForPet(profile, rawAnalysis), summary };
+        const retakeReasons = publicPetLensLines(
+            recordValue(data, "retake_reasons", "retakeReasons"),
+            3,
+        );
+        const breedCandidates: PetLensBreedCandidateView[] = [];
+        const seenBreedLabels = new Set<string>();
+        const addBreedCandidate = (label: string | undefined, confidence: number | undefined, reason?: string) => {
+            const cleanLabel = label?.trim().slice(0, 80);
+            if (!cleanLabel || /^(unknown|unclear|none|미상|알\s*수\s*없음)$/i.test(cleanLabel)) return;
+            const key = cleanLabel.toLocaleLowerCase("ko-KR");
+            if (seenBreedLabels.has(key)) return;
+            seenBreedLabels.add(key);
+            breedCandidates.push({
+                label: cleanLabel,
+                confidenceLabel: confidence !== undefined && confidence >= 0.8
+                    ? "근거 충분"
+                    : confidence !== undefined && confidence >= PETLENS_BREED_CONFIDENCE_MIN
+                        ? "가까운 후보"
+                        : "비교 필요",
+                ...(reason?.trim() ? { reason: reason.trim().slice(0, 180) } : {}),
+            });
+        };
+
+        if (modelBacked && readyForRecommendation) {
+            addBreedCandidate(canonicalBreed, breedConfidence);
+            addBreedCandidate(
+                reviewOnlyBreed?.label,
+                reviewOnlyBreed?.confidence,
+                typeof recordValue(data, "unlisted_breed_reason", "unlistedBreedReason") === "string"
+                    ? String(recordValue(data, "unlisted_breed_reason", "unlistedBreedReason"))
+                    : undefined,
+            );
+            const topK = recordValue(data, "breed_topk", "breedTopk");
+            if (Array.isArray(topK)) {
+                for (const item of topK) {
+                    const row = asRecord(item);
+                    if (!row) continue;
+                    const label = typeof row.breed === "string"
+                        ? row.breed
+                        : typeof row.nameKo === "string"
+                            ? row.nameKo
+                            : undefined;
+                    addBreedCandidate(label, finiteNumber(row.confidence));
+                    if (breedCandidates.length >= 3) break;
+                }
+            }
+        }
+
+        const canRecommendProducts = Boolean(
+            modelBacked &&
+            readyForRecommendation &&
+            trustworthyCandidate &&
+            breedCandidates.length > 0
+        );
+        const status: PetLensResultDetails["status"] = canRecommendProducts
+            ? canonicalBreed
+                ? "ready"
+                : "review"
+            : visibleFeatures.length > 0
+                ? "review"
+                : "retake";
+        const statusLabel: PetLensResultDetails["statusLabel"] = status === "ready"
+            ? "근거 충분"
+            : status === "review"
+                ? "후보 비교 필요"
+                : "사진 보완 필요";
+        const title = status === "ready" && canonicalBreed
+            ? `${profile.name}에게서 ${canonicalBreed} 계열과 가까운 외형이 보여요`
+            : status === "review" && reviewOnlyBreed
+                ? `${reviewOnlyBreed.label} 계열 후보를 보호자와 함께 확인해 주세요`
+                : status === "review"
+                    ? "사진에서 확인된 특징부터 정리했어요"
+                    : "사진을 보완하면 더 구체적으로 비교할 수 있어요";
+        const description = status === "ready"
+            ? "사진만으로 견종을 단정하지 않고, 관찰 근거와 후보를 나눠 보여드려요. 실제 견종은 보호자가 최종 확인합니다."
+            : status === "review" && reviewOnlyBreed
+                ? reviewOnlyBreedSummary(reviewOnlyBreed.label)
+                : status === "review"
+                    ? "현재 사진만으로 견종 하나를 단정하기 어려워 후보를 프로필에 반영하지 않았어요. 확인된 특징과 촬영 보완점을 먼저 살펴보세요."
+                    : "밝은 곳에서 얼굴과 몸통의 윤곽이 배경과 분리되게 촬영하면 외형 후보와 케어 포인트를 더 구체적으로 비교할 수 있어요.";
+        const profileCandidates = uniquePetLensLines([
+            ...(sizeCandidate ? [`크기 후보: ${sizeLabel(sizeCandidate)}`] : []),
+            ...(weightEstimate ? [`체중 참고 범위: ${weightEstimate.minKg}~${weightEstimate.maxKg}kg`] : []),
+            ...(coatColorCandidate ? [`털 색상 후보: ${coatColorCandidate}`] : []),
+        ], 4);
+        const ownerChecks = uniquePetLensLines([
+            "실제 견종 또는 믹스견 여부",
+            "현재 체중과 나이",
+            ...(profileCandidates.length > 0 ? ["사진 기반 체형·털색 후보"] : []),
+        ], 4);
+        const careActions = canRecommendProducts
+            ? uniquePetLensLines(
+                providerCareNotes.length > 0 ? providerCareNotes : petLensCareNotes(profile).slice(1),
+                4,
+            )
+            : [];
+        const details: PetLensResultDetails = {
+            status,
+            statusLabel,
+            title,
+            description,
+            analyzedViewCount: input.photoViews?.length ?? 0,
+            photoQualityLabel: recordValue(data, "analysis_quality", "analysisQuality") === "high"
+                ? "사진 상태 좋음"
+                : recordValue(data, "analysis_quality", "analysisQuality") === "medium"
+                    ? "사진 상태 보통"
+                    : "사진 보완 필요",
+            observations: visibleFeatures,
+            breedCandidates: breedCandidates.slice(0, 3),
+            profileCandidates,
+            ownerChecks,
+            careActions,
+            recommendationSignals: canRecommendProducts ? shoppingSignals : [],
+            retakeReasons: retakeReasons.length > 0
+                ? retakeReasons
+                : status === "retake"
+                    ? [petLensRetakeAdvice(data).replace(/^다시 촬영 팁:\s*/, "")]
+                    : [],
+            canRecommendProducts,
+        };
+        const summary = uniquePetLensLines([
+            title,
+            description,
+            ...(input.photoViews?.length && input.photoViews.length > 1
+                ? [`정면/좌/우/뒷면 중 ${input.photoViews.length}개 방향 사진을 함께 확인했습니다.`]
+                : []),
+            ...(visibleFeatures.length > 0 ? [`사진에서 확인한 특징: ${visibleFeatures.join(", ")}`] : []),
+            ...(shoppingSignals.length > 0 && canRecommendProducts ? [`추천 기준: ${shoppingSignals.join(", ")}`] : []),
+        ], 6);
+        return {
+            profile,
+            products: canRecommendProducts ? recommendForPet(profile, rawAnalysis) : [],
+            summary,
+            details,
+        };
     } catch (error) {
         throw error instanceof Error ? error : new Error("사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.");
     }

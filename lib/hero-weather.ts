@@ -4,7 +4,7 @@ export type HeroWeatherReport = {
     weather: HeroWeather;
     locationName: string;
     locationNameEn?: string;
-    locationSource: "default" | "ip" | "manual" | "selected" | "timezone";
+    locationSource: "default" | "geolocation" | "ip" | "manual" | "selected" | "timezone";
     temperatureC: number | null;
     apparentTemperatureC: number | null;
     weatherCode: number | null;
@@ -85,6 +85,7 @@ const IP_GEO_CACHE_KEY = "ddb.hero.ipgeo.v1";
 const IP_GEO_CACHE_MS = 60 * 60 * 1000;
 const IP_GEO_TIMEOUT_MS = 3200;
 const GEOCODING_TIMEOUT_MS = 3200;
+const BROWSER_GEO_TIMEOUT_MS = 5000;
 const DEFAULT_LATITUDE = 37.5665;
 const DEFAULT_LONGITUDE = 126.978;
 const DEFAULT_LOCATION_NAME = "서울";
@@ -348,6 +349,34 @@ function nearestGlobalLocationName(latitude: number, longitude: number): { name:
         : { name: "현재 위치", nameEn: "Current location" };
 }
 
+async function browserGeoLocation(): Promise<HeroWeatherLocation | null> {
+    if (typeof navigator === "undefined" || !("geolocation" in navigator)) return null;
+
+    try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: false,
+                maximumAge: 10 * 60 * 1000,
+                timeout: BROWSER_GEO_TIMEOUT_MS,
+            });
+        });
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+        const nearest = nearestGlobalLocationName(latitude, longitude);
+        return {
+            latitude,
+            longitude,
+            name: nearest.name,
+            nameEn: nearest.nameEn,
+            timeZone: readBrowserTimeZone() || undefined,
+            source: "geolocation",
+        };
+    } catch {
+        return null;
+    }
+}
+
 function selectedRegionLocation(regionId: string | null | undefined): HeroWeatherLocation | null {
     const region = resolveHeroWeatherRegion(regionId);
     if (!region) return null;
@@ -592,13 +621,15 @@ function setCachedReport(location: HeroWeatherLocation, report: HeroWeatherRepor
 export async function fetchHeroWeatherReport(options: { regionId?: string | null } = {}): Promise<HeroWeatherReport | null> {
     const manualLocation = readManualLocation();
     const selectedLocation = manualLocation ? null : selectedRegionLocation(options.regionId);
-    const ipLocation = manualLocation || selectedLocation ? null : await ipGeoLocation();
-    const mappedTimezoneLocation = manualLocation || selectedLocation || ipLocation ? null : timezoneLocation();
-    const geocodedLocation = manualLocation || selectedLocation || ipLocation || mappedTimezoneLocation
+    const preciseLocation = manualLocation || selectedLocation ? null : await browserGeoLocation();
+    const ipLocation = manualLocation || selectedLocation || preciseLocation ? null : await ipGeoLocation();
+    const mappedTimezoneLocation = manualLocation || selectedLocation || preciseLocation || ipLocation ? null : timezoneLocation();
+    const geocodedLocation = manualLocation || selectedLocation || preciseLocation || ipLocation || mappedTimezoneLocation
         ? null
         : await geocodedTimezoneLocation();
     const location = manualLocation
         ?? selectedLocation
+        ?? preciseLocation
         ?? ipLocation
         ?? mappedTimezoneLocation
         ?? geocodedLocation
@@ -646,7 +677,12 @@ export async function fetchHeroWeatherReport(options: { regionId?: string | null
 
 export function heroWeatherSummary(report: HeroWeatherReport | null, locale: "ko" | "en" = "ko"): string | null {
     if (!report) return null;
-    const locationName = locale === "en" ? report.locationNameEn || report.locationName : report.locationName;
+    const rawLocationName = locale === "en" ? report.locationNameEn || report.locationName : report.locationName;
+    const locationName = report.locationSource === "ip" || report.locationSource === "timezone" || report.locationSource === "default"
+        ? locale === "en"
+            ? `${rawLocationName} area`
+            : `${rawLocationName} 인근`
+        : rawLocationName;
     const parts = [locationName];
     if (report.temperatureC !== null) parts.push(`${Math.round(report.temperatureC)}°`);
     if (report.windSpeedKmh !== null && report.windSpeedKmh >= 12) {

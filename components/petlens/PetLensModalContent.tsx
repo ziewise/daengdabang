@@ -28,8 +28,8 @@ import {
     analyzePetLensSmart,
     isPetLensAnalysisReadyForProfileSave,
     mergePetLensAnalysisWithConfirmedProfile,
+    type PetLensAnalysisResult,
 } from "@/lib/daengdabang-llm";   // 협업자 LLM 분석 (수정 X)
-import type { CatalogProduct } from "@/lib/catalog";
 import { savePetProfilePhotosSmart } from "@/lib/customer-api";
 import {
     buildPetLensAnalysisImage,
@@ -46,15 +46,12 @@ import {
 import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
 import ProductCard from "@/components/products/ProductCard";
+import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary";
 
 // 관심 포인트 — 협업자 PetLensClient 와 동일하게 유지(분석 입력 호환)
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
-type Result = {
-    profile: PetProfile;
-    products: CatalogProduct[];
-    summary: string[];
-};
+type Result = PetLensAnalysisResult;
 
 export default function PetLensModalContent() {
     const { user, upsertPet } = useAuth();
@@ -184,12 +181,15 @@ export default function PetLensModalContent() {
             const resultWithConfirmedProfile = {
                 ...analysis,
                 profile,
-                summary: [
-                    ...analysis.summary,
-                    canAutoSaveProfile
-                        ? "분석 후보를 준비했습니다. 견종·체형 변경은 보호자가 확인한 뒤에만 프로필에 반영됩니다."
-                        : "분석 신뢰도가 충분하지 않아 회원 프로필과 산책 친구 캐릭터는 자동 변경하지 않았습니다. 견종을 직접 확인한 뒤 저장해 주세요.",
-                ],
+                details: {
+                    ...analysis.details,
+                    ownerChecks: Array.from(new Set([
+                        ...analysis.details.ownerChecks,
+                        canAutoSaveProfile
+                            ? "후보가 실제 정보와 맞는지 확인한 뒤 프로필에 반영"
+                            : "견종을 직접 확인한 뒤 프로필에 저장",
+                    ])),
+                },
             };
             setResult(resultWithConfirmedProfile); // result 세팅 = 결과 단계로 전환
             if (user && confirmedPet?.apiProfileId) {
@@ -258,21 +258,8 @@ export default function PetLensModalContent() {
                     </button>
                 </div>
 
-                {/* 추천 요약 (협업자 summary[] 그대로 표시) */}
-                <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-5">
-                    {result.profile.photoDataUrl && (
-                        <div className="relative float-right mb-2 ml-4 h-24 w-24 overflow-hidden rounded-xl border border-neutral-200">
-                            <Image src={result.profile.photoDataUrl} alt="분석한 반려견 사진" fill sizes="96px" className="object-cover" unoptimized />
-                        </div>
-                    )}
-                    <ul className="grid gap-2 text-sm font-bold leading-6 text-neutral-700">
-                        {result.summary.map((line) => (
-                            <li key={line} className="flex gap-2">
-                                <i className="fa-solid fa-check mt-1 text-xs text-aurora-indigo" />
-                                <span>{line}</span>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-3 sm:p-4">
+                    <PetLensAnalysisSummary profile={result.profile} details={result.details} />
                     {!user && (
                         <Link
                             href="/auth/signup"
@@ -288,8 +275,8 @@ export default function PetLensModalContent() {
 
                 {/* 추천 상품 (협업자 products[] = recommendForPet 결과) */}
                 <h3 className="mb-2.5 mt-5 text-[13px] font-black text-neutral-900">
-                    이런 상품을 추천해요{" "}
-                    <span className="text-neutral-400">({result.products.length})</span>
+                    {result.products.length > 0 ? "확인된 정보로 골라본 상품" : "상품 추천 전 확인이 필요해요"}{" "}
+                    {result.products.length > 0 && <span className="text-neutral-400">({result.products.length})</span>}
                 </h3>
                 {result.products.length > 0 ? (
                     <div className="grid grid-cols-2 gap-2.5">
@@ -298,8 +285,8 @@ export default function PetLensModalContent() {
                         ))}
                     </div>
                 ) : (
-                    <p className="rounded-lg bg-neutral-50 px-3 py-4 text-center text-xs font-bold text-neutral-400">
-                        추천 상품을 찾지 못했어요. 정보를 조정해 다시 분석해 보세요.
+                    <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-center text-xs font-bold leading-5 text-amber-800">
+                        견종과 체형을 확인하면 상품 추천을 이어갈게요. 불확실한 사진 결과만으로 상품을 먼저 권하지 않습니다.
                     </p>
                 )}
             </div>
