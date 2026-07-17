@@ -24,6 +24,8 @@ import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/s
 import ProductCard from "@/components/products/ProductCard";
 import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary";
 import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
+import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
+import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
@@ -44,6 +46,7 @@ export default function PetLensClient() {
     const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
+    const [mode, setMode] = useState<PetLensMode>("photo");
     const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>(user?.pets[0]?.apiProfileId);
     const photoViewsRef = useRef<PetLensPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
@@ -207,6 +210,11 @@ export default function PetLensClient() {
                 </p>
             </header>
 
+            <PetLensModeTabs mode={mode} onChange={setMode} />
+
+            {mode === "observation" ? (
+                <PetLensObservationExperience pet={selectedPet} accessToken={user.apiAccessToken} variant="page" />
+            ) : (
             <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface grid h-fit gap-4 p-5">
                     <div data-petlens-page-multiview-upload>
@@ -355,6 +363,7 @@ export default function PetLensClient() {
                     )}
                 </section>
             </div>
+            )}
         </main>
     );
 }

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
-import { BUSINESS_INFO, LEGAL_UPDATED_AT } from "@/lib/legal";
+import { BUSINESS_INFO } from "@/lib/legal";
+
+const PRIVACY_UPDATED_AT = "2026-07-18";
 
 export const metadata: Metadata = {
     title: "개인정보처리방침 | 댕다방",
@@ -80,6 +82,12 @@ const consentRows = [
         "이용자가 삭제하거나 회원 탈퇴할 때까지. 임시 처리 파일은 목적 달성 후 지체 없이 삭제",
     ],
     [
+        "PetLens 짖음·행동 관찰",
+        "이용자가 별도로 동의하고 촬영·선택한 2~12초 반려견 영상·포함 음성, 등록된 반려견 이름·견종·나이, 촬영 상황 메모, 관찰 분석 결과",
+        "반려견의 소리·자세·움직임·호흡 모습에 대한 관찰 보조와 응급 가능 신호 안내",
+        "원본 영상·음성은 분석 요청 중에만 일시 처리하고 댕다방 서버에 저장하지 않음. 결과도 반려견 프로필에 자동 저장하지 않음. 외부 분석 제공자의 보안·오남용 방지 목적 처리에는 해당 제공자의 정책이 적용됨",
+    ],
+    [
         "마케팅 수신",
         "이메일, 휴대전화번호, 수신동의 내역, 관심상품, 구매·검색·클릭 내역",
         "신상품, 할인, 이벤트, 맞춤 혜택 안내",
@@ -98,7 +106,7 @@ const outsourcingRows = [
     ["배송", "계약 택배사 및 배송 대행사", "상품 배송, 반품 회수, 배송 안내"],
     ["호스팅·보안·CDN", BUSINESS_INFO.hostingProvider, "웹사이트 제공, 트래픽 처리, 보안, 장애 대응"],
     ["고객 알림", "이메일·문자·카카오 알림 발송 사업자(연동 시 고지)", "주문, 배송, 상담, 마케팅 수신동의 알림 발송"],
-    ["이미지 자동 분석", "이미지 분석 제공자(운영 연동 시 별도 고지)", "PetLens 이미지 분석 및 맞춤 추천"],
+    ["이미지·영상·음성 자동 분석", "외부 자동 분석 제공자(기능 사용 직전 별도 고지 및 동의)", "PetLens 이미지 분석, 짧은 행동 관찰 및 맞춤 추천"],
 ];
 
 const complaintRows = [
@@ -158,7 +166,7 @@ export default function PrivacyPage() {
                 {BUSINESS_INFO.companyName}은 개인정보 보호법 및 관계 법령이 정한 바를 준수하며, 적법하게
                 개인정보를 처리하고 안전하게 관리하고 있습니다. 이에 개인정보 보호법 제30조에 따라 정보주체에게
                 개인정보의 처리와 보호에 관한 절차 및 기준을 안내하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수
-                있도록 다음과 같이 개인정보처리방침을 수립·공개합니다. 시행일: {LEGAL_UPDATED_AT}.
+                있도록 다음과 같이 개인정보처리방침을 수립·공개합니다. 시행일: {PRIVACY_UPDATED_AT}.
             </p>
 
             <nav
@@ -364,7 +372,7 @@ export default function PrivacyPage() {
                     최소 30일 전부터 공지합니다.
                 </p>
                 <p className="mt-3 text-sm font-bold leading-7 text-neutral-600">
-                    개인정보처리방침 버전: v1.1 / 시행일: {LEGAL_UPDATED_AT}
+                    개인정보처리방침 버전: v1.2 / 시행일: {PRIVACY_UPDATED_AT}
                 </p>
             </section>
         </main>

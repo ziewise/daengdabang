@@ -45,6 +45,8 @@ import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/s
 import ProductCard from "@/components/products/ProductCard";
 import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary";
 import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
+import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
+import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
 
 // 관심 포인트 — 협업자 PetLensClient 와 동일하게 유지(분석 입력 호환)
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -70,6 +72,7 @@ export default function PetLensModalContent() {
     const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
+    const [mode, setMode] = useState<PetLensMode>("photo");
     const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>(user?.pets[0]?.apiProfileId);
     const photoViewsRef = useRef<PetLensPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
@@ -225,6 +228,19 @@ export default function PetLensModalContent() {
     if (!selectedPet?.apiProfileId) return <PetLensMemberGate compact reason="profile" />;
     if (!selectedPet.breed?.trim()) return <PetLensMemberGate compact reason="breed" />;
 
+    if (mode === "observation") {
+        return (
+            <div className="p-3 sm:p-5">
+                <header className="mb-3 text-center">
+                    <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 케어</p>
+                    <h2 className="mt-0.5 text-lg font-black text-neutral-950">짖음·행동 관찰</h2>
+                </header>
+                <PetLensModeTabs mode={mode} onChange={setMode} />
+                <PetLensObservationExperience pet={selectedPet} accessToken={user.apiAccessToken} variant="modal" />
+            </div>
+        );
+    }
+
     // ============================================================
     // 결과 단계
     // ============================================================
@@ -248,6 +264,8 @@ export default function PetLensModalContent() {
                         다시 분석
                     </button>
                 </div>
+
+                <PetLensModeTabs mode={mode} onChange={setMode} />
 
                 <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-3 sm:p-4">
                     <PetLensAnalysisSummary profile={result.profile} details={result.details} />
@@ -285,6 +303,8 @@ export default function PetLensModalContent() {
                     네 방향 사진과 생활 정보를 함께 보고 케어 포인트와 맞춤 추천을 정리해드려요
                 </p>
             </header>
+
+            <PetLensModeTabs mode={mode} onChange={setMode} />
 
             <form onSubmit={submit} className="grid gap-2 sm:gap-2.5">
                 {/* 사진 — 모바일에서는 각 슬롯 터치 시 카메라 실행 */}
