@@ -102,10 +102,10 @@ type EntryPortalStyle = CSSProperties & {
 };
 
 const MOVE_EVENT = "ddb:pet-companion-move";
-const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v3";
+const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v4";
 const MAX_RECOMMENDATIONS_PER_SESSION = 6;
 const MAX_RECOMMENDATIONS_PER_MOUNT = 8;
-const MIN_AUTOMATIC_RECOMMENDATION_GAP_MS = 18_000;
+const MIN_NAVIGATOR_PROMPT_GAP_MS = 10_000;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
 let memoryRecommendationShownCount = 0;
@@ -220,7 +220,7 @@ export default function PetCompanionLayer({
     const lastFocusRef = useRef<HTMLElement | null>(null);
     const recommendedNamesRef = useRef(new Set<string>());
     const recommendationCountRef = useRef(0);
-    const lastRecommendationShownAtRef = useRef(0);
+    const lastNavigatorPromptAtRef = useRef(0);
     const promptOpenRef = useRef(false);
     const guideInFlightRef = useRef(false);
     const guideRunRef = useRef(0);
@@ -1105,11 +1105,18 @@ export default function PetCompanionLayer({
         let activeGuideRun = 0;
         let shownGuideRun = 0;
         let shownGuideId: PetGuideId | null = null;
-        let shownGuidePlacement: PetGuidePrompt["placement"];
         let pendingGuideId: PetGuideId | null = null;
         const previewMode = process.env.NODE_ENV !== "production"
             && new URLSearchParams(window.location.search).get("petPreview") === "1";
-        const firstGuideAt = performance.now() + (previewMode ? 2200 : 3200);
+        const firstGuideAt = performance.now() + (previewMode ? 1200 : 1800);
+        const navigatorPromptGapRemaining = () => {
+            if (!lastNavigatorPromptAtRef.current) return 0;
+            return Math.max(
+                0,
+                MIN_NAVIGATOR_PROMPT_GAP_MS
+                    - (performance.now() - lastNavigatorPromptAtRef.current),
+            );
+        };
         if (walkerRef.current) walkerRef.current.dataset.petGuideStatus = "waiting";
 
         const dismissGuide = (expectedRun: number) => {
@@ -1124,11 +1131,8 @@ export default function PetCompanionLayer({
                 dismissTimer = window.setTimeout(() => dismissGuide(expectedRun), 3000);
                 return;
             }
-            const followHeroPetLens = shownGuideId === "signup"
-                && shownGuidePlacement === "header";
             shownGuideRun = 0;
             shownGuideId = null;
-            shownGuidePlacement = undefined;
             pendingGuideId = null;
             promptOpenRef.current = false;
             guidePlacementRef.current = "content";
@@ -1137,10 +1141,8 @@ export default function PetCompanionLayer({
             moveCompanionToRest(walkerRef.current);
             window.clearTimeout(retryTimer);
             retryTimer = window.setTimeout(
-                () => showGuide(followHeroPetLens
-                    ? { onlyId: "pet-lens", bypassRouteCooldownForId: "pet-lens" }
-                    : {}),
-                previewMode ? 1200 : 4200,
+                () => showGuide(),
+                previewMode ? 900 : 2600,
             );
         };
 
@@ -1169,25 +1171,29 @@ export default function PetCompanionLayer({
             }
             if (guideInFlightRef.current) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:guide-in-flight";
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                    previewMode ? 500 : 1800,
+                );
                 return;
             }
             if (promptOpenRef.current) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:prompt-open";
-                return;
-            }
-            const automaticRecommendationAvailable =
-                recommendationCountRef.current < MAX_RECOMMENDATIONS_PER_SESSION
-                && recommendationShownCountThisSession() < MAX_RECOMMENDATIONS_PER_SESSION;
-            if (
-                !(force && !previewMode)
-                && automaticRecommendationAvailable
-                && hasVisibleProductSurface()
-            ) {
-                if (walker) walker.dataset.petGuideStatus = "blocked:product-surface";
                 window.clearTimeout(retryTimer);
                 retryTimer = window.setTimeout(
                     () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
-                    previewMode ? 3500 : 12000,
+                    previewMode ? 500 : 1800,
+                );
+                return;
+            }
+            const navigatorGapRemaining = navigatorPromptGapRemaining();
+            if (!force && navigatorGapRemaining > 0) {
+                if (walker) walker.dataset.petGuideStatus = "blocked:navigator-gap";
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ onlyId, bypassRouteCooldownForId }),
+                    Math.ceil(navigatorGapRemaining),
                 );
                 return;
             }
@@ -1329,10 +1335,10 @@ export default function PetCompanionLayer({
                     setMotion("idle");
                     return;
                 }
+                lastNavigatorPromptAtRef.current = performance.now();
                 markPetGuideShown(prompt.id);
                 shownGuideRun = guideRun;
                 shownGuideId = prompt.id;
-                shownGuidePlacement = prompt.placement;
                 pendingGuideId = null;
                 promptOpenRef.current = true;
                 setGuidePrompt(prompt);
@@ -1359,6 +1365,16 @@ export default function PetCompanionLayer({
             targetRetryCount = 0;
             scheduleSettledGuide(previewMode ? 650 : 1250);
         };
+        const onFocusOut = (event: FocusEvent) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (!target.matches("input, textarea, select, [contenteditable='true']")) return;
+            targetRetryCount = 0;
+            scheduleSettledGuide(previewMode ? 450 : 700);
+        };
+        const onVisibilityChange = () => {
+            if (!document.hidden) scheduleSettledGuide(previewMode ? 350 : 500);
+        };
         const onResize = () => {
             // `promptOpenRef` is also used by product recommendations. Only
             // reuse an id when this exact guide run still owns it; a scroll,
@@ -1384,7 +1400,6 @@ export default function PetCompanionLayer({
                 activeGuideRun = 0;
                 shownGuideRun = 0;
                 shownGuideId = null;
-                shownGuidePlacement = undefined;
                 pendingGuideId = null;
                 guidePlacementRef.current = "content";
                 setGuidePrompt(null);
@@ -1405,7 +1420,17 @@ export default function PetCompanionLayer({
             }
             scheduleSettledGuide(previewMode ? 450 : 900);
         };
-        const onManualGuideRequest = () => showGuide({ force: true });
+        const onManualGuideRequest = (event: Event) => {
+            const detail = (event as CustomEvent<{
+                id?: PetGuideId;
+                force?: boolean;
+            }>).detail;
+            showGuide({
+                force: detail?.force ?? true,
+                onlyId: detail?.id,
+                bypassRouteCooldownForId: detail?.force ? detail.id : undefined,
+            });
+        };
         const targetObserver = new MutationObserver((mutations) => {
             const addedGuideTarget = mutations.some((mutation) => (
                 Array.from(mutation.addedNodes).some((node) => (
@@ -1420,12 +1445,14 @@ export default function PetCompanionLayer({
         // keeping visual QA deterministic without changing production timing.
         const first = window.setTimeout(
             () => showGuide({ force: previewMode }),
-            previewMode ? 2200 : 3200,
+            previewMode ? 1200 : 1800,
         );
-        const interval = window.setInterval(() => showGuide(), 22000);
+        const interval = window.setInterval(() => showGuide(), 14000);
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("resize", onResize);
         window.addEventListener("ddb:pet-guide-now", onManualGuideRequest);
+        document.addEventListener("focusout", onFocusOut, true);
+        document.addEventListener("visibilitychange", onVisibilityChange);
         targetObserver.observe(document.body, { childList: true, subtree: true });
         return () => {
             window.clearTimeout(first);
@@ -1438,6 +1465,8 @@ export default function PetCompanionLayer({
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onResize);
             window.removeEventListener("ddb:pet-guide-now", onManualGuideRequest);
+            document.removeEventListener("focusout", onFocusOut, true);
+            document.removeEventListener("visibilitychange", onVisibilityChange);
             pendingGuideId = null;
             guidePlacementRef.current = "content";
             if (activeGuideRun && guideRunRef.current === activeGuideRun) {
@@ -1457,12 +1486,12 @@ export default function PetCompanionLayer({
         let activeRecommendationRun = 0;
         let shownRecommendationRun = 0;
         const firstRecommendationAt = performance.now() + 2600;
-        const automaticRecommendationGapRemaining = () => {
-            if (!lastRecommendationShownAtRef.current) return 0;
+        const navigatorPromptGapRemaining = () => {
+            if (!lastNavigatorPromptAtRef.current) return 0;
             return Math.max(
                 0,
-                MIN_AUTOMATIC_RECOMMENDATION_GAP_MS
-                    - (performance.now() - lastRecommendationShownAtRef.current),
+                MIN_NAVIGATOR_PROMPT_GAP_MS
+                    - (performance.now() - lastNavigatorPromptAtRef.current),
             );
         };
 
@@ -1499,12 +1528,12 @@ export default function PetCompanionLayer({
                 }
                 return;
             }
-            const automaticGapRemaining = automaticRecommendationGapRemaining();
-            if (!force && automaticGapRemaining > 0) {
+            const navigatorGapRemaining = navigatorPromptGapRemaining();
+            if (!force && navigatorGapRemaining > 0) {
                 if (walkerRef.current) {
-                    walkerRef.current.dataset.petRecommendationStatus = "blocked:automatic-gap";
+                    walkerRef.current.dataset.petRecommendationStatus = "blocked:navigator-gap";
                 }
-                scheduleAutomaticRecommendation(Math.ceil(automaticGapRemaining));
+                scheduleAutomaticRecommendation(Math.ceil(navigatorGapRemaining));
                 return;
             }
             if (promptOpenRef.current && !document.querySelector("[data-pet-companion-speech]")) {
@@ -1541,7 +1570,7 @@ export default function PetCompanionLayer({
                 window.clearTimeout(retryTimer);
                 retryTimer = window.setTimeout(
                     () => showRecommendation({ force }),
-                    force ? 1600 : 12000,
+                    force ? 900 : 1800,
                 );
                 return;
             }
@@ -1638,7 +1667,7 @@ export default function PetCompanionLayer({
                 markRecommendationShownThisSession();
                 // Explicit search recommendations bypass the wait before they
                 // appear, but still reset the next automatic prompt's gap.
-                lastRecommendationShownAtRef.current = performance.now();
+                lastNavigatorPromptAtRef.current = performance.now();
                 shownRecommendationRun = recommendationRun;
                 promptOpenRef.current = true;
                 setRecommendation({
@@ -1656,7 +1685,7 @@ export default function PetCompanionLayer({
 
         const scheduleAutomaticRecommendation = (delay = 700) => {
             const initialDelay = Math.max(0, firstRecommendationAt - performance.now());
-            const gapDelay = Math.ceil(automaticRecommendationGapRemaining());
+            const gapDelay = Math.ceil(navigatorPromptGapRemaining());
             window.clearTimeout(settleTimer);
             settleTimer = window.setTimeout(
                 () => showRecommendation(),
@@ -1738,7 +1767,7 @@ export default function PetCompanionLayer({
         const hasInitialProduct = Boolean(document.querySelector("[data-pet-product]"));
         observeProductCards(document);
         if (hasInitialProduct && !intersectionObserver) scheduleAutomaticRecommendation(2600);
-        const interval = window.setInterval(() => showRecommendation(), 30000);
+        const interval = window.setInterval(() => showRecommendation(), 15000);
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
         document.addEventListener("focusin", onSearchRecommendationInput, true);

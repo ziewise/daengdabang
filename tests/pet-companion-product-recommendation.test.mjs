@@ -37,15 +37,15 @@ test("products search requests an immediate companion recommendation", async () 
 test("companion recommendation layer allows search focus without becoming spammy", async () => {
     const source = await readSource("components/pet-companion/PetCompanionLayer.tsx");
 
-    assert.match(source, /RECOMMENDATION_SESSION_KEY = "ddb\.petCompanion\.recommendationShown\.v3"/);
+    assert.match(source, /RECOMMENDATION_SESSION_KEY = "ddb\.petCompanion\.recommendationShown\.v4"/);
     assert.match(source, /MAX_RECOMMENDATIONS_PER_SESSION = 6/);
     assert.match(source, /MAX_RECOMMENDATIONS_PER_MOUNT = 8/);
-    assert.match(source, /MIN_AUTOMATIC_RECOMMENDATION_GAP_MS = 18_000/);
-    assert.match(source, /lastRecommendationShownAtRef/);
+    assert.match(source, /MIN_NAVIGATOR_PROMPT_GAP_MS = 10_000/);
+    assert.match(source, /lastNavigatorPromptAtRef/);
     assert.match(source, /recommendationShownCountThisSession/);
     assert.match(source, /hasVisibleProductSurface/);
-    assert.match(source, /blocked:product-surface/);
-    assert.match(source, /automaticRecommendationAvailable/);
+    assert.doesNotMatch(source, /blocked:product-surface/);
+    assert.doesNotMatch(source, /automaticRecommendationAvailable/);
     assert.match(source, /recommendationInFlightRef/);
     assert.match(source, /!recommendationInFlightRef\.current/);
     assert.match(source, /movementLooksSettled/);
@@ -58,13 +58,19 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /scheduleAutomaticRecommendation\(1250\)/);
     assert.match(source, /showRecommendation\(\{ force: true \}\)/);
     assert.match(source, /!force && automaticCapReached/);
-    assert.match(source, /!force && automaticGapRemaining > 0/);
-    assert.match(source, /lastRecommendationShownAtRef\.current = performance\.now\(\)/);
-    assert.doesNotMatch(source, /if \(!force\) lastRecommendationShownAtRef\.current/);
+    assert.match(source, /!force && navigatorGapRemaining > 0/);
+    assert.match(source, /lastNavigatorPromptAtRef\.current = performance\.now\(\)/);
+    assert.doesNotMatch(source, /if \(!force\) lastNavigatorPromptAtRef\.current/);
+    assert.match(source, /petGuideStatus = "blocked:navigator-gap"/);
+    assert.match(source, /petRecommendationStatus = "blocked:navigator-gap"/);
     assert.match(source, /Math\.max\(delay, initialDelay, gapDelay\)/);
     assert.match(source, /mountCapReached \|\| \(!force && automaticCapReached\)/);
-    assert.match(source, /window\.setInterval\(\(\) => showRecommendation\(\), 30000\)/);
-    assert.match(source, /window\.setInterval\(\(\) => showGuide\(\), 22000\)/);
+    assert.match(source, /if \(promptOpenRef\.current \|\| guideInFlightRef\.current\)/);
+    assert.match(source, /force \? 900 : 1800/);
+    assert.match(source, /const firstGuideAt = performance\.now\(\) \+ \(previewMode \? 1200 : 1800\)/);
+    assert.match(source, /\(\) => showGuide\(\),[\s\S]{0,80}previewMode \? 900 : 2600/);
+    assert.match(source, /window\.setInterval\(\(\) => showRecommendation\(\), 15000\)/);
+    assert.match(source, /window\.setInterval\(\(\) => showGuide\(\), 14000\)/);
     assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
     assert.match(source, /!document\.querySelector\("\[data-pet-companion-speech\]"\)/);
     assert.match(source, /target\.closest\("\[data-pet-companion-allow='search'\]"\)/);

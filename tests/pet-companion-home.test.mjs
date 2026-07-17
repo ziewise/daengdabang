@@ -12,6 +12,12 @@ test("the companion home control hides and restores the dog without opening sett
     const gate = await readSource("components/pet-companion/PetCompanionGate.tsx");
 
     assert.match(gate, /data-pet-companion-home/);
+    assert.match(gate, /data-pet-guide-target="home"/);
+    assert.match(gate, /data-pet-guide-target="settings"/);
+    assert.match(gate, /onPointerEnter=\{\(\) => requestControlGuide\("home"\)\}/);
+    assert.match(gate, /onPointerEnter=\{\(\) => requestControlGuide\("settings"\)\}/);
+    assert.match(gate, /detail: \{ id, force: false \}/);
+    assert.match(gate, /집에서 쉬는 중 · 누르면 돌아와요/);
     assert.match(gate, /data-home-occupied=\{!companionEnabled \? "true" : "false"\}/);
     assert.match(gate, /setHomeTransition\("leaving"\)/);
     assert.match(gate, /setHomeTransition\("entering"\)/);
@@ -39,6 +45,31 @@ test("the companion home control hides and restores the dog without opening sett
     );
     assert.doesNotMatch(settingsHandler, /enabled: true/);
     assert.doesNotMatch(settingsHandler, /writeLocalCompanionSettings/);
+});
+
+test("the navigator explains the home and settings controls without outranking product guidance", async () => {
+    const [guide, layer] = await Promise.all([
+        readSource("lib/pet-companion-guide.ts"),
+        readSource("components/pet-companion/PetCompanionLayer.tsx"),
+    ]);
+
+    assert.match(guide, /\| "home"/);
+    assert.match(guide, /\| "settings"/);
+    assert.match(guide, /const MEMBER_GUIDE_ORDER: PetGuideId\[\] = \["try-on", "color",[\s\S]*?"chatbot", "settings", "home"/);
+    assert.match(guide, /const GUEST_GUIDE_ORDER: PetGuideId\[\] = \["try-on", "color", "signup", "chatbot", "settings", "home"/);
+    assert.match(guide, /const HERO_GUEST_GUIDE_ORDER: PetGuideId\[\] = \["signup", "chatbot", "settings", "home"/);
+    assert.match(guide, /발바닥 버튼에서 견종과 색상, 움직임 등 산책 친구의 모습을 설정/);
+    assert.match(guide, /집 버튼을 누르면 강아지가 집에서 쉬어요\. 다시 누르면 곁으로 돌아옵니다/);
+    assert.match(guide, /const AUTO_GUIDE_GAP_MS = 6_000/);
+    assert.match(guide, /const ROUTE_GUIDE_COOLDOWN_MS = 2 \* 60_000/);
+    assert.match(guide, /actionLabel: "설정 열기"/);
+    assert.match(guide, /actionLabel: "집에서 쉬기"/);
+    assert.match(guide, /activatesTarget: true/);
+    assert.match(layer, /const onManualGuideRequest = \(event: Event\)/);
+    assert.match(layer, /onlyId: detail\?\.id/);
+    assert.match(layer, /bypassRouteCooldownForId: detail\?\.force \? detail\.id : undefined/);
+    assert.match(layer, /scheduleSettledGuide\(previewMode \? 450 : 700\)/);
+    assert.match(layer, /scheduleSettledGuide\(previewMode \? 350 : 500\)/);
 });
 
 test("the dog returns with matched sizing, a full-resolution canvas, and explicit timing", async () => {

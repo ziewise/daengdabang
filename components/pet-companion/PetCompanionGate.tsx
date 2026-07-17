@@ -242,6 +242,13 @@ export default function PetCompanionGate() {
         ? `${effectiveSettings?.activePetName || "산책 친구"} 집으로 보내기`
         : `${effectiveSettings?.activePetName || "산책 친구"} 다시 부르기`;
 
+    const requestControlGuide = (id: "home" | "settings") => {
+        if (!companionEnabled || panelOpen || homeTransition) return;
+        window.dispatchEvent(new CustomEvent("ddb:pet-guide-now", {
+            detail: { id, force: false },
+        }));
+    };
+
     const setCompanionEnabled = (enabled: boolean) => {
         const fallback = state.user
             ? resolveCompanionSettings(state.user)
@@ -299,17 +306,20 @@ export default function PetCompanionGate() {
                     type="button"
                     className={styles.homeLaunch}
                     onClick={handleHomeToggle}
+                    onPointerEnter={() => requestControlGuide("home")}
+                    onFocus={() => requestControlGuide("home")}
                     aria-label={homeLaunchLabel}
                     title={homeLaunchLabel}
                     aria-pressed={!companionEnabled}
                     disabled={Boolean(homeTransition)}
                     data-pet-companion-home
+                    data-pet-guide-target="home"
                     data-home-occupied={!companionEnabled ? "true" : "false"}
                     data-home-transition={homeTransition || "idle"}
                     data-panel-open={panelOpen}
                 >
                     {!companionEnabled && !homeTransition && (
-                        <span className={styles.homeBark} aria-hidden="true">멍멍?</span>
+                        <span className={styles.homeBark} role="status">집에서 쉬는 중 · 누르면 돌아와요</span>
                     )}
                     <span className={styles.dogHouseIcon} aria-hidden="true">
                         <span className={styles.dogHouseRoof} />
@@ -323,10 +333,13 @@ export default function PetCompanionGate() {
                 type="button"
                 className={styles.settingsLaunch}
                 onClick={handleSettingsLaunch}
+                onPointerEnter={() => requestControlGuide("settings")}
+                onFocus={() => requestControlGuide("settings")}
                 aria-label={settingsLaunchLabel}
                 title={settingsLaunchLabel}
                 aria-haspopup="dialog"
                 data-pet-companion-settings
+                data-pet-guide-target="settings"
                 data-companion-enabled={companionEnabled ? "true" : "false"}
                 data-panel-open={panelOpen}
             >

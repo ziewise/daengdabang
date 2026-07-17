@@ -5,6 +5,8 @@ export type PetGuideId =
     | "product-actions"
     | "signup"
     | "pet-lens"
+    | "home"
+    | "settings"
     | "signup-provider"
     | "signup-account"
     | "signup-pet-photo"
@@ -23,18 +25,18 @@ export type PetGuidePrompt = {
     placement?: "header" | "content";
 };
 
-// v7 starts a fresh guidance history with the higher navigator budget. Old v6
+// v8 starts a fresh guidance history with the interactive navigator targets. Old v7
 // records could otherwise keep an already exhausted session or day suppressed.
-const SESSION_KEY = "ddb.petGuide.session.v7";
-const DAILY_KEY = "ddb.petGuide.daily.v7";
+const SESSION_KEY = "ddb.petGuide.session.v8";
+const DAILY_KEY = "ddb.petGuide.daily.v8";
 
 // Guidance should stay useful throughout a shopping session without becoming a
-// repetitive pop-up. The v7 state replaces the old three-prompt hard stop with
+// repetitive pop-up. The v8 state replaces the old three-prompt hard stop with
 // a short global gap plus a route-and-target cooldown.
 const SESSION_LIMIT = 20;
 const DAILY_LIMIT = 40;
-const AUTO_GUIDE_GAP_MS = 8_000;
-const ROUTE_GUIDE_COOLDOWN_MS = 5 * 60_000;
+const AUTO_GUIDE_GAP_MS = 6_000;
+const ROUTE_GUIDE_COOLDOWN_MS = 2 * 60_000;
 const HISTORY_RETENTION_MS = 24 * 60 * 60_000;
 
 type GuideHistoryEntry = {
@@ -54,9 +56,9 @@ type DailyState = {
     count: number;
 };
 
-const MEMBER_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "product-actions", "pet-lens", "chatbot", "signup"];
-const GUEST_GUIDE_ORDER: PetGuideId[] = ["color", "try-on", "signup", "pet-lens", "chatbot", "product-actions"];
-const HERO_GUEST_GUIDE_ORDER: PetGuideId[] = ["signup", "pet-lens", "color", "try-on", "chatbot", "product-actions"];
+const MEMBER_GUIDE_ORDER: PetGuideId[] = ["try-on", "color", "product-actions", "chatbot", "settings", "home", "pet-lens", "signup"];
+const GUEST_GUIDE_ORDER: PetGuideId[] = ["try-on", "color", "signup", "chatbot", "settings", "home", "pet-lens", "product-actions"];
+const HERO_GUEST_GUIDE_ORDER: PetGuideId[] = ["signup", "chatbot", "settings", "home", "pet-lens", "try-on", "color", "product-actions"];
 const SIGNUP_GUIDE_ORDER: PetGuideId[] = [
     "signup-provider",
     "signup-account",
@@ -342,8 +344,9 @@ export function findPetGuidePrompt({
                 message: hasPetPhoto
                     ? "우리 아이 사진으로 직접 입혀 보세요. 핏과 위치를 여기서 천천히 확인하실 수 있어요."
                     : "강아지 사진 한 장을 올리시면 여기서 직접 입혀 보실 수 있어요.",
-                actionLabel: hasPetPhoto ? undefined : "사진 등록 안내",
+                actionLabel: hasPetPhoto ? "입어보기 열기" : "사진 등록 안내",
                 href: hasPetPhoto ? undefined : (isGuest ? "/auth/signup" : "/pet-lens"),
+                activatesTarget: hasPetPhoto,
             };
         }
         if (id === "product-actions") {
@@ -353,6 +356,28 @@ export function findPetGuidePrompt({
                 placement,
                 name: "옵션 선택",
                 message: "마음에 드시면 여기서 색상과 수량부터 천천히 골라 주세요.",
+            };
+        }
+        if (id === "settings") {
+            return {
+                id,
+                target,
+                placement,
+                name: "산책 친구 설정",
+                message: "발바닥 버튼에서 견종과 색상, 움직임 등 산책 친구의 모습을 설정하실 수 있어요.",
+                actionLabel: "설정 열기",
+                activatesTarget: true,
+            };
+        }
+        if (id === "home") {
+            return {
+                id,
+                target,
+                placement,
+                name: "강아지 집",
+                message: "집 버튼을 누르면 강아지가 집에서 쉬어요. 다시 누르면 곁으로 돌아옵니다.",
+                actionLabel: "집에서 쉬기",
+                activatesTarget: true,
             };
         }
         if (id === "chatbot") {
