@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
 import { useStore } from "@/lib/store";
 import {
     PET_COMPANION_OPEN_EVENT,
@@ -48,9 +49,14 @@ export default function PetCompanionGate() {
     const [guestSettingsInteracted, setGuestSettingsInteracted] = useState(false);
     const [productRecommendationActive, setProductRecommendationActive] = useState(false);
     const [homeTransition, setHomeTransition] = useState<"entering" | "leaving" | null>(null);
+    const [buybar, setBuybar] = useState(false);
+    const mobileFloating = useMobileFloatingVisibility();
     const panelOpenRef = useRef(false);
     const productRecommendationActiveRef = useRef(false);
     const homeTransitionTimerRef = useRef<number | null>(null);
+    const homeLaunchRef = useRef<HTMLButtonElement>(null);
+    const settingsLaunchRef = useRef<HTMLButtonElement>(null);
+    const mobileControlsHidden = mobileFloating.hidden || panelOpen;
     const heroActive = isHeroRoute(pathname);
     const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
@@ -72,6 +78,20 @@ export default function PetCompanionGate() {
         heroVisualScopeRef.current = heroVisualScope;
         setHeroVisual(null);
     }, [heroVisualScope]);
+
+    useEffect(() => {
+        const onBuybar = (event: Event) => setBuybar(Boolean((event as CustomEvent).detail));
+        window.addEventListener("ddb:buybar", onBuybar);
+        return () => window.removeEventListener("ddb:buybar", onBuybar);
+    }, []);
+
+    useEffect(() => {
+        if (!mobileControlsHidden) return;
+        const activeElement = document.activeElement;
+        if (activeElement === homeLaunchRef.current || activeElement === settingsLaunchRef.current) {
+            (activeElement as HTMLElement).blur();
+        }
+    }, [mobileControlsHidden]);
 
     useEffect(() => {
         if (!hydrated) return;
@@ -303,6 +323,7 @@ export default function PetCompanionGate() {
         <>
             {effectiveSettings && (
                 <button
+                    ref={homeLaunchRef}
                     type="button"
                     className={styles.homeLaunch}
                     onClick={handleHomeToggle}
@@ -311,12 +332,19 @@ export default function PetCompanionGate() {
                     aria-label={homeLaunchLabel}
                     title={homeLaunchLabel}
                     aria-pressed={!companionEnabled}
+                    aria-hidden={mobileControlsHidden ? "true" : undefined}
+                    tabIndex={mobileControlsHidden ? -1 : undefined}
                     disabled={Boolean(homeTransition)}
                     data-pet-companion-home
                     data-pet-guide-target="home"
                     data-home-occupied={!companionEnabled ? "true" : "false"}
                     data-home-transition={homeTransition || "idle"}
                     data-panel-open={panelOpen}
+                    data-mobile-hidden={mobileControlsHidden ? "true" : "false"}
+                    data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
+                    data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
+                    data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
+                    data-buybar={buybar ? "true" : "false"}
                 >
                     {!companionEnabled && !homeTransition && (
                         <span className={styles.homeBark} role="status">집에서 쉬는 중 · 누르면 돌아와요</span>
@@ -330,6 +358,7 @@ export default function PetCompanionGate() {
                 </button>
             )}
             <button
+                ref={settingsLaunchRef}
                 type="button"
                 className={styles.settingsLaunch}
                 onClick={handleSettingsLaunch}
@@ -338,10 +367,17 @@ export default function PetCompanionGate() {
                 aria-label={settingsLaunchLabel}
                 title={settingsLaunchLabel}
                 aria-haspopup="dialog"
+                aria-hidden={mobileControlsHidden ? "true" : undefined}
+                tabIndex={mobileControlsHidden ? -1 : undefined}
                 data-pet-companion-settings
                 data-pet-guide-target="settings"
                 data-companion-enabled={companionEnabled ? "true" : "false"}
                 data-panel-open={panelOpen}
+                data-mobile-hidden={mobileControlsHidden ? "true" : "false"}
+                data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
+                data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
+                data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
+                data-buybar={buybar ? "true" : "false"}
             >
                 <span aria-hidden="true">🐾</span>
             </button>

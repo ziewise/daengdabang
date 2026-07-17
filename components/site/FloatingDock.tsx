@@ -15,15 +15,19 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import ChatWidget from "@/components/site/ChatWidget";
+import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
 import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
 
 export default function FloatingDock() {
     const pathname = usePathname();
     const [shown, setShown] = useState(false);
     const [navigatorReveal, setNavigatorReveal] = useState(false);
+    const [chatOpen, setChatOpen] = useState(false);
+    const dockRef = useRef<HTMLDivElement>(null);
+    const mobileFloating = useMobileFloatingVisibility({ ignoreDialogsWithin: dockRef });
     // 제품 상세의 하단 구매 바가 떠 있으면(ddb:buybar) 그 위로 비켜 올라간다
     const [buybar, setBuybar] = useState(false);
     useEffect(() => {
@@ -65,17 +69,38 @@ export default function FloatingDock() {
     //   ChatWidget 은 relative 라 dock 기준으로 배치된다(예전엔 ChatWidget 이 자체 fixed 라
     //   buybar 회피가 안 먹혀 하단 구매 바와 겹쳤음). fade 는 translate 없이 opacity 로만
     //   처리한다(자식 채팅창 폭 깨짐 방지). dock 자체는 pointer-events-none, 노출 시 버튼만 auto.
-    const dockVisible = shown || navigatorReveal;
+    const baseDockVisible = shown || navigatorReveal;
+    const dockVisible = !mobileFloating.hasBlockingDialog
+        && (chatOpen || (baseDockVisible && !mobileFloating.isScrolling));
     const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
+    const dockBottom = buybar
+        ? (mobileFloating.isMobile
+            ? "bottom-[calc(5.5rem+env(safe-area-inset-bottom))]"
+            : "bottom-[5.5rem]")
+        : (mobileFloating.isMobile
+            ? "bottom-[calc(1rem+env(safe-area-inset-bottom))]"
+            : "bottom-4");
     return (
         <div
-            className={`pointer-events-none fixed right-4 z-[2200] flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${
-                buybar ? "bottom-[5.5rem]" : "bottom-4"
-            } ${dockVisible ? "opacity-100" : "opacity-0"}`}
+            ref={dockRef}
+            data-mobile-floating-chat
+            data-mobile-hidden={!dockVisible ? "true" : "false"}
+            data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
+            data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
+            data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
+            aria-hidden={!dockVisible ? "true" : undefined}
+            inert={!dockVisible ? true : undefined}
+            className={`pointer-events-none fixed right-4 z-[2200] flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${dockBottom} ${
+                dockVisible ? "visible opacity-100" : "invisible opacity-0"
+            }`}
         >
             {/* 챗봇 — 위치는 dock 이 관리, 내부 토글/대화 로직은 협업자 ChatWidget 그대로 */}
             <div className={interactive}>
-                <ChatWidget />
+                <ChatWidget
+                    isMobile={mobileFloating.isMobile}
+                    launcherHidden={!dockVisible}
+                    onOpenChange={setChatOpen}
+                />
             </div>
         </div>
     );

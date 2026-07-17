@@ -25,7 +25,7 @@
     font-size: 17px;
     line-height: 1;
     cursor: pointer;
-    transition: transform .18s ease, box-shadow .18s ease;
+    transition: transform .18s ease, box-shadow .18s ease, opacity .16s ease, visibility 0s linear;
 }
 
 .settingsLaunch:hover {
@@ -64,7 +64,7 @@
     background: linear-gradient(145deg, rgb(255 252 246 / 98%), rgb(255 241 222 / 96%));
     box-shadow: 0 5px 18px rgb(40 31 27 / 14%);
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, opacity .16s ease, visibility 0s linear;
 }
 
 .homeLaunch:hover {
@@ -807,16 +807,22 @@
 
     .settingsLaunch {
         right: 0;
-        bottom: 78px;
+        bottom: calc(78px + env(safe-area-inset-bottom));
         width: 40px;
         height: 44px;
         border-radius: 20px 0 0 20px;
     }
     .homeLaunch {
-        bottom: 128px;
+        bottom: calc(128px + env(safe-area-inset-bottom));
         width: 40px;
         height: 44px;
         border-radius: 20px 0 0 20px;
+    }
+    .settingsLaunch[data-buybar="true"] {
+        bottom: calc(150px + env(safe-area-inset-bottom));
+    }
+    .homeLaunch[data-buybar="true"] {
+        bottom: calc(200px + env(safe-area-inset-bottom));
     }
     .homeBark {
         top: -10px;
@@ -824,6 +830,19 @@
     }
     .settingsLaunch[data-companion-enabled="false"] {
         opacity: .86;
+    }
+    .settingsLaunch[data-mobile-hidden="true"],
+    .homeLaunch[data-mobile-hidden="true"] {
+        visibility: hidden;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateX(calc(100% + 4px));
+    }
+    .settingsLaunch[data-mobile-hidden="true"] {
+        transition-delay: 0s, 0s, 0s, .14s;
+    }
+    .homeLaunch[data-mobile-hidden="true"] {
+        transition-delay: 0s, 0s, 0s, 0s, .14s;
     }
 
     .dialogBackdrop { padding: 8px; }
@@ -916,6 +935,12 @@
     .homeBark {
         opacity: 1;
         transform: none;
+    }
+
+    .settingsLaunch[data-mobile-hidden="true"],
+    .homeLaunch[data-mobile-hidden="true"] {
+        transform: none;
+        transition-delay: 0s !important;
     }
 
     .entryBehindLens:not([data-pet-force-motion="true"]) { animation: none; }

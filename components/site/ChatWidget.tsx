@@ -29,6 +29,12 @@ type Message = {
     conversation?: ShopChatConversation;
 };
 
+type Props = {
+    isMobile?: boolean;
+    launcherHidden?: boolean;
+    onOpenChange?: (open: boolean) => void;
+};
+
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     if (!actions?.length) return null;
     return (
@@ -56,7 +62,7 @@ function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     );
 }
 
-export default function ChatWidget() {
+export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange }: Props = {}) {
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState("");
@@ -65,6 +71,8 @@ export default function ChatWidget() {
     const [productContext, setProductContext] = useState("");
     const messagesRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const previouslyOpenRef = useRef(false);
 
     const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
         const container = messagesRef.current;
@@ -80,12 +88,23 @@ export default function ChatWidget() {
     }, [open, messages, loading]);
 
     useEffect(() => {
+        onOpenChange?.(open);
+        const wasOpen = previouslyOpenRef.current;
+        previouslyOpenRef.current = open;
+        if (open === wasOpen) return;
+        const focusFrame = window.requestAnimationFrame(() => {
+            if (open) inputRef.current?.focus();
+            else triggerRef.current?.focus();
+        });
+        return () => window.cancelAnimationFrame(focusFrame);
+    }, [onOpenChange, open]);
+
+    useEffect(() => {
         const openFromPage = (event: Event) => {
             const detail = (event as CustomEvent<ChatWidgetOpenDetail>).detail;
             setProductContext(typeof detail?.productName === "string" ? detail.productName.trim() : "");
             setInput("");
             setOpen(true);
-            window.setTimeout(() => inputRef.current?.focus(), 0);
         };
         window.addEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
         return () => window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
@@ -135,10 +154,16 @@ export default function ChatWidget() {
         void ask(input);
     };
 
+    const hideTrigger = launcherHidden || (isMobile && open);
+
     return (
-        <div className="relative z-50">
+        <div className="relative z-50" data-chat-widget-open={open ? "true" : "false"}>
             {open && (
-                <section className="absolute bottom-[calc(100%+12px)] right-0 z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl max-sm:fixed max-sm:inset-x-3 max-sm:bottom-[calc(88px+env(safe-area-inset-bottom))] max-sm:top-[calc(env(safe-area-inset-top)+12px)] max-sm:h-auto max-sm:w-auto">
+                <section
+                    role="dialog"
+                    aria-label="댕다방 케어톡"
+                    className="absolute bottom-[calc(100%+12px)] right-0 z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl max-sm:fixed max-sm:inset-x-3 max-sm:bottom-[calc(env(safe-area-inset-bottom)+12px)] max-sm:top-[calc(env(safe-area-inset-top)+12px)] max-sm:h-auto max-sm:w-auto"
+                >
                     <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
                         <b className="text-sm font-black">댕다방 케어톡</b>
                         <div className="flex items-center gap-1">
@@ -248,11 +273,17 @@ export default function ChatWidget() {
             )}
 
             <button
+                ref={triggerRef}
                 type="button"
                 onClick={() => setOpen((value) => !value)}
-                className="flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700"
+                className={`flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700 ${
+                    hideTrigger ? "invisible pointer-events-none opacity-0" : "visible opacity-100"
+                }`}
                 data-pet-guide-target="chatbot"
+                data-mobile-chat-trigger
                 aria-expanded={open}
+                aria-hidden={hideTrigger ? "true" : undefined}
+                tabIndex={hideTrigger ? -1 : undefined}
                 aria-label={open ? "채팅 닫기" : "채팅 열기"}
                 title={open ? "채팅 닫기" : "채팅 열기"}
             >

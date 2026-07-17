@@ -1,0 +1,135 @@
+"use client";
+
+import { type RefObject, useEffect, useState } from "react";
+
+const MOBILE_FLOATING_QUERY = "(max-width: 680px)";
+export const MOBILE_FLOATING_SCROLL_IDLE_MS = 400;
+
+function isVisibleDialog(dialog: HTMLElement) {
+    if (dialog.closest("[hidden], [aria-hidden='true']")) return false;
+    let current: HTMLElement | null = dialog;
+    while (current) {
+        const style = window.getComputedStyle(current);
+        if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity || "1") <= 0) {
+            return false;
+        }
+        current = current.parentElement;
+    }
+
+    const rect = dialog.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const viewportHeight = document.documentElement.clientHeight || window.innerHeight;
+    return rect.width > 0
+        && rect.height > 0
+        && rect.right > 0
+        && rect.bottom > 0
+        && rect.left < viewportWidth
+        && rect.top < viewportHeight;
+}
+
+type Options = {
+    ignoreDialogsWithin?: RefObject<HTMLElement | null>;
+};
+
+/**
+ * Mobile-only collision state for the independent house, settings and chat
+ * launchers. Nothing is unmounted, so chat history and companion motion state
+ * survive while the launchers are temporarily out of the way.
+ */
+export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {}) {
+    const [isMobile, setIsMobile] = useState(false);
+    const [isScrolling, setIsScrolling] = useState(false);
+    const [hasBlockingDialog, setHasBlockingDialog] = useState(false);
+
+    useEffect(() => {
+        const query = window.matchMedia(MOBILE_FLOATING_QUERY);
+        const update = () => setIsMobile(query.matches);
+        update();
+        query.addEventListener("change", update);
+        return () => query.removeEventListener("change", update);
+    }, []);
+
+    useEffect(() => {
+        if (!isMobile) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- clear stale mobile-only interaction state after a viewport change.
+            setIsScrolling(false);
+            return;
+        }
+
+        let idleTimer = 0;
+        let scrollAnchorY = window.scrollY;
+        let scrollingActive = false;
+        const onScroll = () => {
+            const nextScrollY = window.scrollY;
+            if (!scrollingActive && Math.abs(nextScrollY - scrollAnchorY) < 2) return;
+            if (!scrollingActive) {
+                scrollingActive = true;
+                setIsScrolling(true);
+            }
+            scrollAnchorY = nextScrollY;
+            window.clearTimeout(idleTimer);
+            idleTimer = window.setTimeout(() => {
+                scrollingActive = false;
+                scrollAnchorY = window.scrollY;
+                setIsScrolling(false);
+            }, MOBILE_FLOATING_SCROLL_IDLE_MS);
+        };
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => {
+            window.clearTimeout(idleTimer);
+            window.removeEventListener("scroll", onScroll);
+        };
+    }, [isMobile]);
+
+    useEffect(() => {
+        if (!isMobile) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- dialog collisions are intentionally mobile-only.
+            setHasBlockingDialog(false);
+            return;
+        }
+
+        let frame = 0;
+        let settleTimer = 0;
+        const update = () => {
+            frame = 0;
+            const ignoredRoot = ignoreDialogsWithin?.current;
+            const next = Array.from(document.querySelectorAll<HTMLElement>("[role='dialog']"))
+                .some((dialog) => !ignoredRoot?.contains(dialog) && isVisibleDialog(dialog));
+            setHasBlockingDialog(next);
+        };
+        const scheduleUpdate = () => {
+            if (frame) return;
+            frame = window.requestAnimationFrame(update);
+        };
+        const scheduleTransitionAwareUpdate = () => {
+            scheduleUpdate();
+            window.clearTimeout(settleTimer);
+            settleTimer = window.setTimeout(scheduleUpdate, 460);
+        };
+
+        scheduleUpdate();
+        const observer = new MutationObserver(scheduleTransitionAwareUpdate);
+        observer.observe(document.body, {
+            attributes: true,
+            attributeFilter: ["aria-hidden", "class", "hidden", "open", "style"],
+            childList: true,
+            subtree: true,
+        });
+        window.addEventListener("resize", scheduleUpdate);
+
+        return () => {
+            if (frame) window.cancelAnimationFrame(frame);
+            window.clearTimeout(settleTimer);
+            observer.disconnect();
+            window.removeEventListener("resize", scheduleUpdate);
+        };
+    }, [ignoreDialogsWithin, isMobile]);
+
+    return {
+        hasBlockingDialog,
+        hidden: isMobile && (isScrolling || hasBlockingDialog),
+        isMobile,
+        isScrolling,
+    };
+}
