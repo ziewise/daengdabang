@@ -296,6 +296,8 @@ export default function PetTryOnPreview({
             )
         )
     );
+    const initialGenerationRequired = Boolean(confirmedRegenerationRequired && !sourceFit);
+    const regenerationConfirmationVisible = Boolean(initialGenerationRequired || preciseRegenerationOpen);
     const showingSourceWhilePreparing = Boolean(
         !explicitColorRequired
         && !selectedPreciseFit
@@ -1191,7 +1193,7 @@ export default function PetTryOnPreview({
                                 </div>
                             )}
 
-                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !preciseRegenerationOpen && (
+                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !initialGenerationRequired && !preciseRegenerationOpen && (
                                 <button
                                     type="button"
                                     onClick={() => setPreciseRegenerationOpen(true)}
@@ -1206,11 +1208,13 @@ export default function PetTryOnPreview({
                                 </button>
                             )}
 
-                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && preciseRegenerationOpen && (
+                            {!loading && !fitMasterRestorePending && !isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && regenerationConfirmationVisible && (
                                 <div className="mt-5 rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
                                     <p className="text-xs font-black text-amber-950">
                                         <i className="fa-solid fa-triangle-exclamation mr-2" />
-                                        {locale === "en" ? "Confirm one new full fitting image" : "새 전체 착용 이미지 생성을 확인해 주세요"}
+                                        {initialGenerationRequired
+                                            ? locale === "en" ? "Create a new fitting image" : "새 착용 이미지 만들기"
+                                            : locale === "en" ? "Confirm one new full fitting image" : "새 전체 착용 이미지 생성을 확인해 주세요"}
                                     </p>
                                     <p className="mt-2 text-[11px] font-bold leading-5 text-amber-900">
                                         {correctionIssues.length > 0
@@ -1225,14 +1229,16 @@ export default function PetTryOnPreview({
                                                 ? "Color switching above creates no new image. Continue only if you want to redraw the entire fitting once."
                                                 : "위 색상 변경은 새 이미지를 만들지 않습니다. 전체 착용 이미지를 1회 다시 만들려는 경우에만 계속해 주세요."}
                                     </p>
-                                    <div className="mt-3 grid grid-cols-2 gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => setPreciseRegenerationOpen(false)}
-                                            className="min-h-11 rounded-md border border-neutral-300 bg-white px-3 py-2 text-xs font-black text-neutral-700 hover:bg-neutral-50"
-                                        >
-                                            {locale === "en" ? "Cancel" : "취소"}
-                                        </button>
+                                    <div className={`mt-3 grid gap-2 ${initialGenerationRequired ? "grid-cols-1" : "grid-cols-2"}`}>
+                                        {!initialGenerationRequired && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setPreciseRegenerationOpen(false)}
+                                                className="min-h-11 rounded-md border border-neutral-300 bg-white px-3 py-2 text-xs font-black text-neutral-700 hover:bg-neutral-50"
+                                            >
+                                                {locale === "en" ? "Cancel" : "취소"}
+                                            </button>
+                                        )}
                                         <button
                                             type="button"
                                             onClick={() => void generate(correctionIssues.length > 0)}
@@ -1242,7 +1248,9 @@ export default function PetTryOnPreview({
                                             <i className={`fa-solid mr-1.5 ${generationRequestPending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"}`} />
                                             {generationRequestPending
                                                 ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
-                                                : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}
+                                                : initialGenerationRequired
+                                                    ? locale === "en" ? "Create one new fitting image" : "새 착용 이미지 1회 만들기"
+                                                    : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}
                                         </button>
                                     </div>
                                 </div>

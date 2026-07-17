@@ -91,7 +91,7 @@ test("every wearable color switch tries the saved-fit preview before optional re
     assert.match(modal, /저장된 착용 결과에서 이 색상을 비교하고 있어요\. 새 이미지는 생성하지 않습니다/);
     assert.match(modal, /선택 기능: 새 정밀 이미지가 꼭 필요한가요/);
     assert.match(modal, /위 색상 변경은 새 이미지를 만들지 않습니다/);
-    assert.match(modal, /!isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !preciseRegenerationOpen/);
+    assert.match(modal, /!isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !initialGenerationRequired && !preciseRegenerationOpen/);
     assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
 
     // Server refusal stays fail-closed and never turns a color tap into an

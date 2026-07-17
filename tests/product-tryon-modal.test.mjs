@@ -25,7 +25,10 @@ test("price row opens the try-on modal and the old inline section is gone", asyn
     ]);
 
     assert.match(info, /우리 아이에게 바로 입혀보기/);
+    assert.match(info, /사진으로 착용 모습 미리보기/);
     assert.match(info, /onClick=\{onTryOn\}/);
+    assert.match(info, /bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500/);
+    assert.match(info, /group-hover:translate-x-1/);
     assert.match(detail, /onTryOn=\{\(\) => setTryOnOpen\(true\)\}/);
     assert.match(detail, /\{tryOnOpen && \(/);
     assert.doesNotMatch(detail, /<PetTryOnPreview product=\{product\} \/>/);
@@ -142,6 +145,18 @@ test("different products stay in a five-item member queue and complete independe
     assert.match(client, /queuePosition: Math\.max\(0, Number\(data\.queue_position \|\| 0\)\)/);
     assert.match(client, /queuedCount: Math\.max\(0, Number\(data\.queued_count \|\| 0\)\)/);
     assert.match(modal, /입혀보기는 한 번에 최대 5개까지 진행할 수 있어요/);
+});
+
+test("the first precise fitting exposes the creation action without an extra disclosure click", async () => {
+    const modal = await source("components/products/detail/PetTryOnPreview.tsx");
+
+    assert.match(modal, /const initialGenerationRequired = Boolean\(confirmedRegenerationRequired && !sourceFit\)/);
+    assert.match(modal, /const regenerationConfirmationVisible = Boolean\(initialGenerationRequired \|\| preciseRegenerationOpen\)/);
+    assert.match(modal, /confirmedRegenerationRequired && !initialGenerationRequired && !preciseRegenerationOpen/);
+    assert.match(modal, /confirmedRegenerationRequired && regenerationConfirmationVisible/);
+    assert.match(modal, /initialGenerationRequired \? "grid-cols-1" : "grid-cols-2"/);
+    assert.match(modal, /새 착용 이미지 만들기/);
+    assert.match(modal, /새 착용 이미지 1회 만들기/);
 });
 
 test("background async responses are guarded before state updates", async () => {

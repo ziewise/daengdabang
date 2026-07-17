@@ -187,10 +187,25 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                             <button
                                 type="button"
                                 onClick={onTryOn}
-                                className="inline-flex h-11 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-indigo-600 px-3 text-xs font-black text-white shadow-sm transition hover:bg-indigo-700 md:px-4 md:text-sm"
+                                aria-label={locale === "en" ? "Preview this product on my dog" : "우리 아이에게 이 상품 입혀보기"}
+                                className="group relative inline-flex min-h-14 shrink-0 items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 px-4 py-2.5 text-left text-white shadow-[0_12px_28px_-12px_rgba(79,70,229,0.9)] ring-1 ring-white/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-12px_rgba(124,58,237,0.95)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none md:px-5"
                             >
-                                <i className="fa-solid fa-paw text-xs" />
-                                {locale === "en" ? "Try it on my dog" : "우리 아이에게 바로 입혀보기"}
+                                <span
+                                    aria-hidden="true"
+                                    className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-18deg] bg-white/20 transition-[left] duration-700 group-hover:left-[120%] motion-reduce:hidden"
+                                />
+                                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/18 shadow-inner ring-1 ring-white/35 transition group-hover:scale-105 motion-reduce:transform-none">
+                                    <i className="fa-solid fa-paw text-sm" />
+                                </span>
+                                <span className="relative min-w-0">
+                                    <span className="block text-[10px] font-bold tracking-wide text-indigo-100">
+                                        {locale === "en" ? "Preview the fit with a photo" : "사진으로 착용 모습 미리보기"}
+                                    </span>
+                                    <span className="mt-0.5 block text-sm font-black md:text-[15px]">
+                                        {locale === "en" ? "Try it on my dog" : "우리 아이에게 바로 입혀보기"}
+                                    </span>
+                                </span>
+                                <i className="fa-solid fa-chevron-right relative ml-0.5 text-[10px] text-white/85 transition-transform group-hover:translate-x-1 motion-reduce:transform-none" />
                             </button>
                         )}
                     </div>
