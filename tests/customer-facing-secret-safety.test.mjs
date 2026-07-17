@@ -1,11 +1,25 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 
 async function readSource(path) {
     return readFile(new URL(path, root), "utf8");
+}
+
+async function productionCopySources(directory) {
+    const entries = await readdir(new URL(directory, root), { withFileTypes: true });
+    const paths = [];
+    for (const entry of entries) {
+        const path = `${directory}${entry.name}`;
+        if (entry.isDirectory()) {
+            paths.push(...await productionCopySources(`${path}/`));
+        } else if (/\.(?:ts|tsx|js|jsx|json)$/.test(entry.name)) {
+            paths.push(path);
+        }
+    }
+    return paths;
 }
 
 function assertNoCustomerLeak(source, label) {
@@ -83,5 +97,18 @@ test("customer-facing auth and PetLens surfaces hide technical setup details", a
 
     for (const [path, source] of sources) {
         assertNoCustomerLeak(source, path);
+    }
+});
+
+test("customer-facing storefront copy uses plain feature names instead of AI labels", async () => {
+    const paths = (await Promise.all([
+        productionCopySources("app/"),
+        productionCopySources("components/"),
+        productionCopySources("lib/"),
+    ])).flat();
+
+    for (const path of paths) {
+        const source = await readSource(path);
+        assert.doesNotMatch(source, /\bAI\b|인공지능|에이아이/, `${path} exposes an artificial feature label`);
     }
 });

@@ -143,12 +143,12 @@ export const CS_LINKS: CSLink[] = [
     { icon: "fa-rotate-left", label: "교환·반품 안내", href: "/return" },
 ];
 
-// ============ AI 메뉴 드롭다운 ============
-// 펫렌즈(AI 분석)·챗봇은 협업자가 구현한 기능을 그대로 사용.
+// ============ 맞춤 서비스 메뉴 드롭다운 ============
+// 펫렌즈 사진 분석·챗봇은 협업자가 구현한 기능을 그대로 사용.
 //   - 펫렌즈: /pet-lens 페이지 (사진·정보 기반 상품 추천)
 //   - 챗봇:   /chat 페이지 (LLM 상담) — 우하단 ChatWidget 도 상시 노출됨
-export const AI_LINKS: CSLink[] = [
-    { icon: "fa-wand-magic-sparkles", label: "펫렌즈 AI 분석", href: "/pet-lens" },
+export const SMART_LINKS: CSLink[] = [
+    { icon: "fa-wand-magic-sparkles", label: "펫렌즈 사진 분석", href: "/pet-lens" },
     { icon: "fa-robot", label: "댕다방 챗봇", href: "/chat" },
 ];
 

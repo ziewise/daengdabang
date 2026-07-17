@@ -21,7 +21,7 @@ const toc = [
     ["officer", "제10조 개인정보 보호책임자 및 담당부서"],
     ["cookies", "제11조 자동 수집 장치의 운영 및 거부"],
     ["behavior", "제12조 행태정보와 맞춤형 광고"],
-    ["automation", "제13조 AI 분석 및 자동화된 결정"],
+    ["automation", "제13조 자동 분석 및 자동화된 결정"],
     ["security", "제14조 안전성 확보조치"],
     ["remedy", "제15조 개인정보침해 상담 및 신고"],
     ["notice", "제16조 변경에 따른 공지"],
@@ -98,7 +98,7 @@ const outsourcingRows = [
     ["배송", "계약 택배사 및 배송 대행사", "상품 배송, 반품 회수, 배송 안내"],
     ["호스팅·보안·CDN", BUSINESS_INFO.hostingProvider, "웹사이트 제공, 트래픽 처리, 보안, 장애 대응"],
     ["고객 알림", "이메일·문자·카카오 알림 발송 사업자(연동 시 고지)", "주문, 배송, 상담, 마케팅 수신동의 알림 발송"],
-    ["AI 이미지 분석", "AI 분석 제공자(운영 연동 시 별도 고지)", "PetLens 이미지 분석 및 맞춤 추천"],
+    ["이미지 자동 분석", "이미지 분석 제공자(운영 연동 시 별도 고지)", "PetLens 이미지 분석 및 맞춤 추천"],
 ];
 
 const complaintRows = [
@@ -235,7 +235,7 @@ export default function PrivacyPage() {
                 <h2 className="text-lg font-black text-neutral-950">제6조 개인정보 국외이전</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
                     현재 {BUSINESS_INFO.companyName}은 이용자 개인정보를 상시적으로 국외 이전하지 않습니다. 다만
-                    글로벌 클라우드, 보안, AI 이미지 분석 등 국외 이전이 필요한 기능을 운영 환경에 연결하는 경우
+                    글로벌 클라우드, 보안, 이미지 자동 분석 등 국외 이전이 필요한 기능을 운영 환경에 연결하는 경우
                     이전받는 자, 이전 국가, 이전 항목, 이전 일시·방법, 이용 목적, 보유기간, 이전 거부 방법을 별도
                     고지하고 필요한 동의를 받습니다.
                 </p>
@@ -308,7 +308,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="automation" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">제13조 AI 분석 및 자동화된 결정</h2>
+                <h2 className="text-lg font-black text-neutral-950">제13조 자동 분석 및 자동화된 결정</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
                     PetLens의 반려견 사진 분석, 견종·체형 추정, 상품 추천은 자동화된 분석 결과를 포함할 수 있습니다.
                     이 결과는 쇼핑 편의를 위한 참고 정보이며, 이용자에게 법적 효과나 중대한 영향을 미치는 결정을

@@ -40,7 +40,7 @@ test("unsafe or low-confidence color previews never replace the original fitting
     assert.doesNotMatch(previewRequest, /\bstart\(|generate\(/);
 });
 
-test("product-shape correction is separate from color and requires explicit 1-AI confirmation", async () => {
+test("product-shape correction is separate from color and requires explicit new-image confirmation", async () => {
     const [modal, client] = await Promise.all([
         source("components/products/detail/PetTryOnPreview.tsx"),
         source("lib/pet-tryon.ts"),
@@ -64,7 +64,7 @@ test("product-shape correction is separate from color and requires explicit 1-AI
 
     for (const label of [
         "제품 형태 보정",
-        "하반신·밑단·배 부분·다리 구멍·길이",
+        "상품 사진과 밑단·배 부분·앞뒤 다리 구멍·목 부분·길이가 맞는지 확인해 주세요.",
         "등·밑단 길이",
         "배 부분·아랫단",
         "앞다리 구멍·앞소매",
@@ -76,9 +76,9 @@ test("product-shape correction is separate from color and requires explicit 1-AI
 
     assert.match(modal, /correctionIssues\.length > 0[\s\S]*confirmedRegenerationRequired/);
     assert.match(modal, /보정은 자동 실행되지 않아요/);
-    assert.match(modal, /AI 1회 사용을 직접 확인한 경우에만 전달됩니다/);
-    assert.match(modal, /새 AI 전체 생성을 확인해 주세요/);
-    assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
+    assert.match(modal, /새 정밀 이미지 1회 생성을 직접 확인한 경우에만 전달됩니다/);
+    assert.match(modal, /새 전체 착용 이미지 생성을 확인해 주세요/);
+    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
     assert.match(client, /confirm_precise_regeneration: true/);
     assert.doesNotMatch(modal, /void generate\(false\)/);
 });

@@ -72,7 +72,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 </div>
                 <div>
                     <p className="text-[10px] tracking-[0.2em] font-black text-aurora-indigo mb-0.5">
-                        AI 분석 결과
+                        사진 분석 결과
                     </p>
                     <h3 className="text-xl font-black tracking-tight">
                         {MOCK_RESULT.breed.primary}
@@ -135,11 +135,11 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 ))}
             </div>
 
-            {/* AI 사진 분석 — 사진만으로 신뢰 가능한 2개 항목만 (체중·모질)
+            {/* 사진 분석 — 사진만으로 신뢰 가능한 2개 항목만 (체중·모질)
                 견종 평균과 톤 구분 위해 aurora 컬러 + 박스 외부 라벨도 인디고 */}
             <p className="text-[10px] font-extrabold text-aurora-indigo tracking-wider mb-2 uppercase flex items-center gap-1">
                 <i className="fa-solid fa-camera-retro text-[10px]" />
-                AI 사진 분석 결과
+                사진 분석 결과
             </p>
             <div className="grid grid-cols-2 gap-2 mb-4">
                 {[

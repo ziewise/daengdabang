@@ -107,7 +107,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                     className="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm px-3 pb-6 pt-20 sm:items-center sm:p-6"
                     role="dialog"
                     aria-modal="true"
-                    aria-label="펫렌즈 AI 분석"
+                    aria-label="펫렌즈 사진 분석"
                     onClick={close}
                 >
                     {/* 모달 패널 — 안쪽 클릭은 닫힘 방지. 컴팩트하게 폭 제한(max-w-md) */}

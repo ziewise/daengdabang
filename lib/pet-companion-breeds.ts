@@ -466,7 +466,7 @@ export function resolvePetBreedId(text: string, fallback = "toy-poodle") {
 }
 
 /**
- * Resolve AI photo output only when it names one canonical 120-breed entry.
+ * Resolve photo-analysis output only when it names one canonical 120-breed entry.
  * Broad aliases such as "푸들" / "Poodle" intentionally do not resolve because
  * they could silently turn Standard or Miniature Poodle into Toy Poodle.
  */

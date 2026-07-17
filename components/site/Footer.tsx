@@ -37,7 +37,7 @@ export default function Footer() {
                         </div>
                     </div>
                     <div>
-                        <h3 className="font-black text-neutral-950">AI</h3>
+                        <h3 className="font-black text-neutral-950">맞춤 서비스</h3>
                         <div className="mt-3 grid gap-2 font-bold text-neutral-600">
                             <Link href="/pet-lens">펫렌즈</Link>
                             <Link href="/chat">챗봇</Link>

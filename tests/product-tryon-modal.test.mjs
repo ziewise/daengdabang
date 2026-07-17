@@ -44,10 +44,10 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(modal, /자연스럽게 입히고 있어요/);
     assert.match(modal, /start\(\s*tryOnProduct,\s*pet,/);
     assert.match(modal, /입혀볼 색상/);
-    assert.match(modal, /AI 사용 0회/);
+    assert.match(modal, /새 이미지 생성 없음/);
     assert.match(modal, /색감 비교용/);
     assert.match(modal, /무늬와 세부 모양은 상품사진 기준/);
-    assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
+    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
     assert.match(modal, /DDB SMART FIT/);
     assert.match(modal, /자연스러운 착용 미리보기/);
     assert.match(modal, /이 창을 닫아도 입혀보기는 계속 진행됩니다/);
@@ -58,7 +58,13 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(modal, /회원가입하고 우리 아이 등록하기/);
     assert.match(modal, /이미 회원이면 로그인/);
     assert.match(layout, /<PetTryOnTaskProvider>/);
-    assert.match(background, /ddb\.tryon\.background\.v1/);
+    assert.match(background, /ddb\.tryon\.background\.v2/);
+    assert.match(background, /const \[tasks, setTasks\] = useState<BackgroundPetTryOnTask\[]>\(\[]\)/);
+    assert.match(background, /MAX_MEMBER_TASKS = 5/);
+    assert.match(background, /tasks: tasks\.map/);
+    assert.match(background, /visibleTasks\.map/);
+    assert.match(background, /대기 순번/);
+    assert.match(background, /new Map<string, AbortController>/);
     assert.match(background, /Notification\.requestPermission\(\)/);
     assert.match(background, /try \{[\s\S]*new Notification/);
     assert.match(background, /Optional OS notifications must never downgrade a completed fitting/);
@@ -68,9 +74,9 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(background, /getPetTryOnJob/);
     assert.match(background, /productHref: storefrontProductHref\(product\)/);
     assert.match(background, /accountKey: undefined/);
-    assert.match(background, /parsed\.ownerKey !== ownerKey/);
+    assert.match(background, /task\.ownerKey !== ownerKey/);
     assert.match(background, /clearTaskForAccountChange/);
-    assert.match(background, /submitAbort\.current\?\.abort\(\)/);
+    assert.match(background, /submitAborts\.current\.values\(\)/);
     assert.match(background, /restoreController\.abort\(\)/);
     assert.match(background, /accountKeyRef\.current !== initialTask\.accountKey/);
     assert.match(background, /status: "failed"/);
@@ -86,6 +92,7 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.doesNotMatch(modal, /value \+ 5|value >= 92/);
     assert.doesNotMatch(modal, /mixBlendMode|PRESETS|productImage.*absolute/);
     assert.doesNotMatch(modal, /OpenAI|Gemini|GPT IMAGE|API (?:key|settings|quota|limit)/i);
+    assert.doesNotMatch(modal, /"[^"\n]*\bAI\b[^"\n]*"/);
 });
 
 test("try-on uses the authenticated browser-RPA queue and polls for completion", async () => {
@@ -110,29 +117,58 @@ test("try-on uses the authenticated browser-RPA queue and polls for completion",
     assert.doesNotMatch(client, /pet_photo_data_url/);
 });
 
+test("different products stay in a five-item member queue and complete independently", async () => {
+    const [background, client, modal] = await Promise.all([
+        source("lib/pet-tryon-background.tsx"),
+        source("lib/pet-tryon.ts"),
+        source("components/products/detail/PetTryOnPreview.tsx"),
+    ]);
+
+    assert.match(background, /MAX_MEMBER_TASKS = 5/);
+    assert.match(background, /const \[tasks, setTasks\] = useState<BackgroundPetTryOnTask\[]>\(\[]\)/);
+    assert.match(background, /const tasksRef = useRef<BackgroundPetTryOnTask\[]>\(\[]\)/);
+    assert.match(background, /tasksRef\.current\.filter\(isActive\)\.length >= MAX_MEMBER_TASKS/);
+    assert.match(background, /const existing = tasksRef\.current\.find\(\(item\) => item\.taskKey === key\)/);
+    assert.match(background, /replaceTask\(baseTask\)/);
+    assert.match(background, /submitAborts\.current\.set\(key, submitController\)/);
+    assert.match(background, /monitorAborts\.current\.set\(jobId, controller\)/);
+    assert.match(background, /for \(const storedTask of restored\.tasks\)/);
+    assert.match(background, /visibleTasks\.map/);
+    assert.match(background, /대기 \$\{queuePosition\}번/);
+    assert.match(background, /tag: completed\.taskKey/);
+    assert.match(background, /getTaskFor/);
+    assert.doesNotMatch(background, /"blocked"/);
+
+    assert.match(client, /queuePosition: Math\.max\(0, Number\(data\.queue_position \|\| 0\)\)/);
+    assert.match(client, /queuedCount: Math\.max\(0, Number\(data\.queued_count \|\| 0\)\)/);
+    assert.match(modal, /입혀보기는 한 번에 최대 5개까지 진행할 수 있어요/);
+});
+
 test("background async responses are guarded before state updates", async () => {
     const background = await source("lib/pet-tryon-background.tsx");
 
     assertOrdered(background, [
         "const monitor = useCallback",
         "const next = await getPetTryOnJob(jobId, controller.signal)",
-        "if (controller.signal.aborted || accountKeyRef.current !== initialTask.accountKey) break",
+        "controller.signal.aborted",
+        "accountKeyRef.current !== initialTask.accountKey",
+        "!tasksRef.current.some((item) => item.taskKey === initialTask.taskKey)",
         "if (!next)",
-        "setTask(current)",
+        "replaceTask(current)",
     ], "monitor guard");
     assertOrdered(background, [
         "const start = useCallback",
         "const first = await startPetTryOn(",
         "submitController.signal.aborted",
         "if (!first)",
-        "setTask(failed)",
+        "replaceTask(failed)",
     ], "submit guard");
     assertOrdered(background, [
         "void getPetTryOnJob(jobId, restoreController.signal).then",
         "restoreController.signal.aborted",
-        "taskRef.current?.taskKey !== restored.task.taskKey",
+        "!tasksRef.current.some((item) => item.taskKey === storedTask.taskKey)",
         "if (!fresh)",
-        "setTask(refreshed)",
+        "replaceTask(refreshed)",
     ], "restore guard");
     assertOrdered(background, [
         "deadlineReached = true",

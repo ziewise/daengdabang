@@ -7,7 +7,7 @@
  *
  * 협업자 LLM 보호 원칙:
  *   - 분석/저장/사진 처리 로직은 협업자 함수를 그대로 import 해서 "호출"만 한다.
- *     · analyzePetLensSmart (lib/daengdabang-llm) — 사진 AI 분석   (수정 X)
+ *     · analyzePetLensSmart (lib/daengdabang-llm) — 사진 자동 분석   (수정 X)
  *     · savePetProfileSmart (lib/customer-api)    — 회원 프로필 저장 (수정 X)
  *     · petlens-multiview  (lib/petlens-multiview) — 4방향 사진 준비/분석 시트
  *   - PetLensClient.tsx 페이지와 같은 4방향 사진 입력 모델을 사용한다.

@@ -28,7 +28,11 @@ export type PetTryOnResult = {
         checks: string[];
     };
     message: string;
+    productId: string;
+    productName: string;
     productImage: string;
+    queuePosition: number;
+    queuedCount: number;
     reusedMasterForColorPreview: boolean;
     /** Missing on legacy responses and therefore parsed fail-closed as false. */
     geometryVerified: boolean;
@@ -151,7 +155,11 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
             checks: Array.isArray(quality.checks) ? quality.checks.map(String) : [],
         },
         message: String(data.message || ""),
+        productId: String(data.product_id || ""),
+        productName: String(data.product_name || ""),
         productImage: String(data.product_image || ""),
+        queuePosition: Math.max(0, Number(data.queue_position || 0)),
+        queuedCount: Math.max(0, Number(data.queued_count || 0)),
         reusedMasterForColorPreview: Boolean(data.reused_master_for_color_preview),
         geometryVerified: data.geometry_verified === true,
     };

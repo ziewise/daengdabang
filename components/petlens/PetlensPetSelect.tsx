@@ -20,7 +20,7 @@ export default function PetlensPetSelect({ pets, onSelect }: Props) {
         <>
             <h3 className="text-lg font-extrabold mb-1.5">어떤 댕댕이의 펫렌즈를 진행할까요?</h3>
             <p className="text-xs text-neutral-500 mb-5">
-                선택하면 분석 결과가 해당 댕댕이의 펫렌즈 기록에 연결되어 AI 맞춤 추천에 반영돼요.
+                선택하면 분석 결과가 해당 댕댕이의 펫렌즈 기록에 연결되어 맞춤 추천에 반영돼요.
             </p>
 
             {/* 등록된 펫 카드 리스트 */}

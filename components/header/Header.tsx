@@ -184,7 +184,7 @@ export default function Header() {
                         모바일(<lg): 햄버거만 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         데스크탑(lg+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
                     <div className="flex items-center gap-2">
-                        {/* 펫렌즈 — AI 분석 모달(검색 버튼 좌측). 챗봇은 우하단 FloatingDock 에 있음 */}
+                        {/* 펫렌즈 — 사진 분석 모달(검색 버튼 좌측). 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
                             type="button"
                             onClick={openPetLens}

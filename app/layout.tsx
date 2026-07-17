@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div className="global-aurora" aria-hidden="true" />
                 <LanguageProvider>
                     <StoreProvider>
-                        {/* 펫렌즈 모달 런처 — 헤더 AI 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
+                        {/* 펫렌즈 모달 런처 — 헤더 맞춤 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
                         <PetLensModalProvider>
                             {/* 입혀보기는 상품 페이지를 떠나도 전역에서 계속 진행하고 완료 상태를 알려준다. */}
                             <PetTryOnTaskProvider>

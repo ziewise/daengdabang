@@ -1,7 +1,7 @@
 /**
  * petlens-data.ts — 펫렌즈 모달 mock 데이터 + 슬롯/가이드 설정
  * ---------------------------------------------------------------------
- * 향후 실제 AI 모델 연동 시 mockResult / analysisSteps 만 교체.
+ * 향후 실제 사진 분석 모델 연동 시 mockResult / analysisSteps 만 교체.
  */
 import type { PetlensSlot } from "@/lib/types";
 
@@ -47,7 +47,7 @@ export interface MockResult {
     breed: { primary: string; confidence: number };
     /** 견종 평균 — 일반적인 그 견종의 특성 */
     body: { size: string; weight: string; coat: string; activity: string };
-    /** AI 가 업로드된 사진에서 직접 인식한 정보
+    /** 사진 분석으로 업로드된 사진에서 직접 인식한 정보
      *  사진만으로 신뢰 가능한 두 항목만 노출 — 추정 체중·사진상 모질.
      *  연령/건강은 단순 사진으론 부정확해서 제외. */
     photoAnalysis: {

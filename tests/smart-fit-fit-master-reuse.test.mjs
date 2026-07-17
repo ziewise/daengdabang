@@ -42,7 +42,7 @@ test("every background-ready path persists a photo-free Smart Fit master", async
     assert.doesNotMatch(helper, /JSON\.stringify\(\{[^}]*imageDataUrl/si);
 });
 
-test("an indeterminate master restore never auto-starts another AI fitting", async () => {
+test("an indeterminate master restore never auto-starts another fitting", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
     const restoreStart = modal.indexOf("const lookup = readPetTryOnFitMasterWithLegacy");
@@ -72,8 +72,8 @@ test("an indeterminate master restore never auto-starts another AI fitting", asy
     assert.match(modal, /if \(fitMasterRestorePending\) return/);
     assert.match(modal, /!fitMasterRestorePending[\s\S]*fitMasterRestoreBlocked[\s\S]*!sourceFit/);
     assert.doesNotMatch(modal, /void generate\(false\)/);
-    assert.match(modal, /새 AI 입혀보기는 자동으로 시작하지 않았습니다/);
-    assert.match(modal, /새 결과가 필요할 때만 아래 AI 1회 버튼/);
+    assert.match(modal, /새 입혀보기는 자동으로 시작하지 않았습니다/);
+    assert.match(modal, /새 결과가 필요할 때만 아래 새 이미지 생성 기능/);
 });
 
 test("server master lookup distinguishes a real miss from an unsafe transient failure", async () => {

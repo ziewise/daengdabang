@@ -29,7 +29,7 @@ export default function RecommendSection() {
     const pets = petsOrMock(registeredPets);
     if (pets.length === 0) return null;
 
-    // AI 맞춤 = 등록된 펫(프로필) — 가장 최근 등록된 댕댕이 사용
+    // 맞춤 추천 = 등록된 펫(프로필) — 가장 최근 등록된 댕댕이 사용
     const current = pets[0];
     const petName = current.name?.trim() || "댕댕이";
 
@@ -52,7 +52,7 @@ export default function RecommendSection() {
                     <div>
                         <p className="text-[11px] md:text-xs font-extrabold text-aurora-indigo tracking-[0.2em] mb-1.5">
                             <i className="fa-solid fa-wand-magic-sparkles mr-1" />
-                            AI 맞춤 추천
+                            우리 아이 맞춤 추천
                         </p>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
                             <span className="text-aurora-indigo">{petName}</span>를 위한 추천

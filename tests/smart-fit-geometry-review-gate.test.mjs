@@ -45,7 +45,7 @@ test("human geometry approval updates local state and is the only color-preview 
     assert.match(modal, /상품 모양 확인 필요/);
     assert.match(modal, /제품 모양 맞아요/);
     assert.match(modal, /실제 상품과 달라요/);
-    assert.match(modal, /밑단·배 부분·다리 구멍·길이가 맞는지 확인해 주세요/);
+    assert.match(modal, /밑단·배 부분·앞뒤 다리 구멍·목 부분·길이가 맞는지 확인해 주세요/);
     assert.match(modal, /확인이 끝날 때까지 원래 입혀보기 결과를 변경 없이 보여드려요/);
     assert.match(modal, /geometryDecisionPending/);
 
@@ -97,4 +97,20 @@ test("precise generation sends only the catalog construction reference", async (
     assert.match(renderBody, /product_construction_image: product\.details\[0\]/);
     assert.match(renderBody, /product_image: product\.image/);
     assert.doesNotMatch(renderBody, /sourceFit|imageDataUrl|master/i);
+});
+
+test("geometry review uses product-specific checks for leads, collars, goggles, and apparel", async () => {
+    const modal = await source("components/products/detail/PetTryOnPreview.tsx");
+
+    assert.match(modal, /type PetTryOnReviewKind = "wear" \| "harness" \| "goggles" \| "leash" \| "collar"/);
+    assert.match(modal, /function petTryOnReviewKind\(product: CatalogProduct\)/);
+    assert.match(modal, /identity\.includes\("목줄"\) \|\| \/collar\|martingale\//);
+    assert.match(modal, /스냅 고리·목 부착 위치/);
+    assert.match(modal, /연결 연출용이며 상품 구성에 포함되지 않아요/);
+    assert.match(modal, /목 둘레·버클·D링/);
+    assert.match(modal, /렌즈·눈 위치·머리끈/);
+    assert.match(modal, /줄이 털·어깨·등에서 바로 시작하면 잘못된 결과/);
+    assert.match(modal, /productShapeCorrectionOptions\.map\(\(option\)/);
+    assert.match(modal, /setError\(sidePhotoRequirement\(reviewKind, locale\)\)/);
+    assert.doesNotMatch(modal, /PRODUCT_SHAPE_CORRECTION_OPTIONS\.map\(/);
 });

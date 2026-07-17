@@ -154,7 +154,7 @@ export default function PetlensModal({ open, onClose }: Props) {
                         className="text-base font-extrabold text-foreground flex items-center gap-2"
                     >
                         <i className="fa-solid fa-paw text-aurora-indigo" />
-                        펫렌즈 — AI 분석
+                        펫렌즈 — 사진 분석
                     </h2>
                     <button
                         type="button"

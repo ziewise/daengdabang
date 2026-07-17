@@ -169,7 +169,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     </div>
                 )}
 
-                {/* 가격 라인 — 착용 가능 상품은 금액 옆에서 바로 AI 피팅을 시작한다 */}
+                {/* 가격 라인 — 착용 가능 상품은 금액 옆에서 바로 입혀보기를 시작한다 */}
                 <div className="flex flex-wrap items-end justify-between gap-3">
                     <div className="flex flex-wrap items-end gap-3">
                         <div>

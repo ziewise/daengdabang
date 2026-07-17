@@ -23,24 +23,24 @@ test("Smart Fit receives the selected real product color instead of the base ima
     assert.match(modal, /selectedColor\?\.image\s*\?\s*\{ \.\.\.product, image: selectedColor\.image \}/);
     assert.match(modal, /start\(\s*tryOnProduct,\s*pet,/);
     assert.match(client, /product_image:\s*product\.image/);
-    assert.match(modal, /isTaskFor\(\s*product\.id,\s*pet\.apiProfileId,\s*tryOnProduct\.image,\s*petReferenceImage,\s*\)/);
+    assert.match(modal, /getTaskFor\(product\.id, pet\.apiProfileId, tryOnProduct\.image, petReferenceImage\)/);
 
     // Browser task identity must include the selected color reference. Without
     // this, a completed blue result is incorrectly reused after choosing red.
     assert.match(background, /function taskKey\([^)]*productImage[^)]*\)/);
     assert.match(background, /taskKey\(product\.id,\s*pet\.apiProfileId,\s*product\.image,\s*petReferenceImage,\s*correctionIssues\)/);
     assert.match(background, /productImage:\s*product\.image/);
-    assert.match(background, /isTaskFor:[^=]*\([^)]*productImage/s);
-    assert.match(background, /visibleTask\.productImage\s*===\s*productImage/);
+    assert.match(background, /getTaskFor:[^=]*\([^)]*productImage/s);
+    assert.match(background, /item\.productImage === productImage/);
 
     // Variant identity must be additive to, not a replacement for, account and
     // profile ownership isolation.
-    assert.match(background, /parsed\.ownerKey !== ownerKey/);
-    assert.match(background, /task\?\.accountKey === accountKey/);
+    assert.match(background, /task\.ownerKey !== ownerKey/);
+    assert.match(background, /item\.accountKey === accountKeyRef\.current/);
     assert.match(background, /petImage:\s*undefined/);
 });
 
-test("color changes use a zero-AI preview until the customer explicitly requests a precise render", async () => {
+test("color changes reuse the saved fitting until the customer explicitly requests a precise render", async () => {
     const [modal, client] = await Promise.all([
         source("components/products/detail/PetTryOnPreview.tsx"),
         source("lib/pet-tryon.ts"),
@@ -55,24 +55,24 @@ test("color changes use a zero-AI preview until the customer explicitly requests
     assert.match(modal, /if \(fitMasterRestorePending\) return/);
     assert.doesNotMatch(modal, /void generate\(false\)/);
     assert.match(modal, /!explicitColorRequired[\s\S]{0,220}isFastPreviewLoading[\s\S]{0,220}fastPreviewUnavailableKey !== selectedFastKey/);
-    assert.match(modal, /AI 사용 0회/);
-    assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
-    assert.match(modal, /AI 1회로 새 착용 이미지 만들기/);
-    assert.match(modal, /우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 만들며 AI 1회를 사용합니다/);
+    assert.match(modal, /새 이미지 생성 없음/);
+    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
+    assert.match(modal, /새 정밀 착용 이미지 1회 만들기/);
+    assert.match(modal, /우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 1회 만듭니다/);
     assert.match(modal, /explicitColorRequired\s*\|\|\s*generationRequestPending/);
-    assert.match(modal, /기존 입혀보기 결과를 확인하고 있어요\. 새 AI 이미지는 시작하지 않습니다/);
+    assert.match(modal, /기존 입혀보기 결과를 확인하고 있어요\. 새 이미지는 시작하지 않습니다/);
     assert.match(modal, /correctionIssues\.length > 0/);
     assert.match(client, /correction_issues: correctionIssues/);
     assert.match(client, /confirm_precise_regeneration: true/);
     assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return null/);
     assert.match(client, /startPetTryOn\(product, pet, options\.signal, \[\], true\)/);
     assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked\)/);
-    assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
+    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
     assert.match(modal, /보정은 자동 실행되지 않아요/);
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,120}generate\(/);
 });
 
-test("every wearable color switch tries automatic zero-AI preview before optional regeneration", async () => {
+test("every wearable color switch tries the saved-fit preview before optional regeneration", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
     const eligibility = await source("lib/pet-tryon-eligibility.ts");
@@ -87,12 +87,12 @@ test("every wearable color switch tries automatic zero-AI preview before optiona
         modal,
         /const shouldRequestFastPreview = Boolean\([\s\S]*?zeroAiColorPreviewEnabled[\s\S]*?if \(!shouldRequestFastPreview[\s\S]*?requestPetTryOnColorPreview\(sourceFit\.jobId, tryOnProduct\.image/,
     );
-    assert.match(modal, /다른 색상은 색상 원만 누르면 AI 사용 0회로 자동 비교돼요/);
-    assert.match(modal, /AI 0회로 이 색상을 비교하고 있어요\. 새 이미지는 생성하지 않습니다/);
+    assert.match(modal, /다른 색상은 색상 원만 누르면 자동으로 비교돼요\. 새 착용 이미지는 만들지 않습니다/);
+    assert.match(modal, /저장된 착용 결과에서 이 색상을 비교하고 있어요\. 새 이미지는 생성하지 않습니다/);
     assert.match(modal, /선택 기능: 새 정밀 이미지가 꼭 필요한가요/);
-    assert.match(modal, /위 색상 변경은 AI 0회입니다/);
+    assert.match(modal, /위 색상 변경은 새 이미지를 만들지 않습니다/);
     assert.match(modal, /!isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !preciseRegenerationOpen/);
-    assert.match(modal, /확인: AI 1회 사용해 새 이미지 만들기/);
+    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
 
     // Server refusal stays fail-closed and never turns a color tap into an
     // implicit paid/full render.
@@ -103,7 +103,7 @@ test("every wearable color switch tries automatic zero-AI preview before optiona
 
     // Product-shape correction still requires an explicit new precise image.
     assert.match(modal, /generate\(correctionIssues\.length > 0\)/);
-    assert.match(modal, /선택 내용 반영해 다시 정밀 확인 \(AI 1회\)/);
+    assert.match(modal, /선택 내용 반영해 정밀 이미지 1회 만들기/);
 
     // A changed swatch invalidates any stale confirmation/correction context,
     // and repeated confirmation clicks are single-flight guarded.

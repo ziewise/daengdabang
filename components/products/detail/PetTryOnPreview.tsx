@@ -59,18 +59,90 @@ function formatElapsed(seconds: number) {
 
 const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
 type CorrectionOption = { value: PetTryOnCorrectionIssue; ko: string; en: string };
+type PetTryOnReviewKind = "wear" | "harness" | "goggles" | "leash" | "collar";
 
-const PRODUCT_SHAPE_CORRECTION_OPTIONS: CorrectionOption[] = [
-    { value: "back_length", ko: "등·밑단 길이", en: "Back / hem length" },
-    { value: "belly_line", ko: "배 부분·아랫단", en: "Belly / lower hem" },
-    { value: "front_sleeve", ko: "앞다리 구멍·앞소매", en: "Front leg holes / sleeves" },
-    { value: "rear_leg", ko: "뒷다리 구멍·하반신", en: "Rear leg holes / lower body" },
-    { value: "neckline", ko: "목 부분", en: "Neckline" },
-];
+const PRODUCT_SHAPE_CORRECTION_OPTIONS: Record<PetTryOnReviewKind, CorrectionOption[]> = {
+    wear: [
+        { value: "back_length", ko: "등·밑단 길이", en: "Back / hem length" },
+        { value: "belly_line", ko: "배 부분·아랫단", en: "Belly / lower hem" },
+        { value: "front_sleeve", ko: "앞다리 구멍·앞소매", en: "Front leg holes / sleeves" },
+        { value: "rear_leg", ko: "뒷다리 구멍·하반신", en: "Rear leg holes / lower body" },
+        { value: "neckline", ko: "목 부분", en: "Neckline" },
+    ],
+    harness: [
+        { value: "back_length", ko: "등판 위치·길이", en: "Back panel placement" },
+        { value: "belly_line", ko: "가슴·배 스트랩", en: "Chest / belly straps" },
+        { value: "front_sleeve", ko: "앞다리 간격·겨드랑이", en: "Front-leg clearance" },
+        { value: "neckline", ko: "목·가슴 둘레", en: "Neck / chest fit" },
+    ],
+    goggles: [
+        { value: "neckline", ko: "렌즈·눈 위치·머리끈", en: "Lens / eye / head straps" },
+    ],
+    leash: [
+        { value: "neckline", ko: "스냅 고리·목 부착 위치", en: "Snap hook / neck attachment" },
+    ],
+    collar: [
+        { value: "neckline", ko: "목 둘레·버클·D링", en: "Neck loop / buckle / D-ring" },
+    ],
+};
 
 const COLOR_PATTERN_CORRECTION_OPTIONS: CorrectionOption[] = [
     { value: "pattern", ko: "색상·무늬", en: "Color / pattern" },
 ];
+
+function petTryOnReviewKind(product: CatalogProduct): PetTryOnReviewKind {
+    if (product.subcategory === "wear") return "wear";
+    if (product.subcategory === "harness") return "harness";
+    if (product.subcategory === "goggles") return "goggles";
+    const identity = `${product.raw.useSub} ${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    if (identity.includes("목줄") || /collar|martingale/.test(identity)) return "collar";
+    return "leash";
+}
+
+function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en") {
+    const descriptions = locale === "en"
+        ? {
+            wear: "Compare the hem, belly, front and rear leg openings, neckline, and length with the product photo.",
+            harness: "Compare the neck and chest fit, back panel, strap routing, and front-leg clearance with the product photo.",
+            goggles: "Compare the lens position, eye coverage, worn angle, and every head or chin strap with the product photo.",
+            leash: "Confirm that the exact snap hook is visibly closed through a collar or harness D-ring at the neck. The lead must not start from fur, the shoulder, or the back. Any newly shown plain collar is a fitting aid and is not included with the product.",
+            collar: "Confirm that the collar forms a continuous neck loop and that its real buckle, adjuster, D-ring, and width match the product photo.",
+        }
+        : {
+            wear: "상품 사진과 밑단·배 부분·앞뒤 다리 구멍·목 부분·길이가 맞는지 확인해 주세요.",
+            harness: "상품 사진과 목·가슴 둘레, 등판, 스트랩 경로, 앞다리 간격이 맞는지 확인해 주세요.",
+            goggles: "상품 사진과 렌즈·눈 위치, 착용 각도, 머리끈·턱끈 경로가 맞는지 확인해 주세요.",
+            leash: "상품의 실제 스냅 고리가 목 부분의 목줄·하네스 D링에 닫혀 있는지 확인해 주세요. 줄이 털·어깨·등에서 바로 시작하면 잘못된 결과예요. 새로 표시된 무채색 기본 목줄은 연결 연출용이며 상품 구성에 포함되지 않아요.",
+            collar: "목줄이 목을 한 바퀴 연속해서 감싸고 실제 버클·조절부·D링·폭이 상품 사진과 맞는지 확인해 주세요.",
+        };
+    return descriptions[kind];
+}
+
+function geometryCorrectionTitle(kind: PetTryOnReviewKind, locale: "ko" | "en") {
+    if (locale === "en") {
+        if (kind === "leash") return "Correct leash connection";
+        if (kind === "collar") return "Correct collar fit";
+        if (kind === "goggles") return "Correct goggles fit";
+        return "Correct product shape";
+    }
+    if (kind === "leash") return "리드줄 연결 위치 보정";
+    if (kind === "collar") return "목줄 착용 형태 보정";
+    if (kind === "goggles") return "고글 착용 위치 보정";
+    return "제품 형태 보정";
+}
+
+function sidePhotoRequirement(kind: PetTryOnReviewKind, locale: "ko" | "en") {
+    if (locale === "en") {
+        if (kind === "leash") return "Add a left or right full-body photo first. Leash connection preview needs a clear side view of the neck and body.";
+        if (kind === "collar") return "Add a left or right full-body photo first. Collar preview needs a clear side view of the neck.";
+        if (kind === "harness") return "Add a left or right full-body photo first. Harness Smart Fit uses a side view, not the front photo.";
+        return "Add a left or right full-body photo first. Clothing Smart Fit uses a side view, not the front photo.";
+    }
+    if (kind === "leash") return "리드줄 연결 확인에는 목과 몸이 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
+    if (kind === "collar") return "목줄 착용 확인에는 목이 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
+    if (kind === "harness") return "하네스 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
+    return "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
+}
 
 type ReadyFit = {
     jobId: string;
@@ -101,10 +173,9 @@ export default function PetTryOnPreview({
     const { user } = useAuth();
     const { locale, productName } = useI18n();
     const {
-        task,
         notificationEnabled,
         start,
-        isTaskFor,
+        getTaskFor,
         requestCompletionNotification,
         setPanelOpen,
     } = usePetTryOnTask();
@@ -115,9 +186,11 @@ export default function PetTryOnPreview({
         () => selectedColor?.image ? { ...product, image: selectedColor.image } : product,
         [product, selectedColor],
     );
+    const reviewKind = useMemo(() => petTryOnReviewKind(tryOnProduct), [tryOnProduct]);
+    const productShapeCorrectionOptions = PRODUCT_SHAPE_CORRECTION_OPTIONS[reviewKind];
     const eligibility = getPetTryOnEligibility(tryOnProduct);
     const eligible = eligibility.eligible;
-    // Every wearable asks the authenticated zero-AI preview endpoint first.
+    // Every wearable asks the authenticated saved-fit preview endpoint first.
     // The server remains the authority and fails closed when a particular
     // product/photo pair cannot be recolored without touching the dog.
     const zeroAiColorPreviewEnabled = eligibility.zeroAiColorPreview === "server_verified";
@@ -151,18 +224,12 @@ export default function PetTryOnPreview({
             petReferenceKey: petTryOnReferenceKey(petReferenceImage),
         };
     }, [pet?.apiProfileId, petReferenceImage, product.id, user?.apiUserId]);
-    const sameProductTask = pet?.apiProfileId && isTaskFor(
-        product.id,
-        pet.apiProfileId,
-        undefined,
-        petReferenceImage,
-    ) ? task : null;
-    const currentTask = !explicitColorRequired && pet?.apiProfileId && isTaskFor(
-        product.id,
-        pet.apiProfileId,
-        tryOnProduct.image,
-        petReferenceImage,
-    ) ? task : null;
+    const sameProductTask = pet?.apiProfileId
+        ? getTaskFor(product.id, pet.apiProfileId, undefined, petReferenceImage)
+        : null;
+    const currentTask = !explicitColorRequired && pet?.apiProfileId
+        ? getTaskFor(product.id, pet.apiProfileId, tryOnProduct.image, petReferenceImage)
+        : null;
     const result = currentTask?.result ?? null;
     const loading = Boolean(currentTask?.submitting || result?.status === "queued" || result?.status === "running");
     const progress = result?.progressPercent ?? (currentTask?.submitting ? 4 : 0);
@@ -323,7 +390,7 @@ export default function PetTryOnPreview({
                         || !remote.result.imageDataUrl
                     ) {
                         // A timeout/5xx or an unknown source image must never
-                        // be interpreted as permission to spend another AI use.
+                        // be interpreted as permission to start another full generation.
                         setFitMasterRestoreBlocked(true);
                         return;
                     }
@@ -371,7 +438,7 @@ export default function PetTryOnPreview({
             if (restored?.status !== "ready" || !restored.imageDataUrl) {
                 // A null result is intentionally treated as indeterminate: the
                 // client cannot distinguish a timeout or temporary 5xx from a
-                // confirmed missing job. Keep the master and never spend AI
+                // confirmed missing job. Keep the master and never start a new image
                 // again until the customer explicitly requests it.
                 setFitMasterRestoreBlocked(true);
                 return;
@@ -439,9 +506,7 @@ export default function PetTryOnPreview({
             tryOnProduct.subcategory !== "goggles"
             && !petReferenceImage
         ) {
-            setError(locale === "en"
-                ? "Add a left or right full-body photo first. Clothing Smart Fit uses a side view, not the front photo."
-                : "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.");
+            setError(sidePhotoRequirement(reviewKind, locale));
             return;
         }
         if (liveReadyFit && pet.apiProfileId) {
@@ -458,10 +523,10 @@ export default function PetTryOnPreview({
             applyCorrections ? correctionIssues : [],
             Boolean(sourceFit || fitMasterRestoreBlocked),
         );
-            if (outcome === "blocked") {
+            if (outcome === "queue_full") {
                 setError(locale === "en"
-                    ? "Another fitting is already in progress. Check the floating Smart Fit status first."
-                    : "다른 입혀보기가 진행 중이에요. 화면 아래의 Smart Fit 상태를 먼저 확인해 주세요.");
+                    ? "Your Smart Fit queue already has five items. Check the floating queue before adding another."
+                    : "입혀보기는 한 번에 최대 5개까지 진행할 수 있어요. 진행 중인 작업이 완료된 후 다시 시도해 주세요.");
                 setPanelOpen(true);
             } else if (outcome === "failed") {
                 setError(locale === "en"
@@ -482,6 +547,7 @@ export default function PetTryOnPreview({
         pet,
         petReferenceImage,
         product.id,
+        reviewKind,
         setPanelOpen,
         start,
         sourceFit,
@@ -575,7 +641,7 @@ export default function PetTryOnPreview({
         if (!sourceFit || geometryReviewPendingRef.current) return;
         const jobId = sourceFit.jobId;
         // Stop using the disputed master immediately, including any cached
-        // zero-AI color previews, while the revocation is saved remotely.
+        // saved-fit color previews, while the revocation is saved remotely.
         setLocalGeometryReview(jobId, false);
         setPreciseRegenerationOpen(false);
         setMismatchOpen(true);
@@ -700,7 +766,9 @@ export default function PetTryOnPreview({
                                             </div>
                                             <div className="shrink-0 text-right">
                                                 <p className="text-xs font-black text-neutral-500">
-                                                    {locale === "en" ? "Average 1–2 min" : "평균 1~2분"}
+                                                    {result?.queuePosition
+                                                        ? locale === "en" ? `Waiting #${result.queuePosition}` : `대기 ${result.queuePosition}번`
+                                                        : locale === "en" ? "Average 1–2 min" : "평균 1~2분"}
                                                 </p>
                                                 <p className="mt-0.5 font-mono text-sm font-black text-indigo-700">{formatElapsed(elapsed)}</p>
                                             </div>
@@ -794,7 +862,7 @@ export default function PetTryOnPreview({
                                         : retainingSourceAfterRejectedPreview
                                         ? locale === "en" ? "Color unchanged · original result kept" : "색상 변경 안 함 · 기존 결과 유지"
                                         : isFastPreview
-                                        ? locale === "en" ? "0 AI uses · quick color preview" : "AI 사용 0회 · 빠른 색상 비교"
+                                        ? locale === "en" ? "No new image · quick color preview" : "새 이미지 생성 없음 · 빠른 색상 비교"
                                         : showingSourceWhilePreparing
                                             ? locale === "en" ? "Preparing quick color preview" : "빠른 색상 비교 준비 중"
                                             : locale === "en" ? "Precise fitting complete" : "정밀 입혀보기 완료"}
@@ -804,7 +872,7 @@ export default function PetTryOnPreview({
                             {isFastPreviewLoading && (
                                 <div className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-2 text-xs font-black text-indigo-700 shadow-lg backdrop-blur">
                                     <i className="fa-solid fa-spinner fa-spin mr-1.5" />
-                                    {locale === "en" ? "Changing color without AI" : "AI 없이 색상만 바꾸는 중"}
+                                    {locale === "en" ? "Comparing color from the saved fitting" : "저장된 결과에서 색상만 비교하는 중"}
                                 </div>
                             )}
                         </div>
@@ -859,8 +927,8 @@ export default function PetTryOnPreview({
                                                 : "먼저 실제 상품 색상을 골라 주세요. 대표 이미지만 보고 색상을 임의로 정하지 않아요."
                                             : sourceFit
                                                 ? locale === "en"
-                                                    ? "Tap another color to compare it automatically with zero AI use. No new image is generated."
-                                                    : "다른 색상은 색상 원만 누르면 AI 사용 0회로 자동 비교돼요. 새 이미지를 만들지 않습니다."
+                                                    ? "Tap another color to compare it automatically. No new fitting image is created."
+                                                    : "다른 색상은 색상 원만 누르면 자동으로 비교돼요. 새 착용 이미지는 만들지 않습니다."
                                                 : locale === "en"
                                                     ? "The first precise fitting uses the exact color you selected."
                                                     : "처음 정밀 입혀보기에는 지금 고른 실제 색상 사진을 사용해요."}
@@ -883,7 +951,7 @@ export default function PetTryOnPreview({
                                         <div className="min-w-0">
                                             <div className="flex flex-wrap gap-1.5">
                                                 <span className="rounded-full bg-indigo-700 px-2 py-1 text-[10px] font-black text-white">
-                                                    {locale === "en" ? "0 AI uses" : "AI 사용 0회"}
+                                                    {locale === "en" ? "No new image" : "새 이미지 생성 없음"}
                                                 </span>
                                                 <span className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
                                                     {locale === "en" ? "Color comparison" : "색감 비교용"}
@@ -911,9 +979,7 @@ export default function PetTryOnPreview({
                                         {locale === "en" ? "Product shape needs your review" : "상품 모양 확인 필요"}
                                     </p>
                                     <p className="mt-2 text-xs font-bold leading-5 text-amber-900">
-                                        {locale === "en"
-                                            ? "Before comparing colors, compare the product photo with this fitting—especially the hem, belly, leg holes, and length."
-                                            : "색상을 비교하기 전에 상품 사진과 현재 착용 결과의 밑단·배 부분·다리 구멍·길이가 맞는지 확인해 주세요."}
+                                        {geometryReviewDescription(reviewKind, locale)}
                                     </p>
                                     {sourceFit.productImage !== tryOnProduct.image && (
                                         <p className="mt-2 text-[11px] font-bold leading-5 text-amber-800">
@@ -969,8 +1035,8 @@ export default function PetTryOnPreview({
                                 <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs font-bold leading-5 text-amber-900">
                                     <i className="fa-solid fa-shield-halved mr-2" />
                                     {locale === "en"
-                                        ? "We could not safely reconnect the previous precise result. No new AI fitting was started. Use the explicit 1-AI button below only if you want a new result."
-                                        : "이전 정밀 결과를 안전하게 다시 연결하지 못했어요. 새 AI 입혀보기는 자동으로 시작하지 않았습니다. 새 결과가 필요할 때만 아래 AI 1회 버튼을 눌러 주세요."}
+                                        ? "We could not safely reconnect the previous precise result. Nothing new was started automatically. Use the explicit new-image action below only if you want another result."
+                                        : "이전 정밀 결과를 안전하게 다시 연결하지 못했어요. 새 입혀보기는 자동으로 시작하지 않았습니다. 새 결과가 필요할 때만 아래 새 이미지 생성 기능을 눌러 주세요."}
                                 </div>
                             )}
 
@@ -1011,8 +1077,8 @@ export default function PetTryOnPreview({
                                                 : "선택한 색상을 안전하게 바꿀 수 없어, 원래 정밀 결과를 색상 변경 없이 유지하고 있어요."
                                             : isFastPreview
                                             ? locale === "en"
-                                                ? "This color comparison used no AI generation. Check the product photo for the exact pattern and construction details."
-                                                : "이 색상 비교는 AI 생성 없이 완료됐어요. 실제 무늬와 세부 모양은 상품 사진에서 함께 확인해 주세요."
+                                                ? "This comparison reused the saved fitting without creating a new image. Check the product photo for the exact pattern and construction details."
+                                                : "저장된 착용 결과를 활용해 새 이미지를 만들지 않고 색상을 비교했어요. 실제 무늬와 세부 모양은 상품 사진에서 함께 확인해 주세요."
                                             : locale === "en"
                                                 ? "The precise fitting is ready. Check the size chart and body measurements before purchase."
                                                 : "정밀 착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
@@ -1044,15 +1110,13 @@ export default function PetTryOnPreview({
                                                 </p>
                                                 <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50/60 p-3">
                                                     <p className="text-[11px] font-black text-amber-950">
-                                                        {locale === "en" ? "Correct product shape" : "제품 형태 보정"}
+                                                        {geometryCorrectionTitle(reviewKind, locale)}
                                                     </p>
                                                     <p className="mt-1 text-[10px] font-bold leading-4 text-amber-900/75">
-                                                        {locale === "en"
-                                                            ? "Choose the lower body, hem, belly, leg holes, or length that differs from the real product."
-                                                            : "실제 상품과 다른 하반신·밑단·배 부분·다리 구멍·길이를 골라 주세요."}
+                                                        {geometryReviewDescription(reviewKind, locale)}
                                                     </p>
                                                     <div className="mt-2 flex flex-wrap gap-2">
-                                                        {PRODUCT_SHAPE_CORRECTION_OPTIONS.map((option) => {
+                                                        {productShapeCorrectionOptions.map((option) => {
                                                             const selectedIssue = correctionIssues.includes(option.value);
                                                             return (
                                                                 <button
@@ -1099,8 +1163,8 @@ export default function PetTryOnPreview({
                                                 </div>
                                                 <p className="mt-3 text-[11px] font-bold leading-5 text-neutral-500">
                                                     {locale === "en"
-                                                        ? "Corrections never run automatically. They are sent only after you open the optional action and explicitly confirm 1 AI use."
-                                                        : "보정은 자동 실행되지 않아요. 아래 선택 기능을 열고 AI 1회 사용을 직접 확인한 경우에만 전달됩니다."}
+                                                        ? "Corrections never run automatically. They are sent only after you open the optional action and explicitly confirm one new precise image."
+                                                        : "보정은 자동 실행되지 않아요. 아래 선택 기능을 열고 새 정밀 이미지 1회 생성을 직접 확인한 경우에만 전달됩니다."}
                                                 </p>
                                             </div>
                                         )}
@@ -1113,8 +1177,8 @@ export default function PetTryOnPreview({
                                 <div className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-xs font-black leading-5 text-indigo-900">
                                     <i className="fa-solid fa-spinner fa-spin mr-2" />
                                     {locale === "en"
-                                        ? "Checking for your existing fitting. No new AI image is being started."
-                                        : "기존 입혀보기 결과를 확인하고 있어요. 새 AI 이미지는 시작하지 않습니다."}
+                                        ? "Checking for your existing fitting. No new image is being started."
+                                        : "기존 입혀보기 결과를 확인하고 있어요. 새 이미지는 시작하지 않습니다."}
                                 </div>
                             )}
 
@@ -1122,8 +1186,8 @@ export default function PetTryOnPreview({
                                 <div className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-xs font-black leading-5 text-indigo-900">
                                     <i className="fa-solid fa-spinner fa-spin mr-2" />
                                     {locale === "en"
-                                        ? "Comparing this color with zero AI use. No new image is being generated."
-                                        : "AI 0회로 이 색상을 비교하고 있어요. 새 이미지는 생성하지 않습니다."}
+                                        ? "Comparing this color from the saved fitting. No new image is being generated."
+                                        : "저장된 착용 결과에서 이 색상을 비교하고 있어요. 새 이미지는 생성하지 않습니다."}
                                 </div>
                             )}
 
@@ -1137,7 +1201,7 @@ export default function PetTryOnPreview({
                                     {correctionIssues.length > 0
                                         ? locale === "en" ? "Optional: create a corrected precise image" : "선택 기능: 보정한 새 정밀 이미지 만들기"
                                         : !sourceFit
-                                            ? locale === "en" ? "Open: create a new fitting with 1 AI use" : "AI 1회로 새 착용 이미지 만들기"
+                                            ? locale === "en" ? "Open: create one new precise fitting" : "새 정밀 착용 이미지 1회 만들기"
                                             : locale === "en" ? "Optional: create another precise image" : "선택 기능: 새 정밀 이미지가 꼭 필요한가요?"}
                                 </button>
                             )}
@@ -1146,20 +1210,20 @@ export default function PetTryOnPreview({
                                 <div className="mt-5 rounded-xl border-2 border-amber-300 bg-amber-50 p-4">
                                     <p className="text-xs font-black text-amber-950">
                                         <i className="fa-solid fa-triangle-exclamation mr-2" />
-                                        {locale === "en" ? "Confirm a new full AI generation" : "새 AI 전체 생성을 확인해 주세요"}
+                                        {locale === "en" ? "Confirm one new full fitting image" : "새 전체 착용 이미지 생성을 확인해 주세요"}
                                     </p>
                                     <p className="mt-2 text-[11px] font-bold leading-5 text-amber-900">
                                         {correctionIssues.length > 0
                                             ? locale === "en"
-                                                ? "This uses 1 AI generation to redraw the full image with your selected corrections. It is not a normal color switch."
-                                                : "선택한 보정을 반영해 전체 이미지를 다시 그리며 AI 1회를 사용합니다. 일반 색상 변경 기능이 아닙니다."
+                                                ? "This creates one new full image with your selected corrections. It is not a normal color switch."
+                                                : "선택한 보정을 반영해 전체 이미지를 새로 1회 만듭니다. 일반 색상 변경 기능이 아닙니다."
                                             : !sourceFit
                                                 ? locale === "en"
-                                                    ? "This creates one new fitting image from your dog's side photo and the selected product, using 1 AI generation."
-                                                    : "우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 만들며 AI 1회를 사용합니다."
+                                                    ? "This creates one new fitting image from your dog's side photo and the selected product."
+                                                    : "우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 1회 만듭니다."
                                             : locale === "en"
-                                                ? "Color switching above is free. Continue only if you want to spend 1 AI use to redraw the entire image."
-                                                : "위 색상 변경은 AI 0회입니다. 전체 이미지를 다시 그리는 데 AI 1회를 사용하려는 경우에만 계속해 주세요."}
+                                                ? "Color switching above creates no new image. Continue only if you want to redraw the entire fitting once."
+                                                : "위 색상 변경은 새 이미지를 만들지 않습니다. 전체 착용 이미지를 1회 다시 만들려는 경우에만 계속해 주세요."}
                                     </p>
                                     <div className="mt-3 grid grid-cols-2 gap-2">
                                         <button
@@ -1178,7 +1242,7 @@ export default function PetTryOnPreview({
                                             <i className={`fa-solid mr-1.5 ${generationRequestPending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"}`} />
                                             {generationRequestPending
                                                 ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
-                                                : locale === "en" ? "Confirm: use 1 AI to create a new image" : "확인: AI 1회 사용해 새 이미지 만들기"}
+                                                : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}
                                         </button>
                                     </div>
                                 </div>
@@ -1199,14 +1263,14 @@ export default function PetTryOnPreview({
                                     {explicitColorRequired
                                         ? locale === "en" ? "Choose a color first" : "먼저 색상을 선택해 주세요"
                                         : correctionIssues.length > 0
-                                            ? locale === "en" ? "Regenerate precisely with these fixes (1 AI use)" : "선택 내용 반영해 다시 정밀 확인 (AI 1회)"
+                                            ? locale === "en" ? "Create one precise image with these fixes" : "선택 내용 반영해 정밀 이미지 1회 만들기"
                                             : selectedPreciseFit
                                                 ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                 : sourceFit
                                                     ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                     : error
-                                                        ? locale === "en" ? "Try again (1 AI use)" : "다시 시도하기 (AI 1회)"
-                                                        : locale === "en" ? "Start precise fitting (1 AI use)" : "정밀 입혀보기 시작 (AI 1회)"}
+                                                        ? locale === "en" ? "Create one new image" : "새 이미지 1회 만들기"
+                                                        : locale === "en" ? "Start one precise fitting" : "정밀 입혀보기 1회 시작"}
                                 </button>
                             )}
                         </aside>
