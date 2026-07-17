@@ -48,6 +48,116 @@
     transform: translateX(-2px);
 }
 
+.homeLaunch {
+    position: fixed;
+    right: 0;
+    bottom: 134px;
+    z-index: 2211;
+    display: grid;
+    width: 42px;
+    height: 48px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgb(99 70 52 / 14%);
+    border-right: 0;
+    border-radius: 19px 0 0 19px;
+    background: linear-gradient(145deg, rgb(255 252 246 / 98%), rgb(255 241 222 / 96%));
+    box-shadow: 0 6px 20px rgb(72 45 31 / 16%);
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.homeLaunch:hover {
+    transform: translateX(-3px) translateY(-1px);
+    box-shadow: 0 9px 24px rgb(72 45 31 / 21%);
+}
+
+.homeLaunch:disabled { cursor: wait; }
+
+.homeLaunch[data-panel-open="true"] {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.homeLaunch[data-home-occupied="true"] {
+    background: linear-gradient(145deg, #fff9ec, #ffe3b5);
+    box-shadow: 0 6px 20px rgb(136 79 33 / 20%), inset 0 0 0 1px rgb(255 255 255 / 72%);
+}
+
+.dogHouseIcon {
+    position: relative;
+    display: block;
+    width: 25px;
+    height: 27px;
+    filter: drop-shadow(0 2px 2px rgb(72 42 27 / 18%));
+    transition: transform .22s ease;
+}
+
+.homeLaunch:hover .dogHouseIcon { transform: scale(1.06); }
+
+.dogHouseRoof {
+    position: absolute;
+    z-index: 2;
+    top: 2px;
+    left: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px 3px 2px;
+    background: linear-gradient(145deg, #d66c4b, #a93f2f);
+    transform: rotate(45deg);
+}
+
+.dogHouseBody {
+    position: absolute;
+    z-index: 3;
+    right: 2px;
+    bottom: 0;
+    left: 2px;
+    height: 17px;
+    border-radius: 3px 3px 5px 5px;
+    background: linear-gradient(150deg, #efaa62, #c8733d);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 36%);
+}
+
+.dogHouseDoor {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 9px;
+    height: 11px;
+    border-radius: 7px 7px 2px 2px;
+    background: #5d392c;
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 24%);
+    transform: translateX(-50%);
+}
+
+.homeLaunch[data-home-occupied="true"] .dogHouseDoor {
+    background: radial-gradient(circle at 50% 34%, #ffe69b 0 17%, #6d4230 21% 100%);
+    animation: pet-home-door-glow 2.8s ease-in-out infinite;
+}
+
+.homeBark {
+    position: absolute;
+    top: -12px;
+    right: 29px;
+    min-width: 48px;
+    padding: 5px 8px;
+    border: 1px solid rgb(110 76 55 / 12%);
+    border-radius: 999px 999px 4px 999px;
+    background: rgb(255 255 255 / 97%);
+    color: #705043;
+    box-shadow: 0 5px 16px rgb(63 43 32 / 15%);
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(4px, 4px, 0) scale(.86);
+    animation: pet-home-bark-reminder 7.2s ease-in-out infinite;
+}
+
+.homeLaunch:focus-visible,
 .settingsLaunch:focus-visible,
 .dogButton:focus-visible,
 .dialog button:focus-visible,
@@ -134,6 +244,22 @@
 .walker[data-dragging="true"] {
     z-index: 2220;
     transition-duration: 0ms !important;
+}
+
+.walker[data-pet-home-transition="leaving"],
+.walker[data-pet-home-transition="entering"] {
+    z-index: 2208;
+    pointer-events: none;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity, filter;
+}
+
+.walker[data-pet-home-transition="leaving"] {
+    animation: pet-companion-go-home .74s cubic-bezier(.42, 0, .2, 1) both;
+}
+
+.walker[data-pet-home-transition="entering"] {
+    animation: pet-companion-leave-home .74s cubic-bezier(.2, .72, .25, 1) both;
 }
 
 .dogButton {
@@ -680,8 +806,19 @@
     .settingsLaunch {
         right: 0;
         bottom: 78px;
-        width: 31px;
-        height: 38px;
+        width: 40px;
+        height: 44px;
+        border-radius: 20px 0 0 20px;
+    }
+    .homeLaunch {
+        bottom: 128px;
+        width: 44px;
+        height: 48px;
+        border-radius: 21px 0 0 21px;
+    }
+    .homeBark {
+        top: -10px;
+        right: 31px;
     }
     .settingsLaunch[data-companion-enabled="false"] {
         opacity: .86;
@@ -764,11 +901,92 @@
 
 @media (prefers-reduced-motion: reduce) {
     .walker,
-    .settingsLaunch {
+    .settingsLaunch,
+    .homeLaunch {
         transition-duration: 1ms !important;
     }
 
+    .walker[data-pet-home-transition="leaving"],
+    .walker[data-pet-home-transition="entering"] {
+        animation-duration: 1ms !important;
+    }
+
+    .homeBark,
+    .homeLaunch[data-home-occupied="true"] .dogHouseDoor {
+        animation: none;
+    }
+
+    .homeBark {
+        opacity: 1;
+        transform: none;
+    }
+
     .entryBehindLens:not([data-pet-force-motion="true"]) { animation: none; }
+}
+
+@keyframes pet-companion-go-home {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translate3d(var(--pet-home-start-x), var(--pet-home-start-y), 0) scale(1);
+    }
+    58% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translate3d(var(--pet-home-end-x), var(--pet-home-end-y), 0) scale(.5);
+    }
+    82% {
+        opacity: .84;
+        filter: blur(.15px);
+        transform: translate3d(var(--pet-home-end-x), var(--pet-home-end-y), 0) scale(.22);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(.5px);
+        transform: translate3d(var(--pet-home-end-x), var(--pet-home-end-y), 0) scale(.07);
+    }
+}
+
+@keyframes pet-companion-leave-home {
+    0% {
+        opacity: 0;
+        filter: blur(.5px);
+        transform: translate3d(var(--pet-home-end-x), var(--pet-home-end-y), 0) scale(.07);
+    }
+    22% {
+        opacity: .9;
+        filter: blur(.1px);
+        transform: translate3d(var(--pet-home-end-x), var(--pet-home-end-y), 0) scale(.24);
+    }
+    70% {
+        opacity: 1;
+        transform: translate3d(var(--pet-home-start-x), var(--pet-home-start-y), 0) scale(.78);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translate3d(var(--pet-home-start-x), var(--pet-home-start-y), 0) scale(1);
+    }
+}
+
+@keyframes pet-home-bark-reminder {
+    0%, 24%, 51%, 100% {
+        opacity: 0;
+        transform: translate3d(4px, 4px, 0) scale(.86);
+    }
+    30%, 43% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+    36% {
+        opacity: 1;
+        transform: translate3d(-2px, -2px, 0) scale(1.04) rotate(-1deg);
+    }
+}
+
+@keyframes pet-home-door-glow {
+    0%, 100% { box-shadow: inset 0 1px 3px rgb(0 0 0 / 24%), 0 0 0 rgb(255 196 91 / 0%); }
+    50% { box-shadow: inset 0 1px 3px rgb(0 0 0 / 16%), 0 0 9px rgb(255 196 91 / 60%); }
 }
 
 @keyframes pet-lens-emerge-behind {

@@ -52,6 +52,7 @@ type Props = {
     visualBreedId?: string;
     visualCharacterId?: CompanionCharacterId;
     panelOpen: boolean;
+    homeTransition?: "entering" | "leaving" | null;
     onPanelOpenChange: (open: boolean) => void;
     onSettingsChange: (settings: PetCompanionSettings) => void;
 };
@@ -194,6 +195,7 @@ export default function PetCompanionLayer({
     visualBreedId,
     visualCharacterId,
     panelOpen,
+    homeTransition,
     onPanelOpenChange,
     onSettingsChange,
 }: Props) {
@@ -223,6 +225,7 @@ export default function PetCompanionLayer({
     const recommendationInFlightRef = useRef(false);
     const entryPlayedRef = useRef(false);
     const entryInProgressRef = useRef(false);
+    const homeTransitionRef = useRef(homeTransition);
     const positionRef = useRef<{ x: number; y: number } | null>(null);
     const interactionEpochRef = useRef(0);
     const dragStateRef = useRef<CompanionDragState | null>(null);
@@ -357,7 +360,9 @@ export default function PetCompanionLayer({
         const heroRoute = window.location.pathname === "/"
             || window.location.pathname === "/main"
             || window.location.pathname === "/main/";
-        const expectHeroLensEntry = heroRoute && !entryPlayedRef.current;
+        const expectHeroLensEntry = heroRoute
+            && !entryPlayedRef.current
+            && homeTransitionRef.current !== "entering";
         const refreshHeroLens = () => {
             heroLens = document.querySelector<HTMLElement>(
                 '[data-pet-companion-origin="hero-lens"]',
@@ -806,6 +811,7 @@ export default function PetCompanionLayer({
         const roam = () => {
             if (
                 reducedMotion
+                || Boolean(walker.dataset.petHomeTransition)
                 || document.hidden
                 || externalDialogIsOpen({ ignoreCompanionAllowed: false })
                 || promptOpenRef.current
@@ -1032,6 +1038,38 @@ export default function PetCompanionLayer({
             document.removeEventListener("focusin", onFocusIn);
         };
     }, [panelOpen, settings.enabled, settings.motion]);
+
+    useEffect(() => {
+        if (!homeTransition || panelOpen || !settings.enabled || !placementReady) return;
+        const walker = walkerRef.current;
+        const home = document.querySelector<HTMLElement>("[data-pet-companion-home]");
+        if (!walker || !home) return;
+        let animationFrame = window.requestAnimationFrame(() => {
+            animationFrame = 0;
+            const walkerRect = walker.getBoundingClientRect();
+            const homeRect = home.getBoundingClientRect();
+            const walkerWidth = walker.offsetWidth || walkerRect.width;
+            const walkerHeight = walker.offsetHeight || walkerRect.height;
+            const homeX = homeRect.left + homeRect.width / 2 - walkerWidth / 2;
+            const homeY = homeRect.top + homeRect.height / 2 - walkerHeight / 2;
+            walker.style.setProperty("--pet-home-start-x", `${Math.round(walkerRect.left)}px`);
+            walker.style.setProperty("--pet-home-start-y", `${Math.round(walkerRect.top)}px`);
+            walker.style.setProperty("--pet-home-end-x", `${Math.round(homeX)}px`);
+            walker.style.setProperty("--pet-home-end-y", `${Math.round(homeY)}px`);
+            walker.dataset.petHomeTransition = homeTransition;
+            walker.inert = true;
+        });
+
+        return () => {
+            if (animationFrame) window.cancelAnimationFrame(animationFrame);
+            delete walker.dataset.petHomeTransition;
+            walker.style.removeProperty("--pet-home-start-x");
+            walker.style.removeProperty("--pet-home-start-y");
+            walker.style.removeProperty("--pet-home-end-x");
+            walker.style.removeProperty("--pet-home-end-y");
+            walker.inert = false;
+        };
+    }, [homeTransition, panelOpen, placementReady, settings.enabled]);
 
     useEffect(() => {
         promptOpenRef.current = Boolean(recommendation || guidePrompt);

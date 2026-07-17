@@ -46,8 +46,10 @@ export default function PetCompanionGate() {
     const [guestSessionVisualChecked, setGuestSessionVisualChecked] = useState(false);
     const [guestInteracted, setGuestInteracted] = useState(false);
     const [productRecommendationActive, setProductRecommendationActive] = useState(false);
+    const [homeTransition, setHomeTransition] = useState<"entering" | "leaving" | null>(null);
     const panelOpenRef = useRef(false);
     const productRecommendationActiveRef = useRef(false);
+    const homeTransitionTimerRef = useRef<number | null>(null);
     const heroActive = isHeroRoute(pathname);
     const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
@@ -157,6 +159,12 @@ export default function PetCompanionGate() {
         productRecommendationActiveRef.current = productRecommendationActive;
     }, [productRecommendationActive]);
 
+    useEffect(() => () => {
+        if (homeTransitionTimerRef.current !== null) {
+            window.clearTimeout(homeTransitionTimerRef.current);
+        }
+    }, []);
+
     useEffect(() => {
         let cancelled = false;
         let animationFrame = 0;
@@ -220,20 +228,57 @@ export default function PetCompanionGate() {
         }
         : baseSettings;
     const companionEnabled = effectiveSettings?.enabled ?? true;
-    const settingsLaunchLabel = companionEnabled
-        ? "산책 친구 설정 열기"
-        : "산책 친구 다시 불러와 설정 열기";
+    const settingsLaunchLabel = "산책 친구 설정 열기";
+    const homeLaunchLabel = companionEnabled
+        ? `${effectiveSettings?.activePetName || "산책 친구"} 집으로 보내기`
+        : `${effectiveSettings?.activePetName || "산책 친구"} 다시 부르기`;
+
+    const setCompanionEnabled = (enabled: boolean) => {
+        const fallback = state.user
+            ? resolveCompanionSettings(state.user)
+            : defaultCompanionSettings("guest");
+        setSettings((current) => {
+            const next = { ...(current || fallback), enabled };
+            writeLocalCompanionSettings(next);
+            return next;
+        });
+        if (!state.user && guestVisualActive) setGuestInteracted(true);
+    };
+
+    const handleHomeToggle = () => {
+        if (!effectiveSettings || homeTransition) return;
+        panelOpenRef.current = false;
+        setPanelOpen(false);
+        if (!state.user && guestVisualActive) setGuestInteracted(true);
+        if (homeTransitionTimerRef.current !== null) {
+            window.clearTimeout(homeTransitionTimerRef.current);
+        }
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const transitionDuration = reducedMotion ? 80 : 780;
+
+        if (companionEnabled) {
+            setHomeTransition("leaving");
+            homeTransitionTimerRef.current = window.setTimeout(() => {
+                setCompanionEnabled(false);
+                setHomeTransition(null);
+                homeTransitionTimerRef.current = null;
+            }, transitionDuration);
+            return;
+        }
+
+        setCompanionEnabled(true);
+        setHomeTransition("entering");
+        homeTransitionTimerRef.current = window.setTimeout(() => {
+            setHomeTransition(null);
+            homeTransitionTimerRef.current = null;
+        }, transitionDuration);
+    };
 
     const handleSettingsLaunch = () => {
         const current = settings || (state.user
             ? resolveCompanionSettings(state.user)
             : defaultCompanionSettings("guest"));
-        if (!current.enabled) {
-            const restored = { ...current, enabled: true };
-            writeLocalCompanionSettings(restored);
-            setGuestInteracted(true);
-            setSettings(restored);
-        } else if (!settings) {
+        if (!settings) {
             setSettings(current);
         }
         panelOpenRef.current = true;
@@ -242,6 +287,31 @@ export default function PetCompanionGate() {
 
     return (
         <>
+            {effectiveSettings && (
+                <button
+                    type="button"
+                    className={styles.homeLaunch}
+                    onClick={handleHomeToggle}
+                    aria-label={homeLaunchLabel}
+                    title={homeLaunchLabel}
+                    aria-pressed={!companionEnabled}
+                    disabled={Boolean(homeTransition)}
+                    data-pet-companion-home
+                    data-home-occupied={!companionEnabled ? "true" : "false"}
+                    data-home-transition={homeTransition || "idle"}
+                    data-panel-open={panelOpen}
+                >
+                    {!companionEnabled && !homeTransition && (
+                        <span className={styles.homeBark} aria-hidden="true">멍멍?</span>
+                    )}
+                    <span className={styles.dogHouseIcon} aria-hidden="true">
+                        <span className={styles.dogHouseRoof} />
+                        <span className={styles.dogHouseBody}>
+                            <span className={styles.dogHouseDoor} />
+                        </span>
+                    </span>
+                </button>
+            )}
             <button
                 type="button"
                 className={styles.settingsLaunch}
@@ -262,6 +332,7 @@ export default function PetCompanionGate() {
                     visualBreedId={guestVisual?.breedId}
                     visualCharacterId={guestVisual?.characterId}
                     panelOpen={panelOpen}
+                    homeTransition={homeTransition}
                     onPanelOpenChange={(open) => {
                         panelOpenRef.current = open;
                         setPanelOpen(open);
