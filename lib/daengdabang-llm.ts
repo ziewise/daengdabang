@@ -70,13 +70,13 @@ export type PetLensStorefrontCandidates = {
 
 export type PetLensBreedCandidateView = {
     label: string;
-    confidenceLabel: "근거 충분" | "가까운 후보" | "비교 필요";
+    confidenceLabel: "회원 확인" | "근거 충분" | "가까운 후보" | "비교 필요";
     reason?: string;
 };
 
 export type PetLensResultDetails = {
-    status: "ready" | "review" | "retake";
-    statusLabel: "근거 충분" | "후보 비교 필요" | "사진 보완 필요";
+    status: "confirmed" | "ready" | "review" | "retake";
+    statusLabel: "회원 견종 확인" | "근거 충분" | "후보 비교 필요" | "사진 보완 필요";
     title: string;
     description: string;
     analyzedViewCount: number;
@@ -89,6 +89,8 @@ export type PetLensResultDetails = {
     recommendationSignals: string[];
     retakeReasons: string[];
     canRecommendProducts: boolean;
+    confirmedBreed?: string;
+    profileNotice?: string;
 };
 
 export type PetLensAnalysisResult = {
@@ -204,6 +206,27 @@ function petLensCareNotes(profile: Pick<PetProfile, "name" | "size" | "coat" | "
         notes.push("피부·발바닥 케어 관심이 있으면 산책 후 발 세척, 완전 건조, 저자극 샴푸 사용 여부를 함께 확인해 주세요.");
     }
     return notes.slice(0, 6);
+}
+
+function petLensPhotoQualityLabel(data: Record<string, unknown>): PetLensResultDetails["photoQualityLabel"] {
+    const imageQuality = asRecord(recordValue(data, "image_quality", "imageQuality"));
+    if (imageQuality) {
+        const usable = recordValue(imageQuality, "usable_for_analysis", "usableForAnalysis") === true;
+        const score = finiteNumber(imageQuality.score);
+        const confidenceLabel = String(
+            recordValue(imageQuality, "confidence_label", "confidenceLabel") || "",
+        ).toLowerCase();
+        if (usable && ((score !== undefined && score >= 0.72) || confidenceLabel === "high")) {
+            return "사진 상태 좋음";
+        }
+        if (usable) return "사진 상태 보통";
+        return "사진 보완 필요";
+    }
+
+    const analysisQuality = recordValue(data, "analysis_quality", "analysisQuality");
+    if (analysisQuality === "high") return "사진 상태 좋음";
+    if (analysisQuality === "medium") return "사진 상태 보통";
+    return "사진 보완 필요";
 }
 
 function isTrustworthyPetLensCandidate(data: Record<string, unknown>) {
@@ -350,14 +373,98 @@ export function mergePetLensAnalysisWithConfirmedProfile(
         ...analysis,
         apiProfileId: confirmed.apiProfileId,
         // Existing member-entered identity and measured fields outrank photo candidates.
+        name: confirmed.name || analysis.name,
         breed: confirmed.breed || analysis.breed,
+        size: confirmed.size,
+        age: confirmed.age || analysis.age,
         birthMonth: confirmed.birthMonth,
         weightKg: confirmed.weightKg,
         sex: confirmed.sex || "unknown",
-        coatColor: confirmed.coatColor,
+        coatColor: confirmed.coatColor || analysis.coatColor,
+        coat: confirmed.coat,
+        activity: confirmed.activity,
+        concerns: confirmed.concerns?.length ? confirmed.concerns : analysis.concerns,
         allergies: confirmed.allergies,
         neutered: confirmed.neutered,
         lifeStage: confirmed.lifeStage,
+    };
+}
+
+function normalizePetLensBreedLabel(value: string) {
+    return value.toLocaleLowerCase("ko-KR").replace(/[^a-z0-9가-힣]/g, "");
+}
+
+export function reconcilePetLensResultWithConfirmedProfile(
+    analysis: PetLensAnalysisResult,
+    confirmed: PetProfile,
+): PetLensAnalysisResult {
+    const profile = mergePetLensAnalysisWithConfirmedProfile(analysis.profile, confirmed);
+    const confirmedBreed = confirmed.breed?.trim();
+    if (!confirmedBreed) return { ...analysis, profile };
+
+    const photoCandidate = analysis.details.breedCandidates[0]?.label?.trim();
+    const breedMismatch = Boolean(
+        photoCandidate &&
+        normalizePetLensBreedLabel(photoCandidate) !== normalizePetLensBreedLabel(confirmedBreed),
+    );
+    const careActions = uniquePetLensLines(
+        analysis.details.careActions.length > 0
+            ? analysis.details.careActions
+            : petLensCareNotes(profile).slice(1),
+        4,
+    );
+    const ownerChecks = uniquePetLensLines([
+        "현재 체중과 나이가 맞는지 확인",
+        "등록 정보가 바뀌었다면 마이페이지에서 수정",
+    ], 4);
+    const recommendationSignals = uniquePetLensLines([
+        `회원 확인 견종: ${confirmedBreed}`,
+        ...analysis.details.recommendationSignals,
+        `체형: ${sizeLabel(profile.size)}`,
+        ...(profile.concerns.length > 0 ? [`관심 케어: ${profile.concerns.join(", ")}`] : []),
+    ], 5);
+    const profileNotice = breedMismatch
+        ? `사진에서 ${photoCandidate} 계열 특징도 보였지만, 상품과 케어 안내에는 회원가입 때 확인한 ${confirmedBreed} 정보를 적용했습니다.`
+        : undefined;
+    const rawAnalysis = {
+        ...(asRecord(profile.rawAnalysis) || {}),
+        breed: confirmedBreed,
+        breed_source: "member_confirmed",
+    };
+    const confirmedProfile = { ...profile, rawAnalysis };
+    const title = `${profile.name || "우리 아이"}의 등록 견종 ${confirmedBreed}을 기준으로 정리했어요`;
+    const description = "회원가입 때 보호자가 확인한 견종을 우선 적용했습니다. 사진은 견종을 다시 맞히는 용도가 아니라 현재 외형·체형·털 상태를 보완하는 데 사용합니다.";
+    const details: PetLensResultDetails = {
+        ...analysis.details,
+        status: "confirmed",
+        statusLabel: "회원 견종 확인",
+        title,
+        description,
+        breedCandidates: [{ label: confirmedBreed, confidenceLabel: "회원 확인" }],
+        ownerChecks,
+        careActions,
+        recommendationSignals,
+        retakeReasons: analysis.details.photoQualityLabel === "사진 보완 필요" && analysis.details.observations.length === 0
+            ? analysis.details.retakeReasons
+            : [],
+        canRecommendProducts: true,
+        confirmedBreed,
+        profileNotice,
+    };
+
+    return {
+        ...analysis,
+        profile: confirmedProfile,
+        products: recommendForPet(confirmedProfile, rawAnalysis),
+        summary: uniquePetLensLines([
+            title,
+            description,
+            ...(analysis.details.observations.length > 0
+                ? [`사진에서 확인한 현재 특징: ${analysis.details.observations.join(", ")}`]
+                : []),
+            ...careActions,
+        ], 6),
+        details,
     };
 }
 
@@ -1302,11 +1409,7 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             title,
             description,
             analyzedViewCount: input.photoViews?.length ?? 0,
-            photoQualityLabel: recordValue(data, "analysis_quality", "analysisQuality") === "high"
-                ? "사진 상태 좋음"
-                : recordValue(data, "analysis_quality", "analysisQuality") === "medium"
-                    ? "사진 상태 보통"
-                    : "사진 보완 필요",
+            photoQualityLabel: petLensPhotoQualityLabel(data),
             observations: visibleFeatures,
             breedCandidates: breedCandidates.slice(0, 3),
             profileCandidates,

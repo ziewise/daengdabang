@@ -10,6 +10,7 @@ type Props = {
 };
 
 const STATUS_STYLES: Record<PetLensResultDetails["status"], string> = {
+    confirmed: "border-indigo-200 bg-indigo-50 text-indigo-900",
     ready: "border-emerald-200 bg-emerald-50 text-emerald-800",
     review: "border-amber-200 bg-amber-50 text-amber-900",
     retake: "border-sky-200 bg-sky-50 text-sky-900",
@@ -71,13 +72,19 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             {details.breedCandidates.length > 0 && (
                 <section className="rounded-2xl border border-neutral-200 bg-white p-4">
                     <div className="mb-3 flex items-end justify-between gap-3">
-                        <p className="text-xs font-black text-neutral-500">가까운 견종 후보</p>
-                        <span className="text-[10px] font-bold text-neutral-400">보호자 확인 전에는 저장하지 않아요</span>
+                        <p className="text-xs font-black text-neutral-500">
+                            {details.confirmedBreed ? "회원가입에서 확인한 견종" : "가까운 견종 후보"}
+                        </p>
+                        <span className="text-[10px] font-bold text-neutral-400">
+                            {details.confirmedBreed ? "사진 결과보다 회원 정보를 우선해요" : "보호자 확인 전에는 저장하지 않아요"}
+                        </span>
                     </div>
                     <div className="grid gap-2 sm:grid-cols-3">
                         {details.breedCandidates.map((candidate, index) => (
                             <article key={candidate.label} className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3">
-                                <p className="text-[10px] font-black text-indigo-500">후보 {index + 1}</p>
+                                <p className="text-[10px] font-black text-indigo-500">
+                                    {details.confirmedBreed ? "등록 견종" : `후보 ${index + 1}`}
+                                </p>
                                 <p className="mt-1 text-sm font-black text-neutral-950">{candidate.label}</p>
                                 <span className="mt-2 inline-flex rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
                                     {candidate.confidenceLabel}
@@ -88,6 +95,12 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                             </article>
                         ))}
                     </div>
+                </section>
+            )}
+
+            {details.profileNotice && (
+                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
+                    <p className="text-sm font-bold leading-6 text-sky-900">{details.profileNotice}</p>
                 </section>
             )}
 

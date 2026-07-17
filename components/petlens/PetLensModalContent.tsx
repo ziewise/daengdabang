@@ -23,11 +23,9 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
     analyzePetLensSmart,
-    isPetLensAnalysisReadyForProfileSave,
-    mergePetLensAnalysisWithConfirmedProfile,
+    reconcilePetLensResultWithConfirmedProfile,
     type PetLensAnalysisResult,
 } from "@/lib/daengdabang-llm";   // 협업자 LLM 분석 (수정 X)
 import { savePetProfilePhotosSmart } from "@/lib/customer-api";
@@ -43,10 +41,10 @@ import {
     type PetLensPhotoCaptures,
     type PetLensPhotoViewId,
 } from "@/lib/petlens-multiview";
-import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
-import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
+import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/store";        // 협업자 전역 스토어 (수정 X)
 import ProductCard from "@/components/products/ProductCard";
 import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary";
+import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 
 // 관심 포인트 — 협업자 PetLensClient 와 동일하게 유지(분석 입력 호환)
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -55,6 +53,7 @@ type Result = PetLensAnalysisResult;
 
 export default function PetLensModalContent() {
     const { user, upsertPet } = useAuth();
+    const { hydrated } = useStore();
 
     // ----- 입력 상태 (협업자 PetLensClient 와 동일 필드) -----
     const [name, setName] = useState(user?.pets[0]?.name ?? "");
@@ -146,6 +145,14 @@ export default function PetLensModalContent() {
         setLoading(true);
         setAnalysisError("");
         try {
+            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
+                || (!editingPetProfileId ? user?.pets[0] : undefined);
+            if (!user || !confirmedPet?.apiProfileId) {
+                throw new Error("회원 반려견 프로필을 먼저 선택해 주세요.");
+            }
+            if (!confirmedPet.breed?.trim()) {
+                throw new Error("마이페이지에서 실제 견종을 먼저 확인해 주세요.");
+            }
             if (petLensPhotoViewCount(photoViews) === 0) {
                 throw new Error("정면 사진부터 촬영해 주세요.");
             }
@@ -173,51 +180,28 @@ export default function PetLensModalContent() {
                 photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
                 photoViews: persistedPhotoViews,
             };
-            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId);
-            const profile = confirmedPet
-                ? mergePetLensAnalysisWithConfirmedProfile(analyzedProfile, confirmedPet)
-                : analyzedProfile;
-            const canAutoSaveProfile = isPetLensAnalysisReadyForProfileSave(profile.rawAnalysis) && Boolean(profile.breed?.trim());
-            const resultWithConfirmedProfile = {
+            const resultWithConfirmedProfile = reconcilePetLensResultWithConfirmedProfile({
                 ...analysis,
-                profile,
-                details: {
-                    ...analysis.details,
-                    ownerChecks: Array.from(new Set([
-                        ...analysis.details.ownerChecks,
-                        canAutoSaveProfile
-                            ? "후보가 실제 정보와 맞는지 확인한 뒤 프로필에 반영"
-                            : "견종을 직접 확인한 뒤 프로필에 저장",
-                    ])),
-                },
-            };
+                profile: analyzedProfile,
+            }, confirmedPet);
             setResult(resultWithConfirmedProfile); // result 세팅 = 결과 단계로 전환
-            if (user && confirmedPet?.apiProfileId) {
-                try {
-                    const profileToSave = {
-                        ...confirmedPet!,
-                        photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
-                        photoViews: persistedPhotoViews,
-                    };
-                    const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
-                    if (!saved) throw new Error("profile_save_unavailable");
-                    upsertPet({
-                        ...profileToSave,
-                        apiProfileId: saved.id,
-                        photoDataUrl: saved.photoDataUrl || undefined,
-                        photoViews: saved.photoViews || undefined,
-                        photoServerVerified: Boolean(saved.photoDataUrl),
-                    });
-                } catch {
-                    setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다.");
-                }
-            } else {
-                const draftSaved = savePetLensSignupDraft(profile);
-                if (user) {
-                    setAnalysisError("새 반려견의 견종을 먼저 확인해 주세요. 사진은 이 화면에 유지되며 아직 회원 프로필에는 저장하지 않았습니다.");
-                } else if (!draftSaved) {
-                    setAnalysisError("브라우저 저장 공간이 부족해 사진 임시 저장을 완료하지 못했습니다. 회원가입 화면에서 사진을 다시 등록해 주세요.");
-                }
+            try {
+                const profileToSave = {
+                    ...confirmedPet,
+                    photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
+                    photoViews: persistedPhotoViews,
+                };
+                const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
+                if (!saved) throw new Error("profile_save_unavailable");
+                upsertPet({
+                    ...profileToSave,
+                    apiProfileId: saved.id,
+                    photoDataUrl: saved.photoDataUrl || undefined,
+                    photoViews: saved.photoViews || undefined,
+                    photoServerVerified: Boolean(saved.photoDataUrl),
+                });
+            } catch {
+                setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다.");
             }
         } catch (error) {
             setResult(null);
@@ -233,6 +217,13 @@ export default function PetLensModalContent() {
         setResult(null);
         setAnalysisError("");
     };
+
+    const selectedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
+        || (!editingPetProfileId ? user?.pets[0] : undefined);
+    if (!hydrated) return <PetLensMemberGate compact reason="loading" />;
+    if (!user) return <PetLensMemberGate compact reason="login" />;
+    if (!selectedPet?.apiProfileId) return <PetLensMemberGate compact reason="profile" />;
+    if (!selectedPet.breed?.trim()) return <PetLensMemberGate compact reason="breed" />;
 
     // ============================================================
     // 결과 단계
@@ -260,17 +251,6 @@ export default function PetLensModalContent() {
 
                 <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-3 sm:p-4">
                     <PetLensAnalysisSummary profile={result.profile} details={result.details} />
-                    {!user && (
-                        <Link
-                            href="/auth/signup"
-                            className="btn btn-secondary mt-4 inline-flex"
-                            data-pet-guide-target="signup"
-                            data-petlens-signup-draft-cta
-                            onClick={() => savePetLensSignupDraft(result.profile)}
-                        >
-                            회원가입하고 프로필 저장
-                        </Link>
-                    )}
                 </div>
 
                 {/* 추천 상품 (협업자 products[] = recommendForPet 결과) */}

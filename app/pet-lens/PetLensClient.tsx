@@ -2,11 +2,9 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
     analyzePetLensSmart,
-    isPetLensAnalysisReadyForProfileSave,
-    mergePetLensAnalysisWithConfirmedProfile,
+    reconcilePetLensResultWithConfirmedProfile,
     type PetLensAnalysisResult,
 } from "@/lib/daengdabang-llm";
 import { savePetProfilePhotosSmart } from "@/lib/customer-api";
@@ -22,10 +20,10 @@ import {
     type PetLensPhotoCaptures,
     type PetLensPhotoViewId,
 } from "@/lib/petlens-multiview";
-import { savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
-import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/store";
 import ProductCard from "@/components/products/ProductCard";
 import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary";
+import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
@@ -33,6 +31,7 @@ type Result = PetLensAnalysisResult;
 
 export default function PetLensClient() {
     const { user, upsertPet } = useAuth();
+    const { hydrated } = useStore();
     const [name, setName] = useState(user?.pets[0]?.name ?? "");
     const [age, setAge] = useState(user?.pets[0]?.age ?? "");
     const [size, setSize] = useState<PetProfile["size"]>("medium");
@@ -119,6 +118,14 @@ export default function PetLensClient() {
         setLoading(true);
         setAnalysisError("");
         try {
+            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
+                || (!editingPetProfileId ? user?.pets[0] : undefined);
+            if (!user || !confirmedPet?.apiProfileId) {
+                throw new Error("회원 반려견 프로필을 먼저 선택해 주세요.");
+            }
+            if (!confirmedPet.breed?.trim()) {
+                throw new Error("마이페이지에서 실제 견종을 먼저 확인해 주세요.");
+            }
             if (petLensPhotoViewCount(photoViews) === 0) {
                 throw new Error("정면 사진부터 촬영해 주세요.");
             }
@@ -143,51 +150,28 @@ export default function PetLensClient() {
                 photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
                 photoViews: persistedPhotoViews,
             };
-            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId);
-            const profile = confirmedPet
-                ? mergePetLensAnalysisWithConfirmedProfile(analyzedProfile, confirmedPet)
-                : analyzedProfile;
-            const canAutoSaveProfile = isPetLensAnalysisReadyForProfileSave(profile.rawAnalysis) && Boolean(profile.breed?.trim());
-            const resultWithConfirmedProfile = {
+            const resultWithConfirmedProfile = reconcilePetLensResultWithConfirmedProfile({
                 ...analysis,
-                profile,
-                details: {
-                    ...analysis.details,
-                    ownerChecks: Array.from(new Set([
-                        ...analysis.details.ownerChecks,
-                        canAutoSaveProfile
-                            ? "후보가 실제 정보와 맞는지 확인한 뒤 프로필에 반영"
-                            : "견종을 직접 확인한 뒤 프로필에 저장",
-                    ])),
-                },
-            };
+                profile: analyzedProfile,
+            }, confirmedPet);
             setResult(resultWithConfirmedProfile);
-            if (user && confirmedPet?.apiProfileId) {
-                try {
-                    const profileToSave = {
-                        ...confirmedPet!,
-                        photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
-                        photoViews: persistedPhotoViews,
-                    };
-                    const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
-                    if (!saved) throw new Error("profile_save_unavailable");
-                    upsertPet({
-                        ...profileToSave,
-                        apiProfileId: saved.id,
-                        photoDataUrl: saved.photoDataUrl || undefined,
-                        photoViews: saved.photoViews || undefined,
-                        photoServerVerified: Boolean(saved.photoDataUrl),
-                    });
-                } catch {
-                    setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
-                }
-            } else {
-                const draftSaved = savePetLensSignupDraft(profile);
-                if (user) {
-                    setAnalysisError("새 반려견의 견종을 먼저 확인해 주세요. 사진은 이 화면에 유지되며 아직 회원 프로필에는 저장하지 않았습니다.");
-                } else if (!draftSaved) {
-                    setAnalysisError("브라우저 저장 공간이 부족해 사진 임시 저장을 완료하지 못했습니다. 회원가입 화면에서 사진을 다시 등록해 주세요.");
-                }
+            try {
+                const profileToSave = {
+                    ...confirmedPet,
+                    photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
+                    photoViews: persistedPhotoViews,
+                };
+                const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
+                if (!saved) throw new Error("profile_save_unavailable");
+                upsertPet({
+                    ...profileToSave,
+                    apiProfileId: saved.id,
+                    photoDataUrl: saved.photoDataUrl || undefined,
+                    photoViews: saved.photoViews || undefined,
+                    photoServerVerified: Boolean(saved.photoDataUrl),
+                });
+            } catch {
+                setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
             }
         } catch (error) {
             setResult(null);
@@ -198,13 +182,28 @@ export default function PetLensClient() {
         }
     };
 
+    const selectedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
+        || (!editingPetProfileId ? user?.pets[0] : undefined);
+    if (!hydrated) {
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="loading" /></main>;
+    }
+    if (!user) {
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="login" /></main>;
+    }
+    if (!selectedPet?.apiProfileId) {
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="profile" /></main>;
+    }
+    if (!selectedPet.breed?.trim()) {
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="breed" /></main>;
+    }
+
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
                 <p className="text-sm font-black text-indigo-700">펫렌즈 케어</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
                 <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                    정면·왼쪽·오른쪽·뒷면 사진과 생활 정보를 함께 보고, 견종 후보·체형 후보·주의할 케어 포인트·맞춤 추천을 정리해 드립니다. 결과는 보호자 확인 후 저장됩니다.
+                    회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다.
                 </p>
             </header>
 
@@ -325,16 +324,6 @@ export default function PetLensClient() {
                         <div className="grid gap-5">
                             <div className="surface p-5">
                                 <PetLensAnalysisSummary profile={result.profile} details={result.details} />
-                                {!user && (
-                                    <Link
-                                        href="/auth/signup"
-                                        className="btn btn-secondary mt-4"
-                                        data-petlens-signup-draft-cta
-                                        onClick={() => savePetLensSignupDraft(result.profile)}
-                                    >
-                                        회원가입하고 프로필 저장
-                                    </Link>
-                                )}
                             </div>
                             {result.products.length > 0 ? (
                                 <section>
