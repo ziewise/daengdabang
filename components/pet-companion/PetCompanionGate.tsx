@@ -44,7 +44,8 @@ export default function PetCompanionGate() {
     const [heroVisual, setHeroVisual] = useState<PetCompanionHeroVisual | null>(null);
     const [sessionHeroVisual, setSessionHeroVisual] = useState<PetCompanionHeroVisual | null>(null);
     const [guestSessionVisualChecked, setGuestSessionVisualChecked] = useState(false);
-    const [guestInteracted, setGuestInteracted] = useState(false);
+    const [guestVisibilityInteracted, setGuestVisibilityInteracted] = useState(false);
+    const [guestSettingsInteracted, setGuestSettingsInteracted] = useState(false);
     const [productRecommendationActive, setProductRecommendationActive] = useState(false);
     const [homeTransition, setHomeTransition] = useState<"entering" | "leaving" | null>(null);
     const panelOpenRef = useRef(false);
@@ -80,7 +81,8 @@ export default function PetCompanionGate() {
         setSettings(resolveCompanionSettings(state.user));
         // A prior guest hide is a deliberate in-page choice, not a reason to
         // make the companion absent on every later visit.
-        setGuestInteracted(false);
+        setGuestVisibilityInteracted(false);
+        setGuestSettingsInteracted(false);
     }, [hydrated, state.user]);
 
     useEffect(() => {
@@ -216,15 +218,22 @@ export default function PetCompanionGate() {
     }
 
     const baseSettings = settings || (signupGuideActive ? defaultCompanionSettings("guest") : null);
-    const shouldForceGuestCompanion = !state.user && (guestVisualActive || signupGuideActive);
+    const guestCompanionScopeActive = guestVisualActive
+        || signupGuideActive
+        || productRecommendationActive;
+    const shouldForceGuestCompanion = !state.user && guestCompanionScopeActive;
     const effectiveSettings = baseSettings && shouldForceGuestCompanion
         ? {
             ...baseSettings,
-            // A guest sees the pet immediately on each new visit or signup
-            // guide, even if an old local setting had left it hidden. A fresh
-            // in-page hide still works until the next visit.
-            enabled: guestInteracted ? baseSettings.enabled : true,
-            speechEnabled: guestInteracted ? baseSettings.speechEnabled : true,
+            // A guest sees and hears the pet immediately on a carried hero,
+            // signup guide, or product recommendation surface even if an old
+            // local setting had disabled either.
+            // Home controls only visibility; speech changes take effect only
+            // after an explicit settings-panel save in the current session.
+            enabled: guestVisibilityInteracted || guestSettingsInteracted
+                ? baseSettings.enabled
+                : true,
+            speechEnabled: guestSettingsInteracted ? baseSettings.speechEnabled : true,
         }
         : baseSettings;
     const companionEnabled = effectiveSettings?.enabled ?? true;
@@ -242,14 +251,13 @@ export default function PetCompanionGate() {
             writeLocalCompanionSettings(next);
             return next;
         });
-        if (!state.user && guestVisualActive) setGuestInteracted(true);
+        if (!state.user && guestCompanionScopeActive) setGuestVisibilityInteracted(true);
     };
 
     const handleHomeToggle = () => {
         if (!effectiveSettings || homeTransition) return;
         panelOpenRef.current = false;
         setPanelOpen(false);
-        if (!state.user && guestVisualActive) setGuestInteracted(true);
         if (homeTransitionTimerRef.current !== null) {
             window.clearTimeout(homeTransitionTimerRef.current);
         }
@@ -337,7 +345,7 @@ export default function PetCompanionGate() {
                         setPanelOpen(open);
                     }}
                     onSettingsChange={(next) => {
-                        if (!state.user && guestVisualActive) setGuestInteracted(true);
+                        if (!state.user && guestCompanionScopeActive) setGuestSettingsInteracted(true);
                         setSettings(next);
                     }}
                 />

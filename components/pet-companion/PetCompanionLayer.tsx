@@ -104,6 +104,7 @@ type EntryPortalStyle = CSSProperties & {
 const MOVE_EVENT = "ddb:pet-companion-move";
 const RECOMMENDATION_SESSION_KEY = "ddb.petCompanion.recommendationShown.v2";
 const MAX_RECOMMENDATIONS_PER_SESSION = 3;
+const MAX_RECOMMENDATIONS_PER_MOUNT = 6;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
 let memoryRecommendationShownCount = 0;
@@ -1076,7 +1077,24 @@ export default function PetCompanionLayer({
     }, [guidePrompt, recommendation]);
 
     useEffect(() => {
-        if (!settings.enabled || !settings.speechEnabled || panelOpen) return;
+        homeTransitionRef.current = homeTransition;
+        if (!homeTransition) return;
+        // Entering the house owns the walker until the transition finishes.
+        // Cancel any delayed arrival and close speech so neither effect can
+        // revive a stale prompt halfway through the animation.
+        interactionEpochRef.current += 1;
+        guideRunRef.current += 1;
+        guideInFlightRef.current = false;
+        recommendationInFlightRef.current = false;
+        promptOpenRef.current = false;
+        guidePlacementRef.current = "content";
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setGuidePrompt(null);
+        setRecommendation(null);
+    }, [homeTransition]);
+
+    useEffect(() => {
+        if (!settings.enabled || !settings.speechEnabled || panelOpen || homeTransition) return;
         let dismissTimer = 0;
         let revealTimer = 0;
         let retryTimer = 0;
@@ -1155,7 +1173,14 @@ export default function PetCompanionLayer({
                 if (walker) walker.dataset.petGuideStatus = "blocked:prompt-open";
                 return;
             }
-            if (!(force && !previewMode) && hasVisibleProductSurface()) {
+            const automaticRecommendationAvailable =
+                recommendationCountRef.current < MAX_RECOMMENDATIONS_PER_SESSION
+                && recommendationShownCountThisSession() < MAX_RECOMMENDATIONS_PER_SESSION;
+            if (
+                !(force && !previewMode)
+                && automaticRecommendationAvailable
+                && hasVisibleProductSurface()
+            ) {
                 if (walker) walker.dataset.petGuideStatus = "blocked:product-surface";
                 window.clearTimeout(retryTimer);
                 retryTimer = window.setTimeout(
@@ -1418,15 +1443,18 @@ export default function PetCompanionLayer({
                 guideInFlightRef.current = false;
             }
         };
-    }, [panelOpen, settings.enabled, settings.speechEnabled, state.user]);
+    }, [homeTransition, panelOpen, settings.enabled, settings.speechEnabled, state.user]);
 
     useEffect(() => {
-        if (!settings.enabled || !settings.speechEnabled || panelOpen) return;
+        if (!settings.enabled || !settings.speechEnabled || panelOpen || homeTransition) return;
         let dismissTimer = 0;
         let revealTimer = 0;
         let retryTimer = 0;
+        let requestTimer = 0;
+        let settleTimer = 0;
         let activeRecommendationRun = 0;
         let shownRecommendationRun = 0;
+        const firstRecommendationAt = performance.now() + 2600;
 
         const dismissRecommendation = (expectedRun: number) => {
             if (
@@ -1448,10 +1476,19 @@ export default function PetCompanionLayer({
         };
 
         const showRecommendation = ({ force = false }: { force?: boolean } = {}) => {
-            if (
+            const mountCapReached =
+                recommendationCountRef.current >= MAX_RECOMMENDATIONS_PER_MOUNT;
+            const automaticCapReached =
                 recommendationCountRef.current >= MAX_RECOMMENDATIONS_PER_SESSION
-                || (!force && recommendationShownCountThisSession() >= MAX_RECOMMENDATIONS_PER_SESSION)
-            ) return;
+                || recommendationShownCountThisSession() >= MAX_RECOMMENDATIONS_PER_SESSION;
+            if (mountCapReached || (!force && automaticCapReached)) {
+                if (walkerRef.current) {
+                    walkerRef.current.dataset.petRecommendationStatus = mountCapReached
+                        ? "blocked:mount-cap"
+                        : "blocked:automatic-cap";
+                }
+                return;
+            }
             if (promptOpenRef.current && !document.querySelector("[data-pet-companion-speech]")) {
                 promptOpenRef.current = false;
             }
@@ -1491,8 +1528,15 @@ export default function PetCompanionLayer({
                 return;
             }
             const activeElement = document.activeElement as HTMLElement | null;
-            if (!force && activeElement?.matches("input, textarea, select, [contenteditable='true']")) return;
-            if (externalDialogIsOpen()) return;
+            if (!force && activeElement?.matches("input, textarea, select, [contenteditable='true']")) {
+                scheduleAutomaticRecommendation(1500);
+                return;
+            }
+            if (document.hidden) return;
+            if (externalDialogIsOpen()) {
+                if (!force) scheduleAutomaticRecommendation(1800);
+                return;
+            }
             const pet = state.user?.pets.find((item) => item.name === settings.activePetName) || state.user?.pets[0];
             const cards = visibleProductCards();
             if (!cards.length) return;
@@ -1568,6 +1612,7 @@ export default function PetCompanionLayer({
                     || externalDialogIsOpen()
                 ) {
                     setMotion("idle");
+                    if (!force && !document.hidden) scheduleAutomaticRecommendation(1250);
                     return;
                 }
                 recommendedNamesRef.current.add(name);
@@ -1588,12 +1633,37 @@ export default function PetCompanionLayer({
             }, travelMs + 70);
         };
 
+        const scheduleAutomaticRecommendation = (delay = 700) => {
+            const initialDelay = Math.max(0, firstRecommendationAt - performance.now());
+            window.clearTimeout(settleTimer);
+            settleTimer = window.setTimeout(
+                () => showRecommendation(),
+                Math.max(delay, initialDelay),
+            );
+        };
+
         const scheduleRecommendationRequest = (delay = 450) => {
             window.clearTimeout(retryTimer);
-            retryTimer = window.setTimeout(
+            window.clearTimeout(requestTimer);
+            requestTimer = window.setTimeout(
                 () => showRecommendation({ force: true }),
                 delay,
             );
+        };
+
+        const onScroll = () => {
+            scheduleAutomaticRecommendation(1250);
+        };
+
+        const onFocusOut = (event: FocusEvent) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (!target.matches("input, textarea, select, [contenteditable='true']")) return;
+            scheduleAutomaticRecommendation(900);
+        };
+
+        const onVisibilityChange = () => {
+            if (!document.hidden) scheduleAutomaticRecommendation(500);
         };
 
         const onRecommendationRequest = () => {
@@ -1607,45 +1677,75 @@ export default function PetCompanionLayer({
             scheduleRecommendationRequest(900);
         };
 
+        const intersectionObserver = typeof IntersectionObserver === "function"
+            ? new IntersectionObserver((entries) => {
+                const productEnteredViewport = entries.some((entry) => {
+                    if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) return false;
+                    const rect = entry.target.getBoundingClientRect();
+                    return rect.width > 80 && rect.bottom > 90 && rect.top < window.innerHeight - 50;
+                });
+                if (productEnteredViewport) scheduleAutomaticRecommendation(700);
+            }, {
+                rootMargin: "-90px 0px -50px",
+                threshold: 0.01,
+            })
+            : null;
+
+        const observeProductCards = (root: Element | Document) => {
+            const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-pet-product]"));
+            if (root instanceof HTMLElement && root.matches("[data-pet-product]")) {
+                cards.unshift(root);
+            }
+            cards.forEach((card) => intersectionObserver?.observe(card));
+            return cards.length > 0;
+        };
+
         const productObserver = new MutationObserver((mutations) => {
-            const addedProduct = mutations.some((mutation) => (
-                Array.from(mutation.addedNodes).some((node) => (
-                    node instanceof Element
-                    && (node.matches("[data-pet-product]") || node.querySelector("[data-pet-product]"))
-                ))
-            ));
-            if (addedProduct) scheduleRecommendationRequest(700);
+            let addedProduct = false;
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (!(node instanceof Element)) return;
+                    addedProduct = observeProductCards(node) || addedProduct;
+                });
+            });
+            // IntersectionObserver schedules cards only when they actually
+            // enter the viewport. Keep a fallback for older embedded browsers.
+            if (addedProduct && !intersectionObserver) scheduleAutomaticRecommendation(700);
         });
 
-        const first = window.setTimeout(() => {
-            if (document.querySelector("[data-pet-product]")) {
-                showRecommendation({ force: true });
-                return;
-            }
-            showRecommendation();
-        }, 2600);
-        const interval = window.setInterval(showRecommendation, 90000);
+        const hasInitialProduct = Boolean(document.querySelector("[data-pet-product]"));
+        observeProductCards(document);
+        if (hasInitialProduct && !intersectionObserver) scheduleAutomaticRecommendation(2600);
+        const interval = window.setInterval(() => showRecommendation(), 90000);
+        window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
         document.addEventListener("focusin", onSearchRecommendationInput, true);
         document.addEventListener("input", onSearchRecommendationInput, true);
+        document.addEventListener("focusout", onFocusOut, true);
+        document.addEventListener("visibilitychange", onVisibilityChange);
         productObserver.observe(document.body, { childList: true, subtree: true });
         return () => {
-            window.clearTimeout(first);
             window.clearTimeout(revealTimer);
             window.clearTimeout(dismissTimer);
             window.clearTimeout(retryTimer);
+            window.clearTimeout(requestTimer);
+            window.clearTimeout(settleTimer);
             window.clearInterval(interval);
+            intersectionObserver?.disconnect();
             productObserver.disconnect();
+            window.removeEventListener("scroll", onScroll);
             window.removeEventListener(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT, onRecommendationRequest);
             document.removeEventListener("focusin", onSearchRecommendationInput, true);
             document.removeEventListener("input", onSearchRecommendationInput, true);
+            document.removeEventListener("focusout", onFocusOut, true);
+            document.removeEventListener("visibilitychange", onVisibilityChange);
             if (activeRecommendationRun && guideRunRef.current === activeRecommendationRun) {
                 guideRunRef.current += 1;
                 guideInFlightRef.current = false;
                 recommendationInFlightRef.current = false;
             }
         };
-    }, [panelOpen, settings.activePetName, settings.enabled, settings.speechEnabled, state.user]);
+    }, [homeTransition, panelOpen, settings.activePetName, settings.enabled, settings.speechEnabled, state.user]);
 
     const choosePet = (event: ChangeEvent<HTMLSelectElement>) => {
         const pet = state.user?.pets.find((item) => item.name === event.target.value);

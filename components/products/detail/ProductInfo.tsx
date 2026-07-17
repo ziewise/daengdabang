@@ -187,6 +187,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                             <button
                                 type="button"
                                 onClick={onTryOn}
+                                data-pet-guide-target="try-on"
                                 aria-label={locale === "en" ? "Preview this product on my dog" : "우리 아이에게 이 상품 입혀보기"}
                                 className="group relative inline-flex min-h-14 shrink-0 items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 px-4 py-2.5 text-left text-white shadow-[0_12px_28px_-12px_rgba(79,70,229,0.9)] ring-1 ring-white/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-12px_rgba(124,58,237,0.95)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none md:px-5"
                             >

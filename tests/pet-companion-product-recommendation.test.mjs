@@ -38,22 +38,40 @@ test("companion recommendation layer allows search focus without becoming spammy
     const source = await readSource("components/pet-companion/PetCompanionLayer.tsx");
 
     assert.match(source, /MAX_RECOMMENDATIONS_PER_SESSION = 3/);
+    assert.match(source, /MAX_RECOMMENDATIONS_PER_MOUNT = 6/);
     assert.match(source, /recommendationShownCountThisSession/);
     assert.match(source, /hasVisibleProductSurface/);
     assert.match(source, /blocked:product-surface/);
+    assert.match(source, /automaticRecommendationAvailable/);
     assert.match(source, /recommendationInFlightRef/);
     assert.match(source, /!recommendationInFlightRef\.current/);
     assert.match(source, /movementLooksSettled/);
     assert.match(source, /petMotionStatus/);
     assert.match(source, /window\.addEventListener\(PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT/);
     assert.match(source, /document\.addEventListener\("input", onSearchRecommendationInput, true\)/);
-    assert.match(source, /new MutationObserver/);
+    assert.match(source, /new IntersectionObserver/);
+    assert.match(source, /intersectionObserver\?\.observe\(card\)/);
+    assert.match(source, /window\.addEventListener\("scroll", onScroll, \{ passive: true \}\)/);
+    assert.match(source, /scheduleAutomaticRecommendation\(1250\)/);
+    assert.match(source, /showRecommendation\(\{ force: true \}\)/);
+    assert.match(source, /!force && automaticCapReached/);
+    assert.match(source, /mountCapReached \|\| \(!force && automaticCapReached\)/);
     assert.match(source, /document\.querySelector\("\[data-pet-product\]"\)/);
     assert.match(source, /!document\.querySelector\("\[data-pet-companion-speech\]"\)/);
     assert.match(source, /target\.closest\("\[data-pet-companion-allow='search'\]"\)/);
     assert.match(source, /!force && revealEpoch !== interactionEpochRef\.current/);
     assert.match(source, /!force && activeElement\?\.matches\("input, textarea, select, \[contenteditable='true'\]"\)/);
     assert.match(source, /data-pet-companion-allow/);
+    assert.match(source, /panelOpen \|\| homeTransition/);
+    assert.match(source, /document\.addEventListener\("focusout", onFocusOut, true\)/);
+    assert.match(source, /document\.addEventListener\("visibilitychange", onVisibilityChange\)/);
+});
+
+test("product detail exposes the visible Smart Fit action to the navigator", async () => {
+    const source = await readSource("components/products/detail/ProductInfo.tsx");
+
+    assert.match(source, /onClick=\{onTryOn\}[\s\S]{0,160}data-pet-guide-target="try-on"/);
+    assert.equal(source.match(/data-pet-guide-target="try-on"/g)?.length, 1);
 });
 
 test("companion gate can mount recommendation layer on product/search surfaces", async () => {

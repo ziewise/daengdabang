@@ -20,6 +20,18 @@ test("the companion home control hides and restores the dog without opening sett
     assert.match(gate, /writeLocalCompanionSettings\(next\)/);
     assert.match(gate, /const transitionDuration = 3250/);
     assert.doesNotMatch(gate, /prefers-reduced-motion/);
+    assert.match(gate, /guestVisibilityInteracted/);
+    assert.match(gate, /guestSettingsInteracted/);
+    assert.match(gate, /guestVisualActive[\s\S]{0,100}signupGuideActive[\s\S]{0,100}productRecommendationActive/);
+    assert.match(gate, /speechEnabled: guestSettingsInteracted \? baseSettings\.speechEnabled : true/);
+    assert.match(gate, /setGuestVisibilityInteracted\(true\)/);
+    assert.doesNotMatch(gate, /setGuestSettingsInteracted\(true\)[\s\S]{0,180}const handleHomeToggle/);
+
+    const homeHandler = gate.slice(
+        gate.indexOf("const handleHomeToggle"),
+        gate.indexOf("const handleSettingsLaunch"),
+    );
+    assert.doesNotMatch(homeHandler, /setGuestVisibilityInteracted/);
 
     const settingsHandler = gate.slice(
         gate.indexOf("const handleSettingsLaunch"),

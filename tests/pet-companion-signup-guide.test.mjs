@@ -17,7 +17,7 @@ test("signup route is allowed to mount the companion guide", async () => {
     assert.match(source, /isHiddenRoute\(pathname\)/);
     assert.match(source, /const signupGuideActive = isSignupGuideRoute\(pathname\)/);
     assert.match(source, /signupGuideActive \? defaultCompanionSettings\("guest"\) : null/);
-    assert.match(source, /guestVisualActive \|\| signupGuideActive/);
+    assert.match(source, /guestVisualActive[\s\S]{0,100}signupGuideActive[\s\S]{0,100}productRecommendationActive/);
 });
 
 test("signup guide has a dedicated field-by-field sequence", async () => {
