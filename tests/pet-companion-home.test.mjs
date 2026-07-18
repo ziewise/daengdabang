@@ -105,3 +105,24 @@ test("the dog returns with matched sizing, a full-resolution canvas, and explici
     assert.match(css, /pet-companion-leave-home 3\.2s/);
     assert.doesNotMatch(css, /data-pet-home-transition="leaving"\][\s\S]{0,180}animation-duration: 1ms/);
 });
+
+test("navigator speech keeps a painted dog frame visible on a cold mobile cache", async () => {
+    const [character, css] = await Promise.all([
+        readSource("components/pet-companion/PetCompanionCharacter.tsx"),
+        readSource("components/pet-companion/PetCompanionCharacter.module.css"),
+    ]);
+
+    assert.match(character, /paused=\{motion === "point" \|\| motion === "recommend"\}/);
+    assert.doesNotMatch(
+        css,
+        /\.character\[data-motion="point"\] \.spriteStack[\s\S]{0,80}opacity:\s*0/,
+    );
+    assert.doesNotMatch(
+        css,
+        /\.character\[data-motion="point"\] \.idleSprite[\s\S]{0,80}opacity:\s*0/,
+    );
+    assert.match(
+        css,
+        /\.character\[data-motion="point"\] \.recommendPose \{[\s\S]{0,80}opacity:\s*0/,
+    );
+});

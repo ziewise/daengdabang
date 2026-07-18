@@ -195,19 +195,23 @@
     transition: transform .18s cubic-bezier(.2, .8, .2, 1);
 }
 
-.character[data-motion="recommend"] .idleSprite,
-.character[data-motion="point"] .idleSprite {
+.character[data-motion="recommend"] .idleSprite {
     opacity: 0;
 }
 
-.character[data-motion="recommend"] .recommendPose,
-.character[data-motion="point"] .recommendPose {
+.character[data-motion="recommend"] .recommendPose {
     opacity: 1;
     transform: scale(1) translateY(0);
 }
 
-.character[data-motion="point"] .spriteStack,
 .character[data-motion="recommend"] .spriteStack {
+    opacity: 0;
+}
+
+/* Navigator speech uses the already painted sprite stack. On mobile Safari a
+   cold poster request can miss the first point frame; replacing the canvas
+   with that poster made the speech bubble remain while the dog vanished. */
+.character[data-motion="point"] .recommendPose {
     opacity: 0;
 }
 
