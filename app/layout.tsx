@@ -8,6 +8,8 @@ import ConditionalChrome from "@/components/site/ConditionalChrome";
 // 협업자 기능 유지 — 전역 스토어(장바구니 등)
 import { StoreProvider } from "@/lib/store";
 import { LanguageProvider } from "@/lib/i18n";
+// 국가/지역 선택 → 통화 자동 적용 + 언어 자동/수동 (지구본 배지 모달)
+import { RegionProvider } from "@/lib/region";
 // 협업자 펫렌즈(LLM 분석)를 "모달"로 띄우는 런처 — 협업자 코드는 그대로, 껍데기만 우리 것
 import PetLensModalProvider from "@/components/petlens/PetLensModalLauncher";
 import { PetTryOnTaskProvider } from "@/lib/pet-tryon-background";
@@ -63,6 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {/* 우리 크레파스 배경 — fixed z-index:-1 레이어 (globals.css .global-aurora) */}
                 <div className="global-aurora" aria-hidden="true" />
                 <LanguageProvider>
+                    <RegionProvider>
                     <StoreProvider>
                         <StorefrontAnalyticsTracker />
                         {/* 펫렌즈 모달 런처 — 헤더 맞춤 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
@@ -74,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             </PetTryOnTaskProvider>
                         </PetLensModalProvider>
                     </StoreProvider>
+                    </RegionProvider>
                 </LanguageProvider>
             </body>
         </html>

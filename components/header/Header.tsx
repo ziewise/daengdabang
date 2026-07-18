@@ -10,6 +10,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/store";
 import {
@@ -184,18 +185,28 @@ export default function Header() {
                         모바일(<lg): 햄버거만 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         데스크탑(lg+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
                     <div className="flex items-center gap-2">
-                        {/* 펫렌즈 — 사진 분석 모달(검색 버튼 좌측). 챗봇은 우하단 FloatingDock 에 있음 */}
+                        {/* 유틸 순서: 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
+                        {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
                             type="button"
                             onClick={openPetLens}
                             data-pet-guide-target="pet-lens"
-                            className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white shadow-[0_2px_14px_-2px_rgba(192,38,211,0.5)] transition-all hover:-translate-y-px hover:shadow-[0_5px_20px_-2px_rgba(192,38,211,0.7)]"
+                            className="group relative inline-flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px"
                             aria-label="PetLens"
                             title="PetLens"
                         >
-                            <i className="fa-solid fa-camera text-sm transition-transform group-hover:scale-110" />
+                            {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함) */}
+                            <Image
+                                src="/images/ui/pet-lens.png"
+                                alt=""
+                                fill
+                                sizes="50px"
+                                className="object-contain transition-transform group-hover:scale-105"
+                                priority
+                            />
                         </button>
-                        <div className="hidden lg:block">
+                        {/* 지구본 배지 — 펫렌즈 우측(모바일에서도 노출: 펫렌즈→지구본→햄버거) */}
+                        <div className="flex items-center">
                             <LanguageSwitcher />
                         </div>
                         <button

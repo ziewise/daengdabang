@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { CatalogProduct, CategorySlug, SubcategorySlug } from "@/lib/catalog";
+// 통화(원/달러) — 국가 선택(RegionProvider)이 세팅, formatPrice 가 전 사이트 가격 환산
+import { useCurrency, convertFromKRW } from "@/lib/currency-store";
 
 export type Locale = "ko" | "en";
 
@@ -425,6 +427,8 @@ function translateProductName(product: CatalogProduct | Pick<CatalogProduct, "na
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [locale, setLocaleState] = useState<Locale>("ko");
+    // 현재 통화 구독 — 달러면 formatPrice 가 환산해서 표시(원이면 기존 동작 유지)
+    const currency = useCurrency();
 
     useEffect(() => {
         const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -455,12 +459,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setLocale,
         toggleLocale: () => setLocale(locale === "ko" ? "en" : "ko"),
         t: (key) => STRINGS[locale][key] || STRINGS.ko[key],
-        formatPrice: (value) => locale === "en" ? `₩${value.toLocaleString("en-US")}` : `${value.toLocaleString("ko-KR")}원`,
+        formatPrice: (value) => {
+            // 달러: 고정환율 환산 후 $x.xx / 원: 기존 로케일별 표기(₩ / 원) 유지
+            if (currency === "USD") {
+                const usd = convertFromKRW(value, "USD");
+                return `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+            return locale === "en" ? `₩${value.toLocaleString("en-US")}` : `${value.toLocaleString("ko-KR")}원`;
+        },
         productName: (product) => translateProductName(product, locale),
         categoryLabel: (slug, fallback) => locale === "en" ? CATEGORY_EN[slug] : fallback || CATEGORY_KO[slug],
         subcategoryLabel: (slug, fallback) => locale === "en" ? SUBCATEGORY_EN[slug] : fallback || SUBCATEGORY_KO[slug],
         menuLabel: (label) => locale === "en" ? MENU_EN[label] || translateProductName({ name: label, brandEn: "", brandKo: "" }, "en") : label,
-    }), [locale, setLocale]);
+    }), [locale, setLocale, currency]);
 
     return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }

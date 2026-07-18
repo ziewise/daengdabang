@@ -123,7 +123,6 @@ export default function LoginPage() {
                     {/* 하단 살짝 어둡게 — 브랜드 문구 가독성 */}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/35 to-transparent p-5 pt-12">
                         <p className="text-sm font-black text-white drop-shadow">우리 댕댕이의 매일이 특별해지는 곳</p>
-                        <p className="mt-0.5 text-[11px] font-bold text-white/85 drop-shadow">댕다방 · 큐레이션 펫 쇼핑몰</p>
                     </div>
                 </div>
 
@@ -220,13 +219,22 @@ export default function LoginPage() {
                         </button>
                     )}
 
-                    {/* 회원가입 */}
-                    <p className="mt-5 text-center text-xs font-bold text-neutral-500">
-                        계정이 없으신가요?{" "}
-                        <Link href="/auth/signup" className="font-black text-amber-600 hover:underline">
+                    {/* 회원가입 — 박스형 보조 CTA.
+                        로그인은 채워진 앰버(primary), 회원가입은 앰버 아웃라인(secondary)으로
+                        위계는 유지하되 "버튼"으로 확실히 눈에 띄게 한다(아이콘·화살표 hover). */}
+                    <div className="mt-6 flex flex-col items-center">
+                        <p className="mb-2 text-center text-[11px] font-bold text-neutral-400">
+                            아직 댕다방 회원이 아니신가요?
+                        </p>
+                        <Link
+                            href="/auth/signup"
+                            className="group inline-flex h-10 items-center justify-center gap-2 rounded-full border-2 border-amber-300 bg-amber-50/60 px-5 text-sm font-black text-amber-700 transition hover:border-amber-400 hover:bg-amber-100/70 hover:shadow-[0_10px_24px_rgba(245,158,11,0.22)]"
+                        >
+                            <i className="fa-solid fa-user-plus text-xs" />
                             회원가입
+                            <i className="fa-solid fa-arrow-right text-[11px] transition-transform group-hover:translate-x-0.5" />
                         </Link>
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>

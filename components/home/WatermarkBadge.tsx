@@ -21,6 +21,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface WatermarkBadgeProps {
     /** 배지에 재생할 영상(견종 얼굴) 경로 */
@@ -122,7 +123,7 @@ export default function WatermarkBadge({
                 // interactive 면 배지만 pointer-events-auto 로 클릭 받고, hover 확대로 클릭 힌트를 준다.
                 <div
                     data-pet-companion-origin="hero-lens"
-                    className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-2 border-white/75 shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
+                    className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
                         interactive
                             ? " pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-105"
                             : ""
@@ -161,18 +162,20 @@ export default function WatermarkBadge({
                             interactive ? " transition-opacity duration-300 group-hover:opacity-0" : ""
                         }`}
                     />
-                    {/* hover 오버레이 — 펫렌즈 버튼(파랑·인디고·핑크 그라데이션 + 카메라 아이콘).
-                        펫렌즈 FAB(petlens.module.css .fab)와 동일 그라데이션이라 브랜드가 일관된다.
+                    {/* hover 오버레이 — 펫렌즈 아이콘(pet-lens.png) 이 원형 배지를 꽉 채운다.
                         평소엔 숨고(opacity-0) hover 시 떠올라 배지가 "펫렌즈 실행" 버튼처럼 보인다.
-                        아이콘 크기는 배지 지름(box.size)에 비례시켜 영상 배율과 함께 커진다. */}
+                        loading=eager: hover 전에 미리 로드해 두어 hover 시 바로 나타난다. */}
                     {interactive && (
-                        <div
-                            className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                            style={{ background: "linear-gradient(135deg, #3b82f6, #6366f1, #ec4899)" }}
-                        >
-                            <i
-                                className="fa-solid fa-camera text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]"
-                                style={{ fontSize: `${box.size * 0.4}px` }}
+                        <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                            {/* pet-lens.png 의 원(불투명 영역)은 프레임의 ~84%라 투명 여백이 있다.
+                                scale-[1.2] 로 키워 원이 배지 흰 테두리에 딱 닿게 채운다(이중 링 제거). */}
+                            <Image
+                                src="/images/ui/pet-lens.png"
+                                alt=""
+                                fill
+                                sizes="120px"
+                                loading="eager"
+                                className="scale-[1.2] object-cover"
                             />
                         </div>
                     )}
