@@ -63,14 +63,14 @@ export default function PetCompanionGate() {
     const homeLaunchRef = useRef<HTMLButtonElement>(null);
     const settingsLaunchRef = useRef<HTMLButtonElement>(null);
     const heroAtTop = heroActive && mobileFloating.isAtPageTop;
-    const hideAtHeroTop = heroAtTop && !mobileFloating.isMobile;
-    const hideInMobileHero = mobileFloating.isMobileHeroViewport && mobileFloating.isHeroVisible;
+    // Match the chat launcher: hidden at the exact hero top, hidden while a
+    // mobile scroll is active, and visible again as soon as scrolling settles.
+    const hideAtHeroTop = heroAtTop;
     const chatWidgetBlocksControls = chatWidgetOpen && mobileFloating.isMobile;
     const floatingControlsHidden = mobileFloating.hidden
         || panelOpen
         || chatWidgetBlocksControls
-        || hideAtHeroTop
-        || hideInMobileHero;
+        || hideAtHeroTop;
     const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
     const heroVisualScopeRef = useRef<string | null>(null);

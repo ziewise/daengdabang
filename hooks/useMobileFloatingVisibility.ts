@@ -4,7 +4,7 @@ import { type RefObject, useEffect, useState } from "react";
 
 const MOBILE_FLOATING_QUERY = "(max-width: 680px)";
 const MOBILE_HERO_QUERY = "(max-width: 767px)";
-export const MOBILE_FLOATING_SCROLL_IDLE_MS = 400;
+export const MOBILE_FLOATING_SCROLL_IDLE_MS = 180;
 
 function isVisibleDialog(dialog: HTMLElement) {
     if (dialog.closest("[hidden], [aria-hidden='true']")) return false;

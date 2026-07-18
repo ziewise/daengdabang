@@ -76,11 +76,11 @@ export default function FloatingDock() {
     //   buybar 회피가 안 먹혀 하단 구매 바와 겹쳤음). fade 는 translate 없이 opacity 로만
     //   처리한다(자식 채팅창 폭 깨짐 방지). dock 자체는 pointer-events-none, 노출 시 버튼만 auto.
     const heroAtTop = heroRouteActive && mobileFloating.isAtPageTop;
-    const hideAtHeroTop = heroAtTop && !mobileFloating.isMobile;
-    const hideInMobileHero = mobileFloating.isMobileHeroViewport && mobileFloating.isHeroVisible;
+    // The hero suppresses launchers only at the exact page top. On mobile,
+    // active scrolling is handled separately and the launchers return on idle.
+    const hideAtHeroTop = heroAtTop;
     const baseDockVisible = shown || navigatorReveal || mobileFloating.isMobile;
     const dockVisible = !mobileFloating.hasBlockingDialog
-        && !hideInMobileHero
         && (chatOpen || (!hideAtHeroTop && baseDockVisible && !mobileFloating.isScrolling));
     const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
     const dockBottom = buybar
