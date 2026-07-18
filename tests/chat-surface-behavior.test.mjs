@@ -39,6 +39,31 @@ test("product inquiry opens the existing chat widget without navigating away", a
     assert.match(widget, /answerShopQuestionSmart\(questionForAnswer/);
 });
 
+test("floating CareTalk keeps its behavior while using the scoped crayon skin", async () => {
+    const [widget, css] = await Promise.all([
+        source("components/site/ChatWidget.tsx"),
+        source("components/site/ChatWidget.module.css"),
+    ]);
+
+    assert.match(widget, /import styles from "\.\/ChatWidget\.module\.css"/);
+    assert.match(widget, /className=\{`\$\{styles\.panel\}/);
+    assert.match(widget, /data-chat-role=\{message\.role\}/);
+    assert.match(widget, /styles\.userBubble/);
+    assert.match(widget, /styles\.assistantBubble/);
+    assert.match(widget, /styles\.composer/);
+    assert.match(widget, /CRAYON CARE NOTE/);
+    assert.match(widget, /우리 아이 케어 노트/);
+    assert.match(widget, /styles\.responseExtras/);
+    assert.match(css, /font-family: var\(--font-crayon\)/);
+    assert.match(css, /repeating-linear-gradient/);
+    assert.match(css, /right: 4\.75rem/);
+    assert.match(css, /linear-gradient\(90deg, transparent 0 34px/);
+    assert.match(css, /\.emptyNote \{/);
+    assert.match(css, /outline: 2px dashed rgba\(242, 139, 114/);
+    assert.match(css, /@media \(max-width: 680px\)/);
+    assert.match(css, /inset: calc\(env\(safe-area-inset-top\) \+ 12px\) 12px calc\(env\(safe-area-inset-bottom\) \+ 12px\)/);
+});
+
 test("medical follow-up slots request the answer instead of sending the prompt as a user message", async () => {
     const extras = await source("components/site/ChatResponseExtras.tsx");
 

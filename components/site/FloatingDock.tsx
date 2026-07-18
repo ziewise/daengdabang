@@ -2,14 +2,15 @@
  * FloatingDock — 우하단 플로팅 챗봇 도크
  * ---------------------------------------------------------------------
  * 협업자 ChatWidget(챗봇)의 위치·등장 타이밍을 감싸 제어한다.
- *   · 챗봇 : 협업자 ChatWidget (토글/대화 로직 0 수정, 위치만 dock 이 관리)
+ *   · 챗봇 : ChatWidget의 대화 로직은 유지하고 위치·노출은 dock이 관리
  *   (펫렌즈는 헤더 펫렌즈 버튼으로 일원화 — FAB 에서는 제거)
  *
  * 배치: 데스크탑(sm+) 우측 하단 / 모바일 하단 가운데.
  *
  * 등장 규칙:
- *   · 히어로 첫 화면에서는 숨김. 사용자가 아래로 스크롤을 시작하면 즉시 fade-in.
- *   · 다시 페이지 맨 위로 올라오면 숨김.
+ *   · 데스크톱 히어로 첫 화면에서는 숨김. 사용자가 아래로 스크롤을 시작하면 즉시 fade-in.
+ *   · 모바일에서는 첫 화면부터 노출하고, 스크롤 중에만 잠시 숨김.
+ *   · 데스크톱에서 다시 페이지 맨 위로 올라오면 숨김.
  *   · 히어로가 없는 다른 페이지(sentinel 없음)에서는 항상 노출.
  *   · 제품 상세 하단 구매 바(ddb:buybar)가 뜨면 그 위로 비켜 올라간다.
  */
@@ -46,7 +47,7 @@ export default function FloatingDock() {
         return () => window.removeEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, revealForNavigator);
     }, []);
 
-    // 히어로가 있는 페이지는 첫 화면만 숨기고, 스크롤이 시작되는 즉시 FAB 노출
+    // 히어로가 있는 데스크톱은 첫 화면만 숨기고, 스크롤이 시작되는 즉시 FAB 노출
     useEffect(() => {
         const update = () => {
             const sentinel = document.getElementById("fab-reveal-sentinel");
@@ -74,9 +75,10 @@ export default function FloatingDock() {
     //   buybar 회피가 안 먹혀 하단 구매 바와 겹쳤음). fade 는 translate 없이 opacity 로만
     //   처리한다(자식 채팅창 폭 깨짐 방지). dock 자체는 pointer-events-none, 노출 시 버튼만 auto.
     const heroAtTop = isHeroRoute(pathname) && mobileFloating.isAtPageTop;
-    const baseDockVisible = shown || navigatorReveal;
+    const hideAtHeroTop = heroAtTop && !mobileFloating.isMobile;
+    const baseDockVisible = shown || navigatorReveal || mobileFloating.isMobile;
     const dockVisible = !mobileFloating.hasBlockingDialog
-        && (chatOpen || (!heroAtTop && baseDockVisible && !mobileFloating.isScrolling));
+        && (chatOpen || (!hideAtHeroTop && baseDockVisible && !mobileFloating.isScrolling));
     const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
     const dockBottom = buybar
         ? (mobileFloating.isMobile
@@ -95,7 +97,7 @@ export default function FloatingDock() {
             data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
             aria-hidden={!dockVisible ? "true" : undefined}
             inert={!dockVisible ? true : undefined}
-            className={`pointer-events-none fixed right-4 z-[2200] flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${dockBottom} ${
+            className={`pointer-events-none fixed right-4 flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${chatOpen ? "z-[2221]" : "z-[2200]"} ${dockBottom} ${
                 dockVisible ? "visible opacity-100" : "invisible opacity-0"
             }`}
         >

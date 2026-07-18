@@ -22,7 +22,7 @@ test("mobile floating launchers hide while scrolling and return after a short id
     assert.match(hook, /window\.addEventListener\("scroll", onScroll, \{ passive: true \}\)/);
 });
 
-test("hero launchers use immediate desktop reveal and idle mobile reveal", async () => {
+test("desktop hero launchers stay quiet at the top while mobile controls remain available", async () => {
     const [hook, dock, gate, css] = await Promise.all([
         source("hooks/useMobileFloatingVisibility.ts"),
         source("components/site/FloatingDock.tsx"),
@@ -31,10 +31,12 @@ test("hero launchers use immediate desktop reveal and idle mobile reveal", async
     ]);
 
     assert.match(hook, /hidden: isMobile && \(isScrolling \|\| hasBlockingDialog\)/);
-    assert.match(dock, /const heroAtTop = isHeroRoute\(pathname\) && mobileFloating\.isAtPageTop/);
-    assert.match(dock, /chatOpen \|\| \(!heroAtTop && baseDockVisible && !mobileFloating\.isScrolling\)/);
-    assert.match(gate, /const heroAtTop = heroActive && mobileFloating\.isAtPageTop/);
-    assert.match(gate, /const floatingControlsHidden = mobileFloating\.hidden \|\| panelOpen \|\| heroAtTop/);
+    assert.match(dock, /const hideAtHeroTop = heroAtTop && !mobileFloating\.isMobile/);
+    assert.match(dock, /const baseDockVisible = shown \|\| navigatorReveal \|\| mobileFloating\.isMobile/);
+    assert.match(dock, /chatOpen \|\| \(!hideAtHeroTop && baseDockVisible && !mobileFloating\.isScrolling\)/);
+    assert.match(gate, /const hideAtHeroTop = heroAtTop && !mobileFloating\.isMobile/);
+    assert.match(gate, /const chatWidgetBlocksControls = chatWidgetOpen && mobileFloating\.isMobile/);
+    assert.match(gate, /mobileFloating\.hidden \|\| panelOpen \|\| chatWidgetBlocksControls \|\| hideAtHeroTop/);
     assert.ok(
         css.indexOf('.settingsLaunch[data-mobile-hidden="true"]') < css.indexOf("@media (max-width: 680px)"),
         "desktop and mobile house/settings launchers must share the hidden rule",
@@ -46,12 +48,13 @@ test("hero launchers use immediate desktop reveal and idle mobile reveal", async
     );
 });
 
-test("mobile launchers yield to dialogs without unmounting their stateful surfaces", async () => {
-    const [hook, dock, chat, gate] = await Promise.all([
+test("mobile launchers yield to dialogs and CareTalk while desktop controls stay beside the shifted note", async () => {
+    const [hook, dock, chat, gate, events] = await Promise.all([
         source("hooks/useMobileFloatingVisibility.ts"),
         source("components/site/FloatingDock.tsx"),
         source("components/site/ChatWidget.tsx"),
         source("components/pet-companion/PetCompanionGate.tsx"),
+        source("lib/chat-widget-events.ts"),
     ]);
 
     assert.match(hook, /querySelectorAll<HTMLElement>\("\[role='dialog'\]"\)/);
@@ -63,9 +66,17 @@ test("mobile launchers yield to dialogs without unmounting their stateful surfac
     assert.match(chat, /else triggerRef\.current\?\.focus\(\)/);
     assert.match(chat, /const hideTrigger = launcherHidden \|\| \(isMobile && open\)/);
     assert.match(chat, /hideTrigger \? "invisible pointer-events-none opacity-0"/);
+    assert.match(chat, /CHAT_WIDGET_VISIBILITY_EVENT/);
+    assert.match(chat, /detail: \{ open \}/);
+    assert.match(chat, /useLayoutEffect\(\(\) => \{/);
+    assert.match(chat, /return \(\) => \{[\s\S]{0,220}detail: \{ open: false \}/);
+    assert.match(events, /CHAT_WIDGET_VISIBILITY_EVENT = "ddb:chat-widget-visibility"/);
     assert.match(dock, /ignoreDialogsWithin: dockRef/);
     assert.match(dock, /!mobileFloating\.hasBlockingDialog/);
-    assert.match(gate, /const floatingControlsHidden = mobileFloating\.hidden \|\| panelOpen \|\| heroAtTop/);
+    assert.match(dock, /chatOpen \? "z-\[2221\]" : "z-\[2200\]"/);
+    assert.match(gate, /window\.addEventListener\(CHAT_WIDGET_VISIBILITY_EVENT, onChatVisibility\)/);
+    assert.match(gate, /const chatWidgetBlocksControls = chatWidgetOpen && mobileFloating\.isMobile/);
+    assert.match(gate, /mobileFloating\.hidden \|\| panelOpen \|\| chatWidgetBlocksControls \|\| hideAtHeroTop/);
     assert.match(gate, /data-mobile-hidden=\{floatingControlsHidden \? "true" : "false"\}/);
     assert.match(gate, /inert=\{floatingControlsHidden \? true : undefined\}/);
     assert.match(gate, /activeElement === homeLaunchRef\.current \|\| activeElement === settingsLaunchRef\.current/);

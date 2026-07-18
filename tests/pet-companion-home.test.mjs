@@ -121,8 +121,8 @@ test("the navigator explains the home and settings controls without outranking p
     assert.match(layer, /\(\) => dismissGuide\(guideRun\),[\s\S]{0,40}6800/);
     assert.match(chatEvents, /CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT = "ddb:reveal-chat-widget-for-navigator"/);
     assert.match(dock, /window\.addEventListener\(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, revealForNavigator\)/);
-    assert.match(dock, /const baseDockVisible = shown \|\| navigatorReveal/);
-    assert.match(dock, /chatOpen \|\| \(!heroAtTop && baseDockVisible && !mobileFloating\.isScrolling\)/);
+    assert.match(dock, /const baseDockVisible = shown \|\| navigatorReveal \|\| mobileFloating\.isMobile/);
+    assert.match(dock, /chatOpen \|\| \(!hideAtHeroTop && baseDockVisible && !mobileFloating\.isScrolling\)/);
     assert.match(dock, /\}, \[pathname\]\);/);
 });
 

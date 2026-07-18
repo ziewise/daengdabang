@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
     answerShopQuestion,
@@ -14,10 +14,16 @@ import {
 } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
-import { CHAT_WIDGET_OPEN_EVENT, type ChatWidgetOpenDetail } from "@/lib/chat-widget-events";
+import {
+    CHAT_WIDGET_OPEN_EVENT,
+    CHAT_WIDGET_VISIBILITY_EVENT,
+    type ChatWidgetOpenDetail,
+    type ChatWidgetVisibilityDetail,
+} from "@/lib/chat-widget-events";
 import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import styles from "./ChatWidget.module.css";
 
 type Message = {
     role: "user" | "assistant";
@@ -39,7 +45,7 @@ type Props = {
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     if (!actions?.length) return null;
     return (
-        <div className="mt-2 space-y-1 rounded-md border border-neutral-200 bg-white/90 p-2 text-left shadow-sm">
+        <div className={`${styles.actionList} mt-2 space-y-1 p-2 text-left`}>
             {actions.slice(0, 5).map((action, index) => (
                 <div key={`${action.label}-${index}`} className="flex gap-2 text-[11px] font-bold leading-4 text-neutral-600">
                     <span
@@ -87,6 +93,17 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         if (!open) return;
         scrollToBottom(messages.length <= 1 ? "auto" : "smooth");
     }, [open, messages, loading]);
+
+    useLayoutEffect(() => {
+        window.dispatchEvent(new CustomEvent<ChatWidgetVisibilityDetail>(CHAT_WIDGET_VISIBILITY_EVENT, {
+            detail: { open },
+        }));
+        return () => {
+            window.dispatchEvent(new CustomEvent<ChatWidgetVisibilityDetail>(CHAT_WIDGET_VISIBILITY_EVENT, {
+                detail: { open: false },
+            }));
+        };
+    }, [open]);
 
     useEffect(() => {
         onOpenChange?.(open);
@@ -181,20 +198,23 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const hideTrigger = launcherHidden || (isMobile && open);
 
     return (
-        <div className="relative z-50" data-chat-widget-open={open ? "true" : "false"}>
+        <div className={`${styles.root} relative z-50`} data-chat-widget-open={open ? "true" : "false"}>
             {open && (
                 <section
                     role="dialog"
                     aria-label="댕다방 케어톡"
-                    className="absolute bottom-[calc(100%+12px)] right-0 z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-2xl max-sm:fixed max-sm:inset-x-3 max-sm:bottom-[calc(env(safe-area-inset-bottom)+12px)] max-sm:top-[calc(env(safe-area-inset-top)+12px)] max-sm:h-auto max-sm:w-auto"
+                    className={`${styles.panel} absolute bottom-[calc(100%+12px)] z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden`}
                 >
-                    <header className="flex h-12 items-center justify-between border-b border-neutral-200 px-4">
-                        <b className="text-sm font-black">댕다방 케어톡</b>
+                    <header className={`${styles.header} flex items-center justify-between px-4`}>
+                        <div className={styles.titleGroup}>
+                            <span className={styles.noteEyebrow}>CRAYON CARE NOTE</span>
+                            <b className={styles.title}>댕다방 케어톡</b>
+                        </div>
                         <div className="flex items-center gap-1">
                             <button
                                 type="button"
                                 onClick={clearChat}
-                                className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-100"
+                                className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
                                 aria-label="채팅 비우기"
                                 title="채팅 비우기"
                             >
@@ -203,7 +223,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
-                                className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-100"
+                                className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
                                 aria-label="채팅 닫기"
                                 title="채팅 닫기"
                             >
@@ -212,8 +232,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         </div>
                     </header>
                     {productContext ? (
-                        <div className="flex shrink-0 items-center gap-2 border-b border-indigo-100 bg-indigo-50 px-3 py-2 text-[11px] font-bold text-indigo-900">
-                            <span className="shrink-0 rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-black text-white">상품 문의</span>
+                        <div className={`${styles.contextBar} flex shrink-0 items-center gap-2 px-3 py-2 text-[11px] font-bold`}>
+                            <span className={`${styles.contextTag} shrink-0 px-2 py-0.5 text-[11px] font-black`}>상품 문의</span>
                             <span className="min-w-0 flex-1 truncate" title={productContext}>{productContext}</span>
                             <button
                                 type="button"
@@ -225,28 +245,44 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             </button>
                         </div>
                     ) : null}
-                    <div ref={messagesRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-neutral-50 p-3 overscroll-contain scroll-smooth">
+                    <div ref={messagesRef} className={`${styles.messageList} min-h-0 flex-1 space-y-3 overflow-y-auto p-3 overscroll-contain scroll-smooth`}>
+                        {messages.length === 0 && !loading ? (
+                            <div className={styles.emptyNote}>
+                                <span className={styles.emptyPencil} aria-hidden="true">
+                                    <i className="fa-solid fa-pencil" />
+                                </span>
+                                <strong>우리 아이 케어 노트</strong>
+                                <p>증상·생활 질문·상품 고민을 편하게 적어 주세요.</p>
+                                <span className={styles.emptyPaws} aria-hidden="true">🐾 · 🐾</span>
+                            </div>
+                        ) : null}
                         {messages.map((message, index) => (
-                            <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
+                            <div
+                                key={`${message.role}-${index}`}
+                                data-chat-role={message.role}
+                                className={`${styles.messageRow} ${message.role === "user" ? "text-right" : "text-left"}`}
+                            >
                                 <div
-                                    className={`inline-block max-w-[86%] whitespace-pre-line rounded-lg px-3 py-2 text-sm font-bold leading-6 ${
-                                        message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
+                                    className={`${styles.messageBubble} inline-block max-w-[86%] whitespace-pre-line px-3 py-2 text-sm font-bold leading-6 ${
+                                        message.role === "user" ? styles.userBubble : styles.assistantBubble
                                     }`}
                                 >
                                     {message.text}
                                 </div>
                                 {message.role === "assistant" && (
-                                    <ChatResponseExtras
-                                        medical={message.medical}
-                                        sources={message.sources}
-                                        ctas={message.ctas}
-                                        onAsk={ask}
-                                        compact
-                                    />
+                                    <div className={styles.responseExtras}>
+                                        <ChatResponseExtras
+                                            medical={message.medical}
+                                            sources={message.sources}
+                                            ctas={message.ctas}
+                                            onAsk={ask}
+                                            compact
+                                        />
+                                    </div>
                                 )}
                                 {message.role === "assistant" && <ActionList actions={message.actions} />}
                                 {message.role === "assistant" && message.conversation?.continued && (
-                                    <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black text-indigo-700">
+                                    <div className={`${styles.continuationBadge} mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black`}>
                                         <span aria-hidden="true">↳</span>
                                         앞 대화와 연결한 답변
                                     </div>
@@ -257,7 +293,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                             <Link
                                                 key={product.id}
                                                 href={productHref(product)}
-                                                className="block rounded-md border border-neutral-200 bg-white px-3 py-2 text-left text-xs font-extrabold text-neutral-800 hover:border-indigo-300"
+                                                className={`${styles.productLink} block px-3 py-2 text-left text-xs font-extrabold text-neutral-800`}
                                             >
                                                 {product.name}
                                             </Link>
@@ -268,26 +304,26 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         ))}
                         {loading && (
                             <div className="text-left">
-                                <div className="inline-block max-w-[90%] rounded-lg bg-white px-3 py-3 shadow-sm">
+                                <div className={`${styles.loadingBubble} inline-block max-w-[90%] border-2 px-3 py-3`}>
                                     <ChatThinkingProgress compact hasHistory={messages.length > 1} />
                                 </div>
                             </div>
                         )}
                         <div aria-hidden="true" className="h-px" />
                     </div>
-                    <form onSubmit={submit} className="flex gap-2 border-t border-neutral-200 p-3">
+                    <form onSubmit={submit} className={`${styles.composer} flex gap-2 p-3`}>
                         <input
                             ref={inputRef}
                             value={input}
                             onChange={(event) => setInput(event.target.value)}
-                            className="input h-10 flex-1"
+                            className={`${styles.input} h-10 flex-1 px-3`}
                             placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "증상, 생활 질문, 상품 고민을 입력"}
                             aria-label="채팅 질문"
                         />
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex h-10 w-10 items-center justify-center rounded-md bg-neutral-950 text-white disabled:opacity-50"
+                            className={`${styles.sendButton} flex h-10 w-10 items-center justify-center disabled:opacity-50`}
                             aria-label="전송"
                         >
                             <i className="fa-solid fa-paper-plane text-xs" />
@@ -300,9 +336,10 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 ref={triggerRef}
                 type="button"
                 onClick={() => setOpen((value) => !value)}
-                className={`flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl transition hover:bg-indigo-700 ${
+                className={`${styles.trigger} flex h-14 w-14 items-center justify-center rounded-full text-white ${
                     hideTrigger ? "invisible pointer-events-none opacity-0" : "visible opacity-100"
                 }`}
+                data-chat-open={open ? "true" : "false"}
                 data-pet-guide-target="chatbot"
                 data-mobile-chat-trigger
                 aria-expanded={open}

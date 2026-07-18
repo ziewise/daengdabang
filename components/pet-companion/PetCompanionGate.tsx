@@ -4,6 +4,10 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
+import {
+    CHAT_WIDGET_VISIBILITY_EVENT,
+    type ChatWidgetVisibilityDetail,
+} from "@/lib/chat-widget-events";
 import { useStore } from "@/lib/store";
 import {
     PET_COMPANION_OPEN_EVENT,
@@ -50,6 +54,7 @@ export default function PetCompanionGate() {
     const [productRecommendationActive, setProductRecommendationActive] = useState(false);
     const [homeTransition, setHomeTransition] = useState<"entering" | "leaving" | null>(null);
     const [buybar, setBuybar] = useState(false);
+    const [chatWidgetOpen, setChatWidgetOpen] = useState(false);
     const mobileFloating = useMobileFloatingVisibility();
     const panelOpenRef = useRef(false);
     const productRecommendationActiveRef = useRef(false);
@@ -58,7 +63,9 @@ export default function PetCompanionGate() {
     const settingsLaunchRef = useRef<HTMLButtonElement>(null);
     const heroActive = isHeroRoute(pathname);
     const heroAtTop = heroActive && mobileFloating.isAtPageTop;
-    const floatingControlsHidden = mobileFloating.hidden || panelOpen || heroAtTop;
+    const hideAtHeroTop = heroAtTop && !mobileFloating.isMobile;
+    const chatWidgetBlocksControls = chatWidgetOpen && mobileFloating.isMobile;
+    const floatingControlsHidden = mobileFloating.hidden || panelOpen || chatWidgetBlocksControls || hideAtHeroTop;
     const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
     const heroVisualScopeRef = useRef<string | null>(null);
@@ -84,6 +91,15 @@ export default function PetCompanionGate() {
         const onBuybar = (event: Event) => setBuybar(Boolean((event as CustomEvent).detail));
         window.addEventListener("ddb:buybar", onBuybar);
         return () => window.removeEventListener("ddb:buybar", onBuybar);
+    }, []);
+
+    useEffect(() => {
+        const onChatVisibility = (event: Event) => {
+            const detail = (event as CustomEvent<ChatWidgetVisibilityDetail>).detail;
+            setChatWidgetOpen(Boolean(detail?.open));
+        };
+        window.addEventListener(CHAT_WIDGET_VISIBILITY_EVENT, onChatVisibility);
+        return () => window.removeEventListener(CHAT_WIDGET_VISIBILITY_EVENT, onChatVisibility);
     }, []);
 
     useEffect(() => {

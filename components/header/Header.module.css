@@ -1,0 +1,113 @@
+.desktopNavItem {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    transform-origin: 50% 72%;
+}
+
+.desktopNavItem::before,
+.desktopNavItem::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 얇게 여러 번 덧칠한 크레파스 종이결 */
+.desktopNavItem::before {
+    inset: 7px 7px 5px;
+    border-radius: 48% 54% 46% 57%;
+    background:
+        repeating-linear-gradient(-7deg, transparent 0 3px, rgba(244, 201, 93, 0.2) 3px 6px),
+        repeating-linear-gradient(8deg, transparent 0 5px, rgba(242, 139, 114, 0.12) 5px 8px);
+    clip-path: polygon(2% 28%, 18% 17%, 34% 24%, 52% 12%, 70% 23%, 97% 15%, 94% 78%, 75% 86%, 52% 76%, 31% 89%, 5% 75%);
+}
+
+/* 손으로 두 번 그은 듯한 컬러 스케치 밑줄 */
+.desktopNavItem::after {
+    right: 11px;
+    bottom: 3px;
+    left: 11px;
+    height: 8px;
+    border-radius: 45% 58% 42% 52%;
+    background:
+        linear-gradient(177deg, transparent 0 34%, rgba(38, 152, 199, 0.88) 36% 54%, transparent 57%),
+        repeating-linear-gradient(96deg, rgba(91, 91, 214, 0.82) 0 8px, rgba(242, 139, 114, 0.72) 8px 13px, transparent 13px 15px);
+    clip-path: inset(0 100% 0 0);
+}
+
+.desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"]) {
+    color: var(--color-aurora-indigo, #5b5bd6);
+    text-shadow:
+        0.45px 0 rgba(38, 152, 199, 0.52),
+        -0.35px 0.25px rgba(242, 139, 114, 0.42);
+    animation: navCrayonWiggle 1.25s steps(3, end) infinite;
+}
+
+.desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::before {
+    animation: navCrayonPaper 1.45s steps(4, end) infinite;
+}
+
+.desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::after {
+    animation:
+        navCrayonDraw 380ms steps(6, end) forwards,
+        navCrayonStrokeWiggle 1.15s steps(3, end) 380ms infinite;
+}
+
+.desktopNavItem:focus-visible {
+    outline: 2px dashed rgba(91, 91, 214, 0.62);
+    outline-offset: 2px;
+}
+
+@keyframes navCrayonDraw {
+    0% {
+        opacity: 0.25;
+        clip-path: inset(0 100% 0 0);
+        transform: translateY(1px) rotate(-1.1deg);
+    }
+    58% {
+        opacity: 0.9;
+        clip-path: inset(0 20% 0 0);
+        transform: translateY(0) rotate(0.6deg);
+    }
+    100% {
+        opacity: 1;
+        clip-path: inset(0);
+        transform: translateY(0.5px) rotate(-0.35deg);
+    }
+}
+
+@keyframes navCrayonStrokeWiggle {
+    0%, 100% { transform: translate(0, 0.5px) rotate(-0.35deg) scaleX(1); }
+    34% { transform: translate(0.35px, 0) rotate(0.2deg) scaleX(0.992); }
+    67% { transform: translate(-0.3px, 0.8px) rotate(-0.55deg) scaleX(1.006); }
+}
+
+@keyframes navCrayonPaper {
+    0%, 100% { opacity: 0.58; transform: rotate(-0.25deg) scale(1); }
+    25% { opacity: 0.72; transform: translate(0.25px, -0.2px) rotate(0.2deg) scale(1.006); }
+    50% { opacity: 0.64; transform: translate(-0.3px, 0.25px) rotate(-0.15deg) scale(0.996); }
+    75% { opacity: 0.7; transform: translate(0.15px, 0.2px) rotate(0.3deg) scale(1.003); }
+}
+
+@keyframes navCrayonWiggle {
+    0%, 100% { transform: translate(0, 0) rotate(0); }
+    33% { transform: translate(0.35px, -0.25px) rotate(0.12deg); }
+    66% { transform: translate(-0.3px, 0.2px) rotate(-0.1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"]),
+    .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::before,
+    .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::after {
+        animation: none;
+        transform: none;
+    }
+
+    .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::before,
+    .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::after {
+        opacity: 0.68;
+        clip-path: inset(0);
+    }
+}

@@ -25,6 +25,7 @@ import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import { useI18n } from "@/lib/i18n";
+import headerStyles from "./Header.module.css";
 
 type DropKey = "category" | "brand" | "promo" | "ai" | "cs" | null;
 
@@ -42,10 +43,10 @@ export default function Header() {
     return (
         <>
             <header className="fixed inset-x-0 top-0 z-[1000] h-[var(--header-height)] backdrop-blur-xl bg-white/65 border-b border-white/60">
-                <div className="max-w-[1400px] h-full mx-auto px-6 flex items-center justify-between gap-6">
+                <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-1 px-2 min-[360px]:gap-1.5 sm:gap-6 sm:px-6">
 
                     {/* 로고 */}
-                    <BrandLogo />
+                    <BrandLogo mobileEmphasis />
 
                     {/* 데스크탑 메인 nav (md+ 만 노출) */}
                     <nav className="hidden lg:flex items-center gap-1">
@@ -184,7 +185,7 @@ export default function Header() {
                     {/* 우측 유틸리티
                         모바일(<lg): 햄버거만 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         데스크탑(lg+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2">
                         {/* 유틸 순서: 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
@@ -269,7 +270,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     return (
         <Link
             href={href}
-            className="px-4 py-2 text-base font-bold text-foreground hover:text-aurora-indigo transition rounded-lg"
+            className={`${headerStyles.desktopNavItem} rounded-lg px-4 py-2 text-base font-bold text-foreground transition`}
         >
             {children}
         </Link>
@@ -303,7 +304,8 @@ function NavDropdown({
         >
             <button
                 type="button"
-                className="rounded-lg px-4 py-2 text-base font-bold text-foreground transition hover:text-aurora-indigo"
+                className={`${headerStyles.desktopNavItem} rounded-lg px-4 py-2 text-base font-bold text-foreground transition`}
+                data-nav-open={open ? "true" : "false"}
             >
                 {label}
             </button>

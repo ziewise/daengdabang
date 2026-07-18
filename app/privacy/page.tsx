@@ -23,7 +23,7 @@ const toc = [
     ["officer", "제10조 개인정보 보호책임자 및 담당부서"],
     ["cookies", "제11조 자동 수집 장치의 운영 및 거부"],
     ["behavior", "제12조 행태정보와 맞춤형 광고"],
-    ["automation", "제13조 자동 분석 및 자동화된 결정"],
+    ["automation", "제13조 AI 분석 및 자동화된 결정"],
     ["security", "제14조 안전성 확보조치"],
     ["remedy", "제15조 개인정보침해 상담 및 신고"],
     ["notice", "제16조 변경에 따른 공지"],
@@ -163,7 +163,7 @@ export default function PrivacyPage() {
             <p className="text-sm font-black text-indigo-700">Privacy</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">개인정보처리방침</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                {BUSINESS_INFO.companyName}은 개인정보 보호법 및 관계 법령이 정한 바를 준수하며, 적법하게
+                {BUSINESS_INFO.companyName}(이하 “포엔치”)는 개인정보 보호법 및 관계 법령이 정한 바를 준수하며, 적법하게
                 개인정보를 처리하고 안전하게 관리하고 있습니다. 이에 개인정보 보호법 제30조에 따라 정보주체에게
                 개인정보의 처리와 보호에 관한 절차 및 기준을 안내하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수
                 있도록 다음과 같이 개인정보처리방침을 수립·공개합니다. 시행일: {PRIVACY_UPDATED_AT}.
@@ -182,11 +182,26 @@ export default function PrivacyPage() {
 
             <section id="purpose" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제1조 개인정보의 처리목적 및 수집 항목</h2>
-                <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 쇼핑몰 서비스 제공, 회원 가입 및 관리, 물품 주문·배송, 본인인증,
-                    연령인증, 요금결제·정산, 서비스 제공, 콘텐츠 제공, 고객상담, 맞춤형 추천서비스 제공, 이벤트 및
-                    마케팅 안내, 서비스 분석 및 개선, 서비스 개발을 위해 필요한 범위에서 개인정보를 처리합니다.
-                </p>
+                <div className="mt-2 grid gap-2 text-sm font-bold leading-7 text-neutral-600">
+                    <p className="grid grid-cols-[2rem_1fr] gap-1" data-legal-marker="clause">
+                        <span className="font-black text-indigo-700">
+                            <span aria-hidden="true">①</span>
+                            <span className="sr-only">제1항</span>
+                        </span>
+                        <span>
+                            {BUSINESS_INFO.companyName}는 쇼핑몰 서비스 제공, 회원 가입 및 관리, 물품 주문·배송, 본인인증,
+                            연령인증, 요금결제·정산, 서비스 제공, 콘텐츠 제공, 고객상담, 맞춤형 추천서비스 제공, 이벤트 및
+                            마케팅 안내, 서비스 분석 및 개선, 서비스 개발을 위해 필요한 범위에서 개인정보를 처리합니다.
+                        </span>
+                    </p>
+                    <p className="grid grid-cols-[2rem_1fr] gap-1" data-legal-marker="clause">
+                        <span className="font-black text-indigo-700">
+                            <span aria-hidden="true">②</span>
+                            <span className="sr-only">제2항</span>
+                        </span>
+                        <span>계약 이행에 필요한 항목과 별도 동의가 필요한 항목을 구분하여 관리합니다.</span>
+                    </p>
+                </div>
                 <h3 className="mt-6 text-base font-black text-neutral-950">1. 정보주체의 동의 없이 처리하는 항목</h3>
                 <DataTable headers={["구분", "처리 항목", "처리 목적", "보유 및 이용기간"]} rows={noConsentRows} />
                 <h3 className="mt-6 text-base font-black text-neutral-950">2. 정보주체의 동의를 받아 처리하는 항목</h3>
@@ -196,7 +211,7 @@ export default function PrivacyPage() {
             <section id="children" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제2조 만 14세 미만 아동의 개인정보</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 원칙적으로 만 14세 미만 아동을 대상으로 회원가입을 제공하지
+                    {BUSINESS_INFO.companyName}는 원칙적으로 만 14세 미만 아동을 대상으로 회원가입을 제공하지
                     않습니다. 향후 만 14세 미만 아동의 개인정보 처리가 필요한 기능을 제공하는 경우 법정대리인의 동의를
                     확인하고, 법정대리인의 열람·정정·삭제·처리정지 요구 절차를 별도로 안내합니다.
                 </p>
@@ -210,7 +225,7 @@ export default function PrivacyPage() {
                     또는 소각 등 이에 준하는 방법으로 파기합니다. 관계 법령에 따라 일정 기간 보존해야 하는 정보는 해당
                     기간 동안 다른 개인정보와 분리하여 보관합니다.
                 </p>
-                <ul className="mt-3 grid gap-2 text-sm font-bold leading-7 text-neutral-600">
+                <ul className="mt-3 grid list-disc gap-2 pl-6 text-sm font-bold leading-7 text-neutral-600">
                     <li>계약 또는 청약철회 등에 관한 기록: 5년</li>
                     <li>대금결제 및 재화 등의 공급에 관한 기록: 5년</li>
                     <li>소비자 불만 또는 분쟁처리에 관한 기록: 3년</li>
@@ -221,7 +236,7 @@ export default function PrivacyPage() {
             <section id="outsourcing" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제4조 개인정보 처리위탁</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 서비스 제공을 위해 필요한 일부 업무를 외부 전문업체에 위탁할 수
+                    {BUSINESS_INFO.companyName}는 서비스 제공을 위해 필요한 일부 업무를 외부 전문업체에 위탁할 수
                     있습니다. 위탁계약 체결 시 개인정보 보호법에 따라 개인정보가 안전하게 관리될 수 있도록 위탁업무
                     수행 목적 외 처리 금지, 안전성 확보조치, 재위탁 제한, 수탁자 관리·감독, 손해배상 등 책임에 관한
                     사항을 문서에 반영합니다. 실제 운영 연동이 확정된 수탁자는 본 표에 즉시 반영합니다.
@@ -232,7 +247,7 @@ export default function PrivacyPage() {
             <section id="third-party" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제5조 개인정보 제3자 제공</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 이용자의 사전 동의가 있거나 법률에 특별한 규정이 있는 경우를
+                    {BUSINESS_INFO.companyName}는 이용자의 사전 동의가 있거나 법률에 특별한 규정이 있는 경우를
                     제외하고 개인정보를 제3자에게 제공하지 않습니다. 제3자 제공이 필요한 제휴, 이벤트, 보험·A/S 등
                     기능을 운영하는 경우 제공받는 자, 제공 목적, 제공 항목, 보유 및 이용기간, 동의 거부권을 별도 화면과
                     본 방침에 고지합니다.
@@ -242,7 +257,7 @@ export default function PrivacyPage() {
             <section id="overseas" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제6조 개인정보 국외이전</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    현재 {BUSINESS_INFO.companyName}은 이용자 개인정보를 상시적으로 국외 이전하지 않습니다. 다만
+                    현재 {BUSINESS_INFO.companyName}는 이용자 개인정보를 상시적으로 국외 이전하지 않습니다. 다만
                     글로벌 클라우드, 보안, 이미지 자동 분석 등 국외 이전이 필요한 기능을 운영 환경에 연결하는 경우
                     이전받는 자, 이전 국가, 이전 항목, 이전 일시·방법, 이용 목적, 보유기간, 이전 거부 방법을 별도
                     고지하고 필요한 동의를 받습니다.
@@ -262,7 +277,7 @@ export default function PrivacyPage() {
             <section id="sensitive" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제8조 반려견 사진·건강정보 등 민감 가능 정보</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 사람의 민감정보를 의도적으로 수집하지 않습니다. 다만 반려견
+                    {BUSINESS_INFO.companyName}는 사람의 민감정보를 의도적으로 수집하지 않습니다. 다만 반려견
                     사진에는 보호자 얼굴, 거주지, 위치 단서가 포함될 수 있고, 반려견 건강 메모에는 질병·복약 등 민감하게
                     느껴질 수 있는 내용이 포함될 수 있습니다. 이용자는 업로드 전 불필요한 배경이나 사람 얼굴을 제외할 수
                     있으며, 업로드한 사진과 프로필 정보는 마이페이지 또는 고객센터를 통해 삭제를 요청할 수 있습니다.
@@ -272,9 +287,9 @@ export default function PrivacyPage() {
             <section id="rights" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제9조 정보주체 및 법정대리인의 권리</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    정보주체는 {BUSINESS_INFO.companyName}에 대해 개인정보 열람, 정정·삭제, 처리정지, 동의 철회를
+                    이용자는 언제든지 {BUSINESS_INFO.companyName}에 대해 개인정보 열람, 정정·삭제, 처리정지, 동의 철회를
                     요구할 수 있습니다. 회원정보와 반려견 프로필은 서비스 화면에서 직접 수정하거나 삭제할 수 있고, 직접
-                    처리하기 어려운 경우 고객센터로 요청할 수 있습니다. {BUSINESS_INFO.companyName}은 본인 확인 후
+                    처리하기 어려운 경우 고객센터로 요청할 수 있습니다. {BUSINESS_INFO.companyName}는 본인 확인 후
                     지체 없이 조치하며, 법령상 보존이 필요한 정보는 처리정지 또는 분리보관 방식으로 관리합니다.
                 </p>
             </section>
@@ -298,7 +313,7 @@ export default function PrivacyPage() {
             <section id="cookies" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제11조 자동 수집 장치의 운영 및 거부</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 로그인 상태 유지, 장바구니, 보안, 서비스 이용 통계 등을 위해 쿠키와
+                    {BUSINESS_INFO.companyName}는 로그인 상태 유지, 장바구니, 보안, 서비스 이용 통계 등을 위해 쿠키와
                     유사 기술을 사용할 수 있습니다. 이용자는 브라우저 설정에서 쿠키 저장을 거부하거나 삭제할 수
                     있습니다. 다만 쿠키를 차단하면 로그인, 장바구니, 맞춤 추천 등 일부 기능이 정상적으로 작동하지 않을 수
                     있습니다.
@@ -316,7 +331,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="automation" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">제13조 자동 분석 및 자동화된 결정</h2>
+                <h2 className="text-lg font-black text-neutral-950">제13조 AI 분석 및 자동화된 결정</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
                     PetLens의 반려견 사진 분석, 견종·체형 추정, 상품 추천은 자동화된 분석 결과를 포함할 수 있습니다.
                     이 결과는 쇼핑 편의를 위한 참고 정보이며, 이용자에게 법적 효과나 중대한 영향을 미치는 결정을
@@ -328,7 +343,7 @@ export default function PrivacyPage() {
             <section id="security" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제14조 개인정보의 안전성 확보조치</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {BUSINESS_INFO.companyName}은 개인정보 보호를 위해 접근권한 최소화, 관리자 인증 관리, 전송구간
+                    {BUSINESS_INFO.companyName}는 개인정보 보호를 위해 접근권한 최소화, 관리자 인증 관리, 전송구간
                     암호화, 비밀번호 단방향 암호화, 접속기록 보관, 보안 업데이트, 위탁업체 관리·감독, 사고 대응 절차를
                     운영합니다. 개인정보를 처리하는 임직원과 협력업체에는 필요한 범위의 접근권한만 부여합니다.
                 </p>
