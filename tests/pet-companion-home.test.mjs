@@ -80,6 +80,10 @@ test("the navigator explains the home and settings controls without outranking p
     assert.match(layer, /bypassRouteCooldownForId: detail\?\.force \? detail\.id : undefined/);
     assert.match(layer, /scheduleSettledGuide\(previewMode \? 450 : 700\)/);
     assert.match(layer, /scheduleSettledGuide\(previewMode \? 350 : 500\)/);
+    assert.match(layer, /petGuideTargetIsVisible\(prompt\.target, prompt\.id\)/);
+    assert.match(layer, /mutation\.type === "attributes"/);
+    assert.match(layer, /attributeFilter: \["aria-hidden", "inert", "data-mobile-hidden", "hidden", "class", "style"\]/);
+    assert.match(layer, /targetRetryCount = 0;[\s\S]{0,80}scheduleSettledGuide\(previewMode \? 450 : 750\)/);
     assert.match(layer, /window\.dispatchEvent\(new Event\(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT\)\)/);
     assert.match(layer, /\(\) => dismissGuide\(guideRun\),[\s\S]{0,40}6800/);
     assert.match(chatEvents, /CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT = "ddb:reveal-chat-widget-for-navigator"/);

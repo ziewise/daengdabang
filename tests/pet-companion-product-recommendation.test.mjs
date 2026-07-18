@@ -37,12 +37,12 @@ test("products search requests an immediate companion recommendation", async () 
 test("companion recommendation layer allows search focus without becoming spammy", async () => {
     const source = await readSource("components/pet-companion/PetCompanionLayer.tsx");
 
-    assert.match(source, /RECOMMENDATION_SESSION_KEY = "ddb\.petCompanion\.recommendationShown\.v4"/);
-    assert.match(source, /MAX_RECOMMENDATIONS_PER_SESSION = 6/);
-    assert.match(source, /MAX_RECOMMENDATIONS_PER_MOUNT = 8/);
+    assert.doesNotMatch(source, /RECOMMENDATION_SESSION_KEY|MAX_RECOMMENDATIONS_PER_SESSION|MAX_RECOMMENDATIONS_PER_MOUNT/);
     assert.match(source, /MIN_NAVIGATOR_PROMPT_GAP_MS = 8_000/);
     assert.match(source, /lastNavigatorPromptAtRef/);
-    assert.match(source, /recommendationShownCountThisSession/);
+    assert.match(source, /recommendedProductKeysRef/);
+    assert.match(source, /waiting:new-product/);
+    assert.doesNotMatch(source, /blocked:automatic-cap|blocked:mount-cap/);
     assert.match(source, /hasVisibleProductSurface/);
     assert.doesNotMatch(source, /blocked:product-surface/);
     assert.doesNotMatch(source, /automaticRecommendationAvailable/);
@@ -57,14 +57,14 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /window\.addEventListener\("scroll", onScroll, \{ passive: true \}\)/);
     assert.match(source, /scheduleAutomaticRecommendation\(1250\)/);
     assert.match(source, /showRecommendation\(\{ force: true \}\)/);
-    assert.match(source, /!force && automaticCapReached/);
     assert.match(source, /!force && navigatorGapRemaining > 0/);
     assert.match(source, /lastNavigatorPromptAtRef\.current = performance\.now\(\)/);
     assert.doesNotMatch(source, /if \(!force\) lastNavigatorPromptAtRef\.current/);
     assert.match(source, /petGuideStatus = "blocked:navigator-gap"/);
     assert.match(source, /petRecommendationStatus = "blocked:navigator-gap"/);
     assert.match(source, /Math\.max\(delay, initialDelay, gapDelay\)/);
-    assert.match(source, /mountCapReached \|\| \(!force && automaticCapReached\)/);
+    assert.match(source, /if \(!unseen\.length && !force\)/);
+    assert.match(source, /recommendedProductKeysRef\.current\.add\(selectedProductKey\)/);
     assert.match(source, /if \(promptOpenRef\.current \|\| guideInFlightRef\.current\)/);
     assert.match(source, /force \? 900 : 1800/);
     assert.match(source, /const firstGuideAt = performance\.now\(\) \+ \(previewMode \? 1200 : 1800\)/);

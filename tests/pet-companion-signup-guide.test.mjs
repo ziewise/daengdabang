@@ -35,15 +35,14 @@ test("signup guide has a dedicated field-by-field sequence", async () => {
     assert.match(source, /필수 약관과 개인정보 동의/);
 });
 
-test("companion navigator uses the refreshed, more frequent guidance budget", async () => {
+test("companion navigator keeps guiding long shopping sessions without a hard stop", async () => {
     const source = await readSource("lib/pet-companion-guide.ts");
 
-    assert.match(source, /const SESSION_KEY = "ddb\.petGuide\.session\.v8"/);
-    assert.match(source, /const DAILY_KEY = "ddb\.petGuide\.daily\.v8"/);
-    assert.match(source, /const SESSION_LIMIT = 20/);
-    assert.match(source, /const DAILY_LIMIT = 40/);
+    assert.match(source, /const SESSION_KEY = "ddb\.petGuide\.session\.v9"/);
+    assert.doesNotMatch(source, /SESSION_LIMIT|DAILY_LIMIT|DAILY_KEY/);
     assert.match(source, /const AUTO_GUIDE_GAP_MS = 6_000/);
     assert.match(source, /const ROUTE_GUIDE_COOLDOWN_MS = 2 \* 60_000/);
+    assert.match(source, /Date\.now\(\) - memoryLastShownAt >= AUTO_GUIDE_GAP_MS/);
 });
 
 test("signup page exposes guide targets for confusing form sections", async () => {

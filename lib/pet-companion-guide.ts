@@ -25,16 +25,15 @@ export type PetGuidePrompt = {
     placement?: "header" | "content";
 };
 
-// v8 starts a fresh guidance history with the interactive navigator targets. Old v7
-// records could otherwise keep an already exhausted session or day suppressed.
-const SESSION_KEY = "ddb.petGuide.session.v8";
-const DAILY_KEY = "ddb.petGuide.daily.v8";
+// v9 removes the old lifetime session/day caps. Those caps could permanently
+// silence the desktop navigator during a long shopping tab while another device
+// continued normally. Route cooldowns and the global prompt gap still prevent
+// repetitive guidance.
+const SESSION_KEY = "ddb.petGuide.session.v9";
 
 // Guidance should stay useful throughout a shopping session without becoming a
-// repetitive pop-up. The v8 state replaces the old three-prompt hard stop with
-// a short global gap plus a route-and-target cooldown.
-const SESSION_LIMIT = 20;
-const DAILY_LIMIT = 40;
+// repetitive pop-up. A short global gap plus a route-and-target cooldown controls
+// frequency without ever turning the navigator off for the rest of the tab.
 const AUTO_GUIDE_GAP_MS = 6_000;
 const ROUTE_GUIDE_COOLDOWN_MS = 2 * 60_000;
 const HISTORY_RETENTION_MS = 24 * 60 * 60_000;
@@ -46,14 +45,8 @@ type GuideHistoryEntry = {
 };
 
 type SessionState = {
-    count: number;
     lastShownAt: number;
     history: GuideHistoryEntry[];
-};
-
-type DailyState = {
-    date: string;
-    count: number;
 };
 
 const MEMBER_GUIDE_ORDER: PetGuideId[] = ["try-on", "color", "product-actions", "chatbot", "settings", "home", "pet-lens", "signup"];
@@ -72,15 +65,8 @@ const ALL_GUIDE_IDS = new Set<PetGuideId>([
     ...GUEST_GUIDE_ORDER,
     ...SIGNUP_GUIDE_ORDER,
 ]);
-let memorySessionCount = 0;
 let memoryLastShownAt = 0;
 let memoryHistory: GuideHistoryEntry[] = [];
-let memoryDailyState: DailyState = { date: todayKey(), count: 0 };
-
-function todayKey() {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
 
 function normalizeCount(value: unknown) {
     return typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0;
@@ -126,70 +112,38 @@ function mergeHistory(...sources: GuideHistoryEntry[][]) {
 }
 
 function readSession(): SessionState {
-    if (typeof window === "undefined") return { count: 0, lastShownAt: 0, history: [] };
+    if (typeof window === "undefined") return { lastShownAt: 0, history: [] };
     try {
         const parsed: unknown = JSON.parse(window.sessionStorage.getItem(SESSION_KEY) || "null");
-        if (!parsed || typeof parsed !== "object") return { count: 0, lastShownAt: 0, history: [] };
+        if (!parsed || typeof parsed !== "object") return { lastShownAt: 0, history: [] };
         const value = parsed as Partial<SessionState>;
         return {
-            count: normalizeCount(value.count),
             lastShownAt: normalizeTimestamp(value.lastShownAt),
             history: normalizeHistory(value.history),
         };
     } catch {
-        return { count: 0, lastShownAt: 0, history: [] };
+        return { lastShownAt: 0, history: [] };
     }
 }
 
-function readDaily(): DailyState {
-    const date = todayKey();
-    if (typeof window === "undefined") return { date, count: 0 };
-    try {
-        const parsed: unknown = JSON.parse(window.localStorage.getItem(DAILY_KEY) || "null");
-        if (!parsed || typeof parsed !== "object") return { date, count: 0 };
-        const value = parsed as Partial<DailyState>;
-        if (value.date !== date) return { date, count: 0 };
-        return { date, count: normalizeCount(value.count) };
-    } catch {
-        return { date, count: 0 };
-    }
-}
-
-export function petGuideHasBudget({
-    bypass = false,
-    ignoreGap = false,
-}: {
-    bypass?: boolean;
-    ignoreGap?: boolean;
-} = {}) {
-    if (bypass) return true;
+export function petGuideHasBudget() {
     const session = readSession();
-    const daily = readDaily();
-    memorySessionCount = Math.max(memorySessionCount, session.count);
     memoryLastShownAt = Math.max(memoryLastShownAt, session.lastShownAt);
     memoryHistory = mergeHistory(memoryHistory, session.history);
-    if (memoryDailyState.date !== daily.date) memoryDailyState = { date: daily.date, count: 0 };
-    memoryDailyState.count = Math.max(memoryDailyState.count, daily.count);
-    if (memorySessionCount >= SESSION_LIMIT || memoryDailyState.count >= DAILY_LIMIT) return false;
-    return ignoreGap || Date.now() - memoryLastShownAt >= AUTO_GUIDE_GAP_MS;
+    return Date.now() - memoryLastShownAt >= AUTO_GUIDE_GAP_MS;
 }
 
 export function markPetGuideShown(id: PetGuideId) {
     if (typeof window === "undefined") return;
     const session = readSession();
-    const daily = readDaily();
     const shownAt = Date.now();
     const history = mergeHistory(memoryHistory, session.history).filter((entry) => (
         entry.route !== currentRoute() || entry.id !== id
     ));
     history.push({ route: currentRoute(), id, shownAt });
     memoryHistory = history;
-    memorySessionCount = Math.max(memorySessionCount, session.count) + 1;
     memoryLastShownAt = shownAt;
-    if (memoryDailyState.date !== daily.date) memoryDailyState = { date: daily.date, count: 0 };
-    memoryDailyState.count = Math.max(memoryDailyState.count, daily.count) + 1;
     const nextSession: SessionState = {
-        count: memorySessionCount,
         lastShownAt: shownAt,
         history,
     };
@@ -198,11 +152,6 @@ export function markPetGuideShown(id: PetGuideId) {
     } catch {
         // Storage can be unavailable in strict privacy modes; the in-memory prompt
         // state still prevents overlapping guidance for the current mount.
-    }
-    try {
-        window.localStorage.setItem(DAILY_KEY, JSON.stringify(memoryDailyState));
-    } catch {
-        // The session and in-memory budgets still apply when localStorage is blocked.
     }
 }
 
@@ -237,6 +186,20 @@ function targetAndAncestorsAreVisible(target: HTMLElement) {
     return true;
 }
 
+export function petGuideTargetIsVisible(target: HTMLElement, id: PetGuideId) {
+    if (target.getAttribute("aria-expanded") === "true") return false;
+    if (!targetAndAncestorsAreVisible(target) || target.getClientRects().length === 0) return false;
+    const rect = target.getBoundingClientRect();
+    const minimumBottom = id === "signup" || id === "pet-lens" ? 8 : 84;
+    return rect.width >= 24
+        && rect.height >= 24
+        && rect.bottom > minimumBottom
+        && rect.top < window.innerHeight - 24
+        && rect.right > 8
+        && rect.left < window.innerWidth - 8
+        && targetIsHitTestVisible(target, rect);
+}
+
 function targetIsHitTestVisible(target: HTMLElement, rect: DOMRect) {
     const points = [
         [rect.left + rect.width / 2, rect.top + rect.height / 2],
@@ -265,19 +228,7 @@ function visibleTarget(id: PetGuideId) {
         // id (for example a signup button beside try-on) instead of forcing
         // the dog back to the fixed header.
         .filter((target) => window.scrollY <= 160 || !target.closest("header"));
-    return targets.find((target) => {
-        if (target.getAttribute("aria-expanded") === "true") return false;
-        if (!targetAndAncestorsAreVisible(target) || target.getClientRects().length === 0) return false;
-        const rect = target.getBoundingClientRect();
-        const minimumBottom = id === "signup" || id === "pet-lens" ? 8 : 84;
-        return rect.width >= 24
-            && rect.height >= 24
-            && rect.bottom > minimumBottom
-            && rect.top < window.innerHeight - 24
-            && rect.right > 8
-            && rect.left < window.innerWidth - 8
-            && targetIsHitTestVisible(target, rect);
-    }) || null;
+    return targets.find((target) => petGuideTargetIsVisible(target, id)) || null;
 }
 
 export function findPetGuidePrompt({
