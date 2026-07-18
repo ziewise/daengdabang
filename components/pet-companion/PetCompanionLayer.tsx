@@ -55,6 +55,7 @@ type Props = {
     visualCharacterId?: CompanionCharacterId;
     panelOpen: boolean;
     homeTransition?: "entering" | "leaving" | null;
+    onHomeRequest: () => void;
     onPanelOpenChange: (open: boolean) => void;
     onSettingsChange: (settings: PetCompanionSettings) => void;
 };
@@ -175,6 +176,7 @@ export default function PetCompanionLayer({
     visualCharacterId,
     panelOpen,
     homeTransition,
+    onHomeRequest,
     onPanelOpenChange,
     onSettingsChange,
 }: Props) {
@@ -186,18 +188,23 @@ export default function PetCompanionLayer({
     const [bubbleSide, setBubbleSide] = useState<"left" | "right">("right");
     const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
     const [guidePrompt, setGuidePrompt] = useState<PetGuidePrompt | null>(null);
+    const [quickActionsOpen, setQuickActionsOpen] = useState(false);
     const [saveStatus, setSaveStatus] = useState("");
     const [placementReady, setPlacementReady] = useState(false);
     const [entryPhase, setEntryPhase] = useState<"waiting" | "lens" | "handoff" | "ready">("waiting");
     const [entryPortal, setEntryPortal] = useState<EntryPortal | null>(null);
     const entryCloneRef = useRef<HTMLSpanElement>(null);
     const walkerRef = useRef<HTMLDivElement>(null);
+    const dogButtonRef = useRef<HTMLButtonElement>(null);
+    const quickActionsRef = useRef<HTMLElement>(null);
+    const quickHomeRef = useRef<HTMLButtonElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const guestSignupRef = useRef<HTMLAnchorElement>(null);
     const lastFocusRef = useRef<HTMLElement | null>(null);
     const recommendedProductKeysRef = useRef(new Set<string>());
     const lastNavigatorPromptAtRef = useRef(0);
     const promptOpenRef = useRef(false);
+    const quickActionsOpenRef = useRef(false);
     const guideInFlightRef = useRef(false);
     const guideRunRef = useRef(0);
     const guidePlacementRef = useRef<PetGuidePrompt["placement"]>("content");
@@ -236,6 +243,7 @@ export default function PetCompanionLayer({
         lastFocusRef.current = document.activeElement as HTMLElement | null;
         // Settings may have changed from another tab or a pet profile sync.
         setDraft(settings);
+        setQuickActionsOpen(false);
         // Opening settings always ends transient guidance instead of reviving it
         // later without an active dismiss timer.
         setGuidePrompt(null);
@@ -279,6 +287,41 @@ export default function PetCompanionLayer({
             lastFocusRef.current?.focus();
         };
     }, [panelOpen, settings, onPanelOpenChange]);
+
+    useEffect(() => {
+        if (!quickActionsOpen) return;
+        const previousOverflow = document.body.style.overflow;
+        const focusFrame = window.requestAnimationFrame(() => quickHomeRef.current?.focus());
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                setQuickActionsOpen(false);
+                window.requestAnimationFrame(() => dogButtonRef.current?.focus());
+                return;
+            }
+            if (event.key !== "Tab") return;
+            const focusable = Array.from(quickActionsRef.current?.querySelectorAll<HTMLElement>(
+                "button:not([disabled]), a[href]",
+            ) || []).filter((element) => element.offsetParent !== null);
+            if (!focusable.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        };
+        document.body.style.overflow = "hidden";
+        window.addEventListener("keydown", onKeyDown);
+        return () => {
+            window.cancelAnimationFrame(focusFrame);
+            window.removeEventListener("keydown", onKeyDown);
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [quickActionsOpen]);
 
     useEffect(() => {
         if (!guestSavePromptOpen) return;
@@ -1051,8 +1094,9 @@ export default function PetCompanionLayer({
     }, [homeTransition, panelOpen, placementReady, settings.enabled]);
 
     useEffect(() => {
-        promptOpenRef.current = Boolean(recommendation || guidePrompt);
-    }, [guidePrompt, recommendation]);
+        quickActionsOpenRef.current = quickActionsOpen;
+        promptOpenRef.current = Boolean(recommendation || guidePrompt || quickActionsOpen);
+    }, [guidePrompt, quickActionsOpen, recommendation]);
 
     useEffect(() => {
         homeTransitionRef.current = homeTransition;
@@ -1141,6 +1185,15 @@ export default function PetCompanionLayer({
             bypassRouteCooldownForId?: PetGuideId;
         } = {}) => {
             const walker = walkerRef.current;
+            if (quickActionsOpenRef.current) {
+                if (walker) walker.dataset.petGuideStatus = "blocked:quick-actions-open";
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showGuide({ force, onlyId, bypassRouteCooldownForId }),
+                    previewMode ? 500 : 1800,
+                );
+                return;
+            }
             if (
                 entryInProgressRef.current
                 || walker?.dataset.petEntryPhase === "lens"
@@ -1518,6 +1571,20 @@ export default function PetCompanionLayer({
         };
 
         const showRecommendation = ({ force = false }: { force?: boolean } = {}) => {
+            if (
+                quickActionsOpenRef.current
+                || document.querySelector("[data-pet-companion-quick-actions]")
+            ) {
+                if (walkerRef.current) {
+                    walkerRef.current.dataset.petRecommendationStatus = "blocked:quick-actions-open";
+                }
+                window.clearTimeout(retryTimer);
+                retryTimer = window.setTimeout(
+                    () => showRecommendation({ force }),
+                    force ? 900 : 1800,
+                );
+                return;
+            }
             const navigatorGapRemaining = navigatorPromptGapRemaining();
             if (!force && navigatorGapRemaining > 0) {
                 if (walkerRef.current) {
@@ -1853,14 +1920,61 @@ export default function PetCompanionLayer({
         window.setTimeout(() => onPanelOpenChange(false), 520);
     };
 
-    const closePrompt = () => {
+    const dismissTransientPrompt = (returnToRest: boolean) => {
+        const walker = walkerRef.current;
+        const paintedRect = walker?.getBoundingClientRect();
         promptOpenRef.current = false;
         guideInFlightRef.current = false;
+        recommendationInFlightRef.current = false;
         guideRunRef.current += 1;
         setGuidePrompt(null);
         setRecommendation(null);
         setMotion("idle");
-        moveCompanionToRest(walkerRef.current);
+        if (returnToRest) {
+            moveCompanionToRest(walker);
+        } else if (paintedRect?.width && paintedRect.height) {
+            window.dispatchEvent(new CustomEvent(MOVE_EVENT, {
+                detail: {
+                    x: paintedRect.left,
+                    y: paintedRect.top,
+                    motion: "idle",
+                    instant: true,
+                    manual: true,
+                    preserveFacing: true,
+                    allowHeader: true,
+                },
+            }));
+        }
+    };
+
+    const closePrompt = () => dismissTransientPrompt(true);
+
+    const openQuickActions = () => {
+        if (suppressClickRef.current) {
+            suppressClickRef.current = false;
+            return;
+        }
+        dismissTransientPrompt(false);
+        quickActionsOpenRef.current = true;
+        promptOpenRef.current = true;
+        setQuickActionsOpen(true);
+    };
+
+    const closeQuickActions = ({ restoreFocus = false } = {}) => {
+        quickActionsOpenRef.current = false;
+        promptOpenRef.current = false;
+        setQuickActionsOpen(false);
+        if (restoreFocus) window.requestAnimationFrame(() => dogButtonRef.current?.focus());
+    };
+
+    const sendCompanionHome = () => {
+        closeQuickActions();
+        onHomeRequest();
+    };
+
+    const openCompanionSettings = () => {
+        closeQuickActions();
+        onPanelOpenChange(true);
     };
 
     const activateGuideTarget = () => {
@@ -1957,6 +2071,8 @@ export default function PetCompanionLayer({
         preventDefault();
         if (!drag.moved) {
             drag.moved = true;
+            quickActionsOpenRef.current = false;
+            setQuickActionsOpen(false);
             cancelEntryRef.current();
             interactionEpochRef.current += 1;
             promptOpenRef.current = false;
@@ -2089,22 +2205,19 @@ export default function PetCompanionLayer({
                         </div>
                     )}
                     <button
+                        ref={dogButtonRef}
                         type="button"
                         className={styles.dogButton}
                         onPointerDown={beginCompanionDrag}
                         onPointerUp={endCompanionDrag}
                         onPointerCancel={endCompanionDrag}
                         onLostPointerCapture={endCompanionDrag}
-                        onClick={() => {
-                            if (suppressClickRef.current) {
-                                suppressClickRef.current = false;
-                                return;
-                            }
-                            closePrompt();
-                            onPanelOpenChange(true);
-                        }}
-                        aria-label={`${settings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 설정 열기`}
-                        title="드래그해서 옮기고, 클릭하면 설정이 열려요"
+                        onClick={openQuickActions}
+                        aria-label={`${settings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 빠른 메뉴 열기`}
+                        aria-haspopup="dialog"
+                        aria-expanded={quickActionsOpen}
+                        aria-controls="pet-companion-quick-actions"
+                        title="드래그해서 옮기고, 클릭하면 빠른 메뉴가 열려요"
                     >
                         <PetCompanionCharacter
                             breedId={displayBreedId}
@@ -2118,6 +2231,57 @@ export default function PetCompanionLayer({
                         />
                         <span className={styles.nameTag}>{settings.activePetName}</span>
                     </button>
+                </div>
+            )}
+
+            {quickActionsOpen && settings.enabled && !panelOpen && !homeTransition && (
+                <div
+                    className={styles.quickActionsBackdrop}
+                    data-pet-companion-dialog
+                    data-pet-companion-quick-actions
+                    onPointerDown={(event) => {
+                        if (event.target === event.currentTarget) closeQuickActions({ restoreFocus: true });
+                    }}
+                >
+                    <section
+                        ref={quickActionsRef}
+                        id="pet-companion-quick-actions"
+                        className={styles.quickActionsDialog}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="pet-companion-quick-actions-title"
+                    >
+                        <h2 id="pet-companion-quick-actions-title" className={styles.quickActionsTitle}>
+                            {settings.activePetName}에게 무엇을 할까요?
+                        </h2>
+                        <button
+                            type="button"
+                            className={styles.quickActionsClose}
+                            onClick={() => closeQuickActions({ restoreFocus: true })}
+                            aria-label="빠른 메뉴 닫기"
+                        >×</button>
+                        <div className={styles.quickActionsGrid}>
+                            <button
+                                ref={quickHomeRef}
+                                type="button"
+                                className={styles.quickActionButton}
+                                onClick={sendCompanionHome}
+                                data-pet-quick-action="home"
+                            >
+                                <span className={styles.quickActionIcon} aria-hidden="true">🏠</span>
+                                <span>집으로 보내기</span>
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.quickActionButton}
+                                onClick={openCompanionSettings}
+                                data-pet-quick-action="settings"
+                            >
+                                <span className={styles.quickActionIcon} aria-hidden="true">🐾</span>
+                                <span>설정하기</span>
+                            </button>
+                        </div>
+                    </section>
                 </div>
             )}
 

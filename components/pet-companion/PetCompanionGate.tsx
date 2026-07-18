@@ -392,6 +392,7 @@ export default function PetCompanionGate() {
                     visualCharacterId={guestVisual?.characterId}
                     panelOpen={panelOpen}
                     homeTransition={homeTransition}
+                    onHomeRequest={handleHomeToggle}
                     onPanelOpenChange={(open) => {
                         panelOpenRef.current = open;
                         setPanelOpen(open);

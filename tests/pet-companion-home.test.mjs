@@ -55,6 +55,39 @@ test("the companion home control hides and restores the dog without opening sett
     assert.doesNotMatch(css, /pet-home-bark-reminder 7\.2s/);
 });
 
+test("clicking the dog opens a compact home-or-settings dialog on desktop and mobile", async () => {
+    const [gate, layer, css] = await Promise.all([
+        readSource("components/pet-companion/PetCompanionGate.tsx"),
+        readSource("components/pet-companion/PetCompanionLayer.tsx"),
+        readSource("components/pet-companion/PetCompanionLayer.module.css"),
+    ]);
+
+    assert.match(gate, /onHomeRequest=\{handleHomeToggle\}/);
+    assert.match(layer, /const \[quickActionsOpen, setQuickActionsOpen\] = useState\(false\)/);
+    assert.match(layer, /onClick=\{openQuickActions\}/);
+    assert.match(layer, /dismissTransientPrompt\(false\)/);
+    assert.match(layer, /Boolean\(recommendation \|\| guidePrompt \|\| quickActionsOpen\)/);
+    assert.match(layer, /quickActionsOpenRef\.current = true;[\s\S]{0,80}promptOpenRef\.current = true/);
+    assert.match(layer, /blocked:quick-actions-open/);
+    assert.match(layer, /quickActionsOpenRef\.current[\s\S]{0,120}data-pet-companion-quick-actions/);
+    assert.match(layer, /data-pet-companion-quick-actions/);
+    assert.match(layer, /data-pet-companion-dialog/);
+    assert.match(layer, /role="dialog"[\s\S]{0,100}aria-modal="true"/);
+    assert.match(layer, /data-pet-quick-action="home"[\s\S]{0,180}집으로 보내기/);
+    assert.match(layer, /data-pet-quick-action="settings"[\s\S]{0,180}설정하기/);
+    assert.match(layer, /const sendCompanionHome = \(\) => \{[\s\S]{0,100}onHomeRequest\(\)/);
+    assert.match(layer, /if \(!drag\.moved\) \{[\s\S]{0,100}setQuickActionsOpen\(false\)/);
+    assert.match(layer, /클릭해서 빠른 메뉴 열기/);
+    assert.doesNotMatch(
+        layer.slice(layer.indexOf("ref={dogButtonRef}"), layer.indexOf("</button>", layer.indexOf("ref={dogButtonRef}"))),
+        /onPanelOpenChange\(true\)/,
+    );
+    assert.match(css, /\.quickActionsDialog \{[\s\S]*?width: min\(238px, calc\(100vw - 24px\)\)/);
+    assert.match(css, /@media \(max-width: 680px\) \{[\s\S]*?\.quickActionsDialog \{[\s\S]*?width: min\(252px, calc\(100vw - 24px\)\)/);
+    assert.match(css, /\.quickActionButton \{[\s\S]*?min-height: 60px/);
+    assert.match(css, /\.quickActionsClose \{[\s\S]*?width: 44px;[\s\S]*?height: 44px/);
+});
+
 test("the navigator explains the home and settings controls without outranking product guidance", async () => {
     const [guide, layer, dock, chatEvents] = await Promise.all([
         readSource("lib/pet-companion-guide.ts"),
