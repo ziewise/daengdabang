@@ -41,10 +41,22 @@ export default function ReturnPage() {
             <p className="text-sm font-black text-aurora-indigo">RETURN &amp; EXCHANGE</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-foreground">교환·반품 안내</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-500">
-                안심하고 쇼핑하실 수 있도록 교환·반품 기준을 안내드립니다. 신청은{" "}
-                <Link href="/inquiry" className="text-aurora-indigo hover:underline font-extrabold">1:1 문의</Link>
-                로 접수해 주세요.
+                안심하고 쇼핑하실 수 있도록 교환·반품 기준을 안내드립니다. 아래 버튼에서 바로 신청할 수 있습니다.
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                    href="/inquiry?category=exchange#inquiry-form"
+                    className="inline-flex min-h-10 items-center gap-2 rounded-full border border-aurora-indigo/20 bg-white/85 px-4 py-2 text-sm font-extrabold text-aurora-indigo shadow-sm transition hover:-translate-y-0.5 hover:border-aurora-indigo/40 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
+                >
+                    <i className="fa-solid fa-envelope" aria-hidden="true" /> 교환·반품 접수하기 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
+                </Link>
+                <Link
+                    href="/faq"
+                    className="inline-flex min-h-10 items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-4 py-2 text-sm font-extrabold text-neutral-700 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
+                >
+                    <i className="fa-solid fa-circle-question" aria-hidden="true" /> 자주 묻는 질문
+                </Link>
+            </div>
 
             <div className="mt-8 grid gap-5">
                 {sections.map((s) => (

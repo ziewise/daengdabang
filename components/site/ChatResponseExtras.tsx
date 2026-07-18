@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { ddbApiBase } from "@/lib/customer-api";
 import type { ShopChatCta, ShopChatMedical, ShopChatSource } from "@/lib/daengdabang-llm";
 
@@ -11,6 +12,7 @@ type ChatResponseExtrasProps = {
     onAsk: (prompt: string) => boolean | Promise<boolean>;
     compact?: boolean;
     followUpsEnabled?: boolean;
+    onInternalNavigate?: () => void;
 };
 
 type ChoiceViewGroup = {
@@ -640,6 +642,7 @@ export default function ChatResponseExtras({
     onAsk,
     compact = false,
     followUpsEnabled = true,
+    onInternalNavigate,
 }: ChatResponseExtrasProps) {
     const [vetSearch, setVetSearch] = useState<VetSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
@@ -695,23 +698,44 @@ export default function ChatResponseExtras({
         <>
             {ctas && ctas.length > 0 && (
                 <div className={`mt-2 ${widthClass} space-y-1.5`}>
-                    {ctas.slice(0, 3).map((cta) => (
-                        <button
-                            key={`${cta.kind}-${cta.label}`}
-                            type="button"
-                            onClick={() => void handleCta(cta)}
-                            disabled={cta.kind === "geo_vet_search" && vetSearch.status === "loading"}
-                            className="flex w-full items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-left text-xs font-black text-neutral-900 shadow-sm transition hover:border-indigo-400 hover:bg-indigo-50"
-                        >
-                            <i className={`fa-solid ${cta.icon || "fa-arrow-up-right-from-square"} text-indigo-600`} />
-                            <span className="min-w-0">
-                                <span className="block">{cta.label}</span>
-                                {cta.helperText ? (
-                                    <span className="mt-0.5 block text-[10px] font-bold leading-4 text-neutral-500">{cta.helperText}</span>
-                                ) : null}
-                            </span>
-                        </button>
-                    ))}
+                    {ctas.slice(0, 3).map((cta) => {
+                        const content = (
+                            <>
+                                <i className={`fa-solid ${cta.icon || "fa-arrow-up-right-from-square"} text-indigo-600`} aria-hidden="true" />
+                                <span className="min-w-0 flex-1">
+                                    <span className="block">{cta.label}</span>
+                                    {cta.helperText ? (
+                                        <span className="mt-0.5 block text-[10px] font-bold leading-4 text-neutral-500">{cta.helperText}</span>
+                                    ) : null}
+                                </span>
+                                {cta.kind === "internal_link" ? <i className="fa-solid fa-chevron-right text-[9px] text-indigo-500" aria-hidden="true" /> : null}
+                            </>
+                        );
+                        const className = "flex min-h-11 w-full items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-left text-xs font-black text-neutral-900 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500";
+                        if (cta.kind === "internal_link" && cta.url) {
+                            return (
+                                <Link
+                                    key={`${cta.kind}-${cta.label}`}
+                                    href={cta.url}
+                                    onClick={onInternalNavigate}
+                                    className={className}
+                                >
+                                    {content}
+                                </Link>
+                            );
+                        }
+                        return (
+                            <button
+                                key={`${cta.kind}-${cta.label}`}
+                                type="button"
+                                onClick={() => void handleCta(cta)}
+                                disabled={cta.kind === "geo_vet_search" && vetSearch.status === "loading"}
+                                className={className}
+                            >
+                                {content}
+                            </button>
+                        );
+                    })}
                     <VetSearchResults state={vetSearch} />
                 </div>
             )}

@@ -14,7 +14,7 @@ export const BUSINESS_INFO = {
     mailOrderNumber: process.env.NEXT_PUBLIC_DDB_MAIL_ORDER_NUMBER || "제2026-성남수정-0227호",
     address: process.env.NEXT_PUBLIC_DDB_BUSINESS_ADDRESS || "경기도 성남시 수정구 수정로 118, 3층 113호(수진동, 나눔빌딩)",
     customerServicePhone: process.env.NEXT_PUBLIC_DDB_CS_PHONE || "1800-2162",
-    customerServiceEmail: process.env.NEXT_PUBLIC_DDB_CS_EMAIL || "help@daengdabang.com",
+    customerServiceEmail: process.env.NEXT_PUBLIC_DDB_CS_EMAIL || "support@daengdabang.com",
     partnerEmail: process.env.NEXT_PUBLIC_DDB_PARTNER_EMAIL || "partner@daengdabang.com",
     privacyOfficer: process.env.NEXT_PUBLIC_DDB_PRIVACY_OFFICER || "박주연",
     hostingProvider: process.env.NEXT_PUBLIC_DDB_HOSTING_PROVIDER || "GitHub Pages",

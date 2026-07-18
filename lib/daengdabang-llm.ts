@@ -1,5 +1,6 @@
 import { CATALOG, applySort, searchCatalog, type CatalogProduct } from "@/lib/catalog";
 import { ddbApiBase } from "@/lib/customer-api";
+import { customerSupportInquiryHref, customerSupportRoute, type CustomerSupportRoute } from "@/lib/customer-support";
 import {
     getPetLensReviewOnlyBreedCandidate,
     isPetLensUnknownBreedAttributeCandidate,
@@ -523,7 +524,7 @@ export type ShopChatChoiceGroup = {
 };
 
 export type ShopChatCta = {
-    kind: "geo_vet_search" | "external_link" | "prompt";
+    kind: "geo_vet_search" | "external_link" | "internal_link" | "prompt";
     label: string;
     url?: string;
     query?: string;
@@ -1011,13 +1012,16 @@ function normalizeCtas(value: unknown): ShopChatCta[] {
         if (!item || typeof item !== "object") return [];
         const record = item as Record<string, unknown>;
         const kind = typeof record.kind === "string" ? record.kind : "";
-        if (!["geo_vet_search", "external_link", "prompt"].includes(kind)) return [];
+        if (!["geo_vet_search", "external_link", "internal_link", "prompt"].includes(kind)) return [];
         const label = typeof record.label === "string" ? record.label.trim() : "";
         if (!label) return [];
+        const rawUrl = typeof record.url === "string" ? record.url.trim() : "";
+        if (kind === "internal_link" && (!rawUrl.startsWith("/") || rawUrl.startsWith("//"))) return [];
+        if (kind === "external_link" && !/^https:\/\//i.test(rawUrl)) return [];
         return [{
             kind: kind as ShopChatCta["kind"],
             label,
-            url: typeof record.url === "string" ? record.url : undefined,
+            url: rawUrl || undefined,
             query: typeof record.query === "string" ? record.query : undefined,
             prompt: typeof record.prompt === "string" ? record.prompt : undefined,
             helperText: typeof record.helperText === "string" ? record.helperText : undefined,
@@ -1452,6 +1456,9 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
 
     if (!text) return { answer: "궁금한 점을 입력해 주세요.", products: [] };
 
+    const supportRoute = customerSupportRoute(text);
+    if (supportRoute) return customerSupportAnswer(supportRoute);
+
     if (/하네스|목줄|리드|산책|외출|아웃도어|야간/.test(text)) {
         products = CATALOG.filter((p) => p.category === "outdoor");
         answer = "산책용품은 착용감, 조절 범위, 야간 안전성, 세탁 편의성을 함께 보면 좋습니다. 아래 상품부터 비교해 보세요.";
@@ -1464,11 +1471,6 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     } else if (/피부|발|샴푸|케어|위생|배변|냄새|치약|칫솔/.test(text)) {
         products = CATALOG.filter((p) => p.category === "care");
         answer = "케어 제품은 작은 부위 테스트와 사용 빈도가 중요합니다. 상처나 염증이 있으면 제품보다 진료가 먼저입니다.";
-    } else if (/배송|교환|반품|주문|결제/.test(text)) {
-        return {
-            answer: "주문·결제·배송 문의는 고객센터에서 확인해드릴게요. 주문번호나 결제 시 사용한 연락처가 있으면 더 빠르게 안내받을 수 있습니다.",
-            products: [],
-        };
     } else {
         products = searchCatalog(text);
         if (products.length === 0) {
@@ -1490,6 +1492,45 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     return { answer, products: unique(products).slice(0, 6) };
 }
 
+function customerSupportAnswer(route: CustomerSupportRoute): ShopChatAnswer {
+    const secondaryCta: ShopChatCta = ["exchange", "return", "refund", "defect"].includes(route.category)
+        ? {
+            kind: "internal_link",
+            label: "교환·반품 기준 보기",
+            url: "/return",
+            helperText: "신청 기간과 배송비 기준을 확인해요.",
+            icon: "fa-rotate-left",
+        }
+        : {
+            kind: "internal_link",
+            label: "주문 내역 확인하기",
+            url: "/mypage",
+            helperText: "현재 주문·배송 상태를 먼저 확인해요.",
+            icon: "fa-box",
+        };
+    return {
+        answer: route.answer,
+        products: [],
+        medical: {
+            mode: false,
+            triage: "customer_support",
+            topic: route.category,
+            topicLabel: route.topicLabel,
+            disclaimer: "",
+        },
+        ctas: [
+            {
+                kind: "internal_link",
+                label: "1:1 문의 접수하기",
+                url: customerSupportInquiryHref(route.category),
+                helperText: "이 페이지에서 바로 작성하고 접수할 수 있어요.",
+                icon: "fa-envelope",
+            },
+            secondaryCta,
+        ],
+    };
+}
+
 const CUSTOMER_ROUTING_PREAMBLE_RE = /^(?:(?:그|이)\s*질문은\s*)?상품\s*추천보다(?:는)?[^.!?\n]*(?:[.!?]+\s*|$)/i;
 
 function customerFacingShopChatAnswer(value: unknown, fallback: string) {
@@ -1500,12 +1541,14 @@ function customerFacingShopChatAnswer(value: unknown, fallback: string) {
 }
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
+    const supportRoute = customerSupportRoute(message);
+    const supportFallback = supportRoute ? customerSupportAnswer(supportRoute) : undefined;
     const scopeFallback = scopeGuardFallback(message);
     const rareFallback = rareHealthFallback(message);
     const heartwormFallback = heartwormPreventionFallback(message);
     const medicalFallback = rareFallback || heartwormFallback || medicalSafetyFallback(message);
     const knowledgeFallback = canineKnowledgeFallback(message);
-    const fallback = scopeFallback || medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
+    const fallback = supportFallback || scopeFallback || medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
     const history = (context?.history || [])
@@ -1535,6 +1578,23 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         const research = normalizeResearch(data.research);
         const ctas = normalizeCtas(data.ctas);
         const conversation = normalizeConversation(data.conversation);
+        if (supportFallback) {
+            const apiCustomerSupport = data?.medical?.triage === "customer_support"
+                || data?.intent === "customer_support"
+                || data?.model === "customer-support";
+            const mergedCtas = [...ctas, ...(supportFallback.ctas ?? [])].filter((cta, index, all) => (
+                all.findIndex((candidate) => `${candidate.kind}:${candidate.url || candidate.prompt || candidate.label}` === `${cta.kind}:${cta.url || cta.prompt || cta.label}`) === index
+            ));
+            return {
+                ...supportFallback,
+                answer: apiCustomerSupport
+                    ? customerFacingShopChatAnswer(data.answer, supportFallback.answer)
+                    : supportFallback.answer,
+                products: [],
+                ctas: mergedCtas,
+                conversation,
+            };
+        }
         const apiMedical = medicalMode ? data.medical as ShopChatMedical : fallback.medical;
         if (apiMedical && apiMedical.choiceGroups) {
             apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);

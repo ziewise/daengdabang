@@ -1,4 +1,7 @@
 import type { PetProfile } from "@/lib/store";
+import type { CustomerSupportCategory } from "@/lib/customer-support";
+
+export type { CustomerSupportCategory } from "@/lib/customer-support";
 
 const TOKEN_KEY = "ddb.api.accessToken";
 
@@ -16,6 +19,30 @@ export type ApiUser = {
     name?: string | null;
     role: string;
     is_active: boolean;
+};
+
+export type CustomerSupportInquiryPayload = {
+    category: CustomerSupportCategory;
+    name: string;
+    email: string;
+    phone?: string;
+    order_number?: string;
+    product_name?: string;
+    subject?: string;
+    message: string;
+    requested_action?: string;
+    source: "inquiry_page" | "chatbot";
+    privacy_consent: boolean;
+    website?: string;
+};
+
+export type CustomerSupportInquiryReceipt = {
+    id: string;
+    status: "new" | "awaiting_customer" | "in_progress" | "resolved" | "closed";
+    category: CustomerSupportCategory;
+    missing_fields: string[];
+    auto_reply_sent: boolean;
+    message: string;
 };
 
 type TokenResponse = {
@@ -183,6 +210,28 @@ export async function loadCurrentCustomer(token?: string) {
     return apiJson<ApiUser>("/api/v1/auth/me", {
         method: "GET",
     }, token, { requireBase: true });
+}
+
+export async function submitCustomerSupportInquiry(payload: CustomerSupportInquiryPayload) {
+    try {
+        const receipt = await apiJson<CustomerSupportInquiryReceipt>("/api/v1/customer-support/inquiries", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        }, undefined, { requireBase: true });
+        if (!receipt?.id) {
+            throw new DdbApiError("문의 접수번호를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.", {
+                code: "http_error",
+            });
+        }
+        return receipt;
+    } catch (error) {
+        if (error instanceof DdbApiError && error.code === "missing_api_base") {
+            throw new DdbApiError("지금은 문의 접수 서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.", {
+                code: "missing_api_base",
+            });
+        }
+        throw error;
+    }
 }
 
 export async function savePetProfileSmart(pet: PetProfile, token?: string) {

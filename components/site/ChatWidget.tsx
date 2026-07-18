@@ -301,6 +301,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                             sources={message.sources}
                                             ctas={message.ctas}
                                             onAsk={ask}
+                                            onInternalNavigate={() => setOpen(false)}
                                             compact
                                             followUpsEnabled={
                                                 !loading

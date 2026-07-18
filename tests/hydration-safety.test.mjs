@@ -25,7 +25,6 @@ test("footer opts specific emails out of Cloudflare DOM rewriting", async () => 
 
 test("public contact and legal routes use the same protected email rendering", async () => {
     const files = [
-        "app/inquiry/page.tsx",
         "app/legal/page.tsx",
         "app/legal/business/page.tsx",
         "app/privacy/page.tsx",
@@ -37,14 +36,16 @@ test("public contact and legal routes use the same protected email rendering", a
         assert.doesNotMatch(content, /\$\{BUSINESS_INFO\.(?:customerServiceEmail|partnerEmail)\}/, files[index]);
     }
 
-    const [inquiry, mailtoButton] = await Promise.all([
+    const [inquiry, inquiryPanel, customerApi] = await Promise.all([
         source("app/inquiry/page.tsx"),
-        source("components/contact/MailtoButton.tsx"),
+        source("components/contact/CustomerInquiryPanel.tsx"),
+        source("lib/customer-api.ts"),
     ]);
-    assert.match(inquiry, /<MailtoButton/);
-    assert.doesNotMatch(inquiry, /href=\{mailto\}/);
-    assert.match(mailtoButton, /"use client"/);
-    assert.match(mailtoButton, /window\.location\.href = `mailto:\$\{email\}/);
+    assert.match(inquiry, /<CustomerInquiryPanel email=\{CS_EMAIL\} phone=\{CS_PHONE\}/);
+    assert.match(inquiryPanel, /CloudflareSafeEmail/);
+    assert.match(inquiryPanel, /submitCustomerSupportInquiry/);
+    assert.doesNotMatch(inquiryPanel, /window\.location\.href\s*=\s*`mailto:/);
+    assert.match(customerApi, /"\/api\/v1\/customer-support\/inquiries"/);
 });
 
 test("hydrated number formatting always uses an explicit locale", async () => {
