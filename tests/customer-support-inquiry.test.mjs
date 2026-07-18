@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import { customerSupportInquiryHref, customerSupportRoute } from "../lib/customer-support.ts";
+import {
+    customerSupportCtaIdentity,
+    customerSupportInquiryHref,
+    customerSupportRoute,
+} from "../lib/customer-support.ts";
 
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
@@ -27,6 +31,10 @@ test("strong post-purchase questions route to customer support before shopping",
         customerSupportInquiryHref("exchange"),
         "/inquiry?category=exchange&source=chat#inquiry-form",
     );
+    assert.equal(
+        customerSupportCtaIdentity("/inquiry/?category=exchange&source=chat"),
+        customerSupportCtaIdentity("/inquiry?category=exchange&source=chat#inquiry-form"),
+    );
 });
 
 test("chat support replies guarantee an internal inquiry CTA and suppress remote products", async () => {
@@ -38,8 +46,9 @@ test("chat support replies guarantee an internal inquiry CTA and suppress remote
 
     assert.match(llm, /kind: "internal_link"/);
     assert.match(llm, /const supportFallback = supportRoute \? customerSupportAnswer\(supportRoute\) : undefined/);
-    assert.match(llm, /if \(supportFallback\) \{[\s\S]{0,900}products: \[\]/);
+    assert.match(llm, /if \(supportFallback\) \{[\s\S]{0,1400}products: \[\]/);
     assert.match(llm, /ctas: mergedCtas/);
+    assert.match(llm, /customerSupportCtaIdentity\(cta\.url\)/);
     assert.match(extras, /cta\.kind === "internal_link" && cta\.url/);
     assert.match(extras, /<Link[\s\S]{0,220}href=\{cta\.url\}/);
     assert.match(widget, /onInternalNavigate=\{\(\) => setOpen\(false\)\}/);

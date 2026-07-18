@@ -1,6 +1,11 @@
 import { CATALOG, applySort, searchCatalog, type CatalogProduct } from "@/lib/catalog";
 import { ddbApiBase } from "@/lib/customer-api";
-import { customerSupportInquiryHref, customerSupportRoute, type CustomerSupportRoute } from "@/lib/customer-support";
+import {
+    customerSupportCtaIdentity,
+    customerSupportInquiryHref,
+    customerSupportRoute,
+    type CustomerSupportRoute,
+} from "@/lib/customer-support";
 import {
     getPetLensReviewOnlyBreedCandidate,
     isPetLensUnknownBreedAttributeCandidate,
@@ -1582,8 +1587,13 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             const apiCustomerSupport = data?.medical?.triage === "customer_support"
                 || data?.intent === "customer_support"
                 || data?.model === "customer-support";
+            const ctaIdentity = (cta: ShopChatCta) => `${cta.kind}:${
+                cta.kind === "internal_link" && cta.url
+                    ? customerSupportCtaIdentity(cta.url)
+                    : cta.url || cta.prompt || cta.label
+            }`;
             const mergedCtas = [...ctas, ...(supportFallback.ctas ?? [])].filter((cta, index, all) => (
-                all.findIndex((candidate) => `${candidate.kind}:${candidate.url || candidate.prompt || candidate.label}` === `${cta.kind}:${cta.url || cta.prompt || cta.label}`) === index
+                all.findIndex((candidate) => ctaIdentity(candidate) === ctaIdentity(cta)) === index
             ));
             return {
                 ...supportFallback,

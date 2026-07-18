@@ -79,3 +79,8 @@ export function customerSupportRoute(message: string): CustomerSupportRoute | nu
 export function customerSupportInquiryHref(category: CustomerSupportCategory) {
     return `/inquiry?category=${encodeURIComponent(category)}&source=chat#inquiry-form`;
 }
+
+export function customerSupportCtaIdentity(url: string) {
+    const withoutHash = url.trim().split("#", 1)[0];
+    return withoutHash.replace(/^\/inquiry\/(?=\?|$)/, "/inquiry");
+}
