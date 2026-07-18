@@ -13,7 +13,7 @@ test("full chat keeps clear controls and message scrolling inside a bounded card
 
     assert.match(page, /surface flex h-\[min\(720px,calc\(100dvh-180px\)\)\] min-h-\[420px\] flex-col overflow-hidden/);
     assert.match(page, /aria-label="대화 내용 비우기"/);
-    assert.match(page, /ref=\{messagesRef\} className="min-h-0 flex-1[^\n]*overflow-y-auto/);
+    assert.match(page, /ref=\{messagesRef\}[\s\S]{0,260}className="min-h-0 flex-1[^\n]*overflow-y-auto/);
     assert.match(page, /<form onSubmit=\{submit\} className="flex shrink-0/);
 
     const sectionStart = page.indexOf("<section className=\"surface flex h-[min(720px");
@@ -54,7 +54,11 @@ test("floating CareTalk keeps its behavior while using the scoped crayon skin", 
     assert.match(widget, /CRAYON CARE NOTE/);
     assert.match(widget, /우리 아이 케어 노트/);
     assert.match(widget, /styles\.responseExtras/);
-    assert.match(css, /font-family: var\(--font-crayon\)/);
+    assert.match(css, /--chat-font-accent: var\(--font-crayon\)/);
+    assert.match(css, /--chat-font-body: var\(--font-wanted-sans\)/);
+    assert.match(css, /\.messageBubble \{[\s\S]{0,260}font-family: var\(--chat-font-body\)/);
+    assert.match(css, /\.messageBubble \{[\s\S]{0,320}font-weight: 600/);
+    assert.match(css, /\.input \{[\s\S]{0,520}font-size: 16px/);
     assert.match(css, /repeating-linear-gradient/);
     assert.match(css, /right: 4\.75rem/);
     assert.match(css, /linear-gradient\(90deg, transparent 0 34px/);
@@ -64,18 +68,43 @@ test("floating CareTalk keeps its behavior while using the scoped crayon skin", 
     assert.match(css, /inset: calc\(env\(safe-area-inset-top\) \+ 12px\) 12px calc\(env\(safe-area-inset-bottom\) \+ 12px\)/);
 });
 
-test("medical follow-up slots request the answer instead of sending the prompt as a user message", async () => {
-    const extras = await source("components/site/ChatResponseExtras.tsx");
+test("required medical follow-up slots are collected once and old cards become inactive", async () => {
+    const [extras, widget, page] = await Promise.all([
+        source("components/site/ChatResponseExtras.tsx"),
+        source("components/site/ChatWidget.tsx"),
+        source("app/chat/ChatPageClient.tsx"),
+    ]);
 
     assert.doesNotMatch(extras, /medical\??\.knowledgeLevel/);
-    assert.match(extras, /answerInput: true/);
-    assert.match(extras, /if \(group\.answerInput\) \{/);
-    assert.match(extras, /setAnswerSlot\(\{ label: choice\.label, prompt: choice\.prompt \}\)/);
-    assert.match(extras, /aria-label=\{answerSlot \? `\$\{answerSlot\.label\} 답변 입력`/);
-    assert.match(extras, /void onAsk\(value\)/);
+    assert.match(extras, /CHAT_FOLLOW_UP_BUNDLE_PREFIX = "추가로 알려드릴 내용입니다\."/);
+    assert.match(extras, /followUpSlots\.some\(\(slot\) => slot\.required\) \? followUpSlots : \[\]/);
+    assert.match(extras, /\.\.\.answeredEntries\.map\(\(\{ label, answer \}\) => `- \$\{label\}: \$\{answer\}`\)/);
+    assert.match(extras, /const accepted = await onAsk\(prompt\)/);
+    assert.match(extras, /if \(accepted\) \{[\s\S]{0,140}setSubmittedCount/);
+    assert.match(extras, /추가 정보 \{submittedCount\}개를 한 번에 전달했어요/);
+    assert.match(extras, /아는 내용만 적고 한 번에 보내세요/);
+    assert.match(extras, /disabled=\{!answeredEntries\.length \|\| submitting\}/);
+    assert.match(extras, /aria-controls=\{formId\}/);
+    assert.match(widget, /index === messages\.length - 1/);
+    assert.match(widget, /!isFollowUpBundlePrompt/);
+    assert.match(page, /index === messages\.length - 1/);
+    assert.match(page, /!isFollowUpBundlePrompt/);
+    assert.doesNotMatch(widget, /\[open, messages, loading\]/);
+    assert.doesNotMatch(page, /\[messages, loading\]/);
+    assert.doesNotMatch(widget, /scroll-smooth/);
+    assert.doesNotMatch(page, /scroll-smooth/);
+    assert.match(widget, /latestMessage\.role === "user"/);
+    assert.match(page, /latestMessage\.role === "user"/);
+    assert.match(widget, /requestSequence !== requestSequenceRef\.current/);
+    assert.match(page, /requestSequence !== requestSequenceRef\.current/);
+});
 
-    const answerBranch = extras.indexOf("if (group.answerInput) {");
-    const immediateAsk = extras.indexOf("void onAsk(choice.prompt);", answerBranch);
-    assert.ok(answerBranch >= 0 && immediateAsk > answerBranch);
-    assert.match(extras.slice(answerBranch, immediateAsk), /return;/);
+test("shop chat strips only the customer-facing routing preamble", async () => {
+    const helper = await source("lib/daengdabang-llm.ts");
+
+    assert.match(helper, /CUSTOMER_ROUTING_PREAMBLE_RE/);
+    assert.match(helper, /source\.replace\(CUSTOMER_ROUTING_PREAMBLE_RE, ""\)\.trim\(\)/);
+    assert.match(helper, /answer: customerFacingShopChatAnswer\(data\.answer, fallback\.answer\)/);
+    assert.doesNotMatch(helper, /이 질문은 상품 추천보다 강아지 생활\/행동 정보에 가까워서/);
+    assert.doesNotMatch(helper, /지금은 상품 추천보다 증상 확인이 먼저/);
 });

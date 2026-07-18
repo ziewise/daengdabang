@@ -846,7 +846,7 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     const emergency = /(호흡|숨|잇몸.*파|쓰러|의식|발작|경련|중독|자일리톨|초콜릿|포도|건포도|출혈|피가.*멈추|골절|열사병|breath|collapse|seizure|poison|xylitol|grape|bloat)/i.test(text);
     if (emergency) {
         return {
-            answer: "응급 가능성이 있습니다. 상품 추천보다 먼저 가까운 동물병원 또는 24시 응급병원에 즉시 연락하세요. 증상 시작 시간, 먹은 것, 복용한 약, 사진/영상을 준비해 병원에 전달하는 것이 좋습니다.",
+            answer: "응급 가능성이 있습니다. 가까운 동물병원 또는 24시 응급병원에 즉시 연락하세요. 증상 시작 시간, 먹은 것, 복용한 약, 사진/영상을 준비해 병원에 전달하는 것이 좋습니다.",
             products: [],
             medical: {
                 mode: true,
@@ -878,7 +878,7 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
         };
     }
     return {
-        answer: "걱정되시겠어요. 지금은 상품 추천보다 증상 확인이 먼저입니다. 언제부터 아픈지, 구토/설사 여부, 호흡 상태, 식욕과 물 섭취, 기력 변화, 통증을 보이는 부위, 최근 먹은 것이나 삼킨 물건이 있는지 확인해 주세요. 호흡이 힘들거나 의식이 처지고, 반복 발작·중독 의심·피가 섞인 구토/설사·심한 통증·걷지 못함이 있으면 바로 동물병원 또는 24시 응급병원에 연락해야 합니다. 증상이 가볍더라도 계속되거나 악화되면 수의사 진료가 우선입니다.",
+        answer: "걱정되시겠어요. 언제부터 아픈지, 구토/설사 여부, 호흡 상태, 식욕과 물 섭취, 기력 변화, 통증을 보이는 부위, 최근 먹은 것이나 삼킨 물건이 있는지 확인해 주세요. 호흡이 힘들거나 의식이 처지고, 반복 발작·중독 의심·피가 섞인 구토/설사·심한 통증·걷지 못함이 있으면 바로 동물병원 또는 24시 응급병원에 연락해야 합니다. 증상이 가볍더라도 계속되거나 악화되면 수의사 진료가 우선입니다.",
         products: [],
         medical: {
             mode: true,
@@ -925,7 +925,7 @@ function isShoppingIntent(message: string) {
 function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
     if (!isCanineKnowledgeQuestion(message) || isShoppingIntent(message)) return null;
     return {
-        answer: "이 질문은 상품 추천보다 강아지 생활/행동 정보에 가까워서 제품은 붙이지 않았어요. 자료 확인이 잠시 불안정하면 우선 검증된 반려견 자료 기준으로 답변드릴게요. 나이, 체중, 품종, 언제부터 그랬는지, 식욕/활력 변화가 있으면 더 정확히 정리할 수 있습니다. 통증, 호흡 이상, 반복 구토/설사, 의식 저하, 중독 가능성이 있으면 생활 팁보다 동물병원 상담이 먼저입니다.",
+        answer: "강아지의 나이, 체중, 품종과 언제부터 그런 모습이 시작됐는지 알려주시면 더 정확히 정리할 수 있습니다. 통증, 호흡 이상, 반복 구토/설사, 의식 저하, 중독 가능성이 있으면 바로 동물병원에 상담해 주세요.",
         products: [],
         medical: {
             mode: false,
@@ -1490,6 +1490,15 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     return { answer, products: unique(products).slice(0, 6) };
 }
 
+const CUSTOMER_ROUTING_PREAMBLE_RE = /^(?:(?:그|이)\s*질문은\s*)?상품\s*추천보다(?:는)?[^.!?\n]*(?:[.!?]+\s*|$)/i;
+
+function customerFacingShopChatAnswer(value: unknown, fallback: string) {
+    const source = typeof value === "string" ? value.trim() : "";
+    if (!source) return fallback;
+    const withoutRoutingPreamble = source.replace(CUSTOMER_ROUTING_PREAMBLE_RE, "").trim();
+    return withoutRoutingPreamble || fallback;
+}
+
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const scopeFallback = scopeGuardFallback(message);
     const rareFallback = rareHealthFallback(message);
@@ -1531,7 +1540,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
         }
         return {
-            answer: typeof data.answer === "string" && data.answer.trim() ? data.answer : fallback.answer,
+            answer: customerFacingShopChatAnswer(data.answer, fallback.answer),
             products: apiReturnedProducts ? unique(apiProducts).slice(0, 6) : fallback.products,
             medical: apiMedical,
             sources: apiSources.length ? apiSources : fallback.sources,

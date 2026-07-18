@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { ddbApiBase } from "@/lib/customer-api";
 import type { ShopChatCta, ShopChatMedical, ShopChatSource } from "@/lib/daengdabang-llm";
 
@@ -8,8 +8,9 @@ type ChatResponseExtrasProps = {
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     ctas?: ShopChatCta[];
-    onAsk: (prompt: string) => void | Promise<void>;
+    onAsk: (prompt: string) => boolean | Promise<boolean>;
     compact?: boolean;
+    followUpsEnabled?: boolean;
 };
 
 type ChoiceViewGroup = {
@@ -17,6 +18,14 @@ type ChoiceViewGroup = {
     choices: Array<{ label: string; prompt: string; description?: string }>;
     answerInput?: boolean;
 };
+
+type FollowUpSlot = NonNullable<ShopChatMedical["followUpSlots"]>[number];
+
+export const CHAT_FOLLOW_UP_BUNDLE_PREFIX = "추가로 알려드릴 내용입니다.";
+
+export function isFollowUpBundlePrompt(value: string) {
+    return value.trimStart().startsWith(CHAT_FOLLOW_UP_BUNDLE_PREFIX);
+}
 
 type VetPlace = {
     id: string;
@@ -277,11 +286,162 @@ async function fetchNominatimVetPlaces(latitude: number, longitude: number) {
     return places.sort((a, b) => a.distanceMeters - b.distanceMeters).slice(0, 5);
 }
 
-function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps, "medical" | "onAsk" | "compact">) {
+function FollowUpBundleForm({
+    slots,
+    onAsk,
+    compact,
+    enabled,
+}: {
+    slots: FollowUpSlot[];
+    onAsk: ChatResponseExtrasProps["onAsk"];
+    compact?: boolean;
+    enabled: boolean;
+}) {
+    const [expanded, setExpanded] = useState(false);
+    const [answers, setAnswers] = useState<Record<string, string>>({});
+    const [submittedCount, setSubmittedCount] = useState(0);
+    const [submitting, setSubmitting] = useState(false);
+    const formId = useId();
+    const toggleRef = useRef<HTMLButtonElement>(null);
+    const firstInputRef = useRef<HTMLTextAreaElement>(null);
+    const returnFocusRef = useRef(false);
+    const answeredEntries = slots.flatMap((slot) => {
+        const answer = answers[slot.key]?.trim();
+        return answer ? [{ label: slot.label, answer }] : [];
+    });
+
+    useEffect(() => {
+        if (expanded && enabled) {
+            firstInputRef.current?.focus();
+            return;
+        }
+        if (!expanded && returnFocusRef.current) {
+            returnFocusRef.current = false;
+            toggleRef.current?.focus();
+        }
+    }, [enabled, expanded]);
+
+    if (!enabled) {
+        return submittedCount > 0 ? (
+            <div className="mt-2 rounded-md border border-dashed border-emerald-300 bg-emerald-50/80 px-3 py-2 text-[13px] font-extrabold leading-[1.45] text-emerald-900">
+                <i className="fa-solid fa-check mr-1.5" aria-hidden="true" />
+                추가 정보 {submittedCount}개를 한 번에 전달했어요.
+            </div>
+        ) : null;
+    }
+
+    const submitBundle = async (event: FormEvent) => {
+        event.preventDefault();
+        if (!answeredEntries.length || submitting) return;
+        const prompt = [
+            CHAT_FOLLOW_UP_BUNDLE_PREFIX,
+            ...answeredEntries.map(({ label, answer }) => `- ${label}: ${answer}`),
+        ].join("\n");
+        setSubmitting(true);
+        const accepted = await onAsk(prompt);
+        if (accepted) {
+            setSubmittedCount(answeredEntries.length);
+            setExpanded(false);
+        }
+        setSubmitting(false);
+    };
+
+    return (
+        <div className="mt-2 rounded-lg border border-dashed border-sky-300 bg-sky-50/75 p-2.5 text-left">
+            {!expanded ? (
+                <button
+                    ref={toggleRef}
+                    type="button"
+                    onClick={() => setExpanded(true)}
+                    className="w-full rounded-md border border-sky-200 bg-white px-3 py-2.5 text-left shadow-sm transition hover:border-sky-400 hover:bg-sky-50"
+                    aria-expanded="false"
+                    aria-controls={formId}
+                >
+                    <span className="block text-[14px] font-extrabold leading-[1.35] text-sky-950">
+                        <i className="fa-solid fa-pencil mr-1.5 text-sky-600" aria-hidden="true" />
+                        추가정보 한 번에 입력
+                    </span>
+                    <span className="mt-1 block text-[13px] font-semibold leading-[1.45] text-sky-700">
+                        아는 내용만 적고 한 번에 보내세요.
+                    </span>
+                </button>
+            ) : (
+                <form id={formId} onSubmit={submitBundle} className="rounded-md border border-sky-200 bg-white p-2.5">
+                    <div className="flex items-start justify-between gap-3">
+                        <div>
+                            <p className="text-[14px] font-extrabold leading-[1.35] text-sky-950">추가정보 모아 보내기</p>
+                            <p className="mt-1 text-[13px] font-semibold leading-[1.45] text-neutral-600">모르는 항목은 비워도 괜찮아요.</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                returnFocusRef.current = true;
+                                setExpanded(false);
+                            }}
+                            className="shrink-0 rounded-full px-2 py-1 text-[12px] font-extrabold text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800"
+                        >
+                            접기
+                        </button>
+                    </div>
+                    <div className={`mt-3 grid gap-2 ${compact ? "" : "sm:grid-cols-2"}`}>
+                        {slots.map((slot, index) => (
+                            <label key={slot.key} className="block rounded-md border border-sky-100 bg-sky-50/60 p-2">
+                                <span className="block text-[13px] font-extrabold leading-[1.45] text-sky-950">{slot.label}</span>
+                                <textarea
+                                    ref={index === 0 ? firstInputRef : undefined}
+                                    value={answers[slot.key] ?? ""}
+                                    onChange={(event) => setAnswers((current) => ({
+                                        ...current,
+                                        [slot.key]: event.target.value,
+                                    }))}
+                                    rows={slot.prompt.length > 34 ? 2 : 1}
+                                    disabled={submitting}
+                                    className="mt-1 min-h-10 w-full resize-y rounded-md border border-sky-200 bg-white px-2.5 py-2 text-[16px] font-semibold leading-[1.4] text-neutral-900 outline-none placeholder:text-[13px] placeholder:font-semibold placeholder:text-neutral-600 focus:border-sky-500 disabled:opacity-60"
+                                    placeholder={slot.prompt}
+                                    aria-label={`${slot.label} 추가 정보 입력`}
+                                />
+                            </label>
+                        ))}
+                    </div>
+                    <button
+                        type="submit"
+                        className="mt-3 w-full rounded-md bg-sky-700 px-3 py-2.5 text-[13px] font-extrabold leading-[1.35] text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-45"
+                        disabled={!answeredEntries.length || submitting}
+                    >
+                        {submitting ? "답변을 확인하고 있어요…" : "입력한 내용 한 번에 보내기"}
+                    </button>
+                </form>
+            )}
+        </div>
+    );
+}
+
+function ChoiceGroups({
+    medical,
+    onAsk,
+    compact,
+    followUpsEnabled = true,
+}: Pick<ChatResponseExtrasProps, "medical" | "onAsk" | "compact" | "followUpsEnabled">) {
     const [customGroupTitle, setCustomGroupTitle] = useState<string | null>(null);
     const [customText, setCustomText] = useState("");
     const [answerSlot, setAnswerSlot] = useState<{ label: string; prompt: string } | null>(null);
     const groups: ChoiceViewGroup[] = medical?.choiceGroups?.filter((group) => group.choices.length > 0) ?? [];
+    const followUpSlots = (medical?.followUpSlots ?? []).slice(0, 8);
+    const bundleSlots = followUpSlots.some((slot) => slot.required) ? followUpSlots : [];
+
+    if (bundleSlots.length) {
+        return (
+            <FollowUpBundleForm
+                slots={bundleSlots}
+                onAsk={onAsk}
+                compact={compact}
+                enabled={followUpsEnabled}
+            />
+        );
+    }
+
+    if (!followUpsEnabled) return null;
+
     const fallbackChoices: ChoiceViewGroup[] = !groups.length && medical?.followUpSlots?.length
         ? [{
             title: "추가로 알려주실 내용",
@@ -310,7 +470,7 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
         <div className="mt-2 space-y-2">
             {allGroups.slice(0, 2).map((group) => (
                 <div key={group.title} className="rounded-lg border border-sky-100 bg-sky-50/70 p-2.5 text-left">
-                    <p className="text-[11px] font-black text-sky-900">{group.title}</p>
+                    <p className="text-[13px] font-extrabold leading-[1.45] text-sky-900">{group.title}</p>
                     <div className="mt-2 grid gap-1.5">
                         {group.choices.slice(0, compact ? 5 : 8).map((choice) => (
                             <button
@@ -325,11 +485,11 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
                                     }
                                     void onAsk(choice.prompt);
                                 }}
-                                className="rounded-md border border-sky-200 bg-white px-2.5 py-2 text-left text-[11px] font-extrabold leading-4 text-sky-900 shadow-sm transition hover:border-sky-400 hover:bg-sky-100"
+                                className="rounded-md border border-sky-200 bg-white px-2.5 py-2 text-left text-[14px] font-extrabold leading-[1.35] text-sky-900 shadow-sm transition hover:border-sky-400 hover:bg-sky-100"
                             >
                                 <span className="block">{choice.label}</span>
                                 {choice.description ? (
-                                    <span className="mt-0.5 block text-[10px] font-bold text-sky-700/80">{choice.description}</span>
+                                    <span className="mt-1 block text-[13px] font-semibold leading-[1.45] text-sky-800">{choice.description}</span>
                                 ) : null}
                             </button>
                         ))}
@@ -341,7 +501,7 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
                                 setAnswerSlot(null);
                                 setCustomGroupTitle((current) => current === group.title ? null : group.title);
                             }}
-                            className="mt-2 w-full rounded-md border border-dashed border-sky-300 bg-white/70 px-2.5 py-2 text-left text-[11px] font-black text-sky-900 transition hover:bg-white"
+                            className="mt-2 w-full rounded-md border border-dashed border-sky-300 bg-white/70 px-2.5 py-2 text-left text-[13px] font-extrabold leading-[1.45] text-sky-900 transition hover:bg-white"
                         >
                             답이 없어요. 직접 적을게요
                         </button>
@@ -349,20 +509,20 @@ function ChoiceGroups({ medical, onAsk, compact }: Pick<ChatResponseExtrasProps,
                     {customGroupTitle === group.title ? (
                         <form onSubmit={submitCustom} className="mt-2 rounded-md border border-sky-200 bg-white p-2">
                             {answerSlot ? (
-                                <label className="mb-1.5 block text-[11px] font-black text-sky-900">{answerSlot.label} 답변</label>
+                                <label className="mb-1.5 block text-[13px] font-extrabold leading-[1.45] text-sky-900">{answerSlot.label} 답변</label>
                             ) : null}
                             <div className="flex gap-1.5">
                                 <input
                                     value={customText}
                                     onChange={(event) => setCustomText(event.target.value)}
-                                    className="min-w-0 flex-1 rounded-md border border-sky-200 bg-white px-2.5 py-2 text-[11px] font-bold text-neutral-900 outline-none focus:border-sky-500"
+                                    className="min-w-0 flex-1 rounded-md border border-sky-200 bg-white px-2.5 py-2 text-[16px] font-semibold leading-[1.4] text-neutral-900 outline-none focus:border-sky-500"
                                     placeholder={answerSlot?.prompt || "상황을 직접 입력"}
                                     aria-label={answerSlot ? `${answerSlot.label} 답변 입력` : "객관식에 없는 답 직접 입력"}
                                     autoFocus
                                 />
                                 <button
                                     type="submit"
-                                    className="shrink-0 rounded-md bg-sky-700 px-2.5 py-2 text-[11px] font-black text-white disabled:opacity-50"
+                                    className="shrink-0 rounded-md bg-sky-700 px-2.5 py-2 text-[12px] font-extrabold leading-[1.35] text-white disabled:opacity-50"
                                     disabled={!customText.trim()}
                                 >
                                     답변 보내기
@@ -473,7 +633,14 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
     );
 }
 
-export default function ChatResponseExtras({ medical, sources, ctas, onAsk, compact = false }: ChatResponseExtrasProps) {
+export default function ChatResponseExtras({
+    medical,
+    sources,
+    ctas,
+    onAsk,
+    compact = false,
+    followUpsEnabled = true,
+}: ChatResponseExtrasProps) {
     const [vetSearch, setVetSearch] = useState<VetSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
     const label = triageLabel(medical);
@@ -586,11 +753,13 @@ export default function ChatResponseExtras({ medical, sources, ctas, onAsk, comp
                             </ul>
                         </div>
                     ) : null}
-                    <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} />
+                    <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} followUpsEnabled={followUpsEnabled} />
                 </div>
             )}
 
-            {!showMedicalCard && <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} />}
+            {!showMedicalCard && (
+                <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} followUpsEnabled={followUpsEnabled} />
+            )}
 
             {sources && sources.length > 0 && (
                 <div className={`mt-2 flex ${widthClass} flex-wrap gap-1.5`}>

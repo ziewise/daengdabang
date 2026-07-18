@@ -3,6 +3,7 @@
 import { type RefObject, useEffect, useState } from "react";
 
 const MOBILE_FLOATING_QUERY = "(max-width: 680px)";
+const MOBILE_HERO_QUERY = "(max-width: 767px)";
 export const MOBILE_FLOATING_SCROLL_IDLE_MS = 400;
 
 function isVisibleDialog(dialog: HTMLElement) {
@@ -29,6 +30,7 @@ function isVisibleDialog(dialog: HTMLElement) {
 
 type Options = {
     ignoreDialogsWithin?: RefObject<HTMLElement | null>;
+    heroRouteActive?: boolean;
 };
 
 /**
@@ -36,15 +38,28 @@ type Options = {
  * launchers. Nothing is unmounted, so chat history and companion motion state
  * survive while the launchers are temporarily out of the way.
  */
-export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {}) {
+export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActive = false }: Options = {}) {
     const [isMobile, setIsMobile] = useState(false);
+    const [isMobileHeroViewport, setIsMobileHeroViewport] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
     const [hasBlockingDialog, setHasBlockingDialog] = useState(false);
     const [isAtPageTop, setIsAtPageTop] = useState(true);
+    const [heroVisibility, setHeroVisibility] = useState(() => ({
+        routeActive: heroRouteActive,
+        visible: heroRouteActive,
+    }));
 
     useEffect(() => {
         const query = window.matchMedia(MOBILE_FLOATING_QUERY);
         const update = () => setIsMobile(query.matches);
+        update();
+        query.addEventListener("change", update);
+        return () => query.removeEventListener("change", update);
+    }, []);
+
+    useEffect(() => {
+        const query = window.matchMedia(MOBILE_HERO_QUERY);
+        const update = () => setIsMobileHeroViewport(query.matches);
         update();
         query.addEventListener("change", update);
         return () => query.removeEventListener("change", update);
@@ -60,6 +75,32 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {
             window.removeEventListener("resize", update);
         };
     }, []);
+
+    useEffect(() => {
+        if (!heroRouteActive) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- reset the route-scoped boundary before a later return to the hero.
+            setHeroVisibility((current) => current.routeActive || current.visible
+                ? { routeActive: false, visible: false }
+                : current);
+            return;
+        }
+
+        const update = () => {
+            const sentinel = document.getElementById("fab-reveal-sentinel");
+            const visible = Boolean(sentinel && sentinel.getBoundingClientRect().top > 0);
+            setHeroVisibility((current) => current.routeActive && current.visible === visible
+                ? current
+                : { routeActive: true, visible });
+        };
+
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update);
+        return () => {
+            window.removeEventListener("scroll", update);
+            window.removeEventListener("resize", update);
+        };
+    }, [heroRouteActive]);
 
     useEffect(() => {
         if (!isMobile) {
@@ -138,11 +179,17 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {
         };
     }, [ignoreDialogsWithin, isMobile]);
 
+    const isHeroVisible = heroRouteActive && (
+        heroVisibility.routeActive === heroRouteActive ? heroVisibility.visible : true
+    );
+
     return {
         hasBlockingDialog,
         hidden: isMobile && (isScrolling || hasBlockingDialog),
+        isHeroVisible,
         isAtPageTop,
         isMobile,
+        isMobileHeroViewport,
         isScrolling,
     };
 }

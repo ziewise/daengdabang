@@ -43,6 +43,7 @@ function isHiddenRoute(pathname: string | null) {
 
 export default function PetCompanionGate() {
     const pathname = usePathname();
+    const heroActive = isHeroRoute(pathname);
     const { state, hydrated } = useStore();
     const [settings, setSettings] = useState<PetCompanionSettings | null>(null);
     const [panelOpen, setPanelOpen] = useState(false);
@@ -55,17 +56,21 @@ export default function PetCompanionGate() {
     const [homeTransition, setHomeTransition] = useState<"entering" | "leaving" | null>(null);
     const [buybar, setBuybar] = useState(false);
     const [chatWidgetOpen, setChatWidgetOpen] = useState(false);
-    const mobileFloating = useMobileFloatingVisibility();
+    const mobileFloating = useMobileFloatingVisibility({ heroRouteActive: heroActive });
     const panelOpenRef = useRef(false);
     const productRecommendationActiveRef = useRef(false);
     const homeTransitionTimerRef = useRef<number | null>(null);
     const homeLaunchRef = useRef<HTMLButtonElement>(null);
     const settingsLaunchRef = useRef<HTMLButtonElement>(null);
-    const heroActive = isHeroRoute(pathname);
     const heroAtTop = heroActive && mobileFloating.isAtPageTop;
     const hideAtHeroTop = heroAtTop && !mobileFloating.isMobile;
+    const hideInMobileHero = mobileFloating.isMobileHeroViewport && mobileFloating.isHeroVisible;
     const chatWidgetBlocksControls = chatWidgetOpen && mobileFloating.isMobile;
-    const floatingControlsHidden = mobileFloating.hidden || panelOpen || chatWidgetBlocksControls || hideAtHeroTop;
+    const floatingControlsHidden = mobileFloating.hidden
+        || panelOpen
+        || chatWidgetBlocksControls
+        || hideAtHeroTop
+        || hideInMobileHero;
     const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
     const heroVisualScopeRef = useRef<string | null>(null);

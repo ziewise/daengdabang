@@ -20,7 +20,7 @@ import {
     type ChatWidgetOpenDetail,
     type ChatWidgetVisibilityDetail,
 } from "@/lib/chat-widget-events";
-import ChatResponseExtras from "@/components/site/ChatResponseExtras";
+import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import styles from "./ChatWidget.module.css";
@@ -80,19 +80,24 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const inputRef = useRef<HTMLInputElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
     const previouslyOpenRef = useRef(false);
+    const inFlightRef = useRef(false);
+    const requestSequenceRef = useRef(0);
 
-    const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
-        const container = messagesRef.current;
-        if (!container) return;
-        window.requestAnimationFrame(() => {
-            container.scrollTo({ top: container.scrollHeight, behavior });
-        });
-    };
-
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!open) return;
-        scrollToBottom(messages.length <= 1 ? "auto" : "smooth");
-    }, [open, messages, loading]);
+        const container = messagesRef.current;
+        const latestMessage = messages.at(-1);
+        if (!container || !latestMessage) return;
+        const latestRow = container.querySelector<HTMLElement>(`[data-chat-message-index="${messages.length - 1}"]`);
+        if (!latestRow || latestMessage.role === "user") {
+            container.scrollTop = container.scrollHeight;
+            return;
+        }
+        const rowTop = latestRow.getBoundingClientRect().top
+            - container.getBoundingClientRect().top
+            + container.scrollTop;
+        container.scrollTop = Math.max(0, rowTop - 8);
+    }, [messages, open]);
 
     useLayoutEffect(() => {
         window.dispatchEvent(new CustomEvent<ChatWidgetVisibilityDetail>(CHAT_WIDGET_VISIBILITY_EVENT, {
@@ -135,6 +140,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     }, []);
 
     const clearChat = () => {
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
         setMessages([]);
         setInput("");
         setLoading(false);
@@ -142,7 +149,9 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
 
     const ask = async (question: string) => {
         const trimmed = question.trim();
-        if (!trimmed || loading) return;
+        if (!trimmed || inFlightRef.current) return false;
+        inFlightRef.current = true;
+        const requestSequence = ++requestSequenceRef.current;
         const questionForAnswer = productContext
             ? `${productContext} 상품 문의: ${trimmed}`
             : trimmed;
@@ -161,6 +170,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
             const result = await answerShopQuestionSmart(questionForAnswer, { pet: user?.pets?.[0] ?? null, history });
+            if (requestSequence !== requestSequenceRef.current) return false;
             setMessages((prev) => [
                 ...prev,
                 {
@@ -179,14 +189,20 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 hasProducts: Boolean(result.products?.length),
                 hasMedicalGuidance: Boolean(result.medical),
             });
-        } catch (error) {
-            trackStorefrontEvent("chat_response_failed", {
-                surface: analyticsSurface,
-                errorCode: "request_failed",
-            });
-            throw error;
+            return true;
+        } catch {
+            if (requestSequence === requestSequenceRef.current) {
+                trackStorefrontEvent("chat_response_failed", {
+                    surface: analyticsSurface,
+                    errorCode: "request_failed",
+                });
+            }
+            return false;
         } finally {
-            setLoading(false);
+            if (requestSequence === requestSequenceRef.current) {
+                inFlightRef.current = false;
+                setLoading(false);
+            }
         }
     };
 
@@ -214,6 +230,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <button
                                 type="button"
                                 onClick={clearChat}
+                                disabled={loading}
                                 className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
                                 aria-label="채팅 비우기"
                                 title="채팅 비우기"
@@ -245,7 +262,14 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             </button>
                         </div>
                     ) : null}
-                    <div ref={messagesRef} className={`${styles.messageList} min-h-0 flex-1 space-y-3 overflow-y-auto p-3 overscroll-contain scroll-smooth`}>
+                    <div
+                        ref={messagesRef}
+                        role="log"
+                        aria-live="polite"
+                        aria-relevant="additions"
+                        aria-busy={loading}
+                        className={`${styles.messageList} min-h-0 flex-1 space-y-3 overflow-y-auto p-3 overscroll-contain`}
+                    >
                         {messages.length === 0 && !loading ? (
                             <div className={styles.emptyNote}>
                                 <span className={styles.emptyPencil} aria-hidden="true">
@@ -260,10 +284,11 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <div
                                 key={`${message.role}-${index}`}
                                 data-chat-role={message.role}
+                                data-chat-message-index={index}
                                 className={`${styles.messageRow} ${message.role === "user" ? "text-right" : "text-left"}`}
                             >
                                 <div
-                                    className={`${styles.messageBubble} inline-block max-w-[86%] whitespace-pre-line px-3 py-2 text-sm font-bold leading-6 ${
+                                    className={`${styles.messageBubble} inline-block max-w-[86%] whitespace-pre-line px-3 py-2 ${
                                         message.role === "user" ? styles.userBubble : styles.assistantBubble
                                     }`}
                                 >
@@ -277,6 +302,13 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                             ctas={message.ctas}
                                             onAsk={ask}
                                             compact
+                                            followUpsEnabled={
+                                                !loading
+                                                && index === messages.length - 1
+                                                && !isFollowUpBundlePrompt(
+                                                    messages[index - 1]?.role === "user" ? messages[index - 1].text : ""
+                                                )
+                                            }
                                         />
                                     </div>
                                 )}

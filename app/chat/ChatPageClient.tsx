@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     answerShopQuestionSmart,
@@ -14,7 +14,7 @@ import {
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
-import ChatResponseExtras from "@/components/site/ChatResponseExtras";
+import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
@@ -70,8 +70,10 @@ export default function ChatPageClient() {
     const pets = useMemo(() => user?.pets ?? [], [user]);
     const [selectedPetIndex, setSelectedPetIndex] = useState(0);
     const selectedPet = pets[selectedPetIndex] ?? pets[0] ?? null;
-    const initialized = useRef(false);
+    const initialQuestionSentRef = useRef<string | null>(null);
     const messagesRef = useRef<HTMLDivElement>(null);
+    const inFlightRef = useRef(false);
+    const requestSequenceRef = useRef(0);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -81,6 +83,8 @@ export default function ChatPageClient() {
     }, []);
 
     const clearChat = () => {
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
         setInput("");
         setLoading(false);
         setMessages([]);
@@ -88,7 +92,9 @@ export default function ChatPageClient() {
 
     const ask = useCallback(async (question: string) => {
         const trimmed = question.trim();
-        if (!trimmed || loading) return;
+        if (!trimmed || inFlightRef.current) return false;
+        inFlightRef.current = true;
+        const requestSequence = ++requestSequenceRef.current;
         setLoading(true);
         trackStorefrontEvent("chat_message_sent", {
             surface: "chat_page",
@@ -101,6 +107,7 @@ export default function ChatPageClient() {
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
             const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet, history });
+            if (requestSequence !== requestSequenceRef.current) return false;
             setMessages((prev) => [
                 ...prev,
                 {
@@ -119,33 +126,54 @@ export default function ChatPageClient() {
                 hasProducts: Boolean(result.products?.length),
                 hasMedicalGuidance: Boolean(result.medical),
             });
-        } catch (error) {
-            trackStorefrontEvent("chat_response_failed", {
-                surface: "chat_page",
-                errorCode: "request_failed",
-            });
-            throw error;
+            return true;
+        } catch {
+            if (requestSequence === requestSequenceRef.current) {
+                trackStorefrontEvent("chat_response_failed", {
+                    surface: "chat_page",
+                    errorCode: "request_failed",
+                });
+            }
+            return false;
         } finally {
-            setLoading(false);
+            if (requestSequence === requestSequenceRef.current) {
+                inFlightRef.current = false;
+                setLoading(false);
+            }
         }
-    }, [loading, messages, selectedPet]);
+    }, [messages, selectedPet]);
 
     useEffect(() => {
-        if (initialized.current) return;
-        initialized.current = true;
         const initialQuestion = params.get("q");
-        if (!initialQuestion) return;
-        const timer = window.setTimeout(() => void ask(initialQuestion), 0);
-        return () => window.clearTimeout(timer);
+        if (!initialQuestion || initialQuestionSentRef.current === initialQuestion) return;
+        initialQuestionSentRef.current = initialQuestion;
+        void ask(initialQuestion);
     }, [params, ask]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const container = messagesRef.current;
-        if (!container) return;
-        window.requestAnimationFrame(() => {
-            container.scrollTo({ top: container.scrollHeight, behavior: messages.length <= 1 ? "auto" : "smooth" });
-        });
-    }, [messages, loading]);
+        const latestMessage = messages.at(-1);
+        if (!container || !latestMessage) return;
+        const latestRow = container.querySelector<HTMLElement>(`[data-chat-message-index="${messages.length - 1}"]`);
+        if (!latestRow || latestMessage.role === "user") {
+            container.scrollTop = container.scrollHeight;
+            return;
+        }
+        const rowTop = latestRow.getBoundingClientRect().top
+            - container.getBoundingClientRect().top
+            + container.scrollTop;
+        container.scrollTop = Math.max(0, rowTop - 8);
+    }, [messages]);
+
+    const selectPet = (nextIndex: number) => {
+        if (nextIndex === selectedPetIndex) return;
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
+        setLoading(false);
+        setMessages([]);
+        setInput("");
+        setSelectedPetIndex(nextIndex);
+    };
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
@@ -167,7 +195,8 @@ export default function ChatPageClient() {
                         <span className="shrink-0 text-neutral-500">개인화 기준</span>
                         <select
                             value={selectedPetIndex}
-                            onChange={(event) => setSelectedPetIndex(Number(event.target.value))}
+                            onChange={(event) => selectPet(Number(event.target.value))}
+                            disabled={loading}
                             className="min-w-0 bg-transparent font-black text-neutral-950 outline-none"
                         >
                             {pets.map((pet, index) => (
@@ -212,9 +241,20 @@ export default function ChatPageClient() {
                             비우기
                         </button>
                     </div>
-                    <div ref={messagesRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4 overscroll-contain scroll-smooth">
+                    <div
+                        ref={messagesRef}
+                        role="log"
+                        aria-live="polite"
+                        aria-relevant="additions"
+                        aria-busy={loading}
+                        className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-neutral-50 p-4 overscroll-contain"
+                    >
                         {messages.map((message, index) => (
-                            <div key={`${message.role}-${index}`} className={message.role === "user" ? "text-right" : "text-left"}>
+                            <div
+                                key={`${message.role}-${index}`}
+                                data-chat-message-index={index}
+                                className={message.role === "user" ? "text-right" : "text-left"}
+                            >
                                 <div
                                     className={`inline-block max-w-[82%] whitespace-pre-line rounded-lg px-4 py-3 text-sm font-bold leading-6 ${
                                         message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
@@ -235,6 +275,13 @@ export default function ChatPageClient() {
                                         sources={message.sources}
                                         ctas={message.ctas}
                                         onAsk={ask}
+                                        followUpsEnabled={
+                                            !loading
+                                            && index === messages.length - 1
+                                            && !isFollowUpBundlePrompt(
+                                                messages[index - 1]?.role === "user" ? messages[index - 1].text : ""
+                                            )
+                                        }
                                     />
                                 )}
                             </div>

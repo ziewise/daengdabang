@@ -5,6 +5,9 @@
     --chat-crayon-yellow: #f4c95d;
     --chat-crayon-mint: #7ccdb3;
     --chat-paper: #fffaf0;
+    --chat-font-body: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+    --chat-font-accent: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--chat-font-body);
 }
 
 .panel {
@@ -85,7 +88,7 @@
 
 .noteEyebrow {
     color: #cf5f65;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--chat-font-accent);
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.11em;
@@ -96,7 +99,7 @@
     position: relative;
     display: inline-block;
     color: #25264c;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--chat-font-accent);
     font-size: 1.48rem;
     font-weight: 700;
     line-height: 1;
@@ -145,7 +148,7 @@
     background: var(--chat-crayon-indigo);
     box-shadow: 2px 2px 0 rgba(38, 152, 199, 0.22);
     color: #fff;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--chat-font-body);
 }
 
 .messageList {
@@ -175,10 +178,13 @@
 
 .messageBubble {
     border: 3px solid transparent;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-    font-size: 0.98rem;
-    letter-spacing: 0.01em;
-    line-height: 1.55;
+    font-family: var(--chat-font-body);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.68;
+    overflow-wrap: anywhere;
+    word-break: keep-all;
 }
 
 .userBubble {
@@ -230,7 +236,7 @@
 
 .emptyNote strong {
     display: block;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--chat-font-accent);
     font-size: 1.32rem;
     line-height: 1.1;
 }
@@ -313,15 +319,19 @@
     background: #fffefb;
     box-shadow: inset 0 -2px 0 rgba(38, 152, 199, 0.1), 2px 2px 0 rgba(244, 201, 93, 0.2);
     color: #33354e;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
+    font-family: var(--chat-font-body);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
     outline: none;
     transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .input::placeholder {
-    color: #8b8aa2;
+    color: #68697d;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .input:focus {
