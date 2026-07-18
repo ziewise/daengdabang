@@ -16,7 +16,34 @@ test("mobile floating launchers hide while scrolling and return after a short id
     assert.match(hook, /Math\.abs\(nextScrollY - scrollAnchorY\) < 2/);
     assert.match(hook, /setIsScrolling\(true\)/);
     assert.match(hook, /setIsScrolling\(false\)/);
+    assert.match(hook, /const \[isAtPageTop, setIsAtPageTop\] = useState\(true\)/);
+    assert.match(hook, /setIsAtPageTop\(window\.scrollY <= 0\)/);
+    assert.match(hook, /isAtPageTop,/);
     assert.match(hook, /window\.addEventListener\("scroll", onScroll, \{ passive: true \}\)/);
+});
+
+test("hero launchers use immediate desktop reveal and idle mobile reveal", async () => {
+    const [hook, dock, gate, css] = await Promise.all([
+        source("hooks/useMobileFloatingVisibility.ts"),
+        source("components/site/FloatingDock.tsx"),
+        source("components/pet-companion/PetCompanionGate.tsx"),
+        source("components/pet-companion/PetCompanionLayer.module.css"),
+    ]);
+
+    assert.match(hook, /hidden: isMobile && \(isScrolling \|\| hasBlockingDialog\)/);
+    assert.match(dock, /const heroAtTop = isHeroRoute\(pathname\) && mobileFloating\.isAtPageTop/);
+    assert.match(dock, /chatOpen \|\| \(!heroAtTop && baseDockVisible && !mobileFloating\.isScrolling\)/);
+    assert.match(gate, /const heroAtTop = heroActive && mobileFloating\.isAtPageTop/);
+    assert.match(gate, /const floatingControlsHidden = mobileFloating\.hidden \|\| panelOpen \|\| heroAtTop/);
+    assert.ok(
+        css.indexOf('.settingsLaunch[data-mobile-hidden="true"]') < css.indexOf("@media (max-width: 680px)"),
+        "desktop and mobile house/settings launchers must share the hidden rule",
+    );
+    assert.equal(
+        [...css.matchAll(/\.settingsLaunch\[data-companion-enabled="false"\]\s*\{/g)].length,
+        1,
+        "the disabled opacity rule must not override the later hidden state on mobile",
+    );
 });
 
 test("mobile launchers yield to dialogs without unmounting their stateful surfaces", async () => {
@@ -38,8 +65,9 @@ test("mobile launchers yield to dialogs without unmounting their stateful surfac
     assert.match(chat, /hideTrigger \? "invisible pointer-events-none opacity-0"/);
     assert.match(dock, /ignoreDialogsWithin: dockRef/);
     assert.match(dock, /!mobileFloating\.hasBlockingDialog/);
-    assert.match(gate, /const mobileControlsHidden = mobileFloating\.hidden \|\| panelOpen/);
-    assert.match(gate, /data-mobile-hidden=\{mobileControlsHidden \? "true" : "false"\}/);
+    assert.match(gate, /const floatingControlsHidden = mobileFloating\.hidden \|\| panelOpen \|\| heroAtTop/);
+    assert.match(gate, /data-mobile-hidden=\{floatingControlsHidden \? "true" : "false"\}/);
+    assert.match(gate, /inert=\{floatingControlsHidden \? true : undefined\}/);
     assert.match(gate, /activeElement === homeLaunchRef\.current \|\| activeElement === settingsLaunchRef\.current/);
     assert.doesNotMatch(dock, /mobileFloating[\s\S]{0,120}return null/);
 });

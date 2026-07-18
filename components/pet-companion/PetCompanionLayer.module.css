@@ -156,7 +156,23 @@
     pointer-events: none;
     opacity: 0;
     transform: translate3d(4px, 4px, 0) scale(.86);
-    animation: pet-home-bark-reminder 7.2s ease-in-out infinite;
+    animation: pet-home-bark-reminder 14.4s ease-in-out infinite;
+}
+
+.settingsLaunch[data-mobile-hidden="true"],
+.homeLaunch[data-mobile-hidden="true"] {
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(calc(100% + 4px));
+}
+
+.settingsLaunch[data-mobile-hidden="true"] {
+    transition-delay: 0s, 0s, 0s, .14s;
+}
+
+.homeLaunch[data-mobile-hidden="true"] {
+    transition-delay: 0s, 0s, 0s, 0s, .14s;
 }
 
 .homeLaunch:focus-visible,
@@ -828,23 +844,6 @@
         top: -10px;
         right: 31px;
     }
-    .settingsLaunch[data-companion-enabled="false"] {
-        opacity: .86;
-    }
-    .settingsLaunch[data-mobile-hidden="true"],
-    .homeLaunch[data-mobile-hidden="true"] {
-        visibility: hidden;
-        pointer-events: none;
-        opacity: 0;
-        transform: translateX(calc(100% + 4px));
-    }
-    .settingsLaunch[data-mobile-hidden="true"] {
-        transition-delay: 0s, 0s, 0s, .14s;
-    }
-    .homeLaunch[data-mobile-hidden="true"] {
-        transition-delay: 0s, 0s, 0s, 0s, .14s;
-    }
-
     .dialogBackdrop { padding: 8px; }
     .dialog {
         max-height: calc(100dvh - 16px);
@@ -992,15 +991,15 @@
 }
 
 @keyframes pet-home-bark-reminder {
-    0%, 24%, 51%, 100% {
+    0%, 12%, 25.5%, 100% {
         opacity: 0;
         transform: translate3d(4px, 4px, 0) scale(.86);
     }
-    30%, 43% {
+    15%, 21.5% {
         opacity: 1;
         transform: translate3d(0, 0, 0) scale(1);
     }
-    36% {
+    18% {
         opacity: 1;
         transform: translate3d(-2px, -2px, 0) scale(1.04) rotate(-1deg);
     }

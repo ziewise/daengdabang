@@ -56,8 +56,9 @@ export default function PetCompanionGate() {
     const homeTransitionTimerRef = useRef<number | null>(null);
     const homeLaunchRef = useRef<HTMLButtonElement>(null);
     const settingsLaunchRef = useRef<HTMLButtonElement>(null);
-    const mobileControlsHidden = mobileFloating.hidden || panelOpen;
     const heroActive = isHeroRoute(pathname);
+    const heroAtTop = heroActive && mobileFloating.isAtPageTop;
+    const floatingControlsHidden = mobileFloating.hidden || panelOpen || heroAtTop;
     const signupGuideActive = isSignupGuideRoute(pathname);
     const heroVisualScope = hydrated && !state.user && heroActive ? pathname : null;
     const heroVisualScopeRef = useRef<string | null>(null);
@@ -86,12 +87,12 @@ export default function PetCompanionGate() {
     }, []);
 
     useEffect(() => {
-        if (!mobileControlsHidden) return;
+        if (!floatingControlsHidden) return;
         const activeElement = document.activeElement;
         if (activeElement === homeLaunchRef.current || activeElement === settingsLaunchRef.current) {
             (activeElement as HTMLElement).blur();
         }
-    }, [mobileControlsHidden]);
+    }, [floatingControlsHidden]);
 
     useEffect(() => {
         if (!hydrated) return;
@@ -332,15 +333,16 @@ export default function PetCompanionGate() {
                     aria-label={homeLaunchLabel}
                     title={homeLaunchLabel}
                     aria-pressed={!companionEnabled}
-                    aria-hidden={mobileControlsHidden ? "true" : undefined}
-                    tabIndex={mobileControlsHidden ? -1 : undefined}
+                    aria-hidden={floatingControlsHidden ? "true" : undefined}
+                    inert={floatingControlsHidden ? true : undefined}
+                    tabIndex={floatingControlsHidden ? -1 : undefined}
                     disabled={Boolean(homeTransition)}
                     data-pet-companion-home
                     data-pet-guide-target="home"
                     data-home-occupied={!companionEnabled ? "true" : "false"}
                     data-home-transition={homeTransition || "idle"}
                     data-panel-open={panelOpen}
-                    data-mobile-hidden={mobileControlsHidden ? "true" : "false"}
+                    data-mobile-hidden={floatingControlsHidden ? "true" : "false"}
                     data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
                     data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
                     data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
@@ -367,13 +369,14 @@ export default function PetCompanionGate() {
                 aria-label={settingsLaunchLabel}
                 title={settingsLaunchLabel}
                 aria-haspopup="dialog"
-                aria-hidden={mobileControlsHidden ? "true" : undefined}
-                tabIndex={mobileControlsHidden ? -1 : undefined}
+                aria-hidden={floatingControlsHidden ? "true" : undefined}
+                inert={floatingControlsHidden ? true : undefined}
+                tabIndex={floatingControlsHidden ? -1 : undefined}
                 data-pet-companion-settings
                 data-pet-guide-target="settings"
                 data-companion-enabled={companionEnabled ? "true" : "false"}
                 data-panel-open={panelOpen}
-                data-mobile-hidden={mobileControlsHidden ? "true" : "false"}
+                data-mobile-hidden={floatingControlsHidden ? "true" : "false"}
                 data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
                 data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
                 data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}

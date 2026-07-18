@@ -21,6 +21,10 @@ import ChatWidget from "@/components/site/ChatWidget";
 import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
 import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
 
+function isHeroRoute(pathname: string | null) {
+    return pathname === "/" || pathname === "/main" || pathname === "/main/";
+}
+
 export default function FloatingDock() {
     const pathname = usePathname();
     const [shown, setShown] = useState(false);
@@ -69,9 +73,10 @@ export default function FloatingDock() {
     //   ChatWidget 은 relative 라 dock 기준으로 배치된다(예전엔 ChatWidget 이 자체 fixed 라
     //   buybar 회피가 안 먹혀 하단 구매 바와 겹쳤음). fade 는 translate 없이 opacity 로만
     //   처리한다(자식 채팅창 폭 깨짐 방지). dock 자체는 pointer-events-none, 노출 시 버튼만 auto.
+    const heroAtTop = isHeroRoute(pathname) && mobileFloating.isAtPageTop;
     const baseDockVisible = shown || navigatorReveal;
     const dockVisible = !mobileFloating.hasBlockingDialog
-        && (chatOpen || (baseDockVisible && !mobileFloating.isScrolling));
+        && (chatOpen || (!heroAtTop && baseDockVisible && !mobileFloating.isScrolling));
     const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
     const dockBottom = buybar
         ? (mobileFloating.isMobile

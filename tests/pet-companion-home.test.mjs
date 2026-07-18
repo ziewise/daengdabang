@@ -9,7 +9,10 @@ async function readSource(path) {
 }
 
 test("the companion home control hides and restores the dog without opening settings", async () => {
-    const gate = await readSource("components/pet-companion/PetCompanionGate.tsx");
+    const [gate, css] = await Promise.all([
+        readSource("components/pet-companion/PetCompanionGate.tsx"),
+        readSource("components/pet-companion/PetCompanionLayer.module.css"),
+    ]);
 
     assert.match(gate, /data-pet-companion-home/);
     assert.match(gate, /data-pet-guide-target="home"/);
@@ -45,6 +48,11 @@ test("the companion home control hides and restores the dog without opening sett
     );
     assert.doesNotMatch(settingsHandler, /enabled: true/);
     assert.doesNotMatch(settingsHandler, /writeLocalCompanionSettings/);
+    assert.match(css, /animation: pet-home-bark-reminder 14\.4s ease-in-out infinite/);
+    assert.match(css, /0%, 12%, 25\.5%, 100%/);
+    assert.match(css, /15%, 21\.5%/);
+    assert.match(css, /\n    18% \{/);
+    assert.doesNotMatch(css, /pet-home-bark-reminder 7\.2s/);
 });
 
 test("the navigator explains the home and settings controls without outranking product guidance", async () => {
@@ -77,7 +85,7 @@ test("the navigator explains the home and settings controls without outranking p
     assert.match(chatEvents, /CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT = "ddb:reveal-chat-widget-for-navigator"/);
     assert.match(dock, /window\.addEventListener\(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, revealForNavigator\)/);
     assert.match(dock, /const baseDockVisible = shown \|\| navigatorReveal/);
-    assert.match(dock, /chatOpen \|\| \(baseDockVisible && !mobileFloating\.isScrolling\)/);
+    assert.match(dock, /chatOpen \|\| \(!heroAtTop && baseDockVisible && !mobileFloating\.isScrolling\)/);
     assert.match(dock, /\}, \[pathname\]\);/);
 });
 

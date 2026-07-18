@@ -40,6 +40,7 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {
     const [isMobile, setIsMobile] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
     const [hasBlockingDialog, setHasBlockingDialog] = useState(false);
+    const [isAtPageTop, setIsAtPageTop] = useState(true);
 
     useEffect(() => {
         const query = window.matchMedia(MOBILE_FLOATING_QUERY);
@@ -47,6 +48,17 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {
         update();
         query.addEventListener("change", update);
         return () => query.removeEventListener("change", update);
+    }, []);
+
+    useEffect(() => {
+        const update = () => setIsAtPageTop(window.scrollY <= 0);
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update);
+        return () => {
+            window.removeEventListener("scroll", update);
+            window.removeEventListener("resize", update);
+        };
     }, []);
 
     useEffect(() => {
@@ -129,6 +141,7 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin }: Options = {
     return {
         hasBlockingDialog,
         hidden: isMobile && (isScrolling || hasBlockingDialog),
+        isAtPageTop,
         isMobile,
         isScrolling,
     };
