@@ -4,13 +4,54 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { CatalogProduct, CategorySlug, SubcategorySlug } from "@/lib/catalog";
 
 export type Locale = "ko" | "en";
+export type RegionCode = "KR" | "US";
+export type CurrencyCode = "KRW" | "USD";
 
 const STORAGE_KEY = "daengdabang.locale";
+const REGION_STORAGE_KEY = "daengdabang.region";
+
+/**
+ * 지역 설정 — 국가 선택 시 통화·기본 언어가 함께 정해진다.
+ * 지금은 한국/미국만. 향후 여기에 항목만 추가하면 모달·통화가 자동 확장된다.
+ * defaultLocale = 그 국가에서 처음 정해지는 언어(사용자가 모달에서 수동 변경 가능).
+ */
+export type RegionConfig = {
+    code: RegionCode;
+    labelKo: string;
+    labelEn: string;
+    flag: string;              // 이모지 국기
+    currency: CurrencyCode;
+    currencyLabelKo: string;
+    currencyLabelEn: string;
+    defaultLocale: Locale;
+};
+
+export const REGIONS: RegionConfig[] = [
+    {
+        code: "KR", labelKo: "대한민국", labelEn: "Korea, South", flag: "🇰🇷",
+        currency: "KRW", currencyLabelKo: "원 (KRW)", currencyLabelEn: "Won (KRW)", defaultLocale: "ko",
+    },
+    {
+        code: "US", labelKo: "미국", labelEn: "United States", flag: "🇺🇸",
+        currency: "USD", currencyLabelKo: "달러 (USD)", currencyLabelEn: "Dollar (USD)", defaultLocale: "en",
+    },
+];
+
+export function regionByCode(code: RegionCode): RegionConfig {
+    return REGIONS.find((r) => r.code === code) ?? REGIONS[0];
+}
+
+// 원↔달러 환산(고정 환율 근사치 — PG/환율 API 연동 전까지의 표시용)
+const USD_PER_KRW = 1 / 1350;
 
 type I18nContextValue = {
     locale: Locale;
     setLocale: (locale: Locale) => void;
     toggleLocale: () => void;
+    region: RegionCode;
+    /** 국가 변경 — 통화가 함께 바뀌고 언어는 그 국가 기본값으로(이후 수동 변경 가능) */
+    setRegion: (code: RegionCode) => void;
+    currency: CurrencyCode;
     t: (key: I18nKey) => string;
     formatPrice: (value: number) => string;
     productName: (product: CatalogProduct | Pick<CatalogProduct, "name" | "brandEn" | "brandKo">) => string;
@@ -116,6 +157,13 @@ const STRINGS = {
         externalCompareFeedNote: "RPA 시장조사 피드가 갱신되면 이 영역에 자동으로 추가됩니다.",
         videoPlay: "영상 재생",
         videoStop: "영상 정지",
+        regionModalTitle: "국가 및 언어 선택",
+        regionField: "국가/지역",
+        currencyField: "통화",
+        languageField: "언어",
+        regionChangeWarning: "쇼핑 도중에 지역을 변경하시면 장바구니에 담긴 상품이 초기화될 수 있으니 주의해 주세요.",
+        save: "저장하기",
+        settings: "설정",
     },
     en: {
         best: "Best",
@@ -213,6 +261,13 @@ const STRINGS = {
         externalCompareFeedNote: "When the RPA market research feed is refreshed, candidates appear here automatically.",
         videoPlay: "Play video",
         videoStop: "Pause video",
+        regionModalTitle: "Select country & language",
+        regionField: "Country/Region",
+        currencyField: "Currency",
+        languageField: "Language",
+        regionChangeWarning: "Changing your region while shopping may clear items in your cart.",
+        save: "Save",
+        settings: "Settings",
     },
 } as const;
 
@@ -425,8 +480,13 @@ function translateProductName(product: CatalogProduct | Pick<CatalogProduct, "na
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [locale, setLocaleState] = useState<Locale>("ko");
+    const [region, setRegionState] = useState<RegionCode>("KR");
 
     useEffect(() => {
+        // 저장된 지역 우선 복원(통화 기준)
+        const savedRegion = window.localStorage.getItem(REGION_STORAGE_KEY);
+        if (savedRegion === "KR" || savedRegion === "US") setRegionState(savedRegion);
+
         const saved = window.localStorage.getItem(STORAGE_KEY);
         if (saved === "ko" || saved === "en") {
             setLocaleState(saved);
@@ -440,6 +500,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             if (!edgeLocale) return;
             setLocaleState(edgeLocale);
             document.documentElement.lang = edgeLocale;
+            // 지역 미저장 시 감지된 언어로 지역도 초기 추정(KR/그 외 US)
+            if (!savedRegion) setRegionState(edgeLocale === "ko" ? "KR" : "US");
         });
     }, []);
 
@@ -449,17 +511,37 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         document.documentElement.lang = next;
     }, []);
 
+    // 국가 변경 — 통화가 함께 바뀌고, 언어는 그 국가 기본값으로 자동 설정(이후 수동 변경 가능)
+    const setRegion = useCallback((code: RegionCode) => {
+        const cfg = regionByCode(code);
+        setRegionState(code);
+        window.localStorage.setItem(REGION_STORAGE_KEY, code);
+        setLocale(cfg.defaultLocale);
+    }, [setLocale]);
+
+    const currency = regionByCode(region).currency;
+
     const value = useMemo<I18nContextValue>(() => ({
         locale,
         setLocale,
         toggleLocale: () => setLocale(locale === "ko" ? "en" : "ko"),
+        region,
+        setRegion,
+        currency,
         t: (key) => STRINGS[locale][key] || STRINGS.ko[key],
-        formatPrice: (value) => locale === "en" ? `₩${value.toLocaleString("en-US")}` : `${value.toLocaleString("ko-KR")}원`,
+        // 통화는 지역(currency)에 따름: USD 는 환산가($), KRW 는 원가
+        formatPrice: (value) => {
+            if (currency === "USD") {
+                const usd = value * USD_PER_KRW;
+                return `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+            return locale === "en" ? `₩${value.toLocaleString("en-US")}` : `${value.toLocaleString("ko-KR")}원`;
+        },
         productName: (product) => translateProductName(product, locale),
         categoryLabel: (slug, fallback) => locale === "en" ? CATEGORY_EN[slug] : fallback || CATEGORY_KO[slug],
         subcategoryLabel: (slug, fallback) => locale === "en" ? SUBCATEGORY_EN[slug] : fallback || SUBCATEGORY_KO[slug],
         menuLabel: (label) => locale === "en" ? MENU_EN[label] || translateProductName({ name: label, brandEn: "", brandKo: "" }, "en") : label,
-    }), [locale, setLocale]);
+    }), [locale, setLocale, region, setRegion, currency]);
 
     return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }

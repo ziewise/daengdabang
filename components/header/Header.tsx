@@ -195,9 +195,6 @@ export default function Header() {
                         >
                             <i className="fa-solid fa-camera text-sm transition-transform group-hover:scale-110" />
                         </button>
-                        <div className="hidden lg:block">
-                            <LanguageSwitcher />
-                        </div>
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
@@ -233,6 +230,11 @@ export default function Header() {
                             </Link>
                         )}
 
+                        {/* 언어 전환 — 맨 우측 끝(설정 성격이라 구석 배치). flex items-center 로 세로 정중앙 */}
+                        <div className="hidden lg:flex items-center pl-1">
+                            <LanguageSwitcher />
+                        </div>
+
                         <button
                             type="button"
                             onClick={() => setMobileOpen(true)}
@@ -258,7 +260,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
     return (
         <Link
             href={href}
-            className="px-4 py-2 text-sm font-bold text-foreground hover:text-aurora-indigo transition rounded-lg"
+            className="px-4 py-2 text-base font-bold text-foreground hover:text-aurora-indigo transition rounded-lg"
         >
             {children}
         </Link>
@@ -292,7 +294,7 @@ function NavDropdown({
         >
             <button
                 type="button"
-                className="rounded-lg px-4 py-2 text-sm font-bold text-foreground transition hover:text-aurora-indigo"
+                className="rounded-lg px-4 py-2 text-base font-bold text-foreground transition hover:text-aurora-indigo"
             >
                 {label}
             </button>

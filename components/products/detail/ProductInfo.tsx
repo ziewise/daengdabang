@@ -169,46 +169,18 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     </div>
                 )}
 
-                {/* 가격 라인 — 착용 가능 상품은 금액 옆에서 바로 입혀보기를 시작한다 */}
+                {/* 가격 라인 */}
                 <div className="flex flex-wrap items-end justify-between gap-3">
-                    <div className="flex flex-wrap items-end gap-3">
-                        <div>
-                            {p.discountRate > 0 && p.originalPrice && (
-                                <div className="mb-1 flex items-center gap-2">
-                                    <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
-                                    <span className="text-sm text-neutral-400 line-through">{formatPrice(p.originalPrice)}</span>
-                                </div>
-                            )}
-                            <p className="text-4xl font-black text-neutral-950">
-                                {formatPrice(p.price)}
-                            </p>
-                        </div>
-                        {canTryOn && onTryOn && (
-                            <button
-                                type="button"
-                                onClick={onTryOn}
-                                data-pet-guide-target="try-on"
-                                aria-label={locale === "en" ? "Preview this product on my dog" : "우리 아이에게 이 상품 입혀보기"}
-                                className="group relative inline-flex min-h-14 shrink-0 items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500 px-4 py-2.5 text-left text-white shadow-[0_12px_28px_-12px_rgba(79,70,229,0.9)] ring-1 ring-white/30 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-12px_rgba(124,58,237,0.95)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none md:px-5"
-                            >
-                                <span
-                                    aria-hidden="true"
-                                    className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-18deg] bg-white/20 transition-[left] duration-700 group-hover:left-[120%] motion-reduce:hidden"
-                                />
-                                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/18 shadow-inner ring-1 ring-white/35 transition group-hover:scale-105 motion-reduce:transform-none">
-                                    <i className="fa-solid fa-paw text-sm" />
-                                </span>
-                                <span className="relative min-w-0">
-                                    <span className="block text-[10px] font-bold tracking-wide text-indigo-100">
-                                        {locale === "en" ? "Preview the fit with a photo" : "사진으로 착용 모습 미리보기"}
-                                    </span>
-                                    <span className="mt-0.5 block text-sm font-black md:text-[15px]">
-                                        {locale === "en" ? "Try it on my dog" : "우리 아이에게 바로 입혀보기"}
-                                    </span>
-                                </span>
-                                <i className="fa-solid fa-chevron-right relative ml-0.5 text-[10px] text-white/85 transition-transform group-hover:translate-x-1 motion-reduce:transform-none" />
-                            </button>
+                    <div>
+                        {p.discountRate > 0 && p.originalPrice && (
+                            <div className="mb-1 flex items-center gap-2">
+                                <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
+                                <span className="text-sm text-neutral-400 line-through">{formatPrice(p.originalPrice)}</span>
+                            </div>
                         )}
+                        <p className="text-4xl font-black text-neutral-950">
+                            {formatPrice(p.price)}
+                        </p>
                     </div>
                     {/* 링크·공유 — 금액 라인 우측 끝(아이콘만) */}
                     <ProductShareActions product={p} />
@@ -237,6 +209,36 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     onColorChange={onColorChange}
                     className="hidden lg:block"
                 />
+
+                {/* 착용 미리보기 — 옵션 선택 아래에 배치. 색상=마이페이지 버튼 톤(aurora blue→indigo).
+                    아이콘은 pet-clothes.png 를 둥근 모서리 흰 타일로 감싸 표시 */}
+                {canTryOn && onTryOn && (
+                    <button
+                        type="button"
+                        onClick={onTryOn}
+                        data-pet-guide-target="try-on"
+                        aria-label={locale === "en" ? "Preview this product on my dog" : "우리 아이에게 이 상품 입혀보기"}
+                        className="group relative inline-flex w-fit max-w-full items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo px-4 py-3 text-left text-white shadow-[0_12px_28px_-12px_rgba(67,56,202,0.85)] transition duration-300 hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none"
+                    >
+                        <span
+                            aria-hidden="true"
+                            className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-18deg] bg-white/20 transition-[left] duration-700 group-hover:left-[120%] motion-reduce:hidden"
+                        />
+                        {/* pet-clothes 아이콘 — 각진 사각 대신 둥근 모서리 흰 타일 */}
+                        <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl bg-white shadow-inner ring-1 ring-white/50 transition group-hover:scale-105 motion-reduce:transform-none">
+                            <Image src="/images/ui/pet-clothes.png" alt="" fill sizes="44px" className="object-cover" />
+                        </span>
+                        <span className="relative min-w-0">
+                            <span className="block text-[11px] font-bold tracking-wide text-indigo-100">
+                                {locale === "en" ? "Preview the fit" : "착용 모습 미리보기"}
+                            </span>
+                            <span className="mt-0.5 block text-sm font-black md:text-[15px]">
+                                {locale === "en" ? "Try it on my dog" : "우리 아이에게 입혀보기"}
+                            </span>
+                        </span>
+                        <i className="fa-solid fa-chevron-right relative ml-0.5 text-[10px] text-white/85 transition-transform group-hover:translate-x-1 motion-reduce:transform-none" />
+                    </button>
+                )}
 
                 {/* 메인 액션 — 누르면 옵션 시트. 이 영역이 화면 밖이면 하단 바 노출 */}
                 <div ref={actionRef} data-pet-guide-target="product-actions" className="grid grid-cols-[56px_1fr_1fr] gap-2">
