@@ -32,8 +32,26 @@ export type ExternalProductResult = {
     optionName?: string;
     optionPriceDelta?: number;
     totalPrice?: number | null;
+    priceConfidence?: "verified" | "observed" | "estimate" | "range_low" | "unavailable" | string;
+    priceEvidence?: string;
+    priceComparable?: boolean;
+    linkKind?: "product" | "search" | "missing" | string;
     specGroup?: string;
     specs?: Record<string, string>;
+    comparisonModel?: string;
+    unitLabel?: string;
+    unitsPerPack?: number | null;
+    packCount?: number | null;
+    totalUnits?: number | null;
+    unitPrice?: number | null;
+    sizeLabel?: string;
+    widthCm?: number | null;
+    heightCm?: number | null;
+    dimensions?: string;
+    comparisonStatus?: "anchor" | "exact_match" | "unit_match" | "variant_mismatch" | "different_product" | "unverified" | "reference_only" | string;
+    comparisonAnchorId?: string;
+    comparisonReason?: string;
+    comparisonEligible?: boolean;
     priceHistory?: Array<Record<string, string | number | null>>;
     historyStats?: {
         sampleCount?: number;

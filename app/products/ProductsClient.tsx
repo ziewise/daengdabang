@@ -16,6 +16,7 @@ import {
 } from "@/lib/catalog";
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
+import { comparisonStatus, relatedReferenceOrder } from "@/lib/external-products/comparison";
 import { trackExternalSearchResults } from "@/lib/storefront-analytics";
 import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
 import { useI18n } from "@/lib/i18n";
@@ -97,6 +98,13 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         return applySort(list, sort);
     }, [query, category, subcategory, sort]);
     const hasSearch = query.trim().length > 0;
+    const referenceExternalProducts = useMemo(() => {
+        const hasAnchor = externalProducts.some((product) => comparisonStatus(product) === "anchor");
+        const rows = hasAnchor
+            ? externalProducts.filter((product) => !["anchor", "exact_match", "unit_match"].includes(comparisonStatus(product)))
+            : externalProducts;
+        return [...rows].sort((a, b) => relatedReferenceOrder(a) - relatedReferenceOrder(b) || b.rank - a.rank);
+    }, [externalProducts]);
 
     const externalFilter = useMemo(() => ({
         category: category === "all" ? undefined : category,
@@ -159,7 +167,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const heading = title ? menuLabel(title) : t("allProducts");
 
     return (
-        <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+        <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
                 <p className="text-sm font-black text-indigo-700">{t("productCount")} {countText(visibleCount)}</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">
@@ -229,7 +237,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
             )}
 
             {hasSearch && (
-                <section className="mt-10 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
+                <section className="mt-10 min-w-0 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
                     <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
                         <div>
                             <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Price Compare</p>
@@ -244,11 +252,30 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                     {externalProducts.length > 0 ? (
                         <>
                             <ExternalProductComparisonTable products={externalProducts} query={query.trim()} />
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                                {externalProducts.map((product) => (
-                                    <ExternalProductCard key={product.id} product={product} query={query.trim()} />
-                                ))}
-                            </div>
+                            {referenceExternalProducts.length > 0 && (
+                                <div>
+                                    <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+                                        <div>
+                                            <h3 className="text-base font-black text-neutral-950">
+                                                {locale === "en" ? "Other products and marketplace results" : "다른 상품·외부몰 둘러보기"}
+                                            </h3>
+                                            <p className="mt-1 text-xs font-bold text-neutral-500">
+                                                {locale === "en"
+                                                    ? "Different brands, sizes and quantities are useful for discovery but are excluded from the exact-SKU lowest price."
+                                                    : "브랜드·크기·수량이 다른 상품은 탐색용으로 보여주되 동일 SKU 최저가에는 섞지 않습니다."}
+                                            </p>
+                                        </div>
+                                        <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-800">
+                                            {locale === "en" ? "Reference only" : "참고 결과"} {countText(referenceExternalProducts.length)}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                                        {referenceExternalProducts.map((product) => (
+                                            <ExternalProductCard key={product.id} product={product} query={query.trim()} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </>
                     ) : (
                         <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
