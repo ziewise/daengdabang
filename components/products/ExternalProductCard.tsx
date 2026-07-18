@@ -12,6 +12,7 @@ import {
     unitSummary,
 } from "@/lib/external-products/comparison";
 import { useI18n } from "@/lib/i18n";
+import { trackDirectExternalProductClick } from "@/lib/storefront-analytics";
 
 type Props = {
     product: ExternalProductResult;
@@ -29,6 +30,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
     const perUnit = unitPrice(product);
     const quantitySummary = unitSummary(product, locale);
     const href = externalProductHref(product, query, "card");
+    const trackDirectClick = () => trackDirectExternalProductClick({ product, query, targetUrl: href, surface: "card" });
     const displayThumbnail = estimate && product.sourceName.includes("네이버")
         ? "/images/marketplaces/naver-shopping.svg"
         : product.thumbnail;
@@ -53,6 +55,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                 rel="noopener noreferrer"
                 className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
                 aria-label={`${product.title} ${isMarketplaceSearch ? "external search" : "external price comparison"}`}
+                onClick={trackDirectClick}
             >
                 <img
                     src={displayThumbnail}
@@ -113,6 +116,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
+                    onClick={trackDirectClick}
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
                     {searchReference

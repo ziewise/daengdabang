@@ -16,6 +16,7 @@ import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
 import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 type Message = {
     role: "user" | "assistant";
@@ -75,6 +76,10 @@ export default function ChatPageClient() {
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
 
+    useEffect(() => {
+        trackStorefrontEvent("chat_opened", { surface: "chat_page" });
+    }, []);
+
     const clearChat = () => {
         setInput("");
         setLoading(false);
@@ -85,6 +90,10 @@ export default function ChatPageClient() {
         const trimmed = question.trim();
         if (!trimmed || loading) return;
         setLoading(true);
+        trackStorefrontEvent("chat_message_sent", {
+            surface: "chat_page",
+            hasPetProfile: Boolean(selectedPet),
+        });
         const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
             role: item.role,
             content: item.text,
@@ -105,6 +114,17 @@ export default function ChatPageClient() {
                     conversation: result.conversation,
                 },
             ]);
+            trackStorefrontEvent("chat_response_succeeded", {
+                surface: "chat_page",
+                hasProducts: Boolean(result.products?.length),
+                hasMedicalGuidance: Boolean(result.medical),
+            });
+        } catch (error) {
+            trackStorefrontEvent("chat_response_failed", {
+                surface: "chat_page",
+                errorCode: "request_failed",
+            });
+            throw error;
         } finally {
             setLoading(false);
         }

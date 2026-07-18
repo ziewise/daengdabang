@@ -47,6 +47,7 @@ import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary"
 import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
 import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 // 관심 포인트 — 협업자 PetLensClient 와 동일하게 유지(분석 입력 호환)
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -147,6 +148,7 @@ export default function PetLensModalContent() {
         event.preventDefault();
         setLoading(true);
         setAnalysisError("");
+        trackStorefrontEvent("petlens_started", { mode: "photo", surface: "modal" });
         try {
             const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
                 || (!editingPetProfileId ? user?.pets[0] : undefined);
@@ -188,6 +190,7 @@ export default function PetLensModalContent() {
                 profile: analyzedProfile,
             }, confirmedPet);
             setResult(resultWithConfirmedProfile); // result 세팅 = 결과 단계로 전환
+            trackStorefrontEvent("petlens_completed", { mode: "photo", surface: "modal" });
             try {
                 const profileToSave = {
                     ...confirmedPet,
@@ -208,6 +211,11 @@ export default function PetLensModalContent() {
             }
         } catch (error) {
             setResult(null);
+            trackStorefrontEvent("petlens_failed", {
+                mode: "photo",
+                surface: "modal",
+                errorCode: "analysis_or_validation_failed",
+            });
             const message = error instanceof Error ? error.message : "사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
             setAnalysisError(`분석을 완료하지 못했습니다. ${message}`);
         } finally {

@@ -34,6 +34,7 @@ import {
     type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 // 모달 본문 — 입력→결과 "단계 전환" 콘텐츠(우리 UI).
 // 분석/저장은 내부에서 협업자 함수(analyzePetLensSmart 등)를 그대로 호출하므로 LLM 은 보존.
@@ -73,7 +74,10 @@ export function usePetLensModal() {
 export default function PetLensModalProvider({ children }: { children: ReactNode }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const open = useCallback(() => setIsOpen(true), []);
+    const open = useCallback(() => {
+        trackStorefrontEvent("petlens_opened", { mode: "photo", surface: "modal" });
+        setIsOpen(true);
+    }, []);
     const close = useCallback(() => setIsOpen(false), []);
 
     // 모달 열려 있는 동안 배경 스크롤 잠금 + ESC 로 닫기

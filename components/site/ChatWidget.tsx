@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/store";
 import { CHAT_WIDGET_OPEN_EVENT, type ChatWidgetOpenDetail } from "@/lib/chat-widget-events";
 import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 type Message = {
     role: "user" | "assistant";
@@ -92,12 +93,18 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         const wasOpen = previouslyOpenRef.current;
         previouslyOpenRef.current = open;
         if (open === wasOpen) return;
+        if (open) {
+            trackStorefrontEvent("chat_opened", {
+                surface: isMobile ? "mobile_widget" : "desktop_widget",
+                hasProductContext: Boolean(productContext),
+            });
+        }
         const focusFrame = window.requestAnimationFrame(() => {
             if (open) inputRef.current?.focus();
             else triggerRef.current?.focus();
         });
         return () => window.cancelAnimationFrame(focusFrame);
-    }, [onOpenChange, open]);
+    }, [isMobile, onOpenChange, open, productContext]);
 
     useEffect(() => {
         const openFromPage = (event: Event) => {
@@ -124,6 +131,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             : trimmed;
         setInput("");
         setLoading(true);
+        const analyticsSurface = isMobile ? "mobile_widget" : "desktop_widget";
+        trackStorefrontEvent("chat_message_sent", {
+            surface: analyticsSurface,
+            hasProductContext: Boolean(productContext),
+            hasPetProfile: Boolean(user?.pets?.[0]),
+        });
         const history: ShopChatHistoryTurn[] = messages.slice(-12).map((item) => ({
             role: item.role,
             content: item.text,
@@ -144,6 +157,17 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     conversation: result.conversation,
                 },
             ]);
+            trackStorefrontEvent("chat_response_succeeded", {
+                surface: analyticsSurface,
+                hasProducts: Boolean(result.products?.length),
+                hasMedicalGuidance: Boolean(result.medical),
+            });
+        } catch (error) {
+            trackStorefrontEvent("chat_response_failed", {
+                surface: analyticsSurface,
+                errorCode: "request_failed",
+            });
+            throw error;
         } finally {
             setLoading(false);
         }

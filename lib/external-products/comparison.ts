@@ -163,6 +163,8 @@ export function externalProductHref(product: ExternalProductResult, query: strin
         hasThumbnail: Boolean(product.thumbnail),
         rank: product.rank,
         surface,
+        category: product.category,
+        subcategory: product.subcategory,
     }, { affiliateTrail: false });
 }
 

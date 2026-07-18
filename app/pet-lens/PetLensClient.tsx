@@ -26,6 +26,7 @@ import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary"
 import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
 import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
@@ -52,6 +53,10 @@ export default function PetLensClient() {
     const photoCaptureInFlight = useRef(false);
     const editingOwnerKeyRef = useRef(user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "");
     const hydratedTargetRef = useRef(false);
+
+    useEffect(() => {
+        trackStorefrontEvent("petlens_opened", { mode: "photo", surface: "page" });
+    }, []);
 
     useEffect(() => {
         const ownerKey = user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "";
@@ -120,6 +125,7 @@ export default function PetLensClient() {
         event.preventDefault();
         setLoading(true);
         setAnalysisError("");
+        trackStorefrontEvent("petlens_started", { mode: "photo", surface: "page" });
         try {
             const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
                 || (!editingPetProfileId ? user?.pets[0] : undefined);
@@ -158,6 +164,7 @@ export default function PetLensClient() {
                 profile: analyzedProfile,
             }, confirmedPet);
             setResult(resultWithConfirmedProfile);
+            trackStorefrontEvent("petlens_completed", { mode: "photo", surface: "page" });
             try {
                 const profileToSave = {
                     ...confirmedPet,
@@ -178,6 +185,11 @@ export default function PetLensClient() {
             }
         } catch (error) {
             setResult(null);
+            trackStorefrontEvent("petlens_failed", {
+                mode: "photo",
+                surface: "page",
+                errorCode: "analysis_or_validation_failed",
+            });
             const message = error instanceof Error ? error.message : "사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
             setAnalysisError(`펫렌즈 분석을 완료하지 못했습니다. ${message}`);
         } finally {

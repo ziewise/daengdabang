@@ -57,6 +57,8 @@ export function outboundHref(
         hasThumbnail?: boolean;
         rank?: string | number | null;
         surface?: string;
+        category?: string;
+        subcategory?: string;
     } = {},
     options: { affiliateTrail?: boolean } = {}
 ) {
@@ -73,6 +75,8 @@ export function outboundHref(
     if (meta.hasThumbnail !== undefined) params.set("hasThumbnail", meta.hasThumbnail ? "1" : "0");
     if (meta.rank !== undefined && meta.rank !== null && meta.rank !== "") params.set("rank", String(meta.rank));
     if (meta.surface) params.set("surface", meta.surface);
+    if (meta.category) params.set("category", meta.category);
+    if (meta.subcategory) params.set("subcategory", meta.subcategory);
     if (options.affiliateTrail !== false) params.set("via", "partners");
     return `/outbound/?${params.toString()}`;
 }

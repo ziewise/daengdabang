@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import ProductGallery from "@/components/products/detail/ProductGallery";
 import ColorSelect from "@/components/products/detail/ColorSelect";
 import ProductInfo from "@/components/products/detail/ProductInfo";
@@ -19,6 +20,18 @@ export default function ProductDetailClient({ product }: Props) {
     const [colorIdx, setColorIdx] = useState<number | null>(null);
     const [tryOnOpen, setTryOnOpen] = useState(false);
     const colorImage = colorIdx != null ? product.colors?.[colorIdx]?.image : undefined;
+
+    useEffect(() => {
+        trackStorefrontEvent("product_view", {
+            productId: product.id,
+            productName: product.name,
+            category: product.category,
+            subcategory: product.subcategory,
+            brand: product.brandKo || product.brandEn,
+            surface: "product_detail",
+        });
+    }, [product.brandEn, product.brandKo, product.category, product.id, product.name, product.subcategory]);
+
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-6 md:px-6 md:py-10">
             <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">

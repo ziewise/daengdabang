@@ -66,6 +66,8 @@ export default function OutboundRedirectClient() {
     const offerId = params.get("offerId") || "";
     const sourceKind = params.get("kind") || "";
     const surface = params.get("surface") || "outbound";
+    const category = params.get("category") || "";
+    const subcategory = params.get("subcategory") || "";
     const priceText = params.get("priceText") || "";
     const hasThumbnail = params.get("hasThumbnail") === "1";
     const priceParam = params.get("price");
@@ -86,6 +88,7 @@ export default function OutboundRedirectClient() {
     const [affiliateStops, setAffiliateStops] = useState<AffiliateStop[]>(OUTBOUND_AFFILIATE_STOPS);
     const [affiliateConfigReady, setAffiliateConfigReady] = useState(false);
     const hitFiredRef = useRef("");
+    const analyticsFiredRef = useRef("");
 
     useEffect(() => {
         if (!showAffiliateTrail) {
@@ -140,6 +143,9 @@ export default function OutboundRedirectClient() {
             hitFiredRef.current = hitKey;
             fireContractedPartnerHits(partnerHitTargets);
         }
+        const analyticsKey = [target, query, sourceName, productId, offerId, surface].join("|");
+        if (analyticsFiredRef.current === analyticsKey) return;
+        analyticsFiredRef.current = analyticsKey;
         trackOutboundRedirect({
             query,
             targetUrl: target,
@@ -155,12 +161,14 @@ export default function OutboundRedirectClient() {
             hasThumbnail,
             rank,
             surface,
+            category,
+            subcategory,
             viaPartners: showAffiliateTrail,
             partnerHitCount: partnerHitTargets.length,
             partnerHitIds: partnerHitTargets.map((item) => item.id),
             partnerHitMode: partnerHitTargets.length ? "contracted_click" : "",
         });
-    }, [target, query, sourceName, sellerName, productTitle, productId, offerId, sourceKind, totalPrice, priceText, hasThumbnail, rank, surface, showAffiliateTrail, affiliateConfigReady, affiliateStops]);
+    }, [target, query, sourceName, sellerName, productTitle, productId, offerId, sourceKind, totalPrice, priceText, hasThumbnail, rank, surface, category, subcategory, showAffiliateTrail, affiliateConfigReady, affiliateStops]);
 
     useEffect(() => {
         if (!target) return;

@@ -12,6 +12,7 @@ import {
     unitSummary,
 } from "@/lib/external-products/comparison";
 import { useI18n } from "@/lib/i18n";
+import { trackDirectExternalProductClick } from "@/lib/storefront-analytics";
 
 type Props = {
     products: ExternalProductResult[];
@@ -197,6 +198,12 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                             rel="noopener noreferrer"
                                             className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"
                                             aria-label={`${product.title} ${locale === "en" ? "open seller" : "판매처 열기"}`}
+                                            onClick={() => trackDirectExternalProductClick({
+                                                product,
+                                                query,
+                                                targetUrl: externalProductHref(product, query, "exact-comparison"),
+                                                surface: "exact-comparison",
+                                            })}
                                         >
                                             <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
                                         </Link>

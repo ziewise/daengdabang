@@ -5,6 +5,7 @@ import { analyzePetObservation, type PetObservationResult, type PetObservationSi
 import type { PetProfile } from "@/lib/store";
 import { usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 
 const SITUATIONS: Array<{ value: PetObservationSituation; label: string }> = [
@@ -57,6 +58,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         abortRef.current = controller;
         setAnalyzing(true);
         setAnalysisError("");
+        trackStorefrontEvent("petlens_started", { mode: "observation", surface: variant });
         try {
             const next = await analyzePetObservation({
                 clip,
@@ -70,10 +72,16 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                 signal: controller.signal,
             });
             setResult(next);
+            trackStorefrontEvent("petlens_completed", { mode: "observation", surface: variant });
             resetCapture();
         } catch (reason) {
             if (controller.signal.aborted) return;
             resetCapture();
+            trackStorefrontEvent("petlens_failed", {
+                mode: "observation",
+                surface: variant,
+                errorCode: "analysis_failed",
+            });
             setAnalysisError(reason instanceof Error ? reason.message : "관찰 분석을 완료하지 못했습니다.");
         } finally {
             if (!controller.signal.aborted) setAnalyzing(false);
