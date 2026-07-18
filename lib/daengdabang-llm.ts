@@ -1592,7 +1592,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                     ? customerSupportCtaIdentity(cta.url)
                     : cta.url || cta.prompt || cta.label
             }`;
-            const mergedCtas = [...ctas, ...(supportFallback.ctas ?? [])].filter((cta, index, all) => (
+            const mergedCtas = [...(supportFallback.ctas ?? []), ...ctas].filter((cta, index, all) => (
                 all.findIndex((candidate) => ctaIdentity(candidate) === ctaIdentity(cta)) === index
             ));
             return {
