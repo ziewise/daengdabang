@@ -713,6 +713,18 @@ export default function ChatResponseExtras({
                         );
                         const className = "flex min-h-11 w-full items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3 py-2 text-left text-xs font-black text-neutral-900 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500";
                         if (cta.kind === "internal_link" && cta.url) {
+                            if (cta.url.startsWith("/inquiry")) {
+                                return (
+                                    <a
+                                        key={`${cta.kind}-${cta.label}`}
+                                        href={cta.url}
+                                        onClick={onInternalNavigate}
+                                        className={className}
+                                    >
+                                        {content}
+                                    </a>
+                                );
+                            }
                             return (
                                 <Link
                                     key={`${cta.kind}-${cta.label}`}

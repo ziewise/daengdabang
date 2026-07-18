@@ -52,6 +52,7 @@ test("chat support replies guarantee an internal inquiry CTA and suppress remote
     assert.match(llm, /const mergedCtas = \[\.\.\.\(supportFallback\.ctas \?\? \[\]\), \.\.\.ctas\]/);
     assert.match(extras, /cta\.kind === "internal_link" && cta\.url/);
     assert.match(extras, /<Link[\s\S]{0,220}href=\{cta\.url\}/);
+    assert.match(extras, /cta\.url\.startsWith\("\/inquiry"\)[\s\S]{0,360}<a[\s\S]{0,180}href=\{cta\.url\}/);
     assert.match(widget, /onInternalNavigate=\{\(\) => setOpen\(false\)\}/);
 });
 
