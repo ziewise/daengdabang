@@ -158,6 +158,9 @@ export default function WatermarkBadge({
                         muted
                         loop
                         playsInline
+                        // 브라우저 기본 PiP(화면 속 화면) 버튼 숨김 — hover 시 영상 위에 뜨는 검정 버튼 제거
+                        disablePictureInPicture
+                        disableRemotePlayback
                         className={`h-full w-full object-cover${
                             interactive ? " transition-opacity duration-300 group-hover:opacity-0" : ""
                         }`}
