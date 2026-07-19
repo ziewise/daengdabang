@@ -4,7 +4,7 @@ import test from "node:test";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("the root PetLens modal closes both before and after client-side navigation", async () => {
+test("the root PetLens modal starts mobile navigation before closing and also closes after a route change", async () => {
     const [launcher, content, gate] = await Promise.all([
         source("components/petlens/PetLensModalLauncher.tsx"),
         source("components/petlens/PetLensModalContent.tsx"),
@@ -17,7 +17,15 @@ test("the root PetLens modal closes both before and after client-side navigation
     assert.match(launcher, /window\.setTimeout\([\s\S]*setIsOpen\(false\);[\s\S]*setView\("menu"\);[\s\S]*\[pathname\]/);
     assert.equal((launcher.match(/onNavigate=\{close\}/g) || []).length, 2);
     assert.equal((content.match(/onNavigate=\{onNavigate\}/g) || []).length, 3);
-    assert.match(gate, /onClick=\{onNavigate\}/);
+    assert.match(gate, /const router = useRouter\(\)/);
+    assert.equal((gate.match(/onClick=\{navigateBeforeClose\}/g) || []).length, 3);
+    assert.doesNotMatch(gate, /onClick=\{onNavigate\}/);
+
+    const handlerStart = gate.indexOf("const navigateBeforeClose");
+    const handlerEnd = gate.indexOf("const needsLogin", handlerStart);
+    const navigationHandler = gate.slice(handlerStart, handlerEnd);
+    assert.ok(navigationHandler.indexOf("event.preventDefault()") < navigationHandler.indexOf("router.push(href)"));
+    assert.ok(navigationHandler.indexOf("router.push(href)") < navigationHandler.indexOf("onNavigate?.()"));
 });
 
 test("guest auth keeps PetLens intent and incomplete members land on profile setup", async () => {

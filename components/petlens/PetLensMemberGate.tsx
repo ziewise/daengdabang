@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, type MouseEvent } from "react";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import {
     PETLENS_PROFILE_SETUP_HREF,
@@ -15,7 +17,31 @@ type Props = {
 };
 
 export default function PetLensMemberGate({ compact = false, reason, service = "petlens", onNavigate }: Props) {
+    const router = useRouter();
     const daenglab = service === "daenglab";
+
+    const navigateBeforeClose = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
+        if (
+            event.defaultPrevented
+            || event.button !== 0
+            || event.metaKey
+            || event.ctrlKey
+            || event.shiftKey
+            || event.altKey
+        ) {
+            return;
+        }
+
+        const href = event.currentTarget.getAttribute("href");
+        if (!href) return;
+
+        // Closing the modal directly from Next Link's onClick can remove the
+        // tapped anchor before mobile browsers finish client-side navigation.
+        // Start navigation explicitly first, then let the root modal close.
+        event.preventDefault();
+        router.push(href);
+        onNavigate?.();
+    }, [onNavigate, router]);
 
     if (reason === "loading") {
         return (
@@ -66,14 +92,14 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
                     <div className="mt-5 grid gap-2 sm:grid-cols-2">
                         <Link
                             href={petLensAuthHref("signup")}
-                            onClick={onNavigate}
+                            onClick={navigateBeforeClose}
                             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-black text-white shadow-sm transition hover:bg-indigo-700"
                         >
                             회원가입하고 시작하기
                         </Link>
                         <Link
                             href={petLensAuthHref("login")}
-                            onClick={onNavigate}
+                            onClick={navigateBeforeClose}
                             className="inline-flex min-h-12 items-center justify-center rounded-xl border-2 border-indigo-200 bg-white px-4 text-sm font-black text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-50"
                         >
                             기존 회원 로그인
@@ -82,7 +108,7 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
                 ) : (
                     <Link
                         href={PETLENS_PROFILE_SETUP_HREF}
-                        onClick={onNavigate}
+                        onClick={navigateBeforeClose}
                         className="mt-5 inline-flex min-h-12 items-center justify-center rounded-xl bg-indigo-600 px-6 text-sm font-black text-white shadow-sm transition hover:bg-indigo-700"
                     >
                         마이페이지에서 등록·확인하기

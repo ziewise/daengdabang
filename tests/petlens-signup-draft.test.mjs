@@ -113,7 +113,9 @@ test("active guest PetLens routes to signup or login while signup keeps legacy d
     assert.match(gate, /petLensAuthHref\("signup"\)/);
     assert.match(gate, /petLensAuthHref\("login"\)/);
     assert.match(gate, /회원가입하고 시작하기/);
-    assert.match(gate, /onClick=\{onNavigate\}/);
+    assert.match(gate, /onClick=\{navigateBeforeClose\}/);
+    assert.match(gate, /event\.preventDefault\(\);[\s\S]*router\.push\(href\);[\s\S]*onNavigate\?\.\(\);/);
+    assert.doesNotMatch(gate, /onClick=\{onNavigate\}/);
     assert.match(launcher, /onNavigate=\{close\}/);
     assert.match(signup, /loadPetLensSignupDraft\(\)/);
     assert.match(signup, /clearPetLensSignupDraft\(\)/);
