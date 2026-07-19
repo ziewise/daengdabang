@@ -124,4 +124,8 @@ test("the moving companion never steals a mobile header action", async () => {
     assert.match(layer, /allowHeader: detail\.allowHeader,\s*motionSource: detail\.motionSource/);
     assert.match(layer, /allowHeader: prompt\.placement === "header",\s*motionSource: "guide"/);
     assert.match(layer, /options\.motionSource === "guide"\s*\? "guide"\s*:\s*"idle"/);
+    assert.match(layer, /const openQuickActions = \(event: ReactMouseEvent<HTMLButtonElement>\)/);
+    assert.match(layer, /const pointerInsideHeader = event\.detail > 0/);
+    assert.match(layer, /document\.elementFromPoint\(event\.clientX, event\.clientY\)/);
+    assert.match(layer, /headerAction && siteHeader\.contains\(headerAction\)\) headerAction\.click\(\)/);
 });

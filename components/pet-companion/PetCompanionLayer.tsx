@@ -9,6 +9,7 @@ import {
     useState,
     type CSSProperties,
     type ChangeEvent,
+    type MouseEvent as ReactMouseEvent,
     type PointerEvent as ReactPointerEvent,
 } from "react";
 import { savePetProfileSmart } from "@/lib/customer-api";
@@ -1956,9 +1957,30 @@ export default function PetCompanionLayer({
 
     const closePrompt = () => dismissTransientPrompt(true);
 
-    const openQuickActions = () => {
+    const openQuickActions = (event: ReactMouseEvent<HTMLButtonElement>) => {
         if (suppressClickRef.current) {
             suppressClickRef.current = false;
+            return;
+        }
+        const siteHeader = document.querySelector<HTMLElement>("header");
+        const headerRect = siteHeader?.getBoundingClientRect();
+        const pointerInsideHeader = event.detail > 0
+            && Boolean(headerRect)
+            && event.clientX >= (headerRect?.left ?? 0)
+            && event.clientX <= (headerRect?.right ?? 0)
+            && event.clientY >= (headerRect?.top ?? 0)
+            && event.clientY <= (headerRect?.bottom ?? 0);
+        if (siteHeader && pointerInsideHeader) {
+            event.preventDefault();
+            event.stopPropagation();
+            const dogButton = event.currentTarget;
+            dogButton.style.pointerEvents = "none";
+            const underlying = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
+            dogButton.style.removeProperty("pointer-events");
+            const headerAction = underlying?.closest<HTMLElement>(
+                "button, a[href], [role='button']",
+            );
+            if (headerAction && siteHeader.contains(headerAction)) headerAction.click();
             return;
         }
         dismissTransientPrompt(false);
