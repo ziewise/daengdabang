@@ -103,6 +103,85 @@ body {
     font-size: 1em;
 }
 
+/* 댕다방 크레파스 워드마크의 결을 잇는 댕랩코인 공통 서명. */
+.ddb-daenglab-coin-mark {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.16em;
+    color: #0f172a;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: -0.08em;
+}
+
+.ddb-daenglab-coin-brand {
+    display: inline-flex;
+    align-items: baseline;
+    letter-spacing: -0.12em;
+    filter: drop-shadow(0.4px 0.45px 0 rgba(15, 23, 42, 0.18));
+}
+
+.ddb-daenglab-coin-brand > span,
+.ddb-daenglab-coin-copy {
+    display: inline-block;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.14px rgba(15, 23, 42, 0.1);
+}
+
+.ddb-daenglab-coin-brand--teal {
+    background-image: repeating-linear-gradient(172deg, #0891b2 0 3px, #15afc0 3px 5px, #07849e 5px 6px);
+    color: #0891b2;
+}
+
+.ddb-daenglab-coin-brand--coral {
+    background-image: repeating-linear-gradient(170deg, #ef476f 0 3px, #f05252 3px 5px, #f97316 5px 7px);
+    color: #ef476f;
+}
+
+.ddb-daenglab-coin-disc {
+    display: inline-grid;
+    width: 1.35em;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 0.11em solid rgba(180, 83, 9, 0.34);
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 32% 27%, rgba(255, 255, 255, 0.78) 0 7%, transparent 8%),
+        repeating-linear-gradient(168deg, #fbbf24 0 3px, #f59e0b 3px 5px, #fb923c 5px 7px);
+    color: #fffaf0;
+    box-shadow:
+        inset 0 0 0 0.1em rgba(255, 251, 235, 0.5),
+        0.04em 0.06em 0 rgba(146, 64, 14, 0.24);
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 0.82em;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1;
+    transform: rotate(-5deg);
+}
+
+.ddb-daenglab-coin-copy {
+    background-image: repeating-linear-gradient(174deg, #f59e0b 0 3px, #fb923c 3px 5px, #d97706 5px 6px);
+    color: #f59e0b;
+    letter-spacing: -0.08em;
+}
+
+.ddb-daenglab-coin-mark--compact {
+    gap: 0.12em;
+    font-size: 0.9em;
+}
+
+.ddb-daenglab-coin-mark--compact .ddb-daenglab-coin-disc {
+    width: 1.24em;
+}
+
 .ddb-daenglab-new-service {
     display: inline-flex;
     min-height: 15px;

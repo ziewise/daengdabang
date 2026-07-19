@@ -24,6 +24,7 @@ import { loadTwinProductStats, type TwinProductStat } from "@/lib/storefront-ana
 import { useI18n } from "@/lib/i18n";
 import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
 import { daengLabCoinsForUnitPrice } from "@/lib/daenglab-rewards";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
@@ -211,13 +212,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         </span>
                         <span aria-hidden="true" className="hidden h-4 w-px bg-neutral-200 sm:block" />
                         <span className="inline-flex flex-wrap items-center gap-2">
-                            <span
-                                aria-hidden="true"
-                                className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-600 px-1 text-[10px] font-black text-white shadow-sm"
-                            >
-                                C
-                            </span>
-                            <span>{locale === "en" ? "DaengLab coins" : "댕랩코인"}</span>
+                            <DaengLabCoinMark en={locale === "en"} compact />
                             <b className="text-indigo-700">{daengLabCoins}C</b>
                             <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-black text-indigo-600">
                                 {locale === "en" ? "Member · after confirmation" : "회원 구매확정 후 적립"}

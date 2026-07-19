@@ -6,6 +6,7 @@ import {
     loadDaengLabWallet,
     type DaengLabWallet,
 } from "@/lib/customer-api";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 
 type Props = {
     accessToken?: string;
@@ -121,7 +122,10 @@ export default function DaengLabWalletCard({ accessToken }: Props) {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <p className="text-[11px] font-black tracking-[0.16em] text-indigo-600">DAENGLAB WALLET</p>
-                        <h2 className="mt-1 text-lg font-black text-neutral-950">댕랩코인 · 적립금</h2>
+                        <h2 className="mt-1 inline-flex flex-wrap items-center gap-1.5 text-lg font-black text-neutral-950">
+                            <DaengLabCoinMark />
+                            <span>· 적립금</span>
+                        </h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
                             행동·소리 분석 1회 {wallet?.analysisCoinCost ?? 10}C · 적립금 {(wallet?.pointConversionUnit ?? 1_000).toLocaleString("ko-KR")}P를 {wallet?.coinConversionUnit ?? 10}C로 전환
                         </p>
@@ -151,7 +155,7 @@ export default function DaengLabWalletCard({ accessToken }: Props) {
                                 <strong className="mt-1 block break-words text-base font-black text-neutral-950 sm:text-lg">{wallet.rewardPoints.toLocaleString("ko-KR")}P</strong>
                             </div>
                             <div className="min-w-0 rounded-xl bg-indigo-50 p-3 text-center">
-                                <span className="text-[10px] font-black text-indigo-700">댕랩코인</span>
+                                <DaengLabCoinMark compact className="text-[11px]" />
                                 <strong className="mt-1 block break-words text-base font-black text-indigo-800 sm:text-lg">{wallet.daengLabCoins.toLocaleString("ko-KR")}C</strong>
                             </div>
                             <div className="col-span-2 min-w-0 rounded-xl bg-emerald-50 p-3 text-center sm:col-span-1">

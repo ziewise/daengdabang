@@ -19,6 +19,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLine, daengLabCoinsForLines } from "@/lib/daenglab-rewards";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
 import { checkoutHref, type CheckoutPaymentMethod, type QuickPaymentMethod } from "@/lib/payment-methods";
 
@@ -345,9 +346,10 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                             <span className="font-bold text-indigo-700">
                                 {locale === "en" ? "Member benefit after confirmation" : "회원 구매확정 후 적립"}
                             </span>
-                            <b className="text-indigo-800 sm:shrink-0">
-                                {locale === "en" ? "DaengLab" : "댕랩코인"} {expectedDaengLabCoins}C
-                                <span className="ml-1 font-bold text-indigo-500">
+                            <b className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 text-indigo-800 sm:shrink-0">
+                                <DaengLabCoinMark en={locale === "en"} compact />
+                                <span>{expectedDaengLabCoins}C</span>
+                                <span className="font-bold text-indigo-500">
                                     {locale === "en" ? "(10C = 1 analysis)" : "(10C = 분석 1회)"}
                                 </span>
                             </b>

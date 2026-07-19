@@ -21,6 +21,7 @@ import SimplePayButtons from "@/components/shop/SimplePayButtons";
 import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLines } from "@/lib/daenglab-rewards";
 import { checkoutHref, type QuickPaymentMethod } from "@/lib/payment-methods";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
 function CheckBtn({ checked, onToggle, label }: { checked: boolean; onToggle: () => void; label: string }) {
@@ -254,14 +255,10 @@ export default function CartPage() {
                             data-daenglab-coin-estimate={expectedDaengLabCoins}
                         >
                             <div className="flex items-center justify-between gap-3">
-                                <span className="inline-flex items-center gap-1.5 text-xs font-black text-indigo-700">
-                                    <span
-                                        aria-hidden="true"
-                                        className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-600 px-1 text-[10px] text-white"
-                                    >
-                                        C
-                                    </span>
-                                    {locale === "en" ? "Member DaengLab coin estimate" : "회원 댕랩코인 적립 예상"}
+                                <span className="inline-flex flex-wrap items-center gap-1.5 text-xs font-black text-indigo-700">
+                                    <span>{locale === "en" ? "Member" : "회원"}</span>
+                                    <DaengLabCoinMark en={locale === "en"} compact />
+                                    <span>{locale === "en" ? "estimate" : "적립 예상"}</span>
                                 </span>
                                 <b className="text-base font-black text-indigo-800">{expectedDaengLabCoins}C</b>
                             </div>

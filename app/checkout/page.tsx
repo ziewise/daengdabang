@@ -6,6 +6,7 @@ import { cartProducts } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLines } from "@/lib/daenglab-rewards";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import {
     CHECKOUT_PAYMENT_METHODS,
     isCheckoutPaymentMethod,
@@ -84,9 +85,16 @@ export default function CheckoutPage() {
                         className="mx-auto mt-4 w-fit rounded-full bg-indigo-50 px-4 py-2 text-sm font-black text-indigo-700"
                         data-daenglab-coin-estimate={selectionRewardEstimate}
                     >
-                        {locale === "en"
-                            ? `Member benefit estimate: ${selectionRewardEstimate}C. Credit is issued only after payment verification and purchase confirmation.`
-                            : `회원 혜택 예상 ${selectionRewardEstimate}C · 실제 결제 확인과 구매확정이 완료된 주문에만 적립됩니다.`}
+                        <span className="inline-flex flex-wrap items-center justify-center gap-1.5">
+                            <span>{locale === "en" ? "Member benefit estimate" : "회원 혜택 예상"}</span>
+                            <DaengLabCoinMark en={locale === "en"} compact />
+                            <span>{selectionRewardEstimate}C</span>
+                            <span>
+                                {locale === "en"
+                                    ? "· Credit is issued only after payment verification and purchase confirmation."
+                                    : "· 실제 결제 확인과 구매확정이 완료된 주문에만 적립됩니다."}
+                            </span>
+                        </span>
                     </p>
                 )}
                 <div className="mt-6 flex justify-center gap-2">
@@ -181,8 +189,10 @@ export default function CheckoutPage() {
                         data-daenglab-coin-estimate={expectedDaengLabCoins}
                     >
                         <div className="flex items-center justify-between gap-3">
-                            <span className="text-xs font-black text-indigo-700">
-                                {locale === "en" ? "Member DaengLab coin estimate" : "회원 댕랩코인 적립 예상"}
+                            <span className="inline-flex flex-wrap items-center gap-1.5 text-xs font-black text-indigo-700">
+                                <span>{locale === "en" ? "Member" : "회원"}</span>
+                                <DaengLabCoinMark en={locale === "en"} compact />
+                                <span>{locale === "en" ? "estimate" : "적립 예상"}</span>
                             </span>
                             <b className="text-base font-black text-indigo-800">{expectedDaengLabCoins}C</b>
                         </div>

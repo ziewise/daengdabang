@@ -13,6 +13,7 @@ import { useAuth, type PetProfile } from "@/lib/store";
 import { usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 
@@ -186,6 +187,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     };
 
     if (result) {
+        const resultCoinCost = result.daengLabCoinCost ?? wallet?.analysisCoinCost ?? 10;
         return (
             <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -208,9 +210,15 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                             : "border-indigo-100 bg-indigo-50 text-indigo-800"
                     }`} role="status">
-                        {result.daengLabCoinRefunded
-                            ? `분석이 어려운 영상이라 10C를 자동으로 돌려드렸어요. 현재 ${result.daengLabCoinBalance}C`
-                            : `댕랩코인 ${result.daengLabCoinCost ?? 10}C 사용 · 현재 ${result.daengLabCoinBalance}C`}
+                        {result.daengLabCoinRefunded ? (
+                            <>
+                                분석이 어려운 영상이라 <DaengLabCoinMark compact className="mx-0.5" /> {resultCoinCost}C를 자동으로 돌려드렸어요. 현재 {result.daengLabCoinBalance}C
+                            </>
+                        ) : (
+                            <>
+                                <DaengLabCoinMark compact className="mr-0.5" /> {resultCoinCost}C 사용 · 현재 {result.daengLabCoinBalance}C
+                            </>
+                        )}
                     </div>
                 )}
                 <PetLensObservationResult result={result} />
@@ -262,7 +270,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
             >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 via-fuchsia-500 to-amber-400 text-xs font-black text-white shadow-sm">C</span>
+                        <DaengLabCoinMark compact className="text-xs" />
                         <div>
                             <p className="text-xs font-black text-neutral-950">댕랩 행동·소리 분석 1회 {analysisCoinCost}C</p>
                             <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출 영상은 자동 환급</p>

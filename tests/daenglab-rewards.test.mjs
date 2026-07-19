@@ -78,7 +78,7 @@ test("shopping surfaces label coins as purchase-confirmation estimates", async (
     ]);
 
     assert.match(productInfo, /daengLabCoinsForUnitPrice\(p\.price\)/);
-    assert.match(productInfo, /댕랩코인/);
+    assert.match(productInfo, /DaengLabCoinMark/);
     assert.match(productInfo, /구매확정 후 적립/);
     assert.match(optionSheet, /unitPrice: unitPrice\(x\.sizeIdx\)/);
     assert.match(optionSheet, /구매확정 후 적립/);
