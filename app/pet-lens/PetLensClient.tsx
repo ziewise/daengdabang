@@ -26,6 +26,7 @@ import PetLensAnalysisSummary from "@/components/petlens/PetLensAnalysisSummary"
 import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
 import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
+import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -199,27 +200,43 @@ export default function PetLensClient() {
 
     const selectedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
         || (!editingPetProfileId ? user?.pets[0] : undefined);
+    const gateService = mode === "observation" ? "daenglab" : "petlens";
     if (!hydrated) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="loading" /></main>;
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="loading" service={gateService} /></main>;
     }
     if (!user) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="login" /></main>;
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="login" service={gateService} /></main>;
     }
     if (!selectedPet?.apiProfileId) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="profile" /></main>;
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="profile" service={gateService} /></main>;
     }
     if (!selectedPet.breed?.trim()) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="breed" /></main>;
+        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="breed" service={gateService} /></main>;
     }
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="mb-6">
-                <p className="text-sm font-black text-indigo-700">펫렌즈 케어</p>
-                <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
-                <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                    회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다.
-                </p>
+                {mode === "observation" ? (
+                    <>
+                        <h1>
+                            <DaengLabServiceTitle
+                                suffixClassName="text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"
+                            />
+                        </h1>
+                        <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
+                            카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다.
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <p className="text-sm font-black text-indigo-700">펫렌즈 케어</p>
+                        <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
+                        <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
+                            회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다.
+                        </p>
+                    </>
+                )}
             </header>
 
             <PetLensModeTabs mode={mode} onChange={setMode} />

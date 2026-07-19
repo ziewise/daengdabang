@@ -21,6 +21,50 @@ export type ApiUser = {
     is_active: boolean;
 };
 
+export type DaengLabWalletTransaction = {
+    id: number;
+    eventType: string;
+    referenceType: string;
+    referenceId: string;
+    rewardPointsDelta: number;
+    daengLabCoinsDelta: number;
+    createdAt: string;
+};
+
+export type DaengLabWallet = {
+    rewardPoints: number;
+    daengLabCoins: number;
+    rewardPointsDebt: number;
+    daengLabCoinsDebt: number;
+    analysesAvailable: number;
+    analysisCoinCost: number;
+    pointConversionUnit: number;
+    coinConversionUnit: number;
+    policyVersion: string;
+    transactions: DaengLabWalletTransaction[];
+};
+
+type ApiDaengLabWallet = {
+    reward_points: number;
+    daenglab_coins: number;
+    reward_points_debt: number;
+    daenglab_coins_debt: number;
+    analyses_available: number;
+    analysis_coin_cost: number;
+    point_conversion_unit: number;
+    coin_conversion_unit: number;
+    policy_version: string;
+    transactions?: Array<{
+        id: number;
+        event_type: string;
+        reference_type: string;
+        reference_id: string;
+        reward_points_delta: number;
+        daenglab_coins_delta: number;
+        created_at: string;
+    }>;
+};
+
 export type CustomerSupportInquiryPayload = {
     category: CustomerSupportCategory;
     name: string;
@@ -54,12 +98,24 @@ type TokenResponse = {
 export class DdbApiError extends Error {
     code?: "missing_api_base" | "http_error";
     status?: number;
+    apiCode?: string;
+    required?: number;
+    balance?: number;
 
-    constructor(message: string, options: { code?: DdbApiError["code"]; status?: number } = {}) {
+    constructor(message: string, options: {
+        code?: DdbApiError["code"];
+        status?: number;
+        apiCode?: string;
+        required?: number;
+        balance?: number;
+    } = {}) {
         super(message);
         this.name = "DdbApiError";
         this.code = options.code;
         this.status = options.status;
+        this.apiCode = options.apiCode;
+        this.required = options.required;
+        this.balance = options.balance;
     }
 }
 
@@ -177,13 +233,28 @@ async function apiJson<T>(
     });
     if (!response.ok) {
         let message = "회원 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+        let apiCode: string | undefined;
+        let required: number | undefined;
+        let balance: number | undefined;
         try {
             const body = await response.clone().json();
             if (typeof body?.detail === "string") message = body.detail;
+            if (body?.detail && typeof body.detail === "object") {
+                if (typeof body.detail.message === "string") message = body.detail.message;
+                if (typeof body.detail.code === "string") apiCode = body.detail.code;
+                if (typeof body.detail.required === "number") required = body.detail.required;
+                if (typeof body.detail.balance === "number") balance = body.detail.balance;
+            }
         } catch {
             // Keep the customer-safe fallback.
         }
-        throw new DdbApiError(message, { code: "http_error", status: response.status });
+        throw new DdbApiError(message, {
+            code: "http_error",
+            status: response.status,
+            apiCode,
+            required,
+            balance,
+        });
     }
     return response.json() as Promise<T>;
 }
@@ -210,6 +281,58 @@ export async function loadCurrentCustomer(token?: string) {
     return apiJson<ApiUser>("/api/v1/auth/me", {
         method: "GET",
     }, token, { requireBase: true });
+}
+
+function normalizeDaengLabWallet(wallet: ApiDaengLabWallet): DaengLabWallet {
+    return {
+        rewardPoints: Number(wallet.reward_points || 0),
+        daengLabCoins: Number(wallet.daenglab_coins || 0),
+        rewardPointsDebt: Number(wallet.reward_points_debt || 0),
+        daengLabCoinsDebt: Number(wallet.daenglab_coins_debt || 0),
+        analysesAvailable: Number(wallet.analyses_available || 0),
+        analysisCoinCost: Number(wallet.analysis_coin_cost || 10),
+        pointConversionUnit: Number(wallet.point_conversion_unit || 1_000),
+        coinConversionUnit: Number(wallet.coin_conversion_unit || 10),
+        policyVersion: wallet.policy_version || "daenglab-wallet-v1",
+        transactions: (wallet.transactions || []).map((entry) => ({
+            id: entry.id,
+            eventType: entry.event_type,
+            referenceType: entry.reference_type,
+            referenceId: entry.reference_id,
+            rewardPointsDelta: entry.reward_points_delta,
+            daengLabCoinsDelta: entry.daenglab_coins_delta,
+            createdAt: entry.created_at,
+        })),
+    };
+}
+
+export async function loadDaengLabWallet(token?: string) {
+    const wallet = await apiJson<ApiDaengLabWallet>("/api/v1/daenglab/wallet", {
+        method: "GET",
+    }, token, { requireBase: true });
+    if (!wallet) throw new DdbApiError("댕랩 지갑을 불러오지 못했습니다.", { code: "http_error" });
+    return normalizeDaengLabWallet(wallet);
+}
+
+export async function convertRewardPointsToDaengLabCoins(
+    rewardPoints: number,
+    idempotencyKey: string,
+    token?: string
+) {
+    const response = await apiJson<{
+        converted_reward_points: number;
+        granted_daenglab_coins: number;
+        wallet: ApiDaengLabWallet;
+    }>("/api/v1/daenglab/wallet/convert", {
+        method: "POST",
+        body: JSON.stringify({ reward_points: rewardPoints, idempotency_key: idempotencyKey }),
+    }, token, { requireBase: true });
+    if (!response) throw new DdbApiError("적립금 전환을 완료하지 못했습니다.", { code: "http_error" });
+    return {
+        convertedRewardPoints: response.converted_reward_points,
+        grantedDaengLabCoins: response.granted_daenglab_coins,
+        wallet: normalizeDaengLabWallet(response.wallet),
+    };
 }
 
 export async function submitCustomerSupportInquiry(payload: CustomerSupportInquiryPayload) {

@@ -98,17 +98,23 @@ test("expired PetLens signup drafts are removed", () => {
     assert.equal(sessionStorage.getItem(PETLENS_SIGNUP_DRAFT_STORAGE_KEY), null);
 });
 
-test("both active guest PetLens CTAs write the dedicated draft and signup restores it", async () => {
-    const [modal, page, signup] = await Promise.all([
+test("active guest PetLens routes to signup or login while signup keeps legacy draft restore", async () => {
+    const [modal, page, gate, launcher, signup] = await Promise.all([
         readFile(new URL("../components/petlens/PetLensModalContent.tsx", import.meta.url), "utf8"),
         readFile(new URL("../app/pet-lens/PetLensClient.tsx", import.meta.url), "utf8"),
+        readFile(new URL("../components/petlens/PetLensMemberGate.tsx", import.meta.url), "utf8"),
+        readFile(new URL("../components/petlens/PetLensModalLauncher.tsx", import.meta.url), "utf8"),
         readFile(new URL("../app/auth/signup/page.tsx", import.meta.url), "utf8"),
     ]);
     for (const source of [modal, page]) {
-        assert.match(source, /savePetLensSignupDraft\(profile\)/);
-        assert.match(source, /onClick=\{\(\) => savePetLensSignupDraft\(result\.profile\)\}/);
-        assert.match(source, /data-petlens-signup-draft-cta/);
+        assert.match(source, /PetLensMemberGate[^>]*reason="login"/);
+        assert.doesNotMatch(source, /savePetLensSignupDraft/);
     }
+    assert.match(gate, /petLensAuthHref\("signup"\)/);
+    assert.match(gate, /petLensAuthHref\("login"\)/);
+    assert.match(gate, /회원가입하고 시작하기/);
+    assert.match(gate, /onClick=\{onNavigate\}/);
+    assert.match(launcher, /onNavigate=\{close\}/);
     assert.match(signup, /loadPetLensSignupDraft\(\)/);
     assert.match(signup, /clearPetLensSignupDraft\(\)/);
     assert.match(signup, /data-petlens-signup-draft-restored/);

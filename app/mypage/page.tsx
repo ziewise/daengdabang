@@ -1,15 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/lib/catalog";
 import { cartProducts, findProduct, productHref } from "@/lib/shop";
 import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/store";
 import { memberAccountDisplay } from "@/lib/member-account-display";
 import ProductCard from "@/components/products/ProductCard";
 import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
+import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
+import DaengLabWalletCard from "@/components/mypage/DaengLabWalletCard";
+import {
+    hasPetLensReadyProfile,
+    PETLENS_PAGE_HREF,
+    petLensProfileNeedsAttention,
+} from "@/lib/petlens-routing";
 
 const TRY_ON_SUBCATEGORIES = new Set(["harness", "leash", "wear", "goggles"]);
 const TRY_ON_PRODUCTS = CATALOG.filter((product) => TRY_ON_SUBCATEGORIES.has(product.subcategory) && product.image).slice(0, 8);
+const subscribeToProfileRoute = () => () => {};
+const getServerProfileRoute = () => false;
+const getClientProfileRoute = () => {
+    if (typeof window === "undefined") return false;
+    return new URLSearchParams(window.location.search).get("petProfile") === "required";
+};
 
 function sizeLabel(size: PetProfile["size"]) {
     if (size === "small") return "소형";
@@ -46,8 +60,15 @@ function firstTryOnProduct(): CatalogProduct | undefined {
 export default function MyPage() {
     const { user, logout } = useAuth();
     const store = useStore();
+    const profileRouteRequested = useSyncExternalStore(
+        subscribeToProfileRoute,
+        getClientProfileRoute,
+        getServerProfileRoute
+    );
     const wishedProducts = store.state.wishlist.map(findProduct).filter(Boolean);
     const hasTryOnProfile = Boolean(user?.pets.some(hasVerifiedPetPhoto));
+    const petLensReady = Boolean(user && hasPetLensReadyProfile(user.pets));
+    const profileNeedingAttentionIndex = user?.pets.findIndex(petLensProfileNeedsAttention) ?? -1;
     const heroTryOnProduct = firstTryOnProduct();
 
     if (!user) {
@@ -80,7 +101,8 @@ export default function MyPage() {
 
             <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
                 <section className="grid gap-4">
-                    <div className="surface p-5">
+                    <DaengLabWalletCard accessToken={user.apiAccessToken} />
+                    <div id="pet-profiles" className="surface scroll-mt-24 p-5">
                         <div className="flex items-center justify-between gap-3">
                             <h2 className="text-lg font-black text-neutral-950">반려견 프로필</h2>
                             {hasTryOnProfile && (
@@ -91,7 +113,7 @@ export default function MyPage() {
                         </div>
                         {user.pets.length > 0 ? (
                             <div className="mt-4 grid gap-3">
-                                {user.pets.map((pet) => (
+                                {user.pets.map((pet, index) => (
                                     <article key={petKey(pet)} className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                                         <div className="grid grid-cols-[76px_1fr] gap-3">
                                             <div className="relative h-[76px] overflow-hidden rounded-md bg-white">
@@ -131,18 +153,34 @@ export default function MyPage() {
                                                 ))}
                                             </div>
                                         )}
-                                        <MemberPetProfileEditor pet={pet} />
+                                        <MemberPetProfileEditor
+                                            key={`${petKey(pet)}-${profileRouteRequested && index === profileNeedingAttentionIndex ? "required" : "default"}`}
+                                            pet={pet}
+                                            initiallyOpen={profileRouteRequested && index === profileNeedingAttentionIndex}
+                                        />
                                     </article>
                                 ))}
                             </div>
                         ) : (
-                            <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
-                                펫렌즈에서 사진과 생활 정보를 등록하면 챗봇 추천, 자동 피팅, 상품 비교가 같은 프로필을 기준으로 이어집니다.
-                            </div>
+                            <>
+                                <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
+                                    먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕랩 행동·소리 분석을 바로 시작할 수 있습니다.
+                                </div>
+                                <MemberPetProfileCreateForm
+                                    key={profileRouteRequested ? "required" : "default"}
+                                    initiallyOpen={profileRouteRequested}
+                                />
+                            </>
                         )}
-                        <Link href="/pet-lens" className="btn btn-primary mt-4 w-full">
-                            {user.pets.length > 0 ? "펫렌즈 업데이트" : "펫렌즈로 추가"}
-                        </Link>
+                        {petLensReady ? (
+                            <Link href={PETLENS_PAGE_HREF} className="btn btn-primary mt-4 w-full">
+                                펫렌즈 사진 분석 열기
+                            </Link>
+                        ) : user.pets.length > 0 ? (
+                            <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs font-black leading-5 text-amber-800">
+                                위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열립니다.
+                            </p>
+                        ) : null}
                         {heroTryOnProduct && hasTryOnProfile && (
                             <Link href={productHref(heroTryOnProduct)} className="btn btn-secondary mt-2 w-full">
                                 자동 피팅 상품 보기

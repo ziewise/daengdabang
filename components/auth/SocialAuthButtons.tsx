@@ -33,10 +33,13 @@ const PROVIDERS: Array<{
 export default function SocialAuthButtons({
     mode,
     variant = "full",
+    returnTo = "/mypage",
 }: {
     mode: "login" | "signup";
     /** full = 라벨 있는 직사각(기본) / compact = 로그인 카드용 원형 아이콘 */
     variant?: "full" | "compact";
+    /** 인증을 시작한 기능으로 안전하게 복귀할 내부 경로 */
+    returnTo?: string;
 }) {
     const apiReady = useDdbApiReady();
     const [enabledByProvider, setEnabledByProvider] = useState<Record<SocialProvider, boolean> | null>(null);
@@ -79,7 +82,7 @@ export default function SocialAuthButtons({
 
     const start = (provider: SocialProvider) => {
         if (apiReady !== true || enabledByProvider?.[provider] === false) return;
-        startSocialLogin(provider, "/mypage");
+        startSocialLogin(provider, returnTo);
     };
 
     // compact — 로그인 카드용 원형 아이콘(라벨 없음, 비활성은 흐리게)

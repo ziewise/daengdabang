@@ -34,9 +34,10 @@ type Options = {
 };
 
 /**
- * Mobile-only collision state for the independent house, settings and chat
- * launchers. Nothing is unmounted, so chat history and companion motion state
- * survive while the launchers are temporarily out of the way.
+ * Responsive collision state for the independent house, settings and chat
+ * launchers. Mobile yields to any visible dialog; desktop yields only to an
+ * aria-modal or explicit floating blocker. Nothing is unmounted, so state is
+ * preserved while the launchers are temporarily out of the way.
  */
 export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActive = false }: Options = {}) {
     const [isMobile, setIsMobile] = useState(false);
@@ -136,19 +137,18 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActi
     }, [isMobile]);
 
     useEffect(() => {
-        if (!isMobile) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect -- dialog collisions are intentionally mobile-only.
-            setHasBlockingDialog(false);
-            return;
-        }
-
         let frame = 0;
         let settleTimer = 0;
         const update = () => {
             frame = 0;
             const ignoredRoot = ignoreDialogsWithin?.current;
             const next = Array.from(document.querySelectorAll<HTMLElement>("[role='dialog']"))
-                .some((dialog) => !ignoredRoot?.contains(dialog) && isVisibleDialog(dialog));
+                .some((dialog) => {
+                    if (ignoredRoot?.contains(dialog)) return false;
+                    const blocksDesktop = dialog.getAttribute("aria-modal") === "true"
+                        || dialog.dataset.floatingBlocker === "true";
+                    return (isMobile || blocksDesktop) && isVisibleDialog(dialog);
+                });
             setHasBlockingDialog(next);
         };
         const scheduleUpdate = () => {
@@ -165,7 +165,7 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActi
         const observer = new MutationObserver(scheduleTransitionAwareUpdate);
         observer.observe(document.body, {
             attributes: true,
-            attributeFilter: ["aria-hidden", "class", "hidden", "open", "style"],
+            attributeFilter: ["aria-hidden", "aria-modal", "class", "data-floating-blocker", "hidden", "open", "style"],
             childList: true,
             subtree: true,
         });
@@ -185,7 +185,7 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActi
 
     return {
         hasBlockingDialog,
-        hidden: isMobile && (isScrolling || hasBlockingDialog),
+        hidden: hasBlockingDialog || (isMobile && isScrolling),
         isHeroVisible,
         isAtPageTop,
         isMobile,

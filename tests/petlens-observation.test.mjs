@@ -18,14 +18,19 @@ test("PetLens observation mounts on both the page and modal without replacing ph
         assert.match(value, /PetLensObservationExperience/);
         assert.match(value, /mode === "observation"/);
         assert.match(value, /analyzePetLensSmart/);
+        assert.match(value, /DaengLabServiceTitle/);
     }
 });
 
 
 test("the active behavior and sound launcher opens the real observation camera instead of a coming-soon view", async () => {
-    const [launcher, modal] = await Promise.all([
+    const [launcher, modal, tabs, experience, brand, memberGate] = await Promise.all([
         source("components/petlens/PetLensModalLauncher.tsx"),
         source("components/petlens/PetLensModalContent.tsx"),
+        source("components/petlens/PetLensModeTabs.tsx"),
+        source("components/petlens/PetLensObservationExperience.tsx"),
+        source("components/petlens/DaengLabServiceTitle.tsx"),
+        source("components/petlens/PetLensMemberGate.tsx"),
     ]);
     assert.match(launcher, /data-petlens-observation-launcher/);
     assert.match(launcher, /setView\("observation"\)/);
@@ -34,6 +39,17 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.doesNotMatch(launcher, /mode: "sound"|준비중|coming soon/i);
     assert.match(modal, /initialMode\?: PetLensMode/);
     assert.match(modal, /useState<PetLensMode>\(initialMode\)/);
+    assert.match(brand, /댕랩/);
+    assert.match(brand, /DaengLab/);
+    assert.match(brand, /신규서비스/);
+    assert.match(launcher, /댕랩 행동·소리 분석 신규 서비스 열기/);
+    assert.match(tabs, /DaengLabServiceTitle/);
+    assert.match(modal, /DaengLabServiceTitle/);
+    assert.match(experience, /data-daenglab-service-description/);
+    assert.match(experience, /AI 딥러닝 모델과 반려동물 행동 연구/);
+    assert.match(modal, /mode === "observation" \? "daenglab" : "petlens"/);
+    assert.match(memberGate, /data-daenglab-member-gate/);
+    assert.match(memberGate, /카메라·마이크 신호를 개별 분석하는 회원 전용 서비스/);
 });
 
 
@@ -86,7 +102,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(experience, /등록된 반려견 정보와 입력한 촬영 상황이 분석을 위해 외부 자동 분석 서비스로 암호화 전송/);
     assert.match(experience, /원본은 댕다방 서버에 저장하지 않/);
     assert.match(experience, /if \(!nextConsent\) resetCapture\(\)/);
-    assert.match(experience, /disabled=\{analyzing \|\| !consent\}/);
+    assert.match(experience, /disabled=\{analyzing \|\| !consent \|\| walletLoading \|\| !hasEnoughCoins\}/);
     assert.match(experience, /촬영보다 병원 연락이 먼저/);
     assert.match(experience, /사람의 얼굴·대화/);
     assert.match(result, /영상에서 포착된 관찰 근거/);

@@ -141,7 +141,7 @@ test("an authenticated pet with unknown breed stays visually disabled instead of
     assert.match(companion, /user\?\.pets\.find\(petHasCompanionIdentity\)/);
 });
 
-test("a guest quota photo-drop returns false, stores no image payload, and surfaces warnings", async () => {
+test("a legacy guest quota draft drops image payloads and signup surfaces the warning", async () => {
     let attempts = 0;
     let fallbackValue = null;
     const previousWindow = globalThis.window;
@@ -195,8 +195,8 @@ test("a guest quota photo-drop returns false, stores no image payload, and surfa
         source("app/auth/signup/page.tsx"),
     ]);
     for (const client of [page, modal]) {
-        assert.match(client, /const draftSaved = savePetLensSignupDraft\(profile\)/);
-        assert.match(client, /else if \(!draftSaved\) \{[\s\S]*?setAnalysisError\(/);
+        assert.match(client, /PetLensMemberGate[^>]*reason="login"/);
+        assert.doesNotMatch(client, /savePetLensSignupDraft/);
     }
     assert.match(signup, /draft\.rawAnalysis\?\.petLensDraftPhotosDropped === true/);
     assert.match(signup, /setPhotoError\(/);

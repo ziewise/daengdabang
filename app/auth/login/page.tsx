@@ -22,6 +22,7 @@ import {
 } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
+import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import BrandLogo from "@/components/header/BrandLogo";
@@ -45,9 +46,17 @@ export default function LoginPage() {
     const apiReady = useDdbApiReady();
     // 구매 흐름 등에서 ?redirect=/checkout 로 넘어오면 로그인/비회원 주문 후 그 경로로 보낸다(내부 경로만 허용 — 오픈 리다이렉트 방지)
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
+    const checkoutRedirect = redirect && (
+        redirect === "/checkout"
+        || redirect.startsWith("/checkout?")
+        || redirect.startsWith("/checkout#")
+    ) ? redirect : null;
+    const signupHref = redirect
+        ? `/auth/signup?redirect=${encodeURIComponent(redirect)}`
+        : "/auth/signup";
 
     // 비회원 주문 — 회원가입/로그인 없이 바로 결제로(현재 checkout 은 게스트 주문 허용)
-    const guestCheckout = () => router.push(redirect || "/checkout");
+    const guestCheckout = () => router.push(checkoutRedirect || "/checkout");
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
@@ -83,7 +92,7 @@ export default function LoginPage() {
                 joinedAt: new Date().toISOString(),
                 pets,
             });
-            router.push(redirect || "/mypage");
+            router.push(petLensPostAuthDestination(redirect, pets));
         } catch (err) {
             setCustomerToken();
             setError(customerApiErrorMessage(err));
@@ -204,11 +213,11 @@ export default function LoginPage() {
                         <span className="text-[11px] font-bold text-neutral-400">간편 로그인</span>
                         <div className="h-px flex-1 bg-neutral-200" />
                     </div>
-                    <SocialAuthButtons mode="login" variant="compact" />
+                    <SocialAuthButtons mode="login" variant="compact" returnTo={redirect || "/mypage"} />
 
                     {/* 비회원 주문 — 구매 흐름(?redirect=...)으로 넘어왔을 때만 노출.
                         헤더 로그인 버튼으로 그냥 들어오면 redirect 가 없어 숨긴다. */}
-                    {redirect && (
+                    {checkoutRedirect && (
                         <button
                             type="button"
                             onClick={guestCheckout}
@@ -227,7 +236,7 @@ export default function LoginPage() {
                             아직 댕다방 회원이 아니신가요?
                         </p>
                         <Link
-                            href="/auth/signup"
+                            href={signupHref}
                             className="group inline-flex h-10 items-center justify-center gap-2 rounded-full border-2 border-amber-300 bg-amber-50/60 px-5 text-sm font-black text-amber-700 transition hover:border-amber-400 hover:bg-amber-100/70 hover:shadow-[0_10px_24px_rgba(245,158,11,0.22)]"
                         >
                             <i className="fa-solid fa-user-plus text-xs" />

@@ -23,6 +23,7 @@ import { cartPetOptions } from "@/lib/pet-attribution";
 import { loadTwinProductStats, type TwinProductStat } from "@/lib/storefront-analytics";
 import { useI18n } from "@/lib/i18n";
 import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
+import { daengLabCoinsForUnitPrice } from "@/lib/daenglab-rewards";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
@@ -44,6 +45,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     const bestRank = getBestRank(p);
     const isNew = isNewProduct(p);
     const point = Math.floor(p.price * 0.01);
+    const daengLabCoins = daengLabCoinsForUnitPrice(p.price);
     const displayName = productName(p);
     const canTryOn = getPetTryOnEligibility(p).eligible;
 
@@ -198,10 +200,29 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 <div className="h-px bg-neutral-200" />
 
                 <ul className="space-y-2 text-sm text-neutral-700">
-                    <li className="flex items-center gap-2">
-                        <i className="fa-solid fa-coins text-amber-500" />
-                        <span>{t("point")}</span>
-                        <b className="text-neutral-950">{formatPrice(point)}</b>
+                    <li
+                        className="flex flex-wrap items-center gap-x-3 gap-y-2"
+                        data-daenglab-coin-estimate={daengLabCoins}
+                    >
+                        <span className="inline-flex items-center gap-2">
+                            <i className="fa-solid fa-coins text-amber-500" />
+                            <span>{t("point")}</span>
+                            <b className="text-neutral-950">{formatPrice(point)}</b>
+                        </span>
+                        <span aria-hidden="true" className="hidden h-4 w-px bg-neutral-200 sm:block" />
+                        <span className="inline-flex flex-wrap items-center gap-2">
+                            <span
+                                aria-hidden="true"
+                                className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-600 px-1 text-[10px] font-black text-white shadow-sm"
+                            >
+                                C
+                            </span>
+                            <span>{locale === "en" ? "DaengLab coins" : "댕랩코인"}</span>
+                            <b className="text-indigo-700">{daengLabCoins}C</b>
+                            <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-black text-indigo-600">
+                                {locale === "en" ? "Member · after confirmation" : "회원 구매확정 후 적립"}
+                            </span>
+                        </span>
                     </li>
                     <li className="flex items-center gap-2">
                         <i className="fa-solid fa-truck text-indigo-600" />
@@ -267,18 +288,18 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <button
                         type="button"
                         onClick={() => setSheetMode("cart")}
-                        className="h-14 rounded-md border-2 border-neutral-200 bg-white text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
+                        className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
                     >
-                        <i className="fa-solid fa-bag-shopping mr-2 text-sm" />
-                        {t("addToCart")}
+                        <i className="fa-solid fa-bag-shopping shrink-0 text-sm" />
+                        <span className="break-keep whitespace-normal text-center leading-tight">{t("addToCart")}</span>
                     </button>
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
-                        className="h-14 rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700"
+                        className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                     >
-                        <i className="fa-solid fa-credit-card mr-2 text-sm" />
-                        {t("buyNow")}
+                        <i className="fa-solid fa-credit-card shrink-0 text-sm" />
+                        <span className="break-keep whitespace-normal text-center leading-tight">{t("buyNow")}</span>
                     </button>
                 </div>
             </div>

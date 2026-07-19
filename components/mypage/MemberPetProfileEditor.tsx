@@ -17,12 +17,13 @@ import { useAuth, type PetProfile } from "@/lib/store";
 
 type Props = {
     pet: PetProfile;
+    initiallyOpen?: boolean;
 };
 
-export default function MemberPetProfileEditor({ pet }: Props) {
+export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: Props) {
     const { user, upsertPet } = useAuth();
     const breedListId = useId();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(initiallyOpen);
     const [breed, setBreed] = useState(pet.breed || "");
     const [size, setSize] = useState<PetProfile["size"]>(pet.size);
     const [age, setAge] = useState(pet.age);

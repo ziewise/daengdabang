@@ -30,7 +30,7 @@ test("mobile hero hides all floating controls only at the exact top and restores
         source("components/pet-companion/PetCompanionLayer.module.css"),
     ]);
 
-    assert.match(hook, /hidden: isMobile && \(isScrolling \|\| hasBlockingDialog\)/);
+    assert.match(hook, /hidden: hasBlockingDialog \|\| \(isMobile && isScrolling\)/);
     assert.match(hook, /setIsAtPageTop\(window\.scrollY <= 0\)/);
     assert.match(dock, /const hideAtHeroTop = heroAtTop;/);
     assert.doesNotMatch(dock, /hideInMobileHero/);
@@ -53,7 +53,7 @@ test("mobile hero hides all floating controls only at the exact top and restores
     );
 });
 
-test("mobile launchers yield to dialogs and CareTalk while desktop controls stay beside the shifted note", async () => {
+test("mobile launchers yield to dialogs and desktop launchers yield only to modal blockers", async () => {
     const [hook, dock, chat, gate, events] = await Promise.all([
         source("hooks/useMobileFloatingVisibility.ts"),
         source("components/site/FloatingDock.tsx"),
@@ -63,7 +63,12 @@ test("mobile launchers yield to dialogs and CareTalk while desktop controls stay
     ]);
 
     assert.match(hook, /querySelectorAll<HTMLElement>\("\[role='dialog'\]"\)/);
-    assert.match(hook, /!ignoredRoot\?\.contains\(dialog\)/);
+    assert.match(hook, /if \(ignoredRoot\?\.contains\(dialog\)\) return false/);
+    assert.match(hook, /dialog\.getAttribute\("aria-modal"\) === "true"/);
+    assert.match(hook, /dialog\.dataset\.floatingBlocker === "true"/);
+    assert.match(hook, /return \(isMobile \|\| blocksDesktop\) && isVisibleDialog\(dialog\)/);
+    assert.match(hook, /"aria-modal"[\s\S]{0,90}"data-floating-blocker"/);
+    assert.match(hook, /hidden: hasBlockingDialog \|\| \(isMobile && isScrolling\)/);
     assert.match(hook, /window\.setTimeout\(scheduleUpdate, 460\)/);
     assert.match(chat, /role="dialog"/);
     assert.match(chat, /onOpenChange\?\.\(open\)/);

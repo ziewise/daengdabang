@@ -50,6 +50,9 @@ export type PetObservationResult = {
     retakeGuidance: string[];
     limitations: string[];
     mediaRetention: "not_stored";
+    daengLabCoinCost?: number;
+    daengLabCoinBalance?: number;
+    daengLabCoinRefunded?: boolean;
 };
 
 export type PetObservationSituation =
@@ -72,7 +75,24 @@ export type PetObservationRequest = {
     note?: string;
     accessToken?: string;
     signal?: AbortSignal;
+    requestId: string;
 };
+
+export class PetObservationRequestError extends Error {
+    code?: string;
+    required?: number;
+    balance?: number;
+    status?: number;
+
+    constructor(message: string, options: { code?: string; required?: number; balance?: number; status?: number } = {}) {
+        super(message);
+        this.name = "PetObservationRequestError";
+        this.code = options.code;
+        this.required = options.required;
+        this.balance = options.balance;
+        this.status = options.status;
+    }
+}
 
 function record(value: unknown): Record<string, unknown> | null {
     return value && typeof value === "object" && !Array.isArray(value)
@@ -220,6 +240,11 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             ? "영상에서 오늘 안에 동물병원에 문의할 신호가 분류됐어요."
             : line(raw.summary, 320) || "짧은 영상만으로 원인이나 질환을 확정할 수는 없어요.";
 
+    const coinCostValue = Number(raw.daenglab_coin_cost ?? raw.daengLabCoinCost);
+    const coinBalanceValue = Number(raw.daenglab_coin_balance ?? raw.daengLabCoinBalance);
+    const hasCoinCost = Number.isFinite(coinCostValue) && coinCostValue >= 0;
+    const hasCoinBalance = Number.isFinite(coinBalanceValue) && coinBalanceValue >= 0;
+
     return {
         status,
         summary: safeSummary,
@@ -252,12 +277,17 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             ...lines(raw.limitations, 4, 200),
         ])).slice(0, 4),
         mediaRetention: "not_stored",
+        ...(hasCoinCost ? { daengLabCoinCost: coinCostValue } : {}),
+        ...(hasCoinBalance ? { daengLabCoinBalance: coinBalanceValue } : {}),
+        ...((raw.daenglab_coin_refunded ?? raw.daengLabCoinRefunded) === true
+            ? { daengLabCoinRefunded: true }
+            : {}),
     };
 }
 
 export async function analyzePetObservation(request: PetObservationRequest): Promise<PetObservationResult> {
     const base = ddbApiBase();
-    if (!base) throw new Error("지금은 짖음·행동 관찰을 사용할 수 없습니다.");
+    if (!base) throw new Error("지금은 댕랩 행동·소리 분석을 사용할 수 없습니다.");
     const token = request.accessToken || getCustomerToken();
     if (!token) throw new Error("로그인 정보를 다시 확인해 주세요.");
 
@@ -271,6 +301,7 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         note: request.note?.trim().slice(0, 300) || "",
         duration_seconds: request.durationSeconds,
     }));
+    form.append("request_id", request.requestId);
     const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/observe`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -279,14 +310,26 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
     });
     if (!response.ok) {
         let message = "관찰 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+        let code: string | undefined;
+        let required: number | undefined;
+        let balance: number | undefined;
         try {
-            const body = await response.clone().json() as { detail?: unknown };
+            const body = await response.clone().json() as {
+                detail?: unknown | { code?: unknown; message?: unknown; required?: unknown; balance?: unknown };
+            };
             if (typeof body.detail === "string" && body.detail.trim()) message = body.detail.trim();
+            if (body.detail && typeof body.detail === "object") {
+                const detail = body.detail as { code?: unknown; message?: unknown; required?: unknown; balance?: unknown };
+                if (typeof detail.message === "string" && detail.message.trim()) message = detail.message.trim();
+                if (typeof detail.code === "string") code = detail.code;
+                if (typeof detail.required === "number") required = detail.required;
+                if (typeof detail.balance === "number") balance = detail.balance;
+            }
         } catch {
             // Keep the customer-safe fallback.
         }
         if (response.status === 401) message = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
-        throw new Error(message);
+        throw new PetObservationRequestError(message, { code, required, balance, status: response.status });
     }
     return parsePetObservationResult(await response.json());
 }

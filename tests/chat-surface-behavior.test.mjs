@@ -54,8 +54,8 @@ test("floating CareTalk keeps its behavior while using the scoped crayon skin", 
     assert.match(widget, /CRAYON CARE NOTE/);
     assert.match(widget, /우리 아이 케어 노트/);
     assert.match(widget, /styles\.responseExtras/);
-    assert.match(css, /--chat-font-accent: var\(--font-crayon\)/);
-    assert.match(css, /--chat-font-body: var\(--font-wanted-sans\)/);
+    assert.match(css, /--chat-font-body: var\(--font-crayon\)/);
+    assert.match(css, /--chat-font-accent: var\(--chat-font-body\)/);
     assert.match(css, /\.messageBubble \{[\s\S]{0,260}font-family: var\(--chat-font-body\)/);
     assert.match(css, /\.messageBubble \{[\s\S]{0,320}font-weight: 600/);
     assert.match(css, /\.input \{[\s\S]{0,520}font-size: 16px/);

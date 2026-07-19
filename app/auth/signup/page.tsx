@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -37,9 +37,18 @@ import {
 import { useAuth, type PetProfile } from "@/lib/store";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import { safeInternalRedirect } from "@/lib/internal-redirect";
+import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 const CUSTOM_BREED_OPTION = "__custom";
+const subscribeToLocation = () => () => {};
+const getServerRedirect = () => null;
+const getClientRedirect = () => {
+    if (typeof window === "undefined") return null;
+    const redirect = new URLSearchParams(window.location.search).get("redirect");
+    return safeInternalRedirect(redirect, window.location.origin);
+};
 const PET_PHOTO_VIEWS = [
     { id: "front", label: "정면", helper: "얼굴·가슴" },
     { id: "left", label: "왼쪽", helper: "옆선·다리" },
@@ -179,6 +188,7 @@ async function buildPetLensViewSheet(views: PetPhotoCaptures) {
 export default function SignupPage() {
     const router = useRouter();
     const { login } = useAuth();
+    const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -511,7 +521,7 @@ export default function SignupPage() {
                 pets: savedPets,
             });
             clearPetLensSignupDraft();
-            router.push("/mypage");
+            router.push(petLensPostAuthDestination(redirect, savedPets));
         } catch (err) {
             setCustomerToken();
             setError(customerApiErrorMessage(err));
@@ -524,7 +534,7 @@ export default function SignupPage() {
         <main className="mx-auto max-w-2xl px-4 py-10">
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
             <div data-pet-guide-target="signup-provider">
-                <SocialAuthButtons mode="signup" />
+                <SocialAuthButtons mode="signup" returnTo={redirect || "/mypage"} />
             </div>
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 {apiReady === false && (

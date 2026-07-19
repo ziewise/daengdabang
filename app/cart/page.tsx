@@ -19,6 +19,8 @@ import { usePets } from "@/hooks/usePets";
 import { cartPetOptions } from "@/lib/pet-attribution";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
 import { useI18n } from "@/lib/i18n";
+import { daengLabCoinsForLines } from "@/lib/daenglab-rewards";
+import { checkoutHref, type QuickPaymentMethod } from "@/lib/payment-methods";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
 function CheckBtn({ checked, onToggle, label }: { checked: boolean; onToggle: () => void; label: string }) {
@@ -53,14 +55,16 @@ export default function CartPage() {
     // 선택된 라인만 합계·결제 대상
     const selectedLines = lines.filter((l) => l.selected);
     const selectedTotal = selectedLines.reduce((sum, l) => sum + l.subtotal, 0);
+    const expectedDaengLabCoins = daengLabCoinsForLines(selectedLines);
     const allSelected = lines.length > 0 && selectedLines.length === lines.length;
     const arrival = arrivalDateText(locale);
     const countText = (count: number) => locale === "en" ? `${count} ${t("countSuffix")}` : `${count}${t("countSuffix")}`;
 
     // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원 주문도 선택 가능)으로
-    const goCheckout = () => {
+    const goCheckout = (preferredPayment: "card" | QuickPaymentMethod = "card") => {
         if (selectedLines.length === 0) return;
-        router.push(user ? "/checkout" : "/auth/login?redirect=/checkout");
+        const nextCheckoutHref = checkoutHref(preferredPayment);
+        router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
     };
 
     // 선택삭제 — 체크된 라인 일괄 삭제(실수 방지 confirm)
@@ -244,13 +248,37 @@ export default function CartPage() {
                         <span>{t("shippingFee")}</span>
                         <b className="text-neutral-950">{formatPrice(0)}</b>
                     </div>
+                    {selectedLines.length > 0 && (
+                        <div
+                            className="mt-4 rounded-xl border border-indigo-100 bg-indigo-50/80 px-3.5 py-3"
+                            data-daenglab-coin-estimate={expectedDaengLabCoins}
+                        >
+                            <div className="flex items-center justify-between gap-3">
+                                <span className="inline-flex items-center gap-1.5 text-xs font-black text-indigo-700">
+                                    <span
+                                        aria-hidden="true"
+                                        className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-indigo-600 px-1 text-[10px] text-white"
+                                    >
+                                        C
+                                    </span>
+                                    {locale === "en" ? "Member DaengLab coin estimate" : "회원 댕랩코인 적립 예상"}
+                                </span>
+                                <b className="text-base font-black text-indigo-800">{expectedDaengLabCoins}C</b>
+                            </div>
+                            <p className="mt-1.5 text-[11px] font-bold leading-4 text-indigo-500">
+                                {locale === "en"
+                                    ? "Payment verification + purchase confirmation required · 10C per analysis"
+                                    : "결제 확인 + 구매확정 후 적립 · 행동·소리 분석 1회당 10C"}
+                            </p>
+                        </div>
+                    )}
                     <div className="mt-4 border-t border-neutral-200 pt-4 flex items-center justify-between">
                         <span className="font-black">{t("paymentDue")}</span>
                         <b className="text-2xl font-black text-indigo-700">{formatPrice(selectedTotal)}</b>
                     </div>
                     <button
                         type="button"
-                        onClick={goCheckout}
+                        onClick={() => goCheckout("card")}
                         disabled={selectedLines.length === 0}
                         className="btn btn-primary mt-5 w-full disabled:cursor-not-allowed disabled:opacity-40"
                     >
@@ -258,8 +286,8 @@ export default function CartPage() {
                             ? t("selectProducts")
                             : `${t("checkout")} (${countText(selectedLines.length)})`}
                     </button>
-                    {/* 간편결제 — 네이버페이·카카오페이 */}
-                    <SimplePayButtons disabled={selectedLines.length === 0} />
+                    {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
+                    <SimplePayButtons disabled={selectedLines.length === 0} onSelect={goCheckout} />
                 </aside>
             </div>
         </main>

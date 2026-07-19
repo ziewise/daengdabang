@@ -19,11 +19,14 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
     type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { useI18n } from "@/lib/i18n";
 
@@ -60,6 +63,8 @@ export function usePetLensModal() {
 
 export default function PetLensModalProvider({ children }: { children: ReactNode }) {
     const { locale } = useI18n();
+    const pathname = usePathname();
+    const previousPathnameRef = useRef(pathname);
     const [isOpen, setIsOpen] = useState(false);
     const [view, setView] = useState<View>("menu");
     const en = locale === "en";
@@ -70,6 +75,22 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
         setIsOpen(true);
     }, []);
     const close = useCallback(() => setIsOpen(false), []);
+
+    // The provider lives in the root layout, so client-side navigation does
+    // not unmount it. Always clear modal state when the page changes; without
+    // this, an auth or My Page route can load behind the still-open overlay.
+    useEffect(() => {
+        // Do not schedule a close on the initial mount. A fast mobile tap can
+        // otherwise race this zero-delay callback and appear to do nothing.
+        if (previousPathnameRef.current === pathname) return;
+        previousPathnameRef.current = pathname;
+
+        const closeAfterNavigation = window.setTimeout(() => {
+            setIsOpen(false);
+            setView("menu");
+        }, 0);
+        return () => window.clearTimeout(closeAfterNavigation);
+    }, [pathname]);
 
     // 메뉴 → 사진 분석(협업자 기능). 분석 진입 이벤트는 여기서 기록
     const startPhoto = useCallback(() => {
@@ -181,33 +202,41 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                         <button
                                             type="button"
                                             onClick={startObservation}
-                                            className="group flex items-center gap-4 rounded-2xl border-2 border-neutral-100 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-pink-400/30 hover:shadow-card"
+                                            aria-label={en
+                                                ? "Open DaengLab Behavior and Sound Analysis, new service"
+                                                : "댕랩 행동·소리 분석 신규 서비스 열기"}
+                                            className="group relative grid w-full grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border-2 border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-rose-50/70 p-3 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-200 motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                                             data-petlens-observation-launcher
                                         >
-                                            <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-neutral-100">
+                                            <span className="relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-cyan-100 sm:h-16 sm:w-16">
                                                 {/* 행동·소리 분석 아이콘 — 모서리 둥근 네모 타일 */}
                                                 <Image src="/images/ui/pet-video.png" alt="" fill sizes="64px" loading="eager" className="object-cover" />
                                             </span>
-                                            <span className="min-w-0 flex-1">
-                                                <span className="block text-[15px] font-black text-neutral-950">
-                                                    {en ? "Behavior & sound" : "댕댕이 행동·소리 분석"}
-                                                </span>
+                                            <span className="min-w-0">
+                                                <DaengLabServiceTitle
+                                                    en={en}
+                                                    suffixClassName="break-keep text-[14px] font-black leading-[1.25] text-neutral-950 sm:text-[15px]"
+                                                />
                                                 <span className="mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
-                                                    {en ? "Observe behavior and sound with your camera and microphone" : "카메라와 마이크로 행동·소리를 함께 관찰해요"}
+                                                    {en
+                                                        ? "Camera and microphone signals become a tailored observation"
+                                                        : "행동·소리 신호를 함께 살펴 맞춤형 관찰 결과를 제공해요"}
                                                 </span>
                                             </span>
-                                            <i className="fa-solid fa-chevron-right text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-pink-500" />
+                                            <i className="fa-solid fa-chevron-right shrink-0 text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-pink-500" aria-hidden="true" />
                                         </button>
                                     </div>
                                 </div>
                             )}
 
                             {/* ②-a 사진 분석 — 협업자 콘텐츠 그대로 */}
-                            {view === "photo" && <PetLensModalContent key="photo" initialMode="photo" />}
+                            {view === "photo" && (
+                                <PetLensModalContent key="photo" initialMode="photo" onNavigate={close} />
+                            )}
 
                             {/* ②-b 행동·소리 관찰 — 실제 카메라·마이크 화면으로 바로 진입 */}
                             {view === "observation" && (
-                                <PetLensModalContent key="observation" initialMode="observation" />
+                                <PetLensModalContent key="observation" initialMode="observation" onNavigate={close} />
                             )}
                         </div>
                     </div>

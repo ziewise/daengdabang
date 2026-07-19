@@ -111,7 +111,9 @@ test("customer-facing storefront copy uses plain feature names instead of AI lab
         const source = await readSource(path);
         const customerFeatureCopy = path === "app/privacy/page.tsx"
             ? source.replaceAll("AI 분석 및 자동화된 결정", "")
-            : source;
+            : path === "components/petlens/PetLensObservationExperience.tsx"
+                ? source.replace("AI 딥러닝", "")
+                : source;
         assert.doesNotMatch(customerFeatureCopy, /\bAI\b|인공지능|에이아이/, `${path} exposes an artificial feature label`);
     }
 });

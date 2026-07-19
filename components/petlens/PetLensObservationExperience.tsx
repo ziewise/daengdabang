@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { analyzePetObservation, type PetObservationResult, type PetObservationSituation } from "@/lib/petlens-observation";
-import type { PetProfile } from "@/lib/store";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import {
+    analyzePetObservation,
+    PetObservationRequestError,
+    type PetObservationResult,
+    type PetObservationSituation,
+} from "@/lib/petlens-observation";
+import { DdbApiError, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
+import { useAuth, type PetProfile } from "@/lib/store";
 import { usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
+import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 
@@ -19,6 +27,11 @@ const SITUATIONS: Array<{ value: PetObservationSituation; label: string }> = [
     { value: "other", label: "그 밖의 상황" },
 ];
 
+function analysisRequestId() {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+    return `analysis-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+}
+
 type Props = {
     pet: Pick<PetProfile, "name" | "breed" | "age">;
     accessToken?: string;
@@ -26,6 +39,7 @@ type Props = {
 };
 
 export default function PetLensObservationExperience({ pet, accessToken, variant = "page" }: Props) {
+    const { logout } = useAuth();
     const {
         videoRef,
         phase,
@@ -48,17 +62,58 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         cancelCapture,
     } = usePetLensMediaCapture();
     const abortRef = useRef<AbortController | null>(null);
+    const requestIdRef = useRef<string | null>(null);
     const [consent, setConsent] = useState(false);
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
     const [note, setNote] = useState("");
     const [analyzing, setAnalyzing] = useState(false);
     const [analysisError, setAnalysisError] = useState("");
     const [result, setResult] = useState<PetObservationResult | null>(null);
+    const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
+    const [walletLoading, setWalletLoading] = useState(true);
+    const [walletError, setWalletError] = useState("");
+
+    const publishWallet = useCallback((next: DaengLabWallet) => {
+        setWallet(next);
+        window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next }));
+    }, []);
 
     useEffect(() => () => abortRef.current?.abort(), []);
 
+    const refreshWallet = useCallback(async () => {
+        setWalletLoading(true);
+        setWallet(null);
+        setWalletError("");
+        try {
+            publishWallet(await loadDaengLabWallet(accessToken));
+        } catch (reason) {
+            if (reason instanceof DdbApiError && reason.status === 401) logout();
+            setWalletError(reason instanceof Error ? reason.message : "댕랩코인 잔액을 불러오지 못했습니다.");
+        } finally {
+            setWalletLoading(false);
+        }
+    }, [accessToken, logout, publishWallet]);
+
+    useEffect(() => {
+        requestIdRef.current = null;
+    }, [clip]);
+
+    useEffect(() => {
+        void refreshWallet();
+        const onWallet = (event: Event) => {
+            const next = (event as CustomEvent<DaengLabWallet>).detail;
+            if (next && typeof next.daengLabCoins === "number") setWallet(next);
+        };
+        window.addEventListener("ddb:daenglab-wallet", onWallet);
+        return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
+    }, [refreshWallet]);
+
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
+        if (!wallet || wallet.daengLabCoins < wallet.analysisCoinCost) {
+            setAnalysisError(`댕랩 행동·소리 분석에는 ${wallet?.analysisCoinCost ?? 10}코인이 필요합니다. 마이페이지에서 적립금을 코인으로 전환할 수 있어요.`);
+            return;
+        }
         abortRef.current?.abort();
         const controller = new AbortController();
         abortRef.current = controller;
@@ -66,6 +121,8 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         setAnalysisError("");
         trackStorefrontEvent("petlens_started", { mode: "observation", surface: variant });
         try {
+            const requestId = requestIdRef.current || analysisRequestId();
+            requestIdRef.current = requestId;
             const next = await analyzePetObservation({
                 clip,
                 durationSeconds,
@@ -76,17 +133,41 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                 note,
                 accessToken,
                 signal: controller.signal,
+                requestId,
             });
             setResult(next);
+            if (typeof next.daengLabCoinBalance === "number") {
+                const currentWallet = wallet;
+                publishWallet({
+                    ...currentWallet,
+                    daengLabCoins: next.daengLabCoinBalance,
+                    analysesAvailable: Math.floor(next.daengLabCoinBalance / currentWallet.analysisCoinCost),
+                });
+            } else {
+                void refreshWallet();
+            }
             trackStorefrontEvent("petlens_completed", { mode: "observation", surface: variant });
+            requestIdRef.current = null;
             resetCapture();
         } catch (reason) {
             if (controller.signal.aborted) return;
-            resetCapture();
+            const insufficient = reason instanceof PetObservationRequestError
+                && reason.code === "daenglab_coin_insufficient";
+            if (insufficient && typeof reason.balance === "number") {
+                const currentWallet = wallet;
+                publishWallet({
+                    ...currentWallet,
+                    daengLabCoins: reason.balance,
+                    analysesAvailable: Math.floor(reason.balance / currentWallet.analysisCoinCost),
+                });
+            } else {
+                void refreshWallet();
+            }
+            if (reason instanceof PetObservationRequestError) requestIdRef.current = null;
             trackStorefrontEvent("petlens_failed", {
                 mode: "observation",
                 surface: variant,
-                errorCode: "analysis_failed",
+                errorCode: insufficient ? "daenglab_coin_insufficient" : "analysis_failed",
             });
             setAnalysisError(reason instanceof Error ? reason.message : "관찰 분석을 완료하지 못했습니다.");
         } finally {
@@ -100,6 +181,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         setAnalyzing(false);
         setAnalysisError("");
         setResult(null);
+        requestIdRef.current = null;
         resetCapture();
     };
 
@@ -108,13 +190,29 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
             <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                        <p className="text-[11px] font-black text-indigo-700">펫렌즈 · 짖음·행동 관찰 결과</p>
+                        <DaengLabServiceTitle
+                            compact
+                            showBadge={false}
+                            suffix="행동·소리 분석 결과"
+                            suffixClassName="text-[11px] font-black leading-tight text-indigo-700"
+                        />
                         <h2 className="mt-1 text-xl font-black text-neutral-950">{pet.name || "우리 아이"}의 짧은 관찰 결과</h2>
                     </div>
                     <button type="button" onClick={resetAll} className="btn btn-secondary min-h-10 px-4 text-xs">
                         <i className="fa-solid fa-video mr-1.5 text-[10px]" /> 새로 관찰
                     </button>
                 </div>
+                {typeof result.daengLabCoinBalance === "number" && (
+                    <div className={`rounded-xl border px-3 py-2 text-xs font-black ${
+                        result.daengLabCoinRefunded
+                            ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                            : "border-indigo-100 bg-indigo-50 text-indigo-800"
+                    }`} role="status">
+                        {result.daengLabCoinRefunded
+                            ? `분석이 어려운 영상이라 10C를 자동으로 돌려드렸어요. 현재 ${result.daengLabCoinBalance}C`
+                            : `댕랩코인 ${result.daengLabCoinCost ?? 10}C 사용 · 현재 ${result.daengLabCoinBalance}C`}
+                    </div>
+                )}
                 <PetLensObservationResult result={result} />
             </section>
         );
@@ -122,6 +220,9 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
 
     const compact = variant === "modal";
     const busy = analyzing || phase === "requesting" || phase === "recording";
+    const analysisCoinCost = wallet?.analysisCoinCost ?? 10;
+    const hasWalletDebt = Boolean(wallet && (wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0));
+    const hasEnoughCoins = Boolean(wallet && wallet.daengLabCoins >= analysisCoinCost && !hasWalletDebt);
     const selectedCameraLabel = videoDevices.find((device) => device.deviceId === selectedVideoDeviceId)?.label
         || (facingMode === "environment" ? "후면·기본 카메라" : "전면 카메라");
     const selectedMicrophoneLabel = audioDevices.find((device) => device.deviceId === selectedAudioDeviceId)?.label
@@ -134,14 +235,66 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-indigo-700 text-white">
                         <i className="fa-solid fa-video" aria-hidden="true" />
                     </span>
-                    <div>
-                        <p className="text-[11px] font-black text-indigo-700">PC·모바일 카메라 + 마이크</p>
+                    <div className="min-w-0">
+                        <DaengLabServiceTitle
+                            compact
+                            suffixClassName="text-sm font-black leading-tight text-neutral-950"
+                        />
+                        <p className="mt-1 text-[11px] font-black text-indigo-700">PC·모바일 카메라 + 마이크</p>
                         <h2 className="mt-1 text-lg font-black text-neutral-950">10초 동안 소리와 행동을 함께 관찰해요</h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
                             짖음만 번역하지 않고 자세·움직임·호흡 모습·상황을 같이 봐서 가능한 맥락과 확인할 신호를 정리합니다.
                         </p>
                     </div>
                 </div>
+                <p
+                    className="mt-4 rounded-xl border border-white/90 bg-white/75 px-3.5 py-3 text-xs font-bold leading-5 text-neutral-600 shadow-sm"
+                    data-daenglab-service-description
+                >
+                    댕랩은 AI 딥러닝 모델과 반려동물 행동 연구를 바탕으로 카메라·마이크 신호를 개별 분석해,
+                    우리 아이에게 맞는 행동·소리 관찰 결과를 제공합니다.
+                </p>
+            </div>
+
+            <div
+                className="rounded-2xl border border-indigo-100 bg-white p-4"
+                data-daenglab-analysis-wallet
+            >
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 via-fuchsia-500 to-amber-400 text-xs font-black text-white shadow-sm">C</span>
+                        <div>
+                            <p className="text-xs font-black text-neutral-950">댕랩 행동·소리 분석 1회 {analysisCoinCost}C</p>
+                            <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출 영상은 자동 환급</p>
+                        </div>
+                    </div>
+                    {walletLoading ? (
+                        <span className="text-xs font-bold text-neutral-500"><i className="fa-solid fa-circle-notch fa-spin mr-1.5" />잔액 확인 중</span>
+                    ) : wallet ? (
+                        <div className="text-right">
+                            <strong className="block text-lg font-black text-indigo-700">{wallet.daengLabCoins}C</strong>
+                            <span className="text-[10px] font-bold text-neutral-500">분석 가능 {wallet.analysesAvailable}회</span>
+                        </div>
+                    ) : null}
+                </div>
+                {!walletLoading && wallet && !hasEnoughCoins && (
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-amber-50 px-3 py-2">
+                        <span className="text-[11px] font-bold leading-5 text-amber-900">
+                            {hasWalletDebt
+                                ? "취소·환불 혜택 정산이 남아 있어 분석 이용이 잠시 제한됩니다."
+                                : `코인이 부족해요. 적립금 ${wallet.pointConversionUnit.toLocaleString("ko-KR")}P를 ${wallet.coinConversionUnit}C로 바꿀 수 있어요.`}
+                        </span>
+                        <Link href="/mypage#daenglab-wallet" className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[11px] font-black text-indigo-700 shadow-sm">
+                            전환하러 가기
+                        </Link>
+                    </div>
+                )}
+                {walletError && (
+                    <p className="mt-3 text-[11px] font-bold text-rose-700">
+                        {walletError}
+                        <button type="button" onClick={() => void refreshWallet()} className="ml-2 underline">다시 확인</button>
+                    </p>
+                )}
             </div>
 
             <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4" data-petlens-emergency-preflight>
@@ -299,7 +452,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             <>
                                 <button
                                     type="button"
-                                    disabled={analyzing || !consent}
+                                    disabled={analyzing || !consent || walletLoading || !hasEnoughCoins}
                                     onClick={() => void analyze()}
                                     className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
                                     data-petlens-analyze-observation
@@ -307,7 +460,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                                     {analyzing ? (
                                         <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 영상·소리 분석 중</>
                                     ) : (
-                                        <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기</>
+                                        <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
                                     )}
                                 </button>
                                 <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">

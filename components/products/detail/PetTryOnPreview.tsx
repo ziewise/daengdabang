@@ -831,19 +831,21 @@ export default function PetTryOnPreview({
                                             <button
                                                 type="button"
                                                 onClick={onClose}
-                                                className="h-10 rounded-lg border border-neutral-200 bg-white text-xs font-black text-neutral-700 hover:border-indigo-300 hover:text-indigo-700"
+                                                className="flex h-10 min-w-0 items-center justify-center rounded-lg border border-neutral-200 bg-white px-2 text-xs font-black text-neutral-700 hover:border-indigo-300 hover:text-indigo-700"
                                             >
-                                                {locale === "en" ? "Keep shopping" : "계속 쇼핑"}
+                                                <span className="break-keep text-center leading-tight">{locale === "en" ? "Keep shopping" : "계속 쇼핑"}</span>
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => void requestCompletionNotification()}
-                                                className="h-10 rounded-lg bg-indigo-600 px-2 text-xs font-black text-white hover:bg-indigo-700"
+                                                className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-lg bg-indigo-600 px-2 text-xs font-black text-white hover:bg-indigo-700"
                                             >
-                                                <i className="fa-regular fa-bell mr-1.5" />
-                                                {notificationEnabled
-                                                    ? locale === "en" ? "Notification on" : "완료 알림 켜짐"
-                                                    : locale === "en" ? "Notify me" : "완성되면 알려줘"}
+                                                <i className="fa-regular fa-bell shrink-0" />
+                                                <span className="break-keep text-center leading-tight">
+                                                    {notificationEnabled
+                                                        ? locale === "en" ? "Notification on" : "완료 알림 켜짐"
+                                                        : locale === "en" ? "Notify me" : "완성되면 알려줘"}
+                                                </span>
                                             </button>
                                         </div>
                                     </div>
@@ -995,12 +997,14 @@ export default function PetTryOnPreview({
                                             type="button"
                                             onClick={() => void approveCurrentGeometry()}
                                             disabled={geometryReviewSubmitting}
-                                            className="min-h-11 rounded-md bg-emerald-600 px-3 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-wait disabled:bg-emerald-300"
+                                            className="flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-md bg-emerald-600 px-3 py-2 text-xs font-black text-white hover:bg-emerald-700 disabled:cursor-wait disabled:bg-emerald-300"
                                         >
-                                            <i className={`fa-solid mr-1.5 ${geometryReviewSubmitting ? "fa-spinner fa-spin" : "fa-check"}`} />
-                                            {geometryReviewSubmitting
-                                                ? locale === "en" ? "Saving…" : "저장 중…"
-                                                : locale === "en" ? "Product shape matches" : "제품 모양 맞아요"}
+                                            <i className={`fa-solid shrink-0 ${geometryReviewSubmitting ? "fa-spinner fa-spin" : "fa-check"}`} />
+                                            <span className="break-keep text-center leading-tight">
+                                                {geometryReviewSubmitting
+                                                    ? locale === "en" ? "Saving…" : "저장 중…"
+                                                    : locale === "en" ? "Product shape matches" : "제품 모양 맞아요"}
+                                            </span>
                                         </button>
                                         <button
                                             type="button"
@@ -1009,10 +1013,10 @@ export default function PetTryOnPreview({
                                                 setMismatchOpen(true);
                                             }}
                                             disabled={geometryReviewSubmitting}
-                                            className="min-h-11 rounded-md border border-amber-400 bg-white px-3 py-2 text-xs font-black text-amber-950 hover:bg-amber-100 disabled:opacity-60"
+                                            className="flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-md border border-amber-400 bg-white px-3 py-2 text-xs font-black text-amber-950 hover:bg-amber-100 disabled:opacity-60"
                                         >
-                                            <i className="fa-solid fa-pen-ruler mr-1.5" />
-                                            {locale === "en" ? "Looks different" : "실제 상품과 달라요"}
+                                            <i className="fa-solid fa-pen-ruler shrink-0" />
+                                            <span className="break-keep text-center leading-tight">{locale === "en" ? "Looks different" : "실제 상품과 달라요"}</span>
                                         </button>
                                     </div>
                                     {geometryReviewError && (
@@ -1234,23 +1238,25 @@ export default function PetTryOnPreview({
                                             <button
                                                 type="button"
                                                 onClick={() => setPreciseRegenerationOpen(false)}
-                                                className="min-h-11 rounded-md border border-neutral-300 bg-white px-3 py-2 text-xs font-black text-neutral-700 hover:bg-neutral-50"
+                                                className="flex min-h-11 min-w-0 items-center justify-center rounded-md border border-neutral-300 bg-white px-3 py-2 text-xs font-black text-neutral-700 hover:bg-neutral-50"
                                             >
-                                                {locale === "en" ? "Cancel" : "취소"}
+                                                <span className="break-keep text-center leading-tight">{locale === "en" ? "Cancel" : "취소"}</span>
                                             </button>
                                         )}
                                         <button
                                             type="button"
                                             onClick={() => void generate(correctionIssues.length > 0)}
                                             disabled={generationRequestPending}
-                                            className="min-h-11 rounded-md bg-amber-600 px-3 py-2 text-xs font-black text-white hover:bg-amber-700 disabled:cursor-wait disabled:bg-amber-300"
+                                            className="flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-md bg-amber-600 px-2 py-2 text-xs font-black text-white hover:bg-amber-700 disabled:cursor-wait disabled:bg-amber-300"
                                         >
-                                            <i className={`fa-solid mr-1.5 ${generationRequestPending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"}`} />
-                                            {generationRequestPending
-                                                ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
-                                                : initialGenerationRequired
-                                                    ? locale === "en" ? "Create one new fitting image" : "새 착용 이미지 1회 만들기"
-                                                    : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}
+                                            <i className={`fa-solid shrink-0 ${generationRequestPending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"}`} />
+                                            <span className="break-keep text-center leading-tight">
+                                                {generationRequestPending
+                                                    ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
+                                                    : initialGenerationRequired
+                                                        ? locale === "en" ? "Create one new fitting image" : "새 착용 이미지 1회 만들기"
+                                                        : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}
+                                            </span>
                                         </button>
                                     </div>
                                 </div>

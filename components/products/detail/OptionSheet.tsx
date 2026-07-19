@@ -12,13 +12,15 @@
  * - open=false 면 화면 밖으로 슬라이드 아웃(언마운트하지 않음) → 열기·닫기 모두 애니메이션.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
+import { daengLabCoinsForLine, daengLabCoinsForLines } from "@/lib/daenglab-rewards";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
+import { checkoutHref, type CheckoutPaymentMethod, type QuickPaymentMethod } from "@/lib/payment-methods";
 
 interface Props {
     product: CatalogProduct;
@@ -49,16 +51,65 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     const [sizeIdx, setSizeIdx] = useState<number | null>(null);
     const [qty, setQty] = useState(1);
     const [picks, setPicks] = useState<Pick[]>([]);
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const openerRef = useRef<HTMLElement | null>(null);
+    const onCloseRef = useRef(onClose);
     const displayName = productName(p);
+
+    useEffect(() => {
+        onCloseRef.current = onClose;
+    }, [onClose]);
 
     // 열릴 때마다 페이지에서 고른 색상으로 초기화(없으면 미선택)
     useEffect(() => {
         if (!open) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- opening the persistent sheet resets its transient option draft.
         setColorIdx(initialColorIdx);
         setSizeIdx(null);
         setQty(1);
         setPicks([]);
     }, [open, initialColorIdx]);
+
+    useEffect(() => {
+        if (!open) return;
+        openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        const previousBodyOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        const focusTimer = window.setTimeout(() => closeButtonRef.current?.focus({ preventScroll: true }), 0);
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                onCloseRef.current();
+                return;
+            }
+            if (event.key !== "Tab") return;
+            const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+                "button:not([disabled]), select:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex='-1'])",
+            ) ?? []).filter((element) => element.getClientRects().length > 0);
+            if (focusable.length === 0) {
+                event.preventDefault();
+                closeButtonRef.current?.focus({ preventScroll: true });
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        };
+        document.addEventListener("keydown", onKeyDown);
+        return () => {
+            window.clearTimeout(focusTimer);
+            document.removeEventListener("keydown", onKeyDown);
+            document.body.style.overflow = previousBodyOverflow;
+            openerRef.current?.focus({ preventScroll: true });
+        };
+    }, [open]);
 
     // 미리보기 이미지 — 색상을 골랐으면 그 색상, 아니면 대표 이미지(없으면 아이콘)
     const previewImage = (colorIdx != null ? colors[colorIdx]?.image : p.image) || p.image || "";
@@ -98,11 +149,14 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     const totalPrice = hasOptions
         ? effective.reduce((s, x) => s + unitPrice(x.sizeIdx) * x.qty, 0)
         : qty * p.price;
+    const expectedDaengLabCoins = hasOptions
+        ? daengLabCoinsForLines(effective.map((x) => ({ unitPrice: unitPrice(x.sizeIdx), qty: x.qty })))
+        : daengLabCoinsForLine(p.price, qty);
 
     // 옵션 없으면 항상 가능 / 옵션 있으면 누적이 있거나 현재 선택이 완료라야 확정 가능
     const canConfirm = !hasOptions || picks.length > 0 || selectionComplete;
 
-    const confirm = () => {
+    const confirm = (preferredPayment: Extract<CheckoutPaymentMethod, "card"> | QuickPaymentMethod = "card") => {
         if (!canConfirm) return;
         if (hasOptions) {
             effective.forEach((x) =>
@@ -119,14 +173,17 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
         onClose();
         onCommitted?.(mode);
         // 비로그인 구매 시 로그인 화면으로(거기서 회원 로그인/비회원 주문 선택 → 결제로 이어짐)
-        if (mode === "buy") router.push(user ? "/checkout" : "/auth/login?redirect=/checkout");
+        if (mode === "buy") {
+            const nextCheckoutHref = checkoutHref(preferredPayment);
+            router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
+        }
     };
 
     return (
         <>
             {/* 백드롭 — 옅게, 클릭 시 닫기 */}
             <div
-                className={`fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300 ${
+                className={`fixed inset-0 z-[2300] bg-black/40 transition-opacity duration-300 ${
                     open ? "opacity-100" : "pointer-events-none opacity-0"
                 }`}
                 onClick={onClose}
@@ -135,17 +192,22 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
 
             {/* 시트 — 모바일: 아래→위 / PC: 우측→좌 슬라이드 */}
             <div
+                ref={dialogRef}
                 role="dialog"
-                aria-modal="true"
+                aria-modal={open ? true : undefined}
+                aria-hidden={!open ? "true" : undefined}
+                inert={!open ? true : undefined}
                 aria-label={mode === "buy" ? t("buyNow") : t("addToCart")}
-                className={`fixed z-[61] flex flex-col bg-white shadow-2xl transition-transform duration-300 inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl sm:inset-x-auto sm:bottom-0 sm:right-0 sm:top-0 sm:h-full sm:max-h-none sm:w-[320px] sm:max-w-[92vw] sm:rounded-l-2xl sm:rounded-tr-none ${
+                data-floating-blocker={open ? "true" : "false"}
+                data-purchase-option-sheet={open ? "open" : "closed"}
+                className={`fixed z-[2301] flex flex-col bg-white shadow-2xl transition-transform duration-300 inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl sm:inset-x-auto sm:bottom-0 sm:right-0 sm:top-0 sm:h-full sm:max-h-none sm:w-[400px] sm:max-w-[92vw] sm:rounded-l-2xl sm:rounded-tr-none ${
                     open ? "translate-y-0 sm:translate-x-0" : "translate-y-full sm:translate-y-0 sm:translate-x-full"
                 }`}
             >
                 {/* 헤더 */}
                 <div className="flex shrink-0 items-center justify-between border-b border-neutral-100 px-5 pb-3 pt-5">
                     <h2 className="text-lg font-black text-neutral-950">{mode === "buy" ? t("buyNow") : t("addToCart")}</h2>
-                    <button type="button" onClick={onClose} aria-label={t("close")} className="text-neutral-400 transition hover:text-neutral-700">
+                    <button ref={closeButtonRef} type="button" onClick={onClose} aria-label={t("close")} className="text-neutral-400 transition hover:text-neutral-700">
                         <i className="fa-solid fa-xmark text-xl" />
                     </button>
                 </div>
@@ -275,17 +337,37 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                         </span>
                         <b className="text-2xl font-black text-indigo-700">{formatPrice(totalPrice)}</b>
                     </div>
+                    {canConfirm && (
+                        <div
+                            className="mt-2 flex flex-col items-start gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between sm:gap-3"
+                            data-daenglab-coin-estimate={expectedDaengLabCoins}
+                        >
+                            <span className="font-bold text-indigo-700">
+                                {locale === "en" ? "Member benefit after confirmation" : "회원 구매확정 후 적립"}
+                            </span>
+                            <b className="text-indigo-800 sm:shrink-0">
+                                {locale === "en" ? "DaengLab" : "댕랩코인"} {expectedDaengLabCoins}C
+                                <span className="ml-1 font-bold text-indigo-500">
+                                    {locale === "en" ? "(10C = 1 analysis)" : "(10C = 분석 1회)"}
+                                </span>
+                            </b>
+                        </div>
+                    )}
                     <button
                         type="button"
-                        onClick={confirm}
+                        onClick={() => confirm("card")}
                         disabled={!canConfirm}
                         className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
                     >
-                        {!canConfirm ? t("chooseOption") : mode === "buy" ? t("buyNow") : t("addToCart")}
+                        {!canConfirm
+                            ? t("chooseOption")
+                            : mode === "buy"
+                              ? (locale === "en" ? "Continue with standard payment" : "일반결제로 구매하기")
+                              : t("addToCart")}
                     </button>
 
-                    {/* 구매 모드 — 간편결제(네이버페이·카카오페이). 옵션 미선택 시 함께 비활성 */}
-                    {mode === "buy" && <SimplePayButtons disabled={!canConfirm} />}
+                    {/* 구매 모드 — 선택한 결제수단을 주문서로 전달. 실제 승인은 PG 단계에서만 완료된다. */}
+                    {mode === "buy" && <SimplePayButtons disabled={!canConfirm} onSelect={confirm} />}
                 </div>
             </div>
         </>

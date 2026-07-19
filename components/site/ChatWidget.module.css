@@ -5,8 +5,8 @@
     --chat-crayon-yellow: #f4c95d;
     --chat-crayon-mint: #7ccdb3;
     --chat-paper: #fffaf0;
-    --chat-font-body: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-    --chat-font-accent: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --chat-font-body: var(--font-crayon), var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+    --chat-font-accent: var(--chat-font-body);
     font-family: var(--chat-font-body);
 }
 

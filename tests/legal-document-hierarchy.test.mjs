@@ -42,6 +42,6 @@ test("the privacy page restores the June source details without removing newer P
     assert.match(privacy, /계약 이행에 필요한 항목과 별도 동의가 필요한 항목을 구분하여 관리합니다\./);
     assert.match(privacy, /이용자는 언제든지 \{BUSINESS_INFO\.companyName\}에 대해 개인정보 열람/);
     assert.match(privacy, /제13조 AI 분석 및 자동화된 결정/);
-    assert.match(privacy, /PetLens 짖음·행동 관찰/);
+    assert.match(privacy, /댕랩 행동·소리 분석\(PetLens 관찰 기능\)/);
     assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-07-18"/);
 });
