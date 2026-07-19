@@ -107,3 +107,16 @@ test("all three mobile launchers share the buy-bar and safe-area offset", async 
     assert.match(css, /data-mobile-hidden="true"[\s\S]{0,180}visibility: hidden/);
     assert.match(css, /data-mobile-hidden="true"[\s\S]{0,220}pointer-events: none/);
 });
+
+test("the moving companion never steals a mobile header action", async () => {
+    const [layer, css] = await Promise.all([
+        source("components/pet-companion/PetCompanionLayer.tsx"),
+        source("components/pet-companion/PetCompanionLayer.module.css"),
+    ]);
+
+    assert.match(layer, /return \{ min: Math\.min\(92, max\), max \}/);
+    assert.match(
+        css,
+        /\.walker\[data-pet-motion-source="guide"\] \.dogButton,[\s\S]{0,120}\.walker\[data-pet-guide-zone="header"\] \.dogButton \{[\s\S]{0,80}pointer-events: none/,
+    );
+});

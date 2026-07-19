@@ -217,6 +217,16 @@
     pointer-events: none;
 }
 
+/*
+ * The navigator can briefly travel through the fixed header while it points
+ * out a header action.  Keep that decorative trip click-through so a moving
+ * companion can never steal the user's PetLens (or other header) tap.
+ */
+.walker[data-pet-motion-source="guide"] .dogButton,
+.walker[data-pet-guide-zone="header"] .dogButton {
+    pointer-events: none;
+}
+
 .walker[data-pet-entry-phase="handoff"] {
     opacity: 1 !important;
     transition: opacity .14s ease-out !important;
