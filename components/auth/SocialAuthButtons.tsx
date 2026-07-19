@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadSocialProviders, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
-import { clearSignupPhoneResume, saveSignupPhoneResume } from "@/lib/signup-phone-verification";
+import { clearSignupEmailResume, saveSignupEmailResume } from "@/lib/signup-email-verification";
 
 const PROVIDERS: Array<{
     id: SocialProvider;
@@ -84,12 +84,12 @@ export default function SocialAuthButtons({
     const start = (provider: SocialProvider) => {
         if (apiReady !== true || enabledByProvider?.[provider] === false) return;
         if (mode === "signup") {
-            saveSignupPhoneResume({ source: "social", returnTo });
+            saveSignupEmailResume({ source: "social", returnTo });
         } else {
-            clearSignupPhoneResume();
+            clearSignupEmailResume();
         }
         if (!startSocialLogin(provider, returnTo)) {
-            clearSignupPhoneResume();
+            clearSignupEmailResume();
         }
     };
 

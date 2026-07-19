@@ -7,10 +7,12 @@ import {
     type DaengLabWallet,
 } from "@/lib/customer-api";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
-import SignupPhoneVerification from "@/components/auth/SignupPhoneVerification";
+import SignupEmailVerification from "@/components/auth/SignupEmailVerification";
+import { useAuth } from "@/lib/store";
 
 type Props = {
     accessToken?: string;
+    accountEmail?: string;
 };
 
 function requestKey() {
@@ -30,7 +32,8 @@ function transactionLabel(eventType: string) {
     return "지갑 변동";
 }
 
-export default function DaengLabWalletCard({ accessToken }: Props) {
+export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: Props) {
+    const { updateMemberEmail } = useAuth();
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [loading, setLoading] = useState(true);
     const [converting, setConverting] = useState(false);
@@ -148,15 +151,17 @@ export default function DaengLabWalletCard({ accessToken }: Props) {
             </div>
 
             <div className="p-5">
-                <SignupPhoneVerification
+                <SignupEmailVerification
                     accessToken={accessToken}
+                    accountEmail={accountEmail}
                     hideWhenSettled
                     onComplete={(result) => {
+                        if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
                         publishWallet(result.wallet);
                         setConversionPoints(result.wallet.pointConversionUnit);
                         setNotice(result.awardedDaengLabCoins > 0
                             ? `가입 축하 코인 ${result.awardedDaengLabCoins}C가 지급되었습니다.`
-                            : "휴대전화 인증과 가입 혜택 지급 여부를 확인했습니다.");
+                            : "이메일 인증과 가입 혜택 지급 여부를 확인했습니다.");
                     }}
                 />
                 {loading && !wallet ? (

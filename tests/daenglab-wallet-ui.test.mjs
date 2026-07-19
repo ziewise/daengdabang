@@ -27,11 +27,11 @@ test("member wallet reads server balances and converts points through an idempot
     assert.match(card, /전환한 댕랩코인은 적립금으로 되돌릴 수 없습니다/);
     assert.match(card, /최종 결제금액 확인 및 구매확정 뒤 지급/);
     assert.match(card, /data-daenglab-wallet/);
-    assert.match(page, /DaengLabWalletCard accessToken=\{user\.apiAccessToken\}/);
+    assert.match(page, /DaengLabWalletCard accessToken=\{user\.apiAccessToken\} accountEmail=\{user\.email\}/);
     assert.doesNotMatch(card, /localStorage|sessionStorage/);
 });
 
-test("signup explains the phone-verified twenty-coin welcome benefit without a premature social success claim", async () => {
+test("signup explains the email-verified twenty-coin welcome benefit without a premature social success claim", async () => {
     const [signup, socialCallback] = await Promise.all([
         source("app/auth/signup/page.tsx"),
         source("app/auth/social-callback/page.tsx"),
@@ -40,9 +40,9 @@ test("signup explains the phone-verified twenty-coin welcome benefit without a p
     assert.match(signup, /data-signup-daenglab-bonus/);
     assert.match(signup, /신규 가입 혜택 · 20C/);
     assert.match(signup, /행동·소리 분석 2회/);
-    assert.match(signup, /휴대전화 인증 완료 시 인증된 휴대전화번호 1개당 최초 1회만 자동 지급됩니다/);
-    assert.doesNotMatch(signup, /탈퇴 후 재가입 또는 중복 계정에는 추가 지급되지 않습니다/);
-    assert.match(socialCallback, /<SignupPhoneVerification/);
+    assert.match(signup, /가입 이메일 인증 완료 후 자동 지급됩니다/);
+    assert.match(signup, /부정 수령이 확인되면 코인이 회수되거나 이용이 제한될 수 있습니다/);
+    assert.match(socialCallback, /<SignupEmailVerification/);
     assert.doesNotMatch(socialCallback, /20C가 지급되었습니다/);
 });
 

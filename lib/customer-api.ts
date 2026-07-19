@@ -53,21 +53,22 @@ export type SignupBonusStatus = {
         analyses: number;
         expiresAt?: string | null;
     };
-    phoneVerificationRequired: boolean;
+    emailVerificationRequired: boolean;
     providerReady: boolean;
 };
 
-export type SignupPhoneVerificationRequest = {
+export type SignupEmailVerificationRequest = {
     verificationId: string;
     resendAfterSeconds: number;
     expiresInSeconds: number;
-    maskedPhone: string;
+    maskedEmail: string;
 };
 
-export type SignupPhoneVerificationConfirmation = {
+export type SignupEmailVerificationConfirmation = {
     status: "credited" | "already_claimed";
     awardedDaengLabCoins: number;
     wallet: DaengLabWallet;
+    verifiedEmail?: string;
 };
 
 type ApiDaengLabWallet = {
@@ -98,7 +99,7 @@ type ApiSignupBonusStatus = {
         analyses: number;
         expires_at?: string | null;
     };
-    phone_verification_required: boolean;
+    email_verification_required: boolean;
     provider_ready: boolean;
 };
 
@@ -363,20 +364,20 @@ export async function loadSignupBonusStatus(token?: string): Promise<SignupBonus
             analyses: Number(response.welcome_bonus.analyses || 2),
             expiresAt: response.welcome_bonus.expires_at,
         },
-        phoneVerificationRequired: Boolean(response.phone_verification_required),
+        emailVerificationRequired: Boolean(response.email_verification_required),
         providerReady: Boolean(response.provider_ready),
     };
 }
 
-export async function requestSignupPhoneVerification(phoneNumber: string, token?: string): Promise<SignupPhoneVerificationRequest> {
+export async function requestSignupEmailVerification(email: string | undefined, token?: string): Promise<SignupEmailVerificationRequest> {
     const response = await apiJson<{
         verification_id: string;
         resend_after_seconds: number;
         expires_in_seconds: number;
-        masked_phone: string;
-    }>("/api/v1/auth/phone-verifications", {
+        masked_email: string;
+    }>("/api/v1/auth/email-verifications", {
         method: "POST",
-        body: JSON.stringify({ phone_number: phoneNumber, purpose: "signup_bonus" }),
+        body: JSON.stringify({ ...(email ? { email } : {}), purpose: "signup_bonus" }),
     }, token, { requireBase: true });
     if (!response?.verification_id) {
         throw new DdbApiError("인증번호 요청을 완료하지 못했습니다.", { code: "http_error" });
@@ -385,30 +386,33 @@ export async function requestSignupPhoneVerification(phoneNumber: string, token?
         verificationId: response.verification_id,
         resendAfterSeconds: Math.max(0, Number(response.resend_after_seconds || 0)),
         expiresInSeconds: Math.max(0, Number(response.expires_in_seconds || 0)),
-        maskedPhone: response.masked_phone || "입력한 휴대전화번호",
+        maskedEmail: response.masked_email || "입력한 이메일",
     };
 }
 
-export async function confirmSignupPhoneVerification(
+export async function confirmSignupEmailVerification(
     verificationId: string,
+    email: string,
     code: string,
     token?: string
-): Promise<SignupPhoneVerificationConfirmation> {
+): Promise<SignupEmailVerificationConfirmation> {
     const response = await apiJson<{
         status: "credited" | "already_claimed";
         awarded_daenglab_coins: number;
         wallet: ApiDaengLabWallet;
-    }>(`/api/v1/auth/phone-verifications/${encodeURIComponent(verificationId)}/confirm`, {
+        verified_email?: string | null;
+    }>(`/api/v1/auth/email-verifications/${encodeURIComponent(verificationId)}/confirm`, {
         method: "POST",
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ email, code }),
     }, token, { requireBase: true });
     if (!response?.wallet) {
-        throw new DdbApiError("휴대전화 인증을 완료하지 못했습니다.", { code: "http_error" });
+        throw new DdbApiError("이메일 인증을 완료하지 못했습니다.", { code: "http_error" });
     }
     return {
         status: response.status,
         awardedDaengLabCoins: Number(response.awarded_daenglab_coins || 0),
         wallet: normalizeDaengLabWallet(response.wallet),
+        verifiedEmail: response.verified_email || undefined,
     };
 }
 

@@ -88,6 +88,7 @@ type Action =
     | { type: "CLEAR_CART" }
     | { type: "TOGGLE_WISHLIST"; productId: string }
     | { type: "LOGIN"; user: User }
+    | { type: "UPDATE_MEMBER_EMAIL"; email: string }
     | { type: "LOGOUT" }
     | { type: "UPSERT_PET"; pet: PetProfile }
     | { type: "SET_PETS"; pets: PetProfile[] }
@@ -239,6 +240,8 @@ function reducer(state: State, action: Action): State {
         }
         case "LOGIN":
             return { ...withoutMemberData(state), user: action.user };
+        case "UPDATE_MEMBER_EMAIL":
+            return state.user ? { ...state, user: { ...state.user, email: action.email } } : state;
         case "LOGOUT":
             return withoutMemberData(state);
         case "UPSERT_PET": {
@@ -271,6 +274,7 @@ type StoreValue = {
     toggleWishlist: (productId: string) => void;
     isWished: (productId: string) => boolean;
     login: (user: User) => void;
+    updateMemberEmail: (email: string) => void;
     logout: () => void;
     upsertPet: (pet: PetProfile) => void;
     addOrder: (order: Order) => void;
@@ -375,6 +379,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
                 authStorage.set({ provider: user.authProvider ?? "email", ts: Date.now() });
                 dispatch({ type: "LOGIN", user });
             },
+            updateMemberEmail: (email) => dispatch({ type: "UPDATE_MEMBER_EMAIL", email }),
             logout: () => {
                 clearPersistedMemberSession(state);
                 dispatch({ type: "LOGOUT" });
@@ -403,8 +408,10 @@ export function useCart() {
 export function useAuth() {
     const store = useStore();
     return {
+        hydrated: store.hydrated,
         user: store.state.user,
         login: store.login,
+        updateMemberEmail: store.updateMemberEmail,
         logout: store.logout,
         upsertPet: store.upsertPet,
     };

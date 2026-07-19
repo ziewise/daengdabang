@@ -101,7 +101,7 @@ export default function MyPage() {
 
             <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
                 <section className="grid gap-4">
-                    <DaengLabWalletCard accessToken={user.apiAccessToken} />
+                    <DaengLabWalletCard accessToken={user.apiAccessToken} accountEmail={user.email} />
                     <div id="pet-profiles" className="surface scroll-mt-24 p-5">
                         <div className="flex items-center justify-between gap-3">
                             <h2 className="text-lg font-black text-neutral-950">반려견 프로필</h2>

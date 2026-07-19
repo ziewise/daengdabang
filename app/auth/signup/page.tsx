@@ -37,17 +37,15 @@ import {
 import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
-import SignupPhoneVerification from "@/components/auth/SignupPhoneVerification";
+import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
 import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 import {
-    clearSignupPhoneResume,
-    formatKoreanMobileNumber,
-    loadSignupPhoneResume,
-    normalizeKoreanMobileNumber,
-    saveSignupPhoneResume,
-} from "@/lib/signup-phone-verification";
+    clearSignupEmailResume,
+    loadSignupEmailResume,
+    saveSignupEmailResume,
+} from "@/lib/signup-email-verification";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 const CUSTOM_BREED_OPTION = "__custom";
@@ -196,12 +194,11 @@ async function buildPetLensViewSheet(views: PetPhotoCaptures) {
 
 export default function SignupPage() {
     const router = useRouter();
-    const { login, user } = useAuth();
+    const { login, updateMemberEmail, user } = useAuth();
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
     const [petName, setPetName] = useState("");
     const [petAge, setPetAge] = useState("성견");
     const [petSize, setPetSize] = useState<PetProfile["size"]>("medium");
@@ -228,9 +225,7 @@ export default function SignupPage() {
     const [pendingVerification, setPendingVerification] = useState<{
         member: User;
         destination: string;
-        defaultPhone: string;
     } | null>(null);
-    const phoneRef = useRef<HTMLInputElement>(null);
     const petPhotoViewsRef = useRef<PetPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
     const [agreeTerms, setAgreeTerms] = useState(false);
@@ -302,13 +297,12 @@ export default function SignupPage() {
 
     useEffect(() => {
         if (pendingVerification || !user?.apiAccessToken) return;
-        const resume = loadSignupPhoneResume();
+        const resume = loadSignupEmailResume();
         if (resume?.source !== "email") return;
         const restoreId = window.setTimeout(() => {
             setPendingVerification({
                 member: user,
                 destination: resume.returnTo,
-                defaultPhone: user.phone || "",
             });
         }, 0);
         return () => window.clearTimeout(restoreId);
@@ -436,12 +430,6 @@ export default function SignupPage() {
             setError("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.");
             return;
         }
-        const normalizedSignupPhone = normalizeKoreanMobileNumber(phone);
-        if (!normalizedSignupPhone) {
-            setError("휴대전화번호를 010-1234-5678 형식으로 입력해 주세요.");
-            phoneRef.current?.focus();
-            return;
-        }
         if (password.trim().length < 8) {
             setError("비밀번호는 8자 이상 입력해 주세요.");
             return;
@@ -557,11 +545,10 @@ export default function SignupPage() {
             const destination = petLensPostAuthDestination(redirect, savedPets);
             login(member);
             clearPetLensSignupDraft();
-            saveSignupPhoneResume({ source: "email", returnTo: destination });
+            saveSignupEmailResume({ source: "email", returnTo: destination });
             setPendingVerification({
                 member,
                 destination,
-                defaultPhone: formatKoreanMobileNumber(normalizedSignupPhone),
             });
         } catch (err) {
             setCustomerToken();
@@ -574,23 +561,28 @@ export default function SignupPage() {
     const finishSignup = () => {
         if (!pendingVerification) return;
         const destination = pendingVerification.destination;
-        clearSignupPhoneResume();
+        clearSignupEmailResume();
         setPendingVerification(null);
         router.push(destination);
+    };
+
+    const completeEmailVerification = (result: SignupEmailVerificationResult) => {
+        if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
+        finishSignup();
     };
 
     if (pendingVerification) {
         return (
             <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
-                <h1 className="text-2xl font-black tracking-tight text-neutral-950">회원가입 휴대전화 인증</h1>
+                <h1 className="text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 인증</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                    계정 가입은 완료되었습니다. 휴대전화 인증을 마치면 신규 가입 혜택 20C를 받을 수 있어요.
+                    계정 가입은 완료되었습니다. 가입 이메일로 자동 발송된 6자리 인증번호를 확인하면 신규 가입 혜택 20C를 받을 수 있어요.
                 </p>
                 <div className="mt-5">
-                    <SignupPhoneVerification
+                    <SignupEmailVerification
                         accessToken={pendingVerification.member.apiAccessToken}
-                        defaultPhone={pendingVerification.defaultPhone}
-                        onComplete={() => finishSignup()}
+                        accountEmail={pendingVerification.member.email}
+                        onComplete={completeEmailVerification}
                         onContinueWithoutBonus={() => finishSignup()}
                     />
                 </div>
@@ -616,7 +608,7 @@ export default function SignupPage() {
                     </span>
                 </div>
                 <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
-                    휴대전화 인증 완료 시 인증된 휴대전화번호 1개당 최초 1회만 자동 지급됩니다.
+                    가입 이메일 인증 완료 후 자동 지급됩니다. 반복 가입 등 부정 수령이 확인되면 코인이 회수되거나 이용이 제한될 수 있습니다.
                 </p>
             </section>
             <div data-pet-guide-target="signup-provider">
@@ -643,25 +635,6 @@ export default function SignupPage() {
                         <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="input" required autoComplete="email" />
                     </label>
                 </div>
-                <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">휴대폰</span>
-                    <input
-                        ref={phoneRef}
-                        type="tel"
-                        value={phone}
-                        onChange={(event) => setPhone(formatKoreanMobileNumber(event.target.value))}
-                        className="input"
-                        inputMode="tel"
-                        autoComplete="tel"
-                        placeholder="010-1234-5678"
-                        required
-                        aria-invalid={Boolean(phone) && !normalizeKoreanMobileNumber(phone)}
-                        aria-describedby="signup-phone-help"
-                    />
-                    <span id="signup-phone-help" className="mt-1 block text-[11px] font-bold leading-4 text-neutral-500">
-                        가입 후 문자 인증을 완료하면 20C가 지급됩니다.
-                    </span>
-                </label>
                 <label>
                     <span className="mb-1 block text-xs font-black text-neutral-500">비밀번호</span>
                     <input
@@ -999,7 +972,7 @@ export default function SignupPage() {
                 </section>
                 <button type="submit" className="btn btn-primary w-full" disabled={photoLoading || loading}>
                     <i className="fa-solid fa-user-plus text-xs" />
-                    {loading ? "가입 처리 중" : "가입하고 휴대전화 인증"}
+                    {loading ? "가입 처리 중" : "가입하고 이메일 인증"}
                 </button>
             </form>
             <p className="mt-5 text-center text-sm font-bold text-neutral-600">

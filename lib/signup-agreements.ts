@@ -43,7 +43,7 @@ export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
         },
         {
             item: "이메일",
-            purpose: "주문 확인, 영수증 발송, 고객 응대",
+            purpose: "회원 식별·로그인, 가입 혜택 인증, 주문 확인, 영수증 발송, 고객 응대",
             retention: "동일",
         },
         {
@@ -57,13 +57,13 @@ export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
             retention: "관계 법령에 따른 보존기간까지",
         },
         {
-            item: "정규화된 휴대전화번호 HMAC 별칭, 요청 IP HMAC, OTP HMAC, 인증 요청·만료·시도·상태 기록",
-            purpose: "가입 혜택 휴대전화 인증번호 발송·검증, 재전송·시도 제한 및 오남용 방지. 휴대전화번호 원문과 OTP 원문은 서버 DB에 저장하지 않으며 휴대전화번호 원문은 발송 시 선택된 문자 사업자에 일시 전달",
+            item: "정규화된 이메일 HMAC 별칭, 요청 IP HMAC, OTP HMAC, 인증 요청·만료·시도·상태 기록",
+            purpose: "가입 혜택 이메일 인증번호 발송·검증, 재전송·시도 제한 및 오남용 방지. 이메일주소는 회원 계정 정보로 보관되고 발송 시 이메일 발송 사업자에 전달되며, OTP 원문은 서버 DB에 저장하지 않음",
             retention: "인증번호 만료 후 24시간",
         },
         {
-            item: "정규화된 인증 휴대전화번호의 HMAC 일방향 식별값",
-            purpose: "신규 가입 댕랩코인 20C의 인증 휴대전화번호 1개당 1회 지급 및 반복 수령 방지",
+            item: "정규화된 인증 이메일의 HMAC 일방향 식별값",
+            purpose: "신규 가입 댕랩코인 20C의 중복 수령 탐지, 반복 가입 등 부정 이용 방지 및 부정 지급 혜택 회수",
             retention: "가입 혜택 프로그램 운영 기간 및 종료 후 30일(분쟁 또는 법령상 보존 사유가 있으면 해당 기간)",
         },
     ] satisfies SignupAgreementRow[],

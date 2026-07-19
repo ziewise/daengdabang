@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { loadPetProfilesSmart, setCustomerToken, type SocialProvider } from "@/lib/customer-api";
 import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
-import SignupPhoneVerification from "@/components/auth/SignupPhoneVerification";
-import { clearSignupPhoneResume, loadSignupPhoneResume } from "@/lib/signup-phone-verification";
+import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
+import { clearSignupEmailResume, loadSignupEmailResume } from "@/lib/signup-email-verification";
 
 const SOCIAL_PROVIDERS = new Set<SocialProvider>(["naver", "kakao", "google"]);
 
@@ -44,7 +44,7 @@ function providerFromJwt(token: string): SocialProvider | undefined {
 
 export default function SocialCallbackPage() {
     const router = useRouter();
-    const { login } = useAuth();
+    const { hydrated, login, updateMemberEmail, user } = useAuth();
     const [error, setError] = useState("");
     const [pendingVerification, setPendingVerification] = useState<{
         member: User;
@@ -53,14 +53,18 @@ export default function SocialCallbackPage() {
     const processedRef = useRef(false);
 
     useEffect(() => {
-        if (processedRef.current) return;
+        if (!hydrated || processedRef.current) return;
         processedRef.current = true;
         const run = async () => {
             const params = parseCallbackParams();
             const token = params.get("access_token") || params.get("token") || "";
-            const resume = loadSignupPhoneResume();
+            const resume = loadSignupEmailResume();
             if (!token) {
-                clearSignupPhoneResume();
+                if (resume?.source === "social" && user?.apiAccessToken) {
+                    setPendingVerification({ member: user, returnTo: resume.returnTo });
+                    return;
+                }
+                clearSignupEmailResume();
                 setError("간편로그인 정보를 확인하지 못했습니다.");
                 return;
             }
@@ -97,27 +101,34 @@ export default function SocialCallbackPage() {
             }
         };
         run();
-    }, [login, router]);
+    }, [hydrated, login, router, user]);
 
     const finishSignup = () => {
         if (!pendingVerification) return;
         const returnTo = pendingVerification.returnTo;
-        clearSignupPhoneResume();
+        clearSignupEmailResume();
         setPendingVerification(null);
         router.replace(returnTo);
+    };
+
+    const completeEmailVerification = (result: SignupEmailVerificationResult) => {
+        if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
+        finishSignup();
     };
 
     if (pendingVerification) {
         return (
             <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
-                <h1 className="text-2xl font-black text-neutral-950">간편가입 휴대전화 인증</h1>
+                <h1 className="text-2xl font-black text-neutral-950">간편가입 이메일 인증</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                    계정 가입은 완료되었습니다. 휴대전화 인증을 마치면 신규 가입 혜택 20C를 받을 수 있어요.
+                    계정 가입은 완료되었습니다. 이메일 인증을 마치면 신규 가입 혜택 20C를 받을 수 있어요.
+                    간편가입에서 임시 이메일이 생성된 경우 실제 사용하는 이메일을 입력해 주세요.
                 </p>
                 <div className="mt-5">
-                    <SignupPhoneVerification
+                    <SignupEmailVerification
                         accessToken={pendingVerification.member.apiAccessToken}
-                        onComplete={() => finishSignup()}
+                        accountEmail={pendingVerification.member.email}
+                        onComplete={completeEmailVerification}
                         onContinueWithoutBonus={() => finishSignup()}
                     />
                 </div>

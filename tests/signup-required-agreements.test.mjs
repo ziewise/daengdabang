@@ -29,10 +29,10 @@ test("signup renders required legal agreements without exposing attached documen
     assert.doesNotMatch(agreementSource, /sourceDocument/);
     assert.match(agreementSource, /회원 탈퇴 후 30일 또는 관계 법령에 따른 보존기간까지/);
     assert.match(agreementSource, /주문 및 결제 정보/);
-    assert.match(agreementSource, /정규화된 인증 휴대전화번호의 HMAC 일방향 식별값/);
-    assert.match(agreementSource, /인증 휴대전화번호 1개당 1회 지급/);
+    assert.match(agreementSource, /정규화된 인증 이메일의 HMAC 일방향 식별값/);
+    assert.match(agreementSource, /중복 수령 탐지, 반복 가입 등 부정 이용 방지 및 부정 지급 혜택 회수/);
     assert.match(agreementSource, /요청 IP HMAC, OTP HMAC, 인증 요청·만료·시도·상태 기록/);
-    assert.match(agreementSource, /휴대전화번호 원문과 OTP 원문은 서버 DB에 저장하지 않으며/);
+    assert.match(agreementSource, /OTP 원문은 서버 DB에 저장하지 않음/);
     assert.match(agreementSource, /인증번호 만료 후 24시간/);
     assert.match(agreementSource, /가입 혜택 프로그램 운영 기간 및 종료 후 30일/);
     assert.match(agreementSource, /귀하는 개인정보 수집·이용에 대한 동의를 거부할 권리/);
@@ -41,12 +41,12 @@ test("signup renders required legal agreements without exposing attached documen
 test("privacy policy discloses pseudonymous signup bonus abuse prevention", async () => {
     const privacySource = await readSource("app/privacy/page.tsx");
 
-    assert.match(privacySource, /가입 혜택 휴대전화 인증/);
+    assert.match(privacySource, /가입 혜택 이메일 인증/);
     assert.match(privacySource, /가입 혜택 중복 방지/);
-    assert.match(privacySource, /정규화된 인증 휴대전화번호를 서버 비밀키로 HMAC 변환한 일방향 식별값/);
-    assert.match(privacySource, /탈퇴·재가입 반복 수령 및 부정 이용 방지/);
+    assert.match(privacySource, /정규화된 인증 이메일을 서버 비밀키로 HMAC 변환한 일방향 식별값/);
+    assert.match(privacySource, /반복 가입 등 부정 이용 방지 및 부정 지급 혜택 회수/);
     assert.match(privacySource, /가입 혜택 중복 방지용 HMAC 식별값/);
-    assert.match(privacySource, /선택된 문자 발송 사업자\(연동 시 사업자명 고지 및 정책 반영\)/);
+    assert.match(privacySource, /선택된 이메일 발송 사업자\(연동 시 사업자명 고지 및 정책 반영\)/);
     assert.match(privacySource, /인증번호 만료 후 24시간/);
     assert.match(privacySource, /2026-07-20/);
 });
