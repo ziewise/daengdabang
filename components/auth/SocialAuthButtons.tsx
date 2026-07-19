@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { loadSocialProviders, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
+import { clearSignupPhoneResume, saveSignupPhoneResume } from "@/lib/signup-phone-verification";
 
 const PROVIDERS: Array<{
     id: SocialProvider;
@@ -82,7 +83,14 @@ export default function SocialAuthButtons({
 
     const start = (provider: SocialProvider) => {
         if (apiReady !== true || enabledByProvider?.[provider] === false) return;
-        startSocialLogin(provider, returnTo);
+        if (mode === "signup") {
+            saveSignupPhoneResume({ source: "social", returnTo });
+        } else {
+            clearSignupPhoneResume();
+        }
+        if (!startSocialLogin(provider, returnTo)) {
+            clearSignupPhoneResume();
+        }
     };
 
     // compact — 로그인 카드용 원형 아이콘(라벨 없음, 비활성은 흐리게)

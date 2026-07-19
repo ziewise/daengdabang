@@ -7,6 +7,7 @@ import {
     type DaengLabWallet,
 } from "@/lib/customer-api";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
+import SignupPhoneVerification from "@/components/auth/SignupPhoneVerification";
 
 type Props = {
     accessToken?: string;
@@ -147,6 +148,17 @@ export default function DaengLabWalletCard({ accessToken }: Props) {
             </div>
 
             <div className="p-5">
+                <SignupPhoneVerification
+                    accessToken={accessToken}
+                    hideWhenSettled
+                    onComplete={(result) => {
+                        publishWallet(result.wallet);
+                        setConversionPoints(result.wallet.pointConversionUnit);
+                        setNotice(result.awardedDaengLabCoins > 0
+                            ? `가입 축하 코인 ${result.awardedDaengLabCoins}C가 지급되었습니다.`
+                            : "휴대전화 인증과 가입 혜택 지급 여부를 확인했습니다.");
+                    }}
+                />
                 {loading && !wallet ? (
                     <div className="grid min-h-28 place-items-center text-sm font-bold text-neutral-500">
                         <span><i className="fa-solid fa-circle-notch fa-spin mr-2" />지갑을 불러오는 중입니다.</span>

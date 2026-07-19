@@ -44,6 +44,32 @@ export type DaengLabWallet = {
     transactions: DaengLabWalletTransaction[];
 };
 
+export type SignupBonusStatusValue = "pending" | "claimed" | "repeat" | "expired" | "ineligible";
+
+export type SignupBonusStatus = {
+    welcomeBonus: {
+        status: SignupBonusStatusValue;
+        amount: number;
+        analyses: number;
+        expiresAt?: string | null;
+    };
+    phoneVerificationRequired: boolean;
+    providerReady: boolean;
+};
+
+export type SignupPhoneVerificationRequest = {
+    verificationId: string;
+    resendAfterSeconds: number;
+    expiresInSeconds: number;
+    maskedPhone: string;
+};
+
+export type SignupPhoneVerificationConfirmation = {
+    status: "credited" | "already_claimed";
+    awardedDaengLabCoins: number;
+    wallet: DaengLabWallet;
+};
+
 type ApiDaengLabWallet = {
     reward_points: number;
     daenglab_coins: number;
@@ -63,6 +89,17 @@ type ApiDaengLabWallet = {
         daenglab_coins_delta: number;
         created_at: string;
     }>;
+};
+
+type ApiSignupBonusStatus = {
+    welcome_bonus: {
+        status: SignupBonusStatusValue;
+        amount: number;
+        analyses: number;
+        expires_at?: string | null;
+    };
+    phone_verification_required: boolean;
+    provider_ready: boolean;
 };
 
 export type CustomerSupportInquiryPayload = {
@@ -312,6 +349,67 @@ export async function loadDaengLabWallet(token?: string) {
     }, token, { requireBase: true });
     if (!wallet) throw new DdbApiError("댕랩 지갑을 불러오지 못했습니다.", { code: "http_error" });
     return normalizeDaengLabWallet(wallet);
+}
+
+export async function loadSignupBonusStatus(token?: string): Promise<SignupBonusStatus> {
+    const response = await apiJson<ApiSignupBonusStatus>("/api/v1/auth/signup-bonus/status", {
+        method: "GET",
+    }, token, { requireBase: true });
+    if (!response) throw new DdbApiError("가입 혜택 상태를 확인하지 못했습니다.", { code: "http_error" });
+    return {
+        welcomeBonus: {
+            status: response.welcome_bonus.status,
+            amount: Number(response.welcome_bonus.amount || 20),
+            analyses: Number(response.welcome_bonus.analyses || 2),
+            expiresAt: response.welcome_bonus.expires_at,
+        },
+        phoneVerificationRequired: Boolean(response.phone_verification_required),
+        providerReady: Boolean(response.provider_ready),
+    };
+}
+
+export async function requestSignupPhoneVerification(phoneNumber: string, token?: string): Promise<SignupPhoneVerificationRequest> {
+    const response = await apiJson<{
+        verification_id: string;
+        resend_after_seconds: number;
+        expires_in_seconds: number;
+        masked_phone: string;
+    }>("/api/v1/auth/phone-verifications", {
+        method: "POST",
+        body: JSON.stringify({ phone_number: phoneNumber, purpose: "signup_bonus" }),
+    }, token, { requireBase: true });
+    if (!response?.verification_id) {
+        throw new DdbApiError("인증번호 요청을 완료하지 못했습니다.", { code: "http_error" });
+    }
+    return {
+        verificationId: response.verification_id,
+        resendAfterSeconds: Math.max(0, Number(response.resend_after_seconds || 0)),
+        expiresInSeconds: Math.max(0, Number(response.expires_in_seconds || 0)),
+        maskedPhone: response.masked_phone || "입력한 휴대전화번호",
+    };
+}
+
+export async function confirmSignupPhoneVerification(
+    verificationId: string,
+    code: string,
+    token?: string
+): Promise<SignupPhoneVerificationConfirmation> {
+    const response = await apiJson<{
+        status: "credited" | "already_claimed";
+        awarded_daenglab_coins: number;
+        wallet: ApiDaengLabWallet;
+    }>(`/api/v1/auth/phone-verifications/${encodeURIComponent(verificationId)}/confirm`, {
+        method: "POST",
+        body: JSON.stringify({ code }),
+    }, token, { requireBase: true });
+    if (!response?.wallet) {
+        throw new DdbApiError("휴대전화 인증을 완료하지 못했습니다.", { code: "http_error" });
+    }
+    return {
+        status: response.status,
+        awardedDaengLabCoins: Number(response.awarded_daenglab_coins || 0),
+        wallet: normalizeDaengLabWallet(response.wallet),
+    };
 }
 
 export async function convertRewardPointsToDaengLabCoins(

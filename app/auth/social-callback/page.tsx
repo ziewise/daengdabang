@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loadPetProfilesSmart, setCustomerToken, type SocialProvider } from "@/lib/customer-api";
-import { useAuth, type PetProfile } from "@/lib/store";
+import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
+import SignupPhoneVerification from "@/components/auth/SignupPhoneVerification";
+import { clearSignupPhoneResume, loadSignupPhoneResume } from "@/lib/signup-phone-verification";
 
 const SOCIAL_PROVIDERS = new Set<SocialProvider>(["naver", "kakao", "google"]);
 
@@ -44,20 +46,32 @@ export default function SocialCallbackPage() {
     const router = useRouter();
     const { login } = useAuth();
     const [error, setError] = useState("");
+    const [pendingVerification, setPendingVerification] = useState<{
+        member: User;
+        returnTo: string;
+    } | null>(null);
+    const processedRef = useRef(false);
 
     useEffect(() => {
+        if (processedRef.current) return;
+        processedRef.current = true;
         const run = async () => {
             const params = parseCallbackParams();
             const token = params.get("access_token") || params.get("token") || "";
+            const resume = loadSignupPhoneResume();
             if (!token) {
+                clearSignupPhoneResume();
                 setError("간편로그인 정보를 확인하지 못했습니다.");
                 return;
             }
 
             const email = params.get("email") || "";
             const name = params.get("name") || email.split("@")[0] || "댕다방 회원";
-            const returnTo = cleanReturnTo(params.get("return_to"));
+            const returnTo = resume?.source === "social"
+                ? resume.returnTo
+                : cleanReturnTo(params.get("return_to"));
             const provider = cleanSocialProvider(params.get("provider")) || providerFromJwt(token);
+            window.history.replaceState(null, "", "/auth/social-callback");
             setCustomerToken(token);
 
             let pets: PetProfile[] = [];
@@ -67,18 +81,49 @@ export default function SocialCallbackPage() {
                 pets = [];
             }
 
-            login({
+            const member: User = {
                 apiAccessToken: token,
                 authProvider: provider || "email",
                 name,
                 email,
                 joinedAt: new Date().toISOString(),
                 pets,
-            });
-            router.replace(returnTo);
+            };
+            login(member);
+            if (resume?.source === "social") {
+                setPendingVerification({ member, returnTo });
+            } else {
+                router.replace(returnTo);
+            }
         };
         run();
     }, [login, router]);
+
+    const finishSignup = () => {
+        if (!pendingVerification) return;
+        const returnTo = pendingVerification.returnTo;
+        clearSignupPhoneResume();
+        setPendingVerification(null);
+        router.replace(returnTo);
+    };
+
+    if (pendingVerification) {
+        return (
+            <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
+                <h1 className="text-2xl font-black text-neutral-950">간편가입 휴대전화 인증</h1>
+                <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
+                    계정 가입은 완료되었습니다. 휴대전화 인증을 마치면 신규 가입 혜택 20C를 받을 수 있어요.
+                </p>
+                <div className="mt-5">
+                    <SignupPhoneVerification
+                        accessToken={pendingVerification.member.apiAccessToken}
+                        onComplete={() => finishSignup()}
+                        onContinueWithoutBonus={() => finishSignup()}
+                    />
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="mx-auto max-w-md px-4 py-16 text-center">
