@@ -22,8 +22,26 @@ test("PetLens observation mounts on both the page and modal without replacing ph
 });
 
 
+test("the active behavior and sound launcher opens the real observation camera instead of a coming-soon view", async () => {
+    const [launcher, modal] = await Promise.all([
+        source("components/petlens/PetLensModalLauncher.tsx"),
+        source("components/petlens/PetLensModalContent.tsx"),
+    ]);
+    assert.match(launcher, /data-petlens-observation-launcher/);
+    assert.match(launcher, /setView\("observation"\)/);
+    assert.match(launcher, /mode: "observation", surface: "modal"/);
+    assert.match(launcher, /initialMode="observation"/);
+    assert.doesNotMatch(launcher, /mode: "sound"|준비중|coming soon/i);
+    assert.match(modal, /initialMode\?: PetLensMode/);
+    assert.match(modal, /useState<PetLensMode>\(initialMode\)/);
+});
+
+
 test("live capture requests camera and microphone and cleans every local media handle", async () => {
-    const hook = await source("hooks/usePetLensMediaCapture.ts");
+    const [hook, experience] = await Promise.all([
+        source("hooks/usePetLensMediaCapture.ts"),
+        source("components/petlens/PetLensObservationExperience.tsx"),
+    ]);
     assert.match(hook, /navigator\.mediaDevices\.getUserMedia/);
     assert.match(hook, /video:\s*\{/);
     assert.match(hook, /audio:\s*\{/);
@@ -35,6 +53,16 @@ test("live capture requests camera and microphone and cleans every local media h
     assert.match(hook, /cameraRequestRef\.current !== requestId/);
     assert.match(hook, /blob\.size > MAX_FILE_BYTES/);
     assert.match(hook, /video\/quicktime/);
+    assert.match(hook, /navigator\.mediaDevices\.enumerateDevices/);
+    assert.match(hook, /deviceId: \{ exact: videoDeviceId \}/);
+    assert.match(hook, /addEventListener\?\.\("devicechange"/);
+    assert.match(hook, /const switchCamera = useCallback/);
+    assert.match(hook, /cameraRequestRef\.current !== requestId\) return;[\s\S]*stream = await requestStream\("", ""\)/);
+    assert.match(experience, /data-petlens-connected-devices/);
+    assert.match(experience, /data-petlens-video-device/);
+    assert.match(experience, /data-petlens-audio-device/);
+    assert.match(experience, /data-petlens-switch-camera/);
+    assert.match(experience, /전·후면 카메라 전환/);
     assert.doesNotMatch(hook, /localStorage|sessionStorage/);
 });
 

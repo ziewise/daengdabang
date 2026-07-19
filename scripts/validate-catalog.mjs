@@ -44,7 +44,8 @@ const CatalogRowSchema = z.object({
     isHygiene: z.boolean(),
     name: z.string().min(1, "상품명 비어있음"),
     priceText: z.string(),
-    priceNum: z.number().nonnegative(),
+    priceNum: z.number().int().positive(),
+    originalPriceNum: z.number().int().positive().optional(),
     categorizeNote: z.string(),
     sourceUrl: z.string(),
     verifyNote: z.string(),
@@ -55,6 +56,14 @@ const CatalogRowSchema = z.object({
     details: z.array(z.string()).optional(),
     sizeImage: z.string().optional(),
     video: z.string().optional(),
+}).superRefine((row, ctx) => {
+    if (row.originalPriceNum !== undefined && row.originalPriceNum <= row.priceNum) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["originalPriceNum"],
+            message: "기존 정상가는 최종 판매가보다 커야 함",
+        });
+    }
 });
 
 const RawCatalogSchema = z.array(CatalogRowSchema).min(1, "raw catalog 비어있음");

@@ -187,9 +187,16 @@ export default function SearchModal({ open, onClose }: Props) {
                                                         </p>
                                                         <p className="text-xs font-bold truncate">{productName(p)}</p>
                                                     </div>
-                                                    <span className="text-xs font-black flex-shrink-0">
-                                                        {formatPrice(p.price)}
-                                                    </span>
+                                                    <div className="flex flex-shrink-0 flex-col items-end gap-0.5">
+                                                        {p.discountRate > 0 && p.originalPrice && (
+                                                            <span className="text-[9px] text-neutral-400 line-through decoration-rose-300 decoration-2">
+                                                                {formatPrice(p.originalPrice)}
+                                                            </span>
+                                                        )}
+                                                        <span className={p.discountRate > 0 && p.originalPrice ? "ddb-sale-price text-base" : "text-xs font-black"}>
+                                                            {formatPrice(p.price)}
+                                                        </span>
+                                                    </div>
                                                 </button>
                                             </li>
                                         ))}

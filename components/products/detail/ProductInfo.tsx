@@ -174,13 +174,22 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <div>
                         {p.discountRate > 0 && p.originalPrice && (
                             <div className="mb-1 flex items-center gap-2">
-                                <span className="text-lg font-black text-rose-600">{p.discountRate}%</span>
-                                <span className="text-sm text-neutral-400 line-through">{formatPrice(p.originalPrice)}</span>
+                                <span className="rounded-full bg-rose-50 px-2.5 py-1 text-sm font-black text-rose-600">
+                                    {locale === "en" ? `${p.discountRate}% off` : `${p.discountRate}% 할인`}
+                                </span>
+                                <span className="text-sm text-neutral-400 line-through decoration-rose-300 decoration-2">{formatPrice(p.originalPrice)}</span>
                             </div>
                         )}
-                        <p className="text-4xl font-black text-neutral-950">
-                            {formatPrice(p.price)}
-                        </p>
+                        <div className="flex flex-wrap items-baseline gap-2.5">
+                            {p.discountRate > 0 && p.originalPrice && (
+                                <span className="ddb-sale-label">
+                                    {locale === "en" ? "DaengDaBang price" : "댕다방 할인가"}
+                                </span>
+                            )}
+                            <p className={p.discountRate > 0 && p.originalPrice ? "ddb-sale-price text-4xl md:text-5xl" : "text-4xl font-black text-neutral-950"}>
+                                {formatPrice(p.price)}
+                            </p>
+                        </div>
                     </div>
                     {/* 링크·공유 — 금액 라인 우측 끝(아이콘만) */}
                     <ProductShareActions product={p} />
@@ -291,7 +300,14 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     </div>
                     <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-black text-neutral-900">{displayName}</p>
-                        <p className="text-sm font-black text-indigo-700">{formatPrice(p.price)}</p>
+                        <div className="flex min-w-0 flex-col items-start gap-0.5 sm:flex-row sm:items-baseline sm:gap-1.5">
+                            {p.discountRate > 0 && p.originalPrice && (
+                                <span className="ddb-sale-label ddb-sale-label--compact">
+                                    {locale === "en" ? "DDB sale" : "댕다방 할인가"}
+                                </span>
+                            )}
+                            <p className={p.discountRate > 0 && p.originalPrice ? "ddb-sale-price max-w-full whitespace-nowrap text-xl" : "text-sm font-black text-indigo-700"}>{formatPrice(p.price)}</p>
+                        </div>
                     </div>
                     <button
                         type="button"

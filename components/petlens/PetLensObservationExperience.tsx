@@ -35,7 +35,13 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         clipUrl,
         durationSeconds,
         error: captureError,
+        videoDevices,
+        audioDevices,
+        selectedVideoDeviceId,
+        selectedAudioDeviceId,
+        facingMode,
         startCamera,
+        switchCamera,
         startRecording,
         selectFile,
         reset: resetCapture,
@@ -116,6 +122,10 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
 
     const compact = variant === "modal";
     const busy = analyzing || phase === "requesting" || phase === "recording";
+    const selectedCameraLabel = videoDevices.find((device) => device.deviceId === selectedVideoDeviceId)?.label
+        || (facingMode === "environment" ? "후면·기본 카메라" : "전면 카메라");
+    const selectedMicrophoneLabel = audioDevices.find((device) => device.deviceId === selectedAudioDeviceId)?.label
+        || "기본 마이크";
 
     return (
         <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
@@ -178,6 +188,64 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             </div>
                         )}
                     </div>
+
+                    {(phase === "preview" || phase === "recording") && (
+                        <div className="rounded-xl border border-sky-100 bg-sky-50/80 p-3" data-petlens-connected-devices>
+                            <div className="flex flex-wrap gap-2 text-[10px] font-black text-sky-900">
+                                <span className="rounded-full bg-white px-2.5 py-1">
+                                    <i className="fa-solid fa-camera mr-1.5" aria-hidden="true" />{selectedCameraLabel}
+                                </span>
+                                <span className="rounded-full bg-white px-2.5 py-1">
+                                    <i className="fa-solid fa-microphone mr-1.5" aria-hidden="true" />{selectedMicrophoneLabel}
+                                </span>
+                            </div>
+                            {phase === "preview" && (
+                                <div className="mt-3 grid gap-2 sm:grid-cols-2" data-petlens-device-controls>
+                                    {videoDevices.length > 1 && (
+                                        <label className="grid gap-1 text-[10px] font-black text-neutral-600">
+                                            카메라 선택
+                                            <select
+                                                value={selectedVideoDeviceId}
+                                                onChange={(event) => void startCamera({ videoDeviceId: event.target.value })}
+                                                className="input min-h-10 w-full text-xs"
+                                                data-petlens-video-device
+                                            >
+                                                <option value="">브라우저 자동 선택</option>
+                                                {videoDevices.map((device) => (
+                                                    <option key={device.deviceId} value={device.deviceId}>{device.label}</option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                    )}
+                                    {audioDevices.length > 1 && (
+                                        <label className="grid gap-1 text-[10px] font-black text-neutral-600">
+                                            마이크 선택
+                                            <select
+                                                value={selectedAudioDeviceId}
+                                                onChange={(event) => void startCamera({ audioDeviceId: event.target.value })}
+                                                className="input min-h-10 w-full text-xs"
+                                                data-petlens-audio-device
+                                            >
+                                                <option value="">브라우저 자동 선택</option>
+                                                {audioDevices.map((device) => (
+                                                    <option key={device.deviceId} value={device.deviceId}>{device.label}</option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => void switchCamera()}
+                                        className="btn btn-secondary min-h-10 justify-center text-xs sm:col-span-2"
+                                        data-petlens-switch-camera
+                                    >
+                                        <i className="fa-solid fa-rotate mr-1.5 text-[10px]" aria-hidden="true" />
+                                        {videoDevices.length > 1 ? "다음 카메라로 전환" : "전·후면 카메라 전환"}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {captureError && (
                         <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold leading-5 text-rose-700" role="alert">
@@ -268,7 +336,8 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                         {analyzing ? "영상과 소리를 분석하는 중입니다." : phase === "recording" ? "10초 관찰 영상을 녹화하는 중입니다." : ""}
                     </span>
                     <p className="text-[11px] font-bold leading-5 text-neutral-500">
-                        실시간 촬영이 안 되는 브라우저에서는 2~12초 WebM·MP4·MOV 영상을 선택할 수 있어요. 최대 12MB입니다.
+                        연결 뒤 모바일 전·후면 카메라나 PC 웹캠·마이크가 여러 개면 직접 바꿀 수 있어요.
+                        실시간 촬영이 안 되는 브라우저에서는 2~12초 WebM·MP4·MOV 영상을 선택할 수 있으며 최대 12MB입니다.
                     </p>
                 </div>
 

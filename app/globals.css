@@ -38,6 +38,48 @@ body {
     font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
+/* 댕다방 로고의 손으로 칠한 듯한 결을 가격 숫자에도 이어 준다. */
+.ddb-sale-price {
+    display: inline-block;
+    background: linear-gradient(102deg, #0891b2 0 31%, #ef476f 38% 67%, #f59e0b 75% 100%);
+    background-clip: text;
+    color: #e7466d;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 1;
+    filter: drop-shadow(0.45px 0.45px 0 rgba(15, 23, 42, 0.2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.15px rgba(15, 23, 42, 0.12);
+}
+
+.ddb-sale-label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    border: 1px dashed rgba(239, 71, 111, 0.38);
+    border-radius: 999px;
+    background: linear-gradient(110deg, rgba(8, 145, 178, 0.1), rgba(239, 71, 111, 0.1), rgba(245, 158, 11, 0.12));
+    padding: 2px 8px;
+    color: #be185d;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    transform: rotate(-0.7deg);
+}
+
+.ddb-sale-label--compact {
+    max-width: 100%;
+    min-height: 18px;
+    padding: 1px 5px;
+    font-size: 9px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* 전역 크레파스 배경 — fixed z-index:-1 레이어(layout 의 .global-aurora div).
    협업자가 globals.css 를 갱신하며 사라진 적 있음 → 커밋 066b0d6 에서 복원. */
 .global-aurora {

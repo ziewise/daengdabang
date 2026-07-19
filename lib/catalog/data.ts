@@ -101,7 +101,7 @@ function seededRand(no: number, salt: number): number {
     return x - Math.floor(x);
 }
 
-function buildMeta(row: CatalogRow) {
+function buildMeta(row: CatalogRow, price: number) {
     const brandBoost = row.brandEn === "Ruffwear" ? 240 : row.brandEn === "Rex Specs" ? 180 : 70;
     const popularity = Math.round(brandBoost + seededRand(row.no, 1) * 760);
     const baseTs = new Date("2026-06-01T00:00:00+09:00").getTime();
@@ -109,9 +109,13 @@ function buildMeta(row: CatalogRow) {
     const salesCount = Math.round(popularity * 0.35 + seededRand(row.no, 2) * 180);
     const reviewCount = Number(row.externalReviewCount || 0);
     const rating = typeof row.externalReviewAverage === "number" ? row.externalReviewAverage : 0;
-    // 할인 표시 제거 — 적힌 가격이 원래가라 가짜 할인(원가 취소선·할인율)을 노출하지 않는다.
-    const discountRate = 0;
-    const originalPrice = null;
+    // 할인율은 관리자에서 저장한 두 가격으로만 계산한다. 정상가가 없거나
+    // 최종 판매가 이하이면 할인 표시를 만들지 않아 잘못된 취소선을 막는다.
+    const candidateOriginalPrice = Number(row.originalPriceNum || 0);
+    const originalPrice = candidateOriginalPrice > price ? candidateOriginalPrice : null;
+    const discountRate = originalPrice
+        ? Math.max(1, Math.round(((originalPrice - price) / originalPrice) * 100))
+        : 0;
 
     return { popularity, addedAt, salesCount, reviewCount, rating, discountRate, originalPrice };
 }
@@ -171,6 +175,8 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
     return (rawCatalog as CatalogRow[]).map((row) => {
         const subcategory = mapSubcategory(row);
         const category = SUBCAT_TO_CAT[subcategory];
+        const overridePrice = buildPrice(row.folder);
+        const price = overridePrice ?? (row.priceNum || 0);
 
         return {
             id: `p_${row.no}`,
@@ -179,8 +185,8 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             brandKo: row.brandKo,
             brandEn: row.brandEn,
             brandSlug: brandSlug(row),
-            price: buildPrice(row.folder) ?? (row.priceNum || 0),
-            priceText: buildPrice(row.folder) != null ? wonText(buildPrice(row.folder)!) : row.priceText,
+            price,
+            priceText: overridePrice != null ? wonText(overridePrice) : row.priceText,
             category,
             subcategory,
             promos: mapPromos(row),
@@ -205,7 +211,7 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             colors: buildColors(row.folder),
             sizes: buildSizes(row.folder),
             optionLabel: buildOptionLabel(row.folder),
-            ...buildMeta(row),
+            ...buildMeta(row, price),
         };
     });
 }

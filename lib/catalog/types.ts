@@ -13,6 +13,8 @@ export interface CatalogRow {
     name: string;
     priceText: string;
     priceNum: number;
+    /** 관리자에서 관리하는 취소선 정상가. 실제 결제금액은 priceNum이다. */
+    originalPriceNum?: number;
     categorizeNote?: string;
     sourceUrl?: string;
     verifyNote?: string;

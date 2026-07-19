@@ -7,6 +7,26 @@ const RECORDING_SECONDS = 10;
 const MAX_FILE_BYTES = 12 * 1024 * 1024;
 
 export type PetLensCapturePhase = "idle" | "requesting" | "preview" | "recording" | "recorded" | "error";
+export type PetLensCameraFacing = "environment" | "user";
+export type PetLensMediaDeviceOption = {
+    deviceId: string;
+    label: string;
+};
+
+type PetLensCameraStartOptions = {
+    videoDeviceId?: string;
+    audioDeviceId?: string;
+    facingMode?: PetLensCameraFacing;
+};
+
+function mediaDeviceOptions(devices: MediaDeviceInfo[], kind: MediaDeviceKind, fallbackLabel: string) {
+    return devices
+        .filter((device) => device.kind === kind && Boolean(device.deviceId))
+        .map((device, index) => ({
+            deviceId: device.deviceId,
+            label: device.label.trim() || `${fallbackLabel} ${index + 1}`,
+        }));
+}
 
 function preferredRecorderMime() {
     if (typeof MediaRecorder === "undefined") return "";
@@ -66,6 +86,11 @@ export function usePetLensMediaCapture() {
     const [clipUrl, setClipUrl] = useState("");
     const [durationSeconds, setDurationSeconds] = useState(0);
     const [error, setError] = useState("");
+    const [videoDevices, setVideoDevices] = useState<PetLensMediaDeviceOption[]>([]);
+    const [audioDevices, setAudioDevices] = useState<PetLensMediaDeviceOption[]>([]);
+    const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState("");
+    const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState("");
+    const [facingMode, setFacingMode] = useState<PetLensCameraFacing>("environment");
 
     const clearTimers = useCallback(() => {
         if (stopTimerRef.current !== null) window.clearTimeout(stopTimerRef.current);
@@ -115,9 +140,28 @@ export function usePetLensMediaCapture() {
         setPhase("idle");
     }, [cancelCapture, revokeClipUrl]);
 
-    const startCamera = useCallback(async () => {
+    const refreshDevices = useCallback(async () => {
+        if (!navigator.mediaDevices?.enumerateDevices) return;
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            if (!mountedRef.current) return;
+            setVideoDevices(mediaDeviceOptions(devices, "videoinput", "카메라"));
+            setAudioDevices(mediaDeviceOptions(devices, "audioinput", "마이크"));
+        } catch {
+            // Device labels and enumeration are optional. Live capture can still use browser defaults.
+        }
+    }, []);
+
+    const startCamera = useCallback(async (options: PetLensCameraStartOptions = {}) => {
         const requestId = cameraRequestRef.current + 1;
         cameraRequestRef.current = requestId;
+        const requestedVideoDeviceId = options.videoDeviceId === undefined
+            ? selectedVideoDeviceId
+            : options.videoDeviceId;
+        const requestedAudioDeviceId = options.audioDeviceId === undefined
+            ? selectedAudioDeviceId
+            : options.audioDeviceId;
+        const requestedFacingMode = options.facingMode || facingMode;
         setError("");
         setClip(null);
         setDurationSeconds(0);
@@ -131,18 +175,38 @@ export function usePetLensMediaCapture() {
         }
         setPhase("requesting");
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
+            const requestStream = (videoDeviceId: string, audioDeviceId: string) => navigator.mediaDevices.getUserMedia({
                 video: {
-                    facingMode: { ideal: "environment" },
+                    ...(videoDeviceId
+                        ? { deviceId: { exact: videoDeviceId } }
+                        : { facingMode: { ideal: requestedFacingMode } }),
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
                 },
                 audio: {
+                    ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } } : {}),
                     echoCancellation: false,
                     noiseSuppression: false,
                     autoGainControl: false,
                 },
             });
+            let stream: MediaStream;
+            let effectiveVideoDeviceId = requestedVideoDeviceId;
+            let effectiveAudioDeviceId = requestedAudioDeviceId;
+            try {
+                stream = await requestStream(requestedVideoDeviceId, requestedAudioDeviceId);
+            } catch (reason) {
+                if (!mountedRef.current || cameraRequestRef.current !== requestId) return;
+                const name = reason instanceof DOMException ? reason.name : "";
+                const selectedDeviceUnavailable = Boolean(requestedVideoDeviceId || requestedAudioDeviceId)
+                    && (name === "OverconstrainedError" || name === "NotFoundError" || name === "DevicesNotFoundError");
+                if (!selectedDeviceUnavailable) throw reason;
+                setSelectedVideoDeviceId("");
+                setSelectedAudioDeviceId("");
+                effectiveVideoDeviceId = "";
+                effectiveAudioDeviceId = "";
+                stream = await requestStream("", "");
+            }
             if (!mountedRef.current || cameraRequestRef.current !== requestId) {
                 stream.getTracks().forEach((track) => track.stop());
                 return;
@@ -152,11 +216,20 @@ export function usePetLensMediaCapture() {
                 throw new Error("카메라와 마이크를 모두 연결해야 합니다.");
             }
             streamRef.current = stream;
+            const videoSettings = stream.getVideoTracks()[0].getSettings?.() || {};
+            const audioSettings = stream.getAudioTracks()[0].getSettings?.() || {};
+            const actualFacingMode = videoSettings.facingMode === "user" || videoSettings.facingMode === "environment"
+                ? videoSettings.facingMode
+                : requestedFacingMode;
+            setFacingMode(actualFacingMode);
+            setSelectedVideoDeviceId(videoSettings.deviceId || effectiveVideoDeviceId);
+            setSelectedAudioDeviceId(audioSettings.deviceId || effectiveAudioDeviceId);
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
                 videoRef.current.muted = true;
                 await videoRef.current.play().catch(() => undefined);
             }
+            await refreshDevices();
             setPhase("preview");
         } catch (reason) {
             if (!mountedRef.current || cameraRequestRef.current !== requestId) return;
@@ -170,7 +243,20 @@ export function usePetLensMediaCapture() {
             setPhase("error");
             setError(message);
         }
-    }, [revokeClipUrl, stopTracks]);
+    }, [facingMode, refreshDevices, revokeClipUrl, selectedAudioDeviceId, selectedVideoDeviceId, stopTracks]);
+
+    const switchCamera = useCallback(async () => {
+        if (videoDevices.length > 1) {
+            const currentIndex = videoDevices.findIndex((device) => device.deviceId === selectedVideoDeviceId);
+            const nextDevice = videoDevices[(currentIndex + 1 + videoDevices.length) % videoDevices.length];
+            await startCamera({ videoDeviceId: nextDevice.deviceId });
+            return;
+        }
+        await startCamera({
+            videoDeviceId: "",
+            facingMode: facingMode === "environment" ? "user" : "environment",
+        });
+    }, [facingMode, selectedVideoDeviceId, startCamera, videoDevices]);
 
     const startRecording = useCallback(() => {
         const stream = streamRef.current;
@@ -296,17 +382,21 @@ export function usePetLensMediaCapture() {
         mountedRef.current = true;
         const supportFrame = window.requestAnimationFrame(() => {
             setSupported(Boolean(navigator.mediaDevices && typeof MediaRecorder !== "undefined"));
+            void refreshDevices();
         });
         const handlePageHide = () => cancelCapture();
+        const handleDeviceChange = () => void refreshDevices();
         window.addEventListener("pagehide", handlePageHide);
+        navigator.mediaDevices?.addEventListener?.("devicechange", handleDeviceChange);
         return () => {
             mountedRef.current = false;
             window.cancelAnimationFrame(supportFrame);
             window.removeEventListener("pagehide", handlePageHide);
+            navigator.mediaDevices?.removeEventListener?.("devicechange", handleDeviceChange);
             cancelCapture();
             revokeClipUrl();
         };
-    }, [cancelCapture, revokeClipUrl]);
+    }, [cancelCapture, refreshDevices, revokeClipUrl]);
 
     return {
         videoRef,
@@ -317,7 +407,13 @@ export function usePetLensMediaCapture() {
         clipUrl,
         durationSeconds,
         error,
+        videoDevices,
+        audioDevices,
+        selectedVideoDeviceId,
+        selectedAudioDeviceId,
+        facingMode,
         startCamera,
+        switchCamera,
         startRecording,
         selectFile,
         reset,

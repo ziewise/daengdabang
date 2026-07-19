@@ -44,13 +44,14 @@ export default function ProductCard({
 }: Props) {
     const router = useRouter();
     const { toggleWishlist, isWished } = useStore();   // 운영 사이트 위시리스트
-    const { t, productName, formatPrice } = useI18n();
+    const { locale, t, productName, formatPrice } = useI18n();
     const wished = isWished(p.id);
     const effectiveRank = rank ?? getBestRank(p);
     const shouldShowNew = showNewBadge ?? isNewProduct(p);
     const showBest = effectiveRank !== null && rankStyle !== "off";
     const detailHref = productHref(p);                 // 운영 사이트 라우트(/product/{slug})
     const displayName = productName(p);
+    const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
 
     // ===== 영상 호버 로직 =====
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -61,6 +62,7 @@ export default function ProductCard({
     /** 터치 디바이스 감지 (mount 후 한 번) */
     useEffect(() => {
         if (typeof window === "undefined") return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate touch capability after mount
         setIsTouch(window.matchMedia("(hover: none)").matches);
     }, []);
 
@@ -199,20 +201,27 @@ export default function ProductCard({
                     {/* 가격 — 할인 row 는 항상 공간 차지 (카드 높이 일관) */}
                     <div className="text-right">
                         <div className="flex items-center justify-end gap-1.5 mb-0.5 h-[14px] md:h-[16px]">
-                            {p.discountRate > 0 && p.originalPrice && (
+                            {hasDiscount && p.originalPrice && (
                                 <>
                                     <span className="text-[11px] md:text-xs font-extrabold text-danger">
                                         {p.discountRate}%
                                     </span>
-                                    <span className="text-[10px] md:text-[11px] text-neutral-400 line-through">
+                                    <span className="text-[10px] md:text-[11px] text-neutral-400 line-through decoration-rose-300 decoration-2">
                                         {formatPrice(p.originalPrice)}
                                     </span>
                                 </>
                             )}
                         </div>
-                        <p className="text-sm md:text-base font-black">
-                            {formatPrice(p.price)}
-                        </p>
+                        <div className="flex min-h-[42px] min-w-0 flex-col items-end justify-end gap-0.5 md:min-h-[24px] md:flex-row md:items-baseline md:gap-1.5">
+                            {hasDiscount && (
+                                <span className="ddb-sale-label ddb-sale-label--compact">
+                                    {locale === "en" ? "DDB sale" : "댕다방 할인가"}
+                                </span>
+                            )}
+                            <p className={hasDiscount ? "ddb-sale-price max-w-full whitespace-nowrap text-lg md:text-xl" : "text-sm font-black md:text-base"}>
+                                {formatPrice(p.price)}
+                            </p>
+                        </div>
                     </div>
 
                     {/* 평점 + 리뷰 수 — 항상 자리 (리뷰 0 시 빈 영역) */}

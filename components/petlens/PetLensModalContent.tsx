@@ -54,7 +54,11 @@ const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리
 
 type Result = PetLensAnalysisResult;
 
-export default function PetLensModalContent() {
+type Props = {
+    initialMode?: PetLensMode;
+};
+
+export default function PetLensModalContent({ initialMode = "photo" }: Props) {
     const { user, upsertPet } = useAuth();
     const { hydrated } = useStore();
 
@@ -73,7 +77,7 @@ export default function PetLensModalContent() {
     const [analysisError, setAnalysisError] = useState("");
     const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
-    const [mode, setMode] = useState<PetLensMode>("photo");
+    const [mode, setMode] = useState<PetLensMode>(initialMode);
     const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>(user?.pets[0]?.apiProfileId);
     const photoViewsRef = useRef<PetLensPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
