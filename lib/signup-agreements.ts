@@ -24,7 +24,7 @@ export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
         {
             item: "이름",
             purpose: "회원 식별, 본인확인",
-            retention: "회원 탈퇴 후 5일 또는 관계 법령에 따른 보존기간까지",
+            retention: "회원 탈퇴 후 30일 또는 관계 법령에 따른 보존기간까지",
         },
         {
             item: "아이디",
@@ -55,6 +55,11 @@ export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
             item: "주문 및 결제 정보",
             purpose: "주문 처리, 환불 및 고객지원",
             retention: "관계 법령에 따른 보존기간까지",
+        },
+        {
+            item: "이메일 또는 간편로그인 식별정보의 HMAC 일방향 식별값",
+            purpose: "신규 가입 댕랩코인 20C의 동일 인증 식별정보 기준 1회 지급 및 반복 수령 방지",
+            retention: "가입 혜택 프로그램 운영 기간 및 종료 후 30일(분쟁 또는 법령상 보존 사유가 있으면 해당 기간)",
         },
     ] satisfies SignupAgreementRow[],
 } as const;

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
     analyzePetObservation,
+    loadPetObservationEngineStatus,
     PetObservationRequestError,
     type PetObservationResult,
     type PetObservationSituation,
@@ -63,6 +64,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         cancelCapture,
     } = usePetLensMediaCapture();
     const abortRef = useRef<AbortController | null>(null);
+    const engineAbortRef = useRef<AbortController | null>(null);
     const requestIdRef = useRef<string | null>(null);
     const [consent, setConsent] = useState(false);
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
@@ -73,6 +75,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [walletLoading, setWalletLoading] = useState(true);
     const [walletError, setWalletError] = useState("");
+    const [engineState, setEngineState] = useState<"checking" | "ready" | "unavailable">("checking");
 
     const publishWallet = useCallback((next: DaengLabWallet) => {
         setWallet(next);
@@ -80,6 +83,21 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     }, []);
 
     useEffect(() => () => abortRef.current?.abort(), []);
+
+    const refreshEngine = useCallback(async () => {
+        engineAbortRef.current?.abort();
+        const controller = new AbortController();
+        engineAbortRef.current = controller;
+        setEngineState("checking");
+        try {
+            const status = await loadPetObservationEngineStatus(controller.signal);
+            setEngineState(status.ready ? "ready" : "unavailable");
+        } catch (reason) {
+            if (!(reason instanceof DOMException && reason.name === "AbortError")) {
+                setEngineState("unavailable");
+            }
+        }
+    }, []);
 
     const refreshWallet = useCallback(async () => {
         setWalletLoading(true);
@@ -96,21 +114,36 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     }, [accessToken, logout, publishWallet]);
 
     useEffect(() => {
+        const timer = window.setTimeout(() => void refreshEngine(), 0);
+        return () => {
+            window.clearTimeout(timer);
+            engineAbortRef.current?.abort();
+        };
+    }, [refreshEngine]);
+
+    useEffect(() => {
         requestIdRef.current = null;
     }, [clip]);
 
     useEffect(() => {
-        void refreshWallet();
+        const refreshTimer = window.setTimeout(() => void refreshWallet(), 0);
         const onWallet = (event: Event) => {
             const next = (event as CustomEvent<DaengLabWallet>).detail;
             if (next && typeof next.daengLabCoins === "number") setWallet(next);
         };
         window.addEventListener("ddb:daenglab-wallet", onWallet);
-        return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
+        return () => {
+            window.clearTimeout(refreshTimer);
+            window.removeEventListener("ddb:daenglab-wallet", onWallet);
+        };
     }, [refreshWallet]);
 
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
+        if (engineState !== "ready") {
+            setAnalysisError("행동·소리 분석 연결을 확인하지 못했어요. 잠시 후 다시 확인해 주세요.");
+            return;
+        }
         if (!wallet || wallet.daengLabCoins < wallet.analysisCoinCost) {
             setAnalysisError(`댕랩 행동·소리 분석에는 ${wallet?.analysisCoinCost ?? 10}코인이 필요합니다. 마이페이지에서 적립금을 코인으로 전환할 수 있어요.`);
             return;
@@ -231,6 +264,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     const analysisCoinCost = wallet?.analysisCoinCost ?? 10;
     const hasWalletDebt = Boolean(wallet && (wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0));
     const hasEnoughCoins = Boolean(wallet && wallet.daengLabCoins >= analysisCoinCost && !hasWalletDebt);
+    const engineReady = engineState === "ready";
     const selectedCameraLabel = videoDevices.find((device) => device.deviceId === selectedVideoDeviceId)?.label
         || (facingMode === "environment" ? "후면·기본 카메라" : "전면 카메라");
     const selectedMicrophoneLabel = audioDevices.find((device) => device.deviceId === selectedAudioDeviceId)?.label
@@ -248,7 +282,23 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             compact
                             suffixClassName="text-sm font-black leading-tight text-neutral-950"
                         />
-                        <p className="mt-1 text-[11px] font-black text-indigo-700">PC·모바일 카메라 + 마이크</p>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
+                            <p className="text-[11px] font-black text-indigo-700">PC·모바일 카메라 + 마이크</p>
+                            <span
+                                className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black ${
+                                    engineState === "ready"
+                                        ? "bg-emerald-100 text-emerald-800"
+                                        : engineState === "checking"
+                                            ? "bg-white text-neutral-500"
+                                            : "bg-amber-100 text-amber-900"
+                                }`}
+                                data-daenglab-observation-engine={engineState}
+                                role="status"
+                            >
+                                <i className={`fa-solid mr-1.5 text-[9px] ${engineReady ? "fa-circle-check" : engineState === "checking" ? "fa-circle-notch fa-spin" : "fa-triangle-exclamation"}`} />
+                                {engineReady ? "행동·소리 분석 연결됨" : engineState === "checking" ? "분석 연결 확인 중" : "분석 연결 점검 중"}
+                            </span>
+                        </div>
                         <h2 className="mt-1 text-lg font-black text-neutral-950">10초 동안 소리와 행동을 함께 관찰해요</h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
                             짖음만 번역하지 않고 자세·움직임·호흡 모습·상황을 같이 봐서 가능한 맥락과 확인할 신호를 정리합니다.
@@ -263,6 +313,13 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                     우리 아이에게 맞는 행동·소리 관찰 결과를 제공합니다.
                 </p>
             </div>
+
+            {engineState === "unavailable" && (
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3" role="alert" data-daenglab-observation-engine-warning>
+                    <p className="text-xs font-bold leading-5 text-amber-950">지금은 행동·소리 분석 연결을 확인하지 못했어요. 촬영 전에 다시 확인해 주세요.</p>
+                    <button type="button" onClick={() => void refreshEngine()} className="btn btn-secondary min-h-9 shrink-0 px-3 text-[11px]">다시 확인</button>
+                </div>
+            )}
 
             <div
                 className="rounded-2xl border border-indigo-100 bg-white p-4"
@@ -423,7 +480,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                         {(phase === "idle" || phase === "error") && (
                             <button
                                 type="button"
-                                disabled={!consent || supported === false || analyzing}
+                                disabled={!consent || supported === false || analyzing || !engineReady}
                                 onClick={() => void startCamera()}
                                 className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
                                 data-petlens-connect-camera
@@ -435,7 +492,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             <>
                                 <button
                                     type="button"
-                                    disabled={!consent}
+                                    disabled={!consent || !engineReady}
                                     onClick={startRecording}
                                     className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
                                     data-petlens-start-observation
@@ -460,7 +517,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             <>
                                 <button
                                     type="button"
-                                    disabled={analyzing || !consent || walletLoading || !hasEnoughCoins}
+                                    disabled={analyzing || !consent || walletLoading || !hasEnoughCoins || !engineReady}
                                     onClick={() => void analyze()}
                                     className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
                                     data-petlens-analyze-observation
@@ -477,14 +534,14 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                             </>
                         )}
                         <label
-                            className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent ? "pointer-events-none opacity-50" : ""}`}
-                            aria-disabled={busy || !consent}
+                            className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent || !engineReady ? "pointer-events-none opacity-50" : ""}`}
+                            aria-disabled={busy || !consent || !engineReady}
                         >
                             <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
                             <input
                                 type="file"
                                 accept="video/webm,video/mp4,video/quicktime,video/mov,.webm,.mp4,.mov"
-                                disabled={busy || !consent}
+                                disabled={busy || !consent || !engineReady}
                                 className="sr-only"
                                 onChange={(event) => {
                                     void selectFile(event.target.files?.[0]);

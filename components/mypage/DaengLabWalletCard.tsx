@@ -20,6 +20,7 @@ function requestKey() {
 }
 
 function transactionLabel(eventType: string) {
+    if (eventType === "signup_bonus") return "가입 축하 코인";
     if (eventType === "purchase_reward") return "구매확정 적립";
     if (eventType === "purchase_reversal") return "주문 취소·환불 회수";
     if (eventType === "points_conversion") return "적립금 전환";
@@ -59,24 +60,27 @@ export default function DaengLabWalletCard({ accessToken }: Props) {
 
     useEffect(() => {
         let active = true;
-        setWallet(null);
-        setLoading(true);
-        setError("");
-        void loadDaengLabWallet(accessToken)
-            .then((next) => {
-                if (active) {
-                    publishWallet(next);
-                    setConversionPoints(next.pointConversionUnit);
-                }
-            })
-            .catch((reason) => {
-                if (active) setError(reason instanceof Error ? reason.message : "댕랩 지갑을 불러오지 못했습니다.");
-            })
-            .finally(() => {
-                if (active) setLoading(false);
-            });
+        const timer = window.setTimeout(() => {
+            setWallet(null);
+            setLoading(true);
+            setError("");
+            void loadDaengLabWallet(accessToken)
+                .then((next) => {
+                    if (active) {
+                        publishWallet(next);
+                        setConversionPoints(next.pointConversionUnit);
+                    }
+                })
+                .catch((reason) => {
+                    if (active) setError(reason instanceof Error ? reason.message : "댕랩 지갑을 불러오지 못했습니다.");
+                })
+                .finally(() => {
+                    if (active) setLoading(false);
+                });
+        }, 0);
         return () => {
             active = false;
+            window.clearTimeout(timer);
         };
     }, [accessToken, publishWallet]);
 

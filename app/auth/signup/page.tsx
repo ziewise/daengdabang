@@ -37,6 +37,7 @@ import {
 import { useAuth, type PetProfile } from "@/lib/store";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
 import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 
@@ -533,6 +534,24 @@ export default function SignupPage() {
     return (
         <main className="mx-auto max-w-2xl px-4 py-10">
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
+            <section
+                className="mt-4 rounded-2xl border border-indigo-100 bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-4 py-3"
+                aria-labelledby="signup-daenglab-bonus-title"
+                data-signup-daenglab-bonus
+            >
+                <div className="flex flex-wrap items-center gap-2">
+                    <DaengLabCoinMark compact />
+                    <p id="signup-daenglab-bonus-title" className="text-sm font-black text-neutral-950">
+                        신규 가입 혜택 · 20C
+                    </p>
+                    <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-black text-indigo-700 shadow-sm">
+                        행동·소리 분석 2회
+                    </span>
+                </div>
+                <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
+                    가입 완료 시 동일한 이메일 또는 동일한 간편로그인 식별정보를 기준으로 최초 1회만 자동 지급됩니다.
+                </p>
+            </section>
             <div data-pet-guide-target="signup-provider">
                 <SocialAuthButtons mode="signup" returnTo={redirect || "/mypage"} />
             </div>

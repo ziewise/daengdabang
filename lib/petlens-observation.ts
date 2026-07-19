@@ -78,6 +78,29 @@ export type PetObservationRequest = {
     requestId: string;
 };
 
+export type PetObservationEngineStatus = {
+    ready: boolean;
+};
+
+export async function loadPetObservationEngineStatus(signal?: AbortSignal): Promise<PetObservationEngineStatus> {
+    const base = ddbApiBase();
+    if (!base) return { ready: false };
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/capture-config`, {
+        cache: "no-store",
+        signal,
+    });
+    if (!response.ok) throw new Error("행동·소리 분석 연결 상태를 확인하지 못했습니다.");
+    const body = await response.json() as {
+        observation_engine_ready?: unknown;
+        observation_camera_enabled?: unknown;
+        observation_audio_enabled?: unknown;
+    };
+    const ready = body.observation_engine_ready === true
+        && body.observation_camera_enabled === true
+        && body.observation_audio_enabled === true;
+    return { ready };
+}
+
 export class PetObservationRequestError extends Error {
     code?: string;
     required?: number;

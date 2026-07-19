@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO } from "@/lib/legal";
 
-const PRIVACY_UPDATED_AT = "2026-07-18";
+const PRIVACY_UPDATED_AT = "2026-07-20";
 
 export const metadata: Metadata = {
     title: "개인정보처리방침 | 댕다방",
@@ -65,6 +65,12 @@ const noConsentRows = [
         "간편로그인 제공자, 제공자 회원 식별값, 이메일주소, 이름, 생년월일, 휴대전화번호",
         "네이버·카카오·구글 등 외부 계정 기반 가입 및 로그인",
         "회원 탈퇴 또는 연결 해제 시까지",
+    ],
+    [
+        "가입 혜택 중복 방지",
+        "정규화된 이메일주소 또는 간편로그인 제공자 식별값을 서버 비밀키로 HMAC 변환한 일방향 식별값, 혜택 프로그램·키 버전, 식별값 생성일시",
+        "신규 가입 댕랩코인 20C의 동일 인증 식별정보 기준 1회 지급, 탈퇴·재가입 반복 수령 및 부정 이용 방지",
+        "해당 가입 혜택 프로그램 운영 기간 및 종료 후 30일. 분쟁 또는 법령상 보존 사유가 있으면 해당 기간",
     ],
 ];
 
@@ -230,6 +236,7 @@ export default function PrivacyPage() {
                     <li>대금결제 및 재화 등의 공급에 관한 기록: 5년</li>
                     <li>소비자 불만 또는 분쟁처리에 관한 기록: 3년</li>
                     <li>웹사이트 접속 로그 등 통신사실확인자료: 3개월</li>
+                    <li>가입 혜택 중복 방지용 HMAC 식별값: 해당 혜택 프로그램 운영 기간 및 종료 후 30일</li>
                 </ul>
             </section>
 

@@ -43,5 +43,6 @@ test("the privacy page restores the June source details without removing newer P
     assert.match(privacy, /이용자는 언제든지 \{BUSINESS_INFO\.companyName\}에 대해 개인정보 열람/);
     assert.match(privacy, /제13조 AI 분석 및 자동화된 결정/);
     assert.match(privacy, /댕랩 행동·소리 분석\(PetLens 관찰 기능\)/);
-    assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-07-18"/);
+    assert.match(privacy, /가입 혜택 중복 방지/);
+    assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-07-20"/);
 });

@@ -27,9 +27,22 @@ test("signup renders required legal agreements without exposing attached documen
     assert.doesNotMatch(agreementSource, /260608_이용약관_댕다방\.docx/);
     assert.doesNotMatch(agreementSource, /260709_개인정보수집이용동의_댕다방용\.docx/);
     assert.doesNotMatch(agreementSource, /sourceDocument/);
-    assert.match(agreementSource, /회원 탈퇴 후 5일 또는 관계 법령에 따른 보존기간까지/);
+    assert.match(agreementSource, /회원 탈퇴 후 30일 또는 관계 법령에 따른 보존기간까지/);
     assert.match(agreementSource, /주문 및 결제 정보/);
+    assert.match(agreementSource, /HMAC 일방향 식별값/);
+    assert.match(agreementSource, /신규 가입 댕랩코인 20C의 동일 인증 식별정보 기준 1회 지급/);
+    assert.match(agreementSource, /가입 혜택 프로그램 운영 기간 및 종료 후 30일/);
     assert.match(agreementSource, /귀하는 개인정보 수집·이용에 대한 동의를 거부할 권리/);
+});
+
+test("privacy policy discloses pseudonymous signup bonus abuse prevention", async () => {
+    const privacySource = await readSource("app/privacy/page.tsx");
+
+    assert.match(privacySource, /가입 혜택 중복 방지/);
+    assert.match(privacySource, /서버 비밀키로 HMAC 변환한 일방향 식별값/);
+    assert.match(privacySource, /탈퇴·재가입 반복 수령 및 부정 이용 방지/);
+    assert.match(privacySource, /가입 혜택 중복 방지용 HMAC 식별값/);
+    assert.match(privacySource, /2026-07-20/);
 });
 
 test("signup requires optional PetLens consent before saving pet profile data", async () => {
