@@ -223,6 +223,7 @@
  * companion can never steal the user's PetLens (or other header) tap.
  */
 .walker[data-pet-motion-source="guide"] .dogButton,
+.walker[data-pet-motion-source="guide-return"] .dogButton,
 .walker[data-pet-guide-zone="header"] .dogButton {
     pointer-events: none;
 }

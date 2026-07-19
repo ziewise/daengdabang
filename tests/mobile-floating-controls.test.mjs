@@ -117,6 +117,11 @@ test("the moving companion never steals a mobile header action", async () => {
     assert.match(layer, /return \{ min: Math\.min\(92, max\), max \}/);
     assert.match(
         css,
-        /\.walker\[data-pet-motion-source="guide"\] \.dogButton,[\s\S]{0,120}\.walker\[data-pet-guide-zone="header"\] \.dogButton \{[\s\S]{0,80}pointer-events: none/,
+        /\.walker\[data-pet-motion-source="guide"\] \.dogButton,[\s\S]{0,180}\.walker\[data-pet-motion-source="guide-return"\] \.dogButton,[\s\S]{0,180}\.walker\[data-pet-guide-zone="header"\] \.dogButton \{[\s\S]{0,80}pointer-events: none/,
     );
+    assert.match(layer, /motionSource\?: "entry" \| "guide" \| "guide-return"/);
+    assert.match(layer, /motion: "walk",\s*motionSource: "guide-return"/);
+    assert.match(layer, /allowHeader: detail\.allowHeader,\s*motionSource: detail\.motionSource/);
+    assert.match(layer, /allowHeader: prompt\.placement === "header",\s*motionSource: "guide"/);
+    assert.match(layer, /options\.motionSource === "guide"\s*\? "guide"\s*:\s*"idle"/);
 });

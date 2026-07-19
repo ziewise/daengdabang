@@ -75,6 +75,7 @@ type MoveEvent = CustomEvent<{
     manual?: boolean;
     preserveFacing?: boolean;
     allowHeader?: boolean;
+    motionSource?: "entry" | "guide" | "guide-return" | "move" | "roam" | "scroll";
 }>;
 
 type CompanionDragState = {
@@ -141,6 +142,7 @@ function moveCompanionToRest(walker: HTMLElement | null) {
             x: clamp(window.innerWidth * .68, 12, Math.max(12, window.innerWidth - width - 12)),
             y: Math.max(yBounds.min, yBounds.max - 18),
             motion: "walk",
+            motionSource: "guide-return",
         },
     }));
 }
@@ -485,7 +487,7 @@ export default function PetCompanionLayer({
                 allowHeader?: boolean;
                 relativeToPainted?: boolean;
                 travelDirection?: PetCompanionTravelDirection;
-                motionSource?: "entry" | "guide" | "move" | "roam" | "scroll";
+                motionSource?: "entry" | "guide" | "guide-return" | "move" | "roam" | "scroll";
             } = {},
         ) => {
             const box = liveBox();
@@ -539,9 +541,10 @@ export default function PetCompanionLayer({
             walker.dataset.petScrollDirection = nextTravelDirection === "side"
                 ? "none"
                 : nextTravelDirection;
+            const nextMotionSource = options.motionSource || "move";
             walker.dataset.petMotionSource = reducedMotion || distance < 5
-                ? "idle"
-                : options.motionSource || "move";
+                ? (nextMotionSource === "guide" ? "guide" : "idle")
+                : nextMotionSource;
             position.x = nextX;
             position.y = nextY;
             positionRef.current = { x: nextX, y: nextY };
@@ -565,7 +568,9 @@ export default function PetCompanionLayer({
                     setMotion("idle");
                     setTravelDirection("side");
                     walker.dataset.petScrollDirection = "none";
-                    walker.dataset.petMotionSource = "idle";
+                    walker.dataset.petMotionSource = options.motionSource === "guide"
+                        ? "guide"
+                        : "idle";
                     walker.dataset.petMotionStatus = "arrived";
                 }, duration + 34);
             }
@@ -972,6 +977,7 @@ export default function PetCompanionLayer({
                 instant: detail.instant,
                 preserveFacing: detail.preserveFacing,
                 allowHeader: detail.allowHeader,
+                motionSource: detail.motionSource,
             });
             if (typeof detail.faceX === "number") {
                 setFacing(detail.faceX < position.x ? "left" : "right");
@@ -1325,6 +1331,7 @@ export default function PetCompanionLayer({
                     motion: "walk",
                     faceX: rect.left + rect.width / 2,
                     allowHeader: prompt.placement === "header",
+                    motionSource: "guide",
                 },
             }));
             const travelMs = Number(walkerRef.current?.dataset.petTravelMs || 850);
