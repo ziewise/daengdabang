@@ -105,20 +105,18 @@ export function affiliateStopsFromPublicConfig(items: unknown): AffiliateStop[] 
         const record = item as Record<string, unknown>;
         if (record.hitEnabled === false) return;
         const id = textValue(record.id, 80) || `partner-${index + 1}`;
-        const hitUrl = safeOutboundTarget(textValue(record.hitUrl, 1000));
-        const url = safeOutboundTarget(textValue(record.url, 1000)) || hitUrl;
-        if (!hitUrl && !url) return;
         const base = defaultsById.get(id);
         const name = textValue(record.name, 80) || base?.name || id;
         const mark = textValue(record.mark, 24) || base?.mark || name.slice(0, 12).toUpperCase();
         rows.push({
-            ...(base || {}),
             id,
             name,
-            url,
-            hitUrl: hitUrl || url,
+            url: "",
+            hitUrl: "",
             mark,
-            campaignCode: textValue(record.campaignCode, 120) || base?.campaignCode,
+            logoSrc: base?.logoSrc,
+            logoAlt: base?.logoAlt,
+            logoText: base?.logoText,
             hitEnabled: true,
         });
     });

@@ -61,7 +61,7 @@ test("market estimates and generic shopping searches never become exact lowest p
     assert.match(helper, /host === "search\.shopping\.naver\.com"/);
     assert.match(helper, /new URL\("https:\/\/search\.naver\.com\/search\.naver"\)/);
     assert.match(helper, /const fallbackTarget = safeReferenceTarget\(product\.outboundUrl \|\| ""\)/);
-    assert.match(helper, /affiliateTrail: false/);
+    assert.match(helper, /affiliateTrail: true/);
     assert.match(helper, /product\.crawlSource === "marketplace-search-bridge"/);
     assert.match(helper, /startsWith\("\/images\/products\/"\)/);
     assert.match(helper, /url\.pathname/);

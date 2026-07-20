@@ -20,17 +20,17 @@ async function loadAnalyticsIdentity(window) {
             target: ts.ScriptTarget.ES2022,
         },
     }).outputText;
-    const module = { exports: {} };
+    const moduleRecord = { exports: {} };
     vm.runInNewContext(compiled, {
-        module,
-        exports: module.exports,
+        module: moduleRecord,
+        exports: moduleRecord.exports,
         window,
         require(specifier) {
             if (specifier === "@/lib/customer-api") return { ddbApiBase: () => "" };
             throw new Error(`Unexpected runtime import: ${specifier}`);
         },
     });
-    return module.exports.analyticsIdentity;
+    return moduleRecord.exports.analyticsIdentity;
 }
 
 test("analytics keeps stable non-empty in-memory IDs when localStorage is blocked", async () => {
@@ -120,6 +120,7 @@ test("external interest keeps categories and tracks direct marketplace search cl
     assert.match(analytics, /args\.category === "all" \? dominantProductField/);
     assert.match(card, /onClick=\{trackDirectClick\}/);
     assert.match(table, /trackDirectExternalProductClick\(\{/);
-    assert.match(redirect, /analyticsFiredRef\.current === analyticsKey/);
-    assert.match(redirect, /analyticsFiredRef\.current = analyticsKey/);
+    assert.match(redirect, /directAnalyticsRef\.current === key/);
+    assert.match(redirect, /directAnalyticsRef\.current = key/);
+    assert.match(redirect, /\/api\/v1\/partners\/outbound-hits/);
 });

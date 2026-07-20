@@ -173,10 +173,9 @@ export function statusLabel(product: ExternalProductResult, locale: "ko" | "en")
 export function externalProductHref(product: ExternalProductResult, query: string, surface: string): string {
     const target = safeReferenceTarget(product.purchaseUrl || "");
     const fallbackTarget = safeReferenceTarget(product.outboundUrl || "");
-    const isSearchReference = product.linkKind === "search" || isGenericSearchUrl(target) || isMarketEstimate(product);
-    if (isSearchReference) return target || fallbackTarget;
-    if (!target) return fallbackTarget;
-    return outboundHref(target, {
+    const chosenTarget = target || fallbackTarget;
+    if (!chosenTarget) return "";
+    return outboundHref(chosenTarget, {
         source: product.sourceName,
         product: product.title,
         query,
@@ -191,7 +190,7 @@ export function externalProductHref(product: ExternalProductResult, query: strin
         surface,
         category: product.category,
         subcategory: product.subcategory,
-    }, { affiliateTrail: false });
+    }, { affiliateTrail: true });
 }
 
 export function relatedReferenceOrder(product: ExternalProductResult): number {
