@@ -57,6 +57,32 @@ export function isGenericSearchUrl(rawUrl: string): boolean {
     }
 }
 
+export function displayProductPrice(product: ExternalProductResult): number | null {
+    for (const value of [product.basePrice, product.totalPrice, product.priceLow]) {
+        if (typeof value === "number" && Number.isFinite(value) && value > 0 && value <= 1_000_000_000) return value;
+    }
+    return null;
+}
+
+export function hasActualProductImage(product: ExternalProductResult): boolean {
+    const thumbnail = (product.thumbnail || "").trim();
+    if (thumbnail.toLocaleLowerCase().startsWith("/images/products/")) return true;
+    try {
+        const url = new URL(thumbnail);
+        if (!["http:", "https:"].includes(url.protocol)) return false;
+        return !/(?:^|[/_.-])(?:logo|sns|favicon|icon|banner|footer|sprite|thum[_-]?none|adult|badge|placeholder)(?:[/_.-]|$)/i.test(url.pathname);
+    } catch {
+        return false;
+    }
+}
+
+export function isDisplayableExternalProduct(product: ExternalProductResult): boolean {
+    if (product.crawlSource === "marketplace-search-bridge") return false;
+    if (isMarketEstimate(product)) return false;
+    if (product.linkKind === "search" || isGenericSearchUrl(product.purchaseUrl || "")) return false;
+    return displayProductPrice(product) !== null && hasActualProductImage(product);
+}
+
 export function safeReferenceTarget(rawUrl: string): string {
     const safeTarget = safeOutboundTarget(rawUrl);
     if (!safeTarget) return "";
@@ -134,12 +160,12 @@ export function statusLabel(product: ExternalProductResult, locale: "ko" | "en")
     const status = comparisonStatus(product);
     const labels: Record<ProductComparisonStatus, [string, string]> = {
         anchor: ["댕다방 판매 상품", "DaengDaBang offer"],
-        exact_match: ["동일 상품 · 동일 규격", "Exact product & spec"],
-        unit_match: ["동일 모델 · 단위가 비교", "Same model · unit price"],
-        variant_mismatch: ["규격·수량 다름", "Different spec/quantity"],
-        different_product: ["다른 상품", "Different product"],
-        unverified: ["정보 확인 필요", "Needs verification"],
-        reference_only: ["참고 결과 · 비교 제외", "Reference only"],
+        exact_match: ["같은 상품 · 같은 구성", "Same product & pack"],
+        unit_match: ["같은 상품 · 구성 다름", "Same product · different pack"],
+        variant_mismatch: ["구성·수량 다름", "Different size/quantity"],
+        different_product: ["비슷한 상품", "Similar product"],
+        unverified: ["상품 상세에서 확인", "Check product details"],
+        reference_only: ["관련 상품", "Related product"],
     };
     return labels[status][locale === "en" ? 1 : 0];
 }

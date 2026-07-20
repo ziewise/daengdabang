@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { type ExternalProductResult } from "@/lib/external-products";
 import {
     comparisonStatus,
+    displayProductPrice,
     externalProductHref,
-    isGenericSearchUrl,
     isMarketEstimate,
     statusLabel,
     unitPrice,
@@ -21,26 +22,24 @@ type Props = {
 
 export default function ExternalProductCard({ product, query = "" }: Props) {
     const { locale, formatPrice } = useI18n();
-    const isMarketplaceSearch = product.sourceKind === "marketplace-live-search";
-    const hasMarketplacePreview = product.previewStatus === "fetched" && /^https?:\/\//.test(product.thumbnail);
+    const [imageUnavailable, setImageUnavailable] = useState(false);
     const status = comparisonStatus(product);
     const estimate = isMarketEstimate(product);
-    const searchReference = product.linkKind === "search" || isGenericSearchUrl(product.purchaseUrl) || estimate;
-    const totalPrice = !estimate && typeof product.totalPrice === "number" ? product.totalPrice : null;
+    const productPrice = estimate ? null : displayProductPrice(product);
+    const payableTotal = !estimate && typeof product.totalPrice === "number" ? product.totalPrice : null;
     const perUnit = unitPrice(product);
     const quantitySummary = unitSummary(product, locale);
     const href = externalProductHref(product, query, "card");
     const trackDirectClick = () => trackDirectExternalProductClick({ product, query, targetUrl: href, surface: "card" });
-    const displayThumbnail = estimate && product.sourceName.includes("네이버")
-        ? "/images/marketplaces/naver-shopping.svg"
-        : product.thumbnail;
     const badgeTone = status === "variant_mismatch" || status === "unit_match"
         ? "bg-sky-50 text-sky-800"
         : status === "reference_only" || status === "unverified"
             ? "bg-amber-50 text-amber-800"
             : "bg-neutral-100 text-neutral-700";
     const priceNote = [
-        typeof product.shippingFee === "number" && product.shippingFee > 0
+        product.shippingFeeKnown === false
+            ? (locale === "en" ? "Shipping shown by seller" : "배송비는 판매처에서 확인")
+            : typeof product.shippingFee === "number" && product.shippingFee > 0
             ? `${locale === "en" ? "Shipping" : "배송"} ${formatPrice(product.shippingFee)}`
             : "",
         product.couponDiscount ? `${locale === "en" ? "Coupon" : "쿠폰"} -${formatPrice(product.couponDiscount)}` : "",
@@ -54,21 +53,31 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
-                aria-label={`${product.title} ${isMarketplaceSearch ? "external search" : "external price comparison"}`}
+                aria-label={`${product.title} ${locale === "en" ? "open seller" : "판매처 보기"}`}
                 onClick={trackDirectClick}
             >
-                <img
-                    src={displayThumbnail}
-                    alt={product.title}
-                    loading="lazy"
-                    onError={(event) => {
-                        const image = event.currentTarget;
-                        if (image.dataset.fallbackApplied || !image.src.includes(".webp")) return;
-                        image.dataset.fallbackApplied = "1";
-                        image.src = image.src.replace(/\.webp($|\?)/, ".png$1");
-                    }}
-                    className={`${(estimate || (isMarketplaceSearch && !hasMarketplacePreview)) ? "h-[72%] w-[72%] object-contain" : "h-full w-full object-cover"} transition duration-150 group-hover:scale-[1.03]`}
-                />
+                {imageUnavailable ? (
+                    <span className="flex h-full w-full flex-col items-center justify-center gap-2 bg-neutral-100 px-4 text-center text-xs font-bold text-neutral-500">
+                        <i className="fa-regular fa-image text-2xl" aria-hidden="true" />
+                        {locale === "en" ? "Product photo unavailable" : "상품 사진을 불러오지 못했어요"}
+                    </span>
+                ) : (
+                    <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        loading="lazy"
+                        onError={(event) => {
+                            const image = event.currentTarget;
+                            if (!image.dataset.fallbackApplied && image.src.includes(".webp")) {
+                                image.dataset.fallbackApplied = "1";
+                                image.src = image.src.replace(/\.webp($|\?)/, ".png$1");
+                                return;
+                            }
+                            setImageUnavailable(true);
+                        }}
+                        className="h-full w-full object-cover transition duration-150 group-hover:scale-[1.03]"
+                    />
+                )}
                 <div className="absolute bottom-2 right-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-neutral-700 shadow-sm">
                     {product.sellerName || product.sourceName}
                 </div>
@@ -87,8 +96,8 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                     {product.title}
                 </h3>
                 <div className="mt-2">
-                    <p className={`${totalPrice !== null ? "text-xl text-neutral-950" : "text-base text-neutral-700"} font-black leading-tight line-clamp-2`}>
-                        {totalPrice !== null ? formatPrice(totalPrice) : product.priceText}
+                    <p className={`${productPrice !== null ? "text-xl text-neutral-950" : "text-base text-neutral-700"} font-black leading-tight line-clamp-2`}>
+                        {productPrice !== null ? formatPrice(productPrice) : product.priceText}
                     </p>
                     {quantitySummary && (
                         <p className="mt-1 text-[11px] font-black text-neutral-600">{quantitySummary}</p>
@@ -101,12 +110,17 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                     {priceNote && (
                         <p className="mt-1 truncate text-[11px] font-bold text-neutral-500">{priceNote}</p>
                     )}
+                    {productPrice !== null && payableTotal !== null && payableTotal !== productPrice && (
+                        <p className="mt-1 text-[11px] font-black text-emerald-700">
+                            {locale === "en" ? "Estimated checkout" : "예상 결제금액"} {formatPrice(payableTotal)}
+                        </p>
+                    )}
                 </div>
                 {estimate ? (
                     <p className="mt-1 text-[11px] font-bold leading-4 text-amber-700">
                         {locale === "en" ? "Market range only · excluded from lowest-price ranking" : "시장 추정 범위 · 최저가 비교에서 제외"}
                     </p>
-                ) : totalPrice === null && (
+                ) : productPrice === null && (
                     <p className="mt-1 text-[11px] font-bold text-neutral-400">
                         {locale === "en" ? "Check final price at the seller" : "판매처에서 최종 가격 확인"}
                     </p>
@@ -119,11 +133,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                     onClick={trackDirectClick}
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
-                    {searchReference
-                        ? product.sourceName.includes("네이버")
-                            ? (locale === "en" ? "Search on Naver" : "네이버 통합검색")
-                            : (locale === "en" ? "Search marketplace" : "외부몰에서 검색")
-                        : (locale === "en" ? "View product" : "상품 보러가기")}
+                    {locale === "en" ? "View at seller" : "판매처에서 보기"}
                 </Link>
             </div>
         </article>

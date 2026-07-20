@@ -28,6 +28,7 @@ export type ExternalProductResult = {
     priceLow?: number | null;
     priceHigh?: number | null;
     shippingFee?: number;
+    shippingFeeKnown?: boolean;
     couponDiscount?: number;
     optionName?: string;
     optionPriceDelta?: number;
@@ -155,7 +156,11 @@ export function searchExternalProducts(query: string, filter: ExternalFilter = {
     return sortResults(matches, filter.sort).slice(0, filter.limit ?? 12);
 }
 
-export async function loadExternalProducts(query: string, filter: ExternalFilter = {}): Promise<ExternalProductResult[]> {
+export async function loadExternalProducts(
+    query: string,
+    filter: ExternalFilter = {},
+    signal?: AbortSignal,
+): Promise<ExternalProductResult[]> {
     const fallback = searchExternalProducts(query, filter);
     const base = ddbApiBase();
     if (!base || !query.trim()) return fallback;
@@ -169,7 +174,10 @@ export async function loadExternalProducts(query: string, filter: ExternalFilter
     if (filter.sort) params.set("sort", filter.sort);
 
     try {
-        const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/search/external-products?${params.toString()}`);
+        const response = await fetch(
+            `${base.replace(/\/$/, "")}/api/v1/search/external-products?${params.toString()}`,
+            { signal },
+        );
         if (!response.ok) return fallback;
         const data = (await response.json()) as ExternalApiResponse;
         return Array.isArray(data.results) && data.results.length > 0 ? data.results : fallback;

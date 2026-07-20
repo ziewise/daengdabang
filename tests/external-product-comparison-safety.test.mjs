@@ -62,10 +62,21 @@ test("market estimates and generic shopping searches never become exact lowest p
     assert.match(helper, /new URL\("https:\/\/search\.naver\.com\/search\.naver"\)/);
     assert.match(helper, /const fallbackTarget = safeReferenceTarget\(product\.outboundUrl \|\| ""\)/);
     assert.match(helper, /affiliateTrail: false/);
+    assert.match(helper, /product\.crawlSource === "marketplace-search-bridge"/);
+    assert.match(helper, /startsWith\("\/images\/products\/"\)/);
+    assert.match(helper, /url\.pathname/);
+    assert.match(helper, /placeholder/);
     assert.match(table, /comparableRows\.length >= 2/);
-    assert.match(table, /‘최저가’로 단정하지 않습니다/);
+    assert.match(table, /같은 상품 판매처 확인 중/);
+    assert.match(table, /상품명·용량·구성이 같은 판매처가 확인되면/);
+    assert.doesNotMatch(table, /SKU|단정하지 않습니다|판매 정보 확인/);
     assert.match(card, /시장 추정 범위 · 최저가 비교에서 제외/);
-    assert.match(card, /네이버 통합검색/);
+    assert.match(card, /displayProductPrice\(product\)/);
+    assert.match(card, /판매처에서 보기/);
+    assert.match(card, /배송비는 판매처에서 확인/);
+    assert.match(card, /상품 사진을 불러오지 못했어요/);
+    assert.doesNotMatch(card, /\/images\/marketplaces\//);
+    assert.doesNotMatch(helper, /판매 정보 확인/);
 });
 
 test("runtime guards reject range estimates, unsafe URLs and ineligible exact matches", async () => {
@@ -108,18 +119,70 @@ test("runtime guards reject range estimates, unsafe URLs and ineligible exact ma
         "https://search.shopping.naver.com/search/all?query=%EA%B0%95%EC%95%84%EC%A7%80",
     );
     assert.match(naver, /^https:\/\/search\.naver\.com\/search\.naver\?/);
+
+    assert.equal(comparison.isDisplayableExternalProduct({
+        ...base,
+        thumbnail: "/images/marketplaces/coupang.svg",
+        crawlSource: "marketplace-search-bridge",
+        linkKind: "search",
+    }), false);
+    assert.equal(comparison.isDisplayableExternalProduct({
+        ...base,
+        thumbnail: "https://cdn.example/product.jpg",
+        basePrice: 12000,
+        totalPrice: 15000,
+        crawlSource: "marketplace-search-result",
+        linkKind: "product",
+    }), true);
+    assert.equal(comparison.isDisplayableExternalProduct({
+        ...base,
+        thumbnail: "https://cdn.example/assets/store-logo.png",
+        basePrice: 12000,
+        linkKind: "product",
+    }), false);
+    assert.equal(comparison.isDisplayableExternalProduct({
+        ...base,
+        thumbnail: "data:image/png;base64,bad",
+        basePrice: 12000,
+        linkKind: "product",
+    }), false);
+    assert.equal(comparison.isDisplayableExternalProduct({
+        ...base,
+        thumbnail: "https://cdn.example/product.jpg",
+        basePrice: 0,
+        totalPrice: null,
+        linkKind: "product",
+    }), false);
+    assert.equal(comparison.isDisplayableExternalProduct({
+        ...base,
+        thumbnail: "/images/products/catalog/treat/treat.webp",
+        basePrice: 12000,
+        linkKind: "product",
+    }), true);
+    assert.equal(comparison.displayProductPrice({
+        ...base,
+        basePrice: 12000,
+        totalPrice: 15000,
+    }), 12000);
 });
 
 test("exact SKU totals and different bundle unit prices stay in separate sections", async () => {
-    const [table, products] = await Promise.all([
+    const [table, products, externalProducts] = await Promise.all([
         source("components/products/ExternalProductComparisonTable.tsx"),
         source("app/products/ProductsClient.tsx"),
+        source("lib/external-products/index.ts"),
     ]);
 
     assert.match(table, /comparisonStatus\(product\) === "exact_match"/);
     assert.match(table, /comparisonStatus\(product\) === "unit_match"/);
     assert.match(table, /브랜드·모델·크기·총수량이 모두 일치할 때만 총액을 비교합니다/);
-    assert.match(table, /묶음 총액을 최저가로 섞지 않고 1매당 가격만 따로 보여줍니다/);
-    assert.match(products, /다른 상품·외부몰 둘러보기/);
-    assert.match(products, /동일 SKU 최저가에는 섞지 않습니다/);
+    assert.match(table, /수량이 다른 구성은 한 개당 가격을 따로 계산해 보여드려요/);
+    assert.match(products, /외부 판매 상품 더 보기/);
+    assert.match(products, /상품 사진과 판매가가 함께 확인된 결과입니다/);
+    assert.match(products, /filter\(isDisplayableExternalProduct\)/);
+    assert.match(products, /window\.setTimeout/);
+    assert.match(products, /}, 350\)/);
+    assert.match(products, /controller\.abort\(\)/);
+    assert.match(externalProducts, /\{ signal \}/);
+    assert.doesNotMatch(products, /SKU|참고 결과|비교 제외/);
 });

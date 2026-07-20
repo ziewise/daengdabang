@@ -16,7 +16,11 @@ import {
 } from "@/lib/catalog";
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { loadExternalProducts, searchExternalProducts, type ExternalProductResult } from "@/lib/external-products";
-import { comparisonStatus, relatedReferenceOrder } from "@/lib/external-products/comparison";
+import {
+    comparisonStatus,
+    isDisplayableExternalProduct,
+    relatedReferenceOrder,
+} from "@/lib/external-products/comparison";
 import { trackExternalSearchResults } from "@/lib/storefront-analytics";
 import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
 import { useI18n } from "@/lib/i18n";
@@ -125,27 +129,33 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         }
 
         let cancelled = false;
-        const fallback = searchExternalProducts(cleanQuery, externalFilter);
+        const controller = new AbortController();
+        const fallback = searchExternalProducts(cleanQuery, externalFilter).filter(isDisplayableExternalProduct);
         setExternalProducts(fallback);
         setExternalSearched(true);
         setExternalLoading(true);
-        loadExternalProducts(cleanQuery, externalFilter).then((results) => {
-            if (!cancelled) {
-                setExternalProducts(results);
-                trackExternalSearchResults({
-                    query: cleanQuery,
-                    category,
-                    subcategory,
-                    sort,
-                    ownResultCount: products.length,
-                    externalProducts: results,
-                });
-            }
-        }).finally(() => {
-            if (!cancelled) setExternalLoading(false);
-        });
+        const timer = window.setTimeout(() => {
+            loadExternalProducts(cleanQuery, externalFilter, controller.signal).then((results) => {
+                if (!cancelled) {
+                    const customerResults = results.filter(isDisplayableExternalProduct);
+                    setExternalProducts(customerResults);
+                    trackExternalSearchResults({
+                        query: cleanQuery,
+                        category,
+                        subcategory,
+                        sort,
+                        ownResultCount: products.length,
+                        externalProducts: customerResults,
+                    });
+                }
+            }).finally(() => {
+                if (!cancelled) setExternalLoading(false);
+            });
+        }, 350);
         return () => {
             cancelled = true;
+            window.clearTimeout(timer);
+            controller.abort();
         };
     }, [query, externalFilter, category, subcategory, sort, products.length]);
 
@@ -240,7 +250,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                 <section className="mt-10 min-w-0 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
                     <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Price Compare</p>
+                            <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Product Price Search</p>
                             <h2 className="mt-1 text-xl font-black text-neutral-950">{t("priceCompare")}</h2>
                         </div>
                         <div className="flex items-center gap-2">
@@ -257,16 +267,16 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                                     <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
                                         <div>
                                             <h3 className="text-base font-black text-neutral-950">
-                                                {locale === "en" ? "Other products and marketplace results" : "다른 상품·외부몰 둘러보기"}
+                                                {locale === "en" ? "More products from other sellers" : "외부 판매 상품 더 보기"}
                                             </h3>
                                             <p className="mt-1 text-xs font-bold text-neutral-500">
                                                 {locale === "en"
-                                                    ? "Different brands, sizes and quantities are useful for discovery but are excluded from the exact-SKU lowest price."
-                                                    : "브랜드·크기·수량이 다른 상품은 탐색용으로 보여주되 동일 SKU 최저가에는 섞지 않습니다."}
+                                                    ? "These listings include a product photo and observed price. Checkout totals can change with options and shipping."
+                                                    : "상품 사진과 판매가가 함께 확인된 결과입니다. 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
                                             </p>
                                         </div>
                                         <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-800">
-                                            {locale === "en" ? "Reference only" : "참고 결과"} {countText(referenceExternalProducts.length)}
+                                            {locale === "en" ? "External products" : "외부 상품"} {countText(referenceExternalProducts.length)}
                                         </span>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

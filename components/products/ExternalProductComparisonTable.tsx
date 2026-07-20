@@ -79,9 +79,9 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
             <div className="border-b border-emerald-100 bg-white p-4 md:p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Verified SKU Compare</p>
+                        <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Same Product Price Check</p>
                         <h3 className="mt-1 text-xl font-black text-neutral-950">
-                            {locale === "en" ? "DaengDaBang exact-product price check" : "댕다방 동일 상품 가격 확인"}
+                            {locale === "en" ? "Compare the same product" : "같은 상품 가격 비교"}
                         </h3>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
                             {locale === "en"
@@ -93,8 +93,8 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                         hasExactComparison ? "bg-emerald-700 text-white" : "bg-amber-100 text-amber-800"
                     }`}>
                         {hasExactComparison
-                            ? (locale === "en" ? `${comparableRows.length} exact offers` : `동일 SKU ${comparableRows.length}곳`)
-                            : (locale === "en" ? "No matching external SKU" : "외부 동일 SKU 미확인")}
+                            ? (locale === "en" ? `${comparableRows.length} matching sellers` : `같은 상품 ${comparableRows.length}곳`)
+                            : (locale === "en" ? "Looking for matching sellers" : "같은 상품 판매처 확인 중")}
                     </span>
                 </div>
 
@@ -120,7 +120,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 {hasExactComparison && minTotal !== null && maxTotal !== null ? (
                     <div className="mt-4 flex flex-wrap gap-2 text-xs font-black">
                         <span className="rounded-md bg-emerald-100 px-2.5 py-1.5 text-emerald-800">
-                            {locale === "en" ? "Exact-SKU lowest" : "동일 SKU 최저"} {formatPrice(minTotal)}
+                            {locale === "en" ? "Lowest found" : "확인된 최저"} {formatPrice(minTotal)}
                         </span>
                         <span className="rounded-md bg-neutral-100 px-2.5 py-1.5 text-neutral-700">
                             {locale === "en" ? "Highest" : "최고"} {formatPrice(maxTotal)}
@@ -132,8 +132,8 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 ) : (
                     <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs font-bold leading-5 text-amber-900">
                         {locale === "en"
-                            ? "Only the DaengDaBang price is verified right now, so it is not labeled as the lowest price. Other brands and quantities remain below as reference products."
-                            : `현재 확인된 동일 SKU는 댕다방 판매가 ${typeof activeAnchor.totalPrice === "number" ? formatPrice(activeAnchor.totalPrice) : "1곳"}뿐이라 ‘최저가’로 단정하지 않습니다. 다른 브랜드·규격은 아래 참고 상품으로 분리했습니다.`}
+                            ? "The currently confirmed price is the DaengDaBang offer. Matching sellers will appear here when the product name, size and pack are the same."
+                            : `현재 확인된 판매가는 댕다방 ${typeof activeAnchor.totalPrice === "number" ? formatPrice(activeAnchor.totalPrice) : "판매 상품"}입니다. 상품명·용량·구성이 같은 판매처가 확인되면 이곳에서 함께 비교해드려요.`}
                     </div>
                 )}
             </div>
@@ -142,12 +142,12 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 <table className="w-full min-w-[780px] table-fixed border-collapse text-left">
                     <thead className="bg-neutral-50 text-[11px] font-black uppercase text-neutral-500">
                         <tr>
-                            <th className="w-20 px-4 py-3">{locale === "en" ? "Result" : "판정"}</th>
-                            <th className="w-[42%] px-4 py-3">{locale === "en" ? "Exact product" : "동일 상품"}</th>
-                            <th className="w-40 px-4 py-3">{locale === "en" ? "Matched spec" : "일치 규격"}</th>
-                            <th className="w-32 px-4 py-3 text-right">{locale === "en" ? "Pay total" : "결제 총액"}</th>
+                            <th className="w-20 px-4 py-3">{locale === "en" ? "Type" : "구분"}</th>
+                            <th className="w-[42%] px-4 py-3">{locale === "en" ? "Product" : "상품"}</th>
+                            <th className="w-40 px-4 py-3">{locale === "en" ? "Pack details" : "확인된 구성"}</th>
+                            <th className="w-32 px-4 py-3 text-right">{locale === "en" ? "Checkout" : "결제 예상액"}</th>
                             <th className="w-40 px-4 py-3">{locale === "en" ? "Seller" : "판매처"}</th>
-                            <th className="w-20 px-4 py-3 text-center">{locale === "en" ? "Open" : "이동"}</th>
+                            <th className="w-20 px-4 py-3 text-center">{locale === "en" ? "Open" : "보기"}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-neutral-100 text-sm">
@@ -162,10 +162,10 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                             isAnchor ? "bg-neutral-950 text-white" : isBest ? "bg-emerald-600 text-white" : "bg-neutral-100 text-neutral-700"
                                         }`}>
                                             {isAnchor
-                                                ? (locale === "en" ? "BASE" : "기준")
+                                                ? (locale === "en" ? "DDB" : "댕다방")
                                                 : isBest
-                                                    ? (locale === "en" ? "LOW" : "최저")
-                                                    : (locale === "en" ? "MATCH" : "일치")}
+                                                    ? (locale === "en" ? "LOW" : "가장 낮음")
+                                                    : (locale === "en" ? "SAME" : "같은 상품")}
                                         </span>
                                     </td>
                                     <td className="px-4 py-3">
@@ -180,7 +180,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                         </div>
                                     </td>
                                     <td className="px-4 py-3">
-                                        <div className="text-xs font-black text-neutral-800">{unitSummary(product, locale) || (locale === "en" ? "Verified listing" : "판매 정보 확인")}</div>
+                                        <div className="text-xs font-black text-neutral-800">{unitSummary(product, locale) || (locale === "en" ? "Check product details" : "상품 상세에서 확인")}</div>
                                         {product.dimensions && <div className="mt-1 text-[11px] font-bold text-neutral-500">{product.dimensions}</div>}
                                     </td>
                                     <td className="px-4 py-3 text-right">
@@ -189,7 +189,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="truncate font-black text-neutral-950">{product.sellerName || product.sourceName}</div>
-                                        <div className="mt-1 truncate text-[11px] font-bold text-neutral-500">{isAnchor ? (locale === "en" ? "DaengDaBang verified" : "댕다방 판매 확인") : product.sourceName}</div>
+                                        <div className="mt-1 truncate text-[11px] font-bold text-neutral-500">{isAnchor ? (locale === "en" ? "DaengDaBang price" : "댕다방 판매가") : product.sourceName}</div>
                                     </td>
                                     <td className="px-4 py-3 text-center">
                                         <Link
@@ -218,10 +218,10 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
             {relatedPackRows.length > 0 && (
                 <div className="border-t border-emerald-100 bg-white p-4 md:p-5">
                     <h4 className="text-sm font-black text-neutral-950">
-                        {locale === "en" ? "Same model and size, different bundle" : "같은 모델·크기, 다른 묶음 수량"}
+                        {locale === "en" ? "Same product, different pack" : "같은 상품의 다른 구성"}
                     </h4>
                     <p className="mt-1 text-xs font-bold text-neutral-500">
-                        {locale === "en" ? "These are compared by unit price, never by raw bundle total." : "묶음 총액을 최저가로 섞지 않고 1매당 가격만 따로 보여줍니다."}
+                        {locale === "en" ? "Different pack sizes are shown separately with a unit price." : "수량이 다른 구성은 한 개당 가격을 따로 계산해 보여드려요."}
                     </p>
                     <div className="mt-3 grid gap-2 md:grid-cols-2">
                         {relatedPackRows.map((product) => {
