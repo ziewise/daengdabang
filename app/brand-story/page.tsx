@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import BrandStoryHeroVideo from "./BrandStoryHeroVideo";
 import styles from "./brand-story.module.css";
 
 export const metadata: Metadata = {
@@ -55,12 +56,13 @@ export default function BrandStoryPage() {
             <section className={styles.hero} aria-labelledby="brand-story-title">
                 <Image
                     src="/images/hero/clear-evening-story.webp"
-                    alt="저녁빛 마을길을 반려견과 함께 걷는 보호자"
+                    alt=""
                     fill
                     priority
                     sizes="(max-width: 760px) 100vw, 1320px"
                     className={styles.heroImage}
                 />
+                <BrandStoryHeroVideo />
                 <div className={styles.heroShade} />
                 <div className={styles.heroContent}>
                     <p className={styles.eyebrow}>DAENGDABANG BRAND STORY</p>

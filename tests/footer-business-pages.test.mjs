@@ -22,9 +22,10 @@ test("footer company links point to real static routes", async () => {
     }
 });
 
-test("brand story explains the real selection standard without medical overclaiming", async () => {
-    const [page, css] = await Promise.all([
+test("brand story explains the real selection standard and uses an accessible video hero", async () => {
+    const [page, heroVideo, css] = await Promise.all([
         source("app/brand-story/page.tsx"),
+        source("app/brand-story/BrandStoryHeroVideo.tsx"),
         source("app/brand-story/brand-story.module.css"),
     ]);
 
@@ -34,6 +35,15 @@ test("brand story explains the real selection standard without medical overclaim
     assert.match(page, /기술은 정답이 아니라/);
     assert.match(page, /기술이 우리 아이를 단정하거나 의료적 판단을 대신하지 않습니다/);
     assert.match(page, /src="\/images\/hero\/clear-evening-story\.webp"/);
+    assert.match(page, /<BrandStoryHeroVideo \/>/);
+    assert.match(heroVideo, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*loop[\s\S]*playsInline/);
+    assert.match(heroVideo, /poster="\/images\/hero\/clear-evening-story\.webp"/);
+    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v1\.mp4"/);
+    assert.match(heroVideo, /aria-hidden="true"/);
+    assert.match(heroVideo, /prefers-reduced-motion: reduce/);
+    assert.match(heroVideo, /prefers-reduced-data: reduce/);
+    assert.match(heroVideo, /connection\?\.saveData/);
+    assert.match(heroVideo, /배경 영상 일시정지/);
     assert.doesNotMatch(page, /src="[^\"]+\.(?:png|jpe?g)"/i);
     const assetSizes = await Promise.all([
         "public/images/hero/clear-evening-story.webp",
@@ -41,8 +51,12 @@ test("brand story explains the real selection standard without medical overclaim
         "public/images/brands/Rexspecs01-story.webp",
     ].map(async (path) => (await stat(new URL(path, root))).size));
     assert.ok(assetSizes.reduce((sum, size) => sum + size, 0) < 1_000_000);
+    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v1.mp4", root))).size;
+    assert.ok(heroVideoSize > 100_000 && heroVideoSize < 3_000_000);
+    assert.match(css, /\.heroVideo[\s\S]*object-fit: cover/);
     assert.match(css, /@media \(max-width: 720px\)/);
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+    assert.match(css, /@media \(prefers-reduced-data: reduce\)/);
 });
 
 test("partner and bulk pages submit dedicated support categories", async () => {
