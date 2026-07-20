@@ -159,9 +159,9 @@ export const POPULAR_KEYWORDS: string[] = [
 
 // ============ 푸터 메타 링크 ============
 export const FOOTER_META_LINKS: MenuItem[] = [
-    { label: "브랜드 스토리", href: "#about" },
-    { label: "입점 문의", href: "#partner" },
-    { label: "대량 구매 문의", href: "#bulk" },
+    { label: "브랜드 스토리", href: "/brand-story" },
+    { label: "입점 문의", href: "/partner" },
+    { label: "대량 구매 문의", href: "/bulk-order" },
 ];
 
 export const FOOTER_LEGAL_LINKS: MenuItem[] = [

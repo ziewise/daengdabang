@@ -15,7 +15,7 @@ export const BUSINESS_INFO = {
     address: process.env.NEXT_PUBLIC_DDB_BUSINESS_ADDRESS || "경기도 성남시 수정구 수정로 118, 3층 113호(수진동, 나눔빌딩)",
     customerServicePhone: process.env.NEXT_PUBLIC_DDB_CS_PHONE || "1800-2162",
     customerServiceEmail: process.env.NEXT_PUBLIC_DDB_CS_EMAIL || "support@daengdabang.com",
-    partnerEmail: process.env.NEXT_PUBLIC_DDB_PARTNER_EMAIL || "partner@daengdabang.com",
+    partnerEmail: process.env.NEXT_PUBLIC_DDB_PARTNER_EMAIL || "partners@daengdabang.com",
     privacyOfficer: process.env.NEXT_PUBLIC_DDB_PRIVACY_OFFICER || "박주연",
     hostingProvider: process.env.NEXT_PUBLIC_DDB_HOSTING_PROVIDER || "GitHub Pages",
     domain: process.env.NEXT_PUBLIC_DDB_DOMAIN || "daengdabang.com",

@@ -6,6 +6,8 @@ export type CustomerSupportCategory =
     | "delivery"
     | "order"
     | "payment"
+    | "partnership"
+    | "bulk_order"
     | "other";
 
 export type CustomerSupportRoute = {
