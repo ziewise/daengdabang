@@ -4,7 +4,7 @@ export default function BrandStoryHeroVideo() {
     return (
         <video
             className={styles.heroVideo}
-            src="/videos/brand-story/summer-night-sunny-v4.mp4"
+            src="/videos/brand-story/summer-night-sunny-v5.mp4"
             poster="/images/hero/clear-evening-story.webp"
             autoPlay
             muted

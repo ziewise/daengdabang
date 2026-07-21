@@ -38,7 +38,7 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(page, /<BrandStoryHeroVideo \/>/);
     assert.match(heroVideo, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*loop[\s\S]*playsInline/);
     assert.match(heroVideo, /poster="\/images\/hero\/clear-evening-story\.webp"/);
-    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v4\.mp4"/);
+    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v5\.mp4"/);
     assert.match(heroVideo, /aria-hidden="true"/);
     assert.match(heroVideo, /preload="auto"/);
     assert.doesNotMatch(heroVideo, /<button|videoToggle|일시정지|paused|useState|useRef|prefers-reduced|saveData/);
@@ -49,7 +49,7 @@ test("brand story explains the real selection standard and uses an accessible vi
         "public/images/brands/Rexspecs01-story.webp",
     ].map(async (path) => (await stat(new URL(path, root))).size));
     assert.ok(assetSizes.reduce((sum, size) => sum + size, 0) < 1_000_000);
-    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v4.mp4", root))).size;
+    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v5.mp4", root))).size;
     assert.ok(heroVideoSize > 100_000 && heroVideoSize < 3_000_000);
     assert.match(css, /\.heroVideo[\s\S]*object-fit: cover/);
     assert.doesNotMatch(css, /\.videoToggle/);
