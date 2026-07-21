@@ -36,29 +36,6 @@
     height: 100%;
 }
 
-.videoToggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 2;
-    display: inline-flex;
-    min-height: 40px;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.46);
-    border-radius: 999px;
-    background: rgba(20, 26, 44, 0.58);
-    padding: 8px 13px;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 900;
-    backdrop-filter: blur(12px);
-    cursor: pointer;
-}
-
-.videoToggle:hover { background: rgba(20, 26, 44, 0.78); }
-.videoToggle:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-
 .heroShade {
     position: absolute;
     inset: 0;
@@ -312,7 +289,6 @@
     .hero { min-height: 640px; border-radius: 28px; }
     .heroImage,
     .heroVideo { object-position: 61% center; }
-    .videoToggle { top: 16px; right: 16px; }
     .heroShade { background: linear-gradient(0deg, rgba(19, 24, 41, 0.9) 0%, rgba(20, 26, 44, 0.62) 58%, rgba(20, 26, 44, 0.08) 100%); }
     .heroContent { position: absolute; right: 0; bottom: 56px; left: 0; width: auto; padding: 30px 24px; }
     .hero h1 { font-size: clamp(40px, 12vw, 58px); }
@@ -330,8 +306,6 @@
 }
 
 @media (max-width: 520px) {
-    .videoToggle span { display: none; }
-    .videoToggle { width: 40px; justify-content: center; padding: 8px; }
     .heroActions,
     .heroActions a,
     .closingActions,
@@ -345,11 +319,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .heroVideo { display: none; }
     .primaryAction,
     .secondaryAction { transition: none; }
-}
-
-@media (prefers-reduced-data: reduce) {
-    .heroVideo { display: none; }
 }
