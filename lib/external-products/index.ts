@@ -29,6 +29,7 @@ export type ExternalProductResult = {
     priceHigh?: number | null;
     shippingFee?: number;
     shippingFeeKnown?: boolean;
+    shippingEvidence?: "explicit_fee" | "explicit_free" | "unknown" | string;
     couponDiscount?: number;
     optionName?: string;
     optionPriceDelta?: number;
@@ -39,12 +40,16 @@ export type ExternalProductResult = {
     linkKind?: "product" | "search" | "missing" | string;
     specGroup?: string;
     specs?: Record<string, string>;
+    productStatus?: string;
     comparisonModel?: string;
     unitLabel?: string;
     unitsPerPack?: number | null;
     packCount?: number | null;
     totalUnits?: number | null;
     unitPrice?: number | null;
+    netWeightGrams?: number | null;
+    pricePer100g?: number | null;
+    weightEvidence?: "title_single_pack" | "title_explicit_multipack" | "ambiguous" | string;
     sizeLabel?: string;
     widthCm?: number | null;
     heightCm?: number | null;

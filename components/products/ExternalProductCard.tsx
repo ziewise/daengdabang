@@ -7,6 +7,8 @@ import {
     comparisonStatus,
     displayProductPrice,
     externalProductHref,
+    hasExplicitShippingEvidence,
+    hasTrustedWeightEvidence,
     isMarketEstimate,
     statusLabel,
     unitPrice,
@@ -18,16 +20,31 @@ import { trackDirectExternalProductClick } from "@/lib/storefront-analytics";
 type Props = {
     product: ExternalProductResult;
     query?: string;
+    comparisonRank?: number;
+    comparisonScore?: number;
+    comparisonTied?: boolean;
 };
 
-export default function ExternalProductCard({ product, query = "" }: Props) {
+export default function ExternalProductCard({ product, query = "", comparisonRank, comparisonScore, comparisonTied = false }: Props) {
     const { locale, formatPrice } = useI18n();
     const [imageUnavailable, setImageUnavailable] = useState(false);
     const status = comparisonStatus(product);
     const estimate = isMarketEstimate(product);
     const productPrice = estimate ? null : displayProductPrice(product);
-    const payableTotal = !estimate && typeof product.totalPrice === "number" ? product.totalPrice : null;
+    const shippingKnown = hasExplicitShippingEvidence(product);
+    const payableTotal = !estimate
+        && shippingKnown
+        && product.priceComparable !== false
+        && typeof product.totalPrice === "number"
+        ? product.totalPrice
+        : null;
     const perUnit = unitPrice(product);
+    const per100g = hasTrustedWeightEvidence(product)
+        && typeof product.pricePer100g === "number"
+        && Number.isFinite(product.pricePer100g)
+        && product.pricePer100g > 0
+        ? product.pricePer100g
+        : null;
     const quantitySummary = unitSummary(product, locale);
     const href = externalProductHref(product, query, "card");
     const trackDirectClick = () => trackDirectExternalProductClick({ product, query, targetUrl: href, surface: "card" });
@@ -37,7 +54,7 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
             ? "bg-amber-50 text-amber-800"
             : "bg-neutral-100 text-neutral-700";
     const priceNote = [
-        product.shippingFeeKnown === false
+        !shippingKnown
             ? (locale === "en" ? "Shipping shown by seller" : "배송비는 판매처에서 확인")
             : typeof product.shippingFee === "number" && product.shippingFee > 0
             ? `${locale === "en" ? "Shipping" : "배송"} ${formatPrice(product.shippingFee)}`
@@ -81,6 +98,13 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                 <div className="absolute bottom-2 right-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-neutral-700 shadow-sm">
                     {product.sellerName || product.sourceName}
                 </div>
+                {typeof comparisonRank === "number" && typeof comparisonScore === "number" && (
+                    <div className="absolute left-2 top-2 rounded-full bg-emerald-700 px-2.5 py-1 text-[10px] font-black text-white shadow-sm">
+                        {locale === "en"
+                            ? `Evidence score ${comparisonTied ? "joint " : ""}#${comparisonRank} · ${comparisonScore}`
+                            : `근거점수 ${comparisonTied ? "공동 " : ""}${comparisonRank}위 · ${comparisonScore}점`}
+                    </div>
+                )}
             </Link>
 
             <div className="p-3">
@@ -105,6 +129,13 @@ export default function ExternalProductCard({ product, query = "" }: Props) {
                     {perUnit !== null && product.unitLabel && (
                         <p className="mt-1 text-[11px] font-black text-sky-700">
                             {locale === "en" ? "Unit price" : `1${product.unitLabel}당`} {formatPrice(Math.round(perUnit))}
+                        </p>
+                    )}
+                    {per100g !== null && (
+                        <p className="mt-1 text-[11px] font-black text-sky-700">
+                            {locale === "en"
+                                ? `About ${formatPrice(Math.round(per100g))}/100g · based on listed price`
+                                : `표시 판매가 기준 100g당 약 ${formatPrice(Math.round(per100g))}`}
                         </p>
                     )}
                     {priceNote && (

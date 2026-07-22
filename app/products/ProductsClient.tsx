@@ -19,7 +19,7 @@ import { loadExternalProducts, searchExternalProducts, type ExternalProductResul
 import {
     comparisonStatus,
     isDisplayableExternalProduct,
-    relatedReferenceOrder,
+    rankSmartComparisonProducts,
 } from "@/lib/external-products/comparison";
 import { trackExternalSearchResults } from "@/lib/storefront-analytics";
 import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
@@ -78,6 +78,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
     const [externalProducts, setExternalProducts] = useState<ExternalProductResult[]>([]);
     const [externalLoading, setExternalLoading] = useState(false);
     const [externalSearched, setExternalSearched] = useState(false);
+    const [externalReveal, setExternalReveal] = useState({ scope: "", count: 30 });
     const { t, locale, categoryLabel, subcategoryLabel, menuLabel } = useI18n();
 
     useEffect(() => {
@@ -102,13 +103,18 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         return applySort(list, sort);
     }, [query, category, subcategory, sort]);
     const hasSearch = query.trim().length > 0;
-    const referenceExternalProducts = useMemo(() => {
-        const hasAnchor = externalProducts.some((product) => comparisonStatus(product) === "anchor");
-        const rows = hasAnchor
+    const referenceExternalRows = useMemo(() => {
+        const anchor = externalProducts.find((product) => comparisonStatus(product) === "anchor");
+        const rows = anchor
             ? externalProducts.filter((product) => !["anchor", "exact_match", "unit_match"].includes(comparisonStatus(product)))
             : externalProducts;
-        return [...rows].sort((a, b) => relatedReferenceOrder(a) - relatedReferenceOrder(b) || b.rank - a.rank);
-    }, [externalProducts]);
+        return rankSmartComparisonProducts(rows, query.trim(), anchor);
+    }, [externalProducts, query]);
+    const referenceExternalProducts = useMemo(() => referenceExternalRows.map((row) => row.product), [referenceExternalRows]);
+    const externalScope = `${query.trim()}|${category}|${subcategory}|${sort}`;
+    const revealedExternalCount = externalReveal.scope === externalScope ? externalReveal.count : 30;
+    const visibleExternalRows = referenceExternalRows.slice(0, revealedExternalCount);
+    const remainingExternalCount = Math.min(20, Math.max(0, referenceExternalRows.length - visibleExternalRows.length));
 
     const externalFilter = useMemo(() => ({
         category: category === "all" ? undefined : category,
@@ -280,10 +286,34 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                                         </span>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                                        {referenceExternalProducts.map((product) => (
-                                            <ExternalProductCard key={product.id} product={product} query={query.trim()} />
+                                        {visibleExternalRows.map((row) => (
+                                            <ExternalProductCard
+                                                key={row.product.id}
+                                                product={row.product}
+                                                query={query.trim()}
+                                                comparisonRank={row.position}
+                                                comparisonScore={row.assessment.score}
+                                                comparisonTied={row.isTied}
+                                            />
                                         ))}
                                     </div>
+                                    {visibleExternalRows.length < referenceExternalRows.length && (
+                                        <div className="mt-5 flex justify-center">
+                                            <button
+                                                type="button"
+                                                className="min-h-11 rounded-md border border-neutral-300 bg-white px-5 py-2.5 text-sm font-black text-neutral-800 transition hover:border-emerald-500 hover:text-emerald-800"
+                                                onClick={() => setExternalReveal({
+                                                    scope: externalScope,
+                                                    count: Math.min(revealedExternalCount + 20, referenceExternalRows.length),
+                                                })}
+                                                aria-label={locale === "en" ? `Show ${remainingExternalCount} more external products` : `외부 상품 ${remainingExternalCount}개 더 보기`}
+                                            >
+                                                {locale === "en"
+                                                    ? `Show more (${visibleExternalRows.length}/${referenceExternalRows.length})`
+                                                    : `${remainingExternalCount}개 더 보기 (${visibleExternalRows.length}/${referenceExternalRows.length})`}
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </>

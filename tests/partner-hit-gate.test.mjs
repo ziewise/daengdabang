@@ -21,7 +21,9 @@ test("every real external product uses the tracked browser-visit bridge", async 
     assert.doesNotMatch(comparison, /if \(isSearchReference\) return/);
     assert.doesNotMatch(comparison, /if \(!target\) return fallbackTarget/);
     assert.match(card, /externalProductHref\(product, query, "card"\)/);
-    assert.match(table, /externalProductHref\(product, query, "exact-comparison"\)/);
+    assert.match(table, /externalProductHref\(product, query, surface\)/);
+    assert.match(table, /trackedHref\(product, "smart-comparison"\)/);
+    assert.match(table, /trackedHref\(product, "smart-comparison-mobile"\)/);
 });
 
 test("outbound navigation records the click and directly opens the attributed target in the customer browser", async () => {
