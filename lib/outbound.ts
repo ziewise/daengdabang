@@ -1,46 +1,53 @@
-export type AffiliateStop = {
-    id: string;
-    name: string;
-    url: string;
-    hitUrl?: string;
-    mark: string;
-    logoSrc?: string;
-    logoAlt?: string;
-    logoText?: string;
-    campaignCode?: string;
-    hitEnabled?: boolean;
+export type OutboundAttributionMode = "naver_nt" | "utm" | "referrer";
+
+export type OutboundVisit = {
+    targetUrl: string;
+    attributionMode: OutboundAttributionMode;
+    partnerId: string;
+    partnerName: string;
 };
 
-export const OUTBOUND_AFFILIATE_STOPS: AffiliateStop[] = [
-    {
-        id: "daengdabang-smartstore",
-        name: "댕다방 스마트스토어",
-        url: "https://smartstore.naver.com/daengdabang",
-        hitUrl: "https://smartstore.naver.com/daengdabang",
-        mark: "SmartStore",
-        logoSrc: "/images/partners/naver-smartstore-icon.png",
-        logoAlt: "네이버 스마트스토어",
-        logoText: "SmartStore",
-    },
-    {
-        id: "urhey",
-        name: "URHEY",
-        url: "https://www.urhey.co.kr/index.html",
-        hitUrl: "https://www.urhey.co.kr/index.html",
-        mark: "URHEY",
-        logoSrc: "/images/partners/urhey-logo.png",
-        logoAlt: "URHEY",
-    },
-    {
-        id: "inclear",
-        name: "INCLEAR",
-        url: "https://inclear.co.kr/index.html",
-        hitUrl: "https://inclear.co.kr/index.html",
-        mark: "INCLEAR",
-        logoSrc: "/images/partners/inclear-logo.png",
-        logoAlt: "INCLEAR",
-    },
-];
+const CONTRACTED_PARTNER_DOMAINS = [
+    { domain: "urhey.co.kr", id: "partner-urhey", name: "URHEY" },
+    { domain: "inclear.co.kr", id: "partner-inclear", name: "INCLEAR" },
+] as const;
+
+function hostMatches(host: string, domain: string): boolean {
+    return host === domain || host.endsWith(`.${domain}`);
+}
+
+function stableSurface(value: string | undefined): string {
+    if (value === "card") return "product_card";
+    if (value === "exact-comparison") return "price_compare";
+    return "external_search";
+}
+
+function stableKeyword(value: string | undefined): string {
+    const cleaned = String(value || "")
+        .trim()
+        .replace(/[^0-9A-Za-z가-힣._-]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 80);
+    return cleaned && cleaned !== "all" ? cleaned : "dog_products";
+}
+
+function appendMissingParams(rawUrl: string, entries: Array<[string, string]>): string {
+    const existing = new URL(rawUrl).searchParams;
+    const additions = entries.filter(([key]) => !existing.has(key));
+    if (!additions.length) return rawUrl;
+    const hashIndex = rawUrl.indexOf("#");
+    const beforeHash = hashIndex >= 0 ? rawUrl.slice(0, hashIndex) : rawUrl;
+    const hash = hashIndex >= 0 ? rawUrl.slice(hashIndex) : "";
+    const separator = beforeHash.includes("?")
+        ? (beforeHash.endsWith("?") || beforeHash.endsWith("&") ? "" : "&")
+        : "?";
+    return `${beforeHash}${separator}${new URLSearchParams(additions).toString()}${hash}`;
+}
+
+function hasAnyParam(rawUrl: string, keys: readonly string[]): boolean {
+    const params = new URL(rawUrl).searchParams;
+    return keys.some((key) => params.has(key));
+}
 
 export function outboundHref(
     targetUrl: string,
@@ -92,72 +99,57 @@ export function safeOutboundTarget(rawTarget: string | null): string {
     }
 }
 
-function textValue(value: unknown, limit: number): string {
-    return String(value ?? "").trim().slice(0, limit);
-}
-
-export function affiliateStopsFromPublicConfig(items: unknown): AffiliateStop[] {
-    if (!Array.isArray(items)) return [];
-    const defaultsById = new Map(OUTBOUND_AFFILIATE_STOPS.map((partner) => [partner.id, partner]));
-    const rows: AffiliateStop[] = [];
-    items.forEach((item, index) => {
-        if (!item || typeof item !== "object") return;
-        const record = item as Record<string, unknown>;
-        if (record.hitEnabled === false) return;
-        const id = textValue(record.id, 80) || `partner-${index + 1}`;
-        const base = defaultsById.get(id);
-        const name = textValue(record.name, 80) || base?.name || id;
-        const mark = textValue(record.mark, 24) || base?.mark || name.slice(0, 12).toUpperCase();
-        rows.push({
-            id,
-            name,
-            url: "",
-            hitUrl: "",
-            mark,
-            logoSrc: base?.logoSrc,
-            logoAlt: base?.logoAlt,
-            logoText: base?.logoText,
-            hitEnabled: true,
-        });
-    });
-    return rows;
-}
-
-export function contractedPartnerHitUrls(
-    targetUrl: string,
-    meta: {
-        query?: string;
-        source?: string;
-        product?: string;
-        surface?: string;
-    } = {},
-    stops: AffiliateStop[] = OUTBOUND_AFFILIATE_STOPS
-): { id: string; url: string }[] {
-    let targetHost = "";
-    try {
-        targetHost = new URL(targetUrl).hostname.replace(/^www\./, "");
-    } catch {
-        targetHost = "";
+export function attributedOutboundVisit(
+    rawTarget: string,
+    meta: { surface?: string; category?: string } = {},
+): OutboundVisit {
+    const safeTarget = safeOutboundTarget(rawTarget);
+    if (!safeTarget) {
+        return { targetUrl: "", attributionMode: "referrer", partnerId: "", partnerName: "" };
     }
 
-    return stops
-        .filter((partner) => partner.hitEnabled !== false && Boolean(partner.hitUrl || partner.url))
-        .flatMap((partner) => {
-            let url: URL;
-            try {
-                url = new URL(partner.hitUrl || partner.url);
-            } catch {
-                return [];
-            }
-            url.searchParams.set("utm_source", "daengdabang");
-            url.searchParams.set("utm_medium", "outbound_bridge");
-            url.searchParams.set("utm_campaign", partner.campaignCode || "partner_contract_hit");
-            url.searchParams.set("ddb_partner_hit", "1");
-            if (targetHost) url.searchParams.set("ddb_target_host", targetHost);
-            if (meta.query) url.searchParams.set("ddb_query", meta.query.slice(0, 80));
-            if (meta.source) url.searchParams.set("ddb_source", meta.source.slice(0, 80));
-            if (meta.product) url.searchParams.set("ddb_product", meta.product.slice(0, 120));
-            if (meta.surface) url.searchParams.set("ddb_surface", meta.surface.slice(0, 60));
-            return [{ id: partner.id, url: url.toString() }];
-        });
+    const url = new URL(safeTarget);
+    const host = url.hostname.toLocaleLowerCase().replace(/^www\./, "");
+    const surface = stableSurface(meta.surface);
+
+    if (host === "smartstore.naver.com" || host === "m.smartstore.naver.com") {
+        // SmartStore's native custom-channel report requires both nt_source and
+        // nt_medium. Values stay deliberately stable to avoid the 400-combination
+        // reporting limit; the raw customer query and a per-click ID are not sent.
+        const ntKeys = ["nt_source", "nt_medium", "nt_detail", "nt_keyword"] as const;
+        const targetUrl = hasAnyParam(safeTarget, ntKeys)
+            ? safeTarget
+            : appendMissingParams(safeTarget, [
+                ["nt_source", "daengdabang.com"],
+                ["nt_medium", "referral"],
+                ["nt_detail", surface],
+                ["nt_keyword", stableKeyword(meta.category)],
+            ]);
+        const storeSlug = url.pathname.split("/").filter(Boolean)[0]?.toLocaleLowerCase() || "";
+        const ownStore = storeSlug === "daengdabang";
+        return {
+            targetUrl,
+            attributionMode: "naver_nt",
+            partnerId: ownStore ? "partner-daengdabang-smartstore" : "",
+            partnerName: ownStore ? "댕다방 스마트스토어" : "",
+        };
+    }
+
+    const contractedPartner = CONTRACTED_PARTNER_DOMAINS.find((partner) => hostMatches(host, partner.domain));
+    const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+    const targetUrl = contractedPartner && !hasAnyParam(safeTarget, utmKeys)
+        ? appendMissingParams(safeTarget, [
+            ["utm_source", "daengdabang.com"],
+            ["utm_medium", "referral"],
+            ["utm_campaign", "external_product_search"],
+            ["utm_content", surface],
+        ])
+        : safeTarget;
+
+    return {
+        targetUrl,
+        attributionMode: contractedPartner ? "utm" : "referrer",
+        partnerId: contractedPartner?.id || "",
+        partnerName: contractedPartner?.name || "",
+    };
 }

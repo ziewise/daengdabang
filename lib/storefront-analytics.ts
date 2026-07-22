@@ -14,6 +14,13 @@ let coarseGeoPreparation: Promise<void> | null = null;
 let memoryVisitorId = "";
 let memorySession: { id: string; lastActivity: number } | null = null;
 
+const INBOUND_CAMPAIGN_FIELDS = [
+    ["utm_source", "inboundSource"],
+    ["utm_medium", "inboundMedium"],
+    ["utm_campaign", "inboundCampaign"],
+    ["utm_content", "inboundContent"],
+] as const;
+
 type AnalyticsIdentity = {
     visitorId: string;
     sessionId: string;
@@ -76,6 +83,22 @@ function pagePath(): string {
     if (typeof window === "undefined") return "";
     // Query strings can contain search terms, OAuth codes, or other sensitive data.
     return window.location.pathname;
+}
+
+/** Keeps only campaign labels that DaengDaBang intentionally issued. */
+export function inboundCampaignFields(): Record<string, string> {
+    if (typeof window === "undefined") return {};
+    const params = new URLSearchParams(window.location.search);
+    const fields: Record<string, string> = {};
+    for (const [queryKey, fieldName] of INBOUND_CAMPAIGN_FIELDS) {
+        const value = (params.get(queryKey) || "")
+            .trim()
+            .replace(/[^0-9A-Za-z._-]+/g, "_")
+            .replace(/^_+|_+$/g, "")
+            .slice(0, 100);
+        if (value) fields[fieldName] = value;
+    }
+    return fields.inboundSource && fields.inboundMedium ? fields : {};
 }
 
 function safeReferrer(): string {
@@ -290,6 +313,8 @@ export function trackOutboundRedirect(payload: {
     partnerHitCount?: number;
     partnerHitIds?: string[];
     partnerHitMode?: string;
+    navigationMode?: string;
+    attributionMode?: string;
     category?: string;
     subcategory?: string;
 }) {
@@ -313,6 +338,8 @@ export function trackOutboundRedirect(payload: {
         partnerHitCount: payload.partnerHitCount ?? 0,
         partnerHitIds: payload.partnerHitIds || [],
         partnerHitMode: payload.partnerHitMode || "",
+        navigationMode: payload.navigationMode || "",
+        attributionMode: payload.attributionMode || "",
         category: payload.category || "",
         subcategory: payload.subcategory || "",
     });

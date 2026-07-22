@@ -7,7 +7,7 @@ import ts from "typescript";
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
 
-async function loadAnalyticsIdentity(window) {
+async function loadAnalyticsModule(window) {
     const analytics = await source("lib/storefront-analytics.ts");
     const instrumented = analytics.replace(
         "function analyticsIdentity(): AnalyticsIdentity {",
@@ -25,12 +25,17 @@ async function loadAnalyticsIdentity(window) {
         module: moduleRecord,
         exports: moduleRecord.exports,
         window,
+        URLSearchParams,
         require(specifier) {
             if (specifier === "@/lib/customer-api") return { ddbApiBase: () => "" };
             throw new Error(`Unexpected runtime import: ${specifier}`);
         },
     });
-    return moduleRecord.exports.analyticsIdentity;
+    return moduleRecord.exports;
+}
+
+async function loadAnalyticsIdentity(window) {
+    return (await loadAnalyticsModule(window)).analyticsIdentity;
 }
 
 test("analytics keeps stable non-empty in-memory IDs when localStorage is blocked", async () => {
@@ -74,7 +79,27 @@ test("global analytics uses a rolling visit and privacy-safe page paths", async 
     assert.doesNotMatch(analytics, /latitude\s*:/);
     assert.doesNotMatch(analytics, /longitude\s*:/);
     assert.match(tracker, /trackStorefrontEvent\("page_view"/);
+    assert.match(tracker, /\.\.\.inboundCampaignFields\(\)/);
     assert.match(layout, /<StorefrontAnalyticsTracker \/>/);
+});
+
+test("reciprocal partner links record only allowlisted inbound campaign labels", async () => {
+    const analytics = await loadAnalyticsModule({
+        location: {
+            pathname: "/products/",
+            search: "?utm_source=naver_smartstore&utm_medium=referral&utm_campaign=partner_crosslink&utm_content=store_home&q=private-search",
+        },
+    });
+
+    assert.deepEqual(
+        { ...analytics.inboundCampaignFields() },
+        {
+            inboundSource: "naver_smartstore",
+            inboundMedium: "referral",
+            inboundCampaign: "partner_crosslink",
+            inboundContent: "store_home",
+        },
+    );
 });
 
 test("product, PetLens, and chat surfaces emit outcome events without copying content", async () => {
@@ -120,7 +145,10 @@ test("external interest keeps categories and tracks direct marketplace search cl
     assert.match(analytics, /args\.category === "all" \? dominantProductField/);
     assert.match(card, /onClick=\{trackDirectClick\}/);
     assert.match(table, /trackDirectExternalProductClick\(\{/);
-    assert.match(redirect, /directAnalyticsRef\.current === key/);
-    assert.match(redirect, /directAnalyticsRef\.current = key/);
-    assert.match(redirect, /\/api\/v1\/partners\/outbound-hits/);
+    assert.match(redirect, /trackedKeyRef\.current !== key/);
+    assert.match(redirect, /trackedKeyRef\.current = key/);
+    assert.match(redirect, /attributedOutboundVisit\(rawTarget, \{ surface, category \}\)/);
+    assert.match(redirect, /trackOutboundRedirect\(\{/);
+    assert.match(redirect, /navigationMode: "browser_top_level"/);
+    assert.doesNotMatch(redirect, /\/api\/v1\/partners\/outbound-hits/);
 });

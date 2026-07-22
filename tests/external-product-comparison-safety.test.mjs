@@ -180,6 +180,7 @@ test("exact SKU totals and different bundle unit prices stay in separate section
     assert.match(products, /외부 판매 상품 더 보기/);
     assert.match(products, /상품 사진과 판매가가 함께 확인된 결과입니다/);
     assert.match(products, /filter\(isDisplayableExternalProduct\)/);
+    assert.match(products, /limit:\s*80/);
     assert.match(products, /window\.setTimeout/);
     assert.match(products, /}, 350\)/);
     assert.match(products, /controller\.abort\(\)/);

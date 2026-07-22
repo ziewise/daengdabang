@@ -114,7 +114,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         category: category === "all" ? undefined : category,
         subcategory: subcategory === "all" ? undefined : subcategory,
         sort,
-        limit: 36,
+        limit: 80,
     }), [category, subcategory, sort]);
 
     useEffect(() => {

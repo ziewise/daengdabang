@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { prepareAnalyticsGeo, trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { inboundCampaignFields, prepareAnalyticsGeo, trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 /** Records one page view for each client-side route change. */
 export default function StorefrontAnalyticsTracker() {
@@ -20,6 +20,7 @@ export default function StorefrontAnalyticsTracker() {
             trackStorefrontEvent("page_view", {
                 path: pathname || "/",
                 surface: "storefront",
+                ...inboundCampaignFields(),
             });
         };
         const sendBeforeExit = () => sendPageView();

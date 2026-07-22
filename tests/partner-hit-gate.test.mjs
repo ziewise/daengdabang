@@ -8,7 +8,7 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("every real external product uses the contracted partner bridge", async () => {
+test("every real external product uses the tracked browser-visit bridge", async () => {
     const [comparison, card, table] = await Promise.all([
         source("lib/external-products/comparison.ts"),
         source("components/products/ExternalProductCard.tsx"),
@@ -24,24 +24,29 @@ test("every real external product uses the contracted partner bridge", async () 
     assert.match(table, /externalProductHref\(product, query, "exact-comparison"\)/);
 });
 
-test("outbound navigation is gated on server-confirmed partner hits", async () => {
-    const client = await source("app/outbound/OutboundRedirectClient.tsx");
+test("outbound navigation records the click and directly opens the attributed target in the customer browser", async () => {
+    const [client, outbound] = await Promise.all([
+        source("app/outbound/OutboundRedirectClient.tsx"),
+        source("lib/outbound.ts"),
+    ]);
 
-    assert.match(client, /\/api\/v1\/partners\/outbound-hit-config\?target=/);
-    assert.match(client, /&click_id=/);
-    assert.match(client, /\/api\/v1\/partners\/outbound-hits/);
-    assert.match(client, /return "https:\/\/api\.daengdabang\.com"/);
-    assert.doesNotMatch(client, /ddbApiBase/);
-    assert.match(client, /clickIdentityRef\.current\.clickId/);
-    assert.match(client, /result\.confirmedCount === result\.requiredCount/);
-    assert.match(client, /confirmedDispatchKey === dispatchKey/);
-    assert.match(client, /const canRedirect = Boolean\(target\) && hitConfirmedForCurrentTarget/);
-    assert.match(client, /if \(!canRedirect \|\| !target \|\| manualOpened\) return/);
-    assert.match(client, /if \(manualNavigationKeyRef\.current !== navigationKey\) window\.location\.assign\(target\)/);
+    assert.match(client, /attributedOutboundVisit\(rawTarget, \{ surface, category \}\)/);
+    assert.match(client, /trackOutboundRedirect\(\{/);
+    assert.match(client, /navigationMode: "browser_top_level"/);
+    assert.match(client, /attributionMode: visit\.attributionMode/);
+    assert.doesNotMatch(client, /partnerHitCount:/);
+    assert.doesNotMatch(client, /partnerHitMode:/);
     assert.match(client, /window\.location\.assign\(target\)/);
-    assert.match(client, /제휴 요청 다시 확인/);
-    assert.match(client, /이동을 보류했습니다/);
-    assert.doesNotMatch(client, /fireContractedPartnerHits/);
+    assert.match(client, /숨은 창이나 서버 대리 접속 없이/);
+    assert.doesNotMatch(client, /\/api\/v1\/partners\/outbound-hit-config/);
+    assert.doesNotMatch(client, /\/api\/v1\/partners\/outbound-hits/);
+    assert.doesNotMatch(client, /window\.open\(/);
     assert.doesNotMatch(client, /mode:\s*"no-cors"/);
-    assert.doesNotMatch(client, /OUTBOUND_AFFILIATE_STOPS/);
+
+    assert.match(outbound, /nt_source/);
+    assert.match(outbound, /nt_medium/);
+    assert.match(outbound, /utm_source/);
+    assert.match(outbound, /utm_medium/);
+    assert.doesNotMatch(outbound, /ddb_partner_hit/);
+    assert.doesNotMatch(outbound, /ddb_click_id/);
 });
