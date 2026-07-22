@@ -30,6 +30,9 @@ test("brand story explains the real selection standard and uses an accessible vi
     ]);
 
     assert.match(page, /좋은 하루는,/);
+    assert.match(page, /<span className=\{styles\.heroTitleLine\}>좋은 하루는,<\/span>/);
+    assert.match(page, /<span className=\{styles\.heroTitleLine\}>함께 고르는<\/span>/);
+    assert.match(page, /<span className=\{styles\.heroTitleLine\}>순간부터\.<\/span>/);
     assert.match(page, /무엇을 더 팔까보다/);
     assert.match(page, /시장 흐름과 보호자 검색을 함께 살피고/);
     assert.match(page, /기술은 정답이 아니라/);
@@ -38,7 +41,7 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(page, /<BrandStoryHeroVideo \/>/);
     assert.match(heroVideo, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*loop[\s\S]*playsInline/);
     assert.match(heroVideo, /poster="\/images\/hero\/clear-evening-story\.webp"/);
-    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v6\.mp4"/);
+    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v7\.mp4"/);
     assert.match(heroVideo, /aria-hidden="true"/);
     assert.match(heroVideo, /preload="auto"/);
     assert.doesNotMatch(heroVideo, /<button|videoToggle|일시정지|paused|useState|useRef|prefers-reduced|saveData/);
@@ -49,7 +52,7 @@ test("brand story explains the real selection standard and uses an accessible vi
         "public/images/brands/Rexspecs01-story.webp",
     ].map(async (path) => (await stat(new URL(path, root))).size));
     assert.ok(assetSizes.reduce((sum, size) => sum + size, 0) < 1_000_000);
-    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v6.mp4", root))).size;
+    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v7.mp4", root))).size;
     assert.ok(heroVideoSize > 100_000 && heroVideoSize < 3_000_000);
     assert.match(css, /\.heroVideo[\s\S]*object-fit: cover/);
     assert.doesNotMatch(css, /\.videoToggle/);
@@ -62,6 +65,10 @@ test("home intro uses the cleaned desktop video without changing the mobile artw
 
     assert.match(intro, /isMobile \? "\/videos\/intro_m\.mp4\?v=20260619" : "\/videos\/intro-clean-v2\.mp4\?v=20260722"/);
     assert.match(intro, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*playsInline[\s\S]*onEnded=/);
+    assert.match(intro, /document\.addEventListener\("play", blockBackgroundPlay, true\)/);
+    assert.match(intro, /pausedBackgroundVideos/);
+    assert.match(intro, /document\.hidden/);
+    assert.doesNotMatch(intro, /onTouchEnd=/);
     assert.match(intro, /<span className=\{styles\.skipText\}>/);
     const [desktopSize, mobileSize] = await Promise.all([
         stat(new URL("public/videos/intro-clean-v2.mp4", root)).then(({ size }) => size),

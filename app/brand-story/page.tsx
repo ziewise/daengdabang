@@ -66,7 +66,11 @@ export default function BrandStoryPage() {
                 <div className={styles.heroShade} />
                 <div className={styles.heroContent}>
                     <p className={styles.eyebrow}>DAENGDABANG BRAND STORY</p>
-                    <h1 id="brand-story-title">좋은 하루는,<br />함께 고르는 순간부터.</h1>
+                    <h1 id="brand-story-title">
+                        <span className={styles.heroTitleLine}>좋은 하루는,</span>
+                        <span className={styles.heroTitleLine}>함께 고르는</span>
+                        <span className={styles.heroTitleLine}>순간부터.</span>
+                    </h1>
                     <p className={styles.heroLead}>
                         댕다방은 반려견의 하루를 먼저 바라보고, 보호자가 이유 있게 고를 수 있도록 돕는 큐레이션 펫 쇼핑몰입니다.
                     </p>

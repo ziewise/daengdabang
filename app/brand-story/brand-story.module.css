@@ -68,7 +68,11 @@
     font-weight: 900;
     line-height: 1.08;
     letter-spacing: -0.055em;
-    text-wrap: balance;
+}
+
+.heroTitleLine {
+    display: block;
+    white-space: nowrap;
 }
 
 .heroLead {
@@ -316,6 +320,10 @@
     .largePhoto { right: 4%; bottom: 6%; }
     .smallPhoto { width: 48%; height: 38%; border-width: 5px; }
     .photoNote { top: 16px; }
+}
+
+@media (max-width: 360px) {
+    .hero h1 { font-size: clamp(34px, 11vw, 40px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
