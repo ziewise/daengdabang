@@ -38,7 +38,7 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(page, /<BrandStoryHeroVideo \/>/);
     assert.match(heroVideo, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*loop[\s\S]*playsInline/);
     assert.match(heroVideo, /poster="\/images\/hero\/clear-evening-story\.webp"/);
-    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v5\.mp4"/);
+    assert.match(heroVideo, /src="\/videos\/brand-story\/summer-night-sunny-v6\.mp4"/);
     assert.match(heroVideo, /aria-hidden="true"/);
     assert.match(heroVideo, /preload="auto"/);
     assert.doesNotMatch(heroVideo, /<button|videoToggle|일시정지|paused|useState|useRef|prefers-reduced|saveData/);
@@ -49,12 +49,26 @@ test("brand story explains the real selection standard and uses an accessible vi
         "public/images/brands/Rexspecs01-story.webp",
     ].map(async (path) => (await stat(new URL(path, root))).size));
     assert.ok(assetSizes.reduce((sum, size) => sum + size, 0) < 1_000_000);
-    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v5.mp4", root))).size;
+    const heroVideoSize = (await stat(new URL("public/videos/brand-story/summer-night-sunny-v6.mp4", root))).size;
     assert.ok(heroVideoSize > 100_000 && heroVideoSize < 3_000_000);
     assert.match(css, /\.heroVideo[\s\S]*object-fit: cover/);
     assert.doesNotMatch(css, /\.videoToggle/);
     assert.match(css, /@media \(max-width: 720px\)/);
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+});
+
+test("home intro uses the cleaned desktop video without changing the mobile artwork or skip overlay", async () => {
+    const intro = await source("components/home/IntroSplash.tsx");
+
+    assert.match(intro, /isMobile \? "\/videos\/intro_m\.mp4\?v=20260619" : "\/videos\/intro-clean-v2\.mp4\?v=20260722"/);
+    assert.match(intro, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*playsInline[\s\S]*onEnded=/);
+    assert.match(intro, /<span className=\{styles\.skipText\}>/);
+    const [desktopSize, mobileSize] = await Promise.all([
+        stat(new URL("public/videos/intro-clean-v2.mp4", root)).then(({ size }) => size),
+        stat(new URL("public/videos/intro_m.mp4", root)).then(({ size }) => size),
+    ]);
+    assert.ok(desktopSize > 100_000 && desktopSize < 5_000_000);
+    assert.ok(mobileSize > 100_000 && mobileSize < 5_000_000);
 });
 
 test("partner and bulk pages submit dedicated support categories", async () => {
