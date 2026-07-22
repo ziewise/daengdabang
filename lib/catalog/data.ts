@@ -5,10 +5,22 @@ import colorsData from "./colors.json";
 import sizesData from "./sizes.json";
 import pricesData from "./prices.json";
 
-const CATALOG_DATA_REVISION = "video-cdn-20260616";
+const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
+const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
+const STOREFRONT_ASSET_CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
 
-function storefrontVideoUrl(video: string | undefined): string | undefined {
-    return video;
+function storefrontVideoUrl(row: CatalogRow): string | undefined {
+    const video = row.video;
+    if (
+        !video ||
+        row.videoDelivery !== "jsdelivr_commit_cdn" ||
+        !STOREFRONT_ASSET_COMMIT_RE.test(STOREFRONT_ASSET_COMMIT_SHA) ||
+        !video.startsWith("/images/products/catalog/") ||
+        !video.endsWith("/videos/hover.mp4")
+    ) {
+        return video;
+    }
+    return `${STOREFRONT_ASSET_CDN_ROOT}@${STOREFRONT_ASSET_COMMIT_SHA}/public${video}`;
 }
 
 const textOf = (row: CatalogRow) =>
@@ -171,7 +183,7 @@ function buildOptionLabel(folder: string | undefined): string | undefined {
     return folder ? OPTION2_LABELS[folder] : undefined;
 }
 
-function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
+function buildCatalog(): CatalogProduct[] {
     return (rawCatalog as CatalogRow[]).map((row) => {
         const subcategory = mapSubcategory(row);
         const category = SUBCAT_TO_CAT[subcategory];
@@ -199,7 +211,7 @@ function buildCatalog(revision = CATALOG_DATA_REVISION): CatalogProduct[] {
             gallery: row.gallery,
             details: row.details,
             sizeImage: row.sizeImage,
-            video: storefrontVideoUrl(row.video ? `${row.video}${revision ? "" : ""}` : row.video),
+            video: storefrontVideoUrl(row),
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
             externalReviewCount: row.externalReviewCount,
