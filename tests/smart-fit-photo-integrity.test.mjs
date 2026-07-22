@@ -72,42 +72,47 @@ test("directional capture writes are serialized and never spread stale React sta
     assert.doesNotMatch(serializer, /file:/);
 });
 
-test("PetLens locks owner and edited profile identity, resetting only for a real owner change", async () => {
-    const [page, modal] = await Promise.all([
+test("PetLens hydrates an explicit profile id and switches multi-pet state without implicit submit fallback", async () => {
+    const [page, modal, selector] = await Promise.all([
         source("app/pet-lens/PetLensClient.tsx"),
         source("components/petlens/PetLensModalContent.tsx"),
+        source("components/petlens/PetLensPetSelector.tsx"),
     ]);
 
     for (const client of [page, modal]) {
-        assert.match(client, /const \[editingPetProfileId, setEditingPetProfileId\] = useState<number \| undefined>\(user\?\.pets\[0\]\?\.apiProfileId\)/);
+        assert.match(client, /const \[editingPetProfileId, setEditingPetProfileId\] = useState<number \| undefined>\(\)/);
         assert.match(client, /const editingOwnerKeyRef = useRef\(user\?\.apiUserId \? `id:\$\{user\.apiUserId\}` : user\?\.email \|\| ""\)/);
-        assert.match(client, /const hydratedTargetRef = useRef\(false\)/);
+        assert.match(client, /const hydratedPetProfileIdRef = useRef<number \| undefined>\(undefined\)/);
         assert.match(client, /const ownerKey = user\?\.apiUserId \? `id:\$\{user\.apiUserId\}` : user\?\.email \|\| ""/);
         assert.match(client, /const ownerChanged = editingOwnerKeyRef\.current !== ownerKey/);
-        assert.match(client, /const pet = ownerChanged\s*\? user\?\.pets\?\.\[0\]\s*:\s*user\?\.pets\.find\(\(candidate\) => candidate\.apiProfileId === editingPetProfileId\)\s*\|\| \(!editingPetProfileId \? user\?\.pets\?\.\[0\] : undefined\)/);
-        assert.match(client, /const resetTarget = ownerChanged \|\| !hydratedTargetRef\.current/);
+        assert.match(client, /const firstReadyPet = user\?\.pets\.find\(\(candidate\) => candidate\.apiProfileId && candidate\.breed\?\.trim\(\)\)/);
+        assert.match(client, /const firstSavedPet = user\?\.pets\.find\(\(candidate\) => candidate\.apiProfileId\)/);
+        assert.match(client, /const pet = ownerChanged \? firstReadyPet \|\| firstSavedPet : currentPet \|\| firstReadyPet \|\| firstSavedPet/);
+        assert.match(client, /const resetTarget = ownerChanged \|\| hydratedPetProfileIdRef\.current !== pet\.apiProfileId/);
         assert.match(client, /editingOwnerKeyRef\.current = ownerKey/);
-        assert.match(client, /hydratedTargetRef\.current = true/);
-        assert.match(client, /setEditingPetProfileId\(\(current\) => resetTarget \? pet\.apiProfileId : current \|\| pet\.apiProfileId\)/);
-        assert.equal(
-            (client.match(/setEditingPetProfileId\(/g) || []).length,
-            1,
-            "the initially selected profile id must not be reassigned after list reordering",
-        );
-        assert.doesNotMatch(client, /setEditingPetProfileId\(\s*pet\.apiProfileId\s*\)/);
+        assert.match(client, /hydratedPetProfileIdRef\.current = pet\.apiProfileId/);
+        assert.match(client, /setEditingPetProfileId\(pet\.apiProfileId\)/);
+        assert.match(client, /const selectPetProfile = \(petProfileId: number\)/);
+        assert.match(client, /pet\.apiProfileId === petProfileId && pet\.breed\?\.trim\(\)/);
+        assert.match(client, /hydratedPetProfileIdRef\.current = undefined/);
+        assert.match(client, /<PetLensPetSelector/);
         assert.doesNotMatch(client, /setEditingPetProfileId\(\s*user\?\.pets\[0\]\?\.apiProfileId\s*\)/);
         assert.match(client, /user\?\.pets\.find\(\(pet\) => pet\.apiProfileId === editingPetProfileId\)/);
-        assert.match(client, /setName\(\(current\) => resetTarget \? pet\.name \|\| "" : current \|\| pet\.name \|\| ""\)/);
-        assert.match(client, /setAge\(\(current\) => resetTarget \? pet\.age \|\| "" : current \|\| pet\.age \|\| ""\)/);
-        assert.match(client, /setSize\(\(current\) => resetTarget \? pet\.size \|\| "medium" : current\)/);
-        assert.match(client, /setCoat\(\(current\) => resetTarget \? pet\.coat \|\| "medium" : current\)/);
-        assert.match(client, /setActivity\(\(current\) => resetTarget \? pet\.activity \|\| "normal" : current\)/);
-        assert.match(client, /setConcerns\(\(current\) => resetTarget \? pet\.concerns\?\.length \? pet\.concerns : \["산책 안전"\] : current\)/);
-        assert.match(client, /setPhotoDataUrl\(\(current\) => resetTarget \? primary : current \|\| primary\)/);
-        assert.match(client, /const next = resetTarget \|\| !Object\.keys\(current\)\.length \? restored : current/);
-        assert.match(client, /photoViewsRef\.current = next/);
+        assert.match(client, /setName\(pet\.name \|\| ""\)/);
+        assert.match(client, /setAge\(pet\.age \|\| ""\)/);
+        assert.match(client, /setPhotoDataUrl\(primary\)/);
+        assert.match(client, /photoViewsRef\.current = restored/);
+        assert.match(client, /hydratedPetProfileIdRef\.current !== confirmedPet\.apiProfileId/);
+
+        const submitStart = client.indexOf("const submit = async");
+        const submitEnd = client.indexOf("const selectedPet", submitStart);
+        assert.doesNotMatch(client.slice(submitStart, submitEnd), /pets\??\.?\[0\]/);
         assert.match(client, /\}, \[editingPetProfileId, user\]\)/);
     }
+
+    assert.match(selector, /data-petlens-pet-selector/);
+    assert.match(selector, /disabled=\{!ready\}/);
+    assert.match(selector, /onChange\(nextId\)/);
 });
 
 test("the local store snapshot redacts member photos, analysis, verification, and token", async () => {

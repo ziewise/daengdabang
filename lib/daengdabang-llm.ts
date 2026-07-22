@@ -11,6 +11,7 @@ import {
     isPetLensUnknownBreedAttributeCandidate,
     type PetLensReviewOnlyBreedCandidate,
 } from "@/lib/petlens-review-breed";
+import { canUsePetLensInferenceForRecommendations } from "@/lib/petlens-result-policy";
 import type { PetProfile } from "@/lib/store";
 
 export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
@@ -413,6 +414,33 @@ export function reconcilePetLensResultWithConfirmedProfile(
         photoCandidate &&
         normalizePetLensBreedLabel(photoCandidate) !== normalizePetLensBreedLabel(confirmedBreed),
     );
+    const inferenceReady = canUsePetLensInferenceForRecommendations(analysis.details);
+    const profileNotice = !inferenceReady
+        ? `등록 견종은 ${confirmedBreed}이지만, 이번 사진에서는 분석 근거가 충분하지 않아 상품 추천에 사용하지 않았습니다.`
+        : breedMismatch
+            ? `사진에서 ${photoCandidate} 계열 특징도 보였지만, 상품과 케어 안내에는 회원이 확인한 ${confirmedBreed} 정보를 적용했습니다.`
+            : `회원이 확인한 등록 견종 ${confirmedBreed}을 상품과 케어 안내의 기준으로 적용했습니다.`;
+    const rawAnalysis = {
+        ...(asRecord(profile.rawAnalysis) || {}),
+        member_confirmed_breed: confirmedBreed,
+        member_breed_source: "member_confirmed",
+    };
+    const confirmedProfile = { ...profile, rawAnalysis };
+
+    if (!inferenceReady) {
+        return {
+            ...analysis,
+            profile: confirmedProfile,
+            products: [],
+            details: {
+                ...analysis.details,
+                canRecommendProducts: false,
+                confirmedBreed,
+                profileNotice,
+            },
+        };
+    }
+
     const careActions = uniquePetLensLines(
         analysis.details.careActions.length > 0
             ? analysis.details.careActions
@@ -420,6 +448,7 @@ export function reconcilePetLensResultWithConfirmedProfile(
         4,
     );
     const ownerChecks = uniquePetLensLines([
+        ...analysis.details.ownerChecks,
         "현재 체중과 나이가 맞는지 확인",
         "등록 정보가 바뀌었다면 마이페이지에서 수정",
     ], 4);
@@ -429,30 +458,11 @@ export function reconcilePetLensResultWithConfirmedProfile(
         `체형: ${sizeLabel(profile.size)}`,
         ...(profile.concerns.length > 0 ? [`관심 케어: ${profile.concerns.join(", ")}`] : []),
     ], 5);
-    const profileNotice = breedMismatch
-        ? `사진에서 ${photoCandidate} 계열 특징도 보였지만, 상품과 케어 안내에는 회원가입 때 확인한 ${confirmedBreed} 정보를 적용했습니다.`
-        : undefined;
-    const rawAnalysis = {
-        ...(asRecord(profile.rawAnalysis) || {}),
-        breed: confirmedBreed,
-        breed_source: "member_confirmed",
-    };
-    const confirmedProfile = { ...profile, rawAnalysis };
-    const title = `${profile.name || "우리 아이"}의 등록 견종 ${confirmedBreed}을 기준으로 정리했어요`;
-    const description = "회원가입 때 보호자가 확인한 견종을 우선 적용했습니다. 사진은 견종을 다시 맞히는 용도가 아니라 현재 외형·체형·털 상태를 보완하는 데 사용합니다.";
     const details: PetLensResultDetails = {
         ...analysis.details,
-        status: "confirmed",
-        statusLabel: "회원 견종 확인",
-        title,
-        description,
-        breedCandidates: [{ label: confirmedBreed, confidenceLabel: "회원 확인" }],
         ownerChecks,
         careActions,
         recommendationSignals,
-        retakeReasons: analysis.details.photoQualityLabel === "사진 보완 필요" && analysis.details.observations.length === 0
-            ? analysis.details.retakeReasons
-            : [],
         canRecommendProducts: true,
         confirmedBreed,
         profileNotice,
@@ -463,8 +473,8 @@ export function reconcilePetLensResultWithConfirmedProfile(
         profile: confirmedProfile,
         products: recommendForPet(confirmedProfile, rawAnalysis),
         summary: uniquePetLensLines([
-            title,
-            description,
+            ...analysis.summary,
+            profileNotice,
             ...(analysis.details.observations.length > 0
                 ? [`사진에서 확인한 현재 특징: ${analysis.details.observations.join(", ")}`]
                 : []),

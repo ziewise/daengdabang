@@ -27,6 +27,7 @@ import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
 import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
+import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -36,8 +37,8 @@ type Result = PetLensAnalysisResult;
 export default function PetLensClient() {
     const { user, upsertPet } = useAuth();
     const { hydrated } = useStore();
-    const [name, setName] = useState(user?.pets[0]?.name ?? "");
-    const [age, setAge] = useState(user?.pets[0]?.age ?? "");
+    const [name, setName] = useState("");
+    const [age, setAge] = useState("");
     const [size, setSize] = useState<PetProfile["size"]>("medium");
     const [coat, setCoat] = useState<PetProfile["coat"]>("medium");
     const [activity, setActivity] = useState<PetProfile["activity"]>("normal");
@@ -49,11 +50,11 @@ export default function PetLensClient() {
     const [loading, setLoading] = useState(false);
     const [photoLoading, setPhotoLoading] = useState(false);
     const [mode, setMode] = useState<PetLensMode>("photo");
-    const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>(user?.pets[0]?.apiProfileId);
+    const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>();
     const photoViewsRef = useRef<PetLensPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
     const editingOwnerKeyRef = useRef(user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "");
-    const hydratedTargetRef = useRef(false);
+    const hydratedPetProfileIdRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
         trackStorefrontEvent("petlens_opened", { mode: "photo", surface: "page" });
@@ -62,32 +63,39 @@ export default function PetLensClient() {
     useEffect(() => {
         const ownerKey = user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "";
         const ownerChanged = editingOwnerKeyRef.current !== ownerKey;
-        const pet = ownerChanged
-            ? user?.pets?.[0]
-            : user?.pets.find((candidate) => candidate.apiProfileId === editingPetProfileId)
-                || (!editingPetProfileId ? user?.pets?.[0] : undefined);
-        if (!pet) return;
-        const resetTarget = ownerChanged || !hydratedTargetRef.current;
+        const currentPet = editingPetProfileId
+            ? user?.pets.find((candidate) => candidate.apiProfileId === editingPetProfileId)
+            : undefined;
+        const firstReadyPet = user?.pets.find((candidate) => candidate.apiProfileId && candidate.breed?.trim());
+        const firstSavedPet = user?.pets.find((candidate) => candidate.apiProfileId);
+        const pet = ownerChanged ? firstReadyPet || firstSavedPet : currentPet || firstReadyPet || firstSavedPet;
+        if (!pet?.apiProfileId) {
+            editingOwnerKeyRef.current = ownerKey;
+            hydratedPetProfileIdRef.current = undefined;
+            setEditingPetProfileId(undefined);
+            return;
+        }
+        const resetTarget = ownerChanged || hydratedPetProfileIdRef.current !== pet.apiProfileId;
+        if (!resetTarget) return;
         const hydrateId = window.setTimeout(() => {
             editingOwnerKeyRef.current = ownerKey;
-            hydratedTargetRef.current = true;
-            setEditingPetProfileId((current) => resetTarget ? pet.apiProfileId : current || pet.apiProfileId);
-            setName((current) => resetTarget ? pet.name || "" : current || pet.name || "");
-            setAge((current) => resetTarget ? pet.age || "" : current || pet.age || "");
-            setSize((current) => resetTarget ? pet.size || "medium" : current);
-            setCoat((current) => resetTarget ? pet.coat || "medium" : current);
-            setActivity((current) => resetTarget ? pet.activity || "normal" : current);
-            setConcerns((current) => resetTarget ? pet.concerns?.length ? pet.concerns : ["산책 안전"] : current);
+            hydratedPetProfileIdRef.current = pet.apiProfileId;
+            setEditingPetProfileId(pet.apiProfileId);
+            setName(pet.name || "");
+            setAge(pet.age || "");
+            setSize(pet.size || "medium");
+            setCoat(pet.coat || "medium");
+            setActivity(pet.activity || "normal");
+            setConcerns(pet.concerns?.length ? pet.concerns : ["산책 안전"]);
             const restored = hasVerifiedPetPhoto(pet)
                 ? restorePetLensPhotoViews(pet.photoViews, pet.photoDataUrl)
                 : {};
             const primary = primaryPetLensPhotoEntry(restored)?.[1].dataUrl || pet.photoDataUrl;
-            setPhotoDataUrl((current) => resetTarget ? primary : current || primary);
-            setPhotoViews((current) => {
-                const next = resetTarget || !Object.keys(current).length ? restored : current;
-                photoViewsRef.current = next;
-                return next;
-            });
+            setPhotoDataUrl(primary);
+            photoViewsRef.current = restored;
+            setPhotoViews(restored);
+            setResult(null);
+            setAnalysisError("");
         }, 0);
         return () => window.clearTimeout(hydrateId);
     }, [editingPetProfileId, user]);
@@ -98,6 +106,18 @@ export default function PetLensClient() {
                 ? current.filter((item) => item !== concern)
                 : [...current, concern]
         );
+    };
+
+    const selectPetProfile = (petProfileId: number) => {
+        const target = user?.pets.find((pet) => pet.apiProfileId === petProfileId && pet.breed?.trim());
+        if (!target?.apiProfileId || loading || photoLoading) return;
+        hydratedPetProfileIdRef.current = undefined;
+        photoViewsRef.current = {};
+        setPhotoViews({});
+        setPhotoDataUrl(undefined);
+        setResult(null);
+        setAnalysisError("");
+        setEditingPetProfileId(target.apiProfileId);
     };
 
     const handleFile = async (viewId: PetLensPhotoViewId, file?: File) => {
@@ -128,10 +148,12 @@ export default function PetLensClient() {
         setAnalysisError("");
         trackStorefrontEvent("petlens_started", { mode: "photo", surface: "page" });
         try {
-            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
-                || (!editingPetProfileId ? user?.pets[0] : undefined);
+            const confirmedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId);
             if (!user || !confirmedPet?.apiProfileId) {
                 throw new Error("회원 반려견 프로필을 먼저 선택해 주세요.");
+            }
+            if (hydratedPetProfileIdRef.current !== confirmedPet.apiProfileId) {
+                throw new Error("선택한 반려견 정보를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.");
             }
             if (!confirmedPet.breed?.trim()) {
                 throw new Error("마이페이지에서 실제 견종을 먼저 확인해 주세요.");
@@ -198,8 +220,7 @@ export default function PetLensClient() {
         }
     };
 
-    const selectedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId)
-        || (!editingPetProfileId ? user?.pets[0] : undefined);
+    const selectedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId);
     const gateService = mode === "observation" ? "daenglab" : "petlens";
     if (!hydrated) {
         return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="loading" service={gateService} /></main>;
@@ -208,10 +229,20 @@ export default function PetLensClient() {
         return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="login" service={gateService} /></main>;
     }
     if (!selectedPet?.apiProfileId) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="profile" service={gateService} /></main>;
+        return (
+            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+                <PetLensPetSelector pets={user.pets} selectedPetProfileId={editingPetProfileId} onChange={selectPetProfile} />
+                <PetLensMemberGate reason="profile" service={gateService} />
+            </main>
+        );
     }
     if (!selectedPet.breed?.trim()) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="breed" service={gateService} /></main>;
+        return (
+            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+                <PetLensPetSelector pets={user.pets} selectedPetProfileId={editingPetProfileId} onChange={selectPetProfile} />
+                <PetLensMemberGate reason="breed" service={gateService} />
+            </main>
+        );
     }
 
     return (
@@ -239,10 +270,23 @@ export default function PetLensClient() {
                 )}
             </header>
 
+            <PetLensPetSelector
+                pets={user.pets}
+                selectedPetProfileId={editingPetProfileId}
+                disabled={loading || photoLoading}
+                onChange={selectPetProfile}
+            />
+
             <PetLensModeTabs mode={mode} onChange={setMode} />
 
             {mode === "observation" ? (
-                <PetLensObservationExperience pet={selectedPet} accessToken={user.apiAccessToken} variant="page" />
+                <PetLensObservationExperience
+                    key={selectedPet.apiProfileId}
+                    pet={selectedPet}
+                    petProfileId={selectedPet.apiProfileId}
+                    accessToken={user.apiAccessToken}
+                    variant="page"
+                />
             ) : (
             <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface grid h-fit gap-4 p-5">

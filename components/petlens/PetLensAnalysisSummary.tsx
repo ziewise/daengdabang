@@ -69,22 +69,29 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                 </section>
             )}
 
+            {details.confirmedBreed && (
+                <section className="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4">
+                    <p className="text-xs font-black text-indigo-700">회원이 확인한 등록 견종</p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <strong className="text-base font-black text-neutral-950">{details.confirmedBreed}</strong>
+                        <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700">회원 확인</span>
+                    </div>
+                    <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
+                        등록 견종은 상품·케어 기준으로 사용하며, 아래 사진 후보와 구분해서 보여드려요.
+                    </p>
+                </section>
+            )}
+
             {details.breedCandidates.length > 0 && (
                 <section className="rounded-2xl border border-neutral-200 bg-white p-4">
                     <div className="mb-3 flex items-end justify-between gap-3">
-                        <p className="text-xs font-black text-neutral-500">
-                            {details.confirmedBreed ? "회원가입에서 확인한 견종" : "가까운 견종 후보"}
-                        </p>
-                        <span className="text-[10px] font-bold text-neutral-400">
-                            {details.confirmedBreed ? "사진 결과보다 회원 정보를 우선해요" : "보호자 확인 전에는 저장하지 않아요"}
-                        </span>
+                        <p className="text-xs font-black text-neutral-500">사진에서 본 가까운 견종 후보</p>
+                        <span className="text-[10px] font-bold text-neutral-400">등록 견종을 자동으로 바꾸지 않아요</span>
                     </div>
                     <div className="grid gap-2 sm:grid-cols-3">
                         {details.breedCandidates.map((candidate, index) => (
                             <article key={candidate.label} className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3">
-                                <p className="text-[10px] font-black text-indigo-500">
-                                    {details.confirmedBreed ? "등록 견종" : `후보 ${index + 1}`}
-                                </p>
+                                <p className="text-[10px] font-black text-indigo-500">후보 {index + 1}</p>
                                 <p className="mt-1 text-sm font-black text-neutral-950">{candidate.label}</p>
                                 <span className="mt-2 inline-flex rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
                                     {candidate.confidenceLabel}

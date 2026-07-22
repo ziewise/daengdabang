@@ -5,7 +5,9 @@ import Link from "next/link";
 import {
     analyzePetObservation,
     loadPetObservationEngineStatus,
+    loadPetObservationHistory,
     PetObservationRequestError,
+    type PetObservationHistoryItem,
     type PetObservationResult,
     type PetObservationSituation,
 } from "@/lib/petlens-observation";
@@ -13,6 +15,7 @@ import { DdbApiError, loadDaengLabWallet, type DaengLabWallet } from "@/lib/cust
 import { useAuth, type PetProfile } from "@/lib/store";
 import { usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
+import PetLensObservationHistory from "@/components/petlens/PetLensObservationHistory";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
@@ -36,11 +39,12 @@ function analysisRequestId() {
 
 type Props = {
     pet: Pick<PetProfile, "name" | "breed" | "age">;
+    petProfileId: number;
     accessToken?: string;
     variant?: "page" | "modal";
 };
 
-export default function PetLensObservationExperience({ pet, accessToken, variant = "page" }: Props) {
+export default function PetLensObservationExperience({ pet, petProfileId, accessToken, variant = "page" }: Props) {
     const { logout } = useAuth();
     const {
         videoRef,
@@ -65,6 +69,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     } = usePetLensMediaCapture();
     const abortRef = useRef<AbortController | null>(null);
     const engineAbortRef = useRef<AbortController | null>(null);
+    const historyAbortRef = useRef<AbortController | null>(null);
     const requestIdRef = useRef<string | null>(null);
     const [consent, setConsent] = useState(false);
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
@@ -76,6 +81,8 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
     const [walletLoading, setWalletLoading] = useState(true);
     const [walletError, setWalletError] = useState("");
     const [engineState, setEngineState] = useState<"checking" | "ready" | "unavailable">("checking");
+    const [history, setHistory] = useState<PetObservationHistoryItem[]>([]);
+    const [historyLoading, setHistoryLoading] = useState(true);
 
     const publishWallet = useCallback((next: DaengLabWallet) => {
         setWallet(next);
@@ -113,6 +120,30 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         }
     }, [accessToken, logout, publishWallet]);
 
+    const refreshHistory = useCallback(async () => {
+        historyAbortRef.current?.abort();
+        const controller = new AbortController();
+        historyAbortRef.current = controller;
+        setHistoryLoading(true);
+        try {
+            const items = await loadPetObservationHistory({
+                petProfileId,
+                accessToken,
+                limit: 8,
+                signal: controller.signal,
+            });
+            if (!controller.signal.aborted) setHistory(items);
+        } catch (reason) {
+            if (!(reason instanceof DOMException && reason.name === "AbortError") && !controller.signal.aborted) {
+                // History was deployed after the capture UI. Keep the primary
+                // analysis flow available while older API processes roll over.
+                setHistory([]);
+            }
+        } finally {
+            if (!controller.signal.aborted) setHistoryLoading(false);
+        }
+    }, [accessToken, petProfileId]);
+
     useEffect(() => {
         const timer = window.setTimeout(() => void refreshEngine(), 0);
         return () => {
@@ -138,6 +169,14 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         };
     }, [refreshWallet]);
 
+    useEffect(() => {
+        const refreshTimer = window.setTimeout(() => void refreshHistory(), 0);
+        return () => {
+            window.clearTimeout(refreshTimer);
+            historyAbortRef.current?.abort();
+        };
+    }, [refreshHistory]);
+
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
         if (engineState !== "ready") {
@@ -160,6 +199,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
             const next = await analyzePetObservation({
                 clip,
                 durationSeconds,
+                petProfileId,
                 petName: pet.name,
                 breed: pet.breed,
                 age: pet.age,
@@ -183,6 +223,7 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
             trackStorefrontEvent("petlens_completed", { mode: "observation", surface: variant });
             requestIdRef.current = null;
             resetCapture();
+            void refreshHistory();
         } catch (reason) {
             if (controller.signal.aborted) return;
             const insufficient = reason instanceof PetObservationRequestError
@@ -217,6 +258,14 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
         setResult(null);
         requestIdRef.current = null;
         resetCapture();
+    };
+
+    const openHistoryResult = (item: PetObservationHistoryItem) => {
+        abortRef.current?.abort();
+        setAnalyzing(false);
+        setAnalysisError("");
+        resetCapture();
+        setResult(item.result);
     };
 
     if (result) {
@@ -309,8 +358,8 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                     className="mt-4 rounded-xl border border-white/90 bg-white/75 px-3.5 py-3 text-xs font-bold leading-5 text-neutral-600 shadow-sm"
                     data-daenglab-service-description
                 >
-                    댕랩은 AI 딥러닝 모델과 반려동물 행동 연구를 바탕으로 카메라·마이크 신호를 개별 분석해,
-                    우리 아이에게 맞는 행동·소리 관찰 결과를 제공합니다.
+                    댕랩은 카메라 영상과 포함 음성을 함께 분석해,
+                    우리 아이의 행동·소리에서 보이는 관찰 신호와 가능한 맥락을 정리합니다.
                 </p>
             </div>
 
@@ -361,6 +410,12 @@ export default function PetLensObservationExperience({ pet, accessToken, variant
                     </p>
                 )}
             </div>
+
+            <PetLensObservationHistory
+                items={history}
+                loading={historyLoading}
+                onOpen={openHistoryResult}
+            />
 
             <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4" data-petlens-emergency-preflight>
                 <p className="text-xs font-black text-rose-900">이럴 때는 촬영보다 병원 연락이 먼저예요</p>

@@ -68,6 +68,7 @@ export type PetObservationSituation =
 export type PetObservationRequest = {
     clip: File;
     durationSeconds: number;
+    petProfileId: number;
     petName?: string;
     breed?: string;
     age?: string;
@@ -76,6 +77,17 @@ export type PetObservationRequest = {
     accessToken?: string;
     signal?: AbortSignal;
     requestId: string;
+};
+
+export type PetObservationHistoryItem = {
+    id: string;
+    requestId: string;
+    petProfileId: number;
+    petName?: string;
+    chargeStatus?: string;
+    createdAt: string;
+    completedAt?: string;
+    result: PetObservationResult;
 };
 
 export type PetObservationEngineStatus = {
@@ -308,14 +320,77 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     };
 }
 
+function historyRows(value: unknown) {
+    if (Array.isArray(value)) return value;
+    const envelope = record(value);
+    return Array.isArray(envelope?.items) ? envelope.items : [];
+}
+
+function parsePetObservationHistoryItem(value: unknown, expectedPetProfileId: number): PetObservationHistoryItem | null {
+    const row = record(value);
+    if (!row) return null;
+    const requestId = line(row.request_id ?? row.requestId, 120);
+    const petProfileIdValue = Number(row.pet_profile_id ?? row.petProfileId ?? expectedPetProfileId);
+    const createdAt = line(row.created_at ?? row.createdAt, 80);
+    const rawResult = row.result ?? row.analysis_result ?? row.analysisResult;
+    if (!requestId || !Number.isInteger(petProfileIdValue) || petProfileIdValue !== expectedPetProfileId || !createdAt) {
+        return null;
+    }
+    try {
+        return {
+            id: requestId,
+            requestId,
+            petProfileId: petProfileIdValue,
+            petName: line(row.pet_name ?? row.petName, 100) || undefined,
+            chargeStatus: line(row.charge_status ?? row.chargeStatus, 40) || undefined,
+            createdAt,
+            completedAt: line(row.completed_at ?? row.completedAt, 80) || undefined,
+            result: parsePetObservationResult(rawResult),
+        };
+    } catch {
+        return null;
+    }
+}
+
+export async function loadPetObservationHistory(options: {
+    petProfileId: number;
+    accessToken?: string;
+    limit?: number;
+    signal?: AbortSignal;
+}): Promise<PetObservationHistoryItem[]> {
+    const base = ddbApiBase();
+    const token = options.accessToken || getCustomerToken();
+    if (!base || !token || !Number.isInteger(options.petProfileId) || options.petProfileId <= 0) return [];
+    const limit = Math.max(1, Math.min(20, Math.trunc(options.limit ?? 8)));
+    const query = new URLSearchParams({
+        pet_profile_id: String(options.petProfileId),
+        limit: String(limit),
+    });
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/observations?${query.toString()}`, {
+        cache: "no-store",
+        headers: { Authorization: `Bearer ${token}` },
+        signal: options.signal,
+    });
+    if ([404, 405, 501].includes(response.status)) return [];
+    if (!response.ok) throw new Error("최근 행동·소리 분석 기록을 불러오지 못했습니다.");
+    return historyRows(await response.json())
+        .map((item) => parsePetObservationHistoryItem(item, options.petProfileId))
+        .filter((item): item is PetObservationHistoryItem => Boolean(item))
+        .slice(0, limit);
+}
+
 export async function analyzePetObservation(request: PetObservationRequest): Promise<PetObservationResult> {
     const base = ddbApiBase();
     if (!base) throw new Error("지금은 댕랩 행동·소리 분석을 사용할 수 없습니다.");
     const token = request.accessToken || getCustomerToken();
     if (!token) throw new Error("로그인 정보를 다시 확인해 주세요.");
+    if (!Number.isInteger(request.petProfileId) || request.petProfileId <= 0) {
+        throw new Error("분석할 반려견 프로필을 다시 선택해 주세요.");
+    }
 
     const form = new FormData();
     form.append("clip", request.clip);
+    form.append("pet_profile_id", String(request.petProfileId));
     form.append("context", JSON.stringify({
         pet_name: request.petName || "우리 아이",
         breed: request.breed || "",

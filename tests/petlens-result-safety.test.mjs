@@ -27,7 +27,7 @@ test("PetLens customer results hide provider and fallback diagnostics", async ()
     assert.doesNotMatch(source, /summary\.push\(`Caution:/);
 });
 
-test("PetLens only patches photos for an explicitly matched existing pet", async () => {
+test("PetLens only analyzes and patches the explicitly selected existing pet", async () => {
     const [pageSource, modalSource, customerApi, companionSource] = await Promise.all([
         readSource("app/pet-lens/PetLensClient.tsx"),
         readSource("components/petlens/PetLensModalContent.tsx"),
@@ -36,21 +36,27 @@ test("PetLens only patches photos for an explicitly matched existing pet", async
     ]);
 
     for (const source of [pageSource, modalSource]) {
-        assert.match(source, /isPetLensAnalysisReadyForProfileSave\(profile\.rawAnalysis\) && Boolean\(profile\.breed\?\.trim\(\)\)/);
+        assert.match(source, /PetLensPetSelector/);
+        assert.match(source, /data-petlens-pet-selector|<PetLensPetSelector/);
         assert.match(source, /const confirmedPet = user\?\.pets\.find\(/);
-        assert.match(source, /if \(user && confirmedPet\?\.apiProfileId\)/);
+        assert.match(source, /hydratedPetProfileIdRef\.current !== confirmedPet\.apiProfileId/);
         assert.match(source, /const profileToSave = \{[\s\S]*?\.\.\.confirmedPet/);
         assert.match(source, /photoViews: persistedPhotoViews/);
         assert.match(source, /await savePetProfilePhotosSmart\(profileToSave, user\.apiAccessToken\)/);
         assert.doesNotMatch(source, /await savePetProfileSmart\(/);
 
         const submitStart = source.indexOf("const submit = async");
-        const submitEnd = source.indexOf("return (", submitStart);
+        const submitEnd = source.indexOf("const selectedPet", submitStart);
         assert.ok(submitStart >= 0 && submitEnd > submitStart);
         const submitSource = source.slice(submitStart, submitEnd);
-        assert.doesNotMatch(submitSource, /(?:\?\?|\|\|)\s*user\?\.pets\[0\]/);
-        assert.match(submitSource, /const draftSaved = savePetLensSignupDraft\(profile\)/);
-        assert.match(submitSource, /if \(user\) \{/);
+        assert.doesNotMatch(submitSource, /pets\??\.?\[0\]/);
+        assert.doesNotMatch(submitSource, /(?:\?\?|\|\|)[\s\S]{0,40}pets/);
+
+        const selectionStart = source.indexOf("const selectedPet", submitEnd);
+        const selectionEnd = source.indexOf("const gateService", selectionStart);
+        const selectionSource = source.slice(selectionStart, selectionEnd);
+        assert.match(selectionSource, /find\(\(pet\) => pet\.apiProfileId === editingPetProfileId\)/);
+        assert.doesNotMatch(selectionSource, /pets\??\.?\[0\]/);
     }
 
     const photoPatchStart = customerApi.indexOf("export async function savePetProfilePhotosSmart");
@@ -67,6 +73,21 @@ test("PetLens only patches photos for an explicitly matched existing pet", async
     assert.match(companionSource, /if \(!petHasCompanionIdentity\(pet\)\) return null/);
     assert.match(companionSource, /user\?\.pets\.find\(petHasCompanionIdentity\)/);
     assert.match(companionSource, /enabled: !pet \|\| Boolean\(profileBreedId \|\| memberBreedId\)/);
+});
+
+test("confirmed member identity never upgrades an unusable photo inference", async () => {
+    const [source, summary] = await Promise.all([
+        readSource("lib/daengdabang-llm.ts"),
+        readSource("components/petlens/PetLensAnalysisSummary.tsx"),
+    ]);
+
+    assert.match(source, /canUsePetLensInferenceForRecommendations\(analysis\.details\)/);
+    assert.match(source, /if \(!inferenceReady\) \{[\s\S]*?products: \[\][\s\S]*?canRecommendProducts: false/);
+    assert.doesNotMatch(source, /breedCandidates: \[\{ label: confirmedBreed/);
+    assert.match(source, /member_confirmed_breed: confirmedBreed/);
+    assert.match(summary, /회원이 확인한 등록 견종/);
+    assert.match(summary, /사진에서 본 가까운 견종 후보/);
+    assert.doesNotMatch(summary, /details\.confirmedBreed \? "회원가입에서 확인한 견종"/);
 });
 
 test("PetLens recommendations prioritize walking safety when selected", async () => {

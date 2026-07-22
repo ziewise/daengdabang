@@ -46,7 +46,7 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.match(tabs, /DaengLabServiceTitle/);
     assert.match(modal, /DaengLabServiceTitle/);
     assert.match(experience, /data-daenglab-service-description/);
-    assert.match(experience, /AI 딥러닝 모델과 반려동물 행동 연구/);
+    assert.match(experience, /카메라 영상과 포함 음성을 함께 분석/);
     assert.match(modal, /mode === "observation" \? "daenglab" : "petlens"/);
     assert.match(memberGate, /data-daenglab-member-gate/);
     assert.match(memberGate, /카메라·마이크 신호를 개별 분석하는 회원 전용 서비스/);
@@ -84,14 +84,42 @@ test("live capture requests camera and microphone and cleans every local media h
 
 
 test("observation upload is authenticated, abortable, and separate from profile persistence", async () => {
-    const api = await source("lib/petlens-observation.ts");
+    const [api, experience] = await Promise.all([
+        source("lib/petlens-observation.ts"),
+        source("components/petlens/PetLensObservationExperience.tsx"),
+    ]);
     assert.match(api, /\/api\/v1\/pet-lens\/observe/);
     assert.match(api, /Authorization: `Bearer \$\{token\}`/);
     assert.match(api, /signal: request\.signal/);
+    assert.match(api, /petProfileId: number/);
+    assert.match(api, /form\.append\("pet_profile_id", String\(request\.petProfileId\)\)/);
+    assert.match(experience, /petProfileId=\{selectedPet\.apiProfileId\}|petProfileId,/);
+    assert.match(experience, /petProfileId,/);
     assert.match(api, /mediaRetention: "not_stored"/);
     assert.match(api, /짖음은 사람 문장처럼 번역할 수 없으며/);
     assert.match(api, /분석 결과를 기다리지 말고 가까운 응급 동물병원에 즉시 연락/);
     assert.doesNotMatch(api, /savePetProfile|upsertPet|photoDataUrl/);
+});
+
+
+test("observation history is scoped to the selected pet and can reopen parsed results", async () => {
+    const [api, experience, history] = await Promise.all([
+        source("lib/petlens-observation.ts"),
+        source("components/petlens/PetLensObservationExperience.tsx"),
+        source("components/petlens/PetLensObservationHistory.tsx"),
+    ]);
+    assert.match(api, /\/api\/v1\/pet-lens\/observations\?\$\{query\.toString\(\)\}/);
+    assert.match(api, /pet_profile_id: String\(options\.petProfileId\)/);
+    assert.match(api, /\[404, 405, 501\]\.includes\(response\.status\)/);
+    assert.match(api, /petProfileIdValue !== expectedPetProfileId/);
+    assert.match(api, /parsePetObservationResult\(rawResult\)/);
+    assert.match(experience, /loadPetObservationHistory\(\{/);
+    assert.match(experience, /petProfileId,/);
+    assert.match(experience, /setResult\(item\.result\)/);
+    assert.match(experience, /void refreshHistory\(\)/);
+    assert.match(history, /data-petlens-observation-history/);
+    assert.match(history, /onOpen\(item\)/);
+    assert.match(history, /원본 영상 없이 분석 결과만 다시 확인/);
 });
 
 
