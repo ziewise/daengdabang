@@ -1,5 +1,7 @@
 import { ddbApiBase, getCustomerToken } from "@/lib/customer-api";
 
+export const PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260723-v1";
+
 export type PetObservationUrgencyLevel = "emergency" | "same_day" | "observe" | "unclear";
 export type PetObservationConfidence = "high" | "medium" | "low";
 
@@ -77,6 +79,7 @@ export type PetObservationRequest = {
     accessToken?: string;
     signal?: AbortSignal;
     requestId: string;
+    privacyConsent: boolean;
 };
 
 export type PetObservationHistoryItem = {
@@ -106,10 +109,12 @@ export async function loadPetObservationEngineStatus(signal?: AbortSignal): Prom
         observation_engine_ready?: unknown;
         observation_camera_enabled?: unknown;
         observation_audio_enabled?: unknown;
+        observation_privacy_notice_version?: unknown;
     };
     const ready = body.observation_engine_ready === true
         && body.observation_camera_enabled === true
-        && body.observation_audio_enabled === true;
+        && body.observation_audio_enabled === true
+        && body.observation_privacy_notice_version === PET_OBSERVATION_PRIVACY_NOTICE_VERSION;
     return { ready };
 }
 
@@ -185,6 +190,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const rawUrgency = record(raw?.urgency);
     if (!raw || !rawQuality || !rawUrgency) {
         throw new Error("관찰 결과 형식을 확인하지 못했습니다.");
+    }
+    const mediaRetention = raw.media_retention ?? raw.mediaRetention;
+    if (mediaRetention !== "not_stored") {
+        throw new Error("관찰 결과의 원본 동영상 보관 상태를 확인하지 못했습니다.");
     }
 
     const qualityLevel = rawQuality.level === "good" || rawQuality.level === "limited" || rawQuality.level === "unusable"
@@ -311,7 +320,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             "영상 관찰은 수의사의 진찰이나 검사를 대신하지 않습니다.",
             ...lines(raw.limitations, 4, 200),
         ])).slice(0, 4),
-        mediaRetention: "not_stored",
+        mediaRetention,
         ...(hasCoinCost ? { daengLabCoinCost: coinCostValue } : {}),
         ...(hasCoinBalance ? { daengLabCoinBalance: coinBalanceValue } : {}),
         ...((raw.daenglab_coin_refunded ?? raw.daengLabCoinRefunded) === true
@@ -387,6 +396,9 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
     if (!Number.isInteger(request.petProfileId) || request.petProfileId <= 0) {
         throw new Error("분석할 반려견 프로필을 다시 선택해 주세요.");
     }
+    if (request.privacyConsent !== true) {
+        throw new Error("영상·음성 분석 개인정보 동의를 다시 확인해 주세요.");
+    }
 
     const form = new FormData();
     form.append("clip", request.clip);
@@ -400,6 +412,8 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         duration_seconds: request.durationSeconds,
     }));
     form.append("request_id", request.requestId);
+    form.append("privacy_consent", "true");
+    form.append("privacy_notice_version", PET_OBSERVATION_PRIVACY_NOTICE_VERSION);
     const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/observe`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },

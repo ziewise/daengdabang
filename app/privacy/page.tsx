@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO } from "@/lib/legal";
 
-const PRIVACY_UPDATED_AT = "2026-07-20";
+const PRIVACY_UPDATED_AT = "2026-07-23";
+const DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260723-v1";
 
 export const metadata: Metadata = {
     title: "개인정보처리방침 | 댕다방",
@@ -95,9 +96,9 @@ const consentRows = [
     ],
     [
         "댕랩 행동·소리 분석(PetLens 관찰 기능)",
-        "이용자가 별도로 동의하고 촬영·선택한 2~12초 반려견 영상·포함 음성, 등록된 반려견 이름·견종·나이, 촬영 상황 메모, 관찰 분석 결과",
+        "이용자가 별도로 동의하고 촬영·선택한 2~12초 반려견 영상·포함 음성, 등록된 반려견 이름·견종·나이, 촬영 상황 메모, 관찰 분석 결과, 원본의 SHA-256 해시, 동의 증적(동의 영수증)과 요청 기록",
         "반려견의 소리·자세·움직임·호흡 모습에 대한 관찰 보조와 응급 가능 신호 안내",
-        "원본 영상·음성은 분석 요청 중에만 일시 처리하고 댕다방 서버에 저장하지 않음. 결과도 반려견 프로필에 자동 저장하지 않음. 외부 분석 제공자의 보안·오남용 방지 목적 처리에는 해당 제공자의 정책이 적용됨",
+        "원본 영상·음성은 분석 요청 중에만 일시 처리하고 댕다방 서버에 보관하지 않음. 분석 결과, 원본의 SHA-256 해시, 동의 증적(동의 영수증)과 요청 기록은 이용자가 삭제를 요청하거나 회원 탈퇴할 때까지 보관",
     ],
     [
         "마케팅 수신",
@@ -119,7 +120,19 @@ const outsourcingRows = [
     ["호스팅·보안·CDN", BUSINESS_INFO.hostingProvider, "웹사이트 제공, 트래픽 처리, 보안, 장애 대응"],
     ["고객 알림", "이메일·문자·카카오 알림 발송 사업자(연동 시 고지)", "주문, 배송, 상담, 마케팅 수신동의 알림 발송"],
     ["가입 혜택 이메일 인증", "선택된 이메일 발송 사업자(연동 시 사업자명 고지 및 정책 반영)", "인증번호 발송을 위해 이메일주소를 발송 처리 중 전달"],
-    ["이미지·영상·음성 자동 분석", "외부 자동 분석 제공자(기능 사용 직전 별도 고지 및 동의)", "PetLens 이미지 분석, 짧은 행동 관찰 및 맞춤 추천"],
+    ["이미지·영상·음성 자동 분석", "Google LLC", "PetLens 이미지 분석과 댕랩 행동·소리 관찰 결과 생성"],
+];
+
+const overseasRows = [
+    [
+        "Google LLC (개인정보 문의: https://policies.google.com/privacy?hl=ko)",
+        "미국 등 Google이 서비스를 운영하는 국가·지역",
+        "이용자가 촬영·선택한 원본 반려견 영상과 포함 음성, 등록된 반려견 이름·견종·나이, 촬영 상황 메모",
+        "이용자가 댕랩 행동·소리 분석에 명시적으로 동의하고 분석을 실행할 때 암호화된 HTTPS 통신으로 이전",
+        "영상·음성에서 관찰되는 신호와 가능한 맥락을 분석하여 결과 생성",
+        "분석 기능 운영을 위한 임시 처리는 최대 24시간, 안전·오남용 방지 기록은 최대 55일 범위에서 제공자 정책에 따라 제한적으로 처리될 수 있음",
+        "동의하지 않거나 전송을 거부할 수 있으며, 이 경우 댕랩 행동·소리 분석 기능을 이용할 수 없음",
+    ],
 ];
 
 const complaintRows = [
@@ -271,11 +284,13 @@ export default function PrivacyPage() {
             <section id="overseas" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">제6조 개인정보 국외이전</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    현재 {BUSINESS_INFO.companyName}는 이용자 개인정보를 상시적으로 국외 이전하지 않습니다. 다만
-                    글로벌 클라우드, 보안, 이미지 자동 분석 등 국외 이전이 필요한 기능을 운영 환경에 연결하는 경우
-                    이전받는 자, 이전 국가, 이전 항목, 이전 일시·방법, 이용 목적, 보유기간, 이전 거부 방법을 별도
-                    고지하고 필요한 동의를 받습니다.
+                    댕랩 행동·소리 분석은 이용자가 별도로 동의하고 직접 실행할 때 분석에 필요한 정보만 보안 연결로
+                    전송합니다. 이전받는 사업자와 처리 범위는 아래 표에서 확인할 수 있습니다.
                 </p>
+                <DataTable
+                    headers={["이전받는 자·서비스", "이전 국가", "이전 항목", "이전 일시·방법", "이용 목적", "보유·처리 경계", "거부 방법·효과"]}
+                    rows={overseasRows}
+                />
             </section>
 
             <section id="location" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
@@ -350,7 +365,8 @@ export default function PrivacyPage() {
                     PetLens의 반려견 사진 분석, 견종·체형 추정, 상품 추천은 자동화된 분석 결과를 포함할 수 있습니다.
                     이 결과는 쇼핑 편의를 위한 참고 정보이며, 이용자에게 법적 효과나 중대한 영향을 미치는 결정을
                     자동으로 확정하지 않습니다. 이용자는 추천 결과에 대해 설명을 요청하거나 프로필 정보를 수정·삭제하여
-                    재분석을 요청할 수 있습니다.
+                    재분석을 요청할 수 있습니다. 댕랩 행동·소리 분석은 짧은 영상과 포함 음성을 자동으로 살펴 참고 결과를
+                    제공하며, 댕다방이 자체 학습한 수의학적 진단 모델이나 수의사의 진단을 대신하는 기능이 아닙니다.
                 </p>
             </section>
 
@@ -401,7 +417,10 @@ export default function PrivacyPage() {
                     최소 30일 전부터 공지합니다.
                 </p>
                 <p className="mt-3 text-sm font-bold leading-7 text-neutral-600">
-                    개인정보처리방침 버전: v1.2 / 시행일: {PRIVACY_UPDATED_AT}
+                    개인정보처리방침 버전: v1.3 / 시행일: {PRIVACY_UPDATED_AT}
+                </p>
+                <p className="mt-1 text-sm font-bold leading-7 text-neutral-600">
+                    댕랩 행동·소리 분석 개인정보 고지 버전: {DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION}
                 </p>
             </section>
         </main>

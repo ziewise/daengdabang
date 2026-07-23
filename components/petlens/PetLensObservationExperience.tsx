@@ -208,6 +208,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 accessToken,
                 signal: controller.signal,
                 requestId,
+                privacyConsent: consent,
             });
             setResult(next);
             if (typeof next.daengLabCoinBalance === "number") {
@@ -245,6 +246,8 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 errorCode: insufficient ? "daenglab_coin_insufficient" : "analysis_failed",
             });
             setAnalysisError(reason instanceof Error ? reason.message : "관찰 분석을 완료하지 못했습니다.");
+            requestIdRef.current = null;
+            resetCapture();
         } finally {
             if (!controller.signal.aborted) setAnalyzing(false);
         }
@@ -645,8 +648,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             className="mt-0.5 h-4 w-4 shrink-0"
                         />
                         <span className="text-[11px] font-bold leading-5 text-neutral-700">
-                            카메라·마이크 원본, 등록된 반려견 정보와 입력한 촬영 상황이 분석을 위해 외부 자동 분석 서비스로 암호화 전송되는 데 동의합니다.
-                            원본은 댕다방 서버에 저장하지 않으며 분석 요청이 끝나면 브라우저에서도 비웁니다.
+                            촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리되는 데 동의합니다.
+                            원본은 댕다방 서버에 저장하지 않으며 분석이 끝나면 브라우저에서도 비웁니다.{" "}
+                            <Link href="/privacy#overseas" className="underline underline-offset-2">개인정보 처리 자세히 보기</Link>
                         </span>
                     </label>
                     <div className="rounded-xl bg-neutral-50 p-3 text-[10px] font-bold leading-5 text-neutral-500">

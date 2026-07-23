@@ -126,9 +126,17 @@ test("observation history is scoped to the selected pet and can reopen parsed re
 test("customer flow requires explicit media consent and shows emergency-first guidance", async () => {
     const experience = await source("components/petlens/PetLensObservationExperience.tsx");
     const result = await source("components/petlens/PetLensObservationResult.tsx");
+    const api = await source("lib/petlens-observation.ts");
     assert.match(experience, /checked=\{consent\}/);
-    assert.match(experience, /등록된 반려견 정보와 입력한 촬영 상황이 분석을 위해 외부 자동 분석 서비스로 암호화 전송/);
+    assert.doesNotMatch(experience, /Gemini|Google LLC/);
+    assert.match(experience, /촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리/);
     assert.match(experience, /원본은 댕다방 서버에 저장하지 않/);
+    assert.match(experience, /privacyConsent: consent/);
+    assert.match(experience, /resetCapture\(\);/);
+    assert.match(api, /PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260723-v1"/);
+    assert.match(api, /form\.append\("privacy_consent", "true"\)/);
+    assert.match(api, /form\.append\("privacy_notice_version", PET_OBSERVATION_PRIVACY_NOTICE_VERSION\)/);
+    assert.match(api, /observation_privacy_notice_version === PET_OBSERVATION_PRIVACY_NOTICE_VERSION/);
     assert.match(experience, /if \(!nextConsent\) resetCapture\(\)/);
     assert.match(experience, /disabled=\{analyzing \|\| !consent \|\| walletLoading \|\| !hasEnoughCoins \|\| !engineReady\}/);
     assert.match(experience, /촬영보다 병원 연락이 먼저/);
@@ -140,6 +148,12 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(result, /질병 진단이 아니라/);
     assert.match(result, /data-observation-urgency/);
     assert.match(result, /24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90/);
+    assert.match(result, /data-daenglab-video-retention-notice/);
+    assert.match(result, /원본 동영상은 댕다방 서버에 저장되지 않습니다\./);
+    assert.doesNotMatch(result, /Gemini|Google LLC|외부 자동 분석 서비스/);
+    assert.match(result, /보안 연결로 분석 중에만 일시 처리하며, 댕다방은 원본이 아닌 분석 결과만 보관/);
+    assert.match(api, /mediaRetention !== "not_stored"/);
+    assert.match(api, /원본 동영상 보관 상태를 확인하지 못했습니다/);
 });
 
 

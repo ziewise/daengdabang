@@ -78,7 +78,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                         영상·소리 통합 관찰
                     </span>
                     <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
-                        댕다방 원본 미저장
+                        원본 영상 미저장
                     </span>
                 </div>
                 <h3 className="mt-3 text-lg font-black leading-7">{result.urgency.headline}</h3>
@@ -103,6 +103,25 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                         가까운 24시 동물병원 찾기
                     </a>
                 )}
+            </section>
+
+            <section
+                className="rounded-2xl border border-sky-200 bg-sky-50 p-4"
+                data-daenglab-video-retention-notice
+            >
+                <div className="flex items-start gap-3">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-sky-700" aria-hidden="true">
+                        <i className="fa-solid fa-shield-halved text-xs" />
+                    </span>
+                    <div>
+                        <p className="text-xs font-black leading-5 text-sky-950">
+                            원본 동영상은 댕다방 서버에 저장되지 않습니다.
+                        </p>
+                        <p className="mt-1 text-[11px] font-bold leading-5 text-sky-800">
+                            보안 연결로 분석 중에만 일시 처리하며, 댕다방은 원본이 아닌 분석 결과만 보관합니다.
+                        </p>
+                    </div>
+                </div>
             </section>
 
             <section className="rounded-2xl border border-neutral-200 bg-white p-4">
