@@ -37,8 +37,15 @@ const TURNSTILE_TEST_SITE_KEYS = new Set([
     "3x00000000000000000000FF",
 ]);
 
+// This is a public, hostname-restricted browser identifier, not the server secret.
+// Keep a production fallback in the client bundle so static hosting cannot lose the
+// challenge when a build runner omits NEXT_PUBLIC_* replacement.
+const PRODUCTION_TURNSTILE_SITE_KEY = "0x4AAAAAAD8Fivq7ZEMUPPwX";
+
 export function signupTurnstileSiteKey() {
-    const siteKey = (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "").trim();
+    const configuredSiteKey = (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "").trim();
+    const siteKey = configuredSiteKey
+        || (process.env.NODE_ENV === "production" ? PRODUCTION_TURNSTILE_SITE_KEY : "");
     if (!siteKey) return "";
     if (process.env.NODE_ENV === "production" && TURNSTILE_TEST_SITE_KEYS.has(siteKey)) return "";
     return siteKey;

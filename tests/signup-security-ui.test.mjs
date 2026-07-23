@@ -38,6 +38,11 @@ test("signup challenge uses explicit rendering and clears expired or failed toke
     assert.match(challenge, /import Script from "next\/script"/);
     assert.match(challenge, /NEXT_PUBLIC_TURNSTILE_SITE_KEY/);
     assert.match(challenge, /process\.env\.NODE_ENV === "production"/);
+    assert.match(challenge, /PRODUCTION_TURNSTILE_SITE_KEY/);
+    assert.match(
+        challenge,
+        /configuredSiteKey\s*\|\|\s*\(process\.env\.NODE_ENV\s*===\s*"production"\s*\?\s*PRODUCTION_TURNSTILE_SITE_KEY\s*:\s*""\)/,
+    );
     assert.match(challenge, /TURNSTILE_TEST_SITE_KEYS\.has\(siteKey\)/);
     assert.match(challenge, /api\.js\?render=explicit/);
     assert.match(challenge, /window\.turnstile\.render/);
@@ -94,10 +99,11 @@ test("password UI matches the API range and legacy local-login surfaces cannot a
 });
 
 test("deployment receives only the public signup challenge site key", async () => {
-    const [envExample, workflow, preflight, readme] = await Promise.all([
+    const [envExample, workflow, preflight, buildOutputCheck, readme] = await Promise.all([
         source(".env.example"),
         source(".github/workflows/deploy.yml"),
         source("scripts/verify-turnstile-site-key.mjs"),
+        source("scripts/verify-turnstile-build-output.mjs"),
         source("README.md"),
     ]);
 
@@ -110,10 +116,18 @@ test("deployment receives only the public signup challenge site key", async () =
     assert.doesNotMatch(workflow, /TURNSTILE_SECRET_KEY/);
     assert.match(workflow, /Verify production signup challenge key/);
     assert.match(workflow, /node scripts\/verify-turnstile-site-key\.mjs/);
+    assert.match(
+        workflow,
+        /name: Build[\s\S]*name: Verify production signup challenge output[\s\S]*node scripts\/verify-turnstile-build-output\.mjs/,
+    );
     assert.match(preflight, /if \(!siteKey\)/);
     assert.match(preflight, /testSiteKeys\.has\(siteKey\)/);
     assert.match(preflight, /process\.exit\(1\)/);
     assert.doesNotMatch(preflight, /SECRET|secret/);
+    assert.match(buildOutputCheck, /data-signup-bot-challenge-unavailable/);
+    assert.match(buildOutputCheck, /data-signup-bot-challenge/);
+    assert.match(buildOutputCheck, /script\.includes\(publicSiteKey\)/);
+    assert.doesNotMatch(buildOutputCheck, /TURNSTILE_SECRET_KEY/);
     assert.match(readme, /Settings → Secrets and variables → Actions → Variables/);
     assert.match(readme, /운영 빌드에서 site key가 없거나 공식 테스트 key가 들어오면/);
 });

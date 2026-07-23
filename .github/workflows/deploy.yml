@@ -66,6 +66,9 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
+      - name: Verify production signup challenge output
+        run: node scripts/verify-turnstile-build-output.mjs
+
       - name: Prepare Pages artifact
         run: node scripts/prepare-pages-artifact.mjs --out out --max-bytes 950000000
 
