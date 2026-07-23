@@ -15,6 +15,7 @@ import { DdbApiError, loadDaengLabWallet, type DaengLabWallet } from "@/lib/cust
 import { useAuth, type PetProfile } from "@/lib/store";
 import { usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
+import PetLensObservationFollowUp from "@/components/petlens/PetLensObservationFollowUp";
 import PetLensObservationHistory from "@/components/petlens/PetLensObservationHistory";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
@@ -71,12 +72,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const engineAbortRef = useRef<AbortController | null>(null);
     const historyAbortRef = useRef<AbortController | null>(null);
     const requestIdRef = useRef<string | null>(null);
+    const consentCheckboxRef = useRef<HTMLInputElement | null>(null);
     const [consent, setConsent] = useState(false);
+    const [consentPromptOpen, setConsentPromptOpen] = useState(false);
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
     const [note, setNote] = useState("");
     const [analyzing, setAnalyzing] = useState(false);
     const [analysisError, setAnalysisError] = useState("");
     const [result, setResult] = useState<PetObservationResult | null>(null);
+    const [resultRequestId, setResultRequestId] = useState<string>();
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [walletLoading, setWalletLoading] = useState(true);
     const [walletError, setWalletError] = useState("");
@@ -90,6 +94,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     }, []);
 
     useEffect(() => () => abortRef.current?.abort(), []);
+
+    useEffect(() => {
+        if (!consentPromptOpen) return;
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setConsentPromptOpen(false);
+        };
+        document.addEventListener("keydown", closeOnEscape);
+        return () => document.removeEventListener("keydown", closeOnEscape);
+    }, [consentPromptOpen]);
 
     const refreshEngine = useCallback(async () => {
         engineAbortRef.current?.abort();
@@ -211,6 +224,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 privacyConsent: consent,
             });
             setResult(next);
+            setResultRequestId(requestId);
             if (typeof next.daengLabCoinBalance === "number") {
                 const currentWallet = wallet;
                 publishWallet({
@@ -259,6 +273,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         setAnalyzing(false);
         setAnalysisError("");
         setResult(null);
+        setResultRequestId(undefined);
         requestIdRef.current = null;
         resetCapture();
     };
@@ -269,6 +284,23 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         setAnalysisError("");
         resetCapture();
         setResult(item.result);
+        setResultRequestId(item.requestId);
+    };
+
+    const focusConsent = () => {
+        setConsentPromptOpen(false);
+        window.requestAnimationFrame(() => {
+            consentCheckboxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+            consentCheckboxRef.current?.focus({ preventScroll: true });
+        });
+    };
+
+    const handleConnectCamera = () => {
+        if (!consent) {
+            setConsentPromptOpen(true);
+            return;
+        }
+        void startCamera();
     };
 
     if (result) {
@@ -307,6 +339,16 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </div>
                 )}
                 <PetLensObservationResult result={result} />
+                <PetLensObservationFollowUp
+                    result={result}
+                    requestId={resultRequestId}
+                    petProfileId={petProfileId}
+                    accessToken={accessToken}
+                    onUpdated={(next) => {
+                        setResult(next);
+                        void refreshHistory();
+                    }}
+                />
             </section>
         );
     }
@@ -324,6 +366,37 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     return (
         <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
+            {consentPromptOpen && (
+                <div className="fixed inset-0 z-[90] grid place-items-center bg-neutral-950/55 p-4" data-daenglab-consent-prompt>
+                    <div
+                        className="w-full max-w-sm rounded-3xl border border-indigo-100 bg-white p-5 shadow-2xl"
+                        role="alertdialog"
+                        aria-modal="true"
+                        aria-labelledby="daenglab-consent-prompt-title"
+                        aria-describedby="daenglab-consent-prompt-description"
+                    >
+                        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-indigo-50 text-indigo-700" aria-hidden="true">
+                            <i className="fa-solid fa-shield-halved" />
+                        </span>
+                        <h2 id="daenglab-consent-prompt-title" className="mt-4 text-lg font-black text-neutral-950">
+                            먼저 아래 동의 항목을 확인해 주세요
+                        </h2>
+                        <p id="daenglab-consent-prompt-description" className="mt-2 text-sm font-bold leading-6 text-neutral-600">
+                            카메라·마이크를 연결하려면 아래의 영상·음성 분석 동의가 필요합니다.
+                            분석한 동영상은 저장되지 않습니다. 분석 중에만 일시 처리됩니다.
+                        </p>
+                        <div className="mt-5 grid gap-2">
+                            <button type="button" onClick={focusConsent} className="btn btn-primary min-h-11 justify-center" autoFocus>
+                                동의 항목 확인하기
+                            </button>
+                            <button type="button" onClick={() => setConsentPromptOpen(false)} className="btn btn-secondary min-h-10 justify-center text-xs">
+                                닫기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className={`rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-sky-50 ${compact ? "p-4" : "p-5 sm:p-6"}`}>
                 <div className="flex items-start gap-3">
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-indigo-700 text-white">
@@ -538,10 +611,11 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         {(phase === "idle" || phase === "error") && (
                             <button
                                 type="button"
-                                disabled={!consent || supported === false || analyzing || !engineReady}
-                                onClick={() => void startCamera()}
+                                disabled={supported === false || analyzing || !engineReady}
+                                onClick={handleConnectCamera}
                                 className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
                                 data-petlens-connect-camera
+                                aria-describedby="daenglab-observation-consent-description"
                             >
                                 <i className="fa-solid fa-camera mr-2 text-xs" /> 카메라·마이크 연결
                             </button>
@@ -637,17 +711,19 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </label>
                     <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-indigo-100 bg-indigo-50/60 p-3">
                         <input
+                            ref={consentCheckboxRef}
                             type="checkbox"
                             checked={consent}
                             onChange={(event) => {
                                 const nextConsent = event.target.checked;
                                 setConsent(nextConsent);
+                                if (nextConsent) setConsentPromptOpen(false);
                                 if (!nextConsent) resetCapture();
                             }}
                             disabled={busy}
                             className="mt-0.5 h-4 w-4 shrink-0"
                         />
-                        <span className="text-[11px] font-bold leading-5 text-neutral-700">
+                        <span id="daenglab-observation-consent-description" className="text-[11px] font-bold leading-5 text-neutral-700">
                             촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리되는 데 동의합니다.
                             원본은 댕다방 서버에 저장하지 않으며 분석이 끝나면 브라우저에서도 비웁니다.{" "}
                             <Link href="/privacy#overseas" className="underline underline-offset-2">개인정보 처리 자세히 보기</Link>

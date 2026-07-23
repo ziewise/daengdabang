@@ -30,6 +30,152 @@ const MODALITY_LABEL: Record<PetObservationResult["observations"][number]["modal
     quality: "촬영 품질",
 };
 
+const INFERENCE_GROUPS = [
+    {
+        key: "behaviorCandidates" as const,
+        label: "행동 후보",
+        empty: "뚜렷하게 분류된 행동 후보가 없어요.",
+        icon: "fa-dog",
+        bar: "bg-indigo-500",
+        accent: "text-indigo-700",
+    },
+    {
+        key: "barkContextCandidates" as const,
+        label: "소리 맥락 후보",
+        empty: "분석할 짖음이 뚜렷하게 포착되지 않았어요.",
+        icon: "fa-volume-high",
+        bar: "bg-cyan-500",
+        accent: "text-cyan-700",
+    },
+] as const;
+
+function ConfidenceBand({ confidence }: Pick<PetObservationCandidate, "confidence">) {
+    const label = confidence === "medium" ? "중간" : "낮음";
+    return (
+        <div className="grid grid-cols-2 gap-1" aria-label={`추론 확신도 ${label} 구간`}>
+            {(["low", "medium"] as const).map((band) => (
+                <span
+                    key={band}
+                    className={`rounded-md px-2 py-1 text-center text-[10px] font-black ${
+                        confidence === band ? "bg-neutral-800 text-white" : "bg-neutral-100 text-neutral-400"
+                    }`}
+                >
+                    {band === "low" ? "낮음" : "중간"}
+                </span>
+            ))}
+        </div>
+    );
+}
+
+function InferenceConfidenceOverview({ result }: { result: PetObservationResult }) {
+    const qualityLabel = result.quality.level === "good"
+        ? "관찰 품질 양호"
+        : result.quality.level === "limited"
+            ? "관찰 품질 제한"
+            : "재촬영 권장";
+
+    return (
+        <section
+            className="overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 p-4 shadow-[0_18px_50px_-34px_rgba(79,70,229,0.65)] sm:p-5"
+            data-daenglab-inference-confidence
+        >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <p className="text-[11px] font-black tracking-[0.12em] text-indigo-600">전반적인 추론 상태</p>
+                    <h3 className="mt-1 text-lg font-black text-neutral-950">행동·소리 추론 후보 그래프</h3>
+                </div>
+                <span className="rounded-full border border-white bg-white/90 px-3 py-1.5 text-[10px] font-black text-neutral-600 shadow-sm">
+                    후보 간 비교
+                </span>
+            </div>
+            <p className="mt-2 max-w-3xl text-[11px] font-bold leading-5 text-neutral-600">
+                영상·소리 근거를 비교한 상대적 확신도입니다. 100% 정답률을 뜻하지 않으며 실제 발생 확률이나 진단·위험도 수치가 아닙니다.
+            </p>
+
+            <div
+                className="mt-4 rounded-2xl border border-white/90 bg-white/85 p-3.5 shadow-sm"
+                data-daenglab-overall-inference-state
+            >
+                <p className="text-[10px] font-black text-neutral-400">전반적인 상태</p>
+                <p className="mt-1 text-sm font-black leading-6 text-neutral-900">{result.summary}</p>
+                <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-black">
+                    <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-indigo-700">
+                        행동 후보 {result.behaviorCandidates.length}개
+                    </span>
+                    <span className="rounded-full bg-cyan-50 px-2.5 py-1 text-cyan-700">
+                        소리 후보 {result.barkContextCandidates.length}개
+                    </span>
+                    <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-neutral-600">
+                        {qualityLabel}
+                    </span>
+                </div>
+            </div>
+
+            <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                {INFERENCE_GROUPS.map(({ key, label, empty, icon, bar, accent }) => {
+                    const items = result[key];
+                    return (
+                        <div key={key} className="rounded-2xl border border-white/90 bg-white/80 p-3.5 shadow-sm">
+                            <div className={`flex items-center gap-2 text-xs font-black ${accent}`}>
+                                <i className={`fa-solid ${icon}`} aria-hidden="true" />
+                                <span>{label}</span>
+                            </div>
+                            {items.length === 0 ? (
+                                <p className="mt-3 rounded-xl bg-neutral-50 px-3 py-3 text-[11px] font-bold leading-5 text-neutral-500">
+                                    {empty}
+                                </p>
+                            ) : (
+                                <div className="mt-3 grid gap-3">
+                                    {items.map((item) => {
+                                        const percentage = typeof item.confidenceScore === "number"
+                                            ? Math.round(item.confidenceScore * 100)
+                                            : null;
+                                        return (
+                                            <div key={`${key}-${item.label}`} className="grid gap-1.5">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <p className="text-[11px] font-black leading-5 text-neutral-800">{item.label}</p>
+                                                    {percentage !== null && (
+                                                        <span className={`shrink-0 text-xs font-black ${accent}`}>
+                                                            {percentage}%
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                {percentage !== null ? (
+                                                    <div
+                                                        className="h-2.5 overflow-hidden rounded-full bg-neutral-100"
+                                                        role="meter"
+                                                        aria-label={`${item.label} 추론 확신도`}
+                                                        aria-valuemin={0}
+                                                        aria-valuemax={100}
+                                                        aria-valuenow={percentage}
+                                                        aria-valuetext={`${percentage}퍼센트, 보정되지 않은 추론 확신도`}
+                                                    >
+                                                        <div
+                                                            className={`h-full rounded-full ${bar}`}
+                                                            style={{ width: `${percentage}%` }}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <ConfidenceBand confidence={item.confidence} />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+            {INFERENCE_GROUPS.some(({ key }) => result[key].some((item) => typeof item.confidenceScore !== "number")) && (
+                <p className="mt-3 text-[10px] font-bold leading-4 text-neutral-500">
+                    정확한 수치가 없는 이전 분석은 임의의 퍼센트를 만들지 않고 낮음·중간 구간으로 표시합니다.
+                </p>
+            )}
+        </section>
+    );
+}
+
 function CandidateCards({
     items,
     observations,
@@ -69,6 +215,8 @@ function CandidateCards({
 export default function PetLensObservationResult({ result }: { result: PetObservationResult }) {
     return (
         <div className="grid gap-4" data-petlens-observation-result>
+            <InferenceConfidenceOverview result={result} />
+
             <section className={`rounded-2xl border p-4 sm:p-5 ${URGENCY_STYLE[result.urgency.level]}`} data-observation-urgency={result.urgency.level}>
                 <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
@@ -103,6 +251,9 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                         가까운 24시 동물병원 찾기
                     </a>
                 )}
+                <p className="mt-4 border-t border-current/15 pt-3 text-[10px] font-bold leading-4 opacity-75">
+                    이 결과는 진단이 아닙니다. 걱정되는 신호가 지속되거나 심해지면 동물병원에 문의해 주세요.
+                </p>
             </section>
 
             <section
@@ -115,7 +266,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                     </span>
                     <div>
                         <p className="text-xs font-black leading-5 text-sky-950">
-                            원본 동영상은 댕다방 서버에 저장되지 않습니다.
+                            분석한 동영상은 저장되지 않습니다. 분석 중에만 일시 처리됩니다.
                         </p>
                         <p className="mt-1 text-[11px] font-bold leading-5 text-sky-800">
                             보안 연결로 분석 중에만 일시 처리하며, 댕다방은 원본이 아닌 분석 결과만 보관합니다.
@@ -215,15 +366,6 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                 </section>
             )}
 
-            {result.followUpQuestions.length > 0 && (
-                <section className="rounded-2xl border border-indigo-100 bg-indigo-50/60 p-4">
-                    <p className="mb-3 text-xs font-black text-indigo-800">보호자가 확인하면 더 정확해져요</p>
-                    <ul className="grid gap-2 text-xs font-bold leading-5 text-neutral-700">
-                        {result.followUpQuestions.map((question) => <li key={question}>• {question}</li>)}
-                    </ul>
-                </section>
-            )}
-
             {result.retakeGuidance.length > 0 && (
                 <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
                     <p className="mb-2 text-xs font-black text-sky-900">다시 촬영하면 좋아지는 점</p>
@@ -231,12 +373,6 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                 </section>
             )}
 
-            <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
-                <p className="text-xs font-black text-neutral-700">분석의 한계</p>
-                <ul className="mt-2 grid gap-1 text-[11px] font-bold leading-5 text-neutral-500">
-                    {result.limitations.map((item) => <li key={item}>• {item}</li>)}
-                </ul>
-            </section>
         </div>
     );
 }

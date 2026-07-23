@@ -79,6 +79,13 @@ test("live capture requests camera and microphone and cleans every local media h
     assert.match(experience, /data-petlens-audio-device/);
     assert.match(experience, /data-petlens-switch-camera/);
     assert.match(experience, /전·후면 카메라 전환/);
+    assert.match(experience, /data-daenglab-consent-prompt/);
+    assert.match(experience, /role="alertdialog"/);
+    assert.match(experience, /먼저 아래 동의 항목을 확인해 주세요/);
+    assert.match(experience, /분석한 동영상은 저장되지 않습니다/);
+    assert.match(experience, /consentCheckboxRef\.current\?\.scrollIntoView/);
+    assert.match(experience, /disabled=\{supported === false \|\| analyzing \|\| !engineReady\}/);
+    assert.doesNotMatch(experience, /disabled=\{!consent \|\| supported === false \|\| analyzing \|\| !engineReady\}/);
     assert.doesNotMatch(hook, /localStorage|sessionStorage/);
 });
 
@@ -149,11 +156,58 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(result, /data-observation-urgency/);
     assert.match(result, /24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90/);
     assert.match(result, /data-daenglab-video-retention-notice/);
-    assert.match(result, /원본 동영상은 댕다방 서버에 저장되지 않습니다\./);
+    assert.match(result, /분석한 동영상은 저장되지 않습니다\. 분석 중에만 일시 처리됩니다\./);
     assert.doesNotMatch(result, /Gemini|Google LLC|외부 자동 분석 서비스/);
     assert.match(result, /보안 연결로 분석 중에만 일시 처리하며, 댕다방은 원본이 아닌 분석 결과만 보관/);
+    assert.match(result, /이 결과는 진단이 아닙니다/);
+    assert.doesNotMatch(result, />분석의 한계</);
+    assert.match(result, /분석한 동영상은 저장되지 않습니다/);
+    assert.doesNotMatch(result, /result\.limitations\.map/);
     assert.match(api, /mediaRetention !== "not_stored"/);
     assert.match(api, /원본 동영상 보관 상태를 확인하지 못했습니다/);
+});
+
+
+test("result starts with an honest behavior and sound inference confidence graph", async () => {
+    const [result, api] = await Promise.all([
+        source("components/petlens/PetLensObservationResult.tsx"),
+        source("lib/petlens-observation.ts"),
+    ]);
+    assert.match(result, /data-daenglab-inference-confidence/);
+    assert.match(result, /행동·소리 추론 후보 그래프/);
+    assert.match(result, /data-daenglab-overall-inference-state/);
+    assert.match(result, /전반적인 상태/);
+    assert.match(result, /100% 정답률을 뜻하지 않으며 실제 발생 확률이나 진단·위험도 수치가 아닙니다/);
+    assert.match(result, /role="meter"/);
+    assert.match(result, /typeof item\.confidenceScore === "number"/);
+    assert.match(result, /정확한 수치가 없는 이전 분석은 임의의 퍼센트를 만들지 않고/);
+    assert.match(result, /<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*data-observation-urgency/);
+    assert.match(api, /confidenceScore\?: number/);
+    assert.match(api, /candidateConfidenceScore/);
+    assert.match(api, /value > 0\.79/);
+});
+
+
+test("guardian follow-up answers refine the same owned result without another coin charge", async () => {
+    const [experience, followUp, api] = await Promise.all([
+        source("components/petlens/PetLensObservationExperience.tsx"),
+        source("components/petlens/PetLensObservationFollowUp.tsx"),
+        source("lib/petlens-observation.ts"),
+    ]);
+    assert.match(experience, /setResultRequestId\(requestId\)/);
+    assert.match(experience, /setResultRequestId\(item\.requestId\)/);
+    assert.match(experience, /<PetLensObservationFollowUp/);
+    assert.match(followUp, /예/);
+    assert.match(followUp, /아니오/);
+    assert.match(followUp, /잘 모르겠어요/);
+    assert.match(followUp, /선택 메모/);
+    assert.match(followUp, /답변 반영해 결과 보완/);
+    assert.match(followUp, /추가 차감 0C/);
+    assert.match(followUp, /진단을 확정하지 않습니다/);
+    assert.match(api, /\/api\/v1\/pet-lens\/observations\/\$\{encodeURIComponent\(request\.requestId\.trim\(\)\)\}\/refine/);
+    assert.match(api, /pet_profile_id: request\.petProfileId/);
+    assert.match(api, /guardian_follow_up_answers/);
+    assert.match(api, /guardian_context_summary/);
 });
 
 
@@ -168,6 +222,7 @@ test("behavior and sound capture fails closed until the real AI engine reports r
     assert.match(client, /observation_audio_enabled === true/);
     assert.match(experience, /data-daenglab-observation-engine=\{engineState\}/);
     assert.match(experience, /data-daenglab-observation-engine-warning/);
-    assert.match(experience, /disabled=\{!consent \|\| supported === false \|\| analyzing \|\| !engineReady\}/);
+    assert.match(experience, /disabled=\{supported === false \|\| analyzing \|\| !engineReady\}/);
+    assert.match(experience, /if \(!consent\) \{[\s\S]*setConsentPromptOpen\(true\)/);
     assert.match(experience, /engineAbortRef\.current\?\.abort\(\)/);
 });

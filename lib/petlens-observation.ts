@@ -23,6 +23,7 @@ export type PetObservationFact = {
 export type PetObservationCandidate = {
     label: string;
     confidence: "medium" | "low";
+    confidenceScore?: number;
     evidence: number[];
     otherPossibility: string;
 };
@@ -32,6 +33,12 @@ export type PetObservationSymptomSignal = {
     confidence: "medium" | "low";
     evidence: number[];
     action: PetObservationUrgencyLevel;
+};
+
+export type PetObservationGuardianAnswer = {
+    question: string;
+    answer: "yes" | "no" | "unknown";
+    note: string;
 };
 
 export type PetObservationResult = {
@@ -49,6 +56,9 @@ export type PetObservationResult = {
         actions: string[];
     };
     followUpQuestions: string[];
+    guardianFollowUpAnswers: PetObservationGuardianAnswer[];
+    guardianContextSummary: string;
+    refinedAt?: string;
     retakeGuidance: string[];
     limitations: string[];
     mediaRetention: "not_stored";
@@ -167,6 +177,13 @@ function evidence(value: unknown, factCount: number) {
         .slice(0, 5);
 }
 
+function candidateConfidenceScore(value: unknown, confidenceLabel: PetObservationCandidate["confidence"]) {
+    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 0.79) return undefined;
+    if (confidenceLabel === "medium" && value < 0.5) return undefined;
+    if (confidenceLabel === "low" && value >= 0.5) return undefined;
+    return Math.round(value * 1_000) / 1_000;
+}
+
 function candidates(value: unknown, factCount: number, limit: number): PetObservationCandidate[] {
     if (!Array.isArray(value)) return [];
     return value.flatMap((item) => {
@@ -175,13 +192,43 @@ function candidates(value: unknown, factCount: number, limit: number): PetObserv
         const label = line(row.label, 100);
         const proof = evidence(row.evidence, factCount);
         if (!label || proof.length === 0) return [];
+        const confidenceLabel = row.confidence === "medium" ? "medium" as const : "low" as const;
+        const confidenceScore = candidateConfidenceScore(
+            row.confidence_score ?? row.confidenceScore,
+            confidenceLabel,
+        );
         return [{
             label,
-            confidence: row.confidence === "medium" ? "medium" as const : "low" as const,
+            confidence: confidenceLabel,
+            ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
             evidence: proof,
             otherPossibility: line(row.other_possibility ?? row.otherPossibility, 140),
         }];
     }).slice(0, limit);
+}
+
+function guardianAnswers(value: unknown, questions: string[]): PetObservationGuardianAnswer[] {
+    if (!Array.isArray(value)) return [];
+    const allowedQuestions = new Set(questions);
+    const seen = new Set<string>();
+    return value.flatMap((item) => {
+        const row = record(item);
+        const question = line(row?.question, 160);
+        const answer = row?.answer;
+        if (
+            !row
+            || !allowedQuestions.has(question)
+            || seen.has(question)
+            || (answer !== "yes" && answer !== "no" && answer !== "unknown")
+        ) return [];
+        seen.add(question);
+        const parsed: PetObservationGuardianAnswer = {
+            question,
+            answer,
+            note: line(row.note, 200),
+        };
+        return [parsed];
+    }).slice(0, 5);
 }
 
 export function parsePetObservationResult(value: unknown): PetObservationResult {
@@ -288,6 +335,12 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const coinBalanceValue = Number(raw.daenglab_coin_balance ?? raw.daengLabCoinBalance);
     const hasCoinCost = Number.isFinite(coinCostValue) && coinCostValue >= 0;
     const hasCoinBalance = Number.isFinite(coinBalanceValue) && coinBalanceValue >= 0;
+    const followUpQuestions = lines(raw.follow_up_questions ?? raw.followUpQuestions, 5, 160);
+    const guardianFollowUpAnswers = guardianAnswers(
+        raw.guardian_follow_up_answers ?? raw.guardianFollowUpAnswers,
+        followUpQuestions,
+    );
+    const refinedAt = line(raw.refined_at ?? raw.refinedAt, 80);
 
     return {
         status,
@@ -313,7 +366,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 : lines(rawUrgency.reasons, 5, 160),
             actions: safeActions[normalizedUrgency],
         },
-        followUpQuestions: lines(raw.follow_up_questions ?? raw.followUpQuestions, 5, 160),
+        followUpQuestions,
+        guardianFollowUpAnswers,
+        guardianContextSummary: line(raw.guardian_context_summary ?? raw.guardianContextSummary, 320),
+        ...(refinedAt ? { refinedAt } : {}),
         retakeGuidance: lines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160),
         limitations: Array.from(new Set([
             "짖음은 사람 문장처럼 번역할 수 없으며, 가능한 맥락만 추론합니다.",
@@ -442,6 +498,54 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         }
         if (response.status === 401) message = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
         throw new PetObservationRequestError(message, { code, required, balance, status: response.status });
+    }
+    return parsePetObservationResult(await response.json());
+}
+
+export async function refinePetObservation(request: {
+    requestId: string;
+    petProfileId: number;
+    answers: PetObservationGuardianAnswer[];
+    accessToken?: string;
+    signal?: AbortSignal;
+}): Promise<PetObservationResult> {
+    const base = ddbApiBase();
+    if (!base) throw new Error("지금은 보호자 답변을 반영할 수 없습니다.");
+    const token = request.accessToken || getCustomerToken();
+    if (!token) throw new Error("로그인 정보를 다시 확인해 주세요.");
+    if (!request.requestId.trim() || !Number.isInteger(request.petProfileId) || request.petProfileId <= 0) {
+        throw new Error("보완할 분석 기록을 다시 확인해 주세요.");
+    }
+    const response = await fetch(
+        `${base.replace(/\/$/, "")}/api/v1/pet-lens/observations/${encodeURIComponent(request.requestId.trim())}/refine`,
+        {
+            method: "POST",
+            cache: "no-store",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                pet_profile_id: request.petProfileId,
+                answers: request.answers.map((answer) => ({
+                    question: answer.question,
+                    answer: answer.answer,
+                    note: answer.note.trim().slice(0, 200),
+                })),
+            }),
+            signal: request.signal,
+        },
+    );
+    if (!response.ok) {
+        let message = "보호자 답변을 반영하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+        try {
+            const body = await response.clone().json() as { detail?: unknown };
+            if (typeof body.detail === "string" && body.detail.trim()) message = body.detail.trim();
+        } catch {
+            // Keep the customer-safe fallback.
+        }
+        if (response.status === 401) message = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
+        throw new PetObservationRequestError(message, { status: response.status });
     }
     return parsePetObservationResult(await response.json());
 }
