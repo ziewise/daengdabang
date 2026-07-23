@@ -8,7 +8,7 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("signup email verification uses the authenticated staged API contract", async () => {
+test("signup email verification supports both account activation and the authenticated bonus contract", async () => {
     const [api, component] = await Promise.all([
         source("lib/customer-api.ts"),
         source("components/auth/SignupEmailVerification.tsx"),
@@ -16,6 +16,8 @@ test("signup email verification uses the authenticated staged API contract", asy
 
     assert.match(api, /\/api\/v1\/auth\/signup-bonus\/status/);
     assert.match(api, /email_verification_required/);
+    assert.match(api, /activation_token\?: string \| null/);
+    assert.match(api, /activation_expires_in\?: number \| null/);
     assert.match(api, /\/api\/v1\/auth\/email-verifications/);
     assert.match(api, /\.\.\.\(email \? \{ email \} : \{\}\), purpose: "signup_bonus"/);
     assert.match(api, /email-verifications\/\$\{encodeURIComponent\(verificationId\)\}\/confirm/);
@@ -46,13 +48,17 @@ test("signup email verification uses the authenticated staged API contract", asy
     assert.match(component, /이메일 오타 수정/);
     assert.match(component, /인증 완료 후에는 이 화면에서 이메일을 변경할 수 없습니다/);
     assert.match(component, /20C 혜택 없이 계속하기/);
+    assert.match(component, /accountActivationRequired/);
+    assert.match(component, /이메일 확인 후 계정 이용 시작/);
+    assert.match(component, /인증 전에는 로그인하거나 회원 기능을 이용할 수 없습니다/);
+    assert.match(component, /!accountActivationRequired && onContinueWithoutBonus/);
     assert.match(component, /completed\.maskedEmail/);
     assert.match(component, /autoRequestAttemptedRef/);
     assert.doesNotMatch(component, /localStorage|sessionStorage|console\./);
     assert.doesNotMatch(component, /인증 이메일:\s*\{completed\.verifiedEmail\}/);
 });
 
-test("email and social signup stage verification without persisting credentials or raw challenges", async () => {
+test("email and social signup stage verification without putting credentials or raw challenges in local storage", async () => {
     const [signup, socialButtons, socialCallback, resume, store] = await Promise.all([
         source("app/auth/signup/page.tsx"),
         source("components/auth/SocialAuthButtons.tsx"),
@@ -61,7 +67,7 @@ test("email and social signup stage verification without persisting credentials 
         source("lib/store.tsx"),
     ]);
 
-    assert.match(signup, /saveSignupEmailResume\(\{ source: "email", returnTo: destination \}\)/);
+    assert.match(signup, /saveSignupEmailResume\(\{ source: "email", returnTo: confirmedDestination \}\)/);
     assert.match(signup, /<SignupEmailVerification/);
     assert.match(signup, /accountEmail=\{pendingVerification\.member\.email\}/);
     assert.match(signup, /onComplete=\{completeEmailVerification\}/);
@@ -80,11 +86,64 @@ test("email and social signup stage verification without persisting credentials 
     assert.match(resume, /safeInternalRedirect/);
     assert.match(resume, /sessionStorage/);
     assert.match(resume, /JSON\.stringify\(\{ source: resume\.source, returnTo \}\)/);
-    assert.doesNotMatch(resume, /verificationId|accessToken|\botp\b/i);
+    assert.match(resume, /ACTIVATION_RESUME_KEY/);
+    assert.match(resume, /phase: "pending_email" \| "verified_login"/);
+    assert.match(resume, /sessionStorage/);
+    assert.doesNotMatch(resume, /localStorage|password|verificationId|\botp\b/i);
 
     assert.match(store, /UPDATE_MEMBER_EMAIL/);
     assert.match(store, /hydrated: store\.hydrated/);
     assert.match(store, /user: \{ \.\.\.state\.user, email: action\.email \}/);
+});
+
+test("required activation blocks login, token persistence, pet save, and member session until OTP confirmation", async () => {
+    const signup = await source("app/auth/signup/page.tsx");
+
+    const activationBranchStart = signup.indexOf("if (apiUser.email_verification_required)");
+    const normalLoginStart = signup.indexOf("const token = await loginCustomer", activationBranchStart);
+    assert.ok(activationBranchStart >= 0);
+    assert.ok(normalLoginStart > activationBranchStart);
+
+    const activationBranch = signup.slice(activationBranchStart, normalLoginStart);
+    assert.match(activationBranch, /activation_token/);
+    assert.match(activationBranch, /saveSignupActivationResume/);
+    assert.match(activationBranch, /setPendingVerification/);
+    assert.doesNotMatch(activationBranch, /setCustomerToken\(apiAccessToken\)/);
+    assert.doesNotMatch(activationBranch, /savePetProfileSmart/);
+    assert.doesNotMatch(activationBranch, /\blogin\(member\)/);
+
+    const activationScreenStart = signup.indexOf('pendingVerification.kind === "activation"');
+    const bonusScreenStart = signup.indexOf(
+        "accessToken={pendingVerification.member.apiAccessToken}",
+        activationScreenStart
+    );
+    const activationScreen = signup.slice(activationScreenStart, bonusScreenStart);
+    assert.match(activationScreen, /accountActivationRequired/);
+    assert.doesNotMatch(activationScreen, /onContinueWithoutBonus/);
+    assert.match(activationScreen, /확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다/);
+});
+
+test("successful activation logs in before saving the staged pet and creating the member session", async () => {
+    const signup = await source("app/auth/signup/page.tsx");
+    const start = signup.indexOf("const finalizeActivatedSignup");
+    const end = signup.indexOf("const completeEmailVerification", start);
+    const finalize = signup.slice(start, end);
+
+    const loginCall = finalize.indexOf("await loginCustomer");
+    const tokenSave = finalize.indexOf("setCustomerToken(apiAccessToken)");
+    const petSave = finalize.indexOf("await savePetProfileSmart");
+    const memberSession = finalize.indexOf("login(member)");
+    assert.ok(loginCall >= 0);
+    assert.ok(tokenSave > loginCall);
+    assert.ok(petSave > tokenSave);
+    assert.ok(memberSession > petSave);
+    assert.match(finalize, /clearSignupActivationResume\(\)/);
+    assert.match(finalize, /clearPetLensSignupDraft\(\)/);
+
+    const completion = signup.slice(end, signup.indexOf("if (pendingVerification)", end));
+    assert.match(completion, /phase: "verified_login"/);
+    assert.match(completion, /void finalizeActivatedSignup\(verifiedActivation, password\)/);
+    assert.doesNotMatch(completion, /localStorage|sessionStorage/);
 });
 
 test("pending users can resume signup bonus email verification from the My Page wallet", async () => {

@@ -576,8 +576,22 @@ https://www.daengdabang.com 에서 즉시 반영
 | Root directory | `/` |
 | Env: `NODE_VERSION` | `20` |
 | Env: `NEXT_TELEMETRY_DISABLED` | `1` |
+| Env: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | 운영 도메인에 연결한 가입 보안 확인용 공개 site key |
 
 PR 브랜치는 미리보기로 자동 배포됨 (예: `feat-x.daengdabang.pages.dev`).
+
+### 가입 보안 확인 빌드 변수
+
+GitHub Pages 배포는 운영용 공개 site key를 기본값으로 사용한다. 저장소
+`Settings → Secrets and variables → Actions → Variables`의
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY`로 공개 site key를 교체할 수 있다.
+서버 검증용 secret key는 API 운영 환경의 비공개 secret으로 별도 관리한다.
+운영 빌드에서 site key가 없거나 공식 테스트 key가 들어오면 이메일 가입과 간편가입은
+열리지 않도록 fail closed 처리된다.
+
+로컬 개발은 `.env.local`에 공식 테스트 site key를 넣을 수 있다.
+테스트 key는 `NODE_ENV !== "production"`일 때만 허용하며, API도 짝이 맞는 테스트
+secret을 사용하는 개발 환경에서만 종단 간 가입 테스트를 진행한다.
 
 ### DNS 구조 (Cloudflare)
 

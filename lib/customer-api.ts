@@ -13,12 +13,25 @@ export type SocialProviderStatus = {
     enabled: boolean;
 };
 
+export type SocialAuthStartOptions =
+    | { mode: "login" }
+    | {
+        mode: "signup";
+        botToken: string;
+        termsVersion: string;
+        privacyVersion: string;
+    };
+
 export type ApiUser = {
     id: number;
     email: string;
     name?: string | null;
     role: string;
     is_active: boolean;
+    email_verified_at?: string | null;
+    activation_token?: string | null;
+    activation_expires_in?: number | null;
+    email_verification_required: boolean;
 };
 
 export type DaengLabWalletTransaction = {
@@ -140,6 +153,18 @@ type TokenResponse = {
     expires_in: number;
 };
 
+export type PasswordResetRequestReceipt = {
+    status: "accepted";
+    requestId: string;
+    resendAfterSeconds: number;
+    expiresInSeconds: number;
+};
+
+export type PasswordResetVerification = {
+    resetToken: string;
+    expiresInSeconds: number;
+};
+
 export class DdbApiError extends Error {
     code?: "missing_api_base" | "http_error";
     status?: number;
@@ -218,17 +243,40 @@ export function setCustomerToken(token?: string) {
     else window.localStorage.removeItem(TOKEN_KEY);
 }
 
-export function socialLoginHref(provider: SocialProvider, returnTo = "/mypage") {
+export function socialLoginHref(
+    provider: SocialProvider,
+    returnTo = "/mypage",
+    options: SocialAuthStartOptions = { mode: "login" }
+) {
     const base = ddbApiBase();
     if (!base) return "";
     const path = `/api/v1/auth/social/${provider}/start`;
-    const query = new URLSearchParams({ return_to: returnTo });
+    const query = new URLSearchParams({
+        return_to: returnTo,
+        mode: options.mode,
+    });
+    if (options.mode === "signup") {
+        if (
+            !options.botToken.trim()
+            || !options.termsVersion.trim()
+            || !options.privacyVersion.trim()
+        ) {
+            return "";
+        }
+        query.set("bot_token", options.botToken);
+        query.set("terms_version", options.termsVersion);
+        query.set("privacy_version", options.privacyVersion);
+    }
     return `${base.replace(/\/$/, "")}${path}?${query.toString()}`;
 }
 
-export function startSocialLogin(provider: SocialProvider, returnTo = "/mypage") {
+export function startSocialLogin(
+    provider: SocialProvider,
+    returnTo = "/mypage",
+    options: SocialAuthStartOptions = { mode: "login" }
+) {
     if (typeof window === "undefined") return false;
-    const href = socialLoginHref(provider, returnTo);
+    const href = socialLoginHref(provider, returnTo, options);
     if (!href) return false;
     window.location.href = href;
     return true;
@@ -238,6 +286,21 @@ export function customerApiErrorMessage(error: unknown) {
     if (error instanceof DdbApiError) {
         if (error.code === "missing_api_base") {
             return "지금은 회원 기능을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.";
+        }
+        if (error.apiCode === "bot_verification_failed") {
+            return "가입 보안 확인 시간이 지났거나 확인되지 않았습니다. 다시 확인해 주세요.";
+        }
+        if (error.apiCode === "bot_verification_unavailable") {
+            return "가입 보안 확인을 잠시 사용할 수 없습니다. 잠시 후 다시 시도해 주세요.";
+        }
+        if (error.apiCode === "consent_version_mismatch") {
+            return "가입 기준이 갱신되었습니다. 페이지를 새로고침한 뒤 다시 동의해 주세요.";
+        }
+        if (error.apiCode === "signup_email_domain_not_allowed") {
+            return "해당 이메일 주소로는 가입할 수 없습니다. 실제 사용하는 다른 이메일을 입력해 주세요.";
+        }
+        if (error.apiCode === "auth_rate_limited") {
+            return "요청이 많아 잠시 보호 중입니다. 잠시 후 다시 시도해 주세요.";
         }
         if (error.status === 401) return "이메일 또는 비밀번호를 확인해 주세요.";
         if (error.status === 403) return "사용할 수 없는 회원 계정입니다.";
@@ -258,7 +321,7 @@ async function apiJson<T>(
     path: string,
     init: RequestInit = {},
     token?: string,
-    options: { requireBase?: boolean } = {}
+    options: { requireBase?: boolean; skipAuth?: boolean } = {}
 ): Promise<T | null> {
     const base = ddbApiBase();
     if (!base) {
@@ -269,7 +332,7 @@ async function apiJson<T>(
     }
     const headers = new Headers(init.headers);
     headers.set("Content-Type", "application/json");
-    const accessToken = token || getCustomerToken();
+    const accessToken = options.skipAuth ? "" : (token || getCustomerToken());
     if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
 
     const response = await fetch(`${base.replace(/\/$/, "")}${path}`, {
@@ -304,7 +367,14 @@ async function apiJson<T>(
     return response.json() as Promise<T>;
 }
 
-export async function signupCustomer(payload: { email: string; password: string; name?: string }) {
+export async function signupCustomer(payload: {
+    email: string;
+    password: string;
+    name?: string;
+    bot_token: string;
+    terms_version: string;
+    privacy_version: string;
+}) {
     const user = await apiJson<ApiUser>("/api/v1/auth/signup", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -320,6 +390,66 @@ export async function loginCustomer(payload: { email: string; password: string }
     }, undefined, { requireBase: true });
     if (!token) throw new DdbApiError("Login failed.", { code: "http_error" });
     return token;
+}
+
+export async function requestPasswordReset(payload: {
+    email: string;
+    bot_token: string;
+}): Promise<PasswordResetRequestReceipt> {
+    const response = await apiJson<{
+        status: "accepted";
+        request_id: string;
+        resend_after_seconds: number;
+        expires_in_seconds: number;
+    }>("/api/v1/auth/password-reset/request", {
+        method: "POST",
+        body: JSON.stringify(payload),
+    }, undefined, { requireBase: true, skipAuth: true });
+    if (!response?.request_id) {
+        throw new DdbApiError("Password reset request failed.", { code: "http_error" });
+    }
+    return {
+        status: response.status,
+        requestId: response.request_id,
+        resendAfterSeconds: Math.max(0, Number(response.resend_after_seconds || 0)),
+        expiresInSeconds: Math.max(0, Number(response.expires_in_seconds || 0)),
+    };
+}
+
+export async function verifyPasswordReset(payload: {
+    request_id: string;
+    email: string;
+    code: string;
+}): Promise<PasswordResetVerification> {
+    const response = await apiJson<{
+        reset_token: string;
+        expires_in_seconds: number;
+    }>("/api/v1/auth/password-reset/verify", {
+        method: "POST",
+        body: JSON.stringify(payload),
+    }, undefined, { requireBase: true, skipAuth: true });
+    if (!response?.reset_token) {
+        throw new DdbApiError("Password reset verification failed.", { code: "http_error" });
+    }
+    return {
+        resetToken: response.reset_token,
+        expiresInSeconds: Math.max(0, Number(response.expires_in_seconds || 0)),
+    };
+}
+
+export async function completePasswordReset(payload: {
+    request_id: string;
+    reset_token: string;
+    new_password: string;
+}) {
+    const response = await apiJson<{ status: "completed" }>("/api/v1/auth/password-reset/complete", {
+        method: "POST",
+        body: JSON.stringify(payload),
+    }, undefined, { requireBase: true, skipAuth: true });
+    if (response?.status !== "completed") {
+        throw new DdbApiError("Password reset failed.", { code: "http_error" });
+    }
+    return response;
 }
 
 export async function loadCurrentCustomer(token?: string) {

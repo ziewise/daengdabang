@@ -22,10 +22,13 @@ import { resizePetPhoto } from "@/lib/pet-photo";
 import {
     clearPetLensSignupDraft,
     loadPetLensSignupDraft,
+    savePetLensSignupDraft,
 } from "@/lib/petlens-signup-draft";
 import {
+    SIGNUP_PRIVACY_VERSION,
     SIGNUP_PETLENS_PRIVACY_CONSENT,
     SIGNUP_REQUIRED_PRIVACY_CONSENT,
+    SIGNUP_TERMS_VERSION,
     SIGNUP_TERMS_AGREEMENT,
 } from "@/lib/signup-agreements";
 import {
@@ -37,18 +40,23 @@ import {
 import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+import SignupBotChallenge, { signupTurnstileSiteKey } from "@/components/auth/SignupBotChallenge";
 import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
 import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 import {
+    clearSignupActivationResume,
     clearSignupEmailResume,
+    loadSignupActivationResume,
     loadSignupEmailResume,
+    saveSignupActivationResume,
     saveSignupEmailResume,
 } from "@/lib/signup-email-verification";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 const CUSTOM_BREED_OPTION = "__custom";
+const passwordUtf8Bytes = (value: string) => new TextEncoder().encode(value).length;
 const subscribeToLocation = () => () => {};
 const getServerRedirect = () => null;
 const getClientRedirect = () => {
@@ -70,6 +78,23 @@ type PetPhotoCapture = {
     restored?: boolean;
 };
 type PetPhotoCaptures = Partial<Record<PetPhotoViewId, PetPhotoCapture>>;
+type PendingBonusVerification = {
+    kind: "bonus";
+    member: User;
+    destination: string;
+};
+type PendingAccountActivation = {
+    kind: "activation";
+    apiUserId: number;
+    name: string;
+    email: string;
+    destination: string;
+    pets: PetProfile[];
+    verified: boolean;
+    activationToken?: string;
+    activationExpiresAt?: number;
+};
+type PendingVerification = PendingBonusVerification | PendingAccountActivation;
 
 const PET_PHOTO_VIEW_LABELS = PET_PHOTO_VIEWS.reduce((acc, view) => {
     acc[view.id] = view.label;
@@ -222,16 +247,25 @@ export default function SignupPage() {
     const [photoError, setPhotoError] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [pendingVerification, setPendingVerification] = useState<{
-        member: User;
-        destination: string;
-    } | null>(null);
+    const [pendingVerification, setPendingVerification] = useState<PendingVerification | null>(null);
+    const [activationFinalizing, setActivationFinalizing] = useState(false);
+    const [activationLoginError, setActivationLoginError] = useState("");
+    const activationFinalizeInFlightRef = useRef(false);
     const petPhotoViewsRef = useRef<PetPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [agreePrivacy, setAgreePrivacy] = useState(false);
     const [agreePetLensPrivacy, setAgreePetLensPrivacy] = useState(false);
+    const [botToken, setBotToken] = useState("");
+    const [botResetKey, setBotResetKey] = useState(0);
     const apiReady = useDdbApiReady();
+    const botChallengeConfigured = Boolean(signupTurnstileSiteKey());
+    const requiredConsentsAccepted = agreeTerms && agreePrivacy;
+    const signupSecurityReady = (
+        botChallengeConfigured
+        && requiredConsentsAccepted
+        && Boolean(botToken)
+    );
 
     useEffect(() => {
         const draft = loadPetLensSignupDraft();
@@ -296,11 +330,33 @@ export default function SignupPage() {
     }, []);
 
     useEffect(() => {
-        if (pendingVerification || !user?.apiAccessToken) return;
+        if (pendingVerification) return;
+        const activationResume = loadSignupActivationResume();
+        if (activationResume) {
+            const stagedPet = loadPetLensSignupDraft();
+            const restoreId = window.setTimeout(() => {
+                setName(activationResume.name);
+                setEmail(activationResume.email);
+                setPendingVerification({
+                    kind: "activation",
+                    apiUserId: activationResume.apiUserId,
+                    name: activationResume.name,
+                    email: activationResume.email,
+                    destination: activationResume.returnTo,
+                    pets: stagedPet ? [stagedPet] : [],
+                    verified: activationResume.phase === "verified_login",
+                    activationToken: activationResume.activationToken,
+                    activationExpiresAt: activationResume.activationExpiresAt,
+                });
+            }, 0);
+            return () => window.clearTimeout(restoreId);
+        }
+        if (!user?.apiAccessToken) return;
         const resume = loadSignupEmailResume();
         if (resume?.source !== "email") return;
         const restoreId = window.setTimeout(() => {
             setPendingVerification({
+                kind: "bonus",
                 member: user,
                 destination: resume.returnTo,
             });
@@ -430,12 +486,21 @@ export default function SignupPage() {
             setError("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.");
             return;
         }
-        if (password.trim().length < 8) {
-            setError("비밀번호는 8자 이상 입력해 주세요.");
+        const passwordBytes = passwordUtf8Bytes(password);
+        if (password.length < 8 || passwordBytes > 72) {
+            setError("비밀번호는 8자 이상, 최대 72바이트로 입력해 주세요.");
             return;
         }
         if (!agreeTerms || !agreePrivacy) {
             setError("필수 약관과 개인정보 수집·이용에 동의해 주세요.");
+            return;
+        }
+        if (!botChallengeConfigured) {
+            setError("가입 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요.");
+            return;
+        }
+        if (!botToken) {
+            setError("가입 보안 확인을 완료해 주세요.");
             return;
         }
         const weightText = petWeightKg.trim();
@@ -522,10 +587,50 @@ export default function SignupPage() {
         try {
             const apiUser = await signupCustomer({
                 email: email.trim(),
-                password: password.trim(),
+                password,
                 name: name.trim() || "댕다방 회원",
+                bot_token: botToken,
+                terms_version: SIGNUP_TERMS_VERSION,
+                privacy_version: SIGNUP_PRIVACY_VERSION,
             });
-            const token = await loginCustomer({ email: email.trim(), password: password.trim() });
+            const destination = petLensPostAuthDestination(redirect, pets);
+            if (apiUser.email_verification_required) {
+                const activationToken = String(apiUser.activation_token || "");
+                const activationExpiresIn = Number(apiUser.activation_expires_in || 0);
+                if (activationToken.length < 20 || activationExpiresIn <= 0) {
+                    throw new Error("Signup activation grant is missing.");
+                }
+                const createdAt = Date.now();
+                const activationExpiresAt = createdAt + activationExpiresIn * 1_000;
+                clearPetLensSignupDraft();
+                if (pets[0]) savePetLensSignupDraft(pets[0]);
+                setCustomerToken();
+                clearSignupEmailResume();
+                saveSignupActivationResume({
+                    phase: "pending_email",
+                    email: apiUser.email,
+                    name: apiUser.name || name.trim() || "댕다방 회원",
+                    apiUserId: apiUser.id,
+                    returnTo: destination,
+                    createdAt,
+                    activationToken,
+                    activationExpiresAt,
+                });
+                setPendingVerification({
+                    kind: "activation",
+                    apiUserId: apiUser.id,
+                    name: apiUser.name || name.trim() || "댕다방 회원",
+                    email: apiUser.email,
+                    destination,
+                    pets,
+                    verified: false,
+                    activationToken,
+                    activationExpiresAt,
+                });
+                return;
+            }
+
+            const token = await loginCustomer({ email: email.trim(), password });
             const apiAccessToken = token.access_token;
             setCustomerToken(apiAccessToken);
 
@@ -542,36 +647,177 @@ export default function SignupPage() {
                 joinedAt: new Date().toISOString(),
                 pets: savedPets,
             };
-            const destination = petLensPostAuthDestination(redirect, savedPets);
+            const confirmedDestination = petLensPostAuthDestination(redirect, savedPets);
             login(member);
             clearPetLensSignupDraft();
-            saveSignupEmailResume({ source: "email", returnTo: destination });
+            clearSignupActivationResume();
+            saveSignupEmailResume({ source: "email", returnTo: confirmedDestination });
             setPendingVerification({
+                kind: "bonus",
                 member,
-                destination,
+                destination: confirmedDestination,
             });
         } catch (err) {
             setCustomerToken();
+            setBotToken("");
+            setBotResetKey((value) => value + 1);
             setError(customerApiErrorMessage(err));
         } finally {
             setLoading(false);
         }
     };
 
-    const finishSignup = () => {
-        if (!pendingVerification) return;
+    const finishBonusSignup = () => {
+        if (!pendingVerification || pendingVerification.kind !== "bonus") return;
         const destination = pendingVerification.destination;
         clearSignupEmailResume();
         setPendingVerification(null);
         router.push(destination);
     };
 
+    const finalizeActivatedSignup = async (
+        activation: PendingAccountActivation,
+        loginPassword: string
+    ) => {
+        if (activationFinalizeInFlightRef.current) return;
+        const passwordBytes = passwordUtf8Bytes(loginPassword);
+        if (loginPassword.length < 8 || passwordBytes > 72) {
+            setActivationLoginError("가입 때 입력한 비밀번호를 다시 입력해 주세요.");
+            return;
+        }
+
+        activationFinalizeInFlightRef.current = true;
+        setActivationFinalizing(true);
+        setActivationLoginError("");
+        try {
+            const token = await loginCustomer({
+                email: activation.email,
+                password: loginPassword,
+            });
+            const apiAccessToken = token.access_token;
+            setCustomerToken(apiAccessToken);
+            if (activation.pets[0]) {
+                await savePetProfileSmart(activation.pets[0], apiAccessToken);
+            }
+            const savedPets = (
+                await loadPetProfilesSmart(apiAccessToken).catch(() => null)
+            ) || activation.pets;
+            const member: User = {
+                apiUserId: activation.apiUserId,
+                apiAccessToken,
+                name: activation.name,
+                email: activation.email,
+                joinedAt: new Date().toISOString(),
+                pets: savedPets,
+            };
+            login(member);
+            clearSignupActivationResume();
+            clearSignupEmailResume();
+            clearPetLensSignupDraft();
+            setPendingVerification(null);
+            router.push(activation.destination);
+        } catch (reason) {
+            setCustomerToken();
+            setActivationLoginError(customerApiErrorMessage(reason));
+        } finally {
+            activationFinalizeInFlightRef.current = false;
+            setActivationFinalizing(false);
+        }
+    };
+
     const completeEmailVerification = (result: SignupEmailVerificationResult) => {
+        if (!pendingVerification) return;
+        if (pendingVerification.kind === "activation") {
+            const verifiedActivation: PendingAccountActivation = {
+                ...pendingVerification,
+                email: result.verifiedEmail || pendingVerification.email,
+                verified: true,
+                activationToken: undefined,
+                activationExpiresAt: undefined,
+            };
+            saveSignupActivationResume({
+                phase: "verified_login",
+                email: verifiedActivation.email,
+                name: verifiedActivation.name,
+                apiUserId: verifiedActivation.apiUserId,
+                returnTo: verifiedActivation.destination,
+                createdAt: Date.now(),
+            });
+            setPendingVerification(verifiedActivation);
+            void finalizeActivatedSignup(verifiedActivation, password);
+            return;
+        }
         if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
-        finishSignup();
+        finishBonusSignup();
     };
 
     if (pendingVerification) {
+        if (pendingVerification.kind === "activation") {
+            if (pendingVerification.verified) {
+                return (
+                    <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
+                        <h1 className="text-2xl font-black tracking-tight text-neutral-950">이메일 확인 완료</h1>
+                        <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
+                            이메일이 확인되었습니다. 안전하게 계정 이용을 시작하기 위해 가입 때 입력한 비밀번호로 로그인해 주세요.
+                        </p>
+                        {activationFinalizing ? (
+                            <p role="status" className="mt-5 rounded-xl bg-indigo-50 px-4 py-3 text-sm font-black text-indigo-800">
+                                <i className="fa-solid fa-circle-notch fa-spin mr-2" />
+                                계정과 반려견 프로필을 준비하고 있습니다.
+                            </p>
+                        ) : (
+                            <form
+                                className="surface mt-5 grid gap-4 p-5"
+                                onSubmit={(event) => {
+                                    event.preventDefault();
+                                    void finalizeActivatedSignup(pendingVerification, password);
+                                }}
+                            >
+                                {activationLoginError && (
+                                    <p role="alert" className="rounded-md bg-rose-50 px-3 py-2 text-sm font-bold leading-6 text-rose-700">
+                                        {activationLoginError}
+                                    </p>
+                                )}
+                                <label>
+                                    <span className="mb-1 block text-xs font-black text-neutral-500">가입 비밀번호</span>
+                                    <input
+                                        type="password"
+                                        value={password}
+                                        onChange={(event) => setPassword(event.target.value)}
+                                        className="input"
+                                        minLength={8}
+                                        maxLength={72}
+                                        autoComplete="current-password"
+                                        required
+                                    />
+                                </label>
+                                <button type="submit" className="btn btn-primary w-full">
+                                    계정 이용 시작
+                                </button>
+                            </form>
+                        )}
+                    </main>
+                );
+            }
+
+            return (
+                <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
+                    <h1 className="text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 확인</h1>
+                    <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
+                        이메일 확인을 마쳐야 계정 이용이 시작됩니다. 확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다.
+                    </p>
+                    <div className="mt-5">
+                        <SignupEmailVerification
+                            accessToken={pendingVerification.activationToken}
+                            accountEmail={pendingVerification.email}
+                            accountActivationRequired
+                            onComplete={completeEmailVerification}
+                        />
+                    </div>
+                </main>
+            );
+        }
+
         return (
             <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
                 <h1 className="text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 인증</h1>
@@ -583,7 +829,7 @@ export default function SignupPage() {
                         accessToken={pendingVerification.member.apiAccessToken}
                         accountEmail={pendingVerification.member.email}
                         onComplete={completeEmailVerification}
-                        onContinueWithoutBonus={() => finishSignup()}
+                        onContinueWithoutBonus={() => finishBonusSignup()}
                     />
                 </div>
             </main>
@@ -612,7 +858,16 @@ export default function SignupPage() {
                 </p>
             </section>
             <div data-pet-guide-target="signup-provider">
-                <SocialAuthButtons mode="signup" returnTo={redirect || "/mypage"} />
+                <SocialAuthButtons
+                    mode="signup"
+                    returnTo={redirect || "/mypage"}
+                    signupSecurity={{
+                        botToken,
+                        requiredConsentsAccepted,
+                        termsVersion: SIGNUP_TERMS_VERSION,
+                        privacyVersion: SIGNUP_PRIVACY_VERSION,
+                    }}
+                />
             </div>
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 {apiReady === false && (
@@ -643,8 +898,9 @@ export default function SignupPage() {
                         onChange={(event) => setPassword(event.target.value)}
                         className="input"
                         minLength={8}
+                        maxLength={72}
                         autoComplete="new-password"
-                        placeholder="8자 이상 입력"
+                        placeholder="8자 이상·최대 72바이트"
                     />
                 </label>
                 <div className="grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
@@ -969,8 +1225,13 @@ export default function SignupPage() {
                             {SIGNUP_PETLENS_PRIVACY_CONSENT.refusalNotice}
                         </p>
                     </div>
+                    <SignupBotChallenge onTokenChange={setBotToken} resetKey={botResetKey} />
                 </section>
-                <button type="submit" className="btn btn-primary w-full" disabled={photoLoading || loading}>
+                <button
+                    type="submit"
+                    className="btn btn-primary w-full"
+                    disabled={photoLoading || loading || apiReady !== true || !signupSecurityReady}
+                >
                     <i className="fa-solid fa-user-plus text-xs" />
                     {loading ? "가입 처리 중" : "가입하고 이메일 인증"}
                 </button>

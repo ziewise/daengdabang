@@ -4,7 +4,11 @@ export type SignupAgreementRow = {
     retention: string;
 };
 
+export const SIGNUP_TERMS_VERSION = "ddb-terms-20260723-v1";
+export const SIGNUP_PRIVACY_VERSION = "ddb-privacy-20260723-v1";
+
 export const SIGNUP_TERMS_AGREEMENT = {
+    version: SIGNUP_TERMS_VERSION,
     title: "[필수] 이용약관 동의",
     href: "/terms",
     summary: [
@@ -15,6 +19,7 @@ export const SIGNUP_TERMS_AGREEMENT = {
 } as const;
 
 export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
+    version: SIGNUP_PRIVACY_VERSION,
     title: "[필수] 개인정보 수집·이용 동의",
     href: "/privacy",
     intro: "회사는 상품 주문, 배송, 회원관리 및 고객서비스 제공을 위하여 아래와 같이 개인정보를 수집·이용합니다.",

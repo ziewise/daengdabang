@@ -35,12 +35,20 @@ export default function SocialAuthButtons({
     mode,
     variant = "full",
     returnTo = "/mypage",
+    signupSecurity,
 }: {
     mode: "login" | "signup";
     /** full = 라벨 있는 직사각(기본) / compact = 로그인 카드용 원형 아이콘 */
     variant?: "full" | "compact";
     /** 인증을 시작한 기능으로 안전하게 복귀할 내부 경로 */
     returnTo?: string;
+    /** 간편가입도 이메일 가입과 같은 필수 동의·봇 방지 확인을 통과해야 한다. */
+    signupSecurity?: {
+        botToken: string;
+        requiredConsentsAccepted: boolean;
+        termsVersion: string;
+        privacyVersion: string;
+    };
 }) {
     const apiReady = useDdbApiReady();
     const [enabledByProvider, setEnabledByProvider] = useState<Record<SocialProvider, boolean> | null>(null);
@@ -80,15 +88,34 @@ export default function SocialAuthButtons({
         if (apiReady !== true || !enabledByProvider) return 0;
         return PROVIDERS.filter((provider) => enabledByProvider[provider.id] === false).length;
     }, [apiReady, enabledByProvider]);
+    const signupSecurityReady = mode === "login" || Boolean(
+        signupSecurity?.requiredConsentsAccepted
+        && signupSecurity.botToken.trim()
+        && signupSecurity.termsVersion.trim()
+        && signupSecurity.privacyVersion.trim()
+    );
 
     const start = (provider: SocialProvider) => {
-        if (apiReady !== true || enabledByProvider?.[provider] === false) return;
+        if (
+            apiReady !== true
+            || !statusChecked
+            || enabledByProvider?.[provider] !== true
+            || !signupSecurityReady
+        ) return;
         if (mode === "signup") {
             saveSignupEmailResume({ source: "social", returnTo });
         } else {
             clearSignupEmailResume();
         }
-        if (!startSocialLogin(provider, returnTo)) {
+        const started = mode === "signup" && signupSecurity
+            ? startSocialLogin(provider, returnTo, {
+                mode: "signup",
+                botToken: signupSecurity.botToken,
+                termsVersion: signupSecurity.termsVersion,
+                privacyVersion: signupSecurity.privacyVersion,
+            })
+            : startSocialLogin(provider, returnTo, { mode: "login" });
+        if (!started) {
             clearSignupEmailResume();
         }
     };
@@ -98,7 +125,12 @@ export default function SocialAuthButtons({
         return (
             <div className="flex items-center justify-center gap-3">
                 {PROVIDERS.map((provider) => {
-                    const disabled = apiReady !== true || enabledByProvider?.[provider.id] === false;
+                    const disabled = (
+                        apiReady !== true
+                        || !statusChecked
+                        || enabledByProvider?.[provider.id] !== true
+                        || !signupSecurityReady
+                    );
                     return (
                         <button
                             key={provider.id}
@@ -128,13 +160,23 @@ export default function SocialAuthButtons({
                 </h2>
                 {apiReady === false && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
                 {apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
-                {apiReady === true && statusChecked && disabledCount > 0 && (
+                {apiReady === true && statusChecked && (!enabledByProvider || disabledCount > 0) && (
                     <span className="text-xs font-black text-amber-700">준비 중</span>
                 )}
             </div>
+            {mode === "signup" && !signupSecurityReady && (
+                <p className="rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-5 text-amber-800">
+                    필수 약관 동의와 가입 보안 확인을 완료하면 간편가입을 이용할 수 있습니다.
+                </p>
+            )}
             <div className="grid gap-2 sm:grid-cols-3">
                 {PROVIDERS.map((provider) => {
-                    const disabled = apiReady !== true || enabledByProvider?.[provider.id] === false;
+                    const disabled = (
+                        apiReady !== true
+                        || !statusChecked
+                        || enabledByProvider?.[provider.id] !== true
+                        || !signupSecurityReady
+                    );
                     return (
                         <button
                             key={provider.id}

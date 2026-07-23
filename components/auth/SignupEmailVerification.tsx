@@ -26,12 +26,17 @@ export type SignupEmailVerificationResult = {
 type Props = {
     accessToken?: string;
     accountEmail?: string;
+    accountActivationRequired?: boolean;
     onComplete?: (result: SignupEmailVerificationResult) => void;
     onContinueWithoutBonus?: () => void;
     hideWhenSettled?: boolean;
 };
 
-function errorMessage(error: unknown, step: "request" | "confirm" | "status") {
+function errorMessage(
+    error: unknown,
+    step: "request" | "confirm" | "status",
+    accountActivationRequired = false
+) {
     if (error instanceof DdbApiError) {
         if (error.apiCode === "signup_bonus_already_claimed") {
             return "가입 축하 코인이 이미 지급된 인증 정보입니다.";
@@ -92,7 +97,11 @@ function errorMessage(error: unknown, step: "request" | "confirm" | "status") {
         if (error.apiCode === "invalid_otp" || (step === "confirm" && error.status === 400)) {
             return "인증번호 6자리를 다시 확인해 주세요.";
         }
-        if (error.status === 401) return "로그인 정보가 만료되었습니다. 다시 로그인해 주세요.";
+        if (error.status === 401) {
+            return accountActivationRequired
+                ? "이메일 확인 시간이 만료되었습니다. 가입 화면에서 인증을 다시 시작해 주세요."
+                : "로그인 정보가 만료되었습니다. 다시 로그인해 주세요.";
+        }
     }
     if (step === "status") return "가입 혜택 상태를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.";
     if (step === "request") return "인증번호를 보내지 못했습니다. 이메일 주소를 확인한 뒤 다시 시도해 주세요.";
@@ -113,13 +122,14 @@ function emailIdentity(value: string | null | undefined) {
 export default function SignupEmailVerification({
     accessToken,
     accountEmail = "",
+    accountActivationRequired = false,
     onComplete,
     onContinueWithoutBonus,
     hideWhenSettled = false,
 }: Props) {
     const visibleAccountEmail = isSyntheticSocialEmail(accountEmail) ? "" : accountEmail.trim();
     const [status, setStatus] = useState<SignupBonusStatus | null>(null);
-    const [statusLoading, setStatusLoading] = useState(true);
+    const [statusLoading, setStatusLoading] = useState(!accountActivationRequired);
     const [email, setEmail] = useState(visibleAccountEmail);
     const [verificationId, setVerificationId] = useState("");
     const [maskedEmail, setMaskedEmail] = useState("");
@@ -138,13 +148,14 @@ export default function SignupEmailVerification({
     const codeRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
+        if (accountActivationRequired) return;
         let active = true;
         void loadSignupBonusStatus(accessToken)
             .then((next) => {
                 if (active) setStatus(next);
             })
             .catch((reason) => {
-                if (active) setError(errorMessage(reason, "status"));
+                if (active) setError(errorMessage(reason, "status", accountActivationRequired));
             })
             .finally(() => {
                 if (active) setStatusLoading(false);
@@ -152,7 +163,7 @@ export default function SignupEmailVerification({
         return () => {
             active = false;
         };
-    }, [accessToken]);
+    }, [accessToken, accountActivationRequired]);
 
     useEffect(() => {
         if (!verificationId) return;
@@ -171,12 +182,17 @@ export default function SignupEmailVerification({
             emailRef.current?.focus();
             return;
         }
-        if (!status?.providerReady || status.welcomeBonus.status !== "pending" || requesting || resendSeconds > 0) return;
+        const verificationAvailable = accountActivationRequired
+            ? Boolean(accessToken)
+            : Boolean(status?.providerReady && status.welcomeBonus.status === "pending");
+        if (!verificationAvailable || requesting || resendSeconds > 0) return;
 
         const accountIdentity = emailIdentity(accountEmail);
-        const needsEmailOverride = !accountIdentity
+        const needsEmailOverride = !accountActivationRequired && (
+            !accountIdentity
             || isSyntheticSocialEmail(accountEmail)
-            || emailIdentity(requestedEmail) !== accountIdentity;
+            || emailIdentity(requestedEmail) !== accountIdentity
+        );
 
         setRequesting(true);
         setError("");
@@ -196,11 +212,11 @@ export default function SignupEmailVerification({
             setNotice(`${response.maskedEmail}로 인증번호를 보냈습니다.`);
             window.setTimeout(() => codeRef.current?.focus(), 0);
         } catch (reason) {
-            setError(errorMessage(reason, "request"));
+            setError(errorMessage(reason, "request", accountActivationRequired));
         } finally {
             setRequesting(false);
         }
-    }, [accessToken, accountEmail, email, requesting, resendSeconds, status]);
+    }, [accessToken, accountActivationRequired, accountEmail, email, requesting, resendSeconds, status]);
 
     useEffect(() => {
         const initialEmail = initialAutoEmailRef.current;
@@ -208,15 +224,37 @@ export default function SignupEmailVerification({
             autoRequestAttemptedRef.current
             || !initialEmail
             || emailIdentity(normalizedEmail) !== emailIdentity(initialEmail)
-            || !status?.providerReady
-            || status.welcomeBonus.status !== "pending"
-            || !status.emailVerificationRequired
             || verificationId
             || completed
         ) return;
+        if (accountActivationRequired) {
+            if (!accessToken) return;
+        } else if (
+            !status?.providerReady
+            || status.welcomeBonus.status !== "pending"
+            || !status.emailVerificationRequired
+        ) {
+            return;
+        }
         autoRequestAttemptedRef.current = true;
-        void requestCode();
-    }, [completed, normalizedEmail, requestCode, status, verificationId]);
+        let started = false;
+        const requestTimer = window.setTimeout(() => {
+            started = true;
+            void requestCode();
+        }, 0);
+        return () => {
+            window.clearTimeout(requestTimer);
+            if (!started) autoRequestAttemptedRef.current = false;
+        };
+    }, [
+        accessToken,
+        accountActivationRequired,
+        completed,
+        normalizedEmail,
+        requestCode,
+        status,
+        verificationId,
+    ]);
 
     const confirmCode = async (event: FormEvent) => {
         event.preventDefault();
@@ -267,7 +305,7 @@ export default function SignupEmailVerification({
                 setVerificationId("");
                 setCode("");
             }
-            setError(errorMessage(reason, "confirm"));
+            setError(errorMessage(reason, "confirm", accountActivationRequired));
         } finally {
             setConfirming(false);
         }
@@ -284,7 +322,14 @@ export default function SignupEmailVerification({
         window.setTimeout(() => emailRef.current?.focus(), 0);
     };
 
-    if (hideWhenSettled && !statusLoading && status && status.welcomeBonus.status !== "pending" && !completed) {
+    if (
+        !accountActivationRequired
+        && hideWhenSettled
+        && !statusLoading
+        && status
+        && status.welcomeBonus.status !== "pending"
+        && !completed
+    ) {
         return null;
     }
 
@@ -297,15 +342,16 @@ export default function SignupEmailVerification({
             <div className="flex flex-wrap items-center gap-2">
                 <DaengLabCoinMark compact />
                 <h2 id="signup-email-verification-title" className="text-base font-black text-neutral-950">
-                    이메일 인증하고 20C 받기
+                    {accountActivationRequired ? "이메일 확인 후 계정 이용 시작" : "이메일 인증하고 20C 받기"}
                 </h2>
                 <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700 shadow-sm">
                     행동·소리 분석 2회
                 </span>
             </div>
             <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">
-                가입 이메일로 6자리 인증번호를 보내 드려요. 인증번호는 5분 동안 유효하며, 가입 혜택은 회원 1인당 한 번만 지급됩니다.
-                반복 가입 등 부정 수령이 확인되면 지급 코인이 회수되거나 서비스 이용이 제한될 수 있습니다.
+                {accountActivationRequired
+                    ? "가입 이메일로 보낸 6자리 인증번호를 확인해야 계정 이용이 시작됩니다. 인증 전에는 로그인하거나 회원 기능을 이용할 수 없습니다."
+                    : "가입 이메일로 6자리 인증번호를 보내 드려요. 인증번호는 5분 동안 유효하며, 가입 혜택은 회원 1인당 한 번만 지급됩니다. 반복 가입 등 부정 수령이 확인되면 지급 코인이 회수되거나 서비스 이용이 제한될 수 있습니다."}
             </p>
 
             {statusLoading ? (
@@ -315,7 +361,11 @@ export default function SignupEmailVerification({
             ) : completed ? (
                 <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4" role="status">
                     <p className="font-black text-emerald-900">
-                        {completed.status === "credited" && completed.awardedDaengLabCoins > 0
+                        {accountActivationRequired
+                            ? completed.awardedDaengLabCoins > 0
+                                ? `이메일 확인이 완료되었습니다. 계정 이용을 시작하며 ${completed.awardedDaengLabCoins}C도 지급되었습니다.`
+                                : "이메일 확인이 완료되었습니다. 계정 이용을 준비하고 있습니다."
+                            : completed.status === "credited" && completed.awardedDaengLabCoins > 0
                             ? `이메일 인증이 완료되어 ${completed.awardedDaengLabCoins}C가 지급되었습니다.`
                             : "이메일 인증은 완료되었습니다. 가입 혜택 지급 이력을 확인해 추가 코인은 지급되지 않았습니다."}
                     </p>
@@ -329,7 +379,7 @@ export default function SignupEmailVerification({
                         </button>
                     )}
                 </div>
-            ) : status && status.welcomeBonus.status !== "pending" ? (
+            ) : !accountActivationRequired && status && status.welcomeBonus.status !== "pending" ? (
                 <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-4">
                     <p role="status" className="text-sm font-bold leading-6 text-neutral-700">
                         {settledMessage(status.welcomeBonus.status)}
@@ -340,18 +390,23 @@ export default function SignupEmailVerification({
                         </button>
                     )}
                 </div>
-            ) : status && !status.providerReady ? (
+            ) : !accountActivationRequired && status && !status.providerReady ? (
                 <p role="status" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-sm font-bold leading-6 text-amber-900">
                     이메일 인증 서비스를 준비하고 있어요. 계정 가입과 기본 서비스 이용은 정상적으로 가능하며,
                     20C는 인증 서비스가 준비된 뒤 이메일 인증을 완료하면 지급됩니다.
                 </p>
-            ) : status && !status.emailVerificationRequired ? (
+            ) : !accountActivationRequired && status && !status.emailVerificationRequired ? (
                 <p role="status" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-sm font-bold leading-6 text-amber-900">
                     가입 혜택 지급 상태를 서버에서 확인하고 있습니다. 잠시 후 다시 시도해 주세요.
                 </p>
-            ) : status ? (
+            ) : accountActivationRequired || status ? (
                 <div className="mt-4 grid gap-3">
-                    <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                    <div className={[
+                        "grid gap-2",
+                        !verificationId || !accountActivationRequired
+                            ? "sm:grid-cols-[minmax(0,1fr)_auto]"
+                            : "",
+                    ].join(" ")}>
                         <label htmlFor="signup-bonus-email" className="min-w-0">
                             <span className="mb-1 block text-xs font-black text-neutral-700">인증받을 이메일</span>
                             <input
@@ -366,13 +421,15 @@ export default function SignupEmailVerification({
                                 placeholder="hello@example.com"
                                 aria-invalid={Boolean(email) && !normalizedEmail}
                                 aria-describedby="signup-bonus-email-help"
-                                disabled={Boolean(verificationId)}
+                                disabled={accountActivationRequired || Boolean(verificationId)}
                             />
                         </label>
                         {verificationId ? (
-                            <button type="button" onClick={changeEmail} className="btn mt-auto h-11 border border-neutral-200 bg-white px-4 text-neutral-700">
-                                이메일 오타 수정
-                            </button>
+                            !accountActivationRequired && (
+                                <button type="button" onClick={changeEmail} className="btn mt-auto h-11 border border-neutral-200 bg-white px-4 text-neutral-700">
+                                    이메일 오타 수정
+                                </button>
+                            )
                         ) : (
                             <button
                                 type="button"
@@ -385,7 +442,9 @@ export default function SignupEmailVerification({
                         )}
                     </div>
                     <p id="signup-bonus-email-help" className="text-[11px] font-bold leading-4 text-neutral-500">
-                        가입 때 입력한 이메일에는 인증번호가 자동 발송됩니다. 이메일이 임시 주소이거나 오타가 있으면 인증 전에 수정할 수 있어요.
+                        {accountActivationRequired
+                            ? "가입 때 입력한 이메일만 확인할 수 있습니다. 받은편지함에 없다면 스팸함을 확인한 뒤 인증번호를 다시 받아 주세요."
+                            : "가입 때 입력한 이메일에는 인증번호가 자동 발송됩니다. 이메일이 임시 주소이거나 오타가 있으면 인증 전에 수정할 수 있어요."}
                     </p>
 
                     {verificationId && (
@@ -437,7 +496,7 @@ export default function SignupEmailVerification({
 
             {notice && <p role="status" aria-live="polite" className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-bold leading-5 text-emerald-800">{notice}</p>}
             {error && <p role="alert" className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-800">{error}</p>}
-            {onContinueWithoutBonus && !completed && (!status || status.welcomeBonus.status === "pending") && (
+            {!accountActivationRequired && onContinueWithoutBonus && !completed && (!status || status.welcomeBonus.status === "pending") && (
                 <button type="button" onClick={onContinueWithoutBonus} className="mt-4 w-full text-center text-xs font-black text-neutral-500 underline underline-offset-4">
                     20C 혜택 없이 계속하기
                 </button>

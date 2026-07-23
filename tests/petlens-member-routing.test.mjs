@@ -42,7 +42,7 @@ test("guest auth keeps PetLens intent and incomplete members land on profile set
     assert.match(login, /petLensPostAuthDestination\(redirect, pets\)/);
     assert.match(signup, /petLensPostAuthDestination\(redirect, savedPets\)/);
     assert.match(signup, /safeInternalRedirect\(redirect, window\.location\.origin\)/);
-    assert.match(social, /startSocialLogin\(provider, returnTo\)/);
+    assert.match(social, /startSocialLogin\(provider, returnTo,/);
     assert.match(routing, /PETLENS_PROFILE_SETUP_HREF/);
     assert.match(routing, /!hasPetLensReadyProfile\(pets\)/);
 });

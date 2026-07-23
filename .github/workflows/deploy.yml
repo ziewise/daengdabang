@@ -30,6 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: ${{ github.sha }}
+      # The site key is a public browser identifier. A repository variable can
+      # override it, while the production widget keeps deploys fail-closed.
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAD8Fivq7ZEMUPPwX' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -54,6 +57,9 @@ jobs:
         run: |
           python -m pip install Pillow==12.2.0
           python tools/verify_pet_companion_breed_atlases.py
+
+      - name: Verify production signup challenge key
+        run: node scripts/verify-turnstile-site-key.mjs
 
       - name: Build
         run: npm run build

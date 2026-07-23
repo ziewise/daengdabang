@@ -196,15 +196,14 @@ export default function LoginPage() {
                         </button>
                     </form>
 
-                    {/* 비밀번호 찾기 — 추후 연결 */}
+                    {/* 본인 이메일 확인 기반 비밀번호 재설정 */}
                     <div className="mt-3 text-right">
-                        <button
-                            type="button"
-                            onClick={() => setError("비밀번호 찾기는 준비 중입니다.")}
+                        <Link
+                            href="/forgot-password"
                             className="text-xs font-bold text-neutral-400 transition hover:text-amber-600"
                         >
                             비밀번호를 잊으셨나요?
-                        </button>
+                        </Link>
                     </div>
 
                     {/* 간편 로그인 — 구분선 + 원형 아이콘 */}
