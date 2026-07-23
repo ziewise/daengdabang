@@ -1,10 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+    PET_OBSERVATION_MAX_DURATION_SECONDS,
+    PET_OBSERVATION_MAX_FILE_BYTES,
+    PET_OBSERVATION_MAX_FILE_MB,
+    PET_OBSERVATION_MIN_DURATION_SECONDS,
+    PET_OBSERVATION_RECORDING_SECONDS,
+} from "@/lib/petlens-observation-limits";
 
 
-const RECORDING_SECONDS = 10;
-const MAX_FILE_BYTES = 12 * 1024 * 1024;
+const RECORDING_SECONDS = PET_OBSERVATION_RECORDING_SECONDS;
+const MAX_FILE_BYTES = PET_OBSERVATION_MAX_FILE_BYTES;
 
 export type PetLensCapturePhase = "idle" | "requesting" | "preview" | "recording" | "recorded" | "error";
 export type PetLensCameraFacing = "environment" | "user";
@@ -175,21 +182,25 @@ export function usePetLensMediaCapture() {
         }
         setPhase("requesting");
         try {
-            const requestStream = (videoDeviceId: string, audioDeviceId: string) => navigator.mediaDevices.getUserMedia({
-                video: {
-                    ...(videoDeviceId
-                        ? { deviceId: { exact: videoDeviceId } }
-                        : { facingMode: { ideal: requestedFacingMode } }),
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                },
-                audio: {
-                    ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } } : {}),
-                    echoCancellation: false,
-                    noiseSuppression: false,
-                    autoGainControl: false,
-                },
-            });
+            const requestStream = (videoDeviceId: string, audioDeviceId: string) => {
+                const portrait = window.matchMedia("(orientation: portrait)").matches;
+                return navigator.mediaDevices.getUserMedia({
+                    video: {
+                        ...(videoDeviceId
+                            ? { deviceId: { exact: videoDeviceId } }
+                            : { facingMode: { ideal: requestedFacingMode } }),
+                        width: { ideal: portrait ? 720 : 1280 },
+                        height: { ideal: portrait ? 1280 : 720 },
+                        aspectRatio: { ideal: portrait ? 3 / 4 : 16 / 9 },
+                    },
+                    audio: {
+                        ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } } : {}),
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        autoGainControl: false,
+                    },
+                });
+            };
             let stream: MediaStream;
             let effectiveVideoDeviceId = requestedVideoDeviceId;
             let effectiveAudioDeviceId = requestedAudioDeviceId;
@@ -298,7 +309,16 @@ export function usePetLensMediaCapture() {
                 }
                 if (blob.size > MAX_FILE_BYTES) {
                     setPhase("error");
-                    setError("촬영된 영상 용량이 12MB를 넘었습니다. 다시 촬영해 주세요.");
+                    setError(`촬영된 영상 용량이 ${PET_OBSERVATION_MAX_FILE_MB}MB를 넘었습니다. 다시 촬영해 주세요.`);
+                    return;
+                }
+                const elapsed = Math.min(
+                    RECORDING_SECONDS,
+                    (performance.now() - startedAtRef.current) / 1000,
+                );
+                if (elapsed < PET_OBSERVATION_MIN_DURATION_SECONDS) {
+                    setPhase("error");
+                    setError(`촬영이 너무 일찍 끝났습니다. ${PET_OBSERVATION_MIN_DURATION_SECONDS}초 이상 다시 촬영해 주세요.`);
                     return;
                 }
                 const extension = actualType.toLowerCase().includes("mp4") ? "mp4" : "webm";
@@ -308,7 +328,7 @@ export function usePetLensMediaCapture() {
                 clipUrlRef.current = url;
                 setClipUrl(url);
                 setClip(file);
-                setDurationSeconds(Math.min(RECORDING_SECONDS, Math.max(2, (performance.now() - startedAtRef.current) / 1000)));
+                setDurationSeconds(elapsed);
                 setPhase("recorded");
                 setSecondsLeft(0);
             };
@@ -352,14 +372,19 @@ export function usePetLensMediaCapture() {
         }
         if (file.size > MAX_FILE_BYTES) {
             setPhase("error");
-            setError("영상 용량이 너무 큽니다. 10초 이내로 다시 촬영해 주세요.");
+            setError(`영상 용량이 너무 큽니다. 최대 ${PET_OBSERVATION_MAX_FILE_MB}MB 영상을 선택해 주세요.`);
             return;
         }
         try {
             const duration = await durationOf(file);
             if (!mountedRef.current || cameraRequestRef.current !== requestId) return;
-            if (duration < 2 || duration > 12) {
-                throw new Error("2초 이상 12초 이내의 영상을 선택해 주세요.");
+            if (
+                duration < PET_OBSERVATION_MIN_DURATION_SECONDS
+                || duration > PET_OBSERVATION_MAX_DURATION_SECONDS
+            ) {
+                throw new Error(
+                    `${PET_OBSERVATION_MIN_DURATION_SECONDS}초 이상 ${PET_OBSERVATION_MAX_DURATION_SECONDS}초 이내의 영상을 선택해 주세요.`,
+                );
             }
             const inferredType = normalizedType || (lowerName.endsWith(".mov")
                 ? "video/quicktime"
@@ -397,6 +422,33 @@ export function usePetLensMediaCapture() {
             revokeClipUrl();
         };
     }, [cancelCapture, refreshDevices, revokeClipUrl]);
+
+    useEffect(() => {
+        if (phase !== "preview") return;
+        let frameId = 0;
+        const syncPreviewOrientation = () => {
+            window.cancelAnimationFrame(frameId);
+            frameId = window.requestAnimationFrame(() => {
+                const track = streamRef.current?.getVideoTracks()[0];
+                if (!track || track.readyState !== "live") return;
+                const portrait = window.matchMedia("(orientation: portrait)").matches;
+                void track.applyConstraints({
+                    width: { ideal: portrait ? 720 : 1280 },
+                    height: { ideal: portrait ? 1280 : 720 },
+                    aspectRatio: { ideal: portrait ? 3 / 4 : 16 / 9 },
+                }).catch(() => {
+                    // 일부 모바일 브라우저는 회전 메타데이터만 갱신합니다.
+                });
+            });
+        };
+        window.addEventListener("resize", syncPreviewOrientation);
+        window.addEventListener("orientationchange", syncPreviewOrientation);
+        return () => {
+            window.cancelAnimationFrame(frameId);
+            window.removeEventListener("resize", syncPreviewOrientation);
+            window.removeEventListener("orientationchange", syncPreviewOrientation);
+        };
+    }, [phase]);
 
     return {
         videoRef,

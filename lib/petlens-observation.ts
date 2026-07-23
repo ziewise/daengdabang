@@ -1,6 +1,6 @@
 import { ddbApiBase, getCustomerToken } from "@/lib/customer-api";
 
-export const PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260723-v1";
+export const PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260724-v2";
 
 export type PetObservationUrgencyLevel = "emergency" | "same_day" | "observe" | "unclear";
 export type PetObservationConfidence = "high" | "medium" | "low";
@@ -22,15 +22,22 @@ export type PetObservationFact = {
 
 export type PetObservationCandidate = {
     label: string;
-    confidence: "medium" | "low";
+    confidence: PetObservationConfidence;
     confidenceScore?: number;
     evidence: number[];
     otherPossibility: string;
+    group?: "behavior" | "sound" | "health";
+};
+
+export type PetObservationHealthCandidate = Omit<PetObservationCandidate, "confidence" | "group"> & {
+    confidence: "medium" | "low";
+    group: "health";
 };
 
 export type PetObservationSymptomSignal = {
     label: string;
     confidence: "medium" | "low";
+    confidenceScore?: number;
     evidence: number[];
     action: PetObservationUrgencyLevel;
 };
@@ -41,6 +48,29 @@ export type PetObservationGuardianAnswer = {
     note: string;
 };
 
+export type PetObservationNutritionFocus =
+    | "balanced_meal"
+    | "hydration_support"
+    | "digestive_support"
+    | "weight_management"
+    | "joint_mobility_support"
+    | "skin_coat_support"
+    | "senior_support";
+
+export type PetObservationNutritionLifeStage = "adult" | "senior";
+
+export type PetObservationNutritionRecommendation = {
+    focus: PetObservationNutritionFocus;
+    lifeStage: PetObservationNutritionLifeStage;
+    headline: string;
+    reason: string;
+    evidence: number[];
+    profileBasis: Array<"age" | "breed" | "situation">;
+    catalogQuery: string;
+    requiresGuardianConfirmation: true;
+    isTreatment: false;
+};
+
 export type PetObservationResult = {
     status: "ready" | "limited" | "no_dog";
     summary: string;
@@ -48,6 +78,7 @@ export type PetObservationResult = {
     observations: PetObservationFact[];
     barkContextCandidates: PetObservationCandidate[];
     behaviorCandidates: PetObservationCandidate[];
+    healthCandidates: PetObservationHealthCandidate[];
     symptomSignals: PetObservationSymptomSignal[];
     urgency: {
         level: PetObservationUrgencyLevel;
@@ -55,6 +86,7 @@ export type PetObservationResult = {
         reasons: string[];
         actions: string[];
     };
+    nutritionRecommendations: PetObservationNutritionRecommendation[];
     followUpQuestions: string[];
     guardianFollowUpAnswers: PetObservationGuardianAnswer[];
     guardianContextSummary: string;
@@ -90,6 +122,7 @@ export type PetObservationRequest = {
     signal?: AbortSignal;
     requestId: string;
     privacyConsent: boolean;
+    onQueueStatus?: (status: PetObservationQueueStatus) => void;
 };
 
 export type PetObservationHistoryItem = {
@@ -107,6 +140,24 @@ export type PetObservationEngineStatus = {
     ready: boolean;
 };
 
+export type PetObservationQueueStatus = {
+    requestId: string;
+    state: "queued" | "processing" | "not_found";
+    position: number | null;
+    active: number;
+    queued: number;
+    maxConcurrent: number;
+    maxWaiting: number;
+    admittedLimit: number;
+    estimatedWaitSeconds: number;
+};
+
+export type PetObservationQueueCancellation = {
+    requestId: string;
+    cancelled: boolean;
+    state: "cancelled" | "processing" | "not_found";
+};
+
 export async function loadPetObservationEngineStatus(signal?: AbortSignal): Promise<PetObservationEngineStatus> {
     const base = ddbApiBase();
     if (!base) return { ready: false };
@@ -114,7 +165,7 @@ export async function loadPetObservationEngineStatus(signal?: AbortSignal): Prom
         cache: "no-store",
         signal,
     });
-    if (!response.ok) throw new Error("행동·소리 분석 연결 상태를 확인하지 못했습니다.");
+    if (!response.ok) throw new Error("행동·소리·건강 신호 분석 연결 상태를 확인하지 못했습니다.");
     const body = await response.json() as {
         observation_engine_ready?: unknown;
         observation_camera_enabled?: unknown;
@@ -177,14 +228,29 @@ function evidence(value: unknown, factCount: number) {
         .slice(0, 5);
 }
 
-function candidateConfidenceScore(value: unknown, confidenceLabel: PetObservationCandidate["confidence"]) {
-    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 0.79) return undefined;
-    if (confidenceLabel === "medium" && value < 0.5) return undefined;
+function candidateConfidenceScore(
+    value: unknown,
+    confidenceLabel: PetObservationCandidate["confidence"],
+    maxScore = 0.95,
+) {
+    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > maxScore) return undefined;
+    if (confidenceLabel === "high" && value < 0.8) return undefined;
+    if (confidenceLabel === "medium" && (value < 0.5 || value >= 0.8)) return undefined;
     if (confidenceLabel === "low" && value >= 0.5) return undefined;
     return Math.round(value * 1_000) / 1_000;
 }
 
-function candidates(value: unknown, factCount: number, limit: number): PetObservationCandidate[] {
+function candidates(
+    value: unknown,
+    factCount: number,
+    limit: number,
+    options: {
+        group?: PetObservationCandidate["group"];
+        maxScore?: number;
+        allowedConfidences?: readonly PetObservationConfidence[];
+        requireScore?: boolean;
+    } = {},
+): PetObservationCandidate[] {
     if (!Array.isArray(value)) return [];
     return value.flatMap((item) => {
         const row = record(item);
@@ -192,17 +258,23 @@ function candidates(value: unknown, factCount: number, limit: number): PetObserv
         const label = line(row.label, 100);
         const proof = evidence(row.evidence, factCount);
         if (!label || proof.length === 0) return [];
-        const confidenceLabel = row.confidence === "medium" ? "medium" as const : "low" as const;
+        const confidenceLabel = row.confidence === "high"
+            ? "high" as const
+            : row.confidence === "medium" ? "medium" as const : "low" as const;
+        if (options.allowedConfidences && !options.allowedConfidences.includes(confidenceLabel)) return [];
         const confidenceScore = candidateConfidenceScore(
             row.confidence_score ?? row.confidenceScore,
             confidenceLabel,
+            options.maxScore,
         );
+        if (options.requireScore && typeof confidenceScore !== "number") return [];
         return [{
             label,
             confidence: confidenceLabel,
             ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
             evidence: proof,
             otherPossibility: line(row.other_possibility ?? row.otherPossibility, 140),
+            ...(options.group ? { group: options.group } : {}),
         }];
     }).slice(0, limit);
 }
@@ -270,10 +342,37 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         : [];
 
     const barkContextCandidates = barkDetected && audioAvailable
-        ? candidates(raw.bark_context_candidates ?? raw.barkContextCandidates, observations.length, 3)
+        ? candidates(
+            raw.bark_context_candidates ?? raw.barkContextCandidates,
+            observations.length,
+            3,
+            { group: "sound" },
+        )
         : [];
     const behaviorCandidates = dogVisible && qualityLevel !== "unusable"
-        ? candidates(raw.behavior_candidates ?? raw.behaviorCandidates, observations.length, 4)
+        ? candidates(
+            raw.behavior_candidates ?? raw.behaviorCandidates,
+            observations.length,
+            4,
+            { group: "behavior" },
+        )
+        : [];
+    const healthCandidates: PetObservationHealthCandidate[] = dogVisible && qualityLevel !== "unusable"
+        ? candidates(
+            raw.health_candidates ?? raw.healthCandidates,
+            observations.length,
+            4,
+            {
+                group: "health",
+                maxScore: 0.79,
+                allowedConfidences: ["medium", "low"],
+                requireScore: true,
+            },
+        ).map((item) => ({
+            ...item,
+            confidence: item.confidence === "medium" ? "medium" : "low",
+            group: "health",
+        }))
         : [];
     const rawSymptoms = raw.symptom_signals ?? raw.symptomSignals;
     const normalizedSymptoms: PetObservationSymptomSignal[] = dogVisible && qualityLevel !== "unusable" && Array.isArray(rawSymptoms)
@@ -284,14 +383,24 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 const label = line(row.label, 120);
                 const proof = evidence(row.evidence, observations.length);
                 if (!label || proof.length === 0) return [];
+                const confidenceLabel = row.confidence === "medium" ? "medium" as const : "low" as const;
+                const rawConfidenceScore = row.confidence_score ?? row.confidenceScore;
+                const confidenceScore = candidateConfidenceScore(
+                    rawConfidenceScore,
+                    confidenceLabel,
+                    0.79,
+                );
+                if (rawConfidenceScore !== undefined && typeof confidenceScore !== "number") return [];
                 return [{
                     label,
-                    confidence: row.confidence === "medium" ? "medium" as const : "low" as const,
+                    confidence: confidenceLabel,
+                    ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
                     evidence: proof,
                     action: urgencyLevel(row.action),
                 }];
             })
             .slice(0, 4)
+            .sort((a, b) => (b.confidenceScore ?? -1) - (a.confidenceScore ?? -1))
         : [];
 
     let normalizedUrgency = urgencyLevel(rawUrgency.level);
@@ -307,6 +416,74 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         : qualityLevel === "good" && raw.status === "ready"
             ? "ready"
             : "limited";
+    const allowedNutritionFocuses = new Set<PetObservationNutritionFocus>([
+        "balanced_meal",
+        "hydration_support",
+        "digestive_support",
+        "weight_management",
+        "joint_mobility_support",
+        "skin_coat_support",
+        "senior_support",
+    ]);
+    const unsafeNutritionClaim = /(?:치료|완치|예방|처방|약효|질병\s*개선|질환\s*개선|통증\s*개선|\d+(?:\.\d+)?\s*%|확률|추론\s*점수|건강\s*점수)/iu;
+    const rawNutrition = raw.nutrition_recommendations ?? raw.nutritionRecommendations;
+    const nutritionRecommendations: PetObservationNutritionRecommendation[] = (
+        status === "ready"
+        && qualityLevel === "good"
+        && normalizedUrgency === "observe"
+        && Array.isArray(rawNutrition)
+    )
+        ? rawNutrition.flatMap((item) => {
+            const row = record(item);
+            if (!row || !allowedNutritionFocuses.has(row.focus as PetObservationNutritionFocus)) return [];
+            const headline = line(row.headline, 100);
+            const reason = line(row.reason, 180);
+            const catalogQuery = line(row.catalog_query ?? row.catalogQuery, 80);
+            const proof = evidence(row.evidence, observations.length);
+            const rawProfileBasis = row.profile_basis ?? row.profileBasis;
+            const profileBasis = Array.isArray(rawProfileBasis)
+                ? Array.from(new Set(rawProfileBasis
+                    .filter((item): item is "age" | "breed" | "situation" =>
+                        item === "age" || item === "breed" || item === "situation")))
+                    .slice(0, 3)
+                : [];
+            const rawLifeStage = row.life_stage ?? row.lifeStage;
+            const lifeStage = rawLifeStage === "adult"
+                ? "adult" as const
+                : rawLifeStage === "senior"
+                    ? "senior" as const
+                    : undefined;
+            const focusMatchesLifeStage = lifeStage === "adult"
+                ? row.focus === "balanced_meal" || row.focus === "hydration_support"
+                : lifeStage === "senior"
+                    ? row.focus === "senior_support"
+                    : false;
+            const requiresGuardianConfirmation = row.requires_guardian_confirmation ?? row.requiresGuardianConfirmation;
+            const isTreatment = row.is_treatment ?? row.isTreatment;
+            if (
+                !headline
+                || !reason
+                || !catalogQuery
+                || !profileBasis.includes("age")
+                || !lifeStage
+                || !focusMatchesLifeStage
+                || requiresGuardianConfirmation !== true
+                || isTreatment !== false
+                || unsafeNutritionClaim.test(`${headline} ${reason}`)
+            ) return [];
+            return [{
+                focus: row.focus as PetObservationNutritionFocus,
+                lifeStage,
+                headline,
+                reason,
+                evidence: proof,
+                profileBasis,
+                catalogQuery,
+                requiresGuardianConfirmation: true as const,
+                isTreatment: false as const,
+            }];
+        }).slice(0, 2)
+        : [];
     const defaultHeadline: Record<PetObservationUrgencyLevel, string> = {
         emergency: "응급 가능성이 있는 신호가 보여요",
         same_day: "오늘 동물병원에 문의해 주세요",
@@ -355,6 +532,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         observations,
         barkContextCandidates,
         behaviorCandidates,
+        healthCandidates,
         symptomSignals: normalizedSymptoms,
         urgency: {
             level: normalizedUrgency,
@@ -366,6 +544,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 : lines(rawUrgency.reasons, 5, 160),
             actions: safeActions[normalizedUrgency],
         },
+        nutritionRecommendations,
         followUpQuestions,
         guardianFollowUpAnswers,
         guardianContextSummary: line(raw.guardian_context_summary ?? raw.guardianContextSummary, 320),
@@ -437,16 +616,117 @@ export async function loadPetObservationHistory(options: {
         signal: options.signal,
     });
     if ([404, 405, 501].includes(response.status)) return [];
-    if (!response.ok) throw new Error("최근 행동·소리 분석 기록을 불러오지 못했습니다.");
+    if (!response.ok) throw new Error("최근 행동·소리·건강 신호 분석 기록을 불러오지 못했습니다.");
     return historyRows(await response.json())
         .map((item) => parsePetObservationHistoryItem(item, options.petProfileId))
         .filter((item): item is PetObservationHistoryItem => Boolean(item))
         .slice(0, limit);
 }
 
+function queueInteger(value: unknown, fallback = 0) {
+    return typeof value === "number" && Number.isFinite(value)
+        ? Math.max(0, Math.trunc(value))
+        : fallback;
+}
+
+function parsePetObservationQueueStatus(value: unknown): PetObservationQueueStatus | null {
+    const raw = record(value);
+    if (!raw) return null;
+    const state = raw.state === "queued" || raw.state === "processing" || raw.state === "not_found"
+        ? raw.state
+        : null;
+    const requestId = line(raw.request_id ?? raw.requestId, 128);
+    if (!state || !requestId) return null;
+    const rawPosition = raw.position;
+    const position = typeof rawPosition === "number" && Number.isFinite(rawPosition)
+        ? Math.max(0, Math.trunc(rawPosition))
+        : null;
+    const maxConcurrent = queueInteger(raw.max_concurrent ?? raw.maxConcurrent, 3);
+    const maxWaiting = queueInteger(raw.max_waiting ?? raw.maxWaiting, 12);
+    return {
+        requestId,
+        state,
+        position,
+        active: queueInteger(raw.active),
+        queued: queueInteger(raw.queued),
+        maxConcurrent,
+        maxWaiting,
+        admittedLimit: queueInteger(raw.admitted_limit ?? raw.admittedLimit, maxConcurrent + maxWaiting),
+        estimatedWaitSeconds: queueInteger(raw.estimated_wait_seconds ?? raw.estimatedWaitSeconds),
+    };
+}
+
+export async function loadPetObservationQueueStatus(options: {
+    requestId: string;
+    accessToken?: string;
+    signal?: AbortSignal;
+}): Promise<PetObservationQueueStatus | null> {
+    const base = ddbApiBase();
+    const token = options.accessToken || getCustomerToken();
+    const requestId = options.requestId.trim();
+    if (!base || !token || !requestId) return null;
+    const response = await fetch(
+        `${base.replace(/\/$/, "")}/api/v1/pet-lens/observation-queue/${encodeURIComponent(requestId)}`,
+        {
+            cache: "no-store",
+            headers: { Authorization: `Bearer ${token}` },
+            signal: options.signal,
+        },
+    );
+    if ([404, 405, 501].includes(response.status)) return null;
+    if (!response.ok) throw new Error("분석 대기 상태를 확인하지 못했습니다.");
+    return parsePetObservationQueueStatus(await response.json());
+}
+
+export async function cancelPetObservationQueueWait(options: {
+    requestId: string;
+    accessToken?: string;
+}): Promise<PetObservationQueueCancellation> {
+    const base = ddbApiBase();
+    const token = options.accessToken || getCustomerToken();
+    const requestId = options.requestId.trim();
+    if (!base || !token || !requestId) {
+        throw new Error("분석 대기 취소 정보를 확인하지 못했습니다.");
+    }
+    const response = await fetch(
+        `${base.replace(/\/$/, "")}/api/v1/pet-lens/observation-queue/${encodeURIComponent(requestId)}`,
+        {
+            method: "DELETE",
+            cache: "no-store",
+            headers: { Authorization: `Bearer ${token}` },
+        },
+    );
+    if (response.status === 409) {
+        try {
+            const body = await response.json() as { detail?: { code?: unknown } };
+            if (body.detail?.code === "OBSERVATION_QUEUE_ALREADY_PROCESSING") {
+                return { requestId, cancelled: false, state: "processing" };
+            }
+        } catch {
+            // Fall through to the customer-safe cancellation error.
+        }
+    }
+    if (!response.ok) {
+        throw new Error("분석 대기 취소를 확인하지 못했어요. 현재 분석은 계속 진행됩니다.");
+    }
+    const body = await response.json() as {
+        request_id?: unknown;
+        cancelled?: unknown;
+        state?: unknown;
+    };
+    const cancelled = body.cancelled === true && body.state === "cancelled";
+    return {
+        requestId: typeof body.request_id === "string" && body.request_id.trim()
+            ? body.request_id.trim()
+            : requestId,
+        cancelled,
+        state: cancelled ? "cancelled" : "not_found",
+    };
+}
+
 export async function analyzePetObservation(request: PetObservationRequest): Promise<PetObservationResult> {
     const base = ddbApiBase();
-    if (!base) throw new Error("지금은 댕랩 행동·소리 분석을 사용할 수 없습니다.");
+    if (!base) throw new Error("지금은 댕랩 행동·소리·건강 신호 분석을 사용할 수 없습니다.");
     const token = request.accessToken || getCustomerToken();
     if (!token) throw new Error("로그인 정보를 다시 확인해 주세요.");
     if (!Number.isInteger(request.petProfileId) || request.petProfileId <= 0) {
@@ -470,12 +750,39 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
     form.append("request_id", request.requestId);
     form.append("privacy_consent", "true");
     form.append("privacy_notice_version", PET_OBSERVATION_PRIVACY_NOTICE_VERSION);
-    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/observe`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: form,
-        signal: request.signal,
-    });
+    let queuePollingStopped = false;
+    let queuePollTimer: ReturnType<typeof setTimeout> | undefined;
+    const pollQueue = async () => {
+        if (queuePollingStopped || request.signal?.aborted || !request.onQueueStatus) return;
+        try {
+            const status = await loadPetObservationQueueStatus({
+                requestId: request.requestId,
+                accessToken: token,
+                signal: request.signal,
+            });
+            if (!queuePollingStopped && status) request.onQueueStatus(status);
+        } catch {
+            // 분석 본 요청은 계속 진행하고 다음 주기에 대기 상태를 다시 확인합니다.
+        } finally {
+            if (!queuePollingStopped && !request.signal?.aborted) {
+                queuePollTimer = setTimeout(() => void pollQueue(), 1_000);
+            }
+        }
+    };
+    if (request.onQueueStatus) queuePollTimer = setTimeout(() => void pollQueue(), 200);
+
+    let response: Response;
+    try {
+        response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/observe`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: form,
+            signal: request.signal,
+        });
+    } finally {
+        queuePollingStopped = true;
+        if (queuePollTimer) clearTimeout(queuePollTimer);
+    }
     if (!response.ok) {
         let message = "관찰 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
         let code: string | undefined;

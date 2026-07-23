@@ -44,8 +44,8 @@ test("the privacy page restores the June source details without removing newer P
     assert.match(privacy, /제13조 AI 분석 및 자동화된 결정/);
     assert.match(privacy, /댕랩 행동·소리 분석\(PetLens 관찰 기능\)/);
     assert.match(privacy, /가입 혜택 중복 방지/);
-    assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-07-23"/);
-    assert.match(privacy, /개인정보처리방침 버전: v1\.3/);
+    assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-07-24"/);
+    assert.match(privacy, /개인정보처리방침 버전: v1\.4/);
 });
 
 test("the privacy page discloses the live behavior and sound processing boundary in plain language", async () => {
@@ -61,5 +61,6 @@ test("the privacy page discloses the live behavior and sound processing boundary
     assert.match(privacy, /분석 결과, 원본의 SHA-256 해시, 동의 증적\(동의 영수증\)과 요청 기록은 이용자가 삭제를 요청하거나 회원 탈퇴할 때까지 보관/);
     assert.match(privacy, /원본 영상·음성은 분석 요청 중에만 일시 처리하고 댕다방 서버에 보관하지 않음/);
     assert.match(privacy, /자체 학습한 수의학적 진단 모델이나 수의사의 진단을 대신하는 기능이 아닙니다/);
-    assert.match(privacy, /const DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260723-v1"/);
+    assert.match(privacy, /5~20초\(권장 15초\) 반려견 영상/);
+    assert.match(privacy, /const DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260724-v2"/);
 });

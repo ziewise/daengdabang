@@ -15,7 +15,7 @@ export default function DaengLabServiceTitle({
     className = "",
     suffixClassName = "",
 }: Props) {
-    const serviceSuffix = suffix ?? (en ? "Behavior & Sound" : "행동·소리 분석");
+    const serviceSuffix = suffix ?? (en ? "Behavior, Sound & Wellness Signals" : "행동·소리·건강 신호 분석");
     const newServiceLabel = en ? "new service" : "신규 서비스";
     const accessibleLabel = `${en ? "DaengLab" : "댕랩"} ${serviceSuffix}${showBadge ? `, ${newServiceLabel}` : ""}`;
 

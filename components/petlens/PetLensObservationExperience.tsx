@@ -4,10 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
     analyzePetObservation,
+    cancelPetObservationQueueWait,
     loadPetObservationEngineStatus,
     loadPetObservationHistory,
     PetObservationRequestError,
     type PetObservationHistoryItem,
+    type PetObservationQueueStatus,
     type PetObservationResult,
     type PetObservationSituation,
 } from "@/lib/petlens-observation";
@@ -20,6 +22,12 @@ import PetLensObservationHistory from "@/components/petlens/PetLensObservationHi
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import {
+    PET_OBSERVATION_MAX_DURATION_SECONDS,
+    PET_OBSERVATION_MAX_FILE_MB,
+    PET_OBSERVATION_MIN_DURATION_SECONDS,
+    PET_OBSERVATION_RECORDING_SECONDS,
+} from "@/lib/petlens-observation-limits";
 
 
 const SITUATIONS: Array<{ value: PetObservationSituation; label: string }> = [
@@ -78,7 +86,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
     const [note, setNote] = useState("");
     const [analyzing, setAnalyzing] = useState(false);
+    const [cancelingWait, setCancelingWait] = useState(false);
     const [analysisError, setAnalysisError] = useState("");
+    const [queueStatus, setQueueStatus] = useState<PetObservationQueueStatus | null>(null);
+    const [previewOrientation, setPreviewOrientation] = useState<"portrait" | "landscape">("landscape");
     const [result, setResult] = useState<PetObservationResult | null>(null);
     const [resultRequestId, setResultRequestId] = useState<string>();
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
@@ -94,6 +105,29 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     }, []);
 
     useEffect(() => () => abortRef.current?.abort(), []);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        const updateOrientation = () => {
+            const viewportOrientation = window.innerWidth >= window.innerHeight ? "landscape" : "portrait";
+            const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+            const streamOrientation = video && video.videoWidth > 0 && video.videoHeight > 0
+                ? video.videoWidth >= video.videoHeight ? "landscape" : "portrait"
+                : viewportOrientation;
+            setPreviewOrientation(coarsePointer ? viewportOrientation : streamOrientation);
+        };
+        updateOrientation();
+        window.addEventListener("resize", updateOrientation);
+        window.addEventListener("orientationchange", updateOrientation);
+        video?.addEventListener("loadedmetadata", updateOrientation);
+        video?.addEventListener("resize", updateOrientation);
+        return () => {
+            window.removeEventListener("resize", updateOrientation);
+            window.removeEventListener("orientationchange", updateOrientation);
+            video?.removeEventListener("loadedmetadata", updateOrientation);
+            video?.removeEventListener("resize", updateOrientation);
+        };
+    }, [videoRef]);
 
     useEffect(() => {
         if (!consentPromptOpen) return;
@@ -193,18 +227,20 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
         if (engineState !== "ready") {
-            setAnalysisError("행동·소리 분석 연결을 확인하지 못했어요. 잠시 후 다시 확인해 주세요.");
+            setAnalysisError("행동·소리·건강 신호 분석 연결을 확인하지 못했어요. 잠시 후 다시 확인해 주세요.");
             return;
         }
         if (!wallet || wallet.daengLabCoins < wallet.analysisCoinCost) {
-            setAnalysisError(`댕랩 행동·소리 분석에는 ${wallet?.analysisCoinCost ?? 10}코인이 필요합니다. 마이페이지에서 적립금을 코인으로 전환할 수 있어요.`);
+            setAnalysisError(`댕랩 행동·소리·건강 신호 분석에는 ${wallet?.analysisCoinCost ?? 10}코인이 필요합니다. 마이페이지에서 적립금을 코인으로 전환할 수 있어요.`);
             return;
         }
         abortRef.current?.abort();
         const controller = new AbortController();
         abortRef.current = controller;
         setAnalyzing(true);
+        setCancelingWait(false);
         setAnalysisError("");
+        setQueueStatus(null);
         trackStorefrontEvent("petlens_started", { mode: "observation", surface: variant });
         try {
             const requestId = requestIdRef.current || analysisRequestId();
@@ -222,6 +258,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 signal: controller.signal,
                 requestId,
                 privacyConsent: consent,
+                onQueueStatus: setQueueStatus,
             });
             setResult(next);
             setResultRequestId(requestId);
@@ -241,6 +278,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             void refreshHistory();
         } catch (reason) {
             if (controller.signal.aborted) return;
+            const queueCancelled = reason instanceof PetObservationRequestError
+                && reason.code === "OBSERVATION_QUEUE_CANCELLED";
+            if (queueCancelled) {
+                requestIdRef.current = null;
+                setAnalysisError("분석 대기를 취소했습니다. 촬영한 영상은 다시 분석할 수 있어요.");
+                return;
+            }
             const insufficient = reason instanceof PetObservationRequestError
                 && reason.code === "daenglab_coin_insufficient";
             if (insufficient && typeof reason.balance === "number") {
@@ -263,7 +307,51 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             requestIdRef.current = null;
             resetCapture();
         } finally {
-            if (!controller.signal.aborted) setAnalyzing(false);
+            if (!controller.signal.aborted) {
+                setAnalyzing(false);
+                setQueueStatus(null);
+            }
+        }
+    };
+
+    const cancelAnalysisWait = async () => {
+        const requestId = requestIdRef.current;
+        if (!requestId || queueStatus?.state !== "queued" || cancelingWait) return;
+        setCancelingWait(true);
+        setAnalysisError("");
+        try {
+            const cancellation = await cancelPetObservationQueueWait({
+                requestId,
+                accessToken,
+            });
+            if (cancellation.state === "processing") {
+                setQueueStatus((current) => current ? {
+                    ...current,
+                    state: "processing",
+                    position: null,
+                    estimatedWaitSeconds: 0,
+                } : current);
+                setAnalysisError("분석이 이미 시작되어 대기 취소는 하지 않았어요. 결과를 확인해 주세요.");
+                return;
+            }
+            if (!cancellation.cancelled) {
+                setAnalysisError("대기 상태가 이미 끝나 취소하지 않았어요. 분석 결과를 확인하고 있습니다.");
+                return;
+            }
+            abortRef.current?.abort();
+            abortRef.current = null;
+            requestIdRef.current = null;
+            setAnalyzing(false);
+            setQueueStatus(null);
+            setAnalysisError("분석 대기를 취소했습니다. 촬영한 영상은 다시 분석할 수 있어요.");
+        } catch (reason) {
+            setAnalysisError(
+                reason instanceof Error
+                    ? reason.message
+                    : "분석 대기 취소를 확인하지 못했어요. 현재 분석은 계속 진행됩니다.",
+            );
+        } finally {
+            setCancelingWait(false);
         }
     };
 
@@ -272,6 +360,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         abortRef.current = null;
         setAnalyzing(false);
         setAnalysisError("");
+        setQueueStatus(null);
         setResult(null);
         setResultRequestId(undefined);
         requestIdRef.current = null;
@@ -282,6 +371,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         abortRef.current?.abort();
         setAnalyzing(false);
         setAnalysisError("");
+        setQueueStatus(null);
         resetCapture();
         setResult(item.result);
         setResultRequestId(item.requestId);
@@ -312,7 +402,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <DaengLabServiceTitle
                             compact
                             showBadge={false}
-                            suffix="행동·소리 분석 결과"
+                            suffix="행동·소리·건강 신호 분석 결과"
                             suffixClassName="text-[11px] font-black leading-tight text-indigo-700"
                         />
                         <h2 className="mt-1 text-xl font-black text-neutral-950">{pet.name || "우리 아이"}의 짧은 관찰 결과</h2>
@@ -421,10 +511,12 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 role="status"
                             >
                                 <i className={`fa-solid mr-1.5 text-[9px] ${engineReady ? "fa-circle-check" : engineState === "checking" ? "fa-circle-notch fa-spin" : "fa-triangle-exclamation"}`} />
-                                {engineReady ? "행동·소리 분석 연결됨" : engineState === "checking" ? "분석 연결 확인 중" : "분석 연결 점검 중"}
+                                {engineReady ? "행동·소리·건강 신호 분석 연결됨" : engineState === "checking" ? "분석 연결 확인 중" : "분석 연결 점검 중"}
                             </span>
                         </div>
-                        <h2 className="mt-1 text-lg font-black text-neutral-950">10초 동안 소리와 행동을 함께 관찰해요</h2>
+                        <h2 className="mt-1 text-lg font-black text-neutral-950">
+                            권장 {PET_OBSERVATION_RECORDING_SECONDS}초 동안 소리와 행동을 함께 관찰해요
+                        </h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
                             짖음만 번역하지 않고 자세·움직임·호흡 모습·상황을 같이 봐서 가능한 맥락과 확인할 신호를 정리합니다.
                         </p>
@@ -435,13 +527,35 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     data-daenglab-service-description
                 >
                     댕랩은 카메라 영상과 포함 음성을 함께 분석해,
-                    우리 아이의 행동·소리에서 보이는 관찰 신호와 가능한 맥락을 정리합니다.
+                    우리 아이의 행동·소리·건강 상태에서 보이는 관찰 신호와 가능한 맥락을 정리합니다.
+                </p>
+                <div
+                    className="mt-3 grid grid-cols-3 gap-2"
+                    data-daenglab-observation-limits
+                >
+                    <div className="rounded-xl bg-indigo-700 px-2.5 py-2 text-center text-white">
+                        <span className="block text-[9px] font-black text-indigo-100">권장 촬영</span>
+                        <strong className="mt-0.5 block text-sm font-black">{PET_OBSERVATION_RECORDING_SECONDS}초</strong>
+                    </div>
+                    <div className="rounded-xl bg-white px-2.5 py-2 text-center text-neutral-800 shadow-sm">
+                        <span className="block text-[9px] font-black text-neutral-400">허용 길이</span>
+                        <strong className="mt-0.5 block text-sm font-black">
+                            {PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초
+                        </strong>
+                    </div>
+                    <div className="rounded-xl bg-white px-2.5 py-2 text-center text-neutral-800 shadow-sm">
+                        <span className="block text-[9px] font-black text-neutral-400">최대 용량</span>
+                        <strong className="mt-0.5 block text-sm font-black">{PET_OBSERVATION_MAX_FILE_MB}MB</strong>
+                    </div>
+                </div>
+                <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
+                    한 가지 행동이 시작되기 전부터 끝난 뒤까지 담아주세요. 앱의 {PET_OBSERVATION_RECORDING_SECONDS}초 촬영은 보통 약 2MB 이내입니다.
                 </p>
             </div>
 
             {engineState === "unavailable" && (
                 <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3" role="alert" data-daenglab-observation-engine-warning>
-                    <p className="text-xs font-bold leading-5 text-amber-950">지금은 행동·소리 분석 연결을 확인하지 못했어요. 촬영 전에 다시 확인해 주세요.</p>
+                    <p className="text-xs font-bold leading-5 text-amber-950">지금은 행동·소리·건강 신호 분석 연결을 확인하지 못했어요. 촬영 전에 다시 확인해 주세요.</p>
                     <button type="button" onClick={() => void refreshEngine()} className="btn btn-secondary min-h-9 shrink-0 px-3 text-[11px]">다시 확인</button>
                 </div>
             )}
@@ -454,7 +568,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     <div className="flex items-center gap-3">
                         <DaengLabCoinMark compact className="text-xs" />
                         <div>
-                            <p className="text-xs font-black text-neutral-950">댕랩 행동·소리 분석 1회 {analysisCoinCost}C</p>
+                            <p className="text-xs font-black text-neutral-950">댕랩 행동·소리·건강 신호 분석 1회 {analysisCoinCost}C</p>
                             <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출 영상은 자동 환급</p>
                         </div>
                     </div>
@@ -503,7 +617,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
             <div className={`grid gap-4 ${compact ? "" : "lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,.8fr)]"}`}>
                 <div className="grid gap-3">
-                    <div className="relative aspect-video overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950" data-petlens-live-camera>
+                    <div
+                        className={`relative w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 transition-[aspect-ratio,max-width] duration-300 ${
+                            previewOrientation === "portrait"
+                                ? "mx-auto aspect-[3/4] max-w-xl"
+                                : "aspect-video"
+                        }`}
+                        data-petlens-live-camera
+                        data-camera-orientation={previewOrientation}
+                    >
                         <video
                             ref={videoRef}
                             src={clipUrl || undefined}
@@ -537,6 +659,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             </div>
                         )}
                     </div>
+                    <p
+                        className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[10px] font-bold leading-4 text-neutral-600"
+                        data-petlens-orientation-status={previewOrientation}
+                        role="status"
+                        aria-live="polite"
+                    >
+                        현재 {previewOrientation === "portrait" ? "세로" : "가로"} 화면에 맞췄어요.
+                        휴대폰을 돌리면 미리보기 비율도 자동으로 전환되며, 촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지해 주세요.
+                    </p>
 
                     {(phase === "preview" || phase === "recording") && (
                         <div className="rounded-xl border border-sky-100 bg-sky-50/80 p-3" data-petlens-connected-devices>
@@ -606,6 +737,61 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             {analysisError}
                         </p>
                     )}
+                    {analyzing && (
+                        <div
+                            className="grid gap-3 rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-indigo-50 p-4 text-sky-950"
+                            role="status"
+                            aria-live="polite"
+                            data-daenglab-observation-queue
+                        >
+                            <div className="flex flex-wrap items-start justify-between gap-3">
+                                <div>
+                                    <p className="text-sm font-black">
+                                        {queueStatus?.state === "queued"
+                                            ? `대기 ${queueStatus.position ?? 1}번째`
+                                            : queueStatus?.state === "processing"
+                                                ? "분석을 시작했어요"
+                                                : "분석 요청을 준비하고 있어요"}
+                                    </p>
+                                    <p className="mt-1 text-xs font-bold leading-5 text-sky-800">
+                                        {queueStatus?.state === "queued"
+                                            ? queueStatus.estimatedWaitSeconds > 0
+                                                ? `예상 대기 약 ${queueStatus.estimatedWaitSeconds}초 · 순서가 되면 자동으로 시작합니다.`
+                                                : "곧 분석이 시작됩니다."
+                                            : queueStatus?.state === "processing"
+                                                ? "행동·소리·건강 신호를 함께 정리하고 있습니다."
+                                                : "현재 처리 가능 여부와 대기 순서를 확인하고 있습니다."}
+                                    </p>
+                                </div>
+                                {queueStatus?.state === "queued" && (
+                                    <button
+                                        type="button"
+                                        onClick={() => void cancelAnalysisWait()}
+                                        disabled={cancelingWait}
+                                        className="rounded-xl border border-sky-300 bg-white px-3 py-2 text-xs font-black text-sky-800 hover:bg-sky-50 disabled:cursor-wait disabled:opacity-60"
+                                    >
+                                        {cancelingWait ? "취소 확인 중..." : "대기 취소"}
+                                    </button>
+                                )}
+                            </div>
+                            {queueStatus && queueStatus.state !== "not_found" && (
+                                <div className="grid grid-cols-2 gap-2 text-center text-[11px] font-black sm:grid-cols-3">
+                                    <span className="rounded-xl bg-white/80 px-3 py-2">
+                                        동시 분석 {queueStatus.active}/{queueStatus.maxConcurrent}
+                                    </span>
+                                    <span className="rounded-xl bg-white/80 px-3 py-2">
+                                        현재 대기 {queueStatus.queued}/{queueStatus.maxWaiting}
+                                    </span>
+                                    <span className="col-span-2 rounded-xl bg-white/80 px-3 py-2 sm:col-span-1">
+                                        수용 가능 {queueStatus.admittedLimit}명
+                                    </span>
+                                </div>
+                            )}
+                            <p className="text-[11px] font-bold text-sky-700">
+                                대기 중에는 코인이 차감되지 않으며, 분석 순서가 되면 자동으로 진행됩니다.
+                            </p>
+                        </div>
+                    )}
 
                     <div className="grid gap-2 sm:grid-cols-2">
                         {(phase === "idle" || phase === "error") && (
@@ -629,7 +815,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                     className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
                                     data-petlens-start-observation
                                 >
-                                    <i className="fa-solid fa-circle-dot mr-2 text-xs" /> 10초 관찰 시작
+                                    <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
                                 </button>
                                 <button type="button" onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
                                     연결 끊기
@@ -655,7 +841,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                     data-petlens-analyze-observation
                                 >
                                     {analyzing ? (
-                                        <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 영상·소리 분석 중</>
+                                        <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
                                     ) : (
                                         <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
                                     )}
@@ -683,11 +869,14 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </label>
                     </div>
                     <span className="sr-only" role="status" aria-live="polite">
-                        {analyzing ? "영상과 소리를 분석하는 중입니다." : phase === "recording" ? "10초 관찰 영상을 녹화하는 중입니다." : ""}
+                        {analyzing
+                            ? "영상과 소리를 분석하는 중입니다."
+                            : phase === "recording" ? `${PET_OBSERVATION_RECORDING_SECONDS}초 관찰 영상을 녹화하는 중입니다.` : ""}
                     </span>
                     <p className="text-[11px] font-bold leading-5 text-neutral-500">
                         연결 뒤 모바일 전·후면 카메라나 PC 웹캠·마이크가 여러 개면 직접 바꿀 수 있어요.
-                        실시간 촬영이 안 되는 브라우저에서는 2~12초 WebM·MP4·MOV 영상을 선택할 수 있으며 최대 12MB입니다.
+                        실시간 촬영이 안 되는 브라우저에서는 {PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초
+                        WebM·MP4·MOV 영상을 선택할 수 있으며 최대 {PET_OBSERVATION_MAX_FILE_MB}MB입니다.
                     </p>
                 </div>
 
@@ -730,7 +919,8 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </span>
                     </label>
                     <div className="rounded-xl bg-neutral-50 p-3 text-[10px] font-bold leading-5 text-neutral-500">
-                        사람의 얼굴·대화와 집 안 개인정보가 담기지 않게 촬영해 주세요. 이 기능은 진단이 아니며 상품 추천에는 자동 사용하지 않습니다.
+                        사람의 얼굴·대화와 집 안 개인정보가 담기지 않게 촬영해 주세요. 이 기능은 진단이 아니며 영상 추론 결과는 제품 추천에 직접 자동 반영되지 않습니다.
+                        영양식 비교는 등록 프로필과 보호자가 선택한 활동 맥락을 기준으로만 제공됩니다.
                     </div>
                 </div>
             </div>
