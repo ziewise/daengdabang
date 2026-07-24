@@ -17,16 +17,6 @@
     --shadow-hover: 0 18px 40px rgba(15, 23, 42, 0.14);
 }
 
-@keyframes daenglab-timeline-draw {
-    from {
-        stroke-dashoffset: 1600;
-    }
-
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
 @keyframes daenglab-timeline-point-in {
     from {
         opacity: 0;
@@ -51,11 +41,10 @@
     }
 }
 
-.daenglab-timeline-line {
-    stroke-dasharray: 1600;
-    stroke-dashoffset: 1600;
-    animation: daenglab-timeline-draw 880ms cubic-bezier(.22, .72, .2, 1) forwards;
-    animation-delay: var(--daenglab-series-delay, 0ms);
+.daenglab-timeline-line,
+.daenglab-timeline-single-point {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
 }
 
 .daenglab-timeline-point,
@@ -88,7 +77,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .daenglab-timeline-line,
     .daenglab-timeline-point,
     .daenglab-timeline-peak,
     .daenglab-timeline-peak-halo,

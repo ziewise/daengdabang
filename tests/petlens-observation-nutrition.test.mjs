@@ -319,6 +319,10 @@ test("profile-based nutrition is exposed only for ready, good, routine-observati
         const payload = validPayload();
         if (variant === "emergency" || variant === "same_day") {
             payload.urgency.level = variant;
+            payload.symptom_signals[0].action = variant;
+            if (variant === "emergency") {
+                payload.symptom_signals[0].label = "영상에서 즉시 확인이 필요한 관찰 신호";
+            }
         } else if (variant === "limited") {
             payload.quality.level = "limited";
         } else {
@@ -327,6 +331,51 @@ test("profile-based nutrition is exposed only for ready, good, routine-observati
         const parsed = parsePetObservationResult(payload);
         assert.deepEqual(parsed.nutritionRecommendations, [], `${variant} must not show nutrition sales`);
     }
+});
+
+
+test("the parser removes provider-only emergency copy when no graph-backed priority signal exists", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = validPayload();
+    payload.symptom_signals = [];
+    payload.summary = "영상에서 응급 확인 신호가 보여 즉시 병원 연락이 필요합니다.";
+    payload.urgency = {
+        level: "emergency",
+        headline: "응급 가능성이 있는 신호가 보여요",
+        reasons: ["영상에서 응급 확인이 필요한 신호가 분류됐어요."],
+        actions: ["가까운 응급 동물병원에 즉시 연락하세요."],
+    };
+
+    const parsed = parsePetObservationResult(payload);
+    const exposed = [
+        parsed.summary,
+        parsed.urgency.headline,
+        ...parsed.urgency.reasons,
+        ...parsed.urgency.actions,
+    ].join(" ");
+
+    assert.equal(parsed.urgency.level, "observe");
+    assert.deepEqual(parsed.urgency.reasons, []);
+    assert.equal(parsed.symptomSignals.length, 0);
+    assert.doesNotMatch(exposed, /응급/u);
+
+    const playful = validPayload();
+    playful.urgency.level = "emergency";
+    playful.symptom_signals[0].label = "꼬리를 빠르게 흔드는 모습";
+    playful.symptom_signals[0].action = "emergency";
+    const playfulResult = parsePetObservationResult(playful);
+
+    assert.equal(playfulResult.urgency.level, "observe");
+    assert.equal(playfulResult.symptomSignals[0].action, "unclear");
+
+    const supported = validPayload();
+    supported.urgency.level = "emergency";
+    supported.symptom_signals[0].label = "영상에서 즉시 확인이 필요한 관찰 신호";
+    supported.symptom_signals[0].action = "emergency";
+    const supportedResult = parsePetObservationResult(supported);
+
+    assert.equal(supportedResult.urgency.level, "emergency");
+    assert.equal(supportedResult.symptomSignals[0].action, "emergency");
 });
 
 

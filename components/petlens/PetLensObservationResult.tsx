@@ -332,7 +332,9 @@ function InferenceGroupLinePanel({
                             preserveAspectRatio="xMidYMid meet"
                             role="img"
                             aria-label={timelineSeries
-                                .map((point) => `${point.item.label} 시간별 영상 근거 지지도`)
+                                .map((point) => point.timeline.length === 1
+                                    ? `${point.item.label} ${point.timeline[0].timeSeconds.toFixed(1)}초 한 시점 포착`
+                                    : `${point.item.label} 시간별 영상 근거 지지도`)
                                 .join(", ")}
                         >
                             <text
@@ -417,7 +419,7 @@ function InferenceGroupLinePanel({
                                         key={`mobile-series-${series.id}`}
                                         style={{ "--daenglab-series-delay": `${seriesIndex * 130}ms` } as CSSProperties}
                                     >
-                                        {series.timeline.length > 1 && (
+                                        {series.timeline.length > 1 ? (
                                             <polyline
                                                 points={polylinePoints}
                                                 fill="none"
@@ -428,6 +430,19 @@ function InferenceGroupLinePanel({
                                                 opacity="0.9"
                                                 className="daenglab-timeline-line"
                                                 data-inference-mobile-timeline-line
+                                            />
+                                        ) : (
+                                            <line
+                                                x1={Math.max(MOBILE_GRAPH_LEFT, peakX - 28)}
+                                                x2={Math.min(MOBILE_GRAPH_WIDTH - MOBILE_GRAPH_RIGHT, peakX + 28)}
+                                                y1={peakY}
+                                                y2={peakY}
+                                                stroke={series.color}
+                                                strokeWidth="5"
+                                                strokeLinecap="round"
+                                                opacity="0.9"
+                                                className="daenglab-timeline-single-point"
+                                                data-inference-mobile-single-point-marker
                                             />
                                         )}
                                         {series.timeline.map((timelinePoint) => (
@@ -497,7 +512,9 @@ function InferenceGroupLinePanel({
                             style={{ minWidth: `${chartWidth}px` }}
                             role="img"
                             aria-label={timelineSeries
-                                .map((point) => `${point.item.label} 시간별 영상 근거 지지도`)
+                                .map((point) => point.timeline.length === 1
+                                    ? `${point.item.label} ${point.timeline[0].timeSeconds.toFixed(1)}초 한 시점 포착`
+                                    : `${point.item.label} 시간별 영상 근거 지지도`)
                                 .join(", ")}
                         >
                             {INFERENCE_GRAPH_TICKS.map((tick) => {
@@ -587,7 +604,7 @@ function InferenceGroupLinePanel({
                                         key={`series-${series.id}`}
                                         style={{ "--daenglab-series-delay": `${seriesIndex * 130}ms` } as CSSProperties}
                                     >
-                                        {series.timeline.length > 1 && (
+                                        {series.timeline.length > 1 ? (
                                             <polyline
                                                 points={polylinePoints}
                                                 fill="none"
@@ -599,6 +616,19 @@ function InferenceGroupLinePanel({
                                                 className="daenglab-timeline-line"
                                                 data-inference-ranked-line
                                                 data-inference-timeline-line
+                                            />
+                                        ) : (
+                                            <line
+                                                x1={Math.max(INFERENCE_CHART_LEFT, peakX - 32)}
+                                                x2={Math.min(chartWidth - INFERENCE_CHART_RIGHT, peakX + 32)}
+                                                y1={peakY}
+                                                y2={peakY}
+                                                stroke={series.color}
+                                                strokeWidth="5"
+                                                strokeLinecap="round"
+                                                opacity="0.9"
+                                                className="daenglab-timeline-single-point"
+                                                data-inference-single-point-marker
                                             />
                                         )}
                                         {series.timeline.map((timelinePoint) => (
@@ -696,6 +726,11 @@ function InferenceGroupLinePanel({
                                 <span className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: series.color }} aria-hidden="true" />
                                 <span className="min-w-0 [overflow-wrap:anywhere] text-[13px] font-black leading-5 text-neutral-800">
                                     {series.item.label}
+                                    {series.timeline.length === 1 && (
+                                        <span className="ml-1.5 inline-flex rounded-full bg-white px-1.5 py-0.5 align-middle text-[9px] font-black text-neutral-500">
+                                            한 시점 포착
+                                        </span>
+                                    )}
                                 </span>
                                 <span className="whitespace-nowrap text-base font-black" style={{ color: series.color }}>
                                     {Math.round(peak.confidenceScore * 100)}%
@@ -714,7 +749,7 @@ function InferenceGroupLinePanel({
                 </p>
             )}
             <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">
-                선은 시간에 따른 영상 근거 지지도이며, 큰 점과 %는 가장 강하게 포착된 시점이에요.
+                2개 이상은 실제 확인 시점을 선으로 연결하고, 한 시점만 확인되면 가짜 추세 없이 짧은 선과 점으로 표시해요. 큰 점과 %는 가장 강하게 포착된 시점이에요.
             </p>
             <div
                 className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50/70 px-3.5 py-3"

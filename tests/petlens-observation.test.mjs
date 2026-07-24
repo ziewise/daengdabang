@@ -217,7 +217,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
 });
 
 
-test("result starts with four animated time-based support graphs, peak markers, comments, and evidence tables", async () => {
+test("result starts with four always-visible time-based support graphs, peak markers, comments, and evidence tables", async () => {
     const [result, api, css] = await Promise.all([
         source("components/petlens/PetLensObservationResult.tsx"),
         source("lib/petlens-observation.ts"),
@@ -240,10 +240,14 @@ test("result starts with four animated time-based support graphs, peak markers, 
     assert.match(result, /data-inference-peak/);
     assert.match(result, /function peakLabelY/);
     assert.match(result, /daenglab-timeline-line/);
+    assert.match(result, /daenglab-timeline-single-point/);
+    assert.match(result, /data-inference-mobile-single-point-marker/);
+    assert.match(result, /data-inference-single-point-marker/);
     assert.match(result, /daenglab-timeline-point/);
     assert.match(result, /daenglab-timeline-peak/);
-    assert.match(css, /@keyframes daenglab-timeline-draw/);
-    assert.match(css, /stroke-dashoffset: 1600/);
+    assert.match(css, /\.daenglab-timeline-line,[\s\S]*\.daenglab-timeline-single-point[\s\S]*stroke-dasharray: none;[\s\S]*stroke-dashoffset: 0;/);
+    assert.doesNotMatch(css, /@keyframes daenglab-timeline-draw/);
+    assert.doesNotMatch(css, /stroke-dashoffset: 1600/);
     assert.match(css, /prefers-reduced-motion: reduce/);
     assert.match(result, /data-inference-percentage=\{Math\.round\(peak\.confidenceScore \* 100\)\}/);
     assert.match(result, /data-daenglab-inference-mobile-graph=\{config\.kind\}/);
@@ -254,7 +258,7 @@ test("result starts with four animated time-based support graphs, peak markers, 
     assert.match(result, /가로 시간 · 세로 지지도/);
     assert.match(result, /영상 근거 지지도\(%\)/);
     assert.match(result, /관찰 시간/);
-    assert.match(result, /선은 시간에 따른 영상 근거 지지도이며, 큰 점과 %는 가장 강하게 포착된 시점/);
+    assert.match(result, /2개 이상은 실제 확인 시점을 선으로 연결하고, 한 시점만 확인되면 가짜 추세 없이 짧은 선과 점으로 표시/);
     assert.match(result, /fontSize="14"/);
     assert.match(result, /시간좌표가 없는 후보/);
     assert.match(result, /data-daenglab-inference-missing-timeline/);
@@ -277,6 +281,9 @@ test("result starts with four animated time-based support graphs, peak markers, 
     assert.match(api, /!\//);
     assert.match(api, /A-Za-z/);
     assert.match(api, /candidateConfidenceScore/);
+    assert.match(api, /const unsupportedHighUrgency/);
+    assert.match(api, /requestedUrgency === "observe" \|\| requestedUrgency === "unclear"/);
+    assert.match(api, /unsupportedHighUrgency[\s\S]*reasons:/);
     assert.match(api, /vocalizationDetected: boolean/);
     assert.match(api, /"environment_sound"/);
     assert.match(api, /status: "ready" \| "limited" \| "no_dog" \| "no_evidence"/);

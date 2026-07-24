@@ -231,6 +231,14 @@ function urgencyLevel(value: unknown): PetObservationUrgencyLevel {
         : "unclear";
 }
 
+function hasEmergencyObservationMeaning(label: string) {
+    const directEmergencySign = /(?:입\s*벌린\s*호흡|개구\s*호흡|(?:푸른|파란|회색|창백한)\s*잇몸|호흡\s*곤란|숨을?\s*매우\s*힘들|쓰러짐|쓰러져|의식\s*저하|의식이\s*없|계속되는\s*발작|심한\s*출혈|열사병|중독|영상에서\s*즉시\s*확인이\s*필요한\s*관찰\s*신호)/u;
+    const distendedAbdomen = /(?:배가\s*부풀|복부가\s*팽창)/u;
+    const unproductiveRetching = /(?:헛구역질|토하지\s*못하고\s*구역질)/u;
+    return directEmergencySign.test(label)
+        || (distendedAbdomen.test(label) && unproductiveRetching.test(label));
+}
+
 function confidence(value: unknown): PetObservationConfidence {
     return value === "high" || value === "medium" || value === "low" ? value : "low";
 }
@@ -502,31 +510,44 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                     0.79,
                 );
                 if (rawConfidenceScore !== undefined && typeof confidenceScore !== "number") return [];
+                const timeline = timelinePoints(
+                    row.timeline,
+                    durationSeconds,
+                    Math.min(0.79, confidenceScore ?? 0.79),
+                    confidenceScore,
+                );
+                const requestedAction = urgencyLevel(row.action);
+                const action: PetObservationUrgencyLevel = (
+                    requestedAction === "emergency"
+                    && (timeline.length === 0 || !hasEmergencyObservationMeaning(label))
+                ) || (
+                    requestedAction === "same_day"
+                    && timeline.length === 0
+                ) ? "unclear" : requestedAction;
                 return [{
                     label,
                     confidence: confidenceLabel,
                     ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
-                    timeline: timelinePoints(
-                        row.timeline,
-                        durationSeconds,
-                        Math.min(0.79, confidenceScore ?? 0.79),
-                        confidenceScore,
-                    ),
+                    timeline,
                     evidence: proof,
-                    action: urgencyLevel(row.action),
+                    action,
                 }];
             })
             .slice(0, 4)
             .sort((a, b) => (b.confidenceScore ?? -1) - (a.confidenceScore ?? -1))
         : [];
 
-    let normalizedUrgency = urgencyLevel(rawUrgency.level);
+    const requestedUrgency = urgencyLevel(rawUrgency.level);
+    let normalizedUrgency: PetObservationUrgencyLevel = requestedUrgency === "observe" || requestedUrgency === "unclear"
+        ? requestedUrgency
+        : "observe";
     if (normalizedSymptoms.some((item) => item.action === "emergency")) normalizedUrgency = "emergency";
-    else if (normalizedSymptoms.some((item) => item.action === "same_day") && ["observe", "unclear"].includes(normalizedUrgency)) {
-        normalizedUrgency = "same_day";
-    }
+    else if (normalizedSymptoms.some((item) => item.action === "same_day")) normalizedUrgency = "same_day";
     if (!dogVisible && normalizedUrgency !== "emergency") normalizedUrgency = "unclear";
     if (qualityLevel === "unusable" && normalizedUrgency !== "emergency") normalizedUrgency = "unclear";
+    const unsupportedHighUrgency = (
+        requestedUrgency === "emergency" || requestedUrgency === "same_day"
+    ) && normalizedUrgency !== requestedUrgency;
 
     const status: PetObservationResult["status"] = !dogVisible
         ? "no_dog"
@@ -610,22 +631,37 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         unclear: "이 영상만으로는 긴급도를 판단하기 어려워요",
     };
     const rawActions = koreanLines(rawUrgency.actions, 5, 180);
+    const highUrgencyWording = /(?:응급|긴급|즉시\s*(?:동물)?병원)/u;
+    const nonUrgentRawActions = rawActions.filter((action) => !highUrgencyWording.test(action));
+    const defaultNonUrgentActions: Record<"observe" | "unclear", string[]> = {
+        observe: ["평소 상태와 비교해 변화를 기록하고, 신호가 계속되거나 나빠지면 동물병원에 문의하세요."],
+        unclear: ["영상만으로 판단하기 어려워요. 걱정되는 신호가 반복되면 동물병원에 문의하세요."],
+    };
     const safeActions: Record<PetObservationUrgencyLevel, string[]> = {
         emergency: ["분석 결과를 기다리지 말고 가까운 응급 동물병원에 즉시 연락하세요."],
         same_day: ["오늘 안으로 동물병원에 연락해 영상에서 보인 신호를 설명하세요."],
-        observe: rawActions,
-        unclear: rawActions,
+        observe: unsupportedHighUrgency || nonUrgentRawActions.length === 0
+            ? defaultNonUrgentActions.observe
+            : nonUrgentRawActions,
+        unclear: unsupportedHighUrgency || nonUrgentRawActions.length === 0
+            ? defaultNonUrgentActions.unclear
+            : nonUrgentRawActions,
     };
     const highUrgency = normalizedUrgency === "emergency" || normalizedUrgency === "same_day";
     const highUrgencyReasons = normalizedSymptoms
         .filter((item) => item.action === normalizedUrgency)
         .map((item) => item.label)
         .slice(0, 4);
+    const rawSummary = koreanLine(raw.summary, 320);
     const safeSummary = normalizedUrgency === "emergency"
         ? "영상에서 즉시 확인이 필요한 신호가 분류돼 추가 촬영보다 병원 연락을 우선하세요."
         : normalizedUrgency === "same_day"
             ? "영상에서 오늘 안에 동물병원에 문의할 신호가 분류됐어요."
-            : koreanLine(raw.summary, 320) || "짧은 영상만으로 원인이나 질환을 확정할 수는 없어요.";
+            : unsupportedHighUrgency || highUrgencyWording.test(rawSummary)
+                ? normalizedUrgency === "observe"
+                    ? "영상에서 우선 확인 신호는 포착되지 않았어요. 관찰된 행동·소리는 평소 모습과 비교해 주세요."
+                    : "이 영상만으로는 긴급도를 판단하기 어려워요. 걱정되는 변화가 이어지면 동물병원에 문의해 주세요."
+                : rawSummary || "짧은 영상만으로 원인이나 질환을 확정할 수는 없어요.";
 
     const coinCostValue = Number(raw.daenglab_coin_cost ?? raw.daengLabCoinCost);
     const coinBalanceValue = Number(raw.daenglab_coin_balance ?? raw.daengLabCoinBalance);
@@ -659,10 +695,15 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             level: normalizedUrgency,
             headline: normalizedUrgency === "emergency" || normalizedUrgency === "same_day"
                 ? defaultHeadline[normalizedUrgency]
-                : koreanLine(rawUrgency.headline, 140) || defaultHeadline[normalizedUrgency],
+                : unsupportedHighUrgency
+                    ? defaultHeadline[normalizedUrgency]
+                    : koreanLine(rawUrgency.headline, 140) || defaultHeadline[normalizedUrgency],
             reasons: highUrgency
                 ? highUrgencyReasons.length ? highUrgencyReasons : ["영상에서 우선 확인이 필요한 신호가 분류됐어요."]
-                : koreanLines(rawUrgency.reasons, 5, 160),
+                : unsupportedHighUrgency
+                    ? []
+                    : koreanLines(rawUrgency.reasons, 5, 160)
+                        .filter((reason) => !highUrgencyWording.test(reason)),
             actions: safeActions[normalizedUrgency],
         },
         nutritionRecommendations,
