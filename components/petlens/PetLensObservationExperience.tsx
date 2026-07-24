@@ -323,7 +323,11 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 surface: variant,
                 errorCode: insufficient ? "daenglab_coin_insufficient" : "analysis_failed",
             });
-            setAnalysisError(reason instanceof Error ? reason.message : "관찰 분석을 완료하지 못했습니다.");
+            setAnalysisError(
+                reason instanceof PetObservationRequestError
+                    ? reason.message
+                    : "관찰 분석을 완료하지 못했어요. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.",
+            );
             requestIdRef.current = null;
             resetCapture();
         } finally {

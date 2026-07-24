@@ -153,6 +153,8 @@ test("observation upload is authenticated, abortable, and separate from profile 
     assert.match(api, /mediaRetention: "not_stored"/);
     assert.match(api, /반려견 발성은 사람 문장처럼 번역할 수 없으며/);
     assert.match(api, /분석 결과를 기다리지 말고 가까운 응급 동물병원에 즉시 연락/);
+    assert.match(experience, /reason instanceof PetObservationRequestError[\s\S]*네트워크 상태를 확인한 뒤 다시 시도해 주세요/);
+    assert.doesNotMatch(experience, /setAnalysisError\(reason instanceof Error \? reason\.message/);
     assert.doesNotMatch(api, /savePetProfile|upsertPet|photoDataUrl/);
 });
 
