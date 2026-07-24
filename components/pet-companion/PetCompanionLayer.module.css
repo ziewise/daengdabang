@@ -1061,6 +1061,19 @@
     }
 }
 
+/*
+ * A 154px roaming character covers too much of a short, landscape phone
+ * viewport and can obscure DaengLab result labels. The fixed launchers remain
+ * available, so the companion can still be configured without blocking data.
+ */
+@media (orientation: landscape) and (max-height: 480px) {
+    .walker {
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .walker,
     .settingsLaunch,

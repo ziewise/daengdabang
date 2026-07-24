@@ -10,11 +10,12 @@ export type PetObservationQuality = {
     dogVisible: boolean;
     audioAvailable: boolean;
     barkDetected: boolean;
+    vocalizationDetected: boolean;
     issues: string[];
 };
 
 export type PetObservationFact = {
-    modality: "vocalization" | "posture" | "movement" | "breathing" | "interaction" | "quality";
+    modality: "vocalization" | "environment_sound" | "posture" | "movement" | "breathing" | "interaction" | "quality";
     description: string;
     timeSeconds: number;
     confidence: PetObservationConfidence;
@@ -72,7 +73,7 @@ export type PetObservationNutritionRecommendation = {
 };
 
 export type PetObservationResult = {
-    status: "ready" | "limited" | "no_dog";
+    status: "ready" | "limited" | "no_dog" | "no_evidence";
     summary: string;
     quality: PetObservationQuality;
     observations: PetObservationFact[];
@@ -242,7 +243,7 @@ function candidateConfidenceScore(
 
 function candidates(
     value: unknown,
-    factCount: number,
+    facts: PetObservationFact[],
     limit: number,
     options: {
         group?: PetObservationCandidate["group"];
@@ -252,21 +253,45 @@ function candidates(
     } = {},
 ): PetObservationCandidate[] {
     if (!Array.isArray(value)) return [];
-    return value.flatMap((item) => {
+    const parsed = value.flatMap((item) => {
         const row = record(item);
         if (!row) return [];
         const label = line(row.label, 100);
-        const proof = evidence(row.evidence, factCount);
+        const proof = evidence(row.evidence, facts.length);
         if (!label || proof.length === 0) return [];
         const confidenceLabel = row.confidence === "high"
             ? "high" as const
             : row.confidence === "medium" ? "medium" as const : "low" as const;
         if (options.allowedConfidences && !options.allowedConfidences.includes(confidenceLabel)) return [];
-        const confidenceScore = candidateConfidenceScore(
-            row.confidence_score ?? row.confidenceScore,
-            confidenceLabel,
-            options.maxScore,
+        const evidenceModalities = new Set<PetObservationFact["modality"]>(
+            proof.flatMap((index) => {
+                const modality = facts[index]?.modality;
+                return modality ? [modality] : [];
+            }),
         );
+        const candidateEvidenceModalities: ReadonlySet<PetObservationFact["modality"]> = new Set(
+            options.group === "sound"
+                ? ["vocalization", "posture", "movement", "interaction"]
+                : options.group === "behavior"
+                    ? ["posture", "movement", "interaction"]
+                    : evidenceModalities,
+        );
+        const supportedEvidenceModalities = new Set(
+            [...evidenceModalities].filter((modality) => candidateEvidenceModalities.has(modality)),
+        );
+        if (options.group === "sound" && !evidenceModalities.has("vocalization")) return [];
+        if (options.group === "behavior" && supportedEvidenceModalities.size === 0) return [];
+        if (confidenceLabel === "high" && supportedEvidenceModalities.size < 2) return [];
+        const maxScore = options.maxScore ?? (
+            options.group === "sound" && supportedEvidenceModalities.size === 1 ? 0.79 : 0.95
+        );
+        const rawConfidenceScore = row.confidence_score ?? row.confidenceScore;
+        const confidenceScore = candidateConfidenceScore(
+            rawConfidenceScore,
+            confidenceLabel,
+            maxScore,
+        );
+        if (rawConfidenceScore !== undefined && typeof confidenceScore !== "number") return [];
         if (options.requireScore && typeof confidenceScore !== "number") return [];
         return [{
             label,
@@ -276,6 +301,13 @@ function candidates(
             otherPossibility: line(row.other_possibility ?? row.otherPossibility, 140),
             ...(options.group ? { group: options.group } : {}),
         }];
+    }).sort((a, b) => (b.confidenceScore ?? -1) - (a.confidenceScore ?? -1));
+    const seenLabels = new Set<string>();
+    return parsed.filter((candidate) => {
+        const normalizedLabel = candidate.label.replace(/\s+/gu, " ").trim().toLocaleLowerCase("ko");
+        if (seenLabels.has(normalizedLabel)) return false;
+        seenLabels.add(normalizedLabel);
+        return true;
     }).slice(0, limit);
 }
 
@@ -329,7 +361,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             if (
                 !row ||
                 !description ||
-                !["vocalization", "posture", "movement", "breathing", "interaction", "quality"].includes(String(modality))
+                !["vocalization", "environment_sound", "posture", "movement", "breathing", "interaction", "quality"].includes(String(modality))
+                || (!audioAvailable && (modality === "vocalization" || modality === "environment_sound"))
             ) return [];
             const timeValue = Number(row.time_seconds ?? row.timeSeconds ?? 0);
             return [{
@@ -340,11 +373,17 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             }];
         }).slice(0, 12)
         : [];
+    const vocalizationDetected = audioAvailable && (
+        rawQuality.vocalization_detected === true
+        || rawQuality.vocalizationDetected === true
+        || barkDetected
+        || observations.some((item) => item.modality === "vocalization")
+    );
 
-    const barkContextCandidates = barkDetected && audioAvailable
+    const barkContextCandidates = vocalizationDetected
         ? candidates(
             raw.bark_context_candidates ?? raw.barkContextCandidates,
-            observations.length,
+            observations,
             3,
             { group: "sound" },
         )
@@ -352,7 +391,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const behaviorCandidates = dogVisible && qualityLevel !== "unusable"
         ? candidates(
             raw.behavior_candidates ?? raw.behaviorCandidates,
-            observations.length,
+            observations,
             4,
             { group: "behavior" },
         )
@@ -360,7 +399,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const healthCandidates: PetObservationHealthCandidate[] = dogVisible && qualityLevel !== "unusable"
         ? candidates(
             raw.health_candidates ?? raw.healthCandidates,
-            observations.length,
+            observations,
             4,
             {
                 group: "health",
@@ -413,9 +452,11 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
 
     const status: PetObservationResult["status"] = !dogVisible
         ? "no_dog"
-        : qualityLevel === "good" && raw.status === "ready"
-            ? "ready"
-            : "limited";
+        : raw.status === "no_evidence"
+            ? "no_evidence"
+            : qualityLevel === "good" && raw.status === "ready"
+                ? "ready"
+                : "limited";
     const allowedNutritionFocuses = new Set<PetObservationNutritionFocus>([
         "balanced_meal",
         "hydration_support",
@@ -527,6 +568,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             dogVisible,
             audioAvailable,
             barkDetected,
+            vocalizationDetected,
             issues: lines(rawQuality.issues, 6, 120),
         },
         observations,
@@ -551,7 +593,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ...(refinedAt ? { refinedAt } : {}),
         retakeGuidance: lines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160),
         limitations: Array.from(new Set([
-            "짖음은 사람 문장처럼 번역할 수 없으며, 가능한 맥락만 추론합니다.",
+            "짖음·낑낑거림·으르렁거림 등 반려견 발성은 사람 문장처럼 번역할 수 없으며, 가능한 맥락만 추론합니다.",
             "영상 관찰은 수의사의 진찰이나 검사를 대신하지 않습니다.",
             ...lines(raw.limitations, 4, 200),
         ])).slice(0, 4),

@@ -43,19 +43,33 @@ function validPayload() {
             bark_detected: true,
             issues: [],
         },
-        observations: [{
-            modality: "movement",
-            description: "몸을 낮추고 주변을 살핍니다.",
-            time_seconds: 3.2,
-            confidence: "high",
-        }],
+        observations: [
+            {
+                modality: "vocalization",
+                description: "짧은 낑낑거림이 들립니다.",
+                time_seconds: 2.1,
+                confidence: "high",
+            },
+            {
+                modality: "posture",
+                description: "몸을 낮추고 주변을 살핍니다.",
+                time_seconds: 3.2,
+                confidence: "high",
+            },
+            {
+                modality: "movement",
+                description: "현관 쪽으로 이동합니다.",
+                time_seconds: 4.1,
+                confidence: "medium",
+            },
+        ],
         bark_context_candidates: [
-            { label: "경계 가능성", confidence: "high", confidence_score: 0.95, evidence: [0] },
-            { label: "범위 초과", confidence: "high", confidence_score: 0.96, evidence: [0] },
+            { label: "경계 가능성", confidence: "high", confidence_score: 0.95, evidence: [0, 1] },
+            { label: "범위 초과", confidence: "high", confidence_score: 0.96, evidence: [0, 1] },
         ],
         behavior_candidates: [
-            { label: "주변 경계", confidence: "high", confidence_score: 0.95, evidence: [0] },
-            { label: "범위 초과", confidence: "high", confidence_score: 0.96, evidence: [0] },
+            { label: "주변 경계", confidence: "high", confidence_score: 0.95, evidence: [1, 2] },
+            { label: "범위 초과", confidence: "high", confidence_score: 0.96, evidence: [1, 2] },
         ],
         health_candidates: [
             { label: "호흡 관찰", confidence: "medium", confidence_score: 0.79, evidence: [0] },
@@ -101,14 +115,12 @@ test("the parser accepts high behavior and sound scores but caps health and symp
         result.barkContextCandidates.map(({ label, confidenceScore }) => [label, confidenceScore]),
         [
             ["경계 가능성", 0.95],
-            ["범위 초과", undefined],
         ],
     );
     assert.deepEqual(
         result.behaviorCandidates.map(({ label, confidenceScore }) => [label, confidenceScore]),
         [
             ["주변 경계", 0.95],
-            ["범위 초과", undefined],
         ],
     );
     assert.ok(result.barkContextCandidates.every((candidate) =>
@@ -129,6 +141,57 @@ test("the parser accepts high behavior and sound scores but caps health and symp
             ["함께 확인", "medium", 0.52],
         ],
     );
+});
+
+
+test("the parser requires sound evidence and caps vocalization-only context below high", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = validPayload();
+    payload.bark_context_candidates = [
+        { label: "발성 단독 후보", confidence: "medium", confidence_score: 0.79, evidence: [0] },
+        { label: "발성 단독 초과", confidence: "medium", confidence_score: 0.8, evidence: [0] },
+        { label: "발성 근거 없음", confidence: "medium", confidence_score: 0.7, evidence: [1, 2] },
+    ];
+
+    const result = parsePetObservationResult(payload);
+
+    assert.deepEqual(
+        result.barkContextCandidates.map(({ label, confidenceScore }) => [label, confidenceScore]),
+        [
+            ["발성 단독 후보", 0.79],
+        ],
+    );
+});
+
+
+test("high candidates require two relevant pet modalities, excluding quality and environment sound", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = validPayload();
+    payload.observations.push(
+        {
+            modality: "quality",
+            description: "촬영 구도가 흔들립니다.",
+            time_seconds: 5.1,
+            confidence: "medium",
+        },
+        {
+            modality: "environment_sound",
+            description: "초인종 소리가 함께 들립니다.",
+            time_seconds: 5.4,
+            confidence: "medium",
+        },
+    );
+    payload.behavior_candidates = [
+        { label: "품질 근거 우회", confidence: "high", confidence_score: 0.89, evidence: [1, 3] },
+    ];
+    payload.bark_context_candidates = [
+        { label: "배경음 근거 우회", confidence: "high", confidence_score: 0.89, evidence: [0, 4] },
+    ];
+
+    const result = parsePetObservationResult(payload);
+
+    assert.deepEqual(result.behaviorCandidates, []);
+    assert.deepEqual(result.barkContextCandidates, []);
 });
 
 

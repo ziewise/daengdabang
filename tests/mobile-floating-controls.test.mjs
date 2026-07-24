@@ -129,3 +129,12 @@ test("the moving companion never steals a mobile header action", async () => {
     assert.match(layer, /document\.elementFromPoint\(event\.clientX, event\.clientY\)/);
     assert.match(layer, /headerAction && siteHeader\.contains\(headerAction\)\) headerAction\.click\(\)/);
 });
+
+test("compact landscape hides the roaming companion so result labels stay readable", async () => {
+    const css = await source("components/pet-companion/PetCompanionLayer.module.css");
+
+    assert.match(
+        css,
+        /@media \(orientation: landscape\) and \(max-height: 480px\) \{[\s\S]{0,180}\.walker \{[\s\S]{0,160}visibility: hidden !important;[\s\S]{0,80}opacity: 0 !important;[\s\S]{0,80}pointer-events: none !important;/,
+    );
+});

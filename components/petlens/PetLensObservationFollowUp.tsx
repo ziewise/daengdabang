@@ -56,9 +56,9 @@ export default function PetLensObservationFollowUp({
                         <i className="fa-solid fa-circle-check text-xs" />
                     </span>
                     <div className="min-w-0">
-                        <p className="text-sm font-black text-emerald-950">보호자 답변을 결과에 반영했어요</p>
+                        <p className="text-sm font-black text-emerald-950">보호자 답변 메모를 결과에 저장했어요</p>
                         <p className="mt-1 text-[11px] font-bold leading-5 text-emerald-800">
-                            {result.guardianContextSummary || "보호자 답변을 기존 영상 관찰과 함께 정리했습니다."}
+                            {result.guardianContextSummary || "보호자 답변을 기존 영상 관찰에 확인 메모로 저장했습니다."}
                         </p>
                     </div>
                 </div>
@@ -102,7 +102,7 @@ export default function PetLensObservationFollowUp({
             onUpdated(refined);
         } catch (reason) {
             if (!(reason instanceof DOMException && reason.name === "AbortError")) {
-                setError(reason instanceof Error ? reason.message : "보호자 답변을 반영하지 못했습니다.");
+                setError(reason instanceof Error ? reason.message : "보호자 답변 메모를 저장하지 못했습니다.");
             }
         } finally {
             if (!controller.signal.aborted) setSubmitting(false);
@@ -113,9 +113,9 @@ export default function PetLensObservationFollowUp({
         <section className="rounded-2xl border border-indigo-100 bg-indigo-50/60 p-4" data-daenglab-guardian-follow-up>
             <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                    <p className="text-sm font-black text-indigo-950">보호자가 확인하면 결과를 더 보완할 수 있어요</p>
+                    <p className="text-sm font-black text-indigo-950">보호자가 확인한 내용을 결과와 함께 남길 수 있어요</p>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-indigo-700">
-                        각 질문에 답하면 기존 영상 결과와 함께 저장해 다시 정리합니다.
+                        기존 영상 결과에 보호자 확인 메모로 저장됩니다. 후보와 점수는 자동 재판정하지 않습니다.
                     </p>
                 </div>
                 <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700">
@@ -172,7 +172,7 @@ export default function PetLensObservationFollowUp({
             </div>
 
             <p className="mt-3 text-[10px] font-bold leading-4 text-neutral-500">
-                메모에는 사람의 이름·연락처 등 개인정보를 적지 마세요. 답변은 영상 분석 결과를 보완하지만 진단을 확정하지 않습니다.
+                메모에는 사람의 이름·연락처 등 개인정보를 적지 마세요. 답변은 결과와 함께 저장되며 후보·점수를 자동 재해석하거나 진단을 확정하지 않습니다.
             </p>
             {error && <p className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700" role="alert">{error}</p>}
             <button
@@ -183,12 +183,12 @@ export default function PetLensObservationFollowUp({
                 data-daenglab-refine-result
             >
                 {submitting
-                    ? <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 답변 반영 중</>
-                    : <><i className="fa-solid fa-wand-magic-sparkles mr-2 text-xs" /> 답변 반영해 결과 보완</>}
+                    ? <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 답변 메모 저장 중</>
+                    : <><i className="fa-solid fa-note-sticky mr-2 text-xs" /> 보호자 답변 메모 저장</>}
             </button>
             {!requestId && (
                 <p className="mt-2 text-center text-[10px] font-bold text-neutral-500">
-                    이 이전 기록은 새 분석에서 답변 보완을 사용할 수 있어요.
+                    이 이전 기록은 새 분석에서 보호자 답변 메모를 저장할 수 있어요.
                 </p>
             )}
         </section>

@@ -25,6 +25,7 @@ const URGENCY_LABEL: Record<PetObservationUrgencyLevel, string> = {
 
 const MODALITY_LABEL: Record<PetObservationResult["observations"][number]["modality"], string> = {
     vocalization: "소리",
+    environment_sound: "주변 소리",
     posture: "자세",
     movement: "움직임",
     breathing: "호흡 모습",
@@ -80,9 +81,9 @@ const INFERENCE_GROUPS: readonly InferenceGroupConfig[] = [
     {
         kind: "sound",
         title: "소리 맥락 해석 그래프",
-        eyebrow: "짖음·울음 맥락",
-        description: "짖음·울음의 높낮이, 반복, 간격과 당시 상황을 함께 본 가능한 맥락입니다. 사람 문장처럼 확정 번역하지 않아요.",
-        empty: "뚜렷한 짖음이나 울음이 포착되지 않아 소리 후보를 만들지 않았어요.",
+        eyebrow: "반려견 발성 맥락",
+        description: "짖음·낑낑거림·으르렁거림·하울링의 높낮이, 반복, 간격과 당시 상황을 함께 본 가능한 맥락입니다. 사람 문장처럼 확정 번역하지 않아요.",
+        empty: "분석 가능한 반려견 발성이 포착되지 않아 소리 후보를 만들지 않았어요.",
         tableTitle: "소리 맥락 후보 결과표",
         tableDescription: "소리 후보별 순위, 추론 신뢰도와 소리·상황 근거를 함께 비교합니다.",
         icon: "fa-volume-high",
@@ -147,10 +148,16 @@ function ConfidenceBand({ confidence }: Pick<PetObservationCandidate, "confidenc
 
 const INFERENCE_GRAPH_TICKS = [100, 80, 60, 40, 20, 0] as const;
 const INFERENCE_CHART_TOP = 54;
-const INFERENCE_CHART_RIGHT = 34;
+const INFERENCE_CHART_RIGHT = 76;
 const INFERENCE_CHART_BOTTOM = 96;
-const INFERENCE_CHART_LEFT = 58;
+const INFERENCE_CHART_LEFT = 76;
 const INFERENCE_CHART_HEIGHT = 338;
+const MOBILE_GRAPH_WIDTH = 320;
+const MOBILE_GRAPH_HEIGHT = 230;
+const MOBILE_GRAPH_TOP = 28;
+const MOBILE_GRAPH_RIGHT = 18;
+const MOBILE_GRAPH_BOTTOM = 36;
+const MOBILE_GRAPH_LEFT = 42;
 
 type InferenceGraphPoint = {
     id: string;
@@ -220,6 +227,17 @@ function InferenceGroupLinePanel({
     const linePoints = rankedPoints
         .map((point, index) => `${xForIndex(index)},${yForPercentage(point.percentage)}`)
         .join(" ");
+    const mobilePlotWidth = MOBILE_GRAPH_WIDTH - MOBILE_GRAPH_LEFT - MOBILE_GRAPH_RIGHT;
+    const mobilePlotHeight = MOBILE_GRAPH_HEIGHT - MOBILE_GRAPH_TOP - MOBILE_GRAPH_BOTTOM;
+    const mobileXForIndex = (index: number) => rankedPoints.length <= 1
+        ? MOBILE_GRAPH_LEFT + mobilePlotWidth / 2
+        : MOBILE_GRAPH_LEFT + (mobilePlotWidth * index) / (rankedPoints.length - 1);
+    const mobileYForPercentage = (percentage: number) => (
+        MOBILE_GRAPH_TOP + ((100 - percentage) / 100) * mobilePlotHeight
+    );
+    const mobileLinePoints = rankedPoints
+        .map((point, index) => `${mobileXForIndex(index)},${mobileYForPercentage(point.percentage)}`)
+        .join(" ");
     const topCommentPoint = rankedPoints[0] ?? legacyPoints[0];
     const topCommentEvidence = topCommentPoint?.item.evidence
         .map((index) => observations[index])
@@ -241,6 +259,7 @@ function InferenceGroupLinePanel({
 
     return (
         <article
+            id={`daenglab-${config.kind}-inference-graph`}
             className="overflow-hidden rounded-2xl border border-white/90 bg-white/90 p-3.5 shadow-sm sm:p-4"
             data-daenglab-inference-line-graph={config.kind}
             data-daenglab-behavior-inference-graph={config.kind === "behavior" ? "" : undefined}
@@ -267,7 +286,127 @@ function InferenceGroupLinePanel({
             </div>
 
             {rankedPoints.length > 0 ? (
-                    <div className="mt-3 overflow-x-auto pb-1" data-daenglab-inference-line-scroll={config.kind}>
+                <>
+                    <div
+                        className="mt-3 min-w-0 lg:hidden"
+                        data-daenglab-inference-mobile-graph={config.kind}
+                    >
+                        <svg
+                            viewBox={`0 0 ${MOBILE_GRAPH_WIDTH} ${MOBILE_GRAPH_HEIGHT}`}
+                            className="block h-auto w-full max-w-full"
+                            preserveAspectRatio="xMidYMid meet"
+                            role="img"
+                            aria-label={rankedPoints
+                                .map((point) => `${point.item.label} 추론 ${point.percentage}%`)
+                                .join(", ")}
+                        >
+                            {[100, 50, 0].map((tick) => {
+                                const y = mobileYForPercentage(tick);
+                                return (
+                                    <g key={`mobile-${tick}`}>
+                                        <line
+                                            x1={MOBILE_GRAPH_LEFT}
+                                            x2={MOBILE_GRAPH_WIDTH - MOBILE_GRAPH_RIGHT}
+                                            y1={y}
+                                            y2={y}
+                                            stroke={tick === 0 ? "#64748b" : config.grid}
+                                            strokeWidth={tick === 0 ? 1.25 : 1}
+                                            strokeDasharray={tick === 0 ? undefined : "4 5"}
+                                        />
+                                        <text
+                                            x={MOBILE_GRAPH_LEFT - 7}
+                                            y={y + 3}
+                                            textAnchor="end"
+                                            fontSize="9"
+                                            fontWeight="800"
+                                            fill="#64748b"
+                                        >
+                                            {tick}%
+                                        </text>
+                                    </g>
+                                );
+                            })}
+                            {rankedPoints.length > 1 && (
+                                <polyline
+                                    points={mobileLinePoints}
+                                    fill="none"
+                                    stroke={config.point}
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    opacity="0.82"
+                                    data-inference-mobile-ranked-line
+                                />
+                            )}
+                            {rankedPoints.map((point, index) => {
+                                const x = mobileXForIndex(index);
+                                const y = mobileYForPercentage(point.percentage);
+                                const percentageY = y <= MOBILE_GRAPH_TOP + 18 ? y + 28 : y - 12;
+                                return (
+                                    <g
+                                        key={`mobile-${point.id}`}
+                                        data-inference-mobile-point
+                                        data-inference-percentage={point.percentage}
+                                    >
+                                        <text
+                                            x={x}
+                                            y={percentageY}
+                                            textAnchor="middle"
+                                            fontSize="10"
+                                            fontWeight="900"
+                                            fill={config.point}
+                                        >
+                                            {point.percentage}%
+                                        </text>
+                                        <circle cx={x} cy={y} r="12" fill={config.point} fillOpacity="0.16" />
+                                        <circle cx={x} cy={y} r="9" fill={config.point} stroke="white" strokeWidth="2.5" />
+                                        <text
+                                            x={x}
+                                            y={y + 3.3}
+                                            textAnchor="middle"
+                                            fontSize="8"
+                                            fontWeight="900"
+                                            fill="white"
+                                        >
+                                            {index + 1}
+                                        </text>
+                                    </g>
+                                );
+                            })}
+                            <text
+                                x={MOBILE_GRAPH_LEFT}
+                                y={MOBILE_GRAPH_HEIGHT - 9}
+                                fontSize="9"
+                                fontWeight="900"
+                                fill="#475569"
+                            >
+                                후보 순위 · 추론 신뢰도(%)
+                            </text>
+                        </svg>
+                        <ol className="mt-1 grid min-w-0 gap-2" data-daenglab-inference-mobile-labels={config.kind}>
+                            {rankedPoints.map((point, index) => (
+                                <li
+                                    key={`mobile-label-${point.id}`}
+                                    className="grid min-w-0 grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2 rounded-xl bg-neutral-50 px-2.5 py-2"
+                                >
+                                    <span
+                                        className="grid h-7 w-7 place-items-center rounded-full text-[10px] font-black text-white"
+                                        style={{ backgroundColor: config.point }}
+                                    >
+                                        {index + 1}
+                                    </span>
+                                    <span className="min-w-0 break-words text-[11px] font-black leading-4 text-neutral-800">
+                                        {point.item.label}
+                                    </span>
+                                    <span className={`whitespace-nowrap rounded-lg px-2 py-1 text-[10px] font-black ${config.confidenceBadge}`}>
+                                        추론 {point.percentage}%
+                                    </span>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+
+                    <div className="mt-3 hidden overflow-x-auto pb-1 lg:block" data-daenglab-inference-line-scroll={config.kind}>
                         <svg
                             viewBox={`0 0 ${chartWidth} ${INFERENCE_CHART_HEIGHT}`}
                             className="block w-full max-w-none"
@@ -436,6 +575,7 @@ function InferenceGroupLinePanel({
                             </text>
                         </svg>
                     </div>
+                </>
                 ) : (
                     <div className="mt-3 grid min-h-44 place-items-center rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 text-center">
                         <div>
@@ -501,7 +641,65 @@ function InferenceGroupLinePanel({
                 </div>
             )}
 
-            <div className="mt-4 overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+            <section
+                className="mt-4 min-w-0 rounded-xl border border-neutral-200 bg-white p-3 lg:hidden"
+                data-daenglab-inference-result-cards={config.kind}
+            >
+                <h5 className="text-xs font-black text-neutral-950">{config.tableTitle}</h5>
+                <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">{config.tableDescription}</p>
+                <div className="mt-3 grid min-w-0 gap-2">
+                    {tablePoints.length > 0 ? tablePoints.map((point) => {
+                        const numericRank = point.percentage === null
+                            ? null
+                            : rankedPoints.findIndex((candidate) => candidate.id === point.id) + 1;
+                        const evidenceItems = point.item.evidence
+                            .map((evidenceIndex) => observations[evidenceIndex])
+                            .filter(Boolean)
+                            .slice(0, 2);
+                        return (
+                            <article key={`mobile-table-${point.id}`} className="min-w-0 rounded-xl bg-neutral-50 p-3">
+                                <div className="flex min-w-0 items-start gap-2.5">
+                                    <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[10px] font-black ${
+                                        numericRank === 1 ? config.rankBadge : "bg-white text-neutral-600"
+                                    }`}>
+                                        {numericRank ?? "—"}
+                                    </span>
+                                    <div className="min-w-0 flex-1">
+                                        <p className="break-words text-[11px] font-black leading-5 text-neutral-900">
+                                            {point.item.label}
+                                        </p>
+                                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                                            <span className={`rounded-lg px-2 py-1 text-[9px] font-black ${config.confidenceBadge}`}>
+                                                {point.percentage === null ? "구간형 결과" : `추론 ${point.percentage}%`}
+                                            </span>
+                                            <span className={`text-[9px] font-black ${
+                                                numericRank === 1 ? config.accent : "text-neutral-600"
+                                            }`}>
+                                                {point.item.action
+                                                    ? URGENCY_LABEL[point.item.action]
+                                                    : numericRank === 1
+                                                        ? "최상위 후보"
+                                                        : candidateConfidenceLabel(point.item.confidence)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="mt-2 break-words text-[10px] font-bold leading-5 text-neutral-600">
+                                    {evidenceItems.length > 0
+                                        ? evidenceItems.map((evidence) => `${evidence.timeSeconds.toFixed(1)}초 ${evidence.description}`).join(" · ")
+                                        : "관찰 근거를 다시 확인해 주세요."}
+                                </p>
+                            </article>
+                        );
+                    }) : (
+                        <p className="rounded-xl bg-neutral-50 px-3 py-6 text-center text-[11px] font-bold text-neutral-500">
+                            {config.empty}
+                        </p>
+                    )}
+                </div>
+            </section>
+
+            <div className="mt-4 hidden overflow-x-auto rounded-xl border border-neutral-200 bg-white lg:block">
                 <table
                     className="w-full min-w-[680px] border-collapse text-left"
                     data-daenglab-inference-result-table={config.kind}
@@ -625,19 +823,7 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
         health: healthItems,
         priority: priorityItems,
     };
-    const rankedOverall = Object.values(groupedItems)
-        .flat()
-        .map((item, index) => ({
-            id: `${index}-${item.label}`,
-            item,
-            percentage: inferencePercentage(item),
-        }))
-        .filter(hasInferencePercentage)
-        .sort((a, b) => b.percentage - a.percentage || a.item.label.localeCompare(b.item.label, "ko"));
-    const topPoint = rankedOverall[0];
-    const leadGap = rankedOverall.length > 1
-        ? Math.max(0, rankedOverall[0].percentage - rankedOverall[1].percentage)
-        : null;
+    const highPriority = result.urgency.level === "emergency" || result.urgency.level === "same_day";
 
     return (
         <section
@@ -655,6 +841,7 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
             </div>
             <p className="mt-2 max-w-3xl text-[11px] font-bold leading-5 text-neutral-600">
                 행동, 소리 맥락, 건강 상태와 우선 확인 신호를 각각 나누어 후보별 추론 신뢰도를 비교합니다.
+                서로 상한과 의미가 다른 그래프의 점수는 직접 순위를 매기지 않습니다.
                 표시된 %는 100% 정답률이나 실제 발생 확률, 진단·위험도 수치가 아닙니다.
             </p>
 
@@ -664,20 +851,16 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
             >
                 <p className="text-[10px] font-black text-neutral-400">전반적인 상태</p>
                 <p className="mt-1 text-sm font-black leading-6 text-neutral-900">{result.summary}</p>
-                <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                    <div className="rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 px-3 py-2.5 text-white">
-                        <p className="text-[9px] font-black text-indigo-100">가장 높은 추론</p>
-                        <p className="mt-1 truncate text-xs font-black" title={topPoint?.item.label}>
-                            {topPoint ? compactGraphLabel(topPoint.item.label) : "수치 확인 필요"}
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    <div className={`rounded-xl bg-gradient-to-br px-3 py-2.5 text-white ${
+                        highPriority ? "from-rose-600 to-rose-700" : "from-indigo-600 to-indigo-700"
+                    }`}>
+                        <p className={`text-[9px] font-black ${highPriority ? "text-rose-100" : "text-indigo-100"}`}>
+                            우선 확인 상태
                         </p>
-                    </div>
-                    <div className="rounded-xl bg-indigo-50 px-3 py-2.5 text-indigo-800">
-                        <p className="text-[9px] font-black text-indigo-500">대표 신뢰도</p>
-                        <p className="mt-1 text-lg font-black">{topPoint ? `추론 ${topPoint.percentage}%` : "—"}</p>
-                    </div>
-                    <div className="rounded-xl bg-cyan-50 px-3 py-2.5 text-cyan-800">
-                        <p className="text-[9px] font-black text-cyan-600">다음 후보와 차이</p>
-                        <p className="mt-1 text-lg font-black">{leadGap === null ? "비교 대기" : `${leadGap}%p`}</p>
+                        <p className="mt-1 text-xs font-black">
+                            {URGENCY_LABEL[result.urgency.level]}
+                        </p>
                     </div>
                     <div className="rounded-xl bg-neutral-100 px-3 py-2.5 text-neutral-700">
                         <p className="text-[9px] font-black text-neutral-500">촬영·분석 상태</p>
@@ -718,7 +901,7 @@ function CandidateCards({
                     <div className="flex items-start justify-between gap-3">
                         <p className="text-sm font-black leading-6 text-neutral-950">{item.label}</p>
                         <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black text-indigo-700">
-                            확신 {item.confidence === "medium" ? "중간" : "낮음"}
+                            확신 {item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}
                         </span>
                     </div>
                     <ul className="mt-3 grid gap-1.5 text-xs font-bold leading-5 text-neutral-600">
@@ -815,7 +998,8 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                         소리 {result.quality.audioAvailable ? "확인" : "확인 어려움"}
                     </span>
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                        짖음 {result.quality.barkDetected ? "포착" : "미포착"}
+                        반려견 발성 {result.quality.vocalizationDetected ? "포착" : "미포착"}
+                        {result.quality.barkDetected ? " · 짖음 포함" : ""}
                     </span>
                 </div>
                 {result.quality.issues.length > 0 && (
@@ -850,7 +1034,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             {result.barkContextCandidates.length > 0 && (
                 <section>
                     <div className="mb-3">
-                        <p className="text-sm font-black text-neutral-950">짖음의 가능한 맥락</p>
+                        <p className="text-sm font-black text-neutral-950">반려견 발성의 가능한 맥락</p>
                         <p className="mt-1 text-[11px] font-bold text-neutral-500">말 번역이 아니라 소리·자세·상황이 함께 맞는 후보입니다.</p>
                     </div>
                     <CandidateCards items={result.barkContextCandidates} observations={result.observations} />

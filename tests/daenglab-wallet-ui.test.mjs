@@ -53,11 +53,11 @@ test("behavior and sound analysis shows, enforces, and refreshes the ten-coin co
     ]);
 
     assert.match(experience, /data-daenglab-analysis-wallet/);
-    assert.match(experience, /댕랩 행동·소리 분석 1회 \{analysisCoinCost\}C/);
+    assert.match(experience, /댕랩 행동·소리·건강 신호 분석 1회 \{analysisCoinCost\}C/);
     assert.match(experience, /wallet\.daengLabCoins >= analysisCoinCost/);
     assert.match(experience, /walletLoading \|\| !hasEnoughCoins/);
     assert.match(experience, /\/mypage#daenglab-wallet/);
-    assert.match(experience, /분석 실패·반려견 미검출 영상은 자동 환급/);
+    assert.match(experience, /분석 실패·반려견 미검출·근거 부족 결과는 자동 환급/);
     assert.match(experience, /const requestId = requestIdRef\.current \|\| analysisRequestId\(\)/);
     assert.match(experience, /requestIdRef\.current = requestId/);
     assert.match(experience, /daenglab_coin_insufficient/);

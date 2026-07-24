@@ -569,7 +569,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <DaengLabCoinMark compact className="text-xs" />
                         <div>
                             <p className="text-xs font-black text-neutral-950">댕랩 행동·소리·건강 신호 분석 1회 {analysisCoinCost}C</p>
-                            <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출 영상은 자동 환급</p>
+                            <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출·근거 부족 결과는 자동 환급</p>
                         </div>
                     </div>
                     {walletLoading ? (

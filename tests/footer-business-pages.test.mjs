@@ -60,10 +60,10 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
-test("home intro uses the cleaned desktop video without changing the mobile artwork or skip overlay", async () => {
+test("home intro uses cleaned desktop and mobile videos without changing the skip overlay", async () => {
     const intro = await source("components/home/IntroSplash.tsx");
 
-    assert.match(intro, /isMobile \? "\/videos\/intro_m\.mp4\?v=20260619" : "\/videos\/intro-clean-v2\.mp4\?v=20260722"/);
+    assert.match(intro, /isMobile \? "\/videos\/intro-mobile-clean-v2\.mp4\?v=20260724" : "\/videos\/intro-clean-v2\.mp4\?v=20260722"/);
     assert.match(intro, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*playsInline[\s\S]*onEnded=/);
     assert.match(intro, /document\.addEventListener\("play", blockBackgroundPlay, true\)/);
     assert.match(intro, /pausedBackgroundVideos/);
@@ -72,7 +72,7 @@ test("home intro uses the cleaned desktop video without changing the mobile artw
     assert.match(intro, /<span className=\{styles\.skipText\}>/);
     const [desktopSize, mobileSize] = await Promise.all([
         stat(new URL("public/videos/intro-clean-v2.mp4", root)).then(({ size }) => size),
-        stat(new URL("public/videos/intro_m.mp4", root)).then(({ size }) => size),
+        stat(new URL("public/videos/intro-mobile-clean-v2.mp4", root)).then(({ size }) => size),
     ]);
     assert.ok(desktopSize > 100_000 && desktopSize < 5_000_000);
     assert.ok(mobileSize > 100_000 && mobileSize < 5_000_000);

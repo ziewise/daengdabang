@@ -123,7 +123,7 @@ test("observation upload is authenticated, abortable, and separate from profile 
     assert.match(experience, /petProfileId=\{selectedPet\.apiProfileId\}|petProfileId,/);
     assert.match(experience, /petProfileId,/);
     assert.match(api, /mediaRetention: "not_stored"/);
-    assert.match(api, /짖음은 사람 문장처럼 번역할 수 없으며/);
+    assert.match(api, /반려견 발성은 사람 문장처럼 번역할 수 없으며/);
     assert.match(api, /분석 결과를 기다리지 말고 가까운 응급 동물병원에 즉시 연락/);
     assert.doesNotMatch(api, /savePetProfile|upsertPet|photoDataUrl/);
 });
@@ -206,6 +206,12 @@ test("result starts with four independent high-to-low line graphs, comments, and
     assert.match(result, /data-inference-ranked-line/);
     assert.match(result, /data-inference-line-point/);
     assert.match(result, /data-inference-percentage=\{point\.percentage\}/);
+    assert.match(result, /data-daenglab-inference-mobile-graph=\{config\.kind\}/);
+    assert.match(result, /data-daenglab-inference-mobile-labels=\{config\.kind\}/);
+    assert.match(result, /data-daenglab-inference-result-cards=\{config\.kind\}/);
+    assert.match(result, /className="mt-3 min-w-0 lg:hidden"/);
+    assert.match(result, /className="mt-3 hidden overflow-x-auto pb-1 lg:block"/);
+    assert.match(result, /서로 상한과 의미가 다른 그래프의 점수는 직접 순위를 매기지 않습니다/);
     assert.match(result, /높은 추론 → 낮은 추론/);
     assert.match(result, /선은 후보를 신뢰도 순서로 비교하기 위한 연결선/);
     assert.match(result, /data-daenglab-overall-inference-state/);
@@ -217,11 +223,16 @@ test("result starts with four independent high-to-low line graphs, comments, and
     assert.match(result, /<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*data-observation-urgency/);
     assert.match(api, /confidenceScore\?: number/);
     assert.match(api, /candidateConfidenceScore/);
+    assert.match(api, /vocalizationDetected: boolean/);
+    assert.match(api, /"environment_sound"/);
+    assert.match(api, /status: "ready" \| "limited" \| "no_dog" \| "no_evidence"/);
+    assert.match(api, /raw\.status === "no_evidence"/);
     assert.match(api, /maxScore = 0\.95/);
     assert.match(api, /confidenceLabel === "high" && value < 0\.8/);
     assert.match(api, /group: "health",[\s\S]*maxScore: 0\.79,[\s\S]*allowedConfidences: \["medium", "low"\]/);
     assert.match(api, /candidateConfidenceScore\([\s\S]*rawConfidenceScore,[\s\S]*confidenceLabel,[\s\S]*0\.79/);
     assert.doesNotMatch(result, /행동·소리 추론 후보 그래프/);
+    assert.doesNotMatch(result, /행동·소리 그래프 최고점|건강·확인 그래프 최고점|rankWithinGroups/);
 });
 
 
@@ -289,7 +300,9 @@ test("guardian follow-up answers refine the same owned result without another co
     assert.match(followUp, /아니오/);
     assert.match(followUp, /잘 모르겠어요/);
     assert.match(followUp, /선택 메모/);
-    assert.match(followUp, /답변 반영해 결과 보완/);
+    assert.match(followUp, /보호자 답변 메모 저장/);
+    assert.match(followUp, /후보와 점수는 자동 재판정하지 않습니다/);
+    assert.doesNotMatch(followUp, /답변 반영해 결과 보완/);
     assert.match(followUp, /추가 차감 0C/);
     assert.match(followUp, /진단을 확정하지 않습니다/);
     assert.match(api, /\/api\/v1\/pet-lens\/observations\/\$\{encodeURIComponent\(request\.requestId\.trim\(\)\)\}\/refine/);
