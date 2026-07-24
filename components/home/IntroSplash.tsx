@@ -154,7 +154,7 @@ export default function IntroSplash() {
         >
             <video
                 ref={introVideoRef}
-                src={isMobile ? "/videos/intro_m.mp4?v=20260619" : "/videos/intro-clean-v2.mp4?v=20260722"}
+                src={isMobile ? "/videos/intro-mobile-clean-v2.mp4?v=20260724" : "/videos/intro-clean-v2.mp4?v=20260722"}
                 autoPlay
                 muted
                 playsInline
