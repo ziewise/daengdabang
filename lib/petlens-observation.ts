@@ -4,6 +4,60 @@ export const PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-priv
 
 export type PetObservationUrgencyLevel = "emergency" | "same_day" | "observe" | "unclear";
 export type PetObservationConfidence = "high" | "medium" | "low";
+export type PetObservationTargetStatus = "identified" | "ambiguous" | "not_visible" | "legacy_unknown";
+export type PetObservationTargetBasis =
+    | "single_dog"
+    | "profile_reference"
+    | "guardian_hint"
+    | "visual_audio_sync"
+    | "uncertain"
+    | "legacy_unknown";
+export type PetObservationTargetVocalizationStatus = "confirmed" | "possible" | "not_detected" | "legacy_unknown";
+export type PetObservationFactSource =
+    | "target_dog"
+    | "other_dog"
+    | "dog_unknown"
+    | "cat"
+    | "other_animal"
+    | "human"
+    | "playback"
+    | "environment"
+    | "unknown"
+    | "legacy_unknown";
+export type PetObservationSourceBasis =
+    | "visible_track"
+    | "visual_audio_sync"
+    | "single_dog"
+    | "profile_reference"
+    | "guardian_hint"
+    | "acoustic_only"
+    | "scene_context"
+    | "unknown"
+    | "legacy_unknown";
+export type PetObservationVocalizationKind =
+    | "bark"
+    | "whine"
+    | "growl"
+    | "howl"
+    | "yelp"
+    | "other"
+    | "unclear"
+    | "not_applicable";
+export type PetObservationInterferenceSource =
+    | "human_speech"
+    | "other_dog"
+    | "cat_or_other_animal"
+    | "tv_or_media"
+    | "environment"
+    | "unknown";
+export type PetObservationSoundContextCode =
+    | "alert_or_guarding"
+    | "attention_or_request"
+    | "play_or_excited"
+    | "uncertainty_or_stress"
+    | "social_contact"
+    | "discomfort_possible"
+    | "unclear";
 
 export type PetObservationQuality = {
     level: "good" | "limited" | "unusable";
@@ -11,6 +65,19 @@ export type PetObservationQuality = {
     audioAvailable: boolean;
     barkDetected: boolean;
     vocalizationDetected: boolean;
+    targetStatus: PetObservationTargetStatus;
+    targetBasis: PetObservationTargetBasis;
+    targetDescriptor: string;
+    targetConfidenceScore: number;
+    visibleDogCount: number;
+    catVisible: boolean;
+    otherAnimalsVisible: boolean;
+    peopleVisible: boolean;
+    mixedAudio: boolean;
+    targetVocalizationStatus: PetObservationTargetVocalizationStatus;
+    unattributedVocalizationDetected: boolean;
+    interferenceSources: PetObservationInterferenceSource[];
+    attributionReason: string;
     issues: string[];
 };
 
@@ -19,6 +86,10 @@ export type PetObservationFact = {
     description: string;
     timeSeconds: number;
     confidence: PetObservationConfidence;
+    source: PetObservationFactSource;
+    sourceConfidenceScore: number;
+    sourceBasis: PetObservationSourceBasis;
+    vocalizationKind: PetObservationVocalizationKind;
 };
 
 export type PetObservationTimelinePoint = {
@@ -34,6 +105,7 @@ export type PetObservationCandidate = {
     evidence: number[];
     otherPossibility: string;
     group?: "behavior" | "sound" | "health";
+    contextCode?: PetObservationSoundContextCode;
 };
 
 export type PetObservationHealthCandidate = Omit<PetObservationCandidate, "confidence" | "group"> & {
@@ -80,6 +152,7 @@ export type PetObservationNutritionRecommendation = {
 };
 
 export type PetObservationResult = {
+    analysisContractVersion: 1 | 2;
     status: "ready" | "limited" | "no_dog" | "no_evidence";
     durationSeconds?: number;
     summary: string;
@@ -243,6 +316,95 @@ function confidence(value: unknown): PetObservationConfidence {
     return value === "high" || value === "medium" || value === "low" ? value : "low";
 }
 
+const FACT_SOURCES = new Set<PetObservationFactSource>([
+    "target_dog",
+    "other_dog",
+    "dog_unknown",
+    "cat",
+    "other_animal",
+    "human",
+    "playback",
+    "environment",
+    "unknown",
+]);
+const SOURCE_BASES = new Set<PetObservationSourceBasis>([
+    "visible_track",
+    "visual_audio_sync",
+    "single_dog",
+    "profile_reference",
+    "guardian_hint",
+    "acoustic_only",
+    "scene_context",
+    "unknown",
+]);
+const TARGET_SOURCE_BASES = new Set<PetObservationSourceBasis>([
+    "visible_track",
+    "visual_audio_sync",
+    "single_dog",
+    "profile_reference",
+    "guardian_hint",
+]);
+const VOCALIZATION_KINDS = new Set<PetObservationVocalizationKind>([
+    "bark",
+    "whine",
+    "growl",
+    "howl",
+    "yelp",
+    "other",
+    "unclear",
+    "not_applicable",
+]);
+const INTERFERENCE_SOURCES = new Set<PetObservationInterferenceSource>([
+    "human_speech",
+    "other_dog",
+    "cat_or_other_animal",
+    "tv_or_media",
+    "environment",
+    "unknown",
+]);
+const SOUND_CONTEXT_CODES = new Set<PetObservationSoundContextCode>([
+    "alert_or_guarding",
+    "attention_or_request",
+    "play_or_excited",
+    "uncertainty_or_stress",
+    "social_contact",
+    "discomfort_possible",
+    "unclear",
+]);
+const SOUND_CONTEXT_LABELS: Record<PetObservationSoundContextCode, string> = {
+    alert_or_guarding: "주변 자극을 알리거나 경계하는 맥락",
+    attention_or_request: "보호자의 관심이나 상호작용을 요청하는 맥락",
+    play_or_excited: "놀이·기대감으로 흥분한 맥락",
+    uncertainty_or_stress: "낯선 상황에서 불확실하거나 긴장한 맥락",
+    social_contact: "다른 대상과 소통을 시도하는 맥락",
+    discomfort_possible: "불편함 때문에 도움을 구하는 맥락",
+    unclear: "맥락을 한 가지로 좁히기 어려움",
+};
+
+function boundedScore(value: unknown, maximum = 0.95) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return 0;
+    return Math.round(Math.max(0, Math.min(numeric, maximum)) * 1_000) / 1_000;
+}
+
+function factSupportsTarget(fact: PetObservationFact, mixedAudio: boolean) {
+    if (fact.source === "legacy_unknown") return true;
+    if (
+        fact.source !== "target_dog"
+        || fact.sourceConfidenceScore < 0.5
+        || !TARGET_SOURCE_BASES.has(fact.sourceBasis)
+    ) return false;
+    if (
+        mixedAudio
+        && fact.modality === "vocalization"
+        && (
+            fact.sourceBasis !== "visual_audio_sync"
+            || fact.sourceConfidenceScore < 0.7
+        )
+    ) return false;
+    return true;
+}
+
 function evidence(value: unknown, factCount: number) {
     if (!Array.isArray(value)) return [];
     return Array.from(new Set(value
@@ -317,15 +479,29 @@ function candidates(
         allowedConfidences?: readonly PetObservationConfidence[];
         requireScore?: boolean;
         durationSeconds?: number;
+        requireTargetAttribution?: boolean;
+        mixedAudio?: boolean;
+        requireContextCode?: boolean;
     } = {},
 ): PetObservationCandidate[] {
     if (!Array.isArray(value)) return [];
     const parsed = value.flatMap((item) => {
         const row = record(item);
         if (!row) return [];
-        const label = koreanLine(row.label, 100);
+        const rawContextCode = row.context_code ?? row.contextCode;
+        const contextCode = SOUND_CONTEXT_CODES.has(rawContextCode as PetObservationSoundContextCode)
+            ? rawContextCode as PetObservationSoundContextCode
+            : undefined;
+        const label = options.requireContextCode && contextCode
+            ? SOUND_CONTEXT_LABELS[contextCode]
+            : koreanLine(row.label, 100);
         const proof = evidence(row.evidence, facts.length);
         if (!label || proof.length === 0) return [];
+        if (
+            options.requireTargetAttribution
+            && !proof.every((index) => factSupportsTarget(facts[index], options.mixedAudio === true))
+        ) return [];
+        if (options.requireContextCode && !contextCode) return [];
         const confidenceLabel = row.confidence === "high"
             ? "high" as const
             : row.confidence === "medium" ? "medium" as const : "low" as const;
@@ -360,19 +536,32 @@ function candidates(
         );
         if (rawConfidenceScore !== undefined && typeof confidenceScore !== "number") return [];
         if (options.requireScore && typeof confidenceScore !== "number") return [];
+        const timeline = timelinePoints(
+            row.timeline,
+            options.durationSeconds ?? 30,
+            Math.min(maxScore, confidenceScore ?? maxScore),
+            confidenceScore,
+        );
+        if (
+            options.requireTargetAttribution
+            && options.group === "sound"
+            && (
+                timeline.length === 0
+                || !proof
+                    .filter((index) => facts[index]?.modality === "vocalization")
+                    .some((index) => timeline.some((point) =>
+                        Math.abs(point.timeSeconds - facts[index].timeSeconds) <= 1.5))
+            )
+        ) return [];
         return [{
             label,
             confidence: confidenceLabel,
             ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
-            timeline: timelinePoints(
-                row.timeline,
-                options.durationSeconds ?? 30,
-                Math.min(maxScore, confidenceScore ?? maxScore),
-                confidenceScore,
-            ),
+            timeline,
             evidence: proof,
             otherPossibility: koreanLine(row.other_possibility ?? row.otherPossibility, 140),
             ...(options.group ? { group: options.group } : {}),
+            ...(contextCode ? { contextCode } : {}),
         }];
     }).sort((a, b) => (b.confidenceScore ?? -1) - (a.confidenceScore ?? -1));
     const seenLabels = new Set<string>();
@@ -419,6 +608,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     if (mediaRetention !== "not_stored") {
         throw new Error("관찰 결과의 원본 동영상 보관 상태를 확인하지 못했습니다.");
     }
+    const analysisContractVersion: 1 | 2 = (
+        raw.analysis_contract_version === 2 || raw.analysisContractVersion === 2
+    ) ? 2 : 1;
+    const attributionV2 = analysisContractVersion === 2;
 
     const qualityLevel = rawQuality.level === "good" || rawQuality.level === "limited" || rawQuality.level === "unusable"
         ? rawQuality.level
@@ -429,11 +622,90 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         : 30;
     const dogVisible = rawQuality.dog_visible === true || rawQuality.dogVisible === true;
     const audioAvailable = rawQuality.audio_available === true || rawQuality.audioAvailable === true;
-    const barkDetected = rawQuality.bark_detected === true || rawQuality.barkDetected === true;
+    const reportedBarkDetected = rawQuality.bark_detected === true || rawQuality.barkDetected === true;
+    const rawVisibleDogCount = Number(rawQuality.visible_dog_count ?? rawQuality.visibleDogCount);
+    const hasValidVisibleDogCount = Number.isInteger(rawVisibleDogCount)
+        && rawVisibleDogCount >= 0
+        && rawVisibleDogCount <= 10;
+    const visibleDogCount = attributionV2
+        ? dogVisible
+            ? Math.max(1, Math.min(hasValidVisibleDogCount ? rawVisibleDogCount : 1, 10))
+            : 0
+        : dogVisible ? 1 : 0;
+    const rawTargetBasis = rawQuality.target_basis ?? rawQuality.targetBasis;
+    let targetBasis: PetObservationTargetBasis = attributionV2 && (
+        rawTargetBasis === "single_dog"
+        || rawTargetBasis === "profile_reference"
+        || rawTargetBasis === "guardian_hint"
+        || rawTargetBasis === "visual_audio_sync"
+        || rawTargetBasis === "uncertain"
+    ) ? rawTargetBasis : attributionV2 ? "uncertain" : "legacy_unknown";
+    const rawTargetStatus = rawQuality.target_status ?? rawQuality.targetStatus;
+    let targetStatus: PetObservationTargetStatus = attributionV2 && (
+        rawTargetStatus === "identified"
+        || rawTargetStatus === "ambiguous"
+        || rawTargetStatus === "not_visible"
+    ) ? rawTargetStatus : attributionV2 ? "ambiguous" : "legacy_unknown";
+    let targetDescriptor = attributionV2
+        ? koreanLine(rawQuality.target_descriptor ?? rawQuality.targetDescriptor, 180)
+        : "";
+    let targetConfidenceScore = attributionV2
+        ? boundedScore(rawQuality.target_confidence_score ?? rawQuality.targetConfidenceScore)
+        : 0;
+    if (attributionV2) {
+        if (!dogVisible) {
+            targetStatus = "not_visible";
+            targetBasis = "uncertain";
+            targetDescriptor = "";
+            targetConfidenceScore = 0;
+        } else {
+            if (targetStatus === "not_visible") targetStatus = "ambiguous";
+            if (targetStatus === "identified") {
+                const singleDogMatch = hasValidVisibleDogCount
+                    && visibleDogCount === 1
+                    && targetConfidenceScore >= 0.5
+                    && targetBasis !== "uncertain"
+                    && targetBasis !== "legacy_unknown";
+                const multipleDogMatch = hasValidVisibleDogCount
+                    && visibleDogCount > 1
+                    && targetConfidenceScore >= 0.8
+                    && (
+                        targetBasis === "profile_reference"
+                        || targetBasis === "guardian_hint"
+                        || targetBasis === "visual_audio_sync"
+                    );
+                if (!targetDescriptor || (!singleDogMatch && !multipleDogMatch)) {
+                    targetStatus = "ambiguous";
+                    targetBasis = "uncertain";
+                }
+            }
+        }
+    }
+    const mixedAudio = attributionV2 && (
+        rawQuality.mixed_audio === true || rawQuality.mixedAudio === true
+    );
+    const rawTargetVocalizationStatus = rawQuality.target_vocalization_status
+        ?? rawQuality.targetVocalizationStatus;
+    const reportedTargetVocalizationStatus: PetObservationTargetVocalizationStatus = attributionV2 && (
+        rawTargetVocalizationStatus === "confirmed"
+        || rawTargetVocalizationStatus === "possible"
+        || rawTargetVocalizationStatus === "not_detected"
+    ) ? rawTargetVocalizationStatus : attributionV2 ? "not_detected" : "legacy_unknown";
+    const unattributedVocalizationDetected = attributionV2 && (
+        rawQuality.unattributed_vocalization_detected === true
+        || rawQuality.unattributedVocalizationDetected === true
+    );
+    const rawInterferenceSources = rawQuality.interference_sources ?? rawQuality.interferenceSources;
+    const interferenceSources: PetObservationInterferenceSource[] = attributionV2 && Array.isArray(rawInterferenceSources)
+        ? Array.from(new Set(rawInterferenceSources.filter(
+            (item): item is PetObservationInterferenceSource =>
+                INTERFERENCE_SOURCES.has(item as PetObservationInterferenceSource),
+        ))).slice(0, 6)
+        : [];
     const observations: PetObservationFact[] = Array.isArray(raw.observations)
         ? raw.observations.flatMap((item) => {
             const row = record(item);
-            const modality = row?.modality;
+            let modality = row?.modality;
             const rawDescription = line(row?.description, 180);
             const description = koreanLine(rawDescription, 180)
                 || (rawDescription ? "이 시점에서 관찰 신호가 포착됐어요." : "");
@@ -441,41 +713,136 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 !row ||
                 !description ||
                 !["vocalization", "environment_sound", "posture", "movement", "breathing", "interaction", "quality"].includes(String(modality))
-                || (!audioAvailable && (modality === "vocalization" || modality === "environment_sound"))
             ) return [];
+            let source: PetObservationFactSource = attributionV2 && FACT_SOURCES.has(row.source as PetObservationFactSource)
+                ? row.source as PetObservationFactSource
+                : attributionV2 ? "unknown" : "legacy_unknown";
+            let sourceBasis: PetObservationSourceBasis = attributionV2 && SOURCE_BASES.has(
+                (row.source_basis ?? row.sourceBasis) as PetObservationSourceBasis,
+            )
+                ? (row.source_basis ?? row.sourceBasis) as PetObservationSourceBasis
+                : attributionV2 ? "unknown" : "legacy_unknown";
+            const sourceConfidenceScore = attributionV2
+                ? boundedScore(row.source_confidence_score ?? row.sourceConfidenceScore)
+                : 0;
+            const rawVocalizationKind = row.vocalization_kind ?? row.vocalizationKind;
+            let vocalizationKind: PetObservationVocalizationKind = modality === "vocalization"
+                && VOCALIZATION_KINDS.has(rawVocalizationKind as PetObservationVocalizationKind)
+                ? rawVocalizationKind as PetObservationVocalizationKind
+                : modality === "vocalization" && attributionV2 ? "unclear" : "not_applicable";
+            if (attributionV2 && source === "target_dog") {
+                const targetSourceValid = targetStatus === "identified"
+                    && sourceConfidenceScore >= 0.5
+                    && TARGET_SOURCE_BASES.has(sourceBasis)
+                    && (
+                        modality !== "vocalization"
+                        || (
+                            sourceConfidenceScore >= 0.7
+                            && (!mixedAudio || sourceBasis === "visual_audio_sync")
+                        )
+                    );
+                if (!targetSourceValid) {
+                    source = ["vocalization", "posture", "movement", "breathing", "interaction"].includes(String(modality))
+                        ? "dog_unknown"
+                        : "unknown";
+                    sourceBasis = "unknown";
+                }
+            }
+            if (attributionV2 && (source === "human" || source === "playback" || source === "environment")) {
+                if (modality === "vocalization") {
+                    modality = "environment_sound";
+                    vocalizationKind = "not_applicable";
+                } else if (modality !== "environment_sound" && modality !== "quality") {
+                    return [];
+                }
+            }
+            if (!audioAvailable && (modality === "vocalization" || modality === "environment_sound")) return [];
             const timeValue = Number(row.time_seconds ?? row.timeSeconds ?? 0);
             return [{
                 modality: modality as PetObservationFact["modality"],
                 description,
                 timeSeconds: Number.isFinite(timeValue) ? Math.max(0, Math.min(timeValue, 30)) : 0,
                 confidence: confidence(row.confidence),
+                source,
+                sourceConfidenceScore,
+                sourceBasis,
+                vocalizationKind,
             }];
         }).slice(0, 12)
         : [];
-    const vocalizationDetected = audioAvailable && (
-        rawQuality.vocalization_detected === true
-        || rawQuality.vocalizationDetected === true
-        || barkDetected
-        || observations.some((item) => item.modality === "vocalization")
+    const targetVocalizationFacts = observations.filter(
+        (item) => item.modality === "vocalization" && factSupportsTarget(item, mixedAudio),
     );
+    const hasUnattributedVocalization = observations.some(
+        (item) => item.modality === "vocalization" && item.source !== "target_dog",
+    );
+    const targetVocalizationStatus: PetObservationTargetVocalizationStatus = attributionV2
+        ? (
+            targetStatus === "identified"
+            && reportedTargetVocalizationStatus === "confirmed"
+            && targetVocalizationFacts.length > 0
+        )
+            ? "confirmed"
+            : (
+                reportedTargetVocalizationStatus === "possible"
+                || unattributedVocalizationDetected
+                || hasUnattributedVocalization
+            )
+                ? "possible"
+                : "not_detected"
+        : "legacy_unknown";
+    const vocalizationDetected = attributionV2
+        ? audioAvailable && targetVocalizationStatus === "confirmed"
+        : audioAvailable && (
+            rawQuality.vocalization_detected === true
+            || rawQuality.vocalizationDetected === true
+            || reportedBarkDetected
+            || observations.some((item) => item.modality === "vocalization")
+        );
+    const barkDetected = attributionV2
+        ? vocalizationDetected && targetVocalizationFacts.some((item) => item.vocalizationKind === "bark")
+        : vocalizationDetected && reportedBarkDetected;
+    const normalizedQualityLevel: PetObservationQuality["level"] = attributionV2
+        && (
+            !dogVisible
+            || targetStatus !== "identified"
+        )
+        ? "unusable"
+        : qualityLevel;
 
     const barkContextCandidates = vocalizationDetected
+        && (!attributionV2 || (targetStatus === "identified" && targetVocalizationStatus === "confirmed"))
         ? candidates(
             raw.bark_context_candidates ?? raw.barkContextCandidates,
             observations,
             3,
-            { group: "sound", durationSeconds },
+            {
+                group: "sound",
+                durationSeconds,
+                requireTargetAttribution: attributionV2,
+                mixedAudio,
+                requireContextCode: attributionV2,
+            },
         )
         : [];
-    const behaviorCandidates = dogVisible && qualityLevel !== "unusable"
+    const behaviorCandidates = dogVisible
+        && qualityLevel !== "unusable"
+        && (!attributionV2 || targetStatus === "identified")
         ? candidates(
             raw.behavior_candidates ?? raw.behaviorCandidates,
             observations,
             4,
-            { group: "behavior", durationSeconds },
+            {
+                group: "behavior",
+                durationSeconds,
+                requireTargetAttribution: attributionV2,
+                mixedAudio,
+            },
         )
         : [];
-    const healthCandidates: PetObservationHealthCandidate[] = dogVisible && qualityLevel !== "unusable"
+    const healthCandidates: PetObservationHealthCandidate[] = dogVisible
+        && qualityLevel !== "unusable"
+        && (!attributionV2 || targetStatus === "identified")
         ? candidates(
             raw.health_candidates ?? raw.healthCandidates,
             observations,
@@ -486,6 +853,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 allowedConfidences: ["medium", "low"],
                 requireScore: true,
                 durationSeconds,
+                requireTargetAttribution: attributionV2,
+                mixedAudio,
             },
         ).map((item) => ({
             ...item,
@@ -494,7 +863,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         }))
         : [];
     const rawSymptoms = raw.symptom_signals ?? raw.symptomSignals;
-    const normalizedSymptoms: PetObservationSymptomSignal[] = dogVisible && qualityLevel !== "unusable" && Array.isArray(rawSymptoms)
+    const normalizedSymptoms: PetObservationSymptomSignal[] = dogVisible
+        && qualityLevel !== "unusable"
+        && (!attributionV2 || targetStatus === "identified")
+        && Array.isArray(rawSymptoms)
         ? rawSymptoms
             .flatMap((item: unknown) => {
                 const row = record(item);
@@ -502,6 +874,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 const label = koreanLine(row.label, 120);
                 const proof = evidence(row.evidence, observations.length);
                 if (!label || proof.length === 0) return [];
+                if (
+                    attributionV2
+                    && !proof.every((index) => factSupportsTarget(observations[index], mixedAudio))
+                ) return [];
                 const confidenceLabel = row.confidence === "medium" ? "medium" as const : "low" as const;
                 const rawConfidenceScore = row.confidence_score ?? row.confidenceScore;
                 const confidenceScore = candidateConfidenceScore(
@@ -544,7 +920,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     if (normalizedSymptoms.some((item) => item.action === "emergency")) normalizedUrgency = "emergency";
     else if (normalizedSymptoms.some((item) => item.action === "same_day")) normalizedUrgency = "same_day";
     if (!dogVisible && normalizedUrgency !== "emergency") normalizedUrgency = "unclear";
-    if (qualityLevel === "unusable" && normalizedUrgency !== "emergency") normalizedUrgency = "unclear";
+    if (normalizedQualityLevel === "unusable" && normalizedUrgency !== "emergency") normalizedUrgency = "unclear";
+    if (attributionV2 && targetStatus !== "identified") normalizedUrgency = "unclear";
     const unsupportedHighUrgency = (
         requestedUrgency === "emergency" || requestedUrgency === "same_day"
     ) && normalizedUrgency !== requestedUrgency;
@@ -553,7 +930,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ? "no_dog"
         : raw.status === "no_evidence"
             ? "no_evidence"
-            : qualityLevel === "good" && raw.status === "ready"
+            : normalizedQualityLevel === "good" && raw.status === "ready"
                 ? "ready"
                 : "limited";
     const allowedNutritionFocuses = new Set<PetObservationNutritionFocus>([
@@ -569,7 +946,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const rawNutrition = raw.nutrition_recommendations ?? raw.nutritionRecommendations;
     const nutritionRecommendations: PetObservationNutritionRecommendation[] = (
         status === "ready"
-        && qualityLevel === "good"
+        && normalizedQualityLevel === "good"
+        && (!attributionV2 || targetStatus === "identified")
         && normalizedUrgency === "observe"
         && Array.isArray(rawNutrition)
     )
@@ -653,7 +1031,9 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         .map((item) => item.label)
         .slice(0, 4);
     const rawSummary = koreanLine(raw.summary, 320);
-    const safeSummary = normalizedUrgency === "emergency"
+    const safeSummary = attributionV2 && targetStatus === "ambiguous"
+        ? "영상 속 강아지를 한 마리의 분석 대상으로 구분하지 못해 행동·발성 후보를 만들지 않았어요."
+        : normalizedUrgency === "emergency"
         ? "영상에서 즉시 확인이 필요한 신호가 분류돼 추가 촬영보다 병원 연락을 우선하세요."
         : normalizedUrgency === "same_day"
             ? "영상에서 오늘 안에 동물병원에 문의할 신호가 분류됐어요."
@@ -673,18 +1053,57 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         followUpQuestions,
     );
     const refinedAt = line(raw.refined_at ?? raw.refinedAt, 80);
+    const baseQualityIssues = koreanLines(rawQuality.issues, 6, 120);
+    const qualityIssues = Array.from(new Set([
+        ...(attributionV2 && targetStatus === "ambiguous"
+            ? ["여러 동물 중 분석 대상 강아지를 한 마리로 구분하지 못했어요."]
+            : []),
+        ...(attributionV2 && targetVocalizationStatus === "possible"
+            ? ["소리는 들렸지만 대상 강아지의 발성인지 구분하기 어려워 맥락 번역에서 제외했어요."]
+            : []),
+        ...baseQualityIssues,
+    ])).slice(0, 6);
+    const baseRetakeGuidance = koreanLines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160);
+    const retakeGuidance = attributionV2 && targetStatus === "ambiguous"
+        ? [
+            "분석할 강아지를 화면 중앙에 두고 목줄·털색 같은 구분 특징이 계속 보이도록 다시 촬영해 주세요.",
+            "여러 강아지가 함께 있으면 촬영 당시 메모에 분석할 강아지의 위치와 특징을 적어 주세요.",
+        ]
+        : baseRetakeGuidance;
 
     return {
+        analysisContractVersion,
         status,
         ...(Number.isFinite(rawDurationSeconds) ? { durationSeconds } : {}),
         summary: safeSummary,
         quality: {
-            level: qualityLevel,
+            level: normalizedQualityLevel,
             dogVisible,
             audioAvailable,
             barkDetected,
             vocalizationDetected,
-            issues: koreanLines(rawQuality.issues, 6, 120),
+            targetStatus,
+            targetBasis,
+            targetDescriptor,
+            targetConfidenceScore,
+            visibleDogCount,
+            catVisible: attributionV2 && (
+                rawQuality.cat_visible === true || rawQuality.catVisible === true
+            ),
+            otherAnimalsVisible: attributionV2 && (
+                rawQuality.other_animals_visible === true || rawQuality.otherAnimalsVisible === true
+            ),
+            peopleVisible: attributionV2 && (
+                rawQuality.people_visible === true || rawQuality.peopleVisible === true
+            ),
+            mixedAudio,
+            targetVocalizationStatus,
+            unattributedVocalizationDetected: unattributedVocalizationDetected || hasUnattributedVocalization,
+            interferenceSources,
+            attributionReason: attributionV2
+                ? koreanLine(rawQuality.attribution_reason ?? rawQuality.attributionReason, 180)
+                : "",
+            issues: qualityIssues,
         },
         observations,
         barkContextCandidates,
@@ -693,7 +1112,9 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         symptomSignals: normalizedSymptoms,
         urgency: {
             level: normalizedUrgency,
-            headline: normalizedUrgency === "emergency" || normalizedUrgency === "same_day"
+            headline: attributionV2 && targetStatus === "ambiguous"
+                ? "분석할 강아지 구분이 필요해요"
+                : normalizedUrgency === "emergency" || normalizedUrgency === "same_day"
                 ? defaultHeadline[normalizedUrgency]
                 : unsupportedHighUrgency
                     ? defaultHeadline[normalizedUrgency]
@@ -711,9 +1132,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         guardianFollowUpAnswers,
         guardianContextSummary: koreanLine(raw.guardian_context_summary ?? raw.guardianContextSummary, 320),
         ...(refinedAt ? { refinedAt } : {}),
-        retakeGuidance: koreanLines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160),
+        retakeGuidance,
         limitations: Array.from(new Set([
             "짖음·낑낑거림·으르렁거림 등 반려견 발성은 사람 문장처럼 번역할 수 없으며, 가능한 맥락만 추론합니다.",
+            "사람·고양이·다른 강아지의 신호는 대상견 근거에서 제외하며, 주체가 불명확하면 후보를 만들지 않습니다.",
             "영상 관찰은 수의사의 진찰이나 검사를 대신하지 않습니다.",
             ...koreanLines(raw.limitations, 4, 200),
         ])).slice(0, 4),

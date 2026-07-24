@@ -453,7 +453,11 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             suffix="행동·소리·건강 신호 분석 결과"
                             suffixClassName="text-[11px] font-black leading-tight text-indigo-700"
                         />
-                        <h2 className="mt-1 text-xl font-black text-neutral-950">{pet.name || "우리 아이"}의 짧은 관찰 결과</h2>
+                        <h2 className="mt-1 text-xl font-black text-neutral-950">
+                            {result.quality.targetStatus === "ambiguous"
+                                ? "분석 대상을 구분하지 못한 관찰 결과"
+                                : "영상 속 분석 대상의 짧은 관찰 결과"}
+                        </h2>
                     </div>
                     <button type="button" onClick={resetAll} className="btn btn-secondary min-h-10 px-4 text-xs">
                         <i className="fa-solid fa-video mr-1.5 text-[10px]" /> 새로 관찰
@@ -563,10 +567,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             </span>
                         </div>
                         <h2 className="mt-1 text-lg font-black text-neutral-950">
-                            권장 {PET_OBSERVATION_RECORDING_SECONDS}초 동안 소리와 행동을 함께 관찰해요
+                            권장 {PET_OBSERVATION_RECORDING_SECONDS}초 동안 대상 강아지만 구분해 관찰해요
                         </h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
-                            짖음만 번역하지 않고 자세·움직임·호흡 모습·상황을 같이 봐서 가능한 맥락과 확인할 신호를 정리합니다.
+                            사람·고양이·다른 강아지·재생음은 근거에서 제외하고, 대상견의 발성 주체가 확인된 경우에만 맥락 번역 후보를 만듭니다.
                         </p>
                     </div>
                 </div>
@@ -575,7 +579,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     data-daenglab-service-description
                 >
                     댕랩은 카메라 영상과 포함 음성을 함께 분석해,
-                    우리 아이의 행동·소리·건강 상태에서 보이는 관찰 신호와 가능한 맥락을 정리합니다.
+                    영상 속 분석 대상을 먼저 구분한 뒤 그 강아지의 행동·소리·건강 관찰 신호와 가능한 맥락을 정리합니다.
                 </p>
                 <div
                     className="mt-3 grid grid-cols-3 gap-2"
@@ -597,7 +601,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </div>
                 </div>
                 <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                    한 가지 행동이 시작되기 전부터 끝난 뒤까지 담아주세요. 앱의 {PET_OBSERVATION_RECORDING_SECONDS}초 촬영은 보통 약 2MB 이내입니다.
+                    분석할 강아지를 화면 중앙에 두고 입·전신·목줄이나 털색 특징이 계속 보이게 담아주세요. 앱의 {PET_OBSERVATION_RECORDING_SECONDS}초 촬영은 보통 약 2MB 이내입니다.
+                </p>
+                <p className="mt-2 rounded-xl border border-cyan-100 bg-cyan-50 px-3 py-2 text-[10px] font-black leading-4 text-cyan-900">
+                    여러 강아지가 함께 있으면 아래 메모에 “화면 왼쪽 빨간 목줄 갈색 푸들”처럼 분석할 아이의 위치와 특징을 적어 주세요. 구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요.
                 </p>
             </div>
 
@@ -967,12 +974,12 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </select>
                     </label>
                     <label>
-                        <span className="mb-1.5 block text-xs font-black text-neutral-600">직전에 있었던 일 · 평소와 다른 점</span>
+                        <span className="mb-1.5 block text-xs font-black text-neutral-600">분석할 아이 구분 · 직전에 있었던 일</span>
                         <textarea
                             value={note}
                             onChange={(event) => setNote(event.target.value.slice(0, 300))}
                             className="input min-h-24 w-full resize-y py-3"
-                            placeholder="예: 초인종이 울린 뒤 시작했어요. 평소보다 숨이 빨라 보여요."
+                            placeholder="예: 화면 왼쪽 빨간 목줄의 갈색 푸들이 대상이에요. 초인종 뒤 짖기 시작했어요."
                             disabled={busy}
                         />
                         <span className="mt-1 block text-right text-[10px] font-bold text-neutral-400">{note.length}/300</span>
@@ -993,7 +1000,8 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </span>
                     </label>
                     <div className="rounded-xl bg-neutral-50 p-3 text-[10px] font-bold leading-5 text-neutral-500">
-                        사람의 얼굴·대화와 집 안 개인정보가 담기지 않게 촬영해 주세요. 이 기능은 진단이 아니며 영상 추론 결과는 제품 추천에 직접 자동 반영되지 않습니다.
+                        사람의 얼굴·대화와 집 안 개인정보가 담기지 않게 촬영해 주세요. 사람·고양이·다른 강아지가 함께 있으면 분리를 시도하지만, 주체가 불확실한 신호는 결과에서 제외합니다.
+                        이 기능은 진단이 아니며 영상 추론 결과는 제품 추천에 직접 자동 반영되지 않습니다.
                         영양식 비교는 등록 프로필과 보호자가 선택한 활동 맥락을 기준으로만 제공됩니다.
                     </div>
                 </div>

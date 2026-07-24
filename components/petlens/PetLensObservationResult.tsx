@@ -33,6 +33,39 @@ const MODALITY_LABEL: Record<PetObservationResult["observations"][number]["modal
     quality: "촬영 품질",
 };
 
+const SOURCE_LABEL: Record<PetObservationResult["observations"][number]["source"], string> = {
+    target_dog: "분석 대상",
+    other_dog: "다른 강아지",
+    dog_unknown: "강아지 구분 어려움",
+    cat: "고양이",
+    other_animal: "다른 동물",
+    human: "사람",
+    playback: "재생 매체",
+    environment: "환경",
+    unknown: "주체 불명확",
+    legacy_unknown: "이전 결과",
+};
+
+const VOCALIZATION_KIND_LABEL: Record<PetObservationResult["observations"][number]["vocalizationKind"], string> = {
+    bark: "짖음",
+    whine: "낑낑거림",
+    growl: "으르렁거림",
+    howl: "하울링",
+    yelp: "비명성 발성",
+    other: "그 밖의 발성",
+    unclear: "종류 구분 어려움",
+    not_applicable: "발성 아님",
+};
+
+const INTERFERENCE_LABEL: Record<PetObservationResult["quality"]["interferenceSources"][number], string> = {
+    human_speech: "사람 말소리",
+    other_dog: "다른 강아지",
+    cat_or_other_animal: "고양이·다른 동물",
+    tv_or_media: "티브이·휴대폰",
+    environment: "환경음",
+    unknown: "주체 불명확 소리",
+};
+
 type InferenceGroupKind = "behavior" | "sound" | "health" | "priority";
 
 type InferenceDisplayItem = {
@@ -1033,18 +1066,29 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
 function CandidateCards({
     items,
     observations,
+    ranked = false,
 }: {
     items: PetObservationCandidate[];
     observations: PetObservationResult["observations"];
+    ranked?: boolean;
 }) {
     return (
         <div className="grid gap-3 sm:grid-cols-2">
-            {items.map((item) => (
+            {items.map((item, itemIndex) => (
                 <article key={`${item.label}-${item.evidence.join("-")}`} className="rounded-2xl border border-neutral-200 bg-white p-4">
                     <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-black leading-6 text-neutral-950">{item.label}</p>
+                        <div className="min-w-0">
+                            {ranked && (
+                                <span className="mb-1 inline-flex rounded-full bg-cyan-600 px-2 py-0.5 text-[9px] font-black text-white">
+                                    {itemIndex + 1}순위
+                                </span>
+                            )}
+                            <p className="break-words text-sm font-black leading-6 text-neutral-950">{item.label}</p>
+                        </div>
                         <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black text-indigo-700">
-                            확신 {item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}
+                            {typeof item.confidenceScore === "number"
+                                ? `근거 ${Math.round(item.confidenceScore * 100)}%`
+                                : `확신 ${item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}`}
                         </span>
                     </div>
                     <ul className="mt-3 grid gap-1.5 text-xs font-bold leading-5 text-neutral-600">
@@ -1066,9 +1110,182 @@ function CandidateCards({
     );
 }
 
+function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
+    const isLegacy = result.analysisContractVersion < 2;
+    const targetIdentified = result.quality.targetStatus === "identified";
+    const targetVocalizations = result.observations
+        .filter((item) => item.modality === "vocalization" && item.source === "target_dog")
+        .slice(0, 4);
+    const omittedVocalizationCount = Math.max(
+        0,
+        result.observations.filter(
+            (item) => item.modality === "vocalization" && item.source === "target_dog",
+        ).length - targetVocalizations.length,
+    );
+    const companionBadges = [
+        result.quality.visibleDogCount > 0 ? `강아지 ${result.quality.visibleDogCount}마리` : "",
+        result.quality.peopleVisible ? "사람 함께 있음" : "",
+        result.quality.catVisible ? "고양이 함께 있음" : "",
+        result.quality.otherAnimalsVisible ? "다른 동물 함께 있음" : "",
+        result.quality.mixedAudio ? "혼합 소리" : "",
+    ].filter(Boolean);
+
+    if (isLegacy) {
+        return (
+            <section
+                className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4"
+                data-daenglab-target-attribution="legacy"
+            >
+                <p className="text-xs font-black text-neutral-800">이전 분석 결과</p>
+                <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-600">
+                    이 결과에는 행동·발성 주체를 나눈 정보가 없어, 영상 속 특정 강아지와 등록 반려견이 같다고 단정하지 않습니다.
+                </p>
+            </section>
+        );
+    }
+
+    return (
+        <section
+            className={`rounded-3xl border p-4 sm:p-5 ${
+                targetIdentified
+                    ? "border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-cyan-50"
+                    : "border-amber-300 bg-amber-50"
+            }`}
+            data-daenglab-target-attribution={result.quality.targetStatus}
+        >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <p className={`text-[10px] font-black tracking-[0.1em] ${
+                        targetIdentified ? "text-emerald-700" : "text-amber-800"
+                    }`}>
+                        분석 대상 분리
+                    </p>
+                    <h3 className="mt-1 break-words text-lg font-black leading-7 text-neutral-950">
+                        {targetIdentified
+                            ? result.quality.targetDescriptor || "영상에서 한 마리로 구분된 강아지"
+                            : result.quality.targetStatus === "not_visible"
+                                ? "분석할 강아지를 확인하지 못했어요"
+                                : "한 마리의 분석 대상으로 구분하지 못했어요"}
+                    </h3>
+                </div>
+                {targetIdentified && (
+                    <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-emerald-800 shadow-sm">
+                        대상 구분 근거 {Math.round(result.quality.targetConfidenceScore * 100)}%
+                    </span>
+                )}
+            </div>
+
+            {companionBadges.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                    {companionBadges.map((label) => (
+                        <span key={label} className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-black text-neutral-700">
+                            {label}
+                        </span>
+                    ))}
+                </div>
+            )}
+
+            <p className="mt-3 text-xs font-bold leading-5 text-neutral-700">
+                {targetIdentified
+                    ? "아래 행동·발성·건강 후보에는 이 대상으로 귀속된 근거만 사용했어요."
+                    : "잘못된 귀속을 피하려고 행동·짖음 맥락·건강 후보를 만들지 않았어요. 구분 가능한 영상으로 다시 촬영해 주세요."}
+            </p>
+            {result.quality.attributionReason && (
+                <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-500">
+                    구분 근거: {result.quality.attributionReason}
+                </p>
+            )}
+
+            {targetVocalizations.length > 0 && (
+                <div className="mt-4 border-t border-emerald-200/70 pt-3">
+                    <p className="text-[10px] font-black text-emerald-800">대상 강아지 발성으로 분리된 시점</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                        {targetVocalizations.map((item) => (
+                            <span
+                                key={`${item.timeSeconds}-${item.vocalizationKind}-${item.description}`}
+                                className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-cyan-800 shadow-sm"
+                            >
+                                {item.timeSeconds.toFixed(1)}초 · {VOCALIZATION_KIND_LABEL[item.vocalizationKind]}
+                            </span>
+                        ))}
+                        {omittedVocalizationCount > 0 && (
+                            <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-neutral-600">
+                                +{omittedVocalizationCount}개 시점
+                            </span>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {result.quality.interferenceSources.length > 0 && (
+                <p className="mt-3 text-[10px] font-bold leading-5 text-neutral-500">
+                    대상견 근거에서 제외한 소리: {result.quality.interferenceSources.map((source) => INTERFERENCE_LABEL[source]).join(" · ")}
+                </p>
+            )}
+        </section>
+    );
+}
+
+function BarkContextTranslator({ result }: { result: PetObservationResult }) {
+    const isLegacy = result.analysisContractVersion < 2;
+    if (isLegacy && result.barkContextCandidates.length === 0) return null;
+
+    const translated = result.barkContextCandidates.length > 0;
+    const targetAmbiguous = result.quality.targetStatus === "ambiguous";
+    const vocalizationPossible = result.quality.targetVocalizationStatus === "possible";
+    const noTargetVocalization = result.quality.targetVocalizationStatus === "not_detected";
+    const emptyMessage = targetAmbiguous
+        ? "분석할 강아지를 한 마리로 구분하지 못해 발성 맥락을 번역하지 않았어요."
+        : vocalizationPossible
+            ? "발성일 수 있는 소리는 있었지만 어느 동물의 소리인지 분리하지 못해 번역하지 않았어요."
+            : noTargetVocalization
+                ? "분석 대상 강아지의 발성이 확인되지 않아 번역 후보를 만들지 않았어요."
+                : "발성은 확인했지만 맥락을 좁힐 영상·상황 근거가 부족했어요.";
+
+    return (
+        <section
+            className="rounded-3xl border border-cyan-200 bg-gradient-to-br from-cyan-50 via-white to-indigo-50 p-4 sm:p-5"
+            data-daenglab-bark-context-translator={translated ? "ready" : "abstained"}
+        >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <p className="text-[10px] font-black tracking-[0.1em] text-cyan-700">맥락 번역</p>
+                    <h3 className="mt-1 text-lg font-black text-neutral-950">짖음·발성 맥락 번역 후보</h3>
+                </div>
+                <span className="rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-cyan-800 shadow-sm">
+                    사람 문장 번역 아님
+                </span>
+            </div>
+            <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
+                발성 종류와 같은 시점의 자세·움직임·주변 자극을 묶어 “왜 그랬을 가능성이 큰지”를 최대 세 가지로 보여줘요.
+            </p>
+            {translated ? (
+                <div className="mt-4">
+                    <CandidateCards
+                        ranked
+                        items={result.barkContextCandidates}
+                        observations={result.observations}
+                    />
+                </div>
+            ) : (
+                <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs font-black leading-5 text-amber-950">
+                    {emptyMessage}
+                </div>
+            )}
+            {isLegacy && (
+                <p className="mt-3 text-[10px] font-bold text-neutral-500">
+                    이전 결과라 발성 주체 분리 정보가 없습니다. 새 분석부터 대상견 귀속이 확인된 경우에만 후보를 표시합니다.
+                </p>
+            )}
+        </section>
+    );
+}
+
 export default function PetLensObservationResult({ result }: { result: PetObservationResult }) {
     return (
         <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result>
+            <TargetAttributionPanel result={result} />
+            <BarkContextTranslator result={result} />
             <InferenceConfidenceOverview result={result} />
 
             <section className={`rounded-2xl border p-4 sm:p-5 ${URGENCY_STYLE[result.urgency.level]}`} data-observation-urgency={result.urgency.level}>
@@ -1135,15 +1352,20 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                 <p className="text-xs font-black text-neutral-500">촬영 품질</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-black">
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                        강아지 {result.quality.dogVisible ? "확인" : "확인 어려움"}
+                        강아지 {result.quality.dogVisible ? `${result.quality.visibleDogCount || 1}마리 확인` : "확인 어려움"}
                     </span>
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
                         소리 {result.quality.audioAvailable ? "확인" : "확인 어려움"}
                     </span>
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                        반려견 발성 {result.quality.vocalizationDetected ? "포착" : "미포착"}
+                        대상견 발성 {result.quality.vocalizationDetected ? "주체 확인" : result.quality.targetVocalizationStatus === "possible" ? "주체 불명확" : "미포착"}
                         {result.quality.barkDetected ? " · 짖음 포함" : ""}
                     </span>
+                    {result.analysisContractVersion >= 2 && (
+                        <span className="rounded-full bg-neutral-100 px-3 py-1.5">
+                            대상 {result.quality.targetStatus === "identified" ? "구분됨" : result.quality.targetStatus === "ambiguous" ? "구분 어려움" : "미확인"}
+                        </span>
+                    )}
                 </div>
                 {result.quality.issues.length > 0 && (
                     <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">{result.quality.issues.join(" · ")}</p>
@@ -1164,23 +1386,13 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                                 </span>
                                 <div>
                                     <p className="text-[10px] font-black text-neutral-400">
-                                        관찰 {index + 1} · {MODALITY_LABEL[item.modality]} · 확신 {item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}
+                                        관찰 {index + 1} · {MODALITY_LABEL[item.modality]} · {SOURCE_LABEL[item.source]} · 확신 {item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}
                                     </p>
                                     <p className="mt-0.5 text-xs font-bold leading-5 text-neutral-700">{item.description}</p>
                                 </div>
                             </li>
                         ))}
                     </ol>
-                </section>
-            )}
-
-            {result.barkContextCandidates.length > 0 && (
-                <section>
-                    <div className="mb-3">
-                        <p className="text-sm font-black text-neutral-950">반려견 발성의 가능한 맥락</p>
-                        <p className="mt-1 text-[11px] font-bold text-neutral-500">말 번역이 아니라 소리·자세·상황이 함께 맞는 후보입니다.</p>
-                    </div>
-                    <CandidateCards items={result.barkContextCandidates} observations={result.observations} />
                 </section>
             )}
 

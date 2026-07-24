@@ -142,6 +142,36 @@ function validPayload() {
 }
 
 
+function v2Payload() {
+    const payload = validPayload();
+    payload.analysis_contract_version = 2;
+    Object.assign(payload.quality, {
+        vocalization_detected: true,
+        target_status: "identified",
+        target_basis: "single_dog",
+        target_descriptor: "화면 중앙의 빨간 목줄 강아지",
+        target_confidence_score: 0.91,
+        visible_dog_count: 1,
+        cat_visible: false,
+        other_animals_visible: false,
+        people_visible: false,
+        mixed_audio: false,
+        target_vocalization_status: "confirmed",
+        unattributed_vocalization_detected: false,
+        interference_sources: [],
+        attribution_reason: "영상에 한 마리만 보이고 발성 시점과 입 움직임이 일치해요.",
+    });
+    payload.observations.forEach((fact, index) => Object.assign(fact, {
+        source: "target_dog",
+        source_confidence_score: 0.9,
+        source_basis: index === 0 ? "visual_audio_sync" : "single_dog",
+        vocalization_kind: index === 0 ? "bark" : "not_applicable",
+    }));
+    payload.bark_context_candidates[0].context_code = "alert_or_guarding";
+    return payload;
+}
+
+
 test("the parser accepts high behavior and sound scores but caps health and symptom inference at medium 0.79", async () => {
     const { parsePetObservationResult } = await observationModule();
     const result = parsePetObservationResult(validPayload());
@@ -433,4 +463,95 @@ test("every curated nutrition product matches the canonical catalog name, price,
         assert.equal(curated.price, canonical.priceNum, `${curated.folder} price must match the catalog`);
         assert.equal(curated.image, canonical.image, `${curated.folder} image must match the catalog`);
     }
+});
+
+
+test("v2 parser only opens context translation for attributed target-dog vocalization", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+
+    const confirmed = parsePetObservationResult(payload);
+    assert.equal(confirmed.analysisContractVersion, 2);
+    assert.equal(confirmed.quality.targetStatus, "identified");
+    assert.equal(confirmed.quality.targetVocalizationStatus, "confirmed");
+    assert.equal(confirmed.quality.barkDetected, true);
+    assert.equal(confirmed.barkContextCandidates.length, 1);
+    assert.equal(
+        confirmed.barkContextCandidates[0].label,
+        "주변 자극을 알리거나 경계하는 맥락",
+    );
+
+    payload.quality.visible_dog_count = 2;
+    payload.quality.target_basis = "guardian_hint";
+    payload.quality.mixed_audio = true;
+    payload.quality.target_vocalization_status = "possible";
+    payload.quality.unattributed_vocalization_detected = true;
+    payload.quality.interference_sources = ["other_dog"];
+    Object.assign(payload.observations[0], {
+        source: "other_dog",
+        source_basis: "visual_audio_sync",
+        source_confidence_score: 0.94,
+    });
+
+    const otherDogOnly = parsePetObservationResult(payload);
+    assert.equal(otherDogOnly.quality.targetStatus, "identified");
+    assert.equal(otherDogOnly.quality.targetVocalizationStatus, "possible");
+    assert.equal(otherDogOnly.quality.vocalizationDetected, false);
+    assert.equal(otherDogOnly.quality.barkDetected, false);
+    assert.deepEqual(otherDogOnly.barkContextCandidates, []);
+    assert.equal(otherDogOnly.behaviorCandidates.length, 1);
+    assert.deepEqual(otherDogOnly.healthCandidates, []);
+    assert.deepEqual(otherDogOnly.symptomSignals, []);
+});
+
+
+test("v2 parser fails closed when attribution fields are missing or malformed", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+    delete payload.observations[0].source;
+    payload.observations[0].source_basis = "unsupported_basis";
+
+    const result = parsePetObservationResult(payload);
+
+    assert.equal(result.quality.targetStatus, "identified");
+    assert.equal(result.observations[0].source, "unknown");
+    assert.equal(result.observations[0].sourceBasis, "unknown");
+    assert.equal(result.quality.targetVocalizationStatus, "possible");
+    assert.equal(result.quality.vocalizationDetected, false);
+    assert.equal(result.quality.barkDetected, false);
+    assert.deepEqual(result.barkContextCandidates, []);
+    assert.deepEqual(result.healthCandidates, []);
+    assert.deepEqual(result.symptomSignals, []);
+});
+
+
+test("v2 parser abstains when multiple animals cannot be resolved to one target", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+    Object.assign(payload.quality, {
+        target_status: "ambiguous",
+        target_basis: "uncertain",
+        target_descriptor: "",
+        target_confidence_score: 0.3,
+        visible_dog_count: 2,
+        cat_visible: true,
+        people_visible: true,
+        mixed_audio: true,
+        target_vocalization_status: "possible",
+        unattributed_vocalization_detected: true,
+        interference_sources: ["human_speech", "cat_or_other_animal", "other_dog"],
+    });
+
+    const result = parsePetObservationResult(payload);
+
+    assert.equal(result.status, "limited");
+    assert.equal(result.quality.level, "unusable");
+    assert.equal(result.quality.targetStatus, "ambiguous");
+    assert.deepEqual(result.barkContextCandidates, []);
+    assert.deepEqual(result.behaviorCandidates, []);
+    assert.deepEqual(result.healthCandidates, []);
+    assert.deepEqual(result.symptomSignals, []);
+    assert.equal(result.urgency.level, "unclear");
+    assert.match(result.summary, /구분하지 못해/);
+    assert.match(result.retakeGuidance[0], /화면 중앙/);
 });

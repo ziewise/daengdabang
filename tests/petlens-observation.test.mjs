@@ -198,6 +198,9 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(experience, /disabled=\{analyzing \|\| !consent \|\| walletLoading \|\| !hasEnoughCoins \|\| !engineReady\}/);
     assert.match(experience, /촬영보다 병원 연락이 먼저/);
     assert.match(experience, /사람의 얼굴·대화/);
+    assert.match(experience, /사람·고양이·다른 강아지·재생음은 근거에서 제외/);
+    assert.match(experience, /화면 왼쪽 빨간 목줄의 갈색 푸들이 대상/);
+    assert.match(experience, /구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요/);
     assert.match(result, /영상에서 포착된 관찰 근거/);
     assert.match(result, /확신 \{signal\.confidence/);
     assert.match(result, /signal\.evidence\.map/);
@@ -217,13 +220,19 @@ test("customer flow requires explicit media consent and shows emergency-first gu
 });
 
 
-test("result starts with four always-visible time-based support graphs, peak markers, comments, and evidence tables", async () => {
+test("result leads with target attribution and context translation before four time-based support graphs", async () => {
     const [result, api, css] = await Promise.all([
         source("components/petlens/PetLensObservationResult.tsx"),
         source("lib/petlens-observation.ts"),
         source("app/globals.css"),
     ]);
     assert.match(result, /data-daenglab-inference-confidence/);
+    assert.match(result, /data-daenglab-target-attribution/);
+    assert.match(result, /data-daenglab-bark-context-translator/);
+    assert.match(result, /짖음·발성 맥락 번역 후보/);
+    assert.match(result, /사람 문장 번역 아님/);
+    assert.match(result, /대상 강아지 발성으로 분리된 시점/);
+    assert.match(result, /대상견 근거에서 제외한 소리/);
     assert.match(result, /title: "행동 지지도 변화"/);
     assert.match(result, /title: "소리 맥락 지지도 변화"/);
     assert.match(result, /title: "건강 신호 지지도 변화"/);
@@ -271,7 +280,7 @@ test("result starts with four always-visible time-based support graphs, peak mar
     assert.match(result, /각 %는 정답률이나 진단 확률이 아니라, 그 시점의 영상·소리 근거가 후보를 얼마나 뒷받침하는지 보여줍니다/);
     assert.match(result, /typeof item\.confidenceScore !== "number"/);
     assert.match(result, /과거 결과는 원본 영상이 없어 임의의 시간선을 만들지 않고 당시 전체 신뢰도 구간만 표시해요/);
-    assert.match(result, /<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*data-observation-urgency/);
+    assert.match(result, /<TargetAttributionPanel result=\{result\} \/>[\s\S]*<BarkContextTranslator result=\{result\} \/>[\s\S]*<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*data-observation-urgency/);
     assert.match(api, /confidenceScore\?: number/);
     assert.match(api, /export type PetObservationTimelinePoint/);
     assert.match(api, /timeline: PetObservationTimelinePoint\[\]/);
@@ -285,6 +294,10 @@ test("result starts with four always-visible time-based support graphs, peak mar
     assert.match(api, /requestedUrgency === "observe" \|\| requestedUrgency === "unclear"/);
     assert.match(api, /unsupportedHighUrgency[\s\S]*reasons:/);
     assert.match(api, /vocalizationDetected: boolean/);
+    assert.match(api, /analysisContractVersion: 1 \| 2/);
+    assert.match(api, /source: PetObservationFactSource/);
+    assert.match(api, /targetStatus: PetObservationTargetStatus/);
+    assert.match(api, /function factSupportsTarget/);
     assert.match(api, /"environment_sound"/);
     assert.match(api, /status: "ready" \| "limited" \| "no_dog" \| "no_evidence"/);
     assert.match(api, /raw\.status === "no_evidence"/);
