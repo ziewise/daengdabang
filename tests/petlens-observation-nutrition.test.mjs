@@ -34,6 +34,7 @@ async function observationModule() {
 function validPayload() {
     return {
         status: "ready",
+        duration_seconds: 6,
         summary: "평소와 비교해 관찰해 주세요.",
         media_retention: "not_stored",
         quality: {
@@ -64,21 +65,55 @@ function validPayload() {
             },
         ],
         bark_context_candidates: [
-            { label: "경계 가능성", confidence: "high", confidence_score: 0.95, evidence: [0, 1] },
+            {
+                label: "경계 가능성",
+                confidence: "high",
+                confidence_score: 0.95,
+                timeline: [
+                    { time_seconds: 0.8, confidence_score: 0.41 },
+                    { time_seconds: 2.1, confidence_score: 0.95 },
+                ],
+                evidence: [0, 1],
+            },
             { label: "범위 초과", confidence: "high", confidence_score: 0.96, evidence: [0, 1] },
         ],
         behavior_candidates: [
-            { label: "주변 경계", confidence: "high", confidence_score: 0.95, evidence: [1, 2] },
+            {
+                label: "주변 경계",
+                confidence: "high",
+                confidence_score: 0.95,
+                timeline: [
+                    { time_seconds: 4.2, confidence_score: 0.72 },
+                    { time_seconds: 1.2, confidence_score: 0.45 },
+                    { time_seconds: 4.2, confidence_score: 0.95 },
+                    { time_seconds: 7, confidence_score: 0.9 },
+                    { time_seconds: 5, confidence_score: 0.96 },
+                ],
+                evidence: [1, 2],
+            },
             { label: "범위 초과", confidence: "high", confidence_score: 0.96, evidence: [1, 2] },
         ],
         health_candidates: [
-            { label: "호흡 관찰", confidence: "medium", confidence_score: 0.79, evidence: [0] },
+            {
+                label: "호흡 관찰",
+                confidence: "medium",
+                confidence_score: 0.79,
+                timeline: [{ time_seconds: 2.1, confidence_score: 0.79 }],
+                evidence: [0],
+            },
             { label: "활동 변화", confidence: "low", confidence_score: 0.49, evidence: [0] },
             { label: "건강 고신뢰 금지", confidence: "high", confidence_score: 0.79, evidence: [0] },
             { label: "건강 범위 초과", confidence: "medium", confidence_score: 0.8, evidence: [0] },
         ],
         symptom_signals: [
-            { label: "먼저 확인", confidence: "medium", confidence_score: 0.79, evidence: [0], action: "observe" },
+            {
+                label: "먼저 확인",
+                confidence: "medium",
+                confidence_score: 0.79,
+                timeline: [{ time_seconds: 2.1, confidence_score: 0.79 }],
+                evidence: [0],
+                action: "observe",
+            },
             { label: "함께 확인", confidence: "medium", confidence_score: 0.52, evidence: [0], action: "observe" },
             { label: "증상 고신뢰 금지", confidence: "high", confidence_score: 0.79, evidence: [0], action: "observe" },
             { label: "증상 범위 초과", confidence: "medium", confidence_score: 0.8, evidence: [0], action: "observe" },
@@ -123,6 +158,15 @@ test("the parser accepts high behavior and sound scores but caps health and symp
             ["주변 경계", 0.95],
         ],
     );
+    assert.equal(result.durationSeconds, 6);
+    assert.deepEqual(result.behaviorCandidates[0].timeline, [
+        { timeSeconds: 1.2, confidenceScore: 0.45 },
+        { timeSeconds: 4.2, confidenceScore: 0.95 },
+    ]);
+    assert.deepEqual(result.barkContextCandidates[0].timeline, [
+        { timeSeconds: 0.8, confidenceScore: 0.41 },
+        { timeSeconds: 2.1, confidenceScore: 0.95 },
+    ]);
     assert.ok(result.barkContextCandidates.every((candidate) =>
         candidate.confidenceScore === undefined || candidate.confidenceScore <= 0.95));
     assert.ok(result.behaviorCandidates.every((candidate) =>
@@ -141,6 +185,44 @@ test("the parser accepts high behavior and sound scores but caps health and symp
             ["함께 확인", "medium", 0.52],
         ],
     );
+});
+
+
+test("the parser hides a timeline whose peak disagrees with the aggregate score", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = validPayload();
+    payload.behavior_candidates[0].timeline = [
+        { time_seconds: 1.2, confidence_score: 0.3 },
+        { time_seconds: 4.2, confidence_score: 0.6 },
+    ];
+
+    const result = parsePetObservationResult(payload);
+
+    assert.equal(result.behaviorCandidates[0].confidenceScore, 0.95);
+    assert.deepEqual(result.behaviorCandidates[0].timeline, []);
+});
+
+
+test("the parser rejects English and mixed-language customer copy while preserving safe Korean fallbacks", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = validPayload();
+    payload.summary = "Calm behavior를 보여요.";
+    payload.observations[0].description = "Whining sound is present.";
+    payload.behavior_candidates[0].label = "Alert 행동";
+    payload.urgency.headline = "Observe 상태입니다.";
+    payload.urgency.reasons = ["No emergency signal.", "평소와 비교해 주세요."];
+    payload.urgency.actions = ["Keep watching.", "물을 마시는지 확인해 주세요."];
+    payload.follow_up_questions = ["Did this happen before?", "평소에도 같은 행동을 하나요?"];
+
+    const result = parsePetObservationResult(payload);
+
+    assert.equal(result.summary, "짧은 영상만으로 원인이나 질환을 확정할 수는 없어요.");
+    assert.equal(result.observations[0].description, "이 시점에서 관찰 신호가 포착됐어요.");
+    assert.deepEqual(result.behaviorCandidates, []);
+    assert.equal(result.urgency.headline, "평소와 비교하며 관찰해 주세요");
+    assert.deepEqual(result.urgency.reasons, ["평소와 비교해 주세요."]);
+    assert.deepEqual(result.urgency.actions, ["물을 마시는지 확인해 주세요."]);
+    assert.deepEqual(result.followUpQuestions, ["평소에도 같은 행동을 하나요?"]);
 });
 
 

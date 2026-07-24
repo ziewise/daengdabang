@@ -15,6 +15,8 @@ const MAX_FILE_BYTES = PET_OBSERVATION_MAX_FILE_BYTES;
 
 export type PetLensCapturePhase = "idle" | "requesting" | "preview" | "recording" | "recorded" | "error";
 export type PetLensCameraFacing = "environment" | "user";
+export type PetLensCaptureOrientation = "portrait" | "landscape";
+export type PetLensCaptureOrientationStatus = "unknown" | "matched" | "preview_only";
 export type PetLensMediaDeviceOption = {
     deviceId: string;
     label: string;
@@ -24,7 +26,54 @@ type PetLensCameraStartOptions = {
     videoDeviceId?: string;
     audioDeviceId?: string;
     facingMode?: PetLensCameraFacing;
+    orientation?: PetLensCaptureOrientation;
 };
+
+export function currentPetLensOrientation(): PetLensCaptureOrientation {
+    const touchFirstDevice = window.matchMedia("(pointer: coarse)").matches
+        || navigator.maxTouchPoints > 0;
+    const screenType = window.screen?.orientation?.type || "";
+    const legacyAngle = (window as Window & { orientation?: number }).orientation;
+    if (touchFirstDevice) {
+        if (screenType.startsWith("portrait")) return "portrait";
+        if (screenType.startsWith("landscape")) return "landscape";
+        if (typeof legacyAngle === "number") {
+            return Math.abs(legacyAngle) === 90 ? "landscape" : "portrait";
+        }
+    }
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    if (width > 0 && height > 0 && width !== height) {
+        return width > height ? "landscape" : "portrait";
+    }
+    if (screenType.startsWith("portrait")) return "portrait";
+    if (screenType.startsWith("landscape")) return "landscape";
+    if (typeof legacyAngle === "number") {
+        return Math.abs(legacyAngle) === 90 ? "landscape" : "portrait";
+    }
+    const viewport = window.visualViewport;
+    return (viewport?.width || 0) > (viewport?.height || 0) ? "landscape" : "portrait";
+}
+
+function cameraShapeConstraints(orientation: PetLensCaptureOrientation): MediaTrackConstraints {
+    const portrait = orientation === "portrait";
+    return {
+        width: { ideal: portrait ? 720 : 1280 },
+        height: { ideal: portrait ? 960 : 720 },
+        aspectRatio: { ideal: portrait ? 3 / 4 : 16 / 9 },
+        resizeMode: { ideal: "crop-and-scale" },
+    } as MediaTrackConstraints;
+}
+
+function detectedStreamOrientation(
+    track: MediaStreamTrack,
+    video?: HTMLVideoElement | null,
+): PetLensCaptureOrientation | null {
+    const width = video?.videoWidth || Number(track.getSettings?.().width || 0);
+    const height = video?.videoHeight || Number(track.getSettings?.().height || 0);
+    if (width <= 0 || height <= 0 || width === height) return null;
+    return width > height ? "landscape" : "portrait";
+}
 
 function mediaDeviceOptions(devices: MediaDeviceInfo[], kind: MediaDeviceKind, fallbackLabel: string) {
     return devices
@@ -98,6 +147,7 @@ export function usePetLensMediaCapture() {
     const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState("");
     const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState("");
     const [facingMode, setFacingMode] = useState<PetLensCameraFacing>("environment");
+    const [captureOrientationStatus, setCaptureOrientationStatus] = useState<PetLensCaptureOrientationStatus>("unknown");
 
     const clearTimers = useCallback(() => {
         if (stopTimerRef.current !== null) window.clearTimeout(stopTimerRef.current);
@@ -109,6 +159,7 @@ export function usePetLensMediaCapture() {
     const stopTracks = useCallback(() => {
         streamRef.current?.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
+        if (mountedRef.current) setCaptureOrientationStatus("unknown");
         if (videoRef.current) videoRef.current.srcObject = null;
     }, []);
 
@@ -169,6 +220,7 @@ export function usePetLensMediaCapture() {
             ? selectedAudioDeviceId
             : options.audioDeviceId;
         const requestedFacingMode = options.facingMode || facingMode;
+        const requestedOrientation = options.orientation || currentPetLensOrientation();
         setError("");
         setClip(null);
         setDurationSeconds(0);
@@ -183,15 +235,12 @@ export function usePetLensMediaCapture() {
         setPhase("requesting");
         try {
             const requestStream = (videoDeviceId: string, audioDeviceId: string) => {
-                const portrait = window.matchMedia("(orientation: portrait)").matches;
                 return navigator.mediaDevices.getUserMedia({
                     video: {
                         ...(videoDeviceId
                             ? { deviceId: { exact: videoDeviceId } }
                             : { facingMode: { ideal: requestedFacingMode } }),
-                        width: { ideal: portrait ? 720 : 1280 },
-                        height: { ideal: portrait ? 1280 : 720 },
-                        aspectRatio: { ideal: portrait ? 3 / 4 : 16 / 9 },
+                        ...cameraShapeConstraints(requestedOrientation),
                     },
                     audio: {
                         ...(audioDeviceId ? { deviceId: { exact: audioDeviceId } } : {}),
@@ -240,6 +289,12 @@ export function usePetLensMediaCapture() {
                 videoRef.current.muted = true;
                 await videoRef.current.play().catch(() => undefined);
             }
+            const detectedOrientation = detectedStreamOrientation(stream.getVideoTracks()[0], videoRef.current);
+            setCaptureOrientationStatus(
+                detectedOrientation === null
+                    ? "unknown"
+                    : detectedOrientation === requestedOrientation ? "matched" : "preview_only",
+            );
             await refreshDevices();
             setPhase("preview");
         } catch (reason) {
@@ -425,28 +480,42 @@ export function usePetLensMediaCapture() {
 
     useEffect(() => {
         if (phase !== "preview") return;
-        let frameId = 0;
+        let syncTimer = 0;
+        let lastAppliedOrientation: PetLensCaptureOrientation | "" = "";
         const syncPreviewOrientation = () => {
-            window.cancelAnimationFrame(frameId);
-            frameId = window.requestAnimationFrame(() => {
+            window.clearTimeout(syncTimer);
+            syncTimer = window.setTimeout(() => {
                 const track = streamRef.current?.getVideoTracks()[0];
                 if (!track || track.readyState !== "live") return;
-                const portrait = window.matchMedia("(orientation: portrait)").matches;
-                void track.applyConstraints({
-                    width: { ideal: portrait ? 720 : 1280 },
-                    height: { ideal: portrait ? 1280 : 720 },
-                    aspectRatio: { ideal: portrait ? 3 / 4 : 16 / 9 },
-                }).catch(() => {
-                    // 일부 모바일 브라우저는 회전 메타데이터만 갱신합니다.
-                });
-            });
+                const nextOrientation = currentPetLensOrientation();
+                if (nextOrientation === lastAppliedOrientation) return;
+                lastAppliedOrientation = nextOrientation;
+                void track.applyConstraints(cameraShapeConstraints(nextOrientation))
+                    .then(() => {
+                        if (!mountedRef.current) return;
+                        const detectedOrientation = detectedStreamOrientation(track, videoRef.current);
+                        setCaptureOrientationStatus(
+                            detectedOrientation === null
+                                ? "unknown"
+                                : detectedOrientation === nextOrientation ? "matched" : "preview_only",
+                        );
+                    })
+                    .catch(() => {
+                        if (mountedRef.current) setCaptureOrientationStatus("preview_only");
+                    });
+            }, 180);
         };
+        syncPreviewOrientation();
         window.addEventListener("resize", syncPreviewOrientation);
         window.addEventListener("orientationchange", syncPreviewOrientation);
+        window.visualViewport?.addEventListener("resize", syncPreviewOrientation);
+        window.screen.orientation?.addEventListener("change", syncPreviewOrientation);
         return () => {
-            window.cancelAnimationFrame(frameId);
+            window.clearTimeout(syncTimer);
             window.removeEventListener("resize", syncPreviewOrientation);
             window.removeEventListener("orientationchange", syncPreviewOrientation);
+            window.visualViewport?.removeEventListener("resize", syncPreviewOrientation);
+            window.screen.orientation?.removeEventListener("change", syncPreviewOrientation);
         };
     }, [phase]);
 
@@ -464,6 +533,7 @@ export function usePetLensMediaCapture() {
         selectedVideoDeviceId,
         selectedAudioDeviceId,
         facingMode,
+        captureOrientationStatus,
         startCamera,
         switchCamera,
         startRecording,

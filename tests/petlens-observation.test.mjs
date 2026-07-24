@@ -82,6 +82,18 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(hook, /addEventListener\?\.\("devicechange"/);
     assert.match(hook, /const switchCamera = useCallback/);
     assert.match(hook, /cameraRequestRef\.current !== requestId\) return;[\s\S]*stream = await requestStream\("", ""\)/);
+    assert.match(hook, /function currentPetLensOrientation/);
+    assert.match(hook, /window\.visualViewport/);
+    assert.match(hook, /window\.screen\?\.orientation\?\.type/);
+    assert.match(hook, /const width = window\.innerWidth/);
+    assert.match(hook, /function cameraShapeConstraints/);
+    assert.match(hook, /height: \{ ideal: portrait \? 960 : 720 \}/);
+    assert.match(hook, /aspectRatio: \{ ideal: portrait \? 3 \/ 4 : 16 \/ 9 \}/);
+    assert.match(hook, /resizeMode: \{ ideal: "crop-and-scale" \}/);
+    assert.match(hook, /track\.applyConstraints\(cameraShapeConstraints\(nextOrientation\)\)/);
+    assert.match(hook, /setCaptureOrientationStatus\("preview_only"\)/);
+    assert.match(hook, /detectedStreamOrientation/);
+    assert.match(hook, /window\.visualViewport\?\.addEventListener\("resize", syncPreviewOrientation\)/);
     assert.match(experience, /data-petlens-connected-devices/);
     assert.match(experience, /data-petlens-video-device/);
     assert.match(experience, /data-petlens-audio-device/);
@@ -99,13 +111,29 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /previewOrientation === "portrait"/);
     assert.match(experience, /aspect-\[3\/4\]/);
     assert.match(experience, /aspect-video/);
+    assert.match(experience, /navigator\.maxTouchPoints > 0/);
+    assert.match(experience, /window\.visualViewport\?\.addEventListener\("resize", updateOrientation\)/);
+    assert.match(experience, /phase === "recording"/);
+    assert.match(experience, /clipUrl \? "object-contain" : "object-cover"/);
+    assert.match(experience, /녹화 원본 비율도 같은 방향으로 확인됐어요/);
+    assert.match(experience, /녹화본은 다른 비율일 수 있어요/);
     assert.match(experience, /촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지/);
     assert.match(experience, /addEventListener\("resize", updateOrientation\)/);
     assert.match(experience, /addEventListener\("orientationchange", updateOrientation\)/);
     assert.match(experience, /addEventListener\("loadedmetadata", updateOrientation\)/);
     assert.match(experience, /consentCheckboxRef\.current\?\.scrollIntoView/);
+    assert.match(experience, /data-petlens-capture-controls/);
+    assert.match(experience, /captureActionsRef\.current\?\.scrollIntoView/);
+    assert.match(experience, /capturePrimaryButtonRef\.current\?\.focus/);
+    assert.match(experience, /prefers-reduced-motion: reduce/);
+    assert.match(experience, /returnToCaptureAfterConsentRef\.current = true/);
     assert.match(experience, /disabled=\{supported === false \|\| analyzing \|\| !engineReady\}/);
     assert.doesNotMatch(experience, /disabled=\{!consent \|\| supported === false \|\| analyzing \|\| !engineReady\}/);
+    const cameraIndex = experience.indexOf("data-petlens-live-camera");
+    const controlsIndex = experience.indexOf("data-petlens-capture-controls");
+    const orientationIndex = experience.indexOf("data-petlens-orientation-status");
+    assert.ok(cameraIndex >= 0 && controlsIndex > cameraIndex, "capture controls must follow the camera");
+    assert.ok(orientationIndex > controlsIndex, "capture controls must stay above supplemental guidance");
     assert.doesNotMatch(hook, /localStorage|sessionStorage/);
 });
 
@@ -164,7 +192,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(api, /form\.append\("privacy_consent", "true"\)/);
     assert.match(api, /form\.append\("privacy_notice_version", PET_OBSERVATION_PRIVACY_NOTICE_VERSION\)/);
     assert.match(api, /observation_privacy_notice_version === PET_OBSERVATION_PRIVACY_NOTICE_VERSION/);
-    assert.match(experience, /if \(!nextConsent\) resetCapture\(\)/);
+    assert.match(experience, /if \(!nextConsent\) \{[\s\S]*resetCapture\(\);[\s\S]*return;/);
     assert.match(experience, /disabled=\{analyzing \|\| !consent \|\| walletLoading \|\| !hasEnoughCoins \|\| !engineReady\}/);
     assert.match(experience, /촬영보다 병원 연락이 먼저/);
     assert.match(experience, /사람의 얼굴·대화/);
@@ -187,41 +215,65 @@ test("customer flow requires explicit media consent and shows emergency-first gu
 });
 
 
-test("result starts with four independent high-to-low line graphs, comments, and evidence tables", async () => {
-    const [result, api] = await Promise.all([
+test("result starts with four animated time-based support graphs, peak markers, comments, and evidence tables", async () => {
+    const [result, api, css] = await Promise.all([
         source("components/petlens/PetLensObservationResult.tsx"),
         source("lib/petlens-observation.ts"),
+        source("app/globals.css"),
     ]);
     assert.match(result, /data-daenglab-inference-confidence/);
-    assert.match(result, /title: "행동 추론 그래프"/);
-    assert.match(result, /title: "소리 맥락 해석 그래프"/);
-    assert.match(result, /title: "건강 상태 신호 그래프"/);
-    assert.match(result, /title: "증상·우선 확인 신호 그래프"/);
+    assert.match(result, /title: "행동 지지도 변화"/);
+    assert.match(result, /title: "소리 맥락 지지도 변화"/);
+    assert.match(result, /title: "건강 신호 지지도 변화"/);
+    assert.match(result, /title: "우선 확인 신호 변화"/);
     assert.match(result, /data-daenglab-behavior-inference-graph/);
     assert.match(result, /data-daenglab-sound-inference-graph/);
     assert.match(result, /data-daenglab-health-inference-graph/);
     assert.match(result, /data-daenglab-priority-inference-graph/);
     assert.match(result, /data-daenglab-inference-line-graph=\{config\.kind\}[\s\S]*data-daenglab-inference-comment=\{config\.kind\}[\s\S]*data-daenglab-inference-result-table=\{config\.kind\}/);
     assert.match(result, /\.sort\(\(a, b\) => b\.percentage - a\.percentage/);
-    assert.match(result, /data-inference-ranked-line/);
+    assert.match(result, /data-inference-timeline-line/);
+    assert.match(result, /data-inference-mobile-timeline-line/);
     assert.match(result, /data-inference-line-point/);
-    assert.match(result, /data-inference-percentage=\{point\.percentage\}/);
+    assert.match(result, /data-inference-peak/);
+    assert.match(result, /function peakLabelY/);
+    assert.match(result, /daenglab-timeline-line/);
+    assert.match(result, /daenglab-timeline-point/);
+    assert.match(result, /daenglab-timeline-peak/);
+    assert.match(css, /@keyframes daenglab-timeline-draw/);
+    assert.match(css, /stroke-dashoffset: 1600/);
+    assert.match(css, /prefers-reduced-motion: reduce/);
+    assert.match(result, /data-inference-percentage=\{Math\.round\(peak\.confidenceScore \* 100\)\}/);
     assert.match(result, /data-daenglab-inference-mobile-graph=\{config\.kind\}/);
     assert.match(result, /data-daenglab-inference-mobile-labels=\{config\.kind\}/);
     assert.match(result, /data-daenglab-inference-result-cards=\{config\.kind\}/);
     assert.match(result, /className="mt-3 min-w-0 lg:hidden"/);
     assert.match(result, /className="mt-3 hidden overflow-x-auto pb-1 lg:block"/);
-    assert.match(result, /서로 상한과 의미가 다른 그래프의 점수는 직접 순위를 매기지 않습니다/);
-    assert.match(result, /높은 추론 → 낮은 추론/);
-    assert.match(result, /선은 후보를 신뢰도 순서로 비교하기 위한 연결선/);
+    assert.match(result, /가로 시간 · 세로 지지도/);
+    assert.match(result, /영상 근거 지지도\(%\)/);
+    assert.match(result, /관찰 시간/);
+    assert.match(result, /선은 시간에 따른 영상 근거 지지도이며, 큰 점과 %는 가장 강하게 포착된 시점/);
+    assert.match(result, /fontSize="14"/);
+    assert.match(result, /시간좌표가 없는 후보/);
+    assert.match(result, /data-daenglab-inference-missing-timeline/);
+    assert.match(result, /최고 지점 표시/);
+    assert.doesNotMatch(result, /peak 시점 표시/);
+    assert.match(result, /result\.durationSeconds/);
+    assert.match(result, /그래프의 순서나 점수와 관계없이 즉시 동물병원 연락 안내가 가장 우선/);
     assert.match(result, /data-daenglab-overall-inference-state/);
     assert.match(result, /전반적인 상태/);
-    assert.match(result, /표시된 %는 100% 정답률이나 실제 발생 확률, 진단·위험도 수치가 아닙니다/);
+    assert.match(result, /각 %는 정답률이나 진단 확률이 아니라, 그 시점의 영상·소리 근거가 후보를 얼마나 뒷받침하는지 보여줍니다/);
     assert.match(result, /typeof item\.confidenceScore !== "number"/);
-    assert.match(result, /원본 영상이 저장되지 않아 정확한 %를 새로 만들 수 없습니다/);
-    assert.match(result, /임의의 수치 대신 당시 구간을 그대로 표시합니다/);
+    assert.match(result, /과거 결과는 원본 영상이 없어 임의의 시간선을 만들지 않고 당시 전체 신뢰도 구간만 표시해요/);
     assert.match(result, /<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*data-observation-urgency/);
     assert.match(api, /confidenceScore\?: number/);
+    assert.match(api, /export type PetObservationTimelinePoint/);
+    assert.match(api, /timeline: PetObservationTimelinePoint\[\]/);
+    assert.match(api, /function timelinePoints/);
+    assert.match(api, /durationSeconds\?: number/);
+    assert.match(api, /function koreanLine/);
+    assert.match(api, /!\//);
+    assert.match(api, /A-Za-z/);
     assert.match(api, /candidateConfidenceScore/);
     assert.match(api, /vocalizationDetected: boolean/);
     assert.match(api, /"environment_sound"/);

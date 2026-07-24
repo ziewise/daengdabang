@@ -44,6 +44,7 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActi
     const [isMobileHeroViewport, setIsMobileHeroViewport] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
     const [hasBlockingDialog, setHasBlockingDialog] = useState(false);
+    const [isDaengLabResultVisible, setIsDaengLabResultVisible] = useState(false);
     const [isAtPageTop, setIsAtPageTop] = useState(true);
     const [heroVisibility, setHeroVisibility] = useState(() => ({
         routeActive: heroRouteActive,
@@ -179,13 +180,53 @@ export function useMobileFloatingVisibility({ ignoreDialogsWithin, heroRouteActi
         };
     }, [ignoreDialogsWithin, isMobile]);
 
+    useEffect(() => {
+        let frame = 0;
+        const update = () => {
+            frame = 0;
+            const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+            const viewportHeight = document.documentElement.clientHeight || window.innerHeight;
+            const visible = Array.from(
+                document.querySelectorAll<HTMLElement>("[data-daenglab-inference-confidence]"),
+            ).some((result) => {
+                const rect = result.getBoundingClientRect();
+                return rect.width > 0
+                    && rect.height > 0
+                    && rect.right > 0
+                    && rect.bottom > 0
+                    && rect.left < viewportWidth
+                    && rect.top < viewportHeight;
+            });
+            setIsDaengLabResultVisible(visible);
+        };
+        const scheduleUpdate = () => {
+            if (frame) return;
+            frame = window.requestAnimationFrame(update);
+        };
+        scheduleUpdate();
+        const observer = new MutationObserver(scheduleUpdate);
+        observer.observe(document.body, { childList: true, subtree: true });
+        window.addEventListener("scroll", scheduleUpdate, { passive: true });
+        window.addEventListener("resize", scheduleUpdate);
+        return () => {
+            if (frame) window.cancelAnimationFrame(frame);
+            observer.disconnect();
+            window.removeEventListener("scroll", scheduleUpdate);
+            window.removeEventListener("resize", scheduleUpdate);
+        };
+    }, []);
+
     const isHeroVisible = heroRouteActive && (
         heroVisibility.routeActive === heroRouteActive ? heroVisibility.visible : true
     );
 
     return {
         hasBlockingDialog,
-        hidden: hasBlockingDialog || (isMobile && isScrolling),
+        // The analysis graph needs its full plotting area on both portrait and
+        // landscape phones. A landscape handset can exceed the old 680px
+        // "mobile" breakpoint, so yield to a visible result at every width.
+        hidden: hasBlockingDialog || isDaengLabResultVisible || (isMobile && isScrolling),
+        isDaengLabResultVisible,
         isHeroVisible,
         isAtPageTop,
         isMobile,

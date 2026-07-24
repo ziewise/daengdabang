@@ -7,6 +7,12 @@
     pointer-events: none;
 }
 
+.root[data-mobile-hidden="true"] {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
 .settingsLaunch {
     position: fixed;
     right: 0;

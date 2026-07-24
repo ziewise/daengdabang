@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, type CSSProperties } from "react";
 import type {
     PetObservationCandidate,
     PetObservationResult,
@@ -39,9 +39,9 @@ type InferenceDisplayItem = {
     label: string;
     confidence: PetObservationCandidate["confidence"];
     confidenceScore?: number;
+    timeline: PetObservationCandidate["timeline"];
     evidence: number[];
     action?: PetObservationUrgencyLevel;
-    comment?: string;
 };
 
 type InferenceGroupConfig = {
@@ -64,9 +64,9 @@ type InferenceGroupConfig = {
 const INFERENCE_GROUPS: readonly InferenceGroupConfig[] = [
     {
         kind: "behavior",
-        title: "행동 추론 그래프",
+        title: "행동 지지도 변화",
         eyebrow: "움직임·자세·반응",
-        description: "몸의 움직임, 자세와 주변 반응을 함께 비교한 행동 후보입니다.",
+        description: "시간에 따라 어떤 움직임·자세 후보가 두드러졌는지 보여줘요.",
         empty: "뚜렷하게 분류된 행동 후보가 없어요.",
         tableTitle: "행동 후보 결과표",
         tableDescription: "행동 후보별 순위, 추론 신뢰도와 영상 근거를 함께 비교합니다.",
@@ -80,9 +80,9 @@ const INFERENCE_GROUPS: readonly InferenceGroupConfig[] = [
     },
     {
         kind: "sound",
-        title: "소리 맥락 해석 그래프",
+        title: "소리 맥락 지지도 변화",
         eyebrow: "반려견 발성 맥락",
-        description: "짖음·낑낑거림·으르렁거림·하울링의 높낮이, 반복, 간격과 당시 상황을 함께 본 가능한 맥락입니다. 사람 문장처럼 확정 번역하지 않아요.",
+        description: "발성이 들린 시점마다 가능한 맥락의 지지도가 어떻게 달라졌는지 보여줘요.",
         empty: "분석 가능한 반려견 발성이 포착되지 않아 소리 후보를 만들지 않았어요.",
         tableTitle: "소리 맥락 후보 결과표",
         tableDescription: "소리 후보별 순위, 추론 신뢰도와 소리·상황 근거를 함께 비교합니다.",
@@ -96,9 +96,9 @@ const INFERENCE_GROUPS: readonly InferenceGroupConfig[] = [
     },
     {
         kind: "health",
-        title: "건강 상태 신호 그래프",
+        title: "건강 신호 지지도 변화",
         eyebrow: "신체·컨디션 관찰",
-        description: "영상에서 관찰된 자세, 움직임, 호흡 등 신체·컨디션 신호를 평소 상태와 비교합니다.",
+        description: "자세·움직임·호흡 신호가 어느 시점에 두드러졌는지 보여줘요.",
         empty: "이번 영상에서 별도로 분류된 건강 신호가 없어요.",
         tableTitle: "건강 신호 결과표",
         tableDescription: "관찰된 신호별 순위, 추론 신뢰도와 영상 근거를 함께 확인합니다.",
@@ -112,9 +112,9 @@ const INFERENCE_GROUPS: readonly InferenceGroupConfig[] = [
     },
     {
         kind: "priority",
-        title: "증상·우선 확인 신호 그래프",
+        title: "우선 확인 신호 변화",
         eyebrow: "증상 신호·확인 순서",
-        description: "영상에서 보이거나 들린 증상 신호를 추론 근거가 높은 순서로 비교하고, 보호자가 확인할 순서를 함께 표시합니다.",
+        description: "보호자가 먼저 살필 신호가 어느 시점에 두드러졌는지 보여줘요.",
         empty: "이번 영상에서 별도로 분류된 증상 신호가 없어요.",
         tableTitle: "증상·우선 확인 결과표",
         tableDescription: "증상 신호별 추론 신뢰도와 관찰 근거, 보호자 확인 순서를 함께 확인합니다.",
@@ -146,18 +146,43 @@ function ConfidenceBand({ confidence }: Pick<PetObservationCandidate, "confidenc
     );
 }
 
-const INFERENCE_GRAPH_TICKS = [100, 80, 60, 40, 20, 0] as const;
-const INFERENCE_CHART_TOP = 54;
-const INFERENCE_CHART_RIGHT = 76;
-const INFERENCE_CHART_BOTTOM = 96;
-const INFERENCE_CHART_LEFT = 76;
-const INFERENCE_CHART_HEIGHT = 338;
-const MOBILE_GRAPH_WIDTH = 320;
-const MOBILE_GRAPH_HEIGHT = 230;
-const MOBILE_GRAPH_TOP = 28;
-const MOBILE_GRAPH_RIGHT = 18;
-const MOBILE_GRAPH_BOTTOM = 36;
-const MOBILE_GRAPH_LEFT = 42;
+const INFERENCE_GRAPH_TICKS = [100, 75, 50, 25, 0] as const;
+const INFERENCE_CHART_TOP = 34;
+const INFERENCE_CHART_RIGHT = 28;
+const INFERENCE_CHART_BOTTOM = 54;
+const INFERENCE_CHART_LEFT = 60;
+const INFERENCE_CHART_HEIGHT = 360;
+const MOBILE_GRAPH_WIDTH = 360;
+const MOBILE_GRAPH_HEIGHT = 300;
+const MOBILE_GRAPH_TOP = 30;
+const MOBILE_GRAPH_RIGHT = 20;
+const MOBILE_GRAPH_BOTTOM = 50;
+const MOBILE_GRAPH_LEFT = 54;
+const INFERENCE_SERIES_COLORS: Record<InferenceGroupKind, readonly string[]> = {
+    behavior: ["#dc2626", "#16a34a", "#7c3aed", "#0284c7"],
+    sound: ["#0891b2", "#ea580c", "#7c3aed", "#16a34a"],
+    health: ["#d97706", "#2563eb", "#16a34a", "#9333ea"],
+    priority: ["#e11d48", "#f97316", "#7c3aed", "#0284c7"],
+};
+
+function peakLabelY(
+    peakY: number,
+    seriesIndex: number,
+    seriesCount: number,
+    plotTop: number,
+    plotBottom: number,
+) {
+    const gap = 18;
+    const crowdedSpan = Math.max(1, seriesCount) * gap;
+    if (peakY <= plotTop + crowdedSpan) {
+        return Math.min(plotBottom - 8, peakY + 24 + seriesIndex * gap);
+    }
+    if (peakY >= plotBottom - crowdedSpan) {
+        return Math.max(plotTop + 14, peakY - 14 - seriesIndex * gap);
+    }
+    const lane = Math.floor(seriesIndex / 2);
+    return peakY + (seriesIndex % 2 === 0 ? -(14 + lane * gap) : 26 + lane * gap);
+}
 
 type InferenceGraphPoint = {
     id: string;
@@ -176,14 +201,6 @@ function hasInferencePercentage(
     return point.percentage !== null;
 }
 
-function compactGraphLabel(label: string) {
-    const normalized = label
-        .replace(/\s*(가능성|행동 패턴|행동|맥락|신호)\s*$/u, "")
-        .trim();
-    if (normalized.length <= 12) return normalized;
-    return `${normalized.slice(0, 11)}…`;
-}
-
 function candidateConfidenceLabel(confidence: PetObservationCandidate["confidence"]) {
     if (confidence === "high") return "강한 근거";
     if (confidence === "medium") return "비교 필요";
@@ -195,11 +212,13 @@ function InferenceGroupLinePanel({
     items,
     observations,
     urgency,
+    durationSeconds,
 }: {
     config: InferenceGroupConfig;
     items: InferenceDisplayItem[];
     observations: PetObservationResult["observations"];
     urgency: PetObservationUrgencyLevel;
+    durationSeconds?: number;
 }) {
     const graphId = useId().replace(/:/g, "");
     const graphPoints: InferenceGraphPoint[] = items.map((item, index) => ({
@@ -212,55 +231,71 @@ function InferenceGroupLinePanel({
         .sort((a, b) => b.percentage - a.percentage || a.item.label.localeCompare(b.item.label, "ko"));
     const legacyPoints = graphPoints.filter((point) => point.percentage === null);
     const tablePoints = [...rankedPoints, ...legacyPoints];
-    const chartWidth = Math.max(
-        680,
-        INFERENCE_CHART_LEFT + INFERENCE_CHART_RIGHT + Math.max(1, rankedPoints.length) * 148,
-    );
+    const chartWidth = 760;
     const plotWidth = chartWidth - INFERENCE_CHART_LEFT - INFERENCE_CHART_RIGHT;
     const plotHeight = INFERENCE_CHART_HEIGHT - INFERENCE_CHART_TOP - INFERENCE_CHART_BOTTOM;
-    const xForIndex = (index: number) => rankedPoints.length <= 1
-        ? INFERENCE_CHART_LEFT + plotWidth / 2
-        : INFERENCE_CHART_LEFT + (plotWidth * index) / (rankedPoints.length - 1);
+    const inferredDuration = Math.max(
+        1,
+        durationSeconds || 0,
+        ...observations.map((observation) => observation.timeSeconds),
+        ...items.flatMap((item) => item.timeline.map((point) => point.timeSeconds)),
+    );
+    const timelineDuration = Math.min(30, inferredDuration);
+    const xForTime = (timeSeconds: number) => (
+        INFERENCE_CHART_LEFT + (Math.min(timelineDuration, Math.max(0, timeSeconds)) / timelineDuration) * plotWidth
+    );
     const yForPercentage = (percentage: number) => (
         INFERENCE_CHART_TOP + ((100 - percentage) / 100) * plotHeight
     );
-    const linePoints = rankedPoints
-        .map((point, index) => `${xForIndex(index)},${yForPercentage(point.percentage)}`)
-        .join(" ");
     const mobilePlotWidth = MOBILE_GRAPH_WIDTH - MOBILE_GRAPH_LEFT - MOBILE_GRAPH_RIGHT;
     const mobilePlotHeight = MOBILE_GRAPH_HEIGHT - MOBILE_GRAPH_TOP - MOBILE_GRAPH_BOTTOM;
-    const mobileXForIndex = (index: number) => rankedPoints.length <= 1
-        ? MOBILE_GRAPH_LEFT + mobilePlotWidth / 2
-        : MOBILE_GRAPH_LEFT + (mobilePlotWidth * index) / (rankedPoints.length - 1);
+    const mobileXForTime = (timeSeconds: number) => (
+        MOBILE_GRAPH_LEFT
+        + (Math.min(timelineDuration, Math.max(0, timeSeconds)) / timelineDuration) * mobilePlotWidth
+    );
     const mobileYForPercentage = (percentage: number) => (
         MOBILE_GRAPH_TOP + ((100 - percentage) / 100) * mobilePlotHeight
     );
-    const mobileLinePoints = rankedPoints
-        .map((point, index) => `${mobileXForIndex(index)},${mobileYForPercentage(point.percentage)}`)
-        .join(" ");
+    const timelineSeries = rankedPoints
+        .map((point, index) => ({
+            ...point,
+            color: INFERENCE_SERIES_COLORS[config.kind][index % INFERENCE_SERIES_COLORS[config.kind].length],
+            timeline: point.item.timeline
+                .filter((timelinePoint) => timelinePoint.timeSeconds <= timelineDuration)
+                .sort((left, right) => left.timeSeconds - right.timeSeconds),
+        }))
+        .filter((point) => point.timeline.length > 0);
+    const timelineSeriesIds = new Set(timelineSeries.map((series) => series.id));
+    const numericPointsWithoutTimeline = rankedPoints.filter((point) => !timelineSeriesIds.has(point.id));
     const topCommentPoint = rankedPoints[0] ?? legacyPoints[0];
     const topCommentEvidence = topCommentPoint?.item.evidence
         .map((index) => observations[index])
         .find(Boolean);
     const hasPriorityHealthSignal = config.kind === "health"
         && (urgency === "emergency" || urgency === "same_day");
+    const topTimelineSeries = timelineSeries.find((series) => series.id === topCommentPoint?.id);
+    const topPeak = topTimelineSeries?.timeline.reduce((highest, point) => (
+        point.confidenceScore > highest.confidenceScore ? point : highest
+    ));
     const interpretationComment = topCommentPoint
-        ? [
-            `가장 먼저 확인된 후보는 ‘${topCommentPoint.item.label}’입니다.`,
-            topCommentPoint.percentage !== null
-                ? `관찰 근거 지지도는 추론 ${topCommentPoint.percentage}%입니다.`
-                : "이전 분석은 신뢰도 구간으로 확인해 주세요.",
-            topCommentEvidence
-                ? `${topCommentEvidence.timeSeconds.toFixed(1)}초의 ${topCommentEvidence.description} 장면이 주요 근거입니다.`
-                : "",
-            topCommentPoint.item.comment || "",
-        ].filter(Boolean).join(" ")
+        ? topPeak
+            ? `${topPeak.timeSeconds.toFixed(1)}초에 ‘${topCommentPoint.item.label}’ 근거가 ${Math.round(topPeak.confidenceScore * 100)}%로 가장 두드러졌어요.`
+            : topCommentEvidence && topCommentPoint.percentage !== null
+                ? `${topCommentEvidence.timeSeconds.toFixed(1)}초 장면을 근거로 ‘${topCommentPoint.item.label}’을 전체 ${topCommentPoint.percentage}% 후보로 봤어요.`
+                : `‘${topCommentPoint.item.label}’은 이전 결과의 신뢰도 구간으로 확인해 주세요.`
         : config.empty;
+    const urgentGraphGuidance = config.kind === "priority"
+        ? items.some((item) => item.action === "emergency")
+            ? "그래프의 순서나 점수와 관계없이 즉시 동물병원 연락 안내가 가장 우선이에요."
+            : items.some((item) => item.action === "same_day")
+                ? "그래프의 순서나 점수와 관계없이 오늘 안에 동물병원에 문의해 주세요."
+                : ""
+        : "";
 
     return (
         <article
             id={`daenglab-${config.kind}-inference-graph`}
-            className="overflow-hidden rounded-2xl border border-white/90 bg-white/90 p-3.5 shadow-sm sm:p-4"
+            className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-white/90 bg-white/90 p-3.5 shadow-sm sm:p-4"
             data-daenglab-inference-line-graph={config.kind}
             data-daenglab-behavior-inference-graph={config.kind === "behavior" ? "" : undefined}
             data-daenglab-sound-inference-graph={config.kind === "sound" ? "" : undefined}
@@ -269,23 +304,23 @@ function InferenceGroupLinePanel({
             aria-labelledby={`${graphId}-title`}
             aria-describedby={`${graphId}-description`}
         >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                    <p className={`text-[10px] font-black ${config.accent}`}>{config.eyebrow}</p>
-                    <h4 id={`${graphId}-title`} className="mt-1 text-sm font-black text-neutral-950">
+            <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-start sm:justify-between sm:gap-3">
+                <div className="min-w-0 sm:flex-1">
+                    <p className={`text-xs font-black ${config.accent}`}>{config.eyebrow}</p>
+                    <h4 id={`${graphId}-title`} className="mt-1 text-base font-black text-neutral-950 sm:text-lg">
                         <i className={`fa-solid ${config.icon} mr-2`} aria-hidden="true" />
                         {config.title}
                     </h4>
-                    <p id={`${graphId}-description`} className="mt-1 max-w-3xl text-[10px] font-bold leading-4 text-neutral-500">
+                    <p id={`${graphId}-description`} className="mt-1 max-w-3xl text-xs font-bold leading-5 text-neutral-600 sm:text-[13px]">
                         {config.description}
                     </p>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${config.badge}`}>
-                    높은 추론 → 낮은 추론
+                <span className={`rounded-full px-2.5 py-1.5 text-[11px] font-black ${config.badge}`}>
+                    가로 시간 · 세로 지지도
                 </span>
             </div>
 
-            {rankedPoints.length > 0 ? (
+            {timelineSeries.length > 0 ? (
                 <>
                     <div
                         className="mt-3 min-w-0 lg:hidden"
@@ -296,11 +331,20 @@ function InferenceGroupLinePanel({
                             className="block h-auto w-full max-w-full"
                             preserveAspectRatio="xMidYMid meet"
                             role="img"
-                            aria-label={rankedPoints
-                                .map((point) => `${point.item.label} 추론 ${point.percentage}%`)
+                            aria-label={timelineSeries
+                                .map((point) => `${point.item.label} 시간별 영상 근거 지지도`)
                                 .join(", ")}
                         >
-                            {[100, 50, 0].map((tick) => {
+                            <text
+                                x={MOBILE_GRAPH_LEFT}
+                                y="16"
+                                fontSize="12"
+                                fontWeight="900"
+                                fill="#334155"
+                            >
+                                영상 근거 지지도(%)
+                            </text>
+                            {INFERENCE_GRAPH_TICKS.map((tick) => {
                                 const y = mobileYForPercentage(tick);
                                 return (
                                     <g key={`mobile-${tick}`}>
@@ -315,9 +359,9 @@ function InferenceGroupLinePanel({
                                         />
                                         <text
                                             x={MOBILE_GRAPH_LEFT - 7}
-                                            y={y + 3}
+                                            y={y + 4}
                                             textAnchor="end"
-                                            fontSize="9"
+                                            fontSize="11"
                                             fontWeight="800"
                                             fill="#64748b"
                                         >
@@ -326,84 +370,124 @@ function InferenceGroupLinePanel({
                                     </g>
                                 );
                             })}
-                            {rankedPoints.length > 1 && (
-                                <polyline
-                                    points={mobileLinePoints}
-                                    fill="none"
-                                    stroke={config.point}
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    opacity="0.82"
-                                    data-inference-mobile-ranked-line
-                                />
-                            )}
-                            {rankedPoints.map((point, index) => {
-                                const x = mobileXForIndex(index);
-                                const y = mobileYForPercentage(point.percentage);
-                                const percentageY = y <= MOBILE_GRAPH_TOP + 18 ? y + 28 : y - 12;
+                            {[0, timelineDuration / 2, timelineDuration].map((tick, index) => {
+                                const x = mobileXForTime(tick);
+                                return (
+                                    <g key={`mobile-time-${index}`}>
+                                        <line
+                                            x1={x}
+                                            x2={x}
+                                            y1={MOBILE_GRAPH_TOP}
+                                            y2={MOBILE_GRAPH_TOP + mobilePlotHeight}
+                                            stroke="#e2e8f0"
+                                            strokeWidth="1"
+                                            strokeDasharray="3 5"
+                                        />
+                                        <text
+                                            x={x}
+                                            y={MOBILE_GRAPH_TOP + mobilePlotHeight + 20}
+                                            textAnchor="middle"
+                                            fontSize="11"
+                                            fontWeight="800"
+                                            fill="#64748b"
+                                        >
+                                            {tick.toFixed(tick % 1 === 0 ? 0 : 1)}초
+                                        </text>
+                                    </g>
+                                );
+                            })}
+                            {timelineSeries.map((series, seriesIndex) => {
+                                const polylinePoints = series.timeline
+                                    .map((point) => `${mobileXForTime(point.timeSeconds)},${mobileYForPercentage(point.confidenceScore * 100)}`)
+                                    .join(" ");
+                                const peak = series.timeline.reduce((highest, point) => (
+                                    point.confidenceScore > highest.confidenceScore ? point : highest
+                                ));
+                                const peakX = mobileXForTime(peak.timeSeconds);
+                                const peakY = mobileYForPercentage(peak.confidenceScore * 100);
+                                const labelY = peakLabelY(
+                                    peakY,
+                                    seriesIndex,
+                                    timelineSeries.length,
+                                    MOBILE_GRAPH_TOP,
+                                    MOBILE_GRAPH_TOP + mobilePlotHeight,
+                                );
                                 return (
                                     <g
-                                        key={`mobile-${point.id}`}
-                                        data-inference-mobile-point
-                                        data-inference-percentage={point.percentage}
+                                        key={`mobile-series-${series.id}`}
+                                        style={{ "--daenglab-series-delay": `${seriesIndex * 130}ms` } as CSSProperties}
                                     >
+                                        {series.timeline.length > 1 && (
+                                            <polyline
+                                                points={polylinePoints}
+                                                fill="none"
+                                                stroke={series.color}
+                                                strokeWidth="4"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                opacity="0.9"
+                                                className="daenglab-timeline-line"
+                                                data-inference-mobile-timeline-line
+                                            />
+                                        )}
+                                        {series.timeline.map((timelinePoint) => (
+                                            <circle
+                                                key={`${series.id}-${timelinePoint.timeSeconds}`}
+                                                cx={mobileXForTime(timelinePoint.timeSeconds)}
+                                                cy={mobileYForPercentage(timelinePoint.confidenceScore * 100)}
+                                                r="4.5"
+                                                fill="white"
+                                                stroke={series.color}
+                                                strokeWidth="3"
+                                                className="daenglab-timeline-point"
+                                                data-inference-mobile-point
+                                            />
+                                        ))}
+                                        <circle
+                                            cx={peakX}
+                                            cy={peakY}
+                                            r="10"
+                                            fill={series.color}
+                                            fillOpacity="0.18"
+                                            className="daenglab-timeline-peak-halo"
+                                        />
+                                        <circle
+                                            cx={peakX}
+                                            cy={peakY}
+                                            r="6.5"
+                                            fill={series.color}
+                                            stroke="white"
+                                            strokeWidth="2.5"
+                                            className="daenglab-timeline-peak"
+                                            data-inference-peak
+                                            data-inference-percentage={Math.round(peak.confidenceScore * 100)}
+                                        />
                                         <text
-                                            x={x}
-                                            y={percentageY}
+                                            x={Math.max(MOBILE_GRAPH_LEFT + 24, Math.min(MOBILE_GRAPH_WIDTH - MOBILE_GRAPH_RIGHT - 24, peakX))}
+                                            y={labelY}
                                             textAnchor="middle"
-                                            fontSize="10"
+                                            fontSize="14"
                                             fontWeight="900"
-                                            fill={config.point}
+                                            fill={series.color}
+                                            className="daenglab-timeline-peak-label"
                                         >
-                                            {point.percentage}%
-                                        </text>
-                                        <circle cx={x} cy={y} r="12" fill={config.point} fillOpacity="0.16" />
-                                        <circle cx={x} cy={y} r="9" fill={config.point} stroke="white" strokeWidth="2.5" />
-                                        <text
-                                            x={x}
-                                            y={y + 3.3}
-                                            textAnchor="middle"
-                                            fontSize="8"
-                                            fontWeight="900"
-                                            fill="white"
-                                        >
-                                            {index + 1}
+                                            {Math.round(peak.confidenceScore * 100)}%
                                         </text>
                                     </g>
                                 );
                             })}
                             <text
-                                x={MOBILE_GRAPH_LEFT}
-                                y={MOBILE_GRAPH_HEIGHT - 9}
-                                fontSize="9"
+                                x={MOBILE_GRAPH_LEFT + mobilePlotWidth / 2}
+                                y={MOBILE_GRAPH_HEIGHT - 8}
+                                textAnchor="middle"
+                                fontSize="12"
                                 fontWeight="900"
                                 fill="#475569"
+                                data-inference-axis="x"
                             >
-                                후보 순위 · 추론 신뢰도(%)
+                                관찰 시간
                             </text>
                         </svg>
-                        <ol className="mt-1 grid min-w-0 gap-2" data-daenglab-inference-mobile-labels={config.kind}>
-                            {rankedPoints.map((point, index) => (
-                                <li
-                                    key={`mobile-label-${point.id}`}
-                                    className="grid min-w-0 grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2 rounded-xl bg-neutral-50 px-2.5 py-2"
-                                >
-                                    <span
-                                        className="grid h-7 w-7 place-items-center rounded-full text-[10px] font-black text-white"
-                                        style={{ backgroundColor: config.point }}
-                                    >
-                                        {index + 1}
-                                    </span>
-                                    <span className="min-w-0 break-words text-[11px] font-black leading-4 text-neutral-800">
-                                        {point.item.label}
-                                    </span>
-                                    <span className={`whitespace-nowrap rounded-lg px-2 py-1 text-[10px] font-black ${config.confidenceBadge}`}>
-                                        추론 {point.percentage}%
-                                    </span>
-                                </li>
-                            ))}
-                        </ol>
                     </div>
 
                     <div className="mt-3 hidden overflow-x-auto pb-1 lg:block" data-daenglab-inference-line-scroll={config.kind}>
@@ -412,20 +496,10 @@ function InferenceGroupLinePanel({
                             className="block w-full max-w-none"
                             style={{ minWidth: `${chartWidth}px` }}
                             role="img"
-                            aria-label={rankedPoints
-                                .map((point) => `${point.item.label} 추론 ${point.percentage}%`)
+                            aria-label={timelineSeries
+                                .map((point) => `${point.item.label} 시간별 영상 근거 지지도`)
                                 .join(", ")}
                         >
-                            <defs>
-                                <linearGradient id={`${graphId}-line-gradient`} x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor={config.point} stopOpacity="1" />
-                                    <stop offset="100%" stopColor={config.point} stopOpacity="0.55" />
-                                </linearGradient>
-                                <filter id={`${graphId}-point-shadow`} x="-50%" y="-50%" width="200%" height="200%">
-                                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor={config.point} floodOpacity="0.18" />
-                                </filter>
-                            </defs>
-
                             {INFERENCE_GRAPH_TICKS.map((tick) => {
                                 const y = yForPercentage(tick);
                                 return (
@@ -443,7 +517,7 @@ function InferenceGroupLinePanel({
                                             x={INFERENCE_CHART_LEFT - 10}
                                             y={y + 4}
                                             textAnchor="end"
-                                            fontSize="10"
+                                            fontSize="12"
                                             fontWeight="800"
                                             fill="#64748b"
                                         >
@@ -456,108 +530,119 @@ function InferenceGroupLinePanel({
                                 x="17"
                                 y={INFERENCE_CHART_TOP + plotHeight / 2}
                                 textAnchor="middle"
-                                fontSize="10"
+                                fontSize="12"
                                 fontWeight="900"
                                 fill="#475569"
                                 transform={`rotate(-90 17 ${INFERENCE_CHART_TOP + plotHeight / 2})`}
                                 data-inference-axis="y"
                             >
-                                추론 신뢰도 (%)
+                                영상 근거 지지도 (%)
                             </text>
 
-                            {rankedPoints.length > 1 && (
-                                <polyline
-                                    points={linePoints}
-                                    fill="none"
-                                    stroke={`url(#${graphId}-line-gradient)`}
-                                    strokeWidth="4"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    data-inference-ranked-line
-                                />
-                            )}
-
-                            {rankedPoints.map((point, index) => {
-                                const x = xForIndex(index);
-                                const y = yForPercentage(point.percentage);
-                                const bubbleBelow = point.percentage >= 84;
-                                const bubbleY = bubbleBelow ? y + 13 : y - 49;
-                                const compactLabel = compactGraphLabel(point.item.label);
+                            {[0, timelineDuration / 2, timelineDuration].map((tick, index) => {
+                                const x = xForTime(tick);
                                 return (
-                                    <g
-                                        key={point.id}
-                                        data-inference-line-point
-                                        data-inference-percentage={point.percentage}
-                                    >
+                                    <g key={`time-${index}`}>
                                         <line
                                             x1={x}
                                             x2={x}
-                                            y1={bubbleBelow ? y + 8 : bubbleY + 38}
-                                            y2={bubbleBelow ? bubbleY : y - 8}
-                                            stroke={config.point}
+                                            y1={INFERENCE_CHART_TOP}
+                                            y2={INFERENCE_CHART_TOP + plotHeight}
+                                            stroke="#e2e8f0"
                                             strokeWidth="1"
-                                            strokeDasharray="2 3"
-                                            opacity="0.55"
-                                        />
-                                        <rect
-                                            x={x - 59}
-                                            y={bubbleY}
-                                            width="118"
-                                            height="38"
-                                            rx="10"
-                                            fill="white"
-                                            stroke={config.point}
-                                            strokeOpacity="0.3"
-                                            filter={`url(#${graphId}-point-shadow)`}
+                                            strokeDasharray="3 5"
                                         />
                                         <text
                                             x={x}
-                                            y={bubbleY + 15}
+                                            y={INFERENCE_CHART_TOP + plotHeight + 22}
                                             textAnchor="middle"
-                                            fontSize="11"
-                                            fontWeight="900"
-                                            fill={config.point}
-                                        >
-                                            추론 {point.percentage}%
-                                        </text>
-                                        <text
-                                            x={x}
-                                            y={bubbleY + 30}
-                                            textAnchor="middle"
-                                            fontSize="9"
+                                            fontSize="12"
                                             fontWeight="800"
-                                            fill="#334155"
+                                            fill="#64748b"
                                         >
-                                            “{compactLabel}”
+                                            {tick.toFixed(tick % 1 === 0 ? 0 : 1)}초
                                         </text>
-                                        <circle cx={x} cy={y} r="12" fill={config.point} fillOpacity="0.14" />
+                                    </g>
+                                );
+                            })}
+
+                            {timelineSeries.map((series, seriesIndex) => {
+                                const polylinePoints = series.timeline
+                                    .map((point) => `${xForTime(point.timeSeconds)},${yForPercentage(point.confidenceScore * 100)}`)
+                                    .join(" ");
+                                const peak = series.timeline.reduce((highest, point) => (
+                                    point.confidenceScore > highest.confidenceScore ? point : highest
+                                ));
+                                const peakX = xForTime(peak.timeSeconds);
+                                const peakY = yForPercentage(peak.confidenceScore * 100);
+                                const labelY = peakLabelY(
+                                    peakY,
+                                    seriesIndex,
+                                    timelineSeries.length,
+                                    INFERENCE_CHART_TOP,
+                                    INFERENCE_CHART_TOP + plotHeight,
+                                );
+                                return (
+                                    <g
+                                        key={`series-${series.id}`}
+                                        style={{ "--daenglab-series-delay": `${seriesIndex * 130}ms` } as CSSProperties}
+                                    >
+                                        {series.timeline.length > 1 && (
+                                            <polyline
+                                                points={polylinePoints}
+                                                fill="none"
+                                                stroke={series.color}
+                                                strokeWidth="4.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                opacity="0.9"
+                                                className="daenglab-timeline-line"
+                                                data-inference-ranked-line
+                                                data-inference-timeline-line
+                                            />
+                                        )}
+                                        {series.timeline.map((timelinePoint) => (
+                                            <circle
+                                                key={`${series.id}-${timelinePoint.timeSeconds}`}
+                                                cx={xForTime(timelinePoint.timeSeconds)}
+                                                cy={yForPercentage(timelinePoint.confidenceScore * 100)}
+                                                r="4.5"
+                                                fill="white"
+                                                stroke={series.color}
+                                                strokeWidth="3"
+                                                className="daenglab-timeline-point"
+                                                data-inference-line-point
+                                            />
+                                        ))}
                                         <circle
-                                            cx={x}
-                                            cy={y}
-                                            r="6.5"
-                                            fill={config.point}
+                                            cx={peakX}
+                                            cy={peakY}
+                                            r="12"
+                                            fill={series.color}
+                                            fillOpacity="0.16"
+                                            className="daenglab-timeline-peak-halo"
+                                        />
+                                        <circle
+                                            cx={peakX}
+                                            cy={peakY}
+                                            r="7"
+                                            fill={series.color}
                                             stroke="white"
                                             strokeWidth="3"
+                                            className="daenglab-timeline-peak"
+                                            data-inference-peak
+                                            data-inference-percentage={Math.round(peak.confidenceScore * 100)}
                                         />
                                         <text
-                                            x={x}
-                                            y={INFERENCE_CHART_TOP + plotHeight + 28}
+                                            x={Math.max(INFERENCE_CHART_LEFT + 28, Math.min(chartWidth - INFERENCE_CHART_RIGHT - 28, peakX))}
+                                            y={labelY}
                                             textAnchor="middle"
-                                            fontSize="10"
+                                            fontSize="15"
                                             fontWeight="900"
-                                            fill="#0f172a"
+                                            fill={series.color}
+                                            className="daenglab-timeline-peak-label"
                                         >
-                                            {compactLabel}
-                                        </text>
-                                        <text
-                                            x={x}
-                                            y={INFERENCE_CHART_TOP + plotHeight + 45}
-                                            textAnchor="middle"
-                                            fontSize="9"
-                                            fontWeight="800"
-                                            fill={config.point}
-                                        >
-                                            {index + 1}순위
+                                            {Math.round(peak.confidenceScore * 100)}%
                                         </text>
                                     </g>
                                 );
@@ -566,12 +651,12 @@ function InferenceGroupLinePanel({
                                 x={INFERENCE_CHART_LEFT + plotWidth / 2}
                                 y={INFERENCE_CHART_HEIGHT - 15}
                                 textAnchor="middle"
-                                fontSize="10"
+                                fontSize="12"
                                 fontWeight="900"
                                 fill="#475569"
                                 data-inference-axis="x"
                             >
-                                {config.title.replace(" 그래프", "")} (높은 추론 → 낮은 추론)
+                                관찰 시간
                             </text>
                         </svg>
                     </div>
@@ -580,35 +665,77 @@ function InferenceGroupLinePanel({
                     <div className="mt-3 grid min-h-44 place-items-center rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 text-center">
                         <div>
                             <i className="fa-solid fa-chart-line text-xl text-neutral-300" aria-hidden="true" />
-                            <p className="mt-2 text-xs font-black text-neutral-700">
-                                {items.length > 0 ? "이 분석에는 퍼센트 수치가 제공되지 않았어요." : config.empty}
+                            <p className="mt-2 text-sm font-black text-neutral-700">
+                                {rankedPoints.length > 0
+                                    ? "이전 결과에는 시간별 지지도 좌표가 없어요."
+                                    : items.length > 0 ? "이 분석에는 퍼센트 수치가 제공되지 않았어요." : config.empty}
                             </p>
                             {items.length > 0 && (
-                                <p className="mt-1 text-[10px] font-bold text-neutral-500">
-                                    수치를 임의로 만들지 않고 제공된 신뢰도 구간만 아래에 표시합니다.
+                                <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
+                                    없는 시간 변화를 만들지 않고, 제공된 전체 지지도나 신뢰도 구간만 아래에 표시합니다.
                                 </p>
                             )}
                         </div>
                     </div>
                 )}
-            <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                선은 후보를 신뢰도 순서로 비교하기 위한 연결선입니다. 후보끼리 원인·결과 관계가 있다는 뜻은 아닙니다.
+            {timelineSeries.length > 0 && (
+                <ol
+                    className="mt-3 grid min-w-0 gap-2 sm:grid-cols-2"
+                    data-daenglab-inference-mobile-labels={config.kind}
+                    data-daenglab-inference-series-legend={config.kind}
+                >
+                    {timelineSeries.map((series) => {
+                        const peak = series.timeline.reduce((highest, timelinePoint) => (
+                            timelinePoint.confidenceScore > highest.confidenceScore ? timelinePoint : highest
+                        ));
+                        return (
+                            <li
+                                key={`series-label-${series.id}`}
+                                className="grid min-w-0 grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-xl bg-neutral-50 px-3 py-2.5"
+                            >
+                                <span className="h-3.5 w-3.5 rounded-full" style={{ backgroundColor: series.color }} aria-hidden="true" />
+                                <span className="min-w-0 [overflow-wrap:anywhere] text-[13px] font-black leading-5 text-neutral-800">
+                                    {series.item.label}
+                                </span>
+                                <span className="whitespace-nowrap text-base font-black" style={{ color: series.color }}>
+                                    {Math.round(peak.confidenceScore * 100)}%
+                                </span>
+                            </li>
+                        );
+                    })}
+                </ol>
+            )}
+            {numericPointsWithoutTimeline.length > 0 && timelineSeries.length > 0 && (
+                <p
+                    className="mt-2 rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-bold leading-5 text-neutral-500"
+                    data-daenglab-inference-missing-timeline={config.kind}
+                >
+                    시간좌표가 없는 후보 {numericPointsWithoutTimeline.length}개는 임의의 선을 만들지 않고 아래 결과표에만 표시해요.
+                </p>
+            )}
+            <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">
+                선은 시간에 따른 영상 근거 지지도이며, 큰 점과 %는 가장 강하게 포착된 시점이에요.
             </p>
             <div
                 className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50/70 px-3.5 py-3"
                 data-daenglab-inference-comment={config.kind}
             >
-                <p className={`text-[10px] font-black ${config.accent}`}>그래프 해석 코멘트</p>
-                <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-700">
+                <p className={`text-xs font-black ${config.accent}`}>한 줄 설명</p>
+                <p className="mt-1 [overflow-wrap:anywhere] text-[13px] font-bold leading-6 text-neutral-700">
                     {interpretationComment}
                 </p>
             </div>
+            {urgentGraphGuidance && (
+                <p className="mt-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2.5 text-xs font-black leading-5 text-rose-800" role="alert">
+                    {urgentGraphGuidance}
+                </p>
+            )}
 
             {legacyPoints.length > 0 && (
                 <div className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50/70 p-3.5" data-daenglab-inference-legacy={config.kind}>
                     <p className="text-[10px] font-black text-neutral-600">구간만 제공된 이전 분석</p>
                     <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">
-                        원본 영상이 저장되지 않아 정확한 %를 새로 만들 수 없습니다. 임의의 수치 대신 당시 구간을 그대로 표시합니다.
+                        과거 결과는 원본 영상이 없어 임의의 시간선을 만들지 않고 당시 전체 신뢰도 구간만 표시해요.
                     </p>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
                         {legacyPoints.map((point) => (
@@ -645,8 +772,8 @@ function InferenceGroupLinePanel({
                 className="mt-4 min-w-0 rounded-xl border border-neutral-200 bg-white p-3 lg:hidden"
                 data-daenglab-inference-result-cards={config.kind}
             >
-                <h5 className="text-xs font-black text-neutral-950">{config.tableTitle}</h5>
-                <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">{config.tableDescription}</p>
+                <h5 className="text-sm font-black text-neutral-950">{config.tableTitle}</h5>
+                <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">{config.tableDescription}</p>
                 <div className="mt-3 grid min-w-0 gap-2">
                     {tablePoints.length > 0 ? tablePoints.map((point) => {
                         const numericRank = point.percentage === null
@@ -659,20 +786,20 @@ function InferenceGroupLinePanel({
                         return (
                             <article key={`mobile-table-${point.id}`} className="min-w-0 rounded-xl bg-neutral-50 p-3">
                                 <div className="flex min-w-0 items-start gap-2.5">
-                                    <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[10px] font-black ${
+                                    <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-black ${
                                         numericRank === 1 ? config.rankBadge : "bg-white text-neutral-600"
                                     }`}>
                                         {numericRank ?? "—"}
                                     </span>
                                     <div className="min-w-0 flex-1">
-                                        <p className="break-words text-[11px] font-black leading-5 text-neutral-900">
+                                        <p className="[overflow-wrap:anywhere] text-[13px] font-black leading-5 text-neutral-900">
                                             {point.item.label}
                                         </p>
                                         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                                            <span className={`rounded-lg px-2 py-1 text-[9px] font-black ${config.confidenceBadge}`}>
+                                            <span className={`rounded-lg px-2 py-1 text-xs font-black ${config.confidenceBadge}`}>
                                                 {point.percentage === null ? "구간형 결과" : `추론 ${point.percentage}%`}
                                             </span>
-                                            <span className={`text-[9px] font-black ${
+                                            <span className={`text-xs font-black ${
                                                 numericRank === 1 ? config.accent : "text-neutral-600"
                                             }`}>
                                                 {point.item.action
@@ -684,7 +811,7 @@ function InferenceGroupLinePanel({
                                         </div>
                                     </div>
                                 </div>
-                                <p className="mt-2 break-words text-[10px] font-bold leading-5 text-neutral-600">
+                                <p className="mt-2 [overflow-wrap:anywhere] text-xs font-bold leading-5 text-neutral-600">
                                     {evidenceItems.length > 0
                                         ? evidenceItems.map((evidence) => `${evidence.timeSeconds.toFixed(1)}초 ${evidence.description}`).join(" · ")
                                         : "관찰 근거를 다시 확인해 주세요."}
@@ -791,32 +918,10 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
         : result.quality.level === "limited"
             ? "관찰 품질 제한"
             : "재촬영 권장";
-    const behaviorItems: InferenceDisplayItem[] = result.behaviorCandidates.map((candidate) => ({
-        ...candidate,
-        comment: candidate.otherPossibility
-            ? `함께 비교할 다른 가능성은 ${candidate.otherPossibility}입니다.`
-            : "",
-    }));
-    const soundItems: InferenceDisplayItem[] = result.barkContextCandidates.map((candidate) => ({
-        ...candidate,
-        comment: candidate.otherPossibility
-            ? `같은 소리에서 비교할 다른 맥락은 ${candidate.otherPossibility}입니다.`
-            : "",
-    }));
-    const healthItems: InferenceDisplayItem[] = result.healthCandidates.map((candidate) => ({
-        ...candidate,
-        comment: candidate.otherPossibility
-            ? `평소 상태와 함께 비교할 신호는 ${candidate.otherPossibility}입니다.`
-            : "",
-    }));
-    const priorityItems: InferenceDisplayItem[] = result.symptomSignals.map((signal) => ({
-        ...signal,
-        comment: signal.action === "emergency"
-            ? "그래프 순위와 관계없이 즉시 확인 안내가 가장 우선입니다."
-            : signal.action === "same_day"
-                ? "그래프 순위와 관계없이 오늘 안에 확인해 주세요."
-                : "평소 모습과 비교하며 반복 여부를 확인해 주세요.",
-    }));
+    const behaviorItems: InferenceDisplayItem[] = result.behaviorCandidates;
+    const soundItems: InferenceDisplayItem[] = result.barkContextCandidates;
+    const healthItems: InferenceDisplayItem[] = result.healthCandidates;
+    const priorityItems: InferenceDisplayItem[] = result.symptomSignals;
     const groupedItems: Record<InferenceGroupKind, InferenceDisplayItem[]> = {
         behavior: behaviorItems,
         sound: soundItems,
@@ -827,22 +932,24 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
 
     return (
         <section
-            className="overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 p-4 shadow-[0_18px_50px_-34px_rgba(79,70,229,0.65)] sm:p-5"
+            className="min-w-0 max-w-full overflow-hidden rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-cyan-50 p-4 shadow-[0_18px_50px_-34px_rgba(79,70,229,0.65)] sm:p-5"
             data-daenglab-inference-confidence
         >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                    <p className="text-[11px] font-black tracking-[0.12em] text-indigo-600">전반적인 추론 상태</p>
-                    <h3 className="mt-1 text-lg font-black text-neutral-950">행동·소리·건강·우선 확인 추론 그래프</h3>
+            <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-start sm:justify-between sm:gap-3">
+                <div className="min-w-0">
+                    <p className="text-xs font-black tracking-[0.1em] text-indigo-600">
+                        {typeof result.durationSeconds === "number"
+                            ? `${Number.isInteger(result.durationSeconds) ? result.durationSeconds : result.durationSeconds.toFixed(1)}초 관찰 흐름`
+                            : "관찰 흐름"}
+                    </p>
+                    <h3 className="mt-1 text-xl font-black text-neutral-950">시간별 행동·소리·건강 관찰</h3>
                 </div>
-                <span className="rounded-full border border-white bg-white/90 px-3 py-1.5 text-[10px] font-black text-neutral-600 shadow-sm">
-                    높은 추론 → 낮은 추론
+                <span className="rounded-full border border-white bg-white/90 px-3 py-1.5 text-[11px] font-black text-neutral-600 shadow-sm">
+                    최고 지점 표시
                 </span>
             </div>
-            <p className="mt-2 max-w-3xl text-[11px] font-bold leading-5 text-neutral-600">
-                행동, 소리 맥락, 건강 상태와 우선 확인 신호를 각각 나누어 후보별 추론 신뢰도를 비교합니다.
-                서로 상한과 의미가 다른 그래프의 점수는 직접 순위를 매기지 않습니다.
-                표시된 %는 100% 정답률이나 실제 발생 확률, 진단·위험도 수치가 아닙니다.
+            <p className="mt-2 max-w-3xl text-[13px] font-bold leading-6 text-neutral-600">
+                각 %는 정답률이나 진단 확률이 아니라, 그 시점의 영상·소리 근거가 후보를 얼마나 뒷받침하는지 보여줍니다.
             </p>
 
             <div
@@ -880,6 +987,7 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
                         items={groupedItems[config.kind]}
                         observations={result.observations}
                         urgency={result.urgency.level}
+                        durationSeconds={result.durationSeconds}
                     />
                 ))}
             </div>
@@ -925,7 +1033,7 @@ function CandidateCards({
 
 export default function PetLensObservationResult({ result }: { result: PetObservationResult }) {
     return (
-        <div className="grid gap-4" data-petlens-observation-result>
+        <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result>
             <InferenceConfidenceOverview result={result} />
 
             <section className={`rounded-2xl border p-4 sm:p-5 ${URGENCY_STYLE[result.urgency.level]}`} data-observation-urgency={result.urgency.level}>

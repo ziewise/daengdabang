@@ -55,6 +55,7 @@ type Props = {
     visualBreedId?: string;
     visualCharacterId?: CompanionCharacterId;
     panelOpen: boolean;
+    hidden?: boolean;
     homeTransition?: "entering" | "leaving" | null;
     onHomeRequest: () => void;
     onPanelOpenChange: (open: boolean) => void;
@@ -178,6 +179,7 @@ export default function PetCompanionLayer({
     visualBreedId,
     visualCharacterId,
     panelOpen,
+    hidden = false,
     homeTransition,
     onHomeRequest,
     onPanelOpenChange,
@@ -2150,7 +2152,9 @@ export default function PetCompanionLayer({
         <div
             className={styles.root}
             data-pet-companion-root
+            data-mobile-hidden={hidden ? "true" : "false"}
             data-pet-speech-enabled={settings.speechEnabled ? "true" : "false"}
+            aria-hidden={hidden ? "true" : undefined}
         >
             {entryPortal && createPortal(
                 <span

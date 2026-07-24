@@ -15,7 +15,7 @@ import {
 } from "@/lib/petlens-observation";
 import { DdbApiError, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
-import { usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
+import { currentPetLensOrientation, usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
 import PetLensObservationFollowUp from "@/components/petlens/PetLensObservationFollowUp";
 import PetLensObservationHistory from "@/components/petlens/PetLensObservationHistory";
@@ -69,6 +69,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         selectedVideoDeviceId,
         selectedAudioDeviceId,
         facingMode,
+        captureOrientationStatus,
         startCamera,
         switchCamera,
         startRecording,
@@ -81,6 +82,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const historyAbortRef = useRef<AbortController | null>(null);
     const requestIdRef = useRef<string | null>(null);
     const consentCheckboxRef = useRef<HTMLInputElement | null>(null);
+    const captureActionsRef = useRef<HTMLDivElement | null>(null);
+    const capturePrimaryButtonRef = useRef<HTMLButtonElement | null>(null);
+    const returnToCaptureAfterConsentRef = useRef(false);
     const [consent, setConsent] = useState(false);
     const [consentPromptOpen, setConsentPromptOpen] = useState(false);
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
@@ -108,26 +112,42 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     useEffect(() => {
         const video = videoRef.current;
-        const updateOrientation = () => {
-            const viewportOrientation = window.innerWidth >= window.innerHeight ? "landscape" : "portrait";
-            const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        let settleTimer = 0;
+        const applyOrientation = () => {
+            if (phase === "recording") return;
+            const viewportOrientation = currentPetLensOrientation();
+            const touchFirstDevice = window.matchMedia("(pointer: coarse)").matches
+                || navigator.maxTouchPoints > 0;
             const streamOrientation = video && video.videoWidth > 0 && video.videoHeight > 0
                 ? video.videoWidth >= video.videoHeight ? "landscape" : "portrait"
                 : viewportOrientation;
-            setPreviewOrientation(coarsePointer ? viewportOrientation : streamOrientation);
+            setPreviewOrientation(
+                phase === "recorded"
+                    ? streamOrientation
+                    : touchFirstDevice ? viewportOrientation : streamOrientation,
+            );
         };
-        updateOrientation();
+        const updateOrientation = () => {
+            window.clearTimeout(settleTimer);
+            settleTimer = window.setTimeout(applyOrientation, 180);
+        };
+        applyOrientation();
         window.addEventListener("resize", updateOrientation);
         window.addEventListener("orientationchange", updateOrientation);
+        window.visualViewport?.addEventListener("resize", updateOrientation);
+        window.screen.orientation?.addEventListener("change", updateOrientation);
         video?.addEventListener("loadedmetadata", updateOrientation);
         video?.addEventListener("resize", updateOrientation);
         return () => {
+            window.clearTimeout(settleTimer);
             window.removeEventListener("resize", updateOrientation);
             window.removeEventListener("orientationchange", updateOrientation);
+            window.visualViewport?.removeEventListener("resize", updateOrientation);
+            window.screen.orientation?.removeEventListener("change", updateOrientation);
             video?.removeEventListener("loadedmetadata", updateOrientation);
             video?.removeEventListener("resize", updateOrientation);
         };
-    }, [videoRef]);
+    }, [phase, videoRef]);
 
     useEffect(() => {
         if (!consentPromptOpen) return;
@@ -378,6 +398,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     };
 
     const focusConsent = () => {
+        returnToCaptureAfterConsentRef.current = true;
         setConsentPromptOpen(false);
         window.requestAnimationFrame(() => {
             consentCheckboxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -385,12 +406,35 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         });
     };
 
+    const handleConsentChange = (nextConsent: boolean) => {
+        setConsent(nextConsent);
+        if (!nextConsent) {
+            returnToCaptureAfterConsentRef.current = false;
+            resetCapture();
+            return;
+        }
+        setConsentPromptOpen(false);
+        if (!returnToCaptureAfterConsentRef.current) return;
+        returnToCaptureAfterConsentRef.current = false;
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+                const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                captureActionsRef.current?.scrollIntoView({
+                    behavior: reducedMotion ? "auto" : "smooth",
+                    block: "center",
+                });
+                capturePrimaryButtonRef.current?.focus({ preventScroll: true });
+            });
+        });
+    };
+
     const handleConnectCamera = () => {
         if (!consent) {
+            returnToCaptureAfterConsentRef.current = false;
             setConsentPromptOpen(true);
             return;
         }
-        void startCamera();
+        void startCamera({ orientation: previewOrientation });
     };
 
     if (result) {
@@ -633,7 +677,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             muted={!clipUrl}
                             controls={Boolean(clipUrl)}
                             playsInline
-                            className={`h-full w-full object-contain ${phase === "preview" || phase === "recording" || clipUrl ? "block" : "invisible"}`}
+                            className={`h-full w-full ${clipUrl ? "object-contain" : "object-cover"} ${phase === "preview" || phase === "recording" || clipUrl ? "block" : "invisible"}`}
                         />
                         {phase !== "preview" && phase !== "recording" && !clipUrl && (
                             <div
@@ -659,14 +703,114 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             </div>
                         )}
                     </div>
+                    <div
+                        ref={captureActionsRef}
+                        className="grid gap-2 sm:grid-cols-2"
+                        data-petlens-capture-controls
+                    >
+                        {(phase === "idle" || phase === "error") && (
+                            <button
+                                ref={capturePrimaryButtonRef}
+                                type="button"
+                                disabled={supported === false || analyzing || !engineReady}
+                                onClick={handleConnectCamera}
+                                className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
+                                data-petlens-connect-camera
+                                aria-describedby="daenglab-observation-consent-description"
+                            >
+                                <i className="fa-solid fa-camera mr-2 text-xs" /> 카메라·마이크 연결
+                            </button>
+                        )}
+                        {phase === "requesting" && (
+                            <button
+                                ref={capturePrimaryButtonRef}
+                                type="button"
+                                disabled
+                                className="btn btn-primary min-h-12 justify-center opacity-70"
+                                data-petlens-camera-requesting
+                            >
+                                <i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" />
+                                카메라·마이크 연결 중
+                            </button>
+                        )}
+                        {phase === "preview" && (
+                            <>
+                                <button
+                                    ref={capturePrimaryButtonRef}
+                                    type="button"
+                                    disabled={!consent || !engineReady}
+                                    onClick={startRecording}
+                                    className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
+                                    data-petlens-start-observation
+                                >
+                                    <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
+                                </button>
+                                <button type="button" onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
+                                    연결 끊기
+                                </button>
+                            </>
+                        )}
+                        {phase === "recording" && (
+                            <button
+                                ref={capturePrimaryButtonRef}
+                                type="button"
+                                onClick={() => cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.")}
+                                className="btn btn-secondary min-h-12 justify-center"
+                            >
+                                촬영 중단
+                            </button>
+                        )}
+                        {phase === "recorded" && (
+                            <>
+                                <button
+                                    ref={capturePrimaryButtonRef}
+                                    type="button"
+                                    disabled={analyzing || !consent || walletLoading || !hasEnoughCoins || !engineReady}
+                                    onClick={() => void analyze()}
+                                    className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
+                                    data-petlens-analyze-observation
+                                >
+                                    {analyzing ? (
+                                        <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
+                                    ) : (
+                                        <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
+                                    )}
+                                </button>
+                                <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
+                                    다시 촬영
+                                </button>
+                            </>
+                        )}
+                        <label
+                            className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent || !engineReady ? "pointer-events-none opacity-50" : ""}`}
+                            aria-disabled={busy || !consent || !engineReady}
+                        >
+                            <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
+                            <input
+                                type="file"
+                                accept="video/webm,video/mp4,video/quicktime,video/mov,.webm,.mp4,.mov"
+                                disabled={busy || !consent || !engineReady}
+                                className="sr-only"
+                                onChange={(event) => {
+                                    void selectFile(event.target.files?.[0]);
+                                    event.currentTarget.value = "";
+                                }}
+                            />
+                        </label>
+                    </div>
                     <p
                         className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[10px] font-bold leading-4 text-neutral-600"
                         data-petlens-orientation-status={previewOrientation}
                         role="status"
                         aria-live="polite"
                     >
-                        현재 {previewOrientation === "portrait" ? "세로" : "가로"} 화면에 맞췄어요.
-                        휴대폰을 돌리면 미리보기 비율도 자동으로 전환되며, 촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지해 주세요.
+                        현재 {previewOrientation === "portrait" ? "세로" : "가로"} 화면용 미리보기예요.
+                        {captureOrientationStatus === "matched"
+                            ? " 녹화 원본 비율도 같은 방향으로 확인됐어요."
+                            : captureOrientationStatus === "preview_only"
+                                ? " 브라우저가 원본 비율 전환을 확인해 주지 않아 녹화본은 다른 비율일 수 있어요."
+                                : " 카메라가 연결되면 녹화 원본 비율도 함께 확인해요."}
+                        {" "}휴대폰을 돌리면 미리보기 비율도 자동으로 전환되며, 촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지해 주세요.
                     </p>
 
                     {(phase === "preview" || phase === "recording") && (
@@ -686,7 +830,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                             카메라 선택
                                             <select
                                                 value={selectedVideoDeviceId}
-                                                onChange={(event) => void startCamera({ videoDeviceId: event.target.value })}
+                                                onChange={(event) => void startCamera({
+                                                    videoDeviceId: event.target.value,
+                                                    orientation: previewOrientation,
+                                                })}
                                                 className="input min-h-10 w-full text-xs"
                                                 data-petlens-video-device
                                             >
@@ -702,7 +849,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                             마이크 선택
                                             <select
                                                 value={selectedAudioDeviceId}
-                                                onChange={(event) => void startCamera({ audioDeviceId: event.target.value })}
+                                                onChange={(event) => void startCamera({
+                                                    audioDeviceId: event.target.value,
+                                                    orientation: previewOrientation,
+                                                })}
                                                 className="input min-h-10 w-full text-xs"
                                                 data-petlens-audio-device
                                             >
@@ -793,81 +943,6 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </div>
                     )}
 
-                    <div className="grid gap-2 sm:grid-cols-2">
-                        {(phase === "idle" || phase === "error") && (
-                            <button
-                                type="button"
-                                disabled={supported === false || analyzing || !engineReady}
-                                onClick={handleConnectCamera}
-                                className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
-                                data-petlens-connect-camera
-                                aria-describedby="daenglab-observation-consent-description"
-                            >
-                                <i className="fa-solid fa-camera mr-2 text-xs" /> 카메라·마이크 연결
-                            </button>
-                        )}
-                        {phase === "preview" && (
-                            <>
-                                <button
-                                    type="button"
-                                    disabled={!consent || !engineReady}
-                                    onClick={startRecording}
-                                    className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
-                                    data-petlens-start-observation
-                                >
-                                    <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
-                                </button>
-                                <button type="button" onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
-                                    연결 끊기
-                                </button>
-                            </>
-                        )}
-                        {phase === "recording" && (
-                            <button
-                                type="button"
-                                onClick={() => cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.")}
-                                className="btn btn-secondary min-h-12 justify-center"
-                            >
-                                촬영 중단
-                            </button>
-                        )}
-                        {phase === "recorded" && (
-                            <>
-                                <button
-                                    type="button"
-                                    disabled={analyzing || !consent || walletLoading || !hasEnoughCoins || !engineReady}
-                                    onClick={() => void analyze()}
-                                    className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
-                                    data-petlens-analyze-observation
-                                >
-                                    {analyzing ? (
-                                        <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
-                                    ) : (
-                                        <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
-                                    )}
-                                </button>
-                                <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
-                                    다시 촬영
-                                </button>
-                            </>
-                        )}
-                        <label
-                            className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent || !engineReady ? "pointer-events-none opacity-50" : ""}`}
-                            aria-disabled={busy || !consent || !engineReady}
-                        >
-                            <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
-                            <input
-                                type="file"
-                                accept="video/webm,video/mp4,video/quicktime,video/mov,.webm,.mp4,.mov"
-                                disabled={busy || !consent || !engineReady}
-                                className="sr-only"
-                                onChange={(event) => {
-                                    void selectFile(event.target.files?.[0]);
-                                    event.currentTarget.value = "";
-                                }}
-                            />
-                        </label>
-                    </div>
                     <span className="sr-only" role="status" aria-live="polite">
                         {analyzing
                             ? "영상과 소리를 분석하는 중입니다."
@@ -903,12 +978,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             ref={consentCheckboxRef}
                             type="checkbox"
                             checked={consent}
-                            onChange={(event) => {
-                                const nextConsent = event.target.checked;
-                                setConsent(nextConsent);
-                                if (nextConsent) setConsentPromptOpen(false);
-                                if (!nextConsent) resetCapture();
-                            }}
+                            onChange={(event) => handleConsentChange(event.target.checked)}
                             disabled={busy}
                             className="mt-0.5 h-4 w-4 shrink-0"
                         />

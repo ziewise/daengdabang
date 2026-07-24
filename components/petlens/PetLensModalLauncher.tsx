@@ -127,14 +127,16 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
             {/* ===== 모달 오버레이 ===== */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 z-[120] flex items-start justify-center overflow-y-auto bg-neutral-950/55 backdrop-blur-sm px-3 pb-6 pt-20 sm:items-center sm:p-6"
+                    className="fixed inset-0 z-[120] flex h-[100dvh] items-start justify-center overflow-hidden bg-neutral-950/55 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-[max(4.25rem,env(safe-area-inset-top))] backdrop-blur-sm sm:items-center sm:p-6"
                     role="dialog"
                     aria-modal="true"
                     aria-label={en ? "PetLens analysis" : "펫렌즈 분석"}
                     onClick={close}
                 >
                     <div
-                        className="relative my-auto flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[88vh]"
+                        className={`relative my-auto flex max-h-[calc(100dvh-4.75rem)] min-w-0 w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)] ${
+                            view === "observation" ? "max-w-5xl" : "max-w-md"
+                        }`}
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* 행동 관찰에서 메뉴로 복귀 */}
@@ -159,7 +161,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                             <i className="fa-solid fa-xmark text-base" />
                         </button>
 
-                        <div className="overflow-y-auto overscroll-contain">
+                        <div className="min-w-0 overflow-x-hidden overflow-y-auto overscroll-contain">
                             {/* ① 메뉴 — 2택 */}
                             {view === "menu" && (
                                 <div className="px-6 pb-7 pt-8">

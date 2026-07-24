@@ -21,10 +21,16 @@ export type PetObservationFact = {
     confidence: PetObservationConfidence;
 };
 
+export type PetObservationTimelinePoint = {
+    timeSeconds: number;
+    confidenceScore: number;
+};
+
 export type PetObservationCandidate = {
     label: string;
     confidence: PetObservationConfidence;
     confidenceScore?: number;
+    timeline: PetObservationTimelinePoint[];
     evidence: number[];
     otherPossibility: string;
     group?: "behavior" | "sound" | "health";
@@ -39,6 +45,7 @@ export type PetObservationSymptomSignal = {
     label: string;
     confidence: "medium" | "low";
     confidenceScore?: number;
+    timeline: PetObservationTimelinePoint[];
     evidence: number[];
     action: PetObservationUrgencyLevel;
 };
@@ -74,6 +81,7 @@ export type PetObservationNutritionRecommendation = {
 
 export type PetObservationResult = {
     status: "ready" | "limited" | "no_dog" | "no_evidence";
+    durationSeconds?: number;
     summary: string;
     quality: PetObservationQuality;
     observations: PetObservationFact[];
@@ -206,9 +214,15 @@ function line(value: unknown, limit = 180) {
     return typeof value === "string" ? value.trim().slice(0, limit) : "";
 }
 
-function lines(value: unknown, limit = 5, textLimit = 180) {
+function koreanLine(value: unknown, limit = 180) {
+    const text = line(value, limit).replace(/\s+/gu, " ").trim();
+    const firstSentence = text.split(/(?<=[.!?])\s+/u)[0] || "";
+    return /[가-힣]/u.test(firstSentence) && !/[A-Za-z]/u.test(firstSentence) ? firstSentence : "";
+}
+
+function koreanLines(value: unknown, limit = 5, textLimit = 180) {
     if (!Array.isArray(value)) return [];
-    return Array.from(new Set(value.map((item) => line(item, textLimit)).filter(Boolean))).slice(0, limit);
+    return Array.from(new Set(value.map((item) => koreanLine(item, textLimit)).filter(Boolean))).slice(0, limit);
 }
 
 function urgencyLevel(value: unknown): PetObservationUrgencyLevel {
@@ -241,6 +255,50 @@ function candidateConfidenceScore(
     return Math.round(value * 1_000) / 1_000;
 }
 
+function timelinePoints(
+    value: unknown,
+    durationSeconds: number,
+    maxScore: number,
+    expectedPeak?: number,
+): PetObservationTimelinePoint[] {
+    if (!Array.isArray(value)) return [];
+    const byTime = new Map<number, PetObservationTimelinePoint>();
+    value.slice(0, 12).forEach((item) => {
+        const row = record(item);
+        const rawTime = Number(row?.time_seconds ?? row?.timeSeconds);
+        const rawScore = Number(row?.confidence_score ?? row?.confidenceScore);
+        if (
+            !row
+            || !Number.isFinite(rawTime)
+            || !Number.isFinite(rawScore)
+            || rawTime < 0
+            || rawTime > durationSeconds
+            || rawScore < 0
+            || rawScore > maxScore
+        ) return;
+        const timeSeconds = Math.round(rawTime * 10) / 10;
+        const point = {
+            timeSeconds,
+            confidenceScore: Math.round(rawScore * 1_000) / 1_000,
+        };
+        const previous = byTime.get(timeSeconds);
+        if (!previous || point.confidenceScore > previous.confidenceScore) {
+            byTime.set(timeSeconds, point);
+        }
+    });
+    const points = [...byTime.values()]
+        .sort((left, right) => left.timeSeconds - right.timeSeconds)
+        .slice(0, 6);
+    if (
+        typeof expectedPeak === "number"
+        && (
+            points.length === 0
+            || Math.abs(Math.max(...points.map((point) => point.confidenceScore)) - expectedPeak) > 0.001
+        )
+    ) return [];
+    return points;
+}
+
 function candidates(
     value: unknown,
     facts: PetObservationFact[],
@@ -250,13 +308,14 @@ function candidates(
         maxScore?: number;
         allowedConfidences?: readonly PetObservationConfidence[];
         requireScore?: boolean;
+        durationSeconds?: number;
     } = {},
 ): PetObservationCandidate[] {
     if (!Array.isArray(value)) return [];
     const parsed = value.flatMap((item) => {
         const row = record(item);
         if (!row) return [];
-        const label = line(row.label, 100);
+        const label = koreanLine(row.label, 100);
         const proof = evidence(row.evidence, facts.length);
         if (!label || proof.length === 0) return [];
         const confidenceLabel = row.confidence === "high"
@@ -297,8 +356,14 @@ function candidates(
             label,
             confidence: confidenceLabel,
             ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
+            timeline: timelinePoints(
+                row.timeline,
+                options.durationSeconds ?? 30,
+                Math.min(maxScore, confidenceScore ?? maxScore),
+                confidenceScore,
+            ),
             evidence: proof,
-            otherPossibility: line(row.other_possibility ?? row.otherPossibility, 140),
+            otherPossibility: koreanLine(row.other_possibility ?? row.otherPossibility, 140),
             ...(options.group ? { group: options.group } : {}),
         }];
     }).sort((a, b) => (b.confidenceScore ?? -1) - (a.confidenceScore ?? -1));
@@ -317,7 +382,7 @@ function guardianAnswers(value: unknown, questions: string[]): PetObservationGua
     const seen = new Set<string>();
     return value.flatMap((item) => {
         const row = record(item);
-        const question = line(row?.question, 160);
+        const question = koreanLine(row?.question, 160);
         const answer = row?.answer;
         if (
             !row
@@ -329,7 +394,7 @@ function guardianAnswers(value: unknown, questions: string[]): PetObservationGua
         const parsed: PetObservationGuardianAnswer = {
             question,
             answer,
-            note: line(row.note, 200),
+            note: koreanLine(row.note, 200),
         };
         return [parsed];
     }).slice(0, 5);
@@ -350,6 +415,10 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const qualityLevel = rawQuality.level === "good" || rawQuality.level === "limited" || rawQuality.level === "unusable"
         ? rawQuality.level
         : "unusable";
+    const rawDurationSeconds = Number(raw.duration_seconds ?? raw.durationSeconds);
+    const durationSeconds = Number.isFinite(rawDurationSeconds)
+        ? Math.max(0.1, Math.min(rawDurationSeconds, 30))
+        : 30;
     const dogVisible = rawQuality.dog_visible === true || rawQuality.dogVisible === true;
     const audioAvailable = rawQuality.audio_available === true || rawQuality.audioAvailable === true;
     const barkDetected = rawQuality.bark_detected === true || rawQuality.barkDetected === true;
@@ -357,7 +426,9 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ? raw.observations.flatMap((item) => {
             const row = record(item);
             const modality = row?.modality;
-            const description = line(row?.description, 180);
+            const rawDescription = line(row?.description, 180);
+            const description = koreanLine(rawDescription, 180)
+                || (rawDescription ? "이 시점에서 관찰 신호가 포착됐어요." : "");
             if (
                 !row ||
                 !description ||
@@ -385,7 +456,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             raw.bark_context_candidates ?? raw.barkContextCandidates,
             observations,
             3,
-            { group: "sound" },
+            { group: "sound", durationSeconds },
         )
         : [];
     const behaviorCandidates = dogVisible && qualityLevel !== "unusable"
@@ -393,7 +464,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             raw.behavior_candidates ?? raw.behaviorCandidates,
             observations,
             4,
-            { group: "behavior" },
+            { group: "behavior", durationSeconds },
         )
         : [];
     const healthCandidates: PetObservationHealthCandidate[] = dogVisible && qualityLevel !== "unusable"
@@ -406,6 +477,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 maxScore: 0.79,
                 allowedConfidences: ["medium", "low"],
                 requireScore: true,
+                durationSeconds,
             },
         ).map((item) => ({
             ...item,
@@ -419,7 +491,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             .flatMap((item: unknown) => {
                 const row = record(item);
                 if (!row) return [];
-                const label = line(row.label, 120);
+                const label = koreanLine(row.label, 120);
                 const proof = evidence(row.evidence, observations.length);
                 if (!label || proof.length === 0) return [];
                 const confidenceLabel = row.confidence === "medium" ? "medium" as const : "low" as const;
@@ -434,6 +506,12 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                     label,
                     confidence: confidenceLabel,
                     ...(typeof confidenceScore === "number" ? { confidenceScore } : {}),
+                    timeline: timelinePoints(
+                        row.timeline,
+                        durationSeconds,
+                        Math.min(0.79, confidenceScore ?? 0.79),
+                        confidenceScore,
+                    ),
                     evidence: proof,
                     action: urgencyLevel(row.action),
                 }];
@@ -477,8 +555,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ? rawNutrition.flatMap((item) => {
             const row = record(item);
             if (!row || !allowedNutritionFocuses.has(row.focus as PetObservationNutritionFocus)) return [];
-            const headline = line(row.headline, 100);
-            const reason = line(row.reason, 180);
+            const headline = koreanLine(row.headline, 100);
+            const reason = koreanLine(row.reason, 180);
             const catalogQuery = line(row.catalog_query ?? row.catalogQuery, 80);
             const proof = evidence(row.evidence, observations.length);
             const rawProfileBasis = row.profile_basis ?? row.profileBasis;
@@ -531,7 +609,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         observe: "평소와 비교하며 관찰해 주세요",
         unclear: "이 영상만으로는 긴급도를 판단하기 어려워요",
     };
-    const rawActions = lines(rawUrgency.actions, 5, 180);
+    const rawActions = koreanLines(rawUrgency.actions, 5, 180);
     const safeActions: Record<PetObservationUrgencyLevel, string[]> = {
         emergency: ["분석 결과를 기다리지 말고 가까운 응급 동물병원에 즉시 연락하세요."],
         same_day: ["오늘 안으로 동물병원에 연락해 영상에서 보인 신호를 설명하세요."],
@@ -544,16 +622,16 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         .map((item) => item.label)
         .slice(0, 4);
     const safeSummary = normalizedUrgency === "emergency"
-        ? "영상에서 즉시 확인이 필요한 신호가 분류됐어요. 촬영이나 추가 분석보다 병원 연락을 우선하세요."
+        ? "영상에서 즉시 확인이 필요한 신호가 분류돼 추가 촬영보다 병원 연락을 우선하세요."
         : normalizedUrgency === "same_day"
             ? "영상에서 오늘 안에 동물병원에 문의할 신호가 분류됐어요."
-            : line(raw.summary, 320) || "짧은 영상만으로 원인이나 질환을 확정할 수는 없어요.";
+            : koreanLine(raw.summary, 320) || "짧은 영상만으로 원인이나 질환을 확정할 수는 없어요.";
 
     const coinCostValue = Number(raw.daenglab_coin_cost ?? raw.daengLabCoinCost);
     const coinBalanceValue = Number(raw.daenglab_coin_balance ?? raw.daengLabCoinBalance);
     const hasCoinCost = Number.isFinite(coinCostValue) && coinCostValue >= 0;
     const hasCoinBalance = Number.isFinite(coinBalanceValue) && coinBalanceValue >= 0;
-    const followUpQuestions = lines(raw.follow_up_questions ?? raw.followUpQuestions, 5, 160);
+    const followUpQuestions = koreanLines(raw.follow_up_questions ?? raw.followUpQuestions, 5, 160);
     const guardianFollowUpAnswers = guardianAnswers(
         raw.guardian_follow_up_answers ?? raw.guardianFollowUpAnswers,
         followUpQuestions,
@@ -562,6 +640,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
 
     return {
         status,
+        ...(Number.isFinite(rawDurationSeconds) ? { durationSeconds } : {}),
         summary: safeSummary,
         quality: {
             level: qualityLevel,
@@ -569,7 +648,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             audioAvailable,
             barkDetected,
             vocalizationDetected,
-            issues: lines(rawQuality.issues, 6, 120),
+            issues: koreanLines(rawQuality.issues, 6, 120),
         },
         observations,
         barkContextCandidates,
@@ -580,22 +659,22 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             level: normalizedUrgency,
             headline: normalizedUrgency === "emergency" || normalizedUrgency === "same_day"
                 ? defaultHeadline[normalizedUrgency]
-                : line(rawUrgency.headline, 140) || defaultHeadline[normalizedUrgency],
+                : koreanLine(rawUrgency.headline, 140) || defaultHeadline[normalizedUrgency],
             reasons: highUrgency
                 ? highUrgencyReasons.length ? highUrgencyReasons : ["영상에서 우선 확인이 필요한 신호가 분류됐어요."]
-                : lines(rawUrgency.reasons, 5, 160),
+                : koreanLines(rawUrgency.reasons, 5, 160),
             actions: safeActions[normalizedUrgency],
         },
         nutritionRecommendations,
         followUpQuestions,
         guardianFollowUpAnswers,
-        guardianContextSummary: line(raw.guardian_context_summary ?? raw.guardianContextSummary, 320),
+        guardianContextSummary: koreanLine(raw.guardian_context_summary ?? raw.guardianContextSummary, 320),
         ...(refinedAt ? { refinedAt } : {}),
-        retakeGuidance: lines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160),
+        retakeGuidance: koreanLines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160),
         limitations: Array.from(new Set([
             "짖음·낑낑거림·으르렁거림 등 반려견 발성은 사람 문장처럼 번역할 수 없으며, 가능한 맥락만 추론합니다.",
             "영상 관찰은 수의사의 진찰이나 검사를 대신하지 않습니다.",
-            ...lines(raw.limitations, 4, 200),
+            ...koreanLines(raw.limitations, 4, 200),
         ])).slice(0, 4),
         mediaRetention,
         ...(hasCoinCost ? { daengLabCoinCost: coinCostValue } : {}),

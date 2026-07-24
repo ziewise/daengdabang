@@ -30,18 +30,22 @@ test("mobile hero hides all floating controls only at the exact top and restores
         source("components/pet-companion/PetCompanionLayer.module.css"),
     ]);
 
-    assert.match(hook, /hidden: hasBlockingDialog \|\| \(isMobile && isScrolling\)/);
+    assert.match(hook, /hidden: hasBlockingDialog \|\| isDaengLabResultVisible \|\| \(isMobile && isScrolling\)/);
+    assert.match(hook, /querySelectorAll<HTMLElement>\("\[data-daenglab-inference-confidence\]"\)/);
+    assert.match(hook, /isDaengLabResultVisible,/);
     assert.match(hook, /setIsAtPageTop\(window\.scrollY <= 0\)/);
     assert.match(dock, /const hideAtHeroTop = heroAtTop;/);
     assert.doesNotMatch(dock, /hideInMobileHero/);
     assert.match(dock, /const baseDockVisible = shown \|\| navigatorReveal \|\| mobileFloating\.isMobile/);
-    assert.match(dock, /const dockVisible = !mobileFloating\.hasBlockingDialog\s*&& \(chatOpen \|\| \(!hideAtHeroTop && baseDockVisible && !mobileFloating\.isScrolling\)\)/);
+    assert.match(dock, /const dockVisible = !mobileFloating\.hasBlockingDialog\s*&& !mobileFloating\.isDaengLabResultVisible\s*&& \(chatOpen \|\| \(!hideAtHeroTop && baseDockVisible && !mobileFloating\.isScrolling\)\)/);
     assert.match(gate, /const hideAtHeroTop = heroAtTop;/);
     assert.doesNotMatch(gate, /hideInMobileHero/);
     assert.match(dock, /dockRef\.current\?\.contains\(activeElement\)/);
     assert.match(dock, /activeElement\.blur\(\)/);
     assert.match(gate, /const chatWidgetBlocksControls = chatWidgetOpen && mobileFloating\.isMobile/);
     assert.match(gate, /mobileFloating\.hidden[\s\S]{0,180}\|\| hideAtHeroTop;/);
+    assert.match(gate, /hidden=\{mobileFloating\.isDaengLabResultVisible\}/);
+    assert.match(css, /\.root\[data-mobile-hidden="true"\][\s\S]{0,120}visibility: hidden/);
     assert.ok(
         css.indexOf('.settingsLaunch[data-mobile-hidden="true"]') < css.indexOf("@media (max-width: 680px)"),
         "desktop and mobile house/settings launchers must share the hidden rule",
@@ -68,7 +72,7 @@ test("mobile launchers yield to dialogs and desktop launchers yield only to moda
     assert.match(hook, /dialog\.dataset\.floatingBlocker === "true"/);
     assert.match(hook, /return \(isMobile \|\| blocksDesktop\) && isVisibleDialog\(dialog\)/);
     assert.match(hook, /"aria-modal"[\s\S]{0,90}"data-floating-blocker"/);
-    assert.match(hook, /hidden: hasBlockingDialog \|\| \(isMobile && isScrolling\)/);
+    assert.match(hook, /hidden: hasBlockingDialog \|\| isDaengLabResultVisible \|\| \(isMobile && isScrolling\)/);
     assert.match(hook, /window\.setTimeout\(scheduleUpdate, 460\)/);
     assert.match(chat, /role="dialog"/);
     assert.match(chat, /onOpenChange\?\.\(open\)/);

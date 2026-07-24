@@ -412,6 +412,7 @@ export default function PetCompanionGate() {
                     visualBreedId={guestVisual?.breedId}
                     visualCharacterId={guestVisual?.characterId}
                     panelOpen={panelOpen}
+                    hidden={mobileFloating.isDaengLabResultVisible}
                     homeTransition={homeTransition}
                     onHomeRequest={handleHomeToggle}
                     onPanelOpenChange={(open) => {

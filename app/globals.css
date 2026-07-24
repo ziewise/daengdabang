@@ -17,6 +17,89 @@
     --shadow-hover: 0 18px 40px rgba(15, 23, 42, 0.14);
 }
 
+@keyframes daenglab-timeline-draw {
+    from {
+        stroke-dashoffset: 1600;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes daenglab-timeline-point-in {
+    from {
+        opacity: 0;
+        transform: scale(0.35);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes daenglab-timeline-label-in {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.daenglab-timeline-line {
+    stroke-dasharray: 1600;
+    stroke-dashoffset: 1600;
+    animation: daenglab-timeline-draw 880ms cubic-bezier(.22, .72, .2, 1) forwards;
+    animation-delay: var(--daenglab-series-delay, 0ms);
+}
+
+.daenglab-timeline-point,
+.daenglab-timeline-peak,
+.daenglab-timeline-peak-halo {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: daenglab-timeline-point-in 360ms cubic-bezier(.2, .9, .3, 1.35) forwards;
+}
+
+.daenglab-timeline-point {
+    animation-delay: calc(var(--daenglab-series-delay, 0ms) + 430ms);
+}
+
+.daenglab-timeline-peak-halo {
+    animation-delay: calc(var(--daenglab-series-delay, 0ms) + 650ms);
+}
+
+.daenglab-timeline-peak {
+    animation-delay: calc(var(--daenglab-series-delay, 0ms) + 720ms);
+}
+
+.daenglab-timeline-peak-label {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: daenglab-timeline-label-in 360ms ease-out forwards;
+    animation-delay: calc(var(--daenglab-series-delay, 0ms) + 780ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .daenglab-timeline-line,
+    .daenglab-timeline-point,
+    .daenglab-timeline-peak,
+    .daenglab-timeline-peak-halo,
+    .daenglab-timeline-peak-label {
+        opacity: 1;
+        transform: none;
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+}
+
 :root {
     --background: #f7f8fb;
     --foreground: #111827;

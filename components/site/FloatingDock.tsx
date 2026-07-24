@@ -81,6 +81,7 @@ export default function FloatingDock() {
     const hideAtHeroTop = heroAtTop;
     const baseDockVisible = shown || navigatorReveal || mobileFloating.isMobile;
     const dockVisible = !mobileFloating.hasBlockingDialog
+        && !mobileFloating.isDaengLabResultVisible
         && (chatOpen || (!hideAtHeroTop && baseDockVisible && !mobileFloating.isScrolling));
     const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
     const dockBottom = buybar
@@ -109,6 +110,7 @@ export default function FloatingDock() {
             data-mobile-hidden={!dockVisible ? "true" : "false"}
             data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
             data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
+            data-daenglab-result-visible={mobileFloating.isDaengLabResultVisible ? "true" : "false"}
             data-mobile-hero-visible={mobileFloating.isHeroVisible ? "true" : "false"}
             data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
             aria-hidden={!dockVisible ? "true" : undefined}
