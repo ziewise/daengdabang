@@ -525,6 +525,82 @@ test("v2 parser fails closed when attribution fields are missing or malformed", 
 });
 
 
+test("v2 parser keeps an unknown visible dog count unknown and abstains", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+    delete payload.quality.visible_dog_count;
+
+    const result = parsePetObservationResult(payload);
+
+    assert.equal(result.quality.visibleDogCount, 0);
+    assert.equal(result.quality.targetStatus, "ambiguous");
+    assert.equal(result.quality.level, "unusable");
+    assert.deepEqual(result.barkContextCandidates, []);
+    assert.deepEqual(result.behaviorCandidates, []);
+
+    payload.quality.visible_dog_count = "1";
+    const malformed = parsePetObservationResult(payload);
+    assert.equal(malformed.quality.visibleDogCount, 0);
+    assert.equal(malformed.quality.targetStatus, "ambiguous");
+});
+
+
+test("v2 parser drops candidates whose aggregate confidence score is missing", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+    delete payload.bark_context_candidates[0].confidence_score;
+    delete payload.behavior_candidates[0].confidence_score;
+    delete payload.health_candidates[0].confidence_score;
+    delete payload.symptom_signals[0].confidence_score;
+
+    const result = parsePetObservationResult(payload);
+
+    assert.deepEqual(result.barkContextCandidates, []);
+    assert.deepEqual(result.behaviorCandidates, []);
+    assert.deepEqual(
+        result.healthCandidates.map(({ confidenceScore }) => confidenceScore),
+        [0.49],
+    );
+    assert.deepEqual(
+        result.symptomSignals.map(({ confidenceScore }) => confidenceScore),
+        [0.52],
+    );
+});
+
+
+test("v2 parser remaps evidence indexes after invalid observations are filtered", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+    const invalidFact = {
+        ...payload.observations[1],
+        modality: "unsupported",
+    };
+    const otherDogFact = {
+        ...payload.observations[1],
+        source: "other_dog",
+    };
+    const targetDogFact = {
+        ...payload.observations[2],
+        source: "target_dog",
+    };
+    payload.observations = [invalidFact, otherDogFact, targetDogFact];
+    payload.behavior_candidates = [{
+        ...payload.behavior_candidates[0],
+        confidence: "medium",
+        confidence_score: 0.61,
+        evidence: [1],
+    }];
+
+    const otherDogEvidence = parsePetObservationResult(payload);
+    assert.deepEqual(otherDogEvidence.behaviorCandidates, []);
+
+    payload.behavior_candidates[0].evidence = [2];
+    const targetDogEvidence = parsePetObservationResult(payload);
+    assert.equal(targetDogEvidence.behaviorCandidates.length, 1);
+    assert.deepEqual(targetDogEvidence.behaviorCandidates[0].evidence, [1]);
+});
+
+
 test("v2 parser abstains when multiple animals cannot be resolved to one target", async () => {
     const { parsePetObservationResult } = await observationModule();
     const payload = v2Payload();

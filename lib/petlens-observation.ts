@@ -405,11 +405,16 @@ function factSupportsTarget(fact: PetObservationFact, mixedAudio: boolean) {
     return true;
 }
 
-function evidence(value: unknown, factCount: number) {
+function evidence(
+    value: unknown,
+    observationIndexMap: ReadonlyMap<number, number>,
+) {
     if (!Array.isArray(value)) return [];
-    return Array.from(new Set(value
-        .filter((item): item is number => typeof item === "number" && Number.isInteger(item))
-        .filter((item) => item >= 0 && item < factCount)))
+    return Array.from(new Set(value.flatMap((item) => {
+        if (typeof item !== "number" || !Number.isInteger(item)) return [];
+        const normalizedIndex = observationIndexMap.get(item);
+        return typeof normalizedIndex === "number" ? [normalizedIndex] : [];
+    })))
         .slice(0, 5);
 }
 
@@ -472,6 +477,7 @@ function timelinePoints(
 function candidates(
     value: unknown,
     facts: PetObservationFact[],
+    observationIndexMap: ReadonlyMap<number, number>,
     limit: number,
     options: {
         group?: PetObservationCandidate["group"];
@@ -495,7 +501,7 @@ function candidates(
         const label = options.requireContextCode && contextCode
             ? SOUND_CONTEXT_LABELS[contextCode]
             : koreanLine(row.label, 100);
-        const proof = evidence(row.evidence, facts.length);
+        const proof = evidence(row.evidence, observationIndexMap);
         if (!label || proof.length === 0) return [];
         if (
             options.requireTargetAttribution
@@ -536,6 +542,11 @@ function candidates(
         );
         if (rawConfidenceScore !== undefined && typeof confidenceScore !== "number") return [];
         if (options.requireScore && typeof confidenceScore !== "number") return [];
+        if (
+            typeof confidenceScore !== "number"
+            && Array.isArray(row.timeline)
+            && row.timeline.length > 0
+        ) return [];
         const timeline = timelinePoints(
             row.timeline,
             options.durationSeconds ?? 30,
@@ -623,13 +634,14 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const dogVisible = rawQuality.dog_visible === true || rawQuality.dogVisible === true;
     const audioAvailable = rawQuality.audio_available === true || rawQuality.audioAvailable === true;
     const reportedBarkDetected = rawQuality.bark_detected === true || rawQuality.barkDetected === true;
-    const rawVisibleDogCount = Number(rawQuality.visible_dog_count ?? rawQuality.visibleDogCount);
-    const hasValidVisibleDogCount = Number.isInteger(rawVisibleDogCount)
+    const rawVisibleDogCount = rawQuality.visible_dog_count ?? rawQuality.visibleDogCount;
+    const hasValidVisibleDogCount = typeof rawVisibleDogCount === "number"
+        && Number.isInteger(rawVisibleDogCount)
         && rawVisibleDogCount >= 0
         && rawVisibleDogCount <= 10;
     const visibleDogCount = attributionV2
-        ? dogVisible
-            ? Math.max(1, Math.min(hasValidVisibleDogCount ? rawVisibleDogCount : 1, 10))
+        ? dogVisible && hasValidVisibleDogCount
+            ? Number(rawVisibleDogCount)
             : 0
         : dogVisible ? 1 : 0;
     const rawTargetBasis = rawQuality.target_basis ?? rawQuality.targetBasis;
@@ -702,8 +714,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 INTERFERENCE_SOURCES.has(item as PetObservationInterferenceSource),
         ))).slice(0, 6)
         : [];
-    const observations: PetObservationFact[] = Array.isArray(raw.observations)
-        ? raw.observations.flatMap((item) => {
+    const observationEntries = Array.isArray(raw.observations)
+        ? raw.observations.flatMap((item, rawIndex) => {
             const row = record(item);
             let modality = row?.modality;
             const rawDescription = line(row?.description, 180);
@@ -759,17 +771,24 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             if (!audioAvailable && (modality === "vocalization" || modality === "environment_sound")) return [];
             const timeValue = Number(row.time_seconds ?? row.timeSeconds ?? 0);
             return [{
-                modality: modality as PetObservationFact["modality"],
-                description,
-                timeSeconds: Number.isFinite(timeValue) ? Math.max(0, Math.min(timeValue, 30)) : 0,
-                confidence: confidence(row.confidence),
-                source,
-                sourceConfidenceScore,
-                sourceBasis,
-                vocalizationKind,
+                rawIndex,
+                fact: {
+                    modality: modality as PetObservationFact["modality"],
+                    description,
+                    timeSeconds: Number.isFinite(timeValue) ? Math.max(0, Math.min(timeValue, 30)) : 0,
+                    confidence: confidence(row.confidence),
+                    source,
+                    sourceConfidenceScore,
+                    sourceBasis,
+                    vocalizationKind,
+                } satisfies PetObservationFact,
             }];
         }).slice(0, 12)
         : [];
+    const observations = observationEntries.map(({ fact }) => fact);
+    const observationIndexMap = new Map(
+        observationEntries.map(({ rawIndex }, normalizedIndex) => [rawIndex, normalizedIndex]),
+    );
     const targetVocalizationFacts = observations.filter(
         (item) => item.modality === "vocalization" && factSupportsTarget(item, mixedAudio),
     );
@@ -815,9 +834,11 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ? candidates(
             raw.bark_context_candidates ?? raw.barkContextCandidates,
             observations,
+            observationIndexMap,
             3,
             {
                 group: "sound",
+                requireScore: attributionV2,
                 durationSeconds,
                 requireTargetAttribution: attributionV2,
                 mixedAudio,
@@ -831,9 +852,11 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ? candidates(
             raw.behavior_candidates ?? raw.behaviorCandidates,
             observations,
+            observationIndexMap,
             4,
             {
                 group: "behavior",
+                requireScore: attributionV2,
                 durationSeconds,
                 requireTargetAttribution: attributionV2,
                 mixedAudio,
@@ -846,6 +869,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ? candidates(
             raw.health_candidates ?? raw.healthCandidates,
             observations,
+            observationIndexMap,
             4,
             {
                 group: "health",
@@ -872,7 +896,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                 const row = record(item);
                 if (!row) return [];
                 const label = koreanLine(row.label, 120);
-                const proof = evidence(row.evidence, observations.length);
+                const proof = evidence(row.evidence, observationIndexMap);
                 if (!label || proof.length === 0) return [];
                 if (
                     attributionV2
@@ -885,7 +909,15 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                     confidenceLabel,
                     0.79,
                 );
-                if (rawConfidenceScore !== undefined && typeof confidenceScore !== "number") return [];
+                if (
+                    (attributionV2 || rawConfidenceScore !== undefined)
+                    && typeof confidenceScore !== "number"
+                ) return [];
+                if (
+                    typeof confidenceScore !== "number"
+                    && Array.isArray(row.timeline)
+                    && row.timeline.length > 0
+                ) return [];
                 const timeline = timelinePoints(
                     row.timeline,
                     durationSeconds,
@@ -957,7 +989,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             const headline = koreanLine(row.headline, 100);
             const reason = koreanLine(row.reason, 180);
             const catalogQuery = line(row.catalog_query ?? row.catalogQuery, 80);
-            const proof = evidence(row.evidence, observations.length);
+            const proof = evidence(row.evidence, observationIndexMap);
             const rawProfileBasis = row.profile_basis ?? row.profileBasis;
             const profileBasis = Array.isArray(rawProfileBasis)
                 ? Array.from(new Set(rawProfileBasis

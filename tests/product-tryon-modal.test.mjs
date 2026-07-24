@@ -18,16 +18,16 @@ function assertOrdered(text, markers, message) {
     }
 }
 
-test("price row opens the try-on modal and the old inline section is gone", async () => {
+test("try-on control opens the modal and the old inline section is gone", async () => {
     const [info, detail] = await Promise.all([
         source("components/products/detail/ProductInfo.tsx"),
         source("app/(shop)/product/[slug]/ProductDetailClient.tsx"),
     ]);
 
-    assert.match(info, /우리 아이에게 바로 입혀보기/);
-    assert.match(info, /사진으로 착용 모습 미리보기/);
+    assert.match(info, /우리 아이에게 입혀보기/);
+    assert.match(info, /착용 모습 미리보기/);
     assert.match(info, /onClick=\{onTryOn\}/);
-    assert.match(info, /bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-500/);
+    assert.match(info, /bg-gradient-to-r from-aurora-blue to-aurora-indigo/);
     assert.match(info, /group-hover:translate-x-1/);
     assert.match(detail, /onTryOn=\{\(\) => setTryOnOpen\(true\)\}/);
     assert.match(detail, /\{tryOnOpen && \(/);

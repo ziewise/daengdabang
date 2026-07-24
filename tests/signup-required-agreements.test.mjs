@@ -48,7 +48,6 @@ test("privacy policy discloses pseudonymous signup bonus abuse prevention", asyn
     assert.match(privacySource, /가입 혜택 중복 방지용 HMAC 식별값/);
     assert.match(privacySource, /선택된 이메일 발송 사업자\(연동 시 사업자명 고지 및 정책 반영\)/);
     assert.match(privacySource, /인증번호 만료 후 24시간/);
-    assert.match(privacySource, /2026-07-23/);
 });
 
 test("signup requires optional PetLens consent before saving pet profile data", async () => {

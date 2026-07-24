@@ -220,7 +220,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
 });
 
 
-test("result leads with target attribution and context translation before four time-based support graphs", async () => {
+test("result prioritizes urgent guidance and otherwise leads with target attribution and translation", async () => {
     const [result, api, css] = await Promise.all([
         source("components/petlens/PetLensObservationResult.tsx"),
         source("lib/petlens-observation.ts"),
@@ -280,7 +280,11 @@ test("result leads with target attribution and context translation before four t
     assert.match(result, /각 %는 정답률이나 진단 확률이 아니라, 그 시점의 영상·소리 근거가 후보를 얼마나 뒷받침하는지 보여줍니다/);
     assert.match(result, /typeof item\.confidenceScore !== "number"/);
     assert.match(result, /과거 결과는 원본 영상이 없어 임의의 시간선을 만들지 않고 당시 전체 신뢰도 구간만 표시해요/);
-    assert.match(result, /<TargetAttributionPanel result=\{result\} \/>[\s\S]*<BarkContextTranslator result=\{result\} \/>[\s\S]*<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*data-observation-urgency/);
+    assert.match(result, /const highPriorityUrgency = \([\s\S]*result\.urgency\.level === "emergency"[\s\S]*result\.urgency\.level === "same_day"/);
+    assert.match(result, /\{highPriorityUrgency && <UrgencyGuidance result=\{result\} highPriority \/>\}[\s\S]*<TargetAttributionPanel result=\{result\} \/>/);
+    assert.match(result, /<InferenceConfidenceOverview result=\{result\} \/>[\s\S]*\{!highPriorityUrgency && <UrgencyGuidance result=\{result\} highPriority=\{false\} \/>\}/);
+    assert.match(result, /role=\{highPriority \? "alert" : undefined\}/);
+    assert.match(result, /강아지 수 확인 어려움/);
     assert.match(api, /confidenceScore\?: number/);
     assert.match(api, /export type PetObservationTimelinePoint/);
     assert.match(api, /timeline: PetObservationTimelinePoint\[\]/);
@@ -298,6 +302,8 @@ test("result leads with target attribution and context translation before four t
     assert.match(api, /source: PetObservationFactSource/);
     assert.match(api, /targetStatus: PetObservationTargetStatus/);
     assert.match(api, /function factSupportsTarget/);
+    assert.match(api, /normalizedIndex = observationIndexMap\.get\(item\)/);
+    assert.match(api, /requireScore: attributionV2/);
     assert.match(api, /"environment_sound"/);
     assert.match(api, /status: "ready" \| "limited" \| "no_dog" \| "no_evidence"/);
     assert.match(api, /raw\.status === "no_evidence"/);

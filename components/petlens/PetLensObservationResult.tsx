@@ -1122,8 +1122,13 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
             (item) => item.modality === "vocalization" && item.source === "target_dog",
         ).length - targetVocalizations.length,
     );
+    const visibleDogCountBadge = !result.quality.dogVisible
+        ? ""
+        : result.quality.visibleDogCount > 0
+            ? `강아지 ${result.quality.visibleDogCount}마리`
+            : "강아지 수 확인 어려움";
     const companionBadges = [
-        result.quality.visibleDogCount > 0 ? `강아지 ${result.quality.visibleDogCount}마리` : "",
+        visibleDogCountBadge,
         result.quality.peopleVisible ? "사람 함께 있음" : "",
         result.quality.catVisible ? "고양이 함께 있음" : "",
         result.quality.otherAnimalsVisible ? "다른 동물 함께 있음" : "",
@@ -1281,51 +1286,74 @@ function BarkContextTranslator({ result }: { result: PetObservationResult }) {
     );
 }
 
+function UrgencyGuidance({
+    result,
+    highPriority,
+}: {
+    result: PetObservationResult;
+    highPriority: boolean;
+}) {
+    return (
+        <section
+            className={`rounded-2xl border p-4 sm:p-5 ${URGENCY_STYLE[result.urgency.level]}`}
+            data-observation-urgency={result.urgency.level}
+            data-daenglab-urgency-priority={highPriority ? "high" : "routine"}
+            role={highPriority ? "alert" : undefined}
+        >
+            <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
+                    {URGENCY_LABEL[result.urgency.level]}
+                </span>
+                <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
+                    영상·소리 통합 관찰
+                </span>
+                <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
+                    원본 영상 미저장
+                </span>
+            </div>
+            <h3 className="mt-3 text-lg font-black leading-7">{result.urgency.headline}</h3>
+            <p className="mt-2 text-sm font-bold leading-6 opacity-85">{result.summary}</p>
+            {result.urgency.reasons.length > 0 && (
+                <ul className="mt-3 grid gap-1.5 text-xs font-bold leading-5">
+                    {result.urgency.reasons.map((reason) => <li key={reason}>• {reason}</li>)}
+                </ul>
+            )}
+            {result.urgency.actions.length > 0 && (
+                <div className="mt-4 grid gap-2 rounded-xl bg-white/75 p-3 text-xs font-black leading-5">
+                    {result.urgency.actions.map((action) => <p key={action}>{action}</p>)}
+                </div>
+            )}
+            {result.urgency.level === "emergency" && (
+                <a
+                    href="https://map.kakao.com/link/search/24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl bg-rose-700 px-4 text-sm font-black text-white"
+                >
+                    가까운 24시 동물병원 찾기
+                </a>
+            )}
+            <p className="mt-4 border-t border-current/15 pt-3 text-[10px] font-bold leading-4 opacity-75">
+                건강 신호는 평소 상태와 비교해 확인해 주세요. 걱정되는 변화가 지속되거나 심해지면 동물병원에 문의해 주세요.
+            </p>
+        </section>
+    );
+}
+
 export default function PetLensObservationResult({ result }: { result: PetObservationResult }) {
+    const highPriorityUrgency = (
+        result.urgency.level === "emergency"
+        || result.urgency.level === "same_day"
+    );
+
     return (
         <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result>
+            {highPriorityUrgency && <UrgencyGuidance result={result} highPriority />}
             <TargetAttributionPanel result={result} />
             <BarkContextTranslator result={result} />
             <InferenceConfidenceOverview result={result} />
 
-            <section className={`rounded-2xl border p-4 sm:p-5 ${URGENCY_STYLE[result.urgency.level]}`} data-observation-urgency={result.urgency.level}>
-                <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
-                        {URGENCY_LABEL[result.urgency.level]}
-                    </span>
-                    <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
-                        영상·소리 통합 관찰
-                    </span>
-                    <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
-                        원본 영상 미저장
-                    </span>
-                </div>
-                <h3 className="mt-3 text-lg font-black leading-7">{result.urgency.headline}</h3>
-                <p className="mt-2 text-sm font-bold leading-6 opacity-85">{result.summary}</p>
-                {result.urgency.reasons.length > 0 && (
-                    <ul className="mt-3 grid gap-1.5 text-xs font-bold leading-5">
-                        {result.urgency.reasons.map((reason) => <li key={reason}>• {reason}</li>)}
-                    </ul>
-                )}
-                {result.urgency.actions.length > 0 && (
-                    <div className="mt-4 grid gap-2 rounded-xl bg-white/75 p-3 text-xs font-black leading-5">
-                        {result.urgency.actions.map((action) => <p key={action}>{action}</p>)}
-                    </div>
-                )}
-                {result.urgency.level === "emergency" && (
-                    <a
-                        href="https://map.kakao.com/link/search/24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl bg-rose-700 px-4 text-sm font-black text-white"
-                    >
-                        가까운 24시 동물병원 찾기
-                    </a>
-                )}
-                <p className="mt-4 border-t border-current/15 pt-3 text-[10px] font-bold leading-4 opacity-75">
-                    건강 신호는 평소 상태와 비교해 확인해 주세요. 걱정되는 변화가 지속되거나 심해지면 동물병원에 문의해 주세요.
-                </p>
-            </section>
+            {!highPriorityUrgency && <UrgencyGuidance result={result} highPriority={false} />}
 
             <PetObservationNutritionRecommendations result={result} />
 
@@ -1352,7 +1380,11 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                 <p className="text-xs font-black text-neutral-500">촬영 품질</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-black">
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                        강아지 {result.quality.dogVisible ? `${result.quality.visibleDogCount || 1}마리 확인` : "확인 어려움"}
+                        {!result.quality.dogVisible
+                            ? "강아지 확인 어려움"
+                            : result.quality.visibleDogCount > 0
+                                ? `강아지 ${result.quality.visibleDogCount}마리 확인`
+                                : "강아지 수 확인 어려움"}
                     </span>
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
                         소리 {result.quality.audioAvailable ? "확인" : "확인 어려움"}
