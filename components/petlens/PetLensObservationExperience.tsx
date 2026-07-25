@@ -112,6 +112,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [resultRequestId, setResultRequestId] = useState<string>();
     const [targetAnchor, setTargetAnchor] = useState<TargetAnchor | null>(null);
     const [targetAnchorMode, setTargetAnchorMode] = useState<TargetAnchorMode>("none");
+    const [targetAnchorImage, setTargetAnchorImage] = useState<Blob | null>(null);
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [walletLoading, setWalletLoading] = useState(true);
     const [walletError, setWalletError] = useState("");
@@ -122,7 +123,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const busy = analyzing || phase === "requesting" || phase === "recording";
     const targetSelectionReady = targetAnchorMode === "single_dog_auto" || Boolean(targetAnchor);
     const targetAnchorHint = targetAnchor
-        ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점을 분석 대상 힌트로 보냅니다.`
+        ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점${targetAnchorImage ? "과 작은 참조 crop" : ""}을 분석 대상 힌트로 보냅니다.`
         : targetAnchorMode === "single_dog_auto"
             ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 AI가 보류할 수 있어요."
             : "분석 전 영상 위에서 대상 아이를 한 번 콕 찍어 주세요.";
@@ -135,6 +136,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const clearTargetSelection = useCallback(() => {
         setTargetAnchor(null);
         setTargetAnchorMode("none");
+        setTargetAnchorImage(null);
     }, []);
 
     const resetObservationCapture = useCallback(() => {
@@ -145,6 +147,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const markSingleDogAuto = useCallback(() => {
         setTargetAnchor(null);
         setTargetAnchorMode("single_dog_auto");
+        setTargetAnchorImage(null);
         setAnalysisError("");
     }, []);
 
@@ -155,9 +158,59 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         trackStorefrontEvent("petlens_target_anchor_selected", { mode: "observation", surface: variant });
     }, [variant]);
 
+    const captureTargetAnchorCrop = useCallback(async (anchor: TargetAnchor) => {
+        const video = videoRef.current;
+        if (!video || video.videoWidth <= 0 || video.videoHeight <= 0) {
+            setTargetAnchorImage(null);
+            return;
+        }
+        try {
+            const sourceWidth = video.videoWidth;
+            const sourceHeight = video.videoHeight;
+            const minSide = Math.min(sourceWidth, sourceHeight);
+            const cropSize = Math.max(160, Math.min(minSide, Math.round(minSide * 0.56)));
+            const centerX = anchor.x * sourceWidth;
+            const centerY = anchor.y * sourceHeight;
+            const sourceX = Math.max(0, Math.min(sourceWidth - cropSize, centerX - cropSize / 2));
+            const sourceY = Math.max(0, Math.min(sourceHeight - cropSize, centerY - cropSize / 2));
+            const outputSize = 512;
+            const canvas = document.createElement("canvas");
+            canvas.width = outputSize;
+            canvas.height = outputSize;
+            const context = canvas.getContext("2d", { alpha: false });
+            if (!context) {
+                setTargetAnchorImage(null);
+                return;
+            }
+            context.drawImage(
+                video,
+                sourceX,
+                sourceY,
+                cropSize,
+                cropSize,
+                0,
+                0,
+                outputSize,
+                outputSize,
+            );
+            const blob = await new Promise<Blob | null>((resolve) => {
+                canvas.toBlob(resolve, "image/jpeg", 0.82);
+            });
+            if (!blob || blob.size <= 0 || blob.size > 512 * 1024) {
+                setTargetAnchorImage(null);
+                return;
+            }
+            setTargetAnchorImage(blob);
+        } catch {
+            setTargetAnchorImage(null);
+        }
+    }, [videoRef]);
+
     const markTargetAnchorPreset = useCallback((x: number, y: number) => {
-        markTargetAnchor({ x, y, displayX: x, displayY: y });
-    }, [markTargetAnchor]);
+        const nextAnchor = { x, y, displayX: x, displayY: y };
+        markTargetAnchor(nextAnchor);
+        void captureTargetAnchorCrop(nextAnchor);
+    }, [markTargetAnchor, captureTargetAnchorCrop]);
 
     const handleTargetAnchorPointer = useCallback((event: PointerEvent<HTMLDivElement>) => {
         if (busy || (phase !== "preview" && phase !== "recorded")) return;
@@ -187,8 +240,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         }
         const x = Math.max(0, Math.min(1, ((event.clientX - bounds.left) - contentLeft) / contentWidth));
         const y = Math.max(0, Math.min(1, ((event.clientY - bounds.top) - contentTop) / contentHeight));
-        markTargetAnchor({ x, y, displayX, displayY });
-    }, [busy, phase, clipUrl, markTargetAnchor, videoRef]);
+        const nextAnchor = { x, y, displayX, displayY };
+        markTargetAnchor(nextAnchor);
+        void captureTargetAnchorCrop(nextAnchor);
+    }, [busy, phase, clipUrl, markTargetAnchor, captureTargetAnchorCrop, videoRef]);
 
     useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -392,6 +447,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         label: "보호자가 영상 위에서 콕 찍은 분석 대상 강아지",
                     },
                 } : {}),
+                ...(targetAnchorImage ? { targetAnchorImage } : {}),
                 accessToken,
                 signal: controller.signal,
                 requestId,

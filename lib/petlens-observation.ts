@@ -207,6 +207,7 @@ export type PetObservationRequest = {
         y: number;
         label?: string;
     };
+    targetAnchorImage?: Blob;
     accessToken?: string;
     signal?: AbortSignal;
     requestId: string;
@@ -1389,6 +1390,9 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
 
     const form = new FormData();
     form.append("clip", request.clip);
+    if (request.targetAnchorImage && request.targetAnchorImage.size > 0) {
+        form.append("target_anchor_image", request.targetAnchorImage, "daenglab-target-anchor.jpg");
+    }
     form.append("pet_profile_id", String(request.petProfileId));
     form.append("context", JSON.stringify({
         pet_name: request.petName || "우리 아이",

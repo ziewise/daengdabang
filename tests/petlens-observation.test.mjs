@@ -128,6 +128,9 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /handleTargetAnchorPointer/);
     assert.match(experience, /videoRatio > boxRatio/);
     assert.match(experience, /targetAnchorMode/);
+    assert.match(experience, /captureTargetAnchorCrop/);
+    assert.match(experience, /canvas\.toBlob\(resolve, "image\/jpeg", 0\.82\)/);
+    assert.match(experience, /setTargetAnchorImage\(blob\)/);
     assert.match(experience, /data-petlens-connected-devices/);
     assert.match(experience, /data-petlens-video-device/);
     assert.match(experience, /data-petlens-audio-device/);
@@ -211,6 +214,8 @@ test("observation upload is authenticated, abortable, and separate from profile 
     assert.match(api, /petProfileId: number/);
     assert.match(api, /form\.append\("pet_profile_id", String\(request\.petProfileId\)\)/);
     assert.match(api, /targetAnchorMode\?: "none" \| "point" \| "single_dog_auto"/);
+    assert.match(api, /targetAnchorImage\?: Blob/);
+    assert.match(api, /form\.append\("target_anchor_image", request\.targetAnchorImage, "daenglab-target-anchor\.jpg"\)/);
     assert.match(api, /target_anchor_mode: request\.targetAnchorMode/);
     assert.match(api, /target_anchor: \{/);
     assert.match(experience, /targetAnchor: \{[\s\S]*x: targetAnchor\.x,[\s\S]*y: targetAnchor\.y/);
