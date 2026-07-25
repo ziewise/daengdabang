@@ -126,7 +126,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점${targetAnchorImage ? "과 콕 찍은 참조 이미지" : ""}을 분석 대상 힌트로 보냅니다.`
         : targetAnchorMode === "single_dog_auto"
             ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 AI가 보류할 수 있어요."
-            : "분석 전 영상 위에서 대상 아이를 한 번 콕 찍어 주세요.";
+            : "강아지가 한 마리만 보이면 콕 없이 바로 분석해도 돼요. 여러 마리면 몸통·가슴 중앙을 찍어 주세요.";
 
     const publishWallet = useCallback((next: DaengLabWallet) => {
         setWallet(next);
@@ -406,10 +406,6 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
-        if (!targetSelectionReady) {
-            setAnalysisError("분석할 아이를 영상에서 한 번 콕 찍거나 ‘한 마리만 보여요’를 선택해 주세요.");
-            return;
-        }
         if (engineState !== "ready") {
             setAnalysisError("행동·소리·건강 신호 분석 연결을 확인하지 못했어요. 잠시 후 다시 확인해 주세요.");
             return;
@@ -840,14 +836,14 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     <>
                         <div className="pointer-events-none absolute inset-x-3 top-3 rounded-2xl bg-black/60 px-3 py-2 text-white shadow-sm" data-daenglab-target-anchor-guide>
                             <p className="text-xs font-black">
-                                {targetSelectionReady ? "분석할 아이 지정 완료" : "분석할 아이를 영상에서 콕 찍어주세요"}
+                                {targetSelectionReady ? "분석할 아이 지정 완료" : "혼자만 보이면 콕 없이 분석해도 돼요"}
                             </p>
                             <p className="mt-0.5 text-[10px] font-bold leading-4 text-white/75">
                                 {targetAnchor
                                     ? "다른 위치를 누르면 대상 힌트를 다시 잡을 수 있어요."
                                     : targetAnchorMode === "single_dog_auto"
                                         ? "한 마리만 보이는 경우로 분석하되, 실제로 여러 마리면 결과를 보류해요."
-                                        : "여러 아이가 함께 있으면 빨간 점이 찍힌 아이만 대상으로 분석을 시도해요."}
+                                        : "여러 아이가 함께 있으면 얼굴 끝보다 가슴·몸통 중앙을 콕 찍어 주세요."}
                             </p>
                         </div>
                         {targetAnchor && (
@@ -950,8 +946,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         >
                             {analyzing ? (
                                 <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
-                            ) : (
+                            ) : targetSelectionReady ? (
                                 <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
+                            ) : (
+                                <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 혼자 보이면 콕 없이 분석하기 · {analysisCoinCost}C</>
                             )}
                         </button>
                         <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
@@ -1369,15 +1367,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     >
                         <div className="flex flex-wrap items-start justify-between gap-2">
                             <div>
-                                <p className="text-xs font-black text-neutral-800">분석할 아이 콕 지정</p>
+                                <p className="text-xs font-black text-neutral-800">대상견 선택</p>
                                 <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-600">
-                                    다견·사람 소리 섞임에서는 이 힌트를 기준으로 대상견만 분리해요.
+                                    혼자 보이면 선택 없이 분석해도 돼요. 여러 마리면 얼굴보다 가슴·몸통 중앙을 콕 찍어 주세요.
                                 </p>
                             </div>
                             <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${
                                 targetSelectionReady ? "bg-white text-emerald-700" : "bg-white text-amber-700"
                             }`}>
-                                {targetSelectionReady ? "지정됨" : "지정 필요"}
+                                {targetSelectionReady ? "지정됨" : "혼자면 생략 가능"}
                             </span>
                         </div>
                         <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-700" data-daenglab-target-anchor-summary>
@@ -1391,7 +1389,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
                                 data-daenglab-target-anchor-action
                             >
-                                왼쪽 아이
+                                왼쪽 몸통
                             </button>
                             <button
                                 type="button"
@@ -1400,7 +1398,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
                                 data-daenglab-target-anchor-action
                             >
-                                가운데 아이
+                                가운데 몸통
                             </button>
                             <button
                                 type="button"
@@ -1409,7 +1407,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
                                 data-daenglab-target-anchor-action
                             >
-                                오른쪽 아이
+                                오른쪽 몸통
                             </button>
                         </div>
                         <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
@@ -1417,10 +1415,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 type="button"
                                 disabled={busy}
                                 onClick={markSingleDogAuto}
-                                className="rounded-xl border border-emerald-100 bg-white px-3 py-2 text-[11px] font-black text-emerald-700 shadow-sm disabled:opacity-50"
+                                className="rounded-xl border border-emerald-500 bg-emerald-600 px-3 py-2 text-[11px] font-black text-white shadow-sm disabled:opacity-50"
                                 data-daenglab-single-dog-auto
                             >
-                                한 마리만 보여요 · 자동 구분
+                                한 마리만 보여요 · 콕 없이 분석
                             </button>
                             <button
                                 type="button"

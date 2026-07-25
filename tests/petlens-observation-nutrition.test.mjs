@@ -505,6 +505,28 @@ test("v2 parser only opens context translation for attributed target-dog vocaliz
 });
 
 
+test("v2 parser treats one visible dog as the target even when descriptor confidence is weak", async () => {
+    const { parsePetObservationResult } = await observationModule();
+    const payload = v2Payload();
+    Object.assign(payload.quality, {
+        target_status: "ambiguous",
+        target_basis: "uncertain",
+        target_descriptor: "",
+        target_confidence_score: 0.2,
+        visible_dog_count: 1,
+    });
+
+    const result = parsePetObservationResult(payload);
+
+    assert.equal(result.quality.targetStatus, "identified");
+    assert.equal(result.quality.targetBasis, "single_dog");
+    assert.equal(result.quality.targetDescriptor, "영상 속 유일하게 보이는 강아지");
+    assert.equal(result.quality.targetConfidenceScore, 0.72);
+    assert.equal(result.quality.level, "good");
+    assert.ok(result.behaviorCandidates.length > 0);
+});
+
+
 test("v2 parser fails closed when attribution fields are missing or malformed", async () => {
     const { parsePetObservationResult } = await observationModule();
     const payload = v2Payload();

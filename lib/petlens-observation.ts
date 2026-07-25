@@ -691,6 +691,12 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
             targetConfidenceScore = 0;
         } else {
             if (targetStatus === "not_visible") targetStatus = "ambiguous";
+            if (visibleDogCount === 1) {
+                targetStatus = "identified";
+                targetBasis = "single_dog";
+                if (!targetDescriptor) targetDescriptor = "영상 속 유일하게 보이는 강아지";
+                targetConfidenceScore = Math.max(targetConfidenceScore, 0.72);
+            }
             if (targetStatus === "identified") {
                 const singleDogMatch = hasValidVisibleDogCount
                     && visibleDogCount === 1
@@ -705,7 +711,7 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
                         || targetBasis === "guardian_hint"
                         || targetBasis === "visual_audio_sync"
                     );
-                if (!targetDescriptor || (!singleDogMatch && !multipleDogMatch)) {
+                if ((!singleDogMatch && !multipleDogMatch) || (multipleDogMatch && !targetDescriptor)) {
                     targetStatus = "ambiguous";
                     targetBasis = "uncertain";
                 }
@@ -1381,8 +1387,8 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
     const targetAnchorNote = request.targetAnchor
         ? `분석 대상 힌트: 보호자가 영상 기준 가로 ${Math.round(Math.max(0, Math.min(1, request.targetAnchor.x)) * 100)}%, 세로 ${Math.round(Math.max(0, Math.min(1, request.targetAnchor.y)) * 100)}% 지점의 강아지를 콕 찍었습니다.`
         : request.targetAnchorMode === "single_dog_auto"
-            ? "분석 대상 힌트: 보호자가 영상에 강아지가 한 마리만 보인다고 선택했습니다."
-            : "";
+            ? "분석 대상 힌트: 보호자가 영상에 강아지가 한 마리만 보인다고 선택했습니다. 실제 영상에 여러 마리가 보이면 보류해 주세요."
+            : "분석 대상 힌트: 별도 콕 지정이 없으면 영상에 강아지가 한 마리일 때만 그 아이를 분석 대상으로 삼고, 여러 마리가 보이면 보류해 주세요.";
     const ownerNote = [targetAnchorNote, request.note?.trim()]
         .filter(Boolean)
         .join(" ")

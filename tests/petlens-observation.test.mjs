@@ -122,8 +122,9 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /data-daenglab-target-anchor-stage/);
     assert.match(experience, /data-daenglab-target-anchor-guide/);
     assert.match(experience, /data-daenglab-target-anchor-marker/);
-    assert.match(experience, /분석할 아이를 영상에서 콕 찍어주세요/);
-    assert.match(experience, /한 마리만 보여요 · 자동 구분/);
+    assert.match(experience, /혼자만 보이면 콕 없이 분석해도 돼요/);
+    assert.match(experience, /가슴·몸통 중앙을 콕 찍어 주세요/);
+    assert.match(experience, /한 마리만 보여요 · 콕 없이 분석/);
     assert.match(experience, /data-daenglab-target-anchor-picker/);
     assert.match(experience, /handleTargetAnchorPointer/);
     assert.match(experience, /videoRatio > boxRatio/);
@@ -219,7 +220,8 @@ test("observation upload is authenticated, abortable, and separate from profile 
     assert.match(api, /target_anchor_mode: request\.targetAnchorMode/);
     assert.match(api, /target_anchor: \{/);
     assert.match(experience, /targetAnchor: \{[\s\S]*x: targetAnchor\.x,[\s\S]*y: targetAnchor\.y/);
-    assert.match(experience, /분석할 아이를 영상에서 한 번 콕 찍거나 ‘한 마리만 보여요’를 선택/);
+    assert.doesNotMatch(experience, /분석할 아이를 영상에서 한 번 콕 찍거나 ‘한 마리만 보여요’를 선택/);
+    assert.match(api, /별도 콕 지정이 없으면 영상에 강아지가 한 마리일 때만 그 아이를 분석 대상으로 삼고/);
     assert.match(experience, /petProfileId=\{selectedPet\.apiProfileId\}|petProfileId,/);
     assert.match(experience, /petProfileId,/);
     assert.match(api, /mediaRetention: "not_stored"/);
