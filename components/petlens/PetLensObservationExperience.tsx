@@ -123,7 +123,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const busy = analyzing || phase === "requesting" || phase === "recording";
     const targetSelectionReady = targetAnchorMode === "single_dog_auto" || Boolean(targetAnchor);
     const targetAnchorHint = targetAnchor
-        ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점${targetAnchorImage ? "과 작은 참조 crop" : ""}을 분석 대상 힌트로 보냅니다.`
+        ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점${targetAnchorImage ? "과 콕 찍은 참조 이미지" : ""}을 분석 대상 힌트로 보냅니다.`
         : targetAnchorMode === "single_dog_auto"
             ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 AI가 보류할 수 있어요."
             : "분석 전 영상 위에서 대상 아이를 한 번 콕 찍어 주세요.";
