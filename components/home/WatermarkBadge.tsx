@@ -54,8 +54,10 @@ export default function WatermarkBadge({
 }: WatermarkBadgeProps) {
     // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼 ref — 이 크기가 곧 영상 컨테이너 크기
     const wrapRef = useRef<HTMLDivElement>(null);
+    const mobileCueTimerRef = useRef<number | null>(null);
     // 계산된 배지 화면 좌표/크기(px). 중심점 기준(left/top = 워터마크 중심)
     const [box, setBox] = useState<{ left: number; top: number; size: number } | null>(null);
+    const [mobilePetLensCue, setMobilePetLensCue] = useState(false);
 
     useEffect(() => {
         const wrap = wrapRef.current;
@@ -110,6 +112,55 @@ export default function WatermarkBadge({
 
     // onClick 이 있으면 배지를 클릭 가능한 버튼으로 만든다(예: 펫렌즈 실행).
     const interactive = Boolean(onClick);
+    useEffect(() => {
+        if (!interactive) return;
+
+        const clearMobileCue = () => {
+            if (mobileCueTimerRef.current) {
+                window.clearTimeout(mobileCueTimerRef.current);
+                mobileCueTimerRef.current = null;
+            }
+            setMobilePetLensCue(false);
+        };
+
+        const showMobileCue = () => {
+            if (mobileCueTimerRef.current) window.clearTimeout(mobileCueTimerRef.current);
+            setMobilePetLensCue(true);
+            mobileCueTimerRef.current = window.setTimeout(() => {
+                setMobilePetLensCue(false);
+                mobileCueTimerRef.current = null;
+            }, 9000);
+        };
+
+        const handleCue = (event: Event) => {
+            const detail = (event as CustomEvent<{ open?: boolean }>).detail;
+            if (detail?.open === false) {
+                clearMobileCue();
+                return;
+            }
+            showMobileCue();
+        };
+
+        window.addEventListener("ddb:pet-lens-hero-cue", handleCue);
+        return () => {
+            window.removeEventListener("ddb:pet-lens-hero-cue", handleCue);
+            clearMobileCue();
+        };
+    }, [interactive]);
+
+    const clearMobileCueNow = () => {
+        if (mobileCueTimerRef.current) {
+            window.clearTimeout(mobileCueTimerRef.current);
+            mobileCueTimerRef.current = null;
+        }
+        setMobilePetLensCue(false);
+    };
+
+    const handleBadgeClick = () => {
+        clearMobileCueNow();
+        onClick?.();
+    };
+
     return (
         // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼(영역 자체는 클릭 통과)
         <div
@@ -123,10 +174,13 @@ export default function WatermarkBadge({
                 // interactive 면 배지만 pointer-events-auto 로 클릭 받고, hover 확대로 클릭 힌트를 준다.
                 <div
                     data-pet-companion-origin="hero-lens"
+                    data-petlens-mobile-hero-cue={mobilePetLensCue ? "true" : "false"}
                     className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
                         interactive
                             ? " pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-105"
                             : ""
+                    }${
+                        mobilePetLensCue ? " scale-105 ring-4 ring-white/80" : ""
                     }`}
                     style={{
                         left: `${box.left}px`,
@@ -138,13 +192,13 @@ export default function WatermarkBadge({
                     tabIndex={interactive ? 0 : undefined}
                     aria-label={interactive ? "펫렌즈 실행" : undefined}
                     title={interactive ? "펫렌즈 실행" : undefined}
-                    onClick={onClick}
+                    onClick={interactive ? handleBadgeClick : undefined}
                     onKeyDown={
                         interactive
                             ? (e) => {
                                   if (e.key === "Enter" || e.key === " ") {
                                       e.preventDefault();
-                                      onClick?.();
+                                      handleBadgeClick();
                                   }
                               }
                             : undefined
@@ -162,14 +216,18 @@ export default function WatermarkBadge({
                         disablePictureInPicture
                         disableRemotePlayback
                         className={`h-full w-full object-cover${
-                            interactive ? " transition-opacity duration-300 group-hover:opacity-0" : ""
+                            interactive
+                                ? ` transition-opacity duration-300 ${mobilePetLensCue ? "opacity-0" : "group-hover:opacity-0"}`
+                                : ""
                         }`}
                     />
                     {/* hover 오버레이 — 펫렌즈 아이콘(pet-lens.png) 이 원형 배지를 꽉 채운다.
                         평소엔 숨고(opacity-0) hover 시 떠올라 배지가 "펫렌즈 실행" 버튼처럼 보인다.
                         loading=eager: hover 전에 미리 로드해 두어 hover 시 바로 나타난다. */}
                     {interactive && (
-                        <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
+                            mobilePetLensCue ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        }`}>
                             {/* pet-lens.png 의 원(불투명 영역)은 프레임의 ~84%라 투명 여백이 있다.
                                 scale-[1.2] 로 키워 원이 배지 흰 테두리에 딱 닿게 채운다(이중 링 제거). */}
                             <Image

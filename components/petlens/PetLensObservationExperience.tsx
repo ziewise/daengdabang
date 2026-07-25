@@ -85,6 +85,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const consentCheckboxRef = useRef<HTMLInputElement | null>(null);
     const captureActionsRef = useRef<HTMLDivElement | null>(null);
     const capturePrimaryButtonRef = useRef<HTMLButtonElement | null>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const consentGrantedRef = useRef(false);
+    const pendingConsentActionRef = useRef<"camera" | "upload" | null>(null);
     const returnToCaptureAfterConsentRef = useRef(false);
     const [consent, setConsent] = useState(false);
     const [consentPromptOpen, setConsentPromptOpen] = useState(false);
@@ -155,7 +158,11 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     useEffect(() => {
         if (!consentPromptOpen) return;
         const closeOnEscape = (event: KeyboardEvent) => {
-            if (event.key === "Escape") setConsentPromptOpen(false);
+            if (event.key === "Escape") {
+                pendingConsentActionRef.current = null;
+                returnToCaptureAfterConsentRef.current = false;
+                setConsentPromptOpen(false);
+            }
         };
         document.addEventListener("keydown", closeOnEscape);
         return () => document.removeEventListener("keydown", closeOnEscape);
@@ -164,9 +171,19 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     useEffect(() => {
         if (!captureViewportActive) return;
         const previousOverflow = document.body.style.overflow;
+        const previousTouchAction = document.body.style.touchAction;
+        const previousCaptureActive = document.body.dataset.petlensCaptureActive;
         document.body.style.overflow = "hidden";
+        document.body.style.touchAction = "none";
+        document.body.dataset.petlensCaptureActive = "true";
         return () => {
             document.body.style.overflow = previousOverflow;
+            document.body.style.touchAction = previousTouchAction;
+            if (previousCaptureActive === undefined) {
+                delete document.body.dataset.petlensCaptureActive;
+            } else {
+                document.body.dataset.petlensCaptureActive = previousCaptureActive;
+            }
         };
     }, [captureViewportActive]);
 
@@ -439,13 +456,27 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     };
 
     const handleConsentChange = (nextConsent: boolean) => {
+        consentGrantedRef.current = nextConsent;
         setConsent(nextConsent);
         if (!nextConsent) {
+            pendingConsentActionRef.current = null;
             returnToCaptureAfterConsentRef.current = false;
             resetCapture();
             return;
         }
+        const pendingAction = pendingConsentActionRef.current;
+        pendingConsentActionRef.current = null;
         setConsentPromptOpen(false);
+        if (pendingAction === "camera") {
+            returnToCaptureAfterConsentRef.current = false;
+            void startCamera({ orientation: previewOrientation });
+            return;
+        }
+        if (pendingAction === "upload") {
+            returnToCaptureAfterConsentRef.current = false;
+            fileInputRef.current?.click();
+            return;
+        }
         if (!returnToCaptureAfterConsentRef.current) return;
         returnToCaptureAfterConsentRef.current = false;
         window.requestAnimationFrame(() => {
@@ -462,11 +493,22 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     const handleConnectCamera = () => {
         if (!consent) {
-            returnToCaptureAfterConsentRef.current = false;
+            pendingConsentActionRef.current = "camera";
+            returnToCaptureAfterConsentRef.current = true;
             setConsentPromptOpen(true);
             return;
         }
         void startCamera({ orientation: previewOrientation });
+    };
+
+    const handleSelectRecordedVideo = () => {
+        if (!consentGrantedRef.current) {
+            pendingConsentActionRef.current = "upload";
+            returnToCaptureAfterConsentRef.current = true;
+            setConsentPromptOpen(true);
+            return;
+        }
+        fileInputRef.current?.click();
     };
 
     if (result) {
@@ -591,11 +633,12 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 }
                                 resetCapture();
                             }}
-                            className="grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-white/15 px-3 text-xs font-black text-white transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                             data-petlens-close-capture-viewport
                             aria-label={phase === "recording" ? "촬영 중단" : "촬영 화면 닫기"}
                         >
                             <i className="fa-solid fa-xmark" aria-hidden="true" />
+                            <span>{phase === "recording" ? "중단" : "닫기"}</span>
                         </button>
                     </div>
                 </div>
@@ -653,7 +696,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     <button
                         ref={capturePrimaryButtonRef}
                         type="button"
-                        disabled={supported === false || analyzing || !engineReady}
+                        disabled={supported === false || analyzing}
                         onClick={handleConnectCamera}
                         className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
                         data-petlens-connect-camera
@@ -663,34 +706,47 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </button>
                 )}
                 {phase === "requesting" && (
-                    <button
-                        ref={capturePrimaryButtonRef}
-                        type="button"
-                        disabled
-                        className="btn btn-primary min-h-12 justify-center opacity-70"
-                        data-petlens-camera-requesting
-                    >
-                        <i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" />
-                        카메라·마이크 연결 중
-                    </button>
+                    <>
+                        <button
+                            ref={capturePrimaryButtonRef}
+                            type="button"
+                            disabled
+                            className="btn btn-primary min-h-12 justify-center opacity-70"
+                            data-petlens-camera-requesting
+                        >
+                            <i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" />
+                            카메라·마이크 연결 중
+                        </button>
+                        <button
+                            type="button"
+                            onClick={resetCapture}
+                            className="btn btn-secondary min-h-12 justify-center"
+                            data-petlens-cancel-camera-request
+                        >
+                            연결 취소
+                        </button>
+                    </>
                 )}
                 {phase === "preview" && (
                     <>
                         <button
                             ref={capturePrimaryButtonRef}
                             type="button"
-                            disabled={!consent || !engineReady}
+                            disabled={!consent}
                             onClick={startRecording}
                             className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
                             data-petlens-start-observation
                         >
                             <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
                         </button>
-                        {!captureViewportActive && (
-                            <button type="button" onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
-                                연결 끊기
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={resetCapture}
+                            className="btn btn-secondary min-h-12 justify-center"
+                            data-petlens-disconnect-camera
+                        >
+                            연결 끊기
+                        </button>
                     </>
                 )}
                 {phase === "recording" && (
@@ -725,22 +781,30 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </>
                 )}
                 {!captureViewportActive && (
-                    <label
-                        className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent || !engineReady ? "pointer-events-none opacity-50" : ""}`}
-                        aria-disabled={busy || !consent || !engineReady}
-                    >
-                        <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
+                    <>
+                        <button
+                            type="button"
+                            onClick={handleSelectRecordedVideo}
+                            disabled={busy}
+                            className="btn btn-secondary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
+                            data-petlens-select-recorded-video
+                            aria-describedby="daenglab-observation-consent-description"
+                        >
+                            <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
+                        </button>
                         <input
+                            ref={fileInputRef}
                             type="file"
                             accept="video/webm,video/mp4,video/quicktime,video/mov,.webm,.mp4,.mov"
-                            disabled={busy || !consent || !engineReady}
+                            disabled={busy}
                             className="sr-only"
+                            tabIndex={-1}
                             onChange={(event) => {
                                 void selectFile(event.target.files?.[0]);
                                 event.currentTarget.value = "";
                             }}
                         />
-                    </label>
+                    </>
                 )}
             </div>
         </div>
@@ -748,7 +812,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const captureStageInViewport = captureViewportActive && typeof document !== "undefined"
         ? createPortal(
             <div
-                className="fixed inset-0 z-[200] overflow-hidden bg-neutral-950 text-white"
+                className="fixed inset-0 z-[2600] overflow-hidden bg-neutral-950 text-white"
                 data-petlens-capture-viewport
                 data-camera-orientation={previewOrientation}
                 role="dialog"
@@ -766,7 +830,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     return (
         <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
             {consentPromptOpen && (
-                <div className="fixed inset-0 z-[90] grid place-items-center bg-neutral-950/55 p-4" data-daenglab-consent-prompt>
+                <div className="fixed inset-0 z-[2700] grid place-items-center bg-neutral-950/55 p-4" data-daenglab-consent-prompt>
                     <div
                         className="w-full max-w-sm rounded-3xl border border-indigo-100 bg-white p-5 shadow-2xl"
                         role="alertdialog"
@@ -781,14 +845,22 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             먼저 아래 동의 항목을 확인해 주세요
                         </h2>
                         <p id="daenglab-consent-prompt-description" className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                            카메라·마이크를 연결하려면 아래의 영상·음성 분석 동의가 필요합니다.
+                            카메라·마이크 연결이나 촬영한 영상 선택 전에 아래의 영상·음성 분석 동의가 필요합니다.
                             분석한 동영상은 저장되지 않습니다. 분석 중에만 일시 처리됩니다.
                         </p>
                         <div className="mt-5 grid gap-2">
                             <button type="button" onClick={focusConsent} className="btn btn-primary min-h-11 justify-center" autoFocus>
                                 동의 항목 확인하기
                             </button>
-                            <button type="button" onClick={() => setConsentPromptOpen(false)} className="btn btn-secondary min-h-10 justify-center text-xs">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    pendingConsentActionRef.current = null;
+                                    returnToCaptureAfterConsentRef.current = false;
+                                    setConsentPromptOpen(false);
+                                }}
+                                className="btn btn-secondary min-h-10 justify-center text-xs"
+                            >
                                 닫기
                             </button>
                         </div>

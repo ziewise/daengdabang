@@ -351,7 +351,7 @@ export function findPetGuidePrompt({
                 message: hasPetPhoto
                     ? "위의 분홍 카메라를 누르시면 우리 아이 사진을 다시 분석하고 맞춤 추천을 받으실 수 있어요."
                     : "위의 분홍 카메라를 누르고 강아지 사진을 올리시면 견종과 맞춤 상품을 찾아드릴게요!",
-                actionLabel: "펫렌즈 열기",
+                actionLabel: "크레파스로 콕, 펫렌즈 열기",
                 activatesTarget: true,
             };
         }

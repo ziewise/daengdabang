@@ -53,11 +53,36 @@ test("the active behavior and sound launcher opens the real observation camera i
 });
 
 
+test("mobile header PetLens reveals the hero lens cue before opening on the next tap", async () => {
+    const [header, watermark, guide] = await Promise.all([
+        source("components/header/Header.tsx"),
+        source("components/home/WatermarkBadge.tsx"),
+        source("lib/pet-companion-guide.ts"),
+    ]);
+
+    assert.match(header, /mobilePetLensGuideArmed/);
+    assert.match(header, /window\.matchMedia\("\(max-width: 1023px\)"\)\.matches/);
+    assert.match(header, /setMobilePetLensGuideArmed\(true\)/);
+    assert.match(header, /onClick=\{handlePetLensButtonClick\}/);
+    assert.match(header, /data-mobile-petlens-guide-armed/);
+    assert.match(header, /ddb:pet-guide-now/);
+    assert.match(header, /ddb:pet-lens-hero-cue/);
+    assert.match(header, /openPetLensFromHeader/);
+    assert.doesNotMatch(header, /data-mobile-petlens-preview/);
+    assert.match(watermark, /data-petlens-mobile-hero-cue/);
+    assert.match(watermark, /ddb:pet-lens-hero-cue/);
+    assert.match(watermark, /mobilePetLensCue \? "opacity-100" : "opacity-0 group-hover:opacity-100"/);
+    assert.match(guide, /크레파스로 콕, 펫렌즈 열기/);
+});
+
+
 test("live capture uses the 15-second contract, adapts camera orientation, and cleans every local media handle", async () => {
-    const [hook, experience, limits] = await Promise.all([
+    const [hook, experience, limits, header, css] = await Promise.all([
         source("hooks/usePetLensMediaCapture.ts"),
         source("components/petlens/PetLensObservationExperience.tsx"),
         source("lib/petlens-observation-limits.ts"),
+        source("components/header/Header.tsx"),
+        source("app/globals.css"),
     ]);
     assert.match(hook, /navigator\.mediaDevices\.getUserMedia/);
     assert.match(hook, /video:\s*\{/);
@@ -102,6 +127,7 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /data-daenglab-consent-prompt/);
     assert.match(experience, /role="alertdialog"/);
     assert.match(experience, /먼저 아래 동의 항목을 확인해 주세요/);
+    assert.match(experience, /카메라·마이크 연결이나 촬영한 영상 선택 전에/);
     assert.match(experience, /분석한 동영상은 저장되지 않습니다/);
     assert.match(experience, /data-daenglab-observation-limits/);
     assert.match(experience, /\{PET_OBSERVATION_RECORDING_SECONDS\}초/);
@@ -117,10 +143,16 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /captureViewportActive \? "object-contain" : clipUrl \? "object-contain" : "object-cover"/);
     assert.match(experience, /createPortal/);
     assert.match(experience, /data-petlens-capture-viewport/);
+    assert.match(experience, /z-\[2600\]/);
+    assert.match(experience, /z-\[2700\]/);
     assert.match(experience, /h-\[100dvh\]/);
     assert.match(experience, /grid-rows-\[auto_minmax\(0,1fr\)_auto\]/);
     assert.match(experience, /env\(safe-area-inset-bottom\)/);
     assert.match(experience, /document\.body\.style\.overflow = "hidden"/);
+    assert.match(experience, /document\.body\.style\.touchAction = "none"/);
+    assert.match(experience, /document\.body\.dataset\.petlensCaptureActive = "true"/);
+    assert.match(header, /data-site-header/);
+    assert.match(css, /body\[data-petlens-capture-active="true"\] \[data-site-header\]/);
     assert.match(experience, /data-petlens-start-observation/);
     assert.match(experience, /녹화 원본 비율도 같은 방향으로 확인됐어요/);
     assert.match(experience, /녹화본은 다른 비율일 수 있어요/);
@@ -134,8 +166,22 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /capturePrimaryButtonRef\.current\?\.focus/);
     assert.match(experience, /prefers-reduced-motion: reduce/);
     assert.match(experience, /returnToCaptureAfterConsentRef\.current = true/);
-    assert.match(experience, /disabled=\{supported === false \|\| analyzing \|\| !engineReady\}/);
+    assert.match(experience, /pendingConsentActionRef = useRef<"camera" \| "upload" \| null>\(null\)/);
+    assert.match(experience, /pendingConsentActionRef\.current = "camera"/);
+    assert.match(experience, /pendingConsentActionRef\.current = "upload"/);
+    assert.match(experience, /fileInputRef\.current\?\.click\(\)/);
+    assert.match(experience, /disabled=\{supported === false \|\| analyzing\}/);
+    assert.doesNotMatch(experience, /disabled=\{supported === false \|\| analyzing \|\| !engineReady\}/);
     assert.doesNotMatch(experience, /disabled=\{!consent \|\| supported === false \|\| analyzing \|\| !engineReady\}/);
+    assert.match(experience, /data-petlens-select-recorded-video/);
+    assert.match(experience, /ref=\{fileInputRef\}/);
+    assert.match(experience, /disabled=\{busy\}/);
+    assert.doesNotMatch(experience, /disabled=\{busy \|\| !engineReady\}/);
+    assert.doesNotMatch(experience, /pointer-events-none opacity-50/);
+    assert.match(experience, /data-petlens-close-capture-viewport/);
+    assert.match(experience, /"닫기"/);
+    assert.match(experience, /data-petlens-cancel-camera-request/);
+    assert.match(experience, /data-petlens-disconnect-camera/);
     const cameraIndex = experience.indexOf("data-petlens-live-camera");
     const controlsIndex = experience.indexOf("data-petlens-capture-controls");
     const orientationIndex = experience.indexOf("data-petlens-orientation-status");
@@ -400,7 +446,7 @@ test("guardian follow-up answers refine the same owned result without another co
 });
 
 
-test("behavior and sound capture fails closed until the real AI engine reports ready", async () => {
+test("behavior and sound analysis fails closed until the real AI engine reports ready", async () => {
     const [experience, client] = await Promise.all([
         source("components/petlens/PetLensObservationExperience.tsx"),
         source("lib/petlens-observation.ts"),
@@ -411,7 +457,8 @@ test("behavior and sound capture fails closed until the real AI engine reports r
     assert.match(client, /observation_audio_enabled === true/);
     assert.match(experience, /data-daenglab-observation-engine=\{engineState\}/);
     assert.match(experience, /data-daenglab-observation-engine-warning/);
-    assert.match(experience, /disabled=\{supported === false \|\| analyzing \|\| !engineReady\}/);
+    assert.match(experience, /disabled=\{analyzing \|\| !consent \|\| walletLoading \|\| !hasEnoughCoins \|\| !engineReady\}/);
+    assert.match(experience, /disabled=\{supported === false \|\| analyzing\}/);
     assert.match(experience, /if \(!consent\) \{[\s\S]*setConsentPromptOpen\(true\)/);
     assert.match(experience, /engineAbortRef\.current\?\.abort\(\)/);
 });

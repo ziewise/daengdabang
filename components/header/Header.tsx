@@ -33,6 +33,7 @@ export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
+    const [mobilePetLensGuideArmed, setMobilePetLensGuideArmed] = useState(false);
     const { isLoggedIn, hydrated } = useAuth();
     // 장바구니 수량 배지 — StoreContext(useCart) 라인 qty 합. hydrate 전엔 0(SSR 일치)
     const { count: cartCount, hydrated: cartHydrated } = useCart();
@@ -40,9 +41,43 @@ export default function Header() {
     const { open: openPetLens } = usePetLensModal();
     const { t, menuLabel } = useI18n();
 
+    const openPetLensFromHeader = () => {
+        setMobilePetLensGuideArmed(false);
+        window.dispatchEvent(new CustomEvent("ddb:pet-lens-hero-cue", {
+            detail: { open: false },
+        }));
+        openPetLens();
+    };
+
+    const requestMobilePetLensGuide = () => {
+        setMobilePetLensGuideArmed(true);
+        window.dispatchEvent(new CustomEvent("ddb:pet-lens-hero-cue", {
+            detail: { open: true },
+        }));
+        window.dispatchEvent(new CustomEvent("ddb:pet-guide-now", {
+            detail: { id: "pet-lens", force: true },
+        }));
+    };
+
+    const handlePetLensButtonClick = () => {
+        if (window.matchMedia("(max-width: 1023px)").matches) {
+            if (!mobilePetLensGuideArmed) {
+                requestMobilePetLensGuide();
+                return;
+            }
+            openPetLensFromHeader();
+            return;
+        }
+
+        openPetLensFromHeader();
+    };
+
     return (
         <>
-            <header className="fixed inset-x-0 top-0 z-[1000] h-[var(--header-height)] backdrop-blur-xl bg-white/65 border-b border-white/60">
+            <header
+                className="fixed inset-x-0 top-0 z-[1000] h-[var(--header-height)] backdrop-blur-xl bg-white/65 border-b border-white/60"
+                data-site-header
+            >
                 <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-1 px-2 min-[360px]:gap-1.5 sm:gap-6 sm:px-6">
 
                     {/* 로고 */}
@@ -190,8 +225,9 @@ export default function Header() {
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
                             type="button"
-                            onClick={openPetLens}
+                            onClick={handlePetLensButtonClick}
                             data-pet-guide-target="pet-lens"
+                            data-mobile-petlens-guide-armed={mobilePetLensGuideArmed ? "true" : "false"}
                             className="group relative inline-flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px"
                             aria-label="PetLens"
                             title="PetLens"

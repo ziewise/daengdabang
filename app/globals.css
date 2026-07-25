@@ -111,6 +111,12 @@ body {
     font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
+body[data-petlens-capture-active="true"] [data-site-header] {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
 /* 댕다방 로고의 손으로 칠한 듯한 결을 가격 숫자에도 이어 준다. */
 .ddb-sale-price {
     display: inline-block;
