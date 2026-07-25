@@ -179,6 +179,7 @@ export type PetObservationResult = {
     daengLabCoinCost?: number;
     daengLabCoinBalance?: number;
     daengLabCoinRefunded?: boolean;
+    daengLabCoinRefundAmount?: number;
 };
 
 export type PetObservationSituation =
@@ -266,14 +267,25 @@ export class PetObservationRequestError extends Error {
     required?: number;
     balance?: number;
     status?: number;
+    coinRefunded?: boolean;
+    refundAmount?: number;
 
-    constructor(message: string, options: { code?: string; required?: number; balance?: number; status?: number } = {}) {
+    constructor(message: string, options: {
+        code?: string;
+        required?: number;
+        balance?: number;
+        status?: number;
+        coinRefunded?: boolean;
+        refundAmount?: number;
+    } = {}) {
         super(message);
         this.name = "PetObservationRequestError";
         this.code = options.code;
         this.required = options.required;
         this.balance = options.balance;
         this.status = options.status;
+        this.coinRefunded = options.coinRefunded;
+        this.refundAmount = options.refundAmount;
     }
 }
 
@@ -1077,8 +1089,13 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
 
     const coinCostValue = Number(raw.daenglab_coin_cost ?? raw.daengLabCoinCost);
     const coinBalanceValue = Number(raw.daenglab_coin_balance ?? raw.daengLabCoinBalance);
+    const coinRefundAmountValue = Number(
+        raw.daenglab_coin_refund_amount ?? raw.daengLabCoinRefundAmount,
+    );
     const hasCoinCost = Number.isFinite(coinCostValue) && coinCostValue >= 0;
     const hasCoinBalance = Number.isFinite(coinBalanceValue) && coinBalanceValue >= 0;
+    const hasCoinRefundAmount = Number.isFinite(coinRefundAmountValue)
+        && coinRefundAmountValue > 0;
     const followUpQuestions = koreanLines(raw.follow_up_questions ?? raw.followUpQuestions, 5, 160);
     const guardianFollowUpAnswers = guardianAnswers(
         raw.guardian_follow_up_answers ?? raw.guardianFollowUpAnswers,
@@ -1176,6 +1193,9 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
         ...(hasCoinBalance ? { daengLabCoinBalance: coinBalanceValue } : {}),
         ...((raw.daenglab_coin_refunded ?? raw.daengLabCoinRefunded) === true
             ? { daengLabCoinRefunded: true }
+            : {}),
+        ...(hasCoinRefundAmount
+            ? { daengLabCoinRefundAmount: coinRefundAmountValue }
             : {}),
     };
 }
@@ -1404,23 +1424,55 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         let code: string | undefined;
         let required: number | undefined;
         let balance: number | undefined;
+        let coinRefunded: boolean | undefined;
+        let refundAmount: number | undefined;
         try {
             const body = await response.clone().json() as {
-                detail?: unknown | { code?: unknown; message?: unknown; required?: unknown; balance?: unknown };
+                detail?: unknown | {
+                    code?: unknown;
+                    message?: unknown;
+                    required?: unknown;
+                    balance?: unknown;
+                    daenglab_coin_refunded?: unknown;
+                    daenglab_coin_refund_amount?: unknown;
+                    daenglab_coin_balance?: unknown;
+                };
             };
             if (typeof body.detail === "string" && body.detail.trim()) message = body.detail.trim();
             if (body.detail && typeof body.detail === "object") {
-                const detail = body.detail as { code?: unknown; message?: unknown; required?: unknown; balance?: unknown };
+                const detail = body.detail as {
+                    code?: unknown;
+                    message?: unknown;
+                    required?: unknown;
+                    balance?: unknown;
+                    daenglab_coin_refunded?: unknown;
+                    daenglab_coin_refund_amount?: unknown;
+                    daenglab_coin_balance?: unknown;
+                };
                 if (typeof detail.message === "string" && detail.message.trim()) message = detail.message.trim();
                 if (typeof detail.code === "string") code = detail.code;
                 if (typeof detail.required === "number") required = detail.required;
                 if (typeof detail.balance === "number") balance = detail.balance;
+                if (typeof detail.daenglab_coin_balance === "number") {
+                    balance = detail.daenglab_coin_balance;
+                }
+                if (detail.daenglab_coin_refunded === true) coinRefunded = true;
+                if (typeof detail.daenglab_coin_refund_amount === "number") {
+                    refundAmount = detail.daenglab_coin_refund_amount;
+                }
             }
         } catch {
             // Keep the customer-safe fallback.
         }
         if (response.status === 401) message = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
-        throw new PetObservationRequestError(message, { code, required, balance, status: response.status });
+        throw new PetObservationRequestError(message, {
+            code,
+            required,
+            balance,
+            status: response.status,
+            coinRefunded,
+            refundAmount,
+        });
     }
     return parsePetObservationResult(await response.json());
 }

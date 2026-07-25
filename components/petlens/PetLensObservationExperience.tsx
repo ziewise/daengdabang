@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import {
     analyzePetObservation,
     cancelPetObservationQueueWait,
@@ -92,6 +93,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [analyzing, setAnalyzing] = useState(false);
     const [cancelingWait, setCancelingWait] = useState(false);
     const [analysisError, setAnalysisError] = useState("");
+    const [refundNotice, setRefundNotice] = useState("");
     const [queueStatus, setQueueStatus] = useState<PetObservationQueueStatus | null>(null);
     const [previewOrientation, setPreviewOrientation] = useState<"portrait" | "landscape">("landscape");
     const [result, setResult] = useState<PetObservationResult | null>(null);
@@ -102,6 +104,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [engineState, setEngineState] = useState<"checking" | "ready" | "unavailable">("checking");
     const [history, setHistory] = useState<PetObservationHistoryItem[]>([]);
     const [historyLoading, setHistoryLoading] = useState(true);
+    const captureViewportActive = phase === "requesting" || phase === "preview" || phase === "recording";
 
     const publishWallet = useCallback((next: DaengLabWallet) => {
         setWallet(next);
@@ -157,6 +160,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         document.addEventListener("keydown", closeOnEscape);
         return () => document.removeEventListener("keydown", closeOnEscape);
     }, [consentPromptOpen]);
+
+    useEffect(() => {
+        if (!captureViewportActive) return;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [captureViewportActive]);
 
     const refreshEngine = useCallback(async () => {
         engineAbortRef.current?.abort();
@@ -260,6 +272,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         setAnalyzing(true);
         setCancelingWait(false);
         setAnalysisError("");
+        setRefundNotice("");
         setQueueStatus(null);
         trackStorefrontEvent("petlens_started", { mode: "observation", surface: variant });
         try {
@@ -307,7 +320,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             }
             const insufficient = reason instanceof PetObservationRequestError
                 && reason.code === "daenglab_coin_insufficient";
-            if (insufficient && typeof reason.balance === "number") {
+            const refunded = reason instanceof PetObservationRequestError
+                && reason.coinRefunded === true;
+            if (reason instanceof PetObservationRequestError && typeof reason.balance === "number") {
                 const currentWallet = wallet;
                 publishWallet({
                     ...currentWallet,
@@ -317,11 +332,22 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             } else {
                 void refreshWallet();
             }
+            if (refunded) {
+                const refundAmount = reason.refundAmount ?? wallet.analysisCoinCost;
+                const currentBalance = typeof reason.balance === "number"
+                    ? ` 현재 잔액은 ${reason.balance}C예요.`
+                    : "";
+                setRefundNotice(
+                    `분석을 완료하지 못해 비용 ${refundAmount}C를 전액 자동 환급했습니다.${currentBalance}`,
+                );
+            }
             if (reason instanceof PetObservationRequestError) requestIdRef.current = null;
             trackStorefrontEvent("petlens_failed", {
                 mode: "observation",
                 surface: variant,
-                errorCode: insufficient ? "daenglab_coin_insufficient" : "analysis_failed",
+                errorCode: insufficient
+                    ? "daenglab_coin_insufficient"
+                    : refunded ? "analysis_failed_refunded" : "analysis_failed",
             });
             setAnalysisError(
                 reason instanceof PetObservationRequestError
@@ -384,6 +410,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         abortRef.current = null;
         setAnalyzing(false);
         setAnalysisError("");
+        setRefundNotice("");
         setQueueStatus(null);
         setResult(null);
         setResultRequestId(undefined);
@@ -395,6 +422,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         abortRef.current?.abort();
         setAnalyzing(false);
         setAnalysisError("");
+        setRefundNotice("");
         setQueueStatus(null);
         resetCapture();
         setResult(item.result);
@@ -443,6 +471,17 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     if (result) {
         const resultCoinCost = result.daengLabCoinCost ?? wallet?.analysisCoinCost ?? 10;
+        const resultRefundAmount = result.daengLabCoinRefundAmount
+            ?? wallet?.analysisCoinCost
+            ?? 10;
+        const currentCoinBalance = wallet?.daengLabCoins ?? result.daengLabCoinBalance;
+        const refundReason = result.quality.targetStatus === "ambiguous"
+            ? "여러 강아지 중 분석 대상을 안정적으로 구분하지 못해"
+            : result.status === "no_dog"
+                ? "영상에서 분석할 강아지를 확인하지 못해"
+                : result.status === "no_evidence"
+                    ? "분석에 사용할 행동·소리 근거가 충분하지 않아"
+                    : "신뢰할 수 있는 분석 결과를 만들지 못해";
         return (
             <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -463,23 +502,31 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <i className="fa-solid fa-video mr-1.5 text-[10px]" /> 새로 관찰
                     </button>
                 </div>
-                {typeof result.daengLabCoinBalance === "number" && (
-                    <div className={`rounded-xl border px-3 py-2 text-xs font-black ${
-                        result.daengLabCoinRefunded
-                            ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                            : "border-indigo-100 bg-indigo-50 text-indigo-800"
-                    }`} role="status">
-                        {result.daengLabCoinRefunded ? (
-                            <>
-                                분석이 어려운 영상이라 <DaengLabCoinMark compact className="mx-0.5" /> {resultCoinCost}C를 자동으로 돌려드렸어요. 현재 {result.daengLabCoinBalance}C
-                            </>
-                        ) : (
-                            <>
-                                <DaengLabCoinMark compact className="mr-0.5" /> {resultCoinCost}C 사용 · 현재 {result.daengLabCoinBalance}C
-                            </>
-                        )}
+                {result.daengLabCoinRefunded ? (
+                    <div
+                        className="flex items-start gap-3 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-emerald-950 shadow-sm"
+                        role="alert"
+                        aria-live="assertive"
+                        data-daenglab-refund-notice
+                    >
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-600 text-white" aria-hidden="true">
+                            <i className="fa-solid fa-rotate-left" />
+                        </span>
+                        <div>
+                            <p className="text-sm font-black">
+                                분석 비용 <DaengLabCoinMark compact className="mx-0.5" /> {resultRefundAmount}C 전액 환급 완료
+                            </p>
+                            <p className="mt-1 text-xs font-bold leading-5 text-emerald-800">
+                                {refundReason} 코인을 다시 돌려드렸어요.
+                                {typeof currentCoinBalance === "number" ? ` 현재 잔액은 ${currentCoinBalance}C예요.` : ""}
+                            </p>
+                        </div>
                     </div>
-                )}
+                ) : typeof currentCoinBalance === "number" ? (
+                    <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-2 text-xs font-black text-indigo-800" role="status">
+                        <DaengLabCoinMark compact className="mr-0.5" /> {resultCoinCost}C 사용 · 현재 {currentCoinBalance}C
+                    </div>
+                ) : null}
                 <PetLensObservationResult result={result} />
                 <PetLensObservationFollowUp
                     result={result}
@@ -505,6 +552,216 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         || (facingMode === "environment" ? "후면·기본 카메라" : "전면 카메라");
     const selectedMicrophoneLabel = audioDevices.find((device) => device.deviceId === selectedAudioDeviceId)?.label
         || "기본 마이크";
+    const captureStage = (
+        <div
+            className={captureViewportActive
+                ? "grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-2"
+                : "grid gap-3"}
+            data-petlens-capture-stage
+            data-capture-viewport-active={captureViewportActive ? "true" : "false"}
+        >
+            {captureViewportActive && (
+                <div className="flex min-w-0 items-center justify-between gap-2 rounded-2xl bg-white/10 px-3 py-2 text-white">
+                    <div className="min-w-0">
+                        <p className="truncate text-xs font-black">
+                            {phase === "recording" ? `${pet.name} 관찰 녹화 중` : `${pet.name} 촬영 준비`}
+                        </p>
+                        <p className="truncate text-[10px] font-bold text-white/65">
+                            {previewOrientation === "portrait" ? "세로 화면" : "가로 화면"} · {selectedCameraLabel}
+                        </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                        {phase === "preview" && (
+                            <button
+                                type="button"
+                                onClick={() => void switchCamera()}
+                                className="grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                                data-petlens-viewport-switch-camera
+                                aria-label={videoDevices.length > 1 ? "다음 카메라로 전환" : "전·후면 카메라 전환"}
+                            >
+                                <i className="fa-solid fa-rotate text-xs" aria-hidden="true" />
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (phase === "recording") {
+                                    cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.");
+                                    return;
+                                }
+                                resetCapture();
+                            }}
+                            className="grid h-10 w-10 place-items-center rounded-full bg-white/15 text-white transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            data-petlens-close-capture-viewport
+                            aria-label={phase === "recording" ? "촬영 중단" : "촬영 화면 닫기"}
+                        >
+                            <i className="fa-solid fa-xmark" aria-hidden="true" />
+                        </button>
+                    </div>
+                </div>
+            )}
+            <div
+                className={`relative w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 transition-[aspect-ratio,max-width] duration-300 ${
+                    captureViewportActive
+                        ? "min-h-0"
+                        : previewOrientation === "portrait"
+                            ? "mx-auto aspect-[3/4] max-w-xl"
+                            : "aspect-video"
+                }`}
+                data-petlens-live-camera
+                data-camera-orientation={previewOrientation}
+            >
+                <video
+                    ref={videoRef}
+                    src={clipUrl || undefined}
+                    autoPlay={!clipUrl}
+                    muted={!clipUrl}
+                    controls={Boolean(clipUrl)}
+                    playsInline
+                    className={`h-full w-full ${captureViewportActive ? "object-contain" : clipUrl ? "object-contain" : "object-cover"} ${phase === "preview" || phase === "recording" || clipUrl ? "block" : "invisible"}`}
+                />
+                {phase !== "preview" && phase !== "recording" && !clipUrl && (
+                    <div
+                        className="absolute inset-0 grid place-items-center p-4 text-center text-white sm:p-6"
+                        role={phase === "requesting" ? "status" : undefined}
+                        aria-live={phase === "requesting" ? "polite" : undefined}
+                    >
+                        <div>
+                            <i className="fa-solid fa-camera text-3xl text-white/70" aria-hidden="true" />
+                            <p className="mt-3 text-sm font-black">
+                                {phase === "requesting" ? "카메라·마이크 권한을 기다리는 중" : "카메라를 연결하면 여기에 미리보기가 나와요"}
+                            </p>
+                            <p className="mt-1 text-[11px] font-bold text-white/60">강아지 옆면과 가슴 움직임이 함께 보이게 해주세요.</p>
+                        </div>
+                    </div>
+                )}
+                {phase === "recording" && (
+                    <div className="absolute inset-x-3 top-3 flex items-center justify-between rounded-full bg-black/65 px-4 py-2 text-white" role="status" aria-live="polite">
+                        <span className="inline-flex items-center gap-2 text-xs font-black">
+                            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-500" /> 녹화 중
+                        </span>
+                        <span className="text-sm font-black">{secondsLeft}초</span>
+                    </div>
+                )}
+            </div>
+            <div
+                ref={captureActionsRef}
+                className={captureViewportActive ? "grid shrink-0 gap-2" : "grid gap-2 sm:grid-cols-2"}
+                data-petlens-capture-controls
+            >
+                {(phase === "idle" || phase === "error") && (
+                    <button
+                        ref={capturePrimaryButtonRef}
+                        type="button"
+                        disabled={supported === false || analyzing || !engineReady}
+                        onClick={handleConnectCamera}
+                        className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
+                        data-petlens-connect-camera
+                        aria-describedby="daenglab-observation-consent-description"
+                    >
+                        <i className="fa-solid fa-camera mr-2 text-xs" /> 카메라·마이크 연결
+                    </button>
+                )}
+                {phase === "requesting" && (
+                    <button
+                        ref={capturePrimaryButtonRef}
+                        type="button"
+                        disabled
+                        className="btn btn-primary min-h-12 justify-center opacity-70"
+                        data-petlens-camera-requesting
+                    >
+                        <i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" />
+                        카메라·마이크 연결 중
+                    </button>
+                )}
+                {phase === "preview" && (
+                    <>
+                        <button
+                            ref={capturePrimaryButtonRef}
+                            type="button"
+                            disabled={!consent || !engineReady}
+                            onClick={startRecording}
+                            className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
+                            data-petlens-start-observation
+                        >
+                            <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
+                        </button>
+                        {!captureViewportActive && (
+                            <button type="button" onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
+                                연결 끊기
+                            </button>
+                        )}
+                    </>
+                )}
+                {phase === "recording" && (
+                    <button
+                        ref={capturePrimaryButtonRef}
+                        type="button"
+                        onClick={() => cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.")}
+                        className="btn btn-secondary min-h-12 justify-center"
+                    >
+                        촬영 중단
+                    </button>
+                )}
+                {phase === "recorded" && (
+                    <>
+                        <button
+                            ref={capturePrimaryButtonRef}
+                            type="button"
+                            disabled={analyzing || !consent || walletLoading || !hasEnoughCoins || !engineReady}
+                            onClick={() => void analyze()}
+                            className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
+                            data-petlens-analyze-observation
+                        >
+                            {analyzing ? (
+                                <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
+                            ) : (
+                                <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
+                            )}
+                        </button>
+                        <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
+                            다시 촬영
+                        </button>
+                    </>
+                )}
+                {!captureViewportActive && (
+                    <label
+                        className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent || !engineReady ? "pointer-events-none opacity-50" : ""}`}
+                        aria-disabled={busy || !consent || !engineReady}
+                    >
+                        <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
+                        <input
+                            type="file"
+                            accept="video/webm,video/mp4,video/quicktime,video/mov,.webm,.mp4,.mov"
+                            disabled={busy || !consent || !engineReady}
+                            className="sr-only"
+                            onChange={(event) => {
+                                void selectFile(event.target.files?.[0]);
+                                event.currentTarget.value = "";
+                            }}
+                        />
+                    </label>
+                )}
+            </div>
+        </div>
+    );
+    const captureStageInViewport = captureViewportActive && typeof document !== "undefined"
+        ? createPortal(
+            <div
+                className="fixed inset-0 z-[200] overflow-hidden bg-neutral-950 text-white"
+                data-petlens-capture-viewport
+                data-camera-orientation={previewOrientation}
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${pet.name} 행동·소리 관찰 촬영`}
+            >
+                <div className="mx-auto h-[100dvh] w-full max-w-6xl px-[max(.5rem,env(safe-area-inset-left))] pb-[max(.75rem,env(safe-area-inset-bottom))] pt-[max(.5rem,env(safe-area-inset-top))]">
+                    {captureStage}
+                </div>
+            </div>,
+            document.body,
+        )
+        : captureStage;
 
     return (
         <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
@@ -672,143 +929,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
             <div className={`grid gap-4 ${compact ? "" : "lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,.8fr)]"}`}>
                 <div className="grid gap-3">
-                    <div
-                        className={`relative w-full overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 transition-[aspect-ratio,max-width] duration-300 ${
-                            previewOrientation === "portrait"
-                                ? "mx-auto aspect-[3/4] max-w-xl"
-                                : "aspect-video"
-                        }`}
-                        data-petlens-live-camera
-                        data-camera-orientation={previewOrientation}
-                    >
-                        <video
-                            ref={videoRef}
-                            src={clipUrl || undefined}
-                            autoPlay={!clipUrl}
-                            muted={!clipUrl}
-                            controls={Boolean(clipUrl)}
-                            playsInline
-                            className={`h-full w-full ${clipUrl ? "object-contain" : "object-cover"} ${phase === "preview" || phase === "recording" || clipUrl ? "block" : "invisible"}`}
-                        />
-                        {phase !== "preview" && phase !== "recording" && !clipUrl && (
-                            <div
-                                className="absolute inset-0 grid place-items-center p-6 text-center text-white"
-                                role={phase === "requesting" ? "status" : undefined}
-                                aria-live={phase === "requesting" ? "polite" : undefined}
-                            >
-                                <div>
-                                    <i className="fa-solid fa-camera text-3xl text-white/70" aria-hidden="true" />
-                                    <p className="mt-3 text-sm font-black">
-                                        {phase === "requesting" ? "카메라·마이크 권한을 기다리는 중" : "카메라를 연결하면 여기에 미리보기가 나와요"}
-                                    </p>
-                                    <p className="mt-1 text-[11px] font-bold text-white/60">강아지 옆면과 가슴 움직임이 함께 보이게 해주세요.</p>
-                                </div>
-                            </div>
-                        )}
-                        {phase === "recording" && (
-                            <div className="absolute inset-x-3 top-3 flex items-center justify-between rounded-full bg-black/65 px-4 py-2 text-white" role="status" aria-live="polite">
-                                <span className="inline-flex items-center gap-2 text-xs font-black">
-                                    <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-500" /> 녹화 중
-                                </span>
-                                <span className="text-sm font-black">{secondsLeft}초</span>
-                            </div>
-                        )}
-                    </div>
-                    <div
-                        ref={captureActionsRef}
-                        className="grid gap-2 sm:grid-cols-2"
-                        data-petlens-capture-controls
-                    >
-                        {(phase === "idle" || phase === "error") && (
-                            <button
-                                ref={capturePrimaryButtonRef}
-                                type="button"
-                                disabled={supported === false || analyzing || !engineReady}
-                                onClick={handleConnectCamera}
-                                className="btn btn-primary min-h-12 justify-center disabled:cursor-not-allowed disabled:opacity-50"
-                                data-petlens-connect-camera
-                                aria-describedby="daenglab-observation-consent-description"
-                            >
-                                <i className="fa-solid fa-camera mr-2 text-xs" /> 카메라·마이크 연결
-                            </button>
-                        )}
-                        {phase === "requesting" && (
-                            <button
-                                ref={capturePrimaryButtonRef}
-                                type="button"
-                                disabled
-                                className="btn btn-primary min-h-12 justify-center opacity-70"
-                                data-petlens-camera-requesting
-                            >
-                                <i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" />
-                                카메라·마이크 연결 중
-                            </button>
-                        )}
-                        {phase === "preview" && (
-                            <>
-                                <button
-                                    ref={capturePrimaryButtonRef}
-                                    type="button"
-                                    disabled={!consent || !engineReady}
-                                    onClick={startRecording}
-                                    className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
-                                    data-petlens-start-observation
-                                >
-                                    <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
-                                </button>
-                                <button type="button" onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
-                                    연결 끊기
-                                </button>
-                            </>
-                        )}
-                        {phase === "recording" && (
-                            <button
-                                ref={capturePrimaryButtonRef}
-                                type="button"
-                                onClick={() => cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.")}
-                                className="btn btn-secondary min-h-12 justify-center"
-                            >
-                                촬영 중단
-                            </button>
-                        )}
-                        {phase === "recorded" && (
-                            <>
-                                <button
-                                    ref={capturePrimaryButtonRef}
-                                    type="button"
-                                    disabled={analyzing || !consent || walletLoading || !hasEnoughCoins || !engineReady}
-                                    onClick={() => void analyze()}
-                                    className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
-                                    data-petlens-analyze-observation
-                                >
-                                    {analyzing ? (
-                                        <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
-                                    ) : (
-                                        <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
-                                    )}
-                                </button>
-                                <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
-                                    다시 촬영
-                                </button>
-                            </>
-                        )}
-                        <label
-                            className={`btn btn-secondary min-h-12 cursor-pointer justify-center ${busy || !consent || !engineReady ? "pointer-events-none opacity-50" : ""}`}
-                            aria-disabled={busy || !consent || !engineReady}
-                        >
-                            <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
-                            <input
-                                type="file"
-                                accept="video/webm,video/mp4,video/quicktime,video/mov,.webm,.mp4,.mov"
-                                disabled={busy || !consent || !engineReady}
-                                className="sr-only"
-                                onChange={(event) => {
-                                    void selectFile(event.target.files?.[0]);
-                                    event.currentTarget.value = "";
-                                }}
-                            />
-                        </label>
-                    </div>
+                    {captureStageInViewport}
                     <p
                         className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[10px] font-bold leading-4 text-neutral-600"
                         data-petlens-orientation-status={previewOrientation}
@@ -897,6 +1018,20 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold leading-5 text-rose-700" role="alert">
                             {analysisError}
                         </p>
+                    )}
+                    {refundNotice && (
+                        <div
+                            className="rounded-xl border-2 border-emerald-300 bg-emerald-50 px-4 py-3 text-emerald-950 shadow-sm"
+                            role="alert"
+                            aria-live="assertive"
+                            data-daenglab-refund-notice
+                        >
+                            <p className="text-sm font-black">
+                                <i className="fa-solid fa-rotate-left mr-2" aria-hidden="true" />
+                                분석 비용 전액 환급 완료
+                            </p>
+                            <p className="mt-1 text-xs font-bold leading-5 text-emerald-800">{refundNotice}</p>
+                        </div>
                     )}
                     {analyzing && (
                         <div
@@ -995,6 +1130,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         />
                         <span id="daenglab-observation-consent-description" className="text-[11px] font-bold leading-5 text-neutral-700">
                             촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리되는 데 동의합니다.
+                            여러 강아지가 함께 보이면 선택한 반려견의 등록 사진 최대 2장과 털색을 대상 구분에만 함께 참고합니다.
                             원본은 댕다방 서버에 저장하지 않으며 분석이 끝나면 브라우저에서도 비웁니다.{" "}
                             <Link href="/privacy#overseas" className="underline underline-offset-2">개인정보 처리 자세히 보기</Link>
                         </span>

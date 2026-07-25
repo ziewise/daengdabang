@@ -61,10 +61,14 @@ test("behavior and sound analysis shows, enforces, and refreshes the ten-coin co
     assert.match(experience, /const requestId = requestIdRef\.current \|\| analysisRequestId\(\)/);
     assert.match(experience, /requestIdRef\.current = requestId/);
     assert.match(experience, /daenglab_coin_insufficient/);
+    assert.match(experience, /reason\.coinRefunded === true/);
+    assert.match(experience, /analysis_failed_refunded/);
+    assert.match(experience, /분석 비용 전액 환급 완료/);
     assert.match(observationApi, /form\.append\("request_id", request\.requestId\)/);
     assert.match(observationApi, /PetObservationRequestError/);
     assert.match(observationApi, /daenglab_coin_balance/);
     assert.match(observationApi, /daenglab_coin_refunded/);
+    assert.match(observationApi, /daenglab_coin_refund_amount/);
 });
 
 test("the local demo checkout never mints a server wallet balance", async () => {

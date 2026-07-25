@@ -114,7 +114,14 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /navigator\.maxTouchPoints > 0/);
     assert.match(experience, /window\.visualViewport\?\.addEventListener\("resize", updateOrientation\)/);
     assert.match(experience, /phase === "recording"/);
-    assert.match(experience, /clipUrl \? "object-contain" : "object-cover"/);
+    assert.match(experience, /captureViewportActive \? "object-contain" : clipUrl \? "object-contain" : "object-cover"/);
+    assert.match(experience, /createPortal/);
+    assert.match(experience, /data-petlens-capture-viewport/);
+    assert.match(experience, /h-\[100dvh\]/);
+    assert.match(experience, /grid-rows-\[auto_minmax\(0,1fr\)_auto\]/);
+    assert.match(experience, /env\(safe-area-inset-bottom\)/);
+    assert.match(experience, /document\.body\.style\.overflow = "hidden"/);
+    assert.match(experience, /data-petlens-start-observation/);
     assert.match(experience, /녹화 원본 비율도 같은 방향으로 확인됐어요/);
     assert.match(experience, /녹화본은 다른 비율일 수 있어요/);
     assert.match(experience, /촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지/);
@@ -187,6 +194,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(experience, /checked=\{consent\}/);
     assert.doesNotMatch(experience, /Gemini|Google LLC/);
     assert.match(experience, /촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리/);
+    assert.match(experience, /등록 사진 최대 2장과 털색을 대상 구분에만 함께 참고/);
     assert.match(experience, /원본은 댕다방 서버에 저장하지 않/);
     assert.match(experience, /privacyConsent: consent/);
     assert.match(experience, /resetCapture\(\);/);

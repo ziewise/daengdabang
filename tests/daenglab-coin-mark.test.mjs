@@ -32,10 +32,12 @@ test("DaengLab coin uses one accessible crayon signature across customer surface
     }
 });
 
-test("analysis refund copy follows the charged coin cost instead of a hard-coded amount", async () => {
+test("analysis refund copy uses the explicit refund amount and current wallet balance", async () => {
     const experience = await source("components/petlens/PetLensObservationExperience.tsx");
 
-    assert.match(experience, /const resultCoinCost = result\.daengLabCoinCost \?\? wallet\?\.analysisCoinCost \?\? 10/);
-    assert.match(experience, /\{resultCoinCost\}C를 자동으로 돌려드렸어요/);
-    assert.doesNotMatch(experience, /영상이라 10C를 자동으로/);
+    assert.match(experience, /const resultRefundAmount = result\.daengLabCoinRefundAmount/);
+    assert.match(experience, /const currentCoinBalance = wallet\?\.daengLabCoins \?\? result\.daengLabCoinBalance/);
+    assert.match(experience, /\{resultRefundAmount\}C 전액 환급 완료/);
+    assert.match(experience, /data-daenglab-refund-notice/);
+    assert.doesNotMatch(experience, /\{resultCoinCost\}C를 자동으로 돌려드렸어요/);
 });
