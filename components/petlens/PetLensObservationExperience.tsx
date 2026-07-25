@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import {
@@ -41,6 +41,15 @@ const SITUATIONS: Array<{ value: PetObservationSituation; label: string }> = [
     { value: "rest", label: "쉬거나 자는 중" },
     { value: "other", label: "그 밖의 상황" },
 ];
+
+type TargetAnchor = {
+    x: number;
+    y: number;
+    displayX: number;
+    displayY: number;
+};
+
+type TargetAnchorMode = "none" | "point" | "single_dog_auto";
 
 function analysisRequestId() {
     if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
@@ -101,6 +110,8 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [previewOrientation, setPreviewOrientation] = useState<"portrait" | "landscape">("landscape");
     const [result, setResult] = useState<PetObservationResult | null>(null);
     const [resultRequestId, setResultRequestId] = useState<string>();
+    const [targetAnchor, setTargetAnchor] = useState<TargetAnchor | null>(null);
+    const [targetAnchorMode, setTargetAnchorMode] = useState<TargetAnchorMode>("none");
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [walletLoading, setWalletLoading] = useState(true);
     const [walletError, setWalletError] = useState("");
@@ -108,11 +119,76 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [history, setHistory] = useState<PetObservationHistoryItem[]>([]);
     const [historyLoading, setHistoryLoading] = useState(true);
     const captureViewportActive = phase === "requesting" || phase === "preview" || phase === "recording";
+    const busy = analyzing || phase === "requesting" || phase === "recording";
+    const targetSelectionReady = targetAnchorMode === "single_dog_auto" || Boolean(targetAnchor);
+    const targetAnchorHint = targetAnchor
+        ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점을 분석 대상 힌트로 보냅니다.`
+        : targetAnchorMode === "single_dog_auto"
+            ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 AI가 보류할 수 있어요."
+            : "분석 전 영상 위에서 대상 아이를 한 번 콕 찍어 주세요.";
 
     const publishWallet = useCallback((next: DaengLabWallet) => {
         setWallet(next);
         window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next }));
     }, []);
+
+    const clearTargetSelection = useCallback(() => {
+        setTargetAnchor(null);
+        setTargetAnchorMode("none");
+    }, []);
+
+    const resetObservationCapture = useCallback(() => {
+        clearTargetSelection();
+        resetCapture();
+    }, [clearTargetSelection, resetCapture]);
+
+    const markSingleDogAuto = useCallback(() => {
+        setTargetAnchor(null);
+        setTargetAnchorMode("single_dog_auto");
+        setAnalysisError("");
+    }, []);
+
+    const markTargetAnchor = useCallback((next: TargetAnchor) => {
+        setTargetAnchor(next);
+        setTargetAnchorMode("point");
+        setAnalysisError("");
+        trackStorefrontEvent("petlens_target_anchor_selected", { mode: "observation", surface: variant });
+    }, [variant]);
+
+    const markTargetAnchorPreset = useCallback((x: number, y: number) => {
+        markTargetAnchor({ x, y, displayX: x, displayY: y });
+    }, [markTargetAnchor]);
+
+    const handleTargetAnchorPointer = useCallback((event: PointerEvent<HTMLDivElement>) => {
+        if (busy || (phase !== "preview" && phase !== "recorded")) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (bounds.width <= 0 || bounds.height <= 0) return;
+        if (clipUrl && event.clientY > bounds.bottom - 48) return;
+
+        const displayX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+        const displayY = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+        const video = videoRef.current;
+        let contentLeft = 0;
+        let contentTop = 0;
+        let contentWidth = bounds.width;
+        let contentHeight = bounds.height;
+        const intrinsicWidth = video?.videoWidth || 0;
+        const intrinsicHeight = video?.videoHeight || 0;
+        if (intrinsicWidth > 0 && intrinsicHeight > 0) {
+            const videoRatio = intrinsicWidth / intrinsicHeight;
+            const boxRatio = bounds.width / bounds.height;
+            if (videoRatio > boxRatio) {
+                contentHeight = bounds.width / videoRatio;
+                contentTop = (bounds.height - contentHeight) / 2;
+            } else {
+                contentWidth = bounds.height * videoRatio;
+                contentLeft = (bounds.width - contentWidth) / 2;
+            }
+        }
+        const x = Math.max(0, Math.min(1, ((event.clientX - bounds.left) - contentLeft) / contentWidth));
+        const y = Math.max(0, Math.min(1, ((event.clientY - bounds.top) - contentTop) / contentHeight));
+        markTargetAnchor({ x, y, displayX, displayY });
+    }, [busy, phase, clipUrl, markTargetAnchor, videoRef]);
 
     useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -275,6 +351,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
+        if (!targetSelectionReady) {
+            setAnalysisError("분석할 아이를 영상에서 한 번 콕 찍거나 ‘한 마리만 보여요’를 선택해 주세요.");
+            return;
+        }
         if (engineState !== "ready") {
             setAnalysisError("행동·소리·건강 신호 분석 연결을 확인하지 못했어요. 잠시 후 다시 확인해 주세요.");
             return;
@@ -304,6 +384,14 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 age: pet.age,
                 situation,
                 note,
+                targetAnchorMode,
+                ...(targetAnchor ? {
+                    targetAnchor: {
+                        x: targetAnchor.x,
+                        y: targetAnchor.y,
+                        label: "보호자가 영상 위에서 콕 찍은 분석 대상 강아지",
+                    },
+                } : {}),
                 accessToken,
                 signal: controller.signal,
                 requestId,
@@ -324,7 +412,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             }
             trackStorefrontEvent("petlens_completed", { mode: "observation", surface: variant });
             requestIdRef.current = null;
-            resetCapture();
+            resetObservationCapture();
             void refreshHistory();
         } catch (reason) {
             if (controller.signal.aborted) return;
@@ -372,7 +460,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     : "관찰 분석을 완료하지 못했어요. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.",
             );
             requestIdRef.current = null;
-            resetCapture();
+            resetObservationCapture();
         } finally {
             if (!controller.signal.aborted) {
                 setAnalyzing(false);
@@ -432,7 +520,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         setResult(null);
         setResultRequestId(undefined);
         requestIdRef.current = null;
-        resetCapture();
+        resetObservationCapture();
     };
 
     const openHistoryResult = (item: PetObservationHistoryItem) => {
@@ -441,7 +529,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         setAnalysisError("");
         setRefundNotice("");
         setQueueStatus(null);
-        resetCapture();
+        resetObservationCapture();
         setResult(item.result);
         setResultRequestId(item.requestId);
     };
@@ -461,6 +549,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         if (!nextConsent) {
             pendingConsentActionRef.current = null;
             returnToCaptureAfterConsentRef.current = false;
+            clearTargetSelection();
             resetCapture();
             return;
         }
@@ -469,11 +558,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         setConsentPromptOpen(false);
         if (pendingAction === "camera") {
             returnToCaptureAfterConsentRef.current = false;
+            clearTargetSelection();
             void startCamera({ orientation: previewOrientation });
             return;
         }
         if (pendingAction === "upload") {
             returnToCaptureAfterConsentRef.current = false;
+            clearTargetSelection();
             fileInputRef.current?.click();
             return;
         }
@@ -498,6 +589,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             setConsentPromptOpen(true);
             return;
         }
+        clearTargetSelection();
         void startCamera({ orientation: previewOrientation });
     };
 
@@ -508,6 +600,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             setConsentPromptOpen(true);
             return;
         }
+        clearTargetSelection();
         fileInputRef.current?.click();
     };
 
@@ -518,7 +611,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             ?? 10;
         const currentCoinBalance = wallet?.daengLabCoins ?? result.daengLabCoinBalance;
         const refundReason = result.quality.targetStatus === "ambiguous"
-            ? "여러 강아지 중 분석 대상을 안정적으로 구분하지 못해"
+            ? "여러 강아지 중 분석할 아이를 안정적으로 구분하지 못해"
             : result.status === "no_dog"
                 ? "영상에서 분석할 강아지를 확인하지 못해"
                 : result.status === "no_evidence"
@@ -559,7 +652,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 분석 비용 <DaengLabCoinMark compact className="mx-0.5" /> {resultRefundAmount}C 전액 환급 완료
                             </p>
                             <p className="mt-1 text-xs font-bold leading-5 text-emerald-800">
-                                {refundReason} 코인을 다시 돌려드렸어요.
+                                {refundReason} 정확하지 않은 그래프를 만들지 않고 코인을 다시 돌려드렸어요.
                                 {typeof currentCoinBalance === "number" ? ` 현재 잔액은 ${currentCoinBalance}C예요.` : ""}
                             </p>
                         </div>
@@ -585,7 +678,6 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     }
 
     const compact = variant === "modal";
-    const busy = analyzing || phase === "requesting" || phase === "recording";
     const analysisCoinCost = wallet?.analysisCoinCost ?? 10;
     const hasWalletDebt = Boolean(wallet && (wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0));
     const hasEnoughCoins = Boolean(wallet && wallet.daengLabCoins >= analysisCoinCost && !hasWalletDebt);
@@ -631,7 +723,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                     cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.");
                                     return;
                                 }
-                                resetCapture();
+                                resetObservationCapture();
                             }}
                             className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-white/15 px-3 text-xs font-black text-white transition hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                             data-petlens-close-capture-viewport
@@ -650,9 +742,11 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         : previewOrientation === "portrait"
                             ? "mx-auto aspect-[3/4] max-w-xl"
                             : "aspect-video"
-                }`}
+                } ${phase === "preview" || phase === "recorded" ? "cursor-crosshair" : ""}`}
                 data-petlens-live-camera
+                data-daenglab-target-anchor-stage={phase === "preview" || phase === "recorded" ? targetAnchorMode : undefined}
                 data-camera-orientation={previewOrientation}
+                onPointerDown={handleTargetAnchorPointer}
             >
                 <video
                     ref={videoRef}
@@ -685,6 +779,35 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </span>
                         <span className="text-sm font-black">{secondsLeft}초</span>
                     </div>
+                )}
+                {(phase === "preview" || phase === "recorded") && (
+                    <>
+                        <div className="pointer-events-none absolute inset-x-3 top-3 rounded-2xl bg-black/60 px-3 py-2 text-white shadow-sm" data-daenglab-target-anchor-guide>
+                            <p className="text-xs font-black">
+                                {targetSelectionReady ? "분석할 아이 지정 완료" : "분석할 아이를 영상에서 콕 찍어주세요"}
+                            </p>
+                            <p className="mt-0.5 text-[10px] font-bold leading-4 text-white/75">
+                                {targetAnchor
+                                    ? "다른 위치를 누르면 대상 힌트를 다시 잡을 수 있어요."
+                                    : targetAnchorMode === "single_dog_auto"
+                                        ? "한 마리만 보이는 경우로 분석하되, 실제로 여러 마리면 결과를 보류해요."
+                                        : "여러 아이가 함께 있으면 빨간 점이 찍힌 아이만 대상으로 분석을 시도해요."}
+                            </p>
+                        </div>
+                        {targetAnchor && (
+                            <div
+                                className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-1/2"
+                                style={{ left: `${targetAnchor.displayX * 100}%`, top: `${targetAnchor.displayY * 100}%` }}
+                                data-daenglab-target-anchor-marker
+                                aria-hidden="true"
+                            >
+                                <span className="absolute -inset-3 rounded-full border-2 border-white/90 bg-rose-500/25 shadow-[0_0_0_9999px_rgba(15,23,42,0.08)]" />
+                                <span className="relative grid h-9 w-9 place-items-center rounded-full bg-rose-500 text-[10px] font-black text-white shadow-lg ring-4 ring-white/90">
+                                    콕
+                                </span>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
             <div
@@ -1180,6 +1303,80 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             {SITUATIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
                         </select>
                     </label>
+                    <div
+                        className={`rounded-2xl border p-3 ${
+                            targetSelectionReady
+                                ? "border-emerald-200 bg-emerald-50"
+                                : "border-amber-200 bg-amber-50"
+                        }`}
+                        data-daenglab-target-anchor-picker
+                    >
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                            <div>
+                                <p className="text-xs font-black text-neutral-800">분석할 아이 콕 지정</p>
+                                <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-600">
+                                    다견·사람 소리 섞임에서는 이 힌트를 기준으로 대상견만 분리해요.
+                                </p>
+                            </div>
+                            <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${
+                                targetSelectionReady ? "bg-white text-emerald-700" : "bg-white text-amber-700"
+                            }`}>
+                                {targetSelectionReady ? "지정됨" : "지정 필요"}
+                            </span>
+                        </div>
+                        <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-700" data-daenglab-target-anchor-summary>
+                            {targetAnchorHint}
+                        </p>
+                        <div className="mt-3 grid grid-cols-3 gap-1.5">
+                            <button
+                                type="button"
+                                disabled={busy}
+                                onClick={() => markTargetAnchorPreset(0.25, 0.55)}
+                                className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
+                                data-daenglab-target-anchor-action
+                            >
+                                왼쪽 아이
+                            </button>
+                            <button
+                                type="button"
+                                disabled={busy}
+                                onClick={() => markTargetAnchorPreset(0.5, 0.55)}
+                                className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
+                                data-daenglab-target-anchor-action
+                            >
+                                가운데 아이
+                            </button>
+                            <button
+                                type="button"
+                                disabled={busy}
+                                onClick={() => markTargetAnchorPreset(0.75, 0.55)}
+                                className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
+                                data-daenglab-target-anchor-action
+                            >
+                                오른쪽 아이
+                            </button>
+                        </div>
+                        <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                            <button
+                                type="button"
+                                disabled={busy}
+                                onClick={markSingleDogAuto}
+                                className="rounded-xl border border-emerald-100 bg-white px-3 py-2 text-[11px] font-black text-emerald-700 shadow-sm disabled:opacity-50"
+                                data-daenglab-single-dog-auto
+                            >
+                                한 마리만 보여요 · 자동 구분
+                            </button>
+                            <button
+                                type="button"
+                                disabled={busy || !targetSelectionReady}
+                                onClick={clearTargetSelection}
+                                className="rounded-xl border border-neutral-100 bg-white px-3 py-2 text-[11px] font-black text-neutral-500 shadow-sm disabled:opacity-40"
+                                data-daenglab-clear-target-anchor
+                            >
+                                대상 지정 다시 하기
+                            </button>
+                        </div>
+                    </div>
                     <label>
                         <span className="mb-1.5 block text-xs font-black text-neutral-600">분석할 아이 구분 · 직전에 있었던 일</span>
                         <textarea

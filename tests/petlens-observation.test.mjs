@@ -119,6 +119,15 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(hook, /setCaptureOrientationStatus\("preview_only"\)/);
     assert.match(hook, /detectedStreamOrientation/);
     assert.match(hook, /window\.visualViewport\?\.addEventListener\("resize", syncPreviewOrientation\)/);
+    assert.match(experience, /data-daenglab-target-anchor-stage/);
+    assert.match(experience, /data-daenglab-target-anchor-guide/);
+    assert.match(experience, /data-daenglab-target-anchor-marker/);
+    assert.match(experience, /분석할 아이를 영상에서 콕 찍어주세요/);
+    assert.match(experience, /한 마리만 보여요 · 자동 구분/);
+    assert.match(experience, /data-daenglab-target-anchor-picker/);
+    assert.match(experience, /handleTargetAnchorPointer/);
+    assert.match(experience, /videoRatio > boxRatio/);
+    assert.match(experience, /targetAnchorMode/);
     assert.match(experience, /data-petlens-connected-devices/);
     assert.match(experience, /data-petlens-video-device/);
     assert.match(experience, /data-petlens-audio-device/);
@@ -201,6 +210,11 @@ test("observation upload is authenticated, abortable, and separate from profile 
     assert.match(api, /signal: request\.signal/);
     assert.match(api, /petProfileId: number/);
     assert.match(api, /form\.append\("pet_profile_id", String\(request\.petProfileId\)\)/);
+    assert.match(api, /targetAnchorMode\?: "none" \| "point" \| "single_dog_auto"/);
+    assert.match(api, /target_anchor_mode: request\.targetAnchorMode/);
+    assert.match(api, /target_anchor: \{/);
+    assert.match(experience, /targetAnchor: \{[\s\S]*x: targetAnchor\.x,[\s\S]*y: targetAnchor\.y/);
+    assert.match(experience, /분석할 아이를 영상에서 한 번 콕 찍거나 ‘한 마리만 보여요’를 선택/);
     assert.match(experience, /petProfileId=\{selectedPet\.apiProfileId\}|petProfileId,/);
     assert.match(experience, /petProfileId,/);
     assert.match(api, /mediaRetention: "not_stored"/);
@@ -281,6 +295,11 @@ test("result prioritizes urgent guidance and otherwise leads with target attribu
         source("app/globals.css"),
     ]);
     assert.match(result, /data-daenglab-inference-confidence/);
+    assert.match(result, /data-daenglab-target-hold-report/);
+    assert.match(result, /data-daenglab-abstained-timeline/);
+    assert.match(result, /data-daenglab-target-hold-refund/);
+    assert.match(result, /여러 아이가 함께 보여 정확하지 않은 그래프는 만들지 않았어요/);
+    assert.match(result, /정확하지 않은 수치선 대신 보류 상태만 표시/);
     assert.match(result, /data-daenglab-target-attribution/);
     assert.match(result, /data-daenglab-bark-context-translator/);
     assert.match(result, /짖음·발성 맥락 번역 후보/);

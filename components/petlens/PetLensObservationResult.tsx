@@ -980,12 +980,111 @@ function InferenceGroupLinePanel({
     );
 }
 
+function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult }) {
+    const refundAmount = result.daengLabCoinRefundAmount ?? result.daengLabCoinCost;
+    const dogCountLabel = result.quality.visibleDogCount > 1
+        ? `${result.quality.visibleDogCount}마리 이상 확인`
+        : result.quality.visibleDogCount === 1
+            ? "한 마리처럼 보였지만 대상 근거 부족"
+            : "강아지 수 확인 어려움";
+    const interferenceLabel = result.quality.interferenceSources.length > 0
+        ? result.quality.interferenceSources.map((source) => INTERFERENCE_LABEL[source]).join(" · ")
+        : result.quality.mixedAudio ? "소리 섞임 가능" : "큰 방해 소리 없음";
+    const retakeTips = result.retakeGuidance.length > 0
+        ? result.retakeGuidance
+        : [
+            "분석할 강아지를 화면 중앙에 두고 목줄·털색 같은 구분 특징이 계속 보이도록 다시 촬영해 주세요.",
+            "여러 강아지가 함께 있으면 영상 위에서 분석할 아이를 콕 찍고, 짖는 순간 얼굴·가슴이 보이게 해 주세요.",
+        ];
+
+    return (
+        <section
+            className="rounded-3xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-4 shadow-[0_18px_50px_-34px_rgba(245,158,11,0.75)] sm:p-5"
+            data-daenglab-target-hold-report
+            aria-labelledby="daenglab-target-hold-title"
+        >
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
+                <div className="min-w-0">
+                    <p className="text-xs font-black tracking-[0.1em] text-amber-700">분석 보류 리포트</p>
+                    <h3 id="daenglab-target-hold-title" className="mt-1 text-xl font-black leading-7 text-neutral-950">
+                        여러 아이가 함께 보여 정확하지 않은 그래프는 만들지 않았어요
+                    </h3>
+                    <p className="mt-2 text-sm font-bold leading-6 text-neutral-700">
+                        행동·소리·건강 그래프가 비어 있는 것이 아니라, 어느 강아지의 신호인지 확실히 구분하지 못해
+                        대상견 분석을 안전하게 보류한 상태예요.
+                    </p>
+                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                        {[
+                            ["강아지 수", dogCountLabel],
+                            ["주변 소리", interferenceLabel],
+                            ["대상견 구분", "실패 · 분석 보류"],
+                            ["코인", result.daengLabCoinRefunded ? `전액 환급${typeof refundAmount === "number" ? ` ${refundAmount}C` : ""}` : "차감 없이 보류 확인"],
+                        ].map(([label, value]) => (
+                            <div key={label} className="rounded-2xl border border-white bg-white/85 px-3 py-3 shadow-sm">
+                                <p className="text-[10px] font-black text-neutral-400">{label}</p>
+                                <p className="mt-1 text-sm font-black leading-5 text-neutral-900">{value}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div
+                    className="rounded-2xl border border-dashed border-amber-300 bg-white/70 p-3"
+                    data-daenglab-abstained-timeline
+                    aria-label="대상견 구분 실패로 보류된 흐릿한 타임라인"
+                >
+                    <p className="text-[10px] font-black text-amber-700">흐릿한 타임라인</p>
+                    <div className="relative mt-3 h-36 overflow-hidden rounded-xl bg-amber-50">
+                        <div className="absolute inset-0 opacity-70 [background-image:repeating-linear-gradient(135deg,rgba(245,158,11,0.16)_0,rgba(245,158,11,0.16)_10px,transparent_10px,transparent_20px)]" />
+                        <div className="absolute inset-x-5 top-1/2 h-1 -translate-y-1/2 rounded-full bg-amber-200" />
+                        {[0.18, 0.42, 0.68, 0.86].map((left, index) => (
+                            <span
+                                key={left}
+                                className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-amber-300 shadow-sm"
+                                style={{ left: `${left * 100}%`, opacity: 0.45 + index * 0.12 }}
+                                aria-hidden="true"
+                            />
+                        ))}
+                        <div className="absolute inset-0 grid place-items-center px-5 text-center">
+                            <p className="rounded-full bg-white/90 px-3 py-2 text-[11px] font-black leading-5 text-amber-900 shadow-sm">
+                                대상견을 고정하지 못한 구간
+                            </p>
+                        </div>
+                    </div>
+                    <p className="mt-2 text-[11px] font-bold leading-5 text-amber-800">
+                        정확하지 않은 수치선 대신 보류 상태만 표시해요.
+                    </p>
+                </div>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-sky-200 bg-sky-50 p-3" data-daenglab-target-retake-guide>
+                <p className="text-xs font-black text-sky-900">다시 찍으면 더 잘 분석돼요</p>
+                <ol className="mt-2 grid gap-1.5 text-xs font-bold leading-5 text-sky-800">
+                    {retakeTips.slice(0, 4).map((tip, index) => (
+                        <li key={tip} className="flex gap-2">
+                            <span className="font-black">{index + 1}</span>
+                            <span>{tip}</span>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+
+            {result.daengLabCoinRefunded && (
+                <p className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-black leading-5 text-emerald-800" data-daenglab-target-hold-refund>
+                    댕랩코인은 전액 환급됐어요. 정확하지 않은 분석에는 비용을 쓰지 않습니다.
+                </p>
+            )}
+        </section>
+    );
+}
+
 function InferenceConfidenceOverview({ result }: { result: PetObservationResult }) {
     const qualityLabel = result.quality.level === "good"
         ? "관찰 품질 양호"
         : result.quality.level === "limited"
             ? "관찰 품질 제한"
             : "재촬영 권장";
+    const targetAmbiguous = result.analysisContractVersion >= 2 && result.quality.targetStatus === "ambiguous";
     const behaviorItems: InferenceDisplayItem[] = result.behaviorCandidates;
     const soundItems: InferenceDisplayItem[] = result.barkContextCandidates;
     const healthItems: InferenceDisplayItem[] = result.healthCandidates;
@@ -1047,18 +1146,24 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
                 </div>
             </div>
 
-            <div className="mt-4 grid gap-4">
-                {INFERENCE_GROUPS.map((config) => (
-                    <InferenceGroupLinePanel
-                        key={config.kind}
-                        config={config}
-                        items={groupedItems[config.kind]}
-                        observations={result.observations}
-                        urgency={result.urgency.level}
-                        durationSeconds={result.durationSeconds}
-                    />
-                ))}
-            </div>
+            {targetAmbiguous ? (
+                <div className="mt-4">
+                    <TargetAmbiguousHoldReport result={result} />
+                </div>
+            ) : (
+                <div className="mt-4 grid gap-4">
+                    {INFERENCE_GROUPS.map((config) => (
+                        <InferenceGroupLinePanel
+                            key={config.kind}
+                            config={config}
+                            items={groupedItems[config.kind]}
+                            observations={result.observations}
+                            urgency={result.urgency.level}
+                            durationSeconds={result.durationSeconds}
+                        />
+                    ))}
+                </div>
+            )}
         </section>
     );
 }

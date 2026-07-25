@@ -35,6 +35,7 @@ export type StorefrontEventName =
     | "petlens_started"
     | "petlens_completed"
     | "petlens_failed"
+    | "petlens_target_anchor_selected"
     | "chat_opened"
     | "chat_message_sent"
     | "chat_response_succeeded"

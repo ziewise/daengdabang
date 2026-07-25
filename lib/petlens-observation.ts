@@ -201,6 +201,12 @@ export type PetObservationRequest = {
     age?: string;
     situation: PetObservationSituation;
     note?: string;
+    targetAnchorMode?: "none" | "point" | "single_dog_auto";
+    targetAnchor?: {
+        x: number;
+        y: number;
+        label?: string;
+    };
     accessToken?: string;
     signal?: AbortSignal;
     requestId: string;
@@ -1115,8 +1121,8 @@ export function parsePetObservationResult(value: unknown): PetObservationResult 
     const baseRetakeGuidance = koreanLines(raw.retake_guidance ?? raw.retakeGuidance, 4, 160);
     const retakeGuidance = attributionV2 && targetStatus === "ambiguous"
         ? [
-            "분석할 강아지를 화면 중앙에 두고 목줄·털색 같은 구분 특징이 계속 보이도록 다시 촬영해 주세요.",
-            "여러 강아지가 함께 있으면 촬영 당시 메모에 분석할 강아지의 위치와 특징을 적어 주세요.",
+            "분석할 강아지를 화면 중앙에 두고 영상 위에서 그 아이를 한 번 콕 찍어 주세요.",
+            "목줄·털색 같은 구분 특징과 짖는 순간 얼굴·가슴 움직임이 함께 보이게 다시 촬영해 주세요.",
         ]
         : baseRetakeGuidance;
 
@@ -1371,6 +1377,15 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
     if (request.privacyConsent !== true) {
         throw new Error("영상·음성 분석 개인정보 동의를 다시 확인해 주세요.");
     }
+    const targetAnchorNote = request.targetAnchor
+        ? `분석 대상 힌트: 보호자가 영상 기준 가로 ${Math.round(Math.max(0, Math.min(1, request.targetAnchor.x)) * 100)}%, 세로 ${Math.round(Math.max(0, Math.min(1, request.targetAnchor.y)) * 100)}% 지점의 강아지를 콕 찍었습니다.`
+        : request.targetAnchorMode === "single_dog_auto"
+            ? "분석 대상 힌트: 보호자가 영상에 강아지가 한 마리만 보인다고 선택했습니다."
+            : "";
+    const ownerNote = [targetAnchorNote, request.note?.trim()]
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 300);
 
     const form = new FormData();
     form.append("clip", request.clip);
@@ -1380,7 +1395,15 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         breed: request.breed || "",
         age: request.age || "",
         situation: request.situation,
-        note: request.note?.trim().slice(0, 300) || "",
+        note: ownerNote,
+        target_anchor_mode: request.targetAnchorMode || (request.targetAnchor ? "point" : "none"),
+        ...(request.targetAnchor ? {
+            target_anchor: {
+                x: Math.max(0, Math.min(1, request.targetAnchor.x)),
+                y: Math.max(0, Math.min(1, request.targetAnchor.y)),
+                label: request.targetAnchor.label?.trim().slice(0, 120) || "보호자가 영상에서 콕 찍은 분석 대상 강아지",
+            },
+        } : {}),
         duration_seconds: request.durationSeconds,
     }));
     form.append("request_id", request.requestId);
