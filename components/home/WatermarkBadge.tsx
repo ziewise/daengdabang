@@ -123,22 +123,13 @@ export default function WatermarkBadge({
             setMobilePetLensCue(false);
         };
 
-        const showMobileCue = () => {
-            if (mobileCueTimerRef.current) window.clearTimeout(mobileCueTimerRef.current);
-            setMobilePetLensCue(true);
-            mobileCueTimerRef.current = window.setTimeout(() => {
-                setMobilePetLensCue(false);
-                mobileCueTimerRef.current = null;
-            }, 9000);
-        };
-
         const handleCue = (event: Event) => {
             const detail = (event as CustomEvent<{ open?: boolean }>).detail;
             if (detail?.open === false) {
                 clearMobileCue();
                 return;
             }
-            showMobileCue();
+            showMobileCueNow();
         };
 
         window.addEventListener("ddb:pet-lens-hero-cue", handleCue);
@@ -156,7 +147,28 @@ export default function WatermarkBadge({
         setMobilePetLensCue(false);
     };
 
+    const showMobileCueNow = () => {
+        if (mobileCueTimerRef.current) window.clearTimeout(mobileCueTimerRef.current);
+        setMobilePetLensCue(true);
+        mobileCueTimerRef.current = window.setTimeout(() => {
+            setMobilePetLensCue(false);
+            mobileCueTimerRef.current = null;
+        }, 9000);
+    };
+
+    const shouldStageMobileCueBeforeOpen = () => (
+        typeof window !== "undefined"
+        && (
+            window.matchMedia("(max-width: 1023px)").matches
+            || window.matchMedia("(pointer: coarse)").matches
+        )
+    );
+
     const handleBadgeClick = () => {
+        if (shouldStageMobileCueBeforeOpen() && !mobilePetLensCue) {
+            showMobileCueNow();
+            return;
+        }
         clearMobileCueNow();
         onClick?.();
     };

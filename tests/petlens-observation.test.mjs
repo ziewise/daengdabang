@@ -71,6 +71,10 @@ test("mobile header PetLens reveals the hero lens cue before opening on the next
     assert.doesNotMatch(header, /data-mobile-petlens-preview/);
     assert.match(watermark, /data-petlens-mobile-hero-cue/);
     assert.match(watermark, /ddb:pet-lens-hero-cue/);
+    assert.match(watermark, /shouldStageMobileCueBeforeOpen/);
+    assert.match(watermark, /window\.matchMedia\("\(max-width: 1023px\)"\)\.matches/);
+    assert.match(watermark, /window\.matchMedia\("\(pointer: coarse\)"\)\.matches/);
+    assert.match(watermark, /if \(shouldStageMobileCueBeforeOpen\(\) && !mobilePetLensCue\) \{[\s\S]*showMobileCueNow\(\);[\s\S]*return;/);
     assert.match(watermark, /mobilePetLensCue \? "opacity-100" : "opacity-0 group-hover:opacity-100"/);
     assert.match(guide, /크레파스로 콕, 펫렌즈 열기/);
 });
