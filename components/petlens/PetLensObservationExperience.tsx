@@ -98,6 +98,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const consentGrantedRef = useRef(false);
     const pendingConsentActionRef = useRef<"camera" | "upload" | null>(null);
     const returnToCaptureAfterConsentRef = useRef(false);
+    const restoreCaptureScrollAfterFileRef = useRef(false);
     const [consent, setConsent] = useState(false);
     const [consentPromptOpen, setConsentPromptOpen] = useState(false);
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
@@ -595,12 +596,32 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         });
     };
 
+    const scrollToCaptureControls = useCallback((focusPrimary = true) => {
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+                const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                captureActionsRef.current?.scrollIntoView({
+                    behavior: reducedMotion ? "auto" : "smooth",
+                    block: "center",
+                });
+                if (focusPrimary) capturePrimaryButtonRef.current?.focus({ preventScroll: true });
+            });
+        });
+    }, []);
+
+    useEffect(() => {
+        if (phase !== "recorded" || !restoreCaptureScrollAfterFileRef.current) return;
+        restoreCaptureScrollAfterFileRef.current = false;
+        scrollToCaptureControls();
+    }, [phase, scrollToCaptureControls]);
+
     const handleConsentChange = (nextConsent: boolean) => {
         consentGrantedRef.current = nextConsent;
         setConsent(nextConsent);
         if (!nextConsent) {
             pendingConsentActionRef.current = null;
             returnToCaptureAfterConsentRef.current = false;
+            restoreCaptureScrollAfterFileRef.current = false;
             clearTargetSelection();
             resetCapture();
             return;
@@ -611,27 +632,21 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         if (pendingAction === "camera") {
             returnToCaptureAfterConsentRef.current = false;
             clearTargetSelection();
+            scrollToCaptureControls(false);
             void startCamera({ orientation: previewOrientation });
             return;
         }
         if (pendingAction === "upload") {
             returnToCaptureAfterConsentRef.current = false;
             clearTargetSelection();
+            restoreCaptureScrollAfterFileRef.current = true;
+            scrollToCaptureControls(false);
             fileInputRef.current?.click();
             return;
         }
         if (!returnToCaptureAfterConsentRef.current) return;
         returnToCaptureAfterConsentRef.current = false;
-        window.requestAnimationFrame(() => {
-            window.requestAnimationFrame(() => {
-                const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                captureActionsRef.current?.scrollIntoView({
-                    behavior: reducedMotion ? "auto" : "smooth",
-                    block: "center",
-                });
-                capturePrimaryButtonRef.current?.focus({ preventScroll: true });
-            });
-        });
+        scrollToCaptureControls();
     };
 
     const handleConnectCamera = () => {

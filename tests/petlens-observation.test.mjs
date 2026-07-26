@@ -177,8 +177,13 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /data-petlens-capture-controls/);
     assert.match(experience, /captureActionsRef\.current\?\.scrollIntoView/);
     assert.match(experience, /capturePrimaryButtonRef\.current\?\.focus/);
+    assert.match(experience, /scrollToCaptureControls = useCallback/);
+    assert.match(experience, /pendingAction === "camera"[\s\S]*scrollToCaptureControls\(false\)[\s\S]*startCamera/);
+    assert.match(experience, /pendingAction === "upload"[\s\S]*restoreCaptureScrollAfterFileRef\.current = true[\s\S]*scrollToCaptureControls\(false\)[\s\S]*fileInputRef\.current\?\.click\(\)/);
+    assert.match(experience, /phase !== "recorded" \|\| !restoreCaptureScrollAfterFileRef\.current/);
     assert.match(experience, /prefers-reduced-motion: reduce/);
     assert.match(experience, /returnToCaptureAfterConsentRef\.current = true/);
+    assert.match(experience, /restoreCaptureScrollAfterFileRef\.current = false/);
     assert.match(experience, /pendingConsentActionRef = useRef<"camera" \| "upload" \| null>\(null\)/);
     assert.match(experience, /pendingConsentActionRef\.current = "camera"/);
     assert.match(experience, /pendingConsentActionRef\.current = "upload"/);
