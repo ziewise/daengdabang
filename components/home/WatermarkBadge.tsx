@@ -187,7 +187,8 @@ export default function WatermarkBadge({
                 <div
                     data-pet-companion-origin="hero-lens"
                     data-petlens-mobile-hero-cue={mobilePetLensCue ? "true" : "false"}
-                    className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.32)]${
+                    data-petlens-mobile-hero-copy={mobilePetLensCue ? "visible" : "hidden"}
+                    className={`group absolute -translate-x-1/2 -translate-y-1/2 overflow-visible rounded-full${
                         interactive
                             ? " pointer-events-auto cursor-pointer transition-transform duration-200 hover:scale-105"
                             : ""
@@ -216,40 +217,56 @@ export default function WatermarkBadge({
                             : undefined
                     }
                 >
-                    {/* 견종 얼굴 영상 — 16:9 가운데만 원형으로(양옆 잘림), 자동재생 루프.
-                        interactive 면 hover 시 페이드아웃되며 아래 펫렌즈 카메라 버튼이 드러난다. */}
-                    <video
-                        src={src}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        // 브라우저 기본 PiP(화면 속 화면) 버튼 숨김 — hover 시 영상 위에 뜨는 검정 버튼 제거
-                        disablePictureInPicture
-                        disableRemotePlayback
-                        className={`h-full w-full object-cover${
-                            interactive
-                                ? ` transition-opacity duration-300 ${mobilePetLensCue ? "opacity-0" : "group-hover:opacity-0"}`
-                                : ""
-                        }`}
-                    />
-                    {/* hover 오버레이 — 펫렌즈 아이콘(pet-lens.png) 이 원형 배지를 꽉 채운다.
-                        평소엔 숨고(opacity-0) hover 시 떠올라 배지가 "펫렌즈 실행" 버튼처럼 보인다.
-                        loading=eager: hover 전에 미리 로드해 두어 hover 시 바로 나타난다. */}
+                    <div className="relative h-full w-full overflow-hidden rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.32)]">
+                        {/* 견종 얼굴 영상 — 16:9 가운데만 원형으로(양옆 잘림), 자동재생 루프.
+                            interactive 면 hover 시 페이드아웃되며 아래 펫렌즈 카메라 버튼이 드러난다. */}
+                        <video
+                            src={src}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            // 브라우저 기본 PiP(화면 속 화면) 버튼 숨김 — hover 시 영상 위에 뜨는 검정 버튼 제거
+                            disablePictureInPicture
+                            disableRemotePlayback
+                            className={`h-full w-full object-cover${
+                                interactive
+                                    ? ` transition-opacity duration-300 ${mobilePetLensCue ? "opacity-0" : "group-hover:opacity-0"}`
+                                    : ""
+                            }`}
+                        />
+                        {/* hover 오버레이 — 펫렌즈 아이콘(pet-lens.png) 이 원형 배지를 꽉 채운다.
+                            평소엔 숨고(opacity-0) hover 시 떠올라 배지가 "펫렌즈 실행" 버튼처럼 보인다.
+                            loading=eager: hover 전에 미리 로드해 두어 hover 시 바로 나타난다. */}
+                        {interactive && (
+                            <div className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
+                                mobilePetLensCue ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                            }`}>
+                                {/* pet-lens.png 의 원(불투명 영역)은 프레임의 ~84%라 투명 여백이 있다.
+                                    scale-[1.2] 로 키워 원이 배지 흰 테두리에 딱 닿게 채운다(이중 링 제거). */}
+                                <Image
+                                    src="/images/ui/pet-lens.png"
+                                    alt=""
+                                    fill
+                                    sizes="120px"
+                                    loading="eager"
+                                    className="scale-[1.2] object-cover"
+                                />
+                            </div>
+                        )}
+                    </div>
                     {interactive && (
-                        <div className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
-                            mobilePetLensCue ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                        }`}>
-                            {/* pet-lens.png 의 원(불투명 영역)은 프레임의 ~84%라 투명 여백이 있다.
-                                scale-[1.2] 로 키워 원이 배지 흰 테두리에 딱 닿게 채운다(이중 링 제거). */}
-                            <Image
-                                src="/images/ui/pet-lens.png"
-                                alt=""
-                                fill
-                                sizes="120px"
-                                loading="eager"
-                                className="scale-[1.2] object-cover"
-                            />
+                        <div
+                            aria-hidden="true"
+                            className={`pointer-events-none absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-[112%] items-center gap-1.5 whitespace-nowrap rounded-[18px] border-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]/95 px-2.5 py-1.5 text-[10px] font-black leading-tight tracking-[-0.03em] text-[#6b46d9] shadow-[0_6px_16px_rgba(61,43,160,0.22)] transition-all duration-300 lg:hidden ${
+                                mobilePetLensCue
+                                    ? "opacity-100 scale-100"
+                                    : "opacity-0 scale-90"
+                            }`}
+                        >
+                            <span className="text-[11px]" aria-hidden="true">🖍️</span>
+                            <span>저를 콕 눌러 분석하기!</span>
+                            <span className="absolute bottom-[-5px] left-1/2 h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]" />
                         </div>
                     )}
                 </div>
