@@ -254,6 +254,37 @@ function InferenceGroupLinePanel({
     durationSeconds?: number;
 }) {
     const graphId = useId().replace(/:/g, "");
+
+    if (items.length === 0) {
+        return (
+            <article
+                className="min-w-0 rounded-2xl border border-white/90 bg-white/75 p-3.5 shadow-sm sm:p-4"
+                data-daenglab-inference-empty-state={config.kind}
+            >
+                <div className="flex min-w-0 items-start gap-3">
+                    <span
+                        className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl ${config.badge}`}
+                        aria-hidden="true"
+                    >
+                        <i className={`fa-solid ${config.icon}`} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="text-sm font-black text-neutral-900">{config.title}</h4>
+                            <span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
+                                뚜렷한 신호 없음
+                            </span>
+                        </div>
+                        <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">{config.empty}</p>
+                        <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-400">
+                            표시할 신호가 없어 차트는 생략했어요.
+                        </p>
+                    </div>
+                </div>
+            </article>
+        );
+    }
+
     const graphPoints: InferenceGraphPoint[] = items.map((item, index) => ({
             id: `${config.kind}-${index}-${item.label}`,
             item,
@@ -349,7 +380,7 @@ function InferenceGroupLinePanel({
                     </p>
                 </div>
                 <span className={`rounded-full px-2.5 py-1.5 text-[11px] font-black ${config.badge}`}>
-                    가로 시간 · 세로 지지도
+                    {timelineSeries.length > 0 ? "가로 시간 · 세로 지지도" : "전체 후보 요약"}
                 </span>
             </div>
 
@@ -725,19 +756,18 @@ function InferenceGroupLinePanel({
                     </div>
                 </>
                 ) : (
-                    <div className="mt-3 grid min-h-44 place-items-center rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-4 text-center">
-                        <div>
-                            <i className="fa-solid fa-chart-line text-xl text-neutral-300" aria-hidden="true" />
-                            <p className="mt-2 text-sm font-black text-neutral-700">
-                                {rankedPoints.length > 0
-                                    ? "이전 결과에는 시간별 지지도 좌표가 없어요."
-                                    : items.length > 0 ? "이 분석에는 퍼센트 수치가 제공되지 않았어요." : config.empty}
+                    <div
+                        className="mt-3 flex items-start gap-3 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3.5 py-3"
+                        data-daenglab-inference-static-summary={config.kind}
+                    >
+                        <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl ${config.badge}`} aria-hidden="true">
+                            <i className="fa-solid fa-list-check text-xs" />
+                        </span>
+                        <div className="min-w-0">
+                            <p className="text-xs font-black text-neutral-800">시간별 그래프는 생략했어요</p>
+                            <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
+                                시간 좌표가 없는 결과라 임의의 빈 차트를 만들지 않고, 아래 후보 요약만 보여드려요.
                             </p>
-                            {items.length > 0 && (
-                                <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
-                                    없는 시간 변화를 만들지 않고, 제공된 전체 지지도나 신뢰도 구간만 아래에 표시합니다.
-                                </p>
-                            )}
                         </div>
                     </div>
                 )}
@@ -781,9 +811,11 @@ function InferenceGroupLinePanel({
                     시간좌표가 없는 후보 {numericPointsWithoutTimeline.length}개는 임의의 선을 만들지 않고 아래 결과표에만 표시해요.
                 </p>
             )}
-            <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">
-                2개 이상은 실제 확인 시점을 선으로 연결하고, 한 시점만 확인되면 가짜 추세 없이 짧은 선과 점으로 표시해요. 큰 점과 %는 가장 강하게 포착된 시점이에요.
-            </p>
+            {timelineSeries.length > 0 && (
+                <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">
+                    2개 이상은 실제 확인 시점을 선으로 연결하고, 한 시점만 확인되면 가짜 추세 없이 짧은 선과 점으로 표시해요. 큰 점과 %는 가장 강하게 포착된 시점이에요.
+                </p>
+            )}
             <div
                 className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50/70 px-3.5 py-3"
                 data-daenglab-inference-comment={config.kind}
@@ -1078,6 +1110,75 @@ function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult })
     );
 }
 
+function strongestInferenceItem(items: InferenceDisplayItem[]) {
+    return items.reduce<InferenceDisplayItem | undefined>((strongest, item) => {
+        if (!strongest) return item;
+        const strongestScore = typeof strongest.confidenceScore === "number" ? strongest.confidenceScore : -1;
+        const itemScore = typeof item.confidenceScore === "number" ? item.confidenceScore : -1;
+        return itemScore > strongestScore ? item : strongest;
+    }, undefined);
+}
+
+function OverallObservationSummary({ result }: { result: PetObservationResult }) {
+    const highPriority = result.urgency.level === "emergency" || result.urgency.level === "same_day";
+    const highlights = [
+        { label: "행동", item: strongestInferenceItem(result.behaviorCandidates), className: "bg-indigo-50 text-indigo-700" },
+        { label: "소리", item: strongestInferenceItem(result.barkContextCandidates), className: "bg-cyan-50 text-cyan-700" },
+        { label: "건강", item: strongestInferenceItem(result.healthCandidates), className: "bg-amber-50 text-amber-800" },
+        { label: "우선 확인", item: strongestInferenceItem(result.symptomSignals), className: "bg-rose-50 text-rose-700" },
+    ].filter((highlight): highlight is typeof highlight & { item: InferenceDisplayItem } => Boolean(highlight.item));
+
+    return (
+        <section
+            className={`overflow-hidden rounded-3xl border p-4 shadow-[0_18px_50px_-34px_rgba(79,70,229,0.65)] sm:p-5 ${
+                highPriority
+                    ? "border-rose-200 bg-gradient-to-br from-rose-50 via-white to-amber-50"
+                    : "border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-cyan-50"
+            }`}
+            data-daenglab-overall-summary
+        >
+            <div className="flex items-start gap-3">
+                <span
+                    className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-white shadow-sm ${
+                        highPriority ? "bg-rose-600" : "bg-indigo-600"
+                    }`}
+                    aria-hidden="true"
+                >
+                    <i className="fa-solid fa-wand-magic-sparkles" />
+                </span>
+                <div className="min-w-0">
+                    <p className={`text-[10px] font-black tracking-[0.12em] ${highPriority ? "text-rose-600" : "text-indigo-600"}`}>
+                        펫렌즈 전체 총평
+                    </p>
+                    <h2 className="mt-1 text-lg font-black leading-7 text-neutral-950 sm:text-xl">
+                        {highPriority ? "먼저 확인해야 할 신호가 있어요" : "영상 전체를 한눈에 보면"}
+                    </h2>
+                </div>
+            </div>
+            <p className="mt-4 [overflow-wrap:anywhere] text-sm font-bold leading-6 text-neutral-700 sm:text-[15px]">
+                {result.summary}
+            </p>
+            {highlights.length > 0 && (
+                <div className="mt-4 border-t border-neutral-900/5 pt-3" data-daenglab-overall-summary-highlights>
+                    <p className="text-[10px] font-black text-neutral-400">분야별 핵심 관찰</p>
+                    <ul className="mt-2 flex flex-wrap gap-2">
+                        {highlights.map((highlight) => (
+                            <li
+                                key={highlight.label}
+                                className={`max-w-full rounded-full px-3 py-1.5 text-[11px] font-black ${highlight.className}`}
+                            >
+                                <span className="opacity-65">{highlight.label}</span>
+                                <span className="mx-1 opacity-35" aria-hidden="true">·</span>
+                                <span className="[overflow-wrap:anywhere]">{highlight.item.label}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </section>
+    );
+}
+
 function InferenceConfidenceOverview({ result }: { result: PetObservationResult }) {
     const qualityLabel = result.quality.level === "good"
         ? "관찰 품질 양호"
@@ -1123,9 +1224,8 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
                 className="mt-4 rounded-2xl border border-white/90 bg-white/85 p-3.5 shadow-sm"
                 data-daenglab-overall-inference-state
             >
-                <p className="text-[10px] font-black text-neutral-400">전반적인 상태</p>
-                <p className="mt-1 text-sm font-black leading-6 text-neutral-900">{result.summary}</p>
-                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                <p className="text-[10px] font-black text-neutral-400">분석 범위</p>
+                <div className="mt-2 grid gap-2 sm:grid-cols-2">
                     <div className={`rounded-xl bg-gradient-to-br px-3 py-2.5 text-white ${
                         highPriority ? "from-rose-600 to-rose-700" : "from-indigo-600 to-indigo-700"
                     }`}>
@@ -1454,6 +1554,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
     return (
         <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result>
             {highPriorityUrgency && <UrgencyGuidance result={result} highPriority />}
+            <OverallObservationSummary result={result} />
             <TargetAttributionPanel result={result} />
             <BarkContextTranslator result={result} />
             <InferenceConfidenceOverview result={result} />
