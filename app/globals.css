@@ -1577,6 +1577,87 @@ header + main .hero-shell {
     }
 }
 
+.petlens-hero-cue-bubble {
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    transform-origin: 50% 100%;
+}
+
+.petlens-hero-cue-crayon,
+.petlens-hero-cue-kok {
+    display: inline-block;
+}
+
+.petlens-hero-cue-crayon {
+    transform-origin: 70% 70%;
+}
+
+.petlens-hero-cue-kok {
+    color: #f97316;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    transform-origin: 50% 70%;
+}
+
+[data-petlens-mobile-hero-copy="visible"] .petlens-hero-cue-bubble {
+    animation: petlens-hero-cue-breathe 1.8s ease-in-out infinite;
+}
+
+[data-petlens-mobile-hero-copy="visible"] .petlens-hero-cue-crayon {
+    animation: petlens-hero-cue-crayon-wiggle 1.25s ease-in-out infinite;
+}
+
+[data-petlens-mobile-hero-copy="visible"] .petlens-hero-cue-kok {
+    animation: petlens-hero-cue-kok-pop 1.35s ease-in-out infinite;
+}
+
+@keyframes petlens-hero-cue-breathe {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-1deg) scale(1);
+    }
+
+    48% {
+        transform: translateY(-4px) rotate(1deg) scale(1.035);
+    }
+}
+
+@keyframes petlens-hero-cue-crayon-wiggle {
+    0%,
+    100% {
+        transform: rotate(-8deg) translateY(0);
+    }
+
+    38% {
+        transform: rotate(10deg) translateY(-1px);
+    }
+
+    62% {
+        transform: rotate(-3deg) translateY(1px);
+    }
+}
+
+@keyframes petlens-hero-cue-kok-pop {
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    42% {
+        transform: translateY(-1px) scale(1.16) rotate(-3deg);
+    }
+
+    62% {
+        transform: translateY(0) scale(0.98) rotate(2deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-petlens-mobile-hero-copy="visible"] .petlens-hero-cue-bubble,
+    [data-petlens-mobile-hero-copy="visible"] .petlens-hero-cue-crayon,
+    [data-petlens-mobile-hero-copy="visible"] .petlens-hero-cue-kok {
+        animation: none;
+    }
+}
+
 @media (min-width: 768px) {
     .hero-shell {
         min-height: 560px;

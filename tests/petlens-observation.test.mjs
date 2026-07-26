@@ -54,10 +54,11 @@ test("the active behavior and sound launcher opens the real observation camera i
 
 
 test("mobile header PetLens reveals the hero lens cue before opening on the next tap", async () => {
-    const [header, watermark, guide] = await Promise.all([
+    const [header, watermark, guide, css] = await Promise.all([
         source("components/header/Header.tsx"),
         source("components/home/WatermarkBadge.tsx"),
         source("lib/pet-companion-guide.ts"),
+        source("app/globals.css"),
     ]);
 
     assert.match(header, /mobilePetLensGuideArmed/);
@@ -77,8 +78,15 @@ test("mobile header PetLens reveals the hero lens cue before opening on the next
     assert.match(watermark, /if \(shouldStageMobileCueBeforeOpen\(\) && !mobilePetLensCue\) \{[\s\S]*showMobileCueNow\(\);[\s\S]*return;/);
     assert.match(watermark, /mobilePetLensCue \? "opacity-100" : "opacity-0 group-hover:opacity-100"/);
     assert.match(watermark, /data-petlens-mobile-hero-copy/);
-    assert.match(watermark, /저를 콕 눌러 분석하기!/);
+    assert.match(watermark, /data-petlens-mobile-hero-copy-text="저를 콕 눌러 분석하기!"/);
+    assert.match(watermark, /petlens-hero-cue-bubble/);
+    assert.match(watermark, /petlens-hero-cue-crayon/);
+    assert.match(watermark, /petlens-hero-cue-kok/);
     assert.match(watermark, /lg:hidden/);
+    assert.match(css, /@keyframes petlens-hero-cue-breathe/);
+    assert.match(css, /@keyframes petlens-hero-cue-crayon-wiggle/);
+    assert.match(css, /@keyframes petlens-hero-cue-kok-pop/);
+    assert.match(css, /prefers-reduced-motion: reduce/);
     assert.match(guide, /크레파스로 콕, 펫렌즈 열기/);
 });
 

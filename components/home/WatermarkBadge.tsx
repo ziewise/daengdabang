@@ -258,15 +258,22 @@ export default function WatermarkBadge({
                     {interactive && (
                         <div
                             aria-hidden="true"
-                            className={`pointer-events-none absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-[112%] items-center gap-1.5 whitespace-nowrap rounded-[18px] border-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]/95 px-2.5 py-1.5 text-[10px] font-black leading-tight tracking-[-0.03em] text-[#6b46d9] shadow-[0_6px_16px_rgba(61,43,160,0.22)] transition-all duration-300 lg:hidden ${
+                            className={`pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-[112%] transition-all duration-300 lg:hidden ${
                                 mobilePetLensCue
                                     ? "opacity-100 scale-100"
                                     : "opacity-0 scale-90"
                             }`}
                         >
-                            <span className="text-[11px]" aria-hidden="true">🖍️</span>
-                            <span>저를 콕 눌러 분석하기!</span>
-                            <span className="absolute bottom-[-5px] left-1/2 h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]" />
+                            <span
+                                data-petlens-mobile-hero-copy-text="저를 콕 눌러 분석하기!"
+                                className="petlens-hero-cue-bubble relative flex items-center gap-1.5 whitespace-nowrap rounded-[18px] border-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]/95 px-2.5 py-1.5 text-[10px] font-black leading-tight tracking-[-0.03em] text-[#6b46d9] shadow-[0_6px_16px_rgba(61,43,160,0.22)]"
+                            >
+                                <span className="petlens-hero-cue-crayon text-[11px]" aria-hidden="true">🖍️</span>
+                                <span className="petlens-hero-cue-text">
+                                    저를 <span className="petlens-hero-cue-kok">콕</span> 눌러 분석하기!
+                                </span>
+                                <span className="absolute bottom-[-5px] left-1/2 h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]" />
+                            </span>
                         </div>
                     )}
                 </div>
