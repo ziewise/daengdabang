@@ -22,6 +22,7 @@ import {
 } from "@/lib/chat-widget-events";
 import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
+import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import styles from "./ChatWidget.module.css";
 
@@ -292,7 +293,11 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                         message.role === "user" ? styles.userBubble : styles.assistantBubble
                                     }`}
                                 >
-                                    {message.text}
+                                    {message.role === "assistant" ? (
+                                        <ProgressiveRevealText text={message.text} stepMs={34} maxDelayMs={1_150} />
+                                    ) : (
+                                        message.text
+                                    )}
                                 </div>
                                 {message.role === "assistant" && (
                                     <div className={styles.responseExtras}>

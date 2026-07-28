@@ -8,6 +8,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
 import styles from "./chatbot.module.css";
 
 interface Props {
@@ -180,7 +181,13 @@ export default function ChatbotModal({ open, onClose }: Props) {
                 <div className={styles.messages}>
                     {messages.map((m) => (
                         <div key={m.id} className={`${styles.bubble} ${m.role === "bot" ? styles.bubbleBot : styles.bubbleUser}`}>
-                            <p className="whitespace-pre-line">{m.text}</p>
+                            <p className="whitespace-pre-line">
+                                {m.role === "bot" ? (
+                                    <ProgressiveRevealText text={m.text} stepMs={36} maxDelayMs={1_100} />
+                                ) : (
+                                    m.text
+                                )}
+                            </p>
                             {/* 봇 메시지에 추천 질문 칩 */}
                             {m.role === "bot" && m.suggestions && m.suggestions.length > 0 && (
                                 <div className={styles.suggestRow}>

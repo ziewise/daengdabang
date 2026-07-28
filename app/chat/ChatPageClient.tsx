@@ -16,6 +16,7 @@ import ProductCard from "@/components/products/ProductCard";
 import { useAuth } from "@/lib/store";
 import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
+import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 type Message = {
@@ -260,7 +261,11 @@ export default function ChatPageClient() {
                                         message.role === "user" ? "bg-neutral-950 text-white" : "bg-white text-neutral-800 shadow-sm"
                                     }`}
                                 >
-                                    {message.text}
+                                    {message.role === "assistant" ? (
+                                        <ProgressiveRevealText text={message.text} />
+                                    ) : (
+                                        message.text
+                                    )}
                                 </div>
                                 {message.role === "assistant" && <ActionList actions={message.actions} />}
                                 {message.role === "assistant" && message.conversation?.continued && (

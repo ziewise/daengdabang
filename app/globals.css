@@ -200,6 +200,56 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     height: 3px;
 }
 
+.ddb-progressive-reveal {
+    --ddb-reveal-ink-wash: rgba(8, 145, 178, 0.24);
+    --ddb-reveal-rose-wash: rgba(239, 71, 111, 0.22);
+    --ddb-reveal-sun-wash: rgba(245, 158, 11, 0.25);
+}
+
+.ddb-progressive-token {
+    display: inline-block;
+    opacity: 0;
+    background-image: linear-gradient(100deg, var(--ddb-reveal-ink-wash), var(--ddb-reveal-rose-wash), var(--ddb-reveal-sun-wash));
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 0 0.44em;
+    filter: blur(2px);
+    transform: translateY(0.32em);
+    animation:
+        ddb-progressive-token-in 420ms cubic-bezier(.16, 1, .3, 1) forwards,
+        ddb-progressive-gradient-pass 980ms cubic-bezier(.2, .78, .22, 1) forwards;
+    animation-delay: var(--ddb-token-delay, 0ms), var(--ddb-token-delay, 0ms);
+}
+
+@keyframes ddb-progressive-token-in {
+    from {
+        opacity: 0;
+        filter: blur(2px);
+        transform: translateY(0.32em);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes ddb-progressive-gradient-pass {
+    0% { background-size: 0 0.44em; }
+    58% { background-size: 100% 0.44em; }
+    100% { background-size: 0 0.44em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ddb-progressive-token {
+        opacity: 1;
+        background-size: 0 0.44em;
+        filter: none;
+        transform: none;
+        animation: none;
+    }
+}
+
 /* 댕다방의 크레파스 색을 잇는 댕랩 서비스 워드마크와 TM형 신규 서비스 표식. */
 .ddb-daenglab-wordmark {
     display: inline-block;
