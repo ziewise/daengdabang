@@ -24,6 +24,8 @@ test("CareTalk offers a persistent readable-font toggle before the clear button"
     assert.match(widget, /aria-pressed=\{readableFontEnabled\}/);
     assert.match(widget, /또박또박한 정자체로 보기/);
     assert.match(widget, /기존 손글씨체로 보기/);
+    assert.match(widget, /fontModeCrayonSample/);
+    assert.match(widget, /fontModeReadableSample/);
     assert.doesNotMatch(widget, /window\.localStorage/);
 
     const toggleIndex = widget.indexOf("data-chat-font-toggle");
@@ -34,5 +36,6 @@ test("CareTalk offers a persistent readable-font toggle before the clear button"
     assert.match(css, /\.panel\[data-chat-font-mode="readable"\] \{[\s\S]{0,260}--chat-font-body: var\(--font-wanted-sans\)/);
     assert.match(css, /\.panel\[data-chat-font-mode="readable"\] \.messageBubble \{[\s\S]{0,180}font-size: 16px/);
     assert.match(css, /\.headerIconButton\[data-active="true"\]/);
-    assert.match(css, /\.fontModeGlyph \{[\s\S]{0,180}font-family: var\(--font-wanted-sans\)/);
+    assert.match(css, /\.fontModeCrayonSample \{[\s\S]{0,260}font-family: var\(--font-crayon\)/);
+    assert.match(css, /\.fontModeReadableSample \{[\s\S]{0,260}font-family: var\(--font-wanted-sans\)/);
 });

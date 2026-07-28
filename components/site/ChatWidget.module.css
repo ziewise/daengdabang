@@ -169,11 +169,37 @@
 }
 
 .fontModeGlyph {
+    display: inline-grid;
+    grid-template-columns: auto 1px auto;
+    align-items: center;
+    column-gap: 2px;
+    line-height: 1;
+}
+
+.fontModeCrayonSample {
+    color: #cf5f65;
+    font-family: var(--font-crayon), var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.08em;
+    transform: rotate(-5deg);
+}
+
+.fontModeDivider {
+    width: 1px;
+    height: 1rem;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.3;
+    transform: rotate(13deg);
+}
+
+.fontModeReadableSample {
+    color: #25264c;
     font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 900;
     letter-spacing: -0.08em;
-    line-height: 1;
 }
 
 .contextBar {
@@ -454,12 +480,16 @@
 }
 
 @media (max-width: 360px) {
+    .titleGroup {
+        margin-right: 4px;
+    }
+
     .noteEyebrow {
         font-size: 0.55rem;
     }
 
     .title {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
 }
 

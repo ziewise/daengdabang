@@ -246,14 +246,18 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <button
                                 type="button"
                                 onClick={() => chatFontModeStorage.set(readableFontEnabled ? "crayon" : "readable")}
-                                className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
+                                className={`${styles.headerIconButton} flex h-10 w-12 items-center justify-center rounded-full`}
                                 data-chat-font-toggle
                                 data-active={readableFontEnabled ? "true" : "false"}
                                 aria-label={fontToggleLabel}
                                 aria-pressed={readableFontEnabled}
                                 title={fontToggleLabel}
                             >
-                                <span className={styles.fontModeGlyph} aria-hidden="true">가</span>
+                                <span className={styles.fontModeGlyph} aria-hidden="true">
+                                    <span className={styles.fontModeCrayonSample}>가</span>
+                                    <span className={styles.fontModeDivider} />
+                                    <span className={styles.fontModeReadableSample}>가</span>
+                                </span>
                             </button>
                             <button
                                 type="button"
