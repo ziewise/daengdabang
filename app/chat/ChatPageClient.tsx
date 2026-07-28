@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, us
 import { useSearchParams } from "next/navigation";
 import {
     answerShopQuestionSmart,
+    ShopChatReferenceRequestError,
     type ShopChatCta,
     type ShopChatAction,
     type ShopChatConversation,
@@ -18,6 +19,11 @@ import { useAuth } from "@/lib/store";
 import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
+import {
+    GenerationReferencePhotoButton,
+    GenerationReferenceTray,
+    useGenerationReferenceAttachments,
+} from "@/components/site/GenerationReferenceComposer";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 type Message = {
@@ -80,6 +86,14 @@ export default function ChatPageClient() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
+    const {
+        hasUploadErrors,
+        isUploading: referencesUploading,
+        readyReferences,
+        showLoginNotice: showReferenceLoginNotice,
+        showNotice: showReferenceNotice,
+    } = generationReferences;
 
     useEffect(() => {
         trackStorefrontEvent("chat_opened", { surface: "chat_page" });
@@ -91,13 +105,23 @@ export default function ChatPageClient() {
         setInput("");
         setLoading(false);
         setMessages([]);
+        generationReferences.clear();
     };
 
     const ask = useCallback(async (question: string) => {
         const trimmed = question.trim();
+        if (referencesUploading) {
+            showReferenceNotice("사진을 올리는 중이에요. 첨부가 끝난 뒤 보내 주세요.");
+            return false;
+        }
+        if (hasUploadErrors) {
+            showReferenceNotice("올리지 못한 사진을 다시 시도하거나 삭제한 뒤 보내 주세요.");
+            return false;
+        }
         if (!trimmed || inFlightRef.current) return false;
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
+        setInput("");
         setLoading(true);
         trackStorefrontEvent("chat_message_sent", {
             surface: "chat_page",
@@ -109,7 +133,12 @@ export default function ChatPageClient() {
         }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
-            const result = await answerShopQuestionSmart(trimmed, { pet: selectedPet, history });
+            const result = await answerShopQuestionSmart(trimmed, {
+                pet: selectedPet,
+                history,
+                references: readyReferences,
+                accessToken: readyReferences.length ? user?.apiAccessToken : undefined,
+            });
             if (requestSequence !== requestSequenceRef.current) return false;
             setMessages((prev) => [
                 ...prev,
@@ -131,8 +160,19 @@ export default function ChatPageClient() {
                 hasMedicalGuidance: Boolean(result.medical),
             });
             return true;
-        } catch {
+        } catch (reason) {
             if (requestSequence === requestSequenceRef.current) {
+                if (reason instanceof ShopChatReferenceRequestError) {
+                    setInput((current) => current.trim() ? current : trimmed);
+                    setMessages((current) => {
+                        const pending = current.at(-1);
+                        return pending?.role === "user" && pending.text === trimmed
+                            ? current.slice(0, -1)
+                            : current;
+                    });
+                    if (reason.status === 401) showReferenceLoginNotice(reason.message);
+                    else showReferenceNotice(reason.message);
+                }
                 trackStorefrontEvent("chat_response_failed", {
                     surface: "chat_page",
                     errorCode: "request_failed",
@@ -145,7 +185,16 @@ export default function ChatPageClient() {
                 setLoading(false);
             }
         }
-    }, [messages, selectedPet]);
+    }, [
+        hasUploadErrors,
+        messages,
+        readyReferences,
+        referencesUploading,
+        selectedPet,
+        showReferenceLoginNotice,
+        showReferenceNotice,
+        user,
+    ]);
 
     useEffect(() => {
         const initialQuestion = params.get("q");
@@ -176,13 +225,13 @@ export default function ChatPageClient() {
         setLoading(false);
         setMessages([]);
         setInput("");
+        generationReferences.clear();
         setSelectedPetIndex(nextIndex);
     };
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
         void ask(input);
-        setInput("");
     };
 
     const latestProducts = [...messages].reverse().find((message) => message.products && message.products.length > 0)?.products ?? [];
@@ -304,18 +353,26 @@ export default function ChatPageClient() {
                         )}
                         <div aria-hidden="true" className="h-px" />
                     </div>
-                    <form onSubmit={submit} className="flex shrink-0 gap-2 border-t border-neutral-200 bg-white p-4">
-                        <input
-                            value={input}
-                            onChange={(event) => setInput(event.target.value)}
-                            className="input h-12 flex-1"
-                            placeholder="예: 강아지 산책은 얼마나 해야 해? / 중형견 하네스 추천"
-                            aria-label="채팅 질문"
-                        />
-                        <button type="submit" disabled={loading} className="btn btn-primary h-12 disabled:opacity-50">
-                            <i className="fa-solid fa-paper-plane text-xs" />
-                            전송
-                        </button>
+                    <form onSubmit={submit} className="flex shrink-0 flex-col border-t border-neutral-200 bg-white p-4">
+                        <GenerationReferenceTray controller={generationReferences} />
+                        <div className="flex gap-2">
+                            <GenerationReferencePhotoButton controller={generationReferences} disabled={loading} />
+                            <input
+                                value={input}
+                                onChange={(event) => setInput(event.target.value)}
+                                className="input h-12 flex-1"
+                                placeholder="예: 강아지 산책은 얼마나 해야 해? / 중형견 하네스 추천"
+                                aria-label="채팅 질문"
+                            />
+                            <button
+                                type="submit"
+                                disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                className="btn btn-primary h-12 shrink-0 disabled:opacity-50"
+                            >
+                                <i className="fa-solid fa-paper-plane text-xs" />
+                                전송
+                            </button>
+                        </div>
                     </form>
                 </section>
 

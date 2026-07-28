@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
     answerShopQuestion,
     answerShopQuestionSmart,
+    ShopChatReferenceRequestError,
     type ShopChatCta,
     type ShopChatAction,
     type ShopChatConversation,
@@ -24,6 +25,11 @@ import {
 import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
+import {
+    GenerationReferencePhotoButton,
+    GenerationReferenceTray,
+    useGenerationReferenceAttachments,
+} from "@/components/site/GenerationReferenceComposer";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage";
 import styles from "./ChatWidget.module.css";
@@ -89,6 +95,14 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const previouslyOpenRef = useRef(false);
     const inFlightRef = useRef(false);
     const requestSequenceRef = useRef(0);
+    const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
+    const {
+        hasUploadErrors,
+        isUploading: referencesUploading,
+        readyReferences,
+        showLoginNotice: showReferenceLoginNotice,
+        showNotice: showReferenceNotice,
+    } = generationReferences;
     const storedChatFontMode = useSyncExternalStore(
         subscribeChatFontMode,
         snapshots.chatFontMode,
@@ -162,10 +176,19 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         setMessages([]);
         setInput("");
         setLoading(false);
+        generationReferences.clear();
     };
 
     const ask = async (question: string) => {
         const trimmed = question.trim();
+        if (referencesUploading) {
+            showReferenceNotice("사진을 올리는 중이에요. 첨부가 끝난 뒤 보내 주세요.");
+            return false;
+        }
+        if (hasUploadErrors) {
+            showReferenceNotice("올리지 못한 사진을 다시 시도하거나 삭제한 뒤 보내 주세요.");
+            return false;
+        }
         if (!trimmed || inFlightRef.current) return false;
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
@@ -186,7 +209,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
         try {
-            const result = await answerShopQuestionSmart(questionForAnswer, { pet: user?.pets?.[0] ?? null, history });
+            const result = await answerShopQuestionSmart(questionForAnswer, {
+                pet: user?.pets?.[0] ?? null,
+                history,
+                references: readyReferences,
+                accessToken: readyReferences.length ? user?.apiAccessToken : undefined,
+            });
             if (requestSequence !== requestSequenceRef.current) return false;
             setMessages((prev) => [
                 ...prev,
@@ -208,8 +236,19 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 hasMedicalGuidance: Boolean(result.medical),
             });
             return true;
-        } catch {
+        } catch (reason) {
             if (requestSequence === requestSequenceRef.current) {
+                if (reason instanceof ShopChatReferenceRequestError) {
+                    setInput((current) => current.trim() ? current : trimmed);
+                    setMessages((current) => {
+                        const pending = current.at(-1);
+                        return pending?.role === "user" && pending.text === trimmed
+                            ? current.slice(0, -1)
+                            : current;
+                    });
+                    if (reason.status === 401) showReferenceLoginNotice(reason.message);
+                    else showReferenceNotice(reason.message);
+                }
                 trackStorefrontEvent("chat_response_failed", {
                     surface: analyticsSurface,
                     errorCode: "request_failed",
@@ -384,23 +423,27 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         )}
                         <div aria-hidden="true" className="h-px" />
                     </div>
-                    <form onSubmit={submit} className={`${styles.composer} flex gap-2 p-3`}>
-                        <input
-                            ref={inputRef}
-                            value={input}
-                            onChange={(event) => setInput(event.target.value)}
-                            className={`${styles.input} h-10 flex-1 px-3`}
-                            placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "증상, 생활 질문, 상품 고민을 입력"}
-                            aria-label="채팅 질문"
-                        />
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className={`${styles.sendButton} flex h-10 w-10 items-center justify-center disabled:opacity-50`}
-                            aria-label="전송"
-                        >
-                            <i className="fa-solid fa-paper-plane text-xs" />
-                        </button>
+                    <form onSubmit={submit} className={`${styles.composer} flex flex-col p-3`}>
+                        <GenerationReferenceTray controller={generationReferences} compact />
+                        <div className="flex gap-2">
+                            <GenerationReferencePhotoButton controller={generationReferences} disabled={loading} compact />
+                            <input
+                                ref={inputRef}
+                                value={input}
+                                onChange={(event) => setInput(event.target.value)}
+                                className={`${styles.input} h-10 flex-1 px-3`}
+                                placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "증상, 생활 질문, 상품 고민을 입력"}
+                                aria-label="채팅 질문"
+                            />
+                            <button
+                                type="submit"
+                                disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
+                                aria-label="전송"
+                            >
+                                <i className="fa-solid fa-paper-plane text-xs" />
+                            </button>
+                        </div>
                     </form>
                 </section>
             )}

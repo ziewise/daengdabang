@@ -13,8 +13,10 @@ import {
 } from "@/lib/petlens-review-breed";
 import { canUsePetLensInferenceForRecommendations } from "@/lib/petlens-result-policy";
 import type { PetProfile } from "@/lib/store";
+import type { GenerationReferenceKind, ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 
 export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
+export type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 
 type PetLensInput = {
     name: string;
@@ -489,9 +491,11 @@ export type ShopChatHistoryTurn = {
     content: string;
 };
 
-type ShopQuestionContext = {
+export type ShopQuestionContext = {
     pet?: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
     history?: ShopChatHistoryTurn[];
+    references?: ShopChatReferenceInput[];
+    accessToken?: string;
 };
 
 export type ShopChatSource = {
@@ -556,6 +560,10 @@ export type ShopChatGeneration = {
         mediaGenerated?: boolean;
         generatedAssets?: string[];
     };
+    references?: {
+        count?: number;
+        kinds?: GenerationReferenceKind[];
+    };
 };
 
 export type ShopChatChoiceGroup = {
@@ -584,6 +592,16 @@ export type ShopChatAnswer = {
     conversation?: ShopChatConversation;
     generation?: ShopChatGeneration;
 };
+
+export class ShopChatReferenceRequestError extends Error {
+    readonly status?: number;
+
+    constructor(message: string, status?: number) {
+        super(message);
+        this.name = "ShopChatReferenceRequestError";
+        this.status = status;
+    }
+}
 
 const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "AVMA pet first aid", url: "https://www.avma.org/resources-tools/pet-owners/emergencycare/first-aid-tips-pet-owners" },
@@ -1056,6 +1074,9 @@ function normalizeGeneration(value: unknown): ShopChatGeneration | undefined {
     const rawExecution = record.execution && typeof record.execution === "object"
         ? record.execution as Record<string, unknown>
         : undefined;
+    const rawReferences = record.references && typeof record.references === "object"
+        ? record.references as Record<string, unknown>
+        : undefined;
     const outputType = rawIntent?.outputType === "image" || rawIntent?.outputType === "video"
         ? rawIntent.outputType
         : null;
@@ -1101,6 +1122,15 @@ function normalizeGeneration(value: unknown): ShopChatGeneration | undefined {
             generatedAssets: Array.isArray(rawExecution.generatedAssets)
                 ? rawExecution.generatedAssets.filter((item): item is string => typeof item === "string").slice(0, 12)
                 : [],
+        } : undefined,
+        references: rawReferences ? {
+            count: typeof rawReferences.count === "number" ? rawReferences.count : undefined,
+            kinds: Array.isArray(rawReferences.kinds)
+                ? rawReferences.kinds.filter((item): item is GenerationReferenceKind => (
+                    typeof item === "string"
+                    && ["subject", "product", "background", "pose", "lighting", "style"].includes(item)
+                )).slice(0, 6)
+                : undefined,
         } : undefined,
     };
 }
@@ -1622,7 +1652,7 @@ function generationIntentFallback(message: string): ShopChatAnswer | null {
     const nextStep = invalidDuration
         ? "영상 길이는 3초 이상 60초 이하로 다시 알려 주세요."
         : needsProduct
-            ? "어떤 상품인지 확인할 수 있는 상품명과 실제 상품 사진이 필요해요. 현재 케어톡 입력창에서는 참고사진을 직접 첨부할 수 없어 실제 생성 접수는 아직 진행되지 않습니다."
+            ? "어떤 상품인지 확인할 수 있는 상품명과 실제 상품 사진이 필요해요. 입력창 옆 사진 버튼으로 참고사진을 첨부한 뒤 다시 보내 주세요."
             : "제작 준비 기능에 다시 연결한 뒤 같은 요청을 보내 주세요.";
     return {
         answer: `${details} 제작 요청으로 이해했어요. ${nextStep} 지금은 실제 이미지나 영상 생성을 시작하지 않았습니다.`,
@@ -1742,6 +1772,43 @@ function customerFacingShopChatAnswer(value: unknown, fallback: string) {
     return withoutRoutingPreamble || fallback;
 }
 
+const SHOP_CHAT_REFERENCE_KINDS = new Set<GenerationReferenceKind>([
+    "subject",
+    "product",
+    "background",
+    "pose",
+    "lighting",
+    "style",
+]);
+
+function normalizedShopChatReferences(context?: ShopQuestionContext): ShopChatReferenceInput[] {
+    if (!context?.accessToken || !Array.isArray(context.references)) return [];
+    const seen = new Set<string>();
+    return context.references.slice(0, 2).flatMap((reference) => {
+        const assetId = typeof reference?.assetId === "string" ? reference.assetId.trim() : "";
+        const kind = reference?.kind;
+        if (
+            !assetId
+            || assetId.length > 48
+            || !/^[A-Za-z0-9_-]+$/.test(assetId)
+            || !SHOP_CHAT_REFERENCE_KINDS.has(kind)
+            || seen.has(assetId)
+        ) return [];
+        seen.add(assetId);
+        return [{ assetId, kind }];
+    });
+}
+
+function shopChatReferenceError(status: number) {
+    if (status === 401) return new ShopChatReferenceRequestError("로그인이 만료되었습니다. 다시 로그인해 주세요.", status);
+    if (status === 403) return new ShopChatReferenceRequestError("이 참고사진을 사용할 수 없습니다. 사진을 삭제하고 다시 첨부해 주세요.", status);
+    if (status === 404 || status === 410) {
+        return new ShopChatReferenceRequestError("참고사진의 보관 기간이 지났거나 삭제되었습니다. 사진을 삭제하고 다시 첨부해 주세요.", status);
+    }
+    if (status === 422) return new ShopChatReferenceRequestError("참고사진 정보를 확인하지 못했습니다. 사진을 삭제하고 다시 첨부해 주세요.", status);
+    return new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 잠시 후 다시 시도해 주세요.", status);
+}
+
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const supportRoute = customerSupportRoute(message);
     const supportFallback = supportRoute ? customerSupportAnswer(supportRoute) : undefined;
@@ -1758,14 +1825,28 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         .filter((turn) => (turn.role === "user" || turn.role === "assistant") && turn.content.trim())
         .map((turn) => ({ role: turn.role, content: turn.content.trim().slice(0, 500) }))
         .slice(-12);
+    const references = normalizedShopChatReferences(context);
 
     try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (references.length && context?.accessToken) {
+            headers.Authorization = `Bearer ${context.accessToken}`;
+        }
         const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message, limit: 6, petProfile: context?.pet ?? null, history }),
+            headers,
+            body: JSON.stringify({
+                message,
+                limit: 6,
+                petProfile: context?.pet ?? null,
+                history,
+                ...(references.length ? { references } : {}),
+            }),
         });
-        if (!response.ok) throw new Error(`shop-chat ${response.status}`);
+        if (!response.ok) {
+            if (references.length) throw shopChatReferenceError(response.status);
+            throw new Error(`shop-chat ${response.status}`);
+        }
         const data = await response.json();
         const apiReturnedProducts = Array.isArray(data.products);
         const apiProducts = apiReturnedProducts
@@ -1836,7 +1917,11 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             conversation,
             generation: medicalMode ? undefined : generation || fallback.generation,
         };
-    } catch {
+    } catch (reason) {
+        if (reason instanceof ShopChatReferenceRequestError) throw reason;
+        if (references.length) {
+            throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
+        }
         return scopeFallback || medicalFallback || generationFallback || knowledgeFallback || fallback;
     }
 }
