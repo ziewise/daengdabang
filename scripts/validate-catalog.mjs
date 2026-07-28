@@ -46,6 +46,7 @@ const CatalogRowSchema = z.object({
     priceText: z.string(),
     priceNum: z.number().int().positive(),
     originalPriceNum: z.number().int().positive().optional(),
+    originalPriceSource: z.enum(["manufacturer_msrp", "supplier_list_price", "recent_store_price"]).optional(),
     categorizeNote: z.string(),
     sourceUrl: z.string(),
     verifyNote: z.string(),
@@ -62,6 +63,20 @@ const CatalogRowSchema = z.object({
             code: "custom",
             path: ["originalPriceNum"],
             message: "기존 정상가는 최종 판매가보다 커야 함",
+        });
+    }
+    if (row.originalPriceNum !== undefined && row.originalPriceSource === undefined) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["originalPriceSource"],
+            message: "할인 비교가는 확인된 가격 근거가 필요함",
+        });
+    }
+    if (row.originalPriceSource !== undefined && row.originalPriceNum === undefined) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["originalPriceNum"],
+            message: "가격 근거만 있고 할인 비교가가 없음",
         });
     }
 });

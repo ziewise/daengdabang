@@ -3,10 +3,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
-    calculateOriginalPrice,
-    seedStorefrontRows,
-    targetDiscountRate,
-} from "../scripts/seed-brand-sale-prices.mjs";
+    clearStorefrontBrandDiscounts,
+} from "../scripts/clear-exempt-brand-discounts.mjs";
 
 const root = new URL("../", import.meta.url);
 const brands = new Set(["Ruffwear", "Rex Specs"]);
@@ -15,7 +13,7 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("Ruffwear and Rex Specs carry explicit editable original prices without deriving a new final price", async () => {
+test("Ruffwear and Rex Specs stay at the current price without a discount comparison", async () => {
     const catalog = JSON.parse(await source("lib/catalog/raw.json"));
     const targets = catalog.filter((row) => brands.has(row.brandEn));
 
@@ -25,34 +23,17 @@ test("Ruffwear and Rex Specs carry explicit editable original prices without der
 
     for (const row of targets) {
         assert.ok(Number.isInteger(row.priceNum) && row.priceNum > 0, `no.${row.no} must have a positive final price`);
-        assert.ok(Number.isInteger(row.originalPriceNum), `no.${row.no} must have an explicit original price`);
-        assert.ok(row.originalPriceNum > row.priceNum, `no.${row.no} must have a higher original price`);
+        assert.equal(Object.hasOwn(row, "originalPriceNum"), false, `no.${row.no} must not have a comparison price`);
     }
 });
 
-test("higher price tiers intentionally use gentler discount rates", () => {
-    assert.equal(targetDiscountRate(20_000), 22);
-    assert.equal(targetDiscountRate(64_000), 18);
-    assert.equal(targetDiscountRate(144_000), 13);
-    assert.equal(targetDiscountRate(270_000), 8);
-    assert.ok(targetDiscountRate(270_000) < targetDiscountRate(20_000));
-    assert.equal(calculateOriginalPrice(64_000), 78_000);
-    assert.equal(calculateOriginalPrice(270_000), 293_000);
-});
-
-test("the seed preserves admin-adjusted original prices unless force is explicit", async () => {
+test("the clearing policy keeps checkout prices unchanged and is idempotent", async () => {
     const catalog = JSON.parse(await source("lib/catalog/raw.json"));
-    const target = catalog.find((row) => brands.has(row.brandEn));
-    assert.ok(target);
-    const customOriginalPrice = target.priceNum + 12_345;
-    const customized = catalog.map((row) => row.no === target.no
-        ? { ...row, originalPriceNum: customOriginalPrice }
-        : row);
-
-    const preserved = seedStorefrontRows(customized);
-    const forced = seedStorefrontRows(customized, { force: true });
-    assert.equal(preserved.find((row) => row.no === target.no)?.originalPriceNum, customOriginalPrice);
-    assert.equal(forced.find((row) => row.no === target.no)?.originalPriceNum, calculateOriginalPrice(target.priceNum));
+    const beforePrices = new Map(catalog.map((row) => [row.no, row.priceNum]));
+    const once = clearStorefrontBrandDiscounts(catalog);
+    const twice = clearStorefrontBrandDiscounts(once);
+    assert.deepEqual(twice, once);
+    for (const row of once) assert.equal(row.priceNum, beforePrices.get(row.no));
 });
 
 test("storefront derives sale state from admin prices and renders the branded final-price treatment", async () => {
@@ -68,9 +49,12 @@ test("storefront derives sale state from admin prices and renders the branded fi
     ]);
 
     assert.match(types, /originalPriceNum\?: number/);
+    assert.match(types, /originalPriceSource\?:/);
+    assert.match(data, /verifiedPriceSources\.has/);
     assert.match(data, /candidateOriginalPrice > price/);
     assert.match(data, /originalPrice - price/);
     assert.match(validator, /originalPriceNum <= row\.priceNum/);
+    assert.match(validator, /할인 비교가는 확인된 가격 근거가 필요함/);
     assert.match(card, /댕다방 할인가/);
     assert.match(info, /댕다방 할인가/);
     assert.match(card, /ddb-sale-price/);

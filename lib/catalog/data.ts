@@ -123,8 +123,11 @@ function buildMeta(row: CatalogRow, price: number) {
     const rating = typeof row.externalReviewAverage === "number" ? row.externalReviewAverage : 0;
     // 할인율은 관리자에서 저장한 두 가격으로만 계산한다. 정상가가 없거나
     // 최종 판매가 이하이면 할인 표시를 만들지 않아 잘못된 취소선을 막는다.
+    const verifiedPriceSources = new Set(["manufacturer_msrp", "supplier_list_price", "recent_store_price"]);
     const candidateOriginalPrice = Number(row.originalPriceNum || 0);
-    const originalPrice = candidateOriginalPrice > price ? candidateOriginalPrice : null;
+    const originalPrice = verifiedPriceSources.has(String(row.originalPriceSource || "")) && candidateOriginalPrice > price
+        ? candidateOriginalPrice
+        : null;
     const discountRate = originalPrice
         ? Math.max(1, Math.round(((originalPrice - price) / originalPrice) * 100))
         : 0;

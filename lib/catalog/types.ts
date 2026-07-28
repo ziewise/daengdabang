@@ -15,6 +15,8 @@ export interface CatalogRow {
     priceNum: number;
     /** 관리자에서 관리하는 취소선 정상가. 실제 결제금액은 priceNum이다. */
     originalPriceNum?: number;
+    /** Discount comparison basis verified by an operator before storefront publication. */
+    originalPriceSource?: "manufacturer_msrp" | "supplier_list_price" | "recent_store_price";
     categorizeNote?: string;
     sourceUrl?: string;
     verifyNote?: string;
