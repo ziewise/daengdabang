@@ -3,10 +3,11 @@
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { ddbApiBase } from "@/lib/customer-api";
-import type { ShopChatCta, ShopChatMedical, ShopChatSource } from "@/lib/daengdabang-llm";
+import type { ShopChatCta, ShopChatGeneration, ShopChatMedical, ShopChatSource } from "@/lib/daengdabang-llm";
 
 type ChatResponseExtrasProps = {
     medical?: ShopChatMedical;
+    generation?: ShopChatGeneration;
     sources?: ShopChatSource[];
     ctas?: ShopChatCta[];
     onAsk: (prompt: string) => boolean | Promise<boolean>;
@@ -637,6 +638,7 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
 
 export default function ChatResponseExtras({
     medical,
+    generation,
     sources,
     ctas,
     onAsk,
@@ -696,6 +698,42 @@ export default function ChatResponseExtras({
 
     return (
         <>
+            {generation ? (
+                <div
+                    data-chat-generation-plan
+                    className={`mt-2 ${widthClass} rounded-lg border border-violet-200 bg-violet-50/80 p-3 text-left shadow-sm`}
+                >
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-violet-800">
+                            제작 요청
+                        </span>
+                        <span className="text-xs font-black text-neutral-700">
+                            {generation.status === "ready_for_generation"
+                                ? "제작 준비 완료"
+                                : generation.status === "blocked"
+                                    ? "요청 수정 필요"
+                                    : generation.status === "needs_information"
+                                        ? "추가 정보 필요"
+                                        : generation.status === "temporarily_unavailable"
+                                            ? "제작 연결 대기"
+                                            : "상태 확인 중"}
+                        </span>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-extrabold text-violet-900">
+                        {generation.intent?.outputType ? <span>{generation.intent.outputType === "video" ? "영상" : "이미지"}</span> : null}
+                        {generation.intent?.purpose ? <span>· {generation.intent.purpose}</span> : null}
+                        {generation.intent?.subject ? <span>· {generation.intent.subject}</span> : null}
+                        {generation.intent?.durationSeconds ? <span>· {generation.intent.durationSeconds}초</span> : null}
+                        {generation.intent?.aspectRatio ? <span>· {generation.intent.aspectRatio}</span> : null}
+                    </div>
+                    {!generation.execution?.mediaGenerated ? (
+                        <p className="mt-2 text-[11px] font-bold leading-4 text-neutral-600">
+                            아직 이미지나 영상 결과가 생성된 상태는 아니에요.
+                        </p>
+                    ) : null}
+                </div>
+            ) : null}
+
             {ctas && ctas.length > 0 && (
                 <div className={`mt-2 ${widthClass} space-y-1.5`}>
                     {ctas.slice(0, 3).map((cta) => {

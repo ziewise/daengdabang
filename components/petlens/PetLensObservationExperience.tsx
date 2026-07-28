@@ -126,7 +126,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const targetAnchorHint = targetAnchor
         ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점${targetAnchorImage ? "과 콕 찍은 참조 이미지" : ""}을 분석 대상 힌트로 보냅니다.`
         : targetAnchorMode === "single_dog_auto"
-            ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 AI가 보류할 수 있어요."
+            ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 대상을 다시 선택해 달라는 안내가 나올 수 있어요."
             : "강아지가 한 마리만 보이면 콕 없이 바로 분석해도 돼요. 여러 마리면 몸통·가슴 중앙을 찍어 주세요.";
 
     const publishWallet = useCallback((next: DaengLabWallet) => {

@@ -533,6 +533,31 @@ export type ShopChatResearch = {
     domains?: string[];
 };
 
+export type ShopChatGeneration = {
+    apiVersion?: string;
+    status?: "needs_information" | "ready_for_generation" | "blocked" | "temporarily_unavailable" | string;
+    requestId?: string | null;
+    canSubmitToGenerator?: boolean;
+    intent?: {
+        outputType?: "image" | "video" | null;
+        subject?: string | null;
+        product?: string | null;
+        style?: string | null;
+        durationSeconds?: number | null;
+        aspectRatio?: "1:1" | "4:5" | "16:9" | "9:16" | null;
+        purpose?: string | null;
+        motion?: string | null;
+        missingFields?: string[];
+    };
+    missingInformation?: Array<{ code?: string; field?: string; message: string }>;
+    plan?: unknown;
+    execution?: {
+        attempted?: boolean;
+        mediaGenerated?: boolean;
+        generatedAssets?: string[];
+    };
+};
+
 export type ShopChatChoiceGroup = {
     title: string;
     choices: Array<{ label: string; prompt: string; description?: string }>;
@@ -557,6 +582,7 @@ export type ShopChatAnswer = {
     ctas?: ShopChatCta[];
     research?: ShopChatResearch;
     conversation?: ShopChatConversation;
+    generation?: ShopChatGeneration;
 };
 
 const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
@@ -1021,6 +1047,64 @@ function normalizeResearch(value: unknown): ShopChatResearch | undefined {
     };
 }
 
+function normalizeGeneration(value: unknown): ShopChatGeneration | undefined {
+    if (!value || typeof value !== "object") return undefined;
+    const record = value as Record<string, unknown>;
+    const rawIntent = record.intent && typeof record.intent === "object"
+        ? record.intent as Record<string, unknown>
+        : undefined;
+    const rawExecution = record.execution && typeof record.execution === "object"
+        ? record.execution as Record<string, unknown>
+        : undefined;
+    const outputType = rawIntent?.outputType === "image" || rawIntent?.outputType === "video"
+        ? rawIntent.outputType
+        : null;
+    const stringOrNull = (item: unknown) => typeof item === "string" && item.trim() ? item.trim() : null;
+    const missingInformation = Array.isArray(record.missingInformation)
+        ? record.missingInformation.slice(0, 8).flatMap((item) => {
+            if (!item || typeof item !== "object") return [];
+            const missing = item as Record<string, unknown>;
+            const message = stringOrNull(missing.message);
+            if (!message) return [];
+            return [{
+                code: stringOrNull(missing.code) || undefined,
+                field: stringOrNull(missing.field) || undefined,
+                message,
+            }];
+        })
+        : undefined;
+    return {
+        apiVersion: stringOrNull(record.apiVersion) || undefined,
+        status: stringOrNull(record.status) || undefined,
+        requestId: stringOrNull(record.requestId),
+        canSubmitToGenerator: record.canSubmitToGenerator === true,
+        intent: rawIntent ? {
+            outputType,
+            subject: stringOrNull(rawIntent.subject),
+            product: stringOrNull(rawIntent.product),
+            style: stringOrNull(rawIntent.style),
+            durationSeconds: typeof rawIntent.durationSeconds === "number" ? rawIntent.durationSeconds : null,
+            aspectRatio: ["1:1", "4:5", "16:9", "9:16"].includes(String(rawIntent.aspectRatio || ""))
+                ? rawIntent.aspectRatio as "1:1" | "4:5" | "16:9" | "9:16"
+                : null,
+            purpose: stringOrNull(rawIntent.purpose),
+            motion: stringOrNull(rawIntent.motion),
+            missingFields: Array.isArray(rawIntent.missingFields)
+                ? rawIntent.missingFields.filter((item): item is string => typeof item === "string").slice(0, 8)
+                : [],
+        } : undefined,
+        missingInformation,
+        plan: record.plan && typeof record.plan === "object" ? record.plan : undefined,
+        execution: rawExecution ? {
+            attempted: rawExecution.attempted === true,
+            mediaGenerated: rawExecution.mediaGenerated === true,
+            generatedAssets: Array.isArray(rawExecution.generatedAssets)
+                ? rawExecution.generatedAssets.filter((item): item is string => typeof item === "string").slice(0, 12)
+                : [],
+        } : undefined,
+    };
+}
+
 function normalizeCtas(value: unknown): ShopChatCta[] {
     if (!Array.isArray(value)) return [];
     return value.slice(0, 6).flatMap((item) => {
@@ -1462,6 +1546,103 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
     }
 }
 
+const DIRECT_GENERATION_REQUEST_RE = /(?:만들어|만들어\s*줘|만들어\s*주세요|제작해|제작해\s*줘|제작해\s*주세요|생성해|생성해\s*줘|생성해\s*주세요|그려\s*줘|그려\s*주세요|디자인해|합성해|create|generate|make\s+me|produce|render)/i;
+const GENERATION_IMAGE_RE = /(?:이미지|사진|그림|일러스트|포스터|배너|썸네일|상세\s*페이지|화보|시안|제품\s*컷|상품\s*컷|image|photo|picture|poster|banner|thumbnail|illustration)/i;
+const GENERATION_VIDEO_RE = /(?:영상|동영상|비디오|릴스|쇼츠|숏폼|애니메이션|움짤|광고\s*필름|video|reels?|shorts?|short[- ]?form|animation)/i;
+const GENERATION_AD_RE = /(?:광고|홍보물|프로모션|캠페인\s*콘텐츠|상업용\s*콘텐츠|advertisement|commercial|promo)/i;
+
+function offlineGenerationIntent(message: string): ShopChatGeneration["intent"] | null {
+    const text = message.trim().replace(/\s+/g, " ");
+    if (!DIRECT_GENERATION_REQUEST_RE.test(text)) return null;
+    const drawingRequest = /(?:그려|draw)/i.test(text);
+    const hasImage = GENERATION_IMAGE_RE.test(text) || drawingRequest;
+    const hasVideo = GENERATION_VIDEO_RE.test(text);
+    if (!hasImage && !hasVideo && !GENERATION_AD_RE.test(text)) return null;
+
+    const durationMatch = text.match(/(\d{1,3})\s*(초|분|sec(?:ond)?s?|min(?:ute)?s?)/i);
+    const rawDuration = durationMatch ? Number(durationMatch[1]) : null;
+    const durationSeconds = rawDuration == null
+        ? null
+        : /^(?:분|min)/i.test(durationMatch?.[2] || "") ? rawDuration * 60 : rawDuration;
+    const outputType = hasVideo || durationSeconds != null || /춤추|댄스|달리|걷는/i.test(text)
+        ? "video"
+        : hasImage ? "image" : null;
+    const productContext = text.match(/^\s*([^:\n]{1,80}?)\s*상품\s*문의\s*:\s*/i)?.[1]?.trim();
+    const deicticProduct = /(?:이|그|저|해당)\s*(?:제품|상품)/i.test(text);
+    const subject = /(?:강아지|반려견|댕댕이|강쥐|퍼피)/i.test(text)
+        ? "강아지"
+        : /(?:고양이|반려묘)/i.test(text) ? "고양이" : null;
+    const style = /(?:귀엽|귀여|큐트|cute)/i.test(text)
+        ? "귀여움"
+        : /(?:고급|럭셔리|luxury)/i.test(text) ? "고급스러움"
+            : /(?:실사|사실적|realistic|photoreal)/i.test(text) ? "사실적" : null;
+    const purpose = /(?:광고|advertisement|commercial)/i.test(text)
+        ? "광고"
+        : /(?:상세\s*페이지|product detail)/i.test(text) ? "상품 상세페이지"
+            : /(?:인스타|sns|릴스|쇼츠|소셜)/i.test(text) ? "SNS 홍보" : null;
+    const compactRatioText = text.replace(/\s*:\s*/g, ":");
+    const aspectRatio = /(?:9:16|세로)/i.test(compactRatioText)
+        ? "9:16"
+        : /(?:16:9|가로)/i.test(compactRatioText) ? "16:9"
+            : /(?:4:5)/i.test(compactRatioText) ? "4:5"
+                : /(?:1:1|정사각|정방형)/i.test(compactRatioText) ? "1:1" : null;
+    const missingFields = [
+        ...(!outputType ? ["output_type"] : []),
+        ...(purpose === "광고" && !productContext && !deicticProduct ? ["product"] : []),
+        ...(deicticProduct && !productContext ? ["product_reference"] : []),
+        ...(durationSeconds != null && (durationSeconds < 3 || durationSeconds > 60) ? ["duration_seconds"] : []),
+    ];
+    return {
+        outputType,
+        subject,
+        product: productContext || (deicticProduct ? "이 제품" : null),
+        style,
+        durationSeconds,
+        aspectRatio,
+        purpose,
+        motion: /귀엽게\s*춤|귀여운\s*춤/i.test(text) ? "귀엽게 춤추기" : /춤추|댄스/i.test(text) ? "춤추기" : null,
+        missingFields,
+    };
+}
+
+function generationIntentFallback(message: string): ShopChatAnswer | null {
+    const intent = offlineGenerationIntent(message);
+    if (!intent) return null;
+    const mediaLabel = intent.outputType === "video" ? "영상" : intent.outputType === "image" ? "이미지" : "콘텐츠";
+    const details = [
+        mediaLabel,
+        intent.purpose,
+        intent.subject ? `주인공 ${intent.subject}` : null,
+        intent.style ? `분위기 ${intent.style}` : null,
+        intent.durationSeconds ? `${intent.durationSeconds}초` : null,
+        intent.aspectRatio ? `화면 ${intent.aspectRatio}` : null,
+    ].filter(Boolean).join(" · ");
+    const needsProduct = intent.missingFields?.includes("product") || intent.missingFields?.includes("product_reference");
+    const invalidDuration = intent.missingFields?.includes("duration_seconds");
+    const nextStep = invalidDuration
+        ? "영상 길이는 3초 이상 60초 이하로 다시 알려 주세요."
+        : needsProduct
+            ? "어떤 상품인지 확인할 수 있는 상품명과 실제 상품 사진이 필요해요. 현재 케어톡 입력창에서는 참고사진을 직접 첨부할 수 없어 실제 생성 접수는 아직 진행되지 않습니다."
+            : "제작 준비 기능에 다시 연결한 뒤 같은 요청을 보내 주세요.";
+    return {
+        answer: `${details} 제작 요청으로 이해했어요. ${nextStep} 지금은 실제 이미지나 영상 생성을 시작하지 않았습니다.`,
+        products: [],
+        medical: { mode: false, triage: "content_generation", topic: intent.outputType || "creative_content", disclaimer: "" },
+        actions: [
+            { label: "제작 요청 확인", status: "done", detail: details },
+            { label: "필요 정보 확인", status: "warn", detail: "실제 생성 전" },
+        ],
+        research: { mode: "none", sourceCount: 0 },
+        generation: {
+            apiVersion: "1.0",
+            status: needsProduct || invalidDuration ? "needs_information" : "temporarily_unavailable",
+            canSubmitToGenerator: false,
+            intent,
+            execution: { attempted: false, mediaGenerated: false, generatedAssets: [] },
+        },
+    };
+}
+
 export function answerShopQuestion(message: string, context?: ShopQuestionContext): ShopChatAnswer {
     const text = message.trim();
     const lower = text.toLowerCase();
@@ -1473,6 +1654,12 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
 
     const supportRoute = customerSupportRoute(text);
     if (supportRoute) return customerSupportAnswer(supportRoute);
+
+    const medicalRoute = medicalSafetyFallback(text);
+    if (medicalRoute) return medicalRoute;
+
+    const generationRoute = generationIntentFallback(text);
+    if (generationRoute) return generationRoute;
 
     if (/하네스|목줄|리드|산책|외출|아웃도어|야간/.test(text)) {
         products = CATALOG.filter((p) => p.category === "outdoor");
@@ -1558,12 +1745,13 @@ function customerFacingShopChatAnswer(value: unknown, fallback: string) {
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const supportRoute = customerSupportRoute(message);
     const supportFallback = supportRoute ? customerSupportAnswer(supportRoute) : undefined;
+    const generationFallback = generationIntentFallback(message);
     const scopeFallback = scopeGuardFallback(message);
     const rareFallback = rareHealthFallback(message);
     const heartwormFallback = heartwormPreventionFallback(message);
     const medicalFallback = rareFallback || heartwormFallback || medicalSafetyFallback(message);
     const knowledgeFallback = canineKnowledgeFallback(message);
-    const fallback = supportFallback || scopeFallback || medicalFallback || knowledgeFallback || answerShopQuestion(message, context);
+    const fallback = supportFallback || scopeFallback || medicalFallback || generationFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
     const history = (context?.history || [])
@@ -1593,6 +1781,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         const research = normalizeResearch(data.research);
         const ctas = normalizeCtas(data.ctas);
         const conversation = normalizeConversation(data.conversation);
+        const generation = normalizeGeneration(data.generation);
         if (supportFallback) {
             const apiCustomerSupport = data?.medical?.triage === "customer_support"
                 || data?.intent === "customer_support"
@@ -1615,6 +1804,23 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 conversation,
             };
         }
+        if (generationFallback && !medicalMode) {
+            const apiGenerationRoute = Boolean(generation || data?.medical?.triage === "content_generation");
+            return {
+                ...generationFallback,
+                answer: apiGenerationRoute
+                    ? customerFacingShopChatAnswer(data.answer, generationFallback.answer)
+                    : generationFallback.answer,
+                products: [],
+                medical: apiGenerationRoute && data.medical && typeof data.medical === "object"
+                    ? data.medical as ShopChatMedical
+                    : generationFallback.medical,
+                actions: apiGenerationRoute && actions.length ? actions : generationFallback.actions,
+                ctas: apiGenerationRoute && ctas.length ? ctas : generationFallback.ctas,
+                generation: generation || generationFallback.generation,
+                conversation,
+            };
+        }
         const apiMedical = medicalMode ? data.medical as ShopChatMedical : fallback.medical;
         if (apiMedical && apiMedical.choiceGroups) {
             apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
@@ -1628,8 +1834,9 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ctas: ctas.length ? ctas : fallback.ctas,
             research: research || fallback.research,
             conversation,
+            generation: medicalMode ? undefined : generation || fallback.generation,
         };
     } catch {
-        return scopeFallback || medicalFallback || knowledgeFallback || fallback;
+        return scopeFallback || medicalFallback || generationFallback || knowledgeFallback || fallback;
     }
 }

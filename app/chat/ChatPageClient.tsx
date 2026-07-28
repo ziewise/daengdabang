@@ -7,6 +7,7 @@ import {
     type ShopChatCta,
     type ShopChatAction,
     type ShopChatConversation,
+    type ShopChatGeneration,
     type ShopChatHistoryTurn,
     type ShopChatMedical,
     type ShopChatSource,
@@ -28,6 +29,7 @@ type Message = {
     actions?: ShopChatAction[];
     ctas?: ShopChatCta[];
     conversation?: ShopChatConversation;
+    generation?: ShopChatGeneration;
 };
 
 const QUICK_QUESTIONS = [
@@ -120,6 +122,7 @@ export default function ChatPageClient() {
                     actions: result.actions,
                     ctas: result.ctas,
                     conversation: result.conversation,
+                    generation: result.generation,
                 },
             ]);
             trackStorefrontEvent("chat_response_succeeded", {
@@ -277,6 +280,7 @@ export default function ChatPageClient() {
                                 {message.role === "assistant" && (
                                     <ChatResponseExtras
                                         medical={message.medical}
+                                        generation={message.generation}
                                         sources={message.sources}
                                         ctas={message.ctas}
                                         onAsk={ask}
