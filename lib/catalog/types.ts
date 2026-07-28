@@ -39,6 +39,8 @@ export interface CatalogRow {
     externalReviewDisclosure?: string;
 }
 
+export type PriceBadgeKind = "select" | "benefit";
+
 export type CategorySlug = "outdoor" | "food" | "life" | "toy" | "care";
 
 export type SubcategorySlug =
@@ -111,6 +113,7 @@ export interface CatalogProduct {
     reviewCount: number;
     discountRate: number;
     originalPrice: number | null;
+    priceBadgeKind: PriceBadgeKind;
     /** 색상 변형(있는 제품만) — 칩 클릭 시 메인 이미지 교체 + 구매 옵션 한글명 */
     colors?: ProductColor[];
     /** 사이즈 옵션(있는 제품만) — 이름 + 사이즈별 가격 증감(원) */

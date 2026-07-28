@@ -50,17 +50,38 @@ test("storefront derives sale state from admin prices and renders the branded fi
 
     assert.match(types, /originalPriceNum\?: number/);
     assert.match(types, /originalPriceSource\?:/);
+    assert.match(types, /PriceBadgeKind = "select" \| "benefit"/);
     assert.match(data, /verifiedPriceSources\.has/);
     assert.match(data, /candidateOriginalPrice > price/);
     assert.match(data, /originalPrice - price/);
+    assert.match(data, /priceBadgeKind: catalogPriceBadgeKind/);
     assert.match(validator, /originalPriceNum <= row\.priceNum/);
     assert.match(validator, /할인 비교가는 확인된 가격 근거가 필요함/);
-    assert.match(card, /댕다방 할인가/);
-    assert.match(info, /댕다방 할인가/);
-    assert.match(card, /ddb-sale-price/);
-    assert.match(info, /ddb-sale-price/);
-    assert.match(search, /ddb-sale-price/);
+    assert.match(card, /catalogPriceBadgeLabel/);
+    assert.match(info, /catalogPriceBadgeLabel/);
+    assert.match(search, /catalogPriceBadgeLabel/);
+    assert.match(card, /ddb-crayon-price/);
+    assert.match(info, /ddb-crayon-price/);
+    assert.match(search, /ddb-crayon-price/);
     assert.match(css, /font-family: var\(--font-crayon\)/);
     assert.match(css, /linear-gradient\(102deg/);
     assert.match(optionSheet, /p\.price/);
+});
+
+test("catalog price badges default for protected and standard brands without changing prices", async () => {
+    const [catalog, badgeSource] = await Promise.all([
+        JSON.parse(await source("lib/catalog/raw.json")),
+        source("lib/catalog/price-badge.ts"),
+    ]);
+    const beforePrices = new Map(catalog.map((row) => [row.no, row.priceNum]));
+    const protectedBrands = catalog.filter((row) => brands.has(row.brandEn));
+    const standardBrands = catalog.filter((row) => !brands.has(row.brandEn));
+
+    assert.equal(protectedBrands.length, 141);
+    assert.equal(standardBrands.length, 192);
+    for (const row of catalog) assert.equal(row.priceNum, beforePrices.get(row.no));
+    assert.match(badgeSource, /Ruffwear/);
+    assert.match(badgeSource, /Rex Specs/);
+    assert.match(badgeSource, /댕다방 셀렉트/);
+    assert.match(badgeSource, /댕다방 혜택가/);
 });

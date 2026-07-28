@@ -118,6 +118,7 @@ body[data-petlens-capture-active="true"] [data-site-header] {
 }
 
 /* 댕다방 로고의 손으로 칠한 듯한 결을 가격 숫자에도 이어 준다. */
+.ddb-crayon-price,
 .ddb-sale-price {
     display: inline-block;
     background: linear-gradient(102deg, #0891b2 0 31%, #ef476f 38% 67%, #f59e0b 75% 100%);
@@ -125,7 +126,7 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     color: #e7466d;
     font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
     font-weight: 700;
-    letter-spacing: -0.055em;
+    letter-spacing: 0;
     line-height: 1;
     filter: drop-shadow(0.45px 0.45px 0 rgba(15, 23, 42, 0.2));
     -webkit-background-clip: text;
@@ -133,9 +134,12 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     -webkit-text-stroke: 0.15px rgba(15, 23, 42, 0.12);
 }
 
+.ddb-price-badge,
 .ddb-sale-label {
     display: inline-flex;
     align-items: center;
+    position: relative;
+    isolation: isolate;
     min-height: 22px;
     border: 1px dashed rgba(239, 71, 111, 0.38);
     border-radius: 999px;
@@ -148,8 +152,37 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     line-height: 1;
     white-space: nowrap;
     transform: rotate(-0.7deg);
+    box-shadow: 0 5px 12px -10px rgba(15, 23, 42, 0.45);
 }
 
+.ddb-price-badge::after,
+.ddb-sale-label::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    right: 9px;
+    bottom: -3px;
+    z-index: -1;
+    height: 4px;
+    border-radius: 999px;
+    background: repeating-linear-gradient(92deg, rgba(8, 145, 178, 0.34) 0 7px, rgba(239, 71, 111, 0.32) 7px 12px, rgba(245, 158, 11, 0.36) 12px 18px);
+    opacity: 0.7;
+    transform: rotate(-1.4deg);
+}
+
+.ddb-price-badge--select {
+    border-color: rgba(99, 102, 241, 0.34);
+    background: linear-gradient(110deg, rgba(224, 242, 254, 0.92), rgba(238, 242, 255, 0.95), rgba(255, 247, 237, 0.92));
+    color: #4338ca;
+}
+
+.ddb-price-badge--benefit {
+    border-color: rgba(239, 71, 111, 0.38);
+    background: linear-gradient(110deg, rgba(8, 145, 178, 0.1), rgba(239, 71, 111, 0.1), rgba(245, 158, 11, 0.12));
+    color: #be185d;
+}
+
+.ddb-price-badge--compact,
 .ddb-sale-label--compact {
     max-width: 100%;
     min-height: 18px;
@@ -157,6 +190,14 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     font-size: 9px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.ddb-price-badge--compact::after,
+.ddb-sale-label--compact::after {
+    left: 6px;
+    right: 6px;
+    bottom: -2px;
+    height: 3px;
 }
 
 /* 댕다방의 크레파스 색을 잇는 댕랩 서비스 워드마크와 TM형 신규 서비스 표식. */

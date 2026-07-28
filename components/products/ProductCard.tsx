@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
+import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { productHref } from "@/lib/shop";          // 운영 사이트 라우트 호환
 import { useStore } from "@/lib/store";            // 운영 사이트 위시리스트 기능
 import { useI18n } from "@/lib/i18n";
@@ -52,6 +53,8 @@ export default function ProductCard({
     const detailHref = productHref(p);                 // 운영 사이트 라우트(/product/{slug})
     const displayName = productName(p);
     const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
+    const priceBadgeLabel = catalogPriceBadgeLabel(p.priceBadgeKind, locale);
+    const priceBadgeClass = catalogPriceBadgeClass(p.priceBadgeKind, true);
 
     // ===== 영상 호버 로직 =====
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -213,12 +216,10 @@ export default function ProductCard({
                             )}
                         </div>
                         <div className="flex min-h-[42px] min-w-0 flex-col items-end justify-end gap-0.5 md:min-h-[24px] md:flex-row md:items-baseline md:gap-1.5">
-                            {hasDiscount && (
-                                <span className="ddb-sale-label ddb-sale-label--compact">
-                                    {locale === "en" ? "DDB sale" : "댕다방 할인가"}
-                                </span>
-                            )}
-                            <p className={hasDiscount ? "ddb-sale-price max-w-full whitespace-nowrap text-lg md:text-xl" : "text-sm font-black md:text-base"}>
+                            <span className={priceBadgeClass}>
+                                {priceBadgeLabel}
+                            </span>
+                            <p className="ddb-crayon-price max-w-full whitespace-nowrap text-lg md:text-xl">
                                 {formatPrice(p.price)}
                             </p>
                         </div>

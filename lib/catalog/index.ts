@@ -3,6 +3,7 @@ export type {
     CatalogProduct,
     CatalogRow,
     CategorySlug,
+    PriceBadgeKind,
     ProductColor,
     PromoSlug,
     SortKey,
@@ -20,6 +21,11 @@ export {
 } from "./labels";
 
 export { CATALOG, findById } from "./data";
+export {
+    catalogPriceBadgeClass,
+    catalogPriceBadgeKind,
+    catalogPriceBadgeLabel,
+} from "./price-badge";
 
 export {
     applySort,

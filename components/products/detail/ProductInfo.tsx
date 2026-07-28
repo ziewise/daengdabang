@@ -17,6 +17,7 @@ import {
     isNewProduct,
     type CatalogProduct,
 } from "@/lib/catalog";
+import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { useAuth, useStore } from "@/lib/store";
 import { usePets } from "@/hooks/usePets";
 import { cartPetOptions } from "@/lib/pet-attribution";
@@ -49,6 +50,9 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     const daengLabCoins = daengLabCoinsForUnitPrice(p.price);
     const displayName = productName(p);
     const canTryOn = getPetTryOnEligibility(p).eligible;
+    const priceBadgeLabel = catalogPriceBadgeLabel(p.priceBadgeKind, locale);
+    const priceBadgeClass = catalogPriceBadgeClass(p.priceBadgeKind);
+    const compactPriceBadgeClass = catalogPriceBadgeClass(p.priceBadgeKind, true);
 
     const colors = p.colors ?? [];
     const hasColors = colors.length > 0;
@@ -184,12 +188,10 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                             </div>
                         )}
                         <div className="flex flex-wrap items-baseline gap-2.5">
-                            {p.discountRate > 0 && p.originalPrice && (
-                                <span className="ddb-sale-label">
-                                    {locale === "en" ? "DaengDaBang price" : "댕다방 할인가"}
-                                </span>
-                            )}
-                            <p className={p.discountRate > 0 && p.originalPrice ? "ddb-sale-price text-4xl md:text-5xl" : "text-4xl font-black text-neutral-950"}>
+                            <span className={priceBadgeClass}>
+                                {priceBadgeLabel}
+                            </span>
+                            <p className="ddb-crayon-price text-4xl md:text-5xl">
                                 {formatPrice(p.price)}
                             </p>
                         </div>
@@ -317,12 +319,10 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-black text-neutral-900">{displayName}</p>
                         <div className="flex min-w-0 flex-col items-start gap-0.5 sm:flex-row sm:items-baseline sm:gap-1.5">
-                            {p.discountRate > 0 && p.originalPrice && (
-                                <span className="ddb-sale-label ddb-sale-label--compact">
-                                    {locale === "en" ? "DDB sale" : "댕다방 할인가"}
-                                </span>
-                            )}
-                            <p className={p.discountRate > 0 && p.originalPrice ? "ddb-sale-price max-w-full whitespace-nowrap text-xl" : "text-sm font-black text-indigo-700"}>{formatPrice(p.price)}</p>
+                            <span className={compactPriceBadgeClass}>
+                                {priceBadgeLabel}
+                            </span>
+                            <p className="ddb-crayon-price max-w-full whitespace-nowrap text-xl">{formatPrice(p.price)}</p>
                         </div>
                     </div>
                     <button

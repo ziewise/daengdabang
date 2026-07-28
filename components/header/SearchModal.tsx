@@ -13,6 +13,7 @@ import Image from "next/image";
 import { POPULAR_KEYWORDS } from "@/lib/menu-data";
 import { searchRecent } from "@/lib/storage";
 import { searchCatalog } from "@/lib/catalog";
+import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { productHref } from "@/lib/shop";
 import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
 import { useI18n } from "@/lib/i18n";
@@ -193,7 +194,10 @@ export default function SearchModal({ open, onClose }: Props) {
                                                                 {formatPrice(p.originalPrice)}
                                                             </span>
                                                         )}
-                                                        <span className={p.discountRate > 0 && p.originalPrice ? "ddb-sale-price text-base" : "text-xs font-black"}>
+                                                        <span className={catalogPriceBadgeClass(p.priceBadgeKind, true)}>
+                                                            {catalogPriceBadgeLabel(p.priceBadgeKind, locale)}
+                                                        </span>
+                                                        <span className="ddb-crayon-price text-base">
                                                             {formatPrice(p.price)}
                                                         </span>
                                                     </div>

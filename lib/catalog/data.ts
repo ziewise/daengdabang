@@ -4,6 +4,7 @@ import type { CatalogProduct, CatalogRow, ProductColor, ProductSize, PromoSlug, 
 import colorsData from "./colors.json";
 import sizesData from "./sizes.json";
 import pricesData from "./prices.json";
+import { catalogPriceBadgeKind } from "./price-badge";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -222,6 +223,7 @@ function buildCatalog(): CatalogProduct[] {
             externalReviewThemes: row.externalReviewThemes,
             externalReviewSnippets: row.externalReviewSnippets,
             externalReviewDisclosure: row.externalReviewDisclosure,
+            priceBadgeKind: catalogPriceBadgeKind(row.brandEn, row.brandKo),
             raw: row,
             colors: buildColors(row.folder),
             sizes: buildSizes(row.folder),
