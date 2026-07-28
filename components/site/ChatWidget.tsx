@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
     answerShopQuestion,
@@ -24,6 +24,7 @@ import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/Ch
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage";
 import styles from "./ChatWidget.module.css";
 
 type Message = {
@@ -42,6 +43,9 @@ type Props = {
     launcherHidden?: boolean;
     onOpenChange?: (open: boolean) => void;
 };
+
+const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_FONT_MODE", callback);
+const getServerChatFontMode = () => "crayon" as const;
 
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     if (!actions?.length) return null;
@@ -83,6 +87,16 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const previouslyOpenRef = useRef(false);
     const inFlightRef = useRef(false);
     const requestSequenceRef = useRef(0);
+    const storedChatFontMode = useSyncExternalStore(
+        subscribeChatFontMode,
+        snapshots.chatFontMode,
+        getServerChatFontMode,
+    );
+    const chatFontMode = storedChatFontMode === "readable" ? "readable" : "crayon";
+    const readableFontEnabled = chatFontMode === "readable";
+    const fontToggleLabel = readableFontEnabled
+        ? "기존 손글씨체로 보기"
+        : "또박또박한 정자체로 보기";
 
     useLayoutEffect(() => {
         if (!open) return;
@@ -220,6 +234,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 <section
                     role="dialog"
                     aria-label="댕다방 케어톡"
+                    data-chat-font-mode={chatFontMode}
                     className={`${styles.panel} absolute bottom-[calc(100%+12px)] z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden`}
                 >
                     <header className={`${styles.header} flex items-center justify-between px-4`}>
@@ -227,7 +242,19 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <span className={styles.noteEyebrow}>CRAYON CARE NOTE</span>
                             <b className={styles.title}>댕다방 케어톡</b>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex shrink-0 items-center gap-1">
+                            <button
+                                type="button"
+                                onClick={() => chatFontModeStorage.set(readableFontEnabled ? "crayon" : "readable")}
+                                className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
+                                data-chat-font-toggle
+                                data-active={readableFontEnabled ? "true" : "false"}
+                                aria-label={fontToggleLabel}
+                                aria-pressed={readableFontEnabled}
+                                title={fontToggleLabel}
+                            >
+                                <span className={styles.fontModeGlyph} aria-hidden="true">가</span>
+                            </button>
                             <button
                                 type="button"
                                 onClick={clearChat}

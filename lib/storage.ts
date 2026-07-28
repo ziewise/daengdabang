@@ -11,7 +11,10 @@ const KEYS = {
     PETS: "daengdabang_pets",
     PET_PENDING: "daengdabang_pet_pending",
     SEARCH_RECENT: "daengdabang_search_recent",
+    CHAT_FONT_MODE: "daengdabang_chat_font_mode",
 } as const;
+
+export type ChatFontMode = "crayon" | "readable";
 
 /** 클라이언트인지 확인 (SSR 가드) */
 const isClient = () => typeof window !== "undefined";
@@ -192,6 +195,15 @@ export const searchRecent = {
     clear: () => removeKey(KEYS.SEARCH_RECENT),
 };
 
+// ============ 케어톡 글꼴 가독성 ============
+export const chatFontModeStorage = {
+    get: (): ChatFontMode => {
+        const value = readJSON<unknown>(KEYS.CHAT_FONT_MODE, "crayon");
+        return value === "readable" ? "readable" : "crayon";
+    },
+    set: (mode: ChatFontMode) => writeJSON(KEYS.CHAT_FONT_MODE, mode),
+};
+
 // ============ storage 변경 구독 — 같은 탭 + 다른 탭 모두 ============
 type StorageKey = keyof typeof KEYS;
 type StorageListener = () => void;
@@ -256,6 +268,7 @@ export const snapshots = {
     auth:        makeSnapshot<import("./types").LoginState | null>(KEYS.AUTH, null),
     pets:        makeSnapshot<import("./types").PetProfile[]>(KEYS.PETS, []),
     pendingPet:  makeSnapshot<import("./types").PetProfile | null>(KEYS.PET_PENDING, null),
+    chatFontMode: makeSnapshot<ChatFontMode>(KEYS.CHAT_FONT_MODE, "crayon"),
 };
 
 /** useSyncExternalStore 의 subscribe 헬퍼 — storage 이벤트 구독 */
