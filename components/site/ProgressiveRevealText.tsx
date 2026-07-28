@@ -10,11 +10,14 @@ type ProgressiveRevealTextProps = {
     maxDelayMs?: number;
 };
 
+export const CHAT_REVEAL_STEP_MS = 68;
+export const CHAT_REVEAL_MAX_DELAY_MS = 2_600;
+
 export default function ProgressiveRevealText({
     text,
     className = "",
-    stepMs = 38,
-    maxDelayMs = 1_350,
+    stepMs = CHAT_REVEAL_STEP_MS,
+    maxDelayMs = CHAT_REVEAL_MAX_DELAY_MS,
 }: ProgressiveRevealTextProps) {
     const parts = useMemo(() => text.split(/(\s+)/), [text]);
     let visibleIndex = 0;

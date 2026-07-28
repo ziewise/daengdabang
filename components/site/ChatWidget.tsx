@@ -325,7 +325,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     }`}
                                 >
                                     {message.role === "assistant" ? (
-                                        <ProgressiveRevealText text={message.text} stepMs={34} maxDelayMs={1_150} />
+                                        <ProgressiveRevealText text={message.text} />
                                     ) : (
                                         message.text
                                     )}

@@ -183,7 +183,7 @@ export default function ChatbotModal({ open, onClose }: Props) {
                         <div key={m.id} className={`${styles.bubble} ${m.role === "bot" ? styles.bubbleBot : styles.bubbleUser}`}>
                             <p className="whitespace-pre-line">
                                 {m.role === "bot" ? (
-                                    <ProgressiveRevealText text={m.text} stepMs={36} maxDelayMs={1_100} />
+                                    <ProgressiveRevealText text={m.text} />
                                 ) : (
                                     m.text
                                 )}
