@@ -607,6 +607,35 @@ button:disabled {
     color: #111827;
 }
 
+.hero-region-select {
+    min-height: 26px;
+    max-width: min(160px, 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    background: rgba(23, 23, 23, 0.4);
+    color: #ffffff;
+    padding: 4px 28px 4px 10px;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.2;
+    outline: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.hero-region-select:focus-visible {
+    border-color: rgba(255, 255, 255, 0.72);
+    box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.2),
+        0 0 0 4px rgba(244, 114, 182, 0.24);
+}
+
+.hero-region-select:disabled {
+    cursor: wait;
+    opacity: 0.72;
+}
+
 /* Keep the native hero region dropdown readable when the popup uses a white surface. */
 .hero-region-select option,
 .hero-region-select optgroup {

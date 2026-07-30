@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type ChangeEvent } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
 import {
     fallbackHeroWeather,
@@ -13,7 +13,13 @@ import {
     type HeroContext,
     type HeroWeather,
 } from "@/lib/hero-assets";
-import { fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
+import {
+    HERO_AUTO_REGION_ID,
+    HERO_WEATHER_REGION_OPTIONS,
+    fetchHeroWeatherReport,
+    heroWeatherSummary,
+    type HeroWeatherReport,
+} from "@/lib/hero-weather";
 import { useI18n } from "@/lib/i18n";
 // 우리 영상 매핑 — 협업자 날씨/시간 감지 결과로 여름 영상 24종(PC/모바일) 중 선택,
 // 그리고 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 선택
@@ -32,6 +38,49 @@ const DEFAULT_CONTEXT: HeroContext = {
     season: "summer",
     timeBucket: "day",
 };
+const HERO_REGION_STORAGE_KEY = "ddb.hero.weather.region.v1";
+const HERO_REGION_CHANGE_EVENT = "ddb:hero-weather-region-change";
+const KOREAN_HERO_WEATHER_REGIONS = HERO_WEATHER_REGION_OPTIONS.filter((region) => region.countryCode === "KR");
+let inMemoryHeroRegion = HERO_AUTO_REGION_ID;
+
+function normalizeStoredHeroRegion(value: string | null | undefined): string {
+    const normalized = value?.trim().toLowerCase();
+    if (!normalized || normalized === HERO_AUTO_REGION_ID) return HERO_AUTO_REGION_ID;
+    return KOREAN_HERO_WEATHER_REGIONS.some((region) => region.id === normalized)
+        ? normalized
+        : HERO_AUTO_REGION_ID;
+}
+
+function readStoredHeroRegion(): string {
+    try {
+        inMemoryHeroRegion = normalizeStoredHeroRegion(window.localStorage.getItem(HERO_REGION_STORAGE_KEY));
+        return inMemoryHeroRegion;
+    } catch {
+        return inMemoryHeroRegion;
+    }
+}
+
+function writeStoredHeroRegion(regionId: string) {
+    inMemoryHeroRegion = normalizeStoredHeroRegion(regionId);
+    try {
+        window.localStorage.setItem(HERO_REGION_STORAGE_KEY, inMemoryHeroRegion);
+    } catch {
+        // The region is only a convenience preference; weather still falls back safely.
+    }
+    window.dispatchEvent(new Event(HERO_REGION_CHANGE_EVENT));
+}
+
+function subscribeStoredHeroRegion(onStoreChange: () => void) {
+    window.addEventListener("storage", onStoreChange);
+    window.addEventListener(HERO_REGION_CHANGE_EVENT, onStoreChange);
+    return () => {
+        window.removeEventListener("storage", onStoreChange);
+        window.removeEventListener(HERO_REGION_CHANGE_EVENT, onStoreChange);
+    };
+}
+
+const getServerHeroRegionSnapshot = () => null;
+const getClientHeroRegionSnapshot = () => readStoredHeroRegion();
 
 function readManualHeroWeather(): HeroWeather | null {
     try {
@@ -81,6 +130,13 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     // 펫렌즈 모달 열기 — 히어로 배지 클릭 시 실행
     const { open: openPetLens } = usePetLensModal();
     const { locale } = useI18n();
+    const storedWeatherRegion = useSyncExternalStore(
+        subscribeStoredHeroRegion,
+        getClientHeroRegionSnapshot,
+        getServerHeroRegionSnapshot,
+    );
+    const regionReady = storedWeatherRegion !== null;
+    const weatherRegion = storedWeatherRegion ?? HERO_AUTO_REGION_ID;
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
     // 모바일(세로) 여부 — 9:16 영상, 데스크탑은 16:9 영상
@@ -95,23 +151,36 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     }, []);
 
     useEffect(() => {
-        const initialContext = resolveClientContext();
-        setContext(initialContext);
-        setWeatherReport(null);
-
-        if (readManualHeroWeather()) return;
+        if (!regionReady) return;
 
         let active = true;
-        fetchHeroWeatherReport().then((report) => {
+
+        async function refreshWeather() {
+            await Promise.resolve();
+            if (!active) return;
+
+            const manualWeather = readManualHeroWeather();
+            setContext(resolveClientContext(manualWeather ?? undefined));
+            setWeatherReport(null);
+            if (manualWeather) return;
+
+            const report = await fetchHeroWeatherReport({ regionId: weatherRegion });
             if (!active || !report) return;
             setWeatherReport(report);
             setContext(resolveClientContext(report.weather, parseOpenMeteoLocalDate(report.localTime)));
-        });
+        }
+
+        void refreshWeather();
 
         return () => {
             active = false;
         };
-    }, []);
+    }, [regionReady, weatherRegion]);
+
+    function handleWeatherRegionChange(event: ChangeEvent<HTMLSelectElement>) {
+        const nextRegion = normalizeStoredHeroRegion(event.target.value);
+        writeStoredHeroRegion(nextRegion);
+    }
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
     // 협업자가 감지한 날씨/시간 → 우리 여름 영상 경로 (PC/모바일)
@@ -184,6 +253,22 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                             {contextLabel}
                         </span>
+                        <select
+                            className="hero-region-select"
+                            value={weatherRegion}
+                            onChange={handleWeatherRegionChange}
+                            aria-label={locale === "en" ? "Hero weather region" : "히어로 날씨 지역"}
+                            disabled={!regionReady}
+                        >
+                            <option value={HERO_AUTO_REGION_ID}>
+                                {locale === "en" ? "Current location" : "현재 위치"}
+                            </option>
+                            {KOREAN_HERO_WEATHER_REGIONS.map((region) => (
+                                <option key={region.id} value={region.id}>
+                                    {locale === "en" ? region.nameEn || region.name : region.name}
+                                </option>
+                            ))}
+                        </select>
                         {weatherSummary && (
                             <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                                 {weatherSummary}
