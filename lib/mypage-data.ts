@@ -12,6 +12,7 @@ export const MOCK_ORDERS: Order[] = [
 ];
 
 export const ORDER_STATUS_LABEL = {
+    test_paid: "테스트 결제완료",
     shipped:   "배송완료",
     shipping:  "배송중",
     preparing: "상품준비중",

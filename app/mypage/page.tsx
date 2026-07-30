@@ -200,7 +200,16 @@ export default function MyPage() {
                                         <article key={order.id} className="rounded-lg border border-neutral-200 p-4">
                                             <div className="flex flex-wrap items-center justify-between gap-2">
                                                 <b className="font-black text-neutral-950">{order.id}</b>
-                                                <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-black text-indigo-700">접수</span>
+                                                <span
+                                                    className={`rounded-full px-2.5 py-1 text-xs font-black ${
+                                                        order.status === "test_paid"
+                                                            ? "bg-sky-50 text-sky-700"
+                                                            : "bg-indigo-50 text-indigo-700"
+                                                    }`}
+                                                    data-order-status={order.status}
+                                                >
+                                                    {order.status === "test_paid" ? "테스트 결제완료 · 배송 없음" : "접수"}
+                                                </span>
                                             </div>
                                             <div className="mt-3 grid gap-1 text-sm font-bold text-neutral-600">
                                                 {lines.map(({ product, qty, color, size }) => (

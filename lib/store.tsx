@@ -15,6 +15,7 @@ import { authStorage } from "@/lib/storage";
 import { DdbApiError, loadPetProfilesSmart } from "@/lib/customer-api";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
 import type { AuthProvider } from "@/lib/types";
+import { removePaidLineQuantities } from "@/lib/cart-payment-reconciliation";
 
 // selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
 export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
@@ -67,7 +68,7 @@ export type Order = {
     receiver: string;
     address: string;
     paymentMethod: string;
-    status: "paid" | "preparing" | "shipped";
+    status: "test_paid" | "paid" | "preparing" | "shipped";
 };
 
 type State = {
@@ -82,6 +83,7 @@ type Action =
     | { type: "ADD_TO_CART"; productId: string; qty: number; color?: string; size?: string }
     | { type: "SET_QTY"; productId: string; qty: number; color?: string; size?: string }
     | { type: "REMOVE_FROM_CART"; productId: string; color?: string; size?: string }
+    | { type: "REMOVE_PAID_LINES"; lines: CartLine[] }
     | { type: "SET_SELECTED"; productId: string; color?: string; size?: string; selected: boolean }
     | { type: "SET_LINE_PET"; productId: string; color?: string; size?: string; petAssignment?: CartPetAssignment }
     | { type: "SET_ALL_SELECTED"; selected: boolean }
@@ -208,6 +210,11 @@ function reducer(state: State, action: Action): State {
             };
         case "REMOVE_FROM_CART":
             return { ...state, cart: state.cart.filter((line) => !sameLine(line, action.productId, action.color, action.size)) };
+        case "REMOVE_PAID_LINES":
+            return {
+                ...state,
+                cart: removePaidLineQuantities(state.cart, action.lines),
+            };
         // 결제 대상 선택 토글(라인 단위 / 전체)
         case "SET_SELECTED":
             return {
@@ -255,7 +262,12 @@ function reducer(state: State, action: Action): State {
         case "SET_PETS":
             return state.user ? { ...state, user: { ...state.user, pets: action.pets } } : state;
         case "ADD_ORDER":
-            return { ...state, orders: [action.order, ...state.orders] };
+            return {
+                ...state,
+                orders: state.orders.some((order) => order.id === action.order.id)
+                    ? state.orders.map((order) => order.id === action.order.id ? action.order : order)
+                    : [action.order, ...state.orders],
+            };
         default:
             return state;
     }
@@ -267,6 +279,7 @@ type StoreValue = {
     addToCart: (productId: string, qty?: number, color?: string, size?: string) => void;
     setQty: (productId: string, qty: number, color?: string, size?: string) => void;
     removeFromCart: (productId: string, color?: string, size?: string) => void;
+    removePaidLines: (lines: CartLine[]) => void;
     setSelected: (productId: string, selected: boolean, color?: string, size?: string) => void;
     setLinePet: (productId: string, petAssignment?: CartPetAssignment, color?: string, size?: string) => void;
     setAllSelected: (selected: boolean) => void;
@@ -368,6 +381,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             addToCart: (productId, qty = 1, color, size) => dispatch({ type: "ADD_TO_CART", productId, qty, color, size }),
             setQty: (productId, qty, color, size) => dispatch({ type: "SET_QTY", productId, qty, color, size }),
             removeFromCart: (productId, color, size) => dispatch({ type: "REMOVE_FROM_CART", productId, color, size }),
+            removePaidLines: (lines) => dispatch({ type: "REMOVE_PAID_LINES", lines }),
             setSelected: (productId, selected, color, size) => dispatch({ type: "SET_SELECTED", productId, color, size, selected }),
             setLinePet: (productId, petAssignment, color, size) => dispatch({ type: "SET_LINE_PET", productId, color, size, petAssignment }),
             setAllSelected: (selected) => dispatch({ type: "SET_ALL_SELECTED", selected }),

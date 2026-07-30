@@ -56,7 +56,7 @@ export interface GradeDefinition {
 }
 
 // ============ 주문 (mock) ============
-export type OrderStatus = "preparing" | "shipping" | "shipped";
+export type OrderStatus = "test_paid" | "preparing" | "shipping" | "shipped";
 
 export interface Order {
     id: string;

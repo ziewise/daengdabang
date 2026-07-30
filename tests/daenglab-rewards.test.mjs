@@ -69,7 +69,7 @@ test("reward point conversion and analysis usage constants stay aligned", () => 
     assert.equal(daengLabAnalysisCount(29), 2);
 });
 
-test("shopping surfaces label coins as purchase-confirmation estimates", async () => {
+test("shopping surfaces label coins as purchase-confirmation estimates while test checkout grants none", async () => {
     const [productInfo, optionSheet, cart, checkout] = await Promise.all([
         source("components/products/detail/ProductInfo.tsx"),
         source("components/products/detail/OptionSheet.tsx"),
@@ -84,9 +84,9 @@ test("shopping surfaces label coins as purchase-confirmation estimates", async (
     assert.match(optionSheet, /구매확정 후 적립/);
     assert.match(cart, /daengLabCoinsForLines\(selectedLines\)/);
     assert.match(cart, /결제 확인 \+ 구매확정 후 적립 · 행동·소리 분석 1회당 10C/);
-    assert.match(checkout, /daengLabCoinsForLines\(lines\)/);
-    assert.match(checkout, /결제 확인과 구매확정이 완료된 주문에만 적립됩니다/);
-    for (const value of [productInfo, optionSheet, cart, checkout]) {
+    assert.doesNotMatch(checkout, /daengLabCoinsForLines|DaengLabCoinMark|data-daenglab-coin-estimate/);
+    assert.match(checkout, /코인 및 적립금 지급은 발생하지 않습니다/);
+    for (const value of [productInfo, optionSheet, cart]) {
         assert.match(value, /data-daenglab-coin-estimate/);
     }
 });

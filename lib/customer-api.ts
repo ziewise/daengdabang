@@ -1,5 +1,6 @@
 import type { PetProfile } from "@/lib/store";
 import type { CustomerSupportCategory } from "@/lib/customer-support";
+import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
 
 export type { CustomerSupportCategory } from "@/lib/customer-support";
 
@@ -163,6 +164,37 @@ export type PasswordResetRequestReceipt = {
 export type PasswordResetVerification = {
     resetToken: string;
     expiresInSeconds: number;
+};
+
+export type TossOrderLine = {
+    productId: string;
+    qty: number;
+    color?: string;
+    size?: string;
+};
+
+export type TossTestOrder = {
+    orderId: string;
+    amount: number;
+    currency: "KRW";
+    orderName: string;
+    clientKey: string;
+    customerKey: string;
+    mode: "test";
+    lines: TossOrderLine[];
+};
+
+export type TossTestPaymentConfirmation = {
+    orderId: string;
+    paymentKey: string;
+    totalAmount: number;
+    status: "test_paid";
+    providerStatus: string;
+    providerMethod?: string | null;
+    mode: "test";
+    lines: TossOrderLine[];
+    paymentMethod: CheckoutPaymentMethod;
+    approvedAt?: string | null;
 };
 
 export class DdbApiError extends Error {
@@ -365,6 +397,35 @@ async function apiJson<T>(
         });
     }
     return response.json() as Promise<T>;
+}
+
+export async function createTossTestOrder(payload: {
+    lines: TossOrderLine[];
+    paymentMethod: CheckoutPaymentMethod;
+}, token?: string) {
+    const order = await apiJson<TossTestOrder>("/api/v1/payments/toss/orders", {
+        method: "POST",
+        body: JSON.stringify(payload),
+    }, token, { requireBase: true });
+    if (!order) {
+        throw new DdbApiError("테스트 주문을 만들지 못했습니다.", { code: "http_error" });
+    }
+    return order;
+}
+
+export async function confirmTossTestPayment(payload: {
+    paymentKey: string;
+    orderId: string;
+    amount: number;
+}, token?: string) {
+    const confirmation = await apiJson<TossTestPaymentConfirmation>("/api/v1/payments/toss/confirm", {
+        method: "POST",
+        body: JSON.stringify(payload),
+    }, token, { requireBase: true });
+    if (!confirmation) {
+        throw new DdbApiError("테스트 결제를 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return confirmation;
 }
 
 export async function signupCustomer(payload: {

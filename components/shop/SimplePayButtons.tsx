@@ -26,7 +26,7 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
                     {locale === "en" ? "Quick payment selection" : "빠른 결제수단 선택"}
                 </p>
                 <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700">
-                    {locale === "en" ? "Setup in progress" : "연동 준비 중"}
+                    {locale === "en" ? "Test mode" : "테스트 모드"}
                 </span>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -64,13 +64,16 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
                 {/* 카카오페이 — 카카오 옐로 + 말풍선 */}
                 <button
                     type="button"
-                    onClick={() => onSelect("kakao_pay")}
-                    disabled={disabled}
-                    aria-label={locale === "en" ? "Continue with Kakao Pay" : "카카오페이로 주문서 이동"}
-                    className="flex h-12 min-w-0 items-center justify-center gap-1.5 rounded-md bg-[#FFEB00] px-2 text-sm font-black text-[#3A1D1D] transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled
+                    aria-disabled="true"
+                    aria-label={locale === "en" ? "Kakao Pay activates after merchant review" : "카카오페이 심사 후 활성화"}
+                    className="flex h-12 min-w-0 cursor-not-allowed items-center justify-center gap-1.5 rounded-md bg-[#FFEB00] px-2 text-[#3A1D1D] opacity-50"
                 >
                     <i className="fa-solid fa-comment text-[15px]" />
-                    <span className="whitespace-nowrap">{locale === "en" ? "Pay" : "카카오페이"}</span>
+                    <span className="flex min-w-0 flex-col text-left leading-tight">
+                        <span className="whitespace-nowrap text-sm font-black">{locale === "en" ? "Kakao Pay" : "카카오페이"}</span>
+                        <span className="break-keep text-[9px] font-black">{locale === "en" ? "After review" : "심사 후 활성화"}</span>
+                    </span>
                 </button>
             </div>
             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-400">

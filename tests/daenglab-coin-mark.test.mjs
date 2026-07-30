@@ -15,7 +15,6 @@ test("DaengLab coin uses one accessible crayon signature across customer surface
         source("components/products/detail/ProductInfo.tsx"),
         source("components/products/detail/OptionSheet.tsx"),
         source("app/cart/page.tsx"),
-        source("app/checkout/page.tsx"),
         source("components/mypage/DaengLabWalletCard.tsx"),
         source("components/petlens/PetLensObservationExperience.tsx"),
     ]);

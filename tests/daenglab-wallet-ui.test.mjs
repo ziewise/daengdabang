@@ -72,7 +72,11 @@ test("behavior and sound analysis shows, enforces, and refreshes the ten-coin co
 });
 
 test("the local demo checkout never mints a server wallet balance", async () => {
-    const checkout = await source("app/checkout/page.tsx");
-    assert.match(checkout, /결제 확인과 구매확정이 완료된 주문에만 적립됩니다/);
-    assert.doesNotMatch(checkout, /purchase-rewards|creditPurchase|daenglab\/wallet/);
+    const [checkout, success] = await Promise.all([
+        source("app/checkout/page.tsx"),
+        source("app/checkout/toss/success/page.tsx"),
+    ]);
+    assert.match(checkout, /코인 및 적립금 지급은 발생하지 않습니다/);
+    assert.match(success, /코인 및 적립금 지급은 발생하지 않습니다/);
+    assert.doesNotMatch(`${checkout}\n${success}`, /purchase-rewards|creditPurchase|daenglab\/wallet/);
 });
