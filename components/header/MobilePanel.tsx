@@ -18,6 +18,7 @@ import {
     CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
+import BrandStoryNavLabel from "./BrandStoryNavLabel";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
 
@@ -179,7 +180,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                     </MobileGroup>
 
                     <MobileLink href="/brand-story" icon="fa-book-open" crayon onClick={onClose}>
-                        {t("brandStory")}
+                        <BrandStoryNavLabel label={t("brandStory")} />
                     </MobileLink>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}

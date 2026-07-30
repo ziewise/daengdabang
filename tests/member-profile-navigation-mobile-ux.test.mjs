@@ -26,6 +26,7 @@ test("member profile create and edit forms expose the same four-view photo regis
 test("the story page is a crayon-styled top-level desktop and mobile menu", () => {
     const header = read("../components/header/Header.tsx");
     const mobile = read("../components/header/MobilePanel.tsx");
+    const storyLabel = read("../components/header/BrandStoryNavLabel.tsx");
     const styles = read("../components/header/Header.module.css");
     const i18n = read("../lib/i18n.tsx");
 
@@ -36,7 +37,8 @@ test("the story page is a crayon-styled top-level desktop and mobile menu", () =
     assert.ok(desktopStoryIndex > desktopCustomerIndex);
     assert.ok(mobileStoryIndex > mobileCustomerIndex);
     assert.match(header, /<BrandStoryNavLabel label=\{t\("brandStory"\)\}/);
-    assert.match(header, /storyTeal[\s\S]*storyRed[\s\S]*storyOrange/);
+    assert.match(mobile, /<BrandStoryNavLabel label=\{t\("brandStory"\)\}/);
+    assert.match(storyLabel, /storyTeal[\s\S]*storyRed[\s\S]*storyOrange/);
     assert.match(mobile, /<MobileLink href="\/brand-story"[^>]*crayon/);
     assert.match(styles, /\.storyNavItem[\s\S]*font-family:\s*var\(--font-crayon\)/);
     assert.match(styles, /\.storyTeal\s*\{\s*color:\s*#36bfc6/);

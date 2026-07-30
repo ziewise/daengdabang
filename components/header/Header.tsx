@@ -20,6 +20,7 @@ import {
     CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
+import BrandStoryNavLabel from "./BrandStoryNavLabel";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
@@ -322,28 +323,6 @@ function NavLink({
         >
             {children}
         </Link>
-    );
-}
-
-function BrandStoryNavLabel({ label }: { label: string }) {
-    const korean = label.startsWith("댕다방");
-    return (
-        <span className={headerStyles.storyLabel} aria-label={label}>
-            <span className={headerStyles.storyBrand} aria-hidden="true">
-                <span className={`${headerStyles.storyGlyph} ${headerStyles.storyTeal}`}>
-                    {korean ? "댕" : "Daeng"}
-                </span>
-                <span className={`${headerStyles.storyGlyph} ${headerStyles.storyRed}`}>
-                    {korean ? "다" : "Da"}
-                </span>
-                <span className={`${headerStyles.storyGlyph} ${headerStyles.storyOrange}`}>
-                    {korean ? "방" : "Bang"}
-                </span>
-            </span>
-            <span className={headerStyles.storySuffix} aria-hidden="true">
-                {korean ? "스토리" : "Story"}
-            </span>
-        </span>
     );
 }
 
