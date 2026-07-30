@@ -620,6 +620,17 @@ const GENERAL_DOG_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "AKC dog owner resources", url: "https://www.akc.org/expert-advice/" },
 ];
 
+const WILDLIFE_BITE_SOURCE_FALLBACK: ShopChatSource[] = [
+    { name: "AVMA rabies guidance", url: "https://ebusiness.avma.org/files/productdownloads/rabies_brochure.pdf" },
+    { name: "CDC rabies guidance for veterinarians", url: "https://www.cdc.gov/rabies/hcp/veterinarians/index.html" },
+    { name: "Merck Veterinary Manual wound management", url: "https://www.merckvetmanual.com/special-pet-topics/emergencies/wound-management" },
+];
+
+const RETRIEVER_COMPARISON_SOURCE_FALLBACK: ShopChatSource[] = [
+    { name: "AKC Labrador Retriever", url: "https://www.akc.org/dog-breeds/labrador-retriever/" },
+    { name: "AKC Golden Retriever", url: "https://www.akc.org/dog-breeds/golden-retriever/" },
+];
+
 function unique(products: CatalogProduct[]) {
     const seen = new Set<string>();
     return products.filter((product) => {
@@ -786,6 +797,65 @@ function healthRuleAnswer(
     };
 }
 
+function wildlifeBiteFallback(message: string): ShopChatAnswer | null {
+    const hasDogSubject = /(강아지|반려견|댕댕이|우리\s*(?:개|강아지)|dog|puppy)/i.test(message);
+    const hasWildlifeOrAnimal = /(너구리|야생\s*동물|박쥐|여우|오소리|들개|유기견|고양이|raccoon|wildlife|wild animal|bat|fox|stray dog|cat)/i.test(message);
+    const hasBiteExposure = /(물렸|물린|물었|물어뜯|교상|공격(?:당|받)|할퀴|긁혔|침이.{0,10}(?:상처|눈|입)|bite|bitten|attacked|scratched)/i.test(message);
+    if (!hasDogSubject || !hasWildlifeOrAnimal || !hasBiteExposure) return null;
+
+    const base = healthRuleAnswer(
+        "지금 바로 동물병원이나 24시 응급 동물병원에 전화한 뒤 이동해 주세요. 너구리 같은 야생동물에게 물린 상처는 겉으로 작아 보여도 깊은 조직 손상·감염과 광견병 노출 평가가 필요합니다. 강아지를 야생동물과 분리하되 직접 잡거나 맨손으로 만지지 마세요. 출혈 부위는 깨끗한 거즈로 압박하고, 안전하게 할 수 있다면 흐르는 물이나 식염수로 가볍게 씻되 병원 이동을 늦추지는 마세요. 광견병 예방접종 기록과 사고 시간·장소를 준비하세요. 사람도 물렸거나 야생동물 침이 눈·입·상처에 닿았다면 사람 의료기관 또는 지역 보건당국에 즉시 상담해야 합니다.",
+        "wildlife_bite_rabies_exposure",
+        "야생동물 교상 및 광견병 노출 가능성",
+        {
+            triage: "emergency",
+            followUpQuestions: [
+                "언제 어디에서 어떤 동물에게 물렸고, 지금 그 동물과 완전히 분리되어 있나요?",
+                "상처 위치와 출혈 정도, 호흡 곤란·축 처짐·심한 통증이 있나요?",
+                "강아지의 최근 광견병 예방접종 날짜와 사람의 물림·침 노출 여부를 알 수 있나요?",
+            ],
+            redFlags: [
+                "압박해도 멈추지 않는 출혈, 호흡 곤란, 쓰러짐 또는 심한 쇠약",
+                "목·가슴·배·눈 주변 교상 또는 깊게 벌어진 상처",
+                "사람도 물렸거나 야생동물 침이 눈·입·기존 상처에 닿음",
+            ],
+            firstSteps: [
+                "강아지와 야생동물을 안전하게 분리하고 야생동물을 직접 포획하거나 만지지 마세요.",
+                "출혈은 깨끗한 거즈로 압박하고, 안전하면 상처를 흐르는 물이나 식염수로 가볍게 씻으세요.",
+                "예방접종 기록과 사고 시간·장소를 준비해 즉시 동물병원에 연락하고 이동하세요.",
+            ],
+            careWindow: "표면 상처가 작아 보여도 기다리지 말고 지금 즉시 동물병원에 연락해야 합니다.",
+        },
+    );
+
+    return {
+        ...base,
+        medical: base.medical ? {
+            ...base.medical,
+            knowledgeLevel: "wildlife-bite-rabies-safety-v1",
+        } : base.medical,
+        sources: WILDLIFE_BITE_SOURCE_FALLBACK,
+        ctas: [
+            {
+                kind: "geo_vet_search",
+                label: "가까운 24시 동물병원 찾기",
+                query: "24시 동물병원",
+                helperText: "위치 권한을 허용하면 가까운 병원 후보를 확인할 수 있어요. 출발 전에 전화로 진료 가능 여부를 확인하세요.",
+                icon: "fa-location-crosshairs",
+            },
+            {
+                kind: "prompt",
+                label: "병원에 전달할 내용 정리",
+                prompt: "야생동물에게 물린 시간과 장소, 상처 위치, 출혈과 현재 증상, 광견병 예방접종 날짜를 병원에 전달할 수 있게 정리해줘",
+                helperText: "아는 내용만 적어도 됩니다.",
+                icon: "fa-clipboard-list",
+            },
+        ],
+        actions: completedActions("야생동물 교상 응급 분류", "제품 추천 차단 및 즉시 병원 안내"),
+        research: { mode: "client-critical-safety", sourceCount: WILDLIFE_BITE_SOURCE_FALLBACK.length },
+    };
+}
+
 function rareHealthFallback(message: string): ShopChatAnswer | null {
     if (/(송충|곤충|벌에\s*쏘|벌\s*쏘|두꺼비|개구리|caterpillar|bee sting|insect)/i.test(message) && /(핥|먹|씹|물|닿|쏘)/i.test(message)) {
         return healthRuleAnswer(
@@ -901,9 +971,9 @@ function heartwormPreventionFallback(message: string): ShopChatAnswer | null {
 
 function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     const text = message.toLowerCase();
-    const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose)/i.test(text);
+    const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|물렸|물린|교상|할퀴|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose|bitten|bite wound)/i.test(text);
     if (!medical) return null;
-    const emergency = /(호흡|숨|잇몸.*파|쓰러|의식|발작|경련|중독|자일리톨|초콜릿|포도|건포도|출혈|피가.*멈추|골절|열사병|breath|collapse|seizure|poison|xylitol|grape|bloat)/i.test(text);
+    const emergency = /(호흡|숨|잇몸.*파|쓰러|의식|발작|경련|중독|자일리톨|초콜릿|포도|건포도|출혈|피가.*멈추|골절|열사병|물렸|물린|교상|할퀴|breath|collapse|seizure|poison|xylitol|grape|bloat|bitten|bite wound)/i.test(text);
     if (emergency) {
         return {
             answer: "응급 가능성이 있습니다. 가까운 동물병원 또는 24시 응급병원에 즉시 연락하세요. 증상 시작 시간, 먹은 것, 복용한 약, 사진/영상을 준비해 병원에 전달하는 것이 좋습니다.",
@@ -973,12 +1043,66 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     };
 }
 
+function retrieverComparisonFallback(message: string): ShopChatAnswer | null {
+    const hasLabrador = /(래브라도|라브라도|labrador)(?:\s*리트리버)?/i.test(message);
+    const hasGolden = /(골든|golden)(?:\s*리트리버)?/i.test(message);
+    const asksComparison = /(차이|비교|다른\s*점|어떤\s*(?:게|것|견종)|대\s*비|vs\.?|알려)/i.test(message);
+    if (!hasLabrador || !hasGolden || !asksComparison) return null;
+
+    return {
+        answer: [
+            "둘 다 사람을 좋아하고 훈련 반응이 좋은 활동적인 리트리버지만, 털 관리와 생활 체감에는 차이가 있어요.",
+            "",
+            "• 털과 외모: 래브라도는 짧고 촘촘한 방수성 이중모이며 검정·노랑·초콜릿색이 대표적입니다. 골든은 금색의 중간 길이 이중모와 다리·꼬리의 풍성한 장식털이 특징입니다.",
+            "• 크기: 성견 체중은 래브라도 약 25~36kg, 골든 약 25~34kg으로 많이 겹칩니다. 품종명만으로 실제 크기를 단정하기보다 부모견과 개체 체형을 함께 봐야 합니다.",
+            "• 성향과 활동: 둘 다 매일 충분한 운동과 사람과의 상호작용이 필요합니다. 래브라도는 특히 활달하고 물놀이·회수 놀이를 좋아하는 경향이 있고, 골든은 다정하고 협조적이며 사람과 함께 과제를 하는 성향이 강한 편입니다.",
+            "• 관리: 둘 다 털이 빠지지만, 긴 장식털이 있는 골든이 빗질과 엉킴 관리에 더 많은 시간이 드는 편입니다. 래브라도도 짧은 털이 꾸준히 빠져 정기적인 빗질은 필요합니다.",
+            "• 선택 기준: 비교적 간단한 털 관리와 매우 활동적인 야외 생활을 원하면 래브라도, 긴 털 관리가 가능하고 밀착감 높은 동반 성향을 선호하면 골든이 더 잘 맞을 수 있어요. 다만 어느 쪽도 운동량이 적은 견종은 아닙니다.",
+            "",
+            "품종 성향은 평균적인 경향일 뿐이고 실제 성격은 혈통, 사회화, 교육, 건강과 개체 차이에 따라 달라집니다.",
+        ].join("\n"),
+        products: [],
+        medical: {
+            mode: false,
+            triage: "canine_knowledge",
+            topic: "labrador_vs_golden_retriever",
+            topicLabel: "래브라도 리트리버와 골든 리트리버 비교",
+            disclaimer: "breed traits are general tendencies and individual dogs vary",
+        },
+        sources: RETRIEVER_COMPARISON_SOURCE_FALLBACK,
+        actions: [
+            { label: "질문 의도 분류", status: "done", detail: "견종 비교" },
+            { label: "공식 품종 자료 확인", status: "done", detail: "래브라도·골든 리트리버 특성 교차 확인" },
+            { label: "답변 정리", status: "done", detail: "상품 추천 없이 생활 기준으로 비교" },
+        ],
+        ctas: [
+            {
+                kind: "prompt",
+                label: "우리 생활에 맞춰 비교",
+                prompt: "우리 집의 산책 시간, 털 관리 가능 시간, 가족 구성과 주거 환경을 기준으로 래브라도와 골든 중 어느 쪽이 맞을지 비교해줘",
+                helperText: "생활 패턴을 알려주면 선택 기준을 더 구체화할 수 있어요.",
+                icon: "fa-scale-balanced",
+            },
+        ],
+        research: { mode: "client-breed-comparison", sourceCount: RETRIEVER_COMPARISON_SOURCE_FALLBACK.length },
+    };
+}
+
+function isBreedKnowledgeQuestion(message: string) {
+    return /(견종|품종|리트리버|래브라도|라브라도|골든|닥스훈트|푸들|말티즈|포메라니안|치와와|비숑|시바|웰시코기|보더콜리|셰퍼드|허스키|사모예드|슈나우저|불독|테리어|labrador|golden|retriever|dachshund|poodle|breed)/i.test(message);
+}
+
+function isBreedComparisonQuestion(message: string) {
+    return isBreedKnowledgeQuestion(message) && /(차이|비교|다른\s*점|어떤\s*(?:게|것|견종)|대\s*비|vs\.?)/i.test(message);
+}
+
 function isCanineKnowledgeQuestion(message: string) {
-    return /(강아지|반려견|댕댕이|멍멍이|퍼피|puppy|dog|산책|훈련|짖|물어|무는|사회화|분리불안|배변|목욕|양치|치아|털갈이|빗질|발톱|귀청소|수면|스트레스|더위|추위|급여|사료|물|체중|예방접종|중성화|심장사상충|진드기|벼룩|노령견)/i.test(message);
+    return isBreedKnowledgeQuestion(message) || /(강아지|반려견|댕댕이|멍멍이|퍼피|puppy|dog|산책|훈련|짖|물어|무는|사회화|분리불안|배변|목욕|양치|치아|털갈이|빗질|발톱|귀청소|수면|스트레스|더위|추위|급여|사료|물|체중|예방접종|중성화|심장사상충|진드기|벼룩|노령견)/i.test(message);
 }
 
 function isShoppingIntent(message: string) {
     if (/(추천\s*말고|상품\s*말고|제품\s*말고|구매\s*말고|사지\s*말고)/i.test(message)) return false;
+    if (isBreedComparisonQuestion(message)) return false;
     return /(추천|상품|제품|구매|가격|최저가|비교|골라|사도|살만|브랜드|사이즈|배송|주문|할인)/i.test(message);
 }
 
@@ -1001,6 +1125,30 @@ function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
         ],
         research: { mode: "client-fallback", sourceCount: GENERAL_DOG_SOURCE_FALLBACK.length },
     };
+}
+
+function normalizeCanineQuestionTerm(value: string) {
+    const suffixes = ["에게", "한테", "에서", "으로", "와", "과", "의", "은", "는", "이", "가", "을", "를"];
+    const suffix = suffixes.find((candidate) => value.endsWith(candidate) && value.length - candidate.length >= 2);
+    return suffix ? value.slice(0, -suffix.length) : value;
+}
+
+function answerAddressesCanineQuestion(message: string, answer: string) {
+    const normalizedAnswer = answer.toLowerCase();
+    if (!normalizedAnswer.trim()) return false;
+    if (retrieverComparisonFallback(message)) {
+        return /(래브라도|라브라도|labrador)/i.test(answer) && /(골든|golden)/i.test(answer);
+    }
+
+    const ignoredTerms = new Set([
+        "강아지", "반려견", "댕댕이", "알려줘", "알려주세요", "궁금해", "궁금합니다",
+        "어떻게", "무엇", "뭐가", "차이점", "차이", "비교", "해줘", "해주세요",
+        "인가요", "할까요", "그리고", "관련", "대한", "please", "about", "what", "how",
+    ]);
+    const terms = (message.toLowerCase().match(/[가-힣]{2,}|[a-z]{3,}/g) || [])
+        .map(normalizeCanineQuestionTerm)
+        .filter((term) => !ignoredTerms.has(term));
+    return terms.length === 0 || terms.some((term) => normalizedAnswer.includes(term));
 }
 
 const CUSTOMER_ACTION_INTERNAL_RE = /\b(?:llama|openai|gemini|llm|model|token|backend|provider|router|pipeline|fallback|rules)\b/i;
@@ -1685,11 +1833,20 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     const supportRoute = customerSupportRoute(text);
     if (supportRoute) return customerSupportAnswer(supportRoute);
 
-    const medicalRoute = medicalSafetyFallback(text);
+    const scopeRoute = scopeGuardFallback(text);
+    if (scopeRoute) return scopeRoute;
+
+    const wildlifeBiteRoute = wildlifeBiteFallback(text);
+    if (wildlifeBiteRoute) return wildlifeBiteRoute;
+
+    const medicalRoute = rareHealthFallback(text) || heartwormPreventionFallback(text) || medicalSafetyFallback(text);
     if (medicalRoute) return medicalRoute;
 
     const generationRoute = generationIntentFallback(text);
     if (generationRoute) return generationRoute;
+
+    const knowledgeRoute = retrieverComparisonFallback(text) || canineKnowledgeFallback(text);
+    if (knowledgeRoute) return knowledgeRoute;
 
     if (/하네스|목줄|리드|산책|외출|아웃도어|야간/.test(text)) {
         products = CATALOG.filter((p) => p.category === "outdoor");
@@ -1810,6 +1967,9 @@ function shopChatReferenceError(status: number) {
 }
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
+    const wildlifeBiteRoute = wildlifeBiteFallback(message);
+    if (wildlifeBiteRoute) return wildlifeBiteRoute;
+
     const supportRoute = customerSupportRoute(message);
     const supportFallback = supportRoute ? customerSupportAnswer(supportRoute) : undefined;
     const generationFallback = generationIntentFallback(message);
@@ -1817,7 +1977,8 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const rareFallback = rareHealthFallback(message);
     const heartwormFallback = heartwormPreventionFallback(message);
     const medicalFallback = rareFallback || heartwormFallback || medicalSafetyFallback(message);
-    const knowledgeFallback = canineKnowledgeFallback(message);
+    const breedComparisonFallback = retrieverComparisonFallback(message);
+    const knowledgeFallback = breedComparisonFallback || canineKnowledgeFallback(message);
     const fallback = supportFallback || scopeFallback || medicalFallback || generationFallback || knowledgeFallback || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
@@ -1899,6 +2060,46 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 actions: apiGenerationRoute && actions.length ? actions : generationFallback.actions,
                 ctas: apiGenerationRoute && ctas.length ? ctas : generationFallback.ctas,
                 generation: generation || generationFallback.generation,
+                conversation,
+            };
+        }
+        if (breedComparisonFallback) {
+            const apiBreedRoute = data?.medical?.triage === "canine_knowledge"
+                || data?.intent === "canine_knowledge"
+                || conversation?.anchorKind === "canine_knowledge";
+            const apiAnswer = customerFacingShopChatAnswer(data.answer, breedComparisonFallback.answer);
+            const useApiAnswer = apiBreedRoute && answerAddressesCanineQuestion(message, apiAnswer);
+            return {
+                ...breedComparisonFallback,
+                answer: useApiAnswer ? apiAnswer : breedComparisonFallback.answer,
+                products: [],
+                medical: useApiAnswer && data.medical && typeof data.medical === "object"
+                    ? data.medical as ShopChatMedical
+                    : breedComparisonFallback.medical,
+                sources: useApiAnswer && apiSources.length ? apiSources : breedComparisonFallback.sources,
+                actions: useApiAnswer && actions.length ? actions : breedComparisonFallback.actions,
+                ctas: useApiAnswer && ctas.length ? ctas : breedComparisonFallback.ctas,
+                research: useApiAnswer && research ? research : breedComparisonFallback.research,
+                conversation,
+            };
+        }
+        if (knowledgeFallback && fallback === knowledgeFallback) {
+            const apiKnowledgeRoute = data?.medical?.triage === "canine_knowledge"
+                || data?.intent === "canine_knowledge"
+                || conversation?.anchorKind === "canine_knowledge";
+            const apiAnswer = customerFacingShopChatAnswer(data.answer, knowledgeFallback.answer);
+            const useApiAnswer = apiKnowledgeRoute && answerAddressesCanineQuestion(message, apiAnswer);
+            return {
+                ...knowledgeFallback,
+                answer: useApiAnswer ? apiAnswer : knowledgeFallback.answer,
+                products: [],
+                medical: useApiAnswer && data.medical && typeof data.medical === "object"
+                    ? data.medical as ShopChatMedical
+                    : knowledgeFallback.medical,
+                sources: useApiAnswer && apiSources.length ? apiSources : knowledgeFallback.sources,
+                actions: useApiAnswer && actions.length ? actions : knowledgeFallback.actions,
+                ctas: useApiAnswer && ctas.length ? ctas : knowledgeFallback.ctas,
+                research: useApiAnswer && research ? research : knowledgeFallback.research,
                 conversation,
             };
         }

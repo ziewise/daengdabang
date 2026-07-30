@@ -29,7 +29,7 @@ test("CareTalk preserves explicit generation requests across API and offline fal
 test("CareTalk keeps emergency API and offline safety answers ahead of generation fallback", async () => {
     const helper = await source("lib/daengdabang-llm.ts");
 
-    assert.match(helper, /const medicalRoute = medicalSafetyFallback\(text\);\s*if \(medicalRoute\) return medicalRoute;\s*\n\s*const generationRoute/s);
+    assert.match(helper, /const medicalRoute = rareHealthFallback\(text\) \|\| heartwormPreventionFallback\(text\) \|\| medicalSafetyFallback\(text\);\s*if \(medicalRoute\) return medicalRoute;\s*\n\s*const generationRoute/s);
     assert.match(helper, /const emergency = \/[^\n]*쓰러/);
     assert.match(helper, /if \(generationFallback && !medicalMode\)/);
     assert.match(helper, /generation: medicalMode \? undefined/);
