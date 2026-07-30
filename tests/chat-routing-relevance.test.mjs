@@ -37,6 +37,15 @@ test("Labrador and Golden Retriever comparison stays in canine knowledge routing
     assert.match(helper, /AKC Golden Retriever/);
 });
 
+test("all selectable breeds participate in canine knowledge routing", async () => {
+    const helper = await source("lib/daengdabang-llm.ts");
+
+    assert.match(helper, /import \{ PET_BREEDS \} from "@\/lib\/pet-companion-breeds"/);
+    assert.match(helper, /return PET_BREEDS\.some\(\(breed\) => \[breed\.en, breed\.ko, \.\.\.breed\.aliases\]/);
+    assert.match(helper, /const minimumLength = \/\[가-힣\]\//);
+    assert.match(helper, /isBreedKnowledgeQuestion\(message\) && \/\(차이\|비교/);
+});
+
 test("unrelated server answers are rejected for canine knowledge questions", async () => {
     const helper = await source("lib/daengdabang-llm.ts");
 

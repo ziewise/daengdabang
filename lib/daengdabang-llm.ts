@@ -12,6 +12,7 @@ import {
     type PetLensReviewOnlyBreedCandidate,
 } from "@/lib/petlens-review-breed";
 import { canUsePetLensInferenceForRecommendations } from "@/lib/petlens-result-policy";
+import { PET_BREEDS } from "@/lib/pet-companion-breeds";
 import type { PetProfile } from "@/lib/store";
 import type { GenerationReferenceKind, ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 
@@ -1089,7 +1090,15 @@ function retrieverComparisonFallback(message: string): ShopChatAnswer | null {
 }
 
 function isBreedKnowledgeQuestion(message: string) {
-    return /(견종|품종|리트리버|래브라도|라브라도|골든|닥스훈트|푸들|말티즈|포메라니안|치와와|비숑|시바|웰시코기|보더콜리|셰퍼드|허스키|사모예드|슈나우저|불독|테리어|labrador|golden|retriever|dachshund|poodle|breed)/i.test(message);
+    if (/(견종|품종|breed)/i.test(message)) return true;
+    const normalized = message.normalize("NFKC").toLocaleLowerCase().replace(/[\s_-]+/g, "");
+    const genericAliases = new Set(["retriever", "리트리버", "poodle", "푸들", "corgi", "코기", "terrier", "테리어"]);
+    return PET_BREEDS.some((breed) => [breed.en, breed.ko, ...breed.aliases].some((label) => {
+        const candidate = label.normalize("NFKC").toLocaleLowerCase().replace(/[\s_-]+/g, "");
+        if (genericAliases.has(candidate)) return false;
+        const minimumLength = /[가-힣]/.test(candidate) ? 2 : 4;
+        return candidate.length >= minimumLength && normalized.includes(candidate);
+    }));
 }
 
 function isBreedComparisonQuestion(message: string) {
