@@ -13,13 +13,13 @@ test("CareTalk preserves explicit generation requests across API and offline fal
     assert.match(helper, /const generationFallback = generationIntentFallback\(message\)/);
     assert.match(
         helper,
-        /const fallback = supportFallback \|\| scopeFallback \|\| medicalFallback \|\| generationFallback/,
+        /const fallback = supportFallback \|\| effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/,
     );
     assert.match(helper, /const generation = normalizeGeneration\(data\.generation\)/);
     assert.match(helper, /data\?\.medical\?\.triage === "content_generation"/);
     assert.match(helper, /if \(generationFallback && !medicalMode\)/);
     assert.match(helper, /generation: medicalMode \? undefined : generation \|\| fallback\.generation/);
-    assert.match(helper, /return scopeFallback \|\| medicalFallback \|\| generationFallback/);
+    assert.match(helper, /return effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/);
     assert.match(helper, /mediaGenerated: false/);
     assert.match(helper, /aspectRatio\?: "1:1" \| "4:5" \| "16:9" \| "9:16"/);
     assert.match(helper, /rawIntent\.aspectRatio/);
@@ -33,7 +33,7 @@ test("CareTalk keeps emergency API and offline safety answers ahead of generatio
     assert.match(helper, /const emergency = \/[^\n]*쓰러/);
     assert.match(helper, /if \(generationFallback && !medicalMode\)/);
     assert.match(helper, /generation: medicalMode \? undefined/);
-    assert.match(helper, /scopeFallback \|\| medicalFallback \|\| generationFallback/);
+    assert.match(helper, /effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/);
 
     const emergencyMixedRequest = "강아지가 피를 토하고 쓰러졌는데 응급 대처 안내 영상을 만들어줘";
     const nonMedicalGeneration = "귀여운 강아지 영상 만들어줘";

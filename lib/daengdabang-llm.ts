@@ -15,9 +15,18 @@ import { canUsePetLensInferenceForRecommendations } from "@/lib/petlens-result-p
 import { PET_BREEDS } from "@/lib/pet-companion-breeds";
 import type { PetProfile } from "@/lib/store";
 import type { GenerationReferenceKind, ShopChatReferenceInput } from "@/lib/generation-reference-assets";
+import {
+    isCurrentInformationRequest,
+    normalizeShopChatResearch,
+    normalizeShopChatSources,
+    shouldUseGeneralVerificationFallback,
+    type ShopChatResearch,
+    type ShopChatSource,
+} from "@/lib/shop-chat-evidence";
 
 export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
 export type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
+export type { ShopChatResearch, ShopChatSource } from "@/lib/shop-chat-evidence";
 
 type PetLensInput = {
     name: string;
@@ -499,11 +508,6 @@ export type ShopQuestionContext = {
     accessToken?: string;
 };
 
-export type ShopChatSource = {
-    name: string;
-    url: string;
-};
-
 export type ShopChatMedical = {
     mode?: boolean;
     triage?: string;
@@ -530,12 +534,6 @@ export type ShopChatConversation = {
     continued: boolean;
     anchorKind?: "shopping" | "health" | "canine_knowledge" | "vet_locator" | string;
     turnsUsed?: number;
-};
-
-export type ShopChatResearch = {
-    mode?: string;
-    sourceCount?: number;
-    domains?: string[];
 };
 
 export type ShopChatGeneration = {
@@ -1209,16 +1207,6 @@ function normalizeConversation(value: unknown): ShopChatConversation | undefined
         continued: true,
         anchorKind: typeof record.anchorKind === "string" ? record.anchorKind : undefined,
         turnsUsed: typeof record.turnsUsed === "number" ? record.turnsUsed : undefined,
-    };
-}
-
-function normalizeResearch(value: unknown): ShopChatResearch | undefined {
-    if (!value || typeof value !== "object") return undefined;
-    const record = value as Record<string, unknown>;
-    return {
-        mode: typeof record.mode === "string" ? record.mode : "",
-        sourceCount: typeof record.sourceCount === "number" ? record.sourceCount : undefined,
-        domains: Array.isArray(record.domains) ? record.domains.filter((item): item is string => typeof item === "string").slice(0, 6) : undefined,
     };
 }
 
@@ -1938,6 +1926,35 @@ function customerFacingShopChatAnswer(value: unknown, fallback: string) {
     return withoutRoutingPreamble || fallback;
 }
 
+function generalVerificationUnavailableAnswer(message: string): ShopChatAnswer {
+    const currentInformation = isCurrentInformationRequest(message);
+    return {
+        answer: currentInformation
+            ? "최신 인터넷 자료를 확인해야 하는 질문인데 지금 검색 서비스에 일시적으로 연결하지 못했습니다. 확인되지 않은 내용을 추측하거나 무관한 상품을 대신 추천하지 않겠습니다. 잠시 후 다시 시도해 주세요."
+            : "일반 질문을 확인할 답변 서비스에 일시적으로 연결하지 못했습니다. 확인되지 않은 답이나 무관한 인기 상품을 대신 보여드리지 않겠습니다. 잠시 후 다시 시도해 주세요.",
+        products: [],
+        medical: {
+            mode: false,
+            triage: "verification_unavailable",
+            topic: currentInformation ? "current_information" : "general_information",
+            disclaimer: "",
+        },
+        sources: [],
+        actions: [
+            {
+                label: currentInformation ? "최신 자료 확인" : "일반 질문 확인",
+                status: "warn",
+                detail: "확인 서비스에 일시적으로 연결하지 못함",
+            },
+        ],
+        research: {
+            mode: currentInformation ? "verification-unavailable" : "general-answer-unavailable",
+            sourceCount: 0,
+            freshnessStatus: "unavailable",
+        },
+    };
+}
+
 const SHOP_CHAT_REFERENCE_KINDS = new Set<GenerationReferenceKind>([
     "subject",
     "product",
@@ -1988,7 +2005,25 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const medicalFallback = rareFallback || heartwormFallback || medicalSafetyFallback(message);
     const breedComparisonFallback = retrieverComparisonFallback(message);
     const knowledgeFallback = breedComparisonFallback || canineKnowledgeFallback(message);
-    const fallback = supportFallback || scopeFallback || medicalFallback || generationFallback || knowledgeFallback || answerShopQuestion(message, context);
+    const currentInformationRequest = isCurrentInformationRequest(message);
+    const effectiveScopeFallback = currentInformationRequest && scopeFallback?.medical?.topic === "out_of_scope"
+        ? undefined
+        : scopeFallback;
+    const effectiveKnowledgeFallback = currentInformationRequest ? undefined : knowledgeFallback;
+    const protectedFallbackAvailable = Boolean(
+        supportFallback
+        || effectiveScopeFallback
+        || medicalFallback
+        || generationFallback
+        || effectiveKnowledgeFallback,
+    );
+    const generalVerificationFallback = shouldUseGeneralVerificationFallback(message, protectedFallbackAvailable)
+        ? generalVerificationUnavailableAnswer(message)
+        : undefined;
+    const fallback = supportFallback || effectiveScopeFallback || medicalFallback || generationFallback
+        || effectiveKnowledgeFallback
+        || generalVerificationFallback
+        || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
     const history = (context?.history || [])
@@ -2023,13 +2058,9 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
             : [];
         const medicalMode = Boolean(data.medical && typeof data.medical === "object" && data.medical.mode);
-        const apiSources = Array.isArray(data.sources)
-            ? data.sources
-                .filter((source: { name?: unknown; url?: unknown }) => typeof source?.name === "string" && typeof source?.url === "string")
-                .map((source: { name: string; url: string }) => ({ name: source.name, url: source.url }))
-            : [];
+        const apiSources = normalizeShopChatSources(data.sources);
         const actions = normalizeActions(data.actions);
-        const research = normalizeResearch(data.research);
+        const research = normalizeShopChatResearch(data.research);
         const ctas = normalizeCtas(data.ctas);
         const conversation = normalizeConversation(data.conversation);
         const generation = normalizeGeneration(data.generation);
@@ -2132,6 +2163,6 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         if (references.length) {
             throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
         }
-        return scopeFallback || medicalFallback || generationFallback || knowledgeFallback || fallback;
+        return effectiveScopeFallback || medicalFallback || generationFallback || effectiveKnowledgeFallback || fallback;
     }
 }

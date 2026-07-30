@@ -12,6 +12,7 @@ import {
     type ShopChatGeneration,
     type ShopChatHistoryTurn,
     type ShopChatMedical,
+    type ShopChatResearch,
     type ShopChatSource,
 } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
@@ -40,6 +41,7 @@ type Message = {
     products?: ReturnType<typeof answerShopQuestion>["products"];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
+    research?: ShopChatResearch;
     actions?: ShopChatAction[];
     ctas?: ShopChatCta[];
     conversation?: ShopChatConversation;
@@ -224,6 +226,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     products: result.products,
                     medical: result.medical,
                     sources: result.sources,
+                    research: result.research,
                     actions: result.actions,
                     ctas: result.ctas,
                     conversation: result.conversation,
@@ -378,6 +381,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                             medical={message.medical}
                                             generation={message.generation}
                                             sources={message.sources}
+                                            research={message.research}
                                             ctas={message.ctas}
                                             onAsk={ask}
                                             onInternalNavigate={() => setOpen(false)}

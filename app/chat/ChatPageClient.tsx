@@ -11,6 +11,7 @@ import {
     type ShopChatGeneration,
     type ShopChatHistoryTurn,
     type ShopChatMedical,
+    type ShopChatResearch,
     type ShopChatSource,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
@@ -32,6 +33,7 @@ type Message = {
     products?: CatalogProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
+    research?: ShopChatResearch;
     actions?: ShopChatAction[];
     ctas?: ShopChatCta[];
     conversation?: ShopChatConversation;
@@ -148,6 +150,7 @@ export default function ChatPageClient() {
                     products: result.products,
                     medical: result.medical,
                     sources: result.sources,
+                    research: result.research,
                     actions: result.actions,
                     ctas: result.ctas,
                     conversation: result.conversation,
@@ -331,6 +334,7 @@ export default function ChatPageClient() {
                                         medical={message.medical}
                                         generation={message.generation}
                                         sources={message.sources}
+                                        research={message.research}
                                         ctas={message.ctas}
                                         onAsk={ask}
                                         followUpsEnabled={
