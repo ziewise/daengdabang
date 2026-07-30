@@ -139,10 +139,6 @@ export default function MobilePanel({ open, onClose }: Props) {
                         ))}
                     </MobileGroup>
 
-                    <MobileLink href="/brand-story" icon="fa-book-open" crayon onClick={onClose}>
-                        {t("brandStory")}
-                    </MobileLink>
-
                     <MobileGroup
                         label={t("brand")}
                         expanded={expanded === "brand"}
@@ -181,6 +177,10 @@ export default function MobilePanel({ open, onClose }: Props) {
                             </SubLink>
                         ))}
                     </MobileGroup>
+
+                    <MobileLink href="/brand-story" icon="fa-book-open" crayon onClick={onClose}>
+                        {t("brandStory")}
+                    </MobileLink>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}
                     <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>

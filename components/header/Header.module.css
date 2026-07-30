@@ -8,9 +8,48 @@
 .storyNavItem {
     font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
     font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: -0.035em;
+    font-weight: 800;
+    letter-spacing: -0.045em;
     white-space: nowrap;
+}
+
+.storyLabel {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.16em;
+    line-height: 1;
+    transform: rotate(-0.35deg);
+}
+
+.storyBrand {
+    display: inline-flex;
+    align-items: baseline;
+    letter-spacing: -0.09em;
+}
+
+.storyGlyph {
+    display: inline-block;
+    -webkit-text-stroke: 0.25px currentColor;
+    paint-order: stroke fill;
+    text-shadow:
+        0.45px 0.35px color-mix(in srgb, currentColor 42%, transparent),
+        -0.35px 0.15px color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.storyGlyph:nth-child(1) { transform: rotate(-1.1deg) translateY(0.2px); }
+.storyGlyph:nth-child(2) { transform: rotate(0.8deg) translateY(-0.25px); }
+.storyGlyph:nth-child(3) { transform: rotate(-0.45deg) translateY(0.3px); }
+
+.storyTeal { color: #36bfc6; }
+.storyRed { color: #ec6256; }
+.storyOrange { color: #f39a26; }
+
+.storySuffix {
+    color: #2c3440;
+    font-size: 0.86em;
+    letter-spacing: -0.055em;
+    text-shadow: 0.35px 0.25px rgba(44, 52, 64, 0.24);
+    transition: color 160ms ease;
 }
 
 .desktopNavItem::before,
@@ -51,6 +90,14 @@
         0.45px 0 rgba(38, 152, 199, 0.52),
         -0.35px 0.25px rgba(242, 139, 114, 0.42);
     animation: navCrayonWiggle 1.25s steps(3, end) infinite;
+}
+
+.desktopNavItem.storyNavItem:is(:hover, :focus-visible) .storySuffix {
+    color: #268f9a;
+}
+
+.desktopNavItem.storyNavItem:is(:hover, :focus-visible) .storyGlyph {
+    filter: saturate(1.12) brightness(1.02);
 }
 
 .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::before {

@@ -29,9 +29,19 @@ test("the story page is a crayon-styled top-level desktop and mobile menu", () =
     const styles = read("../components/header/Header.module.css");
     const i18n = read("../lib/i18n.tsx");
 
-    assert.match(header, /<NavLink href="\/brand-story" crayon>\{t\("brandStory"\)\}<\/NavLink>/);
+    const desktopCustomerIndex = header.lastIndexOf('label={t("customerCenter")}');
+    const desktopStoryIndex = header.indexOf('<NavLink href="/brand-story" crayon>');
+    const mobileCustomerIndex = mobile.lastIndexOf('label={t("customerCenter")}');
+    const mobileStoryIndex = mobile.indexOf('<MobileLink href="/brand-story"');
+    assert.ok(desktopStoryIndex > desktopCustomerIndex);
+    assert.ok(mobileStoryIndex > mobileCustomerIndex);
+    assert.match(header, /<BrandStoryNavLabel label=\{t\("brandStory"\)\}/);
+    assert.match(header, /storyTeal[\s\S]*storyRed[\s\S]*storyOrange/);
     assert.match(mobile, /<MobileLink href="\/brand-story"[^>]*crayon/);
     assert.match(styles, /\.storyNavItem[\s\S]*font-family:\s*var\(--font-crayon\)/);
+    assert.match(styles, /\.storyTeal\s*\{\s*color:\s*#36bfc6/);
+    assert.match(styles, /\.storyRed\s*\{\s*color:\s*#ec6256/);
+    assert.match(styles, /\.storyOrange\s*\{\s*color:\s*#f39a26/);
     assert.match(i18n, /brandStory:\s*"댕다방 스토리"/);
 });
 

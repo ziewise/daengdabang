@@ -1,7 +1,7 @@
 /**
  * Header — 사이트 메인 헤더 (글래스 + 메가메뉴 + 모바일 토글)
  * ---------------------------------------------------------------------
- * 데스크탑: 로고 + 메인 nav(베스트·신상품·카테고리·브랜드·댕다방 스토리·기획전·고객센터) + 검색·장바구니·로그인
+ * 데스크탑: 로고 + 메인 nav(베스트·신상품·카테고리·브랜드·기획전·고객센터·댕다방 스토리) + 검색·장바구니·로그인
  * 모바일: 로고 + 햄버거 토글만 (전체 메뉴는 MobilePanel)
  *
  * client component (드롭다운 toggle, 검색·모바일 모달 trigger, 인증 상태 표시).
@@ -164,8 +164,6 @@ export default function Header() {
                             </div>
                         </NavDropdown>
 
-                        <NavLink href="/brand-story" crayon>{t("brandStory")}</NavLink>
-
                         {/* 기획전 — 5개 promo 카드 */}
                         <NavDropdown
                             label={t("promotion")}
@@ -217,6 +215,10 @@ export default function Header() {
                                 ))}
                             </ul>
                         </NavDropdown>
+
+                        <NavLink href="/brand-story" crayon>
+                            <BrandStoryNavLabel label={t("brandStory")} />
+                        </NavLink>
                     </nav>
 
                     {/* 우측 유틸리티
@@ -320,6 +322,28 @@ function NavLink({
         >
             {children}
         </Link>
+    );
+}
+
+function BrandStoryNavLabel({ label }: { label: string }) {
+    const korean = label.startsWith("댕다방");
+    return (
+        <span className={headerStyles.storyLabel} aria-label={label}>
+            <span className={headerStyles.storyBrand} aria-hidden="true">
+                <span className={`${headerStyles.storyGlyph} ${headerStyles.storyTeal}`}>
+                    {korean ? "댕" : "Daeng"}
+                </span>
+                <span className={`${headerStyles.storyGlyph} ${headerStyles.storyRed}`}>
+                    {korean ? "다" : "Da"}
+                </span>
+                <span className={`${headerStyles.storyGlyph} ${headerStyles.storyOrange}`}>
+                    {korean ? "방" : "Bang"}
+                </span>
+            </span>
+            <span className={headerStyles.storySuffix} aria-hidden="true">
+                {korean ? "스토리" : "Story"}
+            </span>
+        </span>
     );
 }
 
