@@ -124,13 +124,14 @@ test("active guest PetLens routes to signup or login while signup keeps legacy d
     assert.match(signup, /사진으로 성별을 추정하지 않습니다/);
 });
 
-test("signup only auto-selects an exact canonical 120-breed name", async () => {
+test("signup only auto-selects an exact selectable breed name", async () => {
     const [breedSource, signupSource] = await Promise.all([
         readFile(new URL("../lib/pet-companion-breeds.ts", import.meta.url), "utf8"),
         readFile(new URL("../app/auth/signup/page.tsx", import.meta.url), "utf8"),
     ]);
 
     assert.match(breedSource, /export function resolvePetBreedIdExact/);
+    assert.match(breedSource, /Resolve photo-analysis output only when it names one exact selectable breed entry/);
     assert.match(breedSource, /Broad aliases such as "푸들" \/ "Poodle" intentionally do not resolve/);
     assert.equal((signupSource.match(/resolvePetBreedIdExact\(rawBreedCandidate, ""\)/g) || []).length, 2);
     assert.match(signupSource, /const rawBreedCandidate = \(draft\.breed \|\| ""\)\.trim\(\)/);

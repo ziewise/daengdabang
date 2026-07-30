@@ -29,14 +29,18 @@ ASSET_DIRECTORY = (
 
 def catalog_breed_ids() -> list[str]:
     source = CATALOG_PATH.read_text(encoding="utf-8")
-    start = source.find("const BREED_DEFINITIONS")
-    end = source.find("\n];", start)
-    if start < 0 or end < 0:
-        raise RuntimeError("Unable to locate the pet companion breed catalog")
-    breed_ids = re.findall(r'^\s*\["([^"]+)"', source[start:end], re.MULTILINE)
-    if len(breed_ids) != 120 or len(set(breed_ids)) != 120:
+    breed_ids: list[str] = []
+    for name in ("BREED_DEFINITIONS", "EXTENDED_BREED_DEFINITIONS"):
+        start = source.find(f"const {name}")
+        end = source.find("\n];", start)
+        if start < 0 or end < 0:
+            raise RuntimeError(f"Unable to locate {name}")
+        breed_ids.extend(
+            re.findall(r'^\s*\["([^"]+)"', source[start:end], re.MULTILINE)
+        )
+    if len(breed_ids) != 155 or len(set(breed_ids)) != 155:
         raise RuntimeError(
-            f"Expected 120 unique catalog breeds; found {len(breed_ids)}/{len(set(breed_ids))}"
+            f"Expected 155 unique catalog breeds; found {len(breed_ids)}/{len(set(breed_ids))}"
         )
     return breed_ids
 
@@ -151,8 +155,8 @@ def main() -> int:
     if missing or unexpected:
         print(
             "ERROR: atlas coverage is "
-            f"{len(actual_core_names)}/120 core and "
-            f"{len(actual_vertical_names)}/120 vertical",
+            f"{len(actual_core_names)}/155 core and "
+            f"{len(actual_vertical_names)}/155 vertical",
             file=sys.stderr,
         )
         if missing:
@@ -167,7 +171,7 @@ def main() -> int:
     failures = [(name, error) for name, error in results if error]
     if failures:
         print(
-            f"ERROR: {len(failures)}/120 breed atlases failed strict frame validation",
+            f"ERROR: {len(failures)}/155 breed atlases failed strict frame validation",
             file=sys.stderr,
         )
         for name, error in failures:
@@ -176,8 +180,8 @@ def main() -> int:
 
     print(
         "Pet companion frame quality verified: "
-        "120 core and 120 vertical breed atlases, "
-        "3,840 aligned transparent frames."
+        "155 core and 155 vertical breed atlases, "
+        "4,960 aligned transparent frames."
     )
     return 0
 

@@ -5,17 +5,23 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const catalogPath = path.join(root, "lib", "pet-companion-breeds.ts");
 const source = readFileSync(catalogPath, "utf8");
-const definitionStart = source.indexOf("const BREED_DEFINITIONS");
-const definitionEnd = source.indexOf("\n];", definitionStart);
-if (definitionStart < 0 || definitionEnd < 0) {
-    throw new Error("Unable to locate the pet companion breed catalog.");
+function readDefinitionBlock(name) {
+    const start = source.indexOf(`const ${name}`);
+    const end = source.indexOf("\n];", start);
+    if (start < 0 || end < 0) {
+        throw new Error(`Unable to locate ${name}.`);
+    }
+    return [...source.slice(start, end).matchAll(
+        /^\s*\["([^"]+)", "([^"]+)", "([^"]+)"/gm,
+    )].map((match) => ({ id: match[1], en: match[2], ko: match[3] }));
 }
 
-const definitions = [...source.slice(definitionStart, definitionEnd).matchAll(
-    /^\s*\["([^"]+)", "([^"]+)", "([^"]+)"/gm,
-)].map((match) => ({ id: match[1], en: match[2], ko: match[3] }));
-if (definitions.length !== 120) {
-    throw new Error(`Expected 120 breed definitions; found ${definitions.length}.`);
+const definitions = [
+    ...readDefinitionBlock("BREED_DEFINITIONS"),
+    ...readDefinitionBlock("EXTENDED_BREED_DEFINITIONS"),
+];
+if (definitions.length !== 155 || new Set(definitions.map(({ id }) => id)).size !== 155) {
+    throw new Error(`Expected 155 unique breed definitions; found ${definitions.length}.`);
 }
 
 const assetDirectory = path.join(
@@ -42,9 +48,9 @@ const assets = definitions.map((breed) => {
 
 const manifest = {
     version: "cute-v4-breeds",
-    cacheVersion: "20260712-2",
-    catalog: "DaengDaBang 120 breed companion characters",
-    generated: "2026-07-12",
+    cacheVersion: "20260730-1",
+    catalog: "DaengDaBang 155 breed companion characters",
+    generated: "2026-07-30",
     layout: {
         columns: 4,
         rows: 4,

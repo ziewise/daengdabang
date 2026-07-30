@@ -34,7 +34,7 @@ type Props = {
 };
 
 const BREED_MOTION_ASSET_ROOT = "/images/pet-companion/cute-v4-breeds";
-const BREED_MOTION_ASSET_VERSION = "20260712-2";
+const BREED_MOTION_ASSET_VERSION = "20260730-1";
 type TurnPhase = "rest" | "out" | "in";
 
 export default function PetCompanionCharacter({
@@ -87,9 +87,9 @@ export default function PetCompanionCharacter({
 
     const breed = getPetBreedVisual(breedId || legacyCharacterBreedId(characterId));
     const renderTokens = getPetBreedRenderTokens(breed);
-    const breedCoreSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.id}-core.webp?v=${BREED_MOTION_ASSET_VERSION}`;
-    const breedPosterSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.id}-poster.webp?v=${BREED_MOTION_ASSET_VERSION}`;
-    const breedVerticalSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.id}-vertical.webp?v=${BREED_MOTION_ASSET_VERSION}`;
+    const breedCoreSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.assetId}-core.webp?v=${BREED_MOTION_ASSET_VERSION}`;
+    const breedPosterSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.assetId}-poster.webp?v=${BREED_MOTION_ASSET_VERSION}`;
+    const breedVerticalSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.assetId}-vertical.webp?v=${BREED_MOTION_ASSET_VERSION}`;
     const characterStyle = {
         "--pet-breed-scale-x": String(renderTokens.scaleX),
         "--pet-breed-scale-y": String(renderTokens.scaleY),

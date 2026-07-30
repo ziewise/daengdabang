@@ -11,22 +11,25 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const breedCatalogPath = path.join(root, "lib", "pet-companion-breeds.ts");
 const breedSource = readFileSync(breedCatalogPath, "utf8");
-const definitionStart = breedSource.indexOf("const BREED_DEFINITIONS");
-const definitionEnd = breedSource.indexOf("\n];", definitionStart);
-if (definitionStart < 0 || definitionEnd < 0) {
-    throw new Error("Unable to locate the pet companion breed catalog.");
+function readDefinitionBlock(name) {
+    const start = breedSource.indexOf(`const ${name}`);
+    const end = breedSource.indexOf("\n];", start);
+    if (start < 0 || end < 0) throw new Error(`Unable to locate ${name}.`);
+    return [...breedSource.slice(start, end).matchAll(
+        /^\s*\["([^"]+)", "([^"]+)", "([^"]+)"/gm,
+    )].map((match) => ({ id: match[1], en: match[2], ko: match[3] }));
 }
 
-const definitionBlock = breedSource.slice(definitionStart, definitionEnd);
-const breedDefinitions = [...definitionBlock.matchAll(
-    /^\s*\["([^"]+)", "([^"]+)", "([^"]+)"/gm,
-)].map((match) => ({ id: match[1], en: match[2], ko: match[3] }));
+const breedDefinitions = [
+    ...readDefinitionBlock("BREED_DEFINITIONS"),
+    ...readDefinitionBlock("EXTENDED_BREED_DEFINITIONS"),
+];
 const breedIds = breedDefinitions.map(({ id }) => id);
 const breedDefinitionById = new Map(breedDefinitions.map((breed) => [breed.id, breed]));
 const uniqueBreedIds = new Set(breedIds);
-if (breedIds.length !== 120 || uniqueBreedIds.size !== 120) {
+if (breedIds.length !== 155 || uniqueBreedIds.size !== 155) {
     throw new Error(
-        `Pet companion catalog must define 120 unique breeds; found ${breedIds.length}/${uniqueBreedIds.size}.`,
+        `Pet companion catalog must define 155 unique breeds; found ${breedIds.length}/${uniqueBreedIds.size}.`,
     );
 }
 
@@ -120,7 +123,7 @@ const missingBreedFiles = expectedBreedFiles.filter((fileName) => !actualBreedFi
 const unexpectedBreedFiles = actualBreedFiles.filter((fileName) => !expectedBreedFiles.includes(fileName));
 if (missingBreedFiles.length || unexpectedBreedFiles.length) {
     throw new Error([
-        `Breed-specific asset coverage is incomplete (${actualBreedFiles.length}/360).`,
+        `Breed-specific asset coverage is incomplete (${actualBreedFiles.length}/465).`,
         missingBreedFiles.length ? `Missing: ${missingBreedFiles.join(", ")}` : "",
         unexpectedBreedFiles.length ? `Unexpected: ${unexpectedBreedFiles.join(", ")}` : "",
     ].filter(Boolean).join(" "));
@@ -133,9 +136,9 @@ if (!existsSync(manifestPath)) {
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 if (
     manifest.version !== "cute-v4-breeds"
-    || manifest.cacheVersion !== "20260712-2"
-    || manifest.assetCount !== 120
-    || manifest.frameCount !== 3_840
+    || manifest.cacheVersion !== "20260730-1"
+    || manifest.assetCount !== 155
+    || manifest.frameCount !== 4_960
     || manifest.layout?.columns !== 4
     || manifest.layout?.rows !== 4
     || manifest.layout?.cell?.[0] !== 256
@@ -150,12 +153,12 @@ if (
     || manifest.verticalLayout?.framesPerDirection !== 8
     || JSON.stringify(manifest.verticalLayout?.motions) !== JSON.stringify(["run-up", "run-down"])
     || !Array.isArray(manifest.assets)
-    || manifest.assets.length !== 120
+    || manifest.assets.length !== 155
 ) {
     throw new Error("Breed-specific asset manifest header is invalid or incomplete.");
 }
 const manifestByFile = new Map(manifest.assets.map((asset) => [asset.file, asset]));
-if (manifestByFile.size !== 120) {
+if (manifestByFile.size !== 155) {
     throw new Error("Breed-specific asset manifest contains duplicate file entries.");
 }
 
@@ -165,7 +168,7 @@ const seenVerticalHashes = new Map();
 for (const fileName of expectedCoreFiles) {
     const asset = path.join(breedAssetDirectory, fileName);
     const bytes = assertWebp(asset, { expectedSize: [1024, 1024], requireAlpha: true });
-    if (bytes.length < 20_000 || bytes.length > 650_000) {
+    if (bytes.length < 20_000 || bytes.length > 850_000) {
         throw new Error(
             `Breed atlas size is outside the quality budget (${bytes.length} bytes): ${path.relative(root, asset)}`,
         );
@@ -215,7 +218,7 @@ for (const fileName of expectedCoreFiles) {
         expectedSize: [1024, 1024],
         requireAlpha: true,
     });
-    if (verticalBytes.length < 20_000 || verticalBytes.length > 650_000) {
+    if (verticalBytes.length < 20_000 || verticalBytes.length > 850_000) {
         throw new Error(
             `Vertical breed atlas size is outside the quality budget (${verticalBytes.length} bytes): ${path.relative(root, verticalPath)}`,
         );
@@ -244,5 +247,5 @@ for (const [digest, verticalFileName] of seenVerticalHashes) {
 }
 
 console.log(
-    "Pet companion coverage verified: 120 breed core atlases, 120 vertical atlases, 120 independent posters (3,840 frames), 14 legacy source rigs, 416 WebP assets.",
+    "Pet companion coverage verified: 155 breed core atlases, 155 vertical atlases, 155 independent posters (4,960 frames), 14 legacy source rigs, 521 WebP assets.",
 );

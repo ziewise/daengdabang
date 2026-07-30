@@ -1205,7 +1205,7 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
         >
             <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-start sm:justify-between sm:gap-3">
                 <div className="min-w-0">
-                    <p className="text-xs font-black tracking-[0.1em] text-indigo-600">
+                    <p className="whitespace-nowrap text-xs font-black tracking-[0.1em] text-indigo-600">
                         {typeof result.durationSeconds === "number"
                             ? `${Number.isInteger(result.durationSeconds) ? result.durationSeconds : result.durationSeconds.toFixed(1)}초 관찰 흐름`
                             : "관찰 흐름"}
@@ -1299,7 +1299,7 @@ function CandidateCards({
                     <ul className="mt-3 grid gap-1.5 text-xs font-bold leading-5 text-neutral-600">
                         {item.evidence.map((index) => observations[index] && (
                             <li key={index} className="flex gap-2">
-                                <span className="font-black text-indigo-600">{observations[index].timeSeconds.toFixed(1)}초</span>
+                                <span className="shrink-0 whitespace-nowrap font-black text-indigo-600">{observations[index].timeSeconds.toFixed(1)}초</span>
                                 <span>{observations[index].description}</span>
                             </li>
                         ))}
@@ -1413,7 +1413,7 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
                         {targetVocalizations.map((item) => (
                             <span
                                 key={`${item.timeSeconds}-${item.vocalizationKind}-${item.description}`}
-                                className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-cyan-800 shadow-sm"
+                                className="whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-cyan-800 shadow-sm"
                             >
                                 {item.timeSeconds.toFixed(1)}초 · {VOCALIZATION_KIND_LABEL[item.vocalizationKind]}
                             </span>
@@ -1619,7 +1619,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                     <ol className="grid gap-2">
                         {result.observations.map((item, index) => (
                             <li key={`${item.timeSeconds}-${item.description}`} className="flex gap-3 rounded-xl bg-neutral-50 p-3">
-                                <span className="mt-0.5 shrink-0 rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
+                                <span className="mt-0.5 shrink-0 whitespace-nowrap rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
                                     {item.timeSeconds.toFixed(1)}초
                                 </span>
                                 <div>
@@ -1662,7 +1662,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                                 <ul className="mt-2 grid gap-1 text-[11px] font-bold leading-5 text-neutral-600">
                                     {signal.evidence.map((index) => result.observations[index] && (
                                         <li key={index}>
-                                            <span className="mr-1.5 font-black text-amber-800">{result.observations[index].timeSeconds.toFixed(1)}초</span>
+                                            <span className="mr-1.5 inline-block whitespace-nowrap font-black text-amber-800">{result.observations[index].timeSeconds.toFixed(1)}초</span>
                                             {result.observations[index].description}
                                         </li>
                                     ))}

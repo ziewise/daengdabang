@@ -844,7 +844,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <span className="inline-flex items-center gap-2 text-xs font-black">
                             <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-500" /> 녹화 중
                         </span>
-                        <span className="text-sm font-black">{secondsLeft}초</span>
+                        <span className="shrink-0 whitespace-nowrap text-sm font-black">{secondsLeft}초</span>
                     </div>
                 )}
                 {(phase === "preview" || phase === "recorded") && (
@@ -924,7 +924,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             type="button"
                             disabled={!consent}
                             onClick={startRecording}
-                            className="btn btn-primary min-h-12 justify-center disabled:opacity-50"
+                            className="btn btn-primary min-h-12 whitespace-nowrap justify-center disabled:opacity-50"
                             data-petlens-start-observation
                         >
                             <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
@@ -1108,17 +1108,17 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 >
                     <div className="rounded-xl bg-indigo-700 px-2.5 py-2 text-center text-white">
                         <span className="block text-[9px] font-black text-indigo-100">권장 촬영</span>
-                        <strong className="mt-0.5 block text-sm font-black">{PET_OBSERVATION_RECORDING_SECONDS}초</strong>
+                        <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">{PET_OBSERVATION_RECORDING_SECONDS}초</strong>
                     </div>
                     <div className="rounded-xl bg-white px-2.5 py-2 text-center text-neutral-800 shadow-sm">
                         <span className="block text-[9px] font-black text-neutral-400">허용 길이</span>
-                        <strong className="mt-0.5 block text-sm font-black">
+                        <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">
                             {PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초
                         </strong>
                     </div>
                     <div className="rounded-xl bg-white px-2.5 py-2 text-center text-neutral-800 shadow-sm">
                         <span className="block text-[9px] font-black text-neutral-400">최대 용량</span>
-                        <strong className="mt-0.5 block text-sm font-black">{PET_OBSERVATION_MAX_FILE_MB}MB</strong>
+                        <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">{PET_OBSERVATION_MAX_FILE_MB}MB</strong>
                     </div>
                 </div>
                 <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
@@ -1360,8 +1360,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </span>
                     <p className="text-[11px] font-bold leading-5 text-neutral-500">
                         연결 뒤 모바일 전·후면 카메라나 PC 웹캠·마이크가 여러 개면 직접 바꿀 수 있어요.
-                        실시간 촬영이 안 되는 브라우저에서는 {PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초
-                        WebM·MP4·MOV 영상을 선택할 수 있으며 최대 {PET_OBSERVATION_MAX_FILE_MB}MB입니다.
+                        실시간 촬영이 안 되는 브라우저에서는 {" "}
+                        <span className="whitespace-nowrap">{PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초</span>{" "}
+                        WebM·MP4·MOV 영상을 선택할 수 있으며 최대 {" "}
+                        <span className="whitespace-nowrap">{PET_OBSERVATION_MAX_FILE_MB}MB</span>입니다.
                     </p>
                 </div>
 

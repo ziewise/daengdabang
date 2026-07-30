@@ -1,8 +1,8 @@
 {
   "version": "cute-v4-breeds",
-  "cacheVersion": "20260712-2",
-  "catalog": "DaengDaBang 120 breed companion characters",
-  "generated": "2026-07-12",
+  "cacheVersion": "20260730-1",
+  "catalog": "DaengDaBang 155 breed companion characters",
+  "generated": "2026-07-30",
   "layout": {
     "columns": 4,
     "rows": 4,
@@ -38,8 +38,8 @@
       "run-down"
     ]
   },
-  "assetCount": 120,
-  "frameCount": 3840,
+  "assetCount": 155,
+  "frameCount": 4960,
   "assets": [
     {
       "id": "japanese-spaniel",
@@ -1238,6 +1238,356 @@
       "file": "tibetan-mastiff-core.webp",
       "poster": "tibetan-mastiff-poster.webp",
       "vertical": "tibetan-mastiff-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "dachshund",
+      "en": "Dachshund",
+      "ko": "닥스훈트",
+      "file": "dachshund-core.webp",
+      "poster": "dachshund-poster.webp",
+      "vertical": "dachshund-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "bichon-frise",
+      "en": "Bichon Frise",
+      "ko": "비숑 프리제",
+      "file": "bichon-frise-core.webp",
+      "poster": "bichon-frise-poster.webp",
+      "vertical": "bichon-frise-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "jindo-dog",
+      "en": "Korean Jindo Dog",
+      "ko": "진돗개",
+      "file": "jindo-dog-core.webp",
+      "poster": "jindo-dog-poster.webp",
+      "vertical": "jindo-dog-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "sapsaree",
+      "en": "Sapsaree",
+      "ko": "삽살개",
+      "file": "sapsaree-core.webp",
+      "poster": "sapsaree-poster.webp",
+      "vertical": "sapsaree-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "pungsan-dog",
+      "en": "Pungsan Dog",
+      "ko": "풍산개",
+      "file": "pungsan-dog-core.webp",
+      "poster": "pungsan-dog-poster.webp",
+      "vertical": "pungsan-dog-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "donggyeongi",
+      "en": "Donggyeongi",
+      "ko": "동경이",
+      "file": "donggyeongi-core.webp",
+      "poster": "donggyeongi-poster.webp",
+      "vertical": "donggyeongi-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "shiba-inu",
+      "en": "Shiba Inu",
+      "ko": "시바 이누",
+      "file": "shiba-inu-core.webp",
+      "poster": "shiba-inu-poster.webp",
+      "vertical": "shiba-inu-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "akita-inu",
+      "en": "Akita Inu",
+      "ko": "아키타 이누",
+      "file": "akita-inu-core.webp",
+      "poster": "akita-inu-poster.webp",
+      "vertical": "akita-inu-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "japanese-spitz",
+      "en": "Japanese Spitz",
+      "ko": "재패니즈 스피츠",
+      "file": "japanese-spitz-core.webp",
+      "poster": "japanese-spitz-poster.webp",
+      "vertical": "japanese-spitz-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "havanese",
+      "en": "Havanese",
+      "ko": "하바니즈",
+      "file": "havanese-core.webp",
+      "poster": "havanese-poster.webp",
+      "vertical": "havanese-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "coton-de-tulear",
+      "en": "Coton de Tulear",
+      "ko": "꼬똥 드 툴레아",
+      "file": "coton-de-tulear-core.webp",
+      "poster": "coton-de-tulear-poster.webp",
+      "vertical": "coton-de-tulear-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "bolognese",
+      "en": "Bolognese",
+      "ko": "볼로네즈",
+      "file": "bolognese-core.webp",
+      "poster": "bolognese-poster.webp",
+      "vertical": "bolognese-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "russian-toy",
+      "en": "Russian Toy",
+      "ko": "러시안 토이",
+      "file": "russian-toy-core.webp",
+      "poster": "russian-toy-poster.webp",
+      "vertical": "russian-toy-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "chinese-crested",
+      "en": "Chinese Crested",
+      "ko": "차이니즈 크레스티드",
+      "file": "chinese-crested-core.webp",
+      "poster": "chinese-crested-poster.webp",
+      "vertical": "chinese-crested-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "jack-russell-terrier",
+      "en": "Jack Russell Terrier",
+      "ko": "잭 러셀 테리어",
+      "file": "jack-russell-terrier-core.webp",
+      "poster": "jack-russell-terrier-poster.webp",
+      "vertical": "jack-russell-terrier-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "parson-russell-terrier",
+      "en": "Parson Russell Terrier",
+      "ko": "파슨 러셀 테리어",
+      "file": "parson-russell-terrier-core.webp",
+      "poster": "parson-russell-terrier-poster.webp",
+      "vertical": "parson-russell-terrier-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "bull-terrier",
+      "en": "Bull Terrier",
+      "ko": "불 테리어",
+      "file": "bull-terrier-core.webp",
+      "poster": "bull-terrier-poster.webp",
+      "vertical": "bull-terrier-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "american-pit-bull-terrier",
+      "en": "American Pit Bull Terrier",
+      "ko": "아메리칸 핏불 테리어",
+      "file": "american-pit-bull-terrier-core.webp",
+      "poster": "american-pit-bull-terrier-poster.webp",
+      "vertical": "american-pit-bull-terrier-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "english-bulldog",
+      "en": "English Bulldog",
+      "ko": "잉글리시 불독",
+      "file": "english-bulldog-core.webp",
+      "poster": "english-bulldog-poster.webp",
+      "vertical": "english-bulldog-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "american-bulldog",
+      "en": "American Bulldog",
+      "ko": "아메리칸 불독",
+      "file": "american-bulldog-core.webp",
+      "poster": "american-bulldog-poster.webp",
+      "vertical": "american-bulldog-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "cane-corso",
+      "en": "Cane Corso",
+      "ko": "카네 코르소",
+      "file": "cane-corso-core.webp",
+      "poster": "cane-corso-poster.webp",
+      "vertical": "cane-corso-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "neapolitan-mastiff",
+      "en": "Neapolitan Mastiff",
+      "ko": "나폴리탄 마스티프",
+      "file": "neapolitan-mastiff-core.webp",
+      "poster": "neapolitan-mastiff-poster.webp",
+      "vertical": "neapolitan-mastiff-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "dogue-de-bordeaux",
+      "en": "Dogue de Bordeaux",
+      "ko": "도그 드 보르도",
+      "file": "dogue-de-bordeaux-core.webp",
+      "poster": "dogue-de-bordeaux-poster.webp",
+      "vertical": "dogue-de-bordeaux-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "australian-shepherd",
+      "en": "Australian Shepherd",
+      "ko": "오스트레일리안 셰퍼드",
+      "file": "australian-shepherd-core.webp",
+      "poster": "australian-shepherd-poster.webp",
+      "vertical": "australian-shepherd-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "miniature-american-shepherd",
+      "en": "Miniature American Shepherd",
+      "ko": "미니어처 아메리칸 셰퍼드",
+      "file": "miniature-american-shepherd-core.webp",
+      "poster": "miniature-american-shepherd-poster.webp",
+      "vertical": "miniature-american-shepherd-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "belgian-tervuren",
+      "en": "Belgian Tervuren",
+      "ko": "벨지안 터뷰렌",
+      "file": "belgian-tervuren-core.webp",
+      "poster": "belgian-tervuren-poster.webp",
+      "vertical": "belgian-tervuren-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "belgian-laekenois",
+      "en": "Belgian Laekenois",
+      "ko": "벨지안 라케노이즈",
+      "file": "belgian-laekenois-core.webp",
+      "poster": "belgian-laekenois-poster.webp",
+      "vertical": "belgian-laekenois-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "portuguese-water-dog",
+      "en": "Portuguese Water Dog",
+      "ko": "포르투기즈 워터 도그",
+      "file": "portuguese-water-dog-core.webp",
+      "poster": "portuguese-water-dog-poster.webp",
+      "vertical": "portuguese-water-dog-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "lagotto-romagnolo",
+      "en": "Lagotto Romagnolo",
+      "ko": "라고토 로마뇰로",
+      "file": "lagotto-romagnolo-core.webp",
+      "poster": "lagotto-romagnolo-poster.webp",
+      "vertical": "lagotto-romagnolo-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "spanish-water-dog",
+      "en": "Spanish Water Dog",
+      "ko": "스패니시 워터 도그",
+      "file": "spanish-water-dog-core.webp",
+      "poster": "spanish-water-dog-poster.webp",
+      "vertical": "spanish-water-dog-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "maltipoo",
+      "en": "Maltipoo",
+      "ko": "말티푸",
+      "file": "maltipoo-core.webp",
+      "poster": "maltipoo-poster.webp",
+      "vertical": "maltipoo-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "cockapoo",
+      "en": "Cockapoo",
+      "ko": "코카푸",
+      "file": "cockapoo-core.webp",
+      "poster": "cockapoo-poster.webp",
+      "vertical": "cockapoo-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "goldendoodle",
+      "en": "Goldendoodle",
+      "ko": "골든두들",
+      "file": "goldendoodle-core.webp",
+      "poster": "goldendoodle-poster.webp",
+      "vertical": "goldendoodle-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "labradoodle",
+      "en": "Labradoodle",
+      "ko": "래브라두들",
+      "file": "labradoodle-core.webp",
+      "poster": "labradoodle-poster.webp",
+      "vertical": "labradoodle-vertical.webp",
+      "frames": 16,
+      "verticalFrames": 16
+    },
+    {
+      "id": "pomsky",
+      "en": "Pomsky",
+      "ko": "폼스키",
+      "file": "pomsky-core.webp",
+      "poster": "pomsky-poster.webp",
+      "vertical": "pomsky-vertical.webp",
       "frames": 16,
       "verticalFrames": 16
     }

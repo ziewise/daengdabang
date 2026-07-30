@@ -7,12 +7,18 @@ import {
     ddbApiReady,
     savePetProfileSmart,
 } from "@/lib/customer-api";
+import PetLensPhotoViewFields from "@/components/petlens/PetLensPhotoViewFields";
 import {
     getPetBreedVisual,
     isPetBreedId,
     PET_BREEDS,
     resolvePetBreedId,
 } from "@/lib/pet-companion-breeds";
+import {
+    persistPetLensPhotoViews,
+    primaryPetLensPhotoEntry,
+    type PetLensPhotoCaptures,
+} from "@/lib/petlens-multiview";
 import { PETLENS_PAGE_HREF } from "@/lib/petlens-routing";
 import { useAuth, type PetProfile } from "@/lib/store";
 
@@ -33,6 +39,8 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
     const [coatColor, setCoatColor] = useState("");
     const [coat, setCoat] = useState<PetProfile["coat"]>("medium");
     const [activity, setActivity] = useState<PetProfile["activity"]>("normal");
+    const [photoViews, setPhotoViews] = useState<PetLensPhotoCaptures>({});
+    const [photoBusy, setPhotoBusy] = useState(false);
     const [privacyConsent, setPrivacyConsent] = useState(false);
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState("");
@@ -74,6 +82,8 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
         const selectedBreed = resolvedBreedId && isPetBreedId(resolvedBreedId)
             ? getPetBreedVisual(resolvedBreedId)
             : null;
+        const persistedPhotoViews = persistPetLensPhotoViews(photoViews);
+        const primaryPhoto = primaryPetLensPhotoEntry(photoViews)?.[1];
         const profile: PetProfile = {
             name: cleanName,
             breed: cleanBreed,
@@ -85,6 +95,8 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
             coat,
             activity,
             concerns: ["일상 케어"],
+            photoDataUrl: primaryPhoto?.dataUrl,
+            photoViews: persistedPhotoViews.length ? persistedPhotoViews : undefined,
             rawAnalysis: {
                 ...(selectedBreed ? {
                     breedId: selectedBreed.id,
@@ -106,7 +118,13 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
         try {
             const saved = await savePetProfileSmart(profile, user.apiAccessToken);
             if (!saved?.id) throw new Error("profile_save_unavailable");
-            upsertPet({ ...profile, apiProfileId: saved.id });
+            upsertPet({
+                ...profile,
+                apiProfileId: saved.id,
+                photoDataUrl: saved.photoDataUrl || profile.photoDataUrl,
+                photoViews: saved.photoViews || profile.photoViews,
+                photoServerVerified: Boolean(saved.photoDataUrl),
+            });
             setSuccess("반려견 프로필을 등록했습니다. 이제 펫렌즈 분석을 시작할 수 있어요.");
             setOpen(false);
         } catch (saveError) {
@@ -171,6 +189,14 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
                 </datalist>
             </label>
 
+            <PetLensPhotoViewFields
+                value={photoViews}
+                disabled={saving}
+                onChange={setPhotoViews}
+                onBusyChange={setPhotoBusy}
+                onError={setError}
+            />
+
             <div className="grid gap-3 sm:grid-cols-2">
                 <label>
                     <span className="mb-1 block text-xs font-black text-neutral-600">크기</span>
@@ -228,8 +254,8 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
 
             {error && <p role="alert" className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-black leading-5 text-rose-700">{error}</p>}
 
-            <button type="submit" className="btn btn-primary w-full" disabled={saving}>
-                {saving ? "프로필 저장 중…" : "프로필 등록 완료"}
+            <button type="submit" className="btn btn-primary w-full" disabled={saving || photoBusy}>
+                {photoBusy ? "사진 준비 중…" : saving ? "프로필 저장 중…" : "프로필 등록 완료"}
             </button>
         </form>
     );

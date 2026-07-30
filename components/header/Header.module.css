@@ -5,6 +5,14 @@
     transform-origin: 50% 72%;
 }
 
+.storyNavItem {
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    white-space: nowrap;
+}
+
 .desktopNavItem::before,
 .desktopNavItem::after {
     position: absolute;
@@ -58,6 +66,15 @@
 .desktopNavItem:focus-visible {
     outline: 2px dashed rgba(91, 91, 214, 0.62);
     outline-offset: 2px;
+}
+
+.desktopNavItem.storyNavItem::before {
+    opacity: 0.52;
+}
+
+.desktopNavItem.storyNavItem::after {
+    opacity: 0.78;
+    clip-path: inset(0);
 }
 
 @keyframes navCrayonDraw {

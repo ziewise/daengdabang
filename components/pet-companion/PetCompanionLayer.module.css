@@ -654,6 +654,7 @@
 }
 
 .field > span,
+.field > label,
 .fieldset legend {
     color: #50463f;
     font-size: 11px;
@@ -676,6 +677,56 @@
     color: #81766e;
     font-size: 10px;
     line-height: 1.4;
+}
+
+.breedSearchStatus {
+    color: #5b5bd6;
+    font-size: 10px;
+    font-weight: 850;
+    line-height: 1.4;
+}
+
+.breedSearchResults {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.breedSearchResults button {
+    display: grid;
+    min-width: 0;
+    padding: 8px 9px;
+    border: 1px solid #ded6cd;
+    border-radius: 10px;
+    background: #fff;
+    text-align: left;
+}
+
+.breedSearchResults button:hover,
+.breedSearchResults button:focus-visible,
+.breedSearchResults button[data-selected="true"] {
+    border-color: #7777df;
+    background: #f2f2ff;
+    outline: none;
+}
+
+.breedSearchResults strong,
+.breedSearchResults span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.breedSearchResults strong {
+    color: #3d342f;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.breedSearchResults span {
+    margin-top: 2px;
+    color: #81766e;
+    font-size: 9px;
 }
 
 .fieldset {

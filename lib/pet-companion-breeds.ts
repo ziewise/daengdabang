@@ -32,6 +32,8 @@ export type PetMarkingStyle = "solid" | "blaze" | "mask" | "points" | "saddle" |
 
 export type PetBreedVisual = {
     id: string;
+    /** Dedicated motion atlas ID used to render this selectable breed. */
+    assetId: string;
     en: string;
     ko: string;
     aliases: string[];
@@ -61,7 +63,7 @@ export type PetBreedRenderTokens = {
     scaleY: number;
 };
 
-type VisualSeed = Omit<PetBreedVisual, "id" | "en" | "ko" | "aliases" | "family" | "rigId">;
+type VisualSeed = Omit<PetBreedVisual, "id" | "assetId" | "en" | "ko" | "aliases" | "family" | "rigId">;
 type BreedDefinition = [
     id: string,
     en: string,
@@ -329,7 +331,7 @@ function rigIdForIndex(index: number): PetBreedRigId {
     return RIG_END_INDEXES.find(([, end]) => index < end)?.[0] || "R14";
 }
 
-export const PET_BREEDS: PetBreedVisual[] = BREED_DEFINITIONS.map(([
+const CANONICAL_PET_BREEDS: PetBreedVisual[] = BREED_DEFINITIONS.map(([
     id,
     en,
     ko,
@@ -338,6 +340,7 @@ export const PET_BREEDS: PetBreedVisual[] = BREED_DEFINITIONS.map(([
     overrides = {},
 ], index) => ({
     id,
+    assetId: id,
     en,
     ko,
     aliases,
@@ -347,12 +350,12 @@ export const PET_BREEDS: PetBreedVisual[] = BREED_DEFINITIONS.map(([
     ...overrides,
 }));
 
-const UNIQUE_BREED_IDS = new Set(PET_BREEDS.map((breed) => breed.id));
-if (PET_BREEDS.length !== 120 || UNIQUE_BREED_IDS.size !== 120) {
-    throw new Error(`Pet companion breed catalog must contain 120 unique breeds; received ${PET_BREEDS.length}/${UNIQUE_BREED_IDS.size}.`);
+const UNIQUE_BREED_IDS = new Set(CANONICAL_PET_BREEDS.map((breed) => breed.id));
+if (CANONICAL_PET_BREEDS.length !== 120 || UNIQUE_BREED_IDS.size !== 120) {
+    throw new Error(`Pet companion breed catalog must contain 120 unique breeds; received ${CANONICAL_PET_BREEDS.length}/${UNIQUE_BREED_IDS.size}.`);
 }
 
-const UNIQUE_VISUAL_PROFILES = new Set(PET_BREEDS.map((breed) => [
+const UNIQUE_VISUAL_PROFILES = new Set(CANONICAL_PET_BREEDS.map((breed) => [
     breed.rigId,
     breed.ear,
     breed.tail,
@@ -372,7 +375,7 @@ if (UNIQUE_VISUAL_PROFILES.size !== 120) {
 
 const VALID_RIG_IDS = new Set<string>(PET_BREED_RIG_IDS);
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
-const invalidBreedVisual = PET_BREEDS.find((breed) => (
+const invalidBreedVisual = CANONICAL_PET_BREEDS.find((breed) => (
     !VALID_RIG_IDS.has(breed.rigId)
     || !HEX_COLOR.test(breed.primary)
     || !HEX_COLOR.test(breed.secondary)
@@ -383,6 +386,89 @@ const invalidBreedVisual = PET_BREEDS.find((breed) => (
 ));
 if (invalidBreedVisual) {
     throw new Error(`Pet companion visual profile is incomplete for ${invalidBreedVisual.id}.`);
+}
+
+type ExtendedBreedDefinition = [
+    id: string,
+    en: string,
+    ko: string,
+    family: PetBreedFamily,
+    motionSourceId: string,
+    aliases?: string[],
+];
+
+/**
+ * Searchable companion breeds beyond the original Stanford 120-class set.
+ * The canonical motion source is retained for reproducible asset generation,
+ * while runtime rendering always uses the breed's dedicated atlas ID.
+ */
+const EXTENDED_BREED_DEFINITIONS: ExtendedBreedDefinition[] = [
+    ["dachshund", "Dachshund", "닥스훈트", "corgi", "basset", ["닥스훈트 스탠다드", "미니어처 닥스훈트", "미니 닥스훈트", "장모 닥스훈트", "단모 닥스훈트", "와이어헤어드 닥스훈트", "소시지개", "sausage dog"]],
+    ["bichon-frise", "Bichon Frise", "비숑 프리제", "toy", "toy-poodle", ["비숑", "비숑프리제"]],
+    ["jindo-dog", "Korean Jindo Dog", "진돗개", "spitz", "dingo", ["진도견", "진도개", "코리안 진도", "korean jindo", "jindo"]],
+    ["sapsaree", "Sapsaree", "삽살개", "herding", "tibetan-terrier", ["삽사리", "삽살이", "sapsali"]],
+    ["pungsan-dog", "Pungsan Dog", "풍산개", "spitz", "eskimo-dog", ["풍산견", "poongsan dog"]],
+    ["donggyeongi", "Donggyeongi", "동경이", "primitive", "basenji", ["경주개 동경이", "gyeongju donggyeong"]],
+    ["shiba-inu", "Shiba Inu", "시바 이누", "spitz", "basenji", ["시바견", "시바", "shiba"]],
+    ["akita-inu", "Akita Inu", "아키타 이누", "spitz", "malamute", ["아키타견", "아키타", "akita"]],
+    ["japanese-spitz", "Japanese Spitz", "재패니즈 스피츠", "spitz", "eskimo-dog", ["일본 스피츠", "재패니즈스피츠"]],
+    ["havanese", "Havanese", "하바니즈", "toy", "lhasa", ["하바네즈"]],
+    ["coton-de-tulear", "Coton de Tulear", "꼬똥 드 툴레아", "toy", "maltese-dog", ["꼬똥", "코통 드 툴레아", "coton"]],
+    ["bolognese", "Bolognese", "볼로네즈", "toy", "maltese-dog", ["볼로네제"]],
+    ["russian-toy", "Russian Toy", "러시안 토이", "toy", "toy-terrier", ["러시안 토이 테리어"]],
+    ["chinese-crested", "Chinese Crested", "차이니즈 크레스티드", "toy", "mexican-hairless", ["차이니스 크레스티드"]],
+    ["jack-russell-terrier", "Jack Russell Terrier", "잭 러셀 테리어", "terrier", "wire-haired-fox-terrier", ["잭러셀", "잭러셀테리어"]],
+    ["parson-russell-terrier", "Parson Russell Terrier", "파슨 러셀 테리어", "terrier", "wire-haired-fox-terrier", ["파슨러셀"]],
+    ["bull-terrier", "Bull Terrier", "불 테리어", "bully", "staffordshire-bullterrier", ["불테리어"]],
+    ["american-pit-bull-terrier", "American Pit Bull Terrier", "아메리칸 핏불 테리어", "bully", "american-staffordshire-terrier", ["핏불", "핏불테리어", "pit bull"]],
+    ["english-bulldog", "English Bulldog", "잉글리시 불독", "bully", "french-bulldog", ["영국 불독", "잉글리시 불도그"]],
+    ["american-bulldog", "American Bulldog", "아메리칸 불독", "bully", "boxer", ["아메리칸 불도그"]],
+    ["cane-corso", "Cane Corso", "카네 코르소", "bully", "bull-mastiff", ["케인 코르소", "카네코르소"]],
+    ["neapolitan-mastiff", "Neapolitan Mastiff", "나폴리탄 마스티프", "bully", "bull-mastiff", ["네오폴리탄 마스티프"]],
+    ["dogue-de-bordeaux", "Dogue de Bordeaux", "도그 드 보르도", "bully", "bull-mastiff", ["보르도 마스티프", "프렌치 마스티프"]],
+    ["australian-shepherd", "Australian Shepherd", "오스트레일리안 셰퍼드", "herding", "border-collie", ["오시", "호주 셰퍼드", "aussie"]],
+    ["miniature-american-shepherd", "Miniature American Shepherd", "미니어처 아메리칸 셰퍼드", "herding", "shetland-sheepdog", ["미니 아메리칸 셰퍼드", "미니 오시"]],
+    ["belgian-tervuren", "Belgian Tervuren", "벨지안 터뷰렌", "herding", "groenendael", ["벨지안 테르뷰런", "터뷰렌"]],
+    ["belgian-laekenois", "Belgian Laekenois", "벨지안 라케노이즈", "herding", "briard", ["라케노이즈"]],
+    ["portuguese-water-dog", "Portuguese Water Dog", "포르투기즈 워터 도그", "poodle", "curly-coated-retriever", ["포르투갈 워터 도그"]],
+    ["lagotto-romagnolo", "Lagotto Romagnolo", "라고토 로마뇰로", "poodle", "curly-coated-retriever", ["라고토"]],
+    ["spanish-water-dog", "Spanish Water Dog", "스패니시 워터 도그", "poodle", "curly-coated-retriever", ["스페니시 워터 도그"]],
+    ["maltipoo", "Maltipoo", "말티푸", "poodle", "toy-poodle", ["몰티푸", "maltese poodle mix"]],
+    ["cockapoo", "Cockapoo", "코카푸", "poodle", "toy-poodle", ["코커푸", "cocker poodle mix"]],
+    ["goldendoodle", "Goldendoodle", "골든두들", "poodle", "standard-poodle", ["골든 푸들 믹스"]],
+    ["labradoodle", "Labradoodle", "래브라두들", "poodle", "standard-poodle", ["라브라두들", "래브라도 푸들 믹스"]],
+    ["pomsky", "Pomsky", "폼스키", "spitz", "pomeranian", ["포메라니안 허스키 믹스"]],
+];
+
+const CANONICAL_BREED_BY_ID = new Map(CANONICAL_PET_BREEDS.map((breed) => [breed.id, breed]));
+const EXTENDED_PET_BREEDS: PetBreedVisual[] = EXTENDED_BREED_DEFINITIONS.map(([
+    id,
+    en,
+    ko,
+    family,
+    motionSourceId,
+    aliases = [],
+]) => {
+    const source = CANONICAL_BREED_BY_ID.get(motionSourceId);
+    if (!source) throw new Error(`Extended pet companion breed ${id} uses an unknown motion source ${motionSourceId}.`);
+    return {
+        ...source,
+        id,
+        assetId: id,
+        en,
+        ko,
+        aliases,
+        family,
+    };
+});
+
+export const PET_BREEDS: PetBreedVisual[] = [
+    ...CANONICAL_PET_BREEDS,
+    ...EXTENDED_PET_BREEDS,
+];
+
+if (new Set(PET_BREEDS.map((breed) => breed.id)).size !== PET_BREEDS.length) {
+    throw new Error("Pet companion selectable breed IDs must be unique.");
 }
 
 const BREED_BY_ID = new Map(PET_BREEDS.map((breed) => [breed.id, breed]));
@@ -401,7 +487,7 @@ export function isPetBreedId(value: unknown): value is string {
 export function getPetBreedVisual(breedId?: string | null): PetBreedVisual {
     const direct = breedId ? BREED_BY_ID.get(breedId) : undefined;
     const resolved = breedId ? BREED_BY_ID.get(resolvePetBreedId(breedId)) : undefined;
-    return direct || resolved || BREED_BY_ID.get("toy-poodle") || PET_BREEDS[0];
+    return direct || resolved || CANONICAL_BREED_BY_ID.get("toy-poodle") || CANONICAL_PET_BREEDS[0];
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -466,7 +552,7 @@ export function resolvePetBreedId(text: string, fallback = "toy-poodle") {
 }
 
 /**
- * Resolve photo-analysis output only when it names one canonical 120-breed entry.
+ * Resolve photo-analysis output only when it names one exact selectable breed entry.
  * Broad aliases such as "푸들" / "Poodle" intentionally do not resolve because
  * they could silently turn Standard or Miniature Poodle into Toy Poodle.
  */

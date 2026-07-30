@@ -6,6 +6,7 @@ import {
     ddbApiReady,
     savePetProfileSmart,
 } from "@/lib/customer-api";
+import PetLensPhotoViewFields from "@/components/petlens/PetLensPhotoViewFields";
 import { getPetLensWeightEstimate } from "@/lib/daengdabang-llm";
 import {
     getPetBreedVisual,
@@ -13,6 +14,12 @@ import {
     PET_BREEDS,
     resolvePetBreedId,
 } from "@/lib/pet-companion-breeds";
+import {
+    persistPetLensPhotoViews,
+    primaryPetLensPhotoEntry,
+    restorePetLensPhotoViews,
+    type PetLensPhotoCaptures,
+} from "@/lib/petlens-multiview";
 import { useAuth, type PetProfile } from "@/lib/store";
 
 type Props = {
@@ -32,6 +39,12 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
     const [coatColor, setCoatColor] = useState(pet.coatColor || "");
     const [coat, setCoat] = useState<PetProfile["coat"]>(pet.coat);
     const [activity, setActivity] = useState<PetProfile["activity"]>(pet.activity);
+    const [photoViews, setPhotoViews] = useState<PetLensPhotoCaptures>(() => (
+        pet.photoServerVerified
+            ? restorePetLensPhotoViews(pet.photoViews, pet.photoDataUrl)
+            : {}
+    ));
+    const [photoBusy, setPhotoBusy] = useState(false);
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
@@ -61,6 +74,8 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
 
         const correctedAt = new Date().toISOString();
         const correctedBreed = breed.trim().slice(0, 100);
+        const persistedPhotoViews = persistPetLensPhotoViews(photoViews);
+        const primaryPhoto = primaryPetLensPhotoEntry(photoViews)?.[1];
         const rawAnalysis: Record<string, unknown> = { ...(pet.rawAnalysis || {}) };
         const resolvedBreedId = resolvePetBreedId(correctedBreed, "");
         if (resolvedBreedId && isPetBreedId(resolvedBreedId)) {
@@ -102,7 +117,8 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
             coatColor: coatColor.trim().slice(0, 80) || undefined,
             coat,
             activity,
-            photoDataUrl: pet.photoServerVerified ? pet.photoDataUrl : undefined,
+            photoDataUrl: primaryPhoto?.dataUrl,
+            photoViews: persistedPhotoViews.length ? persistedPhotoViews : undefined,
             rawAnalysis,
         };
 
@@ -113,7 +129,8 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
             upsertPet({
                 ...updatedPet,
                 apiProfileId: saved.id,
-                photoDataUrl: saved.photoDataUrl || undefined,
+                photoDataUrl: saved.photoDataUrl || updatedPet.photoDataUrl,
+                photoViews: saved.photoViews || updatedPet.photoViews,
                 photoServerVerified: Boolean(saved.photoDataUrl),
             });
             setSuccess("반려견 정보가 저장되었습니다. 추천과 펫렌즈에 바로 반영됩니다.");
@@ -181,6 +198,14 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                 </datalist>
             </label>
 
+            <PetLensPhotoViewFields
+                value={photoViews}
+                disabled={saving}
+                onChange={setPhotoViews}
+                onBusyChange={setPhotoBusy}
+                onError={setError}
+            />
+
             <div className="grid gap-3 sm:grid-cols-2">
                 <label>
                     <span className="mb-1 block text-xs font-black text-neutral-500">크기</span>
@@ -247,8 +272,8 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
             {success && <p role="status" className="rounded-md bg-emerald-50 px-3 py-2 text-xs font-black leading-5 text-emerald-700">{success}</p>}
             {error && <p role="alert" className="rounded-md bg-rose-50 px-3 py-2 text-xs font-black leading-5 text-rose-700">{error}</p>}
 
-            <button type="submit" className="btn btn-primary w-full" disabled={saving}>
-                {saving ? "저장 중" : "수정 정보 저장"}
+            <button type="submit" className="btn btn-primary w-full" disabled={saving || photoBusy}>
+                {photoBusy ? "사진 준비 중…" : saving ? "저장 중" : "수정 정보 저장"}
             </button>
         </form>
     );

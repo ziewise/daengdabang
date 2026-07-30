@@ -1,7 +1,7 @@
 /**
  * Header — 사이트 메인 헤더 (글래스 + 메가메뉴 + 모바일 토글)
  * ---------------------------------------------------------------------
- * 데스크탑: 로고 + 5개 nav(베스트·신상품·카테고리·브랜드·기획전·고객센터) + 검색·장바구니·로그인
+ * 데스크탑: 로고 + 메인 nav(베스트·신상품·카테고리·브랜드·댕다방 스토리·기획전·고객센터) + 검색·장바구니·로그인
  * 모바일: 로고 + 햄버거 토글만 (전체 메뉴는 MobilePanel)
  *
  * client component (드롭다운 toggle, 검색·모바일 모달 trigger, 인증 상태 표시).
@@ -84,7 +84,7 @@ export default function Header() {
                     <BrandLogo mobileEmphasis />
 
                     {/* 데스크탑 메인 nav (md+ 만 노출) */}
-                    <nav className="hidden lg:flex items-center gap-1">
+                    <nav className="hidden items-center gap-0 lg:flex xl:gap-1">
                         <NavLink href="/best">{t("best")}</NavLink>
                         <NavLink href="/new">{t("new")}</NavLink>
 
@@ -164,6 +164,8 @@ export default function Header() {
                             </div>
                         </NavDropdown>
 
+                        <NavLink href="/brand-story" crayon>{t("brandStory")}</NavLink>
+
                         {/* 기획전 — 5개 promo 카드 */}
                         <NavDropdown
                             label={t("promotion")}
@@ -218,8 +220,8 @@ export default function Header() {
                     </nav>
 
                     {/* 우측 유틸리티
-                        모바일(<lg): 햄버거만 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
-                        데스크탑(lg+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
+                        좁은 PC·모바일(<xl): 햄버거 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
+                        넓은 데스크탑(xl+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
                     <div className="flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2">
                         {/* 유틸 순서: 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
@@ -249,14 +251,14 @@ export default function Header() {
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
-                            className="hidden lg:flex w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="hidden xl:flex w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label={t("search")}
                         >
                             <i className="fa-solid fa-magnifying-glass" />
                         </button>
                         <Link
                             href="/cart"
-                            className="hidden lg:flex relative w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="hidden xl:flex relative w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
                             aria-label={t("cart")}
                         >
                             <i className="fa-solid fa-bag-shopping" />
@@ -273,7 +275,7 @@ export default function Header() {
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/auth/login"}
                                 data-pet-guide-target={isLoggedIn ? undefined : "signup"}
-                                className="hidden lg:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
+                                className="hidden xl:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
                                 aria-label={isLoggedIn ? t("mypage") : t("login")}
                             >
                                 <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
@@ -285,7 +287,7 @@ export default function Header() {
                             type="button"
                             onClick={() => setMobileOpen(true)}
                             data-pet-guide-target={!isLoggedIn ? "signup" : undefined}
-                            className="lg:hidden w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition hover:bg-white/80 xl:hidden"
                             aria-label={t("menu")}
                             aria-expanded={mobileOpen}
                         >
@@ -302,11 +304,19 @@ export default function Header() {
 }
 
 /* ============ 단순 nav 링크 ============ */
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({
+    href,
+    children,
+    crayon = false,
+}: {
+    href: string;
+    children: React.ReactNode;
+    crayon?: boolean;
+}) {
     return (
         <Link
             href={href}
-            className={`${headerStyles.desktopNavItem} rounded-lg px-4 py-2 text-base font-bold text-foreground transition`}
+            className={`${headerStyles.desktopNavItem} ${crayon ? headerStyles.storyNavItem : ""} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-4 xl:text-base`}
         >
             {children}
         </Link>
@@ -340,7 +350,7 @@ function NavDropdown({
         >
             <button
                 type="button"
-                className={`${headerStyles.desktopNavItem} rounded-lg px-4 py-2 text-base font-bold text-foreground transition`}
+                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-4 xl:text-base`}
                 data-nav-open={open ? "true" : "false"}
             >
                 {label}

@@ -139,6 +139,10 @@ export default function MobilePanel({ open, onClose }: Props) {
                         ))}
                     </MobileGroup>
 
+                    <MobileLink href="/brand-story" icon="fa-book-open" crayon onClick={onClose}>
+                        {t("brandStory")}
+                    </MobileLink>
+
                     <MobileGroup
                         label={t("brand")}
                         expanded={expanded === "brand"}
@@ -200,17 +204,19 @@ function MobileLink({
     icon,
     children,
     onClick,
+    crayon = false,
 }: {
     href: string;
     icon?: string;
     children: React.ReactNode;
     onClick: () => void;
+    crayon?: boolean;
 }) {
     return (
         <Link
             href={href}
             onClick={onClick}
-            className="flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 rounded-xl"
+            className={`flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "font-[family-name:var(--font-crayon)] text-base" : ""}`}
         >
             {icon && <i className={`fa-solid ${icon} text-aurora-indigo w-4 text-center`} />}
             <span>{children}</span>

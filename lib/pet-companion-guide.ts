@@ -388,7 +388,7 @@ export function findPetGuidePrompt({
                 target,
                 placement,
                 name: "견종은 꼭 확인해 주세요",
-                message: "사진 분석 결과는 후보예요. 120종 캐릭터 중 맞는 견종을 고르거나, 목록 밖 견종·믹스견이면 직접 입력해 주세요.",
+                message: "사진 분석 결과는 후보예요. 155종 캐릭터 중 맞는 견종을 고르거나, 목록 밖 견종·믹스견이면 직접 입력해 주세요.",
             };
         }
         if (id === "signup-weight") {

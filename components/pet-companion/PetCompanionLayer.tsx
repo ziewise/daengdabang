@@ -187,6 +187,7 @@ export default function PetCompanionLayer({
 }: Props) {
     const { state, upsertPet } = useStore();
     const [draft, setDraft] = useState(settings);
+    const [breedSearch, setBreedSearch] = useState("");
     const [motion, setMotion] = useState<PetCompanionMotion>("idle");
     const [facing, setFacing] = useState<"left" | "right">("right");
     const [travelDirection, setTravelDirection] = useState<PetCompanionTravelDirection>("side");
@@ -225,6 +226,19 @@ export default function PetCompanionLayer({
     const suppressClickRef = useRef(false);
     const selectedBreedId = useMemo(() => resolvePetBreedId(draft.breedId), [draft.breedId]);
     const selectedBreed = useMemo(() => getPetBreedVisual(selectedBreedId), [selectedBreedId]);
+    const filteredBreeds = useMemo(() => {
+        const query = breedSearch.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "");
+        if (!query) return PET_BREEDS;
+        return PET_BREEDS.filter((breed) => (
+            [breed.id, breed.ko, breed.en, ...breed.aliases]
+                .some((label) => label.toLowerCase().replace(/[^a-z0-9가-힣]+/g, "").includes(query))
+        ));
+    }, [breedSearch]);
+    const visibleBreeds = useMemo(() => (
+        filteredBreeds.some((breed) => breed.id === selectedBreedId)
+            ? filteredBreeds
+            : [selectedBreed, ...filteredBreeds]
+    ), [filteredBreeds, selectedBreed, selectedBreedId]);
     const displayBreedId = visualBreedId || settings.breedId;
     const displayCharacterId = visualCharacterId || settings.characterId;
     const saveAccess = resolvePetCompanionSaveAccess(state.user);
@@ -248,6 +262,7 @@ export default function PetCompanionLayer({
         lastFocusRef.current = document.activeElement as HTMLElement | null;
         // Settings may have changed from another tab or a pet profile sync.
         setDraft(settings);
+        setBreedSearch("");
         setQuickActionsOpen(false);
         // Opening settings always ends transient guidance instead of reviving it
         // later without an active dismiss timer.
@@ -2336,7 +2351,7 @@ export default function PetCompanionLayer({
                             <div>
                                 <span className={styles.eyebrow}>DDB WALKING FRIEND</span>
                                 <h2 id="pet-companion-title">산책 친구 설정</h2>
-                                <p>120견종별로 만든 큰 머리 치비 모션 캐릭터 중 우리 아이와 가까운 친구를 골라 주세요.</p>
+                                <p>{PET_BREEDS.length}개 견종 이름을 검색하고 우리 아이와 가까운 치비 모션 캐릭터를 골라 주세요.</p>
                             </div>
                             <button
                                 ref={closeRef}
@@ -2380,24 +2395,58 @@ export default function PetCompanionLayer({
                                     )}
                                 </label>
 
-                                <label className={styles.field}>
-                                    <span>견종 캐릭터</span>
+                                <div className={styles.field} data-pet-companion-breed-search>
+                                    <label htmlFor="pet-companion-breed-search">견종 캐릭터 검색</label>
+                                    <input
+                                        id="pet-companion-breed-search"
+                                        type="search"
+                                        value={breedSearch}
+                                        onChange={(event) => setBreedSearch(event.target.value)}
+                                        placeholder="예: 닥스훈트, 비숑, 진돗개"
+                                        autoComplete="off"
+                                    />
+                                    {breedSearch.trim() && filteredBreeds.length > 0 && (
+                                        <div className={styles.breedSearchResults} role="listbox" aria-label="견종 검색 결과">
+                                            {filteredBreeds.slice(0, 6).map((breed) => (
+                                                <button
+                                                    key={breed.id}
+                                                    type="button"
+                                                    role="option"
+                                                    aria-selected={selectedBreedId === breed.id}
+                                                    data-selected={selectedBreedId === breed.id}
+                                                    onClick={() => setDraft((current) => ({ ...current, breedId: breed.id }))}
+                                                >
+                                                    <strong>{breed.ko}</strong>
+                                                    <span>{breed.en}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <label htmlFor="pet-companion-breed-select" className="sr-only">견종 캐릭터 선택</label>
                                     <select
+                                        id="pet-companion-breed-select"
                                         value={selectedBreedId}
                                         onChange={(event) => setDraft((current) => ({ ...current, breedId: event.target.value }))}
                                     >
                                         {(Object.keys(PET_BREED_FAMILY_LABELS) as PetBreedFamily[]).map((family) => (
                                             <optgroup key={family} label={PET_BREED_FAMILY_LABELS[family]}>
-                                                {PET_BREEDS.filter((breed) => breed.family === family).map((breed) => (
+                                                {visibleBreeds.filter((breed) => breed.family === family).map((breed) => (
                                                     <option key={breed.id} value={breed.id}>{breed.ko} · {breed.en}</option>
                                                 ))}
                                             </optgroup>
                                         ))}
                                     </select>
-                                    <small className={styles.breedHint}>
-                                        {selectedBreed.ko} 전용 큰 머리 치비 캐릭터 · 16프레임 모션
+                                    <small className={styles.breedSearchStatus} role="status">
+                                        {breedSearch.trim()
+                                            ? filteredBreeds.length
+                                                ? `${filteredBreeds.length}개 검색 결과${filteredBreeds.length > 6 ? " · 상위 6개 바로 선택" : ""}`
+                                                : "일치하는 견종이 없어요. 다른 이름이나 영문명으로 검색해 주세요."
+                                            : `전체 ${PET_BREEDS.length}개 견종`}
                                     </small>
-                                </label>
+                                    <small className={styles.breedHint}>
+                                        {`${selectedBreed.ko} 전용 치비 캐릭터 · 걷기·달리기·냄새 맡기·상하 이동 32프레임`}
+                                    </small>
+                                </div>
 
                                 <fieldset className={styles.fieldset}>
                                     <legend>털 색상</legend>
