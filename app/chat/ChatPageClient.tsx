@@ -26,6 +26,7 @@ import {
     useGenerationReferenceAttachments,
 } from "@/components/site/GenerationReferenceComposer";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { customerVisibleChatAnswer } from "@/lib/chat-display";
 
 type Message = {
     role: "user" | "assistant";
@@ -317,7 +318,9 @@ export default function ChatPageClient() {
                                     }`}
                                 >
                                     {message.role === "assistant" ? (
-                                        <ProgressiveRevealText text={message.text} />
+                                        <ProgressiveRevealText
+                                            text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
+                                        />
                                     ) : (
                                         message.text
                                     )}

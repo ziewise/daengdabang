@@ -34,6 +34,23 @@ async function evidenceModule() {
     return moduleRecord.exports;
 }
 
+async function displayModule() {
+    const input = await source("lib/chat-display.ts");
+    const compiled = ts.transpileModule(input, {
+        compilerOptions: {
+            module: ts.ModuleKind.CommonJS,
+            target: ts.ScriptTarget.ES2022,
+        },
+    }).outputText;
+    const moduleRecord = { exports: {} };
+    const context = vm.createContext({
+        module: moduleRecord,
+        exports: moduleRecord.exports,
+    });
+    new vm.Script(compiled, { filename: "chat-display.js" }).runInContext(context);
+    return moduleRecord.exports;
+}
+
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("chat evidence accepts only bounded credential-free HTTPS sources", async () => {
@@ -103,7 +120,7 @@ test("general API fallback is selected only when no protected canine or storefro
     assert.equal(isCurrentInformationRequest("프랑스 수도는 어디야?"), false);
 });
 
-test("both chat surfaces preserve research metadata and render numbered freshness-aware citations", async () => {
+test("both chat surfaces preserve research metadata without exposing source lists", async () => {
     const [helper, widget, page, extras] = await Promise.all([
         source("lib/daengdabang-llm.ts"),
         source("components/site/ChatWidget.tsx"),
@@ -120,10 +137,24 @@ test("both chat surfaces preserve research metadata and render numbered freshnes
         assert.match(surface, /research\?: ShopChatResearch/);
         assert.match(surface, /research: result\.research/);
         assert.match(surface, /research=\{message\.research\}/);
+        assert.match(surface, /customerVisibleChatAnswer\(message\.text, Boolean\(message\.sources\?\.length\)\)/);
     }
-    assert.match(extras, /sourceCitationNumber\(source, index\)/);
-    assert.match(extras, /freshnessLabel\(research\?\.freshnessStatus\)/);
-    assert.match(extras, /근거 기준 \$\{freshAsOf\}/);
-    assert.match(extras, /검색 \$\{searchedAt\}/);
-    assert.match(extras, /HTTPS 출처 \$\{sources\.length\}개/);
+    assert.match(extras, /sources\?: ShopChatSource\[\]/);
+    assert.doesNotMatch(extras, /HTTPS 출처/);
+    assert.doesNotMatch(extras, /검색 근거 상태/);
+    assert.doesNotMatch(extras, /근거 기준/);
+    assert.doesNotMatch(extras, /href=\{source\.url\}/);
+    assert.doesNotMatch(extras, /sourceCitationNumber/);
+    assert.doesNotMatch(extras, /sourceMetadataTitle/);
+});
+
+test("customer answer display hides only trailing source markers when evidence exists", async () => {
+    const { customerVisibleChatAnswer } = await displayModule();
+    const answer = "첫 번째 확인 내용입니다. [1]\n두 출처가 확인했습니다. [1][2]\n[1]은 항목 번호입니다.";
+
+    assert.equal(
+        customerVisibleChatAnswer(answer, true),
+        "첫 번째 확인 내용입니다.\n두 출처가 확인했습니다.\n[1]은 항목 번호입니다.",
+    );
+    assert.equal(customerVisibleChatAnswer(answer, false), answer);
 });

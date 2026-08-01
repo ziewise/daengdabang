@@ -32,6 +32,7 @@ import {
     useGenerationReferenceAttachments,
 } from "@/components/site/GenerationReferenceComposer";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { customerVisibleChatAnswer } from "@/lib/chat-display";
 import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage";
 import styles from "./ChatWidget.module.css";
 
@@ -371,7 +372,9 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     }`}
                                 >
                                     {message.role === "assistant" ? (
-                                        <ProgressiveRevealText text={message.text} />
+                                        <ProgressiveRevealText
+                                            text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
+                                        />
                                     ) : (
                                         message.text
                                     )}

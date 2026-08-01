@@ -64,63 +64,6 @@ function triageLabel(medical?: ShopChatMedical) {
     return "건강 상담";
 }
 
-function formatResearchTimestamp(value?: string) {
-    if (!value) return "";
-    const timestamp = Date.parse(value);
-    if (!Number.isFinite(timestamp)) return "";
-    return new Intl.DateTimeFormat("ko-KR", {
-        timeZone: "Asia/Seoul",
-        month: "numeric",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-    }).format(new Date(timestamp));
-}
-
-function freshnessLabel(status?: string) {
-    const normalized = String(status || "").trim().toLowerCase();
-    if (!normalized) return "";
-    if (["live_verified", "verified", "fresh", "current"].includes(normalized)) return "최신 근거 확인";
-    if (["recent_snapshot", "recent"].includes(normalized)) return "최근 근거 확인";
-    if (["stale", "expired"].includes(normalized)) return "근거가 오래됨";
-    if (["unavailable", "error", "failed"].includes(normalized)) return "최신 확인 일시 중단";
-    if (["unverified", "unknown", "insufficient"].includes(normalized)) return "최신성 미확인";
-    return "근거 상태 확인 필요";
-}
-
-function researchContext(research?: ShopChatResearch, sources: ShopChatSource[] = []) {
-    const parts: string[] = [];
-    const status = freshnessLabel(research?.freshnessStatus);
-    if (status) parts.push(status);
-    const freshAsOf = formatResearchTimestamp(research?.freshAsOf);
-    if (freshAsOf) parts.push(`근거 기준 ${freshAsOf}`);
-    const searchedAt = formatResearchTimestamp(research?.searchedAt);
-    if (searchedAt && searchedAt !== freshAsOf) parts.push(`검색 ${searchedAt}`);
-    const latestRetrievedAt = sources
-        .map((source) => source.retrievedAt || "")
-        .filter(Boolean)
-        .sort()
-        .at(-1);
-    const retrievedAt = formatResearchTimestamp(latestRetrievedAt);
-    if (!freshAsOf && !searchedAt && retrievedAt) parts.push(`확인 ${retrievedAt}`);
-    if (sources.length) parts.push(`HTTPS 출처 ${sources.length}개`);
-    return parts.join(" · ");
-}
-
-function sourceCitationNumber(source: ShopChatSource, index: number) {
-    return source.id && /^\d{1,2}$/.test(source.id) ? source.id : String(index + 1);
-}
-
-function sourceMetadataTitle(source: ShopChatSource) {
-    const parts = [source.name];
-    const publishedAt = formatResearchTimestamp(source.publishedAt);
-    const retrievedAt = formatResearchTimestamp(source.retrievedAt);
-    if (publishedAt) parts.push(`게시 ${publishedAt}`);
-    if (retrievedAt) parts.push(`확인 ${retrievedAt}`);
-    return parts.join(" · ");
-}
-
 function buildMapUrl(query: string, latitude?: number, longitude?: number) {
     const encoded = encodeURIComponent(query || "동물병원");
     if (typeof latitude === "number" && typeof longitude === "number") {
@@ -703,8 +646,6 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
 export default function ChatResponseExtras({
     medical,
     generation,
-    sources,
-    research,
     ctas,
     onAsk,
     compact = false,
@@ -713,8 +654,6 @@ export default function ChatResponseExtras({
 }: ChatResponseExtrasProps) {
     const [vetSearch, setVetSearch] = useState<VetSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
-    const visibleSources = sources?.slice(0, 6) ?? [];
-    const evidenceContext = researchContext(research, sources ?? []);
     const label = triageLabel(medical);
     const showMedicalCard = Boolean(
         medical?.mode &&
@@ -902,34 +841,6 @@ export default function ChatResponseExtras({
                 <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} followUpsEnabled={followUpsEnabled} />
             )}
 
-            {(evidenceContext || visibleSources.length > 0) && (
-                <div className={`mt-2 ${widthClass} text-left`}>
-                    {evidenceContext ? (
-                        <p
-                            aria-label="검색 근거 상태"
-                            className="mb-1.5 text-[10px] font-bold leading-4 text-neutral-500"
-                        >
-                            {evidenceContext}
-                        </p>
-                    ) : null}
-                    {visibleSources.length > 0 ? (
-                        <div className="flex flex-wrap gap-1.5">
-                            {visibleSources.map((source, index) => (
-                                <a
-                                    key={`${source.id || index}-${source.name}-${source.url}`}
-                                    href={source.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    title={sourceMetadataTitle(source)}
-                                    className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-extrabold text-neutral-600 shadow-sm hover:border-indigo-300 hover:text-indigo-700"
-                                >
-                                    [{sourceCitationNumber(source, index)}] {source.name}
-                                </a>
-                            ))}
-                        </div>
-                    ) : null}
-                </div>
-            )}
         </>
     );
 }
