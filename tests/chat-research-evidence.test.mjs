@@ -135,9 +135,12 @@ test("both chat surfaces preserve research metadata without exposing source list
     assert.match(helper, /products:\s*\[\]/);
     for (const surface of [widget, page]) {
         assert.match(surface, /research\?: ShopChatResearch/);
+        assert.match(surface, /actions: result\.actions/);
         assert.match(surface, /research: result\.research/);
         assert.match(surface, /research=\{message\.research\}/);
         assert.match(surface, /customerVisibleChatAnswer\(message\.text, Boolean\(message\.sources\?\.length\)\)/);
+        assert.doesNotMatch(surface, /function ActionList/);
+        assert.doesNotMatch(surface, /<ActionList/);
     }
     assert.match(extras, /sources\?: ShopChatSource\[\]/);
     assert.doesNotMatch(extras, /HTTPS 출처/);

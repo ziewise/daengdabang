@@ -49,33 +49,6 @@ const QUICK_QUESTIONS = [
     "중형견 하네스 추천",
 ];
 
-function ActionList({ actions }: { actions?: ShopChatAction[] }) {
-    if (!actions?.length) return null;
-    return (
-        <div className="mt-2 max-w-[82%] space-y-1 rounded-lg border border-neutral-200 bg-white p-3 text-left shadow-sm">
-            {actions.slice(0, 6).map((action, index) => (
-                <div key={`${action.label}-${index}`} className="flex gap-2 text-xs font-bold leading-5 text-neutral-600">
-                    <span
-                        className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-                            action.status === "warn"
-                                ? "bg-amber-500"
-                                : action.status === "running"
-                                  ? "animate-pulse bg-sky-500"
-                                  : action.status === "done"
-                                    ? "bg-emerald-500"
-                                    : "bg-neutral-300"
-                        }`}
-                    />
-                    <span>
-                        <b className="text-neutral-900">{action.label}</b>
-                        {action.detail ? <span className="block text-[11px] text-neutral-500">{action.detail}</span> : null}
-                    </span>
-                </div>
-            ))}
-        </div>
-    );
-}
-
 export default function ChatPageClient() {
     const params = useSearchParams();
     const { user } = useAuth();
@@ -325,7 +298,6 @@ export default function ChatPageClient() {
                                         message.text
                                     )}
                                 </div>
-                                {message.role === "assistant" && <ActionList actions={message.actions} />}
                                 {message.role === "assistant" && message.conversation?.continued && (
                                     <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-black text-indigo-700">
                                         <span aria-hidden="true">↳</span>

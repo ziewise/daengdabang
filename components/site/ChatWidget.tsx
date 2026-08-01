@@ -58,33 +58,6 @@ type Props = {
 const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_FONT_MODE", callback);
 const getServerChatFontMode = () => "readable" as const;
 
-function ActionList({ actions }: { actions?: ShopChatAction[] }) {
-    if (!actions?.length) return null;
-    return (
-        <div className={`${styles.actionList} mt-2 space-y-1 p-2 text-left`}>
-            {actions.slice(0, 5).map((action, index) => (
-                <div key={`${action.label}-${index}`} className="flex gap-2 text-[11px] font-bold leading-4 text-neutral-600">
-                    <span
-                        className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${
-                            action.status === "warn"
-                                ? "bg-amber-500"
-                                : action.status === "running"
-                                  ? "animate-pulse bg-sky-500"
-                                  : action.status === "done"
-                                    ? "bg-emerald-500"
-                                    : "bg-neutral-300"
-                        }`}
-                    />
-                    <span>
-                        <b className="text-neutral-800">{action.label}</b>
-                        {action.detail ? <span className="block text-neutral-500">{action.detail}</span> : null}
-                    </span>
-                </div>
-            ))}
-        </div>
-    );
-}
-
 export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange }: Props = {}) {
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
@@ -400,7 +373,6 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                         />
                                     </div>
                                 )}
-                                {message.role === "assistant" && <ActionList actions={message.actions} />}
                                 {message.role === "assistant" && message.conversation?.continued && (
                                     <div className={`${styles.continuationBadge} mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black`}>
                                         <span aria-hidden="true">↳</span>
