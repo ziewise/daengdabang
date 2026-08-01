@@ -1,6 +1,11 @@
 import { CATALOG, applySort, searchCatalog, type CatalogProduct } from "@/lib/catalog";
 import { ddbApiBase } from "@/lib/customer-api";
 import {
+    classifyChatMedicalSafety,
+    resolveSuccessfulApiMedical,
+    shouldPreferProtectedMedicalFallback,
+} from "@/lib/chat-medical-safety";
+import {
     customerSupportCtaIdentity,
     customerSupportInquiryHref,
     customerSupportRoute,
@@ -881,17 +886,17 @@ function rareHealthFallback(message: string): ShopChatAnswer | null {
             }
         );
     }
-    if (/(눈.*(뿌예|뿌옇|파랗|흐려|하얗)|뿌예.*눈|cloudy eye)/i.test(message)) {
+    if (/(?:(?:눈(?!에\s*띄)|눈동자|동공|각막|안구).{0,30}(?:하얀\s*(?:막(?!대)|빛|점|부분)|흰\s*(?:막(?!대)|빛|점|부분|필름)|백색|회백색|우윳빛|뿌예|뿌옇|흐려|혼탁|탁해|파랗|푸르스름|반투명\s*막(?!대)|막(?:이|가)?\s*(?:보|끼|올라|덮)|하얗(?:게|고|어)|찔|튀어나)|(?:하얀\s*막(?!대)|흰\s*막(?!대)|우윳빛|혼탁|반투명\s*막(?!대)).{0,24}(?:눈|눈동자|동공|각막|안구)|cloudy eye)/i.test(message)) {
         return healthRuleAnswer(
-            "눈이 갑자기 뿌옇거나 파랗게 보이면 각막 손상, 염증, 안압 문제처럼 빠른 확인이 필요한 원인이 있을 수 있어요. 눈은 악화가 빠를 수 있어서 사람용 안약이나 남은 안약을 임의로 넣지 말고, 비비지 못하게 하면서 오늘 안에 동물병원에 연락하는 쪽이 안전합니다.",
+            "눈의 하얀 막이나 혼탁은 각막 표면, 제3안검, 수정체, 눈 안 염증·안압 문제처럼 서로 다른 위치에서 보일 수 있어 사진이나 글만으로 백내장 등을 확정할 수 없어요. 갑자기 생겼거나 눈을 못 뜨고 비비는 경우에는 즉시, 통증이 없어 보여도 오늘 안에 동물병원에 연락하세요. 사람용·남은 안약, 특히 스테로이드 안약은 진찰 전에 임의로 넣지 않는 것이 안전합니다.",
             "acute_eye_cloudiness",
             "갑작스러운 눈 혼탁 또는 색 변화",
             {
-                triage: /갑자기|눈을\s*못|외상|부딪/i.test(message) ? "emergency" : "general_health",
-                followUpQuestions: ["한쪽 눈인가요, 양쪽 눈인가요? 언제부터 갑자기 보였나요?", "눈을 못 뜨거나 비비기, 눈물, 눈곱, 통증 반응이 있나요?", "최근 산책 중 풀/먼지/충돌, 목욕, 샴푸, 외상이 있었나요?"],
+                triage: /갑자기.*(?:눈을\s*못|못\s*떠|계속\s*감|찔|튀어나|출혈)|눈을\s*못|못\s*떠|계속\s*감|외상|부딪/i.test(message) ? "emergency" : "general_health",
+                followUpQuestions: ["한쪽 눈인가요, 양쪽 눈인가요? 갑자기 생겼나요, 서서히 변했나요?", "막이 눈 표면, 동공 안쪽, 코 쪽 눈구석 중 어디에서 보이나요?", "눈을 못 뜨거나 비비기, 충혈, 눈물·눈곱, 동공 차이, 시야 변화가 있나요?", "최근 풀/먼지/충돌, 목욕·샴푸·화학물질, 외상이나 기존 안약 사용이 있었나요?"],
                 redFlags: ["눈을 못 뜸, 심하게 비빔, 통증 반응", "갑작스러운 혼탁, 파란빛/하얀빛 변화, 시야 이상 의심", "외상 뒤 시작됐거나 눈물/분비물이 급격히 늘어남"],
-                firstSteps: ["눈을 비비지 못하게 하고 사람용 안약이나 남은 안약을 임의로 넣지 마세요.", "빛이 강한 곳과 먼지를 피하고 변화가 보이는 사진을 찍어 두세요.", "갑작스러운 혼탁이나 통증이 있으면 오늘 안에 동물병원에 연락하세요."],
-                careWindow: "갑작스러운 눈 색 변화나 통증이 있으면 오늘 안에 동물병원 상담을 잡는 것이 좋습니다.",
+                firstSteps: ["눈을 비비지 못하게 하고 사람용·남은 안약, 특히 스테로이드 안약을 임의로 넣지 마세요.", "빛이 강한 곳과 먼지를 피하고 변화가 보이는 사진을 찍어 두세요.", "갑작스러운 혼탁이나 통증은 즉시, 그 외 흰 막·혼탁도 오늘 안에 동물병원에 연락하세요."],
+                careWindow: "통증이 없어 보여도 오늘 안에 동물병원에 연락하고, 갑작스럽거나 아픈 눈은 즉시 진료하는 것이 안전합니다.",
             }
         );
     }
@@ -969,11 +974,9 @@ function heartwormPreventionFallback(message: string): ShopChatAnswer | null {
 }
 
 function medicalSafetyFallback(message: string): ShopChatAnswer | null {
-    const text = message.toLowerCase();
-    const medical = /(아파|아프|아픈|아픔|아픈가|아픈지|아픈\s*것|이상해|이상한|이상\s*증상|기운|무기력|밥을\s*안|안\s*먹|못\s*먹|다쳤|다쳐|상처|물렸|물린|교상|할퀴|절룩|낑낑|깨갱|토해|토했|변이|구토|설사|경련|발작|호흡|숨|기침|열|통증|피|혈변|중독|초콜릿|자일리톨|포도|건포도|약|용량|처방|질병|질환|진단|치료|수술|알러지|알레르기|vomit|diarrhea|seizure|breath|pain|poison|xylitol|grape|medicine|dose|bitten|bite wound)/i.test(text);
-    if (!medical) return null;
-    const emergency = /(호흡|숨|잇몸.*파|쓰러|의식|발작|경련|중독|자일리톨|초콜릿|포도|건포도|출혈|피가.*멈추|골절|열사병|물렸|물린|교상|할퀴|breath|collapse|seizure|poison|xylitol|grape|bloat|bitten|bite wound)/i.test(text);
-    if (emergency) {
+    const classification = classifyChatMedicalSafety(message);
+    if (!classification) return null;
+    if (classification === "emergency") {
         return {
             answer: "응급 가능성이 있습니다. 가까운 동물병원 또는 24시 응급병원에 즉시 연락하세요. 증상 시작 시간, 먹은 것, 복용한 약, 사진/영상을 준비해 병원에 전달하는 것이 좋습니다.",
             products: [],
@@ -2103,7 +2106,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 conversation,
             };
         }
-        if (breedComparisonFallback) {
+        if (breedComparisonFallback && !medicalMode) {
             const apiBreedRoute = data?.medical?.triage === "canine_knowledge"
                 || data?.intent === "canine_knowledge"
                 || conversation?.anchorKind === "canine_knowledge";
@@ -2123,7 +2126,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 conversation,
             };
         }
-        if (knowledgeFallback && fallback === knowledgeFallback) {
+        if (knowledgeFallback && fallback === knowledgeFallback && !medicalMode) {
             const apiKnowledgeRoute = data?.medical?.triage === "canine_knowledge"
                 || data?.intent === "canine_knowledge"
                 || conversation?.anchorKind === "canine_knowledge";
@@ -2143,18 +2146,36 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 conversation,
             };
         }
-        const apiMedical = medicalMode ? data.medical as ShopChatMedical : fallback.medical;
+        const preferProtectedMedicalFallback = shouldPreferProtectedMedicalFallback(
+            data.medical,
+            medicalFallback?.medical,
+        );
+        const apiMedical = preferProtectedMedicalFallback
+            ? medicalFallback?.medical
+            : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, fallback.medical);
         if (apiMedical && apiMedical.choiceGroups) {
             apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
         }
         return {
-            answer: customerFacingShopChatAnswer(data.answer, fallback.answer),
-            products: apiReturnedProducts ? unique(apiProducts).slice(0, 6) : fallback.products,
+            answer: preferProtectedMedicalFallback
+                ? medicalFallback?.answer || fallback.answer
+                : customerFacingShopChatAnswer(data.answer, fallback.answer),
+            products: preferProtectedMedicalFallback
+                ? []
+                : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : fallback.products,
             medical: apiMedical,
-            sources: apiSources.length ? apiSources : fallback.sources,
-            actions: actions.length ? actions : fallback.actions,
-            ctas: ctas.length ? ctas : fallback.ctas,
-            research: research || fallback.research,
+            sources: preferProtectedMedicalFallback
+                ? medicalFallback?.sources
+                : apiSources.length ? apiSources : fallback.sources,
+            actions: preferProtectedMedicalFallback
+                ? medicalFallback?.actions
+                : actions.length ? actions : fallback.actions,
+            ctas: preferProtectedMedicalFallback
+                ? medicalFallback?.ctas
+                : ctas.length ? ctas : fallback.ctas,
+            research: preferProtectedMedicalFallback
+                ? medicalFallback?.research
+                : research || fallback.research,
             conversation,
             generation: medicalMode ? undefined : generation || fallback.generation,
         };

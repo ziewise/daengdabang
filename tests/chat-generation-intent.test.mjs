@@ -30,7 +30,8 @@ test("CareTalk keeps emergency API and offline safety answers ahead of generatio
     const helper = await source("lib/daengdabang-llm.ts");
 
     assert.match(helper, /const medicalRoute = rareHealthFallback\(text\) \|\| heartwormPreventionFallback\(text\) \|\| medicalSafetyFallback\(text\);\s*if \(medicalRoute\) return medicalRoute;\s*\n\s*const generationRoute/s);
-    assert.match(helper, /const emergency = \/[^\n]*쓰러/);
+    assert.match(helper, /classifyChatMedicalSafety\(message\)/);
+    assert.match(helper, /classification === "emergency"/);
     assert.match(helper, /if \(generationFallback && !medicalMode\)/);
     assert.match(helper, /generation: medicalMode \? undefined/);
     assert.match(helper, /effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/);

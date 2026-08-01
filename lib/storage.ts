@@ -198,8 +198,8 @@ export const searchRecent = {
 // ============ 케어톡 글꼴 가독성 ============
 export const chatFontModeStorage = {
     get: (): ChatFontMode => {
-        const value = readJSON<unknown>(KEYS.CHAT_FONT_MODE, "crayon");
-        return value === "readable" ? "readable" : "crayon";
+        const value = readJSON<unknown>(KEYS.CHAT_FONT_MODE, "readable");
+        return value === "crayon" ? "crayon" : "readable";
     },
     set: (mode: ChatFontMode) => writeJSON(KEYS.CHAT_FONT_MODE, mode),
 };
@@ -268,7 +268,7 @@ export const snapshots = {
     auth:        makeSnapshot<import("./types").LoginState | null>(KEYS.AUTH, null),
     pets:        makeSnapshot<import("./types").PetProfile[]>(KEYS.PETS, []),
     pendingPet:  makeSnapshot<import("./types").PetProfile | null>(KEYS.PET_PENDING, null),
-    chatFontMode: makeSnapshot<ChatFontMode>(KEYS.CHAT_FONT_MODE, "crayon"),
+    chatFontMode: makeSnapshot<ChatFontMode>(KEYS.CHAT_FONT_MODE, "readable"),
 };
 
 /** useSyncExternalStore 의 subscribe 헬퍼 — storage 이벤트 구독 */

@@ -1,4 +1,7 @@
 import type { PetProfile } from "@/lib/store";
+import { ddbApiBase } from "@/lib/ddb-api-base";
+
+export { ddbApiBase } from "@/lib/ddb-api-base";
 import type { CustomerSupportCategory } from "@/lib/customer-support";
 import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
 
@@ -221,14 +224,6 @@ export class DdbApiError extends Error {
     }
 }
 
-function inferredApiBase() {
-    if (typeof window === "undefined") return "";
-    if (window.location.hostname === "daengdabang.com" || window.location.hostname === "www.daengdabang.com") {
-        return "https://api.daengdabang.com";
-    }
-    return "";
-}
-
 type ApiPetProfile = {
     id: number;
     name: string;
@@ -253,12 +248,6 @@ type ApiPetProfile = {
     createdAt: string;
     updatedAt: string;
 };
-
-export function ddbApiBase() {
-    const envBase = process.env.NEXT_PUBLIC_DDB_API_BASE || process.env.NEXT_PUBLIC_API_URL || "";
-    if (typeof window === "undefined") return envBase;
-    return window.localStorage.getItem("ddb.apiBase") || envBase || inferredApiBase();
-}
 
 export function ddbApiReady() {
     return Boolean(ddbApiBase());

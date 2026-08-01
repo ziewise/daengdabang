@@ -15,11 +15,13 @@ test("CareTalk offers a persistent readable-font toggle before the clear button"
     assert.match(storage, /CHAT_FONT_MODE: "daengdabang_chat_font_mode"/);
     assert.match(storage, /export type ChatFontMode = "crayon" \| "readable"/);
     assert.match(storage, /chatFontModeStorage/);
-    assert.match(storage, /chatFontMode: makeSnapshot<ChatFontMode>/);
+    assert.match(storage, /readJSON<unknown>\(KEYS\.CHAT_FONT_MODE, "readable"\)/);
+    assert.match(storage, /chatFontMode: makeSnapshot<ChatFontMode>\(KEYS\.CHAT_FONT_MODE, "readable"\)/);
 
     assert.match(widget, /useSyncExternalStore/);
     assert.match(widget, /subscribeStorage\("CHAT_FONT_MODE", callback\)/);
     assert.match(widget, /data-chat-font-mode=\{chatFontMode\}/);
+    assert.match(widget, /getServerChatFontMode = \(\) => "readable"/);
     assert.match(widget, /data-chat-font-toggle/);
     assert.match(widget, /aria-pressed=\{readableFontEnabled\}/);
     assert.match(widget, /또박또박한 정자체로 보기/);

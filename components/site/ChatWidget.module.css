@@ -4,7 +4,8 @@
     --chat-crayon-coral: #f28b72;
     --chat-crayon-yellow: #f4c95d;
     --chat-crayon-mint: #7ccdb3;
-    --chat-paper: #fffaf0;
+    --chat-paper: #fffdf8;
+    --chat-ink: #252842;
     --chat-font-body: var(--font-crayon), var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
     --chat-font-accent: var(--chat-font-body);
     font-family: var(--chat-font-body);
@@ -17,11 +18,7 @@
     outline: 2px dashed rgba(242, 139, 114, 0.72);
     outline-offset: 3px;
     border-radius: 29px 18px 26px 16px;
-    background:
-        radial-gradient(circle at 12% 18%, rgba(244, 201, 93, 0.2) 0 2px, transparent 3px),
-        radial-gradient(circle at 84% 74%, rgba(124, 205, 179, 0.18) 0 2px, transparent 3px),
-        repeating-linear-gradient(101deg, rgba(91, 91, 214, 0.035) 0 1px, transparent 1px 7px),
-        var(--chat-paper);
+    background: var(--chat-paper);
     box-shadow:
         7px 8px 0 rgba(38, 152, 199, 0.26),
         -5px 5px 0 rgba(242, 139, 114, 0.22),
@@ -30,7 +27,7 @@
 
 .panel[data-chat-font-mode="readable"] {
     --chat-font-body: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-    --chat-font-accent: var(--chat-font-body);
+    --chat-font-accent: var(--font-crayon), var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
     font-family: var(--chat-font-body);
 }
 
@@ -69,8 +66,8 @@
     padding-top: 9px;
     border-bottom: 4px solid rgba(91, 91, 214, 0.42);
     background:
-        repeating-linear-gradient(104deg, rgba(244, 201, 93, 0.66) 0 18px, rgba(242, 139, 114, 0.38) 18px 34px, rgba(124, 205, 179, 0.44) 34px 52px),
-        #fff5df;
+        linear-gradient(105deg, rgba(244, 201, 93, 0.28), rgba(242, 139, 114, 0.15) 34%, rgba(124, 205, 179, 0.19) 66%, rgba(38, 152, 199, 0.1)),
+        #fffaf2;
 }
 
 .header::before {
@@ -109,7 +106,7 @@
 }
 
 .noteEyebrow {
-    color: #cf5f65;
+    color: #ad3f50;
     font-family: var(--chat-font-accent);
     font-size: 0.65rem;
     font-weight: 700;
@@ -121,7 +118,7 @@
 .title {
     position: relative;
     display: inline-block;
-    color: #25264c;
+    color: #202342;
     font-family: var(--chat-font-accent);
     font-size: 1.48rem;
     font-weight: 700;
@@ -146,8 +143,9 @@
 
 .headerIconButton {
     border: 2px dashed rgba(91, 91, 214, 0.4);
-    background: rgba(255, 255, 255, 0.58);
-    color: #514f88;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 0 rgba(91, 91, 214, 0.08);
+    color: #403f74;
     transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
 }
 
@@ -219,9 +217,9 @@
 
 .messageList {
     background:
-        linear-gradient(90deg, transparent 0 34px, rgba(242, 139, 114, 0.48) 34px 37px, transparent 37px),
-        repeating-linear-gradient(0deg, transparent 0 30px, rgba(38, 152, 199, 0.18) 30px 32px),
-        #fff9e9;
+        linear-gradient(90deg, transparent 0 34px, rgba(242, 139, 114, 0.18) 34px 36px, transparent 36px),
+        repeating-linear-gradient(0deg, transparent 0 35px, rgba(38, 152, 199, 0.08) 35px 36px),
+        #fffdf8;
     padding-left: 48px;
     scrollbar-color: rgba(91, 91, 214, 0.5) transparent;
     scrollbar-width: thin;
@@ -256,7 +254,7 @@
 .userBubble {
     border-color: rgba(49, 64, 167, 0.5);
     border-radius: 19px 15px 6px 18px;
-    background: linear-gradient(135deg, var(--chat-crayon-blue), var(--chat-crayon-indigo));
+    background: linear-gradient(135deg, #187da5, var(--chat-crayon-indigo));
     box-shadow: 4px 4px 0 rgba(244, 201, 93, 0.55);
     color: #fff;
     outline: 1px dashed rgba(244, 201, 93, 0.88);
@@ -267,25 +265,27 @@
 .loadingBubble {
     border-color: rgba(242, 139, 114, 0.5);
     border-radius: 13px 19px 18px 6px;
-    background: rgba(255, 254, 246, 0.96);
+    background: #fff;
     box-shadow: 4px 4px 0 rgba(124, 205, 179, 0.42);
-    color: #33354e;
+    color: var(--chat-ink);
     outline: 1px dashed rgba(242, 139, 114, 0.5);
     outline-offset: 2px;
 }
 
 .emptyNote {
     position: relative;
-    width: min(100%, 238px);
+    width: min(100%, 252px);
     margin: 42px auto 0;
-    padding: 30px 20px 20px;
-    border: 3px dashed #e07b70;
-    border-radius: 15px 20px 13px 18px;
-    background: #fff1a8;
-    box-shadow: 6px 7px 0 rgba(91, 91, 214, 0.19);
-    color: #39395f;
+    padding: 32px 22px 22px;
+    border: 2px solid rgba(91, 91, 214, 0.72);
+    border-radius: 18px 22px 17px 20px;
+    outline: 2px dashed rgba(242, 139, 114, 0.7);
+    outline-offset: -7px;
+    background: #fffefa;
+    box-shadow: 6px 7px 0 rgba(91, 91, 214, 0.13), 0 12px 24px -18px rgba(37, 40, 66, 0.34);
+    color: #292c4d;
     text-align: center;
-    transform: rotate(-1deg);
+    transform: none;
 }
 
 .emptyNote::before {
@@ -294,7 +294,7 @@
     left: 50%;
     width: 82px;
     height: 23px;
-    background: rgba(124, 205, 179, 0.78);
+    background: rgba(124, 205, 179, 0.86);
     clip-path: polygon(4% 7%, 97% 0, 92% 100%, 0 86%);
     content: "";
     transform: translateX(-50%) rotate(2deg);
@@ -303,15 +303,18 @@
 .emptyNote strong {
     display: block;
     font-family: var(--chat-font-accent);
-    font-size: 1.32rem;
-    line-height: 1.1;
+    color: #24274a;
+    font-size: 1.38rem;
+    line-height: 1.2;
 }
 
 .emptyNote p {
-    margin-top: 8px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    line-height: 1.55;
+    margin-top: 10px;
+    color: #41465e;
+    font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.65;
 }
 
 .emptyPencil {
@@ -339,7 +342,7 @@
 }
 
 .responseExtras :global(.bg-white) {
-    background-color: rgba(255, 254, 246, 0.96);
+    background-color: #fff;
 }
 
 .actionList {
@@ -374,8 +377,8 @@
 .composer {
     border-top: 4px solid rgba(91, 91, 214, 0.4);
     background:
-        repeating-linear-gradient(102deg, rgba(244, 201, 93, 0.3) 0 18px, rgba(124, 205, 179, 0.18) 18px 36px, transparent 36px 52px),
-        #fffaf0;
+        linear-gradient(90deg, rgba(244, 201, 93, 0.24), rgba(242, 139, 114, 0.12), rgba(124, 205, 179, 0.18), rgba(38, 152, 199, 0.09)) top / 100% 6px no-repeat,
+        #fffaf3;
 }
 
 .input {
@@ -384,7 +387,7 @@
     border-radius: 16px 12px 17px 13px;
     background: #fffefb;
     box-shadow: inset 0 -2px 0 rgba(38, 152, 199, 0.1), 2px 2px 0 rgba(244, 201, 93, 0.2);
-    color: #33354e;
+    color: var(--chat-ink);
     font-family: var(--chat-font-body);
     font-size: 16px;
     font-weight: 600;
@@ -395,7 +398,7 @@
 }
 
 .input::placeholder {
-    color: #68697d;
+    color: #565a70;
     font-size: 15px;
     font-weight: 600;
 }

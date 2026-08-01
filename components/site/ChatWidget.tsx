@@ -55,7 +55,7 @@ type Props = {
 };
 
 const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_FONT_MODE", callback);
-const getServerChatFontMode = () => "crayon" as const;
+const getServerChatFontMode = () => "readable" as const;
 
 function ActionList({ actions }: { actions?: ShopChatAction[] }) {
     if (!actions?.length) return null;
@@ -110,7 +110,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         snapshots.chatFontMode,
         getServerChatFontMode,
     );
-    const chatFontMode = storedChatFontMode === "readable" ? "readable" : "crayon";
+    const chatFontMode = storedChatFontMode === "crayon" ? "crayon" : "readable";
     const readableFontEnabled = chatFontMode === "readable";
     const fontToggleLabel = readableFontEnabled
         ? "기존 손글씨체로 보기"
@@ -176,6 +176,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
         setMessages([]);
+        setProductContext("");
         setInput("");
         setLoading(false);
         generationReferences.clear();

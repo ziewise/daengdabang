@@ -32,7 +32,7 @@ test("Labrador and Golden Retriever comparison stays in canine knowledge routing
     assert.match(helper, /긴 장식털이 있는 골든이 빗질과 엉킴 관리에 더 많은 시간이 드는 편/);
     assert.match(helper, /if \(isBreedComparisonQuestion\(message\)\) return false/);
     assert.match(helper, /const knowledgeRoute = retrieverComparisonFallback\(text\) \|\| canineKnowledgeFallback\(text\);\s*if \(knowledgeRoute\) return knowledgeRoute/s);
-    assert.match(helper, /if \(breedComparisonFallback\) \{[\s\S]*?answerAddressesCanineQuestion\(message, apiAnswer\)[\s\S]*?products:\s*\[\]/);
+    assert.match(helper, /if \(breedComparisonFallback && !medicalMode\) \{[\s\S]*?answerAddressesCanineQuestion\(message, apiAnswer\)[\s\S]*?products:\s*\[\]/);
     assert.match(helper, /AKC Labrador Retriever/);
     assert.match(helper, /AKC Golden Retriever/);
 });

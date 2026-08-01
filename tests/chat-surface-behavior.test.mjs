@@ -104,7 +104,7 @@ test("shop chat strips only the customer-facing routing preamble", async () => {
 
     assert.match(helper, /CUSTOMER_ROUTING_PREAMBLE_RE/);
     assert.match(helper, /source\.replace\(CUSTOMER_ROUTING_PREAMBLE_RE, ""\)\.trim\(\)/);
-    assert.match(helper, /answer: customerFacingShopChatAnswer\(data\.answer, fallback\.answer\)/);
+    assert.match(helper, /customerFacingShopChatAnswer\(data\.answer, fallback\.answer\)/);
     assert.doesNotMatch(helper, /이 질문은 상품 추천보다 강아지 생활\/행동 정보에 가까워서/);
     assert.doesNotMatch(helper, /지금은 상품 추천보다 증상 확인이 먼저/);
 });
