@@ -6,7 +6,6 @@ import {
     shouldPreferProtectedMedicalFallback,
 } from "@/lib/chat-medical-safety";
 import {
-    customerSupportCtaIdentity,
     customerSupportInquiryHref,
     customerSupportRoute,
     type CustomerSupportRoute,
@@ -24,7 +23,6 @@ import {
     isCurrentInformationRequest,
     normalizeShopChatResearch,
     normalizeShopChatSources,
-    shouldUseGeneralVerificationFallback,
     type ShopChatResearch,
     type ShopChatSource,
 } from "@/lib/shop-chat-evidence";
@@ -1208,30 +1206,6 @@ function canineKnowledgeFallback(message: string): ShopChatAnswer | null {
     };
 }
 
-function normalizeCanineQuestionTerm(value: string) {
-    const suffixes = ["에게", "한테", "에서", "으로", "와", "과", "의", "은", "는", "이", "가", "을", "를"];
-    const suffix = suffixes.find((candidate) => value.endsWith(candidate) && value.length - candidate.length >= 2);
-    return suffix ? value.slice(0, -suffix.length) : value;
-}
-
-function answerAddressesCanineQuestion(message: string, answer: string) {
-    const normalizedAnswer = answer.toLowerCase();
-    if (!normalizedAnswer.trim()) return false;
-    if (retrieverComparisonFallback(message)) {
-        return /(래브라도|라브라도|labrador)/i.test(answer) && /(골든|golden)/i.test(answer);
-    }
-
-    const ignoredTerms = new Set([
-        "강아지", "반려견", "댕댕이", "알려줘", "알려주세요", "궁금해", "궁금합니다",
-        "어떻게", "무엇", "뭐가", "차이점", "차이", "비교", "해줘", "해주세요",
-        "인가요", "할까요", "그리고", "관련", "대한", "please", "about", "what", "how",
-    ]);
-    const terms = (message.toLowerCase().match(/[가-힣]{2,}|[a-z]{3,}/g) || [])
-        .map(normalizeCanineQuestionTerm)
-        .filter((term) => !ignoredTerms.has(term));
-    return terms.length === 0 || terms.some((term) => normalizedAnswer.includes(term));
-}
-
 const CUSTOMER_ACTION_INTERNAL_RE = /\b(?:llama|openai|gemini|llm|model|token|backend|provider|router|pipeline|fallback|rules)\b/i;
 
 function customerActionText(value: unknown, fallback: string) {
@@ -2118,41 +2092,20 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         .filter((turn) => (turn.role === "user" || turn.role === "assistant") && turn.content.trim())
         .map((turn) => ({ role: turn.role, content: turn.content.trim().slice(0, 500) }))
         .slice(-12);
-    const recentCanineHealthContext = hasRecentCanineHealthContext(history);
     const wildlifeBiteRoute = wildlifeBiteFallback(message);
-    if (wildlifeBiteRoute) return wildlifeBiteRoute;
 
     const supportRoute = customerSupportRoute(message);
     const supportFallback = supportRoute ? customerSupportAnswer(supportRoute) : undefined;
     const generationFallback = generationIntentFallback(message);
-    const scopeFallback = scopeGuardFallback(message, recentCanineHealthContext);
     const rareFallback = rareHealthFallback(message);
     const heartwormFallback = heartwormPreventionFallback(message);
     const medicalDecisionFallback = medicalDecisionFollowUpFallback(message, history);
-    const medicalFallback = rareFallback || heartwormFallback || medicalDecisionFallback || medicalSafetyFallback(message);
-    const breedComparisonFallback = retrieverComparisonFallback(message);
-    const knowledgeFallback = breedComparisonFallback || canineKnowledgeFallback(message);
-    const currentInformationRequest = isCurrentInformationRequest(message);
-    const effectiveScopeFallback = currentInformationRequest && scopeFallback?.medical?.topic === "out_of_scope"
-        ? undefined
-        : scopeFallback;
-    const effectiveKnowledgeFallback = currentInformationRequest ? undefined : knowledgeFallback;
-    const protectedFallbackAvailable = Boolean(
-        supportFallback
-        || effectiveScopeFallback
-        || medicalFallback
-        || generationFallback
-        || effectiveKnowledgeFallback,
-    );
-    const generalVerificationFallback = shouldUseGeneralVerificationFallback(message, protectedFallbackAvailable)
-        ? generalVerificationUnavailableAnswer(message)
-        : undefined;
-    const fallback = supportFallback || effectiveScopeFallback || medicalFallback || generationFallback
-        || effectiveKnowledgeFallback
-        || generalVerificationFallback
-        || answerShopQuestion(message, context);
+    const medicalFallback = wildlifeBiteRoute || rareFallback || heartwormFallback || medicalDecisionFallback || medicalSafetyFallback(message);
+    const unavailableFallback = generalVerificationUnavailableAnswer(message);
     const base = apiBase();
-    if (!base) return fallback;
+    if (!base) {
+        return supportFallback || medicalFallback || generationFallback || unavailableFallback;
+    }
     const references = normalizedShopChatReferences(context);
 
     try {
@@ -2181,6 +2134,9 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
             : [];
         const medicalMode = Boolean(data.medical && typeof data.medical === "object" && data.medical.mode);
+        const apiReturnedSources = Array.isArray(data.sources);
+        const apiReturnedActions = Array.isArray(data.actions);
+        const apiReturnedCtas = Array.isArray(data.ctas) || Boolean(data.locationRequest);
         const apiSources = normalizeShopChatSources(data.sources);
         const actions = normalizeActions(data.actions);
         const research = normalizeShopChatResearch(data.research);
@@ -2190,123 +2146,44 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         );
         const conversation = normalizeConversation(data.conversation);
         const generation = normalizeGeneration(data.generation);
-        if (supportFallback) {
-            const apiCustomerSupport = data?.medical?.triage === "customer_support"
-                || data?.intent === "customer_support"
-                || data?.model === "customer-support";
-            const ctaIdentity = (cta: ShopChatCta) => `${cta.kind}:${
-                cta.kind === "internal_link" && cta.url
-                    ? customerSupportCtaIdentity(cta.url)
-                    : cta.url || cta.prompt || cta.label
-            }`;
-            const mergedCtas = [...(supportFallback.ctas ?? []), ...ctas].filter((cta, index, all) => (
-                all.findIndex((candidate) => ctaIdentity(candidate) === ctaIdentity(cta)) === index
-            ));
-            return {
-                ...supportFallback,
-                answer: apiCustomerSupport
-                    ? customerFacingShopChatAnswer(data.answer, supportFallback.answer)
-                    : supportFallback.answer,
-                products: [],
-                ctas: mergedCtas,
-                conversation,
-            };
-        }
-        if (generationFallback && !medicalMode) {
-            const apiGenerationRoute = Boolean(generation || data?.medical?.triage === "content_generation");
-            return {
-                ...generationFallback,
-                answer: apiGenerationRoute
-                    ? customerFacingShopChatAnswer(data.answer, generationFallback.answer)
-                    : generationFallback.answer,
-                products: [],
-                medical: apiGenerationRoute && data.medical && typeof data.medical === "object"
-                    ? data.medical as ShopChatMedical
-                    : generationFallback.medical,
-                actions: apiGenerationRoute && actions.length ? actions : generationFallback.actions,
-                ctas: apiGenerationRoute && ctas.length ? ctas : generationFallback.ctas,
-                generation: generation || generationFallback.generation,
-                conversation,
-            };
-        }
-        if (breedComparisonFallback && !medicalMode) {
-            const apiBreedRoute = data?.medical?.triage === "canine_knowledge"
-                || data?.intent === "canine_knowledge"
-                || conversation?.anchorKind === "canine_knowledge";
-            const apiAnswer = customerFacingShopChatAnswer(data.answer, breedComparisonFallback.answer);
-            const useApiAnswer = apiBreedRoute && answerAddressesCanineQuestion(message, apiAnswer);
-            return {
-                ...breedComparisonFallback,
-                answer: useApiAnswer ? apiAnswer : breedComparisonFallback.answer,
-                products: [],
-                medical: useApiAnswer && data.medical && typeof data.medical === "object"
-                    ? data.medical as ShopChatMedical
-                    : breedComparisonFallback.medical,
-                sources: useApiAnswer && apiSources.length ? apiSources : breedComparisonFallback.sources,
-                actions: useApiAnswer && actions.length ? actions : breedComparisonFallback.actions,
-                ctas: useApiAnswer && ctas.length ? ctas : breedComparisonFallback.ctas,
-                research: useApiAnswer && research ? research : breedComparisonFallback.research,
-                conversation,
-            };
-        }
-        if (knowledgeFallback && fallback === knowledgeFallback && !medicalMode) {
-            const apiKnowledgeRoute = data?.medical?.triage === "canine_knowledge"
-                || data?.intent === "canine_knowledge"
-                || conversation?.anchorKind === "canine_knowledge";
-            const apiAnswer = customerFacingShopChatAnswer(data.answer, knowledgeFallback.answer);
-            const useApiAnswer = apiKnowledgeRoute && answerAddressesCanineQuestion(message, apiAnswer);
-            return {
-                ...knowledgeFallback,
-                answer: useApiAnswer ? apiAnswer : knowledgeFallback.answer,
-                products: [],
-                medical: useApiAnswer && data.medical && typeof data.medical === "object"
-                    ? data.medical as ShopChatMedical
-                    : knowledgeFallback.medical,
-                sources: useApiAnswer && apiSources.length ? apiSources : knowledgeFallback.sources,
-                actions: useApiAnswer && actions.length ? actions : knowledgeFallback.actions,
-                ctas: useApiAnswer && ctas.length ? ctas : knowledgeFallback.ctas,
-                research: useApiAnswer && research ? research : knowledgeFallback.research,
-                conversation,
-            };
-        }
         const preferProtectedMedicalFallback = shouldPreferProtectedMedicalFallback(
             data.medical,
             medicalFallback?.medical,
         );
         const apiMedical = preferProtectedMedicalFallback
             ? medicalFallback?.medical
-            : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, fallback.medical);
+            : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, medicalFallback?.medical);
         if (apiMedical && apiMedical.choiceGroups) {
             apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
         }
         return {
             answer: preferProtectedMedicalFallback
-                ? medicalFallback?.answer || fallback.answer
-                : customerFacingShopChatAnswer(data.answer, fallback.answer),
+                ? medicalFallback?.answer || unavailableFallback.answer
+                : customerFacingShopChatAnswer(data.answer, medicalFallback?.answer || unavailableFallback.answer),
             products: preferProtectedMedicalFallback
                 ? []
-                : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : fallback.products,
+                : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : [],
             medical: apiMedical,
             sources: preferProtectedMedicalFallback
                 ? medicalFallback?.sources
-                : apiSources.length ? apiSources : fallback.sources,
+                : apiReturnedSources ? apiSources : [],
             actions: preferProtectedMedicalFallback
                 ? medicalFallback?.actions
-                : actions.length ? actions : fallback.actions,
+                : apiReturnedActions ? actions : [],
             ctas: preferProtectedMedicalFallback
                 ? medicalFallback?.ctas
-                : ctas.length ? ctas : fallback.ctas,
+                : apiReturnedCtas ? ctas : [],
             research: preferProtectedMedicalFallback
                 ? medicalFallback?.research
-                : research || fallback.research,
+                : research,
             conversation,
-            generation: medicalMode ? undefined : generation || fallback.generation,
+            generation: medicalMode ? undefined : generation,
         };
     } catch (reason) {
         if (reason instanceof ShopChatReferenceRequestError) throw reason;
         if (references.length) {
             throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
         }
-        return effectiveScopeFallback || medicalFallback || generationFallback || effectiveKnowledgeFallback || fallback;
+        return supportFallback || medicalFallback || generationFallback || unavailableFallback;
     }
 }

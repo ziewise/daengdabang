@@ -5,21 +5,17 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
 
-test("CareTalk preserves explicit generation requests across API and offline fallback paths", async () => {
+test("CareTalk treats the API generation response as authoritative and keeps an outage fallback", async () => {
     const helper = await source("lib/daengdabang-llm.ts");
 
     assert.match(helper, /export type ShopChatGeneration/);
     assert.match(helper, /function generationIntentFallback\(message: string\)/);
     assert.match(helper, /const generationFallback = generationIntentFallback\(message\)/);
-    assert.match(
-        helper,
-        /const fallback = supportFallback \|\| effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/,
-    );
     assert.match(helper, /const generation = normalizeGeneration\(data\.generation\)/);
-    assert.match(helper, /data\?\.medical\?\.triage === "content_generation"/);
-    assert.match(helper, /if \(generationFallback && !medicalMode\)/);
-    assert.match(helper, /generation: medicalMode \? undefined : generation \|\| fallback\.generation/);
-    assert.match(helper, /return effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/);
+    assert.match(helper, /generation: medicalMode \? undefined : generation/);
+    assert.match(helper, /return supportFallback \|\| medicalFallback \|\| generationFallback \|\| unavailableFallback/);
+    assert.doesNotMatch(helper, /if \(generationFallback && !medicalMode\)/);
+    assert.doesNotMatch(helper, /generation \|\| generationFallback\.generation/);
     assert.match(helper, /mediaGenerated: false/);
     assert.match(helper, /aspectRatio\?: "1:1" \| "4:5" \| "16:9" \| "9:16"/);
     assert.match(helper, /rawIntent\.aspectRatio/);
@@ -32,9 +28,9 @@ test("CareTalk keeps emergency API and offline safety answers ahead of generatio
     assert.match(helper, /const medicalRoute = rareHealthFallback\(text\) \|\| heartwormPreventionFallback\(text\) \|\| medicalSafetyFallback\(text\);\s*if \(medicalRoute\) return medicalRoute;\s*\n\s*const generationRoute/s);
     assert.match(helper, /classifyChatMedicalSafety\(message\)/);
     assert.match(helper, /classification === "emergency"/);
-    assert.match(helper, /if \(generationFallback && !medicalMode\)/);
     assert.match(helper, /generation: medicalMode \? undefined/);
-    assert.match(helper, /effectiveScopeFallback \|\| medicalFallback \|\| generationFallback/);
+    assert.match(helper, /return supportFallback \|\| medicalFallback \|\| generationFallback \|\| unavailableFallback/);
+    assert.doesNotMatch(helper, /if \(generationFallback && !medicalMode\)/);
 
     const emergencyMixedRequest = "강아지가 피를 토하고 쓰러졌는데 응급 대처 안내 영상을 만들어줘";
     const nonMedicalGeneration = "귀여운 강아지 영상 만들어줘";

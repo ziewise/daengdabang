@@ -120,7 +120,7 @@ test("general API fallback is selected only when no protected canine or storefro
     assert.equal(isCurrentInformationRequest("프랑스 수도는 어디야?"), false);
 });
 
-test("both chat surfaces preserve research metadata without exposing source lists", async () => {
+test("both chat surfaces preserve research metadata and render compact verified source links", async () => {
     const [helper, widget, page, extras] = await Promise.all([
         source("lib/daengdabang-llm.ts"),
         source("components/site/ChatWidget.tsx"),
@@ -143,21 +143,45 @@ test("both chat surfaces preserve research metadata without exposing source list
         assert.doesNotMatch(surface, /<ActionList/);
     }
     assert.match(extras, /sources\?: ShopChatSource\[\]/);
+    assert.match(extras, /data-chat-research-evidence/);
+    assert.match(extras, /href=\{href\}/);
+    assert.match(extras, /target="_blank"/);
+    assert.match(extras, /rel="noopener noreferrer"/);
+    assert.match(extras, /확인한 출처/);
+    assert.match(extras, /확인 가능한 웹 출처 없음/);
+    assert.match(extras, /웹 확인 시각/);
+    assert.match(extras, /근거 기준/);
+    assert.match(extras, /aria-label="답변에 인용된 웹 출처"/);
+    assert.match(extras, /group-open:rotate-180/);
+    assert.match(extras, /parsed\.protocol !== "https:"/);
+    assert.match(extras, /parsed\.username \|\| parsed\.password/);
+    assert.match(extras, /citationNumber: index \+ 1/);
+    assert.match(extras, /\[\{citationNumber\}\]/);
     assert.doesNotMatch(extras, /HTTPS 출처/);
     assert.doesNotMatch(extras, /검색 근거 상태/);
-    assert.doesNotMatch(extras, /근거 기준/);
-    assert.doesNotMatch(extras, /href=\{source\.url\}/);
-    assert.doesNotMatch(extras, /sourceCitationNumber/);
-    assert.doesNotMatch(extras, /sourceMetadataTitle/);
 });
 
-test("customer answer display hides only trailing source markers when evidence exists", async () => {
+test("research timestamps render deterministically across server and browser hydration", async () => {
+    const extras = await source("components/site/ChatResponseExtras.tsx");
+
+    assert.match(extras, /EVIDENCE_SEOUL_OFFSET_MS/);
+    assert.match(extras, /getUTCFullYear\(\)/);
+    assert.match(extras, /getUTCMinutes\(\)/);
+    assert.doesNotMatch(extras, /Intl\.DateTimeFormat/);
+    assert.match(extras, /open=\{!visibleSources\.length\}/);
+    assert.match(extras, /if \(!visibleSources\.length && !research\) return null/);
+});
+
+test("customer answer display keeps mapped citations and removes unsupported trailing markers", async () => {
     const { customerVisibleChatAnswer } = await displayModule();
     const answer = "첫 번째 확인 내용입니다. [1]\n두 출처가 확인했습니다. [1][2]\n[1]은 항목 번호입니다.";
 
     assert.equal(
         customerVisibleChatAnswer(answer, true),
+        answer,
+    );
+    assert.equal(
+        customerVisibleChatAnswer(answer, false),
         "첫 번째 확인 내용입니다.\n두 출처가 확인했습니다.\n[1]은 항목 번호입니다.",
     );
-    assert.equal(customerVisibleChatAnswer(answer, false), answer);
 });

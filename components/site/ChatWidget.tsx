@@ -322,16 +322,6 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         aria-busy={loading}
                         className={`${styles.messageList} min-h-0 flex-1 space-y-3 overflow-y-auto p-3 overscroll-contain`}
                     >
-                        {messages.length === 0 && !loading ? (
-                            <div className={styles.emptyNote}>
-                                <span className={styles.emptyPencil} aria-hidden="true">
-                                    <i className="fa-solid fa-pencil" />
-                                </span>
-                                <strong>우리 아이 케어 노트</strong>
-                                <p>증상·생활 질문·상품 고민을 편하게 적어 주세요.</p>
-                                <span className={styles.emptyPaws} aria-hidden="true">🐾 · 🐾</span>
-                            </div>
-                        ) : null}
                         {messages.map((message, index) => (
                             <div
                                 key={`${message.role}-${index}`}
@@ -412,7 +402,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 value={input}
                                 onChange={(event) => setInput(event.target.value)}
                                 className={`${styles.input} h-10 flex-1 px-3`}
-                                placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "증상, 생활 질문, 상품 고민을 입력"}
+                                placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "메시지를 입력하세요"}
                                 aria-label="채팅 질문"
                             />
                             <button

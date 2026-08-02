@@ -118,7 +118,7 @@ test("customer-facing storefront copy uses plain feature names instead of AI lab
     }
 });
 
-test("customer chat progress uses active plain-language steps", async () => {
+test("customer chat progress does not invent internal stages", async () => {
     const paths = [
         "components/site/ChatThinkingProgress.tsx",
         "components/site/ChatWidget.tsx",
@@ -136,9 +136,8 @@ test("customer chat progress uses active plain-language steps", async () => {
     }
 
     const progress = await readSource("components/site/ChatThinkingProgress.tsx");
-    assert.match(progress, /답변을 준비하고 있어요/);
-    assert.match(progress, /초째/);
-    assert.match(progress, /조금 더 걸리고 있지만 멈추지 않았어요/);
+    assert.match(progress, /답변을 정리하고 있어요/);
+    assert.doesNotMatch(progress, /STAGES|STAGE_STARTS|초째|조금 더 걸리고 있지만/);
 
     const widget = await readSource("components/site/ChatWidget.tsx");
     const page = await readSource("app/chat/ChatPageClient.tsx");
@@ -150,6 +149,9 @@ test("chat respects an intentional empty product result", async () => {
     const source = await readSource("lib/daengdabang-llm.ts");
 
     assert.match(source, /const apiReturnedProducts = Array\.isArray\(data\.products\)/);
-    assert.match(source, /products: apiReturnedProducts \? unique\(apiProducts\)\.slice\(0, 6\) : fallback\.products/);
+    assert.match(
+        source,
+        /products:\s*preferProtectedMedicalFallback\s*\?\s*\[\]\s*:\s*apiReturnedProducts\s*\?\s*unique\(apiProducts\)\.slice\(0, 6\)\s*:\s*\[\]/,
+    );
     assert.doesNotMatch(source, /apiProducts\.length \? unique\(apiProducts\)/);
 });

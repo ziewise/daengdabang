@@ -52,7 +52,8 @@ test("floating CareTalk keeps its behavior while using the scoped crayon skin", 
     assert.match(widget, /styles\.assistantBubble/);
     assert.match(widget, /styles\.composer/);
     assert.match(widget, /CRAYON CARE NOTE/);
-    assert.match(widget, /우리 아이 케어 노트/);
+    assert.doesNotMatch(widget, /우리 아이 케어 노트/);
+    assert.match(widget, /메시지를 입력하세요/);
     assert.match(widget, /styles\.responseExtras/);
     assert.match(css, /--chat-font-body: var\(--font-crayon\)/);
     assert.match(css, /--chat-font-accent: var\(--chat-font-body\)/);
@@ -99,12 +100,15 @@ test("required medical follow-up slots are collected once and old cards become i
     assert.match(page, /requestSequence !== requestSequenceRef\.current/);
 });
 
-test("shop chat strips only the customer-facing routing preamble", async () => {
+test("shop chat strips customer-facing routing and canned sympathy preambles", async () => {
     const helper = await source("lib/daengdabang-llm.ts");
 
     assert.match(helper, /CUSTOMER_ROUTING_PREAMBLE_RE/);
+    assert.match(helper, /CUSTOMER_FIXED_OPENING_RE/);
     assert.match(helper, /source\.replace\(CUSTOMER_ROUTING_PREAMBLE_RE, ""\)\.trim\(\)/);
-    assert.match(helper, /customerFacingShopChatAnswer\(data\.answer, fallback\.answer\)/);
+    assert.match(helper, /withoutRoutingPreamble\.replace\(CUSTOMER_FIXED_OPENING_RE, ""\)\.trim\(\)/);
+    assert.match(helper, /withoutFixedOpening\.replace\(CUSTOMER_ROUTING_PREAMBLE_RE, ""\)\.trim\(\)/);
+    assert.match(helper, /customerFacingShopChatAnswer\(data\.answer, medicalFallback\?\.answer \|\| unavailableFallback\.answer\)/);
     assert.doesNotMatch(helper, /이 질문은 상품 추천보다 강아지 생활\/행동 정보에 가까워서/);
     assert.doesNotMatch(helper, /지금은 상품 추천보다 증상 확인이 먼저/);
 });

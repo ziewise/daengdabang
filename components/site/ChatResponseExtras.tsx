@@ -85,97 +85,125 @@ function formatDistance(meters: number) {
     return `${(meters / 1000).toFixed(meters < 10000 ? 1 : 0)}km`;
 }
 
-function compactAddress(tags: Record<string, string>) {
-    const full = tags["addr:full"] || tags["contact:address"];
-    if (full) return full;
-    return [
-        tags["addr:province"],
-        tags["addr:city"],
-        tags["addr:district"],
-        tags["addr:suburb"],
-        tags["addr:street"],
-        tags["addr:housenumber"],
-    ].filter(Boolean).join(" ");
+const EVIDENCE_SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+function formatEvidenceDate(value?: string) {
+    if (!value) return "";
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return "";
+    const seoul = new Date(date.getTime() + EVIDENCE_SEOUL_OFFSET_MS);
+    const pad = (part: number) => String(part).padStart(2, "0");
+    return `${seoul.getUTCFullYear()}. ${pad(seoul.getUTCMonth() + 1)}. ${pad(seoul.getUTCDate())}. ${pad(seoul.getUTCHours())}:${pad(seoul.getUTCMinutes())}`;
+}
+
+function researchFreshnessLabel(status?: string, hasSources = true) {
+    if (!hasSources || status === "insufficient" || status === "unavailable") return "근거 부족";
+    if (status === "stale") return "오래된 자료";
+    if (status === "live_verified") return "최신 정보 확인";
+    if (status === "verified") return "출처 확인";
+    return "웹 근거";
+}
+
+function safeResearchUrl(value: string) {
+    try {
+        const parsed = new URL(value);
+        if (parsed.protocol !== "https:" || !parsed.hostname || parsed.username || parsed.password) return null;
+        return {
+            href: parsed.toString(),
+            hostname: parsed.hostname.toLowerCase().replace(/^www\./, ""),
+        };
+    } catch {
+        return null;
+    }
+}
+
+function ResearchEvidence({
+    sources,
+    research,
+    compact,
+}: Pick<ChatResponseExtrasProps, "sources" | "research" | "compact">) {
+    const visibleSources = (sources ?? []).reduce<Array<{
+        source: ShopChatSource;
+        citationNumber: number;
+        href: string;
+        hostname: string;
+    }>>((items, source, index) => {
+        const safeUrl = safeResearchUrl(source.url);
+        if (safeUrl && items.length < 6) {
+            items.push({ source, citationNumber: index + 1, ...safeUrl });
+        }
+        return items;
+    }, []);
+    if (!visibleSources.length && !research) return null;
+
+    const searchedAt = formatEvidenceDate(research?.searchedAt);
+    const freshAsOf = formatEvidenceDate(research?.freshAsOf);
+    const isInsufficient = !visibleSources.length
+        || research?.freshnessStatus === "insufficient"
+        || research?.freshnessStatus === "unavailable";
+
+    return (
+        <details
+            data-chat-research-evidence
+            open={!visibleSources.length}
+            className={`group mt-2 ${compact ? "max-w-[86%]" : "max-w-[82%]"} rounded-lg border border-sky-100 bg-sky-50/70 px-3 py-2 text-left shadow-sm`}
+        >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[11px] font-black text-sky-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600">
+                <span className="flex min-w-0 items-center gap-1.5">
+                    <i className="fa-solid fa-link text-sky-600" aria-hidden="true" />
+                    <span>
+                        {visibleSources.length
+                            ? `${isInsufficient ? "참고한 자료" : "확인한 출처"} ${visibleSources.length}개`
+                            : "확인 가능한 웹 출처 없음"}
+                    </span>
+                </span>
+                <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-extrabold text-sky-700">
+                    {researchFreshnessLabel(research?.freshnessStatus, Boolean(visibleSources.length))}
+                    <i
+                        className="fa-solid fa-chevron-down text-[9px] transition-transform group-open:rotate-180"
+                        aria-hidden="true"
+                    />
+                </span>
+            </summary>
+            {visibleSources.length ? (
+                <ol className="mt-2 space-y-1.5 border-t border-sky-100 pt-2" aria-label="답변에 인용된 웹 출처">
+                {visibleSources.map(({ source, citationNumber, href, hostname }) => {
+                    const sourceDate = formatEvidenceDate(source.publishedAt || source.retrievedAt);
+                    return (
+                        <li key={`${href}-${citationNumber}`} className="text-[11px] leading-4 text-neutral-700">
+                            <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-extrabold text-sky-900 underline decoration-sky-300 underline-offset-2 hover:text-sky-700"
+                            >
+                                [{citationNumber}] {source.name}
+                                <span className="sr-only"> 새 창에서 열기</span>
+                            </a>
+                            <span className="ml-1.5 text-[10px] font-bold text-neutral-500">
+                                {hostname}
+                                {sourceDate ? ` · ${source.publishedAt ? "게시" : "확인"} ${sourceDate}` : ""}
+                            </span>
+                        </li>
+                    );
+                })}
+                </ol>
+            ) : null}
+            {searchedAt || freshAsOf ? (
+                <p className="mt-2 text-[10px] font-bold text-neutral-500">
+                    {searchedAt ? `웹 확인 시각 ${searchedAt}` : ""}
+                    {searchedAt && freshAsOf ? " · " : ""}
+                    {freshAsOf ? `근거 기준 ${freshAsOf}` : ""}
+                </p>
+            ) : null}
+        </details>
+    );
 }
 
 async function fetchNearbyVetPlaces(latitude: number, longitude: number, query = "동물병원") {
-    const fallbackUrl = buildMapUrl(query, latitude, longitude);
-    try {
-        const daengdabangPlaces = await fetchDaengDaBangVetPlaces(latitude, longitude, query);
-        if (daengdabangPlaces?.places.length) return daengdabangPlaces;
-    } catch {
-        // Keep the public map fallback path below.
-    }
-
-    const radius = 6000;
-    const overpassQuery = `[out:json][timeout:9];(node(around:${radius},${latitude},${longitude})["amenity"="veterinary"];way(around:${radius},${latitude},${longitude})["amenity"="veterinary"];relation(around:${radius},${latitude},${longitude})["amenity"="veterinary"];);out center tags 20;`;
-    const endpoints = [
-        "https://overpass.kumi.systems/api/interpreter",
-        "https://overpass-api.de/api/interpreter",
-    ];
-
-    let lastError: unknown = null;
-    for (const endpoint of endpoints) {
-        try {
-            const response = await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json" },
-                body: new URLSearchParams({ data: overpassQuery }),
-            });
-            if (!response.ok) throw new Error(`place search ${response.status}`);
-            const data = await response.json() as {
-                elements?: Array<{
-                    id: number;
-                    type: string;
-                    lat?: number;
-                    lon?: number;
-                    center?: { lat?: number; lon?: number };
-                    tags?: Record<string, string>;
-                }>;
-            };
-            const places: VetPlace[] = (data.elements ?? []).flatMap((element): VetPlace[] => {
-                const lat = element.lat ?? element.center?.lat;
-                const lon = element.lon ?? element.center?.lon;
-                if (typeof lat !== "number" || typeof lon !== "number") return [];
-                const tags = element.tags ?? {};
-                const name = tags["name:ko"] || tags.name || tags["official_name"] || "이름 미확인 동물병원";
-                const address = compactAddress(tags);
-                const phone = tags.phone || tags["contact:phone"];
-                const openingHours = tags.opening_hours || tags["opening_hours:covid19"];
-                const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(name)}/@${lat},${lon},17z`;
-                return [{
-                    id: `${element.type}-${element.id}`,
-                    name,
-                    address,
-                    phone,
-                    openingHours,
-                    lat,
-                    lon,
-                    mapUrl,
-                    source: "openstreetmap",
-                    distanceMeters: distanceMeters(
-                        { latitude, longitude },
-                        { latitude: lat, longitude: lon }
-                    ),
-                }];
-            });
-            const sortedPlaces = places
-                .sort((a, b) => a.distanceMeters - b.distanceMeters)
-                .slice(0, 5);
-            if (sortedPlaces.length > 0) return { fallbackUrl, places: sortedPlaces };
-        } catch (error) {
-            lastError = error;
-        }
-    }
-
-    try {
-        const nominatim = await fetchNominatimVetPlaces(latitude, longitude);
-        return { fallbackUrl, places: nominatim };
-    } catch (error) {
-        lastError = error;
-    }
-
-    throw lastError instanceof Error ? lastError : new Error("place search failed");
+    const result = await fetchDaengDaBangVetPlaces(latitude, longitude, query);
+    if (result?.places.length) return result;
+    throw new Error(result?.message || "현재 확인 가능한 동물병원 후보가 없습니다.");
 }
 
 async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, query = "동물병원") {
@@ -194,6 +222,8 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
     if (!response.ok) return null;
     const data = await response.json() as {
         configured?: boolean;
+        status?: "ready" | "degraded" | "unavailable";
+        error?: string;
         places?: Array<{
             id?: string;
             name?: string;
@@ -204,20 +234,23 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
             distanceMeters?: number | null;
             mapUrl?: string;
             source?: string;
+            openingHours?: string;
         }>;
     };
-    if (!data.configured || !Array.isArray(data.places)) return null;
+    if (!Array.isArray(data.places)) return null;
 
     const places = data.places.flatMap((place, index): VetPlace[] => {
+        if (place.lat == null || place.lon == null) return [];
         const lat = Number(place.lat);
         const lon = Number(place.lon);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return [];
+        if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat === 0 || lon === 0) return [];
         const name = String(place.name || "이름 미확인 동물병원").trim();
         return [{
             id: place.id || `naver-${index}-${name}`,
             name,
             address: String(place.address || "").trim(),
             phone: place.phone ? String(place.phone) : undefined,
+            openingHours: place.openingHours ? String(place.openingHours) : undefined,
             lat,
             lon,
             distanceMeters: typeof place.distanceMeters === "number"
@@ -228,64 +261,12 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
         }];
     });
 
-    return { fallbackUrl: buildMapUrl(query, latitude, longitude), places };
-}
-
-async function fetchNominatimVetPlaces(latitude: number, longitude: number) {
-    const delta = 0.1;
-    const queries = ["animal hospital", "veterinary", "동물병원"];
-    const places: VetPlace[] = [];
-    const seen = new Set<string>();
-
-    for (const search of queries) {
-        const params = new URLSearchParams({
-            format: "jsonv2",
-            q: search,
-            limit: "8",
-            bounded: "1",
-            addressdetails: "1",
-            "accept-language": "ko,en",
-            viewbox: `${longitude - delta},${latitude + delta},${longitude + delta},${latitude - delta}`,
-        });
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?${params}`);
-        if (!response.ok) continue;
-        const data = await response.json() as Array<{
-            place_id?: number;
-            display_name?: string;
-            lat?: string;
-            lon?: string;
-            name?: string;
-            type?: string;
-            category?: string;
-        }>;
-        for (const item of data) {
-            const lat = Number(item.lat);
-            const lon = Number(item.lon);
-            if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
-            if (item.category && item.category !== "amenity" && item.type !== "veterinary") continue;
-            const id = String(item.place_id ?? `${lat},${lon}`);
-            if (seen.has(id)) continue;
-            seen.add(id);
-            const displayName = item.display_name || "이름 미확인 동물병원";
-            const name = item.name || displayName.split(",")[0] || "이름 미확인 동물병원";
-            places.push({
-                id: `nominatim-${id}`,
-                name,
-                address: displayName,
-                lat,
-                lon,
-                distanceMeters: distanceMeters(
-                    { latitude, longitude },
-                    { latitude: lat, longitude: lon }
-                ),
-                mapUrl: `https://www.google.com/maps/search/${encodeURIComponent(name)}/@${lat},${lon},17z`,
-                source: "openstreetmap",
-            });
-        }
-        if (places.length >= 5) break;
-    }
-
-    return places.sort((a, b) => a.distanceMeters - b.distanceMeters).slice(0, 5);
+    const message = data.status === "unavailable"
+        ? "병원 검색 공급자에 연결하지 못했습니다. 지도에서 직접 확인해 주세요."
+        : data.status === "degraded" || data.error
+            ? "일부 검색 공급자가 불안정해 확인된 후보만 표시합니다."
+            : "";
+    return { fallbackUrl: buildMapUrl(query, latitude, longitude), places, message };
 }
 
 function FollowUpBundleForm({
@@ -638,6 +619,8 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
 export default function ChatResponseExtras({
     medical,
     generation,
+    sources,
+    research,
     ctas,
     onAsk,
     compact = false,
@@ -680,10 +663,18 @@ export default function ChatResponseExtras({
             });
             const result = await fetchNearbyVetPlaces(position.coords.latitude, position.coords.longitude, query);
             setVetSearch({ status: "done", places: result.places, fallbackUrl: result.fallbackUrl });
-        } catch {
+        } catch (error) {
+            const geolocationCode = typeof error === "object" && error !== null && "code" in error
+                ? Number((error as { code?: unknown }).code)
+                : undefined;
+            const message = geolocationCode === 1
+                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 지도에서 직접 확인해 주세요."
+                : error instanceof Error && error.message
+                    ? error.message
+                    : "병원 후보 검색이 잠시 불안정해요. 지도에서 직접 확인해 주세요.";
             setVetSearch({
                 status: "error",
-                message: "위치 권한이 거절됐거나 지도 후보 검색이 잠시 불안정해요. 아래 버튼으로 지도 검색을 열어 확인해 주세요.",
+                message,
                 fallbackUrl,
             });
         }
@@ -691,6 +682,8 @@ export default function ChatResponseExtras({
 
     return (
         <>
+            <ResearchEvidence sources={sources} research={research} compact={compact} />
+
             {generation ? (
                 <div
                     data-chat-generation-plan

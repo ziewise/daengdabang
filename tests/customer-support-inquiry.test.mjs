@@ -37,7 +37,7 @@ test("strong post-purchase questions route to customer support before shopping",
     );
 });
 
-test("chat support replies guarantee an internal inquiry CTA and suppress remote products", async () => {
+test("chat support replies trust the API and keep the internal inquiry CTA for outages", async () => {
     const [llm, extras, widget] = await Promise.all([
         source("lib/daengdabang-llm.ts"),
         source("components/site/ChatResponseExtras.tsx"),
@@ -46,10 +46,11 @@ test("chat support replies guarantee an internal inquiry CTA and suppress remote
 
     assert.match(llm, /kind: "internal_link"/);
     assert.match(llm, /const supportFallback = supportRoute \? customerSupportAnswer\(supportRoute\) : undefined/);
-    assert.match(llm, /if \(supportFallback\) \{[\s\S]{0,1400}products: \[\]/);
-    assert.match(llm, /ctas: mergedCtas/);
-    assert.match(llm, /customerSupportCtaIdentity\(cta\.url\)/);
-    assert.match(llm, /const mergedCtas = \[\.\.\.\(supportFallback\.ctas \?\? \[\]\), \.\.\.ctas\]/);
+    assert.match(llm, /return supportFallback \|\| medicalFallback \|\| generationFallback \|\| unavailableFallback/);
+    assert.doesNotMatch(llm, /if \(supportFallback\) \{/);
+    assert.doesNotMatch(llm, /ctas: mergedCtas/);
+    assert.doesNotMatch(llm, /customerSupportCtaIdentity\(cta\.url\)/);
+    assert.match(llm, /apiReturnedProducts \? unique\(apiProducts\)\.slice\(0, 6\) : \[\]/);
     assert.match(extras, /cta\.kind === "internal_link" && cta\.url/);
     assert.match(extras, /<Link[\s\S]{0,220}href=\{cta\.url\}/);
     assert.match(extras, /cta\.url\.startsWith\("\/inquiry"\)[\s\S]{0,360}<a[\s\S]{0,180}href=\{cta\.url\}/);

@@ -94,9 +94,9 @@ test("rare GDV wording with a drum-like abdomen stays emergency", () => {
 test("a successful API medical route cannot be replaced by knowledge fallbacks", () => {
     const helper = readFileSync(new URL("../lib/daengdabang-llm.ts", import.meta.url), "utf8");
 
-    assert.match(helper, /if \(breedComparisonFallback && !medicalMode\)/);
-    assert.match(helper, /if \(knowledgeFallback && fallback === knowledgeFallback && !medicalMode\)/);
-    assert.match(helper, /resolveSuccessfulApiMedical<ShopChatMedical>\(data\.medical, fallback\.medical\)/);
+    assert.doesNotMatch(helper, /if \(breedComparisonFallback && !medicalMode\)/);
+    assert.doesNotMatch(helper, /if \(knowledgeFallback && fallback === knowledgeFallback && !medicalMode\)/);
+    assert.match(helper, /resolveSuccessfulApiMedical<ShopChatMedical>\(data\.medical, medicalFallback\?\.medical\)/);
 });
 
 test("a successful normal API answer never inherits the client emergency fallback", () => {

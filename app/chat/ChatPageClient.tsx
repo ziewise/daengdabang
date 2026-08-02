@@ -41,14 +41,6 @@ type Message = {
     generation?: ShopChatGeneration;
 };
 
-const QUICK_QUESTIONS = [
-    "우리 강아지가 아파요",
-    "강아지가 토하고 설사를 해요",
-    "자일리톨 껌을 먹었어요",
-    "강아지 산책은 하루 몇 번 해야 해?",
-    "중형견 하네스 추천",
-];
-
 export default function ChatPageClient() {
     const params = useSearchParams();
     const { user } = useAuth();
@@ -237,21 +229,9 @@ export default function ChatPageClient() {
                         </select>
                     </label>
                 )}
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {QUICK_QUESTIONS.map((question) => (
-                        <button
-                            key={question}
-                            type="button"
-                            onClick={() => void ask(question)}
-                            className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-black text-neutral-700 shadow-sm hover:border-indigo-300 hover:text-indigo-700"
-                        >
-                            {question}
-                        </button>
-                    ))}
-                </div>
             </header>
 
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+            <div className={`grid gap-6 ${latestProducts.length > 0 ? "lg:grid-cols-[minmax(0,1fr)_420px]" : ""}`}>
                 <section className="surface flex h-[min(720px,calc(100dvh-180px))] min-h-[420px] flex-col overflow-hidden">
                     <div className="flex h-12 shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-4">
                         <div>
@@ -340,7 +320,7 @@ export default function ChatPageClient() {
                                 value={input}
                                 onChange={(event) => setInput(event.target.value)}
                                 className="input h-12 flex-1"
-                                placeholder="예: 강아지 산책은 얼마나 해야 해? / 중형견 하네스 추천"
+                                placeholder="메시지를 입력하세요"
                                 aria-label="채팅 질문"
                             />
                             <button
@@ -355,20 +335,16 @@ export default function ChatPageClient() {
                     </form>
                 </section>
 
-                <aside>
-                    <h2 className="mb-4 text-lg font-black text-neutral-950">필요할 때만 추천 상품</h2>
-                    {latestProducts.length > 0 ? (
+                {latestProducts.length > 0 ? (
+                    <aside>
+                        <h2 className="mb-4 text-lg font-black text-neutral-950">추천 상품</h2>
                         <div className="grid grid-cols-2 gap-3">
                             {latestProducts.slice(0, 4).map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
-                    ) : (
-                        <div className="surface p-6 text-sm font-bold leading-6 text-neutral-600">
-                            상품이 필요한 질문일 때만 추천을 표시합니다. 건강/생활 질문에는 제품을 억지로 붙이지 않습니다.
-                        </div>
-                    )}
-                </aside>
+                    </aside>
+                ) : null}
             </div>
         </main>
     );
