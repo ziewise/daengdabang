@@ -86,6 +86,7 @@ function formatDistance(meters: number) {
 }
 
 const EVIDENCE_SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
+const NON_EVIDENCE_RESEARCH_MODES = new Set(["none", "scope-guard"]);
 
 function formatEvidenceDate(value?: string) {
     if (!value) return "";
@@ -134,7 +135,16 @@ function ResearchEvidence({
         }
         return items;
     }, []);
-    if (!visibleSources.length && !research) return null;
+    const researchMode = research?.mode?.trim().toLowerCase();
+    const hasResearchAttempt = Boolean(research && (
+        (researchMode && !NON_EVIDENCE_RESEARCH_MODES.has(researchMode))
+        || research.freshnessStatus
+        || research.searchedAt
+        || research.freshAsOf
+        || (research.sourceCount ?? 0) > 0
+        || (research.domains?.length ?? 0) > 0
+    ));
+    if (!visibleSources.length && !hasResearchAttempt) return null;
 
     const searchedAt = formatEvidenceDate(research?.searchedAt);
     const freshAsOf = formatEvidenceDate(research?.freshAsOf);

@@ -156,6 +156,8 @@ test("both chat surfaces preserve research metadata and render compact verified 
     assert.match(extras, /parsed\.protocol !== "https:"/);
     assert.match(extras, /parsed\.username \|\| parsed\.password/);
     assert.match(extras, /citationNumber: index \+ 1/);
+    assert.match(extras, /NON_EVIDENCE_RESEARCH_MODES/);
+    assert.match(extras, /if \(!visibleSources\.length && !hasResearchAttempt\) return null/);
     assert.match(extras, /\[\{citationNumber\}\]/);
     assert.doesNotMatch(extras, /HTTPS 출처/);
     assert.doesNotMatch(extras, /검색 근거 상태/);
@@ -169,7 +171,7 @@ test("research timestamps render deterministically across server and browser hyd
     assert.match(extras, /getUTCMinutes\(\)/);
     assert.doesNotMatch(extras, /Intl\.DateTimeFormat/);
     assert.match(extras, /open=\{!visibleSources\.length\}/);
-    assert.match(extras, /if \(!visibleSources\.length && !research\) return null/);
+    assert.match(extras, /if \(!visibleSources\.length && !hasResearchAttempt\) return null/);
 });
 
 test("customer answer display keeps mapped citations and removes unsupported trailing markers", async () => {
