@@ -56,14 +56,6 @@ type VetSearchState =
     | { status: "done"; places: VetPlace[]; fallbackUrl: string }
     | { status: "error"; message: string; fallbackUrl: string };
 
-function triageLabel(medical?: ShopChatMedical) {
-    if (!medical?.mode && medical?.triage === "vet_locator") return "병원 찾기";
-    if (!medical?.mode) return "";
-    if (medical.triage === "emergency") return "응급 가능성";
-    if (medical.triage === "preventive_care") return "예방/복약 안내";
-    return "건강 상담";
-}
-
 function buildMapUrl(query: string, latitude?: number, longitude?: number) {
     const encoded = encodeURIComponent(query || "동물병원");
     if (typeof latitude === "number" && typeof longitude === "number") {
@@ -654,11 +646,6 @@ export default function ChatResponseExtras({
 }: ChatResponseExtrasProps) {
     const [vetSearch, setVetSearch] = useState<VetSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
-    const label = triageLabel(medical);
-    const showMedicalCard = Boolean(
-        medical?.mode &&
-        (label || medical?.topicLabel || medical?.careWindow || medical?.redFlags?.length || medical?.firstSteps?.length)
-    );
 
     const handleCta = async (cta: ShopChatCta) => {
         if (cta.kind === "prompt" && cta.prompt) {
@@ -796,50 +783,7 @@ export default function ChatResponseExtras({
                 </div>
             )}
 
-            {showMedicalCard && (
-                <div className={`mt-2 ${widthClass} rounded-lg border border-sky-100 bg-white p-3 text-left shadow-sm`}>
-                    <div className="flex flex-wrap items-center gap-2">
-                        {label ? (
-                            <span className={`rounded-full px-2.5 py-1 text-xs font-black ${
-                                medical?.triage === "emergency" ? "bg-red-50 text-red-700" : "bg-sky-50 text-sky-800"
-                            }`}>
-                                {label}
-                            </span>
-                        ) : null}
-                        {medical?.topicLabel ? (
-                            <span className="text-xs font-black text-neutral-700">{medical.topicLabel}</span>
-                        ) : null}
-                    </div>
-                    {medical?.careWindow ? (
-                        <p className="mt-2 text-xs font-black leading-5 text-neutral-700">{medical.careWindow}</p>
-                    ) : null}
-                    {medical?.redFlags && medical.redFlags.length > 0 ? (
-                        <div className="mt-3">
-                            <p className="text-[11px] font-black uppercase text-red-600">바로 병원 신호</p>
-                            <ul className="mt-1 space-y-1 text-xs font-bold leading-5 text-neutral-700">
-                                {medical.redFlags.slice(0, 3).map((item) => (
-                                    <li key={item}>- {item}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ) : null}
-                    {medical?.firstSteps && medical.firstSteps.length > 0 ? (
-                        <div className="mt-3">
-                            <p className="text-[11px] font-black uppercase text-sky-700">지금 할 일</p>
-                            <ul className="mt-1 space-y-1 text-xs font-bold leading-5 text-neutral-700">
-                                {medical.firstSteps.slice(0, 3).map((item) => (
-                                    <li key={item}>- {item}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ) : null}
-                    <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} followUpsEnabled={followUpsEnabled} />
-                </div>
-            )}
-
-            {!showMedicalCard && (
-                <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} followUpsEnabled={followUpsEnabled} />
-            )}
+            <ChoiceGroups medical={medical} onAsk={onAsk} compact={compact} followUpsEnabled={followUpsEnabled} />
 
         </>
     );

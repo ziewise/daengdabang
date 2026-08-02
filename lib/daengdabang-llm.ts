@@ -681,15 +681,33 @@ function completedActions(topic: string, detail = "상품 추천 없이 답변")
     ];
 }
 
-function scopeGuardFallback(message: string): ShopChatAnswer | null {
+function hasRecentCanineHealthContext(history: ShopChatHistoryTurn[]) {
+    return history
+        .filter((turn) => turn.role === "user")
+        .slice(-6)
+        .some((turn) => {
+            const content = turn.content.trim();
+            if (!content) return false;
+            return Boolean(classifyChatMedicalSafety(content)) || (
+                /(강아지|반려견|댕댕이|우리\s*(?:개|강아지)|dog|puppy|canine)/i.test(content)
+                && /(아프|증상|먹었|삼켰|토|설사|기침|호흡|눈|피|상처|통증|절뚝|무기력|병원|중독)/i.test(content)
+            );
+        });
+}
+
+function scopeGuardFallback(message: string, recentCanineHealthContext = false): ShopChatAnswer | null {
     const text = message.toLowerCase();
     const hasDogContext = /(강아지|반려견|댕댕|멍멍|퍼피|노견|노령견|시니어견|우리\s*개|dog|puppy|canine)/i.test(message);
-    const vetLocator = /(동물\s*병원|응급\s*병원|24시\s*병원|수의사|animal hospital|vet|veterinary)/i.test(message)
-        && /(근처|주변|가까운|인근|찾|알려|어디|위치|지도|검색|24시|응급|near)/i.test(message);
+    const asksForNearbyHospital = /병원/i.test(message)
+        && /(근처|주변|가까운|인근|찾|알려|어디|위치|지도|검색|near)/i.test(message);
+    const vetLocator = (
+        /(동물\s*병원|응급\s*병원|24시\s*병원|수의사|animal hospital|vet|veterinary)/i.test(message)
+        || (recentCanineHealthContext && asksForNearbyHospital)
+    ) && /(근처|주변|가까운|인근|찾|알려|어디|위치|지도|검색|24시|응급|near)/i.test(message);
     if (vetLocator) {
         const searchText = encodeURIComponent(message.replace(/알려줘|알려주세요|찾아줘|찾아주세요|어디|있나|있나요|\?/g, " ").trim() || "동물병원");
         return {
-            answer: "동물병원을 찾는 질문으로 이해했어요. 아래 버튼을 누르면 현재 위치 기준으로 가까운 동물병원 후보를 먼저 보여드릴게요. 실시간 영업 여부와 야간/응급 진료 여부는 지도 결과가 바뀔 수 있으니, 이동 전 전화로 먼저 확인하는 흐름이 가장 안전합니다. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
+            answer: "아래 버튼을 누르면 현재 위치 기준으로 가까운 동물병원 후보를 보여드릴게요. 실시간 영업 여부와 야간·응급 진료 여부는 출발 전에 전화로 확인해 주세요. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
             products: [],
             medical: { mode: false, triage: "vet_locator", topic: "nearby_vet", disclaimer: "지도 검색 보조이며 진료 품질, 대기 시간, 영업 여부를 보증하지 않습니다." },
             sources: [
@@ -861,6 +879,19 @@ function wildlifeBiteFallback(message: string): ShopChatAnswer | null {
 }
 
 function rareHealthFallback(message: string): ShopChatAnswer | null {
+    if (/(바퀴벌레|cockroach)/i.test(message) && /(핥|먹|삼키|씹|물|닿)/i.test(message)) {
+        return healthRuleAnswer(
+            "바퀴벌레 한 마리를 먹은 것만으로 심한 중독이 생기는 경우는 흔하지 않지만, 바퀴벌레약·살충제·먹이통에 닿았던 벌레라면 약제 노출을 함께 확인해야 해요. 입에 남은 것은 안전하게 보이는 범위에서만 치우고 임의로 토하게 하지 마세요. 반복 구토, 심한 침 흘림, 떨림, 비틀거림, 호흡 이상, 축 처짐이 있거나 살충제 노출 가능성이 있으면 바로 동물병원에 전화하세요. 증상이 없으면 몇 시간 동안 구토·설사·기력 변화를 관찰하고, 먹은 시각과 주변에 사용한 약제 제품명을 기록해 두세요.",
+            "cockroach_ingestion_or_pesticide_exposure",
+            "바퀴벌레 섭취 및 살충제 노출 확인",
+            {
+                followUpQuestions: ["언제 몇 마리 정도 먹었나요?", "근처에 바퀴벌레약, 겔 미끼, 살충제를 사용했나요?", "구토, 침 흘림, 떨림, 비틀거림, 호흡 이상이 있나요?"],
+                redFlags: ["반복 구토, 심한 침 흘림, 떨림 또는 비틀거림", "호흡 이상, 의식 저하, 심한 무기력", "살충제·겔 미끼를 직접 먹었거나 제품 성분을 알 수 없음"],
+                firstSteps: ["먹은 시각과 양, 주변에 사용한 약제 제품명을 기록하세요.", "임의로 토하게 하거나 사람 약을 먹이지 마세요.", "위험 신호나 약제 노출 가능성이 있으면 바로 동물병원에 전화하세요."],
+                careWindow: "위험 신호나 살충제 노출 가능성이 있으면 즉시 병원에 연락하고, 증상이 없으면 몇 시간 동안 상태 변화를 관찰하세요.",
+            },
+        );
+    }
     if (/(송충|곤충|벌에\s*쏘|벌\s*쏘|두꺼비|개구리|caterpillar|bee sting|insect)/i.test(message) && /(핥|먹|씹|물|닿|쏘)/i.test(message)) {
         return healthRuleAnswer(
             "송충이, 벌, 일부 곤충이나 두꺼비 접촉은 입안 자극, 침 흘림, 구토, 얼굴 부기, 피부 염증을 만들 수 있어요. 핥았거나 씹은 상황이면 제품보다 먼저 입 주변·호흡·부기·구토 여부를 확인해 주세요. 얼굴이나 입술이 붓거나 숨이 불편해 보이면 바로 동물병원에 연락하는 게 안전합니다.",
@@ -1010,7 +1041,7 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
         };
     }
     return {
-        answer: "걱정되시겠어요. 언제부터 아픈지, 구토/설사 여부, 호흡 상태, 식욕과 물 섭취, 기력 변화, 통증을 보이는 부위, 최근 먹은 것이나 삼킨 물건이 있는지 확인해 주세요. 호흡이 힘들거나 의식이 처지고, 반복 발작·중독 의심·피가 섞인 구토/설사·심한 통증·걷지 못함이 있으면 바로 동물병원 또는 24시 응급병원에 연락해야 합니다. 증상이 가볍더라도 계속되거나 악화되면 수의사 진료가 우선입니다.",
+        answer: "언제부터 아픈지, 구토·설사 여부, 호흡 상태, 식욕과 물 섭취, 기력 변화, 통증을 보이는 부위, 최근 먹은 것이나 삼킨 물건이 있는지 확인해 주세요. 호흡이 힘들거나 의식이 처지고, 반복 발작·중독 의심·피가 섞인 구토·설사·심한 통증·걷지 못함이 있으면 바로 동물병원 또는 24시 응급병원에 연락해야 합니다. 증상이 가볍더라도 계속되거나 악화되면 수의사 진료가 우선입니다.",
         products: [],
         medical: {
             mode: true,
@@ -1042,6 +1073,46 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
             disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
         },
         sources: HEALTH_SOURCE_FALLBACK,
+    };
+}
+
+function medicalDecisionFollowUpFallback(
+    message: string,
+    history: ShopChatHistoryTurn[],
+): ShopChatAnswer | null {
+    const asksWhetherToSeekCare = /(?:병원|진료|수의사).{0,16}(?:가야|가봐|가볼|가보|갈까|봐야|필요|받아|연락|전화|상담)/i.test(message)
+        || /(?:가야|가봐|가볼|가보|갈까|봐야).{0,10}(?:병원|진료)/i.test(message);
+    if (!asksWhetherToSeekCare || !hasRecentCanineHealthContext(history)) return null;
+
+    return {
+        answer: "앞서 말한 증상이나 섭취 상황에서 호흡 이상, 반복 구토, 심한 침 흘림, 떨림·비틀거림, 의식 저하, 빠르게 심해지는 통증이나 부기가 하나라도 있으면 지금 바로 동물병원에 연락하고 가는 편이 안전합니다. 그런 증상이 없어도 약품·살충제·이물질을 먹었을 가능성이 있거나 무엇을 얼마나 먹었는지 확실하지 않다면 먼저 병원에 전화해 아이의 체중, 먹은 시각과 양을 알려 주세요. 위험 물질 노출이 없고 현재 평소처럼 먹고 움직인다면 가까이 관찰하되 증상이 생기거나 악화되면 바로 진료받으세요.",
+        products: [],
+        medical: {
+            mode: true,
+            triage: "general_health",
+            topic: "care_decision_follow_up",
+            followUpQuestions: ["지금 구토, 침 흘림, 떨림, 비틀거림, 호흡 이상 중 하나라도 있나요?", "약품이나 살충제, 이물질에 닿았을 가능성이 있나요?"],
+            choiceGroups: [
+                {
+                    title: "지금 상태를 알려주세요",
+                    choices: [
+                        { label: "위험 신호가 있어요", prompt: "지금 구토, 침 흘림, 떨림, 비틀거림 또는 호흡 이상이 있어요" },
+                        { label: "약품 노출이 의심돼요", prompt: "주변 약품이나 살충제를 먹었을 가능성이 있어요" },
+                        { label: "현재는 평소와 같아요", prompt: "지금은 구토나 이상 행동 없이 평소와 같아요" },
+                    ],
+                },
+            ],
+            redFlags: ["호흡 이상, 의식 저하", "반복 구토, 심한 침 흘림", "떨림, 비틀거림, 빠르게 심해지는 통증이나 부기"],
+            firstSteps: ["먹은 시각과 양, 아이 체중을 정리하세요.", "약품 노출 가능성이 있으면 제품명이나 포장을 준비하세요.", "임의로 토하게 하거나 사람 약을 먹이지 마세요."],
+            careWindow: "위험 신호나 유해 물질 노출 가능성이 있으면 즉시 병원에 연락하세요.",
+            disclaimer: "general information only; contact a veterinarian for diagnosis or treatment",
+        },
+        sources: HEALTH_SOURCE_FALLBACK,
+        conversation: {
+            continued: true,
+            anchorKind: "health",
+            turnsUsed: Math.min(history.length, 12),
+        },
     };
 }
 
@@ -1305,6 +1376,50 @@ function normalizeCtas(value: unknown): ShopChatCta[] {
             icon: typeof record.icon === "string" ? record.icon : undefined,
         }];
     });
+}
+
+function normalizeLocationRequestCtas(value: unknown): ShopChatCta[] {
+    const record = asRecord(value);
+    if (!record || record.mode !== "nearby_vet") return [];
+    const query = typeof record.query === "string" && record.query.trim()
+        ? record.query.trim()
+        : "동물병원";
+    const allowLabel = typeof record.allowLabel === "string" && record.allowLabel.trim()
+        ? record.allowLabel.trim()
+        : "현재 위치로 동물병원 찾기";
+    const candidates: Array<Record<string, unknown>> = [
+        {
+            kind: "geo_vet_search",
+            label: allowLabel,
+            query,
+            helperText: typeof record.reason === "string" ? record.reason : undefined,
+            icon: "fa-location-crosshairs",
+        },
+    ];
+    const firstMapLink = Array.isArray(record.mapLinks) ? asRecord(record.mapLinks[0]) : undefined;
+    if (typeof firstMapLink?.url === "string" && /^https:\/\//i.test(firstMapLink.url)) {
+        candidates.push({
+            kind: "external_link",
+            label: typeof firstMapLink.name === "string" && firstMapLink.name.trim()
+                ? firstMapLink.name.trim()
+                : "지도 검색 열기",
+            url: firstMapLink.url,
+            helperText: "출발 전에 영업 여부와 진료 가능 여부를 전화로 확인해 주세요.",
+            icon: "fa-map-location-dot",
+        });
+    }
+    return normalizeCtas(candidates);
+}
+
+function mergeShopChatCtas(...groups: ShopChatCta[][]) {
+    const seen = new Set<string>();
+    return groups.flat().filter((cta) => {
+        const destination = cta.url || cta.prompt || cta.query || cta.label;
+        const identity = `${cta.kind}:${destination}`;
+        if (seen.has(identity)) return false;
+        seen.add(identity);
+        return true;
+    }).slice(0, 6);
 }
 
 function normalizeChoiceGroups(value: unknown): ShopChatChoiceGroup[] {
@@ -1921,12 +2036,15 @@ function customerSupportAnswer(route: CustomerSupportRoute): ShopChatAnswer {
 }
 
 const CUSTOMER_ROUTING_PREAMBLE_RE = /^(?:(?:그|이)\s*질문은\s*)?상품\s*추천보다(?:는)?[^.!?\n]*(?:[.!?]+\s*|$)/i;
+const CUSTOMER_FIXED_OPENING_RE = /^(?:(?:걱정되시겠(?:어요|습니다)|많이\s*놀라셨겠(?:어요|습니다)|증상\s*확인과\s*위험\s*신호\s*분리부터\s*시작해\s*볼게요)[.!]?\s*)+/i;
 
 function customerFacingShopChatAnswer(value: unknown, fallback: string) {
     const source = typeof value === "string" ? value.trim() : "";
     if (!source) return fallback;
     const withoutRoutingPreamble = source.replace(CUSTOMER_ROUTING_PREAMBLE_RE, "").trim();
-    return withoutRoutingPreamble || fallback;
+    const withoutFixedOpening = withoutRoutingPreamble.replace(CUSTOMER_FIXED_OPENING_RE, "").trim();
+    const sanitized = withoutFixedOpening.replace(CUSTOMER_ROUTING_PREAMBLE_RE, "").trim();
+    return sanitized || fallback;
 }
 
 function generalVerificationUnavailableAnswer(message: string): ShopChatAnswer {
@@ -1996,16 +2114,22 @@ function shopChatReferenceError(status: number) {
 }
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
+    const history = (context?.history || [])
+        .filter((turn) => (turn.role === "user" || turn.role === "assistant") && turn.content.trim())
+        .map((turn) => ({ role: turn.role, content: turn.content.trim().slice(0, 500) }))
+        .slice(-12);
+    const recentCanineHealthContext = hasRecentCanineHealthContext(history);
     const wildlifeBiteRoute = wildlifeBiteFallback(message);
     if (wildlifeBiteRoute) return wildlifeBiteRoute;
 
     const supportRoute = customerSupportRoute(message);
     const supportFallback = supportRoute ? customerSupportAnswer(supportRoute) : undefined;
     const generationFallback = generationIntentFallback(message);
-    const scopeFallback = scopeGuardFallback(message);
+    const scopeFallback = scopeGuardFallback(message, recentCanineHealthContext);
     const rareFallback = rareHealthFallback(message);
     const heartwormFallback = heartwormPreventionFallback(message);
-    const medicalFallback = rareFallback || heartwormFallback || medicalSafetyFallback(message);
+    const medicalDecisionFallback = medicalDecisionFollowUpFallback(message, history);
+    const medicalFallback = rareFallback || heartwormFallback || medicalDecisionFallback || medicalSafetyFallback(message);
     const breedComparisonFallback = retrieverComparisonFallback(message);
     const knowledgeFallback = breedComparisonFallback || canineKnowledgeFallback(message);
     const currentInformationRequest = isCurrentInformationRequest(message);
@@ -2029,10 +2153,6 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         || answerShopQuestion(message, context);
     const base = apiBase();
     if (!base) return fallback;
-    const history = (context?.history || [])
-        .filter((turn) => (turn.role === "user" || turn.role === "assistant") && turn.content.trim())
-        .map((turn) => ({ role: turn.role, content: turn.content.trim().slice(0, 500) }))
-        .slice(-12);
     const references = normalizedShopChatReferences(context);
 
     try {
@@ -2064,7 +2184,10 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         const apiSources = normalizeShopChatSources(data.sources);
         const actions = normalizeActions(data.actions);
         const research = normalizeShopChatResearch(data.research);
-        const ctas = normalizeCtas(data.ctas);
+        const ctas = mergeShopChatCtas(
+            normalizeCtas(data.ctas),
+            normalizeLocationRequestCtas(data.locationRequest),
+        );
         const conversation = normalizeConversation(data.conversation);
         const generation = normalizeGeneration(data.generation);
         if (supportFallback) {
