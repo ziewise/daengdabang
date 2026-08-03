@@ -176,6 +176,33 @@ export type TossOrderLine = {
     size?: string | null;
 };
 
+export type TossDeliveryRequestCode =
+    | "front_door"
+    | "security_office"
+    | "direct_handoff"
+    | "parcel_box"
+    | "other";
+
+export type TossDeliveryDetails = {
+    recipientName: string;
+    phone: string;
+    postalCode: string;
+    addressLine1: string;
+    addressLine2: string;
+    requestCode: TossDeliveryRequestCode;
+    requestNote: string;
+};
+
+export type TossDeliveryQuote = {
+    shippingFee: number;
+    currency: "KRW";
+    estimatedStartDate: string;
+    estimatedEndDate: string;
+    policyVersion: string;
+    fulfillmentMode: "test_no_shipment" | "live_pending";
+    isSimulation: boolean;
+};
+
 export type TossTestOrder = {
     orderId: string;
     amount: number;
@@ -185,6 +212,8 @@ export type TossTestOrder = {
     customerKey: string;
     mode: "test";
     lines: TossOrderLine[];
+    delivery?: TossDeliveryDetails | null;
+    quote?: TossDeliveryQuote | null;
 };
 
 export type TossTestPaymentConfirmation = {
@@ -198,6 +227,8 @@ export type TossTestPaymentConfirmation = {
     lines: TossOrderLine[];
     paymentMethod: CheckoutPaymentMethod;
     approvedAt?: string | null;
+    delivery?: TossDeliveryDetails | null;
+    quote?: TossDeliveryQuote | null;
 };
 
 export class DdbApiError extends Error {
@@ -391,6 +422,7 @@ async function apiJson<T>(
 export async function createTossTestOrder(payload: {
     lines: TossOrderLine[];
     paymentMethod: CheckoutPaymentMethod;
+    delivery: TossDeliveryDetails;
 }, token?: string) {
     const order = await apiJson<TossTestOrder>("/api/v1/payments/toss/orders", {
         method: "POST",
@@ -400,6 +432,16 @@ export async function createTossTestOrder(payload: {
         throw new DdbApiError("테스트 주문을 만들지 못했습니다.", { code: "http_error" });
     }
     return order;
+}
+
+export async function loadTossTestDeliveryQuote(token?: string) {
+    const quote = await apiJson<TossDeliveryQuote>("/api/v1/payments/toss/delivery-quote", {
+        method: "GET",
+    }, token, { requireBase: true });
+    if (!quote) {
+        throw new DdbApiError("예상 배송일을 불러오지 못했습니다.", { code: "http_error" });
+    }
+    return quote;
 }
 
 export async function confirmTossTestPayment(payload: {
@@ -506,6 +548,17 @@ export async function loadCurrentCustomer(token?: string) {
     return apiJson<ApiUser>("/api/v1/auth/me", {
         method: "GET",
     }, token, { requireBase: true });
+}
+
+export async function updateCurrentCustomerName(name: string, token?: string) {
+    const user = await apiJson<ApiUser>("/api/v1/auth/me", {
+        method: "PATCH",
+        body: JSON.stringify({ name }),
+    }, token, { requireBase: true });
+    if (!user?.name) {
+        throw new DdbApiError("회원 이름을 변경하지 못했습니다.", { code: "http_error" });
+    }
+    return user;
 }
 
 function normalizeDaengLabWallet(wallet: ApiDaengLabWallet): DaengLabWallet {

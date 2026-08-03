@@ -10,6 +10,7 @@ import ProductCard from "@/components/products/ProductCard";
 import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
 import DaengLabWalletCard from "@/components/mypage/DaengLabWalletCard";
+import MypageSidebar from "@/components/mypage/MypageSidebar";
 import {
     hasPetLensReadyProfile,
     PETLENS_PAGE_HREF,
@@ -58,7 +59,7 @@ function firstTryOnProduct(): CatalogProduct | undefined {
 }
 
 export default function MyPage() {
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const store = useStore();
     const profileRouteRequested = useSyncExternalStore(
         subscribeToProfileRoute,
@@ -86,6 +87,9 @@ export default function MyPage() {
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+            <div className="grid min-w-0 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+                <MypageSidebar />
+                <div className="min-w-0">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <p className="text-sm font-black text-indigo-700">마이페이지</p>
@@ -94,9 +98,6 @@ export default function MyPage() {
                         {memberAccountDisplay(user.email, user.authProvider)}
                     </p>
                 </div>
-                <button type="button" onClick={logout} className="btn btn-secondary">
-                    로그아웃
-                </button>
             </div>
 
             <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
@@ -191,7 +192,15 @@ export default function MyPage() {
 
                 <section className="grid gap-6">
                     <div className="surface p-5">
-                        <h2 className="text-lg font-black text-neutral-950">주문 내역</h2>
+                        <div className="flex items-center justify-between gap-3">
+                            <div>
+                                <h2 className="text-lg font-black text-neutral-950">최근 결제</h2>
+                                <p className="mt-1 text-xs font-bold text-neutral-500">이 브라우저에서 완료한 결제만 빠르게 보여줍니다.</p>
+                            </div>
+                            <Link href="/mypage/orders/" className="text-sm font-black text-indigo-700 hover:underline">
+                                전체 주문 보기 <i className="fa-solid fa-chevron-right ml-1 text-[10px]" aria-hidden="true" />
+                            </Link>
+                        </div>
                         {store.state.orders.length > 0 ? (
                             <div className="mt-4 grid gap-3">
                                 {store.state.orders.map((order) => {
@@ -199,7 +208,12 @@ export default function MyPage() {
                                     return (
                                         <article key={order.id} className="rounded-lg border border-neutral-200 p-4">
                                             <div className="flex flex-wrap items-center justify-between gap-2">
-                                                <b className="font-black text-neutral-950">{order.id}</b>
+                                                <Link
+                                                    href={`/mypage/orders/?orderId=${encodeURIComponent(order.id)}`}
+                                                    className="break-all font-black text-neutral-950 hover:text-indigo-700 hover:underline"
+                                                >
+                                                    {order.id}
+                                                </Link>
                                                 <span
                                                     className={`rounded-full px-2.5 py-1 text-xs font-black ${
                                                         order.status === "test_paid"
@@ -226,7 +240,9 @@ export default function MyPage() {
                                 })}
                             </div>
                         ) : (
-                            <p className="mt-3 text-sm font-bold text-neutral-600">아직 주문 내역이 없습니다.</p>
+                            <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
+                                전체 주문과 배송 상태는 서버 기준 <Link href="/mypage/orders/" className="font-black text-indigo-700 hover:underline">주문 내역</Link>에서 확인해 주세요.
+                            </p>
                         )}
                     </div>
 
@@ -277,6 +293,8 @@ export default function MyPage() {
                         )}
                     </div>
                 </section>
+            </div>
+                </div>
             </div>
         </main>
     );

@@ -33,21 +33,40 @@ export interface MyMenuItem {
     href: string;
     label: string;
     icon: string;
-    divider?: boolean;       // 위에 divider 표시
 }
 
-export const MYPAGE_MENU: MyMenuItem[] = [
-    { href: "/mypage",              label: "대시보드",      icon: "fa-house" },
-    { href: "/mypage/pets",         label: "펫 프로필",     icon: "fa-paw" },
-    { href: "/mypage/petlens-log",  label: "펫렌즈 기록",   icon: "fa-wand-magic-sparkles" },
-    { href: "/mypage/orders",       label: "주문 내역",     icon: "fa-bag-shopping" },
-    { href: "/mypage/address",      label: "배송지 관리",   icon: "fa-location-dot" },
-    { href: "/mypage/wishlist",     label: "찜한 상품",     icon: "fa-heart" },
-    { href: "/mypage/reviews",      label: "내 리뷰",       icon: "fa-star" },
-    { href: "/mypage/points",       label: "적립금",        icon: "fa-coins" },
-    { href: "/mypage/grade",        label: "등급 / 혜택",   icon: "fa-crown" },
-    { href: "/mypage/profile",      label: "회원정보 수정", icon: "fa-user-pen", divider: true },
+export type MyMenuGroupId = "shopping" | "account";
+
+export interface MyMenuGroup {
+    id: MyMenuGroupId;
+    label: string;
+    items: readonly MyMenuItem[];
+}
+
+/** 실제 정적 라우트가 존재하는 메뉴만 노출한다. */
+export const MYPAGE_MENU_GROUPS: readonly MyMenuGroup[] = [
+    {
+        id: "shopping",
+        label: "쇼핑 정보",
+        items: [
+            { href: "/mypage", label: "대시보드", icon: "fa-house" },
+            { href: "/mypage/orders", label: "주문 내역", icon: "fa-bag-shopping" },
+        ],
+    },
+    {
+        id: "account",
+        label: "MY 정보",
+        items: [
+            { href: "/mypage/profile", label: "개인정보 확인/수정", icon: "fa-user-pen" },
+            { href: "/mypage/payments", label: "결제수단 관리", icon: "fa-credit-card" },
+            { href: "/mypage/address", label: "배송지 관리", icon: "fa-location-dot" },
+            { href: "/mypage/withdrawal", label: "회원 탈퇴", icon: "fa-user-slash" },
+        ],
+    },
 ];
+
+/** 단순 경로 조회가 필요한 기존 호출부를 위한 읽기 전용 평탄 목록. */
+export const MYPAGE_MENU: readonly MyMenuItem[] = MYPAGE_MENU_GROUPS.flatMap((group) => group.items);
 
 /** 등록 후 며칠 지났는지 mock */
 export function getJoinDate(authTs?: number): string {

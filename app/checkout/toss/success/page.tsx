@@ -89,8 +89,6 @@ export default function TossTestSuccessPage() {
                     createdAt: confirmation.approvedAt || new Date().toISOString(),
                     lines: paidLines,
                     total: confirmation.totalAmount,
-                    receiver: "",
-                    address: "테스트 결제 — 실제 배송 없음",
                     paymentMethod: confirmation.paymentMethod,
                     status: "test_paid",
                 });
@@ -136,7 +134,7 @@ export default function TossTestSuccessPage() {
                     </p>
                 </div>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
-                    <Link href="/mypage" className="btn btn-primary">테스트 주문 보기</Link>
+                    <Link href={`/mypage/orders/?orderId=${encodeURIComponent(view.orderId)}`} className="btn btn-primary">테스트 주문 상세보기</Link>
                     <Link href="/products" className="btn btn-secondary">쇼핑 계속하기</Link>
                 </div>
             </main>

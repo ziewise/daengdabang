@@ -65,8 +65,12 @@ export type Order = {
     createdAt: string;
     lines: CartLine[];
     total: number;
-    receiver: string;
-    address: string;
+    /**
+     * Legacy display-only fields. Delivery PII now lives only in the
+     * authenticated payment-order API and must never be persisted here.
+     */
+    receiver?: string;
+    address?: string;
     paymentMethod: string;
     status: "test_paid" | "paid" | "preparing" | "shipped";
 };
@@ -91,6 +95,7 @@ type Action =
     | { type: "TOGGLE_WISHLIST"; productId: string }
     | { type: "LOGIN"; user: User }
     | { type: "UPDATE_MEMBER_EMAIL"; email: string }
+    | { type: "UPDATE_MEMBER_NAME"; name: string }
     | { type: "LOGOUT" }
     | { type: "UPSERT_PET"; pet: PetProfile }
     | { type: "SET_PETS"; pets: PetProfile[] }
@@ -100,10 +105,20 @@ const STORAGE_KEY = "daengdabang.store.v2";
 const API_TOKEN_KEY = "ddb.api.accessToken";
 const INITIAL: State = { cart: [], wishlist: [], user: null, orders: [] };
 
+function ordersWithoutDeliveryPii(orders: Order[]): Order[] {
+    return orders.map((order) => {
+        const safeOrder = { ...order };
+        delete safeOrder.receiver;
+        delete safeOrder.address;
+        return safeOrder;
+    });
+}
+
 function stateForLocalStorage(snapshot: State): State {
     if (!snapshot.user) return snapshot;
     return {
         ...snapshot,
+        orders: ordersWithoutDeliveryPii(snapshot.orders),
         user: {
             ...snapshot.user,
             // The bearer token already has one dedicated storage key. Do not
@@ -249,6 +264,8 @@ function reducer(state: State, action: Action): State {
             return { ...withoutMemberData(state), user: action.user };
         case "UPDATE_MEMBER_EMAIL":
             return state.user ? { ...state, user: { ...state.user, email: action.email } } : state;
+        case "UPDATE_MEMBER_NAME":
+            return state.user ? { ...state, user: { ...state.user, name: action.name } } : state;
         case "LOGOUT":
             return withoutMemberData(state);
         case "UPSERT_PET": {
@@ -288,6 +305,7 @@ type StoreValue = {
     isWished: (productId: string) => boolean;
     login: (user: User) => void;
     updateMemberEmail: (email: string) => void;
+    updateMemberName: (name: string) => void;
     logout: () => void;
     upsertPet: (pet: PetProfile) => void;
     addOrder: (order: Order) => void;
@@ -309,6 +327,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
                 if (parsed.user) {
                     parsed.user.apiAccessToken = window.localStorage.getItem(API_TOKEN_KEY) || parsed.user.apiAccessToken;
                 }
+                parsed.orders = ordersWithoutDeliveryPii(parsed.orders ?? []);
                 // 선택 플래그 도입 전 저장분 보정 — 미지정(undefined)은 선택된 것으로
                 parsed.cart = (parsed.cart ?? []).map((line: CartLine) => ({ ...line, selected: line.selected !== false }));
                 dispatch({ type: "HYDRATE", state: parsed });
@@ -394,6 +413,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
                 dispatch({ type: "LOGIN", user });
             },
             updateMemberEmail: (email) => dispatch({ type: "UPDATE_MEMBER_EMAIL", email }),
+            updateMemberName: (name) => dispatch({ type: "UPDATE_MEMBER_NAME", name }),
             logout: () => {
                 clearPersistedMemberSession(state);
                 dispatch({ type: "LOGOUT" });
@@ -426,6 +446,7 @@ export function useAuth() {
         user: store.state.user,
         login: store.login,
         updateMemberEmail: store.updateMemberEmail,
+        updateMemberName: store.updateMemberName,
         logout: store.logout,
         upsertPet: store.upsertPet,
     };

@@ -114,7 +114,12 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(checkout, /https:\/\/pages\.tosspayments\.com\/terms\/privacy\/consent1/);
     assert.match(checkout, /https:\/\/pages\.tosspayments\.com\/terms\/privacy\/consent2/);
     assert.doesNotMatch(checkout, /consent1privacy|consent2privacy/);
-    assert.doesNotMatch(checkout, /const \[address|setAddress|t\("address"\)/);
+    assert.match(checkout, /ShippingDetailsSection/);
+    assert.match(checkout, /validateCheckoutDelivery\(deliveryDraft, locale\)/);
+    assert.match(checkout, /delivery: \{/);
+    assert.match(checkout, /isCheckoutDeliveryServerContract\(order\)/);
+    assert.match(checkout, /customerName: order\.delivery\.recipientName/);
+    assert.match(checkout, /customerMobilePhone: order\.delivery\.phone/);
     assert.doesNotMatch(checkout, /trackTwinOrderAttribution/);
     assert.doesNotMatch(checkout, /cart\.addOrder/);
     assert.doesNotMatch(checkout, /cart\.removeFromCart/);
@@ -153,6 +158,9 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(failure, /장바구니 상품은 그대로 유지됩니다/);
     assert.match(store, /REMOVE_PAID_LINES/);
     assert.match(store, /removePaidLineQuantities\(state\.cart, action\.lines\)/);
+    assert.match(store, /ordersWithoutDeliveryPii/);
+    assert.match(store, /delete safeOrder\.receiver/);
+    assert.match(store, /delete safeOrder\.address/);
     assert.match(reconciliation, /const remainingQuantity = cartLine\.qty - consumed/);
     assert.match(store, /order\.id === action\.order\.id/);
     assert.match(mypage, /order\.status === "test_paid"/);

@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
+import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
 import { cartProducts } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
@@ -10,7 +11,19 @@ import {
     createTossTestOrder,
     DdbApiError,
     getCustomerToken,
+    loadTossTestDeliveryQuote,
 } from "@/lib/customer-api";
+import {
+    createCheckoutDeliveryDraft,
+    formatCheckoutDeliveryEstimate,
+    isCheckoutDeliveryQuote,
+    isCheckoutDeliveryServerContract,
+    validateCheckoutDelivery,
+    type CheckoutDeliveryDraft,
+    type CheckoutDeliveryErrors,
+    type CheckoutDeliveryField,
+    type CheckoutDeliveryQuote,
+} from "@/lib/checkout-shipping";
 import {
     CHECKOUT_PAYMENT_METHODS,
     checkoutPaymentMethodFromQuery,
@@ -61,11 +74,18 @@ export default function CheckoutPage() {
     const { t, locale, formatPrice, productName } = useI18n();
     const lines = cartProducts(cart.lines).filter((line) => line.selected);
     const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
-    const [receiver, setReceiver] = useState(user?.name ?? "");
+    const [deliveryDraft, setDeliveryDraft] = useState<CheckoutDeliveryDraft>(() => createCheckoutDeliveryDraft());
+    const [deliveryErrors, setDeliveryErrors] = useState<CheckoutDeliveryErrors>({});
+    const [quoteResult, setQuoteResult] = useState<{
+        token: string;
+        quote: CheckoutDeliveryQuote | null;
+        error: string;
+    } | null>(null);
     const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
     const [submitting, setSubmitting] = useState(false);
     const [paymentError, setPaymentError] = useState("");
     const [directTermsAccepted, setDirectTermsAccepted] = useState(false);
+    const prefilledMemberRef = useRef("");
 
     useEffect(() => {
         const requestedMethod = new URLSearchParams(window.location.search).get("payment");
@@ -77,6 +97,66 @@ export default function CheckoutPage() {
     const signedInForPayment = Boolean(user && accessToken);
     const loginHref = `/auth/login?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
     const directEasyPay = paymentMethod === "toss_pay" || paymentMethod === "naver_pay";
+
+    useEffect(() => {
+        if (!user) return;
+        const memberIdentity = `${user.email}|${user.name}|${user.phone ?? ""}`;
+        if (prefilledMemberRef.current === memberIdentity) return;
+        prefilledMemberRef.current = memberIdentity;
+        setDeliveryDraft((current) => ({
+            ...current,
+            recipientName: current.recipientName || user.name,
+            phone: current.phone || user.phone || "",
+        }));
+    }, [user]);
+
+    useEffect(() => {
+        if (!accessToken) return;
+        let cancelled = false;
+        loadTossTestDeliveryQuote(accessToken)
+            .then((quote) => {
+                if (cancelled) return;
+                if (!isCheckoutDeliveryQuote(quote) || quote.fulfillmentMode !== "test_no_shipment") {
+                    throw new Error("Unsafe delivery quote response");
+                }
+                setQuoteResult({ token: accessToken, quote, error: "" });
+            })
+            .catch(() => {
+                if (!cancelled) {
+                    setQuoteResult({
+                        token: accessToken,
+                        quote: null,
+                        error: locale === "en"
+                            ? "The server will calculate the test estimate when you continue."
+                            : "예상일을 미리 불러오지 못했습니다. 결제 진행 시 서버가 다시 계산합니다.",
+                    });
+                }
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [accessToken, locale]);
+
+    const deliveryQuote = quoteResult?.token === accessToken ? quoteResult.quote : null;
+    const quoteError = quoteResult?.token === accessToken ? quoteResult.error : "";
+    const quoteLoading = Boolean(accessToken && quoteResult?.token !== accessToken);
+
+    const changeDelivery = (next: CheckoutDeliveryDraft) => {
+        setDeliveryDraft(next);
+        setDeliveryErrors({});
+        if (paymentError) setPaymentError("");
+    };
+
+    const validateDeliveryField = (field: CheckoutDeliveryField) => {
+        const result = validateCheckoutDelivery(deliveryDraft, locale);
+        setDeliveryErrors((current) => ({ ...current, [field]: result.errors[field] }));
+    };
+
+    const focusDeliveryField = (field: CheckoutDeliveryField) => {
+        window.requestAnimationFrame(() => {
+            document.getElementById(`checkout-delivery-${field}`)?.focus();
+        });
+    };
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
@@ -102,6 +182,16 @@ export default function CheckoutPage() {
             return;
         }
 
+        const deliveryValidation = validateCheckoutDelivery(deliveryDraft, locale);
+        if (!deliveryValidation.ok) {
+            setDeliveryErrors(deliveryValidation.errors);
+            setPaymentError(locale === "en"
+                ? "Check the highlighted delivery details."
+                : "표시된 배송지 정보를 확인해 주세요.");
+            focusDeliveryField(deliveryValidation.firstInvalidField);
+            return;
+        }
+
         setPaymentError("");
         setSubmitting(true);
         let pendingOrderId = "";
@@ -114,6 +204,11 @@ export default function CheckoutPage() {
                     ...(size ? { size } : {}),
                 })),
                 paymentMethod,
+                delivery: {
+                    ...deliveryValidation.value,
+                    addressLine2: deliveryValidation.value.addressLine2 ?? "",
+                    requestNote: deliveryValidation.value.requestNote ?? "",
+                },
             }, accessToken);
 
             if (
@@ -123,9 +218,12 @@ export default function CheckoutPage() {
                 || order.currency !== "KRW"
                 || !Number.isSafeInteger(order.amount)
                 || order.amount <= 0
-                || order.amount !== total
                 || !Array.isArray(order.lines)
                 || order.lines.length === 0
+                || !isCheckoutDeliveryServerContract(order)
+                || order.quote.fulfillmentMode !== "test_no_shipment"
+                || order.quote.isSimulation !== true
+                || order.amount !== total + order.quote.shippingFee
             ) {
                 throw new Error("Unsafe Toss order response");
             }
@@ -152,9 +250,9 @@ export default function CheckoutPage() {
                 orderName: order.orderName,
                 successUrl: tossCallbackUrl("/checkout/toss/success/"),
                 failUrl: tossCallbackUrl("/checkout/toss/fail/"),
-                customerName: receiver,
+                customerName: order.delivery.recipientName,
                 customerEmail: user.email,
-                customerMobilePhone: user.phone?.replace(/\D/g, "") || undefined,
+                customerMobilePhone: order.delivery.phone,
             };
 
             const sdkMethod = tossSdkPaymentMethod(paymentMethod);
@@ -201,18 +299,69 @@ export default function CheckoutPage() {
                 </p>
                 <p className="mt-1 text-xs font-bold leading-5 text-sky-800">
                     {locale === "en"
-                        ? "Test keys are active. No real withdrawal, shipment, purchase analytics, or rewards will be created."
-                        : "테스트 키로만 진행됩니다. 실제 출금·배송·구매 분석·코인 및 적립금 지급은 발생하지 않습니다."}
+                        ? "Test keys are active. No real withdrawal, shipment, purchase analytics, or rewards will be created. Delivery details are stored only for this test-order review."
+                        : "테스트 키로만 진행됩니다. 실제 출금·배송·구매 분석·코인 및 적립금 지급은 발생하지 않습니다. 배송정보는 테스트 주문 확인용으로만 저장됩니다."}
                 </p>
             </div>
             <form onSubmit={submit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
-                <section className="surface grid gap-4 p-5">
-                    <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">{t("receiver")}</span>
-                        <input value={receiver} onChange={(event) => setReceiver(event.target.value)} className="input" required />
-                    </label>
-                    <fieldset>
-                        <legend className="mb-2 block text-xs font-black text-neutral-500">{t("paymentMethod")}</legend>
+                <section className="grid min-w-0 gap-4">
+                    <ShippingDetailsSection
+                        value={deliveryDraft}
+                        onChange={changeDelivery}
+                        errors={deliveryErrors}
+                        onBlur={validateDeliveryField}
+                        locale={locale}
+                        disabled={submitting}
+                        testMode
+                    />
+
+                    <section className="surface overflow-hidden" aria-labelledby="checkout-delivery-estimate-title">
+                        <div className="border-b border-neutral-200 bg-neutral-50/80 px-4 py-4 sm:px-5">
+                            <div className="flex items-start gap-3">
+                                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sky-100 text-sky-700" aria-hidden="true">
+                                    <i className="fa-solid fa-calendar-check text-sm" />
+                                </span>
+                                <div>
+                                    <h2 id="checkout-delivery-estimate-title" className="text-lg font-black text-neutral-950">
+                                        {locale === "en" ? "Estimated arrival" : "예상 도착일"}
+                                    </h2>
+                                    <p className="mt-0.5 text-xs font-bold leading-5 text-neutral-500">
+                                        {locale === "en" ? "Calculated by the server in Korea time." : "한국 시간과 영업일 기준으로 서버가 계산합니다."}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="p-4 sm:p-5" aria-live="polite">
+                            {quoteLoading ? (
+                                <p className="text-sm font-black text-neutral-600">
+                                    <i className="fa-solid fa-spinner fa-spin mr-2 text-indigo-600" aria-hidden="true" />
+                                    {locale === "en" ? "Calculating estimate…" : "예상일 계산 중…"}
+                                </p>
+                            ) : deliveryQuote ? (
+                                <>
+                                    <p className="text-lg font-black text-emerald-700">
+                                        {formatCheckoutDeliveryEstimate(deliveryQuote, locale)}
+                                    </p>
+                                    <p className="mt-2 text-xs font-bold leading-5 text-sky-800">
+                                        <i className="fa-solid fa-flask mr-1.5" aria-hidden="true" />
+                                        {locale === "en"
+                                            ? "Simulation for test-screen verification; no parcel will actually be shipped."
+                                            : "테스트 화면 검증용 모의 예상이며 실제 상품은 발송되지 않습니다."}
+                                    </p>
+                                </>
+                            ) : (
+                                <p className="text-sm font-bold leading-6 text-neutral-600">
+                                    {quoteError || (locale === "en"
+                                        ? "Sign in to see the server estimate."
+                                        : "로그인하면 서버 예상일을 확인할 수 있습니다.")}
+                                </p>
+                            )}
+                        </div>
+                    </section>
+
+                    <section className="surface p-5" aria-labelledby="checkout-payment-method-title">
+                        <fieldset>
+                        <legend id="checkout-payment-method-title" className="mb-3 block text-lg font-black text-neutral-950">{t("paymentMethod")}</legend>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup" aria-label={t("paymentMethod")}>
                             {CHECKOUT_PAYMENT_METHODS.map((method) => {
                                 const copy = PAYMENT_OPTION_COPY[method];
@@ -271,9 +420,10 @@ export default function CheckoutPage() {
                                 </span>
                             </label>
                         )}
-                    </fieldset>
+                        </fieldset>
+                    </section>
                 </section>
-                <aside className="surface h-fit p-5">
+                <aside className="surface h-fit p-5 lg:sticky lg:top-24">
                     <h2 className="text-lg font-black text-neutral-950">{t("orderedProducts")}</h2>
                     <div className="mt-4 grid gap-3">
                         {lines.map(({ product, qty, color, size, subtotal }) => (
@@ -287,10 +437,36 @@ export default function CheckoutPage() {
                             </div>
                         ))}
                     </div>
+                    <div className="mt-4 grid gap-2 border-t border-neutral-200 pt-4 text-sm font-bold text-neutral-600">
+                        <div className="flex items-center justify-between gap-3">
+                            <span>{locale === "en" ? "Items" : "총 상품금액"}</span>
+                            <b className="text-neutral-950">{formatPrice(total)}</b>
+                        </div>
+                        <div className="flex items-center justify-between gap-3">
+                            <span>{locale === "en" ? "Shipping" : "배송비"}</span>
+                            <b className="text-emerald-700">
+                                {deliveryQuote
+                                    ? (deliveryQuote.shippingFee
+                                        ? formatPrice(deliveryQuote.shippingFee)
+                                        : (locale === "en" ? "Free" : "무료"))
+                                    : (quoteLoading
+                                        ? (locale === "en" ? "Checking…" : "확인 중")
+                                        : (locale === "en" ? "At payment" : "결제 시 확인"))}
+                            </b>
+                        </div>
+                    </div>
                     <div className="mt-4 flex items-center justify-between border-t border-neutral-200 pt-4">
                         <span className="font-black">{t("totalPayment")}</span>
-                        <b className="text-2xl font-black text-indigo-700">{formatPrice(total)}</b>
+                        <b className="text-2xl font-black text-indigo-700">
+                            {formatPrice(total + (deliveryQuote?.shippingFee ?? 0))}
+                        </b>
                     </div>
+                    {deliveryQuote && (
+                        <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-xs font-black leading-5 text-emerald-800">
+                            <i className="fa-solid fa-truck-fast mr-1.5" aria-hidden="true" />
+                            {formatCheckoutDeliveryEstimate(deliveryQuote, locale)}
+                        </p>
+                    )}
                     {!signedInForPayment && (
                         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" role="alert">
                             <p className="text-xs font-bold leading-5 text-amber-900">
@@ -320,8 +496,8 @@ export default function CheckoutPage() {
                     </button>
                     <p className="mt-2 text-center text-[10px] font-bold leading-4 text-neutral-500">
                         {locale === "en"
-                            ? "The server creates and verifies the order ID and amount."
-                            : "주문번호와 금액은 서버가 생성하고 검증합니다."}
+                            ? "The server verifies the order, amount, and encrypted delivery snapshot."
+                            : "주문번호·금액·암호화 배송정보는 서버가 생성하고 검증합니다."}
                     </p>
                 </aside>
             </form>
