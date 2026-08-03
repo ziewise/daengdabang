@@ -41,6 +41,7 @@ async function fixture(t, { includeCdnUrl = true } = {}) {
     await write(root, "out/images/products/catalog/sample/videos/hover.mp4", "drop-cdn-copy");
     await write(root, "out/images/products/catalog/stale/videos/hover.mp4", "drop-unused-video");
     await write(root, "out/images/hero/keep.mp4", "keep-unrelated");
+    await write(root, "out/videos/hero.mp4", "drop-legacy-copy");
     return root;
 }
 
@@ -56,8 +57,10 @@ test("Pages artifact keeps referenced images and removes verified CDN video copi
     assert.equal(result.expectedCdnVideoCount, 1);
     assert.equal(result.externalizedVideoCount, 1);
     assert.equal(result.unusedAssetCount, 3);
+    assert.equal(result.omittedLegacyAssetCount, 1);
     assert.equal(await fs.readFile(path.join(root, "out/images/products/catalog/sample/sample.webp"), "utf8"), "keep-main");
     assert.equal(await fs.readFile(path.join(root, "out/images/hero/keep.mp4"), "utf8"), "keep-unrelated");
+    await assert.rejects(fs.access(path.join(root, "out/videos/hero.mp4")));
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/sample.png")));
 });

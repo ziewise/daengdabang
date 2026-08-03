@@ -7,6 +7,10 @@ const CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
 const COMMIT_SHA_RE = /^[0-9a-f]{40}$/i;
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".txt", ".xml"]);
 const SOURCE_EXTENSIONS = new Set([".css", ".js", ".json", ".mjs", ".ts", ".tsx"]);
+const DEPLOYMENT_OMIT_PATHS = new Set([
+    // Legacy storefront copy. The current app uses /images/hero/default.mp4.
+    "videos/hero.mp4",
+]);
 
 function normalizeAssetPath(value) {
     if (typeof value !== "string") return "";
@@ -156,6 +160,12 @@ export async function preparePagesArtifact({
     const removed = [];
     for (const filePath of beforeFiles) {
         const relative = path.relative(resolvedOutRoot, filePath).replaceAll(path.sep, "/");
+        if (DEPLOYMENT_OMIT_PATHS.has(relative)) {
+            const size = (await fs.stat(filePath)).size;
+            await fs.unlink(filePath);
+            removed.push({ relative, size, reason: "legacy" });
+            continue;
+        }
         if (!relative.startsWith(PRODUCT_ASSET_PREFIX)) continue;
         const externalizedVideo = expectedCdnVideos.has(relative);
         const unusedProductAsset = !references.has(relative);
@@ -178,6 +188,7 @@ export async function preparePagesArtifact({
         removedFileCount: removed.length,
         externalizedVideoCount: removed.filter((entry) => entry.reason === "commit_cdn").length,
         unusedAssetCount: removed.filter((entry) => entry.reason === "unused").length,
+        omittedLegacyAssetCount: removed.filter((entry) => entry.reason === "legacy").length,
         expectedCdnVideoCount: expectedCdnVideos.size,
     };
 }
