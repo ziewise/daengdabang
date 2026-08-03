@@ -136,9 +136,9 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(success, /confirmation\.providerStatus !== "DONE"/);
     assert.match(success, /confirmation\.paymentKey !== paymentKey/);
     assert.match(success, /confirmation\.totalAmount !== amount/);
-    assert.match(success, /isTossOrderLineList\(confirmation\.lines\)/);
-    assert.match(success, /cart\.removePaidLines\(confirmation\.lines\)/);
-    assert.match(success, /lines: confirmation\.lines/);
+    assert.match(success, /normalizeTossOrderLines\(confirmation\.lines\)/);
+    assert.match(success, /cart\.removePaidLines\(paidLines\)/);
+    assert.match(success, /lines: paidLines/);
     assert.match(success, /paymentMethod: confirmation\.paymentMethod/);
     assert.doesNotMatch(success, /loadPendingTossTestPayment|completedOrder|pending\./);
     assert.match(success, /window\.location\.pathname.*window\.location\.search/);

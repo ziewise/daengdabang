@@ -172,8 +172,8 @@ export type PasswordResetVerification = {
 export type TossOrderLine = {
     productId: string;
     qty: number;
-    color?: string;
-    size?: string;
+    color?: string | null;
+    size?: string | null;
 };
 
 export type TossTestOrder = {

@@ -16,8 +16,8 @@ import { isTossConfirmationPendingError } from "@/lib/toss-confirmation-state";
 import {
     clearPendingTossTestPayment,
     isTossOrderId,
-    isTossOrderLineList,
     isTossPaymentKey,
+    normalizeTossOrderLines,
     parseTossAmount,
 } from "@/lib/toss-test-payment";
 
@@ -26,7 +26,7 @@ type ViewState =
     | { kind: "login_required"; loginHref: string }
     | { kind: "pending"; retryHref: string }
     | { kind: "invalid"; message: string }
-    | { kind: "failed"; message: string }
+    | { kind: "failed"; message: string; retryHref?: string }
     | { kind: "complete"; confirmation: TossTestPaymentConfirmation; orderId: string; amount: number };
 
 export default function TossTestSuccessPage() {
@@ -62,6 +62,7 @@ export default function TossTestSuccessPage() {
         startedRef.current = true;
         confirmTossTestPayment({ paymentKey, orderId, amount }, accessToken)
             .then((confirmation) => {
+                const paidLines = normalizeTossOrderLines(confirmation.lines);
                 if (
                     confirmation.status !== "test_paid"
                     || confirmation.mode !== "test"
@@ -70,7 +71,7 @@ export default function TossTestSuccessPage() {
                     || confirmation.paymentKey !== paymentKey
                     || confirmation.totalAmount !== amount
                     || !isCheckoutPaymentMethod(confirmation.paymentMethod)
-                    || !isTossOrderLineList(confirmation.lines)
+                    || paidLines === null
                 ) {
                     throw new Error("Unexpected test confirmation response");
                 }
@@ -80,13 +81,13 @@ export default function TossTestSuccessPage() {
                     && order.status === "test_paid"
                     && order.total === confirmation.totalAmount
                     && order.paymentMethod === confirmation.paymentMethod
-                    && haveSamePaidLineQuantities(order.lines, confirmation.lines)
+                    && haveSamePaidLineQuantities(order.lines, paidLines)
                 ));
-                if (!alreadyReconciled) cart.removePaidLines(confirmation.lines);
+                if (!alreadyReconciled) cart.removePaidLines(paidLines);
                 cart.addOrder({
                     id: confirmation.orderId,
                     createdAt: confirmation.approvedAt || new Date().toISOString(),
-                    lines: confirmation.lines,
+                    lines: paidLines,
                     total: confirmation.totalAmount,
                     receiver: "",
                     address: "테스트 결제 — 실제 배송 없음",
@@ -106,6 +107,7 @@ export default function TossTestSuccessPage() {
                     message: error instanceof DdbApiError
                         ? error.message
                         : "서버에서 테스트 결제를 확인하지 못했습니다. 장바구니는 변경하지 않았습니다.",
+                    ...(error instanceof DdbApiError ? {} : { retryHref: callbackPath }),
                 });
             });
     }, [cart, user]);
@@ -179,9 +181,15 @@ export default function TossTestSuccessPage() {
                 {view.kind === "invalid" ? "결제 결과를 확인할 수 없습니다." : "테스트 결제 확인에 실패했습니다."}
             </h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{view.message}</p>
-            <p className="mt-2 text-xs font-bold text-neutral-500">선택한 장바구니 상품은 삭제하지 않았습니다.</p>
+            <p className="mt-2 text-xs font-bold text-neutral-500">
+                {view.kind === "failed" && view.retryHref
+                    ? "새 결제를 시작하지 말고 동일한 결제 결과를 다시 확인해 주세요."
+                    : "선택한 장바구니 상품은 삭제하지 않았습니다."}
+            </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
-                <Link href="/checkout" className="btn btn-primary">결제 다시 시도</Link>
+                {view.kind === "failed" && view.retryHref
+                    ? <a href={view.retryHref} className="btn btn-primary">동일 결제 다시 확인</a>
+                    : <Link href="/checkout" className="btn btn-primary">결제 다시 시도</Link>}
                 <Link href="/cart" className="btn btn-secondary">장바구니 확인</Link>
             </div>
         </main>

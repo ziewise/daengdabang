@@ -14,9 +14,31 @@ import {
     tossSdkPaymentMethod,
 } from "../lib/payment-methods.ts";
 import { isTossConfirmationPendingError } from "../lib/toss-confirmation-state.ts";
+import {
+    isTossOrderLineList,
+    normalizeTossOrderLines,
+} from "../lib/toss-order-lines.ts";
 
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
+
+test("nullable Toss line options are accepted and normalized before local storage", () => {
+    const responseLines = [
+        { productId: "lead", qty: 1, color: "red", size: null },
+        { productId: "food", qty: 2, color: null },
+    ];
+    assert.equal(isTossOrderLineList(responseLines), true);
+    assert.deepEqual(normalizeTossOrderLines(responseLines), [
+        { productId: "lead", qty: 1, color: "red" },
+        { productId: "food", qty: 2 },
+    ]);
+
+    for (const invalidOption of [7, false, {}, []]) {
+        assert.equal(isTossOrderLineList([
+            { productId: "lead", qty: 1, size: invalidOption },
+        ]), false);
+    }
+});
 
 test("only uncertain confirmation responses remain in the same-payment retry state", () => {
     for (const status of [429, 502, 504]) {
@@ -88,11 +110,13 @@ test("line reconciliation marker compares option-aware summed quantities", () =>
 test("missing or tampered pending storage never blocks the idempotent server confirm", async () => {
     const callback = await source("app/checkout/toss/success/page.tsx");
     const confirmIndex = callback.indexOf("confirmTossTestPayment({ paymentKey, orderId, amount }, accessToken)");
-    const removalIndex = callback.indexOf("cart.removePaidLines(confirmation.lines)");
+    const normalizationIndex = callback.indexOf("normalizeTossOrderLines(confirmation.lines)");
+    const removalIndex = callback.indexOf("cart.removePaidLines(paidLines)");
     const completeIndex = callback.indexOf('setView({ kind: "complete"');
 
     assert.ok(confirmIndex > 0);
-    assert.ok(removalIndex > confirmIndex);
+    assert.ok(normalizationIndex > confirmIndex);
+    assert.ok(removalIndex > normalizationIndex);
     assert.ok(completeIndex > removalIndex);
     assert.doesNotMatch(callback, /loadPendingTossTestPayment|pending\./);
 });
@@ -111,11 +135,18 @@ test("an existing local test order cannot bypass server confirmation", async () 
 
 test("only server-authoritative lines and payment method reconcile the local store", async () => {
     const callback = await source("app/checkout/toss/success/page.tsx");
-    assert.match(callback, /isTossOrderLineList\(confirmation\.lines\)/);
+    assert.match(callback, /const paidLines = normalizeTossOrderLines\(confirmation\.lines\)/);
     assert.match(callback, /isCheckoutPaymentMethod\(confirmation\.paymentMethod\)/);
-    assert.match(callback, /cart\.removePaidLines\(confirmation\.lines\)/);
-    assert.match(callback, /lines: confirmation\.lines/);
+    assert.match(callback, /cart\.removePaidLines\(paidLines\)/);
+    assert.match(callback, /lines: paidLines/);
     assert.match(callback, /paymentMethod: confirmation\.paymentMethod/);
+});
+
+test("unexpected client contract failures retry the exact callback instead of starting another payment", async () => {
+    const callback = await source("app/checkout/toss/success/page.tsx");
+    assert.match(callback, /error instanceof DdbApiError \? \{\} : \{ retryHref: callbackPath \}/);
+    assert.match(callback, /view\.kind === "failed" && view\.retryHref/);
+    assert.match(callback, /새 결제를 시작하지 말고 동일한 결제 결과를 다시 확인해 주세요/);
 });
 
 test("expired login preserves the complete callback query for confirmation after login", async () => {

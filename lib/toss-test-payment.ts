@@ -3,6 +3,13 @@ import {
     isCheckoutPaymentMethod,
     type CheckoutPaymentMethod,
 } from "@/lib/payment-methods";
+import { isTossOrderLineList } from "@/lib/toss-order-lines";
+
+export {
+    isTossOrderLine,
+    isTossOrderLineList,
+    normalizeTossOrderLines,
+} from "@/lib/toss-order-lines";
 
 const PENDING_PREFIX = "ddb.toss.test.pending.v1.";
 
@@ -35,25 +42,6 @@ export function parseTossAmount(value: string | null): number | null {
 
 function pendingKey(orderId: string) {
     return `${PENDING_PREFIX}${orderId}`;
-}
-
-export function isTossOrderLine(value: unknown): value is TossOrderLine {
-    if (!value || typeof value !== "object") return false;
-    const line = value as Partial<TossOrderLine>;
-    return (
-        typeof line.productId === "string"
-        && line.productId.length > 0
-        && line.productId.length <= 128
-        && Number.isInteger(line.qty)
-        && Number(line.qty) > 0
-        && Number(line.qty) <= 99
-        && (line.color === undefined || typeof line.color === "string")
-        && (line.size === undefined || typeof line.size === "string")
-    );
-}
-
-export function isTossOrderLineList(value: unknown): value is TossOrderLine[] {
-    return Array.isArray(value) && value.length > 0 && value.every(isTossOrderLine);
 }
 
 function isPendingPayment(value: unknown): value is PendingTossTestPayment {
