@@ -14,8 +14,17 @@ import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import LocalizedText from "@/components/i18n/LocalizedText";
 import { FOOTER_META_LINKS, FOOTER_LEGAL_LINKS } from "@/lib/menu-data";
 import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
+import { PUBLIC_SOCIAL_CHANNELS, type SocialChannel } from "@/lib/social-channels";
 import CloudflareSafeEmail from "./CloudflareSafeEmail";
 import NewsletterForm from "./NewsletterForm";
+
+const SOCIAL_TONES: Record<string, string> = {
+    naver: "from-green-500 to-emerald-600",
+    youtube: "from-red-500 to-red-600",
+    instagram: "from-pink-500 via-purple-500 to-amber-400",
+    threads: "from-neutral-800 to-neutral-950",
+    tiktok: "from-cyan-500 via-neutral-950 to-rose-500",
+};
 
 export default function Footer() {
     return (
@@ -90,10 +99,9 @@ export default function Footer() {
 
                     {/* 우: SNS 아이콘 */}
                     <div className="flex gap-1.5 md:justify-self-end self-center">
-                        <SnsBtn href="https://instagram.com/daengdabang" icon="fa-instagram" brand="fa-brands" color="from-pink-500 to-purple-500" label="Instagram" />
-                        <SnsBtn href="#youtube" icon="fa-youtube" brand="fa-brands" color="from-red-500 to-red-600" label="YouTube" />
-                        <SnsBtn href="#blog" icon="fa-blog" brand="fa-solid" color="from-green-500 to-emerald-500" label="블로그" />
-                        <SnsBtn href="#kakao" icon="fa-comment" brand="fa-solid" color="from-yellow-400 to-amber-500" label="카카오톡" />
+                        {PUBLIC_SOCIAL_CHANNELS.map((channel) => (
+                            <SnsBtn key={channel.key} channel={channel} />
+                        ))}
                     </div>
                 </div>
 
@@ -144,18 +152,16 @@ export default function Footer() {
     );
 }
 
-function SnsBtn({
-    href, icon, brand, color, label,
-}: { href: string; icon: string; brand: string; color: string; label: string }) {
+function SnsBtn({ channel }: { channel: SocialChannel }) {
     return (
         <a
-            href={href}
-            target={href.startsWith("http") ? "_blank" : undefined}
-            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-            aria-label={label}
-            className={`w-9 h-9 rounded-full flex items-center justify-center text-white bg-gradient-to-br ${color} hover:scale-105 transition`}
+            href={channel.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`댕다방 공식 ${channel.label} ${channel.handle}`}
+            className={`w-9 h-9 rounded-full flex items-center justify-center text-white bg-gradient-to-br ${SOCIAL_TONES[channel.key] || "from-indigo-500 to-purple-600"} hover:scale-105 transition`}
         >
-            <i className={`${brand} ${icon} text-sm`} />
+            <i className={`${channel.iconClassName} text-sm`} aria-hidden="true" />
         </a>
     );
 }

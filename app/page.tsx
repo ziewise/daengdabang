@@ -33,6 +33,7 @@ import ReviewSection from "@/components/main/ReviewSection";
 import InstaSection from "@/components/main/InstaSection";
 import MemberAiDashboard from "@/components/home/MemberAiDashboard";
 import AiQuickActions from "@/components/home/AiQuickActions";
+import HomeAudienceSlot from "@/components/home/HomeAudienceSlot";
 
 export default function HomePage() {
     // 협업자 동적 히어로에 넘길 추천 상품 4개 (popularity 기준 베스트)
@@ -50,8 +51,10 @@ export default function HomePage() {
             {/* 로그인 회원의 오늘 돌봄 이유를 가장 먼저 보여주는 개인 AI 대시보드 */}
             <MemberAiDashboard />
 
-            {/* 사진·소리·행동·리포트·상담·챌린지로 바로 이동 */}
-            <AiQuickActions />
+            {/* 회원은 개인 대시보드에서 곧바로 AI 기능으로 이어진다. */}
+            <HomeAudienceSlot audience="member">
+                <AiQuickActions />
+            </HomeAudienceSlot>
 
             {/* AI 분석과 회원 프로필을 실제 상품으로 연결 */}
             <RecommendSection />
@@ -59,6 +62,11 @@ export default function HomePage() {
             <BrandSlider />
             <PromoSection />
             <NewArrivalsSection />
+
+            {/* 비회원은 쇼핑 콘텐츠를 둘러본 뒤 리뷰 직전에 AI 체험으로 진입한다. */}
+            <HomeAudienceSlot audience="guest">
+                <AiQuickActions />
+            </HomeAudienceSlot>
             <ReviewSection />
             <InstaSection />
         </>

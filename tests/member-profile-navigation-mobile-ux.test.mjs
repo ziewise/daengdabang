@@ -29,8 +29,8 @@ test("desktop and mobile navigation expose the AI-platform information architect
     const i18n = read("../lib/i18n.tsx");
 
     for (const [source, labels] of [
-        [header, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"']],
-        [mobile, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"']],
+        [header, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"', 'label={t("customerCenter")}']],
+        [mobile, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"', 'label={t("customerCenter")}']],
     ]) {
         let previous = -1;
         for (const label of labels) {
@@ -39,9 +39,10 @@ test("desktop and mobile navigation expose the AI-platform information architect
             previous = next;
         }
     }
-    for (const label of ["쇼핑", "AI 분석", "우리 아이", "챌린지", "커뮤니티", "이벤트"]) {
+    for (const label of ["쇼핑", "AI 분석", "우리 아이", "챌린지", "커뮤니티", "이벤트", "고객센터"]) {
         assert.match(i18n, new RegExp(`"${label}"`));
     }
+    for (const source of [header, mobile]) assert.match(source, /CS_LINKS/);
 });
 
 test("navigator gives every searchable breed an independent 32-frame atlas set", async () => {

@@ -12,12 +12,12 @@
     "priority": 100,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/summer-hydration/poster.png",
+    "poster": "/images/bundles/summer-hydration/poster.webp",
     "video": "/images/bundles/summer-hydration/hover.mp4",
     "showroom": [
-      "/images/bundles/summer-hydration/showroom-1.png",
-      "/images/bundles/summer-hydration/showroom-2.png",
-      "/images/bundles/summer-hydration/showroom-3.png"
+      "/images/bundles/summer-hydration/showroom-1.webp",
+      "/images/bundles/summer-hydration/showroom-2.webp",
+      "/images/bundles/summer-hydration/poster.webp"
     ],
     "videoPrompt": "Medium dog on a sunny walk wearing cooling gear, stopping beside a portable bowl and clean water setup. Natural summer light, gentle tail motion, products clearly visible."
   },
@@ -34,12 +34,12 @@
     "priority": 98,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/rain-walk/poster.png",
+    "poster": "/images/bundles/rain-walk/poster.webp",
     "video": "/images/bundles/rain-walk/hover.mp4",
     "showroom": [
-      "/images/bundles/rain-walk/showroom-1.png",
-      "/images/bundles/rain-walk/showroom-2.png",
-      "/images/bundles/rain-walk/showroom-3.png"
+      "/images/bundles/rain-walk/showroom-1.webp",
+      "/images/bundles/rain-walk/showroom-2.webp",
+      "/images/bundles/rain-walk/poster.webp"
     ],
     "videoPrompt": "Calm dog walking in light rain wearing rainwear with waterproof leash and a small safety light. Wet sidewalk reflections, soft grey-blue mood, no text."
   },
@@ -56,12 +56,12 @@
     "priority": 96,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/paw-care/poster.png",
+    "poster": "/images/bundles/paw-care/poster.webp",
     "video": "/images/bundles/paw-care/hover.mp4",
     "showroom": [
-      "/images/bundles/paw-care/showroom-1.png",
-      "/images/bundles/paw-care/showroom-2.png",
-      "/images/bundles/paw-care/showroom-3.png"
+      "/images/bundles/paw-care/showroom-1.webp",
+      "/images/bundles/paw-care/showroom-2.webp",
+      "/images/bundles/paw-care/poster.webp"
     ],
     "videoPrompt": "Dog coming home after a walk, paw cleanser and grooming products arranged near the entry mat. Gentle paw wipe motion, warm home light, clean premium routine."
   },
@@ -78,12 +78,12 @@
     "priority": 94,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/crunch-snack/poster.png",
+    "poster": "/images/bundles/crunch-snack/poster.webp",
     "video": "/images/bundles/crunch-snack/hover.mp4",
     "showroom": [
-      "/images/bundles/crunch-snack/showroom-1.png",
-      "/images/bundles/crunch-snack/showroom-2.png",
-      "/images/bundles/crunch-snack/showroom-3.png"
+      "/images/bundles/crunch-snack/showroom-1.webp",
+      "/images/bundles/crunch-snack/showroom-2.webp",
+      "/images/bundles/crunch-snack/poster.webp"
     ],
     "videoPrompt": "Dog enjoying a curated snack bundle in a clean kitchen-living space. Treat packs and dental snacks arranged neatly, gentle crunchy bite, no mess."
   },
@@ -100,12 +100,12 @@
     "priority": 92,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/night-safety/poster.png",
+    "poster": "/images/bundles/night-safety/poster.webp",
     "video": "/images/bundles/night-safety/hover.mp4",
     "showroom": [
-      "/images/bundles/night-safety/showroom-1.png",
-      "/images/bundles/night-safety/showroom-2.png",
-      "/images/bundles/night-safety/showroom-3.png"
+      "/images/bundles/night-safety/showroom-1.webp",
+      "/images/bundles/night-safety/showroom-2.webp",
+      "/images/bundles/night-safety/poster.webp"
     ],
     "videoPrompt": "Beagle on a calm night walk wearing a light harness with safety beacons and sturdy leash. Soft streetlight, subtle reflective glow, no harsh neon."
   },
@@ -122,12 +122,12 @@
     "priority": 90,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/car-travel/poster.png",
+    "poster": "/images/bundles/car-travel/poster.webp",
     "video": "/images/bundles/car-travel/hover.mp4",
     "showroom": [
-      "/images/bundles/car-travel/showroom-1.png",
-      "/images/bundles/car-travel/showroom-2.png",
-      "/images/bundles/car-travel/showroom-3.png"
+      "/images/bundles/car-travel/showroom-1.webp",
+      "/images/bundles/car-travel/showroom-2.webp",
+      "/images/bundles/car-travel/poster.webp"
     ],
     "videoPrompt": "Dog safely prepared for car travel with car harness, car seat and carrier elements visible. Calm vehicle interior, no driver, comfortable posture."
   },
@@ -144,12 +144,12 @@
     "priority": 88,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/goggle-outdoor/poster.png",
+    "poster": "/images/bundles/goggle-outdoor/poster.webp",
     "video": "/images/bundles/goggle-outdoor/hover.mp4",
     "showroom": [
-      "/images/bundles/goggle-outdoor/showroom-1.png",
-      "/images/bundles/goggle-outdoor/showroom-2.png",
-      "/images/bundles/goggle-outdoor/showroom-3.png"
+      "/images/bundles/goggle-outdoor/showroom-1.webp",
+      "/images/bundles/goggle-outdoor/showroom-2.webp",
+      "/images/bundles/goggle-outdoor/poster.webp"
     ],
     "videoPrompt": "Dog wearing protective goggles with lightweight harness and leash on a sunny outdoor path. Eye protection visible and believable, no extreme sports."
   },
@@ -166,12 +166,12 @@
     "priority": 86,
     "assetStatus": "ready",
     "source": "curated",
-    "poster": "/images/bundles/brain-play/poster.png",
+    "poster": "/images/bundles/brain-play/poster.webp",
     "video": "/images/bundles/brain-play/hover.mp4",
     "showroom": [
-      "/images/bundles/brain-play/showroom-1.png",
-      "/images/bundles/brain-play/showroom-2.png",
-      "/images/bundles/brain-play/showroom-3.png"
+      "/images/bundles/brain-play/showroom-1.webp",
+      "/images/bundles/brain-play/showroom-2.webp",
+      "/images/bundles/brain-play/poster.webp"
     ],
     "videoPrompt": "Focused dog using a slow feeder and puzzle toy in a clean indoor play space. Gentle nosework motion, tidy premium showroom loop."
   },

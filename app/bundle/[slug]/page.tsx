@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/products/ProductCard";
-import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import DeferredBundleHeroVideo from "@/components/bundles/DeferredBundleHeroVideo";
 import { BUNDLES, bundleImageCandidates, getBundleBySlug } from "@/lib/bundles";
 import { formatKRW } from "@/lib/catalog";
 import BundleAddButton from "./BundleAddButton";
@@ -40,12 +40,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
             <section className="relative overflow-hidden bg-neutral-950 text-white">
                 <div className="absolute inset-0">
                     {heroImage && <Image src={heroImage} alt="" fill sizes="100vw" className="object-cover opacity-72" priority />}
-                    {bundle.video && (
-                        <>
-                            <video src={bundle.video} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full bg-neutral-950 object-cover opacity-78" />
-                            <VideoBrandOverlay />
-                        </>
-                    )}
+                    {bundle.video && <DeferredBundleHeroVideo src={bundle.video} />}
                     <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/90 via-neutral-950/58 to-neutral-950/10" />
                     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f7f8fb] to-transparent" />
                 </div>
@@ -61,11 +56,11 @@ export default async function BundleDetailPage({ params }: PageProps) {
                         <p className="mt-5 max-w-2xl text-base font-bold leading-7 text-white/86 md:text-lg">{bundle.story}</p>
                     </div>
                     <aside className="rounded-lg border border-white/16 bg-white/94 p-5 text-neutral-950 shadow-card backdrop-blur">
-                        <p className="text-xs font-black text-indigo-700">세트가</p>
+                        <p className="ddb-sale-label ddb-sale-label--compact">세트가</p>
                         <div className="mt-2 flex items-end justify-between gap-3">
                             <div>
                                 <p className="text-sm font-bold text-neutral-400 line-through">{formatKRW(bundle.basePrice)}원</p>
-                                <p className="text-3xl font-black text-neutral-950">{formatKRW(bundle.salePrice)}원</p>
+                                <p className="ddb-crayon-price text-3xl">{formatKRW(bundle.salePrice)}원</p>
                             </div>
                             <span className="rounded-full bg-rose-600 px-3 py-1 text-sm font-black text-white">{bundle.discountRate}%</span>
                         </div>
@@ -103,7 +98,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                         <div className="grid gap-3 md:grid-cols-3">
                             {showroom.map((src, index) => (
                                 <div key={`${src}-${index}`} className="relative aspect-[4/3] overflow-hidden rounded-lg border border-neutral-200 bg-white">
-                                    <Image src={src} alt={`${bundle.title} 쇼룸 ${index + 1}`} fill sizes="(max-width: 768px) 100vw, 280px" className="object-cover" />
+                                    <Image src={src} alt={`${bundle.title} 쇼룸 ${index + 1}`} fill sizes="(max-width: 768px) 100vw, 280px" loading="eager" className="object-cover" />
                                 </div>
                             ))}
                         </div>

@@ -19,7 +19,7 @@ export default function BundleCard({ bundle, priority }: Props) {
     const [videoLoaded, setVideoLoaded] = useState(false);
     const candidates = bundleImageCandidates(bundle).slice(0, 4);
     const videoReady = bundle.assetStatus === "ready" && Boolean(bundle.video);
-    const videoVisible = videoReady && videoActive;
+    const videoVisible = videoReady && videoActive && videoLoaded;
 
     const activate = () => {
         if (!videoReady) return;
@@ -120,10 +120,10 @@ export default function BundleCard({ bundle, priority }: Props) {
                     <p className="mt-2 min-h-[2.5rem] text-xs font-bold leading-5 text-neutral-500 line-clamp-2">{bundle.subtitle}</p>
                 </Link>
                 <div className="mt-3 flex items-end justify-between gap-2">
-                    <div className="text-xs font-black text-rose-600">{bundle.discountRate}% 세트가</div>
+                    <div className="ddb-sale-label ddb-sale-label--compact">{bundle.discountRate}% 세트가</div>
                     <div className="text-right">
                         <p className="text-[11px] text-neutral-400 line-through">{formatKRW(bundle.basePrice)}원</p>
-                        <p className="text-lg font-black text-neutral-950">{formatKRW(bundle.salePrice)}원</p>
+                        <p className="ddb-crayon-price text-lg">{formatKRW(bundle.salePrice)}원</p>
                     </div>
                 </div>
             </div>

@@ -4,14 +4,24 @@ import test from "node:test";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 
-test("home prioritizes the signed-in dashboard, AI actions, then member recommendations", () => {
+test("home keeps member AI actions near the dashboard and moves guest actions before reviews", () => {
     const home = read("../app/page.tsx");
     const dashboard = home.indexOf("<MemberAiDashboard");
-    const actions = home.indexOf("<AiQuickActions");
+    const memberSlot = home.indexOf('<HomeAudienceSlot audience="member">');
+    const memberActions = home.indexOf("<AiQuickActions", memberSlot);
     const recommendations = home.indexOf("<RecommendSection");
+    const newArrivals = home.indexOf("<NewArrivalsSection");
+    const guestSlot = home.indexOf('<HomeAudienceSlot audience="guest">');
+    const guestActions = home.indexOf("<AiQuickActions", guestSlot);
+    const reviews = home.indexOf("<ReviewSection");
 
-    assert.ok(dashboard >= 0 && dashboard < actions);
-    assert.ok(actions < recommendations);
+    assert.ok(dashboard >= 0 && dashboard < memberSlot);
+    assert.ok(memberSlot < memberActions && memberActions < recommendations);
+    assert.ok(newArrivals < guestSlot && guestSlot < guestActions && guestActions < reviews);
+    const audienceSlot = read("../components/home/HomeAudienceSlot.tsx");
+    assert.match(audienceSlot, /useAuth.*@\/lib\/store/s);
+    assert.match(audienceSlot, /audience === "member"/);
+    assert.match(audienceSlot, /isMember \? null : children/);
     assert.match(read("../components/home/MemberAiDashboard.tsx"), /useAuth.*@\/lib\/store/s);
     assert.match(read("../components/main/RecommendSection.tsx"), /recommendForPet\(current, hasAnalysis \? current\.rawAnalysis/);
 });

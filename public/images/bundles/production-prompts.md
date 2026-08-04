@@ -6,10 +6,10 @@ Target structure:
 
 ```text
 public/images/bundles/{bundle-slug}/hover.mp4
-public/images/bundles/{bundle-slug}/poster.png
-public/images/bundles/{bundle-slug}/showroom-1.png
-public/images/bundles/{bundle-slug}/showroom-2.png
-public/images/bundles/{bundle-slug}/showroom-3.png
+public/images/bundles/{bundle-slug}/poster.webp
+public/images/bundles/{bundle-slug}/showroom-1.webp
+public/images/bundles/{bundle-slug}/showroom-2.webp
+public/images/bundles/{bundle-slug}/showroom-3.webp
 ```
 
 ## Shared Hover Video Rules
@@ -51,9 +51,9 @@ A medium white-and-brown dog on a sunny neighborhood walk wearing a cooling vest
 Showroom images:
 
 ```text
-showroom-1.png: Border Collie wearing a cooling vest on a sunny sidewalk, portable bowl visible beside the dog, fresh summer walk mood.
-showroom-2.png: Toy Poodle resting in park shade with cooling vest and travel bowl, small dog scale, soft lifestyle showroom.
-showroom-3.png: Golden Retriever after a walk beside water bowl and fountain set, cooling gear visible, premium summer hydration lookbook.
+showroom-1.webp: Border Collie wearing a cooling vest on a sunny sidewalk, portable bowl visible beside the dog, fresh summer walk mood.
+showroom-2.webp: Toy Poodle resting in park shade with cooling vest and travel bowl, small dog scale, soft lifestyle showroom.
+showroom-3.webp: Golden Retriever after a walk beside water bowl and fountain set, cooling gear visible, premium summer hydration lookbook.
 ```
 
 ## night-safety
@@ -67,9 +67,9 @@ A Beagle on a calm night walk wearing a light harness with small safety beacons 
 Showroom images:
 
 ```text
-showroom-1.png: Beagle wearing light and safety harness on a quiet night street, leash visible, soft streetlight.
-showroom-2.png: Pomeranian with compact safety light and leash under a street lamp, cozy evening lookbook.
-showroom-3.png: Shiba Inu in lightweight harness with visible beacon light on a moonlit path, premium night safety styling.
+showroom-1.webp: Beagle wearing light and safety harness on a quiet night street, leash visible, soft streetlight.
+showroom-2.webp: Pomeranian with compact safety light and leash under a street lamp, cozy evening lookbook.
+showroom-3.webp: Shiba Inu in lightweight harness with visible beacon light on a moonlit path, premium night safety styling.
 ```
 
 ## rain-walk
@@ -83,9 +83,9 @@ A calm dog walking in light rain wearing a rain jacket or coverall with leash an
 Showroom images:
 
 ```text
-showroom-1.png: Cocker Spaniel in rain jacket on wet sidewalk, leash and light visible, gentle rain.
-showroom-2.png: Maltese in rainwear near a park entrance after rain, clean and cute showroom image.
-showroom-3.png: Labrador wearing waterproof gear beside a shallow puddle, leash and light included, premium rainy walk styling.
+showroom-1.webp: Cocker Spaniel in rain jacket on wet sidewalk, leash and light visible, gentle rain.
+showroom-2.webp: Maltese in rainwear near a park entrance after rain, clean and cute showroom image.
+showroom-3.webp: Labrador wearing waterproof gear beside a shallow puddle, leash and light included, premium rainy walk styling.
 ```
 
 ## crunch-snack
@@ -99,9 +99,9 @@ A dog enjoying a curated snack bundle in a clean kitchen-living space. Show smal
 Showroom images:
 
 ```text
-showroom-1.png: Chihuahua sitting on a mat with training treats arranged neatly, premium treat routine.
-showroom-2.png: Welsh Corgi taking a gentle crunchy snack from a clean low table, happy expression.
-showroom-3.png: Samoyed beside dental snacks and treat packs on a bright rug, clean lifestyle showroom.
+showroom-1.webp: Chihuahua sitting on a mat with training treats arranged neatly, premium treat routine.
+showroom-2.webp: Welsh Corgi taking a gentle crunchy snack from a clean low table, happy expression.
+showroom-3.webp: Samoyed beside dental snacks and treat packs on a bright rug, clean lifestyle showroom.
 ```
 
 ## paw-care
@@ -115,9 +115,9 @@ A dog coming home after a walk, paw-care products neatly arranged near the entra
 Showroom images:
 
 ```text
-showroom-1.png: Bichon Frise at an entry mat with paw cleanser and soap, clean after-walk routine.
-showroom-2.png: Poodle mix beside shampoo and soothing care products in a bright grooming corner.
-showroom-3.png: Standard Poodle in warm indoor light with paw care and moisturizing products displayed neatly.
+showroom-1.webp: Bichon Frise at an entry mat with paw cleanser and soap, clean after-walk routine.
+showroom-2.webp: Poodle mix beside shampoo and soothing care products in a bright grooming corner.
+showroom-3.webp: Standard Poodle in warm indoor light with paw care and moisturizing products displayed neatly.
 ```
 
 ## brain-play
@@ -131,9 +131,9 @@ A focused dog using a slow feeder and puzzle toy in a clean indoor play space. S
 Showroom images:
 
 ```text
-showroom-1.png: Jack Russell Terrier focused on nosework toy in a clean playroom.
-showroom-2.png: Dachshund using a slow feeder on a feeding mat, calm and cute.
-showroom-3.png: Husky beside puzzle toys in a spacious living room, engaged but not chaotic.
+showroom-1.webp: Jack Russell Terrier focused on nosework toy in a clean playroom.
+showroom-2.webp: Dachshund using a slow feeder on a feeding mat, calm and cute.
+showroom-3.webp: Husky beside puzzle toys in a spacious living room, engaged but not chaotic.
 ```
 
 ## car-travel
@@ -147,9 +147,9 @@ A dog safely prepared for car travel with car harness, car seat, and carrier ele
 Showroom images:
 
 ```text
-showroom-1.png: French Bulldog ready beside a car seat and harness, bright vehicle interior.
-showroom-2.png: Yorkshire Terrier sitting safely in a pet car seat, soft premium travel styling.
-showroom-3.png: Retriever mix beside carrier and travel gear near an open car door, calm trip preparation.
+showroom-1.webp: French Bulldog ready beside a car seat and harness, bright vehicle interior.
+showroom-2.webp: Yorkshire Terrier sitting safely in a pet car seat, soft premium travel styling.
+showroom-3.webp: Retriever mix beside carrier and travel gear near an open car door, calm trip preparation.
 ```
 
 ## goggle-outdoor
@@ -163,7 +163,7 @@ A dog wearing protective goggles with lightweight harness and leash on a sunny o
 Showroom images:
 
 ```text
-showroom-1.png: Australian Shepherd wearing protective goggles and light harness in a sunny park.
-showroom-2.png: Schnauzer wearing goggles on a dry dusty path with leash visible, eye-protection focus.
-showroom-3.png: Malamute wearing goggles and outdoor walking gear on a broad deck, premium adventure showroom.
+showroom-1.webp: Australian Shepherd wearing protective goggles and light harness in a sunny park.
+showroom-2.webp: Schnauzer wearing goggles on a dry dusty path with leash visible, eye-protection focus.
+showroom-3.webp: Malamute wearing goggles and outdoor walking gear on a broad deck, premium adventure showroom.
 ```

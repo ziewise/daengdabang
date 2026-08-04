@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/store";
 import {
     CATEGORY_GROUPS,
+    CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -24,7 +25,7 @@ import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import { useI18n } from "@/lib/i18n";
 import headerStyles from "./Header.module.css";
 
-type DropKey = "shop" | "ai" | null;
+type DropKey = "shop" | "ai" | "cs" | null;
 
 export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
@@ -82,13 +83,12 @@ export default function Header() {
 
                     {/* AI 서비스 중심의 데스크탑 메인 메뉴 */}
                     <nav className="hidden items-center gap-0 lg:flex xl:gap-1">
-                        <NavLink href="/" crayon>{t("home")}</NavLink>
+                        <NavLink href="/">{t("home")}</NavLink>
                         <NavDropdown
                             label={t("shop")}
                             open={openDrop === "shop"}
                             onEnter={() => setOpenDrop("shop")}
                             onLeave={() => setOpenDrop(null)}
-                            crayon
                             wide
                         >
                             <div className="min-w-[680px] p-6">
@@ -138,7 +138,6 @@ export default function Header() {
                             open={openDrop === "ai"}
                             onEnter={() => setOpenDrop("ai")}
                             onLeave={() => setOpenDrop(null)}
-                            crayon
                         >
                             <ul className="min-w-[300px] p-3">
                                 {[
@@ -162,10 +161,30 @@ export default function Header() {
                             </ul>
                         </NavDropdown>
 
-                        <NavLink href="/my-pet/" crayon>{t("myPet")}</NavLink>
-                        <NavLink href="/challenge/" crayon>{t("challenge")}</NavLink>
-                        <NavLink href="/community/" crayon>{t("community")}</NavLink>
-                        <NavLink href="/bundles/" crayon>{t("event")}</NavLink>
+                        <NavLink href="/my-pet/">{t("myPet")}</NavLink>
+                        <NavLink href="/challenge/">{t("challenge")}</NavLink>
+                        <NavLink href="/community/">{t("community")}</NavLink>
+                        <NavLink href="/bundles/">{t("event")}</NavLink>
+                        <NavDropdown
+                            label={t("customerCenter")}
+                            open={openDrop === "cs"}
+                            onEnter={() => setOpenDrop("cs")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <ul className="min-w-[230px] p-3">
+                                {CS_LINKS.map((item) => (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
+                                        >
+                                            <i className={`fa-solid ${item.icon} w-5 text-center text-indigo-500`} aria-hidden="true" />
+                                            <span>{menuLabel(item.label)}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </NavDropdown>
                     </nav>
 
                     {/* 우측 유틸리티
@@ -224,7 +243,7 @@ export default function Header() {
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/auth/login"}
                                 data-pet-guide-target={isLoggedIn ? undefined : "signup"}
-                                className="ddb-crayon-link hidden h-10 items-center justify-center gap-2 rounded-full px-4 text-sm font-bold transition hover:-translate-y-px xl:inline-flex"
+                                className={`ddb-crayon-link ${headerStyles.loginLink} hidden h-10 items-center justify-center gap-2 rounded-full px-4 text-sm font-bold transition hover:-translate-y-px xl:inline-flex`}
                                 aria-label={isLoggedIn ? t("mypage") : t("login")}
                             >
                                 <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
@@ -256,16 +275,14 @@ export default function Header() {
 function NavLink({
     href,
     children,
-    crayon = false,
 }: {
     href: string;
     children: React.ReactNode;
-    crayon?: boolean;
 }) {
     return (
         <Link
             href={href}
-            className={`${headerStyles.desktopNavItem} ${crayon ? headerStyles.storyNavItem : ""} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-4 xl:text-base`}
+            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
         >
             {children}
         </Link>
@@ -282,7 +299,6 @@ function NavDropdown({
     onEnter,
     onLeave,
     children,
-    crayon = false,
     wide = false,
 }: {
     label: string;
@@ -290,7 +306,6 @@ function NavDropdown({
     onEnter: () => void;
     onLeave: () => void;
     children: React.ReactNode;
-    crayon?: boolean;
     wide?: boolean;
 }) {
     return (
@@ -301,7 +316,7 @@ function NavDropdown({
         >
             <button
                 type="button"
-                className={`${headerStyles.desktopNavItem} ${crayon ? headerStyles.storyNavItem : ""} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-4 xl:text-base`}
+                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
                 data-nav-open={open ? "true" : "false"}
             >
                 {label}

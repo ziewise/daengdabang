@@ -5,6 +5,7 @@
  * 모바일 2열, sm 3열, lg 4열.
  */
 import Image from "next/image";
+import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
 
 interface InstaPost {
     src: string;
@@ -23,7 +24,9 @@ const INSTA_POSTS: InstaPost[] = [
     { src: "/images/instagram/i8.jpg", likes: "823",  comments: 24 },
 ];
 
-const INSTA_URL = "https://instagram.com/daengdabang";
+const INSTAGRAM_CHANNEL = PUBLIC_SOCIAL_CHANNELS.find((channel) => channel.key === "instagram");
+const INSTA_URL = INSTAGRAM_CHANNEL?.href || "https://www.instagram.com/daengdabang/";
+const INSTA_HANDLE = INSTAGRAM_CHANNEL?.handle || "@daengdabang";
 
 export default function InstaSection() {
     return (
@@ -34,7 +37,7 @@ export default function InstaSection() {
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5 inline-flex items-center gap-2">
                             <i className="fa-brands fa-instagram bg-gradient-to-br from-pink-500 via-purple-500 to-yellow-400 bg-clip-text text-transparent" />
-                            <span>@daengdabang</span>
+                            <span>{INSTA_HANDLE}</span>
                         </h2>
                         <p className="text-sm text-neutral-500">
                             댕다방의 일상을 인스타에서 만나보세요
@@ -63,7 +66,7 @@ export default function InstaSection() {
                         >
                             <Image
                                 src={post.src}
-                                alt={`@daengdabang post ${i + 1}`}
+                                alt={`${INSTA_HANDLE} post ${i + 1}`}
                                 fill
                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                 className="object-cover transition-transform duration-500 group-hover:scale-110"

@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { searchRecent } from "@/lib/storage";
 import {
     CATEGORY_GROUPS,
+    CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -156,6 +157,18 @@ export default function MobilePanel({ open, onClose }: Props) {
                     <MobileLink href="/challenge/" icon="fa-trophy" tone="orange" crayon onClick={onClose}>{t("challenge")}</MobileLink>
                     <MobileLink href="/community/" icon="fa-people-group" tone="teal" crayon onClick={onClose}>{t("community")}</MobileLink>
                     <MobileLink href="/bundles/" icon="fa-gift" tone="coral" crayon onClick={onClose}>{t("event")}</MobileLink>
+                    <MobileGroup
+                        label={t("customerCenter")}
+                        expanded={expanded === "cs"}
+                        onToggle={() => setExpanded(expanded === "cs" ? null : "cs")}
+                        crayon
+                    >
+                        {CS_LINKS.map((item) => (
+                            <SubLink key={item.href} href={item.href} icon={item.icon} onClick={onClose}>
+                                {menuLabel(item.label)}
+                            </SubLink>
+                        ))}
+                    </MobileGroup>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}
                     <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>
@@ -193,7 +206,7 @@ function MobileLink({
         <Link
             href={href}
             onClick={onClick}
-            className={`flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "font-[family-name:var(--font-crayon)] text-base" : ""}`}
+            className={`flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "text-base" : ""}`}
         >
             {icon && (crayon ? (
                 <span className="ddb-crayon-icon grid h-7 w-7 shrink-0 place-items-center rounded-lg text-white" data-crayon-tone={tone}>
@@ -226,7 +239,7 @@ function MobileGroup({
             <button
                 type="button"
                 onClick={onToggle}
-                className={`w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "font-[family-name:var(--font-crayon)] text-base" : ""}`}
+                className={`w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "text-base" : ""}`}
             >
                 {/* 아이콘 없는 그룹 — 아이콘 자리(w-4) 만큼 빈 공간 차지해서
                     아이콘 있는 항목(베스트/신상품/장바구니/마이페이지)과 텍스트 시작 위치 정렬 */}

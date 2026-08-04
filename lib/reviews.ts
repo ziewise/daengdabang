@@ -28,30 +28,30 @@ export const REVIEW_STATS = {
 export const PHOTO_REVIEWS: PhotoReview[] = [
     {
         rating: 5,
-        text: "정말 튼튼하고 우리 댕댕이가 너무 좋아해요. 산책할 때마다 꼭 챙겨가는데, 활동량 많은 우리 강아지한테 사이즈도 딱이고 디자인도 예뻐서 사진 찍을 때마다 이쁘게 나와요. 다음에 또 사고 싶은 제품이에요!",
+        text: "카메라를 가까이 대도 가만히 바라봐 주는 우리 럭키예요. 긴 귀와 촉촉한 눈까지 또렷하게 담겨서 가장 좋아하는 사진이 됐어요.",
         author: "럭키맘",
-        product: "Ruffwear Front Range 하네스",
+        product: "우리 아이 일상 포토",
         image: "/images/reviews/r1.jpg",
     },
     {
         rating: 5,
-        text: "고글이 잘 안 맞을까봐 걱정했는데 사이즈 가이드 따라 골라서 딱 맞아요.",
+        text: "햇살 드는 소파가 코코의 최애 자리예요. 편하게 기대어 쉬는 모습이 너무 사랑스러워서 한 장 남겼어요.",
         author: "코코아빠",
-        product: "Rex Specs V2 고글",
+        product: "우리 아이 휴식 기록",
         image: "/images/reviews/r2.jpg",
     },
     {
         rating: 5,
-        text: "아이스크림 너무 좋아해서 매일 하나씩 줘요. 더위가 심해서 걱정이었는데 이거 주고 나서 우리 댕댕이가 너무 행복해해요. 재료도 안심되고 맛있어 보여서 자주 살 것 같아요.",
+        text: "이동가방만 꺼내면 두부가 먼저 쏙 들어가요. 안에서 편안하게 쉬는 걸 보니 외출 준비가 훨씬 수월해졌어요.",
         author: "두부맘",
-        product: "댕스크림 딸기맛",
+        product: "반려견 이동가방",
         image: "/images/reviews/r3.jpg",
     },
     {
         rating: 4,
-        text: "우비 사이즈가 살짝 큰 편이지만 방수는 확실해요. 장마철 필수템.",
+        text: "매너팬티를 입고 포근한 소파에서 잠든 초코예요. 몸에 편하게 맞아 쉬는 동안에도 불편해하지 않았어요.",
         author: "초코맘",
-        product: "리프웨어 레인 자켓",
+        product: "반려견 매너팬티",
         image: "/images/reviews/r4.jpg",
     },
 ];

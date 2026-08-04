@@ -88,4 +88,7 @@ test("desktop navigation hover draws a subtle motion-safe crayon sketch", async 
     assert.match(css, /@keyframes navCrayonStrokeWiggle/);
     assert.match(css, /@keyframes navCrayonWiggle/);
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+    assert.doesNotMatch(header, /headerStyles\.storyNavItem/);
+    assert.doesNotMatch(css, /\.desktopNavItem\.storyNavItem::after/);
+    assert.match(css, /\.loginLink[\s\S]*font-family: var\(--font-wanted-sans\)/);
 });

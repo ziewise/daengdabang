@@ -2,15 +2,17 @@
     position: relative;
     isolation: isolate;
     overflow: visible;
+    font-family: var(--font-wanted-sans), Arial, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.025em;
     transform-origin: 50% 72%;
+    white-space: nowrap;
 }
 
-.storyNavItem {
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-    font-size: 1.05rem;
-    font-weight: 800;
-    letter-spacing: -0.045em;
-    white-space: nowrap;
+.loginLink {
+    font-family: var(--font-wanted-sans), Arial, sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
 }
 
 .storyLabel {
@@ -92,11 +94,11 @@
     animation: navCrayonWiggle 1.25s steps(3, end) infinite;
 }
 
-.desktopNavItem.storyNavItem:is(:hover, :focus-visible) .storySuffix {
+.desktopNavItem:is(:hover, :focus-visible) .storySuffix {
     color: #268f9a;
 }
 
-.desktopNavItem.storyNavItem:is(:hover, :focus-visible) .storyGlyph {
+.desktopNavItem:is(:hover, :focus-visible) .storyGlyph {
     filter: saturate(1.12) brightness(1.02);
 }
 
@@ -113,15 +115,6 @@
 .desktopNavItem:focus-visible {
     outline: 2px dashed rgba(91, 91, 214, 0.62);
     outline-offset: 2px;
-}
-
-.desktopNavItem.storyNavItem::before {
-    opacity: 0.52;
-}
-
-.desktopNavItem.storyNavItem::after {
-    opacity: 0.78;
-    clip-path: inset(0);
 }
 
 @keyframes navCrayonDraw {
