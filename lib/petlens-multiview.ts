@@ -129,13 +129,23 @@ function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number) 
     });
 }
 
+function resizedDataUrlToFile(dataUrl: string, fileName: string) {
+    const match = dataUrl.match(/^data:([^;,]+);base64,(.+)$/i);
+    if (!match) throw new Error("PetLens resized image could not be prepared.");
+    const bytes = Uint8Array.from(atob(match[2]), (character) => character.charCodeAt(0));
+    return new File([bytes], fileName, {
+        type: match[1] || "image/jpeg",
+        lastModified: Date.now(),
+    });
+}
+
 export async function buildPetLensAnalysisImage(views: PetLensPhotoCaptures) {
     const entries = petLensPhotoViewEntries(views);
     if (entries.length === 0) return undefined;
-    if (entries.length === 1 && entries[0][1].file) {
+    if (entries.length === 1) {
         const [viewId, photo] = entries[0];
         return {
-            file: photo.file,
+            file: resizedDataUrlToFile(photo.dataUrl, `daengdabang-weekly-${viewId}.jpg`),
             imageName: `${PETLENS_PHOTO_VIEW_LABELS[viewId]}_${photo.imageName}`,
         };
     }

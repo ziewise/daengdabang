@@ -78,9 +78,10 @@ test("P2 through P5 routes connect analysis history, quick actions, challenges, 
     for (const href of ["/pet-lens/", "/my-pet/#health-report", "/chat/", "/challenge/"]) {
         assert.match(actions, new RegExp(href.replaceAll("/", "\\/")));
     }
-    assert.match(myPet, /loadPetObservationHistory/);
-    assert.match(myPet, /row\.petLens/);
-    assert.match(myPet, /snapshot\.details/);
+    assert.match(myPet, /loadWeeklyPhotoAnalyses/);
+    assert.match(myPet, /<WeeklyPhotoComparison/);
+    assert.match(myPet, /행동·소리 분석은 등록한 우리 아이와 별개예요/);
+    assert.doesNotMatch(myPet, /loadPetObservationHistory/);
     assert.match(wallet, /daily_attendance/);
     assert.match(wallet, /매일 출근도장/);
 });
