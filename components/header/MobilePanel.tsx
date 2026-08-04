@@ -114,12 +114,13 @@ export default function MobilePanel({ open, onClose }: Props) {
 
                 {/* 메뉴 리스트 — 스크롤 가능 */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3">
-                    <MobileLink href="/" icon="fa-house" onClick={onClose}>{t("home")}</MobileLink>
+                    <MobileLink href="/" icon="fa-house" tone="teal" crayon onClick={onClose}>{t("home")}</MobileLink>
 
                     <MobileGroup
                         label={t("shop")}
                         expanded={expanded === "shop"}
                         onToggle={() => setExpanded(expanded === "shop" ? null : "shop")}
+                        crayon
                     >
                         <SubLink href="/products/" icon="fa-store" onClick={onClose}>{t("allProducts")}</SubLink>
                         <SubLink href="/best/" icon="fa-trophy" onClick={onClose}>{t("best")}</SubLink>
@@ -143,6 +144,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                         label={t("aiAnalysis")}
                         expanded={expanded === "ai"}
                         onToggle={() => setExpanded(expanded === "ai" ? null : "ai")}
+                        crayon
                     >
                         <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
                         <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" onClick={onClose}>울음소리·행동 분석</SubLink>
@@ -150,10 +152,10 @@ export default function MobilePanel({ open, onClose }: Props) {
                         <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 
-                    <MobileLink href="/my-pet/" icon="fa-dog" onClick={onClose}>{t("myPet")}</MobileLink>
-                    <MobileLink href="/challenge/" icon="fa-trophy" onClick={onClose}>{t("challenge")}</MobileLink>
-                    <MobileLink href="/community/" icon="fa-people-group" onClick={onClose}>{t("community")}</MobileLink>
-                    <MobileLink href="/bundles/" icon="fa-gift" onClick={onClose}>{t("event")}</MobileLink>
+                    <MobileLink href="/my-pet/" icon="fa-dog" tone="coral" crayon onClick={onClose}>{t("myPet")}</MobileLink>
+                    <MobileLink href="/challenge/" icon="fa-trophy" tone="orange" crayon onClick={onClose}>{t("challenge")}</MobileLink>
+                    <MobileLink href="/community/" icon="fa-people-group" tone="teal" crayon onClick={onClose}>{t("community")}</MobileLink>
+                    <MobileLink href="/bundles/" icon="fa-gift" tone="coral" crayon onClick={onClose}>{t("event")}</MobileLink>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}
                     <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>
@@ -178,12 +180,14 @@ function MobileLink({
     children,
     onClick,
     crayon = false,
+    tone = "teal",
 }: {
     href: string;
     icon?: string;
     children: React.ReactNode;
     onClick: () => void;
     crayon?: boolean;
+    tone?: "teal" | "coral" | "orange";
 }) {
     return (
         <Link
@@ -191,7 +195,13 @@ function MobileLink({
             onClick={onClick}
             className={`flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "font-[family-name:var(--font-crayon)] text-base" : ""}`}
         >
-            {icon && <i className={`fa-solid ${icon} text-aurora-indigo w-4 text-center`} />}
+            {icon && (crayon ? (
+                <span className="ddb-crayon-icon grid h-7 w-7 shrink-0 place-items-center rounded-lg text-white" data-crayon-tone={tone}>
+                    <i className={`fa-solid ${icon} text-[11px]`} aria-hidden="true" />
+                </span>
+            ) : (
+                <i className={`fa-solid ${icon} w-4 text-center text-aurora-indigo`} aria-hidden="true" />
+            ))}
             <span>{children}</span>
             <i className="fa-solid fa-chevron-right text-[10px] text-neutral-300 ml-auto" />
         </Link>
@@ -203,22 +213,24 @@ function MobileGroup({
     expanded,
     onToggle,
     children,
+    crayon = false,
 }: {
     label: string;
     expanded: boolean;
     onToggle: () => void;
     children: React.ReactNode;
+    crayon?: boolean;
 }) {
     return (
         <div className="my-1">
             <button
                 type="button"
                 onClick={onToggle}
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 rounded-xl"
+                className={`w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "font-[family-name:var(--font-crayon)] text-base" : ""}`}
             >
                 {/* 아이콘 없는 그룹 — 아이콘 자리(w-4) 만큼 빈 공간 차지해서
                     아이콘 있는 항목(베스트/신상품/장바구니/마이페이지)과 텍스트 시작 위치 정렬 */}
-                <span className="w-4" aria-hidden="true" />
+                <span className={crayon ? "w-7 shrink-0" : "w-4 shrink-0"} aria-hidden="true" />
                 <span>{label}</span>
                 <i className={`fa-solid fa-chevron-down text-[10px] text-neutral-400 ml-auto transition-transform ${expanded ? "rotate-180" : ""}`} />
             </button>

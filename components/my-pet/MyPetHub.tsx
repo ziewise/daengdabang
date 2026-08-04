@@ -89,11 +89,11 @@ export default function MyPetHub() {
     if (!user) {
         return (
             <main className="mx-auto w-full max-w-[900px] px-4 py-16 text-center md:px-6">
-                <div className="rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-card md:p-12">
-                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-gradient-to-br from-cyan-500 to-indigo-600 text-2xl text-white"><i className="fa-solid fa-dog" /></span>
-                    <h1 className="mt-5 text-3xl font-black text-neutral-950">우리 아이 기록은 로그인 후 볼 수 있어요</h1>
+                <div className="ddb-crayon-paper rounded-[32px] border p-8 shadow-card md:p-12">
+                    <span className="ddb-crayon-icon mx-auto grid h-16 w-16 place-items-center rounded-3xl text-2xl text-white" data-crayon-tone="teal"><i className="fa-solid fa-dog" /></span>
+                    <h1 className="ddb-crayon-title mt-5 text-3xl text-neutral-950">우리 아이 기록은 로그인 후 볼 수 있어요</h1>
                     <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">사진·행동·소리 분석 결과를 회원 계정에 안전하게 연결합니다.</p>
-                    <Link href="/auth/login/?redirect=%2Fmy-pet" className="btn btn-primary mt-6">로그인하기</Link>
+                    <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link mt-6 inline-flex min-h-11 items-center rounded-full px-6 text-sm font-black">로그인하기</Link>
                 </div>
             </main>
         );
@@ -102,10 +102,10 @@ export default function MyPetHub() {
     if (!pet) {
         return (
             <main className="mx-auto w-full max-w-[900px] px-4 py-16 text-center md:px-6">
-                <div className="rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-card md:p-12">
-                    <h1 className="text-3xl font-black text-neutral-950">먼저 우리 아이를 등록해 주세요</h1>
+                <div className="ddb-crayon-paper rounded-[32px] border p-8 shadow-card md:p-12">
+                    <h1 className="ddb-crayon-title text-3xl text-neutral-950">먼저 우리 아이를 등록해 주세요</h1>
                     <p className="mt-3 text-sm font-bold text-neutral-600">프로필이 생기면 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.</p>
-                    <Link href="/mypage/?profile=required#pet-profiles" className="btn btn-primary mt-6">반려견 등록하기</Link>
+                    <Link href="/mypage/?profile=required#pet-profiles" className="ddb-crayon-link mt-6 inline-flex min-h-11 items-center rounded-full px-6 text-sm font-black">반려견 등록하기</Link>
                 </div>
             </main>
         );
@@ -117,24 +117,24 @@ export default function MyPetHub() {
 
     return (
         <main className="mx-auto w-full max-w-[1280px] px-4 py-10 md:px-6 md:py-14" data-my-pet-hub>
-            <header className="flex flex-col gap-5 rounded-[30px] border border-white/80 bg-gradient-to-br from-white via-cyan-50 to-indigo-50 p-5 shadow-card md:flex-row md:items-center md:justify-between md:p-8">
+            <header className="ddb-crayon-paper flex flex-col gap-5 rounded-[30px] border p-5 shadow-card md:flex-row md:items-center md:justify-between md:p-8">
                 <div className="flex min-w-0 items-center gap-4">
                     <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[26px] border-4 border-white bg-white shadow-lg md:h-24 md:w-24">
                         {pet.photoDataUrl ? (
                             <Image src={pet.photoDataUrl} alt={`${pet.name} 프로필`} fill sizes="96px" className="object-cover" unoptimized />
                         ) : (
-                            <span className="grid h-full place-items-center text-3xl text-indigo-300"><i className="fa-solid fa-dog" /></span>
+                            <span className="ddb-crayon-icon grid h-full place-items-center text-3xl text-white" data-crayon-tone="teal"><i className="fa-solid fa-dog" /></span>
                         )}
                     </div>
                     <div className="min-w-0">
-                        <p className="text-xs font-black tracking-[0.16em] text-indigo-600">MY PET AI HISTORY</p>
-                        <h1 className="mt-2 truncate text-3xl font-black text-neutral-950 md:text-4xl">{pet.name}의 기록</h1>
+                        <p className="ddb-crayon-kicker text-xs">MY PET AI HISTORY</p>
+                        <h1 className="ddb-crayon-title ddb-crayon-underline mt-2 truncate text-3xl text-neutral-950 md:text-4xl">{pet.name}의 기록</h1>
                         <p className="mt-1 text-sm font-bold text-neutral-600">{pet.breed || "견종 확인 전"} · {pet.weightKg ? `${pet.weightKg}kg` : "체중 기록 전"}</p>
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                     {user.pets.filter((item) => item.apiProfileId).map((item) => (
-                        <button key={item.apiProfileId} type="button" onClick={() => setSelectedPetId(item.apiProfileId)} className={`rounded-full px-4 py-2 text-xs font-black ${item.apiProfileId === pet.apiProfileId ? "bg-indigo-600 text-white" : "border border-neutral-200 bg-white text-neutral-700"}`}>
+                        <button key={item.apiProfileId} type="button" onClick={() => setSelectedPetId(item.apiProfileId)} className={`rounded-full px-4 py-2 text-xs font-black ${item.apiProfileId === pet.apiProfileId ? "ddb-crayon-link" : "border border-neutral-200 bg-white text-neutral-700"}`}>
                             {item.name}
                         </button>
                     ))}
@@ -143,12 +143,14 @@ export default function MyPetHub() {
 
             <section className="mt-6 grid gap-4 md:grid-cols-3" aria-label="우리 아이 요약">
                 {[
-                    ["최근 사진 분석", formatDate(pet.lastAnalyzedAt), "fa-camera-retro", "bg-cyan-50 text-cyan-800"],
-                    ["행동·소리 기록", `${history.length}개`, "fa-wave-square", "bg-violet-50 text-violet-800"],
-                    ["관심 케어", pet.concerns[0] || "아직 선택 전", "fa-heart", "bg-rose-50 text-rose-800"],
+                    ["최근 사진 분석", formatDate(pet.lastAnalyzedAt), "fa-camera-retro", "teal"],
+                    ["행동·소리 기록", `${history.length}개`, "fa-wave-square", "coral"],
+                    ["관심 케어", pet.concerns[0] || "아직 선택 전", "fa-heart", "orange"],
                 ].map(([label, value, icon, tone]) => (
-                    <article key={label} className={`rounded-3xl p-5 ${tone}`}>
-                        <i className={`fa-solid ${icon} text-lg`} aria-hidden="true" />
+                    <article key={label} className="ddb-crayon-paper rounded-3xl border p-5 text-neutral-800">
+                        <span className="ddb-crayon-icon grid h-10 w-10 place-items-center rounded-xl text-white" data-crayon-tone={tone}>
+                            <i className={`fa-solid ${icon} text-sm`} aria-hidden="true" />
+                        </span>
                         <p className="mt-3 text-xs font-black opacity-70">{label}</p>
                         <strong className="mt-1 block text-lg font-black">{value}</strong>
                     </article>
@@ -158,14 +160,14 @@ export default function MyPetHub() {
             <section id="health-report" className="mt-8 scroll-mt-28" aria-labelledby="health-report-title">
                 <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
                     <div>
-                        <p className="text-xs font-black tracking-[0.16em] text-emerald-700">AI 건강 변화 리포트</p>
-                        <h2 id="health-report-title" className="mt-2 text-2xl font-black text-neutral-950">최근 기록 비교</h2>
+                        <p className="ddb-crayon-kicker text-xs">AI 건강 변화 리포트</p>
+                        <h2 id="health-report-title" className="ddb-crayon-title ddb-crayon-underline mt-2 text-2xl text-neutral-950">최근 기록 비교</h2>
                     </div>
-                    <Link href="/pet-lens/" className="btn btn-primary">새 분석 시작</Link>
+                    <Link href="/pet-lens/" className="ddb-crayon-link inline-flex min-h-11 items-center rounded-full px-5 text-sm font-black">새 분석 시작</Link>
                 </div>
                 <div className="grid gap-4 lg:grid-cols-2">
-                    <article className="rounded-[26px] border border-neutral-200 bg-white p-5 shadow-card">
-                        <p className="text-xs font-black text-indigo-600">사진 분석</p>
+                    <article className="ddb-crayon-paper rounded-[26px] border p-5 shadow-card">
+                        <p className="ddb-crayon-kicker text-xs">사진 분석</p>
                         {photoAnalysis ? (
                             <>
                                 <h3 className="mt-3 text-lg font-black text-neutral-950">{photoAnalysis.details?.title || "저장된 사진 분석"}</h3>
@@ -178,8 +180,8 @@ export default function MyPetHub() {
                             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">사진 분석을 완료하면 결과와 케어 포인트가 이곳에 저장됩니다.</p>
                         )}
                     </article>
-                    <article className="rounded-[26px] border border-neutral-200 bg-white p-5 shadow-card">
-                        <p className="text-xs font-black text-violet-600">행동·소리 관찰</p>
+                    <article className="ddb-crayon-paper rounded-[26px] border p-5 shadow-card">
+                        <p className="ddb-crayon-kicker text-xs">행동·소리 관찰</p>
                         {historyLoading ? (
                             <p className="mt-3 text-sm font-bold text-neutral-500">관찰 기록을 불러오는 중입니다.</p>
                         ) : latestObservation ? (

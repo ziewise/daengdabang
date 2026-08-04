@@ -42,12 +42,12 @@ export default function RecommendSection() {
             <div className="mx-auto max-w-[1400px] px-6">
                 <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p className="mb-1.5 text-[11px] font-extrabold tracking-[0.2em] text-aurora-indigo md:text-xs">
+                        <p className="ddb-crayon-kicker mb-1.5 text-[11px] md:text-xs">
                             <i className="fa-solid fa-wand-magic-sparkles mr-1" />
                             우리 아이 맞춤 추천
                         </p>
-                        <h2 className="mb-1.5 text-2xl font-black tracking-tight md:text-3xl">
-                            <span className="text-aurora-indigo">{petName}</span>를 위한 추천
+                        <h2 className="ddb-crayon-title mb-1.5 text-3xl md:text-4xl">
+                            <span className="ddb-crayon-underline">{petName}를 위한 추천</span>
                         </h2>
                         <p className="text-sm font-bold leading-6 text-neutral-500">
                             {hasAnalysis
@@ -62,7 +62,7 @@ export default function RecommendSection() {
                     </div>
                     <Link
                         href={hasAnalysis ? "/recommendations" : "/pet-lens"}
-                        className="inline-flex self-start items-center gap-1.5 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo px-5 py-2.5 text-xs font-extrabold text-white transition hover:opacity-90 md:self-auto md:text-sm"
+                        className="ddb-crayon-link inline-flex self-start items-center gap-1.5 rounded-full px-5 py-2.5 text-xs md:self-auto md:text-sm"
                     >
                         {hasAnalysis ? "맞춤 추천 전체 보기" : "사진 분석하고 더 정확히 보기"}
                         <i className="fa-solid fa-arrow-right text-[10px]" />

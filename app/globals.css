@@ -1890,3 +1890,148 @@ header + main .hero-shell {
         height: 58px;
     }
 }
+
+/*
+ * DaengDaBang crayon language
+ * Keep long-form copy in the readable UI font and reserve these utilities for
+ * brand headings, hand-drawn accents and playful feature surfaces.
+ */
+.ddb-crayon-kicker {
+    display: inline-block;
+    background-image: repeating-linear-gradient(
+        172deg,
+        #07849e 0 5px,
+        #ef476f 5px 10px,
+        #e98708 10px 15px
+    );
+    background-clip: text;
+    color: #07849e;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    filter: drop-shadow(0.45px 0.55px 0 rgba(15, 23, 42, 0.16));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.15px rgba(15, 23, 42, 0.12);
+}
+
+.ddb-crayon-title {
+    color: #172033;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.08;
+    filter: drop-shadow(0.65px 0.8px 0 rgba(15, 23, 42, 0.15));
+    -webkit-text-stroke: 0.18px rgba(15, 23, 42, 0.1);
+}
+
+.ddb-crayon-underline {
+    position: relative;
+    isolation: isolate;
+}
+
+.ddb-crayon-underline::after {
+    position: absolute;
+    right: 1%;
+    bottom: -0.16em;
+    left: 0;
+    z-index: -1;
+    height: 0.2em;
+    border-radius: 999px 70% 999px 60%;
+    background: repeating-linear-gradient(
+        94deg,
+        rgba(8, 145, 178, 0.62) 0 14px,
+        rgba(239, 71, 111, 0.58) 14px 28px,
+        rgba(245, 158, 11, 0.62) 28px 42px
+    );
+    content: "";
+    opacity: 0.62;
+    transform: rotate(-0.7deg) skewX(-7deg);
+}
+
+.ddb-crayon-paper {
+    border-color: rgba(51, 65, 85, 0.17) !important;
+    border-style: dashed !important;
+    background-color: rgba(255, 253, 248, 0.96) !important;
+    background-image:
+        linear-gradient(112deg, rgba(8, 145, 178, 0.035), transparent 28%, rgba(239, 71, 111, 0.03) 64%, rgba(245, 158, 11, 0.045)),
+        repeating-linear-gradient(176deg, rgba(71, 85, 105, 0.026) 0 1px, transparent 1px 5px) !important;
+    box-shadow:
+        3px 4px 0 rgba(8, 145, 178, 0.075),
+        -2px -2px 0 rgba(239, 71, 111, 0.045),
+        0 18px 40px rgba(15, 23, 42, 0.07) !important;
+}
+
+.ddb-crayon-banner {
+    border-bottom: 2px dashed rgba(8, 145, 178, 0.23);
+    background-color: #fffaf0 !important;
+    background-image:
+        linear-gradient(105deg, rgba(255, 253, 248, 0.98) 0 55%, rgba(207, 250, 254, 0.72) 100%),
+        repeating-linear-gradient(168deg, rgba(8, 145, 178, 0.08) 0 4px, rgba(239, 71, 111, 0.07) 4px 8px, rgba(245, 158, 11, 0.08) 8px 12px) !important;
+    color: #172033 !important;
+}
+
+.ddb-crayon-icon {
+    border: 2px dashed rgba(255, 255, 255, 0.68) !important;
+    color: #fffdf8 !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(15, 23, 42, 0.08),
+        2px 3px 0 rgba(15, 23, 42, 0.12) !important;
+    filter: saturate(0.94);
+}
+
+.ddb-crayon-icon[data-crayon-tone="teal"] {
+    background: repeating-linear-gradient(168deg, #07849e 0 4px, #10a6b7 4px 7px, #08788f 7px 9px) !important;
+}
+
+.ddb-crayon-icon[data-crayon-tone="coral"] {
+    background: repeating-linear-gradient(168deg, #df3f66 0 4px, #f05b72 4px 7px, #d8375b 7px 9px) !important;
+}
+
+.ddb-crayon-icon[data-crayon-tone="orange"] {
+    background: repeating-linear-gradient(168deg, #e98708 0 4px, #f5a623 4px 7px, #db7905 7px 9px) !important;
+}
+
+.ddb-crayon-link {
+    border: 2px dashed rgba(8, 145, 178, 0.32) !important;
+    background: #fffdf8 !important;
+    color: #087b91 !important;
+    box-shadow: 2px 3px 0 rgba(239, 71, 111, 0.09) !important;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-weight: 700;
+    transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.ddb-crayon-link:hover {
+    border-color: rgba(239, 71, 111, 0.5) !important;
+    color: #c83259 !important;
+    transform: rotate(-0.6deg) translateY(-1px);
+}
+
+.ddb-crayon-chip {
+    border: 1px dashed rgba(239, 71, 111, 0.38);
+    background: repeating-linear-gradient(174deg, rgba(255, 228, 230, 0.98) 0 5px, rgba(255, 247, 237, 0.98) 5px 9px);
+    color: #b4234d;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-weight: 700;
+    transform: rotate(-0.7deg);
+}
+
+.ddb-crayon-meter {
+    background: repeating-linear-gradient(174deg, #07849e 0 7px, #ef476f 7px 14px, #e98708 14px 21px) !important;
+    box-shadow: inset 0 -1px 0 rgba(15, 23, 42, 0.12);
+}
+
+.ddb-crayon-meter--teal {
+    background: repeating-linear-gradient(174deg, #07849e 0 5px, #10a6b7 5px 9px, #08788f 9px 12px) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ddb-crayon-link {
+        transition: none;
+    }
+
+    .ddb-crayon-link:hover {
+        transform: none;
+    }
+}

@@ -106,28 +106,28 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
             value: careScore === null ? "—" : `${careScore}점`,
             helper: "의료 점수가 아닌 오늘 돌봄 완료율",
             icon: "fa-heart-pulse",
-            tone: "from-rose-500 to-pink-600",
+            tone: "coral",
         },
         {
             label: "오늘 AI 분석",
             value: analyzedToday ? "완료" : "아직",
             helper: pet?.lastAnalyzedAt ? `최근 ${new Date(pet.lastAnalyzedAt).toLocaleDateString("ko-KR")}` : "첫 사진 분석을 시작해 보세요",
             icon: "fa-camera-retro",
-            tone: "from-cyan-500 to-blue-600",
+            tone: "teal",
         },
         {
             label: "이번 주 출석 챌린지",
             value: engagement ? `${engagement.weeklyAttendanceProgress} / ${engagement.weeklyAttendanceTarget}` : "- / -",
             helper: `${engagement ? ratio(engagement.weeklyAttendanceProgress, engagement.weeklyAttendanceTarget) : 0}% 진행`,
             icon: "fa-calendar-check",
-            tone: "from-violet-500 to-indigo-600",
+            tone: "orange",
         },
         {
             label: "오늘 산책",
             value: walkTask?.completed ? "20분 완료" : "기록 전",
             helper: walkTask?.completed ? "오늘의 산책 XP가 반영됐어요" : "무리하지 않는 범위에서 시작하세요",
             icon: "fa-person-walking",
-            tone: "from-emerald-500 to-teal-600",
+            tone: "teal",
         },
     ];
 
@@ -136,9 +136,9 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
         if (variant === "home") return null;
         return (
             <div className="mx-auto w-full max-w-[900px] px-4 py-16 text-center md:px-6">
-                <div className="rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-card md:p-12">
-                    <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-gradient-to-br from-amber-400 to-rose-500 text-2xl text-white"><i className="fa-solid fa-paw" /></span>
-                    <h1 className="mt-5 text-3xl font-black text-neutral-950">로그인하고 오늘의 챌린지를 시작하세요</h1>
+                <div className="ddb-crayon-paper rounded-[32px] border p-8 md:p-12">
+                    <span className="ddb-crayon-icon mx-auto grid h-16 w-16 place-items-center rounded-3xl text-2xl" data-crayon-tone="coral"><i className="fa-solid fa-paw" /></span>
+                    <h1 className="ddb-crayon-title mt-5 text-4xl">로그인하고 오늘의 챌린지를 시작하세요</h1>
                     <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">출근도장과 XP, 코인 보상은 회원 계정에 안전하게 저장됩니다.</p>
                     <Link href="/auth/login/?redirect=%2Fchallenge" className="btn btn-primary mt-6">로그인하기</Link>
                 </div>
@@ -179,12 +179,12 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
     return (
         <section id="ai-dashboard" className={variant === "home" ? "py-10 md:py-14" : "py-8"} aria-labelledby="ai-dashboard-title" data-member-ai-dashboard>
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-                <div className="overflow-hidden rounded-[34px] border border-white/80 bg-white/80 shadow-[0_24px_70px_rgba(79,70,229,0.12)] backdrop-blur">
-                    <header className="relative overflow-hidden bg-gradient-to-r from-indigo-700 via-violet-600 to-rose-500 px-5 py-6 text-white md:px-8 md:py-8">
-                        <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-white/15 blur-2xl" aria-hidden="true" />
+                <div className="ddb-crayon-paper overflow-hidden rounded-[34px] border">
+                    <header className="ddb-crayon-banner relative overflow-hidden px-5 py-6 md:px-8 md:py-8">
+                        <div className="absolute -right-10 top-5 h-2 w-44 rotate-[-7deg] rounded-full bg-cyan-500/20 shadow-[0_8px_0_rgba(239,71,111,0.14),0_16px_0_rgba(245,158,11,0.16)]" aria-hidden="true" />
                         <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                             <div className="flex min-w-0 items-center gap-4">
-                                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-3xl border-4 border-white/60 bg-white/20 shadow-lg">
+                                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-3xl border-4 border-dashed border-cyan-700/30 bg-white shadow-[3px_4px_0_rgba(239,71,111,0.12)]">
                                     {pet?.photoDataUrl ? (
                                         <Image src={pet.photoDataUrl} alt={`${pet.name} 프로필`} fill sizes="64px" className="object-cover" unoptimized />
                                     ) : (
@@ -192,14 +192,14 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     )}
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-xs font-black tracking-[0.16em] text-white/75">PERSONAL AI DASHBOARD</p>
-                                    <h2 id="ai-dashboard-title" className="mt-1 truncate text-2xl font-black tracking-tight md:text-3xl">
-                                        {pet ? `${pet.name}와 오늘 뭐 하지?` : `${user.name}님, 오늘 뭐 하지?`}
+                                    <p className="ddb-crayon-kicker text-xs">PERSONAL AI DASHBOARD</p>
+                                    <h2 id="ai-dashboard-title" className="ddb-crayon-title mt-1 truncate text-3xl md:text-4xl">
+                                        <span className="ddb-crayon-underline">{pet ? `${pet.name}와 오늘 뭐 하지?` : `${user.name}님, 오늘 뭐 하지?`}</span>
                                     </h2>
-                                    <p className="mt-1 text-xs font-bold text-white/80">출근도장부터 산책·분석·추천까지 한 번에 이어가세요.</p>
+                                    <p className="mt-2 text-xs font-bold text-neutral-600">출근도장부터 산책·분석·추천까지 한 번에 이어가세요.</p>
                                 </div>
                             </div>
-                            <Link href="/my-pet/" className="inline-flex h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-black text-indigo-700 shadow-lg transition hover:-translate-y-0.5">
+                            <Link href="/my-pet/" className="ddb-crayon-link inline-flex h-11 items-center justify-center rounded-full px-5 text-sm">
                                 내 아이 리포트 <i className="fa-solid fa-arrow-right ml-2 text-xs" aria-hidden="true" />
                             </Link>
                         </div>
@@ -209,8 +209,8 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                         <div className="min-w-0">
                             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                                 {metrics.map((metric) => (
-                                    <article key={metric.label} className="rounded-3xl border border-neutral-100 bg-white p-4 shadow-sm">
-                                        <span className={`grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br ${metric.tone} text-sm text-white`}><i className={`fa-solid ${metric.icon}`} aria-hidden="true" /></span>
+                                    <article key={metric.label} className="ddb-crayon-paper rounded-3xl border p-4">
+                                        <span className="ddb-crayon-icon grid h-9 w-9 place-items-center rounded-xl text-sm" data-crayon-tone={metric.tone}><i className={`fa-solid ${metric.icon}`} aria-hidden="true" /></span>
                                         <p className="mt-3 text-[10px] font-black text-neutral-500">{metric.label}</p>
                                         <strong className="mt-1 block text-lg font-black text-neutral-950">{loading && !engagement ? "…" : metric.value}</strong>
                                         <span className="mt-1 block text-[10px] font-bold leading-4 text-neutral-400">{metric.helper}</span>
@@ -219,11 +219,11 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                             </div>
 
                             <div className="mt-5 grid gap-4 lg:grid-cols-2">
-                                <article className="rounded-[26px] border border-neutral-100 bg-neutral-50/80 p-5">
+                                <article className="ddb-crayon-paper rounded-[26px] border p-5">
                                     <div className="flex items-center justify-between gap-3">
                                         <div>
-                                            <p className="text-xs font-black text-indigo-600">오늘 해야 할 일</p>
-                                            <h3 className="mt-1 text-lg font-black text-neutral-950">작게 하나씩 완료해요</h3>
+                                            <p className="ddb-crayon-kicker text-xs">오늘 해야 할 일</p>
+                                            <h3 className="ddb-crayon-title mt-1 text-2xl">작게 하나씩 완료해요</h3>
                                         </div>
                                         <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-600">{completedRoutineCount}/4</span>
                                     </div>
@@ -243,16 +243,16 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     </div>
                                 </article>
 
-                                <article className="rounded-[26px] border border-indigo-100 bg-gradient-to-br from-indigo-50 to-violet-50 p-5">
+                                <article className="ddb-crayon-paper rounded-[26px] border p-5">
                                     <div className="flex items-start justify-between gap-3">
                                         <div>
-                                            <p className="text-xs font-black text-indigo-600">LEVEL {engagement?.level || 1}</p>
-                                            <h3 className="mt-1 text-lg font-black text-neutral-950">{(engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이"}</h3>
+                                            <p className="ddb-crayon-kicker text-xs">LEVEL {engagement?.level || 1}</p>
+                                            <h3 className="ddb-crayon-title mt-1 text-2xl">{(engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이"}</h3>
                                         </div>
-                                        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-xl text-white shadow-lg"><i className="fa-solid fa-medal" /></span>
+                                        <span className="ddb-crayon-icon grid h-12 w-12 place-items-center rounded-2xl text-xl" data-crayon-tone="orange"><i className="fa-solid fa-medal" /></span>
                                     </div>
                                     <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
-                                        <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-rose-500 transition-[width] duration-700" style={{ width: `${levelProgress}%` }} />
+                                        <div className="ddb-crayon-meter h-full rounded-full transition-[width] duration-700" style={{ width: `${levelProgress}%` }} />
                                     </div>
                                     <div className="mt-2 flex items-center justify-between text-[10px] font-black text-neutral-500">
                                         <span>{engagement?.xp || 0} XP</span>
@@ -266,8 +266,8 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                             </div>
 
                             <div className="mt-4 grid grid-cols-2 gap-3">
-                                <ProgressCard label="이번 주 출석" value={engagement?.weeklyAttendanceProgress || 0} target={engagement?.weeklyAttendanceTarget || 7} tone="bg-indigo-600" />
-                                <ProgressCard label="이번 달 AI 체크" value={engagement?.monthlyAnalysisProgress || 0} target={engagement?.monthlyAnalysisTarget || 5} tone="bg-emerald-600" />
+                                <ProgressCard label="이번 주 출석" value={engagement?.weeklyAttendanceProgress || 0} target={engagement?.weeklyAttendanceTarget || 7} tone="ddb-crayon-meter" />
+                                <ProgressCard label="이번 달 AI 체크" value={engagement?.monthlyAnalysisProgress || 0} target={engagement?.monthlyAnalysisTarget || 5} tone="ddb-crayon-meter ddb-crayon-meter--teal" />
                             </div>
                         </div>
 
@@ -283,7 +283,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     onClaim={claimAttendance}
                                 />
                             ) : (
-                                <div className="grid min-h-[330px] place-items-center rounded-[28px] border border-dashed border-neutral-200 bg-neutral-50 p-6 text-center">
+                                <div className="ddb-crayon-paper grid min-h-[330px] place-items-center rounded-[28px] border p-6 text-center">
                                     <div>
                                         <i className={`fa-solid ${loading ? "fa-circle-notch fa-spin" : "fa-paw"} text-3xl text-indigo-300`} />
                                         <p className="mt-3 text-sm font-black text-neutral-600">{loading ? "출근도장을 준비하는 중" : "출근도장을 불러오지 못했어요"}</p>
@@ -291,7 +291,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     </div>
                                 </div>
                             )}
-                            <div className="mt-3 rounded-2xl border border-neutral-100 bg-white p-4 text-xs font-bold leading-5 text-neutral-500">
+                            <div className="ddb-crayon-paper mt-3 rounded-2xl border p-4 text-xs font-bold leading-5 text-neutral-500">
                                 <i className="fa-solid fa-shield-heart mr-2 text-indigo-500" aria-hidden="true" />
                                 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.
                             </div>
@@ -313,7 +313,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
 function ProgressCard({ label, value, target, tone }: { label: string; value: number; target: number; tone: string }) {
     const progress = ratio(value, target);
     return (
-        <article className="rounded-2xl border border-neutral-100 bg-white p-3">
+        <article className="ddb-crayon-paper rounded-2xl border p-3">
             <div className="flex items-center justify-between gap-2 text-[10px] font-black text-neutral-500"><span>{label}</span><span>{value}/{target}</span></div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-neutral-100"><div className={`h-full rounded-full ${tone}`} style={{ width: `${progress}%` }} /></div>
         </article>

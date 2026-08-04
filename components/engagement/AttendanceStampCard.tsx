@@ -62,7 +62,7 @@ export default function AttendanceStampCard({
     };
 
     return (
-        <article className={`${styles.stage} rounded-[28px] border border-rose-100 bg-gradient-to-br from-rose-50 via-amber-50 to-white p-5 shadow-[0_18px_45px_rgba(190,24,93,0.12)]`} data-attendance-stamp-card>
+        <article className={`${styles.stage} ddb-crayon-paper rounded-[28px] border p-5`} data-attendance-stamp-card>
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
                 <div className="relative mx-auto shrink-0 sm:mx-0">
                     <button
@@ -91,10 +91,10 @@ export default function AttendanceStampCard({
 
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-full bg-rose-600 px-2.5 py-1 text-[10px] font-black text-white">매일 출근</span>
-                        <span className="text-xs font-black text-rose-700">{currentStreak}일 연속</span>
+                        <span className="ddb-crayon-chip rounded-full px-2.5 py-1 text-[11px]">매일 출근</span>
+                        <span className="ddb-crayon-kicker text-xs">{currentStreak}일 연속</span>
                     </div>
-                    <h3 className="mt-2 text-xl font-black tracking-tight text-neutral-950">오늘도 우리 아이 돌봄 출근!</h3>
+                    <h3 className="ddb-crayon-title mt-2 text-2xl">오늘도 우리 아이 돌봄 출근!</h3>
                     <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
                         하루 한 번 도장을 찍으면 <strong className="text-amber-700">코인 {dailyReward}개</strong>가 서버 지갑에 바로 지급돼요.
                     </p>
@@ -109,7 +109,7 @@ export default function AttendanceStampCard({
                 {recentDays.map((day) => (
                     <div key={day.date} className="text-center">
                         <span className="block text-[9px] font-black text-neutral-400">{weekday(day.date)}</span>
-                        <span className={`mx-auto mt-1 grid h-8 w-8 place-items-center rounded-full border text-xs ${day.claimed ? "border-emerald-300 bg-emerald-100 text-emerald-700" : "border-dashed border-neutral-200 bg-white/70 text-neutral-300"}`}>
+                        <span className={`mx-auto mt-1 grid h-8 w-8 place-items-center rounded-full border text-xs ${day.claimed ? "border-dashed border-cyan-600/40 bg-cyan-50 text-cyan-700" : "border-dashed border-neutral-200 bg-white/70 text-neutral-300"}`}>
                             <i className={`fa-solid ${day.claimed ? "fa-paw" : "fa-minus"}`} aria-hidden="true" />
                         </span>
                     </div>
@@ -117,7 +117,7 @@ export default function AttendanceStampCard({
             </div>
 
             <p className="sr-only" aria-live="polite">{notice}</p>
-            {notice && <p className="mt-3 rounded-xl bg-white/80 px-3 py-2 text-center text-xs font-black text-emerald-700" role="status">{notice}</p>}
+            {notice && <p className="mt-3 rounded-xl border border-dashed border-cyan-700/25 bg-white/80 px-3 py-2 text-center text-xs font-black text-cyan-800" role="status">{notice}</p>}
         </article>
     );
 }

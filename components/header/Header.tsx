@@ -82,12 +82,13 @@ export default function Header() {
 
                     {/* AI 서비스 중심의 데스크탑 메인 메뉴 */}
                     <nav className="hidden items-center gap-0 lg:flex xl:gap-1">
-                        <NavLink href="/">{t("home")}</NavLink>
+                        <NavLink href="/" crayon>{t("home")}</NavLink>
                         <NavDropdown
                             label={t("shop")}
                             open={openDrop === "shop"}
                             onEnter={() => setOpenDrop("shop")}
                             onLeave={() => setOpenDrop(null)}
+                            crayon
                             wide
                         >
                             <div className="min-w-[680px] p-6">
@@ -137,20 +138,21 @@ export default function Header() {
                             open={openDrop === "ai"}
                             onEnter={() => setOpenDrop("ai")}
                             onLeave={() => setOpenDrop(null)}
+                            crayon
                         >
                             <ul className="min-w-[300px] p-3">
                                 {[
-                                    ["/pet-lens/", "사진 건강 분석", "fa-camera-retro"],
-                                    ["/pet-lens/?mode=observation", "울음소리·행동 분석", "fa-wave-square"],
-                                    ["/my-pet/#health-report", "건강 변화 리포트", "fa-chart-line"],
-                                    ["/chat/", "AI 상담", "fa-comment-dots"],
-                                ].map(([href, label, icon]) => (
+                                    ["/pet-lens/", "사진 건강 분석", "fa-camera-retro", "teal"],
+                                    ["/pet-lens/?mode=observation", "울음소리·행동 분석", "fa-wave-square", "coral"],
+                                    ["/my-pet/#health-report", "건강 변화 리포트", "fa-chart-line", "orange"],
+                                    ["/chat/", "AI 상담", "fa-comment-dots", "teal"],
+                                ].map(([href, label, icon, tone]) => (
                                     <li key={href}>
                                         <Link
                                             href={href}
                                             className="flex items-center gap-3 rounded-xl p-3 text-sm font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
                                         >
-                                            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 text-white">
+                                            <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" data-crayon-tone={tone}>
                                                 <i className={`fa-solid ${icon}`} aria-hidden="true" />
                                             </span>
                                             <span>{label}</span>
@@ -160,10 +162,10 @@ export default function Header() {
                             </ul>
                         </NavDropdown>
 
-                        <NavLink href="/my-pet/">{t("myPet")}</NavLink>
-                        <NavLink href="/challenge/">{t("challenge")}</NavLink>
-                        <NavLink href="/community/">{t("community")}</NavLink>
-                        <NavLink href="/bundles/">{t("event")}</NavLink>
+                        <NavLink href="/my-pet/" crayon>{t("myPet")}</NavLink>
+                        <NavLink href="/challenge/" crayon>{t("challenge")}</NavLink>
+                        <NavLink href="/community/" crayon>{t("community")}</NavLink>
+                        <NavLink href="/bundles/" crayon>{t("event")}</NavLink>
                     </nav>
 
                     {/* 우측 유틸리티
@@ -222,7 +224,7 @@ export default function Header() {
                             <Link
                                 href={isLoggedIn ? "/mypage" : "/auth/login"}
                                 data-pet-guide-target={isLoggedIn ? undefined : "signup"}
-                                className="hidden xl:inline-flex items-center justify-center gap-2 px-4 h-10 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-bold hover:opacity-90 transition"
+                                className="ddb-crayon-link hidden h-10 items-center justify-center gap-2 rounded-full px-4 text-sm font-bold transition hover:-translate-y-px xl:inline-flex"
                                 aria-label={isLoggedIn ? t("mypage") : t("login")}
                             >
                                 <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
@@ -280,6 +282,7 @@ function NavDropdown({
     onEnter,
     onLeave,
     children,
+    crayon = false,
     wide = false,
 }: {
     label: string;
@@ -287,6 +290,7 @@ function NavDropdown({
     onEnter: () => void;
     onLeave: () => void;
     children: React.ReactNode;
+    crayon?: boolean;
     wide?: boolean;
 }) {
     return (
@@ -297,7 +301,7 @@ function NavDropdown({
         >
             <button
                 type="button"
-                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-4 xl:text-base`}
+                className={`${headerStyles.desktopNavItem} ${crayon ? headerStyles.storyNavItem : ""} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-4 xl:text-base`}
                 data-nav-open={open ? "true" : "false"}
             >
                 {label}
