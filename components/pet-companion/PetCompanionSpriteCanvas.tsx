@@ -23,7 +23,16 @@ type Props = {
 const GRID_COLUMNS = 4;
 const GRID_ROWS = 4;
 const VERTICAL_SEQUENCE_LENGTH = 8;
-const MAX_DEVICE_PIXEL_RATIO = 2;
+const DEFAULT_SOURCE_CELL_SIZE = 256;
+const MIN_DEVICE_PIXEL_RATIO = 1;
+const MAX_DEVICE_PIXEL_RATIO = 3;
+const VERTICAL_IDLE_TIMEOUT_MS = 1_600;
+const VERTICAL_FALLBACK_DELAY_MS = 240;
+
+type IdleCapableWindow = Window & typeof globalThis & {
+    requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+    cancelIdleCallback?: (handle: number) => void;
+};
 
 const MOTION_ROW: Record<PetCompanionSpriteMotion, number> = {
     idle: 0,
@@ -36,6 +45,81 @@ type MotionFrame = {
     frame: number;
     duration: number;
 };
+
+type TimelineAdvance = {
+    step: number;
+    remainder: number;
+};
+
+/**
+ * Match backing-store detail to the atlas rather than blindly multiplying a
+ * large preview by the display DPR. The source ceiling follows the actual
+ * contain-drawn sprite, not blank space along a rectangular canvas's long
+ * edge. The 1x floor keeps CSS-sized canvases stable while small mobile dogs
+ * can still use the full DPR 3 available on modern phones.
+ */
+function adaptiveCanvasDpr(
+    layoutWidth: number,
+    layoutHeight: number,
+    devicePixelRatio: number,
+    sourceCellWidth = DEFAULT_SOURCE_CELL_SIZE,
+    sourceCellHeight = DEFAULT_SOURCE_CELL_SIZE,
+) {
+    const safeLayoutWidth = Math.max(1, layoutWidth);
+    const safeLayoutHeight = Math.max(1, layoutHeight);
+    const safeDevicePixelRatio = Number.isFinite(devicePixelRatio)
+        ? devicePixelRatio
+        : MIN_DEVICE_PIXEL_RATIO;
+    const safeSourceCellWidth = Math.max(1, sourceCellWidth);
+    const safeSourceCellHeight = Math.max(1, sourceCellHeight);
+    const containScale = Math.min(
+        safeLayoutWidth / safeSourceCellWidth,
+        safeLayoutHeight / safeSourceCellHeight,
+    );
+    const containDrawWidth = safeSourceCellWidth * containScale;
+    const containDrawHeight = safeSourceCellHeight * containScale;
+    const sourceLimitedDpr = Math.min(
+        safeSourceCellWidth / containDrawWidth,
+        safeSourceCellHeight / containDrawHeight,
+    );
+
+    return Math.max(
+        MIN_DEVICE_PIXEL_RATIO,
+        Math.min(MAX_DEVICE_PIXEL_RATIO, safeDevicePixelRatio, sourceLimitedDpr),
+    );
+}
+
+/**
+ * Skip whole animation cycles after a throttled frame. Only the residual
+ * phase is walked, so a suspended/background tab cannot trigger a catch-up
+ * burst through dozens of historical frames when it resumes.
+ */
+function advanceTimeline(
+    timeline: readonly MotionFrame[],
+    currentStep: number,
+    elapsed: number,
+): TimelineAdvance {
+    if (!timeline.length) return { step: 0, remainder: 0 };
+
+    let step = ((currentStep % timeline.length) + timeline.length) % timeline.length;
+    const cycleDuration = timeline.reduce(
+        (total, motionFrame) => total + Math.max(1, motionFrame.duration),
+        0,
+    );
+    let remainder = Number.isFinite(elapsed) ? Math.max(0, elapsed) : 0;
+    if (cycleDuration > 0 && remainder >= cycleDuration) {
+        remainder %= cycleDuration;
+    }
+
+    let visited = 0;
+    while (remainder >= Math.max(1, timeline[step].duration) && visited < timeline.length) {
+        remainder -= Math.max(1, timeline[step].duration);
+        step = (step + 1) % timeline.length;
+        visited += 1;
+    }
+
+    return { step, remainder };
+}
 
 /**
  * Contact frames stay on screen a little longer than passing frames. This
@@ -95,6 +179,8 @@ type CanvasSize = {
     width: number;
     height: number;
     dpr: number;
+    scaleX: number;
+    scaleY: number;
 };
 
 /**
@@ -123,6 +209,7 @@ export default function PetCompanionSpriteCanvas({
     const pausedRef = useRef(paused);
     const startAnimationRef = useRef<(() => void) | null>(null);
     const stopAnimationRef = useRef<(() => void) | null>(null);
+    const requestVerticalLoadRef = useRef<(() => void) | null>(null);
 
     useEffect(() => {
         const previousMotion = motionRef.current;
@@ -140,6 +227,9 @@ export default function PetCompanionSpriteCanvas({
         frameRef.current = timeline[stepRef.current]?.frame ?? 0;
         lastFrameAtRef.current = 0;
         drawFrameRef.current?.(frameRef.current);
+        if (motion === "run" && travelDirection !== "side") {
+            requestVerticalLoadRef.current?.();
+        }
     }, [motion, travelDirection]);
 
     useEffect(() => {
@@ -161,7 +251,13 @@ export default function PetCompanionSpriteCanvas({
         let reducedMotion = forcePreview
             ? false
             : window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let canvasSize: CanvasSize = { width: 0, height: 0, dpr: 1 };
+        let canvasSize: CanvasSize = {
+            width: 0,
+            height: 0,
+            dpr: 1,
+            scaleX: 1,
+            scaleY: 1,
+        };
 
         root.dataset.spriteReady = "false";
         root.dataset.verticalSpriteReady = "false";
@@ -218,7 +314,7 @@ export default function PetCompanionSpriteCanvas({
             const drawX = (canvasSize.width - drawWidth) / 2;
             const drawY = canvasSize.height - drawHeight;
 
-            context.setTransform(canvasSize.dpr, 0, 0, canvasSize.dpr, 0, 0);
+            context.setTransform(canvasSize.scaleX, 0, 0, canvasSize.scaleY, 0, 0);
             context.clearRect(0, 0, canvasSize.width, canvasSize.height);
             context.imageSmoothingEnabled = true;
             context.imageSmoothingQuality = "high";
@@ -265,18 +361,34 @@ export default function PetCompanionSpriteCanvas({
             const layoutHeight = canvas.clientHeight;
             if (layoutWidth <= 0 || layoutHeight <= 0) return;
 
-            const dpr = Math.min(
-                Math.max(window.devicePixelRatio || 1, 1),
-                MAX_DEVICE_PIXEL_RATIO,
+            const sourceCellWidth = coreImage?.naturalWidth
+                ? coreImage.naturalWidth / GRID_COLUMNS
+                : DEFAULT_SOURCE_CELL_SIZE;
+            const sourceCellHeight = coreImage?.naturalHeight
+                ? coreImage.naturalHeight / GRID_ROWS
+                : DEFAULT_SOURCE_CELL_SIZE;
+            const dpr = adaptiveCanvasDpr(
+                layoutWidth,
+                layoutHeight,
+                window.devicePixelRatio || 1,
+                sourceCellWidth,
+                sourceCellHeight,
             );
             const backingWidth = Math.max(1, Math.round(layoutWidth * dpr));
             const backingHeight = Math.max(1, Math.round(layoutHeight * dpr));
-            canvasSize = { width: layoutWidth, height: layoutHeight, dpr };
+            canvasSize = {
+                width: layoutWidth,
+                height: layoutHeight,
+                dpr,
+                scaleX: backingWidth / layoutWidth,
+                scaleY: backingHeight / layoutHeight,
+            };
 
             if (canvas.width !== backingWidth || canvas.height !== backingHeight) {
                 canvas.width = backingWidth;
                 canvas.height = backingHeight;
             }
+            canvas.dataset.petCanvasDpr = dpr.toFixed(3);
             drawFrame(frameRef.current);
         };
 
@@ -295,13 +407,9 @@ export default function PetCompanionSpriteCanvas({
             const elapsed = now - lastFrameAtRef.current;
 
             if (elapsed >= frameDuration) {
-                let remainder = elapsed;
-                let guard = 0;
-                while (remainder >= timeline[stepRef.current].duration && guard < 32) {
-                    remainder -= timeline[stepRef.current].duration;
-                    stepRef.current = (stepRef.current + 1) % timeline.length;
-                    guard += 1;
-                }
+                const advanced = advanceTimeline(timeline, stepRef.current, elapsed);
+                const remainder = advanced.remainder;
+                stepRef.current = advanced.step;
                 frameRef.current = timeline[stepRef.current].frame;
                 lastFrameAtRef.current = now - remainder;
                 drawFrame(frameRef.current);
@@ -318,6 +426,132 @@ export default function PetCompanionSpriteCanvas({
 
         startAnimationRef.current = startAnimation;
         stopAnimationRef.current = stopAnimation;
+
+        const idleWindow = window as IdleCapableWindow;
+        let verticalSpriteImage: HTMLImageElement | null = null;
+        let verticalLoadStarted = false;
+        let verticalUrgentRequested = false;
+        let verticalIdleId: number | undefined;
+        let verticalFallbackTimer: number | undefined;
+        let waitingForWindowLoad = false;
+
+        const markVerticalUnavailable = () => {
+            root.dataset.verticalSpriteReady = "false";
+            drawFrame(frameRef.current);
+        };
+
+        const prepareVerticalImage = async (nextImage: HTMLImageElement) => {
+            if (verticalPrepared || cancelled) return;
+            verticalPrepared = true;
+            try {
+                await nextImage.decode();
+            } catch {
+                // Keep successfully loaded images on older browsers.
+            }
+            if (cancelled) return;
+            if (
+                !nextImage.naturalWidth
+                || !nextImage.naturalHeight
+                || nextImage.naturalWidth % GRID_COLUMNS !== 0
+                || nextImage.naturalHeight % GRID_ROWS !== 0
+                || nextImage.naturalWidth / GRID_COLUMNS
+                    !== nextImage.naturalHeight / GRID_ROWS
+            ) {
+                markVerticalUnavailable();
+                return;
+            }
+            verticalImage = nextImage;
+            root.dataset.verticalSpriteReady = "true";
+            drawFrame(frameRef.current);
+            startAnimation();
+        };
+
+        const queueVerticalIdleLoad = () => {
+            waitingForWindowLoad = false;
+            if (
+                cancelled
+                || reducedMotion
+                || verticalLoadStarted
+                || !coreImage
+                || !verticalSrc
+            ) return;
+
+            if (idleWindow.requestIdleCallback) {
+                verticalIdleId = idleWindow.requestIdleCallback(() => {
+                    verticalIdleId = undefined;
+                    beginVerticalLoad();
+                }, { timeout: VERTICAL_IDLE_TIMEOUT_MS });
+                return;
+            }
+            verticalFallbackTimer = window.setTimeout(() => {
+                verticalFallbackTimer = undefined;
+                beginVerticalLoad();
+            }, VERTICAL_FALLBACK_DELAY_MS);
+        };
+
+        const cancelScheduledVerticalLoad = () => {
+            if (verticalIdleId !== undefined) {
+                idleWindow.cancelIdleCallback?.(verticalIdleId);
+                verticalIdleId = undefined;
+            }
+            if (verticalFallbackTimer !== undefined) {
+                window.clearTimeout(verticalFallbackTimer);
+                verticalFallbackTimer = undefined;
+            }
+            if (waitingForWindowLoad) {
+                window.removeEventListener("load", queueVerticalIdleLoad);
+                waitingForWindowLoad = false;
+            }
+        };
+
+        function beginVerticalLoad() {
+            cancelScheduledVerticalLoad();
+            if (cancelled || verticalLoadStarted || !coreImage || !verticalSrc) return;
+
+            verticalLoadStarted = true;
+            verticalSpriteImage = new window.Image();
+            verticalSpriteImage.decoding = "async";
+            verticalSpriteImage.onload = () => {
+                if (verticalSpriteImage) void prepareVerticalImage(verticalSpriteImage);
+            };
+            verticalSpriteImage.onerror = markVerticalUnavailable;
+            verticalSpriteImage.src = verticalSrc;
+            if (verticalSpriteImage.complete && verticalSpriteImage.naturalWidth) {
+                void prepareVerticalImage(verticalSpriteImage);
+            }
+        }
+
+        const scheduleVerticalPrewarm = () => {
+            if (
+                cancelled
+                || reducedMotion
+                || verticalLoadStarted
+                || verticalIdleId !== undefined
+                || verticalFallbackTimer !== undefined
+                || waitingForWindowLoad
+                || !coreImage
+                || !verticalSrc
+            ) return;
+
+            if (document.readyState === "complete") {
+                queueVerticalIdleLoad();
+                return;
+            }
+            waitingForWindowLoad = true;
+            window.addEventListener("load", queueVerticalIdleLoad, { once: true });
+        };
+
+        const requestVerticalLoad = () => {
+            if (!verticalSrc || verticalLoadStarted || cancelled) return;
+            verticalUrgentRequested = true;
+            if (!coreImage) return;
+            beginVerticalLoad();
+        };
+
+        requestVerticalLoadRef.current = requestVerticalLoad;
+        if (motionRef.current === "run" && travelDirectionRef.current !== "side") {
+            requestVerticalLoad();
+        }
 
         const markCoreUnavailable = () => {
             stopAnimation();
@@ -353,6 +587,14 @@ export default function PetCompanionSpriteCanvas({
             lastFrameAtRef.current = 0;
             resizeCanvas();
             drawFrame(0);
+            if (
+                verticalUrgentRequested
+                || (motionRef.current === "run" && travelDirectionRef.current !== "side")
+            ) {
+                beginVerticalLoad();
+            } else {
+                scheduleVerticalPrewarm();
+            }
             if (!reducedMotion && !pausedRef.current) startAnimation();
         };
 
@@ -365,52 +607,21 @@ export default function PetCompanionSpriteCanvas({
             void prepareCoreImage(spriteImage);
         }
 
-        let verticalSpriteImage: HTMLImageElement | null = null;
-        if (verticalSrc) {
-            const markVerticalUnavailable = () => {
-                root.dataset.verticalSpriteReady = "false";
-                drawFrame(frameRef.current);
-            };
-            const prepareVerticalImage = async (nextImage: HTMLImageElement) => {
-                if (verticalPrepared || cancelled) return;
-                verticalPrepared = true;
-                try {
-                    await nextImage.decode();
-                } catch {
-                    // Keep successfully loaded images on older browsers.
-                }
-                if (cancelled) return;
-                if (
-                    !nextImage.naturalWidth
-                    || !nextImage.naturalHeight
-                    || nextImage.naturalWidth % GRID_COLUMNS !== 0
-                    || nextImage.naturalHeight % GRID_ROWS !== 0
-                    || nextImage.naturalWidth / GRID_COLUMNS
-                        !== nextImage.naturalHeight / GRID_ROWS
-                ) {
-                    markVerticalUnavailable();
-                    return;
-                }
-                verticalImage = nextImage;
-                root.dataset.verticalSpriteReady = "true";
-                drawFrame(frameRef.current);
-                startAnimation();
-            };
-            verticalSpriteImage = new window.Image();
-            verticalSpriteImage.decoding = "async";
-            verticalSpriteImage.onload = () => {
-                if (verticalSpriteImage) void prepareVerticalImage(verticalSpriteImage);
-            };
-            verticalSpriteImage.onerror = markVerticalUnavailable;
-            verticalSpriteImage.src = verticalSrc;
-            if (verticalSpriteImage.complete && verticalSpriteImage.naturalWidth) {
-                void prepareVerticalImage(verticalSpriteImage);
-            }
-        }
-
         const resizeObserver = new ResizeObserver(resizeCanvas);
         resizeObserver.observe(canvas);
         window.addEventListener("resize", resizeCanvas, { passive: true });
+
+        let dprQuery: MediaQueryList | null = null;
+        const onDevicePixelRatioChange = () => {
+            resizeCanvas();
+            watchDevicePixelRatio();
+        };
+        function watchDevicePixelRatio() {
+            dprQuery?.removeEventListener("change", onDevicePixelRatioChange);
+            dprQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+            dprQuery.addEventListener("change", onDevicePixelRatioChange);
+        }
+        watchDevicePixelRatio();
 
         const onVisibilityChange = () => {
             if (document.hidden) {
@@ -429,14 +640,23 @@ export default function PetCompanionSpriteCanvas({
             frameRef.current = 0;
             lastFrameAtRef.current = 0;
             drawFrame(0);
-            if (reducedMotion) stopAnimation();
-            else startAnimation();
+            if (reducedMotion) {
+                stopAnimation();
+                cancelScheduledVerticalLoad();
+                if (motionRef.current === "run" && travelDirectionRef.current !== "side") {
+                    requestVerticalLoad();
+                }
+            } else {
+                startAnimation();
+                scheduleVerticalPrewarm();
+            }
         };
         motionQuery.addEventListener("change", onMotionPreferenceChange);
 
         return () => {
             cancelled = true;
             stopAnimation();
+            cancelScheduledVerticalLoad();
             spriteImage.onload = null;
             spriteImage.onerror = null;
             if (verticalSpriteImage) {
@@ -445,11 +665,15 @@ export default function PetCompanionSpriteCanvas({
             }
             resizeObserver.disconnect();
             window.removeEventListener("resize", resizeCanvas);
+            dprQuery?.removeEventListener("change", onDevicePixelRatioChange);
             document.removeEventListener("visibilitychange", onVisibilityChange);
             motionQuery.removeEventListener("change", onMotionPreferenceChange);
             if (drawFrameRef.current === drawFrame) drawFrameRef.current = null;
             if (startAnimationRef.current === startAnimation) startAnimationRef.current = null;
             if (stopAnimationRef.current === stopAnimation) stopAnimationRef.current = null;
+            if (requestVerticalLoadRef.current === requestVerticalLoad) {
+                requestVerticalLoadRef.current = null;
+            }
         };
     }, [src, verticalSrc]);
 

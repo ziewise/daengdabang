@@ -91,7 +91,7 @@ test("customer-facing storefront copy presents the requested AI platform without
     const dashboard = await readSource("components/home/MemberAiDashboard.tsx");
     const quickActions = await readSource("components/home/AiQuickActions.tsx");
 
-    assert.match(header, /DaengLabSymbol/);
+    assert.match(header, /DaengLabWordmark/);
     assert.match(header, /t\("daengLab"\)/);
     assert.match(dashboard, /PERSONAL AI DASHBOARD/);
     assert.match(quickActions, /우리 아이를 위한 AI 바로가기/);

@@ -22,7 +22,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
-import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
+import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 import headerStyles from "./Header.module.css";
 
@@ -139,7 +139,27 @@ export default function Header() {
                         <NavLink href="/challenge/">{t("challenge")}</NavLink>
                         <NavLink href="/community/">{t("community")}</NavLink>
                         <NavDropdown
-                            label={<DaengLabSymbol size={40} className={headerStyles.daengLabNavSymbol} priority />}
+                            label={t("customerCenter")}
+                            open={openDrop === "cs"}
+                            onEnter={() => setOpenDrop("cs")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <ul className="min-w-[230px] p-3">
+                                {CS_LINKS.map((item) => (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
+                                        >
+                                            <i className={`fa-solid ${item.icon} w-5 text-center text-indigo-500`} aria-hidden="true" />
+                                            <span>{menuLabel(item.label)}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </NavDropdown>
+                        <NavDropdown
+                            label={<DaengLabWordmark label={t("daengLab")} />}
                             ariaLabel={t("daengLab")}
                             open={openDrop === "lab"}
                             onEnter={() => setOpenDrop("lab")}
@@ -167,26 +187,6 @@ export default function Header() {
                             </ul>
                         </NavDropdown>
 
-                        <NavDropdown
-                            label={t("customerCenter")}
-                            open={openDrop === "cs"}
-                            onEnter={() => setOpenDrop("cs")}
-                            onLeave={() => setOpenDrop(null)}
-                        >
-                            <ul className="min-w-[230px] p-3">
-                                {CS_LINKS.map((item) => (
-                                    <li key={item.href}>
-                                        <Link
-                                            href={item.href}
-                                            className="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
-                                        >
-                                            <i className={`fa-solid ${item.icon} w-5 text-center text-indigo-500`} aria-hidden="true" />
-                                            <span>{menuLabel(item.label)}</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </NavDropdown>
                     </nav>
 
                     {/* 우측 유틸리티

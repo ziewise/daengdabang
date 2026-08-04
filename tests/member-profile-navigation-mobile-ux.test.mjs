@@ -26,11 +26,12 @@ test("member profile create and edit forms expose the same four-view photo regis
 test("desktop and mobile navigation expose the final DaengLab information architecture", () => {
     const header = read("../components/header/Header.tsx");
     const mobile = read("../components/header/MobilePanel.tsx");
+    const labWordmark = read("../components/header/DaengLabWordmark.tsx");
     const i18n = read("../lib/i18n.tsx");
 
     for (const [source, labels] of [
-        [header, ['label={t("shop")}', 'href="/new/"', 'href="/brands/"', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'label={<DaengLabSymbol', 'label={t("customerCenter")}']],
-        [mobile, ['label={t("shop")}', '<MobileLink href="/new/"', '<MobileLink href="/brands/"', '<MobileLink href="/my-pet/"', '<MobileLink href="/challenge/"', '<MobileLink href="/community/"', '<DaengLabSymbol', 'label={t("customerCenter")}']],
+        [header, ['label={t("shop")}', 'href="/new/"', 'href="/brands/"', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'label={t("customerCenter")}', 'label={<DaengLabWordmark']],
+        [mobile, ['label={t("shop")}', '<MobileLink href="/new/"', '<MobileLink href="/brands/"', '<MobileLink href="/my-pet/"', '<MobileLink href="/challenge/"', '<MobileLink href="/community/"', 'label={t("customerCenter")}', '<DaengLabWordmark']],
     ]) {
         let previous = -1;
         for (const label of labels) {
@@ -44,7 +45,7 @@ test("desktop and mobile navigation expose the final DaengLab information archit
     }
     for (const source of [header, mobile]) {
         assert.match(source, /CS_LINKS/);
-        assert.match(source, /DaengLabSymbol/);
+        assert.match(source, /DaengLabWordmark/);
         assert.match(source, /t\("daengLab"\)/);
         assert.doesNotMatch(source, /label=\{t\("aiAnalysis"\)\}/);
         for (const href of ["/pet-lens/", "/pet-lens/?mode=observation", "/my-pet/#health-report", "/chat/"]) {
@@ -55,6 +56,11 @@ test("desktop and mobile navigation expose the final DaengLab information archit
     assert.doesNotMatch(header, /<NavLink href="\/bundles\/">/);
     assert.doesNotMatch(mobile, /<MobileLink href="\/"/);
     assert.doesNotMatch(mobile, /<MobileLink href="\/bundles\/"/);
+    assert.match(labWordmark, /<span>댕<\/span><span>다<\/span><span>방<\/span>/);
+    assert.match(labWordmark, />연구소<\/span>/);
+    assert.doesNotMatch(`${header}\n${mobile}`, /DaengLabSymbol/);
+    assert.match(mobile, /aria-hidden=\{!open\}/);
+    assert.match(mobile, /inert=\{open \? undefined : true\}/);
 });
 
 test("navigator gives every searchable breed an independent 32-frame atlas set", async () => {

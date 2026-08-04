@@ -130,7 +130,8 @@
 }
 
 /* A ready sheet already contains real body/leg motion. Avoid stacking the old
-   whole-image bounce on top of those frames; the static fallback keeps it. */
+   whole-image bounce on top of those frames. Ready idle gets a separate,
+   deliberately tiny breathing pass below. */
 .character:not([data-motion="point"]):not([data-motion="curious"]):has(.spriteStack[data-sprite-ready="true"]) .spriteMotion {
     animation: none;
 }
@@ -303,6 +304,12 @@
     animation: plush-idle 3.4s ease-in-out infinite;
 }
 
+/* Keep the loaded character gently alive without masking the painted atlas.
+   This runs only while settled, so turns and every travel heading stay intact. */
+.character[data-motion="idle"][data-turn-phase="rest"]:has(.spriteStack[data-sprite-ready="true"]) .spriteMotion {
+    animation: plush-ready-idle 3.2s cubic-bezier(.4, 0, .2, 1) infinite;
+}
+
 .character[data-motion="walk"] .spriteMotion {
     animation: plush-walk .534s linear infinite;
 }
@@ -429,6 +436,13 @@
 @keyframes plush-idle {
     0%, 100% { transform: translateY(0) rotate(0); }
     50% { transform: translateY(-2px) rotate(.4deg) scale(1.006); }
+}
+
+@keyframes plush-ready-idle {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0) scale3d(1, 1, 1); }
+    28% { transform: translate3d(0, -.35px, 0) rotate(-.06deg) scale3d(1.001, 1.002, 1); }
+    55% { transform: translate3d(0, -.8px, 0) rotate(.07deg) scale3d(1.002, 1.004, 1); }
+    76% { transform: translate3d(0, -.25px, 0) rotate(.03deg) scale3d(1.0005, 1.001, 1); }
 }
 
 @keyframes plush-turn-out {

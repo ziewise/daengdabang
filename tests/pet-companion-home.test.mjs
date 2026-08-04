@@ -164,6 +164,31 @@ test("the dog returns with matched sizing, a full-resolution canvas, and explici
     assert.doesNotMatch(css, /data-pet-home-transition="leaving"\][\s\S]{0,180}animation-duration: 1ms/);
 });
 
+test("the single sprite canvas scales detail to its source and lazily prepares vertical motion", async () => {
+    const spriteCanvas = await readSource("components/pet-companion/PetCompanionSpriteCanvas.tsx");
+
+    assert.equal((spriteCanvas.match(/<canvas\b/g) || []).length, 1);
+    assert.match(spriteCanvas, /const DEFAULT_SOURCE_CELL_SIZE = 256/);
+    assert.match(spriteCanvas, /const MAX_DEVICE_PIXEL_RATIO = 3/);
+    assert.match(spriteCanvas, /function adaptiveCanvasDpr\(/);
+    assert.match(spriteCanvas, /const containScale = Math\.min\(/);
+    assert.match(spriteCanvas, /const containDrawWidth = safeSourceCellWidth \* containScale/);
+    assert.match(spriteCanvas, /const containDrawHeight = safeSourceCellHeight \* containScale/);
+    assert.doesNotMatch(spriteCanvas, /sourceCellWidth\) \/ safeLayoutWidth/);
+    assert.doesNotMatch(spriteCanvas, /sourceCellHeight\) \/ safeLayoutHeight/);
+    assert.match(spriteCanvas, /Math\.min\(MAX_DEVICE_PIXEL_RATIO, safeDevicePixelRatio, sourceLimitedDpr\)/);
+    assert.match(spriteCanvas, /canvas\.dataset\.petCanvasDpr = dpr\.toFixed\(3\)/);
+    assert.match(spriteCanvas, /\(resolution: \$\{window\.devicePixelRatio \|\| 1\}dppx\)/);
+    assert.match(spriteCanvas, /function advanceTimeline\(/);
+    assert.match(spriteCanvas, /remainder %= cycleDuration/);
+    assert.doesNotMatch(spriteCanvas, /guard < 32/);
+    assert.match(spriteCanvas, /window\.addEventListener\("load", queueVerticalIdleLoad, \{ once: true \}\)/);
+    assert.match(spriteCanvas, /requestIdleCallback/);
+    assert.match(spriteCanvas, /requestVerticalLoadRef\.current\?\.\(\)/);
+    assert.match(spriteCanvas, /reducedMotion[\s\S]{0,160}cancelScheduledVerticalLoad\(\)/);
+    assert.match(spriteCanvas, /context\.imageSmoothingQuality = "high"/);
+});
+
 test("navigator speech keeps a painted dog frame visible on a cold mobile cache", async () => {
     const [character, css] = await Promise.all([
         readSource("components/pet-companion/PetCompanionCharacter.tsx"),

@@ -52,6 +52,7 @@ import {
     resolveHorizontalFacing,
     type PetCompanionFacing,
 } from "@/lib/pet-companion-direction";
+import { sampleCompanionMotion } from "@/lib/pet-companion-motion";
 import PetCompanionCharacter, {
     type PetCompanionMotion,
     type PetCompanionTravelDirection,
@@ -116,8 +117,19 @@ type EntryPortalStyle = CSSProperties & {
     "--pet-entry-duration": string;
 };
 
+type ActiveCompanionMovement = {
+    start: { x: number; y: number };
+    target: { x: number; y: number };
+    startedAt: number;
+    duration: number;
+    boxWidth: number;
+    arrivalFaceX?: number;
+    motionSource: "entry" | "guide" | "guide-return" | "move" | "roam" | "scroll";
+};
+
 const MOVE_EVENT = "ddb:pet-companion-move";
 const FLOATING_COLLISION_EVENT = "ddb:pet-companion-collision-check";
+const VERTICAL_LOAD_INTENT_MS = 96;
 const MIN_NAVIGATOR_PROMPT_GAP_MS = 8_000;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
@@ -150,28 +162,25 @@ function liveYBounds(boxHeight = LIVE_BOX_HEIGHT) {
 function visibleFloatingObstacleRects(): CollisionRect[] {
     if (typeof document === "undefined") return [];
     return Array.from(document.querySelectorAll<HTMLElement>(FLOATING_COLLISION_SELECTOR))
-        .filter((element) => {
+        .flatMap((element) => {
             if (element.dataset.mobileHidden === "true" || element.getAttribute("aria-hidden") === "true") {
-                return false;
+                return [];
             }
             const style = window.getComputedStyle(element);
-            if (style.display === "none" || style.visibility === "hidden") return false;
+            if (style.display === "none" || style.visibility === "hidden") return [];
             const rect = element.getBoundingClientRect();
-            return rect.width > 0
+            const visible = rect.width > 0
                 && rect.height > 0
                 && rect.right > 0
                 && rect.bottom > 0
                 && rect.left < window.innerWidth
                 && rect.top < window.innerHeight;
-        })
-        .map((element) => {
-            const rect = element.getBoundingClientRect();
-            return {
+            return visible ? [{
                 left: rect.left,
                 top: rect.top,
                 right: rect.right,
                 bottom: rect.bottom,
-            };
+            }] : [];
         });
 }
 
@@ -498,9 +507,13 @@ export default function PetCompanionLayer({
                 initialYBounds.max,
             ),
         };
+        const renderedPosition = { ...position };
+        let activeMovement: ActiveCompanionMovement | null = null;
+        let movementFrame = 0;
+        let scrollFrame = 0;
+        let pendingScrollDelta = 0;
         let lastScrollY = window.scrollY;
         let stopTimer = 0;
-        let arrivalTimer = 0;
         let actionTimer = 0;
         let entryTimer = 0;
         let portalTimer = 0;
@@ -565,6 +578,7 @@ export default function PetCompanionLayer({
             y: number,
             box: { width: number; height: number },
             allowHeader = false,
+            obstacles = visibleFloatingObstacleRects(),
         ) => {
             const mobile = window.innerWidth <= 680;
             const yBounds = allowHeader
@@ -581,9 +595,86 @@ export default function PetCompanionLayer({
                     minY: yBounds.min,
                     maxY: yBounds.max,
                 },
-                obstacles: visibleFloatingObstacleRects(),
+                obstacles,
                 gap: FLOATING_COLLISION_GAP,
             });
+        };
+
+        const writeRenderedPosition = (x: number, y: number) => {
+            renderedPosition.x = x;
+            renderedPosition.y = y;
+            walker.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
+        };
+
+        const cancelActiveMovement = () => {
+            activeMovement = null;
+            if (movementFrame) window.cancelAnimationFrame(movementFrame);
+            movementFrame = 0;
+        };
+
+        const finishActiveMovement = (movement: ActiveCompanionMovement) => {
+            if (activeMovement !== movement) return;
+            writeRenderedPosition(movement.target.x, movement.target.y);
+            activeMovement = null;
+            movementFrame = 0;
+            if (
+                walker.dataset.dragging === "true"
+                || homeTransitionRef.current
+                || Boolean(walker.dataset.petHomeTransition)
+            ) return;
+            walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
+            setMotion("idle");
+            setTravelDirection("side");
+            walker.dataset.petScrollDirection = "none";
+            walker.dataset.petMotionSource = movement.motionSource === "guide"
+                ? "guide"
+                : "idle";
+            walker.dataset.petMotionStatus = "arrived";
+            if (typeof movement.arrivalFaceX === "number") {
+                commitFacing(movement.target.x + movement.boxWidth / 2, movement.arrivalFaceX);
+            }
+        };
+
+        const advanceActiveMovement = (timestamp: number) => {
+            movementFrame = 0;
+            const movement = activeMovement;
+            if (!movement) return;
+            if (
+                walker.dataset.dragging === "true"
+                || homeTransitionRef.current
+                || Boolean(walker.dataset.petHomeTransition)
+            ) {
+                activeMovement = null;
+                walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
+                return;
+            }
+            const elapsed = Math.max(0, timestamp - movement.startedAt);
+            const point = sampleCompanionMotion(
+                movement.start,
+                movement.target,
+                elapsed,
+                movement.duration,
+            );
+            writeRenderedPosition(point.x, point.y);
+            if (elapsed >= movement.duration) {
+                finishActiveMovement(movement);
+                return;
+            }
+            movementFrame = window.requestAnimationFrame(advanceActiveMovement);
+        };
+
+        const syncActiveMovement = () => {
+            const movement = activeMovement;
+            if (!movement) return { ...renderedPosition };
+            const elapsed = Math.max(0, performance.now() - movement.startedAt);
+            const point = sampleCompanionMotion(
+                movement.start,
+                movement.target,
+                elapsed,
+                movement.duration,
+            );
+            writeRenderedPosition(point.x, point.y);
+            return point;
         };
 
         const moveTo = (
@@ -602,24 +693,27 @@ export default function PetCompanionLayer({
         ) => {
             const box = liveBox();
             const mobile = window.innerWidth <= 680;
-            // A new guide or scroll can retarget the dog before its previous
-            // transition finishes. Measure from the painted position so the
-            // paws keep the same world speed instead of inheriting stale goals.
-            const currentRect = walker.getBoundingClientRect();
-            const requestedX = options.relativeToPainted ? currentRect.left + x : x;
-            const requestedY = options.relativeToPainted ? currentRect.top + y : y;
+            // Retarget from the current painted point. A single JavaScript RAF
+            // loop owns transform, so repeated scroll input never restarts CSS
+            // easing or jumps back to an older target.
+            const currentPoint = syncActiveMovement();
+            cancelActiveMovement();
+            const requestedX = options.relativeToPainted ? currentPoint.x + x : x;
+            const requestedY = options.relativeToPainted ? currentPoint.y + y : y;
+            const floatingObstacles = visibleFloatingObstacleRects();
             const resolvedPosition = resolveFloatingPosition(
                 requestedX,
                 requestedY,
                 box,
                 options.allowHeader,
+                floatingObstacles,
             );
             const nextX = resolvedPosition.x;
             const nextY = resolvedPosition.y;
-            const distance = Math.hypot(nextX - currentRect.left, nextY - currentRect.top);
+            const distance = Math.hypot(nextX - currentPoint.x, nextY - currentPoint.y);
             let movementFacing: PetCompanionFacing | null = null;
-            if (!options.preserveFacing && distance >= 5) {
-                movementFacing = commitFacing(currentRect.left, nextX);
+            if (!options.preserveFacing && Math.abs(nextX - currentPoint.x) >= 5) {
+                movementFacing = commitFacing(currentPoint.x, nextX);
             }
             const normalSpeechWidth = Math.min(
                 mobile ? 210 : 224,
@@ -634,7 +728,6 @@ export default function PetCompanionLayer({
             const flippedLeft = nextX + box.width - flippedInset - flippedSpeechWidth;
             const normalFits = normalLeft + normalSpeechWidth <= window.innerWidth - 8;
             const flippedFits = flippedLeft >= 8;
-            const floatingObstacles = visibleFloatingObstacleRects();
             const horizontalObstacleOverlap = (left: number, width: number) => (
                 floatingObstacles.reduce((total, obstacle) => total + Math.max(
                     0,
@@ -652,18 +745,19 @@ export default function PetCompanionLayer({
 
             const pixelsPerSecond = nextMotion === "run"
                 ? (mobile ? 430 : 620)
-                : (mobile ? 80 : 136);
-            const minimumDuration = nextMotion === "run" ? 160 : 620;
-            const maximumDuration = nextMotion === "run" ? 420 : 3100;
+                : (mobile ? 104 : 152);
+            const minimumDuration = nextMotion === "run" ? 160 : 260;
+            const maximumDuration = nextMotion === "run" ? 420 : 2400;
             const duration = reducedMotion || options.instant || distance < 5
                 ? 1
                 : Math.round(clamp(distance / pixelsPerSecond * 1000, minimumDuration, maximumDuration));
             const hasAnimatedTravel = duration > 1
                 && (nextMotion === "walk" || nextMotion === "run");
 
-            window.clearTimeout(arrivalTimer);
             window.clearTimeout(actionTimer);
             window.clearTimeout(stopTimer);
+            walker.style.removeProperty("transition-duration");
+            walker.style.removeProperty("transition-timing-function");
             walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
             if (hasAnimatedTravel && movementFacing) {
                 walker.style.setProperty(
@@ -691,39 +785,27 @@ export default function PetCompanionLayer({
             walker.dataset.petX = String(nextX);
             walker.dataset.petY = String(nextY);
             walker.dataset.petTravelMs = String(duration);
-            walker.style.transitionTimingFunction = reducedMotion || options.instant
-                ? "linear"
-                : nextMotion === "run"
-                    ? "cubic-bezier(.2, .68, .28, 1)"
-                    : "cubic-bezier(.3, 0, .7, 1)";
-            walker.style.setProperty(
-                "transition-duration",
-                `${duration}ms`,
-                forcePreview ? "important" : "",
-            );
-            walker.style.transform = `translate3d(${Math.round(nextX)}px, ${Math.round(nextY)}px, 0)`;
-            if (hasAnimatedTravel) {
-                arrivalTimer = window.setTimeout(() => {
-                    if (
-                        walker.dataset.dragging === "true"
-                        || homeTransitionRef.current
-                        || Boolean(walker.dataset.petHomeTransition)
-                    ) return;
-                    walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
-                    setMotion("idle");
-                    setTravelDirection("side");
-                    walker.dataset.petScrollDirection = "none";
-                    walker.dataset.petMotionSource = options.motionSource === "guide"
-                        ? "guide"
-                        : "idle";
-                    walker.dataset.petMotionStatus = "arrived";
-                    if (typeof options.arrivalFaceX === "number") {
-                        commitFacing(nextX + box.width / 2, options.arrivalFaceX);
-                    }
-                }, duration + 34);
-            } else if (typeof options.arrivalFaceX === "number") {
-                commitFacing(nextX + box.width / 2, options.arrivalFaceX);
+
+            if (!hasAnimatedTravel) {
+                writeRenderedPosition(nextX, nextY);
+                walker.dataset.petMotionStatus = "arrived";
+                if (typeof options.arrivalFaceX === "number") {
+                    commitFacing(nextX + box.width / 2, options.arrivalFaceX);
+                }
+                return duration;
             }
+
+            activeMovement = {
+                start: currentPoint,
+                target: { x: nextX, y: nextY },
+                startedAt: performance.now(),
+                duration,
+                boxWidth: box.width,
+                arrivalFaceX: options.arrivalFaceX,
+                motionSource: nextMotionSource,
+            };
+            walker.dataset.petMotionStatus = "moving";
+            movementFrame = window.requestAnimationFrame(advanceActiveMovement);
             return duration;
         };
 
@@ -758,6 +840,7 @@ export default function PetCompanionLayer({
         };
 
         const placeWalkerInstantly = (x: number, y: number) => {
+            cancelActiveMovement();
             const resolvedPosition = resolveFloatingPosition(x, y, initialBox);
             const nextX = resolvedPosition.x;
             const nextY = resolvedPosition.y;
@@ -771,7 +854,7 @@ export default function PetCompanionLayer({
             walker.dataset.petScrollDirection = "none";
             walker.dataset.petMotionSource = "entry";
             walker.style.setProperty("transition-duration", "0ms", "important");
-            walker.style.transform = `translate3d(${Math.round(nextX)}px, ${Math.round(nextY)}px, 0)`;
+            writeRenderedPosition(nextX, nextY);
         };
 
         const beginInitialEntry = () => {
@@ -1051,21 +1134,22 @@ export default function PetCompanionLayer({
 
             const mobile = window.innerWidth <= 680;
             const step = (mobile ? 62 : 96) + Math.random() * (mobile ? 92 : 184);
-            const direction = Math.random() * Math.PI * 2;
-            const x = position.x + Math.cos(direction) * step;
+            const horizontalDirection = Math.random() < .5 ? -1 : 1;
+            const x = renderedPosition.x + horizontalDirection * step;
             const lowerTop = Math.max(96, window.innerHeight * .55);
             const y = clamp(
-                position.y + Math.sin(direction) * step * .42,
+                renderedPosition.y + (Math.random() * 2 - 1) * Math.min(38, step * .2),
                 lowerTop,
                 Math.max(lowerTop, window.innerHeight - box.height),
             );
             moveTo(x, y, "walk", { motionSource: "roam" });
         };
 
-        const onScroll = () => {
+        const applyScrollMovement = () => {
+            scrollFrame = 0;
             updateVisibility();
-            const delta = window.scrollY - lastScrollY;
-            lastScrollY = window.scrollY;
+            const delta = pendingScrollDelta;
+            pendingScrollDelta = 0;
             if (Math.abs(delta) < 2) return;
             // Browser scroll restoration and late-loading hero media can emit a
             // trusted scroll without any visitor gesture. Do not let that cancel
@@ -1091,12 +1175,30 @@ export default function PetCompanionLayer({
             }
             if (!walker.querySelector("[data-sprite-ready='true'][data-vertical-sprite-ready='true']")) {
                 // A missing/slow core or front-rear atlas must never make the
-                // static poster/side-view fallback slide vertically. Skip this
-                // decorative step; the selected-breed atlases will serve the next.
-                setMotion("idle");
-                setTravelDirection("side");
-                walker.dataset.petScrollDirection = "none";
+                // static poster/side-view fallback slide vertically. Briefly
+                // publish the vertical intent so the sprite can urgently load
+                // that atlas, but do not change the walker's position yet.
+                const verticalIntentDirection = delta > 0 ? "down" : "up";
+                const currentPoint = syncActiveMovement();
+                cancelActiveMovement();
+                position.x = currentPoint.x;
+                position.y = currentPoint.y;
+                positionRef.current = { ...currentPoint };
+                walker.dataset.petX = String(currentPoint.x);
+                walker.dataset.petY = String(currentPoint.y);
+                walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
+                setMotion("run");
+                setTravelDirection(verticalIntentDirection);
+                walker.dataset.petScrollDirection = verticalIntentDirection;
                 walker.dataset.petMotionSource = "vertical-loading";
+                window.clearTimeout(stopTimer);
+                stopTimer = window.setTimeout(() => {
+                    if (walker.dataset.petMotionSource !== "vertical-loading") return;
+                    setMotion("idle");
+                    setTravelDirection("side");
+                    walker.dataset.petScrollDirection = "none";
+                    walker.dataset.petMotionSource = "idle";
+                }, VERTICAL_LOAD_INTENT_MS);
                 return;
             }
             const travel = clamp(Math.abs(delta) * .72, 24, 150);
@@ -1120,9 +1222,23 @@ export default function PetCompanionLayer({
             }, runDuration + 45);
         };
 
+        const onScroll = () => {
+            const nextScrollY = window.scrollY;
+            pendingScrollDelta += nextScrollY - lastScrollY;
+            lastScrollY = nextScrollY;
+            if (scrollFrame) return;
+            scrollFrame = window.requestAnimationFrame(applyScrollMovement);
+        };
+
         const onResize = () => {
             interruptInitialEntry();
-            moveTo(position.x, position.y, "idle", {
+            // Clamp the point that is actually painted. `position` already
+            // contains an in-flight target and would teleport the dog there
+            // when a phone rotation interrupts the rAF travel.
+            moveTo(0, 0, "idle", {
+                instant: true,
+                preserveFacing: true,
+                relativeToPainted: true,
                 allowHeader: guidePlacementRef.current === "header"
                     && (guideInFlightRef.current || promptOpenRef.current),
             });
@@ -1184,6 +1300,10 @@ export default function PetCompanionLayer({
             reducedMotion = event.matches;
             walker.dataset.petReducedMotion = reducedMotion ? "true" : "false";
             if (reducedMotion) {
+                if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+                scrollFrame = 0;
+                pendingScrollDelta = 0;
+                cancelActiveMovement();
                 interruptInitialEntry();
                 moveTo(position.x, position.y, "idle", {
                     allowHeader: guidePlacementRef.current === "header"
@@ -1244,8 +1364,11 @@ export default function PetCompanionLayer({
         const firstRoam = window.setTimeout(roam, expectHeroLensEntry ? 2800 : 1000);
 
         return () => {
+            cancelActiveMovement();
+            if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+            scrollFrame = 0;
+            pendingScrollDelta = 0;
             window.clearTimeout(stopTimer);
-            window.clearTimeout(arrivalTimer);
             window.clearTimeout(actionTimer);
             window.clearTimeout(entryTimer);
             window.clearTimeout(portalTimer);

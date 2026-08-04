@@ -1,0 +1,52 @@
+.wordmark {
+    display: inline-flex;
+    min-width: 58px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-weight: 900;
+    line-height: .88;
+    letter-spacing: -.08em;
+    transform: rotate(-.7deg);
+    filter: drop-shadow(.4px .6px 0 rgb(32 57 70 / 18%));
+}
+
+.brandLine {
+    display: inline-flex;
+    align-items: baseline;
+    font-size: 16px;
+    -webkit-text-stroke: .22px currentColor;
+    paint-order: stroke fill;
+}
+
+.brandLine > span:nth-child(1) { color: #2aa9ae; transform: rotate(-1.5deg); }
+.brandLine > span:nth-child(2) { color: #ed5d55; transform: translateY(-.4px) rotate(1deg); }
+.brandLine > span:nth-child(3) { color: #ef941f; transform: rotate(-.8deg); }
+
+.labLine {
+    margin-top: 4px;
+    color: #263746;
+    font-size: 12px;
+    letter-spacing: -.055em;
+    text-shadow:
+        .35px .2px rgb(42 169 174 / 34%),
+        -.25px .25px rgb(237 93 85 / 22%);
+    transform: rotate(.6deg);
+}
+
+.wordmark[data-compact="true"] {
+    min-width: 52px;
+    align-items: flex-start;
+}
+
+.wordmark[data-compact="true"] .brandLine { font-size: 15px; }
+.wordmark[data-compact="true"] .labLine { margin-top: 3px; font-size: 11px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .wordmark,
+    .brandLine > span,
+    .labLine {
+        transform: none;
+    }
+}

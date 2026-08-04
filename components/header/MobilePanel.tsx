@@ -17,7 +17,7 @@ import {
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
-import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
+import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
@@ -74,6 +74,8 @@ export default function MobilePanel({ open, onClose }: Props) {
                 role="dialog"
                 aria-modal="true"
                 aria-label={t("menu")}
+                aria-hidden={!open}
+                inert={open ? undefined : true}
             >
                 {/* 헤더 */}
                 <div className="flex items-center justify-between px-5 h-[var(--header-height)] border-b border-neutral-200">
@@ -146,23 +148,6 @@ export default function MobilePanel({ open, onClose }: Props) {
                     <MobileLink href="/challenge/" icon="fa-trophy" tone="orange" crayon onClick={onClose}>{t("challenge")}</MobileLink>
                     <MobileLink href="/community/" icon="fa-people-group" tone="teal" crayon onClick={onClose}>{t("community")}</MobileLink>
                     <MobileGroup
-                        label={(
-                            <span className="inline-flex items-center gap-2">
-                                <DaengLabSymbol size={28} />
-                                <span>{t("daengLab")}</span>
-                            </span>
-                        )}
-                        expanded={expanded === "lab"}
-                        onToggle={() => setExpanded(expanded === "lab" ? null : "lab")}
-                        crayon
-                    >
-                        <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
-                        <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" onClick={onClose}>울음소리·행동 분석</SubLink>
-                        <SubLink href="/my-pet/#health-report" icon="fa-chart-line" onClick={onClose}>건강 변화 리포트</SubLink>
-                        <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
-                    </MobileGroup>
-
-                    <MobileGroup
                         label={t("customerCenter")}
                         expanded={expanded === "cs"}
                         onToggle={() => setExpanded(expanded === "cs" ? null : "cs")}
@@ -173,6 +158,17 @@ export default function MobilePanel({ open, onClose }: Props) {
                                 {menuLabel(item.label)}
                             </SubLink>
                         ))}
+                    </MobileGroup>
+                    <MobileGroup
+                        label={<DaengLabWordmark label={t("daengLab")} compact />}
+                        expanded={expanded === "lab"}
+                        onToggle={() => setExpanded(expanded === "lab" ? null : "lab")}
+                        crayon
+                    >
+                        <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
+                        <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" onClick={onClose}>울음소리·행동 분석</SubLink>
+                        <SubLink href="/my-pet/#health-report" icon="fa-chart-line" onClick={onClose}>건강 변화 리포트</SubLink>
+                        <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}

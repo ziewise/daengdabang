@@ -9,17 +9,6 @@
     white-space: nowrap;
 }
 
-.daengLabNavSymbol {
-    transform: rotate(-1.2deg);
-    filter: drop-shadow(0 2px 2px rgba(35, 95, 122, 0.14));
-    transition: transform 180ms ease, filter 180ms ease;
-}
-
-.desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"]) .daengLabNavSymbol {
-    transform: translateY(-1px) rotate(1deg) scale(1.06);
-    filter: drop-shadow(0 3px 3px rgba(35, 95, 122, 0.2)) saturate(1.08);
-}
-
 .loginLink {
     font-family: var(--font-wanted-sans), Arial, sans-serif !important;
     font-weight: 800 !important;
@@ -166,12 +155,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .daengLabNavSymbol,
-    .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"]) .daengLabNavSymbol {
-        transition: none;
-        transform: none;
-    }
-
     .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"]),
     .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::before,
     .desktopNavItem:is(:hover, :focus-visible, [data-nav-open="true"])::after {
