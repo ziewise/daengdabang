@@ -27,6 +27,7 @@ test("desktop and mobile navigation expose the final DaengLab information archit
     const header = read("../components/header/Header.tsx");
     const mobile = read("../components/header/MobilePanel.tsx");
     const labWordmark = read("../components/header/DaengLabWordmark.tsx");
+    const labWordmarkCss = read("../components/header/DaengLabWordmark.module.css");
     const i18n = read("../lib/i18n.tsx");
 
     for (const [source, labels] of [
@@ -58,6 +59,10 @@ test("desktop and mobile navigation expose the final DaengLab information archit
     assert.doesNotMatch(mobile, /<MobileLink href="\/bundles\/"/);
     assert.match(labWordmark, /<span>댕<\/span><span>다<\/span><span>방<\/span>/);
     assert.match(labWordmark, />연구소<\/span>/);
+    assert.match(labWordmarkCss, /--daenglab-wordmark-size:\s*16px/);
+    assert.match(labWordmarkCss, /\.brandLine[\s\S]*?font-size:\s*var\(--daenglab-wordmark-size\)/);
+    assert.match(labWordmarkCss, /\.labLine[\s\S]*?font-size:\s*var\(--daenglab-wordmark-size\)/);
+    assert.match(labWordmarkCss, /data-compact="true"[\s\S]*?--daenglab-wordmark-size:\s*15px/);
     assert.doesNotMatch(`${header}\n${mobile}`, /DaengLabSymbol/);
     assert.match(mobile, /aria-hidden=\{!open\}/);
     assert.match(mobile, /inert=\{open \? undefined : true\}/);

@@ -1,4 +1,5 @@
 .wordmark {
+    --daenglab-wordmark-size: 16px;
     display: inline-flex;
     min-width: 58px;
     flex-direction: column;
@@ -15,7 +16,7 @@
 .brandLine {
     display: inline-flex;
     align-items: baseline;
-    font-size: 16px;
+    font-size: var(--daenglab-wordmark-size);
     -webkit-text-stroke: .22px currentColor;
     paint-order: stroke fill;
 }
@@ -27,7 +28,7 @@
 .labLine {
     margin-top: 4px;
     color: #263746;
-    font-size: 12px;
+    font-size: var(--daenglab-wordmark-size);
     letter-spacing: -.055em;
     text-shadow:
         .35px .2px rgb(42 169 174 / 34%),
@@ -36,12 +37,12 @@
 }
 
 .wordmark[data-compact="true"] {
+    --daenglab-wordmark-size: 15px;
     min-width: 52px;
     align-items: flex-start;
 }
 
-.wordmark[data-compact="true"] .brandLine { font-size: 15px; }
-.wordmark[data-compact="true"] .labLine { margin-top: 3px; font-size: 11px; }
+.wordmark[data-compact="true"] .labLine { margin-top: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
     .wordmark,
