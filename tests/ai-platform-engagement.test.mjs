@@ -4,20 +4,41 @@ import test from "node:test";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 
-test("home keeps member AI actions near the dashboard and moves guest actions before reviews", () => {
+test("home leads with member recommendations and places AI engagement after new arrivals", () => {
     const home = read("../app/page.tsx");
+    const hero = home.indexOf("<HeroSection");
+    const sentinel = home.indexOf('id="fab-reveal-sentinel"');
+    const recommendations = home.indexOf("<RecommendSection");
+    const best = home.indexOf("<BestSection");
+    const brands = home.indexOf("<BrandSlider");
+    const promo = home.indexOf("<PromoSection");
+    const newArrivals = home.indexOf("<NewArrivalsSection");
     const dashboard = home.indexOf("<MemberAiDashboard");
     const memberSlot = home.indexOf('<HomeAudienceSlot audience="member">');
     const memberActions = home.indexOf("<AiQuickActions", memberSlot);
-    const recommendations = home.indexOf("<RecommendSection");
-    const newArrivals = home.indexOf("<NewArrivalsSection");
     const guestSlot = home.indexOf('<HomeAudienceSlot audience="guest">');
     const guestActions = home.indexOf("<AiQuickActions", guestSlot);
     const reviews = home.indexOf("<ReviewSection");
 
-    assert.ok(dashboard >= 0 && dashboard < memberSlot);
-    assert.ok(memberSlot < memberActions && memberActions < recommendations);
-    assert.ok(newArrivals < guestSlot && guestSlot < guestActions && guestActions < reviews);
+    const orderedSections = [
+        hero,
+        sentinel,
+        recommendations,
+        best,
+        brands,
+        promo,
+        newArrivals,
+        dashboard,
+        memberSlot,
+        memberActions,
+        guestSlot,
+        guestActions,
+        reviews,
+    ];
+    assert.ok(orderedSections.every((index) => index >= 0), "every requested home section must be present");
+    for (let index = 1; index < orderedSections.length; index += 1) {
+        assert.ok(orderedSections[index - 1] < orderedSections[index], "home sections must follow the requested order");
+    }
     const audienceSlot = read("../components/home/HomeAudienceSlot.tsx");
     assert.match(audienceSlot, /useAuth.*@\/lib\/store/s);
     assert.match(audienceSlot, /audience === "member"/);

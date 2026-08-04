@@ -48,22 +48,21 @@ export default function HomePage() {
             {/* 플로팅 FAB(FloatingDock) 등장 기준점 — 히어로를 지나면 펫렌즈/챗봇 버튼 노출 */}
             <div id="fab-reveal-sentinel" aria-hidden="true" />
 
-            {/* 로그인 회원의 오늘 돌봄 이유를 가장 먼저 보여주는 개인 AI 대시보드 */}
-            <MemberAiDashboard />
-
-            {/* 회원은 개인 대시보드에서 곧바로 AI 기능으로 이어진다. */}
-            <HomeAudienceSlot audience="member">
-                <AiQuickActions />
-            </HomeAudienceSlot>
-
-            {/* AI 분석과 회원 프로필을 실제 상품으로 연결 */}
+            {/* 회원의 반려견 데이터를 반영한 추천 상품은 히어로 바로 아래에 노출한다. */}
             <RecommendSection />
             <BestSection />
             <BrandSlider />
             <PromoSection />
             <NewArrivalsSection />
 
-            {/* 비회원은 쇼핑 콘텐츠를 둘러본 뒤 리뷰 직전에 AI 체험으로 진입한다. */}
+            {/* 신상품 다음에 오늘의 돌봄 대시보드와 AI 바로가기를 이어서 배치한다. */}
+            <MemberAiDashboard />
+
+            <HomeAudienceSlot audience="member">
+                <AiQuickActions />
+            </HomeAudienceSlot>
+
+            {/* 비회원도 같은 위치에서 AI 체험으로 진입한다. */}
             <HomeAudienceSlot audience="guest">
                 <AiQuickActions />
             </HomeAudienceSlot>

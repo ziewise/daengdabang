@@ -15,7 +15,7 @@ export default function DaengLabSymbol({ size = 64, className = "", priority = f
             data-daenglab-symbol
         >
             <Image
-                src="/images/brand/daengdabang-research-lab-symbol.png"
+                src="/images/brand/daengdabang-research-lab-symbol-nav.webp"
                 alt=""
                 fill
                 sizes={`${size}px`}

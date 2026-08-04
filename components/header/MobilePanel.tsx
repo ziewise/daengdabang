@@ -17,6 +17,7 @@ import {
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
+import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
@@ -115,8 +116,6 @@ export default function MobilePanel({ open, onClose }: Props) {
 
                 {/* 메뉴 리스트 — 스크롤 가능 */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3">
-                    <MobileLink href="/" icon="fa-house" tone="teal" crayon onClick={onClose}>{t("home")}</MobileLink>
-
                     <MobileGroup
                         label={t("shop")}
                         expanded={expanded === "shop"}
@@ -141,10 +140,20 @@ export default function MobilePanel({ open, onClose }: Props) {
                         ))}
                     </MobileGroup>
 
+                    <MobileLink href="/new/" icon="fa-sparkles" tone="orange" crayon onClick={onClose}>{t("new")}</MobileLink>
+                    <MobileLink href="/brands/" icon="fa-tags" tone="teal" crayon onClick={onClose}>{t("brand")}</MobileLink>
+                    <MobileLink href="/my-pet/" icon="fa-dog" tone="coral" crayon onClick={onClose}>{t("myPet")}</MobileLink>
+                    <MobileLink href="/challenge/" icon="fa-trophy" tone="orange" crayon onClick={onClose}>{t("challenge")}</MobileLink>
+                    <MobileLink href="/community/" icon="fa-people-group" tone="teal" crayon onClick={onClose}>{t("community")}</MobileLink>
                     <MobileGroup
-                        label={t("aiAnalysis")}
-                        expanded={expanded === "ai"}
-                        onToggle={() => setExpanded(expanded === "ai" ? null : "ai")}
+                        label={(
+                            <span className="inline-flex items-center gap-2">
+                                <DaengLabSymbol size={28} />
+                                <span>{t("daengLab")}</span>
+                            </span>
+                        )}
+                        expanded={expanded === "lab"}
+                        onToggle={() => setExpanded(expanded === "lab" ? null : "lab")}
                         crayon
                     >
                         <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
@@ -153,10 +162,6 @@ export default function MobilePanel({ open, onClose }: Props) {
                         <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 
-                    <MobileLink href="/my-pet/" icon="fa-dog" tone="coral" crayon onClick={onClose}>{t("myPet")}</MobileLink>
-                    <MobileLink href="/challenge/" icon="fa-trophy" tone="orange" crayon onClick={onClose}>{t("challenge")}</MobileLink>
-                    <MobileLink href="/community/" icon="fa-people-group" tone="teal" crayon onClick={onClose}>{t("community")}</MobileLink>
-                    <MobileLink href="/bundles/" icon="fa-gift" tone="coral" crayon onClick={onClose}>{t("event")}</MobileLink>
                     <MobileGroup
                         label={t("customerCenter")}
                         expanded={expanded === "cs"}
@@ -228,7 +233,7 @@ function MobileGroup({
     children,
     crayon = false,
 }: {
-    label: string;
+    label: React.ReactNode;
     expanded: boolean;
     onToggle: () => void;
     children: React.ReactNode;

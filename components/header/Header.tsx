@@ -22,10 +22,11 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
+import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import { useI18n } from "@/lib/i18n";
 import headerStyles from "./Header.module.css";
 
-type DropKey = "shop" | "ai" | "cs" | null;
+type DropKey = "shop" | "lab" | "cs" | null;
 
 export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
@@ -83,7 +84,6 @@ export default function Header() {
 
                     {/* AI 서비스 중심의 데스크탑 메인 메뉴 */}
                     <nav className="hidden items-center gap-0 lg:flex xl:gap-1">
-                        <NavLink href="/">{t("home")}</NavLink>
                         <NavDropdown
                             label={t("shop")}
                             open={openDrop === "shop"}
@@ -133,10 +133,16 @@ export default function Header() {
                             </div>
                         </NavDropdown>
 
+                        <NavLink href="/new/">{t("new")}</NavLink>
+                        <NavLink href="/brands/">{t("brand")}</NavLink>
+                        <NavLink href="/my-pet/">{t("myPet")}</NavLink>
+                        <NavLink href="/challenge/">{t("challenge")}</NavLink>
+                        <NavLink href="/community/">{t("community")}</NavLink>
                         <NavDropdown
-                            label={t("aiAnalysis")}
-                            open={openDrop === "ai"}
-                            onEnter={() => setOpenDrop("ai")}
+                            label={<DaengLabSymbol size={40} className={headerStyles.daengLabNavSymbol} priority />}
+                            ariaLabel={t("daengLab")}
+                            open={openDrop === "lab"}
+                            onEnter={() => setOpenDrop("lab")}
                             onLeave={() => setOpenDrop(null)}
                         >
                             <ul className="min-w-[300px] p-3">
@@ -161,10 +167,6 @@ export default function Header() {
                             </ul>
                         </NavDropdown>
 
-                        <NavLink href="/my-pet/">{t("myPet")}</NavLink>
-                        <NavLink href="/challenge/">{t("challenge")}</NavLink>
-                        <NavLink href="/community/">{t("community")}</NavLink>
-                        <NavLink href="/bundles/">{t("event")}</NavLink>
                         <NavDropdown
                             label={t("customerCenter")}
                             open={openDrop === "cs"}
@@ -295,13 +297,15 @@ function NavLink({
  * (mt-2 margin 대신 pt-2 padding 으로 outer absolute 자체가 영역을 차지) */
 function NavDropdown({
     label,
+    ariaLabel,
     open,
     onEnter,
     onLeave,
     children,
     wide = false,
 }: {
-    label: string;
+    label: React.ReactNode;
+    ariaLabel?: string;
     open: boolean;
     onEnter: () => void;
     onLeave: () => void;
@@ -316,6 +320,7 @@ function NavDropdown({
         >
             <button
                 type="button"
+                aria-label={ariaLabel}
                 className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
                 data-nav-open={open ? "true" : "false"}
             >

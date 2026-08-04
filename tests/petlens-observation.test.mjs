@@ -52,7 +52,7 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.match(modal, /mode === "observation" \? "daenglab" : "petlens"/);
     assert.match(memberGate, /data-daenglab-member-gate/);
     assert.match(memberGate, /카메라·마이크 신호를 개별 분석하는 회원 전용 서비스/);
-    assert.match(symbol, /daengdabang-research-lab-symbol\.png/);
+    assert.match(symbol, /daengdabang-research-lab-symbol-nav\.webp/);
     assert.match(symbol, /data-daenglab-symbol/);
     for (const surface of [launcher, modal, experience, page]) {
         assert.match(surface, /DaengLabSymbol/);

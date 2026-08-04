@@ -23,14 +23,14 @@ test("member profile create and edit forms expose the same four-view photo regis
     assert.match(editor, /restorePetLensPhotoViews\(pet\.photoViews, pet\.photoDataUrl\)/);
 });
 
-test("desktop and mobile navigation expose the AI-platform information architecture", () => {
+test("desktop and mobile navigation expose the final DaengLab information architecture", () => {
     const header = read("../components/header/Header.tsx");
     const mobile = read("../components/header/MobilePanel.tsx");
     const i18n = read("../lib/i18n.tsx");
 
     for (const [source, labels] of [
-        [header, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"', 'label={t("customerCenter")}']],
-        [mobile, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"', 'label={t("customerCenter")}']],
+        [header, ['label={t("shop")}', 'href="/new/"', 'href="/brands/"', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'label={<DaengLabSymbol', 'label={t("customerCenter")}']],
+        [mobile, ['label={t("shop")}', '<MobileLink href="/new/"', '<MobileLink href="/brands/"', '<MobileLink href="/my-pet/"', '<MobileLink href="/challenge/"', '<MobileLink href="/community/"', '<DaengLabSymbol', 'label={t("customerCenter")}']],
     ]) {
         let previous = -1;
         for (const label of labels) {
@@ -39,10 +39,22 @@ test("desktop and mobile navigation expose the AI-platform information architect
             previous = next;
         }
     }
-    for (const label of ["쇼핑", "AI 분석", "우리 아이", "챌린지", "커뮤니티", "이벤트", "고객센터"]) {
-        assert.match(i18n, new RegExp(`"${label}"`));
+    for (const key of ["shop", "new", "brand", "myPet", "challenge", "community", "daengLab", "customerCenter"]) {
+        assert.match(i18n, new RegExp(`\\b${key}:`));
     }
-    for (const source of [header, mobile]) assert.match(source, /CS_LINKS/);
+    for (const source of [header, mobile]) {
+        assert.match(source, /CS_LINKS/);
+        assert.match(source, /DaengLabSymbol/);
+        assert.match(source, /t\("daengLab"\)/);
+        assert.doesNotMatch(source, /label=\{t\("aiAnalysis"\)\}/);
+        for (const href of ["/pet-lens/", "/pet-lens/?mode=observation", "/my-pet/#health-report", "/chat/"]) {
+            assert.ok(source.includes(`"${href}"`), `${href} must stay in the DaengLab dropdown`);
+        }
+    }
+    assert.doesNotMatch(header, /<NavLink href="\/">/);
+    assert.doesNotMatch(header, /<NavLink href="\/bundles\/">/);
+    assert.doesNotMatch(mobile, /<MobileLink href="\/"/);
+    assert.doesNotMatch(mobile, /<MobileLink href="\/bundles\/"/);
 });
 
 test("navigator gives every searchable breed an independent 32-frame atlas set", async () => {
