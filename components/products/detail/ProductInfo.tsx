@@ -303,7 +303,6 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
 
             {/* 스크롤 추적 하단 고정 바 — 버튼을 누르면 옵션 시트가 열린다 */}
             <div
-                data-pet-guide-target="product-actions"
                 className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/60 bg-white/65 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-transform duration-300 ${
                     showBar ? "translate-y-0" : "pointer-events-none translate-y-full"
                 }`}
@@ -336,6 +335,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
+                        data-pet-guide-target="product-actions"
                         className="h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >
                         {t("buyNow")}

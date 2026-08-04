@@ -359,6 +359,7 @@ export default function PetCompanionGate() {
                     tabIndex={floatingControlsHidden ? -1 : undefined}
                     disabled={Boolean(homeTransition)}
                     data-pet-companion-home
+                    data-pet-companion-avoid="true"
                     data-pet-guide-target="home"
                     data-home-occupied={!companionEnabled ? "true" : "false"}
                     data-home-transition={homeTransition || "idle"}
@@ -394,6 +395,7 @@ export default function PetCompanionGate() {
                 inert={floatingControlsHidden ? true : undefined}
                 tabIndex={floatingControlsHidden ? -1 : undefined}
                 data-pet-companion-settings
+                data-pet-companion-avoid="true"
                 data-pet-guide-target="settings"
                 data-companion-enabled={companionEnabled ? "true" : "false"}
                 data-panel-open={panelOpen}

@@ -31,7 +31,7 @@
     font-size: 17px;
     line-height: 1;
     cursor: pointer;
-    transition: transform .18s ease, box-shadow .18s ease, opacity .16s ease, visibility 0s linear;
+    transition: bottom .3s cubic-bezier(.4, 0, .2, 1), transform .18s ease, box-shadow .18s ease, opacity .16s ease, visibility 0s linear;
 }
 
 .settingsLaunch:hover {
@@ -70,7 +70,7 @@
     background: linear-gradient(145deg, rgb(255 252 246 / 98%), rgb(255 241 222 / 96%));
     box-shadow: 0 5px 18px rgb(40 31 27 / 14%);
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, opacity .16s ease, visibility 0s linear;
+    transition: bottom .3s cubic-bezier(.4, 0, .2, 1), transform .2s ease, box-shadow .2s ease, background .2s ease, opacity .16s ease, visibility 0s linear;
 }
 
 .homeLaunch:hover {
@@ -88,6 +88,14 @@
 .homeLaunch[data-home-occupied="true"] {
     background: linear-gradient(145deg, #fff9ec, #ffe3b5);
     box-shadow: 0 5px 18px rgb(40 31 27 / 14%), inset 0 0 0 1px rgb(255 255 255 / 72%);
+}
+
+.settingsLaunch[data-buybar="true"] {
+    bottom: 158px;
+}
+
+.homeLaunch[data-buybar="true"] {
+    bottom: 206px;
 }
 
 .dogHouseIcon {
@@ -174,11 +182,11 @@
 }
 
 .settingsLaunch[data-mobile-hidden="true"] {
-    transition-delay: 0s, 0s, 0s, .14s;
+    transition-delay: 0s, 0s, 0s, 0s, .14s;
 }
 
 .homeLaunch[data-mobile-hidden="true"] {
-    transition-delay: 0s, 0s, 0s, 0s, .14s;
+    transition-delay: 0s, 0s, 0s, 0s, 0s, .14s;
 }
 
 .homeLaunch:focus-visible,
@@ -1132,10 +1140,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .walker,
+    .walker {
+        transition-duration: 1ms !important;
+    }
+
     .settingsLaunch,
     .homeLaunch {
-        transition-duration: 1ms !important;
+        transition: none !important;
     }
 
     .quickActionsBackdrop,

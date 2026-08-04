@@ -105,11 +105,48 @@ test("all three mobile launchers share the buy-bar and safe-area offset", async 
     ]);
 
     assert.match(dock, /bottom-\[calc\(5\.5rem\+env\(safe-area-inset-bottom\)\)\]/);
+    assert.match(dock, /motion-reduce:transition-none/);
     assert.match(gate, /data-buybar=\{buybar \? "true" : "false"\}/);
+    assert.ok(
+        css.indexOf('.settingsLaunch[data-buybar="true"]') < css.indexOf("@media (max-width: 680px)"),
+        "desktop controls must clear the raised chat dock before the mobile overrides",
+    );
+    assert.match(css, /\.settingsLaunch\[data-buybar="true"\][\s\S]{0,90}158px/);
+    assert.match(css, /\.homeLaunch\[data-buybar="true"\][\s\S]{0,90}206px/);
     assert.match(css, /\.settingsLaunch\[data-buybar="true"\][\s\S]{0,90}150px/);
     assert.match(css, /\.homeLaunch\[data-buybar="true"\][\s\S]{0,90}200px/);
     assert.match(css, /data-mobile-hidden="true"[\s\S]{0,180}visibility: hidden/);
     assert.match(css, /data-mobile-hidden="true"[\s\S]{0,220}pointer-events: none/);
+    assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]{0,360}\.settingsLaunch,[\s\S]{0,80}\.homeLaunch \{[\s\S]{0,80}transition: none !important/);
+});
+
+test("the companion reserves the visible floating rail after scroll idle", async () => {
+    const [dock, gate, layer, collision, productInfo] = await Promise.all([
+        source("components/site/FloatingDock.tsx"),
+        source("components/pet-companion/PetCompanionGate.tsx"),
+        source("components/pet-companion/PetCompanionLayer.tsx"),
+        source("lib/pet-companion-collision.ts"),
+        source("components/products/detail/ProductInfo.tsx"),
+    ]);
+
+    assert.match(dock, /data-mobile-floating-chat[\s\S]{0,80}data-pet-companion-avoid="true"/);
+    assert.equal((gate.match(/data-pet-companion-avoid="true"/g) || []).length, 2);
+    assert.match(layer, /FLOATING_COLLISION_SELECTOR = '\[data-pet-companion-avoid="true"\]'/);
+    assert.match(layer, /resolveCompanionCollision\(\{/);
+    assert.match(layer, /attributeFilter: \[[^\]]*"data-mobile-hidden"/);
+    assert.match(layer, /scheduleFloatingCollisionCheck\(\)/);
+    assert.match(layer, /horizontalObstacleOverlap/);
+    assert.match(layer, /flippedOverlap < normalOverlap/);
+    assert.match(layer, /walker\.dataset\.dragging === "true" \|\| homeTransitionRef\.current/);
+    assert.match(layer, /const onBuybar = \(event: Event\) => \{[\s\S]{0,100}if \(homeTransitionRef\.current\) return/);
+    assert.match(layer, /latestBuybarVisible = Boolean\(\(event as CustomEvent\)\.detail\)/);
+    assert.match(layer, /const onFloatingCollisionRequest = \(\) => \{[\s\S]{0,260}latestBuybarVisible[\s\S]{0,260}scheduleFloatingCollisionCheck\(\)/);
+    assert.match(layer, /addEventListener\(FLOATING_COLLISION_EVENT, onFloatingCollisionRequest\)/);
+    assert.match(layer, /dispatchEvent\(new Event\(FLOATING_COLLISION_EVENT\)\)/);
+    assert.match(collision, /Candidate axes are built from every edge/);
+    const stickyBar = productInfo.slice(productInfo.indexOf("스크롤 추적 하단 고정 바"));
+    assert.doesNotMatch(stickyBar.slice(0, stickyBar.indexOf("mx-auto")), /data-pet-guide-target="product-actions"/);
+    assert.match(stickyBar, /onClick=\{\(\) => setSheetMode\("buy"\)\}[\s\S]{0,100}data-pet-guide-target="product-actions"/);
 });
 
 test("the moving companion never steals a mobile header action", async () => {

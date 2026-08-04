@@ -43,6 +43,10 @@ import {
     type PetCompanionSettings,
 } from "@/lib/pet-companion";
 import { resolvePetCompanionSaveAccess } from "@/lib/pet-companion-save-access";
+import {
+    resolveCompanionCollision,
+    type CollisionRect,
+} from "@/lib/pet-companion-collision";
 import PetCompanionCharacter, {
     type PetCompanionMotion,
     type PetCompanionTravelDirection,
@@ -108,9 +112,12 @@ type EntryPortalStyle = CSSProperties & {
 };
 
 const MOVE_EVENT = "ddb:pet-companion-move";
+const FLOATING_COLLISION_EVENT = "ddb:pet-companion-collision-check";
 const MIN_NAVIGATOR_PROMPT_GAP_MS = 8_000;
 const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
+const FLOATING_COLLISION_SELECTOR = '[data-pet-companion-avoid="true"]';
+const FLOATING_COLLISION_GAP = 12;
 
 function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
@@ -132,6 +139,34 @@ function hasVisibleProductSurface() {
 function liveYBounds(boxHeight = LIVE_BOX_HEIGHT) {
     const max = Math.max(8, window.innerHeight - boxHeight);
     return { min: Math.min(92, max), max };
+}
+
+function visibleFloatingObstacleRects(): CollisionRect[] {
+    if (typeof document === "undefined") return [];
+    return Array.from(document.querySelectorAll<HTMLElement>(FLOATING_COLLISION_SELECTOR))
+        .filter((element) => {
+            if (element.dataset.mobileHidden === "true" || element.getAttribute("aria-hidden") === "true") {
+                return false;
+            }
+            const style = window.getComputedStyle(element);
+            if (style.display === "none" || style.visibility === "hidden") return false;
+            const rect = element.getBoundingClientRect();
+            return rect.width > 0
+                && rect.height > 0
+                && rect.right > 0
+                && rect.bottom > 0
+                && rect.left < window.innerWidth
+                && rect.top < window.innerHeight;
+        })
+        .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+                left: rect.left,
+                top: rect.top,
+                right: rect.right,
+                bottom: rect.bottom,
+            };
+        });
 }
 
 function moveCompanionToRest(walker: HTMLElement | null) {
@@ -459,10 +494,15 @@ export default function PetCompanionLayer({
         let roamTimer = 0;
         let visibilityFrame = 0;
         let visibilitySettleTimer = 0;
+        let floatingCollisionFrame = 0;
+        let floatingCollisionSettleTimer = 0;
         let dialogWasOpen = false;
         let scrollIntentUntil = 0;
         let manualHoldUntil = 0;
         let roamStep = 0;
+        let latestBuybarVisible = document.querySelector<HTMLElement>(
+            "[data-pet-companion-settings]",
+        )?.dataset.buybar === "true";
 
         const updateVisibility = () => {
             const hidden = externalDialogIsOpen();
@@ -495,6 +535,32 @@ export default function PetCompanionLayer({
             });
         };
 
+        const resolveFloatingPosition = (
+            x: number,
+            y: number,
+            box: { width: number; height: number },
+            allowHeader = false,
+        ) => {
+            const mobile = window.innerWidth <= 680;
+            const yBounds = allowHeader
+                ? { min: mobile ? -26 : -20, max: Math.max(8, window.innerHeight - box.height) }
+                : liveYBounds(box.height);
+            return resolveCompanionCollision({
+                x,
+                y,
+                width: box.width,
+                height: box.height,
+                bounds: {
+                    minX: 8,
+                    maxX: Math.max(8, window.innerWidth - box.width),
+                    minY: yBounds.min,
+                    maxY: yBounds.max,
+                },
+                obstacles: visibleFloatingObstacleRects(),
+                gap: FLOATING_COLLISION_GAP,
+            });
+        };
+
         const moveTo = (
             x: number,
             y: number,
@@ -516,26 +582,48 @@ export default function PetCompanionLayer({
             const currentRect = walker.getBoundingClientRect();
             const requestedX = options.relativeToPainted ? currentRect.left + x : x;
             const requestedY = options.relativeToPainted ? currentRect.top + y : y;
-            const nextX = clamp(requestedX, 8, Math.max(8, window.innerWidth - box.width));
-            const yBounds = options.allowHeader
-                ? { min: mobile ? -26 : -20, max: Math.max(8, window.innerHeight - box.height) }
-                : liveYBounds(box.height);
-            const nextY = clamp(requestedY, yBounds.min, yBounds.max);
+            const resolvedPosition = resolveFloatingPosition(
+                requestedX,
+                requestedY,
+                box,
+                options.allowHeader,
+            );
+            const nextX = resolvedPosition.x;
+            const nextY = resolvedPosition.y;
             const distance = Math.hypot(nextX - currentRect.left, nextY - currentRect.top);
             const horizontalTravel = nextX - currentRect.left;
             const directionThreshold = mobile ? 18 : 28;
             if (!options.preserveFacing && Math.abs(horizontalTravel) >= directionThreshold) {
                 setFacing(horizontalTravel < 0 ? "left" : "right");
             }
-            const speechWidth = Math.min(
+            const normalSpeechWidth = Math.min(
                 mobile ? 210 : 224,
-                window.innerWidth - (mobile ? 24 : 32),
+                Math.max(1, window.innerWidth - (mobile ? 24 : 32)),
             );
+            const compactSpeech = window.innerWidth <= 410;
+            const flippedSpeechWidth = compactSpeech
+                ? Math.min(136, Math.max(1, window.innerWidth - 16))
+                : normalSpeechWidth;
             const normalLeft = nextX + (mobile ? 10 : 54);
-            const flippedLeft = nextX + box.width - (mobile ? 20 : 46) - speechWidth;
-            const normalFits = normalLeft + speechWidth <= window.innerWidth - 8;
+            const flippedInset = compactSpeech ? 2 : (mobile ? 20 : 46);
+            const flippedLeft = nextX + box.width - flippedInset - flippedSpeechWidth;
+            const normalFits = normalLeft + normalSpeechWidth <= window.innerWidth - 8;
             const flippedFits = flippedLeft >= 8;
-            setBubbleSide(!normalFits && flippedFits ? "left" : "right");
+            const floatingObstacles = visibleFloatingObstacleRects();
+            const horizontalObstacleOverlap = (left: number, width: number) => (
+                floatingObstacles.reduce((total, obstacle) => total + Math.max(
+                    0,
+                    Math.min(left + width, obstacle.right + FLOATING_COLLISION_GAP)
+                        - Math.max(left, obstacle.left - FLOATING_COLLISION_GAP),
+                ), 0)
+            );
+            const normalOverlap = horizontalObstacleOverlap(normalLeft, normalSpeechWidth);
+            const flippedOverlap = horizontalObstacleOverlap(flippedLeft, flippedSpeechWidth);
+            setBubbleSide(
+                flippedFits && (!normalFits || flippedOverlap < normalOverlap)
+                    ? "left"
+                    : "right",
+            );
 
             const pixelsPerSecond = nextMotion === "run"
                 ? (mobile ? 430 : 620)
@@ -595,10 +683,40 @@ export default function PetCompanionLayer({
             return duration;
         };
 
+        const applyFloatingCollision = () => {
+            floatingCollisionFrame = 0;
+            if (walker.dataset.dragging === "true" || homeTransitionRef.current) return;
+            const box = liveBox();
+            const currentRect = walker.getBoundingClientRect();
+            const allowHeader = guidePlacementRef.current === "header"
+                && (guideInFlightRef.current || promptOpenRef.current);
+            const resolvedPosition = resolveFloatingPosition(
+                currentRect.left,
+                currentRect.top,
+                box,
+                allowHeader,
+            );
+            if (
+                Math.abs(resolvedPosition.x - currentRect.left) < 1
+                && Math.abs(resolvedPosition.y - currentRect.top) < 1
+            ) return;
+            moveTo(currentRect.left, currentRect.top, "idle", {
+                instant: true,
+                preserveFacing: true,
+                allowHeader,
+                motionSource: "move",
+            });
+        };
+
+        const scheduleFloatingCollisionCheck = () => {
+            if (floatingCollisionFrame) return;
+            floatingCollisionFrame = window.requestAnimationFrame(applyFloatingCollision);
+        };
+
         const placeWalkerInstantly = (x: number, y: number) => {
-            const nextX = clamp(x, 8, Math.max(8, window.innerWidth - initialBox.width));
-            const yBounds = liveYBounds(initialBox.height);
-            const nextY = clamp(y, yBounds.min, yBounds.max);
+            const resolvedPosition = resolveFloatingPosition(x, y, initialBox);
+            const nextX = resolvedPosition.x;
+            const nextY = resolvedPosition.y;
             position.x = nextX;
             position.y = nextY;
             walker.dataset.petX = String(nextX);
@@ -1002,9 +1120,21 @@ export default function PetCompanionLayer({
             }
         };
         const onBuybar = (event: Event) => {
-            if (Boolean((event as CustomEvent).detail)) {
+            latestBuybarVisible = Boolean((event as CustomEvent).detail);
+            if (homeTransitionRef.current) return;
+            if (latestBuybarVisible) {
                 moveTo(position.x, Math.min(position.y, window.innerHeight - 220), "walk");
             }
+        };
+        const onFloatingCollisionRequest = () => {
+            if (homeTransitionRef.current) return;
+            if (latestBuybarVisible) {
+                moveTo(position.x, Math.min(position.y, window.innerHeight - 220), "idle", {
+                    instant: true,
+                    preserveFacing: true,
+                });
+            }
+            scheduleFloatingCollisionCheck();
         };
         const onMotionPreferenceChange = (event: MediaQueryListEvent) => {
             if (forcePreview) return;
@@ -1026,6 +1156,7 @@ export default function PetCompanionLayer({
         window.addEventListener("keydown", onPotentialScrollKey);
         window.addEventListener("resize", onResize);
         window.addEventListener(MOVE_EVENT, onMoveRequest);
+        window.addEventListener(FLOATING_COLLISION_EVENT, onFloatingCollisionRequest);
         window.addEventListener("ddb:buybar", onBuybar);
         motionQuery.addEventListener("change", onMotionPreferenceChange);
         document.addEventListener("focusin", onFocusIn);
@@ -1041,13 +1172,31 @@ export default function PetCompanionLayer({
             // dialog is still visible. Recheck after that transition settles.
             window.clearTimeout(visibilitySettleTimer);
             visibilitySettleTimer = window.setTimeout(scheduleVisibilityUpdate, 460);
+
+            const floatingControlChanged = mutations.some((mutation) => {
+                const target = mutation.target;
+                if (
+                    target instanceof Element
+                    && (target.matches(FLOATING_COLLISION_SELECTOR) || target.closest(FLOATING_COLLISION_SELECTOR))
+                ) return true;
+                return Array.from(mutation.addedNodes).some((node) => (
+                    node instanceof Element
+                    && (node.matches(FLOATING_COLLISION_SELECTOR) || node.querySelector(FLOATING_COLLISION_SELECTOR))
+                ));
+            });
+            if (floatingControlChanged) {
+                scheduleFloatingCollisionCheck();
+                window.clearTimeout(floatingCollisionSettleTimer);
+                floatingCollisionSettleTimer = window.setTimeout(scheduleFloatingCollisionCheck, 320);
+            }
         });
         dialogObserver.observe(document.body, {
             attributes: true,
-            attributeFilter: ["aria-hidden", "class", "open", "style"],
+            attributeFilter: ["aria-hidden", "class", "data-buybar", "data-mobile-hidden", "open", "style"],
             childList: true,
             subtree: true,
         });
+        scheduleFloatingCollisionCheck();
         roamTimer = window.setInterval(roam, settings.motion === "lively" ? 3200 : 4800);
         const firstRoam = window.setTimeout(roam, expectHeroLensEntry ? 2800 : 1000);
 
@@ -1065,8 +1214,10 @@ export default function PetCompanionLayer({
             if (activeEntryTarget) delete activeEntryTarget.dataset.petCompanionEmerging;
             window.clearTimeout(firstRoam);
             window.clearTimeout(visibilitySettleTimer);
+            window.clearTimeout(floatingCollisionSettleTimer);
             window.clearInterval(roamTimer);
             if (visibilityFrame) window.cancelAnimationFrame(visibilityFrame);
+            if (floatingCollisionFrame) window.cancelAnimationFrame(floatingCollisionFrame);
             entryObserver?.disconnect();
             if (cancelEntryRef.current === interruptInitialEntry) {
                 cancelEntryRef.current = () => {};
@@ -1079,6 +1230,7 @@ export default function PetCompanionLayer({
             window.removeEventListener("keydown", onPotentialScrollKey);
             window.removeEventListener("resize", onResize);
             window.removeEventListener(MOVE_EVENT, onMoveRequest);
+            window.removeEventListener(FLOATING_COLLISION_EVENT, onFloatingCollisionRequest);
             window.removeEventListener("ddb:buybar", onBuybar);
             motionQuery.removeEventListener("change", onMotionPreferenceChange);
             document.removeEventListener("focusin", onFocusIn);
@@ -1124,7 +1276,12 @@ export default function PetCompanionLayer({
 
     useEffect(() => {
         homeTransitionRef.current = homeTransition;
-        if (!homeTransition) return;
+        if (!homeTransition) {
+            const frame = window.requestAnimationFrame(() => {
+                window.dispatchEvent(new Event(FLOATING_COLLISION_EVENT));
+            });
+            return () => window.cancelAnimationFrame(frame);
+        }
         // Entering the house owns the walker until the transition finishes.
         // Cancel any delayed arrival and close speech so neither effect can
         // revive a stale prompt halfway through the animation.

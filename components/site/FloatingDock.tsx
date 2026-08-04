@@ -107,6 +107,7 @@ export default function FloatingDock() {
         <div
             ref={dockRef}
             data-mobile-floating-chat
+            data-pet-companion-avoid="true"
             data-mobile-hidden={!dockVisible ? "true" : "false"}
             data-mobile-viewport={mobileFloating.isMobile ? "true" : "false"}
             data-mobile-scrolling={mobileFloating.isScrolling ? "true" : "false"}
@@ -115,7 +116,7 @@ export default function FloatingDock() {
             data-blocking-dialog={mobileFloating.hasBlockingDialog ? "true" : "false"}
             aria-hidden={!dockVisible ? "true" : undefined}
             inert={!dockVisible ? true : undefined}
-            className={`pointer-events-none fixed right-4 flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 ${chatOpen ? "z-[2221]" : "z-[2200]"} ${dockBottom} ${
+            className={`pointer-events-none fixed right-4 flex items-end justify-end gap-3 transition-[opacity,bottom] duration-300 motion-reduce:transition-none ${chatOpen ? "z-[2221]" : "z-[2200]"} ${dockBottom} ${
                 dockVisible ? "visible opacity-100" : "invisible opacity-0"
             }`}
         >
