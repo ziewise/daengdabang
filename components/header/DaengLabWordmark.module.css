@@ -26,8 +26,8 @@
 .brandLine > span:nth-child(3) { color: #ef941f; transform: rotate(-.8deg); }
 
 .labLine {
+    display: inline-flex;
     margin-top: 4px;
-    color: #263746;
     font-size: var(--daenglab-wordmark-size);
     letter-spacing: -.055em;
     text-shadow:
@@ -35,6 +35,10 @@
         -.25px .25px rgb(237 93 85 / 22%);
     transform: rotate(.6deg);
 }
+
+.labLine > span:nth-child(1) { color: #ed6a4f; transform: rotate(-1deg); }
+.labLine > span:nth-child(2) { color: #ef941f; transform: translateY(-.3px) rotate(.8deg); }
+.labLine > span:nth-child(3) { color: #6c5ce7; transform: rotate(-.8deg); }
 
 .wordmark[data-compact="true"] {
     --daenglab-wordmark-size: 15px;

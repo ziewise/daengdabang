@@ -58,11 +58,14 @@ test("desktop and mobile navigation expose the final DaengLab information archit
     assert.doesNotMatch(mobile, /<MobileLink href="\/"/);
     assert.doesNotMatch(mobile, /<MobileLink href="\/bundles\/"/);
     assert.match(labWordmark, /<span>댕<\/span><span>다<\/span><span>방<\/span>/);
-    assert.match(labWordmark, />연구소<\/span>/);
+    assert.match(labWordmark, /<span>연<\/span><span>구<\/span><span>소<\/span>/);
     assert.match(labWordmarkCss, /--daenglab-wordmark-size:\s*16px/);
     assert.match(labWordmarkCss, /\.brandLine[\s\S]*?font-size:\s*var\(--daenglab-wordmark-size\)/);
     assert.match(labWordmarkCss, /\.labLine[\s\S]*?font-size:\s*var\(--daenglab-wordmark-size\)/);
     assert.match(labWordmarkCss, /data-compact="true"[\s\S]*?--daenglab-wordmark-size:\s*15px/);
+    assert.match(labWordmarkCss, /\.labLine > span:nth-child\(1\)[^{]*\{[^}]*#ed6a4f/);
+    assert.match(labWordmarkCss, /\.labLine > span:nth-child\(2\)[^{]*\{[^}]*#ef941f/);
+    assert.match(labWordmarkCss, /\.labLine > span:nth-child\(3\)[^{]*\{[^}]*#6c5ce7/);
     assert.doesNotMatch(`${header}\n${mobile}`, /DaengLabSymbol/);
     assert.match(mobile, /aria-hidden=\{!open\}/);
     assert.match(mobile, /inert=\{open \? undefined : true\}/);
