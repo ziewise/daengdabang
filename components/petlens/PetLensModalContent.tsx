@@ -23,12 +23,13 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
     analyzePetLensSmart,
     reconcilePetLensResultWithConfirmedProfile,
     type PetLensAnalysisResult,
 } from "@/lib/daengdabang-llm";   // 협업자 LLM 분석 (수정 X)
-import { savePetProfilePhotosSmart } from "@/lib/customer-api";
+import { savePetProfileSmart } from "@/lib/customer-api";
 import {
     buildPetLensAnalysisImage,
     PETLENS_PHOTO_VIEWS,
@@ -51,6 +52,10 @@ import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import {
+    buildPetLensProfileForSave,
+    mergeSavedPetLensProfile,
+} from "@/lib/petlens-profile-persistence";
 
 // 관심 포인트 — 협업자 PetLensClient 와 동일하게 유지(분석 입력 호환)
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
@@ -221,22 +226,15 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
             setResult(resultWithConfirmedProfile); // result 세팅 = 결과 단계로 전환
             trackStorefrontEvent("petlens_completed", { mode: "photo", surface: "modal" });
             try {
-                const profileToSave = {
-                    ...confirmedPet,
+                const profileToSave = buildPetLensProfileForSave(confirmedPet, resultWithConfirmedProfile, {
                     photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
                     photoViews: persistedPhotoViews,
-                };
-                const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
-                if (!saved) throw new Error("profile_save_unavailable");
-                upsertPet({
-                    ...profileToSave,
-                    apiProfileId: saved.id,
-                    photoDataUrl: saved.photoDataUrl || undefined,
-                    photoViews: saved.photoViews || undefined,
-                    photoServerVerified: Boolean(saved.photoDataUrl),
                 });
+                const saved = await savePetProfileSmart(profileToSave, user.apiAccessToken);
+                if (!saved) throw new Error("profile_save_unavailable");
+                upsertPet(mergeSavedPetLensProfile(profileToSave, saved));
             } catch {
-                setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다.");
+                setAnalysisError("분석은 완료됐지만 결과와 사진을 내 아이 기록에 저장하지 못했습니다.");
             }
         } catch (error) {
             setResult(null);
@@ -345,6 +343,15 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
 
                 <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-3 sm:p-4">
                     <PetLensAnalysisSummary profile={result.profile} details={result.details} />
+                    <Link
+                        href="/my-pet/#health-report"
+                        onClick={onNavigate}
+                        className="btn btn-secondary mt-3 w-full justify-center"
+                        data-petlens-result-profile-cta
+                    >
+                        <i className="fa-solid fa-chart-line text-xs" />
+                        내 아이 기록에서 결과 보기
+                    </Link>
                 </div>
 
                 {/* 추천 상품 (협업자 products[] = recommendForPet 결과) */}

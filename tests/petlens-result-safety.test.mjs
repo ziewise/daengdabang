@@ -27,7 +27,7 @@ test("PetLens customer results hide provider and fallback diagnostics", async ()
     assert.doesNotMatch(source, /summary\.push\(`Caution:/);
 });
 
-test("PetLens only analyzes and patches the explicitly selected existing pet", async () => {
+test("PetLens only analyzes and saves the explicitly selected existing pet", async () => {
     const [pageSource, modalSource, customerApi, companionSource] = await Promise.all([
         readSource("app/pet-lens/PetLensClient.tsx"),
         readSource("components/petlens/PetLensModalContent.tsx"),
@@ -40,10 +40,11 @@ test("PetLens only analyzes and patches the explicitly selected existing pet", a
         assert.match(source, /data-petlens-pet-selector|<PetLensPetSelector/);
         assert.match(source, /const confirmedPet = user\?\.pets\.find\(/);
         assert.match(source, /hydratedPetProfileIdRef\.current !== confirmedPet\.apiProfileId/);
-        assert.match(source, /const profileToSave = \{[\s\S]*?\.\.\.confirmedPet/);
+        assert.match(source, /buildPetLensProfileForSave\(confirmedPet, resultWithConfirmedProfile/);
         assert.match(source, /photoViews: persistedPhotoViews/);
-        assert.match(source, /await savePetProfilePhotosSmart\(profileToSave, user\.apiAccessToken\)/);
-        assert.doesNotMatch(source, /await savePetProfileSmart\(/);
+        assert.match(source, /await savePetProfileSmart\(profileToSave, user\.apiAccessToken\)/);
+        assert.match(source, /upsertPet\(mergeSavedPetLensProfile\(profileToSave, saved\)\)/);
+        assert.doesNotMatch(source, /await savePetProfilePhotosSmart\(/);
 
         const submitStart = source.indexOf("const submit = async");
         const submitEnd = source.indexOf("const selectedPet", submitStart);

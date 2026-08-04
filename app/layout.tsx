@@ -30,7 +30,7 @@ const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["4
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.daengdabang.com"),
     title: "댕다방",
-    description: "반려견 산책, 먹거리, 생활, 놀이, 케어 상품을 고르는 댕다방 자사몰",
+    description: "AI 분석과 건강 기록, 매일 돌봄 챌린지가 쇼핑으로 이어지는 반려견 AI 플랫폼 댕다방",
     alternates: {
         canonical: "/",
     },
@@ -38,16 +38,21 @@ export const metadata: Metadata = {
         type: "website",
         locale: "ko_KR",
         siteName: "댕다방",
-        title: "댕다방",
-        description: "펫렌즈와 챗봇으로 우리 아이에게 맞는 반려견 상품을 고르는 자사몰",
+        title: "댕다방 | 매일 돌봄이 쌓이는 반려견 AI 플랫폼",
+        description: "AI 분석·건강 기록·출근도장으로 우리 아이의 매일을 이어가세요.",
         url: "/",
-        images: [{ url: "/images/logo.png", width: 512, height: 512, alt: "댕다방" }],
+        images: [{
+            url: "/images/og-ai-platform-20260804-1200x630.png",
+            width: 1200,
+            height: 630,
+            alt: "댕다방 반려견 AI 플랫폼과 매일 출근도장",
+        }],
     },
     twitter: {
-        card: "summary",
-        title: "댕다방",
-        description: "펫렌즈와 챗봇으로 우리 아이에게 맞는 반려견 상품을 고르는 자사몰",
-        images: ["/images/logo.png"],
+        card: "summary_large_image",
+        title: "댕다방 | 반려견 AI 플랫폼",
+        description: "AI 분석·건강 기록·출근도장으로 우리 아이의 매일을 이어가세요.",
+        images: ["/images/og-ai-platform-20260804-1200x630.png"],
     },
 };
 

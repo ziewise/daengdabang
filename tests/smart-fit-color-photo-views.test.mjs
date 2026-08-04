@@ -140,7 +140,8 @@ test("four PetLens camera views round-trip through the member profile contract",
         assert.match(clientSource, /photoViews:\s*(?:persisted|saved|profile|next|captured|server)?PhotoViews/i);
         assert.match(clientSource, /pet\.photoViews/);
         assert.match(clientSource, /setPhotoViews/);
-        assert.match(clientSource, /const saved = await savePetProfilePhotosSmart/);
+        assert.match(clientSource, /const saved = await savePetProfileSmart/);
+        assert.match(clientSource, /buildPetLensProfileForSave/);
     }
 });
 

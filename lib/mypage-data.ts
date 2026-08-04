@@ -35,7 +35,7 @@ export interface MyMenuItem {
     icon: string;
 }
 
-export type MyMenuGroupId = "shopping" | "account";
+export type MyMenuGroupId = "care" | "shopping" | "account";
 
 export interface MyMenuGroup {
     id: MyMenuGroupId;
@@ -45,6 +45,15 @@ export interface MyMenuGroup {
 
 /** 실제 정적 라우트가 존재하는 메뉴만 노출한다. */
 export const MYPAGE_MENU_GROUPS: readonly MyMenuGroup[] = [
+    {
+        id: "care",
+        label: "우리 아이 AI",
+        items: [
+            { href: "/my-pet", label: "건강 기록", icon: "fa-dog" },
+            { href: "/pet-lens", label: "AI 분석", icon: "fa-camera-retro" },
+            { href: "/challenge", label: "챌린지·출근도장", icon: "fa-trophy" },
+        ],
+    },
     {
         id: "shopping",
         label: "쇼핑 정보",

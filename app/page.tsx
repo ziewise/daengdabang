@@ -31,6 +31,8 @@ import PromoSection from "@/components/main/PromoSection";
 import NewArrivalsSection from "@/components/main/NewArrivalsSection";
 import ReviewSection from "@/components/main/ReviewSection";
 import InstaSection from "@/components/main/InstaSection";
+import MemberAiDashboard from "@/components/home/MemberAiDashboard";
+import AiQuickActions from "@/components/home/AiQuickActions";
 
 export default function HomePage() {
     // 협업자 동적 히어로에 넘길 추천 상품 4개 (popularity 기준 베스트)
@@ -45,7 +47,13 @@ export default function HomePage() {
             {/* 플로팅 FAB(FloatingDock) 등장 기준점 — 히어로를 지나면 펫렌즈/챗봇 버튼 노출 */}
             <div id="fab-reveal-sentinel" aria-hidden="true" />
 
-            {/* 우리 구성 — 메인 섹션 (로그인 시 추천 섹션 자동 노출) */}
+            {/* 로그인 회원의 오늘 돌봄 이유를 가장 먼저 보여주는 개인 AI 대시보드 */}
+            <MemberAiDashboard />
+
+            {/* 사진·소리·행동·리포트·상담·챌린지로 바로 이동 */}
+            <AiQuickActions />
+
+            {/* AI 분석과 회원 프로필을 실제 상품으로 연결 */}
             <RecommendSection />
             <BestSection />
             <BrandSlider />

@@ -13,12 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { searchRecent } from "@/lib/storage";
 import {
     CATEGORY_GROUPS,
-    BRAND_CARDS,
-    PROMO_CARDS,
-    CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
-import BrandStoryNavLabel from "./BrandStoryNavLabel";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
 
@@ -118,14 +114,17 @@ export default function MobilePanel({ open, onClose }: Props) {
 
                 {/* 메뉴 리스트 — 스크롤 가능 */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3">
-                    <MobileLink href="/best" icon="fa-trophy" onClick={onClose}>{t("best")}</MobileLink>
-                    <MobileLink href="/new" icon="fa-sparkles" onClick={onClose}>{t("new")}</MobileLink>
+                    <MobileLink href="/" icon="fa-house" onClick={onClose}>{t("home")}</MobileLink>
 
                     <MobileGroup
-                        label={t("category")}
-                        expanded={expanded === "cat"}
-                        onToggle={() => setExpanded(expanded === "cat" ? null : "cat")}
+                        label={t("shop")}
+                        expanded={expanded === "shop"}
+                        onToggle={() => setExpanded(expanded === "shop" ? null : "shop")}
                     >
+                        <SubLink href="/products/" icon="fa-store" onClick={onClose}>{t("allProducts")}</SubLink>
+                        <SubLink href="/best/" icon="fa-trophy" onClick={onClose}>{t("best")}</SubLink>
+                        <SubLink href="/new/" icon="fa-sparkles" onClick={onClose}>{t("new")}</SubLink>
+                        <SubLink href="/brands/" icon="fa-tags" onClick={onClose}>{t("brand")}</SubLink>
                         {CATEGORY_GROUPS.map((g) => (
                             <div key={g.title} className="mb-3 last:mb-0">
                                 <p className="px-4 pt-2 pb-1 text-[11px] font-extrabold text-neutral-400 uppercase tracking-wider">
@@ -141,47 +140,20 @@ export default function MobilePanel({ open, onClose }: Props) {
                     </MobileGroup>
 
                     <MobileGroup
-                        label={t("brand")}
-                        expanded={expanded === "brand"}
-                        onToggle={() => setExpanded(expanded === "brand" ? null : "brand")}
+                        label={t("aiAnalysis")}
+                        expanded={expanded === "ai"}
+                        onToggle={() => setExpanded(expanded === "ai" ? null : "ai")}
                     >
-                        {BRAND_CARDS.map((b) => (
-                            <SubLink key={b.name} href={b.href} onClick={onClose}>
-                                {b.name}
-                            </SubLink>
-                        ))}
-                        <SubLink href="/brands" onClick={onClose}>
-                            {menuLabel("기타 브랜드 보기")}
-                        </SubLink>
+                        <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
+                        <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" onClick={onClose}>울음소리·행동 분석</SubLink>
+                        <SubLink href="/my-pet/#health-report" icon="fa-chart-line" onClick={onClose}>건강 변화 리포트</SubLink>
+                        <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 
-                    <MobileGroup
-                        label={t("promotion")}
-                        expanded={expanded === "promo"}
-                        onToggle={() => setExpanded(expanded === "promo" ? null : "promo")}
-                    >
-                        {PROMO_CARDS.map((p) => (
-                            <SubLink key={p.title} href={p.href} onClick={onClose}>
-                                {menuLabel(p.title)}
-                            </SubLink>
-                        ))}
-                    </MobileGroup>
-
-                    <MobileGroup
-                        label={t("customerCenter")}
-                        expanded={expanded === "cs"}
-                        onToggle={() => setExpanded(expanded === "cs" ? null : "cs")}
-                    >
-                        {CS_LINKS.map((c) => (
-                            <SubLink key={c.label} href={c.href} icon={c.icon} onClick={onClose}>
-                                {menuLabel(c.label)}
-                            </SubLink>
-                        ))}
-                    </MobileGroup>
-
-                    <MobileLink href="/brand-story" icon="fa-book-open" crayon onClick={onClose}>
-                        <BrandStoryNavLabel label={t("brandStory")} />
-                    </MobileLink>
+                    <MobileLink href="/my-pet/" icon="fa-dog" onClick={onClose}>{t("myPet")}</MobileLink>
+                    <MobileLink href="/challenge/" icon="fa-trophy" onClick={onClose}>{t("challenge")}</MobileLink>
+                    <MobileLink href="/community/" icon="fa-people-group" onClick={onClose}>{t("community")}</MobileLink>
+                    <MobileLink href="/bundles/" icon="fa-gift" onClick={onClose}>{t("event")}</MobileLink>
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}
                     <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>

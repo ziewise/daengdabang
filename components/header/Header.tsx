@@ -15,12 +15,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/store";
 import {
     CATEGORY_GROUPS,
-    BRAND_CARDS,
-    PROMO_CARDS,
-    CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
-import BrandStoryNavLabel from "./BrandStoryNavLabel";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MobilePanel from "./MobilePanel";
 import SearchModal from "./SearchModal";
@@ -28,7 +24,7 @@ import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import { useI18n } from "@/lib/i18n";
 import headerStyles from "./Header.module.css";
 
-type DropKey = "category" | "brand" | "promo" | "ai" | "cs" | null;
+type DropKey = "shop" | "ai" | null;
 
 export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
@@ -84,20 +80,31 @@ export default function Header() {
                     {/* 로고 */}
                     <BrandLogo mobileEmphasis />
 
-                    {/* 데스크탑 메인 nav (md+ 만 노출) */}
+                    {/* AI 서비스 중심의 데스크탑 메인 메뉴 */}
                     <nav className="hidden items-center gap-0 lg:flex xl:gap-1">
-                        <NavLink href="/best">{t("best")}</NavLink>
-                        <NavLink href="/new">{t("new")}</NavLink>
-
-                        {/* 카테고리 — 5컬럼 메가메뉴 */}
+                        <NavLink href="/">{t("home")}</NavLink>
                         <NavDropdown
-                            label={t("category")}
-                            open={openDrop === "category"}
-                            onEnter={() => setOpenDrop("category")}
+                            label={t("shop")}
+                            open={openDrop === "shop"}
+                            onEnter={() => setOpenDrop("shop")}
                             onLeave={() => setOpenDrop(null)}
                             wide
                         >
-                            <div className="p-6 min-w-[680px]">
+                            <div className="min-w-[680px] p-6">
+                                <div className="mb-5 grid grid-cols-5 gap-2 border-b border-neutral-100 pb-5">
+                                    {[
+                                        ["/products", t("allProducts"), "fa-store"],
+                                        ["/best", t("best"), "fa-trophy"],
+                                        ["/new", t("new"), "fa-sparkles"],
+                                        ["/brands", t("brand"), "fa-tags"],
+                                        ["/bundles", t("event"), "fa-gift"],
+                                    ].map(([href, label, icon]) => (
+                                        <Link key={href} href={href} className="rounded-xl bg-neutral-50 px-3 py-3 text-center text-xs font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700">
+                                            <i className={`fa-solid ${icon} mr-1.5 text-indigo-500`} aria-hidden="true" />
+                                            {label}
+                                        </Link>
+                                    ))}
+                                </div>
                                 <div className="grid grid-cols-5 gap-6">
                                     {CATEGORY_GROUPS.map((g) => (
                                         <div key={g.title}>
@@ -122,104 +129,41 @@ export default function Header() {
                                         </div>
                                     ))}
                                 </div>
-                                {/* 우하단 — 전체 상품 보기 (333개 통합 페이지) */}
-                                <div className="mt-5 pt-4 border-t border-neutral-100 flex justify-end">
-                                    <Link
-                                        href="/products"
-                                        className="inline-flex items-center gap-1.5 text-xs font-extrabold text-aurora-indigo hover:text-aurora-pink transition"
-                                    >
-                                        {t("allProducts")}
-                                        <i className="fa-solid fa-arrow-right text-[10px]" />
-                                    </Link>
-                                </div>
                             </div>
                         </NavDropdown>
 
-                        {/* 브랜드 — 2 카드 + 전체 보기 링크 */}
                         <NavDropdown
-                            label={t("brand")}
-                            open={openDrop === "brand"}
-                            onEnter={() => setOpenDrop("brand")}
+                            label={t("aiAnalysis")}
+                            open={openDrop === "ai"}
+                            onEnter={() => setOpenDrop("ai")}
                             onLeave={() => setOpenDrop(null)}
                         >
-                            <div className="p-5 min-w-[420px]">
-                                <div className="grid grid-cols-2 gap-3 mb-3">
-                                    {BRAND_CARDS.map((b) => (
+                            <ul className="min-w-[300px] p-3">
+                                {[
+                                    ["/pet-lens/", "사진 건강 분석", "fa-camera-retro"],
+                                    ["/pet-lens/?mode=observation", "울음소리·행동 분석", "fa-wave-square"],
+                                    ["/my-pet/#health-report", "건강 변화 리포트", "fa-chart-line"],
+                                    ["/chat/", "AI 상담", "fa-comment-dots"],
+                                ].map(([href, label, icon]) => (
+                                    <li key={href}>
                                         <Link
-                                            key={b.name}
-                                            href={b.href}
-                                            className={`flex h-11 items-center justify-center rounded-xl border bg-white hover:shadow-card transition-all
-                                                ${b.accent === "ruff" ? "border-orange-200 hover:border-orange-400" : "border-blue-200 hover:border-blue-400"}`}
+                                            href={href}
+                                            className="flex items-center gap-3 rounded-xl p-3 text-sm font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
                                         >
-                                            <h3 className="text-sm font-bold">{b.name}</h3>
-                                        </Link>
-                                    ))}
-                                </div>
-                                <Link
-                                    href="/brands"
-                                    className="flex items-center justify-between px-3 py-2 rounded-lg bg-neutral-50 hover:bg-neutral-100 text-xs font-bold"
-                                >
-                                    <span>{menuLabel("기타 브랜드 보기")}</span>
-                                    <i className="fa-solid fa-arrow-right text-aurora-indigo" />
-                                </Link>
-                            </div>
-                        </NavDropdown>
-
-                        {/* 기획전 — 5개 promo 카드 */}
-                        <NavDropdown
-                            label={t("promotion")}
-                            open={openDrop === "promo"}
-                            onEnter={() => setOpenDrop("promo")}
-                            onLeave={() => setOpenDrop(null)}
-                        >
-                            <ul className="p-3 min-w-[240px]">
-                                {PROMO_CARDS.map((p) => (
-                                    <li key={p.title}>
-                                        <Link
-                                            href={p.href}
-                                            className="flex items-center gap-3 p-3 rounded-lg hover:bg-neutral-50"
-                                        >
-                                            <span className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-white text-base
-                                                ${p.color === "indigo" && "bg-aurora-indigo"}
-                                                ${p.color === "blue" && "bg-aurora-blue"}
-                                                ${p.color === "purple" && "bg-aurora-purple"}
-                                                ${p.color === "green" && "bg-success"}
-                                                ${p.color === "pink" && "bg-aurora-pink"}`}
-                                            >
-                                                <i className={`fa-solid ${p.icon}`} />
+                                            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 text-white">
+                                                <i className={`fa-solid ${icon}`} aria-hidden="true" />
                                             </span>
-                                            <h4 className="flex-1 min-w-0 text-sm font-bold">{menuLabel(p.title)}</h4>
+                                            <span>{label}</span>
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
                         </NavDropdown>
 
-                        {/* 고객센터 — 단순 리스트 */}
-                        <NavDropdown
-                            label={t("customerCenter")}
-                            open={openDrop === "cs"}
-                            onEnter={() => setOpenDrop("cs")}
-                            onLeave={() => setOpenDrop(null)}
-                        >
-                            <ul className="p-2 min-w-[200px]">
-                                {CS_LINKS.map((c) => (
-                                    <li key={c.label}>
-                                        <Link
-                                            href={c.href}
-                                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-sm font-bold"
-                                        >
-                                            <i className={`fa-solid ${c.icon} text-aurora-indigo w-4 text-center`} />
-                                            <span>{menuLabel(c.label)}</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </NavDropdown>
-
-                        <NavLink href="/brand-story" crayon>
-                            <BrandStoryNavLabel label={t("brandStory")} />
-                        </NavLink>
+                        <NavLink href="/my-pet/">{t("myPet")}</NavLink>
+                        <NavLink href="/challenge/">{t("challenge")}</NavLink>
+                        <NavLink href="/community/">{t("community")}</NavLink>
+                        <NavLink href="/bundles/">{t("event")}</NavLink>
                     </nav>
 
                     {/* 우측 유틸리티

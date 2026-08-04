@@ -218,7 +218,9 @@ test("try-on only uses a member photo after the customer API confirms it", async
     assert.match(modal, /filter\(hasVerifiedPetPhoto\)/);
     assert.doesNotMatch(modal, /filter\(\(item\) => item\.photoDataUrl\)/);
     for (const client of [page, modalLens]) {
-        assert.match(client, /const saved = await savePetProfilePhotosSmart/);
-        assert.match(client, /photoServerVerified: Boolean\(saved\.photoDataUrl\)/);
+        assert.match(client, /const saved = await savePetProfileSmart/);
+        assert.match(client, /upsertPet\(mergeSavedPetLensProfile\(profileToSave, saved\)\)/);
     }
+    const persistence = await source("lib/petlens-profile-persistence.ts");
+    assert.match(persistence, /photoServerVerified: Boolean\(saved\.photoDataUrl\)/);
 });

@@ -23,28 +23,25 @@ test("member profile create and edit forms expose the same four-view photo regis
     assert.match(editor, /restorePetLensPhotoViews\(pet\.photoViews, pet\.photoDataUrl\)/);
 });
 
-test("the story page is a crayon-styled top-level desktop and mobile menu", () => {
+test("desktop and mobile navigation expose the AI-platform information architecture", () => {
     const header = read("../components/header/Header.tsx");
     const mobile = read("../components/header/MobilePanel.tsx");
-    const storyLabel = read("../components/header/BrandStoryNavLabel.tsx");
-    const styles = read("../components/header/Header.module.css");
     const i18n = read("../lib/i18n.tsx");
 
-    const desktopCustomerIndex = header.lastIndexOf('label={t("customerCenter")}');
-    const desktopStoryIndex = header.indexOf('<NavLink href="/brand-story" crayon>');
-    const mobileCustomerIndex = mobile.lastIndexOf('label={t("customerCenter")}');
-    const mobileStoryIndex = mobile.indexOf('<MobileLink href="/brand-story"');
-    assert.ok(desktopStoryIndex > desktopCustomerIndex);
-    assert.ok(mobileStoryIndex > mobileCustomerIndex);
-    assert.match(header, /<BrandStoryNavLabel label=\{t\("brandStory"\)\}/);
-    assert.match(mobile, /<BrandStoryNavLabel label=\{t\("brandStory"\)\}/);
-    assert.match(storyLabel, /storyTeal[\s\S]*storyRed[\s\S]*storyOrange/);
-    assert.match(mobile, /<MobileLink href="\/brand-story"[^>]*crayon/);
-    assert.match(styles, /\.storyNavItem[\s\S]*font-family:\s*var\(--font-crayon\)/);
-    assert.match(styles, /\.storyTeal\s*\{\s*color:\s*#36bfc6/);
-    assert.match(styles, /\.storyRed\s*\{\s*color:\s*#ec6256/);
-    assert.match(styles, /\.storyOrange\s*\{\s*color:\s*#f39a26/);
-    assert.match(i18n, /brandStory:\s*"댕다방 스토리"/);
+    for (const [source, labels] of [
+        [header, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"']],
+        [mobile, ['href="/"', 'label={t("shop")}', 'label={t("aiAnalysis")}', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'href="/bundles/"']],
+    ]) {
+        let previous = -1;
+        for (const label of labels) {
+            const next = source.indexOf(label, previous + 1);
+            assert.ok(next > previous, `${label} must follow the requested menu order`);
+            previous = next;
+        }
+    }
+    for (const label of ["쇼핑", "AI 분석", "우리 아이", "챌린지", "커뮤니티", "이벤트"]) {
+        assert.match(i18n, new RegExp(`"${label}"`));
+    }
 });
 
 test("navigator gives every searchable breed an independent 32-frame atlas set", async () => {

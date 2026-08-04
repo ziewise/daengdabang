@@ -61,6 +61,55 @@ export type DaengLabWallet = {
     transactions: DaengLabWalletTransaction[];
 };
 
+export type DaengLabAttendanceDay = {
+    businessDate: string;
+    claimed: boolean;
+};
+
+export type DaengLabAttendance = {
+    wallet: DaengLabWallet;
+    claimedToday: boolean;
+    newlyClaimed: boolean;
+    status: "available" | "claimed";
+    awardedDaengLabCoins: number;
+    dailyRewardDaengLabCoins: number;
+    businessDate: string;
+    timezone: "Asia/Seoul";
+    currentStreak: number;
+    recentDays: DaengLabAttendanceDay[];
+    nextClaimAt: string;
+};
+
+export type DaengLabCareTaskId = "walk_20" | "eye_check";
+
+export type DaengLabCareTask = {
+    taskId: DaengLabCareTaskId;
+    title: string;
+    description: string;
+    xp: number;
+    completed: boolean;
+};
+
+export type DaengLabEngagement = {
+    businessDate: string;
+    timezone: "Asia/Seoul";
+    xp: number;
+    level: number;
+    nextLevelXp: number;
+    todayTasks: DaengLabCareTask[];
+    weeklyAttendanceProgress: number;
+    weeklyAttendanceTarget: number;
+    monthlyAnalysisProgress: number;
+    monthlyAnalysisTarget: number;
+};
+
+export type DaengLabCareTaskCompletion = DaengLabEngagement & {
+    taskId: DaengLabCareTaskId;
+    newlyCompleted: boolean;
+    status: "completed" | "already_completed";
+    awardedXp: number;
+};
+
 export type CustomerResultEmailStatus = "scheduled" | "sent" | "failed" | "expired" | "uncertain";
 
 export type CustomerResultEmailReceipt = {
@@ -127,6 +176,46 @@ type ApiDaengLabWallet = {
         daenglab_coins_delta: number;
         created_at: string;
     }>;
+};
+
+type ApiDaengLabAttendance = {
+    wallet: ApiDaengLabWallet;
+    claimed_today: boolean;
+    newly_claimed: boolean;
+    status: "available" | "claimed";
+    awarded_daenglab_coins: number;
+    daily_reward_daenglab_coins: number;
+    business_date: string;
+    timezone: "Asia/Seoul";
+    current_streak: number;
+    recent_days: Array<{ business_date: string; claimed: boolean }>;
+    next_claim_at: string;
+};
+
+type ApiDaengLabEngagement = {
+    business_date: string;
+    timezone: "Asia/Seoul";
+    xp: number;
+    level: number;
+    next_level_xp: number;
+    today_tasks: Array<{
+        task_id: DaengLabCareTaskId;
+        title: string;
+        description: string;
+        xp: number;
+        completed: boolean;
+    }>;
+    weekly_attendance_progress: number;
+    weekly_attendance_target: number;
+    monthly_analysis_progress: number;
+    monthly_analysis_target: number;
+};
+
+type ApiDaengLabCareTaskCompletion = ApiDaengLabEngagement & {
+    task_id: DaengLabCareTaskId;
+    newly_completed: boolean;
+    status: "completed" | "already_completed";
+    awarded_xp: number;
 };
 
 type ApiSignupBonusStatus = {
@@ -610,6 +699,90 @@ export async function loadDaengLabWallet(token?: string) {
     }, token, { requireBase: true });
     if (!wallet) throw new DdbApiError("댕다방 연구소 지갑을 불러오지 못했습니다.", { code: "http_error" });
     return normalizeDaengLabWallet(wallet);
+}
+
+function normalizeDaengLabAttendance(value: ApiDaengLabAttendance): DaengLabAttendance {
+    return {
+        wallet: normalizeDaengLabWallet(value.wallet),
+        claimedToday: Boolean(value.claimed_today),
+        newlyClaimed: Boolean(value.newly_claimed),
+        status: value.status,
+        awardedDaengLabCoins: Number(value.awarded_daenglab_coins || 0),
+        dailyRewardDaengLabCoins: Number(value.daily_reward_daenglab_coins || 2),
+        businessDate: value.business_date,
+        timezone: value.timezone,
+        currentStreak: Number(value.current_streak || 0),
+        recentDays: (value.recent_days || []).map((day) => ({
+            businessDate: day.business_date,
+            claimed: Boolean(day.claimed),
+        })),
+        nextClaimAt: value.next_claim_at,
+    };
+}
+
+function normalizeDaengLabEngagement(value: ApiDaengLabEngagement): DaengLabEngagement {
+    return {
+        businessDate: value.business_date,
+        timezone: value.timezone,
+        xp: Number(value.xp || 0),
+        level: Math.max(1, Number(value.level || 1)),
+        nextLevelXp: Math.max(1, Number(value.next_level_xp || 100)),
+        todayTasks: (value.today_tasks || []).map((task) => ({
+            taskId: task.task_id,
+            title: task.title,
+            description: task.description,
+            xp: Number(task.xp || 0),
+            completed: Boolean(task.completed),
+        })),
+        weeklyAttendanceProgress: Number(value.weekly_attendance_progress || 0),
+        weeklyAttendanceTarget: Math.max(1, Number(value.weekly_attendance_target || 7)),
+        monthlyAnalysisProgress: Number(value.monthly_analysis_progress || 0),
+        monthlyAnalysisTarget: Math.max(1, Number(value.monthly_analysis_target || 5)),
+    };
+}
+
+export async function loadDaengLabAttendance(token?: string) {
+    const value = await apiJson<ApiDaengLabAttendance>("/api/v1/daenglab/wallet/attendance", {
+        method: "GET",
+        cache: "no-store",
+    }, token, { requireBase: true });
+    if (!value) throw new DdbApiError("오늘 출근도장을 불러오지 못했습니다.", { code: "http_error" });
+    return normalizeDaengLabAttendance(value);
+}
+
+export async function claimDaengLabAttendance(token?: string) {
+    const value = await apiJson<ApiDaengLabAttendance>("/api/v1/daenglab/wallet/attendance/claim", {
+        method: "POST",
+        body: JSON.stringify({}),
+    }, token, { requireBase: true });
+    if (!value) throw new DdbApiError("오늘 출근도장을 찍지 못했습니다.", { code: "http_error" });
+    return normalizeDaengLabAttendance(value);
+}
+
+export async function loadDaengLabEngagement(token?: string) {
+    const value = await apiJson<ApiDaengLabEngagement>("/api/v1/daenglab/engagement", {
+        method: "GET",
+        cache: "no-store",
+    }, token, { requireBase: true });
+    if (!value) throw new DdbApiError("오늘의 챌린지를 불러오지 못했습니다.", { code: "http_error" });
+    return normalizeDaengLabEngagement(value);
+}
+
+export async function completeDaengLabCareTask(taskId: DaengLabCareTaskId, token?: string) {
+    const value = await apiJson<ApiDaengLabCareTaskCompletion>(
+        `/api/v1/daenglab/engagement/tasks/${encodeURIComponent(taskId)}/complete`,
+        { method: "POST", body: JSON.stringify({}) },
+        token,
+        { requireBase: true },
+    );
+    if (!value) throw new DdbApiError("오늘의 돌봄 기록을 저장하지 못했습니다.", { code: "http_error" });
+    return {
+        ...normalizeDaengLabEngagement(value),
+        taskId: value.task_id,
+        newlyCompleted: Boolean(value.newly_completed),
+        status: value.status,
+        awardedXp: Number(value.awarded_xp || 0),
+    } satisfies DaengLabCareTaskCompletion;
 }
 
 export async function emailPetObservationResult(

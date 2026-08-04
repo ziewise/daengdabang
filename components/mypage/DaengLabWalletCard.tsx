@@ -29,6 +29,8 @@ function transactionLabel(eventType: string) {
     if (eventType === "points_conversion") return "적립금 전환";
     if (eventType === "analysis_reservation") return "행동·소리 분석";
     if (eventType === "analysis_refund") return "분석 실패 자동 환급";
+    if (eventType === "daily_attendance") return "매일 출근도장";
+    if (eventType === "daily_care_task_completed") return "오늘 돌봄 챌린지";
     return "지갑 변동";
 }
 
@@ -245,6 +247,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                                                 {entry.rewardPointsDelta !== 0 && `${entry.rewardPointsDelta > 0 ? "+" : ""}${entry.rewardPointsDelta.toLocaleString("ko-KR")}P`}
                                                 {entry.rewardPointsDelta !== 0 && entry.daengLabCoinsDelta !== 0 && " · "}
                                                 {entry.daengLabCoinsDelta !== 0 && `${entry.daengLabCoinsDelta > 0 ? "+" : ""}${entry.daengLabCoinsDelta}C`}
+                                                {entry.rewardPointsDelta === 0 && entry.daengLabCoinsDelta === 0 && "완료"}
                                             </span>
                                         </li>
                                     ))}

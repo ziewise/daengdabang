@@ -2,12 +2,13 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
     analyzePetLensSmart,
     reconcilePetLensResultWithConfirmedProfile,
     type PetLensAnalysisResult,
 } from "@/lib/daengdabang-llm";
-import { savePetProfilePhotosSmart } from "@/lib/customer-api";
+import { savePetProfileSmart } from "@/lib/customer-api";
 import {
     buildPetLensAnalysisImage,
     PETLENS_PHOTO_VIEWS,
@@ -30,6 +31,10 @@ import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import {
+    buildPetLensProfileForSave,
+    mergeSavedPetLensProfile,
+} from "@/lib/petlens-profile-persistence";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
@@ -58,7 +63,17 @@ export default function PetLensClient() {
     const hydratedPetProfileIdRef = useRef<number | undefined>(undefined);
 
     useEffect(() => {
-        trackStorefrontEvent("petlens_opened", { mode: "photo", surface: "page" });
+        const queryMode = new URLSearchParams(window.location.search).get("mode");
+        const hash = window.location.hash.replace(/^#/, "");
+        const hashMode = hash === "observation"
+            ? hash
+            : new URLSearchParams(hash).get("mode");
+        const initialMode = queryMode === "observation" || hashMode === "observation"
+            ? "observation"
+            : "photo";
+        const modeSyncId = window.setTimeout(() => setMode(initialMode), 0);
+        trackStorefrontEvent("petlens_opened", { mode: initialMode, surface: "page" });
+        return () => window.clearTimeout(modeSyncId);
     }, []);
 
     useEffect(() => {
@@ -190,22 +205,15 @@ export default function PetLensClient() {
             setResult(resultWithConfirmedProfile);
             trackStorefrontEvent("petlens_completed", { mode: "photo", surface: "page" });
             try {
-                const profileToSave = {
-                    ...confirmedPet,
+                const profileToSave = buildPetLensProfileForSave(confirmedPet, resultWithConfirmedProfile, {
                     photoDataUrl: primaryPhoto?.dataUrl || photoDataUrl,
                     photoViews: persistedPhotoViews,
-                };
-                const saved = await savePetProfilePhotosSmart(profileToSave, user.apiAccessToken);
-                if (!saved) throw new Error("profile_save_unavailable");
-                upsertPet({
-                    ...profileToSave,
-                    apiProfileId: saved.id,
-                    photoDataUrl: saved.photoDataUrl || undefined,
-                    photoViews: saved.photoViews || undefined,
-                    photoServerVerified: Boolean(saved.photoDataUrl),
                 });
+                const saved = await savePetProfileSmart(profileToSave, user.apiAccessToken);
+                if (!saved) throw new Error("profile_save_unavailable");
+                upsertPet(mergeSavedPetLensProfile(profileToSave, saved));
             } catch {
-                setAnalysisError("분석은 완료됐지만 네 방향 사진 저장에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+                setAnalysisError("분석은 완료됐지만 결과와 사진을 내 아이 기록에 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.");
             }
         } catch (error) {
             setResult(null);
@@ -409,6 +417,14 @@ export default function PetLensClient() {
                         <div className="grid gap-5">
                             <div className="surface p-5">
                                 <PetLensAnalysisSummary profile={result.profile} details={result.details} />
+                                <Link
+                                    href="/my-pet/#health-report"
+                                    className="btn btn-secondary mt-4 w-full justify-center sm:w-auto"
+                                    data-petlens-result-profile-cta
+                                >
+                                    <i className="fa-solid fa-chart-line text-xs" />
+                                    내 아이 기록에서 결과 보기
+                                </Link>
                             </div>
                             {result.products.length > 0 ? (
                                 <section>

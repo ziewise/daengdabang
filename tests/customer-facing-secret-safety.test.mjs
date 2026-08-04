@@ -1,25 +1,11 @@
 import assert from "node:assert/strict";
-import { readdir, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 
 async function readSource(path) {
     return readFile(new URL(path, root), "utf8");
-}
-
-async function productionCopySources(directory) {
-    const entries = await readdir(new URL(directory, root), { withFileTypes: true });
-    const paths = [];
-    for (const entry of entries) {
-        const path = `${directory}${entry.name}`;
-        if (entry.isDirectory()) {
-            paths.push(...await productionCopySources(`${path}/`));
-        } else if (/\.(?:ts|tsx|js|jsx|json)$/.test(entry.name)) {
-            paths.push(path);
-        }
-    }
-    return paths;
 }
 
 function assertNoCustomerLeak(source, label) {
@@ -100,21 +86,20 @@ test("customer-facing auth and PetLens surfaces hide technical setup details", a
     }
 });
 
-test("customer-facing storefront copy uses plain feature names instead of AI labels", async () => {
-    const paths = (await Promise.all([
-        productionCopySources("app/"),
-        productionCopySources("components/"),
-        productionCopySources("lib/"),
-    ])).flat();
+test("customer-facing storefront copy presents the requested AI platform without provider labels", async () => {
+    const header = await readSource("components/header/Header.tsx");
+    const dashboard = await readSource("components/home/MemberAiDashboard.tsx");
+    const quickActions = await readSource("components/home/AiQuickActions.tsx");
 
-    for (const path of paths) {
-        const source = await readSource(path);
-        const customerFeatureCopy = path === "app/privacy/page.tsx"
-            ? source.replaceAll("AI 분석 및 자동화된 결정", "")
-            : path === "components/petlens/PetLensObservationExperience.tsx"
-                ? source.replace("AI 딥러닝", "")
-                : source;
-        assert.doesNotMatch(customerFeatureCopy, /\bAI\b|인공지능|에이아이/, `${path} exposes an artificial feature label`);
+    assert.match(header, /t\("aiAnalysis"\)/);
+    assert.match(dashboard, /PERSONAL AI DASHBOARD/);
+    assert.match(quickActions, /우리 아이를 위한 AI 바로가기/);
+    for (const [path, source] of [
+        ["components/header/Header.tsx", header],
+        ["components/home/MemberAiDashboard.tsx", dashboard],
+        ["components/home/AiQuickActions.tsx", quickActions],
+    ]) {
+        assert.doesNotMatch(source, /\b(?:openai|gemini|llama|provider|fallback)\b/i, `${path} exposes an internal provider label`);
     }
 });
 
