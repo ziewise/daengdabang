@@ -68,7 +68,7 @@ export const SIGNUP_REQUIRED_PRIVACY_CONSENT = {
         },
         {
             item: "정규화된 인증 이메일의 HMAC 일방향 식별값",
-            purpose: "신규 가입 댕랩코인 20C의 중복 수령 탐지, 반복 가입 등 부정 이용 방지 및 부정 지급 혜택 회수",
+            purpose: "신규 가입 댕다방 연구소 코인 20C의 중복 수령 탐지, 반복 가입 등 부정 이용 방지 및 부정 지급 혜택 회수",
             retention: "가입 혜택 프로그램 운영 기간 및 종료 후 30일(분쟁 또는 법령상 보존 사유가 있으면 해당 기간)",
         },
     ] satisfies SignupAgreementRow[],

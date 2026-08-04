@@ -20,7 +20,7 @@ test("unsafe or low-confidence color previews never replace the original fitting
     assert.match(client, /returnedProductImage !== productImage/);
     assert.match(client, /mode !== "approximate_color_only"/);
     assert.match(client, /confidence < MIN_SAFE_COLOR_PREVIEW_CONFIDENCE/);
-    assert.match(client, /return null/);
+    assert.match(client, /return failure\("invalid_response", false\)/);
 
     assert.match(modal, /const retainingSourceAfterRejectedPreview = Boolean/);
     assert.match(
@@ -36,7 +36,7 @@ test("unsafe or low-confidence color previews never replace the original fitting
         modal.indexOf("void requestPetTryOnColorPreview"),
         modal.indexOf("const generate = useCallback"),
     );
-    assert.match(previewRequest, /if \(!preview\)[\s\S]*setFastPreviewUnavailableKey/);
+    assert.match(previewRequest, /if \(!previewOutcome\.ok\)[\s\S]*setFastPreviewUnavailableKey/);
     assert.doesNotMatch(previewRequest, /\bstart\(|generate\(/);
 });
 

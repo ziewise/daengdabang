@@ -1103,7 +1103,7 @@ function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult })
 
             {result.daengLabCoinRefunded && (
                 <p className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-black leading-5 text-emerald-800" data-daenglab-target-hold-refund>
-                    댕랩코인은 전액 환급됐어요. 정확하지 않은 분석에는 비용을 쓰지 않습니다.
+                    댕다방 연구소 코인은 전액 환급됐어요. 정확하지 않은 분석에는 비용을 쓰지 않습니다.
                 </p>
             )}
         </section>

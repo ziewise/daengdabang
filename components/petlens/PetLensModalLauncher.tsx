@@ -27,6 +27,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
+import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { useI18n } from "@/lib/i18n";
 
@@ -205,15 +206,16 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             type="button"
                                             onClick={startObservation}
                                             aria-label={en
-                                                ? "Open DaengLab Behavior and Sound Analysis, new service"
-                                                : "댕랩 행동·소리 분석 신규 서비스 열기"}
+                                                ? "Open DaengDaBang Research Lab Behavior and Sound Analysis, new service"
+                                                : "댕다방 연구소 행동·소리 분석 신규 서비스 열기"}
                                             className="group relative grid w-full grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border-2 border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-rose-50/70 p-3 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-200 motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                                             data-petlens-observation-launcher
                                         >
-                                            <span className="relative h-[52px] w-[52px] shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-cyan-100 sm:h-16 sm:w-16">
-                                                {/* 행동·소리 분석 아이콘 — 모서리 둥근 네모 타일 */}
-                                                <Image src="/images/ui/pet-video.png" alt="" fill sizes="64px" loading="eager" className="object-cover" />
-                                            </span>
+                                            <DaengLabSymbol
+                                                size={64}
+                                                priority
+                                                className="h-[52px]! w-[52px]! ring-1 ring-cyan-100 sm:h-16! sm:w-16!"
+                                            />
                                             <span className="min-w-0">
                                                 <DaengLabServiceTitle
                                                     en={en}

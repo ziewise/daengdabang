@@ -27,6 +27,7 @@ import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
 import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
+import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
@@ -250,11 +251,14 @@ export default function PetLensClient() {
             <header className="mb-6">
                 {mode === "observation" ? (
                     <>
-                        <h1>
-                            <DaengLabServiceTitle
-                                suffixClassName="text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"
-                            />
-                        </h1>
+                        <div className="flex items-center gap-3">
+                            <DaengLabSymbol size={72} priority className="ring-1 ring-cyan-100 shadow-sm" />
+                            <h1 className="min-w-0">
+                                <DaengLabServiceTitle
+                                    suffixClassName="text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"
+                                />
+                            </h1>
+                        </div>
                         <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
                             카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다.
                         </p>

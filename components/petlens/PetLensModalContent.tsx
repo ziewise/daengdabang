@@ -48,6 +48,7 @@ import PetLensMemberGate from "@/components/petlens/PetLensMemberGate";
 import PetLensModeTabs, { type PetLensMode } from "@/components/petlens/PetLensModeTabs";
 import PetLensObservationExperience from "@/components/petlens/PetLensObservationExperience";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
+import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
@@ -282,6 +283,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
         return (
             <div className="p-3 sm:p-5">
                 <header className="mb-3 text-center">
+                    <DaengLabSymbol size={56} className="mx-auto mb-2 ring-1 ring-cyan-100" />
                     <DaengLabServiceTitle
                         className="justify-center"
                         suffixClassName="text-lg font-black leading-tight text-neutral-950"

@@ -10,6 +10,7 @@ import {
     petTryOnReferencePhoto,
     requestPetTryOnColorPreview,
     reviewPetTryOnGeometry,
+    type PetTryOnApiErrorCode,
     type PetTryOnColorPreview,
     type PetTryOnCorrectionIssue,
     type PetTryOnProgressStage,
@@ -22,7 +23,10 @@ import {
     type PetTryOnFitMasterIdentity,
 } from "@/lib/pet-tryon-fit-master";
 import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
-import { usePetTryOnTask } from "@/lib/pet-tryon-background";
+import {
+    PetTryOnEmailDeliveryControls,
+    usePetTryOnTask,
+} from "@/lib/pet-tryon-background";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import ColorSelect from "./ColorSelect";
@@ -144,6 +148,38 @@ function sidePhotoRequirement(kind: PetTryOnReviewKind, locale: "ko" | "en") {
     return "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
 }
 
+function apiErrorMessage(code: PetTryOnApiErrorCode, locale: "ko" | "en") {
+    if (locale === "en") {
+        if (code === "login_required") return "Your login has expired. Sign in again to continue Smart Fit.";
+        if (code === "already_running") return "A Smart Fit job is already running. Open the status panel and wait for it to finish.";
+        if (code === "rate_limited") return "Smart Fit has too many requests right now. Check your queue and try again later.";
+        if (code === "invalid_request") return "Check the selected product and your dog's saved side photo, then try again.";
+        if (code === "not_found") return "We could not reconnect to the saved fitting. Start a new one only if you want another image.";
+        if (code === "aborted") return "The request was stopped. No additional fitting was started.";
+        return "The connection is temporarily unstable. Please try again shortly.";
+    }
+    if (code === "login_required") return "로그인이 만료됐어요. 다시 로그인한 뒤 입혀보기를 이어서 확인해 주세요.";
+    if (code === "already_running") return "이미 진행 중인 입혀보기가 있어요. 상태 창에서 완료될 때까지 기다려 주세요.";
+    if (code === "rate_limited") return "현재 입혀보기 요청이 많아요. 진행 중인 작업을 확인하고 잠시 후 다시 시도해 주세요.";
+    if (code === "invalid_request") return "선택한 상품과 우리 아이의 저장된 측면 사진을 확인한 뒤 다시 시도해 주세요.";
+    if (code === "not_found") return "저장된 입혀보기 작업을 다시 연결하지 못했어요. 새 이미지가 필요할 때만 다시 만들어 주세요.";
+    if (code === "aborted") return "요청이 중단됐어요. 추가 입혀보기 작업은 시작하지 않았습니다.";
+    return "연결이 잠시 불안정해요. 잠시 후 다시 시도해 주세요.";
+}
+
+function ineligibleMessage(reason: ReturnType<typeof getPetTryOnEligibility>["reason"], locale: "ko" | "en") {
+    if (locale === "en") {
+        if (reason === "missing_image") return "This product does not have a usable catalog image yet.";
+        if (reason === "requires_base_product") return "This accessory needs its complete base product and cannot be fitted by itself.";
+        if (reason === "accessory_only" || reason === "not_pet_wearable") return "This item is not worn directly by a dog.";
+        return "Smart Fit is not available for this product category yet.";
+    }
+    if (reason === "missing_image") return "이 상품은 입혀보기에 사용할 수 있는 상품 이미지가 아직 없어요.";
+    if (reason === "requires_base_product") return "이 액세서리는 완제품과 함께 사용해야 해서 단독으로 입혀볼 수 없어요.";
+    if (reason === "accessory_only" || reason === "not_pet_wearable") return "강아지가 직접 착용하는 상품이 아니라 입혀보기를 제공하지 않아요.";
+    return "이 상품 분류는 아직 스마트 입혀보기를 지원하지 않아요.";
+}
+
 type ReadyFit = {
     jobId: string;
     productImage: string;
@@ -170,7 +206,7 @@ export default function PetTryOnPreview({
     onColorChange: (index: number) => void;
     onClose: () => void;
 }) {
-    const { user } = useAuth();
+    const { user, hydrated } = useAuth();
     const { locale, productName } = useI18n();
     const {
         notificationEnabled,
@@ -197,6 +233,7 @@ export default function PetTryOnPreview({
     const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
     const [error, setError] = useState("");
+    const [errorCode, setErrorCode] = useState<PetTryOnApiErrorCode | null>(null);
     const [now, setNow] = useState(0);
     const [preciseFits, setPreciseFits] = useState<Record<string, ReadyFit>>({});
     const [fastPreviews, setFastPreviews] = useState<Record<string, PetTryOnColorPreview>>({});
@@ -231,6 +268,8 @@ export default function PetTryOnPreview({
         ? getTaskFor(product.id, pet.apiProfileId, tryOnProduct.image, petReferenceImage)
         : null;
     const result = currentTask?.result ?? null;
+    const displayedError = error || currentTask?.error || "";
+    const displayedErrorCode = errorCode || currentTask?.apiErrorCode || null;
     const loading = Boolean(currentTask?.submitting || result?.status === "queued" || result?.status === "running");
     const progress = result?.progressPercent ?? (currentTask?.submitting ? 4 : 0);
     const stage: PetTryOnProgressStage = result?.progressStage ?? "queued";
@@ -385,9 +424,16 @@ export default function PetTryOnPreview({
                         setFitMasterRestoreBlocked(false);
                         return;
                     }
+                    if (remote.status === "error") {
+                        setFitMasterRestoreBlocked(true);
+                        if (remote.error.code !== "aborted") {
+                            setErrorCode(remote.error.code);
+                            setError(apiErrorMessage(remote.error.code, locale));
+                        }
+                        return;
+                    }
                     if (
-                        remote.status !== "found"
-                        || !approvedImages.has(remote.productImage)
+                        !approvedImages.has(remote.productImage)
                         || remote.result.status !== "ready"
                         || !remote.result.imageDataUrl
                     ) {
@@ -435,13 +481,20 @@ export default function PetTryOnPreview({
         }
         const controller = new AbortController();
         let active = true;
-        void getPetTryOnJob(saved.jobId, controller.signal).then((restored) => {
+        void getPetTryOnJob(saved.jobId, controller.signal).then((restoredOutcome) => {
             if (!active || controller.signal.aborted) return;
-            if (restored?.status !== "ready" || !restored.imageDataUrl) {
-                // A null result is intentionally treated as indeterminate: the
-                // client cannot distinguish a timeout or temporary 5xx from a
-                // confirmed missing job. Keep the master and never start a new image
-                // again until the customer explicitly requests it.
+            if (!restoredOutcome.ok) {
+                setFitMasterRestoreBlocked(true);
+                if (restoredOutcome.error.code !== "aborted") {
+                    setErrorCode(restoredOutcome.error.code);
+                    setError(apiErrorMessage(restoredOutcome.error.code, locale));
+                }
+                return;
+            }
+            const restored = restoredOutcome.value;
+            if (restored.status !== "ready" || !restored.imageDataUrl) {
+                // A non-ready master remains fail-closed: keep the saved identity
+                // and never start another image without explicit confirmation.
                 setFitMasterRestoreBlocked(true);
                 return;
             }
@@ -465,7 +518,7 @@ export default function PetTryOnPreview({
             active = false;
             controller.abort();
         };
-    }, [fitMasterIdentity, liveReadyFit, pet?.apiProfileId, petReferenceImage, product.colors, product.id, product.image]);
+    }, [fitMasterIdentity, liveReadyFit, locale, pet?.apiProfileId, petReferenceImage, product.colors, product.id, product.image]);
 
     useEffect(() => {
         if (!shouldRequestFastPreview || !sourceFit || !tryOnProduct.image || !selectedFastKey) return;
@@ -474,12 +527,17 @@ export default function PetTryOnPreview({
         let active = true;
         setFastPreviewUnavailableKey((key) => key === selectedFastKey ? "" : key);
         void requestPetTryOnColorPreview(sourceFit.jobId, tryOnProduct.image, controller.signal)
-            .then((preview) => {
+            .then((previewOutcome) => {
                 if (!active || controller.signal.aborted) return;
-                if (!preview) {
+                if (!previewOutcome.ok) {
                     setFastPreviewUnavailableKey(selectedFastKey);
+                    if (previewOutcome.error.code === "login_required") {
+                        setErrorCode(previewOutcome.error.code);
+                        setError(apiErrorMessage(previewOutcome.error.code, locale));
+                    }
                     return;
                 }
+                const preview = previewOutcome.value;
                 setFastPreviews((previous) => ({ ...previous, [selectedFastKey]: preview }));
                 setFastPreviewUnavailableKey("");
             });
@@ -489,6 +547,7 @@ export default function PetTryOnPreview({
         };
     }, [
         selectedFastKey,
+        locale,
         shouldRequestFastPreview,
         sourceFit,
         tryOnProduct.image,
@@ -498,6 +557,7 @@ export default function PetTryOnPreview({
         if (!eligible || !pet || !tryOnProduct.image) return;
         if (fitMasterRestorePending) return;
         setError("");
+        setErrorCode(null);
         if (explicitColorRequired) {
             setError(locale === "en"
                 ? "Choose the exact product color first. Smart Fit never guesses a color from the main image."
@@ -525,15 +585,17 @@ export default function PetTryOnPreview({
             applyCorrections ? correctionIssues : [],
             Boolean(sourceFit || fitMasterRestoreBlocked),
         );
-            if (outcome === "queue_full") {
+            if (outcome.status === "queue_full") {
                 setError(locale === "en"
                     ? "Your Smart Fit queue already has five items. Check the floating queue before adding another."
                     : "입혀보기는 한 번에 최대 5개까지 진행할 수 있어요. 진행 중인 작업이 완료된 후 다시 시도해 주세요.");
                 setPanelOpen(true);
-            } else if (outcome === "failed") {
-                setError(locale === "en"
-                    ? "We couldn't start a reliable fitting. Please try again shortly."
-                    : "입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.");
+            } else if (outcome.status === "error" && outcome.error.code !== "aborted") {
+                setErrorCode(outcome.error.code);
+                setError(apiErrorMessage(outcome.error.code, locale));
+                if (outcome.error.code === "already_running" || outcome.error.code === "login_required") {
+                    setPanelOpen(true);
+                }
             }
         } finally {
             generationRequestPendingRef.current = false;
@@ -579,12 +641,11 @@ export default function PetTryOnPreview({
         };
     }, [onClose]);
 
-    if (!eligible) return null;
-
     const handlePetChange = (index: number) => {
         if (loading) return;
         setSelected(index);
         setError("");
+        setErrorCode(null);
         setMismatchOpen(false);
         setCorrectionIssues([]);
         setPreciseRegenerationOpen(false);
@@ -625,10 +686,14 @@ export default function PetTryOnPreview({
         setGeometryReviewError("");
         try {
             const approved = await reviewPetTryOnGeometry(jobId, true);
-            if (!approved) {
+            if (!approved.ok) {
                 setGeometryReviewError(locale === "en"
-                    ? "We could not save your product-shape approval. The original result is still shown and no new image was generated."
-                    : "상품 모양 확인을 저장하지 못했어요. 기존 결과는 그대로 유지되며 새 이미지는 생성하지 않았습니다.");
+                    ? `We could not save your product-shape approval. ${apiErrorMessage(approved.error.code, locale)} The original result is still shown and no new image was generated.`
+                    : `상품 모양 확인을 저장하지 못했어요. ${apiErrorMessage(approved.error.code, locale)} 기존 결과는 그대로 유지되며 새 이미지는 생성하지 않았습니다.`);
+                if (approved.error.code === "login_required") {
+                    setErrorCode(approved.error.code);
+                    setError(apiErrorMessage(approved.error.code, locale));
+                }
                 return;
             }
             setLocalGeometryReview(jobId, true);
@@ -652,10 +717,14 @@ export default function PetTryOnPreview({
         setGeometryReviewError("");
         try {
             const revoked = await reviewPetTryOnGeometry(jobId, false);
-            if (!revoked) {
+            if (!revoked.ok) {
                 setGeometryReviewError(locale === "en"
-                    ? "We could not save that the product shape is different. Color comparison remains locked for safety, and no new image was generated."
-                    : "상품 모양이 다르다는 확인을 저장하지 못했어요. 안전을 위해 색상 비교는 계속 잠겨 있으며 새 이미지는 생성하지 않았습니다.");
+                    ? `We could not save that the product shape is different. ${apiErrorMessage(revoked.error.code, locale)} Color comparison remains locked for safety, and no new image was generated.`
+                    : `상품 모양이 다르다는 확인을 저장하지 못했어요. ${apiErrorMessage(revoked.error.code, locale)} 안전을 위해 색상 비교는 계속 잠겨 있으며 새 이미지는 생성하지 않았습니다.`);
+                if (revoked.error.code === "login_required") {
+                    setErrorCode(revoked.error.code);
+                    setError(apiErrorMessage(revoked.error.code, locale));
+                }
             }
         } finally {
             geometryReviewPendingRef.current = false;
@@ -700,7 +769,44 @@ export default function PetTryOnPreview({
                     </button>
                 </header>
 
-                {!pet ? (
+                {!hydrated ? (
+                    <div className="p-6 sm:p-10" role="status" aria-live="polite">
+                        <div className="mx-auto max-w-xl rounded-xl border border-indigo-100 bg-indigo-50 p-7 text-center">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-indigo-700 shadow-sm">
+                                <i className="fa-solid fa-paw animate-pulse text-xl" />
+                            </div>
+                            <h3 className="mt-4 text-lg font-black text-neutral-950">
+                                {locale === "en" ? "Checking your member session" : "회원 정보를 확인하고 있어요"}
+                            </h3>
+                            <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
+                                {locale === "en"
+                                    ? "Smart Fit will stay open while your saved dog and active jobs are restored."
+                                    : "저장된 우리 아이와 진행 중인 작업을 불러오는 동안 이 창을 그대로 유지합니다."}
+                            </p>
+                        </div>
+                    </div>
+                ) : !eligible ? (
+                    <div className="p-6 sm:p-10" role="status" aria-live="polite">
+                        <div className="mx-auto max-w-xl rounded-xl border border-amber-200 bg-amber-50 p-7 text-center">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-amber-700 shadow-sm">
+                                <i className="fa-solid fa-circle-info text-xl" />
+                            </div>
+                            <h3 className="mt-4 text-lg font-black text-neutral-950">
+                                {locale === "en" ? "Smart Fit is unavailable for this item" : "이 상품은 스마트 입혀보기를 지원하지 않아요"}
+                            </h3>
+                            <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
+                                {ineligibleMessage(eligibility.reason, locale)}
+                            </p>
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-900 px-5 text-sm font-black text-white hover:bg-neutral-800"
+                            >
+                                {locale === "en" ? "Continue shopping" : "상품 계속 보기"}
+                            </button>
+                        </div>
+                    </div>
+                ) : !pet ? (
                     <div className="p-6 sm:p-10">
                         <div className="mx-auto max-w-xl rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-7 text-center">
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 text-indigo-700">
@@ -758,7 +864,7 @@ export default function PetTryOnPreview({
 
                             {loading && (
                                 <div className="absolute inset-0 flex items-end bg-neutral-950/52 p-4 sm:p-7">
-                                    <div className="w-full rounded-2xl bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
+                                    <div className="max-h-full w-full overflow-y-auto rounded-2xl bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
                                                 <p className="text-[11px] font-black tracking-wide text-indigo-700">DDB SMART FIT</p>
@@ -821,6 +927,11 @@ export default function PetTryOnPreview({
                                                     : "정교한 마무리에 조금 더 시간이 걸리고 있어요. 쇼핑을 계속하셔도 결과는 Smart Fit에 보관됩니다."}
                                             </p>
                                         )}
+
+                                        <PetTryOnEmailDeliveryControls
+                                            task={currentTask}
+                                            longWait={elapsed >= 120}
+                                        />
 
                                         <p className="mt-3 text-xs font-bold leading-5 text-neutral-500">
                                             {locale === "en"
@@ -913,9 +1024,10 @@ export default function PetTryOnPreview({
                                     <ColorSelect
                                         colors={product.colors || []}
                                         colorIdx={colorIdx}
-                                        onColorChange={loading ? undefined : (index) => {
-                                            setError("");
-                                            setMismatchOpen(false);
+                                         onColorChange={loading ? undefined : (index) => {
+                                             setError("");
+                                             setErrorCode(null);
+                                             setMismatchOpen(false);
                                             setCorrectionIssues([]);
                                             setPreciseRegenerationOpen(false);
                                             setFastPreviewUnavailableKey("");
@@ -1057,10 +1169,32 @@ export default function PetTryOnPreview({
                                 </p>
                             </div>
 
-                            {error && (
+                            {displayedError && (
                                 <div className="mt-4 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm font-bold leading-6 text-rose-800">
-                                    <i className="fa-solid fa-triangle-exclamation mr-2" />
-                                    {error}
+                                    <p>
+                                        <i className="fa-solid fa-triangle-exclamation mr-2" />
+                                        {displayedError}
+                                    </p>
+                                    {displayedErrorCode === "login_required" && (
+                                        <Link
+                                            href="/auth/login"
+                                            className="mt-3 inline-flex h-9 items-center justify-center rounded-md bg-indigo-600 px-4 text-xs font-black text-white hover:bg-indigo-700"
+                                        >
+                                            {locale === "en" ? "Sign in again" : "다시 로그인"}
+                                        </Link>
+                                    )}
+                                    {(displayedErrorCode === "already_running" || loading) && displayedErrorCode !== "login_required" && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPanelOpen(true);
+                                                onClose();
+                                            }}
+                                            className="mt-3 inline-flex h-9 items-center justify-center rounded-md bg-indigo-600 px-4 text-xs font-black text-white hover:bg-indigo-700"
+                                        >
+                                            {locale === "en" ? "Open job status" : "진행 상태 확인"}
+                                        </button>
+                                    )}
                                 </div>
                             )}
 

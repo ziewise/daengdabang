@@ -1375,7 +1375,7 @@ export async function cancelPetObservationQueueWait(options: {
 
 export async function analyzePetObservation(request: PetObservationRequest): Promise<PetObservationResult> {
     const base = ddbApiBase();
-    if (!base) throw new Error("지금은 댕랩 행동·소리·건강 신호 분석을 사용할 수 없습니다.");
+    if (!base) throw new Error("지금은 댕다방 연구소 행동·소리·건강 신호 분석을 사용할 수 없습니다.");
     const token = request.accessToken || getCustomerToken();
     if (!token) throw new Error("로그인 정보를 다시 확인해 주세요.");
     if (!Number.isInteger(request.petProfileId) || request.petProfileId <= 0) {

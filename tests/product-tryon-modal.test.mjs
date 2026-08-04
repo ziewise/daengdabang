@@ -82,9 +82,10 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(background, /submitAborts\.current\.values\(\)/);
     assert.match(background, /restoreController\.abort\(\)/);
     assert.match(background, /accountKeyRef\.current !== initialTask\.accountKey/);
-    assert.match(background, /status: "failed"/);
-    assert.match(background, /Date\.now\(\) - current\.startedAt >= MAX_MONITOR_MS/);
-    assert.match(background, /deadlineReached = true/);
+    assert.match(background, /apiErrorCode\?: PetTryOnApiErrorCode/);
+    assert.match(background, /status checks will retry automatically/);
+    assert.match(background, /다시 로그인해 작업 이어보기/);
+    assert.doesNotMatch(background, /MAX_MONITOR_MS|deadlineReached/);
     assert.match(background, /if \(!restoreStarted\) restoredOnce\.current = false/);
     assert.doesNotMatch(background, /productHref: `\/product\/\$\{encodeURIComponent\(product\.id\)\}`/);
     assert.equal(
@@ -106,8 +107,14 @@ test("try-on uses the authenticated browser-RPA queue and polls for completion",
     assert.match(client, /authorization: `Bearer \$\{token\}`/);
     assert.match(client, /pet_profile_id: pet\.apiProfileId/);
     assert.match(client, /pet-tryon\/jobs\/\$\{encodeURIComponent\(jobId\)\}/);
-    assert.match(client, /15 \* 60 \* 1000/);
-    assert.match(client, /result\.status === "ready"/);
+    assert.doesNotMatch(client, /15 \* 60 \* 1000/);
+    assert.match(client, /type PetTryOnApiOutcome<T>/);
+    assert.match(client, /response\.status === 401 \|\| response\.status === 403/);
+    assert.match(client, /response\.status === 409/);
+    assert.match(client, /response\.status === 429/);
+    assert.match(client, /response\.status === 503/);
+    assert.match(client, /while \(\["queued", "running"\]\.includes\(result\.status\) && result\.jobId\)/);
+    assert.match(client, /return success\(result\)/);
     assert.match(client, /progress_stage/);
     assert.match(client, /progress_percent/);
     assert.match(client, /estimated_seconds/);
@@ -164,36 +171,30 @@ test("background async responses are guarded before state updates", async () => 
 
     assertOrdered(background, [
         "const monitor = useCallback",
-        "const next = await getPetTryOnJob(jobId, controller.signal)",
+        "const polled = await getPetTryOnJob(jobId, controller.signal)",
         "controller.signal.aborted",
         "accountKeyRef.current !== initialTask.accountKey",
         "!tasksRef.current.some((item) => item.taskKey === initialTask.taskKey)",
-        "if (!next)",
+        "if (!polled.ok)",
         "replaceTask(current)",
     ], "monitor guard");
     assertOrdered(background, [
         "const start = useCallback",
         "const first = await startPetTryOn(",
         "submitController.signal.aborted",
-        "if (!first)",
+        "if (!first.ok)",
         "replaceTask(failed)",
     ], "submit guard");
     assertOrdered(background, [
-        "void getPetTryOnJob(jobId, restoreController.signal).then",
+        "const fresh = await getPetTryOnJob(jobId, restoreController.signal)",
         "restoreController.signal.aborted",
         "!tasksRef.current.some((item) => item.taskKey === storedTask.taskKey)",
-        "if (!fresh)",
+        "if (!fresh.ok)",
         "replaceTask(refreshed)",
     ], "restore guard");
-    assertOrdered(background, [
-        "deadlineReached = true",
-        "controller.abort()",
-        "} finally {",
-        "deadlineReached",
-        "latest?.result?.jobId === jobId",
-        "ACTIVE_STATUSES.has(latest.result.status)",
-        "const failed = asMonitorFailure",
-    ], "hard deadline terminalization");
+    assert.match(background, /while \(current\.result && ACTIVE_STATUSES\.has\(current\.result\.status\)\)/);
+    assert.match(background, /if \(polled\.error\.retryable\) \{[\s\S]*continue;/);
+    assert.doesNotMatch(background, /Date\.now\(\) - current\.startedAt|hard deadline terminalization/);
     assertOrdered(background, [
         "const restoreTimer = window.setTimeout",
         "restoreStarted = true",

@@ -42,7 +42,7 @@ test("the privacy page restores the June source details without removing newer P
     assert.match(privacy, /계약 이행에 필요한 항목과 별도 동의가 필요한 항목을 구분하여 관리합니다\./);
     assert.match(privacy, /이용자는 언제든지 \{BUSINESS_INFO\.companyName\}에 대해 개인정보 열람/);
     assert.match(privacy, /제13조 AI 분석 및 자동화된 결정/);
-    assert.match(privacy, /댕랩 행동·소리 분석\(PetLens 관찰 기능\)/);
+    assert.match(privacy, /댕다방 연구소 행동·소리 분석\(PetLens 관찰 기능\)/);
     assert.match(privacy, /가입 혜택 중복 방지/);
     assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-07-24"/);
     assert.match(privacy, /개인정보처리방침 버전: v1\.4/);
@@ -57,7 +57,7 @@ test("the privacy page discloses the live behavior and sound processing boundary
     assert.match(privacy, /명시적으로 동의하고 분석을 실행할 때 암호화된 HTTPS 통신으로 이전/);
     assert.match(privacy, /분석 기능 운영을 위한 임시 처리는 최대 24시간/);
     assert.match(privacy, /안전·오남용 방지 기록은 최대 55일/);
-    assert.match(privacy, /동의하지 않거나 전송을 거부할 수 있으며, 이 경우 댕랩 행동·소리 분석 기능을 이용할 수 없음/);
+    assert.match(privacy, /동의하지 않거나 전송을 거부할 수 있으며, 이 경우 댕다방 연구소 행동·소리 분석 기능을 이용할 수 없음/);
     assert.match(privacy, /분석 결과, 원본의 SHA-256 해시, 동의 증적\(동의 영수증\)과 요청 기록은 이용자가 삭제를 요청하거나 회원 탈퇴할 때까지 보관/);
     assert.match(privacy, /원본 영상·음성은 분석 요청 중에만 일시 처리하고 댕다방 서버에 보관하지 않음/);
     assert.match(privacy, /자체 학습한 수의학적 진단 모델이나 수의사의 진단을 대신하는 기능이 아닙니다/);

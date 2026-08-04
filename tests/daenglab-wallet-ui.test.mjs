@@ -24,7 +24,7 @@ test("member wallet reads server balances and converts points through an idempot
     assert.match(card, /wallet\?\.pointConversionUnit \?\? 1_000/);
     assert.match(card, /wallet\?\.coinConversionUnit \?\? 10/);
     assert.match(card, /eventType === "signup_bonus"\) return "가입 축하 코인"/);
-    assert.match(card, /전환한 댕랩코인은 적립금으로 되돌릴 수 없습니다/);
+    assert.match(card, /전환한 댕다방 연구소 코인은 적립금으로 되돌릴 수 없습니다/);
     assert.match(card, /최종 결제금액 확인 및 구매확정 뒤 지급/);
     assert.match(card, /data-daenglab-wallet/);
     assert.match(page, /DaengLabWalletCard accessToken=\{user\.apiAccessToken\} accountEmail=\{user\.email\}/);
@@ -53,7 +53,7 @@ test("behavior and sound analysis shows, enforces, and refreshes the ten-coin co
     ]);
 
     assert.match(experience, /data-daenglab-analysis-wallet/);
-    assert.match(experience, /댕랩 행동·소리·건강 신호 분석 1회 \{analysisCoinCost\}C/);
+    assert.match(experience, /댕다방 연구소 행동·소리·건강 신호 분석 1회 \{analysisCoinCost\}C/);
     assert.match(experience, /wallet\.daengLabCoins >= analysisCoinCost/);
     assert.match(experience, /walletLoading \|\| !hasEnoughCoins/);
     assert.match(experience, /\/mypage#daenglab-wallet/);

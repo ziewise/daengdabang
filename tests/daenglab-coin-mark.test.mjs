@@ -8,7 +8,7 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("DaengLab coin uses one accessible crayon signature across customer surfaces", async () => {
+test("DaengDaBang Research Lab coin uses one accessible crayon signature across customer surfaces", async () => {
     const [mark, styles, ...surfaces] = await Promise.all([
         source("components/petlens/DaengLabCoinMark.tsx"),
         source("app/globals.css"),
@@ -21,7 +21,8 @@ test("DaengLab coin uses one accessible crayon signature across customer surface
 
     assert.match(mark, /role="img"/);
     assert.match(mark, /aria-label=\{accessibleLabel\}/);
-    assert.match(mark, /댕랩코인/);
+    assert.match(mark, /댕다방 연구소 코인/);
+    assert.doesNotMatch(mark, /댕랩|"DaengLab coin"/);
     assert.match(mark, /data-daenglab-coin-mark/);
     assert.match(styles, /\.ddb-daenglab-coin-brand--teal/);
     assert.match(styles, /\.ddb-daenglab-coin-brand--coral/);
@@ -29,6 +30,28 @@ test("DaengLab coin uses one accessible crayon signature across customer surface
     for (const surface of surfaces) {
         assert.match(surface, /DaengLabCoinMark/);
     }
+});
+
+test("customer-facing research lab name replaces the legacy wordmark without renaming compatibility identifiers", async () => {
+    const [title, launcher, memberGate, experience, result, wallet, privacy] = await Promise.all([
+        source("components/petlens/DaengLabServiceTitle.tsx"),
+        source("components/petlens/PetLensModalLauncher.tsx"),
+        source("components/petlens/PetLensMemberGate.tsx"),
+        source("components/petlens/PetLensObservationExperience.tsx"),
+        source("components/petlens/PetLensObservationResult.tsx"),
+        source("components/mypage/DaengLabWalletCard.tsx"),
+        source("app/privacy/page.tsx"),
+    ]);
+
+    for (const surface of [title, launcher, memberGate, experience, result, wallet, privacy]) {
+        assert.match(surface, /댕다방 연구소/);
+        assert.doesNotMatch(surface, /댕랩/);
+    }
+    assert.match(title, /DaengDaBang Research Lab/);
+    assert.doesNotMatch(title, /"DaengLab"/);
+    assert.match(launcher, /Open DaengDaBang Research Lab Behavior and Sound Analysis/);
+    assert.match(wallet, /data-daenglab-wallet/);
+    assert.match(privacy, /daenglab-observation-privacy-20260724-v2/);
 });
 
 test("analysis refund copy uses the explicit refund amount and current wallet balance", async () => {

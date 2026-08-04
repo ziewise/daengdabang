@@ -169,7 +169,7 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
                 <div>
                     <p className="text-sm font-black text-indigo-700">우리 아이 프로필 등록</p>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
-                        직접 확인한 정보로 등록하면 펫렌즈와 댕랩이 같은 아이를 기준으로 분석합니다.
+                        직접 확인한 정보로 등록하면 펫렌즈와 댕다방 연구소가 같은 아이를 기준으로 분석합니다.
                     </p>
                 </div>
                 <button type="button" onClick={() => setOpen(false)} className="rounded-md px-2 py-1 text-xs font-black text-neutral-500 hover:bg-neutral-100">

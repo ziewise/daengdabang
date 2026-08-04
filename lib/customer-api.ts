@@ -61,6 +61,26 @@ export type DaengLabWallet = {
     transactions: DaengLabWalletTransaction[];
 };
 
+export type CustomerResultEmailStatus = "scheduled" | "sent" | "failed" | "expired" | "uncertain";
+
+export type CustomerResultEmailReceipt = {
+    deliveryId: string;
+    status: CustomerResultEmailStatus;
+    idempotentReplay: boolean;
+};
+
+export type CustomerResultEmailRecipientVerification = {
+    verificationId: string;
+    maskedEmail: string;
+    resendAfterSeconds: number;
+    expiresInSeconds: number;
+};
+
+export type CustomerResultEmailRecipientToken = {
+    recipientToken: string;
+    expiresInSeconds: number;
+};
+
 export type SignupBonusStatusValue = "pending" | "claimed" | "repeat" | "expired" | "ineligible";
 
 export type SignupBonusStatus = {
@@ -588,8 +608,116 @@ export async function loadDaengLabWallet(token?: string) {
     const wallet = await apiJson<ApiDaengLabWallet>("/api/v1/daenglab/wallet", {
         method: "GET",
     }, token, { requireBase: true });
-    if (!wallet) throw new DdbApiError("댕랩 지갑을 불러오지 못했습니다.", { code: "http_error" });
+    if (!wallet) throw new DdbApiError("댕다방 연구소 지갑을 불러오지 못했습니다.", { code: "http_error" });
     return normalizeDaengLabWallet(wallet);
+}
+
+export async function emailPetObservationResult(
+    requestId: string,
+    payload: { idempotencyKey: string; recipientToken?: string },
+    token?: string
+): Promise<CustomerResultEmailReceipt> {
+    const cleanRequestId = requestId.trim();
+    if (!cleanRequestId) {
+        throw new DdbApiError("이메일로 보낼 분석 결과를 확인하지 못했습니다.", { code: "http_error" });
+    }
+    const response = await apiJson<{
+        delivery_id?: string;
+        status: CustomerResultEmailStatus;
+        idempotent_replay?: boolean;
+    }>(`/api/v1/pet-lens/observations/${encodeURIComponent(cleanRequestId)}/email`, {
+        method: "POST",
+        body: JSON.stringify({
+            idempotency_key: payload.idempotencyKey,
+            ...(payload.recipientToken ? { recipient_token: payload.recipientToken } : {}),
+        }),
+    }, token, { requireBase: true });
+    if (!response?.delivery_id || !isCustomerResultEmailStatus(response.status)) {
+        throw new DdbApiError("분석 결과 이메일 발송을 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return {
+        deliveryId: response.delivery_id,
+        status: response.status,
+        idempotentReplay: Boolean(response.idempotent_replay),
+    };
+}
+
+function isCustomerResultEmailStatus(value: unknown): value is CustomerResultEmailStatus {
+    return value === "scheduled"
+        || value === "sent"
+        || value === "failed"
+        || value === "expired"
+        || value === "uncertain";
+}
+
+export async function requestCustomerResultEmailRecipientVerification(
+    recipientEmail: string,
+    token?: string
+): Promise<CustomerResultEmailRecipientVerification> {
+    const response = await apiJson<{
+        verification_id?: string;
+        masked_email?: string;
+        resend_after_seconds?: number;
+        expires_in_seconds?: number;
+    }>("/api/v1/customer-result-emails/recipient-verifications", {
+        method: "POST",
+        body: JSON.stringify({ recipient_email: recipientEmail }),
+    }, token, { requireBase: true });
+    if (!response?.verification_id || !response.masked_email) {
+        throw new DdbApiError("이메일 인증번호 발송을 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return {
+        verificationId: response.verification_id,
+        maskedEmail: response.masked_email,
+        resendAfterSeconds: Math.max(1, Number(response.resend_after_seconds || 1)),
+        expiresInSeconds: Math.max(1, Number(response.expires_in_seconds || 1)),
+    };
+}
+
+export async function confirmCustomerResultEmailRecipientVerification(
+    verificationId: string,
+    recipientEmail: string,
+    code: string,
+    token?: string
+): Promise<CustomerResultEmailRecipientToken> {
+    const response = await apiJson<{
+        recipient_token?: string;
+        expires_in_seconds?: number;
+    }>(`/api/v1/customer-result-emails/recipient-verifications/${encodeURIComponent(verificationId)}/confirm`, {
+        method: "POST",
+        body: JSON.stringify({ recipient_email: recipientEmail, code }),
+    }, token, { requireBase: true });
+    if (!response?.recipient_token) {
+        throw new DdbApiError("이메일 인증을 완료하지 못했습니다.", { code: "http_error" });
+    }
+    return {
+        recipientToken: response.recipient_token,
+        expiresInSeconds: Math.max(1, Number(response.expires_in_seconds || 1)),
+    };
+}
+
+export async function loadCustomerResultEmailStatus(
+    deliveryId: string,
+    token?: string,
+    signal?: AbortSignal
+): Promise<CustomerResultEmailReceipt> {
+    const response = await apiJson<{
+        delivery_id?: string;
+        status?: CustomerResultEmailStatus;
+        idempotent_replay?: boolean;
+    }>(`/api/v1/customer-result-emails/${encodeURIComponent(deliveryId)}`, {
+        method: "GET",
+        cache: "no-store",
+        signal,
+    }, token, { requireBase: true });
+    if (!response?.delivery_id || !isCustomerResultEmailStatus(response.status)) {
+        throw new DdbApiError("이메일 발송 상태를 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return {
+        deliveryId: response.delivery_id,
+        status: response.status,
+        idempotentReplay: Boolean(response.idempotent_replay),
+    };
 }
 
 export async function loadSignupBonusStatus(token?: string): Promise<SignupBonusStatus> {

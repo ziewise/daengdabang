@@ -24,13 +24,15 @@ test("PetLens observation mounts on both the page and modal without replacing ph
 
 
 test("the active behavior and sound launcher opens the real observation camera instead of a coming-soon view", async () => {
-    const [launcher, modal, tabs, experience, brand, memberGate] = await Promise.all([
+    const [launcher, modal, tabs, experience, brand, memberGate, symbol, page] = await Promise.all([
         source("components/petlens/PetLensModalLauncher.tsx"),
         source("components/petlens/PetLensModalContent.tsx"),
         source("components/petlens/PetLensModeTabs.tsx"),
         source("components/petlens/PetLensObservationExperience.tsx"),
         source("components/petlens/DaengLabServiceTitle.tsx"),
         source("components/petlens/PetLensMemberGate.tsx"),
+        source("components/petlens/DaengLabSymbol.tsx"),
+        source("app/pet-lens/PetLensClient.tsx"),
     ]);
     assert.match(launcher, /data-petlens-observation-launcher/);
     assert.match(launcher, /setView\("observation"\)/);
@@ -39,10 +41,10 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.doesNotMatch(launcher, /mode: "sound"|준비중|coming soon/i);
     assert.match(modal, /initialMode\?: PetLensMode/);
     assert.match(modal, /useState<PetLensMode>\(initialMode\)/);
-    assert.match(brand, /댕랩/);
-    assert.match(brand, /DaengLab/);
+    assert.match(brand, /댕다방 연구소/);
+    assert.match(brand, /DaengDaBang Research Lab/);
     assert.match(brand, /신규서비스/);
-    assert.match(launcher, /댕랩 행동·소리 분석 신규 서비스 열기/);
+    assert.match(launcher, /댕다방 연구소 행동·소리 분석 신규 서비스 열기/);
     assert.match(tabs, /DaengLabServiceTitle/);
     assert.match(modal, /DaengLabServiceTitle/);
     assert.match(experience, /data-daenglab-service-description/);
@@ -50,6 +52,11 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.match(modal, /mode === "observation" \? "daenglab" : "petlens"/);
     assert.match(memberGate, /data-daenglab-member-gate/);
     assert.match(memberGate, /카메라·마이크 신호를 개별 분석하는 회원 전용 서비스/);
+    assert.match(symbol, /daengdabang-research-lab-symbol\.png/);
+    assert.match(symbol, /data-daenglab-symbol/);
+    for (const surface of [launcher, modal, experience, page]) {
+        assert.match(surface, /DaengLabSymbol/);
+    }
 });
 
 

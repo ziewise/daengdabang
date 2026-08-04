@@ -3,7 +3,7 @@ export const DAENGLAB_POINTS_CONVERSION_UNIT = 1_000;
 export const DAENGLAB_COINS_PER_CONVERSION_UNIT = 10;
 
 /**
- * 구매확정 시 지급될 상품 1개당 댕랩코인.
+ * 구매확정 시 지급될 상품 1개당 댕다방 연구소 코인.
  * 할인 전 가격이 아닌 옵션 추가금까지 반영된 최종 판매 단가를 기준으로 한다.
  */
 export function daengLabCoinsForUnitPrice(finalUnitPrice: number): number {

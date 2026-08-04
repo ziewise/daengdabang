@@ -64,7 +64,7 @@ test("color changes reuse the saved fitting until the customer explicitly reques
     assert.match(modal, /correctionIssues\.length > 0/);
     assert.match(client, /correction_issues: correctionIssues/);
     assert.match(client, /confirm_precise_regeneration: true/);
-    assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return null/);
+    assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return failure\("invalid_request", false\)/);
     assert.match(client, /startPetTryOn\(product, pet, options\.signal, \[\], true\)/);
     assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked\)/);
     assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
@@ -96,7 +96,7 @@ test("every wearable color switch tries the saved-fit preview before optional re
 
     // Server refusal stays fail-closed and never turns a color tap into an
     // implicit paid/full render.
-    assert.match(modal, /if \(!preview\) \{[\s\S]{0,120}setFastPreviewUnavailableKey\(selectedFastKey\)/);
+    assert.match(modal, /if \(!previewOutcome\.ok\) \{[\s\S]{0,180}setFastPreviewUnavailableKey\(selectedFastKey\)/);
     assert.match(modal, /색상만 안전하게 바꾸기 어려워 기존 입혀보기 결과를 그대로 보여드려요/);
     assert.doesNotMatch(modal, /AI 없는 색상 변경은 현재 의류만 지원해요/);
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,160}generate\(/);

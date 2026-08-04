@@ -56,7 +56,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
             publishWallet(next);
             setConversionPoints(next.pointConversionUnit);
         } catch (reason) {
-            setError(reason instanceof Error ? reason.message : "댕랩 지갑을 불러오지 못했습니다.");
+            setError(reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.");
         } finally {
             setLoading(false);
         }
@@ -76,7 +76,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                     }
                 })
                 .catch((reason) => {
-                    if (active) setError(reason instanceof Error ? reason.message : "댕랩 지갑을 불러오지 못했습니다.");
+                    if (active) setError(reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.");
                 })
                 .finally(() => {
                     if (active) setLoading(false);
@@ -129,7 +129,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
             <div className="bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-5 py-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p className="text-[11px] font-black tracking-[0.16em] text-indigo-600">DAENGLAB WALLET</p>
+                        <p className="text-[11px] font-black tracking-[0.16em] text-indigo-600">댕다방 연구소 지갑</p>
                         <h2 className="mt-1 inline-flex flex-wrap items-center gap-1.5 text-lg font-black text-neutral-950">
                             <DaengLabCoinMark />
                             <span>· 적립금</span>
@@ -195,7 +195,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
 
                         <form onSubmit={submitConversion} className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
                             <label className="text-xs font-black text-neutral-700" htmlFor="daenglab-conversion-points">
-                                적립금을 댕랩코인으로 전환
+                                적립금을 댕다방 연구소 코인으로 전환
                             </label>
                             <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
                                 <div className="relative">
@@ -219,12 +219,12 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                                 </button>
                             </div>
                             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                                {wallet.pointConversionUnit.toLocaleString("ko-KR")}P 단위로 전환할 수 있으며, 전환한 댕랩코인은 적립금으로 되돌릴 수 없습니다.
+                                {wallet.pointConversionUnit.toLocaleString("ko-KR")}P 단위로 전환할 수 있으며, 전환한 댕다방 연구소 코인은 적립금으로 되돌릴 수 없습니다.
                             </p>
                         </form>
 
                         <details className="mt-3 rounded-xl border border-indigo-100 bg-indigo-50/50 px-3 py-2.5 text-xs text-neutral-600">
-                            <summary className="cursor-pointer font-black text-indigo-700">상품별 댕랩코인 지급 기준</summary>
+                            <summary className="cursor-pointer font-black text-indigo-700">상품별 댕다방 연구소 코인 지급 기준</summary>
                             <p className="mt-2 font-bold leading-5">
                                 최종 판매 단가 기준 · 3만원 미만 1C · 3만~6만원 미만 3C · 6만~10만원 미만 6C ·
                                 10만~15만원 미만 10C · 15만~25만원 미만 15C · 25만원 이상 20C

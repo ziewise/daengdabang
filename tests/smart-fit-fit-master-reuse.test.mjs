@@ -26,8 +26,8 @@ test("every background-ready path persists a photo-free Smart Fit master", async
 
     for (const readyPath of [
         /if \(next\.status === "ready"\) \{\s*announceReady\(current\)/,
-        /if \(first\.status === "ready"\) \{\s*announceReady\(started\)/,
-        /if \(fresh\.status === "ready"\) \{\s*announceReady\(refreshed\)/,
+        /if \(firstResult\.status === "ready"\) \{\s*announceReady\(started\)/,
+        /if \(freshResult\.status === "ready"\) \{\s*announceReady\(refreshed\)/,
     ]) {
         assert.match(background, readyPath);
     }
@@ -42,7 +42,7 @@ test("every background-ready path persists a photo-free Smart Fit master", async
     assert.doesNotMatch(helper, /JSON\.stringify\(\{[^}]*imageDataUrl/si);
 });
 
-test("an indeterminate master restore never auto-starts another fitting", async () => {
+test("a typed master restore failure never auto-starts another fitting", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
     const restoreStart = modal.indexOf("const lookup = readPetTryOnFitMasterWithLegacy");
@@ -52,19 +52,19 @@ test("an indeterminate master restore never auto-starts another fitting", async 
     assert.match(restore, /if \(lookup\.status === "missing"\)/);
     assert.match(restore, /getLatestPetTryOnMaster\(pet\.apiProfileId, product\.id, controller\.signal\)/);
     assert.match(restore, /remote\.status === "missing"/);
-    assert.match(restore, /remote\.status !== "found"[\s\S]*setFitMasterRestoreBlocked\(true\)/);
+    assert.match(restore, /remote\.status === "error"[\s\S]*setFitMasterRestoreBlocked\(true\)/);
     assert.match(restore, /jobId: remote\.sourceJobId/);
     assert.match(restore, /productImage: remote\.productImage/);
     assert.match(restore, /savePetTryOnFitMaster\(fitMasterIdentity/);
     assert.match(restore, /if \(lookup\.status !== "found"\)[\s\S]*setFitMasterRestoreBlocked\(true\)/);
     assert.match(
         restore,
-        /if \(restored\?\.status !== "ready" \|\| !restored\.imageDataUrl\) \{[\s\S]*setFitMasterRestoreBlocked\(true\);[\s\S]*return;/,
+        /if \(!restoredOutcome\.ok\) \{[\s\S]*setFitMasterRestoreBlocked\(true\);[\s\S]*return;/,
     );
 
     const ambiguousResult = restore.slice(
-        restore.indexOf('if (restored?.status !== "ready"'),
-        restore.indexOf("const restoredFit", restore.indexOf('if (restored?.status !== "ready"')),
+        restore.indexOf("if (!restoredOutcome.ok)"),
+        restore.indexOf("const restoredFit", restore.indexOf("if (!restoredOutcome.ok)")),
     );
     assert.doesNotMatch(ambiguousResult, /removePetTryOnFitMaster/);
     assert.doesNotMatch(ambiguousResult, /sessionStorage\.removeItem/);
@@ -84,8 +84,9 @@ test("server master lookup distinguishes a real miss from an unsafe transient fa
 
     assert.match(client, /pet-tryon\/masters\/latest\?\$\{params\.toString\(\)\}/);
     assert.match(client, /data\.detail === MASTER_MISSING_DETAIL/);
-    assert.match(client, /catch \{\s*return \{ status: "indeterminate" \}/);
-    assert.match(client, /if \(!response\.ok\) return \{ status: "indeterminate" \}/);
+    assert.match(client, /status: "error"; error: PetTryOnApiError/);
+    assert.match(client, /return \{ status: "error", error: caughtFailure\(error\)\.error \}/);
+    assert.match(client, /if \(!response\.ok\) return \{ status: "error", error: responseFailure\(response\)\.error \}/);
     assert.match(client, /status: "found", sourceJobId, productImage, result/);
 
     const restoreStart = modal.indexOf("const lookup = readPetTryOnFitMasterWithLegacy");

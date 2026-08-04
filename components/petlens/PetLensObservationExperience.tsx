@@ -20,7 +20,9 @@ import { currentPetLensOrientation, usePetLensMediaCapture } from "@/hooks/usePe
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
 import PetLensObservationFollowUp from "@/components/petlens/PetLensObservationFollowUp";
 import PetLensObservationHistory from "@/components/petlens/PetLensObservationHistory";
+import PetLensObservationEmailDelivery from "@/components/petlens/PetLensObservationEmailDelivery";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
+import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import {
@@ -64,7 +66,7 @@ type Props = {
 };
 
 export default function PetLensObservationExperience({ pet, petProfileId, accessToken, variant = "page" }: Props) {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
     const {
         videoRef,
         phase,
@@ -342,7 +344,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             publishWallet(await loadDaengLabWallet(accessToken));
         } catch (reason) {
             if (reason instanceof DdbApiError && reason.status === 401) logout();
-            setWalletError(reason instanceof Error ? reason.message : "댕랩코인 잔액을 불러오지 못했습니다.");
+            setWalletError(reason instanceof Error ? reason.message : "댕다방 연구소 코인 잔액을 불러오지 못했습니다.");
         } finally {
             setWalletLoading(false);
         }
@@ -412,7 +414,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             return;
         }
         if (!wallet || wallet.daengLabCoins < wallet.analysisCoinCost) {
-            setAnalysisError(`댕랩 행동·소리·건강 신호 분석에는 ${wallet?.analysisCoinCost ?? 10}코인이 필요합니다. 마이페이지에서 적립금을 코인으로 전환할 수 있어요.`);
+            setAnalysisError(`댕다방 연구소 행동·소리·건강 신호 분석에는 ${wallet?.analysisCoinCost ?? 10}코인이 필요합니다. 마이페이지에서 적립금을 코인으로 전환할 수 있어요.`);
             return;
         }
         abortRef.current?.abort();
@@ -730,6 +732,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </div>
                 ) : null}
                 <PetLensObservationResult result={result} />
+                {resultRequestId && (
+                    <PetLensObservationEmailDelivery
+                        key={`${resultRequestId}:${user?.email || "no-account-email"}`}
+                        requestId={resultRequestId}
+                        accountEmail={user?.email}
+                        accessToken={accessToken}
+                        onUnauthorized={logout}
+                    />
+                )}
                 <PetLensObservationFollowUp
                     result={result}
                     requestId={resultRequestId}
@@ -1062,9 +1073,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
             <div className={`rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-sky-50 ${compact ? "p-4" : "p-5 sm:p-6"}`}>
                 <div className="flex items-start gap-3">
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-indigo-700 text-white">
-                        <i className="fa-solid fa-video" aria-hidden="true" />
-                    </span>
+                    <DaengLabSymbol size={44} className="ring-1 ring-cyan-100 shadow-sm" />
                     <div className="min-w-0">
                         <DaengLabServiceTitle
                             compact
@@ -1099,7 +1108,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     className="mt-4 rounded-xl border border-white/90 bg-white/75 px-3.5 py-3 text-xs font-bold leading-5 text-neutral-600 shadow-sm"
                     data-daenglab-service-description
                 >
-                    댕랩은 카메라 영상과 포함 음성을 함께 분석해,
+                    댕다방 연구소는 카메라 영상과 포함 음성을 함께 분석해,
                     영상 속 분석 대상을 먼저 구분한 뒤 그 강아지의 행동·소리·건강 관찰 신호와 가능한 맥락을 정리합니다.
                 </p>
                 <div
@@ -1144,7 +1153,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     <div className="flex items-center gap-3">
                         <DaengLabCoinMark compact className="text-xs" />
                         <div>
-                            <p className="text-xs font-black text-neutral-950">댕랩 행동·소리·건강 신호 분석 1회 {analysisCoinCost}C</p>
+                            <p className="text-xs font-black text-neutral-950">댕다방 연구소 행동·소리·건강 신호 분석 1회 {analysisCoinCost}C</p>
                             <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출·근거 부족 결과는 자동 환급</p>
                         </div>
                     </div>

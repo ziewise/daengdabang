@@ -165,7 +165,7 @@ export default function MyPage() {
                         ) : (
                             <>
                                 <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
-                                    먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕랩 행동·소리 분석을 바로 시작할 수 있습니다.
+                                    먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다.
                                 </div>
                                 <MemberPetProfileCreateForm
                                     key={profileRouteRequested ? "required" : "default"}
