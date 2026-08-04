@@ -52,6 +52,7 @@ test("daily attendance uses server-backed KST state and a fixed two-coin reward 
     const dashboard = read("../components/home/MemberAiDashboard.tsx");
     const stamp = read("../components/engagement/AttendanceStampCard.tsx");
     const motion = read("../components/engagement/AttendanceStamp.module.css");
+    const challenge = read("../app/challenge/page.tsx");
 
     assert.match(api, /\/api\/v1\/daenglab\/wallet\/attendance\/claim/);
     assert.match(api, /timezone: "Asia\/Seoul"/);
@@ -61,6 +62,8 @@ test("daily attendance uses server-backed KST state and a fixed two-coin reward 
     assert.match(motion, /@keyframes stamp-hit/);
     assert.match(motion, /@keyframes coin-pop-left/);
     assert.match(motion, /prefers-reduced-motion: reduce/);
+    assert.match(challenge, /max-w-none[^"]*md:whitespace-nowrap/);
+    assert.match(challenge, /<span className="whitespace-nowrap">2코인을 지급합니다\.<\/span>/);
     assert.doesNotMatch(`${dashboard}\n${stamp}`, /localStorage/);
 });
 
