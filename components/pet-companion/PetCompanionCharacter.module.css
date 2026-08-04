@@ -80,20 +80,20 @@
 .spriteMirror {
     position: absolute;
     inset: 0;
+    transform: scaleX(var(--pet-live-travel-facing-scale, var(--pet-facing-scale, 1)));
     transform-origin: center;
     backface-visibility: hidden;
     will-change: transform, opacity;
 }
 
-.character[data-facing="right"] { --pet-turn-angle: -3deg; }
-.character[data-facing="left"] { --pet-turn-angle: 3deg; }
-
-.character[data-facing="right"] .spriteMirror {
-    transform: scaleX(1);
+.character[data-facing="right"] {
+    --pet-facing-scale: 1;
+    --pet-turn-angle: -3deg;
 }
 
-.character[data-facing="left"] .spriteMirror {
-    transform: scaleX(-1);
+.character[data-facing="left"] {
+    --pet-facing-scale: -1;
+    --pet-turn-angle: 3deg;
 }
 
 .spriteStack {
@@ -244,13 +244,22 @@
     position: absolute;
     z-index: 5;
     top: -7px;
-    right: -4px;
     width: 68px;
     height: 54px;
     opacity: 0;
     transform: translateY(7px) scale(.8);
     transform-origin: 50% 100%;
     pointer-events: none;
+}
+
+.character[data-recommend-badge-side="right"] .recommendFx {
+    right: auto;
+    left: calc(100% + 6px);
+}
+
+.character[data-recommend-badge-side="left"] .recommendFx {
+    right: calc(100% + 6px);
+    left: auto;
 }
 
 .pickBadge {
@@ -509,7 +518,6 @@
 
     .live .recommendFx {
         top: -17px;
-        right: -24px;
         transform: scale(.68);
     }
 }

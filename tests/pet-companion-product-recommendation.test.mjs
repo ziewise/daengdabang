@@ -82,6 +82,35 @@ test("companion recommendation layer allows search focus without becoming spammy
     assert.match(source, /document\.addEventListener\("visibilitychange", onVisibilityChange\)/);
 });
 
+test("the Daeng Pick badge stays outside the dog's face on either viewport side", async () => {
+    const [character, characterCss, layer] = await Promise.all([
+        readSource("components/pet-companion/PetCompanionCharacter.tsx"),
+        readSource("components/pet-companion/PetCompanionCharacter.module.css"),
+        readSource("components/pet-companion/PetCompanionLayer.tsx"),
+    ]);
+
+    assert.match(character, /data-recommend-badge-side=\{recommendBadgeSide\}/);
+    assert.match(layer, /recommendBadgeSide=\{bubbleSide\}/);
+    assert.match(
+        characterCss,
+        /data-recommend-badge-side="right"[\s\S]{0,120}left: calc\(100% \+ 6px\)/,
+    );
+    assert.match(
+        characterCss,
+        /data-recommend-badge-side="left"[\s\S]{0,120}right: calc\(100% \+ 6px\)/,
+    );
+    const baseRule = characterCss.slice(
+        characterCss.indexOf(".recommendFx {"),
+        characterCss.indexOf("}", characterCss.indexOf(".recommendFx {")),
+    );
+    const mobileRule = characterCss.slice(
+        characterCss.indexOf(".live .recommendFx {"),
+        characterCss.indexOf("}", characterCss.indexOf(".live .recommendFx {")),
+    );
+    assert.doesNotMatch(baseRule, /(?:left|right):\s*-\d/);
+    assert.doesNotMatch(mobileRule, /(?:left|right):/);
+});
+
 test("product detail exposes the visible Smart Fit action to the navigator", async () => {
     const source = await readSource("components/products/detail/ProductInfo.tsx");
 

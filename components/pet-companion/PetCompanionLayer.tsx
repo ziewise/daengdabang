@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import {
+    useCallback,
     useEffect,
     useMemo,
     useRef,
@@ -47,6 +48,10 @@ import {
     resolveCompanionCollision,
     type CollisionRect,
 } from "@/lib/pet-companion-collision";
+import {
+    resolveHorizontalFacing,
+    type PetCompanionFacing,
+} from "@/lib/pet-companion-direction";
 import PetCompanionCharacter, {
     type PetCompanionMotion,
     type PetCompanionTravelDirection,
@@ -118,6 +123,7 @@ const LIVE_BOX_WIDTH = 174;
 const LIVE_BOX_HEIGHT = 174;
 const FLOATING_COLLISION_SELECTOR = '[data-pet-companion-avoid="true"]';
 const FLOATING_COLLISION_GAP = 12;
+const LIVE_TRAVEL_FACING_PROPERTY = "--pet-live-travel-facing-scale";
 
 function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
@@ -224,7 +230,7 @@ export default function PetCompanionLayer({
     const [draft, setDraft] = useState(settings);
     const [breedSearch, setBreedSearch] = useState("");
     const [motion, setMotion] = useState<PetCompanionMotion>("idle");
-    const [facing, setFacing] = useState<"left" | "right">("right");
+    const [facing, setFacing] = useState<PetCompanionFacing>("right");
     const [travelDirection, setTravelDirection] = useState<PetCompanionTravelDirection>("side");
     const [bubbleSide, setBubbleSide] = useState<"left" | "right">("right");
     const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
@@ -253,6 +259,7 @@ export default function PetCompanionLayer({
     const entryPlayedRef = useRef(false);
     const entryInProgressRef = useRef(false);
     const homeTransitionRef = useRef(homeTransition);
+    const facingRef = useRef<PetCompanionFacing>("right");
     const positionRef = useRef<{ x: number; y: number } | null>(null);
     const interactionEpochRef = useRef(0);
     const dragStateRef = useRef<CompanionDragState | null>(null);
@@ -281,6 +288,24 @@ export default function PetCompanionLayer({
     const forceMotionPreview = process.env.NODE_ENV !== "production"
         && typeof window !== "undefined"
         && new URLSearchParams(window.location.search).get("petPreview") === "1";
+
+    const commitFacing = useCallback((
+        fromX: number,
+        toX: number,
+        deadband?: number,
+    ) => {
+        const nextFacing = resolveHorizontalFacing(
+            fromX,
+            toX,
+            facingRef.current,
+            deadband,
+        );
+        if (nextFacing !== facingRef.current) {
+            facingRef.current = nextFacing;
+            setFacing(nextFacing);
+        }
+        return nextFacing;
+    }, []);
 
     useEffect(() => () => {
         dragListenerCleanupRef.current?.();
@@ -571,6 +596,7 @@ export default function PetCompanionLayer({
                 allowHeader?: boolean;
                 relativeToPainted?: boolean;
                 travelDirection?: PetCompanionTravelDirection;
+                arrivalFaceX?: number;
                 motionSource?: "entry" | "guide" | "guide-return" | "move" | "roam" | "scroll";
             } = {},
         ) => {
@@ -591,10 +617,9 @@ export default function PetCompanionLayer({
             const nextX = resolvedPosition.x;
             const nextY = resolvedPosition.y;
             const distance = Math.hypot(nextX - currentRect.left, nextY - currentRect.top);
-            const horizontalTravel = nextX - currentRect.left;
-            const directionThreshold = mobile ? 18 : 28;
-            if (!options.preserveFacing && Math.abs(horizontalTravel) >= directionThreshold) {
-                setFacing(horizontalTravel < 0 ? "left" : "right");
+            let movementFacing: PetCompanionFacing | null = null;
+            if (!options.preserveFacing && distance >= 5) {
+                movementFacing = commitFacing(currentRect.left, nextX);
             }
             const normalSpeechWidth = Math.min(
                 mobile ? 210 : 224,
@@ -633,10 +658,19 @@ export default function PetCompanionLayer({
             const duration = reducedMotion || options.instant || distance < 5
                 ? 1
                 : Math.round(clamp(distance / pixelsPerSecond * 1000, minimumDuration, maximumDuration));
+            const hasAnimatedTravel = duration > 1
+                && (nextMotion === "walk" || nextMotion === "run");
 
             window.clearTimeout(arrivalTimer);
             window.clearTimeout(actionTimer);
             window.clearTimeout(stopTimer);
+            walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
+            if (hasAnimatedTravel && movementFacing) {
+                walker.style.setProperty(
+                    LIVE_TRAVEL_FACING_PROPERTY,
+                    movementFacing === "left" ? "-1" : "1",
+                );
+            }
             const nextTravelDirection = reducedMotion
                 || distance < 5
                 || nextMotion !== "run"
@@ -668,9 +702,14 @@ export default function PetCompanionLayer({
                 forcePreview ? "important" : "",
             );
             walker.style.transform = `translate3d(${Math.round(nextX)}px, ${Math.round(nextY)}px, 0)`;
-            if (duration > 1 && (nextMotion === "walk" || nextMotion === "run")) {
+            if (hasAnimatedTravel) {
                 arrivalTimer = window.setTimeout(() => {
-                    if (walker.dataset.dragging === "true") return;
+                    if (
+                        walker.dataset.dragging === "true"
+                        || homeTransitionRef.current
+                        || Boolean(walker.dataset.petHomeTransition)
+                    ) return;
+                    walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
                     setMotion("idle");
                     setTravelDirection("side");
                     walker.dataset.petScrollDirection = "none";
@@ -678,7 +717,12 @@ export default function PetCompanionLayer({
                         ? "guide"
                         : "idle";
                     walker.dataset.petMotionStatus = "arrived";
+                    if (typeof options.arrivalFaceX === "number") {
+                        commitFacing(nextX + box.width / 2, options.arrivalFaceX);
+                    }
                 }, duration + 34);
+            } else if (typeof options.arrivalFaceX === "number") {
+                commitFacing(nextX + box.width / 2, options.arrivalFaceX);
             }
             return duration;
         };
@@ -723,6 +767,7 @@ export default function PetCompanionLayer({
             walker.dataset.petY = String(nextY);
             positionRef.current = { x: nextX, y: nextY };
             setTravelDirection("side");
+            walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
             walker.dataset.petScrollDirection = "none";
             walker.dataset.petMotionSource = "entry";
             walker.style.setProperty("transition-duration", "0ms", "important");
@@ -798,7 +843,7 @@ export default function PetCompanionLayer({
                 activeEntryTarget = entryHeroStage;
                 activeEntryExit = { x: entryExitX, y: entryExitY };
                 entryHeroStage.dataset.petCompanionEmerging = "true";
-                setFacing("left");
+                commitFacing(position.x, entryExitX);
                 setEntryPortal({
                     target: entryHeroStage,
                     left: position.x - entryStageRect.left,
@@ -1114,10 +1159,8 @@ export default function PetCompanionLayer({
                 preserveFacing: detail.preserveFacing,
                 allowHeader: detail.allowHeader,
                 motionSource: detail.motionSource,
+                arrivalFaceX: detail.faceX,
             });
-            if (typeof detail.faceX === "number") {
-                setFacing(detail.faceX < position.x ? "left" : "right");
-            }
         };
         const onBuybar = (event: Event) => {
             latestBuybarVisible = Boolean((event as CustomEvent).detail);
@@ -1208,6 +1251,7 @@ export default function PetCompanionLayer({
             window.clearTimeout(portalTimer);
             window.clearTimeout(entryWaitTimer);
             window.clearTimeout(entryWatchdogTimer);
+            walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
             if (entrySettleFrame) window.cancelAnimationFrame(entrySettleFrame);
             if (handoffFrame) window.cancelAnimationFrame(handoffFrame);
             entryInProgressRef.current = false;
@@ -1235,7 +1279,7 @@ export default function PetCompanionLayer({
             motionQuery.removeEventListener("change", onMotionPreferenceChange);
             document.removeEventListener("focusin", onFocusIn);
         };
-    }, [panelOpen, settings.enabled, settings.motion]);
+    }, [commitFacing, panelOpen, settings.enabled, settings.motion]);
 
     useEffect(() => {
         if (!homeTransition || panelOpen || !settings.enabled || !placementReady) return;
@@ -1250,6 +1294,13 @@ export default function PetCompanionLayer({
             const walkerHeight = walker.offsetHeight || walkerRect.height;
             const homeX = homeRect.left + homeRect.width / 2 - walkerWidth / 2;
             const homeY = homeRect.top + homeRect.height / 2 - walkerHeight / 2;
+            const homeTravelFromX = homeTransition === "leaving" ? walkerRect.left : homeX;
+            const homeTravelToX = homeTransition === "leaving" ? homeX : walkerRect.left;
+            const homeTravelFacing = commitFacing(homeTravelFromX, homeTravelToX);
+            walker.style.setProperty(
+                LIVE_TRAVEL_FACING_PROPERTY,
+                homeTravelFacing === "left" ? "-1" : "1",
+            );
             walker.style.setProperty("--pet-home-start-x", `${Math.round(walkerRect.left)}px`);
             walker.style.setProperty("--pet-home-start-y", `${Math.round(walkerRect.top)}px`);
             walker.style.setProperty("--pet-home-end-x", `${Math.round(homeX)}px`);
@@ -1265,9 +1316,10 @@ export default function PetCompanionLayer({
             walker.style.removeProperty("--pet-home-start-y");
             walker.style.removeProperty("--pet-home-end-x");
             walker.style.removeProperty("--pet-home-end-y");
+            walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
             walker.inert = false;
         };
-    }, [homeTransition, panelOpen, placementReady, settings.enabled]);
+    }, [commitFacing, homeTransition, panelOpen, placementReady, settings.enabled]);
 
     useEffect(() => {
         quickActionsOpenRef.current = quickActionsOpen;
@@ -2351,7 +2403,7 @@ export default function PetCompanionLayer({
                             toneId={settings.toneId}
                             accessoryId={settings.accessoryId}
                             motion="walk"
-                            facing="left"
+                            facing={resolveHorizontalFacing(0, entryPortal.travelX, facing)}
                             forceMotion={forceMotionPreview}
                         />
                     </span>
@@ -2431,6 +2483,8 @@ export default function PetCompanionLayer({
                             accessoryId={settings.accessoryId}
                             motion={displayMotion}
                             facing={facing}
+                            immediateFacing={Boolean(homeTransition)}
+                            recommendBadgeSide={bubbleSide}
                             travelDirection={displayTravelDirection}
                             forceMotion={forceMotionPreview}
                         />

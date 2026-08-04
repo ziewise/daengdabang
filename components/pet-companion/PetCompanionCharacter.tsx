@@ -27,6 +27,8 @@ type Props = {
     accessoryId: CompanionAccessoryId;
     motion?: PetCompanionMotion;
     facing?: "left" | "right";
+    immediateFacing?: boolean;
+    recommendBadgeSide?: "left" | "right";
     travelDirection?: PetCompanionTravelDirection;
     forceMotion?: boolean;
     variant?: "live" | "preview" | "card";
@@ -44,6 +46,8 @@ export default function PetCompanionCharacter({
     accessoryId,
     motion = "idle",
     facing = "right",
+    immediateFacing = false,
+    recommendBadgeSide = "right",
     travelDirection = "side",
     forceMotion = false,
     variant = "live",
@@ -52,8 +56,17 @@ export default function PetCompanionCharacter({
     const [displayFacing, setDisplayFacing] = useState(facing);
     const [turnPhase, setTurnPhase] = useState<TurnPhase>("rest");
     const displayFacingRef = useRef(facing);
+    const usesTravelFacing = immediateFacing || motion === "walk" || motion === "run";
 
     useEffect(() => {
+        if (usesTravelFacing) {
+            displayFacingRef.current = facing;
+            const syncTimer = window.setTimeout(() => {
+                setDisplayFacing(facing);
+                setTurnPhase("rest");
+            }, 0);
+            return () => window.clearTimeout(syncTimer);
+        }
         if (facing === displayFacingRef.current) {
             // A rapid left-right correction can cancel a pending turn.
             const resetTimer = window.setTimeout(() => setTurnPhase("rest"), 0);
@@ -83,7 +96,7 @@ export default function PetCompanionCharacter({
             window.clearTimeout(swapTimer);
             window.clearTimeout(settleTimer);
         };
-    }, [facing, forceMotion]);
+    }, [facing, forceMotion, usesTravelFacing]);
 
     const breed = getPetBreedVisual(breedId || legacyCharacterBreedId(characterId));
     const renderTokens = getPetBreedRenderTokens(breed);
@@ -124,9 +137,10 @@ export default function PetCompanionCharacter({
             data-breed-poster={breedPosterSrc}
             data-breed-vertical-asset={breedVerticalSrc}
             data-motion={motion}
-            data-facing={displayFacing}
+            data-facing={usesTravelFacing ? facing : displayFacing}
+            data-recommend-badge-side={recommendBadgeSide}
             data-travel-direction={travelDirection}
-            data-turn-phase={turnPhase}
+            data-turn-phase={usesTravelFacing ? "rest" : turnPhase}
             data-force-motion={forceMotion ? "true" : "false"}
             data-tone={toneId}
             data-accessory={accessoryId}

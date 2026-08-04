@@ -137,7 +137,20 @@ test("the dog returns with matched sizing, a full-resolution canvas, and explici
     assert.match(layer, /querySelector<HTMLElement>\("\[data-pet-companion-home\]"\)/);
     assert.match(layer, /--pet-home-start-x/);
     assert.match(layer, /--pet-home-end-x/);
+    assert.match(layer, /const homeTravelFromX = homeTransition === "leaving" \? walkerRect\.left : homeX/);
+    assert.match(layer, /const homeTravelToX = homeTransition === "leaving" \? homeX : walkerRect\.left/);
+    assert.match(layer, /commitFacing\(homeTravelFromX, homeTravelToX\)/);
     assert.match(layer, /walker\.dataset\.petHomeTransition = homeTransition/);
+    assert.match(
+        layer,
+        /walker\.dataset\.dragging === "true"[\s\S]{0,140}homeTransitionRef\.current[\s\S]{0,140}walker\.dataset\.petHomeTransition[\s\S]{0,80}\) return/,
+    );
+    assert.ok(
+        layer.indexOf("commitFacing(homeTravelFromX, homeTravelToX)")
+            < layer.indexOf("walker.dataset.petHomeTransition = homeTransition"),
+        "the dog must face the house trip before its CSS animation starts",
+    );
+    assert.match(layer, /immediateFacing=\{Boolean\(homeTransition\)\}/);
     assert.match(spriteCanvas, /const layoutWidth = canvas\.clientWidth/);
     assert.match(spriteCanvas, /const layoutHeight = canvas\.clientHeight/);
     assert.match(spriteCanvas, /Math\.round\(layoutWidth \* dpr\)/);
