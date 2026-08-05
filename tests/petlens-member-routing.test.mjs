@@ -67,6 +67,10 @@ test("an observation email link survives login and opens only an owner-bound job
     assert.match(routing, /\^\[A-Za-z0-9\]\[A-Za-z0-9\._:-\]\{7,99\}\$/);
     assert.match(routing, /`\$\{PETLENS_PAGE_HREF\}\/\?observation=\$\{encodeURIComponent\(safeRequestId\)\}`/);
     assert.match(client, /get\("observation"\)/);
+    assert.match(client, /const hydrationTimer = window\.setTimeout\(notify, 0\)/);
+    assert.match(client, /window\.addEventListener\("popstate", notify\)/);
+    assert.match(client, /window\.addEventListener\(PETLENS_OBSERVATION_LOCATION_CHANGE, notify\)/);
+    assert.match(client, /window\.dispatchEvent\(new Event\(PETLENS_OBSERVATION_LOCATION_CHANGE\)\)/);
     assert.match(client, /returnTo=\{observationReturnTo\}/);
     assert.match(gate, /returnTo\?: string/);
     assert.match(client, /loadPetObservationJobStatus\(\{/);

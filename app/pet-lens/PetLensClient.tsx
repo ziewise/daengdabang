@@ -48,7 +48,20 @@ import {
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 
-const subscribeToObservationLocation = () => () => {};
+const PETLENS_OBSERVATION_LOCATION_CHANGE = "ddb:petlens-observation-location-change";
+const subscribeToObservationLocation = (notify: () => void) => {
+    if (typeof window === "undefined") return () => {};
+    const hydrationTimer = window.setTimeout(notify, 0);
+    window.addEventListener("popstate", notify);
+    window.addEventListener("hashchange", notify);
+    window.addEventListener(PETLENS_OBSERVATION_LOCATION_CHANGE, notify);
+    return () => {
+        window.clearTimeout(hydrationTimer);
+        window.removeEventListener("popstate", notify);
+        window.removeEventListener("hashchange", notify);
+        window.removeEventListener(PETLENS_OBSERVATION_LOCATION_CHANGE, notify);
+    };
+};
 const getServerObservationRequestId = () => "";
 const getClientObservationRequestId = () => {
     if (typeof window === "undefined") return "";
@@ -117,6 +130,7 @@ function clearObservationDeepLink() {
         "",
         `${url.pathname}${search ? `?${search}` : ""}${url.hash}`,
     );
+    window.dispatchEvent(new Event(PETLENS_OBSERVATION_LOCATION_CHANGE));
 }
 
 type Result = PetLensAnalysisResult;
