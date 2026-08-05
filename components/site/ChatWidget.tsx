@@ -6,6 +6,7 @@ import {
     answerShopQuestion,
     answerShopQuestionSmart,
     ShopChatReferenceRequestError,
+    ShopChatRequestCancelledError,
     type ShopChatCta,
     type ShopChatAction,
     type ShopChatConversation,
@@ -14,6 +15,8 @@ import {
     type ShopChatMedical,
     type ShopChatResearch,
     type ShopChatSource,
+    type ShopChatDelivery,
+    type ShopChatQuality,
 } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
@@ -34,6 +37,7 @@ import {
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { customerVisibleChatAnswer } from "@/lib/chat-display";
 import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage";
+import ChatAnswerControls from "@/components/site/ChatAnswerControls";
 import styles from "./ChatWidget.module.css";
 
 type Message = {
@@ -47,6 +51,10 @@ type Message = {
     ctas?: ShopChatCta[];
     conversation?: ShopChatConversation;
     generation?: ShopChatGeneration;
+    traceId?: string;
+    quality?: ShopChatQuality;
+    delivery?: ShopChatDelivery;
+    retryPrompt?: string;
 };
 
 type Props = {
@@ -71,6 +79,9 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const previouslyOpenRef = useRef(false);
     const inFlightRef = useRef(false);
     const requestSequenceRef = useRef(0);
+    const activeRequestRef = useRef<AbortController | null>(null);
+    const activeQuestionRef = useRef("");
+    const [requestNotice, setRequestNotice] = useState("");
     const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
     const {
         hasUploadErrors,
@@ -146,14 +157,43 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         return () => window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
     }, []);
 
+    useEffect(() => () => activeRequestRef.current?.abort(), []);
+
     const clearChat = () => {
+        activeRequestRef.current?.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
         setMessages([]);
         setProductContext("");
         setInput("");
         setLoading(false);
+        setRequestNotice("");
         generationReferences.clear();
+    };
+
+    const cancelActiveRequest = () => {
+        if (!activeRequestRef.current) return;
+        const cancelledQuestion = activeQuestionRef.current;
+        activeRequestRef.current.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
+        setLoading(false);
+        setInput((current) => current.trim() ? current : cancelledQuestion);
+        setMessages((current) => {
+            const pending = current.at(-1);
+            return pending?.role === "user" && pending.text === cancelledQuestion
+                ? current.slice(0, -1)
+                : current;
+        });
+        setRequestNotice("요청을 멈췄어요. 질문을 고쳐서 다시 보내도 괜찮아요.");
+        trackStorefrontEvent("chat_response_failed", {
+            surface: isMobile ? "mobile_widget" : "desktop_widget",
+            errorCode: "request_cancelled",
+        });
     };
 
     const ask = async (question: string) => {
@@ -169,11 +209,15 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         if (!trimmed || inFlightRef.current) return false;
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
+        const requestController = new AbortController();
+        activeRequestRef.current = requestController;
+        activeQuestionRef.current = trimmed;
         const questionForAnswer = productContext
             ? `${productContext} 상품 문의: ${trimmed}`
             : trimmed;
         setInput("");
         setLoading(true);
+        setRequestNotice("");
         const analyticsSurface = isMobile ? "mobile_widget" : "desktop_widget";
         trackStorefrontEvent("chat_message_sent", {
             surface: analyticsSurface,
@@ -191,6 +235,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 history,
                 references: readyReferences,
                 accessToken: readyReferences.length ? user?.apiAccessToken : undefined,
+                signal: requestController.signal,
             });
             if (requestSequence !== requestSequenceRef.current) return false;
             setMessages((prev) => [
@@ -206,16 +251,31 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     ctas: result.ctas,
                     conversation: result.conversation,
                     generation: result.generation,
+                    traceId: result.traceId,
+                    quality: result.quality,
+                    delivery: result.delivery,
+                    retryPrompt: result.delivery?.status === "live" ? undefined : trimmed,
                 },
             ]);
-            trackStorefrontEvent("chat_response_succeeded", {
-                surface: analyticsSurface,
-                hasProducts: Boolean(result.products?.length),
-                hasMedicalGuidance: Boolean(result.medical),
-            });
+            if (!result.delivery || result.delivery.status === "live") {
+                trackStorefrontEvent("chat_response_succeeded", {
+                    surface: analyticsSurface,
+                    hasProducts: Boolean(result.products?.length),
+                    hasMedicalGuidance: Boolean(result.medical),
+                });
+            } else {
+                trackStorefrontEvent("chat_response_failed", {
+                    surface: analyticsSurface,
+                    errorCode: `delivery_${result.delivery.reason || result.delivery.status}`,
+                });
+            }
             return true;
         } catch (reason) {
             if (requestSequence === requestSequenceRef.current) {
+                if (reason instanceof ShopChatRequestCancelledError) {
+                    setRequestNotice("요청을 멈췄어요. 질문을 고쳐서 다시 보내도 괜찮아요.");
+                    return false;
+                }
                 if (reason instanceof ShopChatReferenceRequestError) {
                     setInput((current) => current.trim() ? current : trimmed);
                     setMessages((current) => {
@@ -234,6 +294,10 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             }
             return false;
         } finally {
+            if (activeRequestRef.current === requestController) {
+                activeRequestRef.current = null;
+                activeQuestionRef.current = "";
+            }
             if (requestSequence === requestSequenceRef.current) {
                 inFlightRef.current = false;
                 setLoading(false);
@@ -361,6 +425,18 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                                 )
                                             }
                                         />
+                                        <ChatAnswerControls
+                                            delivery={message.delivery}
+                                            quality={message.quality}
+                                            traceId={message.traceId}
+                                            accessToken={user?.apiAccessToken}
+                                            onRetry={
+                                                !loading && message.retryPrompt && index === messages.length - 1
+                                                    ? () => void ask(message.retryPrompt || "")
+                                                    : undefined
+                                            }
+                                            compact
+                                        />
                                     </div>
                                 )}
                                 {message.role === "assistant" && message.conversation?.continued && (
@@ -388,9 +464,22 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <div className="text-left">
                                 <div className={`${styles.loadingBubble} inline-block max-w-[90%] border-2 px-3 py-3`}>
                                     <ChatThinkingProgress compact hasHistory={messages.length > 1} />
+                                    <button
+                                        type="button"
+                                        onClick={cancelActiveRequest}
+                                        className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-black text-neutral-600 hover:border-neutral-400 hover:text-neutral-950"
+                                    >
+                                        <i className="fa-solid fa-stop text-[8px]" aria-hidden="true" />
+                                        멈추기
+                                    </button>
                                 </div>
                             </div>
                         )}
+                        {!loading && requestNotice ? (
+                            <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[11px] font-bold leading-4 text-neutral-600" role="status">
+                                {requestNotice}
+                            </div>
+                        ) : null}
                         <div aria-hidden="true" className="h-px" />
                     </div>
                     <form onSubmit={submit} className={`${styles.composer} flex flex-col p-3`}>
@@ -405,14 +494,26 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "메시지를 입력하세요"}
                                 aria-label="채팅 질문"
                             />
-                            <button
-                                type="submit"
-                                disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
-                                className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
-                                aria-label="전송"
-                            >
-                                <i className="fa-solid fa-paper-plane text-xs" />
-                            </button>
+                            {loading ? (
+                                <button
+                                    type="button"
+                                    onClick={cancelActiveRequest}
+                                    className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center`}
+                                    aria-label="답변 생성 멈추기"
+                                    title="답변 멈추기"
+                                >
+                                    <i className="fa-solid fa-stop text-xs" />
+                                </button>
+                            ) : (
+                                <button
+                                    type="submit"
+                                    disabled={generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                    className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
+                                    aria-label="전송"
+                                >
+                                    <i className="fa-solid fa-paper-plane text-xs" />
+                                </button>
+                            )}
                         </div>
                     </form>
                 </section>

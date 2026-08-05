@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import {
     answerShopQuestionSmart,
     ShopChatReferenceRequestError,
+    ShopChatRequestCancelledError,
     type ShopChatCta,
     type ShopChatAction,
     type ShopChatConversation,
@@ -13,6 +14,8 @@ import {
     type ShopChatMedical,
     type ShopChatResearch,
     type ShopChatSource,
+    type ShopChatDelivery,
+    type ShopChatQuality,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
@@ -27,6 +30,7 @@ import {
 } from "@/components/site/GenerationReferenceComposer";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { customerVisibleChatAnswer } from "@/lib/chat-display";
+import ChatAnswerControls from "@/components/site/ChatAnswerControls";
 
 type Message = {
     role: "user" | "assistant";
@@ -39,6 +43,10 @@ type Message = {
     ctas?: ShopChatCta[];
     conversation?: ShopChatConversation;
     generation?: ShopChatGeneration;
+    traceId?: string;
+    quality?: ShopChatQuality;
+    delivery?: ShopChatDelivery;
+    retryPrompt?: string;
 };
 
 export default function ChatPageClient() {
@@ -51,9 +59,12 @@ export default function ChatPageClient() {
     const messagesRef = useRef<HTMLDivElement>(null);
     const inFlightRef = useRef(false);
     const requestSequenceRef = useRef(0);
+    const activeRequestRef = useRef<AbortController | null>(null);
+    const activeQuestionRef = useRef("");
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    const [requestNotice, setRequestNotice] = useState("");
     const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
     const {
         hasUploadErrors,
@@ -65,15 +76,43 @@ export default function ChatPageClient() {
 
     useEffect(() => {
         trackStorefrontEvent("chat_opened", { surface: "chat_page" });
+        return () => activeRequestRef.current?.abort();
     }, []);
 
     const clearChat = () => {
+        activeRequestRef.current?.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
         setInput("");
         setLoading(false);
         setMessages([]);
+        setRequestNotice("");
         generationReferences.clear();
+    };
+
+    const cancelActiveRequest = () => {
+        if (!activeRequestRef.current) return;
+        const cancelledQuestion = activeQuestionRef.current;
+        activeRequestRef.current.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
+        setLoading(false);
+        setInput((current) => current.trim() ? current : cancelledQuestion);
+        setMessages((current) => {
+            const pending = current.at(-1);
+            return pending?.role === "user" && pending.text === cancelledQuestion
+                ? current.slice(0, -1)
+                : current;
+        });
+        setRequestNotice("요청을 멈췄어요. 질문을 고쳐서 다시 보내도 괜찮아요.");
+        trackStorefrontEvent("chat_response_failed", {
+            surface: "chat_page",
+            errorCode: "request_cancelled",
+        });
     };
 
     const ask = useCallback(async (question: string) => {
@@ -89,8 +128,12 @@ export default function ChatPageClient() {
         if (!trimmed || inFlightRef.current) return false;
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
+        const requestController = new AbortController();
+        activeRequestRef.current = requestController;
+        activeQuestionRef.current = trimmed;
         setInput("");
         setLoading(true);
+        setRequestNotice("");
         trackStorefrontEvent("chat_message_sent", {
             surface: "chat_page",
             hasPetProfile: Boolean(selectedPet),
@@ -106,6 +149,7 @@ export default function ChatPageClient() {
                 history,
                 references: readyReferences,
                 accessToken: readyReferences.length ? user?.apiAccessToken : undefined,
+                signal: requestController.signal,
             });
             if (requestSequence !== requestSequenceRef.current) return false;
             setMessages((prev) => [
@@ -121,16 +165,31 @@ export default function ChatPageClient() {
                     ctas: result.ctas,
                     conversation: result.conversation,
                     generation: result.generation,
+                    traceId: result.traceId,
+                    quality: result.quality,
+                    delivery: result.delivery,
+                    retryPrompt: result.delivery?.status === "live" ? undefined : trimmed,
                 },
             ]);
-            trackStorefrontEvent("chat_response_succeeded", {
-                surface: "chat_page",
-                hasProducts: Boolean(result.products?.length),
-                hasMedicalGuidance: Boolean(result.medical),
-            });
+            if (!result.delivery || result.delivery.status === "live") {
+                trackStorefrontEvent("chat_response_succeeded", {
+                    surface: "chat_page",
+                    hasProducts: Boolean(result.products?.length),
+                    hasMedicalGuidance: Boolean(result.medical),
+                });
+            } else {
+                trackStorefrontEvent("chat_response_failed", {
+                    surface: "chat_page",
+                    errorCode: `delivery_${result.delivery.reason || result.delivery.status}`,
+                });
+            }
             return true;
         } catch (reason) {
             if (requestSequence === requestSequenceRef.current) {
+                if (reason instanceof ShopChatRequestCancelledError) {
+                    setRequestNotice("요청을 멈췄어요. 질문을 고쳐서 다시 보내도 괜찮아요.");
+                    return false;
+                }
                 if (reason instanceof ShopChatReferenceRequestError) {
                     setInput((current) => current.trim() ? current : trimmed);
                     setMessages((current) => {
@@ -149,6 +208,10 @@ export default function ChatPageClient() {
             }
             return false;
         } finally {
+            if (activeRequestRef.current === requestController) {
+                activeRequestRef.current = null;
+                activeQuestionRef.current = "";
+            }
             if (requestSequence === requestSequenceRef.current) {
                 inFlightRef.current = false;
                 setLoading(false);
@@ -189,11 +252,15 @@ export default function ChatPageClient() {
 
     const selectPet = (nextIndex: number) => {
         if (nextIndex === selectedPetIndex) return;
+        activeRequestRef.current?.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
         setLoading(false);
         setMessages([]);
         setInput("");
+        setRequestNotice("");
         generationReferences.clear();
         setSelectedPetIndex(nextIndex);
     };
@@ -285,21 +352,34 @@ export default function ChatPageClient() {
                                     </div>
                                 )}
                                 {message.role === "assistant" && (
-                                    <ChatResponseExtras
-                                        medical={message.medical}
-                                        generation={message.generation}
-                                        sources={message.sources}
-                                        research={message.research}
-                                        ctas={message.ctas}
-                                        onAsk={ask}
-                                        followUpsEnabled={
-                                            !loading
-                                            && index === messages.length - 1
-                                            && !isFollowUpBundlePrompt(
-                                                messages[index - 1]?.role === "user" ? messages[index - 1].text : ""
-                                            )
-                                        }
-                                    />
+                                    <>
+                                        <ChatResponseExtras
+                                            medical={message.medical}
+                                            generation={message.generation}
+                                            sources={message.sources}
+                                            research={message.research}
+                                            ctas={message.ctas}
+                                            onAsk={ask}
+                                            followUpsEnabled={
+                                                !loading
+                                                && index === messages.length - 1
+                                                && !isFollowUpBundlePrompt(
+                                                    messages[index - 1]?.role === "user" ? messages[index - 1].text : ""
+                                                )
+                                            }
+                                        />
+                                        <ChatAnswerControls
+                                            delivery={message.delivery}
+                                            quality={message.quality}
+                                            traceId={message.traceId}
+                                            accessToken={user?.apiAccessToken}
+                                            onRetry={
+                                                !loading && message.retryPrompt && index === messages.length - 1
+                                                    ? () => void ask(message.retryPrompt || "")
+                                                    : undefined
+                                            }
+                                        />
+                                    </>
                                 )}
                             </div>
                         ))}
@@ -307,9 +387,22 @@ export default function ChatPageClient() {
                             <div className="text-left">
                                 <div className="inline-block max-w-[86%] rounded-lg bg-white px-4 py-4 shadow-sm">
                                     <ChatThinkingProgress hasHistory={messages.length > 1} />
+                                    <button
+                                        type="button"
+                                        onClick={cancelActiveRequest}
+                                        className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-black text-neutral-600 hover:border-neutral-400 hover:text-neutral-950"
+                                    >
+                                        <i className="fa-solid fa-stop text-[9px]" aria-hidden="true" />
+                                        답변 멈추기
+                                    </button>
                                 </div>
                             </div>
                         )}
+                        {!loading && requestNotice ? (
+                            <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs font-bold text-neutral-600" role="status">
+                                {requestNotice}
+                            </div>
+                        ) : null}
                         <div aria-hidden="true" className="h-px" />
                     </div>
                     <form onSubmit={submit} className="flex shrink-0 flex-col border-t border-neutral-200 bg-white p-4">
@@ -323,14 +416,26 @@ export default function ChatPageClient() {
                                 placeholder="메시지를 입력하세요"
                                 aria-label="채팅 질문"
                             />
-                            <button
-                                type="submit"
-                                disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
-                                className="btn btn-primary h-12 shrink-0 disabled:opacity-50"
-                            >
-                                <i className="fa-solid fa-paper-plane text-xs" />
-                                전송
-                            </button>
+                            {loading ? (
+                                <button
+                                    type="button"
+                                    onClick={cancelActiveRequest}
+                                    className="btn h-12 shrink-0 border border-neutral-300 bg-white text-neutral-800"
+                                    aria-label="답변 생성 멈추기"
+                                >
+                                    <i className="fa-solid fa-stop text-xs" />
+                                    멈추기
+                                </button>
+                            ) : (
+                                <button
+                                    type="submit"
+                                    disabled={generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                    className="btn btn-primary h-12 shrink-0 disabled:opacity-50"
+                                >
+                                    <i className="fa-solid fa-paper-plane text-xs" />
+                                    전송
+                                </button>
+                            )}
                         </div>
                     </form>
                 </section>

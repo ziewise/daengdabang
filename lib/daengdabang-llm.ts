@@ -18,6 +18,10 @@ import {
 import { canUsePetLensInferenceForRecommendations } from "@/lib/petlens-result-policy";
 import { PET_BREEDS } from "@/lib/pet-companion-breeds";
 import type { PetProfile } from "@/lib/store";
+import {
+    projectShopChatPetProfile,
+    type ShopChatPetProfile,
+} from "@/lib/shop-chat-client-contract";
 import type { GenerationReferenceKind, ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 import {
     isCurrentInformationRequest,
@@ -505,10 +509,28 @@ export type ShopChatHistoryTurn = {
 };
 
 export type ShopQuestionContext = {
-    pet?: Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
+    pet?: ShopChatPetProfile | Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
     history?: ShopChatHistoryTurn[];
     references?: ShopChatReferenceInput[];
     accessToken?: string;
+    signal?: AbortSignal;
+    timeoutMs?: number;
+};
+
+export type ShopChatDelivery = {
+    status: "live" | "degraded" | "retry";
+    reason?: "offline" | "rate_limited" | "service_busy" | "timeout" | "invalid_response" | string;
+    transient?: boolean;
+    retryAfterSeconds?: number;
+    message?: string;
+};
+
+export type ShopChatQuality = {
+    status?: "verified" | "grounded" | "limited" | "unverified" | string;
+    confidence?: number;
+    grounded?: boolean;
+    citationCoverage?: number;
+    needsReview?: boolean;
 };
 
 export type ShopChatMedical = {
@@ -593,6 +615,9 @@ export type ShopChatAnswer = {
     research?: ShopChatResearch;
     conversation?: ShopChatConversation;
     generation?: ShopChatGeneration;
+    traceId?: string;
+    quality?: ShopChatQuality;
+    delivery?: ShopChatDelivery;
 };
 
 export class ShopChatReferenceRequestError extends Error {
@@ -604,6 +629,22 @@ export class ShopChatReferenceRequestError extends Error {
         this.status = status;
     }
 }
+
+export class ShopChatRequestCancelledError extends Error {
+    constructor() {
+        super("요청을 중단했습니다.");
+        this.name = "ShopChatRequestCancelledError";
+    }
+}
+
+export type ShopChatFeedbackVerdict = "helpful" | "not_helpful";
+
+export type ShopChatFeedbackInput = {
+    traceId: string;
+    verdict: ShopChatFeedbackVerdict;
+    reason?: string;
+    accessToken?: string;
+};
 
 const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "AVMA pet first aid", url: "https://www.avma.org/resources-tools/pet-owners/emergencycare/first-aid-tips-pet-owners" },
@@ -1255,6 +1296,80 @@ function normalizeConversation(value: unknown): ShopChatConversation | undefined
         continued: true,
         anchorKind: typeof record.anchorKind === "string" ? record.anchorKind : undefined,
         turnsUsed: typeof record.turnsUsed === "number" ? record.turnsUsed : undefined,
+    };
+}
+
+function finiteUnitNumber(value: unknown) {
+    if (typeof value !== "number" || !Number.isFinite(value)) return undefined;
+    return Math.max(0, Math.min(1, value));
+}
+
+function normalizeShopChatQuality(value: unknown): ShopChatQuality | undefined {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+    const record = value as Record<string, unknown>;
+    const status = typeof record.status === "string" ? record.status.trim().slice(0, 40) : undefined;
+    const confidence = finiteUnitNumber(record.confidence);
+    const citationCoverage = finiteUnitNumber(record.citationCoverage ?? record.citation_coverage);
+    const grounded = typeof record.grounded === "boolean" ? record.grounded : undefined;
+    const needsReview = typeof (record.needsReview ?? record.needs_review) === "boolean"
+        ? Boolean(record.needsReview ?? record.needs_review)
+        : undefined;
+    if (!status && confidence === undefined && citationCoverage === undefined && grounded === undefined && needsReview === undefined) {
+        return undefined;
+    }
+    return { status, confidence, citationCoverage, grounded, needsReview };
+}
+
+function normalizeTraceId(value: unknown) {
+    if (typeof value !== "string") return undefined;
+    const traceId = value.trim();
+    if (!traceId || traceId.length > 128 || !/^[A-Za-z0-9._:-]+$/.test(traceId)) return undefined;
+    return traceId;
+}
+
+function retryAfterSeconds(value: string | null) {
+    if (!value) return undefined;
+    const seconds = Number(value);
+    if (Number.isFinite(seconds) && seconds >= 0) return Math.min(3600, Math.ceil(seconds));
+    const date = Date.parse(value);
+    if (!Number.isFinite(date)) return undefined;
+    return Math.max(0, Math.min(3600, Math.ceil((date - Date.now()) / 1000)));
+}
+
+function withDegradedDelivery(answer: ShopChatAnswer, reason: ShopChatDelivery["reason"]): ShopChatAnswer {
+    return {
+        ...answer,
+        delivery: {
+            status: "degraded",
+            reason,
+            transient: true,
+            message: "연결이 불안정해 지금 확인 가능한 안전한 기본 안내로 답했어요. 잠시 뒤 다시 확인하면 더 자세한 답변을 받을 수 있어요.",
+        },
+    };
+}
+
+function transientShopChatAnswer(
+    reason: ShopChatDelivery["reason"],
+    retryAfter?: number,
+): ShopChatAnswer {
+    const message = reason === "rate_limited"
+        ? "지금 상담 요청이 잠시 몰려 있어요. 잠깐 뒤 다시 보내 주시면 순서대로 꼼꼼히 확인해 드릴게요."
+        : reason === "timeout"
+            ? "답변을 확인하는 데 평소보다 시간이 걸리고 있어요. 잠시 뒤 다시 시도해 주세요."
+            : reason === "service_busy"
+                ? "케어톡을 잠시 정비하고 있어요. 조금 뒤 다시 시도해 주세요."
+                : "질문을 확인하는 연결이 잠시 불안정해요. 잠시 뒤 다시 시도해 주세요.";
+    return {
+        answer: message,
+        products: [],
+        delivery: {
+            status: "retry",
+            reason,
+            transient: true,
+            retryAfterSeconds: retryAfter,
+            message,
+        },
+        quality: { status: "unverified", needsReview: true },
     };
 }
 
@@ -2102,11 +2217,27 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const medicalDecisionFallback = medicalDecisionFollowUpFallback(message, history);
     const medicalFallback = wildlifeBiteRoute || rareFallback || heartwormFallback || medicalDecisionFallback || medicalSafetyFallback(message);
     const unavailableFallback = generalVerificationUnavailableAnswer(message);
+    const safeFallback = supportFallback || medicalFallback || generationFallback || unavailableFallback;
     const base = apiBase();
     if (!base) {
-        return supportFallback || medicalFallback || generationFallback || unavailableFallback;
+        return withDegradedDelivery(safeFallback, "offline");
     }
     const references = normalizedShopChatReferences(context);
+    const petProfile = projectShopChatPetProfile(context?.pet);
+    const requestController = new AbortController();
+    let timedOut = false;
+    // Verified web research currently has a measured p95 just above 30s. Keep
+    // a bounded client deadline, but do not abort a healthy grounded answer at
+    // the old 30s boundary; users can still stop it immediately from the UI.
+    const requestedTimeout = Number.isFinite(context?.timeoutMs) ? Number(context?.timeoutMs) : 50_000;
+    const timeoutMs = Math.max(5_000, Math.min(60_000, requestedTimeout));
+    const abortFromCaller = () => requestController.abort();
+    if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
+    context?.signal?.addEventListener("abort", abortFromCaller, { once: true });
+    const timeoutHandle = setTimeout(() => {
+        timedOut = true;
+        requestController.abort();
+    }, timeoutMs);
 
     try {
         const headers: Record<string, string> = { "Content-Type": "application/json" };
@@ -2119,14 +2250,21 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             body: JSON.stringify({
                 message,
                 limit: 6,
-                petProfile: context?.pet ?? null,
+                petProfile,
                 history,
                 ...(references.length ? { references } : {}),
             }),
+            signal: requestController.signal,
         });
         if (!response.ok) {
             if (references.length) throw shopChatReferenceError(response.status);
-            throw new Error(`shop-chat ${response.status}`);
+            const retryAfter = retryAfterSeconds(response.headers.get("retry-after"));
+            if (response.status === 429) return transientShopChatAnswer("rate_limited", retryAfter);
+            if (response.status === 503 || response.status === 504) {
+                return transientShopChatAnswer("service_busy", retryAfter);
+            }
+            if (response.status >= 500) return withDegradedDelivery(safeFallback, "offline");
+            return transientShopChatAnswer("invalid_response", retryAfter);
         }
         const data = await response.json();
         const apiReturnedProducts = Array.isArray(data.products);
@@ -2146,6 +2284,13 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         );
         const conversation = normalizeConversation(data.conversation);
         const generation = normalizeGeneration(data.generation);
+        const traceId = normalizeTraceId(
+            data.traceId
+            ?? data.trace_id
+            ?? response.headers.get("x-trace-id")
+            ?? response.headers.get("x-request-id"),
+        );
+        const quality = normalizeShopChatQuality(data.quality);
         const preferProtectedMedicalFallback = shouldPreferProtectedMedicalFallback(
             data.medical,
             medicalFallback?.medical,
@@ -2178,12 +2323,48 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
                 : research,
             conversation,
             generation: medicalMode ? undefined : generation,
+            traceId,
+            quality,
+            delivery: { status: "live", transient: false },
         };
     } catch (reason) {
+        if (context?.signal?.aborted && !timedOut) throw new ShopChatRequestCancelledError();
         if (reason instanceof ShopChatReferenceRequestError) throw reason;
         if (references.length) {
             throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
         }
-        return supportFallback || medicalFallback || generationFallback || unavailableFallback;
+        if (timedOut || (reason instanceof Error && reason.name === "TimeoutError")) {
+            return transientShopChatAnswer("timeout");
+        }
+        return withDegradedDelivery(safeFallback, "offline");
+    } finally {
+        clearTimeout(timeoutHandle);
+        context?.signal?.removeEventListener("abort", abortFromCaller);
+    }
+}
+
+export async function submitShopChatFeedback(input: ShopChatFeedbackInput): Promise<void> {
+    const base = apiBase();
+    const traceId = normalizeTraceId(input.traceId);
+    if (!base || !traceId) throw new Error("feedback_unavailable");
+
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), 8_000);
+    try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (input.accessToken?.trim()) headers.Authorization = `Bearer ${input.accessToken.trim()}`;
+        const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat/feedback`, {
+            method: "POST",
+            headers,
+            signal: controller.signal,
+            body: JSON.stringify({
+                traceId,
+                verdict: input.verdict,
+                ...(input.reason?.trim() ? { reason: input.reason.trim().slice(0, 240) } : {}),
+            }),
+        });
+        if (!response.ok) throw new Error(`shop-chat-feedback ${response.status}`);
+    } finally {
+        clearTimeout(timeoutHandle);
     }
 }
