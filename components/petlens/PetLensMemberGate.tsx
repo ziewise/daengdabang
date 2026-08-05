@@ -13,10 +13,11 @@ type Props = {
     compact?: boolean;
     reason: "loading" | "login" | "profile" | "breed";
     service?: "petlens" | "daenglab";
+    returnTo?: string;
     onNavigate?: () => void;
 };
 
-export default function PetLensMemberGate({ compact = false, reason, service = "petlens", onNavigate }: Props) {
+export default function PetLensMemberGate({ compact = false, reason, service = "petlens", returnTo, onNavigate }: Props) {
     const router = useRouter();
     const daenglab = service === "daenglab";
 
@@ -91,14 +92,14 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
                 {needsLogin ? (
                     <div className="mt-5 grid gap-2 sm:grid-cols-2">
                         <Link
-                            href={petLensAuthHref("signup")}
+                            href={petLensAuthHref("signup", returnTo)}
                             onClick={navigateBeforeClose}
                             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-black text-white shadow-sm transition hover:bg-indigo-700"
                         >
                             회원가입하고 시작하기
                         </Link>
                         <Link
-                            href={petLensAuthHref("login")}
+                            href={petLensAuthHref("login", returnTo)}
                             onClick={navigateBeforeClose}
                             className="inline-flex min-h-12 items-center justify-center rounded-xl border-2 border-indigo-200 bg-white px-4 text-sm font-black text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-50"
                         >

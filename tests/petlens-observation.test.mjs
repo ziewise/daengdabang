@@ -163,7 +163,8 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(experience, /role="alertdialog"/);
     assert.match(experience, /먼저 아래 동의 항목을 확인해 주세요/);
     assert.match(experience, /카메라·마이크 연결이나 촬영한 영상 선택 전에/);
-    assert.match(experience, /분석한 동영상은 저장되지 않습니다/);
+    assert.match(experience, /촬영·선택한 영상과 음성은 대기·분석 중 암호화해 임시 보관/);
+    assert.match(experience, /완료·취소·임시 보관기간 만료 시 삭제됩니다/);
     assert.match(experience, /data-daenglab-observation-limits/);
     assert.match(experience, /\{PET_OBSERVATION_RECORDING_SECONDS\}초/);
     assert.match(experience, /\{PET_OBSERVATION_MIN_DURATION_SECONDS\}~\{PET_OBSERVATION_MAX_DURATION_SECONDS\}초/);
@@ -236,7 +237,7 @@ test("observation upload is authenticated, abortable, and separate from profile 
         source("lib/petlens-observation.ts"),
         source("components/petlens/PetLensObservationExperience.tsx"),
     ]);
-    assert.match(api, /\/api\/v1\/pet-lens\/observe/);
+    assert.match(api, /\/api\/v1\/pet-lens\/observation-jobs/);
     assert.match(api, /Authorization: `Bearer \$\{token\}`/);
     assert.match(api, /signal: request\.signal/);
     assert.match(api, /petProfileId: number/);
@@ -287,12 +288,12 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     const api = await source("lib/petlens-observation.ts");
     assert.match(experience, /checked=\{consent\}/);
     assert.doesNotMatch(experience, /Gemini|Google LLC/);
-    assert.match(experience, /촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리/);
+    assert.match(experience, /촬영한 영상·음성과 반려견 정보가 보안 연결로 전송되고, 대기·분석 중 암호화되어 임시 보관/);
     assert.match(experience, /등록 사진 최대 2장과 털색을 대상 구분에만 함께 참고/);
-    assert.match(experience, /원본은 댕다방 서버에 저장하지 않/);
+    assert.match(experience, /원본은 분석 완료·취소·임시 보관기간 만료 시 삭제/);
     assert.match(experience, /privacyConsent: consent/);
     assert.match(experience, /resetCapture\(\);/);
-    assert.match(api, /PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260724-v2"/);
+    assert.match(api, /PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260806-v3"/);
     assert.match(api, /form\.append\("privacy_consent", "true"\)/);
     assert.match(api, /form\.append\("privacy_notice_version", PET_OBSERVATION_PRIVACY_NOTICE_VERSION\)/);
     assert.match(api, /observation_privacy_notice_version === PET_OBSERVATION_PRIVACY_NOTICE_VERSION/);
@@ -311,11 +312,11 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(result, /data-observation-urgency/);
     assert.match(result, /24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90/);
     assert.match(result, /data-daenglab-video-retention-notice/);
-    assert.match(result, /분석한 동영상은 저장되지 않습니다\. 분석 중에만 일시 처리됩니다\./);
+    assert.match(result, /원본 영상·음성은 필요한 동안만 암호화해 임시 보관합니다\./);
     assert.doesNotMatch(result, /Gemini|Google LLC|외부 자동 분석 서비스/);
-    assert.match(result, /보안 연결로 분석 중에만 일시 처리하며, 댕다방은 원본이 아닌 분석 결과만 보관/);
+    assert.match(result, /분석 완료·취소·임시 보관기간 만료 시 원본을 삭제하고, 이후에는 분석 결과만 보관/);
     assert.doesNotMatch(result, />분석의 한계</);
-    assert.match(result, /분석한 동영상은 저장되지 않습니다/);
+    assert.match(result, /원본 영상·음성은 필요한 동안만 암호화해 임시 보관/);
     assert.doesNotMatch(result, /result\.limitations\.map/);
     assert.match(api, /mediaRetention !== "not_stored"/);
     assert.match(api, /원본 동영상 보관 상태를 확인하지 못했습니다/);
@@ -427,57 +428,6 @@ test("result prioritizes urgent guidance and otherwise leads with target attribu
     assert.match(api, /candidateConfidenceScore\([\s\S]*rawConfidenceScore,[\s\S]*confidenceLabel,[\s\S]*0\.79/);
     assert.doesNotMatch(result, /행동·소리 추론 후보 그래프/);
     assert.doesNotMatch(result, /행동·소리 그래프 최고점|건강·확인 그래프 최고점|rankWithinGroups/);
-});
-
-
-test("analysis queue polls by request id and shows position, ETA, capacity, and no-charge waiting guidance", async () => {
-    const [api, experience] = await Promise.all([
-        source("lib/petlens-observation.ts"),
-        source("components/petlens/PetLensObservationExperience.tsx"),
-    ]);
-    assert.match(api, /type PetObservationQueueStatus = \{/);
-    assert.match(api, /state: "queued" \| "processing" \| "not_found"/);
-    assert.match(api, /position: number \| null/);
-    assert.match(api, /maxConcurrent: number/);
-    assert.match(api, /maxWaiting: number/);
-    assert.match(api, /admittedLimit: number/);
-    assert.match(api, /estimatedWaitSeconds: number/);
-    assert.match(api, /\/api\/v1\/pet-lens\/observation-queue\/\$\{encodeURIComponent\(requestId\)\}/);
-    assert.match(api, /queuePollTimer = setTimeout\(\(\) => void pollQueue\(\), 200\)/);
-    assert.match(api, /queuePollTimer = setTimeout\(\(\) => void pollQueue\(\), 1_000\)/);
-    assert.match(api, /request\.onQueueStatus\(status\)/);
-    assert.match(api, /queuePollingStopped = true/);
-    assert.match(api, /clearTimeout\(queuePollTimer\)/);
-    assert.match(api, /export async function cancelPetObservationQueueWait/);
-    assert.match(api, /method: "DELETE"/);
-    assert.match(api, /OBSERVATION_QUEUE_ALREADY_PROCESSING/);
-    assert.match(experience, /onQueueStatus: setQueueStatus/);
-    assert.match(experience, /data-daenglab-observation-queue/);
-    assert.match(experience, /`대기 \$\{queueStatus\.position \?\? 1\}번째`/);
-    assert.match(experience, /`예상 대기 약 \$\{queueStatus\.estimatedWaitSeconds\}초/);
-    assert.match(experience, /동시 분석 \{queueStatus\.active\}\/\{queueStatus\.maxConcurrent\}/);
-    assert.match(experience, /현재 대기 \{queueStatus\.queued\}\/\{queueStatus\.maxWaiting\}/);
-    assert.match(experience, /수용 가능 \{queueStatus\.admittedLimit\}명/);
-    assert.match(experience, /대기 중에는 코인이 차감되지 않으며/);
-    assert.match(experience, /queueStatus\?\.state === "queued" &&/);
-    assert.match(experience, /disabled=\{cancelingWait\}/);
-    assert.match(experience, /cancellation\.state === "processing"/);
-    assert.match(experience, /reason\.code === "OBSERVATION_QUEUE_CANCELLED"/);
-    const cancellationFlow = experience.match(
-        /const cancelAnalysisWait = async \(\) => \{[\s\S]*?\n    \};/,
-    )?.[0] ?? "";
-    assert.match(cancellationFlow, /await cancelPetObservationQueueWait/);
-    assert.match(cancellationFlow, /abortRef\.current\?\.abort\(\)/);
-    assert.ok(
-        cancellationFlow.indexOf("await cancelPetObservationQueueWait")
-            < cancellationFlow.indexOf("abortRef.current?.abort()"),
-        "server queue cancellation must complete before the local POST is aborted",
-    );
-    assert.match(experience, /const next = await analyzePetObservation\([\s\S]*setResult\(next\);[\s\S]*next\.daengLabCoinBalance/);
-    assert.doesNotMatch(
-        experience.match(/onQueueStatus: setQueueStatus,[\s\S]*?\}\);/)?.[0] ?? "",
-        /publishWallet|daengLabCoins\s*-/,
-    );
 });
 
 

@@ -1573,10 +1573,10 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                     </span>
                     <div>
                         <p className="text-xs font-black leading-5 text-sky-950">
-                            분석한 동영상은 저장되지 않습니다. 분석 중에만 일시 처리됩니다.
+                            원본 영상·음성은 필요한 동안만 암호화해 임시 보관합니다.
                         </p>
                         <p className="mt-1 text-[11px] font-bold leading-5 text-sky-800">
-                            보안 연결로 분석 중에만 일시 처리하며, 댕다방은 원본이 아닌 분석 결과만 보관합니다.
+                            분석 완료·취소·임시 보관기간 만료 시 원본을 삭제하고, 이후에는 분석 결과만 보관합니다.
                         </p>
                     </div>
                 </div>

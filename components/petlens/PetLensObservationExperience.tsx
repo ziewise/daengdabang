@@ -1,16 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import {
     analyzePetObservation,
-    cancelPetObservationQueueWait,
+    choosePetObservationDelivery,
     loadPetObservationEngineStatus,
     loadPetObservationHistory,
+    loadPetObservationJobStatus,
     PetObservationRequestError,
+    type PetObservationDeferredJob,
     type PetObservationHistoryItem,
-    type PetObservationQueueStatus,
+    type PetObservationJobStatus,
     type PetObservationResult,
     type PetObservationSituation,
 } from "@/lib/petlens-observation";
@@ -44,6 +46,135 @@ const SITUATIONS: Array<{ value: PetObservationSituation; label: string }> = [
     { value: "other", label: "그 밖의 상황" },
 ];
 
+const ALERT_DIALOG_FOCUSABLE_SELECTOR = [
+    "a[href]",
+    "button:not([disabled])",
+    "input:not([disabled])",
+    "select:not([disabled])",
+    "textarea:not([disabled])",
+    "[tabindex]:not([tabindex='-1'])",
+].join(",");
+
+function useManagedAlertDialog(options: {
+    open: boolean;
+    dialogRef: RefObject<HTMLDivElement | null>;
+    fallbackFocusRef: RefObject<HTMLElement | null>;
+    onEscape?: () => void;
+    suppressRestoreRef?: RefObject<boolean>;
+}) {
+    const { open, dialogRef, fallbackFocusRef, onEscape, suppressRestoreRef } = options;
+
+    useEffect(() => {
+        if (!open) return;
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+        const layer = dialog.closest<HTMLElement>("[data-ddb-managed-modal-layer]");
+        if (!layer) return;
+
+        const previousActiveElement = document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
+        const fallbackFocusElement = fallbackFocusRef.current;
+        const previousBodyStyles = {
+            overflow: document.body.style.overflow,
+            overscrollBehavior: document.body.style.overscrollBehavior,
+            touchAction: document.body.style.touchAction,
+        };
+        const previousRootStyles = {
+            overflow: document.documentElement.style.overflow,
+            overscrollBehavior: document.documentElement.style.overscrollBehavior,
+        };
+        const backgroundState = Array.from(document.body.children)
+            .filter((element): element is HTMLElement => element instanceof HTMLElement && element !== layer)
+            .map((element) => ({
+                element,
+                inert: element.inert,
+                ariaHidden: element.getAttribute("aria-hidden"),
+            }));
+
+        document.body.style.overflow = "hidden";
+        document.body.style.overscrollBehavior = "none";
+        document.body.style.touchAction = "none";
+        document.documentElement.style.overflow = "hidden";
+        document.documentElement.style.overscrollBehavior = "none";
+        for (const state of backgroundState) {
+            state.element.inert = true;
+            state.element.setAttribute("aria-hidden", "true");
+        }
+
+        const focusableElements = () => Array.from(
+            dialog.querySelectorAll<HTMLElement>(ALERT_DIALOG_FOCUSABLE_SELECTOR),
+        ).filter((element) => element.getAttribute("aria-hidden") !== "true");
+        const focusInitialElement = () => {
+            const initial = dialog.querySelector<HTMLElement>("[data-dialog-initial-focus]");
+            const target = initial && !initial.hasAttribute("disabled")
+                ? initial
+                : focusableElements()[0] || dialog;
+            target.focus({ preventScroll: true });
+        };
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                event.preventDefault();
+                event.stopPropagation();
+                onEscape?.();
+                return;
+            }
+            if (event.key !== "Tab") return;
+            const focusable = focusableElements();
+            if (focusable.length === 0) {
+                event.preventDefault();
+                dialog.focus({ preventScroll: true });
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            const active = document.activeElement;
+            if (event.shiftKey && (active === first || !dialog.contains(active))) {
+                event.preventDefault();
+                last.focus({ preventScroll: true });
+            } else if (!event.shiftKey && (active === last || !dialog.contains(active))) {
+                event.preventDefault();
+                first.focus({ preventScroll: true });
+            }
+        };
+        const keepFocusInside = (event: FocusEvent) => {
+            if (event.target instanceof Node && dialog.contains(event.target)) return;
+            focusInitialElement();
+        };
+
+        document.addEventListener("keydown", handleKeyDown, true);
+        document.addEventListener("focusin", keepFocusInside, true);
+        const initialFocusFrame = window.requestAnimationFrame(focusInitialElement);
+
+        return () => {
+            window.cancelAnimationFrame(initialFocusFrame);
+            document.removeEventListener("keydown", handleKeyDown, true);
+            document.removeEventListener("focusin", keepFocusInside, true);
+            for (const state of backgroundState) {
+                state.element.inert = state.inert;
+                if (state.ariaHidden === null) state.element.removeAttribute("aria-hidden");
+                else state.element.setAttribute("aria-hidden", state.ariaHidden);
+            }
+            document.body.style.overflow = previousBodyStyles.overflow;
+            document.body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior;
+            document.body.style.touchAction = previousBodyStyles.touchAction;
+            document.documentElement.style.overflow = previousRootStyles.overflow;
+            document.documentElement.style.overscrollBehavior = previousRootStyles.overscrollBehavior;
+
+            if (suppressRestoreRef?.current) {
+                suppressRestoreRef.current = false;
+                return;
+            }
+            window.requestAnimationFrame(() => {
+                const target = previousActiveElement?.isConnected
+                    ? previousActiveElement
+                    : fallbackFocusElement;
+                target?.focus({ preventScroll: true });
+            });
+        };
+    }, [dialogRef, fallbackFocusRef, onEscape, open, suppressRestoreRef]);
+}
+
 type TargetAnchor = {
     x: number;
     y: number;
@@ -63,9 +194,10 @@ type Props = {
     petProfileId: number;
     accessToken?: string;
     variant?: "page" | "modal";
+    initialJobStatus?: PetObservationJobStatus;
 };
 
-export default function PetLensObservationExperience({ pet, petProfileId, accessToken, variant = "page" }: Props) {
+export default function PetLensObservationExperience({ pet, petProfileId, accessToken, variant = "page", initialJobStatus }: Props) {
     const { logout, user } = useAuth();
     const {
         videoRef,
@@ -90,9 +222,17 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         cancelCapture,
     } = usePetLensMediaCapture();
     const abortRef = useRef<AbortController | null>(null);
+    const jobPollAbortRef = useRef<AbortController | null>(null);
+    const deliveryChoiceAbortRef = useRef<AbortController | null>(null);
     const engineAbortRef = useRef<AbortController | null>(null);
     const historyAbortRef = useRef<AbortController | null>(null);
     const requestIdRef = useRef<string | null>(null);
+    const initialJobAppliedRef = useRef("");
+    const deliveryChoiceHandledRequestIdsRef = useRef(new Set<string>());
+    const experienceRootRef = useRef<HTMLElement | null>(null);
+    const consentDialogRef = useRef<HTMLDivElement | null>(null);
+    const deferredChoiceDialogRef = useRef<HTMLDivElement | null>(null);
+    const suppressConsentFocusRestoreRef = useRef(false);
     const consentCheckboxRef = useRef<HTMLInputElement | null>(null);
     const captureActionsRef = useRef<HTMLDivElement | null>(null);
     const capturePrimaryButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -106,10 +246,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [situation, setSituation] = useState<PetObservationSituation>("unknown");
     const [note, setNote] = useState("");
     const [analyzing, setAnalyzing] = useState(false);
-    const [cancelingWait, setCancelingWait] = useState(false);
     const [analysisError, setAnalysisError] = useState("");
     const [refundNotice, setRefundNotice] = useState("");
-    const [queueStatus, setQueueStatus] = useState<PetObservationQueueStatus | null>(null);
+    const [deferredJob, setDeferredJob] = useState<PetObservationDeferredJob | null>(null);
+    const [deferredChoiceOpen, setDeferredChoiceOpen] = useState(false);
+    const [deferredChoiceBusy, setDeferredChoiceBusy] = useState<"email" | "cancel" | null>(null);
+    const [deferredChoiceError, setDeferredChoiceError] = useState("");
+    const [deferredNotice, setDeferredNotice] = useState("");
     const [previewOrientation, setPreviewOrientation] = useState<"portrait" | "landscape">("landscape");
     const [result, setResult] = useState<PetObservationResult | null>(null);
     const [resultRequestId, setResultRequestId] = useState<string>();
@@ -123,13 +266,32 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
     const [history, setHistory] = useState<PetObservationHistoryItem[]>([]);
     const [historyLoading, setHistoryLoading] = useState(true);
     const captureViewportActive = phase === "requesting" || phase === "preview" || phase === "recording";
-    const busy = analyzing || phase === "requesting" || phase === "recording";
+    const busy = analyzing || Boolean(deferredJob) || phase === "requesting" || phase === "recording";
     const targetSelectionReady = targetAnchorMode === "single_dog_auto" || Boolean(targetAnchor);
     const targetAnchorHint = targetAnchor
         ? `영상 기준 가로 ${Math.round(targetAnchor.x * 100)}%, 세로 ${Math.round(targetAnchor.y * 100)}% 지점${targetAnchorImage ? "과 콕 찍은 참조 이미지" : ""}을 분석 대상 힌트로 보냅니다.`
         : targetAnchorMode === "single_dog_auto"
             ? "영상에 한 마리만 보이는 것으로 선택했어요. 실제로 여러 마리가 보이면 대상을 다시 선택해 달라는 안내가 나올 수 있어요."
             : "강아지가 한 마리만 보이면 콕 없이 바로 분석해도 돼요. 여러 마리면 몸통·가슴 중앙을 찍어 주세요.";
+
+    const closeConsentPrompt = useCallback(() => {
+        pendingConsentActionRef.current = null;
+        returnToCaptureAfterConsentRef.current = false;
+        setConsentPromptOpen(false);
+    }, []);
+
+    useManagedAlertDialog({
+        open: consentPromptOpen,
+        dialogRef: consentDialogRef,
+        fallbackFocusRef: experienceRootRef,
+        onEscape: closeConsentPrompt,
+        suppressRestoreRef: suppressConsentFocusRestoreRef,
+    });
+    useManagedAlertDialog({
+        open: deferredChoiceOpen && Boolean(deferredJob),
+        dialogRef: deferredChoiceDialogRef,
+        fallbackFocusRef: experienceRootRef,
+    });
 
     const publishWallet = useCallback((next: DaengLabWallet) => {
         setWallet(next);
@@ -248,7 +410,11 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         void captureTargetAnchorCrop(nextAnchor);
     }, [busy, phase, clipUrl, markTargetAnchor, captureTargetAnchorCrop, videoRef]);
 
-    useEffect(() => () => abortRef.current?.abort(), []);
+    useEffect(() => () => {
+        abortRef.current?.abort();
+        jobPollAbortRef.current?.abort();
+        deliveryChoiceAbortRef.current?.abort();
+    }, []);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -288,19 +454,6 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             video?.removeEventListener("resize", updateOrientation);
         };
     }, [phase, videoRef]);
-
-    useEffect(() => {
-        if (!consentPromptOpen) return;
-        const closeOnEscape = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                pendingConsentActionRef.current = null;
-                returnToCaptureAfterConsentRef.current = false;
-                setConsentPromptOpen(false);
-            }
-        };
-        document.addEventListener("keydown", closeOnEscape);
-        return () => document.removeEventListener("keydown", closeOnEscape);
-    }, [consentPromptOpen]);
 
     useEffect(() => {
         if (!captureViewportActive) return;
@@ -407,6 +560,159 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         };
     }, [refreshHistory]);
 
+    useEffect(() => {
+        if (!initialJobStatus || initialJobAppliedRef.current === initialJobStatus.requestId) return;
+        if (initialJobStatus.petProfileId !== petProfileId) return;
+        const applyTimer = window.setTimeout(() => {
+            initialJobAppliedRef.current = initialJobStatus.requestId;
+            requestIdRef.current = initialJobStatus.requestId;
+            setAnalysisError("");
+            setRefundNotice("");
+            setDeferredChoiceError("");
+
+            if (initialJobStatus.status === "completed") {
+                setDeferredJob(null);
+                setDeferredChoiceOpen(false);
+                setDeferredNotice("");
+                setResult(initialJobStatus.result);
+                setResultRequestId(initialJobStatus.requestId);
+                requestIdRef.current = null;
+                void refreshWallet();
+                void refreshHistory();
+                return;
+            }
+
+            if (initialJobStatus.status === "cancelled" || initialJobStatus.status === "failed") {
+                setDeferredJob(null);
+                setDeferredChoiceOpen(false);
+                setDeferredNotice("");
+                requestIdRef.current = null;
+                if (initialJobStatus.coinRefunded) {
+                    setRefundNotice(initialJobStatus.message);
+                } else {
+                    setAnalysisError(initialJobStatus.message);
+                }
+                void refreshWallet();
+                return;
+            }
+
+            if (initialJobStatus.status !== "deferred") return;
+            setDeferredJob(initialJobStatus);
+            if (initialJobStatus.emailWhenReady === true) {
+                deliveryChoiceHandledRequestIdsRef.current.add(initialJobStatus.requestId);
+                setDeferredChoiceOpen(false);
+                setDeferredNotice("분석은 자동으로 계속하고, 완료되면 가입 이메일로 알려드릴게요.");
+            } else {
+                const shouldOfferEmail = initialJobStatus.state === "paused"
+                    && initialJobStatus.emailOffer
+                    && initialJobStatus.emailAvailable
+                    && !deliveryChoiceHandledRequestIdsRef.current.has(initialJobStatus.requestId);
+                setDeferredChoiceOpen(shouldOfferEmail);
+                setDeferredNotice(shouldOfferEmail
+                    ? "분석은 자동으로 계속됩니다. 알림 방법을 선택해 주세요."
+                    : "분석은 자동으로 계속돼요. 완료된 결과는 분석 기록에서 확인해 주세요.");
+            }
+        }, 0);
+        return () => window.clearTimeout(applyTimer);
+    }, [initialJobStatus, petProfileId, refreshHistory, refreshWallet]);
+
+    const deferredRequestId = deferredJob?.requestId;
+    const deferredInitialPollSeconds = deferredJob?.nextPollSeconds ?? 3;
+
+    useEffect(() => {
+        if (!deferredRequestId) return;
+        let active = true;
+        let finished = false;
+        let timer: number | undefined;
+        let nextPollSeconds = deferredInitialPollSeconds;
+
+        const poll = async () => {
+            if (!active || finished) return;
+            const controller = new AbortController();
+            jobPollAbortRef.current = controller;
+            try {
+                const status = await loadPetObservationJobStatus({
+                    requestId: deferredRequestId,
+                    accessToken,
+                    signal: controller.signal,
+                });
+                if (!active || controller.signal.aborted) return;
+                if (status.status === "deferred") {
+                    nextPollSeconds = status.nextPollSeconds;
+                    setDeferredJob(status);
+                    if (status.emailWhenReady === true) {
+                        deliveryChoiceHandledRequestIdsRef.current.add(status.requestId);
+                        setDeferredChoiceOpen(false);
+                        setDeferredNotice("분석은 자동으로 계속하고, 완료되면 가입 이메일로 알려드릴게요.");
+                    } else {
+                        const shouldOfferEmail = status.state === "paused"
+                            && status.emailOffer
+                            && status.emailAvailable
+                            && !deliveryChoiceHandledRequestIdsRef.current.has(status.requestId);
+                        if (shouldOfferEmail) {
+                            setDeferredChoiceOpen(true);
+                            setDeferredNotice("분석은 자동으로 계속됩니다. 알림 방법을 선택해 주세요.");
+                        } else if (status.state === "processing") {
+                            setDeferredNotice("분석 결과를 정리하고 있어요. 완료된 결과는 분석 기록에서도 확인할 수 있습니다.");
+                        }
+                    }
+                    return;
+                }
+
+                if (status.status === "cancelled" || status.status === "failed") {
+                    finished = true;
+                    setDeferredJob(null);
+                    setDeferredChoiceOpen(false);
+                    setDeferredChoiceBusy(null);
+                    setDeferredChoiceError("");
+                    setDeferredNotice("");
+                    requestIdRef.current = null;
+                    resetObservationCapture();
+                    setRefundNotice("");
+                    setAnalysisError("");
+                    if (status.coinRefunded) {
+                        setRefundNotice(status.message);
+                    } else {
+                        setAnalysisError(status.message);
+                    }
+                    void refreshWallet();
+                    return;
+                }
+
+                if (status.status !== "completed") return;
+                finished = true;
+                setDeferredJob(null);
+                setDeferredChoiceOpen(false);
+                setDeferredChoiceBusy(null);
+                setDeferredChoiceError("");
+                setDeferredNotice("");
+                setResult(status.result);
+                setResultRequestId(status.requestId);
+                requestIdRef.current = null;
+                resetObservationCapture();
+                void refreshWallet();
+                void refreshHistory();
+                trackStorefrontEvent("petlens_completed", { mode: "observation", surface: variant });
+            } catch {
+                if (!active || controller.signal.aborted) return;
+                nextPollSeconds = Math.max(3, nextPollSeconds);
+                setDeferredNotice((current) => current || "분석은 계속되고 있어요. 완료된 결과는 분석 기록에서도 확인할 수 있습니다.");
+            } finally {
+                if (active && !finished) {
+                    timer = window.setTimeout(() => void poll(), nextPollSeconds * 1_000);
+                }
+            }
+        };
+
+        timer = window.setTimeout(() => void poll(), deferredInitialPollSeconds * 1_000);
+        return () => {
+            active = false;
+            if (timer) window.clearTimeout(timer);
+            jobPollAbortRef.current?.abort();
+            jobPollAbortRef.current = null;
+        };
+    }, [accessToken, deferredInitialPollSeconds, deferredRequestId, refreshHistory, refreshWallet, resetObservationCapture, variant]);
+
     const analyze = async () => {
         if (!clip || !durationSeconds || !consent) return;
         if (engineState !== "ready") {
@@ -421,10 +727,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         const controller = new AbortController();
         abortRef.current = controller;
         setAnalyzing(true);
-        setCancelingWait(false);
         setAnalysisError("");
         setRefundNotice("");
-        setQueueStatus(null);
+        setDeferredNotice("");
+        setDeferredChoiceError("");
         trackStorefrontEvent("petlens_started", { mode: "observation", surface: variant });
         try {
             const requestId = requestIdRef.current || analysisRequestId();
@@ -451,8 +757,25 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 signal: controller.signal,
                 requestId,
                 privacyConsent: consent,
-                onQueueStatus: setQueueStatus,
             });
+            if (next.status === "deferred") {
+                requestIdRef.current = next.requestId;
+                setDeferredJob(next);
+                if (next.emailWhenReady === true) {
+                    deliveryChoiceHandledRequestIdsRef.current.add(next.requestId);
+                    setDeferredChoiceOpen(false);
+                    setDeferredNotice("분석은 자동으로 계속하고, 완료되면 가입 이메일로 알려드릴게요.");
+                } else {
+                    const canOfferEmail = next.state === "paused" && next.emailOffer && next.emailAvailable;
+                    setDeferredChoiceOpen(canOfferEmail);
+                    setDeferredNotice(canOfferEmail
+                        ? "분석은 자동으로 계속됩니다. 알림 방법을 선택해 주세요."
+                        : "분석은 자동으로 계속돼요. 완료된 결과는 분석 기록에서 확인해 주세요.");
+                }
+                resetObservationCapture();
+                void refreshWallet();
+                return;
+            }
             setResult(next);
             setResultRequestId(requestId);
             if (typeof next.daengLabCoinBalance === "number") {
@@ -519,59 +842,156 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         } finally {
             if (!controller.signal.aborted) {
                 setAnalyzing(false);
-                setQueueStatus(null);
             }
         }
     };
 
-    const cancelAnalysisWait = async () => {
-        const requestId = requestIdRef.current;
-        if (!requestId || queueStatus?.state !== "queued" || cancelingWait) return;
-        setCancelingWait(true);
-        setAnalysisError("");
-        try {
-            const cancellation = await cancelPetObservationQueueWait({
-                requestId,
-                accessToken,
-            });
-            if (cancellation.state === "processing") {
-                setQueueStatus((current) => current ? {
-                    ...current,
-                    state: "processing",
-                    position: null,
-                    estimatedWaitSeconds: 0,
-                } : current);
-                setAnalysisError("분석이 이미 시작되어 대기 취소는 하지 않았어요. 결과를 확인해 주세요.");
-                return;
-            }
-            if (!cancellation.cancelled) {
-                setAnalysisError("대기 상태가 이미 끝나 취소하지 않았어요. 분석 결과를 확인하고 있습니다.");
-                return;
-            }
-            abortRef.current?.abort();
-            abortRef.current = null;
+    const chooseDeferredDelivery = async (emailWhenReady: boolean) => {
+        const job = deferredJob;
+        if (!job || deferredChoiceBusy) return;
+        deliveryChoiceAbortRef.current?.abort();
+        const controller = new AbortController();
+        deliveryChoiceAbortRef.current = controller;
+        const showCompletedResult = (nextResult: PetObservationResult) => {
+            jobPollAbortRef.current?.abort();
+            setDeferredJob(null);
+            setDeferredChoiceOpen(false);
+            setDeferredChoiceError("");
+            setDeferredNotice("");
+            setResult(nextResult);
+            setResultRequestId(job.requestId);
             requestIdRef.current = null;
-            setAnalyzing(false);
-            setQueueStatus(null);
-            setAnalysisError("분석 대기를 취소했습니다. 촬영한 영상은 다시 분석할 수 있어요.");
+            resetObservationCapture();
+            void refreshWallet();
+            void refreshHistory();
+            trackStorefrontEvent("petlens_completed", { mode: "observation", surface: variant });
+        };
+        const reconcileLatestJob = async () => {
+            const latest = await loadPetObservationJobStatus({
+                requestId: job.requestId,
+                accessToken,
+                signal: controller.signal,
+            });
+            if (latest.status === "completed") {
+                showCompletedResult(latest.result);
+                return true;
+            }
+            if (latest.status === "cancelled" || latest.status === "failed") {
+                jobPollAbortRef.current?.abort();
+                setDeferredJob(null);
+                setDeferredChoiceOpen(false);
+                setDeferredChoiceError("");
+                setDeferredNotice("");
+                setRefundNotice("");
+                setAnalysisError("");
+                requestIdRef.current = null;
+                if (latest.coinRefunded) {
+                    setRefundNotice(latest.message);
+                } else {
+                    setAnalysisError(latest.message);
+                }
+                void refreshWallet();
+                return true;
+            }
+            if (latest.status !== "deferred") return false;
+            setDeferredJob(latest);
+            return false;
+        };
+        deliveryChoiceHandledRequestIdsRef.current.add(job.requestId);
+        setDeferredChoiceOpen(false);
+        setDeferredChoiceBusy(emailWhenReady ? "email" : "cancel");
+        setDeferredChoiceError("");
+        try {
+            const choice = await choosePetObservationDelivery({
+                requestId: job.requestId,
+                emailWhenReady,
+                accessToken,
+                signal: controller.signal,
+            });
+            if (controller.signal.aborted) return;
+            if (choice.completedResult) {
+                showCompletedResult(choice.completedResult);
+                return;
+            }
+            if (emailWhenReady) {
+                setDeferredChoiceOpen(false);
+                setDeferredNotice(choice.emailAvailable && choice.emailScheduled
+                    ? "분석은 자동으로 계속하고, 완료되면 가입 이메일로 알려드릴게요."
+                    : "분석은 계속되며 완료된 결과는 분석 기록에서 확인해 주세요.");
+                return;
+            }
+            if (!choice.cancelled) {
+                try {
+                    if (await reconcileLatestJob()) return;
+                } catch {
+                    // Keep the job and show the safe retry guidance below.
+                }
+                setDeferredChoiceError("");
+                setDeferredNotice("분석이 이미 완료되었거나 취소할 수 없는 상태예요. 결과를 계속 확인하고 있습니다.");
+                return;
+            }
+            jobPollAbortRef.current?.abort();
+            setDeferredJob(null);
+            setDeferredChoiceOpen(false);
+            setDeferredNotice("");
+            requestIdRef.current = null;
+            if (typeof choice.coinBalance === "number" && wallet) {
+                publishWallet({
+                    ...wallet,
+                    daengLabCoins: choice.coinBalance,
+                    analysesAvailable: Math.floor(choice.coinBalance / wallet.analysisCoinCost),
+                });
+            } else {
+                void refreshWallet();
+            }
+            setRefundNotice("");
+            setAnalysisError("");
+            if (choice.coinRefunded) {
+                setRefundNotice("분석을 취소했고 코인을 원래대로 돌려드렸어요. 나중에 다시 시도해 주세요.");
+            } else {
+                setAnalysisError("분석은 취소되었지만 코인 환급 상태를 확인하지 못했어요. 댕다방 연구소 지갑 내역을 확인해 주세요.");
+            }
+            trackStorefrontEvent("petlens_failed", {
+                mode: "observation",
+                surface: variant,
+                errorCode: "deferred_cancelled",
+            });
         } catch (reason) {
-            setAnalysisError(
-                reason instanceof Error
-                    ? reason.message
-                    : "분석 대기 취소를 확인하지 못했어요. 현재 분석은 계속 진행됩니다.",
-            );
+            if (controller.signal.aborted) return;
+            try {
+                if (await reconcileLatestJob()) return;
+            } catch {
+                // Keep the existing deferred job visible.
+            }
+            if (emailWhenReady) {
+                setDeferredChoiceOpen(false);
+                setDeferredNotice("이메일 알림을 확인하지 못했어요. 분석은 계속되며 완료된 결과는 분석 기록에서 확인해 주세요.");
+            } else {
+                setDeferredChoiceError("");
+                setDeferredNotice(
+                    reason instanceof Error
+                        ? reason.message
+                        : "분석 취소를 확인하지 못했어요. 현재 분석은 계속 진행됩니다.",
+                );
+            }
         } finally {
-            setCancelingWait(false);
+            if (!controller.signal.aborted) setDeferredChoiceBusy(null);
         }
     };
 
     const resetAll = () => {
         abortRef.current?.abort();
+        jobPollAbortRef.current?.abort();
+        deliveryChoiceAbortRef.current?.abort();
         abortRef.current = null;
         setAnalyzing(false);
         setAnalysisError("");
         setRefundNotice("");
-        setQueueStatus(null);
+        setDeferredJob(null);
+        setDeferredChoiceOpen(false);
+        setDeferredChoiceBusy(null);
+        setDeferredChoiceError("");
+        setDeferredNotice("");
         setResult(null);
         setResultRequestId(undefined);
         requestIdRef.current = null;
@@ -580,10 +1000,16 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     const openHistoryResult = (item: PetObservationHistoryItem) => {
         abortRef.current?.abort();
+        jobPollAbortRef.current?.abort();
+        deliveryChoiceAbortRef.current?.abort();
         setAnalyzing(false);
         setAnalysisError("");
         setRefundNotice("");
-        setQueueStatus(null);
+        setDeferredJob(null);
+        setDeferredChoiceOpen(false);
+        setDeferredChoiceBusy(null);
+        setDeferredChoiceError("");
+        setDeferredNotice("");
         resetObservationCapture();
         setResult(item.result);
         setResultRequestId(item.requestId);
@@ -591,6 +1017,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
     const focusConsent = () => {
         returnToCaptureAfterConsentRef.current = true;
+        suppressConsentFocusRestoreRef.current = true;
         setConsentPromptOpen(false);
         window.requestAnimationFrame(() => {
             consentCheckboxRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -687,7 +1114,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     ? "분석에 사용할 행동·소리 근거가 충분하지 않아"
                     : "신뢰할 수 있는 분석 결과를 만들지 못해";
         return (
-            <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
+            <section ref={experienceRootRef} tabIndex={-1} className="grid gap-4 outline-none" data-petlens-observation-experience data-variant={variant}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <DaengLabServiceTitle
@@ -1031,11 +1458,17 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         : captureStage;
 
     return (
-        <section className="grid gap-4" data-petlens-observation-experience data-variant={variant}>
-            {consentPromptOpen && (
-                <div className="fixed inset-0 z-[2700] grid place-items-center bg-neutral-950/55 p-4" data-daenglab-consent-prompt>
+        <section ref={experienceRootRef} tabIndex={-1} className="grid gap-4 outline-none" data-petlens-observation-experience data-variant={variant}>
+            {consentPromptOpen && typeof document !== "undefined" && createPortal(
+                <div
+                    className="fixed inset-0 z-[2700] h-[100dvh] overflow-y-auto overscroll-contain bg-neutral-950/55 pl-[max(.75rem,env(safe-area-inset-left))] pr-[max(.75rem,env(safe-area-inset-right))] pt-[max(.75rem,env(safe-area-inset-top))] pb-[max(.75rem,env(safe-area-inset-bottom))] sm:grid sm:place-items-center"
+                    data-daenglab-consent-prompt
+                    data-ddb-managed-modal-layer
+                >
                     <div
-                        className="w-full max-w-sm rounded-3xl border border-indigo-100 bg-white p-5 shadow-2xl"
+                        ref={consentDialogRef}
+                        tabIndex={-1}
+                        className="mx-auto max-h-full w-full max-w-sm overflow-y-auto rounded-3xl border border-indigo-100 bg-white p-5 shadow-2xl outline-none"
                         role="alertdialog"
                         aria-modal="true"
                         aria-labelledby="daenglab-consent-prompt-title"
@@ -1049,26 +1482,88 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </h2>
                         <p id="daenglab-consent-prompt-description" className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                             카메라·마이크 연결이나 촬영한 영상 선택 전에 아래의 영상·음성 분석 동의가 필요합니다.
-                            분석한 동영상은 저장되지 않습니다. 분석 중에만 일시 처리됩니다.
+                            촬영·선택한 영상과 음성은 대기·분석 중 암호화해 임시 보관할 수 있으며,
+                            완료·취소·임시 보관기간 만료 시 삭제됩니다.
                         </p>
                         <div className="mt-5 grid gap-2">
-                            <button type="button" onClick={focusConsent} className="btn btn-primary min-h-11 justify-center" autoFocus>
+                            <button
+                                type="button"
+                                onClick={focusConsent}
+                                className="btn btn-primary min-h-12 w-full justify-center"
+                                data-dialog-initial-focus
+                            >
                                 동의 항목 확인하기
                             </button>
                             <button
                                 type="button"
-                                onClick={() => {
-                                    pendingConsentActionRef.current = null;
-                                    returnToCaptureAfterConsentRef.current = false;
-                                    setConsentPromptOpen(false);
-                                }}
-                                className="btn btn-secondary min-h-10 justify-center text-xs"
+                                onClick={closeConsentPrompt}
+                                className="btn btn-secondary min-h-12 w-full justify-center text-xs"
                             >
                                 닫기
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body,
+            )}
+
+            {deferredChoiceOpen && deferredJob && typeof document !== "undefined" && createPortal(
+                <div
+                    className="fixed inset-0 z-[2750] h-[100dvh] overflow-y-auto overscroll-contain bg-neutral-950/60 pl-[max(.75rem,env(safe-area-inset-left))] pr-[max(.75rem,env(safe-area-inset-right))] pt-[max(.75rem,env(safe-area-inset-top))] pb-[max(.75rem,env(safe-area-inset-bottom))] sm:grid sm:place-items-center"
+                    data-daenglab-deferred-choice
+                    data-ddb-managed-modal-layer
+                >
+                    <div
+                        ref={deferredChoiceDialogRef}
+                        tabIndex={-1}
+                        className="mx-auto max-h-full w-full max-w-md overflow-y-auto rounded-3xl border border-indigo-100 bg-white p-5 shadow-2xl outline-none sm:p-6"
+                        role="alertdialog"
+                        aria-modal="true"
+                        aria-labelledby="daenglab-deferred-choice-title"
+                        aria-describedby="daenglab-deferred-choice-description daenglab-deferred-choice-consequence"
+                    >
+                        <span className="grid h-12 w-12 place-items-center rounded-2xl bg-indigo-50 text-indigo-700" aria-hidden="true">
+                            <i className="fa-solid fa-envelope-open-text" />
+                        </span>
+                        <p id="daenglab-deferred-choice-title" className="mt-4 text-xs font-black tracking-[0.16em] text-indigo-700">
+                            분석 완료 알림
+                        </p>
+                        <h2 id="daenglab-deferred-choice-description" className="mt-2 break-keep text-lg font-black leading-7 text-neutral-950 sm:text-xl">
+                            분석이 평소보다 오래 걸리고 있어요. 완료되면 가입 이메일로 알려드릴까요?
+                        </h2>
+                        <p id="daenglab-deferred-choice-consequence" className="mt-3 text-xs font-bold leading-5 text-neutral-600">
+                            선택하는 동안에도 분석은 자동으로 계속됩니다. ‘아니오, 분석 취소’를 선택하면 진행 중인 분석을 취소하고
+                            임시 보관 중인 영상·음성을 삭제하며, 사용한 코인은 환급 처리됩니다.
+                        </p>
+                        {deferredChoiceError && (
+                            <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-700" role="alert">
+                                {deferredChoiceError}
+                            </p>
+                        )}
+                        <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            <button
+                                type="button"
+                                onClick={() => void chooseDeferredDelivery(true)}
+                                disabled={Boolean(deferredChoiceBusy)}
+                                className="btn btn-primary min-h-12 w-full justify-center disabled:cursor-wait disabled:opacity-60"
+                                data-dialog-initial-focus
+                            >
+                                {deferredChoiceBusy === "email" && <i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />}
+                                예, 이메일 알림
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => void chooseDeferredDelivery(false)}
+                                disabled={Boolean(deferredChoiceBusy)}
+                                className="btn btn-secondary min-h-12 w-full justify-center disabled:cursor-wait disabled:opacity-60"
+                            >
+                                {deferredChoiceBusy === "cancel" && <i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />}
+                                아니오, 분석 취소
+                            </button>
+                        </div>
+                    </div>
+                </div>,
+                document.body,
             )}
 
             <div className={`rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-sky-50 ${compact ? "p-4" : "p-5 sm:p-6"}`}>
@@ -1308,62 +1803,41 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     )}
                     {analyzing && (
                         <div
-                            className="grid gap-3 rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-indigo-50 p-4 text-sky-950"
+                            className="rounded-2xl border border-sky-200 bg-gradient-to-r from-sky-50 to-indigo-50 p-4 text-sky-950"
                             role="status"
                             aria-live="polite"
-                            data-daenglab-observation-queue
+                            data-daenglab-observation-submitting
                         >
-                            <div className="flex flex-wrap items-start justify-between gap-3">
-                                <div>
-                                    <p className="text-sm font-black">
-                                        {queueStatus?.state === "queued"
-                                            ? `대기 ${queueStatus.position ?? 1}번째`
-                                            : queueStatus?.state === "processing"
-                                                ? "분석을 시작했어요"
-                                                : "분석 요청을 준비하고 있어요"}
-                                    </p>
-                                    <p className="mt-1 text-xs font-bold leading-5 text-sky-800">
-                                        {queueStatus?.state === "queued"
-                                            ? queueStatus.estimatedWaitSeconds > 0
-                                                ? `예상 대기 약 ${queueStatus.estimatedWaitSeconds}초 · 순서가 되면 자동으로 시작합니다.`
-                                                : "곧 분석이 시작됩니다."
-                                            : queueStatus?.state === "processing"
-                                                ? "행동·소리·건강 신호를 함께 정리하고 있습니다."
-                                                : "현재 처리 가능 여부와 대기 순서를 확인하고 있습니다."}
-                                    </p>
-                                </div>
-                                {queueStatus?.state === "queued" && (
-                                    <button
-                                        type="button"
-                                        onClick={() => void cancelAnalysisWait()}
-                                        disabled={cancelingWait}
-                                        className="rounded-xl border border-sky-300 bg-white px-3 py-2 text-xs font-black text-sky-800 hover:bg-sky-50 disabled:cursor-wait disabled:opacity-60"
-                                    >
-                                        {cancelingWait ? "취소 확인 중..." : "대기 취소"}
-                                    </button>
-                                )}
-                            </div>
-                            {queueStatus && queueStatus.state !== "not_found" && (
-                                <div className="grid grid-cols-2 gap-2 text-center text-[11px] font-black sm:grid-cols-3">
-                                    <span className="rounded-xl bg-white/80 px-3 py-2">
-                                        동시 분석 {queueStatus.active}/{queueStatus.maxConcurrent}
-                                    </span>
-                                    <span className="rounded-xl bg-white/80 px-3 py-2">
-                                        현재 대기 {queueStatus.queued}/{queueStatus.maxWaiting}
-                                    </span>
-                                    <span className="col-span-2 rounded-xl bg-white/80 px-3 py-2 sm:col-span-1">
-                                        수용 가능 {queueStatus.admittedLimit}명
-                                    </span>
-                                </div>
-                            )}
-                            <p className="text-[11px] font-bold text-sky-700">
-                                대기 중에는 코인이 차감되지 않으며, 분석 순서가 되면 자동으로 진행됩니다.
+                            <p className="text-sm font-black">
+                                <i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />
+                                분석 요청을 안전하게 보내고 있어요
+                            </p>
+                            <p className="mt-1 text-xs font-bold leading-5 text-sky-800">
+                                영상과 소리를 확인할 준비를 하고 있습니다.
+                            </p>
+                        </div>
+                    )}
+                    {deferredJob && (
+                        <div
+                            className="rounded-2xl border border-indigo-200 bg-gradient-to-r from-indigo-50 via-white to-sky-50 p-4 text-indigo-950"
+                            role="status"
+                            aria-live="polite"
+                            data-daenglab-observation-deferred={deferredJob.state}
+                        >
+                            <p className="text-sm font-black">
+                                <i className="fa-solid fa-wand-magic-sparkles mr-2 text-indigo-600" aria-hidden="true" />
+                                분석은 자동으로 계속되고 있어요
+                            </p>
+                            <p className="mt-1 text-xs font-bold leading-5 text-indigo-800">
+                                {deferredNotice || "완료된 결과는 분석 기록에서 확인할 수 있습니다."}
                             </p>
                         </div>
                     )}
 
                     <span className="sr-only" role="status" aria-live="polite">
-                        {analyzing
+                        {deferredJob
+                            ? "분석은 자동으로 계속되고 있습니다."
+                            : analyzing
                             ? "영상과 소리를 분석하는 중입니다."
                             : phase === "recording" ? `${PET_OBSERVATION_RECORDING_SECONDS}초 관찰 영상을 녹화하는 중입니다.` : ""}
                     </span>
@@ -1478,9 +1952,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             className="mt-0.5 h-4 w-4 shrink-0"
                         />
                         <span id="daenglab-observation-consent-description" className="text-[11px] font-bold leading-5 text-neutral-700">
-                            촬영한 영상·음성과 반려견 정보가 보안 연결을 통해 분석 중에만 일시 처리되는 데 동의합니다.
+                            촬영한 영상·음성과 반려견 정보가 보안 연결로 전송되고, 대기·분석 중 암호화되어 임시 보관되는 데 동의합니다.
                             여러 강아지가 함께 보이면 선택한 반려견의 등록 사진 최대 2장과 털색을 대상 구분에만 함께 참고합니다.
-                            원본은 댕다방 서버에 저장하지 않으며 분석이 끝나면 브라우저에서도 비웁니다.{" "}
+                            원본은 분석 완료·취소·임시 보관기간 만료 시 삭제되며, 요청을 보낸 뒤 브라우저에서도 비웁니다.{" "}
                             <Link href="/privacy#overseas" className="underline underline-offset-2">개인정보 처리 자세히 보기</Link>
                         </span>
                     </label>

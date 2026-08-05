@@ -1,6 +1,6 @@
 import { ddbApiBase, getCustomerToken } from "@/lib/customer-api";
 
-export const PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260724-v2";
+export const PET_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260806-v3";
 
 export type PetObservationUrgencyLevel = "emergency" | "same_day" | "observe" | "unclear";
 export type PetObservationConfidence = "high" | "medium" | "low";
@@ -246,6 +246,59 @@ export type PetObservationQueueCancellation = {
     requestId: string;
     cancelled: boolean;
     state: "cancelled" | "processing" | "not_found";
+};
+
+export type PetObservationDeferredJob = {
+    status: "deferred";
+    requestId: string;
+    petProfileId: number;
+    petName?: string;
+    state: "queued" | "paused" | "processing";
+    message: string;
+    emailOffer: boolean;
+    emailAvailable: boolean;
+    emailWhenReady: boolean | null;
+    nextPollSeconds: number;
+    estimatedResumeAt: string | null;
+    queuePosition: number | null;
+};
+
+export type PetObservationCompletedJob = {
+    status: "completed";
+    requestId: string;
+    petProfileId: number;
+    petName?: string;
+    result: PetObservationResult;
+};
+
+export type PetObservationTerminalJob = {
+    status: "cancelled" | "failed";
+    requestId: string;
+    petProfileId: number;
+    petName?: string;
+    state: "cancelled" | "failed";
+    message: string;
+    coinBalance?: number;
+    coinRefunded: boolean;
+    refundAmount?: number;
+};
+
+export type PetObservationJobStatus =
+    | PetObservationDeferredJob
+    | PetObservationCompletedJob
+    | PetObservationTerminalJob;
+export type PetObservationAnalysisResponse = PetObservationResult | PetObservationDeferredJob;
+
+export type PetObservationDeliveryChoice = {
+    requestId: string;
+    emailWhenReady: boolean;
+    emailAvailable: boolean;
+    emailScheduled: boolean;
+    cancelled: boolean;
+    coinRefunded: boolean;
+    refundAmount?: number;
+    coinBalance?: number;
+    completedResult?: PetObservationResult;
 };
 
 export async function loadPetObservationEngineStatus(signal?: AbortSignal): Promise<PetObservationEngineStatus> {
@@ -1373,7 +1426,388 @@ export async function cancelPetObservationQueueWait(options: {
     };
 }
 
-export async function analyzePetObservation(request: PetObservationRequest): Promise<PetObservationResult> {
+function buildPetObservationForm(request: PetObservationRequest) {
+    if (!Number.isInteger(request.petProfileId) || request.petProfileId <= 0) {
+        throw new Error("분석할 반려견 프로필을 다시 선택해 주세요.");
+    }
+    if (request.privacyConsent !== true) {
+        throw new Error("영상·음성 분석 개인정보 동의를 다시 확인해 주세요.");
+    }
+    const targetAnchorNote = request.targetAnchor
+        ? `분석 대상 힌트: 보호자가 영상 기준 가로 ${Math.round(Math.max(0, Math.min(1, request.targetAnchor.x)) * 100)}%, 세로 ${Math.round(Math.max(0, Math.min(1, request.targetAnchor.y)) * 100)}% 지점의 강아지를 콕 찍었습니다.`
+        : request.targetAnchorMode === "single_dog_auto"
+            ? "분석 대상 힌트: 보호자가 영상에 강아지가 한 마리만 보인다고 선택했습니다. 실제 영상에 여러 마리가 보이면 보류해 주세요."
+            : "분석 대상 힌트: 별도 콕 지정이 없으면 영상에 강아지가 한 마리일 때만 그 아이를 분석 대상으로 삼고, 여러 마리가 보이면 보류해 주세요.";
+    const ownerNote = [targetAnchorNote, request.note?.trim()]
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 300);
+
+    const form = new FormData();
+    form.append("clip", request.clip);
+    if (request.targetAnchorImage && request.targetAnchorImage.size > 0) {
+        form.append("target_anchor_image", request.targetAnchorImage, "daenglab-target-anchor.jpg");
+    }
+    form.append("pet_profile_id", String(request.petProfileId));
+    form.append("context", JSON.stringify({
+        pet_name: request.petName || "우리 아이",
+        breed: request.breed || "",
+        age: request.age || "",
+        situation: request.situation,
+        note: ownerNote,
+        target_anchor_mode: request.targetAnchorMode || (request.targetAnchor ? "point" : "none"),
+        ...(request.targetAnchor ? {
+            target_anchor: {
+                x: Math.max(0, Math.min(1, request.targetAnchor.x)),
+                y: Math.max(0, Math.min(1, request.targetAnchor.y)),
+                label: request.targetAnchor.label?.trim().slice(0, 120) || "보호자가 영상에서 콕 찍은 분석 대상 강아지",
+            },
+        } : {}),
+        duration_seconds: request.durationSeconds,
+    }));
+    form.append("request_id", request.requestId);
+    form.append("privacy_consent", "true");
+    form.append("privacy_notice_version", PET_OBSERVATION_PRIVACY_NOTICE_VERSION);
+    return form;
+}
+
+function nullableNonNegativeInteger(value: unknown) {
+    return typeof value === "number" && Number.isFinite(value)
+        ? Math.max(0, Math.trunc(value))
+        : null;
+}
+
+function nullableIsoDate(value: unknown) {
+    const text = line(value, 64);
+    return text && Number.isFinite(Date.parse(text)) ? text : null;
+}
+
+export function parsePetObservationDeferredJob(
+    value: unknown,
+    expectedRequestId?: string,
+): PetObservationDeferredJob | null {
+    const raw = record(value);
+    if (!raw || (raw.status !== "deferred" && raw.status !== "processing")) return null;
+    const requestId = line(raw.request_id ?? raw.requestId, 128);
+    const state = raw.status === "processing"
+        ? "processing"
+        : raw.state === "queued" || raw.state === "paused" || raw.state === "processing"
+            ? raw.state
+            : null;
+    if (!requestId || !state || (expectedRequestId && requestId !== expectedRequestId)) return null;
+    const rawPetProfileId = raw.pet_profile_id ?? raw.petProfileId;
+    const petProfileId = typeof rawPetProfileId === "number" && Number.isInteger(rawPetProfileId) && rawPetProfileId > 0
+        ? rawPetProfileId
+        : undefined;
+    if (!petProfileId) return null;
+    const petName = line(raw.pet_name ?? raw.petName, 80) || undefined;
+    const rawPollSeconds = raw.next_poll_seconds ?? raw.nextPollSeconds;
+    const nextPollSeconds = typeof rawPollSeconds === "number" && Number.isFinite(rawPollSeconds)
+        ? Math.max(1, Math.min(300, Math.trunc(rawPollSeconds)))
+        : 3;
+    return {
+        status: "deferred",
+        requestId,
+        petProfileId,
+        ...(petName ? { petName } : {}),
+        state,
+        message: line(raw.message, 300),
+        emailOffer: raw.email_offer === true || raw.emailOffer === true,
+        emailAvailable: raw.email_available === true || raw.emailAvailable === true,
+        emailWhenReady: raw.email_when_ready === true || raw.emailWhenReady === true
+            ? true
+            : raw.email_when_ready === false || raw.emailWhenReady === false
+                ? false
+                : null,
+        nextPollSeconds,
+        estimatedResumeAt: nullableIsoDate(raw.estimated_resume_at ?? raw.estimatedResumeAt),
+        queuePosition: nullableNonNegativeInteger(raw.queue_position ?? raw.queuePosition),
+    };
+}
+
+export function parsePetObservationJobStatus(
+    value: unknown,
+    expectedRequestId?: string,
+): PetObservationJobStatus | null {
+    const deferred = parsePetObservationDeferredJob(value, expectedRequestId);
+    if (deferred) return deferred;
+    const raw = record(value);
+    if (!raw) return null;
+    const requestId = line(raw.request_id ?? raw.requestId, 128);
+    if (!requestId || (expectedRequestId && requestId !== expectedRequestId)) return null;
+    const rawPetProfileId = raw.pet_profile_id ?? raw.petProfileId;
+    const petProfileId = typeof rawPetProfileId === "number" && Number.isInteger(rawPetProfileId) && rawPetProfileId > 0
+        ? rawPetProfileId
+        : undefined;
+    if (!petProfileId) return null;
+    const petName = line(raw.pet_name ?? raw.petName, 80) || undefined;
+    if (raw.status === "cancelled" || raw.status === "failed") {
+        const rawCoinBalance = raw.daenglab_coin_balance ?? raw.balance ?? raw.coinBalance;
+        const rawRefundAmount = raw.daenglab_coin_refund_amount ?? raw.refund_amount ?? raw.refundAmount;
+        const coinRefunded = raw.daenglab_coin_refunded === true
+            || raw.coin_refunded === true
+            || raw.coinRefunded === true;
+        const message = raw.status === "cancelled"
+            ? coinRefunded
+                ? "분석을 취소했고 코인을 원래대로 돌려드렸어요. 나중에 다시 시도해 주세요."
+                : "분석이 취소되었어요. 코인 내역은 댕다방 연구소 지갑에서 확인해 주세요."
+            : coinRefunded
+                ? "분석을 완료하지 못해 사용한 코인을 원래대로 돌려드렸어요. 새 영상으로 다시 시도해 주세요."
+                : "분석을 완료하지 못했어요. 잠시 후 새 영상으로 다시 시도해 주세요.";
+        return {
+            status: raw.status,
+            requestId,
+            petProfileId,
+            ...(petName ? { petName } : {}),
+            state: raw.status,
+            message,
+            coinRefunded,
+            ...(typeof rawCoinBalance === "number" && Number.isFinite(rawCoinBalance)
+                ? { coinBalance: Math.max(0, rawCoinBalance) }
+                : {}),
+            ...(typeof rawRefundAmount === "number" && Number.isFinite(rawRefundAmount)
+                ? { refundAmount: Math.max(0, rawRefundAmount) }
+                : {}),
+        };
+    }
+    if (raw.status !== "completed" || !record(raw.result)) return null;
+    try {
+        return {
+            status: "completed",
+            requestId,
+            petProfileId,
+            ...(petName ? { petName } : {}),
+            result: parsePetObservationResult(raw.result),
+        };
+    } catch {
+        return null;
+    }
+}
+
+export function parsePetObservationDeliveryChoice(
+    value: unknown,
+    requestId: string,
+    emailWhenReady: boolean,
+): PetObservationDeliveryChoice {
+    const raw = record(value) ?? {};
+    const responseRequestId = line(raw.request_id ?? raw.requestId, 128) || requestId;
+    if (responseRequestId !== requestId) {
+        throw new Error("분석 요청 상태를 다시 확인해 주세요.");
+    }
+    const state = line(raw.state ?? raw.status, 40).toLowerCase();
+    const emailAvailable = raw.email_available !== false && raw.emailAvailable !== false;
+    const cancelled = raw.cancelled === true || state === "cancelled" || state === "canceled";
+    const coinRefunded = raw.daenglab_coin_refunded === true
+        || raw.coin_refunded === true
+        || raw.coinRefunded === true;
+    const rawRefundAmount = raw.daenglab_coin_refund_amount ?? raw.refund_amount ?? raw.refundAmount;
+    const rawCoinBalance = raw.daenglab_coin_balance ?? raw.balance ?? raw.coinBalance;
+    const completedJob = parsePetObservationJobStatus(raw, requestId);
+    return {
+        requestId,
+        emailWhenReady,
+        emailAvailable,
+        emailScheduled: emailWhenReady && emailAvailable && (
+            raw.email_scheduled === true
+            || raw.email_when_ready === true
+            || raw.emailWhenReady === true
+            || state === "email_scheduled"
+            || state === "queued"
+            || state === "paused"
+        ),
+        cancelled,
+        coinRefunded,
+        ...(typeof rawRefundAmount === "number" && Number.isFinite(rawRefundAmount)
+            ? { refundAmount: Math.max(0, rawRefundAmount) }
+            : {}),
+        ...(typeof rawCoinBalance === "number" && Number.isFinite(rawCoinBalance)
+            ? { coinBalance: Math.max(0, rawCoinBalance) }
+            : {}),
+        ...(completedJob?.status === "completed" ? { completedResult: completedJob.result } : {}),
+    };
+}
+
+export async function loadPetObservationJobStatus(options: {
+    requestId: string;
+    accessToken?: string;
+    signal?: AbortSignal;
+}): Promise<PetObservationJobStatus> {
+    const base = ddbApiBase();
+    const token = options.accessToken || getCustomerToken();
+    const requestId = options.requestId.trim();
+    if (!base || !token || !requestId) throw new Error("분석 요청 상태를 다시 확인해 주세요.");
+    const response = await fetch(
+        `${base.replace(/\/$/, "")}/api/v1/pet-lens/observation-jobs/${encodeURIComponent(requestId)}`,
+        {
+            cache: "no-store",
+            headers: { Authorization: `Bearer ${token}` },
+            signal: options.signal,
+        },
+    );
+    if (!response.ok) {
+        const message = response.status === 401
+            ? "로그인이 만료되었습니다. 다시 로그인해 주세요."
+            : response.status === 404
+                ? "이 계정에서 확인할 수 없는 분석이거나 링크가 만료됐어요."
+                : "분석 상태를 잠시 확인하지 못했어요. 자동으로 다시 확인할게요.";
+        throw new PetObservationRequestError(message, { status: response.status });
+    }
+    const status = parsePetObservationJobStatus(await response.json(), requestId);
+    if (!status) throw new Error("분석 요청 상태를 다시 확인해 주세요.");
+    return status;
+}
+
+export async function choosePetObservationDelivery(options: {
+    requestId: string;
+    emailWhenReady: boolean;
+    accessToken?: string;
+    signal?: AbortSignal;
+}): Promise<PetObservationDeliveryChoice> {
+    const base = ddbApiBase();
+    const token = options.accessToken || getCustomerToken();
+    const requestId = options.requestId.trim();
+    if (!base || !token || !requestId) throw new Error("분석 요청 상태를 다시 확인해 주세요.");
+    const response = await fetch(
+        `${base.replace(/\/$/, "")}/api/v1/pet-lens/observation-jobs/${encodeURIComponent(requestId)}/delivery-choice`,
+        {
+            method: "POST",
+            cache: "no-store",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email_when_ready: options.emailWhenReady }),
+            signal: options.signal,
+        },
+    );
+    if (!response.ok) {
+        throw new Error(options.emailWhenReady
+            ? "이메일 알림을 확인하지 못했어요. 분석은 계속되며 완료된 결과는 분석 기록에서 확인해 주세요."
+            : "분석 취소를 확인하지 못했어요. 현재 분석은 계속 진행됩니다.");
+    }
+    return parsePetObservationDeliveryChoice(await response.json(), requestId, options.emailWhenReady);
+}
+
+const PET_OBSERVATION_GENERIC_ERROR_MESSAGE = "관찰 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+const PET_OBSERVATION_AUTH_ERROR_MESSAGE = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
+const CUSTOMER_SAFE_PET_OBSERVATION_ERRORS = new Set([
+    "반려견 프로필을 찾지 못했어요.",
+    "분석 요청 번호를 다시 확인해 주세요.",
+    "지금은 분석 준비를 점검하고 있어요. 잠시 후 다시 시도해 주세요.",
+    "지금은 댕다방 연구소 행동·소리·건강 신호 분석을 사용할 수 없어요.",
+    "암호화된 임시 보관을 포함한 영상·음성 분석 동의를 다시 확인해 주세요.",
+    "영상·음성 분석 개인정보 동의를 다시 확인해 주세요.",
+    "분석 요청이 잠시 몰렸어요. 1분 뒤 다시 시도해 주세요.",
+    "현재 분석 접수가 잠시 붐비고 있어요. 조금 뒤 다시 시도해 주세요.",
+    "분석 접수 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.",
+    "촬영 상황 정보를 확인해 주세요.",
+    "영상 컨테이너를 읽을 수 없어요.",
+    "WebM Segment를 확인할 수 없어요.",
+    "WebM 영상 형식을 확인할 수 없어요.",
+    "영상과 오디오 트랙을 확인할 수 없어요. 다시 촬영해 주세요.",
+    "영상 길이를 확인할 수 없어요. 다시 촬영해 주세요.",
+    "MP4/MOV 영상 구조가 너무 복잡해요.",
+    "MP4/MOV 영상 형식을 확인할 수 없어요.",
+    "WebM, MP4 또는 MOV 영상만 분석할 수 있어요.",
+    "영상 파일이 비어 있어요.",
+    "같은 요청 번호가 다른 분석에 사용되었어요. 새 분석으로 다시 시작해 주세요.",
+    "분석 접수를 안전하게 저장하지 못했어요. 코인 예약 상태는 자동으로 확인해 복구할게요. 잠시 후 다시 확인해 주세요.",
+    "분석 접수는 저장했지만 응답을 확인하지 못했어요. 같은 요청 번호로 다시 확인해 주세요.",
+    "분석 기록을 찾지 못했어요.",
+    "기존 분석 결과를 안전하게 확인하지 못했어요.",
+    "보완할 보호자 확인 질문이 없어요.",
+    "보호자 확인 질문과 답변을 다시 확인해 주세요.",
+    "모든 보호자 확인 질문에 답해 주세요.",
+]);
+const CUSTOMER_SAFE_PET_OBSERVATION_ERROR_PATTERNS = [
+    /^영상 용량이 너무 커요\. 최대 \d{1,4}MB 영상으로 다시 선택해 주세요\.$/u,
+    /^영상이 너무 짧아요\. \d+(?:\.\d+)?초 이상 촬영해 주세요\.$/u,
+    /^영상은 \d+(?:\.\d+)?초 이내로 촬영해 주세요\.$/u,
+    /^댕다방 연구소 행동·소리 분석에는 \d{1,4}코인이 필요합니다\.$/u,
+];
+
+export function customerSafePetObservationErrorMessage(
+    value: unknown,
+    options: { status?: number; fallback?: string } = {},
+) {
+    if (options.status === 401) return PET_OBSERVATION_AUTH_ERROR_MESSAGE;
+    const fallback = options.fallback?.trim() || PET_OBSERVATION_GENERIC_ERROR_MESSAGE;
+    const candidate = typeof value === "string" ? value.trim().slice(0, 500) : "";
+    if (!candidate) return fallback;
+    if (CUSTOMER_SAFE_PET_OBSERVATION_ERRORS.has(candidate)) return candidate;
+    if (CUSTOMER_SAFE_PET_OBSERVATION_ERROR_PATTERNS.some((pattern) => pattern.test(candidate))) {
+        return candidate;
+    }
+    return fallback;
+}
+
+async function petObservationRequestError(response: Response) {
+    let untrustedMessage: unknown;
+    let code: string | undefined;
+    let required: number | undefined;
+    let balance: number | undefined;
+    let coinRefunded: boolean | undefined;
+    let refundAmount: number | undefined;
+    try {
+        const body = await response.clone().json() as { detail?: unknown };
+        if (typeof body.detail === "string" && body.detail.trim()) untrustedMessage = body.detail;
+        if (body.detail && typeof body.detail === "object") {
+            const detail = body.detail as Record<string, unknown>;
+            if (typeof detail.message === "string" && detail.message.trim()) untrustedMessage = detail.message;
+            if (typeof detail.code === "string") code = detail.code;
+            if (typeof detail.required === "number") required = detail.required;
+            if (typeof detail.balance === "number") balance = detail.balance;
+            if (typeof detail.daenglab_coin_balance === "number") balance = detail.daenglab_coin_balance;
+            if (detail.daenglab_coin_refunded === true) coinRefunded = true;
+            if (typeof detail.daenglab_coin_refund_amount === "number") refundAmount = detail.daenglab_coin_refund_amount;
+        }
+    } catch {
+        // Keep the customer-safe fallback.
+    }
+    const message = customerSafePetObservationErrorMessage(untrustedMessage, { status: response.status });
+    return new PetObservationRequestError(message, {
+        code,
+        required,
+        balance,
+        status: response.status,
+        coinRefunded,
+        refundAmount,
+    });
+}
+
+export async function analyzePetObservation(
+    request: PetObservationRequest,
+): Promise<PetObservationAnalysisResponse> {
+    const base = ddbApiBase();
+    if (!base) throw new Error("지금은 댕다방 연구소 행동·소리·건강 신호 분석을 사용할 수 없습니다.");
+    const token = request.accessToken || getCustomerToken();
+    if (!token) throw new Error("로그인 정보를 다시 확인해 주세요.");
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/pet-lens/observation-jobs`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: buildPetObservationForm(request),
+        signal: request.signal,
+    });
+    if (!response.ok) throw await petObservationRequestError(response);
+    const body: unknown = await response.json();
+    const jobStatus = parsePetObservationJobStatus(body, request.requestId);
+    if (jobStatus?.status === "deferred") return jobStatus;
+    if (jobStatus?.status === "completed") return jobStatus.result;
+    if (jobStatus?.status === "cancelled" || jobStatus?.status === "failed") {
+        throw new PetObservationRequestError(jobStatus.message, {
+            status: response.status,
+            balance: jobStatus.coinBalance,
+            coinRefunded: jobStatus.coinRefunded,
+            refundAmount: jobStatus.refundAmount,
+        });
+    }
+    if (response.status === 202) {
+        throw new Error("분석 요청 상태를 다시 확인해 주세요.");
+    }
+    return parsePetObservationResult(body);
+}
+
+export async function analyzePetObservationSync(request: PetObservationRequest): Promise<PetObservationResult> {
     const base = ddbApiBase();
     if (!base) throw new Error("지금은 댕다방 연구소 행동·소리·건강 신호 분석을 사용할 수 없습니다.");
     const token = request.accessToken || getCustomerToken();
@@ -1453,7 +1887,7 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         if (queuePollTimer) clearTimeout(queuePollTimer);
     }
     if (!response.ok) {
-        let message = "관찰 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+        let untrustedMessage: unknown;
         let code: string | undefined;
         let required: number | undefined;
         let balance: number | undefined;
@@ -1471,7 +1905,7 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
                     daenglab_coin_balance?: unknown;
                 };
             };
-            if (typeof body.detail === "string" && body.detail.trim()) message = body.detail.trim();
+            if (typeof body.detail === "string" && body.detail.trim()) untrustedMessage = body.detail;
             if (body.detail && typeof body.detail === "object") {
                 const detail = body.detail as {
                     code?: unknown;
@@ -1482,7 +1916,7 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
                     daenglab_coin_refund_amount?: unknown;
                     daenglab_coin_balance?: unknown;
                 };
-                if (typeof detail.message === "string" && detail.message.trim()) message = detail.message.trim();
+                if (typeof detail.message === "string" && detail.message.trim()) untrustedMessage = detail.message;
                 if (typeof detail.code === "string") code = detail.code;
                 if (typeof detail.required === "number") required = detail.required;
                 if (typeof detail.balance === "number") balance = detail.balance;
@@ -1497,7 +1931,7 @@ export async function analyzePetObservation(request: PetObservationRequest): Pro
         } catch {
             // Keep the customer-safe fallback.
         }
-        if (response.status === 401) message = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
+        const message = customerSafePetObservationErrorMessage(untrustedMessage, { status: response.status });
         throw new PetObservationRequestError(message, {
             code,
             required,
@@ -1545,14 +1979,17 @@ export async function refinePetObservation(request: {
         },
     );
     if (!response.ok) {
-        let message = "보호자 답변을 반영하지 못했습니다. 잠시 후 다시 시도해 주세요.";
+        let untrustedMessage: unknown;
         try {
             const body = await response.clone().json() as { detail?: unknown };
-            if (typeof body.detail === "string" && body.detail.trim()) message = body.detail.trim();
+            if (typeof body.detail === "string" && body.detail.trim()) untrustedMessage = body.detail;
         } catch {
             // Keep the customer-safe fallback.
         }
-        if (response.status === 401) message = "로그인이 만료되었습니다. 다시 로그인해 주세요.";
+        const message = customerSafePetObservationErrorMessage(untrustedMessage, {
+            status: response.status,
+            fallback: "보호자 답변을 반영하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        });
         throw new PetObservationRequestError(message, { status: response.status });
     }
     return parsePetObservationResult(await response.json());

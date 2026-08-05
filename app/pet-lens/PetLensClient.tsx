@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -32,11 +32,92 @@ import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import {
+    loadPetObservationJobStatus,
+    PetObservationRequestError,
+    type PetObservationJobStatus,
+} from "@/lib/petlens-observation";
+import {
+    cleanPetLensObservationRequestId,
+    petLensAuthHref,
+    petLensObservationHref,
+} from "@/lib/petlens-routing";
+import {
     buildPetLensProfileForSave,
     mergeSavedPetLensProfile,
 } from "@/lib/petlens-profile-persistence";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
+
+const subscribeToObservationLocation = () => () => {};
+const getServerObservationRequestId = () => "";
+const getClientObservationRequestId = () => {
+    if (typeof window === "undefined") return "";
+    return new URLSearchParams(window.location.search).get("observation")?.slice(0, 256) || "";
+};
+
+type ObservationDeepLinkState = "idle" | "resolving" | "processing" | "found" | "invalid" | "not_found" | "profile_unavailable" | "cancelled" | "failed";
+
+function ObservationDeepLinkNotice({
+    state,
+    message,
+    recoveryHref,
+}: {
+    state: ObservationDeepLinkState;
+    message: string;
+    recoveryHref?: string;
+}) {
+    const pending = state === "resolving" || state === "processing";
+    const cancelled = state === "cancelled";
+    return (
+        <div
+            className={`mb-4 flex items-start gap-3 rounded-2xl border px-4 py-3 ${
+                pending
+                    ? "border-indigo-200 bg-indigo-50 text-indigo-950"
+                    : cancelled
+                        ? "border-amber-200 bg-amber-50 text-amber-950"
+                        : "border-rose-200 bg-rose-50 text-rose-950"
+            }`}
+            role={pending ? "status" : "alert"}
+            aria-live="polite"
+            data-petlens-observation-deep-link={state}
+        >
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/80" aria-hidden="true">
+                <i className={`fa-solid ${pending ? "fa-circle-notch fa-spin" : cancelled ? "fa-rotate-left" : "fa-circle-exclamation"}`} />
+            </span>
+            <div className="min-w-0">
+                <p className="text-sm font-black">
+                    {state === "resolving"
+                        ? "분석 기록 확인 중"
+                        : state === "processing"
+                            ? "분석 진행 중"
+                            : cancelled
+                                ? "취소된 분석"
+                                : "분석 기록 안내"}
+                </p>
+                <p className="mt-1 break-keep text-xs font-bold leading-5 opacity-80">{message}</p>
+                {recoveryHref && (
+                    <Link
+                        href={recoveryHref}
+                        className="mt-3 inline-flex min-h-12 items-center justify-center rounded-xl border border-current bg-white px-4 text-xs font-black shadow-sm transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+                    >
+                        다른 계정으로 다시 로그인
+                    </Link>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function clearObservationDeepLink() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("observation");
+    const search = url.searchParams.toString();
+    window.history.replaceState(
+        window.history.state,
+        "",
+        `${url.pathname}${search ? `?${search}` : ""}${url.hash}`,
+    );
+}
 
 type Result = PetLensAnalysisResult;
 
@@ -57,18 +138,33 @@ export default function PetLensClient() {
     const [photoLoading, setPhotoLoading] = useState(false);
     const [mode, setMode] = useState<PetLensMode>("photo");
     const [editingPetProfileId, setEditingPetProfileId] = useState<number | undefined>();
+    const [observationDeepLinkState, setObservationDeepLinkState] = useState<ObservationDeepLinkState>("idle");
+    const [observationDeepLinkMessage, setObservationDeepLinkMessage] = useState("");
+    const [observationDeepLinkJob, setObservationDeepLinkJob] = useState<PetObservationJobStatus | null>(null);
     const photoViewsRef = useRef<PetLensPhotoCaptures>({});
     const photoCaptureInFlight = useRef(false);
     const editingOwnerKeyRef = useRef(user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "");
     const hydratedPetProfileIdRef = useRef<number | undefined>(undefined);
+    const handledObservationRequestIdRef = useRef("");
+    const rawObservationRequestId = useSyncExternalStore(
+        subscribeToObservationLocation,
+        getClientObservationRequestId,
+        getServerObservationRequestId,
+    );
+    const observationRequestId = cleanPetLensObservationRequestId(rawObservationRequestId);
+    const observationReturnTo = observationRequestId
+        ? petLensObservationHref(observationRequestId)
+        : undefined;
 
     useEffect(() => {
-        const queryMode = new URLSearchParams(window.location.search).get("mode");
+        const query = new URLSearchParams(window.location.search);
+        const queryMode = query.get("mode");
+        const queryObservation = query.get("observation");
         const hash = window.location.hash.replace(/^#/, "");
         const hashMode = hash === "observation"
             ? hash
             : new URLSearchParams(hash).get("mode");
-        const initialMode = queryMode === "observation" || hashMode === "observation"
+        const initialMode = queryObservation || queryMode === "observation" || hashMode === "observation"
             ? "observation"
             : "photo";
         const modeSyncId = window.setTimeout(() => setMode(initialMode), 0);
@@ -115,6 +211,81 @@ export default function PetLensClient() {
         }, 0);
         return () => window.clearTimeout(hydrateId);
     }, [editingPetProfileId, user]);
+
+    useEffect(() => {
+        if (!rawObservationRequestId) return;
+        if (!observationRequestId) {
+            if (handledObservationRequestIdRef.current === rawObservationRequestId) return;
+            handledObservationRequestIdRef.current = rawObservationRequestId;
+            const invalidTimer = window.setTimeout(() => {
+                setObservationDeepLinkJob(null);
+                setObservationDeepLinkState("invalid");
+                setObservationDeepLinkMessage("분석 링크가 올바르지 않아요. 이메일의 링크를 다시 확인해 주세요.");
+                clearObservationDeepLink();
+            }, 0);
+            return () => window.clearTimeout(invalidTimer);
+        }
+        if (!hydrated || !user?.apiAccessToken) return;
+        if (handledObservationRequestIdRef.current === observationRequestId) return;
+        handledObservationRequestIdRef.current = observationRequestId;
+        const controller = new AbortController();
+        const resolveTimer = window.setTimeout(() => {
+            setObservationDeepLinkJob(null);
+            setObservationDeepLinkState("resolving");
+            setObservationDeepLinkMessage("이 계정의 분석 결과를 안전하게 확인하고 있어요.");
+
+            void loadPetObservationJobStatus({
+                requestId: observationRequestId,
+                accessToken: user.apiAccessToken,
+                signal: controller.signal,
+            }).then((status) => {
+                if (controller.signal.aborted) return;
+                const matchedPet = user.pets.find((pet) => pet.apiProfileId === status.petProfileId);
+                if (!matchedPet) {
+                    setObservationDeepLinkJob(null);
+                    setObservationDeepLinkState("profile_unavailable");
+                    setObservationDeepLinkMessage("이 분석에 연결된 반려견 프로필을 현재 계정에서 확인하지 못했어요. 마이페이지의 반려견 목록을 확인해 주세요.");
+                    clearObservationDeepLink();
+                    return;
+                }
+                if (matchedPet?.apiProfileId) {
+                    hydratedPetProfileIdRef.current = undefined;
+                    setEditingPetProfileId(matchedPet.apiProfileId);
+                }
+                setObservationDeepLinkJob(status);
+                if (status.status === "completed") {
+                    setObservationDeepLinkState("found");
+                    setObservationDeepLinkMessage("");
+                } else if (status.status === "deferred") {
+                    setObservationDeepLinkState("processing");
+                    setObservationDeepLinkMessage(
+                        status.state === "processing"
+                            ? "분석 결과를 정리하고 있어요. 완료되면 이 화면에서 자동으로 열어드릴게요."
+                            : "분석이 아직 진행 중이에요. 완료되면 이 화면에서 자동으로 열어드릴게요.",
+                    );
+                } else {
+                    setObservationDeepLinkState(status.status);
+                    setObservationDeepLinkMessage(status.message);
+                }
+                clearObservationDeepLink();
+            }).catch((reason) => {
+                if (controller.signal.aborted) return;
+                setObservationDeepLinkJob(null);
+                if (reason instanceof PetObservationRequestError && reason.status === 404) {
+                    setObservationDeepLinkState("not_found");
+                    setObservationDeepLinkMessage("이 계정의 분석 기록에서 결과를 찾지 못했어요. 이메일을 받은 계정으로 로그인했는지 확인해 주세요.");
+                    return;
+                }
+                setObservationDeepLinkState("failed");
+                setObservationDeepLinkMessage("분석 기록을 잠시 확인하지 못했어요. 네트워크 상태를 확인한 뒤 새로고침해 주세요.");
+            });
+        }, 0);
+
+        return () => {
+            window.clearTimeout(resolveTimer);
+            controller.abort();
+        };
+    }, [hydrated, observationRequestId, rawObservationRequestId, user]);
 
     const toggleConcern = (concern: string) => {
         setConcerns((current) =>
@@ -230,12 +401,35 @@ export default function PetLensClient() {
     };
 
     const selectedPet = user?.pets.find((pet) => pet.apiProfileId === editingPetProfileId);
-    const gateService = mode === "observation" ? "daenglab" : "petlens";
+    const gateService = mode === "observation" || Boolean(rawObservationRequestId) ? "daenglab" : "petlens";
+    const observationDeepLinkHasError = ["invalid", "not_found", "profile_unavailable", "failed"].includes(observationDeepLinkState);
+    const observationDeepLinkPending = Boolean(rawObservationRequestId)
+        && !observationDeepLinkJob
+        && !observationDeepLinkHasError;
+    const observationDeepLinkBlocksExperience = observationDeepLinkPending || observationDeepLinkHasError;
+    const observationRecoveryHref = observationDeepLinkState === "not_found" && observationReturnTo
+        ? petLensAuthHref("login", observationReturnTo)
+        : undefined;
     if (!hydrated) {
         return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="loading" service={gateService} /></main>;
     }
     if (!user) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="login" service={gateService} /></main>;
+        return (
+            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+                <PetLensMemberGate reason="login" service={gateService} returnTo={observationReturnTo} />
+            </main>
+        );
+    }
+    if (observationDeepLinkPending || observationDeepLinkHasError) {
+        return (
+            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+                <ObservationDeepLinkNotice
+                    state={observationDeepLinkPending ? "resolving" : observationDeepLinkState}
+                    message={observationDeepLinkMessage || "이 계정의 분석 기록을 안전하게 확인하고 있어요."}
+                    recoveryHref={observationRecoveryHref}
+                />
+            </main>
+        );
     }
     if (!selectedPet?.apiProfileId) {
         return (
@@ -245,7 +439,7 @@ export default function PetLensClient() {
             </main>
         );
     }
-    if (!selectedPet.breed?.trim()) {
+    if (!selectedPet.breed?.trim() && !observationDeepLinkJob) {
         return (
             <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
                 <PetLensPetSelector pets={user.pets} selectedPetProfileId={editingPetProfileId} onChange={selectPetProfile} />
@@ -291,14 +485,21 @@ export default function PetLensClient() {
 
             <PetLensModeTabs mode={mode} onChange={setMode} />
 
+            {mode === "observation" && !observationDeepLinkJob && !["idle", "found"].includes(observationDeepLinkState) && (
+                <ObservationDeepLinkNotice state={observationDeepLinkState} message={observationDeepLinkMessage} />
+            )}
+
             {mode === "observation" ? (
-                <PetLensObservationExperience
-                    key={selectedPet.apiProfileId}
-                    pet={selectedPet}
-                    petProfileId={selectedPet.apiProfileId}
-                    accessToken={user.apiAccessToken}
-                    variant="page"
-                />
+                observationDeepLinkBlocksExperience ? null : (
+                    <PetLensObservationExperience
+                        key={`${selectedPet.apiProfileId}:${observationDeepLinkJob?.requestId || "capture"}`}
+                        pet={selectedPet}
+                        petProfileId={selectedPet.apiProfileId}
+                        accessToken={user.apiAccessToken}
+                        variant="page"
+                        initialJobStatus={observationDeepLinkJob || undefined}
+                    />
+                )
             ) : (
             <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface grid h-fit gap-4 p-5">

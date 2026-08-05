@@ -51,7 +51,7 @@ test("customer-facing research lab name replaces the legacy wordmark without ren
     assert.doesNotMatch(title, /"DaengLab"/);
     assert.match(launcher, /Open DaengDaBang Research Lab Behavior and Sound Analysis/);
     assert.match(wallet, /data-daenglab-wallet/);
-    assert.match(privacy, /daenglab-observation-privacy-20260724-v2/);
+    assert.match(privacy, /daenglab-observation-privacy-20260806-v3/);
 });
 
 test("analysis refund copy uses the explicit refund amount and current wallet balance", async () => {

@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO } from "@/lib/legal";
 
-const PRIVACY_UPDATED_AT = "2026-07-24";
-const DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260724-v2";
+const PRIVACY_UPDATED_AT = "2026-08-06";
+const DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260806-v3";
 
 export const metadata: Metadata = {
     title: "개인정보처리방침 | 댕다방",
@@ -98,7 +98,7 @@ const consentRows = [
         "댕다방 연구소 행동·소리 분석(PetLens 관찰 기능)",
         "이용자가 별도로 동의하고 촬영·선택한 5~20초(권장 15초) 반려견 영상·포함 음성, 등록된 반려견 이름·견종·나이, 촬영 상황 메모, 관찰 분석 결과, 원본의 SHA-256 해시, 동의 증적(동의 영수증)과 요청 기록",
         "반려견의 소리·자세·움직임·호흡 모습에 대한 관찰 보조와 응급 가능 신호 안내",
-        "원본 영상·음성은 분석 요청 중에만 일시 처리하고 댕다방 서버에 보관하지 않음. 분석 결과, 원본의 SHA-256 해시, 동의 증적(동의 영수증)과 요청 기록은 이용자가 삭제를 요청하거나 회원 탈퇴할 때까지 보관",
+        "원본 영상·음성은 분석 대기·처리 중 암호화해 임시 보관할 수 있으며, 분석 완료·이용자 취소·임시 보관기간 만료 시 삭제. 분석 결과, 원본의 SHA-256 해시, 동의 증적(동의 영수증)과 요청 기록은 이용자가 삭제를 요청하거나 회원 탈퇴할 때까지 보관",
     ],
     [
         "마케팅 수신",
@@ -417,7 +417,7 @@ export default function PrivacyPage() {
                     최소 30일 전부터 공지합니다.
                 </p>
                 <p className="mt-3 text-sm font-bold leading-7 text-neutral-600">
-                    개인정보처리방침 버전: v1.4 / 시행일: {PRIVACY_UPDATED_AT}
+                    개인정보처리방침 버전: v1.5 / 시행일: {PRIVACY_UPDATED_AT}
                 </p>
                 <p className="mt-1 text-sm font-bold leading-7 text-neutral-600">
                     댕다방 연구소 행동·소리 분석 개인정보 고지 버전: {DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION}

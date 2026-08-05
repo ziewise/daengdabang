@@ -7,6 +7,10 @@ const ORIGIN = "https://www.daengdabang.com";
 test("internal login redirects preserve safe paths, queries, and fragments", () => {
     assert.equal(safeInternalRedirect("/checkout", ORIGIN), "/checkout");
     assert.equal(safeInternalRedirect("/checkout?coupon=welcome#payment", ORIGIN), "/checkout?coupon=welcome#payment");
+    assert.equal(
+        safeInternalRedirect("/pet-lens/?observation=job_20260806-abcdef", ORIGIN),
+        "/pet-lens/?observation=job_20260806-abcdef",
+    );
 });
 
 test("login redirects reject external, backslash, and control-character forms", () => {

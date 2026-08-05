@@ -47,7 +47,9 @@ test("main recommendations use the authenticated profile and stored PetLens sign
 test("the PetLens page accepts an observation mode query or hash", async () => {
     const page = await source("app/pet-lens/PetLensClient.tsx");
 
-    assert.match(page, /new URLSearchParams\(window\.location\.search\)\.get\("mode"\)/);
+    assert.match(page, /const query = new URLSearchParams\(window\.location\.search\)/);
+    assert.match(page, /query\.get\("mode"\)/);
+    assert.match(page, /query\.get\("observation"\)/);
     assert.match(page, /window\.location\.hash/);
     assert.match(page, /setMode\(initialMode\)/);
 });
