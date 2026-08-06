@@ -16,6 +16,7 @@ import {
     type ShopChatSource,
     type ShopChatDelivery,
     type ShopChatQuality,
+    type ShopChatStreamStage,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
@@ -31,6 +32,12 @@ import {
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { customerVisibleChatAnswer } from "@/lib/chat-display";
 import ChatAnswerControls from "@/components/site/ChatAnswerControls";
+import {
+    clearShopChatConversationId,
+    loadShopChatConversationId,
+    saveShopChatConversationId,
+    shopChatConversationOwnerKey,
+} from "@/lib/shop-chat-conversation";
 
 type Message = {
     role: "user" | "assistant";
@@ -47,6 +54,7 @@ type Message = {
     quality?: ShopChatQuality;
     delivery?: ShopChatDelivery;
     retryPrompt?: string;
+    streamed?: boolean;
 };
 
 export default function ChatPageClient() {
@@ -65,6 +73,15 @@ export default function ChatPageClient() {
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [requestNotice, setRequestNotice] = useState("");
+    const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
+    const [streamedAnswer, setStreamedAnswer] = useState("");
+    const conversationIdRef = useRef("");
+    const conversationOwnerRef = useRef<string | null>(null);
+    const conversationOwner = useMemo(() => user ? {
+        apiUserId: user.apiUserId,
+        email: user.email,
+    } : null, [user]);
+    const conversationOwnerKey = shopChatConversationOwnerKey(conversationOwner);
     const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
     const {
         hasUploadErrors,
@@ -72,12 +89,32 @@ export default function ChatPageClient() {
         readyReferences,
         showLoginNotice: showReferenceLoginNotice,
         showNotice: showReferenceNotice,
+        clear: clearReferences,
     } = generationReferences;
 
     useEffect(() => {
         trackStorefrontEvent("chat_opened", { surface: "chat_page" });
         return () => activeRequestRef.current?.abort();
     }, []);
+
+    useEffect(() => {
+        const previousOwner = conversationOwnerRef.current;
+        conversationOwnerRef.current = conversationOwnerKey;
+        conversationIdRef.current = loadShopChatConversationId(conversationOwner);
+        if (previousOwner === null || previousOwner === conversationOwnerKey) return;
+        activeRequestRef.current?.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
+        setInput("");
+        setLoading(false);
+        setMessages([]);
+        setStreamedAnswer("");
+        setStreamStage("queued");
+        setRequestNotice("계정이 바뀌어 안전하게 새 대화를 시작했어요.");
+        clearReferences();
+    }, [clearReferences, conversationOwner, conversationOwnerKey]);
 
     const clearChat = () => {
         activeRequestRef.current?.abort();
@@ -88,8 +125,12 @@ export default function ChatPageClient() {
         setInput("");
         setLoading(false);
         setMessages([]);
-        setRequestNotice("");
-        generationReferences.clear();
+        setStreamedAnswer("");
+        setStreamStage("queued");
+        conversationIdRef.current = "";
+        clearShopChatConversationId(conversationOwner);
+        setRequestNotice(user ? "새 대화를 시작했어요. 무엇이든 다시 물어보세요." : "");
+        clearReferences();
     };
 
     const cancelActiveRequest = () => {
@@ -101,6 +142,8 @@ export default function ChatPageClient() {
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
         setLoading(false);
+        setStreamedAnswer("");
+        setStreamStage("queued");
         setInput((current) => current.trim() ? current : cancelledQuestion);
         setMessages((current) => {
             const pending = current.at(-1);
@@ -133,6 +176,8 @@ export default function ChatPageClient() {
         activeQuestionRef.current = trimmed;
         setInput("");
         setLoading(true);
+        setStreamStage("queued");
+        setStreamedAnswer("");
         setRequestNotice("");
         trackStorefrontEvent("chat_message_sent", {
             surface: "chat_page",
@@ -143,15 +188,33 @@ export default function ChatPageClient() {
             content: item.text,
         }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
+        let streamed = false;
         try {
             const result = await answerShopQuestionSmart(trimmed, {
                 pet: selectedPet,
                 history,
                 references: readyReferences,
-                accessToken: readyReferences.length ? user?.apiAccessToken : undefined,
+                accessToken: user?.apiAccessToken,
+                conversationId: conversationIdRef.current || undefined,
+                onProgress: ({ stage }) => {
+                    if (requestSequence === requestSequenceRef.current) setStreamStage(stage);
+                },
+                onDelta: (delta) => {
+                    if (requestSequence !== requestSequenceRef.current || !delta) return;
+                    streamed = true;
+                    setStreamedAnswer((current) => `${current}${delta}`.slice(0, 50_000));
+                },
                 signal: requestController.signal,
             });
             if (requestSequence !== requestSequenceRef.current) return false;
+            if (result.delivery?.reason === "conversation_not_found") {
+                conversationIdRef.current = "";
+                clearShopChatConversationId(conversationOwner);
+            }
+            if (result.delivery?.status === "live" && result.conversationId) {
+                conversationIdRef.current = result.conversationId;
+                saveShopChatConversationId(conversationOwner, result.conversationId);
+            }
             setMessages((prev) => [
                 ...prev,
                 {
@@ -169,6 +232,7 @@ export default function ChatPageClient() {
                     quality: result.quality,
                     delivery: result.delivery,
                     retryPrompt: result.delivery?.status === "live" ? undefined : trimmed,
+                    streamed,
                 },
             ]);
             if (!result.delivery || result.delivery.status === "live") {
@@ -215,6 +279,8 @@ export default function ChatPageClient() {
             if (requestSequence === requestSequenceRef.current) {
                 inFlightRef.current = false;
                 setLoading(false);
+                setStreamedAnswer("");
+                setStreamStage("queued");
             }
         }
     }, [
@@ -222,6 +288,7 @@ export default function ChatPageClient() {
         messages,
         readyReferences,
         referencesUploading,
+        conversationOwner,
         selectedPet,
         showReferenceLoginNotice,
         showReferenceNotice,
@@ -248,7 +315,7 @@ export default function ChatPageClient() {
             - container.getBoundingClientRect().top
             + container.scrollTop;
         container.scrollTop = Math.max(0, rowTop - 8);
-    }, [messages]);
+    }, [messages, streamStage, streamedAnswer]);
 
     const selectPet = (nextIndex: number) => {
         if (nextIndex === selectedPetIndex) return;
@@ -260,8 +327,12 @@ export default function ChatPageClient() {
         setLoading(false);
         setMessages([]);
         setInput("");
-        setRequestNotice("");
-        generationReferences.clear();
+        setStreamedAnswer("");
+        setStreamStage("queued");
+        conversationIdRef.current = "";
+        clearShopChatConversationId(conversationOwner);
+        setRequestNotice("아이를 바꿔 새 대화를 시작했어요.");
+        clearReferences();
         setSelectedPetIndex(nextIndex);
     };
 
@@ -310,12 +381,12 @@ export default function ChatPageClient() {
                         <button
                             type="button"
                             onClick={clearChat}
-                            disabled={messages.length === 0 || loading}
+                            disabled={loading || (!user && messages.length === 0)}
                             className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-black text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-35"
-                            aria-label="대화 내용 비우기"
+                            aria-label={user ? "새 대화 시작" : "대화 내용 비우기"}
                         >
-                            <i className="fa-solid fa-trash-can text-[11px]" />
-                            비우기
+                            <i className={`fa-solid ${user ? "fa-pen-to-square" : "fa-trash-can"} text-[11px]`} />
+                            {user ? "새 대화" : "비우기"}
                         </button>
                     </div>
                     <div
@@ -338,9 +409,13 @@ export default function ChatPageClient() {
                                     }`}
                                 >
                                     {message.role === "assistant" ? (
-                                        <ProgressiveRevealText
-                                            text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
-                                        />
+                                        message.streamed ? (
+                                            customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))
+                                        ) : (
+                                            <ProgressiveRevealText
+                                                text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
+                                            />
+                                        )
                                     ) : (
                                         message.text
                                     )}
@@ -386,7 +461,12 @@ export default function ChatPageClient() {
                         {loading && (
                             <div className="text-left">
                                 <div className="inline-block max-w-[86%] rounded-lg bg-white px-4 py-4 shadow-sm">
-                                    <ChatThinkingProgress hasHistory={messages.length > 1} />
+                                    <ChatThinkingProgress hasHistory={messages.length > 1} stage={streamStage} />
+                                    {streamedAnswer ? (
+                                        <p className="mt-3 whitespace-pre-line border-t border-neutral-200 pt-3 text-sm font-bold leading-6 text-neutral-800">
+                                            {customerVisibleChatAnswer(streamedAnswer, false)}
+                                        </p>
+                                    ) : null}
                                     <button
                                         type="button"
                                         onClick={cancelActiveRequest}

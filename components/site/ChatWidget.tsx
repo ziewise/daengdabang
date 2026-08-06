@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
     answerShopQuestion,
@@ -17,6 +17,7 @@ import {
     type ShopChatSource,
     type ShopChatDelivery,
     type ShopChatQuality,
+    type ShopChatStreamStage,
 } from "@/lib/daengdabang-llm";
 import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
@@ -38,6 +39,12 @@ import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { customerVisibleChatAnswer } from "@/lib/chat-display";
 import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage";
 import ChatAnswerControls from "@/components/site/ChatAnswerControls";
+import {
+    clearShopChatConversationId,
+    loadShopChatConversationId,
+    saveShopChatConversationId,
+    shopChatConversationOwnerKey,
+} from "@/lib/shop-chat-conversation";
 import styles from "./ChatWidget.module.css";
 
 type Message = {
@@ -55,6 +62,7 @@ type Message = {
     quality?: ShopChatQuality;
     delivery?: ShopChatDelivery;
     retryPrompt?: string;
+    streamed?: boolean;
 };
 
 type Props = {
@@ -82,6 +90,15 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const activeRequestRef = useRef<AbortController | null>(null);
     const activeQuestionRef = useRef("");
     const [requestNotice, setRequestNotice] = useState("");
+    const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
+    const [streamedAnswer, setStreamedAnswer] = useState("");
+    const conversationIdRef = useRef("");
+    const conversationOwnerRef = useRef<string | null>(null);
+    const conversationOwner = useMemo(() => user ? {
+        apiUserId: user.apiUserId,
+        email: user.email,
+    } : null, [user]);
+    const conversationOwnerKey = shopChatConversationOwnerKey(conversationOwner);
     const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
     const {
         hasUploadErrors,
@@ -89,6 +106,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         readyReferences,
         showLoginNotice: showReferenceLoginNotice,
         showNotice: showReferenceNotice,
+        clear: clearReferences,
     } = generationReferences;
     const storedChatFontMode = useSyncExternalStore(
         subscribeChatFontMode,
@@ -115,7 +133,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             - container.getBoundingClientRect().top
             + container.scrollTop;
         container.scrollTop = Math.max(0, rowTop - 8);
-    }, [messages, open]);
+    }, [messages, open, streamStage, streamedAnswer]);
 
     useLayoutEffect(() => {
         window.dispatchEvent(new CustomEvent<ChatWidgetVisibilityDetail>(CHAT_WIDGET_VISIBILITY_EVENT, {
@@ -159,6 +177,25 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
 
     useEffect(() => () => activeRequestRef.current?.abort(), []);
 
+    useEffect(() => {
+        const previousOwner = conversationOwnerRef.current;
+        conversationOwnerRef.current = conversationOwnerKey;
+        conversationIdRef.current = loadShopChatConversationId(conversationOwner);
+        if (previousOwner === null || previousOwner === conversationOwnerKey) return;
+        activeRequestRef.current?.abort();
+        activeRequestRef.current = null;
+        activeQuestionRef.current = "";
+        requestSequenceRef.current += 1;
+        inFlightRef.current = false;
+        setMessages([]);
+        setInput("");
+        setLoading(false);
+        setStreamedAnswer("");
+        setStreamStage("queued");
+        setRequestNotice("계정이 바뀌어 안전하게 새 대화를 시작했어요.");
+        clearReferences();
+    }, [clearReferences, conversationOwner, conversationOwnerKey]);
+
     const clearChat = () => {
         activeRequestRef.current?.abort();
         activeRequestRef.current = null;
@@ -169,8 +206,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         setProductContext("");
         setInput("");
         setLoading(false);
-        setRequestNotice("");
-        generationReferences.clear();
+        setStreamedAnswer("");
+        setStreamStage("queued");
+        conversationIdRef.current = "";
+        clearShopChatConversationId(conversationOwner);
+        setRequestNotice(user ? "새 대화를 시작했어요. 무엇이든 다시 물어보세요." : "");
+        clearReferences();
     };
 
     const cancelActiveRequest = () => {
@@ -182,6 +223,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
         setLoading(false);
+        setStreamedAnswer("");
+        setStreamStage("queued");
         setInput((current) => current.trim() ? current : cancelledQuestion);
         setMessages((current) => {
             const pending = current.at(-1);
@@ -217,6 +260,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             : trimmed;
         setInput("");
         setLoading(true);
+        setStreamStage("queued");
+        setStreamedAnswer("");
         setRequestNotice("");
         const analyticsSurface = isMobile ? "mobile_widget" : "desktop_widget";
         trackStorefrontEvent("chat_message_sent", {
@@ -229,15 +274,33 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             content: item.text,
         }));
         setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
+        let streamed = false;
         try {
             const result = await answerShopQuestionSmart(questionForAnswer, {
                 pet: user?.pets?.[0] ?? null,
                 history,
                 references: readyReferences,
-                accessToken: readyReferences.length ? user?.apiAccessToken : undefined,
+                accessToken: user?.apiAccessToken,
+                conversationId: conversationIdRef.current || undefined,
+                onProgress: ({ stage }) => {
+                    if (requestSequence === requestSequenceRef.current) setStreamStage(stage);
+                },
+                onDelta: (delta) => {
+                    if (requestSequence !== requestSequenceRef.current || !delta) return;
+                    streamed = true;
+                    setStreamedAnswer((current) => `${current}${delta}`.slice(0, 50_000));
+                },
                 signal: requestController.signal,
             });
             if (requestSequence !== requestSequenceRef.current) return false;
+            if (result.delivery?.reason === "conversation_not_found") {
+                conversationIdRef.current = "";
+                clearShopChatConversationId(conversationOwner);
+            }
+            if (result.delivery?.status === "live" && result.conversationId) {
+                conversationIdRef.current = result.conversationId;
+                saveShopChatConversationId(conversationOwner, result.conversationId);
+            }
             setMessages((prev) => [
                 ...prev,
                 {
@@ -255,6 +318,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     quality: result.quality,
                     delivery: result.delivery,
                     retryPrompt: result.delivery?.status === "live" ? undefined : trimmed,
+                    streamed,
                 },
             ]);
             if (!result.delivery || result.delivery.status === "live") {
@@ -301,6 +365,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             if (requestSequence === requestSequenceRef.current) {
                 inFlightRef.current = false;
                 setLoading(false);
+                setStreamedAnswer("");
+                setStreamStage("queued");
             }
         }
     };
@@ -347,11 +413,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 type="button"
                                 onClick={clearChat}
                                 disabled={loading}
-                                className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
-                                aria-label="채팅 비우기"
-                                title="채팅 비우기"
+                                className={`${styles.headerIconButton} flex h-10 items-center justify-center gap-1 rounded-full ${user ? "px-2 text-[10px] font-black" : "w-10"}`}
+                                aria-label={user ? "새 대화 시작" : "채팅 비우기"}
+                                title={user ? "새 대화" : "채팅 비우기"}
                             >
-                                <i className="fa-solid fa-trash-can text-xs" />
+                                <i className={`fa-solid ${user ? "fa-pen-to-square" : "fa-trash-can"} text-xs`} />
+                                {user ? <span>새 대화</span> : null}
                             </button>
                             <button
                                 type="button"
@@ -399,9 +466,13 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     }`}
                                 >
                                     {message.role === "assistant" ? (
-                                        <ProgressiveRevealText
-                                            text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
-                                        />
+                                        message.streamed ? (
+                                            customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))
+                                        ) : (
+                                            <ProgressiveRevealText
+                                                text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
+                                            />
+                                        )
                                     ) : (
                                         message.text
                                     )}
@@ -463,7 +534,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         {loading && (
                             <div className="text-left">
                                 <div className={`${styles.loadingBubble} inline-block max-w-[90%] border-2 px-3 py-3`}>
-                                    <ChatThinkingProgress compact hasHistory={messages.length > 1} />
+                                    <ChatThinkingProgress compact hasHistory={messages.length > 1} stage={streamStage} />
+                                    {streamedAnswer ? (
+                                        <p className="mt-3 whitespace-pre-line border-t border-neutral-200 pt-3 text-[12px] font-bold leading-5 text-neutral-800">
+                                            {customerVisibleChatAnswer(streamedAnswer, false)}
+                                        </p>
+                                    ) : null}
                                     <button
                                         type="button"
                                         onClick={cancelActiveRequest}

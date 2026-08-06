@@ -30,10 +30,21 @@ import {
     type ShopChatResearch,
     type ShopChatSource,
 } from "@/lib/shop-chat-evidence";
+import {
+    ShopChatSseDecoder,
+    ShopChatStreamTimeoutGuard,
+    completeShopChatStreamResult,
+    createShopChatClientRequestId,
+    resolveShopChatStreamTimeouts,
+    shouldFallbackShopChatStream,
+    type ShopChatSseEvent,
+    type ShopChatStreamStage,
+} from "@/lib/shop-chat-stream";
 
 export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
 export type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 export type { ShopChatResearch, ShopChatSource } from "@/lib/shop-chat-evidence";
+export type { ShopChatStreamStage } from "@/lib/shop-chat-stream";
 
 type PetLensInput = {
     name: string;
@@ -513,7 +524,11 @@ export type ShopQuestionContext = {
     history?: ShopChatHistoryTurn[];
     references?: ShopChatReferenceInput[];
     accessToken?: string;
+    conversationId?: string;
+    onProgress?: (progress: { stage: ShopChatStreamStage }) => void;
+    onDelta?: (text: string) => void;
     signal?: AbortSignal;
+    /** Optional extension; values below the server-aware minimum never shorten a valid request. */
     timeoutMs?: number;
 };
 
@@ -616,6 +631,7 @@ export type ShopChatAnswer = {
     conversation?: ShopChatConversation;
     generation?: ShopChatGeneration;
     traceId?: string;
+    conversationId?: string;
     quality?: ShopChatQuality;
     delivery?: ShopChatDelivery;
 };
@@ -1325,6 +1341,13 @@ function normalizeTraceId(value: unknown) {
     const traceId = value.trim();
     if (!traceId || traceId.length > 128 || !/^[A-Za-z0-9._:-]+$/.test(traceId)) return undefined;
     return traceId;
+}
+
+function normalizeConversationId(value: unknown) {
+    if (typeof value !== "string") return undefined;
+    const conversationId = value.trim();
+    if (conversationId.length !== 36 || !/^[A-Za-z0-9._:-]+$/.test(conversationId)) return undefined;
+    return conversationId;
 }
 
 function retryAfterSeconds(value: string | null) {
@@ -2202,6 +2225,303 @@ function shopChatReferenceError(status: number) {
     return new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 잠시 후 다시 시도해 주세요.", status);
 }
 
+type ShopChatRequestPayload = {
+    message: string;
+    limit: number;
+    petProfile: ShopChatPetProfile | null;
+    history: ShopChatHistoryTurn[];
+    clientRequestId: string;
+    conversationId?: string;
+    references?: ShopChatReferenceInput[];
+};
+
+type ShopChatPreparedFallbacks = {
+    medicalFallback?: ShopChatAnswer | null;
+    unavailableFallback: ShopChatAnswer;
+};
+
+function emitShopChatProgress(context: ShopQuestionContext | undefined, stage: ShopChatStreamStage) {
+    try {
+        context?.onProgress?.({ stage });
+    } catch {
+        // Rendering progress is optional and must never fail the chat request.
+    }
+}
+
+function emitShopChatDelta(context: ShopQuestionContext | undefined, text: string) {
+    if (!text) return;
+    try {
+        context?.onDelta?.(text);
+    } catch {
+        // Rendering partial text is optional and must never fail the request.
+    }
+}
+
+function normalizeShopChatApiAnswer(
+    value: unknown,
+    headers: Headers | undefined,
+    fallbacks: ShopChatPreparedFallbacks,
+): ShopChatAnswer {
+    const data = asRecord(value) || {};
+    const rawProducts = Array.isArray(data.products) ? data.products : undefined;
+    const apiReturnedProducts = Boolean(rawProducts);
+    const apiProducts = rawProducts
+        ? rawProducts.flatMap((item: unknown) => {
+            const record = asRecord(item);
+            const product = record ? productFromApi(record) : undefined;
+            return product ? [product] : [];
+        })
+        : [];
+    const medicalMode = Boolean(asRecord(data.medical)?.mode);
+    const apiReturnedSources = Array.isArray(data.sources);
+    const apiReturnedActions = Array.isArray(data.actions);
+    const apiReturnedCtas = Array.isArray(data.ctas) || Boolean(data.locationRequest);
+    const apiSources = normalizeShopChatSources(data.sources);
+    const actions = normalizeActions(data.actions);
+    const research = normalizeShopChatResearch(data.research);
+    const ctas = mergeShopChatCtas(
+        normalizeCtas(data.ctas),
+        normalizeLocationRequestCtas(data.locationRequest),
+    );
+    const conversation = normalizeConversation(data.conversation);
+    const generation = normalizeGeneration(data.generation);
+    const traceId = normalizeTraceId(
+        data.traceId
+        ?? data.trace_id
+        ?? headers?.get("x-trace-id")
+        ?? headers?.get("x-request-id"),
+    );
+    const conversationRecord = asRecord(data.conversation);
+    const conversationId = normalizeConversationId(
+        data.conversationId
+        ?? data.conversation_id
+        ?? conversationRecord?.id
+        ?? conversationRecord?.conversationId
+        ?? conversationRecord?.conversation_id,
+    );
+    const quality = normalizeShopChatQuality(data.quality);
+    const preferProtectedMedicalFallback = shouldPreferProtectedMedicalFallback(
+        data.medical,
+        fallbacks.medicalFallback?.medical,
+    );
+    const apiMedical = preferProtectedMedicalFallback
+        ? fallbacks.medicalFallback?.medical
+        : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, fallbacks.medicalFallback?.medical);
+    if (apiMedical?.choiceGroups) apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
+    return {
+        answer: preferProtectedMedicalFallback
+            ? fallbacks.medicalFallback?.answer || fallbacks.unavailableFallback.answer
+            : customerFacingShopChatAnswer(
+                data.answer,
+                fallbacks.medicalFallback?.answer || fallbacks.unavailableFallback.answer,
+            ),
+        products: preferProtectedMedicalFallback
+            ? []
+            : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : [],
+        medical: apiMedical,
+        sources: preferProtectedMedicalFallback
+            ? fallbacks.medicalFallback?.sources
+            : apiReturnedSources ? apiSources : [],
+        actions: preferProtectedMedicalFallback
+            ? fallbacks.medicalFallback?.actions
+            : apiReturnedActions ? actions : [],
+        ctas: preferProtectedMedicalFallback
+            ? fallbacks.medicalFallback?.ctas
+            : apiReturnedCtas ? ctas : [],
+        research: preferProtectedMedicalFallback
+            ? fallbacks.medicalFallback?.research
+            : research,
+        conversation,
+        generation: medicalMode ? undefined : generation,
+        traceId,
+        conversationId,
+        quality,
+        delivery: { status: "live", transient: false },
+    };
+}
+
+function shopChatErrorAnswer(response: Response, references: ShopChatReferenceInput[]) {
+    if (references.length) throw shopChatReferenceError(response.status);
+    const retryAfter = retryAfterSeconds(response.headers.get("retry-after"));
+    if (response.status === 429) return transientShopChatAnswer("rate_limited", retryAfter);
+    if (response.status === 503 || response.status === 504) return transientShopChatAnswer("service_busy", retryAfter);
+    return transientShopChatAnswer(response.status >= 500 ? "service_busy" : "invalid_response", retryAfter);
+}
+
+function shopChatConversationNotFoundAnswer(): ShopChatAnswer {
+    const message = "이전 대화의 보관 기간이 지나 새 대화로 준비했어요. 같은 질문을 한 번만 다시 보내 주세요.";
+    return {
+        answer: message,
+        products: [],
+        delivery: {
+            status: "retry",
+            reason: "conversation_not_found",
+            transient: true,
+            message,
+        },
+        quality: { status: "unverified", needsReview: true },
+    };
+}
+
+async function shopChatResponseErrorCode(response: Response) {
+    if (response.ok) return undefined;
+    try {
+        const payload = asRecord(await response.clone().json());
+        const detail = asRecord(payload?.detail);
+        const code = detail?.code ?? payload?.code;
+        return typeof code === "string" ? code.slice(0, 100) : undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+async function answerShopQuestionPost(
+    base: string,
+    headers: Record<string, string>,
+    payload: ShopChatRequestPayload,
+    references: ShopChatReferenceInput[],
+    signal: AbortSignal,
+    fallbacks: ShopChatPreparedFallbacks,
+    context?: ShopQuestionContext,
+    onTransportActivity?: () => void,
+) {
+    emitShopChatProgress(context, "planning");
+    onTransportActivity?.();
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+        signal,
+    });
+    onTransportActivity?.();
+    if (!response.ok) return shopChatErrorAnswer(response, references);
+    emitShopChatProgress(context, "answering");
+    return normalizeShopChatApiAnswer(await response.json(), response.headers, fallbacks);
+}
+
+type ShopChatStreamAttempt =
+    | { kind: "answer"; answer: ShopChatAnswer }
+    | { kind: "fallback" };
+
+function streamEventRecord(event: ShopChatSseEvent) {
+    return asRecord(event.data) || {};
+}
+
+async function answerShopQuestionStream(
+    base: string,
+    headers: Record<string, string>,
+    payload: ShopChatRequestPayload,
+    references: ShopChatReferenceInput[],
+    signal: AbortSignal,
+    fallbacks: ShopChatPreparedFallbacks,
+    context?: ShopQuestionContext,
+    onTransportActivity?: () => void,
+): Promise<ShopChatStreamAttempt> {
+    emitShopChatProgress(context, "queued");
+    onTransportActivity?.();
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat/stream`, {
+        method: "POST",
+        headers: { ...headers, Accept: "text/event-stream" },
+        body: JSON.stringify(payload),
+        signal,
+    });
+    onTransportActivity?.();
+    const responseErrorCode = await shopChatResponseErrorCode(response);
+    if (response.status === 404 && responseErrorCode === "shop_chat_conversation_not_found") {
+        return { kind: "answer", answer: shopChatConversationNotFoundAnswer() };
+    }
+    if (shouldFallbackShopChatStream({
+        status: response.status,
+        accepted: false,
+        errorCode: responseErrorCode,
+    })) return { kind: "fallback" };
+    if (!response.ok) return { kind: "answer", answer: shopChatErrorAnswer(response, references) };
+
+    const contentType = response.headers.get("content-type")?.toLowerCase() || "";
+    if (contentType.includes("application/json")) {
+        return {
+            kind: "answer",
+            answer: normalizeShopChatApiAnswer(await response.json(), response.headers, fallbacks),
+        };
+    }
+    if (!contentType.includes("text/event-stream") || !response.body) {
+        return { kind: "answer", answer: transientShopChatAnswer("invalid_response") };
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    const eventDecoder = new ShopChatSseDecoder();
+    let accepted = false;
+    let completedAnswer: ShopChatAnswer | undefined;
+    let fallbackAllowed = false;
+    let accumulatedAnswer = "";
+
+    const consumeEvent = (event: ShopChatSseEvent) => {
+        const data = streamEventRecord(event);
+        if (event.event === "meta") {
+            if (data.accepted === true) accepted = true;
+            return;
+        }
+        if (event.event === "status") {
+            // A server-emitted work status means processing has begun even if a
+            // malformed proxy dropped the preceding meta event. Never duplicate it.
+            accepted = true;
+            const stage = typeof data.stage === "string" && data.stage.trim()
+                ? data.stage.trim().slice(0, 40) as ShopChatStreamStage
+                : "planning";
+            emitShopChatProgress(context, stage);
+            return;
+        }
+        if (event.event === "delta") {
+            accepted = true;
+            const text = typeof data.text === "string"
+                ? data.text
+                : typeof data.delta === "string" ? data.delta : "";
+            const publicDelta = text.slice(0, 8_000);
+            accumulatedAnswer = `${accumulatedAnswer}${publicDelta}`.slice(0, 50_000);
+            emitShopChatDelta(context, publicDelta);
+            return;
+        }
+        if (event.event === "done") {
+            accepted = true;
+            const result = completeShopChatStreamResult(data, accumulatedAnswer);
+            completedAnswer = normalizeShopChatApiAnswer(result, response.headers, fallbacks);
+            return;
+        }
+        if (event.event === "error") {
+            fallbackAllowed = shouldFallbackShopChatStream({
+                accepted,
+                fallbackAllowed: data.fallbackAllowed === true,
+            });
+            if (!fallbackAllowed) {
+                const code = typeof data.code === "string" ? data.code : "service_busy";
+                completedAnswer = transientShopChatAnswer(
+                    code === "rate_limited" ? "rate_limited" : code === "timeout" ? "timeout" : "service_busy",
+                );
+            }
+        }
+    };
+
+    while (!completedAnswer && !fallbackAllowed) {
+        const chunk = await reader.read();
+        if (chunk.done) break;
+        onTransportActivity?.();
+        for (const event of eventDecoder.push(decoder.decode(chunk.value, { stream: true }))) consumeEvent(event);
+    }
+    if (!completedAnswer && !fallbackAllowed) {
+        for (const event of eventDecoder.push(decoder.decode())) consumeEvent(event);
+        for (const event of eventDecoder.finish()) consumeEvent(event);
+    }
+    if (fallbackAllowed) {
+        await reader.cancel().catch(() => undefined);
+        return { kind: "fallback" };
+    }
+    if (completedAnswer) return { kind: "answer", answer: completedAnswer };
+    // An accepted or partially emitted stream must never be repeated through
+    // POST. Surface a retry state instead of risking a duplicate model call.
+    return { kind: "answer", answer: transientShopChatAnswer("service_busy") };
+}
+
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
     const history = (context?.history || [])
         .filter((turn) => (turn.role === "user" || turn.role === "assistant") && turn.content.trim())
@@ -2225,120 +2545,71 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const references = normalizedShopChatReferences(context);
     const petProfile = projectShopChatPetProfile(context?.pet);
     const requestController = new AbortController();
-    let timedOut = false;
-    // Verified web research currently has a measured p95 just above 30s. Keep
-    // a bounded client deadline, but do not abort a healthy grounded answer at
-    // the old 30s boundary; users can still stop it immediately from the UI.
-    const requestedTimeout = Number.isFinite(context?.timeoutMs) ? Number(context?.timeoutMs) : 50_000;
-    const timeoutMs = Math.max(5_000, Math.min(60_000, requestedTimeout));
+    const streamTimeouts = resolveShopChatStreamTimeouts(context?.timeoutMs);
+    const timeoutGuard = new ShopChatStreamTimeoutGuard(
+        () => requestController.abort(),
+        streamTimeouts.idleTimeoutMs,
+        streamTimeouts.overallTimeoutMs,
+    );
     const abortFromCaller = () => requestController.abort();
     if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
     context?.signal?.addEventListener("abort", abortFromCaller, { once: true });
-    const timeoutHandle = setTimeout(() => {
-        timedOut = true;
-        requestController.abort();
-    }, timeoutMs);
+    timeoutGuard.start();
 
     try {
         const headers: Record<string, string> = { "Content-Type": "application/json" };
-        if (references.length && context?.accessToken) {
-            headers.Authorization = `Bearer ${context.accessToken}`;
-        }
-        const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat`, {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-                message,
-                limit: 6,
-                petProfile,
-                history,
-                ...(references.length ? { references } : {}),
-            }),
-            signal: requestController.signal,
-        });
-        if (!response.ok) {
-            if (references.length) throw shopChatReferenceError(response.status);
-            const retryAfter = retryAfterSeconds(response.headers.get("retry-after"));
-            if (response.status === 429) return transientShopChatAnswer("rate_limited", retryAfter);
-            if (response.status === 503 || response.status === 504) {
-                return transientShopChatAnswer("service_busy", retryAfter);
-            }
-            if (response.status >= 500) return withDegradedDelivery(safeFallback, "offline");
-            return transientShopChatAnswer("invalid_response", retryAfter);
-        }
-        const data = await response.json();
-        const apiReturnedProducts = Array.isArray(data.products);
-        const apiProducts = apiReturnedProducts
-            ? data.products.map(productFromApi).filter(Boolean) as CatalogProduct[]
-            : [];
-        const medicalMode = Boolean(data.medical && typeof data.medical === "object" && data.medical.mode);
-        const apiReturnedSources = Array.isArray(data.sources);
-        const apiReturnedActions = Array.isArray(data.actions);
-        const apiReturnedCtas = Array.isArray(data.ctas) || Boolean(data.locationRequest);
-        const apiSources = normalizeShopChatSources(data.sources);
-        const actions = normalizeActions(data.actions);
-        const research = normalizeShopChatResearch(data.research);
-        const ctas = mergeShopChatCtas(
-            normalizeCtas(data.ctas),
-            normalizeLocationRequestCtas(data.locationRequest),
-        );
-        const conversation = normalizeConversation(data.conversation);
-        const generation = normalizeGeneration(data.generation);
-        const traceId = normalizeTraceId(
-            data.traceId
-            ?? data.trace_id
-            ?? response.headers.get("x-trace-id")
-            ?? response.headers.get("x-request-id"),
-        );
-        const quality = normalizeShopChatQuality(data.quality);
-        const preferProtectedMedicalFallback = shouldPreferProtectedMedicalFallback(
-            data.medical,
-            medicalFallback?.medical,
-        );
-        const apiMedical = preferProtectedMedicalFallback
-            ? medicalFallback?.medical
-            : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, medicalFallback?.medical);
-        if (apiMedical && apiMedical.choiceGroups) {
-            apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
-        }
-        return {
-            answer: preferProtectedMedicalFallback
-                ? medicalFallback?.answer || unavailableFallback.answer
-                : customerFacingShopChatAnswer(data.answer, medicalFallback?.answer || unavailableFallback.answer),
-            products: preferProtectedMedicalFallback
-                ? []
-                : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : [],
-            medical: apiMedical,
-            sources: preferProtectedMedicalFallback
-                ? medicalFallback?.sources
-                : apiReturnedSources ? apiSources : [],
-            actions: preferProtectedMedicalFallback
-                ? medicalFallback?.actions
-                : apiReturnedActions ? actions : [],
-            ctas: preferProtectedMedicalFallback
-                ? medicalFallback?.ctas
-                : apiReturnedCtas ? ctas : [],
-            research: preferProtectedMedicalFallback
-                ? medicalFallback?.research
-                : research,
-            conversation,
-            generation: medicalMode ? undefined : generation,
-            traceId,
-            quality,
-            delivery: { status: "live", transient: false },
+        const accessToken = context?.accessToken?.trim();
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        const clientRequestId = createShopChatClientRequestId();
+        headers["X-Idempotency-Key"] = clientRequestId;
+        const conversationId = normalizeConversationId(context?.conversationId);
+        const payload: ShopChatRequestPayload = {
+            message,
+            limit: 6,
+            petProfile,
+            history,
+            clientRequestId,
+            ...(conversationId ? { conversationId } : {}),
+            ...(references.length ? { references } : {}),
         };
+        const fallbacks = { medicalFallback, unavailableFallback };
+        const streamed = await answerShopQuestionStream(
+            base,
+            headers,
+            payload,
+            references,
+            requestController.signal,
+            fallbacks,
+            context,
+            () => timeoutGuard.touch(),
+        );
+        if (streamed.kind === "answer") return streamed.answer;
+        // A POST fallback is only reached for an explicitly unsupported stream
+        // endpoint or a pre-accept error that opted into fallback. Reuse the
+        // same idempotency key so a new backend can deduplicate defensively.
+        timeoutGuard.restart();
+        return await answerShopQuestionPost(
+            base,
+            headers,
+            payload,
+            references,
+            requestController.signal,
+            fallbacks,
+            context,
+            () => timeoutGuard.touch(),
+        );
     } catch (reason) {
-        if (context?.signal?.aborted && !timedOut) throw new ShopChatRequestCancelledError();
+        if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
         if (reason instanceof ShopChatReferenceRequestError) throw reason;
+        if (timeoutGuard.timeoutReason() || (reason instanceof Error && reason.name === "TimeoutError")) {
+            return transientShopChatAnswer("timeout");
+        }
         if (references.length) {
             throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
         }
-        if (timedOut || (reason instanceof Error && reason.name === "TimeoutError")) {
-            return transientShopChatAnswer("timeout");
-        }
         return withDegradedDelivery(safeFallback, "offline");
     } finally {
-        clearTimeout(timeoutHandle);
+        timeoutGuard.stop();
         context?.signal?.removeEventListener("abort", abortFromCaller);
     }
 }
