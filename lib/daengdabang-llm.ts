@@ -750,6 +750,15 @@ function hasRecentCanineHealthContext(history: ShopChatHistoryTurn[]) {
         });
 }
 
+function buildNaverMapSearchUrl(...parts: Array<string | undefined>) {
+    const searchText = parts
+        .map((part) => String(part || "").trim())
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 240) || "동물병원";
+    return `https://map.naver.com/p/search/${encodeURIComponent(searchText)}`;
+}
+
 function scopeGuardFallback(message: string, recentCanineHealthContext = false): ShopChatAnswer | null {
     const text = message.toLowerCase();
     const hasDogContext = /(강아지|반려견|댕댕|멍멍|퍼피|노견|노령견|시니어견|우리\s*개|dog|puppy|canine)/i.test(message);
@@ -760,34 +769,31 @@ function scopeGuardFallback(message: string, recentCanineHealthContext = false):
         || (recentCanineHealthContext && asksForNearbyHospital)
     ) && /(근처|주변|가까운|인근|찾|알려|어디|위치|지도|검색|24시|응급|near)/i.test(message);
     if (vetLocator) {
-        const searchText = encodeURIComponent(message.replace(/알려줘|알려주세요|찾아줘|찾아주세요|어디|있나|있나요|\?/g, " ").trim() || "동물병원");
+        const searchText = message.replace(/알려줘|알려주세요|찾아줘|찾아주세요|어디|있나|있나요|\?/g, " ").trim();
+        const naverMapUrl = buildNaverMapSearchUrl(searchText || "동물병원");
         return {
-            answer: "아래 버튼을 누르면 현재 위치 기준으로 가까운 동물병원 후보를 보여드릴게요. 실시간 영업 여부와 야간·응급 진료 여부는 출발 전에 전화로 확인해 주세요. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
+            answer: "아래 버튼을 누르면 현재 위치 기준으로 가까운 동물병원 후보를 보여드리고, 지도는 네이버지도로 연결해 드릴게요. 실시간 영업 여부와 야간·응급 진료 여부는 출발 전에 전화로 확인해 주세요. 응급 상황이라면 평점 비교보다 지금 통화 가능한 24시 병원을 우선하세요.",
             products: [],
             medical: { mode: false, triage: "vet_locator", topic: "nearby_vet", disclaimer: "지도 검색 보조이며 진료 품질, 대기 시간, 영업 여부를 보증하지 않습니다." },
-            sources: [
-                { name: "카카오맵 검색", url: `https://map.kakao.com/link/search/${searchText}` },
-                { name: "네이버지도 검색", url: `https://map.naver.com/p/search/${searchText}` },
-                { name: "Google Maps 검색", url: `https://www.google.com/maps/search/${searchText}` },
-            ],
+            sources: [],
             ctas: [
                 {
                     kind: "geo_vet_search",
-                    label: "현재 위치로 동물병원 찾기",
+                    label: "현재 위치로 가까운 병원 찾기",
                     query: "동물병원",
-                    helperText: "브라우저 위치 권한을 허용하면 가까운 후보를 챗봇 안에 보여줍니다.",
+                    helperText: "가까운 후보를 챗봇 안에 보여드리고 지도는 네이버지도로 엽니다.",
                     icon: "fa-location-crosshairs",
                 },
                 {
                     kind: "external_link",
-                    label: "지도 검색 열기",
-                    url: `https://map.kakao.com/link/search/${searchText}`,
-                    helperText: "위치 권한이 불편하면 일반 지도 검색을 먼저 열어도 됩니다.",
+                    label: "네이버지도에서 직접 찾기",
+                    url: naverMapUrl,
+                    helperText: "위치 권한이 불편하면 네이버지도 검색을 바로 열어도 됩니다.",
                     icon: "fa-map-location-dot",
                 },
             ],
-            actions: completedActions("동물병원 위치 찾기", "지도 검색 링크 제공"),
-            research: { mode: "map-search", sourceCount: 3 },
+            actions: completedActions("동물병원 위치 찾기", "네이버지도 검색 링크 제공"),
+            research: { mode: "map-search", sourceCount: 1 },
         };
     }
     if (/(사주|운세|타로|로또|복권)/i.test(message)) {
@@ -1498,7 +1504,8 @@ function normalizeLocationRequestCtas(value: unknown): ShopChatCta[] {
         : "동물병원";
     const allowLabel = typeof record.allowLabel === "string" && record.allowLabel.trim()
         ? record.allowLabel.trim()
-        : "현재 위치로 동물병원 찾기";
+        : "현재 위치로 가까운 병원 찾기";
+    const placeQuery = typeof record.placeQuery === "string" ? record.placeQuery.trim() : "";
     const candidates: Array<Record<string, unknown>> = [
         {
             kind: "geo_vet_search",
@@ -1508,18 +1515,13 @@ function normalizeLocationRequestCtas(value: unknown): ShopChatCta[] {
             icon: "fa-location-crosshairs",
         },
     ];
-    const firstMapLink = Array.isArray(record.mapLinks) ? asRecord(record.mapLinks[0]) : undefined;
-    if (typeof firstMapLink?.url === "string" && /^https:\/\//i.test(firstMapLink.url)) {
-        candidates.push({
-            kind: "external_link",
-            label: typeof firstMapLink.name === "string" && firstMapLink.name.trim()
-                ? firstMapLink.name.trim()
-                : "지도 검색 열기",
-            url: firstMapLink.url,
-            helperText: "출발 전에 영업 여부와 진료 가능 여부를 전화로 확인해 주세요.",
-            icon: "fa-map-location-dot",
-        });
-    }
+    candidates.push({
+        kind: "external_link",
+        label: placeQuery ? `${placeQuery} 네이버지도에서 보기` : "네이버지도에서 직접 찾기",
+        url: buildNaverMapSearchUrl(placeQuery, query),
+        helperText: "출발 전에 영업 여부와 진료 가능 여부를 전화로 확인해 주세요.",
+        icon: "fa-map-location-dot",
+    });
     return normalizeCtas(candidates);
 }
 
@@ -2279,10 +2281,15 @@ function normalizeShopChatApiAnswer(
     const apiSources = normalizeShopChatSources(data.sources);
     const actions = normalizeActions(data.actions);
     const research = normalizeShopChatResearch(data.research);
-    const ctas = mergeShopChatCtas(
-        normalizeCtas(data.ctas),
-        normalizeLocationRequestCtas(data.locationRequest),
-    );
+    const locationRequest = asRecord(data.locationRequest);
+    const locationRequestCtas = normalizeLocationRequestCtas(locationRequest);
+    const normalizedApiCtas = normalizeCtas(data.ctas);
+    const ctas = locationRequest?.mode === "nearby_vet"
+        ? mergeShopChatCtas(
+            locationRequestCtas,
+            normalizedApiCtas.filter((cta) => cta.kind !== "geo_vet_search" && cta.kind !== "external_link"),
+        )
+        : mergeShopChatCtas(normalizedApiCtas, locationRequestCtas);
     const conversation = normalizeConversation(data.conversation);
     const generation = normalizeGeneration(data.generation);
     const traceId = normalizeTraceId(

@@ -48,6 +48,7 @@ type VetPlace = {
     lon: number;
     mapUrl: string;
     source?: "naver" | "openstreetmap";
+    mapProvider: "naver";
 };
 
 type VetSearchState =
@@ -56,12 +57,13 @@ type VetSearchState =
     | { status: "done"; places: VetPlace[]; fallbackUrl: string }
     | { status: "error"; message: string; fallbackUrl: string };
 
-function buildMapUrl(query: string, latitude?: number, longitude?: number) {
-    const encoded = encodeURIComponent(query || "동물병원");
-    if (typeof latitude === "number" && typeof longitude === "number") {
-        return `https://www.google.com/maps/search/${encoded}/@${latitude},${longitude},15z`;
-    }
-    return `https://www.google.com/maps/search/${encoded}`;
+function buildNaverMapUrl(...parts: Array<string | undefined>) {
+    const searchText = parts
+        .map((part) => String(part || "").trim())
+        .filter(Boolean)
+        .join(" ")
+        .slice(0, 240) || "동물병원";
+    return `https://map.naver.com/p/search/${encodeURIComponent(searchText)}`;
 }
 
 function openExternal(url?: string) {
@@ -86,7 +88,12 @@ function formatDistance(meters: number) {
 }
 
 const EVIDENCE_SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
-const NON_EVIDENCE_RESEARCH_MODES = new Set(["none", "scope-guard"]);
+const NON_EVIDENCE_RESEARCH_MODES = new Set([
+    "none",
+    "scope-guard",
+    "map-search",
+    "location-permission-required",
+]);
 
 function formatEvidenceDate(value?: string) {
     if (!value) return "";
@@ -244,6 +251,7 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
             distanceMeters?: number | null;
             mapUrl?: string;
             source?: string;
+            mapProvider?: string;
             openingHours?: string;
         }>;
     };
@@ -266,17 +274,20 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
             distanceMeters: typeof place.distanceMeters === "number"
                 ? place.distanceMeters
                 : distanceMeters({ latitude, longitude }, { latitude: lat, longitude: lon }),
-            mapUrl: place.mapUrl || `https://map.naver.com/p/search/${encodeURIComponent(name)}`,
+            // Candidate data may come from a bounded public-data fallback, but
+            // every customer-facing map destination is intentionally NAVER Map.
+            mapUrl: buildNaverMapUrl(name, String(place.address || "").trim()),
             source: place.source === "naver" ? "naver" : "openstreetmap",
+            mapProvider: "naver",
         }];
     });
 
     const message = data.status === "unavailable"
-        ? "병원 검색 공급자에 연결하지 못했습니다. 지도에서 직접 확인해 주세요."
+        ? "병원 검색 서비스에 연결하지 못했습니다. 네이버지도에서 직접 확인해 주세요."
         : data.status === "degraded" || data.error
             ? "일부 검색 공급자가 불안정해 확인된 후보만 표시합니다."
             : "";
-    return { fallbackUrl: buildMapUrl(query, latitude, longitude), places, message };
+    return { fallbackUrl: buildNaverMapUrl(query), places, message };
 }
 
 function FollowUpBundleForm({
@@ -547,9 +558,9 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
                 <button
                     type="button"
                     onClick={() => openExternal(state.fallbackUrl)}
-                    className="mt-2 rounded-md bg-neutral-950 px-3 py-2 text-[11px] font-black text-white"
+                    className="mt-2 min-h-10 rounded-md bg-neutral-950 px-3 py-2 text-[11px] font-black text-white"
                 >
-                    지도에서 직접 보기
+                    네이버지도에서 직접 보기
                 </button>
             </div>
         );
@@ -559,14 +570,14 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
         return (
             <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-left">
                 <p className="text-xs font-black leading-5 text-amber-900">
-                    공개 지도 데이터에서 가까운 동물병원 후보를 찾지 못했어요. 위치 주변 지도 검색으로 바로 확인해 주세요.
+                    가까운 동물병원 후보를 찾지 못했어요. 네이버지도에서 주변 병원을 바로 확인해 주세요.
                 </p>
                 <button
                     type="button"
                     onClick={() => openExternal(state.fallbackUrl)}
-                    className="mt-2 rounded-md bg-neutral-950 px-3 py-2 text-[11px] font-black text-white"
+                    className="mt-2 min-h-10 rounded-md bg-neutral-950 px-3 py-2 text-[11px] font-black text-white"
                 >
-                    지도에서 직접 보기
+                    네이버지도에서 직접 보기
                 </button>
             </div>
         );
@@ -574,7 +585,12 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
 
     return (
         <div className="mt-2 space-y-2 rounded-lg border border-indigo-100 bg-white p-2.5 text-left shadow-sm">
-            <p className="text-[11px] font-black text-indigo-800">현재 위치 기준 가까운 동물병원 후보</p>
+            <div className="flex flex-wrap items-center justify-between gap-1.5">
+                <p className="text-[11px] font-black text-indigo-800">현재 위치 기준 가까운 동물병원 후보</p>
+                <span className="rounded-full bg-[#e9fff1] px-2 py-1 text-[10px] font-black text-[#087b39]">
+                    지도: 네이버지도
+                </span>
+            </div>
             {state.places.map((place, index) => (
                 <div key={place.id} className="rounded-md border border-neutral-200 bg-neutral-50 p-2.5">
                     <div className="flex items-start gap-2">
@@ -584,7 +600,7 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-black leading-5 text-neutral-950">{place.name}</p>
                             <p className="mt-0.5 text-[10px] font-black text-indigo-700">
-                                {place.source === "naver" ? "네이버 지역검색" : "공개 지도"}
+                                {place.source === "naver" ? "네이버 지역검색 결과" : "공개 위치 데이터 결과"}
                             </p>
                             <p className="mt-0.5 text-[11px] font-bold leading-4 text-neutral-600">
                                 {formatDistance(place.distanceMeters)}
@@ -604,14 +620,16 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
                         <button
                             type="button"
                             onClick={() => openExternal(place.mapUrl)}
-                            className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-black text-neutral-700"
+                            aria-label={`${place.name} 네이버지도에서 보기`}
+                            className="inline-flex min-h-9 items-center rounded-full border border-[#03a94f] bg-[#03c75a] px-2.5 py-1 text-[11px] font-black text-white hover:bg-[#02b351]"
                         >
-                            지도 열기
+                            <span aria-hidden="true" className="mr-1">N</span>
+                            네이버지도에서 보기
                         </button>
                         {place.phone ? (
                             <a
                                 href={`tel:${place.phone}`}
-                                className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-black text-neutral-700"
+                                className="inline-flex min-h-9 items-center rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-black text-neutral-700"
                             >
                                 전화하기
                             </a>
@@ -620,7 +638,7 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
                 </div>
             ))}
             <p className="text-[10px] font-bold leading-4 text-neutral-500">
-                공개 지도 데이터 기준 후보입니다. 실제 진료 가능 여부와 야간/응급 운영은 전화로 확인해 주세요.
+                후보 정보는 네이버 지역검색을 우선하며, 모든 지도 버튼은 네이버지도로 열립니다. 실제 진료 가능 여부와 야간/응급 운영은 전화로 확인해 주세요.
             </p>
         </div>
     );
@@ -652,11 +670,11 @@ export default function ChatResponseExtras({
         if (cta.kind !== "geo_vet_search") return;
 
         const query = cta.query || "동물병원";
-        const fallbackUrl = buildMapUrl(query);
+        const fallbackUrl = buildNaverMapUrl(query);
         if (!("geolocation" in navigator)) {
             setVetSearch({
                 status: "error",
-                message: "이 브라우저에서는 현재 위치를 읽을 수 없어요. 지도 검색으로 확인해 주세요.",
+                message: "이 브라우저에서는 현재 위치를 읽을 수 없어요. 네이버지도에서 직접 확인해 주세요.",
                 fallbackUrl,
             });
             return;
@@ -678,10 +696,10 @@ export default function ChatResponseExtras({
                 ? Number((error as { code?: unknown }).code)
                 : undefined;
             const message = geolocationCode === 1
-                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 지도에서 직접 확인해 주세요."
+                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 네이버지도에서 직접 확인해 주세요."
                 : error instanceof Error && error.message
                     ? error.message
-                    : "병원 후보 검색이 잠시 불안정해요. 지도에서 직접 확인해 주세요.";
+                    : "병원 후보 검색이 잠시 불안정해요. 네이버지도에서 직접 확인해 주세요.";
             setVetSearch({
                 status: "error",
                 message,

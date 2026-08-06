@@ -1530,12 +1530,12 @@ function UrgencyGuidance({
             )}
             {result.urgency.level === "emergency" && (
                 <a
-                    href="https://map.kakao.com/link/search/24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90"
+                    href="https://map.naver.com/p/search/24%EC%8B%9C%20%EB%8F%99%EB%AC%BC%EB%B3%91%EC%9B%90"
                     target="_blank"
                     rel="noreferrer"
                     className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl bg-rose-700 px-4 text-sm font-black text-white"
                 >
-                    가까운 24시 동물병원 찾기
+                    네이버지도에서 가까운 24시 동물병원 찾기
                 </a>
             )}
             <p className="mt-4 border-t border-current/15 pt-3 text-[10px] font-bold leading-4 opacity-75">
