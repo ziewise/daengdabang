@@ -351,7 +351,6 @@ const MENU_EN: Record<string, string> = {
     "낮은 가격순": "Lowest price",
     "높은 가격순": "Highest price",
     "할인순": "Biggest discount",
-    "판매순": "Best selling",
     "리뷰 많은순": "Most reviewed",
     "평점 높은순": "Top rated",
 };

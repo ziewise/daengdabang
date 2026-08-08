@@ -29,6 +29,7 @@ import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
+import PurchaseEvidenceCard from "./PurchaseEvidenceCard";
 
 interface Props {
     product: CatalogProduct;
@@ -228,6 +229,8 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                         <span className="text-neutral-500">{t("shipsIn")}</span>
                     </li>
                 </ul>
+
+                <PurchaseEvidenceCard product={p} />
 
                 {/* 색상 — PC(lg+)는 여기(우측 구매정보), 모바일은 이미지 바로 아래(ProductDetailClient)에서 표시 */}
                 <ColorSelect

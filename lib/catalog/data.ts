@@ -119,7 +119,6 @@ function buildMeta(row: CatalogRow, price: number) {
     const popularity = Math.round(brandBoost + seededRand(row.no, 1) * 760);
     const baseTs = new Date("2026-06-01T00:00:00+09:00").getTime();
     const addedAt = baseTs - Math.max(0, 360 - row.no) * 86400000;
-    const salesCount = Math.round(popularity * 0.35 + seededRand(row.no, 2) * 180);
     const reviewCount = Number(row.externalReviewCount || 0);
     const rating = typeof row.externalReviewAverage === "number" ? row.externalReviewAverage : 0;
     // 할인율은 관리자에서 저장한 두 가격으로만 계산한다. 정상가가 없거나
@@ -133,7 +132,7 @@ function buildMeta(row: CatalogRow, price: number) {
         ? Math.max(1, Math.round(((originalPrice - price) / originalPrice) * 100))
         : 0;
 
-    return { popularity, addedAt, salesCount, reviewCount, rating, discountRate, originalPrice };
+    return { popularity, addedAt, reviewCount, rating, discountRate, originalPrice };
 }
 
 /**

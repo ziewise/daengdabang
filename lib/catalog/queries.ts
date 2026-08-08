@@ -134,8 +134,6 @@ export function applySort(list: CatalogProduct[], key: SortKey): CatalogProduct[
             return copy.sort((a, b) => b.price - a.price);
         case "discount":
             return copy.sort((a, b) => b.discountRate - a.discountRate);
-        case "salesDesc":
-            return copy.sort((a, b) => b.salesCount - a.salesCount);
         case "reviewDesc":
             return copy.sort((a, b) => b.reviewCount - a.reviewCount);
         case "ratingDesc":

@@ -72,7 +72,6 @@ export type SortKey =
     | "priceAsc"
     | "priceDesc"
     | "discount"
-    | "salesDesc"
     | "reviewDesc"
     | "ratingDesc";
 
@@ -108,7 +107,6 @@ export interface CatalogProduct {
     raw: CatalogRow;
     popularity: number;
     addedAt: number;
-    salesCount: number;
     rating: number;
     reviewCount: number;
     discountRate: number;
