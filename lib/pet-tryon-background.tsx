@@ -173,6 +173,21 @@ function shouldRetainTask(task: BackgroundPetTryOnTask | null) {
     return isActive(task) || hasActiveEmailDelivery(task);
 }
 
+function resumeTasksAfterAuthentication(tasks: BackgroundPetTryOnTask[]) {
+    return tasks
+        .filter((task) => !(task.apiErrorCode === "login_required" && !task.result))
+        .map((task): BackgroundPetTryOnTask => ({
+            ...task,
+            emailScheduling: false,
+            ...(task.emailErrorCode === "login_required"
+                ? { emailError: "", emailErrorCode: undefined }
+                : {}),
+            ...(task.apiErrorCode === "login_required"
+                ? { error: "", apiErrorCode: undefined }
+                : {}),
+        }));
+}
+
 function safePersist(tasks: BackgroundPetTryOnTask[], notificationEnabled: boolean) {
     if (typeof window === "undefined") return;
     try {
@@ -332,18 +347,20 @@ function apiErrorMessage(
             return "A Smart Fit job is already running. Open the status panel and wait for it to finish.";
         }
         if (code === "rate_limited") {
-            return "Smart Fit has too many requests right now. Check your active queue and try again later.";
+            return phase === "status"
+                ? "The analysis system is taking longer than usual. Your job is still saved, and we will keep checking it automatically."
+                : "The analysis system is temporarily busy, so Smart Fit could not start. Nothing new was created automatically. Please try again shortly.";
         }
         if (code === "invalid_request") {
-            return "Check the selected product and your dog's saved side photo, then try again.";
+            return "We could not connect the selected product with the saved photo. The photo itself may be fine. Re-select it from the product page; nothing new was started automatically.";
         }
         if (code === "not_found") {
-            return "We could not find this Smart Fit job. Return to the product and start a new one.";
+            return "We could not reconnect to this fitting job. A new job was not started automatically. Please return to the product a little later.";
         }
         if (phase === "status") {
-            return "The live connection is temporarily unstable. Your job is kept and status checks will retry automatically.";
+            return "The analysis system is responding more slowly than usual. Your job is still saved, and we will keep checking it automatically.";
         }
-        return "Smart Fit could not start because the connection is temporarily unstable. Please try again shortly.";
+        return "The analysis system is temporarily delayed, so Smart Fit could not start. Nothing new was created automatically. Please try again shortly.";
     }
     if (code === "login_required") {
         return "로그인이 만료됐어요. 다시 로그인하면 진행 중인 입혀보기 작업을 이어서 확인할 수 있어요.";
@@ -352,41 +369,43 @@ function apiErrorMessage(
         return "이미 진행 중인 입혀보기가 있어요. 상태 창에서 작업이 끝날 때까지 기다려 주세요.";
     }
     if (code === "rate_limited") {
-        return "현재 입혀보기 요청이 많아요. 진행 중인 작업을 확인하고 잠시 후 다시 시도해 주세요.";
+        return phase === "status"
+            ? "현재 분석 시스템 응답이 평소보다 늦어지고 있어요. 작업은 그대로 보관되며 상태를 자동으로 다시 확인합니다."
+            : "현재 분석 요청이 몰려 입혀보기를 시작하지 못했어요. 새 작업은 자동으로 만들어지지 않았습니다. 잠시 후 다시 이용해 주세요.";
     }
     if (code === "invalid_request") {
-        return "선택한 상품과 우리 아이의 저장된 측면 사진을 확인한 뒤 다시 시도해 주세요.";
+        return "상품과 저장된 사진의 연결 정보를 확인하지 못했어요. 사진 자체의 문제가 아닐 수 있어요. 상품 화면에서 사진을 다시 선택해 주세요. 새 작업은 자동으로 시작하지 않았습니다.";
     }
     if (code === "not_found") {
-        return "이 입혀보기 작업을 찾지 못했어요. 상품 화면에서 새로 시작해 주세요.";
+        return "이전 입혀보기 작업을 다시 연결하지 못했어요. 새 작업은 자동으로 시작되지 않았습니다. 잠시 후 상품 화면에서 이용해 주세요.";
     }
     if (phase === "status") {
-        return "실시간 연결이 잠시 불안정해요. 작업은 그대로 유지되며 상태를 자동으로 다시 확인합니다.";
+        return "현재 분석 시스템 응답이 평소보다 늦어지고 있어요. 작업은 그대로 보관되며 상태를 자동으로 다시 확인합니다.";
     }
-    return "연결이 잠시 불안정해 입혀보기를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.";
+    return "현재 분석 시스템이 잠시 지연되어 입혀보기를 시작하지 못했어요. 새 작업은 자동으로 만들어지지 않았습니다. 잠시 후 다시 이용해 주세요.";
 }
 
 function resultEmailErrorMessage(code: PetTryOnApiErrorCode, locale: "ko" | "en") {
     if (locale === "en") {
         if (code === "login_required") return "Sign in again, then request the result email once more.";
-        if (code === "rate_limited") return "Too many email requests are being processed. Please try again a little later.";
+        if (code === "rate_limited") return "The email alert request is taking longer than usual. Your Smart Fit job is unaffected, so please try the email request again later.";
         if (code === "not_found" || code === "invalid_request") {
-            return "We could not schedule email for this result. Check the Smart Fit job and try again.";
+            return "We could not connect the email alert. This does not affect your Smart Fit result, which remains available in this panel.";
         }
-        return "We could not confirm the email request. Try again; the same request key prevents duplicate delivery.";
+        return "We could not confirm the email alert request. Your Smart Fit job is unaffected, and no automatic resend was made to prevent duplicates.";
     }
     if (code === "login_required") return "다시 로그인한 뒤 결과 이메일을 한 번 더 신청해 주세요.";
-    if (code === "rate_limited") return "이메일 요청이 많아요. 잠시 후 다시 시도해 주세요.";
+    if (code === "rate_limited") return "이메일 알림 신청이 평소보다 늦어지고 있어요. 입혀보기 작업에는 영향이 없으니 잠시 후 이메일만 다시 신청해 주세요.";
     if (code === "not_found" || code === "invalid_request") {
-        return "이 작업의 이메일 발송을 예약하지 못했어요. 진행 상태를 확인한 뒤 다시 시도해 주세요.";
+        return "이메일 알림을 연결하지 못했어요. 입혀보기 결과에는 영향이 없으며 결과는 이 창에서 확인할 수 있습니다.";
     }
-    return "이메일 신청 결과를 확인하지 못했어요. 다시 눌러도 같은 요청으로 처리되어 중복 발송되지 않습니다.";
+    return "이메일 알림 신청 결과를 확인하지 못했어요. 입혀보기 작업은 그대로 진행되며, 중복 발송을 막기 위해 자동으로 다시 신청하지 않았습니다.";
 }
 
 function resultEmailStatusErrorMessage(locale: "ko" | "en") {
     return locale === "en"
-        ? "We could not verify the delivery status. To prevent duplicates, a new email was not requested automatically."
-        : "발송 상태를 확인하지 못했어요. 중복 발송을 막기 위해 새 이메일을 자동으로 신청하지 않았습니다.";
+        ? "We could not verify the email delivery status. Your Smart Fit result is unaffected, and no automatic resend was made to prevent duplicates."
+        : "이메일 발송 상태를 확인하지 못했어요. 입혀보기 결과에는 영향이 없으며, 중복 발송을 막기 위해 자동으로 다시 신청하지 않았습니다.";
 }
 
 function delay(ms: number, signal: AbortSignal) {
@@ -411,7 +430,7 @@ function stageLabel(stage: PetTryOnProgressStage, locale: "ko" | "en") {
             generating: "Creating a natural fit",
             finalizing: "Checking fur, shadows, and details",
             ready: "Fitting complete",
-            failed: "Fitting needs another try",
+            failed: "We could not prepare this result",
         }
         : {
             queued: "피팅룸 순서를 기다리고 있어요",
@@ -419,7 +438,7 @@ function stageLabel(stage: PetTryOnProgressStage, locale: "ko" | "en") {
             generating: "몸에 맞게 자연스럽게 입히고 있어요",
             finalizing: "털·그림자·상품 디테일을 확인하고 있어요",
             ready: "입혀보기가 완성됐어요",
-            failed: "입혀보기를 다시 시도해 주세요",
+            failed: "이번 결과를 준비하지 못했어요",
         };
     return labels[stage];
 }
@@ -437,6 +456,9 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         ? user.apiUserId
             ? `user:${user.apiUserId}`
             : `session:${identityFingerprint(user.apiAccessToken || user.email.trim().toLowerCase())}`
+        : "";
+    const authSessionKey = user?.apiAccessToken
+        ? identityFingerprint(user.apiAccessToken)
         : "";
     const [tasks, setTasks] = useState<BackgroundPetTryOnTask[]>([]);
     const [selectedTaskKey, setSelectedTaskKey] = useState("");
@@ -457,6 +479,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
     const restoredOnce = useRef(false);
     const accountKeyRef = useRef(accountKey);
     const previousAccountKeyRef = useRef<string | null>(null);
+    const previousAuthSessionKeyRef = useRef<string | null>(null);
     const userRef = useRef(user);
 
     useLayoutEffect(() => {
@@ -526,8 +549,25 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         if (!hydrated) return;
         const previousAccount = previousAccountKeyRef.current;
+        const previousAuthSession = previousAuthSessionKeyRef.current;
         previousAccountKeyRef.current = accountKey;
-        if (previousAccount === null || previousAccount === accountKey) return;
+        previousAuthSessionKeyRef.current = authSessionKey;
+        if (previousAccount === null || previousAuthSession === null) return;
+        if (previousAccount === accountKey && previousAuthSession === authSessionKey) return;
+        if (previousAccount === accountKey && accountKey) {
+            setAuthNotice(null);
+            const resumedTasks = resumeTasksAfterAuthentication(
+                tasksRef.current.filter((item) => item.accountKey === accountKey),
+            );
+            commitTasks(resumedTasks);
+            if (resumedTasks.length > 0) {
+                setSelectedTaskKey(resumedTasks.at(-1)?.taskKey || "");
+            } else {
+                setSelectedTaskKey("");
+                setPanelOpen(false);
+            }
+            return;
+        }
         if (previousAccount && !accountKey) {
             if (tasksRef.current.some((item) => item.accountKey === previousAccount && shouldRetainTask(item))) {
                 setAuthNotice(localApiError("login_required", false));
@@ -538,22 +578,18 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         setAuthNotice(null);
         const matchingTasks = tasksRef.current.filter((item) => item.accountKey === accountKey);
         if (matchingTasks.length > 0) {
-            const resumedTasks = matchingTasks.map((item) => ({
-                ...item,
-                emailScheduling: false,
-                ...(item.emailErrorCode === "login_required"
-                    ? { emailError: "", emailErrorCode: undefined }
-                    : {}),
-                ...(item.apiErrorCode === "login_required"
-                    ? { error: "", apiErrorCode: undefined }
-                    : {}),
-            }));
+            const resumedTasks = resumeTasksAfterAuthentication(matchingTasks);
             commitTasks(resumedTasks);
-            setSelectedTaskKey(resumedTasks.at(-1)?.taskKey || "");
+            if (resumedTasks.length > 0) {
+                setSelectedTaskKey(resumedTasks.at(-1)?.taskKey || "");
+            } else {
+                setSelectedTaskKey("");
+                setPanelOpen(false);
+            }
             return;
         }
         clearTaskForAccountChange();
-    }, [accountKey, clearTaskForAccountChange, commitTasks, hydrated, pauseTasksForAuthentication]);
+    }, [accountKey, authSessionKey, clearTaskForAccountChange, commitTasks, hydrated, pauseTasksForAuthentication]);
 
     useEffect(() => {
         tasksRef.current = tasks;
@@ -681,8 +717,8 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                     result: next,
                     error: next.status === "failed"
                         ? locale === "en"
-                            ? "Smart Fit could not complete this fitting. You can retry from the product page."
-                            : "입혀보기를 완료하지 못했어요. 상품 화면에서 다시 시도해 주세요."
+                            ? "The analysis system could not finish this result. No new job was started automatically, and you can try again from the product page later."
+                            : "현재 분석 시스템이 이번 결과를 끝까지 준비하지 못했어요. 새 작업은 자동으로 시작되지 않았습니다. 잠시 후 다시 이용해 주세요."
                         : "",
                     apiErrorCode: undefined,
                 };
@@ -1189,8 +1225,8 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                             result: freshResult,
                             error: freshResult.status === "failed"
                                 ? locale === "en"
-                                    ? "Smart Fit could not complete this fitting. You can retry from the product page."
-                                    : "입혀보기를 완료하지 못했어요. 상품 화면에서 다시 시도해 주세요."
+                                    ? "The analysis system could not finish this result. No new job was started automatically, and you can try again from the product page later."
+                                    : "현재 분석 시스템이 이번 결과를 끝까지 준비하지 못했어요. 새 작업은 자동으로 시작되지 않았습니다. 잠시 후 다시 이용해 주세요."
                                 : "",
                             apiErrorCode: undefined,
                         };
@@ -1290,6 +1326,57 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
     const waitingCount = activeTasks.length - runningCount;
     const readyCount = visibleTasks.filter((item) => item.result?.status === "ready").length;
     const elapsed = visibleTask ? Math.max(0, Math.floor((now - visibleTask.startedAt) / 1000)) : 0;
+    const finalGenerationFailed = result?.status === "failed";
+    const loginRequired = visibleTask?.apiErrorCode === "login_required";
+    const invalidRequest = visibleTask?.apiErrorCode === "invalid_request";
+    const missingTask = visibleTask?.apiErrorCode === "not_found";
+    const existingTaskRunning = visibleTask?.apiErrorCode === "already_running";
+    const systemStatusDelayed = Boolean(
+        active
+        && visibleTask?.error
+        && !loginRequired
+        && !invalidRequest
+        && !missingTask
+        && !existingTaskRunning,
+    );
+    const startUnavailable = Boolean(
+        visibleTask
+        && !active
+        && !result
+        && visibleTask.error
+        && !loginRequired
+        && !invalidRequest
+        && !missingTask
+        && !existingTaskRunning,
+    );
+    const panelTitle = loginRequired
+        ? locale === "en" ? "Sign in to continue" : "다시 로그인해 이어서 확인해 주세요"
+        : invalidRequest
+            ? locale === "en" ? "Reconnect the product and saved photo" : "상품과 사진 연결을 다시 확인해 주세요"
+            : missingTask
+                ? locale === "en" ? "We could not reconnect this fitting" : "이전 입혀보기를 연결하지 못했어요"
+                : existingTaskRunning
+                    ? locale === "en" ? "Your fitting is already in progress" : "진행 중인 입혀보기가 있어요"
+                    : finalGenerationFailed
+                        ? locale === "en" ? "We could not prepare this result" : "이번 결과를 준비하지 못했어요"
+                        : systemStatusDelayed
+                            ? locale === "en" ? "Your job is safely saved" : "작업을 안전하게 보관하고 있어요"
+                            : startUnavailable
+                                ? locale === "en" ? "Smart Fit is temporarily delayed" : "현재 입혀보기가 잠시 지연되고 있어요"
+                                : stageLabel(stage, locale);
+    const panelSubtext = finalGenerationFailed || startUnavailable
+        ? locale === "en" ? "No new fitting will start automatically" : "새 입혀보기는 자동으로 시작되지 않아요"
+        : loginRequired && !result
+            ? locale === "en" ? "Sign in to check the fitting status again" : "로그인하면 입혀보기 상태를 다시 확인해요"
+            : invalidRequest && !result
+                ? locale === "en" ? "No fitting job was started" : "새 입혀보기 작업은 시작되지 않았어요"
+                : missingTask && !result
+                    ? locale === "en" ? "No new job was created from this screen" : "이 화면에서 새 작업을 만들지 않았어요"
+                    : existingTaskRunning && !result
+                        ? locale === "en" ? "No duplicate job was created" : "중복 작업은 새로 만들지 않았어요"
+                        : locale === "en"
+                            ? `${visibleTasks.length} saved · ${runningCount} running · ${waitingCount} waiting`
+                            : `${visibleTasks.length}개 보관 · ${runningCount}개 진행 · ${waitingCount}개 대기`;
     const waitTips = locale === "en"
         ? [
             "A harness should allow about two fingers of room around the chest.",
@@ -1347,19 +1434,16 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                 <div className="pointer-events-none fixed bottom-24 right-3 z-[2350] flex w-[min(360px,calc(100vw-24px))] flex-col items-end gap-2 sm:bottom-6 sm:right-6">
                     {panelOpen && (
                         <section
-                            aria-live="polite"
                             className="pointer-events-auto w-full overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-2xl"
                         >
                             <div className="flex items-start justify-between gap-3 border-b border-neutral-100 px-4 py-3">
                                 <div>
                                     <p className="text-[11px] font-black tracking-wide text-indigo-700">DDB SMART FIT</p>
                                     <h2 className="mt-1 text-sm font-black text-neutral-950">
-                                        {stageLabel(stage, locale)}
+                                        {panelTitle}
                                     </h2>
                                     <p className="mt-1 text-[10px] font-bold text-neutral-500">
-                                        {locale === "en"
-                                            ? `${visibleTasks.length} saved · ${runningCount} running · ${waitingCount} waiting`
-                                            : `${visibleTasks.length}개 보관 · ${runningCount}개 진행 · ${waitingCount}개 대기`}
+                                        {panelSubtext}
                                     </p>
                                 </div>
                                 <button
@@ -1454,12 +1538,23 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                                     </>
                                 )}
 
+                                {visibleTask.error && (
+                                    <div
+                                        role="status"
+                                        aria-live="polite"
+                                        className={`mt-3 rounded-xl border px-3 py-2.5 text-xs font-bold leading-5 ${finalGenerationFailed || startUnavailable || visibleTask.apiErrorCode === "login_required"
+                                            ? "border-amber-200 bg-amber-50 text-amber-950"
+                                            : "border-neutral-200 bg-neutral-50 text-neutral-700"}`}
+                                    >
+                                        <i className={`fa-solid mr-2 ${finalGenerationFailed || startUnavailable || visibleTask.apiErrorCode === "login_required" ? "fa-circle-info text-amber-600" : "fa-clock text-neutral-500"}`} />
+                                        {visibleTask.error}
+                                    </div>
+                                )}
+
                                 <PetTryOnEmailDeliveryControls
                                     task={visibleTask}
                                     longWait={elapsed >= 120}
                                 />
-
-                                {visibleTask.error && <p className="rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-700">{visibleTask.error}</p>}
 
                                 <div className="mt-3 grid grid-cols-2 gap-2">
                                     {visibleTask.apiErrorCode === "login_required" ? (
@@ -1500,7 +1595,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                                             <Link href={visibleTask.productHref} onClick={() => setPanelOpen(false)} className="inline-flex h-10 items-center justify-center rounded-lg bg-indigo-600 text-xs font-black text-white hover:bg-indigo-700">
                                                 {result?.status === "ready"
                                                     ? locale === "en" ? "View product" : "상품에서 확인"
-                                                    : locale === "en" ? "Try again" : "다시 시도"}
+                                                    : locale === "en" ? "Try again later" : "잠시 후 다시 시도"}
                                             </Link>
                                             <button type="button" onClick={dismiss} className="h-10 rounded-lg border border-neutral-200 text-xs font-black text-neutral-600 hover:bg-neutral-50">
                                                 {locale === "en" ? "Dismiss" : "닫기"}
@@ -1526,14 +1621,20 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                                 <span className="block truncate text-xs font-black">
                                     {readyCount > 0
                                         ? `${visibleTask.petName} 입혀보기 ${readyCount}개 완성!`
-                                        : `${visibleTask.petName} 피팅 ${activeTasks.length}개 진행 중`}
+                                        : activeTasks.length > 0
+                                            ? `${visibleTask.petName} 피팅 ${activeTasks.length}개 진행 중`
+                                            : locale === "en"
+                                                ? `${visibleTask.petName} Smart Fit update`
+                                                : `${visibleTask.petName} 입혀보기 안내`}
                                 </span>
                                 <span className="block truncate text-[10px] font-bold text-white/70">
                                     {readyCount > 0
                                         ? "결과 확인하기"
-                                        : waitingCount > 0
-                                            ? `${runningCount}개 진행 · ${waitingCount}개 대기`
-                                            : stageLabel(stage, locale)}
+                                        : activeTasks.length > 0
+                                            ? waitingCount > 0
+                                                ? `${runningCount}개 진행 · ${waitingCount}개 대기`
+                                                : stageLabel(stage, locale)
+                                            : panelTitle}
                                 </span>
                             </span>
                         </button>
@@ -1586,7 +1687,11 @@ export function PetTryOnEmailDeliveryControls({
     longWait?: boolean;
 }) {
     const { emailAccountKey, registeredEmailAvailable } = usePetTryOnTask();
-    if (!task?.result?.jobId || (!isActive(task) && !task.emailDeliveryStatus)) return null;
+    if (
+        !task?.result?.jobId
+        || task.result.status === "failed"
+        || (!isActive(task) && !task.emailDeliveryStatus)
+    ) return null;
     return (
         <PetTryOnEmailDeliverySession
             key={`${emailAccountKey}:${task.taskKey}`}
@@ -1840,62 +1945,45 @@ function PetTryOnEmailDeliverySession({
 
     const retryingTerminalDelivery = task.emailDeliveryStatus === "failed"
         || task.emailDeliveryStatus === "expired";
+    const inlineEmailError = localError || (
+        !retryingTerminalDelivery || task.emailErrorCode === "login_required"
+            ? task.emailError || ""
+            : ""
+    );
 
     return (
         <section
             aria-label={locale === "en" ? "Receive Smart Fit result by email" : "Smart Fit 결과 이메일 수신"}
             className={`mt-3 rounded-xl border px-3 py-3 ${retryingTerminalDelivery
-                ? "border-rose-200 bg-rose-50"
+                ? "border-amber-200 bg-amber-50"
                 : longWait ? "border-amber-200 bg-amber-50" : "border-indigo-200 bg-indigo-50"}`}
         >
             {retryingTerminalDelivery && (
-                <p className="mb-3 rounded-lg bg-white px-2.5 py-2 text-xs font-bold leading-5 text-rose-700">
-                    <i className="fa-solid fa-circle-exclamation mr-1.5" />
-                    {task.emailDeliveryStatus === "failed"
-                        ? locale === "en" ? "Email delivery failed. You can make a new request." : "이메일 발송에 실패했어요. 새로 신청할 수 있습니다."
-                        : locale === "en" ? "The email request expired. You can make a new request." : "이메일 발송 요청이 만료됐어요. 새로 신청할 수 있습니다."}
+                <div role="status" className="mb-3 rounded-lg border border-amber-100 bg-white px-2.5 py-2 text-xs font-bold leading-5 text-neutral-700">
+                    <p className="font-black text-amber-950">
+                        <i className="fa-solid fa-circle-info mr-1.5 text-amber-600" />
+                        {task.emailDeliveryStatus === "failed"
+                            ? locale === "en" ? "We could not send the email alert" : "이메일 알림을 보내지 못했어요"
+                            : locale === "en" ? "The email alert request has expired" : "이메일 알림 신청 시간이 지났어요"}
+                    </p>
+                    <p className="mt-1 text-[11px] text-neutral-600">
+                        {locale === "en"
+                            ? "This is separate from your Smart Fit result. You can still view the result here and request email again later."
+                            : "입혀보기 결과와는 별개예요. 결과는 이 창에서 확인할 수 있고, 이메일 알림만 잠시 후 다시 신청할 수 있어요."}
+                    </p>
+                </div>
+            )}
+            {!retryingTerminalDelivery && (
+                <p className={`text-xs font-bold leading-5 ${longWait ? "text-amber-950" : "text-indigo-950"}`}>
+                    {longWait
+                        ? locale === "en"
+                            ? "The analysis system is taking longer than usual. Your job is still running and remains saved if you close this window. We can email it after completion."
+                            : "현재 분석 시스템이 평소보다 지연되고 있어요. 작업은 그대로 진행 중이며, 이 창을 닫아도 결과는 보관됩니다. 원하시면 완료 후 이메일로 보내드릴게요."
+                        : locale === "en"
+                            ? "When Smart Fit is complete, you can view the result here or receive it by email."
+                            : "입혀보기가 완료되면 결과를 이 창에서 확인할 수 있어요. 원하시면 이메일로도 받아보실 수 있습니다."}
                 </p>
             )}
-            <p className={`text-xs font-bold leading-5 ${retryingTerminalDelivery
-                ? "text-rose-950"
-                : longWait ? "text-amber-950" : "text-indigo-950"}`}
-            >
-                {locale === "en" ? (
-                    <>
-                        Image generation may take longer when many requests are queued. Select [
-                        <button
-                            type="button"
-                            onClick={() => directRecipientRequired
-                                ? verification
-                                    ? verificationInputRef.current?.focus()
-                                    : recipientInputRef.current?.focus()
-                                : void requestDelivery()}
-                            disabled={Boolean(busy) || task.emailScheduling}
-                            className="rounded px-0.5 font-black underline decoration-2 underline-offset-2 disabled:cursor-wait disabled:opacity-60"
-                        >
-                            Receive by email
-                        </button>
-                        ] and we will send it after completion.
-                    </>
-                ) : (
-                    <>
-                        이미지 생성 요청이 많을 경우 이미지 생성에는 다소 시간이 소요될 수 있습니다. [
-                        <button
-                            type="button"
-                            onClick={() => directRecipientRequired
-                                ? verification
-                                    ? verificationInputRef.current?.focus()
-                                    : recipientInputRef.current?.focus()
-                                : void requestDelivery()}
-                            disabled={Boolean(busy) || task.emailScheduling}
-                            className="rounded px-0.5 font-black underline decoration-2 underline-offset-2 disabled:cursor-wait disabled:opacity-60"
-                        >
-                            이메일로 받아보기
-                        </button>
-                        ]를 클릭하시면 생성 완료 후 이메일로 보내드립니다.
-                    </>
-                )}
-            </p>
 
             {directRecipientRequired ? (
                 <form
@@ -2071,14 +2159,16 @@ function PetTryOnEmailDeliverySession({
                         <i className={`fa-solid mr-1.5 ${busy === "schedule" || task.emailScheduling ? "fa-spinner fa-spin" : "fa-envelope"}`} />
                         {busy === "schedule" || task.emailScheduling
                             ? locale === "en" ? "Checking request…" : "예약 확인 중…"
-                            : locale === "en" ? "Receive at registered email" : "등록 이메일로 결과 받기"}
+                            : retryingTerminalDelivery
+                                ? locale === "en" ? "Request result email again" : "결과 이메일 다시 신청"
+                                : locale === "en" ? "Receive at registered email" : "등록 이메일로 결과 받기"}
                     </button>
                 </div>
             )}
 
-            {(localError || task.emailError) && (
-                <div role="alert" className="mt-2 rounded-lg bg-white px-2.5 py-2 text-[11px] font-bold leading-5 text-rose-700">
-                    <p>{localError || task.emailError}</p>
+            {inlineEmailError && (
+                <div role="alert" className="mt-2 rounded-lg border border-amber-100 bg-white px-2.5 py-2 text-[11px] font-bold leading-5 text-amber-900">
+                    <p>{inlineEmailError}</p>
                     {showLoginLink && (
                         <Link
                             href="/auth/login"

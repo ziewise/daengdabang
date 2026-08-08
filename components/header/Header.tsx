@@ -8,7 +8,7 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,7 +26,7 @@ import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 import headerStyles from "./Header.module.css";
 
-type DropKey = "shop" | "lab" | "cs" | null;
+type DropKey = "shop" | "daily" | "lab" | "cs" | null;
 
 export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
@@ -82,8 +82,8 @@ export default function Header() {
                     {/* 로고 */}
                     <BrandLogo mobileEmphasis />
 
-                    {/* AI 서비스 중심의 데스크탑 메인 메뉴 */}
-                    <nav className="hidden items-center gap-0 lg:flex xl:gap-1">
+                    {/* 넓은 화면에는 네 개의 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. */}
+                    <nav className="hidden items-center gap-1 xl:flex">
                         <NavDropdown
                             label={t("shop")}
                             open={openDrop === "shop"}
@@ -133,11 +133,29 @@ export default function Header() {
                             </div>
                         </NavDropdown>
 
-                        <NavLink href="/new/">{t("new")}</NavLink>
-                        <NavLink href="/brands/">{t("brand")}</NavLink>
-                        <NavLink href="/my-pet/">{t("myPet")}</NavLink>
-                        <NavLink href="/challenge/">{t("challenge")}</NavLink>
-                        <NavLink href="/community/">{t("community")}</NavLink>
+                        <NavDropdown
+                            label={t("dailyLife")}
+                            open={openDrop === "daily"}
+                            onEnter={() => setOpenDrop("daily")}
+                            onLeave={() => setOpenDrop(null)}
+                        >
+                            <ul className="min-w-[270px] p-3">
+                                {[
+                                    ["/treasure-mine/", "보물광산 · 오늘의 루틴", "fa-gem", "orange"],
+                                    ["/my-pet/", "우리 아이 기록", "fa-dog", "coral"],
+                                    ["/community/", "커뮤니티", "fa-people-group", "teal"],
+                                ].map(([href, label, icon, tone]) => (
+                                    <li key={href}>
+                                        <Link href={href} className="flex items-center gap-3 rounded-xl p-3 text-sm font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700">
+                                            <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" data-crayon-tone={tone}>
+                                                <i className={`fa-solid ${icon}`} aria-hidden="true" />
+                                            </span>
+                                            <span>{label}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </NavDropdown>
                         <NavDropdown
                             label={t("customerCenter")}
                             open={openDrop === "cs"}
@@ -273,24 +291,6 @@ export default function Header() {
     );
 }
 
-/* ============ 단순 nav 링크 ============ */
-function NavLink({
-    href,
-    children,
-}: {
-    href: string;
-    children: React.ReactNode;
-}) {
-    return (
-        <Link
-            href={href}
-            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
-        >
-            {children}
-        </Link>
-    );
-}
-
 /* ============ 드롭다운 nav 항목 (hover/focus 로 열림) ============
  * hover bridge — nav 버튼과 드롭다운 카드 사이의 8px 영역도
  * 동일 wrapper 의 자식으로 두어 마우스가 그 위를 지나도 hover 유지.
@@ -312,15 +312,49 @@ function NavDropdown({
     children: React.ReactNode;
     wide?: boolean;
 }) {
+    const panelId = useId();
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const activationPointerTypeRef = useRef("");
+
     return (
         <div
             className="relative"
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
+            onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") onEnter();
+            }}
+            onPointerLeave={(event) => {
+                if (event.pointerType === "mouse") onLeave();
+            }}
+            onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) onLeave();
+            }}
+            onKeyDownCapture={(event) => {
+                if (event.key !== "Escape") return;
+                event.preventDefault();
+                event.stopPropagation();
+                buttonRef.current?.focus();
+                onLeave();
+            }}
         >
             <button
+                ref={buttonRef}
                 type="button"
                 aria-label={ariaLabel}
+                aria-expanded={open}
+                aria-controls={panelId}
+                onPointerDown={(event) => {
+                    activationPointerTypeRef.current = event.pointerType;
+                }}
+                onClick={() => {
+                    const pointerType = activationPointerTypeRef.current;
+                    activationPointerTypeRef.current = "";
+                    if (pointerType === "mouse") {
+                        onEnter();
+                        return;
+                    }
+                    if (open) onLeave();
+                    else onEnter();
+                }}
                 className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
                 data-nav-open={open ? "true" : "false"}
             >
@@ -328,6 +362,7 @@ function NavDropdown({
             </button>
             {open && (
                 <div
+                    id={panelId}
                     className={`absolute top-full ${wide ? "left-1/2 -translate-x-1/2" : "left-0"} pt-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150`}
                 >
                     <div

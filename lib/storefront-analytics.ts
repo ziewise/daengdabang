@@ -39,7 +39,13 @@ export type StorefrontEventName =
     | "chat_opened"
     | "chat_message_sent"
     | "chat_response_succeeded"
-    | "chat_response_failed";
+    | "chat_response_failed"
+    | "growth_hub_viewed"
+    | "growth_result_shared"
+    | "growth_invite_shared"
+    | "growth_program_interest_opened"
+    | "growth_program_interest_submitted"
+    | "growth_program_interest_failed";
 
 function freshAnalyticsId(prefix: string): string {
     if (typeof window !== "undefined" && typeof window.crypto?.randomUUID === "function") {

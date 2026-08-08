@@ -152,19 +152,19 @@ function apiErrorMessage(code: PetTryOnApiErrorCode, locale: "ko" | "en") {
     if (locale === "en") {
         if (code === "login_required") return "Your login has expired. Sign in again to continue Smart Fit.";
         if (code === "already_running") return "A Smart Fit job is already running. Open the status panel and wait for it to finish.";
-        if (code === "rate_limited") return "Smart Fit has too many requests right now. Check your queue and try again later.";
-        if (code === "invalid_request") return "Check the selected product and your dog's saved side photo, then try again.";
-        if (code === "not_found") return "We could not reconnect to the saved fitting. Start a new one only if you want another image.";
+        if (code === "rate_limited") return "The analysis system is taking longer than usual. Nothing new was started automatically, so please try again later.";
+        if (code === "invalid_request") return "We could not connect the selected product with the saved photo. The photo itself may be fine. Re-select it from the product page; nothing new was started automatically.";
+        if (code === "not_found") return "We could not reconnect to the saved fitting. Nothing new was started automatically, so please try again later.";
         if (code === "aborted") return "The request was stopped. No additional fitting was started.";
-        return "The connection is temporarily unstable. Please try again shortly.";
+        return "The analysis system is temporarily delayed. Nothing new was started automatically, so please try again later.";
     }
     if (code === "login_required") return "로그인이 만료됐어요. 다시 로그인한 뒤 입혀보기를 이어서 확인해 주세요.";
     if (code === "already_running") return "이미 진행 중인 입혀보기가 있어요. 상태 창에서 완료될 때까지 기다려 주세요.";
-    if (code === "rate_limited") return "현재 입혀보기 요청이 많아요. 진행 중인 작업을 확인하고 잠시 후 다시 시도해 주세요.";
-    if (code === "invalid_request") return "선택한 상품과 우리 아이의 저장된 측면 사진을 확인한 뒤 다시 시도해 주세요.";
-    if (code === "not_found") return "저장된 입혀보기 작업을 다시 연결하지 못했어요. 새 이미지가 필요할 때만 다시 만들어 주세요.";
+    if (code === "rate_limited") return "현재 분석 시스템이 평소보다 지연되고 있어요. 새 작업은 자동으로 시작되지 않았으니 잠시 후 다시 이용해 주세요.";
+    if (code === "invalid_request") return "상품과 저장된 사진의 연결 정보를 확인하지 못했어요. 사진 자체의 문제가 아닐 수 있어요. 상품 화면에서 사진을 다시 선택해 주세요. 새 작업은 자동으로 시작하지 않았습니다.";
+    if (code === "not_found") return "저장된 입혀보기 작업을 다시 연결하지 못했어요. 새 작업은 자동으로 시작되지 않았으니 잠시 후 다시 이용해 주세요.";
     if (code === "aborted") return "요청이 중단됐어요. 추가 입혀보기 작업은 시작하지 않았습니다.";
-    return "연결이 잠시 불안정해요. 잠시 후 다시 시도해 주세요.";
+    return "현재 분석 시스템이 잠시 지연되고 있어요. 새 작업은 자동으로 시작되지 않았으니 잠시 후 다시 이용해 주세요.";
 }
 
 function ineligibleMessage(reason: ReturnType<typeof getPetTryOnEligibility>["reason"], locale: "ko" | "en") {
@@ -271,6 +271,19 @@ export default function PetTryOnPreview({
     const displayedError = error || currentTask?.error || "";
     const displayedErrorCode = errorCode || currentTask?.apiErrorCode || null;
     const loading = Boolean(currentTask?.submitting || result?.status === "queued" || result?.status === "running");
+    const finalGenerationFailed = result?.status === "failed";
+    const systemIssue = Boolean(displayedErrorCode || finalGenerationFailed);
+    const systemIssueTitle = finalGenerationFailed
+        ? locale === "en" ? "We could not prepare this result" : "이번 결과를 준비하지 못했어요"
+        : displayedErrorCode === "login_required"
+            ? locale === "en" ? "Sign in to continue" : "다시 로그인해 이어서 확인해 주세요"
+            : displayedErrorCode === "already_running"
+                ? locale === "en" ? "Your fitting is already in progress" : "진행 중인 입혀보기가 있어요"
+                : displayedErrorCode === "invalid_request"
+                    ? locale === "en" ? "Reconnect the product and saved photo" : "상품과 사진 연결을 다시 확인해 주세요"
+                    : displayedErrorCode === "not_found"
+                        ? locale === "en" ? "We could not reconnect this fitting" : "이전 입혀보기를 연결하지 못했어요"
+                        : locale === "en" ? "Smart Fit is temporarily delayed" : "현재 분석 시스템이 잠시 지연되고 있어요";
     const progress = result?.progressPercent ?? (currentTask?.submitting ? 4 : 0);
     const stage: PetTryOnProgressStage = result?.progressStage ?? "queued";
     const elapsed = currentTask ? Math.max(0, Math.floor((now - currentTask.startedAt) / 1000)) : 0;
@@ -1170,9 +1183,21 @@ export default function PetTryOnPreview({
                             </div>
 
                             {displayedError && (
-                                <div className="mt-4 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm font-bold leading-6 text-rose-800">
-                                    <p>
-                                        <i className="fa-solid fa-triangle-exclamation mr-2" />
+                                <div
+                                    role={systemIssue ? "status" : "alert"}
+                                    aria-live="polite"
+                                    className={`mt-4 rounded-lg border p-4 text-sm font-bold leading-6 ${systemIssue
+                                        ? "border-amber-200 bg-amber-50 text-amber-950"
+                                        : "border-rose-200 bg-rose-50 text-rose-800"}`}
+                                >
+                                    {systemIssue && (
+                                        <p className="mb-1 font-black">
+                                            <i className="fa-solid fa-circle-info mr-2 text-amber-600" />
+                                            {systemIssueTitle}
+                                        </p>
+                                    )}
+                                    <p className={systemIssue ? "text-xs text-neutral-700" : ""}>
+                                        {!systemIssue && <i className="fa-solid fa-triangle-exclamation mr-2" />}
                                         {displayedError}
                                     </p>
                                     {displayedErrorCode === "login_required" && (
@@ -1351,11 +1376,17 @@ export default function PetTryOnPreview({
                                     <p className="text-xs font-black text-amber-950">
                                         <i className="fa-solid fa-triangle-exclamation mr-2" />
                                         {initialGenerationRequired
-                                            ? locale === "en" ? "Create a new fitting image" : "새 착용 이미지 만들기"
+                                            ? finalGenerationFailed
+                                                ? locale === "en" ? "You can try again later" : "잠시 후 다시 시도할 수 있어요"
+                                                : locale === "en" ? "Create a new fitting image" : "새 착용 이미지 만들기"
                                             : locale === "en" ? "Confirm one new full fitting image" : "새 전체 착용 이미지 생성을 확인해 주세요"}
                                     </p>
                                     <p className="mt-2 text-[11px] font-bold leading-5 text-amber-900">
-                                        {correctionIssues.length > 0
+                                        {finalGenerationFailed
+                                            ? locale === "en"
+                                                ? "The analysis system could not finish this result. Nothing new will start automatically; use the button below later only when you want to try again."
+                                                : "현재 분석 시스템이 이번 결과를 끝까지 준비하지 못했어요. 새 작업은 자동으로 시작되지 않으니, 잠시 후 원하실 때만 아래 버튼으로 다시 요청해 주세요."
+                                            : correctionIssues.length > 0
                                             ? locale === "en"
                                                 ? "This creates one new full image with your selected corrections. It is not a normal color switch."
                                                 : "선택한 보정을 반영해 전체 이미지를 새로 1회 만듭니다. 일반 색상 변경 기능이 아닙니다."
@@ -1387,6 +1418,8 @@ export default function PetTryOnPreview({
                                             <span className="break-keep text-center leading-tight">
                                                 {generationRequestPending
                                                     ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
+                                                    : finalGenerationFailed
+                                                        ? locale === "en" ? "Try again later" : "잠시 후 다시 시도"
                                                     : initialGenerationRequired
                                                         ? locale === "en" ? "Create one new fitting image" : "새 착용 이미지 1회 만들기"
                                                         : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}

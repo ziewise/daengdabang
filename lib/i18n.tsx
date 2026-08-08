@@ -23,7 +23,7 @@ type I18nContextValue = {
 
 const STRINGS = {
     ko: {
-        best: "베스트",
+        best: "추천 셀렉트",
         new: "신상품",
         category: "카테고리",
         brand: "브랜드",
@@ -36,6 +36,7 @@ const STRINGS = {
         myPet: "우리 아이",
         challenge: "챌린지",
         community: "커뮤니티",
+        dailyLife: "매일 댕생활",
         event: "이벤트",
         productsAll: "전체상품",
         search: "검색",
@@ -128,7 +129,7 @@ const STRINGS = {
         videoStop: "영상 정지",
     },
     en: {
-        best: "Best",
+        best: "Curated Picks",
         new: "New",
         category: "Categories",
         brand: "Brands",
@@ -141,6 +142,7 @@ const STRINGS = {
         myPet: "My Pet",
         challenge: "Challenge",
         community: "Community",
+        dailyLife: "Daily Life",
         event: "Events",
         productsAll: "All Products",
         search: "Search",

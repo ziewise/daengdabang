@@ -140,7 +140,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                     <span className="ddb-crayon-icon mx-auto grid h-16 w-16 place-items-center rounded-3xl text-2xl" data-crayon-tone="coral"><i className="fa-solid fa-paw" /></span>
                     <h1 className="ddb-crayon-title mt-5 text-4xl">로그인하고 오늘의 챌린지를 시작하세요</h1>
                     <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">출근도장과 XP, 코인 보상은 회원 계정에 안전하게 저장됩니다.</p>
-                    <Link href="/auth/login/?redirect=%2Fchallenge" className="btn btn-primary mt-6">로그인하기</Link>
+                    <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="btn btn-primary mt-6">로그인하기</Link>
                 </div>
             </div>
         );

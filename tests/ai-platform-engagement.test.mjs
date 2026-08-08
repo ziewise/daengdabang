@@ -4,21 +4,17 @@ import test from "node:test";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 
-test("home leads with member recommendations and places AI engagement after new arrivals", () => {
+test("home exposes one compact daily entry and keeps the full engagement hub off the shopping page", () => {
     const home = read("../app/page.tsx");
     const hero = home.indexOf("<HeroSection");
     const sentinel = home.indexOf('id="fab-reveal-sentinel"');
+    const dailyMine = home.indexOf("<DailyMineTeaser");
     const recommendations = home.indexOf("<RecommendSection");
     const best = home.indexOf("<BestSection");
     const brands = home.indexOf("<BrandSlider");
     const promo = home.indexOf("<PromoSection");
     const newArrivals = home.indexOf("<NewArrivalsSection");
-    const dashboard = home.indexOf("<MemberAiDashboard");
-    const memberSlot = home.indexOf('<HomeAudienceSlot audience="member">');
-    const memberActions = home.indexOf("<AiQuickActions", memberSlot);
-    const guestSlot = home.indexOf('<HomeAudienceSlot audience="guest">');
-    const guestActions = home.indexOf("<AiQuickActions", guestSlot);
-    const reviews = home.indexOf("<ReviewSection");
+    const instagram = home.indexOf("<InstaSection");
 
     const orderedSections = [
         hero,
@@ -27,23 +23,19 @@ test("home leads with member recommendations and places AI engagement after new 
         best,
         brands,
         promo,
+        dailyMine,
         newArrivals,
-        dashboard,
-        memberSlot,
-        memberActions,
-        guestSlot,
-        guestActions,
-        reviews,
+        instagram,
     ];
     assert.ok(orderedSections.every((index) => index >= 0), "every requested home section must be present");
     for (let index = 1; index < orderedSections.length; index += 1) {
         assert.ok(orderedSections[index - 1] < orderedSections[index], "home sections must follow the requested order");
     }
-    const audienceSlot = read("../components/home/HomeAudienceSlot.tsx");
-    assert.match(audienceSlot, /useAuth.*@\/lib\/store/s);
-    assert.match(audienceSlot, /audience === "member"/);
-    assert.match(audienceSlot, /isMember \? null : children/);
-    assert.match(read("../components/home/MemberAiDashboard.tsx"), /useAuth.*@\/lib\/store/s);
+    assert.doesNotMatch(home, /MemberAiDashboard|AiQuickActions|ReviewSection/);
+    const teaser = read("../components/home/DailyMineTeaser.tsx");
+    assert.match(teaser, /useAuth.*@\/lib\/store/s);
+    assert.match(teaser, /\/treasure-mine\//);
+    assert.match(teaser, /실천 체크는 사용자가 직접 남기는 기록이며 의료 점수가 아닙니다/);
     assert.match(read("../components/main/RecommendSection.tsx"), /recommendForPet\(current, hasAnalysis \? current\.rawAnalysis/);
 });
 
@@ -52,7 +44,8 @@ test("daily attendance uses server-backed KST state and a fixed two-coin reward 
     const dashboard = read("../components/home/MemberAiDashboard.tsx");
     const stamp = read("../components/engagement/AttendanceStampCard.tsx");
     const motion = read("../components/engagement/AttendanceStamp.module.css");
-    const challenge = read("../app/challenge/page.tsx");
+    const treasureMine = read("../app/treasure-mine/page.tsx");
+    const growthHub = read("../components/growth/GrowthHub.tsx");
 
     assert.match(api, /\/api\/v1\/daenglab\/wallet\/attendance\/claim/);
     assert.match(api, /timezone: "Asia\/Seoul"/);
@@ -62,8 +55,11 @@ test("daily attendance uses server-backed KST state and a fixed two-coin reward 
     assert.match(motion, /@keyframes stamp-hit/);
     assert.match(motion, /@keyframes coin-pop-left/);
     assert.match(motion, /prefers-reduced-motion: reduce/);
-    assert.match(challenge, /max-w-none[^"]*md:whitespace-nowrap/);
-    assert.match(challenge, /<span className="whitespace-nowrap">2코인을 지급합니다\.<\/span>/);
+    assert.match(treasureMine, /GrowthHub/);
+    assert.match(growthHub, /MemberAiDashboard/);
+    assert.match(growthHub, /GrowthShareCard/);
+    assert.match(growthHub, /GrowthPrograms/);
+    assert.match(growthHub, /GrowthPolicySummary/);
     assert.doesNotMatch(`${dashboard}\n${stamp}`, /localStorage/);
 });
 
@@ -75,7 +71,7 @@ test("P2 through P5 routes connect analysis history, quick actions, challenges, 
 
     assert.match(persistence, /rawAnalysis:/);
     assert.match(persistence, /lastAnalyzedAt/);
-    for (const href of ["/pet-lens/", "/my-pet/#health-report", "/chat/", "/challenge/"]) {
+    for (const href of ["/pet-lens/", "/my-pet/#health-report", "/chat/", "/treasure-mine/"]) {
         assert.match(actions, new RegExp(href.replaceAll("/", "\\/")));
     }
     assert.match(myPet, /loadWeeklyPhotoAnalyses/);

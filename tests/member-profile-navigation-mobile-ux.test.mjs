@@ -23,7 +23,7 @@ test("member profile create and edit forms expose the same four-view photo regis
     assert.match(editor, /restorePetLensPhotoViews\(pet\.photoViews, pet\.photoDataUrl\)/);
 });
 
-test("desktop and mobile navigation expose the final DaengLab information architecture", () => {
+test("desktop and mobile navigation expose the compact commerce-first information architecture", () => {
     const header = read("../components/header/Header.tsx");
     const mobile = read("../components/header/MobilePanel.tsx");
     const labWordmark = read("../components/header/DaengLabWordmark.tsx");
@@ -31,8 +31,8 @@ test("desktop and mobile navigation expose the final DaengLab information archit
     const i18n = read("../lib/i18n.tsx");
 
     for (const [source, labels] of [
-        [header, ['label={t("shop")}', 'href="/new/"', 'href="/brands/"', 'href="/my-pet/"', 'href="/challenge/"', 'href="/community/"', 'label={t("customerCenter")}', 'label={<DaengLabWordmark']],
-        [mobile, ['label={t("shop")}', '<MobileLink href="/new/"', '<MobileLink href="/brands/"', '<MobileLink href="/my-pet/"', '<MobileLink href="/challenge/"', '<MobileLink href="/community/"', 'label={t("customerCenter")}', '<DaengLabWordmark']],
+        [header, ['label={t("shop")}', 'label={t("dailyLife")}', 'label={t("customerCenter")}', 'label={<DaengLabWordmark']],
+        [mobile, ['label={t("shop")}', 'label={t("dailyLife")}', 'label={t("customerCenter")}', '<DaengLabWordmark']],
     ]) {
         let previous = -1;
         for (const label of labels) {
@@ -41,7 +41,7 @@ test("desktop and mobile navigation expose the final DaengLab information archit
             previous = next;
         }
     }
-    for (const key of ["shop", "new", "brand", "myPet", "challenge", "community", "daengLab", "customerCenter"]) {
+    for (const key of ["shop", "dailyLife", "new", "brand", "myPet", "community", "daengLab", "customerCenter"]) {
         assert.match(i18n, new RegExp(`\\b${key}:`));
     }
     for (const source of [header, mobile]) {
@@ -51,6 +51,9 @@ test("desktop and mobile navigation expose the final DaengLab information archit
         assert.doesNotMatch(source, /label=\{t\("aiAnalysis"\)\}/);
         for (const href of ["/pet-lens/", "/pet-lens/?mode=observation", "/my-pet/#health-report", "/chat/"]) {
             assert.ok(source.includes(`"${href}"`), `${href} must stay in the DaengLab dropdown`);
+        }
+        for (const href of ["/products", "/best", "/new", "/brands", "/treasure-mine", "/my-pet", "/community"]) {
+            assert.ok(source.includes(`"${href}`), `${href} must stay in the compact navigation`);
         }
     }
     assert.doesNotMatch(header, /<NavLink href="\/">/);

@@ -68,7 +68,7 @@ test("queued and running jobs remain server-owned and survive transient polling 
     assert.match(background, /if \(polled\.error\.retryable\) \{[\s\S]*transientFailures \+= 1;[\s\S]*continue;/);
     assert.match(background, /minimumRetryDelaySeconds = polled\.error\.retryAfterSeconds \|\| 0/);
     assert.match(background, /fresh\.error\.retryAfterSeconds \|\| 0/);
-    assert.match(background, /작업은 그대로 유지되며 상태를 자동으로 다시 확인합니다/);
+    assert.match(background, /작업은 그대로 보관되며 상태를 자동으로 다시 확인합니다/);
     assert.doesNotMatch(background, /MAX_MONITOR_MS|deadlineReached|Date\.now\(\) - current\.startedAt/);
     assert.doesNotMatch(client, /15 \* 60 \* 1000|const deadline =/);
 });
@@ -92,6 +92,37 @@ test("single-flight submission and persisted job identity prevent duplicate gene
     assert.match(background, /const jobId = storedTask\.result\?\.jobId/);
     assert.match(background, /const fresh = await getPetTryOnJob\(jobId, restoreController\.signal\)/);
     assert.match(background, /void monitorRef\.current\(refreshed\)/);
+});
+
+test("a refreshed login token resumes the same member's paused Smart Fit job", async () => {
+    const background = await source("lib/pet-tryon-background.tsx");
+
+    assert.match(background, /const authSessionKey = user\?\.apiAccessToken/);
+    assert.match(background, /previousAuthSessionKeyRef/);
+    assert.match(background, /previousAccount === accountKey && previousAuthSession === authSessionKey/);
+    assert.match(background, /previousAccount === accountKey && accountKey/);
+    assert.match(background, /function resumeTasksAfterAuthentication/);
+    assert.match(background, /task\.apiErrorCode === "login_required" && !task\.result/);
+    assert.match(background, /task\.apiErrorCode === "login_required"[\s\S]*error: "", apiErrorCode: undefined/);
+    assert.match(background, /commitTasks\(resumedTasks\)[\s\S]*setPanelOpen\(false\)/);
+    assert.match(background, /\[accountKey, authSessionKey,/);
+});
+
+test("Smart Fit announces only status changes instead of every elapsed-second render", async () => {
+    const background = await source("lib/pet-tryon-background.tsx");
+
+    assert.doesNotMatch(background, /<section\s+aria-live="polite"/);
+    assert.match(background, /role="status"[\s\S]*aria-live="polite"/);
+});
+
+test("Smart Fit never labels a result-less error placeholder as a saved job", async () => {
+    const background = await source("lib/pet-tryon-background.tsx");
+
+    assert.match(background, /loginRequired && !result[\s\S]*로그인하면 입혀보기 상태를 다시 확인해요/);
+    assert.match(background, /invalidRequest && !result[\s\S]*새 입혀보기 작업은 시작되지 않았어요/);
+    assert.match(background, /missingTask && !result[\s\S]*이 화면에서 새 작업을 만들지 않았어요/);
+    assert.match(background, /existingTaskRunning && !result[\s\S]*중복 작업은 새로 만들지 않았어요/);
+    assert.match(background, /\{panelSubtext\}/);
 });
 
 test("auth hydration and ineligible products keep a visible explanatory surface", async () => {

@@ -243,8 +243,11 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                 surface: "modal",
                 errorCode: "analysis_or_validation_failed",
             });
-            const message = error instanceof Error ? error.message : "사진 분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.";
-            setAnalysisError(`분석을 완료하지 못했습니다. ${message}`);
+            const message = error instanceof Error ? error.message.trim() : "";
+            const localAnalysisUnavailable = !message || /사진 분석을 (?:완료|사용)|분석 서버/.test(message);
+            setAnalysisError(localAnalysisUnavailable
+                ? "현재 로컬 사진 분석이 잠시 지연되고 있어요. 사진은 외부 사진 분석 API로 자동 전송되지 않았습니다. 잠시 후 같은 사진으로 다시 시도해 주세요."
+                : message);
         } finally {
             setLoading(false);
         }
@@ -505,8 +508,14 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
 
                 {/* 분석 에러 (백엔드 API 미설정 시 'API is not configured' 등) */}
                 {analysisError && (
-                    <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-bold text-rose-600">
+                    <p role="alert" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold leading-5 text-amber-900">
                         {analysisError}
+                    </p>
+                )}
+
+                {loading && (
+                    <p role="status" aria-live="polite" className="rounded-lg border border-sky-100 bg-sky-50 px-3 py-2 text-xs font-bold leading-5 text-sky-900">
+                        사진을 댕다방 로컬 분석 환경에서 꼼꼼히 살펴보고 있어요. 보통 20~30초 정도 걸리며, 요청이 몰리면 조금 더 걸릴 수 있습니다.
                     </p>
                 )}
 

@@ -11,11 +11,10 @@
  *
  * [우리 구성 — 메인 섹션]
  *   - RecommendSection  : 로그인 회원 + 등록 펫 기반 맞춤 추천 (비로그인 시 미노출)
- *   - BestSection       : 베스트 (4탭 × 4상품)
+ *   - BestSection       : 댕다방 추천 셀렉트
  *   - BrandSlider       : 대표 브랜드 자동 페이드
  *   - PromoSection      : 기획전 (1 featured + 4 small)
  *   - NewArrivalsSection: 신상품 무한 캐러셀
- *   - ReviewSection     : 리뷰 (포토 + 간단)
  *   - InstaSection      : 인스타그램 그리드
  *
  * 데이터는 모두 협업자 lib/catalog (외부 리뷰·CDN 영상 통합) 에서 가져옴.
@@ -29,14 +28,11 @@ import BestSection from "@/components/main/BestSection";
 import BrandSlider from "@/components/main/BrandSlider";
 import PromoSection from "@/components/main/PromoSection";
 import NewArrivalsSection from "@/components/main/NewArrivalsSection";
-import ReviewSection from "@/components/main/ReviewSection";
 import InstaSection from "@/components/main/InstaSection";
-import MemberAiDashboard from "@/components/home/MemberAiDashboard";
-import AiQuickActions from "@/components/home/AiQuickActions";
-import HomeAudienceSlot from "@/components/home/HomeAudienceSlot";
+import DailyMineTeaser from "@/components/home/DailyMineTeaser";
 
 export default function HomePage() {
-    // 협업자 동적 히어로에 넘길 추천 상품 4개 (popularity 기준 베스트)
+    // 동적 히어로에 넘길 운영자 검수 추천 상품 4개
     const heroProducts = getBestProducts(4);
 
     return (
@@ -53,20 +49,12 @@ export default function HomePage() {
             <BestSection />
             <BrandSlider />
             <PromoSection />
+
+            {/* 쇼핑 흐름을 먼저 충분히 보여준 뒤 매일 방문 기능은 짧은 띠로 연결한다. */}
+            <DailyMineTeaser />
+
             <NewArrivalsSection />
 
-            {/* 신상품 다음에 오늘의 돌봄 대시보드와 AI 바로가기를 이어서 배치한다. */}
-            <MemberAiDashboard />
-
-            <HomeAudienceSlot audience="member">
-                <AiQuickActions />
-            </HomeAudienceSlot>
-
-            {/* 비회원도 같은 위치에서 AI 체험으로 진입한다. */}
-            <HomeAudienceSlot audience="guest">
-                <AiQuickActions />
-            </HomeAudienceSlot>
-            <ReviewSection />
             <InstaSection />
         </>
     );

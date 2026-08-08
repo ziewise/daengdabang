@@ -51,7 +51,7 @@ export const MYPAGE_MENU_GROUPS: readonly MyMenuGroup[] = [
         items: [
             { href: "/my-pet", label: "건강 기록", icon: "fa-dog" },
             { href: "/pet-lens", label: "AI 분석", icon: "fa-camera-retro" },
-            { href: "/challenge", label: "챌린지·출근도장", icon: "fa-trophy" },
+            { href: "/treasure-mine/", label: "매일댕생활·출근도장", icon: "fa-gem" },
         ],
     },
     {

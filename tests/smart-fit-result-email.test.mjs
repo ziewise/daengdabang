@@ -128,7 +128,7 @@ test("delivery reconciliation is owner-scoped, single-flight, and fail-closed", 
     assert.match(background, /monitoringResultEmailDeliveries\.current\.has\(deliveryId\)/);
     assert.match(background, /task\.emailDeliveryStatus === "scheduled"/);
     assert.match(background, /outcome\.value\.status !== "scheduled"/);
-    assert.match(background, /중복 발송을 막기 위해 새 이메일을 자동으로 신청하지 않았습니다/);
+    assert.match(background, /입혀보기 결과에는 영향이 없으며, 중복 발송을 막기 위해 자동으로 다시 신청하지 않았습니다/);
     assert.match(background, /이메일 발송 여부를 확정할 수 없어요/);
     assert.match(background, /발송 상태 다시 확인/);
     assert.match(background, /function shouldRetainTask/);
@@ -142,9 +142,33 @@ test("long-running Smart Fit exposes the real email action in both result surfac
         source("components/products/detail/PetTryOnPreview.tsx"),
     ]);
 
-    assert.match(background, /이미지 생성 요청이 많을 경우 이미지 생성에는 다소 시간이 소요될 수 있습니다/);
-    assert.match(background, /이메일로 받아보기/);
+    assert.match(background, /현재 분석 시스템이 평소보다 지연되고 있어요/);
+    assert.match(background, /이 창을 닫아도 결과는 보관됩니다/);
+    assert.match(background, /등록 이메일로 결과 받기/);
     assert.match(background, /<PetTryOnEmailDeliveryControls[\s\S]*task=\{visibleTask\}/);
     assert.match(modal, /<PetTryOnEmailDeliveryControls[\s\S]*task=\{currentTask\}/);
     assert.match(modal, /max-h-full w-full overflow-y-auto/);
+});
+
+test("Smart Fit keeps system delay, email failure, and final generation failure distinct", async () => {
+    const [background, modal] = await Promise.all([
+        source("lib/pet-tryon-background.tsx"),
+        source("components/products/detail/PetTryOnPreview.tsx"),
+    ]);
+
+    assert.match(background, /작업을 안전하게 보관하고 있어요/);
+    assert.match(background, /이번 결과를 준비하지 못했어요/);
+    assert.match(background, /task\.result\.status === "failed"/);
+    assert.match(background, /이메일 알림을 보내지 못했어요/);
+    assert.match(background, /입혀보기 결과와는 별개예요/);
+    assert.match(background, /결과 이메일 다시 신청/);
+    assert.match(background, /잠시 후 다시 시도/);
+    assert.doesNotMatch(background, /failed: "입혀보기를 다시 시도해 주세요"/);
+    assert.doesNotMatch(background, /이메일 발송에 실패했어요\. 새로 신청할 수 있습니다/);
+    assert.match(modal, /현재 분석 시스템이 잠시 지연되고 있어요/);
+    assert.match(modal, /잠시 후 다시 시도할 수 있어요/);
+    assert.match(background, /상품과 사진 연결을 다시 확인해 주세요/);
+    assert.match(background, /사진 자체의 문제가 아닐 수 있어요/);
+    assert.match(background, /다시 로그인해 이어서 확인해 주세요/);
+    assert.match(modal, /상품 화면에서 사진을 다시 선택해 주세요/);
 });

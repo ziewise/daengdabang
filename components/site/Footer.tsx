@@ -28,7 +28,7 @@ export default function Footer() {
                         <h3 className="font-black text-neutral-950">쇼핑</h3>
                         <div className="mt-3 grid gap-2 font-bold text-neutral-600">
                             <Link href="/products">전체상품</Link>
-                            <Link href="/best">베스트</Link>
+                            <Link href="/best">추천 셀렉트</Link>
                             <Link href="/new">신상품</Link>
                             <Link href="/brands">브랜드</Link>
                             {CATEGORY_ORDER.slice(0, 4).map((slug) => (
@@ -39,6 +39,7 @@ export default function Footer() {
                     <div>
                         <h3 className="font-black text-neutral-950">맞춤 서비스</h3>
                         <div className="mt-3 grid gap-2 font-bold text-neutral-600">
+                            <Link href="/treasure-mine">보물광산</Link>
                             <Link href="/pet-lens">펫렌즈</Link>
                             <Link href="/chat">챗봇</Link>
                         </div>

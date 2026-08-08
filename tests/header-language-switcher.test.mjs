@@ -80,7 +80,7 @@ test("desktop navigation hover draws a subtle motion-safe crayon sketch", async 
     ]);
 
     assert.match(header, /import headerStyles from "\.\/Header\.module\.css"/);
-    assert.equal((header.match(/headerStyles\.desktopNavItem/g) || []).length, 2);
+    assert.equal((header.match(/headerStyles\.desktopNavItem/g) || []).length, 1);
     assert.match(header, /data-nav-open=\{open \? "true" : "false"\}/);
     assert.match(css, /\.desktopNavItem::before/);
     assert.match(css, /\.desktopNavItem::after/);
@@ -91,4 +91,22 @@ test("desktop navigation hover draws a subtle motion-safe crayon sketch", async 
     assert.doesNotMatch(header, /headerStyles\.storyNavItem/);
     assert.doesNotMatch(css, /\.desktopNavItem\.storyNavItem::after/);
     assert.match(css, /\.loginLink[\s\S]*font-family: var\(--font-wanted-sans\)/);
+    assert.doesNotMatch(header, /aria-haspopup="menu"/);
+    assert.match(header, /aria-expanded=\{open\}/);
+    assert.match(header, /aria-controls=\{panelId\}/);
+    assert.match(header, /event\.key !== "Escape"/);
+    assert.match(header, /onPointerEnter=\{\(event\) => \{[\s\S]*event\.pointerType === "mouse"/);
+    assert.match(header, /onPointerLeave=\{\(event\) => \{[\s\S]*event\.pointerType === "mouse"/);
+    assert.match(header, /activationPointerTypeRef\.current = event\.pointerType/);
+    assert.match(header, /if \(pointerType === "mouse"\) \{[\s\S]*onEnter\(\)/);
+    assert.doesNotMatch(header, /onFocusCapture=\{onEnter\}/);
+});
+
+test("mobile menu groups expose their expanded state", async () => {
+    const mobilePanel = await source("components/header/MobilePanel.tsx");
+
+    assert.match(mobilePanel, /function MobileGroup[\s\S]*const panelId = useId\(\)/);
+    assert.match(mobilePanel, /aria-expanded=\{expanded\}/);
+    assert.match(mobilePanel, /aria-controls=\{panelId\}/);
+    assert.match(mobilePanel, /<div id=\{panelId\}/);
 });

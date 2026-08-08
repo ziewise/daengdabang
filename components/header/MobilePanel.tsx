@@ -6,7 +6,7 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -142,11 +142,16 @@ export default function MobilePanel({ open, onClose }: Props) {
                         ))}
                     </MobileGroup>
 
-                    <MobileLink href="/new/" icon="fa-sparkles" tone="orange" crayon onClick={onClose}>{t("new")}</MobileLink>
-                    <MobileLink href="/brands/" icon="fa-tags" tone="teal" crayon onClick={onClose}>{t("brand")}</MobileLink>
-                    <MobileLink href="/my-pet/" icon="fa-dog" tone="coral" crayon onClick={onClose}>{t("myPet")}</MobileLink>
-                    <MobileLink href="/challenge/" icon="fa-trophy" tone="orange" crayon onClick={onClose}>{t("challenge")}</MobileLink>
-                    <MobileLink href="/community/" icon="fa-people-group" tone="teal" crayon onClick={onClose}>{t("community")}</MobileLink>
+                    <MobileGroup
+                        label={t("dailyLife")}
+                        expanded={expanded === "daily"}
+                        onToggle={() => setExpanded(expanded === "daily" ? null : "daily")}
+                        crayon
+                    >
+                        <SubLink href="/treasure-mine/" icon="fa-gem" onClick={onClose}>보물광산 · 오늘의 루틴</SubLink>
+                        <SubLink href="/my-pet/" icon="fa-dog" onClick={onClose}>{t("myPet")}</SubLink>
+                        <SubLink href="/community/" icon="fa-people-group" onClick={onClose}>{t("community")}</SubLink>
+                    </MobileGroup>
                     <MobileGroup
                         label={t("customerCenter")}
                         expanded={expanded === "cs"}
@@ -235,11 +240,15 @@ function MobileGroup({
     children: React.ReactNode;
     crayon?: boolean;
 }) {
+    const panelId = useId();
+
     return (
         <div className="my-1">
             <button
                 type="button"
                 onClick={onToggle}
+                aria-expanded={expanded}
+                aria-controls={panelId}
                 className={`w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "text-base" : ""}`}
             >
                 {/* 아이콘 없는 그룹 — 아이콘 자리(w-4) 만큼 빈 공간 차지해서
@@ -249,7 +258,7 @@ function MobileGroup({
                 <i className={`fa-solid fa-chevron-down text-[10px] text-neutral-400 ml-auto transition-transform ${expanded ? "rotate-180" : ""}`} />
             </button>
             {expanded && (
-                <div className="ml-2 mt-1 mb-2 pl-2 border-l-2 border-neutral-100 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div id={panelId} className="ml-2 mt-1 mb-2 pl-2 border-l-2 border-neutral-100 animate-in fade-in slide-in-from-top-1 duration-150">
                     {children}
                 </div>
             )}

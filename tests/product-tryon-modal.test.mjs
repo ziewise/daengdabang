@@ -83,7 +83,7 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(background, /restoreController\.abort\(\)/);
     assert.match(background, /accountKeyRef\.current !== initialTask\.accountKey/);
     assert.match(background, /apiErrorCode\?: PetTryOnApiErrorCode/);
-    assert.match(background, /status checks will retry automatically/);
+    assert.match(background, /Your job is still saved, and we will keep checking it automatically/);
     assert.match(background, /다시 로그인해 작업 이어보기/);
     assert.doesNotMatch(background, /MAX_MONITOR_MS|deadlineReached/);
     assert.match(background, /if \(!restoreStarted\) restoredOnce\.current = false/);

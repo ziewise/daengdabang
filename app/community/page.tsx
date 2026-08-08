@@ -22,7 +22,7 @@ const COMMUNITY_LINKS = [
         tone: "teal",
     },
     {
-        href: "/challenge/",
+        href: "/treasure-mine/",
         title: "함께하는 챌린지",
         copy: "매일 산책하고 기록하며 건강한 돌봄 습관을 만드세요.",
         icon: "fa-trophy",

@@ -1,73 +1,46 @@
 /**
- * BestSection — 메인 페이지 베스트 (4탭 × 4상품)
+ * BestSection — 실제 판매 순위를 주장하지 않는 편집 추천 셀렉트
  * ---------------------------------------------------------------------
- * 카탈로그 단일 출처 — getBestProducts(period).slice(0, 4)
- * 향후 BEST_RANKS 가 백엔드/RPA 로 자동 갱신되어도 이 컴포넌트는 그대로.
- *
- * 카드는 공용 ProductCard 사용 — 영상 호버 자동 적용 (p.video 있으면).
+ * 현재 카탈로그의 상품 정보와 브랜드 구성을 기준으로 고른 상품이며,
+ * 공식 주문 데이터가 연결되기 전에는 기간별 판매량·순위를 표시하지 않는다.
  */
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { getBestProducts, BEST_PERIOD_LABEL, type BestPeriod } from "@/lib/catalog";
+import { getBestProducts } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
 import { useI18n } from "@/lib/i18n";
 
-const TABS: BestPeriod[] = ["realtime", "daily", "weekly", "monthly"];
-
 export default function BestSection() {
-    const [period, setPeriod] = useState<BestPeriod>("realtime");
-    const { locale, menuLabel } = useI18n();
-    // 임시: 영상 호버 효과 있는 상품만 메인 페이지 베스트에 노출 (실 운영 전 마케팅 효과).
-    // 실 판매 데이터 연결 시 .filter 제거하고 .slice(0, 4) 만 사용.
-    const withVideo = getBestProducts(period).filter((p) => p.video);
-    const items = withVideo.length >= 4 ? withVideo.slice(0, 4) : getBestProducts(period).slice(0, 4);
+    const { locale } = useI18n();
+    const items = getBestProducts(4);
 
     return (
         <section id="best" className="py-10 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
-                {/* 섹션 헤더 — 좌측 타이틀 / 우측 탭 (모바일에선 세로) */}
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 md:mb-8">
+                <div className="mb-6 flex flex-col gap-3 md:mb-8 md:flex-row md:items-end md:justify-between">
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                            {locale === "en" ? "DaengDaBang Best" : "댕다방 베스트"}
+                            {locale === "en" ? "DaengDaBang Curated Picks" : "댕다방 추천 셀렉트"}
                         </h2>
                         <p className="text-sm text-neutral-500">
-                            {locale === "en" ? "Most-loved picks right now" : "지금 가장 많이 사랑받는 댕댕이 아이템"}
+                            {locale === "en" ? "Editorial picks based on product purpose and brand fit" : "상품 용도와 브랜드 구성을 살펴 고른 편집 추천"}
                         </p>
                     </div>
-
-                    {/* 탭 — 기간 전환 */}
-                    <div className="inline-flex bg-white/70 backdrop-blur-md rounded-full p-1 shadow-card self-start md:self-auto">
-                        {TABS.map((p) => (
-                            <button
-                                key={p}
-                                type="button"
-                                onClick={() => setPeriod(p)}
-                                className={`px-4 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-bold transition ${
-                                    period === p
-                                        ? "bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white shadow-card"
-                                        : "text-neutral-600 hover:text-aurora-indigo"
-                                }`}
-                            >
-                                {menuLabel(BEST_PERIOD_LABEL[p])}
-                            </button>
-                        ))}
-                    </div>
+                    <span className="self-start rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-[11px] font-black text-cyan-800 md:self-auto">
+                        {locale === "en" ? "Editorial discovery · Not a sales ranking" : "판매량 순위 아님 · 상품 탐색용"}
+                    </span>
                 </div>
 
                 {/* 4상품 그리드 — 공용 ProductCard */}
                 <div
-                    key={period}
                     className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 animate-in fade-in duration-300"
                 >
-                    {items.map((p, index) => (
+                    {items.map((p) => (
                         <ProductCard
                             key={p.id}
                             product={p}
-                            rank={index + 1}
-                            rankStyle="large"
+                            rankStyle="off"
                         />
                     ))}
                 </div>
@@ -78,7 +51,7 @@ export default function BestSection() {
                         href="/best"
                         className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
-                        {locale === "en" ? "View Best Sellers" : "베스트 상품 보기"}
+                        {locale === "en" ? "View More Curated Picks" : "추천 셀렉트 더 보기"}
                         <i className="fa-solid fa-arrow-right text-[10px]" />
                     </Link>
                 </div>

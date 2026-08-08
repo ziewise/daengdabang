@@ -25,7 +25,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false }: Br
 
     return (
         <Link
-            href="/main"
+            href="/"
             className={`inline-flex shrink-0 flex-nowrap items-center whitespace-nowrap no-underline ${
                 mobileEmphasis ? "gap-1.5 min-[360px]:gap-2 md:gap-2.5" : "gap-2.5"
             } ${className}`}

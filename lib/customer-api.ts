@@ -4,8 +4,10 @@ import { ddbApiBase } from "@/lib/ddb-api-base";
 export { ddbApiBase } from "@/lib/ddb-api-base";
 import type { CustomerSupportCategory } from "@/lib/customer-support";
 import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
+import type { GrowthProgramId } from "@/lib/growth-programs";
 
 export type { CustomerSupportCategory } from "@/lib/customer-support";
+export type { GrowthProgramId } from "@/lib/growth-programs";
 
 const TOKEN_KEY = "ddb.api.accessToken";
 
@@ -108,6 +110,31 @@ export type DaengLabCareTaskCompletion = DaengLabEngagement & {
     newlyCompleted: boolean;
     status: "completed" | "already_completed";
     awardedXp: number;
+};
+
+export type GrowthInterestPayload = {
+    programId: GrowthProgramId;
+    consentToContact: boolean;
+};
+
+export type GrowthInterestReceipt = {
+    id: string;
+    programId: GrowthProgramId;
+    status: "registered";
+    alreadyRegistered: boolean;
+    createdAt: string;
+    updatedAt: string;
+    message: string;
+};
+
+type ApiGrowthInterestReceipt = {
+    id: string;
+    program_id: GrowthProgramId;
+    status: "registered";
+    already_registered: boolean;
+    created_at: string;
+    updated_at: string;
+    message: string;
 };
 
 export type CustomerResultEmailStatus = "scheduled" | "sent" | "failed" | "expired" | "uncertain";
@@ -525,6 +552,7 @@ async function apiJson<T>(
             balance,
         });
     }
+    if (response.status === 204) return undefined as T;
     return response.json() as Promise<T>;
 }
 
@@ -783,6 +811,77 @@ export async function completeDaengLabCareTask(taskId: DaengLabCareTaskId, token
         status: value.status,
         awardedXp: Number(value.awarded_xp || 0),
     } satisfies DaengLabCareTaskCompletion;
+}
+
+export async function submitGrowthInterest(
+    payload: GrowthInterestPayload,
+    token?: string,
+): Promise<GrowthInterestReceipt> {
+    const accessToken = (token || getCustomerToken()).trim();
+    if (!accessToken) {
+        throw new DdbApiError("관심등록은 로그인 후 이용할 수 있습니다.", {
+            code: "http_error",
+            status: 401,
+        });
+    }
+    if (!payload.consentToContact) {
+        throw new DdbApiError("준비 소식 안내를 위한 연락 동의가 필요합니다.", {
+            code: "http_error",
+            status: 422,
+        });
+    }
+    const value = await apiJson<ApiGrowthInterestReceipt>("/api/v1/growth/interests", {
+        method: "POST",
+        body: JSON.stringify({
+            program_id: payload.programId,
+            consent_to_contact: payload.consentToContact,
+        }),
+    }, accessToken, { requireBase: true });
+    if (!value?.id) {
+        throw new DdbApiError("관심등록 결과를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.", {
+            code: "http_error",
+        });
+    }
+    return {
+        id: value.id,
+        programId: value.program_id,
+        status: value.status,
+        alreadyRegistered: Boolean(value.already_registered),
+        createdAt: value.created_at,
+        updatedAt: value.updated_at,
+        message: value.message,
+    };
+}
+
+export async function loadGrowthInterests(token?: string): Promise<GrowthInterestReceipt[]> {
+    const accessToken = (token || getCustomerToken()).trim();
+    if (!accessToken) return [];
+    const values = await apiJson<ApiGrowthInterestReceipt[]>("/api/v1/growth/interests/me", {
+        method: "GET",
+        cache: "no-store",
+    }, accessToken, { requireBase: true });
+    return (values || []).map((value) => ({
+        id: value.id,
+        programId: value.program_id,
+        status: value.status,
+        alreadyRegistered: Boolean(value.already_registered),
+        createdAt: value.created_at,
+        updatedAt: value.updated_at,
+        message: value.message,
+    }));
+}
+
+export async function cancelGrowthInterest(programId: GrowthProgramId, token?: string): Promise<void> {
+    const accessToken = (token || getCustomerToken()).trim();
+    if (!accessToken) {
+        throw new DdbApiError("관심등록 취소는 로그인 후 이용할 수 있습니다.", {
+            code: "http_error",
+            status: 401,
+        });
+    }
+    await apiJson<never>(`/api/v1/growth/interests/${encodeURIComponent(programId)}`, {
+        method: "DELETE",
+    }, accessToken, { requireBase: true });
 }
 
 export async function emailPetObservationResult(

@@ -42,8 +42,8 @@ const ACTIONS = [
         tilt: "hover:-rotate-[0.5deg]",
     },
     {
-        href: "/challenge/",
-        label: "AI 챌린지",
+        href: "/treasure-mine/",
+        label: "보물광산",
         helper: "매일 돌보고 레벨 올리기",
         icon: "fa-trophy",
         tone: "orange",
