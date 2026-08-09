@@ -73,7 +73,7 @@ const getServerChatFontMode = () => "readable" as const;
 export default function ChatPageClient() {
     const navigation = useRouter();
     const params = useSearchParams();
-    const { user } = useAuth();
+    const { user, hydrated } = useAuth();
     const pets = useMemo(() => user?.pets ?? [], [user]);
     const [selectedPetKey, setSelectedPetKey] = useState("");
     const selectedPet = pets.find((pet) => chatPetKey(pet) === selectedPetKey) ?? pets[0] ?? null;
@@ -126,23 +126,25 @@ export default function ChatPageClient() {
     }, []);
 
     useEffect(() => {
+        if (!hydrated) return;
         const previousOwner = conversationOwnerRef.current;
         conversationOwnerRef.current = conversationOwnerKey;
         conversationIdRef.current = loadShopChatConversationId(conversationOwner);
         if (previousOwner === null || previousOwner === conversationOwnerKey) return;
+        const interruptedQuestion = activeQuestionRef.current;
         activeRequestRef.current?.abort();
         activeRequestRef.current = null;
         activeQuestionRef.current = "";
         requestSequenceRef.current += 1;
         inFlightRef.current = false;
-        setInput("");
+        setInput((current) => current.trim() ? current : interruptedQuestion);
         setLoading(false);
         setMessages([]);
         setStreamedAnswer("");
         setStreamStage("queued");
         setRequestNotice("계정이 바뀌어 안전하게 새 대화를 시작했어요.");
         clearReferences();
-    }, [clearReferences, conversationOwner, conversationOwnerKey]);
+    }, [clearReferences, conversationOwner, conversationOwnerKey, hydrated]);
 
     const clearChat = () => {
         activeRequestRef.current?.abort();
@@ -162,6 +164,7 @@ export default function ChatPageClient() {
     };
 
     const resetChatForPetChange = useCallback((notice = "아이를 바꿔 새 대화를 시작했어요.") => {
+        const interruptedQuestion = activeQuestionRef.current;
         activeRequestRef.current?.abort();
         activeRequestRef.current = null;
         activeQuestionRef.current = "";
@@ -169,7 +172,7 @@ export default function ChatPageClient() {
         inFlightRef.current = false;
         setLoading(false);
         setMessages([]);
-        setInput("");
+        setInput((current) => current.trim() ? current : interruptedQuestion);
         setStreamedAnswer("");
         setStreamStage("queued");
         conversationIdRef.current = "";
@@ -307,6 +310,13 @@ export default function ChatPageClient() {
         } catch (reason) {
             if (requestSequence === requestSequenceRef.current) {
                 if (reason instanceof ShopChatRequestCancelledError) {
+                    setInput((current) => current.trim() ? current : trimmed);
+                    setMessages((current) => {
+                        const pending = current.at(-1);
+                        return pending?.role === "user" && pending.text === trimmed
+                            ? current.slice(0, -1)
+                            : current;
+                    });
                     setRequestNotice("요청을 멈췄어요. 질문을 고쳐서 다시 보내도 괜찮아요.");
                     return false;
                 }
@@ -352,11 +362,12 @@ export default function ChatPageClient() {
     ]);
 
     useEffect(() => {
-        const initialQuestion = params.get("q");
+        if (!hydrated || conversationOwnerRef.current !== conversationOwnerKey) return;
+        const initialQuestion = params.get("q")?.trim();
         if (!initialQuestion || initialQuestionSentRef.current === initialQuestion) return;
         initialQuestionSentRef.current = initialQuestion;
         void ask(initialQuestion);
-    }, [params, ask]);
+    }, [params, ask, conversationOwnerKey, hydrated]);
 
     useLayoutEffect(() => {
         const container = messagesRef.current;

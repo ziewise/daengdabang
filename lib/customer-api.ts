@@ -5,9 +5,16 @@ export { ddbApiBase } from "@/lib/ddb-api-base";
 import type { CustomerSupportCategory } from "@/lib/customer-support";
 import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
 import type { GrowthProgramId } from "@/lib/growth-programs";
+import {
+    GOODS_CONTEST_GOAL,
+    GOODS_CONTEST_ITEM_IDS,
+    isGoodsContestItemId,
+    type GoodsContestItemId,
+} from "@/lib/goods-contest";
 
 export type { CustomerSupportCategory } from "@/lib/customer-support";
 export type { GrowthProgramId } from "@/lib/growth-programs";
+export type { GoodsContestItemId } from "@/lib/goods-contest";
 
 const TOKEN_KEY = "ddb.api.accessToken";
 
@@ -135,6 +142,56 @@ type ApiGrowthInterestReceipt = {
     created_at: string;
     updated_at: string;
     message: string;
+};
+
+export type GoodsContestItemSummary = {
+    itemId: GoodsContestItemId;
+    selectionCount: number;
+    goal: typeof GOODS_CONTEST_GOAL;
+    remainingCount: number;
+    productionEligible: boolean;
+};
+
+export type GoodsContestSummary = {
+    goal: typeof GOODS_CONTEST_GOAL;
+    totalSelectionCount: number;
+    items: GoodsContestItemSummary[];
+    updatedAt: string | null;
+};
+
+export type GoodsContestMySelections = {
+    selectedItemIds: GoodsContestItemId[];
+};
+
+export type GoodsContestSelectionReceipt = GoodsContestItemSummary & {
+    selected: true;
+    alreadySelected: boolean;
+    selectedAt: string;
+};
+
+type ApiGoodsContestItemSummary = {
+    item_id: unknown;
+    selection_count: unknown;
+    goal: unknown;
+    remaining_count: unknown;
+    production_eligible: unknown;
+};
+
+type ApiGoodsContestSummary = {
+    goal: unknown;
+    total_selection_count: unknown;
+    items: unknown;
+    updated_at?: unknown;
+};
+
+type ApiGoodsContestMySelections = {
+    selected_item_ids: unknown;
+};
+
+type ApiGoodsContestSelectionReceipt = ApiGoodsContestItemSummary & {
+    selected: unknown;
+    already_selected: unknown;
+    selected_at: unknown;
 };
 
 export type CustomerResultEmailStatus = "scheduled" | "sent" | "failed" | "expired" | "uncertain";
@@ -811,6 +868,166 @@ export async function completeDaengLabCareTask(taskId: DaengLabCareTaskId, token
         status: value.status,
         awardedXp: Number(value.awarded_xp || 0),
     } satisfies DaengLabCareTaskCompletion;
+}
+
+function invalidGoodsContestResponse(): never {
+    throw new DdbApiError("굿즈 공모전 집계 응답을 확인하지 못했습니다.", {
+        code: "http_error",
+    });
+}
+
+function nonNegativeInteger(value: unknown): number | null {
+    return Number.isInteger(value) && Number(value) >= 0 ? Number(value) : null;
+}
+
+function normalizeGoodsContestItem(value: unknown): GoodsContestItemSummary {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+        return invalidGoodsContestResponse();
+    }
+    const item = value as ApiGoodsContestItemSummary;
+    const selectionCount = nonNegativeInteger(item.selection_count);
+    const remainingCount = nonNegativeInteger(item.remaining_count);
+    if (
+        !isGoodsContestItemId(item.item_id)
+        || selectionCount === null
+        || item.goal !== GOODS_CONTEST_GOAL
+        || remainingCount === null
+        || remainingCount !== Math.max(0, GOODS_CONTEST_GOAL - selectionCount)
+        || typeof item.production_eligible !== "boolean"
+        || item.production_eligible !== (selectionCount >= GOODS_CONTEST_GOAL)
+    ) {
+        return invalidGoodsContestResponse();
+    }
+    return {
+        itemId: item.item_id,
+        selectionCount,
+        goal: GOODS_CONTEST_GOAL,
+        remainingCount,
+        productionEligible: item.production_eligible,
+    };
+}
+
+function normalizeGoodsContestSummary(value: ApiGoodsContestSummary | null): GoodsContestSummary {
+    if (
+        !value
+        || value.goal !== GOODS_CONTEST_GOAL
+        || nonNegativeInteger(value.total_selection_count) === null
+        || !Array.isArray(value.items)
+        || value.items.length !== GOODS_CONTEST_ITEM_IDS.length
+        || !(
+            value.updated_at === undefined
+            || value.updated_at === null
+            || (typeof value.updated_at === "string" && value.updated_at.trim().length > 0)
+        )
+    ) {
+        return invalidGoodsContestResponse();
+    }
+    const normalizedItems = value.items.map(normalizeGoodsContestItem);
+    const itemsById = new Map(normalizedItems.map((item) => [item.itemId, item]));
+    const totalSelectionCount = Number(value.total_selection_count);
+    if (
+        itemsById.size !== GOODS_CONTEST_ITEM_IDS.length
+        || normalizedItems.reduce((total, item) => total + item.selectionCount, 0) !== totalSelectionCount
+    ) {
+        return invalidGoodsContestResponse();
+    }
+    return {
+        goal: GOODS_CONTEST_GOAL,
+        totalSelectionCount,
+        items: GOODS_CONTEST_ITEM_IDS.map((itemId) => {
+            const item = itemsById.get(itemId);
+            return item || invalidGoodsContestResponse();
+        }),
+        updatedAt: typeof value.updated_at === "string" ? value.updated_at : null,
+    };
+}
+
+function goodsContestAccessToken(token?: string): string {
+    const accessToken = (token || getCustomerToken()).trim();
+    if (!accessToken) {
+        throw new DdbApiError("굿즈 선택은 로그인 후 이용할 수 있습니다.", {
+            code: "http_error",
+            status: 401,
+        });
+    }
+    return accessToken;
+}
+
+export async function loadGoodsContestSummary(signal?: AbortSignal): Promise<GoodsContestSummary> {
+    const value = await apiJson<ApiGoodsContestSummary>("/api/v1/growth/goods-contest", {
+        method: "GET",
+        cache: "no-store",
+        signal,
+    }, undefined, { requireBase: true, skipAuth: true });
+    return normalizeGoodsContestSummary(value);
+}
+
+export async function loadMyGoodsContestSelections(
+    token?: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestMySelections> {
+    const accessToken = goodsContestAccessToken(token);
+    const value = await apiJson<ApiGoodsContestMySelections>("/api/v1/growth/goods-contest/me", {
+        method: "GET",
+        cache: "no-store",
+        signal,
+    }, accessToken, { requireBase: true });
+    if (!value || !Array.isArray(value.selected_item_ids)) return invalidGoodsContestResponse();
+    const selectedItemIds = value.selected_item_ids;
+    if (
+        !selectedItemIds.every(isGoodsContestItemId)
+        || new Set(selectedItemIds).size !== selectedItemIds.length
+    ) {
+        return invalidGoodsContestResponse();
+    }
+    const selectedSet = new Set<GoodsContestItemId>(selectedItemIds);
+    return {
+        selectedItemIds: GOODS_CONTEST_ITEM_IDS.filter((itemId) => selectedSet.has(itemId)),
+    };
+}
+
+export async function selectGoodsContestItem(
+    itemId: GoodsContestItemId,
+    token?: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestSelectionReceipt> {
+    const accessToken = goodsContestAccessToken(token);
+    const value = await apiJson<ApiGoodsContestSelectionReceipt>(
+        `/api/v1/growth/goods-contest/items/${encodeURIComponent(itemId)}/selection`,
+        { method: "PUT", cache: "no-store", signal },
+        accessToken,
+        { requireBase: true },
+    );
+    if (
+        !value
+        || value.selected !== true
+        || typeof value.already_selected !== "boolean"
+        || typeof value.selected_at !== "string"
+        || !value.selected_at.trim()
+    ) {
+        return invalidGoodsContestResponse();
+    }
+    return {
+        ...normalizeGoodsContestItem(value),
+        selected: true,
+        alreadySelected: value.already_selected,
+        selectedAt: value.selected_at,
+    };
+}
+
+export async function cancelGoodsContestItemSelection(
+    itemId: GoodsContestItemId,
+    token?: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestItemSummary> {
+    const accessToken = goodsContestAccessToken(token);
+    const value = await apiJson<ApiGoodsContestItemSummary>(
+        `/api/v1/growth/goods-contest/items/${encodeURIComponent(itemId)}/selection`,
+        { method: "DELETE", cache: "no-store", signal },
+        accessToken,
+        { requireBase: true },
+    );
+    return normalizeGoodsContestItem(value);
 }
 
 export async function submitGrowthInterest(

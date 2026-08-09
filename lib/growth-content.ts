@@ -1,4 +1,23 @@
 import { ddbApiBase } from "@/lib/ddb-api-base";
+import {
+    GOODS_CONTEST_CATALOG,
+    type GoodsContestItemId,
+} from "@/lib/goods-contest";
+
+export type GrowthGoodsItemContent = {
+    name: string;
+    summary: string;
+    expectedPriceKrw: number;
+    active: boolean;
+};
+
+export type GrowthGoodsContent = {
+    kicker: string;
+    title: string;
+    description: string;
+    escrowNotice: string;
+    items: Record<GoodsContestItemId, GrowthGoodsItemContent>;
+};
 
 export type GrowthHubPublishedContent = {
     hero: {
@@ -23,11 +42,29 @@ export type GrowthHubPublishedContent = {
         secondaryCtaLabel: string;
         secondaryCtaHref: string;
     };
+    goods: GrowthGoodsContent;
     visibility: {
         localCare: boolean;
         programs: boolean;
         policy: boolean;
     };
+};
+
+const DEFAULT_GROWTH_GOODS_ITEMS = Object.fromEntries(
+    GOODS_CONTEST_CATALOG.map((item) => [item.id, {
+        name: item.defaultName,
+        summary: item.defaultSummary,
+        expectedPriceKrw: item.defaultExpectedPriceKrw,
+        active: true,
+    }]),
+) as Record<GoodsContestItemId, GrowthGoodsItemContent>;
+
+export const DEFAULT_GROWTH_GOODS_CONTENT: GrowthGoodsContent = {
+    kicker: "DAENGDABANG GOODS CONTEST",
+    title: "500명의 선택으로 다음 굿즈를 함께 정해요",
+    description: "마음에 드는 굿즈를 선택해 주세요. 각 상품이 500명의 선택을 모으면 최종 제작 조건을 다시 안내합니다.",
+    escrowNotice: "에스크로는 향후 별도 결제 단계에서 구매자를 보호하기 위한 제도이며, 현재 선택 단계에는 적용되지 않습니다.",
+    items: DEFAULT_GROWTH_GOODS_ITEMS,
 };
 
 export type PublishedGrowthContentReceipt = {
@@ -58,6 +95,7 @@ export const DEFAULT_GROWTH_HUB_CONTENT: GrowthHubPublishedContent = {
         secondaryCtaLabel: "추천 셀렉트 보기",
         secondaryCtaHref: "/best/",
     },
+    goods: DEFAULT_GROWTH_GOODS_CONTENT,
     visibility: {
         localCare: true,
         programs: true,
@@ -78,12 +116,56 @@ function safeStorefrontHref(value: unknown): string | null {
     return value;
 }
 
+function boundedInteger(value: unknown, min: number, max: number): number | null {
+    return Number.isInteger(value) && Number(value) >= min && Number(value) <= max
+        ? Number(value)
+        : null;
+}
+
+function normalizedGoodsContent(raw: unknown): GrowthGoodsContent {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return DEFAULT_GROWTH_GOODS_CONTENT;
+    const goods = raw as Record<string, unknown>;
+    const rawItems = goods.items && typeof goods.items === "object" && !Array.isArray(goods.items)
+        ? goods.items as Record<string, unknown>
+        : {};
+    const items = Object.fromEntries(GOODS_CONTEST_CATALOG.map((catalogItem) => {
+        const fallback = DEFAULT_GROWTH_GOODS_CONTENT.items[catalogItem.id];
+        const candidate = rawItems[catalogItem.id];
+        const item = candidate && typeof candidate === "object" && !Array.isArray(candidate)
+            ? candidate as Record<string, unknown>
+            : {};
+        return [catalogItem.id, {
+            name: boundedString(item.name, 2, 80) || fallback.name,
+            summary: boundedString(item.summary, 5, 240) || fallback.summary,
+            expectedPriceKrw: boundedInteger(
+                item.expected_price_krw ?? item.expectedPriceKrw,
+                1_000,
+                500_000,
+            ) ?? fallback.expectedPriceKrw,
+            active: typeof item.active === "boolean" ? item.active : fallback.active,
+        }];
+    })) as Record<GoodsContestItemId, GrowthGoodsItemContent>;
+
+    return {
+        kicker: boundedString(goods.kicker, 2, 80) || DEFAULT_GROWTH_GOODS_CONTENT.kicker,
+        title: boundedString(goods.title, 2, 140) || DEFAULT_GROWTH_GOODS_CONTENT.title,
+        description: boundedString(goods.description, 10, 420) || DEFAULT_GROWTH_GOODS_CONTENT.description,
+        escrowNotice: boundedString(
+            goods.escrow_notice ?? goods.escrowNotice,
+            10,
+            420,
+        ) || DEFAULT_GROWTH_GOODS_CONTENT.escrowNotice,
+        items,
+    };
+}
+
 function normalizedContent(raw: unknown): GrowthHubPublishedContent | null {
     if (!raw || typeof raw !== "object") return null;
     const content = raw as Record<string, unknown>;
     const hero = content.hero as Record<string, unknown> | undefined;
     const today = content.today as Record<string, unknown> | undefined;
     const commerce = content.commerce as Record<string, unknown> | undefined;
+    const goods = content.goods;
     const visibility = content.visibility as Record<string, unknown> | undefined;
     if (!hero || !today || !commerce || !visibility) return null;
 
@@ -110,6 +192,7 @@ function normalizedContent(raw: unknown): GrowthHubPublishedContent | null {
             secondaryCtaLabel: boundedString(commerce.secondary_cta_label, 2, 50) || "",
             secondaryCtaHref: safeStorefrontHref(commerce.secondary_cta_href) || "",
         },
+        goods: normalizedGoodsContent(goods),
         visibility: {
             localCare: visibility.local_care === true,
             programs: visibility.programs === true,

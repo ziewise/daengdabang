@@ -7,6 +7,7 @@ import LocalCareFinder from "@/components/growth/LocalCareFinder";
 import GrowthPolicySummary from "@/components/growth/GrowthPolicySummary";
 import GrowthPrograms from "@/components/growth/GrowthPrograms";
 import GrowthShareCard from "@/components/growth/GrowthShareCard";
+import GoodsContest from "@/components/growth/GoodsContest";
 import { useAuth } from "@/lib/store";
 import type { PetProfile } from "@/lib/store";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
@@ -58,6 +59,7 @@ function hasShareableAiRecord(pet: PetProfile): boolean {
 export default function GrowthHub() {
     const { hydrated, user } = useAuth();
     const [content, setContent] = useState(DEFAULT_GROWTH_HUB_CONTENT);
+    const [contentReady, setContentReady] = useState(false);
     const trackedViewRef = useRef(false);
     const isMember = Boolean(user);
     const hasPet = Boolean(user?.pets.length);
@@ -75,7 +77,9 @@ export default function GrowthHub() {
     useEffect(() => {
         const controller = new AbortController();
         loadPublishedGrowthContent(controller.signal).then((published) => {
+            if (controller.signal.aborted) return;
             if (published) setContent(published.content);
+            setContentReady(true);
         });
         return () => controller.abort();
     }, []);
@@ -104,6 +108,9 @@ export default function GrowthHub() {
                         <nav className="grid min-w-[220px] grid-cols-2 gap-2 lg:grid-cols-1" aria-label="보물광산 구역 바로가기">
                             <a href="#today-treasure" className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center rounded-full px-4 text-xs">
                                 오늘의 보물
+                            </a>
+                            <a href="#goods-contest" className="ddb-motion-lift inline-flex min-h-12 items-center justify-center rounded-full border border-indigo-300 bg-white px-4 text-xs font-black text-indigo-900 transition hover:bg-indigo-50">
+                                굿즈 500명 공모전
                             </a>
                             {content.visibility.localCare ? (
                                 <a href="#local-care-finder" className="ddb-motion-lift inline-flex min-h-12 items-center justify-center rounded-full border border-cyan-300 bg-white px-4 text-xs font-black text-cyan-900 transition hover:bg-cyan-50">
@@ -144,6 +151,8 @@ export default function GrowthHub() {
                     <CommerceBridge isMember={isMember} hasPet={hasPet} hasAiRecord={hasAiRecord} content={content.commerce} />
                 </div>
             </section>
+
+            <GoodsContest content={content.goods} contentReady={contentReady} />
 
             {content.visibility.localCare ? <LocalCareFinder /> : null}
             {content.visibility.programs ? <GrowthPrograms /> : null}

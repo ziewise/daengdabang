@@ -9,6 +9,11 @@ import {
     GROWTH_PROGRAM_IDS,
     growthSharePayload,
 } from "../lib/growth-programs.ts";
+import {
+    GOODS_CONTEST_GOAL,
+    GOODS_CONTEST_ITEM_IDS,
+    isGoodsContestItemId,
+} from "../lib/goods-contest.ts";
 
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
@@ -32,6 +37,9 @@ async function loadCustomerApi(fetchImpl) {
         require(specifier) {
             if (specifier === "@/lib/ddb-api-base") {
                 return { ddbApiBase: () => "https://api.example.test" };
+            }
+            if (specifier === "@/lib/goods-contest") {
+                return { GOODS_CONTEST_GOAL, GOODS_CONTEST_ITEM_IDS, isGoodsContestItemId };
             }
             throw new Error(`Unexpected runtime import: ${specifier}`);
         },
