@@ -27,7 +27,10 @@ import {
     type ChatWidgetOpenDetail,
     type ChatWidgetVisibilityDetail,
 } from "@/lib/chat-widget-events";
-import ChatResponseExtras, { isFollowUpBundlePrompt } from "@/components/site/ChatResponseExtras";
+import ChatResponseExtras, {
+    customerFriendlyLocalCareAnswer,
+    isFollowUpBundlePrompt,
+} from "@/components/site/ChatResponseExtras";
 import ChatThinkingProgress from "@/components/site/ChatThinkingProgress";
 import ProgressiveRevealText from "@/components/site/ProgressiveRevealText";
 import {
@@ -211,7 +214,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         conversationIdRef.current = "";
         clearShopChatConversationId(conversationOwner);
         setRequestNotice(user ? "새 대화를 시작했어요. 무엇이든 다시 물어보세요." : "");
-        clearReferences();
+        generationReferences.clear();
     };
 
     const cancelActiveRequest = () => {
@@ -414,7 +417,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 onClick={clearChat}
                                 disabled={loading}
                                 className={`${styles.headerIconButton} flex h-10 items-center justify-center gap-1 rounded-full ${user ? "px-2 text-[10px] font-black" : "w-10"}`}
-                                aria-label={user ? "새 대화 시작" : "채팅 비우기"}
+                                aria-label="채팅 비우기"
                                 title={user ? "새 대화" : "채팅 비우기"}
                             >
                                 <i className={`fa-solid ${user ? "fa-pen-to-square" : "fa-trash-can"} text-xs`} />
@@ -453,7 +456,18 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         aria-busy={loading}
                         className={`${styles.messageList} min-h-0 flex-1 space-y-3 overflow-y-auto p-3 overscroll-contain`}
                     >
-                        {messages.map((message, index) => (
+                        {messages.map((message, index) => {
+                            const questionContext = [...messages.slice(0, index)]
+                                .reverse()
+                                .find((item) => item.role === "user")?.text;
+                            const visibleAnswer = message.role === "assistant"
+                                ? customerFriendlyLocalCareAnswer(
+                                    questionContext,
+                                    customerVisibleChatAnswer(message.text, Boolean(message.sources?.length)),
+                                    message.medical?.triage,
+                                )
+                                : message.text;
+                            return (
                             <div
                                 key={`${message.role}-${index}`}
                                 data-chat-role={message.role}
@@ -467,14 +481,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 >
                                     {message.role === "assistant" ? (
                                         message.streamed ? (
-                                            customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))
+                                            visibleAnswer
                                         ) : (
-                                            <ProgressiveRevealText
-                                                text={customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))}
-                                            />
+                                            <ProgressiveRevealText text={visibleAnswer} />
                                         )
                                     ) : (
-                                        message.text
+                                        visibleAnswer
                                     )}
                                 </div>
                                 {message.role === "assistant" && (
@@ -485,6 +497,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                             sources={message.sources}
                                             research={message.research}
                                             ctas={message.ctas}
+                                            questionContext={questionContext}
                                             onAsk={ask}
                                             onInternalNavigate={() => setOpen(false)}
                                             compact
@@ -492,7 +505,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                                 !loading
                                                 && index === messages.length - 1
                                                 && !isFollowUpBundlePrompt(
-                                                    messages[index - 1]?.role === "user" ? messages[index - 1].text : ""
+                                                    questionContext || ""
                                                 )
                                             }
                                         />
@@ -530,7 +543,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     </div>
                                 )}
                             </div>
-                        ))}
+                            );
+                        })}
                         {loading && (
                             <div className="text-left">
                                 <div className={`${styles.loadingBubble} inline-block max-w-[90%] border-2 px-3 py-3`}>
@@ -583,7 +597,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             ) : (
                                 <button
                                     type="submit"
-                                    disabled={generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                    disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
                                     className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
                                     aria-label="전송"
                                 >

@@ -65,7 +65,7 @@ test("both CareTalk composers send only ready opaque references and block early 
         assert.match(surface, /<GenerationReferenceTray controller=\{generationReferences\}/);
         assert.match(surface, /<GenerationReferencePhotoButton controller=\{generationReferences\}/);
         assert.match(surface, /references: readyReferences/);
-        assert.match(surface, /accessToken: readyReferences\.length \? user\?\.apiAccessToken : undefined/);
+        assert.match(surface, /accessToken: user\?\.apiAccessToken/);
         assert.match(surface, /if \(referencesUploading\)/);
         assert.match(surface, /if \(hasUploadErrors\)/);
         assert.match(surface, /사진을 올리는 중이에요\. 첨부가 끝난 뒤 보내 주세요\./);
@@ -78,8 +78,8 @@ test("both CareTalk composers send only ready opaque references and block early 
     assert.match(helper, /references\?: ShopChatReferenceInput\[\]/);
     assert.match(helper, /const references = normalizedShopChatReferences\(context\)/);
     assert.match(helper, /assetId\.length > 48/);
-    assert.match(helper, /if \(references\.length && context\?\.accessToken\)/);
-    assert.match(helper, /headers\.Authorization = `Bearer \$\{context\.accessToken\}`/);
+    assert.match(helper, /if \(context\?\.accessToken\)/);
+    assert.match(helper, /if \(context\?\.accessToken\)[\s\S]*headers\.Authorization = `Bearer \$\{context\.accessToken\}`/);
     assert.match(helper, /\.\.\.\(references\.length \? \{ references \} : \{\}\)/);
     assert.match(helper, /if \(references\.length\) throw shopChatReferenceError\(response\.status\)/);
     assert.match(helper, /if \(reason instanceof ShopChatReferenceRequestError\) throw reason/);

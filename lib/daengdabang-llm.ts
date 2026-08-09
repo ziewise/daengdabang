@@ -2265,8 +2265,11 @@ function normalizeShopChatApiAnswer(
     fallbacks: ShopChatPreparedFallbacks,
 ): ShopChatAnswer {
     const data = asRecord(value) || {};
-    const rawProducts = Array.isArray(data.products) ? data.products : undefined;
-    const apiReturnedProducts = Boolean(rawProducts);
+    const { medicalFallback, unavailableFallback } = fallbacks;
+    const apiReturnedProducts = Array.isArray(data.products);
+    const rawProducts: unknown[] | undefined = apiReturnedProducts
+        ? data.products as unknown[]
+        : undefined;
     const apiProducts = rawProducts
         ? rawProducts.flatMap((item: unknown) => {
             const record = asRecord(item);
@@ -2309,34 +2312,31 @@ function normalizeShopChatApiAnswer(
     const quality = normalizeShopChatQuality(data.quality);
     const preferProtectedMedicalFallback = shouldPreferProtectedMedicalFallback(
         data.medical,
-        fallbacks.medicalFallback?.medical,
+        medicalFallback?.medical,
     );
     const apiMedical = preferProtectedMedicalFallback
-        ? fallbacks.medicalFallback?.medical
-        : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, fallbacks.medicalFallback?.medical);
+        ? medicalFallback?.medical
+        : resolveSuccessfulApiMedical<ShopChatMedical>(data.medical, medicalFallback?.medical);
     if (apiMedical?.choiceGroups) apiMedical.choiceGroups = normalizeChoiceGroups(apiMedical.choiceGroups);
     return {
         answer: preferProtectedMedicalFallback
-            ? fallbacks.medicalFallback?.answer || fallbacks.unavailableFallback.answer
-            : customerFacingShopChatAnswer(
-                data.answer,
-                fallbacks.medicalFallback?.answer || fallbacks.unavailableFallback.answer,
-            ),
+            ? medicalFallback?.answer || unavailableFallback.answer
+            : customerFacingShopChatAnswer(data.answer, medicalFallback?.answer || unavailableFallback.answer),
         products: preferProtectedMedicalFallback
             ? []
             : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : [],
         medical: apiMedical,
         sources: preferProtectedMedicalFallback
-            ? fallbacks.medicalFallback?.sources
+            ? medicalFallback?.sources
             : apiReturnedSources ? apiSources : [],
         actions: preferProtectedMedicalFallback
-            ? fallbacks.medicalFallback?.actions
+            ? medicalFallback?.actions
             : apiReturnedActions ? actions : [],
         ctas: preferProtectedMedicalFallback
-            ? fallbacks.medicalFallback?.ctas
+            ? medicalFallback?.ctas
             : apiReturnedCtas ? ctas : [],
         research: preferProtectedMedicalFallback
-            ? fallbacks.medicalFallback?.research
+            ? medicalFallback?.research
             : research,
         conversation,
         generation: medicalMode ? undefined : generation,
@@ -2544,10 +2544,12 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const medicalDecisionFallback = medicalDecisionFollowUpFallback(message, history);
     const medicalFallback = wildlifeBiteRoute || rareFallback || heartwormFallback || medicalDecisionFallback || medicalSafetyFallback(message);
     const unavailableFallback = generalVerificationUnavailableAnswer(message);
-    const safeFallback = supportFallback || medicalFallback || generationFallback || unavailableFallback;
+    const offlineFallback = () => {
+        return supportFallback || medicalFallback || generationFallback || unavailableFallback;
+    };
     const base = apiBase();
     if (!base) {
-        return withDegradedDelivery(safeFallback, "offline");
+        return withDegradedDelivery(offlineFallback(), "offline");
     }
     const references = normalizedShopChatReferences(context);
     const petProfile = projectShopChatPetProfile(context?.pet);
@@ -2565,8 +2567,9 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
 
     try {
         const headers: Record<string, string> = { "Content-Type": "application/json" };
-        const accessToken = context?.accessToken?.trim();
-        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        if (context?.accessToken) {
+            headers.Authorization = `Bearer ${context.accessToken}`;
+        }
         const clientRequestId = createShopChatClientRequestId();
         headers["X-Idempotency-Key"] = clientRequestId;
         const conversationId = normalizeConversationId(context?.conversationId);
@@ -2614,7 +2617,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         if (references.length) {
             throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
         }
-        return withDegradedDelivery(safeFallback, "offline");
+        return withDegradedDelivery(offlineFallback(), "offline");
     } finally {
         timeoutGuard.stop();
         context?.signal?.removeEventListener("abort", abortFromCaller);

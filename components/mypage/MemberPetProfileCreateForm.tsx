@@ -28,8 +28,9 @@ type Props = {
 
 export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Props) {
     const { user, upsertPet } = useAuth();
+    const hasExistingPets = Boolean(user?.pets.length);
     const breedListId = useId();
-    const [open, setOpen] = useState(initiallyOpen);
+    const [open, setOpen] = useState(initiallyOpen && !hasExistingPets);
     const [name, setName] = useState("");
     const [breed, setBreed] = useState("");
     const [size, setSize] = useState<PetProfile["size"]>("medium");
@@ -45,6 +46,20 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
+
+    const resetDraft = () => {
+        setName("");
+        setBreed("");
+        setSize("medium");
+        setAge("성견");
+        setWeightKg("");
+        setSex("unknown");
+        setCoatColor("");
+        setCoat("medium");
+        setActivity("normal");
+        setPhotoViews({});
+        setPrivacyConsent(false);
+    };
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
@@ -62,6 +77,10 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
         const cleanBreed = breed.trim().slice(0, 100);
         if (!cleanName || !cleanBreed) {
             setError("우리 아이 이름과 실제 견종을 입력해 주세요.");
+            return;
+        }
+        if (user.pets.some((pet) => pet.name.trim().toLocaleLowerCase("ko-KR") === cleanName.toLocaleLowerCase("ko-KR"))) {
+            setError(`${cleanName} 이름의 프로필이 이미 있어요. 기존 프로필의 ‘정보 수정’을 이용하거나 다른 이름으로 구분해 주세요.`);
             return;
         }
         if (!privacyConsent) {
@@ -125,7 +144,8 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
                 photoViews: saved.photoViews || profile.photoViews,
                 photoServerVerified: Boolean(saved.photoDataUrl),
             });
-            setSuccess("반려견 프로필을 등록했습니다. 이제 펫렌즈 분석을 시작할 수 있어요.");
+            setSuccess(`${profile.name} 프로필을 등록했습니다. 다른 강아지도 이어서 등록할 수 있어요.`);
+            resetDraft();
             setOpen(false);
         } catch (saveError) {
             setError(customerApiErrorMessage(saveError));
@@ -142,23 +162,23 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
                         {success}
                     </p>
                 )}
-                {success ? (
+                {success && (
                     <Link href={PETLENS_PAGE_HREF} className="btn btn-primary w-full">
                         펫렌즈 사진 분석 시작하기
                     </Link>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setOpen(true);
-                            setError("");
-                        }}
-                        className="btn btn-primary w-full"
-                        data-member-pet-create-open
-                    >
-                        반려견 프로필 등록하기
-                    </button>
                 )}
+                <button
+                    type="button"
+                    onClick={() => {
+                        setOpen(true);
+                        setError("");
+                        setSuccess("");
+                    }}
+                    className={success ? "btn btn-secondary w-full" : "btn btn-primary w-full"}
+                    data-member-pet-create-open
+                >
+                    {hasExistingPets || success ? "강아지 추가 등록" : "첫 강아지 등록하기"}
+                </button>
             </div>
         );
     }
@@ -167,7 +187,9 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
         <form onSubmit={submit} className="mt-4 grid gap-3 rounded-xl border-2 border-indigo-200 bg-white p-4" data-member-pet-create-form>
             <div className="flex items-start justify-between gap-3">
                 <div>
-                    <p className="text-sm font-black text-indigo-700">우리 아이 프로필 등록</p>
+                    <p className="text-sm font-black text-indigo-700">
+                        {hasExistingPets ? "새 강아지 프로필 등록" : "우리 아이 프로필 등록"}
+                    </p>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
                         직접 확인한 정보로 등록하면 펫렌즈와 댕다방 연구소가 같은 아이를 기준으로 분석합니다.
                     </p>

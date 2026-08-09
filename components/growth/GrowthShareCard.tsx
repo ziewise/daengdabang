@@ -149,7 +149,7 @@ export default function GrowthShareCard({
                         type="button"
                         disabled={busy !== null}
                         onClick={() => void share("care_result")}
-                        className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:-translate-y-0.5 hover:border-indigo-400 disabled:cursor-wait disabled:opacity-60"
+                        className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:border-indigo-400 disabled:cursor-wait disabled:opacity-60"
                     >
                         <span><i className="fa-solid fa-wand-magic-sparkles mr-2 text-indigo-500" aria-hidden="true" />AI 기록 안전 공유</span>
                         <i className={`fa-solid ${busy === "care_result" ? "fa-circle-notch fa-spin" : "fa-arrow-up-from-bracket"} text-xs`} aria-hidden="true" />
@@ -157,7 +157,7 @@ export default function GrowthShareCard({
                 ) : isMember ? (
                     <Link
                         href="/pet-lens/"
-                        className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:-translate-y-0.5 hover:border-indigo-400"
+                        className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:border-indigo-400"
                     >
                         <span><i className="fa-solid fa-camera-retro mr-2 text-indigo-500" aria-hidden="true" />AI 기록 만들고 공유</span>
                         <i className="fa-solid fa-arrow-right text-xs" aria-hidden="true" />
@@ -165,7 +165,7 @@ export default function GrowthShareCard({
                 ) : (
                     <Link
                         href="/auth/login/?redirect=%2Ftreasure-mine%2F"
-                        className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:-translate-y-0.5 hover:border-indigo-400"
+                        className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:border-indigo-400"
                     >
                         <span><i className="fa-solid fa-lock mr-2 text-indigo-500" aria-hidden="true" />로그인 후 AI 기록 공유</span>
                         <i className="fa-solid fa-arrow-right text-xs" aria-hidden="true" />
@@ -175,7 +175,7 @@ export default function GrowthShareCard({
                     type="button"
                     disabled={busy !== null}
                     onClick={() => void share("friend_invite")}
-                    className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-orange-200 bg-white px-4 py-3 text-left text-sm font-black text-orange-900 transition hover:-translate-y-0.5 hover:border-orange-400 disabled:cursor-wait disabled:opacity-60"
+                    className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-orange-200 bg-white px-4 py-3 text-left text-sm font-black text-orange-900 transition hover:border-orange-400 disabled:cursor-wait disabled:opacity-60"
                 >
                     <span><i className="fa-solid fa-user-group mr-2 text-orange-500" aria-hidden="true" />친구에게 보물광산 초대</span>
                     <i className={`fa-solid ${busy === "friend_invite" ? "fa-circle-notch fa-spin" : "fa-paper-plane"} text-xs`} aria-hidden="true" />

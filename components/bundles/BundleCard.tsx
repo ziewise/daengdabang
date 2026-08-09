@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
-import { bundleHref, bundleImageCandidates, type Bundle } from "@/lib/bundles";
+import { bundleCustomerBadge, bundleHref, bundleImageCandidates, type Bundle } from "@/lib/bundles";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 type Props = {
@@ -104,7 +104,7 @@ export default function BundleCard({ bundle, priority }: Props) {
                 )}
                 <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">
                     <div className="flex flex-wrap gap-1.5">
-                        <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-neutral-950">{bundle.badge}</span>
+                        <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-neutral-950">{bundleCustomerBadge(bundle)}</span>
                         <span className="rounded-full bg-neutral-950/45 px-2 py-0.5 text-[10px] font-black text-white ring-1 ring-white/20">
                             {bundle.products.length}종 세트
                         </span>

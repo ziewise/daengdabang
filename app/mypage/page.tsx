@@ -50,8 +50,10 @@ function sexLabel(sex: PetProfile["sex"]) {
     return "성별 미입력";
 }
 
-function petKey(pet: PetProfile) {
-    return `pet-profile-${pet.name}`;
+function petKey(pet: PetProfile, index: number) {
+    return pet.apiProfileId
+        ? `pet-profile-id-${pet.apiProfileId}`
+        : `pet-profile-local-${index}-${pet.name}`;
 }
 
 function firstTryOnProduct(): CatalogProduct | undefined {
@@ -115,7 +117,7 @@ export default function MyPage() {
                         {user.pets.length > 0 ? (
                             <div className="mt-4 grid gap-3">
                                 {user.pets.map((pet, index) => (
-                                    <article key={petKey(pet)} className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+                                    <article key={petKey(pet, index)} className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                                         <div className="grid grid-cols-[76px_1fr] gap-3">
                                             <div className="relative h-[76px] overflow-hidden rounded-md bg-white">
                                                 {hasVerifiedPetPhoto(pet) ? (
@@ -155,7 +157,7 @@ export default function MyPage() {
                                             </div>
                                         )}
                                         <MemberPetProfileEditor
-                                            key={`${petKey(pet)}-${profileRouteRequested && index === profileNeedingAttentionIndex ? "required" : "default"}`}
+                                            key={`${petKey(pet, index)}-${profileRouteRequested && index === profileNeedingAttentionIndex ? "required" : "default"}`}
                                             pet={pet}
                                             initiallyOpen={profileRouteRequested && index === profileNeedingAttentionIndex}
                                         />
@@ -163,16 +165,14 @@ export default function MyPage() {
                                 ))}
                             </div>
                         ) : (
-                            <>
-                                <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
-                                    먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다.
-                                </div>
-                                <MemberPetProfileCreateForm
-                                    key={profileRouteRequested ? "required" : "default"}
-                                    initiallyOpen={profileRouteRequested}
-                                />
-                            </>
+                            <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
+                                먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다.
+                            </div>
                         )}
+                        <MemberPetProfileCreateForm
+                            key={profileRouteRequested ? "required" : "default"}
+                            initiallyOpen={profileRouteRequested}
+                        />
                         {petLensReady ? (
                             <Link href={PETLENS_PAGE_HREF} className="btn btn-primary mt-4 w-full">
                                 펫렌즈 사진 분석 열기

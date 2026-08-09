@@ -29,7 +29,7 @@ export default function DailyMineTeaser() {
     const isMember = hydrated && Boolean(user);
 
     return (
-        <section className="py-8 md:py-10" aria-labelledby="daily-mine-title" data-daily-mine-teaser>
+        <section className="py-8 md:py-10" aria-labelledby="daily-mine-title" data-daily-mine-teaser data-growth-motion-scope>
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
                 <div className="ddb-crayon-paper overflow-hidden rounded-[30px] border shadow-card">
                     <div className="grid gap-5 p-5 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)_auto] md:items-center md:p-7">
@@ -56,7 +56,7 @@ export default function DailyMineTeaser() {
                         </ol>
 
                         <div className="flex flex-col items-stretch gap-2 md:min-w-40">
-                            <Link href="/treasure-mine/" className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-black">
+                            <Link href="/treasure-mine/" className="ddb-crayon-link ddb-attention-cta inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-black">
                                 {isMember ? "오늘 기록하기" : "오늘 둘러보기"}
                                 <i className="fa-solid fa-arrow-right ml-2 text-[10px]" aria-hidden="true" />
                             </Link>

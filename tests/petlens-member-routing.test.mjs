@@ -113,7 +113,31 @@ test("My Page never links an incomplete member straight back into the same gate"
     assert.match(mypage, /\{petLensReady \? \(/);
     assert.doesNotMatch(mypage, /펫렌즈로 추가/);
     assert.match(editor, /useState\(initiallyOpen\)/);
-    assert.match(creator, /useState\(initiallyOpen\)/);
+    assert.match(creator, /useState\(initiallyOpen(?: && !hasExistingPets)?\)/);
     assert.match(creator, /savePetProfileSmart\(profile, user\.apiAccessToken\)/);
     assert.match(creator, /apiProfileId: saved\.id/);
+});
+
+test("Treasure Mine carries the selected server profile into the PetLens page", async () => {
+    const [dashboard, client, routing] = await Promise.all([
+        source("components/home/MemberAiDashboard.tsx"),
+        source("app/pet-lens/PetLensClient.tsx"),
+        source("lib/petlens-routing.ts"),
+    ]);
+
+    assert.match(routing, /export function cleanPetLensProfileId/);
+    assert.match(routing, /Number\.isSafeInteger\(profileId\) && profileId > 0/);
+    assert.match(routing, /export function petLensProfileHref/);
+    assert.match(routing, /`\$\{PETLENS_PAGE_HREF\}\/\?profile=\$\{safeProfileId\}`/);
+    assert.match(dashboard, /href=\{petLensProfileHref\(pet\?\.apiProfileId\)\}/);
+    assert.match(client, /get\("profile"\)/);
+    assert.match(client, /candidate\.apiProfileId === requestedPetProfileId/);
+    assert.match(client, /currentPet \|\| requestedPet \|\| firstReadyPet/);
+
+    const { cleanPetLensProfileId, petLensProfileHref } = await import("../lib/petlens-routing.ts");
+    assert.equal(cleanPetLensProfileId("42"), 42);
+    assert.equal(cleanPetLensProfileId("0"), undefined);
+    assert.equal(cleanPetLensProfileId("1.5"), undefined);
+    assert.equal(petLensProfileHref(42), "/pet-lens/?profile=42");
+    assert.equal(petLensProfileHref(-1), "/pet-lens");
 });

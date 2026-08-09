@@ -8,6 +8,7 @@ import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { safeInternalRedirect } from "@/lib/internal-redirect";
 import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
 import { clearSignupEmailResume, loadSignupEmailResume } from "@/lib/signup-email-verification";
+import { trackSignupCompleted } from "@/lib/storefront-analytics";
 
 const SOCIAL_PROVIDERS = new Set<SocialProvider>(["naver", "kakao", "google"]);
 
@@ -95,6 +96,7 @@ export default function SocialCallbackPage() {
             };
             login(member);
             if (resume?.source === "social") {
+                trackSignupCompleted(provider || "social");
                 setPendingVerification({ member, returnTo });
             } else {
                 router.replace(returnTo);

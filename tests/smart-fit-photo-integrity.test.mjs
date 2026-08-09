@@ -85,9 +85,18 @@ test("PetLens hydrates an explicit profile id and switches multi-pet state witho
         assert.match(client, /const hydratedPetProfileIdRef = useRef<number \| undefined>\(undefined\)/);
         assert.match(client, /const ownerKey = user\?\.apiUserId \? `id:\$\{user\.apiUserId\}` : user\?\.email \|\| ""/);
         assert.match(client, /const ownerChanged = editingOwnerKeyRef\.current !== ownerKey/);
+        if (client.includes("const requestedPetProfileId")) {
+            assert.match(client, /const requestedPetProfileId = cleanPetLensProfileId\(/);
+            assert.match(client, /const requestedPet = requestedPetProfileId[\s\S]*?user\?\.pets\.find\(\(candidate\) => candidate\.apiProfileId === requestedPetProfileId\)/);
+        }
         assert.match(client, /const firstReadyPet = user\?\.pets\.find\(\(candidate\) => candidate\.apiProfileId && candidate\.breed\?\.trim\(\)\)/);
         assert.match(client, /const firstSavedPet = user\?\.pets\.find\(\(candidate\) => candidate\.apiProfileId\)/);
-        assert.match(client, /const pet = ownerChanged \? firstReadyPet \|\| firstSavedPet : currentPet \|\| firstReadyPet \|\| firstSavedPet/);
+        assert.match(
+            client,
+            client.includes("const requestedPetProfileId")
+                ? /const pet = ownerChanged[\s\S]{0,100}\? requestedPet \|\| firstReadyPet \|\| firstSavedPet[\s\S]{0,100}: currentPet \|\| requestedPet \|\| firstReadyPet \|\| firstSavedPet/
+                : /const pet = ownerChanged \? firstReadyPet \|\| firstSavedPet : currentPet \|\| firstReadyPet \|\| firstSavedPet/,
+        );
         assert.match(client, /const resetTarget = ownerChanged \|\| hydratedPetProfileIdRef\.current !== pet\.apiProfileId/);
         assert.match(client, /editingOwnerKeyRef\.current = ownerKey/);
         assert.match(client, /hydratedPetProfileIdRef\.current = pet\.apiProfileId/);

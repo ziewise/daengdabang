@@ -271,8 +271,17 @@ function reducer(state: State, action: Action): State {
         case "UPSERT_PET": {
             if (!state.user) return state;
             const pets = state.user.pets.filter((pet) => {
-                if (action.pet.apiProfileId && pet.apiProfileId === action.pet.apiProfileId) return false;
-                return pet.name !== action.pet.name;
+                if (action.pet.apiProfileId) {
+                    if (pet.apiProfileId === action.pet.apiProfileId) return false;
+                    // Replace an older local-only draft when its first server
+                    // save returns an id, but never collapse two real profiles
+                    // just because their display names happen to match.
+                    if (!pet.apiProfileId && pet.name === action.pet.name) return false;
+                    return true;
+                }
+                // A local-only update may replace only another local-only row.
+                // Server-backed profiles are identified by id and stay intact.
+                return Boolean(pet.apiProfileId) || pet.name !== action.pet.name;
             });
             return { ...state, user: { ...state.user, pets: [action.pet, ...pets] } };
         }

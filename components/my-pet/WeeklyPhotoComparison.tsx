@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
     buildPetLensAnalysisImage,
     PETLENS_PHOTO_VIEWS,
@@ -61,8 +62,12 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
     const streamRef = useRef<MediaStream | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const launcherRef = useRef<HTMLButtonElement>(null);
+    const dialogRef = useRef<HTMLElement>(null);
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
     const idempotencyKeyRef = useRef("");
     const busy = photoBusy || phase === "uploading" || phase === "analyzing";
+    const busyRef = useRef(busy);
     const capturedCount = petLensPhotoViewCount(views);
     const priorRecord = savedRecord
         ? history.find((item) => item.id !== savedRecord.id)
@@ -80,21 +85,64 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
     }, []);
 
     useEffect(() => {
+        busyRef.current = busy;
+    }, [busy]);
+
+    useEffect(() => {
         if (!open) return;
         const previousOverflow = document.body.style.overflow;
+        const launcher = launcherRef.current;
+        const dialog = dialogRef.current;
+        const portalRoot = dialog?.closest("[data-weekly-photo-modal-viewport]");
+        const background = Array.from(document.body.children)
+            .filter((node): node is HTMLElement => node instanceof HTMLElement && node !== portalRoot)
+            .map((node) => ({ node, inert: node.inert }));
         document.body.style.overflow = "hidden";
+        background.forEach(({ node }) => {
+            node.inert = true;
+        });
+        const focusFrame = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape" && !busy) {
+            if (event.key === "Escape" && !busyRef.current) {
                 stopCamera();
                 setOpen(false);
+                return;
+            }
+            if (event.key !== "Tab" || !dialogRef.current) return;
+            const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+                'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            )).filter((node) => !node.inert && node.getClientRects().length > 0);
+            if (!focusable.length) {
+                event.preventDefault();
+                dialogRef.current.focus();
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (!dialogRef.current.contains(document.activeElement)) {
+                event.preventDefault();
+                (event.shiftKey ? last : first).focus();
+                return;
+            }
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
             }
         };
         window.addEventListener("keydown", onKeyDown);
         return () => {
+            window.cancelAnimationFrame(focusFrame);
             document.body.style.overflow = previousOverflow;
             window.removeEventListener("keydown", onKeyDown);
+            background.forEach(({ node, inert }) => {
+                node.inert = inert;
+            });
+            window.requestAnimationFrame(() => launcher?.focus());
         };
-    }, [busy, open]);
+    }, [open]);
 
     useEffect(() => {
         if (!cameraActive || !streamRef.current || !videoRef.current) return;
@@ -229,6 +277,7 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
     return (
         <>
             <button
+                ref={launcherRef}
                 type="button"
                 className="ddb-crayon-link inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-sm font-black"
                 onClick={openFlow}
@@ -238,30 +287,37 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
                 새 주간 분석 시작
             </button>
 
-            {open && (
-                <div className="fixed inset-0 z-[140] grid place-items-center bg-neutral-950/65 p-2 backdrop-blur-sm sm:p-4" role="presentation" onMouseDown={(event) => {
-                    if (event.target === event.currentTarget) closeFlow();
-                }}>
+            {open && typeof document !== "undefined" && createPortal((
+                <div
+                    className="fixed inset-0 z-[2600] flex h-[100dvh] items-start justify-center overflow-hidden bg-neutral-950/65 px-2 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-[max(.5rem,env(safe-area-inset-top))] backdrop-blur-sm sm:p-4"
+                    role="presentation"
+                    data-weekly-photo-modal-viewport
+                    onMouseDown={(event) => {
+                        if (event.target === event.currentTarget) closeFlow();
+                    }}
+                >
                     <section
+                        ref={dialogRef}
                         role="dialog"
+                        tabIndex={-1}
                         aria-modal="true"
                         aria-busy={busy}
                         aria-labelledby="weekly-photo-title"
-                        className="ddb-crayon-paper max-h-[calc(100dvh-1rem)] w-full max-w-[1120px] overflow-y-auto rounded-[28px] border bg-[#fffdf8] shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-[34px]"
+                        className="ddb-crayon-paper flex max-h-full w-full max-w-[1120px] flex-col overflow-hidden rounded-[28px] border bg-[#fffdf8] shadow-2xl sm:rounded-[34px]"
                         data-weekly-photo-comparison
                     >
-                        <header className="sticky top-0 z-20 flex items-start justify-between gap-3 border-b border-neutral-200/80 bg-[#fffdf8]/95 px-4 py-4 backdrop-blur sm:px-6">
+                        <header className="relative z-20 flex shrink-0 items-start justify-between gap-3 border-b border-neutral-200/80 bg-[#fffdf8]/95 px-4 py-4 backdrop-blur sm:px-6" data-weekly-photo-modal-header>
                             <div>
                                 <p className="ddb-crayon-kicker text-[10px] sm:text-xs">WEEKLY LIVE PHOTO CHECK</p>
                                 <h2 id="weekly-photo-title" className="ddb-crayon-title mt-1 text-xl text-neutral-950 sm:text-2xl">{pet.name}의 이번 주 사진 비교</h2>
                                 <p className="mt-1 text-xs font-bold text-neutral-500">최초 등록 사진은 그대로 보존하고, 이번 촬영만 새 기록으로 저장해요.</p>
                             </div>
-                            <button type="button" onClick={closeFlow} disabled={busy} className="grid h-11 w-11 shrink-0 place-items-center rounded-full border bg-white text-neutral-600 disabled:opacity-40" aria-label="주간 분석 닫기">
+                            <button ref={closeButtonRef} type="button" onClick={closeFlow} disabled={busy} className="grid h-11 w-11 shrink-0 place-items-center rounded-full border bg-white text-neutral-600 disabled:opacity-40" aria-label="주간 분석 닫기">
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
                         </header>
 
-                        <div className="p-4 sm:p-6">
+                        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-6" data-weekly-photo-modal-scroll-region>
                             <ol className="mb-5 grid grid-cols-3 gap-2" aria-label="주간 분석 단계">
                                 {[
                                     ["1", "실시간 촬영", phase === "capture"],
@@ -383,7 +439,7 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
                         </div>
                     </section>
                 </div>
-            )}
+            ), document.body)}
         </>
     );
 }

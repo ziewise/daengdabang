@@ -28,7 +28,10 @@ test("customer chat assistant replies reveal gradually with an accessible reduce
     assert.match(css, /ddb-progressive-gradient-pass 1240ms/);
     assert.match(css, /ddb-progressive-gradient-pass/);
     assert.match(css, /prefers-reduced-motion: reduce/);
-    assert.match(page, /<ProgressiveRevealText\s+text=\{customerVisibleChatAnswer\(message\.text, Boolean\(message\.sources\?\.length\)\)\}/);
-    assert.match(widget, /<ProgressiveRevealText\s+text=\{customerVisibleChatAnswer\(message\.text, Boolean\(message\.sources\?\.length\)\)\}/);
+    assert.match(page, /customerVisibleChatAnswer\(message\.text, Boolean\(message\.sources\?\.length\)\)/);
+    assert.match(page, /customerFriendlyLocalCareAnswer\([\s\S]{0,220}customerVisibleChatAnswer/);
+    assert.match(page, /<ProgressiveRevealText text=\{visibleAnswer\} \/>/);
+    assert.match(widget, /customerFriendlyLocalCareAnswer\([\s\S]{0,220}customerVisibleChatAnswer/);
+    assert.match(widget, /<ProgressiveRevealText text=\{visibleAnswer\} \/>/);
     assert.match(modal, /<ProgressiveRevealText text=\{m\.text\} \/>/);
 });

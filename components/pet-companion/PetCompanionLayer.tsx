@@ -15,7 +15,7 @@ import {
 } from "react";
 import { savePetProfileSmart } from "@/lib/customer-api";
 import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
-import { hasVerifiedPetPhoto, useStore } from "@/lib/store";
+import { hasVerifiedPetPhoto, useStore, type PetProfile } from "@/lib/store";
 import {
     findPetGuidePrompt,
     markPetGuideShown,
@@ -34,7 +34,12 @@ import {
 import {
     COMPANION_TONES,
     PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT,
+    companionDisplaySettingsForPet,
+    companionPetProfileKey,
+    companionRotationCandidates,
     defaultCompanionSettings,
+    findCompanionPet,
+    nextCompanionRotationKey,
     resolvePetProfileBreedId,
     withCompanionSettings,
     writeLocalCompanionSettings,
@@ -136,6 +141,9 @@ const LIVE_BOX_HEIGHT = 174;
 const FLOATING_COLLISION_SELECTOR = '[data-pet-companion-avoid="true"]';
 const FLOATING_COLLISION_GAP = 12;
 const LIVE_TRAVEL_FACING_PROPERTY = "--pet-live-travel-facing-scale";
+const PET_ROTATION_INTERVAL_MS = 45_000;
+const PET_ROTATION_MANUAL_PAUSE_MS = 60_000;
+const EMPTY_PET_PROFILES: PetProfile[] = [];
 
 function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
@@ -236,6 +244,33 @@ export default function PetCompanionLayer({
     onSettingsChange,
 }: Props) {
     const { state, upsertPet } = useStore();
+    const registeredPets = state.user?.pets || EMPTY_PET_PROFILES;
+    const rotationEntries = useMemo(() => {
+        const candidates = companionRotationCandidates(registeredPets);
+        return candidates.map((pet) => ({
+            pet,
+            key: companionPetProfileKey(pet, registeredPets.indexOf(pet)),
+        }));
+    }, [registeredPets]);
+    const rotationSignature = rotationEntries.map((entry) => entry.key).join("|");
+    const manuallySelectedPet = useMemo(
+        () => findCompanionPet(registeredPets, settings),
+        [registeredPets, settings],
+    );
+    const manuallySelectedPetKey = manuallySelectedPet
+        ? companionPetProfileKey(manuallySelectedPet, registeredPets.indexOf(manuallySelectedPet))
+        : rotationEntries[0]?.key || "";
+    const [rotationPetKey, setRotationPetKey] = useState(manuallySelectedPetKey);
+    const rotationPet = rotationEntries.find((entry) => entry.key === rotationPetKey)?.pet
+        || manuallySelectedPet
+        || rotationEntries[0]?.pet;
+    const runtimeSettings = useMemo(
+        () => companionDisplaySettingsForPet(settings, rotationPet),
+        [rotationPet, settings],
+    );
+    const runtimePetKey = rotationPet
+        ? companionPetProfileKey(rotationPet, registeredPets.indexOf(rotationPet))
+        : "single";
     const [draft, setDraft] = useState(settings);
     const [breedSearch, setBreedSearch] = useState("");
     const [motion, setMotion] = useState<PetCompanionMotion>("idle");
@@ -271,6 +306,8 @@ export default function PetCompanionLayer({
     const facingRef = useRef<PetCompanionFacing>("right");
     const positionRef = useRef<{ x: number; y: number } | null>(null);
     const interactionEpochRef = useRef(0);
+    const rotationManuallyPausedRef = useRef(false);
+    const rotationResumeTimerRef = useRef<number | null>(null);
     const dragStateRef = useRef<CompanionDragState | null>(null);
     const dragListenerCleanupRef = useRef<(() => void) | null>(null);
     const cancelEntryRef = useRef<() => void>(() => {});
@@ -290,8 +327,8 @@ export default function PetCompanionLayer({
             ? filteredBreeds
             : [selectedBreed, ...filteredBreeds]
     ), [filteredBreeds, selectedBreed, selectedBreedId]);
-    const displayBreedId = visualBreedId || settings.breedId;
-    const displayCharacterId = visualCharacterId || settings.characterId;
+    const displayBreedId = visualBreedId || runtimeSettings.breedId;
+    const displayCharacterId = visualCharacterId || runtimeSettings.characterId;
     const saveAccess = resolvePetCompanionSaveAccess(state.user);
     const guestSavePromptOpen = !saveAccess.allowed && saveStatus === saveAccess.message;
     const forceMotionPreview = process.env.NODE_ENV !== "production"
@@ -316,8 +353,22 @@ export default function PetCompanionLayer({
         return nextFacing;
     }, []);
 
+    const pauseCompanionRotation = useCallback(() => {
+        rotationManuallyPausedRef.current = true;
+        if (rotationResumeTimerRef.current !== null) {
+            window.clearTimeout(rotationResumeTimerRef.current);
+        }
+        rotationResumeTimerRef.current = window.setTimeout(() => {
+            rotationManuallyPausedRef.current = false;
+            rotationResumeTimerRef.current = null;
+        }, PET_ROTATION_MANUAL_PAUSE_MS);
+    }, []);
+
     useEffect(() => () => {
         dragListenerCleanupRef.current?.();
+        if (rotationResumeTimerRef.current !== null) {
+            window.clearTimeout(rotationResumeTimerRef.current);
+        }
     }, []);
 
     useEffect(() => {
@@ -446,7 +497,7 @@ export default function PetCompanionLayer({
     }, [guestSavePromptOpen]);
 
     useEffect(() => {
-        if (!settings.enabled || panelOpen) return;
+        if (!runtimeSettings.enabled || panelOpen) return;
         const walker = walkerRef.current;
         if (!walker) return;
         const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -1360,7 +1411,7 @@ export default function PetCompanionLayer({
             subtree: true,
         });
         scheduleFloatingCollisionCheck();
-        roamTimer = window.setInterval(roam, settings.motion === "lively" ? 3200 : 4800);
+        roamTimer = window.setInterval(roam, runtimeSettings.motion === "lively" ? 3200 : 4800);
         const firstRoam = window.setTimeout(roam, expectHeroLensEntry ? 2800 : 1000);
 
         return () => {
@@ -1402,10 +1453,10 @@ export default function PetCompanionLayer({
             motionQuery.removeEventListener("change", onMotionPreferenceChange);
             document.removeEventListener("focusin", onFocusIn);
         };
-    }, [commitFacing, panelOpen, settings.enabled, settings.motion]);
+    }, [commitFacing, panelOpen, runtimeSettings.enabled, runtimeSettings.motion]);
 
     useEffect(() => {
-        if (!homeTransition || panelOpen || !settings.enabled || !placementReady) return;
+        if (!homeTransition || panelOpen || !runtimeSettings.enabled || !placementReady) return;
         const walker = walkerRef.current;
         const home = document.querySelector<HTMLElement>("[data-pet-companion-home]");
         if (!walker || !home) return;
@@ -1442,12 +1493,39 @@ export default function PetCompanionLayer({
             walker.style.removeProperty(LIVE_TRAVEL_FACING_PROPERTY);
             walker.inert = false;
         };
-    }, [commitFacing, homeTransition, panelOpen, placementReady, settings.enabled]);
+    }, [commitFacing, homeTransition, panelOpen, placementReady, runtimeSettings.enabled]);
 
     useEffect(() => {
         quickActionsOpenRef.current = quickActionsOpen;
         promptOpenRef.current = Boolean(recommendation || guidePrompt || quickActionsOpen);
     }, [guidePrompt, quickActionsOpen, recommendation]);
+
+    useEffect(() => {
+        // Manual selection is the starting point for every new profile set.
+        // Timed rotation remains presentation-only and never updates storage.
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- synchronize a transient display cursor with member profile identity.
+        setRotationPetKey(manuallySelectedPetKey);
+    }, [manuallySelectedPetKey, rotationSignature]);
+
+    useEffect(() => {
+        if (rotationEntries.length < 2 || panelOpen || hidden || homeTransition) return;
+        const rotationKeys = rotationEntries.map((entry) => entry.key);
+        const rotate = () => {
+            if (
+                document.hidden
+                || quickActionsOpenRef.current
+                || promptOpenRef.current
+                || dragStateRef.current
+                || rotationManuallyPausedRef.current
+                || externalDialogIsOpen({ ignoreCompanionAllowed: false })
+            ) return;
+            setRotationPetKey((current) => (
+                nextCompanionRotationKey(rotationKeys, current, manuallySelectedPetKey)
+            ));
+        };
+        const timer = window.setInterval(rotate, PET_ROTATION_INTERVAL_MS);
+        return () => window.clearInterval(timer);
+    }, [hidden, homeTransition, manuallySelectedPetKey, panelOpen, rotationEntries]);
 
     useEffect(() => {
         homeTransitionRef.current = homeTransition;
@@ -1472,7 +1550,7 @@ export default function PetCompanionLayer({
     }, [homeTransition]);
 
     useEffect(() => {
-        if (!settings.enabled || !settings.speechEnabled || panelOpen || homeTransition) return;
+        if (!runtimeSettings.enabled || !runtimeSettings.speechEnabled || panelOpen || homeTransition) return;
         let dismissTimer = 0;
         let revealTimer = 0;
         let retryTimer = 0;
@@ -1887,10 +1965,10 @@ export default function PetCompanionLayer({
                 guideInFlightRef.current = false;
             }
         };
-    }, [homeTransition, panelOpen, settings.enabled, settings.speechEnabled, state.user]);
+    }, [homeTransition, panelOpen, runtimeSettings.enabled, runtimeSettings.speechEnabled, state.user]);
 
     useEffect(() => {
-        if (!settings.enabled || !settings.speechEnabled || panelOpen || homeTransition) return;
+        if (!runtimeSettings.enabled || !runtimeSettings.speechEnabled || panelOpen || homeTransition) return;
         let dismissTimer = 0;
         let revealTimer = 0;
         let retryTimer = 0;
@@ -1998,7 +2076,7 @@ export default function PetCompanionLayer({
                 if (!force) scheduleAutomaticRecommendation(1800);
                 return;
             }
-            const pet = state.user?.pets.find((item) => item.name === settings.activePetName) || state.user?.pets[0];
+            const pet = findCompanionPet(state.user?.pets || [], runtimeSettings) || state.user?.pets[0];
             const cards = visibleProductCards();
             if (!cards.length) return;
 
@@ -2028,7 +2106,7 @@ export default function PetCompanionLayer({
             const category = selected.dataset.petCategory || "";
             const rect = selected.getBoundingClientRect();
             const revealEpoch = interactionEpochRef.current;
-            let reason = `${settings.activePetName}의 댕픽은 이 상품이에요. 함께 살펴보실까요?`;
+            let reason = `${runtimeSettings.activePetName}의 댕픽은 이 상품이에요. 함께 살펴보실까요?`;
             if (category === "outdoor" && pet?.activity === "high") reason = "산책하실 때 눈여겨보시면 좋을 것 같아요.";
             else if (category === "care" && pet?.coat === "long") reason = "털 관리하실 때 함께 살펴보세요.";
             else if (category === "toy" && pet?.activity === "high") reason = "활동량이 많은 아이에게 잘 어울릴 것 같아요!";
@@ -2222,14 +2300,25 @@ export default function PetCompanionLayer({
                 recommendationInFlightRef.current = false;
             }
         };
-    }, [homeTransition, panelOpen, settings.activePetName, settings.enabled, settings.speechEnabled, state.user]);
+    }, [homeTransition, panelOpen, runtimeSettings, state.user]);
+
+    const petOptions = registeredPets.map((pet, index) => ({
+        pet,
+        value: companionPetProfileKey(pet, index),
+    }));
+    const draftPet = findCompanionPet(registeredPets, draft);
+    const draftPetOptionValue = draftPet
+        ? companionPetProfileKey(draftPet, registeredPets.indexOf(draftPet))
+        : petOptions[0]?.value || "";
 
     const choosePet = (event: ChangeEvent<HTMLSelectElement>) => {
-        const pet = state.user?.pets.find((item) => item.name === event.target.value);
+        const pet = petOptions.find((option) => option.value === event.target.value)?.pet;
+        if (!pet) return;
         const suggested = defaultCompanionSettings(draft.ownerKey, pet);
         setDraft((current) => ({
             ...current,
-            activePetName: event.target.value,
+            activePetProfileId: pet.apiProfileId,
+            activePetName: pet.name,
             breedId: suggested.breedId,
             characterId: suggested.characterId,
             toneId: suggested.toneId,
@@ -2243,7 +2332,7 @@ export default function PetCompanionLayer({
             setSaveStatus(currentSaveAccess.message);
             return;
         }
-        const pet = state.user?.pets.find((item) => item.name === draft.activePetName);
+        const pet = findCompanionPet(registeredPets, draft);
         const selectedBreedId = resolvePetBreedId(draft.breedId);
         const profileBreedId = resolvePetProfileBreedId(pet);
         const next = {
@@ -2252,6 +2341,7 @@ export default function PetCompanionLayer({
             breedSource: profileBreedId && selectedBreedId === profileBreedId
                 ? "profile" as const
                 : "member_companion_selection" as const,
+            activePetProfileId: pet?.apiProfileId,
             activePetName: draft.activePetName.trim() || "몽이",
         };
         writeLocalCompanionSettings(next);
@@ -2307,6 +2397,7 @@ export default function PetCompanionLayer({
     const closePrompt = () => dismissTransientPrompt(true);
 
     const openQuickActions = (event: ReactMouseEvent<HTMLButtonElement>) => {
+        pauseCompanionRotation();
         if (suppressClickRef.current) {
             suppressClickRef.current = false;
             return;
@@ -2367,6 +2458,7 @@ export default function PetCompanionLayer({
 
     const beginCompanionDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
         if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+        pauseCompanionRotation();
         const walker = walkerRef.current;
         if (!walker) return;
         const rect = walker.getBoundingClientRect();
@@ -2413,6 +2505,7 @@ export default function PetCompanionLayer({
         dragListenerCleanupRef.current?.();
         if (button.hasPointerCapture(pointerId)) button.releasePointerCapture(pointerId);
         if (!drag.moved || !walker) return;
+        pauseCompanionRotation();
         suppressClickRef.current = true;
         walker.dataset.dragging = "false";
         button.blur();
@@ -2500,7 +2593,9 @@ export default function PetCompanionLayer({
             className={styles.root}
             data-pet-companion-root
             data-mobile-hidden={hidden ? "true" : "false"}
-            data-pet-speech-enabled={settings.speechEnabled ? "true" : "false"}
+            data-pet-speech-enabled={runtimeSettings.speechEnabled ? "true" : "false"}
+            data-pet-companion-active-profile={runtimeSettings.activePetProfileId || ""}
+            data-pet-companion-rotation-key={runtimePetKey}
             aria-hidden={hidden ? "true" : undefined}
         >
             {entryPortal && createPortal(
@@ -2523,8 +2618,8 @@ export default function PetCompanionLayer({
                         <PetCompanionCharacter
                             breedId={displayBreedId}
                             characterId={displayCharacterId}
-                            toneId={settings.toneId}
-                            accessoryId={settings.accessoryId}
+                            toneId={runtimeSettings.toneId}
+                            accessoryId={runtimeSettings.accessoryId}
                             motion="walk"
                             facing={resolveHorizontalFacing(0, entryPortal.travelX, facing)}
                             forceMotion={forceMotionPreview}
@@ -2533,7 +2628,7 @@ export default function PetCompanionLayer({
                 </span>,
                 entryPortal.target,
             )}
-            {settings.enabled && !panelOpen && (
+            {runtimeSettings.enabled && !panelOpen && (
                 <div
                     ref={walkerRef}
                     className={styles.walker}
@@ -2593,17 +2688,18 @@ export default function PetCompanionLayer({
                         onPointerCancel={endCompanionDrag}
                         onLostPointerCapture={endCompanionDrag}
                         onClick={openQuickActions}
-                        aria-label={`${settings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 빠른 메뉴 열기`}
+                        aria-label={`${runtimeSettings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 빠른 메뉴 열기`}
                         aria-haspopup="dialog"
                         aria-expanded={quickActionsOpen}
                         aria-controls="pet-companion-quick-actions"
                         title="드래그해서 옮기고, 클릭하면 빠른 메뉴가 열려요"
                     >
                         <PetCompanionCharacter
+                            key={runtimePetKey}
                             breedId={displayBreedId}
                             characterId={displayCharacterId}
-                            toneId={settings.toneId}
-                            accessoryId={settings.accessoryId}
+                            toneId={runtimeSettings.toneId}
+                            accessoryId={runtimeSettings.accessoryId}
                             motion={displayMotion}
                             facing={facing}
                             immediateFacing={Boolean(homeTransition)}
@@ -2611,12 +2707,12 @@ export default function PetCompanionLayer({
                             travelDirection={displayTravelDirection}
                             forceMotion={forceMotionPreview}
                         />
-                        <span className={styles.nameTag}>{settings.activePetName}</span>
+                        <span className={styles.nameTag}>{runtimeSettings.activePetName}</span>
                     </button>
                 </div>
             )}
 
-            {quickActionsOpen && settings.enabled && !panelOpen && !homeTransition && (
+            {quickActionsOpen && runtimeSettings.enabled && !panelOpen && !homeTransition && (
                 <div
                     className={styles.quickActionsBackdrop}
                     data-pet-companion-dialog
@@ -2634,7 +2730,7 @@ export default function PetCompanionLayer({
                         aria-labelledby="pet-companion-quick-actions-title"
                     >
                         <h2 id="pet-companion-quick-actions-title" className={styles.quickActionsTitle}>
-                            {settings.activePetName}에게 무엇을 할까요?
+                            {runtimeSettings.activePetName}에게 무엇을 할까요?
                         </h2>
                         <button
                             type="button"
@@ -2716,8 +2812,12 @@ export default function PetCompanionLayer({
                                 <label className={styles.field}>
                                     <span>{state.user?.pets.length ? "활성 반려견" : "친구 이름"}</span>
                                     {state.user?.pets.length ? (
-                                        <select value={draft.activePetName} onChange={choosePet}>
-                                            {state.user.pets.map((pet) => <option key={pet.name}>{pet.name}</option>)}
+                                        <select value={draftPetOptionValue} onChange={choosePet}>
+                                            {petOptions.map(({ pet, value }) => (
+                                                <option key={value} value={value}>
+                                                    {pet.name}{pet.breed ? ` · ${pet.breed}` : ""}
+                                                </option>
+                                            ))}
                                         </select>
                                     ) : (
                                         <input

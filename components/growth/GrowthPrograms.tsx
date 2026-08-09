@@ -50,8 +50,10 @@ export default function GrowthPrograms() {
     const [loadedSession, setLoadedSession] = useState(0);
     const [cancelling, setCancelling] = useState<GrowthProgramId | null>(null);
     const [programNotice, setProgramNotice] = useState<{ tone: "success" | "error"; message: string } | null>(null);
+    const [preparationMotionActive, setPreparationMotionActive] = useState(false);
     const formHeadingRef = useRef<HTMLHeadingElement>(null);
     const receiptHeadingRef = useRef<HTMLHeadingElement>(null);
+    const preparationRef = useRef<HTMLDivElement>(null);
     const accessToken = user?.apiAccessToken;
     const currentSession = sessionFingerprint(accessToken);
     const registrationsReady = !accessToken || loadedSession === currentSession;
@@ -84,6 +86,22 @@ export default function GrowthPrograms() {
         if (receipt) receiptHeadingRef.current?.focus();
         else if (selectedProgram) formHeadingRef.current?.focus();
     }, [receipt, selectedProgram]);
+
+    useEffect(() => {
+        const node = preparationRef.current;
+        if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        if (typeof globalThis.IntersectionObserver !== "function") {
+            const timer = globalThis.setTimeout(() => setPreparationMotionActive(true), 0);
+            return () => globalThis.clearTimeout(timer);
+        }
+        const observer = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            setPreparationMotionActive(true);
+            observer.disconnect();
+        }, { threshold: 0.45 });
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
 
     const selectProgram = (programId: GrowthProgramId) => {
         if (!accessToken) return;
@@ -168,9 +186,25 @@ export default function GrowthPrograms() {
                             아직 판매·예약 가능한 서비스가 아닙니다. 관심 수요를 확인한 뒤 운영 조건과 시작 일정을 별도로 안내하며, 등록은 이 화면에서 언제든 취소할 수 있어요.
                         </p>
                     </div>
-                    <span className="w-fit rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-black text-amber-900">
-                        전 프로그램 준비 중
-                    </span>
+                    <div
+                        ref={preparationRef}
+                        className={`ddb-treasure-prep-scene w-fit${preparationMotionActive ? " ddb-treasure-prep-scene--animate" : ""}`}
+                        data-treasure-preparing-visual
+                        aria-label="전 프로그램 준비 중"
+                    >
+                        <span className="ddb-treasure-prep-icons" aria-hidden="true">
+                            <i className="fa-solid fa-hammer ddb-treasure-pick" />
+                            <i className="fa-solid fa-coins ddb-treasure-coin" />
+                            <i className="fa-solid fa-sparkles ddb-treasure-spark" />
+                            <i className="fa-solid fa-sparkles ddb-treasure-spark" />
+                        </span>
+                        <span className="min-w-0">
+                            <strong className="block text-xs font-black text-amber-950">전 프로그램 준비 중</strong>
+                            <span className="mt-0.5 block text-[10px] font-bold leading-4 text-amber-800">
+                                광고·제휴 혜택은 검증을 마친 뒤 선택 기능으로 열어요.
+                            </span>
+                        </span>
+                    </div>
                 </div>
 
                 <div className="mt-7 grid gap-4 lg:grid-cols-2">
@@ -183,7 +217,7 @@ export default function GrowthPrograms() {
                                 <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                         <p className="ddb-crayon-kicker text-[10px]">{program.eyebrow}</p>
-                                        <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-black text-amber-900">준비 중</span>
+                                        <span className="ddb-preparing-chip rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-black text-amber-900">준비 중</span>
                                     </div>
                                     <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{program.title}</h3>
                                     <p className="mt-1 text-xs font-black text-indigo-700">{program.status}</p>

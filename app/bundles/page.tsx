@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import BundleCard from "@/components/bundles/BundleCard";
 import LocalizedText from "@/components/i18n/LocalizedText";
-import { BUNDLES, bundleCountSummary } from "@/lib/bundles";
+import { BUNDLES } from "@/lib/bundles";
 
 export const metadata: Metadata = {
     title: "묶음 기획전 | 댕다방",
@@ -9,8 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default function BundlesPage() {
-    const summary = bundleCountSummary();
-
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <p className="text-sm font-black text-indigo-700">PROMO</p>
@@ -22,19 +20,17 @@ export default function BundlesPage() {
                         en="Bundle Sets"
                         className="text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"
                     />
+                    <LocalizedText
+                        as="p"
+                        ko="함께 쓰기 좋은 실제 판매 상품을 골라 세트 혜택으로 모았어요."
+                        en="Shop practical product combinations with bundle savings."
+                        className="mt-2 text-sm font-bold text-neutral-600"
+                    />
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="text-center">
                     <div className="surface px-4 py-3">
-                        <p className="text-lg font-black text-neutral-950">{summary.total}</p>
+                        <p className="text-lg font-black text-neutral-950">{BUNDLES.length}</p>
                         <LocalizedText ko="전체 세트" en="Total sets" className="text-[11px] font-bold text-neutral-500" />
-                    </div>
-                    <div className="surface px-4 py-3">
-                        <p className="text-lg font-black text-neutral-950">{summary.ready}</p>
-                        <LocalizedText ko="영상 완료" en="Video ready" className="text-[11px] font-bold text-neutral-500" />
-                    </div>
-                    <div className="surface px-4 py-3">
-                        <p className="text-lg font-black text-neutral-950">{summary.needsVideo}</p>
-                        <LocalizedText ko="영상 대기" en="Video pending" className="text-[11px] font-bold text-neutral-500" />
                     </div>
                 </div>
             </div>

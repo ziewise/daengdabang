@@ -21,6 +21,7 @@ type ChatResponseExtrasProps = {
     compact?: boolean;
     followUpsEnabled?: boolean;
     onInternalNavigate?: () => void;
+    questionContext?: string;
 };
 
 type ChoiceViewGroup = {
@@ -37,7 +38,9 @@ export function isFollowUpBundlePrompt(value: string) {
     return value.trimStart().startsWith(CHAT_FOLLOW_UP_BUNDLE_PREFIX);
 }
 
-type VetPlace = {
+type LocalCareCategory = "veterinary" | "grooming" | "hotel" | "daycare";
+
+type LocalCarePlace = {
     id: string;
     name: string;
     address: string;
@@ -51,11 +54,11 @@ type VetPlace = {
     mapProvider: "naver";
 };
 
-type VetSearchState =
+type LocalCareSearchState =
     | { status: "idle" }
-    | { status: "loading"; message: string }
-    | { status: "done"; places: VetPlace[]; fallbackUrl: string }
-    | { status: "error"; message: string; fallbackUrl: string };
+    | { status: "loading"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string }
+    | { status: "done"; category: LocalCareCategory; label: string; places: LocalCarePlace[]; fallbackUrl: string }
+    | { status: "error"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string };
 
 function buildNaverMapUrl(...parts: Array<string | undefined>) {
     const searchText = parts
@@ -95,6 +98,43 @@ const NON_EVIDENCE_RESEARCH_MODES = new Set([
     "location-permission-required",
 ]);
 
+const LOCAL_PET_CARE_SERVICE_RE = /(동물\s*(?:병원|변원)|24시\s*(?:동물\s*)?병원|응급\s*(?:동물\s*)?병원|반려견\s*미용|강아지\s*미용|애견\s*미용|펫\s*미용|미용실|반려견\s*호텔|강아지\s*호텔|애견\s*호텔|펫\s*호텔|데이\s*케어|데이케이|반려견\s*유치원|강아지\s*유치원|애견\s*유치원)/i;
+const LOCAL_PET_CARE_LOCATION_RE = /(현재\s*위치|가까운|근처|주변|인근|동네|지역|찾아?\s*줘|찾아?\s*주세요|어디|위치|지도|후보)/i;
+const LOCAL_CARE_FALLBACK_ANSWER_RE = /(확인\s*가능한\s*웹\s*출처|근거\s*부족|제한\s*시간\s*안에[\s\S]{0,80}확인하지\s*못|위치와\s*운영\s*여부를\s*확인하지\s*못|지역과[\s\S]{0,60}다시\s*(?:적어|알려))/i;
+const LOCAL_CARE_SAFETY_ANSWER_RE = /(?:지금\s*바로|즉시)[\s\S]{0,50}(?:병원|연락|이동)/i;
+const LOCAL_CARE_INTERNAL_FALLBACK_PATTERNS = [
+    /(?:확인\s*가능한\s*웹\s*출처(?:가)?\s*(?:없습니다|없어요|없음)?|근거\s*부족)[.!?]?/gi,
+    /제한\s*시간\s*안에[^.!?\n]{0,140}(?:확인하지\s*못(?:했어요|했습니다)|확인할\s*수\s*없(?:어요|습니다))[.!?]?/gi,
+    /(?:진료기관의\s*)?위치와\s*운영\s*여부를[^.!?\n]{0,100}(?:확인하지\s*못|확인할\s*수\s*없)[^.!?\n]*[.!?]?/gi,
+    /지역과[^.!?\n]{0,100}다시\s*(?:적어|알려)[^.!?\n]*(?:주세요|주십시오)?[.!?]?/gi,
+] as const;
+
+function withoutInternalLocalCareFallback(answer: string) {
+    return LOCAL_CARE_INTERNAL_FALLBACK_PATTERNS
+        .reduce((visible, pattern) => visible.replace(pattern, ""), answer)
+        .replace(/[ \t]+\n/g, "\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .replace(/ {2,}/g, " ")
+        .trim();
+}
+
+export function isLocalPetCarePrompt(value?: string) {
+    const text = String(value || "").trim();
+    return Boolean(text && LOCAL_PET_CARE_SERVICE_RE.test(text) && LOCAL_PET_CARE_LOCATION_RE.test(text));
+}
+
+export function customerFriendlyLocalCareAnswer(question: string | undefined, answer: string, triage?: string) {
+    if (
+        triage === "emergency"
+        || LOCAL_CARE_SAFETY_ANSWER_RE.test(answer)
+        || !isLocalPetCarePrompt(question)
+        || !LOCAL_CARE_FALLBACK_ANSWER_RE.test(answer)
+    ) return answer;
+    const visibleAnswer = withoutInternalLocalCareFallback(answer);
+    const locationGuide = "현재 위치에서 찾기 쉬운 병원·미용·호텔·데이케어 바로가기를 아래에 준비했어요. 위치 권한을 허용하면 가까운 후보를 이 화면에서 확인할 수 있어요.";
+    return visibleAnswer ? `${visibleAnswer}\n\n${locationGuide}` : locationGuide;
+}
+
 function formatEvidenceDate(value?: string) {
     if (!value) return "";
     const date = new Date(value);
@@ -105,7 +145,7 @@ function formatEvidenceDate(value?: string) {
 }
 
 function researchFreshnessLabel(status?: string, hasSources = true) {
-    if (!hasSources || status === "insufficient" || status === "unavailable") return "근거 부족";
+    if (!hasSources || status === "insufficient" || status === "unavailable") return "일반 안내";
     if (status === "stale") return "오래된 자료";
     if (status === "live_verified") return "최신 정보 확인";
     if (status === "verified") return "출처 확인";
@@ -143,8 +183,9 @@ function ResearchEvidence({
         return items;
     }, []);
     const researchMode = research?.mode?.trim().toLowerCase();
+    if (researchMode && NON_EVIDENCE_RESEARCH_MODES.has(researchMode) && visibleSources.length === 0) return null;
     const hasResearchAttempt = Boolean(research && (
-        (researchMode && !NON_EVIDENCE_RESEARCH_MODES.has(researchMode))
+        researchMode
         || research.freshnessStatus
         || research.searchedAt
         || research.freshAsOf
@@ -171,7 +212,7 @@ function ResearchEvidence({
                     <span>
                         {visibleSources.length
                             ? `${isInsufficient ? "참고한 자료" : "확인한 출처"} ${visibleSources.length}개`
-                            : "확인 가능한 웹 출처 없음"}
+                            : "출처 링크 없는 일반 안내"}
                     </span>
                 </span>
                 <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-extrabold text-sky-700">
@@ -217,23 +258,49 @@ function ResearchEvidence({
     );
 }
 
-async function fetchNearbyVetPlaces(latitude: number, longitude: number, query = "동물병원") {
-    const result = await fetchDaengDaBangVetPlaces(latitude, longitude, query);
-    if (result?.places.length) return result;
-    throw new Error(result?.message || "현재 확인 가능한 동물병원 후보가 없습니다.");
+function safeNaverMapFallback(value: string | undefined, query: string) {
+    const fallbackUrl = buildNaverMapUrl(query);
+    if (!value) return fallbackUrl;
+    try {
+        const parsed = new URL(value);
+        if (parsed.protocol !== "https:" || parsed.hostname !== "map.naver.com" || !parsed.pathname.startsWith("/p/search/")) {
+            return fallbackUrl;
+        }
+        return parsed.toString();
+    } catch {
+        return fallbackUrl;
+    }
 }
 
-async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, query = "동물병원") {
+async function fetchNearbyLocalCarePlaces(
+    latitude: number,
+    longitude: number,
+    category: LocalCareCategory,
+    label: string,
+    query: string,
+) {
+    const result = await fetchDaengDaBangLocalCarePlaces(latitude, longitude, category, label, query);
+    if (result?.places.length) return result;
+    throw new Error(result?.message || `현재 확인 가능한 ${label} 후보가 없습니다.`);
+}
+
+async function fetchDaengDaBangLocalCarePlaces(
+    latitude: number,
+    longitude: number,
+    category: LocalCareCategory,
+    label: string,
+    query: string,
+) {
     const base = ddbApiBase();
     if (!base) return null;
 
     const params = new URLSearchParams({
+        category,
         lat: String(latitude),
         lon: String(longitude),
-        query,
         limit: "5",
     });
-    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/local/vets?${params}`, {
+    const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/local/pet-care?${params}`, {
         headers: { "Accept": "application/json" },
     });
     if (!response.ok) return null;
@@ -241,6 +308,7 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
         configured?: boolean;
         status?: "ready" | "degraded" | "unavailable";
         error?: string;
+        fallbackMapUrl?: string;
         places?: Array<{
             id?: string;
             name?: string;
@@ -257,12 +325,12 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
     };
     if (!Array.isArray(data.places)) return null;
 
-    const places = data.places.flatMap((place, index): VetPlace[] => {
+    const places = data.places.flatMap((place, index): LocalCarePlace[] => {
         if (place.lat == null || place.lon == null) return [];
         const lat = Number(place.lat);
         const lon = Number(place.lon);
         if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat === 0 || lon === 0) return [];
-        const name = String(place.name || "이름 미확인 동물병원").trim();
+        const name = String(place.name || `이름 미확인 ${label}`).trim();
         return [{
             id: place.id || `naver-${index}-${name}`,
             name,
@@ -283,11 +351,15 @@ async function fetchDaengDaBangVetPlaces(latitude: number, longitude: number, qu
     });
 
     const message = data.status === "unavailable"
-        ? "병원 검색 서비스에 연결하지 못했습니다. 네이버지도에서 직접 확인해 주세요."
+        ? `${label} 검색 서비스에 연결하지 못했습니다. 네이버지도에서 직접 확인해 주세요.`
         : data.status === "degraded" || data.error
             ? "일부 검색 공급자가 불안정해 확인된 후보만 표시합니다."
             : "";
-    return { fallbackUrl: buildNaverMapUrl(query), places, message };
+    return {
+        fallbackUrl: safeNaverMapFallback(data.fallbackMapUrl, query),
+        places,
+        message,
+    };
 }
 
 function FollowUpBundleForm({
@@ -540,7 +612,76 @@ function ChoiceGroups({
     );
 }
 
-function VetSearchResults({ state }: { state: VetSearchState }) {
+const LOCAL_CARE_SHORTCUTS = [
+    { category: "veterinary", label: "동물병원", query: "동물병원", icon: "fa-house-medical" },
+    { category: "grooming", label: "반려견 미용", query: "반려견 미용", icon: "fa-scissors" },
+    { category: "hotel", label: "반려견 호텔", query: "반려견 호텔", icon: "fa-bed" },
+    { category: "daycare", label: "데이케어·유치원", query: "반려견 데이케어 유치원", icon: "fa-dog" },
+] as const;
+
+type LocalCareShortcut = (typeof LOCAL_CARE_SHORTCUTS)[number];
+
+function LocalCareQuickActions({
+    onFindLocalCare,
+    loadingCategory,
+}: {
+    onFindLocalCare: (item: LocalCareShortcut) => void;
+    loadingCategory?: LocalCareCategory;
+}) {
+    return (
+        <div
+            data-chat-local-care-actions
+            className="rounded-xl border border-indigo-200 bg-[#fffaf0] p-3 text-left shadow-sm"
+        >
+            <div className="flex items-start gap-2.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-700" aria-hidden="true">
+                    <i className="fa-solid fa-map-location-dot" />
+                </span>
+                <div>
+                    <p className="text-sm font-black text-neutral-950">동네 돌봄을 한곳에서 찾아보세요</p>
+                    <p className="mt-1 text-[11px] font-bold leading-4 text-neutral-600">
+                        병원·미용·호텔·데이케어 모두 현재 위치에서 가까운 후보를 이 화면에 보여드려요.
+                    </p>
+                </div>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+                {LOCAL_CARE_SHORTCUTS.map((item) => (
+                    <div key={item.category} className="overflow-hidden rounded-lg border border-indigo-100 bg-white">
+                        <button
+                            type="button"
+                            onClick={() => onFindLocalCare(item)}
+                            disabled={Boolean(loadingCategory)}
+                            className="flex min-h-12 w-full items-center gap-2 px-3 py-2 text-left text-xs font-black text-neutral-900 transition hover:bg-indigo-50 disabled:cursor-wait disabled:opacity-60"
+                        >
+                            <i
+                                className={`fa-solid ${loadingCategory === item.category ? "fa-spinner fa-spin" : item.icon} w-4 text-center text-indigo-600`}
+                                aria-hidden="true"
+                            />
+                            <span>
+                                <span className="block">{item.label}</span>
+                                <span className="mt-0.5 block text-[10px] font-bold text-neutral-500">가까운 후보 보기</span>
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => openExternal(buildNaverMapUrl(item.query))}
+                            className="flex min-h-8 w-full items-center justify-center border-t border-indigo-50 bg-[#f8fff9] px-2 text-[10px] font-black text-[#087b39] hover:bg-[#ecfff0]"
+                            aria-label={`${item.label} 네이버지도에서 바로 보기`}
+                        >
+                            <span aria-hidden="true" className="mr-1">N</span>
+                            지도 바로 보기
+                        </button>
+                    </div>
+                ))}
+            </div>
+            <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
+                영업·진료·예약 가능 여부는 방문 전에 해당 업체에 확인해 주세요.
+            </p>
+        </div>
+    );
+}
+
+function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
     if (state.status === "idle") return null;
     if (state.status === "loading") {
         return (
@@ -570,7 +711,7 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
         return (
             <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-left">
                 <p className="text-xs font-black leading-5 text-amber-900">
-                    가까운 동물병원 후보를 찾지 못했어요. 네이버지도에서 주변 병원을 바로 확인해 주세요.
+                    가까운 {state.label} 후보를 찾지 못했어요. 네이버지도에서 주변 업체를 바로 확인해 주세요.
                 </p>
                 <button
                     type="button"
@@ -586,7 +727,7 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
     return (
         <div className="mt-2 space-y-2 rounded-lg border border-indigo-100 bg-white p-2.5 text-left shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-1.5">
-                <p className="text-[11px] font-black text-indigo-800">현재 위치 기준 가까운 동물병원 후보</p>
+                <p className="text-[11px] font-black text-indigo-800">현재 위치 기준 가까운 {state.label} 후보</p>
                 <span className="rounded-full bg-[#e9fff1] px-2 py-1 text-[10px] font-black text-[#087b39]">
                     지도: 네이버지도
                 </span>
@@ -638,7 +779,9 @@ function VetSearchResults({ state }: { state: VetSearchState }) {
                 </div>
             ))}
             <p className="text-[10px] font-bold leading-4 text-neutral-500">
-                후보 정보는 네이버 지역검색을 우선하며, 모든 지도 버튼은 네이버지도로 열립니다. 실제 진료 가능 여부와 야간/응급 운영은 전화로 확인해 주세요.
+                후보 정보는 네이버 지역검색을 우선하며, 모든 지도 버튼은 네이버지도로 열립니다. {state.category === "veterinary"
+                    ? "실제 진료 가능 여부와 야간·응급 운영은 전화로 확인해 주세요."
+                    : "실제 영업·예약 가능 여부와 반려견 이용 조건은 업체에 확인해 주세요."}
             </p>
         </div>
     );
@@ -654,9 +797,83 @@ export default function ChatResponseExtras({
     compact = false,
     followUpsEnabled = true,
     onInternalNavigate,
+    questionContext,
 }: ChatResponseExtrasProps) {
-    const [vetSearch, setVetSearch] = useState<VetSearchState>({ status: "idle" });
+    const [localCareSearch, setLocalCareSearch] = useState<LocalCareSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
+    const geoSearchCta = ctas?.find((cta) => cta.kind === "geo_vet_search");
+    const localCareIntent = Boolean(geoSearchCta) || isLocalPetCarePrompt(questionContext);
+    const visibleCtas = (ctas ?? []).filter((cta) => !localCareIntent || (
+        cta.kind !== "geo_vet_search"
+        && !(cta.kind === "external_link" && cta.url?.startsWith("https://map.naver.com/p/search/"))
+    ));
+
+    const runLocalCareSearch = async ({
+        category,
+        label,
+        query,
+    }: {
+        category: LocalCareCategory;
+        label: string;
+        query: string;
+    }) => {
+        const fallbackUrl = buildNaverMapUrl(query);
+        if (!("geolocation" in navigator)) {
+            setLocalCareSearch({
+                status: "error",
+                category,
+                label,
+                message: "이 브라우저에서는 현재 위치를 읽을 수 없어요. 네이버지도에서 직접 확인해 주세요.",
+                fallbackUrl,
+            });
+            return;
+        }
+
+        setLocalCareSearch({
+            status: "loading",
+            category,
+            label,
+            message: `현재 위치 기준으로 가까운 ${label} 후보를 찾고 있어요.`,
+            fallbackUrl,
+        });
+        try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 7000,
+                    maximumAge: 60000,
+                });
+            });
+            const result = await fetchNearbyLocalCarePlaces(
+                position.coords.latitude,
+                position.coords.longitude,
+                category,
+                label,
+                query,
+            );
+            setLocalCareSearch({
+                status: "done",
+                category,
+                label,
+                places: result.places,
+                fallbackUrl: result.fallbackUrl,
+            });
+        } catch (error) {
+            const geolocationCode = typeof error === "object" && error !== null && "code" in error
+                ? Number((error as { code?: unknown }).code)
+                : undefined;
+            const message = geolocationCode === 1
+                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 네이버지도에서 직접 확인해 주세요."
+                : `${label} 후보 검색이 잠시 불안정해요. 네이버지도에서 직접 확인해 주세요.`;
+            setLocalCareSearch({
+                status: "error",
+                category,
+                label,
+                message,
+                fallbackUrl,
+            });
+        }
+    };
 
     const handleCta = async (cta: ShopChatCta) => {
         if (cta.kind === "prompt" && cta.prompt) {
@@ -668,49 +885,18 @@ export default function ChatResponseExtras({
             return;
         }
         if (cta.kind !== "geo_vet_search") return;
-
-        const query = cta.query || "동물병원";
-        const fallbackUrl = buildNaverMapUrl(query);
-        if (!("geolocation" in navigator)) {
-            setVetSearch({
-                status: "error",
-                message: "이 브라우저에서는 현재 위치를 읽을 수 없어요. 네이버지도에서 직접 확인해 주세요.",
-                fallbackUrl,
-            });
-            return;
-        }
-
-        setVetSearch({ status: "loading", message: "현재 위치 기준으로 가까운 동물병원을 찾고 있어요." });
-        try {
-            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: true,
-                    timeout: 7000,
-                    maximumAge: 60000,
-                });
-            });
-            const result = await fetchNearbyVetPlaces(position.coords.latitude, position.coords.longitude, query);
-            setVetSearch({ status: "done", places: result.places, fallbackUrl: result.fallbackUrl });
-        } catch (error) {
-            const geolocationCode = typeof error === "object" && error !== null && "code" in error
-                ? Number((error as { code?: unknown }).code)
-                : undefined;
-            const message = geolocationCode === 1
-                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 네이버지도에서 직접 확인해 주세요."
-                : error instanceof Error && error.message
-                    ? error.message
-                    : "병원 후보 검색이 잠시 불안정해요. 네이버지도에서 직접 확인해 주세요.";
-            setVetSearch({
-                status: "error",
-                message,
-                fallbackUrl,
-            });
-        }
+        await runLocalCareSearch({
+            category: "veterinary",
+            label: "동물병원",
+            query: cta.query || "동물병원",
+        });
     };
 
     return (
         <>
-            <ResearchEvidence sources={sources} research={research} compact={compact} />
+            {!localCareIntent ? (
+                <ResearchEvidence sources={sources} research={research} compact={compact} />
+            ) : null}
 
             {generation ? (
                 <div
@@ -748,9 +934,19 @@ export default function ChatResponseExtras({
                 </div>
             ) : null}
 
-            {ctas && ctas.length > 0 && (
+            {localCareIntent ? (
+                <div className={`mt-2 ${widthClass}`}>
+                    <LocalCareQuickActions
+                        loadingCategory={localCareSearch.status === "loading" ? localCareSearch.category : undefined}
+                        onFindLocalCare={(item) => void runLocalCareSearch(item)}
+                    />
+                    <LocalCareSearchResults state={localCareSearch} />
+                </div>
+            ) : null}
+
+            {visibleCtas.length > 0 && (
                 <div className={`mt-2 ${widthClass} space-y-1.5`}>
-                    {ctas.slice(0, 3).map((cta) => {
+                    {visibleCtas.slice(0, 3).map((cta) => {
                         const content = (
                             <>
                                 <i className={`fa-solid ${cta.icon || "fa-arrow-up-right-from-square"} text-indigo-600`} aria-hidden="true" />
@@ -793,14 +989,13 @@ export default function ChatResponseExtras({
                                 key={`${cta.kind}-${cta.label}`}
                                 type="button"
                                 onClick={() => void handleCta(cta)}
-                                disabled={cta.kind === "geo_vet_search" && vetSearch.status === "loading"}
+                                disabled={cta.kind === "geo_vet_search" && localCareSearch.status === "loading"}
                                 className={className}
                             >
                                 {content}
                             </button>
                         );
                     })}
-                    <VetSearchResults state={vetSearch} />
                 </div>
             )}
 

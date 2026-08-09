@@ -5,9 +5,10 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const source = (path) => readFile(new URL(path, root), "utf8");
 
-test("CareTalk offers a persistent readable-font toggle before the clear button", async () => {
-    const [widget, css, storage] = await Promise.all([
+test("both CareTalk surfaces offer a persistent readable-font toggle before the clear button", async () => {
+    const [widget, page, css, storage] = await Promise.all([
         source("components/site/ChatWidget.tsx"),
+        source("app/chat/ChatPageClient.tsx"),
         source("components/site/ChatWidget.module.css"),
         source("lib/storage.ts"),
     ]);
@@ -33,6 +34,24 @@ test("CareTalk offers a persistent readable-font toggle before the clear button"
     const toggleIndex = widget.indexOf("data-chat-font-toggle");
     const clearIndex = widget.indexOf('aria-label="채팅 비우기"');
     assert.ok(toggleIndex >= 0 && clearIndex > toggleIndex);
+
+    assert.match(page, /useSyncExternalStore/);
+    assert.match(page, /subscribeStorage\("CHAT_FONT_MODE", callback\)/);
+    assert.match(page, /data-chat-font-mode=\{chatFontMode\}/);
+    assert.match(page, /getServerChatFontMode = \(\) => "readable"/);
+    assert.match(page, /chatFontModeStorage\.set\(readableFontEnabled \? "crayon" : "readable"\)/);
+    assert.match(page, /data-chat-font-toggle/);
+    assert.match(page, /aria-pressed=\{readableFontEnabled\}/);
+    assert.match(page, /또박또박한 정자체로 보기/);
+    assert.match(page, /기존 손글씨체로 보기/);
+    assert.match(page, /text-base leading-7 tracking-normal/);
+    assert.match(page, /\[font-family:var\(--font-wanted-sans\)\]/);
+    assert.match(page, /\[font-family:var\(--font-crayon\)\]/);
+    assert.doesNotMatch(page, /window\.localStorage/);
+
+    const pageToggleIndex = page.indexOf("data-chat-font-toggle");
+    const newChatIndex = page.indexOf('aria-label="새 대화 시작"');
+    assert.ok(pageToggleIndex >= 0 && newChatIndex > pageToggleIndex);
 
     assert.match(css, /--chat-font-body: var\(--font-crayon\)/);
     assert.match(css, /\.panel\[data-chat-font-mode="readable"\] \{[\s\S]{0,260}--chat-font-body: var\(--font-wanted-sans\)/);

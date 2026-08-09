@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/products/ProductCard";
 import DeferredBundleHeroVideo from "@/components/bundles/DeferredBundleHeroVideo";
-import { BUNDLES, bundleImageCandidates, getBundleBySlug } from "@/lib/bundles";
+import { BUNDLES, bundleCustomerBadge, bundleImageCandidates, getBundleBySlug } from "@/lib/bundles";
 import { formatKRW } from "@/lib/catalog";
 import BundleAddButton from "./BundleAddButton";
 
@@ -47,7 +47,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                 <div className="relative z-10 mx-auto grid min-h-[520px] max-w-[1280px] items-end gap-8 px-4 pb-10 pt-16 md:grid-cols-[minmax(0,1fr)_360px] md:px-6">
                     <div>
                         <div className="flex flex-wrap gap-2">
-                            <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-950">{bundle.badge}</span>
+                            <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-950">{bundleCustomerBadge(bundle)}</span>
                             <span className="rounded-full bg-white/14 px-3 py-1 text-xs font-black text-white ring-1 ring-white/24">
                                 {bundle.products.length}종 세트
                             </span>
@@ -87,10 +87,6 @@ export default async function BundleDetailPage({ params }: PageProps) {
                             <div className="flex items-center justify-between text-sm font-bold text-neutral-600">
                                 <span>세트 절약</span>
                                 <b className="text-rose-600">{formatKRW(bundle.savings)}원</b>
-                            </div>
-                            <div className="flex items-center justify-between text-sm font-bold text-neutral-600">
-                                <span>영상 상태</span>
-                                <b className="text-neutral-950">{bundle.assetStatus === "ready" ? "완성" : "제작 대기"}</b>
                             </div>
                         </div>
                     </aside>

@@ -37,6 +37,7 @@ import {
     type PetObservationJobStatus,
 } from "@/lib/petlens-observation";
 import {
+    cleanPetLensProfileId,
     cleanPetLensObservationRequestId,
     petLensAuthHref,
     petLensObservationHref,
@@ -192,9 +193,17 @@ export default function PetLensClient() {
         const currentPet = editingPetProfileId
             ? user?.pets.find((candidate) => candidate.apiProfileId === editingPetProfileId)
             : undefined;
+        const requestedPetProfileId = cleanPetLensProfileId(
+            typeof window === "undefined" ? undefined : new URLSearchParams(window.location.search).get("profile"),
+        );
+        const requestedPet = requestedPetProfileId
+            ? user?.pets.find((candidate) => candidate.apiProfileId === requestedPetProfileId)
+            : undefined;
         const firstReadyPet = user?.pets.find((candidate) => candidate.apiProfileId && candidate.breed?.trim());
         const firstSavedPet = user?.pets.find((candidate) => candidate.apiProfileId);
-        const pet = ownerChanged ? firstReadyPet || firstSavedPet : currentPet || firstReadyPet || firstSavedPet;
+        const pet = ownerChanged
+            ? requestedPet || firstReadyPet || firstSavedPet
+            : currentPet || requestedPet || firstReadyPet || firstSavedPet;
         if (!pet?.apiProfileId) {
             editingOwnerKeyRef.current = ownerKey;
             hydratedPetProfileIdRef.current = undefined;

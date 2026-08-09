@@ -148,7 +148,8 @@ test("both chat surfaces preserve research metadata and render compact verified 
     assert.match(extras, /target="_blank"/);
     assert.match(extras, /rel="noopener noreferrer"/);
     assert.match(extras, /확인한 출처/);
-    assert.match(extras, /확인 가능한 웹 출처 없음/);
+    assert.match(extras, /일반 안내/);
+    assert.doesNotMatch(extras, /근거 부족|확인 가능한 웹 출처 없음/);
     assert.match(extras, /웹 확인 시각/);
     assert.match(extras, /근거 기준/);
     assert.match(extras, /aria-label="답변에 인용된 웹 출처"/);
@@ -157,6 +158,7 @@ test("both chat surfaces preserve research metadata and render compact verified 
     assert.match(extras, /parsed\.username \|\| parsed\.password/);
     assert.match(extras, /citationNumber: index \+ 1/);
     assert.match(extras, /NON_EVIDENCE_RESEARCH_MODES/);
+    assert.match(extras, /if \(researchMode && NON_EVIDENCE_RESEARCH_MODES\.has\(researchMode\) && visibleSources\.length === 0\) return null/);
     assert.match(extras, /if \(!visibleSources\.length && !hasResearchAttempt\) return null/);
     assert.match(extras, /\[\{citationNumber\}\]/);
     assert.doesNotMatch(extras, /HTTPS 출처/);

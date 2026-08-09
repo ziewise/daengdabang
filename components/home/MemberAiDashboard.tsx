@@ -13,7 +13,8 @@ import {
     type DaengLabCareTaskId,
     type DaengLabEngagement,
 } from "@/lib/customer-api";
-import { useAuth } from "@/lib/store";
+import { useAuth, type PetProfile } from "@/lib/store";
+import { petLensProfileHref } from "@/lib/petlens-routing";
 
 type Props = {
     variant?: "home" | "full";
@@ -52,6 +53,10 @@ function ratio(value: number, target: number) {
     return Math.max(0, Math.min(100, Math.round(value / Math.max(1, target) * 100)));
 }
 
+function dashboardPetKey(pet: PetProfile, index: number) {
+    return pet.apiProfileId ? `profile:${pet.apiProfileId}` : `local:${index}:${pet.name}`;
+}
+
 export default function MemberAiDashboard({ variant = "home" }: Props) {
     const { hydrated, user } = useAuth();
     const [attendance, setAttendance] = useState<DaengLabAttendance | null>(null);
@@ -59,6 +64,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
     const [loading, setLoading] = useState(false);
     const [savingTask, setSavingTask] = useState<DaengLabCareTaskId | null>(null);
     const [error, setError] = useState("");
+    const [selectedPetKey, setSelectedPetKey] = useState("");
     const accessToken = user?.apiAccessToken;
 
     const refresh = useCallback(async () => {
@@ -85,7 +91,9 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
         return () => window.clearTimeout(timer);
     }, [accessToken, hydrated, refresh]);
 
-    const pet = user?.pets[0];
+    const pets = user?.pets || [];
+    const selectedPetIndex = pets.findIndex((candidate, index) => dashboardPetKey(candidate, index) === selectedPetKey);
+    const pet = pets[selectedPetIndex >= 0 ? selectedPetIndex : 0];
     const today = attendance?.businessDate || engagement?.businessDate || "";
     const analyzedToday = Boolean(pet?.lastAnalyzedAt && seoulDate(pet.lastAnalyzedAt) === today);
     const walkTask = engagement?.todayTasks.find((task) => task.taskId === "walk_20");
@@ -140,7 +148,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                     <span className="ddb-crayon-icon mx-auto grid h-16 w-16 place-items-center rounded-3xl text-2xl" data-crayon-tone="coral"><i className="fa-solid fa-paw" /></span>
                     <h1 className="ddb-crayon-title mt-5 text-4xl">로그인하고 오늘의 챌린지를 시작하세요</h1>
                     <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">출근도장과 XP, 코인 보상은 회원 계정에 안전하게 저장됩니다.</p>
-                    <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="btn btn-primary mt-6">로그인하기</Link>
+                    <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="btn btn-primary ddb-attention-cta mt-6">로그인하기</Link>
                 </div>
             </div>
         );
@@ -177,7 +185,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
     };
 
     return (
-        <section id="ai-dashboard" className={variant === "home" ? "py-10 md:py-14" : "py-8"} aria-labelledby="ai-dashboard-title" data-member-ai-dashboard>
+        <section id="ai-dashboard" className={variant === "home" ? "py-10 md:py-14" : "py-8"} aria-labelledby="ai-dashboard-title" data-member-ai-dashboard data-growth-motion-scope>
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
                 <div className="ddb-crayon-paper overflow-hidden rounded-[34px] border">
                     <header className="ddb-crayon-banner relative overflow-hidden px-5 py-6 md:px-8 md:py-8">
@@ -199,11 +207,40 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     <p className="mt-2 text-xs font-bold text-neutral-600">출근도장부터 산책·분석·추천까지 한 번에 이어가세요.</p>
                                 </div>
                             </div>
-                            <Link href="/my-pet/" className="ddb-crayon-link inline-flex h-11 items-center justify-center rounded-full px-5 text-sm">
+                            <Link href="/my-pet/" className="ddb-crayon-link ddb-motion-lift inline-flex h-11 items-center justify-center rounded-full px-5 text-sm">
                                 내 아이 리포트 <i className="fa-solid fa-arrow-right ml-2 text-xs" aria-hidden="true" />
                             </Link>
                         </div>
                     </header>
+
+                    {pets.length > 1 ? (
+                        <div className="flex items-center gap-2 overflow-x-auto border-b border-neutral-200 bg-white/70 px-4 py-3 sm:px-6 xl:px-8" role="tablist" aria-label="보물광산에서 볼 강아지 선택" data-treasure-pet-selector>
+                            <span className="mr-1 shrink-0 text-[10px] font-black text-neutral-500">아이별 보기</span>
+                            {pets.map((candidate, index) => {
+                                const key = dashboardPetKey(candidate, index);
+                                const active = candidate === pet;
+                                return (
+                                    <button
+                                        key={key}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={active}
+                                        onClick={() => setSelectedPetKey(key)}
+                                        className={`ddb-motion-lift inline-flex min-h-9 shrink-0 items-center gap-2 rounded-full border px-3 text-[11px] font-black transition ${active ? "border-indigo-400 bg-indigo-50 text-indigo-900" : "border-neutral-200 bg-white text-neutral-600 hover:border-cyan-300"}`}
+                                    >
+                                        {candidate.photoDataUrl ? (
+                                            <span className="relative h-6 w-6 overflow-hidden rounded-full bg-neutral-100">
+                                                <Image src={candidate.photoDataUrl} alt="" fill sizes="24px" className="object-cover" unoptimized />
+                                            </span>
+                                        ) : (
+                                            <i className="fa-solid fa-dog text-[10px] text-cyan-700" aria-hidden="true" />
+                                        )}
+                                        {candidate.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    ) : null}
 
                     <div className="grid gap-6 p-4 sm:p-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(330px,0.65fr)] xl:p-8">
                         <div className="min-w-0">
@@ -229,13 +266,13 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     </div>
                                     <div className="mt-4 grid gap-2">
                                         {(engagement?.todayTasks || []).map((task) => (
-                                            <button key={task.taskId} type="button" disabled={task.completed || savingTask !== null} onClick={() => void completeTask(task.taskId)} className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-left text-sm font-black transition ${task.completed ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-neutral-200 bg-white text-neutral-700 hover:border-indigo-300"}`}>
+                                            <button key={task.taskId} type="button" disabled={task.completed || savingTask !== null} onClick={() => void completeTask(task.taskId)} className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-left text-sm font-black transition ${task.completed ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "ddb-motion-lift border-neutral-200 bg-white text-neutral-700 hover:border-indigo-300"}`}>
                                                 <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${task.completed ? "bg-emerald-500 text-white" : "border-2 border-neutral-200 text-transparent"}`}><i className="fa-solid fa-check text-[10px]" /></span>
                                                 <span className="min-w-0 flex-1">{task.title}</span>
                                                 <span className="text-[10px] text-indigo-600">+{task.xp}XP</span>
                                             </button>
                                         ))}
-                                        <Link href="/pet-lens/" className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-sm font-black ${analyzedToday ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-neutral-200 bg-white text-neutral-700 hover:border-indigo-300"}`}>
+                                        <Link href={petLensProfileHref(pet?.apiProfileId)} className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-sm font-black ${analyzedToday ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "ddb-motion-lift border-neutral-200 bg-white text-neutral-700 hover:border-indigo-300"}`}>
                                             <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${analyzedToday ? "bg-emerald-500 text-white" : "border-2 border-neutral-200 text-neutral-300"}`}><i className={`fa-solid ${analyzedToday ? "fa-check" : "fa-camera"} text-[10px]`} /></span>
                                             <span className="min-w-0 flex-1">사진 건강 분석</span>
                                             <i className="fa-solid fa-chevron-right text-[10px] text-neutral-300" />
@@ -260,7 +297,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     </div>
                                     <div className="mt-4 grid grid-cols-2 gap-2">
                                         <div className="rounded-2xl bg-white/80 p-3"><span className="text-[10px] font-black text-neutral-500">최근 건강 변화</span><strong className="mt-1 block text-xs font-black leading-5 text-neutral-900">{analysisStatus(pet?.rawAnalysis)}</strong></div>
-                                        <Link href={pet ? (variant === "home" ? "#recommend" : "/#recommend") : "/mypage/?profile=required#pet-profiles"} className="rounded-2xl bg-white/80 p-3 transition hover:bg-white"><span className="text-[10px] font-black text-neutral-500">AI 추천</span><strong className="mt-1 block text-xs font-black leading-5 text-indigo-700">{pet ? recommendationCopy(pet.concerns || []) : "프로필 등록 후 맞춤 추천 받기"}</strong></Link>
+                                        <Link href={pet ? (variant === "home" ? "#recommend" : "/#recommend") : "/mypage/?profile=required#pet-profiles"} className="ddb-motion-lift rounded-2xl bg-white/80 p-3 transition hover:bg-white"><span className="text-[10px] font-black text-neutral-500">AI 추천</span><strong className="mt-1 block text-xs font-black leading-5 text-indigo-700">{pet ? recommendationCopy(pet.concerns || []) : "프로필 등록 후 맞춤 추천 받기"}</strong></Link>
                                     </div>
                                 </article>
                             </div>
@@ -287,7 +324,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     <div>
                                         <i className={`fa-solid ${loading ? "fa-circle-notch fa-spin" : "fa-paw"} text-3xl text-indigo-300`} />
                                         <p className="mt-3 text-sm font-black text-neutral-600">{loading ? "출근도장을 준비하는 중" : "출근도장을 불러오지 못했어요"}</p>
-                                        {!loading && <button type="button" onClick={() => void refresh()} className="btn btn-secondary mt-4">다시 불러오기</button>}
+                                        {!loading && <button type="button" onClick={() => void refresh()} className="btn btn-secondary ddb-motion-lift mt-4">다시 불러오기</button>}
                                     </div>
                                 </div>
                             )}

@@ -29,6 +29,33 @@ test("weekly photo flow visibly captures, previews, uploads, and completes", asy
     assert.match(motion, /prefers-reduced-motion: reduce/);
 });
 
+test("weekly photo modal stays inside the viewport with an always-visible close header", async () => {
+    const component = await read("components/my-pet/WeeklyPhotoComparison.tsx");
+
+    assert.match(component, /import \{ createPortal \} from "react-dom"/);
+    assert.match(component, /createPortal\(\(/);
+    assert.match(component, /document\.body\)/);
+    assert.match(component, /data-weekly-photo-modal-viewport/);
+    assert.match(component, /fixed inset-0 z-\[2600\] flex h-\[100dvh\] items-start justify-center overflow-hidden/);
+    assert.match(component, /env\(safe-area-inset-top\)/);
+    assert.match(component, /env\(safe-area-inset-bottom\)/);
+    assert.match(component, /flex max-h-full w-full max-w-\[1120px\] flex-col overflow-hidden/);
+    assert.match(component, /shrink-0[^\n]+data-weekly-photo-modal-header/);
+    assert.match(component, /min-h-0 flex-1 overflow-y-auto overscroll-contain[^\n]+data-weekly-photo-modal-scroll-region/);
+    assert.match(component, /aria-label="주간 분석 닫기"/);
+    assert.match(component, /ref=\{launcherRef\}/);
+    assert.match(component, /ref=\{dialogRef\}/);
+    assert.match(component, /ref=\{closeButtonRef\}/);
+    assert.match(component, /closeButtonRef\.current\?\.focus\(\)/);
+    assert.match(component, /event\.key !== "Tab"/);
+    assert.match(component, /!dialogRef\.current\.contains\(document\.activeElement\)/);
+    assert.match(component, /node\.inert = true/);
+    assert.match(component, /node\.inert = inert/);
+    assert.match(component, /const launcher = launcherRef\.current/);
+    assert.match(component, /launcher\?\.focus\(\)/);
+    assert.doesNotMatch(component, /z-\[140\]/);
+});
+
 test("weekly photo API is authenticated, pet-scoped, idempotent, and response-bound", async () => {
     const api = await read("lib/weekly-photo-analysis.ts");
 

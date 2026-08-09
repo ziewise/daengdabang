@@ -53,6 +53,7 @@ import {
     saveSignupActivationResume,
     saveSignupEmailResume,
 } from "@/lib/signup-email-verification";
+import { trackSignupCompleted } from "@/lib/storefront-analytics";
 
 const CONCERN_OPTIONS = ["눈 보호", "피부/발바닥 케어", "체중 관리", "산책 안전", "놀이/분리불안"];
 const CUSTOM_BREED_OPTION = "__custom";
@@ -649,6 +650,7 @@ export default function SignupPage() {
             };
             const confirmedDestination = petLensPostAuthDestination(redirect, savedPets);
             login(member);
+            trackSignupCompleted("email");
             clearPetLensSignupDraft();
             clearSignupActivationResume();
             saveSignupEmailResume({ source: "email", returnTo: confirmedDestination });
@@ -711,6 +713,7 @@ export default function SignupPage() {
                 pets: savedPets,
             };
             login(member);
+            trackSignupCompleted("email");
             clearSignupActivationResume();
             clearSignupEmailResume();
             clearPetLensSignupDraft();

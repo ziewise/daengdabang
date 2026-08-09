@@ -1,5 +1,5 @@
 import rawBundles from "./bundle-data.json";
-import { CATALOG, findById, type CatalogProduct } from "@/lib/catalog";
+import { findById, type CatalogProduct } from "@/lib/catalog";
 
 export type BundleAssetStatus = "ready" | "needs_video" | "draft";
 export type BundleSource = "curated" | "ai";
@@ -74,16 +74,11 @@ export function bundleHref(bundle: Pick<BundleDefinition, "slug">): string {
     return `/bundle/${bundle.slug}`;
 }
 
+export function bundleCustomerBadge(bundle: Pick<BundleDefinition, "badge">): string {
+    return bundle.badge === "완성 영상" ? "영상 미리보기" : bundle.badge;
+}
+
 export function bundleImageCandidates(bundle: Bundle): string[] {
     if (bundle.poster) return [bundle.poster];
     return bundle.products.map((product) => product.image).filter(Boolean) as string[];
-}
-
-export function bundleCountSummary(): { total: number; ready: number; needsVideo: number; products: number } {
-    return {
-        total: BUNDLES.length,
-        ready: BUNDLES.filter((bundle) => bundle.assetStatus === "ready").length,
-        needsVideo: BUNDLES.filter((bundle) => bundle.assetStatus === "needs_video").length,
-        products: CATALOG.length,
-    };
 }

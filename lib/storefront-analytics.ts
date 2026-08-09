@@ -7,7 +7,9 @@ import type { CartPetAssignment } from "@/lib/pet-attribution";
 const LEGACY_ID_KEY = "ddb.analytics.sessionId";
 const VISITOR_KEY = "ddb.analytics.visitorId";
 const SESSION_KEY = "ddb.analytics.session.v2";
+const INBOUND_CAMPAIGN_KEY = "ddb.analytics.inboundCampaign.v1";
 const SESSION_IDLE_MS = 30 * 60 * 1000;
+const INBOUND_CAMPAIGN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const GEO_CACHE_KEY = "ddb.analytics.coarseGeo.v1";
 const GEO_CACHE_MS = 24 * 60 * 60 * 1000;
 let coarseGeoPreparation: Promise<void> | null = null;
@@ -30,6 +32,7 @@ type AnalyticsIdentity = {
 export type StorefrontEventName =
     | "session_start"
     | "page_view"
+    | "signup_completed"
     | "product_view"
     | "petlens_opened"
     | "petlens_started"
@@ -41,11 +44,14 @@ export type StorefrontEventName =
     | "chat_response_succeeded"
     | "chat_response_failed"
     | "growth_hub_viewed"
+    | "growth_policy_opened"
     | "growth_result_shared"
     | "growth_invite_shared"
     | "growth_program_interest_opened"
     | "growth_program_interest_submitted"
-    | "growth_program_interest_failed";
+    | "growth_program_interest_failed"
+    | "local_care_search_completed"
+    | "local_care_search_failed";
 
 function freshAnalyticsId(prefix: string): string {
     if (typeof window !== "undefined" && typeof window.crypto?.randomUUID === "function") {
@@ -93,7 +99,7 @@ function pagePath(): string {
 }
 
 /** Keeps only campaign labels that DaengDaBang intentionally issued. */
-export function inboundCampaignFields(): Record<string, string> {
+function currentInboundCampaignFields(): Record<string, string> {
     if (typeof window === "undefined") return {};
     const params = new URLSearchParams(window.location.search);
     const fields: Record<string, string> = {};
@@ -106,6 +112,47 @@ export function inboundCampaignFields(): Record<string, string> {
         if (value) fields[fieldName] = value;
     }
     return fields.inboundSource && fields.inboundMedium ? fields : {};
+}
+
+/**
+ * Keeps only DaengDaBang-issued, sanitized campaign labels for a short
+ * first-party attribution window. No URL, account identifier, or PII is stored.
+ */
+export function inboundCampaignFields(): Record<string, string> {
+    if (typeof window === "undefined") return {};
+    const current = currentInboundCampaignFields();
+    if (current.inboundSource && current.inboundMedium) {
+        try {
+            window.localStorage.setItem(INBOUND_CAMPAIGN_KEY, JSON.stringify({
+                fields: current,
+                capturedAt: Date.now(),
+            }));
+        } catch {
+            // Attribution is optional and must never interrupt shopping.
+        }
+        return current;
+    }
+    try {
+        const stored = JSON.parse(window.localStorage.getItem(INBOUND_CAMPAIGN_KEY) || "null") as {
+            fields?: Record<string, unknown>;
+            capturedAt?: number;
+        } | null;
+        if (!stored?.capturedAt || Date.now() - stored.capturedAt > INBOUND_CAMPAIGN_TTL_MS) {
+            window.localStorage.removeItem(INBOUND_CAMPAIGN_KEY);
+            return {};
+        }
+        const fields = stored.fields || {};
+        const source = typeof fields.inboundSource === "string" ? fields.inboundSource : "";
+        const medium = typeof fields.inboundMedium === "string" ? fields.inboundMedium : "";
+        if (!source || !medium) return {};
+        return Object.fromEntries(
+            ["inboundSource", "inboundMedium", "inboundCampaign", "inboundContent"]
+                .map((key) => [key, typeof fields[key] === "string" ? fields[key] : ""])
+                .filter(([, value]) => Boolean(value)),
+        );
+    } catch {
+        return {};
+    }
 }
 
 function safeReferrer(): string {
@@ -232,6 +279,13 @@ export function trackStorefrontEvent(
         postEventWithIdentity("session_start", {}, identity);
     }
     postEventWithIdentity(eventName, metadata, identity);
+}
+
+export function trackSignupCompleted(method: "email" | "naver" | "kakao" | "google" | "social") {
+    trackStorefrontEvent("signup_completed", {
+        signupMethod: method,
+        ...inboundCampaignFields(),
+    });
 }
 
 function priceValue(product: ExternalProductResult): number | null {

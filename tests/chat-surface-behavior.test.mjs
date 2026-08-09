@@ -8,16 +8,27 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("full chat keeps clear controls and message scrolling inside a bounded card", async () => {
+test("full chat uses a viewport-bounded care-note shell with fixed controls and internal scrolling", async () => {
     const page = await source("app/chat/ChatPageClient.tsx");
 
-    assert.match(page, /surface flex h-\[min\(720px,calc\(100dvh-180px\)\)\] min-h-\[420px\] flex-col overflow-hidden/);
-    assert.match(page, /aria-label="대화 내용 비우기"/);
-    assert.match(page, /ref=\{messagesRef\}[\s\S]{0,260}className="min-h-0 flex-1[^\n]*overflow-y-auto/);
-    assert.match(page, /<form onSubmit=\{submit\} className="flex shrink-0/);
+    assert.match(page, /max-w-\[1080px\]/);
+    assert.match(page, /data-chat-frame/);
+    assert.match(page, /h-\[min\(43rem,calc\(100dvh-9rem\)\)\]/);
+    assert.match(page, /max-h-\[calc\(100dvh-9rem\)\]/);
+    assert.match(page, /data-chat-shell/);
+    assert.match(page, /CRAYON CARE NOTE/);
+    assert.match(page, /border-\[3px\] border-indigo-600/);
+    assert.match(page, /border-2 border-dashed border-\[#f2a48f\]/);
+    assert.match(page, /aria-label="새 대화 시작"/);
+    assert.match(page, /aria-label="상담 닫기"/);
+    assert.match(page, /data-chat-header[\s\S]{0,180}sticky top-0/);
+    assert.match(page, /ref=\{messagesRef\}[\s\S]{0,340}data-chat-scroll-region[\s\S]{0,340}className="min-h-0 flex-1[^\n]*overflow-y-auto/);
+    assert.match(page, /repeating-linear-gradient\(to bottom/);
+    assert.match(page, /data-chat-composer[\s\S]{0,160}sticky bottom-0[\s\S]{0,120}shrink-0/);
+    assert.match(page, /questionContext=\{questionContext\}/);
 
-    const sectionStart = page.indexOf("<section className=\"surface flex h-[min(720px");
-    const clearButton = page.indexOf("aria-label=\"대화 내용 비우기\"");
+    const sectionStart = page.indexOf("data-chat-shell");
+    const clearButton = page.indexOf("aria-label=\"새 대화 시작\"");
     const sectionEnd = page.indexOf("</section>", sectionStart);
     assert.ok(sectionStart >= 0 && clearButton > sectionStart && clearButton < sectionEnd);
 });

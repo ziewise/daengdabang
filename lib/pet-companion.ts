@@ -15,6 +15,8 @@ export type CompanionBreedSource = "profile" | "member_companion_selection";
 export type PetCompanionSettings = {
     version: 1;
     ownerKey: string;
+    /** Stable server identity. `activePetName` remains for labels and legacy settings. */
+    activePetProfileId?: number;
     activePetName: string;
     enabled: boolean;
     breedId: string;
@@ -311,9 +313,43 @@ function memberSelectedCompanionBreedId(pet?: PetProfile | null) {
     return resolved && isPetBreedId(resolved) ? resolved : "";
 }
 
-function petHasCompanionIdentity(pet?: PetProfile | null) {
+export function petHasCompanionIdentity(pet?: PetProfile | null) {
     if (!pet) return false;
     return Boolean(resolvePetProfileBreedId(pet) || memberSelectedCompanionBreedId(pet));
+}
+
+export function companionPetProfileKey(pet: PetProfile, index = 0) {
+    return Number.isInteger(pet.apiProfileId) && Number(pet.apiProfileId) > 0
+        ? `profile:${Number(pet.apiProfileId)}`
+        : `legacy:${index}:${pet.name.trim().toLowerCase()}`;
+}
+
+export function findCompanionPet(
+    pets: PetProfile[],
+    identity: Pick<PetCompanionSettings, "activePetProfileId" | "activePetName">,
+) {
+    if (Number.isInteger(identity.activePetProfileId) && Number(identity.activePetProfileId) > 0) {
+        return pets.find((pet) => pet.apiProfileId === Number(identity.activePetProfileId));
+    }
+    return pets.find((pet) => pet.name === identity.activePetName);
+}
+
+export function companionRotationCandidates(pets: PetProfile[]) {
+    return pets.filter(petHasCompanionIdentity);
+}
+
+export function nextCompanionRotationKey(
+    keys: string[],
+    currentKey: string,
+    fallbackKey = keys[0] || "",
+) {
+    if (keys.length < 2) return keys[0] || fallbackKey;
+    const currentIndex = keys.indexOf(currentKey);
+    if (currentIndex < 0) {
+        const fallbackIndex = keys.indexOf(fallbackKey);
+        return keys[(fallbackIndex >= 0 ? fallbackIndex + 1 : 0) % keys.length];
+    }
+    return keys[(currentIndex + 1) % keys.length];
 }
 
 function legacyBreedId(characterId: CompanionCharacterId) {
@@ -351,6 +387,7 @@ export function defaultCompanionSettings(ownerKey: string, pet?: PetProfile | nu
     return {
         version: 1,
         ownerKey,
+        activePetProfileId: pet?.apiProfileId,
         activePetName: pet?.name?.trim() || "몽이",
         // Never silently depict an authenticated pet as the Poodle fallback.
         // Until the profile has a canonical breed (or an explicit member
@@ -389,12 +426,19 @@ function normalizeSettings(
     // breed), so never let that stale cache override a confirmed profile.
     const resolvedBreedId = profileBreedId
         || (storedBreedId && isPetBreedId(storedBreedId) ? storedBreedId : fallback.breedId);
+    const activePetProfileId = Number.isInteger(value.activePetProfileId)
+        && Number(value.activePetProfileId) > 0
+        ? Number(value.activePetProfileId)
+        : fallback.activePetProfileId;
     return {
         version: 1,
         ownerKey,
-        activePetName: typeof value.activePetName === "string" && value.activePetName.trim()
-            ? value.activePetName.trim()
-            : fallback.activePetName,
+        activePetProfileId,
+        activePetName: activePetProfileId && activePetProfileId === fallback.activePetProfileId
+            ? fallback.activePetName
+            : typeof value.activePetName === "string" && value.activePetName.trim()
+                ? value.activePetName.trim()
+                : fallback.activePetName,
         enabled: typeof value.enabled === "boolean" ? value.enabled : fallback.enabled,
         breedId: resolvedBreedId,
         breedSource: profileBreedId
@@ -437,9 +481,17 @@ export function readLocalCompanionSettings(
     try {
         const value = JSON.parse(window.localStorage.getItem(PET_COMPANION_STORAGE_KEY) || "null");
         if (!isRecord(value) || value.ownerKey !== ownerKey) return null;
-        const activePet = typeof value.activePetName === "string"
-            ? pets.find((candidate) => candidate.name === value.activePetName) || pet
-            : pet;
+        const requestedProfileId = Number.isInteger(value.activePetProfileId)
+            && Number(value.activePetProfileId) > 0
+            ? Number(value.activePetProfileId)
+            : undefined;
+        const activePet = findCompanionPet(pets, {
+            activePetProfileId: requestedProfileId,
+            activePetName: typeof value.activePetName === "string"
+                ? value.activePetName
+                : pet?.name || "",
+        }) || pet;
+        if (requestedProfileId && activePet?.apiProfileId !== requestedProfileId) return null;
         if (activePet && !petHasCompanionIdentity(activePet)) return null;
         return normalizeSettings(
             value,
@@ -466,7 +518,7 @@ export function writeLocalCompanionSettings(settings: PetCompanionSettings) {
 export function resolveCompanionSettings(user: User | null): PetCompanionSettings {
     const ownerKey = user?.email || "guest";
     const local = readLocalCompanionSettings(ownerKey, user?.pets[0], user?.pets || []);
-    const localPet = user?.pets.find((pet) => pet.name === local?.activePetName);
+    const localPet = local ? findCompanionPet(user?.pets || [], local) : undefined;
     const usableLocal = user && local && !localPet ? null : local;
     const activePet = localPet
         || user?.pets.find((pet) => companionSettingsFromPet(pet, ownerKey)?.enabled)
@@ -478,6 +530,29 @@ export function resolveCompanionSettings(user: User | null): PetCompanionSetting
         || defaultCompanionSettings(ownerKey, activePet);
 }
 
+/**
+ * Builds a temporary on-screen identity for multi-pet rotation. Global
+ * visibility/speech preferences stay untouched and this value is never saved.
+ */
+export function companionDisplaySettingsForPet(
+    settings: PetCompanionSettings,
+    pet?: PetProfile | null,
+): PetCompanionSettings {
+    if (!pet) return settings;
+    const isManuallySelected = Number.isInteger(settings.activePetProfileId)
+        ? pet.apiProfileId === settings.activePetProfileId
+        : pet.name === settings.activePetName;
+    if (isManuallySelected) return settings;
+
+    const petSettings = companionSettingsFromPet(pet, settings.ownerKey)
+        || defaultCompanionSettings(settings.ownerKey, pet);
+    return {
+        ...petSettings,
+        enabled: settings.enabled,
+        speechEnabled: settings.speechEnabled,
+    };
+}
+
 export function withCompanionSettings(
     pet: PetProfile,
     settings: PetCompanionSettings,
@@ -485,6 +560,7 @@ export function withCompanionSettings(
     const selectedBreed = getPetBreedVisual(settings.breedId);
     const stored: StoredPetCompanionSettings = {
         version: 1,
+        activePetProfileId: pet.apiProfileId,
         activePetName: pet.name,
         enabled: settings.enabled,
         breedId: selectedBreed.id,

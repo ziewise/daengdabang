@@ -4,6 +4,18 @@ export const PETLENS_PAGE_HREF = "/pet-lens";
 export const PETLENS_PROFILE_SETUP_HREF = "/mypage?petProfile=required#pet-profiles";
 const PETLENS_OBSERVATION_REQUEST_ID = /^[A-Za-z0-9][A-Za-z0-9._:-]{7,99}$/;
 
+export function cleanPetLensProfileId(value: string | number | null | undefined) {
+    const profileId = typeof value === "number" ? value : Number(String(value || "").trim());
+    return Number.isSafeInteger(profileId) && profileId > 0 ? profileId : undefined;
+}
+
+export function petLensProfileHref(profileId: number | undefined) {
+    const safeProfileId = cleanPetLensProfileId(profileId);
+    return safeProfileId
+        ? `${PETLENS_PAGE_HREF}/?profile=${safeProfileId}`
+        : PETLENS_PAGE_HREF;
+}
+
 export function cleanPetLensObservationRequestId(value: string | null | undefined) {
     const requestId = value?.trim() || "";
     return PETLENS_OBSERVATION_REQUEST_ID.test(requestId) ? requestId : "";

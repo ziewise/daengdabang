@@ -40,9 +40,10 @@ async function loadCustomerApi(fetchImpl) {
 }
 
 test("the treasure mine stays a two-level hub and reuses the live member dashboard", async () => {
-    const [page, hub] = await Promise.all([
+    const [page, hub, publishedContent] = await Promise.all([
         source("app/treasure-mine/page.tsx"),
         source("components/growth/GrowthHub.tsx"),
+        source("lib/growth-content.ts"),
     ]);
 
     assert.match(page, /<GrowthHub \/>/);
@@ -53,12 +54,12 @@ test("the treasure mine stays a two-level hub and reuses the live member dashboa
     assert.match(hub, /\/auth\/login\/\?redirect=%2Ftreasure-mine%2F/);
     assert.match(hub, /비회원도 아래 성장 프로그램과 운영 정책은 먼저 둘러볼 수 있습니다/);
     assert.match(hub, /trackStorefrontEvent\("growth_hub_viewed"/);
-    assert.match(hub, /href="\/best\/"/);
+    assert.match(publishedContent, /secondaryCtaHref: "\/best\/"/);
     assert.match(hub, /hasPet \? "\/#recommend" : isMember \? "\/my-pet\/" : "\/products\/"/);
-    assert.match(hub, /<CommerceBridge isMember=\{isMember\} hasPet=\{hasPet\} hasAiRecord=\{hasAiRecord\} \/>/);
-    assert.match(hub, /우리 아이 프로필과 확인된 AI 기록을 상품 선택에 참고해요/);
-    assert.match(hub, /우리 아이 프로필을 상품 선택에 참고해요/);
-    assert.match(hub, /우리 아이 프로필을 등록하면 맞춤 추천을 시작할 수 있어요/);
+    assert.match(hub, /<CommerceBridge isMember=\{isMember\} hasPet=\{hasPet\} hasAiRecord=\{hasAiRecord\} content=\{content\.commerce\} \/>/);
+    assert.match(publishedContent, /우리 아이 프로필과 확인된 AI 기록을 상품 선택에 참고해요/);
+    assert.match(publishedContent, /우리 아이 프로필을 상품 선택에 참고해요/);
+    assert.match(publishedContent, /우리 아이 프로필을 등록하면 맞춤 추천을 시작할 수 있어요/);
 });
 
 test("share payloads contain campaign attribution but no pet or health detail", () => {
@@ -85,8 +86,8 @@ test("all future programs are explicitly preparing and cover separate brand inte
     const options = GROWTH_PROGRAM_CARDS.flatMap((program) => program.interestOptions.map((option) => option.programId));
     assert.deepEqual(options, [...GROWTH_PROGRAM_IDS]);
     const local = GROWTH_PROGRAM_CARDS.find((program) => program.id === "local");
-    assert.match(local.existingFeature.href, /^\/chat\/\?q=/);
-    assert.match(local.existingFeature.helper, /기존 AI 상담의 지도 검색 보조/);
+    assert.equal(local.existingFeature.href, "#local-care-finder");
+    assert.match(local.existingFeature.helper, /상담으로 이동하지 않고 이 화면에서 현재 위치 주변을 확인/);
 });
 
 test("interest registration is authenticated, minimal, readable, and cancellable", async () => {
@@ -153,8 +154,13 @@ test("reward ads have no simulated completion or reward action", async () => {
     ]);
     const combined = `${policy}\n${share}\n${programs}`;
 
-    assert.match(policy, /공식 리워드 광고는 아직 연동 전/);
-    assert.match(policy, /광고를 보지 않아도 기본 기능은 그대로 이용/);
-    assert.match(policy, /AI 기록은 의료 진단이 아니에요/);
+    assert.match(policy, /광고 없이도 오늘의 돌봄은 그대로/);
+    assert.match(policy, /광고를 보지 않아도 이용할 수 있습니다/);
+    assert.match(policy, /AI 기록은 의료 진단이 아닌 참고 정보/);
+    assert.match(policy, /의료 진단을 대신하지 않아요/);
+    assert.match(policy, /onToggle=/);
+    assert.match(policy, /trackStorefrontEvent\("growth_policy_opened", \{ surface: "treasure_mine" \}\)/);
+    assert.match(policy, /isOpen && !wasOpenRef\.current/);
+    assert.doesNotMatch(policy, /공식 리워드 광고는 아직 연동 전/);
     assert.doesNotMatch(combined, /watchAd|completeAd|claimAdReward|광고 시청하기|광고 보상 받기/);
 });
