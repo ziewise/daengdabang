@@ -43,7 +43,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          # The regression suite imports bounded, framework-free .ts helpers
+          # directly; pin the same native type-stripping runtime used locally.
+          node-version: 24.14.0
 
       - name: Setup Python
         uses: actions/setup-python@v6
