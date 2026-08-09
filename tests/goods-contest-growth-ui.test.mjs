@@ -87,9 +87,10 @@ test("members and verified guests can select only active goods during the campai
     assert.match(contest, /campaignClosed/);
     assert.match(contest, /공모 종료/);
     assert.match(contest, /controller\.abort\(\)/);
+    assert.match(contest, /hourCycle: "h23"/);
 });
 
-test("goods hero autoplays a silent full-frame campaign video with a manual pause control", async () => {
+test("goods hero autoplays a silent edge-to-edge campaign video without playback controls", async () => {
     const contest = await source("components/growth/GoodsContest.tsx");
 
     assert.match(contest, /data-goods-hero-video/);
@@ -101,12 +102,10 @@ test("goods hero autoplays a silent full-frame campaign video with a manual paus
     assert.match(contest, /\n\s+muted\n/);
     assert.match(contest, /loop/);
     assert.match(contest, /playsInline/);
-    assert.match(contest, /object-contain/);
-    assert.match(contest, /readyState >= HTMLMediaElement\.HAVE_CURRENT_DATA/);
-    assert.match(contest, /heroVideoUserPausedRef/);
-    assert.match(contest, /addEventListener\("canplay", ensureAutoPlayback\)/);
-    assert.match(contest, /removeEventListener\("canplay", ensureAutoPlayback\)/);
-    assert.match(contest, /aria-label=\{heroVideoPlaying \? "영상 일시정지" : "영상 재생"\}/);
+    assert.match(contest, /absolute inset-0 h-full w-full object-cover/);
+    assert.doesNotMatch(contest, /object-contain|heroVideoRef|heroVideoPlaying|heroVideoReady|toggleHeroVideo|ensureAutoPlayback/);
+    assert.doesNotMatch(contest, /fa-pause|fa-play|영상 일시정지|영상 재생/);
+    assert.doesNotMatch(contest, /aspect-video[^\"]*(?:radial-gradient|\bp-3\b|\bsm:p-6\b|\blg:p-10\b|\bxl:p-12\b)/);
     assert.doesNotMatch(contest, /heroVideoMuted|toggleHeroVideoSound|영상 소리 켜기|영상 소리 끄기/);
     assert.doesNotMatch(contest, /18초 굿즈 미리보기|prefers-reduced-motion: reduce/);
     assert.doesNotMatch(contest, /data-goods-hero-rotation/);
