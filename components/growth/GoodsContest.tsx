@@ -223,21 +223,30 @@ export default function GoodsContest({
 
     useEffect(() => {
         const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const syncPreference = () => {
+        const syncPlayback = () => {
             setReduceHeroMotion(media.matches);
             const video = heroVideoRef.current;
             if (!video) return;
+            const ready = video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+            setHeroVideoReady(ready);
             if (media.matches) {
                 video.pause();
                 setHeroVideoPlaying(false);
                 return;
             }
-            void video.play().then(() => setHeroVideoPlaying(true)).catch(() => setHeroVideoPlaying(false));
+            if (ready && video.paused) {
+                void video.play().then(() => setHeroVideoPlaying(true)).catch(() => setHeroVideoPlaying(false));
+            }
         };
-        syncPreference();
-        media.addEventListener("change", syncPreference);
+        const video = heroVideoRef.current;
+        syncPlayback();
+        video?.addEventListener("loadeddata", syncPlayback);
+        video?.addEventListener("canplay", syncPlayback);
+        media.addEventListener("change", syncPlayback);
         return () => {
-            media.removeEventListener("change", syncPreference);
+            video?.removeEventListener("loadeddata", syncPlayback);
+            video?.removeEventListener("canplay", syncPlayback);
+            media.removeEventListener("change", syncPlayback);
         };
     }, []);
 

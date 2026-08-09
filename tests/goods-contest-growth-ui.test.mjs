@@ -100,6 +100,9 @@ test("goods hero uses the bounded campaign video with explicit controls and redu
     assert.match(contest, /loop/);
     assert.match(contest, /playsInline/);
     assert.match(contest, /prefers-reduced-motion: reduce/);
+    assert.match(contest, /readyState >= HTMLMediaElement\.HAVE_FUTURE_DATA/);
+    assert.match(contest, /addEventListener\("canplay", syncPlayback\)/);
+    assert.match(contest, /removeEventListener\("canplay", syncPlayback\)/);
     assert.match(contest, /aria-label=\{heroVideoPlaying \? "영상 일시정지" : "영상 재생"\}/);
     assert.match(contest, /aria-label=\{heroVideoMuted \? "영상 소리 켜기" : "영상 소리 끄기"\}/);
     assert.doesNotMatch(contest, /data-goods-hero-rotation/);
