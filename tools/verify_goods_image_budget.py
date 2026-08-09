@@ -8,7 +8,10 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 GOODS_DIR = ROOT / "public" / "images" / "goods"
 UI_DIR = ROOT / "public" / "images" / "ui"
-VIDEO_PATH = ROOT / "public" / "videos" / "goods-contest-hero.mp4"
+VIDEO_BUDGETS = {
+    "goods-contest-hero.mp4": 2_500_000,
+    "goods-contest-hero-mobile.mp4": 1_200_000,
+}
 CARD_FILES = sorted(path for path in GOODS_DIR.glob("goods-*.webp") if "goods-hero-" not in path.name)
 HERO_BUDGETS = {
     "goods-hero-lifestyle.webp": ((960, 720), 180_000),
@@ -51,12 +54,16 @@ def main() -> None:
         with Image.open(path) as image:
             if max(image.size) > 128 or image.format != "WEBP":
                 raise SystemExit(f"header icon dimensions/format failed: {name} {image.size} {image.format}")
-    if not VIDEO_PATH.is_file():
-        raise SystemExit("missing goods contest hero video")
-    video_size = VIDEO_PATH.stat().st_size
-    if video_size > 4_000_000:
-        raise SystemExit(f"hero video budget exceeded: {video_size:,}B (max 4,000,000B)")
-    print(f"goods media budget OK: 23 images {total:,}B, video {video_size:,}B")
+    video_total = 0
+    for name, budget in VIDEO_BUDGETS.items():
+        path = ROOT / "public" / "videos" / name
+        if not path.is_file():
+            raise SystemExit(f"missing goods contest hero video: {name}")
+        size = path.stat().st_size
+        if size > budget:
+            raise SystemExit(f"hero video budget exceeded: {name} is {size:,}B (max {budget:,}B)")
+        video_total += size
+    print(f"goods media budget OK: 23 images {total:,}B, 2 videos {video_total:,}B")
 
 
 if __name__ == "__main__":

@@ -8,11 +8,11 @@ const source = await readFile(
 );
 
 test("community expansion distinguishes live sharing from the planned internal feed", () => {
-    assert.match(source, /title: "댕스냅"/);
+    assert.match(source, /title: "댕자랑"/);
     assert.match(source, /status: "준비 중"/);
     assert.match(source, /외부 안전 공유 운영 중/);
     assert.match(source, /게시물·뼈다귀 반응·댓글은 아직 열리지 않았어요/);
-    assert.match(source, /href: "#today-treasure"/);
+    assert.match(source, /href: "\/daeng-showcase\/"/);
 });
 
 test("editorial card never presents an unsupported product comparison as published", () => {

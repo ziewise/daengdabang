@@ -82,7 +82,7 @@ export default function Header() {
                     {/* 로고 */}
                     <BrandLogo mobileEmphasis />
 
-                    {/* 넓은 화면에는 네 개의 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. */}
+                    {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. */}
                     <nav className="hidden items-center gap-1 xl:flex">
                         <NavDropdown
                             label={t("shop")}
@@ -157,6 +157,12 @@ export default function Header() {
                                 ))}
                             </ul>
                         </NavDropdown>
+                        <Link
+                            href="/daeng-showcase/"
+                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
+                        >
+                            댕자랑
+                        </Link>
                         <NavDropdown
                             label={t("customerCenter")}
                             open={openDrop === "cs"}

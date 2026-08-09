@@ -135,6 +135,7 @@ export default function GoodsContest({
     const identityKeyRef = useRef(identityKey);
     const actionControllerRef = useRef<AbortController | null>(null);
     const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+    const heroVideoUserPausedRef = useRef(false);
     const [summary, setSummary] = useState<GoodsContestSummary | null>(null);
     const [summaryState, setSummaryState] = useState<LoadState>("loading");
     const [summaryRetry, setSummaryRetry] = useState(0);
@@ -146,10 +147,8 @@ export default function GoodsContest({
     const [selectionRetry, setSelectionRetry] = useState(0);
     const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
     const [notice, setNotice] = useState<{ tone: "success" | "error"; message: string } | null>(null);
-    const [reduceHeroMotion, setReduceHeroMotion] = useState(false);
     const [heroVideoReady, setHeroVideoReady] = useState(false);
     const [heroVideoPlaying, setHeroVideoPlaying] = useState(false);
-    const [heroVideoMuted, setHeroVideoMuted] = useState(true);
     const [guestVerificationOpen, setGuestVerificationOpen] = useState(false);
     const [guestVerification, setGuestVerification] = useState<GuestVerificationState>(INITIAL_GUEST_VERIFICATION);
     const selectionState: SelectionLoadState = !hydrated || !guestTokenHydrated
@@ -222,31 +221,32 @@ export default function GoodsContest({
     }, [identityKey]);
 
     useEffect(() => {
-        const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const syncPlayback = () => {
-            setReduceHeroMotion(media.matches);
-            const video = heroVideoRef.current;
-            if (!video) return;
-            const ready = video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA;
+        const video = heroVideoRef.current;
+        if (!video) return;
+        const ensureAutoPlayback = () => {
+            const ready = video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA;
             setHeroVideoReady(ready);
-            if (media.matches) {
-                video.pause();
-                setHeroVideoPlaying(false);
-                return;
-            }
-            if (ready && video.paused) {
+            if (ready && video.paused && !heroVideoUserPausedRef.current && !document.hidden) {
+                video.muted = true;
                 void video.play().then(() => setHeroVideoPlaying(true)).catch(() => setHeroVideoPlaying(false));
             }
         };
-        const video = heroVideoRef.current;
-        syncPlayback();
-        video?.addEventListener("loadeddata", syncPlayback);
-        video?.addEventListener("canplay", syncPlayback);
-        media.addEventListener("change", syncPlayback);
+        const handleUnexpectedPause = () => {
+            setHeroVideoPlaying(false);
+            if (!heroVideoUserPausedRef.current && !document.hidden) {
+                window.requestAnimationFrame(ensureAutoPlayback);
+            }
+        };
+        ensureAutoPlayback();
+        video.addEventListener("loadeddata", ensureAutoPlayback);
+        video.addEventListener("canplay", ensureAutoPlayback);
+        video.addEventListener("pause", handleUnexpectedPause);
+        document.addEventListener("visibilitychange", ensureAutoPlayback);
         return () => {
-            video?.removeEventListener("loadeddata", syncPlayback);
-            video?.removeEventListener("canplay", syncPlayback);
-            media.removeEventListener("change", syncPlayback);
+            video.removeEventListener("loadeddata", ensureAutoPlayback);
+            video.removeEventListener("canplay", ensureAutoPlayback);
+            video.removeEventListener("pause", handleUnexpectedPause);
+            document.removeEventListener("visibilitychange", ensureAutoPlayback);
         };
     }, []);
 
@@ -254,18 +254,14 @@ export default function GoodsContest({
         const video = heroVideoRef.current;
         if (!video) return;
         if (video.paused) {
+            heroVideoUserPausedRef.current = false;
+            video.muted = true;
             void video.play().then(() => setHeroVideoPlaying(true)).catch(() => setHeroVideoPlaying(false));
             return;
         }
+        heroVideoUserPausedRef.current = true;
         video.pause();
         setHeroVideoPlaying(false);
-    };
-
-    const toggleHeroVideoSound = () => {
-        const video = heroVideoRef.current;
-        if (!video) return;
-        video.muted = !video.muted;
-        setHeroVideoMuted(video.muted);
     };
 
     const itemSummaries = useMemo(
@@ -439,46 +435,31 @@ export default function GoodsContest({
         <section id="goods-contest" className="scroll-mt-28 py-10 md:py-14" aria-labelledby="goods-contest-title">
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
                 <div className="relative overflow-hidden rounded-[34px] border border-white/80 bg-[#eadfce] shadow-[0_22px_60px_rgba(62,47,34,0.16)]" data-goods-hero-video>
-                    <div className="relative aspect-video bg-[#eadfce]">
+                    <div className="relative aspect-video bg-[radial-gradient(circle_at_50%_42%,#fff9ef_0%,#eadfce_72%,#dfcbb5_100%)] p-3 sm:p-6 lg:p-10 xl:p-12">
                         <video
                             ref={heroVideoRef}
-                            muted={heroVideoMuted}
+                            autoPlay
+                            muted
                             loop
                             playsInline
-                            preload="metadata"
+                            preload="auto"
                             poster="/images/goods/goods-hero-lifestyle.webp"
                             aria-label="댕다방 굿즈 공모전 상품 미리보기 영상"
-                            onCanPlay={() => {
-                                setHeroVideoReady(true);
-                                if (!reduceHeroMotion && heroVideoRef.current?.paused) {
-                                    void heroVideoRef.current.play().catch(() => undefined);
-                                }
-                            }}
+                            onCanPlay={() => setHeroVideoReady(true)}
                             onPlay={() => setHeroVideoPlaying(true)}
                             onPause={() => setHeroVideoPlaying(false)}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full rounded-[24px] bg-[#e6d7c6] object-contain shadow-[0_12px_32px_rgba(80,56,35,0.18)] sm:rounded-[28px]"
                         >
+                            <source media="(max-width: 640px)" src="/videos/goods-contest-hero-mobile.mp4" type="video/mp4" />
                             <source src="/videos/goods-contest-hero.mp4" type="video/mp4" />
                         </video>
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950/55 via-transparent to-neutral-950/10" aria-hidden="true" />
-                        <span className="absolute left-4 top-4 rounded-full border border-white/75 bg-white/90 px-3 py-1.5 text-[10px] font-black text-neutral-800 shadow-sm sm:left-6 sm:top-6">
-                            18초 굿즈 미리보기
-                        </span>
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950/50 via-transparent to-transparent" aria-hidden="true" />
                         <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 sm:bottom-6 sm:left-6 sm:right-6">
                             <div className="min-w-0 text-white drop-shadow-md">
                                 <p className="text-[10px] font-black tracking-[0.22em] sm:text-xs">DAENGDABANG GOODS CONTEST</p>
                                 <p className="mt-1 break-keep text-lg font-black sm:text-2xl">500명의 선택으로 만드는 다음 굿즈</p>
                             </div>
-                            <div className="flex shrink-0 gap-2">
-                                <button
-                                    type="button"
-                                    onClick={toggleHeroVideoSound}
-                                    disabled={!heroVideoReady}
-                                    className="grid h-11 w-11 place-items-center rounded-full border border-white/70 bg-neutral-950/45 text-white backdrop-blur-sm transition hover:bg-neutral-950/65 disabled:opacity-50"
-                                    aria-label={heroVideoMuted ? "영상 소리 켜기" : "영상 소리 끄기"}
-                                >
-                                    <i className={`fa-solid ${heroVideoMuted ? "fa-volume-xmark" : "fa-volume-high"}`} aria-hidden="true" />
-                                </button>
+                            <div className="flex shrink-0">
                                 <button
                                     type="button"
                                     onClick={toggleHeroVideo}
@@ -582,7 +563,7 @@ export default function GoodsContest({
                 ) : null}
 
                 <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {GOODS_CONTEST_CATALOG.map((catalogItem, catalogIndex) => {
+                    {GOODS_CONTEST_CATALOG.map((catalogItem) => {
                         const itemContent = content.items[catalogItem.id];
                         const itemSummary = itemSummaries.get(catalogItem.id);
                         const selected = selectedSet.has(catalogItem.id);
@@ -598,7 +579,7 @@ export default function GoodsContest({
                                         alt={`${itemContent.name} 굿즈 시안`}
                                         width={720}
                                         height={720}
-                                        loading={catalogIndex < 4 ? "eager" : "lazy"}
+                                        loading="lazy"
                                         placeholder="blur"
                                         blurDataURL={GOODS_IMAGE_PLACEHOLDER}
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

@@ -80,7 +80,8 @@ test("desktop navigation hover draws a subtle motion-safe crayon sketch", async 
     ]);
 
     assert.match(header, /import headerStyles from "\.\/Header\.module\.css"/);
-    assert.equal((header.match(/headerStyles\.desktopNavItem/g) || []).length, 1);
+    assert.equal((header.match(/headerStyles\.desktopNavItem/g) || []).length, 2);
+    assert.match(header, /href="\/daeng-showcase\/"[\s\S]*댕자랑/);
     assert.match(header, /data-nav-open=\{open \? "true" : "false"\}/);
     assert.match(css, /\.desktopNavItem::before/);
     assert.match(css, /\.desktopNavItem::after/);

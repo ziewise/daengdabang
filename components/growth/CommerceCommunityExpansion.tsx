@@ -19,15 +19,15 @@ const EXPANSION_CARDS: readonly ExpansionCard[] = [
     {
         step: "01",
         eyebrow: "COMMUNITY",
-        title: "댕스냅",
+        title: "댕자랑",
         status: "준비 중",
         statusTone: "border-rose-200 bg-rose-50 text-rose-800",
         description: "AI 분석 사진과 우리 아이 캐릭터를 한곳에 모아 서로 응원하는 내부 피드를 준비하고 있어요.",
         guardrail: "게시물·뼈다귀 반응·댓글은 아직 열리지 않았어요. 지금은 개인정보를 뺀 AI 기록 공유만 이용할 수 있습니다.",
         icon: "fa-images",
         tone: "coral",
-        href: "#today-treasure",
-        cta: "지금 가능한 안전 공유",
+        href: "/daeng-showcase/",
+        cta: "댕자랑 준비 현황 보기",
         activeFeature: "외부 안전 공유 운영 중",
     },
     {

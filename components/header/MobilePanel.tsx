@@ -153,6 +153,9 @@ export default function MobilePanel({ open, onClose }: Props) {
                         <SubLink href="/my-pet/" icon="fa-dog" onClick={onClose}>{t("myPet")}</SubLink>
                         <SubLink href="/community/" icon="fa-people-group" onClick={onClose}>{t("community")}</SubLink>
                     </MobileGroup>
+                    <MobileLink href="/daeng-showcase/" icon="fa-images" onClick={onClose} crayon tone="coral">
+                        댕자랑
+                    </MobileLink>
                     <MobileGroup
                         label={t("customerCenter")}
                         expanded={expanded === "cs"}

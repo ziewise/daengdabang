@@ -89,24 +89,29 @@ test("members and verified guests can select only active goods during the campai
     assert.match(contest, /controller\.abort\(\)/);
 });
 
-test("goods hero uses the bounded campaign video with explicit controls and reduced-motion handling", async () => {
+test("goods hero autoplays a silent full-frame campaign video with a manual pause control", async () => {
     const contest = await source("components/growth/GoodsContest.tsx");
 
     assert.match(contest, /data-goods-hero-video/);
+    assert.match(contest, /\/videos\/goods-contest-hero-mobile\.mp4/);
     assert.match(contest, /\/videos\/goods-contest-hero\.mp4/);
     assert.match(contest, /poster="\/images\/goods\/goods-hero-lifestyle\.webp"/);
-    assert.match(contest, /preload="metadata"/);
-    assert.match(contest, /muted=\{heroVideoMuted\}/);
+    assert.match(contest, /preload="auto"/);
+    assert.match(contest, /autoPlay/);
+    assert.match(contest, /\n\s+muted\n/);
     assert.match(contest, /loop/);
     assert.match(contest, /playsInline/);
-    assert.match(contest, /prefers-reduced-motion: reduce/);
-    assert.match(contest, /readyState >= HTMLMediaElement\.HAVE_FUTURE_DATA/);
-    assert.match(contest, /addEventListener\("canplay", syncPlayback\)/);
-    assert.match(contest, /removeEventListener\("canplay", syncPlayback\)/);
+    assert.match(contest, /object-contain/);
+    assert.match(contest, /readyState >= HTMLMediaElement\.HAVE_CURRENT_DATA/);
+    assert.match(contest, /heroVideoUserPausedRef/);
+    assert.match(contest, /addEventListener\("canplay", ensureAutoPlayback\)/);
+    assert.match(contest, /removeEventListener\("canplay", ensureAutoPlayback\)/);
     assert.match(contest, /aria-label=\{heroVideoPlaying \? "영상 일시정지" : "영상 재생"\}/);
-    assert.match(contest, /aria-label=\{heroVideoMuted \? "영상 소리 켜기" : "영상 소리 끄기"\}/);
+    assert.doesNotMatch(contest, /heroVideoMuted|toggleHeroVideoSound|영상 소리 켜기|영상 소리 끄기/);
+    assert.doesNotMatch(contest, /18초 굿즈 미리보기|prefers-reduced-motion: reduce/);
     assert.doesNotMatch(contest, /data-goods-hero-rotation/);
-    assert.match(contest, /loading=\{catalogIndex < 4 \? "eager" : "lazy"\}/);
+    assert.match(contest, /loading="lazy"/);
+    assert.doesNotMatch(contest, /loading=\{catalogIndex < 4 \? "eager" : "lazy"\}/);
     assert.match(contest, /placeholder="blur"/);
 });
 
