@@ -10,6 +10,7 @@ import {
     type ShowcasePost,
     type ShowcaseReportReason,
 } from "@/lib/daeng-showcase";
+import { inboundCampaignFields, trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 const REPORT_REASONS: readonly { value: ShowcaseReportReason; label: string }[] = [
     { value: "spam", label: "광고·도배" },
@@ -27,6 +28,7 @@ type ShowcaseCardProps = {
     onRequireAuth: () => void;
     onAuthorUpdated: (authorId: string, followed: boolean, followerCount: number) => void;
     onPostUpdated: (postId: string, values: Partial<Pick<ShowcasePost, "bonedByMe" | "boneCount">>) => void;
+    onShare: (post: ShowcasePost) => void;
     onDeleted: (postId: string) => void;
     onNotice: (message: string, error?: boolean) => void;
 };
@@ -50,6 +52,7 @@ export default function ShowcaseCard({
     onRequireAuth,
     onAuthorUpdated,
     onPostUpdated,
+    onShare,
     onDeleted,
     onNotice,
 }: ShowcaseCardProps) {
@@ -75,6 +78,16 @@ export default function ShowcaseCard({
         try {
             const receipt = await setShowcaseFollow(post.author.authorId, nextFollowed, accessToken);
             onAuthorUpdated(receipt.authorId, receipt.followed, receipt.followerCount);
+            if (receipt.followed && receipt.firstFollowByMember && receipt.conversionReceipt) {
+                trackStorefrontEvent("showcase_follow_completed", {
+                    surface: "daeng_showcase",
+                    authorId: receipt.authorId,
+                    postId: post.postId,
+                    topicId: post.topic?.topicId || "",
+                    conversionReceipt: receipt.conversionReceipt,
+                    ...inboundCampaignFields(),
+                });
+            }
         } catch (reason) {
             onAuthorUpdated(post.author.authorId, previousFollowed, previousCount);
             if (reason instanceof ShowcaseApiError && reason.status === 401) onRequireAuth();
@@ -97,6 +110,15 @@ export default function ShowcaseCard({
         try {
             const receipt = await setShowcaseBone(post.postId, nextBoned, accessToken);
             onPostUpdated(receipt.postId, { bonedByMe: receipt.boned, boneCount: receipt.boneCount });
+            if (receipt.boned && receipt.firstBoneByMember && receipt.conversionReceipt) {
+                trackStorefrontEvent("showcase_bone_completed", {
+                    surface: "daeng_showcase",
+                    postId: receipt.postId,
+                    topicId: post.topic?.topicId || "",
+                    conversionReceipt: receipt.conversionReceipt,
+                    ...inboundCampaignFields(),
+                });
+            }
         } catch (reason) {
             onPostUpdated(post.postId, { bonedByMe: previousBoned, boneCount: previousCount });
             if (reason instanceof ShowcaseApiError && reason.status === 401) onRequireAuth();
@@ -201,6 +223,12 @@ export default function ShowcaseCard({
                         {post.pet.name}{post.pet.breed ? ` · ${post.pet.breed}` : ""}
                     </p>
                 ) : null}
+                {post.topic ? (
+                    <p className="mb-3 ml-1 inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-[10px] font-black text-rose-900">
+                        <i className="fa-solid fa-hashtag" aria-hidden="true" />
+                        {post.topic.title}
+                    </p>
+                ) : null}
                 <p className="whitespace-pre-wrap break-words text-sm font-bold leading-7 text-neutral-700">{post.caption}</p>
 
                 <div className="mt-4 flex items-center justify-between gap-3 border-t border-neutral-100 pt-4">
@@ -215,6 +243,9 @@ export default function ShowcaseCard({
                         응원 {post.boneCount.toLocaleString("ko-KR")}
                     </button>
                     <div className="flex items-center gap-1">
+                        <button type="button" onClick={() => onShare(post)} className="min-h-10 rounded-full px-3 text-[11px] font-black text-indigo-600 hover:bg-indigo-50 hover:text-indigo-900" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
+                            <i className="fa-solid fa-share-nodes mr-1.5" aria-hidden="true" />공유
+                        </button>
                         {post.canDelete ? (
                             <button type="button" onClick={removePost} disabled={busy === "delete"} className="min-h-10 rounded-full px-3 text-[11px] font-black text-neutral-500 hover:bg-red-50 hover:text-red-700">
                                 {busy === "delete" ? "삭제 중" : "삭제"}

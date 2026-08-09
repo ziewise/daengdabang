@@ -1,5 +1,9 @@
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { getCustomerToken } from "@/lib/customer-api";
+import {
+    buildShowcaseTopicShareLink,
+    SHOWCASE_TOPIC_ID_PATTERN,
+} from "@/lib/daeng-showcase-share";
 
 export const SHOWCASE_PRIVACY_NOTICE_VERSION = "ddb-showcase-public-v1";
 export const SHOWCASE_OFFICIAL_CHANNEL_CONSENT_VERSION = "ddb-showcase-official-channels-v1";
@@ -22,6 +26,11 @@ export type ShowcasePet = {
     breed?: string;
 };
 
+export type ShowcaseTopicSummary = {
+    topicId: string;
+    title: string;
+};
+
 export type ShowcasePost = {
     postId: string;
     caption: string;
@@ -30,10 +39,23 @@ export type ShowcasePost = {
     imageHeight: number;
     author: ShowcaseAuthor;
     pet?: ShowcasePet;
+    topic?: ShowcaseTopicSummary;
     boneCount: number;
     bonedByMe: boolean;
     canDelete: boolean;
     createdAt: string;
+    firstPostByAuthor?: boolean;
+};
+
+export type ShowcasePostCreateReceipt = ShowcasePost & { conversionReceipt: string };
+
+export type ShowcaseTopic = ShowcaseTopicSummary & {
+    prompt: string;
+    startsAt: string;
+    endsAt: string;
+    isActive: boolean;
+    shareUrl: string;
+    featuredPost?: ShowcasePost;
 };
 
 export type ShowcaseFeed = {
@@ -46,6 +68,8 @@ export type ShowcaseFollowReceipt = {
     followed: boolean;
     alreadyInState: boolean;
     followerCount: number;
+    firstFollowByMember: boolean;
+    conversionReceipt: string;
 };
 
 export type ShowcaseBoneReceipt = {
@@ -53,6 +77,8 @@ export type ShowcaseBoneReceipt = {
     boned: boolean;
     alreadyInState: boolean;
     boneCount: number;
+    firstBoneByMember: boolean;
+    conversionReceipt: string;
 };
 
 export type ShowcaseReportReceipt = {
@@ -68,6 +94,7 @@ export type CreateShowcasePostInput = {
     publicDisplayConsent: boolean;
     petProfileId?: number;
     officialChannelOptIn: boolean;
+    topicId?: string;
 };
 
 type ApiShowcaseAuthor = {
@@ -86,10 +113,13 @@ type ApiShowcasePost = {
     image_height: number;
     author: ApiShowcaseAuthor;
     pet?: { name: string; breed?: string | null } | null;
+    topic?: { topic_id: string; title: string } | null;
     bone_count?: number;
     boned_by_me?: boolean;
     can_delete?: boolean;
     created_at: string;
+    first_post_by_author?: boolean;
+    conversion_receipt: unknown;
 };
 
 type ApiShowcaseFeed = {
@@ -102,6 +132,8 @@ type ApiShowcaseFollowReceipt = {
     followed: boolean;
     already_in_state: boolean;
     follower_count: number;
+    first_follow_by_member?: boolean;
+    conversion_receipt: unknown;
 };
 
 type ApiShowcaseBoneReceipt = {
@@ -109,6 +141,23 @@ type ApiShowcaseBoneReceipt = {
     boned: boolean;
     already_in_state: boolean;
     bone_count: number;
+    first_bone_by_member?: boolean;
+    conversion_receipt: unknown;
+};
+
+type ApiShowcaseTopic = {
+    topic_id: string;
+    title: string;
+    prompt: string;
+    starts_at: string;
+    ends_at: string;
+    is_active: unknown;
+    share_url: string;
+    featured_post?: ApiShowcasePost | null;
+};
+
+type ApiShowcaseTopicReceipt = {
+    topic?: ApiShowcaseTopic | null;
 };
 
 type ApiShowcaseReportReceipt = {
@@ -206,6 +255,14 @@ function trustedImageUrl(value: string, postId: string) {
     }
 }
 
+function trustedTopicShareUrl(value: string, topicId: string) {
+    return buildShowcaseTopicShareLink(value, topicId);
+}
+
+function normalizeConversionReceipt(value: unknown): string {
+    return typeof value === "string" ? value.trim() : "";
+}
+
 function normalizePost(value: ApiShowcasePost): ShowcasePost {
     return {
         postId: value.post_id,
@@ -223,10 +280,29 @@ function normalizePost(value: ApiShowcasePost): ShowcasePost {
         pet: value.pet?.name
             ? { name: value.pet.name, breed: value.pet.breed || undefined }
             : undefined,
+        topic: value.topic?.topic_id && value.topic.title
+            ? { topicId: value.topic.topic_id, title: value.topic.title }
+            : undefined,
         boneCount: Math.max(0, Number(value.bone_count) || 0),
         bonedByMe: Boolean(value.boned_by_me),
         canDelete: Boolean(value.can_delete),
         createdAt: value.created_at,
+        firstPostByAuthor: typeof value.first_post_by_author === "boolean"
+            ? value.first_post_by_author
+            : undefined,
+    };
+}
+
+function normalizeTopic(value: ApiShowcaseTopic): ShowcaseTopic {
+    return {
+        topicId: value.topic_id,
+        title: value.title,
+        prompt: value.prompt,
+        startsAt: value.starts_at,
+        endsAt: value.ends_at,
+        isActive: value.is_active === true,
+        shareUrl: trustedTopicShareUrl(value.share_url, value.topic_id),
+        featuredPost: value.featured_post ? normalizePost(value.featured_post) : undefined,
     };
 }
 
@@ -273,11 +349,29 @@ export async function loadShowcasePost(
     return normalizePost(payload);
 }
 
+export async function loadShowcaseTopic(
+    options: { topicId?: string; token?: string; signal?: AbortSignal } = {},
+): Promise<ShowcaseTopic | null> {
+    const topicId = options.topicId && SHOWCASE_TOPIC_ID_PATTERN.test(options.topicId)
+        ? options.topicId
+        : "";
+    const path = topicId
+        ? `/api/v1/showcase/topics/${encodeURIComponent(topicId)}`
+        : "/api/v1/showcase/topic";
+    const payload = await requestJson<ApiShowcaseTopicReceipt>(
+        path,
+        { method: "GET", signal: options.signal },
+        options.token,
+        { anonymousAllowed: true },
+    );
+    return payload.topic ? normalizeTopic(payload.topic) : null;
+}
+
 export async function createShowcasePost(
     input: CreateShowcasePostInput,
     token?: string,
     onProgress?: (percent: number) => void,
-): Promise<ShowcasePost> {
+): Promise<ShowcasePostCreateReceipt> {
     const accessToken = token || getCustomerToken();
     if (!accessToken) {
         throw new ShowcaseApiError("로그인 후 사진을 올려 주세요.", { status: 401, apiCode: "login_required" });
@@ -297,9 +391,10 @@ export async function createShowcasePost(
         "official_channel_consent_version",
         input.officialChannelOptIn ? SHOWCASE_OFFICIAL_CHANNEL_CONSENT_VERSION : "",
     );
+    if (input.topicId) form.append("topic_id", input.topicId);
 
     const request = new XMLHttpRequest();
-    return new Promise<ShowcasePost>((resolve, reject) => {
+    return new Promise<ShowcasePostCreateReceipt>((resolve, reject) => {
         request.open("POST", apiUrl("/api/v1/showcase/posts"));
         request.responseType = "json";
         request.setRequestHeader("Authorization", `Bearer ${accessToken}`);
@@ -321,7 +416,11 @@ export async function createShowcasePost(
             }
             try {
                 onProgress?.(100);
-                resolve(normalizePost(request.response as ApiShowcasePost));
+                const payload = request.response as ApiShowcasePost;
+                resolve({
+                    ...normalizePost(payload),
+                    conversionReceipt: normalizeConversionReceipt(payload.conversion_receipt),
+                });
             } catch {
                 reject(new ShowcaseApiError("게시물 응답을 확인하지 못했어요. 피드를 새로고침해 주세요."));
             }
@@ -344,6 +443,8 @@ export async function setShowcaseFollow(authorId: string, followed: boolean, tok
         followed: payload.followed,
         alreadyInState: payload.already_in_state,
         followerCount: payload.follower_count,
+        firstFollowByMember: Boolean(payload.first_follow_by_member),
+        conversionReceipt: normalizeConversionReceipt(payload.conversion_receipt),
     };
 }
 
@@ -358,6 +459,8 @@ export async function setShowcaseBone(postId: string, boned: boolean, token?: st
         boned: payload.boned,
         alreadyInState: payload.already_in_state,
         boneCount: payload.bone_count,
+        firstBoneByMember: Boolean(payload.first_bone_by_member),
+        conversionReceipt: normalizeConversionReceipt(payload.conversion_receipt),
     };
 }
 

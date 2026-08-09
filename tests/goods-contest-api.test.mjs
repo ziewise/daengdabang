@@ -108,6 +108,8 @@ test("authenticated goods contest reads, selects, and cancels with bearer auth a
                     ...apiItem("mug", 1),
                     selected: true,
                     already_selected: false,
+                    first_selection_by_identity: true,
+                    conversion_receipt: "  gcr1.member_payload.member_signature  ",
                     selected_at: "2026-08-09T12:01:00Z",
                 }),
             };
@@ -123,12 +125,45 @@ test("authenticated goods contest reads, selects, and cancels with bearer auth a
     assert.equal(selected.itemId, "mug");
     assert.equal(selected.selectionCount, 1);
     assert.equal(selected.alreadySelected, false);
+    assert.equal(selected.firstSelectionByIdentity, true);
+    assert.equal(selected.conversionReceipt, "gcr1.member_payload.member_signature");
     assert.equal(cancelled.selectionCount, 0);
     assert.deepEqual(requests.map((request) => request.init.method), ["GET", "PUT", "DELETE"]);
     assert.ok(requests.every((request) => request.init.headers.get("Authorization") === "Bearer member-token"));
     assert.equal(requests[1].url, "https://api.example.test/api/v1/growth/goods-contest/items/mug/selection");
     assert.equal(requests[1].init.body, undefined);
     assert.equal(requests[2].init.body, undefined);
+});
+
+test("verified guest receipts fail closed unless the API marks the identity's first durable selection", async () => {
+    const requests = [];
+    const customerApi = await loadCustomerApi(async (url, init) => {
+        requests.push({ url, init });
+        const firstSelection = url.includes("/items/mug/");
+        return {
+            ok: true,
+            status: 200,
+            json: async () => ({
+                ...apiItem(firstSelection ? "mug" : "wood_sign", 1),
+                selected: true,
+                already_selected: false,
+                first_selection_by_identity: firstSelection ? true : "true",
+                conversion_receipt: firstSelection
+                    ? "  gcr1.guest_payload.guest_signature  "
+                    : 12345,
+                selected_at: "2026-08-09T12:01:00Z",
+            }),
+        };
+    });
+
+    const first = await customerApi.selectGuestGoodsContestItem("mug", "guest-token");
+    const later = await customerApi.selectGuestGoodsContestItem("wood_sign", "guest-token");
+
+    assert.equal(first.firstSelectionByIdentity, true);
+    assert.equal(first.conversionReceipt, "gcr1.guest_payload.guest_signature");
+    assert.equal(later.firstSelectionByIdentity, false, "only a strict API boolean true may unlock first-selection analytics");
+    assert.equal(later.conversionReceipt, "", "non-string receipts must fail closed");
+    assert.ok(requests.every((request) => request.init.headers.get("X-Goods-Guest-Token") === "guest-token"));
 });
 
 test("goods contest API fails closed on inconsistent counts and before unauthenticated mutations", async () => {

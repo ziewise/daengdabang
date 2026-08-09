@@ -17,6 +17,7 @@ import {
     selectGuestGoodsContestItem,
     setGoodsContestGuestToken,
     type GoodsContestItemSummary,
+    type GoodsContestSelectionReceipt,
     type GoodsContestSummary,
 } from "@/lib/customer-api";
 import {
@@ -25,6 +26,7 @@ import {
 } from "@/lib/goods-contest";
 import type { GrowthGoodsContent } from "@/lib/growth-content";
 import { useAuth } from "@/lib/store";
+import { inboundCampaignFields, trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 const LOGIN_HREF = "/auth/login/?redirect=%2Fgoods-contest%2F";
 const GOODS_IMAGE_PLACEHOLDER = "data:image/webp;base64,UklGRioAAABXRUJQVlA4IB4AAABQAQCdASoMAAwABIByJQBOgCgAAP7wDPQfDvWwAAA=";
@@ -106,13 +108,20 @@ function replaceSummaryItem(
     if (!current) return current;
     const previous = current.items.find((item) => item.itemId === nextItem.itemId);
     if (!previous) return current;
+    const replacement: GoodsContestItemSummary = {
+        itemId: nextItem.itemId,
+        selectionCount: nextItem.selectionCount,
+        goal: nextItem.goal,
+        remainingCount: nextItem.remainingCount,
+        productionEligible: nextItem.productionEligible,
+    };
     return {
         ...current,
         totalSelectionCount: Math.max(
             0,
-            current.totalSelectionCount - previous.selectionCount + nextItem.selectionCount,
+            current.totalSelectionCount - previous.selectionCount + replacement.selectionCount,
         ),
-        items: current.items.map((item) => item.itemId === nextItem.itemId ? nextItem : item),
+        items: current.items.map((item) => item.itemId === replacement.itemId ? replacement : item),
     };
 }
 
@@ -309,6 +318,24 @@ export default function GoodsContest({
                             ? current.selectedItemIds
                             : [...current.selectedItemIds, itemId],
                 });
+            if (
+                !wasSelected
+                && "alreadySelected" in nextItem
+                && "firstSelectionByIdentity" in nextItem
+                && "conversionReceipt" in nextItem
+                && !nextItem.alreadySelected
+                && nextItem.firstSelectionByIdentity === true
+                && typeof nextItem.conversionReceipt === "string"
+                && nextItem.conversionReceipt
+            ) {
+                trackStorefrontEvent("goods_contest_selection_completed", {
+                    surface: "goods_contest",
+                    itemId,
+                    audience: accessToken ? "member" : "verified_guest",
+                    conversionReceipt: nextItem.conversionReceipt,
+                    ...inboundCampaignFields(),
+                });
+            }
             setNotice({
                 tone: "success",
                 message: wasSelected
@@ -387,7 +414,7 @@ export default function GoodsContest({
                 controller.signal,
             );
             let selectedItemIds = session.selectedItemIds;
-            let selectedSummary: GoodsContestItemSummary | null = null;
+            let selectedSummary: GoodsContestSelectionReceipt | null = null;
             let selectionFailed = false;
             const intendedItemId = guestVerification.intendedItemId;
             if (
@@ -412,7 +439,20 @@ export default function GoodsContest({
             identityKeyRef.current = nextIdentityKey;
             setSelectionSnapshot({ owner: nextIdentityKey, state: "ready", selectedItemIds });
             if (selectedSummary) {
-                setSummary((current) => replaceSummaryItem(current, selectedSummary as GoodsContestItemSummary));
+                setSummary((current) => replaceSummaryItem(current, selectedSummary));
+                if (
+                    !selectedSummary.alreadySelected
+                    && selectedSummary.firstSelectionByIdentity === true
+                    && selectedSummary.conversionReceipt
+                ) {
+                    trackStorefrontEvent("goods_contest_selection_completed", {
+                        surface: "goods_contest",
+                        itemId: selectedSummary.itemId,
+                        audience: "verified_guest",
+                        conversionReceipt: selectedSummary.conversionReceipt,
+                        ...inboundCampaignFields(),
+                    });
+                }
                 setNotice({ tone: "success", message: "이메일 확인과 굿즈 선택을 완료했어요. 결제는 발생하지 않았습니다." });
             } else if (!selectionFailed) {
                 setNotice({ tone: "success", message: "이메일 확인을 완료했어요. 이제 원하는 굿즈를 선택해 주세요." });

@@ -8,7 +8,9 @@ import {
     SHOWCASE_ACCEPTED_IMAGE_TYPES,
     validateShowcaseImage,
     type ShowcasePost,
+    type ShowcaseTopicSummary,
 } from "@/lib/daeng-showcase";
+import { inboundCampaignFields, trackStorefrontEvent } from "@/lib/storefront-analytics";
 
 type PetOption = {
     id: number;
@@ -20,6 +22,7 @@ type ShowcaseComposerProps = {
     accessToken: string;
     defaultDisplayName: string;
     pets: PetOption[];
+    topic?: ShowcaseTopicSummary;
     onCreated: (post: ShowcasePost) => void;
 };
 
@@ -27,6 +30,7 @@ export default function ShowcaseComposer({
     accessToken,
     defaultDisplayName,
     pets,
+    topic,
     onCreated,
 }: ShowcaseComposerProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +42,7 @@ export default function ShowcaseComposer({
     const [petProfileId, setPetProfileId] = useState("");
     const [publicConsent, setPublicConsent] = useState(false);
     const [officialOptIn, setOfficialOptIn] = useState(false);
+    const [topicChoice, setTopicChoice] = useState<{ topicId: string; joined: boolean } | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState("");
@@ -46,6 +51,10 @@ export default function ShowcaseComposer({
     useEffect(() => () => {
         if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     }, []);
+
+    const joinTopic = topic
+        ? topicChoice && topicChoice.topicId === topic.topicId ? topicChoice.joined : true
+        : false;
 
     const clearPhoto = () => {
         if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
@@ -105,14 +114,26 @@ export default function ShowcaseComposer({
                 publicDisplayConsent: publicConsent,
                 petProfileId: petProfileId ? Number(petProfileId) : undefined,
                 officialChannelOptIn: officialOptIn,
+                topicId: joinTopic ? topic?.topicId : undefined,
             }, accessToken, setProgress);
+            const { conversionReceipt, ...publishedPost } = post;
             clearPhoto();
             setCaption("");
             setPetProfileId("");
             setPublicConsent(false);
             setOfficialOptIn(false);
+            setTopicChoice(null);
             setSuccess("댕자랑을 공개했어요. 피드 맨 앞에서 확인해 보세요.");
-            onCreated(post);
+            if (publishedPost.firstPostByAuthor && conversionReceipt) {
+                trackStorefrontEvent("showcase_first_post_completed", {
+                    surface: "daeng_showcase",
+                    postId: publishedPost.postId,
+                    topicId: publishedPost.topic?.topicId || "",
+                    conversionReceipt,
+                    ...inboundCampaignFields(),
+                });
+            }
+            onCreated(publishedPost);
         } catch (reason) {
             setError(reason instanceof ShowcaseApiError ? reason.message : "사진을 올리지 못했어요. 잠시 후 다시 시도해 주세요.");
         } finally {
@@ -234,6 +255,22 @@ export default function ShowcaseComposer({
                             </select>
                         </div>
                     </div>
+
+                    {topic ? (
+                        <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50/65 p-4 text-xs font-bold leading-5 text-rose-950">
+                            <input
+                                type="checkbox"
+                                checked={joinTopic}
+                                onChange={(event) => setTopicChoice({ topicId: topic.topicId, joined: event.target.checked })}
+                                className="mt-1 h-4 w-4 shrink-0 accent-rose-600"
+                                disabled={submitting}
+                            />
+                            <span>
+                                <strong className="block font-black">오늘의 댕주제 참여 · {topic.title}</strong>
+                                <span className="mt-1 block text-rose-800">선택하면 이 글이 현재 주제와 함께 표시돼요. 체크를 풀어 일반 댕자랑으로 올릴 수도 있습니다.</span>
+                            </span>
+                        </label>
+                    ) : null}
 
                     <div className="space-y-3 rounded-2xl border border-cyan-200 bg-cyan-50/70 p-4">
                         <label className="flex cursor-pointer items-start gap-3 text-xs font-bold leading-5 text-cyan-950">

@@ -51,7 +51,11 @@ export type StorefrontEventName =
     | "growth_program_interest_submitted"
     | "growth_program_interest_failed"
     | "local_care_search_completed"
-    | "local_care_search_failed";
+    | "local_care_search_failed"
+    | "showcase_first_post_completed"
+    | "showcase_follow_completed"
+    | "showcase_bone_completed"
+    | "goods_contest_selection_completed";
 
 function freshAnalyticsId(prefix: string): string {
     if (typeof window !== "undefined" && typeof window.crypto?.randomUUID === "function") {

@@ -174,6 +174,8 @@ export type GoodsContestMySelections = {
 export type GoodsContestSelectionReceipt = GoodsContestItemSummary & {
     selected: true;
     alreadySelected: boolean;
+    firstSelectionByIdentity: boolean;
+    conversionReceipt: string;
     selectedAt: string;
 };
 
@@ -205,6 +207,8 @@ type ApiGoodsContestMySelections = {
 type ApiGoodsContestSelectionReceipt = ApiGoodsContestItemSummary & {
     selected: unknown;
     already_selected: unknown;
+    first_selection_by_identity: unknown;
+    conversion_receipt: unknown;
     selected_at: unknown;
 };
 
@@ -929,6 +933,10 @@ function nonNegativeInteger(value: unknown): number | null {
     return Number.isInteger(value) && Number(value) >= 0 ? Number(value) : null;
 }
 
+function normalizeGrowthConversionReceipt(value: unknown): string {
+    return typeof value === "string" ? value.trim() : "";
+}
+
 function normalizeGoodsContestItem(value: unknown): GoodsContestItemSummary {
     if (!value || typeof value !== "object" || Array.isArray(value)) {
         return invalidGoodsContestResponse();
@@ -1075,6 +1083,8 @@ export async function selectGoodsContestItem(
         ...normalizeGoodsContestItem(value),
         selected: true,
         alreadySelected: value.already_selected,
+        firstSelectionByIdentity: value.first_selection_by_identity === true,
+        conversionReceipt: normalizeGrowthConversionReceipt(value.conversion_receipt),
         selectedAt: value.selected_at,
     };
 }
@@ -1206,6 +1216,8 @@ export async function selectGuestGoodsContestItem(
         ...normalizeGoodsContestItem(value),
         selected: true,
         alreadySelected: value.already_selected,
+        firstSelectionByIdentity: value.first_selection_by_identity === true,
+        conversionReceipt: normalizeGrowthConversionReceipt(value.conversion_receipt),
         selectedAt: value.selected_at,
     };
 }

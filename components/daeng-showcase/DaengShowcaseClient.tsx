@@ -5,23 +5,38 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ShowcaseCard from "@/components/daeng-showcase/ShowcaseCard";
 import ShowcaseComposer from "@/components/daeng-showcase/ShowcaseComposer";
+import ShowcaseShareModal, { type ShowcaseShareTarget } from "@/components/daeng-showcase/ShowcaseShareModal";
+import ShowcaseTopicCard from "@/components/daeng-showcase/ShowcaseTopicCard";
 import {
     loadShowcaseFeed,
     loadShowcasePost,
+    loadShowcaseTopic,
     ShowcaseApiError,
     type ShowcaseFeedScope,
     type ShowcasePost,
+    type ShowcaseTopic,
 } from "@/lib/daeng-showcase";
+import {
+    SHOWCASE_POST_ID_PATTERN,
+    SHOWCASE_TOPIC_ID_PATTERN,
+    showcaseAuthHref,
+    showcaseReturnPath,
+} from "@/lib/daeng-showcase-share";
 import { useAuth } from "@/lib/store";
 
 const SHOWCASE_LOGIN_HREF = "/auth/login?redirect=%2Fdaeng-showcase%2F";
 const SHOWCASE_SIGNUP_HREF = "/auth/signup?redirect=%2Fdaeng-showcase%2F";
-const SHOWCASE_POST_ID_PATTERN = /^dsp_[A-Za-z0-9_-]{20,32}$/;
 
 function deepLinkedPostId() {
     if (typeof window === "undefined") return "";
     const value = new URLSearchParams(window.location.search).get("post") || "";
     return SHOWCASE_POST_ID_PATTERN.test(value) ? value : "";
+}
+
+function deepLinkedTopicId() {
+    if (typeof window === "undefined") return "";
+    const value = new URLSearchParams(window.location.search).get("topic") || "";
+    return SHOWCASE_TOPIC_ID_PATTERN.test(value) ? value : "";
 }
 
 function memberDisplayName(value: string) {
@@ -76,12 +91,23 @@ export default function DaengShowcaseClient() {
     const [feedError, setFeedError] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
     const [highlightedPostId, setHighlightedPostId] = useState("");
+    const [topic, setTopic] = useState<ShowcaseTopic | null>(null);
+    const [topicLoading, setTopicLoading] = useState(true);
+    const [topicError, setTopicError] = useState("");
+    const [topicRefreshKey, setTopicRefreshKey] = useState(0);
+    const [highlightedTopicId, setHighlightedTopicId] = useState("");
+    const [shareTarget, setShareTarget] = useState<ShowcaseShareTarget | null>(null);
+    const [loginHref, setLoginHref] = useState(SHOWCASE_LOGIN_HREF);
+    const [signupHref, setSignupHref] = useState(SHOWCASE_SIGNUP_HREF);
     const [notice, setNotice] = useState<{ message: string; error: boolean } | null>(null);
     const noticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const requireAuth = useCallback(() => {
-        router.push(SHOWCASE_LOGIN_HREF);
+        const currentUrl = typeof window === "undefined" ? "/daeng-showcase/" : window.location.href;
+        router.push(showcaseAuthHref("login", currentUrl));
     }, [router]);
+
+    const closeShare = useCallback(() => setShareTarget(null), []);
 
     const showNotice = useCallback((message: string, error = false) => {
         if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
@@ -92,6 +118,58 @@ export default function DaengShowcaseClient() {
     useEffect(() => () => {
         if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
     }, []);
+
+    useEffect(() => {
+        let active = true;
+        void Promise.resolve().then(() => {
+            if (!active) return;
+            setLoginHref(showcaseAuthHref("login", window.location.href));
+            setSignupHref(showcaseAuthHref("signup", window.location.href));
+        });
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        let scrollTimer: ReturnType<typeof setTimeout> | undefined;
+        void (async () => {
+            await Promise.resolve();
+            if (controller.signal.aborted) return;
+            setTopicLoading(true);
+            setTopicError("");
+            try {
+                const requestedTopicId = deepLinkedTopicId();
+                const nextTopic = await loadShowcaseTopic({
+                    topicId: requestedTopicId || undefined,
+                    token: accessToken,
+                    signal: controller.signal,
+                });
+                if (controller.signal.aborted) return;
+                setTopic(nextTopic);
+                const shouldHighlight = Boolean(nextTopic && requestedTopicId === nextTopic.topicId);
+                setHighlightedTopicId(shouldHighlight && nextTopic ? nextTopic.topicId : "");
+                if (shouldHighlight) {
+                    scrollTimer = setTimeout(() => {
+                        document.getElementById("showcase-topic")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }, 120);
+                }
+            } catch (reason) {
+                if (controller.signal.aborted || (reason instanceof DOMException && reason.name === "AbortError")) return;
+                setTopic(null);
+                setHighlightedTopicId("");
+                setTopicError(reason instanceof Error ? reason.message : "오늘의 댕주제를 불러오지 못했어요.");
+            } finally {
+                if (!controller.signal.aborted) setTopicLoading(false);
+            }
+        })();
+
+        return () => {
+            controller.abort();
+            if (scrollTimer) clearTimeout(scrollTimer);
+        };
+    }, [accessToken, topicRefreshKey]);
 
     useEffect(() => {
         if (!hydrated) return;
@@ -191,16 +269,24 @@ export default function DaengShowcaseClient() {
         }
     };
 
-    const handleCreated = (post: ShowcasePost) => {
+    const showExactPost = (post: ShowcasePost, topicId = post.topic?.topicId || "") => {
         if (typeof window !== "undefined") {
-            const url = new URL(window.location.href);
-            url.searchParams.set("post", post.postId);
-            window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+            const nextPath = showcaseReturnPath(window.location.href, {
+                postId: post.postId,
+                topicId,
+            });
+            window.history.replaceState(null, "", nextPath);
+            setLoginHref(showcaseAuthHref("login", window.location.href));
+            setSignupHref(showcaseAuthHref("signup", window.location.href));
         }
         setScope("all");
         setHighlightedPostId(post.postId);
         setPosts((current) => mergeUniquePosts([post], current));
         setTimeout(() => document.getElementById(`post-${post.postId}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+    };
+
+    const handleCreated = (post: ShowcasePost) => {
+        showExactPost(post);
     };
 
     const updateAuthor = (authorId: string, followed: boolean, followerCount: number) => {
@@ -217,9 +303,9 @@ export default function DaengShowcaseClient() {
         setPosts((current) => current.filter((post) => post.postId !== postId));
         if (postId !== highlightedPostId || typeof window === "undefined") return;
         setHighlightedPostId("");
-        const url = new URL(window.location.href);
-        url.searchParams.delete("post");
-        window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+        window.history.replaceState(null, "", showcaseReturnPath(window.location.href, { postId: "" }));
+        setLoginHref(showcaseAuthHref("login", window.location.href));
+        setSignupHref(showcaseAuthHref("signup", window.location.href));
     };
 
     const serverPets = (user?.pets || [])
@@ -261,7 +347,7 @@ export default function DaengShowcaseClient() {
                                         사진 올리기
                                     </button>
                                 ) : (
-                                    <Link href={SHOWCASE_SIGNUP_HREF} className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-black">
+                                    <Link href={signupHref} className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-black">
                                         <i className="fa-solid fa-user-plus" aria-hidden="true" />
                                         회원가입하고 시작
                                     </Link>
@@ -290,6 +376,26 @@ export default function DaengShowcaseClient() {
                 </div>
             </section>
 
+            <ShowcaseTopicCard
+                topic={topic}
+                loading={topicLoading}
+                error={topicError}
+                highlighted={Boolean(topic && topic.topicId === highlightedTopicId)}
+                onRetry={() => setTopicRefreshKey((value) => value + 1)}
+                onJoin={() => {
+                    if (!topic?.isActive) return;
+                    if (!authenticated) {
+                        router.push(signupHref);
+                        return;
+                    }
+                    document.getElementById("showcase-composer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                onShare={() => {
+                    if (topic) setShareTarget({ kind: "topic", topic });
+                }}
+                onViewFeatured={(post) => showExactPost(post, topic?.topicId || post.topic?.topicId || "")}
+            />
+
             <section id="showcase-composer" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-8 sm:px-6 md:pt-10" aria-label="댕자랑 작성">
                 {!hydrated ? (
                     <div className="h-44 animate-pulse rounded-[30px] border border-white bg-white/75 shadow-card motion-reduce:animate-none" aria-label="회원 상태 확인 중" />
@@ -298,6 +404,7 @@ export default function DaengShowcaseClient() {
                         accessToken={accessToken}
                         defaultDisplayName={memberDisplayName(user.name)}
                         pets={serverPets}
+                        topic={topic?.isActive ? { topicId: topic.topicId, title: topic.title } : undefined}
                         onCreated={handleCreated}
                     />
                 ) : (
@@ -309,8 +416,8 @@ export default function DaengShowcaseClient() {
                                 <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">가입 후 사진 한 장과 오늘의 이야기를 공개하고, 마음에 드는 친구를 팔로우해 보세요.</p>
                             </div>
                             <div className="flex flex-col gap-2 sm:flex-row">
-                                <Link href={SHOWCASE_SIGNUP_HREF} className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-black">회원가입</Link>
-                                <Link href={SHOWCASE_LOGIN_HREF} className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-5 text-sm font-black text-neutral-700">로그인</Link>
+                                <Link href={signupHref} className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-black">회원가입</Link>
+                                <Link href={loginHref} className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-5 text-sm font-black text-neutral-700">로그인</Link>
                             </div>
                         </div>
                     </div>
@@ -374,6 +481,7 @@ export default function DaengShowcaseClient() {
                                     onRequireAuth={requireAuth}
                                     onAuthorUpdated={updateAuthor}
                                     onPostUpdated={updatePost}
+                                    onShare={(selectedPost) => setShareTarget({ kind: "post", post: selectedPost })}
                                     onDeleted={removePost}
                                     onNotice={showNotice}
                                 />
@@ -391,6 +499,8 @@ export default function DaengShowcaseClient() {
                     </div>
                 ) : null}
             </section>
+
+            {shareTarget ? <ShowcaseShareModal target={shareTarget} onClose={closeShare} /> : null}
 
             <div className="fixed inset-x-4 bottom-5 z-[2050] flex justify-center pointer-events-none" aria-live="polite" aria-atomic="true">
                 {notice ? (

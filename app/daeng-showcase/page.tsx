@@ -12,6 +12,20 @@ export const metadata: Metadata = {
         title: "오늘의 댕자랑 | 우리 아이의 오늘을 함께 응원해요",
         description: "공개 피드를 둘러보고 회원가입 후 사진 한 장과 오늘의 이야기를 바로 나눠 보세요.",
         url: "/daeng-showcase/",
+        images: [
+            {
+                url: "/images/og-ai-platform-20260804-1200x630.png",
+                width: 1200,
+                height: 630,
+                alt: "댕다방 오늘의 댕자랑 커뮤니티",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "오늘의 댕자랑 | 댕다방",
+        description: "오늘의 댕주제에 참여하고 우리 아이의 일상을 함께 응원해요.",
+        images: ["/images/og-ai-platform-20260804-1200x630.png"],
     },
 };
 
