@@ -4,18 +4,15 @@ import test from "node:test";
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 
-test("daeng showcase has a truthful static coming-soon landing", () => {
+test("daeng showcase exposes the live public community client with truthful metadata", () => {
     const page = read("../app/daeng-showcase/page.tsx");
 
     assert.match(page, /alternates: \{ canonical: "\/daeng-showcase\/" \}/);
     assert.match(page, /오늘의 댕자랑/);
-    assert.match(page, /게시물·뼈다귀·댓글/);
-    assert.match(page, /준비 중/);
-    assert.match(page, /개인정보 없는 외부 공유/);
-    assert.match(page, /href="\/treasure-mine\/#today-treasure"/);
-    assert.match(page, /href="\/treasure-mine\/"/);
-    assert.match(page, /이 페이지에서는 아직 게시물 작성, 뼈다귀 반응, 댓글을 받지 않습니다/);
-    assert.doesNotMatch(page, /오픈 알림 신청|결제하기|구매하기/);
+    assert.match(page, /import DaengShowcaseClient/);
+    assert.match(page, /return <DaengShowcaseClient \/>/);
+    assert.match(page, /회원은 사진과 이야기를 올리고 친구를 팔로우하며 뼈다귀 응원/);
+    assert.doesNotMatch(page, /준비 중|아직 게시물|댓글/);
 });
 
 test("desktop and mobile navigation expose daeng showcase as a primary direct link", () => {

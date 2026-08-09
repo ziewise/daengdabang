@@ -7,11 +7,12 @@ const source = await readFile(
     "utf8",
 );
 
-test("community expansion distinguishes live sharing from the planned internal feed", () => {
+test("community expansion links to the live member-backed daeng showcase", () => {
     assert.match(source, /title: "댕자랑"/);
-    assert.match(source, /status: "준비 중"/);
-    assert.match(source, /외부 안전 공유 운영 중/);
-    assert.match(source, /게시물·뼈다귀 반응·댓글은 아직 열리지 않았어요/);
+    assert.match(source, /status: "운영 중"/);
+    assert.match(source, /회원 게시·팔로우 운영 중/);
+    assert.match(source, /공개 피드는 누구나 볼 수 있고 게시·팔로우·뼈다귀 응원은 회원이 이용/);
+    assert.match(source, /cta: "오늘의 댕자랑 보기"/);
     assert.match(source, /href: "\/daeng-showcase\/"/);
 });
 
