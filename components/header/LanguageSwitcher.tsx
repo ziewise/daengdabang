@@ -3,7 +3,7 @@
 /**
  * LanguageSwitcher — 지구본 배지 → 국가/언어 선택 모달 트리거
  * ---------------------------------------------------------------------
- * 트리거: lang-globe.png 배지(투명 배경 그대로). 클릭 시 RegionModal 열림.
+ * 트리거: 최적화한 lang-globe WebP 배지. 클릭 시 RegionModal 열림.
  * 모달에서 국가/지역·통화(자동)·언어를 선택한다.
  * compact = 모바일 패널용(조금 크게).
  */
@@ -30,7 +30,7 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
                 }`}
             >
                 <Image
-                    src="/images/ui/lang-globe.png"
+                    src="/images/ui/lang-globe-128.webp"
                     alt=""
                     fill
                     sizes="50px"

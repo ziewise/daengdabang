@@ -20,7 +20,7 @@
  */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 interface WatermarkBadgeProps {
@@ -112,21 +112,30 @@ export default function WatermarkBadge({
 
     // onClick 이 있으면 배지를 클릭 가능한 버튼으로 만든다(예: 펫렌즈 실행).
     const interactive = Boolean(onClick);
+    const clearMobileCueNow = useCallback(() => {
+        if (mobileCueTimerRef.current) {
+            window.clearTimeout(mobileCueTimerRef.current);
+            mobileCueTimerRef.current = null;
+        }
+        setMobilePetLensCue(false);
+    }, []);
+
+    const showMobileCueNow = useCallback(() => {
+        if (mobileCueTimerRef.current) window.clearTimeout(mobileCueTimerRef.current);
+        setMobilePetLensCue(true);
+        mobileCueTimerRef.current = window.setTimeout(() => {
+            setMobilePetLensCue(false);
+            mobileCueTimerRef.current = null;
+        }, 9000);
+    }, []);
+
     useEffect(() => {
         if (!interactive) return;
-
-        const clearMobileCue = () => {
-            if (mobileCueTimerRef.current) {
-                window.clearTimeout(mobileCueTimerRef.current);
-                mobileCueTimerRef.current = null;
-            }
-            setMobilePetLensCue(false);
-        };
 
         const handleCue = (event: Event) => {
             const detail = (event as CustomEvent<{ open?: boolean }>).detail;
             if (detail?.open === false) {
-                clearMobileCue();
+                clearMobileCueNow();
                 return;
             }
             showMobileCueNow();
@@ -135,26 +144,9 @@ export default function WatermarkBadge({
         window.addEventListener("ddb:pet-lens-hero-cue", handleCue);
         return () => {
             window.removeEventListener("ddb:pet-lens-hero-cue", handleCue);
-            clearMobileCue();
+            clearMobileCueNow();
         };
-    }, [interactive]);
-
-    const clearMobileCueNow = () => {
-        if (mobileCueTimerRef.current) {
-            window.clearTimeout(mobileCueTimerRef.current);
-            mobileCueTimerRef.current = null;
-        }
-        setMobilePetLensCue(false);
-    };
-
-    const showMobileCueNow = () => {
-        if (mobileCueTimerRef.current) window.clearTimeout(mobileCueTimerRef.current);
-        setMobilePetLensCue(true);
-        mobileCueTimerRef.current = window.setTimeout(() => {
-            setMobilePetLensCue(false);
-            mobileCueTimerRef.current = null;
-        }, 9000);
-    };
+    }, [clearMobileCueNow, interactive, showMobileCueNow]);
 
     const shouldStageMobileCueBeforeOpen = () => (
         typeof window !== "undefined"
@@ -245,7 +237,7 @@ export default function WatermarkBadge({
                                 {/* pet-lens.png 의 원(불투명 영역)은 프레임의 ~84%라 투명 여백이 있다.
                                     scale-[1.2] 로 키워 원이 배지 흰 테두리에 딱 닿게 채운다(이중 링 제거). */}
                                 <Image
-                                    src="/images/ui/pet-lens.png"
+                                    src="/images/ui/pet-lens-128.webp"
                                     alt=""
                                     fill
                                     sizes="120px"

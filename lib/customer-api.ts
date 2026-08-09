@@ -17,6 +17,8 @@ export type { GrowthProgramId } from "@/lib/growth-programs";
 export type { GoodsContestItemId } from "@/lib/goods-contest";
 
 const TOKEN_KEY = "ddb.api.accessToken";
+const GOODS_CONTEST_GUEST_TOKEN_KEY = "ddb.goodsContest.guestToken";
+const GOODS_CONTEST_GUEST_TOKEN_EXPIRES_AT_KEY = "ddb.goodsContest.guestTokenExpiresAt";
 
 export type SocialProvider = "naver" | "kakao" | "google";
 
@@ -157,6 +159,12 @@ export type GoodsContestSummary = {
     totalSelectionCount: number;
     items: GoodsContestItemSummary[];
     updatedAt: string | null;
+    startsAt: string | null;
+    endsAt: string | null;
+    status: "active" | "expired" | "ended";
+    configuredStatus: "active" | "ended";
+    daysRemaining: number | null;
+    selectionOpen: boolean;
 };
 
 export type GoodsContestMySelections = {
@@ -182,6 +190,12 @@ type ApiGoodsContestSummary = {
     total_selection_count: unknown;
     items: unknown;
     updated_at?: unknown;
+    starts_at?: unknown;
+    ends_at?: unknown;
+    status?: unknown;
+    configured_status?: unknown;
+    days_remaining?: unknown;
+    selection_open?: unknown;
 };
 
 type ApiGoodsContestMySelections = {
@@ -192,6 +206,18 @@ type ApiGoodsContestSelectionReceipt = ApiGoodsContestItemSummary & {
     selected: unknown;
     already_selected: unknown;
     selected_at: unknown;
+};
+
+export type GoodsContestGuestVerification = {
+    verificationId: string;
+    maskedEmail: string;
+    resendAfterSeconds: number;
+    expiresInSeconds: number;
+};
+
+export type GoodsContestGuestSession = GoodsContestMySelections & {
+    guestToken: string;
+    expiresAt: string;
 };
 
 export type CustomerResultEmailStatus = "scheduled" | "sent" | "failed" | "expired" | "uncertain";
@@ -486,6 +512,29 @@ export function setCustomerToken(token?: string) {
     if (typeof window === "undefined") return;
     if (token) window.localStorage.setItem(TOKEN_KEY, token);
     else window.localStorage.removeItem(TOKEN_KEY);
+}
+
+export function getGoodsContestGuestToken() {
+    if (typeof window === "undefined") return "";
+    const token = window.localStorage.getItem(GOODS_CONTEST_GUEST_TOKEN_KEY) || "";
+    const expiresAt = window.localStorage.getItem(GOODS_CONTEST_GUEST_TOKEN_EXPIRES_AT_KEY) || "";
+    if (!token || !expiresAt || Date.parse(expiresAt) <= Date.now()) {
+        window.localStorage.removeItem(GOODS_CONTEST_GUEST_TOKEN_KEY);
+        window.localStorage.removeItem(GOODS_CONTEST_GUEST_TOKEN_EXPIRES_AT_KEY);
+        return "";
+    }
+    return token;
+}
+
+export function setGoodsContestGuestToken(token?: string, expiresAt?: string) {
+    if (typeof window === "undefined") return;
+    if (token && expiresAt && Number.isFinite(Date.parse(expiresAt))) {
+        window.localStorage.setItem(GOODS_CONTEST_GUEST_TOKEN_KEY, token);
+        window.localStorage.setItem(GOODS_CONTEST_GUEST_TOKEN_EXPIRES_AT_KEY, expiresAt);
+        return;
+    }
+    window.localStorage.removeItem(GOODS_CONTEST_GUEST_TOKEN_KEY);
+    window.localStorage.removeItem(GOODS_CONTEST_GUEST_TOKEN_EXPIRES_AT_KEY);
 }
 
 export function socialLoginHref(
@@ -925,6 +974,11 @@ function normalizeGoodsContestSummary(value: ApiGoodsContestSummary | null): Goo
     const normalizedItems = value.items.map(normalizeGoodsContestItem);
     const itemsById = new Map(normalizedItems.map((item) => [item.itemId, item]));
     const totalSelectionCount = Number(value.total_selection_count);
+    const status = value.status === "expired" || value.status === "ended"
+        ? value.status
+        : "active";
+    const configuredStatus = value.configured_status === "ended" ? "ended" : "active";
+    const daysRemaining = nonNegativeInteger(value.days_remaining);
     if (
         itemsById.size !== GOODS_CONTEST_ITEM_IDS.length
         || normalizedItems.reduce((total, item) => total + item.selectionCount, 0) !== totalSelectionCount
@@ -939,6 +993,27 @@ function normalizeGoodsContestSummary(value: ApiGoodsContestSummary | null): Goo
             return item || invalidGoodsContestResponse();
         }),
         updatedAt: typeof value.updated_at === "string" ? value.updated_at : null,
+        startsAt: typeof value.starts_at === "string" && value.starts_at.trim() ? value.starts_at : null,
+        endsAt: typeof value.ends_at === "string" && value.ends_at.trim() ? value.ends_at : null,
+        status,
+        configuredStatus,
+        daysRemaining,
+        selectionOpen: typeof value.selection_open === "boolean" ? value.selection_open : status === "active",
+    };
+}
+
+function normalizeGoodsContestSelections(value: ApiGoodsContestMySelections | null): GoodsContestMySelections {
+    if (!value || !Array.isArray(value.selected_item_ids)) return invalidGoodsContestResponse();
+    const selectedItemIds = value.selected_item_ids;
+    if (
+        !selectedItemIds.every(isGoodsContestItemId)
+        || new Set(selectedItemIds).size !== selectedItemIds.length
+    ) {
+        return invalidGoodsContestResponse();
+    }
+    const selectedSet = new Set<GoodsContestItemId>(selectedItemIds);
+    return {
+        selectedItemIds: GOODS_CONTEST_ITEM_IDS.filter((itemId) => selectedSet.has(itemId)),
     };
 }
 
@@ -972,18 +1047,7 @@ export async function loadMyGoodsContestSelections(
         cache: "no-store",
         signal,
     }, accessToken, { requireBase: true });
-    if (!value || !Array.isArray(value.selected_item_ids)) return invalidGoodsContestResponse();
-    const selectedItemIds = value.selected_item_ids;
-    if (
-        !selectedItemIds.every(isGoodsContestItemId)
-        || new Set(selectedItemIds).size !== selectedItemIds.length
-    ) {
-        return invalidGoodsContestResponse();
-    }
-    const selectedSet = new Set<GoodsContestItemId>(selectedItemIds);
-    return {
-        selectedItemIds: GOODS_CONTEST_ITEM_IDS.filter((itemId) => selectedSet.has(itemId)),
-    };
+    return normalizeGoodsContestSelections(value);
 }
 
 export async function selectGoodsContestItem(
@@ -1026,6 +1090,141 @@ export async function cancelGoodsContestItemSelection(
         { method: "DELETE", cache: "no-store", signal },
         accessToken,
         { requireBase: true },
+    );
+    return normalizeGoodsContestItem(value);
+}
+
+function goodsContestGuestHeaders(guestToken: string): HeadersInit {
+    const normalized = guestToken.trim();
+    if (!normalized) {
+        throw new DdbApiError("비회원 이메일 인증이 필요합니다.", {
+            code: "http_error",
+            status: 401,
+        });
+    }
+    return { "X-Goods-Guest-Token": normalized };
+}
+
+export async function requestGoodsContestGuestVerification(
+    email: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestGuestVerification> {
+    const value = await apiJson<{
+        verification_id?: unknown;
+        masked_email?: unknown;
+        resend_after_seconds?: unknown;
+        expires_in_seconds?: unknown;
+    }>("/api/v1/growth/goods-contest/guest/email-verifications", {
+        method: "POST",
+        cache: "no-store",
+        signal,
+        body: JSON.stringify({ email: email.trim() }),
+    }, undefined, { requireBase: true, skipAuth: true });
+    if (
+        !value
+        || typeof value.verification_id !== "string"
+        || !value.verification_id.trim()
+        || typeof value.masked_email !== "string"
+        || !value.masked_email.trim()
+    ) return invalidGoodsContestResponse();
+    return {
+        verificationId: value.verification_id,
+        maskedEmail: value.masked_email,
+        resendAfterSeconds: Math.max(1, Number(value.resend_after_seconds) || 1),
+        expiresInSeconds: Math.max(1, Number(value.expires_in_seconds) || 1),
+    };
+}
+
+export async function confirmGoodsContestGuestVerification(
+    verificationId: string,
+    email: string,
+    code: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestGuestSession> {
+    const value = await apiJson<{
+        guest_token?: unknown;
+        expires_at?: unknown;
+        selected_item_ids?: unknown;
+    }>(`/api/v1/growth/goods-contest/guest/email-verifications/${encodeURIComponent(verificationId)}/confirm`, {
+        method: "POST",
+        cache: "no-store",
+        signal,
+        body: JSON.stringify({ email: email.trim(), code: code.trim() }),
+    }, undefined, { requireBase: true, skipAuth: true });
+    if (
+        !value
+        || typeof value.guest_token !== "string"
+        || !value.guest_token.trim()
+        || typeof value.expires_at !== "string"
+        || !Number.isFinite(Date.parse(value.expires_at))
+    ) return invalidGoodsContestResponse();
+    const selections = normalizeGoodsContestSelections({ selected_item_ids: value.selected_item_ids });
+    return {
+        guestToken: value.guest_token,
+        expiresAt: value.expires_at,
+        selectedItemIds: selections.selectedItemIds,
+    };
+}
+
+export async function loadGuestGoodsContestSelections(
+    guestToken: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestMySelections> {
+    const value = await apiJson<ApiGoodsContestMySelections>("/api/v1/growth/goods-contest/guest/me", {
+        method: "GET",
+        cache: "no-store",
+        signal,
+        headers: goodsContestGuestHeaders(guestToken),
+    }, undefined, { requireBase: true, skipAuth: true });
+    return normalizeGoodsContestSelections(value);
+}
+
+export async function selectGuestGoodsContestItem(
+    itemId: GoodsContestItemId,
+    guestToken: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestSelectionReceipt> {
+    const value = await apiJson<ApiGoodsContestSelectionReceipt>(
+        `/api/v1/growth/goods-contest/guest/items/${encodeURIComponent(itemId)}/selection`,
+        {
+            method: "PUT",
+            cache: "no-store",
+            signal,
+            headers: goodsContestGuestHeaders(guestToken),
+        },
+        undefined,
+        { requireBase: true, skipAuth: true },
+    );
+    if (
+        !value
+        || value.selected !== true
+        || typeof value.already_selected !== "boolean"
+        || typeof value.selected_at !== "string"
+        || !value.selected_at.trim()
+    ) return invalidGoodsContestResponse();
+    return {
+        ...normalizeGoodsContestItem(value),
+        selected: true,
+        alreadySelected: value.already_selected,
+        selectedAt: value.selected_at,
+    };
+}
+
+export async function cancelGuestGoodsContestItemSelection(
+    itemId: GoodsContestItemId,
+    guestToken: string,
+    signal?: AbortSignal,
+): Promise<GoodsContestItemSummary> {
+    const value = await apiJson<ApiGoodsContestItemSummary>(
+        `/api/v1/growth/goods-contest/guest/items/${encodeURIComponent(itemId)}/selection`,
+        {
+            method: "DELETE",
+            cache: "no-store",
+            signal,
+            headers: goodsContestGuestHeaders(guestToken),
+        },
+        undefined,
+        { requireBase: true, skipAuth: true },
     );
     return normalizeGoodsContestItem(value);
 }

@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import MemberAiDashboard from "@/components/home/MemberAiDashboard";
 import LocalCareFinder from "@/components/growth/LocalCareFinder";
 import GrowthPolicySummary from "@/components/growth/GrowthPolicySummary";
 import GrowthPrograms from "@/components/growth/GrowthPrograms";
 import GrowthShareCard from "@/components/growth/GrowthShareCard";
-import GoodsContest from "@/components/growth/GoodsContest";
+import CommerceCommunityExpansion from "@/components/growth/CommerceCommunityExpansion";
 import { useAuth } from "@/lib/store";
 import type { PetProfile } from "@/lib/store";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
@@ -109,9 +110,9 @@ export default function GrowthHub() {
                             <a href="#today-treasure" className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center rounded-full px-4 text-xs">
                                 오늘의 보물
                             </a>
-                            <a href="#goods-contest" className="ddb-motion-lift inline-flex min-h-12 items-center justify-center rounded-full border border-indigo-300 bg-white px-4 text-xs font-black text-indigo-900 transition hover:bg-indigo-50">
+                            <Link href="/goods-contest/" className="ddb-motion-lift inline-flex min-h-12 items-center justify-center rounded-full border border-indigo-300 bg-white px-4 text-xs font-black text-indigo-900 transition hover:bg-indigo-50">
                                 굿즈 500명 공모전
-                            </a>
+                            </Link>
                             {content.visibility.localCare ? (
                                 <a href="#local-care-finder" className="ddb-motion-lift inline-flex min-h-12 items-center justify-center rounded-full border border-cyan-300 bg-white px-4 text-xs font-black text-cyan-900 transition hover:bg-cyan-50">
                                     동네 돌봄 찾기
@@ -152,12 +153,63 @@ export default function GrowthHub() {
                 </div>
             </section>
 
-            <GoodsContest content={content.goods} contentReady={contentReady} />
+            <GoodsContestTeaser content={content.goods} contentReady={contentReady} />
+
+            <CommerceCommunityExpansion />
 
             {content.visibility.localCare ? <LocalCareFinder /> : null}
             {content.visibility.programs ? <GrowthPrograms /> : null}
             {content.visibility.policy ? <GrowthPolicySummary /> : null}
         </main>
+    );
+}
+
+function GoodsContestTeaser({
+    content,
+    contentReady,
+}: {
+    content: GrowthHubPublishedContent["goods"];
+    contentReady: boolean;
+}) {
+    return (
+        <section id="goods-contest" className="scroll-mt-28 px-4 py-10 sm:px-6 md:py-14" aria-labelledby="goods-contest-teaser-title">
+            <div className="ddb-crayon-paper ddb-crayon-banner mx-auto grid max-w-[1352px] overflow-hidden rounded-[32px] border lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]">
+                <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <p className="ddb-crayon-kicker text-xs">{content.kicker}</p>
+                        <span className="rounded-full border border-indigo-200 bg-white/90 px-3 py-1 text-[10px] font-black text-indigo-800">90일 한정 · 누구나 참여</span>
+                    </div>
+                    <h2 id="goods-contest-teaser-title" className="ddb-crayon-title mt-3 break-keep text-3xl leading-tight text-neutral-950 md:text-4xl">
+                        500명의 선택으로 만드는 <span className="ddb-crayon-underline">댕다방 굿즈</span>
+                    </h2>
+                    <p className="mt-4 max-w-2xl break-keep text-sm font-bold leading-7 text-neutral-650">
+                        회원은 바로, 비회원은 이메일을 한 번 확인한 뒤 마음에 드는 굿즈를 선택할 수 있어요. 주문과 결제는 500명 달성 후 최종 조건에 동의할 때만 진행합니다.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                        <Link href="/goods-contest/" className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center rounded-full px-5 text-xs">
+                            굿즈 공모전 전체 보기
+                            <i className="fa-solid fa-arrow-right ml-2" aria-hidden="true" />
+                        </Link>
+                        <span className="inline-flex min-h-12 items-center rounded-full border border-neutral-200 bg-white/85 px-4 text-xs font-black text-neutral-600">
+                            <i className="fa-solid fa-shield-heart mr-2 text-emerald-600" aria-hidden="true" />
+                            선택 단계 결제 없음
+                        </span>
+                    </div>
+                    {!contentReady ? <span className="mt-3 text-[10px] font-bold text-neutral-400">최신 공모 설정 확인 중…</span> : null}
+                </div>
+                <Link href="/goods-contest/" className="group relative min-h-[260px] overflow-hidden border-t border-neutral-200 bg-[#f5ead8] lg:min-h-[360px] lg:border-l lg:border-t-0" aria-label="굿즈 공모전 전체 이미지와 상품 보기">
+                    <Image
+                        src="/images/goods/goods-hero-lineup.webp"
+                        alt="댕다방 굿즈 공모전 전체 구성"
+                        fill
+                        loading="lazy"
+                        sizes="(max-width: 1024px) 100vw, 42vw"
+                        className="object-contain p-3 transition duration-700 group-hover:scale-[1.025] motion-reduce:transition-none"
+                    />
+                    <span className="absolute bottom-4 right-4 rounded-full border border-white/80 bg-white/90 px-3 py-2 text-[10px] font-black text-indigo-900 shadow-sm">21개 아이템 보기</span>
+                </Link>
+            </div>
+        </section>
     );
 }
 

@@ -136,7 +136,7 @@ export default function RegionModal({ open, onClose }: { open: boolean; onClose:
                 {/* 헤더 — 지구본 아이콘 + 제목 + 닫기 */}
                 <div className="flex items-center gap-3 border-b border-neutral-100 px-6 py-5">
                     <span className="relative h-10 w-10 shrink-0">
-                        <Image src="/images/ui/lang-globe.png" alt="" fill sizes="40px" className="object-contain" />
+                        <Image src="/images/ui/lang-globe-128.webp" alt="" fill sizes="40px" className="object-contain" />
                     </span>
                     <h2 className="flex-1 text-lg font-black text-neutral-950">
                         {en ? "Country & Language" : "국가 및 언어 선택"}

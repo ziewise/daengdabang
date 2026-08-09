@@ -169,7 +169,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                     <div className="mb-6 text-center">
                                         {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함) */}
                                         <span className="relative mx-auto mb-3 block h-20 w-20">
-                                            <Image src="/images/ui/pet-lens.png" alt="" fill sizes="80px" loading="eager" className="object-contain" />
+                                            <Image src="/images/ui/pet-lens-128.webp" alt="" fill sizes="80px" loading="eager" className="object-contain" />
                                         </span>
                                         <h2 className="text-xl font-black text-neutral-950">
                                             {en ? "PetLens Analysis" : "펫렌즈 분석"}

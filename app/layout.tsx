@@ -23,9 +23,10 @@ const wantedSans = localFont({
     variable: "--font-wanted-sans",
     display: "swap",
     weight: "100 900",
+    preload: false,
 });
 // Gaegu (개구) — 거친 손글씨 한글 폰트, 로고 크레파스 워드마크용
-const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap" });
+const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap", preload: false });
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.daengdabang.com"),

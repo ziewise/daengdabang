@@ -17,7 +17,7 @@ test("the header opens the latest country and language modal from the globe badg
     ]);
 
     assert.match(switcher, /import RegionModal from "\.\/RegionModal"/);
-    assert.match(switcher, /src="\/images\/ui\/lang-globe\.png"/);
+    assert.match(switcher, /src="\/images\/ui\/lang-globe-128\.webp"/);
     assert.match(switcher, /onClick=\{\(\) => setOpen\(true\)\}/);
     assert.match(switcher, /aria-haspopup="dialog"/);
     assert.match(switcher, /aria-expanded=\{open\}/);

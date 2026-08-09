@@ -142,6 +142,7 @@ export default function Header() {
                             <ul className="min-w-[270px] p-3">
                                 {[
                                     ["/treasure-mine/", "보물광산 · 오늘의 루틴", "fa-gem", "orange"],
+                                    ["/goods-contest/", "굿즈 500명 공모전 · 진행 중", "fa-gift", "coral"],
                                     ["/my-pet/", "우리 아이 기록", "fa-dog", "coral"],
                                     ["/community/", "커뮤니티", "fa-people-group", "teal"],
                                 ].map(([href, label, icon, tone]) => (
@@ -224,7 +225,7 @@ export default function Header() {
                         >
                             {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함) */}
                             <Image
-                                src="/images/ui/pet-lens.png"
+                                src="/images/ui/pet-lens-128.webp"
                                 alt=""
                                 fill
                                 sizes="50px"

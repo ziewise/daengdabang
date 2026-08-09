@@ -16,6 +16,11 @@ export type GrowthGoodsContent = {
     title: string;
     description: string;
     escrowNotice: string;
+    campaign: {
+        startsAt: string;
+        endsAt: string;
+        status: "active" | "ended";
+    };
     items: Record<GoodsContestItemId, GrowthGoodsItemContent>;
 };
 
@@ -64,6 +69,11 @@ export const DEFAULT_GROWTH_GOODS_CONTENT: GrowthGoodsContent = {
     title: "500명의 선택으로 다음 굿즈를 함께 정해요",
     description: "마음에 드는 굿즈를 선택해 주세요. 각 상품이 500명의 선택을 모으면 최종 제작 조건을 다시 안내합니다.",
     escrowNotice: "에스크로는 향후 별도 결제 단계에서 구매자를 보호하기 위한 제도이며, 현재 선택 단계에는 적용되지 않습니다.",
+    campaign: {
+        startsAt: "2026-08-09T20:53:01+09:00",
+        endsAt: "2026-11-07T20:53:01+09:00",
+        status: "active",
+    },
     items: DEFAULT_GROWTH_GOODS_ITEMS,
 };
 
@@ -125,6 +135,9 @@ function boundedInteger(value: unknown, min: number, max: number): number | null
 function normalizedGoodsContent(raw: unknown): GrowthGoodsContent {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) return DEFAULT_GROWTH_GOODS_CONTENT;
     const goods = raw as Record<string, unknown>;
+    const rawCampaign = goods.campaign && typeof goods.campaign === "object" && !Array.isArray(goods.campaign)
+        ? goods.campaign as Record<string, unknown>
+        : {};
     const rawItems = goods.items && typeof goods.items === "object" && !Array.isArray(goods.items)
         ? goods.items as Record<string, unknown>
         : {};
@@ -155,6 +168,17 @@ function normalizedGoodsContent(raw: unknown): GrowthGoodsContent {
             10,
             420,
         ) || DEFAULT_GROWTH_GOODS_CONTENT.escrowNotice,
+        campaign: {
+            startsAt: typeof (rawCampaign.starts_at ?? rawCampaign.startsAt) === "string"
+                && Number.isFinite(Date.parse(String(rawCampaign.starts_at ?? rawCampaign.startsAt)))
+                ? String(rawCampaign.starts_at ?? rawCampaign.startsAt)
+                : DEFAULT_GROWTH_GOODS_CONTENT.campaign.startsAt,
+            endsAt: typeof (rawCampaign.ends_at ?? rawCampaign.endsAt) === "string"
+                && Number.isFinite(Date.parse(String(rawCampaign.ends_at ?? rawCampaign.endsAt)))
+                ? String(rawCampaign.ends_at ?? rawCampaign.endsAt)
+                : DEFAULT_GROWTH_GOODS_CONTENT.campaign.endsAt,
+            status: rawCampaign.status === "ended" ? "ended" : "active",
+        },
         items,
     };
 }

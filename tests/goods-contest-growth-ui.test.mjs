@@ -43,25 +43,33 @@ test("all 21 card assets and both full hero assets are shipped as bounded WebP f
     assert.ok(metadata.every((item) => item.size < 500_000));
 });
 
-test("GrowthHub exposes the goods contest in hero navigation and both daily-life routes", async () => {
-    const [hub, contest, growthPage] = await Promise.all([
+test("the daily-life hub links to a dedicated goods contest route without rendering all cards", async () => {
+    const [hub, contest, landing, page, growthPage, header, mobile] = await Promise.all([
         source("components/growth/GrowthHub.tsx"),
         source("components/growth/GoodsContest.tsx"),
+        source("components/growth/GoodsContestLanding.tsx"),
+        source("app/goods-contest/page.tsx"),
         source("app/growth/page.tsx"),
+        source("components/header/Header.tsx"),
+        source("components/header/MobilePanel.tsx"),
     ]);
 
-    assert.match(hub, /href="#goods-contest"/);
+    assert.match(hub, /href="\/goods-contest\/"/);
     assert.match(hub, /굿즈 500명 공모전/);
-    assert.match(hub, /<GoodsContest content=\{content\.goods\} contentReady=\{contentReady\} \/>/);
+    assert.doesNotMatch(hub, /<GoodsContest content=/);
+    assert.match(hub, /<GoodsContestTeaser content=\{content\.goods\}/);
     assert.match(contest, /id="goods-contest"/);
     assert.match(contest, /\/images\/goods\/goods-hero-lifestyle\.webp/);
-    assert.match(contest, /\/images\/goods\/goods-hero-lineup\.webp/);
-    assert.doesNotMatch(contest, /goods-hero-[^"']+[^<]*object-cover/);
+    assert.match(contest, /\/videos\/goods-contest-hero\.mp4/);
+    assert.match(landing, /<GoodsContest content=\{content\} contentReady=\{contentReady\} \/>/);
+    assert.match(page, /canonical: "\/goods-contest\/"/);
+    assert.match(header, /굿즈 500명 공모전 · 진행 중/);
+    assert.match(mobile, /굿즈 500명 공모전 · 진행 중/);
     assert.match(growthPage, /<GrowthHub \/>/);
     assert.match(growthPage, /canonical: "\/treasure-mine\/"/);
 });
 
-test("only active goods can be selected and login returns guests to the contest", async () => {
+test("members and verified guests can select only active goods during the campaign", async () => {
     const contest = await source("components/growth/GoodsContest.tsx");
 
     assert.match(contest, /itemContent\.active/);
@@ -70,10 +78,33 @@ test("only active goods can be selected and login returns guests to the contest"
     assert.match(contest, /loadMyGoodsContestSelections/);
     assert.match(contest, /selectGoodsContestItem/);
     assert.match(contest, /cancelGoodsContestItemSelection/);
-    assert.match(contest, /로그인 후 선택/);
-    assert.match(contest, /redirect=%2Ftreasure-mine%2F%23goods-contest/);
-    assert.match(contest, /accessTokenRef\.current !== accessToken/);
+    assert.match(contest, /requestGoodsContestGuestVerification/);
+    assert.match(contest, /confirmGoodsContestGuestVerification/);
+    assert.match(contest, /selectGuestGoodsContestItem/);
+    assert.match(contest, /이메일 확인 후 선택/);
+    assert.match(contest, /redirect=%2Fgoods-contest%2F/);
+    assert.match(contest, /identityKeyRef\.current !== identityKey/);
+    assert.match(contest, /campaignClosed/);
+    assert.match(contest, /공모 종료/);
     assert.match(contest, /controller\.abort\(\)/);
+});
+
+test("goods hero uses the bounded campaign video with explicit controls and reduced-motion handling", async () => {
+    const contest = await source("components/growth/GoodsContest.tsx");
+
+    assert.match(contest, /data-goods-hero-video/);
+    assert.match(contest, /\/videos\/goods-contest-hero\.mp4/);
+    assert.match(contest, /poster="\/images\/goods\/goods-hero-lifestyle\.webp"/);
+    assert.match(contest, /preload="metadata"/);
+    assert.match(contest, /muted=\{heroVideoMuted\}/);
+    assert.match(contest, /loop/);
+    assert.match(contest, /playsInline/);
+    assert.match(contest, /prefers-reduced-motion: reduce/);
+    assert.match(contest, /aria-label=\{heroVideoPlaying \? "영상 일시정지" : "영상 재생"\}/);
+    assert.match(contest, /aria-label=\{heroVideoMuted \? "영상 소리 켜기" : "영상 소리 끄기"\}/);
+    assert.doesNotMatch(contest, /data-goods-hero-rotation/);
+    assert.match(contest, /loading=\{catalogIndex < 4 \? "eager" : "lazy"\}/);
+    assert.match(contest, /placeholder="blur"/);
 });
 
 test("progress and payment copy keep selection distinct from an order", async () => {
@@ -89,6 +120,9 @@ test("progress and payment copy keep selection distinct from an order", async ()
     assert.match(contest, /별도 결제 단계/);
     assert.match(contest, /href="\/legal\/escrow\/"/);
     assert.match(contest, /현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다/);
+    assert.match(contest, /1P=1원, 1댕코인=100원/);
+    assert.match(contest, /적립금·댕코인 전액 결제/);
+    assert.match(contest, /에스크로 계약과 배송 연동 준비가 확인된 뒤에만/);
     assert.match(contest, /title: "선택"/);
     assert.match(contest, /title: "500명"/);
     assert.match(contest, /title: "최종 조건 \+ 결제"/);

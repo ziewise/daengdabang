@@ -149,6 +149,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                         crayon
                     >
                         <SubLink href="/treasure-mine/" icon="fa-gem" onClick={onClose}>보물광산 · 오늘의 루틴</SubLink>
+                        <SubLink href="/goods-contest/" icon="fa-gift" onClick={onClose}>굿즈 500명 공모전 · 진행 중</SubLink>
                         <SubLink href="/my-pet/" icon="fa-dog" onClick={onClose}>{t("myPet")}</SubLink>
                         <SubLink href="/community/" icon="fa-people-group" onClick={onClose}>{t("community")}</SubLink>
                     </MobileGroup>

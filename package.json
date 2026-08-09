@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node --test tests/*.test.mjs",
     "test:pet-companion-guest-save": "node --test tests/pet-companion-guest-save-access.test.mjs"
   },
   "dependencies": {
