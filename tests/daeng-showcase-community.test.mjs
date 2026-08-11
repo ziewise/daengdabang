@@ -48,9 +48,15 @@ test("live showcase supports public read, member posting, feed scopes, cursor pa
     assert.match(client, /new URLSearchParams\(window\.location\.search\)\.get\("author"\)/);
     assert.match(client, /<ShowcaseAuthorProfileModal/);
     assert.match(client, /chooseScope\("following"\)/);
-    assert.match(client, /cursor: nextCursor/);
-    assert.match(client, /댕자랑 더 보기/);
+    assert.match(client, /SHOWCASE_PAGE_SIZE = 9/);
+    assert.match(client, /cursor: pageCursor \|\| undefined/);
+    assert.match(client, /setPageHistory\(\(current\) => \[\.\.\.current, pageCursor\]\)/);
+    assert.match(client, /댕자랑 페이지 이동/);
+    assert.match(client, /이전/);
+    assert.match(client, /다음/);
+    assert.match(client, /\{pageNumber\}페이지/);
     assert.match(client, /sm:grid-cols-2 xl:grid-cols-3/);
+    assert.match(client, /grid items-stretch/);
     assert.match(client, /FeedSkeleton/);
     assert.match(client, /다시 불러오기/);
     assert.match(client, /첫 번째 댕자랑의 주인공/);
@@ -86,6 +92,12 @@ test("showcase cards provide real follow, bone, report, own-delete, and highligh
     assert.match(card, /role="dialog"/);
     assert.match(card, /post\.canDelete/);
     assert.match(card, /신고는 운영자 확인용/);
+    assert.match(card, /aspect-square w-full[^"]*object-cover/);
+    assert.match(card, /captionExpanded/);
+    assert.match(card, /captionOverflows/);
+    assert.match(card, /line-clamp-3/);
+    assert.match(card, /aria-expanded=\{captionExpanded\}/);
+    assert.match(card, /captionExpanded \? "접기" : "더보기"/);
     assert.doesNotMatch(card, /댓글/);
 });
 

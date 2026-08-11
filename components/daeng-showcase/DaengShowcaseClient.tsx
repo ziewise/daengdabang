@@ -28,6 +28,7 @@ import { useAuth } from "@/lib/store";
 
 const SHOWCASE_LOGIN_HREF = "/auth/login?redirect=%2Fdaeng-showcase%2F";
 const SHOWCASE_SIGNUP_HREF = "/auth/signup?redirect=%2Fdaeng-showcase%2F";
+const SHOWCASE_PAGE_SIZE = 9;
 
 function deepLinkedPostId() {
     if (typeof window === "undefined") return "";
@@ -94,8 +95,10 @@ export default function DaengShowcaseClient() {
     const [scope, setScope] = useState<ShowcaseFeedScope>("all");
     const [posts, setPosts] = useState<ShowcasePost[]>([]);
     const [nextCursor, setNextCursor] = useState("");
+    const [pageCursor, setPageCursor] = useState("");
+    const [pageHistory, setPageHistory] = useState<string[]>([]);
+    const [pageNumber, setPageNumber] = useState(1);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
     const [feedError, setFeedError] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
     const [highlightedPostId, setHighlightedPostId] = useState("");
@@ -201,13 +204,14 @@ export default function DaengShowcaseClient() {
 
             setLoading(true);
             setFeedError("");
-            const requestedPostId = scope === "all" ? deepLinkedPostId() : "";
+            const requestedPostId = scope === "all" && !pageCursor ? deepLinkedPostId() : "";
 
             try {
                 const feed = await loadShowcaseFeed(scope, {
+                    cursor: pageCursor || undefined,
                     token: accessToken,
                     signal: controller.signal,
-                    limit: 18,
+                    limit: requestedPostId ? SHOWCASE_PAGE_SIZE - 1 : SHOWCASE_PAGE_SIZE,
                 });
                 let nextPosts = feed.items;
                 if (requestedPostId) {
@@ -249,34 +253,39 @@ export default function DaengShowcaseClient() {
             controller.abort();
             if (scrollTimer) clearTimeout(scrollTimer);
         };
-    }, [accessToken, authenticated, hydrated, refreshKey, scope, showNotice]);
+    }, [accessToken, authenticated, hydrated, pageCursor, refreshKey, scope, showNotice]);
 
     const chooseScope = (nextScope: ShowcaseFeedScope) => {
         if (nextScope === "following" && !authenticated) {
             requireAuth();
             return;
         }
+        if (nextScope === scope) return;
+        setPageCursor("");
+        setPageHistory([]);
+        setPageNumber(1);
         setScope(nextScope);
     };
 
-    const loadMore = async () => {
-        if (!nextCursor || loadingMore) return;
-        setLoadingMore(true);
-        setFeedError("");
-        try {
-            const feed = await loadShowcaseFeed(scope, {
-                cursor: nextCursor,
-                token: accessToken,
-                limit: 18,
-            });
-            setPosts((current) => mergeUniquePosts(current, feed.items));
-            setNextCursor(feed.nextCursor || "");
-        } catch (reason) {
-            if (reason instanceof ShowcaseApiError && reason.status === 401) requireAuth();
-            else showNotice(reason instanceof Error ? reason.message : "다음 게시물을 불러오지 못했어요.", true);
-        } finally {
-            setLoadingMore(false);
-        }
+    const scrollToFeed = () => {
+        setTimeout(() => document.getElementById("showcase-feed-title")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+    };
+
+    const showPreviousPage = () => {
+        if (loading || pageHistory.length === 0) return;
+        const previousCursor = pageHistory[pageHistory.length - 1] || "";
+        setPageHistory((current) => current.slice(0, -1));
+        setPageCursor(previousCursor);
+        setPageNumber((current) => Math.max(1, current - 1));
+        scrollToFeed();
+    };
+
+    const showNextPage = () => {
+        if (loading || !nextCursor) return;
+        setPageHistory((current) => [...current, pageCursor]);
+        setPageCursor(nextCursor);
+        setPageNumber((current) => current + 1);
+        scrollToFeed();
     };
 
     const showExactPost = (post: ShowcasePost, topicId = post.topic?.topicId || "") => {
@@ -504,7 +513,7 @@ export default function DaengShowcaseClient() {
                             {scope === "following" ? <button type="button" onClick={() => setScope("all")} className="ddb-crayon-link mt-4 min-h-10 rounded-full px-5 text-xs font-black">전체 피드 보기</button> : null}
                         </div>
                     ) : (
-                        <div className="grid items-start gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        <div className="grid items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3">
                             {posts.map((post) => (
                                 <ShowcaseCard
                                     key={post.postId}
@@ -525,13 +534,28 @@ export default function DaengShowcaseClient() {
                     )}
                 </div>
 
-                {nextCursor && !loading ? (
-                    <div className="mt-7 flex justify-center">
-                        <button type="button" onClick={loadMore} disabled={loadingMore} className="ddb-motion-lift inline-flex min-h-12 items-center gap-2 rounded-full border border-indigo-200 bg-white px-6 text-sm font-black text-indigo-900 shadow-sm transition hover:border-indigo-400 hover:bg-indigo-50 disabled:opacity-55 motion-reduce:transform-none motion-reduce:transition-none">
-                            <i className={`fa-solid ${loadingMore ? "fa-spinner fa-spin" : "fa-plus"}`} aria-hidden="true" />
-                            {loadingMore ? "불러오는 중" : "댕자랑 더 보기"}
+                {(pageNumber > 1 || nextCursor) && !loading ? (
+                    <nav className="mt-7 flex items-center justify-center gap-3" aria-label="댕자랑 페이지 이동">
+                        <button
+                            type="button"
+                            onClick={showPreviousPage}
+                            disabled={pageHistory.length === 0}
+                            className="ddb-motion-lift inline-flex min-h-11 items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 text-xs font-black text-neutral-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-800 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transform-none motion-reduce:transition-none"
+                        >
+                            <i className="fa-solid fa-chevron-left text-[10px]" aria-hidden="true" />
+                            이전
                         </button>
-                    </div>
+                        <span className="min-w-20 text-center text-xs font-black text-neutral-700" aria-current="page">{pageNumber}페이지</span>
+                        <button
+                            type="button"
+                            onClick={showNextPage}
+                            disabled={!nextCursor}
+                            className="ddb-motion-lift inline-flex min-h-11 items-center gap-2 rounded-full border border-indigo-200 bg-white px-5 text-xs font-black text-indigo-900 shadow-sm transition hover:border-indigo-400 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transform-none motion-reduce:transition-none"
+                        >
+                            다음
+                            <i className="fa-solid fa-chevron-right text-[10px]" aria-hidden="true" />
+                        </button>
+                    </nav>
                 ) : null}
             </section>
 

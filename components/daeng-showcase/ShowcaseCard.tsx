@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     deleteShowcasePost,
     reportShowcasePost,
@@ -63,6 +63,27 @@ export default function ShowcaseCard({
     const [reportReason, setReportReason] = useState<ShowcaseReportReason>("spam");
     const [reportDetail, setReportDetail] = useState("");
     const [reportError, setReportError] = useState("");
+    const [captionExpanded, setCaptionExpanded] = useState(false);
+    const [captionOverflows, setCaptionOverflows] = useState(false);
+    const captionRef = useRef<HTMLParagraphElement>(null);
+
+    useEffect(() => {
+        if (captionExpanded) return;
+        const caption = captionRef.current;
+        if (!caption) return;
+
+        const measureOverflow = () => {
+            setCaptionOverflows(caption.scrollHeight > caption.clientHeight + 1);
+        };
+        const animationFrame = window.requestAnimationFrame(measureOverflow);
+        const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measureOverflow);
+        observer?.observe(caption);
+
+        return () => {
+            window.cancelAnimationFrame(animationFrame);
+            observer?.disconnect();
+        };
+    }, [captionExpanded, post.caption]);
 
     const requireMember = () => {
         if (authenticated && accessToken) return true;
@@ -177,7 +198,7 @@ export default function ShowcaseCard({
     return (
         <article
             id={`post-${post.postId}`}
-            className={`scroll-mt-28 overflow-hidden rounded-[26px] border bg-white shadow-card transition-shadow ${highlighted ? "border-rose-300 ring-4 ring-rose-200/65" : "border-white/90"}`}
+            className={`flex h-full scroll-mt-28 flex-col overflow-hidden rounded-[26px] border bg-white shadow-card transition-shadow ${highlighted ? "border-rose-300 ring-4 ring-rose-200/65" : "border-white/90"}`}
         >
             <div className="flex items-center gap-3 px-4 py-4 sm:px-5">
                 <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="group flex min-w-0 flex-1 items-center gap-3 text-left" aria-label={`${post.author.displayName} 프로필 보기`}>
@@ -217,25 +238,47 @@ export default function ShowcaseCard({
                 height={post.imageHeight}
                 loading="lazy"
                 decoding="async"
-                className="max-h-[680px] w-full bg-[#f6f3ee] object-contain"
+                className="aspect-square w-full bg-[#f6f3ee] object-cover"
             />
 
-            <div className="p-4 sm:p-5">
-                {post.pet ? (
-                    <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-black text-amber-900">
-                        <i className="fa-solid fa-dog" aria-hidden="true" />
-                        {post.pet.name}{post.pet.breed ? ` · ${post.pet.breed}` : ""}
+            <div className="flex flex-1 flex-col p-4 sm:p-5">
+                <div className="mb-3 flex min-h-7 flex-wrap items-start gap-2">
+                    {post.pet ? (
+                        <p className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-black text-amber-900">
+                            <i className="fa-solid fa-dog" aria-hidden="true" />
+                            <span className="truncate">{post.pet.name}{post.pet.breed ? ` · ${post.pet.breed}` : ""}</span>
+                        </p>
+                    ) : null}
+                    {post.topic ? (
+                        <p className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-[10px] font-black text-rose-900">
+                            <i className="fa-solid fa-hashtag" aria-hidden="true" />
+                            <span className="truncate">{post.topic.title}</span>
+                        </p>
+                    ) : null}
+                </div>
+                <div className="min-h-[7rem]">
+                    <p
+                        ref={captionRef}
+                        id={`caption-${post.postId}`}
+                        className={`whitespace-pre-wrap break-words text-sm font-bold leading-7 text-neutral-700 ${captionExpanded ? "" : "line-clamp-3"}`}
+                    >
+                        {post.caption}
                     </p>
-                ) : null}
-                {post.topic ? (
-                    <p className="mb-3 ml-1 inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-[10px] font-black text-rose-900">
-                        <i className="fa-solid fa-hashtag" aria-hidden="true" />
-                        {post.topic.title}
-                    </p>
-                ) : null}
-                <p className="whitespace-pre-wrap break-words text-sm font-bold leading-7 text-neutral-700">{post.caption}</p>
+                    {captionOverflows ? (
+                        <button
+                            type="button"
+                            aria-controls={`caption-${post.postId}`}
+                            aria-expanded={captionExpanded}
+                            onClick={() => setCaptionExpanded((value) => !value)}
+                            className="mt-1 inline-flex min-h-7 items-center gap-1 rounded-full px-1 text-[11px] font-black text-neutral-500 hover:text-indigo-700"
+                        >
+                            {captionExpanded ? "접기" : "더보기"}
+                            <i className={`fa-solid ${captionExpanded ? "fa-chevron-up" : "fa-chevron-down"} text-[9px]`} aria-hidden="true" />
+                        </button>
+                    ) : null}
+                </div>
 
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-neutral-100 pt-4">
+                <div className="mt-auto flex items-center justify-between gap-3 border-t border-neutral-100 pt-4">
                     <button
                         type="button"
                         onClick={toggleBone}
