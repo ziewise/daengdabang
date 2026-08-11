@@ -7,6 +7,7 @@ import ts from "typescript";
 import {
     buildShowcaseDeepLink,
     buildShowcaseTopicShareLink,
+    SHOWCASE_AUTHOR_ID_PATTERN,
     SHOWCASE_TOPIC_ID_PATTERN,
     showcaseAuthHref,
     showcaseMemberShareCampaign,
@@ -16,6 +17,7 @@ import {
 const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
 const POST_ID = `dsp_${"a".repeat(20)}`;
 const TOPIC_ID = "dst_daily_walk_20260810";
+const AUTHOR_ID = `dsa_${"b".repeat(20)}`;
 
 function loadShowcaseApi(fetchImpl) {
     const compiled = ts.transpileModule(read("../lib/daeng-showcase.ts"), {
@@ -68,13 +70,14 @@ function topicPayload({ active, topicId = TOPIC_ID, featured = true }) {
 
 test("showcase links use the canonical origin and keep only exact safe routing attribution", () => {
     const link = new URL(buildShowcaseDeepLink({
-        baseUrl: `https://attacker.example/private?post=${POST_ID}&topic=${TOPIC_ID}&email=hidden%40example.com&utm_source=member%20share&utm_medium=referral&utm_campaign=daeng%2Fshowcase&utm_content=post%20${POST_ID}`,
+        baseUrl: `https://attacker.example/private?post=${POST_ID}&topic=${TOPIC_ID}&author=${AUTHOR_ID}&email=hidden%40example.com&utm_source=member%20share&utm_medium=referral&utm_campaign=daeng%2Fshowcase&utm_content=post%20${POST_ID}`,
     }));
 
     assert.equal(link.origin, "https://www.daengdabang.com");
     assert.equal(link.pathname, "/daeng-showcase/");
     assert.equal(link.searchParams.get("post"), POST_ID);
     assert.equal(link.searchParams.get("topic"), TOPIC_ID);
+    assert.equal(link.searchParams.get("author"), AUTHOR_ID);
     assert.equal(link.searchParams.get("utm_source"), "member_share");
     assert.equal(link.searchParams.get("utm_medium"), "referral");
     assert.equal(link.searchParams.get("utm_campaign"), "daeng_showcase");
@@ -86,11 +89,13 @@ test("showcase links use the canonical origin and keep only exact safe routing a
         baseUrl: "javascript:alert(1)",
         postId: "../../private",
         topicId: "오늘의 주제",
+        authorId: "private@example.com",
         campaign: showcaseMemberShareCampaign(`post_${POST_ID}`),
     }));
     assert.equal(malformed.origin, "https://www.daengdabang.com");
     assert.equal(malformed.searchParams.has("post"), false);
     assert.equal(malformed.searchParams.has("topic"), false);
+    assert.equal(malformed.searchParams.has("author"), false);
     assert.equal(malformed.searchParams.get("utm_source"), "member_share");
 });
 
@@ -124,16 +129,18 @@ test("API topic share links replace mismatched topics and discard untrusted quer
     assert.equal(SHOWCASE_TOPIC_ID_PATTERN.test(TOPIC_ID), true);
     assert.equal(SHOWCASE_TOPIC_ID_PATTERN.test("dst_too_short"), false);
     assert.equal(SHOWCASE_TOPIC_ID_PATTERN.test("daily-walk_20260810"), false);
+    assert.equal(SHOWCASE_AUTHOR_ID_PATTERN.test(AUTHOR_ID), true);
+    assert.equal(SHOWCASE_AUTHOR_ID_PATTERN.test("sadmin@example.com"), false);
 });
 
-test("login and signup return paths preserve the selected post, topic, and issued campaign", () => {
-    const current = `http://localhost:3000/daeng-showcase/?post=${POST_ID}&topic=${TOPIC_ID}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=topic_${TOPIC_ID}&oauth_code=secret`;
+test("login and signup return paths preserve the selected post, topic, author, and issued campaign", () => {
+    const current = `http://localhost:3000/daeng-showcase/?post=${POST_ID}&topic=${TOPIC_ID}&author=${AUTHOR_ID}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=topic_${TOPIC_ID}&oauth_code=secret`;
     const returnPath = showcaseReturnPath(current);
 
-    assert.equal(returnPath, `/daeng-showcase/?post=${POST_ID}&topic=${TOPIC_ID}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=topic_${TOPIC_ID}`);
+    assert.equal(returnPath, `/daeng-showcase/?post=${POST_ID}&topic=${TOPIC_ID}&author=${AUTHOR_ID}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=topic_${TOPIC_ID}`);
     assert.equal(new URL(`https://example.test${showcaseAuthHref("login", current)}`).searchParams.get("redirect"), returnPath);
     assert.equal(new URL(`https://example.test${showcaseAuthHref("signup", current)}`).searchParams.get("redirect"), returnPath);
-    assert.equal(showcaseReturnPath(current, { postId: "" }), `/daeng-showcase/?topic=${TOPIC_ID}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=topic_${TOPIC_ID}`);
+    assert.equal(showcaseReturnPath(current, { postId: "", authorId: "" }), `/daeng-showcase/?topic=${TOPIC_ID}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=topic_${TOPIC_ID}`);
 });
 
 test("an exact expired topic link uses historical lookup and preserves its published featured post", async () => {

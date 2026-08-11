@@ -1,6 +1,7 @@
 export const SHOWCASE_CANONICAL_ORIGIN = "https://www.daengdabang.com";
 export const SHOWCASE_POST_ID_PATTERN = /^dsp_[A-Za-z0-9_-]{20,32}$/;
 export const SHOWCASE_TOPIC_ID_PATTERN = /^dst_[A-Za-z0-9_-]{12,40}$/;
+export const SHOWCASE_AUTHOR_ID_PATTERN = /^dsa_[A-Za-z0-9_-]{20,32}$/;
 
 const SHOWCASE_PATH = "/daeng-showcase/";
 const CAMPAIGN_QUERY_FIELDS = [
@@ -16,6 +17,7 @@ export type ShowcaseDeepLinkInput = {
     baseUrl?: string;
     postId?: string;
     topicId?: string;
+    authorId?: string;
     campaign?: ShowcaseCampaign;
 };
 
@@ -50,11 +52,14 @@ export function buildShowcaseDeepLink(input: ShowcaseDeepLinkInput = {}): string
     const source = sourceParams(input.baseUrl);
     const sourcePostId = source.get("post") || "";
     const sourceTopicId = source.get("topic") || "";
+    const sourceAuthorId = source.get("author") || "";
     const postId = input.postId === undefined ? sourcePostId : input.postId;
     const topicId = input.topicId === undefined ? sourceTopicId : input.topicId;
+    const authorId = input.authorId === undefined ? sourceAuthorId : input.authorId;
 
     if (SHOWCASE_POST_ID_PATTERN.test(postId)) url.searchParams.set("post", postId);
     if (SHOWCASE_TOPIC_ID_PATTERN.test(topicId)) url.searchParams.set("topic", topicId);
+    if (SHOWCASE_AUTHOR_ID_PATTERN.test(authorId)) url.searchParams.set("author", authorId);
 
     for (const field of CAMPAIGN_QUERY_FIELDS) {
         const rawValue = input.campaign?.[field] ?? source.get(field);
@@ -67,7 +72,7 @@ export function buildShowcaseDeepLink(input: ShowcaseDeepLinkInput = {}): string
 
 export function showcaseReturnPath(
     currentUrl: string,
-    overrides: Pick<ShowcaseDeepLinkInput, "postId" | "topicId"> = {},
+    overrides: Pick<ShowcaseDeepLinkInput, "postId" | "topicId" | "authorId"> = {},
 ): string {
     const url = new URL(buildShowcaseDeepLink({ baseUrl: currentUrl, ...overrides }));
     return `${url.pathname}${url.search}`;

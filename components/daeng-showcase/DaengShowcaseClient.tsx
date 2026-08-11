@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ShowcaseAuthorProfileModal from "@/components/daeng-showcase/ShowcaseAuthorProfileModal";
 import ShowcaseCard from "@/components/daeng-showcase/ShowcaseCard";
 import ShowcaseComposer from "@/components/daeng-showcase/ShowcaseComposer";
 import ShowcaseShareModal, { type ShowcaseShareTarget } from "@/components/daeng-showcase/ShowcaseShareModal";
@@ -17,6 +18,7 @@ import {
     type ShowcaseTopic,
 } from "@/lib/daeng-showcase";
 import {
+    SHOWCASE_AUTHOR_ID_PATTERN,
     SHOWCASE_POST_ID_PATTERN,
     SHOWCASE_TOPIC_ID_PATTERN,
     showcaseAuthHref,
@@ -37,6 +39,12 @@ function deepLinkedTopicId() {
     if (typeof window === "undefined") return "";
     const value = new URLSearchParams(window.location.search).get("topic") || "";
     return SHOWCASE_TOPIC_ID_PATTERN.test(value) ? value : "";
+}
+
+function deepLinkedAuthorId() {
+    if (typeof window === "undefined") return "";
+    const value = new URLSearchParams(window.location.search).get("author") || "";
+    return SHOWCASE_AUTHOR_ID_PATTERN.test(value) ? value : "";
 }
 
 function memberDisplayName(value: string) {
@@ -96,6 +104,7 @@ export default function DaengShowcaseClient() {
     const [topicError, setTopicError] = useState("");
     const [topicRefreshKey, setTopicRefreshKey] = useState(0);
     const [highlightedTopicId, setHighlightedTopicId] = useState("");
+    const [profileAuthorId, setProfileAuthorId] = useState("");
     const [shareTarget, setShareTarget] = useState<ShowcaseShareTarget | null>(null);
     const [loginHref, setLoginHref] = useState(SHOWCASE_LOGIN_HREF);
     const [signupHref, setSignupHref] = useState(SHOWCASE_SIGNUP_HREF);
@@ -125,6 +134,7 @@ export default function DaengShowcaseClient() {
             if (!active) return;
             setLoginHref(showcaseAuthHref("login", window.location.href));
             setSignupHref(showcaseAuthHref("signup", window.location.href));
+            setProfileAuthorId(deepLinkedAuthorId());
         });
         return () => {
             active = false;
@@ -274,6 +284,7 @@ export default function DaengShowcaseClient() {
             const nextPath = showcaseReturnPath(window.location.href, {
                 postId: post.postId,
                 topicId,
+                authorId: "",
             });
             window.history.replaceState(null, "", nextPath);
             setLoginHref(showcaseAuthHref("login", window.location.href));
@@ -283,6 +294,29 @@ export default function DaengShowcaseClient() {
         setHighlightedPostId(post.postId);
         setPosts((current) => mergeUniquePosts([post], current));
         setTimeout(() => document.getElementById(`post-${post.postId}`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+    };
+
+    const showAuthorProfile = (authorId: string) => {
+        if (!SHOWCASE_AUTHOR_ID_PATTERN.test(authorId)) return;
+        if (typeof window !== "undefined") {
+            const nextPath = showcaseReturnPath(window.location.href, {
+                authorId,
+                postId: "",
+            });
+            window.history.replaceState(null, "", nextPath);
+            setLoginHref(showcaseAuthHref("login", window.location.href));
+            setSignupHref(showcaseAuthHref("signup", window.location.href));
+        }
+        setProfileAuthorId(authorId);
+    };
+
+    const closeAuthorProfile = () => {
+        if (typeof window !== "undefined") {
+            window.history.replaceState(null, "", showcaseReturnPath(window.location.href, { authorId: "" }));
+            setLoginHref(showcaseAuthHref("login", window.location.href));
+            setSignupHref(showcaseAuthHref("signup", window.location.href));
+        }
+        setProfileAuthorId("");
     };
 
     const handleCreated = (post: ShowcasePost) => {
@@ -479,6 +513,7 @@ export default function DaengShowcaseClient() {
                                     accessToken={accessToken || undefined}
                                     authenticated={authenticated}
                                     onRequireAuth={requireAuth}
+                                    onOpenAuthor={showAuthorProfile}
                                     onAuthorUpdated={updateAuthor}
                                     onPostUpdated={updatePost}
                                     onShare={(selectedPost) => setShareTarget({ kind: "post", post: selectedPost })}
@@ -499,6 +534,22 @@ export default function DaengShowcaseClient() {
                     </div>
                 ) : null}
             </section>
+
+            {profileAuthorId ? (
+                <ShowcaseAuthorProfileModal
+                    authorId={profileAuthorId}
+                    accessToken={accessToken || undefined}
+                    authenticated={authenticated}
+                    onClose={closeAuthorProfile}
+                    onRequireAuth={requireAuth}
+                    onAuthorUpdated={updateAuthor}
+                    onShowPost={(post) => {
+                        setProfileAuthorId("");
+                        showExactPost(post);
+                    }}
+                    onNotice={showNotice}
+                />
+            ) : null}
 
             {shareTarget ? <ShowcaseShareModal target={shareTarget} onClose={closeShare} /> : null}
 

@@ -14,6 +14,8 @@ test("showcase API client matches the public feed and authenticated mutation con
     assert.match(api, /scope === "all"/);
     assert.match(api, /export async function loadShowcasePost/);
     assert.match(api, /\/api\/v1\/showcase\/posts\/\$\{encodeURIComponent\(postId\)\}/);
+    assert.match(api, /export async function loadShowcaseAuthorProfile/);
+    assert.match(api, /\/api\/v1\/showcase\/authors\/\$\{encodeURIComponent\(authorId\)\}/);
     assert.match(api, /form\.append\("file", input\.file\)/);
     assert.match(api, /form\.append\("caption", input\.caption\.trim\(\)\)/);
     assert.match(api, /form\.append\("display_name", input\.displayName\.trim\(\)\)/);
@@ -42,6 +44,9 @@ test("live showcase supports public read, member posting, feed scopes, cursor pa
     assert.match(client, /loadShowcasePost\(requestedPostId/);
     assert.match(client, /new URLSearchParams\(window\.location\.search\)\.get\("post"\)/);
     assert.match(client, /document\.getElementById\(`post-\$\{linkedPost\.postId\}`\)/);
+    assert.match(client, /SHOWCASE_AUTHOR_ID_PATTERN/);
+    assert.match(client, /new URLSearchParams\(window\.location\.search\)\.get\("author"\)/);
+    assert.match(client, /<ShowcaseAuthorProfileModal/);
     assert.match(client, /chooseScope\("following"\)/);
     assert.match(client, /cursor: nextCursor/);
     assert.match(client, /댕자랑 더 보기/);
@@ -74,10 +79,25 @@ test("showcase cards provide real follow, bone, report, own-delete, and highligh
     assert.match(card, /setShowcaseBone/);
     assert.match(card, /reportShowcasePost/);
     assert.match(card, /deleteShowcasePost/);
+    assert.match(card, /onOpenAuthor\(post\.author\.authorId\)/);
+    assert.match(card, /프로필 보기/);
     assert.match(card, /aria-pressed=\{post\.author\.followedByMe\}/);
     assert.match(card, /aria-pressed=\{post\.bonedByMe\}/);
     assert.match(card, /role="dialog"/);
     assert.match(card, /post\.canDelete/);
     assert.match(card, /신고는 운영자 확인용/);
     assert.doesNotMatch(card, /댓글/);
+});
+
+test("showcase author profile exposes only public counts and recent public posts", () => {
+    const profile = read("../components/daeng-showcase/ShowcaseAuthorProfileModal.tsx");
+
+    assert.match(profile, /loadShowcaseAuthorProfile/);
+    assert.match(profile, /게시물/);
+    assert.match(profile, /팔로워/);
+    assert.match(profile, /받은 응원/);
+    assert.match(profile, /공개 게시물만 표시/);
+    assert.match(profile, /setShowcaseFollow/);
+    assert.match(profile, /role="dialog"/);
+    assert.doesNotMatch(profile, /email|이메일|주소|전화/);
 });

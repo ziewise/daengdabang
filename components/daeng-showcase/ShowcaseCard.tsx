@@ -26,6 +26,7 @@ type ShowcaseCardProps = {
     accessToken?: string;
     authenticated: boolean;
     onRequireAuth: () => void;
+    onOpenAuthor: (authorId: string) => void;
     onAuthorUpdated: (authorId: string, followed: boolean, followerCount: number) => void;
     onPostUpdated: (postId: string, values: Partial<Pick<ShowcasePost, "bonedByMe" | "boneCount">>) => void;
     onShare: (post: ShowcasePost) => void;
@@ -50,6 +51,7 @@ export default function ShowcaseCard({
     accessToken,
     authenticated,
     onRequireAuth,
+    onOpenAuthor,
     onAuthorUpdated,
     onPostUpdated,
     onShare,
@@ -178,20 +180,22 @@ export default function ShowcaseCard({
             className={`scroll-mt-28 overflow-hidden rounded-[26px] border bg-white shadow-card transition-shadow ${highlighted ? "border-rose-300 ring-4 ring-rose-200/65" : "border-white/90"}`}
         >
             <div className="flex items-center gap-3 px-4 py-4 sm:px-5">
-                <span className="ddb-crayon-icon grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-black text-white" data-crayon-tone="coral" aria-hidden="true">
-                    {post.author.displayName.slice(0, 1)}
-                </span>
-                <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="truncate text-sm font-black text-neutral-950">{post.author.displayName}</h3>
-                        {post.author.isMe ? (
-                            <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-black text-indigo-700">나</span>
-                        ) : null}
+                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="group flex min-w-0 flex-1 items-center gap-3 text-left" aria-label={`${post.author.displayName} 프로필 보기`}>
+                    <span className="ddb-crayon-icon grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-black text-white" data-crayon-tone="coral" aria-hidden="true">
+                        {post.author.displayName.slice(0, 1)}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="truncate text-sm font-black text-neutral-950 underline-offset-4 group-hover:underline">{post.author.displayName}</h3>
+                            {post.author.isMe ? (
+                                <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-black text-indigo-700">나</span>
+                            ) : null}
+                        </div>
+                        <p className="mt-0.5 text-[10px] font-bold text-neutral-500">
+                            팔로워 {post.author.followerCount.toLocaleString("ko-KR")}명 · {formatCreatedAt(post.createdAt)}
+                        </p>
                     </div>
-                    <p className="mt-0.5 text-[10px] font-bold text-neutral-500">
-                        팔로워 {post.author.followerCount.toLocaleString("ko-KR")}명 · {formatCreatedAt(post.createdAt)}
-                    </p>
-                </div>
+                </button>
                 {!post.author.isMe ? (
                     <button
                         type="button"

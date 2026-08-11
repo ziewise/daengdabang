@@ -63,6 +63,13 @@ export type ShowcaseFeed = {
     nextCursor?: string;
 };
 
+export type ShowcaseAuthorProfile = {
+    author: ShowcaseAuthor;
+    postCount: number;
+    receivedBoneCount: number;
+    posts: ShowcasePost[];
+};
+
 export type ShowcaseFollowReceipt = {
     authorId: string;
     followed: boolean;
@@ -125,6 +132,13 @@ type ApiShowcasePost = {
 type ApiShowcaseFeed = {
     items?: ApiShowcasePost[];
     next_cursor?: string | null;
+};
+
+type ApiShowcaseAuthorProfile = {
+    author: ApiShowcaseAuthor;
+    post_count?: number;
+    received_bone_count?: number;
+    posts?: ApiShowcasePost[];
 };
 
 type ApiShowcaseFollowReceipt = {
@@ -306,6 +320,21 @@ function normalizeTopic(value: ApiShowcaseTopic): ShowcaseTopic {
     };
 }
 
+function normalizeAuthorProfile(value: ApiShowcaseAuthorProfile): ShowcaseAuthorProfile {
+    return {
+        author: {
+            authorId: value.author.author_id,
+            displayName: value.author.display_name,
+            followerCount: Math.max(0, Number(value.author.follower_count) || 0),
+            followedByMe: Boolean(value.author.followed_by_me),
+            isMe: Boolean(value.author.is_me),
+        },
+        postCount: Math.max(0, Number(value.post_count) || 0),
+        receivedBoneCount: Math.max(0, Number(value.received_bone_count) || 0),
+        posts: (value.posts || []).map(normalizePost),
+    };
+}
+
 export function validateShowcaseImage(file: File) {
     if (!SHOWCASE_ACCEPTED_IMAGE_TYPES.includes(file.type as typeof SHOWCASE_ACCEPTED_IMAGE_TYPES[number])) {
         return "JPG, PNG, WebP 사진만 올릴 수 있어요.";
@@ -347,6 +376,22 @@ export async function loadShowcasePost(
         { anonymousAllowed: true },
     );
     return normalizePost(payload);
+}
+
+export async function loadShowcaseAuthorProfile(
+    authorId: string,
+    options: { token?: string; signal?: AbortSignal; limit?: number } = {},
+): Promise<ShowcaseAuthorProfile> {
+    const query = new URLSearchParams({
+        limit: String(Math.min(12, Math.max(1, options.limit ?? 12))),
+    });
+    const payload = await requestJson<ApiShowcaseAuthorProfile>(
+        `/api/v1/showcase/authors/${encodeURIComponent(authorId)}?${query.toString()}`,
+        { method: "GET", signal: options.signal },
+        options.token,
+        { anonymousAllowed: true },
+    );
+    return normalizeAuthorProfile(payload);
 }
 
 export async function loadShowcaseTopic(
