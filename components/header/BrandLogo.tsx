@@ -40,7 +40,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false }: Br
                     sizes={mobileEmphasis
                         ? "(max-width: 359px) 48px, (max-width: 767px) 60px, 56px"
                         : "56px"}
-                    className="object-contain"
+                    className="translate-x-[3px] translate-y-[3px] object-contain"
                     priority
                 />
             </span>

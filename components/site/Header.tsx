@@ -47,7 +47,7 @@ export default function Header() {
                         alt=""
                         width={76}
                         height={76}
-                        className="h-12 w-12 object-contain md:h-16 md:w-16"
+                        className="h-12 w-12 translate-x-[3px] translate-y-[3px] object-contain md:h-16 md:w-16"
                         priority
                     />
                     <Image

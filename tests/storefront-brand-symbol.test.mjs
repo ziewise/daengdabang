@@ -19,4 +19,15 @@ test("storefront uses the approved transparent black-poodle brand symbol", () =>
     for (const source of [brandLogo, siteHeader, authLayout, videoOverlay]) {
         assert.match(source, /\/images\/logo-black-poodle-v2\.png/);
     }
+
+    for (const header of [brandLogo, siteHeader]) {
+        assert.match(header, /translate-x-\[3px\] translate-y-\[3px\]/);
+    }
+});
+
+test("storefront publishes the approved black-poodle Windows icon for the AI assistant", () => {
+    const icon = readFileSync(new URL("../public/downloads/daengdabang-ai-install-v20260812.ico", import.meta.url));
+
+    assert.equal(icon.toString("ascii", 0, 4), "\x00\x00\x01\x00");
+    assert.ok(icon.byteLength > 100_000);
 });
