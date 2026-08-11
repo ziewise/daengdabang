@@ -5,12 +5,20 @@ import styles from "@/app/intro.module.css";
 
 const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
 const MIN_INTRO_MS = 2200;
+const INTRO_VIDEO_SOURCES = [
+    "/videos/intro-random-1-clean-v1.mp4?v=20260811",
+    "/videos/intro-random-2-clean-v1.mp4?v=20260811",
+    "/videos/intro-random-3-clean-v1.mp4?v=20260811",
+    "/videos/intro-random-4-clean-v1.mp4?v=20260811",
+    "/videos/intro-random-5-clean-v1.mp4?v=20260811",
+] as const;
 
 export default function IntroSplash() {
     const [visible, setVisible] = useState(false);
     const [isMobile] = useState(() =>
         typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
-    ); // 모바일이면 9:16 인트로 영상(intro_m)
+    );
+    const [introVideoSrc, setIntroVideoSrc] = useState("");
     const shownAtRef = useRef(0);
     const introVideoRef = useRef<HTMLVideoElement>(null);
     const introMobileRef = useRef(false);
@@ -22,6 +30,15 @@ export default function IntroSplash() {
         introMobileRef.current = mobile;
 
         const show = () => {
+            const requestedVideo = Number(
+                new URLSearchParams(window.location.search).get("introVideo")
+            );
+            const selectedIndex = Number.isInteger(requestedVideo)
+                && requestedVideo >= 1
+                && requestedVideo <= INTRO_VIDEO_SOURCES.length
+                ? requestedVideo - 1
+                : Math.floor(Math.random() * INTRO_VIDEO_SOURCES.length);
+            setIntroVideoSrc(INTRO_VIDEO_SOURCES[selectedIndex]);
             shownAtRef.current = Date.now();
             setVisible(true);
         };
@@ -139,7 +156,7 @@ export default function IntroSplash() {
         closeTimerRef.current = window.setTimeout(close, remaining);
     };
 
-    if (!visible) return null;
+    if (!visible || !introVideoSrc) return null;
 
     return (
         <div
@@ -154,7 +171,7 @@ export default function IntroSplash() {
         >
             <video
                 ref={introVideoRef}
-                src={isMobile ? "/videos/intro-mobile-clean-v2.mp4?v=20260724" : "/videos/intro-clean-v2.mp4?v=20260722"}
+                src={introVideoSrc}
                 autoPlay
                 muted
                 playsInline

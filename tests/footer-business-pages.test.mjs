@@ -60,22 +60,32 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
-test("home intro uses cleaned desktop and mobile videos without changing the skip overlay", async () => {
-    const intro = await source("components/home/IntroSplash.tsx");
+test("home intro randomly selects five cleaned videos and never crops the mobile frame", async () => {
+    const [intro, introCss] = await Promise.all([
+        source("components/home/IntroSplash.tsx"),
+        source("app/intro.module.css"),
+    ]);
 
-    assert.match(intro, /isMobile \? "\/videos\/intro-mobile-clean-v2\.mp4\?v=20260724" : "\/videos\/intro-clean-v2\.mp4\?v=20260722"/);
+    for (let index = 1; index <= 5; index += 1) {
+        assert.match(intro, new RegExp(`/videos/intro-random-${index}-clean-v1\\.mp4\\?v=20260811`));
+    }
+    assert.match(intro, /Math\.floor\(Math\.random\(\) \* INTRO_VIDEO_SOURCES\.length\)/);
+    assert.match(intro, /introVideo/);
+    assert.match(introCss, /object-fit: contain/);
+    assert.doesNotMatch(introCss, /object-fit: cover/);
     assert.match(intro, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*playsInline[\s\S]*onEnded=/);
     assert.match(intro, /document\.addEventListener\("play", blockBackgroundPlay, true\)/);
     assert.match(intro, /pausedBackgroundVideos/);
     assert.match(intro, /document\.hidden/);
     assert.doesNotMatch(intro, /onTouchEnd=/);
     assert.match(intro, /<span className=\{styles\.skipText\}>/);
-    const [desktopSize, mobileSize] = await Promise.all([
-        stat(new URL("public/videos/intro-clean-v2.mp4", root)).then(({ size }) => size),
-        stat(new URL("public/videos/intro-mobile-clean-v2.mp4", root)).then(({ size }) => size),
-    ]);
-    assert.ok(desktopSize > 100_000 && desktopSize < 5_000_000);
-    assert.ok(mobileSize > 100_000 && mobileSize < 5_000_000);
+    const introSizes = await Promise.all(
+        Array.from({ length: 5 }, (_, index) =>
+            stat(new URL(`public/videos/intro-random-${index + 1}-clean-v1.mp4`, root))
+                .then(({ size }) => size)
+        )
+    );
+    assert.ok(introSizes.every((size) => size > 100_000 && size < 5_000_000));
 });
 
 test("partner and bulk pages submit dedicated support categories", async () => {
