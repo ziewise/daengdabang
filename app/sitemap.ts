@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         "/partner",
         "/bulk-order",
         "/pet-lens",
+        "/app",
         "/treasure-mine",
         "/daeng-showcase",
         "/goods-contest",

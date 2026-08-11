@@ -16,13 +16,25 @@ import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
 
 // 헤더/푸터/도크 없이 풀스크린으로 띄울 경로(정확 일치 또는 하위 경로)
 const BARE_PATHS = ["/auth/login"];
+const APP_SHELL_PATHS = ["/app"];
 
 export default function ConditionalChrome({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const bare = BARE_PATHS.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
+    const appShell = APP_SHELL_PATHS.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
 
     // 풀스크린 — 크롬(헤더/푸터/도크) 없이 페이지만
     if (bare) return <>{children}</>;
+
+    // 설치형 앱 홈은 핵심 기능을 가리지 않도록 쇼핑 푸터와 플로팅 도구를 제외한다.
+    if (appShell) {
+        return (
+            <>
+                <Header />
+                <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
+            </>
+        );
+    }
 
     // 일반 — 헤더(fixed) + 본문 여백 + 푸터 + 도크
     return (

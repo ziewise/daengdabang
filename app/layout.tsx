@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Gaegu } from "next/font/google";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -14,6 +14,7 @@ import { RegionProvider } from "@/lib/region";
 import PetLensModalProvider from "@/components/petlens/PetLensModalLauncher";
 import { PetTryOnTaskProvider } from "@/lib/pet-tryon-background";
 import StorefrontAnalyticsTracker from "@/components/analytics/StorefrontAnalyticsTracker";
+import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
 
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
@@ -32,6 +33,20 @@ export const metadata: Metadata = {
     metadataBase: new URL("https://www.daengdabang.com"),
     title: "댕다방",
     description: "AI 분석과 건강 기록, 매일 돌봄 챌린지가 쇼핑으로 이어지는 반려견 AI 플랫폼 댕다방",
+    manifest: "/manifest.webmanifest",
+    applicationName: "댕다방",
+    appleWebApp: {
+        capable: true,
+        title: "댕다방",
+        statusBarStyle: "default",
+    },
+    icons: {
+        icon: [
+            { url: "/images/pwa/icon-192x192.png", sizes: "192x192", type: "image/png" },
+            { url: "/images/pwa/icon-512x512.png", sizes: "512x512", type: "image/png" },
+        ],
+        apple: [{ url: "/images/pwa/apple-touch-icon-180x180.png", sizes: "180x180", type: "image/png" }],
+    },
     alternates: {
         canonical: "/",
     },
@@ -57,6 +72,11 @@ export const metadata: Metadata = {
     },
 };
 
+export const viewport: Viewport = {
+    themeColor: "#fffaf0",
+    colorScheme: "light",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html
@@ -70,21 +90,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className="min-h-full flex flex-col">
                 {/* 우리 크레파스 배경 — fixed z-index:-1 레이어 (globals.css .global-aurora) */}
                 <div className="global-aurora" aria-hidden="true" />
-                <LanguageProvider>
-                    <RegionProvider>
-                    <StoreProvider>
-                        <StorefrontAnalyticsTracker />
-                        {/* 펫렌즈 모달 런처 — 헤더 맞춤 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
-                        <PetLensModalProvider>
-                            {/* 입혀보기는 상품 페이지를 떠나도 전역에서 계속 진행하고 완료 상태를 알려준다. */}
-                            <PetTryOnTaskProvider>
-                                {/* 경로별로 헤더/푸터/도크 토글 — 로그인 등 풀스크린 페이지는 크롬 없이 */}
-                                <ConditionalChrome>{children}</ConditionalChrome>
-                            </PetTryOnTaskProvider>
-                        </PetLensModalProvider>
-                    </StoreProvider>
-                    </RegionProvider>
-                </LanguageProvider>
+                <PwaInstallProvider>
+                    <LanguageProvider>
+                        <RegionProvider>
+                            <StoreProvider>
+                                <StorefrontAnalyticsTracker />
+                                {/* 펫렌즈 모달 런처 — 헤더 맞춤 메뉴에서 open() 호출하므로 Header 를 감싼다 */}
+                                <PetLensModalProvider>
+                                    {/* 입혀보기는 상품 페이지를 떠나도 전역에서 계속 진행하고 완료 상태를 알려준다. */}
+                                    <PetTryOnTaskProvider>
+                                        {/* 경로별로 헤더/푸터/도크 토글 — 로그인 등 풀스크린 페이지는 크롬 없이 */}
+                                        <ConditionalChrome>{children}</ConditionalChrome>
+                                    </PetTryOnTaskProvider>
+                                </PetLensModalProvider>
+                            </StoreProvider>
+                        </RegionProvider>
+                    </LanguageProvider>
+                </PwaInstallProvider>
             </body>
         </html>
     );

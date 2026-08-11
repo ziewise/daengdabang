@@ -30,6 +30,7 @@ import PromoSection from "@/components/main/PromoSection";
 import NewArrivalsSection from "@/components/main/NewArrivalsSection";
 import InstaSection from "@/components/main/InstaSection";
 import DailyMineTeaser from "@/components/home/DailyMineTeaser";
+import MobileAppInstallStrip from "@/components/pwa/MobileAppInstallStrip";
 
 export default function HomePage() {
     // 동적 히어로에 넘길 운영자 검수 추천 상품 4개
@@ -43,6 +44,9 @@ export default function HomePage() {
 
             {/* 플로팅 FAB(FloatingDock) 등장 기준점 — 히어로를 지나면 펫렌즈/챗봇 버튼 노출 */}
             <div id="fab-reveal-sentinel" aria-hidden="true" />
+
+            {/* 모바일 방문자는 스토어 심사 없이 홈 화면 앱으로 바로 추가할 수 있다. */}
+            <MobileAppInstallStrip />
 
             {/* 회원의 반려견 데이터를 반영한 추천 상품은 히어로 바로 아래에 노출한다. */}
             <RecommendSection />
