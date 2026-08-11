@@ -1,12 +1,12 @@
-const SHELL_CACHE = "ddb-shell-v1";
-const ASSET_CACHE = "ddb-static-v1";
+const SHELL_CACHE = "ddb-shell-v2";
+const ASSET_CACHE = "ddb-static-v2";
 const SHELL_URLS = [
     "/app/",
     "/offline/",
-    "/images/pwa/icon-192x192.png",
-    "/images/pwa/icon-512x512.png",
-    "/images/pwa/icon-maskable-512x512.png",
-    "/images/pwa/apple-touch-icon-180x180.png",
+    "/images/pwa/icon-v2-192x192.png",
+    "/images/pwa/icon-v2-512x512.png",
+    "/images/pwa/icon-maskable-v2-512x512.png",
+    "/images/pwa/apple-touch-icon-v2-180x180.png",
 ];
 
 self.addEventListener("install", (event) => {

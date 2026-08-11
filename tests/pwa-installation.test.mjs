@@ -14,7 +14,7 @@ test("manifest defines a standalone app home, branded icons, and the three membe
     assert.match(manifest, /scope: "\/"/);
     assert.match(manifest, /display: "standalone"/);
     assert.match(manifest, /theme_color: "#07849e"/);
-    assert.match(manifest, /icon-maskable-512x512\.png/);
+    assert.match(manifest, /icon-maskable-v2-512x512\.png/);
     assert.match(manifest, /purpose: "maskable"/);
 
     for (const route of ["/treasure-mine/", "/daeng-showcase/", "/pet-lens/"]) {
@@ -24,10 +24,12 @@ test("manifest defines a standalone app home, branded icons, and the three membe
 
 test("home-screen icons are valid square PNGs at every declared size", () => {
     const icons = [
-        ["../public/images/pwa/icon-192x192.png", 192],
-        ["../public/images/pwa/icon-512x512.png", 512],
-        ["../public/images/pwa/icon-maskable-512x512.png", 512],
-        ["../public/images/pwa/apple-touch-icon-180x180.png", 180],
+        ["../public/images/pwa/icon-v2-192x192.png", 192],
+        ["../public/images/pwa/icon-v2-512x512.png", 512],
+        ["../public/images/pwa/icon-maskable-v2-512x512.png", 512],
+        ["../public/images/pwa/apple-touch-icon-v2-180x180.png", 180],
+        ["../app/icon.png", 512],
+        ["../app/apple-icon.png", 180],
     ];
 
     for (const [path, expectedSize] of icons) {
@@ -58,6 +60,10 @@ test("install UI handles native prompts, iOS instructions, and in-app browsers",
     const homeStrip = read("../components/pwa/MobileAppInstallStrip.tsx");
 
     assert.match(provider, /beforeinstallprompt/);
+    assert.ok(
+        provider.indexOf("await deferredPrompt.prompt()") < provider.indexOf("openInstallHelp();"),
+        "supported browsers must open their native install prompt before any help UI",
+    );
     assert.match(provider, /appinstalled/);
     assert.match(provider, /display-mode: standalone/);
     assert.match(provider, /홈 화면에 추가/);
@@ -66,6 +72,7 @@ test("install UI handles native prompts, iOS instructions, and in-app browsers",
     assert.match(provider, /clipboard\.writeText/);
     assert.match(mobileMenu, /댕다방 앱 설치/);
     assert.match(homeStrip, /매일 댕생활 · 댕자랑 · 연구소/);
+    assert.match(homeStrip, /바로 설치/);
 });
 
 test("mobile app home links members to all requested services and preserves login return", () => {

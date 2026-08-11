@@ -34,7 +34,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false }: Br
             {/* 강아지 로고 — 배경 없이(투명) 헤더 색이 비치게, 좀 더 크게 */}
             <span className={`relative inline-flex shrink-0 ${symbolSize}`}>
                 <Image
-                    src="/images/logo.png"
+                    src="/images/logo-black-poodle-v2.png"
                     alt=""
                     fill
                     sizes={mobileEmphasis

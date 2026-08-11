@@ -101,7 +101,7 @@ export default function OutboundRedirectClient() {
             <section className="w-full max-w-lg rounded-lg border border-neutral-200 bg-white p-6 text-center shadow-card">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#f7f2e8]">
                     <Image
-                        src="/images/logo.png?v=20260614-tight"
+                        src="/images/logo-black-poodle-v2.png"
                         alt="댕다방"
                         width={76}
                         height={76}

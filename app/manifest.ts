@@ -18,19 +18,19 @@ export default function manifest(): MetadataRoute.Manifest {
         prefer_related_applications: false,
         icons: [
             {
-                src: "/images/pwa/icon-192x192.png",
+                src: "/images/pwa/icon-v2-192x192.png",
                 sizes: "192x192",
                 type: "image/png",
                 purpose: "any",
             },
             {
-                src: "/images/pwa/icon-512x512.png",
+                src: "/images/pwa/icon-v2-512x512.png",
                 sizes: "512x512",
                 type: "image/png",
                 purpose: "any",
             },
             {
-                src: "/images/pwa/icon-maskable-512x512.png",
+                src: "/images/pwa/icon-maskable-v2-512x512.png",
                 sizes: "512x512",
                 type: "image/png",
                 purpose: "maskable",
@@ -42,21 +42,21 @@ export default function manifest(): MetadataRoute.Manifest {
                 short_name: "매일 댕생활",
                 description: "오늘의 출근도장과 돌봄 루틴",
                 url: "/treasure-mine/?source=pwa-shortcut",
-                icons: [{ src: "/images/pwa/icon-192x192.png", sizes: "192x192" }],
+                icons: [{ src: "/images/pwa/icon-v2-192x192.png", sizes: "192x192" }],
             },
             {
                 name: "댕자랑",
                 short_name: "댕자랑",
                 description: "우리 아이의 순간을 함께 나누는 공간",
                 url: "/daeng-showcase/?source=pwa-shortcut",
-                icons: [{ src: "/images/pwa/icon-192x192.png", sizes: "192x192" }],
+                icons: [{ src: "/images/pwa/icon-v2-192x192.png", sizes: "192x192" }],
             },
             {
                 name: "댕다방 연구소",
                 short_name: "댕다방 연구소",
                 description: "사진과 생활 기록으로 살펴보는 반려견 케어",
                 url: "/pet-lens/?source=pwa-shortcut",
-                icons: [{ src: "/images/pwa/icon-192x192.png", sizes: "192x192" }],
+                icons: [{ src: "/images/pwa/icon-v2-192x192.png", sizes: "192x192" }],
             },
         ],
     };

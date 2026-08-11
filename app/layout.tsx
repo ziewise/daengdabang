@@ -42,10 +42,10 @@ export const metadata: Metadata = {
     },
     icons: {
         icon: [
-            { url: "/images/pwa/icon-192x192.png", sizes: "192x192", type: "image/png" },
-            { url: "/images/pwa/icon-512x512.png", sizes: "512x512", type: "image/png" },
+            { url: "/images/pwa/icon-v2-192x192.png", sizes: "192x192", type: "image/png" },
+            { url: "/images/pwa/icon-v2-512x512.png", sizes: "512x512", type: "image/png" },
         ],
-        apple: [{ url: "/images/pwa/apple-touch-icon-180x180.png", sizes: "180x180", type: "image/png" }],
+        apple: [{ url: "/images/pwa/apple-touch-icon-v2-180x180.png", sizes: "180x180", type: "image/png" }],
     },
     alternates: {
         canonical: "/",

@@ -43,7 +43,7 @@ export default function Header() {
                 </button>
                 <Link href="/" className="flex min-w-0 shrink-0 items-center gap-1.5" aria-label="댕다방 홈">
                     <Image
-                        src="/images/logo.png?v=20260614-tight"
+                        src="/images/logo-black-poodle-v2.png"
                         alt=""
                         width={76}
                         height={76}

@@ -44,10 +44,10 @@ export default function MobileAppHome() {
     const { canPrompt, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
 
     const installLabel = canPrompt
-        ? "이 기기에 앱 설치"
+        ? "바로 설치"
         : platform === "ios"
-            ? "iPhone 홈 화면에 추가"
-            : "홈 화면 설치 방법";
+            ? "iPhone 설치 안내"
+            : "설치 방법 보기";
 
     return (
         <div className="min-h-[calc(100vh-var(--header-height))] bg-[#fffaf0]/80 px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pt-8">
@@ -56,7 +56,7 @@ export default function MobileAppHome() {
                     <div className="absolute -right-8 -top-10 h-36 w-36 rounded-full bg-cyan-100/55 blur-2xl" aria-hidden="true" />
                     <div className="relative flex items-start gap-4">
                         <Image
-                            src="/images/pwa/icon-192x192.png"
+                            src="/images/pwa/icon-v2-192x192.png"
                             alt=""
                             width={64}
                             height={64}

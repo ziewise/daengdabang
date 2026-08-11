@@ -7,9 +7,9 @@ export default function MobileAppInstallStrip() {
     if (!isReady || isStandalone) return null;
 
     const action = canPrompt
-        ? "앱으로 설치"
+        ? "바로 설치"
         : platform === "ios"
-            ? "홈 화면에 추가"
+            ? "iPhone 설치 안내"
             : "설치 방법 보기";
 
     return (

@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             {/* 상단 시그니처 로고 (모든 인증 페이지 공통) */}
             <Link href="/main" className="inline-flex items-center gap-2 mb-8 md:mb-10 no-underline">
                 <span className="relative w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden bg-white shadow-card">
-                    <Image src="/images/logo.png" alt="댕다방" fill sizes="56px" className="object-cover" priority />
+                    <Image src="/images/logo-black-poodle-v2.png" alt="댕다방" fill sizes="56px" className="object-contain" priority />
                 </span>
                 <span className="inline-flex items-baseline font-display text-3xl md:text-4xl font-black tracking-tight">
                     <span className="text-aurora-blue">댕</span>

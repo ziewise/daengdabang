@@ -10,13 +10,13 @@ export const metadata: Metadata = {
         title: "댕다방 시작하기",
         description: "펫렌즈와 챗봇으로 우리 아이에게 맞는 반려견 상품을 고르세요.",
         url: "/campaign/sns-launch",
-        images: [{ url: "/images/logo.png", width: 512, height: 512, alt: "댕다방" }],
+        images: [{ url: "/images/logo-black-poodle-v2.png", width: 1254, height: 1254, alt: "댕다방" }],
     },
     twitter: {
         card: "summary",
         title: "댕다방 시작하기",
         description: "펫렌즈와 챗봇으로 우리 아이에게 맞는 반려견 상품을 고르세요.",
-        images: ["/images/logo.png"],
+        images: ["/images/logo-black-poodle-v2.png"],
     },
 };
 
