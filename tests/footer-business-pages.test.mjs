@@ -73,6 +73,15 @@ test("home intro randomly selects five cleaned videos and never crops the mobile
     assert.match(intro, /introVideo/);
     assert.match(introCss, /object-fit: contain/);
     assert.doesNotMatch(introCss, /object-fit: cover/);
+    assert.match(intro, /className=\{styles\.videoFrame\}/);
+    assert.match(introCss, /intro-crayon-backdrop-v1\.webp/);
+    assert.match(introCss, /width: min\(68vw, 1000px, calc\(62dvh \* 1\.7778\)\)/);
+    assert.match(introCss, /width: min\(88vw, calc\(54dvh \* 1\.7778\)\)/);
+    assert.match(introCss, /mask-image:[\s\S]*linear-gradient\(to right,[\s\S]*linear-gradient\(to bottom/);
+    assert.match(introCss, /mask-composite: intersect/);
+    assert.doesNotMatch(introCss, /\.videoFrame[\s\S]*?border: 2px/);
+    const introBackdropSize = (await stat(new URL("public/images/intro/intro-crayon-backdrop-v1.webp", root))).size;
+    assert.ok(introBackdropSize > 100_000 && introBackdropSize < 1_000_000);
     assert.match(intro, /<video[\s\S]*autoPlay[\s\S]*muted[\s\S]*playsInline[\s\S]*onEnded=/);
     assert.match(intro, /document\.addEventListener\("play", blockBackgroundPlay, true\)/);
     assert.match(intro, /pausedBackgroundVideos/);

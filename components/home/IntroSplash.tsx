@@ -169,28 +169,30 @@ export default function IntroSplash() {
             tabIndex={0}
             aria-label="인트로 건너뛰기"
         >
-            <video
-                ref={introVideoRef}
-                src={introVideoSrc}
-                autoPlay
-                muted
-                playsInline
-                preload="auto"
-                onCanPlay={(event) => {
-                    event.currentTarget.defaultPlaybackRate = 1;
-                    event.currentTarget.playbackRate = 1;
-                    if (document.hidden) {
-                        event.currentTarget.pause();
-                    } else {
-                        void event.currentTarget.play().catch(() => undefined);
-                    }
-                }}
-                onRateChange={(event) => {
-                    if (event.currentTarget.playbackRate !== 1) event.currentTarget.playbackRate = 1;
-                }}
-                onEnded={closeAfterMinimum}
-                onError={closeAfterMinimum}
-            />
+            <div className={styles.videoFrame}>
+                <video
+                    ref={introVideoRef}
+                    src={introVideoSrc}
+                    autoPlay
+                    muted
+                    playsInline
+                    preload="auto"
+                    onCanPlay={(event) => {
+                        event.currentTarget.defaultPlaybackRate = 1;
+                        event.currentTarget.playbackRate = 1;
+                        if (document.hidden) {
+                            event.currentTarget.pause();
+                        } else {
+                            void event.currentTarget.play().catch(() => undefined);
+                        }
+                    }}
+                    onRateChange={(event) => {
+                        if (event.currentTarget.playbackRate !== 1) event.currentTarget.playbackRate = 1;
+                    }}
+                    onEnded={closeAfterMinimum}
+                    onError={closeAfterMinimum}
+                />
+            </div>
             <span className={styles.skipText}>탭하면 바로 쇼핑하기</span>
         </div>
     );
