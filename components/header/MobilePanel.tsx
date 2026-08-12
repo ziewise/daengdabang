@@ -16,6 +16,7 @@ import {
     CS_LINKS,
 } from "@/lib/menu-data";
 import BrandLogo from "./BrandLogo";
+import { usePwaInstall } from "@/components/pwa/PwaInstallProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
 import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
@@ -32,6 +33,7 @@ export default function MobilePanel({ open, onClose }: Props) {
     const { isLoggedIn, hydrated } = useAuth();
     const router = useRouter();
     const { t, menuLabel } = useI18n();
+    const { isReady: pwaReady, isStandalone } = usePwaInstall();
 
     /** 검색 submit — /products?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
     const submitSearch = (e: React.FormEvent) => {
@@ -181,16 +183,22 @@ export default function MobilePanel({ open, onClose }: Props) {
                         <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 
-                    <PwaInstallButton
-                        onBeforeInstall={onClose}
-                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-base font-bold text-foreground hover:bg-neutral-50"
-                    >
-                        <span className="ddb-crayon-icon grid h-7 w-7 shrink-0 place-items-center rounded-lg text-white" data-crayon-tone="teal">
-                            <i className="fa-solid fa-mobile-screen-button text-[11px]" aria-hidden="true" />
-                        </span>
-                        <span>댕다방 앱 설치</span>
-                        <i className="fa-solid fa-chevron-right ml-auto text-[10px] text-neutral-300" aria-hidden="true" />
-                    </PwaInstallButton>
+                    {pwaReady && isStandalone ? (
+                        <MobileLink href="/app/" icon="fa-house" onClick={onClose} crayon tone="teal">
+                            댕다방 앱 홈
+                        </MobileLink>
+                    ) : (
+                        <PwaInstallButton
+                            onBeforeInstall={onClose}
+                            className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-base font-bold text-foreground hover:bg-neutral-50"
+                        >
+                            <span className="ddb-crayon-icon grid h-7 w-7 shrink-0 place-items-center rounded-lg text-white" data-crayon-tone="teal">
+                                <i className="fa-solid fa-mobile-screen-button text-[11px]" aria-hidden="true" />
+                            </span>
+                            <span>댕다방 앱 설치</span>
+                            <i className="fa-solid fa-chevron-right ml-auto text-[10px] text-neutral-300" aria-hidden="true" />
+                        </PwaInstallButton>
+                    )}
 
                     {/* 장바구니 — 협업자 장바구니 페이지 */}
                     <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>

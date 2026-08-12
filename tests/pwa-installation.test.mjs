@@ -90,3 +90,21 @@ test("mobile app home links members to all requested services and preserves logi
     assert.match(chrome, /APP_SHELL_PATHS = \["\/app"\]/);
     assert.match(chrome, /if \(appShell\)/);
 });
+
+test("installed app users can always return to the dedicated app home", () => {
+    const logo = read("../components/header/BrandLogo.tsx");
+    const mobileMenu = read("../components/header/MobilePanel.tsx");
+    const appHomeButton = read("../components/pwa/InstalledAppHomeButton.tsx");
+    const chrome = read("../components/site/ConditionalChrome.tsx");
+
+    assert.match(logo, /href="\/"/);
+    assert.match(mobileMenu, /pwaReady && isStandalone/);
+    assert.match(mobileMenu, /<MobileLink href="\/app\/" icon="fa-house"/);
+    assert.match(mobileMenu, /댕다방 앱 홈/);
+    assert.match(appHomeButton, /!isReady \|\| !isStandalone \|\| isAppHome/);
+    assert.match(appHomeButton, /data-installed-app-home-button/);
+    assert.match(appHomeButton, /href="\/app\/"/);
+    assert.match(appHomeButton, /<span>앱 홈<\/span>/);
+    assert.match(chrome, /<InstalledAppHomeButton \/>/);
+    assert.match(chrome, /<InstalledAppHomeButton headerOffset=\{false\} \/>/);
+});
