@@ -11,6 +11,7 @@ const INTRO_VIDEO_SOURCES = [
     "/videos/intro-random-3-clean-v1.mp4?v=20260811",
     "/videos/intro-random-4-clean-v1.mp4?v=20260811",
     "/videos/intro-random-5-clean-v1.mp4?v=20260811",
+    "/videos/intro-random-6-clean-v1.mp4?v=20260812",
 ] as const;
 
 export default function IntroSplash() {

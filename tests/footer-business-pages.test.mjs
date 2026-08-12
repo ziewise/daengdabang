@@ -60,14 +60,15 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
-test("home intro randomly selects five cleaned videos and never crops the mobile frame", async () => {
+test("home intro randomly selects six cleaned videos and never crops the mobile frame", async () => {
     const [intro, introCss] = await Promise.all([
         source("components/home/IntroSplash.tsx"),
         source("app/intro.module.css"),
     ]);
 
-    for (let index = 1; index <= 5; index += 1) {
-        assert.match(intro, new RegExp(`/videos/intro-random-${index}-clean-v1\\.mp4\\?v=20260811`));
+    for (let index = 1; index <= 6; index += 1) {
+        const version = index === 6 ? "20260812" : "20260811";
+        assert.match(intro, new RegExp(`/videos/intro-random-${index}-clean-v1\\.mp4\\?v=${version}`));
     }
     assert.match(intro, /Math\.floor\(Math\.random\(\) \* INTRO_VIDEO_SOURCES\.length\)/);
     assert.match(intro, /introVideo/);
@@ -89,7 +90,7 @@ test("home intro randomly selects five cleaned videos and never crops the mobile
     assert.doesNotMatch(intro, /onTouchEnd=/);
     assert.match(intro, /<span className=\{styles\.skipText\}>/);
     const introSizes = await Promise.all(
-        Array.from({ length: 5 }, (_, index) =>
+        Array.from({ length: 6 }, (_, index) =>
             stat(new URL(`public/videos/intro-random-${index + 1}-clean-v1.mp4`, root))
                 .then(({ size }) => size)
         )
