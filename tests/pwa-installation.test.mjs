@@ -121,6 +121,7 @@ test("Android dark mode receives a platform-scoped readability veil without chan
     const provider = read("../components/pwa/PwaInstallProvider.tsx");
 
     assert.match(layout, /strategy="beforeInteractive"/);
+    assert.match(layout, /suppressHydrationWarning/);
     assert.match(layout, /\/Android\/i\.test\(navigator\.userAgent\)/);
     assert.match(layout, /ddbAndroidDark/);
     assert.match(provider, /prefers-color-scheme: dark/);

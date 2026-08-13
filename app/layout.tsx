@@ -94,6 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html
             lang="ko"
             className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} ${gaegu.variable} h-full antialiased`}
+            suppressHydrationWarning
         >
             <head>
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
