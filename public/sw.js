@@ -40,6 +40,7 @@ self.addEventListener("activate", (event) => {
         });
         await Promise.all(windowClients.map(async (client) => {
             try {
+                if (new URL(client.url).pathname === "/pwa-refresh.html") return;
                 await client.navigate(client.url);
             } catch {
                 // A closing/backgrounded window may no longer be navigable.

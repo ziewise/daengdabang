@@ -44,6 +44,7 @@ test("home-screen icons are valid square PNGs at every declared size", () => {
 test("service worker keeps member and API responses out of caches", () => {
     const worker = read("../public/sw.js");
     const provider = read("../components/pwa/PwaInstallProvider.tsx");
+    const recovery = read("../public/pwa-refresh.html");
 
     assert.match(worker, /request\.mode === "navigate"/);
     assert.match(worker, /url\.pathname\.startsWith\("\/api\/"\)/);
@@ -55,8 +56,14 @@ test("service worker keeps member and API responses out of caches", () => {
     assert.match(provider, /registration\.update\(\)/);
     assert.match(worker, /ddb-shell-v3/);
     assert.match(worker, /includeUncontrolled: true/);
+    assert.match(worker, /pathname === "\/pwa-refresh\.html"/);
     assert.match(worker, /client\.navigate\(client\.url\)/);
     assert.match(worker, /fetch\(request, \{ cache: "no-store" \}\)/);
+    assert.match(recovery, /caches\.keys\(\)/);
+    assert.match(recovery, /registration\.unregister\(\)/);
+    assert.match(recovery, /serviceWorker\.register\(`\/sw\.js\?release=\$\{release\}`/);
+    assert.match(recovery, /updateViaCache: "none"/);
+    assert.match(recovery, /바로가기를 만든 브라우저/);
 });
 
 test("install UI handles native prompts, iOS instructions, and in-app browsers", () => {
