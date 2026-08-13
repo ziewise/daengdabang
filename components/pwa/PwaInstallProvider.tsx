@@ -64,9 +64,10 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
         const syncAndroidAppearance = () => {
             const detectedPlatform = detectPlatform();
             document.documentElement.dataset.ddbPlatform = detectedPlatform;
-            document.documentElement.dataset.ddbAndroidDark = detectedPlatform === "android" && darkModeQuery.matches
-                ? "true"
-                : "false";
+            // Samsung Internet/installed Android PWAs can force-darken a light page
+            // aggressively, so dim the decorative background beyond the browser conversion.
+            document.documentElement.dataset.ddbAndroidDark = detectedPlatform === "android"
+                && darkModeQuery.matches ? "true" : "false";
         };
         const onBeforeInstallPrompt = (event: Event) => {
             event.preventDefault();
@@ -95,7 +96,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
             navigator.serviceWorker.register("/sw.js", {
                 scope: "/",
                 updateViaCache: "none",
-            }).catch(() => {
+            }).then((registration) => registration.update()).catch(() => {
                 // The site stays fully usable if a browser or network blocks registration.
             });
         }

@@ -1,5 +1,5 @@
-const SHELL_CACHE = "ddb-shell-v2";
-const ASSET_CACHE = "ddb-static-v2";
+const SHELL_CACHE = "ddb-shell-v3";
+const ASSET_CACHE = "ddb-static-v3";
 const SHELL_URLS = [
     "/app/",
     "/offline/",
@@ -34,6 +34,17 @@ self.addEventListener("activate", (event) => {
                 .map((name) => caches.delete(name)),
         );
         await self.clients.claim();
+        const windowClients = await self.clients.matchAll({
+            type: "window",
+            includeUncontrolled: true,
+        });
+        await Promise.all(windowClients.map(async (client) => {
+            try {
+                await client.navigate(client.url);
+            } catch {
+                // A closing/backgrounded window may no longer be navigable.
+            }
+        }));
     })());
 });
 
@@ -51,7 +62,7 @@ self.addEventListener("fetch", (event) => {
     if (request.mode === "navigate") {
         event.respondWith((async () => {
             try {
-                return await fetch(request);
+                return await fetch(request, { cache: "no-store" });
             } catch {
                 return (await caches.match("/offline/")) || Response.error();
             }

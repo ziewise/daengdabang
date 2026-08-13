@@ -488,13 +488,18 @@ body[data-petlens-capture-active="true"] [data-site-header] {
         normal;
 }
 
-/* Android 브라우저/PWA의 강제 다크 처리에서는 밝은 크레파스 결이 흰 글자 뒤로 떠 보인다.
-   OS가 다크 모드인 Android에만 이미지형 암막을 한 겹 올려 iOS/라이트 모드는 그대로 둔다. */
+/* Android 브라우저/PWA의 강제 다크 처리는 실제 OS 상태와 prefers-color-scheme 보고값이
+   어긋날 수 있다. Android에서는 배경 자체를 먼저 낮추고 암막까지 더해 흰 글자를 보호한다. */
+html[data-ddb-android-dark="true"] .global-aurora {
+    background-color: #02040a;
+    filter: brightness(0.3) saturate(0.62);
+}
+
 html[data-ddb-android-dark="true"] .global-aurora::after {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background-image: linear-gradient(180deg, rgba(2, 4, 10, 0.82), rgba(2, 4, 10, 0.88));
+    background-image: linear-gradient(180deg, rgba(2, 4, 10, 0.72), rgba(2, 4, 10, 0.82));
     content: "";
 }
 

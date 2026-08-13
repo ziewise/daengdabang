@@ -52,6 +52,11 @@ test("service worker keeps member and API responses out of caches", () => {
     assert.doesNotMatch(worker, /localStorage|indexedDB|Authorization/);
     assert.match(provider, /serviceWorker\.register\("\/sw\.js"/);
     assert.match(provider, /updateViaCache: "none"/);
+    assert.match(provider, /registration\.update\(\)/);
+    assert.match(worker, /ddb-shell-v3/);
+    assert.match(worker, /includeUncontrolled: true/);
+    assert.match(worker, /client\.navigate\(client\.url\)/);
+    assert.match(worker, /fetch\(request, \{ cache: "no-store" \}\)/);
 });
 
 test("install UI handles native prompts, iOS instructions, and in-app browsers", () => {
@@ -116,7 +121,7 @@ test("installed app users can always return to the dedicated app home", () => {
     assert.doesNotMatch(chrome, /InstalledAppHomeButton/);
 });
 
-test("Android dark mode receives a platform-scoped readability veil without changing iOS", () => {
+test("Android force-dark receives a stronger platform-scoped readability veil", () => {
     const layout = read("../app/layout.tsx");
     const styles = read("../app/globals.css");
     const provider = read("../components/pwa/PwaInstallProvider.tsx");
@@ -125,9 +130,12 @@ test("Android dark mode receives a platform-scoped readability veil without chan
     assert.match(layout, /suppressHydrationWarning/);
     assert.match(layout, /\/Android\/i\.test\(navigator\.userAgent\)/);
     assert.match(layout, /ddbAndroidDark/);
-    assert.match(provider, /prefers-color-scheme: dark/);
+    assert.match(layout, /isAndroid && isDark \? "true" : "false"/);
+    assert.match(provider, /detectedPlatform === "android"[\s\S]*&& darkModeQuery\.matches/);
     assert.match(provider, /darkModeQuery\.addEventListener\("change", syncAndroidAppearance\)/);
+    assert.match(styles, /html\[data-ddb-android-dark="true"\] \.global-aurora \{/);
+    assert.match(styles, /filter: brightness\(0\.3\) saturate\(0\.62\)/);
     assert.match(styles, /html\[data-ddb-android-dark="true"\] \.global-aurora::after/);
-    assert.match(styles, /rgba\(2, 4, 10, 0\.88\)/);
+    assert.match(styles, /rgba\(2, 4, 10, 0\.82\)/);
     assert.doesNotMatch(styles, /html\[data-ddb-platform="ios"\]/);
 });
