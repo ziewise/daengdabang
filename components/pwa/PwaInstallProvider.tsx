@@ -59,7 +59,15 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(display-mode: standalone)");
+        const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
         const syncStandalone = () => setIsStandalone(detectStandalone());
+        const syncAndroidAppearance = () => {
+            const detectedPlatform = detectPlatform();
+            document.documentElement.dataset.ddbPlatform = detectedPlatform;
+            document.documentElement.dataset.ddbAndroidDark = detectedPlatform === "android" && darkModeQuery.matches
+                ? "true"
+                : "false";
+        };
         const onBeforeInstallPrompt = (event: Event) => {
             event.preventDefault();
             setDeferredPrompt(event as BeforeInstallPromptEvent);
@@ -74,12 +82,14 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
             setPlatform(detectPlatform());
             setIsInAppBrowser(detectInAppBrowser());
             syncStandalone();
+            syncAndroidAppearance();
             setIsReady(true);
         }, 0);
 
         window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
         window.addEventListener("appinstalled", onAppInstalled);
         mediaQuery.addEventListener("change", syncStandalone);
+        darkModeQuery.addEventListener("change", syncAndroidAppearance);
 
         if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
             navigator.serviceWorker.register("/sw.js", {
@@ -95,6 +105,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
             window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
             window.removeEventListener("appinstalled", onAppInstalled);
             mediaQuery.removeEventListener("change", syncStandalone);
+            darkModeQuery.removeEventListener("change", syncAndroidAppearance);
         };
     }, []);
 

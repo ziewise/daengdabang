@@ -24,6 +24,7 @@ import SearchModal from "./SearchModal";
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
+import InstalledAppHomeButton from "@/components/pwa/InstalledAppHomeButton";
 import headerStyles from "./Header.module.css";
 
 type DropKey = "shop" | "daily" | "lab" | "cs" | null;
@@ -80,7 +81,10 @@ export default function Header() {
                 <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-1 px-2 min-[360px]:gap-1.5 sm:gap-6 sm:px-6">
 
                     {/* 로고 */}
-                    <BrandLogo mobileEmphasis />
+                    <div className="flex min-w-0 shrink-0 items-center gap-1.5 min-[360px]:gap-2">
+                        <BrandLogo mobileEmphasis mobileIntegrated />
+                        <InstalledAppHomeButton />
+                    </div>
 
                     {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. */}
                     <nav className="hidden items-center gap-1 xl:flex">

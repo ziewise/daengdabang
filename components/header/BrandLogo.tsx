@@ -13,9 +13,10 @@ import Link from "next/link";
 type BrandLogoProps = {
     className?: string;
     mobileEmphasis?: boolean;
+    mobileIntegrated?: boolean;
 };
 
-export default function BrandLogo({ className = "", mobileEmphasis = false }: BrandLogoProps) {
+export default function BrandLogo({ className = "", mobileEmphasis = false, mobileIntegrated = false }: BrandLogoProps) {
     const symbolSize = mobileEmphasis
         ? "h-12 w-12 min-[360px]:h-[60px] min-[360px]:w-[60px] md:h-14 md:w-14"
         : "h-12 w-12 md:h-14 md:w-14";
@@ -31,8 +32,23 @@ export default function BrandLogo({ className = "", mobileEmphasis = false }: Br
             } ${className}`}
             aria-label="댕다방 홈"
         >
+            {mobileIntegrated && (
+                <span
+                    data-mobile-integrated-brand
+                    className="relative inline-flex h-[58px] w-[58px] shrink-0 overflow-hidden rounded-full border border-cyan-500/40 bg-[#fffaf0] shadow-[0_4px_14px_rgba(15,23,42,0.18)] md:hidden"
+                >
+                    <Image
+                        src="/images/pwa/icon-v2-192x192.png"
+                        alt=""
+                        fill
+                        sizes="58px"
+                        className="object-cover"
+                        priority
+                    />
+                </span>
+            )}
             {/* 강아지 로고 — 배경 없이(투명) 헤더 색이 비치게, 좀 더 크게 */}
-            <span className={`relative inline-flex shrink-0 ${symbolSize}`}>
+            <span className={`relative shrink-0 ${mobileIntegrated ? "hidden md:inline-flex" : "inline-flex"} ${symbolSize}`}>
                 <Image
                     src="/images/logo-black-poodle-v2.png"
                     alt=""
@@ -45,7 +61,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false }: Br
                 />
             </span>
             {/* 댕다방 워드마크 — 디자이너 제작 크레파스 이미지 */}
-            <span className={`relative inline-block shrink-0 ${wordmarkSize}`} aria-hidden="true">
+            <span className={`relative shrink-0 ${mobileIntegrated ? "hidden md:inline-block" : "inline-block"} ${wordmarkSize}`} aria-hidden="true">
                 <Image
                     src="/images/wordmark.png"
                     alt=""

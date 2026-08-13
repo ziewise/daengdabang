@@ -13,7 +13,6 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import FloatingDock from "@/components/site/FloatingDock";
 import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
-import InstalledAppHomeButton from "@/components/pwa/InstalledAppHomeButton";
 
 // 헤더/푸터/도크 없이 풀스크린으로 띄울 경로(정확 일치 또는 하위 경로)
 const BARE_PATHS = ["/auth/login"];
@@ -26,12 +25,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
 
     // 풀스크린 — 크롬(헤더/푸터/도크) 없이 페이지만
     if (bare) {
-        return (
-            <>
-                <InstalledAppHomeButton headerOffset={false} />
-                {children}
-            </>
-        );
+        return <>{children}</>;
     }
 
     // 설치형 앱 홈은 핵심 기능을 가리지 않도록 쇼핑 푸터와 플로팅 도구를 제외한다.
@@ -39,7 +33,6 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
         return (
             <>
                 <Header />
-                <InstalledAppHomeButton />
                 <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
             </>
         );
@@ -49,7 +42,6 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
     return (
         <>
             <Header />
-            <InstalledAppHomeButton />
             <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
             <Footer />
             <FloatingDock />

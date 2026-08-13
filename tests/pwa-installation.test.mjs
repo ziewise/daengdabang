@@ -93,6 +93,7 @@ test("mobile app home links members to all requested services and preserves logi
 
 test("installed app users can always return to the dedicated app home", () => {
     const logo = read("../components/header/BrandLogo.tsx");
+    const header = read("../components/header/Header.tsx");
     const mobileMenu = read("../components/header/MobilePanel.tsx");
     const appHomeButton = read("../components/pwa/InstalledAppHomeButton.tsx");
     const chrome = read("../components/site/ConditionalChrome.tsx");
@@ -105,6 +106,26 @@ test("installed app users can always return to the dedicated app home", () => {
     assert.match(appHomeButton, /data-installed-app-home-button/);
     assert.match(appHomeButton, /href="\/app\/"/);
     assert.match(appHomeButton, /<span>앱 홈<\/span>/);
-    assert.match(chrome, /<InstalledAppHomeButton \/>/);
-    assert.match(chrome, /<InstalledAppHomeButton headerOffset=\{false\} \/>/);
+    assert.match(appHomeButton, /md:hidden/);
+    assert.doesNotMatch(appHomeButton, /\bfixed\b/);
+    assert.match(header, /<BrandLogo mobileEmphasis mobileIntegrated \/>/);
+    assert.match(header, /<InstalledAppHomeButton \/>/);
+    assert.match(logo, /data-mobile-integrated-brand/);
+    assert.match(logo, /\/images\/pwa\/icon-v2-192x192\.png/);
+    assert.doesNotMatch(chrome, /InstalledAppHomeButton/);
+});
+
+test("Android dark mode receives a platform-scoped readability veil without changing iOS", () => {
+    const layout = read("../app/layout.tsx");
+    const styles = read("../app/globals.css");
+    const provider = read("../components/pwa/PwaInstallProvider.tsx");
+
+    assert.match(layout, /strategy="beforeInteractive"/);
+    assert.match(layout, /\/Android\/i\.test\(navigator\.userAgent\)/);
+    assert.match(layout, /ddbAndroidDark/);
+    assert.match(provider, /prefers-color-scheme: dark/);
+    assert.match(provider, /darkModeQuery\.addEventListener\("change", syncAndroidAppearance\)/);
+    assert.match(styles, /html\[data-ddb-android-dark="true"\] \.global-aurora::after/);
+    assert.match(styles, /rgba\(2, 4, 10, 0\.88\)/);
+    assert.doesNotMatch(styles, /html\[data-ddb-platform="ios"\]/);
 });

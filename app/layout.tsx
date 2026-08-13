@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono, Gaegu } from "next/font/google";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -28,6 +29,17 @@ const wantedSans = localFont({
 });
 // Gaegu (개구) — 거친 손글씨 한글 폰트, 로고 크레파스 워드마크용
 const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap", preload: false });
+
+const androidAppearanceBootstrap = `
+(() => {
+  try {
+    const root = document.documentElement;
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.ddbPlatform = isAndroid ? "android" : "other";
+    root.dataset.ddbAndroidDark = isAndroid && isDark ? "true" : "false";
+  } catch {}
+})();`;
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.daengdabang.com"),
@@ -88,6 +100,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
             </head>
             <body className="min-h-full flex flex-col">
+                <Script id="ddb-android-appearance" strategy="beforeInteractive">
+                    {androidAppearanceBootstrap}
+                </Script>
                 {/* 우리 크레파스 배경 — fixed z-index:-1 레이어 (globals.css .global-aurora) */}
                 <div className="global-aurora" aria-hidden="true" />
                 <PwaInstallProvider>
