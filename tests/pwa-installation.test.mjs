@@ -102,7 +102,8 @@ test("installed app users can always return to the dedicated app home", () => {
     assert.match(mobileMenu, /pwaReady && isStandalone/);
     assert.match(mobileMenu, /<MobileLink href="\/app\/" icon="fa-house"/);
     assert.match(mobileMenu, /댕다방 앱 홈/);
-    assert.match(appHomeButton, /!isReady \|\| !isStandalone \|\| isAppHome/);
+    assert.match(appHomeButton, /!isReady \|\| !isStandalone/);
+    assert.doesNotMatch(appHomeButton, /usePathname|isAppHome/);
     assert.match(appHomeButton, /data-installed-app-home-button/);
     assert.match(appHomeButton, /href="\/app\/"/);
     assert.match(appHomeButton, /<span>앱 홈<\/span>/);
