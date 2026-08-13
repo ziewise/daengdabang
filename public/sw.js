@@ -1,5 +1,5 @@
-const SHELL_CACHE = "ddb-shell-v3";
-const ASSET_CACHE = "ddb-static-v3";
+const SHELL_CACHE = "ddb-shell-v4";
+const ASSET_CACHE = "ddb-static-v4";
 const SHELL_URLS = [
     "/app/",
     "/offline/",
@@ -40,7 +40,8 @@ self.addEventListener("activate", (event) => {
         });
         await Promise.all(windowClients.map(async (client) => {
             try {
-                if (new URL(client.url).pathname === "/pwa-refresh.html") return;
+                const pathname = new URL(client.url).pathname.replace(/\/+$/, "") || "/";
+                if (pathname === "/pwa-refresh" || pathname === "/pwa-refresh.html") return;
                 await client.navigate(client.url);
             } catch {
                 // A closing/backgrounded window may no longer be navigable.

@@ -93,7 +93,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
         darkModeQuery.addEventListener("change", syncAndroidAppearance);
 
         if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
-            navigator.serviceWorker.register("/sw.js?release=20260813-3", {
+            navigator.serviceWorker.register("/sw.js?release=20260813-4", {
                 scope: "/",
                 updateViaCache: "none",
             }).then((registration) => registration.update()).catch(() => {

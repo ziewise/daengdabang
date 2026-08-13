@@ -56,67 +56,81 @@
         <p>바로가기 앱에 남은 이전 화면만 지우고<br />최신 앱 화면으로 다시 연결합니다.</p>
         <p id="status" role="status" aria-live="polite">최신 앱을 준비하고 있어요…</p>
         <div class="actions">
-            <a id="open-app" href="/app/?source=pwa-repair&amp;shell=3" hidden>최신 앱 홈 열기</a>
+            <a id="open-app" href="https://www.daengdabang.com/app/?source=pwa-repair&amp;shell=4" hidden>최신 앱 홈 열기</a>
             <button id="retry" type="button" hidden>다시 시도</button>
         </div>
     </main>
     <script>
         (() => {
-            const release = "20260813-3";
-            const marker = `ddb-pwa-repair-${release}`;
+            const release = "20260813-4";
+            const repairOrigins = [
+                "https://www.daengdabang.com",
+                "https://daengdabang.com",
+                "https://daengdabang.pages.dev",
+            ];
+            const params = new URLSearchParams(location.search);
+            const requestedStep = Number.parseInt(params.get("step") || "0", 10);
+            const step = Number.isFinite(requestedStep) && requestedStep >= 0 ? requestedStep : 0;
             const status = document.getElementById("status");
             const openApp = document.getElementById("open-app");
             const retry = document.getElementById("retry");
 
             const showComplete = () => {
-                status.textContent = "최신 앱 준비가 끝났습니다. 아래 버튼을 누른 뒤, 기존 바로가기 앱을 완전히 닫았다가 다시 열어 주세요.";
+                status.textContent = "두 운영 주소와 이전 설치 주소까지 모두 정리했습니다. 최신 앱 홈을 연 뒤 기존 바로가기 앱을 완전히 닫았다가 다시 열어 주세요.";
+                openApp.href = `https://www.daengdabang.com/app/?source=pwa-repair&shell=4&v=${release}`;
                 openApp.hidden = false;
                 retry.hidden = true;
             };
 
-            const repair = async () => {
+            const repairCurrentOrigin = async () => {
                 if (!("serviceWorker" in navigator)) {
                     throw new Error("이 브라우저에서는 자동 새로고침을 지원하지 않습니다.");
                 }
 
-                status.textContent = "이전 앱 화면을 정리하고 있어요…";
+                status.textContent = `이전 앱 화면을 정리하고 있어요… (${step + 1}/${repairOrigins.length})`;
                 if ("caches" in window) {
                     const names = await caches.keys();
-                    await Promise.all(names
-                        .filter((name) => name.startsWith("ddb-shell-") || name.startsWith("ddb-static-"))
-                        .map((name) => caches.delete(name)));
+                    await Promise.all(names.map((name) => caches.delete(name)));
                 }
 
                 const registrations = await navigator.serviceWorker.getRegistrations();
-                await Promise.all(registrations.map(async (registration) => {
-                    const worker = registration.active || registration.waiting || registration.installing;
-                    if (!worker) return;
-                    const script = new URL(worker.scriptURL);
-                    if (script.origin === location.origin && script.pathname === "/sw.js") {
-                        await registration.unregister();
-                    }
-                }));
+                await Promise.all(registrations.map((registration) => registration.unregister()));
 
-                sessionStorage.setItem(marker, "ready");
-                status.textContent = "최신 앱 화면을 연결하고 있어요…";
+                status.textContent = `최신 앱 화면을 연결하고 있어요… (${step + 1}/${repairOrigins.length})`;
                 const registration = await navigator.serviceWorker.register(`/sw.js?release=${release}`, {
                     scope: "/",
                     updateViaCache: "none",
                 });
                 await registration.update();
                 await navigator.serviceWorker.ready;
-                showComplete();
+            };
+
+            const repair = async () => {
+                if (params.get("done") === "1") {
+                    showComplete();
+                    return;
+                }
+
+                const expectedOrigin = repairOrigins[step];
+                if (expectedOrigin && location.origin !== expectedOrigin) {
+                    location.replace(`${expectedOrigin}/pwa-refresh?step=${step}&v=${release}`);
+                    return;
+                }
+
+                await repairCurrentOrigin();
+
+                const nextStep = step + 1;
+                if (nextStep < repairOrigins.length) {
+                    location.replace(`${repairOrigins[nextStep]}/pwa-refresh?step=${nextStep}&v=${release}`);
+                    return;
+                }
+
+                location.replace(`${repairOrigins[0]}/pwa-refresh?done=1&v=${release}`);
             };
 
             retry.addEventListener("click", () => {
-                sessionStorage.removeItem(marker);
-                location.reload();
+                location.replace(`${repairOrigins[0]}/pwa-refresh?step=0&v=${release}&retry=${Date.now()}`);
             });
-
-            if (sessionStorage.getItem(marker) === "ready") {
-                showComplete();
-                return;
-            }
 
             repair().catch((error) => {
                 status.textContent = `${error.message} 바로가기를 만든 브라우저에서 이 페이지를 다시 열어 주세요.`;

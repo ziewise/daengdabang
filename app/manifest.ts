@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
         name: "댕다방 – 매일 댕생활",
         short_name: "댕다방",
         description: "매일 댕생활, 댕자랑, 댕다방 연구소를 홈 화면에서 바로 만나는 반려견 생활 앱",
-        start_url: "/app/?source=pwa&shell=3",
+        start_url: "/app/?source=pwa&shell=4",
         scope: "/",
         display: "standalone",
         background_color: "#fffaf0",

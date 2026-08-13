@@ -10,7 +10,7 @@ test("manifest defines a standalone app home, branded icons, and the three membe
 
     assert.match(manifest, /export const dynamic = "force-static"/);
     assert.match(manifest, /id: "\/app\/"/);
-    assert.match(manifest, /start_url: "\/app\/\?source=pwa&shell=3"/);
+    assert.match(manifest, /start_url: "\/app\/\?source=pwa&shell=4"/);
     assert.match(manifest, /scope: "\/"/);
     assert.match(manifest, /display: "standalone"/);
     assert.match(manifest, /theme_color: "#07849e"/);
@@ -51,11 +51,12 @@ test("service worker keeps member and API responses out of caches", () => {
     assert.match(worker, /\/_next\/static\//);
     assert.match(worker, /\/images\/pwa\//);
     assert.doesNotMatch(worker, /localStorage|indexedDB|Authorization/);
-    assert.match(provider, /serviceWorker\.register\("\/sw\.js\?release=20260813-3"/);
+    assert.match(provider, /serviceWorker\.register\("\/sw\.js\?release=20260813-4"/);
     assert.match(provider, /updateViaCache: "none"/);
     assert.match(provider, /registration\.update\(\)/);
-    assert.match(worker, /ddb-shell-v3/);
+    assert.match(worker, /ddb-shell-v4/);
     assert.match(worker, /includeUncontrolled: true/);
+    assert.match(worker, /pathname === "\/pwa-refresh"/);
     assert.match(worker, /pathname === "\/pwa-refresh\.html"/);
     assert.match(worker, /client\.navigate\(client\.url\)/);
     assert.match(worker, /fetch\(request, \{ cache: "no-store" \}\)/);
@@ -63,6 +64,11 @@ test("service worker keeps member and API responses out of caches", () => {
     assert.match(recovery, /registration\.unregister\(\)/);
     assert.match(recovery, /serviceWorker\.register\(`\/sw\.js\?release=\$\{release\}`/);
     assert.match(recovery, /updateViaCache: "none"/);
+    assert.match(recovery, /https:\/\/www\.daengdabang\.com/);
+    assert.match(recovery, /https:\/\/daengdabang\.com/);
+    assert.match(recovery, /https:\/\/daengdabang\.pages\.dev/);
+    assert.match(recovery, /names\.map\(\(name\) => caches\.delete\(name\)\)/);
+    assert.doesNotMatch(recovery, /sessionStorage/);
     assert.match(recovery, /바로가기를 만든 브라우저/);
 });
 
