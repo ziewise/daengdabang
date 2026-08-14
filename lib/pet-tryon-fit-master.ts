@@ -1,5 +1,7 @@
 export const PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.v2";
 export const LEGACY_PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.v1";
+const PRODUCT_REFERENCE_SAFETY_STORAGE_PREFIX = "ddb.tryon.fit-master.v3";
+const PRODUCT_REFERENCE_SAFETY_RESET_IDS = new Set(["p_44", "p_70", "p_283"]);
 
 export type PetTryOnFitMasterIdentity = {
     ownerKey: string;
@@ -50,7 +52,9 @@ function legacyPetTryOnReferenceKey(value: string) {
 
 export function petTryOnFitMasterStorageKey(identity: PetTryOnFitMasterIdentity) {
     return [
-        PET_TRYON_FIT_MASTER_STORAGE_PREFIX,
+        PRODUCT_REFERENCE_SAFETY_RESET_IDS.has(identity.productId)
+            ? PRODUCT_REFERENCE_SAFETY_STORAGE_PREFIX
+            : PET_TRYON_FIT_MASTER_STORAGE_PREFIX,
         identity.ownerKey,
         identity.petProfileId,
         identity.productId,
@@ -138,6 +142,9 @@ export function readPetTryOnFitMasterWithLegacy(
 ): PetTryOnFitMasterLookup {
     const current = readPetTryOnFitMaster(identity);
     if (current.status !== "missing") return current;
+    // Do not migrate a Giraffe Snood master created before product-reference
+    // animals were removed. The server will restore only a newly safe master.
+    if (PRODUCT_REFERENCE_SAFETY_RESET_IDS.has(identity.productId)) return current;
     if (!petReferenceImage || typeof window === "undefined") return { status: "unavailable" };
 
     const legacyKey = legacyPetTryOnFitMasterStorageKey(identity, petReferenceImage);
