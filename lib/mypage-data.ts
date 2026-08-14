@@ -4,6 +4,7 @@
  * 백엔드 연결 시 fetch 로 교체.
  */
 import type { Order, PetProfile } from "./types";
+import { RECOMMENDATION_FEATURE_FLAGS } from "./recommendation/feature-flags";
 
 export const MOCK_ORDERS: Order[] = [
     { id: "ORD-2026-0512-001", date: "2026.05.12", name: "Ruffwear Front Range 하네스 (M)",   amount: 78000,  status: "shipped",    icon: "fa-shirt" },
@@ -67,6 +68,9 @@ export const MYPAGE_MENU_GROUPS: readonly MyMenuGroup[] = [
         label: "MY 정보",
         items: [
             { href: "/mypage/profile", label: "개인정보 확인/수정", icon: "fa-user-pen" },
+            ...(RECOMMENDATION_FEATURE_FLAGS.preferences
+                ? [{ href: "/mypage/recommendations", label: "추천 데이터 관리", icon: "fa-sliders" }]
+                : []),
             { href: "/mypage/payments", label: "결제수단 관리", icon: "fa-credit-card" },
             { href: "/mypage/address", label: "배송지 관리", icon: "fa-location-dot" },
             { href: "/mypage/withdrawal", label: "회원 탈퇴", icon: "fa-user-slash" },

@@ -50,6 +50,9 @@ const CatalogRowSchema = z.object({
     categorizeNote: z.string(),
     sourceUrl: z.string(),
     verifyNote: z.string(),
+    recommendable: z.boolean().optional(),
+    availability: z.enum(["available", "sold_out", "discontinued", "unknown"]).optional(),
+    operatorReviewedAt: z.string().datetime({ offset: true }).optional(),
     // 옵션 — sync-images.mjs 가 채움
     folder: z.string().optional(),
     image: z.string().optional(),

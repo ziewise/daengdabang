@@ -20,6 +20,12 @@ export interface CatalogRow {
     categorizeNote?: string;
     sourceUrl?: string;
     verifyNote?: string;
+    /** 추천 후보로 운영자가 명시 승인했는지 여부. 누락은 false로 해석한다. */
+    recommendable?: boolean;
+    /** 추천 시 사용하는 판매 상태. 누락은 unknown으로 해석한다. */
+    availability?: "available" | "sold_out" | "discontinued" | "unknown";
+    /** 추천 적합성 검수를 완료한 ISO 8601 시각. 누락은 미검수다. */
+    operatorReviewedAt?: string;
     folder?: string;
     image?: string;
     gallery?: string[];
@@ -112,6 +118,9 @@ export interface CatalogProduct {
     discountRate: number;
     originalPrice: number | null;
     priceBadgeKind: PriceBadgeKind;
+    recommendable?: boolean;
+    availability?: "available" | "sold_out" | "discontinued" | "unknown";
+    operatorReviewedAt?: string;
     /** 색상 변형(있는 제품만) — 칩 클릭 시 메인 이미지 교체 + 구매 옵션 한글명 */
     colors?: ProductColor[];
     /** 사이즈 옵션(있는 제품만) — 이름 + 사이즈별 가격 증감(원) */

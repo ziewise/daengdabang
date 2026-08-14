@@ -36,7 +36,10 @@ test("home exposes one compact daily entry and keeps the full engagement hub off
     assert.match(teaser, /useAuth.*@\/lib\/store/s);
     assert.match(teaser, /\/treasure-mine\//);
     assert.match(teaser, /실천 체크는 사용자가 직접 남기는 기록이며 의료 점수가 아닙니다/);
-    assert.match(read("../components/main/RecommendSection.tsx"), /recommendForPet\(current, hasAnalysis \? current\.rawAnalysis/);
+    const recommendationSection = read("../components/main/RecommendSection.tsx");
+    assert.match(recommendationSection, /runMemberRecommendation/);
+    assert.match(recommendationSection, /useRecommendationPreferences/);
+    assert.doesNotMatch(recommendationSection, /latestAnalyzedPet|recommendForPet/);
 });
 
 test("daily attendance uses server-backed KST state and a fixed two-coin reward contract", () => {

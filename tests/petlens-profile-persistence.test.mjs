@@ -35,13 +35,13 @@ test("completed PetLens results persist a compact server-backed member record", 
 test("main recommendations use the authenticated profile and stored PetLens signals", async () => {
     const recommendations = await source("components/main/RecommendSection.tsx");
 
-    assert.match(recommendations, /import \{ useAuth, type PetProfile \} from "@\/lib\/store"/);
+    assert.match(recommendations, /useRecommendationPreferences/);
     assert.match(recommendations, /user\.pets/);
-    assert.match(recommendations, /filter\(hasPetLensAnalysis\)/);
-    assert.match(recommendations, /recommendForPet\(current, hasAnalysis \? current\.rawAnalysis : undefined\)/);
-    assert.match(recommendations, /최근 펫렌즈 분석 결과와/);
-    assert.match(recommendations, /체형·활동량·관심 케어 프로필/);
-    assert.doesNotMatch(recommendations, /usePets|petsOrMock|getBestProducts|mock/i);
+    assert.match(recommendations, /resolveSelectedRecommendationPet/);
+    assert.match(recommendations, /runMemberRecommendation/);
+    assert.match(recommendations, /사용에 동의한 펫렌즈 케어 신호/);
+    assert.match(recommendations, /등록한 체형·활동량·관심 케어 프로필/);
+    assert.doesNotMatch(recommendations, /latestAnalyzedPet|analysisTime|recommendForPet|usePets|petsOrMock|mock/i);
 });
 
 test("the PetLens page accepts an observation mode query or hash", async () => {

@@ -18,6 +18,7 @@ test("mypage menu is grouped and contains only implemented destinations", async 
         ["/mypage", "대시보드"],
         ["/mypage/orders", "주문 내역"],
         ["/mypage/profile", "개인정보 확인\/수정"],
+        ["/mypage/recommendations", "추천 데이터 관리"],
         ["/mypage/payments", "결제수단 관리"],
         ["/mypage/address", "배송지 관리"],
         ["/mypage/withdrawal", "회원 탈퇴"],
@@ -38,7 +39,7 @@ test("mypage menu is grouped and contains only implemented destinations", async 
 });
 
 test("all MY information destinations are real static pages with the common sidebar layout", async () => {
-    for (const route of ["profile", "payments", "address", "withdrawal"]) {
+    for (const route of ["profile", "recommendations", "payments", "address", "withdrawal"]) {
         const path = `app/mypage/${route}/page.tsx`;
         await access(new URL(path, root));
         const page = await source(path);

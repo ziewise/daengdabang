@@ -1,5 +1,6 @@
 import type { PetProfile } from "@/lib/store";
 import { ddbApiBase } from "@/lib/ddb-api-base";
+import type { MemberRecommendationPreferences } from "@/lib/recommendation/types";
 
 export { ddbApiBase } from "@/lib/ddb-api-base";
 import type { CustomerSupportCategory } from "@/lib/customer-support";
@@ -17,10 +18,13 @@ export type { GrowthProgramId } from "@/lib/growth-programs";
 export type { GoodsContestItemId } from "@/lib/goods-contest";
 
 const TOKEN_KEY = "ddb.api.accessToken";
+const CURRENT_RECOMMENDATION_CONSENT_VERSION = "ddb-recommendation-20260812-v1";
 const GOODS_CONTEST_GUEST_TOKEN_KEY = "ddb.goodsContest.guestToken";
 const GOODS_CONTEST_GUEST_TOKEN_EXPIRES_AT_KEY = "ddb.goodsContest.guestTokenExpiresAt";
 
 export type SocialProvider = "naver" | "kakao" | "google";
+
+export type RecommendationPreferences = MemberRecommendationPreferences;
 
 export type SocialProviderStatus = {
     id: SocialProvider;
@@ -1606,4 +1610,61 @@ export async function loadPetProfilesSmart(token?: string): Promise<PetProfile[]
         rawAnalysis: row.rawAnalysis || undefined,
         lastAnalyzedAt: row.lastAnalyzedAt || row.updatedAt,
     }));
+}
+
+function normalizeRecommendationPreferences(value: unknown): RecommendationPreferences {
+    if (!value || typeof value !== "object") {
+        throw new DdbApiError("추천 설정 응답을 확인하지 못했습니다.", { code: "http_error" });
+    }
+    const row = value as Record<string, unknown>;
+    const selectedPetProfileId = row.selectedPetProfileId;
+    const validSelectedPetProfileId = selectedPetProfileId === null
+        || (Number.isInteger(selectedPetProfileId) && Number(selectedPetProfileId) > 0);
+    if (
+        typeof row.enabled !== "boolean"
+        || typeof row.profileSignalsEnabled !== "boolean"
+        || typeof row.petLensSignalsEnabled !== "boolean"
+        || typeof row.behaviorSignalsEnabled !== "boolean"
+        || !validSelectedPetProfileId
+        || row.consentVersion !== CURRENT_RECOMMENDATION_CONSENT_VERSION
+    ) {
+        throw new DdbApiError("추천 설정 기준이 갱신되었거나 응답이 올바르지 않습니다.", {
+            code: "http_error",
+            apiCode: "recommendation_consent_version_mismatch",
+        });
+    }
+    return {
+        enabled: row.enabled,
+        profileSignalsEnabled: row.profileSignalsEnabled,
+        petLensSignalsEnabled: row.petLensSignalsEnabled,
+        behaviorSignalsEnabled: row.behaviorSignalsEnabled,
+        selectedPetProfileId: selectedPetProfileId as number | null,
+        consentVersion: CURRENT_RECOMMENDATION_CONSENT_VERSION,
+    };
+}
+
+export async function loadRecommendationPreferences(token?: string): Promise<RecommendationPreferences> {
+    const response = await apiJson<unknown>("/api/v1/recommendation-preferences", {
+        method: "GET",
+        cache: "no-store",
+    }, token, { requireBase: true });
+    return normalizeRecommendationPreferences(response);
+}
+
+export async function updateRecommendationPreferences(
+    preferences: RecommendationPreferences,
+    token?: string,
+): Promise<RecommendationPreferences> {
+    const response = await apiJson<unknown>("/api/v1/recommendation-preferences", {
+        method: "PUT",
+        body: JSON.stringify({
+            enabled: preferences.enabled,
+            profileSignalsEnabled: preferences.profileSignalsEnabled,
+            petLensSignalsEnabled: preferences.petLensSignalsEnabled,
+            behaviorSignalsEnabled: preferences.behaviorSignalsEnabled,
+            selectedPetProfileId: preferences.selectedPetProfileId,
+            consentVersion: CURRENT_RECOMMENDATION_CONSENT_VERSION,
+        }),
+    }, token, { requireBase: true });
+    return normalizeRecommendationPreferences(response);
 }

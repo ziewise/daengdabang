@@ -63,6 +63,42 @@ test("analytics keeps stable non-empty in-memory IDs when localStorage is blocke
     assert.equal(second.isNewSession, false);
 });
 
+test("recommendation analytics keeps only bounded anonymous metadata", async () => {
+    const analytics = await loadAnalyticsModule({
+        crypto: { randomUUID: () => "recommendation-run-test" },
+    });
+    const clean = analytics.sanitizeRecommendationEventMetadata({
+        engineVersion: "recommendation-v1",
+        surface: "recommendations",
+        mode: "profile_only",
+        runId: "recommendation-run-safe_1",
+        productId: "product-safe_1",
+        rank: 2,
+        resultCount: 12,
+        sourceSet: "profile",
+        outcome: "hidden",
+        petProfileId: 77,
+        petName: "저장되면 안 되는 이름",
+        breed: "저장되면 안 되는 견종",
+        weightKg: 8.2,
+        allergies: ["저장되면 안 되는 알레르기"],
+        reasonLabel: "저장되면 안 되는 추천 이유",
+        rawAnalysis: { diagnosis: "저장되면 안 되는 분석" },
+    });
+
+    assert.deepEqual({ ...clean }, {
+        engineVersion: "recommendation-v1",
+        surface: "recommendations",
+        mode: "profile_only",
+        runId: "recommendation-run-safe_1",
+        productId: "product-safe_1",
+        rank: 2,
+        resultCount: 12,
+        sourceSet: "profile",
+        outcome: "hidden",
+    });
+});
+
 test("global analytics uses a rolling visit and privacy-safe page paths", async () => {
     const [analytics, tracker, layout] = await Promise.all([
         source("lib/storefront-analytics.ts"),

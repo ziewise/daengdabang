@@ -92,22 +92,29 @@ test("confirmed member identity never upgrades an unusable photo inference", asy
 });
 
 test("PetLens recommendations prioritize walking safety when selected", async () => {
-    const source = await readSource("lib/daengdabang-llm.ts");
+    const source = await readSource("lib/recommendation/engine.ts");
 
-    assert.match(source, /const wantsWalkSafety = \/산책\|안전\|하네스\|목줄\|리드\|외출\|야간\//);
-    assert.match(source, /product\.category === "outdoor"\) score \+= 120/);
+    assert.match(source, /signals\.push\("interest\.walk_safety"\)/);
+    assert.match(source, /signalSet\.has\("interest\.walk_safety"\) && product\.category === "outdoor"/);
+    assert.match(source, /add\(120, "matches_member_interest"/);
     assert.match(source, /\["harness", "leash", "wear", "goggles", "carrier"\]/);
-    assert.match(source, /하네스\|리드\|목줄\|야간\|안전\|산책\|외출/);
+    assert.match(source, /등록한 산책·안전 관심사와 맞아요/);
 });
 
 test("PetLens recommendations use public photo signals and diversified products", async () => {
-    const source = await readSource("lib/daengdabang-llm.ts");
+    const [source, engine] = await Promise.all([
+        readSource("lib/daengdabang-llm.ts"),
+        readSource("lib/recommendation/engine.ts"),
+    ]);
 
-    assert.match(source, /petLensPublicSignalList/);
-    assert.match(source, /recommendation_signals/);
-    assert.match(source, /visible_features/);
-    assert.match(source, /breed_traits/);
-    assert.match(source, /diversifyPetLensProducts/);
+    assert.match(engine, /petLensRecommendationLines/);
+    assert.match(engine, /stringList\(raw\.recommendation_signals/);
+    assert.match(engine, /stringList\(details\?\.recommendationSignals/);
+    assert.doesNotMatch(engine, /stringList\(raw\.visible_features/);
+    assert.doesNotMatch(engine, /stringList\(raw\.breed_traits/);
+    assert.match(engine, /takeDiversified/);
+    assert.match(engine, /MAX_SUBCATEGORY_ITEMS = 2/);
+    assert.match(source, /recommendProductsForPet/);
     assert.match(source, /recommendForPet\(profile, rawAnalysis\)/);
     assert.match(source, /추천 기준:/);
     assert.match(source, /사진에서 확인한 특징:/);

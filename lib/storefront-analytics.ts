@@ -55,7 +55,76 @@ export type StorefrontEventName =
     | "showcase_first_post_completed"
     | "showcase_follow_completed"
     | "showcase_bone_completed"
-    | "goods_contest_selection_completed";
+    | "goods_contest_selection_completed"
+    | "recommendation_impression"
+    | "recommendation_clicked"
+    | "recommendation_reason_opened"
+    | "recommendation_hidden"
+    | "recommendation_preferences_updated"
+    | "recommendation_empty";
+
+const RECOMMENDATION_EVENT_NAMES = new Set<StorefrontEventName>([
+    "recommendation_impression",
+    "recommendation_clicked",
+    "recommendation_reason_opened",
+    "recommendation_hidden",
+    "recommendation_preferences_updated",
+    "recommendation_empty",
+]);
+
+const RECOMMENDATION_SURFACES = new Set(["home", "recommendations", "petlens_followup", "preferences"]);
+const RECOMMENDATION_MODES = new Set(["personalized", "profile_only", "editorial_fallback", "disabled"]);
+const RECOMMENDATION_SOURCE_SETS = new Set(["profile", "profile+petlens", "editorial"]);
+const RECOMMENDATION_OUTCOMES = new Set(["enabled", "disabled", "hidden", "empty"]);
+
+function safeRecommendationToken(value: unknown, limit: number): string {
+    if (typeof value !== "string") return "";
+    const clean = value.trim();
+    return /^[0-9A-Za-z._:+-]+$/.test(clean) ? clean.slice(0, limit) : "";
+}
+
+/**
+ * Recommendation events have a deliberately smaller contract than general
+ * storefront events. Profile ids, names, health details and reason sentences
+ * are dropped even if a caller accidentally includes them.
+ */
+export function sanitizeRecommendationEventMetadata(metadata: Record<string, unknown>): Record<string, unknown> {
+    const engineVersion = metadata.engineVersion === "recommendation-v1" ? "recommendation-v1" : "";
+    const surface = typeof metadata.surface === "string" && RECOMMENDATION_SURFACES.has(metadata.surface)
+        ? metadata.surface
+        : "";
+    const mode = typeof metadata.mode === "string" && RECOMMENDATION_MODES.has(metadata.mode)
+        ? metadata.mode
+        : "";
+    const sourceSet = typeof metadata.sourceSet === "string" && RECOMMENDATION_SOURCE_SETS.has(metadata.sourceSet)
+        ? metadata.sourceSet
+        : "";
+    const outcome = typeof metadata.outcome === "string" && RECOMMENDATION_OUTCOMES.has(metadata.outcome)
+        ? metadata.outcome
+        : "";
+    const runId = safeRecommendationToken(metadata.runId, 100);
+    const productId = safeRecommendationToken(metadata.productId, 140);
+    const rank = Number.isInteger(metadata.rank) ? Math.max(1, Math.min(Number(metadata.rank), 1000)) : 0;
+    const resultCount = Number.isInteger(metadata.resultCount)
+        ? Math.max(0, Math.min(Number(metadata.resultCount), 1000))
+        : -1;
+
+    return Object.fromEntries([
+        ["engineVersion", engineVersion],
+        ["surface", surface],
+        ["mode", mode],
+        ["runId", runId],
+        ["productId", productId],
+        ["rank", rank || undefined],
+        ["resultCount", resultCount >= 0 ? resultCount : undefined],
+        ["sourceSet", sourceSet],
+        ["outcome", outcome],
+    ].filter(([, value]) => value !== "" && value !== undefined));
+}
+
+export function createRecommendationRunId(): string {
+    return freshAnalyticsId("recommendation-run");
+}
 
 function freshAnalyticsId(prefix: string): string {
     if (typeof window !== "undefined" && typeof window.crypto?.randomUUID === "function") {
@@ -282,7 +351,13 @@ export function trackStorefrontEvent(
     if (identity.isNewSession && eventName !== "session_start") {
         postEventWithIdentity("session_start", {}, identity);
     }
-    postEventWithIdentity(eventName, metadata, identity);
+    postEventWithIdentity(
+        eventName,
+        RECOMMENDATION_EVENT_NAMES.has(eventName)
+            ? sanitizeRecommendationEventMetadata(metadata)
+            : metadata,
+        identity,
+    );
 }
 
 export function trackSignupCompleted(method: "email" | "naver" | "kakao" | "google" | "social") {
