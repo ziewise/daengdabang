@@ -1,7 +1,11 @@
 export const PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.v2";
 export const LEGACY_PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.v1";
-const PRODUCT_REFERENCE_SAFETY_STORAGE_PREFIX = "ddb.tryon.fit-master.v3";
-const PRODUCT_REFERENCE_SAFETY_RESET_IDS = new Set(["p_44", "p_70", "p_283"]);
+const PRODUCT_REFERENCE_SAFETY_STORAGE_PREFIX = "ddb.tryon.fit-master.v4";
+const PRODUCT_REFERENCE_SAFETY_RESET_IDS = new Set([
+    "p_44",
+    "p_63", "p_64", "p_65", "p_66", "p_67", "p_68", "p_69", "p_70", "p_71", "p_72",
+    "p_279", "p_280", "p_281", "p_282", "p_283",
+]);
 
 export type PetTryOnFitMasterIdentity = {
     ownerKey: string;
