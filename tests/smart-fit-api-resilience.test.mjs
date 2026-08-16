@@ -94,6 +94,28 @@ test("single-flight submission and persisted job identity prevent duplicate gene
     assert.match(background, /void monitorRef\.current\(refreshed\)/);
 });
 
+test("a terminal retry creates a new server attempt and never just reopens the failed job", async () => {
+    const [client, background, modal] = await Promise.all([
+        source("lib/pet-tryon.ts"),
+        source("lib/pet-tryon-background.tsx"),
+        source("components/products/detail/PetTryOnPreview.tsx"),
+    ]);
+
+    assert.match(client, /failureCode: String\(data\.failure_code \|\| ""\)/);
+    assert.match(client, /retryAttempt: Math\.max\(0, Number\(data\.retry_attempt \|\| 0\)\)/);
+    assert.match(background, /result\.failureCode === "retry_submit_not_started"/);
+    assertOrdered(background, [
+        "const retry = useCallback",
+        "const catalogProduct = findProduct(failedTask.productId)",
+        "return start(",
+        "failedTask.correctionIssues || []",
+        "true,",
+    ], "terminal retry must submit a fresh confirmed attempt");
+    assert.match(background, /onClick=\{\(\) => void retry\(visibleTask\)\}/);
+    assert.match(background, /새 작업으로 다시 시도/);
+    assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked \|\| finalGenerationFailed\)/);
+});
+
 test("a refreshed login token resumes the same member's paused Smart Fit job", async () => {
     const background = await source("lib/pet-tryon-background.tsx");
 

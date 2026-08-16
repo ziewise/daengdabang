@@ -66,7 +66,7 @@ test("color changes reuse the saved fitting until the customer explicitly reques
     assert.match(client, /confirm_precise_regeneration: true/);
     assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return failure\("invalid_request", false\)/);
     assert.match(client, /startPetTryOn\(product, pet, options\.signal, \[\], true\)/);
-    assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked\)/);
+    assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked \|\| finalGenerationFailed\)/);
     assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
     assert.match(modal, /보정은 자동 실행되지 않아요/);
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,120}generate\(/);

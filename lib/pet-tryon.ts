@@ -53,6 +53,8 @@ export type PetTryOnResult = {
         checks: string[];
     };
     message: string;
+    failureCode: string;
+    retryAttempt: number;
     productId: string;
     productName: string;
     productImage: string;
@@ -342,6 +344,8 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
             checks: Array.isArray(quality.checks) ? quality.checks.map(String) : [],
         },
         message: String(data.message || ""),
+        failureCode: String(data.failure_code || ""),
+        retryAttempt: Math.max(0, Number(data.retry_attempt || 0)),
         productId: String(data.product_id || ""),
         productName: String(data.product_name || ""),
         productImage: String(data.product_image || ""),

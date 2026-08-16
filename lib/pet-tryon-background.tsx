@@ -39,7 +39,7 @@ import {
     petTryOnReferenceKey,
     savePetTryOnFitMaster,
 } from "@/lib/pet-tryon-fit-master";
-import { productHref as storefrontProductHref } from "@/lib/shop";
+import { findProduct, productHref as storefrontProductHref } from "@/lib/shop";
 import { useStore, type PetProfile, type User } from "@/lib/store";
 
 const STORAGE_KEY = "ddb.tryon.background.v2";
@@ -106,6 +106,7 @@ type PetTryOnTaskContextValue = {
         correctionIssues?: PetTryOnCorrectionIssue[],
         confirmPreciseRegeneration?: boolean,
     ) => Promise<PetTryOnStartOutcome>;
+    retry: (task: BackgroundPetTryOnTask) => Promise<PetTryOnStartOutcome>;
     isTaskFor: (
         productId: string,
         petProfileId?: number,
@@ -383,6 +384,17 @@ function apiErrorMessage(
         return "현재 분석 시스템 응답이 평소보다 늦어지고 있어요. 작업은 그대로 보관되며 상태를 자동으로 다시 확인합니다.";
     }
     return "현재 분석 시스템이 잠시 지연되어 입혀보기를 시작하지 못했어요. 새 작업은 자동으로 만들어지지 않았습니다. 잠시 후 다시 이용해 주세요.";
+}
+
+function terminalFailureMessage(result: PetTryOnResult, locale: "ko" | "en") {
+    if (result.failureCode === "retry_submit_not_started") {
+        return locale === "en"
+            ? "This retry stopped before it was submitted to the generation server. No remote job was created; the retry button will start a new attempt."
+            : "이번 재시도는 생성 서버에 제출되기 전에 중단됐어요. 원격 작업은 만들어지지 않았으며, 재시도 버튼을 누르면 새 작업으로 접수합니다.";
+    }
+    return locale === "en"
+        ? "The analysis system could not finish this result. No new job was started automatically, and you can retry explicitly."
+        : "현재 분석 시스템이 이번 결과를 끝까지 준비하지 못했어요. 새 작업은 자동으로 시작되지 않으며, 재시도 버튼으로 직접 새로 접수할 수 있습니다.";
 }
 
 function resultEmailErrorMessage(code: PetTryOnApiErrorCode, locale: "ko" | "en") {
@@ -716,9 +728,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                     submitting: false,
                     result: next,
                     error: next.status === "failed"
-                        ? locale === "en"
-                            ? "The analysis system could not finish this result. No new job was started automatically, and you can try again from the product page later."
-                            : "현재 분석 시스템이 이번 결과를 끝까지 준비하지 못했어요. 새 작업은 자동으로 시작되지 않았습니다. 잠시 후 다시 이용해 주세요."
+                        ? terminalFailureMessage(next, locale)
                         : "",
                     apiErrorCode: undefined,
                 };
@@ -875,6 +885,9 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             productImage: firstResult.productImage || baseTask.productImage,
             submitting: false,
             result: firstResult,
+            error: firstResult.status === "failed"
+                ? terminalFailureMessage(firstResult, locale)
+                : "",
             apiErrorCode: undefined,
         };
         replaceTask(started);
@@ -887,6 +900,29 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         }
         return { status: "started" };
     }, [accountKey, announceReady, clearTaskForAccountChange, hydrated, locale, monitor, removeTask, replaceTask]);
+
+    const retry = useCallback(async (
+        failedTask: BackgroundPetTryOnTask,
+    ): Promise<PetTryOnStartOutcome> => {
+        if (isActive(failedTask)) return { status: "existing" };
+        const catalogProduct = findProduct(failedTask.productId);
+        const pet = userRef.current?.pets.find(
+            (item) => item.apiProfileId === failedTask.petProfileId,
+        );
+        if (!catalogProduct || !pet) {
+            return { status: "error", error: localApiError("invalid_request", false) };
+        }
+        return start(
+            {
+                ...catalogProduct,
+                name: failedTask.productName,
+                image: failedTask.productImage,
+            },
+            pet,
+            failedTask.correctionIssues || [],
+            true,
+        );
+    }, [start]);
 
     const monitorResultEmailDelivery = useCallback(async (
         requestedTask: BackgroundPetTryOnTask,
@@ -1306,6 +1342,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         registeredEmailAvailable: isRoutableCustomerEmail(user?.email),
         emailAccountKey: accountKey,
         start,
+        retry,
         isTaskFor: (productId, petProfileId, productImage, petReferenceImage) => Boolean(
             getTaskFor(productId, petProfileId, productImage, petReferenceImage)
         ),
@@ -1315,7 +1352,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         scheduleResultEmail,
         refreshResultEmailStatus,
         dismiss,
-    }), [accountKey, dismiss, getTaskFor, notificationEnabled, panelOpen, refreshResultEmailStatus, requestCompletionNotification, scheduleResultEmail, start, user?.email, visibleTask, visibleTasks]);
+    }), [accountKey, dismiss, getTaskFor, notificationEnabled, panelOpen, refreshResultEmailStatus, requestCompletionNotification, retry, scheduleResultEmail, start, user?.email, visibleTask, visibleTasks]);
 
     const result = visibleTask?.result;
     const stage = result?.progressStage || (visibleTask?.submitting ? "queued" : "failed");
@@ -1592,11 +1629,19 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                                         </>
                                     ) : (
                                         <>
-                                            <Link href={visibleTask.productHref} onClick={() => setPanelOpen(false)} className="inline-flex h-10 items-center justify-center rounded-lg bg-indigo-600 text-xs font-black text-white hover:bg-indigo-700">
-                                                {result?.status === "ready"
-                                                    ? locale === "en" ? "View product" : "상품에서 확인"
-                                                    : locale === "en" ? "Try again later" : "잠시 후 다시 시도"}
-                                            </Link>
+                                            {result?.status === "ready" ? (
+                                                <Link href={visibleTask.productHref} onClick={() => setPanelOpen(false)} className="inline-flex h-10 items-center justify-center rounded-lg bg-indigo-600 text-xs font-black text-white hover:bg-indigo-700">
+                                                    {locale === "en" ? "View product" : "상품에서 확인"}
+                                                </Link>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => void retry(visibleTask)}
+                                                    className="h-10 rounded-lg bg-indigo-600 px-2 text-xs font-black text-white hover:bg-indigo-700"
+                                                >
+                                                    {locale === "en" ? "Start a new retry" : "새 작업으로 다시 시도"}
+                                                </button>
+                                            )}
                                             <button type="button" onClick={dismiss} className="h-10 rounded-lg border border-neutral-200 text-xs font-black text-neutral-600 hover:bg-neutral-50">
                                                 {locale === "en" ? "Dismiss" : "닫기"}
                                             </button>

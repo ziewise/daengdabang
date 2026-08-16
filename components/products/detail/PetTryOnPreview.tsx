@@ -596,7 +596,7 @@ export default function PetTryOnPreview({
             tryOnProduct,
             pet,
             applyCorrections ? correctionIssues : [],
-            Boolean(sourceFit || fitMasterRestoreBlocked),
+            Boolean(sourceFit || fitMasterRestoreBlocked || finalGenerationFailed),
         );
             if (outcome.status === "queue_full") {
                 setError(locale === "en"
@@ -618,7 +618,9 @@ export default function PetTryOnPreview({
         correctionIssues,
         eligible,
         explicitColorRequired,
+        fitMasterRestoreBlocked,
         fitMasterRestorePending,
+        finalGenerationFailed,
         liveReadyFit,
         locale,
         pet,
