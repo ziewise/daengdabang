@@ -32,7 +32,8 @@ test("every background-ready path persists a photo-free Smart Fit master", async
         assert.match(background, readyPath);
     }
 
-    assert.match(helper, /PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb\.tryon\.fit-master\.v2"/);
+    assert.match(helper, /PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb\.tryon\.fit-master\.v3"/);
+    assert.match(helper, /PRODUCT_REFERENCE_SAFETY_STORAGE_PREFIX = "ddb\.tryon\.fit-master\.v5"/);
     assert.match(
         helper,
         /JSON\.stringify\(\{\s*jobId: value\.jobId\.trim\(\),\s*productImage: value\.productImage\.trim\(\),\s*\}\)/,
