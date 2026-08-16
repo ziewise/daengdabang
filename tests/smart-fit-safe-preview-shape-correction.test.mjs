@@ -50,7 +50,7 @@ test("product-shape correction is separate from color and requires explicit new-
         modal.indexOf("const PRODUCT_SHAPE_CORRECTION_OPTIONS"),
         modal.indexOf("const COLOR_PATTERN_CORRECTION_OPTIONS"),
     );
-    for (const marker of ["back_length", "belly_line", "front_sleeve", "rear_leg", "neckline"]) {
+    for (const marker of ["back_length", "belly_line", "front_sleeve", "rear_leg", "neckline", "coverage"]) {
         assert.match(shapeOptions, new RegExp(`"${marker}"`));
     }
     assert.doesNotMatch(shapeOptions, /"pattern"/);

@@ -7,6 +7,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import {
     getLatestPetTryOnMaster,
     getPetTryOnJob,
+    isPetTryOnSnoodProduct,
     petTryOnReferencePhoto,
     requestPetTryOnColorPreview,
     reviewPetTryOnGeometry,
@@ -63,7 +64,7 @@ function formatElapsed(seconds: number) {
 
 const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
 type CorrectionOption = { value: PetTryOnCorrectionIssue; ko: string; en: string };
-type PetTryOnReviewKind = "wear" | "harness" | "goggles" | "leash" | "collar";
+type PetTryOnReviewKind = "wear" | "harness" | "goggles" | "leash" | "collar" | "snood";
 
 const PRODUCT_SHAPE_CORRECTION_OPTIONS: Record<PetTryOnReviewKind, CorrectionOption[]> = {
     wear: [
@@ -88,6 +89,10 @@ const PRODUCT_SHAPE_CORRECTION_OPTIONS: Record<PetTryOnReviewKind, CorrectionOpt
     collar: [
         { value: "neckline", ko: "목 둘레·버클·D링", en: "Neck loop / buckle / D-ring" },
     ],
+    snood: [
+        { value: "coverage", ko: "머리·귀 덮임", en: "Head / ear coverage" },
+        { value: "neckline", ko: "얼굴 구멍·목 아랫단", en: "Face opening / neck edge" },
+    ],
 };
 
 const COLOR_PATTERN_CORRECTION_OPTIONS: CorrectionOption[] = [
@@ -95,6 +100,7 @@ const COLOR_PATTERN_CORRECTION_OPTIONS: CorrectionOption[] = [
 ];
 
 function petTryOnReviewKind(product: CatalogProduct): PetTryOnReviewKind {
+    if (isPetTryOnSnoodProduct(product)) return "snood";
     if (product.subcategory === "wear") return "wear";
     if (product.subcategory === "harness") return "harness";
     if (product.subcategory === "goggles") return "goggles";
@@ -111,6 +117,7 @@ function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en"
             goggles: "Compare the lens position, eye coverage, worn angle, and every head or chin strap with the product photo.",
             leash: "Confirm that the exact snap hook is visibly closed through a collar or harness D-ring at the neck. The lead must not start from fur, the shoulder, or the back. Any newly shown plain collar is a fitting aid and is not included with the product.",
             collar: "Confirm that the collar forms a continuous neck loop and that its real buckle, adjuster, D-ring, and width match the product photo.",
+            snood: "Confirm that the snood covers both real ears completely, shows only the product's decorative ears, frames the face, and stops above the shoulders.",
         }
         : {
             wear: "상품 사진과 밑단·배 부분·앞뒤 다리 구멍·목 부분·길이가 맞는지 확인해 주세요.",
@@ -118,6 +125,7 @@ function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en"
             goggles: "상품 사진과 렌즈·눈 위치, 착용 각도, 머리끈·턱끈 경로가 맞는지 확인해 주세요.",
             leash: "상품의 실제 스냅 고리가 목 부분의 목줄·하네스 D링에 닫혀 있는지 확인해 주세요. 줄이 털·어깨·등에서 바로 시작하면 잘못된 결과예요. 새로 표시된 무채색 기본 목줄은 연결 연출용이며 상품 구성에 포함되지 않아요.",
             collar: "목줄이 목을 한 바퀴 연속해서 감싸고 실제 버클·조절부·D링·폭이 상품 사진과 맞는지 확인해 주세요.",
+            snood: "스누드가 강아지의 실제 양쪽 귀를 완전히 덮고 상품 장식 귀만 보이는지, 얼굴 구멍과 어깨 위 아랫단이 맞는지 확인해 주세요.",
         };
     return descriptions[kind];
 }
@@ -127,11 +135,13 @@ function geometryCorrectionTitle(kind: PetTryOnReviewKind, locale: "ko" | "en") 
         if (kind === "leash") return "Correct leash connection";
         if (kind === "collar") return "Correct collar fit";
         if (kind === "goggles") return "Correct goggles fit";
+        if (kind === "snood") return "Correct snood coverage";
         return "Correct product shape";
     }
     if (kind === "leash") return "리드줄 연결 위치 보정";
     if (kind === "collar") return "목줄 착용 형태 보정";
     if (kind === "goggles") return "고글 착용 위치 보정";
+    if (kind === "snood") return "스누드 머리·귀 덮임 보정";
     return "제품 형태 보정";
 }
 
@@ -140,11 +150,13 @@ function sidePhotoRequirement(kind: PetTryOnReviewKind, locale: "ko" | "en") {
         if (kind === "leash") return "Add a left or right full-body photo first. Leash connection preview needs a clear side view of the neck and body.";
         if (kind === "collar") return "Add a left or right full-body photo first. Collar preview needs a clear side view of the neck.";
         if (kind === "harness") return "Add a left or right full-body photo first. Harness Smart Fit uses a side view, not the front photo.";
+        if (kind === "snood") return "Add a clear front photo first. Snood Smart Fit needs the head, both ears, and neck to be visible.";
         return "Add a left or right full-body photo first. Clothing Smart Fit uses a side view, not the front photo.";
     }
     if (kind === "leash") return "리드줄 연결 확인에는 목과 몸이 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
     if (kind === "collar") return "목줄 착용 확인에는 목이 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
     if (kind === "harness") return "하네스 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
+    if (kind === "snood") return "스누드 입혀보기에는 머리·양쪽 귀·목이 잘 보이는 정면 사진이 필요해요.";
     return "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
 }
 
@@ -577,10 +589,7 @@ export default function PetTryOnPreview({
                 : "먼저 실제 상품 색상을 선택해 주세요. 대표 이미지만 보고 색상을 임의로 정하지 않아요.");
             return;
         }
-        if (
-            tryOnProduct.subcategory !== "goggles"
-            && !petReferenceImage
-        ) {
+        if (!petReferenceImage) {
             setError(sidePhotoRequirement(reviewKind, locale));
             return;
         }

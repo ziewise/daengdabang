@@ -99,17 +99,20 @@ test("precise generation sends only the catalog construction reference", async (
     assert.doesNotMatch(renderBody, /sourceFit|imageDataUrl|master/i);
 });
 
-test("geometry review uses product-specific checks for leads, collars, goggles, and apparel", async () => {
+test("geometry review uses product-specific checks for leads, collars, goggles, snoods, and apparel", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
-    assert.match(modal, /type PetTryOnReviewKind = "wear" \| "harness" \| "goggles" \| "leash" \| "collar"/);
+    assert.match(modal, /type PetTryOnReviewKind = "wear" \| "harness" \| "goggles" \| "leash" \| "collar" \| "snood"/);
     assert.match(modal, /function petTryOnReviewKind\(product: CatalogProduct\)/);
+    assert.match(modal, /if \(isPetTryOnSnoodProduct\(product\)\) return "snood";[\s\S]*?if \(product\.subcategory === "wear"\) return "wear"/);
     assert.match(modal, /identity\.includes\("목줄"\) \|\| \/collar\|martingale\//);
     assert.match(modal, /스냅 고리·목 부착 위치/);
     assert.match(modal, /연결 연출용이며 상품 구성에 포함되지 않아요/);
     assert.match(modal, /목 둘레·버클·D링/);
     assert.match(modal, /렌즈·눈 위치·머리끈/);
     assert.match(modal, /줄이 털·어깨·등에서 바로 시작하면 잘못된 결과/);
+    assert.match(modal, /머리·귀 덮임/);
+    assert.match(modal, /강아지의 실제 양쪽 귀를 완전히 덮고 상품 장식 귀만 보이는지/);
     assert.match(modal, /productShapeCorrectionOptions\.map\(\(option\)/);
     assert.match(modal, /setError\(sidePhotoRequirement\(reviewKind, locale\)\)/);
     assert.doesNotMatch(modal, /PRODUCT_SHAPE_CORRECTION_OPTIONS\.map\(/);

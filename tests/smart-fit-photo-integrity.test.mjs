@@ -9,7 +9,7 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("clothing Smart Fit requires a side photo and never falls back to the front", async () => {
+test("Smart Fit uses front-first headwear photos and side-only body-wear photos", async () => {
     const [client, modal, background] = await Promise.all([
         source("lib/pet-tryon.ts"),
         source("components/products/detail/PetTryOnPreview.tsx"),
@@ -21,13 +21,15 @@ test("clothing Smart Fit requires a side photo and never falls back to the front
     assert.ok(helperStart >= 0 && helperEnd > helperStart);
     const helper = client.slice(helperStart, helperEnd);
 
-    assert.match(helper, /product\.subcategory === "goggles"[\s\S]*?\["front", "left", "right", "back"\][\s\S]*?: \["left", "right"\]/);
-    assert.match(helper, /return product\.subcategory === "goggles" \? pet\.photoDataUrl : undefined/);
+    assert.match(helper, /product\.subcategory === "goggles" \|\| isPetTryOnSnoodProduct\(product\)/);
+    assert.match(helper, /usesHeadPhoto[\s\S]*?\["front", "left", "right", "back"\][\s\S]*?: \["left", "right"\]/);
+    assert.match(helper, /return usesHeadPhoto \? pet\.photoDataUrl : undefined/);
     assert.doesNotMatch(helper, /:\s*\["left", "right", "front"\]/);
     assert.equal((client.match(/!petTryOnReferencePhoto\(product, pet\)/g) || []).length, 2);
 
     assert.match(modal, /const petReferenceImage = pet \? petTryOnReferencePhoto\(tryOnProduct, pet\) : undefined/);
-    assert.match(modal, /tryOnProduct\.subcategory !== "goggles"[\s\S]*?&& !petReferenceImage/);
+    assert.match(modal, /if \(!petReferenceImage\) \{/);
+    assert.match(modal, /스누드 입혀보기에는 머리·양쪽 귀·목이 잘 보이는 정면 사진이 필요해요/);
     assert.match(modal, /start\(\s*tryOnProduct,\s*pet,/);
     assert.match(background, /const petReferenceImage = petTryOnReferencePhoto\(product, pet\)/);
     assert.match(background, /taskKey\(product\.id, pet\.apiProfileId, product\.image, petReferenceImage, correctionIssues\)/);

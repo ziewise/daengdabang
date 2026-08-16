@@ -10,6 +10,7 @@ export type PetTryOnCorrectionIssue =
     | "belly_line"
     | "front_sleeve"
     | "neckline"
+    | "coverage"
     | "pattern";
 
 export type PetTryOnApiErrorCode =
@@ -260,16 +261,22 @@ function parseResultEmailDelivery(
     };
 }
 
+export function isPetTryOnSnoodProduct(product: CatalogProduct) {
+    const identity = `${product.raw.useSub || ""} ${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    return identity.includes("스누드") || identity.includes("snood") || product.folder?.toLocaleLowerCase().startsWith("zs_") === true;
+}
+
 export function petTryOnReferencePhoto(product: CatalogProduct, pet: PetProfile) {
     const views = pet.photoViews || [];
-    const order = product.subcategory === "goggles"
+    const usesHeadPhoto = product.subcategory === "goggles" || isPetTryOnSnoodProduct(product);
+    const order = usesHeadPhoto
         ? ["front", "left", "right", "back"]
         : ["left", "right"];
     for (const viewId of order) {
         const match = views.find((photo) => photo.viewId === viewId);
         if (match?.dataUrl) return match.dataUrl;
     }
-    return product.subcategory === "goggles" ? pet.photoDataUrl : undefined;
+    return usesHeadPhoto ? pet.photoDataUrl : undefined;
 }
 
 async function fetchWithTimeout(
