@@ -140,17 +140,17 @@ export async function preparePagesArtifact({
     }
 
     const rawCatalog = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "raw.json"), []);
-    const expectedCdnVideos = new Set(
+    const catalogCdnVideos = new Set(
         (Array.isArray(rawCatalog) ? rawCatalog : [])
             .filter((row) => row?.videoDelivery === "jsdelivr_commit_cdn")
             .map((row) => normalizeAssetPath(row.video))
             .filter(Boolean),
     );
     const builtCdnVideos = await collectBuiltCdnVideos(resolvedOutRoot, commitSha);
-    const missingCdnVideos = [...expectedCdnVideos].filter((video) => !builtCdnVideos.has(video));
-    if (missingCdnVideos.length) {
+    const unknownBuiltCdnVideos = [...builtCdnVideos].filter((video) => !catalogCdnVideos.has(video));
+    if (unknownBuiltCdnVideos.length) {
         throw new Error(
-            `Refusing to remove local product videos; ${missingCdnVideos.length} CDN URL(s) are missing from the build`,
+            `Refusing to publish ${unknownBuiltCdnVideos.length} product video CDN URL(s) absent from the catalog`,
         );
     }
 
@@ -167,7 +167,10 @@ export async function preparePagesArtifact({
             continue;
         }
         if (!relative.startsWith(PRODUCT_ASSET_PREFIX)) continue;
-        const externalizedVideo = expectedCdnVideos.has(relative);
+        // Catalog videos are never copied into the Pages artifact. A video may
+        // intentionally be absent from the build when the product is not a
+        // dog-worn item; only reviewed, rendered CDN references are published.
+        const externalizedVideo = catalogCdnVideos.has(relative);
         const unusedProductAsset = !references.has(relative);
         if (!externalizedVideo && !unusedProductAsset) continue;
         const size = (await fs.stat(filePath)).size;
@@ -189,7 +192,8 @@ export async function preparePagesArtifact({
         externalizedVideoCount: removed.filter((entry) => entry.reason === "commit_cdn").length,
         unusedAssetCount: removed.filter((entry) => entry.reason === "unused").length,
         omittedLegacyAssetCount: removed.filter((entry) => entry.reason === "legacy").length,
-        expectedCdnVideoCount: expectedCdnVideos.size,
+        expectedCdnVideoCount: builtCdnVideos.size,
+        catalogCdnVideoCount: catalogCdnVideos.size,
     };
 }
 

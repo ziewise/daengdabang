@@ -5,13 +5,22 @@ import colorsData from "./colors.json";
 import sizesData from "./sizes.json";
 import pricesData from "./prices.json";
 import { catalogPriceBadgeKind } from "./price-badge";
+import { safeDogWearingCatalogVideo } from "../pet-tryon-eligibility";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
 const STOREFRONT_ASSET_CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
 
-function storefrontVideoUrl(row: CatalogRow): string | undefined {
-    const video = row.video;
+function storefrontVideoUrl(row: CatalogRow, subcategory: SubcategorySlug): string | undefined {
+    const video = safeDogWearingCatalogVideo({
+        id: `p_${row.no}`,
+        subcategory,
+        image: row.image,
+        video: row.video,
+        name: row.name,
+        folder: row.folder,
+        raw: row,
+    });
     if (
         !video ||
         row.videoDelivery !== "jsdelivr_commit_cdn" ||
@@ -214,7 +223,7 @@ function buildCatalog(): CatalogProduct[] {
             gallery: row.gallery,
             details: row.details,
             sizeImage: row.sizeImage,
-            video: storefrontVideoUrl(row),
+            video: storefrontVideoUrl(row, subcategory),
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
             externalReviewCount: row.externalReviewCount,

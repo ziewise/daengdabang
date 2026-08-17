@@ -20,6 +20,10 @@ type PetTryOnProductIdentity = {
     };
 };
 
+type StorefrontVideoCandidate = PetTryOnProductIdentity & {
+    video?: string;
+};
+
 export type PetTryOnEligibility = {
     eligible: boolean;
     reason: PetTryOnEligibilityReason;
@@ -86,4 +90,16 @@ export function getPetTryOnEligibility(product: PetTryOnProductIdentity): PetTry
         return { eligible: false, reason: "unsupported_category", zeroAiColorPreview: "disabled" };
     }
     return { eligible: true, reason: "eligible", zeroAiColorPreview: "server_verified" };
+}
+
+/**
+ * The current catalog hover clips were produced as dog-wearing scenes. They
+ * are safe to publish only for products that the dog actually wears. Human
+ * bags, carriers, food, toys, beds and accessories fail closed to the static
+ * product image until a separately reviewed interaction video exists.
+ */
+export function safeDogWearingCatalogVideo(product: StorefrontVideoCandidate): string | undefined {
+    const video = product.video?.trim();
+    if (!video) return undefined;
+    return getPetTryOnEligibility(product).eligible ? video : undefined;
 }

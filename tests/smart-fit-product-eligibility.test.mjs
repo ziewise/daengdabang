@@ -129,3 +129,47 @@ test("product card and modal share the same product-level Smart Fit gate", async
     assert.doesNotMatch(info, /WEARABLE_SUBCATEGORIES/);
     assert.doesNotMatch(modal, /WEARABLE_SUBCATEGORIES/);
 });
+
+test("legacy dog-wearing hover videos fail closed for every non-wearable product type", async () => {
+    const { safeDogWearingCatalogVideo } = await import("../lib/pet-tryon-eligibility.ts");
+    const candidate = (id, subcategory, name, folder) => ({
+        id,
+        subcategory,
+        image: `/products/${id}.webp`,
+        video: `/products/${id}.mp4`,
+        name,
+        folder,
+    });
+
+    for (const item of [
+        candidate("p_42", "carrier", "러프웨어 홈 트레일 힙 팩", "rw_hometrail_hippack"),
+        candidate("p_41", "carrier", "러프웨어 트릿 트레이더 트릿백", "rw_treattrader_bag"),
+        candidate("p_62", "carrier", "러프웨어 히치 하이커 반려견 백팩 캐리어", "rw_hitchhiker_carrier"),
+        candidate("p_83", "goggles", "렉스스펙스 반려견 고글 하드케이스", "rs_hardcase"),
+        candidate("p_123", "drysoy", "카나간 독 덴탈 사료", "canagan_dog_dental_6kg"),
+        candidate("p_9", "cushion", "러프웨어 베이스캠프 침대", "rw_basecamp_bed"),
+        candidate("p_223", "bowl", "러프웨어 비비 보울", "rw_bivybowl_23"),
+    ]) {
+        assert.equal(safeDogWearingCatalogVideo(item), undefined, `${item.id} must use its static product image`);
+    }
+});
+
+test("reviewed dog-worn product videos remain available", async () => {
+    const { safeDogWearingCatalogVideo } = await import("../lib/pet-tryon-eligibility.ts");
+    const dogPackVideo = "/images/products/catalog/rw_palisades_pack_26/videos/hover.mp4";
+
+    assert.equal(safeDogWearingCatalogVideo({
+        id: "p_28",
+        subcategory: "carrier",
+        image: "/images/products/catalog/rw_palisades_pack_26/rw_palisades_pack_26.webp",
+        video: dogPackVideo,
+        name: "러프웨어 팰리세이드 팩 반려견 배낭",
+        folder: "rw_palisades_pack_26",
+    }), dogPackVideo);
+    assert.equal(safeDogWearingCatalogVideo({
+        id: "p_155",
+        subcategory: "wear",
+        image: "/wear.webp",
+        video: "/wear.mp4",
+    }), "/wear.mp4");
+});

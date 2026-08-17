@@ -65,22 +65,18 @@ test("Pages artifact keeps referenced images and removes verified CDN video copi
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/sample.png")));
 });
 
-test("Pages artifact refuses to remove local videos before every expected CDN URL is in the build", async (t) => {
+test("Pages artifact omits catalog videos that the storefront safety gate did not publish", async (t) => {
     const root = await fixture(t, { includeCdnUrl: false });
+    const result = await preparePagesArtifact({
+        repoRoot: root,
+        outRoot: path.join(root, "out"),
+        commitSha: COMMIT_SHA,
+        maxBytes: 1_000_000,
+    });
 
-    await assert.rejects(
-        preparePagesArtifact({
-            repoRoot: root,
-            outRoot: path.join(root, "out"),
-            commitSha: COMMIT_SHA,
-            maxBytes: 1_000_000,
-        }),
-        /CDN URL\(s\) are missing/,
-    );
-    assert.equal(
-        await fs.readFile(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4"), "utf8"),
-        "drop-cdn-copy",
-    );
+    assert.equal(result.expectedCdnVideoCount, 0);
+    assert.equal(result.catalogCdnVideoCount, 1);
+    await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
 });
 
 test("Pages deployment workflow pins video URLs to the build SHA and uses Node 24-based action majors", async () => {
