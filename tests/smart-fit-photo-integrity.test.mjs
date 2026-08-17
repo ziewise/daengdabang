@@ -21,7 +21,8 @@ test("Smart Fit uses front-first headwear photos and side-only body-wear photos"
     assert.ok(helperStart >= 0 && helperEnd > helperStart);
     const helper = client.slice(helperStart, helperEnd);
 
-    assert.match(helper, /product\.subcategory === "goggles" \|\| isPetTryOnSnoodProduct\(product\)/);
+    assert.match(helper, /product\.subcategory === "goggles"\s*\|\|\s*isPetTryOnSnoodProduct\(product\)/);
+    assert.match(helper, /isPetTryOnHearingProtectionProduct\(product\)/);
     assert.match(helper, /usesHeadPhoto[\s\S]*?\["front", "left", "right", "back"\][\s\S]*?: \["left", "right"\]/);
     assert.match(helper, /return usesHeadPhoto \? pet\.photoDataUrl : undefined/);
     assert.doesNotMatch(helper, /:\s*\["left", "right", "front"\]/);

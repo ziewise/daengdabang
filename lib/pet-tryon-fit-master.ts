@@ -3,6 +3,16 @@ export const LEGACY_PET_TRYON_FIT_MASTER_STORAGE_PREFIX = "ddb.tryon.fit-master.
 const PRODUCT_REFERENCE_SAFETY_STORAGE_PREFIX = "ddb.tryon.fit-master.v5";
 const PRODUCT_REFERENCE_SAFETY_RESET_IDS = new Set([
     "p_44",
+    "p_96",
+    "p_119",
+    "p_33",
+    "p_48",
+    "p_53",
+    "p_60",
+    "p_156",
+    "p_243",
+    "p_244",
+    "p_333",
     "p_63", "p_64", "p_65", "p_66", "p_67", "p_68", "p_69", "p_70", "p_71", "p_72",
     "p_279", "p_280", "p_281", "p_282", "p_283",
 ]);

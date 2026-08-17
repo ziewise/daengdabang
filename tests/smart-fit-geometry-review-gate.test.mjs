@@ -99,11 +99,13 @@ test("precise generation sends only the catalog construction reference", async (
     assert.doesNotMatch(renderBody, /sourceFit|imageDataUrl|master/i);
 });
 
-test("geometry review uses product-specific checks for leads, collars, goggles, snoods, and apparel", async () => {
+test("geometry review uses product-specific checks for every supported wearing structure", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
-    assert.match(modal, /type PetTryOnReviewKind = "wear" \| "harness" \| "goggles" \| "leash" \| "collar" \| "snood"/);
+    assert.match(modal, /type PetTryOnReviewKind = "wear" \| "harness" \| "goggles" \| "leash" \| "collar" \| "snood" \| "hearing_protection" \| "harness_jacket" \| "dog_pack" \| "footwear" \| "life_jacket" \| "neckwear"/);
     assert.match(modal, /function petTryOnReviewKind\(product: CatalogProduct\)/);
+    assert.match(modal, /if \(isPetTryOnHearingProtectionProduct\(product\)\) return "hearing_protection";[\s\S]*?if \(product\.subcategory === "goggles"\) return "goggles"/);
+    assert.match(modal, /if \(isPetTryOnHarnessJacketProduct\(product\)\) return "harness_jacket";[\s\S]*?if \(product\.subcategory === "harness"\) return "harness"/);
     assert.match(modal, /if \(isPetTryOnSnoodProduct\(product\)\) return "snood";[\s\S]*?if \(product\.subcategory === "wear"\) return "wear"/);
     assert.match(modal, /identity\.includes\("목줄"\) \|\| \/collar\|martingale\//);
     assert.match(modal, /스냅 고리·목 부착 위치/);
@@ -113,6 +115,18 @@ test("geometry review uses product-specific checks for leads, collars, goggles, 
     assert.match(modal, /줄이 털·어깨·등에서 바로 시작하면 잘못된 결과/);
     assert.match(modal, /머리·귀 덮임/);
     assert.match(modal, /강아지의 실제 양쪽 귀를 완전히 덮고 상품 장식 귀만 보이는지/);
+    assert.match(modal, /양쪽 청력보호 패널이 실제 귀를 완전히 덮고/);
+    assert.match(modal, /고글·렌즈가 추가되지 않았는지/);
+    assert.match(modal, /등·엉덩이 덮임 길이/);
+    assert.match(modal, /등판이 꼬리 시작점까지 이어져 양쪽 옆구리·엉덩이 윗부분을 덮는지/);
+    assert.match(modal, /if \(isPetTryOnDogPackProduct\(product\)\) return "dog_pack"/);
+    assert.match(modal, /if \(isPetTryOnFootwearProduct\(product\)\) return "footwear"/);
+    assert.match(modal, /if \(isPetTryOnLifeJacketProduct\(product\)\) return "life_jacket"/);
+    assert.match(modal, /if \(isPetTryOnNeckwearProduct\(product\)\) return "neckwear"/);
+    assert.match(modal, /양쪽 수납 가방/);
+    assert.match(modal, /신발 개수와 발 위치/);
+    assert.match(modal, /부력 패널과 몸통 감쌈/);
+    assert.match(modal, /목만 감싸는 범위/);
     assert.match(modal, /productShapeCorrectionOptions\.map\(\(option\)/);
     assert.match(modal, /setError\(sidePhotoRequirement\(reviewKind, locale\)\)/);
     assert.doesNotMatch(modal, /PRODUCT_SHAPE_CORRECTION_OPTIONS\.map\(/);

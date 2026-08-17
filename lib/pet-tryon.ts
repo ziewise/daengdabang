@@ -266,9 +266,40 @@ export function isPetTryOnSnoodProduct(product: CatalogProduct) {
     return identity.includes("스누드") || identity.includes("snood") || product.folder?.toLocaleLowerCase().startsWith("zs_") === true;
 }
 
+export function isPetTryOnHearingProtectionProduct(product: CatalogProduct) {
+    const identity = `${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    return /이어\s*프로|청력\s*보호|귀마개|이어\s*머프|ear\s*pro|hearing\s*protection|ear\s*muffs?/.test(identity);
+}
+
+export function isPetTryOnHarnessJacketProduct(product: CatalogProduct) {
+    const identity = `${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    return /(하네스|harness)/.test(identity)
+        && /(재킷|자켓|코트|jacket|coat|콤보|combo|fuse)/.test(identity);
+}
+
+export function isPetTryOnFootwearProduct(product: CatalogProduct) {
+    const identity = `${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    return new Set(["p_33", "p_156", "p_243", "p_244"]).has(product.id)
+        || /신발|슈즈|부츠|shoes?|boots?/.test(identity);
+}
+
+export function isPetTryOnLifeJacketProduct(product: CatalogProduct) {
+    const identity = `${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    return new Set(["p_48", "p_60"]).has(product.id)
+        || /구명\s*조끼|라이프\s*자켓|life\s*jacket|lifejacket|float\s*coat/.test(identity);
+}
+
+export function isPetTryOnNeckwearProduct(product: CatalogProduct) {
+    const identity = `${product.name} ${product.folder || ""}`.toLocaleLowerCase();
+    return new Set(["p_53", "p_333"]).has(product.id)
+        || /넥\s*(?:게이터|게이트)|neck\s*gaiter/.test(identity);
+}
+
 export function petTryOnReferencePhoto(product: CatalogProduct, pet: PetProfile) {
     const views = pet.photoViews || [];
-    const usesHeadPhoto = product.subcategory === "goggles" || isPetTryOnSnoodProduct(product);
+    const usesHeadPhoto = product.subcategory === "goggles"
+        || isPetTryOnSnoodProduct(product)
+        || isPetTryOnHearingProtectionProduct(product);
     const order = usesHeadPhoto
         ? ["front", "left", "right", "back"]
         : ["left", "right"];

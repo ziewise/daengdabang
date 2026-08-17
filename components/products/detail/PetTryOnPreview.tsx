@@ -7,6 +7,11 @@ import type { CatalogProduct } from "@/lib/catalog";
 import {
     getLatestPetTryOnMaster,
     getPetTryOnJob,
+    isPetTryOnFootwearProduct,
+    isPetTryOnHarnessJacketProduct,
+    isPetTryOnHearingProtectionProduct,
+    isPetTryOnLifeJacketProduct,
+    isPetTryOnNeckwearProduct,
     isPetTryOnSnoodProduct,
     petTryOnReferencePhoto,
     requestPetTryOnColorPreview,
@@ -23,7 +28,10 @@ import {
     savePetTryOnFitMaster,
     type PetTryOnFitMasterIdentity,
 } from "@/lib/pet-tryon-fit-master";
-import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
+import {
+    getPetTryOnEligibility,
+    isPetTryOnDogPackProduct,
+} from "@/lib/pet-tryon-eligibility";
 import {
     PetTryOnEmailDeliveryControls,
     usePetTryOnTask,
@@ -64,7 +72,7 @@ function formatElapsed(seconds: number) {
 
 const PROGRESS_STAGES: PetTryOnProgressStage[] = ["preparing", "generating", "finalizing", "ready"];
 type CorrectionOption = { value: PetTryOnCorrectionIssue; ko: string; en: string };
-type PetTryOnReviewKind = "wear" | "harness" | "goggles" | "leash" | "collar" | "snood";
+type PetTryOnReviewKind = "wear" | "harness" | "goggles" | "leash" | "collar" | "snood" | "hearing_protection" | "harness_jacket" | "dog_pack" | "footwear" | "life_jacket" | "neckwear";
 
 const PRODUCT_SHAPE_CORRECTION_OPTIONS: Record<PetTryOnReviewKind, CorrectionOption[]> = {
     wear: [
@@ -93,6 +101,35 @@ const PRODUCT_SHAPE_CORRECTION_OPTIONS: Record<PetTryOnReviewKind, CorrectionOpt
         { value: "coverage", ko: "머리·귀 덮임", en: "Head / ear coverage" },
         { value: "neckline", ko: "얼굴 구멍·목 아랫단", en: "Face opening / neck edge" },
     ],
+    hearing_protection: [
+        { value: "coverage", ko: "양쪽 귀 보호 패널", en: "Both ear-protection panels" },
+        { value: "neckline", ko: "머리·목 착용 위치", en: "Head / neck placement" },
+    ],
+    harness_jacket: [
+        { value: "back_length", ko: "등·엉덩이 덮임 길이", en: "Back / upper-rump length" },
+        { value: "coverage", ko: "옆구리·엉덩이 덮임", en: "Flank / upper-rump coverage" },
+        { value: "belly_line", ko: "배 부분·하네스 스트랩", en: "Belly / harness straps" },
+        { value: "neckline", ko: "목·가슴 시작 위치", en: "Neck / chest placement" },
+    ],
+    dog_pack: [
+        { value: "coverage", ko: "양쪽 수납 가방", en: "Both side panniers" },
+        { value: "back_length", ko: "등판 위치와 길이", en: "Back bridge placement" },
+        { value: "belly_line", ko: "가슴·배 스트랩", en: "Chest / belly straps" },
+        { value: "front_sleeve", ko: "앞다리 여유", en: "Front-leg clearance" },
+    ],
+    footwear: [
+        { value: "coverage", ko: "신발 개수와 발 위치", en: "Shoe count / paw placement" },
+    ],
+    life_jacket: [
+        { value: "coverage", ko: "부력 패널과 몸통 감쌈", en: "Flotation-panel coverage" },
+        { value: "belly_line", ko: "가슴·배 스트랩", en: "Chest / belly straps" },
+        { value: "back_length", ko: "등판과 뒤쪽 밑단", en: "Back panel / rear hem" },
+        { value: "neckline", ko: "목둘레 위치", en: "Neck opening" },
+    ],
+    neckwear: [
+        { value: "coverage", ko: "목만 감싸는 범위", en: "Neck-only coverage" },
+        { value: "neckline", ko: "위·아래 가장자리", en: "Upper / lower edge" },
+    ],
 };
 
 const COLOR_PATTERN_CORRECTION_OPTIONS: CorrectionOption[] = [
@@ -100,7 +137,13 @@ const COLOR_PATTERN_CORRECTION_OPTIONS: CorrectionOption[] = [
 ];
 
 function petTryOnReviewKind(product: CatalogProduct): PetTryOnReviewKind {
+    if (isPetTryOnHearingProtectionProduct(product)) return "hearing_protection";
     if (isPetTryOnSnoodProduct(product)) return "snood";
+    if (isPetTryOnHarnessJacketProduct(product)) return "harness_jacket";
+    if (isPetTryOnDogPackProduct(product)) return "dog_pack";
+    if (isPetTryOnFootwearProduct(product)) return "footwear";
+    if (isPetTryOnLifeJacketProduct(product)) return "life_jacket";
+    if (isPetTryOnNeckwearProduct(product)) return "neckwear";
     if (product.subcategory === "wear") return "wear";
     if (product.subcategory === "harness") return "harness";
     if (product.subcategory === "goggles") return "goggles";
@@ -118,6 +161,12 @@ function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en"
             leash: "Confirm that the exact snap hook is visibly closed through a collar or harness D-ring at the neck. The lead must not start from fur, the shoulder, or the back. Any newly shown plain collar is a fitting aid and is not included with the product.",
             collar: "Confirm that the collar forms a continuous neck loop and that its real buckle, adjuster, D-ring, and width match the product photo.",
             snood: "Confirm that the snood covers both real ears completely, shows only the product's decorative ears, frames the face, and stops above the shoulders.",
+            hearing_protection: "Confirm that both padded acoustic side panels fully cover the real ears, the crown and rear wrap match the product, the eyes and muzzle stay open, and no goggles or lenses were added.",
+            harness_jacket: "Confirm that the continuous jacket shell reaches the tail base and covers both flanks, hips, and upper rump while leaving the tail, groin, and legs free, and that the integrated harness hardware remains complete.",
+            dog_pack: "Confirm that two balanced panniers sit on the left and right ribcage, remain joined to one centered harness, and preserve every real zipper, strap, buckle, handle, and leash point.",
+            footwear: "Confirm the product count, paw placement, forward toe direction, low cuff, sole, and closures, and make sure no footwear became a leg or body garment.",
+            life_jacket: "Confirm the flotation panels wrap the neck, chest, ribcage, and belly, the rescue handle and straps remain complete, and all legs, the groin, and tail stay free.",
+            neckwear: "Confirm that one closed fabric loop wraps only the lower neck below both ears and above both shoulders without covering the head, face, chest, or torso.",
         }
         : {
             wear: "상품 사진과 밑단·배 부분·앞뒤 다리 구멍·목 부분·길이가 맞는지 확인해 주세요.",
@@ -126,6 +175,12 @@ function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en"
             leash: "상품의 실제 스냅 고리가 목 부분의 목줄·하네스 D링에 닫혀 있는지 확인해 주세요. 줄이 털·어깨·등에서 바로 시작하면 잘못된 결과예요. 새로 표시된 무채색 기본 목줄은 연결 연출용이며 상품 구성에 포함되지 않아요.",
             collar: "목줄이 목을 한 바퀴 연속해서 감싸고 실제 버클·조절부·D링·폭이 상품 사진과 맞는지 확인해 주세요.",
             snood: "스누드가 강아지의 실제 양쪽 귀를 완전히 덮고 상품 장식 귀만 보이는지, 얼굴 구멍과 어깨 위 아랫단이 맞는지 확인해 주세요.",
+            hearing_protection: "양쪽 청력보호 패널이 실제 귀를 완전히 덮고 머리 위·뒤쪽 감싸임이 상품과 맞는지, 눈과 주둥이는 열려 있고 고글·렌즈가 추가되지 않았는지 확인해 주세요.",
+            harness_jacket: "재킷의 연속된 등판이 꼬리 시작점까지 이어져 양쪽 옆구리·엉덩이 윗부분을 덮는지, 꼬리·사타구니·다리는 열려 있고 일체형 하네스 부품이 모두 유지됐는지 확인해 주세요.",
+            dog_pack: "왼쪽과 오른쪽 수납 가방이 균형 있게 갈비뼈 옆에 있고 하나의 중앙 하네스에 연결됐는지, 지퍼·스트랩·버클·손잡이·리드 연결부가 유지됐는지 확인해 주세요.",
+            footwear: "상품 수량과 발 위치, 발끝 방향, 낮은 커프, 밑창과 잠금부가 맞는지, 신발이 다리 덮개나 몸통 옷으로 바뀌지 않았는지 확인해 주세요.",
+            life_jacket: "부력 패널이 목·가슴·갈비뼈·배를 감싸고 구조 손잡이와 스트랩이 유지됐는지, 모든 다리·사타구니·꼬리는 열려 있는지 확인해 주세요.",
+            neckwear: "하나의 닫힌 천 고리가 양쪽 귀 아래와 양쪽 어깨 위의 목만 감싸고 머리·얼굴·가슴·몸통을 덮지 않는지 확인해 주세요.",
         };
     return descriptions[kind];
 }
@@ -136,12 +191,24 @@ function geometryCorrectionTitle(kind: PetTryOnReviewKind, locale: "ko" | "en") 
         if (kind === "collar") return "Correct collar fit";
         if (kind === "goggles") return "Correct goggles fit";
         if (kind === "snood") return "Correct snood coverage";
+        if (kind === "hearing_protection") return "Correct hearing-protection fit";
+        if (kind === "harness_jacket") return "Correct harness-jacket coverage";
+        if (kind === "dog_pack") return "Correct dog-pack fit";
+        if (kind === "footwear") return "Correct footwear placement";
+        if (kind === "life_jacket") return "Correct life-jacket fit";
+        if (kind === "neckwear") return "Correct neck-gaiter fit";
         return "Correct product shape";
     }
     if (kind === "leash") return "리드줄 연결 위치 보정";
     if (kind === "collar") return "목줄 착용 형태 보정";
     if (kind === "goggles") return "고글 착용 위치 보정";
     if (kind === "snood") return "스누드 머리·귀 덮임 보정";
+    if (kind === "hearing_protection") return "청력보호 헤드기어 보정";
+    if (kind === "harness_jacket") return "하네스 재킷 길이·덮임 보정";
+    if (kind === "dog_pack") return "강아지용 백팩 위치·균형 보정";
+    if (kind === "footwear") return "신발 개수·발 위치 보정";
+    if (kind === "life_jacket") return "구명조끼 부력 패널·스트랩 보정";
+    if (kind === "neckwear") return "넥 게이터 목 덮임 보정";
     return "제품 형태 보정";
 }
 
@@ -151,12 +218,22 @@ function sidePhotoRequirement(kind: PetTryOnReviewKind, locale: "ko" | "en") {
         if (kind === "collar") return "Add a left or right full-body photo first. Collar preview needs a clear side view of the neck.";
         if (kind === "harness") return "Add a left or right full-body photo first. Harness Smart Fit uses a side view, not the front photo.";
         if (kind === "snood") return "Add a clear front photo first. Snood Smart Fit needs the head, both ears, and neck to be visible.";
+        if (kind === "hearing_protection") return "Add a clear front or side photo first. Hearing-protection Smart Fit needs the head, both ears, and upper neck to be visible.";
+        if (kind === "dog_pack") return "Add a left or right full-body photo first. Dog-pack Smart Fit needs a clear side view of the back, ribcage, belly, and legs.";
+        if (kind === "footwear") return "Add a left or right full-body photo first. Footwear Smart Fit needs every intended paw to be visible.";
+        if (kind === "life_jacket") return "Add a left or right full-body photo first. Life-jacket Smart Fit needs the neck, torso, belly, legs, and tail base to be visible.";
+        if (kind === "neckwear") return "Add a left or right full-body photo first. Neck-gaiter Smart Fit needs the ears, neck, shoulders, and chest boundary to be visible.";
         return "Add a left or right full-body photo first. Clothing Smart Fit uses a side view, not the front photo.";
     }
     if (kind === "leash") return "리드줄 연결 확인에는 목과 몸이 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
     if (kind === "collar") return "목줄 착용 확인에는 목이 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
     if (kind === "harness") return "하네스 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
     if (kind === "snood") return "스누드 입혀보기에는 머리·양쪽 귀·목이 잘 보이는 정면 사진이 필요해요.";
+    if (kind === "hearing_protection") return "청력보호 헤드기어 입혀보기에는 머리·양쪽 귀·목 윗부분이 잘 보이는 정면 또는 측면 사진이 필요해요.";
+    if (kind === "dog_pack") return "강아지용 백팩 입혀보기에는 등·갈비뼈·배·다리가 잘 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
+    if (kind === "footwear") return "신발 입혀보기에는 착용할 발이 모두 보이는 왼쪽 또는 오른쪽 측면 전신 사진이 필요해요.";
+    if (kind === "life_jacket") return "구명조끼 입혀보기에는 목·몸통·배·다리·꼬리 시작점이 보이는 측면 전신 사진이 필요해요.";
+    if (kind === "neckwear") return "넥 게이터 입혀보기에는 귀·목·어깨·가슴 경계가 보이는 측면 전신 사진이 필요해요.";
     return "옷 입혀보기는 정면이 아닌 측면 전신 사진을 사용해요. 왼쪽 또는 오른쪽 사진을 먼저 등록해 주세요.";
 }
 
