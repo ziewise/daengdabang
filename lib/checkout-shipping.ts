@@ -1,5 +1,13 @@
 export type CheckoutLocale = "ko" | "en";
 
+export const CHECKOUT_DELIVERY_ZONES = ["mainland", "jeju", "island"] as const;
+export type CheckoutDeliveryZone = typeof CHECKOUT_DELIVERY_ZONES[number];
+
+export function isCheckoutDeliveryZone(value: unknown): value is CheckoutDeliveryZone {
+    return typeof value === "string"
+        && CHECKOUT_DELIVERY_ZONES.includes(value as CheckoutDeliveryZone);
+}
+
 export const CHECKOUT_DELIVERY_REQUEST_CODES = [
     "front_door",
     "security_office",
@@ -50,6 +58,7 @@ export type CheckoutDeliveryDraft = {
     postalCode: string;
     addressLine1: string;
     addressLine2: string;
+    deliveryZone: CheckoutDeliveryZone;
     requestCode: CheckoutDeliveryRequestCode;
     requestNote: string;
 };
@@ -60,6 +69,7 @@ export type CheckoutDelivery = {
     postalCode: string;
     addressLine1: string;
     addressLine2?: string;
+    deliveryZone: CheckoutDeliveryZone;
     requestCode: CheckoutDeliveryRequestCode;
     requestNote?: string;
 };
@@ -78,6 +88,7 @@ export const CHECKOUT_DELIVERY_FIELD_ORDER: readonly CheckoutDeliveryField[] = [
     "postalCode",
     "addressLine1",
     "addressLine2",
+    "deliveryZone",
     "requestCode",
     "requestNote",
 ] as const;
@@ -88,6 +99,7 @@ export const EMPTY_CHECKOUT_DELIVERY_DRAFT: Readonly<CheckoutDeliveryDraft> = Ob
     postalCode: "",
     addressLine1: "",
     addressLine2: "",
+    deliveryZone: "mainland",
     requestCode: "front_door",
     requestNote: "",
 });
@@ -160,6 +172,7 @@ export function normalizeCheckoutDelivery(draft: CheckoutDeliveryDraft): Checkou
         postalCode: draft.postalCode.trim(),
         addressLine1: normalizeSingleLine(draft.addressLine1),
         ...(addressLine2 ? { addressLine2 } : {}),
+        deliveryZone: draft.deliveryZone,
         requestCode: draft.requestCode,
         ...(draft.requestCode === "other" && requestNote ? { requestNote } : {}),
     };
@@ -178,6 +191,7 @@ const VALIDATION_COPY: Record<CheckoutLocale, Record<string, string>> = {
         address1Required: "기본 주소를 입력해 주세요.",
         address1Length: "기본 주소는 5~200자로 입력해 주세요.",
         address2Length: "상세 주소는 100자 이하로 입력해 주세요.",
+        deliveryZone: "배송 지역을 다시 선택해 주세요.",
         requestCode: "배송 요청사항을 다시 선택해 주세요.",
         requestNoteRequired: "배송 요청사항을 입력해 주세요.",
         requestNoteLength: "배송 요청사항은 100자 이하로 입력해 주세요.",
@@ -190,6 +204,7 @@ const VALIDATION_COPY: Record<CheckoutLocale, Record<string, string>> = {
         address1Required: "Enter the street address.",
         address1Length: "Use 5–200 characters for the street address.",
         address2Length: "Keep the address details within 100 characters.",
+        deliveryZone: "Select the delivery region again.",
         requestCode: "Select the delivery request again.",
         requestNoteRequired: "Enter your delivery request.",
         requestNoteLength: "Keep the delivery request within 100 characters.",
@@ -218,6 +233,10 @@ export function validateCheckoutDelivery(
 
     if (value.addressLine2 && characterCount(value.addressLine2) > 100) {
         errors.addressLine2 = copy.address2Length;
+    }
+
+    if (!isCheckoutDeliveryZone(value.deliveryZone)) {
+        errors.deliveryZone = copy.deliveryZone;
     }
 
     if (!isCheckoutDeliveryRequestCode(value.requestCode)) {
@@ -251,6 +270,7 @@ export function normalizeCheckoutDeliveryResponse(value: unknown): CheckoutDeliv
         || typeof delivery.phone !== "string"
         || typeof delivery.postalCode !== "string"
         || typeof delivery.addressLine1 !== "string"
+        || !isCheckoutDeliveryZone(delivery.deliveryZone)
         || !isCheckoutDeliveryRequestCode(delivery.requestCode)
         || !(delivery.addressLine2 == null || typeof delivery.addressLine2 === "string")
         || !(delivery.requestNote == null || typeof delivery.requestNote === "string")
@@ -264,6 +284,7 @@ export function normalizeCheckoutDeliveryResponse(value: unknown): CheckoutDeliv
         postalCode: delivery.postalCode,
         addressLine1: delivery.addressLine1,
         addressLine2: typeof delivery.addressLine2 === "string" ? delivery.addressLine2 : "",
+        deliveryZone: delivery.deliveryZone,
         requestCode: delivery.requestCode,
         requestNote: typeof delivery.requestNote === "string" ? delivery.requestNote : "",
     });

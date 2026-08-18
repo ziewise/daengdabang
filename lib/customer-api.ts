@@ -416,6 +416,7 @@ export type TossDeliveryDetails = {
     postalCode: string;
     addressLine1: string;
     addressLine2: string;
+    deliveryZone: "mainland" | "jeju" | "island";
     requestCode: TossDeliveryRequestCode;
     requestNote: string;
 };
@@ -685,8 +686,15 @@ export async function createTossTestOrder(payload: {
     return order;
 }
 
-export async function loadTossTestDeliveryQuote(token?: string) {
-    const quote = await apiJson<TossDeliveryQuote>("/api/v1/payments/toss/delivery-quote", {
+export async function loadTossTestDeliveryQuote(input: {
+    subtotal: number;
+    deliveryZone: "mainland" | "jeju" | "island";
+}, token?: string) {
+    const query = new URLSearchParams({
+        subtotal: String(input.subtotal),
+        delivery_zone: input.deliveryZone,
+    });
+    const quote = await apiJson<TossDeliveryQuote>(`/api/v1/payments/toss/delivery-quote?${query.toString()}`, {
         method: "GET",
     }, token, { requireBase: true });
     if (!quote) {

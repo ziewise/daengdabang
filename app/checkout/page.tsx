@@ -88,7 +88,7 @@ export default function CheckoutPage() {
     const [deliveryDraft, setDeliveryDraft] = useState<CheckoutDeliveryDraft>(() => createCheckoutDeliveryDraft());
     const [deliveryErrors, setDeliveryErrors] = useState<CheckoutDeliveryErrors>({});
     const [quoteResult, setQuoteResult] = useState<{
-        token: string;
+        requestKey: string;
         quote: CheckoutDeliveryQuote | null;
         error: string;
     } | null>(null);
@@ -108,6 +108,9 @@ export default function CheckoutPage() {
     const signedInForPayment = Boolean(user && accessToken);
     const loginHref = `/auth/login?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
     const directEasyPay = paymentMethod === "toss_pay" || paymentMethod === "naver_pay";
+    const quoteRequestKey = accessToken
+        ? `${accessToken}:${total}:${deliveryDraft.deliveryZone}`
+        : "";
 
     useEffect(() => {
         if (!user) return;
@@ -122,20 +125,23 @@ export default function CheckoutPage() {
     }, [user]);
 
     useEffect(() => {
-        if (!accessToken) return;
+        if (!accessToken || !quoteRequestKey) return;
         let cancelled = false;
-        loadTossTestDeliveryQuote(accessToken)
+        loadTossTestDeliveryQuote({
+            subtotal: total,
+            deliveryZone: deliveryDraft.deliveryZone,
+        }, accessToken)
             .then((quote) => {
                 if (cancelled) return;
                 if (!isCheckoutDeliveryQuote(quote) || quote.fulfillmentMode !== "test_no_shipment") {
                     throw new Error("Unsafe delivery quote response");
                 }
-                setQuoteResult({ token: accessToken, quote, error: "" });
+                setQuoteResult({ requestKey: quoteRequestKey, quote, error: "" });
             })
             .catch(() => {
                 if (!cancelled) {
                     setQuoteResult({
-                        token: accessToken,
+                        requestKey: quoteRequestKey,
                         quote: null,
                         error: locale === "en"
                             ? "The server will calculate the test estimate when you continue."
@@ -146,11 +152,11 @@ export default function CheckoutPage() {
         return () => {
             cancelled = true;
         };
-    }, [accessToken, locale]);
+    }, [accessToken, deliveryDraft.deliveryZone, locale, quoteRequestKey, total]);
 
-    const deliveryQuote = quoteResult?.token === accessToken ? quoteResult.quote : null;
-    const quoteError = quoteResult?.token === accessToken ? quoteResult.error : "";
-    const quoteLoading = Boolean(accessToken && quoteResult?.token !== accessToken);
+    const deliveryQuote = quoteResult?.requestKey === quoteRequestKey ? quoteResult.quote : null;
+    const quoteError = quoteResult?.requestKey === quoteRequestKey ? quoteResult.error : "";
+    const quoteLoading = Boolean(accessToken && quoteResult?.requestKey !== quoteRequestKey);
 
     const changeDelivery = (next: CheckoutDeliveryDraft) => {
         setDeliveryDraft(next);

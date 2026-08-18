@@ -142,13 +142,17 @@ export default function LegalNoticePage() {
                     시간이 지나 재판매가 곤란할 정도로 가치가 감소한 경우, 복제가 가능한 상품의 포장이 훼손된 경우 등
                     법령상 제한 사유가 있으면 청약철회가 제한될 수 있습니다.
                 </p>
+                <Link href="/return" className="mt-4 inline-flex text-sm font-black text-indigo-700 underline underline-offset-4">
+                    배송비·반품비·반품지·반품/교환 불가 사유 전체 보기
+                </Link>
             </section>
 
             <section id="delivery" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">5. 배송 및 비용</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    상품은 통상 결제 확인 후 1~2영업일 이내 출고하며, 결제일로부터 최대 7일 이내 배송 완료를 원칙으로 합니다.
-                    배송 방법, 배송비와 도서산간 추가비는 상품 상세 또는 주문 단계에서 확인할 수 있도록 표시합니다.
+                    배송비는 3,000원이며 30,000원 이상 주문 시 기본 배송비가 무료입니다. 제주도는 3,000원,
+                    그 외 도서지역은 5,000원의 지역 추가 배송비가 부과됩니다. 한진택배 또는 CJ대한통운으로
+                    통상 결제 확인 후 1~2영업일 이내 출고하며, 결제일로부터 최대 7일 이내 배송 완료를 원칙으로 합니다.
                     단순 변심으로 인한 교환·반품 배송비는 이용자가 부담하며, 표시·광고 또는 계약 내용과 다르게 이행된
                     경우의 반품 비용은 댕다방이 부담합니다.
                 </p>

@@ -3,6 +3,7 @@ import { CATEGORY_LABEL } from "@/lib/catalog";
 import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
 import { CATEGORY_ORDER } from "@/lib/shop";
 import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
+import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
 
 export default function Footer() {
     return (
@@ -53,6 +54,7 @@ export default function Footer() {
                             <Link href="/cart">장바구니</Link>
                             <Link href="/terms">이용약관</Link>
                             <Link href="/privacy">개인정보처리방침</Link>
+                            <ReturnPolicyDialogLink className="text-left" />
                         </div>
                     </div>
                     <div>

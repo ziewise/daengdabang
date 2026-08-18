@@ -17,6 +17,7 @@ import { BUSINESS_INFO, COPYRIGHT_NOTICE } from "@/lib/legal";
 import { PUBLIC_SOCIAL_CHANNELS, type SocialChannel } from "@/lib/social-channels";
 import CloudflareSafeEmail from "./CloudflareSafeEmail";
 import NewsletterForm from "./NewsletterForm";
+import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
 
 const SOCIAL_TONES: Record<string, string> = {
     naver: "from-green-500 to-emerald-600",
@@ -129,19 +130,20 @@ export default function Footer() {
                 {/* 4. 법적 링크 + 카피라이트 */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 pt-3 border-t border-neutral-200/70">
                     <div className="flex flex-wrap gap-x-4 gap-y-1">
-                        {FOOTER_LEGAL_LINKS.map((l) => (
-                            <Link
-                                key={l.label}
-                                href={l.href}
-                                className={`text-[11px] ${
-                                    l.label === "개인정보처리방침"
-                                        ? "font-bold text-foreground"
-                                        : "text-neutral-500 hover:text-aurora-indigo"
-                                }`}
-                            >
-                                <LocalizedMenuLabel label={l.label} />
-                            </Link>
-                        ))}
+                        {FOOTER_LEGAL_LINKS.map((l) => {
+                            const className = `text-[11px] ${
+                                l.label === "개인정보처리방침"
+                                    ? "font-bold text-foreground"
+                                    : "text-neutral-500 hover:text-aurora-indigo"
+                            }`;
+                            return l.label === "환불·반품 정책" ? (
+                                <ReturnPolicyDialogLink key={l.label} className={className} />
+                            ) : (
+                                <Link key={l.label} href={l.href} className={className}>
+                                    <LocalizedMenuLabel label={l.label} />
+                                </Link>
+                            );
+                        })}
                     </div>
                     <p className="text-[10px] text-neutral-400">
                         {COPYRIGHT_NOTICE}

@@ -9,14 +9,40 @@ async function source(path) {
 }
 
 test("product and legal pages disclose the maximum delivery period", async () => {
-    const [i18n, legal] = await Promise.all([
+    const [i18n, legal, policy, policyData, returnPage, footer, dialog, productInfo, checkout, api] = await Promise.all([
         source("lib/i18n.tsx"),
         source("app/legal/page.tsx"),
+        source("components/policy/DeliveryReturnPolicyDetails.tsx"),
+        source("lib/commerce-policy.ts"),
+        source("app/return/page.tsx"),
+        source("components/footer/Footer.tsx"),
+        source("components/policy/ReturnPolicyDialogLink.tsx"),
+        source("components/products/detail/ProductInfo.tsx"),
+        source("app/checkout/page.tsx"),
+        source("lib/customer-api.ts"),
     ]);
 
     assert.match(i18n, /1~2영업일 내 출고 · 결제 후 최대 7일 내 배송/);
     assert.match(i18n, /delivered within 7 days of payment/);
     assert.match(legal, /결제일로부터 최대 7일 이내 배송 완료/);
+    assert.match(policy, /이상 무료배송/);
+    assert.match(policy, /제주도/);
+    assert.match(policy, /그 외 도서지역/);
+    assert.match(policy, /편도/);
+    assert.match(policy, /최초 배송비 무료인 경우/);
+    assert.match(policy, /교환배송비/);
+    assert.match(policy, /반품\/교환 불가능 사유/);
+    assert.match(policyData, /freeThresholdKrw: 30_000/);
+    assert.match(policyData, /한진택배 또는 CJ대한통운/);
+    assert.match(policyData, /충청남도 천안시 서북구 한들2로 150/);
+    assert.match(returnPage, /DeliveryReturnPolicyDetails/);
+    assert.match(footer, /ReturnPolicyDialogLink/);
+    assert.match(dialog, /aria-modal="true"/);
+    assert.match(dialog, /전체 정책 보기/);
+    assert.match(dialog, /교환·반품 접수/);
+    assert.match(productInfo, /ReturnPolicyDialogLink/);
+    assert.match(checkout, /deliveryDraft\.deliveryZone/);
+    assert.match(api, /delivery_zone: input\.deliveryZone/);
 });
 
 test("card checkout explains that sensitive card data stays in the Toss window", async () => {

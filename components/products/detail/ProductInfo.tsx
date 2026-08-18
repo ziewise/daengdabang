@@ -30,6 +30,7 @@ import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
 import PurchaseEvidenceCard from "./PurchaseEvidenceCard";
+import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
 
 interface Props {
     product: CatalogProduct;
@@ -222,11 +223,34 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                             </span>
                         </span>
                     </li>
-                    <li className="flex items-center gap-2">
+                    <li className="flex items-start gap-2">
                         <i className="fa-solid fa-truck text-indigo-600" />
-                        <span>{t("shipping")}</span>
-                        <b className="text-neutral-950">{t("freeShipping")}</b>
-                        <span className="text-neutral-500">{t("shipsIn")}</span>
+                        <div className="min-w-0">
+                            <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <span>{t("shipping")}</span>
+                                <b className="text-neutral-950">
+                                    {locale === "en" ? "KRW 3,000 (free from KRW 30,000)" : "3,000원 (30,000원 이상 무료)"}
+                                </b>
+                            </p>
+                            <p className="mt-1 break-keep text-xs font-bold leading-5 text-neutral-500">
+                                {locale === "en"
+                                    ? "Jeju +3,000 · other islands +5,000 · ships in 1-2 business days · arrives within 7 days"
+                                    : "제주 +3,000원 · 그 외 도서 +5,000원 · 1~2영업일 내 출고 · 결제 후 최대 7일 내 도착"}
+                            </p>
+                            <p className="break-keep text-xs font-bold leading-5 text-neutral-500">
+                                {locale === "en" ? "Hanjin Express or CJ Logistics" : "한진택배 또는 CJ대한통운"}
+                                {locale === "en" ? (
+                                    <a href="#delivery-return-policy" className="ml-2 font-black text-indigo-700 underline underline-offset-2">
+                                        Delivery &amp; returns
+                                    </a>
+                                ) : (
+                                    <ReturnPolicyDialogLink
+                                        label="배송·반품 안내"
+                                        className="ml-2 font-black text-indigo-700 underline underline-offset-2"
+                                    />
+                                )}
+                            </p>
+                        </div>
                     </li>
                 </ul>
 

@@ -1,4 +1,4 @@
-export const LEGAL_UPDATED_AT = "2026-06-24";
+export const LEGAL_UPDATED_AT = "2026-08-18";
 
 export const FTC_BUSINESS_INFO_URL =
     "https://www.ftc.go.kr/www/selectBizCommView.do?pageUnit=10&pageIndex=1&searchCnd=BRNO&searchKrwd=8738103438&key=254&opnSn=2026378039430200950";

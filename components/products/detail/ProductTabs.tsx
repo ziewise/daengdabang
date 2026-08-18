@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { openChatWidget } from "@/lib/chat-widget-events";
+import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
 
 type SectionKey = "detail" | "review" | "qna";
 
@@ -58,6 +59,7 @@ export default function ProductTabs({ product: p }: Props) {
             <section id="tab-detail" className="scroll-mt-32 pt-10">
                 <SectionTitle title={t("detailInfo")} />
                 <DetailContent product={p} />
+                <ProductDeliveryReturnPolicy />
             </section>
 
             <section id="tab-review" className="scroll-mt-32 pt-14">

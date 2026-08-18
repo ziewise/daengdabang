@@ -8,6 +8,7 @@ import {
     type CheckoutDeliveryRequestCode,
     type CheckoutLocale,
 } from "@/lib/checkout-shipping";
+import { CHECKOUT_DELIVERY_ZONES, type CheckoutDeliveryZone } from "@/lib/shipping-policy";
 
 export type ShippingDetailsSectionProps = {
     value: CheckoutDeliveryDraft;
@@ -38,6 +39,11 @@ const COPY = {
         postalCodePlaceholder: "12345",
         addressLine1Placeholder: "도로명 또는 지번 주소",
         addressLine2Placeholder: "동·호수 등 상세 주소",
+        deliveryZone: "배송 지역",
+        deliveryZoneDescription: "지역 추가 배송비 계산을 위해 정확하게 선택해 주세요.",
+        mainland: "일반 지역 · 추가비 없음",
+        jeju: "제주도 · 3,000원 추가",
+        island: "그 외 도서지역 · 5,000원 추가",
         addressSearch: "주소 검색",
         addressSearching: "검색 중…",
         requestTitle: "배송 요청사항",
@@ -62,6 +68,11 @@ const COPY = {
         postalCodePlaceholder: "12345",
         addressLine1Placeholder: "Street address",
         addressLine2Placeholder: "Building, unit, etc.",
+        deliveryZone: "Delivery region",
+        deliveryZoneDescription: "Select the correct region so the surcharge can be calculated.",
+        mainland: "Mainland · no surcharge",
+        jeju: "Jeju · KRW 3,000 surcharge",
+        island: "Other islands · KRW 5,000 surcharge",
         addressSearch: "Find address",
         addressSearching: "Searching…",
         requestTitle: "Delivery request",
@@ -271,6 +282,31 @@ export default function ShippingDetailsSection({
                             placeholder={copy.addressLine2Placeholder}
                         />
                         <FieldError id={errorId("addressLine2")} message={errors.addressLine2} />
+                    </div>
+
+                    <div>
+                        <label htmlFor={fieldId("deliveryZone")} className="mb-1.5 block text-xs font-black text-neutral-600">
+                            {copy.deliveryZone}
+                        </label>
+                        <p className="mb-2 text-[11px] font-bold leading-5 text-neutral-500">
+                            {copy.deliveryZoneDescription}
+                        </p>
+                        <select
+                            id={fieldId("deliveryZone")}
+                            name="shipping-delivery-zone"
+                            required
+                            value={value.deliveryZone}
+                            onChange={(event) => update("deliveryZone", event.currentTarget.value as CheckoutDeliveryZone)}
+                            onBlur={() => onBlur?.("deliveryZone")}
+                            aria-invalid={Boolean(errors.deliveryZone)}
+                            aria-describedby={describedBy("deliveryZone")}
+                            className={fieldClass(Boolean(errors.deliveryZone))}
+                        >
+                            {CHECKOUT_DELIVERY_ZONES.map((zone) => (
+                                <option key={zone} value={zone}>{copy[zone]}</option>
+                            ))}
+                        </select>
+                        <FieldError id={errorId("deliveryZone")} message={errors.deliveryZone} />
                     </div>
                 </fieldset>
             </section>

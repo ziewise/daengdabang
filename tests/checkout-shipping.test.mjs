@@ -16,6 +16,11 @@ import {
     normalizeCheckoutPhone,
     validateCheckoutDelivery,
 } from "../lib/checkout-shipping.ts";
+import {
+    baseShippingFee,
+    checkoutShippingFee,
+    deliveryZoneSurcharge,
+} from "../lib/shipping-policy.ts";
 
 const root = new URL("../", import.meta.url);
 
@@ -26,6 +31,7 @@ function validDraft(overrides = {}) {
         postalCode: "06234",
         addressLine1: " 서울특별시  강남구 테헤란로 123 ",
         addressLine2: " 101동 202호 ",
+        deliveryZone: "mainland",
         requestCode: "front_door",
         requestNote: "",
         ...overrides,
@@ -55,6 +61,15 @@ test("delivery request codes stay aligned with the server allowlist", () => {
     ]);
 });
 
+test("shipping fee calculation applies the order threshold and regional surcharge", () => {
+    assert.equal(baseShippingFee(29_999), 3_000);
+    assert.equal(baseShippingFee(30_000), 0);
+    assert.equal(deliveryZoneSurcharge("jeju"), 3_000);
+    assert.equal(deliveryZoneSurcharge("island"), 5_000);
+    assert.equal(checkoutShippingFee(29_999, "island"), 8_000);
+    assert.equal(checkoutShippingFee(30_000, "mainland"), 0);
+});
+
 test("checkout delivery normalization removes formatting without retaining unused notes", () => {
     assert.equal(normalizeCheckoutPhone("010 1234-5678"), "01012345678");
     assert.equal(formatCheckoutPhone("01012345678"), "010-1234-5678");
@@ -64,6 +79,7 @@ test("checkout delivery normalization removes formatting without retaining unuse
         postalCode: "06234",
         addressLine1: "서울특별시 강남구 테헤란로 123",
         addressLine2: "101동 202호",
+        deliveryZone: "mainland",
         requestCode: "front_door",
     });
 
@@ -76,6 +92,7 @@ test("checkout delivery normalization removes formatting without retaining unuse
         postalCode: "06234",
         addressLine1: "서울특별시 강남구 테헤란로 123",
         addressLine2: "101동 202호",
+        deliveryZone: "mainland",
         requestCode: "other",
         requestNote: "벨은 누르지 말아 주세요.",
     });
@@ -93,6 +110,7 @@ test("client validation enforces every delivery boundary and reports the first f
         ["addressLine1", { addressLine1: "" }],
         ["addressLine1", { addressLine1: "서울시청" }],
         ["addressLine2", { addressLine2: "가".repeat(101) }],
+        ["deliveryZone", { deliveryZone: "overseas" }],
         ["requestNote", { requestCode: "other", requestNote: "" }],
         ["requestNote", { requestCode: "other", requestNote: "가".repeat(101) }],
     ];
@@ -119,11 +137,13 @@ test("server response guards accept normalized snapshots and reject malformed PI
         phone: delivery.phone,
         postalCode: delivery.postalCode,
         addressLine1: delivery.addressLine1,
+        deliveryZone: delivery.deliveryZone,
         requestCode: delivery.requestCode,
     });
     assert.equal(isCheckoutDeliveryResponse({ ...delivery, phone: "not-a-phone" }), false);
     assert.equal(isCheckoutDeliveryResponse({ ...delivery, postalCode: "1234" }), false);
     assert.equal(isCheckoutDeliveryResponse({ ...delivery, requestCode: "unknown" }), false);
+    assert.equal(isCheckoutDeliveryResponse({ ...delivery, deliveryZone: "overseas" }), false);
 
     assert.equal(isCheckoutDeliveryQuote(quote), true);
     assert.equal(isCheckoutDeliveryQuote(validQuote({ estimatedStartDate: "2026-02-30" })), false);
@@ -183,6 +203,8 @@ test("shipping form exposes autocomplete, field errors, and the access-code warn
     }
     assert.match(component, /공동현관·출입문 비밀번호 등 민감정보는 입력하지 마세요/);
     assert.match(component, /실제 배송은 진행되지 않습니다/);
+    assert.match(component, /배송 지역/);
+    assert.match(component, /제주도 · 3,000원 추가/);
     assert.match(component, /maxLength=\{40\}/);
     assert.match(component, /maxLength=\{100\}/);
 });

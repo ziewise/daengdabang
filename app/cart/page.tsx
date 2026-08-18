@@ -4,7 +4,7 @@
  * CartPage — 장바구니 (선택 결제 지원)
  * ---------------------------------------------------------------------
  * - 라인별 체크박스 + 전체선택/선택삭제 바: 체크된 상품만 결제로 넘어간다.
- * - 각 상품에 도착 예정일(무료배송 1~2일 출고 기준) 표시.
+ * - 각 상품에 도착 예정일(1~2영업일 출고 기준) 표시.
  * - 수량 1일 때 마이너스 비활성(0으로 못 내림 — 삭제는 삭제 버튼으로만).
  * - 합계/결제 버튼은 "선택된" 상품 기준. 미선택 상품은 카드가 흐려진다.
  * - 결제하기: 로그인 회원은 바로, 비로그인은 로그인 화면(비회원 주문서 미리보기 가능)으로.
@@ -22,6 +22,7 @@ import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLines } from "@/lib/daenglab-rewards";
 import { checkoutHref, type QuickPaymentMethod } from "@/lib/payment-methods";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
+import { baseShippingFee } from "@/lib/shipping-policy";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
 function CheckBtn({ checked, onToggle, label }: { checked: boolean; onToggle: () => void; label: string }) {
@@ -56,6 +57,7 @@ export default function CartPage() {
     // 선택된 라인만 합계·결제 대상
     const selectedLines = lines.filter((l) => l.selected);
     const selectedTotal = selectedLines.reduce((sum, l) => sum + l.subtotal, 0);
+    const estimatedBaseShippingFee = baseShippingFee(selectedTotal);
     const expectedDaengLabCoins = daengLabCoinsForLines(selectedLines);
     const allSelected = lines.length > 0 && selectedLines.length === lines.length;
     const arrival = arrivalDateText(locale);
@@ -157,7 +159,7 @@ export default function CartPage() {
                                             {t("option")}: {[color, size].filter(Boolean).join(", ")}
                                         </p>
                                     )}
-                                    {/* 도착 예정일 — 무료배송 1~2일 출고 기준 */}
+                                    {/* 도착 예정일 — 1~2영업일 출고 기준 */}
                                     <p className="mt-1.5 text-xs font-black text-emerald-600">
                                         <i className="fa-solid fa-truck-fast mr-1 text-[10px]" />
                                         {arrival}
@@ -246,9 +248,16 @@ export default function CartPage() {
                         <b className="text-neutral-950">{formatPrice(selectedTotal)}</b>
                     </div>
                     <div className="mt-2 flex items-center justify-between text-sm font-bold text-neutral-600">
-                        <span>{t("shippingFee")}</span>
-                        <b className="text-neutral-950">{formatPrice(0)}</b>
+                        <span>{locale === "en" ? "Base shipping" : "기본 배송비"}</span>
+                        <b className="text-neutral-950">
+                            {estimatedBaseShippingFee ? formatPrice(estimatedBaseShippingFee) : (locale === "en" ? "Free" : "무료")}
+                        </b>
                     </div>
+                    <p className="mt-1 text-right text-[10px] font-bold leading-4 text-neutral-500">
+                        {locale === "en"
+                            ? "KRW 3,000 under KRW 30,000 · Jeju +3,000 · other islands +5,000"
+                            : "3만원 미만 3,000원 · 제주 +3,000원 · 기타 도서 +5,000원"}
+                    </p>
                     {selectedLines.length > 0 && (
                         <div
                             className="mt-4 rounded-xl border border-indigo-100 bg-indigo-50/80 px-3.5 py-3"
@@ -271,7 +280,7 @@ export default function CartPage() {
                     )}
                     <div className="mt-4 border-t border-neutral-200 pt-4 flex items-center justify-between">
                         <span className="font-black">{t("paymentDue")}</span>
-                        <b className="text-2xl font-black text-indigo-700">{formatPrice(selectedTotal)}</b>
+                        <b className="text-2xl font-black text-indigo-700">{formatPrice(selectedTotal + estimatedBaseShippingFee)}</b>
                     </div>
                     <button
                         type="button"
