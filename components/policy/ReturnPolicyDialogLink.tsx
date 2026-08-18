@@ -91,7 +91,7 @@ export default function ReturnPolicyDialogLink({
                                     </Link>
                                 </div>
                                 <p className="mt-3 text-xs font-bold leading-5 text-rose-600">
-                                    판매자 정보는 자동 도용 방지 목적으로 인증 절차 이후 확인 가능합니다.
+                                    반품 상품을 보내기 전에 1:1 문의로 반품사유·택배사·배송비·반품지를 먼저 협의해 주세요.
                                 </p>
                                 <Link
                                     href="/inquiry?category=exchange#inquiry-form"
