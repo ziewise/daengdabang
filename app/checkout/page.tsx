@@ -8,6 +8,7 @@ import { cartProducts } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import {
+    cancelTossTestOrder,
     createTossTestOrder,
     DdbApiError,
     getCustomerToken,
@@ -67,7 +68,19 @@ const PAYMENT_BUTTON_COPY: Record<CheckoutPaymentMethod, { ko: string; en: strin
 };
 
 function safePaymentError(error: unknown, locale: "ko" | "en") {
-    if (error instanceof DdbApiError) return error.message;
+    if (error instanceof DdbApiError) {
+        if (error.apiCode === "OPEN_ORDER_LIMIT") {
+            return locale === "en"
+                ? "Earlier payment windows are still being closed. Please wait a moment and try again."
+                : "이전에 열었던 결제창의 주문을 정리하고 있습니다. 잠시 후 다시 시도해 주세요.";
+        }
+        if (error.apiCode === "ORDER_CREATE_RATE_LIMIT") {
+            return locale === "en"
+                ? "Several payment windows were opened in a short time. Please try again in one minute."
+                : "짧은 시간에 결제창을 여러 번 열어 잠시 보호 중입니다. 1분 뒤 다시 시도해 주세요.";
+        }
+        return error.message;
+    }
     const code = typeof error === "object" && error && "code" in error
         ? String((error as { code?: unknown }).code || "")
         : "";
@@ -290,6 +303,12 @@ export default function CheckoutPage() {
             }
         } catch (error) {
             if (pendingOrderId) {
+                try {
+                    await cancelTossTestOrder(pendingOrderId, accessToken);
+                } catch {
+                    // A submitted/confirmed order must never be forced back to cancelled.
+                    // The API accepts this cleanup only while no provider payment key exists.
+                }
                 clearPendingTossTestPayment(pendingOrderId);
             }
             setPaymentError(safePaymentError(error, locale));

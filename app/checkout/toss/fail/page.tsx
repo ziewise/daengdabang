@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { cancelTossTestOrder, getCustomerToken } from "@/lib/customer-api";
 import {
     clearPendingTossTestPayment,
     isTossOrderId,
@@ -19,7 +20,12 @@ export default function TossTestFailPage() {
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         const orderId = query.get("orderId") || "";
-        if (isTossOrderId(orderId)) clearPendingTossTestPayment(orderId);
+        if (isTossOrderId(orderId)) {
+            clearPendingTossTestPayment(orderId);
+            void cancelTossTestOrder(orderId, getCustomerToken()).catch(() => {
+                // Provider-submitted or already-finalized orders are intentionally not cancellable.
+            });
+        }
         // eslint-disable-next-line react-hooks/set-state-in-effect -- redirect query parameters exist only after client hydration.
         setDetail({
             code: (query.get("code") || "PAYMENT_FAILED").slice(0, 80),

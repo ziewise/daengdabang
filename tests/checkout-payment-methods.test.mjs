@@ -102,6 +102,7 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(packageJson, /"@tosspayments\/tosspayments-sdk": "\^2\.7\.1"/);
     assert.match(checkout, /loadTossPayments\(order\.clientKey\)/);
     assert.match(checkout, /createTossTestOrder/);
+    assert.match(checkout, /await cancelTossTestOrder\(pendingOrderId, accessToken\)/);
     assert.match(checkout, /order\.mode !== "test"/);
     assert.match(checkout, /!order\.clientKey\.startsWith\("test_ck_"\)/);
     assert.match(checkout, /order\.amount !== total/);
@@ -131,6 +132,7 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(checkout, /실제 출금·배송·구매 분석·코인 및 적립금 지급은 발생하지 않습니다/);
 
     assert.match(api, /\/api\/v1\/payments\/toss\/orders/);
+    assert.match(api, /\/api\/v1\/payments\/toss\/orders\/\$\{encodeURIComponent\(orderId\)\}\/cancel/);
     assert.match(api, /\/api\/v1\/payments\/toss\/confirm/);
     assert.match(api, /providerMethod\?: string \| null/);
     assert.match(api, /paymentKey: string/);
@@ -159,6 +161,7 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(success, /status: "test_paid"/);
     assert.doesNotMatch(success, /trackTwinOrderAttribution|creditPurchase|daenglab\/wallet/);
     assert.doesNotMatch(failure, /removePaidLines|clearCart|addOrder/);
+    assert.match(failure, /cancelTossTestOrder\(orderId, getCustomerToken\(\)\)/);
     assert.match(failure, /장바구니 상품은 그대로 유지됩니다/);
     assert.match(store, /REMOVE_PAID_LINES/);
     assert.match(store, /removePaidLineQuantities\(state\.cart, action\.lines\)/);

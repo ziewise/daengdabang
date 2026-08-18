@@ -686,6 +686,19 @@ export async function createTossTestOrder(payload: {
     return order;
 }
 
+export async function cancelTossTestOrder(orderId: string, token?: string) {
+    const cancellation = await apiJson<{ orderId: string; status: string }>(
+        `/api/v1/payments/toss/orders/${encodeURIComponent(orderId)}/cancel`,
+        { method: "POST", body: JSON.stringify({}) },
+        token,
+        { requireBase: true },
+    );
+    if (!cancellation || cancellation.orderId !== orderId || cancellation.status !== "cancelled") {
+        throw new DdbApiError("테스트 주문 취소 상태를 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return cancellation;
+}
+
 export async function loadTossTestDeliveryQuote(input: {
     subtotal: number;
     deliveryZone: "mainland" | "jeju" | "island";
