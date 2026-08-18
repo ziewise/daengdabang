@@ -7,7 +7,7 @@
  * - 각 상품에 도착 예정일(무료배송 1~2일 출고 기준) 표시.
  * - 수량 1일 때 마이너스 비활성(0으로 못 내림 — 삭제는 삭제 버튼으로만).
  * - 합계/결제 버튼은 "선택된" 상품 기준. 미선택 상품은 카드가 흐려진다.
- * - 결제하기: 로그인 회원은 바로, 비로그인은 로그인 화면(비회원 주문 선택 가능)으로.
+ * - 결제하기: 로그인 회원은 바로, 비로그인은 로그인 화면(비회원 주문서 미리보기 가능)으로.
  */
 
 import Image from "next/image";
@@ -61,7 +61,7 @@ export default function CartPage() {
     const arrival = arrivalDateText(locale);
     const countText = (count: number) => locale === "en" ? `${count} ${t("countSuffix")}` : `${count}${t("countSuffix")}`;
 
-    // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원 주문도 선택 가능)으로
+    // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원은 주문서 미리보기 가능)으로
     const goCheckout = (preferredPayment: "card" | QuickPaymentMethod = "card") => {
         if (selectedLines.length === 0) return;
         const nextCheckoutHref = checkoutHref(preferredPayment);

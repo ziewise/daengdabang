@@ -20,10 +20,12 @@ test("product and legal pages disclose the maximum delivery period", async () =>
 });
 
 test("card checkout explains that sensitive card data stays in the Toss window", async () => {
-    const [checkout, login, optionSheet] = await Promise.all([
+    const [checkout, login, optionSheet, privacy, faq] = await Promise.all([
         source("app/checkout/page.tsx"),
         source("app/auth/login/page.tsx"),
         source("components/products/detail/OptionSheet.tsx"),
+        source("app/privacy/page.tsx"),
+        source("app/faq/FaqClient.tsx"),
     ]);
 
     assert.match(checkout, /신용·체크카드/);
@@ -33,4 +35,8 @@ test("card checkout explains that sensitive card data stays in the Toss window",
     assert.match(login, /비회원 주문서 미리보기/);
     assert.match(login, /심사용 테스트 계정으로 로그인해야 열 수 있습니다/);
     assert.match(optionSheet, /신용·체크카드로 구매하기/);
+    assert.match(privacy, /카드번호·유효기간·CVC는 PG사 보안창에서 처리/);
+    assert.match(privacy, /댕다방이 직접 수집하거나 저장하지 않음/);
+    assert.doesNotMatch(faq, /비회원도 주문 가능/);
+    assert.match(faq, /결제일로부터 최대 7일 이내 배송 완료/);
 });
