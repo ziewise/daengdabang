@@ -1,6 +1,7 @@
 export const CHECKOUT_PAYMENT_METHODS = [
     "card",
     "transfer",
+    "virtual_account",
     "toss_pay",
     "phone",
     "naver_pay",
@@ -8,7 +9,7 @@ export const CHECKOUT_PAYMENT_METHODS = [
 ] as const;
 
 export type CheckoutPaymentMethod = (typeof CHECKOUT_PAYMENT_METHODS)[number];
-export type QuickPaymentMethod = Exclude<CheckoutPaymentMethod, "card" | "transfer">;
+export type QuickPaymentMethod = Exclude<CheckoutPaymentMethod, "card" | "transfer" | "virtual_account">;
 export type TossSdkPaymentMethod = "CARD" | "TRANSFER" | "MOBILE_PHONE";
 export type TossEasyPayCode = "TOSSPAY" | "NAVERPAY";
 export type TossCardOptions =
@@ -20,7 +21,7 @@ export function isCheckoutPaymentMethod(value: string | null): value is Checkout
 }
 
 export function isCheckoutPaymentMethodEnabled(method: CheckoutPaymentMethod) {
-    return method !== "kakao_pay";
+    return method !== "virtual_account" && method !== "kakao_pay";
 }
 
 export function checkoutPaymentMethodFromQuery(value: string | null): CheckoutPaymentMethod {
@@ -34,7 +35,7 @@ export function checkoutHref(method: CheckoutPaymentMethod = "card") {
 
 export function tossSdkPaymentMethod(method: CheckoutPaymentMethod): TossSdkPaymentMethod {
     if (!isCheckoutPaymentMethodEnabled(method)) {
-        throw new Error("Kakao Pay is unavailable until merchant review is complete.");
+        throw new Error("This payment method is unavailable until merchant review and settlement setup are complete.");
     }
     if (method === "transfer") return "TRANSFER";
     if (method === "phone") return "MOBILE_PHONE";
@@ -43,7 +44,7 @@ export function tossSdkPaymentMethod(method: CheckoutPaymentMethod): TossSdkPaym
 
 export function tossCardOptions(method: CheckoutPaymentMethod): TossCardOptions {
     if (!isCheckoutPaymentMethodEnabled(method)) {
-        throw new Error("Kakao Pay is unavailable until merchant review is complete.");
+        throw new Error("This payment method is unavailable until merchant review and settlement setup are complete.");
     }
     if (method === "toss_pay") return { flowMode: "DIRECT", easyPay: "TOSSPAY" };
     if (method === "naver_pay") return { flowMode: "DIRECT", easyPay: "NAVERPAY" };

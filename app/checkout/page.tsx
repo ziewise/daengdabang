@@ -47,12 +47,23 @@ const PAYMENT_OPTION_COPY: Record<CheckoutPaymentMethod, {
     detailEn: string;
     icon: string;
 }> = {
-    card: { ko: "일반결제", en: "Standard", detailKo: "신용·체크카드·간편결제 통합창", detailEn: "Card and easy-pay window", icon: "fa-credit-card" },
+    card: { ko: "신용·체크카드", en: "Credit / debit card", detailKo: "토스 보안창에서 카드정보 입력", detailEn: "Enter card details in the secure Toss window", icon: "fa-credit-card" },
     transfer: { ko: "계좌이체", en: "Bank transfer", detailKo: "퀵계좌이체 테스트", detailEn: "Test bank transfer", icon: "fa-building-columns" },
+    virtual_account: { ko: "가상계좌", en: "Virtual account", detailKo: "입금통지 연동 후 활성화", detailEn: "Available after deposit webhook setup", icon: "fa-receipt" },
     toss_pay: { ko: "토스페이", en: "Toss Pay", detailKo: "토스페이 직접 테스트창", detailEn: "Direct Toss Pay test window", icon: "fa-bolt" },
     phone: { ko: "휴대폰 결제", en: "Mobile", detailKo: "휴대폰 결제 테스트창", detailEn: "Test carrier billing", icon: "fa-mobile-screen-button" },
     naver_pay: { ko: "네이버페이", en: "Naver Pay", detailKo: "네이버페이 직접 테스트창", detailEn: "Direct Naver Pay test window", icon: "fa-n" },
     kakao_pay: { ko: "카카오페이", en: "Kakao Pay", detailKo: "심사 후 활성화", detailEn: "Available after review", icon: "fa-comment" },
+};
+
+const PAYMENT_BUTTON_COPY: Record<CheckoutPaymentMethod, { ko: string; en: string }> = {
+    card: { ko: "카드 테스트 결제창 열기", en: "Open card test payment" },
+    transfer: { ko: "계좌이체 테스트창 열기", en: "Open bank transfer test" },
+    virtual_account: { ko: "가상계좌 준비 중", en: "Virtual account setup in progress" },
+    toss_pay: { ko: "토스페이 테스트창 열기", en: "Open Toss Pay test" },
+    phone: { ko: "휴대폰 결제 테스트창 열기", en: "Open mobile payment test" },
+    naver_pay: { ko: "네이버페이 테스트창 열기", en: "Open Naver Pay test" },
+    kakao_pay: { ko: "카카오페이 심사 중", en: "Kakao Pay under review" },
 };
 
 function safePaymentError(error: unknown, locale: "ko" | "en") {
@@ -165,8 +176,8 @@ export default function CheckoutPage() {
             setPaymentMethod("card");
             setDirectTermsAccepted(false);
             setPaymentError(locale === "en"
-                ? "Kakao Pay becomes available after merchant review. Standard card payment was selected instead."
-                : "카카오페이는 가맹점 심사 후 활성화됩니다. 일반결제로 다시 선택했습니다.");
+                ? "That payment method is not ready yet. Credit/debit card payment was selected instead."
+                : "해당 결제수단은 아직 준비 중입니다. 신용·체크카드로 다시 선택했습니다.");
             return;
         }
         if (!user || !accessToken) {
@@ -401,6 +412,19 @@ export default function CheckoutPage() {
                                 );
                             })}
                         </div>
+                        {paymentMethod === "card" && (
+                            <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
+                                <p className="font-black">
+                                    <i className="fa-solid fa-shield-halved mr-1.5" aria-hidden="true" />
+                                    {locale === "en" ? "Card details are entered in the Toss Payments secure window." : "카드정보는 토스페이먼츠 보안 결제창에서 입력합니다."}
+                                </p>
+                                <p className="mt-1 text-sky-800">
+                                    {locale === "en"
+                                        ? "After entering delivery details, select the card payment button below. Daengdabang does not directly collect or store card numbers, expiry dates, or CVCs."
+                                        : "배송정보 입력 후 아래 카드 결제 버튼을 누르면 카드번호·유효기간·CVC 입력창이 열립니다. 댕다방은 카드정보를 직접 수집하거나 저장하지 않습니다."}
+                                </p>
+                            </div>
+                        )}
                         {directEasyPay && (
                             <label className="mt-3 flex items-start gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-3">
                                 <input
@@ -471,8 +495,8 @@ export default function CheckoutPage() {
                         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" role="alert">
                             <p className="text-xs font-bold leading-5 text-amber-900">
                                 {locale === "en"
-                                    ? "A signed-in API session is required for test payment."
-                                    : "테스트 결제를 시작하려면 로그인된 API 세션이 필요합니다."}
+                                    ? "Sign in with the review test account to open the Toss Payments test window. Guest users can preview the order form only."
+                                    : "토스페이먼츠 테스트 결제창은 심사용 테스트 계정으로 로그인해야 열립니다. 비회원은 주문서 화면만 미리 볼 수 있습니다."}
                             </p>
                             <Link href={loginHref} className="mt-2 inline-flex text-xs font-black text-indigo-700 underline">
                                 {locale === "en" ? "Sign in" : "로그인하기"}
@@ -492,7 +516,7 @@ export default function CheckoutPage() {
                     >
                         {submitting
                             ? (locale === "en" ? "Opening test payment…" : "테스트 결제창 여는 중…")
-                            : (locale === "en" ? "Open test payment" : "테스트 결제창 열기")}
+                            : (locale === "en" ? PAYMENT_BUTTON_COPY[paymentMethod].en : PAYMENT_BUTTON_COPY[paymentMethod].ko)}
                     </button>
                     <p className="mt-2 text-center text-[10px] font-bold leading-4 text-neutral-500">
                         {locale === "en"

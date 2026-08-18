@@ -11,13 +11,13 @@ async function source(path) {
 test("checkout uses one allowlisted payment-method contract", async () => {
     const paymentMethods = await source("lib/payment-methods.ts");
 
-    for (const method of ["card", "transfer", "toss_pay", "phone", "naver_pay", "kakao_pay"]) {
+    for (const method of ["card", "transfer", "virtual_account", "toss_pay", "phone", "naver_pay", "kakao_pay"]) {
         assert.match(paymentMethods, new RegExp(`"${method}"`));
     }
     assert.match(paymentMethods, /isCheckoutPaymentMethod/);
     assert.match(paymentMethods, /CHECKOUT_PAYMENT_METHODS\.includes/);
     assert.match(paymentMethods, /isCheckoutPaymentMethodEnabled/);
-    assert.match(paymentMethods, /method !== "kakao_pay"/);
+    assert.match(paymentMethods, /method !== "virtual_account" && method !== "kakao_pay"/);
     assert.match(paymentMethods, /checkoutPaymentMethodFromQuery/);
     assert.match(paymentMethods, /isCheckoutPaymentMethod\(value\) && isCheckoutPaymentMethodEnabled\(value\) \? value : "card"/);
     assert.match(paymentMethods, /const availableMethod = isCheckoutPaymentMethodEnabled\(method\) \? method : "card"/);
@@ -25,7 +25,7 @@ test("checkout uses one allowlisted payment-method contract", async () => {
     assert.match(paymentMethods, /method === "toss_pay"\) return \{ flowMode: "DIRECT", easyPay: "TOSSPAY" \}/);
     assert.match(paymentMethods, /method === "naver_pay"\) return \{ flowMode: "DIRECT", easyPay: "NAVERPAY" \}/);
     assert.doesNotMatch(paymentMethods, /KAKAOPAY/);
-    assert.match(paymentMethods, /Kakao Pay is unavailable until merchant review is complete/);
+    assert.match(paymentMethods, /unavailable until merchant review and settlement setup are complete/);
     assert.match(paymentMethods, /return \{ flowMode: "DEFAULT" \}/);
 });
 
@@ -47,7 +47,7 @@ test("product and cart purchase actions preserve the selected method through log
     assert.match(simplePay, /<button\s+type="button"\s+disabled\s+aria-disabled="true"/);
     assert.match(optionSheet, /checkoutHref\(preferredPayment\)/);
     assert.match(optionSheet, /encodeURIComponent\(nextCheckoutHref\)/);
-    assert.match(optionSheet, /일반결제로 구매하기/);
+    assert.match(optionSheet, /Pay by credit \/ debit card/);
     assert.match(optionSheet, /<SimplePayButtons disabled=\{!canConfirm\} onSelect=\{confirm\}/);
     assert.match(cart, /checkoutHref\(preferredPayment\)/);
     assert.match(cart, /encodeURIComponent\(nextCheckoutHref\)/);
@@ -89,8 +89,12 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(checkout, /data-payment-method=\{method\}/);
     assert.match(checkout, /data-payment-availability=\{enabled \? "enabled" : "review_required"\}/);
     assert.match(checkout, /disabled=\{!enabled\}/);
+    assert.match(checkout, /virtual_account: \{ ko: "가상계좌"/);
+    assert.match(checkout, /카드정보는 토스페이먼츠 보안 결제창에서 입력합니다/);
+    assert.match(checkout, /카드번호·유효기간·CVC 입력창이 열립니다/);
+    assert.match(checkout, /PAYMENT_BUTTON_COPY\[paymentMethod\]/);
     assert.match(checkout, /심사 후 활성화/);
-    assert.match(checkout, /일반결제/);
+    assert.match(checkout, /신용·체크카드/);
     assert.match(checkout, /토스페이/);
     assert.match(checkout, /휴대폰 결제/);
     assert.match(checkout, /네이버페이/);

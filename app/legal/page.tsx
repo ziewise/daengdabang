@@ -147,9 +147,10 @@ export default function LegalNoticePage() {
             <section id="delivery" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950">5. 배송 및 비용</h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    배송 방법, 배송비, 도서산간 추가비, 예상 배송기간은 상품 상세 또는 주문 단계에서 확인할 수 있도록
-                    표시합니다. 단순 변심으로 인한 교환·반품 배송비는 이용자가 부담하며, 표시·광고 또는 계약 내용과
-                    다르게 이행된 경우의 반품 비용은 댕다방이 부담합니다.
+                    상품은 통상 결제 확인 후 1~2영업일 이내 출고하며, 결제일로부터 최대 7일 이내 배송 완료를 원칙으로 합니다.
+                    배송 방법, 배송비와 도서산간 추가비는 상품 상세 또는 주문 단계에서 확인할 수 있도록 표시합니다.
+                    단순 변심으로 인한 교환·반품 배송비는 이용자가 부담하며, 표시·광고 또는 계약 내용과 다르게 이행된
+                    경우의 반품 비용은 댕다방이 부담합니다.
                 </p>
             </section>
 

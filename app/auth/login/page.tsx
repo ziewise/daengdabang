@@ -44,7 +44,7 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const apiReady = useDdbApiReady();
-    // 구매 흐름 등에서 ?redirect=/checkout 로 넘어오면 로그인/비회원 주문 후 그 경로로 보낸다(내부 경로만 허용 — 오픈 리다이렉트 방지)
+    // 구매 흐름 등에서 ?redirect=/checkout 로 넘어오면 로그인 또는 주문서 미리보기 후 그 경로로 보낸다.
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
     const checkoutRedirect = redirect && (
         redirect === "/checkout"
@@ -55,7 +55,7 @@ export default function LoginPage() {
         ? `/auth/signup?redirect=${encodeURIComponent(redirect)}`
         : "/auth/signup";
 
-    // 비회원 주문 — 회원가입/로그인 없이 바로 결제로(현재 checkout 은 게스트 주문 허용)
+    // 비회원은 주문서를 미리 볼 수 있지만 현재 테스트 PG창은 로그인된 심사용 계정에서만 연다.
     const guestCheckout = () => router.push(checkoutRedirect || "/checkout");
 
     const submit = async (event: FormEvent) => {
@@ -214,7 +214,7 @@ export default function LoginPage() {
                     </div>
                     <SocialAuthButtons mode="login" variant="compact" returnTo={redirect || "/mypage"} />
 
-                    {/* 비회원 주문 — 구매 흐름(?redirect=...)으로 넘어왔을 때만 노출.
+                    {/* 비회원 주문서 미리보기 — 구매 흐름(?redirect=...)으로 넘어왔을 때만 노출.
                         헤더 로그인 버튼으로 그냥 들어오면 redirect 가 없어 숨긴다. */}
                     {checkoutRedirect && (
                         <button
@@ -223,8 +223,13 @@ export default function LoginPage() {
                             className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-neutral-200 text-sm font-black text-neutral-600 transition hover:border-amber-300 hover:bg-amber-50/60 hover:text-amber-700"
                         >
                             <i className="fa-solid fa-bag-shopping text-xs" />
-                            비회원으로 주문하기
+                            비회원 주문서 미리보기
                         </button>
+                    )}
+                    {checkoutRedirect && (
+                        <p className="mt-2 text-center text-[11px] font-bold leading-5 text-neutral-400">
+                            테스트 결제창은 심사용 테스트 계정으로 로그인해야 열 수 있습니다.
+                        </p>
                     )}
 
                     {/* 회원가입 — 박스형 보조 CTA.

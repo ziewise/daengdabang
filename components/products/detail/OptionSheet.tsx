@@ -173,7 +173,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
         }
         onClose();
         onCommitted?.(mode);
-        // 비로그인 구매 시 로그인 화면으로(거기서 회원 로그인/비회원 주문 선택 → 결제로 이어짐)
+        // 비로그인 구매 시 로그인 화면으로 이동한다. 비회원은 주문서 미리보기까지만 가능하다.
         if (mode === "buy") {
             const nextCheckoutHref = checkoutHref(preferredPayment);
             router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
@@ -364,7 +364,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                         {!canConfirm
                             ? t("chooseOption")
                             : mode === "buy"
-                              ? (locale === "en" ? "Continue with standard payment" : "일반결제로 구매하기")
+                              ? (locale === "en" ? "Pay by credit / debit card" : "신용·체크카드로 구매하기")
                               : t("addToCart")}
                     </button>
 
