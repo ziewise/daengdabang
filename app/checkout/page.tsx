@@ -48,7 +48,7 @@ const PAYMENT_OPTION_COPY: Record<CheckoutPaymentMethod, {
     detailEn: string;
     icon: string;
 }> = {
-    card: { ko: "신용·체크카드", en: "Credit / debit card", detailKo: "토스 보안창에서 카드정보 입력", detailEn: "Enter card details in the secure Toss window", icon: "fa-credit-card" },
+    card: { ko: "신용·체크카드", en: "Credit / debit card", detailKo: "토스 보안창에서 카드사 선택·인증", detailEn: "Choose and authenticate your card issuer in Toss", icon: "fa-credit-card" },
     transfer: { ko: "계좌이체", en: "Bank transfer", detailKo: "퀵계좌이체 테스트", detailEn: "Test bank transfer", icon: "fa-building-columns" },
     virtual_account: { ko: "가상계좌", en: "Virtual account", detailKo: "입금통지 연동 후 활성화", detailEn: "Available after deposit webhook setup", icon: "fa-receipt" },
     toss_pay: { ko: "토스페이", en: "Toss Pay", detailKo: "토스페이 직접 테스트창", detailEn: "Direct Toss Pay test window", icon: "fa-bolt" },
@@ -445,8 +445,8 @@ export default function CheckoutPage() {
                                 </p>
                                 <p className="mt-1 text-sky-800">
                                     {locale === "en"
-                                        ? "After entering delivery details, select the card payment button below. Daengdabang does not directly collect or store card numbers, expiry dates, or CVCs."
-                                        : "배송정보 입력 후 아래 카드 결제 버튼을 누르면 카드번호·유효기간·CVC 입력창이 열립니다. 댕다방은 카드정보를 직접 수집하거나 저장하지 않습니다."}
+                                        ? "Choose a supported issuer, including KB Kookmin, in the Toss window. Depending on the issuer and device, an app-card or issuer authentication screen may open instead of direct card-number entry. Daengdabang does not directly collect or store card details."
+                                        : "토스 결제창에서 KB국민카드(국민)를 포함한 카드사를 선택해 인증합니다. 카드사와 기기에 따라 앱카드·ISP/안심클릭 등이 열리며 카드번호 직접 입력 화면이 항상 나오지는 않습니다. 댕다방은 카드정보를 직접 수집하거나 저장하지 않습니다."}
                                 </p>
                             </div>
                         )}

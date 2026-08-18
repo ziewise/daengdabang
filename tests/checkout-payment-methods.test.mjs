@@ -91,7 +91,8 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(checkout, /disabled=\{!enabled\}/);
     assert.match(checkout, /virtual_account: \{ ko: "가상계좌"/);
     assert.match(checkout, /카드정보는 토스페이먼츠 보안 결제창에서 입력합니다/);
-    assert.match(checkout, /카드번호·유효기간·CVC 입력창이 열립니다/);
+    assert.match(checkout, /KB국민카드\(국민\)를 포함한 카드사를 선택해 인증합니다/);
+    assert.match(checkout, /카드번호 직접 입력 화면이 항상 나오지는 않습니다/);
     assert.match(checkout, /PAYMENT_BUTTON_COPY\[paymentMethod\]/);
     assert.match(checkout, /심사 후 활성화/);
     assert.match(checkout, /신용·체크카드/);
