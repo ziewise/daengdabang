@@ -114,6 +114,8 @@ test("mobile app home links members to all requested services and preserves logi
     assert.match(aiCare, /loadPetObservationHistory/);
     assert.match(aiCare, /loadPetObservationEngineStatus/);
     assert.match(aiCare, /Promise\.allSettled/);
+    assert.match(aiCare, /current\.profileId === activePetId \? current\.weekly : \[\]/);
+    assert.match(aiCare, /current\.profileId === activePetId \? current\.observations : \[\]/);
     assert.match(aiCare, /data-app-ai-care-overview/);
     assert.match(aiCare, /사진과 생활 기록에서 확인된 관찰만/);
     assert.match(aiCare, /의료 진단을 대신하지 않습니다/);

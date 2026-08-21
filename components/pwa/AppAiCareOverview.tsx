@@ -88,9 +88,10 @@ export default function AppAiCareOverview() {
         const timer = window.setTimeout(() => {
             if (!active) return;
             setState((current) => ({
-                ...current,
                 profileId: activePetId,
                 loading: true,
+                weekly: current.profileId === activePetId ? current.weekly : [],
+                observations: current.profileId === activePetId ? current.observations : [],
                 engine: "checking",
                 failedSections: 0,
             }));
@@ -108,14 +109,18 @@ export default function AppAiCareOverview() {
                 if (!active) return;
                 const failedSections = [weeklyResult, observationResult, engineResult]
                     .filter((result) => result.status === "rejected").length;
-                setState({
+                setState((current) => ({
                     profileId: activePetId,
                     loading: false,
-                    weekly: weeklyResult.status === "fulfilled" ? weeklyResult.value : [],
-                    observations: observationResult.status === "fulfilled" ? observationResult.value : [],
+                    weekly: weeklyResult.status === "fulfilled"
+                        ? weeklyResult.value
+                        : current.profileId === activePetId ? current.weekly : [],
+                    observations: observationResult.status === "fulfilled"
+                        ? observationResult.value
+                        : current.profileId === activePetId ? current.observations : [],
                     engine: engineResult.status === "fulfilled" && engineResult.value.ready ? "ready" : "delayed",
                     failedSections,
-                });
+                }));
             });
         }, 0);
 
