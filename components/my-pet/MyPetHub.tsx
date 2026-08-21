@@ -40,6 +40,16 @@ export default function MyPetHub() {
     const previousWeekly = weeklyHistory[1];
 
     useEffect(() => {
+        const profileId = Number(new URLSearchParams(window.location.search).get("profile"));
+        const timer = window.setTimeout(() => {
+            if (Number.isInteger(profileId) && profileId > 0 && user?.pets.some((item) => item.apiProfileId === profileId)) {
+                setSelectedPetId(profileId);
+            }
+        }, 0);
+        return () => window.clearTimeout(timer);
+    }, [user?.pets]);
+
+    useEffect(() => {
         if (!petProfileId || !accessToken) return;
         let active = true;
         const timer = window.setTimeout(() => {

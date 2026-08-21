@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/lib/store";
+import AppAiCareOverview from "./AppAiCareOverview";
 import { usePwaInstall } from "./PwaInstallProvider";
 
 const PRIMARY_LINKS = [
@@ -109,6 +110,8 @@ export default function MobileAppHome() {
                         )}
                     </section>
                 )}
+
+                <AppAiCareOverview />
 
                 <section className="mt-6" aria-labelledby="app-main-services">
                     <div className="flex items-end justify-between gap-3 px-1">

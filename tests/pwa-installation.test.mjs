@@ -95,6 +95,8 @@ test("install UI handles native prompts, iOS instructions, and in-app browsers",
 
 test("mobile app home links members to all requested services and preserves login return", () => {
     const page = read("../components/pwa/MobileAppHome.tsx");
+    const aiCare = read("../components/pwa/AppAiCareOverview.tsx");
+    const myPet = read("../components/my-pet/MyPetHub.tsx");
     const route = read("../app/app/page.tsx");
     const sitemap = read("../app/sitemap.ts");
     const chrome = read("../components/site/ConditionalChrome.tsx");
@@ -107,6 +109,18 @@ test("mobile app home links members to all requested services and preserves logi
     assert.match(sitemap, /"\/app"/);
     assert.match(chrome, /APP_SHELL_PATHS = \["\/app"\]/);
     assert.match(chrome, /if \(appShell\)/);
+    assert.match(page, /<AppAiCareOverview \/>/);
+    assert.match(aiCare, /loadWeeklyPhotoAnalyses/);
+    assert.match(aiCare, /loadPetObservationHistory/);
+    assert.match(aiCare, /loadPetObservationEngineStatus/);
+    assert.match(aiCare, /Promise\.allSettled/);
+    assert.match(aiCare, /data-app-ai-care-overview/);
+    assert.match(aiCare, /사진과 생활 기록에서 확인된 관찰만/);
+    assert.match(aiCare, /의료 진단을 대신하지 않습니다/);
+    assert.match(aiCare, /다시 불러오기/);
+    assert.match(aiCare, /mode=observation#observation/);
+    assert.match(aiCare, /#health-report/);
+    assert.match(myPet, /URLSearchParams\(window\.location\.search\)\.get\("profile"\)/);
 });
 
 test("installed app users can always return to the dedicated app home", () => {
