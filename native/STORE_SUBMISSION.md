@@ -17,6 +17,8 @@
 
 전체 쇼핑몰 정적 산출물은 상품 이미지 때문에 약 1.5GB이므로 앱에 넣지 않는다. 앱에는 AI 돌봄 핵심 화면과 필수 자산만 번들하고, 쇼핑·대용량 콘텐츠는 댕다방 공식 웹으로 연결한다. 이 구조는 단순 웹 바로가기를 피하면서 카메라·마이크 분석, 오프라인 상태, 네이티브 뒤로가기, 딥링크, 햅틱을 앱 기능으로 제공한다.
 
+`.github/workflows/native-package-validation.yml`은 원격 브랜치에서 Android API 36 디버그 AAB와 iOS 시뮬레이터 빌드를 각각 생성해 플랫폼 컴파일을 검증한다. 이 산출물은 기능 검증용이며 스토어 제출용 서명본은 아니다.
+
 ## 재생성 명령
 
 ```powershell
@@ -99,4 +101,3 @@ Origin: capacitor://localhost
 - `native/store-assets/google-play-feature-1024x500.png`
 - `native/store-assets/app-store-icon-1024.png`
 - 한국어 등록 문안: `native/store-metadata/ko-KR.md`
-

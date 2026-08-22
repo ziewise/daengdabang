@@ -1,0 +1,85 @@
+name: Native package validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/native-store-packaging-20260822
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Android API 36 bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build and sync native assets
+        run: npm run native:sync
+
+      - name: Build debug Android App Bundle
+        working-directory: android
+        run: ./gradlew :app:bundleDebug --stacktrace
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daengdabang-android-debug-aab
+          path: android/app/build/outputs/bundle/debug/app-debug.aab
+          if-no-files-found: error
+          retention-days: 14
+
+  ios:
+    name: iOS simulator build
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+          cache: npm
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build and sync native assets
+        run: npm run native:sync
+
+      - name: Build unsigned simulator app
+        run: >-
+          xcodebuild
+          -project ios/App/App.xcodeproj
+          -scheme App
+          -configuration Debug
+          -sdk iphonesimulator
+          -derivedDataPath ios/DerivedData
+          CODE_SIGNING_ALLOWED=NO
+          build
+
+      - name: Package simulator build
+        run: ditto -c -k --sequesterRsrc --keepParent ios/DerivedData/Build/Products/Debug-iphonesimulator/App.app daengdabang-ios-simulator.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daengdabang-ios-simulator
+          path: daengdabang-ios-simulator.zip
+          if-no-files-found: error
+          retention-days: 14
