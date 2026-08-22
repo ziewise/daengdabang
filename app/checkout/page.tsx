@@ -12,7 +12,9 @@ import {
     createTossTestOrder,
     DdbApiError,
     getCustomerToken,
+    loadCustomerAddresses,
     loadTossTestDeliveryQuote,
+    type CustomerAddress,
 } from "@/lib/customer-api";
 import {
     createCheckoutDeliveryDraft,
@@ -109,7 +111,10 @@ export default function CheckoutPage() {
     const [submitting, setSubmitting] = useState(false);
     const [paymentError, setPaymentError] = useState("");
     const [directTermsAccepted, setDirectTermsAccepted] = useState(false);
+    const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
+    const [selectedAddressId, setSelectedAddressId] = useState("");
     const prefilledMemberRef = useRef("");
+    const prefilledAddressRef = useRef("");
 
     useEffect(() => {
         const requestedMethod = new URLSearchParams(window.location.search).get("payment");
@@ -136,6 +141,45 @@ export default function CheckoutPage() {
             phone: current.phone || user.phone || "",
         }));
     }, [user]);
+
+    useEffect(() => {
+        if (!accessToken) return;
+        let cancelled = false;
+        loadCustomerAddresses(accessToken)
+            .then((addresses) => {
+                if (cancelled) return;
+                setSavedAddresses(addresses);
+                const preferred = addresses.find((address) => address.isDefault) || addresses[0];
+                if (!preferred || prefilledAddressRef.current) return;
+                prefilledAddressRef.current = preferred.id;
+                setSelectedAddressId(preferred.id);
+                setDeliveryDraft((current) => ({
+                    ...current,
+                    recipientName: current.recipientName || preferred.recipientName,
+                    phone: current.phone || preferred.phone,
+                    postalCode: current.postalCode || preferred.postalCode,
+                    addressLine1: current.addressLine1 || preferred.addressLine1,
+                    addressLine2: current.addressLine2 || preferred.addressLine2,
+                }));
+            })
+            .catch(() => undefined);
+        return () => { cancelled = true; };
+    }, [accessToken]);
+
+    const applySavedAddress = (addressId: string) => {
+        const selected = savedAddresses.find((address) => address.id === addressId);
+        if (!selected) return;
+        prefilledAddressRef.current = selected.id;
+        setSelectedAddressId(selected.id);
+        changeDelivery({
+            ...deliveryDraft,
+            recipientName: selected.recipientName,
+            phone: selected.phone,
+            postalCode: selected.postalCode,
+            addressLine1: selected.addressLine1,
+            addressLine2: selected.addressLine2,
+        });
+    };
 
     useEffect(() => {
         if (!accessToken || !quoteRequestKey) return;
@@ -341,6 +385,27 @@ export default function CheckoutPage() {
             </div>
             <form onSubmit={submit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section className="grid min-w-0 gap-4">
+                    {savedAddresses.length > 0 && (
+                        <section className="surface flex flex-wrap items-center gap-3 p-4" aria-label="저장된 배송지 선택">
+                            <label htmlFor="checkout-saved-address" className="text-xs font-black text-neutral-600">
+                                저장된 배송지
+                            </label>
+                            <select
+                                id="checkout-saved-address"
+                                value={selectedAddressId}
+                                onChange={(event) => applySavedAddress(event.target.value)}
+                                disabled={submitting}
+                                className="min-h-10 min-w-[220px] flex-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-black text-neutral-900"
+                            >
+                                {savedAddresses.map((address) => (
+                                    <option key={address.id} value={address.id}>
+                                        {address.label}{address.isDefault ? " · 기본" : ""} — {address.recipientName}
+                                    </option>
+                                ))}
+                            </select>
+                            <Link href="/mypage/address/" className="text-xs font-black text-indigo-700 hover:underline">배송지 관리</Link>
+                        </section>
+                    )}
                     <ShippingDetailsSection
                         value={deliveryDraft}
                         onChange={changeDelivery}

@@ -10,6 +10,7 @@ import {
 } from "@/lib/customer-api";
 import { memberAccountDisplay } from "@/lib/member-account-display";
 import { useAuth, type User } from "@/lib/store";
+import PasswordChangeModal from "@/components/mypage/PasswordChangeModal";
 
 function normalizedMemberName(value: string): string | null {
     const normalized = value.normalize("NFKC");
@@ -30,6 +31,7 @@ function ProfileEditor({
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [savedMessage, setSavedMessage] = useState("");
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
     const accountDisplay = memberAccountDisplay(user.email, user.authProvider);
     const candidateName = normalizedMemberName(name);
 
@@ -134,8 +136,25 @@ function ProfileEditor({
                     <Link href="/inquiry?category=other#inquiry-form" className="btn btn-secondary">
                         이메일·계정 변경 문의
                     </Link>
+                    {user.authProvider === "email" ? (
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setPasswordModalOpen(true)}
+                        >
+                            비밀번호 변경
+                        </button>
+                    ) : (
+                        <span className="self-center text-xs font-bold text-neutral-500">
+                            비밀번호는 {user.authProvider === "naver" ? "네이버" : user.authProvider === "kakao" ? "카카오" : "구글"}에서 관리합니다.
+                        </span>
+                    )}
                 </div>
             </form>
+            <PasswordChangeModal
+                open={passwordModalOpen}
+                onClose={() => setPasswordModalOpen(false)}
+            />
         </section>
     );
 }

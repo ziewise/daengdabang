@@ -3,11 +3,18 @@
  * ---------------------------------------------------------------------
  * 입력: 현재 비밀번호 + 새 비밀번호 + 새 비밀번호 확인 (2번)
  * 검증: 새 비번 ≥ 8자, 새 비번 == 확인, 현재 비번 != 새 비번
- * 비밀번호 변경 모달. 운영 연결 시 저장 흐름으로 교체.
+ * 변경 즉시 기존 세션을 폐기하고 다시 로그인하도록 안내합니다.
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+    changeCurrentCustomerPassword,
+    DdbApiError,
+    getCustomerToken,
+} from "@/lib/customer-api";
+import { useAuth } from "@/lib/store";
 
 interface Props {
     open: boolean;
@@ -15,43 +22,74 @@ interface Props {
 }
 
 export default function PasswordChangeModal({ open, onClose }: Props) {
+    const { user, logout } = useAuth();
+    const router = useRouter();
     const [current, setCurrent] = useState("");
     const [next, setNext] = useState("");
     const [confirm, setConfirm] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [done, setDone] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const close = useCallback(() => {
+        setCurrent("");
+        setNext("");
+        setConfirm("");
+        setError(null);
+        setDone(false);
+        onClose();
+    }, [onClose]);
 
     // Esc 닫기 + body 스크롤 잠금
     useEffect(() => {
         if (!open) return;
         document.body.style.overflow = "hidden";
-        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
         document.addEventListener("keydown", onKey);
         return () => {
             document.body.style.overflow = "";
             document.removeEventListener("keydown", onKey);
         };
-    }, [open, onClose]);
+    }, [close, open]);
 
-    // 모달 닫힐 때 상태 reset
-    useEffect(() => {
-        if (!open) {
-            setCurrent(""); setNext(""); setConfirm("");
-            setError(null); setDone(false);
-        }
-    }, [open]);
-
-    const submit = (e: React.FormEvent) => {
+    const submit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (submitting || !user) return;
         setError(null);
         if (!current) { setError("현재 비밀번호를 입력해주세요."); return; }
         if (next.length < 8) { setError("새 비밀번호는 8자 이상이어야 합니다."); return; }
         if (next !== confirm) { setError("새 비밀번호가 일치하지 않습니다."); return; }
         if (current === next) { setError("새 비밀번호가 현재 비밀번호와 같습니다."); return; }
 
-        // TODO: PATCH /api/user/password { current, next }
-        setDone(true);
-        setTimeout(() => onClose(), 1500);
+        const accessToken = user.apiAccessToken || getCustomerToken();
+        if (!accessToken) {
+            setError("로그인이 만료되었습니다. 다시 로그인해 주세요.");
+            return;
+        }
+        setSubmitting(true);
+        try {
+            await changeCurrentCustomerPassword({
+                email: user.email,
+                currentPassword: current,
+                newPassword: next,
+            }, accessToken);
+            setDone(true);
+            window.setTimeout(() => {
+                logout();
+                router.replace("/auth/login/?reason=password_changed");
+            }, 1200);
+        } catch (caught) {
+            if (caught instanceof DdbApiError && caught.status === 401) {
+                setError("현재 비밀번호가 일치하지 않습니다.");
+            } else if (caught instanceof DdbApiError && caught.status === 403) {
+                setError("이 계정의 비밀번호는 간편로그인 제공자에서 변경해 주세요.");
+            } else {
+                setError(caught instanceof DdbApiError
+                    ? caught.message
+                    : "비밀번호를 변경하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+            }
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     if (!open) return null;
@@ -60,7 +98,7 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
         <>
             <div
                 className="fixed inset-0 z-[2000] bg-foreground/40 backdrop-blur-sm animate-in fade-in duration-200"
-                onClick={onClose}
+                onClick={close}
                 aria-hidden="true"
             />
             <div
@@ -76,7 +114,7 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                     </h2>
                     <button
                         type="button"
-                        onClick={onClose}
+                        onClick={close}
                         className="w-9 h-9 rounded-full hover:bg-neutral-100 flex items-center justify-center"
                         aria-label="닫기"
                     >
@@ -91,7 +129,7 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                         </div>
                         <h3 className="text-base font-extrabold mb-1">비밀번호가 변경됐어요</h3>
                         <p className="text-xs text-neutral-500">
-                            다음 로그인부터 새 비밀번호를 사용하세요.
+                            보안을 위해 모든 세션을 종료하고 로그인 화면으로 이동합니다.
                         </p>
                     </div>
                 ) : (
@@ -130,16 +168,18 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                         <div className="grid grid-cols-2 gap-2 pt-1">
                             <button
                                 type="button"
-                                onClick={onClose}
+                                onClick={close}
+                                disabled={submitting}
                                 className="py-3 rounded-xl bg-white border-2 border-neutral-200 hover:border-aurora-indigo text-foreground text-sm font-extrabold transition"
                             >
                                 취소
                             </button>
                             <button
                                 type="submit"
-                                className="py-3 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold hover:opacity-90 transition"
+                                disabled={submitting}
+                                className="py-3 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold hover:opacity-90 transition disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                                변경하기
+                                {submitting ? "변경 중…" : "변경하기"}
                             </button>
                         </div>
 

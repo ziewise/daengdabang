@@ -10,10 +10,20 @@ import type {
     ShopChatResearch,
     ShopChatSource,
 } from "@/lib/daengdabang-llm";
+import type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
+import {
+    CareTalkGenerationError,
+    loadCareTalkGenerationAsset,
+    loadCareTalkGenerationJob,
+    startCareTalkGeneration,
+    type CareTalkGenerationJob,
+} from "@/lib/caretalk-generation";
 
 type ChatResponseExtrasProps = {
     medical?: ShopChatMedical;
     generation?: ShopChatGeneration;
+    generationRequest?: { message: string; references: ShopChatReferenceInput[] };
+    accessToken?: string;
     sources?: ShopChatSource[];
     research?: ShopChatResearch;
     ctas?: ShopChatCta[];
@@ -23,6 +33,87 @@ type ChatResponseExtrasProps = {
     onInternalNavigate?: () => void;
     questionContext?: string;
 };
+
+function CareTalkGenerationExecution({
+    generation,
+    request,
+    accessToken,
+}: {
+    generation: ShopChatGeneration;
+    request?: { message: string; references: ShopChatReferenceInput[] };
+    accessToken?: string;
+}) {
+    const [job, setJob] = useState<CareTalkGenerationJob | null>(null);
+    const [pending, setPending] = useState(false);
+    const [error, setError] = useState("");
+    const [asset, setAsset] = useState<{ objectUrl: string; mimeType: string } | null>(null);
+    const alive = useRef(true);
+
+    useEffect(() => {
+        alive.current = true;
+        return () => {
+            alive.current = false;
+            if (asset?.objectUrl) URL.revokeObjectURL(asset.objectUrl);
+        };
+    }, [asset?.objectUrl]);
+
+    const run = async () => {
+        if (!request || !accessToken || pending) return;
+        setPending(true);
+        setError("");
+        setAsset(null);
+        try {
+            let current = await startCareTalkGeneration(request.message, request.references, accessToken);
+            if (!alive.current) return;
+            setJob(current);
+            for (let attempt = 0; attempt < 40 && ["submitting", "queued", "running"].includes(current.status); attempt += 1) {
+                await new Promise((resolve) => window.setTimeout(resolve, 3000));
+                if (!alive.current) return;
+                current = await loadCareTalkGenerationJob(current.jobId, accessToken);
+                setJob(current);
+            }
+            if (current.status === "ready") {
+                const loaded = await loadCareTalkGenerationAsset(current.jobId, accessToken);
+                if (alive.current) setAsset(loaded);
+            } else if (current.status === "failed") {
+                setError("생성 노드에서 작업을 완료하지 못했어요. 잠시 후 다시 시도해 주세요.");
+            } else {
+                setError("작업이 계속 진행 중이에요. 잠시 후 다시 시도하면 상태를 새로 확인합니다.");
+            }
+        } catch (caught) {
+            setError(caught instanceof CareTalkGenerationError
+                ? caught.message
+                : "생성 작업을 시작하지 못했습니다.");
+        } finally {
+            if (alive.current) setPending(false);
+        }
+    };
+
+    if (!generation.canSubmitToGenerator) return null;
+    return (
+        <div className="mt-3 border-t border-violet-200 pt-3">
+            {asset ? (
+                asset.mimeType.startsWith("video/") ? (
+                    <video src={asset.objectUrl} controls playsInline className="w-full rounded-lg" aria-label="케어톡 생성 영상" />
+                ) : (
+                    // eslint-disable-next-line @next/next/no-img-element -- authenticated blob URL cannot use the static image optimizer.
+                    <img src={asset.objectUrl} alt="케어톡 생성 결과" className="w-full rounded-lg" />
+                )
+            ) : (
+                <button
+                    type="button"
+                    disabled={pending || !request || !accessToken}
+                    onClick={() => void run()}
+                    className="min-h-10 rounded-lg bg-violet-700 px-4 text-xs font-black text-white disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                    <i className={`fa-solid ${pending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"} mr-2`} aria-hidden="true" />
+                    {!accessToken ? "로그인 후 실제 제작" : pending ? `제작 중${job?.progressPercent != null ? ` · ${job.progressPercent}%` : "…"}` : "실제 제작 시작"}
+                </button>
+            )}
+            {error && <p className="mt-2 text-[11px] font-bold leading-4 text-amber-800" role="alert">{error}</p>}
+        </div>
+    );
+}
 
 type ChoiceViewGroup = {
     title: string;
@@ -790,6 +881,8 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
 export default function ChatResponseExtras({
     medical,
     generation,
+    generationRequest,
+    accessToken,
     sources,
     research,
     ctas,
@@ -931,6 +1024,11 @@ export default function ChatResponseExtras({
                             아직 이미지나 영상 결과가 생성된 상태는 아니에요.
                         </p>
                     ) : null}
+                    <CareTalkGenerationExecution
+                        generation={generation}
+                        request={generationRequest}
+                        accessToken={accessToken}
+                    />
                 </div>
             ) : null}
 

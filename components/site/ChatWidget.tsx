@@ -38,6 +38,7 @@ import {
     GenerationReferenceTray,
     useGenerationReferenceAttachments,
 } from "@/components/site/GenerationReferenceComposer";
+import type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { customerVisibleChatAnswer } from "@/lib/chat-display";
 import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage";
@@ -61,6 +62,7 @@ type Message = {
     ctas?: ShopChatCta[];
     conversation?: ShopChatConversation;
     generation?: ShopChatGeneration;
+    generationRequest?: { message: string; references: ShopChatReferenceInput[] };
     traceId?: string;
     quality?: ShopChatQuality;
     delivery?: ShopChatDelivery;
@@ -317,6 +319,10 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     ctas: result.ctas,
                     conversation: result.conversation,
                     generation: result.generation,
+                    generationRequest: result.generation ? {
+                        message: questionForAnswer,
+                        references: readyReferences.map((reference) => ({ ...reference })),
+                    } : undefined,
                     traceId: result.traceId,
                     quality: result.quality,
                     delivery: result.delivery,
@@ -494,6 +500,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                         <ChatResponseExtras
                                             medical={message.medical}
                                             generation={message.generation}
+                                            generationRequest={message.generationRequest}
+                                            accessToken={user?.apiAccessToken}
                                             sources={message.sources}
                                             research={message.research}
                                             ctas={message.ctas}

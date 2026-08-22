@@ -52,7 +52,7 @@ test("all MY information destinations are real static pages with the common side
     assert.match(layout, /lg:grid-cols-\[260px_minmax\(0,1fr\)\]/);
 });
 
-test("profile page edits only the authenticated member name", async () => {
+test("profile page edits the member name and connects local password change", async () => {
     const profile = await source("app/mypage/profile/page.tsx");
     assert.match(profile, /useState\(user\.name\)/);
     assert.match(profile, /value=\{accountDisplay\}/);
@@ -60,10 +60,13 @@ test("profile page edits only the authenticated member name", async () => {
     assert.match(profile, /updateCurrentCustomerName\(normalized, accessToken\)/);
     assert.match(profile, /onSaved\(savedName\)/);
     assert.match(profile, /이름 변경 저장/);
+    assert.match(profile, /PasswordChangeModal/);
+    assert.match(profile, /user\.authProvider === "email"/);
+    assert.match(profile, /비밀번호는/);
     assert.doesNotMatch(profile, /updateMemberEmail|email:\s*name|role:|is_active:/);
 });
 
-test("payment and address pages do not invent stored cards or address-book CRUD", async () => {
+test("payment stays tokenized while address book uses authenticated server CRUD", async () => {
     const [payments, address] = await Promise.all([
         source("app/mypage/payments/page.tsx"),
         source("app/mypage/address/page.tsx"),
@@ -73,19 +76,22 @@ test("payment and address pages do not invent stored cards or address-book CRUD"
     assert.match(payments, /href="\/cart"/);
     assert.doesNotMatch(payments, /addCard|deleteCard|savePaymentMethod/);
 
-    assert.match(address, /별도 배송지 목록은 아직 제공하지 않습니다/);
-    assert.match(address, /주문별로 입력/);
-    assert.match(address, /href="\/mypage\/orders"/);
-    assert.match(address, /href="\/checkout"/);
-    assert.doesNotMatch(address, /addAddress|deleteAddress|updateAddress|MOCK_ADDRESSES/);
+    assert.match(address, /loadCustomerAddresses/);
+    assert.match(address, /createCustomerAddress/);
+    assert.match(address, /updateCustomerAddress/);
+    assert.match(address, /deleteCustomerAddress/);
+    assert.match(address, /정말 삭제/);
+    assert.match(address, /서버에서 암호화/);
+    assert.doesNotMatch(address, /MOCK_ADDRESSES|localStorage/);
 });
 
-test("withdrawal remains a verified inquiry flow without a destructive action", async () => {
+test("withdrawal requires explicit authenticated confirmation and explains retention", async () => {
     const withdrawal = await source("app/mypage/withdrawal/page.tsx");
-    assert.match(withdrawal, /즉시 탈퇴 기능은 제공하지 않습니다/);
-    assert.match(withdrawal, /본인 확인 절차/);
-    assert.match(withdrawal, /관계 법령상 보존 의무/);
-    assert.match(withdrawal, /href="\/inquiry\?category=other#inquiry-form"/);
+    assert.match(withdrawal, /confirmation === "회원 탈퇴"/);
+    assert.match(withdrawal, /acknowledged/);
+    assert.match(withdrawal, /currentPassword/);
+    assert.match(withdrawal, /withdrawCurrentCustomer/);
+    assert.match(withdrawal, /법정 보존 대상 정보/);
     assert.match(withdrawal, /href="\/privacy"/);
-    assert.doesNotMatch(withdrawal, /deleteAccount|deleteCustomer|withdrawCustomer|fetch\(/);
+    assert.doesNotMatch(withdrawal, /window\.confirm|fetch\(/);
 });

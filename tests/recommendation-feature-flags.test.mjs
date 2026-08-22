@@ -40,7 +40,7 @@ test("recommendation flags fail closed and accept only explicit enabled values",
     assert.equal(recommendationPersonalizationEnabled({ ...flags, preferences: false }, "home"), false);
 });
 
-test("all four public build flags are explicit and default off in deployment", async () => {
+test("all four public build flags are explicit and launched by default in deployment", async () => {
     const [featureFlags, workflow] = await Promise.all([
         source("lib/recommendation/feature-flags.ts"),
         source(".github/workflows/deploy.yml"),
@@ -48,9 +48,17 @@ test("all four public build flags are explicit and default off in deployment", a
     for (const name of ["ENGINE", "FULL_PAGE", "PREFERENCES", "ANALYTICS"]) {
         assert.match(featureFlags, new RegExp(`process\\.env\\.NEXT_PUBLIC_RECOMMENDATION_V1_${name}`));
         const expected = "NEXT_PUBLIC_RECOMMENDATION_V1_" + name
-            + ": ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_" + name + " || 'false' }}";
+            + ": ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_" + name + " || 'true' }}";
         assert.ok(workflow.includes(expected));
     }
+    const launched = resolveRecommendationFeatureFlags({}, true);
+    assert.deepEqual({ ...launched }, {
+        engine: true,
+        fullPage: true,
+        preferences: true,
+        analytics: true,
+    });
+    assert.equal(resolveRecommendationFeatureFlags({ engine: "false" }, true).engine, false);
 });
 
 test("engine, full page, preferences, and analytics have independent fail-closed paths", async () => {

@@ -18,12 +18,16 @@ export function parseRecommendationFeatureFlag(value: string | undefined): boole
 
 export function resolveRecommendationFeatureFlags(
     values: RecommendationFeatureFlagValues,
+    defaultEnabled = false,
 ): RecommendationFeatureFlags {
+    const resolve = (value: string | undefined) => (
+        value === undefined ? defaultEnabled : parseRecommendationFeatureFlag(value)
+    );
     return Object.freeze({
-        engine: parseRecommendationFeatureFlag(values.engine),
-        fullPage: parseRecommendationFeatureFlag(values.fullPage),
-        preferences: parseRecommendationFeatureFlag(values.preferences),
-        analytics: parseRecommendationFeatureFlag(values.analytics),
+        engine: resolve(values.engine),
+        fullPage: resolve(values.fullPage),
+        preferences: resolve(values.preferences),
+        analytics: resolve(values.analytics),
     });
 }
 
@@ -36,10 +40,11 @@ export function recommendationPersonalizationEnabled(
 }
 
 // NEXT_PUBLIC values are frozen into the static storefront at build time.
-// Every flag deliberately fails closed when the repository variable is absent.
+// Recommendation v1 is launched by default; an explicit false/off/0 still
+// provides an immediate per-surface rollback switch at build time.
 export const RECOMMENDATION_FEATURE_FLAGS = resolveRecommendationFeatureFlags({
     engine: process.env.NEXT_PUBLIC_RECOMMENDATION_V1_ENGINE,
     fullPage: process.env.NEXT_PUBLIC_RECOMMENDATION_V1_FULL_PAGE,
     preferences: process.env.NEXT_PUBLIC_RECOMMENDATION_V1_PREFERENCES,
     analytics: process.env.NEXT_PUBLIC_RECOMMENDATION_V1_ANALYTICS,
-});
+}, true);

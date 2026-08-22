@@ -33,12 +33,12 @@ jobs:
       # The site key is a public browser identifier. A repository variable can
       # override it, while the production widget keeps deploys fail-closed.
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAD8Fivq7ZEMUPPwX' }}
-      # Recommendation v1 rolls out independently and fails closed when a
-      # repository variable is absent. NEXT_PUBLIC values are frozen at build.
-      NEXT_PUBLIC_RECOMMENDATION_V1_ENGINE: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_ENGINE || 'false' }}
-      NEXT_PUBLIC_RECOMMENDATION_V1_FULL_PAGE: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_FULL_PAGE || 'false' }}
-      NEXT_PUBLIC_RECOMMENDATION_V1_PREFERENCES: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_PREFERENCES || 'false' }}
-      NEXT_PUBLIC_RECOMMENDATION_V1_ANALYTICS: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_ANALYTICS || 'false' }}
+        # Recommendation v1 is launched; repository variables remain immediate
+        # per-surface rollback switches. NEXT_PUBLIC values are frozen at build.
+        NEXT_PUBLIC_RECOMMENDATION_V1_ENGINE: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_ENGINE || 'true' }}
+        NEXT_PUBLIC_RECOMMENDATION_V1_FULL_PAGE: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_FULL_PAGE || 'true' }}
+        NEXT_PUBLIC_RECOMMENDATION_V1_PREFERENCES: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_PREFERENCES || 'true' }}
+        NEXT_PUBLIC_RECOMMENDATION_V1_ANALYTICS: ${{ vars.NEXT_PUBLIC_RECOMMENDATION_V1_ANALYTICS || 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6

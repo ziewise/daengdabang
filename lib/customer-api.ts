@@ -140,6 +140,15 @@ export type GrowthInterestReceipt = {
     message: string;
 };
 
+export type OutboundEmailPreference = {
+    channel: "email";
+    consented: boolean;
+    suppressed: boolean;
+    destinationLinked: boolean;
+    sendAuthorized: boolean;
+    latestAction: "consent" | "withdraw" | null;
+};
+
 type ApiGrowthInterestReceipt = {
     id: string;
     program_id: GrowthProgramId;
@@ -420,6 +429,21 @@ export type TossDeliveryDetails = {
     requestCode: TossDeliveryRequestCode;
     requestNote: string;
 };
+
+export type CustomerAddress = {
+    id: string;
+    label: string;
+    recipientName: string;
+    phone: string;
+    postalCode: string;
+    addressLine1: string;
+    addressLine2: string;
+    isDefault: boolean;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type CustomerAddressInput = Omit<CustomerAddress, "id" | "createdAt" | "updatedAt">;
 
 export type TossDeliveryQuote = {
     shippingFee: number;
@@ -831,6 +855,196 @@ export async function updateCurrentCustomerName(name: string, token?: string) {
         throw new DdbApiError("회원 이름을 변경하지 못했습니다.", { code: "http_error" });
     }
     return user;
+}
+
+export async function changeCurrentCustomerPassword(payload: {
+    email: string;
+    currentPassword: string;
+    newPassword: string;
+}, token?: string) {
+    const user = await apiJson<ApiUser>("/api/v1/auth/change-password", {
+        method: "POST",
+        body: JSON.stringify({
+            email: payload.email,
+            current_password: payload.currentPassword,
+            new_password: payload.newPassword,
+        }),
+    }, token, { requireBase: true });
+    if (!user?.id) {
+        throw new DdbApiError("비밀번호를 변경하지 못했습니다.", { code: "http_error" });
+    }
+    return user;
+}
+
+export async function withdrawCurrentCustomer(payload: {
+    confirmation: "회원 탈퇴";
+    acknowledgeRetention: true;
+    currentPassword?: string;
+}, token?: string) {
+    const response = await apiJson<{ status: "withdrawn"; signed_out: true }>(
+        "/api/v1/auth/withdraw",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                confirmation: payload.confirmation,
+                acknowledge_retention: payload.acknowledgeRetention,
+                current_password: payload.currentPassword || null,
+            }),
+        },
+        token,
+        { requireBase: true },
+    );
+    if (response?.status !== "withdrawn" || response.signed_out !== true) {
+        throw new DdbApiError("회원 탈퇴 상태를 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return response;
+}
+
+type ApiOutboundPreference = {
+    channel: string;
+    consented: boolean;
+    suppressed: boolean;
+    destination_linked: boolean;
+    send_authorized: boolean;
+    latest_action?: "consent" | "withdraw" | null;
+};
+
+type ApiCustomerAddress = {
+    id: string;
+    label: string;
+    recipient_name: string;
+    phone: string;
+    postal_code: string;
+    address_line1: string;
+    address_line2: string;
+    is_default: boolean;
+    created_at: string;
+    updated_at: string;
+};
+
+function normalizeCustomerAddress(value: ApiCustomerAddress): CustomerAddress {
+    return {
+        id: value.id,
+        label: value.label,
+        recipientName: value.recipient_name,
+        phone: value.phone,
+        postalCode: value.postal_code,
+        addressLine1: value.address_line1,
+        addressLine2: value.address_line2,
+        isDefault: Boolean(value.is_default),
+        createdAt: value.created_at,
+        updatedAt: value.updated_at,
+    };
+}
+
+function customerAddressBody(value: CustomerAddressInput) {
+    return {
+        label: value.label,
+        recipient_name: value.recipientName,
+        phone: value.phone,
+        postal_code: value.postalCode,
+        address_line1: value.addressLine1,
+        address_line2: value.addressLine2,
+        is_default: value.isDefault,
+    };
+}
+
+export async function loadCustomerAddresses(token?: string): Promise<CustomerAddress[]> {
+    const response = await apiJson<ApiCustomerAddress[]>(
+        "/api/v1/customer-addresses",
+        { method: "GET" },
+        token,
+        { requireBase: true },
+    );
+    return (response || []).map(normalizeCustomerAddress);
+}
+
+export async function createCustomerAddress(
+    value: CustomerAddressInput,
+    token?: string,
+): Promise<CustomerAddress> {
+    const response = await apiJson<ApiCustomerAddress>(
+        "/api/v1/customer-addresses",
+        { method: "POST", body: JSON.stringify(customerAddressBody(value)) },
+        token,
+        { requireBase: true },
+    );
+    if (!response) throw new DdbApiError("배송지를 저장하지 못했습니다.", { code: "http_error" });
+    return normalizeCustomerAddress(response);
+}
+
+export async function updateCustomerAddress(
+    addressId: string,
+    value: CustomerAddressInput,
+    token?: string,
+): Promise<CustomerAddress> {
+    const response = await apiJson<ApiCustomerAddress>(
+        `/api/v1/customer-addresses/${encodeURIComponent(addressId)}`,
+        { method: "PUT", body: JSON.stringify(customerAddressBody(value)) },
+        token,
+        { requireBase: true },
+    );
+    if (!response) throw new DdbApiError("배송지를 수정하지 못했습니다.", { code: "http_error" });
+    return normalizeCustomerAddress(response);
+}
+
+export async function setDefaultCustomerAddress(
+    addressId: string,
+    token?: string,
+): Promise<CustomerAddress> {
+    const response = await apiJson<ApiCustomerAddress>(
+        `/api/v1/customer-addresses/${encodeURIComponent(addressId)}/default`,
+        { method: "POST", body: JSON.stringify({}) },
+        token,
+        { requireBase: true },
+    );
+    if (!response) throw new DdbApiError("기본 배송지를 변경하지 못했습니다.", { code: "http_error" });
+    return normalizeCustomerAddress(response);
+}
+
+export async function deleteCustomerAddress(addressId: string, token?: string): Promise<void> {
+    await apiJson<void>(
+        `/api/v1/customer-addresses/${encodeURIComponent(addressId)}`,
+        { method: "DELETE" },
+        token,
+        { requireBase: true },
+    );
+}
+
+function normalizeOutboundEmailPreference(value: ApiOutboundPreference): OutboundEmailPreference {
+    return {
+        channel: "email",
+        consented: Boolean(value.consented),
+        suppressed: Boolean(value.suppressed),
+        destinationLinked: Boolean(value.destination_linked),
+        sendAuthorized: Boolean(value.send_authorized),
+        latestAction: value.latest_action || null,
+    };
+}
+
+export async function loadOutboundEmailPreference(token?: string): Promise<OutboundEmailPreference> {
+    const response = await apiJson<{ preferences: ApiOutboundPreference[] }>(
+        "/api/v1/growth/outbound-preferences",
+        { method: "GET" },
+        token,
+        { requireBase: true },
+    );
+    const email = response?.preferences.find((preference) => preference.channel === "email");
+    if (!email) throw new DdbApiError("이메일 수신 설정을 확인하지 못했습니다.", { code: "http_error" });
+    return normalizeOutboundEmailPreference(email);
+}
+
+export async function consentOutboundEmailPreference(token?: string): Promise<OutboundEmailPreference> {
+    const response = await apiJson<ApiOutboundPreference>(
+        "/api/v1/growth/outbound-preferences/email/consent",
+        { method: "POST", body: JSON.stringify({ consent_to_marketing: true }) },
+        token,
+        { requireBase: true },
+    );
+    if (!response || response.channel !== "email") {
+        throw new DdbApiError("이메일 구독을 저장하지 못했습니다.", { code: "http_error" });
+    }
+    return normalizeOutboundEmailPreference(response);
 }
 
 function normalizeDaengLabWallet(wallet: ApiDaengLabWallet): DaengLabWallet {
