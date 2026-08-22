@@ -127,7 +127,7 @@ test("mobile app home links members to all requested services and preserves logi
     assert.match(myPet, /URLSearchParams\(window\.location\.search\)\.get\("profile"\)/);
 });
 
-test("installed app users can always return to the dedicated app home", () => {
+test("mobile shoppers can always return to the dedicated app home", () => {
     const logo = read("../components/header/BrandLogo.tsx");
     const header = read("../components/header/Header.tsx");
     const mobileMenu = read("../components/header/MobilePanel.tsx");
@@ -138,8 +138,8 @@ test("installed app users can always return to the dedicated app home", () => {
     assert.match(mobileMenu, /pwaReady && \(isNativeApp \|\| isStandalone\)/);
     assert.match(mobileMenu, /<MobileLink href="\/app\/" icon="fa-house"/);
     assert.match(mobileMenu, /댕다방 앱 홈/);
-    assert.match(appHomeButton, /!isReady \|\| \(!isNativeApp && !isStandalone\)/);
-    assert.doesNotMatch(appHomeButton, /usePathname|isAppHome/);
+    assert.match(appHomeButton, /usePathname/);
+    assert.match(appHomeButton, /pathname === "\/app" \|\| pathname\.startsWith\("\/app\/"\)/);
     assert.match(appHomeButton, /data-installed-app-home-button/);
     assert.match(appHomeButton, /href="\/app\/"/);
     assert.match(appHomeButton, /<span>앱 홈<\/span>/);
@@ -149,6 +149,7 @@ test("installed app users can always return to the dedicated app home", () => {
     assert.match(header, /<InstalledAppHomeButton \/>/);
     assert.match(logo, /data-mobile-integrated-brand/);
     assert.match(logo, /\/images\/pwa\/icon-v2-192x192\.png/);
+    assert.doesNotMatch(logo, /border-cyan-500\/40/);
     assert.doesNotMatch(chrome, /InstalledAppHomeButton/);
 });
 

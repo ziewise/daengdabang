@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePwaInstall } from "./PwaInstallProvider";
+import { usePathname } from "next/navigation";
 
 export default function InstalledAppHomeButton() {
-    const { isNativeApp, isReady, isStandalone } = usePwaInstall();
+    const pathname = usePathname();
 
-    if (!isReady || (!isNativeApp && !isStandalone)) return null;
+    if (pathname === "/app" || pathname.startsWith("/app/")) return null;
 
     return (
         <Link

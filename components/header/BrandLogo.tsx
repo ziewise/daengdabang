@@ -35,7 +35,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false, mobi
             {mobileIntegrated && (
                 <span
                     data-mobile-integrated-brand
-                    className="relative inline-flex h-[58px] w-[58px] shrink-0 overflow-hidden rounded-full border border-cyan-500/40 bg-[#fffaf0] shadow-[0_4px_14px_rgba(15,23,42,0.18)] md:hidden"
+                    className="relative inline-flex h-[58px] w-[58px] shrink-0 overflow-hidden rounded-full bg-[#fffaf0] shadow-[0_4px_14px_rgba(15,23,42,0.18)] md:hidden"
                 >
                     <Image
                         src="/images/pwa/icon-v2-192x192.png"
