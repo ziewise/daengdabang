@@ -9,9 +9,9 @@ type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
 };
 
 export default function PwaInstallButton({ children, onBeforeInstall, ...props }: Props) {
-    const { isReady, isStandalone, requestInstall } = usePwaInstall();
+    const { isNativeApp, isReady, isStandalone, requestInstall } = usePwaInstall();
 
-    if (!isReady || isStandalone) return null;
+    if (!isReady || isNativeApp || isStandalone) return null;
 
     return (
         <button

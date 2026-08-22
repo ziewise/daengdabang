@@ -3,8 +3,8 @@
 import { usePwaInstall } from "./PwaInstallProvider";
 
 export default function MobileAppInstallStrip() {
-    const { canPrompt, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
-    if (!isReady || isStandalone) return null;
+    const { canPrompt, isNativeApp, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
+    if (!isReady || isNativeApp || isStandalone) return null;
 
     const action = canPrompt
         ? "바로 설치"

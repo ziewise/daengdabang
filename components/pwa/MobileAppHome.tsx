@@ -42,7 +42,7 @@ const QUICK_LINKS = [
 
 export default function MobileAppHome() {
     const { hydrated, user } = useAuth();
-    const { canPrompt, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
+    const { canPrompt, isNativeApp, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
 
     const installLabel = canPrompt
         ? "바로 설치"
@@ -91,7 +91,7 @@ export default function MobileAppHome() {
                     )}
                 </section>
 
-                {isReady && (
+                {isReady && !isNativeApp && (
                     <section className="mt-4" aria-label="앱 설치 상태">
                         {isStandalone ? (
                             <div className="flex items-center justify-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
@@ -147,6 +147,7 @@ export default function MobileAppHome() {
                             <Link
                                 key={item.href}
                                 href={item.href}
+                                data-native-external={item.href === "/" ? "true" : undefined}
                                 className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white/90 px-2 text-center text-xs font-bold text-slate-700 shadow-sm"
                             >
                                 <i className={`fa-solid ${item.icon} text-lg text-[#07849e]`} aria-hidden="true" />

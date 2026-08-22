@@ -88,6 +88,8 @@ test("install UI handles native prompts, iOS instructions, and in-app browsers",
     assert.match(provider, /Safari로 열기/);
     assert.match(provider, /Chrome으로 열기/);
     assert.match(provider, /clipboard\.writeText/);
+    assert.match(provider, /Capacitor\.isNativePlatform\(\)/);
+    assert.match(provider, /!isNativeApp && !isStandalone/);
     assert.match(mobileMenu, /댕다방 앱 설치/);
     assert.match(homeStrip, /매일 댕생활 · 댕자랑 · 연구소/);
     assert.match(homeStrip, /바로 설치/);
@@ -133,10 +135,10 @@ test("installed app users can always return to the dedicated app home", () => {
     const chrome = read("../components/site/ConditionalChrome.tsx");
 
     assert.match(logo, /href="\/"/);
-    assert.match(mobileMenu, /pwaReady && isStandalone/);
+    assert.match(mobileMenu, /pwaReady && \(isNativeApp \|\| isStandalone\)/);
     assert.match(mobileMenu, /<MobileLink href="\/app\/" icon="fa-house"/);
     assert.match(mobileMenu, /댕다방 앱 홈/);
-    assert.match(appHomeButton, /!isReady \|\| !isStandalone/);
+    assert.match(appHomeButton, /!isReady \|\| \(!isNativeApp && !isStandalone\)/);
     assert.doesNotMatch(appHomeButton, /usePathname|isAppHome/);
     assert.match(appHomeButton, /data-installed-app-home-button/);
     assert.match(appHomeButton, /href="\/app\/"/);
@@ -148,6 +150,34 @@ test("installed app users can always return to the dedicated app home", () => {
     assert.match(logo, /data-mobile-integrated-brand/);
     assert.match(logo, /\/images\/pwa\/icon-v2-192x192\.png/);
     assert.doesNotMatch(chrome, /InstalledAppHomeButton/);
+});
+
+test("native store package removes install prompts while the web PWA keeps them", () => {
+    const provider = read("../components/pwa/PwaInstallProvider.tsx");
+    const appHome = read("../components/pwa/MobileAppHome.tsx");
+    const installStrip = read("../components/pwa/MobileAppInstallStrip.tsx");
+    const installButton = read("../components/pwa/PwaInstallButton.tsx");
+    const nativeBridge = read("../components/native/NativeAppBridge.tsx");
+    const capacitorConfig = read("../capacitor.config.ts");
+    const nativeBuilder = read("../scripts/prepare-native-web.mjs");
+    const apiBase = read("../lib/ddb-api-base.ts");
+
+    assert.match(provider, /beforeinstallprompt/);
+    assert.match(provider, /!Capacitor\.isNativePlatform\(\).*beforeinstallprompt/s);
+    assert.match(provider, /!Capacitor\.isNativePlatform\(\).*serviceWorker/s);
+    assert.match(appHome, /isReady && !isNativeApp/);
+    assert.match(installStrip, /!isReady \|\| isNativeApp \|\| isStandalone/);
+    assert.match(installButton, /!isReady \|\| isNativeApp \|\| isStandalone/);
+    assert.match(nativeBridge, /NATIVE_ROUTE_PREFIXES/);
+    assert.match(nativeBridge, /Browser\.open/);
+    assert.match(nativeBridge, /Haptics\.impact/);
+    assert.match(nativeBridge, /networkStatusChange/);
+    assert.match(read("../components/header/MobilePanel.tsx"), /www\.daengdabang\.com\/products\//);
+    assert.match(capacitorConfig, /appId: "com\.daengdabang\.app"/);
+    assert.match(capacitorConfig, /webDir: "native\/www"/);
+    assert.match(nativeBuilder, /maximumMegabytes = 40/);
+    assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero|images\/pet-companion/);
+    assert.match(apiBase, /Capacitor\.isNativePlatform\(\).*https:\/\/api\.daengdabang\.com/s);
 });
 
 test("Android force-dark receives a stronger platform-scoped readability veil", () => {

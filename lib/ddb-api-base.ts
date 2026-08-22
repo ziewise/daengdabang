@@ -1,5 +1,8 @@
+import { Capacitor } from "@capacitor/core";
+
 function inferredApiBase() {
     if (typeof window === "undefined") return "";
+    if (Capacitor.isNativePlatform()) return "https://api.daengdabang.com";
     if (window.location.hostname === "daengdabang.com" || window.location.hostname === "www.daengdabang.com") {
         return "https://api.daengdabang.com";
     }

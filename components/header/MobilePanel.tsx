@@ -21,6 +21,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 import PwaInstallButton from "@/components/pwa/PwaInstallButton";
+import { Browser } from "@capacitor/browser";
 
 interface Props {
     open: boolean;
@@ -33,7 +34,7 @@ export default function MobilePanel({ open, onClose }: Props) {
     const { isLoggedIn, hydrated } = useAuth();
     const router = useRouter();
     const { t, menuLabel } = useI18n();
-    const { isReady: pwaReady, isStandalone } = usePwaInstall();
+    const { isNativeApp, isReady: pwaReady, isStandalone } = usePwaInstall();
 
     /** 검색 submit — /products?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
     const submitSearch = (e: React.FormEvent) => {
@@ -43,6 +44,13 @@ export default function MobilePanel({ open, onClose }: Props) {
         searchRecent.add(t);
         setSearchTerm("");
         onClose();
+        if (isNativeApp) {
+            const url = `https://www.daengdabang.com/products/?q=${encodeURIComponent(t)}`;
+            void Browser.open({ url, presentationStyle: "popover" }).catch(() => {
+                window.open(url, "_blank", "noopener,noreferrer");
+            });
+            return;
+        }
         router.push(`/products?q=${encodeURIComponent(t)}`);
     };
 
@@ -183,7 +191,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                         <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 
-                    {pwaReady && isStandalone ? (
+                    {pwaReady && (isNativeApp || isStandalone) ? (
                         <MobileLink href="/app/" icon="fa-house" onClick={onClose} crayon tone="teal">
                             댕다방 앱 홈
                         </MobileLink>

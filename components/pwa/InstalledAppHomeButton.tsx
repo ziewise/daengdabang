@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePwaInstall } from "./PwaInstallProvider";
 
 export default function InstalledAppHomeButton() {
-    const { isReady, isStandalone } = usePwaInstall();
+    const { isNativeApp, isReady, isStandalone } = usePwaInstall();
 
-    if (!isReady || !isStandalone) return null;
+    if (!isReady || (!isNativeApp && !isStandalone)) return null;
 
     return (
         <Link

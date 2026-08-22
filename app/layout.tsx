@@ -16,6 +16,7 @@ import PetLensModalProvider from "@/components/petlens/PetLensModalLauncher";
 import { PetTryOnTaskProvider } from "@/lib/pet-tryon-background";
 import StorefrontAnalyticsTracker from "@/components/analytics/StorefrontAnalyticsTracker";
 import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
+import NativeAppBridge from "@/components/native/NativeAppBridge";
 
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {/* 우리 크레파스 배경 — fixed z-index:-1 레이어 (globals.css .global-aurora) */}
                 <div className="global-aurora" aria-hidden="true" />
                 <PwaInstallProvider>
+                    <NativeAppBridge />
                     <LanguageProvider>
                         <RegionProvider>
                             <StoreProvider>

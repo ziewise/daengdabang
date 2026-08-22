@@ -9,6 +9,7 @@ import {
     useRef,
     useState,
 } from "react";
+import { Capacitor } from "@capacitor/core";
 
 type InstallPlatform = "ios" | "android" | "other";
 type InstallOutcome = "accepted" | "dismissed" | "instructions";
@@ -23,6 +24,7 @@ interface PwaInstallContextValue {
     isInAppBrowser: boolean;
     isReady: boolean;
     isStandalone: boolean;
+    isNativeApp: boolean;
     platform: InstallPlatform;
     openInstallHelp: () => void;
     requestInstall: () => Promise<InstallOutcome>;
@@ -52,6 +54,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [isStandalone, setIsStandalone] = useState(false);
+    const [isNativeApp, setIsNativeApp] = useState(false);
     const [platform, setPlatform] = useState<InstallPlatform>("other");
     const [isInAppBrowser, setIsInAppBrowser] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -80,6 +83,9 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
         };
 
         const readyTimer = window.setTimeout(() => {
+            const nativeApp = Capacitor.isNativePlatform();
+            setIsNativeApp(nativeApp);
+            document.documentElement.dataset.ddbNativeApp = nativeApp ? "true" : "false";
             setPlatform(detectPlatform());
             setIsInAppBrowser(detectInAppBrowser());
             syncStandalone();
@@ -87,12 +93,14 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
             setIsReady(true);
         }, 0);
 
-        window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
-        window.addEventListener("appinstalled", onAppInstalled);
+        if (!Capacitor.isNativePlatform()) {
+            window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+            window.addEventListener("appinstalled", onAppInstalled);
+        }
         mediaQuery.addEventListener("change", syncStandalone);
         darkModeQuery.addEventListener("change", syncAndroidAppearance);
 
-        if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
+        if (!Capacitor.isNativePlatform() && "serviceWorker" in navigator && process.env.NODE_ENV === "production") {
             navigator.serviceWorker.register("/sw.js?release=20260813-4", {
                 scope: "/",
                 updateViaCache: "none",
@@ -155,15 +163,16 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
         isInAppBrowser,
         isReady,
         isStandalone,
+        isNativeApp,
         platform,
         openInstallHelp,
         requestInstall,
-    }), [deferredPrompt, isInAppBrowser, isReady, isStandalone, openInstallHelp, platform, requestInstall]);
+    }), [deferredPrompt, isInAppBrowser, isNativeApp, isReady, isStandalone, openInstallHelp, platform, requestInstall]);
 
     return (
         <PwaInstallContext.Provider value={value}>
             {children}
-            {isHelpOpen && !isStandalone && (
+            {isHelpOpen && !isNativeApp && !isStandalone && (
                 <div className="fixed inset-0 z-[1900] flex items-end justify-center p-3 sm:items-center sm:p-6">
                     <button
                         type="button"
