@@ -99,12 +99,13 @@ test("mobile header PetLens reveals the hero lens cue before opening on the next
 
 
 test("live capture uses the 15-second contract, adapts camera orientation, and cleans every local media handle", async () => {
-    const [hook, experience, limits, header, css] = await Promise.all([
+    const [hook, experience, limits, header, css, onDeviceScan] = await Promise.all([
         source("hooks/usePetLensMediaCapture.ts"),
         source("components/petlens/PetLensObservationExperience.tsx"),
         source("lib/petlens-observation-limits.ts"),
         source("components/header/Header.tsx"),
         source("app/globals.css"),
+        source("lib/petlens-on-device-scan.ts"),
     ]);
     assert.match(hook, /navigator\.mediaDevices\.getUserMedia/);
     assert.match(hook, /video:\s*\{/);
@@ -118,7 +119,23 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.match(hook, /elapsed < PET_OBSERVATION_MIN_DURATION_SECONDS/);
     assert.match(hook, /duration < PET_OBSERVATION_MIN_DURATION_SECONDS/);
     assert.match(hook, /duration > PET_OBSERVATION_MAX_DURATION_SECONDS/);
-    assert.match(hook, /videoBitsPerSecond:\s*800_000/);
+    assert.match(hook, /const LIVE_VIDEO_BITS_PER_SECOND = 600_000/);
+    assert.match(hook, /const LIVE_AUDIO_BITS_PER_SECOND = 48_000/);
+    assert.match(hook, /videoBitsPerSecond:\s*LIVE_VIDEO_BITS_PER_SECOND/);
+    assert.match(hook, /audioBitsPerSecond:\s*LIVE_AUDIO_BITS_PER_SECOND/);
+    assert.match(hook, /context\.getImageData/);
+    assert.match(hook, /createMediaStreamSource\(stream\)\.connect\(analyser\)/);
+    assert.match(hook, /analyser\.getFloatTimeDomainData/);
+    assert.match(hook, /petLensOnDeviceScanCanRecord/);
+    assert.match(hook, /finalOnDeviceScan\?\.status === "blocked"/);
+    assert.match(onDeviceScan, /PETLENS_ON_DEVICE_SCAN_VERSION = "ddb-live-preflight-v1"/);
+    assert.match(onDeviceScan, /meanLuminance < 8/);
+    assert.match(onDeviceScan, /meanContrast < 1\.5/);
+    assert.match(onDeviceScan, /audioPeak < 0\.003/);
+    assert.match(experience, /data-daenglab-on-device-scan/);
+    assert.match(experience, /data-daenglab-on-device-policy/);
+    assert.match(experience, /온디바이스 스캔 완료 · 전송 최적화/);
+    assert.match(experience, /실시간 촬영의 1차 품질 스캔은 기기 안에서만 처리하며 업로드 영상에는 적용하지 않습니다/);
     assert.match(hook, /getTracks\(\)\.forEach\(\(track\) => track\.stop\(\)\)/);
     assert.match(hook, /URL\.revokeObjectURL/);
     assert.match(hook, /cameraRequestRef\.current !== requestId/);
@@ -229,6 +246,35 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
     assert.ok(cameraIndex >= 0 && controlsIndex > cameraIndex, "capture controls must follow the camera");
     assert.ok(orientationIndex > controlsIndex, "capture controls must stay above supplemental guidance");
     assert.doesNotMatch(hook, /localStorage|sessionStorage/);
+});
+
+
+test("on-device live preflight blocks unusable frames without rejecting a quiet but visible dog", async () => {
+    const { buildPetLensOnDeviceScanReport, petLensOnDeviceScanCanRecord } = await import(
+        "../lib/petlens-on-device-scan.ts"
+    );
+    const darkFrames = Array.from({ length: 5 }, () => ({
+        luminance: 2,
+        contrast: 0.5,
+        motion: 0,
+        audioRms: 0,
+        audioPeak: 0,
+    }));
+    const darkReport = buildPetLensOnDeviceScanReport(darkFrames, 1_500);
+    assert.equal(darkReport.status, "blocked");
+    assert.equal(petLensOnDeviceScanCanRecord(darkReport.status), false);
+
+    const quietVisibleFrames = Array.from({ length: 5 }, (_, index) => ({
+        luminance: 118,
+        contrast: 34,
+        motion: index === 0 ? null : 0.2,
+        audioRms: 0,
+        audioPeak: 0,
+    }));
+    const quietReport = buildPetLensOnDeviceScanReport(quietVisibleFrames, 1_500);
+    assert.equal(quietReport.status, "attention");
+    assert.equal(quietReport.blockingReason, "");
+    assert.equal(petLensOnDeviceScanCanRecord(quietReport.status), true);
 });
 
 

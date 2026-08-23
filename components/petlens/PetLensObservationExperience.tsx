@@ -214,6 +214,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         selectedAudioDeviceId,
         facingMode,
         captureOrientationStatus,
+        captureSource,
+        onDeviceScanStatus,
+        onDeviceScanReport,
+        canStartRecording,
         startCamera,
         switchCamera,
         startRecording,
@@ -1191,6 +1195,27 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         || (facingMode === "environment" ? "후면·기본 카메라" : "전면 카메라");
     const selectedMicrophoneLabel = audioDevices.find((device) => device.deviceId === selectedAudioDeviceId)?.label
         || "기본 마이크";
+    const onDeviceScanTitle = onDeviceScanStatus === "scanning"
+        ? "온디바이스 1차 스캔 중"
+        : onDeviceScanStatus === "blocked"
+            ? "촬영 환경을 다시 맞춰주세요"
+            : onDeviceScanStatus === "attention"
+                ? "촬영 가능 · 환경 확인 권장"
+                : onDeviceScanStatus === "ready"
+                    ? "촬영 환경 확인됨"
+                    : "촬영 가능 · 기기 스캔 제한";
+    const onDeviceScanDetail = onDeviceScanStatus === "scanning"
+        ? "밝기·윤곽·움직임·마이크 신호를 이 기기에서 확인하고 있어요."
+        : onDeviceScanStatus === "blocked"
+            ? onDeviceScanReport?.blockingReason || "카메라 화면을 다시 확인해 주세요."
+            : onDeviceScanStatus === "attention"
+                ? onDeviceScanReport?.warnings[0] || "강아지 전신과 소리가 잘 담기는지 확인해 주세요."
+                : onDeviceScanStatus === "ready"
+                    ? "촬영 전 검사는 기기 안에서 끝났고, 영상은 아직 서버로 전송되지 않았어요."
+                    : "이 기기에서는 사전 검사가 제한되지만 저용량 녹화는 적용됩니다.";
+    const liveClipMegabytes = clip && captureSource === "live_camera"
+        ? (clip.size / (1024 * 1024)).toFixed(1)
+        : "";
     const captureStage = (
         <div
             className={captureViewportActive
@@ -1285,6 +1310,26 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <span className="shrink-0 whitespace-nowrap text-sm font-black">{secondsLeft}초</span>
                     </div>
                 )}
+                {captureSource === "live_camera" && (phase === "preview" || phase === "recording") && (
+                    <div
+                        className={`pointer-events-none absolute inset-x-3 bottom-3 z-20 rounded-2xl border px-3 py-2 text-white shadow-lg backdrop-blur-sm ${
+                            onDeviceScanStatus === "blocked"
+                                ? "border-rose-300/70 bg-rose-950/85"
+                                : onDeviceScanStatus === "attention"
+                                    ? "border-amber-300/70 bg-amber-950/80"
+                                    : "border-cyan-300/60 bg-slate-950/78"
+                        }`}
+                        role="status"
+                        aria-live="polite"
+                        data-daenglab-on-device-scan={onDeviceScanStatus}
+                    >
+                        <p className="text-[11px] font-black">
+                            <i className={`fa-solid mr-1.5 ${onDeviceScanStatus === "scanning" ? "fa-circle-notch fa-spin" : onDeviceScanStatus === "blocked" ? "fa-triangle-exclamation" : "fa-microchip"}`} aria-hidden="true" />
+                            {onDeviceScanTitle}
+                        </p>
+                        <p className="mt-0.5 line-clamp-2 text-[10px] font-bold leading-4 text-white/80">{onDeviceScanDetail}</p>
+                    </div>
+                )}
                 {(phase === "preview" || phase === "recorded") && (
                     <>
                         <div className="pointer-events-none absolute inset-x-3 top-3 rounded-2xl bg-black/60 px-3 py-2 text-white shadow-sm" data-daenglab-target-anchor-guide>
@@ -1315,6 +1360,21 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </>
                 )}
             </div>
+            {captureSource === "live_camera" && phase === "recorded" && (
+                <div
+                    className="rounded-2xl border border-cyan-200 bg-cyan-50 px-4 py-3 text-cyan-950"
+                    data-daenglab-on-device-scan="recorded"
+                >
+                    <p className="text-xs font-black">
+                        <i className="fa-solid fa-microchip mr-2 text-cyan-700" aria-hidden="true" />
+                        온디바이스 스캔 완료 · 전송 최적화
+                    </p>
+                    <p className="mt-1 text-[10px] font-bold leading-4 text-cyan-900">
+                        기기에서 촬영 품질을 먼저 확인했고, 15초 영상을 약 {liveClipMegabytes}MB로 줄였습니다.
+                        분석 버튼을 누를 때만 최종 행동·소리·건강 신호 분석을 위해 서버로 전송합니다.
+                    </p>
+                </div>
+            )}
             <div
                 ref={captureActionsRef}
                 className={captureViewportActive ? "grid shrink-0 gap-2" : "grid gap-2 sm:grid-cols-2"}
@@ -1360,12 +1420,16 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         <button
                             ref={capturePrimaryButtonRef}
                             type="button"
-                            disabled={!consent}
+                            disabled={!consent || !canStartRecording}
                             onClick={startRecording}
                             className="btn btn-primary min-h-12 whitespace-nowrap justify-center disabled:opacity-50"
                             data-petlens-start-observation
                         >
-                            <i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작
+                            {onDeviceScanStatus === "scanning" ? (
+                                <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 기기에서 촬영 환경 확인 중</>
+                            ) : (
+                                <><i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작</>
+                            )}
                         </button>
                         <button
                             type="button"
@@ -1626,7 +1690,12 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </div>
                 </div>
                 <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                    분석할 강아지를 화면 중앙에 두고 입·전신·목줄이나 털색 특징이 계속 보이게 담아주세요. 앱의 {PET_OBSERVATION_RECORDING_SECONDS}초 촬영은 보통 약 2MB 이내입니다.
+                    분석할 강아지를 화면 중앙에 두고 입·전신·목줄이나 털색 특징이 계속 보이게 담아주세요.
+                    실시간 촬영은 기기에서 밝기·움직임·마이크 신호를 먼저 확인하고 저용량으로 녹화합니다.
+                </p>
+                <p className="mt-2 rounded-xl border border-sky-100 bg-sky-50 px-3 py-2 text-[10px] font-bold leading-4 text-sky-900" data-daenglab-on-device-policy>
+                    <i className="fa-solid fa-microchip mr-1.5 text-sky-700" aria-hidden="true" />
+                    온디바이스 스캔은 촬영 품질과 전송량을 줄이는 1차 검사입니다. 행동 의미와 건강 신호의 최종 판정은 정확도를 위해 분석 버튼을 누른 뒤 서버에서 수행합니다.
                 </p>
                 <p className="mt-2 rounded-xl border border-cyan-100 bg-cyan-50 px-3 py-2 text-[10px] font-black leading-4 text-cyan-900">
                     여러 강아지가 함께 있으면 아래 메모에 “화면 왼쪽 빨간 목줄 갈색 푸들”처럼 분석할 아이의 위치와 특징을 적어 주세요. 구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요.
@@ -1843,6 +1912,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     </span>
                     <p className="text-[11px] font-bold leading-5 text-neutral-500">
                         연결 뒤 모바일 전·후면 카메라나 PC 웹캠·마이크가 여러 개면 직접 바꿀 수 있어요.
+                        실시간 촬영의 1차 품질 스캔은 기기 안에서만 처리하며 업로드 영상에는 적용하지 않습니다.{" "}
                         실시간 촬영이 안 되는 브라우저에서는 {" "}
                         <span className="whitespace-nowrap">{PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초</span>{" "}
                         WebM·MP4·MOV 영상을 선택할 수 있으며 최대 {" "}

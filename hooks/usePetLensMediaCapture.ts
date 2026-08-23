@@ -8,15 +8,29 @@ import {
     PET_OBSERVATION_MIN_DURATION_SECONDS,
     PET_OBSERVATION_RECORDING_SECONDS,
 } from "@/lib/petlens-observation-limits";
+import {
+    buildPetLensOnDeviceScanReport,
+    PETLENS_ON_DEVICE_SCAN_MIN_FRAMES,
+    petLensOnDeviceScanCanRecord,
+    type PetLensOnDeviceFrameSample,
+    type PetLensOnDeviceScanReport,
+    type PetLensOnDeviceScanStatus,
+} from "@/lib/petlens-on-device-scan";
 
 
 const RECORDING_SECONDS = PET_OBSERVATION_RECORDING_SECONDS;
 const MAX_FILE_BYTES = PET_OBSERVATION_MAX_FILE_BYTES;
+const LIVE_VIDEO_BITS_PER_SECOND = 600_000;
+const LIVE_AUDIO_BITS_PER_SECOND = 48_000;
+const ON_DEVICE_SAMPLE_INTERVAL_MS = 300;
+const ON_DEVICE_SAMPLE_WIDTH = 160;
+const ON_DEVICE_SAMPLE_HEIGHT = 120;
 
 export type PetLensCapturePhase = "idle" | "requesting" | "preview" | "recording" | "recorded" | "error";
 export type PetLensCameraFacing = "environment" | "user";
 export type PetLensCaptureOrientation = "portrait" | "landscape";
 export type PetLensCaptureOrientationStatus = "unknown" | "matched" | "preview_only";
+export type PetLensCaptureSource = "live_camera" | "uploaded_video" | null;
 export type PetLensMediaDeviceOption = {
     deviceId: string;
     label: string;
@@ -134,6 +148,14 @@ export function usePetLensMediaCapture() {
     const discardRef = useRef(false);
     const mountedRef = useRef(true);
     const cameraRequestRef = useRef(0);
+    const onDeviceScanTimerRef = useRef<number | null>(null);
+    const onDeviceAudioContextRef = useRef<AudioContext | null>(null);
+    const onDeviceAnalyserRef = useRef<AnalyserNode | null>(null);
+    const onDeviceAudioBufferRef = useRef<Float32Array<ArrayBuffer> | null>(null);
+    const onDeviceScanSamplesRef = useRef<PetLensOnDeviceFrameSample[]>([]);
+    const onDeviceScanStartedAtRef = useRef(0);
+    const onDevicePreviousFrameRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
+    const onDeviceScanReportRef = useRef<PetLensOnDeviceScanReport | null>(null);
 
     const [phase, setPhase] = useState<PetLensCapturePhase>("idle");
     const [supported, setSupported] = useState<boolean | null>(null);
@@ -148,6 +170,9 @@ export function usePetLensMediaCapture() {
     const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState("");
     const [facingMode, setFacingMode] = useState<PetLensCameraFacing>("environment");
     const [captureOrientationStatus, setCaptureOrientationStatus] = useState<PetLensCaptureOrientationStatus>("unknown");
+    const [captureSource, setCaptureSource] = useState<PetLensCaptureSource>(null);
+    const [onDeviceScanStatus, setOnDeviceScanStatus] = useState<PetLensOnDeviceScanStatus>("idle");
+    const [onDeviceScanReport, setOnDeviceScanReport] = useState<PetLensOnDeviceScanReport | null>(null);
 
     const clearTimers = useCallback(() => {
         if (stopTimerRef.current !== null) window.clearTimeout(stopTimerRef.current);
@@ -156,12 +181,145 @@ export function usePetLensMediaCapture() {
         tickTimerRef.current = null;
     }, []);
 
+    const stopOnDeviceScan = useCallback(() => {
+        if (onDeviceScanTimerRef.current !== null) {
+            window.clearInterval(onDeviceScanTimerRef.current);
+            onDeviceScanTimerRef.current = null;
+        }
+        const audioContext = onDeviceAudioContextRef.current;
+        onDeviceAudioContextRef.current = null;
+        onDeviceAnalyserRef.current = null;
+        onDeviceAudioBufferRef.current = null;
+        if (audioContext && audioContext.state !== "closed") {
+            void audioContext.close().catch(() => undefined);
+        }
+        onDevicePreviousFrameRef.current = null;
+    }, []);
+
+    const resetOnDeviceScan = useCallback(() => {
+        stopOnDeviceScan();
+        onDeviceScanSamplesRef.current = [];
+        onDeviceScanReportRef.current = null;
+        if (mountedRef.current) {
+            setOnDeviceScanReport(null);
+            setOnDeviceScanStatus("idle");
+        }
+    }, [stopOnDeviceScan]);
+
+    const startOnDeviceScan = useCallback((stream: MediaStream) => {
+        stopOnDeviceScan();
+        onDeviceScanSamplesRef.current = [];
+        onDeviceScanReportRef.current = null;
+        onDeviceScanStartedAtRef.current = performance.now();
+        onDevicePreviousFrameRef.current = null;
+        setOnDeviceScanReport(null);
+        setOnDeviceScanStatus("scanning");
+
+        const canvas = document.createElement("canvas");
+        canvas.width = ON_DEVICE_SAMPLE_WIDTH;
+        canvas.height = ON_DEVICE_SAMPLE_HEIGHT;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) {
+            setOnDeviceScanStatus("unavailable");
+            return;
+        }
+
+        try {
+            const AudioContextConstructor = window.AudioContext
+                || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+            if (AudioContextConstructor) {
+                const audioContext = new AudioContextConstructor();
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 1_024;
+                analyser.smoothingTimeConstant = 0.35;
+                audioContext.createMediaStreamSource(stream).connect(analyser);
+                onDeviceAudioContextRef.current = audioContext;
+                onDeviceAnalyserRef.current = analyser;
+                onDeviceAudioBufferRef.current = new Float32Array(analyser.fftSize);
+                void audioContext.resume().catch(() => undefined);
+            }
+        } catch {
+            // Video preflight still works when Web Audio is unavailable.
+        }
+
+        const sampleFrame = () => {
+            const video = videoRef.current;
+            if (
+                !mountedRef.current
+                || !video
+                || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA
+                || video.videoWidth <= 0
+                || video.videoHeight <= 0
+            ) return;
+            try {
+                context.drawImage(video, 0, 0, ON_DEVICE_SAMPLE_WIDTH, ON_DEVICE_SAMPLE_HEIGHT);
+                const rgba = context.getImageData(0, 0, ON_DEVICE_SAMPLE_WIDTH, ON_DEVICE_SAMPLE_HEIGHT).data;
+                const pixelCount = rgba.length / 4;
+                const grayscale = new Uint8Array(pixelCount);
+                let luminanceSum = 0;
+                let luminanceSquareSum = 0;
+                let motionSum = 0;
+                const previous = onDevicePreviousFrameRef.current;
+                for (let pixel = 0, offset = 0; pixel < pixelCount; pixel += 1, offset += 4) {
+                    const luminance = Math.round(
+                        (rgba[offset] * 0.299) + (rgba[offset + 1] * 0.587) + (rgba[offset + 2] * 0.114),
+                    );
+                    grayscale[pixel] = luminance;
+                    luminanceSum += luminance;
+                    luminanceSquareSum += luminance * luminance;
+                    if (previous) motionSum += Math.abs(luminance - previous[pixel]);
+                }
+                onDevicePreviousFrameRef.current = grayscale;
+                const luminance = luminanceSum / pixelCount;
+                const variance = Math.max(0, (luminanceSquareSum / pixelCount) - (luminance * luminance));
+                const analyser = onDeviceAnalyserRef.current;
+                const audioBuffer = onDeviceAudioBufferRef.current;
+                let audioRms: number | null = null;
+                let audioPeak: number | null = null;
+                if (analyser && audioBuffer) {
+                    analyser.getFloatTimeDomainData(audioBuffer);
+                    let audioSquareSum = 0;
+                    let peak = 0;
+                    for (const value of audioBuffer) {
+                        audioSquareSum += value * value;
+                        peak = Math.max(peak, Math.abs(value));
+                    }
+                    audioRms = Math.sqrt(audioSquareSum / audioBuffer.length);
+                    audioPeak = peak;
+                }
+                const samples = onDeviceScanSamplesRef.current;
+                samples.push({
+                    luminance,
+                    contrast: Math.sqrt(variance),
+                    motion: previous ? motionSum / pixelCount : null,
+                    audioRms,
+                    audioPeak,
+                });
+                if (samples.length > 20) samples.shift();
+                const report = buildPetLensOnDeviceScanReport(
+                    samples,
+                    performance.now() - onDeviceScanStartedAtRef.current,
+                );
+                onDeviceScanReportRef.current = report;
+                setOnDeviceScanReport(report);
+                setOnDeviceScanStatus(report.status);
+            } catch {
+                if (onDeviceScanSamplesRef.current.length < PETLENS_ON_DEVICE_SCAN_MIN_FRAMES) {
+                    setOnDeviceScanStatus("unavailable");
+                }
+            }
+        };
+        sampleFrame();
+        onDeviceScanTimerRef.current = window.setInterval(sampleFrame, ON_DEVICE_SAMPLE_INTERVAL_MS);
+    }, [stopOnDeviceScan]);
+
     const stopTracks = useCallback(() => {
+        stopOnDeviceScan();
         streamRef.current?.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
         if (mountedRef.current) setCaptureOrientationStatus("unknown");
         if (videoRef.current) videoRef.current.srcObject = null;
-    }, []);
+    }, [stopOnDeviceScan]);
 
     const revokeClipUrl = useCallback(() => {
         if (clipUrlRef.current) URL.revokeObjectURL(clipUrlRef.current);
@@ -181,11 +339,16 @@ export function usePetLensMediaCapture() {
             recorder.stop();
         }
         stopTracks();
+        onDeviceScanSamplesRef.current = [];
+        onDeviceScanReportRef.current = null;
         chunksRef.current = [];
         if (mountedRef.current) {
             setPhase(message ? "error" : "idle");
             setError(message);
             setSecondsLeft(RECORDING_SECONDS);
+            setCaptureSource(null);
+            setOnDeviceScanReport(null);
+            setOnDeviceScanStatus("idle");
         }
     }, [clearTimers, stopTracks]);
 
@@ -196,7 +359,9 @@ export function usePetLensMediaCapture() {
         setDurationSeconds(0);
         setError("");
         setPhase("idle");
-    }, [cancelCapture, revokeClipUrl]);
+        setCaptureSource(null);
+        resetOnDeviceScan();
+    }, [cancelCapture, resetOnDeviceScan, revokeClipUrl]);
 
     const refreshDevices = useCallback(async () => {
         if (!navigator.mediaDevices?.enumerateDevices) return;
@@ -225,6 +390,7 @@ export function usePetLensMediaCapture() {
         setClip(null);
         setDurationSeconds(0);
         revokeClipUrl();
+        resetOnDeviceScan();
         stopTracks();
         if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
             setSupported(false);
@@ -289,6 +455,8 @@ export function usePetLensMediaCapture() {
                 videoRef.current.muted = true;
                 await videoRef.current.play().catch(() => undefined);
             }
+            setCaptureSource("live_camera");
+            startOnDeviceScan(stream);
             const detectedOrientation = detectedStreamOrientation(stream.getVideoTracks()[0], videoRef.current);
             setCaptureOrientationStatus(
                 detectedOrientation === null
@@ -306,10 +474,21 @@ export function usePetLensMediaCapture() {
                     ? "사용할 수 있는 카메라 또는 마이크를 찾지 못했습니다."
                     : reason instanceof Error ? reason.message : "카메라와 마이크를 연결하지 못했습니다.";
             stopTracks();
+            resetOnDeviceScan();
+            setCaptureSource(null);
             setPhase("error");
             setError(message);
         }
-    }, [facingMode, refreshDevices, revokeClipUrl, selectedAudioDeviceId, selectedVideoDeviceId, stopTracks]);
+    }, [
+        facingMode,
+        refreshDevices,
+        resetOnDeviceScan,
+        revokeClipUrl,
+        selectedAudioDeviceId,
+        selectedVideoDeviceId,
+        startOnDeviceScan,
+        stopTracks,
+    ]);
 
     const switchCamera = useCallback(async () => {
         if (videoDevices.length > 1) {
@@ -327,6 +506,14 @@ export function usePetLensMediaCapture() {
     const startRecording = useCallback(() => {
         const stream = streamRef.current;
         if (!stream || phase !== "preview") return;
+        const currentScanStatus = onDeviceScanReportRef.current?.status || onDeviceScanStatus;
+        if (!petLensOnDeviceScanCanRecord(currentScanStatus)) {
+            setError(
+                onDeviceScanReportRef.current?.blockingReason
+                || "기기에서 촬영 환경을 확인하고 있습니다. 잠시 후 다시 눌러 주세요.",
+            );
+            return;
+        }
         setError("");
         discardRef.current = false;
         chunksRef.current = [];
@@ -336,8 +523,8 @@ export function usePetLensMediaCapture() {
             try {
                 recorder = new MediaRecorder(stream, {
                     ...(mimeType ? { mimeType } : {}),
-                    videoBitsPerSecond: 800_000,
-                    audioBitsPerSecond: 64_000,
+                    videoBitsPerSecond: LIVE_VIDEO_BITS_PER_SECOND,
+                    audioBitsPerSecond: LIVE_AUDIO_BITS_PER_SECOND,
                 });
             } catch {
                 recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
@@ -349,9 +536,16 @@ export function usePetLensMediaCapture() {
             recorder.onstop = () => {
                 clearTimers();
                 recorderRef.current = null;
+                const finalOnDeviceScan = onDeviceScanReportRef.current;
                 stopTracks();
                 if (discardRef.current || !mountedRef.current) {
                     chunksRef.current = [];
+                    return;
+                }
+                if (finalOnDeviceScan?.status === "blocked") {
+                    chunksRef.current = [];
+                    setPhase("error");
+                    setError(finalOnDeviceScan.blockingReason || "촬영 화면을 확인할 수 없습니다. 다시 촬영해 주세요.");
                     return;
                 }
                 const actualType = recorder.mimeType || mimeType || "video/webm";
@@ -404,7 +598,7 @@ export function usePetLensMediaCapture() {
         } catch {
             cancelCapture("이 브라우저에서 영상 녹화를 시작하지 못했습니다. 아래에서 촬영한 영상을 선택해 주세요.");
         }
-    }, [cancelCapture, clearTimers, phase, revokeClipUrl, stopTracks]);
+    }, [cancelCapture, clearTimers, onDeviceScanStatus, phase, revokeClipUrl, stopTracks]);
 
     const selectFile = useCallback(async (file?: File) => {
         if (!file) return;
@@ -450,6 +644,7 @@ export function usePetLensMediaCapture() {
             setClipUrl(url);
             setClip(normalizedFile);
             setDurationSeconds(duration);
+            setCaptureSource("uploaded_video");
             setPhase("recorded");
         } catch (reason) {
             if (!mountedRef.current || cameraRequestRef.current !== requestId) return;
@@ -534,6 +729,10 @@ export function usePetLensMediaCapture() {
         selectedAudioDeviceId,
         facingMode,
         captureOrientationStatus,
+        captureSource,
+        onDeviceScanStatus,
+        onDeviceScanReport,
+        canStartRecording: petLensOnDeviceScanCanRecord(onDeviceScanStatus),
         startCamera,
         switchCamera,
         startRecording,
