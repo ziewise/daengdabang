@@ -139,3 +139,41 @@ test("yellow additions and previously missing products include real product and 
         }
     }
 });
+
+const newDetailTargets = {
+    rw_backtrak_evac_kit: 6,
+    rw_doubletrack_coupler: 3,
+    rw_knotahitch: 6,
+    rw_trailrunner_vest: 6,
+    rw_gourdo_small: 6,
+    rw_gourdo_large: 6,
+    rw_pacificring_toy: 5,
+    rw_powderhound_waterproof_jacket_26fw: 6,
+    rw_powderhound_coverall_26fw: 6,
+    rw_timberline_fuse_vest_26fw: 8,
+    rw_mt_hoodie_gaiter_26fw: 7,
+    rw_lumenglow_jacket_26fw: 7,
+    rw_polartrex_boots_26fw: 5,
+    rw_rogue_longline_26fw: 4,
+    rw_remix_cactus_tug_26fw: 3,
+    rw_remix_soft_disc_26fw: 3,
+};
+
+test("all 16 newly listed Ruffwear products have sourced detail-page content", async () => {
+    const catalog = JSON.parse(await readFile(new URL("../lib/catalog/raw.json", import.meta.url), "utf8"));
+    const byFolder = new Map(catalog.map((row) => [row.folder, row]));
+
+    assert.equal(Object.keys(newDetailTargets).length, 16);
+    for (const [folder, expectedCount] of Object.entries(newDetailTargets)) {
+        const row = byFolder.get(folder);
+        assert.ok(row, `missing new Ruffwear product: ${folder}`);
+        assert.match(row.sourceUrl ?? "", /^https:\/\/ruffwear\.com\/products\//, `unofficial detail source: ${folder}`);
+        assert.equal(row.details?.length, expectedCount, `incomplete detail page: ${folder}`);
+
+        for (let index = 1; index <= expectedCount; index += 1) {
+            const expectedPath = `/images/products/catalog/${folder}/details/${index}.webp`;
+            assert.equal(row.details[index - 1], expectedPath, `wrong detail image order: ${folder}`);
+            await access(new URL(`../public${expectedPath}`, import.meta.url));
+        }
+    }
+});
