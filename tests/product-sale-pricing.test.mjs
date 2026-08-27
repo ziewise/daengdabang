@@ -17,8 +17,8 @@ test("Ruffwear and Rex Specs stay at the current price without a discount compar
     const catalog = JSON.parse(await source("lib/catalog/raw.json"));
     const targets = catalog.filter((row) => brands.has(row.brandEn));
 
-    assert.equal(targets.length, 154);
-    assert.equal(targets.filter((row) => row.brandEn === "Ruffwear").length, 123);
+    assert.equal(targets.length, 170);
+    assert.equal(targets.filter((row) => row.brandEn === "Ruffwear").length, 139);
     assert.equal(targets.filter((row) => row.brandEn === "Rex Specs").length, 31);
 
     for (const row of targets) {
@@ -77,7 +77,7 @@ test("catalog price badges default for protected and standard brands without cha
     const protectedBrands = catalog.filter((row) => brands.has(row.brandEn));
     const standardBrands = catalog.filter((row) => !brands.has(row.brandEn));
 
-    assert.equal(protectedBrands.length, 154);
+    assert.equal(protectedBrands.length, 170);
     assert.equal(standardBrands.length, 192);
     for (const row of catalog) assert.equal(row.priceNum, beforePrices.get(row.no));
     assert.match(badgeSource, /Ruffwear/);

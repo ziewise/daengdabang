@@ -2224,5 +2224,63 @@
    "name": "XL",
    "delta": 0
   }
+ ],
+ "rw_powderhound_waterproof_jacket_26fw": [
+  { "name": "XXS", "delta": 0 },
+  { "name": "XS", "delta": 0 },
+  { "name": "S", "delta": 0 },
+  { "name": "M", "delta": 0 },
+  { "name": "L", "delta": 0 },
+  { "name": "XL", "delta": 0 }
+ ],
+ "rw_powderhound_coverall_26fw": [
+  { "name": "XXS", "delta": 0 },
+  { "name": "XS", "delta": 0 },
+  { "name": "S", "delta": 0 },
+  { "name": "M", "delta": 0 },
+  { "name": "L", "delta": 0 },
+  { "name": "XL", "delta": 0 }
+ ],
+ "rw_timberline_fuse_vest_26fw": [
+  { "name": "XXS", "delta": 0 },
+  { "name": "XS", "delta": 0 },
+  { "name": "S", "delta": 0 },
+  { "name": "M", "delta": 0 },
+  { "name": "L", "delta": 0 },
+  { "name": "XL", "delta": 0 }
+ ],
+ "rw_mt_hoodie_gaiter_26fw": [
+  { "name": "11\"–15\"", "delta": 0 },
+  { "name": "15\"–20\"", "delta": 0 },
+  { "name": "20\"–27\"", "delta": 0 }
+ ],
+ "rw_lumenglow_jacket_26fw": [
+  { "name": "XXS", "delta": 0 },
+  { "name": "XS", "delta": 0 },
+  { "name": "S", "delta": 0 },
+  { "name": "M", "delta": 0 },
+  { "name": "L", "delta": 0 },
+  { "name": "XL", "delta": 0 }
+ ],
+ "rw_polartrex_boots_26fw": [
+  { "name": "1.50\"", "delta": 0 },
+  { "name": "1.75\"", "delta": 0 },
+  { "name": "2.00\"", "delta": 0 },
+  { "name": "2.25\"", "delta": 0 },
+  { "name": "2.50\"", "delta": 0 },
+  { "name": "2.75\"", "delta": 0 },
+  { "name": "3.00\"", "delta": 0 },
+  { "name": "3.25\"", "delta": 0 }
+ ],
+ "rw_backtrak_evac_kit": [
+  { "name": "S", "delta": 0 },
+  { "name": "M", "delta": 0 },
+  { "name": "L", "delta": 0 }
+ ],
+ "rw_trailrunner_vest": [
+  { "name": "XS", "delta": 0 },
+  { "name": "S", "delta": 0 },
+  { "name": "M", "delta": 0 },
+  { "name": "L/XL", "delta": 0 }
  ]
 }

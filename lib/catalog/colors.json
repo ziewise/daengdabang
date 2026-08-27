@@ -1507,38 +1507,38 @@
    "chip": "chips/red_sumac.webp"
   }
  ],
- "rw_overcoat_fuse_jacket": [
+"rw_overcoat_fuse_jacket": [
   {
-   "file": "basalt_gray.webp",
-   "name": "바솔트 그레이",
-   "chip": "chips/basalt_gray.webp"
+   "file": "brown_bear.png",
+   "name": "브라운 베어",
+   "chip": "brown_bear.png"
   },
   {
-   "file": "evergreen.webp",
-   "name": "에버그린",
-   "chip": "chips/evergreen.webp"
+   "file": "cedar_green.png",
+   "name": "시더 그린",
+   "chip": "cedar_green.png"
   },
   {
-   "file": "purple_rain.webp",
-   "name": "퍼플 레인",
-   "chip": "chips/purple_rain.webp"
+   "file": "purple_umber.png",
+   "name": "퍼플 엄버",
+   "chip": "purple_umber.png"
   }
  ],
  "rw_powderhound_jacket": [
   {
-   "file": "blue_pool.webp",
-   "name": "블루 풀",
-   "chip": "chips/blue_pool.webp"
+   "file": "obsidian_black.png",
+   "name": "옵시디언 블랙",
+   "chip": "obsidian_black.png"
   },
   {
-   "file": "aurora_teal.webp",
-   "name": "오로라 틸",
-   "chip": "chips/aurora_teal.webp"
+   "file": "polar_blue.png",
+   "name": "폴라 블루",
+   "chip": "polar_blue.png"
   },
   {
-   "file": "persimmon_orange.webp",
-   "name": "퍼시먼 오렌지",
-   "chip": "chips/persimmon_orange.webp"
+   "file": "red_currant.png",
+   "name": "레드 커런트",
+   "chip": "red_currant.png"
   }
  ],
  "rw_hemphound_sweater": [
@@ -2935,6 +2935,168 @@
    "file": "aurorateal_heliotropepurple.webp",
    "name": "오로라 틸/헬리오트로프 퍼플",
    "chip": "chips/aurorateal_heliotropepurple.webp"
+  }
+ ],
+ "rw_powderhound_waterproof_jacket_26fw": [
+  {
+   "file": "polar_blue.png",
+   "name": "폴라 블루",
+   "chip": "polar_blue.png"
+  },
+  {
+   "file": "red_currant.png",
+   "name": "레드 커런트",
+   "chip": "red_currant.png"
+  }
+ ],
+ "rw_powderhound_coverall_26fw": [
+  {
+   "file": "obsidian_black.png",
+   "name": "옵시디언 블랙",
+   "chip": "obsidian_black.png"
+  }
+ ],
+ "rw_timberline_fuse_vest_26fw": [
+  {
+   "file": "deep_teal.png",
+   "name": "딥 틸",
+   "chip": "deep_teal.png"
+  },
+  {
+   "file": "driftwood.png",
+   "name": "드리프트우드",
+   "chip": "driftwood.png"
+  }
+ ],
+ "rw_mt_hoodie_gaiter_26fw": [
+  {
+   "file": "basalt_gray.png",
+   "name": "바솔트 그레이",
+   "chip": "basalt_gray.png"
+  },
+  {
+   "file": "deep_teal.png",
+   "name": "딥 틸",
+   "chip": "deep_teal.png"
+  }
+ ],
+ "rw_lumenglow_jacket_26fw": [
+  {
+   "file": "blaze_orange.png",
+   "name": "블레이즈 오렌지",
+   "chip": "blaze_orange.png"
+  }
+ ],
+ "rw_polartrex_boots_26fw": [
+  {
+   "file": "obsidian_black.png",
+   "name": "옵시디언 블랙",
+   "chip": "obsidian_black.png"
+  }
+ ],
+ "rw_rogue_longline_26fw": [
+  {
+   "file": "basalt_gray.png",
+   "name": "바솔트 그레이",
+   "chip": "basalt_gray.png"
+  },
+  {
+   "file": "blaze_orange.png",
+   "name": "블레이즈 오렌지",
+   "chip": "blaze_orange.png"
+  }
+ ],
+ "rw_remix_cactus_tug_26fw": [
+  {
+   "file": "surprise.png",
+   "name": "서프라이즈(랜덤)",
+   "chip": "surprise.png"
+  }
+ ],
+ "rw_remix_soft_disc_26fw": [
+  {
+   "file": "surprise.png",
+   "name": "서프라이즈(랜덤)",
+   "chip": "surprise.png"
+  }
+ ],
+ "rw_backtrak_evac_kit": [
+  {
+   "file": "cloudburst_gray.png",
+   "name": "클라우드버스트 그레이",
+   "chip": "cloudburst_gray.png"
+  }
+ ],
+ "rw_doubletrack_coupler": [
+  {
+   "file": "basalt_gray.png",
+   "name": "바솔트 그레이",
+   "chip": "basalt_gray.png"
+  }
+ ],
+ "rw_knotahitch": [
+  {
+   "file": "red_clay.png",
+   "name": "레드 클레이",
+   "chip": "red_clay.png"
+  }
+ ],
+ "rw_trailrunner_vest": [
+  {
+   "file": "lichen_green.png",
+   "name": "라이켄 그린",
+   "chip": "lichen_green.png"
+  },
+  {
+   "file": "blue_pool.png",
+   "name": "블루 풀",
+   "chip": "blue_pool.png"
+  }
+ ],
+ "rw_gourdo_small": [
+  {
+   "file": "sage_green.png",
+   "name": "세이지 그린",
+   "chip": "sage_green.png"
+  },
+  {
+   "file": "heliotrope_purple.png",
+   "name": "헬리오트로프 퍼플",
+   "chip": "heliotrope_purple.png"
+  },
+  {
+   "file": "campfire_orange.png",
+   "name": "캠프파이어 오렌지",
+   "chip": "campfire_orange.png"
+  }
+ ],
+ "rw_gourdo_large": [
+  {
+   "file": "sage_green.png",
+   "name": "세이지 그린",
+   "chip": "sage_green.png"
+  },
+  {
+   "file": "heliotrope_purple.png",
+   "name": "헬리오트로프 퍼플",
+   "chip": "heliotrope_purple.png"
+  },
+  {
+   "file": "campfire_orange.png",
+   "name": "캠프파이어 오렌지",
+   "chip": "campfire_orange.png"
+  }
+ ],
+ "rw_pacificring_toy": [
+  {
+   "file": "sockeye_red.png",
+   "name": "사카이 레드",
+   "chip": "sockeye_red.png"
+  },
+  {
+   "file": "aurora_teal.png",
+   "name": "오로라 틸",
+   "chip": "aurora_teal.png"
   }
  ]
 }

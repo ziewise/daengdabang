@@ -114,7 +114,7 @@ test("the full storefront catalog keeps the reviewed dog-pack boundary", async (
         .map((row) => `p_${row.no}`)
         .sort();
 
-    assert.equal(rows.length, 346);
+    assert.equal(rows.length, 362);
     assert.deepEqual(detected, ["p_145", "p_28"]);
 });
 
