@@ -17,6 +17,9 @@ type PetTryOnProductIdentity = {
         folder?: string;
         useMain?: string;
         useSub?: string;
+        videoProvider?: string;
+        videoQuality?: string;
+        videoJobId?: string;
     };
 };
 
@@ -102,4 +105,30 @@ export function safeDogWearingCatalogVideo(product: StorefrontVideoCandidate): s
     const video = product.video?.trim();
     if (!video) return undefined;
     return getPetTryOnEligibility(product).eligible ? video : undefined;
+}
+
+const REVIEWED_PRODUCT_INTERACTION_QUALITIES = new Set([
+    "approved_dog_wearing",
+    "approved_dog_using",
+    "approved_dog_product_interaction",
+]);
+
+/**
+ * General catalog hover clips are separate from Smart Fit eligibility. A toy,
+ * bowl or other non-wearable product can have a safe dog-using hover clip even
+ * though it must remain unavailable in Try-On. Only Admin-reviewed ZiewCraft
+ * jobs may bypass the legacy dog-wearing gate.
+ */
+export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string | undefined {
+    const video = product.video?.trim();
+    if (!video) return undefined;
+    const raw = product.raw;
+    if (
+        raw?.videoProvider === "ziewcraft" &&
+        REVIEWED_PRODUCT_INTERACTION_QUALITIES.has(raw.videoQuality || "") &&
+        Boolean(raw.videoJobId?.trim())
+    ) {
+        return video;
+    }
+    return safeDogWearingCatalogVideo(product);
 }

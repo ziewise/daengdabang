@@ -23,6 +23,7 @@ import { productHref } from "@/lib/shop";          // 운영 사이트 라우트
 import { useStore } from "@/lib/store";            // 운영 사이트 위시리스트 기능
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
+import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
 interface Props {
     product: CatalogProduct;
@@ -119,6 +120,7 @@ export default function ProductCard({
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />
                     )}
+                    {hasVideo && videoActive && <VideoBrandOverlay />}
 
                 {/* 좌상단 배지 — BEST + NEW */}
                     {(showBest || shouldShowNew) && (

@@ -173,3 +173,23 @@ test("reviewed dog-worn product videos remain available", async () => {
         video: "/wear.mp4",
     }), "/wear.mp4");
 });
+
+test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gate", async () => {
+    const { getPetTryOnEligibility, safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
+    const toyVideo = "/images/products/catalog/rw_gourdo_small/videos/hover.mp4";
+    const toy = {
+        id: "p_351",
+        subcategory: "latex",
+        image: "/images/products/catalog/rw_gourdo_small/rw_gourdo_small.png",
+        video: toyVideo,
+        raw: {
+            videoProvider: "ziewcraft",
+            videoQuality: "approved_dog_wearing",
+            videoJobId: "5509607d50ba5e2536301a599d730468",
+        },
+    };
+
+    assert.equal(getPetTryOnEligibility(toy).eligible, false);
+    assert.equal(safeCatalogHoverVideo(toy), toyVideo);
+    assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
+});

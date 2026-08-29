@@ -10,6 +10,7 @@ test("storefront uses the approved transparent black-poodle brand symbol", () =>
     const siteHeader = read("../components/site/Header.tsx");
     const authLayout = read("../app/(auth)/layout.tsx");
     const videoOverlay = read("../components/products/VideoBrandOverlay.tsx");
+    const productCard = read("../components/products/ProductCard.tsx");
 
     assert.equal(symbol.toString("ascii", 1, 4), "PNG");
     assert.equal(symbol.readUInt32BE(16), 1254);
@@ -23,6 +24,9 @@ test("storefront uses the approved transparent black-poodle brand symbol", () =>
     for (const header of [brandLogo, siteHeader]) {
         assert.match(header, /translate-x-\[3px\] translate-y-\[3px\]/);
     }
+
+    assert.match(productCard, /import VideoBrandOverlay/);
+    assert.match(productCard, /hasVideo && videoActive && <VideoBrandOverlay \/>/);
 });
 
 test("storefront publishes the approved black-poodle Windows icon for the AI assistant", () => {
