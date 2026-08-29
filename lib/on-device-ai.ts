@@ -151,9 +151,8 @@ export async function prepareImageOnDevice(
         context.imageSmoothingQuality = "high";
         context.drawImage(decoded, 0, 0, width, height);
         if ("close" in decoded && typeof decoded.close === "function") decoded.close();
-        const dataUrl = canvas.toDataURL("image/webp", 0.86);
         return {
-            dataUrl,
+            dataUrl: canvas.toDataURL("image/webp", 0.86),
             width,
             height,
             preprocessed: true,

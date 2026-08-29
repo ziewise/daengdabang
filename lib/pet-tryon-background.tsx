@@ -31,6 +31,7 @@ import {
     type PetTryOnApiErrorCode,
     type PetTryOnCorrectionIssue,
     type PetTryOnEmailDeliveryStatus,
+    type PetTryOnHybridContext,
     type PetTryOnProgressStage,
     type PetTryOnRecipientVerification,
     type PetTryOnResult,
@@ -105,6 +106,7 @@ type PetTryOnTaskContextValue = {
         pet: PetProfile,
         correctionIssues?: PetTryOnCorrectionIssue[],
         confirmPreciseRegeneration?: boolean,
+        hybridContext?: PetTryOnHybridContext,
     ) => Promise<PetTryOnStartOutcome>;
     retry: (task: BackgroundPetTryOnTask) => Promise<PetTryOnStartOutcome>;
     isTaskFor: (
@@ -788,6 +790,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         pet: PetProfile,
         correctionIssues: PetTryOnCorrectionIssue[] = [],
         confirmPreciseRegeneration = false,
+        hybridContext: PetTryOnHybridContext = {},
     ): Promise<PetTryOnStartOutcome> => {
         const petReferenceImage = petTryOnReferencePhoto(product, pet);
         if (!hydrated || !accountKey) {
@@ -849,6 +852,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
             submitController.signal,
             correctionIssues,
             confirmPreciseRegeneration,
+            hybridContext,
         );
         if (submitAborts.current.get(key) === submitController) submitAborts.current.delete(key);
         if (
