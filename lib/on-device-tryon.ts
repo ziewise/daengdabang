@@ -16,7 +16,7 @@ import {
 } from "@/lib/on-device-tryon-native";
 
 const MANIFEST_URL = "/ai/tryon/model-manifest.json";
-const ORT_RUNTIME_BASE = "/ai/runtime/onnxruntime-web-1.29.0/";
+const EXPECTED_ORT_RUNTIME_BASE = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/";
 const MINIMUM_MEMORY_GB = 2;
 const MINIMUM_WASM_CORES = 2;
 const CACHE_SCHEMA = "ddb.local-tryon-result/v2";
@@ -43,6 +43,13 @@ type TryOnModelManifest = {
     pipelineVersion: string;
     privacyDefault: "local_only";
     fallbackPolicy: "explicit_user_action_only";
+    webRuntime: {
+        package: "onnxruntime-web";
+        version: "1.29.0";
+        baseUrl: typeof EXPECTED_ORT_RUNTIME_BASE;
+        executionProviders: ["webgpu", "wasm"];
+        dataPolicy: "runtime_files_only_no_customer_data";
+    };
     model: {
         id: string;
         version: string;
@@ -111,6 +118,11 @@ function isManifest(value: unknown): value is TryOnModelManifest {
         && manifest.pipelineVersion === ON_DEVICE_PIPELINE_VERSION
         && manifest.privacyDefault === "local_only"
         && manifest.fallbackPolicy === "explicit_user_action_only"
+        && manifest.webRuntime?.package === "onnxruntime-web"
+        && manifest.webRuntime?.version === "1.29.0"
+        && manifest.webRuntime?.baseUrl === EXPECTED_ORT_RUNTIME_BASE
+        && JSON.stringify(manifest.webRuntime?.executionProviders) === '["webgpu","wasm"]'
+        && manifest.webRuntime?.dataPolicy === "runtime_files_only_no_customer_data"
         && Boolean(model)
         && typeof model?.id === "string"
         && typeof model?.version === "string"
@@ -428,11 +440,13 @@ async function runWeb(
     provider: "webgpu" | "wasm",
     modelBytes: ArrayBuffer,
     prepared: Awaited<ReturnType<typeof prepareTensors>>,
+    runtimeBaseUrl: typeof EXPECTED_ORT_RUNTIME_BASE,
 ) {
-    const ort = provider === "webgpu"
-        ? await import("onnxruntime-web/webgpu")
-        : await import("onnxruntime-web/wasm");
-    ort.env.wasm.wasmPaths = ORT_RUNTIME_BASE;
+    // The WebGPU entry point contains both WebGPU and WASM EPs. Keeping one
+    // browser bundle avoids duplicating the runtime in the Pages artifact;
+    // only version-pinned runtime binaries are fetched, never customer data.
+    const ort = await import("onnxruntime-web/webgpu");
+    ort.env.wasm.wasmPaths = runtimeBaseUrl;
     ort.env.wasm.numThreads = typeof crossOriginIsolated !== "undefined" && crossOriginIsolated
         ? Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 2) - 1))
         : 1;
@@ -528,7 +542,7 @@ export async function runOnDeviceTryOn(
                 const prepared = await prepareTensors(petImageDataUrl, productImage, layout);
                 const modelBytes = await loadVerifiedModel(manifest);
                 imageDataUrl = await withTimeout(
-                    runWeb(provider, modelBytes, prepared),
+                    runWeb(provider, modelBytes, prepared, manifest.webRuntime.baseUrl),
                     manifest.model.maximumInferenceMs,
                 );
             }

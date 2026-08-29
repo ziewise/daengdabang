@@ -20,6 +20,10 @@ test("versioned Try-On manifest pins the private local-only hybrid runtime", asy
     assert.equal(manifest.pipelineVersion, "ddb-hybrid-tryon-v2-20260830");
     assert.equal(manifest.privacyDefault, "local_only");
     assert.equal(manifest.fallbackPolicy, "explicit_user_action_only");
+    assert.equal(manifest.webRuntime.package, "onnxruntime-web");
+    assert.equal(manifest.webRuntime.version, "1.29.0");
+    assert.equal(manifest.webRuntime.baseUrl, "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/");
+    assert.equal(manifest.webRuntime.dataPolicy, "runtime_files_only_no_customer_data");
     assert.equal(manifest.model.bytes, model.byteLength);
     assert.equal(manifest.model.sha256, createHash("sha256").update(model).digest("hex"));
     assert.deepEqual(manifest.model.executionProviders, ["webgpu", "wasm", "coreml", "nnapi"]);
@@ -40,7 +44,9 @@ test("PC browser runtime verifies the model before WebGPU or WASM inference", as
     assert.match(runtime, /bytes\.byteLength !== manifest\.model\.bytes/);
     assert.match(runtime, /import\("onnxruntime-web\/webgpu"\)/);
     assert.match(runtime, /provider === "webgpu" \? \["webgpu", "wasm"\] : \["wasm"\]/);
-    assert.match(runtime, /import\("onnxruntime-web\/wasm"\)/);
+    assert.doesNotMatch(runtime, /import\("onnxruntime-web\/wasm"\)/);
+    assert.match(runtime, /cdn\.jsdelivr\.net\/npm\/onnxruntime-web@1\.29\.0\/dist/);
+    assert.match(runtime, /runtime_files_only_no_customer_data/);
     assert.match(runtime, /estimatedPeakMemoryMb/);
     assert.match(runtime, /maximumInferenceMs/);
     assert.match(runtime, /MAX_DATA_URL_CHARACTERS = 14_000_000/);

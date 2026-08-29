@@ -4,6 +4,13 @@
   "releasedAt": "2026-08-30T00:00:00Z",
   "privacyDefault": "local_only",
   "fallbackPolicy": "explicit_user_action_only",
+  "webRuntime": {
+    "package": "onnxruntime-web",
+    "version": "1.29.0",
+    "baseUrl": "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/",
+    "executionProviders": ["webgpu", "wasm"],
+    "dataPolicy": "runtime_files_only_no_customer_data"
+  },
   "model": {
     "id": "ddb-lite-tryon-compositor",
     "version": "2.0.0",
