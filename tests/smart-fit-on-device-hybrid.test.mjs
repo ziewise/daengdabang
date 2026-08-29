@@ -31,7 +31,7 @@ test("Smart Fit keeps light photo work local and sends only a coarse client prof
     assert.match(serverProfile, /wasm: capabilities\.wasm/);
     assert.doesNotMatch(serverProfile, /logicalProcessors|deviceMemory|saveData/);
 
-    assert.match(client, /execution_mode: "hybrid"/);
+    assert.match(client, /execution_mode: capabilities\.tier === "fallback" \? "server" : "hybrid"/);
     assert.match(client, /client_profile: serverClientProfile/);
     assert.match(client, /cached\?\.status === "ready"/);
     assert.match(client, /result\.status === "ready" && result\.imageDataUrl/);

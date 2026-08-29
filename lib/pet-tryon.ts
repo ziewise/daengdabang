@@ -435,7 +435,7 @@ export async function startPetTryOn(
                     ? { product_construction_image: product.details[0] }
                     : {}),
                 subcategory: product.subcategory,
-                execution_mode: "hybrid",
+                execution_mode: capabilities.tier === "fallback" ? "server" : "hybrid",
                 client_profile: serverClientProfile(
                     capabilities,
                     hybridContext.imagePreprocessed === true,
