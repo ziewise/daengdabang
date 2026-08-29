@@ -96,6 +96,10 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
 
     assert.match(androidBuild, /onnxruntime-android:1\.29\.0/);
     assert.match(android, /options\.addNnapi\(\)/);
+    assert.match(android, /OrtEnvironment\.getEnvironment\(\)\.getVersion\(\)/);
+    assert.match(android, /PowerManager\.THERMAL_STATUS_SEVERE/);
+    assert.match(android, /PowerManager\.THERMAL_STATUS_MODERATE/);
+    assert.doesNotMatch(android, /THERMAL_STATUS_(?:SERIOUS|FAIR)/);
     assert.match(android, /MODEL_SHA256/);
     assert.match(android, /MAX_SOURCE_EDGE = 2048/);
     assert.match(ios, /appendCoreMLExecutionProvider/);

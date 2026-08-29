@@ -59,7 +59,7 @@ public class OnDeviceTryOnPlugin extends Plugin {
         JSObject result = new JSObject();
         result.put("available", Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && modelAvailable);
         result.put("provider", "nnapi");
-        result.put("runtimeVersion", OrtEnvironment.getVersionString());
+        result.put("runtimeVersion", OrtEnvironment.getEnvironment().getVersion());
         result.put("modelAvailable", modelAvailable);
         result.put("modelSha256", digest);
         result.put("totalMemoryMb", memoryInfo.totalMem / 1024L / 1024L);
@@ -99,7 +99,7 @@ public class OnDeviceTryOnPlugin extends Plugin {
                 JSObject result = new JSObject();
                 result.put("imageDataUrl", "data:image/jpeg;base64," + Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP));
                 result.put("provider", "nnapi");
-                result.put("runtimeVersion", OrtEnvironment.getVersionString());
+                result.put("runtimeVersion", OrtEnvironment.getEnvironment().getVersion());
                 result.put("durationMs", (System.nanoTime() - started) / 1_000_000.0);
                 result.put("modelSha256", MODEL_SHA256);
                 call.resolve(result);
@@ -255,8 +255,8 @@ public class OnDeviceTryOnPlugin extends Plugin {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return "unknown";
         int status = manager.getCurrentThermalStatus();
         if (status >= PowerManager.THERMAL_STATUS_CRITICAL) return "critical";
-        if (status >= PowerManager.THERMAL_STATUS_SERIOUS) return "serious";
-        if (status >= PowerManager.THERMAL_STATUS_FAIR) return "fair";
+        if (status >= PowerManager.THERMAL_STATUS_SEVERE) return "serious";
+        if (status >= PowerManager.THERMAL_STATUS_MODERATE) return "fair";
         return "nominal";
     }
 
