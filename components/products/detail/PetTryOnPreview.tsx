@@ -40,6 +40,10 @@ import {
     prepareImageOnDevice,
     type LocalImagePreparation,
 } from "@/lib/on-device-ai";
+import {
+    runOnDeviceTryOn,
+    type OnDeviceTryOnResult,
+} from "@/lib/on-device-tryon";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import ColorSelect from "./ColorSelect";
@@ -341,6 +345,8 @@ export default function PetTryOnPreview({
     const [fitMasterRestorePending, setFitMasterRestorePending] = useState(true);
     const [fitMasterRestoreBlocked, setFitMasterRestoreBlocked] = useState(false);
     const [localPetPreview, setLocalPetPreview] = useState<LocalImagePreparation | null>(null);
+    const [localTryOn, setLocalTryOn] = useState<OnDeviceTryOnResult | null>(null);
+    const [localTryOnPending, setLocalTryOnPending] = useState(false);
     const generationRequestPendingRef = useRef(false);
     const geometryReviewPendingRef = useRef(false);
 
@@ -356,6 +362,22 @@ export default function PetTryOnPreview({
         });
         return () => { active = false; };
     }, [petReferenceImage]);
+
+    useEffect(() => {
+        let active = true;
+        setLocalTryOn(null);
+        setLocalTryOnPending(false);
+        if (!eligible || explicitColorRequired || !petReferenceImage || !tryOnProduct.image) {
+            return () => { active = false; };
+        }
+        setLocalTryOnPending(true);
+        void runOnDeviceTryOn(tryOnProduct, petReferenceImage).then((localResult) => {
+            if (!active) return;
+            setLocalTryOn(localResult);
+            setLocalTryOnPending(false);
+        });
+        return () => { active = false; };
+    }, [eligible, explicitColorRequired, petReferenceImage, tryOnProduct]);
     const fitMasterIdentity = useMemo<PetTryOnFitMasterIdentity | null>(() => {
         if (!pet?.apiProfileId || !petReferenceImage) return null;
         return {
@@ -483,6 +505,9 @@ export default function PetTryOnPreview({
         || (showingSourceWhilePreparing || retainingSourceAfterRejectedPreview || retainingSourceUntilGeometryReview
             ? sourceFit?.imageDataUrl
             : undefined);
+    const localResultImage = localTryOn?.status === "ready" ? localTryOn.imageDataUrl : undefined;
+    const displayResultImage = resultImage || localResultImage;
+    const showingLocalResult = Boolean(!resultImage && localResultImage);
     const displayName = productName(product);
     const progressStageIndex = stage === "queued" ? -1 : PROGRESS_STAGES.indexOf(stage);
     const progressStageLabels = locale === "en"
@@ -698,7 +723,13 @@ export default function PetTryOnPreview({
             pet,
             applyCorrections ? correctionIssues : [],
             Boolean(sourceFit || fitMasterRestoreBlocked || finalGenerationFailed),
-            { imagePreprocessed: localPetPreview?.preprocessed === true },
+            {
+                imagePreprocessed: localPetPreview?.preprocessed === true,
+                localInferenceStatus: localTryOn?.status,
+                localProvider: localTryOn?.provider,
+                localModelVersion: localTryOn?.modelVersion,
+                fallbackReason: localTryOn?.reason,
+            },
         );
             if (outcome.status === "queue_full") {
                 setError(locale === "en"
@@ -725,6 +756,7 @@ export default function PetTryOnPreview({
         finalGenerationFailed,
         liveReadyFit,
         localPetPreview?.preprocessed,
+        localTryOn,
         locale,
         pet,
         petReferenceImage,
@@ -968,9 +1000,9 @@ export default function PetTryOnPreview({
                     <div className="grid max-h-[calc(100dvh-150px)] overflow-y-auto lg:grid-cols-[minmax(0,1.35fr)_minmax(300px,0.65fr)]">
                         <div className="relative min-h-[360px] bg-neutral-100 sm:min-h-[520px]">
                             <Image
-                                src={resultImage || localPetPreview?.dataUrl || petReferenceImage || pet.photoDataUrl!}
+                                src={displayResultImage || localPetPreview?.dataUrl || petReferenceImage || pet.photoDataUrl!}
                                 alt={
-                                    resultImage
+                                    displayResultImage
                                         ? `${pet.name || "우리 아이"} ${displayName} 착용 결과`
                                         : `${pet.name || "우리 아이"} 사진`
                                 }
@@ -980,10 +1012,35 @@ export default function PetTryOnPreview({
                                 className="absolute inset-0 h-full w-full object-contain"
                             />
 
-                            {!resultImage && localPetPreview?.preprocessed && (
+                            {!displayResultImage && localPetPreview?.preprocessed && (
                                 <div className="absolute left-3 top-3 rounded-full border border-emerald-200 bg-white/90 px-3 py-1.5 text-[10px] font-black text-emerald-800 shadow-sm backdrop-blur">
                                     <i className="fa-solid fa-mobile-screen-button mr-1.5" />
                                     {locale === "en" ? "Photo prepared on this device" : "사진 준비는 이 기기에서 완료"}
+                                </div>
+                            )}
+
+                            {localTryOnPending && !resultImage && (
+                                <div className="absolute left-3 top-3 rounded-full border border-indigo-200 bg-white/92 px-3 py-1.5 text-[10px] font-black text-indigo-800 shadow-sm backdrop-blur" role="status">
+                                    <i className="fa-solid fa-microchip fa-pulse mr-1.5" />
+                                    {locale === "en" ? "Creating a private on-device preview" : "사진을 보내지 않고 기기에서 입혀보는 중"}
+                                </div>
+                            )}
+
+                            {showingLocalResult && localTryOn?.provider && (
+                                <div className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-xl border border-emerald-200 bg-white/94 px-3 py-2 text-[10px] font-black leading-4 text-emerald-900 shadow-sm backdrop-blur" role="status">
+                                    <i className="fa-solid fa-shield-halved mr-1.5" />
+                                    {locale === "en"
+                                        ? `Private preview · ${localTryOn.provider.toUpperCase()} · photo not uploaded`
+                                        : `기기 내 비공개 미리보기 · ${localTryOn.provider.toUpperCase()} · 사진 미전송`}
+                                </div>
+                            )}
+
+                            {!resultImage && !localTryOnPending && localTryOn && localTryOn.status !== "ready" && (
+                                <div className="absolute inset-x-3 bottom-3 rounded-xl border border-amber-200 bg-white/94 px-3 py-2 text-[10px] font-bold leading-4 text-amber-950 shadow-sm backdrop-blur" role="status">
+                                    <i className="fa-solid fa-battery-quarter mr-1.5" />
+                                    {locale === "en"
+                                        ? "This device paused the local preview to protect memory, battery, or compatibility. Your photo was not uploaded. Use the server button only if you want a precise fallback."
+                                        : "메모리·배터리·호환성 보호를 위해 이 기기의 로컬 미리보기를 멈췄어요. 사진은 전송되지 않았습니다. 원할 때만 아래 GPU 서버 정밀 입혀보기를 눌러 주세요."}
                                 </div>
                             )}
 
@@ -1533,8 +1590,8 @@ export default function PetTryOnPreview({
                                                     : finalGenerationFailed
                                                         ? locale === "en" ? "Try again later" : "잠시 후 다시 시도"
                                                     : initialGenerationRequired
-                                                        ? locale === "en" ? "Create one new fitting image" : "새 착용 이미지 1회 만들기"
-                                                        : locale === "en" ? "Confirm: create one new fitting image" : "확인: 새 착용 이미지 1회 만들기"}
+                                                        ? locale === "en" ? "Create one precise image on the GPU server" : "GPU 서버 정밀 착용 이미지 1회 만들기"
+                                                        : locale === "en" ? "Confirm one precise GPU-server image" : "확인: 새 착용 이미지 1회 만들기 · GPU 서버"}
                                             </span>
                                         </button>
                                     </div>
@@ -1562,8 +1619,8 @@ export default function PetTryOnPreview({
                                                 : sourceFit
                                                     ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                     : error
-                                                        ? locale === "en" ? "Create one new image" : "새 이미지 1회 만들기"
-                                                        : locale === "en" ? "Start one precise fitting" : "정밀 입혀보기 1회 시작"}
+                                                        ? locale === "en" ? "Try one precise GPU-server image" : "GPU 서버 정밀 이미지 1회 시도"
+                                                        : locale === "en" ? "Start one precise GPU-server fitting" : "GPU 서버 정밀 입혀보기 1회 시작"}
                                 </button>
                             )}
                         </aside>

@@ -6,9 +6,9 @@
     "node": ">=24.14.0 <25"
   },
   "scripts": {
-    "predev": "node scripts/gen-hero-manifest.mjs",
+    "predev": "node scripts/gen-hero-manifest.mjs && node scripts/verify-tryon-model.mjs && node scripts/sync-tryon-runtime.mjs",
     "dev": "next dev -p 4000",
-    "prebuild": "node scripts/gen-hero-manifest.mjs && node scripts/verify-pet-companion-assets.mjs",
+    "prebuild": "node scripts/gen-hero-manifest.mjs && node scripts/verify-pet-companion-assets.mjs && node scripts/verify-tryon-model.mjs && node scripts/sync-tryon-runtime.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -36,6 +36,7 @@
     "@tosspayments/tosspayments-sdk": "^2.7.1",
     "gsap": "^3.15.0",
     "next": "16.3.2",
+    "onnxruntime-web": "1.29.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "zod": "^4.4.3"

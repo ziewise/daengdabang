@@ -10,6 +10,7 @@ const config: CapacitorConfig = {
     server: {
         appStartPath: "/app/",
         errorPath: "offline/index.html",
+        allowNavigation: ["daengdabang.com", "www.daengdabang.com"],
     },
     android: {
         backgroundColor: "#fffaf0",

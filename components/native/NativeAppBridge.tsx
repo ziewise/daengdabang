@@ -23,9 +23,14 @@ const NATIVE_ROUTE_PREFIXES = [
     "/privacy",
     "/terms",
 ] as const;
+const NATIVE_TRYON_ROUTE_PREFIXES = ["/products"] as const;
 
 function isBundledNativeRoute(pathname: string) {
     return NATIVE_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
+
+function isNativeTryOnRoute(pathname: string) {
+    return NATIVE_TRYON_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
 function canonicalWebUrl(url: URL) {
@@ -75,6 +80,13 @@ export default function NativeAppBridge() {
 
             void Haptics.impact({ style: ImpactStyle.Light }).catch(() => undefined);
             if (staysInApp) return;
+
+            if (isNativeTryOnRoute(url.pathname) && anchor.dataset.nativeExternal === undefined) {
+                event.preventDefault();
+                event.stopPropagation();
+                window.location.assign(canonicalWebUrl(url));
+                return;
+            }
 
             event.preventDefault();
             event.stopPropagation();

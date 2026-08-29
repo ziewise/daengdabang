@@ -37,6 +37,7 @@ const bundledDirectories = [
     "images/breeds",
     "images/pwa",
     "images/ui",
+    "ai/tryon",
 ];
 
 const bundledFiles = [
@@ -123,6 +124,19 @@ async function verifyReferencedAssets() {
     }
 }
 
+async function removeWebOnlyOnnxRuntimeMedia() {
+    const mediaRoot = path.join(nativeRoot, "_next", "static", "media");
+    const entries = await readdir(mediaRoot, { withFileTypes: true });
+    for (const entry of entries) {
+        if (
+            entry.isFile()
+            && /^ort(?:[.-]).*\.(?:mjs|wasm)$/i.test(entry.name)
+        ) {
+            await rm(path.join(mediaRoot, entry.name), { force: true });
+        }
+    }
+}
+
 async function directorySize(directory) {
     let bytes = 0;
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -143,6 +157,9 @@ for (const relativePath of [...bundledRoutes, ...bundledDirectories, ...bundledF
 }
 
 await writeFile(path.join(nativeRoot, "index.html"), launchDocument, "utf8");
+// Native product pages run the same graph through Core ML/NNAPI. The browser
+// WebGPU/WASM artifacts are intentionally omitted from the install package.
+await removeWebOnlyOnnxRuntimeMedia();
 await verifyReferencedAssets();
 
 const bytes = await directorySize(nativeRoot);

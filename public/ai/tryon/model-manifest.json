@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "ddb.tryon-model-manifest/v2",
+  "pipelineVersion": "ddb-hybrid-tryon-v2-20260830",
+  "releasedAt": "2026-08-30T00:00:00Z",
+  "privacyDefault": "local_only",
+  "fallbackPolicy": "explicit_user_action_only",
+  "model": {
+    "id": "ddb-lite-tryon-compositor",
+    "version": "2.0.0",
+    "format": "onnx",
+    "opset": 13,
+    "url": "/ai/tryon/ddb-lite-tryon-compositor-v2.onnx",
+    "sha256": "3d09e7795872e60f381f02bce0993c2be6ca75fa5530f64ad50979f6315b9eea",
+    "bytes": 626,
+    "inputShape": [1, 3, 256, 256],
+    "alphaShape": [1, 1, 256, 256],
+    "outputShape": [1, 3, 256, 256],
+    "estimatedPeakMemoryMb": 48,
+    "maximumInferenceMs": 12000,
+    "minimumRuntimeVersions": {
+      "onnxruntimeWeb": "1.29.0",
+      "onnxruntimeAndroid": "1.29.0",
+      "onnxruntimeIos": "1.24.2"
+    },
+    "executionProviders": ["webgpu", "wasm", "coreml", "nnapi"]
+  }
+}

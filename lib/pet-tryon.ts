@@ -119,6 +119,10 @@ export type PetTryOnRecipientVerificationConfirmation = {
 
 export type PetTryOnHybridContext = {
     imagePreprocessed?: boolean;
+    localInferenceStatus?: "ready" | "unavailable" | "failed";
+    localProvider?: "webgpu" | "wasm" | "coreml" | "nnapi" | null;
+    localModelVersion?: string;
+    fallbackReason?: string | null;
 };
 
 type RequestOptions = {
@@ -435,10 +439,16 @@ export async function startPetTryOn(
                     ? { product_construction_image: product.details[0] }
                     : {}),
                 subcategory: product.subcategory,
-                execution_mode: capabilities.tier === "fallback" ? "server" : "hybrid",
+                execution_mode: hybridContext.localInferenceStatus === "ready" ? "hybrid" : "server",
                 client_profile: serverClientProfile(
                     capabilities,
                     hybridContext.imagePreprocessed === true,
+                    {
+                        status: hybridContext.localInferenceStatus,
+                        provider: hybridContext.localProvider,
+                        modelVersion: hybridContext.localModelVersion,
+                        fallbackReason: hybridContext.fallbackReason,
+                    },
                 ),
                 ...(correctionIssues.length > 0 ? { correction_issues: correctionIssues } : {}),
                 ...(confirmPreciseRegeneration ? { confirm_precise_regeneration: true } : {}),

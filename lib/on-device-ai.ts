@@ -1,6 +1,6 @@
 "use client";
 
-export const ON_DEVICE_PIPELINE_VERSION = "ddb-hybrid-tryon-v1-20260829";
+export const ON_DEVICE_PIPELINE_VERSION = "ddb-hybrid-tryon-v2-20260830";
 
 export type OnDeviceExecutionTier = "enhanced" | "standard" | "fallback";
 
@@ -31,6 +31,7 @@ type CachedValue<T> = {
 const CACHE_DB = "ddb-on-device-ai";
 const CACHE_STORE = "tryon-results";
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const CACHE_MAX_ENTRIES = 12;
 
 function logicalProcessorBucket(value: number | undefined): OnDeviceCapabilities["logicalProcessors"] {
     if (!value || value < 1) return "unknown";
@@ -78,13 +79,26 @@ export function probeOnDeviceCapabilities(): OnDeviceCapabilities {
     };
 }
 
-export function serverClientProfile(capabilities: OnDeviceCapabilities, imagePreprocessed: boolean) {
+export function serverClientProfile(
+    capabilities: OnDeviceCapabilities,
+    imagePreprocessed: boolean,
+    localInference: {
+        status?: "ready" | "unavailable" | "failed";
+        provider?: "webgpu" | "wasm" | "coreml" | "nnapi" | null;
+        modelVersion?: string;
+        fallbackReason?: string | null;
+    } = {},
+) {
     return {
         tier: capabilities.tier,
         webgpu: capabilities.webgpu,
         wasm: capabilities.wasm,
         image_preprocessed: imagePreprocessed,
         preprocessing_version: capabilities.pipelineVersion,
+        local_inference: localInference.status || "unavailable",
+        local_provider: localInference.provider || "none",
+        model_version: String(localInference.modelVersion || "").slice(0, 40),
+        fallback_reason: String(localInference.fallbackReason || "").slice(0, 40),
     };
 }
 
@@ -202,12 +216,30 @@ export async function writeOnDeviceCache<T>(key: string, value: T): Promise<void
     if (!database) return;
     await new Promise<void>((resolve) => {
         const transaction = database.transaction(CACHE_STORE, "readwrite");
-        transaction.objectStore(CACHE_STORE).put({
+        const store = transaction.objectStore(CACHE_STORE);
+        store.put({
             key,
             value,
             updatedAt: Date.now(),
             pipelineVersion: ON_DEVICE_PIPELINE_VERSION,
         } satisfies CachedValue<T>);
+        const entries: Array<{ key: string; updatedAt: number }> = [];
+        const cursorRequest = store.openCursor();
+        cursorRequest.onsuccess = () => {
+            const cursor = cursorRequest.result;
+            if (cursor) {
+                const row = cursor.value as Partial<CachedValue<unknown>>;
+                if (typeof row.key === "string") {
+                    entries.push({ key: row.key, updatedAt: Number(row.updatedAt || 0) });
+                }
+                cursor.continue();
+                return;
+            }
+            entries
+                .sort((left, right) => right.updatedAt - left.updatedAt)
+                .slice(CACHE_MAX_ENTRIES)
+                .forEach((entry) => store.delete(entry.key));
+        };
         transaction.oncomplete = () => resolve();
         transaction.onerror = () => resolve();
         transaction.onabort = () => resolve();
