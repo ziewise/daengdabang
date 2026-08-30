@@ -49,6 +49,22 @@ async function readJson(filePath, fallback) {
     }
 }
 
+function applyReviewedHoverOverrides(rawCatalog, overrides) {
+    return (Array.isArray(rawCatalog) ? rawCatalog : []).map((row) => {
+        const folder = row?.folder || "";
+        if (!Object.prototype.hasOwnProperty.call(overrides, folder)) return row;
+        const override = overrides[folder];
+        if (override === null) {
+            const withdrawn = { ...row };
+            for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId"]) {
+                delete withdrawn[key];
+            }
+            return withdrawn;
+        }
+        return { ...row, ...override };
+    });
+}
+
 async function listFiles(root) {
     const files = [];
     async function visit(directory) {
@@ -95,6 +111,13 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
         const sourceRoot = path.join(repoRoot, sourceRootName);
         for (const filePath of await listFiles(sourceRoot)) {
             if (!SOURCE_EXTENSIONS.has(path.extname(filePath).toLowerCase())) continue;
+            const repoRelative = path.relative(repoRoot, filePath).replaceAll(path.sep, "/");
+            if (new Set([
+                "lib/catalog/raw.json",
+                "lib/catalog/reviewed-hover-overrides.json",
+                "lib/catalog/colors.json",
+                "lib/external-products/feed.json",
+            ]).has(repoRelative)) continue;
             const source = await fs.readFile(filePath, "utf8");
             for (const match of source.matchAll(/\/images\/products\/catalog\/[A-Za-z0-9_.\/-]+/g)) {
                 const normalized = normalizeAssetPath(match[0]);
@@ -151,15 +174,20 @@ export async function preparePagesArtifact({
     }
 
     const rawCatalog = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "raw.json"), []);
+    const reviewedHoverOverrides = await readJson(
+        path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-hover-overrides.json"),
+        {},
+    );
+    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides);
     const catalogCdnVideos = new Set(
-        (Array.isArray(rawCatalog) ? rawCatalog : [])
+        publicationCatalog
             .filter((row) => row?.videoDelivery === "jsdelivr_commit_cdn")
             .map((row) => normalizeAssetPath(row.video))
             .filter(Boolean),
     );
     const builtCdnVideos = await collectBuiltCdnVideos(resolvedOutRoot, commitSha);
     const requiredReviewedCdnVideos = new Set(
-        (Array.isArray(rawCatalog) ? rawCatalog : [])
+        publicationCatalog
             .filter((row) => (
                 row?.videoDelivery === "jsdelivr_commit_cdn"
                 && REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
@@ -184,7 +212,7 @@ export async function preparePagesArtifact({
         );
     }
 
-    const references = await collectRuntimeProductReferences(resolvedRepoRoot, rawCatalog);
+    const references = await collectRuntimeProductReferences(resolvedRepoRoot, publicationCatalog);
     const beforeFiles = await listFiles(resolvedOutRoot);
     const beforeBytes = await totalBytes(beforeFiles);
     const removed = [];

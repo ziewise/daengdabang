@@ -15,7 +15,11 @@ async function write(root, relative, value = "fixture") {
     return target;
 }
 
-async function fixture(t, { includeCdnUrl = true, approvedMetadata = false } = {}) {
+async function fixture(t, {
+    includeCdnUrl = true,
+    approvedMetadata = false,
+    reviewedHoverOverrides = {},
+} = {}) {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "ddb-pages-artifact-"));
     t.after(() => fs.rm(root, { recursive: true, force: true }));
     await write(
@@ -23,6 +27,7 @@ async function fixture(t, { includeCdnUrl = true, approvedMetadata = false } = {
         "lib/catalog/raw.json",
         JSON.stringify([
             {
+                folder: "sample",
                 image: "/images/products/catalog/sample/sample.webp",
                 video: "/images/products/catalog/sample/videos/hover.mp4",
                 videoDelivery: "jsdelivr_commit_cdn",
@@ -33,6 +38,11 @@ async function fixture(t, { includeCdnUrl = true, approvedMetadata = false } = {
                 } : {}),
             },
         ]),
+    );
+    await write(
+        root,
+        "lib/catalog/reviewed-hover-overrides.json",
+        JSON.stringify(reviewedHoverOverrides),
     );
     await write(root, "lib/catalog/colors.json", "{}");
     await write(root, "lib/external-products/feed.json", "[]");
@@ -86,6 +96,48 @@ test("Pages artifact omits catalog videos that the storefront safety gate did no
 
 test("Pages artifact fails closed when a reviewed video was not commit-pinned into the build", async (t) => {
     const root = await fixture(t, { includeCdnUrl: false, approvedMetadata: true });
+    await assert.rejects(
+        preparePagesArtifact({
+            repoRoot: root,
+            outRoot: path.join(root, "out"),
+            commitSha: COMMIT_SHA,
+            maxBytes: 1_000_000,
+        }),
+        /reviewed video CDN URL\(s\) were not pinned/,
+    );
+});
+
+test("Pages artifact uses the same reviewed hover withdrawal gate as the storefront", async (t) => {
+    const root = await fixture(t, {
+        includeCdnUrl: false,
+        approvedMetadata: true,
+        reviewedHoverOverrides: { sample: null },
+    });
+    const result = await preparePagesArtifact({
+        repoRoot: root,
+        outRoot: path.join(root, "out"),
+        commitSha: COMMIT_SHA,
+        maxBytes: 1_000_000,
+    });
+
+    assert.equal(result.requiredReviewedCdnVideoCount, 0);
+    assert.equal(result.catalogCdnVideoCount, 0);
+    await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
+});
+
+test("Pages artifact requires a reviewed override that the storefront publishes", async (t) => {
+    const root = await fixture(t, {
+        includeCdnUrl: false,
+        reviewedHoverOverrides: {
+            sample: {
+                video: "/images/products/catalog/sample/videos/hover.mp4",
+                videoDelivery: "jsdelivr_commit_cdn",
+                videoProvider: "ziewcraft",
+                videoQuality: "approved_dog_wearing",
+                videoJobId: "reviewed-override",
+            },
+        },
+    });
     await assert.rejects(
         preparePagesArtifact({
             repoRoot: root,
