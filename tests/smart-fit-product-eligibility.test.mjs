@@ -255,6 +255,7 @@ test("camera-motion-only replacements stay hidden while reviewed two-shot replac
 
 test("strict catalog re-review withdraws mismatches and publishes only current approved clips", async () => {
     const { applyReviewedHoverOverride } = await import("../lib/catalog/reviewed-hover-overrides.ts");
+    const overrides = JSON.parse(await source("lib/catalog/reviewed-hover-overrides.json"));
     const base = (folder) => ({
         no: 1,
         folder,
@@ -264,7 +265,16 @@ test("strict catalog re-review withdraws mismatches and publishes only current a
         videoJobId: "old-review",
     });
 
-    for (const folder of ["rw_backtrak_evac_kit", "rw_lumenglow_jacket_26fw"]) {
+    assert.equal(Object.keys(overrides).length, 38);
+    assert.ok(Object.values(overrides).every((value) => value === null));
+    for (const folder of [
+        "rw_backtrak_evac_kit",
+        "rw_lumenglow_jacket_26fw",
+        "rw_lunker",
+        "id_treat_sardine",
+        "heyrex_taurus_filter_5p",
+        "icecream_realcheese",
+    ]) {
         const withdrawn = applyReviewedHoverOverride(base(folder));
         assert.equal(withdrawn.video, undefined);
         assert.equal(withdrawn.videoJobId, undefined);
