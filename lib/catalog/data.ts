@@ -7,6 +7,7 @@ import pricesData from "./prices.json";
 import { catalogPriceBadgeKind } from "./price-badge";
 import { safeCatalogHoverVideo } from "../pet-tryon-eligibility";
 import { applyReviewedHoverOverride } from "./reviewed-hover-overrides";
+import { catalogDisplayName } from "./catalog-display-name";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -145,19 +146,6 @@ function buildMeta(row: CatalogRow, price: number) {
     return { popularity, addedAt, reviewCount, rating, discountRate, originalPrice };
 }
 
-/**
- * 제품명 끝에 붙은 "강아지" / "강아지 24" / "강아지 23" 꼬리표 제거.
- * 네이버 스마트스토어 상품명을 크롤링할 때 타겟 키워드("강아지")와 연도(23·24)가
- * 이름 끝에 그대로 딸려 들어온 잔재라, 화면·검색·정렬에 쓰는 이름에서만 떼어낸다.
- * (원본 raw.json 의 row.name 은 출처 대조용으로 그대로 보존)
- *   - 이름 "맨 끝"의 꼬리표만 제거($ 앵커) → 이름 중간에 들어간 "강아지"는 보존
- *   - 뒤따르는 연도 숫자(예: 24·23)도 사용자 요청대로 함께 제거
- */
-function cleanProductName(name: string): string {
-    // 끝의  "강아지" + (선택: 공백/연도숫자) + 남은 공백  을 통째로 제거 후 트림
-    return name.replace(/\s*강아지\s*\d*\s*$/, "").trim();
-}
-
 type RawColorEntry = { file: string; name: string; chip: string };
 
 // colors.json(제품 folder → 색상 목록)을 CatalogProduct.colors 로 변환 — 이미지 경로를 완성해서.
@@ -207,7 +195,7 @@ function buildCatalog(): CatalogProduct[] {
         return {
             id: `p_${row.no}`,
             no: row.no,
-            name: cleanProductName(row.name),
+            name: catalogDisplayName(row.name, row.folder),
             brandKo: row.brandKo,
             brandEn: row.brandEn,
             brandSlug: brandSlug(row),

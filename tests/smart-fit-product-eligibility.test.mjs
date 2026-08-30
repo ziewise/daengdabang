@@ -290,3 +290,12 @@ test("strict catalog re-review withdraws mismatches and publishes only current a
     assert.equal(gaiter.video, undefined);
     assert.equal(gaiter.videoJobId, undefined);
 });
+
+test("catalog display name identifies the Everest item as a dog bed cover", async () => {
+    const { catalogDisplayName } = await import("../lib/catalog/catalog-display-name.ts");
+    assert.equal(
+        catalogDisplayName("러프웨어 마운틴 에베레스트 코트", "rw_everest_coat_25fw"),
+        "러프웨어 마운틴 에베레스트 인슐레이티드 도그 침대 커버 (2025FW)",
+    );
+    assert.equal(catalogDisplayName("일반 상품 강아지 24", "ordinary"), "일반 상품");
+});
