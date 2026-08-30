@@ -7,7 +7,27 @@
   "customerPreview": {
     "enabled": false,
     "status": "blocked_quality_review",
-    "reason": "dog_geometry_validation_failed"
+    "reason": "dog_geometry_validation_failed",
+    "qualityReview": {
+      "id": "tryon-qa-20260830-compositor-v2-rejection",
+      "decision": "rejected",
+      "reviewedAt": "2026-08-30T14:25:00Z",
+      "reviewer": "codex-visual-review",
+      "pipelineVersion": "ddb-hybrid-tryon-v2-20260830",
+      "modelSha256": "3d09e7795872e60f381f02bce0993c2be6ca75fa5530f64ad50979f6315b9eea",
+      "goldenSet": {
+        "total": 1,
+        "passed": 0,
+        "minimumRequired": 12
+      },
+      "failedCriteria": [
+        "anatomical_fit",
+        "dog_geometry",
+        "perspective_and_scale",
+        "fur_garment_occlusion",
+        "photorealistic_integration"
+      ]
+    }
   },
   "webRuntime": {
     "package": "onnxruntime-web",

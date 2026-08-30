@@ -20,11 +20,14 @@ test("versioned Try-On manifest pins the private local-only hybrid runtime", asy
     assert.equal(manifest.pipelineVersion, "ddb-hybrid-tryon-v2-20260830");
     assert.equal(manifest.privacyDefault, "local_only");
     assert.equal(manifest.fallbackPolicy, "explicit_user_action_only");
-    assert.deepEqual(manifest.customerPreview, {
-        enabled: false,
-        status: "blocked_quality_review",
-        reason: "dog_geometry_validation_failed",
-    });
+    assert.equal(manifest.customerPreview.enabled, false);
+    assert.equal(manifest.customerPreview.status, "blocked_quality_review");
+    assert.equal(manifest.customerPreview.reason, "dog_geometry_validation_failed");
+    assert.equal(manifest.customerPreview.qualityReview.decision, "rejected");
+    assert.equal(manifest.customerPreview.qualityReview.modelSha256, manifest.model.sha256);
+    assert.equal(manifest.customerPreview.qualityReview.pipelineVersion, manifest.pipelineVersion);
+    assert.ok(manifest.customerPreview.qualityReview.goldenSet.minimumRequired >= 12);
+    assert.ok(manifest.customerPreview.qualityReview.failedCriteria.includes("anatomical_fit"));
     assert.equal(manifest.webRuntime.package, "onnxruntime-web");
     assert.equal(manifest.webRuntime.version, "1.29.0");
     assert.equal(manifest.webRuntime.baseUrl, "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/");
@@ -60,7 +63,8 @@ test("PC browser runtime verifies the model before WebGPU or WASM inference", as
     assert.match(runtime, /batteryState === "low"/);
     assert.match(runtime, /thermal_pressure/);
     assert.match(runtime, /reason: "quality_gate_failed"/);
-    assert.match(runtime, /!manifest\.customerPreview\.enabled/);
+    assert.match(runtime, /review\.goldenSet\.passed === review\.goldenSet\.total/);
+    assert.match(runtime, /review\.modelSha256 === manifest\.model\.sha256/);
 
     assert.match(modal, /runOnDeviceTryOn\(tryOnProduct, petReferenceImage\)/);
     assert.doesNotMatch(modal, /useEffect\(\(\) => \{[\s\S]{0,300}void generate\(/);

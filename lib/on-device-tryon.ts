@@ -48,6 +48,20 @@ type TryOnModelManifest = {
         enabled: boolean;
         status: "approved" | "blocked_quality_review";
         reason: "passed_perceptual_qa" | "dog_geometry_validation_failed";
+        qualityReview: {
+            id: string;
+            decision: "approved" | "rejected";
+            reviewedAt: string;
+            reviewer: string;
+            pipelineVersion: string;
+            modelSha256: string;
+            goldenSet: {
+                total: number;
+                passed: number;
+                minimumRequired: number;
+            };
+            failedCriteria: string[];
+        };
     };
     webRuntime: {
         package: "onnxruntime-web";
@@ -120,6 +134,7 @@ function isManifest(value: unknown): value is TryOnModelManifest {
     if (!value || typeof value !== "object") return false;
     const manifest = value as Partial<TryOnModelManifest>;
     const model = manifest.model;
+    const qualityReview = manifest.customerPreview?.qualityReview;
     return manifest.schemaVersion === "ddb.tryon-model-manifest/v2"
         && manifest.pipelineVersion === ON_DEVICE_PIPELINE_VERSION
         && manifest.privacyDefault === "local_only"
@@ -127,6 +142,22 @@ function isManifest(value: unknown): value is TryOnModelManifest {
         && typeof manifest.customerPreview?.enabled === "boolean"
         && ["approved", "blocked_quality_review"].includes(manifest.customerPreview?.status || "")
         && ["passed_perceptual_qa", "dog_geometry_validation_failed"].includes(manifest.customerPreview?.reason || "")
+        && typeof qualityReview?.id === "string"
+        && qualityReview.id.length >= 12
+        && ["approved", "rejected"].includes(qualityReview?.decision || "")
+        && !Number.isNaN(Date.parse(qualityReview?.reviewedAt || ""))
+        && typeof qualityReview?.reviewer === "string"
+        && qualityReview.reviewer.length >= 3
+        && qualityReview.pipelineVersion === manifest.pipelineVersion
+        && qualityReview.modelSha256 === model?.sha256
+        && Number.isInteger(qualityReview.goldenSet?.total)
+        && Number.isInteger(qualityReview.goldenSet?.passed)
+        && Number.isInteger(qualityReview.goldenSet?.minimumRequired)
+        && Number(qualityReview.goldenSet?.total) >= 0
+        && Number(qualityReview.goldenSet?.passed) >= 0
+        && Number(qualityReview.goldenSet?.passed) <= Number(qualityReview.goldenSet?.total)
+        && Number(qualityReview.goldenSet?.minimumRequired) >= 12
+        && Array.isArray(qualityReview.failedCriteria)
         && manifest.webRuntime?.package === "onnxruntime-web"
         && manifest.webRuntime?.version === "1.29.0"
         && manifest.webRuntime?.baseUrl === EXPECTED_ORT_RUNTIME_BASE
@@ -258,7 +289,17 @@ export async function assessOnDeviceTryOnCapability(): Promise<OnDeviceTryOnCapa
             privacy: "local_only",
         };
     }
-    if (!manifest.customerPreview.enabled || manifest.customerPreview.status !== "approved") {
+    const review = manifest.customerPreview.qualityReview;
+    const qualityApproved = manifest.customerPreview.enabled
+        && manifest.customerPreview.status === "approved"
+        && manifest.customerPreview.reason === "passed_perceptual_qa"
+        && review.decision === "approved"
+        && review.pipelineVersion === manifest.pipelineVersion
+        && review.modelSha256 === manifest.model.sha256
+        && review.goldenSet.total >= review.goldenSet.minimumRequired
+        && review.goldenSet.passed === review.goldenSet.total
+        && review.failedCriteria.length === 0;
+    if (!qualityApproved) {
         return {
             available: false, provider: null, tier: "fallback", reason: "quality_gate_failed",
             modelId: manifest.model.id, modelVersion: manifest.model.version,
