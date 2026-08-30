@@ -211,13 +211,18 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
     assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
 });
 
-test("camera-motion-only replacements stay hidden while a reviewed two-shot replacement is restored", async () => {
+test("camera-motion-only replacements stay hidden while reviewed two-shot replacements are restored", async () => {
     const { safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
     const rows = JSON.parse(await readFile(new URL("lib/catalog/raw.json", root), "utf8"));
     const blocked = rows.filter((row) => row.videoJobId === "hover-20260830-exact-product-v2");
-    const reviewed = rows.find((row) => row.videoJobId === "hover2-20260830-b916f65da933");
+    const reviewedJobIds = new Set([
+        "hover2-20260830-b916f65da933",
+        "hover2-20260830-a661ee9a7f74",
+        "hover2-20260830-5879e86094cf",
+    ]);
+    const reviewed = rows.filter((row) => reviewedJobIds.has(row.videoJobId));
 
-    assert.equal(blocked.length, 15);
+    assert.equal(blocked.length, 13);
     for (const row of blocked) {
         assert.equal(row.videoQuality, "blocked_not_dog_wearing");
         assert.equal(safeCatalogHoverVideo({
@@ -228,13 +233,22 @@ test("camera-motion-only replacements stay hidden while a reviewed two-shot repl
             raw: row,
         }), undefined, `${row.folder} must stay static until a reviewed dog-wearing or dog-using clip exists`);
     }
-    assert.equal(reviewed?.folder, "rw_powderhound_waterproof_jacket_26fw");
-    assert.equal(reviewed?.videoQuality, "approved_dog_wearing");
-    assert.equal(safeCatalogHoverVideo({
-        id: `p_${reviewed.no}`,
-        subcategory: "wear",
-        image: reviewed.image,
-        video: reviewed.video,
-        raw: reviewed,
-    }), reviewed.video);
+    assert.deepEqual(
+        reviewed.map((row) => row.folder).sort(),
+        [
+            "rw_backtrak_evac_kit",
+            "rw_lumenglow_jacket_26fw",
+            "rw_powderhound_waterproof_jacket_26fw",
+        ],
+    );
+    for (const row of reviewed) {
+        assert.equal(row.videoQuality, "approved_dog_wearing");
+        assert.equal(safeCatalogHoverVideo({
+            id: `p_${row.no}`,
+            subcategory: "wear",
+            image: row.image,
+            video: row.video,
+            raw: row,
+        }), row.video);
+    }
 });
