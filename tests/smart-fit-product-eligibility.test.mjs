@@ -210,3 +210,21 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
     }), undefined);
     assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
 });
+
+test("camera-motion-only replacement batch is hidden until dog interaction review passes", async () => {
+    const { safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
+    const rows = JSON.parse(await readFile(new URL("lib/catalog/raw.json", root), "utf8"));
+    const blocked = rows.filter((row) => row.videoJobId === "hover-20260830-exact-product-v2");
+
+    assert.equal(blocked.length, 16);
+    for (const row of blocked) {
+        assert.equal(row.videoQuality, "blocked_not_dog_wearing");
+        assert.equal(safeCatalogHoverVideo({
+            id: `p_${row.no}`,
+            subcategory: "wear",
+            image: row.image,
+            video: row.video,
+            raw: row,
+        }), undefined, `${row.folder} must stay static until a reviewed dog-wearing or dog-using clip exists`);
+    }
+});
