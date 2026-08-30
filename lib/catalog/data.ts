@@ -6,6 +6,7 @@ import sizesData from "./sizes.json";
 import pricesData from "./prices.json";
 import { catalogPriceBadgeKind } from "./price-badge";
 import { safeCatalogHoverVideo } from "../pet-tryon-eligibility";
+import { applyReviewedHoverOverride } from "./reviewed-hover-overrides";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -197,6 +198,7 @@ function buildOptionLabel(folder: string | undefined): string | undefined {
 
 function buildCatalog(): CatalogProduct[] {
     return (rawCatalog as CatalogRow[]).map((row) => {
+        const reviewedRow = applyReviewedHoverOverride(row);
         const subcategory = mapSubcategory(row);
         const category = SUBCAT_TO_CAT[subcategory];
         const overridePrice = buildPrice(row.folder);
@@ -223,7 +225,7 @@ function buildCatalog(): CatalogProduct[] {
             gallery: row.gallery,
             details: row.details,
             sizeImage: row.sizeImage,
-            video: storefrontVideoUrl(row, subcategory),
+            video: storefrontVideoUrl(reviewedRow, subcategory),
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
             externalReviewCount: row.externalReviewCount,
@@ -235,7 +237,7 @@ function buildCatalog(): CatalogProduct[] {
             recommendable: row.recommendable === true,
             availability: row.availability || "unknown",
             operatorReviewedAt: row.operatorReviewedAt,
-            raw: row,
+            raw: reviewedRow,
             colors: buildColors(row.folder),
             sizes: buildSizes(row.folder),
             optionLabel: buildOptionLabel(row.folder),

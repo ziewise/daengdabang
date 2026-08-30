@@ -252,3 +252,29 @@ test("camera-motion-only replacements stay hidden while reviewed two-shot replac
         }), row.video);
     }
 });
+
+test("strict catalog re-review withdraws mismatches and publishes only current approved clips", async () => {
+    const { applyReviewedHoverOverride } = await import("../lib/catalog/reviewed-hover-overrides.ts");
+    const base = (folder) => ({
+        no: 1,
+        folder,
+        video: `/images/products/catalog/${folder}/videos/hover.mp4`,
+        videoProvider: "ziewcraft",
+        videoQuality: "approved_dog_wearing",
+        videoJobId: "old-review",
+    });
+
+    for (const folder of ["rw_backtrak_evac_kit", "rw_lumenglow_jacket_26fw"]) {
+        const withdrawn = applyReviewedHoverOverride(base(folder));
+        assert.equal(withdrawn.video, undefined);
+        assert.equal(withdrawn.videoJobId, undefined);
+    }
+
+    const powder = applyReviewedHoverOverride(base("rw_powderhound_waterproof_jacket_26fw"));
+    assert.equal(powder.videoJobId, "hover2-20260830-b916f65da933");
+    assert.equal(powder.videoDelivery, "jsdelivr_commit_cdn");
+
+    const gaiter = applyReviewedHoverOverride({ no: 2, folder: "rw_mt_hoodie_gaiter_26fw" });
+    assert.equal(gaiter.videoJobId, "hover2-20260830-7bbe7b6395c1");
+    assert.equal(gaiter.videoQuality, "approved_dog_wearing");
+});
