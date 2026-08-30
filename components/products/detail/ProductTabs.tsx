@@ -6,6 +6,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
+import { getProductDetailContent } from "@/lib/catalog/product-detail-content";
 
 type SectionKey = "detail" | "review" | "qna";
 
@@ -88,9 +89,10 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     const [expanded, setExpanded] = useState(false);
     const { t, productName } = useI18n();
     const details = p.details ?? [];
+    const content = getProductDetailContent(p.folder);
     const displayName = productName(p);
 
-    if (details.length === 0) {
+    if (details.length === 0 && !content) {
         return (
             <div className="rounded-lg border border-dashed border-neutral-200 bg-white p-8 text-center text-sm font-bold text-neutral-500">
                 {t("noDetailImages")}
@@ -100,6 +102,59 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
 
     return (
         <div className="relative mx-auto max-w-3xl">
+            {content && (
+                <article className="mb-8 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-8" data-product-detail-copy>
+                    <p className="text-xs font-black tracking-[0.18em] text-indigo-600">공식 상품 정보</p>
+                    <h3 className="mt-2 text-xl font-black tracking-tight text-neutral-950 md:text-2xl">{displayName}</h3>
+                    <p className="mt-4 break-keep text-sm font-bold leading-7 text-neutral-700 md:text-base">{content.summary}</p>
+
+                    <div className="mt-6 grid gap-5 md:grid-cols-2">
+                        <div>
+                            <h4 className="text-sm font-black text-neutral-950">핵심 기능</h4>
+                            <ul className="mt-3 space-y-2 text-sm font-bold leading-6 text-neutral-700">
+                                {content.features.map((feature) => (
+                                    <li key={feature} className="flex gap-2">
+                                        <i className="fa-solid fa-check mt-1 text-xs text-indigo-600" aria-hidden="true" />
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="space-y-4">
+                            {content.specs && content.specs.length > 0 && (
+                                <div>
+                                    <h4 className="text-sm font-black text-neutral-950">사이즈·사양</h4>
+                                    <ul className="mt-2 space-y-1 text-sm font-bold leading-6 text-neutral-700">
+                                        {content.specs.map((spec) => <li key={spec}>• {spec}</li>)}
+                                    </ul>
+                                </div>
+                            )}
+                            {content.care && (
+                                <div>
+                                    <h4 className="text-sm font-black text-neutral-950">관리 방법</h4>
+                                    <p className="mt-2 text-sm font-bold leading-6 text-neutral-700">{content.care}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {content.safety && (
+                        <p className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm font-black leading-6 text-amber-950">
+                            <i className="fa-solid fa-triangle-exclamation mr-2" aria-hidden="true" />
+                            {content.safety}
+                        </p>
+                    )}
+                    <a
+                        href={content.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-5 inline-flex items-center gap-2 text-xs font-black text-neutral-500 underline underline-offset-4 hover:text-indigo-700"
+                    >
+                        Ruffwear 공식 상품 정보 확인
+                        <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true" />
+                    </a>
+                </article>
+            )}
             <div className={`relative overflow-hidden transition-all ${expanded ? "max-h-none" : "max-h-[820px]"}`}>
                 <div className="flex flex-col gap-2">
                     {details.map((src, index) => (
@@ -115,7 +170,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                         />
                     ))}
                 </div>
-                {!expanded && (
+                {details.length > 0 && !expanded && (
                     <div
                         className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
                         style={{ background: "linear-gradient(to top, var(--background) 0%, rgba(255,255,255,0) 100%)" }}
@@ -123,7 +178,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                 )}
             </div>
 
-            <div className="mt-4 flex justify-center">
+            {details.length > 0 && <div className="mt-4 flex justify-center">
                 <button
                     type="button"
                     onClick={() => setExpanded((value) => !value)}
@@ -132,7 +187,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     {expanded ? t("fold") : t("moreDetail")}
                     <i className={`fa-solid ${expanded ? "fa-chevron-up" : "fa-chevron-down"} text-[10px]`} />
                 </button>
-            </div>
+            </div>}
         </div>
     );
 }
