@@ -275,6 +275,6 @@ test("strict catalog re-review withdraws mismatches and publishes only current a
     assert.equal(powder.videoJobId, undefined);
 
     const gaiter = applyReviewedHoverOverride({ no: 2, folder: "rw_mt_hoodie_gaiter_26fw" });
-    assert.equal(gaiter.videoJobId, "hover2-20260830-7bbe7b6395c1");
-    assert.equal(gaiter.videoQuality, "approved_dog_wearing");
+    assert.equal(gaiter.video, undefined);
+    assert.equal(gaiter.videoJobId, undefined);
 });
