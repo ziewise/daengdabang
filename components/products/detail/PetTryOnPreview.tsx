@@ -1031,7 +1031,7 @@ export default function PetTryOnPreview({
                             {!displayResultImage && localPetPreview?.preprocessed && (
                                 <div className="absolute left-3 top-3 rounded-full border border-emerald-200 bg-white/90 px-3 py-1.5 text-[10px] font-black text-emerald-800 shadow-sm backdrop-blur">
                                     <i className="fa-solid fa-mobile-screen-button mr-1.5" />
-                                    {locale === "en" ? "Photo prepared on this device" : "사진 준비는 이 기기에서 완료"}
+                                    {locale === "en" ? "Photo stays on this device" : "사진은 이 기기에만 보관 중"}
                                 </div>
                             )}
 

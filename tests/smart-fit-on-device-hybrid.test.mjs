@@ -148,6 +148,7 @@ test("server generation remains an explicit action after local protection or fai
     ]);
 
     assert.match(modal, /사진은 전송되지 않았습니다/);
+    assert.match(modal, /사진은 이 기기에만 보관 중/);
     assert.match(modal, /온라인으로 착용 모습을 만들려는 경우에만/);
     assert.match(modal, /우리 아이 착용 모습 만들기/);
     assert.match(modal, /onClick=\{\(\) => void generate\(/);
