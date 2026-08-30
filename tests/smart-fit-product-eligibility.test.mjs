@@ -211,12 +211,13 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
     assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
 });
 
-test("camera-motion-only replacement batch is hidden until dog interaction review passes", async () => {
+test("camera-motion-only replacements stay hidden while a reviewed two-shot replacement is restored", async () => {
     const { safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
     const rows = JSON.parse(await readFile(new URL("lib/catalog/raw.json", root), "utf8"));
     const blocked = rows.filter((row) => row.videoJobId === "hover-20260830-exact-product-v2");
+    const reviewed = rows.find((row) => row.videoJobId === "hover2-20260830-b916f65da933");
 
-    assert.equal(blocked.length, 16);
+    assert.equal(blocked.length, 15);
     for (const row of blocked) {
         assert.equal(row.videoQuality, "blocked_not_dog_wearing");
         assert.equal(safeCatalogHoverVideo({
@@ -227,4 +228,13 @@ test("camera-motion-only replacement batch is hidden until dog interaction revie
             raw: row,
         }), undefined, `${row.folder} must stay static until a reviewed dog-wearing or dog-using clip exists`);
     }
+    assert.equal(reviewed?.folder, "rw_powderhound_waterproof_jacket_26fw");
+    assert.equal(reviewed?.videoQuality, "approved_dog_wearing");
+    assert.equal(safeCatalogHoverVideo({
+        id: `p_${reviewed.no}`,
+        subcategory: "wear",
+        image: reviewed.image,
+        video: reviewed.video,
+        raw: reviewed,
+    }), reviewed.video);
 });
