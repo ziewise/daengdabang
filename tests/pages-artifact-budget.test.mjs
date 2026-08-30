@@ -109,6 +109,7 @@ test("Pages deployment workflow pins video URLs to the build SHA and uses Node 2
     assert.match(catalogSource, /videoDelivery !== "jsdelivr_commit_cdn"/);
     assert.match(workflow, /NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: \$\{\{ github\.sha \}\}/);
     assert.match(nextConfig, /env:\s*\{[\s\S]*NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: storefrontAssetCommitSha/);
+    assert.match(nextConfig, /process\.env\.CF_PAGES_COMMIT_SHA/);
     for (const action of [
         "actions/checkout@v6",
         "actions/configure-pages@v6",

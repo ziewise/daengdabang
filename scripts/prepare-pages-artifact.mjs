@@ -134,7 +134,11 @@ async function totalBytes(filePaths) {
 export async function preparePagesArtifact({
     repoRoot = process.cwd(),
     outRoot = path.join(repoRoot, "out"),
-    commitSha = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA || "",
+    commitSha = (
+        process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA
+        || process.env.CF_PAGES_COMMIT_SHA
+        || ""
+    ),
     maxBytes = 950_000_000,
 } = {}) {
     const resolvedRepoRoot = path.resolve(repoRoot);
@@ -143,7 +147,7 @@ export async function preparePagesArtifact({
         throw new Error(`Pages output must stay inside the repository: ${resolvedOutRoot}`);
     }
     if (!COMMIT_SHA_RE.test(commitSha)) {
-        throw new Error("NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA must be a full 40-character Git commit SHA");
+        throw new Error("NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA or CF_PAGES_COMMIT_SHA must be a full 40-character Git commit SHA");
     }
 
     const rawCatalog = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "raw.json"), []);

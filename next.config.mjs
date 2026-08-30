@@ -11,7 +11,11 @@ function commonAncestor(first, second) {
 }
 
 const projectRoot = realpathSync(process.cwd());
-const storefrontAssetCommitSha = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
+const storefrontAssetCommitSha = (
+    process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA
+    || process.env.CF_PAGES_COMMIT_SHA
+    || ""
+).trim();
 let dependencyRoot = projectRoot;
 try {
     dependencyRoot = realpathSync(resolve(projectRoot, "node_modules"));
