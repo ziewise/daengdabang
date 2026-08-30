@@ -117,6 +117,15 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
     assert.match(nativePrepare, /"ai\/tryon"/);
 });
 
+test("native validation publishes an installable Android test APK", async () => {
+    const workflow = await source(".github/workflows/native-package-validation.yml");
+
+    assert.match(workflow, /:app:bundleDebug :app:assembleDebug --stacktrace/);
+    assert.match(workflow, /name: daengdabang-android-debug-apk/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
+    assert.match(workflow, /if-no-files-found: error/);
+});
+
 test("server generation remains an explicit action after local protection or failure", async () => {
     const [modal, client] = await Promise.all([
         source("components/products/detail/PetTryOnPreview.tsx"),
