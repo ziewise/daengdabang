@@ -121,8 +121,11 @@ test("native validation publishes an installable Android test APK", async () => 
     const workflow = await source(".github/workflows/native-package-validation.yml");
 
     assert.match(workflow, /:app:bundleDebug :app:assembleDebug --stacktrace/);
+    assert.match(workflow, /apksigner" verify --verbose --print-certs/);
+    assert.match(workflow, /aapt" dump badging/);
     assert.match(workflow, /name: daengdabang-android-debug-apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-badging\.txt/);
     assert.match(workflow, /if-no-files-found: error/);
 });
 

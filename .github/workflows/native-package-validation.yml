@@ -39,10 +39,20 @@ jobs:
         working-directory: android
         run: ./gradlew :app:bundleDebug :app:assembleDebug --stacktrace
 
+      - name: Verify APK signature and package metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_tools="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+          "$build_tools/apksigner" verify --verbose --print-certs android/app/build/outputs/apk/debug/app-debug.apk
+          "$build_tools/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | tee android/app/build/outputs/apk/debug/app-debug-badging.txt
+
       - uses: actions/upload-artifact@v4
         with:
           name: daengdabang-android-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/apk/debug/app-debug-badging.txt
           if-no-files-found: error
           retention-days: 14
 
