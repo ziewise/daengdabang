@@ -90,6 +90,7 @@ export type PetTryOnColorPreview = {
     mode: "approximate_color_only";
     confidence: number;
     notice: string;
+    processing?: "on_device" | "server_verified";
 };
 
 export type PetTryOnEmailDeliveryStatus =
@@ -792,6 +793,7 @@ export async function requestPetTryOnColorPreview(
             mode: "approximate_color_only",
             confidence,
             notice: String(data.notice || ""),
+            processing: "server_verified",
         });
     } catch (error) {
         return caughtFailure(error);

@@ -154,3 +154,46 @@ test("server generation remains an explicit action after local protection or fai
     assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return failure/);
     assert.doesNotMatch(modal, /localTryOnPending[\s\S]{0,220}void generate\(/);
 });
+
+test("an approved fit master is recolored locally at high resolution before the photo-free server fallback", async () => {
+    const [localPreview, modal, client] = await Promise.all([
+        source("lib/on-device-color-preview.ts"),
+        source("components/products/detail/PetTryOnPreview.tsx"),
+        source("lib/pet-tryon.ts"),
+    ]);
+
+    assert.match(localPreview, /MAX_ENHANCED_EDGE = 1600/);
+    assert.match(localPreview, /MAX_STANDARD_EDGE = 1280/);
+    assert.match(localPreview, /imageSmoothingQuality = "high"/);
+    assert.match(localPreview, /canvas\.toDataURL\("image\/webp", 0\.93\)/);
+    assert.match(localPreview, /MIN_CONFIDENCE = 0\.76/);
+    assert.match(localPreview, /changedRatio < 0\.018 \|\| changedRatio > 0\.52/);
+    assert.match(localPreview, /processing: "on_device"/);
+    assert.match(localPreview, /probeOnDeviceCapabilities\(\)/);
+    assert.match(localPreview, /capabilities\.saveData/);
+    assert.match(localPreview, /writeOnDeviceCache\(cacheKey, value\)/);
+
+    const previewEffect = modal.slice(
+        modal.indexOf("void createOnDeviceColorPreview"),
+        modal.indexOf("const generate = useCallback", modal.indexOf("void createOnDeviceColorPreview")),
+    );
+    assert.match(previewEffect, /sourceImageDataUrl: sourceFit\.imageDataUrl/);
+    assert.match(previewEffect, /if \(localOutcome\.status === "ready"\)/);
+    assert.match(previewEffect, /return requestPetTryOnColorPreview/);
+    assert.ok(
+        previewEffect.indexOf("createOnDeviceColorPreview") < previewEffect.indexOf("requestPetTryOnColorPreview"),
+        "local processing must run before server fallback",
+    );
+
+    const serverFallback = client.slice(
+        client.indexOf("export async function requestPetTryOnColorPreview"),
+        client.indexOf("async function wait", client.indexOf("export async function requestPetTryOnColorPreview")),
+    );
+    assert.match(serverFallback, /body: JSON\.stringify\(\{ product_image: productImage \}\)/);
+    const requestBody = serverFallback.slice(
+        serverFallback.indexOf("body: JSON.stringify"),
+        serverFallback.indexOf("}),", serverFallback.indexOf("body: JSON.stringify")),
+    );
+    assert.doesNotMatch(requestBody, /pet|photo|sourceImage|imageDataUrl/);
+    assert.match(serverFallback, /processing: "server_verified"/);
+});

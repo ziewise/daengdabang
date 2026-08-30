@@ -33,9 +33,11 @@ test("unsafe or low-confidence color previews never replace the original fitting
     assert.match(modal, /selectedPreciseFit \|\| selectedFastPreview \|\| retainingSourceAfterRejectedPreview/);
 
     const previewRequest = modal.slice(
-        modal.indexOf("void requestPetTryOnColorPreview"),
+        modal.indexOf("void createOnDeviceColorPreview"),
         modal.indexOf("const generate = useCallback"),
     );
+    assert.match(previewRequest, /if \(localOutcome\.status === "ready"\)/);
+    assert.match(previewRequest, /return requestPetTryOnColorPreview/);
     assert.match(previewRequest, /if \(!previewOutcome\.ok\)[\s\S]*setFastPreviewUnavailableKey/);
     assert.doesNotMatch(previewRequest, /\bstart\(|generate\(/);
 });

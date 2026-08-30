@@ -44,6 +44,7 @@ import {
     runOnDeviceTryOn,
     type OnDeviceTryOnResult,
 } from "@/lib/on-device-tryon";
+import { createOnDeviceColorPreview } from "@/lib/on-device-color-preview";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import ColorSelect from "./ColorSelect";
@@ -444,6 +445,7 @@ export default function PetTryOnPreview({
         ? fastPreviews[selectedFastKey]
         : undefined;
     const isFastPreview = Boolean(!selectedPreciseFit && selectedFastPreview);
+    const isOnDeviceFastPreview = selectedFastPreview?.processing === "on_device";
     const geometryReviewNeeded = Boolean(sourceFit && sourceFit.geometryVerified !== true);
     const shouldRequestFastPreview = Boolean(
         !explicitColorRequired
@@ -668,9 +670,23 @@ export default function PetTryOnPreview({
         const controller = new AbortController();
         let active = true;
         setFastPreviewUnavailableKey((key) => key === selectedFastKey ? "" : key);
-        void requestPetTryOnColorPreview(sourceFit.jobId, tryOnProduct.image, controller.signal)
-            .then((previewOutcome) => {
+        void createOnDeviceColorPreview({
+            sourceJobId: sourceFit.jobId,
+            sourceImageDataUrl: sourceFit.imageDataUrl,
+            sourceProductImage: sourceFit.productImage,
+            targetProductImage: tryOnProduct.image,
+            signal: controller.signal,
+        }).then(async (localOutcome) => {
+            if (localOutcome.status === "ready") {
+                return { ok: true as const, value: localOutcome.value };
+            }
+            if (localOutcome.reason === "aborted") return null;
+            // The server receives only the approved job id and public catalog
+            // image URL. The member photo and local master pixels stay private.
+            return requestPetTryOnColorPreview(sourceFit.jobId, tryOnProduct.image!, controller.signal);
+        }).then((previewOutcome) => {
                 if (!active || controller.signal.aborted) return;
+                if (!previewOutcome) return;
                 if (!previewOutcome.ok) {
                     setFastPreviewUnavailableKey(selectedFastKey);
                     if (previewOutcome.error.code === "login_required") {
@@ -1415,8 +1431,12 @@ export default function PetTryOnPreview({
                                                 : "선택한 색상을 안전하게 바꿀 수 없어, 원래 정밀 결과를 색상 변경 없이 유지하고 있어요."
                                             : isFastPreview
                                             ? locale === "en"
-                                                ? "This comparison reused the saved fitting without creating a new image. Check the product photo for the exact pattern and construction details."
-                                                : "저장된 착용 결과를 활용해 새 이미지를 만들지 않고 색상을 비교했어요. 실제 무늬와 세부 모양은 상품 사진에서 함께 확인해 주세요."
+                                                ? isOnDeviceFastPreview
+                                                    ? "This color comparison was processed privately on this device from your approved fitting. Check the product photo for exact pattern details."
+                                                    : "This comparison reused the approved fitting without sending your pet photo again. Check the product photo for exact pattern details."
+                                                : isOnDeviceFastPreview
+                                                    ? "승인한 착용 기준본을 이용해 이 기기 안에서 고해상도 색상 비교를 만들었어요. 정확한 무늬와 세부 모양은 상품 사진도 함께 확인해 주세요."
+                                                    : "승인한 착용 결과를 활용해 반려견 사진을 다시 보내지 않고 색상을 비교했어요. 정확한 무늬와 세부 모양은 상품 사진도 함께 확인해 주세요."
                                             : locale === "en"
                                                 ? "The precise fitting is ready. Check the size chart and body measurements before purchase."
                                                 : "착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
