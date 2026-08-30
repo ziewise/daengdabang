@@ -11,6 +11,13 @@ const DEPLOYMENT_OMIT_PATHS = new Set([
     // Legacy storefront copy. The current app uses /images/hero/default.mp4.
     "videos/hero.mp4",
 ]);
+const REVIEWED_VIDEO_PROVIDERS = new Set(["ziewcraft", "ddb_exact_product_renderer"]);
+const REVIEWED_VIDEO_QUALITIES = new Set([
+    "approved_dog_wearing",
+    "approved_dog_using",
+    "approved_dog_product_interaction",
+    "approved_exact_product_images",
+]);
 
 function normalizeAssetPath(value) {
     if (typeof value !== "string") return "";
@@ -147,6 +154,25 @@ export async function preparePagesArtifact({
             .filter(Boolean),
     );
     const builtCdnVideos = await collectBuiltCdnVideos(resolvedOutRoot, commitSha);
+    const requiredReviewedCdnVideos = new Set(
+        (Array.isArray(rawCatalog) ? rawCatalog : [])
+            .filter((row) => (
+                row?.videoDelivery === "jsdelivr_commit_cdn"
+                && REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
+                && REVIEWED_VIDEO_QUALITIES.has(row?.videoQuality)
+                && typeof row?.videoJobId === "string"
+                && row.videoJobId.trim().length > 0
+            ))
+            .map((row) => normalizeAssetPath(row.video))
+            .filter(Boolean),
+    );
+    const missingReviewedCdnVideos = [...requiredReviewedCdnVideos]
+        .filter((video) => !builtCdnVideos.has(video));
+    if (missingReviewedCdnVideos.length) {
+        throw new Error(
+            `Refusing to publish: ${missingReviewedCdnVideos.length} reviewed video CDN URL(s) were not pinned into the build`,
+        );
+    }
     const unknownBuiltCdnVideos = [...builtCdnVideos].filter((video) => !catalogCdnVideos.has(video));
     if (unknownBuiltCdnVideos.length) {
         throw new Error(
@@ -193,6 +219,7 @@ export async function preparePagesArtifact({
         unusedAssetCount: removed.filter((entry) => entry.reason === "unused").length,
         omittedLegacyAssetCount: removed.filter((entry) => entry.reason === "legacy").length,
         expectedCdnVideoCount: builtCdnVideos.size,
+        requiredReviewedCdnVideoCount: requiredReviewedCdnVideos.size,
         catalogCdnVideoCount: catalogCdnVideos.size,
     };
 }

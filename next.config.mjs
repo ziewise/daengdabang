@@ -11,6 +11,7 @@ function commonAncestor(first, second) {
 }
 
 const projectRoot = realpathSync(process.cwd());
+const storefrontAssetCommitSha = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 let dependencyRoot = projectRoot;
 try {
     dependencyRoot = realpathSync(resolve(projectRoot, "node_modules"));
@@ -22,6 +23,12 @@ try {
 const nextConfig = {
     output: "export",
     trailingSlash: true,
+    // Next 16/Turbopack did not inline this value from client-side catalog code
+    // reliably. Declare it in Next config so every rendered video URL is tied to
+    // the immutable commit that contains the reviewed media.
+    env: {
+        NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: storefrontAssetCommitSha,
+    },
     images: {
         unoptimized: true,
     },

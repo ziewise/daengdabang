@@ -15,7 +15,7 @@ async function write(root, relative, value = "fixture") {
     return target;
 }
 
-async function fixture(t, { includeCdnUrl = true } = {}) {
+async function fixture(t, { includeCdnUrl = true, approvedMetadata = false } = {}) {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "ddb-pages-artifact-"));
     t.after(() => fs.rm(root, { recursive: true, force: true }));
     await write(
@@ -26,6 +26,11 @@ async function fixture(t, { includeCdnUrl = true } = {}) {
                 image: "/images/products/catalog/sample/sample.webp",
                 video: "/images/products/catalog/sample/videos/hover.mp4",
                 videoDelivery: "jsdelivr_commit_cdn",
+                ...(approvedMetadata ? {
+                    videoProvider: "ddb_exact_product_renderer",
+                    videoQuality: "approved_exact_product_images",
+                    videoJobId: "reviewed-batch",
+                } : {}),
             },
         ]),
     );
@@ -79,16 +84,31 @@ test("Pages artifact omits catalog videos that the storefront safety gate did no
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
 });
 
+test("Pages artifact fails closed when a reviewed video was not commit-pinned into the build", async (t) => {
+    const root = await fixture(t, { includeCdnUrl: false, approvedMetadata: true });
+    await assert.rejects(
+        preparePagesArtifact({
+            repoRoot: root,
+            outRoot: path.join(root, "out"),
+            commitSha: COMMIT_SHA,
+            maxBytes: 1_000_000,
+        }),
+        /reviewed video CDN URL\(s\) were not pinned/,
+    );
+});
+
 test("Pages deployment workflow pins video URLs to the build SHA and uses Node 24-based action majors", async () => {
-    const [catalogSource, workflow] = await Promise.all([
+    const [catalogSource, workflow, nextConfig] = await Promise.all([
         fs.readFile(new URL("../lib/catalog/data.ts", import.meta.url), "utf8"),
         fs.readFile(new URL("../.github/workflows/deploy.yml", import.meta.url), "utf8"),
+        fs.readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
     ]);
 
     assert.match(catalogSource, /NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA/);
     assert.match(catalogSource, /cdn\.jsdelivr\.net\/gh\/ziewise\/daengdabang/);
     assert.match(catalogSource, /videoDelivery !== "jsdelivr_commit_cdn"/);
     assert.match(workflow, /NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: \$\{\{ github\.sha \}\}/);
+    assert.match(nextConfig, /env:\s*\{[\s\S]*NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: storefrontAssetCommitSha/);
     for (const action of [
         "actions/checkout@v6",
         "actions/configure-pages@v6",
