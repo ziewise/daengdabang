@@ -1,13 +1,7 @@
 {
   "rw_backtrak_evac_kit": null,
   "rw_lumenglow_jacket_26fw": null,
-  "rw_powderhound_waterproof_jacket_26fw": {
-    "video": "/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_dog_wearing",
-    "videoJobId": "hover2-20260830-b916f65da933"
-  },
+  "rw_powderhound_waterproof_jacket_26fw": null,
   "rw_mt_hoodie_gaiter_26fw": {
     "video": "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
