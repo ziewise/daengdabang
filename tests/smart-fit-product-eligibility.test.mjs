@@ -265,7 +265,7 @@ test("strict catalog re-review withdraws mismatches and publishes only current a
         videoJobId: "old-review",
     });
 
-    assert.equal(Object.keys(overrides).length, 38);
+    assert.equal(Object.keys(overrides).length, 41);
     assert.ok(Object.values(overrides).every((value) => value === null));
     for (const folder of [
         "rw_backtrak_evac_kit",
@@ -274,6 +274,8 @@ test("strict catalog re-review withdraws mismatches and publishes only current a
         "id_treat_sardine",
         "heyrex_taurus_filter_5p",
         "icecream_realcheese",
+        "yora_wet_appleparsnip_390g",
+        "yora_wet_beetrootswede_390g",
     ]) {
         const withdrawn = applyReviewedHoverOverride(base(folder));
         assert.equal(withdrawn.video, undefined);
