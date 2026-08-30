@@ -50,9 +50,9 @@ test("try-on is a click-triggered branded modal with actual progress and backgro
     assert.match(modal, /새 이미지 생성 없음/);
     assert.match(modal, /색감 비교용/);
     assert.match(modal, /무늬와 세부 모양은 상품사진 기준/);
-    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
+    assert.match(modal, /수정한 착용 모습 만들기/);
     assert.match(modal, /DDB SMART FIT/);
-    assert.match(modal, /자연스러운 착용 미리보기/);
+    assert.match(modal, /우리 아이 착용 모습 만들기/);
     assert.match(modal, /이 창을 닫아도 입혀보기는 계속 진행됩니다/);
     assert.match(modal, /계속 쇼핑/);
     assert.match(modal, /완성되면 알려줘/);
@@ -154,7 +154,7 @@ test("different products stay in a five-item member queue and complete independe
     assert.match(modal, /입혀보기는 한 번에 최대 5개까지 진행할 수 있어요/);
 });
 
-test("the first precise fitting exposes the creation action without an extra disclosure click", async () => {
+test("the first fitting exposes the creation action without an extra disclosure click", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
     assert.match(modal, /const initialGenerationRequired = Boolean\(confirmedRegenerationRequired && !sourceFit\)/);
@@ -163,7 +163,7 @@ test("the first precise fitting exposes the creation action without an extra dis
     assert.match(modal, /confirmedRegenerationRequired && regenerationConfirmationVisible/);
     assert.match(modal, /initialGenerationRequired \? "grid-cols-1" : "grid-cols-2"/);
     assert.match(modal, /새 착용 이미지 만들기/);
-    assert.match(modal, /새 착용 이미지 1회 만들기/);
+    assert.match(modal, /우리 아이 착용 모습 만들기/);
 });
 
 test("background async responses are guarded before state updates", async () => {

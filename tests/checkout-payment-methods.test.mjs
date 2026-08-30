@@ -185,6 +185,6 @@ test("narrow two-column actions keep Korean words intact", async () => {
     assert.match(productInfo, /fa-bag-shopping shrink-0/);
     assert.match(tryOn, /완성되면 알려줘/);
     assert.match(tryOn, /실제 상품과 달라요/);
-    assert.match(tryOn, /확인: 새 착용 이미지 1회 만들기/);
+    assert.match(tryOn, /수정한 착용 모습 만들기/);
     assert.ok((tryOn.match(/break-keep text-center leading-tight/g) || []).length >= 6);
 });

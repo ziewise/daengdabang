@@ -4,6 +4,11 @@
   "releasedAt": "2026-08-30T00:00:00Z",
   "privacyDefault": "local_only",
   "fallbackPolicy": "explicit_user_action_only",
+  "customerPreview": {
+    "enabled": false,
+    "status": "blocked_quality_review",
+    "reason": "dog_geometry_validation_failed"
+  },
   "webRuntime": {
     "package": "onnxruntime-web",
     "version": "1.29.0",

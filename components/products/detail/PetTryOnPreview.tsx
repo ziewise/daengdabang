@@ -1039,8 +1039,12 @@ export default function PetTryOnPreview({
                                 <div className="absolute inset-x-3 bottom-3 rounded-xl border border-amber-200 bg-white/94 px-3 py-2 text-[10px] font-bold leading-4 text-amber-950 shadow-sm backdrop-blur" role="status">
                                     <i className="fa-solid fa-battery-quarter mr-1.5" />
                                     {locale === "en"
-                                        ? "This device paused the local preview to protect memory, battery, or compatibility. Your photo was not uploaded. Use the server button only if you want a precise fallback."
-                                        : "메모리·배터리·호환성 보호를 위해 이 기기의 로컬 미리보기를 멈췄어요. 사진은 전송되지 않았습니다. 원할 때만 아래 GPU 서버 정밀 입혀보기를 눌러 주세요."}
+                                        ? localTryOn.reason === "quality_gate_failed"
+                                            ? "The current on-device preview did not meet our visual-quality standard, so it was not shown. Your photo was not uploaded. Use the button below only if you want to send the photo securely and create a fitting image online."
+                                            : "This device could not create a private local preview. Your photo was not uploaded. Use the button below only if you want to send it securely and create a fitting image online."
+                                        : localTryOn.reason === "quality_gate_failed"
+                                            ? "현재 기기 내 미리보기는 시각 품질 기준을 통과하지 못해 결과를 보여드리지 않았어요. 사진은 전송되지 않았습니다. 온라인으로 착용 모습을 만들려는 경우에만 아래 버튼을 눌러 주세요."
+                                            : "이 기기에서는 비공개 미리보기를 만들기 어려웠어요. 사진은 전송되지 않았습니다. 온라인으로 착용 모습을 만들려는 경우에만 아래 버튼을 눌러 주세요."}
                                 </div>
                             )}
 
@@ -1162,7 +1166,7 @@ export default function PetTryOnPreview({
                                         ? locale === "en" ? "No new image · quick color preview" : "새 이미지 생성 없음 · 빠른 색상 비교"
                                         : showingSourceWhilePreparing
                                             ? locale === "en" ? "Preparing quick color preview" : "빠른 색상 비교 준비 중"
-                                            : locale === "en" ? "Precise fitting complete" : "정밀 입혀보기 완료"}
+                                            : locale === "en" ? "Fitting image ready" : "착용 모습 완성"}
                                 </div>
                             )}
 
@@ -1229,7 +1233,7 @@ export default function PetTryOnPreview({
                                                     : "다른 색상은 색상 원만 누르면 자동으로 비교돼요. 새 착용 이미지는 만들지 않습니다."
                                                 : locale === "en"
                                                     ? "The first precise fitting uses the exact color you selected."
-                                                    : "처음 정밀 입혀보기에는 지금 고른 실제 색상 사진을 사용해요."}
+                                                    : "처음 착용 모습을 만들 때는 지금 고른 실제 색상 사진을 사용해요."}
                                     </p>
                                 </div>
                             )}
@@ -1342,12 +1346,12 @@ export default function PetTryOnPreview({
 
                             <div className="mt-5 rounded-lg border border-indigo-100 bg-indigo-50/70 p-4">
                                 <p className="text-sm font-black text-indigo-950">
-                                    {locale === "en" ? "Natural fitting preview" : "자연스러운 착용 미리보기"}
+                                    {locale === "en" ? "Create a fitting image" : "우리 아이 착용 모습 만들기"}
                                 </p>
                                 <p className="mt-2 text-xs font-bold leading-5 text-indigo-900/75">
                                     {locale === "en"
-                                        ? "Your dog's photo and the selected product's shape, color, and details are reflected to create a natural fitting preview."
-                                        : "우리 아이 사진과 선택한 상품의 형태·색상·디테일을 함께 반영해 자연스러운 착용 이미지를 만들어 드립니다."}
+                                        ? "Create a reference image from your dog's photo and the selected product. Check the product size chart before purchasing."
+                                        : "우리 아이 사진과 선택한 상품 사진을 바탕으로 착용 모습을 만들 수 있어요. 구매 전에는 상품 사이즈표도 함께 확인해 주세요."}
                                 </p>
                             </div>
 
@@ -1415,7 +1419,7 @@ export default function PetTryOnPreview({
                                                 : "저장된 착용 결과를 활용해 새 이미지를 만들지 않고 색상을 비교했어요. 실제 무늬와 세부 모양은 상품 사진에서 함께 확인해 주세요."
                                             : locale === "en"
                                                 ? "The precise fitting is ready. Check the size chart and body measurements before purchase."
-                                                : "정밀 착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
+                                                : "착용 이미지가 완성됐어요. 구매 전에는 상세 사이즈표와 우리 아이의 가슴둘레를 함께 확인해 주세요."}
                                     </div>
 
                                     {(!geometryReviewNeeded || mismatchOpen) && (
@@ -1497,8 +1501,8 @@ export default function PetTryOnPreview({
                                                 </div>
                                                 <p className="mt-3 text-[11px] font-bold leading-5 text-neutral-500">
                                                     {locale === "en"
-                                                        ? "Corrections never run automatically. They are sent only after you open the optional action and explicitly confirm one new precise image."
-                                                        : "보정은 자동 실행되지 않아요. 아래 선택 기능을 열고 새 정밀 이미지 1회 생성을 직접 확인한 경우에만 전달됩니다."}
+                                                        ? "Corrections never start automatically. The photo is sent only after you open the optional action and explicitly create a new fitting image."
+                                                        : "보정은 자동으로 시작하지 않아요. 아래에서 새 착용 모습 만들기를 직접 누른 경우에만 사진을 전송합니다."}
                                                 </p>
                                             </div>
                                         )}
@@ -1533,10 +1537,10 @@ export default function PetTryOnPreview({
                                 >
                                     <i className="fa-solid fa-chevron-down" />
                                     {correctionIssues.length > 0
-                                        ? locale === "en" ? "Optional: create a corrected precise image" : "선택 기능: 보정한 새 정밀 이미지 만들기"
+                                        ? locale === "en" ? "Optional: adjust the fitting image" : "선택 사항: 원하는 부분 다시 맞추기"
                                         : !sourceFit
-                                            ? locale === "en" ? "Open: create one new precise fitting" : "새 정밀 착용 이미지 1회 만들기"
-                                            : locale === "en" ? "Optional: create another precise image" : "선택 기능: 새 정밀 이미지가 꼭 필요한가요?"}
+                                            ? locale === "en" ? "Open: create a corrected fitting image" : "수정해서 새 착용 모습 만들기"
+                                            : locale === "en" ? "Optional: create another fitting image" : "다른 착용 모습이 필요하신가요?"}
                                 </button>
                             )}
 
@@ -1548,7 +1552,7 @@ export default function PetTryOnPreview({
                                             ? finalGenerationFailed
                                                 ? locale === "en" ? "You can try again later" : "잠시 후 다시 시도할 수 있어요"
                                                 : locale === "en" ? "Create a new fitting image" : "새 착용 이미지 만들기"
-                                            : locale === "en" ? "Confirm one new full fitting image" : "새 전체 착용 이미지 생성을 확인해 주세요"}
+                                            : locale === "en" ? "Confirm a new fitting image" : "새 착용 모습 만들기를 확인해 주세요"}
                                     </p>
                                     <p className="mt-2 text-[11px] font-bold leading-5 text-amber-900">
                                         {finalGenerationFailed
@@ -1557,15 +1561,15 @@ export default function PetTryOnPreview({
                                                 : "현재 분석 시스템이 이번 결과를 끝까지 준비하지 못했어요. 새 작업은 자동으로 시작되지 않으니, 잠시 후 원하실 때만 아래 버튼으로 다시 요청해 주세요."
                                             : correctionIssues.length > 0
                                             ? locale === "en"
-                                                ? "This creates one new full image with your selected corrections. It is not a normal color switch."
-                                                : "선택한 보정을 반영해 전체 이미지를 새로 1회 만듭니다. 일반 색상 변경 기능이 아닙니다."
+                                                ? "This creates a new fitting image with your selected corrections. It is not a normal color switch."
+                                                : "선택한 보정을 반영해 새 착용 모습을 만듭니다. 일반 색상 변경 기능이 아닙니다."
                                             : !sourceFit
                                                 ? locale === "en"
-                                                    ? "This creates one new fitting image from your dog's side photo and the selected product."
-                                                    : "우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 1회 만듭니다."
+                                                    ? "This creates a fitting image from your dog's side photo and the selected product."
+                                                    : "우리 아이 측면 사진과 선택한 실제 상품으로 착용 모습을 만듭니다."
                                             : locale === "en"
-                                                ? "Color switching above creates no new image. Continue only if you want to redraw the entire fitting once."
-                                                : "위 색상 변경은 새 이미지를 만들지 않습니다. 전체 착용 이미지를 1회 다시 만들려는 경우에만 계속해 주세요."}
+                                                ? "Color switching above creates no new image. Continue only if you want to redraw the entire fitting."
+                                                : "위 색상 변경은 새 이미지를 만들지 않습니다. 전체 착용 모습을 다시 만들려는 경우에만 계속해 주세요."}
                                     </p>
                                     <div className={`mt-3 grid gap-2 ${initialGenerationRequired ? "grid-cols-1" : "grid-cols-2"}`}>
                                         {!initialGenerationRequired && (
@@ -1586,12 +1590,12 @@ export default function PetTryOnPreview({
                                             <i className={`fa-solid shrink-0 ${generationRequestPending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"}`} />
                                             <span className="break-keep text-center leading-tight">
                                                 {generationRequestPending
-                                                    ? locale === "en" ? "Starting once…" : "한 번만 시작 중…"
+                                                    ? locale === "en" ? "Creating…" : "만드는 중…"
                                                     : finalGenerationFailed
                                                         ? locale === "en" ? "Try again later" : "잠시 후 다시 시도"
                                                     : initialGenerationRequired
-                                                        ? locale === "en" ? "Create one precise image on the GPU server" : "GPU 서버 정밀 착용 이미지 1회 만들기"
-                                                        : locale === "en" ? "Confirm one precise GPU-server image" : "확인: 새 착용 이미지 1회 만들기 · GPU 서버"}
+                                                        ? locale === "en" ? "Create my dog's fitting image" : "우리 아이 착용 모습 만들기"
+                                                        : locale === "en" ? "Create the adjusted fitting image" : "수정한 착용 모습 만들기"}
                                             </span>
                                         </button>
                                     </div>
@@ -1613,14 +1617,14 @@ export default function PetTryOnPreview({
                                     {explicitColorRequired
                                         ? locale === "en" ? "Choose a color first" : "먼저 색상을 선택해 주세요"
                                         : correctionIssues.length > 0
-                                            ? locale === "en" ? "Create one precise image with these fixes" : "선택 내용 반영해 정밀 이미지 1회 만들기"
+                                            ? locale === "en" ? "Create a fitting image with these changes" : "선택 내용 반영해 착용 모습 만들기"
                                             : selectedPreciseFit
                                                 ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                 : sourceFit
                                                     ? locale === "en" ? "Precise result ready" : "정밀 결과 확인됨"
                                                     : error
-                                                        ? locale === "en" ? "Try one precise GPU-server image" : "GPU 서버 정밀 이미지 1회 시도"
-                                                        : locale === "en" ? "Start one precise GPU-server fitting" : "GPU 서버 정밀 입혀보기 1회 시작"}
+                                                        ? locale === "en" ? "Try creating the fitting image again" : "다시 착용 모습 만들기"
+                                                        : locale === "en" ? "Create my dog's fitting image" : "우리 아이 착용 모습 만들기"}
                                 </button>
                             )}
                         </aside>

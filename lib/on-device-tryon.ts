@@ -34,6 +34,7 @@ export type OnDeviceTryOnBlockReason =
     | "power_saver"
     | "thermal_pressure"
     | "backgrounded"
+    | "quality_gate_failed"
     | "input_too_large"
     | "inference_timeout"
     | "inference_failed";
@@ -43,6 +44,11 @@ type TryOnModelManifest = {
     pipelineVersion: string;
     privacyDefault: "local_only";
     fallbackPolicy: "explicit_user_action_only";
+    customerPreview: {
+        enabled: boolean;
+        status: "approved" | "blocked_quality_review";
+        reason: "passed_perceptual_qa" | "dog_geometry_validation_failed";
+    };
     webRuntime: {
         package: "onnxruntime-web";
         version: "1.29.0";
@@ -118,6 +124,9 @@ function isManifest(value: unknown): value is TryOnModelManifest {
         && manifest.pipelineVersion === ON_DEVICE_PIPELINE_VERSION
         && manifest.privacyDefault === "local_only"
         && manifest.fallbackPolicy === "explicit_user_action_only"
+        && typeof manifest.customerPreview?.enabled === "boolean"
+        && ["approved", "blocked_quality_review"].includes(manifest.customerPreview?.status || "")
+        && ["passed_perceptual_qa", "dog_geometry_validation_failed"].includes(manifest.customerPreview?.reason || "")
         && manifest.webRuntime?.package === "onnxruntime-web"
         && manifest.webRuntime?.version === "1.29.0"
         && manifest.webRuntime?.baseUrl === EXPECTED_ORT_RUNTIME_BASE
@@ -247,6 +256,14 @@ export async function assessOnDeviceTryOnCapability(): Promise<OnDeviceTryOnCapa
             batteryState: "unknown",
             thermalState: "unknown",
             privacy: "local_only",
+        };
+    }
+    if (!manifest.customerPreview.enabled || manifest.customerPreview.status !== "approved") {
+        return {
+            available: false, provider: null, tier: "fallback", reason: "quality_gate_failed",
+            modelId: manifest.model.id, modelVersion: manifest.model.version,
+            modelSha256: manifest.model.sha256, runtimeVersion: "",
+            memoryBucket: "unknown", batteryState: "unknown", thermalState: "unknown", privacy: "local_only",
         };
     }
     if (typeof document !== "undefined" && document.visibilityState !== "visible") {

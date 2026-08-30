@@ -75,10 +75,10 @@ test("product-shape correction is separate from color and requires explicit new-
     }
 
     assert.match(modal, /correctionIssues\.length > 0[\s\S]*confirmedRegenerationRequired/);
-    assert.match(modal, /보정은 자동 실행되지 않아요/);
-    assert.match(modal, /새 정밀 이미지 1회 생성을 직접 확인한 경우에만 전달됩니다/);
-    assert.match(modal, /새 전체 착용 이미지 생성을 확인해 주세요/);
-    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
+    assert.match(modal, /보정은 자동으로 시작하지 않아요/);
+    assert.match(modal, /새 착용 모습 만들기를 직접 누른 경우에만 사진을 전송합니다/);
+    assert.match(modal, /새 착용 모습 만들기를 확인해 주세요/);
+    assert.match(modal, /수정한 착용 모습 만들기/);
     assert.match(client, /confirm_precise_regeneration: true/);
     assert.doesNotMatch(modal, /void generate\(false\)/);
 });

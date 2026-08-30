@@ -20,6 +20,11 @@ test("versioned Try-On manifest pins the private local-only hybrid runtime", asy
     assert.equal(manifest.pipelineVersion, "ddb-hybrid-tryon-v2-20260830");
     assert.equal(manifest.privacyDefault, "local_only");
     assert.equal(manifest.fallbackPolicy, "explicit_user_action_only");
+    assert.deepEqual(manifest.customerPreview, {
+        enabled: false,
+        status: "blocked_quality_review",
+        reason: "dog_geometry_validation_failed",
+    });
     assert.equal(manifest.webRuntime.package, "onnxruntime-web");
     assert.equal(manifest.webRuntime.version, "1.29.0");
     assert.equal(manifest.webRuntime.baseUrl, "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/");
@@ -54,11 +59,14 @@ test("PC browser runtime verifies the model before WebGPU or WASM inference", as
     assert.match(runtime, /device\.connection\?\.saveData/);
     assert.match(runtime, /batteryState === "low"/);
     assert.match(runtime, /thermal_pressure/);
+    assert.match(runtime, /reason: "quality_gate_failed"/);
+    assert.match(runtime, /!manifest\.customerPreview\.enabled/);
 
     assert.match(modal, /runOnDeviceTryOn\(tryOnProduct, petReferenceImage\)/);
     assert.doesNotMatch(modal, /useEffect\(\(\) => \{[\s\S]{0,300}void generate\(/);
     assert.match(modal, /localTryOn\?\.status === "ready"/);
-    assert.match(modal, /GPU server/);
+    assert.doesNotMatch(modal, /GPU(?: server| 서버)|GPU-server/);
+    assert.match(modal, /우리 아이 착용 모습 만들기/);
     assert.match(client, /localInferenceStatus === "ready" \? "hybrid" : "server"/);
     assert.match(client, /client_profile: serverClientProfile/);
 });
@@ -136,7 +144,8 @@ test("server generation remains an explicit action after local protection or fai
     ]);
 
     assert.match(modal, /사진은 전송되지 않았습니다/);
-    assert.match(modal, /GPU 서버 정밀 입혀보기/);
+    assert.match(modal, /온라인으로 착용 모습을 만들려는 경우에만/);
+    assert.match(modal, /우리 아이 착용 모습 만들기/);
     assert.match(modal, /onClick=\{\(\) => void generate\(/);
     assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return failure/);
     assert.doesNotMatch(modal, /localTryOnPending[\s\S]{0,220}void generate\(/);

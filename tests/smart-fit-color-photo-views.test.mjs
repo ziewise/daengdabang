@@ -56,9 +56,9 @@ test("color changes reuse the saved fitting until the customer explicitly reques
     assert.doesNotMatch(modal, /void generate\(false\)/);
     assert.match(modal, /!explicitColorRequired[\s\S]{0,220}isFastPreviewLoading[\s\S]{0,220}fastPreviewUnavailableKey !== selectedFastKey/);
     assert.match(modal, /새 이미지 생성 없음/);
-    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
-    assert.match(modal, /새 정밀 착용 이미지 1회 만들기/);
-    assert.match(modal, /우리 아이 측면 사진과 선택한 실제 상품으로 새 착용 이미지를 1회 만듭니다/);
+    assert.match(modal, /우리 아이 착용 모습 만들기/);
+    assert.match(modal, /수정해서 새 착용 모습 만들기/);
+    assert.match(modal, /우리 아이 측면 사진과 선택한 실제 상품으로 착용 모습을 만듭니다/);
     assert.match(modal, /explicitColorRequired\s*\|\|\s*generationRequestPending/);
     assert.match(modal, /기존 입혀보기 결과를 확인하고 있어요\. 새 이미지는 시작하지 않습니다/);
     assert.match(modal, /correctionIssues\.length > 0/);
@@ -67,8 +67,8 @@ test("color changes reuse the saved fitting until the customer explicitly reques
     assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return failure\("invalid_request", false\)/);
     assert.match(client, /startPetTryOn\(product, pet, options\.signal, \[\], true\)/);
     assert.match(modal, /Boolean\(sourceFit \|\| fitMasterRestoreBlocked \|\| finalGenerationFailed\)/);
-    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
-    assert.match(modal, /보정은 자동 실행되지 않아요/);
+    assert.match(modal, /수정한 착용 모습 만들기/);
+    assert.match(modal, /보정은 자동으로 시작하지 않아요/);
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,120}generate\(/);
 });
 
@@ -89,10 +89,10 @@ test("every wearable color switch tries the saved-fit preview before optional re
     );
     assert.match(modal, /다른 색상은 색상 원만 누르면 자동으로 비교돼요\. 새 착용 이미지는 만들지 않습니다/);
     assert.match(modal, /저장된 착용 결과에서 이 색상을 비교하고 있어요\. 새 이미지는 생성하지 않습니다/);
-    assert.match(modal, /선택 기능: 새 정밀 이미지가 꼭 필요한가요/);
+    assert.match(modal, /다른 착용 모습이 필요하신가요/);
     assert.match(modal, /위 색상 변경은 새 이미지를 만들지 않습니다/);
     assert.match(modal, /!isFastPreviewLoading && !geometryDecisionPending && confirmedRegenerationRequired && !initialGenerationRequired && !preciseRegenerationOpen/);
-    assert.match(modal, /확인: 새 착용 이미지 1회 만들기/);
+    assert.match(modal, /우리 아이 착용 모습 만들기/);
 
     // Server refusal stays fail-closed and never turns a color tap into an
     // implicit paid/full render.
@@ -103,7 +103,7 @@ test("every wearable color switch tries the saved-fit preview before optional re
 
     // Product-shape correction still requires an explicit new precise image.
     assert.match(modal, /generate\(correctionIssues\.length > 0\)/);
-    assert.match(modal, /선택 내용 반영해 정밀 이미지 1회 만들기/);
+    assert.match(modal, /선택 내용 반영해 착용 모습 만들기/);
 
     // A changed swatch invalidates any stale confirmation/correction context,
     // and repeated confirmation clicks are single-flight guarded.
