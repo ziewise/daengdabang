@@ -111,6 +111,12 @@ const REVIEWED_PRODUCT_INTERACTION_QUALITIES = new Set([
     "approved_dog_wearing",
     "approved_dog_using",
     "approved_dog_product_interaction",
+    "approved_exact_product_images",
+]);
+
+const REVIEWED_PRODUCT_VIDEO_PROVIDERS = new Set([
+    "ziewcraft",
+    "ddb_exact_product_renderer",
 ]);
 
 /**
@@ -123,12 +129,12 @@ export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string
     const video = product.video?.trim();
     if (!video) return undefined;
     const raw = product.raw;
-    if (
-        raw?.videoProvider === "ziewcraft" &&
-        REVIEWED_PRODUCT_INTERACTION_QUALITIES.has(raw.videoQuality || "") &&
-        Boolean(raw.videoJobId?.trim())
-    ) {
-        return video;
+    if (raw?.videoProvider) {
+        return REVIEWED_PRODUCT_VIDEO_PROVIDERS.has(raw.videoProvider)
+            && REVIEWED_PRODUCT_INTERACTION_QUALITIES.has(raw.videoQuality || "")
+            && Boolean(raw.videoJobId?.trim())
+            ? video
+            : undefined;
     }
     return safeDogWearingCatalogVideo(product);
 }

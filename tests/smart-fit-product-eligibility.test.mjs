@@ -191,5 +191,22 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
 
     assert.equal(getPetTryOnEligibility(toy).eligible, false);
     assert.equal(safeCatalogHoverVideo(toy), toyVideo);
+    assert.equal(safeCatalogHoverVideo({
+        ...toy,
+        raw: {
+            videoProvider: "ddb_exact_product_renderer",
+            videoQuality: "approved_exact_product_images",
+            videoJobId: "hover-20260830-exact-product-v1",
+        },
+    }), toyVideo);
+    assert.equal(safeCatalogHoverVideo({
+        ...toy,
+        subcategory: "wear",
+        raw: {
+            videoProvider: "ziewcraft",
+            videoQuality: "blocked_perceptual_qa",
+            videoJobId: "rejected-video",
+        },
+    }), undefined);
     assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
 });
