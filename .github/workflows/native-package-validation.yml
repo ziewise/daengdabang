@@ -49,6 +49,12 @@ jobs:
           "$build_tools/zipalign" -c -P 16 -v 4 android/app/build/outputs/apk/debug/app-debug.apk
           "$build_tools/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | tee android/app/build/outputs/apk/debug/app-debug-badging.txt
 
+      - name: Enable KVM for the Android emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Verify the installed app opens and stays alive
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
@@ -58,7 +64,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
-            set -euo pipefail
+            set -eu
             package_name="com.daengdabang.app"
             apk_path="android/app/build/outputs/apk/debug/app-debug.apk"
             adb logcat -c
@@ -66,20 +72,22 @@ jobs:
             adb shell am force-stop "$package_name"
             adb shell am start -W -n "$package_name/.MainActivity" | tee android/app/build/outputs/apk/debug/app-debug-launch.txt
             sleep 5
-            if ! adb shell pidof "$package_name" > /dev/null; then
+            app_pid="$(adb shell pidof "$package_name" | tr -d '\r')"
+            if [ -z "$app_pid" ]; then
               adb logcat -d -v threadtime > android/app/build/outputs/apk/debug/app-debug-logcat.txt
               cat android/app/build/outputs/apk/debug/app-debug-logcat.txt
               exit 1
             fi
             adb shell dumpsys activity activities | grep -F "$package_name/.MainActivity" | tee -a android/app/build/outputs/apk/debug/app-debug-launch.txt
             adb exec-out screencap -p > android/app/build/outputs/apk/debug/app-debug-launch.png
-            adb logcat -d -v threadtime > android/app/build/outputs/apk/debug/app-debug-logcat.txt
-            if grep -E "FATAL EXCEPTION|Process: ${package_name}" android/app/build/outputs/apk/debug/app-debug-logcat.txt; then
+            adb logcat -d -v threadtime --pid="$app_pid" > android/app/build/outputs/apk/debug/app-debug-logcat.txt
+            if grep -F "FATAL EXCEPTION" android/app/build/outputs/apk/debug/app-debug-logcat.txt; then
               cat android/app/build/outputs/apk/debug/app-debug-logcat.txt
               exit 1
             fi
 
       - uses: actions/upload-artifact@v4
+        if: ${{ always() && hashFiles('android/app/build/outputs/apk/debug/app-debug.apk') != '' }}
         with:
           name: daengdabang-android-debug-apk
           path: |

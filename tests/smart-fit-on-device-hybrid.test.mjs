@@ -144,11 +144,16 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(workflow, /apksigner" verify --verbose --print-certs/);
     assert.match(workflow, /zipalign" -c -P 16 -v 4/);
     assert.match(workflow, /aapt" dump badging/);
+    assert.match(workflow, /Enable KVM for the Android emulator/);
+    assert.match(workflow, /udevadm trigger --name-match=kvm/);
     assert.match(workflow, /Verify the installed app opens and stays alive/);
+    assert.match(workflow, /script: \|\s+set -eu/);
+    assert.doesNotMatch(workflow, /set -euo pipefail/);
     assert.match(workflow, /adb install -r "\$apk_path"/);
     assert.match(workflow, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
     assert.match(workflow, /adb shell pidof "\$package_name"/);
     assert.match(workflow, /adb exec-out screencap -p/);
+    assert.match(workflow, /adb logcat -d -v threadtime --pid="\$app_pid"/);
     assert.match(workflow, /FATAL EXCEPTION/);
     assert.match(workflow, /name: daengdabang-android-debug-apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
