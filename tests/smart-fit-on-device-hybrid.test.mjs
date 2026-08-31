@@ -138,9 +138,10 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
 });
 
 test("native validation publishes an installable Android test APK", async () => {
-    const [workflow, startupCheck] = await Promise.all([
+    const [workflow, startupCheck, webviewCheck] = await Promise.all([
         source(".github/workflows/native-package-validation.yml"),
         source("scripts/verify-android-apk-startup.sh"),
+        source("scripts/verify-android-webview.mjs"),
     ]);
     const launchStepStart = workflow.indexOf("Verify the installed app opens and stays alive");
     const launchStepEnd = workflow.indexOf("- uses: actions/upload-artifact", launchStepStart);
@@ -160,8 +161,11 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(startupCheck, /adb install -r "\$apk_path"/);
     assert.match(startupCheck, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
     assert.match(startupCheck, /adb shell pidof "\$package_name"/);
-    assert.match(startupCheck, /uiautomator dump --compressed/);
-    assert.match(startupCheck, /grep -F "댕다방 앱 홈"/);
+    assert.match(startupCheck, /webview_devtools_remote/);
+    assert.match(startupCheck, /node scripts\/verify-android-webview\.mjs/);
+    assert.match(webviewCheck, /expectedText = "댕다방 앱 홈"/);
+    assert.match(webviewCheck, /expectedPath = "\/app\/index\.html"/);
+    assert.match(webviewCheck, /lastState\.text\.includes\(expectedText\)/);
     assert.match(startupCheck, /adb exec-out screencap -p/);
     assert.match(startupCheck, /adb logcat -d -v threadtime --pid="\$app_pid"/);
     assert.match(startupCheck, /FATAL EXCEPTION/);
@@ -171,7 +175,7 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.txt/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-logcat\.txt/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.png/);
-    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-ui\.xml/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-webview\.json/);
     assert.match(workflow, /if-no-files-found: error/);
 });
 
