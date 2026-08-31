@@ -163,6 +163,11 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(startupCheck, /adb shell pidof "\$package_name"/);
     assert.match(startupCheck, /webview_devtools_remote/);
     assert.match(startupCheck, /node scripts\/verify-android-webview\.mjs/);
+    assert.ok(
+        startupCheck.indexOf("node scripts/verify-android-webview.mjs")
+            < startupCheck.lastIndexOf("adb exec-out screencap -p"),
+        "the final screenshot must be captured after the rendered DOM check",
+    );
     assert.match(webviewCheck, /expectedText = "댕다방 앱 홈"/);
     assert.match(webviewCheck, /expectedPath = "\/app\/index\.html"/);
     assert.match(webviewCheck, /lastState\.text\.includes\(expectedText\)/);

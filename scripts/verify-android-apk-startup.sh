@@ -44,3 +44,10 @@ fi
 adb forward tcp:9222 "localabstract:$devtools_socket"
 node scripts/verify-android-webview.mjs > "$webview_state"
 cat "$webview_state"
+sleep 1
+adb exec-out screencap -p > "$artifact_dir/app-debug-launch.png"
+adb logcat -d -v threadtime --pid="$app_pid" > "$app_log"
+if grep -F "FATAL EXCEPTION" "$app_log"; then
+  cat "$app_log"
+  exit 1
+fi
