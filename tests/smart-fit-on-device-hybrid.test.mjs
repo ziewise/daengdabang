@@ -139,6 +139,9 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
 
 test("native validation publishes an installable Android test APK", async () => {
     const workflow = await source(".github/workflows/native-package-validation.yml");
+    const launchStepStart = workflow.indexOf("Verify the installed app opens and stays alive");
+    const launchStepEnd = workflow.indexOf("- uses: actions/upload-artifact", launchStepStart);
+    const launchStep = workflow.slice(launchStepStart, launchStepEnd);
 
     assert.match(workflow, /:app:bundleDebug :app:assembleDebug --stacktrace/);
     assert.match(workflow, /apksigner" verify --verbose --print-certs/);
@@ -147,8 +150,8 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(workflow, /Enable KVM for the Android emulator/);
     assert.match(workflow, /udevadm trigger --name-match=kvm/);
     assert.match(workflow, /Verify the installed app opens and stays alive/);
-    assert.match(workflow, /script: \|\s+set -eu/);
-    assert.doesNotMatch(workflow, /set -euo pipefail/);
+    assert.match(launchStep, /script: \|\s+set -eu/);
+    assert.doesNotMatch(launchStep, /set -euo pipefail/);
     assert.match(workflow, /adb install -r "\$apk_path"/);
     assert.match(workflow, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
     assert.match(workflow, /adb shell pidof "\$package_name"/);
