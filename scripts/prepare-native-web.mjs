@@ -68,7 +68,7 @@ const launchDocument = `<!doctype html>
     <img class="mark" src="/images/pwa/icon-v2-192x192.png" alt="">
     <p>댕다방을 여는 중이에요</p>
   </div>
-  <script>location.replace('/app/');</script>
+  <script>location.replace('/app/index.html');</script>
 </body>
 </html>
 `;

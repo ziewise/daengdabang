@@ -160,6 +160,8 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(startupCheck, /adb install -r "\$apk_path"/);
     assert.match(startupCheck, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
     assert.match(startupCheck, /adb shell pidof "\$package_name"/);
+    assert.match(startupCheck, /uiautomator dump --compressed/);
+    assert.match(startupCheck, /grep -F "댕다방 앱 홈"/);
     assert.match(startupCheck, /adb exec-out screencap -p/);
     assert.match(startupCheck, /adb logcat -d -v threadtime --pid="\$app_pid"/);
     assert.match(startupCheck, /FATAL EXCEPTION/);
@@ -169,6 +171,7 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.txt/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-logcat\.txt/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.png/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-ui\.xml/);
     assert.match(workflow, /if-no-files-found: error/);
 });
 

@@ -8,7 +8,10 @@ const config: CapacitorConfig = {
     loggingBehavior: "production",
     appendUserAgent: " DDBNative/1.0",
     server: {
-        appStartPath: "/app/",
+        // Capacitor's Android HTML5 fallback maps extensionless paths to the
+        // root index. Start from Next's exported document to avoid a fallback
+        // loop between /app/ and native/www/index.html.
+        appStartPath: "/app/index.html",
         errorPath: "offline/index.html",
         allowNavigation: ["daengdabang.com", "www.daengdabang.com"],
     },
