@@ -63,28 +63,9 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          script: |
-            set -eu
-            package_name="com.daengdabang.app"
-            apk_path="android/app/build/outputs/apk/debug/app-debug.apk"
-            adb logcat -c
-            adb install -r "$apk_path"
-            adb shell am force-stop "$package_name"
-            adb shell am start -W -n "$package_name/.MainActivity" | tee android/app/build/outputs/apk/debug/app-debug-launch.txt
-            sleep 5
-            app_pid="$(adb shell pidof "$package_name" | tr -d '\r')"
-            if [ -z "$app_pid" ]; then
-              adb logcat -d -v threadtime > android/app/build/outputs/apk/debug/app-debug-logcat.txt
-              cat android/app/build/outputs/apk/debug/app-debug-logcat.txt
-              exit 1
-            fi
-            adb shell dumpsys activity activities | grep -F "$package_name/.MainActivity" | tee -a android/app/build/outputs/apk/debug/app-debug-launch.txt
-            adb exec-out screencap -p > android/app/build/outputs/apk/debug/app-debug-launch.png
-            adb logcat -d -v threadtime --pid="$app_pid" > android/app/build/outputs/apk/debug/app-debug-logcat.txt
-            if grep -F "FATAL EXCEPTION" android/app/build/outputs/apk/debug/app-debug-logcat.txt; then
-              cat android/app/build/outputs/apk/debug/app-debug-logcat.txt
-              exit 1
-            fi
+          # The emulator action invokes each script line in a separate shell, so
+          # keep the stateful startup checks in one standalone POSIX script.
+          script: sh scripts/verify-android-apk-startup.sh
 
       - uses: actions/upload-artifact@v4
         if: ${{ always() && hashFiles('android/app/build/outputs/apk/debug/app-debug.apk') != '' }}

@@ -138,7 +138,10 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
 });
 
 test("native validation publishes an installable Android test APK", async () => {
-    const workflow = await source(".github/workflows/native-package-validation.yml");
+    const [workflow, startupCheck] = await Promise.all([
+        source(".github/workflows/native-package-validation.yml"),
+        source("scripts/verify-android-apk-startup.sh"),
+    ]);
     const launchStepStart = workflow.indexOf("Verify the installed app opens and stays alive");
     const launchStepEnd = workflow.indexOf("- uses: actions/upload-artifact", launchStepStart);
     const launchStep = workflow.slice(launchStepStart, launchStepEnd);
@@ -150,14 +153,16 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(workflow, /Enable KVM for the Android emulator/);
     assert.match(workflow, /udevadm trigger --name-match=kvm/);
     assert.match(workflow, /Verify the installed app opens and stays alive/);
-    assert.match(launchStep, /script: \|\s+set -eu/);
+    assert.match(launchStep, /script: sh scripts\/verify-android-apk-startup\.sh/);
     assert.doesNotMatch(launchStep, /set -euo pipefail/);
-    assert.match(workflow, /adb install -r "\$apk_path"/);
-    assert.match(workflow, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
-    assert.match(workflow, /adb shell pidof "\$package_name"/);
-    assert.match(workflow, /adb exec-out screencap -p/);
-    assert.match(workflow, /adb logcat -d -v threadtime --pid="\$app_pid"/);
-    assert.match(workflow, /FATAL EXCEPTION/);
+    assert.match(startupCheck, /set -eu/);
+    assert.doesNotMatch(startupCheck, /set -euo pipefail/);
+    assert.match(startupCheck, /adb install -r "\$apk_path"/);
+    assert.match(startupCheck, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
+    assert.match(startupCheck, /adb shell pidof "\$package_name"/);
+    assert.match(startupCheck, /adb exec-out screencap -p/);
+    assert.match(startupCheck, /adb logcat -d -v threadtime --pid="\$app_pid"/);
+    assert.match(startupCheck, /FATAL EXCEPTION/);
     assert.match(workflow, /name: daengdabang-android-debug-apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-badging\.txt/);
