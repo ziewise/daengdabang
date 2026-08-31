@@ -135,9 +135,15 @@ test("native validation publishes an installable Android test APK", async () => 
     assert.match(workflow, /:app:bundleDebug :app:assembleDebug --stacktrace/);
     assert.match(workflow, /apksigner" verify --verbose --print-certs/);
     assert.match(workflow, /aapt" dump badging/);
+    assert.match(workflow, /Verify the installed app opens and stays alive/);
+    assert.match(workflow, /adb install -r "\$apk_path"/);
+    assert.match(workflow, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
+    assert.match(workflow, /adb shell pidof "\$package_name"/);
     assert.match(workflow, /name: daengdabang-android-debug-apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-badging\.txt/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.txt/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-logcat\.txt/);
     assert.match(workflow, /if-no-files-found: error/);
 });
 
