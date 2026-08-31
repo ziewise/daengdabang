@@ -103,8 +103,9 @@ test("local photo/result cache stays device-private, versioned, bounded, and rea
 });
 
 test("native projects bind the same digest to NNAPI and Core ML providers", async () => {
-    const [android, androidBuild, ios, project, bridge, nativePrepare] = await Promise.all([
+    const [android, androidActivity, androidBuild, ios, project, bridge, nativePrepare] = await Promise.all([
         source("android/app/src/main/java/com/daengdabang/app/OnDeviceTryOnPlugin.java"),
+        source("android/app/src/main/java/com/daengdabang/app/MainActivity.java"),
         source("android/app/build.gradle"),
         source("ios/App/App/OnDeviceTryOnPlugin.swift"),
         source("ios/App/App.xcodeproj/project.pbxproj"),
@@ -120,6 +121,13 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
     assert.doesNotMatch(android, /THERMAL_STATUS_(?:SERIOUS|FAIR)/);
     assert.match(android, /MODEL_SHA256/);
     assert.match(android, /MAX_SOURCE_EDGE = 2048/);
+    assert.ok(
+        androidActivity.indexOf("super.onCreate(savedInstanceState)")
+            < androidActivity.indexOf("getBridge().registerPlugin(OnDeviceTryOnPlugin.class)"),
+        "the optional ONNX plugin must register only after the app shell starts",
+    );
+    assert.match(androidActivity, /catch \(RuntimeException \| LinkageError pluginError\)/);
+    assert.match(androidActivity, /https:\/\/www\.daengdabang\.com\/app\//);
     assert.match(ios, /appendCoreMLExecutionProvider/);
     assert.match(ios, /modelDigest/);
     assert.match(ios, /CGImageSourceCreateThumbnailAtIndex/);
@@ -134,16 +142,20 @@ test("native validation publishes an installable Android test APK", async () => 
 
     assert.match(workflow, /:app:bundleDebug :app:assembleDebug --stacktrace/);
     assert.match(workflow, /apksigner" verify --verbose --print-certs/);
+    assert.match(workflow, /zipalign" -c -P 16 -v 4/);
     assert.match(workflow, /aapt" dump badging/);
     assert.match(workflow, /Verify the installed app opens and stays alive/);
     assert.match(workflow, /adb install -r "\$apk_path"/);
     assert.match(workflow, /adb shell am start -W -n "\$package_name\/\.MainActivity"/);
     assert.match(workflow, /adb shell pidof "\$package_name"/);
+    assert.match(workflow, /adb exec-out screencap -p/);
+    assert.match(workflow, /FATAL EXCEPTION/);
     assert.match(workflow, /name: daengdabang-android-debug-apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug\.apk/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-badging\.txt/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.txt/);
     assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-logcat\.txt/);
+    assert.match(workflow, /android\/app\/build\/outputs\/apk\/debug\/app-debug-launch\.png/);
     assert.match(workflow, /if-no-files-found: error/);
 });
 
