@@ -60,7 +60,10 @@ function applyReviewedHoverOverrides(rawCatalog, overrides) {
         const folder = row?.folder || "";
         if (!Object.prototype.hasOwnProperty.call(overrides, folder)) return row;
         const override = overrides[folder];
-        if (override === null) {
+        // Keep artifact validation aligned with the storefront publication
+        // gate. Exact-product renderer clips are still-photo pan/zoom renders,
+        // not reviewed true-motion hover videos, so they must be withdrawn.
+        if (override === null || override?.videoProvider === "ddb_exact_product_renderer") {
             const withdrawn = { ...row };
             for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId"]) {
                 delete withdrawn[key];

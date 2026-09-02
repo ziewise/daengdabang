@@ -151,6 +151,32 @@ test("Pages artifact uses the same reviewed hover withdrawal gate as the storefr
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
 });
 
+test("Pages artifact quarantines reviewed still-photo pan-zoom overrides", async (t) => {
+    const root = await fixture(t, {
+        includeCdnUrl: false,
+        approvedMetadata: true,
+        reviewedHoverOverrides: {
+            sample: {
+                video: "/images/products/catalog/sample/videos/hover.mp4",
+                videoDelivery: "jsdelivr_commit_cdn",
+                videoProvider: "ddb_exact_product_renderer",
+                videoQuality: "approved_exact_product_images",
+                videoJobId: "still-photo-render",
+            },
+        },
+    });
+    const result = await preparePagesArtifact({
+        repoRoot: root,
+        outRoot: path.join(root, "out"),
+        commitSha: COMMIT_SHA,
+        maxBytes: 1_000_000,
+    });
+
+    assert.equal(result.requiredReviewedCdnVideoCount, 0);
+    assert.equal(result.catalogCdnVideoCount, 0);
+    await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
+});
+
 test("Pages artifact requires a reviewed override that the storefront publishes", async (t) => {
     const root = await fixture(t, {
         includeCdnUrl: false,
