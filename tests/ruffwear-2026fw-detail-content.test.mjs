@@ -37,8 +37,32 @@ test("all 16 new Ruffwear products expose sourced written detail content", async
     }
 });
 
-test("the product detail UI renders copy before the image gallery", async () => {
+test("the product detail UI renders an image-led official product story", async () => {
     const source = await readFile(new URL("../components/products/detail/ProductTabs.tsx", import.meta.url), "utf8");
     assert.match(source, /data-product-detail-copy/);
-    assert.ok(source.indexOf("data-product-detail-copy") < source.indexOf("details.map"));
+    assert.match(source, /data-visual-story/);
+    assert.match(source, /OFFICIAL PRODUCT GUIDE/);
+    assert.match(source, /사진으로 보는 제품의 핵심/);
+    assert.match(source, /featureVisuals\.map|featureGroups\.map/);
+    assert.doesNotMatch(source, /data-product-detail-copy>\s*<p className="text-xs/);
+});
+
+test("all manufacturer stories expose safe visual-detail image selections", async () => {
+    const generated = JSON.parse(
+        await readFile(new URL("../lib/catalog/product-detail-content.generated.json", import.meta.url), "utf8"),
+    );
+    const raw = JSON.parse(await readFile(new URL("../lib/catalog/raw.json", import.meta.url), "utf8"));
+    const byFolder = new Map(raw.map((row) => [row.folder, row]));
+
+    assert.equal(Object.keys(generated).length, 249);
+    for (const [folder, content] of Object.entries(generated)) {
+        const row = byFolder.get(folder);
+        assert.ok(row, `${folder} must exist in the catalog`);
+        assert.ok(Array.isArray(content.visualDetailIndices), `${folder} needs a visual image selection`);
+        assert.ok(content.visualDetailIndices.length <= 3, `${folder} selects too many feature visuals`);
+        for (const index of content.visualDetailIndices) {
+            assert.ok(Number.isInteger(index) && index >= 0, `${folder} has an invalid visual image index`);
+            assert.ok(index < (row.details?.length ?? 0), `${folder} visual image index is out of range`);
+        }
+    }
 });

@@ -9,6 +9,7 @@ export interface ProductDetailContent {
     usage?: readonly string[];
     care?: string | readonly string[];
     cautions?: readonly string[];
+    visualDetailIndices?: readonly number[];
     safety?: string;
     sourceUrl: string;
     sourceTitle?: string;
