@@ -253,7 +253,7 @@ test("camera-motion-only replacements stay hidden while reviewed two-shot replac
     }
 });
 
-test("strict catalog re-review withdraws mismatches and publishes only current approved clips", async () => {
+test("strict catalog re-review keeps unsafe clips withdrawn and publishes reviewed real-photo clips", async () => {
     const { applyReviewedHoverOverride } = await import("../lib/catalog/reviewed-hover-overrides.ts");
     const overrides = JSON.parse(await source("lib/catalog/reviewed-hover-overrides.json"));
     const base = (folder) => ({
@@ -265,21 +265,36 @@ test("strict catalog re-review withdraws mismatches and publishes only current a
         videoJobId: "old-review",
     });
 
-    assert.equal(Object.keys(overrides).length, 41);
-    assert.ok(Object.values(overrides).every((value) => value === null));
+    const values = Object.values(overrides);
+    assert.equal(Object.keys(overrides).length, 88);
+    assert.equal(values.filter((value) => value === null).length, 36);
+    assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 52);
     for (const folder of [
         "rw_backtrak_evac_kit",
         "rw_lumenglow_jacket_26fw",
-        "rw_lunker",
         "id_treat_sardine",
         "heyrex_taurus_filter_5p",
         "icecream_realcheese",
-        "yora_wet_appleparsnip_390g",
-        "yora_wet_beetrootswede_390g",
+        "bm_kibble_9kg",
+        "rs_bowl",
     ]) {
         const withdrawn = applyReviewedHoverOverride(base(folder));
         assert.equal(withdrawn.video, undefined);
         assert.equal(withdrawn.videoJobId, undefined);
+    }
+
+    for (const folder of [
+        "rw_lunker",
+        "yora_wet_appleparsnip_390g",
+        "yora_wet_beetrootswede_390g",
+        "aff_pad_l_20_1",
+        "rs_v2_lenslab",
+    ]) {
+        const restored = applyReviewedHoverOverride(base(folder));
+        assert.equal(restored.videoProvider, "ddb_exact_product_renderer");
+        assert.equal(restored.videoQuality, "approved_exact_product_images");
+        assert.match(restored.videoJobId, /^hover-photo-20260903-[0-9a-f]{12}$/);
+        assert.equal(restored.video, `/images/products/catalog/${folder}/videos/hover.mp4`);
     }
 
     const powder = applyReviewedHoverOverride(base("rw_powderhound_waterproof_jacket_26fw"));

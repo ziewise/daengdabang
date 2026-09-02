@@ -203,15 +203,18 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_campflyer_disc_26/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_campflyer_disc_26/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_campflyer_disc_26/details/official-visual-01.webp": "부드러운 구조",
       "/images/products/catalog/rw_campflyer_disc_26/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_campflyer_disc_26/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-1d720b9e967b"
   },
   {
     "no": 4,
@@ -573,11 +576,11 @@
         "text": "algk****24.11.02."
       }
     ],
-    "video": "",
-    "videoQuality": "director_regeneration_pending_current_2026fw_asset",
+    "video": "/images/products/catalog/rw_basecamp_bed/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-08-27T09:18:15.122Z",
     "videoCacheBust": null,
-    "videoDelivery": null,
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": null,
     "detailImage": "/images/products/catalog/rw_basecamp_bed/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -586,7 +589,9 @@
       "/images/products/catalog/rw_basecamp_bed/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_bed/details/official-visual-04.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_bed/details/official-visual-05.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-ffd522866819"
   },
   {
     "no": 10,
@@ -1508,8 +1513,8 @@
       "/images/products/catalog/rw_remix_tugtoy_s_26/details/2.webp",
       "/images/products/catalog/rw_remix_tugtoy_s_26/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_remix_tugtoy_s_26/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_remix_tugtoy_s_26/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -1517,7 +1522,10 @@
       "/images/products/catalog/rw_remix_tugtoy_s_26/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_remix_tugtoy_s_26/details/official-visual-03.webp": "당기기와 던지기 놀이",
       "/images/products/catalog/rw_remix_tugtoy_s_26/details/official-visual-04.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-c863fdcc5873"
   },
   {
     "no": 27,
@@ -1889,15 +1897,18 @@
       "/images/products/catalog/rw_hydroplane_disc_m_25/details/3.webp",
       "/images/products/catalog/rw_hydroplane_disc_m_25/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_hydroplane_disc_m_25/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_hydroplane_disc_m_25/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_hydroplane_disc_m_25/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hydroplane_disc_m_25/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hydroplane_disc_m_25/details/official-visual-03.webp": "부드러운 구조"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-1f745511799e"
   },
   {
     "no": 36,
@@ -2325,15 +2336,18 @@
       "/images/products/catalog/rw_basecamp_mat/details/3.webp",
       "/images/products/catalog/rw_basecamp_mat/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_basecamp_mat/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_basecamp_mat/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_basecamp_mat/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_mat/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_mat/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-c5dc88d6a04c"
   },
   {
     "no": 46,
@@ -2724,15 +2738,18 @@
       "/images/products/catalog/rw_notastick/details/3.webp",
       "/images/products/catalog/rw_notastick/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_notastick/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_notastick/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_notastick/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_notastick/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_notastick/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-139b9cb626ef"
   },
   {
     "no": 56,
@@ -2763,7 +2780,7 @@
       "/images/products/catalog/rw_lunker/details/4.webp"
     ],
     "video": "/images/products/catalog/rw_lunker/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -2773,7 +2790,9 @@
       "/images/products/catalog/rw_lunker/details/official-visual-01.webp": "부드러운 구조",
       "/images/products/catalog/rw_lunker/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_lunker/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-f89875f20ac2"
   },
   {
     "no": 57,
@@ -2809,15 +2828,18 @@
     "externalReviewAverage": 4,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_notarock/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_notarock/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_notarock/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_notarock/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_notarock/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-0f0f79ca18f2"
   },
   {
     "no": 58,
@@ -2853,15 +2875,18 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_notacone/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_notacone/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_notacone/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_notacone/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_notacone/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-42efee66781f"
   },
   {
     "no": 59,
@@ -2891,15 +2916,18 @@
       "/images/products/catalog/rw_hookacone/details/3.webp",
       "/images/products/catalog/rw_hookacone/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_hookacone/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_hookacone/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_hookacone/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hookacone/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hookacone/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-044e2f87c5c8"
   },
   {
     "no": 60,
@@ -3025,7 +3053,7 @@
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
     "video": "/images/products/catalog/rw_hitchhiker_carrier/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -3035,7 +3063,9 @@
       "/images/products/catalog/rw_hitchhiker_carrier/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hitchhiker_carrier/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hitchhiker_carrier/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-ac785bd6868a"
   },
   {
     "no": 63,
@@ -3065,15 +3095,18 @@
       "/images/products/catalog/zs_pandabear/details/4.webp"
     ],
     "image": "/images/products/catalog/zs_pandabear/zs_pandabear.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/zs_pandabear/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/zs_pandabear/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/zs_pandabear/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/zs_pandabear/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/zs_pandabear/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-bbaddaeffe19"
   },
   {
     "no": 64,
@@ -3450,15 +3483,18 @@
       "/images/products/catalog/zs_dinosaur/details/4.webp"
     ],
     "image": "/images/products/catalog/zs_dinosaur/zs_dinosaur.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/zs_dinosaur/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/zs_dinosaur/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/zs_dinosaur/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/zs_dinosaur/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/zs_dinosaur/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-89460e535de7"
   },
   {
     "no": 73,
@@ -4471,15 +4507,18 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rs_v2_lenslab/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rs_v2_lenslab/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rs_v2_lenslab/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_v2_lenslab/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_v2_lenslab/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-3a42e99abfaf"
   },
   {
     "no": 96,
@@ -4916,8 +4955,8 @@
       "/images/products/catalog/polkadog_codchips_99g/details/2.webp"
     ],
     "image": "/images/products/catalog/polkadog_codchips_99g/polkadog_codchips_99g.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/polkadog_codchips_99g/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/polkadog_codchips_99g/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -4926,7 +4965,10 @@
       "/images/products/catalog/polkadog_codchips_99g/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/polkadog_codchips_99g/details/official-visual-04.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/polkadog_codchips_99g/details/official-visual-05.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-4cc9e72e42f5"
   },
   {
     "no": 107,
@@ -5003,15 +5045,18 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_morel_toy/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_morel_toy/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_morel_toy/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_morel_toy/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_morel_toy/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-83cb2be5e881"
   },
   {
     "no": 109,
@@ -5041,15 +5086,18 @@
       "/images/products/catalog/rw_toadstool_toy/details/3.webp",
       "/images/products/catalog/rw_toadstool_toy/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_toadstool_toy/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_toadstool_toy/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_toadstool_toy/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_toadstool_toy/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_toadstool_toy/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-3ddc5bf6812d"
   },
   {
     "no": 110,
@@ -5296,7 +5344,7 @@
       "/images/products/catalog/rw_vert_jacket/details/3.webp"
     ],
     "video": "/images/products/catalog/rw_vert_jacket/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -5307,7 +5355,9 @@
       "/images/products/catalog/rw_vert_jacket/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_vert_jacket/details/official-visual-03.webp": "고밀도 보온 구조",
       "/images/products/catalog/rw_vert_jacket/details/official-visual-04.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-ccfc5d8c753a"
   },
   {
     "no": 115,
@@ -5996,13 +6046,16 @@
       "/images/products/catalog/yora_wet_carrotpotato_390g/details/4.webp",
       "/images/products/catalog/yora_wet_carrotpotato_390g/details/5.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/yora_wet_carrotpotato_390g/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/yora_wet_carrotpotato_390g/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-c431e752a5af"
   },
   {
     "no": 131,
@@ -6032,7 +6085,7 @@
       "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/5.webp"
     ],
     "video": "/images/products/catalog/yora_wet_appleparsnip_390g_2/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -6040,7 +6093,9 @@
     "detailImage": "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-3d1ef27ef8fe"
   },
   {
     "no": 132,
@@ -6070,7 +6125,7 @@
       "/images/products/catalog/yora_wet_beetrootswede_390g/details/5.webp"
     ],
     "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -6078,7 +6133,9 @@
     "detailImage": "/images/products/catalog/yora_wet_beetrootswede_390g/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/yora_wet_beetrootswede_390g/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-b74fb1d05369"
   },
   {
     "no": 133,
@@ -6439,10 +6496,13 @@
       "/images/products/catalog/bm_wet_100g_3/details/4.webp",
       "/images/products/catalog/bm_wet_100g_3/details/5.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/bm_wet_100g_3/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/bm_wet_100g_3/details/2.webp"
+    "detailImage": "/images/products/catalog/bm_wet_100g_3/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-9d33aa0f0b0d"
   },
   {
     "no": 142,
@@ -6852,15 +6912,18 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_quencher_24/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_quencher_24/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_quencher_24/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_quencher_24/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_quencher_24/details/official-visual-03.webp": "내구성 높은 외피"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-cc5784610269"
   },
   {
     "no": 148,
@@ -7486,15 +7549,18 @@
         "text": "find***25.05.11."
       }
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_hydroplane_disc/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_hydroplane_disc/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_hydroplane_disc/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hydroplane_disc/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_hydroplane_disc/details/official-visual-03.webp": "부드러운 구조"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-f3d30f042903"
   },
   {
     "no": 160,
@@ -7543,15 +7609,18 @@
         "text": "fox3***25.02.12."
       }
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_pacificloop_toy/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_pacificloop_toy/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_pacificloop_toy/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_pacificloop_toy/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_pacificloop_toy/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-761ae4df8b31"
   },
   {
     "no": 161,
@@ -7642,15 +7711,18 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_stashbag_mini_2/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_stashbag_mini_2/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_stashbag_mini_2/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_stashbag_mini_2/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_stashbag_mini_2/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-299965c96da1"
   },
   {
     "no": 163,
@@ -7863,7 +7935,7 @@
       "/images/products/catalog/yora_wet_appleparsnip_390g/details/3.webp"
     ],
     "video": "/images/products/catalog/yora_wet_appleparsnip_390g/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -7871,7 +7943,9 @@
     "detailImage": "/images/products/catalog/yora_wet_appleparsnip_390g/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/yora_wet_appleparsnip_390g/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-39addd084896"
   },
   {
     "no": 169,
@@ -8081,7 +8155,7 @@
       }
     ],
     "video": "/images/products/catalog/yora_dental_s_56g/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -8089,7 +8163,9 @@
     "detailImage": "/images/products/catalog/yora_dental_s_56g/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/yora_dental_s_56g/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-dde076f92d0c"
   },
   {
     "no": 174,
@@ -9210,14 +9286,17 @@
       }
     ],
     "image": "/images/products/catalog/ot_sleepingmat/ot_sleepingmat.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ot_sleepingmat/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/ot_sleepingmat/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/ot_sleepingmat/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/ot_sleepingmat/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-facb59633a6b"
   },
   {
     "no": 199,
@@ -9247,8 +9326,8 @@
       "/images/products/catalog/ot_bowl_foldable/details/2.webp"
     ],
     "image": "/images/products/catalog/ot_bowl_foldable/ot_bowl_foldable.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ot_bowl_foldable/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/ot_bowl_foldable/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -9257,7 +9336,10 @@
       "/images/products/catalog/ot_bowl_foldable/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/ot_bowl_foldable/details/official-visual-04.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/ot_bowl_foldable/details/official-visual-05.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-84ed4f96816f"
   },
   {
     "no": 200,
@@ -10031,10 +10113,13 @@
       "/images/products/catalog/fumble_bugmist/details/6.webp"
     ],
     "image": "/images/products/catalog/fumble_bugmist/fumble_bugmist.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_bugmist/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_bugmist/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_bugmist/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-5e8e17eeae4b"
   },
   {
     "no": 220,
@@ -10328,15 +10413,18 @@
         "text": "선물하기도 좋고 안 딱딱해서 이빨나갈 걱정 없음이에요..!"
       }
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_campflyer_disc/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_campflyer_disc/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_campflyer_disc/details/official-visual-01.webp": "부드러운 구조",
       "/images/products/catalog/rw_campflyer_disc/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_campflyer_disc/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-4622a11db0a6"
   },
   {
     "no": 225,
@@ -11329,10 +11417,13 @@
       "/images/products/catalog/wow_shoes_80/details/4.webp",
       "/images/products/catalog/wow_shoes_80/details/5.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/wow_shoes_80/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/wow_shoes_80/details/2.webp"
+    "detailImage": "/images/products/catalog/wow_shoes_80/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-34f3c9848102"
   },
   {
     "no": 244,
@@ -11367,12 +11458,14 @@
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
     "video": "/images/products/catalog/wow_shoes_20/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/wow_shoes_20/details/2.webp"
+    "detailImage": "/images/products/catalog/wow_shoes_20/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-1f5bb9920421"
   },
   {
     "no": 245,
@@ -11467,8 +11560,8 @@
       "/images/products/catalog/iby_backpack_fc2297/details/3.webp"
     ],
     "image": "/images/products/catalog/iby_backpack_fc2297/iby_backpack_fc2297.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/iby_backpack_fc2297/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/iby_backpack_fc2297/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -11476,7 +11569,10 @@
       "/images/products/catalog/iby_backpack_fc2297/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/iby_backpack_fc2297/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/iby_backpack_fc2297/details/official-visual-04.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-a11da77aa287"
   },
   {
     "no": 248,
@@ -11540,7 +11636,7 @@
     ],
     "video": "/images/products/catalog/iby_backpack_fc2106/videos/hover.mp4",
     "image": "/images/products/catalog/iby_backpack_fc2106/iby_backpack_fc2106.webp",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -11548,7 +11644,9 @@
     "detailImage": "/images/products/catalog/iby_backpack_fc2106/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/iby_backpack_fc2106/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-103eb5c5fc80"
   },
   {
     "no": 250,
@@ -11967,10 +12065,13 @@
       "/images/products/catalog/aff_pad_l_20_1/details/8.webp",
       "/images/products/catalog/aff_pad_l_20_1/details/9.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/aff_pad_l_20_1/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/aff_pad_l_20_1/details/2.webp"
+    "detailImage": "/images/products/catalog/aff_pad_l_20_1/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-bde78ccfc5e2"
   },
   {
     "no": 261,
@@ -12575,12 +12676,14 @@
     ],
     "image": "/images/products/catalog/pdh_spin_flyingdisc/pdh_spin_flyingdisc.webp",
     "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/pdh_spin_flyingdisc/details/2.webp"
+    "detailImage": "/images/products/catalog/pdh_spin_flyingdisc/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-ed7ba9c00323"
   },
   {
     "no": 277,
@@ -12642,15 +12745,18 @@
         "text": "강아지가 야간산책이 많아서 구매하였습니다. 맘에듭니다"
       }
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_audiblebeacon_light/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rw_audiblebeacon_light/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_audiblebeacon_light/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_audiblebeacon_light/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_audiblebeacon_light/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-0c89d5acb878"
   },
   {
     "no": 278,
@@ -14281,8 +14387,8 @@
       "/images/products/catalog/polkadog_codskin_907g/details/2.webp"
     ],
     "image": "/images/products/catalog/polkadog_codskin_907g/polkadog_codskin_907g.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/polkadog_codskin_907g/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/polkadog_codskin_907g/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -14291,7 +14397,10 @@
       "/images/products/catalog/polkadog_codskin_907g/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/polkadog_codskin_907g/details/official-visual-04.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/polkadog_codskin_907g/details/official-visual-05.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-b61ea015ee6d"
   },
   {
     "no": 316,
@@ -15347,12 +15456,16 @@
       "/images/products/catalog/rw_mteverrest_cot_26fw/details/4.webp",
       "/images/products/catalog/rw_mteverrest_cot_26fw/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_mteverrest_cot_26fw/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_mteverrest_cot_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_mteverrest_cot_26fw/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_mteverrest_cot_26fw/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-df59cf9a5cdd"
   },
   {
     "no": 335,
@@ -15382,12 +15495,16 @@
       "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/4.webp",
       "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-09ab33f7fbcc"
   },
   {
     "no": 336,
@@ -15417,12 +15534,16 @@
       "/images/products/catalog/rw_highlands_pad_m/details/4.webp",
       "/images/products/catalog/rw_highlands_pad_m/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_highlands_pad_m/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_highlands_pad_m/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_highlands_pad_m/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_highlands_pad_m/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-eb9123a93388"
   },
   {
     "no": 337,
@@ -15452,12 +15573,16 @@
       "/images/products/catalog/rw_highlands_pad_l/details/4.webp",
       "/images/products/catalog/rw_highlands_pad_l/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_highlands_pad_l/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_highlands_pad_l/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_highlands_pad_l/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_highlands_pad_l/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-eb9123a93388"
   },
   {
     "no": 338,
@@ -15487,12 +15612,16 @@
       "/images/products/catalog/rw_highlands_sleepingbag_m/details/4.webp",
       "/images/products/catalog/rw_highlands_sleepingbag_m/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_highlands_sleepingbag_m/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_highlands_sleepingbag_m/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_highlands_sleepingbag_m/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_highlands_sleepingbag_m/details/official-visual-02.webp": "내구성 높은 외피"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-54540a405442"
   },
   {
     "no": 339,
@@ -15522,12 +15651,16 @@
       "/images/products/catalog/rw_highlands_sleepingbag_l/details/4.webp",
       "/images/products/catalog/rw_highlands_sleepingbag_l/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_highlands_sleepingbag_l/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_highlands_sleepingbag_l/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_highlands_sleepingbag_l/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_highlands_sleepingbag_l/details/official-visual-02.webp": "내구성 높은 외피"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-54540a405442"
   },
   {
     "no": 340,
@@ -15557,12 +15690,16 @@
       "/images/products/catalog/rw_barknboot_liners/details/4.webp",
       "/images/products/catalog/rw_barknboot_liners/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_barknboot_liners/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_barknboot_liners/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_barknboot_liners/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_barknboot_liners/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-b10af40ceda4"
   },
   {
     "no": 341,
@@ -15592,12 +15729,16 @@
       "/images/products/catalog/rw_griptrex_bootpairs/details/4.webp",
       "/images/products/catalog/rw_griptrex_bootpairs/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_griptrex_bootpairs/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_griptrex_bootpairs/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_griptrex_bootpairs/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_griptrex_bootpairs/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-d43a2a555196"
   },
   {
     "no": 342,
@@ -15627,13 +15768,17 @@
       "/images/products/catalog/rw_basecamp_antisplash/details/3.webp",
       "/images/products/catalog/rw_basecamp_antisplash/details/4.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_basecamp_antisplash/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_basecamp_antisplash/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_basecamp_antisplash/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_antisplash/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_antisplash/details/official-visual-03.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-2c4d72ce55a6"
   },
   {
     "no": 343,
@@ -15663,12 +15808,16 @@
       "/images/products/catalog/rw_basecamp_slowfeeder/details/4.webp",
       "/images/products/catalog/rw_basecamp_slowfeeder/details/5.webp"
     ],
-    "video": "",
+    "video": "/images/products/catalog/rw_basecamp_slowfeeder/videos/hover.mp4",
     "detailImage": "/images/products/catalog/rw_basecamp_slowfeeder/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_basecamp_slowfeeder/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_slowfeeder/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-79dad1f09c18"
   },
   {
     "no": 344,
@@ -15722,8 +15871,8 @@
         "text": "algk****24.11.02."
       }
     ],
-    "video": "",
-    "videoQuality": "director_regeneration_pending_current_2026fw_asset",
+    "video": "/images/products/catalog/rw_basecamp_bed_m/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-08-27T09:18:15.125Z",
     "detailImage": "/images/products/catalog/rw_basecamp_bed_m/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -15732,7 +15881,10 @@
       "/images/products/catalog/rw_basecamp_bed_m/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_bed_m/details/official-visual-04.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_bed_m/details/official-visual-05.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-ffd522866819"
   },
   {
     "no": 345,
@@ -15786,8 +15938,8 @@
         "text": "algk****24.11.02."
       }
     ],
-    "video": "",
-    "videoQuality": "director_regeneration_pending_current_2026fw_asset",
+    "video": "/images/products/catalog/rw_basecamp_bed_l/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-08-27T09:18:15.125Z",
     "detailImage": "/images/products/catalog/rw_basecamp_bed_l/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -15796,7 +15948,10 @@
       "/images/products/catalog/rw_basecamp_bed_l/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_bed_l/details/official-visual-04.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rw_basecamp_bed_l/details/official-visual-05.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-photo-20260903-ffd522866819"
   },
   {
     "no": 346,

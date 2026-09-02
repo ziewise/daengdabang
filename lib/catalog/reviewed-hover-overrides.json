@@ -1,43 +1,402 @@
 {
+  "aff_pad_l_20_1": {
+    "video": "/images/products/catalog/aff_pad_l_20_1/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-bde78ccfc5e2"
+  },
   "annapet_soju": null,
   "bm_kibble_9kg": null,
+  "bm_wet_100g_3": {
+    "video": "/images/products/catalog/bm_wet_100g_3/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-9d33aa0f0b0d"
+  },
   "fumble_bath": null,
+  "fumble_bugmist": {
+    "video": "/images/products/catalog/fumble_bugmist/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-5e8e17eeae4b"
+  },
   "fumble_footcleanser_200ml": null,
   "fumble_footcleanser_set": null,
   "fumble_shampoo_laurel": null,
   "heyrex_taurus_filter_5p": null,
-  "iby_backpack_fc2106": null,
+  "iby_backpack_fc2106": {
+    "video": "/images/products/catalog/iby_backpack_fc2106/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-103eb5c5fc80"
+  },
+  "iby_backpack_fc2297": {
+    "video": "/images/products/catalog/iby_backpack_fc2297/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-a11da77aa287"
+  },
   "icecream_realcheese": null,
   "id_treat_sardine": null,
   "mb_vegemix_100g_4": null,
-  "pdh_spin_flyingdisc": null,
+  "ot_bowl_foldable": {
+    "video": "/images/products/catalog/ot_bowl_foldable/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-84ed4f96816f"
+  },
+  "ot_sleepingmat": {
+    "video": "/images/products/catalog/ot_sleepingmat/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-facb59633a6b"
+  },
+  "pdh_spin_flyingdisc": {
+    "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-ed7ba9c00323"
+  },
   "perity_broccoli_mist": null,
   "perity_broccoli_shampoo_250ml": null,
   "perity_broccoli_shampoo_refill_500ml": null,
   "perity_carrot_shampoo_refill_500ml": null,
+  "polkadog_codchips_99g": {
+    "video": "/images/products/catalog/polkadog_codchips_99g/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-4cc9e72e42f5"
+  },
+  "polkadog_codskin_907g": {
+    "video": "/images/products/catalog/polkadog_codskin_907g/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-b61ea015ee6d"
+  },
+  "rs_bowl": null,
+  "rs_brachy_lens": null,
+  "rs_lens_original": null,
+  "rs_lens_v2": null,
+  "rs_lenslab_original": null,
+  "rs_v2_lenslab": {
+    "video": "/images/products/catalog/rs_v2_lenslab/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-3a42e99abfaf"
+  },
+  "rw_audiblebeacon_light": {
+    "video": "/images/products/catalog/rw_audiblebeacon_light/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-0c89d5acb878"
+  },
   "rw_backtrak_evac_kit": null,
+  "rw_barknboot_liners": {
+    "video": "/images/products/catalog/rw_barknboot_liners/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-b10af40ceda4"
+  },
+  "rw_basecamp_antisplash": {
+    "video": "/images/products/catalog/rw_basecamp_antisplash/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-2c4d72ce55a6"
+  },
+  "rw_basecamp_bed": {
+    "video": "/images/products/catalog/rw_basecamp_bed/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-ffd522866819"
+  },
+  "rw_basecamp_bed_l": {
+    "video": "/images/products/catalog/rw_basecamp_bed_l/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-ffd522866819"
+  },
+  "rw_basecamp_bed_m": {
+    "video": "/images/products/catalog/rw_basecamp_bed_m/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-ffd522866819"
+  },
+  "rw_basecamp_mat": {
+    "video": "/images/products/catalog/rw_basecamp_mat/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-c5dc88d6a04c"
+  },
+  "rw_basecamp_slowfeeder": {
+    "video": "/images/products/catalog/rw_basecamp_slowfeeder/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-79dad1f09c18"
+  },
+  "rw_campflyer_disc": {
+    "video": "/images/products/catalog/rw_campflyer_disc/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-4622a11db0a6"
+  },
+  "rw_campflyer_disc_26": {
+    "video": "/images/products/catalog/rw_campflyer_disc_26/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-1d720b9e967b"
+  },
   "rw_doubletrack_coupler": null,
   "rw_gourdo_large": null,
   "rw_gourdo_small": null,
-  "rw_hitchhiker_carrier": null,
+  "rw_griptrex_bootpairs": {
+    "video": "/images/products/catalog/rw_griptrex_bootpairs/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-d43a2a555196"
+  },
+  "rw_highlands_pad_l": {
+    "video": "/images/products/catalog/rw_highlands_pad_l/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-eb9123a93388"
+  },
+  "rw_highlands_pad_m": {
+    "video": "/images/products/catalog/rw_highlands_pad_m/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-eb9123a93388"
+  },
+  "rw_highlands_sleepingbag_l": {
+    "video": "/images/products/catalog/rw_highlands_sleepingbag_l/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-54540a405442"
+  },
+  "rw_highlands_sleepingbag_m": {
+    "video": "/images/products/catalog/rw_highlands_sleepingbag_m/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-54540a405442"
+  },
+  "rw_hitchhiker_carrier": {
+    "video": "/images/products/catalog/rw_hitchhiker_carrier/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-ac785bd6868a"
+  },
+  "rw_hookacone": {
+    "video": "/images/products/catalog/rw_hookacone/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-044e2f87c5c8"
+  },
+  "rw_hydroplane_disc": {
+    "video": "/images/products/catalog/rw_hydroplane_disc/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-f3d30f042903"
+  },
+  "rw_hydroplane_disc_m_25": {
+    "video": "/images/products/catalog/rw_hydroplane_disc_m_25/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-1f745511799e"
+  },
   "rw_knotahitch": null,
   "rw_lumenglow_jacket_26fw": null,
-  "rw_lunker": null,
+  "rw_lunker": {
+    "video": "/images/products/catalog/rw_lunker/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-f89875f20ac2"
+  },
+  "rw_morel_toy": {
+    "video": "/images/products/catalog/rw_morel_toy/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-83cb2be5e881"
+  },
   "rw_mt_hoodie_gaiter_26fw": null,
+  "rw_mteverrest_cot_26fw": {
+    "video": "/images/products/catalog/rw_mteverrest_cot_26fw/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-df59cf9a5cdd"
+  },
+  "rw_mteverrest_cotcover_26fw": {
+    "video": "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-09ab33f7fbcc"
+  },
+  "rw_notacone": {
+    "video": "/images/products/catalog/rw_notacone/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-42efee66781f"
+  },
+  "rw_notarock": {
+    "video": "/images/products/catalog/rw_notarock/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-0f0f79ca18f2"
+  },
+  "rw_notastick": {
+    "video": "/images/products/catalog/rw_notastick/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-139b9cb626ef"
+  },
+  "rw_pacificloop_toy": {
+    "video": "/images/products/catalog/rw_pacificloop_toy/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-761ae4df8b31"
+  },
   "rw_pacificring_toy": null,
   "rw_polartrex_boots_26fw": null,
   "rw_powderhound_coverall_26fw": null,
   "rw_powderhound_waterproof_jacket_26fw": null,
+  "rw_quencher_24": {
+    "video": "/images/products/catalog/rw_quencher_24/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-cc5784610269"
+  },
   "rw_remix_cactus_tug_26fw": null,
   "rw_remix_soft_disc_26fw": null,
+  "rw_remix_tugtoy_s_26": {
+    "video": "/images/products/catalog/rw_remix_tugtoy_s_26/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-c863fdcc5873"
+  },
   "rw_rogue_longline_26fw": null,
+  "rw_stashbag_mini_2": {
+    "video": "/images/products/catalog/rw_stashbag_mini_2/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-299965c96da1"
+  },
   "rw_timberline_fuse_vest_26fw": null,
+  "rw_toadstool_toy": {
+    "video": "/images/products/catalog/rw_toadstool_toy/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-3ddc5bf6812d"
+  },
   "rw_trailrunner_vest": null,
-  "rw_vert_jacket": null,
+  "rw_vert_jacket": {
+    "video": "/images/products/catalog/rw_vert_jacket/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-ccfc5d8c753a"
+  },
   "sweetpet_icecream_strawberry": null,
-  "wow_shoes_20": null,
-  "yora_dental_s_56g": null,
-  "yora_wet_appleparsnip_390g": null,
-  "yora_wet_appleparsnip_390g_2": null,
-  "yora_wet_beetrootswede_390g": null
+  "wow_shoes_20": {
+    "video": "/images/products/catalog/wow_shoes_20/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-1f5bb9920421"
+  },
+  "wow_shoes_80": {
+    "video": "/images/products/catalog/wow_shoes_80/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-34f3c9848102"
+  },
+  "yora_dental_s_56g": {
+    "video": "/images/products/catalog/yora_dental_s_56g/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-dde076f92d0c"
+  },
+  "yora_wet_appleparsnip_390g": {
+    "video": "/images/products/catalog/yora_wet_appleparsnip_390g/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-39addd084896"
+  },
+  "yora_wet_appleparsnip_390g_2": {
+    "video": "/images/products/catalog/yora_wet_appleparsnip_390g_2/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-3d1ef27ef8fe"
+  },
+  "yora_wet_beetrootswede_390g": {
+    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-b74fb1d05369"
+  },
+  "yora_wet_carrotpotato_390g": {
+    "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-c431e752a5af"
+  },
+  "zs_dinosaur": {
+    "video": "/images/products/catalog/zs_dinosaur/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-89460e535de7"
+  },
+  "zs_pandabear": {
+    "video": "/images/products/catalog/zs_pandabear/videos/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoQuality": "approved_exact_product_images",
+    "videoJobId": "hover-photo-20260903-bbaddaeffe19"
+  }
 }
