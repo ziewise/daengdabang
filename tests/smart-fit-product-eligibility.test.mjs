@@ -245,8 +245,8 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
     });
 
     const values = Object.values(overrides);
-    assert.equal(Object.keys(overrides).length, 124);
-    assert.equal(values.filter((value) => value === null).length, 0);
+    assert.equal(Object.keys(overrides).length, 339);
+    assert.equal(values.filter((value) => value === null).length, 215);
     assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
     for (const folder of [
         "rw_backtrak_evac_kit",
@@ -282,6 +282,13 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
     assert.equal(powder.videoProvider, undefined);
     assert.equal(powder.videoQuality, undefined);
     assert.equal(powder.videoJobId, undefined);
+
+    const legacyPowderVest = applyReviewedHoverOverride(base("rw_powderhound_jacket"));
+    assert.equal(overrides.rw_powderhound_jacket, null);
+    assert.equal(legacyPowderVest.videoProvider, undefined);
+    assert.equal(legacyPowderVest.videoQuality, undefined);
+    assert.equal(legacyPowderVest.videoJobId, undefined);
+    assert.equal(legacyPowderVest.video, undefined);
 
     const gaiter = applyReviewedHoverOverride({ no: 2, folder: "rw_mt_hoodie_gaiter_26fw" });
     assert.equal(gaiter.videoProvider, undefined);
