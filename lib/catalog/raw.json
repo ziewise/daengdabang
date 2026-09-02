@@ -964,13 +964,19 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_collar_hiandlight_24/rw_collar_hiandlight_24.webp",
     "folder": "rw_collar_hiandlight_24",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_collar_hiandlight_24/details/2.webp",
+      "/images/products/catalog/rw_collar_hiandlight_24/details/3.webp",
+      "/images/products/catalog/rw_collar_hiandlight_24/details/4.webp",
+      "/images/products/catalog/rw_collar_hiandlight_24/details/5.webp"
+    ],
     "video": "/images/products/catalog/rw_collar_hiandlight_24/videos/hover.mp4",
     "videoQuality": "approved_dog_wearing",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_collar_hiandlight_24/details/2.webp"
   },
   {
     "no": 18,
@@ -992,7 +998,12 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_leash_flagline_24/rw_leash_flagline_24.webp",
     "folder": "rw_leash_flagline_24",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_leash_flagline_24/details/2.webp",
+      "/images/products/catalog/rw_leash_flagline_24/details/3.webp",
+      "/images/products/catalog/rw_leash_flagline_24/details/4.webp",
+      "/images/products/catalog/rw_leash_flagline_24/details/5.webp"
+    ],
     "externalReviewSource": "naver_smartstore_public_product_detail",
     "externalReviewUrl": "https://smartstore.naver.com/daengdabang/products/9930902015",
     "externalReviewCount": 2,
@@ -1004,7 +1015,8 @@
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_leash_flagline_24/details/2.webp"
   },
   {
     "no": 19,
@@ -1026,7 +1038,12 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_leash_hiandlight_24/rw_leash_hiandlight_24.webp",
     "folder": "rw_leash_hiandlight_24",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_leash_hiandlight_24/details/2.webp",
+      "/images/products/catalog/rw_leash_hiandlight_24/details/3.webp",
+      "/images/products/catalog/rw_leash_hiandlight_24/details/4.webp",
+      "/images/products/catalog/rw_leash_hiandlight_24/details/5.webp"
+    ],
     "externalReviewSource": "naver_smartstore_public_product_detail",
     "externalReviewUrl": "https://smartstore.naver.com/daengdabang/products/9930907313",
     "externalReviewCount": 5,
@@ -1038,7 +1055,8 @@
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_leash_hiandlight_24/details/2.webp"
   },
   {
     "no": 20,
@@ -1061,12 +1079,18 @@
     "image": "/images/products/catalog/rw_flagline_harness_24/rw_flagline_harness_24.webp",
     "folder": "rw_flagline_harness_24",
     "video": "/images/products/catalog/rw_flagline_harness_24/videos/hover.mp4",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_flagline_harness_24/details/2.webp",
+      "/images/products/catalog/rw_flagline_harness_24/details/3.webp",
+      "/images/products/catalog/rw_flagline_harness_24/details/4.webp",
+      "/images/products/catalog/rw_flagline_harness_24/details/5.webp"
+    ],
     "videoQuality": "approved_dog_wearing",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_flagline_harness_24/details/2.webp"
   },
   {
     "no": 21,
@@ -1088,7 +1112,12 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_leash_frontrange_24/rw_leash_frontrange_24.webp",
     "folder": "rw_leash_frontrange_24",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_leash_frontrange_24/details/2.webp",
+      "/images/products/catalog/rw_leash_frontrange_24/details/3.webp",
+      "/images/products/catalog/rw_leash_frontrange_24/details/4.webp",
+      "/images/products/catalog/rw_leash_frontrange_24/details/5.webp"
+    ],
     "externalReviewSource": "naver_smartstore_public_product_detail",
     "externalReviewUrl": "https://smartstore.naver.com/daengdabang/products/9930943012",
     "externalReviewCount": 8,
@@ -1100,7 +1129,8 @@
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_leash_frontrange_24/details/2.webp"
   },
   {
     "no": 22,
@@ -3873,10 +3903,16 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rs_lens_original/rs_lens_original.webp",
     "folder": "rs_lens_original",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rs_lens_original/details/2.webp",
+      "/images/products/catalog/rs_lens_original/details/3.webp",
+      "/images/products/catalog/rs_lens_original/details/4.webp",
+      "/images/products/catalog/rs_lens_original/details/5.webp"
+    ],
     "video": "",
     "videoQuality": "regenerate_required",
-    "videoUpdatedAt": "2026-06-16T06:11:28+00:00"
+    "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
+    "detailImage": "/images/products/catalog/rs_lens_original/details/2.webp"
   },
   {
     "no": 99,
@@ -4265,13 +4301,19 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_collar_toprope/rw_collar_toprope.webp",
     "folder": "rw_collar_toprope",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_collar_toprope/details/2.webp",
+      "/images/products/catalog/rw_collar_toprope/details/3.webp",
+      "/images/products/catalog/rw_collar_toprope/details/4.webp",
+      "/images/products/catalog/rw_collar_toprope/details/5.webp"
+    ],
     "video": "/images/products/catalog/rw_collar_toprope/videos/hover.mp4",
     "videoQuality": "approved_dog_wearing",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_collar_toprope/details/2.webp"
   },
   {
     "no": 111,
@@ -6957,13 +6999,17 @@
     "verifyNote": "",
     "image": "/images/products/catalog/yora_dental_l_270g/yora_dental_l_270g.webp",
     "folder": "yora_dental_l_270g",
-    "details": [],
+    "details": [
+      "/images/products/catalog/yora_dental_l_270g/details/2.webp",
+      "/images/products/catalog/yora_dental_l_270g/details/3.webp"
+    ],
     "video": "/images/products/catalog/yora_dental_l_270g/videos/hover.mp4",
     "videoQuality": "approved_dog_wearing",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/yora_dental_l_270g/details/2.webp"
   },
   {
     "no": 175,
@@ -12744,7 +12790,12 @@
     "verifyNote": "",
     "image": "/images/products/catalog/mb_vegemix_475g/mb_vegemix_475g.webp",
     "folder": "mb_vegemix_475g",
-    "details": [],
+    "details": [
+      "/images/products/catalog/mb_vegemix_475g/details/2.webp",
+      "/images/products/catalog/mb_vegemix_475g/details/3.webp",
+      "/images/products/catalog/mb_vegemix_475g/details/4.webp",
+      "/images/products/catalog/mb_vegemix_475g/details/5.webp"
+    ],
     "externalReviewSource": "naver_smartstore_public_product_detail",
     "externalReviewUrl": "https://smartstore.naver.com/daengdabang/products/7176506993",
     "externalReviewCount": 1,
@@ -12756,7 +12807,8 @@
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/mb_vegemix_475g/details/2.webp"
   },
   {
     "no": 317,
@@ -13362,7 +13414,12 @@
     "verifyNote": "",
     "image": "/images/products/catalog/rw_hiandlight_harness_24/rw_hiandlight_harness_24.webp",
     "folder": "rw_hiandlight_harness_24",
-    "details": [],
+    "details": [
+      "/images/products/catalog/rw_hiandlight_harness_24/details/2.webp",
+      "/images/products/catalog/rw_hiandlight_harness_24/details/3.webp",
+      "/images/products/catalog/rw_hiandlight_harness_24/details/4.webp",
+      "/images/products/catalog/rw_hiandlight_harness_24/details/5.webp"
+    ],
     "externalReviewSource": "naver_smartstore_public_product_detail",
     "externalReviewUrl": "https://smartstore.naver.com/daengdabang/products/9930917628",
     "externalReviewCount": 19,
@@ -13374,7 +13431,8 @@
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1"
+    "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
+    "detailImage": "/images/products/catalog/rw_hiandlight_harness_24/details/2.webp"
   },
   {
     "no": 329,
@@ -13712,8 +13770,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_mteverrest_cot_26fw",
     "image": "/images/products/catalog/rw_mteverrest_cot_26fw/rw_mteverrest_cot_26fw.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_mteverrest_cot_26fw/details/2.webp",
+      "/images/products/catalog/rw_mteverrest_cot_26fw/details/3.webp",
+      "/images/products/catalog/rw_mteverrest_cot_26fw/details/4.webp",
+      "/images/products/catalog/rw_mteverrest_cot_26fw/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_mteverrest_cot_26fw/details/2.webp"
   },
   {
     "no": 335,
@@ -13735,8 +13799,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_mteverrest_cotcover_26fw",
     "image": "/images/products/catalog/rw_mteverrest_cotcover_26fw/rw_mteverrest_cotcover_26fw.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/2.webp",
+      "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/3.webp",
+      "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/4.webp",
+      "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_mteverrest_cotcover_26fw/details/2.webp"
   },
   {
     "no": 336,
@@ -13758,8 +13828,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_highlands_pad_m",
     "image": "/images/products/catalog/rw_highlands_pad_m/rw_highlands_pad_m.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_highlands_pad_m/details/2.webp",
+      "/images/products/catalog/rw_highlands_pad_m/details/3.webp",
+      "/images/products/catalog/rw_highlands_pad_m/details/4.webp",
+      "/images/products/catalog/rw_highlands_pad_m/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_highlands_pad_m/details/2.webp"
   },
   {
     "no": 337,
@@ -13781,8 +13857,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_highlands_pad_l",
     "image": "/images/products/catalog/rw_highlands_pad_l/rw_highlands_pad_l.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_highlands_pad_l/details/2.webp",
+      "/images/products/catalog/rw_highlands_pad_l/details/3.webp",
+      "/images/products/catalog/rw_highlands_pad_l/details/4.webp",
+      "/images/products/catalog/rw_highlands_pad_l/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_highlands_pad_l/details/2.webp"
   },
   {
     "no": 338,
@@ -13804,8 +13886,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_highlands_sleepingbag_m",
     "image": "/images/products/catalog/rw_highlands_sleepingbag_m/rw_highlands_sleepingbag_m.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_highlands_sleepingbag_m/details/2.webp",
+      "/images/products/catalog/rw_highlands_sleepingbag_m/details/3.webp",
+      "/images/products/catalog/rw_highlands_sleepingbag_m/details/4.webp",
+      "/images/products/catalog/rw_highlands_sleepingbag_m/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_highlands_sleepingbag_m/details/2.webp"
   },
   {
     "no": 339,
@@ -13827,8 +13915,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_highlands_sleepingbag_l",
     "image": "/images/products/catalog/rw_highlands_sleepingbag_l/rw_highlands_sleepingbag_l.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_highlands_sleepingbag_l/details/2.webp",
+      "/images/products/catalog/rw_highlands_sleepingbag_l/details/3.webp",
+      "/images/products/catalog/rw_highlands_sleepingbag_l/details/4.webp",
+      "/images/products/catalog/rw_highlands_sleepingbag_l/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_highlands_sleepingbag_l/details/2.webp"
   },
   {
     "no": 340,
@@ -13850,8 +13944,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_barknboot_liners",
     "image": "/images/products/catalog/rw_barknboot_liners/rw_barknboot_liners.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_barknboot_liners/details/2.webp",
+      "/images/products/catalog/rw_barknboot_liners/details/3.webp",
+      "/images/products/catalog/rw_barknboot_liners/details/4.webp",
+      "/images/products/catalog/rw_barknboot_liners/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_barknboot_liners/details/2.webp"
   },
   {
     "no": 341,
@@ -13873,8 +13973,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_griptrex_bootpairs",
     "image": "/images/products/catalog/rw_griptrex_bootpairs/rw_griptrex_bootpairs.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_griptrex_bootpairs/details/2.webp",
+      "/images/products/catalog/rw_griptrex_bootpairs/details/3.webp",
+      "/images/products/catalog/rw_griptrex_bootpairs/details/4.webp",
+      "/images/products/catalog/rw_griptrex_bootpairs/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_griptrex_bootpairs/details/2.webp"
   },
   {
     "no": 342,
@@ -13896,8 +14002,13 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_basecamp_antisplash",
     "image": "/images/products/catalog/rw_basecamp_antisplash/rw_basecamp_antisplash.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_basecamp_antisplash/details/2.webp",
+      "/images/products/catalog/rw_basecamp_antisplash/details/3.webp",
+      "/images/products/catalog/rw_basecamp_antisplash/details/4.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_basecamp_antisplash/details/2.webp"
   },
   {
     "no": 343,
@@ -13919,8 +14030,14 @@
     "verifyNote": "공급사 소비자가 확인 완료",
     "folder": "rw_basecamp_slowfeeder",
     "image": "/images/products/catalog/rw_basecamp_slowfeeder/rw_basecamp_slowfeeder.png",
-    "details": [],
-    "video": ""
+    "details": [
+      "/images/products/catalog/rw_basecamp_slowfeeder/details/2.webp",
+      "/images/products/catalog/rw_basecamp_slowfeeder/details/3.webp",
+      "/images/products/catalog/rw_basecamp_slowfeeder/details/4.webp",
+      "/images/products/catalog/rw_basecamp_slowfeeder/details/5.webp"
+    ],
+    "video": "",
+    "detailImage": "/images/products/catalog/rw_basecamp_slowfeeder/details/2.webp"
   },
   {
     "no": 344,
