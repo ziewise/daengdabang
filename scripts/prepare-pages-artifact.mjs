@@ -11,6 +11,12 @@ const DEPLOYMENT_OMIT_PATHS = new Set([
     // Legacy storefront copy. The current app uses /images/hero/default.mp4.
     "videos/hero.mp4",
 ]);
+const DEPLOYMENT_OMIT_PREFIXES = [
+    // Source/reference exports used to prepare marketplace content. The
+    // storefront catalog does not reference these trees at runtime.
+    "images/naver-import/",
+    "images/naver-details/",
+];
 const REVIEWED_VIDEO_PROVIDERS = new Set(["ziewcraft", "ddb_exact_product_renderer"]);
 const REVIEWED_VIDEO_QUALITIES = new Set([
     "approved_dog_wearing",
@@ -224,6 +230,12 @@ export async function preparePagesArtifact({
             removed.push({ relative, size, reason: "legacy" });
             continue;
         }
+        if (DEPLOYMENT_OMIT_PREFIXES.some((prefix) => relative.startsWith(prefix))) {
+            const size = (await fs.stat(filePath)).size;
+            await fs.unlink(filePath);
+            removed.push({ relative, size, reason: "non_runtime" });
+            continue;
+        }
         if (!relative.startsWith(PRODUCT_ASSET_PREFIX)) continue;
         // Catalog videos are never copied into the Pages artifact. A video may
         // intentionally be absent from the build when the product is not a
@@ -250,6 +262,7 @@ export async function preparePagesArtifact({
         externalizedVideoCount: removed.filter((entry) => entry.reason === "commit_cdn").length,
         unusedAssetCount: removed.filter((entry) => entry.reason === "unused").length,
         omittedLegacyAssetCount: removed.filter((entry) => entry.reason === "legacy").length,
+        omittedNonRuntimeAssetCount: removed.filter((entry) => entry.reason === "non_runtime").length,
         expectedCdnVideoCount: builtCdnVideos.size,
         requiredReviewedCdnVideoCount: requiredReviewedCdnVideos.size,
         catalogCdnVideoCount: catalogCdnVideos.size,
