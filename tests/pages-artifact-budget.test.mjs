@@ -177,5 +177,5 @@ test("Pages deployment workflow pins video URLs to the build SHA and uses Node 2
     ]) {
         assert.ok(workflow.includes(action), `missing ${action}`);
     }
-    assert.match(workflow, /prepare-pages-artifact\.mjs --out out --max-bytes 950000000/);
+    assert.match(workflow, /prepare-pages-artifact\.mjs --out out --max-bytes 960000000/);
 });
