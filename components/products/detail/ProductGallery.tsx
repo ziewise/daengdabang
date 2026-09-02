@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import type { CatalogProduct } from "@/lib/catalog";
+import { isNewProduct, type CatalogProduct } from "@/lib/catalog";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 
@@ -21,6 +21,7 @@ export default function ProductGallery({ product: p, colorImage }: Props) {
     // 색상 선택 시 그 색상 이미지를 메인으로(없으면 기존 활성 이미지)
     const activeImage = colorImage ?? images[activeIdx];
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
+    const useContainedImage = isNewProduct(p);
 
     const activateVideo = () => {
         if (!p.video) return;
@@ -60,7 +61,7 @@ export default function ProductGallery({ product: p, colorImage }: Props) {
                         alt={p.name}
                         fill
                         sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover"
+                        className={useContainedImage ? "object-contain p-[7%]" : "object-cover"}
                         priority
                     />
                 ) : (
@@ -103,7 +104,13 @@ export default function ProductGallery({ product: p, colorImage }: Props) {
                                         : "opacity-70 ring-1 ring-neutral-200 hover:opacity-100 hover:ring-indigo-300"
                                 }`}
                             >
-                                <Image src={img} alt={`${p.name} ${index + 1}`} fill sizes="80px" className="object-cover" />
+                                <Image
+                                    src={img}
+                                    alt={`${p.name} ${index + 1}`}
+                                    fill
+                                    sizes="80px"
+                                    className={useContainedImage ? "object-contain p-1" : "object-cover"}
+                                />
                             </button>
                         );
                     })}

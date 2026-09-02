@@ -135,7 +135,7 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
     return references;
 }
 
-async function collectBuiltCdnVideos(outRoot, commitSha) {
+async function collectBuiltCdnProductAssets(outRoot, commitSha) {
     const found = new Set();
     const prefix = `${CDN_ROOT}@${commitSha}/public/`;
     for (const filePath of await listFiles(outRoot)) {
@@ -146,7 +146,7 @@ async function collectBuiltCdnVideos(outRoot, commitSha) {
         let offset = 0;
         while ((offset = source.indexOf(prefix, offset)) >= 0) {
             const rest = source.slice(offset + prefix.length);
-            const match = rest.match(/^images\/products\/catalog\/[A-Za-z0-9_.\/-]+\/videos\/hover\.mp4/);
+            const match = rest.match(/^images\/products\/catalog\/[A-Za-z0-9_.\/-]+\/(?:videos\/hover\.mp4|details\/official-visual-\d+\.webp)/);
             if (match) found.add(normalizeAssetPath(match[0]));
             offset += prefix.length;
         }
@@ -191,7 +191,23 @@ export async function preparePagesArtifact({
             .map((row) => normalizeAssetPath(row.video))
             .filter(Boolean),
     );
-    const builtCdnVideos = await collectBuiltCdnVideos(resolvedOutRoot, commitSha);
+    const builtCdnProductAssets = await collectBuiltCdnProductAssets(resolvedOutRoot, commitSha);
+    const builtCdnVideos = new Set([...builtCdnProductAssets].filter((asset) => asset.endsWith("/videos/hover.mp4")));
+    const builtCdnOfficialVisuals = new Set(
+        [...builtCdnProductAssets].filter((asset) => /\/details\/official-visual-\d+\.webp$/.test(asset)),
+    );
+    const catalogCdnOfficialVisuals = new Set(
+        publicationCatalog.flatMap((row) => (row?.details ?? []))
+            .map((asset) => normalizeAssetPath(asset))
+            .filter((asset) => /\/details\/official-visual-\d+\.webp$/.test(asset)),
+    );
+    const missingCdnOfficialVisuals = [...catalogCdnOfficialVisuals]
+        .filter((asset) => !builtCdnOfficialVisuals.has(asset));
+    if (missingCdnOfficialVisuals.length) {
+        throw new Error(
+            `Refusing to publish: ${missingCdnOfficialVisuals.length} official visual CDN URL(s) were not pinned into the build`,
+        );
+    }
     const requiredReviewedCdnVideos = new Set(
         publicationCatalog
             .filter((row) => (
@@ -241,11 +257,16 @@ export async function preparePagesArtifact({
         // intentionally be absent from the build when the product is not a
         // dog-worn item; only reviewed, rendered CDN references are published.
         const externalizedVideo = catalogCdnVideos.has(relative);
+        const externalizedOfficialVisual = catalogCdnOfficialVisuals.has(relative);
         const unusedProductAsset = !references.has(relative);
-        if (!externalizedVideo && !unusedProductAsset) continue;
+        if (!externalizedVideo && !externalizedOfficialVisual && !unusedProductAsset) continue;
         const size = (await fs.stat(filePath)).size;
         await fs.unlink(filePath);
-        removed.push({ relative, size, reason: externalizedVideo ? "commit_cdn" : "unused" });
+        removed.push({
+            relative,
+            size,
+            reason: externalizedVideo ? "commit_cdn" : externalizedOfficialVisual ? "commit_cdn_official_visual" : "unused",
+        });
     }
 
     const afterFiles = await listFiles(resolvedOutRoot);
@@ -260,12 +281,14 @@ export async function preparePagesArtifact({
         removedBytes: beforeBytes - afterBytes,
         removedFileCount: removed.length,
         externalizedVideoCount: removed.filter((entry) => entry.reason === "commit_cdn").length,
+        externalizedOfficialVisualCount: removed.filter((entry) => entry.reason === "commit_cdn_official_visual").length,
         unusedAssetCount: removed.filter((entry) => entry.reason === "unused").length,
         omittedLegacyAssetCount: removed.filter((entry) => entry.reason === "legacy").length,
         omittedNonRuntimeAssetCount: removed.filter((entry) => entry.reason === "non_runtime").length,
         expectedCdnVideoCount: builtCdnVideos.size,
         requiredReviewedCdnVideoCount: requiredReviewedCdnVideos.size,
         catalogCdnVideoCount: catalogCdnVideos.size,
+        catalogCdnOfficialVisualCount: catalogCdnOfficialVisuals.size,
     };
 }
 

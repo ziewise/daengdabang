@@ -13,6 +13,23 @@ const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COM
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
 const STOREFRONT_ASSET_CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
 
+function storefrontOfficialVisualUrl(value: string): string {
+    if (
+        !STOREFRONT_ASSET_COMMIT_RE.test(STOREFRONT_ASSET_COMMIT_SHA) ||
+        !/^\/images\/products\/catalog\/[A-Za-z0-9_.-]+\/details\/official-visual-\d+\.webp$/.test(value)
+    ) {
+        return value;
+    }
+    return `${STOREFRONT_ASSET_CDN_ROOT}@${STOREFRONT_ASSET_COMMIT_SHA}/public${value}`;
+}
+
+function storefrontDetailImageLabels(labels: CatalogRow["detailImageLabels"]): Record<string, string> | undefined {
+    if (!labels) return undefined;
+    return Object.fromEntries(
+        Object.entries(labels).map(([asset, label]) => [storefrontOfficialVisualUrl(asset), label]),
+    );
+}
+
 function storefrontVideoUrl(row: CatalogRow, subcategory: SubcategorySlug): string | undefined {
     const video = safeCatalogHoverVideo({
         id: `p_${row.no}`,
@@ -211,7 +228,8 @@ function buildCatalog(): CatalogProduct[] {
             folder: row.folder,
             image: row.image,
             gallery: row.gallery,
-            details: row.details,
+            details: row.details?.map(storefrontOfficialVisualUrl),
+            detailImageLabels: storefrontDetailImageLabels(row.detailImageLabels),
             sizeImage: row.sizeImage,
             video: storefrontVideoUrl(reviewedRow, subcategory),
             externalReviewSource: row.externalReviewSource,

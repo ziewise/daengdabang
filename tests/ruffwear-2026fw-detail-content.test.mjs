@@ -34,6 +34,12 @@ test("all 16 new Ruffwear products expose sourced written detail content", async
         assert.ok(content.summary.length >= 40, `${folder} summary is too short`);
         assert.ok(content.features.length >= 3, `${folder} needs at least three sourced features`);
         assert.equal(content.sourceUrl, row.sourceUrl, `${folder} must cite its cataloged official source`);
+        assert.ok(row.details.length >= 7, `${folder} needs a complete visual detail sequence`);
+        const officialVisuals = row.details.filter((path) => path.includes("/official-visual-"));
+        assert.ok(officialVisuals.length >= 5, `${folder} needs at least five manufacturer visuals`);
+        for (const path of officialVisuals) {
+            assert.ok(row.detailImageLabels?.[path], `${folder} official visual needs a customer caption`);
+        }
     }
 });
 
@@ -44,7 +50,21 @@ test("the product detail UI renders an image-led official product story", async 
     assert.match(source, /OFFICIAL PRODUCT GUIDE/);
     assert.match(source, /사진으로 보는 제품의 핵심/);
     assert.match(source, /featureVisuals\.map|featureGroups\.map/);
+    assert.match(source, /detailImageLabels/);
+    assert.match(source, /figcaption/);
     assert.doesNotMatch(source, /data-product-detail-copy>\s*<p className="text-xs/);
+});
+
+test("new product cards show the complete product instead of cropping the thumbnail", async () => {
+    const source = await readFile(new URL("../components/products/ProductCard.tsx", import.meta.url), "utf8");
+    assert.match(source, /useContainedThumbnail = isNewProduct\(p\)/);
+    assert.match(source, /object-contain p-\[7%\]/);
+    assert.match(source, /useContainedThumbnail \? "object-contain/);
+
+    const gallerySource = await readFile(new URL("../components/products/detail/ProductGallery.tsx", import.meta.url), "utf8");
+    assert.match(gallerySource, /useContainedImage = isNewProduct\(p\)/);
+    assert.match(gallerySource, /useContainedImage \? "object-contain p-\[7%\]"/);
+    assert.match(gallerySource, /useContainedImage \? "object-contain p-1"/);
 });
 
 test("all manufacturer stories expose safe visual-detail image selections", async () => {
@@ -59,7 +79,7 @@ test("all manufacturer stories expose safe visual-detail image selections", asyn
         const row = byFolder.get(folder);
         assert.ok(row, `${folder} must exist in the catalog`);
         assert.ok(Array.isArray(content.visualDetailIndices), `${folder} needs a visual image selection`);
-        assert.ok(content.visualDetailIndices.length <= 3, `${folder} selects too many feature visuals`);
+        assert.ok(content.visualDetailIndices.length <= 6, `${folder} selects too many feature visuals`);
         for (const index of content.visualDetailIndices) {
             assert.ok(Number.isInteger(index) && index >= 0, `${folder} has an invalid visual image index`);
             assert.ok(index < (row.details?.length ?? 0), `${folder} visual image index is out of range`);

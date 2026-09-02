@@ -85,7 +85,7 @@ jobs:
         run: node scripts/verify-goods-contest-build-output.mjs
 
       - name: Prepare Pages artifact
-        run: node scripts/prepare-pages-artifact.mjs --out out --max-bytes 960000000
+        run: node scripts/prepare-pages-artifact.mjs --out out --max-bytes 965000000
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

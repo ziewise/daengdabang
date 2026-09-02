@@ -116,13 +116,9 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
         const theme = officialTheme(content.sourceLabel);
         const visualIndices = (content.visualDetailIndices ?? details.map((_, index) => index))
             .filter((index) => index >= 0 && index < details.length)
-            .slice(0, 3);
+            .slice(0, 6);
         const featureVisuals = visualIndices.map((index) => details[index]);
-        const featurePanelCount = Math.max(1, Math.min(3, featureVisuals.length || 1, content.features.length || 1));
-        const featureGroups = Array.from({ length: featurePanelCount }, (_, groupIndex) =>
-            content.features.filter((_, featureIndex) => featureIndex % featurePanelCount === groupIndex),
-        );
-        const usedVisualIndices = new Set(visualIndices.slice(0, featurePanelCount));
+        const usedVisualIndices = new Set(visualIndices);
         const remainingDetails = details.filter((_, index) => !usedVisualIndices.has(index));
 
         return (
@@ -164,45 +160,39 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     <p className="text-center text-xs font-black tracking-[0.22em]" style={{ color: theme.accent }}>FEATURES</p>
                     <h4 className="mt-3 text-center text-3xl font-black tracking-tight md:text-4xl">사진으로 보는 제품의 핵심</h4>
 
-                    <div className="mt-10 space-y-10 md:mt-14 md:space-y-16">
-                        {featureGroups.map((features, index) => (
-                            <div key={`${featureVisuals[index] ?? "feature"}-${index}`} className="grid items-center gap-7 md:grid-cols-2 md:gap-12">
-                                <div className={`overflow-hidden bg-white/10 ${index % 2 === 1 ? "md:order-2" : ""}`}>
-                                    {featureVisuals[index] ? (
+                    {featureVisuals.length > 0 && (
+                        <div className="mt-10 grid gap-3 md:mt-14 md:grid-cols-2">
+                            {featureVisuals.map((src, index) => {
+                                const label = p.detailImageLabels?.[src] ?? `제조사 공식 제품 이미지 ${index + 1}`;
+                                return (
+                                    <figure key={src} className="overflow-hidden bg-white/10">
                                         <Image
-                                            src={featureVisuals[index]}
-                                            alt={`${displayName} 특징 이미지 ${index + 1}`}
-                                            width={1200}
-                                            height={900}
+                                            src={src}
+                                            alt={`${displayName} ${label}`}
+                                            width={1600}
+                                            height={1000}
                                             sizes="(max-width: 768px) 100vw, 50vw"
-                                            className="h-auto max-h-[560px] w-full object-contain"
+                                            className="aspect-[16/10] h-auto w-full object-contain"
                                             priority={index === 0}
                                         />
-                                    ) : (
-                                        <Image
-                                            src={heroImage}
-                                            alt={`${displayName} 제품 특징`}
-                                            width={1200}
-                                            height={900}
-                                            sizes="(max-width: 768px) 100vw, 50vw"
-                                            className="h-auto max-h-[560px] w-full object-contain p-8"
-                                        />
-                                    )}
-                                </div>
-                                <div className={index % 2 === 1 ? "md:order-1" : ""}>
-                                    <p className="text-xs font-black tracking-[0.18em]" style={{ color: theme.accent }}>FEATURE {String(index + 1).padStart(2, "0")}</p>
-                                    <ul className="mt-4 space-y-5">
-                                        {features.map((feature) => (
-                                            <li key={feature} className="flex gap-3 break-keep text-base font-black leading-7 md:text-xl md:leading-9">
-                                                <span className="mt-3 h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: theme.accent }} aria-hidden="true" />
-                                                <span>{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
+                                        <figcaption className="border-t border-white/15 px-5 py-4 text-sm font-black text-white/90">
+                                            <span className="mr-2 text-[10px] tracking-[0.16em]" style={{ color: theme.accent }}>OFFICIAL {String(index + 1).padStart(2, "0")}</span>
+                                            {label}
+                                        </figcaption>
+                                    </figure>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    <ol className="mt-12 grid gap-x-12 gap-y-7 border-t border-white/20 pt-10 md:grid-cols-2">
+                        {content.features.map((feature, index) => (
+                            <li key={feature} className="flex gap-4 break-keep text-base font-black leading-7 md:text-lg md:leading-8">
+                                <span className="text-sm" style={{ color: theme.accent }}>{String(index + 1).padStart(2, "0")}</span>
+                                <span>{feature}</span>
+                            </li>
                         ))}
-                    </div>
+                    </ol>
                 </section>
 
                 <section className="px-6 py-12 md:px-12 md:py-16" style={{ backgroundColor: theme.paper }}>
@@ -221,7 +211,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                             <div key={src} className={remainingDetails.length % 2 === 1 && index === remainingDetails.length - 1 ? "md:col-span-2" : ""}>
                                 <Image
                                     src={src}
-                                    alt={`${displayName} 상세 이미지 ${featurePanelCount + index + 1}`}
+                                    alt={`${displayName} 상세 이미지 ${featureVisuals.length + index + 1}`}
                                     width={1200}
                                     height={1200}
                                     sizes="(max-width: 768px) 100vw, 50vw"

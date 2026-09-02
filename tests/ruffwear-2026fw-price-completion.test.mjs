@@ -164,17 +164,27 @@ test("all 16 newly listed Ruffwear products have sourced detail-page content", a
     const byFolder = new Map(catalog.map((row) => [row.folder, row]));
 
     assert.equal(Object.keys(newDetailTargets).length, 16);
-    for (const [folder, expectedCount] of Object.entries(newDetailTargets)) {
+    for (const [folder, originalCount] of Object.entries(newDetailTargets)) {
         const row = byFolder.get(folder);
         assert.ok(row, `missing new Ruffwear product: ${folder}`);
         assert.match(row.sourceUrl ?? "", /^https:\/\/ruffwear\.com\/products\//, `unofficial detail source: ${folder}`);
-        assert.equal(row.details?.length, expectedCount, `incomplete detail page: ${folder}`);
+        assert.ok(row.details?.length >= originalCount + 5, `incomplete enriched detail page: ${folder}`);
 
         assert.ok(row.details.every((detail) => !detail.endsWith("/details/1.webp")), `generated detail panel returned: ${folder}`);
-        for (let index = 0; index < expectedCount; index += 1) {
+        const originalVisuals = row.details.filter((detail) => !detail.includes("/official-visual-"));
+        assert.equal(originalVisuals.length, originalCount, `original detail sequence changed: ${folder}`);
+        for (let index = 0; index < originalCount; index += 1) {
             const expectedPath = `/images/products/catalog/${folder}/details/${index + 2}.webp`;
-            assert.equal(row.details[index], expectedPath, `wrong detail image order: ${folder}`);
+            assert.equal(originalVisuals[index], expectedPath, `wrong original detail image order: ${folder}`);
             await access(new URL(`../public${expectedPath}`, import.meta.url));
+        }
+
+        const officialVisuals = row.details.filter((detail) => detail.includes("/official-visual-"));
+        assert.ok(officialVisuals.length >= 5, `manufacturer visuals missing: ${folder}`);
+        for (const detail of officialVisuals) {
+            assert.match(detail, /\/details\/official-visual-\d+\.webp$/, `unexpected enrichment asset: ${folder}`);
+            assert.ok(row.detailImageLabels?.[detail], `manufacturer visual caption missing: ${folder}`);
+            await access(new URL(`../public${detail}`, import.meta.url));
         }
     }
 });

@@ -31,7 +31,9 @@
     "sourceTitle": "Free-Range Chicken Small Breed Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "canagan_dog_dental_2kg": {
     "summary": "카나간 덴탈 프리런 터키 스몰브리드는 퍼피와 성견을 위한 소형 알갱이의 그레인프리 건식 사료입니다. ProDen PlaqueOff®를 배합한 덴탈 레시피이며 제조사는 정기적인 양치와 함께 사용할 것을 안내합니다.",
@@ -66,7 +68,9 @@
     "sourceTitle": "Dental Small Breed Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "canagan_dog_dental_6kg": {
     "summary": "카나간 덴탈 프리런 터키 스몰브리드는 퍼피와 성견을 위한 소형 알갱이의 그레인프리 건식 사료입니다. ProDen PlaqueOff®를 배합한 덴탈 레시피이며 제조사는 정기적인 양치와 함께 사용할 것을 안내합니다.",
@@ -101,7 +105,9 @@
     "sourceTitle": "Dental Small Breed Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "canagan_dog_highland_2kg": {
     "summary": "카나간 하이랜드 피스트는 퍼피와 성견을 위한 그레인프리 건식 사료입니다. 오리·칠면조·꿩·연어를 중심으로 구성하고 프리바이오틱스, 글루코사민과 콘드로이틴을 더했습니다.",
@@ -135,7 +141,9 @@
     "sourceTitle": "Highland Feast Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "canagan_dog_highland_6kg": {
     "summary": "카나간 하이랜드 피스트는 퍼피와 성견을 위한 그레인프리 건식 사료입니다. 오리·칠면조·꿩·연어를 중심으로 구성하고 프리바이오틱스, 글루코사민과 콘드로이틴을 더했습니다.",
@@ -169,7 +177,9 @@
     "sourceTitle": "Highland Feast Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "canagan_dog_salmon_2kg": {
     "summary": "카나간 스코티시 살몬 스몰브리드는 퍼피와 성견을 위한 소형 알갱이의 그레인프리 건식 사료입니다. 스코틀랜드산 생연어에 청어·송어·흰살생선을 더했습니다.",
@@ -203,7 +213,9 @@
     "sourceTitle": "Scottish Salmon Small Breed Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "canagan_dog_salmon_6kg": {
     "summary": "카나간 스코티시 살몬 스몰브리드는 퍼피와 성견을 위한 소형 알갱이의 그레인프리 건식 사료입니다. 스코틀랜드산 생연어에 청어·송어·흰살생선을 더했습니다.",
@@ -237,7 +249,9 @@
     "sourceTitle": "Scottish Salmon Small Breed Dry Dog Food",
     "sourceLabel": "Canagan 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "hugo_icecream_salmon": {
     "summary": "스칸디나비아 연어를 사용한 오메가-3 풍부 아이스크림으로, 스트레스 해소에 도움을 줍니다. 흰 설탕과 유당이 배제되어 모든 연령대 강아지가 즐길 수 있는 냉동 간식입니다.",
@@ -288,7 +302,9 @@
     "sourceLabel": "Hugo & Celine 공식 상품 정보",
     "sourceEvidenceSha256": "a2f61c2ca13d925d0466e5981e48a0d6ee0b40f11a116c93fcdb835e10613648",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "iby_backpack_fc2106": {
     "summary": "3파운드(1.4kg)의 초경량 설계로 일상 산책 및 짧은 여행에 적합한 반려동물 백팩 캐리어입니다. 견고한 바닥과 통기성 메쉬가 안정감과 편안함을 제공하여 애완동물이 안심하고 휴식할 수 있습니다.",
@@ -334,7 +350,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "iby_backpack_fc2297": {
@@ -380,7 +399,11 @@
     "sourceEvidenceSha256": "c3b162ad34ce822f144ab9b04f037129f41738175b2def54962e0f9c7e08a048",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      0
+      0,
+      1,
+      2,
+      3,
+      4
     ]
   },
   "iby_stroller_fs2011": {
@@ -430,7 +453,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "iby_stroller_fs2180": {
@@ -480,7 +506,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "iby_wagon_fs1880": {
@@ -529,7 +558,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "nd_feelgood_c": {
@@ -573,7 +605,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "af228942f9c2b225fe699a43390c2fbcf9c178e446f5a0a0f75f89702829c394",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_feelgood_p": {
     "summary": "이 제품은 이유기부터 건강한 성장을 지원하기 위해 특별히 개발된 균형 잡힌 완전식 젖은 강아지 사료입니다. 고품질 천연 재료를 사용하여 성장 초기 단계에 부드럽고 일상적인 영양을 제공합니다.",
@@ -618,7 +656,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "9d8acfbcb6852cd14d3b4d8b8caf96865be4a8c227a23ce30dd32a21ef14e925",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_feelgood_s": {
     "summary": "성인견의 일상 영양을 지원하고 퓨린 함량이 자연적으로 낮은 완전식 습식 사료입니다. 고기 기반의 균형 잡힌 영양을 제공하여 건강한 피부와 털을 유지하는 데 도움을 줍니다.",
@@ -671,7 +715,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "b510d1fa74ccd6865f649d038031f9c9e6ba8e9af32dbe94abee91127dec53af",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_feelgood_sl": {
     "summary": "7세 이상 노령견 및 활동량이 적은 개를 위한 저칼로리, 저지방 습식 사료입니다. 고기 함량이 높고 소화가 잘 되어 근육 유지와 체중 관리를 지원합니다.",
@@ -725,7 +775,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "179cbb680ed832b9eca051e4c3e6f98c5eae134bdbdf7d9962ce96cb8638fd26",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_feelgood_tc": {
     "summary": "고품질 천연 원료로 만든 완전 영양식인 Feel Good Turkey & Chicken은 성견의 일상적인 웰빙을 지원합니다. 밀 배제 레시피로 민감한 위장에도 적합하며, 단독 급여나 건사료와 혼합하여 유연하게 급여할 수 있습니다.",
@@ -775,7 +831,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "167ffda0b3fdaf38632accb3ab59e8d3bf1689cabd0264119fc9d9df0f9cc5f1",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_feelgood_wf": {
     "summary": "성인견의 체중 관리와 가벼운 일상 식단에 적합한 저지방·저칼로리 완전 사료입니다. 고기류 기반의 소화 흡수율이 높은 단백질과 쌀, 감자, 해초가 조화롭게 배합되었습니다.",
@@ -827,7 +889,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "89b2ee5cc1939977d1c92b2f27689ec78db096f47cb330dbeb55727bface03ab",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_purely_bc": {
     "summary": "성인견을 위한 고단백, 무곡물, 무글uten 식이로, 92%의 고품질 닭고기를 사용하여 단순하고 균형 잡힌 영양을 제공합니다. 민감한 장을 가진 개나 저퓨린 식사가 필요한 개에게 적합하며, 단독 급여나 건사료와 혼합하여 유연하게 급여할 수 있습니다.",
@@ -876,7 +944,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "2dfe62d0c501f2a4c699b0d4d715f0e75fd3fda3801f9723d9e7007a4874e61e",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "nd_purely_sw": {
     "summary": "성인견을 위한 단순하고 고단백의 습식 사료로, 연어와 흰살 생선을 92% 함유하여 균형 잡힌 영양을 제공합니다. 알레르기 민감한 개나 저퓨린 식사가 필요한 개에게 적합하며, 곡물과 글루텐이 없어 소화하기 쉽습니다.",
@@ -917,7 +991,13 @@
     "sourceLabel": "Naturediet 공식 상품 정보",
     "sourceEvidenceSha256": "1994f5814f08ed8f53508513d2f2f6633deeec0ab206c363f2ddfcdda5f88710",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "ot_bowl_foldable": {
     "summary": "여행 중 작은 개를 위한 휴대용 접이식 사료 및 물 그릇입니다. 담배갑 크기까지 축소되어 하네스나 가방에 간편하게 부착할 수 있습니다.",
@@ -956,7 +1036,13 @@
     "sourceLabel": "OneTigris 공식 상품 정보",
     "sourceEvidenceSha256": "a5230e5d2c0e823b79d6a02874e0fa561ebcacd02a7b7d9d1a39b687484ae638",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "ot_destroyer_harness": {
     "summary": "대형견 및 K9 유닛을 위한 중장비 전술용 하네스로, 3개의 강화 핸들과 금속 버클을 통해 우수한 제어력과 이동 보조가 가능합니다. 내구성 있는 1000D 나일론 소재와 5점식 조절 시스템을 갖추고 있어 거친 야외 활동에서도 안정적인 착용감을 제공합니다.",
@@ -1006,7 +1092,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      5,
+      6
     ]
   },
   "ot_firewatcher_harness": {
@@ -1063,7 +1152,9 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4
     ]
   },
   "ot_goliath_harness": {
@@ -1108,7 +1199,10 @@
     "translationProvider": "llama-local",
     "visualDetailIndices": [
       0,
-      1
+      1,
+      2,
+      3,
+      4
     ]
   },
   "ot_sleepingmat": {
@@ -1150,9 +1244,11 @@
     "sourceEvidenceSha256": "65fc31e4bdc435a3bbcbbe1c7b212b0c35b4fd639d1eb4e116258b15c6a0c8b4",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
+      0,
       1,
-      2,
-      3
+      3,
+      4,
+      5
     ]
   },
   "polkadog_codchips_99g": {
@@ -1177,7 +1273,13 @@
     "sourceLabel": "Polkadog Bakery 공식 상품 정보",
     "sourceEvidenceSha256": "67a1790e8cb273005880ee2855a8361f0bf0b1f6a3e91e0a6287e1e1cf9b0bd9",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "polkadog_codskin_907g": {
     "summary": "알래스카에서 계절에 따라 잡힌 명태를 손으로 말아 보스턴에서 천천히 건조한 바삭하고 감칠맛 나는 간식입니다. 단일 재료로 구성되어 알레르기 유발 가능성이 낮으며 오메가-3 지방산이 풍부합니다.",
@@ -1212,7 +1314,13 @@
     "sourceLabel": "Polkadog Bakery 공식 상품 정보",
     "sourceEvidenceSha256": "21cec00cc38101f5e24d31b01a037842400f62a9841d0c5d99d05e656c7d49d2",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "polkadog_haddockskin_453g": {
     "summary": "북대서양에서 지속 가능하게 조획한 대구 피부를 손으로 접어 자체 건조한 단일 성분 간식입니다. 오메가-3 지방산이 풍부하여 피부와 모피 건강을 지원하며 알레르기 유발 가능성이 낮은 무곡물 제품입니다.",
@@ -1248,7 +1356,13 @@
     "sourceLabel": "Polkadog Bakery 공식 상품 정보",
     "sourceEvidenceSha256": "2cb7ef94ba4e0299c1e5264798e04782543fe96f4d72e0c671c8c60a43f2f0f6",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "polkadog_henpenny_biscuit_142g": {
     "summary": "미국 농장에서 기른 닭 가슴살과 매사추세츠산 크랜베리를 사용하여 만든 4가지 원료의 제한 성분 간식입니다. 보스턴에서 수공으로 천천히 탈수 처리하여 훈련 및 보상용으로 적합한 크기와 바삭한 식감을 제공합니다.",
@@ -1288,7 +1402,13 @@
     "sourceLabel": "Polkadog Bakery 공식 상품 정보",
     "sourceEvidenceSha256": "b69a2f32488fe4853f65cc36d3efdf00b53c32954907214952d545467a509bca",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rs_bowl": {
     "summary": "고품질 스테인리스 스틸로 제작된 내구성 있는 개 사료 그릇으로, 스타일과 기능을 결합했습니다. 렉스 스펙스 로고가 개를 위한 모험적인 느낌을 더하며, 스테인리스 스틸 구조는 오래 사용 가능하고 세척이 용이합니다.",
@@ -1326,7 +1446,12 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e634be53b53d93984a31667263ea2548cada47dfbf25df3030e07e79e9cfafea",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rs_brachy_black": {
     "summary": "프렌치 불독이나 파그와 같이 코가 짧고 얼굴이 넓고 평평한 개를 위해 설계된 보호 안경입니다. 눈이 이물질, 환경적 위험 및 햇빛으로부터 보호받으며 턱의 완전한 운동과 시야를 허용합니다.",
@@ -1360,7 +1485,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "825927e2da641108da0b52ac02f0e1ec2ff730fe7060db0a183a4c2fa191f93a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_brachy_lens": {
     "summary": "오리지널 렉스 스펙스(Rex Specs) 개용 고글 전용 교체용 렌즈입니다. 프리미엄 소재로 제작되어 충격 저항성과 UV 400 등급의 자외선 차단 기능을 제공합니다.",
@@ -1400,7 +1529,12 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "424b49ede9aec521918c028dd316955edb92ca314f1480eb26ba7a2c70717047",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rs_earpro": {
     "summary": "Rex Specs Ear Pro는 소음 노출로 인한 군용 개들의 일시적 및 영구적 청력 손실을 방지하기 위해 개발된 제품입니다. 임무, 사격장, 오토바이 또는 콘서트 등 다양한 환경에서 개의 귀를 보호하고 장기적인 청력 손상을 제한합니다.",
@@ -1430,7 +1564,12 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "a41a791c4a7a6b14ac33c14f3330fb33583e3b717e730a3f6b6c83d1e4fbf18f",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rs_hardcase": {
     "summary": "Rex Specs 개용 고글을 위해 특별히 설계된 맞춤형 하드 케이스로, 모험 중 렌즈 긁힘과 손상을 방지합니다. 견고한 구조와 지퍼 밀폐 설계로 고글을 안전하게 보호합니다.",
@@ -1463,7 +1602,12 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "0c9e9f7bf1488797619ffce618d9fbace04775ff7901616ce946fc7f4f1accf0",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rs_lens_original": {
     "summary": "오리지널 렉스 스펙스(Rex Specs) 개용 고글 전용 교체용 렌즈입니다. 프리미엄 소재로 제작되어 충격 저항성과 UV 400 등급의 자외선 차단 기능을 제공합니다.",
@@ -1506,7 +1650,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rs_lens_v2": {
@@ -1549,9 +1696,10 @@
     "sourceEvidenceSha256": "063b5d4670b6ed21e37eb8b88687296697d6e96fa46d3453eab9f58fe23cd459",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      1,
+      0,
       2,
-      3
+      3,
+      4
     ]
   },
   "rs_lenslab_original": {
@@ -1592,7 +1740,12 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "424b49ede9aec521918c028dd316955edb92ca314f1480eb26ba7a2c70717047",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rs_trailhead_collar": {
     "summary": "가족과 함께하는 모험을 위해 설계된 트레일헤드 목줄은 리드 연결부의 평행 배치를 통해 목 주변으로의 불필요한 이동을 방지합니다. 태그와 버클의 균형으로 연결부가 목 상단에 고정되어 접근성을 높이고, 연속 루프 구조로 내구성과 안전성을 확보했습니다.",
@@ -1622,7 +1775,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "37afb8520b42a5781ee00583e07e666f68fa95a1792e87e2d10e5c2b26f0b7ff",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_trailhead_leash_dual_24m": {
     "summary": "혁신적인 루프 시스템과 더블 스냅 후크를 탑재한 다기능 리드줄로, 최대의 조절성과 다용성을 제공합니다. 다양한 착용 방식과 두 마리 개 동시 산책이 가능한 실용적인 디자인을 갖추고 있습니다.",
@@ -1655,7 +1812,12 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "82923ee1620ad95aeca4d8116a643a6e436cbd484b5bbed8fb6501f5263727e6",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rs_trailhead_leash_single_18m": {
     "summary": "기본 기능을 한층 업그레이드한 클래식 리드줄로, 패딩 핸들이 착용감을 높여줍니다. 데이지 체인 루프를 활용해 어깨나 허리에도 간편하게 고정할 수 있어 오프리시 사용 시 편리합니다.",
@@ -1691,7 +1853,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "0b9bb12b15117572300487548ef95ac8d33258932d55da4136af41c7433584ff",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_2024ltd": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -1743,7 +1909,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_appalachianorange": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -1795,7 +1964,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_atlasblue": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -1850,7 +2023,10 @@
     "visualDetailIndices": [
       1,
       2,
-      3
+      3,
+      4,
+      5,
+      6
     ]
   },
   "rs_v2_avalanchewhite": {
@@ -1903,7 +2079,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_banditorange": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -1958,7 +2138,10 @@
     "visualDetailIndices": [
       1,
       2,
-      3
+      3,
+      4,
+      5,
+      6
     ]
   },
   "rs_v2_bighornblue": {
@@ -2011,7 +2194,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_black": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2066,7 +2252,10 @@
     "visualDetailIndices": [
       1,
       2,
-      3
+      3,
+      4,
+      5,
+      6
     ]
   },
   "rs_v2_cloudycoral_ltd": {
@@ -2119,7 +2308,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_coyote": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2171,7 +2363,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_gallatingray": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2223,7 +2419,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_himalayapink": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2275,7 +2474,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_lenslab": {
     "summary": "이 제품은 V2 고글에 호환되는 천공 비닐 렌즈 랩으로, 개가 선명하게 볼 수 있으면서도 개성을 더합니다. 다양한 스타일로 교체 가능하여 모험 중에도 스크래치로부터 렌즈를 보호합니다.",
@@ -2310,7 +2513,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "c8dcc0094d0dcd86e6724642eacc6dbe558540a9d53bc1ff1d9858925153933b",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_neon_ltd": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2362,7 +2569,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_ozarkorange": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2414,7 +2625,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_pikepurple": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2466,7 +2680,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_rangerred": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2518,7 +2735,10 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rs_v2_tazerteal": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2573,7 +2793,10 @@
     "visualDetailIndices": [
       1,
       2,
-      3
+      3,
+      4,
+      5,
+      6
     ]
   },
   "rs_v2_volcanored": {
@@ -2626,7 +2849,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_vulcanblue": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2678,7 +2905,11 @@
     "sourceLabel": "Rex Specs 공식 상품 정보",
     "sourceEvidenceSha256": "e16be31b083faae7b3f5133afc2f9d9b4175a29f4457075812c329e3c346b263",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rs_v2_yazberry": {
     "summary": "Rex Specs Goggles V2는 전문 작업견부터 일상 산책견까지 안정적이고 안전한 눈 보호를 제공합니다. 다양한 모험 환경에서 개의 시야와 편안함을 최적화하여 설계되었습니다.",
@@ -2733,7 +2964,10 @@
     "visualDetailIndices": [
       1,
       2,
-      3
+      3,
+      4,
+      5,
+      6
     ]
   },
   "rw_audiblebeacon_light": {
@@ -2779,7 +3013,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0919f439a9741e222e5b4da9a523d555a615ddbf34fa668295667f30683899b1",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_backtrak_evac_kit": {
     "summary": "BackTrak™ Dog Evacuation Kit은 긴급 상황에서 부상 또는 질병으로 이동이 어려운 개를 안전하게 대피할 수 있도록 설계된 비상 키트입니다. 경량 구조의 응급용 마즐과 개 운반 슬링이 내장된 인간용 조끼로 구성되어 있어, 예상치 못한 상황에서도 자신감 있게 야외 활동을 즐길 수 있습니다.",
@@ -2833,7 +3071,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_barknboot_liners": {
@@ -2874,7 +3115,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_basecamp_antisplash": {
@@ -2913,7 +3157,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_basecamp_bed": {
@@ -2964,7 +3211,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "7e1c7ec38082a58e0422754c17e715964a357ddf1d183c68aac07a5a1318aa83",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_basecamp_bed_l": {
     "summary": "Basecamp™ 접이식 강아지 침대는 이동 중에도 반려견에게 편안한 휴식 공간을 제공하는 휴대용 수면 매트입니다. 재활용 소재로 제작되어 가볍게 접어 들고 다니기 쉬우며, 물기 차단과 미끄럼 방지 기능이 갖춰져 있습니다.",
@@ -3014,7 +3267,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "7e1c7ec38082a58e0422754c17e715964a357ddf1d183c68aac07a5a1318aa83",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_basecamp_bed_m": {
     "summary": "Basecamp™ 접이식 강아지 침대는 이동 중에도 반려견에게 편안한 휴식 공간을 제공하는 휴대용 수면 매트입니다. 재활용 소재로 제작되어 가볍게 접어 들고 다니기 쉬우며, 물기 차단과 미끄럼 방지 기능이 갖춰져 있습니다.",
@@ -3064,7 +3323,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "7e1c7ec38082a58e0422754c17e715964a357ddf1d183c68aac07a5a1318aa83",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_basecamp_mat": {
     "summary": "Basecamp™️ Dog Bowl Mat은 모험의 시작점에서 반려견이 식사와 물을 통해 에너지를 보충할 수 있도록 설계된 그릇 받침입니다. 미끄럼 방지 표면과 튼튼한 벽면이 있어 물과 음식물의 넘침을 효과적으로 차단하며, 세척이 용이합니다.",
@@ -3103,7 +3368,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "d7433ce6124442723000224827e602b482d0dc45731b4b9345649e07e16e8a84",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_basecamp_slowfeeder": {
     "summary": "Basecamp™ Slow Feeder Bowl Insert는 빠른 식사 속도를 조절하고 식사 시간의 정신적 풍부함을 더하는 액세서리입니다. 식품 안전 실리콘으로 제작되어 Basecamp™ Bowl 내부에 단단히 고정되며, 식사 후 식기세척기로 간편하게 세척할 수 있습니다.",
@@ -3145,7 +3414,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_beacon_light": {
@@ -3189,7 +3461,10 @@
     "sourceEvidenceSha256": "e7ccf3f8725d70539c08e33b4f6eb0c3473928e0b741cd4f5cca2279b5485d88",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      1
+      0,
+      1,
+      2,
+      4
     ]
   },
   "rw_bivybowl_23": {
@@ -3234,7 +3509,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "8ee2086dcccfa1deaf04014cca33999efdeb81ca76534b8a0dc31bba3ba8f0c0",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_campflyer_disc": {
     "summary": "캠핑장에서 가볍게 던져 놀 수 있는 캠프 플라이어는 비행 디스크이자 물그릇으로 다용도로 활용됩니다. 유연하고 구멍이 잘 생기지 않는 소재로 제작되어 개 치아와 잇몸에 부드럽면서도 형태를 잘 유지합니다.",
@@ -3275,7 +3556,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0dd73a1a97690b49b0a33e2a2157044b9f7c70f91457ed164033d478e16018b5",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_campflyer_disc_26": {
     "summary": "캠핑장에서 가볍게 던져 놀 수 있는 캠프 플라이어는 비행 디스크이자 물그릇으로 다용도로 활용됩니다. 유연하고 구멍이 잘 생기지 않는 소재로 제작되어 개 치아와 잇몸에 부드럽면서도 형태를 잘 유지합니다.",
@@ -3316,7 +3601,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0dd73a1a97690b49b0a33e2a2157044b9f7c70f91457ed164033d478e16018b5",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_climatechanger_fleece": {
     "summary": "재활용 폴리에스터 플리스 소재로 제작된 Climate Changer™ Dog Fleece는 빠른 건조와 보온성을 제공합니다. 단독 착용이나 다른 코트와 레이어링하여 추운 날씨에 활동하는 개에게 적합합니다.",
@@ -3364,7 +3653,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "c10f3c6ccbfdfb6b2dddcf8bd54d49f4daffd2d83ac065640b49cbf73a4d9793",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_climatechanger_jacket_25fw": {
     "summary": "Climate Changer™ Fleece Jacket은 100% 재활용 폴리에스터 플리스로 제작된 기술적 보온 재킷으로, 활동성을 해치지 않는 따뜻함을 제공합니다. 하네스 착용 시에도 편리한 사용이 가능하며, 레이어링에 적합하여 다양한 날씨 조건에서 활용도가 높습니다.",
@@ -3406,7 +3699,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "b165d46ee1f13b660e99d9a035e7112878dfa90c10be66b2ddfc182ad50bb0dd",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_climatechanger_vest_25fw": {
     "summary": "Climate Changer™ 플리스 조끼는 100% 재활용 소재로 제작되어 시원한 날씨에 다양한 따뜻함을 제공하는 기술적 의류입니다. 조끼 실루엣은 움직임의 자유를 극대화하고 마찰을 최소화하며, 사이드 릴리스 버클로 착용과 탈착이 빠르고 쉽습니다.",
@@ -3451,7 +3749,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "64c266f0d4eae7007c3a2c5e4a6166176801bb14171f39ce782ef8ba1e7fe26f",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_collar_chainreaction_martingale": {
     "summary": "슬립아웃을 방지하는 리미티드 친치 마틴게일 디자인에 스테인리스 스틸 체인을 결합한 목걸이입니다. 반사 튜블록 웹bing과 재활용 소재를 사용하여 내구성과 환경 친화성을 모두 갖춘 제품입니다.",
@@ -3496,7 +3799,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0be4e075b5719f2d4820aa57be6bc84a3b3cf595b39482bedf8046a58c4431fd",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_collar_chainreaction_martingale_24": {
     "summary": "슬립아웃을 방지하는 리미티드 친치 마틴게일 디자인에 스테인리스 스틸 체인을 결합한 목걸이입니다. 반사 튜블록 웹bing과 재활용 소재를 사용하여 내구성과 환경 친화성을 모두 갖춘 제품입니다.",
@@ -3541,7 +3848,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0be4e075b5719f2d4820aa57be6bc84a3b3cf595b39482bedf8046a58c4431fd",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_collar_crag": {
     "summary": "반사 Tubelok™ 웹bing과 측면 릴리스 버클을 갖춘 일상용 개 목걸이로, 편안한 착용감과 내구성을 제공합니다. 알루미늄 V링과 별도 ID 태그 부착점, 실리콘 태그 소음 방지 장치가 포함되어 있습니다.",
@@ -3585,7 +3898,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "2cbb8423abdf23fd79e9f15e72dee686ca173209d007876822ddd71d5f79a890",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_collar_crag_23": {
     "summary": "반사 Tubelok™ 웹bing과 측면 릴리스 버클을 갖춘 일상용 개 목걸이로, 편안한 착용감과 내구성을 제공합니다. 알루미늄 V링과 별도 ID 태그 부착점, 실리콘 태그 소음 방지 장치가 포함되어 있습니다.",
@@ -3629,7 +3946,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "2cbb8423abdf23fd79e9f15e72dee686ca173209d007876822ddd71d5f79a890",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_collar_frontrange": {
     "summary": "Front Range® 목걸이는 일상적인 산책에 필수적인 개용 목걸이로, 사용이 쉬운 사이드 릴리스 버클을 갖추고 있습니다. 자연에서 영감을 받은 옴브레 패턴과 함께 알루미늄 V링 및 실리콘 태그 사이런서 등 Ruffwear의 시그니처 기능을 제공합니다.",
@@ -3673,7 +3995,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "1de2ac3e5ac0c65e987ba32df0110a3ccd7746456de736d3a7473891b347e7a3",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_collar_frontrange_24": {
     "summary": "Front Range® 목걸이는 일상적인 산책에 필수적인 개용 목걸이로, 사용이 쉬운 사이드 릴리스 버클을 갖추고 있습니다. 자연에서 영감을 받은 옴브레 패턴과 함께 알루미늄 V링 및 실리콘 태그 사이런서 등 Ruffwear의 시그니처 기능을 제공합니다.",
@@ -3717,7 +4043,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "1de2ac3e5ac0c65e987ba32df0110a3ccd7746456de736d3a7473891b347e7a3",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_collar_hiandlight_24": {
     "summary": "등반용 슬링에서 영감을 받은 초경량 웹bing으로 제작된 미니멀리스트 디자인의 개 목걸이입니다. 강력한 사이드 릴리스 버클과 알루미늄 D-링을 갖추고 있어 착용이 간편하며 견고합니다.",
@@ -3764,7 +4096,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_collar_toprope": {
@@ -3818,7 +4153,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_collar_webreaction_martingale": {
@@ -3867,7 +4205,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "507c0ca7ad541b3304e2242f245584762e04154a2b361a10f74b145c021c460c",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_confluence_collar": {
     "summary": "물놀이와 습한 환경 탐험을 좋아하는 개를 위한 방수 및 냄새 방지 목줄입니다. 캠 버클로 간편하게 조절하며, 반사 프린트와 견고한 리드 연결점으로 일상 착용에 안전하고 편안합니다.",
@@ -3913,7 +4255,10 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "9003db04c3b59778b656bf254dad835bdb728b071779d725f914f35d8ee6ec80",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rw_confluence_lifejacket": {
     "summary": "하네스의 스트림라인 핏과 부력을 결합해 물속에서 자연스러운 수영 자세를 지원합니다. 여섯 가지 조절 포인트와 반사 트림으로 안전하고 편안한 수상 활동을 가능하게 합니다.",
@@ -3961,7 +4306,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0b612f989748e2c6fb915cb623305dda694bd57899f61b898262f9510018c965",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_coverall_snow_25fw": {
     "summary": "Vert™ Coverall은 눈, 비, 추위로부터 개를 보호하는 풀바디 워밍업 슈트입니다. 방수·방풍 셸과 고밀도 재활용 폴리에스터 단열재로 뛰어난 보온성과 활동성을 제공합니다.",
@@ -4012,7 +4362,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "19ddb0ba31a5f36e20b02b5f8cf16749b21c4b7dd22cb5c3060582091bd6f303",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_dirtbag_seatcover": {
     "summary": "Dirtbag™ Dog Car Seat Cover는 견고하고 방수 처리된 소재로 차량 시트를 보호하는 커버입니다. 벤치 또는 해먹 형태로 변환 가능하며, 재활용 소재를 사용하여 환경 친화적입니다.",
@@ -4062,7 +4417,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "8e79f476568d06e02c68004490e4f59034f9dc9eb114f266612c3b194dc43ff8",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_doubletrack_coupler": {
     "summary": "단일 리드를 사용하여 두 마리의 개를 엉킴 없이 편안하게 산책할 수 있도록 설계된 리드 어댑터입니다. 충격 흡수 소재와 회전식 잠금 클립을 적용해 견주와 반려견 모두에게 매끄러운 산책 경험을 제공합니다.",
@@ -4100,7 +4459,11 @@
     "translationProvider": "llama-local",
     "visualDetailIndices": [
       0,
-      1
+      1,
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_flagline_harness_24": {
@@ -4154,7 +4517,9 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4
     ]
   },
   "rw_floatcoat_lifejacket": {
@@ -4203,7 +4568,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0084b7996f3ec2627c4bf4a059b9f3542e9686078092e565c18e99bff5416d4e",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_frontrange_daypack_24": {
     "summary": "Ruffwear의 시그니처 래디얼 컷 새들백과 프론트 레인지 하네스 플랫폼을 결합한 일상용 개용 백팩입니다. 패딩된 하네스와 배 스트랩이 조절되어 뛰어난 착용감과 안정성을 제공하며, 등산 및 야외 활동 시 개가 짐을 함께 나르는 데 적합합니다.",
@@ -4253,7 +4623,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "136db19b2d848ee0b0639a00c77b1922249463669f65c6e17ec699374fc5411c",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_frontrange_harness": {
     "summary": "매일 착용하기 편하고 편안한 패딩이 적용된 프론트 레인지 하네스로, 일상 산책과 모험 활동에 적합합니다. 등 중앙의 알루미늄 V링과 가슴 앞쪽의 강화 클립 두 가지 리드 연결 옵션을 제공하여 당김을 줄이고 안전을 높입니다.",
@@ -4305,7 +4680,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "542fedb4fcd1010657961fbb950199c4d31d0ead309d72df886108579653c53d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_frontrange_harness_24": {
     "summary": "매일 착용하기 편하고 편안한 패딩이 적용된 프론트 레인지 하네스로, 일상 산책과 모험 활동에 적합합니다. 등 중앙의 알루미늄 V링과 가슴 앞쪽의 강화 클립 두 가지 리드 연결 옵션을 제공하여 당김을 줄이고 안전을 높입니다.",
@@ -4357,7 +4736,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "542fedb4fcd1010657961fbb950199c4d31d0ead309d72df886108579653c53d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_frontrangeflex_collar_26": {
     "summary": "운동화 니트 소재에서 영감을 받은 부드러운 플렉스 칼라로, 개 목의 움직임에 맞춰 편안함을 제공합니다. 경량화된 디자인과 알루미늄 V-링을 통해 고에너지 모험에 적합한 안정성을 확보했습니다.",
@@ -4399,7 +4782,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "8681657130c9fea11708828f00670d1164299ce5f706a90c650cbce52d9c64f9",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_frontrangeflex_harness_26": {
     "summary": "성능 신발에서 영감을 받은 엔지니어링 니트 소재로 제작되어 개체의 움직임에 자연스럽게 밀착되는 경량 하네스입니다. 최소한의 볼륨과 솔기로 마찰을 줄이고 통기성을 높여 장시간 착용 시에도 편안함을 유지합니다.",
@@ -4449,7 +4836,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "34a12718f0fbc8a4576528b36698125a767947967f48d5d6dd06c01e9b428964",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_frontrangeflex_leash_26": {
     "summary": "운동화 니트 소재에서 영감을 받은 경량 유연한 리드줄로, 부드러운 촉감과 탄력성을 제공합니다. 활동적인 개와 모험을 즐기는 보호자를 위한 최적의 연결감을 선사합니다.",
@@ -4486,7 +4878,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "edf356ddcfba0efb7d92acdb3cae31b8ec672f7194afdf425b4beb3558426678",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_furness_jacket": {
     "summary": "Furness™는 목, 등, 배, 엉덩이 및 허벅지에 고밀도 보온재를 적용한 초보온성 고커버리지 개용 재킷입니다. 가벼운 방수 처리 소재와 조절 가능한 헴 코드로 추운 겨울 야외 활동 시 체온 유지와 활동성을 동시에 지원합니다.",
@@ -4537,7 +4933,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "f8ff55eadd749b4b6fd1474f4a05963ed004a16fd622bca607f72e468270e301",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_gourdo_large": {
     "summary": "고르도는 개와의 인터랙티브 놀이를 위해 설계된 내구성 있는 천연 라텍스 고무 장난감입니다. 켄먼틀 로프 랜야드가 있어 던지고 주워 올리기 편하며, 침이 묻은 고무 끝을 피할 수 있습니다.",
@@ -4579,7 +4979,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_gourdo_small": {
@@ -4622,7 +5025,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_griptrex_bootpairs": {
@@ -4672,7 +5078,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_hemphound_sweater": {
@@ -4719,7 +5128,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "92b5e3cf95b90a0bfba1f03ea10ac335cc1840de29133a352056139ab60d299d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_hiandlight_harness_24": {
     "summary": "Hi & Light™ 하네스는 미니멀한 디자인과 경량성을 갖춘 저프로파일 개용 하네스로, 빠른 활동에 적합합니다. 4개의 조절 포인트와 XXXS부터 L/XL까지의 다양한 사이즈로 소형견에게도 깔끔하고 편안한 착용감을 제공합니다.",
@@ -4769,7 +5183,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_hiandlight_harness_26": {
@@ -4817,7 +5234,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "1acdca9302f21e76c562e6fc45f36415fa018868cf14c880ba6d878722010307",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_hiandlight_leash_26": {
     "summary": "Hi & Light 리드는 등반용 슬링에서 영감을 받은 웹빙으로 제작된 초경량 및 초강력 개 리드입니다. 미니멀한 디자인과 함께 핸들 근처에 쓰레기봉투를 넣을 수 있는 숨겨진 포켓과 잠금식 Crux Clip™을 갖추고 있어 휴대성이 뛰어납니다.",
@@ -4857,7 +5278,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "9516a4f7863ddf923781e7dfd34343eac2c1f65b031097c9ffc31482701a72d9",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_highlands_pad_l": {
     "summary": "Highlands™ Dog Pad는 아코디언 폴딩 디자인으로 휴대가 간편한 경량 백패킹용 개 침대입니다. 차가운 지면에서 보호하며 텐트 설치 시 반려견에게 편안한 휴식 공간을 제공합니다.",
@@ -4902,7 +5327,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_highlands_pad_m": {
@@ -4948,7 +5376,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_highlands_sleepingbag_l": {
@@ -4998,7 +5429,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_highlands_sleepingbag_m": {
@@ -5048,7 +5482,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_hitchhiker_carrier": {
@@ -5100,7 +5537,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "6990b6da3b8a27ca8d3cb05ab22eed12086e03e6940c38ebb17ff1546ab14cc9",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_hitchhiker_leash_26": {
     "summary": "등반 장비에서 영감을 받은 Hitch Hiker는 길이 조절이 가능한 리드줄과 고정 시스템을 결합한 다용도 제품입니다. 손잡이, 허리 벨트, 나무 고정용 스트랩으로 유연하게 변환하여 다양한 상황에서 개와的主人의 연결성을 극대화합니다.",
@@ -5147,7 +5588,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "f237340e7d02cf4b29fb9c849120d23f62546e9274751bbacc3f68ccc42522cb",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_hometrail_hippack": {
     "summary": "Home Trail™ Hip Pack은 반려견과主人的 필수품을 휴대하며 손을 자유롭게 사용할 수 있도록 설계된 다용도 허리 가방입니다. 저프로파일 디자인과 다양한 수납 공간을 제공하여 일상적인 산책이나 트레킹에 적합합니다.",
@@ -5199,7 +5644,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "c22f95dab94aadace294e6379523ca1e9d9b431202586486d50067656040c424",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_hookacone": {
     "summary": "아발란치 훈련견과 핸들러의 놀이에서 영감을 받아 개발된 Huck-a-Cone™은 견고한 천연 라텍스 콘과 매듭 로프 핸들을 결합한 인터랙티브 장난감입니다. 로프 핸들은 훈련 중 우수한 그립감을 제공하며, 마모 시 교체 가능하여 장난감의 수명을 연장합니다.",
@@ -5242,7 +5692,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ecd3f76dbad49a704ae9736d5ca7a7ee3e8e144596c61a984fbd8146487e8a1d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_hydroplane_disc": {
     "summary": "Hydro Plane™은 눈과 물 위를 잘 뜨는 부표형 디자인으로 연중 던지기 놀이에 적합합니다. 부드러운 구조로 초보견의 자신감을 키우고, 대형 링 디자인은 물기 및 당기기 놀이를 유도합니다.",
@@ -5286,7 +5740,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ca800e83a1d2258d291d6c2415dc8964fb645e059c88035425af68c443eb234a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_hydroplane_disc_m_25": {
     "summary": "Hydro Plane™은 눈과 물 위를 잘 뜨는 부표형 디자인으로 연중 던지기 놀이에 적합합니다. 부드러운 구조로 초보견의 자신감을 키우고, 대형 링 디자인은 물기 및 당기기 놀이를 유도합니다.",
@@ -5330,7 +5788,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ca800e83a1d2258d291d6c2415dc8964fb645e059c88035425af68c443eb234a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_kibblecaddy": {
     "summary": "Kibble Kaddie™는 여행 중 간식이나 사료를 휴대하기 위한 부드러운 소재의 개 사료 운반 가방입니다. 컴팩트한 디자인으로 이동 및 보관이 용이하며, 내용물을 안전하게 보호하면서 편리하게 분배할 수 있습니다.",
@@ -5375,7 +5837,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "f2440fe0916663ee290a5a0ae2aa3d0c598f16307aa35404ff32a6d2c8ff923e",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_knotahitch": {
     "summary": "등산용 하드웨어를 활용한 캠핑용 개 묶음 시스템으로, 개가 목줄에 묶인 채 캠프장에서 자유롭게 돌아다닐 수 있게 합니다. 두 나무 사이나 단일 기둥에 설치하여 텐트 설치나 취사 등 캠프 업무를 수행하는 동안 개가 주변을 탐색할 수 있도록 돕습니다.",
@@ -5422,7 +5888,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_leash_crag": {
@@ -5468,7 +5937,10 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "8c3cb12b9d370d0cfbf44b9a2ebc21ab956ac16cc0dbccdb0eb9e9441becf1e6",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rw_leash_crag_23": {
     "summary": "내구성과 실용성을 갖춘 크래그™ 리프렉티브 리드는 손에 들거나 허리에 착용하여 핸즈프리 산책이 가능합니다. 패드 핸들과 반사 소재가 어두운 환경에서의 안전과 편의를 높여줍니다.",
@@ -5513,7 +5985,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "8c3cb12b9d370d0cfbf44b9a2ebc21ab956ac16cc0dbccdb0eb9e9441becf1e6",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_leash_cragex_23": {
     "summary": "Crag EX™ 리드는 손으로 들거나 허리에 착용하여 핸즈프리 사용이 가능한 조절식 개 리드입니다. 산책이나 등산 시 필요한 공간에 따라 길이를 유연하게 조절할 수 있어 다양한 활동에 적합합니다.",
@@ -5558,7 +6035,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "be4c81bf72825d60b632f721be0209f9684d87e6c0d00f104b740cebf2a0fb79",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_flagline_24": {
     "summary": "Flagline™ 리드는 가볍고 다용도로 활용 가능한 핸즈프리 개 리드로, 산책의 흐름을 방해하지 않습니다. 등반용 웨빙과 강력한 Crux Clip™을 결합해 민첩한 디자인과 견고함을 제공합니다.",
@@ -5603,7 +6086,9 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4
     ]
   },
   "rw_leash_frontrange_24": {
@@ -5645,7 +6130,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_leash_frontrange_short_24": {
@@ -5684,7 +6172,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "40565e6f410a4e4216bce14c9d2deb2002fe5cf331535a0c41ec49b279bcfee7",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_hiandlight_24": {
     "summary": "Hi & Light 리드는 등반용 슬링에서 영감을 받은 웹빙으로 제작된 초경량 및 초강력 개 리드입니다. 미니멀한 디자인과 함께 핸들 근처에 쓰레기봉투를 넣을 수 있는 숨겨진 포켓과 잠금식 Crux Clip™을 갖추고 있어 휴대성이 뛰어납니다.",
@@ -5727,7 +6221,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_leash_justacinch": {
@@ -5767,7 +6264,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "202c8243bae508f423091eeb7899c0696181f1418c10343341511eea9e86a4fa",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_nota": {
     "summary": "클imbing 영감을 받은 Knot-a-Leash™는 튼튼한 연결과 내구성을 자랑하는 개 목줄입니다. 부드러운 반사 코어만틀 로프와 편안한 핸들, 자동 잠금 카라비너가 일상부터 모험까지 동반합니다.",
@@ -5805,7 +6308,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "53ec997a2702c8d4ff5989d0b4a0ac5bc4e76c84fbd0bb96ea4ca39e05b13362",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_nota_long": {
     "summary": "클래식한 등반 미학을 갖춘 Knot-a-Long™은 강아지를 가까이 유지하거나 Double Track™ Coupler와 함께 두 마리를 묶을 때 이상적인 짧은 리드줄입니다. 부드러운 반사성 kernmantle 로프와 자동 잠금 카라비너가 안전한 연결을 제공하며, 회전식 디자인으로 꼬임과 엉킴을 방지합니다.",
@@ -5846,7 +6355,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "e3974953ab04706960b1be2375843dd721954684e1752170d3a9579a33288d38",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_roamer": {
     "summary": "Roamer™는 조절 가능한 스트레치 웹빙을 사용해 손에 쥐거나 허리띠로 착용할 수 있는 다이나믹한 핸즈프리 러닝 리드입니다. Wavelength™ 스트레치 웹빙이 사람과 개를 연결하면서도 탐색을 위한 확장된 범위를 제공합니다.",
@@ -5890,7 +6405,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "b7c1054d02b8bd6ec13a16ebc96df69b4f0944f88c5ad0b1681d09fa63a85193",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_roamer_long": {
     "summary": "Roamer™는 조절 가능한 스트레치 웹빙을 사용해 손에 쥐거나 허리띠로 착용할 수 있는 다이나믹한 핸즈프리 러닝 리드입니다. Wavelength™ 스트레치 웹빙이 사람과 개를 연결하면서도 탐색을 위한 확장된 범위를 제공합니다.",
@@ -5934,7 +6455,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "b7c1054d02b8bd6ec13a16ebc96df69b4f0944f88c5ad0b1681d09fa63a85193",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_switchback_24": {
     "summary": "반려견의 다양한 산책 상황에 맞춰 길이를 조절하고 끝단을 자유롭게 전환할 수 있는 다기능 리드줄입니다. 부드러운 실리콘 코팅 웹과 맞춤형 슬라이딩 V링이 편안한 그립감과 매끄러운 구성 변경을 지원합니다.",
@@ -5979,7 +6506,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "8f8770b7c94f999a9aa7c45765e44109e29bc41afb4b4950e9e41917d1626b91",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_leash_trailrunner_23": {
     "summary": "라이트웨이트 미니멀리스트 디자인의 트레일 러너™ 리드는 동적 신축성으로 당신과 개 모두에게 편안한 보행을 제공합니다. 저프로파일의 강력한 잠금식 크룩스 클립™ 하드웨어가 신뢰할 수 있는 연결을 보장합니다.",
@@ -6013,7 +6546,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "99bedafad9f93f2cb3bb8ff5a1a6212ce810e811b0f5ae2fe80d46f57939a62c",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_loadup_harness_24": {
     "summary": "충돌 테스트를 통과한 Load Up™ 하네스는 차량 여행 중 갑작스러운 움직임으로부터 개를 안전하게 보호합니다. 착용이 간편하고 장시간 착용해도 편안하여, 짧은 휴식 시간에도 벗기지 않고 사용할 수 있습니다.",
@@ -6059,7 +6596,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "9a30326909a1bb0a402739e99915f297f9524e1af492ef494cbf346da6712c6d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_lumenglow_jacket_26fw": {
     "summary": "Lumenglow™ High-Vis Vest는 낮과 밤 모두 높은 가시성을 확보하기 위해 고대비 색상과 반사 소재를 결합한 안전 조끼입니다. 내구성 있는 소재로 보호하며, Beacon™ 안전등 부착용 루프와 다양한 하네스 호환성을 제공합니다.",
@@ -6112,7 +6654,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_lunker": {
@@ -6153,7 +6698,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "96b4c0be1f7fb0d33f7d9c5acc60f7f3df3578de829f0ce046c0fefd9bd6e404",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_morel_toy": {
     "summary": "자연의 모습을 모티브로 한 모렐™ 도그 토이는 대형 비스킷과 땅콩버터를 보관할 수 있는 내부 챔버와 질감 있는 외부를 갖추고 있습니다. 내구성 있는 라텍스 고무 소재로 제작되어 중간 정도 씹는 강아지에게 적합하며, 디스킹과 간식 놀이에 이상적입니다.",
@@ -6189,7 +6738,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "c7dcaf6d4f540574c1b8a30882d286e966c46de47e903cf7bca6ca48b34ac1c0",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_mt_hoodie_gaiter_26fw": {
     "summary": "Mt. Hoodie™ Warming Neck Gaiter는 추운 날씨에 따뜻함을 더하는 다용도 액세서리로, 양면 사용이 가능합니다. 조절 가능한 끈으로 후드 형태로 변환하여 귀까지 보호할 수 있으며, 반사 소재로 저조도 환경에서 가시성을 높입니다.",
@@ -6230,7 +6783,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_mteverrest_cot_26fw": {
@@ -6279,7 +6835,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_mteverrest_cotcover_26fw": {
@@ -6326,7 +6885,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_notacone": {
@@ -6364,7 +6926,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "386c87fe87b2f04fa98dbde5f3343022a99d6537c440aaacff26115e8d6b4c8c",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_notarock": {
     "summary": "태평양 북서부 화산의 자연적인 흑요석을 모티브로 한 내구성 있는 개 장난감입니다. 불규칙한 반짝임 표면과 자연 라텍스 고무로 만들어져 추격 놀이와 퍼즐 놀이를 모두 즐길 수 있습니다.",
@@ -6402,7 +6968,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "a5b90a9cb2b6cad8a29df6614e209e326c7b73992b681fe347e796712c12f736",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_notastick": {
     "summary": "오리건 해안 표류목을 모티브로 한 Gnawt-a-Stick™은 자연 라텍스 고무로 제작된 부유형(fetch) 장난감입니다. 불규칙한 형태로 땅에서는 재미있는 바운스를, 물속에서는 내장 폼 코어로 인해 잘 뜨는 특징이 있습니다.",
@@ -6444,7 +7014,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "371e2cbb27a938e23055bba21be1c5bc829769f42fd6a3646144e17750e9b477",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_overcoat_fuse_jacket": {
     "summary": "인테그레이드 하네스가 결합된 오버코트 퓨즈™ 단열 조끼는 추운 날씨 산책 시 안전한 리드 연결과 보온을 제공합니다. 내마모성 쉘과 재활용 폴리에스터 단열재로 구성된 이 제품은 거친 지형에서도 모든 날씨에 대비한 보호와 편안한 착용감을 선사합니다.",
@@ -6491,7 +7065,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "344c85673d374dda94fb638eb4d1c9c261fd1a9e2047ffb92b2ffac4c9b80fef",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_pacificloop_toy": {
     "summary": "아발란치 구조견 훈련 및 작업 시 동기를 부여하고 보상하는 데 사용되는 태평양 루프 장난감입니다. 견주와 강아지가 안전하게 당기기 놀이를 즐길 수 있도록 설계되었으며, 물에 뜨는 기능도 갖추고 있습니다.",
@@ -6534,7 +7112,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "37263e3cdc6f156d758e351dffdffe68a35b23d63724bf56476ccc7cf159911a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_pacificring_toy": {
     "summary": "Ruffwear Pacific Ring은 높은 인장강도의 로프로 제작되어 격렬한 당기기 놀이와 던지기 놀이에 적합한 다용도 개 장난감입니다. 인간과 반려견 간의 유대감을 강화하는 상호작용형 디자인으로, 다양한 놀이 스타일을 지원합니다.",
@@ -6574,7 +7156,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_palisades_pack_26": {
@@ -6623,7 +7208,10 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "5b6551e11f1af9883dec97c350f62946fd28185e227397d6a2f069a77cc15e8f",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rw_palisades_poncho_26": {
     "summary": "캠핑 및 트레킹 중 개가 착용할 수 있는 경량 기술형 수면용 포니코로, 야간 보온과 편안함을 제공합니다. 압축성이 뛰어나며 다리와 목 부분의 조절 기능으로 활동성을 유지합니다.",
@@ -6665,7 +7253,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "4fd260165b4ece8f1d289818e7a2997f159ce2fc7cbd76124051124a426c35d5",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_polartrex_boots_26fw": {
     "summary": "Polar Trex™ 겨울용 부츠는 눈, 얼음, 추위 및 제설제로부터 개의 발을 보호하고 견인력을 제공합니다. 방수 및 방풍 소프트셀 상단과 신축성 있는 가터가 발을 따뜻하고 건조하게 유지하며, 반사 트림은 저조도 환경에서 가시성을 높입니다.",
@@ -6717,7 +7310,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_porcini_toy": {
@@ -6759,7 +7355,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "833e4b3ff853b3fa42d45b30b9f3e483e3da1fce12cccbbd825e78258360819c",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_powderhound_coverall_26fw": {
     "summary": "Powder Hound™ Waterproof Insulated Coverall은 습기, 추위, 바람으로부터 개를 보호하는 풀커버리지 방수 보온복입니다. 스트레치 소매와 지퍼 밀폐 설계로 자연스러운 움직임을 지원하며, 레이어링이 가능한 실루엣을 제공합니다.",
@@ -6813,7 +7413,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_powderhound_jacket": {
@@ -6863,7 +7466,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "86ce015d96daa7c83b6c11595fea9a2fa91daa1eeb0dd597356cb2b9ad5e0a7d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_powderhound_waterproof_jacket_26fw": {
     "summary": "Powder Hound™ 자켓은 비, 추위, 바람이 심한 겨울 환경에서 개를 따뜻하고 편안하게 보호합니다. 방수·방풍 셸과 고밀도 단열재가 핵심 열을 유지하며, 활동성을 고려한 설계로 트레킹에 적합합니다.",
@@ -6914,7 +7522,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_quencher_24": {
@@ -6955,7 +7566,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "13c32060e7acc699c5b014a802b146b85d06edb80fd2677504d4238531e83f81",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_quinzee_jacket": {
     "summary": "Quinzee™ Insulated Vest는 가벼운 쉘과 고밀도 재활용 폴리에스터 단열재로 추운 날씨에도 개를 따뜻하게 보호합니다. 대부분의 하네스 위에 착용 가능한 리드 포털과 빠른 착용이 가능한 사이드 릴리스 버클을 갖추고 있어 야외 활동에 편리합니다.",
@@ -7006,7 +7621,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ec25cdf58995504ac4be5ea07743f99e369f2f67cb267e013b0318a9eb9c2cce",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_quinzee_jacket_24": {
     "summary": "Quinzee™ Insulated Vest는 가벼운 쉘과 고밀도 재활용 폴리에스터 단열재로 추운 날씨에도 개를 따뜻하게 보호합니다. 대부분의 하네스 위에 착용 가능한 리드 포털과 빠른 착용이 가능한 사이드 릴리스 버클을 갖추고 있어 야외 활동에 편리합니다.",
@@ -7060,7 +7680,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_remix_balltoy_m_26": {
@@ -7099,7 +7722,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "5faf292e7f94b703ac1f657e18cd5a0b69cea78cd36786682b32f1b24e7b9cf2",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_remix_balltoy_s_26": {
     "summary": "제조 후 발생한 폐기물 원사를 100% 재활용한 웹빙으로 만든 오리гами 영감의 공 장난감입니다. 던지기 놀이와 간식 숨기기 활동을 통해 반려견과 함께하는 즐거움을 극대화합니다.",
@@ -7137,7 +7765,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "5faf292e7f94b703ac1f657e18cd5a0b69cea78cd36786682b32f1b24e7b9cf2",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_remix_cactus_tug_26fw": {
     "summary": "접힌 종이 같은 입체적인 형상으로 개들이 물어뜯기 좋아하는 리믹스 선인장 당기기 장난감입니다. 눈사태 구조팀의 피드백을 바탕으로 설계되어 당기기, 던지기, 가져오기 놀이에 적합합니다.",
@@ -7181,7 +7814,11 @@
     "translationProvider": "llama-local",
     "visualDetailIndices": [
       0,
-      1
+      1,
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_remix_soft_disc_26fw": {
@@ -7225,7 +7862,11 @@
     "translationProvider": "llama-local",
     "visualDetailIndices": [
       0,
-      1
+      1,
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_remix_tugtoy_m_26": {
@@ -7262,7 +7903,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "6ca07a35ad15c82019de7467a9a346b5cc82da28400a427b137f6e48fe582e8b",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_remix_tugtoy_s_26": {
     "summary": "제조 과정에서 발생한 폐기물을 재활용한 웹빙과 로프로 만든 환경 친화적인 당기기 장난감입니다. 오리가미에서 영감을 받은 디자인과 독특한 색상 조합으로 반려견과의 즐거운 놀이 시간을 제공합니다.",
@@ -7298,7 +7944,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "6ca07a35ad15c82019de7467a9a346b5cc82da28400a427b137f6e48fe582e8b",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_ridgeline_collar_26": {
     "summary": "Ridgeline™ 목줄은 가볍고 강하며 부드러운 내구성 있는 웨빙 소재로 제작되어 편안한 착용감을 제공합니다. Fidlock® 자기식 버클과 반사 소재를 적용해 저조도 환경에서도 안전하고 간편하게 사용 가능합니다.",
@@ -7343,7 +7994,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "07e601b218e8b9cc3661ff8d5d47bdea0550d575044a678ee5ebfa93ec86ab31",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_ridgeline_harness_26": {
     "summary": "Ridgeline™ 하네스는 탐험급 소재와 정밀한 제작으로 뛰어난 내후성 및 내마모성을 자랑하는 고성능 제품입니다. 자석식 버클과 360° 반사 소재를 적용해 장갑 착용 시에도 간편하게 사용하며, 다양한 연결 지점을 제공합니다.",
@@ -7390,7 +8045,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "58225610c7bde9ab6be0f9cf84dd499a342dd0dd007506b0449098d097a3bbc4",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_ridgeline_leash_26": {
     "summary": "Ridgeline™ 리드는 고성능 소재와 사용 편의성을 결합한 견책으로, 손에 쥐거나 허리에 착용하여 핸즈프리 산책이 가능합니다. 내구성 있는 반사 웹으로 제작되어 가볍고 강하며 저조도 환경에서 가시성을 높여줍니다.",
@@ -7430,7 +8090,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "e2f19fb967362d7cf3579963fe42cfe6d140b38dd8798d34abdece120ad3bdba",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_ridgeline_shoes_26": {
     "summary": "Ridgeline™ Shoes는 거친 지형과 뜨거운 표면에서 발을 보호하는 고성능 일상 모험용 신발입니다. 공학적으로 설계된 니트 소재가 자연스러운 움직임과 뛰어난 착용감을 제공합니다.",
@@ -7478,7 +8143,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "097d4c11a037da3c7b5895757286bf4d0d302e5dbc7cb449d8b235011d3af0ef",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_rogue_longline_26fw": {
     "summary": "Rogue™ Long Line은 회상 훈련 및 느슨한 리드 산책 시 개에게 넓은 활동 공간을 제공하면서도 안전하게 연결을 유지합니다. 핸들이 없어 걸림이 없고 드래그 라인으로 자유롭게 움직일 수 있어 다양한 환경에서 유용합니다.",
@@ -7521,7 +8191,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_shoes_hiandlight_23": {
@@ -7567,7 +8240,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "e983c5f1fb56ea630329ba86d52ade86bf57ce2a9c63ff566c2d3d08c2e2d834",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_stashbag_mini": {
     "summary": "리드줄과 완벽하게 통합되는 컴팩트한 디자인의 Stash Bag Mini™은 가볍고 조용한 구조로 산책 시 편리함을 제공합니다. 지퍼 메인 컴파트먼트와 사이드 디스펜싱 구멍을 통해 표준 사이즈 롤을 보관하고 한 장씩 쉽게 꺼낼 수 있습니다.",
@@ -7614,7 +8292,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "549690a5ea3fae04707bddf8946fddf84960213646b4226562008b4df6c79a7a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_stashbag_mini_2": {
     "summary": "리드줄과 완벽하게 통합되는 컴팩트한 디자인의 Stash Bag Mini™은 가볍고 조용한 구조로 산책 시 편리함을 제공합니다. 지퍼 메인 컴파트먼트와 사이드 디스펜싱 구멍을 통해 표준 사이즈 롤을 보관하고 한 장씩 쉽게 꺼낼 수 있습니다.",
@@ -7661,7 +8343,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "549690a5ea3fae04707bddf8946fddf84960213646b4226562008b4df6c79a7a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_stumptown_jacket": {
     "summary": "Stumptown™ Insulated Vest는 내구성 있는 외피와 재활용 폴리에스터 보온재로 추운 날씨에 따뜻함을 제공하는 개용 조끼입니다. 현대적인 퀼팅 디자인과 후면 리드 포털을 갖추고 있어 도시와 트레일 모두에서 스타일과 성능을 겸비했습니다.",
@@ -7705,7 +8391,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "0739b4afb9b1871a34d939dcb4197b9dc9aeae352937b7238b9bdec03a25393a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_sunshower_coverall_25fw": {
     "summary": "비나 바람으로부터 강아지를 보호하는 방수·방풍 풀바디 레인슈트입니다. 4방향 신축성 있는 스톰슬리브와 조절 가능한 밑단으로 활동성을 확보했습니다.",
@@ -7754,7 +8445,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "e6efb8345082ca70ad151eba57ae42d4fe1969916390e881b15389e9bf99c052",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_sunshower_jacket": {
     "summary": "바람과 비를 막아주는 방수·방풍 설계로 야외 활동 시 반려견을 건조하게 유지합니다. 확장된 베스트와 레그 루프가 안정적인 착용감과 넓은 커버리지를 제공합니다.",
@@ -7804,7 +8499,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "9d3ef26929a239ac753ee258bd2a4028d4eac18ef8acb0faa6326be7c70f6e17",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_swampcooler_harness": {
     "summary": "Swamp Cooler™ Harness는 뜨거운 환경에서 개를 위한 트레일 준비형 일체형 냉각 솔루션입니다. 증발 냉각 기술을 통해 체표면 열을 제거하고, 가슴에 추가된 리드 연결 포인트를 제공합니다.",
@@ -7850,7 +8551,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "7b7603a70c1dea92a60ca0f2bd3c1dbebb968501accbe9370b3d40bcdd298637",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_swampcooler_harness_2": {
     "summary": "Swamp Cooler™ Harness는 뜨거운 환경에서 개를 위한 트레일 준비형 일체형 냉각 솔루션입니다. 증발 냉각 기술을 통해 체표면 열을 제거하고, 가슴에 추가된 리드 연결 포인트를 제공합니다.",
@@ -7896,7 +8602,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "7b7603a70c1dea92a60ca0f2bd3c1dbebb968501accbe9370b3d40bcdd298637",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_swampcooler_neckgaiter": {
     "summary": "Swamp Cooler™ Neck Gaiter는 더운 날씨에 개를 위한 반전 가능한 냉각 액세서리로, 증발 냉각 기술을 통해 체표면 열을 제거합니다. 물에 적셔 간편하게 사용하며, 일상적인 산책 시 상쾌함을 제공합니다.",
@@ -7940,7 +8651,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "d6e2b4d156198fc5f8f80855c7aa43938068b0dc8c60add9518303adb8c93303",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_swampcooler_neckgaiter_2": {
     "summary": "Swamp Cooler™ Neck Gaiter는 더운 날씨에 개를 위한 반전 가능한 냉각 액세서리로, 증발 냉각 기술을 통해 체표면 열을 제거합니다. 물에 적셔 간편하게 사용하며, 일상적인 산책 시 상쾌함을 제공합니다.",
@@ -7984,7 +8699,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "d6e2b4d156198fc5f8f80855c7aa43938068b0dc8c60add9518303adb8c93303",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_swampcooler_vest": {
     "summary": "['Swamp Cooler™ Cooling Dog Vest는 뜨거운 날씨에 강아지의 모험을 지속하도록 돕는 냉각 조끼입니다.', '빛을 반사하는 소재와 증발 냉각 기술을 활용하여 열 스트레스를 완화하고, 하네스 위에 착용 가능한 실용적인 디자인을 제공합니다.']",
@@ -8035,7 +8754,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "f2ee3992977eaed4580122ce6b39c7a333dd63211b66aed82a013a9b4243aa52",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_swampcooler_vest_2": {
     "summary": "['Swamp Cooler™ Cooling Dog Vest는 뜨거운 날씨에 강아지의 모험을 지속하도록 돕는 냉각 조끼입니다.', '빛을 반사하는 소재와 증발 냉각 기술을 활용하여 열 스트레스를 완화하고, 하네스 위에 착용 가능한 실용적인 디자인을 제공합니다.']",
@@ -8086,7 +8809,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "f2ee3992977eaed4580122ce6b39c7a333dd63211b66aed82a013a9b4243aa52",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_swampcooler_zipvest": {
     "summary": "Swamp Cooler Zip™은 뜨거운 날씨의 모험에서 개를 시원하게 유지하는 경량 냉각 조끼입니다. 증발 냉각 기술을 활용하여 체온을 낮추고 UPF 50+ 자외선 차단 기능을 제공합니다.",
@@ -8128,7 +8855,10 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "5a6beda3636ff0e4821c7d50dde818f15c0c2f127253ac2e6dc6324d1c08c920",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1
+    ]
   },
   "rw_swampcooler_zipvest_2": {
     "summary": "Swamp Cooler Zip™은 뜨거운 날씨의 모험에서 개를 시원하게 유지하는 경량 냉각 조끼입니다. 증발 냉각 기술을 활용하여 체온을 낮추고 UPF 50+ 자외선 차단 기능을 제공합니다.",
@@ -8170,7 +8900,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "5a6beda3636ff0e4821c7d50dde818f15c0c2f127253ac2e6dc6324d1c08c920",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_switchback_harness": {
     "summary": "Switchbak™ 하네스는 패딩 편안함과 핸들을 갖춘 일상용 하네스에 소형 필수품 수납 기능을 더한 제품입니다. 도시와 트레일 모두에서 편안함과 편의성을 결합한 성능형 하네스로, 높은 조절성과 안정적인 착용감을 제공합니다.",
@@ -8220,7 +8954,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "1f428d332e2e993011caa7c602b49a6553056763e2777d5880e798fced328d6d",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_timberline_fuse_vest_26fw": {
     "summary": "Timberline Fuse™ 플리스 조끼는 내장형 하네스와 부드러운 중밀도 폴리에스터 플리스를 결합하여 온화한 날씨에서 개를 따뜻하게 보호합니다. 측면 릴리스 버클과 신축성 있는 다리 루프가 착용 편의성과 편안한 핏을 제공하며, 반사 소재와 Beacon™ 라이트 루프가 저조도 환경에서의 가시성을 높입니다.",
@@ -8272,7 +9011,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_toadstool_toy": {
@@ -8310,7 +9052,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "13c586fd55a03d149f0b728d7b66775478522633c57112417dd2f9db9e7ec457",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_trailrunner_belt_23": {
     "summary": "트레일 러너™ 벨트는 손이 자유로운 상태에서 개와 함께 달릴 수 있도록 허리에 착용하는 리드 시스템입니다. 평평하고 가벼운 패딩 디자인으로 휴대폰, 열쇠, 수거봉투 등을 흔들림 없이 편안하게 휴대할 수 있습니다.",
@@ -8359,7 +9105,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "9454af87740c8b9ae75e24fb4a2788eb6508d9dae609db54948b8519bd133ae2",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_trailrunner_vest": {
     "summary": "강아지가 수분 보충을 쉽게 할 수 있도록 설계된 트레일 러너™ 달리기 조끼입니다. 통기성과 균형 잡힌 착용감을 제공하여 반려견과 함께하는 러닝을 더 편안하게 만들어줍니다.",
@@ -8406,7 +9156,10 @@
     "visualDetailIndices": [
       0,
       1,
-      2
+      2,
+      3,
+      4,
+      5
     ]
   },
   "rw_trailrunnerbowl": {
@@ -8456,7 +9209,13 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ab1ae22fd40149716a38778c5e3bd036bd1c9d0ea00b110658b775f35d92e2c8",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "rw_treattrader_23": {
     "summary": "Treat Trader™는 핸즈프리 훈련과 일상 모험을 위한 허리 착용형 간식 파우치입니다. 내구성 있는 소재와 방수 라이닝으로 간식을 신선하게 보관하며, 자석 클로저로 한 손으로 빠르게 꺼낼 수 있습니다.",
@@ -8497,7 +9256,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ded814d14bc6f0f5808ce328b1dcd6c4e4e484074e6c1257ca2b1741813f6321",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_treattrader_bag": {
     "summary": "Treat Trader™는 핸즈프리 훈련과 일상 모험을 위한 허리 착용형 간식 파우치입니다. 내구성 있는 소재와 방수 라이닝으로 간식을 신선하게 보관하며, 자석 클로저로 한 손으로 빠르게 꺼낼 수 있습니다.",
@@ -8538,7 +9301,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "ded814d14bc6f0f5808ce328b1dcd6c4e4e484074e6c1257ca2b1741813f6321",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_undercoat_jacket": {
     "summary": "차가운 물이나 습한 환경에서 개를 따뜻하게 보호하는 Undercoat™ Water Jacket은 신축성 있는 라미네이트 네오프렌으로 제작되어 수영 및 활동 시 몸에 밀착됩니다. 단독 착용이 가능하며, 부력이 필요할 경우 Float Coat™ Life Jacket과 겹쳐 입어 사용할 수 있습니다.",
@@ -8588,7 +9355,11 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "6088923d21b4c444216173e4f22efca630fd1aa27b43f189c2c65cc373e6201a",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2
+    ]
   },
   "rw_vert_jacket": {
     "summary": "바람과 비를 차단하는 방수·방풍 쉘과 재활용 단열재로 추운 날씨에도 개가 활발히 움직일 수 있도록 설계된 조끼입니다. 허리와 허벅지를 넓게 덮고 레그 루프가 있어 바람이 강할 때도 안정적으로 착용할 수 있습니다.",
@@ -8640,7 +9411,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "7be77de29a3e21ffc83089c79756c875d45f99fa5c6d08332465808fba45b3e0",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "rw_webmaster_harness": {
     "summary": "20년 이상 검증된 내구성과 편안함을 제공하는 Web Master™ 하네스는 머리 통과 없이 착용 가능한 목 버클과 전방 리드 부착점을 갖추고 있습니다. 강화 핸들과 통기성 폼 패널이 기술 지형에서의 안정적 이동과 조절 가능한 핏을 지원합니다.",
@@ -8685,7 +9461,12 @@
     "sourceLabel": "Ruffwear 공식 상품 정보",
     "sourceEvidenceSha256": "185634a62bbc0a2bec4c578d4fa274e00c2548efbc13fb5904af575b9722c247",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "sk_ft_chicken_pate_390g": {
     "summary": "스키너즈 필드 & 트라이얼 치킨 위드 루트 베지는 가벼운 활동을 하는 성견을 위한 완전·균형 습식 사료입니다. 닭고기와 뿌리채소를 사용한 그레인프리 레시피로 단독 급여 또는 건식 사료 토퍼로 사용할 수 있습니다.",
@@ -9075,7 +9856,9 @@
     "sourceLabel": "Soopa 공식 상품 정보",
     "sourceEvidenceSha256": "4864a073d28817ab7d82b2e2370a52c77c9611db8d5d7f41f4d69ae78f10a385",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "soopa_dental_appleblueberry": {
     "summary": "사과와 블루베리 향이 나는 덴탈 스틱으로, 개가 맛있게 씹으며 치아를 깨끗이 하고 입냄새를 상쾌하게 유지할 수 있습니다. 자연 식물성 성분으로 만들어 민감한 위장에도 부드럽고 항산화 성분이 풍부합니다.",
@@ -9129,7 +9912,9 @@
     "sourceLabel": "Soopa 공식 상품 정보",
     "sourceEvidenceSha256": "5b479d332d219ef1042374f5d1a55c085a905e26678f8c77854dd864a7c59bae",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "soopa_dental_bananapumpkin": {
     "summary": "고령견을 위해 부드럽게 설계된 치아 관리 간식으로, 씹기 쉬우면서도 치아 건강을 지원합니다. 바나나와 호박은 소화 건강을, 아마씨는 관절 건강을 위한 오메가-3를 제공합니다.",
@@ -9393,7 +10178,9 @@
     "sourceLabel": "Soopa 공식 상품 정보",
     "sourceEvidenceSha256": "0c909c0a852562c5c07b3a4467e23db85a193cb5e7e0347a875c4c6f886f2567",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "soopa_healthybites_bananapumpkin": {
     "summary": "연약한 치아를 가진 노령견을 위해 부드러운 식감으로 설계된 간식입니다. 바나나, 호박, 아마씨를 함유하여 소화 건강과 영양 보충을 지원합니다.",
@@ -9522,7 +10309,9 @@
     "sourceLabel": "Soopa 공식 상품 정보",
     "sourceEvidenceSha256": "580331ffb2e2fd2b4ad995874231e5930b37cc96d88611f8fd0c03144bf83ad7",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "soopa_healthybites_cranberrysweetpotato": {
     "summary": "크랜베리와 고구마를 사용한 식물성 저자극성 강아지 간식으로, 훈련이나 일상적인 보상용으로 적합합니다. 천연 항산화 성분과 식이섬유를 함유하여 소화를 지원하며, 단순한 원료로 만들어졌습니다.",
@@ -9635,7 +10424,9 @@
     "visualDetailIndices": [
       3,
       4,
-      5
+      5,
+      7,
+      8
     ]
   },
   "yora_allbreed_12kg": {
@@ -9670,7 +10461,9 @@
     "sourceTitle": "The Original Insect Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_allbreed_2.5kg": {
     "summary": "요라 올브리드는 성견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료 40%와 귀리·감자를 중심으로 구성하고 글루코사민과 콘드로이틴을 더했습니다.",
@@ -9704,7 +10497,9 @@
     "sourceTitle": "The Original Insect Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_allbreed_6kg": {
     "summary": "요라 올브리드는 성견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료 40%와 귀리·감자를 중심으로 구성하고 글루코사민과 콘드로이틴을 더했습니다.",
@@ -9738,7 +10533,9 @@
     "sourceTitle": "The Original Insect Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_dental_l_270g": {
     "summary": "요라 덴탈 스틱 라지는 대형견용 인섹트 단백질 덴탈 간식입니다. 별 모양과 섬유 구조로 플라크 제거를 돕고 사과·민트와 SHMP를 배합했습니다.",
@@ -9774,7 +10571,8 @@
     "translationProvider": "manual-official-source-review",
     "visualDetailIndices": [
       0,
-      1
+      1,
+      2
     ]
   },
   "yora_dental_s_56g": {
@@ -9811,7 +10609,9 @@
     "sourceTitle": "Dental Sticks Small",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_dreamer_treat": {
     "summary": "요라 드리머스는 곤충 단백질에 발레리안 뿌리·레몬밤·카모마일을 더한 보완 간식입니다. 제조사는 취침 전이나 긴장한 반려견을 위한 간식으로 안내합니다.",
@@ -9849,7 +10649,8 @@
     "visualDetailIndices": [
       1,
       3,
-      5
+      5,
+      8
     ]
   },
   "yora_largebreed_12kg": {
@@ -9884,7 +10685,9 @@
     "sourceTitle": "Large Breed Insect Protein Dry Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_lightsenior_12kg": {
     "summary": "요라 라이트·시니어는 노령견과 활동량이 적거나 체중 관리가 필요한 성견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료와 귀리·감자에 관절 관리 성분과 DHA 해조류를 더했습니다.",
@@ -9918,7 +10721,9 @@
     "sourceTitle": "Light / Senior Insect Protein Dry Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_lightsenior_2.5kg": {
     "summary": "요라 라이트·시니어는 노령견과 활동량이 적거나 체중 관리가 필요한 성견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료와 귀리·감자에 관절 관리 성분과 DHA 해조류를 더했습니다.",
@@ -9952,7 +10757,9 @@
     "sourceTitle": "Light / Senior Insect Protein Dry Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_lightsenior_6kg": {
     "summary": "요라 라이트·시니어는 노령견과 활동량이 적거나 체중 관리가 필요한 성견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료와 귀리·감자에 관절 관리 성분과 DHA 해조류를 더했습니다.",
@@ -9986,7 +10793,9 @@
     "sourceTitle": "Light / Senior Insect Protein Dry Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_puppy_12kg": {
     "summary": "요라 퍼피는 모든 품종과 크기의 어린 반려견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료 44%와 성장기용 DHA 해조류를 포함합니다.",
@@ -10020,7 +10829,9 @@
     "sourceTitle": "Supercharged Insect Puppy Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_puppy_2.5kg": {
     "summary": "요라 퍼피는 모든 품종과 크기의 어린 반려견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료 44%와 성장기용 DHA 해조류를 포함합니다.",
@@ -10054,7 +10865,9 @@
     "sourceTitle": "Supercharged Insect Puppy Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_smallbreed_2.5kg": {
     "summary": "요라 스몰브리드는 소형견과 입맛이 까다로운 반려견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료 42.5%와 귀리·감자를 중심으로 구성했습니다.",
@@ -10088,7 +10901,9 @@
     "sourceTitle": "Small Breed Insect Protein Dry Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_smallbreed_6kg": {
     "summary": "요라 스몰브리드는 소형견과 입맛이 까다로운 반려견을 위한 완전·균형 인섹트 단백질 건식 사료입니다. 곤충 원료 42.5%와 귀리·감자를 중심으로 구성했습니다.",
@@ -10122,7 +10937,9 @@
     "sourceTitle": "Small Breed Insect Protein Dry Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_wet_appleparsnip_390g": {
     "summary": "요라 애플·파스닙 파테는 성견을 위한 인섹트 단백질 습식 사료입니다. 생곤충 58%에 사과와 파스닙을 각각 6% 배합하고 프리바이오틱 원료를 더했습니다.",
@@ -10156,7 +10973,9 @@
     "sourceTitle": "Apple & Parsnip Insect Protein Wet Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_wet_appleparsnip_390g_2": {
     "summary": "요라 애플·파스닙 파테는 성견을 위한 인섹트 단백질 습식 사료입니다. 생곤충 58%에 사과와 파스닙을 각각 6% 배합하고 프리바이오틱 원료를 더했습니다.",
@@ -10190,7 +11009,9 @@
     "sourceTitle": "Apple & Parsnip Insect Protein Wet Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_wet_beetrootswede_390g": {
     "summary": "요라 비트루트·스웨드 파테는 성견을 위한 인섹트 단백질 습식 사료입니다. 생곤충 58%에 비트루트와 스웨드를 각각 6% 배합하고 프리바이오틱 MOS·FOS를 더했습니다.",
@@ -10224,7 +11045,9 @@
     "sourceTitle": "Beetroot & Swede Insect Protein Wet Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "yora_wet_carrotpotato_390g": {
     "summary": "요라 캐럿·포테이토 파테는 성견을 위한 완전·균형 인섹트 단백질 습식 사료입니다. 생곤충 58%에 당근과 감자, 프리바이오틱 MOS·FOS를 더한 그레인프리 레시피입니다.",
@@ -10258,7 +11081,9 @@
     "sourceTitle": "Carrot & Potato Insect Protein Wet Dog Food",
     "sourceLabel": "Yora 공식 상품 정보",
     "translationProvider": "manual-official-source-review",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0
+    ]
   },
   "zs_alien": {
     "summary": "손뜨개로 제작된 이 스누드는 반려동물의 목과 귀를 추위와 먼지, 습기로부터 따뜻하게 보호합니다. 알레르기 유발 없이 부드러운 착용감을 제공하여 겨울철 외출 시 안전하고 편안한 착용이 가능합니다.",
@@ -10297,7 +11122,12 @@
     "sourceLabel": "Zoo Snoods 공식 상품 정보",
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "zs_blackbear": {
     "summary": "손으로 뜨개질한 이 스누드는 반려동물의 목과 귀를 추위와 먼지, 습기로부터 따뜻하게 보호합니다. 알레르기 유발 없이 부드러운 착용감을 제공하여 겨울철 외출 시 안전하고 편안한 보호를 지원합니다.",
@@ -10338,7 +11168,12 @@
     "sourceLabel": "Zoo Snoods 공식 상품 정보",
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "zs_bull": {
     "summary": "손으로 뜨개질한 이 스누드는 반려동물의 목과 귀를 추위와 먼지, 습기로부터 따뜻하게 보호합니다. 알레르기 유발 없이 부드러운 착용감을 제공하여 겨울철 외출 시 안전하고 편안한 보호를 지원합니다.",
@@ -10377,7 +11212,13 @@
     "sourceLabel": "Zoo Snoods 공식 상품 정보",
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "zs_bunnyrabbit": {
     "summary": "손뜨개 방식으로 제작된 이 스누드는 반려동물의 목과 귀를 추위와 먼지, 습기로부터 따뜻하게 보호합니다. 알레르기 유발 없이 부드러운 착용감을 제공하여 겨울철 외출 시 편안함을 선사합니다.",
@@ -10415,7 +11256,13 @@
     "sourceLabel": "Zoo Snoods 공식 상품 정보",
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "zs_dinosaur": {
     "summary": "손뜨개 방식으로 제작된 이 스누드는 반려견의 목과 귀를 추위와 먼지, 습기로부터 따뜻하게 보호합니다. 알레르기 유발 없이 부드럽고 편안한 착용감을 제공하여 겨울철 외출 시 필수 아이템입니다.",
@@ -10460,7 +11307,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_fox": {
@@ -10499,7 +11349,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_giraffe": {
@@ -10540,7 +11393,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_grizzlybear": {
@@ -10574,7 +11430,12 @@
     "sourceLabel": "Zoo Snoods 공식 상품 정보",
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
-    "visualDetailIndices": []
+    "visualDetailIndices": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
   "zs_horse": {
     "summary": "손뜨개 방식으로 제작된 이 스누드는 반려동물의 목과 귀를 따뜻하게 보호하며, 먼지, 습기 및 추운 겨울 날씨로부터 안전하게 지킬 수 있습니다. 알레르기 유발 없이 피부에 자극을 주지 않는 초부드러운 실을 사용하여 따뜻함과 편안함을 동시에 제공합니다.",
@@ -10620,7 +11481,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_jackrabbit": {
@@ -10664,7 +11528,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_lion": {
@@ -10701,7 +11568,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_pandabear": {
@@ -10740,7 +11610,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_reindeer": {
@@ -10778,7 +11651,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_rhino": {
@@ -10817,7 +11693,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   },
   "zs_unicorn": {
@@ -10858,7 +11737,10 @@
     "sourceEvidenceSha256": "705c205f777ec644e85afe16ef93defebf80f19a1dee01000299e47aee7348bf",
     "translationProvider": "llama-local",
     "visualDetailIndices": [
-      2
+      0,
+      1,
+      2,
+      5
     ]
   }
 }

@@ -48,6 +48,7 @@ export default function ProductCard({
     const wished = isWished(p.id);
     const effectiveRank = rank ?? getBestRank(p);
     const shouldShowNew = showNewBadge ?? isNewProduct(p);
+    const useContainedThumbnail = isNewProduct(p);
     const showBest = effectiveRank !== null && rankStyle !== "off";
     const detailHref = productHref(p);                 // 운영 사이트 라우트(/product/{slug})
     const displayName = productName(p);
@@ -100,7 +101,7 @@ export default function ProductCard({
                             alt={displayName}
                             fill
                             sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
-                            className={`object-cover transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
+                            className={`${useContainedThumbnail ? "object-contain p-[7%]" : "object-cover"} transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
                         />
                     ) : (
                         <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />

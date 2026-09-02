@@ -30,6 +30,8 @@ export interface CatalogRow {
     image?: string;
     gallery?: string[];
     details?: string[];
+    /** 상품별 제조사 공식 상세 이미지에 대응하는 고객용 캡션. */
+    detailImageLabels?: Record<string, string>;
     sizeImage?: string;
     video?: string;
     /** Pages 배포에서는 현재 Git commit에 고정된 jsDelivr URL로 전달한다. */
@@ -105,6 +107,7 @@ export interface CatalogProduct {
     image?: string;
     gallery?: string[];
     details?: string[];
+    detailImageLabels?: Record<string, string>;
     sizeImage?: string;
     video?: string;
     externalReviewSource?: string;
