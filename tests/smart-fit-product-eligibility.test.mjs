@@ -211,38 +211,17 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
     assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
 });
 
-test("camera-motion-only replacements stay hidden while reviewed two-shot replacements are restored", async () => {
+test("the completed static catalog replaces camera-motion-only clips with reviewed exact-product videos", async () => {
     const { safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
     const rows = JSON.parse(await readFile(new URL("lib/catalog/raw.json", root), "utf8"));
     const blocked = rows.filter((row) => row.videoJobId === "hover-20260830-exact-product-v2");
-    const reviewedJobIds = new Set([
-        "hover2-20260830-b916f65da933",
-        "hover2-20260830-a661ee9a7f74",
-        "hover2-20260830-5879e86094cf",
-    ]);
-    const reviewed = rows.filter((row) => reviewedJobIds.has(row.videoJobId));
+    const reviewed = rows.filter((row) => row.videoJobId?.startsWith("hover-static72-20260903-"));
 
-    assert.equal(blocked.length, 13);
-    for (const row of blocked) {
-        assert.equal(row.videoQuality, "blocked_not_dog_wearing");
-        assert.equal(safeCatalogHoverVideo({
-            id: `p_${row.no}`,
-            subcategory: "wear",
-            image: row.image,
-            video: row.video,
-            raw: row,
-        }), undefined, `${row.folder} must stay static until a reviewed dog-wearing or dog-using clip exists`);
-    }
-    assert.deepEqual(
-        reviewed.map((row) => row.folder).sort(),
-        [
-            "rw_backtrak_evac_kit",
-            "rw_lumenglow_jacket_26fw",
-            "rw_powderhound_waterproof_jacket_26fw",
-        ],
-    );
+    assert.equal(blocked.length, 0);
+    assert.equal(reviewed.length, 72);
     for (const row of reviewed) {
-        assert.equal(row.videoQuality, "approved_dog_wearing");
+        assert.equal(row.videoProvider, "ddb_exact_product_renderer");
+        assert.equal(row.videoQuality, "approved_exact_product_images");
         assert.equal(safeCatalogHoverVideo({
             id: `p_${row.no}`,
             subcategory: "wear",
@@ -253,7 +232,7 @@ test("camera-motion-only replacements stay hidden while reviewed two-shot replac
     }
 });
 
-test("strict catalog re-review keeps unsafe clips withdrawn and publishes reviewed real-photo clips", async () => {
+test("strict catalog re-review publishes every approved real-photo replacement", async () => {
     const { applyReviewedHoverOverride } = await import("../lib/catalog/reviewed-hover-overrides.ts");
     const overrides = JSON.parse(await source("lib/catalog/reviewed-hover-overrides.json"));
     const base = (folder) => ({
@@ -266,9 +245,9 @@ test("strict catalog re-review keeps unsafe clips withdrawn and publishes review
     });
 
     const values = Object.values(overrides);
-    assert.equal(Object.keys(overrides).length, 88);
-    assert.equal(values.filter((value) => value === null).length, 36);
-    assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 52);
+    assert.equal(Object.keys(overrides).length, 124);
+    assert.equal(values.filter((value) => value === null).length, 0);
+    assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
     for (const folder of [
         "rw_backtrak_evac_kit",
         "rw_lumenglow_jacket_26fw",
@@ -278,9 +257,11 @@ test("strict catalog re-review keeps unsafe clips withdrawn and publishes review
         "bm_kibble_9kg",
         "rs_bowl",
     ]) {
-        const withdrawn = applyReviewedHoverOverride(base(folder));
-        assert.equal(withdrawn.video, undefined);
-        assert.equal(withdrawn.videoJobId, undefined);
+        const restored = applyReviewedHoverOverride(base(folder));
+        assert.equal(restored.videoProvider, "ddb_exact_product_renderer");
+        assert.equal(restored.videoQuality, "approved_exact_product_images");
+        assert.match(restored.videoJobId, /^hover-static72-20260903-[0-9a-f]{12}$/);
+        assert.equal(restored.video, `/images/products/catalog/${folder}/videos/hover.mp4`);
     }
 
     for (const folder of [
@@ -298,12 +279,14 @@ test("strict catalog re-review keeps unsafe clips withdrawn and publishes review
     }
 
     const powder = applyReviewedHoverOverride(base("rw_powderhound_waterproof_jacket_26fw"));
-    assert.equal(powder.video, undefined);
-    assert.equal(powder.videoJobId, undefined);
+    assert.equal(powder.videoProvider, "ddb_exact_product_renderer");
+    assert.equal(powder.videoQuality, "approved_exact_product_images");
+    assert.match(powder.videoJobId, /^hover-static72-20260903-[0-9a-f]{12}$/);
 
     const gaiter = applyReviewedHoverOverride({ no: 2, folder: "rw_mt_hoodie_gaiter_26fw" });
-    assert.equal(gaiter.video, undefined);
-    assert.equal(gaiter.videoJobId, undefined);
+    assert.equal(gaiter.videoProvider, "ddb_exact_product_renderer");
+    assert.equal(gaiter.videoQuality, "approved_exact_product_images");
+    assert.match(gaiter.videoJobId, /^hover-static72-20260903-[0-9a-f]{12}$/);
 });
 
 test("catalog display name identifies the Everest item as a dog bed cover", async () => {

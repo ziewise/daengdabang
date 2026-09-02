@@ -619,10 +619,13 @@
       "/images/products/catalog/perity_aloe_essence/details/5.webp"
     ],
     "image": "/images/products/catalog/perity_aloe_essence/perity_aloe_essence.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/perity_aloe_essence/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/perity_aloe_essence/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_aloe_essence/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-cc417f1ac8e2"
   },
   {
     "no": 11,
@@ -875,10 +878,13 @@
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
     "image": "/images/products/catalog/fumble_deodorizer/fumble_deodorizer.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_deodorizer/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_deodorizer/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_deodorizer/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-c9b6229c197b"
   },
   {
     "no": 14,
@@ -1015,10 +1021,13 @@
       "/images/products/catalog/ip_slowdog/details/3.webp"
     ],
     "image": "/images/products/catalog/ip_slowdog/ip_slowdog.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_slowdog/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_slowdog/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_slowdog/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-f0b404607959"
   },
   {
     "no": 16,
@@ -1062,10 +1071,13 @@
       }
     ],
     "image": "/images/products/catalog/pdh_slowfeeder_paw/pdh_slowfeeder_paw.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/pdh_slowfeeder_paw/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/pdh_slowfeeder_paw/details/2.webp"
+    "detailImage": "/images/products/catalog/pdh_slowfeeder_paw/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-5a5d31f5200f"
   },
   {
     "no": 17,
@@ -2535,10 +2547,13 @@
       "/images/products/catalog/rw_corecooler_pad/details/3.webp",
       "/images/products/catalog/rw_corecooler_pad/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_corecooler_pad/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/rw_corecooler_pad/details/2.webp"
+    "detailImage": "/images/products/catalog/rw_corecooler_pad/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-f3a255532a37"
   },
   {
     "no": 51,
@@ -3557,8 +3572,8 @@
       "/images/products/catalog/rs_brachy_lens/details/2.webp",
       "/images/products/catalog/rs_brachy_lens/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rs_brachy_lens/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rs_brachy_lens/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -3566,7 +3581,10 @@
       "/images/products/catalog/rs_brachy_lens/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_brachy_lens/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_brachy_lens/details/official-visual-04.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-e03daa386c93"
   },
   {
     "no": 75,
@@ -3596,8 +3614,8 @@
       "/images/products/catalog/rs_lenslab_original/details/2.webp",
       "/images/products/catalog/rs_lenslab_original/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rs_lenslab_original/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rs_lenslab_original/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -3605,7 +3623,10 @@
       "/images/products/catalog/rs_lenslab_original/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_lenslab_original/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_lenslab_original/details/official-visual-04.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-d543688d2d62"
   },
   {
     "no": 76,
@@ -3700,13 +3721,16 @@
         "text": "선물용으로 사달라해서 잘은 모르지만 만족하더라구요"
       }
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rs_lens_v2/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rs_lens_v2/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rs_lens_v2/details/official-visual-01.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-1b0ac6a7378d"
   },
   {
     "no": 77,
@@ -4210,8 +4234,8 @@
       "/images/products/catalog/rs_bowl/details/2.webp",
       "/images/products/catalog/rs_bowl/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rs_bowl/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rs_bowl/details/official-visual-01.webp",
     "detailImageLabels": {
@@ -4219,7 +4243,10 @@
       "/images/products/catalog/rs_bowl/details/official-visual-02.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_bowl/details/official-visual-03.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_bowl/details/official-visual-04.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-a3e807b8c8c2"
   },
   {
     "no": 89,
@@ -4630,14 +4657,17 @@
       "/images/products/catalog/rs_lens_original/details/4.webp",
       "/images/products/catalog/rs_lens_original/details/5.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rs_lens_original/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/rs_lens_original/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rs_lens_original/details/official-visual-01.webp": "제조사 공식 제품 이미지",
       "/images/products/catalog/rs_lens_original/details/official-visual-02.webp": "제조사 공식 제품 이미지"
-    }
+    },
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-12ed79e0169b"
   },
   {
     "no": 99,
@@ -4922,10 +4952,13 @@
       "/images/products/catalog/rw_everest_coat/details/3.webp",
       "/images/products/catalog/rw_everest_coat/details/4.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/rw_everest_coat/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/rw_everest_coat/details/2.webp"
+    "detailImage": "/images/products/catalog/rw_everest_coat/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-83ae8d145275"
   },
   {
     "no": 106,
@@ -5792,10 +5825,13 @@
       "/images/products/catalog/aff_donut_luxury_xl/details/6.webp"
     ],
     "image": "/images/products/catalog/aff_donut_luxury_xl/aff_donut_luxury_xl.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/aff_donut_luxury_xl/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/aff_donut_luxury_xl/details/2.webp"
+    "detailImage": "/images/products/catalog/aff_donut_luxury_xl/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-d325b8efdc3f"
   },
   {
     "no": 125,
@@ -6168,10 +6204,13 @@
       "/images/products/catalog/yora_activebar_35g_12/details/9.webp",
       "/images/products/catalog/yora_activebar_35g_12/details/10.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/yora_activebar_35g_12/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/yora_activebar_35g_12/details/2.webp"
+    "detailImage": "/images/products/catalog/yora_activebar_35g_12/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-f71c805bea32"
   },
   {
     "no": 134,
@@ -6463,12 +6502,14 @@
     ],
     "video": "/images/products/catalog/bm_kibble_9kg/videos/hover.mp4",
     "image": "/images/products/catalog/bm_kibble_9kg/bm_kibble_9kg.webp",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/bm_kibble_9kg/details/2.webp"
+    "detailImage": "/images/products/catalog/bm_kibble_9kg/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-72738c54aacc"
   },
   {
     "no": 141,
@@ -7175,12 +7216,14 @@
       "/images/products/catalog/mb_vegemix_100g_4/details/6.webp"
     ],
     "video": "/images/products/catalog/mb_vegemix_100g_4/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/mb_vegemix_100g_4/details/2.webp"
+    "detailImage": "/images/products/catalog/mb_vegemix_100g_4/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-f0fcc36dbb12"
   },
   {
     "no": 151,
@@ -7206,10 +7249,13 @@
       "/images/products/catalog/id_treat_sturgeon/details/2.webp",
       "/images/products/catalog/id_treat_sturgeon/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/id_treat_sturgeon/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/id_treat_sturgeon/details/2.webp"
+    "detailImage": "/images/products/catalog/id_treat_sturgeon/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-3e6d4d5914df"
   },
   {
     "no": 152,
@@ -7236,12 +7282,14 @@
       "/images/products/catalog/id_treat_sardine/details/3.webp"
     ],
     "video": "/images/products/catalog/id_treat_sardine/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/id_treat_sardine/details/2.webp"
+    "detailImage": "/images/products/catalog/id_treat_sardine/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-63e8c990f7a2"
   },
   {
     "no": 153,
@@ -7497,10 +7545,13 @@
       "/images/products/catalog/pegnaty_woodstick/details/3.webp"
     ],
     "image": "/images/products/catalog/pegnaty_woodstick/pegnaty_woodstick.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/pegnaty_woodstick/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/pegnaty_woodstick/details/2.webp"
+    "detailImage": "/images/products/catalog/pegnaty_woodstick/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-efba822c5f85"
   },
   {
     "no": 159,
@@ -7904,10 +7955,13 @@
       "/images/products/catalog/yora_stew_carrotpotato_390g/details/2.webp",
       "/images/products/catalog/yora_stew_carrotpotato_390g/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/yora_stew_carrotpotato_390g/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/yora_stew_carrotpotato_390g/details/2.webp"
+    "detailImage": "/images/products/catalog/yora_stew_carrotpotato_390g/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-9c5d8e4c6616"
   },
   {
     "no": 168,
@@ -8452,11 +8506,14 @@
       "/images/products/catalog/sk_ft_salmon_pate_390g/details/2.webp",
       "/images/products/catalog/sk_ft_salmon_pate_390g/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/sk_ft_salmon_pate_390g/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
     "detailImage": "/images/products/catalog/sk_ft_salmon_pate_390g/details/2.webp",
-    "detailImageLabels": {}
+    "detailImageLabels": {},
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-ddb6248838ab"
   },
   {
     "no": 182,
@@ -9416,10 +9473,13 @@
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
     "image": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/perity_broccoli_shampoo_set_750ml.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-3ac5a3aea83d"
   },
   {
     "no": 202,
@@ -9492,12 +9552,14 @@
     ],
     "image": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/perity_broccoli_shampoo_refill_500ml.webp",
     "video": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-2edeb49cf744"
   },
   {
     "no": 203,
@@ -9527,12 +9589,14 @@
     ],
     "image": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/perity_carrot_shampoo_refill_500ml.webp",
     "video": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-5cd73c808318"
   },
   {
     "no": 204,
@@ -9565,10 +9629,13 @@
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
     "image": "/images/products/catalog/perity_carrot_shampoo_set_750ml/perity_carrot_shampoo_set_750ml.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/perity_carrot_shampoo_set_750ml/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/perity_carrot_shampoo_set_750ml/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_carrot_shampoo_set_750ml/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-8b4dc9d16f74"
   },
   {
     "no": 205,
@@ -9595,10 +9662,13 @@
       "/images/products/catalog/perity_carrot_shampoo_250ml/details/4.webp"
     ],
     "image": "/images/products/catalog/perity_carrot_shampoo_250ml/perity_carrot_shampoo_250ml.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/perity_carrot_shampoo_250ml/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/perity_carrot_shampoo_250ml/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_carrot_shampoo_250ml/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-19ec8472c690"
   },
   {
     "no": 206,
@@ -9667,12 +9737,14 @@
     ],
     "image": "/images/products/catalog/perity_broccoli_shampoo_250ml/perity_broccoli_shampoo_250ml.webp",
     "video": "/images/products/catalog/perity_broccoli_shampoo_250ml/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/perity_broccoli_shampoo_250ml/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_broccoli_shampoo_250ml/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-d28b6a760402"
   },
   {
     "no": 207,
@@ -9709,12 +9781,14 @@
     "externalReviewSnippets": [],
     "image": "/images/products/catalog/perity_broccoli_mist/perity_broccoli_mist.webp",
     "video": "/images/products/catalog/perity_broccoli_mist/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/perity_broccoli_mist/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_broccoli_mist/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-71bec810f93d"
   },
   {
     "no": 208,
@@ -9743,10 +9817,13 @@
       "/images/products/catalog/perity_carrot_mist/details/6.webp"
     ],
     "image": "/images/products/catalog/perity_carrot_mist/perity_carrot_mist.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/perity_carrot_mist/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/perity_carrot_mist/details/2.webp"
+    "detailImage": "/images/products/catalog/perity_carrot_mist/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-eec636b9d88a"
   },
   {
     "no": 209,
@@ -9771,10 +9848,13 @@
       "/images/products/catalog/fumble_toothpaste/details/2.webp"
     ],
     "image": "/images/products/catalog/fumble_toothpaste/fumble_toothpaste.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_toothpaste/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_toothpaste/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_toothpaste/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-b15e04796893"
   },
   {
     "no": 210,
@@ -9814,10 +9894,13 @@
       }
     ],
     "image": "/images/products/catalog/fumble_brushingmist/fumble_brushingmist.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_brushingmist/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_brushingmist/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_brushingmist/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-1bc2131f43dc"
   },
   {
     "no": 211,
@@ -9850,12 +9933,14 @@
     ],
     "image": "/images/products/catalog/fumble_bath/fumble_bath.webp",
     "video": "/images/products/catalog/fumble_bath/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/fumble_bath/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_bath/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-be83507fe811"
   },
   {
     "no": 212,
@@ -9882,12 +9967,14 @@
     ],
     "image": "/images/products/catalog/fumble_shampoo_laurel/fumble_shampoo_laurel.webp",
     "video": "/images/products/catalog/fumble_shampoo_laurel/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/fumble_shampoo_laurel/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_shampoo_laurel/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-17aeabc69900"
   },
   {
     "no": 213,
@@ -9912,10 +9999,13 @@
       "/images/products/catalog/fumble_brushingmist_perfume/details/2.webp"
     ],
     "image": "/images/products/catalog/fumble_brushingmist_perfume/fumble_brushingmist_perfume.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_brushingmist_perfume/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_brushingmist_perfume/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_brushingmist_perfume/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-00795b1fcb37"
   },
   {
     "no": 214,
@@ -9942,12 +10032,14 @@
     ],
     "image": "/images/products/catalog/fumble_footcleanser_200ml/fumble_footcleanser_200ml.webp",
     "video": "/images/products/catalog/fumble_footcleanser_200ml/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/fumble_footcleanser_200ml/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_footcleanser_200ml/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-6764c918fc29"
   },
   {
     "no": 215,
@@ -9972,10 +10064,13 @@
       "/images/products/catalog/fumble_shampoobar_herbtea/details/2.webp"
     ],
     "image": "/images/products/catalog/fumble_shampoobar_herbtea/fumble_shampoobar_herbtea.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_shampoobar_herbtea/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_shampoobar_herbtea/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_shampoobar_herbtea/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-d6d8b924c19a"
   },
   {
     "no": 216,
@@ -10000,10 +10095,13 @@
       "/images/products/catalog/fumble_shampoobar_turkeygreen/details/2.webp"
     ],
     "image": "/images/products/catalog/fumble_shampoobar_turkeygreen/fumble_shampoobar_turkeygreen.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/fumble_shampoobar_turkeygreen/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/fumble_shampoobar_turkeygreen/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_shampoobar_turkeygreen/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-82e8f050bb84"
   },
   {
     "no": 217,
@@ -10146,12 +10244,14 @@
     ],
     "image": "/images/products/catalog/fumble_footcleanser_set/fumble_footcleanser_set.webp",
     "video": "/images/products/catalog/fumble_footcleanser_set/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/fumble_footcleanser_set/details/2.webp"
+    "detailImage": "/images/products/catalog/fumble_footcleanser_set/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-2a50a9485ace"
   },
   {
     "no": 221,
@@ -11291,10 +11391,13 @@
       "/images/products/catalog/iby_stroller_fs1670/details/3.webp"
     ],
     "image": "/images/products/catalog/iby_stroller_fs1670/iby_stroller_fs1670.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/iby_stroller_fs1670/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/iby_stroller_fs1670/details/2.webp"
+    "detailImage": "/images/products/catalog/iby_stroller_fs1670/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-d0e73078e1e5"
   },
   {
     "no": 240,
@@ -11321,10 +11424,13 @@
       "/images/products/catalog/iby_bed_fb2011/details/4.webp"
     ],
     "image": "/images/products/catalog/iby_bed_fb2011/iby_bed_fb2011.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/iby_bed_fb2011/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/iby_bed_fb2011/details/2.webp"
+    "detailImage": "/images/products/catalog/iby_bed_fb2011/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-4d38bcd639f5"
   },
   {
     "no": 241,
@@ -11493,10 +11599,13 @@
       "/images/products/catalog/annapet_wine/details/4.webp",
       "/images/products/catalog/annapet_wine/details/5.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/annapet_wine/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/annapet_wine/details/2.webp"
+    "detailImage": "/images/products/catalog/annapet_wine/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-ad85333475af"
   },
   {
     "no": 246,
@@ -11525,12 +11634,14 @@
       "/images/products/catalog/annapet_soju/details/5.webp"
     ],
     "video": "/images/products/catalog/annapet_soju/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/annapet_soju/details/2.webp"
+    "detailImage": "/images/products/catalog/annapet_soju/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-4ac4ac0dab97"
   },
   {
     "no": 247,
@@ -13249,10 +13360,13 @@
     "externalReviewAverage": 5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/soopa_dental_6set/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/soopa_dental_6set/details/2.webp"
+    "detailImage": "/images/products/catalog/soopa_dental_6set/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-119eec509de3"
   },
   {
     "no": 288,
@@ -13288,10 +13402,13 @@
     "externalReviewAverage": 4.5,
     "externalReviewThemes": [],
     "externalReviewSnippets": [],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/soopa_chew_coconut/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/soopa_chew_coconut/details/2.webp"
+    "detailImage": "/images/products/catalog/soopa_chew_coconut/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-1b40203068ce"
   },
   {
     "no": 289,
@@ -13861,12 +13978,14 @@
     ],
     "image": "/images/products/catalog/sweetpet_icecream_strawberry/sweetpet_icecream_strawberry.webp",
     "video": "/images/products/catalog/sweetpet_icecream_strawberry/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/sweetpet_icecream_strawberry/details/2.webp"
+    "detailImage": "/images/products/catalog/sweetpet_icecream_strawberry/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-f3496bb89854"
   },
   {
     "no": 302,
@@ -13975,10 +14094,13 @@
       "/images/products/catalog/ip_trovbiz_bigdog/details/3.webp"
     ],
     "image": "/images/products/catalog/ip_trovbiz_bigdog/ip_trovbiz_bigdog.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_trovbiz_bigdog/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_trovbiz_bigdog/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_trovbiz_bigdog/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-71fdfb63421a"
   },
   {
     "no": 305,
@@ -14036,10 +14158,13 @@
       "/images/products/catalog/ip_trovbiz_pigball/details/3.webp"
     ],
     "image": "/images/products/catalog/ip_trovbiz_pigball/ip_trovbiz_pigball.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_trovbiz_pigball/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_trovbiz_pigball/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_trovbiz_pigball/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-6002e1cdbb3c"
   },
   {
     "no": 307,
@@ -14065,10 +14190,13 @@
       "/images/products/catalog/ip_trovbiz_chickenball/details/3.webp"
     ],
     "image": "/images/products/catalog/ip_trovbiz_chickenball/ip_trovbiz_chickenball.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_trovbiz_chickenball/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_trovbiz_chickenball/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_trovbiz_chickenball/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-29e20a925e5b"
   },
   {
     "no": 308,
@@ -14113,10 +14241,13 @@
       }
     ],
     "image": "/images/products/catalog/ip_trovbiz_flyingstick/ip_trovbiz_flyingstick.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_trovbiz_flyingstick/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_trovbiz_flyingstick/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_trovbiz_flyingstick/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-c475e7befe31"
   },
   {
     "no": 309,
@@ -14142,10 +14273,13 @@
       "/images/products/catalog/ip_obowl_l/details/3.webp"
     ],
     "image": "/images/products/catalog/ip_obowl_l/ip_obowl_l.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_obowl_l/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_obowl_l/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_obowl_l/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-9005f2dee112"
   },
   {
     "no": 310,
@@ -14171,10 +14305,13 @@
       "/images/products/catalog/ip_obowl_m/details/3.webp"
     ],
     "image": "/images/products/catalog/ip_obowl_m/ip_obowl_m.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/ip_obowl_m/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/ip_obowl_m/details/2.webp"
+    "detailImage": "/images/products/catalog/ip_obowl_m/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-6cfce11155d3"
   },
   {
     "no": 311,
@@ -14238,12 +14375,14 @@
     ],
     "image": "/images/products/catalog/heyrex_taurus_filter_5p/heyrex_taurus_filter_5p.webp",
     "video": "/images/products/catalog/heyrex_taurus_filter_5p/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/heyrex_taurus_filter_5p/details/2.webp"
+    "detailImage": "/images/products/catalog/heyrex_taurus_filter_5p/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-30ad633bcf90"
   },
   {
     "no": 312,
@@ -14553,10 +14692,13 @@
       }
     ],
     "image": "/images/products/catalog/joaru_perfume_lilac/joaru_perfume_lilac.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/joaru_perfume_lilac/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/joaru_perfume_lilac/details/2.webp"
+    "detailImage": "/images/products/catalog/joaru_perfume_lilac/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-e52e8fe26532"
   },
   {
     "no": 319,
@@ -14641,10 +14783,13 @@
       }
     ],
     "image": "/images/products/catalog/joaru_perfume_daisy/joaru_perfume_daisy.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/joaru_perfume_daisy/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/joaru_perfume_daisy/details/2.webp"
+    "detailImage": "/images/products/catalog/joaru_perfume_daisy/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-4a524c515236"
   },
   {
     "no": 321,
@@ -14670,10 +14815,13 @@
       "/images/products/catalog/id_treat_trout/details/2.webp",
       "/images/products/catalog/id_treat_trout/details/3.webp"
     ],
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/id_treat_trout/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/id_treat_trout/details/2.webp"
+    "detailImage": "/images/products/catalog/id_treat_trout/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-52eb866efe8e"
   },
   {
     "no": 322,
@@ -14820,12 +14968,14 @@
     ],
     "image": "/images/products/catalog/icecream_realcheese/icecream_realcheese.webp",
     "video": "/images/products/catalog/icecream_realcheese/videos/hover.mp4",
-    "videoQuality": "approved_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:42:38+00:00",
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/icecream_realcheese/details/2.webp"
+    "detailImage": "/images/products/catalog/icecream_realcheese/details/2.webp",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-dd77d7b4a921"
   },
   {
     "no": 326,
@@ -14920,10 +15070,13 @@
       }
     ],
     "image": "/images/products/catalog/jjayo_icecream_blueberry_100ml/jjayo_icecream_blueberry_100ml.webp",
-    "video": "",
-    "videoQuality": "regenerate_required",
+    "video": "/images/products/catalog/jjayo_icecream_blueberry_100ml/videos/hover.mp4",
+    "videoQuality": "approved_exact_product_images",
     "videoUpdatedAt": "2026-06-16T06:11:28+00:00",
-    "detailImage": "/images/products/catalog/jjayo_icecream_blueberry_100ml/details/2.webp"
+    "detailImage": "/images/products/catalog/jjayo_icecream_blueberry_100ml/details/2.webp",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-c78ae2f68688"
   },
   {
     "no": 327,
@@ -16100,9 +16253,9 @@
     ],
     "video": "/images/products/catalog/rw_backtrak_evac_kit/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "approved_dog_wearing",
-    "videoProvider": "ziewcraft",
-    "videoJobId": "hover2-20260830-a661ee9a7f74",
+    "videoQuality": "approved_exact_product_images",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-b085ba4e3aa3",
     "detailImage": "/images/products/catalog/rw_backtrak_evac_kit/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_backtrak_evac_kit/details/official-visual-01.webp": "완전한 비상 대피 구성",
@@ -16145,9 +16298,9 @@
     ],
     "video": "/images/products/catalog/rw_doubletrack_coupler/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-ab6571c2a1c6",
     "detailImage": "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-01.webp": "가볍고 견고한 구조",
@@ -16193,9 +16346,9 @@
     ],
     "video": "/images/products/catalog/rw_knotahitch/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-970e9b0fed27",
     "detailImage": "/images/products/catalog/rw_knotahitch/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_knotahitch/details/official-visual-01.webp": "제조사 공식 제품 이미지",
@@ -16241,9 +16394,9 @@
     ],
     "video": "/images/products/catalog/rw_trailrunner_vest/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-1f924621051b",
     "detailImage": "/images/products/catalog/rw_trailrunner_vest/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_trailrunner_vest/details/official-visual-01.webp": "활동성을 살린 설계",
@@ -16289,9 +16442,9 @@
     ],
     "video": "/images/products/catalog/rw_gourdo_small/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-82ef6e8f9521",
     "detailImage": "/images/products/catalog/rw_gourdo_small/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_gourdo_small/details/official-visual-01.webp": "제조사 공식 제품 이미지",
@@ -16337,9 +16490,9 @@
     ],
     "video": "/images/products/catalog/rw_gourdo_large/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-82ef6e8f9521",
     "detailImage": "/images/products/catalog/rw_gourdo_large/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_gourdo_large/details/official-visual-01.webp": "제조사 공식 제품 이미지",
@@ -16384,9 +16537,9 @@
     ],
     "video": "/images/products/catalog/rw_pacificring_toy/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-ca60bfdc96f1",
     "detailImage": "/images/products/catalog/rw_pacificring_toy/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_pacificring_toy/details/official-visual-01.webp": "제조사 공식 제품 이미지",
@@ -16432,9 +16585,9 @@
     ],
     "video": "/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "approved_dog_wearing",
-    "videoProvider": "ziewcraft",
-    "videoJobId": "hover2-20260830-b916f65da933",
+    "videoQuality": "approved_exact_product_images",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-62114ddb56c3",
     "detailImage": "/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/details/official-visual-01.webp": "고밀도 보온 구조",
@@ -16480,9 +16633,9 @@
     ],
     "video": "/images/products/catalog/rw_powderhound_coverall_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-3841b6b39ab6",
     "detailImage": "/images/products/catalog/rw_powderhound_coverall_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_powderhound_coverall_26fw/details/official-visual-01.webp": "고밀도 보온 구조",
@@ -16530,9 +16683,9 @@
     ],
     "video": "/images/products/catalog/rw_timberline_fuse_vest_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-952e09e6d72e",
     "detailImage": "/images/products/catalog/rw_timberline_fuse_vest_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_timberline_fuse_vest_26fw/details/official-visual-01.webp": "움직임을 고려한 편안한 핏",
@@ -16579,9 +16732,9 @@
     ],
     "video": "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-1cf9fd352003",
     "detailImage": "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/details/official-visual-01.webp": "양면 활용 디자인",
@@ -16628,9 +16781,9 @@
     ],
     "video": "/images/products/catalog/rw_lumenglow_jacket_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "approved_dog_wearing",
-    "videoProvider": "ziewcraft",
-    "videoJobId": "hover2-20260830-5879e86094cf",
+    "videoQuality": "approved_exact_product_images",
+    "videoProvider": "ddb_exact_product_renderer",
+    "videoJobId": "hover-static72-20260903-6d660df0b212",
     "detailImage": "/images/products/catalog/rw_lumenglow_jacket_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_lumenglow_jacket_26fw/details/official-visual-01.webp": "저조도 시인성",
@@ -16675,9 +16828,9 @@
     ],
     "video": "/images/products/catalog/rw_polartrex_boots_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-745c6c1dab5e",
     "detailImage": "/images/products/catalog/rw_polartrex_boots_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_polartrex_boots_26fw/details/official-visual-01.webp": "눈과 이물질 유입을 막는 스트레치 게이터",
@@ -16721,9 +16874,9 @@
     ],
     "video": "/images/products/catalog/rw_rogue_longline_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-719e33681e4b",
     "detailImage": "/images/products/catalog/rw_rogue_longline_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_rogue_longline_26fw/details/official-visual-01.webp": "잠금식 카라비너",
@@ -16766,9 +16919,9 @@
     ],
     "video": "/images/products/catalog/rw_remix_cactus_tug_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-9d1c9f0332db",
     "detailImage": "/images/products/catalog/rw_remix_cactus_tug_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_remix_cactus_tug_26fw/details/official-visual-01.webp": "견고한 웨빙 구조",
@@ -16810,9 +16963,9 @@
     ],
     "video": "/images/products/catalog/rw_remix_soft_disc_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoQuality": "blocked_not_dog_wearing",
+    "videoQuality": "approved_exact_product_images",
     "videoProvider": "ddb_exact_product_renderer",
-    "videoJobId": "hover-20260830-exact-product-v2",
+    "videoJobId": "hover-static72-20260903-deab61e841cb",
     "detailImage": "/images/products/catalog/rw_remix_soft_disc_26fw/details/official-visual-01.webp",
     "detailImageLabels": {
       "/images/products/catalog/rw_remix_soft_disc_26fw/details/official-visual-01.webp": "유연한 플라잉 디스크",
