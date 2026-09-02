@@ -1,11 +1,21 @@
+import generatedDetailContent from "./product-detail-content.generated.json" with { type: "json" };
+
 export interface ProductDetailContent {
     summary: string;
     features: readonly string[];
     specs?: readonly string[];
-    care?: string;
+    specifications?: readonly string[];
+    composition?: readonly string[];
+    usage?: readonly string[];
+    care?: string | readonly string[];
+    cautions?: readonly string[];
     safety?: string;
     sourceUrl: string;
+    sourceTitle?: string;
+    sourceLabel?: string;
 }
+
+const GENERATED_DETAIL_CONTENT = generatedDetailContent as Readonly<Record<string, ProductDetailContent>>;
 
 const RUFFWEAR_2026_DETAIL_CONTENT: Readonly<Record<string, ProductDetailContent>> = {
     rw_backtrak_evac_kit: {
@@ -131,5 +141,5 @@ export const RUFFWEAR_2026_DETAIL_FOLDERS = Object.freeze(Object.keys(RUFFWEAR_2
 
 export function getProductDetailContent(folder?: string): ProductDetailContent | undefined {
     if (!folder) return undefined;
-    return RUFFWEAR_2026_DETAIL_CONTENT[folder];
+    return GENERATED_DETAIL_CONTENT[folder] ?? RUFFWEAR_2026_DETAIL_CONTENT[folder];
 }

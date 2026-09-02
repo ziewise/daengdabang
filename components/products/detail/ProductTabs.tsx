@@ -91,6 +91,9 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     const details = p.details ?? [];
     const content = getProductDetailContent(p.folder);
     const displayName = productName(p);
+    const specifications = content?.specifications ?? content?.specs ?? [];
+    const careItems = typeof content?.care === "string" ? [content.care] : (content?.care ?? []);
+    const cautionItems = [...(content?.cautions ?? []), ...(content?.safety ? [content.safety] : [])];
 
     if (details.length === 0 && !content) {
         return (
@@ -121,28 +124,49 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                             </ul>
                         </div>
                         <div className="space-y-4">
-                            {content.specs && content.specs.length > 0 && (
+                            {specifications.length > 0 && (
                                 <div>
                                     <h4 className="text-sm font-black text-neutral-950">사이즈·사양</h4>
                                     <ul className="mt-2 space-y-1 text-sm font-bold leading-6 text-neutral-700">
-                                        {content.specs.map((spec) => <li key={spec}>• {spec}</li>)}
+                                        {specifications.map((spec) => <li key={spec}>• {spec}</li>)}
                                     </ul>
                                 </div>
                             )}
-                            {content.care && (
+                            {content.composition && content.composition.length > 0 && (
+                                <div>
+                                    <h4 className="text-sm font-black text-neutral-950">소재·성분</h4>
+                                    <ul className="mt-2 space-y-1 text-sm font-bold leading-6 text-neutral-700">
+                                        {content.composition.map((item) => <li key={item}>• {item}</li>)}
+                                    </ul>
+                                </div>
+                            )}
+                            {content.usage && content.usage.length > 0 && (
+                                <div>
+                                    <h4 className="text-sm font-black text-neutral-950">사용·급여 방법</h4>
+                                    <ul className="mt-2 space-y-1 text-sm font-bold leading-6 text-neutral-700">
+                                        {content.usage.map((item) => <li key={item}>• {item}</li>)}
+                                    </ul>
+                                </div>
+                            )}
+                            {careItems.length > 0 && (
                                 <div>
                                     <h4 className="text-sm font-black text-neutral-950">관리 방법</h4>
-                                    <p className="mt-2 text-sm font-bold leading-6 text-neutral-700">{content.care}</p>
+                                    <ul className="mt-2 space-y-1 text-sm font-bold leading-6 text-neutral-700">
+                                        {careItems.map((item) => <li key={item}>• {item}</li>)}
+                                    </ul>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {content.safety && (
-                        <p className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm font-black leading-6 text-amber-950">
+                    {cautionItems.length > 0 && (
+                        <div className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm font-black leading-6 text-amber-950">
                             <i className="fa-solid fa-triangle-exclamation mr-2" aria-hidden="true" />
-                            {content.safety}
-                        </p>
+                            <span>주의사항</span>
+                            <ul className="mt-2 space-y-1 pl-5 font-bold">
+                                {cautionItems.map((item) => <li key={item} className="list-disc">{item}</li>)}
+                            </ul>
+                        </div>
                     )}
                     <a
                         href={content.sourceUrl}
@@ -150,7 +174,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                         rel="noreferrer"
                         className="mt-5 inline-flex items-center gap-2 text-xs font-black text-neutral-500 underline underline-offset-4 hover:text-indigo-700"
                     >
-                        Ruffwear 공식 상품 정보 확인
+                        {content.sourceLabel ?? "제조사 공식 상품 정보"} 확인
                         <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true" />
                     </a>
                 </article>
