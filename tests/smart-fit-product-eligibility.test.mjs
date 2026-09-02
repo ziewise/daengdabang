@@ -232,7 +232,7 @@ test("the completed static catalog replaces camera-motion-only clips with review
     }
 });
 
-test("strict catalog re-review publishes every approved real-photo replacement", async () => {
+test("strict catalog re-review quarantines every still-photo pan-zoom replacement", async () => {
     const { applyReviewedHoverOverride } = await import("../lib/catalog/reviewed-hover-overrides.ts");
     const overrides = JSON.parse(await source("lib/catalog/reviewed-hover-overrides.json"));
     const base = (folder) => ({
@@ -257,11 +257,11 @@ test("strict catalog re-review publishes every approved real-photo replacement",
         "bm_kibble_9kg",
         "rs_bowl",
     ]) {
-        const restored = applyReviewedHoverOverride(base(folder));
-        assert.equal(restored.videoProvider, "ddb_exact_product_renderer");
-        assert.equal(restored.videoQuality, "approved_exact_product_images");
-        assert.match(restored.videoJobId, /^hover-static72-20260903-[0-9a-f]{12}$/);
-        assert.equal(restored.video, `/images/products/catalog/${folder}/videos/hover.mp4`);
+        const quarantined = applyReviewedHoverOverride(base(folder));
+        assert.equal(quarantined.videoProvider, undefined);
+        assert.equal(quarantined.videoQuality, undefined);
+        assert.equal(quarantined.videoJobId, undefined);
+        assert.equal(quarantined.video, undefined);
     }
 
     for (const folder of [
@@ -271,22 +271,22 @@ test("strict catalog re-review publishes every approved real-photo replacement",
         "aff_pad_l_20_1",
         "rs_v2_lenslab",
     ]) {
-        const restored = applyReviewedHoverOverride(base(folder));
-        assert.equal(restored.videoProvider, "ddb_exact_product_renderer");
-        assert.equal(restored.videoQuality, "approved_exact_product_images");
-        assert.match(restored.videoJobId, /^hover-photo-20260903-[0-9a-f]{12}$/);
-        assert.equal(restored.video, `/images/products/catalog/${folder}/videos/hover.mp4`);
+        const quarantined = applyReviewedHoverOverride(base(folder));
+        assert.equal(quarantined.videoProvider, undefined);
+        assert.equal(quarantined.videoQuality, undefined);
+        assert.equal(quarantined.videoJobId, undefined);
+        assert.equal(quarantined.video, undefined);
     }
 
     const powder = applyReviewedHoverOverride(base("rw_powderhound_waterproof_jacket_26fw"));
-    assert.equal(powder.videoProvider, "ddb_exact_product_renderer");
-    assert.equal(powder.videoQuality, "approved_exact_product_images");
-    assert.match(powder.videoJobId, /^hover-static72-20260903-[0-9a-f]{12}$/);
+    assert.equal(powder.videoProvider, undefined);
+    assert.equal(powder.videoQuality, undefined);
+    assert.equal(powder.videoJobId, undefined);
 
     const gaiter = applyReviewedHoverOverride({ no: 2, folder: "rw_mt_hoodie_gaiter_26fw" });
-    assert.equal(gaiter.videoProvider, "ddb_exact_product_renderer");
-    assert.equal(gaiter.videoQuality, "approved_exact_product_images");
-    assert.match(gaiter.videoJobId, /^hover-static72-20260903-[0-9a-f]{12}$/);
+    assert.equal(gaiter.videoProvider, undefined);
+    assert.equal(gaiter.videoQuality, undefined);
+    assert.equal(gaiter.videoJobId, undefined);
 });
 
 test("catalog display name identifies the Everest item as a dog bed cover", async () => {
