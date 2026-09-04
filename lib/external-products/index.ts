@@ -1,6 +1,7 @@
 import { ddbApiBase } from "@/lib/customer-api";
 import type { CategorySlug, SortKey, SubcategorySlug } from "@/lib/catalog";
 import feed from "./feed.json";
+import { matchesExternalSearchTerm, matchesComparisonQuery } from "./comparison";
 
 export type ExternalProductResult = {
     id: string;
@@ -117,15 +118,14 @@ function queryTokens(query: string): string[] {
 
 function scoreResult(item: ExternalProductResult, tokens: string[]): number {
     if (tokens.length === 0) return 0;
-    const title = normalize(item.title);
-    const brand = normalize(item.brand);
-    const keywords = item.keywords.map(normalize);
+    const keywords = item.keywords || [];
     let score = item.rank;
 
     for (const token of tokens) {
-        if (title.includes(token)) score += 120;
-        if (brand.includes(token)) score += 50;
-        if (keywords.some((keyword) => keyword.includes(token) || token.includes(keyword))) score += 90;
+        if (matchesExternalSearchTerm(item.title, token)) score += 120;
+        if (matchesExternalSearchTerm(item.brand, token)) score += 50;
+        if (keywords.some((keyword) => matchesExternalSearchTerm(keyword, token)
+            || (/^[가-힣]{2,}$/.test(normalize(keyword)) && token.includes(normalize(keyword))))) score += 90;
     }
     return score;
 }
@@ -153,7 +153,7 @@ export function searchExternalProducts(query: string, filter: ExternalFilter = {
         .filter(({ item, score }) => {
             if (filter.category && item.category !== filter.category) return false;
             if (filter.subcategory && item.subcategory !== filter.subcategory) return false;
-            return score > item.rank;
+            return score > item.rank && matchesComparisonQuery(item, query);
         })
         .sort((a, b) => b.score - a.score)
         .map(({ item }) => item);
@@ -185,7 +185,9 @@ export async function loadExternalProducts(
         );
         if (!response.ok) return fallback;
         const data = (await response.json()) as ExternalApiResponse;
-        return Array.isArray(data.results) && data.results.length > 0 ? data.results : fallback;
+        return Array.isArray(data.results) && data.results.length > 0
+            ? data.results.filter((product) => matchesComparisonQuery(product, query))
+            : fallback;
     } catch {
         return fallback;
     }

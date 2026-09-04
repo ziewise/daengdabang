@@ -334,3 +334,72 @@ test("exact SKU totals and different bundle unit prices stay in separate section
     assert.match(externalProducts, /\{ signal \}/);
     assert.doesNotMatch(products, /SKU|참고 결과|비교 제외/);
 });
+
+test("named model search keeps Polar Trex separate from Rex Specs", async () => {
+    const comparison = await comparisonModule();
+    const boots = { title: "Ruffwear Polar Trex 겨울 부츠", brand: "Ruffwear", category: "outdoor", subcategory: "harness" };
+    const goggles = { title: "Rex Specs 강아지 고글", brand: "Rex Specs", category: "outdoor", subcategory: "harness", keywords: ["Polar Trex"] };
+    assert.equal(comparison.matchesExternalSearchTerm("Rex Specs", "trex"), false);
+    assert.equal(comparison.matchesExternalSearchTerm("Polar Trex", "rex"), false);
+    assert.equal(comparison.matchesExternalSearchTerm("Polar Trex", "polartrex"), true);
+    assert.equal(comparison.matchesComparisonQuery(goggles, "Polar Trex"), false);
+    assert.equal(comparison.matchesComparisonQuery(boots, "Polar Trex"), true);
+    assert.equal(comparison.matchesComparisonCategory(goggles, boots), false, "broad imported harness category is not proof that goggles and boots are similar products");
+    assert.equal(comparison.matchesComparisonCategory({ ...boots, title: "다른 강아지 부츠" }, boots), true);
+});
+
+test("footwear never receives food weight-price guidance", async () => {
+    const comparison = await comparisonModule();
+    const boots = { category: "outdoor", weightEvidence: "title_single_pack", pricePer100g: 5000 };
+    assert.equal(comparison.hasTrustedWeightEvidence(boots), false);
+    assert.equal(comparison.hasTrustedWeightEvidence({ ...boots, category: "food" }), true);
+    const table = await source("components/products/ExternalProductComparisonTable.tsx");
+    assert.doesNotMatch(table, /간식 형태|treat forms/);
+    assert.match(table, /matchesComparisonCategory\(product, activeAnchor\)/);
+    assert.match(table, /matchesComparisonQuery\(product, query\)/);
+});
+
+test("live API results and local fallback both exclude partial model collisions", async () => {
+    const comparison = await comparisonModule();
+    const boot = { id: "boot", title: "Ruffwear Polar Trex 부츠", brand: "Ruffwear", keywords: ["polar", "trex"], rank: 1 };
+    const goggles = { id: "goggle", title: "Rex Specs 고글", brand: "Rex Specs", keywords: ["rex", "specs"], rank: 99999 };
+    const moduleRecord = { exports: {} };
+    const compiled = ts.transpileModule(await source("lib/external-products/index.ts"), {
+        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
+    }).outputText;
+    const context = vm.createContext({
+        module: moduleRecord,
+        exports: moduleRecord.exports,
+        require(specifier) {
+            if (specifier === "./comparison") return comparison;
+            if (specifier === "./feed.json") return [goggles, boot];
+            if (specifier === "@/lib/customer-api") return { ddbApiBase: () => "https://api.example" };
+            throw new Error(`Unexpected runtime import: ${specifier}`);
+        },
+        URLSearchParams,
+        fetch: async () => ({ ok: true, json: async () => ({ results: [goggles, boot] }) }),
+    });
+    new vm.Script(compiled).runInContext(context);
+    const search = moduleRecord.exports;
+    assert.equal(search.searchExternalProducts("Polar Trex").map((item) => item.id).join(","), "boot");
+    assert.equal(search.searchExternalProducts("Rex").map((item) => item.id).join(","), "goggle");
+    assert.equal((await search.loadExternalProducts("Polar Trex")).map((item) => item.id).join(","), "boot");
+});
+
+test("ordinary English shopping words do not exclude a matching product", async () => {
+    const comparison = await comparisonModule();
+    const harness = { title: "Front Range dog harness", brand: "Ruffwear" };
+    const boots = { title: "Polar Trex winter boots", brand: "Ruffwear" };
+    assert.equal(comparison.matchesComparisonQuery(harness, "best dog harness"), true);
+    assert.equal(comparison.matchesComparisonQuery(boots, "Polar Trex boots price"), true);
+    assert.equal(comparison.matchesComparisonQuery(harness, "harness for my dog"), true);
+    assert.equal(comparison.matchesComparisonQuery(harness, "Rex Specs price"), false);
+});
+
+test("English product and brand searches retain Korean catalog names", async () => {
+    const comparison = await comparisonModule();
+    const harness = { title: "러프웨어 프론트레인지 하네스", brand: "러프웨어" };
+    assert.equal(comparison.matchesComparisonQuery(harness, "best dog harness"), true);
+    assert.equal(comparison.matchesComparisonQuery(harness, "Ruffwear price"), true);
+    assert.equal(comparison.matchesComparisonQuery(harness, "Polar Trex price"), false);
+});

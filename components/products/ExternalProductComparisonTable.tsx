@@ -13,6 +13,8 @@ import {
     hasExplicitShippingEvidence,
     hasTrustedWeightEvidence,
     isDaengdabangOffer,
+    matchesComparisonQuery,
+    matchesComparisonCategory,
     rankSmartComparisonProducts,
     unitPrice,
     unitSummary,
@@ -96,8 +98,9 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
         () => products.filter((product) => (
             (comparisonStatus(product) === "anchor" || isDaengdabangOffer(product))
             && isAvailableAnchor(product)
+            && matchesComparisonQuery(product, query)
         )),
-        [products],
+        [products, query],
     );
     const [activeId, setActiveId] = useState("");
     const activeAnchor = anchors.find((product) => product.id === activeId) ?? anchors[0];
@@ -107,6 +110,8 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
         const candidates = products.filter((product) => (
             product.id !== activeAnchor.id
             && !["anchor", "exact_match", "unit_match"].includes(comparisonStatus(product))
+            && matchesComparisonQuery(product, query)
+            && matchesComparisonCategory(product, activeAnchor)
         ));
         const externallyRanked = rankSmartComparisonProducts(candidates, query, activeAnchor);
         const selectedExternal = selectDiverseProducts(externallyRanked, 7);
@@ -380,8 +385,8 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
 
             <p className="border-t border-neutral-100 bg-white px-4 py-3 text-[11px] font-bold leading-5 text-neutral-500 md:px-5">
                 {locale === "en"
-                    ? "Per-100g values use the listed price and are reference-only. Price level is not scored because treat forms and pack conditions differ."
-                    : "100g당 가격은 표시 판매가 기준 참고값입니다. 간식 형태와 구성 조건이 달라 가격의 높고 낮음은 근거점수 순위에 반영하지 않습니다."}
+                    ? "Listed prices are reference values. Price level is not scored because model, size, options and pack contents may differ."
+                    : "표시 판매가는 참고값입니다. 모델·크기·옵션·구성 조건이 달라 가격의 높고 낮음은 근거점수 순위에 반영하지 않습니다."}
             </p>
 
             <div className="border-t border-emerald-100 bg-white p-4 md:p-5">

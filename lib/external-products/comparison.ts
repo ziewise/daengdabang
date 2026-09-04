@@ -46,6 +46,74 @@ function normalized(value: string | undefined): string {
     return (value || "").toLocaleLowerCase().replace(/[^0-9a-z가-힣]+/g, "");
 }
 
+const SEARCH_STOP_WORDS = new Set([
+    "a", "an", "the", "and", "or", "for", "of", "in", "on", "with", "to", "my",
+    "me", "please", "show", "find", "buy", "shop", "best", "cheap", "affordable",
+    "price", "prices", "cost", "compare", "comparison", "recommended",
+    "dog", "dogs", "pet", "pets", "puppy", "puppies",
+]);
+const SEARCH_ALIASES: Record<string, string[]> = {
+    ruffwear: ["러프웨어"],
+    rexspecs: ["렉스스펙스"],
+    polartrex: ["폴라트렉스"],
+    harness: ["하네스", "가슴줄"],
+    harnesses: ["하네스", "가슴줄"],
+    boot: ["부츠", "신발"],
+    boots: ["부츠", "신발"],
+    shoes: ["신발", "슈즈"],
+    goggles: ["고글"],
+    leash: ["리드줄", "리쉬"],
+    jacket: ["재킷", "자켓"],
+    vest: ["베스트", "조끼"],
+    treats: ["간식", "트릿"],
+};
+
+export function matchesExternalSearchTerm(text: string, term: string): boolean {
+    const needle = normalized(term);
+    if (!needle) return false;
+    if ((SEARCH_ALIASES[needle] || []).some((alias) => normalized(text).includes(alias))) return true;
+    if (!/^[a-z0-9]+$/.test(needle)) return normalized(text).includes(needle);
+    const words = text.toLocaleLowerCase().match(/[a-z0-9]+/g) || [];
+    for (let start = 0; start < words.length; start += 1) {
+        let combined = "";
+        for (let end = start; end < words.length; end += 1) {
+            combined += words[end];
+            if (combined === needle) return true;
+            if (combined.length >= needle.length) break;
+        }
+    }
+    return false;
+}
+
+export function matchesComparisonQuery(product: ExternalProductResult, query: string): boolean {
+    const terms = query.split(/\s+/).map(normalized).filter((term) => (
+        /^[a-z0-9]+$/.test(term) && !SEARCH_STOP_WORDS.has(term)
+    ));
+    if (terms.length === 0) return true;
+    // This is a relevance filter, not exact model verification. Natural
+    // queries need a meaningful match, not every adjective or request word.
+    const evidence = `${product.title} ${product.brand}`;
+    return [...terms, terms.join("")].some((term) => matchesExternalSearchTerm(evidence, term));
+}
+
+export function matchesComparisonCategory(product: ExternalProductResult, anchor: ExternalProductResult): boolean {
+    const family = (item: ExternalProductResult): string | undefined => {
+        const text = item.title.toLocaleLowerCase();
+        const patterns: Array<[string, RegExp]> = [
+            ["footwear", /부츠|신발|슈즈|\bboots?\b|\bshoes?\b/],
+            ["goggles", /고글|안경|\bgoggles?\b/],
+            ["harness", /하네스|가슴줄|\bharness\b/],
+            ["leash", /리드줄|리쉬|\bleash\b/],
+            ["apparel", /재킷|자켓|조끼|베스트|플리스|\bjacket\b|\bvest\b|\bfleece\b/],
+        ];
+        return patterns.find(([, pattern]) => pattern.test(text))?.[0];
+    };
+    const anchorFamily = family(anchor);
+    const productFamily = family(product);
+    if (anchorFamily || productFamily) return Boolean(anchorFamily) && anchorFamily === productFamily;
+    return product.category === anchor.category && Boolean(product.subcategory) && product.subcategory === anchor.subcategory;
+}
+
 function meaningful(value: string | undefined): value is string {
     if (!value?.trim()) return false;
     return !/^(?:-|미확인|확인불가|unknown|unavailable|null|none)$/i.test(value.trim());
@@ -100,7 +168,7 @@ export function hasExplicitShippingEvidence(product: ExternalProductResult): boo
 }
 
 export function hasTrustedWeightEvidence(product: ExternalProductResult): boolean {
-    return ["title_single_pack", "title_explicit_multipack"].includes((product.weightEvidence || "").trim().toLocaleLowerCase());
+    return product.category === "food" && ["title_single_pack", "title_explicit_multipack"].includes((product.weightEvidence || "").trim().toLocaleLowerCase());
 }
 
 export function confirmedProductFacts(product: ExternalProductResult): ConfirmedProductFact[] {
@@ -143,7 +211,7 @@ export function assessSmartComparison(
     const relevanceConfirmed: string[] = [];
     const relevanceUnknown: string[] = [];
     let relevanceScore = 0;
-    const matchedTokens = queryTokens.filter((token) => searchable.includes(token));
+    const matchedTokens = queryTokens.filter((token) => matchesExternalSearchTerm(`${product.title} ${product.brand}`, token));
     if (matchedTokens.length > 0) {
         relevanceScore += Math.min(12, matchedTokens.length * 6);
         relevanceConfirmed.push("query_match");
