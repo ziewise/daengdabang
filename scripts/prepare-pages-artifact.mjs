@@ -17,7 +17,7 @@ const DEPLOYMENT_OMIT_PREFIXES = [
     "images/naver-import/",
     "images/naver-details/",
 ];
-const REVIEWED_VIDEO_PROVIDERS = new Set(["ziewcraft", "ddb_exact_product_renderer"]);
+const REVIEWED_VIDEO_PROVIDERS = new Set(["ziewcraft", "ddb_exact_product_renderer", "google_flow_web"]);
 const REVIEWED_VIDEO_QUALITIES = new Set([
     "approved_dog_wearing",
     "approved_dog_using",
@@ -55,7 +55,26 @@ async function readJson(filePath, fallback) {
     }
 }
 
-function applyReviewedHoverOverrides(rawCatalog, overrides) {
+function isReviewedFlowRow(row, reviews) {
+    const review = reviews[row?.folder];
+    return review?.publicationStatus === "approved"
+        && `p_${row.no}` === review.productId
+        && row.folder === review.folder
+        && row.video === review.video
+        && row.video === `/images/products/catalog/${review.folder}/videos/${review.sha256}/hover.mp4`
+        && row.videoJobId === review.videoJobId
+        && row.videoQuality === review.videoQuality;
+}
+
+function withoutHoverVideo(row) {
+    const withdrawn = { ...row };
+    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId"]) {
+        delete withdrawn[key];
+    }
+    return withdrawn;
+}
+
+function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews) {
     return (Array.isArray(rawCatalog) ? rawCatalog : []).map((row) => {
         const folder = row?.folder || "";
         if (!Object.prototype.hasOwnProperty.call(overrides, folder)) return row;
@@ -64,14 +83,12 @@ function applyReviewedHoverOverrides(rawCatalog, overrides) {
         // gate. Exact-product renderer clips are still-photo pan/zoom renders,
         // not reviewed true-motion hover videos, so they must be withdrawn.
         if (override === null || override?.videoProvider === "ddb_exact_product_renderer") {
-            const withdrawn = { ...row };
-            for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId"]) {
-                delete withdrawn[key];
-            }
-            return withdrawn;
+            return withoutHoverVideo(row);
         }
         return { ...row, ...override };
-    });
+    }).map((row) => row?.videoProvider === "google_flow_web" && !isReviewedFlowRow(row, flowReviews)
+        ? withoutHoverVideo(row)
+        : row);
 }
 
 async function listFiles(root) {
@@ -128,6 +145,7 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
                 // only publicationCatalog decides which media is used.
                 "lib/catalog/video-branding.json",
                 "lib/catalog/hover-review-20260906.json",
+                "lib/catalog/reviewed-flow-videos.json",
                 "lib/catalog/colors.json",
                 "lib/external-products/feed.json",
             ]).has(repoRelative)) continue;
@@ -191,7 +209,11 @@ export async function preparePagesArtifact({
         path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-hover-overrides.json"),
         {},
     );
-    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides);
+    const flowReviews = await readJson(
+        path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-flow-videos.json"),
+        {},
+    );
+    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews);
     const catalogCdnVideos = new Set(
         publicationCatalog
             .filter((row) => row?.videoDelivery === "jsdelivr_commit_cdn")

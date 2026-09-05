@@ -18,5 +18,18 @@
     "reviewedAt": "2026-09-06",
     "sourceAssetPath": "/images/products/catalog/rw_flagline_harness_24/videos/hover.mp4",
     "sourceCommit": "e08511692898b9c3b908515fb25118897dc1e658"
+  },
+  "/images/products/catalog/zs_lion/videos/60d013650eeb06d11326823a5b35d037f39032f78508209873eb35e4e7e64ed1/hover.mp4": {
+    "branding": "baked",
+    "sha256": "60d013650eeb06d11326823a5b35d037f39032f78508209873eb35e4e7e64ed1",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "6d1fd550-202e-4061-a253-530a33d14bc7",
+    "sourceVideoSha256": "6540217a6b9768125e8df938ca46fe291367b90fd419109ffffb17e08a65ef67",
+    "providerWatermarkPreserved": true
   }
 }

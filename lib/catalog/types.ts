@@ -41,7 +41,7 @@ export interface CatalogRow {
     /** 이전 자산 검증에 사용한 commit. 새 Pages 빌드는 workflow의 현재 SHA를 우선한다. */
     videoSourceCommit?: string;
     /** Admin-reviewed hover publication provenance. */
-    videoProvider?: "ziewcraft" | "ddb_exact_product_renderer";
+    videoProvider?: "ziewcraft" | "ddb_exact_product_renderer" | "google_flow_web";
     videoQuality?: string;
     videoJobId?: string;
     externalReviewSource?: string;

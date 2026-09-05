@@ -255,3 +255,46 @@ test("Pages deployment workflow pins video URLs to the build SHA and uses Node 2
     }
     assert.match(workflow, /prepare-pages-artifact\.mjs --out out --max-bytes 965000000/);
 });
+
+async function flowFixture(t, { includeVideo = true, job = "flow-reviewed-job", includeReview = true } = {}) {
+    const root = await fixture(t, { includeCdnUrl: false });
+    const hash = "b".repeat(64);
+    const video = `/images/products/catalog/sample/videos/${hash}/hover.mp4`;
+    const rows = JSON.parse(await fs.readFile(path.join(root, "lib/catalog/raw.json"), "utf8"));
+    rows[0].no = 67;
+    await write(root, "lib/catalog/raw.json", JSON.stringify(rows));
+    await write(root, "lib/catalog/reviewed-hover-overrides.json", JSON.stringify({
+        sample: { video, videoDelivery: "jsdelivr_commit_cdn", videoProvider: "google_flow_web", videoQuality: "approved_dog_wearing", videoJobId: job },
+    }));
+    await write(root, "lib/catalog/reviewed-flow-videos.json", JSON.stringify(includeReview ? {
+        sample: { folder: "sample", productId: "p_67", video, sha256: hash, videoJobId: "flow-reviewed-job", videoQuality: "approved_dog_wearing", publicationStatus: "approved", sourceAssetPath: "/images/products/catalog/stale/videos/hover.mp4" },
+    } : {}));
+    await write(root, `out${video}`, "immutable-flow-fixture");
+    if (includeVideo) {
+        const html = await fs.readFile(path.join(root, "out/index.html"), "utf8");
+        await write(root, "out/index.html", `${html}<video src="https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${COMMIT_SHA}/public${video}"></video>`);
+    }
+    return { root, video };
+}
+
+test("Pages includes the exact reviewed Flow asset through the effective catalog, not review-only references", async (t) => {
+    const { root, video } = await flowFixture(t);
+    const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    assert.equal(result.requiredReviewedCdnVideoCount, 1);
+    assert.equal(result.expectedCdnVideoCount, 1);
+    assert.equal(result.externalizedVideoCount, 1);
+    await assert.rejects(fs.access(path.join(root, `out${video}`)));
+    await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/stale/videos/hover.mp4")));
+});
+
+test("Pages refuses an approved Flow clip missing its commit-pinned build URL", async (t) => {
+    const { root } = await flowFixture(t, { includeVideo: false });
+    await assert.rejects(preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 }), /reviewed video CDN URL\(s\) were not pinned/);
+});
+
+test("Pages refuses Flow CDN references with an unreviewed job or missing review", async (t) => {
+    for (const options of [{ job: "wrong-job" }, { includeReview: false }]) {
+        const { root } = await flowFixture(t, options);
+        await assert.rejects(preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 }), /product video CDN URL\(s\) absent from the catalog/);
+    }
+});

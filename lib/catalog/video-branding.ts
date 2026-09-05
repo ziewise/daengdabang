@@ -9,7 +9,10 @@ export type VideoBrandingReview = {
     reviewScope: "logo_presence_only";
     reviewedAt: string;
     sourceAssetPath: string;
-    sourceCommit: string;
+    sourceCommit: string | null;
+    sourceJobId?: string;
+    sourceVideoSha256?: string;
+    providerWatermarkPreserved?: boolean;
 };
 
 export const VIDEO_BRANDING_REVIEWS = videoBranding as Record<string, VideoBrandingReview>;

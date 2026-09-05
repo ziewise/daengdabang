@@ -1079,7 +1079,13 @@
   "zs_grizzlybear": null,
   "zs_horse": null,
   "zs_jackrabbit": null,
-  "zs_lion": null,
+  "zs_lion": {
+    "video": "/images/products/catalog/zs_lion/videos/60d013650eeb06d11326823a5b35d037f39032f78508209873eb35e4e7e64ed1/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6d1fd550-202e-4061-a253-530a33d14bc7"
+  },
   "zs_pandabear": {
     "video": "/images/products/catalog/zs_pandabear/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

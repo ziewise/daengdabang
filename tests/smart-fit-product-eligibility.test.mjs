@@ -246,7 +246,7 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
 
     const values = Object.values(overrides);
     assert.equal(Object.keys(overrides).length, 347);
-    assert.equal(values.filter((value) => value === null).length, 223);
+    assert.equal(values.filter((value) => value === null).length, 222);
     assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
     for (const folder of [
         "rw_backtrak_evac_kit",

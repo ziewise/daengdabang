@@ -1,3 +1,5 @@
+import reviewedFlowVideos from "./catalog/reviewed-flow-videos.json" with { type: "json" };
+
 export type PetTryOnEligibilityReason =
     | "eligible"
     | "missing_image"
@@ -119,16 +121,45 @@ const REVIEWED_PRODUCT_VIDEO_PROVIDERS = new Set([
     "ddb_exact_product_renderer",
 ]);
 
+type ReviewedFlowVideo = {
+    folder: string;
+    productId: string;
+    video: string;
+    sha256: string;
+    videoJobId: string;
+    videoQuality: string;
+    publicationStatus: "approved";
+};
+const REVIEWED_FLOW_VIDEOS = reviewedFlowVideos as Record<string, ReviewedFlowVideo>;
+
+function reviewedFlowVideo(product: StorefrontVideoCandidate, video: string): string | undefined {
+    const raw = product.raw;
+    const folder = product.folder || raw?.folder || "";
+    const review = REVIEWED_FLOW_VIDEOS[folder];
+    return review?.publicationStatus === "approved"
+        && product.id === review.productId
+        && folder === review.folder
+        && (!raw?.folder || raw.folder === review.folder)
+        && video === review.video
+        && video === `/images/products/catalog/${review.folder}/videos/${review.sha256}/hover.mp4`
+        && raw?.videoJobId === review.videoJobId
+        && raw.videoQuality === review.videoQuality
+        ? video
+        : undefined;
+}
+
 /**
  * General catalog hover clips are separate from Smart Fit eligibility. A toy,
  * bowl or other non-wearable product can have a safe dog-using hover clip even
- * though it must remain unavailable in Try-On. Only Admin-reviewed ZiewCraft
- * jobs may bypass the legacy dog-wearing gate.
+ * though it must remain unavailable in Try-On. Existing reviewed providers
+ * use quality and job provenance. Web-generated Flow clips additionally have
+ * a separate exact product, asset and job review; a provider label is not approval.
  */
 export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string | undefined {
     const video = product.video?.trim();
     if (!video) return undefined;
     const raw = product.raw;
+    if (raw?.videoProvider === "google_flow_web") return reviewedFlowVideo(product, video);
     if (raw?.videoProvider) {
         return REVIEWED_PRODUCT_VIDEO_PROVIDERS.has(raw.videoProvider)
             && REVIEWED_PRODUCT_INTERACTION_QUALITIES.has(raw.videoQuality || "")

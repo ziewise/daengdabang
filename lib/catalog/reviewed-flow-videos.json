@@ -1,0 +1,31 @@
+{
+  "zs_lion": {
+    "folder": "zs_lion",
+    "productId": "p_67",
+    "video": "/images/products/catalog/zs_lion/videos/60d013650eeb06d11326823a5b35d037f39032f78508209873eb35e4e7e64ed1/hover.mp4",
+    "sha256": "60d013650eeb06d11326823a5b35d037f39032f78508209873eb35e4e7e64ed1",
+    "videoJobId": "6d1fd550-202e-4061-a253-530a33d14bc7",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "6540217a6b9768125e8df938ca46fe291367b90fd419109ffffb17e08a65ef67",
+    "sourcePhotoSha256": "438ba1964fc0571098e9f130ab681946e1732dc18f9daa78c93f0cc512dbeb3e",
+    "uploadSha256": "acf06ae5fa67fc257cdc95d27774f54b39739657f8777d55b31e36078c6729a5",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "approved_against_original_reference_and_dense_full_frames",
+      "relativeFitScale": "approved_against_reference_no_inferred_absolute_dimensions",
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "loopLimitation": "Small starting/ending head-pose seam accepted by reviewer"
+    }
+  }
+}
