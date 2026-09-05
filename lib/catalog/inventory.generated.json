@@ -165,92 +165,92 @@
         {
           "color": "블루 더스크",
           "size": "XS(28~36cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "블루 더스크",
           "size": "S(36~43cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "블루 더스크",
           "size": "M(43~51cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "블루 더스크",
           "size": "L(51~58cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "standard"
         },
         {
           "color": "블루 더스크",
           "size": "XL(58~66cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "시폼",
           "size": "XS(28~36cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "시폼",
           "size": "S(36~43cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "시폼",
           "size": "M(43~51cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "시폼",
           "size": "L(51~58cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "시폼",
           "size": "XL(58~66cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "선셋",
           "size": "XS(28~36cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "선셋",
           "size": "S(36~43cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "선셋",
           "size": "M(43~51cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "선셋",
           "size": "L(51~58cm)",
-          "availability": "unknown",
+          "availability": "sold_out",
           "fulfillment": null
         },
         {
           "color": "선셋",
           "size": "XL(58~66cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "그래니트 그레이",
@@ -413,38 +413,38 @@
         {
           "color": "오리온 블루",
           "size": "M=1.7~2.1m",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "오리온 블루",
           "size": "L=2.2~3.4m",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "리버 락 그린",
           "size": "M=1.7~2.1m",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "standard"
         },
         {
           "color": "리버 락 그린",
           "size": "L=2.2~3.4m",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "옐로우 스노우",
           "size": "M=1.7~2.1m",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "옐로우 스노우",
           "size": "L=2.2~3.4m",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         }
       ]
     },
@@ -481,44 +481,44 @@
         {
           "color": "옵시디앙 블랙",
           "size": "M(36~51cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "옵시디앙 블랙",
           "size": "L(51~66cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "모스 그린",
           "size": "M(36~51cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "모스 그린",
           "size": "L(51~66cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "블루 풀",
           "size": "M(36~51cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "supplier_request"
         },
         {
           "color": "블루 풀",
           "size": "L(51~66cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "standard"
         },
         {
           "color": "파이어위드 핑크",
           "size": "M(36~51cm)",
-          "availability": "unknown",
-          "fulfillment": null
+          "availability": "available",
+          "fulfillment": "standard"
         },
         {
           "color": "파이어위드 핑크",

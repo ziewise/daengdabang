@@ -176,6 +176,6 @@ test('generated contract covers only public metadata and resolver mirrors every 
         }
     }
     assert.equal(Object.keys(document.products).length,67);
-    assert.deepEqual(observed,{available:477,sold_out:52,unknown:234,supplier_request:290});
+    assert.deepEqual(observed,{available:494,sold_out:63,unknown:206,supplier_request:303});
     assert.doesNotMatch(JSON.stringify(document),/sourceWorkbook|sourceMarker|internalStock|costPrice|[A-Z]:\\/);
 });

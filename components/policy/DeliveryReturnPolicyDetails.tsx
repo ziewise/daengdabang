@@ -13,7 +13,8 @@ export default function DeliveryReturnPolicyDetails({ includeDelivery = true }: 
                     <PolicyRows rows={[
                         ["배송비", `${won(DELIVERY_POLICY.baseFeeKrw)} (${won(DELIVERY_POLICY.freeThresholdKrw)} 이상 무료배송)`],
                         ["지역 추가비", `제주도 ${won(DELIVERY_POLICY.jejuSurchargeKrw)} 추가 · 그 외 도서지역 ${won(DELIVERY_POLICY.islandSurchargeKrw)} 추가`],
-                        ["배송/출고", `${DELIVERY_POLICY.dispatch} · ${DELIVERY_POLICY.arrival}`],
+                        ["일반 배송/출고", `${DELIVERY_POLICY.dispatch} · ${DELIVERY_POLICY.arrival} (본사 요청 배송 옵션 제외)`],
+                        ["본사 요청 배송", "옵션 선택창에 ‘본사 요청 배송’으로 표시된 옵션은 본사 발송 일정을 확인해 별도로 안내합니다. 일반 배송기간과 다를 수 있습니다."],
                         ["택배사", DELIVERY_POLICY.carriers],
                     ]} />
                     <ul className="mt-3 list-disc space-y-1 pl-5 text-neutral-600">
