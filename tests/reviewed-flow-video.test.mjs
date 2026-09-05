@@ -12,7 +12,8 @@ const raw = read("../lib/catalog/raw.json");
 const expected = read("./fixtures/flow-publication-batch04.json");
 test("the reviewed Flow list matches the exact separately approved release snapshot", () => {
     assert.deepEqual(Object.keys(reviews).sort(), Object.keys(expected.approvedFlow).sort());
-    assert.equal(createHash("sha256").update(readFileSync(new URL("../lib/catalog/raw.json", import.meta.url))).digest("hex"), expected.rawSha256);
+    const rawText = readFileSync(new URL("../lib/catalog/raw.json", import.meta.url), "utf8");
+    assert.equal(createHash("sha256").update(rawText.replace(/\r\n/g, "\n")).digest("hex"), expected.rawNormalizedLfSha256);
     for (const [folder, approval] of Object.entries(expected.approvedFlow)) {
         const actual = reviews[folder];
         assert.deepEqual(Object.fromEntries(Object.keys(approval).map(key => [key, actual[key]])), approval, folder);

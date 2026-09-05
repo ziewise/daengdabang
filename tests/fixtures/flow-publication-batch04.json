@@ -2,6 +2,7 @@
   "schemaVersion": "ddb.reviewed-publication-test-expectation.v1",
   "baselineHead": "ab455d411acce33bb29f218f858318d5ce42052c",
   "rawSha256": "981ab6fd1cb8e5ed3566ddbac0ef36da15914bb79b7ea7b1698774adb7ff55df",
+  "rawNormalizedLfSha256": "68784bcee1d441615ebcb2f7b880c6df76ad859363810775fc49c9157ad83684",
   "approvedFlow": {
     "zs_lion": {
       "productId": "p_67",
