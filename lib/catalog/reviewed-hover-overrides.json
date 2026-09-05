@@ -1075,10 +1075,22 @@
     "videoJobId": "hover-photo-20260903-89460e535de7"
   },
   "zs_fox": null,
-  "zs_giraffe": null,
+  "zs_giraffe": {
+    "video": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "ebfdf2aa-1394-4fa5-9e3c-7fbdae6a3011"
+  },
   "zs_grizzlybear": null,
   "zs_horse": null,
-  "zs_jackrabbit": null,
+  "zs_jackrabbit": {
+    "video": "/images/products/catalog/zs_jackrabbit/videos/35ae9e7753be8ba23d59bd7065d39d65dc660b02ff2e7eae600271a4edde1450/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "7eba61a5-5014-4d5b-b08d-6bacdbcdf217"
+  },
   "zs_lion": {
     "video": "/images/products/catalog/zs_lion/videos/60d013650eeb06d11326823a5b35d037f39032f78508209873eb35e4e7e64ed1/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1093,7 +1105,13 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-bbaddaeffe19"
   },
-  "zs_reindeer": null,
+  "zs_reindeer": {
+    "video": "/images/products/catalog/zs_reindeer/videos/033429d90d7db7e92737f93cc6abe6925a59695d252fd07da5dc1568392e6194/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "3d4e1704-1820-4dc2-aad9-d39d5f808358"
+  },
   "zs_rhino": null,
   "zs_unicorn": null
 }

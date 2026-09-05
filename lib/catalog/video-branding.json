@@ -31,5 +31,44 @@
     "sourceJobId": "6d1fd550-202e-4061-a253-530a33d14bc7",
     "sourceVideoSha256": "6540217a6b9768125e8df938ca46fe291367b90fd419109ffffb17e08a65ef67",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4": {
+    "branding": "baked",
+    "sha256": "2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "ebfdf2aa-1394-4fa5-9e3c-7fbdae6a3011",
+    "sourceVideoSha256": "358966158840fac45b3aff7ed6cd1c09fb6d4b1d4d709c1733b15b0a8cb2106c",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/zs_jackrabbit/videos/35ae9e7753be8ba23d59bd7065d39d65dc660b02ff2e7eae600271a4edde1450/hover.mp4": {
+    "branding": "baked",
+    "sha256": "35ae9e7753be8ba23d59bd7065d39d65dc660b02ff2e7eae600271a4edde1450",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "7eba61a5-5014-4d5b-b08d-6bacdbcdf217",
+    "sourceVideoSha256": "4011e9c142e3c0b3ee9cfe4ca03239fd3400f6acada18b870dd813bbe5462707",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/zs_reindeer/videos/033429d90d7db7e92737f93cc6abe6925a59695d252fd07da5dc1568392e6194/hover.mp4": {
+    "branding": "baked",
+    "sha256": "033429d90d7db7e92737f93cc6abe6925a59695d252fd07da5dc1568392e6194",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "3d4e1704-1820-4dc2-aad9-d39d5f808358",
+    "sourceVideoSha256": "81fc652549cb7fe62935ea25bfc69978e92962e1554bd944c2a72272a3e12e57",
+    "providerWatermarkPreserved": true
   }
 }

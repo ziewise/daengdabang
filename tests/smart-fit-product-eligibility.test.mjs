@@ -246,7 +246,7 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
 
     const values = Object.values(overrides);
     assert.equal(Object.keys(overrides).length, 347);
-    assert.equal(values.filter((value) => value === null).length, 222);
+    assert.equal(values.filter((value) => value === null).length, 219);
     assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
     for (const folder of [
         "rw_backtrak_evac_kit",
@@ -261,9 +261,6 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         "rw_hiandlight_harness_26",
         "ot_goliath_harness",
         "rw_everest_coat_25fw",
-        "zs_giraffe",
-        "zs_jackrabbit",
-        "zs_reindeer",
     ]) {
         const quarantined = applyReviewedHoverOverride(base(folder));
         assert.equal(quarantined.videoProvider, undefined);
