@@ -244,10 +244,10 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         videoJobId: "old-review",
     });
 
-    const values = Object.values(overrides);
-    assert.equal(Object.keys(overrides).length, 347);
-    assert.equal(values.filter((value) => value === null).length, 215);
-    assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
+    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch04.json"));
+    assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
+    assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
+    assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);
     for (const folder of [
         "rw_backtrak_evac_kit",
         "rw_lumenglow_jacket_26fw",

@@ -347,7 +347,13 @@
     "videoJobId": "hover-static72-20260903-5a5d31f5200f"
   },
   "pdh_slowfeeder_paw_2in1": null,
-  "pdh_slowfeeder_paw_mini": null,
+  "pdh_slowfeeder_paw_mini": {
+    "video": "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/06cf8a87774b76a29ebab3f2ebfc051a8cd7953a0de17c901ec4b6ceff18a159/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "80e1d847-a454-48b0-9e25-439e1aa830c3"
+  },
   "pdh_spin_flyingdisc": {
     "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -588,7 +594,13 @@
   },
   "rw_climatechanger_fleece": null,
   "rw_climatechanger_jacket_25fw": null,
-  "rw_climatechanger_vest_25fw": null,
+  "rw_climatechanger_vest_25fw": {
+    "video": "/images/products/catalog/rw_climatechanger_vest_25fw/videos/a7061dcfa1e03fa11f4bddf23e9828ece6220a5cfe6e6649714dfa1d42944856/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "d69967f0-389f-42ad-a3c1-72015b14cb9b"
+  },
   "rw_collar_chainreaction_martingale": null,
   "rw_collar_chainreaction_martingale_24": null,
   "rw_collar_crag": null,
@@ -755,11 +767,11 @@
     "videoJobId": "hover-photo-20260903-f89875f20ac2"
   },
   "rw_morel_toy": {
-    "video": "/images/products/catalog/rw_morel_toy/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_morel_toy/videos/317e151da43668b23b369fc81e9d341f46a6d6795ca7ada410fe43c75d54c2ca/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-83cb2be5e881"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "0d2914ff-787e-482c-b5f5-ee5bd3613752"
   },
   "rw_mt_hoodie_gaiter_26fw": {
     "video": "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/videos/hover.mp4",
@@ -853,7 +865,13 @@
   "rw_quinzee_jacket": null,
   "rw_quinzee_jacket_24": null,
   "rw_remix_balltoy_m_26": null,
-  "rw_remix_balltoy_s_26": null,
+  "rw_remix_balltoy_s_26": {
+    "video": "/images/products/catalog/rw_remix_balltoy_s_26/videos/453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "4a33ca4b-9927-418a-97d2-f8432ae3c603"
+  },
   "rw_remix_cactus_tug_26fw": {
     "video": "/images/products/catalog/rw_remix_cactus_tug_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -918,11 +936,11 @@
     "videoJobId": "hover-static72-20260903-952e09e6d72e"
   },
   "rw_toadstool_toy": {
-    "video": "/images/products/catalog/rw_toadstool_toy/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_toadstool_toy/videos/9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-3ddc5bf6812d"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "3f069ad3-b4ef-484d-b824-b8642d4acea1"
   },
   "rw_trailrunner_belt_23": null,
   "rw_trailrunner_vest": {

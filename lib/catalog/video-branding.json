@@ -122,5 +122,70 @@
     "sourceJobId": "9e16d217-e718-45c8-9bd0-a64671769a90",
     "sourceVideoSha256": "198b77fb325021b0446f9afb4961f8e822937ee004807b4af51299ac49bfa8dd",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_climatechanger_vest_25fw/videos/a7061dcfa1e03fa11f4bddf23e9828ece6220a5cfe6e6649714dfa1d42944856/hover.mp4": {
+    "branding": "baked",
+    "sha256": "a7061dcfa1e03fa11f4bddf23e9828ece6220a5cfe6e6649714dfa1d42944856",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:37:17.006765+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "d69967f0-389f-42ad-a3c1-72015b14cb9b",
+    "sourceVideoSha256": "85fc7b61bd4e1f408b5f54e90894719a27a1e7949462c946ee1a09442613cb48",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_morel_toy/videos/317e151da43668b23b369fc81e9d341f46a6d6795ca7ada410fe43c75d54c2ca/hover.mp4": {
+    "branding": "baked",
+    "sha256": "317e151da43668b23b369fc81e9d341f46a6d6795ca7ada410fe43c75d54c2ca",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:55:59.804498+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "0d2914ff-787e-482c-b5f5-ee5bd3613752",
+    "sourceVideoSha256": "1619b6723156b357df48f35b7a52c9d7ebf7b02d2198efcede132b2a013f2e08",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_remix_balltoy_s_26/videos/453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06/hover.mp4": {
+    "branding": "baked",
+    "sha256": "453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:58:48.103977+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "4a33ca4b-9927-418a-97d2-f8432ae3c603",
+    "sourceVideoSha256": "a22a77e0b24de3bd7d5c275c946f3a855c3e42b35ed12b2a39dd2696fe545f5f",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_toadstool_toy/videos/9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051/hover.mp4": {
+    "branding": "baked",
+    "sha256": "9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T22:06:45.351999+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "3f069ad3-b4ef-484d-b824-b8642d4acea1",
+    "sourceVideoSha256": "b1eb1907f1555a8195fcddf2898a6fd2dca78fc9306a06ae77d0687799e6605e",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/06cf8a87774b76a29ebab3f2ebfc051a8cd7953a0de17c901ec4b6ceff18a159/hover.mp4": {
+    "branding": "baked",
+    "sha256": "06cf8a87774b76a29ebab3f2ebfc051a8cd7953a0de17c901ec4b6ceff18a159",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T22:27:54.082378+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "80e1d847-a454-48b0-9e25-439e1aa830c3",
+    "sourceVideoSha256": "3e1e712b07d543d0fb12d89481793846e5e8b5b1c468f5df0cec15140a4c1e77",
+    "providerWatermarkPreserved": true
   }
 }

@@ -259,5 +259,491 @@
       "loopLimitation": "Small pose or eyelid differences may remain at the loop boundary.",
       "acceptedOcclusion": "Far decorative ear briefly occluded in the side view; both original ears remain present when the dog turns forward. No clear plant contact or eating observed in inspected samples."
     }
+  },
+  "rw_climatechanger_vest_25fw": {
+    "folder": "rw_climatechanger_vest_25fw",
+    "productId": "p_36",
+    "video": "/images/products/catalog/rw_climatechanger_vest_25fw/videos/a7061dcfa1e03fa11f4bddf23e9828ece6220a5cfe6e6649714dfa1d42944856/hover.mp4",
+    "sha256": "a7061dcfa1e03fa11f4bddf23e9828ece6220a5cfe6e6649714dfa1d42944856",
+    "videoJobId": "d69967f0-389f-42ad-a3c1-72015b14cb9b",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T21:37:17.006765+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "85fc7b61bd4e1f408b5f54e90894719a27a1e7949462c946ee1a09442613cb48",
+    "sourcePhotoSha256": "ae323f2ade81184c77553e80f2c49276ef8bd377a6b5befc89a7592b3d425a17",
+    "uploadSha256": "2a453ca6ddafeeb7d1ec12b90ca0398e5c4db59d8264333bed05eafeb5562786",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "22fd87fcfe8a5c8d5d8205edc5ade43413c66ec7469515e49aa87d83d3dfd563",
+    "referenceReviewPath": "rw_climatechanger_vest_25fw/image-reference-independent-review.json",
+    "rootApprovalSha256": "b4c3efa4efe4073371b08c92dcac4c030a95bbb548bf5322ca57e70d3e27b9f9",
+    "qualifiedQaSha256": "0b160e4afd9e1c3eca8a94e3e2ec6f14031268847e328220d997925dd2ceabad",
+    "candidateManifestSha256": "e7dda170cb4767121040ba4db98a27f28a3b8d882fb040e0108b313fd5f0bb21",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "White Google diamond is visible on lower-right paving in native raw frames. Entire source will be proportionally contained with DDB in a separate added footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "No photographer credit observed on the selected source photographs or input. Original source bytes remain unchanged; separate product accessories were intentionally excluded from the generated scene.",
+      "observations": [
+        "Actual wearing photograph official-visual-04.webp and the Berry Lava close-up establish a sleeveless pink/cranberry fleece vest. The raw video retains this colorway and large irregular patch pattern across the visible side and rear panel.",
+        "The silver-grey curved upper side seam, curved belly edge, dark burgundy hem and rear-panel stitching remain attached to corresponding garment regions during head turn and short steps.",
+        "The source vest silhouette leaves all four furry legs bare; no sleeve tubes appear during the movement. Relative back length and belly coverage remain plausible against the actual wearing photograph.",
+        "No added harness, leash, beacon light, pocket or loose strap was observed. A small dark-grey detail near the front underside corresponds broadly to source trim/hardware; its fine shape is not certified pixel-exact.",
+        "The small chocolate curly-haired dog makes short natural steps/weight shifts, looks left then toward the camera, raises its face and sways its tail. These are actual animal and cloth motions rather than a static image pan or zoom.",
+        "Native 1.5, 2.5 and 3.5-second frames show plausible changing paw support, with no obvious duplicated limb or floating dog. Far legs may overlap naturally in the side view.",
+        "The whole dog, tail and paws remain within the raw frame. The camera and courtyard background stay stable, with no scene cut.",
+        "The ending has a slightly different forepaw stance and a lower tail than the start. A visible loop boundary change remains; eye blinks are partly obscured by forehead hair and are not independently certified."
+      ],
+      "limitations": [
+        "Start/end forepaw stance and tail height differ; this is a gentle-loop candidate, not a certified seamless loop.",
+        "The visible forehead fur limits confident verification of every eye blink.",
+        "Fine fleece fibers, individual stitches, small hardware and all pattern pixels are not certified identical to the physical source.",
+        "Unseen far-side and concealed front-neck construction is not independently certified.",
+        "No exact garment size, dog weight or absolute centimetre fit is measured from generated pixels.",
+        "All 192 frames were decoded; 18 representative frames were manually compared.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Garment seams, Berry Lava pattern, sleeveless silhouette and four bare legs",
+        "Relative fit and real natural dog movement",
+        "Exactly one DDB mark and preserved full source including provider-required mark",
+        "Start/end forepaw and tail difference accepted as a loop limitation",
+        "Blink verification and absolute centimetres remain uncertified"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "Small chocolate curly dog with an attentive face, gentle steps and tail sways creates a warm autumn pet-boutique scene.",
+        "variation": "Standing lateral apparel display in a cafe courtyard differs from seated character snoods and indoor cushion/toy scenes."
+      }
+    }
+  },
+  "rw_morel_toy": {
+    "folder": "rw_morel_toy",
+    "productId": "p_108",
+    "video": "/images/products/catalog/rw_morel_toy/videos/317e151da43668b23b369fc81e9d341f46a6d6795ca7ada410fe43c75d54c2ca/hover.mp4",
+    "sha256": "317e151da43668b23b369fc81e9d341f46a6d6795ca7ada410fe43c75d54c2ca",
+    "videoJobId": "0d2914ff-787e-482c-b5f5-ee5bd3613752",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T21:55:59.804498+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "1619b6723156b357df48f35b7a52c9d7ebf7b02d2198efcede132b2a013f2e08",
+    "sourcePhotoSha256": "b377009076d20692e51369ab4252427282cc383664d199c8454d057e0a8cf63d",
+    "uploadSha256": "cba1405164964f0d8a4586d40b97fe34ceb729b52c698f010ed9fe50547883de",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "36f17823bead9590ad160237080659e209f1bfc3ba39c61ccdaf44f7956d8b53",
+    "referenceReviewPath": "rw_morel_toy/image-reference-independent-review.json",
+    "rootApprovalSha256": "21abcf8d63268e4eadf38b86ddd6b3260b2444cf99b8f215e8568d2371991121",
+    "qualifiedQaSha256": "29c072d81465f873ad6e49af496cf8b22801d1515013944ec0b5d4a694e77c1d",
+    "candidateManifestSha256": "198d8d908a77800c9224fda43c7fdafb928933c84c6b3782a163fd16300f0247",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "White Google diamond is visible at lower-right on wood flooring. Preserve the entire raw frame and put DDB only in added footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact original source files are retained; no photographer credit observed in selected product/use references. Product color captions are not carried into the generated advertising scene.",
+      "observations": [
+        "The Blue Prism Morel keeps its elongated rounded blue/pink/pale-yellow marbled body, deep curved recessed surface pattern, top circular opening and narrower short bottom ring.",
+        "The product remains upright and a stable size relative to the dog and floor through sniffing, licking and forepaw contact. No clear inflation, surface redesign, duplication or detached part was observed.",
+        "The small Bichon makes genuine tongue, muzzle, forepaw and gaze movements. Native1.5 seconds shows a brief lick, and3.0/3.5 seconds show the lifted forepaw resting near the toy side with plausible toes and joint placement.",
+        "The dog raises its head to look toward the camera after the interaction. The mouth does not engulf the whole object and no invented food, swallowed component or fragment was observed in sampled frames.",
+        "Camera position and background are stable; the dog and single toy remain within the full image.",
+        "Relative fit is approved only as a visual relationship. Current manufacturer text reported by root and cached primary evidence give3x3x3.75in (7.62x7.62x9.525cm), while the actual local details/3.webp table reads9x9.5cm. The width discrepancy is preserved unresolved; options are not changed.",
+        "The final head is lifted versus the initial head lowered over the toy, so a visible loop boundary posture change remains."
+      ],
+      "limitations": [
+        "Manufacturer and local width evidence disagree; neither exact physical product dimensions nor generated dog weight are certified.",
+        "Start/end head position differs and the loop is not seamless.",
+        "Tiny molded lettering, every recess and marbling pixel are not certified identical to the actual product.",
+        "All192 frames were decoded;18 representative frames were manually compared.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Product molding, recesses, narrow base, top circular opening, pastel color and relative fit",
+        "Credible paw and nose interaction with actual movement",
+        "Exactly one DDB mark and preserved full source including provider-required mark",
+        "Start/end head-height difference accepted as a loop limitation",
+        "Manufacturer 7.62 cm versus local 9 cm width conflict remains unresolved; no absolute physical certification"
+      ],
+      "dimensionEvidenceConflict": {
+        "status": "unresolved_width_difference",
+        "manufacturerSource": "https://ruffwear.com/products/morel",
+        "manufacturerNominalInches": [
+          3,
+          3,
+          3.75
+        ],
+        "manufacturerNominalCmConversion": [
+          7.62,
+          7.62,
+          9.525
+        ],
+        "localImagePath": "C:/DaengDaBang/.codex/manufacturer-visual-v3-20260902/public/images/products/catalog/rw_morel_toy/details/3.webp",
+        "localImageSha256": "06578599bfb898f1775b2808e7caa6ee57fbf404898d46cd6c97ac63e3e9912b",
+        "localImageText": "9 x 9.5 cm",
+        "absoluteGeneratedDimensionsCertified": false,
+        "optionsChanged": false
+      },
+      "promotionalUse": {
+        "observedAppeal": "Small white Bichon with a gentle lick, delicate paw touch and calm camera glance creates an appealing interactive-toy advertising scene."
+      }
+    }
+  },
+  "rw_remix_balltoy_s_26": {
+    "folder": "rw_remix_balltoy_s_26",
+    "productId": "p_24",
+    "video": "/images/products/catalog/rw_remix_balltoy_s_26/videos/453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06/hover.mp4",
+    "sha256": "453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06",
+    "videoJobId": "4a33ca4b-9927-418a-97d2-f8432ae3c603",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T21:58:48.103977+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "a22a77e0b24de3bd7d5c275c946f3a855c3e42b35ed12b2a39dd2696fe545f5f",
+    "sourcePhotoSha256": "d9d37d5e8ec19dd5c644f3ec8918856085c253e3ac928856d4fcd6b8303a7b1d",
+    "uploadSha256": "a4aa4912b4e4cf560951257992f5217eb5f3a779ba5e4650fc8f742de1bdc10a",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "09c4b0515fed1616ac4f60a55c57367851dd4c23c9ffef7cdae19595cb2371eb",
+    "referenceReviewPath": "rw_remix_balltoy_s_26/image-reference-independent-review.json",
+    "rootApprovalSha256": "d2ea43df40052a0fb1e98294fda4c567a17e743b4c85662a8eae1aa5b21ce3a3",
+    "qualifiedQaSha256": "7223c29b7e817124c068b4f719648ac3ce001663d1c922712793e2011186c0e9",
+    "candidateManifestSha256": "0e2c2c7624017f4da5c7eee98bd9f5a160825c442437a5e6ce7173d6d63f5064",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Faint white Google diamond is visible at lower-right over the grass. Preserve the entire raw frame and add DDB only in the new white footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact original source files retained. No separate photographer credit observed in the selected product and real-use references.",
+      "observations": [
+        "The single ball preserves red, yellow and blue broad woven strips, overlapping triangular folds, ridged fabric texture and one small black tag on a yellow panel as it rotates.",
+        "No clear conversion to a rubber or plastic sphere, loose unraveling strip, extra rope, duplicate ball, detached fragment or growth was observed in the sampled frames.",
+        "The product remains a plausible stable size relative to the small Maltese and ground. The source specifies Small 8.9 cm diameter; generated absolute centimetres and dog weight are not certified.",
+        "The dog lifts and places a front paw, briefly nudges the ball, follows its movement, lowers its muzzle toward the ball and then rests beside it. Native 4.5 seconds shows plausible nose contact without engulfing the object.",
+        "The visible limbs, toes and muzzle remain plausible during contact. The ball stays grounded and rolls a short distance with corresponding rotation.",
+        "The camera and garden background remain stable, with the entire dog and toy in frame.",
+        "The ending dog is lying down while the starting dog is standing. This creates a noticeable loop boundary posture jump requiring explicit root acceptance."
+      ],
+      "limitations": [
+        "Standing-to-lying start/end posture creates a noticeable loop discontinuity; the clip is not seamless.",
+        "Exact physical centimetres, dog weight and breed pedigree are not certified.",
+        "Every folded seam and woven pixel, and the tiny manufacturer tag typography, are not certified identical.",
+        "All 192 frames were decoded; 18 representative frames were manually compared, with additional native-resolution inspection.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Woven panels, red/yellow/blue colors, relative product size and credible dog play context",
+        "Exactly one DDB mark and preserved full source including provider-required mark",
+        "Noticeable standing-to-lying loop boundary jump explicitly accepted for this 8-second advertising scene",
+        "Absolute physical dimensions and exact tiny manufacturer tag typography remain uncertified"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "A small white Maltese gives a playful paw nudge and gentle sniff before relaxing beside the colorful fabric ball. This varies the small-dog advertising action from the previous still-standing scenes."
+      }
+    }
+  },
+  "rw_toadstool_toy": {
+    "folder": "rw_toadstool_toy",
+    "productId": "p_109",
+    "video": "/images/products/catalog/rw_toadstool_toy/videos/9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051/hover.mp4",
+    "sha256": "9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051",
+    "videoJobId": "3f069ad3-b4ef-484d-b824-b8642d4acea1",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T22:06:45.351999+00:00",
+    "provider": "google_flow_web",
+    "model": "Veo 3.1 - Fast",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "b1eb1907f1555a8195fcddf2898a6fd2dca78fc9306a06ae77d0687799e6605e",
+    "sourcePhotoSha256": "1573250264c6438ebff5b48c16b0afecf40a7e1443ccb3a7e762ffc82f4628a9",
+    "uploadSha256": "84c90b9b490e35c29563b0d00094534657d40897604cfc58dec4856696f3314c",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "f0faa7e5eb5a0a4474844ab88ca9f9358510768b94f53612d3293f23de47ec00",
+    "referenceReviewPath": "rw_toadstool_toy/image-reference-independent-review.json",
+    "rootApprovalSha256": "87376dd41d95815e5e8dffbfdef48d58c30382102515f69d439f53fe8d4c1ae3",
+    "qualifiedQaSha256": "26a124d5b48a317f55d191c0cd0075ce3d3267630fd0e695d5159e20067dbfa3",
+    "candidateManifestSha256": "bd70cd0a855421c4928469afbe358fadee9c46dc03cb00ecc0dc8b3ef6a05502",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "The visible white Veo wordmark at the extreme lower-right is part of the complete raw frame and will remain in the contained frame; DDB goes only in the added footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact existing source images and generated first/last reference retained. No separate photographer credit observed in the selected source images.",
+      "observations": [
+        "The mint-green and pale-yellow marbled toy keeps the same low broad cap, top opening, short narrower stem and flared flat base through the sampled frames.",
+        "The prior attempt's obvious rounded mushroom redesign, large new spots and scale growth are absent in the new attempt. This approval applies only to attempt 2 and does not restore attempt 1.",
+        "Product-to-dog and product-to-floor proportions remain stable. A small orientation/position change is visible during nose contact near 2 seconds, without a clear change of molded silhouette or physical size.",
+        "The Pomeranian makes actual muzzle, mouth, gaze, head and tail movements. It lowers its nose toward the toy, lifts its head toward the camera, wags its tail and returns close to the initial crouched pose.",
+        "Native 1.5 and 2 seconds show brief mouth/tongue proximity or contact near the top edge. The toy is not engulfed or fragmented, but the strict prompt request of no pushing and perfectly stationary orientation is not fully certified.",
+        "Four visible legs and grounded paws remain plausible, and the complete toy remains readable in the sampled frames. No extra toy, food, limb, detached piece or leash was observed.",
+        "The ending head is close to the original lowered pose, but exact first/last pixel identity and a completely seamless loop are not certified."
+      ],
+      "limitations": [
+        "Brief mouth/nose contact and a small toy orientation/position change do not fully meet the prompt's perfectly stationary, sniff-only wording.",
+        "Actual physical centimetres and generated dog weight are not certified; nominal manufacturer dimensions are source evidence only.",
+        "All fine marbling pixels and exact first/last pose are not certified identical; minor loop boundary change remains possible.",
+        "All 192 frames were decoded; 18 representative raw frames were manually compared with additional native-resolution inspection.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Manufactured toy retains low cap, short base, top opening, marbling and plausible relative scale; prior attempt's growing mushroom deformation is absent in inspected samples",
+        "Cute Pomeranian genuinely moves, noses the toy, raises its head and wags its tail",
+        "Small mouth contact and a slight orientation change at 2 seconds are accepted; the toy is not perfectly stationary as requested in the prompt",
+        "Whole source frame including provider mark retained; one DDB logo in separate footer",
+        "Near-start return is acceptable, without claiming a perfectly seamless loop"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "A small orange Pomeranian gives a gentle inquisitive sniff, bright camera glance and fluffy tail wag around the clearly visible real toy."
+      }
+    },
+    "sourceAttempt": 2,
+    "priorAttemptsPreserved": [
+      {
+        "path": "rw_toadstool_toy/flow-raw-omni11-8s.mp4",
+        "sha256": "ae8a2a4c3a0302db8d9b435e037d2f87fc014f6a0c6e3045ca9d811e131dcda2"
+      },
+      {
+        "path": "rw_toadstool_toy/flow-submission.json",
+        "sha256": "23e7b7b6b7aef320b1c6aef48e7b578d810769a06705a32d5257e9856cfcb874"
+      },
+      {
+        "path": "rw_toadstool_toy/image-reference-independent-review.json",
+        "sha256": "f0faa7e5eb5a0a4474844ab88ca9f9358510768b94f53612d3293f23de47ec00"
+      },
+      {
+        "path": "rw_toadstool_toy/image-reference-review.json",
+        "sha256": "14138a689f663598678dd443314647eadebd16c3ba7996844aabfff8888e969b"
+      },
+      {
+        "path": "rw_toadstool_toy/imagegen-prompt.txt",
+        "sha256": "d3ae78f6a506f6bf069ca7c13fc51b10594f4c81538ab36a0124ab1382162455"
+      },
+      {
+        "path": "rw_toadstool_toy/pomeranian-moss-green-reference.png",
+        "sha256": "84c90b9b490e35c29563b0d00094534657d40897604cfc58dec4856696f3314c"
+      },
+      {
+        "path": "rw_toadstool_toy/prompt-en.txt",
+        "sha256": "b49ba2b081d0cfacd0fc3b2f33a86b67b1a0c8771f2de382a6ebd896ed97cc71"
+      },
+      {
+        "path": "rw_toadstool_toy/reference-original.webp",
+        "sha256": "1573250264c6438ebff5b48c16b0afecf40a7e1443ccb3a7e762ffc82f4628a9"
+      },
+      {
+        "path": "rw_toadstool_toy/sample-pack.json",
+        "sha256": "8eb03f4f4eb25c4b93d7ba494a56c57824ee4eee90d0a8743a86236334c1b1f9"
+      },
+      {
+        "path": "rw_toadstool_toy/VIDEO-QA-KO.md",
+        "sha256": "6f5852479a8af4151f52e6d7d00e21936b81035b4646ce3d5dca4646b078c4ea"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/dense-full.jpg",
+        "sha256": "16d3541757a7ba2392f34fba1d85976c554f1bc15f56b078081e58ec1b60afa0"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/ffmpeg-full-decode.log",
+        "sha256": "1a583fcc46e0c4712149a01fa92f109815279d0d2c3e549e4e8c18e1286b44fc"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/ffmpeg-last-extraction.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-000-0.000s.png",
+        "sha256": "85fb7acc835f22c5117885f84626bbc7d6d8e6f4402ca805cd414d96392ecbaf"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-012-0.500s.png",
+        "sha256": "88a92f4cbc89950b849ed59b3fce09a3c69bb002d963cb691ce0bc78943114f8"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-024-1.000s.png",
+        "sha256": "f23615c8b75e0914dd031cf0b0e4ad13e182f4384320a11ec59000192802ee72"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-036-1.500s.png",
+        "sha256": "76185f3506cb017764d97d839be8f6f07eff39e63b002cabe17c5f68b2f29591"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-048-2.000s.png",
+        "sha256": "8ecc19adc309840e66f63978b6e03091fa6f6794ec752e2b896d81815aa70971"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-060-2.500s.png",
+        "sha256": "90d313a7cdeac823936a08d23630accb6586ae4fbcfce60b3c23347d4c9abca4"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-072-3.000s.png",
+        "sha256": "2461c8560b26261890f2c9e13e78777e672a8e710f6074c0a5fe5d00b364b32c"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-084-3.500s.png",
+        "sha256": "088db782ba7c9920d2eebacac773b7fd51bd3ef72714dcf45ed09bb235f77f49"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-096-4.000s.png",
+        "sha256": "b88875c9c9ad3adb5b891e7b2a5532bd8e5378e50a23b9cc7ba5202caf0bc2a5"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-108-4.500s.png",
+        "sha256": "0e7a043c8a7aa50f87f7ea98a4435c6b43c32779c6c8647f95e613f3107126d7"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-120-5.000s.png",
+        "sha256": "09b455a560f5da8b4c191a7e94600c617dd2ffa47784d357dd311a1e58c1057d"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-132-5.500s.png",
+        "sha256": "0d9ca1947dd4c322dad540ecf66d01a319c6ecc4427ff7086f8ef2ddb8b6fb8d"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-144-6.000s.png",
+        "sha256": "9935cc80bb16eb9e6b60e872c76141cf6a9e8c236694a0b5aed0f30c136c7480"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-156-6.500s.png",
+        "sha256": "16c24da5202bc63485ceb4a5c2778cb57c398c40c8b6b0f69aaaf6873bd5da21"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-168-7.000s.png",
+        "sha256": "0cad916c4d00e2160877b7cfb800eb13a22e1add29ba96b0b7054d8ac019ede7"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-180-7.500s.png",
+        "sha256": "a883283509fe99c2756799a0828fc799fbe51efdd23dfb7fb6a644209c4f2ba5"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-190-7.917s.png",
+        "sha256": "d687159cf984ff001bb82980a8227b2cf31708d0cea446c12079e0c1a3949ba9"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/frame-191-7.958s.png",
+        "sha256": "22f30c6effeebda586124ce8fa32901c75d6bbdeb72abb6c36aee4db3e4adf48"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/inspection-manifest.json",
+        "sha256": "17782f45c0d8259ec61778a6e41171ec51e8899d2645e161fd0c3f8d013402db"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/qualified-qa.json",
+        "sha256": "865f5b741b81b0baf84e868b6941d8546ba225780a3fd31b135a3e3f27350107"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/reference-and-keyframes.jpg",
+        "sha256": "2418788eed4f3c40c7636167b5d43375571616261364fe110b6e9d452e0ad32a"
+      },
+      {
+        "path": "rw_toadstool_toy/qa-omni-01/technical-evidence.json",
+        "sha256": "6498d5ce12644d62f53086622d78643db373b3960c545ea3050e362c1c50a71e"
+      }
+    ]
+  },
+  "pdh_slowfeeder_paw_mini": {
+    "folder": "pdh_slowfeeder_paw_mini",
+    "productId": "p_274",
+    "video": "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/06cf8a87774b76a29ebab3f2ebfc051a8cd7953a0de17c901ec4b6ceff18a159/hover.mp4",
+    "sha256": "06cf8a87774b76a29ebab3f2ebfc051a8cd7953a0de17c901ec4b6ceff18a159",
+    "videoJobId": "80e1d847-a454-48b0-9e25-439e1aa830c3",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T22:27:54.082378+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "3e1e712b07d543d0fb12d89481793846e5e8b5b1c468f5df0cec15140a4c1e77",
+    "sourcePhotoSha256": "9a92efb042d4be5a9f4908fa055ad1f30a7feb39da53631a593e05d354d4d21a",
+    "uploadSha256": "e6586ac0cf872f25f86c3e5d1bc999079100172b5709752aa7b0b46ce7368b3a",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "dd46a7bd6a08ddc8b8c6c97085209acf366c96339e0fae6b585c4add4d3ad92e",
+    "referenceReviewPath": "pdh_slowfeeder_paw_mini/image-reference-independent-review.json",
+    "rootApprovalSha256": "42256d4e0c443af5416ad4553c2d811e98a7e515847a4b926c4e2ed66a14b205",
+    "qualifiedQaSha256": "be0467802d417f1607230e340d2333b2cdc803ec216447a6b6fd6afab9f64503",
+    "candidateManifestSha256": "1b4d74d1a84e549d9f40cccc035848d2c6c1095047fb61f8c16d269a96a581b5",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "White Google diamond is visible at lower-right on the wood floor. Preserve the entire raw frame and put the DDB mark only in the new footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact source images retained. Manufacturer title/background of actual cat-use reference are not part of the generated scene; no source file or photographer credit was removed.",
+      "observations": [
+        "Baby Blue color, low paw-shaped plate, four separate toe compartments and one large oval bumped pad retain their identity and position through the sampled frames.",
+        "The two inner toe wells remain larger than the two outer wells. The single oval pad remains attached, visible and otherwise empty, without an extra bowl, spiral or pedestal.",
+        "Plate size relative to the Poodle, paws and fixed floor pattern remains stable. The complete feeder stays on the floor with no swelling, rotating, sliding or melted perimeter observed.",
+        "The Poodle lowers its muzzle into a middle well, visibly moves its mouth/jaw, lifts its head and looks toward the camera, then feeds from the other middle well. Actual eating-like interaction is clear; the amount swallowed is not measurable.",
+        "Native 1, 4, 6.5 and final seconds show plausible muzzle, tongue/mouth, eyes and four limbs. Food remains confined to the toe wells, with no clear scattering, impossible duplication or swallowing of product parts.",
+        "The dog upper back is partly cropped during the feeding close-up, while the whole plate and face remain visible. The camera and room remain stable.",
+        "The ending muzzle is in the other middle well, so the prompt's request to return to the same compartment is not fully met; a start/end head-position change remains."
+      ],
+      "limitations": [
+        "The dog uses both middle wells rather than returning to exactly the same compartment as requested.",
+        "Start/end muzzle and head placement differ; the loop is not perfectly seamless.",
+        "Manufacturer nominal height differs between 3 and 3.2 cm across source pages; absolute generated dimensions and dog weight are not certified.",
+        "Exact bump count, each kibble piece and all surface pixels are not certified identical or counted.",
+        "All 192 frames were decoded; 18 representative frames were manually compared with native-resolution checks.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Exactly four toe wells, one oval pad, low plate outline and stable relative size",
+        "Actual feeding and head movement with natural small Poodle appearance",
+        "One DDB mark and complete source frame including provider mark preserved",
+        "Different ending head position and use of two middle wells accepted as documented prompt/loop limitations",
+        "Partial upper-body crop in feeding close-up accepted; absolute centimetres and exact bump count uncertified"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "A small apricot curly Poodle nibbles, pauses with bright gentle eyes and returns to its feeder, showing the intended real-use context."
+      }
+    }
   }
 }
