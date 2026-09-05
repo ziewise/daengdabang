@@ -3,7 +3,7 @@
   "date": "2026-09-06",
   "newGeneratedVideos": 0,
   "generationState": "blocked_account_quota",
-  "legacyVideosRetained": 6,
+  "legacyVideosRetained": 3,
   "withdrawn": [
     {
       "folder": "ot_goliath_harness",
@@ -29,6 +29,24 @@
       "folder": "zs_reindeer",
       "sha256": "f7752185cce4ac54f68622506a961e91fe9ee00c4b71b03a13b08b82a0a30cfd",
       "reason": "원본 황갈색 가지뿔/갈색 스누드와 달리 영상의 뿔은 짙은 갈색으로 짧고 둥글게 재설계되고 니트 형태도 달라짐. 하단 REINDEER ZOO SNOOD 배지가 별도 생성됨."
+    },
+    {
+      "folder": "rw_swampcooler_zipvest",
+      "sha256": "8afef1ad3fa0a9fab611e21590aaeb4ae22a4221dc4f46250030e7ce20d90ba5",
+      "decision": "quarantine_and_regenerate",
+      "reason": "정확한 Biolumin Blue 색상과 제조사 측면 착용 사진을 0.5초 간격 영상과 비교함. 실제 넓은 무늬 옆판·단색 하부/배판 대신 영상은 넓은 파란 옆판과 무늬 배 부분으로 원단 배치가 뒤바뀜. 큰 등쪽 고리도 실물에서 확인되지 않음. 원단 배치 불일치가 전 구간 지속되어 기존 포괄적 유사 판정을 취소하고 재생성을 권고함."
+    },
+    {
+      "folder": "rw_sunshower_coverall_25fw",
+      "sha256": "5fbf916921b29fa12ca13a2a830f35350c4061dc696b0bc75981c7f46570d7dd",
+      "decision": "quarantine_and_regenerate",
+      "reason": "0.5초 간격 전체 구간과 정확한 제조사 상세3/착용 official-visual-01을 다시 비교함. 실제는 남색 외부 레인 케이프 아래 회색 뒷다리 슬리브가 분리되지만 영상은 남색 뒷몸판과 남색 뒷다리가 이어진 일체형으로 바뀜. 앞 지퍼의 올리브 테이프/분리된 케이프 테두리도 생략됨. 단순한 짧은 강아지 체형 문제가 아닌 원단 배치·구조 불일치. 정사각형 중앙 크롭은3–4초 부근 머리/꼬리도 자름."
+    },
+    {
+      "folder": "rw_hiandlight_harness_26",
+      "sha256": "3dfd9e922c0f8233591a44c386284aee97a25e5a4d44f9a580e780ae6b46b8f6",
+      "decision": "quarantine_pending_topology_verification",
+      "reason": "정확한 Blue Pool의 파란 패널·패치·D링·버클은 대체로 맞음. 납작한 상품사진에서 보이는 검정 안쪽 가슴 패널이 생성 영상에서는 강아지 목 위/등에 놓인 것처럼 보인다는 추론이 있음. 부모 검수자도 이 불확실성 때문에 실착 구조 확인까지 임시 비공개를 결정함. 다른 모델로 확정 판정한 것이 아님. details/3.webp 원본과 hiandlight-actual-blue-topology.jpg 및 native last 프레임이 근거. 5.04초와 내장 로고도 개선 대상."
     }
   ],
   "brandingCorrected": [
@@ -41,5 +59,6 @@
       "sha256": "522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357"
     }
   ],
-  "scope": "All11 previously visible products and44 additional bed/bowl products sampled; no full361 semantic approval."
+  "scope": "All11 previously visible products and44 additional bed/bowl products sampled. Six remaining candidates received0.5s frame sampling and exact option-reference review. No full361 semantic approval.",
+  "qualifiedFinding": "Seven previously visible clips have established identity/context defects. Hi&Light is temporarily withheld pending wearing-topology verification; a wrong-model conclusion is not established."
 }

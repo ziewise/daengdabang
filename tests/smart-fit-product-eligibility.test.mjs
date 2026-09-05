@@ -245,8 +245,8 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
     });
 
     const values = Object.values(overrides);
-    assert.equal(Object.keys(overrides).length, 344);
-    assert.equal(values.filter((value) => value === null).length, 220);
+    assert.equal(Object.keys(overrides).length, 347);
+    assert.equal(values.filter((value) => value === null).length, 223);
     assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
     for (const folder of [
         "rw_backtrak_evac_kit",
@@ -256,6 +256,9 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         "icecream_realcheese",
         "bm_kibble_9kg",
         "rs_bowl",
+        "rw_swampcooler_zipvest",
+        "rw_sunshower_coverall_25fw",
+        "rw_hiandlight_harness_26",
         "ot_goliath_harness",
         "rw_everest_coat_25fw",
         "zs_giraffe",
