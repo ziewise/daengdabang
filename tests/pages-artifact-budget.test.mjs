@@ -124,6 +124,16 @@ test("Pages artifact recognizes content-addressed video paths and rejects undecl
     await assert.rejects(preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 }), /absent from the catalog/);
 });
 
+test("branding and audit records do not retain withdrawn video copies in Pages", async (t) => {
+    const root = await fixture(t);
+    const withdrawn = "/images/products/catalog/stale/videos/hover.mp4";
+    await write(root, "lib/catalog/video-branding.json", JSON.stringify({ [withdrawn]: { sourceAssetPath: withdrawn } }));
+    await write(root, "lib/catalog/hover-review-20260906.json", JSON.stringify({ withdrawn }));
+    const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    assert.equal(result.expectedCdnVideoCount, 1);
+    await assert.rejects(fs.access(path.join(root, `out${withdrawn}`)));
+});
+
 test("Pages artifact omits catalog videos that the storefront safety gate did not publish", async (t) => {
     const root = await fixture(t, { includeCdnUrl: false });
     const result = await preparePagesArtifact({

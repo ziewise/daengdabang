@@ -124,6 +124,10 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
             if (new Set([
                 "lib/catalog/raw.json",
                 "lib/catalog/reviewed-hover-overrides.json",
+                // Review evidence describes withdrawn/source versions too;
+                // only publicationCatalog decides which media is used.
+                "lib/catalog/video-branding.json",
+                "lib/catalog/hover-review-20260906.json",
                 "lib/catalog/colors.json",
                 "lib/external-products/feed.json",
             ]).has(repoRelative)) continue;
