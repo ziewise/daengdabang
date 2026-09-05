@@ -83,7 +83,7 @@ export default function ProductGallery({ product: p, colorImage }: Props) {
                     />
                 )}
 
-                {isVideoVisible && <VideoBrandOverlay />}
+                {isVideoVisible && <VideoBrandOverlay src={p.video} />}
             </div>
 
             {images.length > 1 && (

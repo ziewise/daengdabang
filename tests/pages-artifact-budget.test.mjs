@@ -106,6 +106,24 @@ test("Pages artifact fails closed when an official visual was not commit-pinned 
     );
 });
 
+test("Pages artifact recognizes content-addressed video paths and rejects undeclared versions", async (t) => {
+    const root = await fixture(t);
+    const asset = `/images/products/catalog/sample/videos/${"b".repeat(64)}/hover.mp4`;
+    const raw = JSON.parse(await fs.readFile(path.join(root, "lib/catalog/raw.json"), "utf8"));
+    raw[0].video = asset;
+    await write(root, "lib/catalog/raw.json", JSON.stringify(raw));
+    const html = await fs.readFile(path.join(root, "out/index.html"), "utf8");
+    await write(root, "out/index.html", html.replace("/sample/videos/hover.mp4", `/sample/videos/${"b".repeat(64)}/hover.mp4`));
+    await write(root, `out${asset}`, "immutable-video");
+    const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    assert.equal(result.expectedCdnVideoCount, 1);
+    assert.equal(result.externalizedVideoCount, 1);
+    await assert.rejects(fs.access(path.join(root, `out${asset}`)));
+    raw[0].video = asset.replace("b".repeat(64), "c".repeat(64));
+    await write(root, "lib/catalog/raw.json", JSON.stringify(raw));
+    await assert.rejects(preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 }), /absent from the catalog/);
+});
+
 test("Pages artifact omits catalog videos that the storefront safety gate did not publish", async (t) => {
     const root = await fixture(t, { includeCdnUrl: false });
     const result = await preparePagesArtifact({

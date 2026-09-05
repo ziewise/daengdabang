@@ -1,0 +1,45 @@
+{
+  "schema": "ddb.hover-release-review.v1",
+  "date": "2026-09-06",
+  "newGeneratedVideos": 0,
+  "generationState": "blocked_account_quota",
+  "legacyVideosRetained": 6,
+  "withdrawn": [
+    {
+      "folder": "ot_goliath_harness",
+      "sha256": "670121be1e78681127f88c0e809852dfaad4e6e769085c5eb13b07aa4e0e6716",
+      "reason": "원본은 ONETIGRIS 문자가 있는 좁은 연결 스트랩 하네스인데 영상은 넓은 검정 가슴 패널과 전면 D링을 가진 다른 형태. 강아지가 착용하는 맥락만 맞고 상품 구조가 다름."
+    },
+    {
+      "folder": "rw_everest_coat_25fw",
+      "sha256": "32042560178b83ce2c38cc966b9035728f173ff6b2d72b3ca01de52f1a1fef07",
+      "reason": "실제 상세2.webp는 Mt. EverRest 높이형 도그 코트에 씌우는 보온 커버이며 접이식 베드 프레임이 사용 맥락에 포함됨. 영상은 바닥에 놓인 두꺼운 일반 방석처럼 표현하고 내부 프레임·커버 구성은 확인되지 않음. 옷으로 분류된 기존 카테고리도 상품 실물과 다름."
+    },
+    {
+      "folder": "zs_giraffe",
+      "sha256": "57913f938f356c14c48fedcbd21361c6b8485c2433f869ad647671c6d508f499",
+      "reason": "원본의 주황빛 무늬·갈색 실 갈기와 뿔 디테일 대신 영상은 노란 단색 골지 튜브와 단순 뿔을 생성함. 실제 제품과 편직 구조·장식 배치가 달라짐."
+    },
+    {
+      "folder": "zs_jackrabbit",
+      "sha256": "1f3feff1efa1ffaddcbf1b41da79227dfcdda42484c7bcec8d588ea433f9148b",
+      "reason": "원본의 황갈색 니트·누운 귀 형태와 달리 영상은 밝은 베이지 골지에 길게 선 토끼 귀. 색·편직과 귀 형상이 달라짐. 후반 Jack Rabbit Zoo Snood 배지도 임의로 들어 있음."
+    },
+    {
+      "folder": "zs_reindeer",
+      "sha256": "f7752185cce4ac54f68622506a961e91fe9ee00c4b71b03a13b08b82a0a30cfd",
+      "reason": "원본 황갈색 가지뿔/갈색 스누드와 달리 영상의 뿔은 짙은 갈색으로 짧고 둥글게 재설계되고 니트 형태도 달라짐. 하단 REINDEER ZOO SNOOD 배지가 별도 생성됨."
+    }
+  ],
+  "brandingCorrected": [
+    {
+      "asset": "/images/products/catalog/rw_hiandlight_harness_26/videos/3dfd9e922c0f8233591a44c386284aee97a25e5a4d44f9a580e780ae6b46b8f6/hover.mp4",
+      "sha256": "3dfd9e922c0f8233591a44c386284aee97a25e5a4d44f9a580e780ae6b46b8f6"
+    },
+    {
+      "asset": "/images/products/catalog/rw_flagline_harness_24/videos/522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357/hover.mp4",
+      "sha256": "522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357"
+    }
+  ],
+  "scope": "All11 previously visible products and44 additional bed/bowl products sampled; no full361 semantic approval."
+}

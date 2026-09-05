@@ -66,7 +66,7 @@ export default function DeferredBundleHeroVideo({ src }: Props) {
                 className={`absolute inset-0 h-full w-full bg-neutral-950 object-cover transition-opacity duration-500 ${playing ? "opacity-78" : "opacity-0"}`}
                 aria-hidden="true"
             />
-            {playing && <VideoBrandOverlay />}
+            {playing && <VideoBrandOverlay src={src} />}
         </>
     );
 }

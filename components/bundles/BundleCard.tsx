@@ -99,7 +99,7 @@ export default function BundleCard({ bundle, priority }: Props) {
                 )}
                 {videoVisible && (
                     <div>
-                        <VideoBrandOverlay />
+                        <VideoBrandOverlay src={bundle.video} />
                     </div>
                 )}
                 <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">

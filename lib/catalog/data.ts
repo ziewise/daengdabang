@@ -46,8 +46,7 @@ function storefrontVideoUrl(row: CatalogRow, subcategory: SubcategorySlug): stri
         !video ||
         row.videoDelivery !== "jsdelivr_commit_cdn" ||
         !STOREFRONT_ASSET_COMMIT_RE.test(STOREFRONT_ASSET_COMMIT_SHA) ||
-        !video.startsWith("/images/products/catalog/") ||
-        !video.endsWith("/videos/hover.mp4")
+        !/^\/images\/products\/catalog\/[A-Za-z0-9_.-]+\/videos\/(?:[a-f0-9]{64}\/)?hover\.mp4$/.test(video)
     ) {
         return video;
     }

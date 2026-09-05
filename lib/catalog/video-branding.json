@@ -1,0 +1,22 @@
+{
+  "/images/products/catalog/rw_hiandlight_harness_26/videos/3dfd9e922c0f8233591a44c386284aee97a25e5a4d44f9a580e780ae6b46b8f6/hover.mp4": {
+    "branding": "baked",
+    "sha256": "3dfd9e922c0f8233591a44c386284aee97a25e5a4d44f9a580e780ae6b46b8f6",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06",
+    "sourceAssetPath": "/images/products/catalog/rw_hiandlight_harness_26/videos/hover.mp4",
+    "sourceCommit": "e08511692898b9c3b908515fb25118897dc1e658"
+  },
+  "/images/products/catalog/rw_flagline_harness_24/videos/522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357/hover.mp4": {
+    "branding": "baked",
+    "sha256": "522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06",
+    "sourceAssetPath": "/images/products/catalog/rw_flagline_harness_24/videos/hover.mp4",
+    "sourceCommit": "e08511692898b9c3b908515fb25118897dc1e658"
+  }
+}

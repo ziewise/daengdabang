@@ -123,7 +123,7 @@ export default function ProductCard({
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />
                     )}
-                    {hasVideo && videoActive && <VideoBrandOverlay />}
+                    {hasVideo && videoActive && <VideoBrandOverlay src={p.video} />}
 
                 {/* 좌상단 배지 — BEST + NEW */}
                     {(showBest || shouldShowNew) && (

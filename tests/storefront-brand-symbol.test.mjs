@@ -26,7 +26,7 @@ test("storefront uses the approved transparent black-poodle brand symbol", () =>
     }
 
     assert.match(productCard, /import VideoBrandOverlay/);
-    assert.match(productCard, /hasVideo && videoActive && <VideoBrandOverlay \/>/);
+    assert.match(productCard, /hasVideo && videoActive && <VideoBrandOverlay src=\{p\.video\} \/>/);
 });
 
 test("storefront publishes the approved black-poodle Windows icon for the AI assistant", () => {

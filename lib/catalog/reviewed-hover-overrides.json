@@ -322,6 +322,7 @@
   },
   "ot_destroyer_harness": null,
   "ot_firewatcher_harness": null,
+  "ot_goliath_harness": null,
   "ot_sleepingmat": {
     "video": "/images/products/catalog/ot_sleepingmat/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -616,6 +617,7 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-83ae8d145275"
   },
+  "rw_everest_coat_25fw": null,
   "rw_floatcoat_lifejacket": null,
   "rw_frontrange_daypack_24": null,
   "rw_frontrange_harness": null,
@@ -1070,8 +1072,10 @@
     "videoJobId": "hover-photo-20260903-89460e535de7"
   },
   "zs_fox": null,
+  "zs_giraffe": null,
   "zs_grizzlybear": null,
   "zs_horse": null,
+  "zs_jackrabbit": null,
   "zs_lion": null,
   "zs_pandabear": {
     "video": "/images/products/catalog/zs_pandabear/videos/hover.mp4",
@@ -1080,6 +1084,7 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-bbaddaeffe19"
   },
+  "zs_reindeer": null,
   "zs_rhino": null,
   "zs_unicorn": null
 }

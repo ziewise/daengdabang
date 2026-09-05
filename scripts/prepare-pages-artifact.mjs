@@ -149,7 +149,7 @@ async function collectBuiltCdnProductAssets(outRoot, commitSha) {
         let offset = 0;
         while ((offset = source.indexOf(prefix, offset)) >= 0) {
             const rest = source.slice(offset + prefix.length);
-            const match = rest.match(/^images\/products\/catalog\/[A-Za-z0-9_.\/-]+\/(?:videos\/hover\.mp4|details\/official-visual-\d+\.webp)/);
+            const match = rest.match(/^images\/products\/catalog\/[A-Za-z0-9_.-]+\/(?:videos\/(?:[a-f0-9]{64}\/)?hover\.mp4|details\/official-visual-\d+\.webp)/);
             if (match) found.add(normalizeAssetPath(match[0]));
             offset += prefix.length;
         }
@@ -195,7 +195,7 @@ export async function preparePagesArtifact({
             .filter(Boolean),
     );
     const builtCdnProductAssets = await collectBuiltCdnProductAssets(resolvedOutRoot, commitSha);
-    const builtCdnVideos = new Set([...builtCdnProductAssets].filter((asset) => asset.endsWith("/videos/hover.mp4")));
+    const builtCdnVideos = new Set([...builtCdnProductAssets].filter((asset) => /\/videos\/(?:[a-f0-9]{64}\/)?hover\.mp4$/.test(asset)));
     const builtCdnOfficialVisuals = new Set(
         [...builtCdnProductAssets].filter((asset) => /\/details\/official-visual-\d+\.webp$/.test(asset)),
     );
