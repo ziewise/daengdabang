@@ -1,5 +1,6 @@
 import { CATALOG, CATEGORY_LABEL, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
+import { optionPurchaseState, type PurchaseState } from "./catalog/inventory";
 
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
@@ -46,6 +47,7 @@ export function cartProducts(lines: Array<{ productId: string; qty: number; colo
             // 사이즈 증감액을 반영한 단가(없으면 기본가)
             const sizeDelta = line.size ? product.sizes?.find((s) => s.name === line.size)?.delta ?? 0 : 0;
             const unitPrice = product.price + sizeDelta;
+            const purchaseState = optionPurchaseState(product, line.color, line.size);
             return {
                 product,
                 qty: line.qty,
@@ -55,11 +57,13 @@ export function cartProducts(lines: Array<{ productId: string; qty: number; colo
                 size: line.size,
                 image: colorImage ?? product.image,
                 // 결제 대상 선택 여부(미지정 = 선택) — 장바구니 체크박스/checkout 필터용
-                selected: line.selected !== false,
+                selected: line.selected !== false && purchaseState.purchasable,
+                purchaseState,
+                selectionBlocked: line.selected !== false && !purchaseState.purchasable,
                 petAssignment: line.petAssignment,
             };
         })
-        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; unitPrice: number; subtotal: number; color?: string; size?: string; image?: string; selected: boolean; petAssignment?: CartPetAssignment }>;
+        .filter(Boolean) as Array<{ product: CatalogProduct; qty: number; unitPrice: number; subtotal: number; color?: string; size?: string; image?: string; selected: boolean; purchaseState: PurchaseState; selectionBlocked: boolean; petAssignment?: CartPetAssignment }>;
 }
 
 export function cartTotal(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment }>) {

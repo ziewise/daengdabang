@@ -98,7 +98,9 @@ export default function CheckoutPage() {
     const cart = useCart();
     const { user } = useAuth();
     const { t, locale, formatPrice, productName } = useI18n();
-    const lines = cartProducts(cart.lines).filter((line) => line.selected);
+    const evaluatedCartLines = cartProducts(cart.lines);
+    const inventoryBlocked = evaluatedCartLines.some(line => line.selectionBlocked);
+    const lines = evaluatedCartLines.filter((line) => line.selected);
     const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
     const [deliveryDraft, setDeliveryDraft] = useState<CheckoutDeliveryDraft>(() => createCheckoutDeliveryDraft());
     const [deliveryErrors, setDeliveryErrors] = useState<CheckoutDeliveryErrors>({});
@@ -234,7 +236,7 @@ export default function CheckoutPage() {
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
-        if (lines.length === 0 || submitting) return;
+        if (lines.length === 0 || submitting || inventoryBlocked) return;
         if (!isCheckoutPaymentMethodEnabled(paymentMethod)) {
             setPaymentMethod("card");
             setDirectTermsAccepted(false);
@@ -360,6 +362,9 @@ export default function CheckoutPage() {
         }
     };
 
+    if (inventoryBlocked) {
+        return <main className="mx-auto max-w-[720px] px-4 py-14 text-center"><h1 className="text-xl font-black">{locale === "en" ? "Review unavailable cart options before checkout." : "구매할 수 없는 옵션이 있어 장바구니 확인이 필요합니다."}</h1><Link href="/cart" className="btn btn-primary mt-6">{locale === "en" ? "Review cart" : "장바구니 확인"}</Link></main>;
+    }
     if (lines.length === 0) {
         return (
             <main className="mx-auto max-w-[720px] px-4 py-14 text-center">

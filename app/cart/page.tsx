@@ -23,15 +23,17 @@ import { daengLabCoinsForLines } from "@/lib/daenglab-rewards";
 import { checkoutHref, type QuickPaymentMethod } from "@/lib/payment-methods";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { baseShippingFee } from "@/lib/shipping-policy";
+import { purchaseStateLabel } from "@/lib/catalog/inventory";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
-function CheckBtn({ checked, onToggle, label }: { checked: boolean; onToggle: () => void; label: string }) {
+function CheckBtn({ checked, onToggle, label, disabled = false }: { checked: boolean; onToggle: () => void; label: string; disabled?: boolean }) {
     return (
         <button
             type="button"
             role="checkbox"
             aria-checked={checked}
             aria-label={label}
+            disabled={disabled}
             onClick={onToggle}
             className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition ${
                 checked
@@ -56,6 +58,7 @@ export default function CartPage() {
 
     // 선택된 라인만 합계·결제 대상
     const selectedLines = lines.filter((l) => l.selected);
+    const inventoryBlocked = lines.some(line => line.selectionBlocked);
     const selectedTotal = selectedLines.reduce((sum, l) => sum + l.subtotal, 0);
     const estimatedBaseShippingFee = baseShippingFee(selectedTotal);
     const expectedDaengLabCoins = daengLabCoinsForLines(selectedLines);
@@ -66,6 +69,7 @@ export default function CartPage() {
     // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원은 주문서 미리보기 가능)으로
     const goCheckout = (preferredPayment: "card" | QuickPaymentMethod = "card") => {
         if (selectedLines.length === 0) return;
+        if (inventoryBlocked) return;
         const nextCheckoutHref = checkoutHref(preferredPayment);
         router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
     };
@@ -95,6 +99,7 @@ export default function CartPage() {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <h1 className="text-3xl font-black tracking-tight text-neutral-950">{t("cart")}</h1>
+            {inventoryBlocked && <p role="alert" className="mt-3 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900">{locale === "en" ? "Some options cannot be purchased. Remove these lines or choose another option before checkout." : "구매할 수 없는 옵션이 있습니다. 해당 상품을 삭제하거나 다른 옵션으로 다시 담은 뒤 결제해 주세요."}</p>}
             <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section>
                     {/* 전체선택 / 선택삭제 바 */}
@@ -120,11 +125,12 @@ export default function CartPage() {
                     </div>
 
                     <div className="grid gap-3">
-                        {lines.map(({ product, qty, subtotal, color, size, image, selected, petAssignment }) => (
+                        {lines.map(({ product, qty, subtotal, color, size, image, selected, petAssignment, purchaseState, selectionBlocked }) => (
                             <article key={`${product.id}-${color ?? ""}-${size ?? ""}`} className="surface relative flex gap-3.5 p-4">
                                 {/* 결제 대상 체크 */}
                                 <CheckBtn
                                     checked={selected}
+                                    disabled={!purchaseState.purchasable}
                                     onToggle={() => cart.setSelected(product.id, !selected, color, size)}
                                     label={`${productName(product)} ${locale === "en" ? "select" : "선택"}`}
                                 />
@@ -162,8 +168,11 @@ export default function CartPage() {
                                     {/* 도착 예정일 — 1~2영업일 출고 기준 */}
                                     <p className="mt-1.5 text-xs font-black text-emerald-600">
                                         <i className="fa-solid fa-truck-fast mr-1 text-[10px]" />
-                                        {arrival}
+                                        {purchaseState.purchasable && !purchaseState.supplierRequest ? arrival : purchaseStateLabel(purchaseState, locale)}
                                     </p>
+                                    {purchaseState.supplierRequest && <p className="mt-1 text-xs font-bold text-amber-800">{locale === "en" ? "Dispatch timing will be confirmed after the supplier request." : "본사 요청 후 발송 일정을 확인해 안내합니다."}</p>}
+                                    {purchaseState.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {purchaseState.sourceDate}</p>}
+                                    {selectionBlocked && <button type="button" onClick={() => cart.setSelected(product.id, false, color, size)} className="mt-2 text-xs font-black text-indigo-700 underline">{locale === "en" ? "Keep this item but exclude it from checkout" : "장바구니에 보관하고 결제에서 제외"}</button>}
                                     <div className="mt-2.5 rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-2">
                                         <label className="block">
                                             <span className="mb-1 block text-[11px] font-black text-indigo-700">
@@ -216,7 +225,7 @@ export default function CartPage() {
                                         <button
                                             type="button"
                                             onClick={() => cart.setQty(product.id, Math.min(99, qty + 1), color, size)}
-                                            disabled={qty >= 99}
+                                            disabled={qty >= 99 || !purchaseState.purchasable}
                                             className="flex h-full w-9 items-center justify-center text-neutral-600 transition disabled:cursor-not-allowed disabled:opacity-30"
                                             aria-label="수량 증가"
                                         >
@@ -285,7 +294,7 @@ export default function CartPage() {
                     <button
                         type="button"
                         onClick={() => goCheckout("card")}
-                        disabled={selectedLines.length === 0}
+                        disabled={selectedLines.length === 0 || inventoryBlocked}
                         className="btn btn-primary mt-5 w-full disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         {selectedLines.length === 0
@@ -293,7 +302,7 @@ export default function CartPage() {
                             : `${t("checkout")} (${countText(selectedLines.length)})`}
                     </button>
                     {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
-                    <SimplePayButtons disabled={selectedLines.length === 0} onSelect={goCheckout} />
+                    <SimplePayButtons disabled={selectedLines.length === 0 || inventoryBlocked} onSelect={goCheckout} />
                 </aside>
             </div>
         </main>

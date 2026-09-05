@@ -31,6 +31,7 @@ import OptionSheet from "./OptionSheet";
 import ColorSelect from "./ColorSelect";
 import PurchaseEvidenceCard from "./PurchaseEvidenceCard";
 import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
+import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 
 interface Props {
     product: CatalogProduct;
@@ -51,6 +52,8 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
     const point = Math.floor(p.price * 0.01);
     const daengLabCoins = daengLabCoinsForUnitPrice(p.price);
     const displayName = productName(p);
+    const purchaseState = productPurchaseState(p);
+    const hasSupplierRequest = p.inventory?.options.some(option => option.availability === "available" && option.fulfillment === "supplier_request");
     const canTryOn = getPetTryOnEligibility(p).eligible;
     const priceBadgeLabel = catalogPriceBadgeLabel(p.priceBadgeKind, locale);
     const priceBadgeClass = catalogPriceBadgeClass(p.priceBadgeKind);
@@ -233,7 +236,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                                 </b>
                             </p>
                             <p className="mt-1 break-keep text-xs font-bold leading-5 text-neutral-500">
-                                {locale === "en"
+                                {hasSupplierRequest ? (locale === "en" ? "Jeju +3,000 · other islands +5,000 · supplier-request options have separately confirmed dispatch timing." : "제주 +3,000원 · 그 외 도서 +5,000원 · 본사 요청 배송 옵션은 발송 일정을 확인해 별도로 안내합니다.") : locale === "en"
                                     ? "Jeju +3,000 · other islands +5,000 · ships in 1-2 business days · arrives within 7 days"
                                     : "제주 +3,000원 · 그 외 도서 +5,000원 · 1~2영업일 내 출고 · 결제 후 최대 7일 내 도착"}
                             </p>
@@ -255,6 +258,13 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 </ul>
 
                 <PurchaseEvidenceCard product={p} />
+                {(purchaseState.tracked || !purchaseState.purchasable) && (
+                    <div data-inventory-state={purchaseState.state} className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
+                        <p className="font-bold text-amber-950">{purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Availability varies by option." : "옵션별 판매 상태를 선택창에서 확인해 주세요.")}</p>
+                        {purchaseState.sourceDate && <p className="mt-1 text-xs text-amber-800">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {purchaseState.sourceDate}</p>}
+                        {!purchaseState.purchasable && <button type="button" onClick={() => setSheetMode("cart")} className="mt-2 text-xs font-black underline">{locale === "en" ? "View option status" : "옵션별 재고 보기"}</button>}
+                    </div>
+                )}
 
                 {/* 색상 — PC(lg+)는 여기(우측 구매정보), 모바일은 이미지 바로 아래(ProductDetailClient)에서 표시 */}
                 <ColorSelect
@@ -312,6 +322,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <button
                         type="button"
                         onClick={() => setSheetMode("cart")}
+                        disabled={!purchaseState.purchasable}
                         className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
                     >
                         <i className="fa-solid fa-bag-shopping shrink-0 text-sm" />
@@ -320,6 +331,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
+                        disabled={!purchaseState.purchasable}
                         className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                     >
                         <i className="fa-solid fa-credit-card shrink-0 text-sm" />
@@ -354,6 +366,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <button
                         type="button"
                         onClick={() => setSheetMode("cart")}
+                        disabled={!purchaseState.purchasable}
                         className="h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition hover:border-indigo-500 hover:text-indigo-700 sm:px-4"
                     >
                         <i className="fa-solid fa-bag-shopping text-sm sm:mr-1.5" />
@@ -362,6 +375,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
+                        disabled={!purchaseState.purchasable}
                         data-pet-guide-target="product-actions"
                         className="h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >

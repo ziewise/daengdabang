@@ -95,6 +95,9 @@ export type RecommendationReasonCode =
 export type RecommendationSourceGroup = "profile" | "petlens" | "editorial";
 
 export type RecommendationProductPolicy = {
+    inventory?: CatalogProduct["inventory"];
+    colors?: CatalogProduct["colors"];
+    sizes?: CatalogProduct["sizes"];
     recommendable?: boolean;
     availability?: "available" | "sold_out" | "discontinued" | "unknown";
     operatorReviewedAt?: string;

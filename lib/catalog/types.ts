@@ -1,3 +1,5 @@
+import type { ProductInventory } from "./inventory";
+
 export interface CatalogRow {
     no: number;
     brandKo: string;
@@ -88,6 +90,8 @@ export type SortKey =
     | "ratingDesc";
 
 export interface CatalogProduct {
+    /** Public option-level inventory; absence is not a stock verification. */
+    inventory?: ProductInventory;
     id: string;
     no: number;
     name: string;

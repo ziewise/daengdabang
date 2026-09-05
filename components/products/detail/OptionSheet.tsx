@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
+import { optionPurchaseState, productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLine, daengLabCoinsForLines } from "@/lib/daenglab-rewards";
@@ -117,6 +118,9 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
 
     // 현재 선택이 "옵션을 다 골랐는지" — 색상 있으면 색상, 사이즈 있으면 사이즈가 모두 선택돼야 true
     const selectionComplete = (!hasColors || colorIdx != null) && (!hasSizes || sizeIdx != null);
+    const selectedState = optionPurchaseState(p, colorIdx != null ? colors[colorIdx]?.name : undefined, sizeIdx != null ? sizes[sizeIdx]?.name : undefined);
+    const summaryState = productPurchaseState(p);
+    const selectionPurchasable = selectionComplete && selectedState.purchasable;
 
     const samePick = (a: Pick, ci: number, si: number) => a.colorIdx === ci && a.sizeIdx === si;
     // 누적 라벨 — "색상 · 사이즈"(있는 옵션만)
@@ -125,7 +129,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     const addLabel = t("add");
 
     const addPick = () => {
-        if (!selectionComplete) return;
+        if (!selectionPurchasable) return;
         const ci = colorIdx ?? 0;
         const si = sizeIdx ?? 0;
         setPicks((prev) => {
@@ -155,7 +159,9 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
         : daengLabCoinsForLine(p.price, qty);
 
     // 옵션 없으면 항상 가능 / 옵션 있으면 누적이 있거나 현재 선택이 완료라야 확정 가능
-    const canConfirm = !hasOptions || picks.length > 0 || selectionComplete;
+    const effectiveStates = effective.map(x => optionPurchaseState(p, hasColors ? colors[x.colorIdx]?.name : undefined, hasSizes ? sizes[x.sizeIdx]?.name : undefined));
+    const blockedState = effectiveStates.find(value => !value.purchasable);
+    const canConfirm = effective.length > 0 && effectiveStates.every(value => value.purchasable);
 
     const confirm = (preferredPayment: Extract<CheckoutPaymentMethod, "card"> | QuickPaymentMethod = "card") => {
         if (!canConfirm) return;
@@ -228,6 +234,8 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-sm font-bold leading-snug text-neutral-800 sm:line-clamp-none">{displayName}</p>
+                            {p.inventory?.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {p.inventory.sourceDate}</p>}
+                            {!summaryState.purchasable && <p role="status" className="mt-2 text-sm font-bold text-amber-900">{purchaseStateLabel(summaryState, locale)}</p>}
                             {hasColors && (
                                 <>
                                     <p className="mt-2 text-xs font-black text-neutral-500">
@@ -237,23 +245,29 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                         )}
                                     </p>
                                     <div className="mt-1.5 flex flex-wrap gap-1.5 sm:mt-2 sm:gap-2">
-                                        {colors.map((c, i) => (
+                                        {colors.map((c, i) => {
+                                            const colorState = productPurchaseState(p, { color: c.name });
+                                            const colorStatus = purchaseStateLabel(colorState, locale);
+                                            return (
                                             <button
                                                 key={c.image}
                                                 type="button"
                                                 onClick={() => setColorIdx(i)}
-                                                aria-label={c.name}
+                                                disabled={!colorState.purchasable}
+                                                aria-label={[c.name, colorStatus].filter(Boolean).join(" · ")}
                                                 aria-current={i === colorIdx}
-                                                title={c.name}
-                                                className={`relative h-8 w-8 overflow-hidden rounded-full transition sm:h-9 sm:w-9 ${
+                                                title={[c.name, colorStatus].filter(Boolean).join(" · ")}
+                                                className={`relative h-8 w-8 overflow-hidden rounded-full transition disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-9 ${
                                                     i === colorIdx
                                                         ? "ring-2 ring-indigo-600 ring-offset-1"
                                                         : "ring-1 ring-neutral-300 hover:ring-indigo-300"
                                                 }`}
                                             >
                                                 <Image src={c.chip} alt={c.name} fill sizes="36px" className="object-cover" />
+                                                {!colorState.purchasable && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-white/50 font-black">×</span>}
                                             </button>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </>
                             )}
@@ -275,14 +289,26 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                 }`}
                             >
                                 <option value="">{p.optionLabel ?? "사이즈"}</option>
-                                {sizes.map((s, i) => (
-                                    <option key={s.name} value={i} className="text-neutral-900">
+                                {sizes.map((s, i) => {
+                                    const sizeState = productPurchaseState(p, { size: s.name, ...(colorIdx != null ? { color: colors[colorIdx]?.name } : {}) });
+                                    const sizeStatus = purchaseStateLabel(sizeState, locale);
+                                    return (
+                                    <option key={s.name} value={i} disabled={!sizeState.purchasable} className="text-neutral-900">
                                         {s.name}
                                         {s.delta ? ` (${s.delta > 0 ? "+" : "−"}${formatPrice(Math.abs(s.delta))})` : ""}
+                                        {sizeStatus ? ` · ${sizeStatus}` : ""}
                                     </option>
-                                ))}
+                                    );
+                                })}
                             </select>
                         </div>
+                    )}
+
+                    {selectionComplete && purchaseStateLabel(selectedState, locale) && (
+                        <p role="status" data-inventory-state={selectedState.state} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900">
+                            {purchaseStateLabel(selectedState, locale)}
+                            {selectedState.supplierRequest && (locale === "en" ? " · Dispatch timing will be confirmed after the supplier request." : " · 본사 요청 후 발송 일정을 확인해 안내합니다.")}
+                        </p>
                     )}
 
                     {/* 수량 + (옵션 있으면) 추가 — 옵션 미선택 시 추가 비활성 */}
@@ -300,7 +326,8 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                             <button
                                 type="button"
                                 onClick={addPick}
-                                disabled={!selectionComplete}
+                                data-add-option="true"
+                                disabled={!selectionPurchasable}
                                 className="h-11 flex-1 rounded-md border-2 border-neutral-200 bg-white text-sm font-black text-neutral-700 transition hover:border-indigo-500 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-neutral-200 disabled:hover:text-neutral-700"
                             >
                                 <i className="fa-solid fa-plus mr-1 text-xs" /> {addLabel}
@@ -358,11 +385,12 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                     <button
                         type="button"
                         onClick={() => confirm("card")}
+                        data-confirm-options="true"
                         disabled={!canConfirm}
                         className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
                     >
                         {!canConfirm
-                            ? t("chooseOption")
+                            ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
                             : mode === "buy"
                               ? (locale === "en" ? "Pay by credit / debit card" : "신용·체크카드로 구매하기")
                               : t("addToCart")}

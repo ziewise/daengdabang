@@ -12,6 +12,7 @@ import type {
     RecommendationSurface,
     RunRecommendationOptions,
 } from "./types";
+import { productPurchaseState } from "../catalog/inventory.ts";
 
 export const RECOMMENDATION_ENGINE_VERSION = "recommendation-v1" as const;
 
@@ -27,7 +28,7 @@ export function recommendationProductPolicyIssues(
 ): Array<"not_recommendable" | "not_available" | "not_reviewed"> {
     const issues: Array<"not_recommendable" | "not_available" | "not_reviewed"> = [];
     if (product.recommendable !== true) issues.push("not_recommendable");
-    if (product.availability !== "available") issues.push("not_available");
+    if (product.availability !== "available" || !productPurchaseState(product).purchasable) issues.push("not_available");
     if (!hasValidRecommendationReviewTimestamp(product.operatorReviewedAt)) issues.push("not_reviewed");
     return issues;
 }
@@ -42,6 +43,7 @@ export function isLegacyRecommendationOperationallyEligible(
     product: RecommendationProductPolicy,
 ): boolean {
     return product.recommendable !== false
+        && productPurchaseState(product).purchasable
         && product.availability !== "sold_out"
         && product.availability !== "discontinued";
 }

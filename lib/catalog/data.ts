@@ -8,6 +8,8 @@ import { catalogPriceBadgeKind } from "./price-badge";
 import { safeCatalogHoverVideo } from "../pet-tryon-eligibility";
 import { applyReviewedHoverOverride } from "./reviewed-hover-overrides";
 import { catalogDisplayName } from "./catalog-display-name";
+import inventoryData from "./inventory.generated.json";
+import { inventoryForProduct } from "./inventory";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -247,6 +249,7 @@ function buildCatalog(): CatalogProduct[] {
             colors: buildColors(row.folder),
             sizes: buildSizes(row.folder),
             optionLabel: buildOptionLabel(row.folder),
+            inventory: inventoryForProduct(inventoryData, row.folder),
             ...buildMeta(row, price),
         };
     });

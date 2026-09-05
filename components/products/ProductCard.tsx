@@ -24,6 +24,7 @@ import { useStore } from "@/lib/store";            // 운영 사이트 위시리
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 
 interface Props {
     product: CatalogProduct;
@@ -52,6 +53,7 @@ export default function ProductCard({
     const showBest = effectiveRank !== null && rankStyle !== "off";
     const detailHref = productHref(p);                 // 운영 사이트 라우트(/product/{slug})
     const displayName = productName(p);
+    const purchaseState = productPurchaseState(p);
     const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
     const priceBadgeLabel = catalogPriceBadgeLabel(p.priceBadgeKind, locale);
     const priceBadgeClass = catalogPriceBadgeClass(p.priceBadgeKind, true);
@@ -169,6 +171,7 @@ export default function ProductCard({
                     <p className="text-xs md:text-sm font-bold line-clamp-2 mb-2 min-h-[2.6em]">
                         {displayName}
                     </p>
+                    {!purchaseState.purchasable && <p data-inventory-state={purchaseState.state} className="mt-1 text-xs font-black text-rose-700">{purchaseStateLabel(purchaseState, locale)}</p>}
 
                     {/* 가격 — 할인 row 는 항상 공간 차지 (카드 높이 일관) */}
                     <div className="text-right">
