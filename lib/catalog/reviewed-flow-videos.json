@@ -745,5 +745,366 @@
         "observedAppeal": "A small apricot curly Poodle nibbles, pauses with bright gentle eyes and returns to its feeder, showing the intended real-use context."
       }
     }
+  },
+  "heyrex_taurus_1l": {
+    "folder": "heyrex_taurus_1l",
+    "productId": "p_313",
+    "video": "/images/products/catalog/heyrex_taurus_1l/videos/5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf/hover.mp4",
+    "sha256": "5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf",
+    "videoJobId": "d839f00a-1e1d-4e3f-8340-66873623a652",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T22:42:02.211749+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "e8db1c147798d759b8a90b289d902a69e4c35e9394d16ffaaecdf713e3ecbe3b",
+    "sourcePhotoSha256": "345968f7a496eafff98fafca4b45f96aeb16ea0a514a6a8e42e20e33a6075535",
+    "uploadSha256": "975eda7b612341f8cc7ef2ce4ff8cd722415e922775a235eb9d212f068488a4a",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "0f41f27da4dc3b7fc88d99a17a8239a0520ab6f132776e4cf70c62e41516a4a0",
+    "referenceReviewPath": "heyrex_taurus_1l/image-reference-independent-review.json",
+    "rootApprovalSha256": "344e82d0ab87864b9c290913a22feee78307f9d60ba7da374d08a9a68e60b3f4",
+    "qualifiedQaSha256": "6f8130329079f5cf8723ba86c1e4184fab418a4f445d970552494ee03b7185b3",
+    "candidateManifestSha256": "34f34e3f6d51fe7f050452085eab3c872dd37f4c92877ac8dcd157ae924d20df",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "White Google diamond is visible at lower-right on the floor. Preserve the complete raw frame; DDB will be added only in the new white footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact actual manufacturer source files remain unchanged. No source credit or provider mark was removed.",
+      "observations": [
+        "The shallow pink ring, white front band with pink TORUS lettering, pink base, single white rear cap and inner outlet retain their layout and relative dimensions throughout the sampled frames.",
+        "The whole bowl remains stationary on the floor. No swelling, extra bowl, pump, cable, water jet or material melting was observed.",
+        "The small Bichon laps water from the basin with visible mouth movement, ripples and small droplets, raises its head toward the camera, blinks and lowers it toward the water again.",
+        "Native 1.5, 4 and final second images show plausible mouth, face and four legs. The dog does not bite or engulf the bowl or its cap.",
+        "The fixed floor and bowl geometry remain stable while the dog moves. The ending head angle is close to the opening pose but is not identical."
+      ],
+      "limitations": [
+        "Nominal 1 L dimensions are taken from the right-hand manufacturer chart (23 cm outer width and 8 cm height); actual generated centimetres and dog size are not physically certified.",
+        "The left-hand 2 L chart and mixed 2 L details/7.webp are excluded as evidence for 1 L scale.",
+        "Tiny TORUS lettering, hidden plumbing and the quantity of water swallowed are not pixel- or physical-measurement certified.",
+        "Start/end muzzle placement and head angle differ slightly; a seamless loop is not certified.",
+        "All 192 frames were decoded; 18 representative frames were manually compared with native-resolution checks.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Stable pink 1 L bowl shape, relative size, material, single cap and outlet; actual water lapping and blink",
+        "Whole source frame and mandatory provider mark preserved; exactly one DDB logo in a separate footer",
+        "Absolute centimetres, tiny text and small loop-boundary pose differences remain documented limitations"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "A cute small round-faced Bichon demonstrates drinking, then briefly looks toward the viewer with a soft expression."
+      }
+    }
+  },
+  "aff_donut_original_pink": {
+    "folder": "aff_donut_original_pink",
+    "productId": "p_270",
+    "video": "/images/products/catalog/aff_donut_original_pink/videos/7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3/hover.mp4",
+    "sha256": "7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3",
+    "videoJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T22:42:04.287095+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "126128c8883dfe802bb5a000d6d34c2a95f7d1aff364acd328228d104a73cb8d",
+    "sourcePhotoSha256": "3430230c76e39bba0ca57ea442402283ac3dde23f2ad68a665b4e55389a5424b",
+    "uploadSha256": "38a13e7ca3b0cc0858f2a0e89c54cd6a31339e377965e792dfe0f0aace771333",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "0f0c2f6966fb53b25d18dc81f5b4dfc5cc060632538e0de1ca7767451ed51757",
+    "referenceReviewPath": "aff_donut_original_pink/image-reference-independent-review.json",
+    "rootApprovalSha256": "a179f0e8dcbf1d1dd2a33eb3a1cf5860423cdb5c58104f654e54f599f90f4b23",
+    "qualifiedQaSha256": "9e44777df84abcd5f1de0b3f3979122a748185e14f44620462ca745e059e58d7",
+    "candidateManifestSha256": "76b0d467ac915cec6655f7b8a95bae53d82acf1a013c61ce7b578fb25e1dd1ff",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "White Google diamond is visible at lower-right on the floor. Preserve the complete raw frame; DDB will be added only in the new white footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact actual manufacturer source files remain unchanged. No source credit or provider mark was removed.",
+      "observations": [
+        "One pink short-loop plush donut bed retains a round padded bolster, recessed centre and a single attached white bone on its front.",
+        "The whole bed is visible on the fixed floor and maintains its diameter and height relative to the small Maltese. Slight local compression under paws and chin is consistent with soft bedding.",
+        "The Maltese makes a small head tilt and blink, adjusts its forepaws slightly, rests its chin on the front bolster, then raises its head near the initial pose. This is real subject motion rather than only a camera pan or zoom.",
+        "Native 1.5, 4 and end images show a plausible face and two visible front paws. Hind limbs remain naturally concealed by the resting body and bed.",
+        "No added bone, long-fur conversion, new labels, zippers, exposed filling or product disassembly is shown in sampled frames."
+      ],
+      "limitations": [
+        "The explicit manufacturer M table gives 52 cm diameter and 17 cm height. Absolute generated centimetres and dog weight are not certified.",
+        "The three-bed main photo is not individually size-labelled; no assertion is made that its middle bed is M. L/XL use examples are contextual rather than M physical measurements.",
+        "Hidden hind limbs, tiny textile stitches and exact bone pixels are not completely certified.",
+        "Disassembly and construction internals are not demonstrated; no construction contradiction is asserted from the product title.",
+        "The final head and forepaw pose differs slightly from the opening pose, so a seamless loop is not certified.",
+        "All 192 frames were decoded; 18 representative frames were manually compared with native-resolution checks.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Stable pink short-loop donut bed, relative size and single white bone; actual small Maltese head tilt and chin-rest motion",
+        "Whole source frame and mandatory provider mark preserved; exactly one DDB logo in a separate footer",
+        "Absolute centimetres, tiny text and small loop-boundary pose differences remain documented limitations"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "A cute small Maltese relaxes into the cushion and rests its chin, directly showing the intended comfortable resting context."
+      }
+    }
+  },
+  "rw_overcoat_fuse_jacket": {
+    "folder": "rw_overcoat_fuse_jacket",
+    "productId": "p_119",
+    "video": "/images/products/catalog/rw_overcoat_fuse_jacket/videos/92995e067562a5d92d323e67f850f9cfc865f6c962bc5015459852b0da339415/hover.mp4",
+    "sha256": "92995e067562a5d92d323e67f850f9cfc865f6c962bc5015459852b0da339415",
+    "videoJobId": "e8d9b32a-5f7c-4361-86d1-3cb2971c4156",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-05T22:55:12.203053+00:00",
+    "provider": "google_flow_web",
+    "model": "Veo 3.1 - Fast",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "83039acba60b29229f20d36c25aadabf1ae974038b975aa8c068d7978e24e708",
+    "sourcePhotoSha256": "6dd0b5e6156474b348c320ff7dd599a5c0cc60efc73b30d01b7ad061bf151fa5",
+    "uploadSha256": "8959cd52295fb5f6bceff5b538087cb6b6c59ded7906109cd944d379385dbf09",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceReviewSha256": "51c828ea5acb05a63a9711f92b7ec7b84ef967d5ddf5cb6a65d44a5ba8b1bb21",
+    "referenceReviewPath": "rw_overcoat_fuse_jacket/image-reference-independent-review-ring-corrected.json",
+    "rootApprovalSha256": "386e8e8605e23729cc7aba9a266fea498245b76530862b2d2ba4d0dc4cfd4f51",
+    "qualifiedQaSha256": "0ece329a379962d3854341c28a2a23704d030d34306dd13b205739135d89a513",
+    "candidateManifestSha256": "b1c03c3c9ea8e98068c16b47d9fd213ffa33d92f4130e0d54e0034251f0d2a0d",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "White Veo text is visible at lower-right. Preserve every raw-frame edge and place DDB in added white footer.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Exact manufacturer source and both original/corrected generated input files remain unchanged.",
+      "observations": [
+        "Basalt Gray outer panel, silver curved piping, side zipper, belly panel and single small yellow back label keep the same positions and relative proportions.",
+        "The small grey attachment ring and its single black web anchor remain small and similarly angled throughout the 18 sampled frames; the previous attempt oversized triangular ring is not observed.",
+        "The chest remains in approximately the same side view without a new yellow badge, additional emblem, collar or leash appearing.",
+        "The dog makes visible blinks, gentle head turns and tilts, and a soft tail wag while maintaining its standing body pose. The paws do not step and the coat does not slide or stretch abnormally.",
+        "Native 1.5, 4, 6 and ending frames show plausible eyes, muzzle, ear visibility and existing limb arrangement. Some far-side anatomy is naturally occluded rather than independently visible.",
+        "The whole dog and garment remain in frame against a locked courtyard background. Final eye openness and head angle differ slightly from the opening frame."
+      ],
+      "limitations": [
+        "Absolute physical centimetres, exact hardware thickness and tiny back-label artwork are not physically or pixel certified.",
+        "The generated small ring is visually compatible with the corrected input, but hidden anchor internals and perspective-dependent ring cross-section cannot be proven from these views.",
+        "Far-side limbs and hidden underside details are partly occluded; no assertion is made that every paw is independently visible.",
+        "The final head angle and eye openness differ slightly from the opening pose despite identical first/last input references; the loop is not certified perfectly seamless.",
+        "All 192 frames were decoded; 18 representative raw frames were manually compared with additional native-resolution checks.",
+        "Root subsequently approved this exact candidate; actual publication remains incomplete, and stock/sale eligibility is unchanged."
+      ],
+      "rootApprovedScopes": [
+        "Stable small grey V-shaped ring, single black web anchor, silver piping, zipper, belly panel and single yellow back patch",
+        "Actual small head movement, blinks and tail wag with natural standing pose",
+        "Whole raw frame and provider mark preserved; exactly one DDB logo in a separate footer",
+        "Fine ring cross-section, absolute centimetres, occluded paws and slight loop blink difference remain uncertified"
+      ],
+      "promotionalUse": {
+        "observedAppeal": "A cute small grey-white terrier-like dog blinks, gives a gentle inquisitive head tilt and wags its tail while presenting the real coat clearly."
+      }
+    },
+    "sourceAttempt": 2,
+    "priorAttemptsPreserved": [
+      {
+        "path": "rw_overcoat_fuse_jacket/diagnostic-actual-top-dog.png",
+        "sha256": "ef8917b42783b2db8a3df62153fab83703b30b6f4aa16392e269a922fb215665"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/diagnostic-ring-comparison.png",
+        "sha256": "4dc51bb67752287f724e3056efe75b5660d290f52688721007517e6a2a259b50"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/diagnostic-ring-corrected-comparison.png",
+        "sha256": "dabe783bbdc1b574e8bce9bbb7450950da13aab72e4ec47b5de9e39bb8b0c725"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/flow-raw-omni11-8s.mp4",
+        "sha256": "61a7971c11129eee988cc9aa5760b855c57eacf8a53c54ffd99ceae566e333cd"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/flow-submission.json",
+        "sha256": "dd6fdeaee0ffdec704934347e41e66689219e898ffd7fda5edc25ee0a30a1810"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/image-reference-independent-review-ring-corrected.json",
+        "sha256": "51c828ea5acb05a63a9711f92b7ec7b84ef967d5ddf5cb6a65d44a5ba8b1bb21"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/image-reference-independent-review.json",
+        "sha256": "9963db01679c6c37bea4e79fd4d089889dfe3b07a6e81afeabe7baa52466bdb2"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/image-reference-review-ring-corrected.json",
+        "sha256": "209a773df9f4824ffe695f1ee53cf61b81a340faed7075866eac3fe5deef5a6a"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/imagegen-prompt.txt",
+        "sha256": "75b2fe56ebd1e26e5d6ddb9bf7b3a631435170ce567b7c24ea36af3aa1347c38"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/imagegen-ring-correction-prompt.txt",
+        "sha256": "37c3f67cd0467326359ed7219db07c867c38e7dc166dab714987fd10223ec2ae"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/prompt-en.txt",
+        "sha256": "badbc850bf4df04e94e9870dc2257ec8b3b3b5b2bd236aedede6e75b6dd2fa16"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/reference-original.webp",
+        "sha256": "6dd0b5e6156474b348c320ff7dd599a5c0cc60efc73b30d01b7ad061bf151fa5"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/REFERENCE-QA-KO.md",
+        "sha256": "0479c06c5148549f5046e54b9d7c3d182245947dae168959200c49ee6084db5b"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/REFERENCE-RING-CORRECTED-QA-KO.md",
+        "sha256": "6928312e8b5745ea87cb35aa9f26a84bada51395cd9c9fa5af185cfbf0f3126a"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/sample-pack.json",
+        "sha256": "e46690ac2a4326405f792ceaf4c2c64bd784916695656b49d84318087791f8c9"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/small-terrier-basalt-gray-reference.png",
+        "sha256": "fa23d42733686f79128e6e734dba002e0e860d54b0ac03e45ee2ea39745ed1d7"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/small-terrier-basalt-gray-ring-corrected-reference.png",
+        "sha256": "8959cd52295fb5f6bceff5b538087cb6b6c59ded7906109cd944d379385dbf09"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/VIDEO-QA-KO.md",
+        "sha256": "251104afaf126eaa6852f95490bd0304f831cdc280f643cc5203b68d0cec7736"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/dense-full.jpg",
+        "sha256": "c48f2e804d23eae858ec600a1ccf5a20b54ea22b03dc171a259f952d98a9f2bb"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/ffmpeg-full-decode.log",
+        "sha256": "69bed9093815abbfb700103bc3757a71efcc5354bec5ca7587aac0a7b618d012"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/ffmpeg-last-extraction.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-000-0.000s.png",
+        "sha256": "4782077c1b8c681bbbbed99c7e40870e56173ba9b699e65bd74dd414adf8c52d"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-012-0.500s.png",
+        "sha256": "240a6876c46d3798622e5750f60acdadf01d7c93649713a75714dd5d7775418d"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-024-1.000s.png",
+        "sha256": "91c3e1e088a476b20d9d3933eed9697e062c257ec08939ad28e012aa1e7e4883"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-036-1.500s.png",
+        "sha256": "834c10f34ad13d1382f1db35ce7cd9ae9eaf15514850517848419bf0e4fdf0b9"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-048-2.000s.png",
+        "sha256": "b0694d1f7b382d695c73e41bec17c02d1a546733938c311df939a14cdea72f46"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-060-2.500s.png",
+        "sha256": "9b2eb5c665c5098b0b9c956f5403950df6f528b1a806730aa962e31bdbc1aff0"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-072-3.000s.png",
+        "sha256": "fe7276fcc5c6c96179bb80c7f5842ad286b955161ebf73451ad82b89a318c364"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-084-3.500s.png",
+        "sha256": "58cd92fa6c9676c39315bf33127ea1a4a28410331e5752048140891309b2139a"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-096-4.000s.png",
+        "sha256": "0e6971c6a8c8738281d341acd63247c6808833c93f81847e99b35256348416ae"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-108-4.500s.png",
+        "sha256": "bdd04118c153c8f34eb94d6a789fcd16c4cb02cda659928c9e33e663f7a05c0e"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-120-5.000s.png",
+        "sha256": "8113a44c26f516633d4aeace77ecc25b3429e7679c4c29b82e55545f5edd83ab"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-132-5.500s.png",
+        "sha256": "4220a81b6e79995c8777544dac9fcfda6efd5182ce6525a9370018b3f7114875"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-144-6.000s.png",
+        "sha256": "5e2934564d2750fb08c24252b100a850a03562128b17ee7a56abd98a4484a704"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-156-6.500s.png",
+        "sha256": "90a1bde0b23adcf26475756bca6e33389262e45cce1683bcdc65011a2cca7da8"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-168-7.000s.png",
+        "sha256": "371bef37a815fbc8a09037be39ad9f1436719b0a5faf3ddd43d290b252c363f4"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-180-7.500s.png",
+        "sha256": "109640cdfac14b868993f5226e1cbe1c3331425c20d1ce037e3b44277ba631dd"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-190-7.917s.png",
+        "sha256": "8286ec07c373832efc0cda6cf63c29d2c2d2dcbe42cd331bd91167ee4ddc6a43"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/frame-191-7.958s.png",
+        "sha256": "f67e8e322e17cc40cfe6869955ccc166754a9a295f47dcaca9bc04ade610f4b1"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/inspection-manifest.json",
+        "sha256": "8699c886bd5a36e9c2bcc5e3b6e6fbff2b61b24172326564edd6ba9a3bc77e43"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/qualified-qa.json",
+        "sha256": "22957ca23b9a3c8e252abcfc59cc8e02adac8025f0a84a2f9275d59596eb6bc6"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/reference-and-keyframes.jpg",
+        "sha256": "79c84d3d4d7d1b056dd41ba54bab1c820809be122e5e2208c125db9e585a776f"
+      },
+      {
+        "path": "rw_overcoat_fuse_jacket/qa-omni-01/technical-evidence.json",
+        "sha256": "02f3c6fa1bcc733719ef61e2512216483ed41f2cc0fab67040587961fee5dbd3"
+      }
+    ]
   }
 }

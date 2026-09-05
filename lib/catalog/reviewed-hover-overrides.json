@@ -19,7 +19,13 @@
   },
   "aff_donut_original_brown": null,
   "aff_donut_original_gray": null,
-  "aff_donut_original_pink": null,
+  "aff_donut_original_pink": {
+    "video": "/images/products/catalog/aff_donut_original_pink/videos/7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f"
+  },
   "aff_microbeads_cloud": null,
   "aff_microbeads_round": null,
   "aff_pad_l_20_1": {
@@ -815,7 +821,13 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-139b9cb626ef"
   },
-  "rw_overcoat_fuse_jacket": null,
+  "rw_overcoat_fuse_jacket": {
+    "video": "/images/products/catalog/rw_overcoat_fuse_jacket/videos/92995e067562a5d92d323e67f850f9cfc865f6c962bc5015459852b0da339415/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e8d9b32a-5f7c-4361-86d1-3cb2971c4156"
+  },
   "rw_pacificloop_toy": {
     "video": "/images/products/catalog/rw_pacificloop_toy/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1155,5 +1167,12 @@
     "videoJobId": "3d4e1704-1820-4dc2-aad9-d39d5f808358"
   },
   "zs_rhino": null,
-  "zs_unicorn": null
+  "zs_unicorn": null,
+  "heyrex_taurus_1l": {
+    "video": "/images/products/catalog/heyrex_taurus_1l/videos/5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "d839f00a-1e1d-4e3f-8340-66873623a652"
+  }
 }

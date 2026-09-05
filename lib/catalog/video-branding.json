@@ -187,5 +187,44 @@
     "sourceJobId": "80e1d847-a454-48b0-9e25-439e1aa830c3",
     "sourceVideoSha256": "3e1e712b07d543d0fb12d89481793846e5e8b5b1c468f5df0cec15140a4c1e77",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/heyrex_taurus_1l/videos/5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf/hover.mp4": {
+    "branding": "baked",
+    "sha256": "5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T22:42:02.211749+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "d839f00a-1e1d-4e3f-8340-66873623a652",
+    "sourceVideoSha256": "e8db1c147798d759b8a90b289d902a69e4c35e9394d16ffaaecdf713e3ecbe3b",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/aff_donut_original_pink/videos/7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3/hover.mp4": {
+    "branding": "baked",
+    "sha256": "7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T22:42:04.287095+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f",
+    "sourceVideoSha256": "126128c8883dfe802bb5a000d6d34c2a95f7d1aff364acd328228d104a73cb8d",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_overcoat_fuse_jacket/videos/92995e067562a5d92d323e67f850f9cfc865f6c962bc5015459852b0da339415/hover.mp4": {
+    "branding": "baked",
+    "sha256": "92995e067562a5d92d323e67f850f9cfc865f6c962bc5015459852b0da339415",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T22:55:12.203053+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "e8d9b32a-5f7c-4361-86d1-3cb2971c4156",
+    "sourceVideoSha256": "83039acba60b29229f20d36c25aadabf1ae974038b975aa8c068d7978e24e708",
+    "providerWatermarkPreserved": true
   }
 }
