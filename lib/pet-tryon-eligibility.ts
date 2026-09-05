@@ -97,29 +97,39 @@ export function getPetTryOnEligibility(product: PetTryOnProductIdentity): PetTry
     return { eligible: true, reason: "eligible", zeroAiColorPreview: "server_verified" };
 }
 
-/**
- * The current catalog hover clips were produced as dog-wearing scenes. They
- * are safe to publish only for products that the dog actually wears. Human
- * bags, carriers, food, toys, beds and accessories fail closed to the static
- * product image until a separately reviewed interaction video exists.
- */
+// These exact existing assets were retained pending replacement in the 2026-09-06 review.
+// Product names/categories and a provider's quality label never grant video publication.
+const RETAINED_LEGACY_VIDEOS: Record<string, { productId: string; video: string }> = {
+    rw_flagline_harness_24: {
+        productId: "p_20",
+        video: "/images/products/catalog/rw_flagline_harness_24/videos/522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357/hover.mp4",
+    },
+    rw_coverall_snow_25fw: {
+        productId: "p_39",
+        video: "/images/products/catalog/rw_coverall_snow_25fw/videos/hover.mp4",
+    },
+    rs_v2_volcanored: {
+        productId: "p_99",
+        video: "/images/products/catalog/rs_v2_volcanored/videos/hover.mp4",
+    },
+};
+
+/** Keep only explicitly retained legacy assets; Smart Fit eligibility is independent. */
 export function safeDogWearingCatalogVideo(product: StorefrontVideoCandidate): string | undefined {
     const video = product.video?.trim();
     if (!video) return undefined;
-    return getPetTryOnEligibility(product).eligible ? video : undefined;
+    const raw = product.raw;
+    const folder = product.folder || raw?.folder || "";
+    const retained = RETAINED_LEGACY_VIDEOS[folder];
+    return retained && product.id === retained.productId
+        && (!raw?.folder || raw.folder === folder)
+        && video === retained.video
+        && (raw?.videoProvider == null || raw.videoProvider === "")
+        && (raw?.videoJobId == null || raw.videoJobId === "")
+        && raw?.videoQuality === "approved_dog_wearing"
+        ? video
+        : undefined;
 }
-
-const REVIEWED_PRODUCT_INTERACTION_QUALITIES = new Set([
-    "approved_dog_wearing",
-    "approved_dog_using",
-    "approved_dog_product_interaction",
-    "approved_exact_product_images",
-]);
-
-const REVIEWED_PRODUCT_VIDEO_PROVIDERS = new Set([
-    "ziewcraft",
-    "ddb_exact_product_renderer",
-]);
 
 type ReviewedFlowVideo = {
     folder: string;
@@ -151,21 +161,13 @@ function reviewedFlowVideo(product: StorefrontVideoCandidate, video: string): st
 /**
  * General catalog hover clips are separate from Smart Fit eligibility. A toy,
  * bowl or other non-wearable product can have a safe dog-using hover clip even
- * though it must remain unavailable in Try-On. Existing reviewed providers
- * use quality and job provenance. Web-generated Flow clips additionally have
- * a separate exact product, asset and job review; a provider label is not approval.
+ * though it must remain unavailable in Try-On. New clips need an exact product,
+ * asset and job review; provider/quality labels alone are never publication approval.
  */
 export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string | undefined {
     const video = product.video?.trim();
     if (!video) return undefined;
     const raw = product.raw;
     if (raw?.videoProvider === "google_flow_web") return reviewedFlowVideo(product, video);
-    if (raw?.videoProvider) {
-        return REVIEWED_PRODUCT_VIDEO_PROVIDERS.has(raw.videoProvider)
-            && REVIEWED_PRODUCT_INTERACTION_QUALITIES.has(raw.videoQuality || "")
-            && Boolean(raw.videoJobId?.trim())
-            ? video
-            : undefined;
-    }
     return safeDogWearingCatalogVideo(product);
 }

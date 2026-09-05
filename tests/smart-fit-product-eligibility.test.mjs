@@ -154,7 +154,7 @@ test("legacy dog-wearing hover videos fail closed for every non-wearable product
     }
 });
 
-test("reviewed dog-worn product videos remain available", async () => {
+test("wearable product identity alone cannot publish an unreviewed legacy video", async () => {
     const { safeDogWearingCatalogVideo } = await import("../lib/pet-tryon-eligibility.ts");
     const dogPackVideo = "/images/products/catalog/rw_palisades_pack_26/videos/hover.mp4";
 
@@ -165,16 +165,16 @@ test("reviewed dog-worn product videos remain available", async () => {
         video: dogPackVideo,
         name: "러프웨어 팰리세이드 팩 반려견 배낭",
         folder: "rw_palisades_pack_26",
-    }), dogPackVideo);
+    }), undefined);
     assert.equal(safeDogWearingCatalogVideo({
         id: "p_155",
         subcategory: "wear",
         image: "/wear.webp",
         video: "/wear.mp4",
-    }), "/wear.mp4");
+    }), undefined);
 });
 
-test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gate", async () => {
+test("provider quality labels cannot publish interaction clips without an exact asset review", async () => {
     const { getPetTryOnEligibility, safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
     const toyVideo = "/images/products/catalog/rw_gourdo_small/videos/hover.mp4";
     const toy = {
@@ -190,7 +190,7 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
     };
 
     assert.equal(getPetTryOnEligibility(toy).eligible, false);
-    assert.equal(safeCatalogHoverVideo(toy), toyVideo);
+    assert.equal(safeCatalogHoverVideo(toy), undefined);
     assert.equal(safeCatalogHoverVideo({
         ...toy,
         raw: {
@@ -198,7 +198,7 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
             videoQuality: "approved_exact_product_images",
             videoJobId: "hover-20260830-exact-product-v1",
         },
-    }), toyVideo);
+    }), undefined);
     assert.equal(safeCatalogHoverVideo({
         ...toy,
         subcategory: "wear",
@@ -211,7 +211,7 @@ test("Admin-reviewed interaction clips do not inherit the Smart Fit wearable gat
     assert.equal(safeCatalogHoverVideo({ ...toy, raw: {} }), undefined);
 });
 
-test("the completed static catalog replaces camera-motion-only clips with reviewed exact-product videos", async () => {
+test("archived still-photo renderer clips remain withheld without a motion review", async () => {
     const { safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
     const rows = JSON.parse(await readFile(new URL("lib/catalog/raw.json", root), "utf8"));
     const blocked = rows.filter((row) => row.videoJobId === "hover-20260830-exact-product-v2");
@@ -228,7 +228,7 @@ test("the completed static catalog replaces camera-motion-only clips with review
             image: row.image,
             video: row.video,
             raw: row,
-        }), row.video);
+        }), undefined);
     }
 });
 
@@ -246,7 +246,7 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
 
     const values = Object.values(overrides);
     assert.equal(Object.keys(overrides).length, 347);
-    assert.equal(values.filter((value) => value === null).length, 219);
+    assert.equal(values.filter((value) => value === null).length, 215);
     assert.equal(values.filter((value) => value?.videoProvider === "ddb_exact_product_renderer").length, 124);
     for (const folder of [
         "rw_backtrak_evac_kit",

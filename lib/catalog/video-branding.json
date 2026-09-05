@@ -70,5 +70,57 @@
     "sourceJobId": "3d4e1704-1820-4dc2-aad9-d39d5f808358",
     "sourceVideoSha256": "81fc652549cb7fe62935ea25bfc69978e92962e1554bd944c2a72272a3e12e57",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/aff_donut_luxury_m/videos/660c7741677b18bfac89e2a8680cf2625a0ec74dedeeeab31901824bc3db4882/hover.mp4": {
+    "branding": "baked",
+    "sha256": "660c7741677b18bfac89e2a8680cf2625a0ec74dedeeeab31901824bc3db4882",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:10:28.022173+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "6a6e5ab8-688c-494d-b313-334a6cde72d3",
+    "sourceVideoSha256": "f8f55dedc02a1b5f9c836c3eaab4399a2e723e048e720be70eceb6d03dab88da",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/zs_blackbear/videos/c4ebd325ebf7c2116f6e6259842ded4abbe43bae1d5d8cb360eb695bd3d58d05/hover.mp4": {
+    "branding": "baked",
+    "sha256": "c4ebd325ebf7c2116f6e6259842ded4abbe43bae1d5d8cb360eb695bd3d58d05",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:10:28.022173+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "31c54039-955d-4f22-ac17-0c576e500d7c",
+    "sourceVideoSha256": "4bc1203a67335b32e0f4c9f8e2fbbb7de353e2e0c6b2136b2ae7481bdcfad02b",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/zs_bunnyrabbit/videos/a2829ba16c5792f1fe7b1f659ecc0f76b46ffc618c274368d4a9d8eaab876a72/hover.mp4": {
+    "branding": "baked",
+    "sha256": "a2829ba16c5792f1fe7b1f659ecc0f76b46ffc618c274368d4a9d8eaab876a72",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:10:28.022173+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "c7d106b9-419e-49e6-a6e2-c59e8ae9ad1a",
+    "sourceVideoSha256": "635a9845d62a30a20a2b52c2aef9d881c5bf5c5e6c79f9ba86f15ce70cb894e7",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/zs_alien/videos/30605f4ea71ad45b92a345dec2e77b1659c7845ad3a30d8e3feca81f561025be/hover.mp4": {
+    "branding": "baked",
+    "sha256": "30605f4ea71ad45b92a345dec2e77b1659c7845ad3a30d8e3feca81f561025be",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T21:10:28.022173+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "9e16d217-e718-45c8-9bd0-a64671769a90",
+    "sourceVideoSha256": "198b77fb325021b0446f9afb4961f8e822937ee004807b4af51299ac49bfa8dd",
+    "providerWatermarkPreserved": true
   }
 }

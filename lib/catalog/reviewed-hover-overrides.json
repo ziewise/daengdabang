@@ -3,7 +3,13 @@
   "aff_carseat_sugarwing": null,
   "aff_donut_chewisty_l_pinkgray": null,
   "aff_donut_luxury_l": null,
-  "aff_donut_luxury_m": null,
+  "aff_donut_luxury_m": {
+    "video": "/images/products/catalog/aff_donut_luxury_m/videos/660c7741677b18bfac89e2a8680cf2625a0ec74dedeeeab31901824bc3db4882/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "6a6e5ab8-688c-494d-b313-334a6cde72d3"
+  },
   "aff_donut_luxury_xl": {
     "video": "/images/products/catalog/aff_donut_luxury_xl/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1063,10 +1069,28 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-c431e752a5af"
   },
-  "zs_alien": null,
-  "zs_blackbear": null,
+  "zs_alien": {
+    "video": "/images/products/catalog/zs_alien/videos/30605f4ea71ad45b92a345dec2e77b1659c7845ad3a30d8e3feca81f561025be/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "9e16d217-e718-45c8-9bd0-a64671769a90"
+  },
+  "zs_blackbear": {
+    "video": "/images/products/catalog/zs_blackbear/videos/c4ebd325ebf7c2116f6e6259842ded4abbe43bae1d5d8cb360eb695bd3d58d05/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "31c54039-955d-4f22-ac17-0c576e500d7c"
+  },
   "zs_bull": null,
-  "zs_bunnyrabbit": null,
+  "zs_bunnyrabbit": {
+    "video": "/images/products/catalog/zs_bunnyrabbit/videos/a2829ba16c5792f1fe7b1f659ecc0f76b46ffc618c274368d4a9d8eaab876a72/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "c7d106b9-419e-49e6-a6e2-c59e8ae9ad1a"
+  },
   "zs_dinosaur": {
     "video": "/images/products/catalog/zs_dinosaur/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
