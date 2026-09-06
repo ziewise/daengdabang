@@ -673,5 +673,89 @@
     "sourceCommit": "f4aa0e3a00840282fe928f2ce28fd3eab9978f73",
     "sourceVideoSha256": "8318c60a15df6ad7e9966545591d856767ff4bcca36de7f56a1f6d53c17a0287",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_basecamp_bed/videos/8cb8e6b7691ce1b19bd3be199bc6e52a6b1349df8f40cdefe67f3e7207c0a377/hover.mp4": {
+    "branding": "baked",
+    "sha256": "8cb8e6b7691ce1b19bd3be199bc6e52a6b1349df8f40cdefe67f3e7207c0a377",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T06:11:59.412124+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "beead419-24cf-4c17-b3bb-443e34485175",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "3fb42be38c121942b00cbd2e76abc6a31d13e2e3c64d7e4a559bc397243735ca",
+      "downloadEvidenceSha256": "ddc19215a2da828eb1735e7e25bd56f2dfb4c80f5c71034bb72ed351d37fbbf4"
+    },
+    "sourceVideoSha256": "3fb42be38c121942b00cbd2e76abc6a31d13e2e3c64d7e4a559bc397243735ca",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_gourdo_small/videos/2972c64b16460456cf9dffbc7337166b0044e4c18fe5a7703475cc8e82f52a4a/hover.mp4": {
+    "branding": "baked",
+    "sha256": "2972c64b16460456cf9dffbc7337166b0044e4c18fe5a7703475cc8e82f52a4a",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T06:11:59.632598+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "f3bde5f8-4f34-488e-b1fc-f6eb431d0311",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "c62cc3d8a2b48516b10d44d8658315936e534670e388d24d301a94bcf77d0117",
+      "downloadEvidenceSha256": "58f1c72a8179a247bec934f09b47a140fef3411a171ff97645434110b6219f3c"
+    },
+    "sourceVideoSha256": "c62cc3d8a2b48516b10d44d8658315936e534670e388d24d301a94bcf77d0117",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_hydroplane_disc_m_25/videos/e8b62d2d25cebf4f5a5c6a2754ee7740b484e55965e808545c902e21f9a66e26/hover.mp4": {
+    "branding": "baked",
+    "sha256": "e8b62d2d25cebf4f5a5c6a2754ee7740b484e55965e808545c902e21f9a66e26",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T06:24:30.478495+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "050efcd4-b1e8-46d4-9ba2-495bf4539b0c",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "19723f3bb8c08369c05b4f6b03279ce5aa6921868106b75385799aa914436dc3",
+      "downloadEvidenceSha256": "7b5cba06efb7c899bb6ce6b38a0c62d785362884b7f01f5be34198ec0a16a1f0"
+    },
+    "sourceVideoSha256": "19723f3bb8c08369c05b4f6b03279ce5aa6921868106b75385799aa914436dc3",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_basecamp_mat/videos/656311cf3797091e561f47ea6e3d729d33214e0cf60d3f7326e3c351fcbf97be/hover.mp4": {
+    "branding": "baked",
+    "sha256": "656311cf3797091e561f47ea6e3d729d33214e0cf60d3f7326e3c351fcbf97be",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T06:38:43.635283+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "fa0f4189-2a4e-41c2-99ee-5729366351b4",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "d9b69617c04a551fc466b01a76d9e7e0bb692fcaa30ad949d458aafe3e1d47c9",
+      "downloadEvidenceSha256": "b3b2c91872e862b732edf38ecbc1210b270c3cc6da810b85f2e3bd923425332f"
+    },
+    "sourceVideoSha256": "d9b69617c04a551fc466b01a76d9e7e0bb692fcaa30ad949d458aafe3e1d47c9",
+    "providerWatermarkPreserved": true
   }
 }
