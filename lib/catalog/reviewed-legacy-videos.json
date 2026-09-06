@@ -35,5 +35,43 @@
     "sourcePhotoSha256": "7f4b50435e6e0e68adc0d5e6d68a932beb3e500bf006eb52404fa16ea12d9182",
     "qualifiedQaSha256": "348a696e9a86108af987d4512c1ef354a324158c39daa8b92e67750e89b5fc17",
     "candidateManifestSha256": "f86ccab7aa89bf3a41730ffdf72ac27dbdb0e94839258bb6f23ed80b17aa582a"
+  },
+  "rs_v2_coyote": {
+    "folder": "rs_v2_coyote",
+    "productId": "p_104",
+    "reviewClass": "legacy_reviewed",
+    "publicationStatus": "approved",
+    "assetPath": "/images/products/catalog/rs_v2_coyote/videos/a23b1d61a771c565443728613546bfbea1c075641910781d84ffe7291e1bcdf0/hover.mp4",
+    "assetSha256": "a23b1d61a771c565443728613546bfbea1c075641910781d84ffe7291e1bcdf0",
+    "sourceVideoSha256": "7957252c5edc5a63bb51ce8961299d2201aa39dc1ae2e4e7d6b95e8ba5081a71",
+    "provider": "unknown",
+    "model": "unknown",
+    "jobId": null,
+    "reviewSha256": "48209f2bee5fa0a8eff05e8715faa36869e6193cf6de6d7a2e8fe43df0fcc768",
+    "reviewedAt": "2026-09-06T03:21:47.239821+00:00",
+    "quality": "approved_dog_wearing",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "checks": {
+      "productIdentity": true,
+      "scale": true,
+      "motion": true,
+      "branding": true,
+      "providerMarkPreserved": true
+    },
+    "limitations": [
+      "Coyote is lighter/sandier under the depicted outdoor light. Exact colorimetry and small/partly obscured molded lettering are not certified.",
+      "Actual frame size, head measurements, absolute cm, fine buckle topology behind the head and unseen foam section cannot be certified from these views.",
+      "The dog appears medium-sized and Jindo/spitz-like by visual inference only; breed and weight are not established. This is legacy reuse, not new small-dog footage.",
+      "Cuts around2s and5.5s and seated-versus-standing start/end create a visible loop difference. The standing transition is a cut, not observed continuous sit-to-stand motion.",
+      "All192 source frames passed technical decoding.18 full-scene temporal samples plus selected natives were manually viewed, not every full frame.",
+      "Original generation provider/model/account/prompt/job are unknown; no synthetic provenance or new generation count.",
+      "Original audio was not listened to; the candidate is silent.",
+      "Root approved this exact candidate; actual canonical registration and publication are pending."
+    ],
+    "sourcePhotoSha256": "3f7daf90cd63a33a324d9d8a230dc6cf6a4c27b14daa3480aa960828b97744c6",
+    "qualifiedQaSha256": "76f7d663831aaf5bc6305bad26ba392fc7ce104167101c4925aac83b7711f8f9",
+    "candidateManifestSha256": "db4d466c138729893b966db3525c3c228e7959e71fe03f0021e7cfb52a19531c"
   }
 }

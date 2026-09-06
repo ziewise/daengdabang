@@ -244,13 +244,12 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         videoJobId: "old-review",
     });
 
-    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch07.json"));
+    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch08.json"));
     assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);
     for (const folder of [
         "rw_backtrak_evac_kit",
-        "rw_lumenglow_jacket_26fw",
         "id_treat_sardine",
         "heyrex_taurus_filter_5p",
         "icecream_realcheese",
@@ -270,7 +269,6 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
     }
 
     for (const folder of [
-        "rw_lunker",
         "yora_wet_appleparsnip_390g",
         "yora_wet_beetrootswede_390g",
         "aff_pad_l_20_1",

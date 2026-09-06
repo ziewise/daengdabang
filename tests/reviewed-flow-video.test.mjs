@@ -9,7 +9,7 @@ import { videoBrandingMode } from "../lib/catalog/video-branding.ts";
 const read = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), "utf8"));
 const reviews = read("../lib/catalog/reviewed-flow-videos.json");
 const raw = read("../lib/catalog/raw.json");
-const expected = read("./fixtures/flow-publication-batch07.json");
+const expected = read("./fixtures/flow-publication-batch08.json");
 test("the reviewed Flow list matches the exact separately approved release snapshot", () => {
     assert.deepEqual(Object.keys(reviews).sort(), Object.keys(expected.approvedFlow).sort());
     const rawText = readFileSync(new URL("../lib/catalog/raw.json", import.meta.url), "utf8");

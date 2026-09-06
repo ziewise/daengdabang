@@ -162,7 +162,13 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-30ad633bcf90"
   },
-  "hugo_icecream_salmon": null,
+  "hugo_icecream_salmon": {
+    "video": "/images/products/catalog/hugo_icecream_salmon/videos/0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "ec70496d-a4a9-4565-9579-cbc49ff307de"
+  },
   "iby_backpack_fc1705": null,
   "iby_backpack_fc1752": null,
   "iby_backpack_fc2106": {
@@ -503,7 +509,15 @@
   "rs_v2_bighornblue": null,
   "rs_v2_black": null,
   "rs_v2_cloudycoral_ltd": null,
-  "rs_v2_coyote": null,
+  "rs_v2_coyote": {
+    "video": "/images/products/catalog/rs_v2_coyote/videos/a23b1d61a771c565443728613546bfbea1c075641910781d84ffe7291e1bcdf0/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "unknown",
+    "videoJobId": null,
+    "videoQuality": "approved_dog_wearing",
+    "videoReviewClass": "legacy_reviewed",
+    "videoReviewSha256": "48209f2bee5fa0a8eff05e8715faa36869e6193cf6de6d7a2e8fe43df0fcc768"
+  },
   "rs_v2_gallatingray": null,
   "rs_v2_himalayapink": null,
   "rs_v2_lenslab": {
@@ -661,7 +675,13 @@
   "rw_frontrangeflex_collar_26": null,
   "rw_frontrangeflex_harness_26": null,
   "rw_frontrangeflex_leash_26": null,
-  "rw_furness_jacket": null,
+  "rw_furness_jacket": {
+    "video": "/images/products/catalog/rw_furness_jacket/videos/6032395b6d43749c644b8215c8a54ca2776cee7eaee2b94953b0db4d4ba4a0b6/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "7cb32df2-25e2-445a-b890-601da10a53c1"
+  },
   "rw_gourdo_large": {
     "video": "/images/products/catalog/rw_gourdo_large/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -763,7 +783,13 @@
   "rw_leash_frontrange_short_24": null,
   "rw_leash_hiandlight_24": null,
   "rw_leash_justacinch": null,
-  "rw_leash_nota": null,
+  "rw_leash_nota": {
+    "video": "/images/products/catalog/rw_leash_nota/videos/88732465260b0a01dfe94ba857c955506bc88e3651a632dd3637f62742cb96e2/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "d2696138-7384-4b47-86d6-e735db21c960"
+  },
   "rw_leash_nota_long": null,
   "rw_leash_roamer": null,
   "rw_leash_roamer_long": null,
@@ -771,18 +797,18 @@
   "rw_leash_trailrunner_23": null,
   "rw_loadup_harness_24": null,
   "rw_lumenglow_jacket_26fw": {
-    "video": "/images/products/catalog/rw_lumenglow_jacket_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_lumenglow_jacket_26fw/videos/e3efc575bd14adcdab87f20966b9238f1c5f7abb96bd4638217775ee8bed3c36/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-6d660df0b212"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "dc6f6b7c-6fc7-49ec-8b6c-a880db0a29bb"
   },
   "rw_lunker": {
-    "video": "/images/products/catalog/rw_lunker/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_lunker/videos/30d34f88eef5f9e649bcdd58776e63344f010e6d5245978e1d7b9257f794f0d3/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-f89875f20ac2"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "84001918-fb05-4b55-8616-3737e9beafe8"
   },
   "rw_morel_toy": {
     "video": "/images/products/catalog/rw_morel_toy/videos/317e151da43668b23b369fc81e9d341f46a6d6795ca7ada410fe43c75d54c2ca/hover.mp4",
@@ -827,11 +853,11 @@
     "videoJobId": "b57c2e97-2c51-4338-add0-2c4951b98b29"
   },
   "rw_notastick": {
-    "video": "/images/products/catalog/rw_notastick/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_notastick/videos/8d58a453ac8af2df0dbeee44b3978656ca98c242f4e817afe99e2f78d3e2c02c/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-139b9cb626ef"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "117a41ae-238a-4e6c-8f8e-26bf1381979e"
   },
   "rw_overcoat_fuse_jacket": {
     "video": "/images/products/catalog/rw_overcoat_fuse_jacket/videos/92995e067562a5d92d323e67f850f9cfc865f6c962bc5015459852b0da339415/hover.mp4",
@@ -1172,13 +1198,19 @@
     "videoJobId": "c7d106b9-419e-49e6-a6e2-c59e8ae9ad1a"
   },
   "zs_dinosaur": {
-    "video": "/images/products/catalog/zs_dinosaur/videos/hover.mp4",
+    "video": "/images/products/catalog/zs_dinosaur/videos/2b21e812ac9f98cbed83986862cb74f382b0df56e44e7f21f659fdc7f485635b/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-89460e535de7"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "7c656711-e852-4c59-a762-d276e1e97b97"
   },
-  "zs_fox": null,
+  "zs_fox": {
+    "video": "/images/products/catalog/zs_fox/videos/cf685418e2f24450720abe59b7ba37c9ca2c27c235f2ab6ef1a38c8940399e4d/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "20323b84-e635-4e72-95a0-46a20f942cf1"
+  },
   "zs_giraffe": {
     "video": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1203,11 +1235,11 @@
     "videoJobId": "6d1fd550-202e-4061-a253-530a33d14bc7"
   },
   "zs_pandabear": {
-    "video": "/images/products/catalog/zs_pandabear/videos/hover.mp4",
+    "video": "/images/products/catalog/zs_pandabear/videos/8b157d6782f96682b814e59ecce9a7099caf12e13aff1db30ac3ae064b83b2ff/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-bbaddaeffe19"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "f54172ff-64b7-4210-aae1-ee6803a954df"
   },
   "zs_reindeer": {
     "video": "/images/products/catalog/zs_reindeer/videos/033429d90d7db7e92737f93cc6abe6925a59695d252fd07da5dc1568392e6194/hover.mp4",
