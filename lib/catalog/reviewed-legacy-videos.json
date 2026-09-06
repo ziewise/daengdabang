@@ -1,0 +1,39 @@
+{
+  "rw_porcini_toy": {
+    "folder": "rw_porcini_toy",
+    "productId": "p_107",
+    "reviewClass": "legacy_reviewed",
+    "publicationStatus": "approved",
+    "assetPath": "/images/products/catalog/rw_porcini_toy/videos/ca4378a3e002535f04fada683077b40f222694c01c77665daee54c923f0b878f/hover.mp4",
+    "assetSha256": "ca4378a3e002535f04fada683077b40f222694c01c77665daee54c923f0b878f",
+    "sourceVideoSha256": "4588f5deb7485b9b1cd9e0f258d984441ab5a841d40dbda634e8a2601e762293",
+    "provider": "unknown",
+    "model": "unknown",
+    "jobId": null,
+    "reviewSha256": "b48f7e4b825251b4f72fb33b3d13eaa554f08a6231e8ccd84612a5e6ba863ef1",
+    "reviewedAt": "2026-09-05T23:08:57.137961+00:00",
+    "quality": "approved_dog_using",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "checks": {
+      "productIdentity": true,
+      "scale": true,
+      "motion": true,
+      "branding": true,
+      "providerMarkPreserved": true
+    },
+    "limitations": [
+      "Nominal source table says15.5x16.5cm and753g without explicit axis labels; generated physical dimensions, dog weight and safe bite force are not certified.",
+      "Rotation and mouth occlusion prevent certification of every hole, internal assembly and individual marble pixel.",
+      "The wide opening and close-up ending create an obvious loop transition; this was accepted for candidate preparation by root.",
+      "The dog is large-appearing and retriever-like by visual inference; this is reuse of existing footage, not a newly produced small-dog scene.",
+      "All192frames are technically decoded;33representative full frames were manually compared, not every full frame.",
+      "Generation account, provider, model, original prompt and job ID are unknown and remain unasserted.",
+      "Root approved this exact final candidate; actual registration/publication has not been performed."
+    ],
+    "sourcePhotoSha256": "7f4b50435e6e0e68adc0d5e6d68a932beb3e500bf006eb52404fa16ea12d9182",
+    "qualifiedQaSha256": "348a696e9a86108af987d4512c1ef354a324158c39daa8b92e67750e89b5fc17",
+    "candidateManifestSha256": "f86ccab7aa89bf3a41730ffdf72ac27dbdb0e94839258bb6f23ed80b17aa582a"
+  }
+}

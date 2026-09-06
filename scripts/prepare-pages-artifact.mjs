@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { matchesReviewedLegacyVideo } from "../lib/catalog/reviewed-legacy-video.mjs";
 
 const PRODUCT_ASSET_PREFIX = "images/products/catalog/";
 const CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
@@ -66,15 +67,19 @@ function isReviewedFlowRow(row, reviews) {
         && row.videoQuality === review.videoQuality;
 }
 
+function isReviewedLegacyRow(row, reviews) {
+    return matchesReviewedLegacyVideo({ id: `p_${row.no}`, folder: row.folder, video: row.video, raw: row }, reviews);
+}
+
 function withoutHoverVideo(row) {
     const withdrawn = { ...row };
-    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId"]) {
+    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId", "videoReviewClass", "videoReviewSha256"]) {
         delete withdrawn[key];
     }
     return withdrawn;
 }
 
-function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews) {
+function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews, legacyReviews) {
     return (Array.isArray(rawCatalog) ? rawCatalog : []).map((row) => {
         const folder = row?.folder || "";
         if (!Object.prototype.hasOwnProperty.call(overrides, folder)) return row;
@@ -86,9 +91,12 @@ function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews) {
             return withoutHoverVideo(row);
         }
         return { ...row, ...override };
-    }).map((row) => row?.videoProvider === "google_flow_web" && !isReviewedFlowRow(row, flowReviews)
-        ? withoutHoverVideo(row)
-        : row);
+    }).map((row) => {
+        if (row?.videoProvider === "unknown" || row?.videoReviewClass != null) {
+            return isReviewedLegacyRow(row, legacyReviews) ? row : withoutHoverVideo(row);
+        }
+        return row?.videoProvider === "google_flow_web" && !isReviewedFlowRow(row, flowReviews) ? withoutHoverVideo(row) : row;
+    });
 }
 
 async function listFiles(root) {
@@ -146,6 +154,7 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
                 "lib/catalog/video-branding.json",
                 "lib/catalog/hover-review-20260906.json",
                 "lib/catalog/reviewed-flow-videos.json",
+                "lib/catalog/reviewed-legacy-videos.json",
                 "lib/catalog/colors.json",
                 "lib/external-products/feed.json",
             ]).has(repoRelative)) continue;
@@ -213,7 +222,8 @@ export async function preparePagesArtifact({
         path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-flow-videos.json"),
         {},
     );
-    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews);
+    const legacyReviews = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-legacy-videos.json"), {});
+    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews, legacyReviews);
     const catalogCdnVideos = new Set(
         publicationCatalog
             .filter((row) => row?.videoDelivery === "jsdelivr_commit_cdn")
@@ -241,10 +251,10 @@ export async function preparePagesArtifact({
         publicationCatalog
             .filter((row) => (
                 row?.videoDelivery === "jsdelivr_commit_cdn"
-                && REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
+                && (isReviewedLegacyRow(row, legacyReviews) || (REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
                 && REVIEWED_VIDEO_QUALITIES.has(row?.videoQuality)
                 && typeof row?.videoJobId === "string"
-                && row.videoJobId.trim().length > 0
+                && row.videoJobId.trim().length > 0))
             ))
             .map((row) => normalizeAssetPath(row.video))
             .filter(Boolean),

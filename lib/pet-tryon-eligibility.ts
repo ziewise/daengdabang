@@ -1,4 +1,6 @@
 import reviewedFlowVideos from "./catalog/reviewed-flow-videos.json" with { type: "json" };
+import reviewedLegacyVideos from "./catalog/reviewed-legacy-videos.json" with { type: "json" };
+import { matchesReviewedLegacyVideo } from "./catalog/reviewed-legacy-video.mjs";
 
 export type PetTryOnEligibilityReason =
     | "eligible"
@@ -21,7 +23,9 @@ type PetTryOnProductIdentity = {
         useSub?: string;
         videoProvider?: string;
         videoQuality?: string;
-        videoJobId?: string;
+        videoJobId?: string | null;
+        videoReviewClass?: string;
+        videoReviewSha256?: string;
     };
 };
 
@@ -168,6 +172,9 @@ export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string
     const video = product.video?.trim();
     if (!video) return undefined;
     const raw = product.raw;
+    if (raw?.videoProvider === "unknown" || raw?.videoReviewClass != null) {
+        return matchesReviewedLegacyVideo(product, reviewedLegacyVideos) ? video : undefined;
+    }
     if (raw?.videoProvider === "google_flow_web") return reviewedFlowVideo(product, video);
     return safeDogWearingCatalogVideo(product);
 }

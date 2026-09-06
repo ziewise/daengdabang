@@ -1294,5 +1294,1373 @@
         "Full source/provider diamond preserved and exactly one DDB footer."
       ]
     }
+  },
+  "rw_stumptown_jacket": {
+    "folder": "rw_stumptown_jacket",
+    "productId": "p_154",
+    "video": "/images/products/catalog/rw_stumptown_jacket/videos/9bc136cdd9755bd4bfb382910d204b8bd0dbcae802e26cb02031bed4e1773b02/hover.mp4",
+    "sha256": "9bc136cdd9755bd4bfb382910d204b8bd0dbcae802e26cb02031bed4e1773b02",
+    "videoJobId": "2d00af63-220e-4adf-b548-d71151c994b9",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T00:36:27.142877+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "a321c031ce5c4deb26050436a2cae92d5bb3fd8d345423ae475610580bbd0b3c",
+    "sourcePhotoSha256": "15470fbfa7b46191e646e5b2cab7b97f68bf749f46a0543fdcd9852aa70cfd7e",
+    "uploadSha256": "1e18959642cd11def5fcc0732a44ec6cec5debeb4a434d9a3d9ee1f68367f66d",
+    "referenceGeneration": "original_manufacturer_photo",
+    "referenceGenerator": "manufacturer_photo",
+    "referenceGenerationPerformed": false,
+    "referenceReviewSha256": "578d355957c81147869edd70360bf47735ac07b8f1ace1a96b0a3cb3e5984f93",
+    "referenceReviewPath": "rw_stumptown_jacket/image-reference-review.json",
+    "rootApprovalSha256": "250a424eb385d7ff69ce89339769ca8455dfacc953f1e7a0ba1fe083feab40b0",
+    "qualifiedQaSha256": "c88d9c2c9c7486eb769e76052de92e12de1abf39b5dcc963308940bef51075ba",
+    "candidateManifestSha256": "1da321c19f6e0cb3ee3a51f105c218a93faabe035b34d9ee2746642059817538",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Translucent white Google diamond near lower-right x1160,y600 confirmed on enlarged corners at0/1.5/4/7.958s.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Byte-identical manufacturer input preserved; full composition retained; no visible photo credit removed.",
+      "observations": [
+        "Exact real manufacturer corgi, handler, leash and rocky-grass composition preserved; no synthetic small-dog still was made.",
+        "Across18 sampled frames, Orion Blue sleeveless quilted jacket retains gold-brown neck lining, curved rear hem before the hind legs, original label positions and the same short-corgi relative fit. No new sleeves, straps, product panel or size distortion established.",
+        "The original leash passes near the dorsal portal to the pre-existing underlying attachment; the video does not establish a new load-bearing jacket handle or ring. The hidden attachment is not certified.",
+        "At1–2s mouth opens and eyes narrow/blink;3.5–4.5s head turns toward camera;5–7.958s returns to side. These localized animal changes with stable background establish actual animation rather than still-image zoom.",
+        "Native1.5/4/7.958s show coherent muzzle, ears and stationary grounded stance; jacket quilting and edges remain stable under the head turn. Existing foreground grass continues to occlude some paws and hem.",
+        "No raw DDB logo, extra advertising badge or newly readable lettering observed. Mandatory translucent provider diamond confirmed separately."
+      ],
+      "limitations": [
+        "All192 frames decoded;18 representative frames manually compared plus native1.5/4/7.958s and four corner crops. Not every video frame was visually inspected.",
+        "Actual worn size, dog measurements and absolute garment centimetres are not certified. Manufacturer XXS guidance does not prove this corgi wears XXS.",
+        "Foreground grass and dog body occlude lower panel, far-side closures and portions of paws; hidden anatomy/product geometry are not independently certified.",
+        "Tiny product label text and exact printed pixels are not certified.",
+        "First and last input photo was identical, but observed head orientation/eye state differs slightly at final frame. Seamless looping is not certified.",
+        "Raw has audio but was not listened to; candidate removes audio.",
+        "Root approved this exact candidate with the documented limitations; actual publication remains pending."
+      ],
+      "rootApprovedScopes": [
+        "Original manufacturer corgi photograph, Orion Blue quilted jacket and relative fit preserved with actual blink/head movement.",
+        "Whole source composition and mandatory Google diamond retained; exactly one DDB footer mark."
+      ]
+    }
+  },
+  "rw_climatechanger_fleece": {
+    "folder": "rw_climatechanger_fleece",
+    "productId": "p_155",
+    "video": "/images/products/catalog/rw_climatechanger_fleece/videos/f5819a2b0f50a9eb0cb24daa8d647e78c2f925eb4ab3f7f70953413abfefa1fa/hover.mp4",
+    "sha256": "f5819a2b0f50a9eb0cb24daa8d647e78c2f925eb4ab3f7f70953413abfefa1fa",
+    "videoJobId": "e7967ae2-f130-4f2b-a209-727b1b54ae8f",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T00:49:24.394057+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "3de42fbc631ffe8901796701f4c1b8d25634141baf32427b77f4cbd84799fbbc",
+    "sourcePhotoSha256": "20c4011060d859178d128f34f9dbccd0dd2e9f22ce8de2068084c342d62eb307",
+    "uploadSha256": "14da4bf851026af574cd114cbb7ec19d8d4268988984e55da6a9c51233117b37",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "9edf72cda207d1d9b360dc37e7af0c748b34067b8b2cc183156108758c3821a8",
+    "referenceReviewPath": "rw_climatechanger_fleece/image-reference-review.json",
+    "rootApprovalSha256": "7ec284767c738f8436223cac51ce6e061895d977c7c7582092930f547ae11946",
+    "qualifiedQaSha256": "5ed30b13b6506560dbe02902ce04203f9e1d02bb98a0835b2ed6dc533235e3fb",
+    "candidateManifestSha256": "8b5102c395a84f9101d4d828794835e3c244209da0e54f50217b7384ef7d5956",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Translucent white Google diamond near lower-right x1160,y600 directly confirmed in four corner crops0/2/4/7.958s.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Source files and generated input preserved unchanged; no visible source credit removed. Full generated frame retained for candidate.",
+      "observations": [
+        "At1–2s front paws lift and place in short steps,3.5s eyelids close,5–6s head lowers to sniff, then lifts. This is localized true animal motion rather than a static-photo zoom.",
+        "Blue Jay blue fleece retains two distinct short front sleeves, tall close neck, mint side zipper, white curved reflective trim and rear hem before the hind legs throughout18 samples.",
+        "Native1/3.5/5.5/7.958s retains coherent four-legged anatomy, sleeve seams and torso proportions under walking and sniffing. No new panel, missing sleeve, handle or harness established.",
+        "Darker underside follows the approved starting-image shade and folds; no new contrasting panel appears. This remains a shadow interpretation, not certification of an unseen flat surface.",
+        "Full dog and product remain visible; there is slight framing/background drift during the short walk, with clear independent body and limb changes. No raw DDB logo or added badge."
+      ],
+      "limitations": [
+        "Absolute garment centimetres, actual worn size and dog measurements remain uncertified.",
+        "Tiny zipper pull, far-side material and small product typography are partly occluded or too small for pixel-level certification.",
+        "Initial and final positions/gaze differ after walking; seamless looping and a perfectly fixed camera are not certified.",
+        "All192 video frames decoded;18 representative frames manually compared plus listed native full frames and four corner crops. Not every frame was visually inspected.",
+        "Raw audio not listened to; candidate removes audio.",
+        "Root approved this exact candidate with these limitations. Actual publication remains pending."
+      ],
+      "rootApprovedScopes": [
+        "Two sleeves, mint zipper, reflective curve and fit sustained with true steps/blink/sniff; mild framing/endposition drift and dark-belly shadow interpretation retained as limitations.",
+        "Full raw frame and provider mark retained with exactly one DDB footer."
+      ]
+    }
+  },
+  "rw_quencher_24": {
+    "folder": "rw_quencher_24",
+    "productId": "p_147",
+    "video": "/images/products/catalog/rw_quencher_24/videos/672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49/hover.mp4",
+    "sha256": "672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49",
+    "videoJobId": "2e9dee08-5b2b-40ed-b0b6-207a26967596",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T00:49:24.394057+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "d425eebc6544a9e3fec79a143a4fcee0b1e78ccb52993d41f6099b779b2afdb8",
+    "sourcePhotoSha256": "2ee79ec10b4050788619d080de153620ce55ce31b211c5999cc0ad1a0fc943b7",
+    "uploadSha256": "3b51861631f3c910e306e59a61a77eb1e944a2c8b759905be5d724d27c8a2ab1",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "21554aa917afc4a10cfd3c75cc6ba2cb666ad095db735a4aee5286e2e625d7db",
+    "referenceReviewPath": "rw_quencher_24/image-reference-review.json",
+    "rootApprovalSha256": "33afeae586232e31a355125ac3ab891e5d8bf38ea97953dde11753cc222889ed",
+    "qualifiedQaSha256": "c82bd80a9d821cd7286308aca1553bae3f3d19c9cd269b36b11b86f7499f5587",
+    "candidateManifestSha256": "b97d6a3f0cd983c636ed4ae2c50e8d921fb8fa80ece434812912c42e908d61af",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Translucent white Google diamond near lower-right x1160,y600 directly confirmed in four corner crops0/2/4/7.958s.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Source files and generated input preserved unchanged; no visible source credit removed. Full generated frame retained for candidate.",
+      "observations": [
+        "During0–5.5s small head/jaw changes accompany drinking; native4s shows a pink tongue at the water/rim. At6–6.5s the muzzle rises with droplets and visible mouth/tongue movement, then settles with gaze upward. This establishes actual drinking animation rather than static-photo zoom.",
+        "All18 sampled frames retain the same stationary Moonlight Mountains bowl: soft flared square fabric base, round brown woven rim, pale reflective band, one original label and brown/black mountain print.",
+        "Native4/6.5/7.958s shows coherent muzzle-to-bowl contact, tongue and head separation after lifting; no obvious penetration, rigid ceramic replacement or changing bowl proportions established.",
+        "The bowl stays in the same ground location and roughly same dimensions relative to the muzzle and front paws. Four dog limbs remain coherent.",
+        "No raw DDB logo or extra advertising badge observed; low-contrast mandatory provider diamond confirmed in four enlarged corner crops."
+      ],
+      "limitations": [
+        "Manufacturer Medium opening14cm/1L guidance is not a physical measurement of the generated image. Outer base width and depth are not inferred from14cm.",
+        "Far-side/bottom folds and every label or mountain-print pixel remain uncertified.",
+        "First muzzle-down and final raised-head poses differ; seamless looping is not certified.",
+        "All192 video frames decoded;18 representative frames manually compared plus listed native full frames and four corner crops. Not every frame was visually inspected.",
+        "Raw audio not listened to; candidate removes audio.",
+        "Root approved this exact candidate with these limitations. Actual publication remains pending."
+      ],
+      "rootApprovedScopes": [
+        "Soft fabric flared square bowl, mountain print and label1 sustained with actual water lapping then head lift; contact occlusion, absolute M14cm, microtext and loop remain qualified.",
+        "Full raw frame and provider mark retained with exactly one DDB footer."
+      ]
+    }
+  },
+  "rw_notarock": {
+    "folder": "rw_notarock",
+    "productId": "p_57",
+    "video": "/images/products/catalog/rw_notarock/videos/29594fcce2c373589eda11bb42ae162600c3af9d21a65d6cb2cf974fca9f3e9c/hover.mp4",
+    "sha256": "29594fcce2c373589eda11bb42ae162600c3af9d21a65d6cb2cf974fca9f3e9c",
+    "videoJobId": "b57c2e97-2c51-4338-add0-2c4951b98b29",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T01:16:53.893166+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "fa016debb5d8578c3d149b7f889d443a782c0795e81d50811e0399d04563b4ed",
+    "sourcePhotoSha256": "8d8c0465685b858e69a590a57599ef3c124104d8e487a4d7d4894b3b397895bd",
+    "uploadSha256": "c6a0b5fa63b8513892ec4ed5a3ad60a2e23753d761aadb82a58761f39e4bd474",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "5025cd5e157a075c8be66dde5dc26fa231f952ca2be9af891be2575c6569e2c7",
+    "referenceReviewPath": "rw_notarock/image-reference-review.json",
+    "rootApprovalSha256": "e0b4b805dba06f603339629a403472c04be29d1902f3c447ae139d0213a0d9aa",
+    "qualifiedQaSha256": "316ccd5682bd03b66cc046ceb03cfc53a05477eb5ce710806e05995f67e7c3e4",
+    "candidateManifestSha256": "5b166fe1d7dca8dfb21d6d8a434f4d4c4ec61e07c3406447052459164af3243f",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Translucent Google diamond lower-right x1160,y600 confirmed in enlarged0/2/4/7.958s crops; low contrast against grass.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Full generated frame retained and exact source files unchanged. No visible original photo credit removed.",
+      "observations": [
+        "The Pomeranian moves its muzzle toward the toy and makes a brief nose/upper-mouth touch around1.5–2s. The toy then rocks/rolls through a small angle around2–3.5s and settles near the front paws. Head lift and blinks follow. This is actual local dog/object motion, not static camera pan/zoom.",
+        "All18 temporal samples retain one Glacial Blue rock-shaped toy with pale marbling, irregular planar faces, one visible dark polygonal opening, and substantial size relative to the small adult dog muzzle. No miniaturization, ball-smoothing, splitting or extra treats established.",
+        "Native2.5/4/7.958s confirms coherent polygonal outside silhouette as the toy rotates and rests, with opening rotation consistent with body orientation. Exact hidden backside faceting remains unverified.",
+        "Four limbs stay coherent and paws remain grounded while muzzle contact releases. No deep mouth penetration or full toy pickup/ingestion observed.",
+        "No DDB branding or extra advertising badges present in raw; mandatory provider diamond persists."
+      ],
+      "limitations": [
+        "Official Large11.5cm is a source guide, not an absolute physical measurement of generated pixels or dog.",
+        "Rotation exposes a partially different set of facets; every hidden face/marble pixel and internal cavity depth is not certified.",
+        "Original pose is nose-down, final pose is raised; toy also moves slightly. Seamless looping is not certified.",
+        "All192 frames decoded,18 temporal samples and listed native frames directly viewed; not every frame visually inspected.",
+        "Raw audio not listened to; review candidate removes audio.",
+        "Root approved this exact candidate with these limitations; actual publication remains pending."
+      ],
+      "rootApprovedScopes": [
+        "Actual nose touch and small rolling followed by head lift/blink; angular marbling, polygonal opening and relative product scale preserved.",
+        "Whole original frame and provider mark preserved with exactly one DDB footer."
+      ]
+    }
+  },
+  "soopa_healthybites_appleblueberry": {
+    "folder": "soopa_healthybites_appleblueberry",
+    "productId": "p_231",
+    "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989/hover.mp4",
+    "sha256": "aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989",
+    "videoJobId": "4b1c284e-c7f8-438d-a2cb-d13065d3b65a",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T01:12:05.601372+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "b2bbbdb8fa6eda3efaab01cb36be16c7165eebf7c8ff4b315e3530d6473a4a15",
+    "sourcePhotoSha256": "5b83200d3f29386897393411ef750295de797ba468520847f82f1f8d6c3f5a4f",
+    "uploadSha256": "313fa50107197dcc3b365d870f99b5bec29dad9e884ea999469494621c4e63be",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "69297092e7a1580c23b178267034537c869aeb747b5f2c9aa803e91c65dc631f",
+    "referenceReviewPath": "soopa_healthybites_appleblueberry/image-reference-review.json",
+    "rootApprovalSha256": "44184341028cdcef8815133bf6b94e98fff9498a62a8013b8e8b4858fe898ef4",
+    "qualifiedQaSha256": "3e4ed1f94f8a1dd901949d7f63672a16e33e06911ed93b944bedc9003ba280ac",
+    "candidateManifestSha256": "7417c75f5b631f208faee0c9cf81491d96e7982834f41ec59a91e3ecd872d36c",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": null,
+      "providerWatermarkVisuallyConfirmed": false,
+      "sourcePhotoCredit": "Neither exact source nor input has a visible author credit to reconstruct. Raw and input are unchanged; future candidate retains all source pixels spatially.",
+      "observations": [
+        "Actual manufacturer packet, real short thick flower bites and exact generated Shih Tzu input were viewed before comparing raw.",
+        "One small beige thick flower-lobed piece is held at finger-relative size through0–2s; mouth opens, fingers make plausible contact and the piece is naturally partially occluded from approximately2.25s.",
+        "The hand releases and withdraws around3–4s while one edge-on lobed piece remains in the mouth. Repeated small jaw opening/closing is visible; the piece ceases to be visible around5s after contact. Nose licking is visible around6.5–7s.",
+        "No extra flower bite, long stick transformation, loss before mouth contact, extra finger/limb or established hand-to-mouth geometry failure was found in the sampled frames.",
+        "Stationary whole kraft/blue packet retains its silhouette, hanging slot, SOOPA/HEALTHY BITES/APPLE & BLUEBERRY major text, flower window, green apple/blueberries and printed terrier layout.",
+        "The small brown-and-white Shih Tzu has coherent eyes, muzzle, paws and fur in a cute food-reward advertisement context. Close-up composition shows face, paws, offering hand and complete packet without new shop logos or badges."
+      ],
+      "limitations": [
+        "Actual centimetres and physical50g packet dimensions are not certified; relative bite/finger/dog scale is plausible against the input and real flower-bite photo.",
+        "Fine package microtype, including the tiny LOW FAT line, is not pixel-equivalent certified. Large SOOPA, HEALTHY BITES and APPLE & BLUEBERRY labels, blue/kraft layout and flower window remain legible/stable in reviewed frames.",
+        "During chewing the piece is seen edge-on or partly hidden by mouth/fur. Exact individual flower lobes and internal swallowing cannot be certified after occlusion; no clear duplicate piece or precontact disappearance was observed.",
+        "This is not a seamless loop: the hand withdraws, the bite is eaten, and the final head/hand poses differ from the first frame. Eight-second advertising use is proposed with this limitation.",
+        "Provider mark is not confidently legible in native raw frames, so no affirmative visual identification is claimed. The entire source frame is retained, with no cropping, masking or watermark removal.",
+        "Dog pedigree, hidden anatomy and unsampled frame microdetail are not certified. All192 frames decoded;18 temporal samples plus3 denser contact samples were manually compared."
+      ],
+      "rootApprovedScopes": [
+        "Product identity and major packet/flavor layout",
+        "One short thick flower bite and plausible relative scale",
+        "Actual hand-to-mouth transfer, jaw motion and nose lick",
+        "Entire raw frame preserved without removing provider marks",
+        "One existing DaengDaBang footer logo",
+        "True8s720square silent candidate"
+      ]
+    }
+  },
+  "rw_vert_jacket": {
+    "folder": "rw_vert_jacket",
+    "productId": "p_114",
+    "video": "/images/products/catalog/rw_vert_jacket/videos/b93b3796334f0e8fc99a3ad254b514d4175f0940e5ea69c00446f1a2fcd5b38e/hover.mp4",
+    "sha256": "b93b3796334f0e8fc99a3ad254b514d4175f0940e5ea69c00446f1a2fcd5b38e",
+    "videoJobId": "62065293-4ee2-4442-815b-d27c4aaca753",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T01:33:22.702335+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "130d746a66016b5f1802873ed8f4f55a32d298130e3f2e17636c90318afd4c46",
+    "sourcePhotoSha256": "ef945b7d2fc7840f50642fb176767c3a41ca7594ab7acf3596af34f37d8a9bf9",
+    "uploadSha256": "4aa16ad2b3b06d7a7ae2f683ebc2f77be73e98d048fb0a44349f995dffb54151",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "0edf94bc60feb42aaf5ba7b7f9d821b1eb4c076c9946391b0e8a9895b49055c4",
+    "referenceReviewPath": "rw_vert_jacket/image-reference-review.json",
+    "rootApprovalSha256": "6d6787b1633cf712931e0a2c00d7c3e417d1178b9ad8053e5cb5a2b302a5c2df",
+    "qualifiedQaSha256": "cb0c6f185b370b0c2c3aeab1a84d6531b0f3d65afa15958090c893307a8663ff",
+    "candidateManifestSha256": "eb8aed9196897602ef30db1b359c2d7df587ac8724d4689c8287fe26e2ab14fb",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Translucent lower-right Google diamond near x1160,y600 directly viewed at0/2/4/7.958s in native corner crops.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Whole generated frame and exact input/source bytes retained; no visible original source credit removed.",
+      "observations": [
+        "The same Blue Pool sleeveless insulated vest retains its visible-side raised storm collar reflector, rear flank reflector, curved panel seams, dark side closure and chest/belly flap across all18 temporal samples.",
+        "Exact manufacturer worn source02 was directly re-viewed. Its visible left side has the collar and rear reflector arrangement seen here; the opposite-side flat shoulder reflector is not falsely required on this side.",
+        "Native2.5s shows a small head turn toward camera, native4s a gentle tilt and moving tail, native5.5s a blink. The body and four paws remain grounded. This is actual animal motion, not an image slide; no walking is claimed.",
+        "No new sleeves, harness handle, oversized ring, floating collar clip or changing torso/garment topology established. The same small shoulder label persists, without certifying its microscopic text.",
+        "The whole dog and garment remain visible. No raw DDB logo or extra advertising badge is present; low-contrast Google diamond is directly confirmed in four corner crops."
+      ],
+      "limitations": [
+        "Official XXS chest33–43cm, length32cm and neck34.5cm are reference guides. The generated Maltese and actual reference dog were not physically measured; exact fit size is uncertified.",
+        "Opposite side, fur-occluded neck interior, underside microdetail and small label printing remain uncertified.",
+        "Head/tail end position differs from first frame and there is slight framing drift; seamless looping and perfectly fixed pixels are not certified.",
+        "All192 frames fully decoded;18 temporal samples and listed native frames manually viewed, not every frame visually inspected.",
+        "Raw audio not listened to; candidate is silent.",
+        "Root approved exact candidate for later publication; actual remote publication is not performed by this agent."
+      ],
+      "rootApprovedScopes": [
+        "Blue Pool sleeveless jacket collar/chest flap/reflectors and relative fit retained; actual blink/head tilt/tail motion.",
+        "Whole original frame/provider mark preserved; exactly one DDB footer."
+      ]
+    }
+  },
+  "rw_trailrunnerbowl": {
+    "folder": "rw_trailrunnerbowl",
+    "productId": "p_161",
+    "video": "/images/products/catalog/rw_trailrunnerbowl/videos/9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3/hover.mp4",
+    "sha256": "9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3",
+    "videoJobId": "6ec534ab-fe75-438b-9db1-9d05a851a62c",
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T01:33:22.805546+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "1d737a3f9c48c0747740eacc06dc55645cc6a39ca0a28188529d259c65a121ff",
+    "sourcePhotoSha256": "e442d8d1d5717e2c52ebfd61c242f1a82b93c7f8693c5ca56cf301e78343474a",
+    "uploadSha256": "65136c5dcb7c81049d90448d6fc492d1913f841bce59e6300a366b6b51a120aa",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "a641822c2139c88fdef8eb84d38498efa42e091bf106aec24073282ab4bcc768",
+    "referenceReviewPath": "rw_trailrunnerbowl/image-reference-review.json",
+    "rootApprovalSha256": "efde8470873b83d0861298ea30ea9bc7e34462104c0da9ccdfd4c568945ad4c0",
+    "qualifiedQaSha256": "0947c7293544f088350389b20cf939c15e9427df2f3149d350ce80e6293b79fc",
+    "candidateManifestSha256": "e7fe1e19d7c854129b8ef00f2016b726a2bf50310da85a8746eee0909d9f6784",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Translucent lower-right Google diamond near x1160,y600 directly viewed at0/2/4/7.958s in native corner crops.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Whole generated frame and exact input/source bytes retained; no visible original source credit removed.",
+      "observations": [
+        "All18 samples show one soft Blue Pool fabric bowl with mint-green rim, one RUFFWEAR front patch, same folded lower stitching and stationary ground placement. No handles, extra labels, rigid plastic shell or Quencher mountain print appear.",
+        "Actual tongue laps contact the water around1–2.5s and4–6s. Native2.5s exposes the pink tongue entering the water; native3.5s shows head lift and a coherent gap from the bowl; native5.5s shows renewed tongue contact. Thus actual drinking animation is established, not a still-image pan/zoom.",
+        "All four legs remain coherent and planted while the muzzle/jaw move. Bowl-to-paw and opening proportions remain broadly stable, with no obvious inflation, collapse, large relocation or penetration through the front fabric.",
+        "The exact actual-use source also shows a folded/compressed fabric bowl. Lower wall folds in the input/raw are compatible with that source; full upright primary-photo height is not falsely required during use.",
+        "No DDB logo or extra advertising badge in raw. Translucent Google diamond at lower right directly seen in four enlarged corner samples."
+      ],
+      "limitations": [
+        "Official capacity1L does not establish opening diameter. No Quencher14cm or invented diameter is used; physical centimetres and actual water volume remain uncertified.",
+        "The inner gray liner is largely hidden by water/angle. Exact hidden liner color, bottom folds, microscopic stitching and tiny brand glyphs are not certified.",
+        "Minor framing/texture drift and first-vs-last muzzle position prevent a seamless-loop guarantee. The brief head lift deviates from a strictly fixed muzzle but preserves actual use and product identity.",
+        "All192 frames fully decoded;18 temporal samples and listed native frames manually viewed, not every frame visually inspected.",
+        "Raw audio not listened to; candidate is silent.",
+        "Root approved exact candidate for later publication; actual remote publication is not performed by this agent."
+      ],
+      "rootApprovedScopes": [
+        "Round soft blue folded fabric bowl/mint rim/single label and relative scale retained with genuine tongue-water lapping.",
+        "Whole original frame/provider mark preserved; exactly one DDB footer."
+      ]
+    }
+  },
+  "rw_collar_hiandlight_24": {
+    "folder": "rw_collar_hiandlight_24",
+    "productId": "p_17",
+    "video": "/images/products/catalog/rw_collar_hiandlight_24/videos/7f0119166a5b54f61d87c60d0322bc84119367d42005c87d18017d88ad4fd123/hover.mp4",
+    "sha256": "7f0119166a5b54f61d87c60d0322bc84119367d42005c87d18017d88ad4fd123",
+    "videoJobId": "c35a3072-e256-451a-8c6f-06701de125ae",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T01:32:12.946681+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "5c35252bf0b713bbb86d4a7026dd2f5a0a632b65ee66e1541bf5acf874661ca1",
+    "sourcePhotoSha256": "0d60750b0b3b88b69bb27ffc8e11028a6fcecd8117e775a83b242e056f472889",
+    "uploadSha256": "ce14288af8ade2f43702a3a80c240c07e62eaff74ee7c4c401713eb56ece0fb7",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "046a9247d5a8e7b46e950731dc02f930e85f90f6620138c24de0c0f4e49bb64b",
+    "referenceReviewPath": "rw_collar_hiandlight_24/attempt-03-omni/image-reference-review.json",
+    "rootApprovalSha256": "f21b97444fa947c08906453c99a3a01cb1bd2671b32f1f6320a7d16c08bf9892",
+    "qualifiedQaSha256": "1cb13ea3dcc6eb47d8a25098d4e176fcadab08244f621cc901c2befe9ee7286e",
+    "candidateManifestSha256": "1183fb984f2d8ddfab1da9da795e2c067201b235ea60cc2af7ef7acab4b1b33d",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": null,
+      "providerWatermarkVisuallyConfirmed": false,
+      "sourcePhotoCredit": "No visible author credit in exact manufacturer flat; raw/input remain unchanged and no credit or provider mark is removed.",
+      "observations": [
+        "Actual8s1280x72024fps192-frame raw fully decodes.18 temporal samples and native middle/end were compared with the approved exact input and manufacturer flat.",
+        "Pink/navy two-tone back webbing follows the slim neck; its width, weave and short partly occluded edge under the ear remain visually stable. No new exposed rear rectangle, enlarged disc/pendant, new name text or extra collar part appears in sampled neck crops.",
+        "All192 eye-region frames were viewed in three contact sheets. Eyelids visibly close and reopen around0.4–0.8s and1.8–2.1s. A small early head/ear settling motion accompanies the blinks; later footage remains mostly still.",
+        "The rear three-quarter seated composition remains: full Dachshund head/body/paws/tail, same garden path and stable product-relative fit, with no major body turn or changed camera.",
+        "The gentle expressions are suitable for a calm small-dog collar advertisement; identity evidence covers visible webbing and relative fit only, not unseen hardware."
+      ],
+      "limitations": [
+        "Front/under-neck buckle, adjuster, label, D-ring and silencer are mostly occluded. Hidden presence, microtopology, label text and bell pictogram cannot be certified from this angle.",
+        "Actual15mm webbing width, neck circumference and dog physical measurements/pedigree are not certified; relative fit only.",
+        "The strict prompt no-head-movement condition is not literal: a small early head/ear settling motion occurs, while the overall angle and hardware occlusion are retained.",
+        "Most clear movement is concentrated in the first approximately2.5s, with two blinks; later frames are largely calm. Continuous breathing/ear-tip motion throughout all8s is not independently certified.",
+        "First/end framing and pose are close but a pixel-perfect seamless loop is not certified; slight facial/pose differences remain.",
+        "Provider mark is not visually resolved. Full raw-frame preservation is verified by the un-cropped contain recipe, with no watermark removal."
+      ],
+      "rootApprovedScopes": [
+        "Stable visible two-tone webbing and relative fit",
+        "Two visible natural blinks",
+        "Unchanged overall angle with naturally occluded hardware",
+        "Full raw frame and one DDB footer",
+        "True8s720square silent candidate"
+      ]
+    },
+    "sourceAttempt": 3,
+    "priorAttemptsPreserved": [
+      {
+        "path": "rw_collar_hiandlight_24/flow-raw-omni11-8s.mp4",
+        "sha256": "4297dc29fd01f6694bd54ea38f6d1cb3b1a0b55a7094954bd9c876a93c47cb14"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/flow-submission-before-snapshot27-reference-sync.json",
+        "sha256": "d658496107ac9f28d7716eb9610533de42b2143ff831eeb3894d9f36573ac2cd"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/flow-submission.json",
+        "sha256": "8b9c409354cddaa270630c6d47d397ee49d0f3ca59cbb4e14536003c0237d511"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/image-reference-review.json",
+        "sha256": "1f2aa7fb758db803f4cebab6f50994bde49208a93fc4026903466e47448b51ce"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/pomeranian-alpenglow-pink-reference.png",
+        "sha256": "80575c6747b0d05effa25bfa6fd259aafd6260f4aeb0c2c621261addfb8088af"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/preparation-pack.json",
+        "sha256": "b32d805490a14917f8c5a49875b36d59fe2a0dde9deda21813b8dc302bd474e3"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/prompt-en.txt",
+        "sha256": "ca280cfb59ab2d2efa5c1aefc0d795dbcbf9f590c89f4fb0e5364b9a4823c590"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/reference-original.webp",
+        "sha256": "0d60750b0b3b88b69bb27ffc8e11028a6fcecd8117e775a83b242e056f472889"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/reference-source-01.webp",
+        "sha256": "1a19cd0ea6f08e065e701b882d8b6b2ecde57f55d48b7f027810d33bb005693f"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/reference-source-02.webp",
+        "sha256": "2de607f0707bd19d2ffe819dc4fb63cb2655075d76f4a6b18954b71148520c89"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/reference-source-evidence.json",
+        "sha256": "1ab91c45bd9e7684f583a7092b6047580763af194f9a2b5ad2a64fd5b6fce808"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/root-hold-decision.json",
+        "sha256": "7aae5a527a418e55813bd14fd08b6545dd78a973858979c46cf43f6e70c0c487"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/root-input-observation-correction.json",
+        "sha256": "3f9249f99d44a9365c55cbafbd1c3f629c2fdceb331723ac12afcdae069d7c9d"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/sample-pack.json",
+        "sha256": "58bae13c3890ce48162088eb4c03733a13edc3fd3d39471651c32e4aadcff377"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/snapshot27-reference-sync.json",
+        "sha256": "b19cda3621dafc8115f3cdf6d21b4b281469b15b7483955a55884b8202acb836"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-01-pre-hold-metadata/flow-submission.json",
+        "sha256": "4e8a99c454aedee596115c85b250a0602432bfbcc29d80c072bafc4a8a3d3d49"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-01-pre-hold-metadata/image-reference-review.json",
+        "sha256": "163c7450aa506bd35348566f0e50df6f7d62abdcbde1c2db883867f8b2a0ef38"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-01-pre-hold-metadata/pre-hold-hash-manifest.json",
+        "sha256": "302f3a7257cbd1acb3b501166b7768a5590fcc21e82b4be1ce6f7c14ea502283"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-01-pre-hold-metadata/sample-pack.json",
+        "sha256": "ddc52f934f0d34cda7abed84ffa4e59b587046e1f0f26424e551ec81c04ab973"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/attempt01-protected-snapshot.json",
+        "sha256": "e780f8ac178317e418ce371b7875d8fee537aeb73141769db7f51ac9d02c76c6"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/credits-confirmation.json",
+        "sha256": "eb616229dae9efa5715d0f26503644450fbc4a44bee716f0986110c090b04eb6"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/final-review-verification.json",
+        "sha256": "8b55325595f4260cda19bb18d93a20ab777a689fe98f89eefa8a5da8e93231d7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/finalize-held-review.py",
+        "sha256": "cbfe9f5c582cea44d3429c29150b1f30786a0d9a5b2da6036fd8e8f92e1b24ca"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/flow-prompt-submitted.txt",
+        "sha256": "d356ad35c8373bd2aed5326094d95949e98a3d5bd950b541760b54aa5f7fff5a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/flow-raw-veo31-fast-8s.mp4",
+        "sha256": "feb180e6862797afdbf8e2fca21f6353e99e64911cc14b057e03ed15fa5f9254"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/flow-submission.json",
+        "sha256": "0911f45cf73afbbd0fa66078195fb1f9cf240bf5081be9cc4e008457e4bdff80"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/image-reference-review.json",
+        "sha256": "11302e37f40d600eaa2f7829025020e3d84cac8fd06d0a3714dbd4d63ace35fc"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pomeranian-alpenglow-pink-reference.png",
+        "sha256": "80575c6747b0d05effa25bfa6fd259aafd6260f4aeb0c2c621261addfb8088af"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/PREPARATION-KO.md",
+        "sha256": "8aca7a17185fa462ea15b106f49ab6f5bb30273daf0043d88a6f007d5c38eab3"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/preparation-verification.json",
+        "sha256": "997ec4a3ca09a557c6d82c9c18e16d1a16b7765cba56cb1a6eeb73847cbc01ad"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/prepare-qa-helper.py",
+        "sha256": "e9040c5a8280d87fc26e8be3972f5b7cc6ee50609dc71ae1c5530343b729e830"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/prior-image-reference-review.json",
+        "sha256": "1f2aa7fb758db803f4cebab6f50994bde49208a93fc4026903466e47448b51ce"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/prompt-en.txt",
+        "sha256": "d356ad35c8373bd2aed5326094d95949e98a3d5bd950b541760b54aa5f7fff5a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/record-root-download.py",
+        "sha256": "9ef9bca2081720d22b567e246e692a7ed3ed18c2d5dca7361171b480326b0a60"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/record-root-submission.py",
+        "sha256": "078a02797eaa3ab39f9a425394135b4ae260ea1548b5f98ae85a7d2d139e50b4"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/reference-original.webp",
+        "sha256": "0d60750b0b3b88b69bb27ffc8e11028a6fcecd8117e775a83b242e056f472889"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/reference-source-01.webp",
+        "sha256": "1a19cd0ea6f08e065e701b882d8b6b2ecde57f55d48b7f027810d33bb005693f"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/reference-source-02.webp",
+        "sha256": "2de607f0707bd19d2ffe819dc4fb63cb2655075d76f4a6b18954b71148520c89"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/reference-source-evidence.json",
+        "sha256": "1ab91c45bd9e7684f583a7092b6047580763af194f9a2b5ad2a64fd5b6fce808"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/review-attempt02.py",
+        "sha256": "a211737278804139ecdbb8982fdf62f2b988578f5115d758c5199aac4da8b105"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/root-hold-decision.json",
+        "sha256": "c514ecb4303a3fc5a46eb96d1feff94a58f71b3cf75c22bc7300d08084cbac83"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/root-input-observation-correction.json",
+        "sha256": "3f9249f99d44a9365c55cbafbd1c3f629c2fdceb331723ac12afcdae069d7c9d"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/sample-pack.json",
+        "sha256": "c9a9f2a240e3cc94282d2754cdaec20adda75e53ec01710575ad4a64f2042c0a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/submission-record-verification.json",
+        "sha256": "90950ea7d7e817a5494a2ea42474d42071c7ed52cadd3bbe823887d3ca589ccf"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/VIDEO-QA-KO.md",
+        "sha256": "cf4934a5c1a7525082d60016e4f48f9d1eddef1d68035dcb5507195210796636"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/final-verification.json",
+        "sha256": "65e4ac8d306c57e25567843eea84b33355cef751a48cd908be9099134abb81b8"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/generated-image-manifest.json",
+        "sha256": "1c1d3360ecfb22657b15c0d7f8a3571c10f151bad4fc8667f242778c5a88607b"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/generation-request.json",
+        "sha256": "2c7428a05b1e492e61229942bedf4a3d89adadd04fdde85870bd5ebc1d215037"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/image-reference-review.json",
+        "sha256": "8e62a0539fd5290f0efcbb605192ccd1adc7ffba9beaa85c59a263bed165f2b2"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/prior-attempts-protected-snapshot.json",
+        "sha256": "c37d4979ee9a11f2e66b3decbc2bc1fc158f1c84ff9d3d87fc9e2ddabc32c66c"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/prompt-en.txt",
+        "sha256": "0e8d2dac959fe9b486800a3a0b0655a9771293ec450cd82bc2b85f25bc224f9e"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/reference-original-alpenglow-pink.webp",
+        "sha256": "0d60750b0b3b88b69bb27ffc8e11028a6fcecd8117e775a83b242e056f472889"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/REFERENCE-QA-KO.md",
+        "sha256": "f43c5a75a4bd94fc035e9b96fccf1559a7d8794b7c185e254af405f7f39e9cb4"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/root-hold-concurrence.json",
+        "sha256": "75b8ab565961063ead53448f9b04d0cf5d2f1a8c90cc2d9a28eff23563fee124"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/sample-pack.json",
+        "sha256": "64abe75a0548b920ce3f461aabf6c834ecec0de0f80cc488043600fe23364bca"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/small-dachshund-alpenglow-pink-reference.png",
+        "sha256": "9418e0a6d648caf2ab67499839bbf7537d906cfe8382e889f13153a388d9f13d"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/generated-image-manifest.json",
+        "sha256": "1deebd38d024e7434fcb9d530721e7d3163ca82defbcf4191929f5229d7747e7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/image-reference-independent-review.json",
+        "sha256": "55091fda5c36142fa6557bd8abb9533e79fd0d19c4c143b71b2a82140573801f"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/prior-attempts-preservation-verification.json",
+        "sha256": "faf0f7dac297c3b80af83793670f6cfa57dc6d95f74b27038720ea791470f025"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/prior-attempts-protected-snapshot.json",
+        "sha256": "9884fbcbfe7bfa5092bd80c7c4bdca3acb9ebde4de61ebf9975de768ebbd370a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/record-independent-review.py",
+        "sha256": "972f4af9dcf2f52a33bd4ec744aff7c4cd8c1890b4a1b3769850ed4eee486ae2"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/reference-original-alpenglow-pink.webp",
+        "sha256": "0d60750b0b3b88b69bb27ffc8e11028a6fcecd8117e775a83b242e056f472889"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/REFERENCE-QA-KO.md",
+        "sha256": "5b333707d5cbd4896d3f3f7a15af329685320c82a2b902fa786d3be9d3ecc113"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/root-hold-concurrence.json",
+        "sha256": "46dc8f8324b87ee43aeaf17934cddd737d617bedf9be949afb6cdd1ec2836a2b"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/sample-pack.json",
+        "sha256": "80e37d7e377fb8ecd6baf9e3c1a70dd06423d2f847e56dd59b6a36c12e3c0926"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/small-dachshund-alpenglow-pink-corrected-reference.png",
+        "sha256": "de57f42ca92e9e344d12cfbccdb6b23d6f9953901cf074060cb02be0370375ac"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/generated-image-manifest.json",
+        "sha256": "2b63ff3882c6317a95635853e9d8e4db2bfb2763e165d5b6ccf5e535beb52653"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/image-reference-independent-review.json",
+        "sha256": "046a9247d5a8e7b46e950731dc02f930e85f90f6620138c24de0c0f4e49bb64b"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/prior-attempts-preservation-verification.json",
+        "sha256": "bf30dfcf649fb0e1d0329f307a0e1bcefc652a51c4a5bb6179f7f6cc202814d9"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/prior-attempts-protected-snapshot.json",
+        "sha256": "b1fd8b4f706b92be8cc5398943405861092ac9ba8442975280468d5164d9314f"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/reference-original-alpenglow-pink.webp",
+        "sha256": "0d60750b0b3b88b69bb27ffc8e11028a6fcecd8117e775a83b242e056f472889"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/root-input-approval.json",
+        "sha256": "dc737659985292d632c2ed7f75539dc533592dc1cc4ea30b29a201fd343046b7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/small-dachshund-alpenglow-pink-plain-back-reference.png",
+        "sha256": "ce14288af8ade2f43702a3a80c240c07e62eaff74ee7c4c401713eb56ece0fb7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/candidate-contact.jpg",
+        "sha256": "ffe6fd51beeef6356bb0f6f3f49a47cb57d55a9c236e73e1561fa58e7615bc51"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/candidate-manifest.json",
+        "sha256": "65dea4b232c5d447d7993c5a4cc4236905661f068c8295f4209ca216e2942fef"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/ddb-existing-logo-2x.png",
+        "sha256": "8f2da976a106b015018b75b899576a95567bab6a20b0de40f606652bc54c3b28"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/ffmpeg-full-decode.log",
+        "sha256": "3dcd0d8fdc9a86cb261158efaffe79642848275bb535f4f9b3c07568c25fcd90"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/ffmpeg-last-extraction.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/ffmpeg-render.log",
+        "sha256": "0c14299687fe45da09e46437ef43f7f9438d9ab086dd761834e0c351dd66200a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/frame-000-0.000s.png",
+        "sha256": "66fb2d89b0ca2f2130efe5423de6843e04a3174e3b65c60af935129722d4d28d"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/frame-048-2.000s.png",
+        "sha256": "c2bd1aa7658eb8a2bc0baf700f430b1e0a90b01f4a29f61f25af8bce3378c0b9"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/frame-096-4.000s.png",
+        "sha256": "e2f8181b655845329a8910c996109ddac315dd2a916831e0828f7063b726b4f2"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/frame-144-6.000s.png",
+        "sha256": "a755358860f0468ec78ddf3c8bd59b42882ab7579b7ee8c156e2d0dbf8869231"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/frame-191-7.958s.png",
+        "sha256": "da134e056946d8ff8fccde8d5fee463fe8765bb0872cb01819408ff28a8957c8"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/rw-collar-hiandlight-24-8s-square-branded-review.mp4",
+        "sha256": "0e11d00b09743a672e4aec3e4e17284e6e22393fdbed38a3331e936cb2ed371c"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/branded-review-candidate/technical-evidence.json",
+        "sha256": "b29ff016aaf0c94130e40a9de65a748aaa3d37875283ce2d1bc5cc4d6609dbe7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/dense-full.jpg",
+        "sha256": "68b63ca61dca537e56b6a5e576bb81fb63a1f3235f625b343451a79e2793cf5a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/ffmpeg-full-decode.log",
+        "sha256": "3f625e073ff1db3993868a66c3d76307d557ff4b40ab22a6a83976171bfea238"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/ffmpeg-last-extraction.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-000-0.000s.png",
+        "sha256": "dd43c77f6f41ebef596329d1cc4d5cfd7bcc48782d583d21a9f688b6b2573d9e"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-012-0.500s.png",
+        "sha256": "a294cb1db3886d240ff4e3f7d68a1e149ff42bc63baf50d5a7efafe016f43c30"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-024-1.000s.png",
+        "sha256": "d2c2a0762bf28fea1a4c0c1128232cfa930aea3b43b7fbc1f68f5febf4046359"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-036-1.500s.png",
+        "sha256": "ec59cfc8e7d2529f58383504b5cdc56d82a1454f4b85c4dc7c9802055f496043"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-048-2.000s.png",
+        "sha256": "56c1fbc6a7bc9f19a9aa8efcadbe372d98efd16e1eb4d1b92521724c03d33ec0"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-060-2.500s.png",
+        "sha256": "82f6beeedde1e9bf1ab927e9cdb73d2731da659f01bc8c51e7f26ef0d0e78d32"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-072-3.000s.png",
+        "sha256": "116dd4acd8e81aefc52939b0fbd3e8665df917ac9980a8d67d795528f70aff82"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-084-3.500s.png",
+        "sha256": "ad04eed54678649e7d20a78804b17d6c0189981a67522364a1e8294ee79e93e0"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-096-4.000s.png",
+        "sha256": "f7ea3e5b873da0143f248e12b940b10ad4b2ca97801e1e7019070779e3ef964b"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-108-4.500s.png",
+        "sha256": "dbba0f3186bc32b98507216121b83b05ae4c8d8b853aae3999ce19ae3dffe503"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-120-5.000s.png",
+        "sha256": "99ebd9d3040617d51b04a4e753b6c5fd2e855609e2da59923da7eacc510a22a7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-132-5.500s.png",
+        "sha256": "d82aa9c6c5449f06cfc9ad38acf6ddb2a71d488c502ec25b83fbd1662fcd7113"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-144-6.000s.png",
+        "sha256": "1812cc62bea3fb0368b9864c438afe9fcbea2e9093e311d6c84616724095a910"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-156-6.500s.png",
+        "sha256": "02b0f17942327281d8c6c1150ac975dca87d449ab6657bafc9c5e1da9a6cd049"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-168-7.000s.png",
+        "sha256": "bbe4325da0d858040932f1fcf394f9a1f335addc64fadbe10a343e1c67e0f01a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-180-7.500s.png",
+        "sha256": "ea33e19d8cb9ec33a76df2758c7aecb8612777cfce329440b1b813193035956d"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-190-7.917s.png",
+        "sha256": "ac1e7066032e2a3ad995baa20c6e4a42bd02504c794bee8b51983fb85b3e4d8e"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/frame-191-7.958s.png",
+        "sha256": "8675844e42f3626a683233674c3f66dffc87d4c34de3161f037fadc0ebbb40b8"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/hardware-critical-crops.jpg",
+        "sha256": "5422f0e69c6cc2f074b62b21a730debd2caa23e2fc0e0841bb75f15b90b94e7a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/inspection-manifest.json",
+        "sha256": "1a913005cbb313687e08da71787f35ca2f2f3c63baeb76c7516f04c2e17e1885"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/qualified-qa.json",
+        "sha256": "f3a3fed5c9deed200f9bb105e8abb0c21eb52a4f63875cd6168f3567fd008439"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/reference-and-keyframes.jpg",
+        "sha256": "3f8dc0733f7ecda71107c13b474aa948d68244cef62a09dd203c2661fafb43e6"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/qa-omni-01/technical-evidence.json",
+        "sha256": "e93444582c4b815026ad8683019886bec9f846a8dcd6307bd8cdd38314e71a1e"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/qa/neck-native.png",
+        "sha256": "8128c49ed2fc9928ea89b49dbe3f56d28ee7fffaf16f846e50a887c429351434"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-05-reference/qa/source-vs-generated.jpg",
+        "sha256": "ed99a98d8fcee4d5acfc3b29d03aadd5c9984ecf003cde7c1d180cd83c12aa74"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/pre-root-hold-metadata/generated-image-manifest.json",
+        "sha256": "2bb19e8404d4612764d2f30f6442aabe8e90adfe6c9258288e0d105d80bb9b28"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/pre-root-hold-metadata/image-reference-independent-review.json",
+        "sha256": "6ac4b709d7f84216503dfae45be128ebead98b5cc55cdc33ebb4c957adb3eb44"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/pre-root-hold-metadata/sample-pack.json",
+        "sha256": "b43e0947ac4760ae3cb2f29a2e10c6e93840f4283d409bfcf1baaad212626e05"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/qa/generated-neck-5x-nearest.png",
+        "sha256": "fd84e7ffe3fde5ab109b7d712efd2d6b72295c81ac8ca4d574c01defb17ec1c5"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/qa/generated-neck-native.png",
+        "sha256": "084490a04ebfa39018890afac2edd29a14b2f8c06e84dcdb791fed1f06d2d853"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/qa/manufacturer-adjuster-native.png",
+        "sha256": "084174a9f1442bcb4f6822053c511635c35a0e8ec545106d4cbc215f4bc75914"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-04-reference/qa/source-vs-generated.jpg",
+        "sha256": "02b134fe61a54520a40d63b542a1c291c8e9d9a3521acaa361d6217dfdcc3e80"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/pre-root-concurrence-metadata/generated-image-manifest.json",
+        "sha256": "005112a394a7029844d7e8644410ac10df5c3a0acb3431898a81075325111416"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/pre-root-concurrence-metadata/image-reference-review.json",
+        "sha256": "e4d227d54e8aad549734566af5db1e1cd93cdbd50bc60674468211ea09c11623"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/pre-root-concurrence-metadata/sample-pack.json",
+        "sha256": "f9ede54ad5f12aa078ae5367efca687a8041c8a5c0cf44fd76e2bc226075c51b"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/qa/generated-collar-5x-nearest.png",
+        "sha256": "cc1a91bc845e9fe7e06a359043415ad11e7c96728dfe52a2d31355a09913f2d1"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/qa/generated-neck-native.png",
+        "sha256": "8334063f37e6e1a77bce6e8d566b019a5af6b5455655bfe4e113cc57280ba963"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/qa/manufacturer-hardware-native.png",
+        "sha256": "d1a3370a4f1c27bc6e9ab7ff6dd5d93bb07e80c44929ad7ee6d2045c1acc2446"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-03-reference/qa/source-vs-generated.jpg",
+        "sha256": "db76465736b070893dda0378c9f69bda29410b86b8176c4cb52e3491da0d10a8"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pre-download-metadata/flow-submission.json",
+        "sha256": "767dd4f4ee62d0378a1969ef008e87c4ef4a6f3bb1db23921c50b45f8fbb97f4"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pre-download-metadata/sample-pack.json",
+        "sha256": "424563fa720b6ee9b3fc8a137686d4ae7865988922cc1b158e4aad1b72d4dffc"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pre-submission-metadata/flow-submission.json",
+        "sha256": "479b626677c54755afa88a345a0e5407e8ba9ae64b6d38ddea992d3d18d73831"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pre-submission-metadata/sample-pack.json",
+        "sha256": "edfe941ac535d8716cc14b458c4d5060c7a9f536ac6cde05ed193f656a7391da"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pre-visual-review-metadata/flow-submission.json",
+        "sha256": "db7cfe64920e1307719e0d0cf6707bc577f3b2c79f1f8485f6f2e6cf674e0ca1"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/pre-visual-review-metadata/sample-pack.json",
+        "sha256": "094809db93ac5886a10c199182cab2ebe7852fafd975f16f24d51e4679eacf8e"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/dense-full.jpg",
+        "sha256": "41141688490d4a71d4f9385c074d325514f94415c9f42da63515d56fcf97b7b5"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/ffmpeg-full-decode.log",
+        "sha256": "caea78374a6661e4c0a21ec1c3bdd457c5346bb542432e9f488a6cc7bbaad0c1"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/ffmpeg-last-extraction.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-000-0.000s.png",
+        "sha256": "76c1c0f04276d8914f172196021263fdd77b2d027d865504b98f052f17837b18"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-012-0.500s.png",
+        "sha256": "8d6a581d31d6784d5d4262bc6efed7d16468c46e3300de06147d6336d506bc41"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-024-1.000s.png",
+        "sha256": "01abb430ddbcff751502e0f5df43e568b681912f1c5a628595754f6d6b610525"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-036-1.500s.png",
+        "sha256": "0de98a5a6f80a20536f31084a51db930bcbfaadab782b89583826193bc010e93"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-048-2.000s.png",
+        "sha256": "8ec305739c6b94faf6b21c12999f640a5bf9ae2e510676bad8c08fb1f209dcc9"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-060-2.500s.png",
+        "sha256": "5ddb2b9da18876b15ec00cc7fc23e92e3564d8c4e26e1d2d66346e219fceaaf3"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-072-3.000s.png",
+        "sha256": "0ef85d0dcd0c0d79c785a3413d207f427cfe62cd2f091a56498b3e2c6a60a2e1"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-084-3.500s.png",
+        "sha256": "4d5c5ab62971ddd13a2cc25415c319dea4b2e786b446f8516fde498dee85b468"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-096-4.000s.png",
+        "sha256": "74333aaf94ef992793d9e2a501b45d94ce9458ab2c2c848f3d4a9c5b62b939d7"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-108-4.500s.png",
+        "sha256": "6189d40f100f147b6f59feda521d67b7667d1609aa04529897a36cf5dcad5aa6"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-120-5.000s.png",
+        "sha256": "d0bbea15124b44c67b123ae6d7f2a3830ced645aea1a6784cf9a90549741555a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-132-5.500s.png",
+        "sha256": "1d3a249221eb25a0b8a81abea9595accba241295bc35e162cde3b30d37f278a2"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-144-6.000s.png",
+        "sha256": "50d3438cb5e80197312f97c0649a9b5d8ba7a6eb806acb7d76fd89c99ccc4683"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-156-6.500s.png",
+        "sha256": "30bf588d09b31829f4a60ea889380349f71f97a860ff4c4f0e7bbd7cb27299d1"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-168-7.000s.png",
+        "sha256": "b77e101dfa29f3a38d9facc70113600336c332ea2e53cc395bd13e284fddd22a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-180-7.500s.png",
+        "sha256": "888de8c6bb7330575b13dcf429ea18dd6951c5e1c60d14f34534fa25a4f9b3d5"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-190-7.917s.png",
+        "sha256": "d4bf8f3ee307ab8d9190148af89a8de586164e14ceaabe1ce71f104435be2068"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/frame-191-7.958s.png",
+        "sha256": "bdfa14dde10c7529d1d40a94b5d4520564536732ed33a059d8b419ceb9a1f324"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/inspection-manifest.json",
+        "sha256": "0fd4219cb2bca6bef2f2aa0649f4987cb94c9ce939901ef1f90dc4eebceab84a"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/qualified-qa.json",
+        "sha256": "96b2107b9885838dad9295499d841f417c9f4a8df95522ca424015271523cd33"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/reference-and-keyframes.jpg",
+        "sha256": "2eb2d9f61a3b004ab84a6275cc34fe9f6b6fdc9ad1d062fd250fd1a4443807ad"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/tag-roi-all18.jpg",
+        "sha256": "bde7513b8b733a4764102ae6df9d2c5eca050135311c56f670df2e6a74660c03"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/tag-roi-definition.json",
+        "sha256": "ab5574076f0e5ed3d19a8bae86aed3ba835159777a104599e9f27aec0216de63"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-02-veo/qa-veo-02/technical-evidence.json",
+        "sha256": "4c7e0d5b1f89389e129ec8817aadd85ee6e937ee00d66eeea189cb77c56262cd"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-01-pre-hold-metadata/branded-review-candidate/candidate-manifest.json",
+        "sha256": "c5696fbd94b8dd6ce2aa8aa22c4b9cdc79deef2644945e06c7336310b8daaddb"
+      },
+      {
+        "path": "rw_collar_hiandlight_24/attempt-01-pre-hold-metadata/qa-omni-01/qualified-qa.json",
+        "sha256": "5c8b8f581cb7d2d12eed9c92197cb3faee7295deb37fb41718c150113fc93c09"
+      }
+    ]
+  },
+  "rw_sunshower_jacket": {
+    "folder": "rw_sunshower_jacket",
+    "productId": "p_115",
+    "video": "/images/products/catalog/rw_sunshower_jacket/videos/b01a20b5b22487f02aa2d2ecc74f09ca173f8b6eeb4ac6d147b8b5b5a30c18b7/hover.mp4",
+    "sha256": "b01a20b5b22487f02aa2d2ecc74f09ca173f8b6eeb4ac6d147b8b5b5a30c18b7",
+    "videoJobId": "cfd46225-59c1-40d2-b502-efe8d0826aba",
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "reviewedAt": "2026-09-06T01:41:05.165922+00:00",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceVideoSha256": "3dd07fa9dc55131c48a8bde1f90bce9e68bfd4d4e3e472387bff046a3e61c5c4",
+    "sourcePhotoSha256": "638db33fc3f73620f3dd574fbfabafdac3c6a8637f5849dd934f7b31bd338c9f",
+    "uploadSha256": "e7bad3d11d256d85eeef46566e98103423619e3536091c061cdf74eb39d11286",
+    "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+    "referenceGenerator": "builtin_imagegen",
+    "referenceGenerationPerformed": true,
+    "referenceReviewSha256": "51e0acabe51c3d02d4cec7d99b3bab9ee538d185d21321ba428a0f6b8f45335f",
+    "referenceReviewPath": "rw_sunshower_jacket/attempt-02-omni/image-reference-review.json",
+    "rootApprovalSha256": "457d4ab4759de0969dcf557bde4364834a70a3884e16ad9c294d0c4321ecc9ad",
+    "qualifiedQaSha256": "5056db6ed322201903f156536da552be57930c13f2080306b34e1f4b8cf9be3d",
+    "candidateManifestSha256": "4b59b8fbd88ee50cd28cb3db994562cb52dce9ef2a6d5665db08ad5bdf094e95",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewEvidence": {
+      "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+      "relativeFitScale": "approved_visual_relative_fit_only",
+      "absoluteDimensionsVerified": false,
+      "trueMotion": "approved_8_seconds",
+      "fullFramePreserved": true,
+      "providerWatermarkObservation": "Lower-right translucent Google diamond directly visible at native2/3.5/5/7.958s.",
+      "providerWatermarkVisuallyConfirmed": true,
+      "sourcePhotoCredit": "Whole source frame kept; no visible source credit removed.",
+      "observations": [
+        "All18 temporal samples keep the same Earth Brown mustard front/brown rear sleeveless shell, side accent lines, curved hem and belly flap. Exact flat and manufacturer worn04/05 were directly re-viewed.",
+        "The head remains almost at the first orientation. The problematic black rear-neck clip/toggle from attempt01 is not observed at any sampled time; fur continues to occlude that area naturally. This does not certify the hidden neck surface.",
+        "Native3.5s visibly closes both eyes; native5s shows tongue/mouth movement. Subtle head movement and breathing are visible while all four paws remain grounded. This is real animal motion, not just an image slide.",
+        "The whole dog/coat remains readable with coherent anatomy; no introduced handle, rigid ring, sleeves or broad torso change established.",
+        "First/end framing and pose are near each other but not pixel-identical; no perfect-loop certification."
+      ],
+      "limitations": [
+        "Exact physical garment centimetres and dog measurements are not certified; actual source size guidance is not a pixel measurement.",
+        "Thin neck-edge accent and neck hardware area remain fur-occluded; absence of a visible spurious clip in these samples is not a hidden-surface certification.",
+        "Microtype, opposite side and interior construction are unverified.",
+        "All192 frames decoded;18 temporal samples and listed native frames manually viewed, not every frame visually inspected.",
+        "Near-matching first/end pose still has small facial/framing differences; perfectly seamless looping is uncertified.",
+        "Raw audio not listened to; candidate is silent.",
+        "Root approved exact candidate for later publication; actual remote publication is not performed by this agent."
+      ],
+      "rootApprovedScopes": [
+        "Earth Brown garment panels/reflectors/fit maintained; no new rear-neck clip observed in samples, natural fur occlusion maintained, blink3.5s and mouth motion5s.",
+        "Whole original frame/provider mark preserved; exactly one DDB footer."
+      ]
+    },
+    "sourceAttempt": 2,
+    "priorAttemptsPreserved": [
+      {
+        "path": "rw_sunshower_jacket/flow-raw-omni11-8s.mp4",
+        "sha256": "88e876debe108860867b078d4026657c6f8927a4d1d93fa1331ba9bab7ad80b5"
+      },
+      {
+        "path": "rw_sunshower_jacket/flow-submission.json",
+        "sha256": "5d15ffc71bab6b7d45bdb17aca5f4fcd4412f4bf7bf532329acaef85bfa83eeb"
+      },
+      {
+        "path": "rw_sunshower_jacket/image-reference-review.json",
+        "sha256": "99e7edc729ab33eb92cbca91e7a7be88add9fd3392cc1e11c615a0f5356b4e47"
+      },
+      {
+        "path": "rw_sunshower_jacket/pre-submission-metadata.json",
+        "sha256": "f9d971f7afa396ffc6d31d4646ff24288eab1aae9186f230806f50f18ed36342"
+      },
+      {
+        "path": "rw_sunshower_jacket/preparation-pack.json",
+        "sha256": "569dc5e2e9e8299fc4b4e1d48240ffbf3558a1d96ffa4986a368dfe639698be1"
+      },
+      {
+        "path": "rw_sunshower_jacket/prompt-en.txt",
+        "sha256": "968134569666002cc3d71a07c87e3a5f74eb09d56fb12996d9736ff1932522d6"
+      },
+      {
+        "path": "rw_sunshower_jacket/reference-original.webp",
+        "sha256": "638db33fc3f73620f3dd574fbfabafdac3c6a8637f5849dd934f7b31bd338c9f"
+      },
+      {
+        "path": "rw_sunshower_jacket/reference-source-01.webp",
+        "sha256": "1732fb8b9fb2f6806aea1e304e3ae6f6673bc71ade27a4cc4768093f061537b1"
+      },
+      {
+        "path": "rw_sunshower_jacket/reference-source-02.webp",
+        "sha256": "7a99af84a9ecdc0f038557c44bcd32eb2336342117f915af1bafacc25ab9f870"
+      },
+      {
+        "path": "rw_sunshower_jacket/reference-source-evidence.json",
+        "sha256": "68726b40ab75b2f448b6038a98a97c12c136a21f451792251332348fa33cbd78"
+      },
+      {
+        "path": "rw_sunshower_jacket/root-final-review.json",
+        "sha256": "b5b67f4dddefe062faaa28b88f2b4dccbed26e2975638416bc7587e134d58c8d"
+      },
+      {
+        "path": "rw_sunshower_jacket/root-input-approval.json",
+        "sha256": "16fac3badb9e089fc5bbeee559c050868399bda2ae6297c6f8df1955ceffe3f1"
+      },
+      {
+        "path": "rw_sunshower_jacket/sample-pack.json",
+        "sha256": "c309d738de7f89b7d2a4cc1b84b337086dedd5ebda012991006d785ff23dc533"
+      },
+      {
+        "path": "rw_sunshower_jacket/silver-poodle-earth-brown-reference.png",
+        "sha256": "e7bad3d11d256d85eeef46566e98103423619e3536091c061cdf74eb39d11286"
+      },
+      {
+        "path": "rw_sunshower_jacket/submitted-prompt-ui.txt",
+        "sha256": "0063576cc860304466e54231dd78f5f3bb5d2bb13c2cc2836367dec05dd9972e"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/dense-full.jpg",
+        "sha256": "d9396ca7c3db2149a5f9e4aabdf6c6491eff53d580ca43b0c13951cfbd88662a"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/ffmpeg-full-decode.log",
+        "sha256": "482d8d71f91a0b84beb5be246f780edb3d12fa8a7117aa1c98520a41a9bbd6a3"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/ffmpeg-last-extraction.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-000-0.000s.png",
+        "sha256": "fa402da15f0921fadc9c58ba77bd7fb9777f79957d312271c36b62615eb68dfd"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-012-0.500s.png",
+        "sha256": "43e4795cacba80db60fec152ec1db17bd1e8c840c42523c23a9aaa1bb5d79242"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-024-1.000s.png",
+        "sha256": "3df91b28728a66bb243d354a8eafb496239e671a0235382ac2682b281f99afa6"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-036-1.500s.png",
+        "sha256": "05d9dd6e50f353647eb8ce81a1ad9e21a284110c4b7ec64e95767c1a6cc18398"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-048-2.000s.png",
+        "sha256": "eb00c00945a0a8cc4f5de890a871d4351cf47fc59805a5b728c24cc250746441"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-060-2.500s.png",
+        "sha256": "c6b1714a79735887f6056f36618a9a6f3e947ad42fc167bf11d49d40d3329b8f"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-072-3.000s.png",
+        "sha256": "356f8920782a0afe93e154d9aa415fcdaf9622e896d5ac50e3ea78d5ea8d4fcb"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-084-3.500s.png",
+        "sha256": "9b2e06e84a84c9fb4fa30c49e7a8ab1584d022e8fa796ddb815bf62c5ff99f41"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-096-4.000s.png",
+        "sha256": "059007c0909115e279a7f9e3962108a413eff40d1bd8b094b4f9198f169c9edf"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-108-4.500s.png",
+        "sha256": "aa312a05f14409a00cfa06b2d9382d3bce7bee9881a6f027e08a3827bb1ed5e1"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-120-5.000s.png",
+        "sha256": "0d68eeae52daf6627f6f39e970984268a83d224f1df82a80336d3eb1c0584001"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-132-5.500s.png",
+        "sha256": "9f7242dc661579d0f66fc7d112794a4e871320318377fa2c7e238e7f87e47648"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-144-6.000s.png",
+        "sha256": "a5838a894f7e35698b2c5732df5e6b0a88eb224e380fdd78ae8044c4ad7845da"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-156-6.500s.png",
+        "sha256": "9eb483c888d1988b24d4abe631edbbeac468f6202fa591d1dba41756fc098e50"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-168-7.000s.png",
+        "sha256": "61476437ccfd743f699d3dbc60c81717ec9bd8ce6869ce49102681bb3ca07553"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-180-7.500s.png",
+        "sha256": "5a40f866f53fa478cc597ad5bc1f59ec046ec1c7d17d7c70db0e7fa11975eb40"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-190-7.917s.png",
+        "sha256": "5ca069e2c2be63fed9c27786f8d86134855669f7850c40685ab21e547aed4c73"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/frame-191-7.958s.png",
+        "sha256": "6b0a7bdba95718e829d77c9f0f561e6ed75dc1af4d20965914107c6528516eaa"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/inspection-manifest.json",
+        "sha256": "30ec2d3aaca92c5978ef74e9f011cda99db1fef5a215705812cab6acb68a0f70"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/neck-detail-followup.jpg",
+        "sha256": "d54e63f5b24599b996b81c54c3168fd5ca27daaaf471c88c1d81c36976f80d31"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/provider-mark-contact.png",
+        "sha256": "8277bc619e72ad650acbcaa14c9626c2789168ce82fb20bd4a20179ddf9db487"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/qualified-qa.json",
+        "sha256": "6bb7c726ec50f4c9e8bf5238cabe78b15a0f24658ab1851780f75ff0c8ea0799"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/reference-and-keyframes.jpg",
+        "sha256": "f1d2624767f60643be6335625784eafce2659a82856ed940f7983c8d43224864"
+      },
+      {
+        "path": "rw_sunshower_jacket/qa-omni-01/technical-evidence.json",
+        "sha256": "7084b150209b14e996563c9bc2504002be492a393ea8024e72a802788424d0de"
+      }
+    ]
   }
 }

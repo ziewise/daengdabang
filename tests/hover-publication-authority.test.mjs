@@ -30,7 +30,7 @@ test('only the three specifically retained legacy assets pass, with unchanged lo
     assert.equal(safeCatalogHoverVideo({ ...product, name: '상품명 변경', subcategory: 'unclassified' }), product.video,
       'retained publication depends on explicit asset identity, not mutable name/category');
   }
-  const legacyActive = raw.map(candidate).filter(product => product.raw.videoProvider !== 'google_flow_web' && safeCatalogHoverVideo(product));
+  const legacyActive = raw.map(candidate).filter(product => safeDogWearingCatalogVideo(product));
   assert.deepEqual(legacyActive.map(product => product.folder).sort(), retained.map(([folder]) => folder).sort());
 });
 
