@@ -625,7 +625,23 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-79dad1f09c18"
   },
-  "rw_bivybowl_23": null,
+  "rw_bivybowl_23": {
+    "video": "/images/products/catalog/rw_bivybowl_23/videos/17f3a400852fcfcc00e3950c456d687d04f4e5d11e075bd52665920ec6eb0346/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "3f183259-4bdc-46c6-b936-0415995eea57",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6464681525f8074448e85426d39d7bab7e61d6b3c8bdc82a07ad4aae96cf1370",
+      "downloadEvidenceSha256": "f056f535df3296d0fbee65eccbffa568887168362ed576259ca6f4d51518c4d6"
+    }
+  },
   "rw_campflyer_disc": {
     "video": "/images/products/catalog/rw_campflyer_disc/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -699,7 +715,23 @@
   "rw_floatcoat_lifejacket": null,
   "rw_frontrange_daypack_24": null,
   "rw_frontrange_harness": null,
-  "rw_frontrange_harness_24": null,
+  "rw_frontrange_harness_24": {
+    "video": "/images/products/catalog/rw_frontrange_harness_24/videos/4f0c612b5f33e4345373e531fbb39d20a0a8ad7805f7a5e357aa92afa7ffa4a7/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "99750618-2470-466f-b79d-95702912942a",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "81a17ec8d2777b962aaed57dbe7dfc0dca904af3b0047e8efd14598b7f4d84fc",
+      "downloadEvidenceSha256": "06eec4e6611bf0abadcc1feb25d86f1240110b88538191b6055085d59f68e051"
+    }
+  },
   "rw_frontrangeflex_collar_26": null,
   "rw_frontrangeflex_harness_26": null,
   "rw_frontrangeflex_leash_26": null,
@@ -1003,7 +1035,23 @@
     "videoJobId": "2e9dee08-5b2b-40ed-b0b6-207a26967596"
   },
   "rw_quinzee_jacket": null,
-  "rw_quinzee_jacket_24": null,
+  "rw_quinzee_jacket_24": {
+    "video": "/images/products/catalog/rw_quinzee_jacket_24/videos/bbc5236f1182f44ae65fd40e77ab65b241887037f4e1725eb58f48a050863990/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "9f24dfe4-9a25-4594-b6cb-622947f4fad6",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "781b9d27a8dd02fd5e420e205c26af7f4c51ba3f177c2d8060b6fc30a3e3b8c7",
+      "downloadEvidenceSha256": "c060e567e7eb63ca999ae6e9e94a59c27c93f29a82fffd47b4f65eb2aea17cb7"
+    }
+  },
   "rw_remix_balltoy_m_26": null,
   "rw_remix_balltoy_s_26": {
     "video": "/images/products/catalog/rw_remix_balltoy_s_26/videos/453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06/hover.mp4",
@@ -1028,11 +1076,21 @@
   },
   "rw_remix_tugtoy_m_26": null,
   "rw_remix_tugtoy_s_26": {
-    "video": "/images/products/catalog/rw_remix_tugtoy_s_26/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_remix_tugtoy_s_26/videos/b25fea95969bce051a146d5cb23bff6d48d4055f482d6839ce47307dd37f88bf/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-c863fdcc5873"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "4e8d217f-aef5-439b-a942-70498c695eed",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "0a37ac53eaf512e7289bb71fda5ae31f8d9965a0e93c432833a4308138d38f9c",
+      "downloadEvidenceSha256": "a9905a48d6e6596cfb5da90b3cafc5b130ec5fed90f9ef373b1950a046fd4f9d"
+    }
   },
   "rw_ridgeline_collar_26": null,
   "rw_ridgeline_harness_26": null,

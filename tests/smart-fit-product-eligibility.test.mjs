@@ -244,7 +244,7 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         videoJobId: "old-review",
     });
 
-    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch10.json"));
+    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch11.json"));
     assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);
