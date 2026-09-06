@@ -826,11 +826,21 @@
     "videoJobId": "hover-photo-20260903-54540a405442"
   },
   "rw_highlands_sleepingbag_m": {
-    "video": "/images/products/catalog/rw_highlands_sleepingbag_m/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_highlands_sleepingbag_m/videos/d03a97a40e7f5d8674c3607dcb56e4e699259faf6736dfdda23713aff0a5c1ba/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-54540a405442"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "03a4bcc8-0325-423a-bcdc-ed01ac151a3f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "4201aff2be0d3714c53a49a492cd44b8912b0c4d4f059e2c653426776159b345",
+      "downloadEvidenceSha256": "8eeba7379571d207b55e0979900a7ef3872f8dafaabbc5c4ac9eb0db1c64a5c5"
+    }
   },
   "rw_hitchhiker_carrier": {
     "video": "/images/products/catalog/rw_hitchhiker_carrier/videos/hover.mp4",
@@ -932,11 +942,21 @@
     "videoJobId": "0d2914ff-787e-482c-b5f5-ee5bd3613752"
   },
   "rw_mt_hoodie_gaiter_26fw": {
-    "video": "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/videos/fbbf81dd8e605edac64436ca8c2d7fb43ea84c9a580fd541c525099ffb9e64d6/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-1cf9fd352003"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "e9da3de3-78b2-4514-9643-c0e5116f1039",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "10ca5bd0e566bcad91baf4fd8e28f08b321cbf0cd44042a0c9a131161bdd6434",
+      "downloadEvidenceSha256": "077e88a6d88b25dd5a1991c964c28e6c8fd2dd479c59418142c18812c882eba8"
+    }
   },
   "rw_mteverrest_cot_26fw": {
     "video": "/images/products/catalog/rw_mteverrest_cot_26fw/videos/hover.mp4",
@@ -1052,7 +1072,23 @@
       "downloadEvidenceSha256": "c060e567e7eb63ca999ae6e9e94a59c27c93f29a82fffd47b4f65eb2aea17cb7"
     }
   },
-  "rw_remix_balltoy_m_26": null,
+  "rw_remix_balltoy_m_26": {
+    "video": "/images/products/catalog/rw_remix_balltoy_m_26/videos/b00c80fcd76be65d9a805e9f1604ec61029d1a68d2205ca01798bfcb71795adf/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "0666f30b-133b-464c-8c70-804edd96757f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "c54e5ec155abc4ca687e20b9d2ea0ac2c4eb2aa14f3eebd2efac4c5086a12513",
+      "downloadEvidenceSha256": "b47371df37dccae672d18e096c74772bb1fd093a710ba79b6c4d8866a12445fd"
+    }
+  },
   "rw_remix_balltoy_s_26": {
     "video": "/images/products/catalog/rw_remix_balltoy_s_26/videos/453514d5e338f60284057cf548f0ff76160cf689ea89fa61146d2d5541692a06/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1132,7 +1168,23 @@
   "rw_swampcooler_harness": null,
   "rw_swampcooler_harness_2": null,
   "rw_swampcooler_neckgaiter": null,
-  "rw_swampcooler_neckgaiter_2": null,
+  "rw_swampcooler_neckgaiter_2": {
+    "video": "/images/products/catalog/rw_swampcooler_neckgaiter_2/videos/7b203171793e42603d341baa1076d15de9e015c13ae6f63dee5c7b3d1d6819da/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "c9a5dc3f-610a-490e-8052-69d6ec718987",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "f89065b54bd3787481e5cbea829c62f8dde64bd40f329b6e3be9acc49983bd5d",
+      "downloadEvidenceSha256": "8e30823e601e489c04c284b1a8de1184852b3fb5da8396374178a73ead28bc99"
+    }
+  },
   "rw_swampcooler_vest": null,
   "rw_swampcooler_vest_2": null,
   "rw_swampcooler_zipvest": null,

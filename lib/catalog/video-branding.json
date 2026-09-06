@@ -841,5 +841,89 @@
     },
     "sourceVideoSha256": "6464681525f8074448e85426d39d7bab7e61d6b3c8bdc82a07ad4aae96cf1370",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_swampcooler_neckgaiter_2/videos/7b203171793e42603d341baa1076d15de9e015c13ae6f63dee5c7b3d1d6819da/hover.mp4": {
+    "branding": "baked",
+    "sha256": "7b203171793e42603d341baa1076d15de9e015c13ae6f63dee5c7b3d1d6819da",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T09:00:49.994003+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "c9a5dc3f-610a-490e-8052-69d6ec718987",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "f89065b54bd3787481e5cbea829c62f8dde64bd40f329b6e3be9acc49983bd5d",
+      "downloadEvidenceSha256": "8e30823e601e489c04c284b1a8de1184852b3fb5da8396374178a73ead28bc99"
+    },
+    "sourceVideoSha256": "f89065b54bd3787481e5cbea829c62f8dde64bd40f329b6e3be9acc49983bd5d",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_mt_hoodie_gaiter_26fw/videos/fbbf81dd8e605edac64436ca8c2d7fb43ea84c9a580fd541c525099ffb9e64d6/hover.mp4": {
+    "branding": "baked",
+    "sha256": "fbbf81dd8e605edac64436ca8c2d7fb43ea84c9a580fd541c525099ffb9e64d6",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T09:20:28.969020+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "e9da3de3-78b2-4514-9643-c0e5116f1039",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "10ca5bd0e566bcad91baf4fd8e28f08b321cbf0cd44042a0c9a131161bdd6434",
+      "downloadEvidenceSha256": "077e88a6d88b25dd5a1991c964c28e6c8fd2dd479c59418142c18812c882eba8"
+    },
+    "sourceVideoSha256": "10ca5bd0e566bcad91baf4fd8e28f08b321cbf0cd44042a0c9a131161bdd6434",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_highlands_sleepingbag_m/videos/d03a97a40e7f5d8674c3607dcb56e4e699259faf6736dfdda23713aff0a5c1ba/hover.mp4": {
+    "branding": "baked",
+    "sha256": "d03a97a40e7f5d8674c3607dcb56e4e699259faf6736dfdda23713aff0a5c1ba",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T09:44:40.545595+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "03a4bcc8-0325-423a-bcdc-ed01ac151a3f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "4201aff2be0d3714c53a49a492cd44b8912b0c4d4f059e2c653426776159b345",
+      "downloadEvidenceSha256": "8eeba7379571d207b55e0979900a7ef3872f8dafaabbc5c4ac9eb0db1c64a5c5"
+    },
+    "sourceVideoSha256": "4201aff2be0d3714c53a49a492cd44b8912b0c4d4f059e2c653426776159b345",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_remix_balltoy_m_26/videos/b00c80fcd76be65d9a805e9f1604ec61029d1a68d2205ca01798bfcb71795adf/hover.mp4": {
+    "branding": "baked",
+    "sha256": "b00c80fcd76be65d9a805e9f1604ec61029d1a68d2205ca01798bfcb71795adf",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T09:58:21.812545+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "0666f30b-133b-464c-8c70-804edd96757f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "c54e5ec155abc4ca687e20b9d2ea0ac2c4eb2aa14f3eebd2efac4c5086a12513",
+      "downloadEvidenceSha256": "b47371df37dccae672d18e096c74772bb1fd093a710ba79b6c4d8866a12445fd"
+    },
+    "sourceVideoSha256": "c54e5ec155abc4ca687e20b9d2ea0ac2c4eb2aa14f3eebd2efac4c5086a12513",
+    "providerWatermarkPreserved": true
   }
 }

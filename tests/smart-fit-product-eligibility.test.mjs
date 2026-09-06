@@ -244,7 +244,7 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         videoJobId: "old-review",
     });
 
-    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch11.json"));
+    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch12.json"));
     assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);
@@ -293,10 +293,18 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
     assert.equal(legacyPowderVest.videoJobId, undefined);
     assert.equal(legacyPowderVest.video, undefined);
 
-    const gaiter = applyReviewedHoverOverride({ no: 2, folder: "rw_mt_hoodie_gaiter_26fw" });
-    assert.equal(gaiter.videoProvider, undefined);
-    assert.equal(gaiter.videoQuality, undefined);
-    assert.equal(gaiter.videoJobId, undefined);
+    const gaiterFolder = "rw_mt_hoodie_gaiter_26fw";
+    const gaiter = applyReviewedHoverOverride({ no: 2, folder: gaiterFolder });
+    const approvedGaiter = expected.approvedFlow[gaiterFolder];
+    assert.equal(gaiter.videoProvider, "google_flow_web");
+    for (const key of ["video", "videoQuality", "videoJobId", "videoGenerationIdentity"]) {
+        assert.deepEqual(gaiter[key], approvedGaiter[key], key);
+    }
+    const { safeCatalogHoverVideo } = await import("../lib/pet-tryon-eligibility.ts");
+    assert.equal(safeCatalogHoverVideo({
+        id: "p_2", folder: gaiterFolder, subcategory: expected.expectedSubcategories[gaiterFolder],
+        image: "/unrelated.webp", video: gaiter.video, raw: gaiter,
+    }), undefined, "approved media cannot authorize the wrong product ID");
 });
 
 test("catalog display name identifies the Everest item as a dog bed cover", async () => {
