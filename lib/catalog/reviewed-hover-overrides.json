@@ -663,7 +663,23 @@
     "videoQuality": "approved_dog_wearing",
     "videoJobId": "e7967ae2-f130-4f2b-a209-727b1b54ae8f"
   },
-  "rw_climatechanger_jacket_25fw": null,
+  "rw_climatechanger_jacket_25fw": {
+    "video": "/images/products/catalog/rw_climatechanger_jacket_25fw/videos/60ada4d78638c8b8cae9d7396547d5e6bf3385b6d697b26655a331a5fbb8f6e2/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "579bcd28-0a81-4f04-b8f2-f75513cd666d",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "de549d5744b781208d5f07d38f127983bd926914b9942c49d2af24fc56ba1121",
+      "downloadEvidenceSha256": "31a63b783714793cef23130f8c06e443de8a408629ae19357464d97b00739b98"
+    }
+  },
   "rw_climatechanger_vest_25fw": {
     "video": "/images/products/catalog/rw_climatechanger_vest_25fw/videos/a7061dcfa1e03fa11f4bddf23e9828ece6220a5cfe6e6649714dfa1d42944856/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -959,11 +975,21 @@
     }
   },
   "rw_mteverrest_cot_26fw": {
-    "video": "/images/products/catalog/rw_mteverrest_cot_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_mteverrest_cot_26fw/videos/1c3c625d19df5f2b3bbd838f1f308b0844dca46f8811ffc9c29f44f6cc767b51/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-df59cf9a5cdd"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "6687cfb8-8029-4b9c-b837-b8f36df6ea08",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "a6528fc3bf452062798cb603df74b3d2dd6d8bba9883b2c0480c397d4f6374ad",
+      "downloadEvidenceSha256": "3ac86a273169c0a7c24483d2128d0a6db5b04f5a7ddad33a0f2f1d1ad54a6e76"
+    }
   },
   "rw_mteverrest_cotcover_26fw": {
     "video": "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/hover.mp4",
@@ -1104,11 +1130,21 @@
     "videoJobId": "hover-static72-20260903-9d1c9f0332db"
   },
   "rw_remix_soft_disc_26fw": {
-    "video": "/images/products/catalog/rw_remix_soft_disc_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_remix_soft_disc_26fw/videos/df6ca6a1a031f8a0561ba9aa33891dc00f62006a816f34d3420eb5b197891bc2/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-deab61e841cb"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ce4cd552-3480-45b0-9140-87c3064d50c2",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "55000e65512705fb5e95b5185beb4c68cde4307d3fc235f087eb8bfb40415560",
+      "downloadEvidenceSha256": "8e22be33b0a6c557a74770472594f9af61744eda0e84dd6a0ee3f7cf1f26a729"
+    }
   },
   "rw_remix_tugtoy_m_26": null,
   "rw_remix_tugtoy_s_26": {
@@ -1191,11 +1227,21 @@
   "rw_swampcooler_zipvest_2": null,
   "rw_switchback_harness": null,
   "rw_timberline_fuse_vest_26fw": {
-    "video": "/images/products/catalog/rw_timberline_fuse_vest_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_timberline_fuse_vest_26fw/videos/865ae5eb6b514fd1d214b610f788464a9bd388ed5e2be6664a3e4eea977b39f6/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-952e09e6d72e"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "dede9c16-285a-40a0-86cd-da6ebce040fc",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "5c52f320a79afcb5b481fa05e22755df5625967233e6b281fa487ef05f136173",
+      "downloadEvidenceSha256": "f13f2fa4cdd430e9ced7f9f7297b10d9ccd9b70687cb094830d83a19a4560f5b"
+    }
   },
   "rw_toadstool_toy": {
     "video": "/images/products/catalog/rw_toadstool_toy/videos/9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051/hover.mp4",

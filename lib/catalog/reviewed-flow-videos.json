@@ -4530,5 +4530,274 @@
         "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
       ]
     }
+  },
+  "rw_climatechanger_jacket_25fw": {
+    "folder": "rw_climatechanger_jacket_25fw",
+    "productId": "p_37",
+    "video": "/images/products/catalog/rw_climatechanger_jacket_25fw/videos/60ada4d78638c8b8cae9d7396547d5e6bf3385b6d697b26655a331a5fbb8f6e2/hover.mp4",
+    "sha256": "60ada4d78638c8b8cae9d7396547d5e6bf3385b6d697b26655a331a5fbb8f6e2",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "579bcd28-0a81-4f04-b8f2-f75513cd666d",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "de549d5744b781208d5f07d38f127983bd926914b9942c49d2af24fc56ba1121",
+      "downloadEvidenceSha256": "31a63b783714793cef23130f8c06e443de8a408629ae19357464d97b00739b98"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "579bcd28-0a81-4f04-b8f2-f75513cd666d",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "de549d5744b781208d5f07d38f127983bd926914b9942c49d2af24fc56ba1121",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T10:22:51.546516+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_climatechanger_jacket_25fw\\attempt-02-omni\\root-final-approval.json",
+        "sha256": "741d2136469850d05107a8ace06fc25781662510126546e37b462cb0d058c1c1",
+        "bytes": 3799
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_climatechanger_jacket_25fw\\attempt-02-omni\\qa-omni-01\\qualified-qa.json",
+        "sha256": "9f7fa2b34a35d7e87bb4a706e2b30db88c7b96294ae8184ba01a45e63f184e9d",
+        "bytes": 3948
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\proofs\\rw_climatechanger_jacket_25fw-attempt2-proof.json",
+        "sha256": "31a63b783714793cef23130f8c06e443de8a408629ae19357464d97b00739b98",
+        "bytes": 2429
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_climatechanger_jacket_25fw\\flow-submission.projection.json",
+        "sha256": "ff2078f2ca359e9555af10bc578572b12fb3db8f50018183e1bb8f884e15d13c",
+        "bytes": 7278
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_climatechanger_jacket_25fw\\sample-pack.original.json",
+        "sha256": "8c2523b238348447d2864488d2b81845c9450e4e936583501db8c3403da2dc49",
+        "bytes": 9100
+      },
+      "limitations": [
+        "The hidden LEFT-side zipper has NOT been demonstrated or certified corrected. This is a valid view of the naturally zipper-free opposite side.",
+        "Exact physical cm, microscopic text, hidden three-dimensional parts and a seamless loop are not certified.",
+        "Head turn exceeds the requested fixed-head action; root accepts it because no product distortion, opposite zipper exposure or full-body clipping was established.",
+        "Manual scope is18 temporal samples plus native096, not every192 decoded frame. Raw audio was not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
+  },
+  "rw_remix_soft_disc_26fw": {
+    "folder": "rw_remix_soft_disc_26fw",
+    "productId": "p_362",
+    "video": "/images/products/catalog/rw_remix_soft_disc_26fw/videos/df6ca6a1a031f8a0561ba9aa33891dc00f62006a816f34d3420eb5b197891bc2/hover.mp4",
+    "sha256": "df6ca6a1a031f8a0561ba9aa33891dc00f62006a816f34d3420eb5b197891bc2",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ce4cd552-3480-45b0-9140-87c3064d50c2",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "55000e65512705fb5e95b5185beb4c68cde4307d3fc235f087eb8bfb40415560",
+      "downloadEvidenceSha256": "8e22be33b0a6c557a74770472594f9af61744eda0e84dd6a0ee3f7cf1f26a729"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "ce4cd552-3480-45b0-9140-87c3064d50c2",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "55000e65512705fb5e95b5185beb4c68cde4307d3fc235f087eb8bfb40415560",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T10:30:06.069608+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_remix_soft_disc_26fw\\root-final-approval.json",
+        "sha256": "fbaff3ab9823cb0d640b00f40033508601caf2a00c2c5acdeb67fa91011b5f79",
+        "bytes": 3669
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_remix_soft_disc_26fw\\qa-omni-01\\qualified-qa.json",
+        "sha256": "f02346932542e2bbe77b6801ad3119e0c86ebc1fa0d7b240d0266925a97734bf",
+        "bytes": 3738
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\proofs\\rw_remix_soft_disc_26fw-attempt1-proof.json",
+        "sha256": "8e22be33b0a6c557a74770472594f9af61744eda0e84dd6a0ee3f7cf1f26a729",
+        "bytes": 2285
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_remix_soft_disc_26fw\\flow-submission.projection.json",
+        "sha256": "2273fc68eee13bca01cdeb633b2198505e0ad97cd415bf48c8162c5a6b2d3a76",
+        "bytes": 6958
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_remix_soft_disc_26fw\\sample-pack.original.json",
+        "sha256": "0c38187347dac4fed43286c9124fe1d8513dc5fce4f50dab3389ebe3caafffc9",
+        "bytes": 9012
+      },
+      "limitations": [
+        "Exact physical22cm, material thickness/flexibility, tiny glyphs and hidden underside are not certified. Surprise color example is not a shipped-color guarantee.",
+        "Contact duration exceeds the prompt; no claim of chewing or lifting success.",
+        "Mouth partly covers the rim; not every contact/anatomy instant manually reviewed.",
+        "Start/end pose differs; seamless loop is not certified.",
+        "Manual scope18 samples plus native096 is distinct from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
+  },
+  "rw_mteverrest_cot_26fw": {
+    "folder": "rw_mteverrest_cot_26fw",
+    "productId": "p_334",
+    "video": "/images/products/catalog/rw_mteverrest_cot_26fw/videos/1c3c625d19df5f2b3bbd838f1f308b0844dca46f8811ffc9c29f44f6cc767b51/hover.mp4",
+    "sha256": "1c3c625d19df5f2b3bbd838f1f308b0844dca46f8811ffc9c29f44f6cc767b51",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "6687cfb8-8029-4b9c-b837-b8f36df6ea08",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "a6528fc3bf452062798cb603df74b3d2dd6d8bba9883b2c0480c397d4f6374ad",
+      "downloadEvidenceSha256": "3ac86a273169c0a7c24483d2128d0a6db5b04f5a7ddad33a0f2f1d1ad54a6e76"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "6687cfb8-8029-4b9c-b837-b8f36df6ea08",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "a6528fc3bf452062798cb603df74b3d2dd6d8bba9883b2c0480c397d4f6374ad",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T10:49:09.932432+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_mteverrest_cot_26fw\\root-final-approval.json",
+        "sha256": "ce2cbe7809856d51b27bfc25ae26f861529b70509c04f8bfe2976668f6a34d48",
+        "bytes": 3529
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_mteverrest_cot_26fw\\qa-omni-01\\qualified-qa.json",
+        "sha256": "25a14c34b20e95965fa676b4bc3e28f05667cb6ccbd4dd36aa467325c4b76725",
+        "bytes": 3452
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\proofs\\rw_mteverrest_cot_26fw-attempt1-proof.json",
+        "sha256": "3ac86a273169c0a7c24483d2128d0a6db5b04f5a7ddad33a0f2f1d1ad54a6e76",
+        "bytes": 2278
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_mteverrest_cot_26fw\\flow-submission.projection.json",
+        "sha256": "b6bab8a0cf78c5d46d2e52460d9d3faadb1919c8b307f3874119d74f7437b8ba",
+        "bytes": 6812
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_mteverrest_cot_26fw\\sample-pack.original.json",
+        "sha256": "2edbff8c366e4d27207685a01f207a65ee5108e7d58a66206d8f135d904e8e42",
+        "bytes": 9127
+      },
+      "limitations": [
+        "Hidden rear supports, microscopic lettering, joint cross-sections and physical76x96x20cm are not certified.",
+        "Tiny front-bar straightness/cloth physics not physically certified.",
+        "Exact blink count and seamless start/end loop are not certified.",
+        "Manual scope18 temporal samples plus native096 is distinct from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
+  },
+  "rw_timberline_fuse_vest_26fw": {
+    "folder": "rw_timberline_fuse_vest_26fw",
+    "productId": "p_356",
+    "video": "/images/products/catalog/rw_timberline_fuse_vest_26fw/videos/865ae5eb6b514fd1d214b610f788464a9bd388ed5e2be6664a3e4eea977b39f6/hover.mp4",
+    "sha256": "865ae5eb6b514fd1d214b610f788464a9bd388ed5e2be6664a3e4eea977b39f6",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "dede9c16-285a-40a0-86cd-da6ebce040fc",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "5c52f320a79afcb5b481fa05e22755df5625967233e6b281fa487ef05f136173",
+      "downloadEvidenceSha256": "f13f2fa4cdd430e9ced7f9f7297b10d9ccd9b70687cb094830d83a19a4560f5b"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "dede9c16-285a-40a0-86cd-da6ebce040fc",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "5c52f320a79afcb5b481fa05e22755df5625967233e6b281fa487ef05f136173",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T11:03:30.167722+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_timberline_fuse_vest_26fw\\root-final-approval.json",
+        "sha256": "cdb2cb4c48a7cdce4c1319c8415d85c8a3f16df45da302553cba8b59a44b298e",
+        "bytes": 3731
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_timberline_fuse_vest_26fw\\qa-omni-01\\qualified-qa.json",
+        "sha256": "ce6df1b961513a6d20eff9fd5eaeae8ead15acc12bd7c0e11dc1412b686b4542",
+        "bytes": 3822
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\proofs\\rw_timberline_fuse_vest_26fw-attempt1-proof.json",
+        "sha256": "f13f2fa4cdd430e9ced7f9f7297b10d9ccd9b70687cb094830d83a19a4560f5b",
+        "bytes": 2320
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_timberline_fuse_vest_26fw\\flow-submission.projection.json",
+        "sha256": "d965aaa61d40fa11bf0fd2f6e2b744aed96e5ee43750e22cfb94ae31b5e0bb9c",
+        "bytes": 7072
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch13-registration-proposal\\evidence\\rw_timberline_fuse_vest_26fw\\sample-pack.original.json",
+        "sha256": "62cd1394a6f7f78c1790db5cc0e07f72dc132d83c98f0c1b6be6027d929f6ffa",
+        "bytes": 9498
+      },
+      "limitations": [
+        "Hidden underside leg loops, ring and anchor microscopic cross-sections, small lettering and physical XS43–56cm/back34–45cm are not certified. Existing XXS table conflict remains separate.",
+        "Actual head rotation exceeds nearly stationary instruction and is accepted within the observed stable-product scope. Exact blink count and tail action are not certified.",
+        "A perfect start/end loop is not certified.",
+        "Manual scope18 temporal samples plus native096 is distinct from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
   }
 }
