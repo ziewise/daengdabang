@@ -1324,5 +1324,28 @@
     },
     "sourceVideoSha256": "f78e9d6c3673f3cdbd48f79cdd6e6a97bc92a009761728d1c3b8496969fdbd51",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/pegnaty_woodstick/videos/782cd2c42a0e0deaf145f8c140066bff11ddaf95e0acf19ae841b732dd423eb9/hover.mp4": {
+    "branding": "baked",
+    "sha256": "782cd2c42a0e0deaf145f8c140066bff11ddaf95e0acf19ae841b732dd423eb9",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T15:58:25.572474+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "1e72f694-0084-484f-8ac4-ee1d3ce37398",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6cc1e13475aff39c27da43375672e4b8a936c8d37b6ce68cd0bdab4e8644e4fe",
+      "downloadEvidenceSha256": "6e1f152da74edd524031c1beb8ea33034f1a8dfb23af5ad618fe2b790feb16a0"
+    },
+    "sourceVideoSha256": "6cc1e13475aff39c27da43375672e4b8a936c8d37b6ce68cd0bdab4e8644e4fe",
+    "providerWatermarkPreserved": true,
+    "providerWatermarkVisuallyConfirmed": false,
+    "providerWatermarkPreservationBasis": "Entire original source frame retained without crop, covering or removal; visible mark identity remains uncertain."
   }
 }

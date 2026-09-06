@@ -5797,5 +5797,81 @@
         "This records only new root FINAL decision; original sample/submission/QA/manifest preserved and no registration/publication performed by recorder."
       ]
     }
+  },
+  "pegnaty_woodstick": {
+    "folder": "pegnaty_woodstick",
+    "productId": "p_158",
+    "video": "/images/products/catalog/pegnaty_woodstick/videos/782cd2c42a0e0deaf145f8c140066bff11ddaf95e0acf19ae841b732dd423eb9/hover.mp4",
+    "sha256": "782cd2c42a0e0deaf145f8c140066bff11ddaf95e0acf19ae841b732dd423eb9",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "1e72f694-0084-484f-8ac4-ee1d3ce37398",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6cc1e13475aff39c27da43375672e4b8a936c8d37b6ce68cd0bdab4e8644e4fe",
+      "downloadEvidenceSha256": "6e1f152da74edd524031c1beb8ea33034f1a8dfb23af5ad618fe2b790feb16a0"
+    },
+    "videoQuality": "approved_dog_present",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "1e72f694-0084-484f-8ac4-ee1d3ce37398",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "6cc1e13475aff39c27da43375672e4b8a936c8d37b6ce68cd0bdab4e8644e4fe",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T15:58:25.572474+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\pegnaty_woodstick\\attempt-02\\root-final-approval.json",
+        "sha256": "a8cd52d1b6e586ecbb261154a232193b52d5b405708816ae09770bb88e2d6f04",
+        "bytes": 5274
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\pegnaty_woodstick\\attempt-02\\qa-omni-01\\qualified-qa.json",
+        "sha256": "ea2185650ccc0434ddb2546d30b0ff5309038648287013eb2e887535b1a439df",
+        "bytes": 6933
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\matching-browser-download85-proof\\proofs\\pegnaty_woodstick-attempt2-proof.json",
+        "sha256": "6e1f152da74edd524031c1beb8ea33034f1a8dfb23af5ad618fe2b790feb16a0",
+        "bytes": 3550
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch16-registration-proposal\\evidence\\pegnaty_woodstick\\flow-submission.json",
+        "sha256": "ceb8aa9d701c37b9923cc3451d94f35dc5bb4d815e960382d74512cf44f59015",
+        "bytes": 7321
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch16-registration-proposal\\evidence\\pegnaty_woodstick\\sample-pack.json",
+        "sha256": "5d59edb215d9fa33090dd98ed8f5006fbe4d597d805ce7e384ed4e11f4b8f020",
+        "bytes": 10187
+      },
+      "limitations": [
+        "Proposed quality approved_dog_present only; demonstratedProductFunction false. No chewing/use/contact/performance claim.",
+        "Source-only SS nominal11cm and1.2cm are not measurements of the generated object; neck-width point, stock-option match, species and physical scale are not certified.",
+        "Micro grain/ring count, hidden surface and physical bite safety or benefit are not certified.",
+        "Head raise2.5-3s and mild framing/camera drift are disclosed deviations; strict locked camera and seamless loop are not certified.",
+        "All192 frames technically decoded;18 full/product samples/native096 and corner0/96/191 manually reviewed, not every frame. Raw audio not auditioned; candidate must be silent.",
+        "Provider mark not confidently visually identifiable to root or independent reviewer. Preservation is guaranteed only by keeping the entire original source frame with no removal/covering; no visibility certification.",
+        "Exact branded candidate still requires root FINAL review before publication.",
+        "Root FINAL decision here resolves the prior candidate-pending limitation for this exact candidate only. Original sample/submission/QA/manifest remain preserved; no registration/publication performed by recorder."
+      ],
+      "demonstratedProductFunction": false,
+      "providerWatermarkVisuallyConfirmed": false,
+      "providerWatermarkPreservationBasis": "Entire original source frame retained without crop, covering or removal; visible mark identity remains uncertain."
+    },
+    "demonstratedProductFunction": false,
+    "providerWatermarkVisuallyConfirmed": false,
+    "providerWatermarkPreservationBasis": "Entire original source frame retained without crop, covering or removal; visible mark identity remains uncertain."
   }
 }

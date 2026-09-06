@@ -375,11 +375,21 @@
   },
   "pdh_spin_ufo": null,
   "pegnaty_woodstick": {
-    "video": "/images/products/catalog/pegnaty_woodstick/videos/hover.mp4",
+    "video": "/images/products/catalog/pegnaty_woodstick/videos/782cd2c42a0e0deaf145f8c140066bff11ddaf95e0acf19ae841b732dd423eb9/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-efba822c5f85"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_present",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "1e72f694-0084-484f-8ac4-ee1d3ce37398",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6cc1e13475aff39c27da43375672e4b8a936c8d37b6ce68cd0bdab4e8644e4fe",
+      "downloadEvidenceSha256": "6e1f152da74edd524031c1beb8ea33034f1a8dfb23af5ad618fe2b790feb16a0"
+    }
   },
   "perity_aloe_essence": {
     "video": "/images/products/catalog/perity_aloe_essence/videos/hover.mp4",
