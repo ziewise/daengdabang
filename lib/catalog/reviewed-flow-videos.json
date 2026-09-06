@@ -31,8 +31,8 @@
   "zs_giraffe": {
     "folder": "zs_giraffe",
     "productId": "p_70",
-    "video": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
-    "sha256": "2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64",
+    "video": "/images/products/catalog/zs_giraffe/videos/18ae9ab325a01a9d736f80f4da647cd38b90353d9822b6b2280df7c3c84f6970/hover.mp4",
+    "sha256": "18ae9ab325a01a9d736f80f4da647cd38b90353d9822b6b2280df7c3c84f6970",
     "videoJobId": "ebfdf2aa-1394-4fa5-9e3c-7fbdae6a3011",
     "videoQuality": "approved_dog_wearing",
     "publicationStatus": "approved",
@@ -53,11 +53,115 @@
       "productFidelity": "root_approved_against_exact_reference_dense_raw_and_final_candidate_frames",
       "relativeFitScale": "approved_against_reference_no_inferred_absolute_dimensions",
       "trueMotion": "approved_8_seconds",
-      "fullFramePreserved": true,
+      "fullFramePreserved": false,
       "loopLimitation": "Start pose looks three-quarter right; final pose looks more forward. A small loop boundary head-pose jump is expected.",
-      "providerWatermarkObservation": "Not distinguishable against white padding; entire raw frame preserved without removal, obstruction or cropping.",
+      "providerWatermarkObservation": "The same original80x80 ROI is moved without resizing or contrast manipulation. Ordinary H264 High encoding differences are measured separately. Diagnostic-only contrast identifies the faint diamond; the delivered image is not contrast-enhanced.",
       "sourcePhotoCredit": "Faint Fav Collie text is still present in the upper-left photograph region at native 0, 4 and 7.958-second frames.",
-      "absoluteDimensionsVerified": false
+      "absoluteDimensionsVerified": false,
+      "fullCentralPhotographPreserved": true,
+      "whitePaddingTrimmed": true,
+      "rootDisplayApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\root-display-approval.json",
+        "sha256": "d4b17fd75dde4fe4b4db556f4171ec6755c591451aaa990008d1e436442eb920",
+        "bytes": 3085
+      },
+      "providerRoiRepositioned": true,
+      "providerPixelsExactlyEqualAfterLossyEncode": false,
+      "currentDisplayReviewScope": "The original product/motion review is inherited; the separately approved current display trims only whitespace and moves the known provider ROI. Full raw-frame preservation applies only to the prior asset in generationReviewEvidence."
+    },
+    "displayReviewedAt": "2026-09-06T17:03:37.453800+00:00",
+    "displayRevision": {
+      "schemaVersion": "ddb.existing-generated-video-display-revision.v1",
+      "kind": "whitespace_enlargement_existing_video",
+      "revision": 1,
+      "replacesAssetPath": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
+      "replacesAssetSha256": "2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64",
+      "assetSha256": "18ae9ab325a01a9d736f80f4da647cd38b90353d9822b6b2280df7c3c84f6970",
+      "originalRawSha256": "358966158840fac45b3aff7ed6cd1c09fb6d4b1d4d709c1733b15b0a8cb2106c",
+      "reviewedAt": "2026-09-06T17:03:37.453800+00:00",
+      "rootApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\root-display-approval.json",
+        "sha256": "d4b17fd75dde4fe4b4db556f4171ec6755c591451aaa990008d1e436442eb920",
+        "bytes": 3085
+      },
+      "candidateManifest": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\candidate-manifest.json",
+        "sha256": "0b4558c66812f04ce030fd351c370d27547654d2472e3599ab0e643b57d7a623",
+        "bytes": 7881
+      },
+      "independentQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\independent-display-qa.json",
+        "sha256": "19a78d8be5259f89c39694314ae0f15a0385f92b6451d708c30275bb356eb95f",
+        "bytes": 5126
+      },
+      "newGenerationCount": 0,
+      "generationCreditsUsed": 0,
+      "generationProductQualityRecertified": false,
+      "originalQualityAndLoopLimitationsUnchanged": true,
+      "sourcePhotographRect": [
+        280,
+        0,
+        720,
+        720
+      ],
+      "destinationPhotographRect": [
+        44,
+        0,
+        632,
+        632
+      ],
+      "providerOriginalRoi": [
+        1116,
+        560,
+        80,
+        80
+      ],
+      "providerDestinationRoi": [
+        24,
+        632,
+        80,
+        80
+      ],
+      "ddbBrandBox": [
+        492,
+        636,
+        204,
+        64
+      ],
+      "fullRawFramePreserved": false,
+      "fullCentralPhotographPreserved": true,
+      "whitePaddingTrimmed": true,
+      "sourcePhotoCreditPreserved": true,
+      "providerRoiRepositioned": true,
+      "providerRoiResized": false,
+      "providerRoiContrastAdjusted": false,
+      "providerPixelsExactlyEqualAfterLossyEncode": false,
+      "providerMarkPreservationBasis": "The same original80x80 ROI is moved without resizing or contrast manipulation. Ordinary H264 High encoding differences are measured separately. Diagnostic-only contrast identifies the faint diamond; the delivered image is not contrast-enhanced.",
+      "providerEncodingComparison": {
+        "all192Exact": false,
+        "differentYuvSamples": 67576,
+        "maxYuvDifference": 3,
+        "meanAbsoluteYuvDifference": 0.037044813368055554,
+        "equalFrames": 0
+      },
+      "ddbLogoCount": 1,
+      "previousAssetRetained": true
+    },
+    "generationReviewEvidence": {
+      "scope": "Prior generated-video and full-frame presentation review for the immutable previous asset only; not the new display layout.",
+      "assetPath": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
+      "assetSha256": "2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64",
+      "reviewedAt": "2026-09-06",
+      "reviewEvidence": {
+        "productFidelity": "root_approved_against_exact_reference_dense_raw_and_final_candidate_frames",
+        "relativeFitScale": "approved_against_reference_no_inferred_absolute_dimensions",
+        "trueMotion": "approved_8_seconds",
+        "fullFramePreserved": true,
+        "loopLimitation": "Start pose looks three-quarter right; final pose looks more forward. A small loop boundary head-pose jump is expected.",
+        "providerWatermarkObservation": "Not distinguishable against white padding; entire raw frame preserved without removal, obstruction or cropping.",
+        "sourcePhotoCredit": "Faint Fav Collie text is still present in the upper-left photograph region at native 0, 4 and 7.958-second frames.",
+        "absoluteDimensionsVerified": false
+      }
     }
   },
   "zs_jackrabbit": {

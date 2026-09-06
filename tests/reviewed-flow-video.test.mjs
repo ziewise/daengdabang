@@ -9,7 +9,7 @@ import { videoBrandingMode } from "../lib/catalog/video-branding.ts";
 const read = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), "utf8"));
 const reviews = read("../lib/catalog/reviewed-flow-videos.json");
 const raw = read("../lib/catalog/raw.json");
-const expected = read("./fixtures/flow-publication-batch16.json");
+const expected = read("./fixtures/flow-publication-batch17.json");
 test("the reviewed Flow list matches the exact separately approved release snapshot", () => {
     assert.deepEqual(Object.keys(reviews).sort(), Object.keys(expected.approvedFlow).sort());
     const rawText = readFileSync(new URL("../lib/catalog/raw.json", import.meta.url), "utf8");
@@ -71,4 +71,30 @@ test("the exact reviewed Flow products retain the remaining explicit hover quara
         assert.equal(effectiveRow.video, undefined, folder);
         assert.equal(effectiveRow.videoProvider, undefined, folder);
     }
+});
+
+test("the Giraffe display revision preserves the original generation and superseded asset", () => {
+    const previous = read("./fixtures/flow-publication-batch16.json");
+    const revision = expected.displayRevisions.zs_giraffe;
+    const current = reviews.zs_giraffe;
+    const old = previous.approvedFlow.zs_giraffe;
+    assert.equal(Object.keys(reviews).length, 75);
+    assert.equal(current.videoJobId, old.videoJobId);
+    assert.equal(current.videoQuality, old.videoQuality);
+    assert.equal(current.model, old.model);
+    assert.equal(current.displayRevision.rootApproval.sha256, revision.rootApprovalSha256);
+    assert.equal(current.displayRevision.newGenerationCount, 0);
+    assert.equal(current.reviewEvidence.fullFramePreserved, false);
+    assert.equal(current.displayRevision.fullRawFramePreserved, false);
+    assert.equal(current.displayRevision.fullCentralPhotographPreserved, true);
+    assert.equal(current.displayRevision.providerRoiRepositioned, true);
+    assert.equal(current.displayRevision.providerPixelsExactlyEqualAfterLossyEncode, false);
+    assert.equal(current.generationReviewEvidence.assetSha256, old.sha256);
+    assert.equal(current.generationReviewEvidence.reviewEvidence.fullFramePreserved, true);
+    assert.equal(createHash("sha256").update(readFileSync(new URL(`../public${old.video}`, import.meta.url))).digest("hex"), old.sha256);
+    assert.equal(videoBrandingMode(old.video), "baked");
+    const row = applyReviewedHoverOverride(raw.find(item => item.folder === "zs_giraffe"));
+    const candidate = { id: current.productId, folder: "zs_giraffe", name: row.name,
+        subcategory: expected.expectedSubcategories.zs_giraffe, image: row.image, video: old.video, raw: row };
+    assert.equal(safeCatalogHoverVideo(candidate), undefined);
 });

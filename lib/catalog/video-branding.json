@@ -1347,5 +1347,96 @@
     "providerWatermarkPreserved": true,
     "providerWatermarkVisuallyConfirmed": false,
     "providerWatermarkPreservationBasis": "Entire original source frame retained without crop, covering or removal; visible mark identity remains uncertain."
+  },
+  "/images/products/catalog/zs_giraffe/videos/18ae9ab325a01a9d736f80f4da647cd38b90353d9822b6b2280df7c3c84f6970/hover.mp4": {
+    "branding": "baked",
+    "sha256": "18ae9ab325a01a9d736f80f4da647cd38b90353d9822b6b2280df7c3c84f6970",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T17:03:37.453800+00:00",
+    "sourceAssetPath": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
+    "sourceCommit": "9adf4a96983d29befcea0bcac9931391d107cbec",
+    "sourceJobId": "ebfdf2aa-1394-4fa5-9e3c-7fbdae6a3011",
+    "sourceVideoSha256": "358966158840fac45b3aff7ed6cd1c09fb6d4b1d4d709c1733b15b0a8cb2106c",
+    "providerWatermarkPreserved": true,
+    "displayRevision": {
+      "schemaVersion": "ddb.existing-generated-video-display-revision.v1",
+      "kind": "whitespace_enlargement_existing_video",
+      "revision": 1,
+      "replacesAssetPath": "/images/products/catalog/zs_giraffe/videos/2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64/hover.mp4",
+      "replacesAssetSha256": "2607130ac816988c4f7ff36fac6fdd2ba585f59179967a7fdcff8e488be59d64",
+      "assetSha256": "18ae9ab325a01a9d736f80f4da647cd38b90353d9822b6b2280df7c3c84f6970",
+      "originalRawSha256": "358966158840fac45b3aff7ed6cd1c09fb6d4b1d4d709c1733b15b0a8cb2106c",
+      "reviewedAt": "2026-09-06T17:03:37.453800+00:00",
+      "rootApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\root-display-approval.json",
+        "sha256": "d4b17fd75dde4fe4b4db556f4171ec6755c591451aaa990008d1e436442eb920",
+        "bytes": 3085
+      },
+      "candidateManifest": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\candidate-manifest.json",
+        "sha256": "0b4558c66812f04ce030fd351c370d27547654d2472e3599ab0e643b57d7a623",
+        "bytes": 7881
+      },
+      "independentQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_giraffe\\display-review-candidate-v3-high-crf16\\independent-display-qa.json",
+        "sha256": "19a78d8be5259f89c39694314ae0f15a0385f92b6451d708c30275bb356eb95f",
+        "bytes": 5126
+      },
+      "newGenerationCount": 0,
+      "generationCreditsUsed": 0,
+      "generationProductQualityRecertified": false,
+      "originalQualityAndLoopLimitationsUnchanged": true,
+      "sourcePhotographRect": [
+        280,
+        0,
+        720,
+        720
+      ],
+      "destinationPhotographRect": [
+        44,
+        0,
+        632,
+        632
+      ],
+      "providerOriginalRoi": [
+        1116,
+        560,
+        80,
+        80
+      ],
+      "providerDestinationRoi": [
+        24,
+        632,
+        80,
+        80
+      ],
+      "ddbBrandBox": [
+        492,
+        636,
+        204,
+        64
+      ],
+      "fullRawFramePreserved": false,
+      "fullCentralPhotographPreserved": true,
+      "whitePaddingTrimmed": true,
+      "sourcePhotoCreditPreserved": true,
+      "providerRoiRepositioned": true,
+      "providerRoiResized": false,
+      "providerRoiContrastAdjusted": false,
+      "providerPixelsExactlyEqualAfterLossyEncode": false,
+      "providerMarkPreservationBasis": "The same original80x80 ROI is moved without resizing or contrast manipulation. Ordinary H264 High encoding differences are measured separately. Diagnostic-only contrast identifies the faint diamond; the delivered image is not contrast-enhanced.",
+      "providerEncodingComparison": {
+        "all192Exact": false,
+        "differentYuvSamples": 67576,
+        "maxYuvDifference": 3,
+        "meanAbsoluteYuvDifference": 0.037044813368055554,
+        "equalFrames": 0
+      },
+      "ddbLogoCount": 1,
+      "previousAssetRetained": true
+    },
+    "providerWatermarkPreservationBasis": "The same original80x80 ROI is moved without resizing or contrast manipulation. Ordinary H264 High encoding differences are measured separately. Diagnostic-only contrast identifies the faint diamond; the delivered image is not contrast-enhanced."
   }
 }
