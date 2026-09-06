@@ -8,12 +8,21 @@ export type VideoBrandingReview = {
     /** Logo evidence does not approve product accuracy or restore a quarantined clip. */
     reviewScope: "logo_presence_only";
     reviewedAt: string;
-    sourceAssetPath: string;
-    sourceCommit: string | null;
-    sourceJobId?: string;
     sourceVideoSha256?: string;
     providerWatermarkPreserved?: boolean;
-};
+} & ({
+    sourceAssetPath: string;
+    sourceCommit: string | null;
+    sourceJobId?: string | null;
+    generationIdentity?: never;
+} | {
+    sourceJobId: null;
+    generationIdentity: Record<string, unknown>;
+    sourceVideoSha256: string;
+    providerWatermarkPreserved: true;
+    sourceAssetPath?: never;
+    sourceCommit?: never;
+});
 
 export const VIDEO_BRANDING_REVIEWS = videoBranding as Record<string, VideoBrandingReview>;
 

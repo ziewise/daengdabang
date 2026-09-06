@@ -3273,5 +3273,428 @@
         "Complete provider frame without warping/cropping; one DDB footer."
       ]
     }
+  },
+  "zs_unicorn": {
+    "folder": "zs_unicorn",
+    "productId": "p_64",
+    "video": "/images/products/catalog/zs_unicorn/videos/a0a635d9ce523d10519a58afe55e995c64d182b829760dfa5ecc5805d9fb3e56/hover.mp4",
+    "sha256": "a0a635d9ce523d10519a58afe55e995c64d182b829760dfa5ecc5805d9fb3e56",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "2c0634cc-9806-48f9-a6b9-254bd253f977",
+      "actualGenerationJobId": null,
+      "mediaAssetId": "2a3249c4-9095-469c-adba-89cb944768ab",
+      "rawSha256": "f675db9593bdc6c7ecf25d6c6a72883765cd72a15f9f0d9d0deeaa03179bcbfe",
+      "downloadEvidenceSha256": "46b89b686d732530e7cd654bbbdb9073a70bbceaba72e8f38bdb5edcd4c5a105"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "2c0634cc-9806-48f9-a6b9-254bd253f977",
+    "actualGenerationJobId": null,
+    "mediaAssetId": "2a3249c4-9095-469c-adba-89cb944768ab",
+    "sourceVideoSha256": "f675db9593bdc6c7ecf25d6c6a72883765cd72a15f9f0d9d0deeaa03179bcbfe",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T03:59:03.421475+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_unicorn\\root-final-approval.json",
+        "sha256": "5c4ab70aa19285ae9b6c03c36ac9de7437eb2c24e3e9a13dcbad86c8c42373e7",
+        "candidateSha256": "a0a635d9ce523d10519a58afe55e995c64d182b829760dfa5ecc5805d9fb3e56"
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_unicorn\\qa-omni-01\\qualified-qa.json",
+        "sha256": "6224beac86eb5f1278939cf454a5708e8b6525bcdbf7fca280bbb21da467fd1b"
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\proofs\\46b89b686d732530e7cd654bbbdb9073a70bbceaba72e8f38bdb5edcd4c5a105.json",
+        "sha256": "46b89b686d732530e7cd654bbbdb9073a70bbceaba72e8f38bdb5edcd4c5a105",
+        "bytes": 1957
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\evidence\\zs_unicorn\\attempt-1\\flow-submission.json",
+        "sha256": "db7ead70a45d89f8dbe322995e92f48a190a1c9b33fad3911f30f50f4c1f719c",
+        "bytes": 7402,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_unicorn\\flow-submission.json"
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\input-bytes\\08b8377e90b5676cca4e371a6e20ae9a93a08a19624dfc3b5aa0bf90e1221dce.json",
+        "sha256": "08b8377e90b5676cca4e371a6e20ae9a93a08a19624dfc3b5aa0bf90e1221dce",
+        "bytes": 12516,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_unicorn\\sample-pack.json"
+      },
+      "limitations": [
+        "Fine spiral thread on the horn and individual knit stitches are not pixel-certified against the flat source.",
+        "Actual worn size, inner diameter or dog measurements in cm are not certified by a generated advertising scene.",
+        "First and last head pose and eyelids differ slightly; an exact seamless loop is not certified.",
+        "All192 frames fully decoded;18 temporal samples plus stated native enlargements visually inspected, not every frame.",
+        "Raw audio was not auditioned; any candidate must be silent.",
+        "Root approved this exact final candidate for later publication, retaining all product/motion qualification limits. No remote publication by this agent."
+      ]
+    }
+  },
+  "zs_bull": {
+    "folder": "zs_bull",
+    "productId": "p_281",
+    "video": "/images/products/catalog/zs_bull/videos/3f2071016267edb656aaedebdfb489f96ef845a1b4fcd1f407150ac5f3ab9c10/hover.mp4",
+    "sha256": "3f2071016267edb656aaedebdfb489f96ef845a1b4fcd1f407150ac5f3ab9c10",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "8e253d8b-5701-472b-bc9e-8d276bf838c1",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ed1280739a61c37fb779df7b3197bf59e13151c8e706df17687dbad370b8f70b",
+      "downloadEvidenceSha256": "adefa8757b99c46e070b76ab808cdb7f9547e0d42c451d1adb36f371f60a42dd"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "8e253d8b-5701-472b-bc9e-8d276bf838c1",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "ed1280739a61c37fb779df7b3197bf59e13151c8e706df17687dbad370b8f70b",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T03:59:03.526811+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_bull\\root-final-approval.json",
+        "sha256": "8a2fbb10856a5490d0d7098715bab8620e9a375d559f804bd6a7d9decfda8c57",
+        "candidateSha256": "3f2071016267edb656aaedebdfb489f96ef845a1b4fcd1f407150ac5f3ab9c10"
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_bull\\qa-omni-01\\qualified-qa.json",
+        "sha256": "1d24f0932a9c32fe37a1fb810689e8f776cb382117da5de0de34b23a7947f78f"
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\proofs\\adefa8757b99c46e070b76ab808cdb7f9547e0d42c451d1adb36f371f60a42dd.json",
+        "sha256": "adefa8757b99c46e070b76ab808cdb7f9547e0d42c451d1adb36f371f60a42dd",
+        "bytes": 1911
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\evidence\\zs_bull\\attempt-1\\flow-submission.json",
+        "sha256": "f8a2b6d300be8b10706c18c441bd6ce246552e8fd4be89efba2483a0bac68b56",
+        "bytes": 7290,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_bull\\flow-submission.json"
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\input-bytes\\51a7cd31e2fbb5f5c7ae302410f0dd5bcc37a34c68c51a4f2a5c719b8f8e6dd9.json",
+        "sha256": "51a7cd31e2fbb5f5c7ae302410f0dd5bcc37a34c68c51a4f2a5c719b8f8e6dd9",
+        "bytes": 12488,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_bull\\sample-pack.json"
+      },
+      "limitations": [
+        "The brief smile/open mouth exceeds the closed-mouth prompt; this is choreography variation, with no established anatomical defect in inspected frames.",
+        "Fine horn knit and hidden attachment stitches are not certified.",
+        "Actual worn size, inner diameter or dog measurements in cm are not certified by a generated advertising scene.",
+        "First and last head pose and eyelids differ slightly; an exact seamless loop is not certified.",
+        "All192 frames fully decoded;18 temporal samples plus stated native enlargements visually inspected, not every frame.",
+        "Raw audio was not auditioned; any candidate must be silent.",
+        "Root approved this exact final candidate for later publication, retaining all product/motion qualification limits. No remote publication by this agent."
+      ]
+    }
+  },
+  "zs_horse": {
+    "folder": "zs_horse",
+    "productId": "p_69",
+    "video": "/images/products/catalog/zs_horse/videos/bd65b0a52c0423f65b8e8dec20507c392ed6351bf7bcf7046b1b7902813f4bfb/hover.mp4",
+    "sha256": "bd65b0a52c0423f65b8e8dec20507c392ed6351bf7bcf7046b1b7902813f4bfb",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "5569f00c-a2d6-41f4-b205-2c3c58820322",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "cac370ebc6b042aa9bee34956c60a598ee9c7d0383a72e06ac71054730aa1f6c",
+      "downloadEvidenceSha256": "5c7235330d97c3e880ad4877cc51b447bed5a4870f3ef7e6daadc85ced978ce3"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "5569f00c-a2d6-41f4-b205-2c3c58820322",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "cac370ebc6b042aa9bee34956c60a598ee9c7d0383a72e06ac71054730aa1f6c",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T04:18:23.557521+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_horse\\attempt-02-omni\\root-final-approval.json",
+        "sha256": "340266e310e3229a94899f7a2a5179becd92930296555a3319e3d5c621f63875",
+        "candidateSha256": "bd65b0a52c0423f65b8e8dec20507c392ed6351bf7bcf7046b1b7902813f4bfb"
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_horse\\attempt-02-omni\\qa-omni-01\\qualified-qa.json",
+        "sha256": "dfa801317a24e471f3a11268916d42f9f4c206ebc8067c15ad824831676e2126"
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\proofs\\5c7235330d97c3e880ad4877cc51b447bed5a4870f3ef7e6daadc85ced978ce3.json",
+        "sha256": "5c7235330d97c3e880ad4877cc51b447bed5a4870f3ef7e6daadc85ced978ce3",
+        "bytes": 1887
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\evidence\\zs_horse\\attempt-2\\flow-submission.json",
+        "sha256": "bb881f0ff9d8bc3327c1b55cdc24c137ef6d1eb81ac109fc71c8c622cea56a78",
+        "bytes": 5321,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_horse\\attempt-02-omni\\flow-submission.json"
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\input-bytes\\0ce6aebb0402ef5a32b43bb67f34702e0d218a8844c180c2cd0aebafe94cd88d.json",
+        "sha256": "0ce6aebb0402ef5a32b43bb67f34702e0d218a8844c180c2cd0aebafe94cd88d",
+        "bytes": 10394,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_horse\\attempt-02-omni\\sample-pack.json"
+      },
+      "limitations": [
+        "Absolute worn M/L size, circumference and physical cm are not certified.",
+        "Individual black yarn strands and fine knit stitches/hidden surfaces are not pixel-certified.",
+        "Head tilts slightly farther than a strict few-degree reading, but every sampled ear tip remains well within the wide frame.",
+        "First/end face direction and gaze differ; an exact seamless loop is not certified.",
+        "All192 frames decoded;18 temporal samples and native2/4/end manually reviewed, not every frame.",
+        "Raw audio not auditioned; any candidate must be silent.",
+        "Root approved exact candidate after final5 contact/native96; smaller subject in the wide composition is intentional framing correction, with original relative fit preserved.",
+        "Later publication remains separate; this agent published nothing."
+      ]
+    }
+  },
+  "zs_grizzlybear": {
+    "folder": "zs_grizzlybear",
+    "productId": "p_280",
+    "video": "/images/products/catalog/zs_grizzlybear/videos/e8fe7bd366ea5384c05674a3e3ba0e5b7fb0b64aa49e9df7f4452b77b59e1999/hover.mp4",
+    "sha256": "e8fe7bd366ea5384c05674a3e3ba0e5b7fb0b64aa49e9df7f4452b77b59e1999",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "d4d4b055-eee8-4e2e-9ed5-de38c23512af",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "5264d7b4e5d3e78905ddc2d61da587cb5846bbefe02a77d7fdf1282da7ec8755",
+      "downloadEvidenceSha256": "d99b8bf810dd1273556df2fbe75ca20c68ebc74fbd616ce98dbec343ea1bb072"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "d4d4b055-eee8-4e2e-9ed5-de38c23512af",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "5264d7b4e5d3e78905ddc2d61da587cb5846bbefe02a77d7fdf1282da7ec8755",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T03:59:03.617629+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_grizzlybear\\root-final-approval.json",
+        "sha256": "9ba91b0d3d15d97d8b8626f46bf09f935b25332259bf4d03edb8fdda849f8370",
+        "candidateSha256": "e8fe7bd366ea5384c05674a3e3ba0e5b7fb0b64aa49e9df7f4452b77b59e1999"
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_grizzlybear\\qa-omni-01\\qualified-qa.json",
+        "sha256": "885c7a7afc7952a70daea2e905e1c2eca64ece646c2d0720c63a19209eaed23a"
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\proofs\\d99b8bf810dd1273556df2fbe75ca20c68ebc74fbd616ce98dbec343ea1bb072.json",
+        "sha256": "d99b8bf810dd1273556df2fbe75ca20c68ebc74fbd616ce98dbec343ea1bb072",
+        "bytes": 1929
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\evidence\\zs_grizzlybear\\attempt-1\\flow-submission.json",
+        "sha256": "d957edb9f2df77f8318edb6174b76eebba05714889d517fd7311baad4ad00355",
+        "bytes": 6804,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_grizzlybear\\flow-submission.json"
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\input-bytes\\cb96a20587b0ea23e1124a8ef59aed7f78edaeccc0945bde42f8898d3d9dd650.json",
+        "sha256": "cb96a20587b0ea23e1124a8ef59aed7f78edaeccc0945bde42f8898d3d9dd650",
+        "bytes": 11950,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\zs_grizzlybear\\sample-pack.json"
+      },
+      "limitations": [
+        "Fine knit stitch geometry, hidden rear surface and folds under the chin are not pixel-certified.",
+        "Actual worn size, inner diameter or dog measurements in cm are not certified by a generated advertising scene.",
+        "First and last head pose and eyelids differ slightly; an exact seamless loop is not certified.",
+        "All192 frames fully decoded;18 temporal samples plus stated native enlargements visually inspected, not every frame.",
+        "Raw audio was not auditioned; any candidate must be silent.",
+        "Root approved this exact final candidate for later publication, retaining all product/motion qualification limits. No remote publication by this agent."
+      ]
+    }
+  },
+  "rw_hemphound_sweater": {
+    "folder": "rw_hemphound_sweater",
+    "productId": "p_121",
+    "video": "/images/products/catalog/rw_hemphound_sweater/videos/cde634d6cec5b8d490d23765dc28bae60a9284582b4b6bea5bfc724c6bc78bb2/hover.mp4",
+    "sha256": "cde634d6cec5b8d490d23765dc28bae60a9284582b4b6bea5bfc724c6bc78bb2",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "d02c0db6-3edc-4919-8e3a-c0477811ef6b",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "a2aee45c199552057e2ebfe3bda3e5533b82e979fc03ceccefefd6653be9c874",
+      "downloadEvidenceSha256": "e266368973c2ddc34cb768e8298dcb7aa9cd67359e3d9c03b865fdbaf78fa4b3"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "d02c0db6-3edc-4919-8e3a-c0477811ef6b",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "a2aee45c199552057e2ebfe3bda3e5533b82e979fc03ceccefefd6653be9c874",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T04:50:28.326715+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "C:\\DaengDaBang\\outputs\\hover-alternative-20260906\\web-rpa\\rw_hemphound_sweater\\root-final-approval.json",
+        "sha256": "49c6863532c0c585d204a28bdfc575a80997ec3086e71e4d61d95dfb4dce6cf5",
+        "candidateSha256": "cde634d6cec5b8d490d23765dc28bae60a9284582b4b6bea5bfc724c6bc78bb2"
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_hemphound_sweater\\qa-omni-01\\qualified-qa.json",
+        "sha256": "6147996c762c513ad2d48cc246718417b68849ac161a6943af51a19fe344935d"
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\proofs\\e266368973c2ddc34cb768e8298dcb7aa9cd67359e3d9c03b865fdbaf78fa4b3.json",
+        "sha256": "e266368973c2ddc34cb768e8298dcb7aa9cd67359e3d9c03b865fdbaf78fa4b3",
+        "bytes": 1821
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\evidence\\rw_hemphound_sweater\\attempt-1\\flow-submission.json",
+        "sha256": "bad9dcdc5e40a2549c28ec83e7cc415a441bc88c08c7abbbbc883c9ed7f31a22",
+        "bytes": 5255,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_hemphound_sweater\\flow-submission.json"
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\input-bytes\\2dd6258486cc10322563fe221ea4b3e4aad9aac5108d443bf545c401d39750f2.json",
+        "sha256": "2dd6258486cc10322563fe221ea4b3e4aad9aac5108d443bf545c401d39750f2",
+        "bytes": 11988,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_hemphound_sweater\\sample-pack.json"
+      },
+      "limitations": [
+        "Manufacturer Lucky XS photo and size table guide relative fit only. Actual generated Shih Tzu girth, worn XS size or cm are not certified.",
+        "Fine knit, hidden neck lining/back patch and the far-side opening are not fully visible or pixel-certified.",
+        "The head tilt is larger than blink/breath-only wording, but no sampled product deformation or framing crop is observed.",
+        "First/end face angle and eye direction differ; exact seamless looping is not certified.",
+        "All192 frames fully decoded;18 temporal samples plus listed native enlargements manually reviewed, not every frame.",
+        "Raw audio was not auditioned; any later candidate must be silent.",
+        "Root approved exact candidate after final5 contact/native96; raw product/motion qualifications and all unresolved limits remain.",
+        "Later publication remains separate; this agent published nothing."
+      ]
+    }
+  },
+  "rw_highlands_pad_m": {
+    "folder": "rw_highlands_pad_m",
+    "productId": "p_336",
+    "video": "/images/products/catalog/rw_highlands_pad_m/videos/96f80648057a0903a926d6036029ecc4a7d117e56fd7acd80c35ad1509e281d3/hover.mp4",
+    "sha256": "96f80648057a0903a926d6036029ecc4a7d117e56fd7acd80c35ad1509e281d3",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "82966691-558c-48b2-b6c0-b3c939129cb3",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "591370277fa13f40308b796f82bea964b4f910d1b7075e0e9f7b68b422c5182e",
+      "downloadEvidenceSha256": "a4e1418782d2340ba861c9a96ec95d682a25f0547809715fcff74a9374faf982"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "82966691-558c-48b2-b6c0-b3c939129cb3",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "591370277fa13f40308b796f82bea964b4f910d1b7075e0e9f7b68b422c5182e",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T04:50:28.388486+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "C:\\DaengDaBang\\outputs\\hover-alternative-20260906\\web-rpa\\rw_highlands_pad_m\\root-final-approval.json",
+        "sha256": "f959ac37c772b3e319c51cd9e104229144f92e19cb7c38954526e32e54389bfd",
+        "candidateSha256": "96f80648057a0903a926d6036029ecc4a7d117e56fd7acd80c35ad1509e281d3"
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_highlands_pad_m\\qa-omni-01\\qualified-qa.json",
+        "sha256": "e3551472d65eb76f0756985f6eab43e6bdbfd6745d56d31b418b925b3e8aa1a3"
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\proofs\\a4e1418782d2340ba861c9a96ec95d682a25f0547809715fcff74a9374faf982.json",
+        "sha256": "a4e1418782d2340ba861c9a96ec95d682a25f0547809715fcff74a9374faf982",
+        "bytes": 1811
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\evidence\\rw_highlands_pad_m\\attempt-1\\flow-submission.json",
+        "sha256": "be666f6e9b99576872764c1fb753c148f7664889a145f6fe169cd5fa02721ff6",
+        "bytes": 5227,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_highlands_pad_m\\flow-submission.json"
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\web-execution-snapshot-11-51raw\\input-bytes\\eb5d1af8aad70a7319c158ac67a2df60f1f892bfa69e5139fdce93ff2e7661a5.json",
+        "sha256": "eb5d1af8aad70a7319c158ac67a2df60f1f892bfa69e5139fdce93ff2e7661a5",
+        "bytes": 12145,
+        "originalPath": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_highlands_pad_m\\sample-pack.json"
+      },
+      "limitations": [
+        "Physical Medium84.5×60cm/loft2.5cm and actual corgi dimensions cannot be certified from generated pixels.",
+        "Dog occludes several quilting seams and rear pad surface; hidden seam count/underside tabs are not fully certified.",
+        "Small RUFFWEAR print remains broadly legible but exact glyph strokes are not pixel-certified.",
+        "Brief smile/head tilt exceed blink-only wording; no visible anatomy defect was established in the reviewed native samples.",
+        "Input01 remains held. This raw uses the root-approved input02, which has no claim of measured dog/pad ratio.",
+        "First/end head angle/gaze differ; exact seamless looping is not certified.",
+        "All192 frames fully decoded;18 temporal samples plus listed native enlargements manually reviewed, not every frame.",
+        "Raw audio was not auditioned; any later candidate must be silent.",
+        "Root approved exact candidate after final5 contact/native96; raw product/motion qualifications and all unresolved limits remain.",
+        "Later publication remains separate; this agent published nothing."
+      ]
+    }
   }
 }

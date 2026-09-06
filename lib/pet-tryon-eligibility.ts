@@ -1,3 +1,4 @@
+import { sameCatalogFlowIdentity } from "./catalog/flow-generation-identity.mjs";
 import reviewedFlowVideos from "./catalog/reviewed-flow-videos.json" with { type: "json" };
 import reviewedLegacyVideos from "./catalog/reviewed-legacy-videos.json" with { type: "json" };
 import { matchesReviewedLegacyVideo } from "./catalog/reviewed-legacy-video.mjs";
@@ -24,6 +25,7 @@ type PetTryOnProductIdentity = {
         videoProvider?: string;
         videoQuality?: string;
         videoJobId?: string | null;
+        videoGenerationIdentity?: Record<string, unknown>;
         videoReviewClass?: string;
         videoReviewSha256?: string;
     };
@@ -140,7 +142,9 @@ type ReviewedFlowVideo = {
     productId: string;
     video: string;
     sha256: string;
-    videoJobId: string;
+    videoJobId: string | null;
+    videoGenerationIdentity?: Record<string, unknown>;
+    sourceVideoSha256?: string;
     videoQuality: string;
     publicationStatus: "approved";
 };
@@ -156,8 +160,8 @@ function reviewedFlowVideo(product: StorefrontVideoCandidate, video: string): st
         && (!raw?.folder || raw.folder === review.folder)
         && video === review.video
         && video === `/images/products/catalog/${review.folder}/videos/${review.sha256}/hover.mp4`
-        && raw?.videoJobId === review.videoJobId
-        && raw.videoQuality === review.videoQuality
+        && sameCatalogFlowIdentity(raw, review)
+        && raw?.videoQuality === review.videoQuality
         ? video
         : undefined;
 }

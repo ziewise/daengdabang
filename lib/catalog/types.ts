@@ -44,6 +44,8 @@ export interface CatalogRow {
     videoProvider?: "ziewcraft" | "ddb_exact_product_renderer" | "google_flow_web" | "unknown";
     videoQuality?: string;
     videoJobId?: string | null;
+    /** Exact reviewed scene-download identity; never a fabricated job ID. */
+    videoGenerationIdentity?: Record<string, unknown>;
     /** Reuse review class is distinct from the original generation provider. */
     videoReviewClass?: "legacy_reviewed";
     videoReviewSha256?: string;

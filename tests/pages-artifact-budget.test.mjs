@@ -298,3 +298,43 @@ test("Pages refuses Flow CDN references with an unreviewed job or missing review
         await assert.rejects(preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 }), /product video CDN URL\(s\) absent from the catalog/);
     }
 });
+
+
+async function sceneFlowFixture(t, options = {}) {
+    const result = await flowFixture(t, { ...options, job: null });
+    const identity = {
+        kind: "google_flow_scene_download.v1", provider: "google_flow_web",
+        projectId: "11111111-1111-4111-8111-111111111111",
+        providerSceneId: "22222222-2222-4222-8222-222222222222",
+        actualGenerationJobId: null, mediaAssetId: null,
+        rawSha256: "c".repeat(64), downloadEvidenceSha256: "d".repeat(64),
+    };
+    const overrides = JSON.parse(await fs.readFile(path.join(result.root, "lib/catalog/reviewed-hover-overrides.json"), "utf8"));
+    const reviews = JSON.parse(await fs.readFile(path.join(result.root, "lib/catalog/reviewed-flow-videos.json"), "utf8"));
+    overrides.sample.videoGenerationIdentity = identity;
+    reviews.sample.videoJobId = null;
+    reviews.sample.videoGenerationIdentity = identity;
+    reviews.sample.sourceVideoSha256 = identity.rawSha256;
+    await write(result.root, "lib/catalog/reviewed-hover-overrides.json", JSON.stringify(overrides));
+    await write(result.root, "lib/catalog/reviewed-flow-videos.json", JSON.stringify(reviews));
+    return result;
+}
+
+test("Pages requires the exact typed Flow scene even when both generation job IDs are null", async (t) => {
+    const { root } = await sceneFlowFixture(t);
+    const options = { repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 };
+    const result = await preparePagesArtifact(options);
+    assert.equal(result.requiredReviewedCdnVideoCount, 1);
+    const overrides = JSON.parse(await fs.readFile(path.join(root, "lib/catalog/reviewed-hover-overrides.json"), "utf8"));
+    overrides.sample.videoGenerationIdentity.providerSceneId = "33333333-3333-4333-8333-333333333333";
+    await write(root, "lib/catalog/reviewed-hover-overrides.json", JSON.stringify(overrides));
+    await assert.rejects(preparePagesArtifact(options), /product video CDN URL\(s\) absent from the catalog/);
+});
+
+test("Pages refuses a reviewed typed Flow scene missing its commit-pinned build URL", async (t) => {
+    const { root } = await sceneFlowFixture(t, { includeVideo: false });
+    await assert.rejects(
+        preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 }),
+        /reviewed video CDN URL\(s\) were not pinned/,
+    );
+});

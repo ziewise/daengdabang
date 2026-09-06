@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { matchesReviewedLegacyVideo } from "../lib/catalog/reviewed-legacy-video.mjs";
+import { sameCatalogFlowIdentity } from "../lib/catalog/flow-generation-identity.mjs";
 
 const PRODUCT_ASSET_PREFIX = "images/products/catalog/";
 const CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
@@ -63,7 +64,7 @@ function isReviewedFlowRow(row, reviews) {
         && row.folder === review.folder
         && row.video === review.video
         && row.video === `/images/products/catalog/${review.folder}/videos/${review.sha256}/hover.mp4`
-        && row.videoJobId === review.videoJobId
+        && sameCatalogFlowIdentity(row, review)
         && row.videoQuality === review.videoQuality;
 }
 
@@ -251,7 +252,9 @@ export async function preparePagesArtifact({
         publicationCatalog
             .filter((row) => (
                 row?.videoDelivery === "jsdelivr_commit_cdn"
-                && (isReviewedLegacyRow(row, legacyReviews) || (REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
+                && (isReviewedLegacyRow(row, legacyReviews)
+                || (row?.videoProvider === "google_flow_web" && isReviewedFlowRow(row, flowReviews))
+                || (REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
                 && REVIEWED_VIDEO_QUALITIES.has(row?.videoQuality)
                 && typeof row?.videoJobId === "string"
                 && row.videoJobId.trim().length > 0))

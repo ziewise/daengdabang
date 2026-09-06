@@ -476,7 +476,15 @@
     "videoJobId": "hover-static72-20260903-e03daa386c93"
   },
   "rs_earpro": null,
-  "rs_hardcase": null,
+  "rs_hardcase": {
+    "video": "/images/products/catalog/rs_hardcase/videos/616aa847b96da5bc5f0c83effa980d612b736ea9ed2493dabd83f24718629bb0/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "unknown",
+    "videoJobId": null,
+    "videoQuality": "approved_dog_interacting",
+    "videoReviewClass": "legacy_reviewed",
+    "videoReviewSha256": "6636cdb43931c1fff5f1cbfc77331bdd7a2295426baff286c050adf8b238ee18"
+  },
   "rs_lens_original": {
     "video": "/images/products/catalog/rs_lens_original/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -704,7 +712,23 @@
     "videoJobId": "hover-photo-20260903-d43a2a555196"
   },
   "rw_headwater_collar": null,
-  "rw_hemphound_sweater": null,
+  "rw_hemphound_sweater": {
+    "video": "/images/products/catalog/rw_hemphound_sweater/videos/cde634d6cec5b8d490d23765dc28bae60a9284582b4b6bea5bfc724c6bc78bb2/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "d02c0db6-3edc-4919-8e3a-c0477811ef6b",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "a2aee45c199552057e2ebfe3bda3e5533b82e979fc03ceccefefd6653be9c874",
+      "downloadEvidenceSha256": "e266368973c2ddc34cb768e8298dcb7aa9cd67359e3d9c03b865fdbaf78fa4b3"
+    }
+  },
   "rw_hiandlight_harness_24": null,
   "rw_hiandlight_harness_26": null,
   "rw_hiandlight_leash_26": null,
@@ -716,11 +740,21 @@
     "videoJobId": "hover-photo-20260903-eb9123a93388"
   },
   "rw_highlands_pad_m": {
-    "video": "/images/products/catalog/rw_highlands_pad_m/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_highlands_pad_m/videos/96f80648057a0903a926d6036029ecc4a7d117e56fd7acd80c35ad1509e281d3/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-eb9123a93388"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "82966691-558c-48b2-b6c0-b3c939129cb3",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "591370277fa13f40308b796f82bea964b4f910d1b7075e0e9f7b68b422c5182e",
+      "downloadEvidenceSha256": "a4e1418782d2340ba861c9a96ec95d682a25f0547809715fcff74a9374faf982"
+    }
   },
   "rw_highlands_sleepingbag_l": {
     "video": "/images/products/catalog/rw_highlands_sleepingbag_l/videos/hover.mp4",
@@ -766,7 +800,15 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-1f745511799e"
   },
-  "rw_kibblecaddy": null,
+  "rw_kibblecaddy": {
+    "video": "/images/products/catalog/rw_kibblecaddy/videos/9b1720c08b9a236404b1b7af3e7769aceb9a0da29e9c992472b732d05c40c68c/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "unknown",
+    "videoJobId": null,
+    "videoQuality": "approved_dog_using",
+    "videoReviewClass": "legacy_reviewed",
+    "videoReviewSha256": "13a04837d0eec3020166b6e9c62065479d49f0ed619d1e40bf77b85e63b0e36a"
+  },
   "rw_knotahitch": {
     "video": "/images/products/catalog/rw_knotahitch/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1189,7 +1231,23 @@
     "videoQuality": "approved_dog_wearing",
     "videoJobId": "31c54039-955d-4f22-ac17-0c576e500d7c"
   },
-  "zs_bull": null,
+  "zs_bull": {
+    "video": "/images/products/catalog/zs_bull/videos/3f2071016267edb656aaedebdfb489f96ef845a1b4fcd1f407150ac5f3ab9c10/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "8e253d8b-5701-472b-bc9e-8d276bf838c1",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ed1280739a61c37fb779df7b3197bf59e13151c8e706df17687dbad370b8f70b",
+      "downloadEvidenceSha256": "adefa8757b99c46e070b76ab808cdb7f9547e0d42c451d1adb36f371f60a42dd"
+    }
+  },
   "zs_bunnyrabbit": {
     "video": "/images/products/catalog/zs_bunnyrabbit/videos/a2829ba16c5792f1fe7b1f659ecc0f76b46ffc618c274368d4a9d8eaab876a72/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1218,8 +1276,40 @@
     "videoQuality": "approved_dog_wearing",
     "videoJobId": "ebfdf2aa-1394-4fa5-9e3c-7fbdae6a3011"
   },
-  "zs_grizzlybear": null,
-  "zs_horse": null,
+  "zs_grizzlybear": {
+    "video": "/images/products/catalog/zs_grizzlybear/videos/e8fe7bd366ea5384c05674a3e3ba0e5b7fb0b64aa49e9df7f4452b77b59e1999/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "d4d4b055-eee8-4e2e-9ed5-de38c23512af",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "5264d7b4e5d3e78905ddc2d61da587cb5846bbefe02a77d7fdf1282da7ec8755",
+      "downloadEvidenceSha256": "d99b8bf810dd1273556df2fbe75ca20c68ebc74fbd616ce98dbec343ea1bb072"
+    }
+  },
+  "zs_horse": {
+    "video": "/images/products/catalog/zs_horse/videos/bd65b0a52c0423f65b8e8dec20507c392ed6351bf7bcf7046b1b7902813f4bfb/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "5569f00c-a2d6-41f4-b205-2c3c58820322",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "cac370ebc6b042aa9bee34956c60a598ee9c7d0383a72e06ac71054730aa1f6c",
+      "downloadEvidenceSha256": "5c7235330d97c3e880ad4877cc51b447bed5a4870f3ef7e6daadc85ced978ce3"
+    }
+  },
   "zs_jackrabbit": {
     "video": "/images/products/catalog/zs_jackrabbit/videos/35ae9e7753be8ba23d59bd7065d39d65dc660b02ff2e7eae600271a4edde1450/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1249,7 +1339,23 @@
     "videoJobId": "3d4e1704-1820-4dc2-aad9-d39d5f808358"
   },
   "zs_rhino": null,
-  "zs_unicorn": null,
+  "zs_unicorn": {
+    "video": "/images/products/catalog/zs_unicorn/videos/a0a635d9ce523d10519a58afe55e995c64d182b829760dfa5ecc5805d9fb3e56/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "2c0634cc-9806-48f9-a6b9-254bd253f977",
+      "actualGenerationJobId": null,
+      "mediaAssetId": "2a3249c4-9095-469c-adba-89cb944768ab",
+      "rawSha256": "f675db9593bdc6c7ecf25d6c6a72883765cd72a15f9f0d9d0deeaa03179bcbfe",
+      "downloadEvidenceSha256": "46b89b686d732530e7cd654bbbdb9073a70bbceaba72e8f38bdb5edcd4c5a105"
+    }
+  },
   "heyrex_taurus_1l": {
     "video": "/images/products/catalog/heyrex_taurus_1l/videos/5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

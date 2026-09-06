@@ -3,7 +3,7 @@ import reviewedHoverOverrides from "./reviewed-hover-overrides.json" with { type
 
 type ReviewedHoverOverride = Pick<
     CatalogRow,
-    "video" | "videoDelivery" | "videoProvider" | "videoQuality" | "videoJobId" | "videoReviewClass" | "videoReviewSha256"
+    "video" | "videoDelivery" | "videoProvider" | "videoQuality" | "videoJobId" | "videoGenerationIdentity" | "videoReviewClass" | "videoReviewSha256"
 >;
 
 /**
@@ -34,6 +34,7 @@ export function applyReviewedHoverOverride(row: CatalogRow): CatalogRow {
             videoProvider: undefined,
             videoQuality: undefined,
             videoJobId: undefined,
+            videoGenerationIdentity: undefined,
             videoReviewClass: undefined,
             videoReviewSha256: undefined,
         };
