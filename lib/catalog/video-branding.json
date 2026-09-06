@@ -226,5 +226,44 @@
     "sourceJobId": "e8d9b32a-5f7c-4361-86d1-3cb2971c4156",
     "sourceVideoSha256": "83039acba60b29229f20d36c25aadabf1ae974038b975aa8c068d7978e24e708",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_undercoat_jacket/videos/3a6e41de2ac74aeadc72dd0683e08930d04e5548c94673e4447dc4dd7451c2bf/hover.mp4": {
+    "branding": "baked",
+    "sha256": "3a6e41de2ac74aeadc72dd0683e08930d04e5548c94673e4447dc4dd7451c2bf",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T23:42:02.859043+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "6eba571f-c90b-4995-b32a-17e89addc4b6",
+    "sourceVideoSha256": "f210b59c35af7fc910ce10f81b83a4868a4730d44731acd43ec5c4804ff94746",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/soopa_healthybites_coconutchia/videos/fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7/hover.mp4": {
+    "branding": "baked",
+    "sha256": "fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T23:42:02.859043+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "6ee0ae1b-f23d-470b-9ad1-b6482404f22f",
+    "sourceVideoSha256": "75a33da3ac9d42b2930ab50166771d17efb4d7cfa8ac7cc3c46bbdda8771a4cd",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_notacone/videos/d36df53ddc2d809b38d0e695e1e969c47bbeed76eaa473468f5c3844245678c2/hover.mp4": {
+    "branding": "baked",
+    "sha256": "d36df53ddc2d809b38d0e695e1e969c47bbeed76eaa473468f5c3844245678c2",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-05T23:58:10.927800+00:00",
+    "sourceAssetPath": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+    "sourceCommit": null,
+    "sourceJobId": "4a722f7c-181c-412f-95d7-fe581b8dea20",
+    "sourceVideoSha256": "907ee9fb205d64e1cabd8fbd989969a5e8fd301c66923871db0ea0dc5dc38370",
+    "providerWatermarkPreserved": true
   }
 }

@@ -801,11 +801,11 @@
     "videoJobId": "hover-photo-20260903-09ab33f7fbcc"
   },
   "rw_notacone": {
-    "video": "/images/products/catalog/rw_notacone/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_notacone/videos/d36df53ddc2d809b38d0e695e1e969c47bbeed76eaa473468f5c3844245678c2/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-42efee66781f"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "4a722f7c-181c-412f-95d7-fe581b8dea20"
   },
   "rw_notarock": {
     "video": "/images/products/catalog/rw_notarock/videos/hover.mp4",
@@ -965,7 +965,13 @@
   "rw_trailrunnerbowl": null,
   "rw_treattrader_23": null,
   "rw_treattrader_bag": null,
-  "rw_undercoat_jacket": null,
+  "rw_undercoat_jacket": {
+    "video": "/images/products/catalog/rw_undercoat_jacket/videos/3a6e41de2ac74aeadc72dd0683e08930d04e5548c94673e4447dc4dd7451c2bf/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6eba571f-c90b-4995-b32a-17e89addc4b6"
+  },
   "rw_vert_jacket": {
     "video": "/images/products/catalog/rw_vert_jacket/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1174,5 +1180,12 @@
     "videoProvider": "google_flow_web",
     "videoQuality": "approved_dog_using",
     "videoJobId": "d839f00a-1e1d-4e3f-8340-66873623a652"
+  },
+  "soopa_healthybites_coconutchia": {
+    "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "6ee0ae1b-f23d-470b-9ad1-b6482404f22f"
   }
 }
