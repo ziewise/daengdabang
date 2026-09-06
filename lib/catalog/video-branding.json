@@ -1093,5 +1093,236 @@
     },
     "sourceVideoSha256": "6bcae651b157c4616f2af845a835e91dbcb0667efb5206c25ef6bef3995ff373",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_basecamp_antisplash/videos/ce3f2bbca119904ee76a0360e8ce4573bcd1139bbe8b53f702582b37937e9d9d/hover.mp4": {
+    "branding": "baked",
+    "sha256": "ce3f2bbca119904ee76a0360e8ce4573bcd1139bbe8b53f702582b37937e9d9d",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T12:56:47.404522+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "beb59922-1ce8-46ad-9315-065ec35d4bc7",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "565ec978888a0f753190217ae6647a713c47a0d8b38bf7351cbfb8497489efb0",
+      "downloadEvidenceSha256": "65b85a7f5743f9e3aa45513dce8a5cfb68ac6ecc6df0a82f69245b4a0b1f295a"
+    },
+    "sourceVideoSha256": "565ec978888a0f753190217ae6647a713c47a0d8b38bf7351cbfb8497489efb0",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_basecamp_slowfeeder/videos/db0a430779cd3c1f6bcec523eef1804b3cb340adade26519bb360d2f5e49871f/hover.mp4": {
+    "branding": "baked",
+    "sha256": "db0a430779cd3c1f6bcec523eef1804b3cb340adade26519bb360d2f5e49871f",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T12:50:35.681682+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "30241a36-3468-4f3f-8730-b91e5a6e6ed7",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "fa3d2142562bdbb0a8718cf65e1577e5d260ee8379b57d0998772fe4897af0e0",
+      "downloadEvidenceSha256": "c00e6c8fb4f8020028cdb33994382abf705a55a1c5f5cb1260aa5bd9d6d2cf9c"
+    },
+    "sourceVideoSha256": "fa3d2142562bdbb0a8718cf65e1577e5d260ee8379b57d0998772fe4897af0e0",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_pacificring_toy/videos/28109863740da413f31504dfe07fa1db2e3c6b63ac6dcea64ffad3c61e148bfc/hover.mp4": {
+    "branding": "baked",
+    "sha256": "28109863740da413f31504dfe07fa1db2e3c6b63ac6dcea64ffad3c61e148bfc",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T12:59:24.712163+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "997ba355-bf14-4603-910e-08257611cb55",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "dd7efd3164e99878d2f2210387a4280ec6f6389a03ac6efcbd908f2b52100270",
+      "downloadEvidenceSha256": "7556e933f57a2ede9fa804e7643afeb6eb953a87bcf27b1ccc9ffed442c0d3c6"
+    },
+    "sourceVideoSha256": "dd7efd3164e99878d2f2210387a4280ec6f6389a03ac6efcbd908f2b52100270",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/toplife_goatmilk_adult_200ml/videos/3d801026a6188ae420057bf1917456f04a726d8b275c8a9f137b43f6a4a2ad6f/hover.mp4": {
+    "branding": "baked",
+    "sha256": "3d801026a6188ae420057bf1917456f04a726d8b275c8a9f137b43f6a4a2ad6f",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T14:10:30.811379+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "a387bea3-91a7-44a9-be21-c8f33a832e1c",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ac909578e064c913986040ad11352df48595c406f92bbeea00e8fc05c45d3406",
+      "downloadEvidenceSha256": "c516565de19780c8d826ab1e806aae9545d4ea53aaf7b8e5e4b5784d3666c79c"
+    },
+    "sourceVideoSha256": "ac909578e064c913986040ad11352df48595c406f92bbeea00e8fc05c45d3406",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_swampcooler_zipvest/videos/31a61062a6a8ff8221a7a8d332be792b596253e4c2af3e1528ad9f2aae1840fa/hover.mp4": {
+    "branding": "baked",
+    "sha256": "31a61062a6a8ff8221a7a8d332be792b596253e4c2af3e1528ad9f2aae1840fa",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T14:17:27.570553+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ceb1bc9f-1cc6-4955-9513-b2ccdcb9e607",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6fc2cfa0f624e6db2def609908a3d4bccab0c0a851ade523e68653a069ba9ee6",
+      "downloadEvidenceSha256": "339e241a5e6ca4e10e0cb3f9891cf2f7e7da48f46e3d31427bd8aedaffac88a7"
+    },
+    "sourceVideoSha256": "6fc2cfa0f624e6db2def609908a3d4bccab0c0a851ade523e68653a069ba9ee6",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_swampcooler_vest/videos/4c2ff654f542ecf21037c1b2cb1043a67fc964b87b1268500d3f640a91641224/hover.mp4": {
+    "branding": "baked",
+    "sha256": "4c2ff654f542ecf21037c1b2cb1043a67fc964b87b1268500d3f640a91641224",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T14:30:18.142610+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "bc720c20-f65a-4d27-9695-0ba0994dcb32",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ab70c273a9e3a0bb7f911b59d00e2d8046007d59dec5f3a70ab8334dfe64a9ec",
+      "downloadEvidenceSha256": "aab3f8598fa620026c0d48563b85eeb18d471f493eead4edf0b07fd7ed17fc43"
+    },
+    "sourceVideoSha256": "ab70c273a9e3a0bb7f911b59d00e2d8046007d59dec5f3a70ab8334dfe64a9ec",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_dirtbag_seatcover/videos/891818b3517f3cae417270ff8a1a43967453fe4a27b9d696001241da3b7adfbe/hover.mp4": {
+    "branding": "baked",
+    "sha256": "891818b3517f3cae417270ff8a1a43967453fe4a27b9d696001241da3b7adfbe",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T14:31:55.065940+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "e0a9cb6d-07f7-4fb8-985b-163c636de99d",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "b69574749a311e356d0df4323d62afc272d5db20311f5d8b71a4fd6c3459c404",
+      "downloadEvidenceSha256": "5d2219dfc1216604399cf3dd5267300a459e2819d1209623a86bfbdc97b8650a"
+    },
+    "sourceVideoSha256": "b69574749a311e356d0df4323d62afc272d5db20311f5d8b71a4fd6c3459c404",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_pacificloop_toy/videos/a2d45429320c97344d3c3fc1342bb4586ac2083816d7f9f5843f206487d4c90c/hover.mp4": {
+    "branding": "baked",
+    "sha256": "a2d45429320c97344d3c3fc1342bb4586ac2083816d7f9f5843f206487d4c90c",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T14:56:15.798508+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "26c4f1d8-b618-4b4b-94af-e89ec287567f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "c75a96fe94890bada205242f1365fd78b2cf53bdb964fbccf60dfaa35db27d00",
+      "downloadEvidenceSha256": "f3e427d88e2b0872ade274bab51f2eafb71cb6064d43e382ada7076aa85520a0"
+    },
+    "sourceVideoSha256": "c75a96fe94890bada205242f1365fd78b2cf53bdb964fbccf60dfaa35db27d00",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/soopa_chew_coconut/videos/41bb005697c198900bf7f6e883c783777ccc4df45199123c718e133ec92be22d/hover.mp4": {
+    "branding": "baked",
+    "sha256": "41bb005697c198900bf7f6e883c783777ccc4df45199123c718e133ec92be22d",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T15:09:32.109507+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "df4d1fe2-cdaa-42f6-953b-60ff5d568c4f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "b4fbd3f378929ebc93f8bad78b9ead6340e21ef2b527eb20eb41dcdae569b6ba",
+      "downloadEvidenceSha256": "fe02c90460e25a9fb9ffa82f93f41de6a0f2b3b70e344adc7363be97c408f391"
+    },
+    "sourceVideoSha256": "b4fbd3f378929ebc93f8bad78b9ead6340e21ef2b527eb20eb41dcdae569b6ba",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_basecamp_bed_m/videos/234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09/hover.mp4": {
+    "branding": "baked",
+    "sha256": "234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T15:11:10.651376+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "bef1b1f8-f640-4f94-8d12-bc9c5945eaab",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "1fa9c8ce2e8a451d30816f55c4fdf961fb1552719b291fbe63713e2833de61f2",
+      "downloadEvidenceSha256": "2498f215feae9b48435ead7bd521eba69a75509850b104b4fa5e3d2db74a4975"
+    },
+    "sourceVideoSha256": "1fa9c8ce2e8a451d30816f55c4fdf961fb1552719b291fbe63713e2833de61f2",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_gourdo_large/videos/56038dfc1ef27a8644397150e6ced0cd164d7659dff27dee278d9640de0a7f2c/hover.mp4": {
+    "branding": "baked",
+    "sha256": "56038dfc1ef27a8644397150e6ced0cd164d7659dff27dee278d9640de0a7f2c",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T15:23:36.706698+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "62c0e34c-5097-4439-9a38-d996c5506b04",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "f78e9d6c3673f3cdbd48f79cdd6e6a97bc92a009761728d1c3b8496969fdbd51",
+      "downloadEvidenceSha256": "7e727ef10cf456526f2c655e0c6882c50cf782be754e567bd0c5d458c5f863f5"
+    },
+    "sourceVideoSha256": "f78e9d6c3673f3cdbd48f79cdd6e6a97bc92a009761728d1c3b8496969fdbd51",
+    "providerWatermarkPreserved": true
   }
 }

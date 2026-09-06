@@ -564,11 +564,21 @@
     "videoJobId": "hover-photo-20260903-b10af40ceda4"
   },
   "rw_basecamp_antisplash": {
-    "video": "/images/products/catalog/rw_basecamp_antisplash/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_basecamp_antisplash/videos/ce3f2bbca119904ee76a0360e8ce4573bcd1139bbe8b53f702582b37937e9d9d/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-2c4d72ce55a6"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "beb59922-1ce8-46ad-9315-065ec35d4bc7",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "565ec978888a0f753190217ae6647a713c47a0d8b38bf7351cbfb8497489efb0",
+      "downloadEvidenceSha256": "65b85a7f5743f9e3aa45513dce8a5cfb68ac6ecc6df0a82f69245b4a0b1f295a"
+    }
   },
   "rw_basecamp_bed": {
     "video": "/images/products/catalog/rw_basecamp_bed/videos/8cb8e6b7691ce1b19bd3be199bc6e52a6b1349df8f40cdefe67f3e7207c0a377/hover.mp4",
@@ -595,11 +605,21 @@
     "videoJobId": "hover-photo-20260903-ffd522866819"
   },
   "rw_basecamp_bed_m": {
-    "video": "/images/products/catalog/rw_basecamp_bed_m/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_basecamp_bed_m/videos/234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-ffd522866819"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "bef1b1f8-f640-4f94-8d12-bc9c5945eaab",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "1fa9c8ce2e8a451d30816f55c4fdf961fb1552719b291fbe63713e2833de61f2",
+      "downloadEvidenceSha256": "2498f215feae9b48435ead7bd521eba69a75509850b104b4fa5e3d2db74a4975"
+    }
   },
   "rw_basecamp_mat": {
     "video": "/images/products/catalog/rw_basecamp_mat/videos/656311cf3797091e561f47ea6e3d729d33214e0cf60d3f7326e3c351fcbf97be/hover.mp4",
@@ -619,11 +639,21 @@
     }
   },
   "rw_basecamp_slowfeeder": {
-    "video": "/images/products/catalog/rw_basecamp_slowfeeder/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_basecamp_slowfeeder/videos/db0a430779cd3c1f6bcec523eef1804b3cb340adade26519bb360d2f5e49871f/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-79dad1f09c18"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "30241a36-3468-4f3f-8730-b91e5a6e6ed7",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "fa3d2142562bdbb0a8718cf65e1577e5d260ee8379b57d0998772fe4897af0e0",
+      "downloadEvidenceSha256": "c00e6c8fb4f8020028cdb33994382abf705a55a1c5f5cb1260aa5bd9d6d2cf9c"
+    }
   },
   "rw_bivybowl_23": {
     "video": "/images/products/catalog/rw_bivybowl_23/videos/17f3a400852fcfcc00e3950c456d687d04f4e5d11e075bd52665920ec6eb0346/hover.mp4",
@@ -712,7 +742,23 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-f3a255532a37"
   },
-  "rw_dirtbag_seatcover": null,
+  "rw_dirtbag_seatcover": {
+    "video": "/images/products/catalog/rw_dirtbag_seatcover/videos/891818b3517f3cae417270ff8a1a43967453fe4a27b9d696001241da3b7adfbe/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "e0a9cb6d-07f7-4fb8-985b-163c636de99d",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "b69574749a311e356d0df4323d62afc272d5db20311f5d8b71a4fd6c3459c404",
+      "downloadEvidenceSha256": "5d2219dfc1216604399cf3dd5267300a459e2819d1209623a86bfbdc97b8650a"
+    }
+  },
   "rw_doubletrack_coupler": {
     "video": "/images/products/catalog/rw_doubletrack_coupler/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -759,11 +805,21 @@
     "videoJobId": "7cb32df2-25e2-445a-b890-601da10a53c1"
   },
   "rw_gourdo_large": {
-    "video": "/images/products/catalog/rw_gourdo_large/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_gourdo_large/videos/56038dfc1ef27a8644397150e6ced0cd164d7659dff27dee278d9640de0a7f2c/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-82ef6e8f9521"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_present",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "62c0e34c-5097-4439-9a38-d996c5506b04",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "f78e9d6c3673f3cdbd48f79cdd6e6a97bc92a009761728d1c3b8496969fdbd51",
+      "downloadEvidenceSha256": "7e727ef10cf456526f2c655e0c6882c50cf782be754e567bd0c5d458c5f863f5"
+    }
   },
   "rw_gourdo_small": {
     "video": "/images/products/catalog/rw_gourdo_small/videos/2972c64b16460456cf9dffbc7337166b0044e4c18fe5a7703475cc8e82f52a4a/hover.mp4",
@@ -1047,18 +1103,38 @@
     "videoJobId": "e8d9b32a-5f7c-4361-86d1-3cb2971c4156"
   },
   "rw_pacificloop_toy": {
-    "video": "/images/products/catalog/rw_pacificloop_toy/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_pacificloop_toy/videos/a2d45429320c97344d3c3fc1342bb4586ac2083816d7f9f5843f206487d4c90c/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-761ae4df8b31"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "26c4f1d8-b618-4b4b-94af-e89ec287567f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "c75a96fe94890bada205242f1365fd78b2cf53bdb964fbccf60dfaa35db27d00",
+      "downloadEvidenceSha256": "f3e427d88e2b0872ade274bab51f2eafb71cb6064d43e382ada7076aa85520a0"
+    }
   },
   "rw_pacificring_toy": {
-    "video": "/images/products/catalog/rw_pacificring_toy/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_pacificring_toy/videos/28109863740da413f31504dfe07fa1db2e3c6b63ac6dcea64ffad3c61e148bfc/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-ca60bfdc96f1"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "997ba355-bf14-4603-910e-08257611cb55",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "dd7efd3164e99878d2f2210387a4280ec6f6389a03ac6efcbd908f2b52100270",
+      "downloadEvidenceSha256": "7556e933f57a2ede9fa804e7643afeb6eb953a87bcf27b1ccc9ffed442c0d3c6"
+    }
   },
   "rw_palisades_pack_26": null,
   "rw_palisades_poncho_26": {
@@ -1273,9 +1349,41 @@
       "downloadEvidenceSha256": "8e30823e601e489c04c284b1a8de1184852b3fb5da8396374178a73ead28bc99"
     }
   },
-  "rw_swampcooler_vest": null,
+  "rw_swampcooler_vest": {
+    "video": "/images/products/catalog/rw_swampcooler_vest/videos/4c2ff654f542ecf21037c1b2cb1043a67fc964b87b1268500d3f640a91641224/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "bc720c20-f65a-4d27-9695-0ba0994dcb32",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ab70c273a9e3a0bb7f911b59d00e2d8046007d59dec5f3a70ab8334dfe64a9ec",
+      "downloadEvidenceSha256": "aab3f8598fa620026c0d48563b85eeb18d471f493eead4edf0b07fd7ed17fc43"
+    }
+  },
   "rw_swampcooler_vest_2": null,
-  "rw_swampcooler_zipvest": null,
+  "rw_swampcooler_zipvest": {
+    "video": "/images/products/catalog/rw_swampcooler_zipvest/videos/31a61062a6a8ff8221a7a8d332be792b596253e4c2af3e1528ad9f2aae1840fa/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ceb1bc9f-1cc6-4955-9513-b2ccdcb9e607",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6fc2cfa0f624e6db2def609908a3d4bccab0c0a851ade523e68653a069ba9ee6",
+      "downloadEvidenceSha256": "339e241a5e6ca4e10e0cb3f9891cf2f7e7da48f46e3d31427bd8aedaffac88a7"
+    }
+  },
   "rw_swampcooler_zipvest_2": null,
   "rw_switchback_harness": null,
   "rw_timberline_fuse_vest_26fw": {
@@ -1350,11 +1458,21 @@
   "smoothie_rainbow_30ml_3": null,
   "soopa_chew_3set": null,
   "soopa_chew_coconut": {
-    "video": "/images/products/catalog/soopa_chew_coconut/videos/hover.mp4",
+    "video": "/images/products/catalog/soopa_chew_coconut/videos/41bb005697c198900bf7f6e883c783777ccc4df45199123c718e133ec92be22d/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-1b40203068ce"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "df4d1fe2-cdaa-42f6-953b-60ff5d568c4f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "b4fbd3f378929ebc93f8bad78b9ead6340e21ef2b527eb20eb41dcdae569b6ba",
+      "downloadEvidenceSha256": "fe02c90460e25a9fb9ffa82f93f41de6a0f2b3b70e344adc7363be97c408f391"
+    }
   },
   "soopa_chew_papaya": null,
   "soopa_chew_sweetpotato": null,
@@ -1389,7 +1507,23 @@
     "videoJobId": "hover-static72-20260903-f3496bb89854"
   },
   "thule_courier_trailer": null,
-  "toplife_goatmilk_adult_200ml": null,
+  "toplife_goatmilk_adult_200ml": {
+    "video": "/images/products/catalog/toplife_goatmilk_adult_200ml/videos/3d801026a6188ae420057bf1917456f04a726d8b275c8a9f137b43f6a4a2ad6f/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_present",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "a387bea3-91a7-44a9-be21-c8f33a832e1c",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ac909578e064c913986040ad11352df48595c406f92bbeea00e8fc05c45d3406",
+      "downloadEvidenceSha256": "c516565de19780c8d826ab1e806aae9545d4ea53aaf7b8e5e4b5784d3666c79c"
+    }
+  },
   "wow_shoes_20": {
     "video": "/images/products/catalog/wow_shoes_20/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

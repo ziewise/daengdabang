@@ -5065,5 +5065,737 @@
         "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
       ]
     }
+  },
+  "rw_basecamp_antisplash": {
+    "folder": "rw_basecamp_antisplash",
+    "productId": "p_342",
+    "video": "/images/products/catalog/rw_basecamp_antisplash/videos/ce3f2bbca119904ee76a0360e8ce4573bcd1139bbe8b53f702582b37937e9d9d/hover.mp4",
+    "sha256": "ce3f2bbca119904ee76a0360e8ce4573bcd1139bbe8b53f702582b37937e9d9d",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "beb59922-1ce8-46ad-9315-065ec35d4bc7",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "565ec978888a0f753190217ae6647a713c47a0d8b38bf7351cbfb8497489efb0",
+      "downloadEvidenceSha256": "65b85a7f5743f9e3aa45513dce8a5cfb68ac6ecc6df0a82f69245b4a0b1f295a"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "beb59922-1ce8-46ad-9315-065ec35d4bc7",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "565ec978888a0f753190217ae6647a713c47a0d8b38bf7351cbfb8497489efb0",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T12:56:47.404522+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_basecamp_antisplash\\root-final-approval.json",
+        "sha256": "ede768eb65fc685349e2f99dcd89d0da2b9b73a733f5177dbf3d11785bd4f3a2",
+        "bytes": 5482
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_basecamp_antisplash\\qa-omni-01\\qualified-qa.json",
+        "sha256": "16f7168b4f528a098c70aac76b0054071282f7ddaaa6429608d01b10bbe00886",
+        "bytes": 4951
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\proofs\\rw_basecamp_antisplash-attempt1-proof.json",
+        "sha256": "65b85a7f5743f9e3aa45513dce8a5cfb68ac6ecc6df0a82f69245b4a0b1f295a",
+        "bytes": 2278
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_basecamp_antisplash\\flow-submission.json",
+        "sha256": "d192d0069784b4fdf1691ed2a08e962301e5da6b7422b686fdde10291dda6be6",
+        "bytes": 7126
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_basecamp_antisplash\\sample-pack.json",
+        "sha256": "2e52f979443d3216a698a91d666b4b9ccf3d976ace4c3308c95153a5773ef9b1",
+        "bytes": 10136
+      },
+      "limitations": [
+        "Exact20cm/1.6L refers to the compatible Medium bowl source data, not a physical scale certificate for the generated frame; insert diameter remains unknown. Bowl is separately sold prop.",
+        "Head lift/turn and exposed short tongue exceed strict no-head-lift/concealed-tongue prompt. Root explicitly accepts this as qualified natural drinking, not exact prompt compliance.",
+        "Water level, concealed insert fitting, micro lettering, anti-splash performance and hidden anatomy are not certified. No empirical spill-prevention claim is supported.",
+        "18 base frames plus6 extra temporal frames were manually sampled; all192 were technically decoded but not all manually viewed. Raw audio was not auditioned and candidate must be silent.",
+        "Start/end motion and perfect seamless loop are not certified. Candidate permission is distinct from final publication approval."
+      ]
+    }
+  },
+  "rw_basecamp_slowfeeder": {
+    "folder": "rw_basecamp_slowfeeder",
+    "productId": "p_343",
+    "video": "/images/products/catalog/rw_basecamp_slowfeeder/videos/db0a430779cd3c1f6bcec523eef1804b3cb340adade26519bb360d2f5e49871f/hover.mp4",
+    "sha256": "db0a430779cd3c1f6bcec523eef1804b3cb340adade26519bb360d2f5e49871f",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "30241a36-3468-4f3f-8730-b91e5a6e6ed7",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "fa3d2142562bdbb0a8718cf65e1577e5d260ee8379b57d0998772fe4897af0e0",
+      "downloadEvidenceSha256": "c00e6c8fb4f8020028cdb33994382abf705a55a1c5f5cb1260aa5bd9d6d2cf9c"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "30241a36-3468-4f3f-8730-b91e5a6e6ed7",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "fa3d2142562bdbb0a8718cf65e1577e5d260ee8379b57d0998772fe4897af0e0",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T12:50:35.681682+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_basecamp_slowfeeder\\root-final-approval.json",
+        "sha256": "5fe188fba101634a0f7f5ee228cc3d6e104e03234593c58c5f89ca64f369dea0",
+        "bytes": 3454
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_basecamp_slowfeeder\\qa-omni-01\\qualified-qa.json",
+        "sha256": "3e25163f8404cfff492365da1681f5825e8a04ea1d6b585dc4b0eb5008396164",
+        "bytes": 3566
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\proofs\\rw_basecamp_slowfeeder-attempt1-proof.json",
+        "sha256": "c00e6c8fb4f8020028cdb33994382abf705a55a1c5f5cb1260aa5bd9d6d2cf9c",
+        "bytes": 2278
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_basecamp_slowfeeder\\flow-submission.json",
+        "sha256": "0aaac7588e429a5d7f4d5b68b8accac3bc7d603a776fc5b077b928a33ea4ab61",
+        "bytes": 7014
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_basecamp_slowfeeder\\sample-pack.json",
+        "sha256": "83e3f9fbf537c358d8f4364b107dae3d9d145e6a662ed24553996729bf30bcc0",
+        "bytes": 10261
+      },
+      "limitations": [
+        "Compatible bowl is a separate prop. Actual eating/chewing success, absolute20cm, hidden fitting details and microtext are not certified.",
+        "Start/end head pose differs; exact seamless loop is not certified.",
+        "Raw audio not auditioned and must be removed. Automated192-frame decode is separate from18 manual temporal samples plus selected native review.",
+        "Root final approval is recorded. No registration, deployment or publication has occurred in this recording task."
+      ]
+    }
+  },
+  "rw_pacificring_toy": {
+    "folder": "rw_pacificring_toy",
+    "productId": "p_353",
+    "video": "/images/products/catalog/rw_pacificring_toy/videos/28109863740da413f31504dfe07fa1db2e3c6b63ac6dcea64ffad3c61e148bfc/hover.mp4",
+    "sha256": "28109863740da413f31504dfe07fa1db2e3c6b63ac6dcea64ffad3c61e148bfc",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "997ba355-bf14-4603-910e-08257611cb55",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "dd7efd3164e99878d2f2210387a4280ec6f6389a03ac6efcbd908f2b52100270",
+      "downloadEvidenceSha256": "7556e933f57a2ede9fa804e7643afeb6eb953a87bcf27b1ccc9ffed442c0d3c6"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "997ba355-bf14-4603-910e-08257611cb55",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "dd7efd3164e99878d2f2210387a4280ec6f6389a03ac6efcbd908f2b52100270",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T12:59:24.712163+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_pacificring_toy\\root-final-approval.json",
+        "sha256": "2fa27fab5f770e75a878777c7bf06cc4c6acdba96e105c100fac812b784363e6",
+        "bytes": 3364
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_pacificring_toy\\qa-omni-01\\qualified-qa.json",
+        "sha256": "924151bd1fb2488b1dff2569bc5abe6b4efc5066086b05b4935b378a37b996a6",
+        "bytes": 3426
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\proofs\\rw_pacificring_toy-attempt1-proof.json",
+        "sha256": "7556e933f57a2ede9fa804e7643afeb6eb953a87bcf27b1ccc9ffed442c0d3c6",
+        "bytes": 2250
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_pacificring_toy\\flow-submission.json",
+        "sha256": "32fa61db3b66c06a06cfd4d9b41c13de272854cb631d83a7ce035027ca005013",
+        "bytes": 6863
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_pacificring_toy\\sample-pack.json",
+        "sha256": "9dbc74061ab6787ece26979e31e32422be627ec2af5bf84aebc9283954c0cf04",
+        "bytes": 9793
+      },
+      "limitations": [
+        "Actual biting success, physical27cm, hidden joins, microscopic wordmark and exact seamless loop are not certified.",
+        "Raw audio not auditioned and must be removed. Automated192-frame decode is separate from18 manual temporal samples plus selected native review.",
+        "Root final approval is recorded. No registration, deployment or publication has occurred in this recording task."
+      ]
+    }
+  },
+  "toplife_goatmilk_adult_200ml": {
+    "folder": "toplife_goatmilk_adult_200ml",
+    "productId": "p_178",
+    "video": "/images/products/catalog/toplife_goatmilk_adult_200ml/videos/3d801026a6188ae420057bf1917456f04a726d8b275c8a9f137b43f6a4a2ad6f/hover.mp4",
+    "sha256": "3d801026a6188ae420057bf1917456f04a726d8b275c8a9f137b43f6a4a2ad6f",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "a387bea3-91a7-44a9-be21-c8f33a832e1c",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ac909578e064c913986040ad11352df48595c406f92bbeea00e8fc05c45d3406",
+      "downloadEvidenceSha256": "c516565de19780c8d826ab1e806aae9545d4ea53aaf7b8e5e4b5784d3666c79c"
+    },
+    "videoQuality": "approved_dog_present",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "a387bea3-91a7-44a9-be21-c8f33a832e1c",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "ac909578e064c913986040ad11352df48595c406f92bbeea00e8fc05c45d3406",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T14:10:30.811379+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\toplife_goatmilk_adult_200ml\\attempt-02-omni\\root-final-approval.json",
+        "sha256": "59e4c994d257231143b3a0a628bc27d47ff05b9d4cdca40819b6445a422168e1",
+        "bytes": 3783
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\toplife_goatmilk_adult_200ml\\attempt-02-omni\\qa-omni-01\\qualified-qa.json",
+        "sha256": "9f7361fbdabdbb0de3b4c3e953e1bafa0525c47af417a65701ab5b9613071e77",
+        "bytes": 3562
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\proofs\\toplife_goatmilk_adult_200ml-attempt2-proof.json",
+        "sha256": "c516565de19780c8d826ab1e806aae9545d4ea53aaf7b8e5e4b5784d3666c79c",
+        "bytes": 2422
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\toplife_goatmilk_adult_200ml\\flow-submission.json",
+        "sha256": "b290411c0d27ee37bd4833c7f7a17234ee3807f3ea4c378a7f404e74c306c192",
+        "bytes": 7242
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\toplife_goatmilk_adult_200ml\\sample-pack.json",
+        "sha256": "1cc01c0ffb360eb8c51a3cfbc4ba7d23e9ef0f0234f084e960dac98a79bcd062",
+        "bytes": 9934
+      },
+      "limitations": [
+        "Physical centimetres, microscopic/capacity lettering, hidden sides and exact seamless loop are not certified.",
+        "Raw audio present but not auditioned; remove in candidate. Technical192 decode is separate from manual18 plus selected native review.",
+        "Root final approval is recorded. No registration, deployment or publication has occurred in this recording task."
+      ]
+    }
+  },
+  "rw_swampcooler_zipvest": {
+    "folder": "rw_swampcooler_zipvest",
+    "productId": "p_51",
+    "video": "/images/products/catalog/rw_swampcooler_zipvest/videos/31a61062a6a8ff8221a7a8d332be792b596253e4c2af3e1528ad9f2aae1840fa/hover.mp4",
+    "sha256": "31a61062a6a8ff8221a7a8d332be792b596253e4c2af3e1528ad9f2aae1840fa",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ceb1bc9f-1cc6-4955-9513-b2ccdcb9e607",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6fc2cfa0f624e6db2def609908a3d4bccab0c0a851ade523e68653a069ba9ee6",
+      "downloadEvidenceSha256": "339e241a5e6ca4e10e0cb3f9891cf2f7e7da48f46e3d31427bd8aedaffac88a7"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "ceb1bc9f-1cc6-4955-9513-b2ccdcb9e607",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "6fc2cfa0f624e6db2def609908a3d4bccab0c0a851ade523e68653a069ba9ee6",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T14:17:27.570553+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_swampcooler_zipvest\\root-final-approval.json",
+        "sha256": "7391b02f2cf9696a9a3ef1bcf799bfc79592e8154c2fe619c6d4cce0c6172f31",
+        "bytes": 3593
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_swampcooler_zipvest\\qa-omni-01\\qualified-qa.json",
+        "sha256": "c91d5c8546cd3bbc8d115c753836d103f4c3332882c06f3fe4fc234c98180d49",
+        "bytes": 3526
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\proofs\\rw_swampcooler_zipvest-attempt1-proof.json",
+        "sha256": "339e241a5e6ca4e10e0cb3f9891cf2f7e7da48f46e3d31427bd8aedaffac88a7",
+        "bytes": 2278
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_swampcooler_zipvest\\flow-submission.json",
+        "sha256": "d52f8e522a68ee7db7b8e1530f39c0c74dc57fc143fc6a5ad5c031d1b3de4c84",
+        "bytes": 6047
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_swampcooler_zipvest\\sample-pack.json",
+        "sha256": "249a7ff3c6bdb3e835529bc1d07ff065cc1a38f13478c3992786e89fabf71a92",
+        "bytes": 13963
+      },
+      "limitations": [
+        "Physical centimetres, hidden hardware, microscopic zipper teeth/slider/label and seamless loop remain uncertified.",
+        "Technical192-frame full decode differs from manual18 samples plus native4s. Original source audio was not auditioned; candidate removes audio.",
+        "Root final approval is recorded. No registration, deployment or publication has occurred in this recording task."
+      ]
+    }
+  },
+  "rw_swampcooler_vest": {
+    "folder": "rw_swampcooler_vest",
+    "productId": "p_52",
+    "video": "/images/products/catalog/rw_swampcooler_vest/videos/4c2ff654f542ecf21037c1b2cb1043a67fc964b87b1268500d3f640a91641224/hover.mp4",
+    "sha256": "4c2ff654f542ecf21037c1b2cb1043a67fc964b87b1268500d3f640a91641224",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "bc720c20-f65a-4d27-9695-0ba0994dcb32",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "ab70c273a9e3a0bb7f911b59d00e2d8046007d59dec5f3a70ab8334dfe64a9ec",
+      "downloadEvidenceSha256": "aab3f8598fa620026c0d48563b85eeb18d471f493eead4edf0b07fd7ed17fc43"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "bc720c20-f65a-4d27-9695-0ba0994dcb32",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "ab70c273a9e3a0bb7f911b59d00e2d8046007d59dec5f3a70ab8334dfe64a9ec",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T14:30:18.142610+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_swampcooler_vest\\root-final-approval.json",
+        "sha256": "e5f27eeae1d0b55f4a8282d7a7915894d2403ef6185648ddd7e1be49a8bd587c",
+        "bytes": 3806
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_swampcooler_vest\\qa-omni-01\\qualified-qa.json",
+        "sha256": "6466739e7361805f24d4917ac89f96c7cbc848392fda112c8e91ab6156b5e905",
+        "bytes": 4502
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\proofs\\rw_swampcooler_vest-attempt1-proof.json",
+        "sha256": "aab3f8598fa620026c0d48563b85eeb18d471f493eead4edf0b07fd7ed17fc43",
+        "bytes": 2257
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_swampcooler_vest\\flow-submission.json",
+        "sha256": "90205442fb512840c1a376646a618fc7449880167deb97dc60f901c964d27a46",
+        "bytes": 6392
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_swampcooler_vest\\sample-pack.json",
+        "sha256": "189d82716565c661a058cff5690fdc975e2ff357feab3fcb54c4f1b471e0d1c5",
+        "bytes": 10920
+      },
+      "limitations": [
+        "Nominal XXS chest33–43cm is manufacturer option evidence only; generated dog or garment is not measured.",
+        "Fine fabric pattern, microscopic labels and concealed buckle/webbing route are not pixel-certified.",
+        "192 frames decoded technically;18 temporal samples plus nativeframe96 inspected visually, not every frame.",
+        "Small head/eye differences between first and last frames mean seamless looping is not certified.",
+        "Source audio was not auditioned; any approved candidate must be silent.",
+        "Root final approval is recorded separately. Existing sample/submission/QA/manifest bytes remain unchanged. No registration or publication in this recording task."
+      ]
+    }
+  },
+  "rw_dirtbag_seatcover": {
+    "folder": "rw_dirtbag_seatcover",
+    "productId": "p_112",
+    "video": "/images/products/catalog/rw_dirtbag_seatcover/videos/891818b3517f3cae417270ff8a1a43967453fe4a27b9d696001241da3b7adfbe/hover.mp4",
+    "sha256": "891818b3517f3cae417270ff8a1a43967453fe4a27b9d696001241da3b7adfbe",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "e0a9cb6d-07f7-4fb8-985b-163c636de99d",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "b69574749a311e356d0df4323d62afc272d5db20311f5d8b71a4fd6c3459c404",
+      "downloadEvidenceSha256": "5d2219dfc1216604399cf3dd5267300a459e2819d1209623a86bfbdc97b8650a"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "e0a9cb6d-07f7-4fb8-985b-163c636de99d",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "b69574749a311e356d0df4323d62afc272d5db20311f5d8b71a4fd6c3459c404",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T14:31:55.065940+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_dirtbag_seatcover\\root-final-approval.json",
+        "sha256": "5eec6081cf368bf56db1933dbaf177ca8204892fff15f2b0dbe756ff7bfd5383",
+        "bytes": 3785
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_dirtbag_seatcover\\qa-omni-01\\qualified-qa.json",
+        "sha256": "2f8829ab6353ad3f801e061f151bb4e7d7d46db9aedb94cdc5e4f27cfa7618e0",
+        "bytes": 3810
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\project-tile-proof80-proposal\\proofs\\rw_dirtbag_seatcover-attempt1-proof.json",
+        "sha256": "5d2219dfc1216604399cf3dd5267300a459e2819d1209623a86bfbdc97b8650a",
+        "bytes": 2278
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_dirtbag_seatcover\\flow-submission.json",
+        "sha256": "751cce047301a57f5a7b500178377bb1dac68fd86f02fd01a2f29ef934325659",
+        "bytes": 6908
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_dirtbag_seatcover\\sample-pack.json",
+        "sha256": "e1533e54594dba39378aa10810d8a440c1666779fcca42d687951f47e1def13d",
+        "bytes": 9991
+      },
+      "limitations": [
+        "Physical centimetres, hidden joins, buckle micro-detail, vehicle compatibility, installation safety and seamless loop remain uncertified. Actual1197-character prompt discrepancy, failed first bundle, project save clone and editor0→original project tile→media1 evidence remain preserved.",
+        "Technical192-frame full decode differs from manual18 samples plus native4s. Original source audio was not auditioned; candidate removes audio.",
+        "Root final approval is recorded. No registration, deployment or publication has occurred in this recording task."
+      ]
+    }
+  },
+  "rw_pacificloop_toy": {
+    "folder": "rw_pacificloop_toy",
+    "productId": "p_160",
+    "video": "/images/products/catalog/rw_pacificloop_toy/videos/a2d45429320c97344d3c3fc1342bb4586ac2083816d7f9f5843f206487d4c90c/hover.mp4",
+    "sha256": "a2d45429320c97344d3c3fc1342bb4586ac2083816d7f9f5843f206487d4c90c",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "26c4f1d8-b618-4b4b-94af-e89ec287567f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "c75a96fe94890bada205242f1365fd78b2cf53bdb964fbccf60dfaa35db27d00",
+      "downloadEvidenceSha256": "f3e427d88e2b0872ade274bab51f2eafb71cb6064d43e382ada7076aa85520a0"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "26c4f1d8-b618-4b4b-94af-e89ec287567f",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "c75a96fe94890bada205242f1365fd78b2cf53bdb964fbccf60dfaa35db27d00",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T14:56:15.798508+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_pacificloop_toy\\root-final-approval.json",
+        "sha256": "78c4cfb88bea62b37fbf60f54314d7c81fc9d0d55b34553da44437d57bd38b60",
+        "bytes": 4126
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_pacificloop_toy\\qa-omni-01\\qualified-qa.json",
+        "sha256": "c05ffd749daf6e30117c251cea6f30c1239aab32f4ef38f7306459b9a68ee2b4",
+        "bytes": 5404
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\project-tile-proof-proposal-v2\\proofs\\rw_pacificloop_toy-attempt1-proof.json",
+        "sha256": "f3e427d88e2b0872ade274bab51f2eafb71cb6064d43e382ada7076aa85520a0",
+        "bytes": 2557
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_pacificloop_toy\\flow-submission.json",
+        "sha256": "9b5fb89f90b11501bd2d31bab999f0844605f5fe6cf3044d6f1713d0e8aa9e58",
+        "bytes": 6620
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_pacificloop_toy\\sample-pack.json",
+        "sha256": "001d58020123a1a773d552ddf4a4ebbf7b1cc9b232e998b592d4731beaa51704",
+        "bytes": 10431
+      },
+      "limitations": [
+        "Manufacturer20.4in/52cm is source evidence only, not a generated-frame measurement certificate. Earlier49cm note is not certified.",
+        "Microscopic print/weave, concealed joins/underside, actual biting/carrying/tugging are not certified.",
+        "Perfect seamless loop not certified.192 technically decoded frames are distinct from18 manual samples/native096/three-corner enlargements.",
+        "Raw audio not auditioned; candidate must be silent. Exact branded final requires root review before publication.",
+        "Existing sample/submission/QA/manifest bytes preserved; only this new root FINAL decision recorded. Registration/publication0 in this task."
+      ]
+    }
+  },
+  "soopa_chew_coconut": {
+    "folder": "soopa_chew_coconut",
+    "productId": "p_288",
+    "video": "/images/products/catalog/soopa_chew_coconut/videos/41bb005697c198900bf7f6e883c783777ccc4df45199123c718e133ec92be22d/hover.mp4",
+    "sha256": "41bb005697c198900bf7f6e883c783777ccc4df45199123c718e133ec92be22d",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "df4d1fe2-cdaa-42f6-953b-60ff5d568c4f",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "b4fbd3f378929ebc93f8bad78b9ead6340e21ef2b527eb20eb41dcdae569b6ba",
+      "downloadEvidenceSha256": "fe02c90460e25a9fb9ffa82f93f41de6a0f2b3b70e344adc7363be97c408f391"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "df4d1fe2-cdaa-42f6-953b-60ff5d568c4f",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "b4fbd3f378929ebc93f8bad78b9ead6340e21ef2b527eb20eb41dcdae569b6ba",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T15:09:32.109507+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\soopa_chew_coconut\\root-final-approval.json",
+        "sha256": "893002715e6d8cd7a3b60cb3222058ca8fb209149920829f82e8efb0b8ec217b",
+        "bytes": 4099
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\soopa_chew_coconut\\qa-omni-01\\qualified-qa.json",
+        "sha256": "7d48d85a4b675d65d25b1a6b6667875e575a55d2b003323fbcad600011a1ccc4",
+        "bytes": 5535
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\single-project-tile-proof82-83-extension\\proofs\\soopa_chew_coconut-attempt1-proof.json",
+        "sha256": "fe02c90460e25a9fb9ffa82f93f41de6a0f2b3b70e344adc7363be97c408f391",
+        "bytes": 2573
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\soopa_chew_coconut\\flow-submission.json",
+        "sha256": "228989ac0325b8a4d349f2d0fd17f48590353350a9320752f9edfcc894d5f5d3",
+        "bytes": 6434
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\soopa_chew_coconut\\sample-pack.json",
+        "sha256": "51af84517ed26fe3796caca1eb5f176ec20bea68eca3f79c1d4c8c289b3717a9",
+        "bytes": 9243
+      },
+      "limitations": [
+        "Microscopic print and actual package/strip/dog dimensions are not certified. Store100g title is distinct from manufacturer shipping128g.",
+        "Actual swallowing, biting off, chewing efficacy or nutrition are not demonstrated. Single-strip input is a qualified promotional illustration, not manufacturer feeding certification.",
+        "All192 frames technically decoded;18 full and mouth-hand samples/native096 inspected, not every frame. Seamless looping not certified.",
+        "Raw audio not auditioned; candidate must be silent. Exact final candidate requires root review before publication.",
+        "This records only new root FINAL decision; original sample/submission/QA/manifest preserved and no registration/publication performed by recorder."
+      ]
+    }
+  },
+  "rw_basecamp_bed_m": {
+    "folder": "rw_basecamp_bed_m",
+    "productId": "p_344",
+    "video": "/images/products/catalog/rw_basecamp_bed_m/videos/234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09/hover.mp4",
+    "sha256": "234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "bef1b1f8-f640-4f94-8d12-bc9c5945eaab",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "1fa9c8ce2e8a451d30816f55c4fdf961fb1552719b291fbe63713e2833de61f2",
+      "downloadEvidenceSha256": "2498f215feae9b48435ead7bd521eba69a75509850b104b4fa5e3d2db74a4975"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "bef1b1f8-f640-4f94-8d12-bc9c5945eaab",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "1fa9c8ce2e8a451d30816f55c4fdf961fb1552719b291fbe63713e2833de61f2",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T15:11:10.651376+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_basecamp_bed_m\\root-final-approval.json",
+        "sha256": "209cf667a713c7484e67c9722fc99f23bb13c4574b65946c6ba33bbea7b77820",
+        "bytes": 4175
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_basecamp_bed_m\\qa-omni-01\\qualified-qa.json",
+        "sha256": "eeee1c51beea208a5aee7725ea7f447b88f193f77516c0a04e15db55ae950622",
+        "bytes": 4607
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\single-project-tile-proof82-83-extension\\proofs\\rw_basecamp_bed_m-attempt1-proof.json",
+        "sha256": "2498f215feae9b48435ead7bd521eba69a75509850b104b4fa5e3d2db74a4975",
+        "bytes": 2565
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_basecamp_bed_m\\flow-submission.json",
+        "sha256": "e3343d1c309f3b0f71f1df7f11ecb19f4250f89ff6a52e7ea8518dd78c6df28b",
+        "bytes": 6467
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_basecamp_bed_m\\sample-pack.json",
+        "sha256": "afa4b5fcfbf6dac50392f2c548356aba24b3fab16bb2cadc9d2250864228e0ba",
+        "bytes": 9263
+      },
+      "limitations": [
+        "M92x59cm/SKU10451-981M is manufacturer option evidence, not generated bed/dog actual measured dimensions.",
+        "Hidden central seam/underside/concealed paw details, fine print/weave and comfort efficacy are not certified.",
+        "Mild camera pullback differs from locked camera request and was explicitly accepted by root. Exact seamless loop is not certified.",
+        "All192 frames technically decoded;18 temporal samples/native096 and three corner crops visually reviewed, not every frame. Raw audio not auditioned; candidate must be silent.",
+        "Exact branded final candidate requires root FINAL review before publication.",
+        "This records only new root FINAL decision; original sample/submission/QA/manifest preserved and no registration/publication performed by recorder."
+      ]
+    }
+  },
+  "rw_gourdo_large": {
+    "folder": "rw_gourdo_large",
+    "productId": "p_352",
+    "video": "/images/products/catalog/rw_gourdo_large/videos/56038dfc1ef27a8644397150e6ced0cd164d7659dff27dee278d9640de0a7f2c/hover.mp4",
+    "sha256": "56038dfc1ef27a8644397150e6ced0cd164d7659dff27dee278d9640de0a7f2c",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "62c0e34c-5097-4439-9a38-d996c5506b04",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "f78e9d6c3673f3cdbd48f79cdd6e6a97bc92a009761728d1c3b8496969fdbd51",
+      "downloadEvidenceSha256": "7e727ef10cf456526f2c655e0c6882c50cf782be754e567bd0c5d458c5f863f5"
+    },
+    "videoQuality": "approved_dog_present",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "62c0e34c-5097-4439-9a38-d996c5506b04",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "f78e9d6c3673f3cdbd48f79cdd6e6a97bc92a009761728d1c3b8496969fdbd51",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T15:23:36.706698+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_gourdo_large\\root-final-approval.json",
+        "sha256": "0e7968e3a55b00be6b2f71aa14a1e2525a9784e77aaa660acf5f3a967765af0e",
+        "bytes": 4526
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_gourdo_large\\qa-omni-01\\qualified-qa.json",
+        "sha256": "07abf910094bce5253b84f929b359420128e4ac0178c66da0a7709bb362520a2",
+        "bytes": 5920
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\matching-browser-download84-durable-proposal\\proofs\\rw_gourdo_large-attempt1-proof.json",
+        "sha256": "7e727ef10cf456526f2c655e0c6882c50cf782be754e567bd0c5d458c5f863f5",
+        "bytes": 3419
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_gourdo_large\\flow-submission.json",
+        "sha256": "b4480f0dd3a5d811e802180716f77683270182c08f434bce3e7662b7ea044ef3",
+        "bytes": 6633
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch15-registration-proposal\\evidence\\rw_gourdo_large\\sample-pack.json",
+        "sha256": "930dbd0c45c22004397b310838897c013ef27dec90205037698c525e4ea4cd3e",
+        "bytes": 9708
+      },
+      "limitations": [
+        "Approved quality must be approved_dog_present, not evidence of product use or functional performance. Actual contact/bite/tugging/carrying absent.",
+        "Manufacturer Large rubber-body6x20cm excludes rope and is not generated product/dog measured dimensions. Rope total length and concealed connection not certified.",
+        "Texture dot count, microscopic embossing and hidden bottom curvature not pixel-certified.",
+        "Mild camera pullback after4.5s explicitly accepted by root as limited camera deviation; seamless looping is not certified.",
+        "All192 frames technically decoded;18 full/product samples/native096 and corner0/96/191 manually reviewed, not every frame. Raw audio not auditioned; candidate must be silent.",
+        "Exact branded final candidate requires root FINAL review before publication.",
+        "This records only new root FINAL decision; original sample/submission/QA/manifest preserved and no registration/publication performed by recorder."
+      ]
+    }
   }
 }
