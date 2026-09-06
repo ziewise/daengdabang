@@ -1009,5 +1009,89 @@
     },
     "sourceVideoSha256": "5c52f320a79afcb5b481fa05e22755df5625967233e6b281fa487ef05f136173",
     "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_palisades_poncho_26/videos/88efe8a5d123a5a261eed3be40ff36cab0709b465fdc337601b2d05d0c191aff/hover.mp4": {
+    "branding": "baked",
+    "sha256": "88efe8a5d123a5a261eed3be40ff36cab0709b465fdc337601b2d05d0c191aff",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T11:14:39.284965+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ac64ec05-75c9-45f1-adb8-ed8b965d6ebe",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "dc8d88e1426c26e116d8d428f4ffd480c611dda43d92a7edd444368e1abccfc6",
+      "downloadEvidenceSha256": "6cba5977749a9362ed9b85714529f5160d3ec13a8161a9aa49bf9705c91e4c36"
+    },
+    "sourceVideoSha256": "dc8d88e1426c26e116d8d428f4ffd480c611dda43d92a7edd444368e1abccfc6",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_sunshower_coverall_25fw/videos/a9d325fd3ee33c59a4018f77392a519a58bec1ed617174152d6cea39d81fca32/hover.mp4": {
+    "branding": "baked",
+    "sha256": "a9d325fd3ee33c59a4018f77392a519a58bec1ed617174152d6cea39d81fca32",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T11:36:35.280846+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "f83a1164-d179-45b0-80cf-4d2b2ec3e0c1",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "280e6c01ab0a15fe654d3f68e1c70e4bdcfc6740e2558a6a1a35cc38dede2355",
+      "downloadEvidenceSha256": "19d496172fdcfb64bf8775785fa5077d91c37be3a46c7ef8668a35d4cd04b9ac"
+    },
+    "sourceVideoSha256": "280e6c01ab0a15fe654d3f68e1c70e4bdcfc6740e2558a6a1a35cc38dede2355",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_hookacone/videos/0fcfcd33abf0754b7d9dcfaf864a9b3acec6b8389b56927ba318adecd6f55026/hover.mp4": {
+    "branding": "baked",
+    "sha256": "0fcfcd33abf0754b7d9dcfaf864a9b3acec6b8389b56927ba318adecd6f55026",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T11:50:44.570247+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "8a32107d-764c-429e-9379-8b88a506459b",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "d34e1b75896681f8c4bf3d3491cb2e72347d4b486edc1c2be28433e539b12770",
+      "downloadEvidenceSha256": "960ccdf27148558d9a7ba6ef43f2b617374d300dc958ad433327f71818794af5"
+    },
+    "sourceVideoSha256": "d34e1b75896681f8c4bf3d3491cb2e72347d4b486edc1c2be28433e539b12770",
+    "providerWatermarkPreserved": true
+  },
+  "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/cd5e77fb2653f65198e6d36f3a6ecf8ffe755273d91c661d4a20f00e4c03b490/hover.mp4": {
+    "branding": "baked",
+    "sha256": "cd5e77fb2653f65198e6d36f3a6ecf8ffe755273d91c661d4a20f00e4c03b490",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-06T12:20:22.845573+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "c7e064b9-abad-4aec-8bf0-650d1bdc1e44",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6bcae651b157c4616f2af845a835e91dbcb0667efb5206c25ef6bef3995ff373",
+      "downloadEvidenceSha256": "6f7aba5b646f1817e1d280666dec7e0855ded46755c2f3a07c2181c20ab61f5a"
+    },
+    "sourceVideoSha256": "6bcae651b157c4616f2af845a835e91dbcb0667efb5206c25ef6bef3995ff373",
+    "providerWatermarkPreserved": true
   }
 }

@@ -868,11 +868,21 @@
   "rw_hitchhiker_leash_26": null,
   "rw_hometrail_hippack": null,
   "rw_hookacone": {
-    "video": "/images/products/catalog/rw_hookacone/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_hookacone/videos/0fcfcd33abf0754b7d9dcfaf864a9b3acec6b8389b56927ba318adecd6f55026/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-044e2f87c5c8"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "8a32107d-764c-429e-9379-8b88a506459b",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "d34e1b75896681f8c4bf3d3491cb2e72347d4b486edc1c2be28433e539b12770",
+      "downloadEvidenceSha256": "960ccdf27148558d9a7ba6ef43f2b617374d300dc958ad433327f71818794af5"
+    }
   },
   "rw_hydroplane_disc": {
     "video": "/images/products/catalog/rw_hydroplane_disc/videos/hover.mp4",
@@ -992,11 +1002,21 @@
     }
   },
   "rw_mteverrest_cotcover_26fw": {
-    "video": "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/cd5e77fb2653f65198e6d36f3a6ecf8ffe755273d91c661d4a20f00e4c03b490/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-09ab33f7fbcc"
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "c7e064b9-abad-4aec-8bf0-650d1bdc1e44",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6bcae651b157c4616f2af845a835e91dbcb0667efb5206c25ef6bef3995ff373",
+      "downloadEvidenceSha256": "6f7aba5b646f1817e1d280666dec7e0855ded46755c2f3a07c2181c20ab61f5a"
+    }
   },
   "rw_notacone": {
     "video": "/images/products/catalog/rw_notacone/videos/d36df53ddc2d809b38d0e695e1e969c47bbeed76eaa473468f5c3844245678c2/hover.mp4",
@@ -1041,7 +1061,23 @@
     "videoJobId": "hover-static72-20260903-ca60bfdc96f1"
   },
   "rw_palisades_pack_26": null,
-  "rw_palisades_poncho_26": null,
+  "rw_palisades_poncho_26": {
+    "video": "/images/products/catalog/rw_palisades_poncho_26/videos/88efe8a5d123a5a261eed3be40ff36cab0709b465fdc337601b2d05d0c191aff/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ac64ec05-75c9-45f1-adb8-ed8b965d6ebe",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "dc8d88e1426c26e116d8d428f4ffd480c611dda43d92a7edd444368e1abccfc6",
+      "downloadEvidenceSha256": "6cba5977749a9362ed9b85714529f5160d3ec13a8161a9aa49bf9705c91e4c36"
+    }
+  },
   "rw_polartrex_boots_26fw": {
     "video": "/images/products/catalog/rw_polartrex_boots_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -1193,7 +1229,23 @@
     "videoQuality": "approved_dog_wearing",
     "videoJobId": "2d00af63-220e-4adf-b548-d71151c994b9"
   },
-  "rw_sunshower_coverall_25fw": null,
+  "rw_sunshower_coverall_25fw": {
+    "video": "/images/products/catalog/rw_sunshower_coverall_25fw/videos/a9d325fd3ee33c59a4018f77392a519a58bec1ed617174152d6cea39d81fca32/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "f83a1164-d179-45b0-80cf-4d2b2ec3e0c1",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "280e6c01ab0a15fe654d3f68e1c70e4bdcfc6740e2558a6a1a35cc38dede2355",
+      "downloadEvidenceSha256": "19d496172fdcfb64bf8775785fa5077d91c37be3a46c7ef8668a35d4cd04b9ac"
+    }
+  },
   "rw_sunshower_jacket": {
     "video": "/images/products/catalog/rw_sunshower_jacket/videos/b01a20b5b22487f02aa2d2ecc74f09ca173f8b6eeb4ac6d147b8b5b5a30c18b7/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

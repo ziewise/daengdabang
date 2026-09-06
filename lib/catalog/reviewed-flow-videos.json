@@ -4799,5 +4799,271 @@
         "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
       ]
     }
+  },
+  "rw_palisades_poncho_26": {
+    "folder": "rw_palisades_poncho_26",
+    "productId": "p_29",
+    "video": "/images/products/catalog/rw_palisades_poncho_26/videos/88efe8a5d123a5a261eed3be40ff36cab0709b465fdc337601b2d05d0c191aff/hover.mp4",
+    "sha256": "88efe8a5d123a5a261eed3be40ff36cab0709b465fdc337601b2d05d0c191aff",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "ac64ec05-75c9-45f1-adb8-ed8b965d6ebe",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "dc8d88e1426c26e116d8d428f4ffd480c611dda43d92a7edd444368e1abccfc6",
+      "downloadEvidenceSha256": "6cba5977749a9362ed9b85714529f5160d3ec13a8161a9aa49bf9705c91e4c36"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "ac64ec05-75c9-45f1-adb8-ed8b965d6ebe",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "dc8d88e1426c26e116d8d428f4ffd480c611dda43d92a7edd444368e1abccfc6",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T11:14:39.284965+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_palisades_poncho_26\\root-final-approval.json",
+        "sha256": "16aae3c1e40be7fec84f7500a98275f32ff09e5bdf14f381f0fbfd114f9e836c",
+        "bytes": 3607
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_palisades_poncho_26\\qa-omni-01\\qualified-qa.json",
+        "sha256": "6f51963f2bde7afe100376595fdc5cba1f523c138ff11c9024795930022d1f81",
+        "bytes": 3620
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\proofs\\rw_palisades_poncho_26-attempt1-proof.json",
+        "sha256": "6cba5977749a9362ed9b85714529f5160d3ec13a8161a9aa49bf9705c91e4c36",
+        "bytes": 2278
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_palisades_poncho_26\\flow-submission.projection.json",
+        "sha256": "d8b34dad12e5891598a5bb10a209a63e362190dc45d43f5c1bd29d20b7ca2483",
+        "bytes": 7400
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_palisades_poncho_26\\sample-pack.original.json",
+        "sha256": "d71b7fa7a9b21935d1d8d9e8f5a5070086781d0e815bd79ea9c5f6fa765e561e",
+        "bytes": 10265
+      },
+      "limitations": [
+        "Hidden upper-back label, cord and lock, covered body, microscopic letters and physical XXSmall33–43cm chest are not certified.",
+        "Head lowering/raising and settling are observed; exact adherence to no head raising or tiny movement wording is not claimed.",
+        "Exact blink count and perfect start/end loop are not certified.",
+        "Manual scope18 temporal samples plus native096 is distinct from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
+  },
+  "rw_sunshower_coverall_25fw": {
+    "folder": "rw_sunshower_coverall_25fw",
+    "productId": "p_38",
+    "video": "/images/products/catalog/rw_sunshower_coverall_25fw/videos/a9d325fd3ee33c59a4018f77392a519a58bec1ed617174152d6cea39d81fca32/hover.mp4",
+    "sha256": "a9d325fd3ee33c59a4018f77392a519a58bec1ed617174152d6cea39d81fca32",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "f83a1164-d179-45b0-80cf-4d2b2ec3e0c1",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "280e6c01ab0a15fe654d3f68e1c70e4bdcfc6740e2558a6a1a35cc38dede2355",
+      "downloadEvidenceSha256": "19d496172fdcfb64bf8775785fa5077d91c37be3a46c7ef8668a35d4cd04b9ac"
+    },
+    "videoQuality": "approved_dog_wearing",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "f83a1164-d179-45b0-80cf-4d2b2ec3e0c1",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "280e6c01ab0a15fe654d3f68e1c70e4bdcfc6740e2558a6a1a35cc38dede2355",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T11:36:35.280846+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_sunshower_coverall_25fw\\root-final-approval.json",
+        "sha256": "83268200360cb1fd61ce6abd570def44042b1ae9184c4d0b691e05be914a477f",
+        "bytes": 3657
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_sunshower_coverall_25fw\\qa-omni-01\\qualified-qa.json",
+        "sha256": "7fbedda5228fda3b13fe68862545491d6dbf5a2dc5df07ccc5c74ed6f0a5ee74",
+        "bytes": 3765
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\proofs\\rw_sunshower_coverall_25fw-attempt1-proof.json",
+        "sha256": "19d496172fdcfb64bf8775785fa5077d91c37be3a46c7ef8668a35d4cd04b9ac",
+        "bytes": 2306
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_sunshower_coverall_25fw\\flow-submission.projection.json",
+        "sha256": "1d2c3bdc8b80a09488d7c4abd2a16f014e101cac125b8a4cd8c3f1d4f90aed0c",
+        "bytes": 7501
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_sunshower_coverall_25fw\\sample-pack.original.json",
+        "sha256": "6129dde150d6ca11a6ae473f8f3a7224985bfef9ddb59c561dd8ec1d394304f4",
+        "bytes": 10503
+      },
+      "limitations": [
+        "Hidden full underside zipper, upper-back light loop and patch, microscopic letters, exact fabric detail and physical XXSmall33–43cm chest are not certified.",
+        "Exact nearly-stationary motion wording is not achieved; observed head turns are accepted with stable product body.",
+        "Complete start/end seamless loop and exact blink count are not certified.",
+        "Manual scope18 temporal samples plus native096 differs from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
+  },
+  "rw_hookacone": {
+    "folder": "rw_hookacone",
+    "productId": "p_59",
+    "video": "/images/products/catalog/rw_hookacone/videos/0fcfcd33abf0754b7d9dcfaf864a9b3acec6b8389b56927ba318adecd6f55026/hover.mp4",
+    "sha256": "0fcfcd33abf0754b7d9dcfaf864a9b3acec6b8389b56927ba318adecd6f55026",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "8a32107d-764c-429e-9379-8b88a506459b",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "d34e1b75896681f8c4bf3d3491cb2e72347d4b486edc1c2be28433e539b12770",
+      "downloadEvidenceSha256": "960ccdf27148558d9a7ba6ef43f2b617374d300dc958ad433327f71818794af5"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "8a32107d-764c-429e-9379-8b88a506459b",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "d34e1b75896681f8c4bf3d3491cb2e72347d4b486edc1c2be28433e539b12770",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T11:50:44.570247+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_hookacone\\root-final-approval.json",
+        "sha256": "8e46ebefce368eb387eb922e471d153d8571d59fd02e409a1d87081f96451e76",
+        "bytes": 3479
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_hookacone\\qa-omni-01\\qualified-qa.json",
+        "sha256": "c294eb6c2ea8d5a12cd96f329808ad0d8b832ed3f6409b48ae9c0a03c5980c3c",
+        "bytes": 3542
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\proofs\\rw_hookacone-attempt1-proof.json",
+        "sha256": "960ccdf27148558d9a7ba6ef43f2b617374d300dc958ad433327f71818794af5",
+        "bytes": 2208
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_hookacone\\flow-submission.projection.json",
+        "sha256": "eaf044160558a48c1e4d867022fd11dfc3991bf8b0caba5ceca82c429450820f",
+        "bytes": 7170
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_hookacone\\sample-pack.original.json",
+        "sha256": "923d9b4a8edbd81e66af13ebf6d6244e3274f79502cb30d67b81e1cfac8a08fa",
+        "bytes": 9358
+      },
+      "limitations": [
+        "Actual7.5x10cm dimensions, hidden rope attachment, microscopic letters and exact marbling are not certified.",
+        "Movement is greater than tiny prompt wording and start/end head poses differ; seamless loop is not certified. No pickup, chewing or tugging success is claimed.",
+        "Manual18 temporal samples plus native096 differs from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
+  },
+  "rw_mteverrest_cotcover_26fw": {
+    "folder": "rw_mteverrest_cotcover_26fw",
+    "productId": "p_335",
+    "video": "/images/products/catalog/rw_mteverrest_cotcover_26fw/videos/cd5e77fb2653f65198e6d36f3a6ecf8ffe755273d91c661d4a20f00e4c03b490/hover.mp4",
+    "sha256": "cd5e77fb2653f65198e6d36f3a6ecf8ffe755273d91c661d4a20f00e4c03b490",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+      "providerSceneId": "c7e064b9-abad-4aec-8bf0-650d1bdc1e44",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "6bcae651b157c4616f2af845a835e91dbcb0667efb5206c25ef6bef3995ff373",
+      "downloadEvidenceSha256": "6f7aba5b646f1817e1d280666dec7e0855ded46755c2f3a07c2181c20ab61f5a"
+    },
+    "videoQuality": "approved_dog_using",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "65de29d5-82e7-4793-a0ad-4052c7199f04",
+    "providerSceneId": "c7e064b9-abad-4aec-8bf0-650d1bdc1e44",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "6bcae651b157c4616f2af845a835e91dbcb0667efb5206c25ef6bef3995ff373",
+    "durationSeconds": 8,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-06T12:20:22.845573+00:00",
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_mteverrest_cotcover_26fw\\root-final-approval.json",
+        "sha256": "de9151fc4db09b4a567f31039a9724df7d24e20047563cbcb37af797c5f1301d",
+        "bytes": 3703
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\web-rpa\\rw_mteverrest_cotcover_26fw\\qa-omni-01\\qualified-qa.json",
+        "sha256": "c461e4a8da6150c9dfd1f30d9c5a3bd0aa8d0f340eb6032a5b4c87f00aeedc22",
+        "bytes": 3581
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\proofs\\rw_mteverrest_cotcover_26fw-attempt1-proof.json",
+        "sha256": "6f7aba5b646f1817e1d280666dec7e0855ded46755c2f3a07c2181c20ab61f5a",
+        "bytes": 2313
+      },
+      "sourceSubmission": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_mteverrest_cotcover_26fw\\flow-submission.projection.json",
+        "sha256": "4fdaff7a7927efe68d32f8dd19c2c138ef46dcd002e02b890c4821d2f9dbfd7f",
+        "bytes": 7426
+      },
+      "samplePack": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch14-registration-proposal\\evidence\\rw_mteverrest_cotcover_26fw\\sample-pack.original.json",
+        "sha256": "85f6f374f4ccdd18e25d53867d6108a627ab487af619d4d5b5d8a091275392ab",
+        "bytes": 9981
+      },
+      "limitations": [
+        "Supporting cot is separately sold prop. Hidden hardware, physical76x96x20cm, microscopic text/weave and concealed rear anatomy are not certified.",
+        "Resting head displacement is greater than tiny wording, and start/end head position differs; seamless loop is not certified.",
+        "Manual18 temporal samples plus native096 differs from192 technically decoded frames. Raw audio not auditioned and must be removed.",
+        "Root final publication approval is recorded, but no registration, deployment or publication has happened in this task."
+      ]
+    }
   }
 }

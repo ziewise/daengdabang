@@ -244,23 +244,11 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         videoJobId: "old-review",
     });
 
-    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch13.json"));
+    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch14.json"));
     assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);
-    for (const folder of [
-        "rw_backtrak_evac_kit",
-        "id_treat_sardine",
-        "heyrex_taurus_filter_5p",
-        "icecream_realcheese",
-        "bm_kibble_9kg",
-        "rs_bowl",
-        "rw_swampcooler_zipvest",
-        "rw_sunshower_coverall_25fw",
-        "rw_hiandlight_harness_26",
-        "ot_goliath_harness",
-        "rw_everest_coat_25fw",
-    ]) {
+    for (const folder of expected.nullOverrideFolders) {
         const quarantined = applyReviewedHoverOverride(base(folder));
         assert.equal(quarantined.videoProvider, undefined);
         assert.equal(quarantined.videoQuality, undefined);
