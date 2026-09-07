@@ -2,6 +2,8 @@ import { sameCatalogFlowIdentity } from "./catalog/flow-generation-identity.mjs"
 import reviewedFlowVideos from "./catalog/reviewed-flow-videos.json" with { type: "json" };
 import reviewedLegacyVideos from "./catalog/reviewed-legacy-videos.json" with { type: "json" };
 import { matchesReviewedLegacyVideo } from "./catalog/reviewed-legacy-video.mjs";
+import reviewedPhotoMotionVideos from "./catalog/reviewed-photo-motion-videos.json" with { type: "json" };
+import { matchesReviewedPhotoMotionVideo } from "./catalog/reviewed-photo-motion-video.mjs";
 
 export type PetTryOnEligibilityReason =
     | "eligible"
@@ -26,6 +28,7 @@ type PetTryOnProductIdentity = {
         videoQuality?: string;
         videoJobId?: string | null;
         videoGenerationIdentity?: Record<string, unknown>;
+        videoEditIdentity?: Record<string, unknown>;
         videoReviewClass?: string;
         videoReviewSha256?: string;
     };
@@ -176,6 +179,9 @@ export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string
     const video = product.video?.trim();
     if (!video) return undefined;
     const raw = product.raw;
+    if (raw?.videoProvider === "ddb_exact_product_renderer") {
+        return matchesReviewedPhotoMotionVideo(product, reviewedPhotoMotionVideos) ? video : undefined;
+    }
     if (raw?.videoProvider === "unknown" || raw?.videoReviewClass != null) {
         return matchesReviewedLegacyVideo(product, reviewedLegacyVideos) ? video : undefined;
     }

@@ -232,7 +232,7 @@ test("archived still-photo renderer clips remain withheld without a motion revie
     }
 });
 
-test("strict catalog re-review quarantines every still-photo pan-zoom replacement", async () => {
+test("catalog re-review preserves the withheld set alongside separately approved content edits", async () => {
     const { applyReviewedHoverOverride } = await import("../lib/catalog/reviewed-hover-overrides.ts");
     const overrides = JSON.parse(await source("lib/catalog/reviewed-hover-overrides.json"));
     const base = (folder) => ({
@@ -244,7 +244,7 @@ test("strict catalog re-review quarantines every still-photo pan-zoom replacemen
         videoJobId: "old-review",
     });
 
-    const expected = JSON.parse(await source("tests/fixtures/flow-publication-batch17.json"));
+    const expected = JSON.parse(await source("tests/fixtures/photo-publication-batch18.json"));
     assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);

@@ -46,6 +46,15 @@ export interface CatalogRow {
     videoJobId?: string | null;
     /** Exact reviewed scene-download identity; never a fabricated job ID. */
     videoGenerationIdentity?: Record<string, unknown>;
+    /** Actual source-photo edit provenance; not a generated video job. */
+    videoEditIdentity?: {
+        method: "source_photo_motion_edit";
+        sourceImageSha256: string;
+        recipeSha256: string;
+        technicalReviewSha256: string;
+        visualReviewSha256: string;
+        durationSeconds: 4;
+    };
     /** Reuse review class is distinct from the original generation provider. */
     videoReviewClass?: "legacy_reviewed";
     videoReviewSha256?: string;

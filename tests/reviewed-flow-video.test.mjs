@@ -9,7 +9,7 @@ import { videoBrandingMode } from "../lib/catalog/video-branding.ts";
 const read = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), "utf8"));
 const reviews = read("../lib/catalog/reviewed-flow-videos.json");
 const raw = read("../lib/catalog/raw.json");
-const expected = read("./fixtures/flow-publication-batch17.json");
+const expected = read("./fixtures/photo-publication-batch18.json");
 test("the reviewed Flow list matches the exact separately approved release snapshot", () => {
     assert.deepEqual(Object.keys(reviews).sort(), Object.keys(expected.approvedFlow).sort());
     const rawText = readFileSync(new URL("../lib/catalog/raw.json", import.meta.url), "utf8");
@@ -62,7 +62,9 @@ for (const [folder, review] of Object.entries(reviews)) {
 
 test("the exact reviewed Flow products retain the remaining explicit hover quarantine set", () => {
     const overrides = read("../lib/catalog/reviewed-hover-overrides.json");
-    const held = Object.entries(overrides).filter(([, value]) => value === null || value.videoProvider === "ddb_exact_product_renderer");
+    const held = Object.entries(overrides).filter(([folder, value]) => value === null || (
+        value.videoProvider === "ddb_exact_product_renderer" && !Object.hasOwn(expected.approvedPhotoEdits, folder)
+    ));
     assert.deepEqual(held.map(([folder]) => folder).sort(), expected.heldOverrideFolders);
     for (const [folder] of held) {
         const row = raw.find((item) => item.folder === folder);

@@ -3,6 +3,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { matchesReviewedLegacyVideo } from "../lib/catalog/reviewed-legacy-video.mjs";
 import { sameCatalogFlowIdentity } from "../lib/catalog/flow-generation-identity.mjs";
+import { matchesReviewedPhotoMotionVideo } from "../lib/catalog/reviewed-photo-motion-video.mjs";
 
 const PRODUCT_ASSET_PREFIX = "images/products/catalog/";
 const CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
@@ -72,27 +73,33 @@ function isReviewedLegacyRow(row, reviews) {
     return matchesReviewedLegacyVideo({ id: `p_${row.no}`, folder: row.folder, video: row.video, raw: row }, reviews);
 }
 
+function isReviewedPhotoMotionRow(row, reviews) {
+    return matchesReviewedPhotoMotionVideo({ id: `p_${row.no}`, folder: row.folder, video: row.video, raw: row }, reviews);
+}
+
 function withoutHoverVideo(row) {
     const withdrawn = { ...row };
-    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId", "videoReviewClass", "videoReviewSha256"]) {
+    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId", "videoGenerationIdentity", "videoEditIdentity", "videoReviewClass", "videoReviewSha256"]) {
         delete withdrawn[key];
     }
     return withdrawn;
 }
 
-function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews, legacyReviews) {
+function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews, legacyReviews, photoMotionReviews) {
     return (Array.isArray(rawCatalog) ? rawCatalog : []).map((row) => {
         const folder = row?.folder || "";
         if (!Object.prototype.hasOwnProperty.call(overrides, folder)) return row;
         const override = overrides[folder];
-        // Keep artifact validation aligned with the storefront publication
-        // gate. Exact-product renderer clips are still-photo pan/zoom renders,
-        // not reviewed true-motion hover videos, so they must be withdrawn.
-        if (override === null || override?.videoProvider === "ddb_exact_product_renderer") {
+        // An edit needs a distinct source/content review. Old renderer labels
+        // and dog-motion reviews cannot authorize a source-photo edit.
+        if (override === null) {
             return withoutHoverVideo(row);
         }
         return { ...row, ...override };
     }).map((row) => {
+        if (row?.videoProvider === "ddb_exact_product_renderer") {
+            return isReviewedPhotoMotionRow(row, photoMotionReviews) ? row : withoutHoverVideo(row);
+        }
         if (row?.videoProvider === "unknown" || row?.videoReviewClass != null) {
             return isReviewedLegacyRow(row, legacyReviews) ? row : withoutHoverVideo(row);
         }
@@ -156,6 +163,7 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
                 "lib/catalog/hover-review-20260906.json",
                 "lib/catalog/reviewed-flow-videos.json",
                 "lib/catalog/reviewed-legacy-videos.json",
+                "lib/catalog/reviewed-photo-motion-videos.json",
                 "lib/catalog/colors.json",
                 "lib/external-products/feed.json",
             ]).has(repoRelative)) continue;
@@ -224,7 +232,8 @@ export async function preparePagesArtifact({
         {},
     );
     const legacyReviews = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-legacy-videos.json"), {});
-    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews, legacyReviews);
+    const photoMotionReviews = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-photo-motion-videos.json"), {});
+    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews, legacyReviews, photoMotionReviews);
     const catalogCdnVideos = new Set(
         publicationCatalog
             .filter((row) => row?.videoDelivery === "jsdelivr_commit_cdn")
@@ -253,6 +262,7 @@ export async function preparePagesArtifact({
             .filter((row) => (
                 row?.videoDelivery === "jsdelivr_commit_cdn"
                 && (isReviewedLegacyRow(row, legacyReviews)
+                || isReviewedPhotoMotionRow(row, photoMotionReviews)
                 || (row?.videoProvider === "google_flow_web" && isReviewedFlowRow(row, flowReviews))
                 || (REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
                 && REVIEWED_VIDEO_QUALITIES.has(row?.videoQuality)

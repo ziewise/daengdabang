@@ -8,6 +8,39 @@ import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
 
 const COMMIT_SHA = "a".repeat(40);
 
+async function photoMotionFixture(t, { includeCdnUrl = true, reviewed = true } = {}) {
+    const root = await fixture(t, { includeCdnUrl: false });
+    const video = `/images/products/catalog/sample/videos/${'b'.repeat(64)}/hover.mp4`;
+    const identity = {method:'source_photo_motion_edit',durationSeconds:4,sourceImageSha256:'1'.repeat(64),recipeSha256:'2'.repeat(64),technicalReviewSha256:'3'.repeat(64),visualReviewSha256:'4'.repeat(64)};
+    const row = {no:230,folder:'sample',image:'/images/products/catalog/sample/sample.webp',video,
+        videoDelivery:'jsdelivr_commit_cdn',videoProvider:'ddb_exact_product_renderer',videoQuality:'approved_product_contents',videoJobId:null,videoEditIdentity:identity};
+    const review = {...row, productId:'p_230',sha256:'b'.repeat(64),publicationStatus:'approved',
+        sourceImagePath:'/images/products/catalog/sample/details/official-visual-01.webp',
+        reviewScope:'verified_product_contents_without_live_dog',durationSeconds:4,width:720,height:720,frameCount:96,fps:24,
+        checks:Object.fromEntries(['sourceProvenance','contentsMatch','sourcePhotoOnly','branding','loop','fullDecode','noLiveDog','noNewProductGeometry'].map(k=>[k,true]))};
+    await write(root,'lib/catalog/raw.json',JSON.stringify([row]));
+    await write(root,'lib/catalog/reviewed-hover-overrides.json',JSON.stringify({sample:row}));
+    await write(root,'lib/catalog/reviewed-photo-motion-videos.json',JSON.stringify(reviewed?{sample:review}:{}));
+    await write(root,'out/index.html',includeCdnUrl?`<video src="https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${COMMIT_SHA}/public${video}"></video>`:'<p>No video published</p>');
+    await write(root,`out${video}`,'source-photo-video-fixture');
+    return {root,video};
+}
+
+test('Pages requires the exact 4-second photo-edit review and a commit-pinned build URL', async t => {
+    const {root,video}=await photoMotionFixture(t);
+    const result=await preparePagesArtifact({repoRoot:root,outRoot:path.join(root,'out'),commitSha:COMMIT_SHA,maxBytes:1_000_000});
+    assert.equal(result.requiredReviewedCdnVideoCount,1);
+    assert.equal(result.catalogCdnVideoCount,1);
+    await assert.rejects(fs.access(path.join(root,`out${video}`)));
+});
+
+test('Pages refuses missing pinned photo-edit output and unapproved photo-edit CDN references', async t => {
+    const missing=await photoMotionFixture(t,{includeCdnUrl:false});
+    await assert.rejects(preparePagesArtifact({repoRoot:missing.root,outRoot:path.join(missing.root,'out'),commitSha:COMMIT_SHA,maxBytes:1_000_000}),/reviewed video CDN URL\(s\) were not pinned/);
+    const unapproved=await photoMotionFixture(t,{reviewed:false});
+    await assert.rejects(preparePagesArtifact({repoRoot:unapproved.root,outRoot:path.join(unapproved.root,'out'),commitSha:COMMIT_SHA,maxBytes:1_000_000}),/absent from the catalog/);
+});
+
 async function write(root, relative, value = "fixture") {
     const target = path.join(root, relative);
     await fs.mkdir(path.dirname(target), { recursive: true });
@@ -148,17 +181,11 @@ test("Pages artifact omits catalog videos that the storefront safety gate did no
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/videos/hover.mp4")));
 });
 
-test("Pages artifact fails closed when a reviewed video was not commit-pinned into the build", async (t) => {
+test("Pages artifact withdraws a renderer label without an exact source/content review", async (t) => {
     const root = await fixture(t, { includeCdnUrl: false, approvedMetadata: true });
-    await assert.rejects(
-        preparePagesArtifact({
-            repoRoot: root,
-            outRoot: path.join(root, "out"),
-            commitSha: COMMIT_SHA,
-            maxBytes: 1_000_000,
-        }),
-        /reviewed video CDN URL\(s\) were not pinned/,
-    );
+    const result = await preparePagesArtifact({repoRoot:root,outRoot:path.join(root,"out"),commitSha:COMMIT_SHA,maxBytes:1_000_000});
+    assert.equal(result.catalogCdnVideoCount, 0);
+    await assert.rejects(fs.access(path.join(root,"out/images/products/catalog/sample/videos/hover.mp4")));
 });
 
 test("Pages artifact uses the same reviewed hover withdrawal gate as the storefront", async (t) => {
