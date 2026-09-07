@@ -5977,5 +5977,176 @@
     "demonstratedProductFunction": false,
     "providerWatermarkVisuallyConfirmed": false,
     "providerWatermarkPreservationBasis": "Entire original source frame retained without crop, covering or removal; visible mark identity remains uncertain."
+  },
+  "soopa_dental_kaleapple": {
+    "folder": "soopa_dental_kaleapple",
+    "productId": "p_291",
+    "video": "/images/products/catalog/soopa_dental_kaleapple/videos/d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0/hover.mp4",
+    "sha256": "d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "9bd4322d-a607-4906-ab22-fa93217d295d",
+      "providerSceneId": "025c7409-9db2-4707-92d3-66216283bbca",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "2e998e3c50f909e6a1950b27070c04e2369d13c5b741b292fef4a8b43b22dc10",
+      "downloadEvidenceSha256": "204993ff9f88fe45e6a3f1dbb611ecc84dc7d86c3ab9f134937efdebba15a808"
+    },
+    "videoQuality": "approved_product_contents",
+    "publicationStatus": "approved",
+    "provider": "google_flow_web",
+    "model": "Omni 1.1 Flash",
+    "sourceProjectId": "9bd4322d-a607-4906-ab22-fa93217d295d",
+    "providerSceneId": "025c7409-9db2-4707-92d3-66216283bbca",
+    "actualGenerationJobId": null,
+    "mediaAssetId": null,
+    "sourceVideoSha256": "2e998e3c50f909e6a1950b27070c04e2369d13c5b741b292fef4a8b43b22dc10",
+    "durationSeconds": 4,
+    "width": 720,
+    "height": 720,
+    "branding": "baked",
+    "ddbLogoCount": 1,
+    "providerWatermarkPreserved": true,
+    "reviewedAt": "2026-09-07T17:06:50.503767+00:00",
+    "reviewPolicy": "ddb.real-contents-demo-4s.v1",
+    "demonstratedProductFunction": false,
+    "humanApprovalClaimed": false,
+    "fullRawFramePreserved": false,
+    "renderRecipe": {
+      "reference": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch20-real-contents\\loop-candidates.json",
+        "sha256": "def6364a571bb96d2d808b8be79e321d6ffaf4417134c04209ecfa14a5a59008",
+        "bytes": 5678
+      },
+      "sourceFrameOrder": "0..47,47..0",
+      "crop": [
+        0,
+        560,
+        720,
+        720
+      ],
+      "sceneRect": [
+        40,
+        0,
+        640,
+        640
+      ],
+      "fullRawFramePreservedSpatially": false,
+      "upperPackageOmitted": true,
+      "newGenerationCountByEdit": 0
+    },
+    "reviewEvidence": {
+      "rootFinalApproval": {
+        "path": "C:\\DaengDaBang\\outputs\\hover-alternative-20260906\\web-rpa\\soopa_dental_kaleapple\\attempt-02\\root-final-approval.json",
+        "sha256": "fe3b70ae24f520ac78f4cf418b02bfa9ba0e72eb3c2eccf1ef5cda291478ea80",
+        "bytes": 5737
+      },
+      "qualifiedQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch20-real-contents\\independent-media77-final\\independent-policy-review.json",
+        "sha256": "e2014980394b21b770ba583cd63f540b03cd75a47e6174cba8496982e502ceb6",
+        "bytes": 9945
+      },
+      "sceneDownload": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\real-contents-native-download-proposal\\actual-source\\native-download-certificate.json",
+        "sha256": "204993ff9f88fe45e6a3f1dbb611ecc84dc7d86c3ab9f134937efdebba15a808",
+        "bytes": 2505
+      },
+      "sourceSubmission": {
+        "path": "C:\\DaengDaBang\\outputs\\hover-alternative-20260906\\web-rpa\\soopa_dental_kaleapple\\attempt-02\\flow-submission.json",
+        "sha256": "2e701cada2597d64a927863c278c86c259f6870588407f904055dcfbf3230e53",
+        "bytes": 5173
+      },
+      "samplePack": {
+        "path": "C:\\DaengDaBang\\outputs\\hover-alternative-20260906\\web-rpa\\soopa_dental_kaleapple\\attempt-02\\sample-pack.json",
+        "sha256": "739636925313153f91c548246f4ab0b405081da75e2c10d0a8b832a140d2f25b",
+        "bytes": 4089
+      },
+      "limitations": [
+        "내용물 closeup 승인 범위입니다. 포장 상단/브랜드명 일부는 고정 crop으로 생략되며 전체 원본 프레임 보존을 주장하지 않습니다.",
+        "생성 원본의 첫48프레임을 순방향/역방향 편집한 4초 루프입니다. 원본 4.01초 전체를 그대로 재생하는 영상은 아닙니다.",
+        "전체96프레임 디코딩과 실제 원본 기반96프레임 렌더 재검산을 했고, 직접시각검수는 contact와 명시된native프레임입니다. 전체사람시청을 주장하지 않습니다.",
+        "손실압축으로 첫·끝 RGB는 동일하지 않습니다. 미세문자·실측길이·숨은면·섭취안전 또는 기능효과를 인증하지 않습니다.",
+        "이 독립검수는 최종 Root 게시승인을 대신하지 않습니다."
+      ]
+    },
+    "realContentsDemo": {
+      "productId": "p_291",
+      "folder": "soopa_dental_kaleapple",
+      "candidateSha256": "d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0",
+      "rawSha256": "2e998e3c50f909e6a1950b27070c04e2369d13c5b741b292fef4a8b43b22dc10",
+      "sourceMethod": "native_image_to_video",
+      "sceneMode": "real_contents_demo",
+      "dogRequired": false,
+      "demonstratedProductFunction": false,
+      "humanApprovalClaimed": false,
+      "sourceReferences": [
+        {
+          "path": "C:\\DaengDaBang\\.codex\\manufacturer-visual-v3-20260902\\public\\images\\products\\catalog\\soopa_dental_kaleapple\\soopa_dental_kaleapple.png",
+          "sha256": "176fa6dcba3de6251c6a0fbabe97212372179eb256e38b1d531dbcf59c1f6cff",
+          "bytes": 573476
+        }
+      ],
+      "technical": {
+        "durationSeconds": 4,
+        "width": 720,
+        "height": 720,
+        "fps": 24,
+        "frameCount": 96,
+        "audioStreams": 0
+      },
+      "branding": {
+        "ddbLogoCount": 1,
+        "logoPosition": "bottom-right",
+        "providerMarksPreserved": true
+      },
+      "checks": {
+        "contentsIdentity": true,
+        "cameraLocked": true,
+        "realObjectMotion": true,
+        "noLiveDog": true,
+        "branding": true,
+        "providerMarkPreserved": true,
+        "fullDecode": true,
+        "productIdentity": true,
+        "scale": true,
+        "motion": true
+      },
+      "renderRecipe": {
+        "reference": {
+          "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch20-real-contents\\loop-candidates.json",
+          "sha256": "def6364a571bb96d2d808b8be79e321d6ffaf4417134c04209ecfa14a5a59008",
+          "bytes": 5678
+        },
+        "sourceFrameOrder": "0..47,47..0",
+        "crop": [
+          0,
+          560,
+          720,
+          720
+        ],
+        "sceneRect": [
+          40,
+          0,
+          640,
+          640
+        ],
+        "fullRawFramePreservedSpatially": false,
+        "upperPackageOmitted": true,
+        "newGenerationCountByEdit": 0
+      },
+      "schemaVersion": "ddb.real-contents-demo-review.v1",
+      "rootApproval": {
+        "path": "C:\\DaengDaBang\\outputs\\hover-alternative-20260906\\web-rpa\\soopa_dental_kaleapple\\attempt-02\\root-final-approval.json",
+        "sha256": "fe3b70ae24f520ac78f4cf418b02bfa9ba0e72eb3c2eccf1ef5cda291478ea80",
+        "bytes": 5737
+      },
+      "independentQa": {
+        "path": "D:\\DaengDaBangData\\outputs\\hover-alternative-20260906\\release\\batch20-real-contents\\independent-media77-final\\independent-policy-review.json",
+        "sha256": "e2014980394b21b770ba583cd63f540b03cd75a47e6174cba8496982e502ceb6",
+        "bytes": 9945
+      }
+    }
   }
 }

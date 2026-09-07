@@ -1498,7 +1498,23 @@
   "soopa_dental_carrotpumpkin": null,
   "soopa_dental_coconutchia": null,
   "soopa_dental_cranberrysweetpotato": null,
-  "soopa_dental_kaleapple": null,
+  "soopa_dental_kaleapple": {
+    "video": "/images/products/catalog/soopa_dental_kaleapple/videos/d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0/hover.mp4",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoProvider": "google_flow_web",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": null,
+    "videoGenerationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "9bd4322d-a607-4906-ab22-fa93217d295d",
+      "providerSceneId": "025c7409-9db2-4707-92d3-66216283bbca",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "2e998e3c50f909e6a1950b27070c04e2369d13c5b741b292fef4a8b43b22dc10",
+      "downloadEvidenceSha256": "204993ff9f88fe45e6a3f1dbb611ecc84dc7d86c3ab9f134937efdebba15a808"
+    }
+  },
   "soopa_healthybites_appleblueberry": {
     "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

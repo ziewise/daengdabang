@@ -1471,5 +1471,26 @@
     "sourceAssetPath": "/images/products/catalog/soopa_dental_coconutchia/details/contents-reference-c8d453719c4f9e81e398c5eed34036965273f416f76a9288bba2972d37ed9693.png",
     "sourceJobId": null,
     "sourceCommit": "eb831b03c10340a03e2c25980fbf971ffefb374c"
+  },
+  "/images/products/catalog/soopa_dental_kaleapple/videos/d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0/hover.mp4": {
+    "branding": "baked",
+    "sha256": "d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0",
+    "logoCount": 1,
+    "logoPosition": "bottom-right",
+    "reviewScope": "logo_presence_only",
+    "reviewedAt": "2026-09-07T17:06:50.503767+00:00",
+    "sourceJobId": null,
+    "generationIdentity": {
+      "kind": "google_flow_scene_download.v1",
+      "provider": "google_flow_web",
+      "projectId": "9bd4322d-a607-4906-ab22-fa93217d295d",
+      "providerSceneId": "025c7409-9db2-4707-92d3-66216283bbca",
+      "actualGenerationJobId": null,
+      "mediaAssetId": null,
+      "rawSha256": "2e998e3c50f909e6a1950b27070c04e2369d13c5b741b292fef4a8b43b22dc10",
+      "downloadEvidenceSha256": "204993ff9f88fe45e6a3f1dbb611ecc84dc7d86c3ab9f134937efdebba15a808"
+    },
+    "sourceVideoSha256": "2e998e3c50f909e6a1950b27070c04e2369d13c5b741b292fef4a8b43b22dc10",
+    "providerWatermarkPreserved": true
   }
 }

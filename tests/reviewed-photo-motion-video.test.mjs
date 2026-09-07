@@ -11,15 +11,17 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
     const read = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url),'utf8'));
     const reviews=read('../lib/catalog/reviewed-photo-motion-videos.json');
     const rows=read('../lib/catalog/raw.json');
+    const flow=read('../lib/catalog/reviewed-flow-videos.json');
     assert.deepEqual(Object.keys(reviews).sort(),['soopa_dental_appleblueberry','soopa_dental_coconutchia','soopa_dental_kaleapple']);
     for(const review of Object.values(reviews)) {
         const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
         const product={id:`p_${raw.no}`,folder:raw.folder,video:raw.video,image:raw.image,raw,subcategory:'treats'};
-        assert.equal(safeCatalogHoverVideo(product),undefined);
+        assert.equal(safeCatalogHoverVideo(product), flow[review.folder]?.video);
+        assert.equal(safeCatalogHoverVideo({...product,video:review.video}),undefined);
         assert.equal(review.publicationStatus,'withdrawn_user_feedback');
         assert.equal(review.withdrawal.reasonCode,'rejected_photo_zoom_motion');
         assert.equal(getPetTryOnEligibility(product).eligible,false);
-        assert.equal(raw.videoJobId,undefined);
+        assert.equal(raw.videoJobId,flow[review.folder] ? null : undefined);
         assert.equal(raw.videoEditIdentity,undefined);
         assert.equal(matchesReviewedPhotoMotionVideo({id:review.productId,folder:review.folder,video:review.video,raw:{...review}},reviews),false);
         for(const [file,digest] of [[review.video,review.sha256],[review.sourceImagePath,review.videoEditIdentity.sourceImageSha256]]) {
@@ -29,8 +31,8 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
         assert.equal(videoBrandingMode(`https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${'a'.repeat(40)}/public${review.video}`),'baked');
     }
     const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
-    assert.equal(active.length,82);
-    assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,75);
+    assert.equal(active.length,83);
+    assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,76);
 });
 
 // Synthetic policy examples do not enter the production authority manifest.

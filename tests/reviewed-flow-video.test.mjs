@@ -9,7 +9,7 @@ import { videoBrandingMode } from "../lib/catalog/video-branding.ts";
 const read = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), "utf8"));
 const reviews = read("../lib/catalog/reviewed-flow-videos.json");
 const raw = read("../lib/catalog/raw.json");
-const expected = read("./fixtures/photo-withdrawal-batch19.json");
+const expected = read("./fixtures/flow-contents-batch20.json");
 test("the reviewed Flow list matches the exact separately approved release snapshot", () => {
     assert.deepEqual(Object.keys(reviews).sort(), Object.keys(expected.approvedFlow).sort());
     const rawText = readFileSync(new URL("../lib/catalog/raw.json", import.meta.url), "utf8");
@@ -36,7 +36,8 @@ for (const [folder, review] of Object.entries(reviews)) {
         assert.equal(safeCatalogHoverVideo(candidate), review.video);
         assert.equal(videoBrandingMode(review.video), "baked");
         assert.equal(createHash("sha256").update(readFileSync(new URL(`../public${review.video}`, import.meta.url))).digest("hex"), review.sha256);
-        assert.equal(review.durationSeconds, 8);
+        assert.equal(review.durationSeconds, folder === 'soopa_dental_kaleapple' ? 4 : 8);
+        if (folder === 'soopa_dental_kaleapple') assert.equal(review.reviewPolicy, 'ddb.real-contents-demo-4s.v1');
         assert.equal(review.ddbLogoCount, 1);
         assert.equal(review.providerWatermarkPreserved, true);
         assert.equal(sourceRow.video, `/images/products/catalog/${folder}/videos/hover.mp4`, "raw legacy source stays unchanged");
@@ -80,7 +81,7 @@ test("the Giraffe display revision preserves the original generation and superse
     const revision = expected.displayRevisions.zs_giraffe;
     const current = reviews.zs_giraffe;
     const old = previous.approvedFlow.zs_giraffe;
-    assert.equal(Object.keys(reviews).length, 75);
+    assert.equal(Object.keys(reviews).length, 76);
     assert.equal(current.videoJobId, old.videoJobId);
     assert.equal(current.videoQuality, old.videoQuality);
     assert.equal(current.model, old.model);
