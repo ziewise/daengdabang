@@ -1444,7 +1444,7 @@
     "sha256": "e5ab65f73e0aef365bd83091cec9883bed87ed018e09c8da9dbfb7dba5b142dc",
     "logoCount": 1,
     "logoPosition": "bottom-right",
-    "reviewScope": "source_photo_contents_and_single_logo",
+    "reviewScope": "logo_presence_only",
     "reviewedAt": "2026-09-07T14:26:38.651647+00:00",
     "sourceAssetPath": "/images/products/catalog/soopa_dental_appleblueberry/details/official-visual-01.webp",
     "sourceJobId": null
@@ -1454,7 +1454,7 @@
     "sha256": "5c36c1e8fbe825353c06d919db8d925f796acb6745a56a8f3ff30e864929a776",
     "logoCount": 1,
     "logoPosition": "bottom-right",
-    "reviewScope": "source_photo_contents_and_single_logo",
+    "reviewScope": "logo_presence_only",
     "reviewedAt": "2026-09-07T14:26:38.651647+00:00",
     "sourceAssetPath": "/images/products/catalog/soopa_dental_kaleapple/details/contents-reference-ca7f6ca26dea726f34fa7696e2bcbca76abfb682ad5a04c6b909ad491dfa67da.png",
     "sourceJobId": null
@@ -1464,7 +1464,7 @@
     "sha256": "e3df6934e9e7c1ea3de3c051cc01ab6827ade9f9a7851a56e621e51995ef4f1f",
     "logoCount": 1,
     "logoPosition": "bottom-right",
-    "reviewScope": "source_photo_contents_and_single_logo",
+    "reviewScope": "logo_presence_only",
     "reviewedAt": "2026-09-07T14:26:38.651647+00:00",
     "sourceAssetPath": "/images/products/catalog/soopa_dental_coconutchia/details/contents-reference-c8d453719c4f9e81e398c5eed34036965273f416f76a9288bba2972d37ed9693.png",
     "sourceJobId": null
