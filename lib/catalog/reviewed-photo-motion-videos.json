@@ -15,7 +15,7 @@
       "visualReviewSha256": "1d88210770bbe6d735799a6baac9555833d99509f3030b648196fc07f6e9aad9",
       "durationSeconds": 4
     },
-    "publicationStatus": "approved",
+    "publicationStatus": "withdrawn_user_feedback",
     "sourceImagePath": "/images/products/catalog/soopa_dental_appleblueberry/details/official-visual-01.webp",
     "reviewScope": "verified_product_contents_without_live_dog",
     "width": 720,
@@ -32,6 +32,14 @@
       "fullDecode": true,
       "noLiveDog": true,
       "noNewProductGeometry": true
+    },
+    "withdrawal": {
+      "recordedAt": "2026-09-07T15:44:49.430460+00:00",
+      "reasonCode": "rejected_photo_zoom_motion",
+      "reasonKo": "사진 확대·축소가 흔들리는 영상처럼 보여 사용자가 거부함",
+      "userInstructionKo": "흘들리는 동영상같은걸하지말고...이상한데?",
+      "restoreOriginalProductPhoto": true,
+      "newGenerationCount": 0
     }
   },
   "soopa_dental_kaleapple": {
@@ -50,7 +58,7 @@
       "visualReviewSha256": "7196a2e9522b41d4e6f8780e3b76972a5ae4a58161c1ad7ebdb4f70eb47f1691",
       "durationSeconds": 4
     },
-    "publicationStatus": "approved",
+    "publicationStatus": "withdrawn_user_feedback",
     "sourceImagePath": "/images/products/catalog/soopa_dental_kaleapple/details/contents-reference-ca7f6ca26dea726f34fa7696e2bcbca76abfb682ad5a04c6b909ad491dfa67da.png",
     "reviewScope": "verified_product_contents_without_live_dog",
     "width": 720,
@@ -67,6 +75,14 @@
       "fullDecode": true,
       "noLiveDog": true,
       "noNewProductGeometry": true
+    },
+    "withdrawal": {
+      "recordedAt": "2026-09-07T15:44:49.430460+00:00",
+      "reasonCode": "rejected_photo_zoom_motion",
+      "reasonKo": "사진 확대·축소가 흔들리는 영상처럼 보여 사용자가 거부함",
+      "userInstructionKo": "흘들리는 동영상같은걸하지말고...이상한데?",
+      "restoreOriginalProductPhoto": true,
+      "newGenerationCount": 0
     }
   },
   "soopa_dental_coconutchia": {
@@ -85,7 +101,7 @@
       "visualReviewSha256": "cfdbd5faea46ee60155e35a71549dbbf06e0a7c4f382556edaa663c0827fb215",
       "durationSeconds": 4
     },
-    "publicationStatus": "approved",
+    "publicationStatus": "withdrawn_user_feedback",
     "sourceImagePath": "/images/products/catalog/soopa_dental_coconutchia/details/contents-reference-c8d453719c4f9e81e398c5eed34036965273f416f76a9288bba2972d37ed9693.png",
     "reviewScope": "verified_product_contents_without_live_dog",
     "width": 720,
@@ -102,6 +118,14 @@
       "fullDecode": true,
       "noLiveDog": true,
       "noNewProductGeometry": true
+    },
+    "withdrawal": {
+      "recordedAt": "2026-09-07T15:44:49.430460+00:00",
+      "reasonCode": "rejected_photo_zoom_motion",
+      "reasonKo": "사진 확대·축소가 흔들리는 영상처럼 보여 사용자가 거부함",
+      "userInstructionKo": "흘들리는 동영상같은걸하지말고...이상한데?",
+      "restoreOriginalProductPhoto": true,
+      "newGenerationCount": 0
     }
   }
 }

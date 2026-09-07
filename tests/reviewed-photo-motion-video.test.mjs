@@ -7,7 +7,7 @@ import { safeCatalogHoverVideo, getPetTryOnEligibility } from '../lib/pet-tryon-
 import { applyReviewedHoverOverride } from '../lib/catalog/reviewed-hover-overrides.ts';
 import { videoBrandingMode } from '../lib/catalog/video-branding.ts';
 
-test('the three reviewed food edits preserve exact source/assets and receive no duplicate brand overlay', () => {
+test('the three user-rejected photo edits stay withdrawn while exact source and assets are preserved', () => {
     const read = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url),'utf8'));
     const reviews=read('../lib/catalog/reviewed-photo-motion-videos.json');
     const rows=read('../lib/catalog/raw.json');
@@ -15,10 +15,13 @@ test('the three reviewed food edits preserve exact source/assets and receive no 
     for(const review of Object.values(reviews)) {
         const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
         const product={id:`p_${raw.no}`,folder:raw.folder,video:raw.video,image:raw.image,raw,subcategory:'treats'};
-        assert.equal(safeCatalogHoverVideo(product),review.video);
+        assert.equal(safeCatalogHoverVideo(product),undefined);
+        assert.equal(review.publicationStatus,'withdrawn_user_feedback');
+        assert.equal(review.withdrawal.reasonCode,'rejected_photo_zoom_motion');
         assert.equal(getPetTryOnEligibility(product).eligible,false);
-        assert.equal(raw.videoJobId,null);
-        assert.equal(raw.videoEditIdentity.durationSeconds,4);
+        assert.equal(raw.videoJobId,undefined);
+        assert.equal(raw.videoEditIdentity,undefined);
+        assert.equal(matchesReviewedPhotoMotionVideo({id:review.productId,folder:review.folder,video:review.video,raw:{...review}},reviews),false);
         for(const [file,digest] of [[review.video,review.sha256],[review.sourceImagePath,review.videoEditIdentity.sourceImageSha256]]) {
             assert.equal(createHash('sha256').update(readFileSync(new URL(`../public${file}`,import.meta.url))).digest('hex'),digest);
         }
@@ -26,7 +29,7 @@ test('the three reviewed food edits preserve exact source/assets and receive no 
         assert.equal(videoBrandingMode(`https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${'a'.repeat(40)}/public${review.video}`),'baked');
     }
     const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
-    assert.equal(active.length,85);
+    assert.equal(active.length,82);
     assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,75);
 });
 
@@ -69,7 +72,7 @@ test('a source-photo edit needs an exact trusted content review, independent of 
 test('wrong duration, dimensions, evidence or review scope never authorize an edit', () => {
     const { product, review } = fixture();
     for (const patch of [
-        {publicationStatus:'pending'}, {durationSeconds:8}, {width:512}, {frameCount:97}, {fps:30},
+        {publicationStatus:'pending'}, {publicationStatus:'withdrawn_user_feedback'}, {durationSeconds:8}, {width:512}, {frameCount:97}, {fps:30},
         {videoJobId:'fake-job'}, {reviewScope:'approved_dog_using'}, {sha256:'x'.repeat(64)},
         {sourceImagePath:'/images/products/catalog/another-flavour/details/official-visual-01.webp'},
         ...Object.keys(review.checks).map(key => ({checks:{...review.checks,[key]:false}})),

@@ -244,7 +244,7 @@ test("catalog re-review preserves the withheld set alongside separately approved
         videoJobId: "old-review",
     });
 
-    const expected = JSON.parse(await source("tests/fixtures/photo-publication-batch18.json"));
+    const expected = JSON.parse(await source("tests/fixtures/photo-withdrawal-batch19.json"));
     assert.deepEqual(Object.keys(overrides).sort(), expected.allOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders);
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders);
