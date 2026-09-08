@@ -141,10 +141,11 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
     const colors = await readJson(path.join(repoRoot, "lib", "catalog", "colors.json"), {});
     for (const [folder, entries] of Object.entries(colors)) {
         for (const entry of Array.isArray(entries) ? entries : []) {
-            for (const key of ["file", "chip"]) {
-                if (entry?.[key]) {
-                    references.add(normalizeAssetPath(`/images/products/catalog/${folder}/colors/${entry[key]}`));
-                }
+            for (const value of [entry?.image || entry?.file, entry?.chip]) {
+                if (!value || /^https?:\/\//i.test(value)) continue;
+                const asset = value.startsWith("/") ? value : `/images/products/catalog/${folder}/colors/${value}`;
+                const normalized = normalizeAssetPath(asset);
+                if (normalized) references.add(normalized);
             }
         }
     }

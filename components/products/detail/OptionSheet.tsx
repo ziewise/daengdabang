@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import ProductColorImage from "@/components/products/ProductColorImage";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { optionPurchaseState, productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
@@ -114,7 +114,8 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
     }, [open]);
 
     // 미리보기 이미지 — 색상을 골랐으면 그 색상, 아니면 대표 이미지(없으면 아이콘)
-    const previewImage = (colorIdx != null ? colors[colorIdx]?.image : p.image) || p.image || "";
+    const selectedColor = colorIdx != null ? colors[colorIdx] : undefined;
+    const previewImage = selectedColor?.image || p.image || "";
 
     // 현재 선택이 "옵션을 다 골랐는지" — 색상 있으면 색상, 사이즈 있으면 사이즈가 모두 선택돼야 true
     const selectionComplete = (!hasColors || colorIdx != null) && (!hasSizes || sizeIdx != null);
@@ -225,7 +226,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                     <div className="flex gap-3 sm:block">
                         <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-[#f7f2e8] sm:mb-3 sm:aspect-square sm:h-auto sm:w-full">
                             {previewImage ? (
-                                <Image key={previewImage} src={previewImage} alt={displayName} fill sizes="(max-width: 640px) 96px, 360px" className="object-cover" />
+                                <ProductColorImage src={previewImage} color={selectedColor} alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName} sizes="(max-width: 640px) 96px, 360px" className={selectedColor ? "object-contain p-[7%]" : "object-cover"} />
                             ) : (
                                 <div className="flex h-full items-center justify-center text-3xl text-neutral-300">
                                     <i className={`fa-solid ${p.icon}`} />
@@ -234,7 +235,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-sm font-bold leading-snug text-neutral-800 sm:line-clamp-none">{displayName}</p>
-                            {p.inventory?.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {p.inventory.sourceDate}</p>}
+                            {p.inventory?.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{p.supplierCatalogSource === "jsk_approved_account" ? (locale === "en" ? "Supplier checked" : "본사 확인일") : (locale === "en" ? "Inventory sheet dated" : "재고표 기준일")}: {p.inventory.sourceDate}</p>}
                             {!summaryState.purchasable && <p role="status" className="mt-2 text-sm font-bold text-amber-900">{purchaseStateLabel(summaryState, locale)}</p>}
                             {hasColors && (
                                 <>
@@ -250,7 +251,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                             const colorStatus = purchaseStateLabel(colorState, locale);
                                             return (
                                             <button
-                                                key={c.image}
+                                                key={`${c.name}-${i}`}
                                                 type="button"
                                                 onClick={() => setColorIdx(i)}
                                                 disabled={!colorState.purchasable}
@@ -263,7 +264,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                                         : "ring-1 ring-neutral-300 hover:ring-indigo-300"
                                                 }`}
                                             >
-                                                <Image src={c.chip} alt={c.name} fill sizes="36px" className="object-cover" />
+                                                <ProductColorImage src={c.chip || c.image} color={c} alt={c.name} sizes="36px" className="object-cover" />
                                                 {!colorState.purchasable && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-white/50 font-black">×</span>}
                                             </button>
                                             );
@@ -343,7 +344,7 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                                     <span className="flex items-center gap-2 font-bold text-neutral-800">
                                         {hasColors && (
                                             <span className="relative h-6 w-6 overflow-hidden rounded-full ring-1 ring-neutral-300">
-                                                <Image src={colors[x.colorIdx]?.chip} alt="" fill sizes="24px" className="object-cover" />
+                                                <ProductColorImage src={colors[x.colorIdx]?.chip || colors[x.colorIdx]?.image} color={colors[x.colorIdx]} alt="" sizes="24px" className="object-cover" />
                                             </span>
                                         )}
                                         {optionLabel(x.colorIdx, x.sizeIdx)} <span className="text-neutral-400">×</span> {x.qty}

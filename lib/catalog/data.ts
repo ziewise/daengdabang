@@ -164,7 +164,19 @@ function buildMeta(row: CatalogRow, price: number) {
     return { popularity, addedAt, reviewCount, rating, discountRate, originalPrice };
 }
 
-type RawColorEntry = { file: string; name: string; chip: string };
+type RawColorEntry = {
+    file?: string;
+    image?: string;
+    name: string;
+    chip?: string;
+    imageWidth?: number;
+    imageHeight?: number;
+    imageRegion?: ProductColor["imageRegion"];
+};
+
+function colorAssetUrl(value: string, directory: string): string {
+    return value.startsWith("/") || /^https?:\/\//i.test(value) ? value : `${directory}/${value}`;
+}
 
 // colors.json(제품 folder → 색상 목록)을 CatalogProduct.colors 로 변환 — 이미지 경로를 완성해서.
 // colors 폴더가 준비된(=sub_image 입력된) 제품만 colors 가 채워지고, 없으면 undefined.
@@ -173,7 +185,22 @@ function buildColors(folder: string | undefined): ProductColor[] | undefined {
     const entries = (colorsData as Record<string, RawColorEntry[]>)[folder];
     if (!entries || entries.length === 0) return undefined;
     const dir = `/images/products/catalog/${folder}/colors`;
-    return entries.map((c) => ({ image: `${dir}/${c.file}`, name: c.name, chip: `${dir}/${c.chip}` }));
+    return entries.map((c) => {
+        const image = c.image || c.file || "";
+        return {
+            image: image ? colorAssetUrl(image, dir) : "",
+            name: c.name,
+            chip: c.chip ? colorAssetUrl(c.chip, dir) : image ? colorAssetUrl(image, dir) : "",
+            ...(c.imageWidth !== undefined ? { imageWidth: c.imageWidth } : {}),
+            ...(c.imageHeight !== undefined ? { imageHeight: c.imageHeight } : {}),
+            ...(c.imageRegion ? { imageRegion: {
+                x: c.imageRegion.x,
+                y: c.imageRegion.y,
+                width: c.imageRegion.width,
+                height: c.imageRegion.height,
+            } } : {}),
+        };
+    });
 }
 
 // sizes.json(제품 folder → 사이즈 이름 목록)을 CatalogProduct.sizes 로 변환.
@@ -213,7 +240,9 @@ function buildCatalog(): CatalogProduct[] {
         return {
             id: `p_${row.no}`,
             no: row.no,
-            name: catalogDisplayName(row.name, row.folder),
+            name: row.supplierCatalogSource === "jsk_approved_account" && row.supplierGoodsNo
+                ? row.name
+                : catalogDisplayName(row.name, row.folder),
             brandKo: row.brandKo,
             brandEn: row.brandEn,
             brandSlug: brandSlug(row),
@@ -230,6 +259,16 @@ function buildCatalog(): CatalogProduct[] {
             image: row.image,
             gallery: row.gallery,
             details: row.details?.map(storefrontOfficialVisualUrl),
+            supplierCatalogSource: row.supplierCatalogSource,
+            supplierGoodsNo: row.supplierGoodsNo,
+            supplierCatalogHistorical: row.supplierCatalogHistorical,
+            supplierDetailImages: row.supplierDetailImages?.map((image) => ({
+                src: storefrontOfficialVisualUrl(image.src),
+                width: image.width,
+                height: image.height,
+                alt: image.alt,
+            })),
+            supplierDetailText: row.supplierDetailText,
             detailImageLabels: storefrontDetailImageLabels(row.detailImageLabels),
             sizeImage: row.sizeImage,
             video: storefrontVideoUrl(reviewedRow, subcategory),
@@ -241,7 +280,7 @@ function buildCatalog(): CatalogProduct[] {
             externalReviewSnippets: row.externalReviewSnippets,
             externalReviewDisclosure: row.externalReviewDisclosure,
             priceBadgeKind: catalogPriceBadgeKind(row.brandEn, row.brandKo),
-            recommendable: row.recommendable === true,
+            recommendable: row.supplierCatalogHistorical !== true && row.recommendable === true,
             availability: row.availability || "unknown",
             operatorReviewedAt: row.operatorReviewedAt,
             raw: reviewedRow,
@@ -254,8 +293,10 @@ function buildCatalog(): CatalogProduct[] {
     });
 }
 
-export const CATALOG: CatalogProduct[] = buildCatalog();
+/** Includes historical products for stable detail routes and existing order/cart references. */
+export const ALL_CATALOG: CatalogProduct[] = buildCatalog();
+export const CATALOG: CatalogProduct[] = ALL_CATALOG.filter((product) => product.supplierCatalogHistorical !== true);
 
 export function findById(id: string): CatalogProduct | undefined {
-    return CATALOG.find((product) => product.id === id || product.folder === id);
+    return ALL_CATALOG.find((product) => product.id === id || product.folder === id);
 }

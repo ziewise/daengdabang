@@ -12,6 +12,7 @@ export type ProductInventory = {
 };
 type InventoryProduct = {
     availability?: string;
+    supplierCatalogHistorical?: boolean;
     inventory?: ProductInventory;
     colors?: Array<{ name: string }>;
     sizes?: Array<{ name: string }>;
@@ -39,7 +40,9 @@ export function inventoryForProduct(document: unknown, folder: string | undefine
     if (!record(document) || !record(document.products) || document.schemaVersion !== 1 || !validSourceDate(document.sourceDate)) return { sourceDate: "", status: "unverified", options: [] };
     if (!Object.hasOwn(document.products, folder)) return undefined;
     const row = document.products[folder];
-    const sourceDate = validSourceDate(document.sourceDate) ? document.sourceDate : "";
+    const sourceDate = record(row) && Object.hasOwn(row, "sourceDate")
+        ? validSourceDate(row.sourceDate) ? row.sourceDate : ""
+        : validSourceDate(document.sourceDate) ? document.sourceDate : "";
     if (document.schemaVersion !== 1 || !sourceDate || !record(row) || !Array.isArray(row.options)) {
         return { sourceDate, status: "unverified", options: [] };
     }
@@ -63,6 +66,7 @@ function state(product: InventoryProduct, value: PurchaseState["state"], supplie
 }
 
 function globalState(product: InventoryProduct): PurchaseState | undefined {
+    if (product.supplierCatalogHistorical === true) return state(product, "paused");
     const availability = String(product.availability || "").replace(/[\s_-]+/g, "").toLowerCase();
     if (["soldout", "outofstock", "품절"].includes(availability)) return state(product, "sold_out");
     if (["discontinued", "paused", "suspended", "suspension", "salestopped", "판매중단", "판매중지", "단종"].includes(availability)) return state(product, "paused");

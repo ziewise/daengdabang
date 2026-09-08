@@ -1,6 +1,23 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+import vm from "node:vm";
+
+const require = createRequire(import.meta.url);
+
+function assertSupplierDetails(row) {
+    assert.match(row.supplierGoodsNo, /^\d{10}$/);
+    assert.equal(row.sourceUrl, `http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=${row.supplierGoodsNo}`);
+    assert.ok(row.details.length > 0 || row.supplierDetailText, `${row.folder} requires original supplier detail`);
+    assert.deepEqual(row.details, row.supplierDetailImages.map((image) => image.src), `${row.folder} original order`);
+    for (const image of row.supplierDetailImages) {
+        assert.ok(Number.isInteger(image.width) && image.width > 0, `${row.folder} original width`);
+        assert.ok(Number.isInteger(image.height) && image.height > 0, `${row.folder} original height`);
+        assert.ok(row.detailImageLabels[image.src], `${row.folder} original caption`);
+        assert.doesNotMatch(image.src, /official-visual-|\/details\/1\.webp$/);
+    }
+}
 
 const EXPECTED_FOLDERS = [
     "rw_backtrak_evac_kit",
@@ -21,7 +38,7 @@ const EXPECTED_FOLDERS = [
     "rw_remix_soft_disc_26fw",
 ].sort();
 
-test("all 16 new Ruffwear products expose sourced written detail content", async () => {
+test("the 16 Ruffwear additions retain legacy stories or use their approved supplier originals", async () => {
     const { getProductDetailContent, RUFFWEAR_2026_DETAIL_FOLDERS } = await import("../lib/catalog/product-detail-content.ts");
     const raw = JSON.parse(await readFile(new URL("../lib/catalog/raw.json", import.meta.url), "utf8"));
     const byFolder = new Map(raw.map((row) => [row.folder, row]));
@@ -33,6 +50,10 @@ test("all 16 new Ruffwear products expose sourced written detail content", async
         assert.ok(row, `${folder} must exist in the catalog`);
         assert.ok(content.summary.length >= 40, `${folder} summary is too short`);
         assert.ok(content.features.length >= 3, `${folder} needs at least three sourced features`);
+        if (row.supplierCatalogSource === "jsk_approved_account") {
+            assertSupplierDetails(row);
+            continue;
+        }
         assert.equal(content.sourceUrl, row.sourceUrl, `${folder} must cite its cataloged official source`);
         assert.ok(row.details.length >= 7, `${folder} needs a complete visual detail sequence`);
         const officialVisuals = row.details.filter((path) => path.includes("/official-visual-"));
@@ -82,7 +103,52 @@ test("all manufacturer stories expose safe visual-detail image selections", asyn
         assert.ok(content.visualDetailIndices.length <= 6, `${folder} selects too many feature visuals`);
         for (const index of content.visualDetailIndices) {
             assert.ok(Number.isInteger(index) && index >= 0, `${folder} has an invalid visual image index`);
-            assert.ok(index < (row.details?.length ?? 0), `${folder} visual image index is out of range`);
+            if (row.supplierCatalogSource !== "jsk_approved_account") {
+                assert.ok(index < (row.details?.length ?? 0), `${folder} visual image index is out of range`);
+            }
+        }
+        if (row.supplierCatalogSource === "jsk_approved_account") assertSupplierDetails(row);
+    }
+});
+
+test("all approved JSK details bypass legacy editorial indices and render every original in order", async () => {
+    const source = await readFile(new URL("../components/products/detail/ProductTabs.tsx", import.meta.url), "utf8");
+    const ts = require("typescript");
+    const compiled = ts.transpileModule(source, { compilerOptions: {
+        module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022,
+        jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true,
+    } }).outputText;
+    const loaded = { exports: {} };
+    vm.runInNewContext(compiled + "\nexports.auditDetailContent = DetailContent;", {
+        module: loaded, exports: loaded.exports,
+        require: (id) => {
+            if (id === "react") return { ...require("react"), useState: () => [false, () => {}] };
+            if (id === "react/jsx-runtime") return require(id);
+            if (id === "next/image") return "source-image";
+            if (id === "@/lib/i18n") return { useI18n: () => ({ t: (value) => value, productName: (p) => p.name }) };
+            if (id === "@/lib/catalog/product-detail-content") return {
+                getProductDetailContent: () => { throw new Error("JSK source detail must not use legacy editorial content"); },
+            };
+            if (id === "@/lib/chat-widget-events") return { openChatWidget: () => {} };
+            if (id === "@/components/products/detail/ProductDeliveryReturnPolicy") return () => null;
+            throw new Error(`Unexpected import: ${id}`);
+        },
+    });
+    const raw = JSON.parse(await readFile(new URL("../lib/catalog/raw.json", import.meta.url), "utf8"));
+    const current = raw.filter((row) => row.supplierCatalogSource === "jsk_approved_account");
+    assert.equal(current.length, 216);
+    const nodes = (value) => !value || typeof value !== "object" ? []
+        : Array.isArray(value) ? Array.from(value).flatMap(nodes) : [value, ...nodes(value.props?.children)];
+    for (const row of current) {
+        assertSupplierDetails(row);
+        const selected = loaded.exports.auditDetailContent({ product: row });
+        const rendered = selected.type(selected.props);
+        assert.equal(rendered.props["data-supplier-original-detail"], row.supplierGoodsNo);
+        const images = nodes(rendered).filter((node) => node.type === "source-image" || node.type === "img");
+        assert.deepEqual(images.map((node) => node.props.src), row.details, row.folder);
+        for (let index = 0; index < images.length; index += 1) {
+            assert.equal(images[index].props.width, row.supplierDetailImages[index].width);
+            assert.equal(images[index].props.height, row.supplierDetailImages[index].height);
         }
     }
 });

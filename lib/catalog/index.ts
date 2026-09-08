@@ -5,6 +5,8 @@ export type {
     CategorySlug,
     PriceBadgeKind,
     ProductColor,
+    ProductImageRegion,
+    SupplierDetailImage,
     PromoSlug,
     SortKey,
     SubcategorySlug,
@@ -20,7 +22,7 @@ export {
     SUBCATEGORY_LABEL,
 } from "./labels";
 
-export { CATALOG, findById } from "./data";
+export { ALL_CATALOG, CATALOG, findById } from "./data";
 export {
     catalogPriceBadgeClass,
     catalogPriceBadgeKind,

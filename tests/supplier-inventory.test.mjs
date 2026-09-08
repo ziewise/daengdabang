@@ -25,14 +25,14 @@ function product(options = {}) {
 }
 function loadModule(path, mocks = {}, append = '') {
     const compiled = ts.transpileModule(read(path), {fileName:path, compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText;
-    const module={exports:{}};
-    vm.runInNewContext(compiled+append,{module,exports:module.exports,console,require:(id)=>{
+    const loadedModule={exports:{}};
+    vm.runInNewContext(compiled+append,{module:loadedModule,exports:loadedModule.exports,console,require:(id)=>{
         if(id.includes('catalog/inventory'))return inventory;
         if(Object.hasOwn(mocks,id))return mocks[id];
         if(id==='react'||id==='react/jsx-runtime')return require(id);
         throw new Error(`Unexpected test import: ${id}`);
     }});
-    return module.exports;
+    return loadedModule.exports;
 }
 const nodes = value => {
     if(!value || typeof value!=='object')return [];
@@ -46,7 +46,7 @@ function optionSheet(p, draft = [0,0,3,[]], mode='cart') {
         const current=draft[index++];return [current,next=>changes.push(typeof next==='function'?next(current):next)];
     }};
     const mod=loadModule('components/products/detail/OptionSheet.tsx',{
-        react:React,'next/image':()=>null,'next/navigation':{useRouter:()=>({push:url=>routes.push(url)})},
+        react:React,'@/components/products/ProductColorImage':'color-image','next/navigation':{useRouter:()=>({push:url=>routes.push(url)})},
         '@/lib/store':{useAuth:()=>({user:{}}),useCart:()=>({addToCart:(...args)=>added.push(args)})},
         '@/lib/i18n':{useI18n:()=>({locale:'ko',t:x=>x,formatPrice:String,productName:p=>p.name})},
         '@/lib/daenglab-rewards':{daengLabCoinsForLine:()=>0,daengLabCoinsForLines:()=>0},
@@ -62,6 +62,17 @@ test('numeric-zero public contract permits purchase without a stock quantity cap
     assert.equal(value.purchasable,true);assert.equal(value.supplierRequest,true);
     assert.equal(inventory.purchaseStateLabel(value),'본사 요청 배송');
 });
+test('supplier observation date does not overwrite or inherit the warehouse sheet date',()=>{
+    const doc={schemaVersion:1,sourceDate:'2026-08-29',products:{
+        fresh:{sourceDate:'2026-09-08',options:product().inventory.options},
+        legacy:{options:product().inventory.options},
+        invalid:{sourceDate:'2026-02-30',options:product().inventory.options},
+    }};
+    assert.equal(inventory.inventoryForProduct(doc,'fresh').sourceDate,'2026-09-08');
+    assert.equal(inventory.inventoryForProduct(doc,'legacy').sourceDate,'2026-08-29');
+    assert.equal(inventory.inventoryForProduct(doc,'invalid').status,'unverified');
+    assert.equal(doc.sourceDate,'2026-08-29');
+});
 test('textual sold out, undefined combinations and unknown options remain distinct',()=>{
     const p=product();
     assert.equal(inventory.optionPurchaseState(p,'Blue','M').state,'sold_out');
@@ -75,6 +86,13 @@ test('global product pause and held model override an available supplier option'
     const p=product();p.inventory.status='unverified';
     assert.equal(inventory.productPurchaseState(p).state,'unknown');
     assert.equal(inventory.optionPurchaseState(p,'Blue','S').purchasable,false);
+});
+test('historical supplier products remain non-purchasable even with available options or no inventory',()=>{
+    for(const p of [product({supplierCatalogHistorical:true,availability:'available'}),product({supplierCatalogHistorical:true,inventory:undefined})]){
+        assert.equal(inventory.productPurchaseState(p).state,'paused');
+        assert.equal(inventory.optionPurchaseState(p,'Blue','S').purchasable,false);
+        assert.equal(isLegacyRecommendationOperationallyEligible(p),false);
+    }
 });
 test('no fuzzy year/color/size alias or duplicate option grants access',()=>{
     const p=product();p.inventory.options.push({...p.inventory.options[0]});
@@ -135,8 +153,24 @@ test('OptionSheet disables exact sold-out and unknown sizes while retaining zero
     assert.equal(optionRows.find(n=>n.props.value===1).props.disabled,true);
     const add=result.elements.find(n=>n.props?.['data-add-option']);assert.equal(add.props.disabled,true);add.props.onClick();assert.equal(result.changes.length,0);
 });
+
+test('OptionSheet retains each same-image color region in the preview, chips and accumulated picks',()=>{
+    const colors = ['Blue', 'Red'].map((name, index) => ({name, image:'/both.jpg', chip:'/both.jpg', imageWidth:500, imageHeight:500, imageRegion:{x:0, y:index * 0.5, width:1, height:0.5}}));
+    const p = product({colors});
+    for (const index of [0, 1]) {
+        const view = optionSheet(p, [index, 0, 1, [{colorIdx:index, sizeIdx:0, qty:1}]]);
+        const images = view.elements.filter(node => node.type === 'color-image');
+        assert.equal(images[0].props.color, colors[index]);
+        assert.equal(images[0].props.src, '/both.jpg');
+        assert.equal(images[1].props.color, colors[0]);
+        assert.equal(images[2].props.color, colors[1]);
+        assert.equal(images[3].props.color, colors[index]);
+        const chips = view.elements.filter(node => node.type === 'button' && ['Blue', 'Red'].some(name => node.props['aria-label']?.startsWith(name)));
+        assert.equal(new Set(chips.map(node => node.key)).size, 2);
+    }
+});
 test('cart display revalidates restored lines without deleting data or silently checking out a subset',()=>{
-    const p=product();const mod=loadModule('lib/shop.ts',{'@/lib/catalog':{CATALOG:[p],CATEGORY_LABEL:{}}});
+    const p=product();const mod=loadModule('lib/shop.ts',{'@/lib/catalog':{CATALOG:[p],CATEGORY_LABEL:{},findById:id=>id===p.id?p:undefined}});
     const input=[{productId:p.id,qty:7,color:'Blue',size:'S'},{productId:p.id,qty:2,color:'Blue',size:'M'}];
     const rows=mod.cartProducts(input);
     assert.equal(rows.length,2);assert.equal(rows[0].subtotal,70000);assert.equal(rows[0].selected,true);
@@ -165,17 +199,27 @@ test('checkout checks inventory block before order submission; UI holds do not c
 });
 test('generated contract covers only public metadata and resolver mirrors every current option',()=>{
     const document=json('lib/catalog/inventory.generated.json'), colors=json('lib/catalog/colors.json'),sizes=json('lib/catalog/sizes.json');
+    const currentRows=json('lib/catalog/raw.json').filter(row=>row.supplierCatalogSource==='jsk_approved_account');
+    const currentFolders=new Set(currentRows.map(row=>row.folder));
     assert.equal(document.schemaVersion,1);
-    const observed={available:0,sold_out:0,unknown:0,supplier_request:0};
+    assert.equal(document.sourceDate,'2026-08-29','the historical warehouse date is preserved');
+    assert.equal(currentFolders.size,216);
+    assert.equal(new Set(currentRows.map(row=>row.supplierGoodsNo)).size,216);
+    const observed={current:{available:0,sold_out:0,unknown:0,supplier_request:0},legacy:{available:0,sold_out:0,unknown:0,supplier_request:0}};
     for(const [folder,entry] of Object.entries(document.products)) {
+        const counts=observed[currentFolders.has(folder)?'current':'legacy'];
+        if(currentFolders.has(folder))assert.equal(entry.sourceDate,'2026-09-08',folder);
         const p={colors:colors[folder]||[],sizes:sizes[folder]||[],inventory:inventory.inventoryForProduct(document,folder)};
         for(const option of entry.options) {
             const actual=inventory.optionPurchaseState(p,option.color,option.size);
             assert.equal(actual.state,entry.status==='unverified'?'unknown':option.availability,`${folder}/${option.color}/${option.size}`);
-            observed[actual.state]++;if(actual.supplierRequest)observed.supplier_request++;
+            counts[actual.state]++;if(actual.supplierRequest)counts.supplier_request++;
         }
     }
-    assert.equal(Object.keys(document.products).length,67);
-    assert.deepEqual(observed,{available:494,sold_out:63,unknown:206,supplier_request:303});
+    for(const folder of currentFolders)assert.ok(document.products[folder],`supplier inventory missing: ${folder}`);
+    assert.equal(Object.keys(document.products).length,216+40);
+    assert.deepEqual(observed.current,{available:1228,sold_out:688,unknown:0,supplier_request:1228});
+    assert.equal(observed.current.available+observed.current.sold_out,1916);
+    assert.deepEqual(observed.legacy,{available:374,sold_out:59,unknown:117,supplier_request:216});
     assert.doesNotMatch(JSON.stringify(document),/sourceWorkbook|sourceMarker|internalStock|costPrice|[A-Z]:\\/);
 });

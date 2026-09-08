@@ -20,7 +20,7 @@ const targets = {
     rw_highlands_pad_l: 106000,
     rw_highlands_sleepingbag_m: 168000,
     rw_highlands_sleepingbag_l: 218000,
-    rw_barknboot_liners: 34000,
+    rw_barknboot_liners: 24000, // JSK 1000000053, observed 2026-09-08
     rw_ridgeline_shoes_26: 92000,
     rw_griptrex_bootpairs: 76000,
     rw_basecamp_antisplash: 32000,
@@ -54,7 +54,7 @@ const targets = {
     rw_hometrail_hippack: 76000,
     rw_treattrader_bag: 68000,
     rw_treattrader_23: 68000,
-    rw_dirtbag_seatcover: 182000,
+    rw_dirtbag_seatcover: 148000, // JSK 1000001198, observed 2026-09-08
     rw_frontrangeflex_leash_26: 54000,
     rw_hitchhiker_leash_26: 106000,
     rw_leash_roamer: 76000,
@@ -85,12 +85,16 @@ const targets = {
     rw_pacificring_toy: 38000,
 };
 
-test("all yellow 2026FW Ruffwear price rows exist at the supplier price", async () => {
+test("reviewed Ruffwear prices follow current JSK observations while preserving historical rows", async () => {
     const catalogUrl = new URL("../lib/catalog/raw.json", import.meta.url);
     const catalog = JSON.parse(await readFile(catalogUrl, "utf8"));
     const byFolder = new Map(catalog.map((row) => [row.folder, row]));
 
     assert.equal(Object.keys(targets).length, 80);
+    for (const [folder, goodsNo] of Object.entries({ rw_barknboot_liners: "1000000053", rw_dirtbag_seatcover: "1000001198" })) {
+        assert.equal(byFolder.get(folder).supplierGoodsNo, goodsNo, `${folder} price change requires the exact supplier product`);
+        assert.equal(byFolder.get(folder).supplierCatalogSource, "jsk_approved_account");
+    }
     for (const [folder, expectedPrice] of Object.entries(targets)) {
         const row = byFolder.get(folder);
         assert.ok(row, `missing Ruffwear listing: ${folder}`);
@@ -120,6 +124,37 @@ const yellowAdditionTargets = {
     rw_remix_soft_disc_26fw: { price: 38000, colors: ["surprise.png"] },
 };
 
+// Exact purchase colors from the approved supplier observation. Size-only and
+// optionless listings must not acquire a color axis from older marketing images.
+const supplierAdditionColors = {
+    rw_knotahitch: [],
+    rw_trailrunner_vest: ["라이켄 그린", "블루 풀"],
+    rw_gourdo_small: ["세이지 그린", "헬리오트로프 퍼플", "캠프파이어 오렌지"],
+    rw_gourdo_large: ["세이지 그린", "헬리오트로프 퍼플", "캠프파이어 오렌지"],
+    rw_pacificring_toy: ["오로라 틸", "사카이 레드"],
+    rw_powderhound_waterproof_jacket_26fw: ["폴라 블루", "레드 커런트"],
+    rw_powderhound_coverall_26fw: [],
+    rw_timberline_fuse_vest_26fw: ["드리프트우드", "딥 틸"],
+    rw_mt_hoodie_gaiter_26fw: ["바솔트 그레이", "딥 틸"],
+    rw_lumenglow_jacket_26fw: ["블레이즈 오렌지"],
+    rw_polartrex_boots_26fw: [],
+    rw_rogue_longline_26fw: ["바솔트 그레이", "블레이즈 오렌지"],
+    rw_remix_cactus_tug_26fw: [],
+};
+
+async function assertSupplierImage(src, folder) {
+    if (src.startsWith("/")) {
+        assert.match(src, /^\/images\/products\/catalog\/jsk-source\/[a-f0-9]{64}\.(jpg|jpeg|png|gif|webp)$/);
+        await access(new URL(`../public${src}`, import.meta.url));
+    } else {
+        const url = new URL(src);
+        assert.equal(url.protocol, "https:", `${folder} public media uses HTTPS`);
+        assert.ok([
+            "godomall-storage.cdn-nhncommerce.com", "cdn-saas-web-223-244.cdn-nhncommerce.com", "shop-phinf.pstatic.net",
+        ].includes(url.hostname), `${folder} original supplier image host: ${url.hostname}`);
+    }
+}
+
 test("yellow additions and previously missing products include real product and color images", async () => {
     const [catalog, colors] = await Promise.all([
         readFile(new URL("../lib/catalog/raw.json", import.meta.url), "utf8").then(JSON.parse),
@@ -132,6 +167,17 @@ test("yellow additions and previously missing products include real product and 
         const row = byFolder.get(folder);
         assert.ok(row, `missing yellow addition product: ${folder}`);
         assert.equal(row.priceNum, expected.price, `wrong addition product price: ${folder}`);
+        if (row.supplierCatalogSource === "jsk_approved_account") {
+            assert.ok(Object.hasOwn(supplierAdditionColors, folder), `missing reviewed supplier colors: ${folder}`);
+            assert.deepEqual(colors[folder].map((color) => color.name), supplierAdditionColors[folder], `${folder} exact purchase colors`);
+            await assertSupplierImage(row.image, folder);
+            for (const color of colors[folder]) {
+                await assertSupplierImage(color.file, folder);
+                assert.equal(color.chip, color.file, `${folder} chip retains the same source photo`);
+                assert.ok(color.imageWidth > 0 && color.imageHeight > 0, `${folder} source photo dimensions`);
+            }
+            continue;
+        }
         assert.deepEqual(colors[folder]?.map((color) => color.file), expected.colors, `wrong added colors: ${folder}`);
         await access(new URL(`../public/images/products/catalog/${folder}/${folder}.png`, import.meta.url));
         for (const file of expected.colors) {
@@ -167,6 +213,17 @@ test("all 16 newly listed Ruffwear products have sourced detail-page content", a
     for (const [folder, originalCount] of Object.entries(newDetailTargets)) {
         const row = byFolder.get(folder);
         assert.ok(row, `missing new Ruffwear product: ${folder}`);
+        if (row.supplierCatalogSource === "jsk_approved_account") {
+            assert.equal(row.sourceUrl, `http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=${row.supplierGoodsNo}`);
+            assert.ok(row.details.length > 0, `${folder} requires original detail images`);
+            assert.deepEqual(row.details, row.supplierDetailImages.map((image) => image.src), `${folder} supplier detail order`);
+            for (const detail of row.details) {
+                await assertSupplierImage(detail, folder);
+                assert.ok(row.detailImageLabels[detail], `${folder} source detail caption`);
+                assert.doesNotMatch(detail, /official-visual-|\/details\/1\.webp$/);
+            }
+            continue;
+        }
         assert.match(row.sourceUrl ?? "", /^https:\/\/ruffwear\.com\/products\//, `unofficial detail source: ${folder}`);
         assert.ok(row.details?.length >= originalCount + 5, `incomplete enriched detail page: ${folder}`);
 

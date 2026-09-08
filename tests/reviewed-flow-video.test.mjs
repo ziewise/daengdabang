@@ -10,10 +10,34 @@ const read = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), "
 const reviews = read("../lib/catalog/reviewed-flow-videos.json");
 const raw = read("../lib/catalog/raw.json");
 const expected = read("./fixtures/flow-contents-batch20.json");
+const mediaIdentity = read("./fixtures/flow-catalog-media-identity.json");
+
+const catalogMediaIdentity = (row) => Object.fromEntries(Object.keys(row).sort()
+    .filter((key) => key === "no" || key === "folder" || key.startsWith("video"))
+    .map((key) => [key, row[key]]));
 test("the reviewed Flow list matches the exact separately approved release snapshot", () => {
     assert.deepEqual(Object.keys(reviews).sort(), Object.keys(expected.approvedFlow).sort());
-    const rawText = readFileSync(new URL("../lib/catalog/raw.json", import.meta.url), "utf8");
-    assert.equal(createHash("sha256").update(rawText.replace(/\r\n/g, "\n")).digest("hex"), expected.rawNormalizedLfSha256);
+    // This fixture was extracted from the pre-import raw catalog only after its
+    // complete LF-normalized hash matched the separately approved baseline.
+    // Prices, names and supplier photos do not grant or revoke video approval.
+    assert.equal(mediaIdentity.schemaVersion, "ddb.reviewed-catalog-media-identity.v1");
+    assert.equal(mediaIdentity.baselineFixture, "flow-contents-batch20.json");
+    assert.equal(mediaIdentity.baselineRawNormalizedLfSha256, expected.rawNormalizedLfSha256);
+    assert.equal(mediaIdentity.products.length, 362);
+    assert.equal(new Set(raw.map((row) => row.no)).size, raw.length);
+    const baselineFolders = new Set(mediaIdentity.products.map((row) => row.folder));
+    const baselineIds = new Set(mediaIdentity.products.map((row) => row.no));
+    assert.equal(baselineIds.size, mediaIdentity.products.length);
+    for (const baseline of mediaIdentity.products) {
+        const current = raw.find((row) => row.no === baseline.no);
+        assert.ok(current, `${baseline.folder} reviewed product identity must remain present`);
+        assert.deepEqual(catalogMediaIdentity(current), baseline, `${baseline.folder} video identity changed`);
+    }
+    for (const row of raw.filter((item) => !baselineIds.has(item.no))) {
+        assert.equal(baselineFolders.has(row.folder), false, `${row.folder} supplier addition cannot reuse a reviewed product folder`);
+        assert.equal(row.supplierCatalogSource, "jsk_approved_account", `${row.folder} is an approved supplier addition`);
+        assert.deepEqual(Object.keys(row).filter((key) => key.startsWith("video")), [], `${row.folder} supplier import cannot create a video approval`);
+    }
     for (const [folder, approval] of Object.entries(expected.approvedFlow)) {
         const actual = reviews[folder];
         assert.deepEqual(Object.fromEntries(Object.keys(approval).map(key => [key, actual[key]])), approval, folder);

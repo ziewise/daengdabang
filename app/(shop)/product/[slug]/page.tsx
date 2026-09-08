@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CATALOG, formatKRW } from "@/lib/catalog";
+import { ALL_CATALOG, formatKRW } from "@/lib/catalog";
 import { findProduct, productHref } from "@/lib/shop";
 import ProductDetailClient from "./ProductDetailClient";
 
@@ -9,7 +9,7 @@ interface PageProps {
 }
 
 export function generateStaticParams() {
-    return CATALOG.map((product) => ({ slug: product.folder || product.id }));
+    return ALL_CATALOG.map((product) => ({ slug: product.folder || product.id }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

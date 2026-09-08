@@ -1,4 +1,4 @@
-import { CATALOG, CATEGORY_LABEL, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
+import { CATALOG, CATEGORY_LABEL, findById, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
 import { optionPurchaseState, type PurchaseState } from "./catalog/inventory";
 
@@ -22,7 +22,7 @@ export function productHref(product: CatalogProduct): string {
 }
 
 export function findProduct(slugOrId: string): CatalogProduct | undefined {
-    return CATALOG.find((product) => product.id === slugOrId || product.folder === slugOrId);
+    return findById(slugOrId);
 }
 
 export function categoryName(slug: CategorySlug): string {

@@ -17,9 +17,15 @@ test("Ruffwear and Rex Specs stay at the current price without a discount compar
     const catalog = JSON.parse(await source("lib/catalog/raw.json"));
     const targets = catalog.filter((row) => brands.has(row.brandEn));
 
-    assert.equal(targets.length, 170);
-    assert.equal(targets.filter((row) => row.brandEn === "Ruffwear").length, 139);
-    assert.equal(targets.filter((row) => row.brandEn === "Rex Specs").length, 31);
+    const current = targets.filter((row) => row.supplierCatalogSource === "jsk_approved_account");
+    const historical = targets.filter((row) => row.supplierCatalogHistorical === true);
+    assert.equal(current.length, 216);
+    assert.equal(current.filter((row) => row.brandEn === "Ruffwear").length, 175);
+    assert.equal(current.filter((row) => row.brandEn === "Rex Specs").length, 41);
+    assert.equal(new Set(current.map((row) => row.supplierGoodsNo)).size, 216);
+    assert.equal(historical.length, 68);
+    assert.equal(targets.length, current.length + historical.length);
+    for (const row of historical) assert.equal(row.availability, "paused", row.folder);
 
     for (const row of targets) {
         assert.ok(Number.isInteger(row.priceNum) && row.priceNum > 0, `no.${row.no} must have a positive final price`);
@@ -69,19 +75,20 @@ test("storefront derives sale state from admin prices and renders the branded fi
 });
 
 test("catalog price badges default for protected and standard brands without changing prices", async () => {
-    const [catalog, badgeSource] = await Promise.all([
+    const [catalog, badges] = await Promise.all([
         JSON.parse(await source("lib/catalog/raw.json")),
-        source("lib/catalog/price-badge.ts"),
+        import("../lib/catalog/price-badge.ts"),
     ]);
     const beforePrices = new Map(catalog.map((row) => [row.no, row.priceNum]));
     const protectedBrands = catalog.filter((row) => brands.has(row.brandEn));
     const standardBrands = catalog.filter((row) => !brands.has(row.brandEn));
 
-    assert.equal(protectedBrands.length, 170);
+    assert.equal(protectedBrands.length, 216 + 68);
     assert.equal(standardBrands.length, 192);
-    for (const row of catalog) assert.equal(row.priceNum, beforePrices.get(row.no));
-    assert.match(badgeSource, /Ruffwear/);
-    assert.match(badgeSource, /Rex Specs/);
-    assert.match(badgeSource, /댕다방 셀렉트/);
-    assert.match(badgeSource, /댕다방 혜택가/);
+    for (const row of catalog) {
+        const kind = badges.catalogPriceBadgeKind(row.brandEn, row.brandKo);
+        assert.equal(kind, brands.has(row.brandEn) ? "select" : "benefit", row.folder);
+        assert.equal(badges.catalogPriceBadgeLabel(kind, "ko"), brands.has(row.brandEn) ? "댕다방 셀렉트" : "댕다방 혜택가");
+        assert.equal(row.priceNum, beforePrices.get(row.no));
+    }
 });

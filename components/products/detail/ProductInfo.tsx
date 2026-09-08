@@ -261,7 +261,7 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                 {(purchaseState.tracked || !purchaseState.purchasable) && (
                     <div data-inventory-state={purchaseState.state} className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
                         <p className="font-bold text-amber-950">{purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Availability varies by option." : "옵션별 판매 상태를 선택창에서 확인해 주세요.")}</p>
-                        {purchaseState.sourceDate && <p className="mt-1 text-xs text-amber-800">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {purchaseState.sourceDate}</p>}
+                        {purchaseState.sourceDate && <p className="mt-1 text-xs text-amber-800">{p.supplierCatalogSource === "jsk_approved_account" ? (locale === "en" ? "Supplier checked" : "본사 확인일") : (locale === "en" ? "Inventory sheet dated" : "재고표 기준일")}: {purchaseState.sourceDate}</p>}
                         {!purchaseState.purchasable && <button type="button" onClick={() => setSheetMode("cart")} className="mt-2 text-xs font-black underline">{locale === "en" ? "View option status" : "옵션별 재고 보기"}</button>}
                     </div>
                 )}

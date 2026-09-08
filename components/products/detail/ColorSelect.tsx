@@ -8,7 +8,7 @@
  * 각각 배치해, 모바일에서 이미지와 색상 선택이 한 화면에 보이게 한다(위아래로 오갈 필요 없음).
  */
 
-import Image from "next/image";
+import ProductColorImage from "@/components/products/ProductColorImage";
 import type { ProductColor } from "@/lib/catalog";
 
 interface Props {
@@ -26,7 +26,7 @@ export default function ColorSelect({ colors, colorIdx, onColorChange, className
             <div className="flex flex-wrap gap-2">
                 {colors.map((c, i) => (
                     <button
-                        key={c.image}
+                        key={`${c.name}-${i}`}
                         type="button"
                         onClick={() => onColorChange?.(i)}
                         aria-label={c.name}
@@ -38,7 +38,7 @@ export default function ColorSelect({ colors, colorIdx, onColorChange, className
                                 : "ring-1 ring-neutral-300 hover:ring-indigo-300"
                         }`}
                     >
-                        <Image src={c.chip} alt={c.name} fill sizes="44px" className="object-cover" />
+                        <ProductColorImage src={c.chip || c.image} color={c} alt={c.name} sizes="44px" className="object-cover" />
                     </button>
                 ))}
             </div>

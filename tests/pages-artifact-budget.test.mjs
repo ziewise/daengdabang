@@ -126,6 +126,24 @@ test("Pages artifact keeps referenced images and removes verified CDN video copi
     await assert.rejects(fs.access(path.join(root, "out/images/products/catalog/sample/sample.png")));
 });
 
+test("Pages retains color photos and chips with relative or absolute local paths", async (t) => {
+    const root = await fixture(t);
+    await write(root, "lib/catalog/colors.json", JSON.stringify({ sample: [
+        { name: "relative", file: "red.jpg", chip: "red-chip.jpg" },
+        { name: "absolute", image: "/images/products/catalog/source/blue.jpg", chip: "/images/products/catalog/source/blue-chip.jpg" },
+        { name: "remote", file: "https://supplier.example/green.jpg", chip: "https://supplier.example/green.jpg" },
+    ] }));
+    const assets = [
+        "images/products/catalog/sample/colors/red.jpg",
+        "images/products/catalog/sample/colors/red-chip.jpg",
+        "images/products/catalog/source/blue.jpg",
+        "images/products/catalog/source/blue-chip.jpg",
+    ];
+    for (const asset of assets) await write(root, `out/${asset}`, "color-source");
+    await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, "out"), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    for (const asset of assets) assert.equal(await fs.readFile(path.join(root, "out", asset), "utf8"), "color-source");
+});
+
 test("Pages artifact fails closed when an official visual was not commit-pinned into the build", async (t) => {
     const root = await fixture(t, { includeCdnVisual: false });
     await assert.rejects(

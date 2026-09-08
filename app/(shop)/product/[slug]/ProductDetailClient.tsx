@@ -19,7 +19,7 @@ export default function ProductDetailClient({ product }: Props) {
     // 색상 미선택(null)으로 시작 → 진입 시 좌측 갤러리는 대표 메인 이미지. 칩 클릭 시 그 색상으로 교체
     const [colorIdx, setColorIdx] = useState<number | null>(null);
     const [tryOnOpen, setTryOnOpen] = useState(false);
-    const colorImage = colorIdx != null ? product.colors?.[colorIdx]?.image : undefined;
+    const selectedColor = colorIdx != null ? product.colors?.[colorIdx] : undefined;
 
     useEffect(() => {
         trackStorefrontEvent("product_view", {
@@ -36,7 +36,7 @@ export default function ProductDetailClient({ product }: Props) {
         <main className="mx-auto max-w-[1280px] px-4 py-6 md:px-6 md:py-10">
             <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
                 <div className="lg:sticky lg:top-[calc(var(--header-height)+24px)] lg:self-start">
-                    <ProductGallery product={product} colorImage={colorImage} />
+                    <ProductGallery product={product} selectedColor={selectedColor} />
                     {/* 모바일 전용 — 색상 칩을 이미지 바로 아래에(위아래로 오갈 필요 없게). PC 는 우측 구매정보에 표시 */}
                     <ColorSelect
                         colors={product.colors ?? []}

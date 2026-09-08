@@ -2,29 +2,35 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { isNewProduct, type CatalogProduct } from "@/lib/catalog";
+import { isNewProduct, type CatalogProduct, type ProductColor } from "@/lib/catalog";
+import { productColorImageKey } from "@/lib/catalog/product-color-image";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import ProductColorImage from "@/components/products/ProductColorImage";
 
 interface Props {
     product: CatalogProduct;
-    /** 색상 변형 선택 시 메인에 띄울 이미지(있으면 활성 이미지보다 우선) */
-    colorImage?: string;
+    /** 새 색상 선택 시 먼저 표시할 이미지. 이후에는 갤러리 썸네일도 선택할 수 있다. */
+    selectedColor?: ProductColor;
 }
 
-export default function ProductGallery({ product: p, colorImage }: Props) {
+export default function ProductGallery(props: Props) {
+    return <ProductGalleryImages key={`${props.product.id}:${productColorImageKey(props.selectedColor)}`} {...props} />;
+}
+
+function ProductGalleryImages({ product: p, selectedColor }: Props) {
     const images = [p.image, ...(p.gallery ?? [])].filter(Boolean) as string[];
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [activeIdx, setActiveIdx] = useState(0);
+    const [activeIdx, setActiveIdx] = useState<number | null>(null);
     const [showVideo, setShowVideo] = useState(false);
     const [videoReady, setVideoReady] = useState(false);
-    // 색상 선택 시 그 색상 이미지를 메인으로(없으면 기존 활성 이미지)
-    const activeImage = colorImage ?? images[activeIdx];
+    const activeColor = activeIdx === null ? selectedColor : undefined;
+    const activeImage = activeColor?.image || images[activeIdx ?? 0];
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
     const useContainedImage = isNewProduct(p);
 
     const activateVideo = () => {
-        if (!p.video) return;
+        if (!p.video || activeColor) return;
         const video = videoRef.current;
         setShowVideo(true);
         if (!video) return;
@@ -55,14 +61,14 @@ export default function ProductGallery({ product: p, colorImage }: Props) {
                 onBlur={deactivateVideo}
             >
                 {activeImage ? (
-                    <Image
+                    <ProductColorImage
                         key={activeImage}
                         src={activeImage}
-                        alt={p.name}
-                        fill
+                        color={activeColor}
+                        alt={activeColor ? `${p.name} · ${activeColor.name}` : p.name}
                         sizes="(max-width: 1024px) 100vw, 50vw"
-                        className={useContainedImage ? "object-contain p-[7%]" : "object-cover"}
-                        priority
+                        className={activeColor || useContainedImage ? "object-contain p-[7%]" : "object-cover"}
+                        preload
                     />
                 ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -86,13 +92,13 @@ export default function ProductGallery({ product: p, colorImage }: Props) {
                 {isVideoVisible && <VideoBrandOverlay src={p.video} />}
             </div>
 
-            {images.length > 1 && (
+            {images.length > 0 && (images.length > 1 || selectedColor) && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
                     {images.map((img, index) => {
-                        const active = index === activeIdx;
+                        const active = activeIdx === null ? !activeColor && index === 0 : index === activeIdx;
                         return (
                             <button
-                                key={img}
+                                key={`${img}-${index}`}
                                 type="button"
                                 onClick={() => setActiveIdx(index)}
                                 onMouseEnter={() => setActiveIdx(index)}

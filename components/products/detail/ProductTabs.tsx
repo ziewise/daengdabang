@@ -89,12 +89,17 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     const [expanded, setExpanded] = useState(false);
     const { t, productName } = useI18n();
     const details = p.details ?? [];
-    const content = getProductDetailContent(p.folder);
+    const supplierOriginal = p.supplierCatalogSource === "jsk_approved_account" && Boolean(p.supplierGoodsNo);
+    const content = supplierOriginal ? undefined : getProductDetailContent(p.folder);
     const displayName = productName(p);
     const heroImage = p.image ?? details[0] ?? "";
     const specifications = content?.specifications ?? content?.specs ?? [];
     const careItems = typeof content?.care === "string" ? [content.care] : (content?.care ?? []);
     const cautionItems = [...(content?.cautions ?? []), ...(content?.safety ? [content.safety] : [])];
+
+    if (supplierOriginal) {
+        return <SupplierDetailContent product={p} />;
+    }
 
     if (details.length === 0 && !content) {
         return (
@@ -273,6 +278,51 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                 </button>
             </div>}
         </div>
+    );
+}
+
+function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
+    const { t } = useI18n();
+    const details = p.details ?? [];
+
+    if (details.length === 0 && !p.supplierDetailText) {
+        return <div className="bg-white p-8 text-center text-sm text-neutral-500">{t("noDetailImages")}</div>;
+    }
+
+    return (
+        <article
+            className="mx-auto max-w-[860px] bg-white"
+            data-supplier-original-detail={p.supplierGoodsNo}
+        >
+            {details.map((src, index) => {
+                // Match metadata by source URL without sorting or adding other assets.
+                const metadata = p.supplierDetailImages?.find((image) => image.src === src);
+                const width = metadata?.width;
+                const height = metadata?.height;
+                const knownDimensions = Number.isInteger(width) && Number.isInteger(height)
+                    && Number(width) > 0 && Number(height) > 0;
+                const alt = metadata?.alt ?? `${p.name} 상세정보 ${index + 1}`;
+
+                return knownDimensions ? (
+                    <Image
+                        key={`${index}:${src}`}
+                        src={src}
+                        alt={alt}
+                        width={width}
+                        height={height}
+                        sizes="(max-width: 860px) 100vw, 860px"
+                        className="block h-auto w-full"
+                    />
+                ) : (
+                    // Unknown source dimensions must use their natural ratio, without invented sizing.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={`${index}:${src}`} src={src} alt={alt} loading="lazy" className="block h-auto w-full" />
+                );
+            })}
+            {p.supplierDetailText && (
+                <div className="whitespace-pre-wrap break-words px-4 py-6 text-sm leading-7">{p.supplierDetailText}</div>
+            )}
+        </article>
     );
 }
 

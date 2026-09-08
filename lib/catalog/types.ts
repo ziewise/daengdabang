@@ -1,5 +1,21 @@
 import type { ProductInventory } from "./inventory";
 
+/** Public source image metadata; dimensions are the observed intrinsic pixels. */
+export interface SupplierDetailImage {
+    src: string;
+    width?: number;
+    height?: number;
+    alt?: string;
+}
+
+/** Non-destructive crop of an original color photo, normalized from 0 to 1. */
+export interface ProductImageRegion {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 export interface CatalogRow {
     no: number;
     brandKo: string;
@@ -32,6 +48,14 @@ export interface CatalogRow {
     image?: string;
     gallery?: string[];
     details?: string[];
+    /** Original detail assets from the approved supplier account, in details order. */
+    supplierCatalogSource?: "jsk_approved_account";
+    supplierGoodsNo?: string;
+    /** Retain old routes and order references while excluding this product from sale. */
+    supplierCatalogHistorical?: boolean;
+    supplierDetailImages?: SupplierDetailImage[];
+    /** Source plain text only. HTML is never executed by the detail renderer. */
+    supplierDetailText?: string;
     /** 상품별 제조사 공식 상세 이미지에 대응하는 고객용 캡션. */
     detailImageLabels?: Record<string, string>;
     sizeImage?: string;
@@ -125,6 +149,11 @@ export interface CatalogProduct {
     image?: string;
     gallery?: string[];
     details?: string[];
+    supplierCatalogSource?: "jsk_approved_account";
+    supplierGoodsNo?: string;
+    supplierCatalogHistorical?: boolean;
+    supplierDetailImages?: SupplierDetailImage[];
+    supplierDetailText?: string;
     detailImageLabels?: Record<string, string>;
     sizeImage?: string;
     video?: string;
@@ -158,6 +187,9 @@ export interface CatalogProduct {
 export interface ProductColor {
     /** 색상별 메인 이미지 경로(칩 클릭 시 좌측 교체) */
     image: string;
+    imageWidth?: number;
+    imageHeight?: number;
+    imageRegion?: ProductImageRegion;
     /** 색상 한글명(구매 옵션 드롭다운 표시) */
     name: string;
     /** 색상 칩(원형 버튼) 이미지 경로 */

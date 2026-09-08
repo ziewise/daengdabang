@@ -24,6 +24,7 @@ import { useStore } from "@/lib/store";            // 운영 사이트 위시리
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import ProductColorImage from "@/components/products/ProductColorImage";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 
 interface Props {
@@ -57,6 +58,10 @@ export default function ProductCard({
     const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
     const priceBadgeLabel = catalogPriceBadgeLabel(p.priceBadgeKind, locale);
     const priceBadgeClass = catalogPriceBadgeClass(p.priceBadgeKind, true);
+    const colors = p.colors ?? [];
+    const [colorIdx, setColorIdx] = useState<number | null>(null);
+    const selectedColor = colorIdx === null ? undefined : colors[colorIdx];
+    const thumbnail = selectedColor?.image || p.image;
 
     // ===== 영상 호버 로직 =====
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -64,7 +69,7 @@ export default function ProductCard({
     const hasVideo = !!p.video;
 
     const activate = () => {
-        if (!hasVideo) return;
+        if (!hasVideo || selectedColor) return;
         setVideoActive(true);
         videoRef.current?.play().catch(() => {});
     };
@@ -90,20 +95,20 @@ export default function ProductCard({
             <div
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
-                className={`relative aspect-square overflow-hidden ${p.image ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative aspect-square overflow-hidden ${thumbnail ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}
             >
                 <Link
                     href={detailHref}
                     aria-label={`${displayName} ${t("detailInfo")}`}
                     className="absolute inset-0 flex cursor-pointer items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-indigo-600"
                 >
-                    {p.image ? (
-                        <Image
-                            src={p.image}
-                            alt={displayName}
-                            fill
+                    {thumbnail ? (
+                        <ProductColorImage
+                            src={thumbnail}
+                            color={selectedColor}
+                            alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName}
                             sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
-                            className={`${useContainedThumbnail ? "object-contain p-[7%]" : "object-cover"} transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
+                            className={`${selectedColor || useContainedThumbnail ? "object-contain p-[7%]" : "object-cover"} transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
                         />
                     ) : (
                         <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
@@ -161,6 +166,55 @@ export default function ProductCard({
                 </button>
 
             </div>
+
+            {colors.length > 0 && (
+                <div className="border-b border-neutral-100 px-2 pb-1 pt-2 md:px-3">
+                    <div
+                        role="group"
+                        aria-label={`${displayName} ${locale === "en" ? "color preview" : "색상 미리보기"}`}
+                        className="flex gap-0.5 overflow-x-auto pb-1"
+                    >
+                        {p.image && (
+                            <button
+                                type="button"
+                                aria-label={locale === "en" ? "Show original image" : "대표 이미지 보기"}
+                                aria-pressed={colorIdx === null}
+                                title={locale === "en" ? "Original image" : "대표 이미지"}
+                                onClick={() => {
+                                    deactivate();
+                                    setColorIdx(null);
+                                }}
+                                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
+                            >
+                                <span className={`relative h-7 w-7 overflow-hidden rounded-md ${colorIdx === null ? "ring-2 ring-indigo-600 ring-offset-2" : "ring-1 ring-neutral-300"}`}>
+                                    <Image src={p.image} alt="" fill sizes="28px" className="object-contain" />
+                                </span>
+                            </button>
+                        )}
+                        {colors.map((color, idx) => (
+                            <button
+                                key={`${color.name}-${idx}`}
+                                type="button"
+                                aria-label={`${color.name} ${locale === "en" ? "preview" : "미리보기"}`}
+                                aria-pressed={idx === colorIdx}
+                                title={color.name}
+                                onClick={() => {
+                                    deactivate();
+                                    setColorIdx(idx);
+                                }}
+                                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
+                            >
+                                <span className={`relative h-7 w-7 overflow-hidden rounded-full ${idx === colorIdx ? "ring-2 ring-indigo-600 ring-offset-2" : "ring-1 ring-neutral-300 hover:ring-indigo-300"}`}>
+                                    <ProductColorImage src={color.chip || color.image} color={color} alt="" sizes="28px" className="object-cover" />
+                                </span>
+                            </button>
+                        ))}
+                    </div>
+                    <p aria-live="polite" className="min-h-4 px-1 text-[10px] leading-4 text-neutral-600">
+                        {selectedColor?.name ?? (locale === "en" ? `${colors.length} colors` : `${colors.length}가지 색상`)}
+                    </p>
+                </div>
+            )}
 
             {/* 정보 영역 — 상세 페이지로 이동 */}
             <Link href={detailHref} className="block hover:bg-neutral-50/40 transition-colors">

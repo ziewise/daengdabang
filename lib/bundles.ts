@@ -32,6 +32,13 @@ export interface Bundle extends BundleDefinition {
 
 const definitions = rawBundles as BundleDefinition[];
 
+/** These contracted brands must keep the supplier's exact retail price. */
+export function allowsBundleDiscount(product: Pick<CatalogProduct, "brandEn" | "brandKo">): boolean {
+    const brands = [product.brandEn, product.brandKo]
+        .map((brand) => String(brand || "").toLowerCase().replace(/[\s_-]+/g, ""));
+    return !brands.some((brand) => ["ruffwear", "rexspecs", "러프웨어", "리프웨어", "렉스스펙스"].includes(brand));
+}
+
 function roundToHundred(value: number): number {
     return Math.max(0, Math.round(value / 100) * 100);
 }
@@ -43,6 +50,12 @@ function resolveProducts(productIds: string[]): CatalogProduct[] {
 export const BUNDLE_DEFINITIONS: BundleDefinition[] = definitions;
 
 export const BUNDLES: Bundle[] = definitions
+    .filter((bundle) => {
+        const products = resolveProducts(bundle.productIds);
+        return products.length === bundle.productIds.length
+            && products.every((product) => product.supplierCatalogHistorical !== true)
+            && (bundle.discountRate <= 0 || products.every(allowsBundleDiscount));
+    })
     .map((bundle) => {
         const products = resolveProducts(bundle.productIds);
         const basePrice = products.reduce((sum, product) => sum + product.price, 0);

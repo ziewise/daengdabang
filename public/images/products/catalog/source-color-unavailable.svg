@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500">
+  <rect width="500" height="500" fill="#f5f5f4"/>
+  <rect x="207" y="175" width="86" height="66" rx="10" fill="none" stroke="#a8a29e" stroke-width="3"/>
+  <circle cx="231" cy="195" r="6" fill="#a8a29e"/>
+  <path d="m217 229 19-19 17 16 17-12 14 15" fill="none" stroke="#a8a29e" stroke-width="3"/>
+  <text x="250" y="285" text-anchor="middle" font-family="sans-serif" font-size="19" fill="#57534e">해당 색상 사진이</text>
+  <text x="250" y="315" text-anchor="middle" font-family="sans-serif" font-size="19" fill="#57534e">제공되지 않습니다</text>
+</svg>
