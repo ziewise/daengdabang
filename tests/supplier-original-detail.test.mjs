@@ -101,7 +101,7 @@ test("catalog projects public supplier metadata, exact names, and both relative 
     ];
     const sha = "a".repeat(40);
     const catalogModule = loadModule("lib/catalog/data.ts", {
-        "./raw.json": [source, { ...source, no: 1002, supplierCatalogSource: undefined, supplierGoodsNo: undefined },
+        "./raw.json": [source, { ...source, no: 1002, folder: "rw_legacy_source", supplierCatalogSource: undefined, supplierGoodsNo: undefined },
             { ...source, no: 1003, folder: "rw_historical", supplierCatalogHistorical: true, recommendable: true, availability: "available", video: "/reviewed-legacy.mp4" }],
         "./colors.json": { rw_source: colorRows }, "./sizes.json": {}, "./prices.json": {}, "./inventory.generated.json": {},
         "./labels": { SUBCAT_ICON: {}, SUBCAT_TO_CAT: {} },
@@ -110,6 +110,7 @@ test("catalog projects public supplier metadata, exact names, and both relative 
         "./reviewed-hover-overrides": { applyReviewedHoverOverride: (row) => row },
         "./catalog-display-name": loadModule("lib/catalog/catalog-display-name.ts"),
         "./inventory": { inventoryForProduct: () => undefined },
+        "./visible-products": loadModule("lib/catalog/visible-products.ts"),
     }, { NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: sha });
     const { CATALOG, ALL_CATALOG, findById } = catalogModule;
     assert.equal(CATALOG.length, 2);

@@ -4,6 +4,7 @@ import { pathToFileURL } from "node:url";
 import { matchesReviewedLegacyVideo } from "../lib/catalog/reviewed-legacy-video.mjs";
 import { sameCatalogFlowIdentity } from "../lib/catalog/flow-generation-identity.mjs";
 import { matchesReviewedPhotoMotionVideo } from "../lib/catalog/reviewed-photo-motion-video.mjs";
+import { matchesReviewedVideoTrim } from "../lib/catalog/reviewed-video-trim.mjs";
 
 const PRODUCT_ASSET_PREFIX = "images/products/catalog/";
 const CDN_ROOT = "https://cdn.jsdelivr.net/gh/ziewise/daengdabang";
@@ -77,15 +78,19 @@ function isReviewedPhotoMotionRow(row, reviews) {
     return matchesReviewedPhotoMotionVideo({ id: `p_${row.no}`, folder: row.folder, video: row.video, raw: row }, reviews);
 }
 
+function isReviewedVideoTrimRow(row, reviews, flowReviews) {
+    return matchesReviewedVideoTrim({ id: `p_${row.no}`, folder: row.folder, video: row.video, raw: row }, reviews, flowReviews);
+}
+
 function withoutHoverVideo(row) {
     const withdrawn = { ...row };
-    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId", "videoGenerationIdentity", "videoEditIdentity", "videoReviewClass", "videoReviewSha256"]) {
+    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId", "videoGenerationIdentity", "videoZiewcraftIdentity", "videoTrimIdentity", "videoPlaybackMode", "videoEditIdentity", "videoReviewClass", "videoReviewSha256"]) {
         delete withdrawn[key];
     }
     return withdrawn;
 }
 
-function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews, legacyReviews, photoMotionReviews) {
+function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews, legacyReviews, photoMotionReviews, videoTrimReviews) {
     return (Array.isArray(rawCatalog) ? rawCatalog : []).map((row) => {
         const folder = row?.folder || "";
         if (!Object.prototype.hasOwnProperty.call(overrides, folder)) return row;
@@ -97,6 +102,9 @@ function applyReviewedHoverOverrides(rawCatalog, overrides, flowReviews, legacyR
         }
         return { ...row, ...override };
     }).map((row) => {
+        if (row?.videoProvider === "ddb_original_video_editor" || row?.videoTrimIdentity != null) {
+            return isReviewedVideoTrimRow(row, videoTrimReviews, flowReviews) ? row : withoutHoverVideo(row);
+        }
         if (row?.videoProvider === "ddb_exact_product_renderer") {
             return isReviewedPhotoMotionRow(row, photoMotionReviews) ? row : withoutHoverVideo(row);
         }
@@ -234,7 +242,8 @@ export async function preparePagesArtifact({
     );
     const legacyReviews = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-legacy-videos.json"), {});
     const photoMotionReviews = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-photo-motion-videos.json"), {});
-    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews, legacyReviews, photoMotionReviews);
+    const videoTrimReviews = await readJson(path.join(resolvedRepoRoot, "lib", "catalog", "reviewed-video-trims.json"), {});
+    const publicationCatalog = applyReviewedHoverOverrides(rawCatalog, reviewedHoverOverrides, flowReviews, legacyReviews, photoMotionReviews, videoTrimReviews);
     const catalogCdnVideos = new Set(
         publicationCatalog
             .filter((row) => row?.videoDelivery === "jsdelivr_commit_cdn")
@@ -264,6 +273,7 @@ export async function preparePagesArtifact({
                 row?.videoDelivery === "jsdelivr_commit_cdn"
                 && (isReviewedLegacyRow(row, legacyReviews)
                 || isReviewedPhotoMotionRow(row, photoMotionReviews)
+                || isReviewedVideoTrimRow(row, videoTrimReviews, flowReviews)
                 || (row?.videoProvider === "google_flow_web" && isReviewedFlowRow(row, flowReviews))
                 || (REVIEWED_VIDEO_PROVIDERS.has(row?.videoProvider)
                 && REVIEWED_VIDEO_QUALITIES.has(row?.videoQuality)

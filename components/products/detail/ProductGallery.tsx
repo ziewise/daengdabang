@@ -27,6 +27,9 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
     const activeColor = activeIdx === null ? selectedColor : undefined;
     const activeImage = activeColor?.image || images[activeIdx ?? 0];
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
+    const playOnce = p.raw?.videoProvider === "ddb_original_video_editor"
+        && p.raw.videoPlaybackMode === "once_hold_last_frame";
+    const videoCaption = playOnce && p.folder === "hugo_icecream_salmon" ? "연어 맛 사용 영상" : undefined;
 
     const activateVideo = () => {
         if (!p.video) return;
@@ -80,7 +83,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                         src={p.video}
                         className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${isVideoVisible ? "opacity-100" : "opacity-0"}`}
                         muted
-                        loop
+                        loop={!playOnce}
                         playsInline
                         preload="auto"
                         onLoadedData={() => setVideoReady(true)}
@@ -89,6 +92,9 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                 )}
 
                 {isVideoVisible && <VideoBrandOverlay src={p.video} />}
+                {isVideoVisible && videoCaption && (
+                    <span className="pointer-events-none absolute bottom-3 left-3 rounded bg-white/95 px-2 py-1 text-xs text-neutral-700">{videoCaption}</span>
+                )}
             </div>
 
             {images.length > 0 && (images.length > 1 || selectedColor) && (

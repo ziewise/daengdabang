@@ -4,6 +4,19 @@ import reviewedLegacyVideos from "./catalog/reviewed-legacy-videos.json" with { 
 import { matchesReviewedLegacyVideo } from "./catalog/reviewed-legacy-video.mjs";
 import reviewedPhotoMotionVideos from "./catalog/reviewed-photo-motion-videos.json" with { type: "json" };
 import { matchesReviewedPhotoMotionVideo } from "./catalog/reviewed-photo-motion-video.mjs";
+import reviewedZiewcraftVideos from "./catalog/reviewed-ziewcraft-videos.json" with { type: "json" };
+import supplierColors from "./catalog/colors.json" with { type: "json" };
+import { matchesReviewedZiewcraftVideo } from "./catalog/reviewed-ziewcraft-video.mjs";
+import type { ZiewcraftVideoIdentity } from "./catalog/ziewcraft-video-review";
+import type { ZiewcraftHumanReviewIdentity } from "./catalog/ziewcraft-human-review";
+import reviewedZiewcraftHumanVideos from "./catalog/reviewed-ziewcraft-human-videos.json" with { type: "json" };
+import { matchesReviewedZiewcraftHumanVideo } from "./catalog/reviewed-ziewcraft-human-video.mjs";
+import type { ZiewcraftContentsReviewIdentity } from "./catalog/ziewcraft-contents-review";
+import reviewedZiewcraftContentsVideos from "./catalog/reviewed-ziewcraft-contents-videos.json" with { type: "json" };
+import { matchesReviewedZiewcraftContentsVideo } from "./catalog/reviewed-ziewcraft-contents-video.mjs";
+import type { ApprovedVideoTrimIdentity } from "./catalog/video-trim-review";
+import reviewedVideoTrims from "./catalog/reviewed-video-trims.json" with { type: "json" };
+import { matchesReviewedVideoTrim } from "./catalog/reviewed-video-trim.mjs";
 
 export type PetTryOnEligibilityReason =
     | "eligible"
@@ -27,9 +40,12 @@ type PetTryOnProductIdentity = {
         videoProvider?: string;
         videoQuality?: string;
         videoJobId?: string | null;
-        videoGenerationIdentity?: Record<string, unknown>;
-        videoEditIdentity?: Record<string, unknown>;
-        videoReviewClass?: string;
+        videoGenerationIdentity?: Record<string, unknown> | null;
+        videoZiewcraftIdentity?: ZiewcraftVideoIdentity | ZiewcraftHumanReviewIdentity | ZiewcraftContentsReviewIdentity | null;
+        videoEditIdentity?: Record<string, unknown> | null;
+        videoTrimIdentity?: ApprovedVideoTrimIdentity | null;
+        videoPlaybackMode?: "once_hold_last_frame";
+        videoReviewClass?: string | null;
         videoReviewSha256?: string;
     };
 };
@@ -179,6 +195,18 @@ export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string
     const video = product.video?.trim();
     if (!video) return undefined;
     const raw = product.raw;
+    if (raw?.videoProvider === "ddb_original_video_editor" || raw?.videoTrimIdentity != null) {
+        return matchesReviewedVideoTrim(product, reviewedVideoTrims, reviewedFlowVideos) ? video : undefined;
+    }
+    if (raw?.videoProvider === "ziewcraft" || raw?.videoZiewcraftIdentity != null) {
+        if (raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_contents_4s.v1") {
+            return matchesReviewedZiewcraftContentsVideo(product, reviewedZiewcraftContentsVideos) ? video : undefined;
+        }
+        if (raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_pair.v1") {
+            return matchesReviewedZiewcraftHumanVideo(product, reviewedZiewcraftHumanVideos, supplierColors) ? video : undefined;
+        }
+        return matchesReviewedZiewcraftVideo(product, reviewedZiewcraftVideos, supplierColors) ? video : undefined;
+    }
     if (raw?.videoProvider === "ddb_exact_product_renderer") {
         return matchesReviewedPhotoMotionVideo(product, reviewedPhotoMotionVideos) ? video : undefined;
     }

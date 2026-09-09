@@ -10,6 +10,7 @@ import { applyReviewedHoverOverride } from "./reviewed-hover-overrides";
 import { catalogDisplayName } from "./catalog-display-name";
 import inventoryData from "./inventory.generated.json";
 import { inventoryForProduct } from "./inventory";
+import { visibleCatalogProducts } from "./visible-products";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -295,7 +296,7 @@ function buildCatalog(): CatalogProduct[] {
 
 /** Includes historical products for stable detail routes and existing order/cart references. */
 export const ALL_CATALOG: CatalogProduct[] = buildCatalog();
-export const CATALOG: CatalogProduct[] = ALL_CATALOG.filter((product) => product.supplierCatalogHistorical !== true);
+export const CATALOG: CatalogProduct[] = visibleCatalogProducts(ALL_CATALOG);
 
 export function findById(id: string): CatalogProduct | undefined {
     return ALL_CATALOG.find((product) => product.id === id || product.folder === id);

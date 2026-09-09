@@ -163,11 +163,138 @@
     "videoJobId": "hover-static72-20260903-30ad633bcf90"
   },
   "hugo_icecream_salmon": {
-    "video": "/images/products/catalog/hugo_icecream_salmon/videos/0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb/hover.mp4",
+    "video": "/images/products/catalog/hugo_icecream_salmon/videos/163bf1566fc65091db86ad6dce2c1c425f014d74a905de5994541af51f5abef7/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "ec70496d-a4a9-4565-9579-cbc49ff307de"
+    "videoProvider": "ddb_original_video_editor",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": null,
+    "videoGenerationIdentity": null,
+    "videoZiewcraftIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": {
+      "kind": "approved_flow_video_time_trim.v1",
+      "newGenerationCount": 0,
+      "sku": {
+        "catalog": {
+          "no": 136,
+          "folder": "hugo_icecream_salmon",
+          "name": "휴고앤샐린 아이스크림 강아지 연어맛",
+          "brandEn": "Hugo & Celine",
+          "isFood": true,
+          "image": "/images/products/catalog/hugo_icecream_salmon/hugo_icecream_salmon.webp",
+          "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10181369049",
+          "gallery": [],
+          "details": [
+            "/images/products/catalog/hugo_icecream_salmon/details/official-visual-01.webp",
+            "/images/products/catalog/hugo_icecream_salmon/details/2.webp"
+          ]
+        },
+        "imageSha256": "d074387f54edeef8aac1bccbe5a4007e87479a4dd34e3be9e636a16b75ac2706",
+        "evidenceSha256": "d6a293f30a79790f7397f65278daedfde474e3ec072bb639e628a4a3bd634b52"
+      },
+      "source": {
+        "provider": "google_flow_web",
+        "video": "/images/products/catalog/hugo_icecream_salmon/videos/0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb/hover.mp4",
+        "sha256": "0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb",
+        "originalGenerationVideoSha256": "c8442936cf7883a20ee4018eb12b2ee85008398eaeb01da26a9fd8311e241093",
+        "videoJobId": "ec70496d-a4a9-4565-9579-cbc49ff307de",
+        "videoGenerationIdentity": null,
+        "approvedRecord": {
+          "folder": "hugo_icecream_salmon",
+          "productId": "p_136",
+          "video": "/images/products/catalog/hugo_icecream_salmon/videos/0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb/hover.mp4",
+          "sha256": "0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb",
+          "videoJobId": "ec70496d-a4a9-4565-9579-cbc49ff307de",
+          "videoQuality": "approved_dog_using",
+          "publicationStatus": "approved",
+          "reviewedAt": "2026-09-06T02:43:36.719516+00:00",
+          "provider": "google_flow_web",
+          "model": "Omni 1.1 Flash",
+          "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+          "sourceProjectProvenance": "root_UI_observation_handoff",
+          "sourceVideoSha256": "c8442936cf7883a20ee4018eb12b2ee85008398eaeb01da26a9fd8311e241093",
+          "sourcePhotoSha256": "d523460e815bcc6c44298e2803dfbd5ea59ef74c31718473d1610c641ec9bf60",
+          "uploadSha256": "c2e491d18850eeb2df0d8978c371b997b9873e32c58ccbae907151cf76471c18",
+          "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+          "referenceGenerator": "builtin_imagegen",
+          "referenceGenerationPerformed": true,
+          "firstEndSame": false,
+          "originalToolOutput": {
+            "path": "C:\\Users\\sadmin\\.codex\\generated_images\\01a072e2-6342-7ed1-9a99-4a89997fdf65\\exec-4ad1d115-feb5-43b1-9c4b-fecf7952c4ee.png",
+            "sha256": "c2e491d18850eeb2df0d8978c371b997b9873e32c58ccbae907151cf76471c18",
+            "bytes": 2058220
+          },
+          "referenceReviewPath": "hugo_icecream_salmon/attempt-02-omni/image-reference-review.json",
+          "referenceReviewSha256": "618e7addfcc82e1c3c83e7055c38239a2779ea6d66165f49f3ac26773166d393",
+          "rootApprovalSha256": "2ad62e47c10e73ab2fdda36ddf067c09aad170e8173a33c62181d63af8c52c52",
+          "qualifiedQaSha256": "b9c20455b91d50d5d53e5ed68a474574f761e47b39457f9f0208eddef97c0816",
+          "candidateManifestSha256": "0b3a0b54182a0683d8dc5ce85132489a842efcd28a984f5c470fad69f126c68b",
+          "sourceAttempt": 2,
+          "durationSeconds": 8,
+          "width": 720,
+          "height": 720,
+          "branding": "baked",
+          "ddbLogoCount": 1,
+          "providerWatermarkPreserved": true,
+          "reviewEvidence": {
+            "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+            "relativeFitScale": "approved_visual_relative_fit_only",
+            "absoluteDimensionsVerified": false,
+            "trueMotion": "approved_8_seconds",
+            "fullFramePreserved": true,
+            "providerWatermarkObservation": "White diamond visibly over the forearm at lower right in native frames; entire raw preserved, no crop or removal.",
+            "providerWatermarkVisuallyConfirmed": true,
+            "sourcePhotoCredit": null,
+            "observations": [
+              "18 whole-scene samples and26 dedicated contact samples manually inspected against exact product cup/lid/food and approved closed-mouth input.",
+              "Cup keeps white rim, paired dachshund black band, ICE CREAM FOR DOGS large text; peach lid maintains SLICK SALMON and paired dog band. Hand and relative cup/dog dimensions remain plausible.",
+              "Two tongue extensions around1.75-2.875s and4.75-5.75s begin/retract into the mouth. A broad continuous tongue shows a central groove and partial food-mound occlusion; no detached or duplicate tongue established in viewed samples.",
+              "Tongue contour is briefly partly hidden by food. Retraction samples show continuous return, not a disconnected tip. This is a qualified visual judgment, not pixel-level anatomy certification.",
+              "Actual head rise/turn and blinks around4.625s and end; seated small adult Maltese body and paws stable without observed major anatomical distortion.",
+              "Small hand lowering and lid perspective change occur smoothly; principal product identity and round cup/lid remain stable."
+            ],
+            "limitations": [
+              "Tongue extends farther than the requested very short tip and contacts the central mound; each contact lasts roughly one second. Exact prompt choreography is not fully met.",
+              "Food occludes part of the tongue during contact; every fine contour cannot be certified. Prior attempt01 remains qualified HOLD, not retroactively declared a definite duplicated tongue.",
+              "Micro package type and nominal120g physical quantity/absolute dimensions cannot be certified from generated pixels;120g is a nominal net weight, not a volume measurement.",
+              "18 full-scene samples and26 contact detail samples manually reviewed; all192 frames decoded but not all192 full frames manually reviewed.",
+              "Start/end head angle and closed eyelids differ; seamless loop is not certified. No audio audition; final candidate is silent."
+            ],
+            "rootApprovedScopes": [
+              "Stable cup, large label, hand and SLICK SALMON lid; plausible relative scale.",
+              "Two actual licks with a continuous broad tongue, central groove and partial food occlusion; no detached additional tongue established.",
+              "Whole raw and original provider diamond preserved, one DDB footer; true8s720square silent192-frame candidate."
+            ]
+          }
+        },
+        "approvedRecordSha256": "705db79112baa5d36603ae3ddd54de1797e497f7278649c96873d7c5288dacc8",
+        "publicationEvidenceSha256": "65f112ac2ec63553d97f276ab1c9bd27ccb0c964557bd44fb78df2d29ce4eb7a",
+        "wasPublishedApproved": true,
+        "wasQuarantined": false,
+        "wasWithdrawn": false,
+        "frameCount": 192,
+        "fps": 24,
+        "width": 720,
+        "height": 720
+      },
+      "recipe": {
+        "operation": "frame_range_trim",
+        "sha256": "5e7bb8f218068a3b9226777ed0408f44faf8b176efa511c57e05d15ba2a2a6b7",
+        "sourceVideoSha256": "0efa56442ff4251e16c0b11db4cf4f28513f62f78d16e8244d92c1124c9019cb",
+        "finalVideoSha256": "163bf1566fc65091db86ad6dce2c1c425f014d74a905de5994541af51f5abef7",
+        "startFrameInclusive": 0,
+        "endFrameExclusive": 96,
+        "fps": 24,
+        "durationSeconds": 4,
+        "speed": 1,
+        "spatialTransform": "none",
+        "frameInterpolation": false,
+        "newGenerationCount": 0
+      }
+    },
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoReviewSha256": "6b522c27e501e30670a82aa83f8440d1ae0c6019bdecacb773e4f103ba732c79"
   },
   "iby_backpack_fc1705": null,
   "iby_backpack_fc1752": null,
@@ -1516,11 +1643,138 @@
     }
   },
   "soopa_healthybites_appleblueberry": {
-    "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989/hover.mp4",
+    "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/299e4bd1201bd61d3f857dc8c114fa64229e452e8933d8f37cb2bd61094023c5/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "4b1c284e-c7f8-438d-a2cb-d13065d3b65a"
+    "videoProvider": "ddb_original_video_editor",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": null,
+    "videoGenerationIdentity": null,
+    "videoZiewcraftIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": {
+      "kind": "approved_flow_video_time_trim.v1",
+      "newGenerationCount": 0,
+      "sku": {
+        "catalog": {
+          "no": 231,
+          "folder": "soopa_healthybites_appleblueberry",
+          "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 야채 사과&블루베리 50g",
+          "brandEn": "Soopa",
+          "isFood": true,
+          "image": "/images/products/catalog/soopa_healthybites_appleblueberry/soopa_healthybites_appleblueberry.webp",
+          "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8336348493",
+          "gallery": [],
+          "details": [
+            "/images/products/catalog/soopa_healthybites_appleblueberry/details/official-visual-01.webp",
+            "/images/products/catalog/soopa_healthybites_appleblueberry/details/2.webp",
+            "/images/products/catalog/soopa_healthybites_appleblueberry/details/3.webp",
+            "/images/products/catalog/soopa_healthybites_appleblueberry/details/4.webp",
+            "/images/products/catalog/soopa_healthybites_appleblueberry/details/5.webp",
+            "/images/products/catalog/soopa_healthybites_appleblueberry/details/6.webp"
+          ]
+        },
+        "imageSha256": "5b83200d3f29386897393411ef750295de797ba468520847f82f1f8d6c3f5a4f",
+        "evidenceSha256": "3666b607933765fe0404acb3b82491819bb6bfda2e36f7d8fe513b63c3d5efc7"
+      },
+      "source": {
+        "provider": "google_flow_web",
+        "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989/hover.mp4",
+        "sha256": "aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989",
+        "originalGenerationVideoSha256": "b2bbbdb8fa6eda3efaab01cb36be16c7165eebf7c8ff4b315e3530d6473a4a15",
+        "videoJobId": "4b1c284e-c7f8-438d-a2cb-d13065d3b65a",
+        "videoGenerationIdentity": null,
+        "approvedRecord": {
+          "folder": "soopa_healthybites_appleblueberry",
+          "productId": "p_231",
+          "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989/hover.mp4",
+          "sha256": "aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989",
+          "videoJobId": "4b1c284e-c7f8-438d-a2cb-d13065d3b65a",
+          "videoQuality": "approved_dog_using",
+          "publicationStatus": "approved",
+          "reviewedAt": "2026-09-06T01:12:05.601372+00:00",
+          "provider": "google_flow_web",
+          "model": "Omni 1.1 Flash",
+          "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+          "sourceVideoSha256": "b2bbbdb8fa6eda3efaab01cb36be16c7165eebf7c8ff4b315e3530d6473a4a15",
+          "sourcePhotoSha256": "5b83200d3f29386897393411ef750295de797ba468520847f82f1f8d6c3f5a4f",
+          "uploadSha256": "313fa50107197dcc3b365d870f99b5bec29dad9e884ea999469494621c4e63be",
+          "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+          "referenceGenerator": "builtin_imagegen",
+          "referenceGenerationPerformed": true,
+          "referenceReviewSha256": "69297092e7a1580c23b178267034537c869aeb747b5f2c9aa803e91c65dc631f",
+          "referenceReviewPath": "soopa_healthybites_appleblueberry/image-reference-review.json",
+          "rootApprovalSha256": "44184341028cdcef8815133bf6b94e98fff9498a62a8013b8e8b4858fe898ef4",
+          "qualifiedQaSha256": "3e4ed1f94f8a1dd901949d7f63672a16e33e06911ed93b944bedc9003ba280ac",
+          "candidateManifestSha256": "7417c75f5b631f208faee0c9cf81491d96e7982834f41ec59a91e3ecd872d36c",
+          "durationSeconds": 8,
+          "width": 720,
+          "height": 720,
+          "branding": "baked",
+          "ddbLogoCount": 1,
+          "providerWatermarkPreserved": true,
+          "reviewEvidence": {
+            "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+            "relativeFitScale": "approved_visual_relative_fit_only",
+            "absoluteDimensionsVerified": false,
+            "trueMotion": "approved_8_seconds",
+            "fullFramePreserved": true,
+            "providerWatermarkObservation": null,
+            "providerWatermarkVisuallyConfirmed": false,
+            "sourcePhotoCredit": "Neither exact source nor input has a visible author credit to reconstruct. Raw and input are unchanged; future candidate retains all source pixels spatially.",
+            "observations": [
+              "Actual manufacturer packet, real short thick flower bites and exact generated Shih Tzu input were viewed before comparing raw.",
+              "One small beige thick flower-lobed piece is held at finger-relative size through0–2s; mouth opens, fingers make plausible contact and the piece is naturally partially occluded from approximately2.25s.",
+              "The hand releases and withdraws around3–4s while one edge-on lobed piece remains in the mouth. Repeated small jaw opening/closing is visible; the piece ceases to be visible around5s after contact. Nose licking is visible around6.5–7s.",
+              "No extra flower bite, long stick transformation, loss before mouth contact, extra finger/limb or established hand-to-mouth geometry failure was found in the sampled frames.",
+              "Stationary whole kraft/blue packet retains its silhouette, hanging slot, SOOPA/HEALTHY BITES/APPLE & BLUEBERRY major text, flower window, green apple/blueberries and printed terrier layout.",
+              "The small brown-and-white Shih Tzu has coherent eyes, muzzle, paws and fur in a cute food-reward advertisement context. Close-up composition shows face, paws, offering hand and complete packet without new shop logos or badges."
+            ],
+            "limitations": [
+              "Actual centimetres and physical50g packet dimensions are not certified; relative bite/finger/dog scale is plausible against the input and real flower-bite photo.",
+              "Fine package microtype, including the tiny LOW FAT line, is not pixel-equivalent certified. Large SOOPA, HEALTHY BITES and APPLE & BLUEBERRY labels, blue/kraft layout and flower window remain legible/stable in reviewed frames.",
+              "During chewing the piece is seen edge-on or partly hidden by mouth/fur. Exact individual flower lobes and internal swallowing cannot be certified after occlusion; no clear duplicate piece or precontact disappearance was observed.",
+              "This is not a seamless loop: the hand withdraws, the bite is eaten, and the final head/hand poses differ from the first frame. Eight-second advertising use is proposed with this limitation.",
+              "Provider mark is not confidently legible in native raw frames, so no affirmative visual identification is claimed. The entire source frame is retained, with no cropping, masking or watermark removal.",
+              "Dog pedigree, hidden anatomy and unsampled frame microdetail are not certified. All192 frames decoded;18 temporal samples plus3 denser contact samples were manually compared."
+            ],
+            "rootApprovedScopes": [
+              "Product identity and major packet/flavor layout",
+              "One short thick flower bite and plausible relative scale",
+              "Actual hand-to-mouth transfer, jaw motion and nose lick",
+              "Entire raw frame preserved without removing provider marks",
+              "One existing DaengDaBang footer logo",
+              "True8s720square silent candidate"
+            ]
+          }
+        },
+        "approvedRecordSha256": "de493c3d3c2020ce9f188bf61b1de22a3d32d24356d5e8d5c061831d511d764d",
+        "publicationEvidenceSha256": "01dd95efb1ce6d92b8ebdeb659a12c056eb72ccef87614f3c5ca84248b3ae48c",
+        "wasPublishedApproved": true,
+        "wasQuarantined": false,
+        "wasWithdrawn": false,
+        "frameCount": 192,
+        "fps": 24,
+        "width": 720,
+        "height": 720
+      },
+      "recipe": {
+        "operation": "frame_range_trim",
+        "sha256": "b6ad3c446a5f9b4d044ee185c4369cc8097ad7f80a25de01d7e504826c596f09",
+        "sourceVideoSha256": "aa003641f9e5f64154bf94f97f6e7e5f5e92022b083b547855a3ae01aebe1989",
+        "finalVideoSha256": "299e4bd1201bd61d3f857dc8c114fa64229e452e8933d8f37cb2bd61094023c5",
+        "startFrameInclusive": 0,
+        "endFrameExclusive": 96,
+        "fps": 24,
+        "durationSeconds": 4,
+        "speed": 1,
+        "spatialTransform": "none",
+        "frameInterpolation": false,
+        "newGenerationCount": 0
+      }
+    },
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoReviewSha256": "110f427f0c39c17596f3a10ced2721deba69bdd41d1e3cf406f56125284dd6b0"
   },
   "soopa_healthybites_carrotpumpkin": null,
   "soopa_healthybites_cranberrysweetpotato": null,
@@ -1772,10 +2026,137 @@
     "videoJobId": "d839f00a-1e1d-4e3f-8340-66873623a652"
   },
   "soopa_healthybites_coconutchia": {
-    "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7/hover.mp4",
+    "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/a48e4a5ec61185746d75398386d3b1306451827d532f89831b6fc0a61b403211/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "6ee0ae1b-f23d-470b-9ad1-b6482404f22f"
+    "videoProvider": "ddb_original_video_editor",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": null,
+    "videoGenerationIdentity": null,
+    "videoZiewcraftIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": {
+      "kind": "approved_flow_video_time_trim.v1",
+      "newGenerationCount": 0,
+      "sku": {
+        "catalog": {
+          "no": 298,
+          "folder": "soopa_healthybites_coconutchia",
+          "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 코코넛&치아씨드 50g",
+          "brandEn": "Soopa",
+          "isFood": true,
+          "image": "/images/products/catalog/soopa_healthybites_coconutchia/soopa_healthybites_coconutchia.webp",
+          "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7100925868",
+          "gallery": [],
+          "details": [
+            "/images/products/catalog/soopa_healthybites_coconutchia/details/official-visual-01.webp",
+            "/images/products/catalog/soopa_healthybites_coconutchia/details/2.webp",
+            "/images/products/catalog/soopa_healthybites_coconutchia/details/3.webp",
+            "/images/products/catalog/soopa_healthybites_coconutchia/details/4.webp",
+            "/images/products/catalog/soopa_healthybites_coconutchia/details/5.webp",
+            "/images/products/catalog/soopa_healthybites_coconutchia/details/6.webp"
+          ]
+        },
+        "imageSha256": "12f3f7ce442c68de0b9591925e471cd94e8e7dfc204a0718df5f7ceb4c6e9968",
+        "evidenceSha256": "5bbef9a5db915d3b4f485b81b578c98d9ff77c2c7f25ed049d7094158485e474"
+      },
+      "source": {
+        "provider": "google_flow_web",
+        "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7/hover.mp4",
+        "sha256": "fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7",
+        "originalGenerationVideoSha256": "75a33da3ac9d42b2930ab50166771d17efb4d7cfa8ac7cc3c46bbdda8771a4cd",
+        "videoJobId": "6ee0ae1b-f23d-470b-9ad1-b6482404f22f",
+        "videoGenerationIdentity": null,
+        "approvedRecord": {
+          "folder": "soopa_healthybites_coconutchia",
+          "productId": "p_298",
+          "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7/hover.mp4",
+          "sha256": "fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7",
+          "videoJobId": "6ee0ae1b-f23d-470b-9ad1-b6482404f22f",
+          "videoQuality": "approved_dog_using",
+          "publicationStatus": "approved",
+          "reviewedAt": "2026-09-05T23:42:02.859043+00:00",
+          "provider": "google_flow_web",
+          "model": "Omni 1.1 Flash",
+          "sourceProjectUrl": "https://flow.google.com/project/ace75711-8ed4-41e9-9f83-c6dd93defb8d",
+          "sourceVideoSha256": "75a33da3ac9d42b2930ab50166771d17efb4d7cfa8ac7cc3c46bbdda8771a4cd",
+          "sourcePhotoSha256": "12f3f7ce442c68de0b9591925e471cd94e8e7dfc204a0718df5f7ceb4c6e9968",
+          "uploadSha256": "655b5ff2a4b476a7401096c08470491f00cad0815143d9ec24c4fec5605e903f",
+          "referenceGeneration": "builtin_imagegen_with_exact_product_references",
+          "referenceGenerator": "builtin_imagegen",
+          "referenceGenerationPerformed": true,
+          "referenceReviewSha256": "c6f26da2dddfd54f6e5f81a8398a4d7f4fb307a0c960c9cb990e6330bd93d6b4",
+          "referenceReviewPath": "soopa_healthybites_coconutchia/image-reference-review.json",
+          "rootApprovalSha256": "93e3cd5fe70ff6bb9b3eee9d7b60006511d94ef365d1cf0ecb411d64afde9478",
+          "qualifiedQaSha256": "75c9a8ac670b994e7d7ca869d286ed965fe30f35dff966811d9c12c2bd9b5d3d",
+          "candidateManifestSha256": "96f786cafe6bd6c82df23c13d37edf058c8405f9e3194c65a3aab3efc52dcb7a",
+          "durationSeconds": 8,
+          "width": 720,
+          "height": 720,
+          "branding": "baked",
+          "ddbLogoCount": 1,
+          "providerWatermarkPreserved": true,
+          "reviewEvidence": {
+            "productFidelity": "root_approved_against_exact_product_reference_and_dense_raw_and_final_frames",
+            "relativeFitScale": "approved_visual_relative_fit_only",
+            "absoluteDimensionsVerified": false,
+            "trueMotion": "approved_8_seconds",
+            "fullFramePreserved": true,
+            "providerWatermarkObservation": "White Google diamond at lower right, approximately x1160 y600, observed in full native frames; entire raw frame retained.",
+            "providerWatermarkVisuallyConfirmed": true,
+            "sourcePhotoCredit": "Exact source photos and generated input unchanged; no source credit/provider mark removed.",
+            "observations": [
+              "The single short thick beige flower-lobed bite preserves its major shape and finger-relative size while the hand advances toward the dog.",
+              "Native2.5/3/3.5s show hand-to-mouth contact and progressive occlusion of the bite; at4s empty fingers withdraw, followed by actual chewing and at6s a nose lick. This is a real animated feeding sequence rather than still-image pan/zoom.",
+              "The small Maltese-like dog maintains coherent visible paws, head, mouth and anatomy in sampled frames. No duplicate treat or pre-contact disappearance was observed.",
+              "The kraft/blue packet, cutout handle, flower-shaped window, coconut artwork, printed dog and large SOOPA/HEALTHY BITES/Coconut&Chia flavor labels remain recognizable and stationary.",
+              "The packet does not inflate, rotate, turn into another flavor or acquire a new badge in sampled frames.",
+              "Small Organic Coconut Oil and calorie print is less legible in the raw720p render than in the approved still; exact characters and unchanged pixels are not certified. No clearly legible contradictory flavor or numeral was established.",
+              "No raw DDB logo observed; Google diamond remains visible."
+            ],
+            "limitations": [
+              "All192 video frames decoded;18 sampled raw frames manually reviewed and7 native critical frames. Every single frame was not separately visually approved.",
+              "Tiny packet print is blurred/degraded and cannot be called pixel-exact or unchanged. Root must judge this limitation for final publication.",
+              "Individual bite centimetres, weight, package physical size and dog measurements are not certified; source hand-relative proportions are used.",
+              "The bite becomes occluded during eating. Actual internal swallowing or exact consumed mass cannot be proven from external frames.",
+              "Ending pose has an empty withdrawn hand and post-feeding expression; seamless looping is not certified.",
+              "Raw has audio which was not listened to; standard candidate removes the audio.",
+              "No final publication approval by this subagent.",
+              "Root approved this exact candidate with these documented limitations. Actual publication is still pending; stock/sale eligibility is unchanged."
+            ],
+            "rootApprovedScopes": [
+              "One flower-shaped bite received and chewed, followed by nose licking; large branding/flavor maintained. Tiny package print remains blurred and uncertified.",
+              "Exactly one DDB footer logo, full source and mandatory provider mark preserved.",
+              "Absolute centimetres, hidden microdetail and seamless loop remain uncertified; Soopa tiny print blur is explicitly retained as a limitation."
+            ]
+          }
+        },
+        "approvedRecordSha256": "36426921d5e22a34457ec84293f2c5ef6ac563074d95961eab17699985508f44",
+        "publicationEvidenceSha256": "af008c0d036c9468520c549976cbcfaf78c5734479316c3eefe51c3693f736d2",
+        "wasPublishedApproved": true,
+        "wasQuarantined": false,
+        "wasWithdrawn": false,
+        "frameCount": 192,
+        "fps": 24,
+        "width": 720,
+        "height": 720
+      },
+      "recipe": {
+        "operation": "frame_range_trim",
+        "sha256": "9be6fdebd443dbbdf71535174fbc0147620b7ab483241f7a5bc5fee8276393a5",
+        "sourceVideoSha256": "fe443c0d9d5879908596885af81e2b747ed42f7c4f22b5b536d191d1c94489b7",
+        "finalVideoSha256": "a48e4a5ec61185746d75398386d3b1306451827d532f89831b6fc0a61b403211",
+        "startFrameInclusive": 12,
+        "endFrameExclusive": 108,
+        "fps": 24,
+        "durationSeconds": 4,
+        "speed": 1,
+        "spatialTransform": "none",
+        "frameInterpolation": false,
+        "newGenerationCount": 0
+      }
+    },
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoReviewSha256": "e25f24bf05e7205e095e5f64f64a9ec5d54e52076db4c2db7e46ad8e62572951"
   }
 }

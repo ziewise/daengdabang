@@ -70,6 +70,29 @@ const galleryMedia = tree => tree.find(node => node.props?.onMouseEnter && node.
 const galleryImage = tree => tree.find(node => node.type === "color-image");
 const renderedVideo = tree => tree.find(node => node.type === "video");
 
+test("the detail gallery holds a reviewed trim's last frame and replays after leaving", () => {
+    const video = galleryVideo();
+    const state = hooks(video);
+    const Gallery = loadGallery(state, mediaBrowser);
+    const product = { id: "fixture", name: "Snack", image: "/original.jpg", video: "/trim.mp4", raw: { videoProvider: "ddb_original_video_editor", videoPlaybackMode: "once_hold_last_frame" } };
+    const wrapper = Gallery({ product, selectedColor: colors[1] });
+    const render = () => nodes(state.render(wrapper.type, wrapper.props));
+    galleryMedia(render()).props.onMouseEnter();
+    video.currentTime = 4;
+    let tree = render();
+    assert.equal(renderedVideo(tree).props.loop, false);
+    assert.equal(renderedVideo(tree).props.onEnded, undefined);
+    assert.match(renderedVideo(tree).props.className, /opacity-100/);
+    assert.equal(video.currentTime, 4);
+    galleryMedia(tree).props.onMouseLeave();
+    tree = render();
+    assert.equal(video.currentTime, 0);
+    assert.equal(galleryImage(tree).props.color, colors[1]);
+    assert.match(renderedVideo(tree).props.className, /opacity-0/);
+    galleryMedia(tree).props.onMouseEnter();
+    assert.equal(video.plays, 2);
+});
+
 test("crop coordinates are clipped to the original image and invalid regions are rejected", () => {
     assert.deepEqual(geometry.normalizeProductImageRegion({ x: -0.25, y: 0.75, width: 0.75, height: 0.5 }), { x: 0, y: 0.75, width: 0.5, height: 0.25 });
     for (const region of [undefined, { x: 0, y: 0, width: 0, height: 1 }, { x: 0, y: 0, width: -1, height: 1 }, { x: 1, y: 0, width: 1, height: 1 }, { x: 0, y: 2, width: 1, height: 1 }, { x: NaN, y: 0, width: 1, height: 1 }, { x: 0, y: 0, width: Infinity, height: 1 }]) {

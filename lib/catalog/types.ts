@@ -1,4 +1,8 @@
 import type { ProductInventory } from "./inventory";
+import type { ZiewcraftVideoIdentity } from "./ziewcraft-video-review";
+import type { ZiewcraftHumanReviewIdentity } from "./ziewcraft-human-review";
+import type { ZiewcraftContentsReviewIdentity } from "./ziewcraft-contents-review";
+import type { ApprovedVideoTrimIdentity } from "./video-trim-review";
 
 /** Public source image metadata; dimensions are the observed intrinsic pixels. */
 export interface SupplierDetailImage {
@@ -65,11 +69,17 @@ export interface CatalogRow {
     /** 이전 자산 검증에 사용한 commit. 새 Pages 빌드는 workflow의 현재 SHA를 우선한다. */
     videoSourceCommit?: string;
     /** Admin-reviewed hover publication provenance. */
-    videoProvider?: "ziewcraft" | "ddb_exact_product_renderer" | "google_flow_web" | "unknown";
+    videoProvider?: "ziewcraft" | "ddb_exact_product_renderer" | "ddb_original_video_editor" | "google_flow_web" | "unknown";
     videoQuality?: string;
     videoJobId?: string | null;
     /** Exact reviewed scene-download identity; never a fabricated job ID. */
-    videoGenerationIdentity?: Record<string, unknown>;
+    videoGenerationIdentity?: Record<string, unknown> | null;
+    /** Actual Director API output and exact supplier/color evidence. */
+    videoZiewcraftIdentity?: ZiewcraftVideoIdentity | ZiewcraftHumanReviewIdentity | ZiewcraftContentsReviewIdentity | null;
+    /** Exact temporal edit of a separately approved original video. */
+    videoTrimIdentity?: ApprovedVideoTrimIdentity | null;
+    /** Only exact approved original-video trims may finish once and retain the last frame. */
+    videoPlaybackMode?: "once_hold_last_frame";
     /** Actual source-photo edit provenance; not a generated video job. */
     videoEditIdentity?: {
         method: "source_photo_motion_edit";
@@ -78,9 +88,9 @@ export interface CatalogRow {
         technicalReviewSha256: string;
         visualReviewSha256: string;
         durationSeconds: 4;
-    };
+    } | null;
     /** Reuse review class is distinct from the original generation provider. */
-    videoReviewClass?: "legacy_reviewed";
+    videoReviewClass?: "legacy_reviewed" | null;
     videoReviewSha256?: string;
     externalReviewSource?: string;
     externalReviewUrl?: string;

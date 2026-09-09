@@ -12,6 +12,7 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
     const reviews=read('../lib/catalog/reviewed-photo-motion-videos.json');
     const rows=read('../lib/catalog/raw.json');
     const flow=read('../lib/catalog/reviewed-flow-videos.json');
+    const trims=read('../lib/catalog/reviewed-video-trims.json');
     assert.deepEqual(Object.keys(reviews).sort(),['soopa_dental_appleblueberry','soopa_dental_coconutchia','soopa_dental_kaleapple']);
     for(const review of Object.values(reviews)) {
         const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
@@ -32,7 +33,17 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
     }
     const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
     assert.equal(active.length,83);
-    assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,76);
+    assert.equal(Object.keys(flow).length,76,'all original Flow approvals remain preserved');
+    assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,73);
+    const derivatives=active.filter(r=>r.videoProvider==='ddb_original_video_editor');
+    assert.deepEqual(derivatives.map(r=>r.folder).sort(),['hugo_icecream_salmon','soopa_healthybites_appleblueberry','soopa_healthybites_coconutchia']);
+    for(const raw of derivatives) {
+        assert.equal(raw.video,trims[raw.folder].video);
+        assert.equal(raw.videoPlaybackMode,'once_hold_last_frame');
+        assert.equal(trims[raw.folder].review.loopDecision,'hold');
+        assert.deepEqual(raw.videoTrimIdentity.source.approvedRecord,flow[raw.folder],'separate temporal edit retains exact original approval');
+        assert.equal(Object.hasOwn(reviews,raw.folder),false,'no withdrawn photo edit is restored by this source-video trim');
+    }
 });
 
 // Synthetic policy examples do not enter the production authority manifest.

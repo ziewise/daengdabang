@@ -65,6 +65,10 @@ export default function ProductCard({
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoActive, setVideoActive] = useState(false);
     const hasVideo = !!p.video;
+    const playOnce = p.raw?.videoProvider === "ddb_original_video_editor"
+        && p.raw.videoPlaybackMode === "once_hold_last_frame";
+    const videoCaption = playOnce && p.folder === "hugo_icecream_salmon"
+        ? (locale === "en" ? "Salmon flavour shown" : "연어 맛 사용 영상") : undefined;
 
     const activate = () => {
         if (!hasVideo) return;
@@ -120,13 +124,16 @@ export default function ProductCard({
                             ref={videoRef}
                             src={p.video}
                             muted
-                            loop
+                            loop={!playOnce}
                             playsInline
                             preload="metadata"
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />
                     )}
                     {hasVideo && videoActive && <VideoBrandOverlay src={p.video} />}
+                    {hasVideo && videoActive && videoCaption && (
+                        <span className="pointer-events-none absolute bottom-2 left-2 rounded bg-white/95 px-2 py-1 text-[10px] text-neutral-700">{videoCaption}</span>
+                    )}
 
                 {/* 좌상단 배지 — BEST + NEW */}
                     {(showBest || shouldShowNew) && (

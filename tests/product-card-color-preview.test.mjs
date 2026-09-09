@@ -21,6 +21,7 @@ function card(overrides = {}) {
     const product = {
         id: "p_fixture", name: "Front Range", image: "/original.jpg", brandEn: "Ruffwear",
         price: 72000, discountRate: 0, originalPrice: null, reviewCount: 0,
+        raw: {},
         colors: [
             { name: "Blue", image: "/blue.jpg", chip: "/blue-chip.jpg" },
             { name: "Red", image: "/red.jpg", chip: "/red-chip.jpg" },
@@ -67,6 +68,45 @@ function card(overrides = {}) {
 const button = (tree, label) => tree.find(n => n.type === "button" && n.props["aria-label"] === label);
 const thumbnail = tree => tree.find(n => n.type === "img" && n.props.sizes.includes("max-width"));
 const media = tree => tree.find(n => n.props?.onMouseEnter);
+
+test("reviewed four-second edits hold their last frame and replay on the next hover", () => {
+    const fixture = card({ video: "/trim.mp4", raw: { videoProvider: "ddb_original_video_editor", videoPlaybackMode: "once_hold_last_frame" } });
+    let tree = fixture.render();
+    button(tree, "Red 미리보기").props.onClick();
+    media(fixture.render()).props.onMouseEnter();
+    fixture.video.currentTime = 4;
+    tree = fixture.render();
+    const player = tree.find(n => n.type === "video");
+    assert.equal(player.props.loop, false);
+    assert.equal(player.props.onEnded, undefined, "native ended retains the last frame until hover ends");
+    assert.match(player.props.className, /opacity-100/);
+    assert.equal(fixture.video.currentTime, 4);
+    media(tree).props.onMouseLeave();
+    tree = fixture.render();
+    assert.equal(fixture.video.currentTime, 0);
+    assert.equal(thumbnail(tree).props.src, "/red.jpg");
+    assert.match(thumbnail(tree).props.className, /opacity-100/);
+    media(tree).props.onMouseEnter();
+    assert.equal(fixture.video.plays, 2);
+});
+
+test("one-shot metadata does not change playback for other providers", () => {
+    for (const raw of [{}, { videoProvider: "google_flow_web", videoPlaybackMode: "once_hold_last_frame" }, { videoProvider: "ddb_original_video_editor" }]) {
+        const tree = card({ video: "/existing.mp4", raw }).render();
+        assert.equal(tree.find(n => n.type === "video").props.loop, true);
+    }
+});
+
+test("the salmon demonstration stays labelled when a different flavour photo is selected", () => {
+    const fixture = card({ folder: "hugo_icecream_salmon", video: "/salmon.mp4", raw: { videoProvider: "ddb_original_video_editor", videoPlaybackMode: "once_hold_last_frame" } });
+    button(fixture.render(), "Red 미리보기").props.onClick();
+    assert.equal(fixture.render().some(n => n.props?.children === "연어 맛 사용 영상"), false);
+    media(fixture.render()).props.onMouseEnter();
+    assert.equal(fixture.render().some(n => n.props?.children === "연어 맛 사용 영상"), true);
+    assert.equal(thumbnail(fixture.render()).props.src, "/red.jpg");
+    media(fixture.render()).props.onMouseLeave();
+    assert.equal(fixture.render().some(n => n.props?.children === "연어 맛 사용 영상"), false);
+});
 
 test("only actual colors are selectable and replace the thumbnail without changing its fit", () => {
     const fixture = card();
