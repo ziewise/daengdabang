@@ -29,7 +29,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
 
     const activateVideo = () => {
-        if (!p.video || activeColor) return;
+        if (!p.video) return;
         const video = videoRef.current;
         setShowVideo(true);
         if (!video) return;

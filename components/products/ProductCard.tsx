@@ -67,7 +67,7 @@ export default function ProductCard({
     const hasVideo = !!p.video;
 
     const activate = () => {
-        if (!hasVideo || selectedColor) return;
+        if (!hasVideo) return;
         setVideoActive(true);
         videoRef.current?.play().catch(() => {});
     };

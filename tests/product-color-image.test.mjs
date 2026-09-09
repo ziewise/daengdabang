@@ -5,13 +5,13 @@ import test from "node:test";
 import ts from "typescript";
 
 const require = createRequire(import.meta.url);
-function loadModule(relative, dependencies = {}) {
+function loadModule(relative, dependencies = {}, browser = {}) {
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
     });
     const loaded = { exports: {} };
-    new Function("require", "module", "exports", outputText)(
-        id => dependencies[id] ?? require(id), loaded, loaded.exports,
+    new Function("require", "module", "exports", ...Object.keys(browser), outputText)(
+        id => dependencies[id] ?? require(id), loaded, loaded.exports, ...Object.values(browser),
     );
     return loaded.exports;
 }
@@ -22,12 +22,12 @@ const colors = [
     { name: "Red", image: "/official-both.jpg", chip: "/official-both.jpg", imageWidth: 500, imageHeight: 500, imageRegion: { x: 0, y: 0.5, width: 1, height: 0.5 } },
 ];
 
-function hooks() {
+function hooks(refCurrent = null) {
     let state = [];
     let cursor = 0;
     return {
         react: {
-            useRef: () => ({ current: null }),
+            useRef: () => ({ current: refCurrent }),
             useState(initial) {
                 const slot = cursor++;
                 if (!(slot in state)) state[slot] = initial;
@@ -44,6 +44,31 @@ function nodes(value) {
     if (Array.isArray(value)) return value.flatMap(nodes);
     return [value, ...nodes(value.props?.children)];
 }
+
+function loadGallery(state, browser = {}) {
+    return loadModule("components/products/detail/ProductGallery.tsx", {
+        react: state.react, "next/image": "img", "@/lib/catalog": { isNewProduct: () => false },
+        "@/components/main/best.module.css": {}, "@/components/products/VideoBrandOverlay": "video-overlay",
+        "@/components/products/ProductColorImage": "color-image", "@/lib/catalog/product-color-image": geometry,
+    }, browser).default;
+}
+
+function galleryVideo(readyState = 2) {
+    return {
+        readyState, preload: "none", currentTime: 3, plays: 0, pauses: 0, loads: 0,
+        play() { this.plays++; return Promise.resolve(); },
+        pause() { this.pauses++; },
+        load() { this.loads++; },
+    };
+}
+
+const mediaBrowser = {
+    HTMLMediaElement: { HAVE_CURRENT_DATA: 2 },
+    window: { requestAnimationFrame: callback => callback() },
+};
+const galleryMedia = tree => tree.find(node => node.props?.onMouseEnter && node.props?.onMouseLeave);
+const galleryImage = tree => tree.find(node => node.type === "color-image");
+const renderedVideo = tree => tree.find(node => node.type === "video");
 
 test("crop coordinates are clipped to the original image and invalid regions are rejected", () => {
     assert.deepEqual(geometry.normalizeProductImageRegion({ x: -0.25, y: 0.75, width: 0.75, height: 0.5 }), { x: 0, y: 0.75, width: 0.5, height: 0.25 });
@@ -113,11 +138,7 @@ test("missing intrinsic dimensions load before revealing the crop and are never 
 
 test("gallery selection resets between same-URL color regions while full gallery images remain selectable", () => {
     const state = hooks();
-    const { default: ProductGallery } = loadModule("components/products/detail/ProductGallery.tsx", {
-        react: state.react, "next/image": "img", "@/lib/catalog": { isNewProduct: () => false },
-        "@/components/main/best.module.css": {}, "@/components/products/VideoBrandOverlay": () => null,
-        "@/components/products/ProductColorImage": "color-image", "@/lib/catalog/product-color-image": geometry,
-    });
+    const ProductGallery = loadGallery(state);
     const product = { id: "fixture", name: "Harness", image: colors[0].image, gallery: ["/side.jpg"] };
     let wrapper = ProductGallery({ product, selectedColor: colors[0] });
     const render = () => nodes(state.render(wrapper.type, wrapper.props));
@@ -144,6 +165,92 @@ test("gallery selection resets between same-URL color regions while full gallery
     assert.ok(onlyOriginal, "the full original remains selectable even when it is the only gallery image");
     onlyOriginal.props.onClick();
     assert.equal(mainImage(render()).props.color, undefined);
+});
+
+test("gallery hover and focus play the product video for every selected crop and leaving restores that crop", () => {
+    for (const selectedColor of colors) {
+        const video = galleryVideo();
+        const state = hooks(video);
+        const ProductGallery = loadGallery(state, mediaBrowser);
+        const product = { id: "fixture", name: "Harness", image: "/original.jpg", video: "/reviewed.mp4" };
+        const wrapper = ProductGallery({ product, selectedColor });
+        const render = () => nodes(state.render(wrapper.type, wrapper.props));
+        let tree = render();
+        const checkSelectedImage = () => {
+            assert.equal(galleryImage(tree).props.src, selectedColor.image);
+            assert.equal(galleryImage(tree).props.color, selectedColor);
+            assert.deepEqual(galleryImage(tree).props.color.imageRegion, selectedColor.imageRegion);
+            assert.equal(galleryImage(tree).props.alt, `Harness · ${selectedColor.name}`);
+        };
+        checkSelectedImage();
+        assert.match(renderedVideo(tree).props.className, /opacity-0/);
+        for (const [enter, leave] of [["onMouseEnter", "onMouseLeave"], ["onFocus", "onBlur"]]) {
+            const previousPlays = video.plays;
+            const previousPauses = video.pauses;
+            galleryMedia(tree).props[enter]();
+            tree = render();
+            assert.equal(video.plays, previousPlays + 1);
+            assert.equal(video.preload, "auto");
+            assert.equal(video.loads, 0);
+            assert.equal(renderedVideo(tree).props.src, product.video);
+            assert.match(renderedVideo(tree).props.className, /opacity-100/);
+            assert.equal(tree.find(node => node.type === "video-overlay").props.src, product.video);
+            checkSelectedImage();
+            video.currentTime = 9;
+            galleryMedia(tree).props[leave]();
+            tree = render();
+            assert.equal(video.pauses, previousPauses + 1);
+            assert.equal(video.currentTime, 0);
+            assert.match(renderedVideo(tree).props.className, /opacity-0/);
+            assert.equal(tree.some(node => node.type === "video-overlay"), false);
+            checkSelectedImage();
+        }
+    }
+});
+
+test("a loading gallery video keeps the selected crop visible and a late ready event cannot cover it after leaving", () => {
+    const video = galleryVideo(0);
+    const state = hooks(video);
+    const ProductGallery = loadGallery(state, mediaBrowser);
+    const selectedColor = colors[1];
+    const wrapper = ProductGallery({ product: { id: "fixture", name: "Harness", image: "/original.jpg", video: "/reviewed.mp4" }, selectedColor });
+    const render = () => nodes(state.render(wrapper.type, wrapper.props));
+    let tree = render();
+    galleryMedia(tree).props.onMouseEnter();
+    tree = render();
+    assert.equal(video.plays, 1);
+    assert.equal(video.loads, 1);
+    assert.match(renderedVideo(tree).props.className, /opacity-0/);
+    assert.equal(galleryImage(tree).props.color, selectedColor);
+    renderedVideo(tree).props.onLoadedData();
+    tree = render();
+    assert.match(renderedVideo(tree).props.className, /opacity-100/);
+    galleryMedia(tree).props.onMouseLeave();
+    tree = render();
+    renderedVideo(tree).props.onCanPlay();
+    tree = render();
+    assert.match(renderedVideo(tree).props.className, /opacity-0/);
+    assert.equal(video.pauses, 1);
+    assert.equal(video.currentTime, 0);
+    assert.equal(galleryImage(tree).props.src, selectedColor.image);
+    assert.equal(galleryImage(tree).props.color, selectedColor);
+});
+
+test("a selected gallery color without a product video safely retains its crop on hover and focus", () => {
+    const state = hooks();
+    const ProductGallery = loadGallery(state);
+    const selectedColor = colors[1];
+    const wrapper = ProductGallery({ product: { id: "fixture", name: "Harness", image: "/original.jpg" }, selectedColor });
+    const render = () => nodes(state.render(wrapper.type, wrapper.props));
+    let tree = render();
+    for (const event of ["onMouseEnter", "onMouseLeave", "onFocus", "onBlur"]) {
+        assert.doesNotThrow(() => galleryMedia(tree).props[event]());
+        tree = render();
+        assert.equal(renderedVideo(tree), undefined);
+        assert.equal(tree.some(node => node.type === "video-overlay"), false);
+        assert.equal(galleryImage(tree).props.src, selectedColor.image);
+        assert.equal(galleryImage(tree).props.color, selectedColor);
+    }
 });
 
 test("color selection controls retain distinct keys and forward the region on each same-URL chip", () => {

@@ -100,7 +100,7 @@ test("color controls are native buttons outside links and preserve wishlist and 
     assert.deepEqual(fixture.wished, ["p_fixture"]);
 });
 
-test("color previews pause hover video and toggling the selected color restores the original preview", () => {
+test("hover video plays for every selected color and leaving restores that color photo", () => {
     const fixture = card({ video: "/reviewed.mp4" });
     let tree = fixture.render();
     media(tree).props.onMouseEnter();
@@ -111,7 +111,34 @@ test("color previews pause hover video and toggling the selected color restores 
     assert.equal(fixture.video.currentTime, 0);
     assert.match(thumbnail(tree).props.className, /opacity-100/);
     media(tree).props.onMouseEnter();
-    assert.equal(fixture.video.plays, 1);
+    assert.equal(fixture.video.plays, 2);
+    tree = fixture.render();
+    assert.match(thumbnail(tree).props.className, /opacity-0/);
+    assert.equal(thumbnail(tree).props.src, "/blue.jpg");
+    assert.equal(tree.find(n => n.type === "video").props.src, "/reviewed.mp4");
+    media(tree).props.onMouseLeave();
+    tree = fixture.render();
+    assert.match(thumbnail(tree).props.className, /opacity-100/);
+    assert.equal(thumbnail(tree).props.src, "/blue.jpg");
+    assert.equal(button(tree, "Blue 미리보기").props["aria-pressed"], true);
+    button(tree, "Red 미리보기").props.onClick();
+    tree = fixture.render();
+    media(tree).props.onMouseEnter();
+    assert.equal(fixture.video.plays, 3);
+    tree = fixture.render();
+    assert.match(thumbnail(tree).props.className, /opacity-0/);
+    media(tree).props.onMouseLeave();
+    tree = fixture.render();
+    assert.equal(thumbnail(tree).props.src, "/red.jpg");
+    assert.match(thumbnail(tree).props.className, /opacity-100/);
+    assert.equal(button(tree, "Red 미리보기").props["aria-pressed"], true);
+    assert.equal(fixture.video.currentTime, 0);
+    media(tree).props.onMouseEnter();
+    assert.equal(fixture.video.plays, 4);
+    media(fixture.render()).props.onMouseLeave();
+    tree = fixture.render();
+    button(tree, "Blue 미리보기").props.onClick();
+    tree = fixture.render();
     button(tree, "Blue 미리보기").props.onClick();
     tree = fixture.render();
     assert.equal(thumbnail(tree).props.src, "/original.jpg");
@@ -119,7 +146,7 @@ test("color previews pause hover video and toggling the selected color restores 
     assert.equal(button(tree, "Blue 미리보기").props["aria-pressed"], false);
     assert.equal(button(tree, "대표 이미지 보기"), undefined);
     media(tree).props.onMouseEnter();
-    assert.equal(fixture.video.plays, 2);
+    assert.equal(fixture.video.plays, 5);
 });
 
 test("products without color options retain the existing image and do not acquire videos", () => {
