@@ -76,16 +76,17 @@ test("the product detail UI renders an image-led official product story", async 
     assert.doesNotMatch(source, /data-product-detail-copy>\s*<p className="text-xs/);
 });
 
-test("new product cards show the complete product instead of cropping the thumbnail", async () => {
+test("product previews consistently contain complete images without selection-dependent padding", async () => {
     const source = await readFile(new URL("../components/products/ProductCard.tsx", import.meta.url), "utf8");
-    assert.match(source, /useContainedThumbnail = isNewProduct\(p\)/);
-    assert.match(source, /object-contain p-\[7%\]/);
-    assert.match(source, /useContainedThumbnail \? "object-contain/);
+    assert.match(source, /className=\{`object-contain transition-opacity/);
+    assert.doesNotMatch(source, /p-\[7%\]/);
 
     const gallerySource = await readFile(new URL("../components/products/detail/ProductGallery.tsx", import.meta.url), "utf8");
-    assert.match(gallerySource, /useContainedImage = isNewProduct\(p\)/);
-    assert.match(gallerySource, /useContainedImage \? "object-contain p-\[7%\]"/);
-    assert.match(gallerySource, /useContainedImage \? "object-contain p-1"/);
+    assert.match(gallerySource, /className="object-contain"/);
+    assert.doesNotMatch(gallerySource, /p-\[7%\]/);
+    const optionSource = await readFile(new URL("../components/products/detail/OptionSheet.tsx", import.meta.url), "utf8");
+    assert.match(optionSource, /className="object-contain"/);
+    assert.doesNotMatch(optionSource, /p-\[7%\]/);
 });
 
 test("all manufacturer stories expose safe visual-detail image selections", async () => {

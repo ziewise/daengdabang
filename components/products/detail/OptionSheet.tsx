@@ -224,9 +224,9 @@ export default function OptionSheet({ product: p, open, mode, initialColorIdx = 
                 <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                     {/* 상단 — 모바일: 정사각 이미지(좌)+색상칩(우) / PC: 이미지(위, 적당히 축소)+색상(아래) */}
                     <div className="flex gap-3 sm:block">
-                        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-[#f7f2e8] sm:mb-3 sm:aspect-square sm:h-auto sm:w-full">
+                        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-white sm:mb-3 sm:aspect-square sm:h-auto sm:w-full">
                             {previewImage ? (
-                                <ProductColorImage src={previewImage} color={selectedColor} alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName} sizes="(max-width: 640px) 96px, 360px" className={selectedColor ? "object-contain p-[7%]" : "object-cover"} />
+                                <ProductColorImage src={previewImage} color={selectedColor} alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName} sizes="(max-width: 640px) 96px, 360px" className="object-contain" />
                             ) : (
                                 <div className="flex h-full items-center justify-center text-3xl text-neutral-300">
                                     <i className={`fa-solid ${p.icon}`} />

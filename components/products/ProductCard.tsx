@@ -14,7 +14,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
@@ -50,7 +49,6 @@ export default function ProductCard({
     const wished = isWished(p.id);
     const effectiveRank = rank ?? getBestRank(p);
     const shouldShowNew = showNewBadge ?? isNewProduct(p);
-    const useContainedThumbnail = isNewProduct(p);
     const showBest = effectiveRank !== null && rankStyle !== "off";
     const detailHref = productHref(p);                 // 운영 사이트 라우트(/product/{slug})
     const displayName = productName(p);
@@ -95,7 +93,7 @@ export default function ProductCard({
             <div
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
-                className={`relative aspect-square overflow-hidden ${thumbnail ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative aspect-square overflow-hidden ${thumbnail ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
             >
                 <Link
                     href={detailHref}
@@ -108,7 +106,7 @@ export default function ProductCard({
                             color={selectedColor}
                             alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName}
                             sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
-                            className={`${selectedColor || useContainedThumbnail ? "object-contain p-[7%]" : "object-cover"} transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
+                            className={`object-contain transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
                         />
                     ) : (
                         <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
@@ -174,23 +172,6 @@ export default function ProductCard({
                         aria-label={`${displayName} ${locale === "en" ? "color preview" : "색상 미리보기"}`}
                         className="flex gap-0.5 overflow-x-auto pb-1"
                     >
-                        {p.image && (
-                            <button
-                                type="button"
-                                aria-label={locale === "en" ? "Show original image" : "대표 이미지 보기"}
-                                aria-pressed={colorIdx === null}
-                                title={locale === "en" ? "Original image" : "대표 이미지"}
-                                onClick={() => {
-                                    deactivate();
-                                    setColorIdx(null);
-                                }}
-                                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
-                            >
-                                <span className={`relative h-7 w-7 overflow-hidden rounded-md ${colorIdx === null ? "ring-2 ring-indigo-600 ring-offset-2" : "ring-1 ring-neutral-300"}`}>
-                                    <Image src={p.image} alt="" fill sizes="28px" className="object-contain" />
-                                </span>
-                            </button>
-                        )}
                         {colors.map((color, idx) => (
                             <button
                                 key={`${color.name}-${idx}`}
@@ -200,7 +181,7 @@ export default function ProductCard({
                                 title={color.name}
                                 onClick={() => {
                                     deactivate();
-                                    setColorIdx(idx);
+                                    setColorIdx(current => current === idx ? null : idx);
                                 }}
                                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
                             >

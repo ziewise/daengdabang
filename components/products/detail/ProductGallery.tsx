@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { isNewProduct, type CatalogProduct, type ProductColor } from "@/lib/catalog";
+import type { CatalogProduct, ProductColor } from "@/lib/catalog";
 import { productColorImageKey } from "@/lib/catalog/product-color-image";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
@@ -27,7 +27,6 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
     const activeColor = activeIdx === null ? selectedColor : undefined;
     const activeImage = activeColor?.image || images[activeIdx ?? 0];
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
-    const useContainedImage = isNewProduct(p);
 
     const activateVideo = () => {
         if (!p.video || activeColor) return;
@@ -54,7 +53,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
     return (
         <div className="space-y-3">
             <div
-                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-[#f7f2e8]" : bestStyles[`ph${p.ph}`]}`}
+                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
                 onMouseEnter={activateVideo}
                 onMouseLeave={deactivateVideo}
                 onFocus={activateVideo}
@@ -67,7 +66,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                         color={activeColor}
                         alt={activeColor ? `${p.name} · ${activeColor.name}` : p.name}
                         sizes="(max-width: 1024px) 100vw, 50vw"
-                        className={activeColor || useContainedImage ? "object-contain p-[7%]" : "object-cover"}
+                        className="object-contain"
                         preload
                     />
                 ) : (
@@ -104,7 +103,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                                 onMouseEnter={() => setActiveIdx(index)}
                                 aria-label={`상품 이미지 ${index + 1}`}
                                 aria-current={active}
-                                className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-[#f7f2e8] transition md:h-20 md:w-20 ${
+                                className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-white transition md:h-20 md:w-20 ${
                                     active
                                         ? "ring-2 ring-indigo-600 ring-offset-2"
                                         : "opacity-70 ring-1 ring-neutral-200 hover:opacity-100 hover:ring-indigo-300"
@@ -115,7 +114,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                                     alt={`${p.name} ${index + 1}`}
                                     fill
                                     sizes="80px"
-                                    className={useContainedImage ? "object-contain p-1" : "object-cover"}
+                                    className="object-contain"
                                 />
                             </button>
                         );

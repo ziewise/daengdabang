@@ -68,21 +68,24 @@ const button = (tree, label) => tree.find(n => n.type === "button" && n.props["a
 const thumbnail = tree => tree.find(n => n.type === "img" && n.props.sizes.includes("max-width"));
 const media = tree => tree.find(n => n.props?.onMouseEnter);
 
-test("color buttons replace the thumbnail, announce selection, and restore the original", () => {
+test("only actual colors are selectable and replace the thumbnail without changing its fit", () => {
     const fixture = card();
     let tree = fixture.render();
     assert.equal(thumbnail(tree).props.src, "/original.jpg");
-    assert.equal(button(tree, "대표 이미지 보기").props["aria-pressed"], true);
+    assert.equal(button(tree, "대표 이미지 보기"), undefined);
+    const choices = tree.find(n => n.props?.role === "group");
+    assert.equal(nodes(choices).filter(n => n.type === "button").length, 2);
+    const initialFrame = thumbnail(tree).props.className;
     button(tree, "Red 미리보기").props.onClick();
     tree = fixture.render();
     assert.equal(thumbnail(tree).props.src, "/red.jpg");
     assert.equal(thumbnail(tree).props.alt, "Front Range · Red");
-    assert.match(thumbnail(tree).props.className, /object-contain/);
+    assert.equal(thumbnail(tree).props.className, initialFrame);
     assert.equal(button(tree, "Red 미리보기").props["aria-pressed"], true);
     assert.equal(button(tree, "Blue 미리보기").props["aria-pressed"], false);
     assert.equal(tree.find(n => n.props?.["aria-live"] === "polite").props.children, "Red");
-    button(tree, "대표 이미지 보기").props.onClick();
-    assert.equal(thumbnail(fixture.render()).props.src, "/original.jpg");
+    button(tree, "Blue 미리보기").props.onClick();
+    assert.equal(thumbnail(fixture.render()).props.src, "/blue.jpg");
 });
 
 test("color controls are native buttons outside links and preserve wishlist and product navigation", () => {
@@ -97,7 +100,7 @@ test("color controls are native buttons outside links and preserve wishlist and 
     assert.deepEqual(fixture.wished, ["p_fixture"]);
 });
 
-test("selecting a color pauses hover video and keeps that image visible on repeated hover", () => {
+test("color previews pause hover video and toggling the selected color restores the original preview", () => {
     const fixture = card({ video: "/reviewed.mp4" });
     let tree = fixture.render();
     media(tree).props.onMouseEnter();
@@ -109,8 +112,13 @@ test("selecting a color pauses hover video and keeps that image visible on repea
     assert.match(thumbnail(tree).props.className, /opacity-100/);
     media(tree).props.onMouseEnter();
     assert.equal(fixture.video.plays, 1);
-    button(tree, "대표 이미지 보기").props.onClick();
-    media(fixture.render()).props.onMouseEnter();
+    button(tree, "Blue 미리보기").props.onClick();
+    tree = fixture.render();
+    assert.equal(thumbnail(tree).props.src, "/original.jpg");
+    assert.equal(thumbnail(tree).props.color, undefined);
+    assert.equal(button(tree, "Blue 미리보기").props["aria-pressed"], false);
+    assert.equal(button(tree, "대표 이미지 보기"), undefined);
+    media(tree).props.onMouseEnter();
     assert.equal(fixture.video.plays, 2);
 });
 
@@ -124,7 +132,7 @@ test("products without color options retain the existing image and do not acquir
     assert.equal(fixture.video.plays, 0);
 });
 
-test("same-image colors forward their own crop metadata and can be reset to the original", () => {
+test("same-image colors remain distinct and forward their own crop metadata", () => {
     const colors = [
         { name: "Blue", image: "/both.jpg", chip: "/both.jpg", imageWidth: 500, imageHeight: 500, imageRegion: { x: 0, y: 0, width: 1, height: 0.5 } },
         { name: "Red", image: "/both.jpg", chip: "/both.jpg", imageWidth: 500, imageHeight: 500, imageRegion: { x: 0, y: 0.5, width: 1, height: 0.5 } },
@@ -138,7 +146,5 @@ test("same-image colors forward their own crop metadata and can be reset to the 
         const chip = nodes(button(tree, `${color.name} 미리보기`)).find(n => n.type === "img");
         assert.equal(chip.props.color, color);
     }
-    button(fixture.render(), "대표 이미지 보기").props.onClick();
-    assert.equal(thumbnail(fixture.render()).props.color, undefined);
-    assert.equal(thumbnail(fixture.render()).props.src, "/original.jpg");
+    assert.equal(button(fixture.render(), "대표 이미지 보기"), undefined);
 });
