@@ -58,3 +58,41 @@ test('a four-second file remains ineligible for clothing and other worn categori
     const f=fixture(); f.record.videoZiewcraftIdentity.seconds=8; sync(f);
     assert.equal(valid(f.product,f.records),false,'changing metadata cannot invent the second segment');
 });
+
+function registeredFixture() {
+    const f = fixture();
+    const review = f.record.delegatedReview;
+    review.scope_id = 'a'.repeat(64);
+    f.record.videoZiewcraftIdentity.scopeId = review.scope_id;
+    f.record.videoZiewcraftIdentity.scopeRegistrationSha256 = 'b'.repeat(64);
+    f.record.delegationScope = {
+        scope_id: review.scope_id, policy_id: review.policy_id,
+        policy_evidence_sha256: review.policy_evidence_sha256,
+        product: structuredClone(review.product), references: structuredClone(review.product_reference_assets),
+        required_final_seconds: 4, approval_granted: false,
+        scene_asset_id: 'c'.repeat(32), scene_sha256: 'd'.repeat(64),
+    };
+    f.record.currentEligibility.scopeId = review.scope_id;
+    sync(f);
+    return f;
+}
+
+test('self-registered product scope must match the current AI receipt and exact reference set', () => {
+    const f = registeredFixture();
+    assert.equal(valid(f.product, f.records), true);
+    for (const change of [
+        r => r.record.delegationScope.product.color = 'different colour',
+        r => r.record.delegationScope.product.sku = 'different sku',
+        r => r.record.delegationScope.references[0].source_sha256 = 'e'.repeat(64),
+        r => r.record.delegationScope.required_final_seconds = 8,
+        r => r.record.delegationScope.approval_granted = true,
+        r => r.record.currentEligibility.scopeId = 'f'.repeat(64),
+        r => r.record.videoZiewcraftIdentity.scopeId = 'e'.repeat(64),
+        r => delete r.record.videoZiewcraftIdentity.scopeRegistrationSha256,
+        r => delete r.record.delegationScope,
+        r => delete r.record.delegatedReview.scope_id,
+    ]) {
+        const changed = registeredFixture(); change(changed); sync(changed);
+        assert.equal(valid(changed.product, changed.records), false);
+    }
+});

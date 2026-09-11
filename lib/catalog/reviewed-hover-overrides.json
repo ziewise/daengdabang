@@ -1973,7 +1973,55 @@
     }
   },
   "soopa_chew_papaya": null,
-  "soopa_chew_sweetpotato": null,
+  "soopa_chew_sweetpotato": {
+    "video": "/images/products/catalog/soopa_chew_sweetpotato/videos/5ba21a4e752774e1a68b6e48f397ab90ca9ad777c82cb6fd4162ae8d17f6b763/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "6de99f6a03bdb93b2ae92d8c2e0b0537",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6de99f6a03bdb93b2ae92d8c2e0b0537",
+      "reviewId": "bc0ca6345f165b4bbffa6f1deb49c205",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5ba21a4e752774e1a68b6e48f397ab90ca9ad777c82cb6fd4162ae8d17f6b763",
+      "seconds": 4,
+      "source": {
+        "no": 289,
+        "folder": "soopa_chew_sweetpotato",
+        "name": "수파 그레인프리 100%식물성 야채간식 비건간식 고구마츄 100g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_chew_sweetpotato/soopa_chew_sweetpotato.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107927018",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_chew_sweetpotato/details/official-visual-01.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/2.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/3.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/4.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/5.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b2a68ef1dfadf36e93e85727735c41ab",
+        "sha256": "5ba21a4e752774e1a68b6e48f397ab90ca9ad777c82cb6fd4162ae8d17f6b763"
+      },
+      "scopeId": "1f249db816ee8e8ce7ef867934fc5e391bf74fddeb2437f1129396f3189ef9fc",
+      "scopeRegistrationSha256": "f478665710c4812ac95f62be840f28caccbd3be2d718465ce1193dcd450f5b57",
+      "aiEvidenceSha256": "04adb1b3908c551d845a3e9bb86c8a1c3770ecffb65f46fadc10c990999c8402",
+      "receiptSha256": "1bdd9f6d78b4e5d6835b0d312a1f8835fcf2c685c73337de64ebe66856483695",
+      "eligibilitySha256": "11b823d4d2ad3e660d8a468124ed041f87bfc85e03e8244490ad3215fc00efaf",
+      "evidenceManifestSha256": "bcecbb24a498ed4b611a1488e077a782947b8f03742600e8243dd4210add6d84"
+    },
+    "videoReviewSha256": "21667c8e81f61426bc33195e08cadd45a729d4d777e3ba1d34755dbffecb6d2f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "soopa_dental_6set": {
     "video": "/images/products/catalog/soopa_dental_6set/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

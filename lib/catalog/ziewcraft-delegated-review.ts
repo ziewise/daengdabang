@@ -3,6 +3,8 @@ export interface ZiewcraftDelegatedReviewIdentity {
     jobId: string;
     reviewId: string;
     policyId: string;
+    scopeId?: string;
+    scopeRegistrationSha256?: string;
     finalSha256: string;
     seconds: 4 | 8;
     source: Record<string, unknown>;
