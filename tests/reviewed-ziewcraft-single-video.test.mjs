@@ -22,6 +22,18 @@ function sync(f){const r=f.record;Object.assign(f.product.raw,{video:r.video,vid
 test('unchanged human-approved first four seconds supports food and dog-use single-pass presentation',()=>{
  for(const food of [true,false]){const f=fixture(food);assert.equal(valid(f.product,f.records),true);assert.equal(matchesReviewedZiewcraftContentsVideo(f.product,f.records),false);}
 });
+test('dog-worn products cannot publish a first four seconds in place of the required four plus four',()=>{
+ for(const subcategory of ['wear','harness','goggles','leash']){
+  const f=fixture(false);f.product.subcategory=subcategory;
+  assert.equal(valid(f.product,f.records),false,subcategory);
+ }
+ const f=fixture(false);f.record.videoQuality='approved_dog_wearing';sync(f);
+ assert.equal(valid(f.product,f.records),false,'wearing quality remains blocked without a category hint');
+ for(const subcategory of ['bed','toy','snack']){
+  const f=fixture(subcategory==='snack');f.product.subcategory=subcategory;
+  assert.equal(valid(f.product,f.records),true,subcategory);
+ }
+});
 test('AI delegation does not substitute for the actual human source-video review',()=>{
  for(const mutate of [h=>h.actor='ai',h=>h.actor='service',h=>h.checks.fullClipWatched=false,h=>delete h.basisSha256,h=>h.jobId='f'.repeat(32),h=>h.videoSha256=fixtureHash('other')]){const f=fixture();mutate(f.record.videoZiewcraftIdentity.humanReview);sync(f);assert.equal(valid(f.product,f.records),false);}
 });
