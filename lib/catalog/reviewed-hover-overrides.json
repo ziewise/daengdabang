@@ -1669,19 +1669,119 @@
     "videoReviewSha256": "b48f7e4b825251b4f72fb33b3d13eaa554f08a6231e8ccd84612a5e6ba863ef1"
   },
   "rw_powderhound_coverall_26fw": {
-    "video": "/images/products/catalog/rw_powderhound_coverall_26fw/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-3841b6b39ab6"
+    "video": "/images/products/catalog/rw_powderhound_coverall_26fw/videos/15ea9e47ae9732f81387536ec5a67e377efb534f82e4dd85ac676e7d0bfa0ede/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "dd47cde71c368c78855d1936517cbb21",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "dd47cde71c368c78855d1936517cbb21",
+      "reviewId": "796876540fb9f51587a2192d05c1f3e2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "15ea9e47ae9732f81387536ec5a67e377efb534f82e4dd85ac676e7d0bfa0ede",
+      "seconds": 8,
+      "source": {
+        "no": 355,
+        "folder": "rw_powderhound_coverall_26fw",
+        "name": "러프웨어 파우더 하운드 방수 보온 커버올 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_03.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001345",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_195.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_246.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_368.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_440.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_52.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_695.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_716.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_812.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001345/image/detail/1000001345_detail_952.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/9d3bcf7b1a894e8c58edfe0f85902f96_174407.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/b1f491dfda07fa52cc4323545cf8df6f_174723.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/ade7fa2f10994e623fadbc4316174dde_174739.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/5277a2052ab9e71cba311625abfc3de8_174758.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "776ae8cf42d693af654c5767e6759d64",
+        "sha256": "15ea9e47ae9732f81387536ec5a67e377efb534f82e4dd85ac676e7d0bfa0ede"
+      },
+      "scopeId": "627d56a1cc0e8344ac621ef9032e236d03319507c94f5db97f0f80fdc4ea7c64",
+      "scopeRegistrationSha256": "2eda4296637842a494e8818763b4917145a54f29434a1f5573a9a9ccddbeb66d",
+      "aiEvidenceSha256": "0cd43965d2c97552883ac1d71f4cc20e8ab25430c04f7871cf11438267a0b992",
+      "receiptSha256": "0509832ccc862195e5d01d4329540b60301e6e67cb6ddcd4fb25bdb3474465fd",
+      "eligibilitySha256": "07b495f73d836dd17661339a1556e0706db874f45720e965846eb2af2f5785eb",
+      "evidenceManifestSha256": "60521d0642d3e92c41343f9283229c9a598e9716f22d916df7400f90d7f6852c"
+    },
+    "videoReviewSha256": "c4b821c574adf4b32e9bb89ced18b08c249b8170650bbd669195f240b6568d08",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   },
   "rw_powderhound_jacket": null,
   "rw_powderhound_waterproof_jacket_26fw": {
-    "video": "/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-62114ddb56c3"
+    "video": "/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/videos/623c023ac172b219df3e3ae446f5b849f5db6af0834305b7e3614cfe0f728080/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "a7e31502226dee27f724da485cf15903",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a7e31502226dee27f724da485cf15903",
+      "reviewId": "86c31e848319c4b81e5fd0b523432d6d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "623c023ac172b219df3e3ae446f5b849f5db6af0834305b7e3614cfe0f728080",
+      "seconds": 8,
+      "source": {
+        "no": 354,
+        "folder": "rw_powderhound_waterproof_jacket_26fw",
+        "name": "러프웨어 파우더 하운드 방수 보온 재킷 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_082.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001344",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_198.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_263.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_325.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_473.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_549.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_676.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_77.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_848.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001344/image/detail/1000001344_detail_924.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/3b4da61b7970bfb02287b5fc88400c1a_172523.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/359e39a0404974d2182676fe6905df97_172542.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/24e0aaed34d258ca066f1d34efb32251_172558.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/5277a2052ab9e71cba311625abfc3de8_172610.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3b777f511c7e9acac89e162aa7712723",
+        "sha256": "623c023ac172b219df3e3ae446f5b849f5db6af0834305b7e3614cfe0f728080"
+      },
+      "scopeId": "5f38afba0466a38c96fc5e14a9a73c98a0ced4944f32234206e96ee71cf5abbb",
+      "scopeRegistrationSha256": "51374c43fc579b64d21987f9f1a0d4754b0da0f663dfd728ccd14246c8bf00ec",
+      "aiEvidenceSha256": "3715fe03b170ada5902f53a7979ad59fb92dfea3756738eaed74d5ea3ecbd297",
+      "receiptSha256": "08da67da31b5db52dae8cf3287fa40b489122031d621fee2a71475097d579fb6",
+      "eligibilitySha256": "a6dc22616e90a260b050d0cf66d11ba98b9ceaa411e9fb583c4bb5661c2d22e4",
+      "evidenceManifestSha256": "41d6b79e8283d064e395e1a36ab0a15e6718bcc076e5ad6879233176f6581bb6"
+    },
+    "videoReviewSha256": "7d6c01a0c71329280a9a551491315d38f94735bd3b1d64dbc86feb7d1cef67b4",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   },
   "rw_quencher_24": {
     "video": "/images/products/catalog/rw_quencher_24/videos/672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49/hover.mp4",

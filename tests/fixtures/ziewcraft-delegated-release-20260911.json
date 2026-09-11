@@ -39,6 +39,14 @@
     "productId": "p_391",
     "sha256": "bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f"
   },
+  "rw_powderhound_waterproof_jacket_26fw": {
+    "productId": "p_354",
+    "sha256": "623c023ac172b219df3e3ae446f5b849f5db6af0834305b7e3614cfe0f728080"
+  },
+  "rw_powderhound_coverall_26fw": {
+    "productId": "p_355",
+    "sha256": "15ea9e47ae9732f81387536ec5a67e377efb534f82e4dd85ac676e7d0bfa0ede"
+  },
   "rw_jsk_1000000966": {
     "productId": "p_396",
     "sha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d"

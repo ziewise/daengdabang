@@ -278,9 +278,15 @@ test("catalog re-review preserves the withheld set alongside separately approved
     }
 
     const powder = applyReviewedHoverOverride(base("rw_powderhound_waterproof_jacket_26fw"));
-    assert.equal(powder.videoProvider, undefined);
-    assert.equal(powder.videoQuality, undefined);
-    assert.equal(powder.videoJobId, undefined);
+    const approvedPowder = newlyApproved.rw_powderhound_waterproof_jacket_26fw;
+    assert.equal(approvedPowder.productId, "p_354");
+    assert.equal(powder.videoProvider, "ziewcraft");
+    assert.equal(powder.videoQuality, "approved_dog_wearing");
+    assert.equal(powder.videoJobId, "a7e31502226dee27f724da485cf15903");
+    assert.equal(powder.videoZiewcraftIdentity.finalSha256, approvedPowder.sha256);
+    assert.equal(powder.videoZiewcraftIdentity.seconds, 8);
+    assert.equal(powder.video, `/images/products/catalog/rw_powderhound_waterproof_jacket_26fw/videos/${approvedPowder.sha256}/hover.mp4`);
+    assert.notEqual(powder.video, base("rw_powderhound_waterproof_jacket_26fw").video);
 
     const legacyPowderVest = applyReviewedHoverOverride(base("rw_powderhound_jacket"));
     assert.equal(overrides.rw_powderhound_jacket, null);
