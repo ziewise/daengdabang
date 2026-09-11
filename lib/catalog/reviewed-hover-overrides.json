@@ -3376,5 +3376,58 @@
     "videoEditIdentity": null,
     "videoReviewClass": null,
     "videoTrimIdentity": null
+  },
+  "rw_jsk_1000000647": {
+    "video": "/images/products/catalog/rw_jsk_1000000647/videos/7e11cc2f442f0bad7f03073e8b9d03d98d3f861d6841db9a9066a559e61cfdf2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "7a248c2992c7dcf7742c2801f69350cb",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7a248c2992c7dcf7742c2801f69350cb",
+      "reviewId": "449467a7067d8b842d062c0c70faefbc",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7e11cc2f442f0bad7f03073e8b9d03d98d3f861d6841db9a9066a559e61cfdf2",
+      "seconds": 8,
+      "source": {
+        "no": 381,
+        "folder": "rw_jsk_1000000647",
+        "name": "러프웨어 퍼니 스웨터 니트(Fernie™ Sweater Knit)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000647/image/detail/1000000647_detail_047.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000647",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000647/image/detail/1000000647_detail_194.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000647/image/detail/1000000647_detail_22.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000647/image/detail/1000000647_detail_335.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000647/image/detail/1000000647_detail_455.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000647/image/detail/1000000647_detail_556.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211116/Fernie2021_1_193853.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Fernie2021_2_025717.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Fernie2021_3_185009.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/45e21a4c5eccb47809f5fdf965a29936_185016.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4656b1ad986194d714051f0c6d07ac4e",
+        "sha256": "7e11cc2f442f0bad7f03073e8b9d03d98d3f861d6841db9a9066a559e61cfdf2"
+      },
+      "scopeId": "2fdb6606c331ee773909f73f18333cf84e4af1f5aa39a32b978760a6582972d6",
+      "scopeRegistrationSha256": "6cf10f26f052ebc970648425c57f9cdae46f5e9becae2879cc2af1c4c4dc5eb6",
+      "aiEvidenceSha256": "42c433914a90afacd588bf72dea384f551b8aaf96238a2c1cf4602c03bc8b898",
+      "receiptSha256": "59f4dc924bb62932b2630d81555ec43aca5b720b7ec19f5920d5c02432c5c672",
+      "eligibilitySha256": "567e3330ec1e837cbdc302c8ce70b649d1092a7f7c52bba6182f28e73f861d0c",
+      "evidenceManifestSha256": "6997c51f34e8a557cee77b17044b47711cbe517c7636370eebb796d87fe9a0d8"
+    },
+    "videoReviewSha256": "1909b64d4c8c0175e3b7f4aad684d6ab55dd009035093d8253467c3a9f81404c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   }
 }

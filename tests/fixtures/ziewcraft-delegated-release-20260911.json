@@ -10,5 +10,9 @@
   "soopa_chew_sweetpotato": {
     "productId": "p_289",
     "sha256": "5ba21a4e752774e1a68b6e48f397ab90ca9ad777c82cb6fd4162ae8d17f6b763"
+  },
+  "rw_jsk_1000000647": {
+    "productId": "p_381",
+    "sha256": "7e11cc2f442f0bad7f03073e8b9d03d98d3f861d6841db9a9066a559e61cfdf2"
   }
 }
