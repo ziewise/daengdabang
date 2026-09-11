@@ -2078,7 +2078,55 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null
   },
-  "soopa_dental_carrotpumpkin": null,
+  "soopa_dental_carrotpumpkin": {
+    "video": "/images/products/catalog/soopa_dental_carrotpumpkin/videos/b9b8a4f57a08b4b6eb1a6842d2c6b08662d15a661b77a53263c7048cf0925800/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "eaebad77f2e57a394eaa321db886050f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "eaebad77f2e57a394eaa321db886050f",
+      "reviewId": "5f05709f91ff764939db1f696765c49c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b9b8a4f57a08b4b6eb1a6842d2c6b08662d15a661b77a53263c7048cf0925800",
+      "seconds": 4,
+      "source": {
+        "no": 294,
+        "folder": "soopa_dental_carrotpumpkin",
+        "name": "수파 그레인프리 100%식물성 건강한 야채 덴탈스틱 당근&호박 100g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_dental_carrotpumpkin/soopa_dental_carrotpumpkin.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107724885",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_dental_carrotpumpkin/details/2.webp",
+          "/images/products/catalog/soopa_dental_carrotpumpkin/details/3.webp",
+          "/images/products/catalog/soopa_dental_carrotpumpkin/details/4.webp",
+          "/images/products/catalog/soopa_dental_carrotpumpkin/details/5.webp",
+          "/images/products/catalog/soopa_dental_carrotpumpkin/details/6.webp",
+          "/images/products/catalog/soopa_dental_carrotpumpkin/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "978122ef4da7e3587825ec86bc564663",
+        "sha256": "b9b8a4f57a08b4b6eb1a6842d2c6b08662d15a661b77a53263c7048cf0925800"
+      },
+      "scopeId": "9b0a28b6158999e43087e7aacb8afab59fc7623b1cb162a620510189e2d1f01c",
+      "scopeRegistrationSha256": "bcda2be4e02e3129a6786de4f220f66543a9093275d5b2ca1dc4da70512eba58",
+      "aiEvidenceSha256": "bb6e440080e4c906d45013fb76c7380ba86b1ce4009ce2c128f4a293d9b31bbd",
+      "receiptSha256": "8a6e89cf37022c64cd4f8655b160032de6a2482a1dc00c43a3efea926e5fb10e",
+      "eligibilitySha256": "45e7128524817faed0fac0b5f4b31e2133cf2002c276aef64e2e3a93bd6084c7",
+      "evidenceManifestSha256": "e491efceb7f3d47c060110099c315c6946d594521defcaa695bbf4770e7d1b7e"
+    },
+    "videoReviewSha256": "185efc7f39979c5d6cb2359cd992e7ce76e414543c5593517c78c4a8ebeca7cb",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "soopa_dental_coconutchia": {
     "video": "/images/products/catalog/soopa_dental_coconutchia/videos/944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3423,6 +3471,58 @@
       "evidenceManifestSha256": "6997c51f34e8a557cee77b17044b47711cbe517c7636370eebb796d87fe9a0d8"
     },
     "videoReviewSha256": "1909b64d4c8c0175e3b7f4aad684d6ab55dd009035093d8253467c3a9f81404c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
+  "rw_jsk_1000001244": {
+    "video": "/images/products/catalog/rw_jsk_1000001244/videos/cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "c5fc572062932d22b4f06189a5c73a4f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c5fc572062932d22b4f06189a5c73a4f",
+      "reviewId": "bda97ff05775ff8fca8d59272f3940af",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec",
+      "seconds": 8,
+      "source": {
+        "no": 460,
+        "folder": "rw_jsk_1000001244",
+        "name": "러프웨어 스왐프 쿨러 집 베스트(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_059.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001244",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_134.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_213.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_387.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_43.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/cbea05c667aec09409972ec0c50bec30_090242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/5f853b35480f53501bec0673eeebdd39_090242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/2ac298b7b6d8c05fffd07054909cf395_090243.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/b5620deefcd866a9bcda0ce1a3b6883d_090244.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f92979e256b301eb5397fc8a8c2e6eb9",
+        "sha256": "cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec"
+      },
+      "scopeId": "1564b90f3737780c862e1e9ade4f01e0224d1f1eace44b81120a989c10b1a618",
+      "scopeRegistrationSha256": "7cfc8000dc9ed011fb979ecf0478e106b8709e086e1b7339e5a79adea108ceb6",
+      "aiEvidenceSha256": "e7f87f78a78855ee1c05acc166e7e9a68b079eb481f5d3eb3059465f29dba6ef",
+      "receiptSha256": "360487cc580905ad80800c7d431e42be56f78baf49d320c29229e36034e7e2d4",
+      "eligibilitySha256": "d582d66b7daff7725d1418f21844ee9bdd4bd5207ea57b9256ef801ed5229817",
+      "evidenceManifestSha256": "749d8a4935cb3c066a11c31cdd48b6bb165df07a8e051108e549a5df109848ea"
+    },
+    "videoReviewSha256": "929e7bcfefc927a9b669f0daffcc628283cfd3679acb57302a50f391f9245806",
     "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "same_origin",
     "videoGenerationIdentity": null,

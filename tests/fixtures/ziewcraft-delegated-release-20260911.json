@@ -14,5 +14,13 @@
   "rw_jsk_1000000647": {
     "productId": "p_381",
     "sha256": "7e11cc2f442f0bad7f03073e8b9d03d98d3f861d6841db9a9066a559e61cfdf2"
+  },
+  "soopa_dental_carrotpumpkin": {
+    "productId": "p_294",
+    "sha256": "b9b8a4f57a08b4b6eb1a6842d2c6b08662d15a661b77a53263c7048cf0925800"
+  },
+  "rw_jsk_1000001244": {
+    "productId": "p_460",
+    "sha256": "cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec"
   }
 }
