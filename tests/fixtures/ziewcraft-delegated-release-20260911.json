@@ -23,6 +23,14 @@
     "productId": "p_448",
     "sha256": "bd64a1746d57112a6e3c64d5bf18345140f2503212352a06cdeb9b1a83faf950"
   },
+  "rw_jsk_1000000650": {
+    "productId": "p_382",
+    "sha256": "0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80"
+  },
+  "rw_jsk_1000000651": {
+    "productId": "p_383",
+    "sha256": "0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f"
+  },
   "rw_jsk_1000001244": {
     "productId": "p_460",
     "sha256": "cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec"

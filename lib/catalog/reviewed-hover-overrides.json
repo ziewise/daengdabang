@@ -3581,5 +3581,109 @@
     "videoEditIdentity": null,
     "videoReviewClass": null,
     "videoTrimIdentity": null
+  },
+  "rw_jsk_1000000650": {
+    "video": "/images/products/catalog/rw_jsk_1000000650/videos/0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "16ea0a2d0fb3c8f315da84fe9f13ed45",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "16ea0a2d0fb3c8f315da84fe9f13ed45",
+      "reviewId": "b9d702e3febd252c3fe0766f2d12fb2f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80",
+      "seconds": 8,
+      "source": {
+        "no": 382,
+        "folder": "rw_jsk_1000000650",
+        "name": "러프웨어 클라이메이트 체인져 플리스(Climate Changer™ Fleece)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_06.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000650",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_192.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_270.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_344.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_480.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer2021_1_025537.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer2021_2_025547.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Climate-Changer2021_3_184912.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/45e21a4c5eccb47809f5fdf965a29936_184921.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7a7f884721f8600af0ecac4dc5ccf03d",
+        "sha256": "0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80"
+      },
+      "scopeId": "f6cfd36705ae6dcdf55e60175482a73bd1e8b3d700b5025e92bfeafa70d42ddc",
+      "scopeRegistrationSha256": "7a416861448cfdf57104237ae3213f5a8fcd96af99f69e6a904b7b1d83fcf72a",
+      "aiEvidenceSha256": "b7b156979eed07886ca724672cf1c9395004fba8a030784cfa10b61f70b81cb7",
+      "receiptSha256": "afaff7019425189b6f162d847559e1952aec69c606b0d00c13c4e36067d64179",
+      "eligibilitySha256": "d6de12adaf53b1b15330a952450e1390d1d599221f6b79a038299ebe15a27bb0",
+      "evidenceManifestSha256": "4406661be2c6354ba3e1d9a5e7e647f2c96459586ef78cbbdee55e3022255081"
+    },
+    "videoReviewSha256": "ff351ffa5262f7df44c0ad5d147c79d2771d8156adf93e4a22b6903eabc4c606",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
+  "rw_jsk_1000000651": {
+    "video": "/images/products/catalog/rw_jsk_1000000651/videos/0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "22c3716f43d01aba68e46ddad808ad78",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "22c3716f43d01aba68e46ddad808ad78",
+      "reviewId": "732f9475346b48fa8f08fb5e3e46f077",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f",
+      "seconds": 8,
+      "source": {
+        "no": 383,
+        "folder": "rw_jsk_1000000651",
+        "name": "러프웨어 클라이메이트 체인져 플리스 풀오버(Climate Changer™ Fleece Pullover)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_030.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000651",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_172.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_2100.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_361.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_48.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer-Pullover2021_1_123510.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer-Pullover2021_2_123548.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Climate-Changer-Pullover2021_3_184812.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/45e21a4c5eccb47809f5fdf965a29936_184820.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d54763cae112aaa8e0f7bf5a7b59c669",
+        "sha256": "0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f"
+      },
+      "scopeId": "c02f8c0a8e30b6fdd9cb54409e02d9d43a0d62557eae0524d05cd2d572461600",
+      "scopeRegistrationSha256": "09c63e93f75033e7a1633d4e59206d738f275d7959a1b924711b9f210ddf6215",
+      "aiEvidenceSha256": "c674c6b9b3ca6ce003e3686a5cc62ec00f6e52f9111a80c441c20465d377b187",
+      "receiptSha256": "c8d8cdf4b4b871765e3075288bb78d691d646051cf99097e58b96637c7d7ca86",
+      "eligibilitySha256": "ecd88dfc7ebf3c4cd2302727166a1ed7490acd264948e08d7deb9b8150fecd33",
+      "evidenceManifestSha256": "ff226b741a954cca8ceeb173358351db1526ed34d897f0e4bade7c0da24c3708"
+    },
+    "videoReviewSha256": "c0135e2f7df4927d03f9d816636b0ef88c1ecfab9efffaf6d5f31f70520d7328",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   }
 }
