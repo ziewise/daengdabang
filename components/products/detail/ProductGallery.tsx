@@ -27,7 +27,8 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
     const activeColor = activeIdx === null ? selectedColor : undefined;
     const activeImage = activeColor?.image || images[activeIdx ?? 0];
     const isVideoVisible = Boolean(p.video && showVideo && videoReady);
-    const playOnce = p.raw?.videoProvider === "ddb_original_video_editor"
+    const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
+        || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1")
         && p.raw.videoPlaybackMode === "once_hold_last_frame";
     const videoCaption = playOnce && p.folder === "hugo_icecream_salmon" ? "연어 맛 사용 영상" : undefined;
 

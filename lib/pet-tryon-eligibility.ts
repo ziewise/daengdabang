@@ -12,8 +12,11 @@ import type { ZiewcraftHumanReviewIdentity } from "./catalog/ziewcraft-human-rev
 import reviewedZiewcraftHumanVideos from "./catalog/reviewed-ziewcraft-human-videos.json" with { type: "json" };
 import { matchesReviewedZiewcraftHumanVideo } from "./catalog/reviewed-ziewcraft-human-video.mjs";
 import type { ZiewcraftContentsReviewIdentity } from "./catalog/ziewcraft-contents-review";
+import type { ZiewcraftSingleReviewIdentity } from "./catalog/ziewcraft-single-review";
 import reviewedZiewcraftContentsVideos from "./catalog/reviewed-ziewcraft-contents-videos.json" with { type: "json" };
 import { matchesReviewedZiewcraftContentsVideo } from "./catalog/reviewed-ziewcraft-contents-video.mjs";
+import reviewedZiewcraftSingleVideos from "./catalog/reviewed-ziewcraft-single-videos.json" with { type: "json" };
+import { matchesReviewedZiewcraftSingleVideo } from "./catalog/reviewed-ziewcraft-single-video.mjs";
 import type { ApprovedVideoTrimIdentity } from "./catalog/video-trim-review";
 import reviewedVideoTrims from "./catalog/reviewed-video-trims.json" with { type: "json" };
 import { matchesReviewedVideoTrim } from "./catalog/reviewed-video-trim.mjs";
@@ -41,7 +44,7 @@ type PetTryOnProductIdentity = {
         videoQuality?: string;
         videoJobId?: string | null;
         videoGenerationIdentity?: Record<string, unknown> | null;
-        videoZiewcraftIdentity?: ZiewcraftVideoIdentity | ZiewcraftHumanReviewIdentity | ZiewcraftContentsReviewIdentity | null;
+        videoZiewcraftIdentity?: ZiewcraftVideoIdentity | ZiewcraftHumanReviewIdentity | ZiewcraftContentsReviewIdentity | ZiewcraftSingleReviewIdentity | null;
         videoEditIdentity?: Record<string, unknown> | null;
         videoTrimIdentity?: ApprovedVideoTrimIdentity | null;
         videoPlaybackMode?: "once_hold_last_frame";
@@ -199,6 +202,9 @@ export function safeCatalogHoverVideo(product: StorefrontVideoCandidate): string
         return matchesReviewedVideoTrim(product, reviewedVideoTrims, reviewedFlowVideos) ? video : undefined;
     }
     if (raw?.videoProvider === "ziewcraft" || raw?.videoZiewcraftIdentity != null) {
+        if (raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1") {
+            return matchesReviewedZiewcraftSingleVideo(product, reviewedZiewcraftSingleVideos) ? video : undefined;
+        }
         if (raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_contents_4s.v1") {
             return matchesReviewedZiewcraftContentsVideo(product, reviewedZiewcraftContentsVideos) ? video : undefined;
         }

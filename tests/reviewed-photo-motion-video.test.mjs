@@ -13,17 +13,18 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
     const rows=read('../lib/catalog/raw.json');
     const flow=read('../lib/catalog/reviewed-flow-videos.json');
     const trims=read('../lib/catalog/reviewed-video-trims.json');
+    const single=read('../lib/catalog/reviewed-ziewcraft-single-videos.json');
     assert.deepEqual(Object.keys(reviews).sort(),['soopa_dental_appleblueberry','soopa_dental_coconutchia','soopa_dental_kaleapple']);
     for(const review of Object.values(reviews)) {
         const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
         const product={id:`p_${raw.no}`,folder:raw.folder,video:raw.video,image:raw.image,raw,subcategory:'treats'};
-        assert.equal(safeCatalogHoverVideo(product), flow[review.folder]?.video);
+        assert.equal(safeCatalogHoverVideo(product), single[review.folder]?.video ?? flow[review.folder]?.video);
         assert.equal(safeCatalogHoverVideo({...product,video:review.video}),undefined);
         assert.equal(review.publicationStatus,'withdrawn_user_feedback');
         assert.equal(review.withdrawal.reasonCode,'rejected_photo_zoom_motion');
         assert.equal(getPetTryOnEligibility(product).eligible,false);
-        assert.equal(raw.videoJobId,flow[review.folder] ? null : undefined);
-        assert.equal(raw.videoEditIdentity,undefined);
+        assert.equal(raw.videoJobId,single[review.folder]?.videoJobId ?? (flow[review.folder] ? null : undefined));
+        assert.equal(raw.videoEditIdentity ?? null,null);
         assert.equal(matchesReviewedPhotoMotionVideo({id:review.productId,folder:review.folder,video:review.video,raw:{...review}},reviews),false);
         for(const [file,digest] of [[review.video,review.sha256],[review.sourceImagePath,review.videoEditIdentity.sourceImageSha256]]) {
             assert.equal(createHash('sha256').update(readFileSync(new URL(`../public${file}`,import.meta.url))).digest('hex'),digest);
@@ -32,7 +33,8 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
         assert.equal(videoBrandingMode(`https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${'a'.repeat(40)}/public${review.video}`),'baked');
     }
     const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
-    assert.equal(active.length,83);
+    assert.equal(active.length,86);
+    assert.equal(active.filter(r=>r.videoZiewcraftIdentity?.kind==='ziewcraft_human_review_single_4s.v1').length,3);
     assert.equal(Object.keys(flow).length,76,'all original Flow approvals remain preserved');
     assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,73);
     const derivatives=active.filter(r=>r.videoProvider==='ddb_original_video_editor');

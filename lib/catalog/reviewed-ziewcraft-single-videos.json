@@ -1,0 +1,1225 @@
+{
+  "soopa_dental_coconutchia": {
+    "schema": "ddb.ziewcraft-single-hover-4s.v1",
+    "publicationStatus": "approved",
+    "productId": "p_292",
+    "folder": "soopa_dental_coconutchia",
+    "videoProvider": "ziewcraft",
+    "videoJobId": "f8df849a668ccc4bf257a3fe256f6ab1",
+    "videoQuality": "approved_product_contents",
+    "video": "/images/products/catalog/soopa_dental_coconutchia/videos/944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e/hover.mp4",
+    "sha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_human_review_single_4s.v1",
+      "provider": "ziewcraft",
+      "playbackMode": "once_hold_last_frame",
+      "contractSha256": "02d3805a83d111a7efaad8194cdb2cba7a01325f633f4cb64e15d77ec344842a",
+      "source": {
+        "catalog": {
+          "no": 292,
+          "folder": "soopa_dental_coconutchia",
+          "name": "수파 그레인프리 100%식물성 건강한 야채 덴탈스틱 코코넛&치아씨드 100g",
+          "brandEn": "Soopa",
+          "isFood": true,
+          "image": "/images/products/catalog/soopa_dental_coconutchia/soopa_dental_coconutchia.webp",
+          "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107803523",
+          "gallery": [
+            "/images/products/catalog/soopa_dental_coconutchia/references/6ea6574da9befdc92eef99d73e850a342fd5329ec75d48ebbb00f7a331449d46.png"
+          ],
+          "details": [
+            "/images/products/catalog/soopa_dental_coconutchia/details/2.webp",
+            "/images/products/catalog/soopa_dental_coconutchia/details/3.webp",
+            "/images/products/catalog/soopa_dental_coconutchia/details/4.webp",
+            "/images/products/catalog/soopa_dental_coconutchia/details/5.webp",
+            "/images/products/catalog/soopa_dental_coconutchia/details/6.webp",
+            "/images/products/catalog/soopa_dental_coconutchia/details/7.webp"
+          ]
+        },
+        "image": "/images/products/catalog/soopa_dental_coconutchia/references/6ea6574da9befdc92eef99d73e850a342fd5329ec75d48ebbb00f7a331449d46.png",
+        "imageSha256": "6ea6574da9befdc92eef99d73e850a342fd5329ec75d48ebbb00f7a331449d46",
+        "referenceImageSha256": "8a89aa3212a18fc59be1b1b8ce5f6f7d27ab527c3953f5c61383bd60e45a0dc3",
+        "sceneImageSha256": "80919d6647b091b33e0a8117cff8cad728213e95347e3826e0bc9ad3cc52d7e7",
+        "sceneProductVerified": true,
+        "manifestSha256": "3c7f2517d2eb7ab7b43cebf86ef654352ac325b989d962b3d9470b1090cd5da5"
+      },
+      "segment": {
+        "jobId": "f8df849a668ccc4bf257a3fe256f6ab1",
+        "ownerSha256": "7aea1c31b9d0f535013c1da6191a148202baaf1939956b8abae30157af6a7c25",
+        "status": "succeeded",
+        "delivery_mode": "human_review",
+        "production_eligible": false,
+        "human_review_required": true,
+        "semantic_verified": false,
+        "requestSha256": "a3c5fef1a0f4a1a8b884d440410b2071a49015bec92336efeb6667d42f0b1b65",
+        "jobResponseSha256": "c5f8698beb824cafe100249d0727f6656933050e831dcd10e9343a500c33e561",
+        "inputReceiptSha256": "4b67c5931f0b4e3a8c2a342a45e74af6bcc97e1ea72e1ff2a1abf7642c0f3416",
+        "receiptSha256": "2a438d470272f95b668af72d1245ddabe8b2e6b135b44f2b1439f24541381ed9",
+        "input": {
+          "asset_id": "3fe88907587368cff9f74955e2382b62",
+          "sha256": "80919d6647b091b33e0a8117cff8cad728213e95347e3826e0bc9ad3cc52d7e7"
+        },
+        "native_video": {
+          "artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+          "byte_length": 317452,
+          "duration_seconds": 4.041666666666667,
+          "filename": "f8df849a668ccc4bf257a3fe256f6ab1_00001_.mp4",
+          "fps": 24,
+          "frame_count": 97,
+          "height": 512,
+          "mime_type": "video/mp4",
+          "role": "native_video",
+          "sha256": "99b6afb91c6294cc4355e5146f65e0a5b5ea7d9810e85c9a7730929be3a9342b",
+          "stored_name": "01-f8df849a668ccc4bf257a3fe256f6ab1_00001_.mp4",
+          "url": "/api/v1/artifacts/f8df849a668ccc4bf257a3fe256f6ab1/94ad432436ac4f9a9720f999a475ff31/content",
+          "width": 512
+        },
+        "review_video": {
+          "artifact_id": "e68b04b12232c57e424872f6d718b360",
+          "byte_length": 2095983,
+          "duration_seconds": 4,
+          "filename": "review-f8df849a668ccc4bf257a3fe256f6ab1-99b6afb91c6294cc-35d27ba2a56313a0.mp4",
+          "fps": 24,
+          "frame_count": 96,
+          "height": 1080,
+          "mime_type": "video/mp4",
+          "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+          "role": "review_video",
+          "sha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+          "source_artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+          "source_artifact_sha256": "99b6afb91c6294cc4355e5146f65e0a5b5ea7d9810e85c9a7730929be3a9342b",
+          "stored_name": "review-f8df849a668ccc4bf257a3fe256f6ab1-99b6afb91c6294cc-35d27ba2a56313a0.mp4",
+          "width": 1080
+        },
+        "native_terminal": {
+          "artifact_id": "4b87e511f38afdc8268f86168eaea82c",
+          "byte_length": 262368,
+          "filename": "terminal-4b87e511f38afdc8268f86168eaea82c.png",
+          "frame_index": 96,
+          "height": 512,
+          "mime_type": "image/png",
+          "provenance": {
+            "artifact_id": "4b87e511f38afdc8268f86168eaea82c",
+            "frame_count": 97,
+            "frame_index": 96,
+            "height": 512,
+            "mime_type": "image/png",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "e3d190a111f23d2a2608443265971bf41cf40ff7fe0ad1ef4d63aaf1c568f961",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "sha256": "0c0d62323cd1f62e03e7b3763f05fa6f3550dd1f487ea3d7e547adbc26444a87",
+            "source_artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+            "source_artifact_sha256": "99b6afb91c6294cc4355e5146f65e0a5b5ea7d9810e85c9a7730929be3a9342b",
+            "source_rendition": "native",
+            "width": 512
+          },
+          "role": "native_terminal",
+          "sha256": "0c0d62323cd1f62e03e7b3763f05fa6f3550dd1f487ea3d7e547adbc26444a87",
+          "source_artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+          "stored_name": "terminal-4b87e511f38afdc8268f86168eaea82c.png",
+          "width": 512
+        },
+        "review_terminal": {
+          "artifact_id": "f262a9bc334bfb5a61975c84da0cf0c2",
+          "byte_length": 922407,
+          "filename": "terminal-f262a9bc334bfb5a61975c84da0cf0c2.png",
+          "frame_index": 95,
+          "height": 1080,
+          "mime_type": "image/png",
+          "provenance": {
+            "artifact_id": "f262a9bc334bfb5a61975c84da0cf0c2",
+            "canonical_review": true,
+            "frame_count": 96,
+            "frame_index": 95,
+            "height": 1080,
+            "mime_type": "image/png",
+            "native_artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+            "native_artifact_sha256": "99b6afb91c6294cc4355e5146f65e0a5b5ea7d9810e85c9a7730929be3a9342b",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "ae80778e630a4e87829635416b0232e27f72fb7b2867bb7d216a6e8523e45e8f",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+            "sha256": "507d5d8c0de34f5bf49744cdd8dcc1b27a2c0ab33e342bd603569f794d8310cb",
+            "source_artifact_id": "e68b04b12232c57e424872f6d718b360",
+            "source_artifact_sha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+            "source_rendition": "review",
+            "width": 1080
+          },
+          "role": "review_terminal",
+          "sha256": "507d5d8c0de34f5bf49744cdd8dcc1b27a2c0ab33e342bd603569f794d8310cb",
+          "source_artifact_id": "e68b04b12232c57e424872f6d718b360",
+          "stored_name": "terminal-f262a9bc334bfb5a61975c84da0cf0c2.png",
+          "width": 1080
+        },
+        "validation": {
+          "technical_gate_passed": true,
+          "technical_core_complete": true,
+          "technical_failed_gates": [],
+          "gates": {
+            "anatomy_extra_limbs_and_wearing_position": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "black_borders": {
+              "code": "HOVER_NO_BLACK_BORDER_HEURISTIC",
+              "status": "passed"
+            },
+            "delivery_format": {
+              "checks": {
+                "constant_frame_rate": true,
+                "exact_duration": true,
+                "faststart": true,
+                "frame_rate_available": true,
+                "h264": true,
+                "no_rotation": true,
+                "silent": true,
+                "single_video_stream": true,
+                "square_minimum_1080": true,
+                "square_pixels": true,
+                "yuv420p": true
+              },
+              "code": "HOVER_FORMAT_OK",
+              "container_duration_seconds": 4,
+              "duration_seconds": 4,
+              "duration_tolerance_seconds": 0.02125,
+              "fps": 24,
+              "height": 1080,
+              "status": "passed",
+              "timestamp_frame_count": 96,
+              "width": 1080
+            },
+            "dog_joint_motion_or_intended_interaction": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "entire_product_and_dog_remain_in_frame": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "fixed_camera": {
+              "anchor_coverage": 1,
+              "anchor_last_verified": true,
+              "code": "HOVER_FIXED_CAMERA_PROXY",
+              "confidence_policy": "forward-backward-appearance-and-spatial-support",
+              "continuous_adjacent_chain_verified": true,
+              "measured_coverage": 1,
+              "minimum_coverage": 0.8,
+              "pass_requires_complete_adjacent_chain": true,
+              "preliminary_motion_support_coverage_minimum": 0.8,
+              "semantic_background_verified": false,
+              "status": "passed",
+              "unverified_reasons": []
+            },
+            "full_decode": {
+              "code": "HOVER_FULL_DECODE_OK",
+              "decoded_duration_seconds": 4,
+              "status": "passed"
+            },
+            "no_text_badges_logos_watermarks_or_blur_mattes": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "non_static": {
+              "code": "HOVER_NONSTATIC_PIXELS",
+              "status": "passed"
+            },
+            "product_color_pattern_geometry_seams_holes_hardware": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "residual_motion": {
+              "code": "HOVER_RESIDUAL_PIXEL_MOTION",
+              "status": "passed"
+            },
+            "single_scene": {
+              "code": "HOVER_NO_LARGE_FRAME_CUT",
+              "status": "passed"
+            },
+            "surface_boiling_and_jelly_deformation": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            }
+          },
+          "unverified_gates": [
+            "product_color_pattern_geometry_seams_holes_hardware",
+            "dog_joint_motion_or_intended_interaction",
+            "anatomy_extra_limbs_and_wearing_position",
+            "surface_boiling_and_jelly_deformation",
+            "entire_product_and_dog_remain_in_frame",
+            "no_text_badges_logos_watermarks_or_blur_mattes"
+          ],
+          "artifact_sha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e"
+        },
+        "receipt": {
+          "review_id": "f66786685b7d99c0e8c8db3a1d71fd3c",
+          "api_job_id": "f8df849a668ccc4bf257a3fe256f6ab1",
+          "status": "approved",
+          "reviewer": "Store operator in the current user conversation",
+          "note": "The actual store operator accepted this exact latest 4-second video and product-photo comparison in response to the full-segment viewing question, saying \"이거 약간 다른데? 나머지는 굿\" and excluding only the Web Master harness. Local original user-review evidence: ddb-20260911-user-review-02-p_292 SHA256 07af935a870eedad174aecd2fb09a116714628a59756f54c387e7ff5660c9180. This is a first-segment review, not a final publication or loop approval.",
+          "private_only": true,
+          "publication_allowed": false,
+          "human_identity_verified": false,
+          "checks": {
+            "product_identity": true,
+            "anatomy_and_motion": true,
+            "camera_and_framing": true,
+            "temporal_stability": true,
+            "no_prohibited_overlays": true,
+            "full_segment_watched": true
+          },
+          "bindings": {
+            "native_video": {
+              "artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+              "sha256": "99b6afb91c6294cc4355e5146f65e0a5b5ea7d9810e85c9a7730929be3a9342b"
+            },
+            "review_video": {
+              "artifact_id": "e68b04b12232c57e424872f6d718b360",
+              "sha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e"
+            },
+            "terminal": {
+              "artifact_id": "f262a9bc334bfb5a61975c84da0cf0c2",
+              "sha256": "507d5d8c0de34f5bf49744cdd8dcc1b27a2c0ab33e342bd603569f794d8310cb"
+            }
+          },
+          "product_reference_assets": [
+            {
+              "asset_id": "4eabebc802d20a2a7b01d0f5399527ff",
+              "sha256": "8a89aa3212a18fc59be1b1b8ce5f6f7d27ab527c3953f5c61383bd60e45a0dc3"
+            }
+          ],
+          "terminal_provenance": {
+            "artifact_id": "f262a9bc334bfb5a61975c84da0cf0c2",
+            "canonical_review": true,
+            "frame_count": 96,
+            "frame_index": 95,
+            "height": 1080,
+            "mime_type": "image/png",
+            "native_artifact_id": "94ad432436ac4f9a9720f999a475ff31",
+            "native_artifact_sha256": "99b6afb91c6294cc4355e5146f65e0a5b5ea7d9810e85c9a7730929be3a9342b",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "ae80778e630a4e87829635416b0232e27f72fb7b2867bb7d216a6e8523e45e8f",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+            "sha256": "507d5d8c0de34f5bf49744cdd8dcc1b27a2c0ab33e342bd603569f794d8310cb",
+            "source_artifact_id": "e68b04b12232c57e424872f6d718b360",
+            "source_artifact_sha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+            "source_rendition": "review",
+            "width": 1080
+          },
+          "reviewed_at": "2026-09-11T03:48:02.426898Z"
+        },
+        "receiptMode": "legacy_service_attestation",
+        "currentDecision": {
+          "status": "approved",
+          "reviewId": "f66786685b7d99c0e8c8db3a1d71fd3c",
+          "receiptSha256": "2a438d470272f95b668af72d1245ddabe8b2e6b135b44f2b1439f24541381ed9"
+        }
+      },
+      "humanReview": {
+        "actor": "human",
+        "evidenceId": "ddb-20260911-user-review-02-p_292",
+        "reviewedAt": "2026-09-11T03:48:02.426898Z",
+        "reviewer": "Store operator in the current user conversation",
+        "note": "Actual operator accepted this exact first 4-second clip and product photos; recorded server review time, not inferred viewing telemetry.",
+        "jobId": "f8df849a668ccc4bf257a3fe256f6ab1",
+        "videoSha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+        "sourceImageSha256": "6ea6574da9befdc92eef99d73e850a342fd5329ec75d48ebbb00f7a331449d46",
+        "sceneImageSha256": "80919d6647b091b33e0a8117cff8cad728213e95347e3826e0bc9ad3cc52d7e7",
+        "basisSha256": "07af935a870eedad174aecd2fb09a116714628a59756f54c387e7ff5660c9180",
+        "checks": {
+          "productIdentity": true,
+          "anatomyAndMotion": true,
+          "cameraAndFraming": true,
+          "temporalStability": true,
+          "noProhibitedOverlays": true,
+          "fullClipWatched": true
+        },
+        "productReferenceAssets": [
+          {
+            "asset_id": "4eabebc802d20a2a7b01d0f5399527ff",
+            "sha256": "8a89aa3212a18fc59be1b1b8ce5f6f7d27ab527c3953f5c61383bd60e45a0dc3"
+          }
+        ],
+        "sha256": "6d7d50ad67c98810e5c5e8eca987622d61147383ae1abf3008aaa36396180621"
+      },
+      "evidenceVerifiedAt": "2026-09-11T06:38:20.063Z",
+      "evidenceManifestSha256": "47d7329fc5760bed85c938bf60849f29da9a0132f9a4fad76fe606d4c6d08973"
+    },
+    "technical": {
+      "container": "mp4",
+      "codec": "avc1",
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "pixelFormat": "yuv420p",
+      "audioStreams": 0,
+      "fastStart": true,
+      "fullDecode": true,
+      "reportSha256": "8bb007e0f4105c608a35a271d6fa4dbae444de1f72feaa1cf2b40724e71fc83f"
+    },
+    "export": {
+      "sourceReviewSha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+      "recipeSha256": "521e0cbe492deb62a92b90574da0e09459e76bf9d8d719914ec1d588a15870f3",
+      "nativeGeneration": false,
+      "serverPublicationAllowed": false
+    },
+    "review": {
+      "decision": "approved",
+      "actor": "ai",
+      "reviewer": "Codex shop publication QA under owner instruction",
+      "note": "Publishes only the unchanged actually human-approved first 4 seconds. Does not approve unseen continuations or imply human loop viewing.",
+      "reviewedAt": "2026-09-11T06:38:20.081Z",
+      "finalVideoSha256": "944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e",
+      "scope": "actual_human_approved_4_second_single_pass",
+      "checks": {
+        "productIdentity": true,
+        "anatomyAndMotion": true,
+        "cameraAndFraming": true,
+        "temporalStability": true,
+        "noProhibitedOverlays": true,
+        "fullClipWatched": true,
+        "fullDecode": true,
+        "branding": true
+      },
+      "authorizationSha256": "c8f989f3334bd265c14003474830c3bed095dfed57d9196442712a9834d0bb9a",
+      "playbackReportSha256": "53abc61dfc6176a4bd332ba52c541bd941c3c270c91d3f0d069b3a03c2e0d772",
+      "limitations": [
+        "Native generation is 512 pixels; 1080 review is an upscale.",
+        "No human review of an unseen continuation or loop is claimed.",
+        "Single playback holds the last frame; it does not create an end-to-start transition."
+      ],
+      "sha256": "a29db32c828b386382e17f10a6dda9bf547aec7888949ef0f3eab7522124f03d"
+    }
+  },
+  "rw_highlands_pad_l": {
+    "schema": "ddb.ziewcraft-single-hover-4s.v1",
+    "publicationStatus": "approved",
+    "productId": "p_337",
+    "folder": "rw_highlands_pad_l",
+    "videoProvider": "ziewcraft",
+    "videoJobId": "da7254997e105f227a2bc3a5daa06718",
+    "videoQuality": "approved_dog_using",
+    "video": "/images/products/catalog/rw_highlands_pad_l/videos/e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd/hover.mp4",
+    "sha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_human_review_single_4s.v1",
+      "provider": "ziewcraft",
+      "playbackMode": "once_hold_last_frame",
+      "contractSha256": "02d3805a83d111a7efaad8194cdb2cba7a01325f633f4cb64e15d77ec344842a",
+      "source": {
+        "catalog": {
+          "no": 337,
+          "folder": "rw_highlands_pad_l",
+          "name": "러프웨어 하이랜드 반려견 패드 휴대용 매트(Highlands™ Pad) - L사이즈",
+          "brandEn": "Ruffwear",
+          "isFood": false,
+          "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_052.jpg",
+          "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000943",
+          "gallery": [
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_162.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_222.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_318.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_490.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_529.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_625.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_748.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_896.jpg",
+            "/images/products/catalog/rw_highlands_pad_l/references/8788e1b2450b31f8810d00d77e7e52e9e7a2d21d967df65a6f6e878245689485.jpg"
+          ],
+          "details": [
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220319/Highlands-Pad1-1_234356.jpg",
+            "/images/products/catalog/jsk-source/9d703f3a8ebcc59d2dae49d9ecb52108858619d872d77d492cabd3a7cc9b535d.gif",
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220322/Highlands-Pad1-2_192933.jpg",
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/Highlands-Pad2_152646.jpg",
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/e92d50a98f3f16bd5528118ab592d9d4_152654.jpg"
+          ]
+        },
+        "image": "/images/products/catalog/rw_highlands_pad_l/references/8788e1b2450b31f8810d00d77e7e52e9e7a2d21d967df65a6f6e878245689485.jpg",
+        "imageSha256": "8788e1b2450b31f8810d00d77e7e52e9e7a2d21d967df65a6f6e878245689485",
+        "referenceImageSha256": "f5e1a54a89a77dcc3dc1de9fafee887bca53033e09fd5009e028e4544b69ee7c",
+        "sceneImageSha256": "14cc12352e6c7725b76529575cf95a284a91a748412b3db7568004284b44769d",
+        "sceneProductVerified": true,
+        "manifestSha256": "41983dd37024835c1df0cda4d3eac3857649e5de44e191bbb3da583e18a3cf92"
+      },
+      "segment": {
+        "jobId": "da7254997e105f227a2bc3a5daa06718",
+        "ownerSha256": "7aea1c31b9d0f535013c1da6191a148202baaf1939956b8abae30157af6a7c25",
+        "status": "succeeded",
+        "delivery_mode": "human_review",
+        "production_eligible": false,
+        "human_review_required": true,
+        "semantic_verified": false,
+        "requestSha256": "8b6cf5272698df75e38884c04b645bf8149e18a29158a3166867319e1a69a1f4",
+        "jobResponseSha256": "a8753909eefee1e4acc5538d07fdf68f2299008452e92b60943065e6b1f0c237",
+        "inputReceiptSha256": "fa22e66d83d39ed451975c24a689fc897a63c792ed8bff914f89b8cc9dcb9660",
+        "receiptSha256": "498910d8de41c4b629c2f77454a63ad0d0f57692127bfae2fdf1f7fe7d037776",
+        "input": {
+          "asset_id": "ede9d9fcab612edf287bfadab9861688",
+          "sha256": "14cc12352e6c7725b76529575cf95a284a91a748412b3db7568004284b44769d"
+        },
+        "native_video": {
+          "artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+          "byte_length": 347287,
+          "duration_seconds": 4.041666666666667,
+          "filename": "da7254997e105f227a2bc3a5daa06718_00001_.mp4",
+          "fps": 24,
+          "frame_count": 97,
+          "height": 512,
+          "mime_type": "video/mp4",
+          "role": "native_video",
+          "sha256": "d07647220ec9206503e06ff30d943a9c6f55fff86916bc600ef3f973e724a0a6",
+          "stored_name": "01-da7254997e105f227a2bc3a5daa06718_00001_.mp4",
+          "url": "/api/v1/artifacts/da7254997e105f227a2bc3a5daa06718/fc89db4afadf45daaf0ff08a3f16950b/content",
+          "width": 512
+        },
+        "review_video": {
+          "artifact_id": "a5457cfa9e8e71a717c288ac95e68cb7",
+          "byte_length": 2128070,
+          "duration_seconds": 4,
+          "filename": "review-da7254997e105f227a2bc3a5daa06718-d07647220ec92065-35d27ba2a56313a0.mp4",
+          "fps": 24,
+          "frame_count": 96,
+          "height": 1080,
+          "mime_type": "video/mp4",
+          "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+          "role": "review_video",
+          "sha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+          "source_artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+          "source_artifact_sha256": "d07647220ec9206503e06ff30d943a9c6f55fff86916bc600ef3f973e724a0a6",
+          "stored_name": "review-da7254997e105f227a2bc3a5daa06718-d07647220ec92065-35d27ba2a56313a0.mp4",
+          "width": 1080
+        },
+        "native_terminal": {
+          "artifact_id": "6b9fa0a1145b87d2c1b66ef99b0d62ec",
+          "byte_length": 322488,
+          "filename": "terminal-6b9fa0a1145b87d2c1b66ef99b0d62ec.png",
+          "frame_index": 96,
+          "height": 512,
+          "mime_type": "image/png",
+          "provenance": {
+            "artifact_id": "6b9fa0a1145b87d2c1b66ef99b0d62ec",
+            "frame_count": 97,
+            "frame_index": 96,
+            "height": 512,
+            "mime_type": "image/png",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "41b66bb667bd7ab4bcb7e3b53b9bb576a9dc2880babbb1c780a1a252a0d70df2",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "sha256": "9de505294498ef16401952f7f9b690c622383013bffea91877b584d46cdd1f97",
+            "source_artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+            "source_artifact_sha256": "d07647220ec9206503e06ff30d943a9c6f55fff86916bc600ef3f973e724a0a6",
+            "source_rendition": "native",
+            "width": 512
+          },
+          "role": "native_terminal",
+          "sha256": "9de505294498ef16401952f7f9b690c622383013bffea91877b584d46cdd1f97",
+          "source_artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+          "stored_name": "terminal-6b9fa0a1145b87d2c1b66ef99b0d62ec.png",
+          "width": 512
+        },
+        "review_terminal": {
+          "artifact_id": "e2d022c24cae7bbaa32e0f7cd676df45",
+          "byte_length": 1107211,
+          "filename": "terminal-e2d022c24cae7bbaa32e0f7cd676df45.png",
+          "frame_index": 95,
+          "height": 1080,
+          "mime_type": "image/png",
+          "provenance": {
+            "artifact_id": "e2d022c24cae7bbaa32e0f7cd676df45",
+            "canonical_review": true,
+            "frame_count": 96,
+            "frame_index": 95,
+            "height": 1080,
+            "mime_type": "image/png",
+            "native_artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+            "native_artifact_sha256": "d07647220ec9206503e06ff30d943a9c6f55fff86916bc600ef3f973e724a0a6",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "d2b5dc7986c7ed44335c0bc73779b224711f03a08d1ce75b66e3e05bdca1b4b5",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+            "sha256": "0e8d46865e42110d98cac617fb38129c4a86e307cb956757be37157fc1e0c5ed",
+            "source_artifact_id": "a5457cfa9e8e71a717c288ac95e68cb7",
+            "source_artifact_sha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+            "source_rendition": "review",
+            "width": 1080
+          },
+          "role": "review_terminal",
+          "sha256": "0e8d46865e42110d98cac617fb38129c4a86e307cb956757be37157fc1e0c5ed",
+          "source_artifact_id": "a5457cfa9e8e71a717c288ac95e68cb7",
+          "stored_name": "terminal-e2d022c24cae7bbaa32e0f7cd676df45.png",
+          "width": 1080
+        },
+        "validation": {
+          "technical_gate_passed": true,
+          "technical_core_complete": true,
+          "technical_failed_gates": [],
+          "gates": {
+            "anatomy_extra_limbs_and_wearing_position": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "black_borders": {
+              "code": "HOVER_NO_BLACK_BORDER_HEURISTIC",
+              "status": "passed"
+            },
+            "delivery_format": {
+              "checks": {
+                "constant_frame_rate": true,
+                "exact_duration": true,
+                "faststart": true,
+                "frame_rate_available": true,
+                "h264": true,
+                "no_rotation": true,
+                "silent": true,
+                "single_video_stream": true,
+                "square_minimum_1080": true,
+                "square_pixels": true,
+                "yuv420p": true
+              },
+              "code": "HOVER_FORMAT_OK",
+              "container_duration_seconds": 4,
+              "duration_seconds": 4,
+              "duration_tolerance_seconds": 0.02125,
+              "fps": 24,
+              "height": 1080,
+              "status": "passed",
+              "timestamp_frame_count": 96,
+              "width": 1080
+            },
+            "dog_joint_motion_or_intended_interaction": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "entire_product_and_dog_remain_in_frame": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "fixed_camera": {
+              "anchor_coverage": 1,
+              "anchor_last_verified": true,
+              "code": "HOVER_FIXED_CAMERA_PROXY",
+              "confidence_policy": "forward-backward-appearance-and-spatial-support",
+              "continuous_adjacent_chain_verified": true,
+              "measured_coverage": 1,
+              "minimum_coverage": 0.8,
+              "pass_requires_complete_adjacent_chain": true,
+              "preliminary_motion_support_coverage_minimum": 0.8,
+              "semantic_background_verified": false,
+              "status": "passed",
+              "unverified_reasons": []
+            },
+            "full_decode": {
+              "code": "HOVER_FULL_DECODE_OK",
+              "decoded_duration_seconds": 4,
+              "status": "passed"
+            },
+            "no_text_badges_logos_watermarks_or_blur_mattes": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "non_static": {
+              "code": "HOVER_NONSTATIC_PIXELS",
+              "status": "passed"
+            },
+            "product_color_pattern_geometry_seams_holes_hardware": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "residual_motion": {
+              "code": "HOVER_RESIDUAL_PIXEL_MOTION",
+              "status": "passed"
+            },
+            "single_scene": {
+              "code": "HOVER_NO_LARGE_FRAME_CUT",
+              "status": "passed"
+            },
+            "surface_boiling_and_jelly_deformation": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            }
+          },
+          "unverified_gates": [
+            "product_color_pattern_geometry_seams_holes_hardware",
+            "dog_joint_motion_or_intended_interaction",
+            "anatomy_extra_limbs_and_wearing_position",
+            "surface_boiling_and_jelly_deformation",
+            "entire_product_and_dog_remain_in_frame",
+            "no_text_badges_logos_watermarks_or_blur_mattes"
+          ],
+          "artifact_sha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd"
+        },
+        "receipt": {
+          "review_id": "8682123d1bc72ad5157e3e637c454287",
+          "api_job_id": "da7254997e105f227a2bc3a5daa06718",
+          "status": "approved",
+          "reviewer": "Store operator in the current user conversation",
+          "note": "The actual store operator accepted this exact latest 4-second video and product-photo comparison in response to the full-segment viewing question, saying \"이거 약간 다른데? 나머지는 굿\" and excluding only the Web Master harness. Local original user-review evidence: ddb-20260911-user-review-02-p_337 SHA256 86010ffd94d07e9d0164e7bffaf0aaef2cbe2d195a96702dad1007c25097e00f. This is a first-segment review, not a final publication or loop approval.",
+          "private_only": true,
+          "publication_allowed": false,
+          "human_identity_verified": false,
+          "checks": {
+            "product_identity": true,
+            "anatomy_and_motion": true,
+            "camera_and_framing": true,
+            "temporal_stability": true,
+            "no_prohibited_overlays": true,
+            "full_segment_watched": true
+          },
+          "bindings": {
+            "native_video": {
+              "artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+              "sha256": "d07647220ec9206503e06ff30d943a9c6f55fff86916bc600ef3f973e724a0a6"
+            },
+            "review_video": {
+              "artifact_id": "a5457cfa9e8e71a717c288ac95e68cb7",
+              "sha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd"
+            },
+            "terminal": {
+              "artifact_id": "e2d022c24cae7bbaa32e0f7cd676df45",
+              "sha256": "0e8d46865e42110d98cac617fb38129c4a86e307cb956757be37157fc1e0c5ed"
+            }
+          },
+          "product_reference_assets": [
+            {
+              "asset_id": "9b286dbb67cb52b835b1b0a3ff09e79b",
+              "sha256": "f5e1a54a89a77dcc3dc1de9fafee887bca53033e09fd5009e028e4544b69ee7c"
+            },
+            {
+              "asset_id": "f14f6d62eae9aa007d57a61762864e1e",
+              "sha256": "85d8f7f3257ecb2c6a427c38c0e89948697f9e5f341076d568ad003fbf5ec9f1"
+            }
+          ],
+          "terminal_provenance": {
+            "artifact_id": "e2d022c24cae7bbaa32e0f7cd676df45",
+            "canonical_review": true,
+            "frame_count": 96,
+            "frame_index": 95,
+            "height": 1080,
+            "mime_type": "image/png",
+            "native_artifact_id": "fc89db4afadf45daaf0ff08a3f16950b",
+            "native_artifact_sha256": "d07647220ec9206503e06ff30d943a9c6f55fff86916bc600ef3f973e724a0a6",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "d2b5dc7986c7ed44335c0bc73779b224711f03a08d1ce75b66e3e05bdca1b4b5",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+            "sha256": "0e8d46865e42110d98cac617fb38129c4a86e307cb956757be37157fc1e0c5ed",
+            "source_artifact_id": "a5457cfa9e8e71a717c288ac95e68cb7",
+            "source_artifact_sha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+            "source_rendition": "review",
+            "width": 1080
+          },
+          "reviewed_at": "2026-09-11T03:48:06.246275Z"
+        },
+        "receiptMode": "legacy_service_attestation",
+        "currentDecision": {
+          "status": "approved",
+          "reviewId": "8682123d1bc72ad5157e3e637c454287",
+          "receiptSha256": "498910d8de41c4b629c2f77454a63ad0d0f57692127bfae2fdf1f7fe7d037776"
+        }
+      },
+      "humanReview": {
+        "actor": "human",
+        "evidenceId": "ddb-20260911-user-review-02-p_337",
+        "reviewedAt": "2026-09-11T03:48:06.246275Z",
+        "reviewer": "Store operator in the current user conversation",
+        "note": "Actual operator accepted this exact first 4-second clip and product photos; recorded server review time, not inferred viewing telemetry.",
+        "jobId": "da7254997e105f227a2bc3a5daa06718",
+        "videoSha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+        "sourceImageSha256": "8788e1b2450b31f8810d00d77e7e52e9e7a2d21d967df65a6f6e878245689485",
+        "sceneImageSha256": "14cc12352e6c7725b76529575cf95a284a91a748412b3db7568004284b44769d",
+        "basisSha256": "86010ffd94d07e9d0164e7bffaf0aaef2cbe2d195a96702dad1007c25097e00f",
+        "checks": {
+          "productIdentity": true,
+          "anatomyAndMotion": true,
+          "cameraAndFraming": true,
+          "temporalStability": true,
+          "noProhibitedOverlays": true,
+          "fullClipWatched": true
+        },
+        "productReferenceAssets": [
+          {
+            "asset_id": "9b286dbb67cb52b835b1b0a3ff09e79b",
+            "sha256": "f5e1a54a89a77dcc3dc1de9fafee887bca53033e09fd5009e028e4544b69ee7c"
+          },
+          {
+            "asset_id": "f14f6d62eae9aa007d57a61762864e1e",
+            "sha256": "85d8f7f3257ecb2c6a427c38c0e89948697f9e5f341076d568ad003fbf5ec9f1"
+          }
+        ],
+        "sha256": "ff2ea2fae6d25d4fde3f4ccfc5023abaab03ced48618e1c3552f61065b5140bb"
+      },
+      "evidenceVerifiedAt": "2026-09-11T06:38:20.233Z",
+      "evidenceManifestSha256": "1b84cbd403b52744e3cf7ca6c7fde4be8093a680f1c6cfa3a7f030bfdfb21840"
+    },
+    "technical": {
+      "container": "mp4",
+      "codec": "avc1",
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "pixelFormat": "yuv420p",
+      "audioStreams": 0,
+      "fastStart": true,
+      "fullDecode": true,
+      "reportSha256": "8bb007e0f4105c608a35a271d6fa4dbae444de1f72feaa1cf2b40724e71fc83f"
+    },
+    "export": {
+      "sourceReviewSha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+      "recipeSha256": "95131c954902f8d8d6e6fd8831a22ef675cbc80ee9984f6ea87ea260c913788f",
+      "nativeGeneration": false,
+      "serverPublicationAllowed": false
+    },
+    "review": {
+      "decision": "approved",
+      "actor": "ai",
+      "reviewer": "Codex shop publication QA under owner instruction",
+      "note": "Publishes only the unchanged actually human-approved first 4 seconds. Does not approve unseen continuations or imply human loop viewing.",
+      "reviewedAt": "2026-09-11T06:38:20.248Z",
+      "finalVideoSha256": "e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd",
+      "scope": "actual_human_approved_4_second_single_pass",
+      "checks": {
+        "productIdentity": true,
+        "anatomyAndMotion": true,
+        "cameraAndFraming": true,
+        "temporalStability": true,
+        "noProhibitedOverlays": true,
+        "fullClipWatched": true,
+        "fullDecode": true,
+        "branding": true
+      },
+      "authorizationSha256": "c8f989f3334bd265c14003474830c3bed095dfed57d9196442712a9834d0bb9a",
+      "playbackReportSha256": "08630beb9bebb8580ec1641bb5d01a199d6d944a965a5cc1b176ba46257400f4",
+      "limitations": [
+        "Native generation is 512 pixels; 1080 review is an upscale.",
+        "No human review of an unseen continuation or loop is claimed.",
+        "Single playback holds the last frame; it does not create an end-to-start transition."
+      ],
+      "sha256": "af58604ae7675642772b647c9800b1e4212528aba8b1578ef4cbd014295f1a0d"
+    }
+  },
+  "rw_jsk_1000001231": {
+    "schema": "ddb.ziewcraft-single-hover-4s.v1",
+    "publicationStatus": "approved",
+    "productId": "p_450",
+    "folder": "rw_jsk_1000001231",
+    "videoProvider": "ziewcraft",
+    "videoJobId": "fc764541af2c9eac8ae1f201fa85adfa",
+    "videoQuality": "approved_dog_interacting",
+    "video": "/images/products/catalog/rw_jsk_1000001231/videos/e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2/hover.mp4",
+    "sha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_human_review_single_4s.v1",
+      "provider": "ziewcraft",
+      "playbackMode": "once_hold_last_frame",
+      "contractSha256": "02d3805a83d111a7efaad8194cdb2cba7a01325f633f4cb64e15d77ec344842a",
+      "source": {
+        "catalog": {
+          "no": 450,
+          "folder": "rw_jsk_1000001231",
+          "name": "러프웨어 런커 반려견 장난감(2025SS)",
+          "brandEn": "Ruffwear",
+          "isFood": false,
+          "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_046.jpg",
+          "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001231",
+          "gallery": [
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_111.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_260.jpg",
+            "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_340.jpg",
+            "/images/products/catalog/rw_jsk_1000001231/references/85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5.jpg"
+          ],
+          "details": [
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/d14314ae23bb223489813d2da348ea9e_134215.jpg",
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/78bb797f8917025e76658917f617f4f0_134216.jpg",
+            "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/043769762e47ac23b7f235bf80f2497d_134216.jpg"
+          ]
+        },
+        "image": "/images/products/catalog/rw_jsk_1000001231/references/85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5.jpg",
+        "imageSha256": "85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5",
+        "referenceImageSha256": "4d4f7fdd1c7ce0e67d9bf643c93d5ae93a2e2db5d1ab7e755e8ddf51a84886ac",
+        "sceneImageSha256": "19d03f888533e5a18cc363027000c6df3f892397a672d113997c0cfd0363a35d",
+        "sceneProductVerified": true,
+        "manifestSha256": "8d5e6bfa607dd220e63d18a75bfcb5bcd6993a18bdc8a323cb6e04a9b30ddbee"
+      },
+      "segment": {
+        "jobId": "fc764541af2c9eac8ae1f201fa85adfa",
+        "ownerSha256": "7aea1c31b9d0f535013c1da6191a148202baaf1939956b8abae30157af6a7c25",
+        "status": "succeeded",
+        "delivery_mode": "human_review",
+        "production_eligible": false,
+        "human_review_required": true,
+        "semantic_verified": false,
+        "requestSha256": "7d940921e1dc91328bd58bd08a2505528f745431063ee37640f9d33964d29eb8",
+        "jobResponseSha256": "e85b6858217cb201014a554561c9f9a3e67786bf0788c3f8b1bb733a8b70e9fd",
+        "inputReceiptSha256": "6ec8005455ab1a1dfe4f07787e849f2493be6bb8803e9ae8efaf876ab9988f6a",
+        "receiptSha256": "8541761218832ae7be52ca342613f949a673a2c804e5ff4b4512f9244b15940b",
+        "input": {
+          "asset_id": "ad9bc0e4dec9bebda7edb22c4fe3b1b4",
+          "sha256": "19d03f888533e5a18cc363027000c6df3f892397a672d113997c0cfd0363a35d"
+        },
+        "native_video": {
+          "artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+          "byte_length": 308568,
+          "duration_seconds": 4.041666666666667,
+          "filename": "fc764541af2c9eac8ae1f201fa85adfa_00001_.mp4",
+          "fps": 24,
+          "frame_count": 97,
+          "height": 512,
+          "mime_type": "video/mp4",
+          "role": "native_video",
+          "sha256": "b4b25d581223b3eeb330827b983628e0fc355bba5cab841c1becd49ba243d8a3",
+          "stored_name": "01-fc764541af2c9eac8ae1f201fa85adfa_00001_.mp4",
+          "url": "/api/v1/artifacts/fc764541af2c9eac8ae1f201fa85adfa/116aa085e9664ec08f5da63b15d97fac/content",
+          "width": 512
+        },
+        "review_video": {
+          "artifact_id": "df1e3da9d360e6f6ab867954d3c19d40",
+          "byte_length": 2030967,
+          "duration_seconds": 4,
+          "filename": "review-fc764541af2c9eac8ae1f201fa85adfa-b4b25d581223b3ee-35d27ba2a56313a0.mp4",
+          "fps": 24,
+          "frame_count": 96,
+          "height": 1080,
+          "mime_type": "video/mp4",
+          "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+          "role": "review_video",
+          "sha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+          "source_artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+          "source_artifact_sha256": "b4b25d581223b3eeb330827b983628e0fc355bba5cab841c1becd49ba243d8a3",
+          "stored_name": "review-fc764541af2c9eac8ae1f201fa85adfa-b4b25d581223b3ee-35d27ba2a56313a0.mp4",
+          "width": 1080
+        },
+        "native_terminal": {
+          "artifact_id": "f9603ec6c9ed6dbd0161f67b1737b77c",
+          "byte_length": 302509,
+          "filename": "terminal-f9603ec6c9ed6dbd0161f67b1737b77c.png",
+          "frame_index": 96,
+          "height": 512,
+          "mime_type": "image/png",
+          "provenance": {
+            "artifact_id": "f9603ec6c9ed6dbd0161f67b1737b77c",
+            "frame_count": 97,
+            "frame_index": 96,
+            "height": 512,
+            "mime_type": "image/png",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "6d0b20835b2383eca51c492c5f10d95ba5baff4a8bfee98cb7e5b6b15bba3a71",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "sha256": "f6a627c6fb3af6859f40bae2c234f091d61de8ae29951f946184d94ed934e7c0",
+            "source_artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+            "source_artifact_sha256": "b4b25d581223b3eeb330827b983628e0fc355bba5cab841c1becd49ba243d8a3",
+            "source_rendition": "native",
+            "width": 512
+          },
+          "role": "native_terminal",
+          "sha256": "f6a627c6fb3af6859f40bae2c234f091d61de8ae29951f946184d94ed934e7c0",
+          "source_artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+          "stored_name": "terminal-f9603ec6c9ed6dbd0161f67b1737b77c.png",
+          "width": 512
+        },
+        "review_terminal": {
+          "artifact_id": "1abeb6bb923eba614d1ecca580cf826c",
+          "byte_length": 1041782,
+          "filename": "terminal-1abeb6bb923eba614d1ecca580cf826c.png",
+          "frame_index": 95,
+          "height": 1080,
+          "mime_type": "image/png",
+          "provenance": {
+            "artifact_id": "1abeb6bb923eba614d1ecca580cf826c",
+            "canonical_review": true,
+            "frame_count": 96,
+            "frame_index": 95,
+            "height": 1080,
+            "mime_type": "image/png",
+            "native_artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+            "native_artifact_sha256": "b4b25d581223b3eeb330827b983628e0fc355bba5cab841c1becd49ba243d8a3",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "8ca4a2544993f7045559d16eb7c2f02e5bbb34743d74171eca47f443ca7158cc",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+            "sha256": "826b5c3012dffbcdafff68a933735c40814cd85135a030d4d528d3f2d0e43b4c",
+            "source_artifact_id": "df1e3da9d360e6f6ab867954d3c19d40",
+            "source_artifact_sha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+            "source_rendition": "review",
+            "width": 1080
+          },
+          "role": "review_terminal",
+          "sha256": "826b5c3012dffbcdafff68a933735c40814cd85135a030d4d528d3f2d0e43b4c",
+          "source_artifact_id": "df1e3da9d360e6f6ab867954d3c19d40",
+          "stored_name": "terminal-1abeb6bb923eba614d1ecca580cf826c.png",
+          "width": 1080
+        },
+        "validation": {
+          "technical_gate_passed": true,
+          "technical_core_complete": true,
+          "technical_failed_gates": [],
+          "gates": {
+            "anatomy_extra_limbs_and_wearing_position": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "black_borders": {
+              "code": "HOVER_NO_BLACK_BORDER_HEURISTIC",
+              "status": "passed"
+            },
+            "delivery_format": {
+              "checks": {
+                "constant_frame_rate": true,
+                "exact_duration": true,
+                "faststart": true,
+                "frame_rate_available": true,
+                "h264": true,
+                "no_rotation": true,
+                "silent": true,
+                "single_video_stream": true,
+                "square_minimum_1080": true,
+                "square_pixels": true,
+                "yuv420p": true
+              },
+              "code": "HOVER_FORMAT_OK",
+              "container_duration_seconds": 4,
+              "duration_seconds": 4,
+              "duration_tolerance_seconds": 0.02125,
+              "fps": 24,
+              "height": 1080,
+              "status": "passed",
+              "timestamp_frame_count": 96,
+              "width": 1080
+            },
+            "dog_joint_motion_or_intended_interaction": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "entire_product_and_dog_remain_in_frame": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "fixed_camera": {
+              "anchor_coverage": 1,
+              "anchor_last_verified": true,
+              "code": "HOVER_FIXED_CAMERA_PROXY",
+              "confidence_policy": "forward-backward-appearance-and-spatial-support",
+              "continuous_adjacent_chain_verified": true,
+              "measured_coverage": 1,
+              "minimum_coverage": 0.8,
+              "pass_requires_complete_adjacent_chain": true,
+              "preliminary_motion_support_coverage_minimum": 0.8,
+              "semantic_background_verified": false,
+              "status": "passed",
+              "unverified_reasons": []
+            },
+            "full_decode": {
+              "code": "HOVER_FULL_DECODE_OK",
+              "decoded_duration_seconds": 4,
+              "status": "passed"
+            },
+            "no_text_badges_logos_watermarks_or_blur_mattes": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "non_static": {
+              "code": "HOVER_NONSTATIC_PIXELS",
+              "status": "passed"
+            },
+            "product_color_pattern_geometry_seams_holes_hardware": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            },
+            "residual_motion": {
+              "code": "HOVER_RESIDUAL_PIXEL_MOTION",
+              "status": "passed"
+            },
+            "single_scene": {
+              "code": "HOVER_NO_LARGE_FRAME_CUT",
+              "status": "passed"
+            },
+            "surface_boiling_and_jelly_deformation": {
+              "code": "HOVER_SEMANTIC_VERIFICATION_UNAVAILABLE",
+              "status": "unverified"
+            }
+          },
+          "unverified_gates": [
+            "product_color_pattern_geometry_seams_holes_hardware",
+            "dog_joint_motion_or_intended_interaction",
+            "anatomy_extra_limbs_and_wearing_position",
+            "surface_boiling_and_jelly_deformation",
+            "entire_product_and_dog_remain_in_frame",
+            "no_text_badges_logos_watermarks_or_blur_mattes"
+          ],
+          "artifact_sha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2"
+        },
+        "receipt": {
+          "review_id": "f70045a9b545a589b615f6d310410f80",
+          "api_job_id": "fc764541af2c9eac8ae1f201fa85adfa",
+          "status": "approved",
+          "reviewer": "Store operator in the current user conversation",
+          "note": "The actual store operator accepted this exact latest 4-second video and product-photo comparison in response to the full-segment viewing question, saying \"이거 약간 다른데? 나머지는 굿\" and excluding only the Web Master harness. Local original user-review evidence: ddb-20260911-user-review-02-p_450 SHA256 1168b64f22d7d0c3c6b9fbea8053479ebb6e95236626a558a53fa3167e83bd29. This is a first-segment review, not a final publication or loop approval.",
+          "private_only": true,
+          "publication_allowed": false,
+          "human_identity_verified": false,
+          "checks": {
+            "product_identity": true,
+            "anatomy_and_motion": true,
+            "camera_and_framing": true,
+            "temporal_stability": true,
+            "no_prohibited_overlays": true,
+            "full_segment_watched": true
+          },
+          "bindings": {
+            "native_video": {
+              "artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+              "sha256": "b4b25d581223b3eeb330827b983628e0fc355bba5cab841c1becd49ba243d8a3"
+            },
+            "review_video": {
+              "artifact_id": "df1e3da9d360e6f6ab867954d3c19d40",
+              "sha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2"
+            },
+            "terminal": {
+              "artifact_id": "1abeb6bb923eba614d1ecca580cf826c",
+              "sha256": "826b5c3012dffbcdafff68a933735c40814cd85135a030d4d528d3f2d0e43b4c"
+            }
+          },
+          "product_reference_assets": [
+            {
+              "asset_id": "f0573050698a7ac5662ca744012b2763",
+              "sha256": "4d4f7fdd1c7ce0e67d9bf643c93d5ae93a2e2db5d1ab7e755e8ddf51a84886ac"
+            },
+            {
+              "asset_id": "d8615ebc8b912c2c23baebcbd6999342",
+              "sha256": "4a3b302fd17f8837d45213d6631c7a99ed6a283ee9c2a041c14d86b4da959a2f"
+            }
+          ],
+          "terminal_provenance": {
+            "artifact_id": "1abeb6bb923eba614d1ecca580cf826c",
+            "canonical_review": true,
+            "frame_count": 96,
+            "frame_index": 95,
+            "height": 1080,
+            "mime_type": "image/png",
+            "native_artifact_id": "116aa085e9664ec08f5da63b15d97fac",
+            "native_artifact_sha256": "b4b25d581223b3eeb330827b983628e0fc355bba5cab841c1becd49ba243d8a3",
+            "origin": "server_decoded_terminal",
+            "pixel_encoding": "bgr24",
+            "pixel_sha256": "8ca4a2544993f7045559d16eb7c2f02e5bbb34743d74171eca47f443ca7158cc",
+            "png_compression": 3,
+            "producer": "ziewcraft-human-review-media-r49-v1",
+            "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+            "sha256": "826b5c3012dffbcdafff68a933735c40814cd85135a030d4d528d3f2d0e43b4c",
+            "source_artifact_id": "df1e3da9d360e6f6ab867954d3c19d40",
+            "source_artifact_sha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+            "source_rendition": "review",
+            "width": 1080
+          },
+          "reviewed_at": "2026-09-11T03:48:09.822816Z"
+        },
+        "receiptMode": "legacy_service_attestation",
+        "currentDecision": {
+          "status": "approved",
+          "reviewId": "f70045a9b545a589b615f6d310410f80",
+          "receiptSha256": "8541761218832ae7be52ca342613f949a673a2c804e5ff4b4512f9244b15940b"
+        }
+      },
+      "humanReview": {
+        "actor": "human",
+        "evidenceId": "ddb-20260911-user-review-02-p_450",
+        "reviewedAt": "2026-09-11T03:48:09.822816Z",
+        "reviewer": "Store operator in the current user conversation",
+        "note": "Actual operator accepted this exact first 4-second clip and product photos; recorded server review time, not inferred viewing telemetry.",
+        "jobId": "fc764541af2c9eac8ae1f201fa85adfa",
+        "videoSha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+        "sourceImageSha256": "85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5",
+        "sceneImageSha256": "19d03f888533e5a18cc363027000c6df3f892397a672d113997c0cfd0363a35d",
+        "basisSha256": "1168b64f22d7d0c3c6b9fbea8053479ebb6e95236626a558a53fa3167e83bd29",
+        "checks": {
+          "productIdentity": true,
+          "anatomyAndMotion": true,
+          "cameraAndFraming": true,
+          "temporalStability": true,
+          "noProhibitedOverlays": true,
+          "fullClipWatched": true
+        },
+        "productReferenceAssets": [
+          {
+            "asset_id": "f0573050698a7ac5662ca744012b2763",
+            "sha256": "4d4f7fdd1c7ce0e67d9bf643c93d5ae93a2e2db5d1ab7e755e8ddf51a84886ac"
+          },
+          {
+            "asset_id": "d8615ebc8b912c2c23baebcbd6999342",
+            "sha256": "4a3b302fd17f8837d45213d6631c7a99ed6a283ee9c2a041c14d86b4da959a2f"
+          }
+        ],
+        "sha256": "c67e9ce9ecbe56753278d5656f30cb4350fa50e1d40172cca4c683bcfd575cb9"
+      },
+      "evidenceVerifiedAt": "2026-09-11T06:38:20.431Z",
+      "evidenceManifestSha256": "838d2126aceb02d87d5d2aefc2e770d8a0361f020f29dc3fbffe8af111448668"
+    },
+    "technical": {
+      "container": "mp4",
+      "codec": "avc1",
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "pixelFormat": "yuv420p",
+      "audioStreams": 0,
+      "fastStart": true,
+      "fullDecode": true,
+      "reportSha256": "8bb007e0f4105c608a35a271d6fa4dbae444de1f72feaa1cf2b40724e71fc83f"
+    },
+    "export": {
+      "sourceReviewSha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+      "recipeSha256": "e97b6a219f196993d1dd583b14ea3c9ca5e893e894c12e27dce2811f735e75e7",
+      "nativeGeneration": false,
+      "serverPublicationAllowed": false
+    },
+    "review": {
+      "decision": "approved",
+      "actor": "ai",
+      "reviewer": "Codex shop publication QA under owner instruction",
+      "note": "Publishes only the unchanged actually human-approved first 4 seconds. Does not approve unseen continuations or imply human loop viewing.",
+      "reviewedAt": "2026-09-11T06:38:20.455Z",
+      "finalVideoSha256": "e97142bb6fb2bd3941f22627b91543e707819b9acbfb03ddcb4f1c774ab6efd2",
+      "scope": "actual_human_approved_4_second_single_pass",
+      "checks": {
+        "productIdentity": true,
+        "anatomyAndMotion": true,
+        "cameraAndFraming": true,
+        "temporalStability": true,
+        "noProhibitedOverlays": true,
+        "fullClipWatched": true,
+        "fullDecode": true,
+        "branding": true
+      },
+      "authorizationSha256": "c8f989f3334bd265c14003474830c3bed095dfed57d9196442712a9834d0bb9a",
+      "playbackReportSha256": "0ebdcff3a3964db2a526d0797138eee14857358a18063fe8fb4f4d29627ca321",
+      "limitations": [
+        "Native generation is 512 pixels; 1080 review is an upscale.",
+        "No human review of an unseen continuation or loop is claimed.",
+        "Single playback holds the last frame; it does not create an end-to-start transition."
+      ],
+      "sha256": "4185b84409bba7b3bf0975f945ced68e5a0184abe21d654deddaab3557176a5d"
+    }
+  }
+}

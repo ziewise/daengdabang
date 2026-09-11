@@ -17029,7 +17029,10 @@
     "videoCacheBust": "path_versioned_20260616_1536",
     "videoDelivery": "jsdelivr_commit_cdn",
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
-    "detailImage": "/images/products/catalog/soopa_dental_coconutchia/details/2.webp"
+    "detailImage": "/images/products/catalog/soopa_dental_coconutchia/details/2.webp",
+    "gallery": [
+      "/images/products/catalog/soopa_dental_coconutchia/references/6ea6574da9befdc92eef99d73e850a342fd5329ec75d48ebbb00f7a331449d46.png"
+    ]
   },
   {
     "no": 293,
@@ -19308,7 +19311,8 @@
       "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_529.jpg",
       "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_625.jpg",
       "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_748.jpg",
-      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_896.jpg"
+      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000943/image/detail/1000000448_detail_896.jpg",
+      "/images/products/catalog/rw_highlands_pad_l/references/8788e1b2450b31f8810d00d77e7e52e9e7a2d21d967df65a6f6e878245689485.jpg"
     ],
     "supplierDetailImages": [
       {
@@ -27205,7 +27209,8 @@
     "gallery": [
       "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_111.jpg",
       "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_260.jpg",
-      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_340.jpg"
+      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_340.jpg",
+      "/images/products/catalog/rw_jsk_1000001231/references/85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5.jpg"
     ],
     "details": [
       "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/d14314ae23bb223489813d2da348ea9e_134215.jpg",
