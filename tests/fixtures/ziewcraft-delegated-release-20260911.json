@@ -50,5 +50,21 @@
   "rw_jsk_1000000966": {
     "productId": "p_396",
     "sha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d"
+  },
+  "polkadog_codchips_99g": {
+    "productId": "p_106",
+    "sha256": "df2b2b4ed4ebb19c76b280e3f05b2ffd66c3a5c84c164879af12411d827b8494"
+  },
+  "id_treat_sturgeon": {
+    "productId": "p_151",
+    "sha256": "93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd"
+  },
+  "id_treat_sardine": {
+    "productId": "p_152",
+    "sha256": "8e27a6bd212f0808b2e8476b13de0f3220bda196c984f916b47680c271a1fbd6"
+  },
+  "id_treat_guineafowl": {
+    "productId": "p_153",
+    "sha256": "ec2170a7649697c1e05709572e61d7db370db5d512b999a66272f96e55dec348"
   }
 }

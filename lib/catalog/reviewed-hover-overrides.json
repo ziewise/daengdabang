@@ -344,20 +344,140 @@
   },
   "id_treat_chicken": null,
   "id_treat_duck": null,
-  "id_treat_guineafowl": null,
+  "id_treat_guineafowl": {
+    "video": "/images/products/catalog/id_treat_guineafowl/videos/ec2170a7649697c1e05709572e61d7db370db5d512b999a66272f96e55dec348/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "8f36fa33883c24acd3470e7e042f9519",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8f36fa33883c24acd3470e7e042f9519",
+      "reviewId": "20af01bcfb7bc9231058763c4c2eebe8",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ec2170a7649697c1e05709572e61d7db370db5d512b999a66272f96e55dec348",
+      "seconds": 4,
+      "source": {
+        "no": 153,
+        "folder": "id_treat_guineafowl",
+        "name": "아임디퍼런트 동결건조 트릿 뿔닭 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_guineafowl/id_treat_guineafowl.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9216889218",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_guineafowl/details/2.webp",
+          "/images/products/catalog/id_treat_guineafowl/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a7522baa8dfc7d07ac4645c5828b2094",
+        "sha256": "ec2170a7649697c1e05709572e61d7db370db5d512b999a66272f96e55dec348"
+      },
+      "scopeId": "2a589fba9447b1da61592f5ddba4f0a8910cf0632e35f836cba330d022ec5527",
+      "scopeRegistrationSha256": "c53cbc5a31d335ab217a0c55d53372d28c1fa2ca024858c432bbdd0e9a225154",
+      "aiEvidenceSha256": "2287ee6af14663824c2f380229cc39eaea089c4ba200b8dbf5af255e01b85b70",
+      "receiptSha256": "f6742c579c83d19777cf2bb78ad034df2437334fff9333d763fae628136a879a",
+      "eligibilitySha256": "4ce5c2130032b0fa7bb564f03a84350d9bcb111aa9fca2066bad4551394e9e85",
+      "evidenceManifestSha256": "04cf5a86c9e310d700959fabce99683bdc43634dcbf83d32e77feddbf2c20541"
+    },
+    "videoReviewSha256": "9f068f8945f9981c4c97dd9f92e7fd6662ac583b4e31e25658e5288e143214bc",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "id_treat_sardine": {
-    "video": "/images/products/catalog/id_treat_sardine/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-63e8c990f7a2"
+    "video": "/images/products/catalog/id_treat_sardine/videos/8e27a6bd212f0808b2e8476b13de0f3220bda196c984f916b47680c271a1fbd6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "07b15d9b13e387803b0a4ff3f6957c61",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "07b15d9b13e387803b0a4ff3f6957c61",
+      "reviewId": "0908080ee700305ae2f499cf94781b4d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "8e27a6bd212f0808b2e8476b13de0f3220bda196c984f916b47680c271a1fbd6",
+      "seconds": 4,
+      "source": {
+        "no": 152,
+        "folder": "id_treat_sardine",
+        "name": "아임디퍼런트 동결건조 트릿 정어리 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_sardine/id_treat_sardine.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9216900106",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_sardine/details/2.webp",
+          "/images/products/catalog/id_treat_sardine/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c9f5d0717e13c1ebf72b05955b1171a9",
+        "sha256": "8e27a6bd212f0808b2e8476b13de0f3220bda196c984f916b47680c271a1fbd6"
+      },
+      "scopeId": "ce29831386097bbdfe1ca9384f5f5cdd916a306644b781e0fc1556e6db453ac9",
+      "scopeRegistrationSha256": "f92f8e6f5269c11703cbfafb3c31a57dbf4b04fca173c30180fde340a05f9196",
+      "aiEvidenceSha256": "0c4218c540183390cab74685bf53bc246d99e8058921bdf189775e82700431ab",
+      "receiptSha256": "8c62d232e0cf5d083aed1dc09024cc195a7750f7714ea6d70a3d198b4df0e878",
+      "eligibilitySha256": "3a9f0ba1fb96fc862c25ef5049b5402162d33fa49aa9f00a3fa97f47d6dc54af",
+      "evidenceManifestSha256": "5f0c4cb7631a5274ba7a6b12781d463290625028e359ee172697c54a47397d91"
+    },
+    "videoReviewSha256": "d7926ae212658fd3cae087cb6501ddebbd343d5bece7da0ba63a3feef004638a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   },
   "id_treat_sturgeon": {
-    "video": "/images/products/catalog/id_treat_sturgeon/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-3e6d4d5914df"
+    "video": "/images/products/catalog/id_treat_sturgeon/videos/93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "1d421ebd5fe1900bdb4be0c1424865ad",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1d421ebd5fe1900bdb4be0c1424865ad",
+      "reviewId": "fbc68e6c26d318ae456d66cd484bad41",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd",
+      "seconds": 4,
+      "source": {
+        "no": 151,
+        "folder": "id_treat_sturgeon",
+        "name": "아임디퍼런트 동결건조 트릿 철갑상어 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_sturgeon/id_treat_sturgeon.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9216913566",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_sturgeon/details/2.webp",
+          "/images/products/catalog/id_treat_sturgeon/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "1e0938f5ad25d7c326789f48bf115bcf",
+        "sha256": "93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd"
+      },
+      "scopeId": "cfb3fcead150bb72792c8f61327ffe01c79f489e3d1d202002b2da072bde96c3",
+      "scopeRegistrationSha256": "d89f65a4c0fdf8342fd73e0589b3925f1d32c7948016d3c8720fa759ed7c0643",
+      "aiEvidenceSha256": "f28c71591d0d9d6de7748b01beaf5bacd8bd46af506b4027b60969d30d1814d5",
+      "receiptSha256": "056b3b3103615493f4be01ca897f824219707770621dd68811db04679df99e7d",
+      "eligibilitySha256": "067a532c4633ba283550cb9f20eaa5b06fba41b3a159c0ce40df948834c7792f",
+      "evidenceManifestSha256": "0cd44b82e530324f477e63f1f7d3eae30ed0126b259b745a8f1ef2eb2aff041c"
+    },
+    "videoReviewSha256": "4ebdbdc4f9aadc58b0a55e4181579f3e899c87a18610f66ca8f8d2fdeaa2cebf",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   },
   "id_treat_trout": {
     "video": "/images/products/catalog/id_treat_trout/videos/hover.mp4",
@@ -582,11 +702,53 @@
     "videoJobId": "hover-static72-20260903-8b4dc9d16f74"
   },
   "polkadog_codchips_99g": {
-    "video": "/images/products/catalog/polkadog_codchips_99g/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-4cc9e72e42f5"
+    "video": "/images/products/catalog/polkadog_codchips_99g/videos/df2b2b4ed4ebb19c76b280e3f05b2ffd66c3a5c84c164879af12411d827b8494/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "a6d6192ae95228cca052711f9fc79641",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a6d6192ae95228cca052711f9fc79641",
+      "reviewId": "49f662933e08854f84573d3bca25557d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "df2b2b4ed4ebb19c76b280e3f05b2ffd66c3a5c84c164879af12411d827b8494",
+      "seconds": 4,
+      "source": {
+        "no": 106,
+        "folder": "polkadog_codchips_99g",
+        "name": "폴카독베이커리_ALL 알래스카 대구칩 99g",
+        "brandEn": "Polkadog Bakery",
+        "isFood": true,
+        "image": "/images/products/catalog/polkadog_codchips_99g/polkadog_codchips_99g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/11026839112",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/polkadog_codchips_99g/details/official-visual-01.webp",
+          "/images/products/catalog/polkadog_codchips_99g/details/official-visual-02.webp",
+          "/images/products/catalog/polkadog_codchips_99g/details/official-visual-03.webp",
+          "/images/products/catalog/polkadog_codchips_99g/details/official-visual-04.webp",
+          "/images/products/catalog/polkadog_codchips_99g/details/official-visual-05.webp",
+          "/images/products/catalog/polkadog_codchips_99g/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a5b2766b9df462c3f1b4e7665a044f5e",
+        "sha256": "df2b2b4ed4ebb19c76b280e3f05b2ffd66c3a5c84c164879af12411d827b8494"
+      },
+      "scopeId": "b13a90e2f7c9941dd4551061bfafc22051e74382d5c1e7f79d44e358e065d8ce",
+      "scopeRegistrationSha256": "bd0696e1e6c7d90e0c26198a121fc7f3c92f3923807f7cf7b2e0859a9a9a1f54",
+      "aiEvidenceSha256": "1da5b3198d07157e9f8dd90f21a89824740a58cd2eea9ecc8ec48e95bcaab449",
+      "receiptSha256": "8c247c9642c221267f7cab6a965cbb4de30e4d174f4273d420e9ce8f91076e28",
+      "eligibilitySha256": "974fcfb48b1c7e566380b04c4e481c837cc9581b52d1f5483674c924de8485bc",
+      "evidenceManifestSha256": "638d266400d84c0e02d67a5cab2b3bee61745c72d9cd2b560c1904644b50804b"
+    },
+    "videoReviewSha256": "b1bd598a4080983ac85681ff048d298424ced2b97bc7f1041c16815447ab224e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   },
   "polkadog_codskin_907g": {
     "video": "/images/products/catalog/polkadog_codskin_907g/videos/hover.mp4",
