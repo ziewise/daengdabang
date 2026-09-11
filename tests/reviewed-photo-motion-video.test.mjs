@@ -33,7 +33,9 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
         assert.equal(videoBrandingMode(`https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${'a'.repeat(40)}/public${review.video}`),'baked');
     }
     const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
-    assert.equal(active.length,86);
+    const delegated=read("./fixtures/ziewcraft-delegated-release-20260911.json");
+    assert.equal(active.length,86+Object.keys(delegated).length);
+    assert.deepEqual(active.filter(r=>r.videoZiewcraftIdentity?.kind==="ziewcraft_owner_delegated_ai.v1").map(r=>r.folder).sort(),Object.keys(delegated).sort());
     assert.equal(active.filter(r=>r.videoZiewcraftIdentity?.kind==='ziewcraft_human_review_single_4s.v1').length,3);
     assert.equal(Object.keys(flow).length,76,'all original Flow approvals remain preserved');
     assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,73);

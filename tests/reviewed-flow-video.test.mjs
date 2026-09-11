@@ -96,7 +96,7 @@ test("the exact reviewed Flow products retain the remaining explicit hover quara
     const held = Object.entries(overrides).filter(([folder, value]) => value === null || (
         value.videoProvider === "ddb_exact_product_renderer" && !Object.hasOwn(expected.approvedPhotoEdits, folder)
     ));
-    const separatelyApproved = read("./fixtures/ziewcraft-single-release-20260911.json");
+    const separatelyApproved = { ...read("./fixtures/ziewcraft-single-release-20260911.json"), ...read("./fixtures/ziewcraft-delegated-release-20260911.json") };
     assert.deepEqual(held.map(([folder]) => folder).sort(), expected.heldOverrideFolders.filter(folder => !Object.hasOwn(separatelyApproved, folder)));
     for (const [folder] of held) {
         const row = raw.find((item) => item.folder === folder);

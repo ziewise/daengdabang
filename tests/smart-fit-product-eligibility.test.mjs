@@ -252,7 +252,7 @@ test("catalog re-review preserves the withheld set alongside separately approved
     });
 
     const expected = JSON.parse(await source("tests/fixtures/flow-contents-batch20.json"));
-    const newlyApproved = JSON.parse(await source("tests/fixtures/ziewcraft-single-release-20260911.json"));
+    const newlyApproved = { ...JSON.parse(await source("tests/fixtures/ziewcraft-single-release-20260911.json")), ...JSON.parse(await source("tests/fixtures/ziewcraft-delegated-release-20260911.json")) };
     assert.deepEqual(Object.keys(overrides).sort(), [...new Set([...expected.allOverrideFolders,...Object.keys(newlyApproved)])].sort());
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value === null).map(([folder]) => folder).sort(), expected.nullOverrideFolders.filter(f=>!Object.hasOwn(newlyApproved,f)));
     assert.deepEqual(Object.entries(overrides).filter(([, value]) => value?.videoProvider === "ddb_exact_product_renderer").map(([folder]) => folder).sort(), expected.stillRendererOverrideFolders.filter(f=>!Object.hasOwn(newlyApproved,f)));

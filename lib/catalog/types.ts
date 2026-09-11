@@ -2,6 +2,7 @@ import type { ProductInventory } from "./inventory";
 import type { ZiewcraftVideoIdentity } from "./ziewcraft-video-review";
 import type { ZiewcraftHumanReviewIdentity } from "./ziewcraft-human-review";
 import type { ZiewcraftContentsReviewIdentity } from "./ziewcraft-contents-review";
+import type { ZiewcraftDelegatedReviewIdentity } from "./ziewcraft-delegated-review";
 import type { ZiewcraftSingleReviewIdentity } from "./ziewcraft-single-review";
 import type { ApprovedVideoTrimIdentity } from "./video-trim-review";
 
@@ -76,7 +77,7 @@ export interface CatalogRow {
     /** Exact reviewed scene-download identity; never a fabricated job ID. */
     videoGenerationIdentity?: Record<string, unknown> | null;
     /** Actual Director API output and exact supplier/color evidence. */
-    videoZiewcraftIdentity?: ZiewcraftVideoIdentity | ZiewcraftHumanReviewIdentity | ZiewcraftContentsReviewIdentity | ZiewcraftSingleReviewIdentity | null;
+    videoZiewcraftIdentity?: ZiewcraftVideoIdentity | ZiewcraftHumanReviewIdentity | ZiewcraftContentsReviewIdentity | ZiewcraftSingleReviewIdentity | ZiewcraftDelegatedReviewIdentity | null;
     /** Exact temporal edit of a separately approved original video. */
     videoTrimIdentity?: ApprovedVideoTrimIdentity | null;
     /** Exact approved original trims or unchanged human-approved four-second clips may finish once and retain the last frame. */

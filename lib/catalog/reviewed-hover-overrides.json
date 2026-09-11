@@ -1982,7 +1982,54 @@
     "videoJobId": "hover-static72-20260903-119eec509de3"
   },
   "soopa_dental_appleblueberry": null,
-  "soopa_dental_bananapumpkin": null,
+  "soopa_dental_bananapumpkin": {
+    "video": "/images/products/catalog/soopa_dental_bananapumpkin/videos/be05233363648da66b52698de1faa7e63bca8b454e7f99ce7917cc67c6bc392d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "9fba1c781ceb5e9fc0762c68aad0cac4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9fba1c781ceb5e9fc0762c68aad0cac4",
+      "reviewId": "23241ac743fdd6b16a4a8feb92ff11cb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "be05233363648da66b52698de1faa7e63bca8b454e7f99ce7917cc67c6bc392d",
+      "seconds": 4,
+      "source": {
+        "no": 229,
+        "folder": "soopa_dental_bananapumpkin",
+        "name": "수파 그레인프리 100%식물성 건강한 야채 덴탈스틱 바나나&호박100g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_dental_bananapumpkin/soopa_dental_bananapumpkin.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107858595",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/2.webp",
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/3.webp",
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/4.webp",
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/5.webp",
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/6.webp",
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/7.webp",
+          "/images/products/catalog/soopa_dental_bananapumpkin/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e35693b75770fdfb72857951029de276",
+        "sha256": "be05233363648da66b52698de1faa7e63bca8b454e7f99ce7917cc67c6bc392d"
+      },
+      "aiEvidenceSha256": "4bb8270f857bf6789128dd90d8e5405e84ec090115721068c2ca98ba0d785c42",
+      "receiptSha256": "f67f0a33587cf08ddb3e4bf8d10e7c363063b7595eb6cfc638580b4e1aca3b6e",
+      "eligibilitySha256": "3c909fce45cb192c520bf40d193feae5754ed36183a19f6a1fa1f93a4aa215fd",
+      "evidenceManifestSha256": "5765e508db5c0819f9d57954cb4481f5060357562ef2c2a6ae789474a43bb534"
+    },
+    "videoReviewSha256": "24cea056936ef4930f75fdf532edcbe70e5d850039e70b08d47e68a6ed91d164",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "soopa_dental_carrotpumpkin": null,
   "soopa_dental_coconutchia": {
     "video": "/images/products/catalog/soopa_dental_coconutchia/videos/944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e/hover.mp4",
@@ -3232,5 +3279,54 @@
     "videoTrimIdentity": null,
     "videoPlaybackMode": "once_hold_last_frame",
     "videoReviewSha256": "4185b84409bba7b3bf0975f945ced68e5a0184abe21d654deddaab3557176a5d"
+  },
+  "rw_jsk_1000000920": {
+    "video": "/images/products/catalog/rw_jsk_1000000920/videos/53b231353fca5c9b9e66c01b4acd0aec291a8047724de559ab1b183b27aa354d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "741404fe409a2247c964082ac8fab2ac",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "741404fe409a2247c964082ac8fab2ac",
+      "reviewId": "9972bab23f37bc94fcf2e377a89894b9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "53b231353fca5c9b9e66c01b4acd0aec291a8047724de559ab1b183b27aa354d",
+      "seconds": 8,
+      "source": {
+        "no": 389,
+        "folder": "rw_jsk_1000000920",
+        "name": "러프웨어 버트 방수 방풍 보온 재킷(Vert™ Jacket)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000920/image/detail/1000000920_detail_04.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000920",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000920/image/detail/1000000920_detail_180.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000920/image/detail/1000000920_detail_260.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211102/Vert-Jacket1_1_171209.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211102/Vert-Jacket1_2_171232.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211102/Vert-Jacket2_171246.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/Vert-Jacket3_164517.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/9a6f1c3bc018687ceaabecdc1f571c3e_164526.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d83b85c530559bc13404750cef644c21",
+        "sha256": "53b231353fca5c9b9e66c01b4acd0aec291a8047724de559ab1b183b27aa354d"
+      },
+      "aiEvidenceSha256": "f7024b9623a954f25bb3ce40e0bd01c9391f4f3a0be2b0a9e1655db142a17a0e",
+      "receiptSha256": "8aea5fec66ca5292df242156d678bbb2bdcdc341efbd20a67209e418ede9c1b6",
+      "eligibilitySha256": "7585a40fe38877b2f7a6eb3a02ae06bd7679a6a2b349cb789dbd490fc8de8749",
+      "evidenceManifestSha256": "f62abb0e361590762495dbb80c2348e6872d9acfd8b514eb37e77eb077a5155c"
+    },
+    "videoReviewSha256": "9533b0d904b8fe0031a0100504f9f198237eae14bae7d8e575ab2f6af98a5649",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   }
 }
