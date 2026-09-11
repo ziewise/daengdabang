@@ -3424,7 +3424,7 @@
     },
     "videoReviewSha256": "1909b64d4c8c0175e3b7f4aad684d6ab55dd009035093d8253467c3a9f81404c",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoDelivery": "same_origin",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,

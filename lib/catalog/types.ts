@@ -67,7 +67,7 @@ export interface CatalogRow {
     sizeImage?: string;
     video?: string;
     /** Pages 배포에서는 현재 Git commit에 고정된 jsDelivr URL로 전달한다. */
-    videoDelivery?: "jsdelivr_commit_cdn";
+    videoDelivery?: "jsdelivr_commit_cdn" | "same_origin";
     /** 이전 자산 검증에 사용한 commit. 새 Pages 빌드는 workflow의 현재 SHA를 우선한다. */
     videoSourceCommit?: string;
     /** Admin-reviewed hover publication provenance. */

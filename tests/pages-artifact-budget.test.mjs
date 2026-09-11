@@ -8,6 +8,16 @@ import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
 
 const COMMIT_SHA = "a".repeat(40);
 
+test('Pages keeps exact same-origin video bytes when CDN delivery is withdrawn', async t => {
+    const root = await fixture(t, { includeCdnUrl: false, reviewedHoverOverrides: { sample: { videoDelivery: 'same_origin' } } });
+    const video = path.join(root, 'out/images/products/catalog/sample/videos/hover.mp4');
+    const before = await fs.readFile(video);
+    const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    assert.equal(result.catalogCdnVideoCount, 0);
+    assert.deepEqual(await fs.readFile(video), before);
+    await assert.rejects(fs.access(path.join(root, 'out/images/products/catalog/stale/videos/hover.mp4')));
+});
+
 async function photoMotionFixture(t, { includeCdnUrl = true, reviewed = true } = {}) {
     const root = await fixture(t, { includeCdnUrl: false });
     const video = `/images/products/catalog/sample/videos/${'b'.repeat(64)}/hover.mp4`;
