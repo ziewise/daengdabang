@@ -34,5 +34,13 @@
   "rw_jsk_1000001244": {
     "productId": "p_460",
     "sha256": "cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec"
+  },
+  "rw_jsk_1000000949": {
+    "productId": "p_391",
+    "sha256": "bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f"
+  },
+  "rw_jsk_1000000966": {
+    "productId": "p_396",
+    "sha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d"
   }
 }

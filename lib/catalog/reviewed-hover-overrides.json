@@ -3685,5 +3685,109 @@
     "videoEditIdentity": null,
     "videoReviewClass": null,
     "videoTrimIdentity": null
+  },
+  "rw_jsk_1000000949": {
+    "video": "/images/products/catalog/rw_jsk_1000000949/videos/bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "d3cac5d0d16a5771770f97735a13e62b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d3cac5d0d16a5771770f97735a13e62b",
+      "reviewId": "1d5a482f5cdaf096c6da29f2db21f347",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f",
+      "seconds": 8,
+      "source": {
+        "no": 391,
+        "folder": "rw_jsk_1000000949",
+        "name": "러프웨어 선 샤워 레인재킷(Sun Shower™ Jacket)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000949/image/detail/1000000896_detail_079.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000949",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000949/image/detail/1000000896_detail_173.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000949/image/detail/1000000896_detail_264.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000949/image/detail/1000000896_detail_372.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220314/Sun-Shower-Jacket1_192520.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220320/Sun-Shower-Jacket2_175724.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/Sun-Shower-Jacket3_164355.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/5268f55755e41d295a2290ba73533f3e_164412.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3ae37b2a7e9a2dacef73d95651b9e714",
+        "sha256": "bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f"
+      },
+      "scopeId": "7bf7f151f0696a65cc48ee049d5f79d1c2b24278502312e0272625d7c0423c90",
+      "scopeRegistrationSha256": "bd6719ccb8d805c59587306292cc81749830616deeaf2a4e798bb4f6d0b56cf5",
+      "aiEvidenceSha256": "84207e9d13de0b5ae3589e1aa072315b1b42833977b107b3b8fbc5533f9cb241",
+      "receiptSha256": "0b306e065a82ac534cf33665f32ec39a81588d2eb0e11b8da0ff42f2bebcc9a9",
+      "eligibilitySha256": "ce312510eead113d482ecf1767eab197ec9d120e9e34f956ef14be6b28c2d933",
+      "evidenceManifestSha256": "c4a59543f7b9b025ddf5e2fea677b5b1d0deed156cd148e20a231b705a06f89c"
+    },
+    "videoReviewSha256": "e8877da89082026b150883680c79a67d6b9d32dab00e106d870c322ae6ca8ace",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
+  "rw_jsk_1000000966": {
+    "video": "/images/products/catalog/rw_jsk_1000000966/videos/7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "680abbb98256b6d5af70629143c63f92",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "680abbb98256b6d5af70629143c63f92",
+      "reviewId": "7280de08ed1abda5677a1df7627a0462",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d",
+      "seconds": 8,
+      "source": {
+        "no": 396,
+        "folder": "rw_jsk_1000000966",
+        "name": "러프웨어 루멘글로우 하이 비스 재킷(Lumenglow™ High-Vis Jacket)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_033.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000966",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_133.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_264.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_352.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_423.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_593.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220323/Lumenglow-High-vis-Jacket1_222518.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220323/Lumenglow-High-vis-Jacket2_222538.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/Lumenglow-High-vis-Jacket3_164238.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/5268f55755e41d295a2290ba73533f3e_164247.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "1f4810a71e07ec4d22661ba7941a5ef9",
+        "sha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d"
+      },
+      "scopeId": "28b76e5032e7fba3a287dc5d0955d4d0ad1f8eb3945ad749eea300fb628ff69f",
+      "scopeRegistrationSha256": "33a94f1abc00c21adebd14ef16fa77b4e5a428f3484431e15e4bb3ed1cf09365",
+      "aiEvidenceSha256": "149254d8603d4c24ca6029b440fa4ef5a07b8233862ce515d8f9dd97aae5a272",
+      "receiptSha256": "86115a63aebbaba22fccdd9b3050a178cbee3a76c1883c68a981d18502f3071d",
+      "eligibilitySha256": "43b03b64fcaf84ad3a571336c95340aa0b53cee342c1e0f16cfe905a3864915d",
+      "evidenceManifestSha256": "388eff87b171cad890a96fbc0213b4846b42270b16932c6308e67816da9fb400"
+    },
+    "videoReviewSha256": "002016c60a8cc7416d6f7c5fcb0245495c636f373b502f8ce122fe464bca6404",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   }
 }
