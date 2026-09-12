@@ -1114,7 +1114,59 @@
     "videoJobId": "hover-photo-20260903-3a42e99abfaf"
   },
   "rs_v2_neon_ltd": null,
-  "rs_v2_ozarkorange": null,
+  "rs_v2_ozarkorange": {
+    "video": "/images/products/catalog/rs_v2_ozarkorange/videos/7c94e0722cb16b9dccedcbf6daee9102efe9dda699f33c289fc242a4acd21d9a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "40adfd4e108bb1a1f0e66e6e9f6d7dd1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "40adfd4e108bb1a1f0e66e6e9f6d7dd1",
+      "reviewId": "a47ccfc02b9a0377500de975c0e64dce",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7c94e0722cb16b9dccedcbf6daee9102efe9dda699f33c289fc242a4acd21d9a",
+      "seconds": 8,
+      "source": {
+        "no": 93,
+        "folder": "rs_v2_ozarkorange",
+        "name": "렉스스펙스 V2 오자크 오렌지 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001148/image/detail/1000001148_detail_085.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001148",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001148/image/detail/1000001148_detail_164.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001148/image/detail/1000001148_detail_274.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_1_183053.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_2_183054.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_3_183055.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_051619.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_051752.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d728b10db325dc72ea9c0cc6adc9f71d",
+        "sha256": "7c94e0722cb16b9dccedcbf6daee9102efe9dda699f33c289fc242a4acd21d9a"
+      },
+      "scopeId": "c0ec64c82d881bc0dd0657752fd32e81c1b6af4d1f74be225f3e971307b3d70a",
+      "scopeRegistrationSha256": "5ee690d2b56af28dab9120cb3c72c77bacb5bd55f71302570399e29edc06ad40",
+      "aiEvidenceSha256": "f4c4dda769429c71a28878a98938a1d2ede9eac495a804a6a4640a86600c6d84",
+      "receiptSha256": "e280694c5951f9c4a21cf6b45aa7e02adb52244dbee1e2a97194ce0f94b5ad79",
+      "eligibilitySha256": "161822da16296b2e5520e82ffd63d9db0b6e042c47523bc399547a5d4465d15c",
+      "evidenceManifestSha256": "05ceec85e5f221a103a8de8009605c133e56ebe75867561019fa67d84b3e0001"
+    },
+    "videoReviewSha256": "0676c6b1e95d4b52d596aaff819f16683b4f4eb5b1c9606f656ae22d91488da8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "6d9cd314dd03a0b7451aa9bfa5d0481053620203"
+  },
   "rs_v2_pikepurple": null,
   "rs_v2_rangerred": {
     "video": "/images/products/catalog/rs_v2_rangerred/videos/d3a7b47b836b329d57147c2730afe30721faa18c9d9f343933607cda2cc90640/hover.mp4",
@@ -6585,5 +6637,64 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4421f0b7a713c78d8357d73a9e1140af60c5c521"
+  },
+  "rw_jsk_1000001219": {
+    "video": "/images/products/catalog/rw_jsk_1000001219/videos/22c90e20f852efd452b76d078dbf8c0346df75afb0894ba220aa3d98ea969ce6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e11f27da004c55efebb4937e8355258e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e11f27da004c55efebb4937e8355258e",
+      "reviewId": "e4669f9ef61a557a656eb1ffd151693b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "22c90e20f852efd452b76d078dbf8c0346df75afb0894ba220aa3d98ea969ce6",
+      "seconds": 8,
+      "source": {
+        "no": 442,
+        "folder": "rw_jsk_1000001219",
+        "name": "러프웨어 퀸지 보온 패딩 베스트",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_053.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001219",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_182.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_228.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_32.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_493.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_525.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_641.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_758.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_824.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001219/image/detail/1000001219_detail_946.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260904/1e58bfa3ae3459b4f5a4e0f3e1736394_184319.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260904/46250c6ac66b80ce80797649014c4a0e_184338.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260904/1570dae301cdddc5c64fa78eeb7878e1_184540.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260904/fbe94f8b1c7a1777c9498020eab8d7ff_184605.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240923/fc4b5b00fe74b35f675f54e8659208f5_152906.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "af7b028cc955113bb4c1a0dfb660babe",
+        "sha256": "22c90e20f852efd452b76d078dbf8c0346df75afb0894ba220aa3d98ea969ce6"
+      },
+      "scopeId": "1e3d563033cb1d8d02e6fc7a591f00c4674e1327360e2f8ce4e52db9b24bd09b",
+      "scopeRegistrationSha256": "85fc1f1224473889f76a1ed0523cb5ca055e439ddb1050147670ce9c91107df4",
+      "aiEvidenceSha256": "026901a90aef95d2dcaae3e33770dde6d5d4470f86f5844df4e6065672312964",
+      "receiptSha256": "bb7847e8a9d5daad4a4dc9ae1645133e29e58d3a005eb3ea8793c1171e91a41b",
+      "eligibilitySha256": "16849cb45f5011022f1127e1b5d0ded309a68329ee849ad99e666476386a5fb0",
+      "evidenceManifestSha256": "40ae37aab60a159580d1fa7ccddb75153fc393cbdbf0f0a678beeaa7856a5d4b"
+    },
+    "videoReviewSha256": "7bcded7b69af551be7356bb0d1787ea7ea95ce9c378f78c1fb32fb9f250549f0",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "6d9cd314dd03a0b7451aa9bfa5d0481053620203"
   }
 }

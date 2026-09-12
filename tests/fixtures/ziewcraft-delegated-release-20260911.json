@@ -254,5 +254,13 @@
   "rw_jsk_1000000416": {
     "productId": "p_379",
     "sha256": "43894f941cd9c256740a9eaec15be1061652c55750e606b84515acec0d94346c"
+  },
+  "rw_jsk_1000001219": {
+    "productId": "p_442",
+    "sha256": "22c90e20f852efd452b76d078dbf8c0346df75afb0894ba220aa3d98ea969ce6"
+  },
+  "rs_v2_ozarkorange": {
+    "productId": "p_93",
+    "sha256": "7c94e0722cb16b9dccedcbf6daee9102efe9dda699f33c289fc242a4acd21d9a"
   }
 }
