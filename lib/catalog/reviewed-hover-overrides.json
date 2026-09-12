@@ -6312,5 +6312,110 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "cbe53fcc073aba8b2d2bf3f7e807e1e3ab613264"
+  },
+  "rw_jsk_1000001160": {
+    "video": "/images/products/catalog/rw_jsk_1000001160/videos/0c8c4d72880dd073c9fbce199afd9b46df09b377ab7015e48346cbac4a9527b6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6be1d768b28bee74ebeda3dc8f6ac861",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6be1d768b28bee74ebeda3dc8f6ac861",
+      "reviewId": "0372f48d2e899a032837d98d4018e125",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0c8c4d72880dd073c9fbce199afd9b46df09b377ab7015e48346cbac4a9527b6",
+      "seconds": 8,
+      "source": {
+        "no": 425,
+        "folder": "rw_jsk_1000001160",
+        "name": "러프웨어 퀸지 보온 패딩 재킷(Quinzee™ Jacket)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001160/image/detail/1000000929_detail_070.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001160",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001160/image/detail/1000000929_detail_175.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001160/image/detail/1000000929_detail_283.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001160/image/detail/1000000929_detail_359.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231021/Quinzee-Jacket1_2023_020434.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231021/Quinzee-Jacket2_2023_020451.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231021/Quinzee-Jacket3_2023_020516.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/9a6f1c3bc018687ceaabecdc1f571c3e_163714.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9cebab37cd79c717861f97f57e297408",
+        "sha256": "0c8c4d72880dd073c9fbce199afd9b46df09b377ab7015e48346cbac4a9527b6"
+      },
+      "scopeId": "1fdbcb117275d22486e34525628836288070eee55032bdecc7b30968f91971fa",
+      "scopeRegistrationSha256": "4ecd50a9db4008f60df21bf1485b31bf861ad7e5510e203bdfe2e4afe2bab9c4",
+      "aiEvidenceSha256": "778d5286cd948dd9e21518f0cbd945a3a4491cbdce4961343c18e5eb631bd55f",
+      "receiptSha256": "ebf9ac12d0548bca002d3516c9e83501e04fc9a9cfc4d192ca5ae35e40a093b5",
+      "eligibilitySha256": "7401a72c92dd8294d08fe06547863b8f250964b32412f5e8ebd3589c9b7382b5",
+      "evidenceManifestSha256": "e8bb691c4053928bb96d8755b9d0a7a35d95a2fe87441fd19760bb0fe4aba4a1"
+    },
+    "videoReviewSha256": "16840d3e31a823ec7ce17024d303155e113b6b8130439aff0d123e4e7f6f3366",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b525c5b95ed886ab26c6cb6c88d3ff5d6d9efbe4"
+  },
+  "rw_jsk_1000001005": {
+    "video": "/images/products/catalog/rw_jsk_1000001005/videos/e20678c4a82d414d6540daf5a39e28a048e3c64d7b286d880af54908dd9853e8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "12e24e31001a536f10fb76f01a29a89b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "12e24e31001a536f10fb76f01a29a89b",
+      "reviewId": "4f993e83e5e1b8b675cf9081fe6099ba",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e20678c4a82d414d6540daf5a39e28a048e3c64d7b286d880af54908dd9853e8",
+      "seconds": 8,
+      "source": {
+        "no": 410,
+        "folder": "rw_jsk_1000001005",
+        "name": "러프웨어 플로트 코트 구명 조끼(Float Coat™)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001005/image/detail/1000000860_detail_089.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001005",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001005/image/detail/1000000860_detail_184.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001005/image/detail/1000000860_detail_255.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001005/image/detail/1000000860_detail_371.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001005/image/detail/1000000860_detail_441.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001005/386bf8a6ace4c5e73c2f0ba0776f46f4.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001005/3a24f1172a831319f3d7250de57b1df1.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001005/67c49451e7b1313881217e00bcb9f470.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001005/85c10f8ac5f4172feba1a8a0768c73ca.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6a3d6438d4cc11f6397efd53cf011980",
+        "sha256": "e20678c4a82d414d6540daf5a39e28a048e3c64d7b286d880af54908dd9853e8"
+      },
+      "scopeId": "b81b1fb243541818226955ebf1613b8d8c71c60b19b022154133f04dc3751d08",
+      "scopeRegistrationSha256": "f365963a2e8f343ea3c0f50d6ae28a117c9db312594b025906a320842406900d",
+      "aiEvidenceSha256": "6974f173ae6e3c21587b8ffcd7e1b4dc8d8a522290ca853c840954a933513ae5",
+      "receiptSha256": "ffccbbf73d361cefef641f840f01395051f36ea4990cb70ee251341d73aca106",
+      "eligibilitySha256": "769294a14c3cbc2c91b0388a53a7e8f46d648519af71aa5461bb4ec66ab04688",
+      "evidenceManifestSha256": "e399b28c584e172238fd37f0d7278e1972fc55b77d9adf33c18dd17fffd33101"
+    },
+    "videoReviewSha256": "051e0d69fa4e7685f51812b4729acd016748978726fdaabf1911388fd3f6395a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b525c5b95ed886ab26c6cb6c88d3ff5d6d9efbe4"
   }
 }

@@ -234,5 +234,13 @@
   "rw_stashbag_mini": {
     "productId": "p_61",
     "sha256": "23782be2b8c59c8df3098517afeaa8e10e877468109090b1e812d97835cb2d3a"
+  },
+  "rw_jsk_1000001160": {
+    "productId": "p_425",
+    "sha256": "0c8c4d72880dd073c9fbce199afd9b46df09b377ab7015e48346cbac4a9527b6"
+  },
+  "rw_jsk_1000001005": {
+    "productId": "p_410",
+    "sha256": "e20678c4a82d414d6540daf5a39e28a048e3c64d7b286d880af54908dd9853e8"
   }
 }
