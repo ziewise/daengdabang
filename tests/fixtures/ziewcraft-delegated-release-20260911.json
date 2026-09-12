@@ -94,5 +94,17 @@
   "rw_jsk_1000001214": {
     "productId": "p_440",
     "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100"
+  },
+  "rw_jsk_1000001245": {
+    "productId": "p_461",
+    "sha256": "9370f2fa35c2bcf9e3d6e480f4d4ea056a79ca258a8f77bf3b6ec74ebd92be54"
+  },
+  "rs_v2_banditorange": {
+    "productId": "p_78",
+    "sha256": "f94f0f3925f46aad22cca60f6313a58fc22d1860323b82cf53ade974bd4a109e"
+  },
+  "rs_v2_appalachianorange": {
+    "productId": "p_100",
+    "sha256": "c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314"
   }
 }
