@@ -178,5 +178,9 @@
   "rs_jsk_1000001250": {
     "productId": "p_463",
     "sha256": "02ea5ac94d1d202d82b74016d95d6206444f1307c52f5879a4a60fc043b7deca"
+  },
+  "rw_jsk_1000000951": {
+    "productId": "p_392",
+    "sha256": "b8f08937b0301cbc135af04ec66fcec7413b404615326d22b02c61b8588a32f2"
   }
 }

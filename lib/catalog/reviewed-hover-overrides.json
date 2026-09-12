@@ -5578,5 +5578,59 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "ead2b507eb25caccb9f08f5ec51cd11bace41dcc"
+  },
+  "rw_jsk_1000000951": {
+    "video": "/images/products/catalog/rw_jsk_1000000951/videos/b8f08937b0301cbc135af04ec66fcec7413b404615326d22b02c61b8588a32f2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "cc9b7e4498c8d925dd494f264b1ff48b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "cc9b7e4498c8d925dd494f264b1ff48b",
+      "reviewId": "7f25a5b2b8757262aee584296b9d1a01",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b8f08937b0301cbc135af04ec66fcec7413b404615326d22b02c61b8588a32f2",
+      "seconds": 8,
+      "source": {
+        "no": 392,
+        "folder": "rw_jsk_1000000951",
+        "name": "러프웨어 탑 로프 목줄(Top Rope™ Collar)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_093.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000951",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_16.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_289.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_339.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_411.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_51.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000951/image/detail/1000000418_detail_669.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/Top-Rope-Collar1_142621.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/Top-Rope-Collar2_151143.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/f58193c39cdb9026eb88a506f51e8f6f_151157.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ce790c38bd3769b48034dcf632d3433a",
+        "sha256": "b8f08937b0301cbc135af04ec66fcec7413b404615326d22b02c61b8588a32f2"
+      },
+      "scopeId": "8b980f4dacb780de051c68fcb5e69279c25c98f1d147ee48ddeb6cc5aee4eb8e",
+      "scopeRegistrationSha256": "8c6c7968ec848abd2a0584ef42ecee6fbcd99b2d6ddd3c0174c7753b226096ed",
+      "aiEvidenceSha256": "d44eb000bdbd73b75b258b85a5b841349a72845395d714283b27da2c29e39c63",
+      "receiptSha256": "e5cae4889c2a137858037b92833522789ed691adb76f600277e254472445b38b",
+      "eligibilitySha256": "917e9948261cd959b5307439b34149fb968ec752673cd3c5b14eededda9cfae0",
+      "evidenceManifestSha256": "e5aaa796b984b95f81e78fad005956e3973532cae64dc1bd7c40f43df99a0906"
+    },
+    "videoReviewSha256": "bde8fdd0e7098941293b25c777dec13321e3fdc3ab9ebe0b55e8395f1faf31d2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "090eac808360fac7a0b2e5474f7574e6d1a0f1c9"
   }
 }
