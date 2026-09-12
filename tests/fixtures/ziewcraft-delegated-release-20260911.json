@@ -86,5 +86,9 @@
   "rw_ridgeline_shoes_26": {
     "productId": "p_33",
     "sha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f"
+  },
+  "rw_jsk_1000000988": {
+    "productId": "p_405",
+    "sha256": "04d1400c0b7c9208d4ce82360e88a11003c3cee6f4c27cdeb6e100e5a1c2a6e5"
   }
 }
