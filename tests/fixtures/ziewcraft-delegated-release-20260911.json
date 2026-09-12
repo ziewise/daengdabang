@@ -294,5 +294,13 @@
   "rw_jsk_1000000955": {
     "productId": "p_394",
     "sha256": "c0786f3a5ef83900b900e70e2c57045ee6ca1ced68c8e968655b5dba33c62d55"
+  },
+  "rw_frontrange_daypack_24": {
+    "productId": "p_145",
+    "sha256": "59e6f70956ca5662da8576254d2561f63a745b81b14d159d7fb1312baf1e4fef"
+  },
+  "rw_jsk_1000001217": {
+    "productId": "p_441",
+    "sha256": "dea98f9f6925f758c7213b32e5d318123460edfa857b18f17af8f09b7aac12fe"
   }
 }
