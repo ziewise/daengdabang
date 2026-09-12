@@ -90,5 +90,9 @@
   "rw_jsk_1000000988": {
     "productId": "p_405",
     "sha256": "04d1400c0b7c9208d4ce82360e88a11003c3cee6f4c27cdeb6e100e5a1c2a6e5"
+  },
+  "rw_jsk_1000001214": {
+    "productId": "p_440",
+    "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100"
   }
 }

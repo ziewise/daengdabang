@@ -4397,5 +4397,56 @@
     "videoEditIdentity": null,
     "videoReviewClass": null,
     "videoTrimIdentity": null
+  },
+  "rw_jsk_1000001214": {
+    "video": "/images/products/catalog/rw_jsk_1000001214/videos/a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "a2d098d986e8e2146e3c86e5cb5c16ac",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a2d098d986e8e2146e3c86e5cb5c16ac",
+      "reviewId": "47868bc3666d15dbe1eab8ca63324227",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100",
+      "seconds": 8,
+      "source": {
+        "no": 440,
+        "folder": "rw_jsk_1000001214",
+        "name": "러프웨어 선 샤워 레인재킷",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_079.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001214",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_154.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_258.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_350.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/9a7b4b43407a4fec61b691b58b4bc517_203607.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/cd800eb061192c9b9237856678189914_203607.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/ba5725ce882cc4ff72670519a5dcc903_203608.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/dc2fe8367c587bdf77bbcadd87057996_203609.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2d969fe0fe2400aa9c406880382568c5",
+        "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100"
+      },
+      "scopeId": "d5d1bef6b7ed5d337da199b6a69be77596a74515474fd7ca186efae844bd8f11",
+      "scopeRegistrationSha256": "19493ce729a4c4392817b71063c42f007bd3d55591251c22afbd71919f796898",
+      "aiEvidenceSha256": "fd33984a144cc9047a7c837245785fef8adf5154dc20a63cc2bc765bf4ea8704",
+      "receiptSha256": "a9673c07c33778e742b85e38837fd985b1b337138d6670dbd15c15976e6cc130",
+      "eligibilitySha256": "af69080f8a17951ec0b48fe22a01e32596ad0aa7b4416943c6a9f88d0010929c",
+      "evidenceManifestSha256": "75d363b891171fb95bdcca601036ae5a4852d99f795313c68f594e66d8c11fe7"
+    },
+    "videoReviewSha256": "745256cff3f0fc38ae30209817c1989c559f40af3d72e5b6dae64cacb046052c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   }
 }
