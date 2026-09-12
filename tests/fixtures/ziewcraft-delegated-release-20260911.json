@@ -242,5 +242,17 @@
   "rw_jsk_1000001005": {
     "productId": "p_410",
     "sha256": "e20678c4a82d414d6540daf5a39e28a048e3c64d7b286d880af54908dd9853e8"
+  },
+  "rs_jsk_1000001223": {
+    "productId": "p_445",
+    "sha256": "7072eca8c1d4aa5d702c70ec909e0a269cd02b3e257cafea8dfe64a98e07a998"
+  },
+  "rw_jsk_1000000993": {
+    "productId": "p_409",
+    "sha256": "33effbea38f916d911d224a19e9d602f17ee20dc016b5c2004aec78738e6bb19"
+  },
+  "rw_jsk_1000000416": {
+    "productId": "p_379",
+    "sha256": "43894f941cd9c256740a9eaec15be1061652c55750e606b84515acec0d94346c"
   }
 }
