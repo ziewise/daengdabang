@@ -106,5 +106,13 @@
   "rs_v2_appalachianorange": {
     "productId": "p_100",
     "sha256": "c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314"
+  },
+  "rs_v2_atlasblue": {
+    "productId": "p_79",
+    "sha256": "b8b3b9463631d1a133ac2de77a7bad6e7bc2ef50e8e1fc3e551d49b4070b55c9"
+  },
+  "rs_v2_tazerteal": {
+    "productId": "p_80",
+    "sha256": "c6844e826589cbc904549ce01adfea0e4b613b177dbef423b4d1e6c0c60777c6"
   }
 }

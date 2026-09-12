@@ -865,7 +865,64 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null
   },
-  "rs_v2_atlasblue": null,
+  "rs_v2_atlasblue": {
+    "video": "/images/products/catalog/rs_v2_atlasblue/videos/b8b3b9463631d1a133ac2de77a7bad6e7bc2ef50e8e1fc3e551d49b4070b55c9/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "f4c5e68b49859004121a647cf6181f66",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f4c5e68b49859004121a647cf6181f66",
+      "reviewId": "d75d75010c3fde9e231d06247d9a0f98",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b8b3b9463631d1a133ac2de77a7bad6e7bc2ef50e8e1fc3e551d49b4070b55c9",
+      "seconds": 8,
+      "source": {
+        "no": 79,
+        "folder": "rs_v2_atlasblue",
+        "name": "렉스스펙스 V2 아틀라스 블루 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_056.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001110",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_137.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_294.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_39.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_499.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_593.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_648.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_7100.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_825.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/V2-Atlas-Blue-2023_023858.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/45bf00fc8a88712b45e75cce0fba8675_023859.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/7c97857fd082488519d861463f37a6a9_023900.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_053536.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_053549.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/ce50939b7267aece200a424b5dac05ea_023901.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "de72cc5beba088a451e920b5d9a6d3f0",
+        "sha256": "b8b3b9463631d1a133ac2de77a7bad6e7bc2ef50e8e1fc3e551d49b4070b55c9"
+      },
+      "scopeId": "0943714f73a82850b4bba6662d7023cf8013e88b0dedd252b1c5816112cbde85",
+      "scopeRegistrationSha256": "e529bfb5a5ad989087dd2fc276a3e31d7d90a9a2f4489d692b97a30dbced5158",
+      "aiEvidenceSha256": "d776fc9b792e1b737256d98c34570811128b401e7a5d29eb4b26cdf3d11b3d80",
+      "receiptSha256": "0ed366d345710917105f855312ba1e89f39b555924d5386a86ff7d284c0c78d1",
+      "eligibilitySha256": "fc880e4eace15adb94b9b2392d3569cd1954b65cc5f79e7d54b9538d65793b6c",
+      "evidenceManifestSha256": "b83b3a28a49ccf319bcfbc8543322fa1b03f1f9d54a334fbda6f743fdd690b61"
+    },
+    "videoReviewSha256": "9d6528ea5c4c4effdf4a6ac5915eeba2102558c4f544c045103b0e4f4d60cfe9",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "rs_v2_avalanchewhite": null,
   "rs_v2_banditorange": {
     "video": "/images/products/catalog/rs_v2_banditorange/videos/f94f0f3925f46aad22cca60f6313a58fc22d1860323b82cf53ade974bd4a109e/hover.mp4",
@@ -950,7 +1007,64 @@
   "rs_v2_ozarkorange": null,
   "rs_v2_pikepurple": null,
   "rs_v2_rangerred": null,
-  "rs_v2_tazerteal": null,
+  "rs_v2_tazerteal": {
+    "video": "/images/products/catalog/rs_v2_tazerteal/videos/c6844e826589cbc904549ce01adfea0e4b613b177dbef423b4d1e6c0c60777c6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "1dcd8db73bbc5e69d85b471fb5ac195f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1dcd8db73bbc5e69d85b471fb5ac195f",
+      "reviewId": "4ab7aa752cac2883e39b21f732eff9ac",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c6844e826589cbc904549ce01adfea0e4b613b177dbef423b4d1e6c0c60777c6",
+      "seconds": 8,
+      "source": {
+        "no": 80,
+        "folder": "rs_v2_tazerteal",
+        "name": "렉스스펙스 V2 테이저 틸 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_038.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001111",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_123.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_228.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_386.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_493.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_538.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_676.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_727.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001111/image/detail/1000001111_detail_891.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/V2-Tazer-Teal-2023_023752.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/45bf00fc8a88712b45e75cce0fba8675_023752.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/7c97857fd082488519d861463f37a6a9_023753.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_053434.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_053446.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/ce50939b7267aece200a424b5dac05ea_023755.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e9acda0d99358bda3102dea19a5a5301",
+        "sha256": "c6844e826589cbc904549ce01adfea0e4b613b177dbef423b4d1e6c0c60777c6"
+      },
+      "scopeId": "c3d2e2953a7ff69a6d96789cebcd552d93fd61b2f479aac28940168b8cd2aab5",
+      "scopeRegistrationSha256": "bc41ad165fedeced1f5538cbdf3bc8f1a91eed783a9a62317c96317b4f8a2901",
+      "aiEvidenceSha256": "113d6c8fbdf859830469235cdc3871bc5b240f141b583e613f71f2112f815f42",
+      "receiptSha256": "e4d33991e8d24142165416f088d6f460f162ec3b24ca05badea9b921e28e09d8",
+      "eligibilitySha256": "7197993c5fc4eba9a0b76b92f8e877525fa16cc03e2b515f31df73134c2170f1",
+      "evidenceManifestSha256": "ba23cc955ec5ac885b83eb50aa61b6fd36af47ac23a11e5444823be3aa6db5e3"
+    },
+    "videoReviewSha256": "429b45f1e1e8729cc729f0d661226d618740b526175374958a994eb4319cd359",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "rs_v2_vulcanblue": null,
   "rs_v2_yazberry": null,
   "rw_audiblebeacon_light": {
