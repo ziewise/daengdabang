@@ -1503,7 +1503,65 @@
     }
   },
   "rw_hiandlight_harness_24": null,
-  "rw_hiandlight_harness_26": null,
+  "rw_hiandlight_harness_26": {
+    "video": "/images/products/catalog/rw_hiandlight_harness_26/videos/920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "b6a583ac3a2ead95bf3c11e6f07579c9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b6a583ac3a2ead95bf3c11e6f07579c9",
+      "reviewId": "fd0dc6048c69aeb2026c133c78cc16b3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17",
+      "seconds": 8,
+      "source": {
+        "no": 1,
+        "folder": "rw_hiandlight_harness_26",
+        "name": "러프웨어 하이 앤 라이트 경량 하네스(2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_060.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001305",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_177.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_287.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_372.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_444.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_569.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_666.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_762.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_830.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001305/image/detail/1000001305_detail_979.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260224/2fd08b87f6a6c4b90dcb0c743e5e5a73_115214.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/61de6af20a56faf61c6b8706eef3c6e1_034305.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/8e507f2adfac84207b584780e54fea7f_034321.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/21479983c1ec414d2d32ec80c8b3cb87_034337.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/8f75b8286aec97d372d945e8968b9b98_034405.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b58b311e159fee19f347ddaeedf49598",
+        "sha256": "920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17"
+      },
+      "scopeId": "8e047eeebba609f770b80f0515a9386aa8c113ab77d58b89316cecce1513edcb",
+      "scopeRegistrationSha256": "bbeb211f959b1b7e00063ca1af36f78d971bfa59b493db313e7f166568483f9c",
+      "aiEvidenceSha256": "3c7a0d5977ffc5f004e0d10b5a6c3e50fb0efc9694451005d2bcbcb84765b3d7",
+      "receiptSha256": "f06cf3deb7599e002c59daf49d2cb7b238ca8bf49af774e535f96db9b4ace0d1",
+      "eligibilitySha256": "4fbc7cac228a65c5d40993525b815c7a9b5b8417779b9103454e3e733f8af76d",
+      "evidenceManifestSha256": "bc07774df0ba8d52a0005003f1b9beab2ee1697a4372f7aca519ca2fafeb5bd9"
+    },
+    "videoReviewSha256": "394c91de7f5c2775c77fc322791c6b4cb59cb2303cbbcaa5e894bcd56cb543b8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c6f9bfdafcf4b7d5e60ed990b7bfac3af9db6730"
+  },
   "rw_hiandlight_leash_26": null,
   "rw_highlands_pad_l": {
     "video": "/images/products/catalog/rw_highlands_pad_l/videos/e72ef846ecb323d2788dbeaabab2e35bb8af3e6799014528b363c58bbcfedbfd/hover.mp4",

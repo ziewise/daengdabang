@@ -134,5 +134,9 @@
   "rw_treattrader_bag": {
     "productId": "p_41",
     "sha256": "b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2"
+  },
+  "rw_hiandlight_harness_26": {
+    "productId": "p_1",
+    "sha256": "920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17"
   }
 }
