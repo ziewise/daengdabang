@@ -6696,5 +6696,155 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "6d9cd314dd03a0b7451aa9bfa5d0481053620203"
+  },
+  "rw_jsk_1000000178": {
+    "video": "/images/products/catalog/rw_jsk_1000000178/videos/bac15f8ec3bb5325b4bf0913f701d3177c3186e7ccf02c14c070cd722c505b8d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "cacd0a2f57a1220f84963d9cb11cbac4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "cacd0a2f57a1220f84963d9cb11cbac4",
+      "reviewId": "6cb807ebc63f00849720d05ae3c8397d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "bac15f8ec3bb5325b4bf0913f701d3177c3186e7ccf02c14c070cd722c505b8d",
+      "seconds": 8,
+      "source": {
+        "no": 368,
+        "folder": "rw_jsk_1000000178",
+        "name": "러프웨어 후피 목줄(Hoopie™ Collar)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000178/image/detail/1000000178_detail_018.png",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000178",
+        "gallery": [],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/Hoopie1_142138.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/Hoopie2_142145.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/91a0a1aa3ec07e1511c76c0c1f321f9f_145602.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9508484ab128eb0ab860c18ffac18573",
+        "sha256": "bac15f8ec3bb5325b4bf0913f701d3177c3186e7ccf02c14c070cd722c505b8d"
+      },
+      "scopeId": "66ecf2d961dbb061c4b2b9924211650089e96de88d1c37eef47d47d3b21f0739",
+      "scopeRegistrationSha256": "ff2a65d493e3986670b6095d7ed84bb66c3d14f6a0629f8f18a0d2d3d23b26b9",
+      "aiEvidenceSha256": "d898f46241f4c1187427c23eea1f41e8b6e6209218da8c9785ad63678ca66808",
+      "receiptSha256": "0eb60c32af8596848d955365ea20db5da30923323148404eaf0c2c60ec3e830b",
+      "eligibilitySha256": "2e3acb2eb64a21a71e5e5a7c5b2f459627797387045534b7b3b10e83f62dc815",
+      "evidenceManifestSha256": "93271b85c9441bb83e983b3c909059006f7f8954215f43dba7c69cca127fa469"
+    },
+    "videoReviewSha256": "43184670e2470a340739bb7c5e14c5af5ae674c54746b84a3861232a90deccc8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0fed72f61ee4687f44324cc9fcadbf47049d013b"
+  },
+  "rw_jsk_1000000393": {
+    "video": "/images/products/catalog/rw_jsk_1000000393/videos/36f731ebc3bf7827e0eaa21ff4f6a17ff9aad1bcd35b750030dbeadb864a0216/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "39cc7fa47524563518fe98a980b6a95b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "39cc7fa47524563518fe98a980b6a95b",
+      "reviewId": "ee79f5731ec5e814df8f372dede88ec3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "36f731ebc3bf7827e0eaa21ff4f6a17ff9aad1bcd35b750030dbeadb864a0216",
+      "seconds": 8,
+      "source": {
+        "no": 378,
+        "folder": "rw_jsk_1000000393",
+        "name": "러프웨어 리미티드에디션 후피 목줄(Hoopie™ Collar Limited Edition)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000393/image/detail/1000000393_detail_028.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000393",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000393/image/detail/1000000393_detail_118.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/HL1_142213.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/HL2_142223.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/91a0a1aa3ec07e1511c76c0c1f321f9f_145511.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7258360dc65567fd13158216146ce18e",
+        "sha256": "36f731ebc3bf7827e0eaa21ff4f6a17ff9aad1bcd35b750030dbeadb864a0216"
+      },
+      "scopeId": "7994cd258455e729c984d4e233462185e7980e1b9c8b0e1aad7891d3745a7b0b",
+      "scopeRegistrationSha256": "e4248bed1f574ba4d201f7517bf79661a74fb1c4d71056acfc9f3dac7f358a7c",
+      "aiEvidenceSha256": "68c9387aab533bfbe9dc27109d3ea5eb5d9f956b54b29abf297acf33245d9c45",
+      "receiptSha256": "06c9586c7ea7e55c54fe7c3c13d2c60b217fca93b49946594ad5dd650869469b",
+      "eligibilitySha256": "d9343852b78cdbd9dbb758bda7f900b38fcc627447c54b70c8d31d40044eff31",
+      "evidenceManifestSha256": "34eaf628c6e9f1d578bf52acbbe8e3ea961a81dcbbe82baf039248de2b4191d4"
+    },
+    "videoReviewSha256": "0b1f788f54e2cbc0ce5b0f5712f00ca50eb6a5ef6e106a853056e0b7ec43f2bd",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0fed72f61ee4687f44324cc9fcadbf47049d013b"
+  },
+  "rw_jsk_1000000987": {
+    "video": "/images/products/catalog/rw_jsk_1000000987/videos/54189bc349d143b663f595103e8ca27515089b12bbc3c7eaeaf80dd84954301c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "5deacbdc406e3d41ff7c54c72591b6e2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5deacbdc406e3d41ff7c54c72591b6e2",
+      "reviewId": "e73543da1593a2f16f2a90ffc890ac24",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "54189bc349d143b663f595103e8ca27515089b12bbc3c7eaeaf80dd84954301c",
+      "seconds": 8,
+      "source": {
+        "no": 404,
+        "folder": "rw_jsk_1000000987",
+        "name": "러프웨어 스왐프 쿨러 쿨링 양면 넥 게이터(Swamp Cooler™ Neck Gaiter 2022SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000987/image/detail/1000000987_detail_053.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000987",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000987/image/detail/1000000987_detail_190.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000987/image/detail/1000000987_detail_292.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000987/image/detail/1000000987_detail_329.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000987/image/detail/1000000987_detail_683.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000987/image/detail/1000000987_detail_717.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/065e634821c8a1f968ecb8c0dbeb2691_131337.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/610f5836acc82fb55f94b2945286172b_131352.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/2a13bd45dda74a04e8c4604ab6d99065_131405.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000987/f87d1b68bf686714db8f7e7232cdc457.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0fd425b55cdc0323354c96dd01add634",
+        "sha256": "54189bc349d143b663f595103e8ca27515089b12bbc3c7eaeaf80dd84954301c"
+      },
+      "scopeId": "ab4e74183a079924d7ce3dbcf786141d9ef9e4b01d921475e007140a645aae4d",
+      "scopeRegistrationSha256": "48d1cb2ae7296437e3194b3d354ca0f9dc6537b6492e9afc8c6b8577674ca580",
+      "aiEvidenceSha256": "4b2988bbc0592f5e211109e434a31eb31f3f2329d96f430fcd8d88d5e5857e84",
+      "receiptSha256": "f1840d4f92871669c87573018dbd120ae0f7adb61836931b06c2fbdb5cf5156e",
+      "eligibilitySha256": "6d4810aa2371d76f4b3a9ebcb934d53b09129fff5932703885983912c01497a9",
+      "evidenceManifestSha256": "97b8c4fdfa0d715632ab4ff19191a033a2e834cfaa40caea3209fa456a566529"
+    },
+    "videoReviewSha256": "f469b471e9d524094fe1fca893861abc5795db122591ca1572deb8a75ba07294",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0fed72f61ee4687f44324cc9fcadbf47049d013b"
   }
 }

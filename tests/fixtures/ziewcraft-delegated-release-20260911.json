@@ -262,5 +262,17 @@
   "rs_v2_ozarkorange": {
     "productId": "p_93",
     "sha256": "7c94e0722cb16b9dccedcbf6daee9102efe9dda699f33c289fc242a4acd21d9a"
+  },
+  "rw_jsk_1000000178": {
+    "productId": "p_368",
+    "sha256": "bac15f8ec3bb5325b4bf0913f701d3177c3186e7ccf02c14c070cd722c505b8d"
+  },
+  "rw_jsk_1000000393": {
+    "productId": "p_378",
+    "sha256": "36f731ebc3bf7827e0eaa21ff4f6a17ff9aad1bcd35b750030dbeadb864a0216"
+  },
+  "rw_jsk_1000000987": {
+    "productId": "p_404",
+    "sha256": "54189bc349d143b663f595103e8ca27515089b12bbc3c7eaeaf80dd84954301c"
   }
 }
