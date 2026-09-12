@@ -26,6 +26,7 @@ const REVIEWED_VIDEO_QUALITIES = new Set([
     "approved_dog_wearing",
     "approved_dog_using",
     "approved_dog_product_interaction",
+    "approved_product_interaction",
     "approved_exact_product_images",
 ]);
 

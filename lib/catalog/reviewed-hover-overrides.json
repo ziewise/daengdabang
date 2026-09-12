@@ -2505,11 +2505,60 @@
   "rw_spokespup_tag": null,
   "rw_stashbag_mini": null,
   "rw_stashbag_mini_2": {
-    "video": "/images/products/catalog/rw_stashbag_mini_2/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_stashbag_mini_2/videos/f37fe56be033cd380ee201e91949ea0cfeaabb7df1b85e9276afb1ee55eb08c1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "6d917f1126d22328058f7f1d3ef7d2b8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6d917f1126d22328058f7f1d3ef7d2b8",
+      "reviewId": "40abf03b48d69466bada4f5dbf9d1c42",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f37fe56be033cd380ee201e91949ea0cfeaabb7df1b85e9276afb1ee55eb08c1",
+      "seconds": 4,
+      "source": {
+        "no": 162,
+        "folder": "rw_stashbag_mini_2",
+        "name": "러프웨어 스테이쉬 백 미니 배변봉투 디스펜서 파우치(Stash Bag Mini™ 2023SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_019.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001133",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_192.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_253.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_379.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_441.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_552.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_635.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001133/image/detail/1000001133_detail_730.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/Stash-Bag-Mini1_163620.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/Stash-Bag-mini2_163635.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/Stash-Bag-Mini3_163649.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/19596345b397abd02783e62c9dd1aaba_163705.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2cb67bc003d27bf40a0d778b395b0d7d",
+        "sha256": "f37fe56be033cd380ee201e91949ea0cfeaabb7df1b85e9276afb1ee55eb08c1"
+      },
+      "scopeId": "766fa622b015084c7f2bffb44ff27a49520c757a03cd65b9d1d79788161ec57e",
+      "scopeRegistrationSha256": "8194817cc80fe55e0b00b752df859f69fd7e670a7081131d15ec4966e7608170",
+      "aiEvidenceSha256": "24368b66bfe1d1e2509d9e5b9cf874917081a57fedd1f51a0b317d41f9215281",
+      "receiptSha256": "a8b2211f2103ab8bd7f4dabc0adb7520b894924957b978b16a0157627ee6e101",
+      "eligibilitySha256": "ca54924d74980419e8c388a3fe2349051e25f316c8354e75fa8ae96478ce3366",
+      "evidenceManifestSha256": "01ddf6c9ddb3d5714336836228ca3a066728f5f4078015b429b290d509bae9c4"
+    },
+    "videoReviewSha256": "81e53bf9bdf47b4fe97feb7a3479692c0fb23404cf25858b668a7dce2f962b46",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-299965c96da1"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a27aec299b11211d962f669693da82e101f0a125"
   },
   "rw_stumptown_jacket": {
     "video": "/images/products/catalog/rw_stumptown_jacket/videos/9bc136cdd9755bd4bfb382910d204b8bd0dbcae802e26cb02031bed4e1773b02/hover.mp4",

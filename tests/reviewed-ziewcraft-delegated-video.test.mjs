@@ -14,6 +14,25 @@ function fixture(folder = 'soopa_dental_bananapumpkin') {
     return { record, records: { [folder]: record }, product: { id: `p_${raw.no}`, folder, video: raw.video, raw } };
 }
 function sync(f) { f.product.raw.videoZiewcraftIdentity = structuredClone(f.record.videoZiewcraftIdentity); }
+
+test('reviewed hand demonstrations are eligible for accessories without claiming a dog appears', () => {
+    const f=fixture('rw_stashbag_mini_2');
+    assert.equal(f.record.videoQuality,'approved_product_interaction');
+    assert.equal(f.record.videoZiewcraftIdentity.seconds,4);
+    f.product.subcategory='hygiene';
+    assert.equal(valid(f.product,f.records),true);
+    for(const subcategory of ['wear','harness','goggles','leash']) {
+        assert.equal(valid({...f.product,subcategory},f.records),false,'hand footage cannot replace an eight-second wearing video');
+    }
+    const food=fixture('rw_stashbag_mini_2');
+    food.product.raw.isFood=true;
+    food.record.videoZiewcraftIdentity.source.isFood=true;
+    sync(food);
+    assert.equal(valid(food.product,food.records),false,'food still needs its contents review classification');
+    const revoked=fixture('rw_stashbag_mini_2');
+    revoked.record.currentEligibility.owner_delegated_shop_candidate_current=false;
+    assert.equal(valid(revoked.product,revoked.records),false);
+});
 test('actual owner-delegated AI receipts activate exact product video bytes without a human claim', () => {
     assert.ok(Object.keys(records).length);
     for (const [folder, record] of Object.entries(records)) {
