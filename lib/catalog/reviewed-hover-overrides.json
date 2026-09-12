@@ -2384,7 +2384,59 @@
   "rw_leash_roamer_long": null,
   "rw_leash_switchback_24": null,
   "rw_leash_trailrunner_23": null,
-  "rw_loadup_harness_24": null,
+  "rw_loadup_harness_24": {
+    "video": "/images/products/catalog/rw_loadup_harness_24/videos/2199fc002064244e6361c312c3795ddf8a2ca160ad15d926c2517727b4367ba1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "58a8fa358319da6f8f4d3142b20dc53d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "58a8fa358319da6f8f4d3142b20dc53d",
+      "reviewId": "8cfe6e7684226d186177357d5b25d415",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2199fc002064244e6361c312c3795ddf8a2ca160ad15d926c2517727b4367ba1",
+      "seconds": 8,
+      "source": {
+        "no": 139,
+        "folder": "rw_loadup_harness_24",
+        "name": "러프웨어 로드 업 차량용 안전 하네스",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001186/image/detail/1000001186_detail_042.jpeg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001186",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001186/image/detail/1000001186_detail_160.jpeg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001186/image/detail/1000001186_detail_285.jpeg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001186/image/detail/1000001186_detail_386.jpeg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001186/image/detail/1000001186_detail_464.jpeg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240528/Load-up-Harness1_135127.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240528/Load-up-Harness2_140557.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240528/Load-up-Harness3_140706.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240528/43750eb38af8eae0d14bbe1c50818607_220440_131537_140758.jpeg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "892f12f2864ad7a517f92c6206217510",
+        "sha256": "2199fc002064244e6361c312c3795ddf8a2ca160ad15d926c2517727b4367ba1"
+      },
+      "scopeId": "5e3eea53ab5b2583f769dbc7f9abb2d89d866666a3437102f0573f424db5cdd7",
+      "scopeRegistrationSha256": "916dac0bd83d9749391952200d781d7b5a08c7ea17f33cee1d35b608f278797e",
+      "aiEvidenceSha256": "639f748d3be05d31f86ebac75f9852688f8d324d1fc915e5424af0193775858c",
+      "receiptSha256": "0add0179206e808600bc87a8ac07bb4ff325f1fa924130b0df30875ac7d523f5",
+      "eligibilitySha256": "c53ef880fb6a2b255b2ed725217d2e3a6ae6cec66f9590073c2505725548d753",
+      "evidenceManifestSha256": "a23c256d2c4d638c56c79e9ba1a130aaaca9dde0b7915a4a819a28c243cf6375"
+    },
+    "videoReviewSha256": "e5eb8a06420f7829bbc9fbb078aedf62ff58e9f6829b81fddc9e1d53e658d87d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "3ecb426cc80ac9129786e349c6a3e86a235460d3"
+  },
   "rw_lumenglow_jacket_26fw": {
     "video": "/images/products/catalog/rw_lumenglow_jacket_26fw/videos/e3efc575bd14adcdab87f20966b9238f1c5f7abb96bd4638217775ee8bed3c36/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -6957,5 +7009,114 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "2773453374dc6087502a528d04eb1badcc46158d"
+  },
+  "rw_jsk_1000000952": {
+    "video": "/images/products/catalog/rw_jsk_1000000952/videos/2b37f3adf70462d10cb1223d55bd21428107e93e17c34fd4cad8b478ba6158d3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "4a01271b1cfeb37ee07576c8c7081039",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4a01271b1cfeb37ee07576c8c7081039",
+      "reviewId": "854dec7ef094b5b33befa1cde0c937de",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2b37f3adf70462d10cb1223d55bd21428107e93e17c34fd4cad8b478ba6158d3",
+      "seconds": 8,
+      "source": {
+        "no": 393,
+        "folder": "rw_jsk_1000000952",
+        "name": "러프웨어 체인 리액션 마틴게일 목줄(Chain Reaction™ Collar)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000952/image/detail/1000000447_detail_067.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000952",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000952/image/detail/1000000447_detail_115.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000952/image/detail/1000000447_detail_285.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000952/image/detail/1000000447_detail_34.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000952/image/detail/1000000447_detail_415.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000952/image/detail/1000000447_detail_520.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/Chain-Reaction-Collar1_141601.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/Chain-Reaction-Collar2_151355.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/f58193c39cdb9026eb88a506f51e8f6f_151416.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b28b108e26bd2e23ed0db72c1d7ca384",
+        "sha256": "2b37f3adf70462d10cb1223d55bd21428107e93e17c34fd4cad8b478ba6158d3"
+      },
+      "scopeId": "5adf9196846f70b2e1dd54c556d0c59c01fe3d8c08d256185c8106984f980fa0",
+      "scopeRegistrationSha256": "75fa849c91740fff25e00668a6ec40f3f103744e678f1d2509502409152d359e",
+      "aiEvidenceSha256": "1d4452fd5396d0c548bf35a38e83ff8cb9a5506453f4834300b9eb72795b8901",
+      "receiptSha256": "60e2cc599963ff819b93615d9b163e6f8c89fa0cb514a42060abc48219a312dc",
+      "eligibilitySha256": "eef51fbdb8aab259420b0048f0cbab06205043a8efcd874e2e6713247974d75d",
+      "evidenceManifestSha256": "0b7982cbf159be70fac42f31c9e9977ade210450a9b946c997d0f1d8ac97ac2e"
+    },
+    "videoReviewSha256": "6d5d91dbda7aadc13271ac128e7e05345d7f04179ed21e998c49a74fe65d4ded",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "3ecb426cc80ac9129786e349c6a3e86a235460d3"
+  },
+  "rw_jsk_1000000955": {
+    "video": "/images/products/catalog/rw_jsk_1000000955/videos/c0786f3a5ef83900b900e70e2c57045ee6ca1ced68c8e968655b5dba33c62d55/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "7c626c7e9ea2cf4702cdb52666cca8e3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7c626c7e9ea2cf4702cdb52666cca8e3",
+      "reviewId": "c88497fd4a43ce7b0f0f5e7d38dfe865",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c0786f3a5ef83900b900e70e2c57045ee6ca1ced68c8e968655b5dba33c62d55",
+      "seconds": 8,
+      "source": {
+        "no": 394,
+        "folder": "rw_jsk_1000000955",
+        "name": "러프웨어 웹 리액션 마틴게일 목줄(Web Reaction™ Collar)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_098.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000955",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_16.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_276.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_378.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_46.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_589.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_688.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_768.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000955/image/detail/1000000453_detail_810.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/Web-Reaction-Collar1_142657.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/Web-Reaction-Collar2_143856.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/91a0a1aa3ec07e1511c76c0c1f321f9f_145154.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ff30502f47786fd7682472ad96bca097",
+        "sha256": "c0786f3a5ef83900b900e70e2c57045ee6ca1ced68c8e968655b5dba33c62d55"
+      },
+      "scopeId": "a4185c056c85c433d3edee4ea732327e58eb09c7cf0fe4d4597c3cf134b5d1b5",
+      "scopeRegistrationSha256": "89a7b1fe3b6181b879e09ae3739d5d47da8789b34713188ddbc4a3fd6f9d6e2f",
+      "aiEvidenceSha256": "f953cd68227b32e6d1002f895858f40d1271ef7f6e6774df5ba0a580fb4b1cad",
+      "receiptSha256": "9c3cb743cd7a059e5d466aff6abde8a795c275b4160eebed18953ec501a12d9d",
+      "eligibilitySha256": "80c0102e3f2a44ae10fb65e2db93069d85f96097b558bd81f75bbdb13e75501b",
+      "evidenceManifestSha256": "4417f7ec207d2b7177c2d9e517ad1d52c4672b2537131701b0ca17b6e76bf381"
+    },
+    "videoReviewSha256": "d2c2301831fa06141ada75a9d917f269baaa5d58777a2db9ef5ced72f18df29c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "3ecb426cc80ac9129786e349c6a3e86a235460d3"
   }
 }

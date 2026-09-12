@@ -282,5 +282,17 @@
   "rw_jsk_1000000972": {
     "productId": "p_400",
     "sha256": "c27ea6ae545a5e2ae0eb9ded47c6e70f3c6579ac8c4d1c2100eaf65bdb22f0b6"
+  },
+  "rw_loadup_harness_24": {
+    "productId": "p_139",
+    "sha256": "2199fc002064244e6361c312c3795ddf8a2ca160ad15d926c2517727b4367ba1"
+  },
+  "rw_jsk_1000000952": {
+    "productId": "p_393",
+    "sha256": "2b37f3adf70462d10cb1223d55bd21428107e93e17c34fd4cad8b478ba6158d3"
+  },
+  "rw_jsk_1000000955": {
+    "productId": "p_394",
+    "sha256": "c0786f3a5ef83900b900e70e2c57045ee6ca1ced68c8e968655b5dba33c62d55"
   }
 }
