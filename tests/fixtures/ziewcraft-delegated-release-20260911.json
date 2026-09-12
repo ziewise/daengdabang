@@ -302,5 +302,17 @@
   "rw_jsk_1000001217": {
     "productId": "p_441",
     "sha256": "dea98f9f6925f758c7213b32e5d318123460edfa857b18f17af8f09b7aac12fe"
+  },
+  "rs_jsk_1000001151": {
+    "productId": "p_424",
+    "sha256": "4cd209b15d596ef63cf34a346c9bfeef79a57bce61321d6b65c0adb7bc398a05"
+  },
+  "rs_v2_himalayapink": {
+    "productId": "p_101",
+    "sha256": "1292d71152f89dc82ef3b427f36af8084c2152ac1a4b4e8e163f56db193813a3"
+  },
+  "rs_v2_vulcanblue": {
+    "productId": "p_102",
+    "sha256": "53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2"
   }
 }
