@@ -190,5 +190,13 @@
   "rw_jsk_1000001241": {
     "productId": "p_457",
     "sha256": "53231be4d5833873865d6451121aaa657cf712be36b3f3eb82d3d325b08d46af"
+  },
+  "soopa_dental_cranberrysweetpotato": {
+    "productId": "p_293",
+    "sha256": "0e083b8d6db51a0684bdfb719866448f4e13c19b28e0ba516566db4167fd7ed8"
+  },
+  "soopa_healthybites_cranberrysweetpotato": {
+    "productId": "p_295",
+    "sha256": "9aec8beda0d45d033a87f510dc1371b1f2f2cb009f93c9b19f468d55c83d227f"
   }
 }
