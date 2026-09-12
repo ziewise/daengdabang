@@ -142,5 +142,25 @@
   "rw_jsk_1000001104": {
     "productId": "p_414",
     "sha256": "4dd704bfc54c193749418499f908953267f681f92b6e818cf4b5ce29997a59e8"
+  },
+  "rw_frontrangeflex_collar_26": {
+    "productId": "p_32",
+    "sha256": "0811cbcb7ccc8ba1380a628a2a3d030f388bfb2f4c92041d6800f1f51819b559"
+  },
+  "rw_confluence_collar": {
+    "productId": "p_47",
+    "sha256": "cdd91e15e46658b6700dcaabd10cf7da06a0d5a0f9e827b7cd405f8addd5bc02"
+  },
+  "rw_jsk_1000001354": {
+    "productId": "p_474",
+    "sha256": "00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd"
+  },
+  "rw_jsk_1000001199": {
+    "productId": "p_433",
+    "sha256": "7a0dd8676e2cf5720b2116c281b2b8abeb63356e2227578a49a87831d3f11b7d"
+  },
+  "rw_jsk_1000001210": {
+    "productId": "p_438",
+    "sha256": "db9533f22c4e7d952b0882f0d01b7d9500709004e1307c9a2096782eacf497c0"
   }
 }
