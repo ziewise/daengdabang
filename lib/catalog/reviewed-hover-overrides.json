@@ -809,7 +809,59 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-d543688d2d62"
   },
-  "rs_trailhead_collar": null,
+  "rs_trailhead_collar": {
+    "video": "/images/products/catalog/rs_trailhead_collar/videos/46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "ea69a42d9437d5bd28dc294850de276b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ea69a42d9437d5bd28dc294850de276b",
+      "reviewId": "e6481a783ed77fad808fc4a0cb8db934",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821",
+      "seconds": 8,
+      "source": {
+        "no": 85,
+        "folder": "rs_trailhead_collar",
+        "name": "렉스스펙스 트레일헤드 목줄",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001125/image/detail/1000001125_detail_0100.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001125",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001125/image/detail/1000001125_detail_185.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001125/image/detail/1000001125_detail_291.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001125/image/detail/1000001125_detail_343.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001125/image/detail/1000001125_detail_439.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001125/image/detail/1000001125_detail_531.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Collar1-2023_154747.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Collar2-2023_154748.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/ce50939b7267aece200a424b5dac05ea_154748.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8f565bf426d50a019a95f3521b0c3815",
+        "sha256": "46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821"
+      },
+      "scopeId": "35111aa2dac059d214ed2d1d0d2690ea08a81cae7ef601be625ff14b1b192860",
+      "scopeRegistrationSha256": "d4955b82e230cc549514271b5c9e590c4cd00923b4e94642cd49b9b02c33822d",
+      "aiEvidenceSha256": "42791031fd3683803e9d3067d6ace348f87265cb8f577dbde25ecbf5bd21ecf8",
+      "receiptSha256": "dbd5d4b4d9b7957bbd37bc745e47a4aa1c799228cd8fd9249e5e258bcf0c1cb8",
+      "eligibilitySha256": "b8098e98df96f635e5f218ea98f236a1a3ff96f80395bcf58afac3c33bf630a3",
+      "evidenceManifestSha256": "56f8677733a315c2f979ec777dea23d273b3d98f50dc4f053afa9080325ee2f6"
+    },
+    "videoReviewSha256": "c2c4d66fd7d6717a9956742eb8ae4f5fa0811f830fe1187cbb6910e9666e7910",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
+  },
   "rs_trailhead_leash_dual_24m": null,
   "rs_trailhead_leash_single_18m": null,
   "rs_v2_2024ltd": null,
@@ -2605,7 +2657,63 @@
       "downloadEvidenceSha256": "a9905a48d6e6596cfb5da90b3cafc5b130ec5fed90f9ef373b1950a046fd4f9d"
     }
   },
-  "rw_ridgeline_collar_26": null,
+  "rw_ridgeline_collar_26": {
+    "video": "/images/products/catalog/rw_ridgeline_collar_26/videos/ef86c97aa38e712ef8752c5fc650bb576142e72fec69167c3fa393afe53c79e2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "b85721c1c0afcafc0105e42be54a70a3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b85721c1c0afcafc0105e42be54a70a3",
+      "reviewId": "665edb8c116c586e7087883633425090",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ef86c97aa38e712ef8752c5fc650bb576142e72fec69167c3fa393afe53c79e2",
+      "seconds": 8,
+      "source": {
+        "no": 34,
+        "folder": "rw_ridgeline_collar_26",
+        "name": "러프웨어 릿지라인 목줄(2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_081.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001322",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_146.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_282.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_31.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_437.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_563.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_656.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_789.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_880.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001322/image/detail/1000001322_detail_981.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260224/39c5609150ca9c3e8a8e634fdd5bd085_143530.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/57f3badb0de930127298f9e73b9f1831_040341.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260224/5277a2052ab9e71cba311625abfc3de8_115551.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "819ecef3df28c522afea30fbbc42f195",
+        "sha256": "ef86c97aa38e712ef8752c5fc650bb576142e72fec69167c3fa393afe53c79e2"
+      },
+      "scopeId": "ecebbb757173a3a21411da9665b4bbe862d87757261aae7c8efc4bdb02599888",
+      "scopeRegistrationSha256": "fe5f95864d64ba2faa1004934b3d043458dfca8e5462d0409612a401a44b7a1c",
+      "aiEvidenceSha256": "477a4e5b2b95ece9a0c570aacc5e845d165e621d21049de7fcbf7df4564bab2f",
+      "receiptSha256": "0ff6aea7f91f196c112ce16636d45c32e3006f55948216ff1ec421ad7678d711",
+      "eligibilitySha256": "54cc7a5c1f2109b2d0c100e8522bd7107f9ec01f8e6cb1eeea275d029809a15a",
+      "evidenceManifestSha256": "ac307d22f3c316f990e604278c98206e0c2698ecdc3520fd352d1d1a6230e994"
+    },
+    "videoReviewSha256": "d39a93e017a9083247962a6407878ba1e7c88d817a45ec05f0026528de1e563b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
+  },
   "rw_ridgeline_harness_26": {
     "video": "/images/products/catalog/rw_ridgeline_harness_26/videos/ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3830,7 +3938,56 @@
     "videoPlaybackMode": "once_hold_last_frame",
     "videoReviewSha256": "110f427f0c39c17596f3a10ced2721deba69bdd41d1e3cf406f56125284dd6b0"
   },
-  "soopa_healthybites_carrotpumpkin": null,
+  "soopa_healthybites_carrotpumpkin": {
+    "video": "/images/products/catalog/soopa_healthybites_carrotpumpkin/videos/8b8ffdb94c22b48529812aa74381a537b5b96d7f0ffadc2e8ee58a8e989ef502/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "efe630e9ca8d888dd9dd903442692edc",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "efe630e9ca8d888dd9dd903442692edc",
+      "reviewId": "66bb6bb8ca0ca9f4a169f14848dab360",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "8b8ffdb94c22b48529812aa74381a537b5b96d7f0ffadc2e8ee58a8e989ef502",
+      "seconds": 4,
+      "source": {
+        "no": 296,
+        "folder": "soopa_healthybites_carrotpumpkin",
+        "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 야채 당근&호박 50g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_healthybites_carrotpumpkin/soopa_healthybites_carrotpumpkin.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107679756",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/2.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/3.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/4.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/5.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/6.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "97667295c5d354df15e2119b32995f25",
+        "sha256": "8b8ffdb94c22b48529812aa74381a537b5b96d7f0ffadc2e8ee58a8e989ef502"
+      },
+      "scopeId": "d2b9ba6f9f02a305253ef3376ebf4894f3c50007b6439660a9866d6a32e70dec",
+      "scopeRegistrationSha256": "90c8655ef5d684b2de68f58848f5405fcadf85cb8d84ba39ee75c6c857e4e877",
+      "aiEvidenceSha256": "747d32d41806c8f3e1299fc136b92965e8d311300e8053cfce8dd3ba5fec535d",
+      "receiptSha256": "03db95139efe73c6eed459e09d880f76fb519eca7f5d89c701c158d564708785",
+      "eligibilitySha256": "50ef76435e8432cfdecb916c6c1563d00561a54542e333d07dc58bb80f8a1d50",
+      "evidenceManifestSha256": "ccb0b47537323ce01399b960ad3e08861cba488611f7a6f5ebcc1f3fd5d06c71"
+    },
+    "videoReviewSha256": "a3a9402afd6535b0d9dd4f3ab5aab99002c06c5a644537fd299aa0518a86fbcf",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
+  },
   "soopa_healthybites_cranberrysweetpotato": {
     "video": "/images/products/catalog/soopa_healthybites_cranberrysweetpotato/videos/9aec8beda0d45d033a87f510dc1371b1f2f2cb009f93c9b19f468d55c83d227f/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3931,13 +4088,99 @@
   },
   "yora_allbreed_2.5kg": null,
   "yora_allbreed_6kg": null,
-  "yora_dental_l_270g": null,
-  "yora_dental_s_56g": {
-    "video": "/images/products/catalog/yora_dental_s_56g/videos/hover.mp4",
+  "yora_dental_l_270g": {
+    "video": "/images/products/catalog/yora_dental_l_270g/videos/75539048877765041420183616425aefbed4626f0cb014640b1604c1834ba952/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "5446f777f1c7c0d83e320f5a232d96ea",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5446f777f1c7c0d83e320f5a232d96ea",
+      "reviewId": "2ba504ebdaa2acc8cdfb9199106c801d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "75539048877765041420183616425aefbed4626f0cb014640b1604c1834ba952",
+      "seconds": 4,
+      "source": {
+        "no": 174,
+        "folder": "yora_dental_l_270g",
+        "name": "요라 덴탈스틱 (라지 270g)",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_dental_l_270g/yora_dental_l_270g.webp",
+        "sourceUrl": "https://yorapets.com/us-en/dog-food",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_dental_l_270g/details/official-visual-01.webp",
+          "/images/products/catalog/yora_dental_l_270g/details/2.webp",
+          "/images/products/catalog/yora_dental_l_270g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "fe5188e123960b442b1c9114a4793909",
+        "sha256": "75539048877765041420183616425aefbed4626f0cb014640b1604c1834ba952"
+      },
+      "scopeId": "2e1f268ac785cf5505e1a6b3b14229874adda8652eb5f2e5bdcd50f7027d7041",
+      "scopeRegistrationSha256": "a8f4dd20ef08a6a4b4c94c99542ac34e8d3909fb955b8f9cbc728bf0be46395e",
+      "aiEvidenceSha256": "a807b4acfc6ff79a634713676be7d0cde5d8c075c3395a915532492cb04ad8e5",
+      "receiptSha256": "b243a5e6445f0e46673e0fa299015b235445f3e1706c6fc3c365f32ab82738c0",
+      "eligibilitySha256": "874d75315e42b001325f67917ac5a395d5a9db3942639e8462468c04d93142f2",
+      "evidenceManifestSha256": "fcbf9ef3d61b6ea7f1d8ebb8d29bff92a543e511546240595e7b0113ceab8e3a"
+    },
+    "videoReviewSha256": "7df38c9a8555f1534cd41ff2d778b0ae8a309d4676bde94e966315b721bdfdc2",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-dde076f92d0c"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
+  },
+  "yora_dental_s_56g": {
+    "video": "/images/products/catalog/yora_dental_s_56g/videos/27410f40af562e5a3446fe5278623c6bdadf290d8a250b1bb1ca7b7c0c798fbf/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "559ebd2376c3e64bf97bcc17efc7ccf0",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "559ebd2376c3e64bf97bcc17efc7ccf0",
+      "reviewId": "f5093f5593ef980ce54bf5c4881830e4",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "27410f40af562e5a3446fe5278623c6bdadf290d8a250b1bb1ca7b7c0c798fbf",
+      "seconds": 4,
+      "source": {
+        "no": 173,
+        "folder": "yora_dental_s_56g",
+        "name": "요라 덴탈스틱 (스몰 56g)",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_dental_s_56g/yora_dental_s_56g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923123046",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_dental_s_56g/details/official-visual-01.webp",
+          "/images/products/catalog/yora_dental_s_56g/details/2.webp",
+          "/images/products/catalog/yora_dental_s_56g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5ddca9d06f1dd9c39ca7f0f070f72187",
+        "sha256": "27410f40af562e5a3446fe5278623c6bdadf290d8a250b1bb1ca7b7c0c798fbf"
+      },
+      "scopeId": "768a3f42df38ee33ac70947b8666bf1aba01cf194a9fe4d899dc3f3ec8ae6aaa",
+      "scopeRegistrationSha256": "233cbbebb490c69fd896aa2b89024a5b00b7dd0a73a68ca337c26c2fe405dc72",
+      "aiEvidenceSha256": "d78cb50d96cee89034dd7d646c79be0277b8c719aa276f4ee624c6d2a962c044",
+      "receiptSha256": "847d2ad944bd633dfb8769b92d8c3e996bf5aa6c2ba2d5e7ee63773b46fba8ec",
+      "eligibilitySha256": "fe61487fda221b135a804953e672d1ddd440e423bd29adee814c339010b692fb",
+      "evidenceManifestSha256": "82b3ee1c07808a555404a9438020e4a141010c2f7d33072934edd596a25870dc"
+    },
+    "videoReviewSha256": "7a2971254d72d71fc75e19c815cdf888cb44471f2e87f5acd467f993c3c4f9b5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
   },
   "yora_dreamer_treat": null,
   "yora_largebreed_12kg": null,
