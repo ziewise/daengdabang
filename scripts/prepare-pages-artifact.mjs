@@ -140,7 +140,18 @@ async function listFiles(root) {
 
 async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
     const references = new Set();
-    collectJsonAssetStrings(rawCatalog, references);
+    // Product identities contain original/superseded media as QA evidence.
+    // Preserve those source records, but only package the published row's assets.
+    const evidenceFields = new Set([
+        "videoZiewcraftIdentity", "videoGenerationIdentity", "videoEditIdentity",
+        "videoTrimIdentity", "videoReviewClass",
+    ]);
+    for (const row of rawCatalog) {
+        collectJsonAssetStrings(
+            Object.fromEntries(Object.entries(row).filter(([key]) => !evidenceFields.has(key))),
+            references,
+        );
+    }
     collectJsonAssetStrings(
         await readJson(path.join(repoRoot, "lib", "external-products", "feed.json"), []),
         references,

@@ -12,6 +12,10 @@ test('Pages omits superseded review media while retaining current published medi
     const root = await fixture(t, { includeCdnUrl: false, reviewedHoverOverrides: { sample: { videoDelivery: 'same_origin' } } });
     const current = '/images/products/catalog/sample/videos/hover.mp4';
     const withdrawn = '/images/products/catalog/sample/videos/old-reviewed/hover.mp4';
+    await write(root, 'lib/catalog/reviewed-hover-overrides.json', JSON.stringify({ sample: {
+        videoDelivery: 'same_origin',
+        videoZiewcraftIdentity: { source: { video: withdrawn, catalog: { image: '/images/products/catalog/sample/sample.webp' } } },
+    } }));
     const registries = ['reviewed-video-trims', 'reviewed-ziewcraft-videos', 'reviewed-ziewcraft-human-videos', 'reviewed-ziewcraft-contents-videos', 'reviewed-ziewcraft-single-videos', 'reviewed-ziewcraft-delegated-videos'];
     for (const registry of registries) {
         await write(root, `lib/catalog/${registry}.json`, JSON.stringify({ sample: { video: current, originalVideo: withdrawn } }));
