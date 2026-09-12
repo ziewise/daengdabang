@@ -230,5 +230,9 @@
   "rw_jsk_1000000164": {
     "productId": "p_367",
     "sha256": "f83c1a182109f81d653804b4683bcbe5f6d1147f210dbb330699b32beb9a37cc"
+  },
+  "rw_stashbag_mini": {
+    "productId": "p_61",
+    "sha256": "23782be2b8c59c8df3098517afeaa8e10e877468109090b1e812d97835cb2d3a"
   }
 }

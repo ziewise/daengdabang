@@ -2890,7 +2890,63 @@
   "rw_shoes_hiandlight_23": null,
   "rw_sierracup_310": null,
   "rw_spokespup_tag": null,
-  "rw_stashbag_mini": null,
+  "rw_stashbag_mini": {
+    "video": "/images/products/catalog/rw_stashbag_mini/videos/23782be2b8c59c8df3098517afeaa8e10e877468109090b1e812d97835cb2d3a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "7f939066f071e29aa72fe1225111aa0b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7f939066f071e29aa72fe1225111aa0b",
+      "reviewId": "5258bb614715987092009a11ebd4c6ae",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "23782be2b8c59c8df3098517afeaa8e10e877468109090b1e812d97835cb2d3a",
+      "seconds": 4,
+      "source": {
+        "no": 61,
+        "folder": "rw_stashbag_mini",
+        "name": "러프웨어 스테이쉬 백 미니 배변봉투 디스펜서 파우치(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_068.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001236",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_155.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_249.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_398.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_472.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_547.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_692.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_787.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_85.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/a4b6c150c0077e25b4c44cb3b91c96e7_125419.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/51c536c4b8a264c279033ca6cfd9e88c_023854.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/3b4247ea33ce37e57742008c9bddb9ad_023855.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/61b55d0a56547ab7fa7c41dc67ee649b_023855.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0d118488dbb9a12712fe1e68811140ae",
+        "sha256": "23782be2b8c59c8df3098517afeaa8e10e877468109090b1e812d97835cb2d3a"
+      },
+      "scopeId": "f4c39a47e6b506c313eb92ada8454e29c81483edc873068de546ef67d4468c15",
+      "scopeRegistrationSha256": "984304ff667b503cbf4521f2804ea4e457eb4d7da92ad8b65e4c1c4caab7b5fe",
+      "aiEvidenceSha256": "f00a34fc579d1ccdfdc06396d0353900c76ef6257feb466b32641c2993673cc0",
+      "receiptSha256": "bc3809de9c5ad9f909d55dea43e5ddd8ed10d9a846cc65d0cbcc63a7cc9ac2b6",
+      "eligibilitySha256": "bb52d39ca9e7f1267382b664e969a4dded6c0cb2e6d9a836f2d36ad6dbe987a3",
+      "evidenceManifestSha256": "8055f231d66b3aaa9e6c64553a76c543512be7b20706358ffd61d5ffe776dd88"
+    },
+    "videoReviewSha256": "669e01096ed6e85d167b9de0312d46cda823a229f7082deefbdf4eb6174dafc4",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5e47ece5c7ae0211cd72d96730c7c5cd1df59b15"
+  },
   "rw_stashbag_mini_2": {
     "video": "/images/products/catalog/rw_stashbag_mini_2/videos/f37fe56be033cd380ee201e91949ea0cfeaabb7df1b85e9276afb1ee55eb08c1/hover.mp4",
     "videoProvider": "ziewcraft",
