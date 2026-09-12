@@ -114,5 +114,13 @@
   "rs_v2_tazerteal": {
     "productId": "p_80",
     "sha256": "c6844e826589cbc904549ce01adfea0e4b613b177dbef423b4d1e6c0c60777c6"
+  },
+  "soopa_dental_appleblueberry": {
+    "productId": "p_230",
+    "sha256": "47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9"
+  },
+  "rs_v2_yazberry": {
+    "productId": "p_81",
+    "sha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a"
   }
 }

@@ -6,6 +6,7 @@ import { matchesReviewedPhotoMotionVideo, PHOTO_MOTION_HASH_FIELDS } from '../li
 import { safeCatalogHoverVideo, getPetTryOnEligibility } from '../lib/pet-tryon-eligibility.ts';
 import { applyReviewedHoverOverride } from '../lib/catalog/reviewed-hover-overrides.ts';
 import { videoBrandingMode } from '../lib/catalog/video-branding.ts';
+import { matchesReviewedZiewcraftDelegatedVideo } from '../lib/catalog/reviewed-ziewcraft-delegated-video.mjs';
 
 test('the three user-rejected photo edits stay withdrawn while exact source and assets are preserved', () => {
     const read = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url),'utf8'));
@@ -14,16 +15,22 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
     const flow=read('../lib/catalog/reviewed-flow-videos.json');
     const trims=read('../lib/catalog/reviewed-video-trims.json');
     const single=read('../lib/catalog/reviewed-ziewcraft-single-videos.json');
+    const generated=read('../lib/catalog/reviewed-ziewcraft-delegated-videos.json');
     assert.deepEqual(Object.keys(reviews).sort(),['soopa_dental_appleblueberry','soopa_dental_coconutchia','soopa_dental_kaleapple']);
     for(const review of Object.values(reviews)) {
         const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
         const product={id:`p_${raw.no}`,folder:raw.folder,video:raw.video,image:raw.image,raw,subcategory:'treats'};
-        assert.equal(safeCatalogHoverVideo(product), single[review.folder]?.video ?? flow[review.folder]?.video);
+        const replacement=generated[review.folder];
+        if(replacement) {
+            assert.equal(matchesReviewedZiewcraftDelegatedVideo(product,generated),true);
+            assert.notEqual(replacement.sha256,review.sha256,'new generation must not restore the withdrawn photo edit');
+        }
+        assert.equal(safeCatalogHoverVideo(product), replacement?.video ?? single[review.folder]?.video ?? flow[review.folder]?.video);
         assert.equal(safeCatalogHoverVideo({...product,video:review.video}),undefined);
         assert.equal(review.publicationStatus,'withdrawn_user_feedback');
         assert.equal(review.withdrawal.reasonCode,'rejected_photo_zoom_motion');
         assert.equal(getPetTryOnEligibility(product).eligible,false);
-        assert.equal(raw.videoJobId,single[review.folder]?.videoJobId ?? (flow[review.folder] ? null : undefined));
+        assert.equal(raw.videoJobId,replacement?.videoZiewcraftIdentity.jobId ?? single[review.folder]?.videoJobId ?? (flow[review.folder] ? null : undefined));
         assert.equal(raw.videoEditIdentity ?? null,null);
         assert.equal(matchesReviewedPhotoMotionVideo({id:review.productId,folder:review.folder,video:review.video,raw:{...review}},reviews),false);
         for(const [file,digest] of [[review.video,review.sha256],[review.sourceImagePath,review.videoEditIdentity.sourceImageSha256]]) {

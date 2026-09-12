@@ -1066,7 +1066,64 @@
     "videoTrimIdentity": null
   },
   "rs_v2_vulcanblue": null,
-  "rs_v2_yazberry": null,
+  "rs_v2_yazberry": {
+    "video": "/images/products/catalog/rs_v2_yazberry/videos/b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6fc11087ffd915a5cf116acb0f74eec8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6fc11087ffd915a5cf116acb0f74eec8",
+      "reviewId": "0600d11d671ed1045309c2eaf3c801e7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a",
+      "seconds": 8,
+      "source": {
+        "no": 81,
+        "folder": "rs_v2_yazberry",
+        "name": "렉스스펙스 V2 야즈베리 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_057.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001112",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_134.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_288.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_319.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_440.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_543.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_631.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_774.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001112/image/detail/1000001112_detail_860.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/V2-Yazberry-2023_023646.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/45bf00fc8a88712b45e75cce0fba8675_023646.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/7c97857fd082488519d861463f37a6a9_023647.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_053328.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_053341.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/ce50939b7267aece200a424b5dac05ea_023648.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "caa4890fc2374ea9d8f3cf3022578a15",
+        "sha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a"
+      },
+      "scopeId": "d9cd83885392a0c33bd5756e39270250cd7b29f3a5841208eae7f73b84e28f99",
+      "scopeRegistrationSha256": "4edfb2b2123f9d35c5566e790df4ad912ee777815e9229e23a821ea8c5e15630",
+      "aiEvidenceSha256": "697bc4d90144ad3cf478c3b7bf79a0adc78851bf648d955dbcb009d025dcbd8d",
+      "receiptSha256": "07e74a430a218c853ff0ddda1f728a25fa32e557aacbfa7cdd1f21bd3fa85b30",
+      "eligibilitySha256": "61ae927fe081f10337af1d4a8ca7fd3e4686596296682ebaa4b2850a2c79cca2",
+      "evidenceManifestSha256": "77c668364ad245aac7cdc76d5f0580c208ca8e0cb5d495ae53d405e16e23e43a"
+    },
+    "videoReviewSha256": "d08ce9355c368884696a75487436e2be90284198654b26d409338c6f45e597ad",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "rw_audiblebeacon_light": {
     "video": "/images/products/catalog/rw_audiblebeacon_light/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -2740,7 +2797,55 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-119eec509de3"
   },
-  "soopa_dental_appleblueberry": null,
+  "soopa_dental_appleblueberry": {
+    "video": "/images/products/catalog/soopa_dental_appleblueberry/videos/47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "847b9f4d995e4e0203e3521e353aafec",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "847b9f4d995e4e0203e3521e353aafec",
+      "reviewId": "a9efd287b8ce80bc66a5422c2879b9bb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9",
+      "seconds": 4,
+      "source": {
+        "no": 230,
+        "folder": "soopa_dental_appleblueberry",
+        "name": "수파 그레인프리 100%식물성 건강한 야채 덴탈스틱 사과&블루베리 100g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_dental_appleblueberry/soopa_dental_appleblueberry.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8336611059",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_dental_appleblueberry/details/official-visual-01.webp",
+          "/images/products/catalog/soopa_dental_appleblueberry/details/2.webp",
+          "/images/products/catalog/soopa_dental_appleblueberry/details/3.webp",
+          "/images/products/catalog/soopa_dental_appleblueberry/details/4.webp",
+          "/images/products/catalog/soopa_dental_appleblueberry/details/5.webp",
+          "/images/products/catalog/soopa_dental_appleblueberry/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b82ef6a9c2eb1ff0ebfba693f4b773a6",
+        "sha256": "47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9"
+      },
+      "scopeId": "13bee277f65105f9fd7f505e20985695b161f5a519442ea3cb63a00b0a7fcc30",
+      "scopeRegistrationSha256": "409fb2e04ce0219432c3542656dd459823325def6a3dbcb6505c5be1f9ba7e81",
+      "aiEvidenceSha256": "44e55db892b3b61a37ee133cf989c3d5fc2ea60f976c23f7321cf304136f771c",
+      "receiptSha256": "af9b404d91e5f7fc355a0f4fd2885a4e6fbe1f0bcd2cfde812304ee44d72f912",
+      "eligibilitySha256": "18db8c04f0467c7d6bdfc35676a1483385603f79c861a051db47eab4efcae918",
+      "evidenceManifestSha256": "0d144fa3617807f99f2e404693eaee438f7448daae93f16970462b504a127735"
+    },
+    "videoReviewSha256": "b336a1b40396be8f4c0975c01fc0a903613ae30bfb2b2fc148f7ee34a3cc8f37",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "soopa_dental_bananapumpkin": {
     "video": "/images/products/catalog/soopa_dental_bananapumpkin/videos/be05233363648da66b52698de1faa7e63bca8b454e7f99ce7917cc67c6bc392d/hover.mp4",
     "videoProvider": "ziewcraft",
