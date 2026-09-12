@@ -383,11 +383,12 @@
     },
     "videoReviewSha256": "9f068f8945f9981c4c97dd9f92e7fd6662ac583b4e31e25658e5288e143214bc",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "id_treat_sardine": {
     "video": "/images/products/catalog/id_treat_sardine/videos/8e27a6bd212f0808b2e8476b13de0f3220bda196c984f916b47680c271a1fbd6/hover.mp4",
@@ -428,11 +429,12 @@
     },
     "videoReviewSha256": "d7926ae212658fd3cae087cb6501ddebbd343d5bece7da0ba63a3feef004638a",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "id_treat_sturgeon": {
     "video": "/images/products/catalog/id_treat_sturgeon/videos/93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd/hover.mp4",
@@ -473,11 +475,12 @@
     },
     "videoReviewSha256": "4ebdbdc4f9aadc58b0a55e4181579f3e899c87a18610f66ca8f8d2fdeaa2cebf",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "id_treat_trout": {
     "video": "/images/products/catalog/id_treat_trout/videos/hover.mp4",
@@ -744,11 +747,12 @@
     },
     "videoReviewSha256": "b1bd598a4080983ac85681ff048d298424ced2b97bc7f1041c16815447ab224e",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "polkadog_codskin_907g": {
     "video": "/images/products/catalog/polkadog_codskin_907g/videos/hover.mp4",
@@ -1094,7 +1098,64 @@
     }
   },
   "rw_frontrangeflex_collar_26": null,
-  "rw_frontrangeflex_harness_26": null,
+  "rw_frontrangeflex_harness_26": {
+    "video": "/images/products/catalog/rw_frontrangeflex_harness_26/videos/fcf903c46aaf87e5d5620c5939fb23f71229f153fad568ee8624e392f60ee4ac/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "ad15f670d5d5534d0b9698fa9e94d6d1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ad15f670d5d5534d0b9698fa9e94d6d1",
+      "reviewId": "02b1e13a241873f7774666d8e3bd8b08",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fcf903c46aaf87e5d5620c5939fb23f71229f153fad568ee8624e392f60ee4ac",
+      "seconds": 8,
+      "source": {
+        "no": 4,
+        "folder": "rw_frontrangeflex_harness_26",
+        "name": "러프웨어 프런트 레인지 플렉스 하네스 (2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_025.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001315",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_174.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_267.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_388.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_449.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_536.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_634.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_744.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_860.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001315/image/detail/1000001315_detail_973.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260224/e1819a2bfaaa2329a7ec402e352d0e5f_115024.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/40b35997502c863292048631c7d31368_035942.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/9548b7dadfb39ed1c29d430eb1390469_035957.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/d14f2dba5f74135a48e0f23d7f158530_040015.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/8f75b8286aec97d372d945e8968b9b98_040038.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c44b7082ca861b48eacd8e6933088fc7",
+        "sha256": "fcf903c46aaf87e5d5620c5939fb23f71229f153fad568ee8624e392f60ee4ac"
+      },
+      "scopeId": "d10cd3dff7781eb5f36ef1be6d66fbbd65de8f5231823d51c7a2277df50c0295",
+      "scopeRegistrationSha256": "36729a0cce9cfb600657921e31835847ab8fc90e051926003a6cb546aeffab71",
+      "aiEvidenceSha256": "06e48dc2dfd6a1e5ea8d4b4ba580e804bffaa5e388ef0fb5c5df886664121cf6",
+      "receiptSha256": "525de7c6445f9f2ca458c8663e29865c19669520d5c46f3c8ff76758640b0117",
+      "eligibilitySha256": "a5a9e2eb24ee0593ba7cc5fff47d93c68180b0f6de069603910bae538f8f72c2",
+      "evidenceManifestSha256": "89ae95bd347ffe1e245a3d44318b684ce5230992ba79aa703475a34c4e2f708f"
+    },
+    "videoReviewSha256": "87219b640cc73f153f5f298345076c760a95d0088826ae714d3f3a2ea75b8bae",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "rw_frontrangeflex_leash_26": null,
   "rw_furness_jacket": {
     "video": "/images/products/catalog/rw_furness_jacket/videos/6032395b6d43749c644b8215c8a54ca2776cee7eaee2b94953b0db4d4ba4a0b6/hover.mp4",
@@ -1881,11 +1942,12 @@
     },
     "videoReviewSha256": "c4b821c574adf4b32e9bb89ced18b08c249b8170650bbd669195f240b6568d08",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_powderhound_jacket": null,
   "rw_powderhound_waterproof_jacket_26fw": {
@@ -1939,11 +2001,12 @@
     },
     "videoReviewSha256": "7d6c01a0c71329280a9a551491315d38f94735bd3b1d64dbc86feb7d1cef67b4",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_quencher_24": {
     "video": "/images/products/catalog/rw_quencher_24/videos/672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49/hover.mp4",
@@ -2223,11 +2286,12 @@
     },
     "videoReviewSha256": "4a097d1d705ff043546c9c2a3af69b29edeac6dd4e0cd8b94bd09a9705a271c5",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_trailrunnerbowl": {
     "video": "/images/products/catalog/rw_trailrunnerbowl/videos/9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3/hover.mp4",
@@ -2333,7 +2397,8 @@
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "soopa_dental_6set": {
     "video": "/images/products/catalog/soopa_dental_6set/videos/hover.mp4",
@@ -2389,7 +2454,8 @@
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "soopa_dental_carrotpumpkin": {
     "video": "/images/products/catalog/soopa_dental_carrotpumpkin/videos/b9b8a4f57a08b4b6eb1a6842d2c6b08662d15a661b77a53263c7048cf0925800/hover.mp4",
@@ -2434,11 +2500,12 @@
     },
     "videoReviewSha256": "185efc7f39979c5d6cb2359cd992e7ce76e414543c5593517c78c4a8ebeca7cb",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "soopa_dental_coconutchia": {
     "video": "/images/products/catalog/soopa_dental_coconutchia/videos/944fbb16d47a918182a7cd006e34c4dc83bc47247ed74400db94ea5718dc258e/hover.mp4",
@@ -3736,7 +3803,8 @@
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000000647": {
     "video": "/images/products/catalog/rw_jsk_1000000647/videos/7e11cc2f442f0bad7f03073e8b9d03d98d3f861d6841db9a9066a559e61cfdf2/hover.mp4",
@@ -3785,11 +3853,12 @@
     },
     "videoReviewSha256": "1909b64d4c8c0175e3b7f4aad684d6ab55dd009035093d8253467c3a9f81404c",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000001244": {
     "video": "/images/products/catalog/rw_jsk_1000001244/videos/cb6dacbd951ef9cd0dfe043daaf1e1778efb484dc4994237cbbc217198bd1aec/hover.mp4",
@@ -3837,11 +3906,12 @@
     },
     "videoReviewSha256": "929e7bcfefc927a9b669f0daffcc628283cfd3679acb57302a50f391f9245806",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000001229": {
     "video": "/images/products/catalog/rw_jsk_1000001229/videos/bd64a1746d57112a6e3c64d5bf18345140f2503212352a06cdeb9b1a83faf950/hover.mp4",
@@ -3889,11 +3959,12 @@
     },
     "videoReviewSha256": "b6b8509dd4e767da9835eb68c50f0a33dc9c2cf6fb7161f4fbcbcd55c4c975c4",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000000650": {
     "video": "/images/products/catalog/rw_jsk_1000000650/videos/0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80/hover.mp4",
@@ -3941,11 +4012,12 @@
     },
     "videoReviewSha256": "ff351ffa5262f7df44c0ad5d147c79d2771d8156adf93e4a22b6903eabc4c606",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000000651": {
     "video": "/images/products/catalog/rw_jsk_1000000651/videos/0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f/hover.mp4",
@@ -3993,11 +4065,12 @@
     },
     "videoReviewSha256": "c0135e2f7df4927d03f9d816636b0ef88c1ecfab9efffaf6d5f31f70520d7328",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000000949": {
     "video": "/images/products/catalog/rw_jsk_1000000949/videos/bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f/hover.mp4",
@@ -4044,11 +4117,12 @@
     },
     "videoReviewSha256": "e8877da89082026b150883680c79a67d6b9d32dab00e106d870c322ae6ca8ace",
     "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
+    "videoDelivery": "jsdelivr_commit_cdn",
     "videoGenerationIdentity": null,
     "videoEditIdentity": null,
     "videoReviewClass": null,
-    "videoTrimIdentity": null
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "rw_jsk_1000000966": {
     "video": "/images/products/catalog/rw_jsk_1000000966/videos/7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d/hover.mp4",
@@ -4096,6 +4170,64 @@
       "evidenceManifestSha256": "388eff87b171cad890a96fbc0213b4846b42270b16932c6308e67816da9fb400"
     },
     "videoReviewSha256": "002016c60a8cc7416d6f7c5fcb0245495c636f373b502f8ce122fe464bca6404",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
+  },
+  "rw_jsk_1000001343": {
+    "video": "/images/products/catalog/rw_jsk_1000001343/videos/4aa1f36b8e607129bf3cd417cc1650295334debed9db79353dfd8715424aae6e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "1280a146ca23046c3c1619939ac3012a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1280a146ca23046c3c1619939ac3012a",
+      "reviewId": "9a69014e7d459efd57e73fe7dad6d826",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4aa1f36b8e607129bf3cd417cc1650295334debed9db79353dfd8715424aae6e",
+      "seconds": 8,
+      "source": {
+        "no": 472,
+        "folder": "rw_jsk_1000001343",
+        "name": "러프웨어 파우더 하운드 방수 보온 베스트 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_052.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001343",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_183.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_296.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_344.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_437.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_510.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_671.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_765.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_814.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001343/image/detail/1000001343_detail_920.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/0593d1a90a80315fd2a0a3357fc69237_171121.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/ae4050975f2c893cb955c25a5aa55eb2_171140.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/36ab8ddde1d184e2d95317acdba9329f_171211.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/8f75b8286aec97d372d945e8968b9b98_171412.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "10e0c8a84082a83cba1d89da503df2cd",
+        "sha256": "4aa1f36b8e607129bf3cd417cc1650295334debed9db79353dfd8715424aae6e"
+      },
+      "scopeId": "ec011f1f3bb9f0551a6c42cb5125a252d9c6638d894f56b529909aed25e2b322",
+      "scopeRegistrationSha256": "3fb284f3b908b245ec3c2ba2ad59976edb7171335b54a0ba9de21d82d2de0ff7",
+      "aiEvidenceSha256": "bff9dca2d865e05efac8e39fc90b51e1ede1511786dd28d38be72e87ffd06b17",
+      "receiptSha256": "5e3a040b5e4f006d448e2b2025ae6ceefab94d45c88255bc8a0f2208de06c0a2",
+      "eligibilitySha256": "4bcf3e05f7d15c683f9a698703f4cf5d3c33e096c4ea06b8dfd0b47ad49932b5",
+      "evidenceManifestSha256": "36085831c98cbef5c97febb808f06b64c12110556ebb804d7f336fafdd551d56"
+    },
+    "videoReviewSha256": "0020ff80e5c8421504446c4282c8d4f2b60b85f17799c6f0b9e773dbdf1e83b5",
     "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "same_origin",
     "videoGenerationIdentity": null,

@@ -8,6 +8,29 @@ import ts from "typescript";
 
 const require = createRequire(import.meta.url);
 
+test('reviewed video CDN pin survives later builds without bypassing the publication gate', () => {
+    const build = 'a'.repeat(40), pinned = 'b'.repeat(40);
+    const dependencies = {
+        './raw.json': [], './colors.json': {}, './sizes.json': {}, './prices.json': {}, './inventory.generated.json': {},
+        './labels': { SUBCAT_ICON: {}, SUBCAT_TO_CAT: {} },
+        './price-badge': { catalogPriceBadgeKind: () => 'select' },
+        '../pet-tryon-eligibility': { safeCatalogHoverVideo: p => p.raw.blocked ? undefined : p.video },
+        './reviewed-hover-overrides': { applyReviewedHoverOverride: row => row },
+        './catalog-display-name': { catalogDisplayName: row => row.name },
+        './inventory': { inventoryForProduct: () => undefined },
+        './visible-products': { visibleCatalogProducts: rows => rows },
+    };
+    const { storefrontVideoUrl: url } = loadModule('lib/catalog/data.ts', dependencies, { NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: build });
+    const video = `/images/products/catalog/sample/videos/${'c'.repeat(64)}/hover.mp4`;
+    const row = { no: 1, folder: 'sample', video, videoDelivery: 'jsdelivr_commit_cdn', videoDeliveryCommit: pinned };
+    assert.equal(url(row, 'wear'), `https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${pinned}/public${video}`);
+    assert.equal(url({ ...row, videoDeliveryCommit: undefined }, 'wear'), `https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${build}/public${video}`);
+    assert.equal(url({ ...row, videoDeliveryCommit: '../../invalid' }, 'wear'), `https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${build}/public${video}`);
+    assert.equal(url({ ...row, videoDelivery: 'same_origin' }, 'wear'), video);
+    assert.equal(url({ ...row, blocked: true }, 'wear'), undefined);
+    assert.equal(url({ ...row, video: 'https://example.com/unapproved.mp4' }, 'wear'), 'https://example.com/unapproved.mp4');
+});
+
 function loadModule(relative, dependencies = {}, env = {}) {
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },

@@ -33,7 +33,7 @@ function storefrontDetailImageLabels(labels: CatalogRow["detailImageLabels"]): R
     );
 }
 
-function storefrontVideoUrl(row: CatalogRow, subcategory: SubcategorySlug): string | undefined {
+export function storefrontVideoUrl(row: CatalogRow, subcategory: SubcategorySlug): string | undefined {
     const video = safeCatalogHoverVideo({
         id: `p_${row.no}`,
         subcategory,
@@ -43,15 +43,17 @@ function storefrontVideoUrl(row: CatalogRow, subcategory: SubcategorySlug): stri
         folder: row.folder,
         raw: row,
     });
+    const deliveryCommit = STOREFRONT_ASSET_COMMIT_RE.test(row.videoDeliveryCommit || "")
+        ? row.videoDeliveryCommit! : STOREFRONT_ASSET_COMMIT_SHA;
     if (
         !video ||
         row.videoDelivery !== "jsdelivr_commit_cdn" ||
-        !STOREFRONT_ASSET_COMMIT_RE.test(STOREFRONT_ASSET_COMMIT_SHA) ||
+        !STOREFRONT_ASSET_COMMIT_RE.test(deliveryCommit) ||
         !/^\/images\/products\/catalog\/[A-Za-z0-9_.-]+\/videos\/(?:[a-f0-9]{64}\/)?hover\.mp4$/.test(video)
     ) {
         return video;
     }
-    return `${STOREFRONT_ASSET_CDN_ROOT}@${STOREFRONT_ASSET_COMMIT_SHA}/public${video}`;
+    return `${STOREFRONT_ASSET_CDN_ROOT}@${deliveryCommit}/public${video}`;
 }
 
 const textOf = (row: CatalogRow) =>

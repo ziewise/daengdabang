@@ -8,6 +8,28 @@ import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
 
 const COMMIT_SHA = "a".repeat(40);
 
+test('Pages accepts only the exact per-video CDN revision, independently of a newer site build', async t => {
+    const pinned = 'b'.repeat(40);
+    const video = '/images/products/catalog/sample/videos/hover.mp4';
+    for (const publishedCommit of [pinned, COMMIT_SHA, 'c'.repeat(40)]) {
+        const root = await fixture(t, { includeCdnUrl: false, approvedMetadata: true, reviewedHoverOverrides: {
+            sample: { videoDelivery: 'jsdelivr_commit_cdn', videoDeliveryCommit: pinned,
+                videoProvider: 'ziewcraft', videoQuality: 'approved_dog_wearing', videoJobId: 'reviewed-batch' },
+        } });
+        const existing = await fs.readFile(path.join(root, 'out/index.html'), 'utf8');
+        await write(root, 'out/index.html', `${existing}<video src="https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${publishedCommit}/public${video}"></video>`);
+        const action = preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+        if (publishedCommit === pinned) {
+            const result = await action;
+            assert.equal(result.catalogCdnVideoCount, 1);
+            await assert.rejects(fs.access(path.join(root, `out${video}`)));
+        } else {
+            await assert.rejects(action, /reviewed video CDN URL\(s\) were not pinned/);
+            assert.equal(await fs.readFile(path.join(root, `out${video}`), 'utf8'), 'drop-cdn-copy');
+        }
+    }
+});
+
 test('Pages omits superseded review media while retaining current published media and source evidence', async t => {
     const root = await fixture(t, { includeCdnUrl: false, reviewedHoverOverrides: { sample: { videoDelivery: 'same_origin' } } });
     const current = '/images/products/catalog/sample/videos/hover.mp4';

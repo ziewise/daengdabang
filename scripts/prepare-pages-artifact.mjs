@@ -84,7 +84,7 @@ function isReviewedVideoTrimRow(row, reviews, flowReviews) {
 
 function withoutHoverVideo(row) {
     const withdrawn = { ...row };
-    for (const key of ["video", "videoDelivery", "videoProvider", "videoQuality", "videoJobId", "videoGenerationIdentity", "videoZiewcraftIdentity", "videoTrimIdentity", "videoPlaybackMode", "videoEditIdentity", "videoReviewClass", "videoReviewSha256"]) {
+    for (const key of ["video", "videoDelivery", "videoDeliveryCommit", "videoProvider", "videoQuality", "videoJobId", "videoGenerationIdentity", "videoZiewcraftIdentity", "videoTrimIdentity", "videoPlaybackMode", "videoEditIdentity", "videoReviewClass", "videoReviewSha256"]) {
         delete withdrawn[key];
     }
     return withdrawn;
@@ -204,9 +204,9 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
     return references;
 }
 
-async function collectBuiltCdnProductAssets(outRoot, commitSha) {
+async function collectBuiltCdnProductAssets(outRoot, commitSha, pinnedVideoCommits) {
     const found = new Set();
-    const prefix = `${CDN_ROOT}@${commitSha}/public/`;
+    const prefix = `${CDN_ROOT}@`;
     for (const filePath of await listFiles(outRoot)) {
         if (!TEXT_EXTENSIONS.has(path.extname(filePath).toLowerCase())) continue;
         const source = (await fs.readFile(filePath, "utf8"))
@@ -215,8 +215,12 @@ async function collectBuiltCdnProductAssets(outRoot, commitSha) {
         let offset = 0;
         while ((offset = source.indexOf(prefix, offset)) >= 0) {
             const rest = source.slice(offset + prefix.length);
-            const match = rest.match(/^images\/products\/catalog\/[A-Za-z0-9_.-]+\/(?:videos\/(?:[a-f0-9]{64}\/)?hover\.mp4|details\/official-visual-\d+\.webp)/);
-            if (match) found.add(normalizeAssetPath(match[0]));
+            const match = rest.match(/^([a-f0-9]{40})\/public\/(images\/products\/catalog\/[A-Za-z0-9_.-]+\/(?:videos\/(?:[a-f0-9]{64}\/)?hover\.mp4|details\/official-visual-\d+\.webp))/i);
+            if (match) {
+                const asset = normalizeAssetPath(match[2]);
+                const expectedCommit = pinnedVideoCommits.get(asset) || commitSha;
+                if (match[1].toLowerCase() === expectedCommit.toLowerCase()) found.add(asset);
+            }
             offset += prefix.length;
         }
     }
@@ -267,7 +271,10 @@ export async function preparePagesArtifact({
             .map((row) => normalizeAssetPath(row.video))
             .filter(Boolean),
     );
-    const builtCdnProductAssets = await collectBuiltCdnProductAssets(resolvedOutRoot, commitSha);
+    const pinnedVideoCommits = new Map(publicationCatalog
+        .filter(row => row?.videoDelivery === "jsdelivr_commit_cdn" && COMMIT_SHA_RE.test(row?.videoDeliveryCommit || ""))
+        .map(row => [normalizeAssetPath(row.video), row.videoDeliveryCommit]));
+    const builtCdnProductAssets = await collectBuiltCdnProductAssets(resolvedOutRoot, commitSha, pinnedVideoCommits);
     const builtCdnVideos = new Set([...builtCdnProductAssets].filter((asset) => /\/videos\/(?:[a-f0-9]{64}\/)?hover\.mp4$/.test(asset)));
     const builtCdnOfficialVisuals = new Set(
         [...builtCdnProductAssets].filter((asset) => /\/details\/official-visual-\d+\.webp$/.test(asset)),

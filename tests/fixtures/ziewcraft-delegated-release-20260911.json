@@ -70,5 +70,13 @@
   "rw_trailrunner_vest": {
     "productId": "p_350",
     "sha256": "dc7fc65a0bc6959e856a6d67f161280510b9c3cd713e22f4200565d55524d036"
+  },
+  "rw_frontrangeflex_harness_26": {
+    "productId": "p_4",
+    "sha256": "fcf903c46aaf87e5d5620c5939fb23f71229f153fad568ee8624e392f60ee4ac"
+  },
+  "rw_jsk_1000001343": {
+    "productId": "p_472",
+    "sha256": "4aa1f36b8e607129bf3cd417cc1650295334debed9db79353dfd8715424aae6e"
   }
 }

@@ -5,7 +5,7 @@ import { matchesReviewedPhotoMotionVideo } from "./reviewed-photo-motion-video.m
 
 type ReviewedHoverOverride = Pick<
     CatalogRow,
-    "video" | "videoDelivery" | "videoProvider" | "videoQuality" | "videoJobId" | "videoGenerationIdentity" | "videoZiewcraftIdentity" | "videoTrimIdentity" | "videoPlaybackMode" | "videoEditIdentity" | "videoReviewClass" | "videoReviewSha256"
+    "video" | "videoDelivery" | "videoDeliveryCommit" | "videoProvider" | "videoQuality" | "videoJobId" | "videoGenerationIdentity" | "videoZiewcraftIdentity" | "videoTrimIdentity" | "videoPlaybackMode" | "videoEditIdentity" | "videoReviewClass" | "videoReviewSha256"
 >;
 
 /**
@@ -36,6 +36,7 @@ export function applyReviewedHoverOverride(row: CatalogRow): CatalogRow {
             ...row,
             video: undefined,
             videoDelivery: undefined,
+            videoDeliveryCommit: undefined,
             videoProvider: undefined,
             videoQuality: undefined,
             videoJobId: undefined,
