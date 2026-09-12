@@ -2172,11 +2172,62 @@
   },
   "rw_trailrunner_belt_23": null,
   "rw_trailrunner_vest": {
-    "video": "/images/products/catalog/rw_trailrunner_vest/videos/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-1f924621051b"
+    "video": "/images/products/catalog/rw_trailrunner_vest/videos/dc7fc65a0bc6959e856a6d67f161280510b9c3cd713e22f4200565d55524d036/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "8eab09e1b24ba9e6f06a849149620a01",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8eab09e1b24ba9e6f06a849149620a01",
+      "reviewId": "feb0b6c98a4ed030b1ccfb30e936e750",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "dc7fc65a0bc6959e856a6d67f161280510b9c3cd713e22f4200565d55524d036",
+      "seconds": 8,
+      "source": {
+        "no": 350,
+        "folder": "rw_trailrunner_vest",
+        "name": "러프웨어 트레일 러너 러닝 베스트",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_08.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001167",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_185.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_272.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_318.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_454.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_518.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_678.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_774.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_816.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_945.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/5665d5a71aa7c1afefe2f858fb93db81_112252.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/8fe45b61d56c9c57fc3c59a0984a93c5_112253.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/6408ce04f769574681c8e5e7088e8fe0_112253.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/76f0b3719db0e2206ee3466ed8ab289f_112254.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/19596345b397abd02783e62c9dd1aaba_161147.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "52bc919dc8fe7a900500ababf663fa29",
+        "sha256": "dc7fc65a0bc6959e856a6d67f161280510b9c3cd713e22f4200565d55524d036"
+      },
+      "scopeId": "65427ef7565f4e6be591fbb87b772c1a05a21619cebca616a1efca8ababa420f",
+      "scopeRegistrationSha256": "2404d48682be5333ac545dc24e2f51dc41335d53d8cdd60683cef9226bfecf4e",
+      "aiEvidenceSha256": "9dc5383ed5e55fdbb12836b09dc1a0a7eb7449fde09978edf263f13ab41418f5",
+      "receiptSha256": "67a17102dee74f65ba7435bdfb53f83c04041a423f60c015c73c85e030ea1e00",
+      "eligibilitySha256": "54ac0364dc9112d6062a3c1fdff6a405480ff0cdcf24977928a10aa7127ab4b4",
+      "evidenceManifestSha256": "331ccdad1ba29f2e9f576c5bf01225dd2a0cd94672a8869865afe16c6cc6ea54"
+    },
+    "videoReviewSha256": "4a097d1d705ff043546c9c2a3af69b29edeac6dd4e0cd8b94bd09a9705a271c5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
   },
   "rw_trailrunnerbowl": {
     "video": "/images/products/catalog/rw_trailrunnerbowl/videos/9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3/hover.mp4",

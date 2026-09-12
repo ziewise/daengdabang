@@ -66,5 +66,9 @@
   "id_treat_guineafowl": {
     "productId": "p_153",
     "sha256": "ec2170a7649697c1e05709572e61d7db370db5d512b999a66272f96e55dec348"
+  },
+  "rw_trailrunner_vest": {
+    "productId": "p_350",
+    "sha256": "dc7fc65a0bc6959e856a6d67f161280510b9c3cd713e22f4200565d55524d036"
   }
 }
