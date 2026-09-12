@@ -1034,7 +1034,59 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null
   },
-  "rs_v2_bighornblue": null,
+  "rs_v2_bighornblue": {
+    "video": "/images/products/catalog/rs_v2_bighornblue/videos/d187edd2df131019b733b7e5d5f6500d2da3bdaf317e6662a0764b4968f61f4b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "032016f4a1e62609fb4fab41d4d40805",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "032016f4a1e62609fb4fab41d4d40805",
+      "reviewId": "79fea726b0c35d5ab69832e9e43c29c0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d187edd2df131019b733b7e5d5f6500d2da3bdaf317e6662a0764b4968f61f4b",
+      "seconds": 8,
+      "source": {
+        "no": 90,
+        "folder": "rs_v2_bighornblue",
+        "name": "렉스스펙스 V2 빅 혼 블루 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001145/image/detail/1000001145_detail_033.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001145",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001145/image/detail/1000001145_detail_145.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001145/image/detail/1000001145_detail_214.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_1_183053.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_2_183054.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_3_183055.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_052155.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_052213.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "df33fafb2af78e4daf12efdff8f5cc6c",
+        "sha256": "d187edd2df131019b733b7e5d5f6500d2da3bdaf317e6662a0764b4968f61f4b"
+      },
+      "scopeId": "b29dd5eb183e4edd5a9694475f1c6c94f38e414899ae8e183174fb6d7eb4d8a2",
+      "scopeRegistrationSha256": "f5f2418e204d95f4862885bdb3e5a2d0feca5da6aeb34d7612b19020c284113f",
+      "aiEvidenceSha256": "d06d0a1828be86553a1ae9eeececb705075a0019590b62f749873ebc26cbdf5a",
+      "receiptSha256": "6016865d14a98ef306938c7905ad9e9aef03259fa825f62059e014e8761bdd03",
+      "eligibilitySha256": "dbb05790285b9a14c75b33a59dc4978802aea5ba7319f2ff035c40546d30739b",
+      "evidenceManifestSha256": "090de28c7346ae5c0b030da1d5e5faf8894ab0ef13e80e419e9a4d08ab6bef65"
+    },
+    "videoReviewSha256": "0ce19b1ed095da1f0a1800f48c4df100b3e818fe4b55ee27b1f26d5b8ba81c82",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "85c25fc448c5443f63a06a3ec4a093e1df2f1974"
+  },
   "rs_v2_black": {
     "video": "/images/products/catalog/rs_v2_black/videos/70dbf86376829499357c435dc69ae5f10eeab77e54e900a2de5ac6e57dd3e322/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -7380,5 +7432,62 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "9708d60a0497653cbcbc9a019743f39f7aa3b491"
+  },
+  "rw_jsk_1000000989": {
+    "video": "/images/products/catalog/rw_jsk_1000000989/videos/04fbd0e021f49323cf4b97633947fe14d3f12b8cea9b674c5c396f8619016cf5/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "271d09e5b9659e84a1e1748f40e3bd97",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "271d09e5b9659e84a1e1748f40e3bd97",
+      "reviewId": "b023e625a1c927c50c54d5c35d21e17e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "04fbd0e021f49323cf4b97633947fe14d3f12b8cea9b674c5c396f8619016cf5",
+      "seconds": 8,
+      "source": {
+        "no": 406,
+        "folder": "rw_jsk_1000000989",
+        "name": "러프웨어 스왐프 쿨러 쿨링 베스트(Swamp Cooler™ Cooling Vest 2022SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_046.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000989",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_115.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_246.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_314.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_492.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_535.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_671.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_750.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_857.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220507/Swamp-Cooler-Cooling-Vest1_074955.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220423/Swamp-Cooler-Cooling-Vest2_233536.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/Swamp-Cooler-Cooling-Vest3_164947.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/5422a66dc907b155b1cb921f85f85d9d_164957.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "75850facec8e9082f2fa7c70dd9dd225",
+        "sha256": "04fbd0e021f49323cf4b97633947fe14d3f12b8cea9b674c5c396f8619016cf5"
+      },
+      "scopeId": "f076183ccbd40933bd5f09d3b0998b575fb61019f4a56de7f6901d4de89df0e5",
+      "scopeRegistrationSha256": "52c1253a60ae0c1b656c6d2574dc52ce8d77d1d0ecce74814ac82bbd4b1abb85",
+      "aiEvidenceSha256": "ce1ae5bf59602f406e5485b8b0abcd160f0f51b249127296d5e2a78742480a70",
+      "receiptSha256": "19e6e87f4c79eab7e57efcb48eacf65c673cf49b6b3137240381c4828f90a503",
+      "eligibilitySha256": "7f3ca48849dae0b9d4e706c562caa0b559c33dc6bc74092278065fa7501ecf1d",
+      "evidenceManifestSha256": "c53a6cc4f98035a7ef4ef559f793b9197a2fb51c7c16b8971243c6dba6b968db"
+    },
+    "videoReviewSha256": "fe897c80f41a890ee7a713532fd1a2c83bffac7f7abaef7fd26f404c3bc15444",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "85c25fc448c5443f63a06a3ec4a093e1df2f1974"
   }
 }

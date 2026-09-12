@@ -314,5 +314,13 @@
   "rs_v2_vulcanblue": {
     "productId": "p_102",
     "sha256": "53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2"
+  },
+  "rs_v2_bighornblue": {
+    "productId": "p_90",
+    "sha256": "d187edd2df131019b733b7e5d5f6500d2da3bdaf317e6662a0764b4968f61f4b"
+  },
+  "rw_jsk_1000000989": {
+    "productId": "p_406",
+    "sha256": "04fbd0e021f49323cf4b97633947fe14d3f12b8cea9b674c5c396f8619016cf5"
   }
 }
