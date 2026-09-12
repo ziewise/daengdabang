@@ -2100,9 +2100,120 @@
     }
   },
   "rw_ridgeline_collar_26": null,
-  "rw_ridgeline_harness_26": null,
+  "rw_ridgeline_harness_26": {
+    "video": "/images/products/catalog/rw_ridgeline_harness_26/videos/ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "1dd49cb2a4a4c778fa8b325f00c23196",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1dd49cb2a4a4c778fa8b325f00c23196",
+      "reviewId": "7dd51eb972132afc9bb8f12836d73f87",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2",
+      "seconds": 8,
+      "source": {
+        "no": 6,
+        "folder": "rw_ridgeline_harness_26",
+        "name": "러프웨어 릿지라인 하네스(2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_036.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001323",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_166.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_239.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_316.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_496.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_592.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_682.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_74.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_894.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001323/image/detail/1000001323_detail_932.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260224/7d44f43df2c68cd6ef9d840c9fa3d6e4_114854.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/a58a31a702f972a938cc32376666c697_040438.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/e8f3ed2c292bf9e60c7258c7f50fd6f0_040453.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260224/5277a2052ab9e71cba311625abfc3de8_114916.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "787cabb6279aae96ca03782f540a9347",
+        "sha256": "ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2"
+      },
+      "scopeId": "d2a622a223336af2c6051bb6f6391f7bf47280858d7d3d8ea1347c620439bb48",
+      "scopeRegistrationSha256": "97313c682b66952a64d0f5f79740c73a58e14c1a3bc25634ab9709bbe46fdfe0",
+      "aiEvidenceSha256": "8e3cef2b833beeeaf5a8818b793707e2b8893f43cf5abb91bff6ca8dbcbd9182",
+      "receiptSha256": "d52bffcc911341d5675911b6dcf5ab4385feef28545ad3a8b1956a6516e19ec6",
+      "eligibilitySha256": "a1334edffc040b7fc2dd0dd5bd8703cf02e236231f0b8b05276f998e61a2826f",
+      "evidenceManifestSha256": "42f02eae342275dc8a5e977bde5590eb29ebdf80631821af445eec5d02bff422"
+    },
+    "videoReviewSha256": "54d2c7b83478b6cde88a438acb74784c7003c9c671fd4cbbc2747669338542dc",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "rw_ridgeline_leash_26": null,
-  "rw_ridgeline_shoes_26": null,
+  "rw_ridgeline_shoes_26": {
+    "video": "/images/products/catalog/rw_ridgeline_shoes_26/videos/ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "563374dd5e895886119575822a2db3fe",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "563374dd5e895886119575822a2db3fe",
+      "reviewId": "dec2f3a9de4daaaaf78d4c58ad0ad458",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f",
+      "seconds": 8,
+      "source": {
+        "no": 33,
+        "folder": "rw_ridgeline_shoes_26",
+        "name": "러프웨어 릿지라인 반려견 슈즈(2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_039.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001320",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_154.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_222.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_377.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_489.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_538.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_629.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_798.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_83.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001320/image/detail/1000001320_detail_944.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/82464b4e2f6c50e0f38218837c19a7df_040222.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/741f5c8a8c15402f27b46e6d85d41425_040237.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/5277a2052ab9e71cba311625abfc3de8_040253.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "703f2e8715ccdb03469ff1c67d5f938e",
+        "sha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f"
+      },
+      "scopeId": "82ff0589e299e4c62b0352795602addada86888aa9b7b88ebe3d75565824a9d2",
+      "scopeRegistrationSha256": "be8126fa9ceb05dcdbc186eb24d73cce2a77817ebae3c79b60ccf10cb27c4588",
+      "aiEvidenceSha256": "493fce3226e9df315d2d65783775c1c7aaaff8998fa409f61d7443a60d8f5efd",
+      "receiptSha256": "cfa82a58db3cfce1a73413acef2a53670702cd62de191f1df33a4072e3bcc851",
+      "eligibilitySha256": "2a14d2ad1563431127e56e01e15bd19de83f62737e0a797e1e3dd113c2868b7d",
+      "evidenceManifestSha256": "5fa4e9e6d2a73b747bce310e7c8f3d83ca6dcee10a38c278f9ea641274c53680"
+    },
+    "videoReviewSha256": "b69fd696688362c509762b2941e1f1a496e15b1d4a8a855e15fe8bd6612f01b1",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "same_origin",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null
+  },
   "rw_rogue_longline_26fw": {
     "video": "/images/products/catalog/rw_rogue_longline_26fw/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

@@ -78,5 +78,13 @@
   "rw_jsk_1000001343": {
     "productId": "p_472",
     "sha256": "4aa1f36b8e607129bf3cd417cc1650295334debed9db79353dfd8715424aae6e"
+  },
+  "rw_ridgeline_harness_26": {
+    "productId": "p_6",
+    "sha256": "ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2"
+  },
+  "rw_ridgeline_shoes_26": {
+    "productId": "p_33",
+    "sha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f"
   }
 }
