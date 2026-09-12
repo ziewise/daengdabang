@@ -8,6 +8,25 @@ import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
 
 const COMMIT_SHA = "a".repeat(40);
 
+test('Pages omits superseded review media while retaining current published media and source evidence', async t => {
+    const root = await fixture(t, { includeCdnUrl: false, reviewedHoverOverrides: { sample: { videoDelivery: 'same_origin' } } });
+    const current = '/images/products/catalog/sample/videos/hover.mp4';
+    const withdrawn = '/images/products/catalog/sample/videos/old-reviewed/hover.mp4';
+    const registries = ['reviewed-video-trims', 'reviewed-ziewcraft-videos', 'reviewed-ziewcraft-human-videos', 'reviewed-ziewcraft-contents-videos', 'reviewed-ziewcraft-single-videos', 'reviewed-ziewcraft-delegated-videos'];
+    for (const registry of registries) {
+        await write(root, `lib/catalog/${registry}.json`, JSON.stringify({ sample: { video: current, originalVideo: withdrawn } }));
+    }
+    await write(root, `out${withdrawn}`, 'superseded-video-bytes');
+    const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    assert.ok(result.unusedAssetCount > 0);
+    await assert.rejects(fs.access(path.join(root, `out${withdrawn}`)));
+    assert.equal(await fs.readFile(path.join(root, `out${current}`), 'utf8'), 'drop-cdn-copy');
+    for (const registry of registries) {
+        const evidence = JSON.parse(await fs.readFile(path.join(root, `lib/catalog/${registry}.json`), 'utf8'));
+        assert.equal(evidence.sample.originalVideo, withdrawn);
+    }
+});
+
 test('Pages keeps exact same-origin video bytes when CDN delivery is withdrawn', async t => {
     const root = await fixture(t, { includeCdnUrl: false, reviewedHoverOverrides: { sample: { videoDelivery: 'same_origin' } } });
     const video = path.join(root, 'out/images/products/catalog/sample/videos/hover.mp4');

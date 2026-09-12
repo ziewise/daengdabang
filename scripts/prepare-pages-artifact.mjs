@@ -173,6 +173,12 @@ async function collectRuntimeProductReferences(repoRoot, rawCatalog) {
                 "lib/catalog/reviewed-flow-videos.json",
                 "lib/catalog/reviewed-legacy-videos.json",
                 "lib/catalog/reviewed-photo-motion-videos.json",
+                "lib/catalog/reviewed-video-trims.json",
+                "lib/catalog/reviewed-ziewcraft-videos.json",
+                "lib/catalog/reviewed-ziewcraft-human-videos.json",
+                "lib/catalog/reviewed-ziewcraft-contents-videos.json",
+                "lib/catalog/reviewed-ziewcraft-single-videos.json",
+                "lib/catalog/reviewed-ziewcraft-delegated-videos.json",
                 "lib/catalog/colors.json",
                 "lib/external-products/feed.json",
             ]).has(repoRelative)) continue;
