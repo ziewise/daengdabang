@@ -6846,5 +6846,116 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "0fed72f61ee4687f44324cc9fcadbf47049d013b"
+  },
+  "rs_jsk_1000001260": {
+    "video": "/images/products/catalog/rs_jsk_1000001260/videos/6163580e54dee01b78487c0c148a9d50b661288a0f0404414df3643bfc710153/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "75ab65dd83e83e7db2a94da59a2f056e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "75ab65dd83e83e7db2a94da59a2f056e",
+      "reviewId": "3ec65ddae86e9657aa560f097cc1ec59",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6163580e54dee01b78487c0c148a9d50b661288a0f0404414df3643bfc710153",
+      "seconds": 8,
+      "source": {
+        "no": 466,
+        "folder": "rs_jsk_1000001260",
+        "name": "렉스스펙스 V2 일렉트릭 라임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001260/image/detail/1000001260_detail_035.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001260",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001260/image/detail/1000001260_detail_155.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001260/image/detail/1000001260_detail_262.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001260/image/detail/1000001260_detail_332.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001260/image/detail/1000001260_detail_46.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001260/image/detail/1000001260_detail_53.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/6472d14dcddd2782c12d545461d305b3_180025.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/153ee315d9f89055c6fb67d45faff80a_180033.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/dd9b7bbe0345788fef6dccee2dd2821e_180035.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/b1f1bd856d3da33a091ac2b533256b03_180037.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/6ab2ee318c674f488acbaec8bf7756e3_180043.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4cd0c7956881395b75538843c7844b2e",
+        "sha256": "6163580e54dee01b78487c0c148a9d50b661288a0f0404414df3643bfc710153"
+      },
+      "scopeId": "4ee60265ccf2003f4c656e0f06a4dd8d79ef5d774b1c44d1af7c2ee57494659c",
+      "scopeRegistrationSha256": "a5830da3502819f6fa2d37e23e9f23e5294e2f8a1ddeb27f5f21f17ef4ea8fde",
+      "aiEvidenceSha256": "87977d863204f0711df9a77eec56ff66943ca53cfd394866591ccd63f9195041",
+      "receiptSha256": "b2646f86b455f1c28bf81cbc612a607122e22d835b75baccbe1fd7b7e9cea393",
+      "eligibilitySha256": "8c6f9666b5a9c2c0c72781b790044982d577d7a0cdcdcb96f9f5ef1f61b06fd3",
+      "evidenceManifestSha256": "74cdf7a434b08a392112f3111c0dbe02223ef97a1c3c13dec5d6cb43bdb2ba82"
+    },
+    "videoReviewSha256": "b267b4a6a4aa9b77e7b8a841d2cf323c433ac8e43907fcb1fbea720c9e18e5ff",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "2773453374dc6087502a528d04eb1badcc46158d"
+  },
+  "rw_jsk_1000000972": {
+    "video": "/images/products/catalog/rw_jsk_1000000972/videos/c27ea6ae545a5e2ae0eb9ded47c6e70f3c6579ac8c4d1c2100eaf65bdb22f0b6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "20752f2a3fc23feefcb8e0eef4957568",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "20752f2a3fc23feefcb8e0eef4957568",
+      "reviewId": "9190d8dc9307c6a85ca63fce344f2baa",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c27ea6ae545a5e2ae0eb9ded47c6e70f3c6579ac8c4d1c2100eaf65bdb22f0b6",
+      "seconds": 8,
+      "source": {
+        "no": 400,
+        "folder": "rw_jsk_1000000972",
+        "name": "러프웨어 낫 어 목줄(Knot-a-Collar™)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_02.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000972",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_132.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_216.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_345.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_482.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_527.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000972/image/detail/1000000903_detail_626.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221013/Knot-a-Collar1_142458.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220327/Knot-a-Collar2_183201.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/Knot-a-Collar3_145656.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/f58193c39cdb9026eb88a506f51e8f6f_145715.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e507b75af407bc6d013ad2596bd929f6",
+        "sha256": "c27ea6ae545a5e2ae0eb9ded47c6e70f3c6579ac8c4d1c2100eaf65bdb22f0b6"
+      },
+      "scopeId": "eb3f210ba150809a30a308fdd571f20d1ecdc73b6395c0ce6f87c42b21e99866",
+      "scopeRegistrationSha256": "5def2efa8f3c508793e56b8a669f01321d8ef9451598f69a33e5e5dffa2e840b",
+      "aiEvidenceSha256": "d114c0e014d7940a2329eb40d876f325605f2f8cbdb37e654bd887622c37942b",
+      "receiptSha256": "85b17ca3f5c6dd90d6f0cfc3e330920d4c85e6c02f6d030a9d8efa81a9c1fda0",
+      "eligibilitySha256": "38df3aefd171bdd8dd9c06b37ee423962a1c98bc7593eb127d0de19c84aea205",
+      "evidenceManifestSha256": "0f8ddff3843695d590b1d51697679d2174f38a7512893108475d9a5ad0346086"
+    },
+    "videoReviewSha256": "801387f6567277e0ecad0fcc10c183feaf5e448ea66847bad06a87f606a35d18",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "2773453374dc6087502a528d04eb1badcc46158d"
   }
 }
