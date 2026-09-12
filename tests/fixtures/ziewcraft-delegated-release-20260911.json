@@ -126,5 +126,13 @@
   "rw_stashbag_mini_2": {
     "productId": "p_162",
     "sha256": "f37fe56be033cd380ee201e91949ea0cfeaabb7df1b85e9276afb1ee55eb08c1"
+  },
+  "rs_jsk_1000001222": {
+    "productId": "p_444",
+    "sha256": "52bf8afa18bcb36da2c14d2c5a950e8382b67857f043b7b7a03e37fafa0f2a66"
+  },
+  "rw_treattrader_bag": {
+    "productId": "p_41",
+    "sha256": "b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2"
   }
 }

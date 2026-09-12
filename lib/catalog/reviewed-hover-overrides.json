@@ -2740,7 +2740,61 @@
     "videoJobId": "6ec534ab-fe75-438b-9db1-9d05a851a62c"
   },
   "rw_treattrader_23": null,
-  "rw_treattrader_bag": null,
+  "rw_treattrader_bag": {
+    "video": "/images/products/catalog/rw_treattrader_bag/videos/b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "508a139b0bc842ab0d7763773cd79b0d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "508a139b0bc842ab0d7763773cd79b0d",
+      "reviewId": "5274dbe2d044c86c8bf984f41899b230",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2",
+      "seconds": 4,
+      "source": {
+        "no": 41,
+        "folder": "rw_treattrader_bag",
+        "name": "러프웨어 트릿 트레이더 트릿백 (2025FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_050.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001253",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_189.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_274.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_312.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_476.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_511.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001253/image/detail/1000001253_detail_610.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/e9a0c41e4c09a1ac472a2edb56675070_100042.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/796bded2443ca2fb8198862ffe6a90e9_100107.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/7ed93e6c9d12791627a5b5641bd71a36_100111.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/4bd382f0c8676989bf72f59287c5f7a2_100112.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "656fa815387ad4aa6064cf9852be7f5f",
+        "sha256": "b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2"
+      },
+      "scopeId": "ce4ab939127448ddaf0102a49d1291fe0ed3aeb14ffa08fde779e4af8c012b46",
+      "scopeRegistrationSha256": "77385b5cee648f8aa5947efdba57f45291d38e6e8a57802e6f15cb4020813b6d",
+      "aiEvidenceSha256": "aba4ade44a866c681410bbeb0a1316c2115e92a24ae347e34ff3a0db75c45303",
+      "receiptSha256": "0ec0e4aabdacd1b11e5224c31d41750779bf1e5cc2d5ebc0fbe814594717430f",
+      "eligibilitySha256": "70f4b10e41f0d8d0d6d098a20544cf44d873bb858b19d8394719ae98a64aef08",
+      "evidenceManifestSha256": "7acf8835c7ac27b4ef69b86a0f87a389ba711b9014093350722282488b631f1b"
+    },
+    "videoReviewSha256": "e7c250f1e1b96e4e0e2a2296e682507ebc797a2ed70f34c91d767872072b55d9",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "fc36e896778591b41efa2d7d97fa7aa53bcfdecd"
+  },
   "rw_undercoat_jacket": {
     "video": "/images/products/catalog/rw_undercoat_jacket/videos/3a6e41de2ac74aeadc72dd0683e08930d04e5548c94673e4447dc4dd7451c2bf/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -4876,5 +4930,59 @@
     "videoEditIdentity": null,
     "videoReviewClass": null,
     "videoTrimIdentity": null
+  },
+  "rs_jsk_1000001222": {
+    "video": "/images/products/catalog/rs_jsk_1000001222/videos/52bf8afa18bcb36da2c14d2c5a950e8382b67857f043b7b7a03e37fafa0f2a66/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "4087c007a049882fcf2c1363862198a2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4087c007a049882fcf2c1363862198a2",
+      "reviewId": "4d0b3db53118b045f34dea3cd3ccfc0c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "52bf8afa18bcb36da2c14d2c5a950e8382b67857f043b7b7a03e37fafa0f2a66",
+      "seconds": 8,
+      "source": {
+        "no": 444,
+        "folder": "rs_jsk_1000001222",
+        "name": "렉스스펙스 V2 그래시어 블루 프레임 2024 한정판 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001222/image/detail/1000001222_detail_016.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001222",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001222/image/detail/1000001222_detail_15.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001222/image/detail/1000001222_detail_235.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001222/image/detail/1000001222_detail_389.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241029/0d14750a56ec511028b1a8a1fc7e2ecf_164050.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241029/9d5894191f9fe015b5df6314a6f37c22_164050.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241029/ba594a3c476fb57f48af9b25ed8519bd_164051.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241029/5c4b8f6ab8876177a2789e819250666d_164052.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241029/bd59b50755e4616c6821df1012bad21a_164052.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "321777a6486af7f5502c1075f8692f77",
+        "sha256": "52bf8afa18bcb36da2c14d2c5a950e8382b67857f043b7b7a03e37fafa0f2a66"
+      },
+      "scopeId": "e070d018b36345f1da7faa6638eeadf90eeff29cb3d71ab8019a4e979df6a038",
+      "scopeRegistrationSha256": "811ae50486acb298c2588bc86b36ea0edbc4e617dab02d9640e54ba860ff5c01",
+      "aiEvidenceSha256": "de3ff1b85742cd636b25fbb75757f753ff7d27cd190f3bcdd22e0e36114053ac",
+      "receiptSha256": "3d78c8a031ce120272cd2206cacc0c410ca892f9867cea59837d9081dc0b5a32",
+      "eligibilitySha256": "f4e277f940479455a21975277591b7bbda583a86293f3097caee8684e3036294",
+      "evidenceManifestSha256": "e75eb178f940adb7dcd1b5267d3c7d505c619a33f2e8b59f9d68750f86cb6fa9"
+    },
+    "videoReviewSha256": "af35d40c043f31e784150f1569abb6851183efa898fc331edbfb98a14a6da04e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "fc36e896778591b41efa2d7d97fa7aa53bcfdecd"
   }
 }

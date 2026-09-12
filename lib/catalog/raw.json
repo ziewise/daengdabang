@@ -3006,7 +3006,7 @@
     "seasonalFlag": false,
     "season": "사계절/상시",
     "isWalk": false,
-    "isFood": true,
+    "isFood": false,
     "isHygiene": false,
     "name": "러프웨어 트릿 트레이더 트릿백 (2025FW)",
     "priceText": "68,000원",

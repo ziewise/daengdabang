@@ -16,6 +16,10 @@ function fixture(folder = 'soopa_dental_bananapumpkin') {
 function sync(f) { f.product.raw.videoZiewcraftIdentity = structuredClone(f.record.videoZiewcraftIdentity); }
 
 test('reviewed hand demonstrations are eligible for accessories without claiming a dog appears', () => {
+    const treatBag=fixture('rw_treattrader_bag');
+    assert.equal(treatBag.product.raw.isFood,false,'a treat storage bag is not edible food');
+    assert.equal(treatBag.record.videoQuality,'approved_product_interaction');
+    assert.equal(valid(treatBag.product,treatBag.records),true);
     const f=fixture('rw_stashbag_mini_2');
     assert.equal(f.record.videoQuality,'approved_product_interaction');
     assert.equal(f.record.videoZiewcraftIdentity.seconds,4);
