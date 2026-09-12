@@ -138,5 +138,9 @@
   "rw_hiandlight_harness_26": {
     "productId": "p_1",
     "sha256": "920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17"
+  },
+  "rw_jsk_1000001104": {
+    "productId": "p_414",
+    "sha256": "4dd704bfc54c193749418499f908953267f681f92b6e818cf4b5ce29997a59e8"
   }
 }

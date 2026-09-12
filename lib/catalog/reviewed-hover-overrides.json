@@ -5042,5 +5042,60 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "fc36e896778591b41efa2d7d97fa7aa53bcfdecd"
+  },
+  "rw_jsk_1000001104": {
+    "video": "/images/products/catalog/rw_jsk_1000001104/videos/4dd704bfc54c193749418499f908953267f681f92b6e818cf4b5ce29997a59e8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "fb48af81f067474b1ddd96899ca37a5f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "fb48af81f067474b1ddd96899ca37a5f",
+      "reviewId": "7f853a89627bc3b9d32c0127356b800a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4dd704bfc54c193749418499f908953267f681f92b6e818cf4b5ce29997a59e8",
+      "seconds": 8,
+      "source": {
+        "no": 414,
+        "folder": "rw_jsk_1000001104",
+        "name": "러프웨어 파우더 하운드 패닝 재킷(Powder Hound™ Jacket)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_092.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001104",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_117.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_291.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_348.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_419.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_530.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001104/image/detail/1000001104_detail_633.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221028/Powder-Hound2022_1_132026.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221028/Powder-Hound2022_2_132044.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221028/Powder-Hound2022_3_132105.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221028/e92d50a98f3f16bd5528118ab592d9d4_132137.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e9c690fff1ed49c81e230f3e940d9379",
+        "sha256": "4dd704bfc54c193749418499f908953267f681f92b6e818cf4b5ce29997a59e8"
+      },
+      "scopeId": "297e16ad834f27659fafd6f97835a8ecf6547784ab4952f2e99affcc7f21bf9d",
+      "scopeRegistrationSha256": "86b87bc1c68ab8f4fe94c4b43f6b618499bc70e9a83b38d9ae15088148048b9a",
+      "aiEvidenceSha256": "57e80adb8a4e3be0c4a80809f7de8eccd9ce324b20bc1c1f031a74f66fa3b235",
+      "receiptSha256": "55bcb4a8e93a51aeb7d577a33dcef8355a1e0b68f467ab7aa35779a23d883ec2",
+      "eligibilitySha256": "7fd68465f03ecefc3bebc53a2123ff818619f49718f94dbcd17d90c5de29f49b",
+      "evidenceManifestSha256": "ece160a3821841a837e58937bae85e3d4c8bfaa54c22ed22f9ead66c79dcb508"
+    },
+    "videoReviewSha256": "10b833670407e1dd083a7280f4bb72c80fc7c766fa4b59679c9b4abdc75f2d05",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e48598c4627fbdd10e021b0c17895da17cc24863"
   }
 }
