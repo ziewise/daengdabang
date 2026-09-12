@@ -14,6 +14,8 @@ const SOURCE_EXTENSIONS = new Set([".css", ".js", ".json", ".mjs", ".ts", ".tsx"
 const DEPLOYMENT_OMIT_PATHS = new Set([
     // Legacy storefront copy. The current app uses /images/hero/default.mp4.
     "videos/hero.mp4",
+    // Superseded snow preview. Runtime weather scenes use weather-snow-*.mp4.
+    "images/hero/snow.mp4",
 ]);
 const DEPLOYMENT_OMIT_PREFIXES = [
     // Source/reference exports used to prepare marketplace content. The

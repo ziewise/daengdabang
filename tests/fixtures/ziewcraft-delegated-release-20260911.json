@@ -218,5 +218,17 @@
   "rw_ridgeline_collar_26": {
     "productId": "p_34",
     "sha256": "ef86c97aa38e712ef8752c5fc650bb576142e72fec69167c3fa393afe53c79e2"
+  },
+  "rs_v2_rangerred": {
+    "productId": "p_92",
+    "sha256": "d3a7b47b836b329d57147c2730afe30721faa18c9d9f343933607cda2cc90640"
+  },
+  "rw_jsk_1000000765": {
+    "productId": "p_385",
+    "sha256": "70515d7b34000544d573255357abcc7e71fb08bac0bdb29a8327d677fa7b945a"
+  },
+  "rw_jsk_1000000164": {
+    "productId": "p_367",
+    "sha256": "f83c1a182109f81d653804b4683bcbe5f6d1147f210dbb330699b32beb9a37cc"
   }
 }

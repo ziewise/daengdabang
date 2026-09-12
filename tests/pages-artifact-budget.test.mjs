@@ -8,6 +8,19 @@ import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
 
 const COMMIT_SHA = "a".repeat(40);
 
+test('Pages omits the superseded snow preview while retaining current weather videos and source bytes', async t => {
+    const root = await fixture(t);
+    await write(root, 'public/images/hero/snow.mp4', 'preserved-original');
+    await write(root, 'out/images/hero/snow.mp4', 'superseded-preview');
+    const current = ['weather-snow-day-v1.mp4', 'weather-snow-day-v2.mp4', 'weather-snow-night.mp4'];
+    for (const name of current) await write(root, `out/images/hero/${name}`, name);
+    const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    assert.equal(result.omittedLegacyAssetCount, 2);
+    await assert.rejects(fs.access(path.join(root, 'out/images/hero/snow.mp4')));
+    assert.equal(await fs.readFile(path.join(root, 'public/images/hero/snow.mp4'), 'utf8'), 'preserved-original');
+    for (const name of current) assert.equal(await fs.readFile(path.join(root, `out/images/hero/${name}`), 'utf8'), name);
+});
+
 test('Pages accepts only the exact per-video CDN revision, independently of a newer site build', async t => {
     const pinned = 'b'.repeat(40);
     const video = '/images/products/catalog/sample/videos/hover.mp4';
