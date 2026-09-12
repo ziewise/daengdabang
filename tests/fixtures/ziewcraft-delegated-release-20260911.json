@@ -162,5 +162,21 @@
   "rw_jsk_1000001210": {
     "productId": "p_438",
     "sha256": "db9533f22c4e7d952b0882f0d01b7d9500709004e1307c9a2096782eacf497c0"
+  },
+  "rs_v2_black": {
+    "productId": "p_77",
+    "sha256": "70dbf86376829499357c435dc69ae5f10eeab77e54e900a2de5ac6e57dd3e322"
+  },
+  "rw_jsk_1000000010": {
+    "productId": "p_363",
+    "sha256": "a9aff9df8cc8c521d4c794738abbda2496975dc7dac300c5c171ec7941cf5c40"
+  },
+  "rw_jsk_1000000011": {
+    "productId": "p_364",
+    "sha256": "6a2cccc8f0d3b99f67fc565994c6a9cc2488f4b641c830a9dad1e0185e50a7fa"
+  },
+  "rs_jsk_1000001250": {
+    "productId": "p_463",
+    "sha256": "02ea5ac94d1d202d82b74016d95d6206444f1307c52f5879a4a60fc043b7deca"
   }
 }
