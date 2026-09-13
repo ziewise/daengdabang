@@ -442,5 +442,9 @@
   "rs_lens_original": {
     "productId": "p_98",
     "sha256": "a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543"
+  },
+  "perity_aloe_shampoo": {
+    "productId": "p_137",
+    "sha256": "7206d7c8ed6056d87b469c74688cb49f6e6cc87138be96a3e7d49703315b4256"
   }
 }

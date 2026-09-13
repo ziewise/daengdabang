@@ -8997,5 +8997,52 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "a1476a7fd595880a09ac37c45e5113f902210e38"
+  },
+  "perity_aloe_shampoo": {
+    "video": "/images/products/catalog/perity_aloe_shampoo/videos/7206d7c8ed6056d87b469c74688cb49f6e6cc87138be96a3e7d49703315b4256/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "05edca4621792b92cf5e099161535b05",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "05edca4621792b92cf5e099161535b05",
+      "reviewId": "d7f0357d303903d2d67633ece5729506",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7206d7c8ed6056d87b469c74688cb49f6e6cc87138be96a3e7d49703315b4256",
+      "seconds": 4,
+      "source": {
+        "no": 137,
+        "folder": "perity_aloe_shampoo",
+        "name": "페리티_알로에 수딩 앤 모이스처 펫 샴푸",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_aloe_shampoo/perity_aloe_shampoo.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10149123837",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_aloe_shampoo/details/2.webp",
+          "/images/products/catalog/perity_aloe_shampoo/details/3.webp",
+          "/images/products/catalog/perity_aloe_shampoo/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b39d201a67d59c206c596645ade055b3",
+        "sha256": "7206d7c8ed6056d87b469c74688cb49f6e6cc87138be96a3e7d49703315b4256"
+      },
+      "scopeId": "76eab252e96bdf9dac59eb1d5ca3e7c3eb1ac0ed14c91c9bcbf3792543f26fcb",
+      "scopeRegistrationSha256": "20dd44b5f4e609715d204b6be8cb4a6798bd4419e7bfad35eccccb8178c1f806",
+      "aiEvidenceSha256": "396da6dece7df9737e565e6c06a19f4df202a50f4d02dc0c7e1ffec0ec777199",
+      "receiptSha256": "70045dfa19d9ab114b17191b21102cdd37890bdfa885461b6e89d909791663a5",
+      "eligibilitySha256": "a7c200536aec09941c9e20741d36746fec5f702c1b9810f05d6acaa25e3aedcf",
+      "evidenceManifestSha256": "e73daf6ef076a5c370c6e949fdc7ac25bd3548229d6bb6b482e644058d04e0c2"
+    },
+    "videoReviewSha256": "e8584af09ab69f4ac9537b6d0851a58b8d1f43556de4b7af5596b4d73cb1e59f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "537abee7f37d5bb0de9d810c1aef059740f5cb2f"
   }
 }
