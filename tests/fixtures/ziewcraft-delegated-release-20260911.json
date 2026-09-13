@@ -322,5 +322,13 @@
   "rw_jsk_1000000989": {
     "productId": "p_406",
     "sha256": "04fbd0e021f49323cf4b97633947fe14d3f12b8cea9b674c5c396f8619016cf5"
+  },
+  "rs_bowl": {
+    "productId": "p_88",
+    "sha256": "860188ede01f84d638816c0a8ea918b313c0d7c2e1fe92d0c874ebac575a3bf2"
+  },
+  "rs_v2_gallatingray": {
+    "productId": "p_91",
+    "sha256": "8492e9dc69f27c8e720b59a57e5ea05c76364c219258766ba5e7cb2b77ca3f21"
   }
 }
