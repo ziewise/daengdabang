@@ -11,11 +11,53 @@
     "videoJobId": "6a6e5ab8-688c-494d-b313-334a6cde72d3"
   },
   "aff_donut_luxury_xl": {
-    "video": "/images/products/catalog/aff_donut_luxury_xl/videos/hover.mp4",
+    "video": "/images/products/catalog/aff_donut_luxury_xl/videos/7ceed86f9018fbefa53ffbe98a677401312aadd2a3e8a83d592515276c167e3c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "7a7c078776b5120978afaefe73772234",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7a7c078776b5120978afaefe73772234",
+      "reviewId": "aab111807be2d65c841b2a6fd0bc96f0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7ceed86f9018fbefa53ffbe98a677401312aadd2a3e8a83d592515276c167e3c",
+      "seconds": 4,
+      "source": {
+        "no": 124,
+        "folder": "aff_donut_luxury_xl",
+        "name": "아페토 커버분리형 럭셔리 도넛방석 XL - 아이보리 핑크 브라운 그레이",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_luxury_xl/aff_donut_luxury_xl.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10318407718",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_luxury_xl/details/2.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/3.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/4.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/5.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a89b58bb991868f5b3ecd9e7a3858e6d",
+        "sha256": "7ceed86f9018fbefa53ffbe98a677401312aadd2a3e8a83d592515276c167e3c"
+      },
+      "scopeId": "eabd39ac5b0c2630241adba4e8629794f068662fb6091e6d068480cae6c78260",
+      "scopeRegistrationSha256": "2346bd62650178d971758b0edd01a02d613e1ba287068310f88c6f52beed474f",
+      "aiEvidenceSha256": "3cf26b7984f5741114a92aa2eed6ef922b0a6cc5ba7b4918fb202ef2684f5122",
+      "receiptSha256": "ee41fc772c9f9f91d0b1b364a21a4bacc18ddb6d7bd19983a68abacbdc0ab172",
+      "eligibilitySha256": "5dedd9964d676418f0db2ffe0e186f58c88bad9cba499e806227c0ae0cbc9457",
+      "evidenceManifestSha256": "056da0878f43f814acaea5426124645aeb4b2ab198bf712193f2f486a9d99469"
+    },
+    "videoReviewSha256": "8b31b2d66b09a0e333ca143e61963e211985eab34edb7a138fc888a6d6d14246",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-d325b8efdc3f"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a1476a7fd595880a09ac37c45e5113f902210e38"
   },
   "aff_donut_original_brown": null,
   "aff_donut_original_gray": null,
@@ -8861,5 +8903,52 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "06389efcf9dd78f188bd1fb37cd29cebe340dcb6"
+  },
+  "yora_allbreed_12kg": {
+    "video": "/images/products/catalog/yora_allbreed_12kg/videos/d2c7f0133d3a6395e5acc3b738d3fea18b88a9539d2e8327412e2d76e18bed14/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "c300e2d82872c982d3fec7d2da62be6c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c300e2d82872c982d3fec7d2da62be6c",
+      "reviewId": "bbd5636ceffb6ff740cf16794370b9de",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d2c7f0133d3a6395e5acc3b738d3fea18b88a9539d2e8327412e2d76e18bed14",
+      "seconds": 4,
+      "source": {
+        "no": 175,
+        "folder": "yora_allbreed_12kg",
+        "name": "요라 올브리드 12kg 전견종 성견용 동애등에 단일단백질 40%",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_allbreed_12kg/yora_allbreed_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923056065",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_allbreed_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_allbreed_12kg/details/2.webp",
+          "/images/products/catalog/yora_allbreed_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8d4a2d7f0403392204ff4a98c48578f7",
+        "sha256": "d2c7f0133d3a6395e5acc3b738d3fea18b88a9539d2e8327412e2d76e18bed14"
+      },
+      "scopeId": "67efd12433a68a6273eedce97c37fdd1b2e3037b35d923ba8de809a1d477af7b",
+      "scopeRegistrationSha256": "75692ed98f9fd5cdc4539c3221c6fe44803ad35566fef717293726075896f68c",
+      "aiEvidenceSha256": "e257b56d411e2fd7f65ddc82a9df7b090298a921b0780973579e477196187402",
+      "receiptSha256": "cc7f3afdcc7c6c2c5255aa7dc6a8f954822d12ee1ee0efe569c01ff40a7b6a12",
+      "eligibilitySha256": "406f70b273892c205c9992d3aa85db6bfdea23e44c004aa4ef82437820b04bde",
+      "evidenceManifestSha256": "e61818e837e01984c0ee2c08a414a717194c02d39429287a0f11c547c06905ea"
+    },
+    "videoReviewSha256": "e19159e429b19d5fe43eb4ea093cc660db3c9c6d80ff132f4418a2ea37be82a2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a1476a7fd595880a09ac37c45e5113f902210e38"
   }
 }

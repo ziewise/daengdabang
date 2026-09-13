@@ -430,5 +430,13 @@
   "yora_reward_treat": {
     "productId": "p_134",
     "sha256": "a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3"
+  },
+  "yora_allbreed_12kg": {
+    "productId": "p_175",
+    "sha256": "d2c7f0133d3a6395e5acc3b738d3fea18b88a9539d2e8327412e2d76e18bed14"
+  },
+  "aff_donut_luxury_xl": {
+    "productId": "p_124",
+    "sha256": "7ceed86f9018fbefa53ffbe98a677401312aadd2a3e8a83d592515276c167e3c"
   }
 }
