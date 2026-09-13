@@ -386,5 +386,13 @@
   "rs_jsk_1000001262": {
     "productId": "p_468",
     "sha256": "2c422ac279d7d35011e59f6a0a62b60ab947583375e0afc693c2296636f94481"
+  },
+  "rw_corecooler_pad": {
+    "productId": "p_50",
+    "sha256": "a3583735295c76114335293830a8bf6866505442680bdc4f2a61e64c06b785c3"
+  },
+  "rw_jsk_1000001346": {
+    "productId": "p_473",
+    "sha256": "2247c8fc99ea7c6343f52e4aa021905798b43d458f56a562cef5212c11883f7e"
   }
 }

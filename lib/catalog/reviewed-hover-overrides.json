@@ -2116,11 +2116,57 @@
     "videoDeliveryCommit": "852ffdcc10fe36f188b7ec8198507d6842768d38"
   },
   "rw_corecooler_pad": {
-    "video": "/images/products/catalog/rw_corecooler_pad/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_corecooler_pad/videos/a3583735295c76114335293830a8bf6866505442680bdc4f2a61e64c06b785c3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6ce12f8452029b7469430f17d1fc3a7b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6ce12f8452029b7469430f17d1fc3a7b",
+      "reviewId": "ce17e8fb6bc0feaa8d83db95f1d9dd8a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a3583735295c76114335293830a8bf6866505442680bdc4f2a61e64c06b785c3",
+      "seconds": 8,
+      "source": {
+        "no": 50,
+        "folder": "rw_corecooler_pad",
+        "name": "러프웨어 코어 쿨러 가슴 쿨링패드(Core Cooler™)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000166/image/detail/1000000166_detail_021.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000166",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000166/image/detail/1000000166_detail_135.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000166/image/detail/1000000166_detail_229.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000166/image/detail/1000000166_detail_31.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000166/image/detail/1000000166_detail_468.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000166/image/detail/1000000166_detail_559.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/210325/Core-Cooler1_124543.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Core-Cooler2_184307.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/a69c64656a3fbda94205defb80baa747_184321.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7f8437101353a7695ea4506575597b0b",
+        "sha256": "a3583735295c76114335293830a8bf6866505442680bdc4f2a61e64c06b785c3"
+      },
+      "scopeId": "3966b092d74e1f536b2f8680735581e85c21755e317535f99bdff8bc33c6d1b5",
+      "scopeRegistrationSha256": "026cfe45219d640824d326756f6c24f6765eb8b71efa5039e18a1ffdd83746b9",
+      "aiEvidenceSha256": "d76072c3fe3a08ff65a538836a47b45aeb467f3c0f21913d75b188114ba893c0",
+      "receiptSha256": "fd3ed759985ca3d2f9a07228bb185a5aebd9546e7f0bde34e188579bd480ddc1",
+      "eligibilitySha256": "ee1b5038987b0a8bad84d078be52835bf20fe0fbf78cbd53ebda0a3dc77f1953",
+      "evidenceManifestSha256": "54a3a656e5f30e7d0db9397b7d3b14a811c08284737751921b2c3f125865f389"
+    },
+    "videoReviewSha256": "8306e3200fd61b7725a72ab3e98ab1636151a6d47256d876ad44078d0237db81",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-f3a255532a37"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "20741959ebbadc30384670260af372145ac82250"
   },
   "rw_dirtbag_seatcover": {
     "video": "/images/products/catalog/rw_dirtbag_seatcover/videos/891818b3517f3cae417270ff8a1a43967453fe4a27b9d696001241da3b7adfbe/hover.mp4",
@@ -8304,5 +8350,65 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "9d4c96e9b44fbb585c9372793de48ed83204ada3"
+  },
+  "rw_jsk_1000001346": {
+    "video": "/images/products/catalog/rw_jsk_1000001346/videos/2247c8fc99ea7c6343f52e4aa021905798b43d458f56a562cef5212c11883f7e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e54b0d064ed5874591b294ef6e49d476",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e54b0d064ed5874591b294ef6e49d476",
+      "reviewId": "9450ff65bfd1a5f6edc118d8c37fdc42",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2247c8fc99ea7c6343f52e4aa021905798b43d458f56a562cef5212c11883f7e",
+      "seconds": 8,
+      "source": {
+        "no": 473,
+        "folder": "rw_jsk_1000001346",
+        "name": "러프웨어 오버코트 퓨즈 보온 베스트 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_081.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001346",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_177.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_269.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_339.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_474.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_586.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_692.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_750.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_858.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_982.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_1035.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/0658e2e9a37cd525b95b07b22a417102_180214.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/9d538ee96387644ab6a8224a0c515e52_180234.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/9511a72f57ee7dbe6d163965035cfab2_180253.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/545c81a5ef64e369ab5e1efad3235bf1_180310.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/8f75b8286aec97d372d945e8968b9b98_180327.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d583fe7eda6ba5a36b2d2c5ea9668e35",
+        "sha256": "2247c8fc99ea7c6343f52e4aa021905798b43d458f56a562cef5212c11883f7e"
+      },
+      "scopeId": "9aaedf651ae37f18feacd00a42614807e42d44c59dc27f63ee176217b2de9415",
+      "scopeRegistrationSha256": "f125d77c51949b10feebe46a8f65b996b2b3d1c8f16a957380353b2d28919d23",
+      "aiEvidenceSha256": "64c22f22121586dad7acf7fbb0da2413d9954758be5c15ca8d3fcb8dbdc30564",
+      "receiptSha256": "e5177c607e3791e2d1418847216446ea74a341840396242e4a972e5328694e8f",
+      "eligibilitySha256": "9a856b3aa277d5cca200b00e09037cf16d74f50b75b3fa3993584be888de4159",
+      "evidenceManifestSha256": "e6bf38b380f76c2d3a01afa69c1fb4301fee32e92955f6ea70b08a7320b9c02c"
+    },
+    "videoReviewSha256": "aac41b6240fc6b9234b20ce61636340f7f133f19eb61e5c6907f31fca863468d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "20741959ebbadc30384670260af372145ac82250"
   }
 }
