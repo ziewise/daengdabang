@@ -358,5 +358,17 @@
   "pdh_slowfeeder_paw": {
     "productId": "p_16",
     "sha256": "c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06"
+  },
+  "fumble_deodorizer": {
+    "productId": "p_13",
+    "sha256": "1259bf097de570409733e1dce48bd60808a5d544403b35383012436aa760588e"
+  },
+  "rw_confluence_lifejacket": {
+    "productId": "p_60",
+    "sha256": "dca30ba4e99d6cb6b3a21ce402015fb462f52724ac79f72b2dec417ca43a26f2"
+  },
+  "rs_jsk_1000001251": {
+    "productId": "p_464",
+    "sha256": "7586e044477352d3372404da5cee21641c41deaffd9eb786ec19e91ea8d5246b"
   }
 }
