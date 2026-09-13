@@ -438,5 +438,9 @@
   "aff_donut_luxury_xl": {
     "productId": "p_124",
     "sha256": "7ceed86f9018fbefa53ffbe98a677401312aadd2a3e8a83d592515276c167e3c"
+  },
+  "rs_lens_original": {
+    "productId": "p_98",
+    "sha256": "a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543"
   }
 }

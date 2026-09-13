@@ -1044,11 +1044,58 @@
     "videoReviewSha256": "6636cdb43931c1fff5f1cbfc77331bdd7a2295426baff286c050adf8b238ee18"
   },
   "rs_lens_original": {
-    "video": "/images/products/catalog/rs_lens_original/videos/hover.mp4",
+    "video": "/images/products/catalog/rs_lens_original/videos/a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "43472cb064de7c60b5416cf0690119a4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "43472cb064de7c60b5416cf0690119a4",
+      "reviewId": "6e2f214cdc36589f00619521be2fe9aa",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543",
+      "seconds": 4,
+      "source": {
+        "no": 98,
+        "folder": "rs_lens_original",
+        "name": "렉스스펙스 교체 렌즈 (오리지널 고글 전용)",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_077.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000889",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_132.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_259.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_349.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_482.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_599.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000889/image/detail/1000000889_detail_683.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/362dc3a1ec489e33b3ab0a189482124c_053943.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b9b244514cb2715e32c0ff8918ac4f03_053958.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220930/7e021a9d8373a8dab6bccf775ccea914_151823.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "899e593fc7dff74569f699e7267ed60e",
+        "sha256": "a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543"
+      },
+      "scopeId": "5b010ec38094abc69d1764cf6d7ccedbc85ddeb6e377a1f7bc983e8014a45650",
+      "scopeRegistrationSha256": "02145830b778f1a5554c286c355a79d94b11c7a13f870533b2131496379ce40b",
+      "aiEvidenceSha256": "18005b040244af9c71b39f28e4100449d654b7f9e411584e392716874048f658",
+      "receiptSha256": "d7f97124f80c19c3933fb6f2e0ff945b76701f2a24df6a7d06ecc23e915b3fe8",
+      "eligibilitySha256": "19a3d5ae04641a94ad3baf358943cbb170e2d57bb39849ce7dc5deef08a8594e",
+      "evidenceManifestSha256": "e1d15b4d0195b9daba3340b116afcef4a19f15f31aa17c2435f57420bf770313"
+    },
+    "videoReviewSha256": "26217efaed35d9da590a51907179911f2f6e8e7a907bce19de9e93afcfcb81b1",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-12ed79e0169b"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "be46688e092c69f7a3dbd681d5db34a1fd792260"
   },
   "rs_lens_v2": {
     "video": "/images/products/catalog/rs_lens_v2/videos/hover.mp4",

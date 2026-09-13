@@ -68,6 +68,17 @@ test('actual owner-delegated AI receipts activate exact product video bytes with
         assert.equal(record.delegatedReview.review_actor.full_segment_watched, false);
     }
 });
+
+test('reviewed replacement-lens demonstrations survive the storefront goggles category', () => {
+    const f = fixture('rs_lens_original');
+    f.product.subcategory = 'goggles';
+    assert.equal(f.record.videoQuality, 'approved_product_interaction');
+    assert.equal(f.record.delegationScope.required_final_seconds, 4);
+    assert.equal(valid(f.product, f.records), true);
+    assert.equal(safeCatalogHoverVideo(f.product), f.record.video);
+    f.record.delegatedReview.server_technical_gate_passed = false;
+    assert.equal(valid(f.product, f.records), false, 'accessory classification cannot waive technical QA');
+});
 test('revoked eligibility, rejection, changed current receipt and fabricated human flags cannot publish', () => {
     for (const change of [
         f => f.record.currentEligibility.owner_delegated_shop_candidate_current = false,
