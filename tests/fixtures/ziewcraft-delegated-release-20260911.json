@@ -402,5 +402,17 @@
   "rw_leash_cragex_23": {
     "productId": "p_149",
     "sha256": "abf8c5a2a3e88362302e34061ec3e5f069c34f246f6dc06b15db858c8ff7d71c"
+  },
+  "rw_polartrex_boots_26fw": {
+    "productId": "p_359",
+    "sha256": "a648b7742fd5ddf45db1bd8b50bd8573bc5fbd17ae1f72215d51f7115a7d526c"
+  },
+  "yora_smallbreed_2.5kg": {
+    "productId": "p_164",
+    "sha256": "52e2dd21323cb73de714603e8bc7b8c8581b3eababc9f82b222c24c61784343e"
+  },
+  "yora_lightsenior_6kg": {
+    "productId": "p_170",
+    "sha256": "31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be"
   }
 }

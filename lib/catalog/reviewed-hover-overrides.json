@@ -3374,11 +3374,62 @@
     }
   },
   "rw_polartrex_boots_26fw": {
-    "video": "/images/products/catalog/rw_polartrex_boots_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_polartrex_boots_26fw/videos/a648b7742fd5ddf45db1bd8b50bd8573bc5fbd17ae1f72215d51f7115a7d526c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "9e8a615f4444acb8a35a6b1a7ac3a221",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9e8a615f4444acb8a35a6b1a7ac3a221",
+      "reviewId": "ff711dca0eca101e2fca7ea7f7ff1972",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a648b7742fd5ddf45db1bd8b50bd8573bc5fbd17ae1f72215d51f7115a7d526c",
+      "seconds": 8,
+      "source": {
+        "no": 359,
+        "folder": "rw_polartrex_boots_26fw",
+        "name": "러프웨어 폴라 트렉스 반려견 겨울 부츠 2026FW(2족)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_097.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001358",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_162.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_234.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_310.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_436.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_557.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_633.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_739.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_816.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_999.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/e52e870aa683836131834b26277b5882_114023.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/12eabda911145efde03ce13cac25fef1_114042.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/c502c3284585693c35fb847dfed07e4e_114056.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/5277a2052ab9e71cba311625abfc3de8_114110.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "67b22cfd3fa969a5fa1418633fc0a55c",
+        "sha256": "a648b7742fd5ddf45db1bd8b50bd8573bc5fbd17ae1f72215d51f7115a7d526c"
+      },
+      "scopeId": "5c0a3aacc443fe3559b67dbad39f35a03d60e9742ee63974e86d8668a3b58302",
+      "scopeRegistrationSha256": "ad497386c1d15ccc51d92b7dc2377da3c46b3cfbed81c0d1b9c2ad0a63569f8d",
+      "aiEvidenceSha256": "62f10abc73fb6257f624ba769ba6d37ca8801dd94517f0d18d02c203f692c914",
+      "receiptSha256": "019ada2387ce24c682f5446f721c1bd1e7ba7ce8779822e7e77cc04cee02df9b",
+      "eligibilitySha256": "e01f79c2b0cc2742765cfdf8c5598f049a0b5f6b7e02f0eb23f6ddcb1c6c8c49",
+      "evidenceManifestSha256": "909d5709a49fd8fe677bb8cb2dc04fd3d6f7ad492523da67b9401bae3ffa26a6"
+    },
+    "videoReviewSha256": "ac4663bc7c3a5f59c750c0bd238e934922a3958bc6e1b377729293d72b716259",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-745c6c1dab5e"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "43c5a0f9cd8811a680c232f8efbb48ff1d8662e6"
   },
   "rw_porcini_toy": {
     "video": "/images/products/catalog/rw_porcini_toy/videos/ca4378a3e002535f04fada683077b40f222694c01c77665daee54c923f0b878f/hover.mp4",
@@ -5237,11 +5288,103 @@
   "yora_dreamer_treat": null,
   "yora_largebreed_12kg": null,
   "yora_lightsenior_12kg": null,
-  "yora_lightsenior_6kg": null,
+  "yora_lightsenior_6kg": {
+    "video": "/images/products/catalog/yora_lightsenior_6kg/videos/31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "5c66a7c0b32632e784c428947d097baa",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5c66a7c0b32632e784c428947d097baa",
+      "reviewId": "08a61c72520c775c35b6eb757a148cd1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be",
+      "seconds": 4,
+      "source": {
+        "no": 170,
+        "folder": "yora_lightsenior_6kg",
+        "name": "요라 라이트 시니어 6kg 곤충사료 동애등에 단일단백질",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_lightsenior_6kg/yora_lightsenior_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923166565",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_lightsenior_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_lightsenior_6kg/details/2.webp",
+          "/images/products/catalog/yora_lightsenior_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "15bec685e1603e2dffb6c999b05a0e32",
+        "sha256": "31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be"
+      },
+      "scopeId": "8a41c8177b067b48cc0b5981afb1741f966e348aeacf0c4c58fd32bb3078346f",
+      "scopeRegistrationSha256": "d89993e13f2e8a307def3327d7f01f9e58f4b7b72aadb8fee8abd54544b47dab",
+      "aiEvidenceSha256": "3baed5a178c375f261ec1e9c6955ccfbaaf9bca029493413f27ac9541bab6595",
+      "receiptSha256": "e2e264932692f80d716da5a56cd5c3a37fcf7ff1a17380b7ae51a0409a231e84",
+      "eligibilitySha256": "7aeaf2d1fab79e05c40d794dfd41aacf08e7454635724f56ad1e98177a49dbf8",
+      "evidenceManifestSha256": "bf25e90eda69e53105555bb1659fc5b4bc1658d4cf438a6f1d06cece5798a70d"
+    },
+    "videoReviewSha256": "0a711c19e274061605cc4ba4aee53b5c706827d71884c7813296970e34c7cdef",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "43c5a0f9cd8811a680c232f8efbb48ff1d8662e6"
+  },
   "yora_puppy_12kg": null,
   "yora_puppy_2.5kg": null,
   "yora_reward_treat": null,
-  "yora_smallbreed_2.5kg": null,
+  "yora_smallbreed_2.5kg": {
+    "video": "/images/products/catalog/yora_smallbreed_2.5kg/videos/52e2dd21323cb73de714603e8bc7b8c8581b3eababc9f82b222c24c61784343e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "f2f39846d514b96c0c84d9d8f2777b8d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f2f39846d514b96c0c84d9d8f2777b8d",
+      "reviewId": "b9a2e7c5d0b7a70ff6c2833b01f89e66",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "52e2dd21323cb73de714603e8bc7b8c8581b3eababc9f82b222c24c61784343e",
+      "seconds": 4,
+      "source": {
+        "no": 164,
+        "folder": "yora_smallbreed_2.5kg",
+        "name": "요라 사료 YORA 스몰브리드 2.5kg 인섹트 저알러지 눈물예방 강아지 곤충 하이포알러제닉",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_smallbreed_2.5kg/yora_smallbreed_2.5kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923215781",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_smallbreed_2.5kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_smallbreed_2.5kg/details/2.webp",
+          "/images/products/catalog/yora_smallbreed_2.5kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "057fbc51279e7ad73c7c2048b22fd884",
+        "sha256": "52e2dd21323cb73de714603e8bc7b8c8581b3eababc9f82b222c24c61784343e"
+      },
+      "scopeId": "fb1b8105cbeccf0cb2438dfade89937b17ceba4a6ec6fde2e3a6ffa2ff61c9c3",
+      "scopeRegistrationSha256": "f67d38c0445df085c2f668b96583c7079fd58b3be785ac9f8232dbca4baca0cb",
+      "aiEvidenceSha256": "41e80657df8c426b771b0a5d70f08e9faf589c73c8faa19c3ccdedf680b038a9",
+      "receiptSha256": "362786d90ef1be424ad1b8df131734eed06bb6256e52dc559518d09347185aae",
+      "eligibilitySha256": "762d0b2f53c739e3e064b44d854099f73c63f23ecbe8430c53093fa2c3f86058",
+      "evidenceManifestSha256": "7c57d16cc31ec54e17324569649f5bb0a2d77b93d6409efdc05cc76332241c6f"
+    },
+    "videoReviewSha256": "71f6b741e2add67ecf214d243f0f90b7018457f8173b27fc3d93576c591a8f21",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "43c5a0f9cd8811a680c232f8efbb48ff1d8662e6"
+  },
   "yora_smallbreed_6kg": null,
   "yora_stew_carrotpotato_390g": {
     "video": "/images/products/catalog/yora_stew_carrotpotato_390g/videos/hover.mp4",
