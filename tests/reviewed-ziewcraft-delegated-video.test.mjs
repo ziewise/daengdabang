@@ -25,7 +25,7 @@ test('reviewed hand demonstrations are eligible for accessories without claiming
     assert.equal(f.record.videoZiewcraftIdentity.seconds,4);
     f.product.subcategory='hygiene';
     assert.equal(valid(f.product,f.records),true);
-    for(const subcategory of ['wear','harness','goggles','leash']) {
+    for(const subcategory of ['wear','harness','goggles']) {
         assert.equal(valid({...f.product,subcategory},f.records),false,'hand footage cannot replace an eight-second wearing video');
     }
     const food=fixture('rw_stashbag_mini_2');
@@ -36,6 +36,25 @@ test('reviewed hand demonstrations are eligible for accessories without claiming
     const revoked=fixture('rw_stashbag_mini_2');
     revoked.record.currentEligibility.owner_delegated_shop_candidate_current=false;
     assert.equal(valid(revoked.product,revoked.records),false);
+});
+test('reviewed four-second leash demonstrations survive the storefront leash category', () => {
+    for (const folder of ['rw_ridgeline_leash_26', 'rw_frontrangeflex_leash_26']) {
+        const f = fixture(folder);
+        f.product.subcategory = 'leash';
+        assert.equal(f.record.videoQuality, 'approved_product_interaction');
+        assert.equal(f.record.videoZiewcraftIdentity.seconds, 4);
+        assert.equal(valid(f.product, f.records), true, folder);
+        assert.equal(safeCatalogHoverVideo(f.product), f.record.video, folder);
+        f.record.delegatedReview.server_technical_gate_passed = false;
+        assert.equal(valid(f.product, f.records), false, 'leash classification cannot waive technical QA');
+    }
+    const worn = fixture('rw_jsk_1000001172');
+    worn.product.subcategory = 'leash';
+    assert.equal(worn.record.videoZiewcraftIdentity.seconds, 8);
+    assert.equal(valid(worn.product, worn.records), true);
+    worn.record.videoZiewcraftIdentity.seconds = 4;
+    sync(worn);
+    assert.equal(valid(worn.product, worn.records), false, 'existing dog-worn leash video still requires both segments');
 });
 test('actual owner-delegated AI receipts activate exact product video bytes without a human claim', () => {
     assert.ok(Object.keys(records).length);

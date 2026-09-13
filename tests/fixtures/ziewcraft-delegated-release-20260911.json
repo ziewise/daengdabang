@@ -338,5 +338,17 @@
   "rs_v2_neon_ltd": {
     "productId": "p_82",
     "sha256": "852e288f83b27ffd8c5fe90c7892d2b719fee90bc633aec92811b3a152f75d93"
+  },
+  "rw_ridgeline_leash_26": {
+    "productId": "p_5",
+    "sha256": "3496ded75b4368cbe0753deb0df6fcb7b59981fbb5235aaa5bc69ac84e61aa58"
+  },
+  "rw_frontrangeflex_leash_26": {
+    "productId": "p_31",
+    "sha256": "80e8b3e8fe3a6068f846d741ee1f269edcfb230c2a06e84ecff673e1e41f320d"
+  },
+  "rs_v2_pikepurple": {
+    "productId": "p_89",
+    "sha256": "6dec635a937d5b564bd8c00c95ef1132ca8488f499525c3d3075bc878d80f192"
   }
 }
