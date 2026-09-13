@@ -2336,11 +2336,56 @@
     "videoJobId": "hover-static72-20260903-ab6571c2a1c6"
   },
   "rw_everest_coat": {
-    "video": "/images/products/catalog/rw_everest_coat/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_everest_coat/videos/73f1f905dbfb1b4683fa2d7a79fe236fd29bff6886224c8f7398a6513055eeea/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "8af14862e19b04a2267d3e95b8434679",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8af14862e19b04a2267d3e95b8434679",
+      "reviewId": "ae854c379f1234526319cf8d1fc79a07",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "73f1f905dbfb1b4683fa2d7a79fe236fd29bff6886224c8f7398a6513055eeea",
+      "seconds": 8,
+      "source": {
+        "no": 105,
+        "folder": "rw_everest_coat",
+        "name": "러프웨어 마운틴 에베레스트 도그 코트",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001218/image/detail/1000001218_detail_064.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001218",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001218/image/detail/1000001218_detail_155.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001218/image/detail/1000001218_detail_28.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001218/image/detail/1000001218_detail_394.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001218/image/detail/1000001218_detail_467.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240923/7ac29c314e93336b192e21c3cd8d9c2f_152315.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240923/f98dbec7a2f1c6b42360925eb1ea622c_152344.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240923/a4cf551287e43dc4dc385355b03f0fff_152405.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8ca244ca3a03bbfecd1b451b8ede4eb3",
+        "sha256": "73f1f905dbfb1b4683fa2d7a79fe236fd29bff6886224c8f7398a6513055eeea"
+      },
+      "scopeId": "0a713214a6ee81b00e971b7eb3f78f814aadf6f3e4fc75894fc79e7f78e55f9b",
+      "scopeRegistrationSha256": "b744bad17f44d6a251c68636452e85f5756010afdd6f4798601be23d862fc0bc",
+      "aiEvidenceSha256": "09c9f8c4e0178106edef973c512b7a91bff221bbd4f49efeee9f430076d5cb37",
+      "receiptSha256": "c03a585683f730604c45a82b723ccd8e80b7c199016b2095fb093602a455e2fb",
+      "eligibilitySha256": "61fbcd5bd88c872289ed4511df34611d1fc486e3c57fea4efa05c0323f229f7d",
+      "evidenceManifestSha256": "c4c5937225098018d4d5bf5ad05cf867488ef63c1eaa7330cdae6d1a1851faa9"
+    },
+    "videoReviewSha256": "a309ac3b6eb72a1a2ec943212d7a073d6419cc589be1bdaac5e74f99bd1629bd",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-83ae8d145275"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c50f4a38d3d3710c9238e8e27eb2f2d21084ceda"
   },
   "rw_everest_coat_25fw": null,
   "rw_floatcoat_lifejacket": null,
@@ -5701,11 +5746,53 @@
     "videoJobId": "hover-photo-20260903-3d1ef27ef8fe"
   },
   "yora_wet_beetrootswede_390g": {
-    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/hover.mp4",
+    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "144dfd2a8ca97f62df153b9abf68f821",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "144dfd2a8ca97f62df153b9abf68f821",
+      "reviewId": "1ce4657b0ce6cf5fa53c8c9236c501ac",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4",
+      "seconds": 4,
+      "source": {
+        "no": 132,
+        "folder": "yora_wet_beetrootswede_390g",
+        "name": "요라 비트루트 & 스웨드 습식사료 390g 주식급여 동애등에 인섹트 반려견 습식사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_wet_beetrootswede_390g/yora_wet_beetrootswede_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182278572",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/official-visual-01.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/2.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/3.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/4.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3fa1536b1a17489d8accc75501e2ce54",
+        "sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4"
+      },
+      "scopeId": "0fc4004aeef20116fbf4e452bda25abde6d51bbd135672b7b29a4d321c89a4f4",
+      "scopeRegistrationSha256": "95d1f92fdb7143e9115a069eb2198dfe692d2f8c85ba774e5fe9d8f81038adbd",
+      "aiEvidenceSha256": "df5aa484d28097ae0571a448b0d66761a43a9103e4509e940217e4995d0b826e",
+      "receiptSha256": "a6266067ce5f9836638ff29bf32bfdcb0da9a15780a918de9eafae740a1237e0",
+      "eligibilitySha256": "18079004f9644e3497049aee555f0bf98847634bb0edd2cbf22108599e2ccc22",
+      "evidenceManifestSha256": "09e75b23664818efa283c3319fefa5cd5669834fa7bf2c22a9b2d36cc24eec6c"
+    },
+    "videoReviewSha256": "45281b6ced036051a9c3b8fa6d912be629f2ed96a981fc18ef6ee26efa235f97",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-b74fb1d05369"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c50f4a38d3d3710c9238e8e27eb2f2d21084ceda"
   },
   "yora_wet_carrotpotato_390g": {
     "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/hover.mp4",

@@ -269,7 +269,7 @@ test("catalog re-review preserves the withheld set alongside separately approved
         "yora_wet_beetrootswede_390g",
         "aff_pad_l_20_1",
         "rs_v2_lenslab",
-    ]) {
+    ].filter(folder => !Object.hasOwn(newlyApproved, folder))) {
         const quarantined = applyReviewedHoverOverride(base(folder));
         assert.equal(quarantined.videoProvider, undefined);
         assert.equal(quarantined.videoQuality, undefined);

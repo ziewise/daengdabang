@@ -450,5 +450,13 @@
   "yora_activebar_35g_12": {
     "productId": "p_133",
     "sha256": "a87b14f5641b0efa345d7398ddfa2434a2285f6c0ea05d8c5a93e01029cae9b4"
+  },
+  "rw_everest_coat": {
+    "productId": "p_105",
+    "sha256": "73f1f905dbfb1b4683fa2d7a79fe236fd29bff6886224c8f7398a6513055eeea"
+  },
+  "yora_wet_beetrootswede_390g": {
+    "productId": "p_132",
+    "sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4"
   }
 }

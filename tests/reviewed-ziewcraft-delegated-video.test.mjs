@@ -69,6 +69,17 @@ test('actual owner-delegated AI receipts activate exact product video bytes with
     }
 });
 
+test('the reviewed Everest bed retains its complete dog-using video and exact review scope', () => {
+    const f = fixture('rw_everest_coat');
+    f.product.subcategory = 'bed';
+    assert.equal(f.record.videoQuality, 'approved_dog_using');
+    assert.equal(f.record.videoZiewcraftIdentity.seconds, 8);
+    assert.equal(valid(f.product, f.records), true);
+    f.record.videoZiewcraftIdentity.seconds = 4;
+    sync(f);
+    assert.equal(valid(f.product, f.records), false, 'a bed classification cannot waive the registered eight-second review');
+});
+
 test('reviewed replacement-lens demonstrations survive the storefront goggles category', () => {
     const f = fixture('rs_lens_original');
     f.product.subcategory = 'goggles';
