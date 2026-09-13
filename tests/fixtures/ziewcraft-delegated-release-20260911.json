@@ -394,5 +394,13 @@
   "rw_jsk_1000001346": {
     "productId": "p_473",
     "sha256": "2247c8fc99ea7c6343f52e4aa021905798b43d458f56a562cef5212c11883f7e"
+  },
+  "rw_leash_frontrange_short_24": {
+    "productId": "p_146",
+    "sha256": "a8436baff31003540ae6233432681aa0ba8e6e1563db82457c6b1e574f3d05e4"
+  },
+  "rw_leash_cragex_23": {
+    "productId": "p_149",
+    "sha256": "abf8c5a2a3e88362302e34061ec3e5f069c34f246f6dc06b15db858c8ff7d71c"
   }
 }

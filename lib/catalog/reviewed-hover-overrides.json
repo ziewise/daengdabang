@@ -3046,11 +3046,114 @@
   },
   "rw_leash_crag": null,
   "rw_leash_crag_23": null,
-  "rw_leash_cragex_23": null,
+  "rw_leash_cragex_23": {
+    "video": "/images/products/catalog/rw_leash_cragex_23/videos/abf8c5a2a3e88362302e34061ec3e5f069c34f246f6dc06b15db858c8ff7d71c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "60f7e32358cb56c6e9f87664be73b9b7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "60f7e32358cb56c6e9f87664be73b9b7",
+      "reviewId": "4a6dd54be2924374dfbadfa5f1d11750",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "abf8c5a2a3e88362302e34061ec3e5f069c34f246f6dc06b15db858c8ff7d71c",
+      "seconds": 4,
+      "source": {
+        "no": 149,
+        "folder": "rw_leash_cragex_23",
+        "name": "러프웨어 크래그 이엑스 리드줄",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_40.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001170",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_77.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_93.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_34.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_87.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_9.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001170/image/detail/1000001170_detail_28.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240131/Crag-EX-Leash1-2024_011117.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240131/Crag-EX-Leash2-2024_011137.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240131/Crag-EX-Leash3-2024_011157.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231012/0a51ab2206cd3e51d0aa5da7b5f470c2_054536.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "34818296be191a6e22e6a1ed48683fe2",
+        "sha256": "abf8c5a2a3e88362302e34061ec3e5f069c34f246f6dc06b15db858c8ff7d71c"
+      },
+      "scopeId": "6b44375146ae29e7a945799cbc86ef0dcab72113007fa2ff9a0894974302afd1",
+      "scopeRegistrationSha256": "7ef46c6979ef676b29e159afb035a988c96eca2a43a6a3a62c2d82cb4993800c",
+      "aiEvidenceSha256": "8e10e80f8827561c78f3bf611eadff170324818d9ac5b3e4d6469fc09016d2ea",
+      "receiptSha256": "419aadfa6fd38ab9a6ff6efc95c1c116093609759729c67b5bf7ff67d437bacf",
+      "eligibilitySha256": "aabb243c2a7a0ec83f94db79ae1ddb5f1cc7c12ee4f291324f097cdacc0d6649",
+      "evidenceManifestSha256": "720d9ed9dab84414330bf1a16f85764e99b196cec7c001d72d6ee6aa7e741c88"
+    },
+    "videoReviewSha256": "e02518d02f172f73014b67f4b0c355e66fbb465ac10977939da00947c516f1a9",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1618ff8b694f164c4b0a7a9bcebd20da473894ea"
+  },
   "rw_leash_flagline_24": null,
   "rw_leash_flatout": null,
   "rw_leash_frontrange_24": null,
-  "rw_leash_frontrange_short_24": null,
+  "rw_leash_frontrange_short_24": {
+    "video": "/images/products/catalog/rw_leash_frontrange_short_24/videos/a8436baff31003540ae6233432681aa0ba8e6e1563db82457c6b1e574f3d05e4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "57f463f7a511404ff8b3e8e0551ff27d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "57f463f7a511404ff8b3e8e0551ff27d",
+      "reviewId": "ba0a87d70d510b1979268dc5e1e43a66",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a8436baff31003540ae6233432681aa0ba8e6e1563db82457c6b1e574f3d05e4",
+      "seconds": 4,
+      "source": {
+        "no": 146,
+        "folder": "rw_leash_frontrange_short_24",
+        "name": "러프웨어 프런트 레인지 숏 리드줄 (2024SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001183/image/detail/1000001183_detail_018.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001183",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001183/image/detail/1000001183_detail_189.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001183/image/detail/1000001183_detail_28.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/Front-Range-Short-Leash1_033329.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/Front-Range-Short-Leash2_033329.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/b678abcd171f3744bdf6b1a636cfcb38_033330.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8f4a45f499c5ada4417bcbd967c61b15",
+        "sha256": "a8436baff31003540ae6233432681aa0ba8e6e1563db82457c6b1e574f3d05e4"
+      },
+      "scopeId": "a732601546ab13b62031dbfd6c6b1f0b532f9e146ed16fd396e35725a914c0e1",
+      "scopeRegistrationSha256": "193102ecc3f46f6cd691b0b697e02213a24a3132e9f82b3f6ba04545b22759c6",
+      "aiEvidenceSha256": "a715fecbe54099e58cd6b6384b9d6b620e2f6eeb43ac8ed4e98254eb9f523671",
+      "receiptSha256": "0d0bd7b43a6df0034d9939e5177613b1c18a0df2d34f9de85ed620db3902b1df",
+      "eligibilitySha256": "2d1657d015cc22590a52233471df27a9498cd8857fca6602564f7427ac9ed32e",
+      "evidenceManifestSha256": "1448c3e1115658cf3d16d52d3d278ae26b10070fd1d203855e26517bb8ec4932"
+    },
+    "videoReviewSha256": "320f7050963cb71fa127876e740ca3da7a88796e66515f924647d3c1cf87614d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1618ff8b694f164c4b0a7a9bcebd20da473894ea"
+  },
   "rw_leash_hiandlight_24": null,
   "rw_leash_justacinch": null,
   "rw_leash_nota": {
