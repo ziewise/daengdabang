@@ -350,5 +350,13 @@
   "rs_v2_pikepurple": {
     "productId": "p_89",
     "sha256": "6dec635a937d5b564bd8c00c95ef1132ca8488f499525c3d3075bc878d80f192"
+  },
+  "mb_vegemix_100g_4": {
+    "productId": "p_150",
+    "sha256": "d122b0c8148f11dd48efe9fa92048e780267fd77b79f59e087302c841f204d1a"
+  },
+  "pdh_slowfeeder_paw": {
+    "productId": "p_16",
+    "sha256": "c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06"
   }
 }

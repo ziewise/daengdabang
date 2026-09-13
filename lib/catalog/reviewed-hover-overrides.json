@@ -567,11 +567,53 @@
     "videoJobId": "hover-static72-20260903-e52e8fe26532"
   },
   "mb_vegemix_100g_4": {
-    "video": "/images/products/catalog/mb_vegemix_100g_4/videos/hover.mp4",
+    "video": "/images/products/catalog/mb_vegemix_100g_4/videos/d122b0c8148f11dd48efe9fa92048e780267fd77b79f59e087302c841f204d1a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "951ad7eb31b5988d4ff3e47949d24b91",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "951ad7eb31b5988d4ff3e47949d24b91",
+      "reviewId": "2789f2ede5b46c3cb39e3b39f7f05136",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d122b0c8148f11dd48efe9fa92048e780267fd77b79f59e087302c841f204d1a",
+      "seconds": 4,
+      "source": {
+        "no": 150,
+        "folder": "mb_vegemix_100g_4",
+        "name": "미티본 베지믹스 100g x 4개",
+        "brandEn": "Mittyborn",
+        "isFood": true,
+        "image": "/images/products/catalog/mb_vegemix_100g_4/mb_vegemix_100g_4.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9241580514",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/mb_vegemix_100g_4/details/2.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/3.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/4.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/5.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f9d8e0fe4c66ef6fc2658831907683b2",
+        "sha256": "d122b0c8148f11dd48efe9fa92048e780267fd77b79f59e087302c841f204d1a"
+      },
+      "scopeId": "e2dd9686a87e2363f52b009d9274f2257ac1ae71bb60fbab8edbaa3371d75ac1",
+      "scopeRegistrationSha256": "238c42b3723f6af48292322044ab8e703d7891d76dd6bb34c629ec3c4af374be",
+      "aiEvidenceSha256": "7e176c7efd18a1f9630806283d0ebbbca35bbd8aa2aba29873b2f727f079a33e",
+      "receiptSha256": "9cb3f6bbe3a87e93e8c307c0a575d9a2ad4dee71c8b186b3e469743e5a078790",
+      "eligibilitySha256": "71873051f4e00c7263f1c95e0da6f10656ba799542b6f2b9d2029ec8201a7b5b",
+      "evidenceManifestSha256": "00a3fa4b0cc7cf7380703bd5a96768e1896d872535c44ba19634bc707a6a8d3a"
+    },
+    "videoReviewSha256": "db2e62d1d2608cd37566373b623f1bd3cfec4ff563f2bc2564f13a1187691b3e",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-f0fcc36dbb12"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e7055df0db6f7fcf12adac0dbbfc530a5a20afa0"
   },
   "mb_vegemix_475g": null,
   "nd_feelgood_c": null,
@@ -602,11 +644,51 @@
   "packt_endeavor_leash_1.5m": null,
   "pdh_lickingmat": null,
   "pdh_slowfeeder_paw": {
-    "video": "/images/products/catalog/pdh_slowfeeder_paw/videos/hover.mp4",
+    "video": "/images/products/catalog/pdh_slowfeeder_paw/videos/c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4221c9a55c9bf44c7a421af9173f1465",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4221c9a55c9bf44c7a421af9173f1465",
+      "reviewId": "4964e83d556a3f812d919577af544ffc",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06",
+      "seconds": 4,
+      "source": {
+        "no": 16,
+        "folder": "pdh_slowfeeder_paw",
+        "name": "펫드림하우스 슬로우피더 PAW",
+        "brandEn": "FitDreamHouse",
+        "isFood": false,
+        "image": "/images/products/catalog/pdh_slowfeeder_paw/pdh_slowfeeder_paw.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6822120998",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/pdh_slowfeeder_paw/details/2.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw/details/3.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "59222f1e6b1bd61e8bb33869c07cee4c",
+        "sha256": "c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06"
+      },
+      "scopeId": "fb3aab02224a2d9b7a82a33d6fbb57eb1a12bc4e5a3bfc94fed2626175928889",
+      "scopeRegistrationSha256": "b90ed91ec5c2ab2a540a636efad69128ab1f79785b177f6ab8b75d146e28a13a",
+      "aiEvidenceSha256": "278c20493ae5df27ec9ab71f20686ba9c6f7b61398c169e884dce3dd99ed9841",
+      "receiptSha256": "db6b7e67b7b244a5ea88dd1635b096656fbe8335fc841531d8f6d94537e61cdd",
+      "eligibilitySha256": "f5bbcec7507b486e726e16fd9077a44de7f6b73bfc3d65f880cccd1dacbad07e",
+      "evidenceManifestSha256": "b76acbe83bfc6a09452c1f29f0839f7c31e16f8d7bf84d184e2d11fe6fa8f839"
+    },
+    "videoReviewSha256": "828d01cba6f33eaa1152dddf2749c4f2f0b1009e8bbf30873e4f401a998d40c0",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-5a5d31f5200f"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e7055df0db6f7fcf12adac0dbbfc530a5a20afa0"
   },
   "pdh_slowfeeder_paw_2in1": null,
   "pdh_slowfeeder_paw_mini": {
