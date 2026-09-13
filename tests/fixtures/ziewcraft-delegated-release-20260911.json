@@ -330,5 +330,13 @@
   "rs_v2_gallatingray": {
     "productId": "p_91",
     "sha256": "8492e9dc69f27c8e720b59a57e5ea05c76364c219258766ba5e7cb2b77ca3f21"
+  },
+  "rw_jsk_1000001172": {
+    "productId": "p_429",
+    "sha256": "10af1f4848f0e8ca68ae42fbcd1fa4e13102de459d0eecc27c78e4617944c630"
+  },
+  "rs_v2_neon_ltd": {
+    "productId": "p_82",
+    "sha256": "852e288f83b27ffd8c5fe90c7892d2b719fee90bc633aec92811b3a152f75d93"
   }
 }
