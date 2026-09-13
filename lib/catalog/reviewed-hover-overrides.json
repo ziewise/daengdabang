@@ -5379,11 +5379,57 @@
     "videoJobId": "hover-photo-20260903-34f3c9848102"
   },
   "yora_activebar_35g_12": {
-    "video": "/images/products/catalog/yora_activebar_35g_12/videos/hover.mp4",
+    "video": "/images/products/catalog/yora_activebar_35g_12/videos/a87b14f5641b0efa345d7398ddfa2434a2285f6c0ea05d8c5a93e01029cae9b4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "4abf07e7a5c67a12b0d553d6fada9610",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4abf07e7a5c67a12b0d553d6fada9610",
+      "reviewId": "6adc864e11c333b2981f31b0b6a515fb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a87b14f5641b0efa345d7398ddfa2434a2285f6c0ea05d8c5a93e01029cae9b4",
+      "seconds": 4,
+      "source": {
+        "no": 133,
+        "folder": "yora_activebar_35g_12",
+        "name": "요라 액티브바 곤충단백질 고단백질 프로틴바 35g 12개입 1박스",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_activebar_35g_12/yora_activebar_35g_12.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182243990",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_activebar_35g_12/details/2.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/3.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/4.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/5.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/6.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/7.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/8.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/9.webp",
+          "/images/products/catalog/yora_activebar_35g_12/details/10.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e76a8e6c2026381f78adc097a7d99754",
+        "sha256": "a87b14f5641b0efa345d7398ddfa2434a2285f6c0ea05d8c5a93e01029cae9b4"
+      },
+      "scopeId": "12143e956ddb07b7960512db8d6f95b9e06701d31fd5e4aeb20e176f22140503",
+      "scopeRegistrationSha256": "51d04821c5d4b5debc7b3a3875a82605ba3418ac6994f5c26216673a90a1629e",
+      "aiEvidenceSha256": "3e388523474da274877ba4e27778457579b4b72992c5b04f74e9502c8ef4b8ef",
+      "receiptSha256": "bd4c40e77ee6a20cf706c1988631af6b5e559aa7c089482244e2d51ef6555ed1",
+      "eligibilitySha256": "d233700d19a83973c45130bb98ad20d98ed9997783634d46975ef602ee941c9e",
+      "evidenceManifestSha256": "49603bce8024aed6b14abb340bf36d5e5789367bbb2774d39a239cad51893ffa"
+    },
+    "videoReviewSha256": "245e962aec6e05a7af46de0993aeeeea72fdeec1c452c4008ab8915be9e6864a",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-f71c805bea32"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1ccb21b9b63eb26ee4dc3a7b1a9e8f3374488c89"
   },
   "yora_allbreed_2.5kg": null,
   "yora_allbreed_6kg": null,

@@ -446,5 +446,9 @@
   "perity_aloe_shampoo": {
     "productId": "p_137",
     "sha256": "7206d7c8ed6056d87b469c74688cb49f6e6cc87138be96a3e7d49703315b4256"
+  },
+  "yora_activebar_35g_12": {
+    "productId": "p_133",
+    "sha256": "a87b14f5641b0efa345d7398ddfa2434a2285f6c0ea05d8c5a93e01029cae9b4"
   }
 }
