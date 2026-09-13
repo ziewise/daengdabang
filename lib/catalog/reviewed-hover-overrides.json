@@ -9177,5 +9177,64 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "537abee7f37d5bb0de9d810c1aef059740f5cb2f"
+  },
+  "rs_jsk_1000001106": {
+    "video": "/images/products/catalog/rs_jsk_1000001106/videos/b903a4c0c4b3359968017c75abf99d62b6576945f9f01b693f6159bb063ff6c7/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "57351a4090323c83945ceff2f97c2f05",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "57351a4090323c83945ceff2f97c2f05",
+      "reviewId": "cee41c71fbc974dcc3375e7f41325bab",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b903a4c0c4b3359968017c75abf99d62b6576945f9f01b693f6159bb063ff6c7",
+      "seconds": 8,
+      "source": {
+        "no": 415,
+        "folder": "rs_jsk_1000001106",
+        "name": "렉스스펙스 V2 카모 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_042.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001106",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_167.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_28.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_386.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_446.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_516.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_642.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_787.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_844.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/V2-Camo-2023_024100.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/45bf00fc8a88712b45e75cce0fba8675_024101.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/7c97857fd082488519d861463f37a6a9_024101.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_053730.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_053741.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/ce50939b7267aece200a424b5dac05ea_024103.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "11abe63e7038eb3559e3177dd41f59c6",
+        "sha256": "b903a4c0c4b3359968017c75abf99d62b6576945f9f01b693f6159bb063ff6c7"
+      },
+      "scopeId": "dce37d5a8f51ae00bc0a9c5955dec554f11d3cab6990b733e2f75f04b6648eaf",
+      "scopeRegistrationSha256": "ed16e1c49b6884940e4cceeaa9ea41a39cfe74aef5f6a2f3775582eee612d221",
+      "aiEvidenceSha256": "e806b18f073a8a137a70e2f826b826a6ea6fb59f76718dda7e142675fc2e0110",
+      "receiptSha256": "999284f803c1e6873815b0e9943a27458c18579af4c19e19a19e5f8f31821f2c",
+      "eligibilitySha256": "df6b48a0c8586e3ec5630863895d1b4cbdad10ba313a96eb7974b54ed832168a",
+      "evidenceManifestSha256": "b1f8a6d440310d7feb358a73ede6404f4ab271648194073426792ba770ca99bd"
+    },
+    "videoReviewSha256": "89c5a20b6cc7b070caa1c02b62945c7d3d746c491987681a0b8a8a4d6eea831e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "3956daf25ece1872f69a144fd2ba9ab56d449bc8"
   }
 }

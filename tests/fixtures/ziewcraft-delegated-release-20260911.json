@@ -458,5 +458,9 @@
   "yora_wet_beetrootswede_390g": {
     "productId": "p_132",
     "sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4"
+  },
+  "rs_jsk_1000001106": {
+    "productId": "p_415",
+    "sha256": "b903a4c0c4b3359968017c75abf99d62b6576945f9f01b693f6159bb063ff6c7"
   }
 }
