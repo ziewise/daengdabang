@@ -74,7 +74,61 @@
   "canagan_dog_highland_2kg": null,
   "canagan_dog_highland_6kg": null,
   "canagan_dog_salmon_6kg": null,
-  "dangcream_strawberry": null,
+  "dangcream_strawberry": {
+    "video": "/images/products/catalog/dangcream_strawberry/videos/0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "b13f27816f6956675a757cea87e86643",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b13f27816f6956675a757cea87e86643",
+      "reviewId": "efc4796bace44a885ceac74497df6af3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076",
+      "seconds": 4,
+      "source": {
+        "no": 138,
+        "folder": "dangcream_strawberry",
+        "name": "댕스크림 강아지 아이스크림 수제 반려견 애견 여름 간식 딸기맛",
+        "brandEn": "Daengscream",
+        "isFood": true,
+        "image": "/images/products/catalog/dangcream_strawberry/dangcream_strawberry.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10148973418",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/dangcream_strawberry/details/2.webp",
+          "/images/products/catalog/dangcream_strawberry/details/3.webp",
+          "/images/products/catalog/dangcream_strawberry/details/4.webp",
+          "/images/products/catalog/dangcream_strawberry/details/5.webp",
+          "/images/products/catalog/dangcream_strawberry/details/6.webp",
+          "/images/products/catalog/dangcream_strawberry/details/7.webp",
+          "/images/products/catalog/dangcream_strawberry/details/8.webp",
+          "/images/products/catalog/dangcream_strawberry/details/9.webp",
+          "/images/products/catalog/dangcream_strawberry/details/10.webp",
+          "/images/products/catalog/dangcream_strawberry/details/11.webp",
+          "/images/products/catalog/dangcream_strawberry/details/12.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ad4eabcbae2d01d81fe0fa584e68c908",
+        "sha256": "0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076"
+      },
+      "scopeId": "53adfa3842248fd9302104bafda9711bcce1e3a7891682e7fbd4bb565d613720",
+      "scopeRegistrationSha256": "44d565997c7d25826024035e0d91a9b7747d58620ab9d84c0b162acbdefe9118",
+      "aiEvidenceSha256": "3f49ab9269f1dac7378c27874286354f525c551a7926ca6a0fc3e102e581710f",
+      "receiptSha256": "a348a1a7c01989a425b6c5699783bac15080286b933951efa63c443579041507",
+      "eligibilitySha256": "a55944b8f8599a0e36826f3fd2fb739743bcfe5e957d42f9c1b5e2de8b177596",
+      "evidenceManifestSha256": "9a776c1126f6607a7f5bddfe84dc1930c4700b892b1952056a4f59754ede2cc7"
+    },
+    "videoReviewSha256": "9f4cf4cbdd3ba277d38fea34577f3ced4ecb0e1ebd56a7751d7b489b0c252eb7",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06389efcf9dd78f188bd1fb37cd29cebe340dcb6"
+  },
   "fumble_bath": {
     "video": "/images/products/catalog/fumble_bath/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -3166,7 +3220,60 @@
   "rw_leash_nota_long": null,
   "rw_leash_roamer": null,
   "rw_leash_roamer_long": null,
-  "rw_leash_switchback_24": null,
+  "rw_leash_switchback_24": {
+    "video": "/images/products/catalog/rw_leash_switchback_24/videos/395276626d4e597850763f98acfc6cfd0145d1b9211838f6044aca76431a9444/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "236ab3594a9e087f62ac16d7fe51ddcd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "236ab3594a9e087f62ac16d7fe51ddcd",
+      "reviewId": "462a12ecd6916a7d6a0bd7ff27e512ea",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "395276626d4e597850763f98acfc6cfd0145d1b9211838f6044aca76431a9444",
+      "seconds": 4,
+      "source": {
+        "no": 144,
+        "folder": "rw_leash_switchback_24",
+        "name": "러프웨어 스위치백 다기능 리드줄",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_038.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001181",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_151.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_264.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_389.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_483.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_515.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/4323ee042367e283bd7048fe629ed686.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/14ed37bb797d149ae628f37492e01548.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/d5d9b0cb42ad13cf09ae981670584c8d.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/f378aa9e56b6f7760e4dc18a3f51340b.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "1cc83766551dec1ada0c701de50195e4",
+        "sha256": "395276626d4e597850763f98acfc6cfd0145d1b9211838f6044aca76431a9444"
+      },
+      "scopeId": "4993b5f21dec15f01e687383dd3c33b6d96196124bca1ab4d6552076a0ef1ca7",
+      "scopeRegistrationSha256": "2c19b332713cd3558cfba544f053b2659df694e3ee5b78a268cae592463c8ba1",
+      "aiEvidenceSha256": "ef3f2d80cf3b6d96a72890e1bb4740c09025b50b34897856ab4ea14c4212b21e",
+      "receiptSha256": "81485d813cb17bfdfc14596b928b28cdc18be654182d62b4ddd97d64f59ec4b0",
+      "eligibilitySha256": "83e1cdec11cb782f228cbbd6ef120d61c9b0e1343b181ab4683f50b275b8f12a",
+      "evidenceManifestSha256": "9b139b89f46224f4371b97d9a233df26d41bdebb58a878486f99fcdbad3564aa"
+    },
+    "videoReviewSha256": "3bf08443b49ef91c695498d029dbd3641be07fb24ed138b3e5a93d249ea42133",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06389efcf9dd78f188bd1fb37cd29cebe340dcb6"
+  },
   "rw_leash_trailrunner_23": null,
   "rw_loadup_harness_24": {
     "video": "/images/products/catalog/rw_loadup_harness_24/videos/2199fc002064244e6361c312c3795ddf8a2ca160ad15d926c2517727b4367ba1/hover.mp4",
@@ -5337,7 +5444,58 @@
   },
   "yora_puppy_12kg": null,
   "yora_puppy_2.5kg": null,
-  "yora_reward_treat": null,
+  "yora_reward_treat": {
+    "video": "/images/products/catalog/yora_reward_treat/videos/a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "e837ec195bb6b86f3f29b5f534379d0b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e837ec195bb6b86f3f29b5f534379d0b",
+      "reviewId": "d7c9be99781670f2f716e500bfe1ad7e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3",
+      "seconds": 4,
+      "source": {
+        "no": 134,
+        "folder": "yora_reward_treat",
+        "name": "요라 리워드 반려견 인섹트간식 100g 애플&캐롯, 피넛버터&바나나",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_reward_treat/yora_reward_treat.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182213506",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_reward_treat/details/2.webp",
+          "/images/products/catalog/yora_reward_treat/details/3.webp",
+          "/images/products/catalog/yora_reward_treat/details/4.webp",
+          "/images/products/catalog/yora_reward_treat/details/5.webp",
+          "/images/products/catalog/yora_reward_treat/details/6.webp",
+          "/images/products/catalog/yora_reward_treat/details/7.webp",
+          "/images/products/catalog/yora_reward_treat/details/8.webp",
+          "/images/products/catalog/yora_reward_treat/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "28b0cca442f815b40f470d6d28a6518e",
+        "sha256": "a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3"
+      },
+      "scopeId": "5bedcdb490e404019bc830489169bc55ccbce2603b475a6747605a119ed2bbd8",
+      "scopeRegistrationSha256": "7699767e151c1fc99bb461869a27ad7c5a4e8c430bafb0306004d7302fb1e7ce",
+      "aiEvidenceSha256": "775063cb50b507b6081c58c24eb38be3524db58fc7944037fb540b255ad6d2f0",
+      "receiptSha256": "1c21af6b3de6d81810f1ae85999a68a0f601fb63a98ee54d1ec73e745c85513b",
+      "eligibilitySha256": "19297a3e816e9e5df63d97e651cca5394c496f49ee94c56982eddca316432ad2",
+      "evidenceManifestSha256": "64616e56b27f5cc2d408fbd3dd01ac711f68b79729eca6a172124e9e07e827df"
+    },
+    "videoReviewSha256": "7c2de232b6dff75dd687904296477f21a2b10a9d9373b9d5a06603a372424efa",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06389efcf9dd78f188bd1fb37cd29cebe340dcb6"
+  },
   "yora_smallbreed_2.5kg": {
     "video": "/images/products/catalog/yora_smallbreed_2.5kg/videos/52e2dd21323cb73de714603e8bc7b8c8581b3eababc9f82b222c24c61784343e/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -8656,5 +8814,52 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "20741959ebbadc30384670260af372145ac82250"
+  },
+  "yora_lightsenior_2.5kg": {
+    "video": "/images/products/catalog/yora_lightsenior_2.5kg/videos/a280299c26500b18161cfc5c1c79ef04aab906b34be1b317dc88715d2541ea66/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "4a3ae77d8d297245631c8d2f90fcb7c9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4a3ae77d8d297245631c8d2f90fcb7c9",
+      "reviewId": "43c61481195f8bba28177ff8963df590",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a280299c26500b18161cfc5c1c79ef04aab906b34be1b317dc88715d2541ea66",
+      "seconds": 4,
+      "source": {
+        "no": 171,
+        "folder": "yora_lightsenior_2.5kg",
+        "name": "요라 라이트 시니어 2.5kg 저칼로리 다이어트",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_lightsenior_2.5kg/yora_lightsenior_2.5kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923162287",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_lightsenior_2.5kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_lightsenior_2.5kg/details/2.webp",
+          "/images/products/catalog/yora_lightsenior_2.5kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b559eb08ebcb217e0763853c46edbd64",
+        "sha256": "a280299c26500b18161cfc5c1c79ef04aab906b34be1b317dc88715d2541ea66"
+      },
+      "scopeId": "1f22753af0eb1e2267436ea781662df697a5666b27a387d1e225e706b4edb369",
+      "scopeRegistrationSha256": "634f5c64e0ff25c91b74bbd1da32158776c8f89bfc34b244e7d9d2eaad2811d9",
+      "aiEvidenceSha256": "7f775072389f246f2bb7b0555dfd55f44a1870b3075d5f9ac4e9f4041776b156",
+      "receiptSha256": "daf5aa4091f2b9b37dca7b36ab130889c40091f093ffeaaf8ee8684b8297bbb5",
+      "eligibilitySha256": "13a4d7e16b2c4356833ac1d85fcf4d8abcbfc74e38465134d52470fe1463f32c",
+      "evidenceManifestSha256": "d60fcb74892064888af0d323ba5125d54d406df3fbad96195cb888c3721ec7da"
+    },
+    "videoReviewSha256": "86191fd39e9772ed2fd1a8c0e973dda0e9a8c2ba382c99deb32d90691ff99537",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06389efcf9dd78f188bd1fb37cd29cebe340dcb6"
   }
 }

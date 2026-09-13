@@ -414,5 +414,21 @@
   "yora_lightsenior_6kg": {
     "productId": "p_170",
     "sha256": "31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be"
+  },
+  "rw_leash_switchback_24": {
+    "productId": "p_144",
+    "sha256": "395276626d4e597850763f98acfc6cfd0145d1b9211838f6044aca76431a9444"
+  },
+  "yora_lightsenior_2.5kg": {
+    "productId": "p_171",
+    "sha256": "a280299c26500b18161cfc5c1c79ef04aab906b34be1b317dc88715d2541ea66"
+  },
+  "dangcream_strawberry": {
+    "productId": "p_138",
+    "sha256": "0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076"
+  },
+  "yora_reward_treat": {
+    "productId": "p_134",
+    "sha256": "a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3"
   }
 }
