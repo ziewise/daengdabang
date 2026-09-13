@@ -462,5 +462,13 @@
   "rs_jsk_1000001106": {
     "productId": "p_415",
     "sha256": "b903a4c0c4b3359968017c75abf99d62b6576945f9f01b693f6159bb063ff6c7"
+  },
+  "sk_ft_working26_15kg": {
+    "productId": "p_180",
+    "sha256": "084552f70142980fc41a3cb9cec3e3aa18220a517fb8b0c8fe3e6d8bf6932b7d"
+  },
+  "sk_ft_maintenance_15kg": {
+    "productId": "p_183",
+    "sha256": "ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49"
   }
 }

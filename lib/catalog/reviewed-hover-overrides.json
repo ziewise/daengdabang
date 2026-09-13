@@ -4491,7 +4491,52 @@
   "rw_webmaster_harness": null,
   "sk_ft_chicken_pate_390g": null,
   "sk_ft_chickenrice_15kg": null,
-  "sk_ft_maintenance_15kg": null,
+  "sk_ft_maintenance_15kg": {
+    "video": "/images/products/catalog/sk_ft_maintenance_15kg/videos/ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "6c1e642797e88c519404232f5a064e20",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6c1e642797e88c519404232f5a064e20",
+      "reviewId": "65e4577ab15fe850443187328986cef9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49",
+      "seconds": 4,
+      "source": {
+        "no": 183,
+        "folder": "sk_ft_maintenance_15kg",
+        "name": "스키너즈 필드 & 트라이얼 메인터넌스 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_maintenance_15kg/sk_ft_maintenance_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922957697",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_maintenance_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_maintenance_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ba0c22554ff1081358dee4d516f004aa",
+        "sha256": "ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49"
+      },
+      "scopeId": "f5fba9ae12a46f4d953ea2daf8a9afcf4def65bd3d623d30fb5fc69784bc6370",
+      "scopeRegistrationSha256": "8fcf6b8d65826e0b921dcb599fba6d841d5c8a2089ddec98c082cfa32d3b2756",
+      "aiEvidenceSha256": "ea928df565a3552deaf6ac3cc785e8913f5c815e69120b9104cdc0707dd728d7",
+      "receiptSha256": "70dc54b610bc03efcfb000238748d2884cb2da6cd9ba4b01b44e23d103b33b4a",
+      "eligibilitySha256": "8820572e4b66ff4c222add0d442e82c5aab6f4354e8d7a8ae8e918430d2b4e0b",
+      "evidenceManifestSha256": "f963696c9e1d6d289f4f230996dbe48c3b49a17b4b9c3d4dd1e53a6baecdd1cd"
+    },
+    "videoReviewSha256": "2c4964bf4c0ec80f46fda15559beb53a4ca14597f9b3640fb1e29db3f485f720",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "7a7643349024bb9cec62200aa9f18259ba6a1b86"
+  },
   "sk_ft_puppy_pate_390g": null,
   "sk_ft_salmon_pate_390g": {
     "video": "/images/products/catalog/sk_ft_salmon_pate_390g/videos/hover.mp4",
@@ -4500,7 +4545,52 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-ddb6248838ab"
   },
-  "sk_ft_working26_15kg": null,
+  "sk_ft_working26_15kg": {
+    "video": "/images/products/catalog/sk_ft_working26_15kg/videos/084552f70142980fc41a3cb9cec3e3aa18220a517fb8b0c8fe3e6d8bf6932b7d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "f43e3955cb0ac7341786ba5b7393f1e7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f43e3955cb0ac7341786ba5b7393f1e7",
+      "reviewId": "33a1e48c1c674312d637f17c05914a9c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "084552f70142980fc41a3cb9cec3e3aa18220a517fb8b0c8fe3e6d8bf6932b7d",
+      "seconds": 4,
+      "source": {
+        "no": 180,
+        "folder": "sk_ft_working26_15kg",
+        "name": "스키너즈 필드 & 트라이얼 워킹26 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_working26_15kg/sk_ft_working26_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922979579",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_working26_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_working26_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b7e0e2252fa4650c2e4bbd2f1a479183",
+        "sha256": "084552f70142980fc41a3cb9cec3e3aa18220a517fb8b0c8fe3e6d8bf6932b7d"
+      },
+      "scopeId": "1a528049f6c91548d0183fa1334eefe5378cc31385577d794c21899b57f86b70",
+      "scopeRegistrationSha256": "2ca55687254fa2f9ae1375a8533fa2ce9629c642de66a44ba95f44f64e53e1c6",
+      "aiEvidenceSha256": "541571252e129adac4aa65b0f501df22ead476dce58c99e8201f52a22d6c481e",
+      "receiptSha256": "442d541ea4051739e8122d96360b28fc6017bd1ba1ad51b5f544bbe2565cbbd8",
+      "eligibilitySha256": "fe6442870623ef1458dcf162ba155f89cc63e0facadecd566a579a6930d52acc",
+      "evidenceManifestSha256": "bdd74a489a50fc2f16eda5fcc36141d151961bf02f1775da88189d2b8d02fe54"
+    },
+    "videoReviewSha256": "3011ed70d1467149871caf8f43ef75bd763208b1669788d9e9308f22bfbbc727",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "7a7643349024bb9cec62200aa9f18259ba6a1b86"
+  },
   "sk_ft_working30_15kg": null,
   "smoothie_rainbow_30ml_3": null,
   "soopa_chew_3set": null,
