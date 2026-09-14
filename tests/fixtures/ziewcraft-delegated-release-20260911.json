@@ -602,5 +602,9 @@
   "iby_backpack_fc2131": {
     "productId": "p_248",
     "sha256": "e2258d21cd7277d12dec62565741008b1f469e845b8eab6eb463b68820d4d948"
+  },
+  "aff_donut_luxury_l": {
+    "productId": "p_268",
+    "sha256": "c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52"
   }
 }

@@ -2,7 +2,55 @@
   "aff_carseat_donutkit_l": null,
   "aff_carseat_sugarwing": null,
   "aff_donut_chewisty_l_pinkgray": null,
-  "aff_donut_luxury_l": null,
+  "aff_donut_luxury_l": {
+    "video": "/images/products/catalog/aff_donut_luxury_l/videos/c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "f0e93517d0946577bd65904fcff097e8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f0e93517d0946577bd65904fcff097e8",
+      "reviewId": "c19ac89c23638f411a5ac723f36c21a9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52",
+      "seconds": 4,
+      "source": {
+        "no": 268,
+        "folder": "aff_donut_luxury_l",
+        "name": "아페토 커버분리형 럭셔리 도넛방석 L - 아이보리 핑크 브라운 그레이",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_luxury_l/aff_donut_luxury_l.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637848507",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_luxury_l/details/2.webp",
+          "/images/products/catalog/aff_donut_luxury_l/details/3.webp",
+          "/images/products/catalog/aff_donut_luxury_l/details/4.webp",
+          "/images/products/catalog/aff_donut_luxury_l/details/5.webp",
+          "/images/products/catalog/aff_donut_luxury_l/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2b5665af0fe053626a448763c3aefb41",
+        "sha256": "c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52"
+      },
+      "scopeId": "23e8bedfbbb4f56b6453d29d78931733602c502c4494e36a4588b0846d4d0b93",
+      "scopeRegistrationSha256": "89464b2f0b2fbc8f8d71aff7c2b1b798055cf8513ed76cd7b32ed3fb113bc700",
+      "aiEvidenceSha256": "6cf7626f9ca699f0a56283b8d65c8fb97270d98a1e5dcc4108f0cd8327df4a6e",
+      "receiptSha256": "095aae5f9c62c5d72cac8cc1e387563bab80cb13d53cbcc5c9f0b98608065e1e",
+      "eligibilitySha256": "3fbe75e03b083f61b8dfae67086353af6736d213d24f6901bf83caa663ac8fbe",
+      "evidenceManifestSha256": "dc7093693bff8e119fa4c57db98eeaa6f768098df7081eb38b2fa090b2109398"
+    },
+    "videoReviewSha256": "276f5e3179ab47a26a8110fd36a48e8b1192a956e4ce4d71e5b67e64a1ae6df7",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "56d83f3963b680162b87b82640a93b9f81c1fb1c"
+  },
   "aff_donut_luxury_m": {
     "video": "/images/products/catalog/aff_donut_luxury_m/videos/660c7741677b18bfac89e2a8680cf2625a0ec74dedeeeab31901824bc3db4882/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
