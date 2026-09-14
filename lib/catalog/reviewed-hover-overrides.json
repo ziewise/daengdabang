@@ -6066,7 +6066,56 @@
   },
   "sk_ft_working30_15kg": null,
   "smoothie_rainbow_30ml_3": null,
-  "soopa_chew_3set": null,
+  "soopa_chew_3set": {
+    "video": "/images/products/catalog/soopa_chew_3set/videos/f0692dd758da32a73f4170dc2b55b4c4972ff7aac4fef89dd91bf36315a4f3ca/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "557ed4be18d994824492d46f1a7cbc68",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "557ed4be18d994824492d46f1a7cbc68",
+      "reviewId": "7fa06ca3956ba8d648af0ed966657ed6",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f0692dd758da32a73f4170dc2b55b4c4972ff7aac4fef89dd91bf36315a4f3ca",
+      "seconds": 4,
+      "source": {
+        "no": 286,
+        "folder": "soopa_chew_3set",
+        "name": "수파 내츄럴 츄 3종 그레인프리 100%식물성 야채간식 비건간식 코코넛 파파야 고구마",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_chew_3set/soopa_chew_3set.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7114196988",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_chew_3set/details/2.webp",
+          "/images/products/catalog/soopa_chew_3set/details/3.webp",
+          "/images/products/catalog/soopa_chew_3set/details/4.webp",
+          "/images/products/catalog/soopa_chew_3set/details/5.webp",
+          "/images/products/catalog/soopa_chew_3set/details/6.webp",
+          "/images/products/catalog/soopa_chew_3set/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "82e5b9d258521d1575b3af1bf0eb7ee2",
+        "sha256": "f0692dd758da32a73f4170dc2b55b4c4972ff7aac4fef89dd91bf36315a4f3ca"
+      },
+      "scopeId": "3e567c88fbea12014310f70b544abfe27fdfa002236ab6187cde626a13d437de",
+      "scopeRegistrationSha256": "230634400dfd66c09e5db513c411069e4074a1c097ee5e5baea475c64576b04e",
+      "aiEvidenceSha256": "8189a65139f11da68293a3c1ca925586a678ed196d08814fd287b688ff9b9ff2",
+      "receiptSha256": "cc1ac45b48b7265ce4f91787df14f8efc99d183f5c66a184ca0579e7f2335584",
+      "eligibilitySha256": "6a9092d217102130ac696512893236e61dcee3ffd277b1e6debd7dd2f859f1b2",
+      "evidenceManifestSha256": "58b5af54b57e2399baa9c6b99995e330fb0c17035834ee896525bd7f0ef20486"
+    },
+    "videoReviewSha256": "05904dc9d4e03a5c8ab79f9e0a95c3bb02662716d52ca5d0c6de72bd180a6c5c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0abe2a5eaf09e896ccd4f7347fca6c19d7305f2b"
+  },
   "soopa_chew_coconut": {
     "video": "/images/products/catalog/soopa_chew_coconut/videos/41bb005697c198900bf7f6e883c783777ccc4df45199123c718e133ec92be22d/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -6084,7 +6133,57 @@
       "downloadEvidenceSha256": "fe02c90460e25a9fb9ffa82f93f41de6a0f2b3b70e344adc7363be97c408f391"
     }
   },
-  "soopa_chew_papaya": null,
+  "soopa_chew_papaya": {
+    "video": "/images/products/catalog/soopa_chew_papaya/videos/5177a7a7da0e883885d3c02263a046e30766466677c5ecab1a0239824da875a0/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "d604164ff6d7e54dcb2004cd931b3d37",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d604164ff6d7e54dcb2004cd931b3d37",
+      "reviewId": "cede5ef5c24228cdd7389a4257674b69",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5177a7a7da0e883885d3c02263a046e30766466677c5ecab1a0239824da875a0",
+      "seconds": 4,
+      "source": {
+        "no": 290,
+        "folder": "soopa_chew_papaya",
+        "name": "수파 그레인프리 100%식물성 야채간식 비건간식 파파야츄 85g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_chew_papaya/soopa_chew_papaya.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107910260",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_chew_papaya/details/2.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/3.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/4.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/5.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/6.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/7.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "dbe68bcdf1097787e94915103656e3f1",
+        "sha256": "5177a7a7da0e883885d3c02263a046e30766466677c5ecab1a0239824da875a0"
+      },
+      "scopeId": "6d83cf69df8827f2159e5bc777500311e9afdeb330d7ca153c28eac41bbd19ba",
+      "scopeRegistrationSha256": "27608e163771c8818530d37ad6c2e9a555d0e874200810c17ca59f733231bb21",
+      "aiEvidenceSha256": "334d7fc2b50342a41a0cee3c969d5ec3b33fd5063e399fd7a6e2bf9badd852be",
+      "receiptSha256": "f43459f58517876adf1c447e92c463e4adddfcbccae8fc2da54fc3fa5bd43bfc",
+      "eligibilitySha256": "f6008667cc004df9e0b36b2a0f9077a85110723964bfe1fb836fc244ca19ea3a",
+      "evidenceManifestSha256": "b4eb1a9e403aef72c6569f49c9c2871fdd49ecc1c67c09eb8e023dd1e6368bde"
+    },
+    "videoReviewSha256": "09a370434010b4752af5b3298e88a5d17823815451a86c0eca3502fbdf3ba4e2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0abe2a5eaf09e896ccd4f7347fca6c19d7305f2b"
+  },
   "soopa_chew_sweetpotato": {
     "video": "/images/products/catalog/soopa_chew_sweetpotato/videos/5ba21a4e752774e1a68b6e48f397ab90ca9ad777c82cb6fd4162ae8d17f6b763/hover.mp4",
     "videoProvider": "ziewcraft",

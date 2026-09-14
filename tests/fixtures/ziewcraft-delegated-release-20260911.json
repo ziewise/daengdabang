@@ -622,5 +622,13 @@
   "polkadog_haddockskin_453g": {
     "productId": "p_284",
     "sha256": "0ab4ef41e423349c94b4be7b58809b612246af378ec2a0b5257b8a166576453e"
+  },
+  "soopa_chew_3set": {
+    "productId": "p_286",
+    "sha256": "f0692dd758da32a73f4170dc2b55b4c4972ff7aac4fef89dd91bf36315a4f3ca"
+  },
+  "soopa_chew_papaya": {
+    "productId": "p_290",
+    "sha256": "5177a7a7da0e883885d3c02263a046e30766466677c5ecab1a0239824da875a0"
   }
 }
