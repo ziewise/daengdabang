@@ -518,5 +518,13 @@
   "rw_jsk_1000000137": {
     "productId": "p_366",
     "sha256": "0b245877e78463bf818b9c307a6d1dc7d834b39a41b6f1255d4146fd1e3d110b"
+  },
+  "packt_endeavor_collar": {
+    "productId": "p_46",
+    "sha256": "9cea971160b1fba79706301b284d2aeeea15e26268132fd9546b61fb7395ce51"
+  },
+  "canagan_dog_salmon_2kg": {
+    "productId": "p_194",
+    "sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe"
   }
 }
