@@ -752,9 +752,156 @@
   "mb_vegemix_475g": null,
   "nd_feelgood_c": null,
   "nd_feelgood_p": null,
-  "nd_feelgood_s": null,
-  "nd_feelgood_tc": null,
-  "nd_feelgood_wf": null,
+  "nd_feelgood_s": {
+    "video": "/images/products/catalog/nd_feelgood_s/videos/7a62a55657ca84b75b9a8f1596cd25bcd1d96ca7a15e9dddf345deee38b35e9f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "342012e25562c8e44bac8a92333d6d61",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "342012e25562c8e44bac8a92333d6d61",
+      "reviewId": "7b90e0b3a384309b0d0a1dd8706c5e14",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7a62a55657ca84b75b9a8f1596cd25bcd1d96ca7a15e9dddf345deee38b35e9f",
+      "seconds": 4,
+      "source": {
+        "no": 189,
+        "folder": "nd_feelgood_s",
+        "name": "네이처다이어트 필 굿 살몬 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_s/nd_feelgood_s.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922895435",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_s/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_s/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_s/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_s/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_s/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_s/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e55dc5914e9106504c10ba65f203fa6e",
+        "sha256": "7a62a55657ca84b75b9a8f1596cd25bcd1d96ca7a15e9dddf345deee38b35e9f"
+      },
+      "scopeId": "94b5e4bd442b94dc8217131a9f3f677d39f89c0d69c925e02fdf069180e9b503",
+      "scopeRegistrationSha256": "fd34dd03d4aade3ea6281438416de3251fbf86096c515a68634011d5ea889516",
+      "aiEvidenceSha256": "91b2a10d7a917872b4a42f6d34a3947f61845dd4efb7ac62442a559aa05a55e4",
+      "receiptSha256": "2f7f2e5398fa072859d992bf61fa554d238eebe604ec5d30594014bd0a851ef3",
+      "eligibilitySha256": "87ae8414d5d5c9c74c3dfa6671dc23e8429d6bccf49d5d51a2dec0b21e704e83",
+      "evidenceManifestSha256": "eacc7c527c752fe09641182ba25a950cd2c2fee840c321562470df3a130b0dd5"
+    },
+    "videoReviewSha256": "21d881dca7a220e5e12fcf8b9fe559c7664991957aa40c078e6731d0c4b78dac",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c418f9de276ccaf36289d351070b8d07d6eb4bb5"
+  },
+  "nd_feelgood_tc": {
+    "video": "/images/products/catalog/nd_feelgood_tc/videos/58ea48b5f7a7e145a525c5c202b935ad47bcacd103b430d09cff72b61e8d63ce/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "d1881be81e6e0752e6b724db5ee32a04",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d1881be81e6e0752e6b724db5ee32a04",
+      "reviewId": "4b214ca5ec2c6a044be91433b62aa4b4",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "58ea48b5f7a7e145a525c5c202b935ad47bcacd103b430d09cff72b61e8d63ce",
+      "seconds": 4,
+      "source": {
+        "no": 187,
+        "folder": "nd_feelgood_tc",
+        "name": "네이처다이어트 필 굿 터키 앤 치킨 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_tc/nd_feelgood_tc.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922906856",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_tc/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_tc/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_tc/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_tc/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_tc/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_tc/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "10deffb63b8c728a92dc5517f814f6cc",
+        "sha256": "58ea48b5f7a7e145a525c5c202b935ad47bcacd103b430d09cff72b61e8d63ce"
+      },
+      "scopeId": "52719c966875a6096d98cc02f586527b4e6467ad35706162fbf2692cc65e5d7b",
+      "scopeRegistrationSha256": "b96d63d1883ee050fbb86206a62f59fb233af0e2ea508d2a31334c2c92adc579",
+      "aiEvidenceSha256": "7fdca1b44e766047f70aeb9e996ea8be316855696146949b9bfa0360d66089d4",
+      "receiptSha256": "dff327f4a0a5a83223453c8b875dbedb24a33bef3cc39ebba63e18c11ecb85c2",
+      "eligibilitySha256": "29bb444a8a125d668341740db4ca5312362e26fc39407d2092d64988c39a874c",
+      "evidenceManifestSha256": "939d3d9894482f7fc1d2779e43768d02b2df7382c040ceac9a087f8b0643cf44"
+    },
+    "videoReviewSha256": "9f07a0942c70e44fd9ed6a1bc8c4eefb989784949976754beb259928900f0f16",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c418f9de276ccaf36289d351070b8d07d6eb4bb5"
+  },
+  "nd_feelgood_wf": {
+    "video": "/images/products/catalog/nd_feelgood_wf/videos/4da3146b099624beccaa610ba8bfe42db2cb2855962d0cca8ea27fcdf91f4441/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "4eb599c92bb0f1d3bfd87431fd59d33d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4eb599c92bb0f1d3bfd87431fd59d33d",
+      "reviewId": "39bee964358e697cb7b6458497aa7869",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4da3146b099624beccaa610ba8bfe42db2cb2855962d0cca8ea27fcdf91f4441",
+      "seconds": 4,
+      "source": {
+        "no": 186,
+        "folder": "nd_feelgood_wf",
+        "name": "네이처다이어트 필 굿 화이트 피쉬 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_wf/nd_feelgood_wf.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922910711",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8a2e568fc438fa926c7671edcf067c54",
+        "sha256": "4da3146b099624beccaa610ba8bfe42db2cb2855962d0cca8ea27fcdf91f4441"
+      },
+      "scopeId": "cda16a2576c24e12cd75c1feb466ac88bc1d67f91a693f03ff05797f0adbcf74",
+      "scopeRegistrationSha256": "c6947c35818db731429d86338fb3e64709cb173a6c783bdd273f9c8f3eb567ed",
+      "aiEvidenceSha256": "26c42bf373a73d9020520277e45020b9b7cc49ea87be1996cdc6fb7b97fcffae",
+      "receiptSha256": "a79d9e9750767ad9cbae4cbcea2a0a28c8913d01cc03bf1e3e4512fd7ed232f5",
+      "eligibilitySha256": "96cf8a1e80b79f1c837c86b9632c0189eb74248feb7ca01c0966534c8217ae1f",
+      "evidenceManifestSha256": "611f189e7cafeb70e3ac98c68f830f071a283a29dcdf32749289d2451608c4b1"
+    },
+    "videoReviewSha256": "e4a151a3d0df48695e0d6c7772904c95e11fa6112c1eaed717d251425a245b32",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c418f9de276ccaf36289d351070b8d07d6eb4bb5"
+  },
   "nd_purely_bc": null,
   "nd_purely_sw": null,
   "ot_bowl_foldable": {

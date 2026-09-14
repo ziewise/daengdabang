@@ -474,5 +474,17 @@
   "sk_ft_chickenrice_15kg": {
     "productId": "p_185",
     "sha256": "fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263"
+  },
+  "nd_feelgood_wf": {
+    "productId": "p_186",
+    "sha256": "4da3146b099624beccaa610ba8bfe42db2cb2855962d0cca8ea27fcdf91f4441"
+  },
+  "nd_feelgood_tc": {
+    "productId": "p_187",
+    "sha256": "58ea48b5f7a7e145a525c5c202b935ad47bcacd103b430d09cff72b61e8d63ce"
+  },
+  "nd_feelgood_s": {
+    "productId": "p_189",
+    "sha256": "7a62a55657ca84b75b9a8f1596cd25bcd1d96ca7a15e9dddf345deee38b35e9f"
   }
 }
