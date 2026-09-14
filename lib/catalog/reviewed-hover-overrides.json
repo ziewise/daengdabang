@@ -1678,7 +1678,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "28f5d7fa10c3b0f40d4795ed4e6a8dcd8328cab2"
   },
-  "pdh_lickingmat": null,
+  "pdh_lickingmat": {
+    "video": "/images/products/catalog/pdh_lickingmat/videos/14ed7a13fbe38356d25603612ed5a7f84d2524a71e7429e65b4c0a75133a24b4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "3ed77a20678f174963f42dbac652b669",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3ed77a20678f174963f42dbac652b669",
+      "reviewId": "3717aa43f992934ff887596c3164a663",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "14ed7a13fbe38356d25603612ed5a7f84d2524a71e7429e65b4c0a75133a24b4",
+      "seconds": 4,
+      "source": {
+        "no": 275,
+        "folder": "pdh_lickingmat",
+        "name": "펫드림하우스 리킹매트 PAD 급체방지 스트레스 해소",
+        "brandEn": "FitDreamHouse",
+        "isFood": false,
+        "image": "/images/products/catalog/pdh_lickingmat/pdh_lickingmat.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7459323154",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/pdh_lickingmat/details/2.webp",
+          "/images/products/catalog/pdh_lickingmat/details/3.webp",
+          "/images/products/catalog/pdh_lickingmat/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "fc2b9ac4e0cf66b84d6dd26ae60f9b44",
+        "sha256": "14ed7a13fbe38356d25603612ed5a7f84d2524a71e7429e65b4c0a75133a24b4"
+      },
+      "scopeId": "c8141d8036214066fa5466fd26967632f39c5efa06d54d2334ada163433e13a2",
+      "scopeRegistrationSha256": "dfa9e7a4e8f32aaefd92c784963358fae4bc79178d29525d42fc0da761ae2d64",
+      "aiEvidenceSha256": "63c57cfab654b38ec5828da9490862a6e3107127a457582802a1517ed5dc1483",
+      "receiptSha256": "694ceed2387115d2c0c2b5390fce4a2cd65ed1183fe2aecb2f48540e4a58faad",
+      "eligibilitySha256": "5e390ebf4fb470da3abdd9fad02bc6852bf32aa9c7d6c1b39f73232efe999aee",
+      "evidenceManifestSha256": "db235f45008d48781f53f9d76d366329c7b2d53877d3d98b73d3500aed20e1b9"
+    },
+    "videoReviewSha256": "92ea984e910d20e11cd4fecb7f9a70f3abd0ba50f1490c3aa5a4a2935884e168",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "9ff71775d01fecbf66d491b4476a0878b019b0fe"
+  },
   "pdh_slowfeeder_paw": {
     "video": "/images/products/catalog/pdh_slowfeeder_paw/videos/c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1728,11 +1774,51 @@
   },
   "pdh_slowfeeder_paw_2in1": null,
   "pdh_slowfeeder_paw_mini": {
-    "video": "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/06cf8a87774b76a29ebab3f2ebfc051a8cd7953a0de17c901ec4b6ceff18a159/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
+    "video": "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/cc52f39a10a7c50f541ae30e179159f4d54addfc6288f73ab57e3301107763ec/hover.mp4",
+    "videoProvider": "ziewcraft",
     "videoQuality": "approved_dog_using",
-    "videoJobId": "80e1d847-a454-48b0-9e25-439e1aa830c3"
+    "videoJobId": "30d9e8276fcc4b9ce062f5f597a63a73",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "30d9e8276fcc4b9ce062f5f597a63a73",
+      "reviewId": "43a3c6023e6fa4ed943c874ce063e157",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "cc52f39a10a7c50f541ae30e179159f4d54addfc6288f73ab57e3301107763ec",
+      "seconds": 4,
+      "source": {
+        "no": 274,
+        "folder": "pdh_slowfeeder_paw_mini",
+        "name": "펫드림하우스 미니 슬로우피더 PAW 2in1 Mini",
+        "brandEn": "FitDreamHouse",
+        "isFood": false,
+        "image": "/images/products/catalog/pdh_slowfeeder_paw_mini/pdh_slowfeeder_paw_mini.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7459355088",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/pdh_slowfeeder_paw_mini/details/2.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw_mini/details/3.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw_mini/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "de009ad42f655937d9b48fc2dd5b8d7c",
+        "sha256": "cc52f39a10a7c50f541ae30e179159f4d54addfc6288f73ab57e3301107763ec"
+      },
+      "scopeId": "74a83d86e8c98b91df201cfbb2f11bcc0b98ae8a2c3c95a3318352fcbec83800",
+      "scopeRegistrationSha256": "4d23424b26e243ce74db396fc86a137c60fb799a3abe3bd3cbb83e3b09cedb31",
+      "aiEvidenceSha256": "a39cb9bb53b7970dae35aa572dbc4b475648309f63227dae05877b0ce3872381",
+      "receiptSha256": "1884dc4a332dc1731d3126de2592de1f933c253f30354e1c46a48a6733090ac1",
+      "eligibilitySha256": "466923b1fb57a9f2d73185fb6c58f181fc2b75190db99f554e8b7af70aff58b4",
+      "evidenceManifestSha256": "fcd633b04b0fd4142f36884721ffd2c2b918bacdb701ca9d1859fa7774892721"
+    },
+    "videoReviewSha256": "f9ea95477e9e214edc555850b037970f4a206c550812395d9ea2483a7028cc6e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "9ff71775d01fecbf66d491b4476a0878b019b0fe"
   },
   "pdh_spin_flyingdisc": {
     "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/hover.mp4",

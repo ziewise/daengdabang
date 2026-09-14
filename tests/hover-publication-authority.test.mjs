@@ -9,6 +9,8 @@ const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url), 'ut
 const raw = read('../lib/catalog/raw.json');
 const reviews = read('../lib/catalog/reviewed-flow-videos.json');
 const trims = read('../lib/catalog/reviewed-video-trims.json');
+const delegated = read('./fixtures/ziewcraft-delegated-release-20260911.json');
+const flowSnapshot = read('./fixtures/flow-contents-batch20.json');
 const retained = [
   ['rw_flagline_harness_24', 20, '522372c35a252a1279c5d507c2e311292bb0fbe0d4dfeb69ae16f7e0543bb357'],
   ['rw_coverall_snow_25fw', 39, '139fa44ad841c8a80fad7e549842c30e1ec3a5d1ff228d6b75761002dd22f7a8'],
@@ -77,12 +79,18 @@ test('provider labels and plausible job/hash strings alone cannot publish genera
 
 test('each exact approved Flow manifest record still passes and substitutions still fail', () => {
   for (const [folder, review] of Object.entries(reviews)) {
-    const active = candidate(raw.find(row => row.folder === folder));
-    assert.equal(safeCatalogHoverVideo(active), trims[folder]?.video ?? review.video);
+    const active = { ...candidate(raw.find(row => row.folder === folder)),
+      subcategory: flowSnapshot.expectedSubcategories[folder] };
+    const replacement = delegated[folder];
+    if (replacement) assert.equal(replacement.productId, active.id);
+    assert.equal(safeCatalogHoverVideo(active), replacement
+      ? `/images/products/catalog/${folder}/videos/${replacement.sha256}/hover.mp4`
+      : trims[folder]?.video ?? review.video);
     // A current temporal edit has separate authority; keep testing the unchanged original approval itself.
     const product = { ...active, video: review.video, raw: { ...active.raw, video: review.video,
       videoProvider: 'google_flow_web', videoQuality: review.videoQuality, videoJobId: review.videoJobId,
-      videoGenerationIdentity: review.videoGenerationIdentity ?? null, videoTrimIdentity: null, videoPlaybackMode: undefined } };
+      videoGenerationIdentity: review.videoGenerationIdentity ?? null, videoTrimIdentity: null,
+      videoZiewcraftIdentity: null, videoPlaybackMode: undefined } };
     assert.equal(safeCatalogHoverVideo(product), review.video);
     assert.equal(safeCatalogHoverVideo({ ...product, raw: { ...product.raw, videoProvider: 'ziewcraft' } }), undefined);
     assert.equal(safeCatalogHoverVideo({ ...product, raw: { ...product.raw, videoJobId: 'pending-job' } }), undefined);

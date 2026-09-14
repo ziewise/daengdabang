@@ -12,6 +12,7 @@ const trims = read("../lib/catalog/reviewed-video-trims.json");
 const raw = read("../lib/catalog/raw.json");
 const expected = read("./fixtures/flow-contents-batch20.json");
 const mediaIdentity = read("./fixtures/flow-catalog-media-identity.json");
+const delegated = read("./fixtures/ziewcraft-delegated-release-20260911.json");
 
 const catalogMediaIdentity = (row) => Object.fromEntries(Object.keys(row).sort()
     .filter((key) => key === "no" || key === "folder" || key.startsWith("video"))
@@ -51,7 +52,7 @@ for (const [folder, review] of Object.entries(reviews)) {
     // Preserve all original Flow approval tests even when a separately reviewed temporal edit is selected now.
     const effective = { ...active, video: review.video, videoProvider: 'google_flow_web', videoQuality: review.videoQuality,
         videoJobId: review.videoJobId, videoGenerationIdentity: review.videoGenerationIdentity ?? null,
-        videoTrimIdentity: null, videoPlaybackMode: undefined };
+        videoTrimIdentity: null, videoZiewcraftIdentity: null, videoPlaybackMode: undefined };
     const candidate = {
         id: `p_${sourceRow.no}`, folder, name: effective.name,
         subcategory: expected.expectedSubcategories[folder], image: effective.image, video: effective.video, raw: effective,
@@ -59,7 +60,12 @@ for (const [folder, review] of Object.entries(reviews)) {
     const other = Object.values(reviews).find((entry) => entry.folder !== folder);
 
     test(`${folder}: exact approved bytes are eligible and receive only their baked brand`, () => {
-        assert.equal(safeCatalogHoverVideo({ ...candidate, video: active.video, raw: active }), trims[folder]?.video ?? review.video);
+        const replacement = delegated[folder];
+        if (replacement) assert.equal(replacement.productId, candidate.id);
+        const expectedActiveVideo = replacement
+            ? `/images/products/catalog/${folder}/videos/${replacement.sha256}/hover.mp4`
+            : trims[folder]?.video ?? review.video;
+        assert.equal(safeCatalogHoverVideo({ ...candidate, video: active.video, raw: active }), expectedActiveVideo);
         assert.equal(effective.videoProvider, "google_flow_web");
         assert.equal(effective.video, review.video);
         assert.equal(effective.videoJobId, review.videoJobId);

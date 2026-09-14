@@ -606,5 +606,13 @@
   "aff_donut_luxury_l": {
     "productId": "p_268",
     "sha256": "c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52"
+  },
+  "pdh_slowfeeder_paw_mini": {
+    "productId": "p_274",
+    "sha256": "cc52f39a10a7c50f541ae30e179159f4d54addfc6288f73ab57e3301107763ec"
+  },
+  "pdh_lickingmat": {
+    "productId": "p_275",
+    "sha256": "14ed7a13fbe38356d25603612ed5a7f84d2524a71e7429e65b4c0a75133a24b4"
   }
 }
