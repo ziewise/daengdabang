@@ -598,5 +598,9 @@
   "fumble_footcleanser_set": {
     "productId": "p_220",
     "sha256": "408aa79f57557fb2d49e01bfd86b225aa9643a9ec58f6bcb7bfc0e115cafe64e"
+  },
+  "iby_backpack_fc2131": {
+    "productId": "p_248",
+    "sha256": "e2258d21cd7277d12dec62565741008b1f469e845b8eab6eb463b68820d4d948"
   }
 }

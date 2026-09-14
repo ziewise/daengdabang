@@ -972,7 +972,53 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-103eb5c5fc80"
   },
-  "iby_backpack_fc2131": null,
+  "iby_backpack_fc2131": {
+    "video": "/images/products/catalog/iby_backpack_fc2131/videos/e2258d21cd7277d12dec62565741008b1f469e845b8eab6eb463b68820d4d948/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "ad76c756ad26993bf928f5a3c09edc6e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ad76c756ad26993bf928f5a3c09edc6e",
+      "reviewId": "d12dda819d0b0ec1fe59b1a117a200d7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e2258d21cd7277d12dec62565741008b1f469e845b8eab6eb463b68820d4d948",
+      "seconds": 4,
+      "source": {
+        "no": 248,
+        "folder": "iby_backpack_fc2131",
+        "name": "이비야야 데님펀백팩2.0 FC2131",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_backpack_fc2131/iby_backpack_fc2131.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7662513319",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_backpack_fc2131/details/3.webp",
+          "/images/products/catalog/iby_backpack_fc2131/details/4.webp",
+          "/images/products/catalog/iby_backpack_fc2131/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8f6bbd328ef1d9fbbd872e47699b1eac",
+        "sha256": "e2258d21cd7277d12dec62565741008b1f469e845b8eab6eb463b68820d4d948"
+      },
+      "scopeId": "13226ff05805ec47e987bd97487106918671e93b339c302d38cc6b235b35f12c",
+      "scopeRegistrationSha256": "9a99393549321f94922683e091e8949fa1bc86b7f257fe94b49b33c95d229e0f",
+      "aiEvidenceSha256": "fc53ea3ab2db2b805af0c10e2ff67c417223e7c2d4b9c3858cb4534d20e071a4",
+      "receiptSha256": "d01c88576960b89e763d34178b46b7413e360eeb6f86ee6a46f14a6cbf85d4a8",
+      "eligibilitySha256": "594a085c0da799b552a58da05280f032ff53e54d90ce8d3b48fab5625d5ee07f",
+      "evidenceManifestSha256": "5e0dd33ff88e5428de75a8e018922e1f790a756c8774af03ac982b34ab868a3d"
+    },
+    "videoReviewSha256": "c902ffddebf1a21e410aac906b5ccce59bbd2c08b0183d3e5b90c8cd157b29fd",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "05593de39c1586e6df7b200d4ab6513e04432399"
+  },
   "iby_backpack_fc2297": {
     "video": "/images/products/catalog/iby_backpack_fc2297/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
