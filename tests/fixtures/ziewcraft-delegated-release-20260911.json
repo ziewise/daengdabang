@@ -526,5 +526,13 @@
   "canagan_dog_salmon_2kg": {
     "productId": "p_194",
     "sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe"
+  },
+  "canagan_dog_highland_2kg": {
+    "productId": "p_195",
+    "sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b"
+  },
+  "rs_trailhead_leash_single_18m": {
+    "productId": "p_86",
+    "sha256": "591d996117ba68adce75ca3184b3981e90b2612028cebb40603f180aa1d9c6ae"
   }
 }

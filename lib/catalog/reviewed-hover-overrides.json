@@ -113,7 +113,53 @@
   "canagan_dog_chicken_2kg": null,
   "canagan_dog_dental_2kg": null,
   "canagan_dog_dental_6kg": null,
-  "canagan_dog_highland_2kg": null,
+  "canagan_dog_highland_2kg": {
+    "video": "/images/products/catalog/canagan_dog_highland_2kg/videos/53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "16fe3ec9668bc89d0716686e53120b34",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "16fe3ec9668bc89d0716686e53120b34",
+      "reviewId": "a50d1fb857555179554c1fd6235217f4",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b",
+      "seconds": 4,
+      "source": {
+        "no": 195,
+        "folder": "canagan_dog_highland_2kg",
+        "name": "카나간 하이랜드 피스트 포 독 2kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_highland_2kg/canagan_dog_highland_2kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922818132",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_highland_2kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_highland_2kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_highland_2kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "88e8d2340f877a69ff5c5c1a796666a8",
+        "sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b"
+      },
+      "scopeId": "513cca0ac59ae48a2b8b16ba0358c650c4a462e1912c5a54af447dab5eeb2ce1",
+      "scopeRegistrationSha256": "0e099fa8cc0c9de40feaa880f46d0c2731c7207c343bbfc50f64cb2cce67e8c7",
+      "aiEvidenceSha256": "1fa10bc709a4b40e96c0e92dadc16a6314bee93f3feae8952e4198624f1a5514",
+      "receiptSha256": "1b81e3eb701df124bb48e2ee37cb9f8210169dc14da60dd21ca5dc1cee9e1c18",
+      "eligibilitySha256": "cad16f075316e735eb5924fc51f46d1fa6377bd7e16da11975f1f976191299a0",
+      "evidenceManifestSha256": "fa6076cb8b53aee2bec97906e4e048177c6700212b7b60ad72215d36995d329d"
+    },
+    "videoReviewSha256": "f5bfc7ba0df1595195a9d75863f0f2d2d05a6e860c020b85e4f48ceae031bba0",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f66cfb9a65aa44560dc2969955e4741f205c298"
+  },
   "canagan_dog_highland_6kg": null,
   "canagan_dog_salmon_6kg": null,
   "dangcream_strawberry": {
@@ -1440,7 +1486,60 @@
     "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
   },
   "rs_trailhead_leash_dual_24m": null,
-  "rs_trailhead_leash_single_18m": null,
+  "rs_trailhead_leash_single_18m": {
+    "video": "/images/products/catalog/rs_trailhead_leash_single_18m/videos/591d996117ba68adce75ca3184b3981e90b2612028cebb40603f180aa1d9c6ae/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "a6b44c3af91a89ccf5177db947ca61df",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a6b44c3af91a89ccf5177db947ca61df",
+      "reviewId": "a10ee358845db0c31f450260ad89e7ec",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "591d996117ba68adce75ca3184b3981e90b2612028cebb40603f180aa1d9c6ae",
+      "seconds": 4,
+      "source": {
+        "no": 86,
+        "folder": "rs_trailhead_leash_single_18m",
+        "name": "렉스스펙스 트레일헤드 싱글 스냅 리드줄 (1.8M)",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_015.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001126",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_154.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_286.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_328.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_469.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_540.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Single-Snap1-2023_155029.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Single-Snap2-2023_155030.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Single-Snap3-2023_155031.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/ce50939b7267aece200a424b5dac05ea_154748.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ce18a8283e6354b879040706158bda55",
+        "sha256": "591d996117ba68adce75ca3184b3981e90b2612028cebb40603f180aa1d9c6ae"
+      },
+      "scopeId": "5f4891ad4965f0ffa75cd19cd61dadcde0fba4afc44bd3d652df478a7d4c58cc",
+      "scopeRegistrationSha256": "c9f1b526e41dcc0ed08c692ee0fb2133294084a4acbc1c5da20088fe110eb9da",
+      "aiEvidenceSha256": "4667486142d17f9d15f02705aedc0d6686681c835134225ce47cc947c26a933d",
+      "receiptSha256": "20c2a4efd9171245d0bdb46f07415abf717a42bf44958398e0d9494fec74fd46",
+      "eligibilitySha256": "d823d133ee1b1d164286bc2393b2cff3f4c598b137a712881f4a4b02a3d0daa9",
+      "evidenceManifestSha256": "8be55bbf11e1a3f515a4e97e8466f156657591626c8b1ef5249c849ec81539f1"
+    },
+    "videoReviewSha256": "d0a66219f8dfeb9144e6415d59a654c582bbe56b9487bfbc85542aa6cf045e3c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f66cfb9a65aa44560dc2969955e4741f205c298"
+  },
   "rs_v2_2024ltd": null,
   "rs_v2_appalachianorange": {
     "video": "/images/products/catalog/rs_v2_appalachianorange/videos/c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314/hover.mp4",
