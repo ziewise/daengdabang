@@ -486,5 +486,9 @@
   "nd_feelgood_s": {
     "productId": "p_189",
     "sha256": "7a62a55657ca84b75b9a8f1596cd25bcd1d96ca7a15e9dddf345deee38b35e9f"
+  },
+  "rw_hiandlight_leash_26": {
+    "productId": "p_2",
+    "sha256": "ed27cf73b30dbef6315aac3d08beea0c54568595e879016c4568566c6a67901c"
   }
 }
