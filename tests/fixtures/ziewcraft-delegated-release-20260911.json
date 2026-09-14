@@ -614,5 +614,13 @@
   "pdh_lickingmat": {
     "productId": "p_275",
     "sha256": "14ed7a13fbe38356d25603612ed5a7f84d2524a71e7429e65b4c0a75133a24b4"
+  },
+  "pdh_spin_flyingdisc": {
+    "productId": "p_276",
+    "sha256": "64924c2386b8004341c78b9029ba08025e3e6c93e806c13f20c0ac3d0d654974"
+  },
+  "polkadog_haddockskin_453g": {
+    "productId": "p_284",
+    "sha256": "0ab4ef41e423349c94b4be7b58809b612246af378ec2a0b5257b8a166576453e"
   }
 }

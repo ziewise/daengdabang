@@ -1821,11 +1821,52 @@
     "videoDeliveryCommit": "9ff71775d01fecbf66d491b4476a0878b019b0fe"
   },
   "pdh_spin_flyingdisc": {
-    "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/hover.mp4",
+    "video": "/images/products/catalog/pdh_spin_flyingdisc/videos/64924c2386b8004341c78b9029ba08025e3e6c93e806c13f20c0ac3d0d654974/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "08bef46963dd357c0d7399d928a1c87f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "08bef46963dd357c0d7399d928a1c87f",
+      "reviewId": "b01c077b786ee5745bb9d4f3601983c1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "64924c2386b8004341c78b9029ba08025e3e6c93e806c13f20c0ac3d0d654974",
+      "seconds": 4,
+      "source": {
+        "no": 276,
+        "folder": "pdh_spin_flyingdisc",
+        "name": "펫드림하우스 스핀 플라잉 디스크 Lick Pad 슬로우식기 리킹매트 급체방지 스트레스해소",
+        "brandEn": "FitDreamHouse",
+        "isFood": false,
+        "image": "/images/products/catalog/pdh_spin_flyingdisc/pdh_spin_flyingdisc.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7459296565",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/pdh_spin_flyingdisc/details/2.webp",
+          "/images/products/catalog/pdh_spin_flyingdisc/details/3.webp",
+          "/images/products/catalog/pdh_spin_flyingdisc/details/4.webp",
+          "/images/products/catalog/pdh_spin_flyingdisc/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4d97eabb33919adf0c09b7a6f4fefea8",
+        "sha256": "64924c2386b8004341c78b9029ba08025e3e6c93e806c13f20c0ac3d0d654974"
+      },
+      "scopeId": "76d4e17a1c340eb43a74a44d86513bd1070c95cc31d888ad57a9b9d59e7e59ef",
+      "scopeRegistrationSha256": "5524ab0275804638e623d134c2520c7ecb8706fd8feb2c90cd476702936a656f",
+      "aiEvidenceSha256": "52a289f16d5132abf4a4281fc3e632677957acfa20b529b7c054f3dc94a03779",
+      "receiptSha256": "10e46e6764de32acd2c1d240dcdbd427bfe5a364e5a6ca30ade86250a63ceb84",
+      "eligibilitySha256": "e3c2bc8f70848b65dab2fdd3ff4b97632b3e66278f467a8c8d8104240cb535a1",
+      "evidenceManifestSha256": "a65f2252374f739e150031d2f85391c354d7ef71d37d744f3373233dff635090"
+    },
+    "videoReviewSha256": "5aabcb697f13ae5d1268182ea7bfb185b3b2edbc17326b6f15e4066deaf1df17",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-ed7ba9c00323"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "917f79a623393feb960d31c979877be69adf5017"
   },
   "pdh_spin_ufo": null,
   "pegnaty_woodstick": {
@@ -2047,7 +2088,56 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-b61ea015ee6d"
   },
-  "polkadog_haddockskin_453g": null,
+  "polkadog_haddockskin_453g": {
+    "video": "/images/products/catalog/polkadog_haddockskin_453g/videos/0ab4ef41e423349c94b4be7b58809b612246af378ec2a0b5257b8a166576453e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "2f429b04bd35da5be617175f880ee1ce",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "2f429b04bd35da5be617175f880ee1ce",
+      "reviewId": "2da5757042f5d0a59358db202d634917",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0ab4ef41e423349c94b4be7b58809b612246af378ec2a0b5257b8a166576453e",
+      "seconds": 4,
+      "source": {
+        "no": 284,
+        "folder": "polkadog_haddockskin_453g",
+        "name": "폴카독베이커리_ALL 해덕껍질 크런치 스틱 453g",
+        "brandEn": "Polkadog Bakery",
+        "isFood": true,
+        "image": "/images/products/catalog/polkadog_haddockskin_453g/polkadog_haddockskin_453g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7118852204",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/polkadog_haddockskin_453g/details/official-visual-01.webp",
+          "/images/products/catalog/polkadog_haddockskin_453g/details/official-visual-02.webp",
+          "/images/products/catalog/polkadog_haddockskin_453g/details/official-visual-03.webp",
+          "/images/products/catalog/polkadog_haddockskin_453g/details/official-visual-04.webp",
+          "/images/products/catalog/polkadog_haddockskin_453g/details/official-visual-05.webp",
+          "/images/products/catalog/polkadog_haddockskin_453g/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c2b0d50125e09e7a5e66599137050522",
+        "sha256": "0ab4ef41e423349c94b4be7b58809b612246af378ec2a0b5257b8a166576453e"
+      },
+      "scopeId": "4ded8285a6e1b8c6d86de7db6598394407811f4371667e4b6cbf2697d1b213a3",
+      "scopeRegistrationSha256": "8e6e920a9171621d3536e4d04fd8e8388f5388477ebc8936f1aa8b1ba0af127f",
+      "aiEvidenceSha256": "5ab31cd3280d90989e948cb622e24ad9ba52cb1f092c9051ac9d60542a49982b",
+      "receiptSha256": "b01e49dceaa2cf81cdc91ae6c37d7d869d7700232aed955f9fb90b3195801b83",
+      "eligibilitySha256": "eaf3a25ff0add58e57d9c07e7dcb4141eb84f63cca53d606aa5051e8061e45dc",
+      "evidenceManifestSha256": "7c2c47fd463e1f0934d552371adb19b1c4526b6deda6e44c2bee9610db8821b9"
+    },
+    "videoReviewSha256": "240e5a73832743e77f0e68ac9954986db70672197f1730dcbdd5112e7ff5ce53",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "917f79a623393feb960d31c979877be69adf5017"
+  },
   "polkadog_henpenny_biscuit_142g": null,
   "rs_bowl": {
     "video": "/images/products/catalog/rs_bowl/videos/860188ede01f84d638816c0a8ea918b313c0d7c2e1fe92d0c874ebac575a3bf2/hover.mp4",
