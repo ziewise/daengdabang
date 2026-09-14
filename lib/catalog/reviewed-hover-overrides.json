@@ -4490,7 +4490,52 @@
   },
   "rw_webmaster_harness": null,
   "sk_ft_chicken_pate_390g": null,
-  "sk_ft_chickenrice_15kg": null,
+  "sk_ft_chickenrice_15kg": {
+    "video": "/images/products/catalog/sk_ft_chickenrice_15kg/videos/fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "c305cd0b820a3615d99318135e03dec1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c305cd0b820a3615d99318135e03dec1",
+      "reviewId": "ce79fa32c4aa8456ce9960fd6ba50b33",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263",
+      "seconds": 4,
+      "source": {
+        "no": 185,
+        "folder": "sk_ft_chickenrice_15kg",
+        "name": "스키너즈 필드 & 트라이얼 치킨 앤 라이스 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_chickenrice_15kg/sk_ft_chickenrice_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922934817",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_chickenrice_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_chickenrice_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "41290056581f4a29395c1ffdab44c26e",
+        "sha256": "fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263"
+      },
+      "scopeId": "80a37caa88df626e9be9fb79fed969e38d8e03989b46dcf59ab4c51abc8ac1b2",
+      "scopeRegistrationSha256": "2273a724a962b591f4f8c7aaa76a016521d51e3ffc012301a72b38e053166dea",
+      "aiEvidenceSha256": "60544f10bd4dd6f78e14f3a312febc866de66d6ef7493a7ff41b375716658d0e",
+      "receiptSha256": "9433a415869cd5fc2702882468725b3821c7ce5905a2a8c06cd1efa047b7b7a4",
+      "eligibilitySha256": "42bdb39679aea66aaa6d508ab11bc3149084452389e9f6a2ea3164e3326844c2",
+      "evidenceManifestSha256": "ef77a6308c5baced1e0be0977a60a9fc2555ee183baf7ed6fedc7356676213fc"
+    },
+    "videoReviewSha256": "f200489ea18c8f1fdfdb8dce1e78db5f828f4510e5742048b69f8bbffb00b224",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "6bdb7ecf70301ec438afdd2dff816d8f47e69689"
+  },
   "sk_ft_maintenance_15kg": {
     "video": "/images/products/catalog/sk_ft_maintenance_15kg/videos/ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49/hover.mp4",
     "videoProvider": "ziewcraft",

@@ -470,5 +470,9 @@
   "sk_ft_maintenance_15kg": {
     "productId": "p_183",
     "sha256": "ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49"
+  },
+  "sk_ft_chickenrice_15kg": {
+    "productId": "p_185",
+    "sha256": "fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263"
   }
 }
