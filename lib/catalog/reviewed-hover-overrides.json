@@ -1193,11 +1193,51 @@
     "videoJobId": "hover-static72-20260903-71bec810f93d"
   },
   "perity_broccoli_shampoo_250ml": {
-    "video": "/images/products/catalog/perity_broccoli_shampoo_250ml/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_broccoli_shampoo_250ml/videos/17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "df23418bc06951c120301d1c45cdca1a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "df23418bc06951c120301d1c45cdca1a",
+      "reviewId": "0115fbbb091888f88e586e5f93a3904b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227",
+      "seconds": 4,
+      "source": {
+        "no": 206,
+        "folder": "perity_broccoli_shampoo_250ml",
+        "name": "페리티_제주 브로콜리 릴리프 펫 샴푸 250ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_shampoo_250ml/perity_broccoli_shampoo_250ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848911635",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_shampoo_250ml/details/2.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_250ml/details/3.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_250ml/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9561d1562e312bd82735d9526d7fe9d7",
+        "sha256": "17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227"
+      },
+      "scopeId": "eecfb5c26be5364665317a408861a3f16de1b34f3fd19c67be80e94c2174167f",
+      "scopeRegistrationSha256": "737d0eb48c0a1ed085f4dfeed3fe418b3d7bb0fed8d4fecb1649b79e52dce9f0",
+      "aiEvidenceSha256": "cc60a49250ca9f82c483362ea0921b5c4251cbb495ec968d6d62dd506addd9f7",
+      "receiptSha256": "b5c9997ec875a7e1166a4a4368d31779971476972f93a4e21a548976b3c6b697",
+      "eligibilitySha256": "8653ab0c0c0c164c0ef8c9574072f610aef849bdd57bcf4794deef5790252a35",
+      "evidenceManifestSha256": "9923848874223274d8a2685af3eca8ab33a165cea0073a8ab6e45f6509a0b11c"
+    },
+    "videoReviewSha256": "f977bc3f34e226bed1effb71c6a2f40bad799a8379f74f7c5a5e2d82867ebe42",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-d28b6a760402"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "786a3d002dcfe4366c10c27d57f4473b6bf61932"
   },
   "perity_broccoli_shampoo_refill_500ml": {
     "video": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/videos/hover.mp4",

@@ -534,5 +534,9 @@
   "rs_trailhead_leash_single_18m": {
     "productId": "p_86",
     "sha256": "591d996117ba68adce75ca3184b3981e90b2612028cebb40603f180aa1d9c6ae"
+  },
+  "perity_broccoli_shampoo_250ml": {
+    "productId": "p_206",
+    "sha256": "17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227"
   }
 }
