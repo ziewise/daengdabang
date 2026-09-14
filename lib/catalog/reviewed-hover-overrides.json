@@ -97,11 +97,49 @@
     "videoJobId": "hover-static72-20260903-ad85333475af"
   },
   "bm_kibble_9kg": {
-    "video": "/images/products/catalog/bm_kibble_9kg/videos/hover.mp4",
+    "video": "/images/products/catalog/bm_kibble_9kg/videos/0bc23424049731b1887a5c8a1de0cd925693499beed494f978533933d9471136/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "89e40c7e7bfa9a60fde7f0250a336818",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "89e40c7e7bfa9a60fde7f0250a336818",
+      "reviewId": "c0f50d43efc4b5607b8ce195abfb3c30",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0bc23424049731b1887a5c8a1de0cd925693499beed494f978533933d9471136",
+      "seconds": 4,
+      "source": {
+        "no": 140,
+        "folder": "bm_kibble_9kg",
+        "name": "빌리앤마것 독 키블 대용량 9kg",
+        "brandEn": "Billy + Margot",
+        "isFood": true,
+        "image": "/images/products/catalog/bm_kibble_9kg/bm_kibble_9kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10148197774",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/bm_kibble_9kg/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "497a49e492bf801f688711c554f75605",
+        "sha256": "0bc23424049731b1887a5c8a1de0cd925693499beed494f978533933d9471136"
+      },
+      "scopeId": "9433b263441270ff2764c0727003e89320a7eab13f8974439e6ff7fc1a17bae9",
+      "scopeRegistrationSha256": "4104f7b8227f1b497fc5829b33ba4e971858089596f3edfeff0f10b59a9c9b88",
+      "aiEvidenceSha256": "addca12503bdffcff9767a31a84798386f8afd58721ee35e437f8779b1530a86",
+      "receiptSha256": "378a93e41db67bf68ccb86403e47811b5c85c97a529474c23e487cb042dd7e91",
+      "eligibilitySha256": "c2e8d00b0547d7a14e083ece829985fc29547a5adb78f3e3d299e54b338a96d1",
+      "evidenceManifestSha256": "991169b679db3576e1e5cdaddcfb64fae4c035d4aab297690c7802122fcf1e19"
+    },
+    "videoReviewSha256": "2a3b4014ff73fe6fd5c3c810a0ffb727ac2a5a862fa933e5abf8b13a615d567c",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-72738c54aacc"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
   },
   "bm_wet_100g_3": {
     "video": "/images/products/catalog/bm_wet_100g_3/videos/hover.mp4",
@@ -1268,11 +1306,53 @@
     "videoJobId": "hover-static72-20260903-19ec8472c690"
   },
   "perity_carrot_shampoo_refill_500ml": {
-    "video": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/videos/a6f0bbc2c888b2a836c7abed06798ca54dae9b382f8275f7e2aaad34576b61f5/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "9db5b7cc3e3a1b7fb42c655a2879d0dd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9db5b7cc3e3a1b7fb42c655a2879d0dd",
+      "reviewId": "31046a5427b710d344dbfc70b6f0ad44",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a6f0bbc2c888b2a836c7abed06798ca54dae9b382f8275f7e2aaad34576b61f5",
+      "seconds": 4,
+      "source": {
+        "no": 203,
+        "folder": "perity_carrot_shampoo_refill_500ml",
+        "name": "페리티_제주 당근 볼류밍 펫 샴푸 리필 500ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/perity_carrot_shampoo_refill_500ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848939127",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/2.webp",
+          "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/3.webp",
+          "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/4.webp",
+          "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/5.webp",
+          "/images/products/catalog/perity_carrot_shampoo_refill_500ml/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4ee3b379f62350ce6409e0a8e8ea03b8",
+        "sha256": "a6f0bbc2c888b2a836c7abed06798ca54dae9b382f8275f7e2aaad34576b61f5"
+      },
+      "scopeId": "973652d303c07a9acd87fbc9f73b8789a5e96e5e05fcd2766ce9d93a8996edef",
+      "scopeRegistrationSha256": "fc36f6b9e855d04180e8ec2c9d4271f20a2c1303370f48ce8ae0435048356474",
+      "aiEvidenceSha256": "f67d86e95ee78eb640e1d8206f9d21c0b23a9a92a329838214e6d89876b01678",
+      "receiptSha256": "eacedf7a66ef8b84fd520b264b60872bd58f46b13268f0fd356a7a14d22ed89d",
+      "eligibilitySha256": "21a3e30cbb0bf728ec205eb62366b638b24e39c48e2ace13c7d253c35432f504",
+      "evidenceManifestSha256": "232cd13ea37bdf733f83a814817163558a7006734d4b18e8461b980e426c5f0e"
+    },
+    "videoReviewSha256": "44acf6b584be8cf2a8ee2ad0c2740855cf875a5448c97239eb6914d30bdb20c5",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-5cd73c808318"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
   },
   "perity_carrot_shampoo_set_750ml": {
     "video": "/images/products/catalog/perity_carrot_shampoo_set_750ml/videos/hover.mp4",
@@ -2544,7 +2624,57 @@
     "videoJobId": "d69967f0-389f-42ad-a3c1-72015b14cb9b"
   },
   "rw_collar_chainreaction_martingale": null,
-  "rw_collar_chainreaction_martingale_24": null,
+  "rw_collar_chainreaction_martingale_24": {
+    "video": "/images/products/catalog/rw_collar_chainreaction_martingale_24/videos/aa482207fb0919575123f03a427c7a88da6b4acb77007fab8e26a4ba5c7e83a6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "79b22afbe948fee2364f99472edb442e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "79b22afbe948fee2364f99472edb442e",
+      "reviewId": "61a25ef26299d62940adaa214de3140c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "aa482207fb0919575123f03a427c7a88da6b4acb77007fab8e26a4ba5c7e83a6",
+      "seconds": 8,
+      "source": {
+        "no": 142,
+        "folder": "rw_collar_chainreaction_martingale_24",
+        "name": "러프웨어 체인 리액션 마틴게일 목줄(2024SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001171/image/detail/1000001171_detail_094.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001171",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001171/image/detail/1000001171_detail_197.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001171/image/detail/1000001171_detail_262.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001171/image/detail/1000001171_detail_387.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001171/5a53a514e3202df6b718b25055e250f9.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001171/415465b758ff513c42fc1b5f78a59573.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001171/de9e269ed0b3f1e11a3fe49125dc8c5f.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0bb1c6662332ed285571107a5ab3c215",
+        "sha256": "aa482207fb0919575123f03a427c7a88da6b4acb77007fab8e26a4ba5c7e83a6"
+      },
+      "scopeId": "b487bd9b01bba020d01de28a8ecc688d7ab48655e717e86ba37a1a0583decc39",
+      "scopeRegistrationSha256": "e31cf52d9645a5355e19c3f6a7ed8a2f400855b9ab3550590f0e074548069719",
+      "aiEvidenceSha256": "f81c8050cf172bebe39c572f4bd9a8c3aba3f766ccca3505c583c4de013c9a09",
+      "receiptSha256": "c0287193d74489089a335736db73b87e7ba35403e9b9b955858a57a36ba2714a",
+      "eligibilitySha256": "7f82b1b20750c86579fe86581994c626acaa1f476993cd7b18a8508ac9d4e78d",
+      "evidenceManifestSha256": "915fbfcd74580303508245e4f6f4ffa1f627b139d41257e86296a17ba15687d4"
+    },
+    "videoReviewSha256": "4a40b3efb7b44383ea296a0230eee4099ddbf971dd98dc8dbb55bd3cb8a4cfc8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
+  },
   "rw_collar_crag": null,
   "rw_collar_crag_23": null,
   "rw_collar_frontrange": null,
@@ -10144,5 +10274,55 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "50f908ca411ff6e0a518da3f65998c0bd960ff97"
+  },
+  "nd_feelgood_sl": {
+    "video": "/images/products/catalog/nd_feelgood_sl/videos/02c322f85e109faa753ab96f4c28b1a7a1d2a9723c86bbcec73fa10db753f83e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "bb99457d8ee3d4c87c251ea0c789bb2b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "bb99457d8ee3d4c87c251ea0c789bb2b",
+      "reviewId": "a75c70de495016126eeb14c00b11b8b1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "02c322f85e109faa753ab96f4c28b1a7a1d2a9723c86bbcec73fa10db753f83e",
+      "seconds": 4,
+      "source": {
+        "no": 188,
+        "folder": "nd_feelgood_sl",
+        "name": "네이처다이어트 필 굿 시니어라이트(터키 앤 치킨) 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_sl/nd_feelgood_sl.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922901636",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_sl/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_sl/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_sl/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_sl/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_sl/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_sl/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0c8ced64959895e4250d50d13f07dac6",
+        "sha256": "02c322f85e109faa753ab96f4c28b1a7a1d2a9723c86bbcec73fa10db753f83e"
+      },
+      "scopeId": "25348e6bcf961a9530f94b2957ab49d257c850ca09653a48479bb5db1b87f22a",
+      "scopeRegistrationSha256": "2ede325feb6d4b48c5c3b1d01b25d3488b6a17d60892497ad6f8ef9f2acc4ac8",
+      "aiEvidenceSha256": "9c10090e79edccd6bf5b1ecc2b8187ac3ca40c0a51183721bad1e6fa3a83f7fa",
+      "receiptSha256": "6535be807e9a56fd116f04d3b49e4ca481a4e382dccd6c34383c6f265618e909",
+      "eligibilitySha256": "05df591db88279ca1435de9844d16060aacb6e9ec97aadf61d477bad3602c6f7",
+      "evidenceManifestSha256": "56619c3044eb77d33d7255dce43d50d45571e50d2cb1da625956eaa159e5f3c2"
+    },
+    "videoReviewSha256": "f46bc0e7756fa2e2488843dbfe1c80169a21987d0f12e3efa4c469ba6bc09eb4",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
   }
 }

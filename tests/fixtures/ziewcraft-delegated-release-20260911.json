@@ -538,5 +538,21 @@
   "perity_broccoli_shampoo_250ml": {
     "productId": "p_206",
     "sha256": "17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227"
+  },
+  "bm_kibble_9kg": {
+    "productId": "p_140",
+    "sha256": "0bc23424049731b1887a5c8a1de0cd925693499beed494f978533933d9471136"
+  },
+  "rw_collar_chainreaction_martingale_24": {
+    "productId": "p_142",
+    "sha256": "aa482207fb0919575123f03a427c7a88da6b4acb77007fab8e26a4ba5c7e83a6"
+  },
+  "nd_feelgood_sl": {
+    "productId": "p_188",
+    "sha256": "02c322f85e109faa753ab96f4c28b1a7a1d2a9723c86bbcec73fa10db753f83e"
+  },
+  "perity_carrot_shampoo_refill_500ml": {
+    "productId": "p_203",
+    "sha256": "a6f0bbc2c888b2a836c7abed06798ca54dae9b382f8275f7e2aaad34576b61f5"
   }
 }
