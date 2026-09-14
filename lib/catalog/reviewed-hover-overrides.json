@@ -256,18 +256,102 @@
     "videoDeliveryCommit": "06389efcf9dd78f188bd1fb37cd29cebe340dcb6"
   },
   "fumble_bath": {
-    "video": "/images/products/catalog/fumble_bath/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_bath/videos/96fce0449d4f2ec81c30dcb304fff22580487889991920ac181aae790cbc5533/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "73e83c96ab9fd5a071b480598205ab39",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "73e83c96ab9fd5a071b480598205ab39",
+      "reviewId": "766fb8f1377974fd04e9a257b0e8ebbe",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "96fce0449d4f2ec81c30dcb304fff22580487889991920ac181aae790cbc5533",
+      "seconds": 4,
+      "source": {
+        "no": 211,
+        "folder": "fumble_bath",
+        "name": "펌블펫솝_강아지 입욕제 슈룹 스파 린스 아로마 힐링바스",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_bath/fumble_bath.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8844115328",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_bath/details/2.webp",
+          "/images/products/catalog/fumble_bath/details/3.webp",
+          "/images/products/catalog/fumble_bath/details/4.webp",
+          "/images/products/catalog/fumble_bath/details/5.webp",
+          "/images/products/catalog/fumble_bath/details/6.webp",
+          "/images/products/catalog/fumble_bath/details/7.webp",
+          "/images/products/catalog/fumble_bath/details/8.webp",
+          "/images/products/catalog/fumble_bath/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "320598a3f841256906228017dbd08ba2",
+        "sha256": "96fce0449d4f2ec81c30dcb304fff22580487889991920ac181aae790cbc5533"
+      },
+      "scopeId": "85c200162490ab4d8ae1403a97b6c84a9ee7ceb592683747f1e67d1c56a41f37",
+      "scopeRegistrationSha256": "bd6d4b2cd17767bc1e8f4a5298eeeaf13d0c2ec6ec04b69870f0414101b40259",
+      "aiEvidenceSha256": "eaf77f59cfb951a028c16ba897a669eda41aabf582c3f24ba3f6e81e47669dcc",
+      "receiptSha256": "75db12cf1b4dde96e1925e932007c243f2844486230bb75400207ed01df8c717",
+      "eligibilitySha256": "68b7322bf610a913363ae5747e137a2d2179705fca1eb65653fa168ebef8e6b6",
+      "evidenceManifestSha256": "94ed887eea8087e78f78571f5a107b7b377f47b8bdd3b08866fe7de3883f7efa"
+    },
+    "videoReviewSha256": "abc8da85aa1a59165001afdbb6788263d1806a865cd0078c97e70adebc95ce76",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-be83507fe811"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "252dc833709692269692d7a9f10b82923827c6a0"
   },
   "fumble_brushingmist": {
-    "video": "/images/products/catalog/fumble_brushingmist/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_brushingmist/videos/8b4af0e37fa46f3a5dc590f09f2fa2579494ae3556971602b1c4b31e44a91dd6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "3e7a6ffbfd8a45f89adc480f4d285eea",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3e7a6ffbfd8a45f89adc480f4d285eea",
+      "reviewId": "403ef26b253d4dc15cb3af74557e1236",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "8b4af0e37fa46f3a5dc590f09f2fa2579494ae3556971602b1c4b31e44a91dd6",
+      "seconds": 4,
+      "source": {
+        "no": 210,
+        "folder": "fumble_brushingmist",
+        "name": "펌블펫솝_강아지 수분 모발영양 정전기방지 아로마 브러싱 미스트 슈룹",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_brushingmist/fumble_brushingmist.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8844132653",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_brushingmist/details/2.webp",
+          "/images/products/catalog/fumble_brushingmist/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e7156e1d5767579359a3f4b5f3de2570",
+        "sha256": "8b4af0e37fa46f3a5dc590f09f2fa2579494ae3556971602b1c4b31e44a91dd6"
+      },
+      "scopeId": "443a5c0a1a9b2ffd408f865dfcf1cba91059115feb46468dc09bdd52124ef8f6",
+      "scopeRegistrationSha256": "484f57ad34d676f7c147b779544c98da99c5e7395daed78b30f496196737100c",
+      "aiEvidenceSha256": "bb665369ee471e879fc4c297a2aaf6f36a3dad6a054a58e5e062302c6406d23b",
+      "receiptSha256": "f5736dafcbc5096333f926ffe402e5c62ece4647a5a68f09be3d983619bb0d4f",
+      "eligibilitySha256": "36e7c917dc7caa2fc80c8696f6d3abc58941fc816db5b9c40707a41a11c4e1ca",
+      "evidenceManifestSha256": "b8078b6e32646310b732565fc4a31a4b0e6bbc7339c5d4631d2078092f013f62"
+    },
+    "videoReviewSha256": "f624c4bafc78206e1b1d90e91f8c13cfb9f69bf69d164646b813557e8bc35d00",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-1bc2131f43dc"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "252dc833709692269692d7a9f10b82923827c6a0"
   },
   "fumble_brushingmist_perfume": {
     "video": "/images/products/catalog/fumble_brushingmist_perfume/videos/hover.mp4",
@@ -366,11 +450,49 @@
     "videoJobId": "hover-static72-20260903-82e8f050bb84"
   },
   "fumble_toothpaste": {
-    "video": "/images/products/catalog/fumble_toothpaste/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_toothpaste/videos/715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "b0a19e9fcc5457b98ecec6432101d2de",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b0a19e9fcc5457b98ecec6432101d2de",
+      "reviewId": "e7fa79cc4713393ec2eb750c1ac5b880",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b",
+      "seconds": 4,
+      "source": {
+        "no": 209,
+        "folder": "fumble_toothpaste",
+        "name": "펌블펫솝_강아지 치약 입냄새 치석제거 슈룹4220",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_toothpaste/fumble_toothpaste.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8844148085",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_toothpaste/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3074309a4db38ba4d448b4097ce29e36",
+        "sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b"
+      },
+      "scopeId": "e30935dc9afc442c9c69a049a2a9608ac6a5117511b76a2c222ecc3205178637",
+      "scopeRegistrationSha256": "faa30c3e1e7690590925f40f8d0e47fdfa7d1273356400e78d6b34d230adac72",
+      "aiEvidenceSha256": "ecd0446075101b5af2bb6d06ca10e3547da6cdffc9172bd6d0c53336a7aab92b",
+      "receiptSha256": "a47cf2ed036e5857cc5788525255b294d9cc9aa7476427537994595b159339b4",
+      "eligibilitySha256": "4081e8c6c91feb249646581f76e57e8ef3e5f4389a9c7c500da5e0a4cacbacfd",
+      "evidenceManifestSha256": "d65f849779bc04edf4e64fe31410b9770a6337d57775bccce40dbc5dd9bdfb16"
+    },
+    "videoReviewSha256": "cfa93e905b521d8e9f904eb7ed2009835801d528ddba5d1458fb5c65a2f8dd8b",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-b15e04796893"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "252dc833709692269692d7a9f10b82923827c6a0"
   },
   "heyrex_taurus_2l": null,
   "heyrex_taurus_filter_5p": {

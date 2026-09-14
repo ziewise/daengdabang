@@ -56,6 +56,19 @@ test('reviewed four-second leash demonstrations survive the storefront leash cat
     sync(worn);
     assert.equal(valid(worn.product, worn.records), false, 'existing dog-worn leash video still requires both segments');
 });
+test('toothpaste uses its reviewed hand demonstration as oral care rather than edible treats', () => {
+    const f = fixture('fumble_toothpaste');
+    assert.equal(f.product.raw.isFood, false);
+    assert.equal(f.product.raw.isHygiene, true);
+    assert.equal(f.product.raw.useMain, '위생/미용');
+    assert.equal(f.record.videoQuality, 'approved_product_interaction');
+    f.product.subcategory = 'hygiene';
+    assert.equal(valid(f.product, f.records), true);
+    assert.equal(safeCatalogHoverVideo(f.product), f.record.video);
+    f.record.delegatedReview.server_technical_gate_passed = false;
+    assert.equal(valid(f.product, f.records), false);
+});
+
 test('actual owner-delegated AI receipts activate exact product video bytes without a human claim', () => {
     assert.ok(Object.keys(records).length);
     for (const [folder, record] of Object.entries(records)) {

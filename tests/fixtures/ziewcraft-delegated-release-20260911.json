@@ -554,5 +554,17 @@
   "perity_carrot_shampoo_refill_500ml": {
     "productId": "p_203",
     "sha256": "a6f0bbc2c888b2a836c7abed06798ca54dae9b382f8275f7e2aaad34576b61f5"
+  },
+  "fumble_toothpaste": {
+    "productId": "p_209",
+    "sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b"
+  },
+  "fumble_brushingmist": {
+    "productId": "p_210",
+    "sha256": "8b4af0e37fa46f3a5dc590f09f2fa2579494ae3556971602b1c4b31e44a91dd6"
+  },
+  "fumble_bath": {
+    "productId": "p_211",
+    "sha256": "96fce0449d4f2ec81c30dcb304fff22580487889991920ac181aae790cbc5533"
   }
 }
