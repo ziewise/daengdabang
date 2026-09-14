@@ -494,5 +494,13 @@
   "yora_allbreed_6kg": {
     "productId": "p_176",
     "sha256": "b3aac8ef9525ec4245533cbfc362633161334fca8328d53acabef8643f07fdc4"
+  },
+  "rw_shoes_hiandlight_23": {
+    "productId": "p_156",
+    "sha256": "c51d2c4d8998e423ff662631273dd7163c02dbb2511e4c42ecb4e982cace7f94"
+  },
+  "packt_endeavor_leash_1.5m": {
+    "productId": "p_44",
+    "sha256": "977350ede22e76edad68c81d204de453f80ecc4333d1256a852718301387e7bb"
   }
 }

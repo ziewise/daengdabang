@@ -922,7 +922,51 @@
     "videoJobId": "hover-photo-20260903-facb59633a6b"
   },
   "packt_endeavor_collar": null,
-  "packt_endeavor_leash_1.5m": null,
+  "packt_endeavor_leash_1.5m": {
+    "video": "/images/products/catalog/packt_endeavor_leash_1.5m/videos/977350ede22e76edad68c81d204de453f80ecc4333d1256a852718301387e7bb/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "3bdf7a1184a74f9e3042a4cfc98db480",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3bdf7a1184a74f9e3042a4cfc98db480",
+      "reviewId": "3f047b85aa004d0715637636a50c7dd6",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "977350ede22e76edad68c81d204de453f80ecc4333d1256a852718301387e7bb",
+      "seconds": 4,
+      "source": {
+        "no": 44,
+        "folder": "packt_endeavor_leash_1.5m",
+        "name": "팩트(PACKT) 1.5m 엔데버 올테란 방수리드줄",
+        "brandEn": "PACKT",
+        "isFood": false,
+        "image": "/images/products/catalog/packt_endeavor_leash_1.5m/packt_endeavor_leash_1.5m.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/12025260213",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/packt_endeavor_leash_1.5m/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0c5da94c065e6c877994d7d87f542bb9",
+        "sha256": "977350ede22e76edad68c81d204de453f80ecc4333d1256a852718301387e7bb"
+      },
+      "scopeId": "bef8321b78c62f7a099da1b628cdd4a57eaa6b1ce2a43bfa10f610e4de2b5a3d",
+      "scopeRegistrationSha256": "a8fedf1f6cfe92a9922501ccae583e9c92b18cc37bb5e0091959ffcea25d11a2",
+      "aiEvidenceSha256": "7b09f5b4f50e0fbef0bcf9575d0141af851995b3ddef771c0a05aaa68cfedbda",
+      "receiptSha256": "98ec71ae938156a9be0af984bb8821bbd6d1254afd43ce220cc1c010980dfc68",
+      "eligibilitySha256": "f825c9179d3d6e3d57a5a6f91da53eb6d2f281a1f5174ebec1c7e9bf7b982062",
+      "evidenceManifestSha256": "a63451aac28071c0fb0973f62759e6b0cfeab2f005afa1ca5ce20a8e25e7918f"
+    },
+    "videoReviewSha256": "ef789ac5c108c00bfe5013f2adadd975176a8594017110e065904054cb3296df",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "28f5d7fa10c3b0f40d4795ed4e6a8dcd8328cab2"
+  },
   "pdh_lickingmat": null,
   "pdh_slowfeeder_paw": {
     "video": "/images/products/catalog/pdh_slowfeeder_paw/videos/c62f342413b5c45815c7e4fd5ebb28e967c9d308fa05f1f6fa55bbe2054a6d06/hover.mp4",
@@ -4326,7 +4370,58 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-719e33681e4b"
   },
-  "rw_shoes_hiandlight_23": null,
+  "rw_shoes_hiandlight_23": {
+    "video": "/images/products/catalog/rw_shoes_hiandlight_23/videos/c51d2c4d8998e423ff662631273dd7163c02dbb2511e4c42ecb4e982cace7f94/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "a8f9001e1847635de0917ae88aa626eb",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a8f9001e1847635de0917ae88aa626eb",
+      "reviewId": "5160505932d2833b17c8e84fac5e9f60",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c51d2c4d8998e423ff662631273dd7163c02dbb2511e4c42ecb4e982cace7f94",
+      "seconds": 8,
+      "source": {
+        "no": 156,
+        "folder": "rw_shoes_hiandlight_23",
+        "name": "러프웨어 하이 앤 라이트 트레일 슈즈 (2족)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001161/image/detail/1000001154_detail_09.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001161",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001161/image/detail/1000001154_detail_162.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001161/image/detail/1000001154_detail_234.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001161/image/detail/1000001154_detail_337.jpg"
+        ],
+        "details": [
+          "/images/products/catalog/jsk-source/b53eeb59d967bae7a14762524a9af09b04e088f477f037301e142703f0405692.jpg",
+          "/images/products/catalog/jsk-source/14813ec86f4a927e1e6dd3986fd1eb3a8dc3d3fee9e9c1c978b738f297b36c4a.jpg",
+          "/images/products/catalog/jsk-source/ba3e2a3ce045511fae39906bf3c9b6ee0200c0307200a316ff24513a10b8a067.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230914/4ced03b7dd6d129f0e11992b87121f91_105446.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "111e9e3901fd9e99fedb467532dd492d",
+        "sha256": "c51d2c4d8998e423ff662631273dd7163c02dbb2511e4c42ecb4e982cace7f94"
+      },
+      "scopeId": "6ffeb07bed54b2aa423c40d9788a6d9e931b2e8cc562e7489b56be367aceb1a1",
+      "scopeRegistrationSha256": "9e6cdf35ae9fe7e742ce06637488a6b52a40e9fc1f80fb988f2e00a7e53663d7",
+      "aiEvidenceSha256": "7481f687927790d1bc332449823c6b9d689fd85fe5f7bc85d5ee14f8dce480fa",
+      "receiptSha256": "13c77a33f1c5328f75bcb9ad4051b89c4107781e066aad2094106cdb84cf4ed9",
+      "eligibilitySha256": "d6f733b3988c5d08558abc74e42fe388a75f0083e798cb502855ac2ea5a4154b",
+      "evidenceManifestSha256": "3b85317121c8db14d85e2d5c8281f6fd049327a2c0863dee946ecb209785ab76"
+    },
+    "videoReviewSha256": "7a5cf9e3aad68ac16660a78d2cc402a7f93490fa7d221ea4a60fd4a46be91730",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "28f5d7fa10c3b0f40d4795ed4e6a8dcd8328cab2"
+  },
   "rw_sierracup_310": null,
   "rw_spokespup_tag": null,
   "rw_stashbag_mini": {
