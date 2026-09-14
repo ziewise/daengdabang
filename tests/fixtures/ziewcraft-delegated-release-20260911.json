@@ -510,5 +510,13 @@
   "rw_palisades_pack_26": {
     "productId": "p_28",
     "sha256": "66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30"
+  },
+  "rw_jsk_1000001243": {
+    "productId": "p_459",
+    "sha256": "43977ace3d6d4f1b014fbedb8d46a388af0fdc2391a34f68b4a43940c2be916a"
+  },
+  "rw_jsk_1000000137": {
+    "productId": "p_366",
+    "sha256": "0b245877e78463bf818b9c307a6d1dc7d834b39a41b6f1255d4146fd1e3d110b"
   }
 }
