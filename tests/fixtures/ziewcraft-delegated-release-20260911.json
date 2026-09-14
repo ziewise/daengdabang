@@ -490,5 +490,9 @@
   "rw_hiandlight_leash_26": {
     "productId": "p_2",
     "sha256": "ed27cf73b30dbef6315aac3d08beea0c54568595e879016c4568566c6a67901c"
+  },
+  "yora_allbreed_6kg": {
+    "productId": "p_176",
+    "sha256": "b3aac8ef9525ec4245533cbfc362633161334fca8328d53acabef8643f07fdc4"
   }
 }

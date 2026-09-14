@@ -5815,7 +5815,53 @@
     "videoDeliveryCommit": "1ccb21b9b63eb26ee4dc3a7b1a9e8f3374488c89"
   },
   "yora_allbreed_2.5kg": null,
-  "yora_allbreed_6kg": null,
+  "yora_allbreed_6kg": {
+    "video": "/images/products/catalog/yora_allbreed_6kg/videos/b3aac8ef9525ec4245533cbfc362633161334fca8328d53acabef8643f07fdc4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "8bd446e44b8159d34c9882d956099e83",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8bd446e44b8159d34c9882d956099e83",
+      "reviewId": "6e5c94e243ba74aca59f02ecb3460568",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b3aac8ef9525ec4245533cbfc362633161334fca8328d53acabef8643f07fdc4",
+      "seconds": 4,
+      "source": {
+        "no": 176,
+        "folder": "yora_allbreed_6kg",
+        "name": "요라 올브리드 6kg 전견종 성견용 (250G X 24개 소포장)",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_allbreed_6kg/yora_allbreed_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923050328",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_allbreed_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_allbreed_6kg/details/2.webp",
+          "/images/products/catalog/yora_allbreed_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b9ae9c83774f87f1c4a4cfac37a8d266",
+        "sha256": "b3aac8ef9525ec4245533cbfc362633161334fca8328d53acabef8643f07fdc4"
+      },
+      "scopeId": "2f38f5a486b43108b98df663832706ce11fbf15330a899bf37d6a2cbad7658d5",
+      "scopeRegistrationSha256": "29d9d3d269312b9e3118e3d5ff24db2198aba6ad014c07b8ca21faf96df9c28e",
+      "aiEvidenceSha256": "011aabf9a5a13a84a087712572e0c0212a48c8547d529c6015ff6d50fca8efe8",
+      "receiptSha256": "5558538d644eea54c24035962223ef820d5fd6bb63941492f449e241b835d3bb",
+      "eligibilitySha256": "f64da3e76a96b2f4d9120ca02a91f739a1fa850d902f82a79ad493fb41243f2d",
+      "evidenceManifestSha256": "076a38bf4f5f2c629cbc5f2f74628f7c8a517e1e262c4bf6a94fe1db7d21939c"
+    },
+    "videoReviewSha256": "b299f522302099c53b1c78b1c2ee41fb55b5fe3844b7b9669d0d6ea474d36af2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "544174f37e37fbc79746019ca27349b2fe70bd85"
+  },
   "yora_dental_l_270g": {
     "video": "/images/products/catalog/yora_dental_l_270g/videos/75539048877765041420183616425aefbed4626f0cb014640b1604c1834ba952/hover.mp4",
     "videoProvider": "ziewcraft",
