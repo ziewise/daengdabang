@@ -399,11 +399,53 @@
     "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_bugmist": {
-    "video": "/images/products/catalog/fumble_bugmist/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_bugmist/videos/545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4982210622ac82b6f96653a5d8363f56",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4982210622ac82b6f96653a5d8363f56",
+      "reviewId": "582fcb830eaf617270b75629e36fb099",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d",
+      "seconds": 4,
+      "source": {
+        "no": 219,
+        "folder": "fumble_bugmist",
+        "name": "펌블펫솝_강아지 산책미스트 바이벅비비스프레이 벌레가 싫어하는 아로마오일 150ml",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_bugmist/fumble_bugmist.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840810327",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_bugmist/details/2.webp",
+          "/images/products/catalog/fumble_bugmist/details/3.webp",
+          "/images/products/catalog/fumble_bugmist/details/4.webp",
+          "/images/products/catalog/fumble_bugmist/details/5.webp",
+          "/images/products/catalog/fumble_bugmist/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ddd576093a945a6b61b6453202d72bfc",
+        "sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d"
+      },
+      "scopeId": "39de52dce54535fe5b7c54d582287219be160de8275177305465bf82aaef713d",
+      "scopeRegistrationSha256": "c857a2f97fd32eedd75a7c859f11221e58259165b457cd71e81d8100178c13b2",
+      "aiEvidenceSha256": "a5a3f71ee63602f71e6ce42208f2e537ba12b5b3ce61a1e63fa18d67d2243882",
+      "receiptSha256": "1c17729cf608ef343cf07a0764b55282d24e6f78b2455fecbb5bda35344f86e4",
+      "eligibilitySha256": "12873beca1a18958dc4a62c129ef6dae5fc7924ec5f53c3913d67549f5b5622d",
+      "evidenceManifestSha256": "2398117c3169ae2f2de6520cbf5c1cb1e0b4ea192f83b5b66442f8bad90bc84e"
+    },
+    "videoReviewSha256": "3384f4cfda7fc656034f975223dcdf9b977b6569557865087f71e78b8f041074",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-5e8e17eeae4b"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1d4e889d56b8cd3911f71ee21e91728b02e59e1c"
   },
   "fumble_deodorizer": {
     "video": "/images/products/catalog/fumble_deodorizer/videos/1259bf097de570409733e1dce48bd60808a5d544403b35383012436aa760588e/hover.mp4",
@@ -497,11 +539,50 @@
     "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_footcleanser_set": {
-    "video": "/images/products/catalog/fumble_footcleanser_set/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_footcleanser_set/videos/408aa79f57557fb2d49e01bfd86b225aa9643a9ec58f6bcb7bfc0e115cafe64e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "3716ad30be234330cf614ab7d61f713b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3716ad30be234330cf614ab7d61f713b",
+      "reviewId": "bd81c08550d842fdc19110db78397456",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "408aa79f57557fb2d49e01bfd86b225aa9643a9ec58f6bcb7bfc0e115cafe64e",
+      "seconds": 4,
+      "source": {
+        "no": 220,
+        "folder": "fumble_footcleanser_set",
+        "name": "펌블펫솝_강아지발세정제 워터리스 클렌저 프리풋케어 2개 set",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_footcleanser_set/fumble_footcleanser_set.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840794263",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_footcleanser_set/details/2.webp",
+          "/images/products/catalog/fumble_footcleanser_set/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "76e4568d5dd37e0effa8a2ef3538328d",
+        "sha256": "408aa79f57557fb2d49e01bfd86b225aa9643a9ec58f6bcb7bfc0e115cafe64e"
+      },
+      "scopeId": "8bb35597edd7c0768917ae2863c3686c858e8943081de048eca670fa62977562",
+      "scopeRegistrationSha256": "c40a407c35a5e20a80886e0a1fc5613c613f6157b7ffc962abed0a33665d4da5",
+      "aiEvidenceSha256": "d3579862e2d57686d0dbdd510cf367f05c74edf5bc31c036b78b05e1957e510f",
+      "receiptSha256": "851862a6d3913a45d2c0a58ad1468fa24bef0a5c227c9c2ff8d7e9f5f0ce0928",
+      "eligibilitySha256": "6d27ea447f5e96139188c06ecdb0bdaccc46e9c4af686542a09251690452021c",
+      "evidenceManifestSha256": "1fec5e8c02e8648e7e4ff66e4389c71c11f900568a4ea3c75563d50ee36a3dc5"
+    },
+    "videoReviewSha256": "af1088672c9140af1d1c0dcbb69c5cf501dbe1ea3972047ff7f8c541670b3f06",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-2a50a9485ace"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1d4e889d56b8cd3911f71ee21e91728b02e59e1c"
   },
   "fumble_footsoap_calamine_2": {
     "video": "/images/products/catalog/fumble_footsoap_calamine_2/videos/2ce32fb03e366c67d91a10e42461b56af2fc55057995875bf2b2d0ed6bdd83b6/hover.mp4",

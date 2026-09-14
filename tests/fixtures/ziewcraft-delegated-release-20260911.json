@@ -590,5 +590,13 @@
   "fumble_footsoap_calamine_2": {
     "productId": "p_218",
     "sha256": "2ce32fb03e366c67d91a10e42461b56af2fc55057995875bf2b2d0ed6bdd83b6"
+  },
+  "fumble_bugmist": {
+    "productId": "p_219",
+    "sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d"
+  },
+  "fumble_footcleanser_set": {
+    "productId": "p_220",
+    "sha256": "408aa79f57557fb2d49e01bfd86b225aa9643a9ec58f6bcb7bfc0e115cafe64e"
   }
 }
