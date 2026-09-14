@@ -502,5 +502,13 @@
   "packt_endeavor_leash_1.5m": {
     "productId": "p_44",
     "sha256": "977350ede22e76edad68c81d204de453f80ecc4333d1256a852718301387e7bb"
+  },
+  "ip_slowdog": {
+    "productId": "p_15",
+    "sha256": "b89056557fcc2efb9e5ccd32ade48e07e6abc7695fea6f435828208ad5b9fc31"
+  },
+  "rw_palisades_pack_26": {
+    "productId": "p_28",
+    "sha256": "66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30"
   }
 }
