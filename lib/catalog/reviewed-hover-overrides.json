@@ -354,11 +354,49 @@
     "videoDeliveryCommit": "252dc833709692269692d7a9f10b82923827c6a0"
   },
   "fumble_brushingmist_perfume": {
-    "video": "/images/products/catalog/fumble_brushingmist_perfume/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_brushingmist_perfume/videos/2f3c8b7c831b91aafe4211d01d4425254ca9c5e81000a2caf5e710a22fd87e33/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4ffb6871dc5f71d4416514102c955a5b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4ffb6871dc5f71d4416514102c955a5b",
+      "reviewId": "b6e7f3dc196ea2bee4e47b3272243880",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2f3c8b7c831b91aafe4211d01d4425254ca9c5e81000a2caf5e710a22fd87e33",
+      "seconds": 4,
+      "source": {
+        "no": 213,
+        "folder": "fumble_brushingmist_perfume",
+        "name": "펌블펫솝_브러싱 퍼퓸 수분 정전기 강아지미스트 모발영양 아로마향수",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_brushingmist_perfume/fumble_brushingmist_perfume.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8843538388",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_brushingmist_perfume/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f162bd4bfcd1cb2a2c6da5ee69744891",
+        "sha256": "2f3c8b7c831b91aafe4211d01d4425254ca9c5e81000a2caf5e710a22fd87e33"
+      },
+      "scopeId": "ede01b0444d3fa93cd399d3c5b6cb99e686b5a760e2a414b29b5b6a2d2e6775f",
+      "scopeRegistrationSha256": "f8ee627624af561a066415c51f58b662b8590022b0a47dbc8dc967edc94130e4",
+      "aiEvidenceSha256": "6c00aa2631c68dd88745947b57252aca3864d185e87ba246d9ff7fc9f42c5bde",
+      "receiptSha256": "29353ba3f7be1db6c67ca76fdeda81dd2195a56983658ebc318512e6c2af5f05",
+      "eligibilitySha256": "e94b4b065a6d5b53fb9f20115e4dde3c58e90e5e61e4d82b6376e7afdf9a7acc",
+      "evidenceManifestSha256": "a1237c54ca6b1c87cf6d4f8640dcdbcebab638cfba9418c2db2ad329d23d1ba1"
+    },
+    "videoReviewSha256": "0199dc22b5b816232c4e89b93b85294ad0bd6c2dfc99a0f9605727a2dfad29e5",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-00795b1fcb37"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_bugmist": {
     "video": "/images/products/catalog/fumble_bugmist/videos/hover.mp4",
@@ -413,11 +451,50 @@
     "videoDeliveryCommit": "852ffdcc10fe36f188b7ec8198507d6842768d38"
   },
   "fumble_footcleanser_200ml": {
-    "video": "/images/products/catalog/fumble_footcleanser_200ml/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_footcleanser_200ml/videos/7fc74fd6f2429013381b475c6eaf680636dd5a8e6a987012ee7dc64dda1a386d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "91ec268b1f3a4bddd7fa30dbe6b35227",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "91ec268b1f3a4bddd7fa30dbe6b35227",
+      "reviewId": "84b0fb4cf928ab518ea9a7ed634a1e8b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7fc74fd6f2429013381b475c6eaf680636dd5a8e6a987012ee7dc64dda1a386d",
+      "seconds": 4,
+      "source": {
+        "no": 214,
+        "folder": "fumble_footcleanser_200ml",
+        "name": "펌블펫솝_강아지발세정제 워터리스 클렌저 프리풋케어 200ml",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_footcleanser_200ml/fumble_footcleanser_200ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8843452493",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_footcleanser_200ml/details/2.webp",
+          "/images/products/catalog/fumble_footcleanser_200ml/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "53e76cb3c8c4ad4ade5676c2c52078e6",
+        "sha256": "7fc74fd6f2429013381b475c6eaf680636dd5a8e6a987012ee7dc64dda1a386d"
+      },
+      "scopeId": "c36c9ad9b21c0cbeec08af71a667c3ec0695d0e94cb8dd2179fe75184f3b0f18",
+      "scopeRegistrationSha256": "532d43961dccca9cdbcaae8f8a0b36b43f4b4de011af8a522be56723d0d7365e",
+      "aiEvidenceSha256": "616ca1f9821f975f6523fe36d4e19dc5c7d5f3315ccc0c2788bb5a2e5b119876",
+      "receiptSha256": "c8117dd80e467df437d63b8b354018439f79a93e5fae6ee6cdc0af816910a6b2",
+      "eligibilitySha256": "9212ca6a7cf225e2598cb984631289ba4de26bd9853551726c1213b7c71d1b2b",
+      "evidenceManifestSha256": "a98bf39a107eb9f355e2aa0eb52f48e4f8536cfb2bb731cfa44df2815ef72625"
+    },
+    "videoReviewSha256": "8b06ef70e8e959abc7188fa8b3cf5e12879eb254adf7110a75817816db28c958",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-6764c918fc29"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_footcleanser_set": {
     "video": "/images/products/catalog/fumble_footcleanser_set/videos/hover.mp4",
@@ -426,7 +503,56 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-2a50a9485ace"
   },
-  "fumble_footsoap_calamine_2": null,
+  "fumble_footsoap_calamine_2": {
+    "video": "/images/products/catalog/fumble_footsoap_calamine_2/videos/2ce32fb03e366c67d91a10e42461b56af2fc55057995875bf2b2d0ed6bdd83b6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "c3a8b0184bbb400a7eba8359a1acedc3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c3a8b0184bbb400a7eba8359a1acedc3",
+      "reviewId": "8371dfb8906454d731e189ebe9922c6f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2ce32fb03e366c67d91a10e42461b56af2fc55057995875bf2b2d0ed6bdd83b6",
+      "seconds": 4,
+      "source": {
+        "no": 218,
+        "folder": "fumble_footsoap_calamine_2",
+        "name": "펌블펫솝_강아지 발세정제 발비누 산책 발사탕 가려움 (Foot Care Soap)핑크 칼라민",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_footsoap_calamine_2/fumble_footsoap_calamine_2.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840868956",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_footsoap_calamine_2/details/2.webp",
+          "/images/products/catalog/fumble_footsoap_calamine_2/details/3.webp",
+          "/images/products/catalog/fumble_footsoap_calamine_2/details/4.webp",
+          "/images/products/catalog/fumble_footsoap_calamine_2/details/5.webp",
+          "/images/products/catalog/fumble_footsoap_calamine_2/details/6.webp",
+          "/images/products/catalog/fumble_footsoap_calamine_2/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "921475886f24bc8e8830639af41d2554",
+        "sha256": "2ce32fb03e366c67d91a10e42461b56af2fc55057995875bf2b2d0ed6bdd83b6"
+      },
+      "scopeId": "3ad344a7a7b605dd2f9840f5dcc91fa80fad669bee9e29ff393a3c21c6185f25",
+      "scopeRegistrationSha256": "06143989eb9a4e20b791fc83354241445ba8bc16a51e0959d9e8fa6715c9a09d",
+      "aiEvidenceSha256": "3489513d00e2b3108ae4d9b650cf4455e170285ba30d77a23a9feb4fdd0ff34f",
+      "receiptSha256": "5918d294b92e7db40149a65fe04fbb993b292df13e217fed71e2fcf4b0517a96",
+      "eligibilitySha256": "9550d7bcf880dabf0ac043ee399e4cf8749ea2943cce49b83ae16f9cdc527a13",
+      "evidenceManifestSha256": "0ccd584741dc5751042dcda9a5c7dd0c371d857cc15f860062a9fa4a3be62004"
+    },
+    "videoReviewSha256": "b3d9caf6413e5fe0084dffb991deb1d12ea3a8703c47a0d3629b18d000ef55c2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
+  },
   "fumble_shampoo_laurel": {
     "video": "/images/products/catalog/fumble_shampoo_laurel/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -434,20 +560,140 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-17aeabc69900"
   },
-  "fumble_shampoobar_camelrose": null,
-  "fumble_shampoobar_herbtea": {
-    "video": "/images/products/catalog/fumble_shampoobar_herbtea/videos/hover.mp4",
+  "fumble_shampoobar_camelrose": {
+    "video": "/images/products/catalog/fumble_shampoobar_camelrose/videos/6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "e4b609e62764423db671e1ce0e736dc2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e4b609e62764423db671e1ce0e736dc2",
+      "reviewId": "b992d36da466ba0c244862f468992d9b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90",
+      "seconds": 4,
+      "source": {
+        "no": 217,
+        "folder": "fumble_shampoobar_camelrose",
+        "name": "펌블펫솝_강아지샴푸바 목욕비누 보습 볼륨 아로마 천연 비누 카멜로즈90g",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_shampoobar_camelrose/fumble_shampoobar_camelrose.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840953695",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_shampoobar_camelrose/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "03563e02d8561f2f138f7add4aa55d0d",
+        "sha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90"
+      },
+      "scopeId": "38b81c509638b63643e6226892c185fbccc609cba01b3d210815221e2e1bb89a",
+      "scopeRegistrationSha256": "1a69ceb34ae90d4ebd481ce12fab8dc0553bd17cb5768ca3157a15cac36821a5",
+      "aiEvidenceSha256": "b1f21b712e13b5cf45031ee2532c39c5c828e4100d99618fe33fd0b465c40c38",
+      "receiptSha256": "c5b76afb4923722fdefb7d8cf63ae8318f5dd313f2bd0409b40415044acccc4f",
+      "eligibilitySha256": "ab5b7e9ff42b45105ca987d3f6da011a57faa08e1ee31646c759d9aebd5809e1",
+      "evidenceManifestSha256": "f4ba0fd94d48a770434d93ce95f10517ed14de97ab964b6c1ab0a1bd3795a7f3"
+    },
+    "videoReviewSha256": "8723d4120fb6cd5706bd537a2cbdb016b2d17c7231b96175df5ecb9abb642453",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-d6d8b924c19a"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
+  },
+  "fumble_shampoobar_herbtea": {
+    "video": "/images/products/catalog/fumble_shampoobar_herbtea/videos/f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4139a179d71d75439af77440b1ae9e12",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4139a179d71d75439af77440b1ae9e12",
+      "reviewId": "112907c166880c5ae9c093b7c8360577",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01",
+      "seconds": 4,
+      "source": {
+        "no": 215,
+        "folder": "fumble_shampoobar_herbtea",
+        "name": "펌블펫솝_강아지샴푸바 목욕비누 피부면역 냄새 천연 아로마 허브티티 90g",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_shampoobar_herbtea/fumble_shampoobar_herbtea.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840970435",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_shampoobar_herbtea/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "eb541ff7bdae98eea8263a06c505551b",
+        "sha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01"
+      },
+      "scopeId": "ab22facb460c993673035128adf00e9962220fc7d98c0afde2c24806f4705de8",
+      "scopeRegistrationSha256": "cc476ff8d0ee304a5c8b9425362602f5d0230818852bba2887ff6896d1b991c6",
+      "aiEvidenceSha256": "cc28d02ae6364edcb72e011e5ab693a5b9cbd12d274ae19a5c20f27c1abbd34f",
+      "receiptSha256": "b7ff933b55699c08f57b9a1613296418d6361f88ea8388cbf5a9304d76233683",
+      "eligibilitySha256": "c8f0586c17f146ce3cb045e18f67865dd3075eb896a5a655614686165fe8dd1d",
+      "evidenceManifestSha256": "a1079f7e4517cf5ec2d18a2899cc24df850141156f24acd033ebee8a182e37e0"
+    },
+    "videoReviewSha256": "0c8cd611191ccb0c78a0bbc3e309caf0dfa66aad987fde2956cdaa2c94e10929",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_shampoobar_turkeygreen": {
-    "video": "/images/products/catalog/fumble_shampoobar_turkeygreen/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_shampoobar_turkeygreen/videos/6d3f7eb3eaad4a674387fd456d73cedd6f1868c9f230187514383047a910a005/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "e9817ec113c8639f7be781be19410c1f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e9817ec113c8639f7be781be19410c1f",
+      "reviewId": "e504bf1e7c1b79fc470f7d42c05ee8e8",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6d3f7eb3eaad4a674387fd456d73cedd6f1868c9f230187514383047a910a005",
+      "seconds": 4,
+      "source": {
+        "no": 216,
+        "folder": "fumble_shampoobar_turkeygreen",
+        "name": "펌블펫솝_강아지샴푸바 목욕비누 각질 가려움 천연 아로마 터키그린90g",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_shampoobar_turkeygreen/fumble_shampoobar_turkeygreen.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840963860",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_shampoobar_turkeygreen/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "fab10ab7b4f4dc8757863d615b0c8fdc",
+        "sha256": "6d3f7eb3eaad4a674387fd456d73cedd6f1868c9f230187514383047a910a005"
+      },
+      "scopeId": "93a91a3a880af49699f666d048380b934bee2b1602bf597dac4257307f4331b3",
+      "scopeRegistrationSha256": "e54eead8183572949ac1db0d2695c41ae74499d9154c66e998e8fca62cecd89b",
+      "aiEvidenceSha256": "fdb4a752629b5118e15c37cb80283b5744bdb71d2d1df0c84518951f4d7b5fb6",
+      "receiptSha256": "cbc65503584695347a9e4281bd7ee04ac6d90c00977b6cd9436e53e48c742c1d",
+      "eligibilitySha256": "a3acdc17fd5a331639d34b1c052729340a96a59b3f0367c76763a3d5bfd457e6",
+      "evidenceManifestSha256": "9557b05861f8ee2a3d8b9cf7304cb0b8aa079fdff3be658cd34b300109a90e9d"
+    },
+    "videoReviewSha256": "4fa36be18d7d305010857c2886d46c70829a29a5443cbbc16f800173264ef0ec",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-82e8f050bb84"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_toothpaste": {
     "video": "/images/products/catalog/fumble_toothpaste/videos/715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b/hover.mp4",
