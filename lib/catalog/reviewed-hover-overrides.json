@@ -7045,7 +7045,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4d8ee580e28f41b7cb01413253b06e5cf1a6d077"
   },
-  "soopa_healthybites_kaleapple": null,
+  "soopa_healthybites_kaleapple": {
+    "video": "/images/products/catalog/soopa_healthybites_kaleapple/videos/a1504fe046fad712c7ef221d120bf8d8016313a1d127df948823213632dd64a4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "1e520ac6d2faa106672b17a98be14b80",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1e520ac6d2faa106672b17a98be14b80",
+      "reviewId": "da3ee4077805f48ee474c01eec23970a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a1504fe046fad712c7ef221d120bf8d8016313a1d127df948823213632dd64a4",
+      "seconds": 4,
+      "source": {
+        "no": 297,
+        "folder": "soopa_healthybites_kaleapple",
+        "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 야채 케일&사과 50g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_healthybites_kaleapple/soopa_healthybites_kaleapple.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107664990",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/2.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/3.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/4.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/5.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/6.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6b395ea5a0cf8b6bd04ae598ffcfced9",
+        "sha256": "a1504fe046fad712c7ef221d120bf8d8016313a1d127df948823213632dd64a4"
+      },
+      "scopeId": "bbaf9d88cc197d76afe13a3e1866b6cedf636f8f667418776cac25af845949a7",
+      "scopeRegistrationSha256": "071a444a0b1b44c0d94c9995eeab0787c9971091e2722d0727c07d17cd9c2a13",
+      "aiEvidenceSha256": "7f1f90da04df5212e39487355151ce2ebd6fd2d1babd950c01d1d17feb11f838",
+      "receiptSha256": "4f1d47cc1f0a845c535350178312491642e87a0591c1acb964738c36078a3147",
+      "eligibilitySha256": "79b26ab263ae34b85c28d682bcea2b7f29188f34404e28e25ad9f440f41fd1a4",
+      "evidenceManifestSha256": "fd2f633816a84c12fbe6963087678b55f9738abf3d5c33a66bbe67e914fa1e29"
+    },
+    "videoReviewSha256": "2c927812bd1e93a3de6e341ac869b20027530331ff2dce53097e05daeb060e7f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "49d7c0b51716cc84316b5a45a908f7e0a8caaf24"
+  },
   "sweetpet_icecream_strawberry": {
     "video": "/images/products/catalog/sweetpet_icecream_strawberry/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -11142,5 +11191,55 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
+  },
+  "soopa_healthybites_bananapumpkin": {
+    "video": "/images/products/catalog/soopa_healthybites_bananapumpkin/videos/1ef5be3ae221e4385f60e868e68913110bca7e33a31a15b252b966f00add5208/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "e277816092ac1134248bba9144d0edb8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e277816092ac1134248bba9144d0edb8",
+      "reviewId": "08bc16710cc68e4c7746eb9ef5d733ee",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1ef5be3ae221e4385f60e868e68913110bca7e33a31a15b252b966f00add5208",
+      "seconds": 4,
+      "source": {
+        "no": 299,
+        "folder": "soopa_healthybites_bananapumpkin",
+        "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 바나나&호박 50g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_healthybites_bananapumpkin/soopa_healthybites_bananapumpkin.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7100649159",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_healthybites_bananapumpkin/details/2.webp",
+          "/images/products/catalog/soopa_healthybites_bananapumpkin/details/3.webp",
+          "/images/products/catalog/soopa_healthybites_bananapumpkin/details/4.webp",
+          "/images/products/catalog/soopa_healthybites_bananapumpkin/details/5.webp",
+          "/images/products/catalog/soopa_healthybites_bananapumpkin/details/6.webp",
+          "/images/products/catalog/soopa_healthybites_bananapumpkin/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5cfd41eda7ec87bd403c23f0ff34e184",
+        "sha256": "1ef5be3ae221e4385f60e868e68913110bca7e33a31a15b252b966f00add5208"
+      },
+      "scopeId": "20e9e68d2a24a7ed2dddfaeda86482594ce51741781e7608572c6ab726a482b7",
+      "scopeRegistrationSha256": "2fa7cc6c4475d839ea2708a5596be70b5cbaa67c91e04cbe39e233678f7bd740",
+      "aiEvidenceSha256": "280b63b951d591d401e8642bba96cac3764cdf9214bfd0a9f9991538e4910b87",
+      "receiptSha256": "874d8d6e2a0931375fd1b2f66a93329ef615ac4901214f67fb8a7af439725b05",
+      "eligibilitySha256": "1de51777e52b1d5bc29a4d200535305f796c5ac759d104093d1f0c10c2db6196",
+      "evidenceManifestSha256": "f3141bf88470f458e591bded43f35810290a2f13d1a49ca0dbfd08748d886be6"
+    },
+    "videoReviewSha256": "b77e6ab15be03cbdbde358753a9b728622a890e1a49520c3e360024cffc57e1a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "49d7c0b51716cc84316b5a45a908f7e0a8caaf24"
   }
 }

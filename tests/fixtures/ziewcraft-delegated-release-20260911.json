@@ -630,5 +630,13 @@
   "soopa_chew_papaya": {
     "productId": "p_290",
     "sha256": "5177a7a7da0e883885d3c02263a046e30766466677c5ecab1a0239824da875a0"
+  },
+  "soopa_healthybites_kaleapple": {
+    "productId": "p_297",
+    "sha256": "a1504fe046fad712c7ef221d120bf8d8016313a1d127df948823213632dd64a4"
+  },
+  "soopa_healthybites_bananapumpkin": {
+    "productId": "p_299",
+    "sha256": "1ef5be3ae221e4385f60e868e68913110bca7e33a31a15b252b966f00add5208"
   }
 }
