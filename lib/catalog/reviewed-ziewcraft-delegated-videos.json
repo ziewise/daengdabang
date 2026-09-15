@@ -73576,5 +73576,306 @@
       "checkedAt": "2026-09-15T08:05:03.809326+00:00",
       "sha256": "ea48bf88533eb17d4c9b7f2fcf1938f9ccd44e8355c9b9f30221d2a44360e63e"
     }
+  },
+  "rw_jsk_1000001233": {
+    "schema": "ddb.ziewcraft-owner-delegated-hover.v1",
+    "publicationStatus": "approved",
+    "productId": "p_452",
+    "folder": "rw_jsk_1000001233",
+    "video": "/images/products/catalog/rw_jsk_1000001233/videos/de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047/hover.mp4",
+    "sha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047",
+    "videoQuality": "approved_dog_interacting",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4e7c4996fe3bff7d8acfd7cdb9b86bd0",
+      "reviewId": "ff22db4447f6f6af52a603fab3fb34ab",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047",
+      "seconds": 4,
+      "source": {
+        "no": 452,
+        "folder": "rw_jsk_1000001233",
+        "name": "러프웨어 낫 어 콘 반려견 장난감(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_022.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001233",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_17.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_244.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_330.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_452.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_59.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001233/image/detail/1000001233_detail_678.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/7bc76e4eb3e66af05b9cd7b9a3921bd3_001554.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/07769413ccddccbd18aa1a712a2a51cd_010152.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/f4630ec5f0406ba85a52ca5aec227a4e_145559.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "05acf1b763d3e69543b7024d8bedbe66",
+        "sha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047"
+      },
+      "scopeId": "66b32a7ab0b17da2263e1f1279c2f9b31158ef137d85089e24b6a5db42643b37",
+      "scopeRegistrationSha256": "fe856e7f769320ff88e0cb70dab96066e729c3fef4c6b39ecb71d553ce14736c",
+      "aiEvidenceSha256": "d0264ece8a69792125d50e415e9179a0f337d39a34fd3d5a4f6140da35809704",
+      "receiptSha256": "532b454c894883b3b6c92be930b2ce330a291dff4546c5476f5461fd274efbcd",
+      "eligibilitySha256": "563f1d20c27bd630e728adc8bcc3de864da2fe81f76cd456069b1869d7b595a5",
+      "evidenceManifestSha256": "a6bcf9c02c92bd7eebab2da92ec11e04b1f4737c4fd7c518451e5f0796138d56"
+    },
+    "delegatedReview": {
+      "api_job_id": "4e7c4996fe3bff7d8acfd7cdb9b86bd0",
+      "bindings": {
+        "native_video": {
+          "artifact_id": "a8b5153679b048f588aa6407ee87a226",
+          "sha256": "d7ce41b7963e0d9bab48176cd06f872f7658590b85bbca1beb10c786cc04d816"
+        },
+        "review_video": {
+          "artifact_id": "05acf1b763d3e69543b7024d8bedbe66",
+          "sha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047"
+        },
+        "terminal": {
+          "artifact_id": "9e068a5415902f52f53c57ac9db1036c",
+          "sha256": "57047602144410519ab71e807eed675ba126c20c0c1dbb18d9803a9899d78c7a"
+        }
+      },
+      "checks": {
+        "anatomy_and_motion": true,
+        "camera_and_framing": true,
+        "no_prohibited_overlays": true,
+        "product_identity": true,
+        "temporal_stability": true
+      },
+      "complete_product": true,
+      "coverage": {
+        "native_frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96
+        ]
+      },
+      "evidence_bytes_verified": true,
+      "evidence_content_verified": false,
+      "human_approved": false,
+      "human_identity_verified": false,
+      "numeric_boundary_evidence": null,
+      "owner_delegated_shop_candidate": true,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "previous_review_id": null,
+      "private_only": true,
+      "product": {
+        "color": "2025 Biolumin turquoise/white marbled Gnawt-a-Cone",
+        "product_id": "p_452",
+        "sku": "rw_jsk_1000001233"
+      },
+      "product_reference_assets": [
+        {
+          "asset_id": "2cd0af986ae579363bd6c68887d51d0d",
+          "sha256": "74a252e540161b217f14862531f7c81261a02261841a1febff913b180620de8a",
+          "source_sha256": "74a252e540161b217f14862531f7c81261a02261841a1febff913b180620de8a"
+        },
+        {
+          "asset_id": "a9fbb69f0508c7763368bc7ef52a99e1",
+          "sha256": "3890c56d4823fc1cda5ac2e0afb56896b5326833e57844648c4dcc55f59b694e",
+          "source_sha256": "3890c56d4823fc1cda5ac2e0afb56896b5326833e57844648c4dcc55f59b694e"
+        }
+      ],
+      "production_eligible": false,
+      "publication_allowed": false,
+      "publication_authority": "shop_owner_separate_decision",
+      "required_final_seconds": 4,
+      "retry_reason": "",
+      "review_actor": {
+        "evidence_id": "ddb-ai-p_452-4e7c4996fe3bff7d8acfd7cdb9b86bd0-all97-v1",
+        "evidence_sha256": "d0264ece8a69792125d50e415e9179a0f337d39a34fd3d5a4f6140da35809704",
+        "full_segment_watched": false,
+        "kind": "ai"
+      },
+      "review_id": "ff22db4447f6f6af52a603fab3fb34ab",
+      "reviewed_at": "2026-09-15T09:29:09.171893Z",
+      "schema_version": 1,
+      "scope_id": "66b32a7ab0b17da2263e1f1279c2f9b31158ef137d85089e24b6a5db42643b37",
+      "semantic_verified": false,
+      "server_technical_gate_passed": true,
+      "status": "accepted",
+      "terminal_provenance": {
+        "artifact_id": "9e068a5415902f52f53c57ac9db1036c",
+        "canonical_review": true,
+        "frame_count": 96,
+        "frame_index": 95,
+        "height": 1080,
+        "mime_type": "image/png",
+        "native_artifact_id": "a8b5153679b048f588aa6407ee87a226",
+        "native_artifact_sha256": "d7ce41b7963e0d9bab48176cd06f872f7658590b85bbca1beb10c786cc04d816",
+        "origin": "server_decoded_terminal",
+        "pixel_encoding": "bgr24",
+        "pixel_sha256": "a292f2831c8bc3ee088dcb62ab68446717817b75f670283d57fe861c6058a27b",
+        "png_compression": 3,
+        "producer": "ziewcraft-human-review-media-r49-v1",
+        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+        "sha256": "57047602144410519ab71e807eed675ba126c20c0c1dbb18d9803a9899d78c7a",
+        "source_artifact_id": "05acf1b763d3e69543b7024d8bedbe66",
+        "source_artifact_sha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047",
+        "source_rendition": "review",
+        "width": 1080
+      }
+    },
+    "delegationScope": {
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "product": {
+        "color": "2025 Biolumin turquoise/white marbled Gnawt-a-Cone",
+        "product_id": "p_452",
+        "sku": "rw_jsk_1000001233"
+      },
+      "references": [
+        {
+          "asset_id": "2cd0af986ae579363bd6c68887d51d0d",
+          "sha256": "74a252e540161b217f14862531f7c81261a02261841a1febff913b180620de8a",
+          "source_sha256": "74a252e540161b217f14862531f7c81261a02261841a1febff913b180620de8a"
+        },
+        {
+          "asset_id": "a9fbb69f0508c7763368bc7ef52a99e1",
+          "sha256": "3890c56d4823fc1cda5ac2e0afb56896b5326833e57844648c4dcc55f59b694e",
+          "source_sha256": "3890c56d4823fc1cda5ac2e0afb56896b5326833e57844648c4dcc55f59b694e"
+        }
+      ],
+      "required_final_seconds": 4,
+      "scene_asset_id": "1b9a46bdb4fa0b3ab5d1c84f3fb165ee",
+      "scene_sha256": "767be7de1104cc59edb9547a33b76c64064b682e8fe251fdcc066623695cd68e",
+      "schema_version": 1,
+      "scope_id": "66b32a7ab0b17da2263e1f1279c2f9b31158ef137d85089e24b6a5db42643b37",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
+    },
+    "currentEligibility": {
+      "owner_delegated_shop_candidate_current": true,
+      "reason": null,
+      "reviewId": "ff22db4447f6f6af52a603fab3fb34ab",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "scopeId": "66b32a7ab0b17da2263e1f1279c2f9b31158ef137d85089e24b6a5db42643b37",
+      "human_approved": false,
+      "publication_allowed": false
+    },
+    "technical": {
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "codec": "avc1",
+      "pixelFormat": "yuv420p",
+      "fullDecode": true,
+      "audioStreams": 0,
+      "fastStart": true
+    },
+    "publication": {
+      "actor": "ai",
+      "ownerAuthorized": true,
+      "evidenceVerified": true,
+      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
+      "technicalProofSha256": "642533cf044bca15a20a034bc1e9c189546f826cfafb5806ff565545de8a523e",
+      "checkedAt": "2026-09-15T09:29:27.821893+00:00",
+      "sha256": "9f86eaaaf8be38c743b3b08614c3de750540f4075cc4cbd98c67fbb50bdd4443"
+    }
   }
 }

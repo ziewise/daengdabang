@@ -698,5 +698,9 @@
   "annapet_wine": {
     "productId": "p_245",
     "sha256": "01a37cfdca9edbb57b828be1251e4e1dbac7d563c4b790907d11bf5410bedfb6"
+  },
+  "rw_jsk_1000001233": {
+    "productId": "p_452",
+    "sha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047"
   }
 }
