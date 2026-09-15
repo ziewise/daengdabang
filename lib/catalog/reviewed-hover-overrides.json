@@ -138,11 +138,52 @@
     "videoJobId": "hover-static72-20260903-4ac4ac0dab97"
   },
   "annapet_wine": {
-    "video": "/images/products/catalog/annapet_wine/videos/hover.mp4",
+    "video": "/images/products/catalog/annapet_wine/videos/01a37cfdca9edbb57b828be1251e4e1dbac7d563c4b790907d11bf5410bedfb6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "d250b784437af4dec7be1e5c4f744f26",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d250b784437af4dec7be1e5c4f744f26",
+      "reviewId": "bdbc56e2ae2d2632c8bdb5caad22e0c0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "01a37cfdca9edbb57b828be1251e4e1dbac7d563c4b790907d11bf5410bedfb6",
+      "seconds": 4,
+      "source": {
+        "no": 245,
+        "folder": "annapet_wine",
+        "name": "애나펫 강아지 전용와인 댕와인",
+        "brandEn": "Anapet",
+        "isFood": false,
+        "image": "/images/products/catalog/annapet_wine/annapet_wine.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7663113469",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/annapet_wine/details/2.webp",
+          "/images/products/catalog/annapet_wine/details/3.webp",
+          "/images/products/catalog/annapet_wine/details/4.webp",
+          "/images/products/catalog/annapet_wine/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "50c4bc1d6737928de3a4a10b6d43b7e0",
+        "sha256": "01a37cfdca9edbb57b828be1251e4e1dbac7d563c4b790907d11bf5410bedfb6"
+      },
+      "scopeId": "74def2100e565bf11a413cbeaa81a073541191fbcc59051476335f959e0b5f4f",
+      "scopeRegistrationSha256": "7a0be2e6163413f5661594e0acd1bf1acefbf82089dd1ab87abce581e956e717",
+      "aiEvidenceSha256": "508532fa4060103b2ae38fb7d77c50e54bd7bb5aacbc3e2c92f574dbfd31804c",
+      "receiptSha256": "c9bb0cc17ad1515206ac44ca6a7c1b60ed1a68d7e1c40381c84d93c2108f3ecd",
+      "eligibilitySha256": "753414426061ad0c1f1e311338f176cb7e11e1a9eaeea552582f36fd08f99b47",
+      "evidenceManifestSha256": "77b93114b00623bce9f6bb77d8557b4bb919c10a2fe4c6db0acfa3aa7fb2dec9"
+    },
+    "videoReviewSha256": "ea48bf88533eb17d4c9b7f2fcf1938f9ccd44e8355c9b9f30221d2a44360e63e",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-ad85333475af"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b03c5a5e47ce29421674d845ce02c537e6c404a9"
   },
   "bm_kibble_9kg": {
     "video": "/images/products/catalog/bm_kibble_9kg/videos/0bc23424049731b1887a5c8a1de0cd925693499beed494f978533933d9471136/hover.mp4",
