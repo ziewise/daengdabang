@@ -658,5 +658,17 @@
   "ip_trovbiz_chickenball": {
     "productId": "p_307",
     "sha256": "4c5e3751aa1153fb9ac0a6f108e0b462ed11f03855631a5fd88ff27385d2ead1"
+  },
+  "ip_obowl_l": {
+    "productId": "p_309",
+    "sha256": "4dd50bc1b625abca2c2630465bc96695512bdeca529841d7e27b1a6e2bc37f5e"
+  },
+  "ip_obowl_m": {
+    "productId": "p_310",
+    "sha256": "66c4a58adadfe2bae73544f59aa982308d8320fb3d228b03f014b0a48e102046"
+  },
+  "heyrex_taurus_filter_5p": {
+    "productId": "p_311",
+    "sha256": "88afcb519a9147af8653738c1f2495f85731ca01c843e1da7e60c198d6951dea"
   }
 }

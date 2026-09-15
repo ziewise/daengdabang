@@ -69,6 +69,21 @@ test('toothpaste uses its reviewed hand demonstration as oral care rather than e
     assert.equal(valid(f.product, f.records), false);
 });
 
+test('OH Bowl tongue-cleaner bowls remain feeding accessories with exact reviewed dog use', () => {
+    for (const folder of ['ip_obowl_l', 'ip_obowl_m']) {
+        const f = fixture(folder);
+        assert.equal(f.product.raw.isFood, false, 'a reusable bowl is not an edible dental treat');
+        assert.equal(f.product.raw.useMain, '식기/급수');
+        assert.equal(f.product.raw.useSub, '식기/보울/급수');
+        f.product.subcategory = 'bowl';
+        assert.equal(f.record.videoQuality, 'approved_dog_interacting');
+        assert.equal(valid(f.product, f.records), true);
+        assert.equal(safeCatalogHoverVideo(f.product), f.record.video);
+        f.record.delegatedReview.server_technical_gate_passed = false;
+        assert.equal(valid(f.product, f.records), false, 'classification does not waive media QA');
+    }
+});
+
 test('actual owner-delegated AI receipts activate exact product video bytes without a human claim', () => {
     assert.ok(Object.keys(records).length);
     for (const [folder, record] of Object.entries(records)) {
