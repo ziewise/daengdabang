@@ -638,5 +638,13 @@
   "soopa_healthybites_bananapumpkin": {
     "productId": "p_299",
     "sha256": "1ef5be3ae221e4385f60e868e68913110bca7e33a31a15b252b966f00add5208"
+  },
+  "sweetpet_icecream_strawberry": {
+    "productId": "p_301",
+    "sha256": "fdd65f2554b4209bd0d6ac77c34807879bec89ad5b441e4086542d783ccc6da1"
+  },
+  "ip_trovbiz_puppy": {
+    "productId": "p_305",
+    "sha256": "36b798c5bd368122374ce377c6815d23378988dee28d622695ddc895bd5ffa48"
   }
 }

@@ -1341,7 +1341,52 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-6002e1cdbb3c"
   },
-  "ip_trovbiz_puppy": null,
+  "ip_trovbiz_puppy": {
+    "video": "/images/products/catalog/ip_trovbiz_puppy/videos/36b798c5bd368122374ce377c6815d23378988dee28d622695ddc895bd5ffa48/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "9c2430c725f54f2598a7cc54faf7d808",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9c2430c725f54f2598a7cc54faf7d808",
+      "reviewId": "4e52c56765727b6f7fb703c456007030",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "36b798c5bd368122374ce377c6815d23378988dee28d622695ddc895bd5ffa48",
+      "seconds": 4,
+      "source": {
+        "no": 305,
+        "folder": "ip_trovbiz_puppy",
+        "name": "인더스트리펫 트로비즈 콤보 퍼피팩",
+        "brandEn": "Industry Pet",
+        "isFood": false,
+        "image": "/images/products/catalog/ip_trovbiz_puppy/ip_trovbiz_puppy.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6825857749",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ip_trovbiz_puppy/details/2.webp",
+          "/images/products/catalog/ip_trovbiz_puppy/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "098a7fdf1966a516e01b3ecf86141632",
+        "sha256": "36b798c5bd368122374ce377c6815d23378988dee28d622695ddc895bd5ffa48"
+      },
+      "scopeId": "3bf18c4e280d737efbab8539edeba52872a2d446a93069fef240bc07f3f5fc0e",
+      "scopeRegistrationSha256": "fb18c2c08eb91632a25cb7abd5ba702da6b415cb2f40f42e66310a1d9c669cba",
+      "aiEvidenceSha256": "0e1a81f9e033188292bb0dad185c09acbf240ce2e9a1e32c4b079ea8281108b2",
+      "receiptSha256": "623e9dbcde0ae2a351cdfd064789df828cce54ca5eec46cbef9cd02e11199dd3",
+      "eligibilitySha256": "aed82efaf27d6b9f3e52289c2bfc6810087394f1329b22e294aa302129bedfb9",
+      "evidenceManifestSha256": "3f57531e40dbb5f41fa5943cd6408ddf2f2996b4f45d7e98cdac599c715a0c3e"
+    },
+    "videoReviewSha256": "a1f3b24157a922b346e2383f25377ac8ef98ee6093eea93034b5d25e85ea0627",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d8a44e5b9562e9c9172f440c964909714a8c8c11"
+  },
   "jjayo_icecream_blueberry_100ml": {
     "video": "/images/products/catalog/jjayo_icecream_blueberry_100ml/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -7096,11 +7141,59 @@
     "videoDeliveryCommit": "49d7c0b51716cc84316b5a45a908f7e0a8caaf24"
   },
   "sweetpet_icecream_strawberry": {
-    "video": "/images/products/catalog/sweetpet_icecream_strawberry/videos/hover.mp4",
+    "video": "/images/products/catalog/sweetpet_icecream_strawberry/videos/fdd65f2554b4209bd0d6ac77c34807879bec89ad5b441e4086542d783ccc6da1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "174779a4be67e9dbff0de2999d8be568",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "174779a4be67e9dbff0de2999d8be568",
+      "reviewId": "2f3e0c792d9e72b438cf5d14931990e5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fdd65f2554b4209bd0d6ac77c34807879bec89ad5b441e4086542d783ccc6da1",
+      "seconds": 4,
+      "source": {
+        "no": 301,
+        "folder": "sweetpet_icecream_strawberry",
+        "name": "스윗펫 강아지 아이스크림 수제 반려견 애견 여름 간식 딸기맛",
+        "brandEn": "Sweet Pet",
+        "isFood": true,
+        "image": "/images/products/catalog/sweetpet_icecream_strawberry/sweetpet_icecream_strawberry.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6877607137",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/2.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/3.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/4.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/5.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/6.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/7.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/8.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/9.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/10.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/11.webp",
+          "/images/products/catalog/sweetpet_icecream_strawberry/details/12.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7a777a3d3aacec9d60ba45d36b25f134",
+        "sha256": "fdd65f2554b4209bd0d6ac77c34807879bec89ad5b441e4086542d783ccc6da1"
+      },
+      "scopeId": "bb3352dfe9adcc87ca7d9a7e20dbd2ed19e990bae788e82ef1d0704dfbdf513d",
+      "scopeRegistrationSha256": "12a9deced85af80daa9b51e60bb2ada37c659bc952eab5ac940a76358cacba57",
+      "aiEvidenceSha256": "be469078cf77f444003ae7738fe74afbd214eb0da813436f04dfd682e25d3e09",
+      "receiptSha256": "b84ed232a10f60b45b7d1de6df0ff4dedeba6221725d002f380ee7a2b3c072bc",
+      "eligibilitySha256": "cb877d4ae054dbf8a42beed0419ab867f81a887f969f4ad3bd4a95f957c400d7",
+      "evidenceManifestSha256": "fcbad29fdc10528ea3d993e4fdd9bdd8efed1b53b8a782724c3fe43b2c78fefd"
+    },
+    "videoReviewSha256": "31575b2c167bbafa5e8f0a470946e767506063e7806ab403ae7dde303a1577b1",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-f3496bb89854"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d8a44e5b9562e9c9172f440c964909714a8c8c11"
   },
   "thule_courier_trailer": null,
   "toplife_goatmilk_adult_200ml": {
