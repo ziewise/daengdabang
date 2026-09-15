@@ -686,5 +686,13 @@
   "id_treat_chicken": {
     "productId": "p_324",
     "sha256": "33404aabe5dbdbd2bd616ea647c9bb6a4ff6d49479d3fe352927bfae8aa42abd"
+  },
+  "rw_jsk_1000000188": {
+    "productId": "p_369",
+    "sha256": "a13c347e28cc0c43eaec032ed6462f1f27dbba498ce11d78cc62f0f0edb9edf1"
+  },
+  "rw_jsk_1000000772": {
+    "productId": "p_386",
+    "sha256": "acd576e54b4534524ca79fefda1b026a9ab09cbff37e56a626edaf0dee32b0e6"
   }
 }

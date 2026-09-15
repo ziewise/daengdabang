@@ -11757,5 +11757,114 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "49d7c0b51716cc84316b5a45a908f7e0a8caaf24"
+  },
+  "rw_jsk_1000000188": {
+    "video": "/images/products/catalog/rw_jsk_1000000188/videos/a13c347e28cc0c43eaec032ed6462f1f27dbba498ce11d78cc62f0f0edb9edf1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "d662019046de571d2c9b3639a3a9f9d1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d662019046de571d2c9b3639a3a9f9d1",
+      "reviewId": "03b01e0b2d29bb77fce9ab8788bc05b2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a13c347e28cc0c43eaec032ed6462f1f27dbba498ce11d78cc62f0f0edb9edf1",
+      "seconds": 4,
+      "source": {
+        "no": 369,
+        "folder": "rw_jsk_1000000188",
+        "name": "러프웨어 턴업 천연 라텍스 반려견 장난감(TurnUp™ 2022SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000188/image/detail/1000000188_detail_064.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000188",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000188/image/detail/1000000188_detail_137.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000188/image/detail/1000000188_detail_216.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000188/image/detail/1000000188_detail_361.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000188/image/detail/1000000188_detail_430.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000188/image/detail/1000000188_detail_544.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000188/f0589bd89513b2f14936bb9db684bad9.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000188/dbd2e1ee514907a3cf9ed673bc484527.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000188/71bbbebf14df49b75d9efa3e5f2b6024.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "64f70db21b14c9b778536c5e2d4513f8",
+        "sha256": "a13c347e28cc0c43eaec032ed6462f1f27dbba498ce11d78cc62f0f0edb9edf1"
+      },
+      "scopeId": "f8629e756ce3334a5492e5f410d5333830675f1a513225905b9b3154bc6c2d29",
+      "scopeRegistrationSha256": "94f0895879ac351a6c5132217a1abd2993299bf80cc9245adf4fedfc6bc1eee9",
+      "aiEvidenceSha256": "b4dac040e83d54ec648d40eef781b9e7caa2e5c560b965aa57e4648a48e23758",
+      "receiptSha256": "562986cba01e149d980840935e4274896536a2e326a8338143024a91e0b5d3ab",
+      "eligibilitySha256": "c8ddb9e2deaeb0398850078be6737c0314eebbe4ae77ec953009c32e14786cb9",
+      "evidenceManifestSha256": "492b89e6046d9f4c83baa046ae0c5f69aa3f303eeada83bc96cf2471ab2cea32"
+    },
+    "videoReviewSha256": "fc73fb3578fa41c882a179111bcdc18fbce04f79a20ff472c5f8d3f8cadf4fee",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d73b7359fc77eaa29117c36f1dc1463f00bad6f9"
+  },
+  "rw_jsk_1000000772": {
+    "video": "/images/products/catalog/rw_jsk_1000000772/videos/acd576e54b4534524ca79fefda1b026a9ab09cbff37e56a626edaf0dee32b0e6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "43158072b34691b6214d0d6c2a6450fb",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "43158072b34691b6214d0d6c2a6450fb",
+      "reviewId": "1caa603ee3fa8d83d83d94a740601b66",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "acd576e54b4534524ca79fefda1b026a9ab09cbff37e56a626edaf0dee32b0e6",
+      "seconds": 4,
+      "source": {
+        "no": 386,
+        "folder": "rw_jsk_1000000772",
+        "name": "러프웨어 퀸쳐 접이식 휴대용 식기(Quencher™ Bowl)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_028.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000772",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_182.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_230.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_390.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_462.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_55.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_663.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_760.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000772/image/detail/1000000772_detail_817.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/210215/2021SS-Quencher-Bowl1_151643.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/2021SS-Quencher-Bowl2_155213.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221011/e92d50a98f3f16bd5528118ab592d9d4_155220.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f31e38cb55d48201484995fb5ebd44f4",
+        "sha256": "acd576e54b4534524ca79fefda1b026a9ab09cbff37e56a626edaf0dee32b0e6"
+      },
+      "scopeId": "0dd58bc901e1b0380bf24601ae127f89f0f049297e4cf198285554567d816117",
+      "scopeRegistrationSha256": "ed92241e35947fae3a95beb3a458398a933b941dfce5dd2be9cbcf177e4ad403",
+      "aiEvidenceSha256": "04724c2b7d34a491b8840c065ae2c09ce77326b55fc57bcf6a88bf64e337c9cc",
+      "receiptSha256": "b7637c4cdb22d106d64807d093f4f340eb3d067d1b7b39aa1fd52320fc2d753c",
+      "eligibilitySha256": "6131adb3999911545e7927f93331d0dc396a0b70cbe92683964318d2db0e8563",
+      "evidenceManifestSha256": "64cc81dae2f8904f4b57e71556f889d5ca4a1f7f0c60c71df878ceff7777aea3"
+    },
+    "videoReviewSha256": "3ceae1f9fabf2c8067f864f9c178090d7115745ff4255c0ab8808c808ce42c46",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d73b7359fc77eaa29117c36f1dc1463f00bad6f9"
   }
 }
