@@ -654,5 +654,9 @@
   "ip_trovbiz_pigball": {
     "productId": "p_306",
     "sha256": "c0bbe8ca74a3fb94e4f01f66ca53b2c4f1450a376b3e51242dfccd92c57e0063"
+  },
+  "ip_trovbiz_chickenball": {
+    "productId": "p_307",
+    "sha256": "4c5e3751aa1153fb9ac0a6f108e0b462ed11f03855631a5fd88ff27385d2ead1"
   }
 }

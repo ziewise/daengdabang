@@ -1359,11 +1359,50 @@
     "videoDeliveryCommit": "78f8831d090489ffde9ffeea52b34fcb4af1d12c"
   },
   "ip_trovbiz_chickenball": {
-    "video": "/images/products/catalog/ip_trovbiz_chickenball/videos/hover.mp4",
+    "video": "/images/products/catalog/ip_trovbiz_chickenball/videos/4c5e3751aa1153fb9ac0a6f108e0b462ed11f03855631a5fd88ff27385d2ead1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "7d27fdfb9ca4e6b19e381d1ac4ef47b2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7d27fdfb9ca4e6b19e381d1ac4ef47b2",
+      "reviewId": "f7121c79577d7aa6c8ab452d6c18bf59",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4c5e3751aa1153fb9ac0a6f108e0b462ed11f03855631a5fd88ff27385d2ead1",
+      "seconds": 4,
+      "source": {
+        "no": 307,
+        "folder": "ip_trovbiz_chickenball",
+        "name": "인더스트리펫 트로비즈 로봇 치킨볼",
+        "brandEn": "Industry Pet",
+        "isFood": false,
+        "image": "/images/products/catalog/ip_trovbiz_chickenball/ip_trovbiz_chickenball.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6825847078",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ip_trovbiz_chickenball/details/2.webp",
+          "/images/products/catalog/ip_trovbiz_chickenball/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "884b6e2f8cf850a94f2638d4c3f41839",
+        "sha256": "4c5e3751aa1153fb9ac0a6f108e0b462ed11f03855631a5fd88ff27385d2ead1"
+      },
+      "scopeId": "5681ff4b63829a424f672156faa8e081dc77c1f147f1043ceeec1646920b07cb",
+      "scopeRegistrationSha256": "0bb7f6f9a49b1e63909d8000d2bf6035879deaa66e410e76c270dc7c9e08a50c",
+      "aiEvidenceSha256": "a1367b356570c26113477ced26040ab949ce5b94e53e9c08c4aad702dcc31ed6",
+      "receiptSha256": "89e5de509ff8cb30bb6347596e321b9552803593ee422962a6079b16139ff2a2",
+      "eligibilitySha256": "e8eac3c9ed906feca926ab0f97e24e1ee9deb3cb6f1413092e5a191410a17b42",
+      "evidenceManifestSha256": "86e264d763027d74e6c926959dd02ee86184644d70d3389d5f453648cc9c90ee"
+    },
+    "videoReviewSha256": "83cbaf24e29f41a91beed8d31dad33388f36a997354411537444c41de551ecbd",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-29e20a925e5b"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "2926a8663e1345d26e6407aa2b896f833062cd79"
   },
   "ip_trovbiz_flyingstick": {
     "video": "/images/products/catalog/ip_trovbiz_flyingstick/videos/hover.mp4",
