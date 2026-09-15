@@ -706,5 +706,9 @@
   "rw_jsk_1000001131": {
     "productId": "p_420",
     "sha256": "24b6b782fe0bec6f470a7d5a09f19bdf63fec64afb551ddb0113f1c4a36e3c99"
+  },
+  "polkadog_codskin_907g": {
+    "productId": "p_315",
+    "sha256": "23647033d630eddbb4cc3a15e84e9493dedf3debadc61c3416c937e5aad44ef5"
   }
 }

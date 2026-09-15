@@ -2591,11 +2591,54 @@
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "polkadog_codskin_907g": {
-    "video": "/images/products/catalog/polkadog_codskin_907g/videos/hover.mp4",
+    "video": "/images/products/catalog/polkadog_codskin_907g/videos/23647033d630eddbb4cc3a15e84e9493dedf3debadc61c3416c937e5aad44ef5/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "fd397c9217c723a7f83a84bbf727ab62",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "fd397c9217c723a7f83a84bbf727ab62",
+      "reviewId": "f42d8485bec035ac17524e490cc13ea2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "23647033d630eddbb4cc3a15e84e9493dedf3debadc61c3416c937e5aad44ef5",
+      "seconds": 4,
+      "source": {
+        "no": 315,
+        "folder": "polkadog_codskin_907g",
+        "name": "폴카독베이커리 ALL 대구껍질 크런치 스틱 907g",
+        "brandEn": "Polkadog Bakery",
+        "isFood": true,
+        "image": "/images/products/catalog/polkadog_codskin_907g/polkadog_codskin_907g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6795025252",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/polkadog_codskin_907g/details/official-visual-01.webp",
+          "/images/products/catalog/polkadog_codskin_907g/details/official-visual-02.webp",
+          "/images/products/catalog/polkadog_codskin_907g/details/official-visual-03.webp",
+          "/images/products/catalog/polkadog_codskin_907g/details/official-visual-04.webp",
+          "/images/products/catalog/polkadog_codskin_907g/details/official-visual-05.webp",
+          "/images/products/catalog/polkadog_codskin_907g/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "96dcbebe15223ed935d85a4733d68e97",
+        "sha256": "23647033d630eddbb4cc3a15e84e9493dedf3debadc61c3416c937e5aad44ef5"
+      },
+      "scopeId": "33f21da55b8b0a5838fd37a3d527f1dad1d5679719e32b832c1930ab0eb9fb65",
+      "scopeRegistrationSha256": "bf8e77285ab9d88890c1bbccbc3695b00b40fd7ada1d005b43668d04d704e0a5",
+      "aiEvidenceSha256": "14f86b276d2c0e3e1885f22772fab822fa4bd39244de144f694e31167628ec44",
+      "receiptSha256": "8899408a025c2e19e18069c9a3bf088fb35eca2df7bf8bbb84bbe7852dcfb609",
+      "eligibilitySha256": "dfeb931e7626d2b09422d02252727af652b7d39d4ec70019cf6396d78db944f6",
+      "evidenceManifestSha256": "6088d530c14ae6ab9cf8c81826e1e4753ac99ab08dd5f3626785dce2135da913"
+    },
+    "videoReviewSha256": "66644fb9d052150eb12c794da04d76109a114bf48dfb5dfb67d250da6dbb50d6",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-b61ea015ee6d"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "6f86926d94723e2ffdc49360fdaeee987f17887e"
   },
   "polkadog_haddockskin_453g": {
     "video": "/images/products/catalog/polkadog_haddockskin_453g/videos/0ab4ef41e423349c94b4be7b58809b612246af378ec2a0b5257b8a166576453e/hover.mp4",
