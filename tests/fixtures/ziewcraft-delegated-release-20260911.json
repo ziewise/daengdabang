@@ -710,5 +710,9 @@
   "polkadog_codskin_907g": {
     "productId": "p_315",
     "sha256": "23647033d630eddbb4cc3a15e84e9493dedf3debadc61c3416c937e5aad44ef5"
+  },
+  "bm_wet_100g_3": {
+    "productId": "p_141",
+    "sha256": "1a784ef49009fe04b801f8ec0978f8e581b791e742536b1c1b63d313ebabd9cb"
   }
 }

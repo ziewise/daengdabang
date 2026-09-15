@@ -231,11 +231,52 @@
     "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
   },
   "bm_wet_100g_3": {
-    "video": "/images/products/catalog/bm_wet_100g_3/videos/hover.mp4",
+    "video": "/images/products/catalog/bm_wet_100g_3/videos/1a784ef49009fe04b801f8ec0978f8e581b791e742536b1c1b63d313ebabd9cb/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "8dc6976cbb69403e5256d8cb2190af72",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8dc6976cbb69403e5256d8cb2190af72",
+      "reviewId": "04de536a453d544f386db7ff2dc45544",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1a784ef49009fe04b801f8ec0978f8e581b791e742536b1c1b63d313ebabd9cb",
+      "seconds": 4,
+      "source": {
+        "no": 141,
+        "folder": "bm_wet_100g_3",
+        "name": "빌리앤마것 독 습식사료 100g 3종",
+        "brandEn": "Billy + Margot",
+        "isFood": true,
+        "image": "/images/products/catalog/bm_wet_100g_3/bm_wet_100g_3.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10146949593",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/bm_wet_100g_3/details/2.webp",
+          "/images/products/catalog/bm_wet_100g_3/details/3.webp",
+          "/images/products/catalog/bm_wet_100g_3/details/4.webp",
+          "/images/products/catalog/bm_wet_100g_3/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "055c895518c6f58b3c0bb1d573df0fe0",
+        "sha256": "1a784ef49009fe04b801f8ec0978f8e581b791e742536b1c1b63d313ebabd9cb"
+      },
+      "scopeId": "a8de34bb292bafe3770a0baeb13b5dd18e8faea1271aea13563120123919f80b",
+      "scopeRegistrationSha256": "a8260df233c13e08a90af943633b307263f5ff7e31606ec62e8f394375fe4ff6",
+      "aiEvidenceSha256": "539ffc1a5caf3918eba38dea42d09dcddac3db4bc4c48beb4f702d3cffd0c2c8",
+      "receiptSha256": "12b2e55447cc36c92a2ef61ee799c9bf75483b301d358bfd493db01d54f80901",
+      "eligibilitySha256": "2bcdd75584db51493d6f4cf58a2672a40484da19d30d5804d2618f617a290a03",
+      "evidenceManifestSha256": "1dc84f4f1d6c83dfdf6634edcf5401e4b94481371476a5f6d085c1ff5c508990"
+    },
+    "videoReviewSha256": "1e11f9876c527c3d0068387dab22bd86cf3bc38d5adbbc3784dca986fb167cf0",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-9d33aa0f0b0d"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d5e0b4e3f28fd8c50bfa9a5b776862706705bd29"
   },
   "canagan_dog_chicken_2kg": null,
   "canagan_dog_dental_2kg": null,
