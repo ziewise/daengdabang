@@ -1313,11 +1313,50 @@
   },
   "ip_trovbiz_adventure": null,
   "ip_trovbiz_bigdog": {
-    "video": "/images/products/catalog/ip_trovbiz_bigdog/videos/hover.mp4",
+    "video": "/images/products/catalog/ip_trovbiz_bigdog/videos/abcd9a171160053c6b6266eaa34ef25a76d643f7f74b12d82d4bb2abfa4dc874/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "6b8bbd75f04561a941fff182845e9969",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6b8bbd75f04561a941fff182845e9969",
+      "reviewId": "76f4ba4d1fecbc0a5e828492429e199f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "abcd9a171160053c6b6266eaa34ef25a76d643f7f74b12d82d4bb2abfa4dc874",
+      "seconds": 4,
+      "source": {
+        "no": 304,
+        "folder": "ip_trovbiz_bigdog",
+        "name": "인더스트리펫 트로비즈 콤보 빅독팩",
+        "brandEn": "Industry Pet",
+        "isFood": false,
+        "image": "/images/products/catalog/ip_trovbiz_bigdog/ip_trovbiz_bigdog.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6825859979",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ip_trovbiz_bigdog/details/2.webp",
+          "/images/products/catalog/ip_trovbiz_bigdog/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6ff89803a407fb5f0bc829878bbb9070",
+        "sha256": "abcd9a171160053c6b6266eaa34ef25a76d643f7f74b12d82d4bb2abfa4dc874"
+      },
+      "scopeId": "d5c36957e132186bf0fe652760501c94f00e5807b832d12fa95a6abad7f71459",
+      "scopeRegistrationSha256": "06d1284d5980c15c36aaea8d69fd2c485e92f350e1b4bec77ae0ab4c3f99a6c2",
+      "aiEvidenceSha256": "208d0590ecc8cc004a13468fd9190e03075be072d699a7556661a3e872ad8efd",
+      "receiptSha256": "3ddbc5afc75a430cebd626b98f092cb5a296623732cad38bb4df30d3c311f647",
+      "eligibilitySha256": "90193b4558165603745a8ec6a6bd2549e7bb5c3bb140f07871ee74b4a463be9d",
+      "evidenceManifestSha256": "66c1ab37e88fa4107230d43eca74d12e6267c8b4ec22c00c29df83b4315c15fe"
+    },
+    "videoReviewSha256": "73e28aced473482500f425b6b35fcdef850c876ec3124a2157b9ab556f500b68",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-71fdfb63421a"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "78f8831d090489ffde9ffeea52b34fcb4af1d12c"
   },
   "ip_trovbiz_chickenball": {
     "video": "/images/products/catalog/ip_trovbiz_chickenball/videos/hover.mp4",

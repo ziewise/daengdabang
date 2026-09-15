@@ -646,5 +646,9 @@
   "ip_trovbiz_puppy": {
     "productId": "p_305",
     "sha256": "36b798c5bd368122374ce377c6815d23378988dee28d622695ddc895bd5ffa48"
+  },
+  "ip_trovbiz_bigdog": {
+    "productId": "p_304",
+    "sha256": "abcd9a171160053c6b6266eaa34ef25a76d643f7f74b12d82d4bb2abfa4dc874"
   }
 }
