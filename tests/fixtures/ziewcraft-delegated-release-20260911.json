@@ -674,5 +674,17 @@
   "pdh_slowfeeder_paw_2in1": {
     "productId": "p_314",
     "sha256": "6d470c9ce08cdc407129f101e9a33d2df43f19ca55bc07562a44897459f9f85d"
+  },
+  "id_treat_duck": {
+    "productId": "p_322",
+    "sha256": "e600c628502b584e0ff2b8634d3c906c69aee60ac67f60252cf02d22617d32bb"
+  },
+  "id_treat_turkey": {
+    "productId": "p_323",
+    "sha256": "413ad31d0ec2ed204f93cddeb35b25c6e11331127c3c307f49f1b2369d2b3f78"
+  },
+  "id_treat_chicken": {
+    "productId": "p_324",
+    "sha256": "33404aabe5dbdbd2bd616ea647c9bb6a4ff6d49479d3fe352927bfae8aa42abd"
   }
 }
