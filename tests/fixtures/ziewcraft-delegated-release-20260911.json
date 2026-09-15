@@ -702,5 +702,9 @@
   "rw_jsk_1000001233": {
     "productId": "p_452",
     "sha256": "de001444ef0f82512c47bb19c4a830620b589c62448cfd629deb4709a15bc047"
+  },
+  "rw_jsk_1000001131": {
+    "productId": "p_420",
+    "sha256": "24b6b782fe0bec6f470a7d5a09f19bdf63fec64afb551ddb0113f1c4a36e3c99"
   }
 }

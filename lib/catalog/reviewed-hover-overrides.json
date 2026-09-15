@@ -11961,5 +11961,61 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "458a3056b7cd2ecb0b80b5569bec7dc0f47812cc"
+  },
+  "rw_jsk_1000001131": {
+    "video": "/images/products/catalog/rw_jsk_1000001131/videos/24b6b782fe0bec6f470a7d5a09f19bdf63fec64afb551ddb0113f1c4a36e3c99/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "5456a2e7cacdd87fd26919ccbb8a4332",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5456a2e7cacdd87fd26919ccbb8a4332",
+      "reviewId": "06be5b5b98f45e313142f26c47d9f8b0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "24b6b782fe0bec6f470a7d5a09f19bdf63fec64afb551ddb0113f1c4a36e3c99",
+      "seconds": 4,
+      "source": {
+        "no": 420,
+        "folder": "rw_jsk_1000001131",
+        "name": "러프웨어 팩 아웃 백 풉백 디스펜서 & 배변 파우치",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_040.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001131",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_119.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_236.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_365.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_485.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_560.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_680.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_787.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001131/image/detail/1000001131_detail_876.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/Pack-Out-Bag1_162059.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/Pack-Out-Bag2_162121.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230216/19596345b397abd02783e62c9dd1aaba_162150.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a57cf1ae483a546f72ca35c04d9cd21f",
+        "sha256": "24b6b782fe0bec6f470a7d5a09f19bdf63fec64afb551ddb0113f1c4a36e3c99"
+      },
+      "scopeId": "f90fd8b1b9c9d1b9f2181afb80cdbc906ca958fd226c41aa6c2a9a41d1ba4ef6",
+      "scopeRegistrationSha256": "67800f9faca8c0b1451e60f7de76aee450464111a0adcdf1ee2d2f5ef6961884",
+      "aiEvidenceSha256": "08fbc0d472fbacf5dd196972d27a8b2dfc012f707d756e36cb39ce7ab7a424c5",
+      "receiptSha256": "10b0e2426a7085e3a0e1ac381754b5c452b6caa9e7bc109b4410dfdf2661d90b",
+      "eligibilitySha256": "ba27f864c9ef2a05ecd467af077c7138eafe118022ecb5d45f16dd09bcec277a",
+      "evidenceManifestSha256": "92c7fd60929cd5c8b81812c6ea1920b8384fb678d647e3f3d9a2edfad10ac88f"
+    },
+    "videoReviewSha256": "f68f32914cb6e87002ff771b8a8850091659b9938d167f38d9039c0c9338644d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "adf62d8b0b2bc089db15f58ad65e95787209340e"
   }
 }
