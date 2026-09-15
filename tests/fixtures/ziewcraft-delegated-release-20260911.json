@@ -670,5 +670,9 @@
   "heyrex_taurus_filter_5p": {
     "productId": "p_311",
     "sha256": "88afcb519a9147af8653738c1f2495f85731ca01c843e1da7e60c198d6951dea"
+  },
+  "pdh_slowfeeder_paw_2in1": {
+    "productId": "p_314",
+    "sha256": "6d470c9ce08cdc407129f101e9a33d2df43f19ca55bc07562a44897459f9f85d"
   }
 }

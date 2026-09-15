@@ -2059,7 +2059,54 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "e7055df0db6f7fcf12adac0dbbfc530a5a20afa0"
   },
-  "pdh_slowfeeder_paw_2in1": null,
+  "pdh_slowfeeder_paw_2in1": {
+    "video": "/images/products/catalog/pdh_slowfeeder_paw_2in1/videos/6d470c9ce08cdc407129f101e9a33d2df43f19ca55bc07562a44897459f9f85d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "c5de4951b4cf5262133bcb9c5744b7c7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c5de4951b4cf5262133bcb9c5744b7c7",
+      "reviewId": "b2c7f702e4c8202e9e2eca9cd14b368b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6d470c9ce08cdc407129f101e9a33d2df43f19ca55bc07562a44897459f9f85d",
+      "seconds": 4,
+      "source": {
+        "no": 314,
+        "folder": "pdh_slowfeeder_paw_2in1",
+        "name": "펫드림하우스 슬로우피더 PAW 2in1 천천히 먹는 슬로우 식기",
+        "brandEn": "FitDreamHouse",
+        "isFood": false,
+        "image": "/images/products/catalog/pdh_slowfeeder_paw_2in1/pdh_slowfeeder_paw_2in1.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6822171918",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/pdh_slowfeeder_paw_2in1/details/2.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw_2in1/details/3.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw_2in1/details/4.webp",
+          "/images/products/catalog/pdh_slowfeeder_paw_2in1/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c585dcb9b97bce4f8f08cf645b1efa22",
+        "sha256": "6d470c9ce08cdc407129f101e9a33d2df43f19ca55bc07562a44897459f9f85d"
+      },
+      "scopeId": "5cb30cac5afeecd0378d7a588b5536f7ffb355a0bc0eefcf66a4ec3f29d93ce8",
+      "scopeRegistrationSha256": "940938579cdea397c58f003fc858bcac0d1f182323c9317f5d2a48b7fa9806be",
+      "aiEvidenceSha256": "30803f4d0cb88f6acdfdaad4d56156094be1eaec6b1b1e5ea8587f1c45102d91",
+      "receiptSha256": "d184e922becf492a593f443c7d40197810060f6059ca8538ab0a53b76beca4cb",
+      "eligibilitySha256": "dd2c5b5db732b5675162ec1c9145477b9155a39e09dcd57cefca59d519f775fa",
+      "evidenceManifestSha256": "d3e4c67de9479571d72c0dba71075fd4642434c4e84eb13200154b23b92b5fe1"
+    },
+    "videoReviewSha256": "334d831515db813fbd63634cce2d6c6b0d8b2bbe2cb8bcace5f386c968af8b70",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "090c865544baca203c3ac7403759c4e9538d4e91"
+  },
   "pdh_slowfeeder_paw_mini": {
     "video": "/images/products/catalog/pdh_slowfeeder_paw_mini/videos/cc52f39a10a7c50f541ae30e179159f4d54addfc6288f73ab57e3301107763ec/hover.mp4",
     "videoProvider": "ziewcraft",
