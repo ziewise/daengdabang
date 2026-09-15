@@ -328,7 +328,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4f66cfb9a65aa44560dc2969955e4741f205c298"
   },
-  "canagan_dog_highland_6kg": null,
+  "canagan_dog_highland_6kg": {
+    "video": "/images/products/catalog/canagan_dog_highland_6kg/videos/32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "1f119f1226ac974cede0792bacb9c175",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1f119f1226ac974cede0792bacb9c175",
+      "reviewId": "cd785c777bbf51b0c0e8ef5ede8b56eb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c",
+      "seconds": 4,
+      "source": {
+        "no": 128,
+        "folder": "canagan_dog_highland_6kg",
+        "name": "카나간 하이랜드 피스트 포 독 6kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_highland_6kg/canagan_dog_highland_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10202355147",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_highland_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_highland_6kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_highland_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "667187897daa0e2912a7c32e4deba116",
+        "sha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c"
+      },
+      "scopeId": "0713f516f5a3adf6839ad9fc00a3db3380cf6591b5382e6d38b103d40a13816a",
+      "scopeRegistrationSha256": "5a9604ffa4ebb4924a7fb64cd2012ae6399cb5c49861b28063cc05ee412efda8",
+      "aiEvidenceSha256": "ccbcbeeb8c6ed1594c515b4048e172758b773272935078e84a49e5a932aa417a",
+      "receiptSha256": "f377d4295d8f39f12fab8b1630f871943583f2a5418c8ebaad6fe1f0b2c1b40f",
+      "eligibilitySha256": "a80de4ac17bc4f708c42e3fa89b56ab20fed14c0b3b639c0fef647b3bb9876bd",
+      "evidenceManifestSha256": "99da73e77d5b08ecaad269b54d851766eb6e4dd43850be6a4f4b9a546a97f8dd"
+    },
+    "videoReviewSha256": "6b0e187efc57a46e72fb79d83feb6c21b74038848c7b56aef0f314374ff87a39",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "dfb3b77017e36f8b6e64269e4f4ad32a917ab88e"
+  },
   "canagan_dog_salmon_6kg": null,
   "dangcream_strawberry": {
     "video": "/images/products/catalog/dangcream_strawberry/videos/0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076/hover.mp4",

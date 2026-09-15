@@ -714,5 +714,9 @@
   "bm_wet_100g_3": {
     "productId": "p_141",
     "sha256": "1a784ef49009fe04b801f8ec0978f8e581b791e742536b1c1b63d313ebabd9cb"
+  },
+  "canagan_dog_highland_6kg": {
+    "productId": "p_128",
+    "sha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c"
   }
 }
