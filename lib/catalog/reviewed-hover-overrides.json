@@ -1374,11 +1374,50 @@
   },
   "ip_trovbiz_nightday": null,
   "ip_trovbiz_pigball": {
-    "video": "/images/products/catalog/ip_trovbiz_pigball/videos/hover.mp4",
+    "video": "/images/products/catalog/ip_trovbiz_pigball/videos/c0bbe8ca74a3fb94e4f01f66ca53b2c4f1450a376b3e51242dfccd92c57e0063/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "9d2af09e3c5f7497da0ba54aed52f892",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9d2af09e3c5f7497da0ba54aed52f892",
+      "reviewId": "ebbf3dc409e8af3261d8703272842ce8",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c0bbe8ca74a3fb94e4f01f66ca53b2c4f1450a376b3e51242dfccd92c57e0063",
+      "seconds": 4,
+      "source": {
+        "no": 306,
+        "folder": "ip_trovbiz_pigball",
+        "name": "인더스트리펫 트로비즈 스포츠 피그볼",
+        "brandEn": "Industry Pet",
+        "isFood": false,
+        "image": "/images/products/catalog/ip_trovbiz_pigball/ip_trovbiz_pigball.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6825852196",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ip_trovbiz_pigball/details/2.webp",
+          "/images/products/catalog/ip_trovbiz_pigball/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4aab716e9dc010d9ca4a556088a03443",
+        "sha256": "c0bbe8ca74a3fb94e4f01f66ca53b2c4f1450a376b3e51242dfccd92c57e0063"
+      },
+      "scopeId": "82f094fb40a95e365ea4d6e8d7973a66410474a61c18c78949fb104382d6248b",
+      "scopeRegistrationSha256": "24f8e5f33c277be1b0dd2f1dac33c609b43daa097b66c8d0e9117120bd57fa7f",
+      "aiEvidenceSha256": "d4dd94a51c9d74f9bc30ecc4fb2576b36f10073918f0bf0a979b74e4977d1cd7",
+      "receiptSha256": "03e5f6207046ae3133a38d4d6237a3a8e56bdb1a26804e91e3570ab595d0458b",
+      "eligibilitySha256": "01b37bb55587063a26c39a370c1d175d2ca1a529bbdfae8768a057fcd056f939",
+      "evidenceManifestSha256": "33474f4df54482c4918b76f4c778234c6ea7889f5740320f34395475faa9eef8"
+    },
+    "videoReviewSha256": "eea3cc217c589c8e7eda4e7c50ae97990662defb69b2400e6cc77e4986eab981",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-6002e1cdbb3c"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "40be7860585d68c93b405bb468437208d74ee60e"
   },
   "ip_trovbiz_puppy": {
     "video": "/images/products/catalog/ip_trovbiz_puppy/videos/36b798c5bd368122374ce377c6815d23378988dee28d622695ddc895bd5ffa48/hover.mp4",
