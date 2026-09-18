@@ -178,6 +178,7 @@ export interface CatalogProduct {
     externalReviewThemes?: string[];
     externalReviewSnippets?: Array<{ rating?: string; summary?: string; text: string; sourceUrl?: string }>;
     externalReviewSources?: Array<{ url: string; count: number; average: number | null }>;
+    relatedExternalReviewProducts?: Array<{ folder: string; name: string; url: string }>;
     reviewGroup?: { key: string; canonical: string; variants: Array<{ folder: string; name: string; colors: string[]; sizes: string[] }> };
     externalReviewDisclosure?: string;
     raw: CatalogRow;

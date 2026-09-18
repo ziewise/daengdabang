@@ -72,6 +72,15 @@ function renderDetails(product, content) {
 
 const editorial = { summary: "기존 편집 설명", features: ["기존 기능"], sourceLabel: "Ruffwear 공식 상품 정보", sourceUrl: "https://ruffwear.com/product" };
 
+test('other-season reviews remain reachable through original routes without pooling their ratings', () => {
+    const { html } = renderDetails({ ...baseProduct, externalReviewCount: 0,
+        relatedExternalReviewProducts: [{ folder: 'original-2024', name: '이전 시즌 상품', url: 'https://smartstore.naver.com/daengdabang/products/123' }],
+    }, editorial);
+    assert.match(html, /href="\/product\/original-2024\/?#tab-review"/);
+    assert.match(html, /다른 시즌 상품의 외부 후기/);
+    assert.match(html, /평점·리뷰 수·요약에는 합산하지 않습니다/);
+});
+
 test("approved supplier details use every source image in exact order and preserve intrinsic dimensions", () => {
     const details = Array.from({ length: 8 }, (_, i) => `/source-${8 - i}.jpg`);
     const { html, lookups } = renderDetails({

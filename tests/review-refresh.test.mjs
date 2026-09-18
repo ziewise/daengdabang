@@ -15,6 +15,13 @@ test('malformed or wrong source refresh retains the entire fallback',()=>{
  const row={externalReviewUrl:url};
  for(const bad of [{...source,count:-1},{...source,average:6},{...source,collectedAt:'invalid'},{...source,snippets:[{text:'a',sourceUrl:'https://example.com'}]}]) assert.equal(applyReviewRefresh(row,{[url]:bad}),row);
 });
+
+test('an older backend snapshot cannot replace a newer verified static source',()=>{
+ const current=snippets.map(item=>({...item,collectedAt:'2026-09-19T01:00:00Z'}));
+ const row={externalReviewUrl:url,externalReviewSnippets:current,externalReviewCount:20};
+ assert.equal(applyReviewRefresh(row,{[url]:source}),row);
+ assert.equal(acceptRemoteReviewRefresh('a',[{url,count:20,average:4.9}],current,{schema:'ddb.review-refresh.v1',groupKey:'a',sources:{[url]:source},summary}),undefined);
+});
 test('server summary and exact input must validate together',()=>{
  const oldSources=[{url,count:8,average:5}];
  const payload={schema:'ddb.review-refresh.v1',groupKey:'a',sources:{[url]:source},summary};

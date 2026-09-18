@@ -292,6 +292,8 @@ function buildCatalog(): CatalogProduct[] {
             externalReviewThemes: row.externalReviewThemes,
             externalReviewSnippets: reviews.snippets,
             externalReviewSources: reviews.sources,
+            relatedExternalReviewProducts: variantRows.filter(source => source.folder !== row.folder && !!source.externalReviewUrl && source.externalReviewUrl !== row.externalReviewUrl)
+                .map(source => ({ folder: source.folder!, name: source.name, url: source.externalReviewUrl! })),
             reviewGroup: group ? {
                 key: group.key,
                 canonical: group.canonical,

@@ -16,6 +16,8 @@ export function applyReviewRefresh<T extends { externalReviewUrl?: string; exter
     if (!update || !Number.isFinite(Date.parse(update.collectedAt)) || !Number.isInteger(update.count) || update.count < 0 ||
         !Array.isArray(update.snippets) || update.snippets.some(item => !item || typeof item !== 'object' || reviewSourceUrl(item.sourceUrl) !== url || typeof item.text !== 'string' || !item.text.trim() || (item.rating !== undefined && !['', '1', '2', '3', '4', '5'].includes(item.rating))) ||
         (update.average !== null && !(typeof update.average === 'number' && update.average >= 1 && update.average <= 5))) return row;
+    const previousTime = Math.max(0, ...(row.externalReviewSnippets ?? []).map(item => Date.parse(item.collectedAt ?? '') || 0));
+    if (Date.parse(update.collectedAt) < previousTime) return row;
     return { ...row, externalReviewCount: update.count, externalReviewAverage: update.average,
         externalReviewSnippets: update.snippets };
 }
