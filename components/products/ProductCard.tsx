@@ -26,6 +26,7 @@ import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 import ProductColorImage from "@/components/products/ProductColorImage";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
+import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 
 interface Props {
     product: CatalogProduct;
@@ -39,12 +40,13 @@ interface Props {
 }
 
 export default function ProductCard({
-    product: p,
+    product,
     showNewBadge,
     rank,
     rankStyle = "label",
     sizeClass,
 }: Props) {
+    const p = useLiveInventoryProduct(product);
     const { toggleWishlist, isWished } = useStore();   // 운영 사이트 위시리스트
     const { locale, t, productName, formatPrice } = useI18n();
     const wished = isWished(p.id);

@@ -114,8 +114,8 @@ test("the full storefront catalog keeps the reviewed dog-pack boundary", async (
         .map((row) => `p_${row.no}`)
         .sort();
 
-    assert.equal(rows.filter((row) => row.supplierCatalogSource === "jsk_approved_account").length, 216);
-    assert.equal(rows.filter((row) => row.supplierCatalogHistorical === true).length, 68);
+    assert.equal(rows.filter((row) => row.supplierCatalogSource === "jsk_approved_account").length, 220);
+    assert.equal(rows.filter((row) => row.supplierCatalogHistorical === true).length, 64);
     assert.deepEqual(detected, ["p_145", "p_28", "p_376", "p_402", "p_403", "p_427"]);
     // Newly imported complete dog packs qualify structurally; human carriers,
     // treat bags and pack accessories remain excluded by the same policy.

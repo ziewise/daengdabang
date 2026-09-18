@@ -139,7 +139,7 @@ test("all approved JSK details bypass legacy editorial indices and render every 
     });
     const raw = JSON.parse(await readFile(new URL("../lib/catalog/raw.json", import.meta.url), "utf8"));
     const current = raw.filter((row) => row.supplierCatalogSource === "jsk_approved_account");
-    assert.equal(current.length, 216);
+    assert.equal(current.length, 220);
     const nodes = (value) => !value || typeof value !== "object" ? []
         : Array.isArray(value) ? Array.from(value).flatMap(nodes) : [value, ...nodes(value.props?.children)];
     for (const row of current) {

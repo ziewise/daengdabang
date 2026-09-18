@@ -18,6 +18,7 @@ import type { AuthProvider } from "@/lib/types";
 import { removePaidLineQuantities } from "@/lib/cart-payment-reconciliation";
 import { findById } from "@/lib/catalog";
 import { optionPurchaseState } from "./catalog/inventory";
+import { liveInventoryProduct } from "./catalog/live-inventory";
 
 // selected — 장바구니에서 결제 대상으로 체크된 라인(기본 true). 결제는 선택된 라인만 진행.
 export type CartLine = { productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment };
@@ -203,7 +204,7 @@ function reducer(state: State, action: Action): State {
             return action.state;
         case "ADD_TO_CART": {
             const product = findById(action.productId);
-            if (!product || !optionPurchaseState(product, action.color, action.size).purchasable) return state;
+            if (!product || !optionPurchaseState(liveInventoryProduct(product), action.color, action.size).purchasable) return state;
             const existing = state.cart.find((line) => sameLine(line, action.productId, action.color, action.size));
             if (existing) {
                 return {
@@ -223,7 +224,7 @@ function reducer(state: State, action: Action): State {
         case "SET_QTY": {
             const existing = state.cart.find(line => sameLine(line, action.productId, action.color, action.size));
             const product = findById(action.productId);
-            if (action.qty > (existing?.qty || 0) && (!product || !optionPurchaseState(product, action.color, action.size).purchasable)) return state;
+            if (action.qty > (existing?.qty || 0) && (!product || !optionPurchaseState(liveInventoryProduct(product), action.color, action.size).purchasable)) return state;
             return {
                 ...state,
                 cart: state.cart

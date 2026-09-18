@@ -19,11 +19,11 @@ test("Ruffwear and Rex Specs stay at the current price without a discount compar
 
     const current = targets.filter((row) => row.supplierCatalogSource === "jsk_approved_account");
     const historical = targets.filter((row) => row.supplierCatalogHistorical === true);
-    assert.equal(current.length, 216);
-    assert.equal(current.filter((row) => row.brandEn === "Ruffwear").length, 175);
+    assert.equal(current.length, 220);
+    assert.equal(current.filter((row) => row.brandEn === "Ruffwear").length, 179);
     assert.equal(current.filter((row) => row.brandEn === "Rex Specs").length, 41);
-    assert.equal(new Set(current.map((row) => row.supplierGoodsNo)).size, 216);
-    assert.equal(historical.length, 68);
+    assert.equal(new Set(current.map((row) => row.supplierGoodsNo)).size, 220);
+    assert.equal(historical.length, 64);
     assert.equal(targets.length, current.length + historical.length);
     for (const row of historical) assert.equal(row.availability, "paused", row.folder);
 

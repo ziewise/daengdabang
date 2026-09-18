@@ -55,6 +55,7 @@ function card(overrides = {}) {
         "@/components/products/VideoBrandOverlay": () => null,
         "@/components/products/ProductColorImage": "img",
         "@/lib/catalog/inventory": { productPurchaseState: () => ({ purchasable: true }), purchaseStateLabel: () => "" },
+        "@/lib/catalog/live-inventory": { useLiveInventoryProduct: product => product },
     };
     const loaded = { exports: {} };
     vm.runInNewContext(compiled, { module: loaded, exports: loaded.exports, require: id => {

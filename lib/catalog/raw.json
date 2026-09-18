@@ -92,7 +92,7 @@
     "supplierGoodsNo": "1000001305",
     "supplierCatalogSource": "jsk_approved_account",
     "supplierCatalogObservedAt": "2026-09-08T08:42:18.098Z",
-    "availability": "sold_out",
+    "availability": "available",
     "recommendable": true,
     "operatorReviewedHold": false,
     "gallery": [
@@ -1797,17 +1797,13 @@
     "priceText": "24,000원",
     "priceNum": 24000,
     "categorizeNote": "상품명 키워드 기반",
-    "sourceUrl": "https://smartstore.naver.com/daengdabang/products/13149767159",
+    "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001307",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_remix_balltoy_s_26/rw_remix_balltoy_s_26.webp",
+    "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001307/image/detail/1000001307_detail_071.jpg",
     "folder": "rw_remix_balltoy_s_26",
     "details": [
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-01.webp",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-02.webp",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-03.webp",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-04.webp",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/2.webp",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/3.webp"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260831/82f7138bc82147bc50d3fbc5e9d3b416_000808.jpg",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034626.jpg"
     ],
     "video": "/images/products/catalog/rw_remix_balltoy_s_26/videos/hover.mp4",
     "videoQuality": "approved_dog_wearing",
@@ -1817,10 +1813,8 @@
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
     "detailImage": "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-01.webp",
     "detailImageLabels": {
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-01.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-02.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-03.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_balltoy_s_26/details/official-visual-04.webp": "제조사 공식 제품 이미지"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260831/82f7138bc82147bc50d3fbc5e9d3b416_000808.jpg": "공식 상품 상세 1",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034626.jpg": "공식 상품 상세 2"
     },
     "recommendable": false,
     "operatorReviewedHold": true,
@@ -1828,7 +1822,25 @@
     "supplierCatalogHistorical": false,
     "supplierGoodsNo": "1000001307",
     "supplierCatalogSource": "jsk_approved_account",
-    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00",
+    "gallery": [
+      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001307/image/detail/1000001307_detail_071.jpg"
+    ],
+    "supplierDetailImages": [
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260831/82f7138bc82147bc50d3fbc5e9d3b416_000808.jpg",
+        "width": 860,
+        "height": 6560,
+        "alt": "82f7138bc82147bc50d3fbc5e9d3b416_000808.jpg"
+      },
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034626.jpg",
+        "width": 860,
+        "height": 1748,
+        "alt": "4c2cf60ddc16078f2a3d003bc4efe801_034626.jpg"
+      }
+    ],
+    "supplierDetailText": "\n\n\n\n\n\n\n\n\n\n \n\n \n\n\n  \n\n\n  \n\n\n "
   },
   {
     "no": 25,
@@ -1846,17 +1858,13 @@
     "priceText": "34,000원",
     "priceNum": 34000,
     "categorizeNote": "상품명 키워드 기반",
-    "sourceUrl": "https://smartstore.naver.com/daengdabang/products/13149766241",
+    "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001308",
     "verifyNote": "2026FW 공급사 소비자가 확인 완료",
-    "image": "/images/products/catalog/rw_remix_balltoy_m_26/rw_remix_balltoy_m_26.webp",
+    "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001308/image/detail/1000001308_detail_045.jpg",
     "folder": "rw_remix_balltoy_m_26",
     "details": [
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-01.webp",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-02.webp",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-03.webp",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-04.webp",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/2.webp",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/3.webp"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260831/82f7138bc82147bc50d3fbc5e9d3b416_000429.jpg",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034714.jpg"
     ],
     "video": "/images/products/catalog/rw_remix_balltoy_m_26/videos/hover.mp4",
     "videoQuality": "approved_dog_wearing",
@@ -1866,10 +1874,8 @@
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
     "detailImage": "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-01.webp",
     "detailImageLabels": {
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-01.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-02.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-03.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_balltoy_m_26/details/official-visual-04.webp": "제조사 공식 제품 이미지"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260831/82f7138bc82147bc50d3fbc5e9d3b416_000429.jpg": "공식 상품 상세 1",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034714.jpg": "공식 상품 상세 2"
     },
     "recommendable": false,
     "operatorReviewedHold": true,
@@ -1877,7 +1883,25 @@
     "supplierCatalogHistorical": false,
     "supplierGoodsNo": "1000001308",
     "supplierCatalogSource": "jsk_approved_account",
-    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00",
+    "gallery": [
+      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001308/image/detail/1000001308_detail_045.jpg"
+    ],
+    "supplierDetailImages": [
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260831/82f7138bc82147bc50d3fbc5e9d3b416_000429.jpg",
+        "width": 860,
+        "height": 6560,
+        "alt": "82f7138bc82147bc50d3fbc5e9d3b416_000429.jpg"
+      },
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034714.jpg",
+        "width": 860,
+        "height": 1748,
+        "alt": "4c2cf60ddc16078f2a3d003bc4efe801_034714.jpg"
+      }
+    ],
+    "supplierDetailText": "\n\n\n\n\n\n\n\n\n\n \n\n \n\n\n  \n\n\n  \n\n\n "
   },
   {
     "no": 26,
@@ -1941,17 +1965,13 @@
     "priceText": "38,000원",
     "priceNum": 38000,
     "categorizeNote": "상품명 키워드 기반",
-    "sourceUrl": "https://smartstore.naver.com/daengdabang/products/13149762160",
+    "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001310",
     "verifyNote": "",
-    "image": "/images/products/catalog/rw_remix_tugtoy_m_26/rw_remix_tugtoy_m_26.webp",
+    "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001310/image/detail/1000001309_detail_050.jpg",
     "folder": "rw_remix_tugtoy_m_26",
     "details": [
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-01.webp",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-02.webp",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-03.webp",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-04.webp",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/2.webp",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/3.webp"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/99003de660f497b56ae0035ee97209b7_034827.jpg",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034841.jpg"
     ],
     "video": "/images/products/catalog/rw_remix_tugtoy_m_26/videos/hover.mp4",
     "videoQuality": "approved_dog_wearing",
@@ -1961,10 +1981,8 @@
     "videoSourceCommit": "bbf89db94b4b11a0889e7a180f25948bb945c1b1",
     "detailImage": "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-01.webp",
     "detailImageLabels": {
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-01.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-02.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-03.webp": "당기기와 던지기 놀이",
-      "/images/products/catalog/rw_remix_tugtoy_m_26/details/official-visual-04.webp": "제조사 공식 제품 이미지"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/99003de660f497b56ae0035ee97209b7_034827.jpg": "공식 상품 상세 1",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034841.jpg": "공식 상품 상세 2"
     },
     "recommendable": false,
     "operatorReviewedHold": true,
@@ -1972,7 +1990,25 @@
     "supplierCatalogHistorical": false,
     "supplierGoodsNo": "1000001310",
     "supplierCatalogSource": "jsk_approved_account",
-    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00",
+    "gallery": [
+      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001310/image/detail/1000001309_detail_050.jpg"
+    ],
+    "supplierDetailImages": [
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/99003de660f497b56ae0035ee97209b7_034827.jpg",
+        "width": 860,
+        "height": 6051,
+        "alt": "99003de660f497b56ae0035ee97209b7_034827.jpg"
+      },
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_034841.jpg",
+        "width": 860,
+        "height": 1748,
+        "alt": "4c2cf60ddc16078f2a3d003bc4efe801_034841.jpg"
+      }
+    ],
+    "supplierDetailText": "\n\n\n\n\n\n\n\n\n \n\n \n\n\n  \n\n\n  \n\n\n "
   },
   {
     "no": 28,
@@ -20143,19 +20179,13 @@
     "priceText": "52,000원",
     "priceNum": 52000,
     "categorizeNote": "2026FW 공급사 소비자가 및 Ruffwear 공식 제품 자료 대조",
-    "sourceUrl": "https://ruffwear.com/products/double-track-coupler",
+    "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001136",
     "verifyNote": "2026FW 공급사 소비자가 확인 완료",
     "folder": "rw_doubletrack_coupler",
-    "image": "/images/products/catalog/rw_doubletrack_coupler/rw_doubletrack_coupler.png",
+    "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001136/image/detail/1000001136_detail_066.jpg",
     "details": [
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-01.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-02.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-03.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-04.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-05.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-06.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/2.webp",
-      "/images/products/catalog/rw_doubletrack_coupler/details/3.webp"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Double-Track-Coupler_145350.jpg",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/839ad201252d91071f7d6236e36561a4_145437.jpg"
     ],
     "video": "/images/products/catalog/rw_doubletrack_coupler/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -20164,12 +20194,8 @@
     "videoJobId": "hover-static72-20260903-ab6571c2a1c6",
     "detailImage": "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-01.webp",
     "detailImageLabels": {
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-01.webp": "가볍고 견고한 구조",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-02.webp": "두 마리 동시 산책 시스템",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-03.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-04.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-05.webp": "제조사 공식 제품 이미지",
-      "/images/products/catalog/rw_doubletrack_coupler/details/official-visual-06.webp": "제조사 공식 제품 이미지"
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Double-Track-Coupler_145350.jpg": "공식 상품 상세 1",
+      "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/839ad201252d91071f7d6236e36561a4_145437.jpg": "공식 상품 상세 2"
     },
     "recommendable": false,
     "operatorReviewedHold": true,
@@ -20177,7 +20203,25 @@
     "supplierCatalogHistorical": false,
     "supplierGoodsNo": "1000001136",
     "supplierCatalogSource": "jsk_approved_account",
-    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00",
+    "gallery": [
+      "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001136/image/detail/1000001136_detail_066.jpg"
+    ],
+    "supplierDetailImages": [
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Double-Track-Coupler_145350.jpg",
+        "width": 860,
+        "height": 6774,
+        "alt": "Double-Track-Coupler_145350.jpg"
+      },
+      {
+        "src": "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/839ad201252d91071f7d6236e36561a4_145437.jpg",
+        "width": 860,
+        "height": 1630,
+        "alt": "839ad201252d91071f7d6236e36561a4_145437.jpg"
+      }
+    ],
+    "supplierDetailText": "\n\n"
   },
   {
     "no": 349,
@@ -22528,7 +22572,7 @@
     "supplierCatalogObservedAt": "2026-09-08T08:42:18.098Z",
     "useMain": "의류/패션",
     "useSub": "의류",
-    "availability": "sold_out",
+    "availability": "available",
     "recommendable": true,
     "operatorReviewedHold": false,
     "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_030.jpg",
@@ -23484,7 +23528,7 @@
     "supplierCatalogObservedAt": "2026-09-08T08:42:18.618Z",
     "useMain": "산책/외출",
     "useSub": "리드줄",
-    "availability": "sold_out",
+    "availability": "available",
     "recommendable": true,
     "operatorReviewedHold": false,
     "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000969/image/detail/1000000907_detail_070.jpg",
@@ -24130,7 +24174,7 @@
     "supplierCatalogObservedAt": "2026-09-08T08:42:21.114Z",
     "useMain": "의류/패션",
     "useSub": "의류",
-    "availability": "sold_out",
+    "availability": "available",
     "recommendable": true,
     "operatorReviewedHold": false,
     "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000989/image/detail/1000000989_detail_046.jpg",
@@ -24205,7 +24249,7 @@
     "supplierCatalogObservedAt": "2026-09-08T08:42:21.114Z",
     "useMain": "산책/외출",
     "useSub": "하네스",
-    "availability": "sold_out",
+    "availability": "available",
     "recommendable": true,
     "operatorReviewedHold": false,
     "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000990/image/detail/1000000990_detail_054.jpg",

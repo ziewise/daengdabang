@@ -3352,13 +3352,7 @@
       "chip": "cloudburst_gray.png"
     }
   ],
-  "rw_doubletrack_coupler": [
-    {
-      "file": "basalt_gray.png",
-      "name": "바솔트 그레이",
-      "chip": "basalt_gray.png"
-    }
-  ],
+  "rw_doubletrack_coupler": [],
   "rw_knotahitch": [],
   "rw_trailrunner_vest": [
     {
@@ -6529,5 +6523,8 @@
       "imageHeight": 1000
     }
   ],
-  "rs_jsk_1000001368": []
+  "rs_jsk_1000001368": [],
+  "rw_remix_balltoy_s_26": [],
+  "rw_remix_balltoy_m_26": [],
+  "rw_remix_tugtoy_m_26": []
 }

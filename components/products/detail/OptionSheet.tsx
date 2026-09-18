@@ -17,6 +17,7 @@ import ProductColorImage from "@/components/products/ProductColorImage";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { optionPurchaseState, productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
+import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLine, daengLabCoinsForLines } from "@/lib/daenglab-rewards";
@@ -38,7 +39,8 @@ interface Props {
 // 누적 1건 — 색상×사이즈 조합 + 수량
 type Pick = { colorIdx: number; sizeIdx: number; qty: number };
 
-export default function OptionSheet({ product: p, open, mode, initialColorIdx = null, onClose, onCommitted }: Props) {
+export default function OptionSheet({ product, open, mode, initialColorIdx = null, onClose, onCommitted }: Props) {
+    const p = useLiveInventoryProduct(product);
     const router = useRouter();
     const { addToCart } = useCart();
     const { user } = useAuth();

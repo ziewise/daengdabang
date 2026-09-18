@@ -127,6 +127,7 @@ const yellowAdditionTargets = {
 // Exact purchase colors from the approved supplier observation. Size-only and
 // optionless listings must not acquire a color axis from older marketing images.
 const supplierAdditionColors = {
+    rw_doubletrack_coupler: [],
     rw_knotahitch: [],
     rw_trailrunner_vest: ["라이켄 그린", "블루 풀"],
     rw_gourdo_small: ["세이지 그린", "헬리오트로프 퍼플", "캠프파이어 오렌지"],

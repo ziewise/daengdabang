@@ -33,6 +33,7 @@ import ColorSelect from "./ColorSelect";
 import PurchaseEvidenceCard from "./PurchaseEvidenceCard";
 import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
+import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 
 interface Props {
     product: CatalogProduct;
@@ -42,7 +43,8 @@ interface Props {
     onTryOn?: () => void;
 }
 
-export default function ProductInfo({ product: p, colorIdx = null, onColorChange, onTryOn }: Props) {
+export default function ProductInfo({ product, colorIdx = null, onColorChange, onTryOn }: Props) {
+    const p = useLiveInventoryProduct(product);
     const { toggleWishlist, isWished } = useStore();
     const { user } = useAuth();
     const { pets: profilePets } = usePets();
