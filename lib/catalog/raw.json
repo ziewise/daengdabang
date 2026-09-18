@@ -1825,7 +1825,10 @@
     "recommendable": false,
     "operatorReviewedHold": true,
     "availability": "paused",
-    "supplierCatalogHistorical": true
+    "supplierCatalogHistorical": false,
+    "supplierGoodsNo": "1000001307",
+    "supplierCatalogSource": "jsk_approved_account",
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
   },
   {
     "no": 25,
@@ -1871,7 +1874,10 @@
     "recommendable": false,
     "operatorReviewedHold": true,
     "availability": "paused",
-    "supplierCatalogHistorical": true
+    "supplierCatalogHistorical": false,
+    "supplierGoodsNo": "1000001308",
+    "supplierCatalogSource": "jsk_approved_account",
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
   },
   {
     "no": 26,
@@ -1963,7 +1969,10 @@
     "recommendable": false,
     "operatorReviewedHold": true,
     "availability": "paused",
-    "supplierCatalogHistorical": true
+    "supplierCatalogHistorical": false,
+    "supplierGoodsNo": "1000001310",
+    "supplierCatalogSource": "jsk_approved_account",
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
   },
   {
     "no": 28,
@@ -5717,7 +5726,7 @@
     "supplierGoodsNo": "1000001124",
     "supplierCatalogSource": "jsk_approved_account",
     "supplierCatalogObservedAt": "2026-09-08T08:42:39.220Z",
-    "availability": "available",
+    "availability": "sold_out",
     "recommendable": true,
     "operatorReviewedHold": false,
     "gallery": [
@@ -20165,7 +20174,10 @@
     "recommendable": false,
     "operatorReviewedHold": true,
     "availability": "paused",
-    "supplierCatalogHistorical": true
+    "supplierCatalogHistorical": false,
+    "supplierGoodsNo": "1000001136",
+    "supplierCatalogSource": "jsk_approved_account",
+    "supplierCatalogObservedAt": "2026-09-18T19:26:06.802+00:00"
   },
   {
     "no": 349,

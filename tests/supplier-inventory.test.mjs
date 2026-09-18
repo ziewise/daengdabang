@@ -203,12 +203,12 @@ test('generated contract covers only public metadata and resolver mirrors every 
     const currentFolders=new Set(currentRows.map(row=>row.folder));
     assert.equal(document.schemaVersion,1);
     assert.equal(document.sourceDate,'2026-08-29','the historical warehouse date is preserved');
-    assert.equal(currentFolders.size,216);
-    assert.equal(new Set(currentRows.map(row=>row.supplierGoodsNo)).size,216);
+    assert.equal(currentFolders.size,220);
+    assert.equal(new Set(currentRows.map(row=>row.supplierGoodsNo)).size,220);
     const observed={current:{available:0,sold_out:0,unknown:0,supplier_request:0},legacy:{available:0,sold_out:0,unknown:0,supplier_request:0}};
     for(const [folder,entry] of Object.entries(document.products)) {
         const counts=observed[currentFolders.has(folder)?'current':'legacy'];
-        if(currentFolders.has(folder))assert.equal(entry.sourceDate,'2026-09-08',folder);
+        if(currentFolders.has(folder))assert.ok(['2026-09-08','2026-09-19'].includes(entry.sourceDate),folder);
         const p={colors:colors[folder]||[],sizes:sizes[folder]||[],inventory:inventory.inventoryForProduct(document,folder)};
         for(const option of entry.options) {
             const actual=inventory.optionPurchaseState(p,option.color,option.size);
@@ -217,8 +217,8 @@ test('generated contract covers only public metadata and resolver mirrors every 
         }
     }
     for(const folder of currentFolders)assert.ok(document.products[folder],`supplier inventory missing: ${folder}`);
-    assert.equal(Object.keys(document.products).length,216+40);
-    assert.deepEqual(observed.current,{available:1228,sold_out:688,unknown:0,supplier_request:1228});
+    assert.equal(Object.keys(document.products).length,220+40);
+    assert.deepEqual(observed.current,{available:1227,sold_out:689,unknown:0,supplier_request:1227});
     assert.equal(observed.current.available+observed.current.sold_out,1916);
     assert.deepEqual(observed.legacy,{available:374,sold_out:59,unknown:117,supplier_request:216});
     assert.doesNotMatch(JSON.stringify(document),/sourceWorkbook|sourceMarker|internalStock|costPrice|[A-Z]:\\/);
