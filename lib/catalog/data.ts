@@ -11,6 +11,8 @@ import { catalogDisplayName } from "./catalog-display-name";
 import inventoryData from "./inventory.generated.json";
 import { inventoryForProduct } from "./inventory";
 import { visibleCatalogProducts } from "./visible-products";
+import productGroups from "./product-groups.json";
+import { aggregateReviews, groupForFolder, visibleProductGroups } from "./review-groups";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -239,6 +241,10 @@ function buildCatalog(): CatalogProduct[] {
         const category = SUBCAT_TO_CAT[subcategory];
         const overridePrice = buildPrice(row.folder);
         const price = overridePrice ?? (row.priceNum || 0);
+        const group = groupForFolder(productGroups, row.folder);
+        const reviewRows = (rawCatalog as CatalogRow[]).filter(source =>
+            group ? group.members.includes(source.folder ?? "") : source.folder === row.folder);
+        const reviews = aggregateReviews(reviewRows);
 
         return {
             id: `p_${row.no}`,
@@ -277,10 +283,20 @@ function buildCatalog(): CatalogProduct[] {
             video: storefrontVideoUrl(reviewedRow, subcategory),
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
-            externalReviewCount: row.externalReviewCount,
-            externalReviewAverage: row.externalReviewAverage,
+            externalReviewCount: reviews.count || row.externalReviewCount,
+            externalReviewAverage: reviews.average ?? row.externalReviewAverage,
             externalReviewThemes: row.externalReviewThemes,
-            externalReviewSnippets: row.externalReviewSnippets,
+            externalReviewSnippets: reviews.snippets,
+            externalReviewSources: reviews.sources,
+            reviewGroup: group ? {
+                key: group.key,
+                canonical: group.canonical,
+                variants: reviewRows.filter(source => source.supplierCatalogHistorical !== true).map(source => ({
+                    folder: source.folder!, name: source.name,
+                    colors: buildColors(source.folder)?.map(color => color.name) ?? [],
+                    sizes: buildSizes(source.folder)?.map(size => size.name) ?? [],
+                })),
+            } : undefined,
             externalReviewDisclosure: row.externalReviewDisclosure,
             priceBadgeKind: catalogPriceBadgeKind(row.brandEn, row.brandKo),
             recommendable: row.supplierCatalogHistorical !== true && row.recommendable === true,
@@ -291,14 +307,14 @@ function buildCatalog(): CatalogProduct[] {
             sizes: buildSizes(row.folder),
             optionLabel: buildOptionLabel(row.folder),
             inventory: inventoryForProduct(inventoryData, row.folder),
-            ...buildMeta(row, price),
+            ...buildMeta({ ...row, externalReviewCount: reviews.count || row.externalReviewCount, externalReviewAverage: reviews.average ?? row.externalReviewAverage }, price),
         };
     });
 }
 
 /** Includes historical products for stable detail routes and existing order/cart references. */
 export const ALL_CATALOG: CatalogProduct[] = buildCatalog();
-export const CATALOG: CatalogProduct[] = visibleCatalogProducts(ALL_CATALOG);
+export const CATALOG: CatalogProduct[] = visibleProductGroups(visibleCatalogProducts(ALL_CATALOG), productGroups);
 
 export function findById(id: string): CatalogProduct | undefined {
     return ALL_CATALOG.find((product) => product.id === id || product.folder === id);

@@ -5,6 +5,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { visibleCatalogProducts } from "../lib/catalog/visible-products.ts";
+import { visibleProductGroups } from "../lib/catalog/review-groups.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const nativeRequire = createRequire(import.meta.url);
@@ -72,7 +73,8 @@ test("the deployed duplicate has one p_299 listing while both IDs and historical
         assert.equal(CATALOG.includes(product), false);
     }
     const current = ALL_CATALOG.filter(p => p.supplierCatalogHistorical !== true);
-    assert.equal(CATALOG.length, current.length - 1);
+    const groups = JSON.parse(readFileSync(resolve(root, "lib/catalog/product-groups.json"), "utf8"));
+    assert.equal(CATALOG.length, visibleProductGroups(visibleCatalogProducts(current), groups).length);
     assert.equal(new Set(CATALOG.filter(p => p.folder).map(p => p.folder)).size, CATALOG.filter(p => p.folder).length);
 });
 

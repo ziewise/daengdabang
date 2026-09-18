@@ -126,6 +126,8 @@ test("all approved JSK details bypass legacy editorial indices and render every 
             if (id === "react") return { ...require("react"), useState: () => [false, () => {}] };
             if (id === "react/jsx-runtime") return require(id);
             if (id === "next/image") return "source-image";
+            if (id === "next/link") return "a";
+            if (id === "./ProductReviewPanel") return () => null;
             if (id === "@/lib/i18n") return { useI18n: () => ({ t: (value) => value, productName: (p) => p.name }) };
             if (id === "@/lib/catalog/product-detail-content") return {
                 getProductDetailContent: () => { throw new Error("JSK source detail must not use legacy editorial content"); },

@@ -1,0 +1,268 @@
+[
+  {
+    "key": "web_master_harness",
+    "canonical": "rw_jsk_1000001237",
+    "members": [
+      "rw_webmaster_harness",
+      "rw_jsk_1000001166",
+      "rw_jsk_1000001237"
+    ]
+  },
+  {
+    "key": "knot_a_leash",
+    "canonical": "rw_jsk_1000001207",
+    "members": [
+      "rw_leash_nota",
+      "rw_jsk_1000000969",
+      "rw_jsk_1000001207"
+    ]
+  },
+  {
+    "key": "front_range_collar",
+    "canonical": "rw_jsk_1000001241",
+    "members": [
+      "rw_collar_frontrange_24",
+      "rw_collar_frontrange",
+      "rw_jsk_1000000993",
+      "rw_jsk_1000001241"
+    ]
+  },
+  {
+    "key": "crag_leash",
+    "canonical": "rw_jsk_1000001355",
+    "members": [
+      "rw_leash_crag_23",
+      "rw_leash_crag",
+      "rw_jsk_1000000417",
+      "rw_jsk_1000001355"
+    ]
+  },
+  {
+    "key": "crag_collar",
+    "canonical": "rw_jsk_1000001354",
+    "members": [
+      "rw_collar_crag",
+      "rw_collar_crag_23",
+      "rw_jsk_1000000137",
+      "rw_jsk_1000000416",
+      "rw_jsk_1000001354"
+    ]
+  },
+  {
+    "key": "swamp_cooler_harness",
+    "canonical": "rw_jsk_1000001246",
+    "members": [
+      "rw_swampcooler_harness_2",
+      "rw_swampcooler_harness",
+      "rw_jsk_1000000990",
+      "rw_jsk_1000001246"
+    ]
+  },
+  {
+    "key": "top_rope_collar",
+    "canonical": "rw_jsk_1000001199",
+    "members": [
+      "rw_collar_toprope",
+      "rw_jsk_1000000011",
+      "rw_jsk_1000000951",
+      "rw_jsk_1000001199"
+    ]
+  },
+  {
+    "key": "knot_a_collar",
+    "canonical": "rw_jsk_1000001210",
+    "members": [
+      "rw_collar_nota",
+      "rw_jsk_1000000219",
+      "rw_jsk_1000000972",
+      "rw_jsk_1000001210"
+    ]
+  },
+  {
+    "key": "knot_a_long",
+    "canonical": "rw_jsk_1000001209",
+    "members": [
+      "rw_leash_nota_long",
+      "rw_jsk_1000000217",
+      "rw_jsk_1000000971",
+      "rw_jsk_1000001209"
+    ]
+  },
+  {
+    "key": "front_range_harness",
+    "canonical": "rw_jsk_1000001239",
+    "members": [
+      "rw_frontrange_harness_24",
+      "rw_frontrange_harness",
+      "rw_jsk_1000000991",
+      "rw_jsk_1000001239"
+    ]
+  },
+  {
+    "key": "front_range_daypack",
+    "canonical": "rw_jsk_1000001165",
+    "members": [
+      "rw_frontrange_daypack_24",
+      "rw_jsk_1000001165"
+    ]
+  },
+  {
+    "key": "chain_reaction_martingale",
+    "canonical": "rw_collar_chainreaction_martingale_24",
+    "members": [
+      "rw_collar_chainreaction_martingale_24",
+      "rw_collar_chainreaction_martingale",
+      "rw_jsk_1000000010",
+      "rw_jsk_1000000952"
+    ]
+  },
+  {
+    "key": "web_reaction_martingale",
+    "canonical": "rw_jsk_1000001172",
+    "members": [
+      "rw_collar_webreaction_martingale",
+      "rw_jsk_1000000955",
+      "rw_jsk_1000001172"
+    ]
+  },
+  {
+    "key": "swamp_cooler_vest",
+    "canonical": "rw_jsk_1000001245",
+    "members": [
+      "rw_swampcooler_vest",
+      "rw_swampcooler_vest_2",
+      "rw_jsk_1000000164",
+      "rw_jsk_1000000989",
+      "rw_jsk_1000001245"
+    ]
+  },
+  {
+    "key": "swamp_cooler_zipvest",
+    "canonical": "rw_jsk_1000001244",
+    "members": [
+      "rw_swampcooler_zipvest",
+      "rw_swampcooler_zipvest_2",
+      "rw_jsk_1000000988",
+      "rw_jsk_1000001244"
+    ]
+  },
+  {
+    "key": "swamp_cooler_neckgaiter",
+    "canonical": "rw_jsk_1000001243",
+    "members": [
+      "rw_swampcooler_neckgaiter",
+      "rw_swampcooler_neckgaiter_2",
+      "rw_jsk_1000000987",
+      "rw_jsk_1000001243"
+    ]
+  },
+  {
+    "key": "just_a_cinch",
+    "canonical": "rw_jsk_1000001208",
+    "members": [
+      "rw_leash_justacinch",
+      "rw_jsk_1000000970",
+      "rw_jsk_1000001208"
+    ]
+  },
+  {
+    "key": "stash_bag_mini",
+    "canonical": "rw_stashbag_mini",
+    "members": [
+      "rw_stashbag_mini",
+      "rw_stashbag_mini_2"
+    ]
+  },
+  {
+    "key": "float_coat",
+    "canonical": "rw_jsk_1000001229",
+    "members": [
+      "rw_floatcoat_lifejacket",
+      "rw_jsk_1000001005",
+      "rw_jsk_1000001229"
+    ]
+  },
+  {
+    "key": "lunker",
+    "canonical": "rw_jsk_1000001231",
+    "members": [
+      "rw_lunker",
+      "rw_jsk_1000001097",
+      "rw_jsk_1000001231"
+    ]
+  },
+  {
+    "key": "home_trail_hip_pack",
+    "canonical": "rw_jsk_1000001252",
+    "members": [
+      "rw_jsk_1000000660",
+      "rw_jsk_1000001130",
+      "rw_jsk_1000001252"
+    ]
+  },
+  {
+    "key": "gnawt_a_rock",
+    "canonical": "rw_jsk_1000001232",
+    "members": [
+      "rw_jsk_1000000192",
+      "rw_jsk_1000001099",
+      "rw_jsk_1000001232"
+    ]
+  },
+  {
+    "key": "gnawt_a_cone",
+    "canonical": "rw_jsk_1000001233",
+    "members": [
+      "rw_jsk_1000000191",
+      "rw_jsk_1000001233"
+    ]
+  },
+  {
+    "key": "gnawt_a_stick",
+    "canonical": "rw_jsk_1000001230",
+    "members": [
+      "rw_jsk_1000001046",
+      "rw_jsk_1000001230"
+    ]
+  },
+  {
+    "key": "huck_a_cone",
+    "canonical": "rw_jsk_1000001234",
+    "members": [
+      "rw_jsk_1000000330",
+      "rw_jsk_1000001234"
+    ]
+  },
+  {
+    "key": "palisades_pack",
+    "canonical": "rw_palisades_pack_26",
+    "members": [
+      "rw_jsk_1000000985",
+      "rw_palisades_pack_26"
+    ]
+  },
+  {
+    "key": "sun_shower_jacket",
+    "canonical": "rw_jsk_1000001214",
+    "members": [
+      "rw_jsk_1000001214",
+      "rw_jsk_1000000949"
+    ]
+  },
+  {
+    "key": "quencher_bowl",
+    "canonical": "rw_quencher_24",
+    "members": [
+      "rw_quencher_24",
+      "rw_jsk_1000000772"
+    ]
+  },
+  {
+    "key": "brush_guard",
+    "canonical": "rw_jsk_1000001129",
+    "members": [
+      "rw_jsk_1000001129",
+      "rw_jsk_1000000031"
+    ]
+  }
+]

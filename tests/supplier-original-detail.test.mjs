@@ -5,6 +5,7 @@ import test from "node:test";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
+import * as reviewGroups from "../lib/catalog/review-groups.ts";
 
 const require = createRequire(import.meta.url);
 
@@ -32,6 +33,7 @@ test('reviewed video CDN pin survives later builds without bypassing the publica
 });
 
 function loadModule(relative, dependencies = {}, env = {}) {
+    dependencies = { './product-groups.json': [], './review-groups': reviewGroups, ...dependencies };
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
     });
@@ -57,6 +59,7 @@ const baseProduct = {
 function renderDetails(product, content) {
     const lookups = [];
     const { default: ProductTabs } = loadModule("components/products/detail/ProductTabs.tsx", {
+        './ProductReviewPanel': () => React.createElement('div', { 'data-review-panel': true }),
         "next/image": imageStub,
         "@/lib/i18n": { useI18n: () => ({ t: (key) => key, productName: (p) => p.name, locale: "ko" }) },
         "@/lib/chat-widget-events": { openChatWidget() {} },

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import ProductReviewPanel from "./ProductReviewPanel";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
@@ -28,6 +30,16 @@ export default function ProductTabs({ product: p }: Props) {
 
     return (
         <div className="mt-12 md:mt-16">
+            {p.reviewGroup && p.reviewGroup.variants.length > 1 && (
+                <section aria-label={locale === "en" ? "Product variants" : "색상·시즌별 상품 옵션"} className="mb-6 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+                    <h2 className="text-sm font-bold">{locale === "en" ? "Choose a color or season" : "색상·시즌별 옵션 보기"}</h2>
+                    <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "Each version keeps its own size options, price and stock." : "각 상품의 기존 색상·사이즈·가격·재고를 그대로 확인하고 선택할 수 있어요."}</p>
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">{p.reviewGroup.variants.map(variant => <Link key={variant.folder} href={`/product/${variant.folder}/`} aria-current={variant.folder === p.folder ? "page" : undefined} className={`rounded-lg border p-3 text-xs leading-5 ${variant.folder === p.folder ? "border-indigo-300 bg-indigo-50" : "border-neutral-200 bg-white hover:border-indigo-300"}`}>
+                        <span className="block font-bold">{variant.name}</span>
+                        {variant.colors.length > 0 && <span className="mt-1 block text-neutral-500">{variant.colors.join(" · ")}</span>}
+                    </Link>)}</div>
+                </section>
+            )}
             <nav
                 className="sticky top-[var(--header-height)] z-20 -mx-4 border-y border-neutral-200 bg-background/95 px-4 backdrop-blur md:-mx-6 md:px-6"
                 aria-label={t("detailInfo")}
@@ -355,82 +367,7 @@ function officialTheme(sourceLabel?: string) {
 }
 
 function ReviewContent({ product: p }: { product: CatalogProduct }) {
-    const { t, locale } = useI18n();
-    const snippets = p.externalReviewSnippets ?? [];
-    const themes = p.externalReviewThemes ?? [];
-    const count = p.externalReviewCount ?? snippets.length;
-    const average = typeof p.externalReviewAverage === "number" ? p.externalReviewAverage : null;
-
-    if (snippets.length > 0) {
-        return (
-            <div className="mx-auto max-w-3xl space-y-5">
-                <div className="rounded-lg border border-neutral-200 bg-white p-5 md:p-7">
-                    <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div>
-                            <p className="text-xs font-black text-indigo-600">
-                                {locale === "en" ? "Naver Smart Store purchase reviews" : "네이버 스마트스토어 구매 후기"}
-                            </p>
-                            <h3 className="mt-2 text-lg font-black text-neutral-950">{t("originalReview")}</h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-center">
-                            <div className="rounded-md bg-neutral-50 px-4 py-3">
-                                <div className="text-[11px] font-black text-neutral-400">{t("rating")}</div>
-                                <div className="mt-1 text-xl font-black">{average !== null ? average.toFixed(1) : "-"}</div>
-                            </div>
-                            <div className="rounded-md bg-neutral-50 px-4 py-3">
-                                <div className="text-[11px] font-black text-neutral-400">{t("reviewCount")}</div>
-                                <div className="mt-1 text-xl font-black">
-                                    {count.toLocaleString(locale === "en" ? "en-US" : "ko-KR")}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {themes.length > 0 && (
-                        <div className="mb-5 flex flex-wrap gap-2">
-                            {themes.map((theme) => (
-                                <span key={theme} className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-extrabold text-amber-700">
-                                    {theme}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-
-                    <div className="space-y-3">
-                        {snippets.slice(0, 8).map((snippet, index) => (
-                            <div key={`${snippet.text}-${index}`} className="rounded-md border border-neutral-200 bg-neutral-50 p-4">
-                                <div className="mb-2 flex items-center justify-between gap-3 text-xs font-black text-neutral-500">
-                                    <span>{snippet.rating ? `${t("rating")} ${snippet.rating}` : t("reviews")}</span>
-                                    {snippet.summary && <span className="truncate">{snippet.summary}</span>}
-                                </div>
-                                <p className="text-sm font-bold leading-6 text-neutral-800">{snippet.text}</p>
-                            </div>
-                        ))}
-                    </div>
-
-                    {p.externalReviewUrl && (
-                        <div className="mt-5 flex justify-end border-t border-neutral-200 pt-4">
-                            <a
-                                href={p.externalReviewUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex h-10 items-center gap-2 rounded-md border border-neutral-200 px-4 text-xs font-black hover:border-indigo-300 hover:text-indigo-700"
-                            >
-                                <i className="fa-solid fa-arrow-up-right-from-square" />
-                                {t("viewOriginal")}
-                            </a>
-                        </div>
-                    )}
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="mx-auto max-w-3xl rounded-lg border border-dashed border-neutral-200 bg-white p-8 text-center text-sm font-bold text-neutral-500">
-            {t("noReviews")}
-        </div>
-    );
+    return <ProductReviewPanel product={p} />;
 }
 
 function QnaContent({ product: p }: { product: CatalogProduct }) {
