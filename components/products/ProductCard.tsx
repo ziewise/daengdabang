@@ -12,6 +12,7 @@
  * sync-images.mjs 가 products/{folder}/video.mp4 감지 시 catalog.video 자동 채움.
  */
 "use client";
+import { reviewSellerLabel } from "@/lib/catalog/review-groups";
 
 import { useRef, useState } from "react";
 import Link from "next/link";
@@ -242,12 +243,14 @@ export default function ProductCard({
                     </div>
 
                     {/* 평점 + 리뷰 수 — 항상 자리 (리뷰 0 시 빈 영역) */}
-                    <div className="flex items-center justify-end gap-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500 h-[14px] md:h-[16px]">
-                        {p.reviewCount > 0 && (
+                    <div className="flex min-h-8 flex-wrap items-center justify-end gap-x-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500">
+                        {(p.externalReviewCount ?? 0) > 0 && (
                             <>
+                                <span>{locale === "en" ? "External store reviews" : "외부 판매점 후기"}</span>
                                 <i className="fa-solid fa-star text-amber-400" />
-                                <span className="font-bold text-neutral-700">{p.rating.toFixed(1)}</span>
-                                <span className="text-neutral-400">({p.reviewCount})</span>
+                                <span className="font-bold text-neutral-700">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
+                                <span className="text-neutral-400">({p.externalReviewCount})</span>
+                                <span className="basis-full text-right">{reviewSellerLabel(p.externalReviewUrl)}</span>
                             </>
                         )}
                     </div>

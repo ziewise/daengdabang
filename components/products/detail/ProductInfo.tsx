@@ -1,4 +1,5 @@
 "use client";
+import { reviewSellerLabel } from "@/lib/catalog/review-groups";
 
 /**
  * ProductInfo — 제품 구매 정보 + 색상 미리보기 + 옵션 시트 트리거 + 스크롤 추적 하단 바.
@@ -154,14 +155,16 @@ export default function ProductInfo({ product: p, colorIdx = null, onColorChange
                     )}
                 </div>
 
-                {p.reviewCount > 0 && (
-                    <div className="flex items-center gap-2 text-sm">
+                {(p.externalReviewCount ?? 0) > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                        <span className="text-xs text-neutral-500">{locale === "en" ? "External store reviews" : "외부 판매점 후기"}</span>
                         <i className="fa-solid fa-star text-amber-400" />
-                        <span className="font-black">{p.rating.toFixed(1)}</span>
+                        <span className="font-black">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
                         <span className="text-neutral-300">|</span>
                         <a href="#tab-review" className="font-bold text-neutral-600 hover:text-indigo-600">
-                            {t("reviews")} {p.reviewCount.toLocaleString(locale === "en" ? "en-US" : "ko-KR")}
+                            {p.externalReviewCount?.toLocaleString(locale === "en" ? "en-US" : "ko-KR")} {locale === "en" ? "reviews" : "개 후기"}
                         </a>
+                        <span className="basis-full text-xs leading-5 text-neutral-500">{reviewSellerLabel(p.externalReviewUrl)}. {locale === "en" ? "Separate from this site's purchase reviews." : "자사몰 구매 후기와 별개입니다."}</span>
                     </div>
                 )}
 

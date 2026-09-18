@@ -353,8 +353,8 @@ const MENU_EN: Record<string, string> = {
     "낮은 가격순": "Lowest price",
     "높은 가격순": "Highest price",
     "할인순": "Biggest discount",
-    "리뷰 많은순": "Most reviewed",
-    "평점 높은순": "Top rated",
+    "외부 판매점 후기 많은순": "Most external store reviews",
+    "외부 판매점 평점 높은순": "Highest external store rating",
 };
 
 const PRODUCT_REPLACEMENTS: Array<[RegExp, string]> = [

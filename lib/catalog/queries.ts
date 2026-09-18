@@ -135,9 +135,9 @@ export function applySort(list: CatalogProduct[], key: SortKey): CatalogProduct[
         case "discount":
             return copy.sort((a, b) => b.discountRate - a.discountRate);
         case "reviewDesc":
-            return copy.sort((a, b) => b.reviewCount - a.reviewCount);
+            return copy.sort((a, b) => (b.externalReviewCount ?? 0) - (a.externalReviewCount ?? 0));
         case "ratingDesc":
-            return copy.sort((a, b) => b.rating - a.rating);
+            return copy.sort((a, b) => (b.externalReviewAverage ?? 0) - (a.externalReviewAverage ?? 0));
         case "popular":
         default:
             return copy.sort((a, b) => b.popularity - a.popularity);

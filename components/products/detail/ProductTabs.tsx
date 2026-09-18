@@ -24,7 +24,7 @@ export default function ProductTabs({ product: p }: Props) {
         : undefined;
     const sections: { key: SectionKey; label: string }[] = [
         { key: "detail", label: t("detailInfo") },
-        { key: "review", label: t("reviews") },
+        { key: "review", label: locale === "en" ? "External reviews" : "외부 판매점 후기" },
         { key: "qna", label: t("qna") },
     ];
 
@@ -76,7 +76,7 @@ export default function ProductTabs({ product: p }: Props) {
             </section>
 
             <section id="tab-review" className="scroll-mt-32 pt-14">
-                <SectionTitle title={t("reviews")} badge={reviewBadge} />
+                <SectionTitle title={locale === "en" ? "External store reviews" : "외부 판매점 후기"} badge={reviewBadge} />
                 <ReviewContent product={p} />
             </section>
 

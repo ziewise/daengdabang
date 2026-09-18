@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import vm from "node:vm";
 import test from "node:test";
+import * as reviewGroups from "../lib/catalog/review-groups.ts";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
@@ -45,6 +46,7 @@ function card(overrides = {}) {
         "next/image": "img",
         "next/link": "a",
         "@/lib/catalog": { getBestRank: () => null, isNewProduct: () => false },
+        "@/lib/catalog/review-groups": reviewGroups,
         "@/lib/catalog/price-badge": { catalogPriceBadgeClass: () => "", catalogPriceBadgeLabel: () => "정가" },
         "@/lib/shop": { productHref: () => "/product/fixture" },
         "@/lib/store": { useStore: () => ({ toggleWishlist: id => wished.push(id), isWished: () => false }) },
@@ -68,6 +70,15 @@ function card(overrides = {}) {
 const button = (tree, label) => tree.find(n => n.type === "button" && n.props["aria-label"] === label);
 const thumbnail = tree => tree.find(n => n.type === "img" && n.props.sizes.includes("max-width"));
 const media = tree => tree.find(n => n.props?.onMouseEnter);
+
+test('external review stars and counts always identify the seller and never use own-store metrics', () => {
+    const fixture = card({ reviewCount: 999, rating: 1, externalReviewCount: 17, externalReviewAverage: 4.94, externalReviewUrl: 'https://smartstore.naver.com/daengdabang/products/123' });
+    const text = JSON.stringify(fixture.render().map(node => node.props.children));
+    assert.match(text, /외부 판매점 후기/);
+    assert.match(text, /내츄럴랩스/);
+    assert.match(text, /4.9/);
+    assert.doesNotMatch(text, /999/);
+});
 
 test("reviewed four-second edits hold their last frame and replay on the next hover", () => {
     const fixture = card({ video: "/trim.mp4", raw: { videoProvider: "ddb_original_video_editor", videoPlaybackMode: "once_hold_last_frame" } });

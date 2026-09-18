@@ -12,7 +12,9 @@ import inventoryData from "./inventory.generated.json";
 import { inventoryForProduct } from "./inventory";
 import { visibleCatalogProducts } from "./visible-products";
 import productGroups from "./product-groups.json";
-import { aggregateReviews, groupForFolder, visibleProductGroups } from "./review-groups";
+import { aggregateReviews, exactReviewRows, groupForFolder, visibleProductGroups } from "./review-groups";
+import reviewRefresh from "./review-refresh.json";
+import { applyReviewRefresh } from "./review-refresh";
 
 const STOREFRONT_ASSET_COMMIT_SHA = process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA?.trim() || "";
 const STOREFRONT_ASSET_COMMIT_RE = /^[0-9a-f]{40}$/i;
@@ -153,8 +155,10 @@ function buildMeta(row: CatalogRow, price: number) {
     const popularity = Math.round(brandBoost + seededRand(row.no, 1) * 760);
     const baseTs = new Date("2026-06-01T00:00:00+09:00").getTime();
     const addedAt = baseTs - Math.max(0, 360 - row.no) * 86400000;
-    const reviewCount = Number(row.externalReviewCount || 0);
-    const rating = typeof row.externalReviewAverage === "number" ? row.externalReviewAverage : 0;
+    // Verified own-store review data is not connected. External reviews must
+    // never populate own-store metrics, structured data or sales signals.
+    const reviewCount = 0;
+    const rating = 0;
     // 할인율은 관리자에서 저장한 두 가격으로만 계산한다. 정상가가 없거나
     // 최종 판매가 이하이면 할인 표시를 만들지 않아 잘못된 취소선을 막는다.
     const verifiedPriceSources = new Set(["manufacturer_msrp", "supplier_list_price", "recent_store_price"]);
@@ -242,8 +246,8 @@ function buildCatalog(): CatalogProduct[] {
         const overridePrice = buildPrice(row.folder);
         const price = overridePrice ?? (row.priceNum || 0);
         const group = groupForFolder(productGroups, row.folder);
-        const reviewRows = (rawCatalog as CatalogRow[]).filter(source =>
-            group ? group.members.includes(source.folder ?? "") : source.folder === row.folder);
+        const variantRows = (rawCatalog as CatalogRow[]).filter(source => group ? group.members.includes(source.folder ?? "") : source.folder === row.folder);
+        const reviewRows = exactReviewRows(row, rawCatalog as CatalogRow[]).map(source => applyReviewRefresh(source, reviewRefresh.sources));
         const reviews = aggregateReviews(reviewRows);
 
         return {
@@ -283,15 +287,15 @@ function buildCatalog(): CatalogProduct[] {
             video: storefrontVideoUrl(reviewedRow, subcategory),
             externalReviewSource: row.externalReviewSource,
             externalReviewUrl: row.externalReviewUrl,
-            externalReviewCount: reviews.count || row.externalReviewCount,
-            externalReviewAverage: reviews.average ?? row.externalReviewAverage,
+            externalReviewCount: reviews.count,
+            externalReviewAverage: reviews.average,
             externalReviewThemes: row.externalReviewThemes,
             externalReviewSnippets: reviews.snippets,
             externalReviewSources: reviews.sources,
             reviewGroup: group ? {
                 key: group.key,
                 canonical: group.canonical,
-                variants: reviewRows.filter(source => source.supplierCatalogHistorical !== true).map(source => ({
+                variants: variantRows.filter(source => source.supplierCatalogHistorical !== true).map(source => ({
                     folder: source.folder!, name: source.name,
                     colors: buildColors(source.folder)?.map(color => color.name) ?? [],
                     sizes: buildSizes(source.folder)?.map(size => size.name) ?? [],

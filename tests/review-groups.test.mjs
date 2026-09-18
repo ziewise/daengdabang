@@ -1,10 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { aggregateReviews, hasReviewBody, reviewedSummary, visibleProductGroups } from '../lib/catalog/review-groups.ts';
+import { aggregateReviews, exactReviewRows, reviewSellerLabel, hasReviewBody, reviewedSummary, visibleProductGroups } from '../lib/catalog/review-groups.ts';
 
 const url = 'https://smartstore.naver.com/daengdabang/products/123';
 const other = 'https://smartstore.naver.com/daengdabang/products/456';
+test('review identity requires the exact original product URL, not a listing family or seller name',()=>{
+    const rows=[{folder:'old',externalReviewUrl:url},{folder:'new'},{folder:'other_model',externalReviewUrl:other}, {folder:'copy',externalReviewUrl:url+'?ref=copy'}];
+    assert.deepEqual(exactReviewRows(rows[0],rows),[rows[0],rows[3]]);
+    assert.deepEqual(exactReviewRows(rows[1],rows),[]);
+    assert.match(reviewSellerLabel(url),/내츄럴랩스/);
+    assert.doesNotMatch(reviewSellerLabel('https://smartstore.naver.com/daengdabangmall/products/123'),/내츄럴랩스/);
+});
 test('review aggregation deduplicates a source URL, retains distinct sources and never mutates originals', () => {
     const rows = [{ folder:'a', externalReviewUrl:url, externalReviewCount:10, externalReviewAverage:4, externalReviewSnippets:[{rating:'4',text:'좋아요'}]},
         { folder:'b', externalReviewUrl:url+'?ref=old', externalReviewCount:12, externalReviewAverage:4.5, externalReviewSnippets:[{rating:'4',text:'좋아요'},{rating:'2',text:'불편해요'}]},

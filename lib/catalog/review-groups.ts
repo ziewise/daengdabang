@@ -1,4 +1,4 @@
-export type ReviewSnippet = { rating?: string; summary?: string; text: string; sourceUrl?: string };
+export type ReviewSnippet = { rating?: string; summary?: string; text: string; sourceUrl?: string; reviewId?: string; collectedAt?: string; date?: string };
 export type ReviewSource = { url: string; count: number; average: number | null };
 type ReviewRow = {
     folder?: string;
@@ -8,7 +8,7 @@ type ReviewRow = {
     externalReviewSnippets?: ReviewSnippet[];
 };
 export type ProductGroup = { key: string; canonical: string; members: string[] };
-export type ReviewedSummary = { headline: string; body: string; tags: string[]; sourceKeys: string[] };
+export type ReviewedSummary = { headline: string; body: string; tags: string[]; sourceKeys: string[]; generatedAt?: string; collectedAt?: string; sampleCount?: number };
 
 /** Scraped author/date labels are metadata, not review bodies. Retain them in source records only. */
 export function hasReviewBody(item: ReviewSnippet): boolean {
@@ -32,6 +32,21 @@ export function reviewSourceUrl(value: unknown): string | undefined {
     } catch { return undefined; }
 }
 
+/** Only the exact linked source product supplies this product's reviews.
+ * Listing families may include redesigned seasons and are not review identity.
+ */
+export function exactReviewRows<T extends ReviewRow>(row: T, rows: readonly T[]): T[] {
+    const url = reviewSourceUrl(row.externalReviewUrl);
+    return url ? rows.filter(source => reviewSourceUrl(source.externalReviewUrl) === url) : [];
+}
+
+export function reviewSellerLabel(value: unknown): string {
+    const url = reviewSourceUrl(value);
+    if (!url) return "외부 판매점";
+    const slug = new URL(url).pathname.split('/')[1];
+    return slug === 'daengdabang' ? '(주)내츄럴랩스 · 네이버 daengdabang' : `네이버 ${slug}`;
+}
+
 /** A read-only projection. Original records and IDs are never rewritten or removed. */
 export function aggregateReviews(rows: readonly ReviewRow[]) {
     const sources = new Map<string, ReviewSource>();
@@ -46,7 +61,7 @@ export function aggregateReviews(rows: readonly ReviewRow[]) {
             if (!item.text?.trim()) continue;
             // No review IDs were supplied: collapse identical excerpts only within one source.
             const sourceUrl = reviewSourceUrl(item.sourceUrl) ?? url;
-            const key = JSON.stringify([sourceUrl ?? row.folder, item.rating, item.summary, item.text]);
+            const key = item.reviewId ? JSON.stringify([sourceUrl ?? row.folder, item.reviewId]) : JSON.stringify([sourceUrl ?? row.folder, item.rating, item.summary, item.text]);
             if (seen.has(key)) continue;
             seen.add(key);
             snippets.push({ ...item, sourceUrl });

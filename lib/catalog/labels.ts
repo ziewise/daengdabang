@@ -71,8 +71,8 @@ export const SORT_LABEL: Record<SortKey, string> = {
     priceAsc: "낮은 가격순",
     priceDesc: "높은 가격순",
     discount: "할인순",
-    reviewDesc: "리뷰 많은순",
-    ratingDesc: "평점 높은순",
+    reviewDesc: "외부 판매점 후기 많은순",
+    ratingDesc: "외부 판매점 평점 높은순",
 };
 
 export const SUBCAT_ICON: Record<SubcategorySlug, string> = {
