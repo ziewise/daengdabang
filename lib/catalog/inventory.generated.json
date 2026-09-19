@@ -11284,37 +11284,37 @@
       "options": [
         {
           "color": "Orion Blue",
-          "size": "L : 2.2 ~3.4 m : +5,600",
+          "size": "L",
           "availability": "available",
           "fulfillment": "supplier_request"
         },
         {
           "color": "Orion Blue",
-          "size": "M : 1.7 ~2.1 m",
+          "size": "M",
           "availability": "available",
           "fulfillment": "supplier_request"
         },
         {
           "color": "River Rock Green",
-          "size": "L : 2.2 ~3.4 m : +5,600",
+          "size": "L",
           "availability": "available",
           "fulfillment": "supplier_request"
         },
         {
           "color": "River Rock Green",
-          "size": "M : 1.7 ~2.1 m",
+          "size": "M",
           "availability": "available",
           "fulfillment": "supplier_request"
         },
         {
           "color": "Yellow Snow",
-          "size": "L : 2.2 ~3.4 m : +5,600",
+          "size": "L",
           "availability": "available",
           "fulfillment": "supplier_request"
         },
         {
           "color": "Yellow Snow",
-          "size": "M : 1.7 ~2.1 m",
+          "size": "M",
           "availability": "available",
           "fulfillment": "supplier_request"
         }
