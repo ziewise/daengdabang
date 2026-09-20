@@ -38,7 +38,9 @@ self.addEventListener("activate", (event) => {
             type: "window",
             includeUncontrolled: true,
         });
-        await Promise.all(windowClients.map(async (client) => {
+        // Navigation fetches wait for activation to finish. Awaiting them here
+        // deadlocks the first controlled load; let activation finish first.
+        void Promise.all(windowClients.map(async (client) => {
             try {
                 const pathname = new URL(client.url).pathname.replace(/\/+$/, "") || "/";
                 if (pathname === "/pwa-refresh" || pathname === "/pwa-refresh.html") return;
