@@ -117,7 +117,56 @@
     "videoJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f"
   },
   "aff_microbeads_cloud": null,
-  "aff_microbeads_round": null,
+  "aff_microbeads_round": {
+    "video": "/images/products/catalog/aff_microbeads_round/videos/c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "af0fba9af6df241a221ee1114577d495",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "af0fba9af6df241a221ee1114577d495",
+      "reviewId": "5101d6dec37cd3fed1c8a8b2717ebd58",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2",
+      "seconds": 4,
+      "source": {
+        "no": 267,
+        "folder": "aff_microbeads_round",
+        "name": "아페토 커버분리형 마이크로 비즈 원형 방석 3컬러 핑크 그레이 네이비",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_microbeads_round/aff_microbeads_round.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637930173",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_microbeads_round/details/2.webp",
+          "/images/products/catalog/aff_microbeads_round/details/3.webp",
+          "/images/products/catalog/aff_microbeads_round/details/4.webp",
+          "/images/products/catalog/aff_microbeads_round/details/5.webp",
+          "/images/products/catalog/aff_microbeads_round/details/6.webp",
+          "/images/products/catalog/aff_microbeads_round/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9ef31ab57f2bb4eda678ffbf3cfcf443",
+        "sha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2"
+      },
+      "scopeId": "da04d53989dd3a67ec48fb705a7e239e5032734755ac31f9d74b88f2a27454b0",
+      "scopeRegistrationSha256": "865e8e3502512ae446aa9a15454450282756a6b07bd4ce093f545a923053d024",
+      "aiEvidenceSha256": "ca17d29f3a871ab8ba36cb7c593f289393b596eca9d8413bcce7c94b3f870f37",
+      "receiptSha256": "d29402e0724286300d2075d42d2f2f29345f56d6fd6158b896e3734775aa7af6",
+      "eligibilitySha256": "94d3cd7f4c220066e39ab47d3b2410580528562ba347f3ae06a42db35de05586",
+      "evidenceManifestSha256": "5d4b73ea11b904ec01c75ab2510bcea95dafd8a2fbcc0c2e794c20868053886f"
+    },
+    "videoReviewSha256": "8cc9fb717f13e53e64f2bfa8c96313351e2e6d6c124382b8cf961de5efbcb96c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "aff_pad_l_20_1": {
     "video": "/images/products/catalog/aff_pad_l_20_1/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -279,8 +328,100 @@
     "videoDeliveryCommit": "d5e0b4e3f28fd8c50bfa9a5b776862706705bd29"
   },
   "canagan_dog_chicken_2kg": null,
-  "canagan_dog_dental_2kg": null,
-  "canagan_dog_dental_6kg": null,
+  "canagan_dog_dental_2kg": {
+    "video": "/images/products/catalog/canagan_dog_dental_2kg/videos/a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "f50658b5bb4d526e69f0851ba2063945",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f50658b5bb4d526e69f0851ba2063945",
+      "reviewId": "6b1400322fcc28d02b9c3084c5ac2045",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86",
+      "seconds": 4,
+      "source": {
+        "no": 197,
+        "folder": "canagan_dog_dental_2kg",
+        "name": "카나간 스몰브리드 덴탈 플라그오프 포 독 2kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_dental_2kg/canagan_dog_dental_2kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922737300",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_dental_2kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_dental_2kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_dental_2kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0d27ef2b40c1187005e24f4c960ee945",
+        "sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86"
+      },
+      "scopeId": "e125468375e8fa62861df6f1efbab72518fd0152a324523578899a8931994a66",
+      "scopeRegistrationSha256": "23176981aaa0c778e64fc563a2ff674573fa44a2d72d190e3ff01d630fbc8821",
+      "aiEvidenceSha256": "f939b807059855df6d23298a88c6f9803fbb9acd9b1efef97d772f6a01c93f2e",
+      "receiptSha256": "4a754da2dd31e8070be36e33ac1e586d4b067d087f6c1d522fb8ef83a2ff696b",
+      "eligibilitySha256": "518d382f96dcc428f09f84de8e379108ef375b9a3762e1637426473092b55a58",
+      "evidenceManifestSha256": "43260debb5ba0da2a6255e0c0dd3dd69b7f3c376fc6ee48615c8f959377392a0"
+    },
+    "videoReviewSha256": "19dcd2134b2a7df670efe672f15442ff760e9b308803640a0e8e221476de7238",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "canagan_dog_dental_6kg": {
+    "video": "/images/products/catalog/canagan_dog_dental_6kg/videos/f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "65f1871211eeaef8319576ba2efb3df5",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "65f1871211eeaef8319576ba2efb3df5",
+      "reviewId": "81c8e2c9e28769b77cc7b00cc8982b0b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6",
+      "seconds": 4,
+      "source": {
+        "no": 123,
+        "folder": "canagan_dog_dental_6kg",
+        "name": "카나간 스몰브리드 덴탈 플라그오프 포 독 6kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_dental_6kg/canagan_dog_dental_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10385635039",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_dental_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_dental_6kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_dental_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6838b935a3d41801ccad232fdb31f5c4",
+        "sha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6"
+      },
+      "scopeId": "d31fb73d162fabc808a583aaee73efd7b2f4eb2367b1d84c768422dbbdcedf5f",
+      "scopeRegistrationSha256": "7752b046b3edaebe331724b18b2e0051d1aad4467f1d19d9fe245f07a5deb2c1",
+      "aiEvidenceSha256": "8e33def9c34a3b87a6879be4b53c77168e7f2cd7b1dfe1be5b3cf775cb73c4e9",
+      "receiptSha256": "cfd56a1e8ea12bd2a0c53466806099e868583db800aae0b318a4483997ff7be2",
+      "eligibilitySha256": "dc7d45cc86ca117aff89167c1f8b18a16c2f25cc60ce49b8be59a2382d772b6c",
+      "evidenceManifestSha256": "0e3c632734a7e1502ab3c64b4ae2be637394ac5104a8663b35b70d94b0304972"
+    },
+    "videoReviewSha256": "39ae577449031b8992abef4f0731e801d84295313b39a649964c055a268557b6",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "canagan_dog_highland_2kg": {
     "video": "/images/products/catalog/canagan_dog_highland_2kg/videos/53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -375,7 +516,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "dfb3b77017e36f8b6e64269e4f4ad32a917ab88e"
   },
-  "canagan_dog_salmon_6kg": null,
+  "canagan_dog_salmon_6kg": {
+    "video": "/images/products/catalog/canagan_dog_salmon_6kg/videos/e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "3c3779bfeaa1faa740edcd73b746860e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3c3779bfeaa1faa740edcd73b746860e",
+      "reviewId": "504c0da4c742aef1ee468c3f46da52ee",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b",
+      "seconds": 4,
+      "source": {
+        "no": 129,
+        "folder": "canagan_dog_salmon_6kg",
+        "name": "카나간 스몰브리드 스코티쉬 살몬 포 독 6kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_salmon_6kg/canagan_dog_salmon_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10202314204",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_salmon_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_salmon_6kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_salmon_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "86c6e4990f2d38649ab489daff9af3d8",
+        "sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b"
+      },
+      "scopeId": "5d1111bb1d21b0e1aeb0e40613b2b496cd2ac1bb459e97f08f8c31b088fb303c",
+      "scopeRegistrationSha256": "41296f2f4a135bc1c5ca1509f91c4b90396053a58729b17c35ea715f88c78baa",
+      "aiEvidenceSha256": "c8dd4196363cf04d4c08604a56d4aaef0d0a4dd6d380a2dd7813db8c7e8bf138",
+      "receiptSha256": "6dc2f7a591a903c1ebdef5cd023fd7ab2e9e9968f577c0a6243406771fae37ba",
+      "eligibilitySha256": "8485d0f55476506cbcd11317cea0d23914e9186119a68bc6d752bc8f5fd4a8bb",
+      "evidenceManifestSha256": "a0f4f89c9fbcd8d46bd259f7a13b448f482e44425e12c209b77b247559f11542"
+    },
+    "videoReviewSha256": "d5bdadad3f5563bf0320b83097173f939d42dc612636f8a4664547792dd958b1",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "dangcream_strawberry": {
     "video": "/images/products/catalog/dangcream_strawberry/videos/0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -997,7 +1184,60 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "252dc833709692269692d7a9f10b82923827c6a0"
   },
-  "heyrex_taurus_2l": null,
+  "heyrex_taurus_2l": {
+    "video": "/images/products/catalog/heyrex_taurus_2l/videos/9e6591051ef2fc53b48c299cd6332690202834d377b65bf9dc8644189e61be83/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "5e42565083d2c4dd2b027cb4b87b3439",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5e42565083d2c4dd2b027cb4b87b3439",
+      "reviewId": "0d5e0ccb2546659127d8a7482c063abd",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "9e6591051ef2fc53b48c299cd6332690202834d377b65bf9dc8644189e61be83",
+      "seconds": 4,
+      "source": {
+        "no": 312,
+        "folder": "heyrex_taurus_2l",
+        "name": "헤이렉스 토러스 반려동물 정수기 2리터",
+        "brandEn": "Heyrex",
+        "isFood": false,
+        "image": "/images/products/catalog/heyrex_taurus_2l/heyrex_taurus_2l.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6822232744",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/heyrex_taurus_2l/details/2.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/3.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/4.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/5.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/6.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/7.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/8.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/9.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/10.webp",
+          "/images/products/catalog/heyrex_taurus_2l/details/11.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7a1d5cc0c749ca8d9c886ebc30d083ba",
+        "sha256": "9e6591051ef2fc53b48c299cd6332690202834d377b65bf9dc8644189e61be83"
+      },
+      "scopeId": "15fb25e9b1c45524293edc42305bce11fb06812ff7f61153944721e43d898b1d",
+      "scopeRegistrationSha256": "4d76da27175fbc474eea15224c1fcd76b9ed8942c8c1c0020c6cb37f0ae2759f",
+      "aiEvidenceSha256": "b7069f1073dfee67a4d47d0875d911db3a2ac6ce45b0773dcc359acf28652a38",
+      "receiptSha256": "813a5b28a4d417e96a52f3d204b081197207aef989a84b1f8cb2ea2af31980a6",
+      "eligibilitySha256": "355a3b9d4c7addbc60a28c5aa9b2feb5dc063ee8648b27dbd15961740de09f89",
+      "evidenceManifestSha256": "659c5295846cdb6cc2ef1083c8b1741ed528d23fac7637f618c6da721ea8510e"
+    },
+    "videoReviewSha256": "9b66f0e841766190074923cb80e2830ec6b3bc1bf4465a3144828e974cddd274",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "heyrex_taurus_filter_5p": {
     "video": "/images/products/catalog/heyrex_taurus_filter_5p/videos/88afcb519a9147af8653738c1f2495f85731ca01c843e1da7e60c198d6951dea/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1798,7 +2038,52 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-c475e7befe31"
   },
-  "ip_trovbiz_nightday": null,
+  "ip_trovbiz_nightday": {
+    "video": "/images/products/catalog/ip_trovbiz_nightday/videos/7c9250b955d04f7657a5ed5e766dbf11047e0603317bef84b632c09a84f50f6b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "e74c3aab9c8fef1fe422eaf1d9e2755e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e74c3aab9c8fef1fe422eaf1d9e2755e",
+      "reviewId": "52802cac49eaea75f1cd70c179936ff6",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7c9250b955d04f7657a5ed5e766dbf11047e0603317bef84b632c09a84f50f6b",
+      "seconds": 4,
+      "source": {
+        "no": 302,
+        "folder": "ip_trovbiz_nightday",
+        "name": "인더스트리펫 트로비즈 콤보 나이트 앤 데이팩",
+        "brandEn": "Industry Pet",
+        "isFood": false,
+        "image": "/images/products/catalog/ip_trovbiz_nightday/ip_trovbiz_nightday.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6825864399",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ip_trovbiz_nightday/details/2.webp",
+          "/images/products/catalog/ip_trovbiz_nightday/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "fba52b82f5b322e757a335ea7af09f0a",
+        "sha256": "7c9250b955d04f7657a5ed5e766dbf11047e0603317bef84b632c09a84f50f6b"
+      },
+      "scopeId": "28eec54f653b573bfd42a00010f3a6730b43c4755965850481d07b60109154e1",
+      "scopeRegistrationSha256": "d81a151d3241b7171bd1d765fd42cb1d0f91dc219ebb7376cdbfadbb2781714e",
+      "aiEvidenceSha256": "722169b0fefdec87afacbe7c9382d9250977a8ceaa87a04c16199974ae9a7b4f",
+      "receiptSha256": "d1c0ac78d284e1d588fc555c6864c53f7eac63db0021a06e375a466d287e0ebe",
+      "eligibilitySha256": "b4679e2a02f39e7068447a97e18f9625b2633939063287596b5c0dd323ac563a",
+      "evidenceManifestSha256": "3fd15caa3c7b5918e303b3f0c04770298f6cdc357672f277020c97b4cba9ab52"
+    },
+    "videoReviewSha256": "9833016fc026350f051eb88ede66acf407a3142302a024e5f6a185effdfde2fe",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "ip_trovbiz_pigball": {
     "video": "/images/products/catalog/ip_trovbiz_pigball/videos/c0bbe8ca74a3fb94e4f01f66ca53b2c4f1450a376b3e51242dfccd92c57e0063/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1964,9 +2249,154 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "e7055df0db6f7fcf12adac0dbbfc530a5a20afa0"
   },
-  "mb_vegemix_475g": null,
-  "nd_feelgood_c": null,
-  "nd_feelgood_p": null,
+  "mb_vegemix_475g": {
+    "video": "/images/products/catalog/mb_vegemix_475g/videos/d159110dbea1c6a5b6e942d7d9126de6b2b8467ac0e759d7b893adc2ba45a142/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "3c7fc360615d8a37b51d663f48efd0c1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3c7fc360615d8a37b51d663f48efd0c1",
+      "reviewId": "b971ac4fc7fed56e5aa4270d774fecd3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d159110dbea1c6a5b6e942d7d9126de6b2b8467ac0e759d7b893adc2ba45a142",
+      "seconds": 4,
+      "source": {
+        "no": 316,
+        "folder": "mb_vegemix_475g",
+        "name": "미티본 베지믹스 475g",
+        "brandEn": "Mittyborn",
+        "isFood": true,
+        "image": "/images/products/catalog/mb_vegemix_475g/mb_vegemix_475g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7176506993",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/mb_vegemix_475g/details/2.webp",
+          "/images/products/catalog/mb_vegemix_475g/details/3.webp",
+          "/images/products/catalog/mb_vegemix_475g/details/4.webp",
+          "/images/products/catalog/mb_vegemix_475g/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "28426710fede521fa1d1cada9a7a437b",
+        "sha256": "d159110dbea1c6a5b6e942d7d9126de6b2b8467ac0e759d7b893adc2ba45a142"
+      },
+      "scopeId": "1d26bbf31417d8fd9e92d26ba63db3707f8d4eb39434582591921d88e97d44ab",
+      "scopeRegistrationSha256": "ccef163ace03f756b1dcdcb22dcc0133c2299ea2ad8278d240954774dd5428dd",
+      "aiEvidenceSha256": "8c1d00edc52ded23911f29b943b889a85b91b33d320b708d81878716fbdf93d8",
+      "receiptSha256": "f3b2b4dfcd004c29b994444b9fcb794979bce5083944e75d537153b75c022148",
+      "eligibilitySha256": "c38f1e1e21e2ff2e807b7980d1821849a07da5c2fb86451148cd23452ad4449a",
+      "evidenceManifestSha256": "8eb415d3e4cb9484125775f88e770df022dc1d5749fda6bfa174c2365aedac3f"
+    },
+    "videoReviewSha256": "f17c021aea6cea5f71c15b9a8b6e8b885ffdb723fdbcba9666b78be48527768e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "nd_feelgood_c": {
+    "video": "/images/products/catalog/nd_feelgood_c/videos/90e22c5c6414be4e76659c54f1b9658a081722978e6851b284b7e0069e7bc3c8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "9cdc61eccec02dca07d2bca34a462314",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9cdc61eccec02dca07d2bca34a462314",
+      "reviewId": "dff91e961f7548f42fbb231b85b8eb59",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "90e22c5c6414be4e76659c54f1b9658a081722978e6851b284b7e0069e7bc3c8",
+      "seconds": 4,
+      "source": {
+        "no": 191,
+        "folder": "nd_feelgood_c",
+        "name": "네이처다이어트 필 굿 치킨 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_c/nd_feelgood_c.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922886725",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_c/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_c/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_c/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_c/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_c/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_c/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d6a46d8ea5ffb0e52ec418c959a28380",
+        "sha256": "90e22c5c6414be4e76659c54f1b9658a081722978e6851b284b7e0069e7bc3c8"
+      },
+      "scopeId": "4b5737b2ae767f0283f3d5934e41cf520a5ee914a122d96ecf007c1431084a4f",
+      "scopeRegistrationSha256": "9798db97224d38d7e9bb2679f0cf406c570d1eaddc83d9bc4f8f94260c25829b",
+      "aiEvidenceSha256": "01b730ad46e9257dec5de981dfdd565afe66033eca18503523c245b2038df056",
+      "receiptSha256": "143b7ab3dc37bbe716cda40705a453397ac843a780c2fd063b8edf25102f7279",
+      "eligibilitySha256": "e44c08c5109f4d8f9b85a14b44ac37c1aadf3b2a04bcf312dab1df7985cf7873",
+      "evidenceManifestSha256": "bc2f1f0a8d5f78dc4d251614fac5b2aa6972bd272a2309ce620447a9d30e8a70"
+    },
+    "videoReviewSha256": "fe3ccfddb0d388a1d2cbea0c9c8ec23b0298fac52965f5f361ac683d44baeb64",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "nd_feelgood_p": {
+    "video": "/images/products/catalog/nd_feelgood_p/videos/0e376dc735d6dad759a9e122a40733da90a9389f94c64aa4b71a37c93766179f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "21bbcb21ed5500cbc2e65ab2a9eec5c9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "21bbcb21ed5500cbc2e65ab2a9eec5c9",
+      "reviewId": "c06f4357d43293fbfeca44066602891e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0e376dc735d6dad759a9e122a40733da90a9389f94c64aa4b71a37c93766179f",
+      "seconds": 4,
+      "source": {
+        "no": 190,
+        "folder": "nd_feelgood_p",
+        "name": "네이처다이어트 필 굿 퍼피(치킨) 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_p/nd_feelgood_p.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922891713",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_p/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_p/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_p/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_p/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_p/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_p/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ef13175d86167392afca2eb670cd185a",
+        "sha256": "0e376dc735d6dad759a9e122a40733da90a9389f94c64aa4b71a37c93766179f"
+      },
+      "scopeId": "1231d13f82da754c91f03dfd08932a85e38ffe87cc3fd53fd3746115d5df692f",
+      "scopeRegistrationSha256": "8fdac0efe726e451d55e4a141688ad64521a8b3d05708d0491dab0660db03d94",
+      "aiEvidenceSha256": "686a3ffc5722ca28048d0dba604aee6629d9d82d352c5c0e0dc9e67292934150",
+      "receiptSha256": "bd8bd8d765f6a01087c8f0bbfbaca30dacf5640d5483a1a85bf9e1ac30c5f473",
+      "eligibilitySha256": "8443fda2cd8e69d610582e54b0e01ce02ab1f4314871695294fa306f908f787b",
+      "evidenceManifestSha256": "dc48c6f5322ca6a852cbfb4b662fc656e3d0697b4996f394f6452d19e321a240"
+    },
+    "videoReviewSha256": "e8486e2869a7ebb98e0bd6fd243b8b8f30a088f27f396b4317f721e596dae04a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "nd_feelgood_s": {
     "video": "/images/products/catalog/nd_feelgood_s/videos/7a62a55657ca84b75b9a8f1596cd25bcd1d96ca7a15e9dddf345deee38b35e9f/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -2117,8 +2547,106 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c418f9de276ccaf36289d351070b8d07d6eb4bb5"
   },
-  "nd_purely_bc": null,
-  "nd_purely_sw": null,
+  "nd_purely_bc": {
+    "video": "/images/products/catalog/nd_purely_bc/videos/3c7ca75a65599c1cb867efd96b157e5d557313c1f62723ff2e323c88ec542230/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "ad92f9a87c50f380c2a3688f5d4f73f2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ad92f9a87c50f380c2a3688f5d4f73f2",
+      "reviewId": "4fde6838e16de6d3f8b870df465f5619",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3c7ca75a65599c1cb867efd96b157e5d557313c1f62723ff2e323c88ec542230",
+      "seconds": 4,
+      "source": {
+        "no": 193,
+        "folder": "nd_purely_bc",
+        "name": "네이처다이어트 퓨얼리 브리티쉬 치킨 92% 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_purely_bc/nd_purely_bc.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922866697",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_purely_bc/details/official-visual-01.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-02.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-03.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-04.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-05.webp",
+          "/images/products/catalog/nd_purely_bc/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d5b46a4732f1f26700e670425a10ef17",
+        "sha256": "3c7ca75a65599c1cb867efd96b157e5d557313c1f62723ff2e323c88ec542230"
+      },
+      "scopeId": "8e3bc0d84b1632e374b3c9d0b2a55653658de8434b3f2cab8315f1fed64303d1",
+      "scopeRegistrationSha256": "1591d1b97e59202d07f1e94597f6910556dfd9ce5bacc04d2aca9281fbd32d5a",
+      "aiEvidenceSha256": "e30c10303c258ff8b2dd19eda00d9ead010f4d5c05c9f642b6d7e54d7b018e37",
+      "receiptSha256": "c79eed17d09c5a38963ca35021d59c2fb81c605bb39f15a619cf424c596b363d",
+      "eligibilitySha256": "ff5e8fe133942736dc3d0b7456d2fc35981f8dd81fbd71fdc693cc3150dfc27c",
+      "evidenceManifestSha256": "8d3bd08ac22311ff10eb2795cd97f25f46eaaa30845f898ff3c94d227055a68e"
+    },
+    "videoReviewSha256": "d6e7407c87c722691f10398e5f743ad47d68a4d67632336cad02b205dd9b363b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "nd_purely_sw": {
+    "video": "/images/products/catalog/nd_purely_sw/videos/bd3e2244259b11f7af0781663953d918d59c1a6594d2a8d5071a720c20eab655/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "a511db5bad68f2979bb90d3e1fc4c27b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a511db5bad68f2979bb90d3e1fc4c27b",
+      "reviewId": "e914fce1699b6b10ea69bbced99f63dc",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "bd3e2244259b11f7af0781663953d918d59c1a6594d2a8d5071a720c20eab655",
+      "seconds": 4,
+      "source": {
+        "no": 192,
+        "folder": "nd_purely_sw",
+        "name": "네이처다이어트 퓨얼리 살몬 앤 화이트 피쉬 92% 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_purely_sw/nd_purely_sw.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922876554",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_purely_sw/details/official-visual-01.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-02.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-03.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-04.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-05.webp",
+          "/images/products/catalog/nd_purely_sw/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "042bc1229155ab223b054d1718d816ee",
+        "sha256": "bd3e2244259b11f7af0781663953d918d59c1a6594d2a8d5071a720c20eab655"
+      },
+      "scopeId": "6cfb6bb8b3241d8dabd20435d7eb890bb8ede02164b2544344233bd2e01281a0",
+      "scopeRegistrationSha256": "7066f59545a8e71d77e7a08aa03458dd2f192ec9f266a35575197f0227dd76d1",
+      "aiEvidenceSha256": "2f67f02d41a3384c5b68d6e33da2cc27bae0f9bb9b07aaf6b906756eb0bf42af",
+      "receiptSha256": "256d286c793cc6aebd5b4d813e5c8d77d83df31a40877b16374055e79587e272",
+      "eligibilitySha256": "5b138b92118811fab2ed21d4d4e3f0109ef0a06067a230ba25b87a91b2e99ea3",
+      "evidenceManifestSha256": "cdfa0a82a39109bb93d921d0fc6a2e8ec0c9a510495d52f26f725ee52a00711b"
+    },
+    "videoReviewSha256": "eb2e3a4dcf9dab857553aad784d85b60c0dda0c819fab2282b055a661d0322b3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "ot_bowl_foldable": {
     "video": "/images/products/catalog/ot_bowl_foldable/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -2464,7 +2992,60 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "917f79a623393feb960d31c979877be69adf5017"
   },
-  "pdh_spin_ufo": null,
+  "pdh_spin_ufo": {
+    "video": "/images/products/catalog/pdh_spin_ufo/videos/76b5e4cccbd95a2613dc7f6e7c0abbc03c897cd2a448965d5b60d8725ad7e493/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "d117f82799999510d8defbf1b381f90c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d117f82799999510d8defbf1b381f90c",
+      "reviewId": "ffdb90775e269f1f37e6742ee63c1728",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "76b5e4cccbd95a2613dc7f6e7c0abbc03c897cd2a448965d5b60d8725ad7e493",
+      "seconds": 4,
+      "source": {
+        "no": 273,
+        "folder": "pdh_spin_ufo",
+        "name": "펫드림하우스 노즈워크식기 스핀 슬로우피더 UFO 미로 그린",
+        "brandEn": "FitDreamHouse",
+        "isFood": false,
+        "image": "/images/products/catalog/pdh_spin_ufo/pdh_spin_ufo.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7459404417",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/pdh_spin_ufo/details/2.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/3.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/4.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/5.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/6.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/7.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/8.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/9.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/10.webp",
+          "/images/products/catalog/pdh_spin_ufo/details/11.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "69f7a6ed94cec08cc90899d1fa4b004f",
+        "sha256": "76b5e4cccbd95a2613dc7f6e7c0abbc03c897cd2a448965d5b60d8725ad7e493"
+      },
+      "scopeId": "073c683432e0e12a8487971d00f8ab48823de95c4d072ad096ed7ddba7ba9bd8",
+      "scopeRegistrationSha256": "f908ddd4d80e3cc398a4d2dce30d58e574f9e33c2bda677632b4b164b2e09dd2",
+      "aiEvidenceSha256": "246a18d521bc169cc86c7cc05051a3e2497262bbc76a7953fea79cbd4ec93303",
+      "receiptSha256": "2f3d0ea7f0f85cf3f679d27c37ac3611186e0ab8879babdbac02f83ff8a50680",
+      "eligibilitySha256": "c5382253e44b8a63f2cde5c47fc13ac4bd4f71b39171702edc2bb0729a57d373",
+      "evidenceManifestSha256": "0ecc4c7b95fc1c5c451b9f3d97c5f3a86c7d53163ce84503c6a52af01468197f"
+    },
+    "videoReviewSha256": "a9d2f545530bd5721cf69951f5901a348fb3cac589be52623d634d2fe42818b1",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "pegnaty_woodstick": {
     "video": "/images/products/catalog/pegnaty_woodstick/videos/782cd2c42a0e0deaf145f8c140066bff11ddaf95e0acf19ae841b732dd423eb9/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -3129,7 +3710,65 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null
   },
-  "rs_v2_avalanchewhite": null,
+  "rs_v2_avalanchewhite": {
+    "video": "/images/products/catalog/rs_v2_avalanchewhite/videos/bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "ffad87bcac981b9bddad42c5cb29e09d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ffad87bcac981b9bddad42c5cb29e09d",
+      "reviewId": "9d3a7ec1bf433371181e0e687fd55e1c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6",
+      "seconds": 8,
+      "source": {
+        "no": 103,
+        "folder": "rs_v2_avalanchewhite",
+        "name": "렉스스펙스 V2 아발란체 화이트 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_03.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001190",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_148.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_219.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_334.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_453.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_580.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_675.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_75.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_828.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_931.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/7713b6091d2d275fff7d2fb3a253418d_102328.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/d75237cf4192cc36c4a141bb47baef57_102344.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/e59a016bf263080e4b5568187eb2a41d_102357.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/22f6ce8e07c260ce642d49abe6c6dbb9_102413.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001190/94ddf4edbc93265ead138823eb7f6643.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e02bc96a52b64e486ad9eb335133e94a",
+        "sha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6"
+      },
+      "scopeId": "ba1ea4fcb7276a912529829da041a19ddd874fbe9eb8a96e8b06dc0696d76d2b",
+      "scopeRegistrationSha256": "2530dad14a301d89f0abf430c2fbc7da1516683ed080be67f5d1d59c5226d4aa",
+      "aiEvidenceSha256": "e8c662355b6060fe4273ae1d8f50cc3583240701480afc74d22011225b127247",
+      "receiptSha256": "7fb897f25914011a48af8482ca6bfad12323302ff82b95da6143cce56e4b1e1b",
+      "eligibilitySha256": "b0117f1838ab9c0126bec81dbdfb420b906c61b0c49eebf8a2a9bbc0bc53836a",
+      "evidenceManifestSha256": "e30fbe1790be0512ff25db0b492ef67575bf8669684a92ab157d7364832f2e9d"
+    },
+    "videoReviewSha256": "517cee0d17a2e141cbace1c3380edc35d83cd815736de36922e9e1e52e6d5af9",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "rs_v2_banditorange": {
     "video": "/images/products/catalog/rs_v2_banditorange/videos/f94f0f3925f46aad22cca60f6313a58fc22d1860323b82cf53ade974bd4a109e/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -5864,11 +6503,58 @@
     "videoJobId": "4a33ca4b-9927-418a-97d2-f8432ae3c603"
   },
   "rw_remix_cactus_tug_26fw": {
-    "video": "/images/products/catalog/rw_remix_cactus_tug_26fw/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_remix_cactus_tug_26fw/videos/515dc5397a20a24569304f1b4038177cae585a06ef8b2b91bc3f29fe293361cc/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "3c710187d195491ffececb3075117dc3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3c710187d195491ffececb3075117dc3",
+      "reviewId": "48ac6cabd0d80563dfbeec6b8fa2f50d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "515dc5397a20a24569304f1b4038177cae585a06ef8b2b91bc3f29fe293361cc",
+      "seconds": 4,
+      "source": {
+        "no": 361,
+        "folder": "rw_remix_cactus_tug_26fw",
+        "name": "러프웨어 웨빙 리믹스 캑턱스 터그 토이 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_061.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001352",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_113.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_29.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_313.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_425.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_537.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_612.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001352/image/detail/1000001352_detail_788.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/fdde6ba1a6d632b705551afce6357429_114959.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/4c2cf60ddc16078f2a3d003bc4efe801_115012.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9dcc8b0c210b6f54238325c639f60e16",
+        "sha256": "515dc5397a20a24569304f1b4038177cae585a06ef8b2b91bc3f29fe293361cc"
+      },
+      "scopeId": "30530a687e1e534acb9d9519d29538294d52991e15b8e5a760342334be3870f5",
+      "scopeRegistrationSha256": "67dc89be8ff884d32b07975ef42533e95bc0b21fed8e6cd0f8bc212425e1fa01",
+      "aiEvidenceSha256": "01ba9108edb0ae25490a9b1890e88086af4776166434968a2ea7ebb417b8680b",
+      "receiptSha256": "d32c775a31dd60f62f2c8625cbb903e36c5f2334b154fe54dfe6aa1214c420fb",
+      "eligibilitySha256": "7797cf9a67931209b11acc71c4e07d15f2df586f50516a5c631e1be24198cfe4",
+      "evidenceManifestSha256": "c967c86951f1f31175f01363781be8086be42f48fb0e675e4227615d9a117a32"
+    },
+    "videoReviewSha256": "e8d65d220723dc75371a4f6028bc80fa354cad2299c76fa758a4dff1b19e6935",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-9d1c9f0332db"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
   "rw_remix_soft_disc_26fw": {
     "video": "/images/products/catalog/rw_remix_soft_disc_26fw/videos/df6ca6a1a031f8a0561ba9aa33891dc00f62006a816f34d3420eb5b197891bc2/hover.mp4",
@@ -6418,7 +7104,64 @@
     "videoQuality": "approved_dog_using",
     "videoJobId": "3f069ad3-b4ef-484d-b824-b8642d4acea1"
   },
-  "rw_trailrunner_belt_23": null,
+  "rw_trailrunner_belt_23": {
+    "video": "/images/products/catalog/rw_trailrunner_belt_23/videos/fa0975334bc12d5409ac54f38093e848967033aa620f2b799c783c45807e97b5/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "6dedd971f274feae02d9c27dc9fa9525",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6dedd971f274feae02d9c27dc9fa9525",
+      "reviewId": "b44c19095c46397cc8d6a08356e221c9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fa0975334bc12d5409ac54f38093e848967033aa620f2b799c783c45807e97b5",
+      "seconds": 4,
+      "source": {
+        "no": 227,
+        "folder": "rw_trailrunner_belt_23",
+        "name": "러프웨어 트레일 러너 벨트(Trail Runner™ Belt 2023SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_071.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001137",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_122.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_269.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_35.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_497.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_553.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_686.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_799.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_831.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001137/image/detail/1000001137_detail_926.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Trail-Runner-Belt1_154857.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Trail-Runner-Belt2_154907.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Trail-Runner-Belt3_154916.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/19596345b397abd02783e62c9dd1aaba_154931.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d9ae74ac775beaa24530083eb541c53c",
+        "sha256": "fa0975334bc12d5409ac54f38093e848967033aa620f2b799c783c45807e97b5"
+      },
+      "scopeId": "8ebe5a316c883ad6d737803b2d9bf3c5fe5914f370c662c8baa2d20e034ef4ba",
+      "scopeRegistrationSha256": "39f359388f4ea932c21e8fc1f912706e0f633a2ce520092dbc2948f37ef02c63",
+      "aiEvidenceSha256": "9124eb846d0d57a628a5a5e1d4fb633ae9ddad2816f88fdbb5a62c4ae70a83a2",
+      "receiptSha256": "28e903cdbf447e3b91c8ea8f4e151a300ecb013722232509818f51451473879e",
+      "eligibilitySha256": "129a1c9e8d5e8f1c6f4e998a011e54560169fa364dfb061ebd5b965cc8d3c9ad",
+      "evidenceManifestSha256": "46d840b75dacb0a078041cbf4fb28dbcf8139242c4de78a5ab38bc09e38ad062"
+    },
+    "videoReviewSha256": "dead64dfad46d41967d7fa21226517681a0f4a745eb2e91f0f7b976d447baffb",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "rw_trailrunner_vest": {
     "video": "/images/products/catalog/rw_trailrunner_vest/videos/dc7fc65a0bc6959e856a6d67f161280510b9c3cd713e22f4200565d55524d036/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -6556,7 +7299,52 @@
     "videoJobId": "62065293-4ee2-4442-815b-d27c4aaca753"
   },
   "rw_webmaster_harness": null,
-  "sk_ft_chicken_pate_390g": null,
+  "sk_ft_chicken_pate_390g": {
+    "video": "/images/products/catalog/sk_ft_chicken_pate_390g/videos/0e49dfb3880dbab349646d825ffe4437dfdd59801978d21c88b5e3d82b517fbb/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "cf10098a2d64d350beb94c4622f7a2de",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "cf10098a2d64d350beb94c4622f7a2de",
+      "reviewId": "df7d8933099f2d0d791b37a500567477",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0e49dfb3880dbab349646d825ffe4437dfdd59801978d21c88b5e3d82b517fbb",
+      "seconds": 4,
+      "source": {
+        "no": 184,
+        "folder": "sk_ft_chicken_pate_390g",
+        "name": "스키너즈 필드 & 트라이얼 치킨 위드 루트 베지 습식 파테 390g",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_chicken_pate_390g/sk_ft_chicken_pate_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922947987",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_chicken_pate_390g/details/2.webp",
+          "/images/products/catalog/sk_ft_chicken_pate_390g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "60376ddc33b961de61be514efd42b554",
+        "sha256": "0e49dfb3880dbab349646d825ffe4437dfdd59801978d21c88b5e3d82b517fbb"
+      },
+      "scopeId": "c316432d6f3af36c52bfc82e3a92ed156757e47a7b0b7c55f9f57b1e990a83b2",
+      "scopeRegistrationSha256": "a3b70e84c2cb255bd28f51a5db145d0b16ee6759bdec5eb79c90778c750910e7",
+      "aiEvidenceSha256": "b58f4c007193e582b625b4f41820637aa26cba4a034ecfc14bde11e8209434ea",
+      "receiptSha256": "7dbbba67fd5d17d6ac03a0508866cb1b8ae0c9a60e7aac7dd4a12b69400d4f26",
+      "eligibilitySha256": "22f3062a43142265a837cb5ae232c108298693f5b6b9fe11cb8355b902f2f58c",
+      "evidenceManifestSha256": "1fca87a1c5cd5eea6c996e854567395c05e767ad2db288a0b9a984841aa76351"
+    },
+    "videoReviewSha256": "0f1b1ab8e9120deb679a881f49e32d72c6a223dcfd0abb9fd2d738f583c37867",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "sk_ft_chickenrice_15kg": {
     "video": "/images/products/catalog/sk_ft_chickenrice_15kg/videos/fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -6649,13 +7437,97 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "7a7643349024bb9cec62200aa9f18259ba6a1b86"
   },
-  "sk_ft_puppy_pate_390g": null,
-  "sk_ft_salmon_pate_390g": {
-    "video": "/images/products/catalog/sk_ft_salmon_pate_390g/videos/hover.mp4",
+  "sk_ft_puppy_pate_390g": {
+    "video": "/images/products/catalog/sk_ft_puppy_pate_390g/videos/21f529fb400291bd0d7e00f22dd838105051c010e737b160df82b37f2462a9f1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "356ab1959b616206e091391c0f686ef8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "356ab1959b616206e091391c0f686ef8",
+      "reviewId": "40b818dc3b1780c7b36d1be4c9b8bf16",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "21f529fb400291bd0d7e00f22dd838105051c010e737b160df82b37f2462a9f1",
+      "seconds": 4,
+      "source": {
+        "no": 182,
+        "folder": "sk_ft_puppy_pate_390g",
+        "name": "스키너즈 필드 & 트라이얼 퍼피 앤 주니어 치킨 & 가든 베지 습식 파테 390g",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_puppy_pate_390g/sk_ft_puppy_pate_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922967940",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_puppy_pate_390g/details/2.webp",
+          "/images/products/catalog/sk_ft_puppy_pate_390g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7847e76a8a73e549253af9ee8f284331",
+        "sha256": "21f529fb400291bd0d7e00f22dd838105051c010e737b160df82b37f2462a9f1"
+      },
+      "scopeId": "beca226ec2ddd7cdabb1b539e00b2e4a665b80d37cae6a954516a810dc6e3e0b",
+      "scopeRegistrationSha256": "bd8e4a8ae48cf1f8bc1880e5f2f083f9f3da7b720a363a125ffc3876094240b1",
+      "aiEvidenceSha256": "bada2df8002e92d4c1701d80b4ed1f5fa01af56ce6a13361a495c5ce55ec229a",
+      "receiptSha256": "2221bdd1fd0af07d171a51e72b0f5b831dd69d7ce2d935d340db97a79968fe97",
+      "eligibilitySha256": "01aee1883959332f6790d13ee2be841b2ac4d5aa849e81769d1f88ab8e970148",
+      "evidenceManifestSha256": "0631ecd8d9f6be97683675dceb547ed9e1fe481d5f44175e1d2d6ffe4891fd50"
+    },
+    "videoReviewSha256": "55f90aac74f9c5b56ff555b1705df0f0cc54d908aea6bf98c1e853e3d9a5a7c1",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-ddb6248838ab"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "sk_ft_salmon_pate_390g": {
+    "video": "/images/products/catalog/sk_ft_salmon_pate_390g/videos/468f6da8963d0c549a17b2de07d908a6ef762ce07e6b779a0ec7c9cf6531fd8d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "f99c68d5e3f106ef1535d67814109a35",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f99c68d5e3f106ef1535d67814109a35",
+      "reviewId": "6191d5a10d8f106a14118ebaa6b59904",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "468f6da8963d0c549a17b2de07d908a6ef762ce07e6b779a0ec7c9cf6531fd8d",
+      "seconds": 4,
+      "source": {
+        "no": 181,
+        "folder": "sk_ft_salmon_pate_390g",
+        "name": "스키너즈 필드 & 트라이얼 살몬 위드 스팀 베지 습식 파테 390g",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_salmon_pate_390g/sk_ft_salmon_pate_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922973737",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_salmon_pate_390g/details/2.webp",
+          "/images/products/catalog/sk_ft_salmon_pate_390g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b5e7dad997b0d4118d2521f9d2b0fec9",
+        "sha256": "468f6da8963d0c549a17b2de07d908a6ef762ce07e6b779a0ec7c9cf6531fd8d"
+      },
+      "scopeId": "22b217d0ab81b745cf00171fce23022c34d3dfca8659c6298316ae920a8b1553",
+      "scopeRegistrationSha256": "7a5997db4da6104a50d3b6934c3fafe27cb98adb2a236603d68f8d9eba8235c9",
+      "aiEvidenceSha256": "5bad61853779a4d78d58360716d93d1cc308db8f9cc92ba438a3bfbfe0d7c1db",
+      "receiptSha256": "ebcd2bac24911f5a6f0fa98f0f2778eaf9d63d4d30bde59149b0b6b09e9c415b",
+      "eligibilitySha256": "d3d477147545971860e7c0280dac8ea84d3aa55b80c57c5196c1d9f517e16ab0",
+      "evidenceManifestSha256": "ed60406c20a1dd3398b25f5ac10b9d8092fb005cddc4516f751c728a0ff6ecce"
+    },
+    "videoReviewSha256": "888f81c1efc508c0dc8c3ba317d5e8da693b21d132747f0346f90599da878d97",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
   "sk_ft_working26_15kg": {
     "video": "/images/products/catalog/sk_ft_working26_15kg/videos/084552f70142980fc41a3cb9cec3e3aa18220a517fb8b0c8fe3e6d8bf6932b7d/hover.mp4",
@@ -6703,8 +7575,102 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "7a7643349024bb9cec62200aa9f18259ba6a1b86"
   },
-  "sk_ft_working30_15kg": null,
-  "smoothie_rainbow_30ml_3": null,
+  "sk_ft_working30_15kg": {
+    "video": "/images/products/catalog/sk_ft_working30_15kg/videos/505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "67185c7bdff7776dea028fb0efe167e1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "67185c7bdff7776dea028fb0efe167e1",
+      "reviewId": "de59f82f1e4dc502f138486226eb818b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161",
+      "seconds": 4,
+      "source": {
+        "no": 179,
+        "folder": "sk_ft_working30_15kg",
+        "name": "스키너즈 필드 & 트라이얼 워킹30 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_working30_15kg/sk_ft_working30_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922985474",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_working30_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_working30_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "1661200bed2b24aa0b41ac8a5675b8e0",
+        "sha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161"
+      },
+      "scopeId": "d52d313c7382d65b03c4f737d2aa43864cd1db44ef3b65196beb87bad558b9cf",
+      "scopeRegistrationSha256": "96d74a32abe27fe8631dd8a4e25a0972b5e2b70ad2b7b4596f11704e46d46965",
+      "aiEvidenceSha256": "3fc66c9b0eb3f6836d4e8d11f888abf1201ac32d33b673f8210926ab0603f121",
+      "receiptSha256": "4772021dedbd9b193d291f87ab430b0e6d298c2e9e009e739dd2b07e60dfe233",
+      "eligibilitySha256": "2a931369d864c6433c6238c7e7e8b2ed32e8912378de2f2b34445f4e99bb19a0",
+      "evidenceManifestSha256": "63ad23941aff66b90c7a99c2f8e0757d1a2d3d7d04d15d2385693881e130137d"
+    },
+    "videoReviewSha256": "bd9cb2d8be792b7f56b2ba24b7e0666aa80105f72dc995ecf1c8356b94218c40",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "smoothie_rainbow_30ml_3": {
+    "video": "/images/products/catalog/smoothie_rainbow_30ml_3/videos/2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "1d2f8a27fd8c86f29fb14256a460fa45",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1d2f8a27fd8c86f29fb14256a460fa45",
+      "reviewId": "83d8ad5a54e801b222a920a539a3595a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694",
+      "seconds": 4,
+      "source": {
+        "no": 232,
+        "folder": "smoothie_rainbow_30ml_3",
+        "name": "수제 무지개 야채 스무디 100m, 30ml 3개",
+        "brandEn": "Handmade/Other",
+        "isFood": true,
+        "image": "/images/products/catalog/smoothie_rainbow_30ml_3/smoothie_rainbow_30ml_3.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8300042384",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/2.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/3.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/4.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/5.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/6.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "01626eccf4868ab7fa1ed4216d290701",
+        "sha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694"
+      },
+      "scopeId": "af683c2876c716bd39fdf35e0568cc5dfbf9417ccf41839c4f509aa5511ddded",
+      "scopeRegistrationSha256": "cd4fe44c5f7a1efc2ec1e3072e9e16708c58bfa92ab7fc3b7c10ebb47fbff040",
+      "aiEvidenceSha256": "11d1a7f6bbcc3d69ba1ea9f12ecb130ed89d0092fe77a56e5edce341af1600f7",
+      "receiptSha256": "07e76cedf45c71212b912ea5cbd185e0a72e8693d8c0e115f1ab86b1039b6fd1",
+      "eligibilitySha256": "7412ce617bb889410a965d69135a17fca96385368c54fee1830f1f86ed275302",
+      "evidenceManifestSha256": "9750334cfed329bf4f1babbacb61d382c9a3e0e66d00ba0f1177142b6d6f9cd0"
+    },
+    "videoReviewSha256": "74e79c027f0961070dc5188bf32acfbc2fff456db0a62d9951cab1e9d616719a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
   "soopa_chew_3set": {
     "video": "/images/products/catalog/soopa_chew_3set/videos/f0692dd758da32a73f4170dc2b55b4c4972ff7aac4fef89dd91bf36315a4f3ca/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -6874,11 +7840,53 @@
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "soopa_dental_6set": {
-    "video": "/images/products/catalog/soopa_dental_6set/videos/hover.mp4",
+    "video": "/images/products/catalog/soopa_dental_6set/videos/794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "b97c2f8dc3c1dd7121073b6bfbf647f0",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b97c2f8dc3c1dd7121073b6bfbf647f0",
+      "reviewId": "f7c1071d8e3a01a2cd8169d52cc435bb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95",
+      "seconds": 4,
+      "source": {
+        "no": 287,
+        "folder": "soopa_dental_6set",
+        "name": "수파 덴탈스틱 100g 6종 그레인프리 100%식물성 덴탈스틱 비건간식",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_dental_6set/soopa_dental_6set.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7114174547",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_dental_6set/details/2.webp",
+          "/images/products/catalog/soopa_dental_6set/details/3.webp",
+          "/images/products/catalog/soopa_dental_6set/details/4.webp",
+          "/images/products/catalog/soopa_dental_6set/details/5.webp",
+          "/images/products/catalog/soopa_dental_6set/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d171f5fd6b76cc7b7f3f0c08d3f56080",
+        "sha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95"
+      },
+      "scopeId": "3c8ac99a5ecb1516aecaf178675bad4a8e5136d61a29007ac58547022e2ac756",
+      "scopeRegistrationSha256": "1936776cf19cb530e590324df122d3b520f82bcbf00573daa17343eb6ace143f",
+      "aiEvidenceSha256": "6898bd8344bc293b6ff4223e82da7e64d3ff1f39bb53985fc79461733598f44c",
+      "receiptSha256": "dc0f41696a7132ccf0eac482cfa077f0273264b7e5bd418417f46f7a1e48bf93",
+      "eligibilitySha256": "c81700797d7c17fc0351b95fb651fd3146e4e535db41eebdc2cb9997e6d7087e",
+      "evidenceManifestSha256": "a207b0dda33c9b717559830ef9024072d4affae7914ec7fb9f7c07bf4dcb817c"
+    },
+    "videoReviewSha256": "4caa08d0cbdb33ac4cea591b366ae7c7705ba5931c7a5e323d8bcccdc636bc13",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-119eec509de3"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
   "soopa_dental_appleblueberry": {
     "video": "/images/products/catalog/soopa_dental_appleblueberry/videos/47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9/hover.mp4",
@@ -12147,5 +13155,216 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "adf62d8b0b2bc089db15f58ad65e95787209340e"
+  },
+  "rw_jsk_1000001149": {
+    "video": "/images/products/catalog/rw_jsk_1000001149/videos/2c703fa7c7fbb6df66a8d6b9db835ae831289c9fda47cf29e93d6c2bf6300005/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "92281e4df0f9cc87d0c5c30c17a730d5",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "92281e4df0f9cc87d0c5c30c17a730d5",
+      "reviewId": "0aad38dae32f122ba89af09af02b4465",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2c703fa7c7fbb6df66a8d6b9db835ae831289c9fda47cf29e93d6c2bf6300005",
+      "seconds": 4,
+      "source": {
+        "no": 422,
+        "folder": "rw_jsk_1000001149",
+        "name": "러프웨어 날진 1L 물통",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001149/image/detail/1000001149_detail_066.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001149",
+        "gallery": [],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230813/2ada3e4702b238c28102ebb11e225d26_124707.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230813/839ad201252d91071f7d6236e36561a4_124736.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4643dfcea17ca0be7b2aeacbb52ecf85",
+        "sha256": "2c703fa7c7fbb6df66a8d6b9db835ae831289c9fda47cf29e93d6c2bf6300005"
+      },
+      "scopeId": "48071f0ad9b8abacfa68e5990d25321bad6b3aa14a22f7e40c53a6fa5e077928",
+      "scopeRegistrationSha256": "595744733a93665b27514a2b705ae353c18ce409e73adfc0dd77e60204a9a9fe",
+      "aiEvidenceSha256": "c5915b72b3cf56296aa5c2456b06eed6f34d20b223a3033e1d23e7c71f6ad621",
+      "receiptSha256": "c95c45d4a29d13638ad81c17998bed4195efe5e54543137cf32a788b07b152c7",
+      "eligibilitySha256": "044bfcd9e040efb2dc153eb4475131278c9596348f620952ff8727665708f56b",
+      "evidenceManifestSha256": "78c0bad9efc943d45fcfb7308553d12705e92a74e9ee05cd909e6e479fcaf71c"
+    },
+    "videoReviewSha256": "26a9de5ed0870b5e99cf92bce5e168f638ef66e6d51b7e374c42b809202bbf35",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "rw_jsk_1000001232": {
+    "video": "/images/products/catalog/rw_jsk_1000001232/videos/15679ca069f6767c394a067b9c5c52b74246496bf815656c4a2ad2c6cdb25a6e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "a6f4efd6957db0a9dbf33bcb46523e28",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a6f4efd6957db0a9dbf33bcb46523e28",
+      "reviewId": "e5aa0dd5816b7840bf7b58bb580e3c2b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "15679ca069f6767c394a067b9c5c52b74246496bf815656c4a2ad2c6cdb25a6e",
+      "seconds": 4,
+      "source": {
+        "no": 451,
+        "folder": "rw_jsk_1000001232",
+        "name": "러프웨어 낫 어 락 반려견 장난감(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_087.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001232",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_137.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_295.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_357.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_436.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_598.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001232/image/detail/1000001232_detail_64.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/483ede604c4653c86f8a1a3a2ae1b972_001621.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/cb2dfcf0a1c58d4d02110dcf463a215b_010230.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/12ad4572f121a4398d7b2a9e21ec17bf_152143.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a16915e9f59f4d4bade413f254284fb6",
+        "sha256": "15679ca069f6767c394a067b9c5c52b74246496bf815656c4a2ad2c6cdb25a6e"
+      },
+      "scopeId": "7c07df68b8b952102a3dc2457fb0b42cfe9a6a3cc5aca7e36c4b6b4766b6e7da",
+      "scopeRegistrationSha256": "7da4b8735feda7dc2b810cf0a7b8be98c9dbe9cc0ddc8ca910ae9a8842cfb40d",
+      "aiEvidenceSha256": "66febe7b6a86c2e8741c70d2d8c1f75f7080303ec2d6c8d16c8b33f57709958b",
+      "receiptSha256": "6f6a02e4468ad0db4c644152ba1e982de7ea4c43b83e52195b60644aa06d2353",
+      "eligibilitySha256": "15f762ee3aa6bf88cfdb5c2b3e0e347735f5bae1cb2915b65c590c53aa4ad75d",
+      "evidenceManifestSha256": "2dc877c09394a6a82a8bc50c02aba4b500de8674b46fb0678021b85079b1c9fe"
+    },
+    "videoReviewSha256": "59271c002097a663e01acaed1f212ef1ea3d4b813e88e92e8eae48d0e60775d3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "rw_jsk_1000001242": {
+    "video": "/images/products/catalog/rw_jsk_1000001242/videos/5a7546d913c39e08e6b930955da909865a0ccd7dae2cc84180d036510098aac8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "c9d5a4999f40ece5cd93731c529e5424",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c9d5a4999f40ece5cd93731c529e5424",
+      "reviewId": "2ebc534334bbe705659638e1b7cecd97",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5a7546d913c39e08e6b930955da909865a0ccd7dae2cc84180d036510098aac8",
+      "seconds": 4,
+      "source": {
+        "no": 458,
+        "folder": "rw_jsk_1000001242",
+        "name": "러프웨어 베이스캠프 보울 반려견 식기",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_089.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001242",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_135.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_233.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_346.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_43.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_588.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_63.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_738.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001242/image/detail/1000001242_detail_811.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260429/bea4bfff2937744d214d19f42614f141_114702.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260429/eba05565fcbccdea9f07e63e0c9ae50a_114715.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260429/3d7617740c993ac979a4f45e078e24e8_114728.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250328/071204a9eddc917c6b884f5def979dbf_113711.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "cc26ed3a6d5396ada5f6fdbe9bad0608",
+        "sha256": "5a7546d913c39e08e6b930955da909865a0ccd7dae2cc84180d036510098aac8"
+      },
+      "scopeId": "a7e8ff15af04c951d309a0b720186881feab023d92df92e018da024ab8092466",
+      "scopeRegistrationSha256": "dfee1a5be8f64de07f0f8b28f1856984fde05a4718c937780d28040ebe90ef39",
+      "aiEvidenceSha256": "da329bc264ba55ea299b06d9ef089138312bca1b83cbb594da28fffd60154b3c",
+      "receiptSha256": "fb7e9415b4abc802ad806714c44cdbe91c77e57bf5a8e8a067ddb79ee0b0041a",
+      "eligibilitySha256": "01f9b2b71ee9405e38924e49d1c2d81e5e45df3b375e9e745f412cb74120da2b",
+      "evidenceManifestSha256": "c7c37e43dd6c88e7037e788b96ee31e2c095935462ef045e2d29c021a5d29ab6"
+    },
+    "videoReviewSha256": "e6a935fbf558a30a940391fe224acc6d1384881ce1fa9edf986283536d80496e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "rw_jsk_1000001252": {
+    "video": "/images/products/catalog/rw_jsk_1000001252/videos/01e6c80d31c230d39a8bc1781700edbed7fd005cc4f89c23d2c367e261b26eef/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "779505f7b82fbc232e3b22dd22b0c21e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "779505f7b82fbc232e3b22dd22b0c21e",
+      "reviewId": "c242aa6450dc5a27846975aed096e003",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "01e6c80d31c230d39a8bc1781700edbed7fd005cc4f89c23d2c367e261b26eef",
+      "seconds": 4,
+      "source": {
+        "no": 465,
+        "folder": "rw_jsk_1000001252",
+        "name": "러프웨어 홈 트레일 힙 팩 (2025FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001252/image/detail/1000001252_detail_018.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001252",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001252/image/detail/1000001252_detail_174.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001252/image/detail/1000001252_detail_288.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001252/image/detail/1000001252_detail_392.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001252/image/detail/1000001252_detail_434.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001252/image/detail/1000001252_detail_564.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/be684f66b948fee74ec9920a14b37002_094018.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/bc779d5af3ed9d0f5a80c3fabcb3f4b6_094040.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/f011bfddf26221a2268458043f6c27a8_094059.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/4bd382f0c8676989bf72f59287c5f7a2_094125.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "40c3c6d3c7f6dd9642349c88d62297e8",
+        "sha256": "01e6c80d31c230d39a8bc1781700edbed7fd005cc4f89c23d2c367e261b26eef"
+      },
+      "scopeId": "eb005dfb564a53188efa11ce2e6d676fa91af2d0eedbb95a32aa2dd7c898159b",
+      "scopeRegistrationSha256": "adb1e8212f8302fab30aad83dbe4d0c78a3bb034ef129fe87dec333ae9d1d9f4",
+      "aiEvidenceSha256": "b76a1d58d00403161ae64b46c5e7e4138d2271b26cf1dd37d8fb0b7388c2d543",
+      "receiptSha256": "ed7c3bbcadf6ff9a22121539fdccdfddba44c7349cddcc5bb7ee726453769890",
+      "eligibilitySha256": "5200f99096d9ce0b75a6544277dcfcfd60b829c93acaf2d27128a6038dbdc455",
+      "evidenceManifestSha256": "f1d986b1e6d6c4b7925994afd01b6e1113a085ecf474fb73ca749f216ef20ab3"
+    },
+    "videoReviewSha256": "8bc9346885de38375aebe3a8febbd2732438617b31ca9a70955d9f76fb9ad83a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   }
 }
