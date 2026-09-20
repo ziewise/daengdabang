@@ -84,7 +84,7 @@ test("catalog price badges default for protected and standard brands without cha
     const standardBrands = catalog.filter((row) => !brands.has(row.brandEn));
 
     assert.equal(protectedBrands.length, 216 + 68);
-    assert.equal(standardBrands.length, 192);
+    assert.equal(standardBrands.length, 191);
     for (const row of catalog) {
         const kind = badges.catalogPriceBadgeKind(row.brandEn, row.brandKo);
         assert.equal(kind, brands.has(row.brandEn) ? "select" : "benefit", row.folder);

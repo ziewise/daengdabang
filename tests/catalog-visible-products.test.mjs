@@ -58,14 +58,14 @@ test("visible routes retain the first current product without merging anonymous 
     assert.equal(visibleCatalogProducts(source)[0], canonical);
 });
 
-test("the deployed duplicate has one p_299 listing while both IDs and historical detail records remain readable", () => {
+test("the reviewed duplicate is removed while both IDs resolve to p_299 and historical detail records remain readable", () => {
     const { CATALOG, ALL_CATALOG, findById } = loadCatalog();
     const folder = "soopa_healthybites_bananapumpkin";
     assert.deepEqual(CATALOG.filter(p => p.folder === folder).map(p => p.id), ["p_299"]);
-    assert.deepEqual(ALL_CATALOG.filter(p => p.folder === folder).map(p => p.id), ["p_299", "p_300"]);
+    assert.deepEqual(ALL_CATALOG.filter(p => p.folder === folder).map(p => p.id), ["p_299"]);
     assert.equal(findById(folder), findById("p_299"));
-    assert.equal(findById("p_300").id, "p_300");
-    assert.equal(CATALOG.includes(findById("p_300")), false);
+    assert.equal(findById("p_300"), findById("p_299"));
+    assert.equal(CATALOG.includes(findById("p_300")), true);
     const historical = ALL_CATALOG.filter(p => p.supplierCatalogHistorical === true);
     assert.ok(historical.length > 0);
     for (const product of historical) {

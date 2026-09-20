@@ -22,7 +22,7 @@ const PRODUCTS = {
     adultWet: {
         folder: "nd_feelgood_c",
         name: "네이처다이어트 필 굿 치킨 주식 습식사료 390g",
-        price: 60_000,
+        price: 6_000,
         image: "/images/products/catalog/nd_feelgood_c/nd_feelgood_c.webp",
         comparisonLabel: "주식 습식 후보",
     },
@@ -43,7 +43,7 @@ const PRODUCTS = {
     seniorWet: {
         folder: "nd_feelgood_sl",
         name: "네이처다이어트 필 굿 시니어라이트(터키 앤 치킨) 주식 습식사료 390g",
-        price: 60_000,
+        price: 6_000,
         image: "/images/products/catalog/nd_feelgood_sl/nd_feelgood_sl.webp",
         comparisonLabel: "시니어 습식 후보",
     },

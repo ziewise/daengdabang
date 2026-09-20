@@ -51,7 +51,8 @@ test('source records, option inventory, routes and reviews survive listing group
         assert.equal(listing.filter(r=>g.members.includes(r.folder)).length,1,g.key);
     }
     assert.equal(JSON.stringify(raw),before);
-    assert.equal(raw.length,476);
+    assert.equal(raw.length,475);
+    assert.equal(new Set(raw.map(row=>row.folder)).size,475);
 });
 test('missing representatives never hide remaining options',()=>{
     const rows=[{folder:'old'}];

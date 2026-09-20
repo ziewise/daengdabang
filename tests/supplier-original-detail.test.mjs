@@ -7,6 +7,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import * as reviewGroups from "../lib/catalog/review-groups.ts";
 import * as reviewRefresh from "../lib/catalog/review-refresh.ts";
+import * as productLookup from "../lib/catalog/product-lookup.ts";
 
 const require = createRequire(import.meta.url);
 
@@ -34,7 +35,7 @@ test('reviewed video CDN pin survives later builds without bypassing the publica
 });
 
 function loadModule(relative, dependencies = {}, env = {}) {
-    dependencies = { './product-groups.json': [], './review-groups': reviewGroups, './review-refresh': reviewRefresh, './review-refresh.json': {sources:{}}, ...dependencies };
+    dependencies = { './product-lookup': productLookup, './product-groups.json': [], './review-groups': reviewGroups, './review-refresh': reviewRefresh, './review-refresh.json': {sources:{}}, ...dependencies };
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
     });
