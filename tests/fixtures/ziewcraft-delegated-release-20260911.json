@@ -826,5 +826,13 @@
   "polkadog_henpenny_biscuit_142g": {
     "productId": "p_285",
     "sha256": "e64e393e79256902afda88b34389de0dedae57a849644208a1b3f016180f8fa1"
+  },
+  "wow_shoes_20": {
+    "productId": "p_244",
+    "sha256": "c372e5e280cbc671bd71f91e5f7e2065b5d5b76ec97894d80fb1d0cce5d46eef"
+  },
+  "rw_beacon_light": {
+    "productId": "p_278",
+    "sha256": "c13a98c05b4b75171cec672bf0245b494404142a6739461e2c6b2eebba195825"
   }
 }

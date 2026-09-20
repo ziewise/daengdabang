@@ -8908,11 +8908,52 @@
     }
   },
   "wow_shoes_20": {
-    "video": "/images/products/catalog/wow_shoes_20/videos/hover.mp4",
+    "video": "/images/products/catalog/wow_shoes_20/videos/c372e5e280cbc671bd71f91e5f7e2065b5d5b76ec97894d80fb1d0cce5d46eef/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e00af1b241376c826ce3ee7646f65da0",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e00af1b241376c826ce3ee7646f65da0",
+      "reviewId": "a7face79fe235ad0933ccd54d2c799e4",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c372e5e280cbc671bd71f91e5f7e2065b5d5b76ec97894d80fb1d0cce5d46eef",
+      "seconds": 8,
+      "source": {
+        "no": 244,
+        "folder": "wow_shoes_20",
+        "name": "와우 신나라슈즈 일회용신발 소형 중형 20매(5일세트)",
+        "brandEn": "WOW",
+        "isFood": false,
+        "image": "/images/products/catalog/wow_shoes_20/wow_shoes_20.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7669160219",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/wow_shoes_20/details/2.webp",
+          "/images/products/catalog/wow_shoes_20/details/3.webp",
+          "/images/products/catalog/wow_shoes_20/details/4.webp",
+          "/images/products/catalog/wow_shoes_20/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6dffff3dc8c7719ba89d23f85d909d22",
+        "sha256": "c372e5e280cbc671bd71f91e5f7e2065b5d5b76ec97894d80fb1d0cce5d46eef"
+      },
+      "scopeId": "0b1fcba3a6ca65c069a83c2ea96543bd30a767bca71d7c265ba7b990af160dd5",
+      "scopeRegistrationSha256": "a508128e45ae6311232a8e484cba7c29d5497e602813e82de043be7e7b740219",
+      "aiEvidenceSha256": "3de1ad2857c2192fef4b8b984e1e4e3148055de5974ab6d284e8092902ab9a99",
+      "receiptSha256": "925907ad213ba2f9e7c377af49d38e9047c3df57f5e11c9925487ea3b8b47e97",
+      "eligibilitySha256": "a0c7b53fc21ece6fc1d111818a23dddd8f4499a9051efaed90e246c404bc9f73",
+      "evidenceManifestSha256": "712492fa975917e810d49f15d73da8a29d53fa40b858aa7555f7735ef1c60756"
+    },
+    "videoReviewSha256": "60fae455d7b882777e58402966abfd5a44ba197e98faad0fec7b53d91d1cbdb2",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-1f5bb9920421"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5385c72c616fffb0b940037e6065014ff824efde"
   },
   "wow_shoes_80": {
     "video": "/images/products/catalog/wow_shoes_80/videos/hover.mp4",
@@ -13458,5 +13499,58 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
+  },
+  "rw_beacon_light": {
+    "video": "/images/products/catalog/rw_beacon_light/videos/c13a98c05b4b75171cec672bf0245b494404142a6739461e2c6b2eebba195825/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "236d0474aa1e5849068e945722362d96",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "236d0474aa1e5849068e945722362d96",
+      "reviewId": "db77d17a353db92400c891325c8ab63e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c13a98c05b4b75171cec672bf0245b494404142a6739461e2c6b2eebba195825",
+      "seconds": 8,
+      "source": {
+        "no": 278,
+        "folder": "rw_beacon_light",
+        "name": "러프웨어 더 비콘 세이프티 라이트",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001048/image/detail/1000000183_detail_071.png",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001048",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001048/image/detail/1000000183_detail_176.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001048/image/detail/1000000183_detail_281.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001048/image/detail/1000000183_detail_375.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001048/image/detail/1000000183_detail_446.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001048/image/detail/1000000183_detail_510.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250305/0c2b2f23fe6a36670e243e82c40226f6_214826.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250305/2f03bd0593afa38d9f29316b104e0961_214826.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250305/2e41b66047dadfba6cb32ab58e268113_214827.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c724ac6d2a4ac7064b2a5485ddd764f7",
+        "sha256": "c13a98c05b4b75171cec672bf0245b494404142a6739461e2c6b2eebba195825"
+      },
+      "scopeId": "0155d2d7f7ea6ea6561af4ca003dc9d0874f188a720a6890fee809ea6d08883f",
+      "scopeRegistrationSha256": "d7b3d646bd7c3cde2f9f063b20b72654ed9f5e9360c7cf5cc931ce2c26318e73",
+      "aiEvidenceSha256": "eb2263eb8abef16a7223b419c45ffa62f0776e98b4e3f76df9c52bdf1d65aca3",
+      "receiptSha256": "29c0c5eff70f603fc4c4da79452d9144ff194e6c83c818d7400d515688872095",
+      "eligibilitySha256": "73edb8cc1efd135decff45f6f887abe1d4b96fac8f4f0ca4296be1e6baffef16",
+      "evidenceManifestSha256": "18fd68912fa223eebcbe1e4cee5f78fdf22b7af35c23c4bc5b49e1ab5273b454"
+    },
+    "videoReviewSha256": "e3b46f41552d6144793793e5dcee4c4e9c3537d395c5afeef6a861a68eadfeab",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5385c72c616fffb0b940037e6065014ff824efde"
   }
 }
