@@ -818,5 +818,13 @@
   "rw_jsk_1000001252": {
     "productId": "p_465",
     "sha256": "01e6c80d31c230d39a8bc1781700edbed7fd005cc4f89c23d2c367e261b26eef"
+  },
+  "perity_broccoli_mist": {
+    "productId": "p_207",
+    "sha256": "dbd4326d51ad15ba9f8eb67a729ed9b0d828aed696c884df395b741bc10e5e14"
+  },
+  "polkadog_henpenny_biscuit_142g": {
+    "productId": "p_285",
+    "sha256": "e64e393e79256902afda88b34389de0dedae57a849644208a1b3f016180f8fa1"
   }
 }

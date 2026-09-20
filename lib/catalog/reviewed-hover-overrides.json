@@ -3071,11 +3071,54 @@
     "videoJobId": "hover-static72-20260903-cc417f1ac8e2"
   },
   "perity_broccoli_mist": {
-    "video": "/images/products/catalog/perity_broccoli_mist/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_broccoli_mist/videos/dbd4326d51ad15ba9f8eb67a729ed9b0d828aed696c884df395b741bc10e5e14/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "bf32ec9f4336551c06beaea12d297bd2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "bf32ec9f4336551c06beaea12d297bd2",
+      "reviewId": "7cae17551198dab7c2406e20518b2068",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "dbd4326d51ad15ba9f8eb67a729ed9b0d828aed696c884df395b741bc10e5e14",
+      "seconds": 4,
+      "source": {
+        "no": 207,
+        "folder": "perity_broccoli_mist",
+        "name": "페리티_제주 브로콜리 릴리프 펫 미스트",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_mist/perity_broccoli_mist.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848890864",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_mist/details/2.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/3.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/4.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/5.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/6.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9d899648cc03e3916779589075af51a5",
+        "sha256": "dbd4326d51ad15ba9f8eb67a729ed9b0d828aed696c884df395b741bc10e5e14"
+      },
+      "scopeId": "94d0de56d713745dcdc1920dad90c7ffdf943d505de31169d8d54e4a96d92b27",
+      "scopeRegistrationSha256": "06dfe6bff4d3b31e723072608bb0f4a339858bac2baa91899ca18207e6867d22",
+      "aiEvidenceSha256": "4bbbe81c1715d430e259d27f72871b29abaa4d179459058ed5e075a5aabe72a7",
+      "receiptSha256": "556e0daf2cabedda0e4e10946ef2e582eb14bca0fa3cc60334077dd44555af73",
+      "eligibilitySha256": "a77800477e4e8194e3079c9f75e419be7809f2dde6cdf93617d9ec979dfce519",
+      "evidenceManifestSha256": "dfa1df5eaddbb454ea91a5953f0624ee140c755c836e687f91a416760387f5c9"
+    },
+    "videoReviewSha256": "cda7acf91e85bf7e0ebd689caea1d76c1d537add73c31f2a9c7e7e8f77a12c60",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-71bec810f93d"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1d6b6fd06cd15434c3d4b5da2562a4c4e3b47d33"
   },
   "perity_broccoli_shampoo_250ml": {
     "video": "/images/products/catalog/perity_broccoli_shampoo_250ml/videos/17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227/hover.mp4",
@@ -3358,7 +3401,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "917f79a623393feb960d31c979877be69adf5017"
   },
-  "polkadog_henpenny_biscuit_142g": null,
+  "polkadog_henpenny_biscuit_142g": {
+    "video": "/images/products/catalog/polkadog_henpenny_biscuit_142g/videos/e64e393e79256902afda88b34389de0dedae57a849644208a1b3f016180f8fa1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "9d00f069b089f4a04f4447e778e080dd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9d00f069b089f4a04f4447e778e080dd",
+      "reviewId": "986da2fe2c107dfb8a89f53cdd02a62f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e64e393e79256902afda88b34389de0dedae57a849644208a1b3f016180f8fa1",
+      "seconds": 4,
+      "source": {
+        "no": 285,
+        "folder": "polkadog_henpenny_biscuit_142g",
+        "name": "폴카독베이커리_ALL 헤니페니 비스킷 (치킨&크랜베리) 142g",
+        "brandEn": "Polkadog Bakery",
+        "isFood": true,
+        "image": "/images/products/catalog/polkadog_henpenny_biscuit_142g/polkadog_henpenny_biscuit_142g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7118825999",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-01.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-02.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-03.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-04.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-05.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "bc2a477f02ac3827e29601dcb3263351",
+        "sha256": "e64e393e79256902afda88b34389de0dedae57a849644208a1b3f016180f8fa1"
+      },
+      "scopeId": "83f782189734cd92fbb1c7766a1861f63c0350b6817562558045df28965b3b74",
+      "scopeRegistrationSha256": "3e06936c2d26422436c763395fff6973fc75a2af2f781cd71292868fc746ca8a",
+      "aiEvidenceSha256": "d80e8d7fefb844ac5d5aa34b70ec90719020c90664d9d46fedb4f33b6ad16021",
+      "receiptSha256": "90d84985527139efbc6c5d4c537366015d5c7a1a5f0d2bbae74c0b99d7cf0a78",
+      "eligibilitySha256": "94aeed7a56ab20b3b089fb1071600a6b2ac850cec741289aa3264c8a9b3fe529",
+      "evidenceManifestSha256": "2060421bf858f150ef7794b40a9725aa4166dd75245ed2bece117f56693e6f43"
+    },
+    "videoReviewSha256": "6ca0956c104237ded0102575bb772a842763c64a9be4bcff272b46783a487021",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1d6b6fd06cd15434c3d4b5da2562a4c4e3b47d33"
+  },
   "rs_bowl": {
     "video": "/images/products/catalog/rs_bowl/videos/860188ede01f84d638816c0a8ea918b313c0d7c2e1fe92d0c874ebac575a3bf2/hover.mp4",
     "videoProvider": "ziewcraft",
