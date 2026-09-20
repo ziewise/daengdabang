@@ -718,5 +718,105 @@
   "canagan_dog_highland_6kg": {
     "productId": "p_128",
     "sha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c"
+  },
+  "rs_v2_avalanchewhite": {
+    "productId": "p_103",
+    "sha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6"
+  },
+  "canagan_dog_dental_6kg": {
+    "productId": "p_123",
+    "sha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6"
+  },
+  "canagan_dog_salmon_6kg": {
+    "productId": "p_129",
+    "sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b"
+  },
+  "sk_ft_working30_15kg": {
+    "productId": "p_179",
+    "sha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161"
+  },
+  "sk_ft_salmon_pate_390g": {
+    "productId": "p_181",
+    "sha256": "468f6da8963d0c549a17b2de07d908a6ef762ce07e6b779a0ec7c9cf6531fd8d"
+  },
+  "sk_ft_puppy_pate_390g": {
+    "productId": "p_182",
+    "sha256": "21f529fb400291bd0d7e00f22dd838105051c010e737b160df82b37f2462a9f1"
+  },
+  "sk_ft_chicken_pate_390g": {
+    "productId": "p_184",
+    "sha256": "0e49dfb3880dbab349646d825ffe4437dfdd59801978d21c88b5e3d82b517fbb"
+  },
+  "nd_feelgood_p": {
+    "productId": "p_190",
+    "sha256": "0e376dc735d6dad759a9e122a40733da90a9389f94c64aa4b71a37c93766179f"
+  },
+  "nd_feelgood_c": {
+    "productId": "p_191",
+    "sha256": "90e22c5c6414be4e76659c54f1b9658a081722978e6851b284b7e0069e7bc3c8"
+  },
+  "nd_purely_sw": {
+    "productId": "p_192",
+    "sha256": "bd3e2244259b11f7af0781663953d918d59c1a6594d2a8d5071a720c20eab655"
+  },
+  "nd_purely_bc": {
+    "productId": "p_193",
+    "sha256": "3c7ca75a65599c1cb867efd96b157e5d557313c1f62723ff2e323c88ec542230"
+  },
+  "canagan_dog_dental_2kg": {
+    "productId": "p_197",
+    "sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86"
+  },
+  "rw_trailrunner_belt_23": {
+    "productId": "p_227",
+    "sha256": "fa0975334bc12d5409ac54f38093e848967033aa620f2b799c783c45807e97b5"
+  },
+  "smoothie_rainbow_30ml_3": {
+    "productId": "p_232",
+    "sha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694"
+  },
+  "aff_microbeads_round": {
+    "productId": "p_267",
+    "sha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2"
+  },
+  "pdh_spin_ufo": {
+    "productId": "p_273",
+    "sha256": "76b5e4cccbd95a2613dc7f6e7c0abbc03c897cd2a448965d5b60d8725ad7e493"
+  },
+  "soopa_dental_6set": {
+    "productId": "p_287",
+    "sha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95"
+  },
+  "ip_trovbiz_nightday": {
+    "productId": "p_302",
+    "sha256": "7c9250b955d04f7657a5ed5e766dbf11047e0603317bef84b632c09a84f50f6b"
+  },
+  "heyrex_taurus_2l": {
+    "productId": "p_312",
+    "sha256": "9e6591051ef2fc53b48c299cd6332690202834d377b65bf9dc8644189e61be83"
+  },
+  "mb_vegemix_475g": {
+    "productId": "p_316",
+    "sha256": "d159110dbea1c6a5b6e942d7d9126de6b2b8467ac0e759d7b893adc2ba45a142"
+  },
+  "rw_remix_cactus_tug_26fw": {
+    "productId": "p_361",
+    "sha256": "515dc5397a20a24569304f1b4038177cae585a06ef8b2b91bc3f29fe293361cc"
+  },
+  "rw_jsk_1000001149": {
+    "productId": "p_422",
+    "sha256": "2c703fa7c7fbb6df66a8d6b9db835ae831289c9fda47cf29e93d6c2bf6300005"
+  },
+  "rw_jsk_1000001232": {
+    "productId": "p_451",
+    "sha256": "15679ca069f6767c394a067b9c5c52b74246496bf815656c4a2ad2c6cdb25a6e"
+  },
+  "rw_jsk_1000001242": {
+    "productId": "p_458",
+    "sha256": "5a7546d913c39e08e6b930955da909865a0ccd7dae2cc84180d036510098aac8"
+  },
+  "rw_jsk_1000001252": {
+    "productId": "p_465",
+    "sha256": "01e6c80d31c230d39a8bc1781700edbed7fd005cc4f89c23d2c367e261b26eef"
   }
 }
