@@ -1,3 +1,4 @@
+import { findCatalogProduct } from "./product-lookup";
 import rawCatalog from "./raw.json";
 import { SUBCAT_ICON, SUBCAT_TO_CAT } from "./labels";
 import type { CatalogProduct, CatalogRow, ProductColor, ProductSize, PromoSlug, SubcategorySlug } from "./types";
@@ -323,5 +324,5 @@ export const ALL_CATALOG: CatalogProduct[] = buildCatalog();
 export const CATALOG: CatalogProduct[] = visibleProductGroups(visibleCatalogProducts(ALL_CATALOG), productGroups);
 
 export function findById(id: string): CatalogProduct | undefined {
-    return ALL_CATALOG.find((product) => product.id === id || product.folder === id);
+    return findCatalogProduct(ALL_CATALOG, id);
 }

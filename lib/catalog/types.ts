@@ -24,6 +24,8 @@ export interface ProductImageRegion {
 
 export interface CatalogRow {
     no: number;
+    /** Reviewed old IDs resolve to this canonical product without duplicate cards. */
+    legacyProductIds?: string[];
     brandKo: string;
     brandEn: string;
     target: string;

@@ -4,7 +4,6 @@
     "canonical": "rw_jsk_1000001237",
     "members": [
       "rw_webmaster_harness",
-      "rw_jsk_1000001166",
       "rw_jsk_1000001237"
     ]
   },
@@ -234,14 +233,6 @@
     ]
   },
   {
-    "key": "palisades_pack",
-    "canonical": "rw_palisades_pack_26",
-    "members": [
-      "rw_jsk_1000000985",
-      "rw_palisades_pack_26"
-    ]
-  },
-  {
     "key": "sun_shower_jacket",
     "canonical": "rw_jsk_1000001214",
     "members": [
@@ -255,14 +246,6 @@
     "members": [
       "rw_quencher_24",
       "rw_jsk_1000000772"
-    ]
-  },
-  {
-    "key": "brush_guard",
-    "canonical": "rw_jsk_1000001129",
-    "members": [
-      "rw_jsk_1000001129",
-      "rw_jsk_1000000031"
     ]
   }
 ]
