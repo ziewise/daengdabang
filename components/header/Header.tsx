@@ -11,6 +11,7 @@
 import { useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/lib/store";
 import {
@@ -25,11 +26,13 @@ import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 import InstalledAppHomeButton from "@/components/pwa/InstalledAppHomeButton";
+import ProductBackButton from "./ProductBackButton";
 import headerStyles from "./Header.module.css";
 
 type DropKey = "shop" | "daily" | "lab" | "cs" | null;
 
 export default function Header() {
+    const isProductDetail = usePathname().startsWith("/product/");
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -82,7 +85,8 @@ export default function Header() {
 
                     {/* 로고 */}
                     <div className="flex min-w-0 shrink-0 items-center gap-1.5 min-[360px]:gap-2">
-                        <BrandLogo mobileEmphasis mobileIntegrated />
+                        <ProductBackButton />
+                        <BrandLogo mobileEmphasis mobileIntegrated className={isProductDetail ? "max-md:hidden" : ""} />
                         <InstalledAppHomeButton />
                     </div>
 
