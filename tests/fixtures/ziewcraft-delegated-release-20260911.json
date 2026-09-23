@@ -834,5 +834,9 @@
   "rw_beacon_light": {
     "productId": "p_278",
     "sha256": "c13a98c05b4b75171cec672bf0245b494404142a6739461e2c6b2eebba195825"
+  },
+  "rw_doubletrack_coupler": {
+    "productId": "p_348",
+    "sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e"
   }
 }

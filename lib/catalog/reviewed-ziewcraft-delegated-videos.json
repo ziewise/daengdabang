@@ -84428,5 +84428,300 @@
       "checkedAt": "2026-09-20T17:16:31.421044+00:00",
       "sha256": "e3b46f41552d6144793793e5dcee4c4e9c3537d395c5afeef6a861a68eadfeab"
     }
+  },
+  "rw_doubletrack_coupler": {
+    "schema": "ddb.ziewcraft-owner-delegated-hover.v1",
+    "publicationStatus": "approved",
+    "productId": "p_348",
+    "folder": "rw_doubletrack_coupler",
+    "video": "/images/products/catalog/rw_doubletrack_coupler/videos/66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e/hover.mp4",
+    "sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e",
+    "videoQuality": "approved_product_interaction",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d84621bae66dd532c29c80048f591fe0",
+      "reviewId": "45b93f50402a608f9995d5fae0cfdb92",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e",
+      "seconds": 4,
+      "source": {
+        "no": 348,
+        "folder": "rw_doubletrack_coupler",
+        "name": "러프웨어 Double Track 2견용 리드줄 커플러",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001136/image/detail/1000001136_detail_066.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001136",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001136/image/detail/1000001136_detail_066.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Double-Track-Coupler_145350.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/839ad201252d91071f7d6236e36561a4_145437.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "be3aaa09bede870ea5f5a9e47231d0a7",
+        "sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e"
+      },
+      "scopeId": "f14322a3433387084ff9423eb908647147d4e24fea895266de8a01d59f0221a3",
+      "scopeRegistrationSha256": "7c7a21d32284b702f839551e8738cd7d2bacad398be197a8c3783688a5d63167",
+      "aiEvidenceSha256": "e3cd5cb043d961585918aa713717b6b3b5c24d24115609b012fc59b80a90c1ce",
+      "receiptSha256": "3fc4799072d550c2fefdcbd25f673334ab6fb197ee72fe767eb8dfbc611a96ac",
+      "eligibilitySha256": "3b9844224b17584e82a9923db95bcdbace4da8b9923004786dae18f9f73cb330",
+      "evidenceManifestSha256": "076e2440cff94f8e0306eccf821794d5ed9f094475d4e6ef4f97be6e52188f4c"
+    },
+    "delegatedReview": {
+      "api_job_id": "d84621bae66dd532c29c80048f591fe0",
+      "bindings": {
+        "native_video": {
+          "artifact_id": "53005936163944a8a83ebd0325cf2ebd",
+          "sha256": "4ef2a378c456226d06534c10de9a99161470f012133092f19244145f131b9eb6"
+        },
+        "review_video": {
+          "artifact_id": "be3aaa09bede870ea5f5a9e47231d0a7",
+          "sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e"
+        },
+        "terminal": {
+          "artifact_id": "e400b7bd1cd1e1196e6d40e6ced4a4a0",
+          "sha256": "cb895d717737b2c2a0360eeea4a6ccd5893b1581da5342dcfe1d6299ad6c2e2d"
+        }
+      },
+      "checks": {
+        "anatomy_and_motion": true,
+        "camera_and_framing": true,
+        "no_prohibited_overlays": true,
+        "product_identity": true,
+        "temporal_stability": true
+      },
+      "complete_product": true,
+      "coverage": {
+        "native_frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96
+        ]
+      },
+      "evidence_bytes_verified": true,
+      "evidence_content_verified": false,
+      "human_approved": false,
+      "human_identity_verified": false,
+      "numeric_boundary_evidence": null,
+      "owner_delegated_shop_candidate": true,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "previous_review_id": null,
+      "private_only": true,
+      "product": {
+        "color": "Basalt Gray",
+        "product_id": "p_348",
+        "sku": "rw_doubletrack_coupler"
+      },
+      "product_reference_assets": [
+        {
+          "asset_id": "f1970130ded95312778a9258d85840ee",
+          "sha256": "790a08b7c43faf03016be456242fa86b36e9d74353abf22d61a4d43977c01422",
+          "source_sha256": "790a08b7c43faf03016be456242fa86b36e9d74353abf22d61a4d43977c01422"
+        },
+        {
+          "asset_id": "befcff0744c5512d11c751376cf84bd0",
+          "sha256": "cee09407314b906566b73507ec797efbe0632d24d7af3a81cd82ae97c4883f71",
+          "source_sha256": "cee09407314b906566b73507ec797efbe0632d24d7af3a81cd82ae97c4883f71"
+        }
+      ],
+      "production_eligible": false,
+      "publication_allowed": false,
+      "publication_authority": "shop_owner_separate_decision",
+      "required_final_seconds": 4,
+      "retry_reason": "",
+      "review_actor": {
+        "evidence_id": "ddb-ai-p_348-d84621bae66dd532c29c80048f591fe0-all97-v1",
+        "evidence_sha256": "e3cd5cb043d961585918aa713717b6b3b5c24d24115609b012fc59b80a90c1ce",
+        "full_segment_watched": false,
+        "kind": "ai"
+      },
+      "review_id": "45b93f50402a608f9995d5fae0cfdb92",
+      "reviewed_at": "2026-09-23T02:38:59.416152Z",
+      "schema_version": 1,
+      "scope_id": "f14322a3433387084ff9423eb908647147d4e24fea895266de8a01d59f0221a3",
+      "semantic_verified": false,
+      "server_technical_gate_passed": true,
+      "status": "accepted",
+      "terminal_provenance": {
+        "artifact_id": "e400b7bd1cd1e1196e6d40e6ced4a4a0",
+        "canonical_review": true,
+        "frame_count": 96,
+        "frame_index": 95,
+        "height": 1080,
+        "mime_type": "image/png",
+        "native_artifact_id": "53005936163944a8a83ebd0325cf2ebd",
+        "native_artifact_sha256": "4ef2a378c456226d06534c10de9a99161470f012133092f19244145f131b9eb6",
+        "origin": "server_decoded_terminal",
+        "pixel_encoding": "bgr24",
+        "pixel_sha256": "d0fb7e26f0d72a44709108a35368efecda69ea871aa4532ffe560241acce6e86",
+        "png_compression": 3,
+        "producer": "ziewcraft-human-review-media-r49-v1",
+        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
+        "sha256": "cb895d717737b2c2a0360eeea4a6ccd5893b1581da5342dcfe1d6299ad6c2e2d",
+        "source_artifact_id": "be3aaa09bede870ea5f5a9e47231d0a7",
+        "source_artifact_sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e",
+        "source_rendition": "review",
+        "width": 1080
+      }
+    },
+    "delegationScope": {
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "product": {
+        "color": "Basalt Gray",
+        "product_id": "p_348",
+        "sku": "rw_doubletrack_coupler"
+      },
+      "references": [
+        {
+          "asset_id": "f1970130ded95312778a9258d85840ee",
+          "sha256": "790a08b7c43faf03016be456242fa86b36e9d74353abf22d61a4d43977c01422",
+          "source_sha256": "790a08b7c43faf03016be456242fa86b36e9d74353abf22d61a4d43977c01422"
+        },
+        {
+          "asset_id": "befcff0744c5512d11c751376cf84bd0",
+          "sha256": "cee09407314b906566b73507ec797efbe0632d24d7af3a81cd82ae97c4883f71",
+          "source_sha256": "cee09407314b906566b73507ec797efbe0632d24d7af3a81cd82ae97c4883f71"
+        }
+      ],
+      "required_final_seconds": 4,
+      "scene_asset_id": "40c8958b87f524e8959f52fa6a94873d",
+      "scene_sha256": "832daef255e4660c72a4d6e2faee619242f09f192a344d8c46c045f32c283486",
+      "schema_version": 1,
+      "scope_id": "f14322a3433387084ff9423eb908647147d4e24fea895266de8a01d59f0221a3",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
+    },
+    "currentEligibility": {
+      "owner_delegated_shop_candidate_current": true,
+      "reason": null,
+      "reviewId": "45b93f50402a608f9995d5fae0cfdb92",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "scopeId": "f14322a3433387084ff9423eb908647147d4e24fea895266de8a01d59f0221a3",
+      "human_approved": false,
+      "publication_allowed": false
+    },
+    "technical": {
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "codec": "avc1",
+      "pixelFormat": "yuv420p",
+      "fullDecode": true,
+      "audioStreams": 0,
+      "fastStart": true
+    },
+    "publication": {
+      "actor": "ai",
+      "ownerAuthorized": true,
+      "evidenceVerified": true,
+      "ownerInstructionSha256": "43e9d5bb86238017afeadcf16af0695a9dba570e2f609617854d28e17696414b",
+      "technicalProofSha256": "0179e3fa780e185863c62b75fe1e15ec3312e0fdefe2fdfa0440942b5e733ee3",
+      "checkedAt": "2026-09-23T02:39:44.292632+00:00",
+      "sha256": "00ce69ac68ae2d020b9b94e4e0cc3ba24356c564c74ec3bdc38d3e9d53015f65"
+    }
   }
 }

@@ -4962,11 +4962,52 @@
     }
   },
   "rw_doubletrack_coupler": {
-    "video": "/images/products/catalog/rw_doubletrack_coupler/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_doubletrack_coupler/videos/66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "d84621bae66dd532c29c80048f591fe0",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d84621bae66dd532c29c80048f591fe0",
+      "reviewId": "45b93f50402a608f9995d5fae0cfdb92",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e",
+      "seconds": 4,
+      "source": {
+        "no": 348,
+        "folder": "rw_doubletrack_coupler",
+        "name": "러프웨어 Double Track 2견용 리드줄 커플러",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001136/image/detail/1000001136_detail_066.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001136",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001136/image/detail/1000001136_detail_066.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/Double-Track-Coupler_145350.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/839ad201252d91071f7d6236e36561a4_145437.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "be3aaa09bede870ea5f5a9e47231d0a7",
+        "sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e"
+      },
+      "scopeId": "f14322a3433387084ff9423eb908647147d4e24fea895266de8a01d59f0221a3",
+      "scopeRegistrationSha256": "7c7a21d32284b702f839551e8738cd7d2bacad398be197a8c3783688a5d63167",
+      "aiEvidenceSha256": "e3cd5cb043d961585918aa713717b6b3b5c24d24115609b012fc59b80a90c1ce",
+      "receiptSha256": "3fc4799072d550c2fefdcbd25f673334ab6fb197ee72fe767eb8dfbc611a96ac",
+      "eligibilitySha256": "3b9844224b17584e82a9923db95bcdbace4da8b9923004786dae18f9f73cb330",
+      "evidenceManifestSha256": "076e2440cff94f8e0306eccf821794d5ed9f094475d4e6ef4f97be6e52188f4c"
+    },
+    "videoReviewSha256": "00ce69ac68ae2d020b9b94e4e0cc3ba24356c564c74ec3bdc38d3e9d53015f65",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-ab6571c2a1c6"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "14047bdf6580ce1f02d2ead0d913c02e8537d86e"
   },
   "rw_everest_coat": {
     "video": "/images/products/catalog/rw_everest_coat/videos/73f1f905dbfb1b4683fa2d7a79fe236fd29bff6886224c8f7398a6513055eeea/hover.mp4",
