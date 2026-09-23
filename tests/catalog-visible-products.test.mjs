@@ -11,6 +11,22 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const nativeRequire = createRequire(import.meta.url);
 const ts = nativeRequire("typescript");
 
+test("reviewed bed usage wins over Chewisty and seasonal names without changing food or feeding mats", () => {
+    const { findById } = loadCatalog();
+    for (const id of ["p_126", "p_265", "p_344", "p_345"]) {
+        const product = findById(id);
+        assert.equal(product.category, "life", id);
+        assert.equal(product.subcategory, "cushion", id);
+        assert.equal(product.raw.isFood, false, id);
+        assert.equal(product.raw.isWalk, false, id);
+        assert.equal(product.promos.includes("food"), false, id);
+    }
+    for (const id of ["p_45", "p_275", "p_276"]) assert.equal(findById(id).subcategory, "bowl", id);
+    assert.equal(findById("p_135").subcategory, "treats");
+    assert.equal(findById("p_163").subcategory, "drysoy");
+    assert.equal(findById("p_258").subcategory, "carrier");
+});
+
 function loadCatalog() {
     const cache = new Map();
     function load(file) {

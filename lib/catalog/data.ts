@@ -109,6 +109,9 @@ function mapSubcategory(row: CatalogRow): SubcategorySlug {
     if (has(text, /리드줄|목줄|초크|Leash|Collar/i)) return "leash";
     if (has(text, /고글|안경|아이웨어|보호안경|비콘|세이프티\s*라이트|안전\s*라이트|야간산책.*라이트/i)) return "goggles";
     if (carrierText) return "carrier";
+    // Reviewed bedding usage takes priority over ambiguous model-name words
+    // such as Chewisty (츄이스티) or seasonal clothing terms.
+    if (has(usageText, /침구|방석|침대|베드/i)) return "cushion";
     if (has(text, /의류|자켓|재킷|코트|베스트|쿨러|부츠|신발|양말|보호대|후디|패딩|구명 ?조끼|우비|판초|스노우 슈트/i)) return "wear";
 
     if (has(text, /디저트|음료|아이스크림|소주|와인|맥주|요거트|댕크림/i)) return "dessert";
