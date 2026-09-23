@@ -846,5 +846,9 @@
   "rw_switchback_harness": {
     "productId": "p_127",
     "sha256": "6d17a69b007a43ebca8266c3bb8a33854cb0acea8ade80b02fdd1b5f1114ccc1"
+  },
+  "rw_everest_coat_25fw": {
+    "productId": "p_23",
+    "sha256": "52240ff6731c545843ccf4c2ef49b3745802021ac16f15ee2d3c8afa047a7fef"
   }
 }

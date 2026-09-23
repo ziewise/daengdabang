@@ -5061,7 +5061,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c50f4a38d3d3710c9238e8e27eb2f2d21084ceda"
   },
-  "rw_everest_coat_25fw": null,
+  "rw_everest_coat_25fw": {
+    "video": "/images/products/catalog/rw_everest_coat_25fw/videos/52240ff6731c545843ccf4c2ef49b3745802021ac16f15ee2d3c8afa047a7fef/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "38f7adf9e716f493c6eb3d8c9e8e39a5",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "38f7adf9e716f493c6eb3d8c9e8e39a5",
+      "reviewId": "d6c2cf2eeca43abb6bba070809bc854c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "52240ff6731c545843ccf4c2ef49b3745802021ac16f15ee2d3c8afa047a7fef",
+      "seconds": 8,
+      "source": {
+        "no": 23,
+        "folder": "rw_everest_coat_25fw",
+        "name": "러프웨어 마운틴 에베레스트 인슐레이티드 도그 코트 커버 (2025FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001287/image/detail/1000001287_detail_067.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001287",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001287/image/detail/1000001287_detail_11.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001287/image/detail/1000001287_detail_249.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/251027/53e782788486d00c48c5a8218626b8fb_221251.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/251027/bca9c9ad3df28b25982fea85636a1631_221305.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/251027/ff0618c35d9b984d8443c183698f2c82_221329.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ccf8a92d10cc072cac2c506a587a4269",
+        "sha256": "52240ff6731c545843ccf4c2ef49b3745802021ac16f15ee2d3c8afa047a7fef"
+      },
+      "scopeId": "a4931cc4339987bb2e76bb7ee1c446260e89af6ca387587b3de16fa5820ea4b3",
+      "scopeRegistrationSha256": "b40ddbe8551ede76dbffa988c9b53e75ca43cd4360fc908daa8c18ab654e4d76",
+      "aiEvidenceSha256": "4bc3737f61b52f20f0f378a5d7956a737770aad994cac0b7b639036f63915d1c",
+      "receiptSha256": "3b614249fcdc840a56b0dd9758d8ba04a1426d3f3494a59b06fce539aafc66d7",
+      "eligibilitySha256": "177fbc445c176bdb3f69cff1e4bc0d2743f3681fba9e3018bad9c858a83c96d0",
+      "evidenceManifestSha256": "11dc79372b45304fd34480ab4a264b265595d3055477e2b58838b388162f6a08"
+    },
+    "videoReviewSha256": "36f636d44057676eb138a902dc0c11f19b807ce80019d6e94d9288fcee4994ba",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "2ff47038a8d48863f2dc53e9e39e3ad9ddc89035"
+  },
   "rw_floatcoat_lifejacket": null,
   "rw_frontrange_daypack_24": {
     "video": "/images/products/catalog/rw_frontrange_daypack_24/videos/59e6f70956ca5662da8576254d2561f63a745b81b14d159d7fb1312baf1e4fef/hover.mp4",
