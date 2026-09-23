@@ -16,6 +16,8 @@ const DEPLOYMENT_OMIT_PATHS = new Set([
     "videos/hero.mp4",
     // Superseded snow preview. Runtime weather scenes use weather-snow-*.mp4.
     "images/hero/snow.mp4",
+    // Superseded evening clip. resolveHeroScene uses ltr-v2 or rtl.
+    "images/hero/weather-clear-evening-ltr-v1.mp4",
 ]);
 const DEPLOYMENT_OMIT_PREFIXES = [
     // Source/reference exports used to prepare marketplace content. The

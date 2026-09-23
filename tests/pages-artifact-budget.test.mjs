@@ -5,19 +5,33 @@ import path from "node:path";
 import test from "node:test";
 
 import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
+import { HERO_WEATHERS, HERO_TIME_BUCKETS, resolveHeroScene } from "../lib/hero-assets.ts";
 
 const COMMIT_SHA = "a".repeat(40);
 
-test('Pages omits the superseded snow preview while retaining current weather videos and source bytes', async t => {
+test('Pages omits superseded previews while retaining every selectable weather video and source bytes', async t => {
     const root = await fixture(t);
     await write(root, 'public/images/hero/snow.mp4', 'preserved-original');
     await write(root, 'out/images/hero/snow.mp4', 'superseded-preview');
-    const current = ['weather-snow-day-v1.mp4', 'weather-snow-day-v2.mp4', 'weather-snow-night.mp4'];
+    const obsolete = 'weather-clear-evening-ltr-v1.mp4';
+    await write(root, `public/images/hero/${obsolete}`, 'preserved-evening-source');
+    await write(root, `out/images/hero/${obsolete}`, 'superseded-evening');
+    const current = new Set();
+    for (const weather of HERO_WEATHERS) {
+        for (const timeBucket of HERO_TIME_BUCKETS) {
+            for (const season of ['spring', 'summer', 'autumn', 'winter']) {
+                current.add(path.basename(resolveHeroScene({ weather, timeBucket, season }).video.split('?')[0]));
+            }
+        }
+    }
+    assert.equal(current.has(obsolete), false);
     for (const name of current) await write(root, `out/images/hero/${name}`, name);
     const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
-    assert.equal(result.omittedLegacyAssetCount, 2);
+    assert.equal(result.omittedLegacyAssetCount, 3);
     await assert.rejects(fs.access(path.join(root, 'out/images/hero/snow.mp4')));
+    await assert.rejects(fs.access(path.join(root, `out/images/hero/${obsolete}`)));
     assert.equal(await fs.readFile(path.join(root, 'public/images/hero/snow.mp4'), 'utf8'), 'preserved-original');
+    assert.equal(await fs.readFile(path.join(root, `public/images/hero/${obsolete}`), 'utf8'), 'preserved-evening-source');
     for (const name of current) assert.equal(await fs.readFile(path.join(root, `out/images/hero/${name}`), 'utf8'), name);
 });
 
