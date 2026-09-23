@@ -946,5 +946,13 @@
   "yora_wet_appleparsnip_390g_2": {
     "productId": "p_131",
     "sha256": "e90e5e19c22e00e6cc6ae0ba120c67aaf3e9ab8fc824bf5dbb46cc9f3173f9c6"
+  },
+  "yora_stew_carrotpotato_390g": {
+    "productId": "p_167",
+    "sha256": "9ef8db891d0b715b21773ccb6d950364de37f10feafb96116042d13b843a420a"
+  },
+  "yora_wet_appleparsnip_390g": {
+    "productId": "p_168",
+    "sha256": "3a91cf464e990d5f3edc660b13171d359d05fa8e59b008243fa7c698f0be71f8"
   }
 }
