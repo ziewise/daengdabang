@@ -930,5 +930,9 @@
   "rs_jsk_1000001341": {
     "productId": "p_471",
     "sha256": "6012644b7d7a680f2898b2d061e852229c03777f66911e346bb520f1f4043c36"
+  },
+  "aff_donut_original_brown": {
+    "productId": "p_269",
+    "sha256": "e03c4e649a1b27a12cf1c518f2a2a689d838e8a7e2a40cf02985ecc1047b4693"
   }
 }

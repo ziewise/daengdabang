@@ -260,7 +260,58 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "a1476a7fd595880a09ac37c45e5113f902210e38"
   },
-  "aff_donut_original_brown": null,
+  "aff_donut_original_brown": {
+    "video": "/images/products/catalog/aff_donut_original_brown/videos/e03c4e649a1b27a12cf1c518f2a2a689d838e8a7e2a40cf02985ecc1047b4693/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "a1259d5fdb88ef1bacbebc256ef4d4ac",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a1259d5fdb88ef1bacbebc256ef4d4ac",
+      "reviewId": "49909f2bf14df98bc1a5741dc991501f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e03c4e649a1b27a12cf1c518f2a2a689d838e8a7e2a40cf02985ecc1047b4693",
+      "seconds": 4,
+      "source": {
+        "no": 269,
+        "folder": "aff_donut_original_brown",
+        "name": "아페토 일체형 오리지널 도넛방석 브라운 M L XL",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_original_brown/aff_donut_original_brown.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637646939",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_original_brown/details/2.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/3.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/4.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/5.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/6.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/7.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/8.webp",
+          "/images/products/catalog/aff_donut_original_brown/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "030bf5bd2bafd4d3643b2ac2503b386b",
+        "sha256": "e03c4e649a1b27a12cf1c518f2a2a689d838e8a7e2a40cf02985ecc1047b4693"
+      },
+      "scopeId": "c74a4532bbb35d41ed31bdf531641754ad92056b3c3412486faaf96505d9e783",
+      "scopeRegistrationSha256": "9a369ad3561efc8bfcec31e85eb4099c921997cbe2f88017b9b1517cf08b7d78",
+      "aiEvidenceSha256": "a438c2a31eccedf59d8d15adf0fe52d6b0a67434203f4e8aba208cda5cb59874",
+      "receiptSha256": "809bf720befa2fc3ca6e249266dce47f1712d00d51bc33edbc9d1e3151c0815c",
+      "eligibilitySha256": "e6cdc7c40df85298923c1c3d03d46aa394690db1a9852a068d9d535aa92645b6",
+      "evidenceManifestSha256": "7cce06b8ff74b17812706f56761f37c37f254f4d66cd3d4576306d7dd7095d56"
+    },
+    "videoReviewSha256": "1c15b0911003b6fedfa7152de4b20643a51b748c2b83cdc860b239cef935f0c0",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "9ed01784d87512e5ff799e94baf1e608b91a3cc8"
+  },
   "aff_donut_original_gray": {
     "video": "/images/products/catalog/aff_donut_original_gray/videos/6f0c25b026f785a7e9d0f22eb200f32bb9708a474c173d611db84525d9bb57a2/hover.mp4",
     "videoProvider": "ziewcraft",
