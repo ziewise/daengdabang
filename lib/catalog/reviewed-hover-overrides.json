@@ -471,15 +471,212 @@
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
   "aff_pad_l_20_1": {
-    "video": "/images/products/catalog/aff_pad_l_20_1/videos/hover.mp4",
+    "video": "/images/products/catalog/aff_pad_l_20_1/videos/9f8549ba6096aabedecfe680b43c421cbb63c9337ed41853c62bf05a3da0af18/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "4f87d470844b7541e73578beec0b1050",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4f87d470844b7541e73578beec0b1050",
+      "reviewId": "0840875939f903de2cd77f4b994aac27",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "9f8549ba6096aabedecfe680b43c421cbb63c9337ed41853c62bf05a3da0af18",
+      "seconds": 4,
+      "source": {
+        "no": 260,
+        "folder": "aff_pad_l_20_1",
+        "name": "아페토 패드 대형 20매 1개",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_pad_l_20_1/aff_pad_l_20_1.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655096415",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_pad_l_20_1/details/2.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/3.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/4.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/5.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/6.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/7.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/8.webp",
+          "/images/products/catalog/aff_pad_l_20_1/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "276c7339a5181346c6f5a365f9d6b458",
+        "sha256": "9f8549ba6096aabedecfe680b43c421cbb63c9337ed41853c62bf05a3da0af18"
+      },
+      "scopeId": "b4df2896aa08c3789d53473defb3d9c1e21d1444949eca513b93434a3184bf9e",
+      "scopeRegistrationSha256": "6d66f2ba460c67445307b16071b1a7f78c6e03d94ddc56dcffc4f2230cd2e040",
+      "aiEvidenceSha256": "52d0a952113ee9a718ae26fa411b50e475cdfd27dbcf6538a671817ce344efca",
+      "receiptSha256": "338c89e94ab0c9a010be37ca47c03f1b0a59eac2d043b5b293b61089ddca9e60",
+      "eligibilitySha256": "4bf58327791b2d2c11ae6c3120892cc8f564ed056de5093239ad31057efd5f53",
+      "evidenceManifestSha256": "818b3b45a99f05eceb06a809f27fb6ad68e1e3513a321e9e649928fc8d6329ab"
+    },
+    "videoReviewSha256": "3770d0579368744cecff87897d1b2e09ea1f462aef6252ccdad2abd8a87852a8",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-bde78ccfc5e2"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
-  "aff_pad_l_20_6": null,
-  "aff_pad_s_50_1": null,
-  "aff_pad_s_50_6": null,
+  "aff_pad_l_20_6": {
+    "video": "/images/products/catalog/aff_pad_l_20_6/videos/ec1c2c139a31533f79f0421e8c5406711edf7dcfb589ef78722b837b34f9a422/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "1c9daa541d291b9d73283c9079c1d973",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1c9daa541d291b9d73283c9079c1d973",
+      "reviewId": "f06def0f0e92fc6fe310cac341d05b58",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ec1c2c139a31533f79f0421e8c5406711edf7dcfb589ef78722b837b34f9a422",
+      "seconds": 4,
+      "source": {
+        "no": 259,
+        "folder": "aff_pad_l_20_6",
+        "name": "아페토 패드 대형 20매 6개",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_pad_l_20_6/aff_pad_l_20_6.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655107245",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_pad_l_20_6/details/2.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/3.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/4.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/5.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/6.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/7.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/8.webp",
+          "/images/products/catalog/aff_pad_l_20_6/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9ee159a0d2ef3fb63e36cd0b88097753",
+        "sha256": "ec1c2c139a31533f79f0421e8c5406711edf7dcfb589ef78722b837b34f9a422"
+      },
+      "scopeId": "3fd80ef9739d14cc0bed97217f3351d4fba49a1e866ab4c80b84570566888b03",
+      "scopeRegistrationSha256": "a5b63a0ba4b1fafcd65a7e7c3ae5ce5beabdb670140d314dff5ac1ae4f3ab8e4",
+      "aiEvidenceSha256": "46260651e635df92ff93fb053a14427453a18f04cc5878365fa2b47a435c8ef4",
+      "receiptSha256": "eb7dcdc6519a59fe371abdb39c687397cf9229b63faeee4f72e97cff2be49888",
+      "eligibilitySha256": "97a917ff6685ac1bcea89483defbe074fd0bb4de3950b0c79f14e600e8f23b2f",
+      "evidenceManifestSha256": "6b073a0769f919a7e4feb91d1adbdcef6eb20bbedfca8e5880f46ac2629915e3"
+    },
+    "videoReviewSha256": "8928e6c758a63e085ec092562888247749fe68e69fad6bb7ec93f2274cbf17d6",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
+  },
+  "aff_pad_s_50_1": {
+    "video": "/images/products/catalog/aff_pad_s_50_1/videos/63c73bd22061d26c12d61e9c740cf3745d4b6cd8981b869096c1bd12e0d2b064/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "ca4917aea8e8e1a8a67d5d27962adfa2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ca4917aea8e8e1a8a67d5d27962adfa2",
+      "reviewId": "468e32d93665c9ffff4c1fc4bbdd86ae",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "63c73bd22061d26c12d61e9c740cf3745d4b6cd8981b869096c1bd12e0d2b064",
+      "seconds": 4,
+      "source": {
+        "no": 262,
+        "folder": "aff_pad_s_50_1",
+        "name": "아페토 패드 소형 50매 1개",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_pad_s_50_1/aff_pad_s_50_1.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655062219",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_pad_s_50_1/details/2.webp",
+          "/images/products/catalog/aff_pad_s_50_1/details/3.webp",
+          "/images/products/catalog/aff_pad_s_50_1/details/4.webp",
+          "/images/products/catalog/aff_pad_s_50_1/details/5.webp",
+          "/images/products/catalog/aff_pad_s_50_1/details/6.webp",
+          "/images/products/catalog/aff_pad_s_50_1/details/7.webp",
+          "/images/products/catalog/aff_pad_s_50_1/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "58c61f9da19d53fdfc402b762d70e25e",
+        "sha256": "63c73bd22061d26c12d61e9c740cf3745d4b6cd8981b869096c1bd12e0d2b064"
+      },
+      "scopeId": "768c778cf6ad1d0e53081f673d1f53f5e2a09440fbcf9fb52f9659b7dd759a23",
+      "scopeRegistrationSha256": "3298333c51affc3634b57764650583b1961cbeeb7da8af14dce53cf222395952",
+      "aiEvidenceSha256": "7dd3a96a8ceeb9e63cea4a98fc9157a44c2959b9f52a58011907460db45bf444",
+      "receiptSha256": "7992e42b8d38a6bb70a1c6e1aa6b9d6838fbd43e090323cc33d5b492eebe4265",
+      "eligibilitySha256": "b9389f7d1c75831e0dcc5b56d1465c4c1e86c723370fdbc77f7f47eb0a2f78f5",
+      "evidenceManifestSha256": "26d55162ba1e6bcc7cd642c001fcd31f77cb24db46ddc57110c9f70bfdc07716"
+    },
+    "videoReviewSha256": "19af196535219d4243cce1de249599ae650afd43ac2011ecc6ae5c4995c66eb8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
+  },
+  "aff_pad_s_50_6": {
+    "video": "/images/products/catalog/aff_pad_s_50_6/videos/3aca1de4995193b8171a463479b12d8910ee40d1cce4a9b1f5b7e7c3cb9ae21f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "ce477138e97edfdd675619be3abbacaa",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ce477138e97edfdd675619be3abbacaa",
+      "reviewId": "f05193d9682fa49c7f6b95187ccdf518",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3aca1de4995193b8171a463479b12d8910ee40d1cce4a9b1f5b7e7c3cb9ae21f",
+      "seconds": 4,
+      "source": {
+        "no": 261,
+        "folder": "aff_pad_s_50_6",
+        "name": "아페토 패드 소형 50매 6개",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_pad_s_50_6/aff_pad_s_50_6.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655081946",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_pad_s_50_6/details/2.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/3.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/4.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/5.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/6.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/7.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/8.webp",
+          "/images/products/catalog/aff_pad_s_50_6/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2d726bc3f3b95679761181a59d8d2f54",
+        "sha256": "3aca1de4995193b8171a463479b12d8910ee40d1cce4a9b1f5b7e7c3cb9ae21f"
+      },
+      "scopeId": "8aa066a5b6a851e9917fc77e8160e2096f42df9a41035055aad7e973fc46a361",
+      "scopeRegistrationSha256": "e27518d0475d44d1d3d3b1373c0b034bb57a5a3a5828f7e6ea747b291bc33ffe",
+      "aiEvidenceSha256": "6fc5de96f3a75a6c7996a0d7ac832df60a2643da84cc89596caeb0e89d6c6002",
+      "receiptSha256": "73757f8a2c7f8bddb87ca098b24bad4b770f2b76e9efee9fb41ea49735201bb6",
+      "eligibilitySha256": "e0b500f66450c1fe4bc79000f671ba91ccd6d0747ac19a0b021c91c610008244",
+      "evidenceManifestSha256": "24e5716abd4be836d1fe15854839a55d4655022982fef1ce6d87e84f4163c0c2"
+    },
+    "videoReviewSha256": "ec5676968a3302888811babff92064c47109b6101807531de346ce109d2778b8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
+  },
   "aff_santa_pocket": {
     "video": "/images/products/catalog/aff_santa_pocket/videos/52e30faedc0e92c817f636274fe420e9392247e384732793ae868a4664dc0b5e/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3779,25 +3976,150 @@
     "videoDeliveryCommit": "786a3d002dcfe4366c10c27d57f4473b6bf61932"
   },
   "perity_broccoli_shampoo_refill_500ml": {
-    "video": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/videos/cf56989142884ac11a996fb979c4121587a23f8958cb97148753c0ab7a9ad858/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "84047ba290bb45685a8e9574db980fdf",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "84047ba290bb45685a8e9574db980fdf",
+      "reviewId": "ba8e591e4f5db9c2ab39310b00b81b7b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "cf56989142884ac11a996fb979c4121587a23f8958cb97148753c0ab7a9ad858",
+      "seconds": 4,
+      "source": {
+        "no": 202,
+        "folder": "perity_broccoli_shampoo_refill_500ml",
+        "name": "페리티_제주 브로콜리 릴리프 펫 샴푸 리필 500ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/perity_broccoli_shampoo_refill_500ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848953886",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/details/2.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/details/3.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "20c813accb3cf9737109252956289b87",
+        "sha256": "cf56989142884ac11a996fb979c4121587a23f8958cb97148753c0ab7a9ad858"
+      },
+      "scopeId": "c34649fd0b73e6943e9c379f25c81a4d1a4de4536fc929064db7967f2375c223",
+      "scopeRegistrationSha256": "55bb27d69f472285bd8a83fae85d05bd9a700d6963778debf6448fe0d16644a2",
+      "aiEvidenceSha256": "6f9a22f527fb61dad5c81ba7bf7a38df32144f2ce7336ac4e76b7e31b227b354",
+      "receiptSha256": "31e6b5b0d8b065dfadc7a2556798a03307772e54cf3339cac30d181cf3f3a5c1",
+      "eligibilitySha256": "06decf0e23fffdaa8df829dda717985a9e95e1f93b87df8d8f43cf98206aeabc",
+      "evidenceManifestSha256": "283e0ad5c1b1f04f644cf0f4fcac1965bfbfca3057cb61b7e5e8f634adecdb9d"
+    },
+    "videoReviewSha256": "f13c7fd8c84687bddac07be2c2f2adb56655d1d5873a663c605044474596d45c",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-2edeb49cf744"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
   "perity_broccoli_shampoo_set_750ml": {
-    "video": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/videos/f9a4d66ea6d67cb42db176f649db4b9621e7bcd7c0646869cb7c96cebeddcf83/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "efd97c286152cb63974ddf11f5e11a30",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "efd97c286152cb63974ddf11f5e11a30",
+      "reviewId": "ea1bc8246432d38bfbc7a796370e3150",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f9a4d66ea6d67cb42db176f649db4b9621e7bcd7c0646869cb7c96cebeddcf83",
+      "seconds": 4,
+      "source": {
+        "no": 201,
+        "folder": "perity_broccoli_shampoo_set_750ml",
+        "name": "페리티_제주 브로콜리 릴리프 펫 샴푸 SET 750ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/perity_broccoli_shampoo_set_750ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848958220",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/2.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/3.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/4.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/5.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/6.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "913bfbc8ff2fd60f7b98e3177f94031b",
+        "sha256": "f9a4d66ea6d67cb42db176f649db4b9621e7bcd7c0646869cb7c96cebeddcf83"
+      },
+      "scopeId": "f0ea75eca2e4303835fa857e75b397bd6cf46dd4074dce158416d3f33bfe00e7",
+      "scopeRegistrationSha256": "e1a2401d30f481ace93f2ff793a32d7a83d24f78294c1e79dd463fb2b882b1ee",
+      "aiEvidenceSha256": "7f1d8d01f83f1c979967e8790df0b1cc67b4e960ca7555bdc909a5dda4690ee7",
+      "receiptSha256": "953d1df1cb58b6d9c6e2ffbfefd0839320448f556c764572529d1bf2a5b8a095",
+      "eligibilitySha256": "08fe02f57c448c1f83632b2a4a21749c9906bc02ab1e856d35d31e6703381210",
+      "evidenceManifestSha256": "5e94e3be1e61c7a6b157bd0503c4f46abf5e6f959b566c0c6f4e4f9338275257"
+    },
+    "videoReviewSha256": "1c5d78033d27495c84f2401faea5dffb1b6c35d685fcd974755c9bc667ecfa0a",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-3ac5a3aea83d"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
   "perity_carrot_mist": {
-    "video": "/images/products/catalog/perity_carrot_mist/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_carrot_mist/videos/5ef46b58365214d6088f1a1f98454cbc16da979b30ace5f82080ebc95b7d1e96/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "e4766a4df45436ebf3659b75d21fff27",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e4766a4df45436ebf3659b75d21fff27",
+      "reviewId": "2d2374d31ffbf2324ce3f7e734261f1c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5ef46b58365214d6088f1a1f98454cbc16da979b30ace5f82080ebc95b7d1e96",
+      "seconds": 4,
+      "source": {
+        "no": 208,
+        "folder": "perity_carrot_mist",
+        "name": "페리티_제주 당근 볼류밍 펫 미스트",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_carrot_mist/perity_carrot_mist.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848873235",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_carrot_mist/details/2.webp",
+          "/images/products/catalog/perity_carrot_mist/details/3.webp",
+          "/images/products/catalog/perity_carrot_mist/details/4.webp",
+          "/images/products/catalog/perity_carrot_mist/details/5.webp",
+          "/images/products/catalog/perity_carrot_mist/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "835c84217a7fed9a7cdde518e1bd3d72",
+        "sha256": "5ef46b58365214d6088f1a1f98454cbc16da979b30ace5f82080ebc95b7d1e96"
+      },
+      "scopeId": "563a4f2f1ecd1659b428060f550d2cb4f9dfb4cef526e855fe3f3fea7f0ec7d2",
+      "scopeRegistrationSha256": "465044414356bc9d10835bbb1e1bf02a04bd9df313da9720b37fbf83efcbf742",
+      "aiEvidenceSha256": "a2101f6399cef381fb6149c0a83491f41ccbddf92021399f93ea7830d1b5f128",
+      "receiptSha256": "81d00c790a3a71257af7d9d85391f0387928413e28272ba97a818569caab2960",
+      "eligibilitySha256": "3829cea94469c6cbd1d9653521195773a2032224e80a94f4bdc161ca9667ed61",
+      "evidenceManifestSha256": "a53c0d24a65157a3e6fe33086d9af3f3d72cf851aeacbf112dbd2a345448ddb5"
+    },
+    "videoReviewSha256": "a7df0edd450454d546970cac151999c1e39a4613e28fd75ea2c4811fdd599b21",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-eec636b9d88a"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
   "perity_carrot_shampoo_250ml": {
     "video": "/images/products/catalog/perity_carrot_shampoo_250ml/videos/hover.mp4",
@@ -3856,11 +4178,51 @@
     "videoDeliveryCommit": "66f42a541445223f14c5dea2b8b5a093e5588b4c"
   },
   "perity_carrot_shampoo_set_750ml": {
-    "video": "/images/products/catalog/perity_carrot_shampoo_set_750ml/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_carrot_shampoo_set_750ml/videos/ab7ea6699de488fc63904a5cf4950b5287d466f45e839d769fa97912c64d1878/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "e5ee17555678b4713b46761273e77d60",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e5ee17555678b4713b46761273e77d60",
+      "reviewId": "c5e2f7181957b1916e5922bdabb34467",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ab7ea6699de488fc63904a5cf4950b5287d466f45e839d769fa97912c64d1878",
+      "seconds": 4,
+      "source": {
+        "no": 204,
+        "folder": "perity_carrot_shampoo_set_750ml",
+        "name": "페리티_제주 당근 볼류밍 펫 샴푸 SET 750ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_carrot_shampoo_set_750ml/perity_carrot_shampoo_set_750ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848933362",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_carrot_shampoo_set_750ml/details/2.webp",
+          "/images/products/catalog/perity_carrot_shampoo_set_750ml/details/3.webp",
+          "/images/products/catalog/perity_carrot_shampoo_set_750ml/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2366fb65a3535dfabc762e85e8ff6f5d",
+        "sha256": "ab7ea6699de488fc63904a5cf4950b5287d466f45e839d769fa97912c64d1878"
+      },
+      "scopeId": "bad5d09cd2aebbd13b6caed94ec27f6ac9a1262c5cf08564463315c5692431f3",
+      "scopeRegistrationSha256": "ac3cbcbcacbb1685257e781f0a912f5c7f896feee1339178ed6d076960321a22",
+      "aiEvidenceSha256": "315f33dcebee841facdd7ebe88605fbfc12512eda9ff50b8856fad2eb4b72cd4",
+      "receiptSha256": "68819df28ce92dff5e4eb1c153ed9f62ed2b1751d64c3eb5b0bc8a11c8d2ef68",
+      "eligibilitySha256": "d7a5a2e5d5788655959258f70b8b53d6c90553750011cefa216877e47541f628",
+      "evidenceManifestSha256": "0245edc2a501de3e270be2b64f11765a2acf5fb2cab9e0caf1dc13fa0a833235"
+    },
+    "videoReviewSha256": "e627c0988f65bce656e83288760c6a82bc327a81e583ecc9dd9d0ff82252fa17",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-8b4dc9d16f74"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
   "polkadog_codchips_99g": {
     "video": "/images/products/catalog/polkadog_codchips_99g/videos/df2b2b4ed4ebb19c76b280e3f05b2ffd66c3a5c84c164879af12411d827b8494/hover.mp4",
@@ -15145,5 +15507,55 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
+  },
+  "aff_stepbystep_2tier": {
+    "video": "/images/products/catalog/aff_stepbystep_2tier/videos/af1c0a4e047ccb25b3dca0010e476a900ea626b63f3f8081b509e0153634270a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "b304d2ae875b2f8d1ec0cd7b61ca5da1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b304d2ae875b2f8d1ec0cd7b61ca5da1",
+      "reviewId": "b60cd1aca9c1de27ea353f3720d6226c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "af1c0a4e047ccb25b3dca0010e476a900ea626b63f3f8081b509e0153634270a",
+      "seconds": 4,
+      "source": {
+        "no": 264,
+        "folder": "aff_stepbystep_2tier",
+        "name": "아페토 커버분리형 스텝 바이 스텝 2단 3컬러 핑크 그레이 베이지",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_stepbystep_2tier/aff_stepbystep_2tier.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7638327793",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_stepbystep_2tier/details/2.webp",
+          "/images/products/catalog/aff_stepbystep_2tier/details/3.webp",
+          "/images/products/catalog/aff_stepbystep_2tier/details/4.webp",
+          "/images/products/catalog/aff_stepbystep_2tier/details/5.webp",
+          "/images/products/catalog/aff_stepbystep_2tier/details/6.webp",
+          "/images/products/catalog/aff_stepbystep_2tier/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f0a53baae46390a224093d3d64c1ce88",
+        "sha256": "af1c0a4e047ccb25b3dca0010e476a900ea626b63f3f8081b509e0153634270a"
+      },
+      "scopeId": "809d6f4272ba637e73a668e58236dad0100e2f5fe91b47c76cd407d7a801cf4b",
+      "scopeRegistrationSha256": "91fa919277f1e9328197609706f561bd5b26ef428c4d6c8c728320ec45a31880",
+      "aiEvidenceSha256": "5c2ff791519900abe84d7e6446b4ef48e9bb66515e13fb02ce35ddc5b3348508",
+      "receiptSha256": "ea46bd95b8fc2b83e128cceb2b145ca92da4f8893cb60a53b3f86fd60ba8ad7d",
+      "eligibilitySha256": "5e491a912bea8fab5d1c16affd54200397b95b51a4b1c8b7ea1c7e47503b826a",
+      "evidenceManifestSha256": "025caa71791e5b0c7fcb7bf6d426360365c072296d4ae2815fc6636adeb4f940"
+    },
+    "videoReviewSha256": "d6b6db72e1adf2ec983b8ac98f764aea9dfd48ff079bf43e1ac19aaed7484cd3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   }
 }

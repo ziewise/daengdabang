@@ -970,5 +970,41 @@
   "rw_highlands_sleepingbag_l": {
     "productId": "p_339",
     "sha256": "5e7b8300bcc6cff3baa146136cdcb7165f925e50faf914af25f8265ca82ac949"
+  },
+  "aff_stepbystep_2tier": {
+    "productId": "p_264",
+    "sha256": "af1c0a4e047ccb25b3dca0010e476a900ea626b63f3f8081b509e0153634270a"
+  },
+  "aff_pad_l_20_6": {
+    "productId": "p_259",
+    "sha256": "ec1c2c139a31533f79f0421e8c5406711edf7dcfb589ef78722b837b34f9a422"
+  },
+  "aff_pad_s_50_6": {
+    "productId": "p_261",
+    "sha256": "3aca1de4995193b8171a463479b12d8910ee40d1cce4a9b1f5b7e7c3cb9ae21f"
+  },
+  "aff_pad_l_20_1": {
+    "productId": "p_260",
+    "sha256": "9f8549ba6096aabedecfe680b43c421cbb63c9337ed41853c62bf05a3da0af18"
+  },
+  "aff_pad_s_50_1": {
+    "productId": "p_262",
+    "sha256": "63c73bd22061d26c12d61e9c740cf3745d4b6cd8981b869096c1bd12e0d2b064"
+  },
+  "perity_broccoli_shampoo_set_750ml": {
+    "productId": "p_201",
+    "sha256": "f9a4d66ea6d67cb42db176f649db4b9621e7bcd7c0646869cb7c96cebeddcf83"
+  },
+  "perity_broccoli_shampoo_refill_500ml": {
+    "productId": "p_202",
+    "sha256": "cf56989142884ac11a996fb979c4121587a23f8958cb97148753c0ab7a9ad858"
+  },
+  "perity_carrot_shampoo_set_750ml": {
+    "productId": "p_204",
+    "sha256": "ab7ea6699de488fc63904a5cf4950b5287d466f45e839d769fa97912c64d1878"
+  },
+  "perity_carrot_mist": {
+    "productId": "p_208",
+    "sha256": "5ef46b58365214d6088f1a1f98454cbc16da979b30ace5f82080ebc95b7d1e96"
   }
 }
