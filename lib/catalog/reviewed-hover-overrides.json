@@ -1,6 +1,55 @@
 {
   "aff_carseat_donutkit_l": null,
-  "aff_carseat_sugarwing": null,
+  "aff_carseat_sugarwing": {
+    "video": "/images/products/catalog/aff_carseat_sugarwing/videos/1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "06c032127535bdfac2006732ecfeb530",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "06c032127535bdfac2006732ecfeb530",
+      "reviewId": "10d4eabae22cff725c08b8a025a93557",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c",
+      "seconds": 4,
+      "source": {
+        "no": 258,
+        "folder": "aff_carseat_sugarwing",
+        "name": "아페토 펫카시트 슈가윙 2컬러 2사이즈 핑크 그레이 SL XL",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_carseat_sugarwing/aff_carseat_sugarwing.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655193910",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_carseat_sugarwing/details/2.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/3.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/4.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/5.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/6.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8a4fbbe5e84e5134cd19b9c8a7f0ca95",
+        "sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c"
+      },
+      "scopeId": "8b2feddd6b2fe83df8ce51c6bc50c08ca988759c2cfe124e5c41cf39b5382603",
+      "scopeRegistrationSha256": "e926d02a34a1ac6e1d3270ab016870fa3a753171fe6688cf3a42e74bdd9cfe8c",
+      "aiEvidenceSha256": "07f5a7047a5df4d6a05ba097870449020f1c417552e47951fcf01c8efa99d972",
+      "receiptSha256": "197760181e3dd46e5f58a523b2937f315bd91b1cef615da739cac52e6186e8f2",
+      "eligibilitySha256": "31a955d76a1abe7aae5af58aa5c603c6f54226f935f53cc4e5109e5da54aed3d",
+      "evidenceManifestSha256": "f05d9e122a88608926ea57a2f9c2fc6e645bd85902623d894f4ebf1efc08a9f5"
+    },
+    "videoReviewSha256": "11354086544ead32869154719be202a64603ec8b54c0fcfc1a037c20302ce985",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "efde75c0140f83b5462d7684eaba333752e93090"
+  },
   "aff_donut_chewisty_l_pinkgray": null,
   "aff_donut_luxury_l": {
     "video": "/images/products/catalog/aff_donut_luxury_l/videos/c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52/hover.mp4",
@@ -9579,7 +9628,53 @@
     "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
   },
   "yora_largebreed_12kg": null,
-  "yora_lightsenior_12kg": null,
+  "yora_lightsenior_12kg": {
+    "video": "/images/products/catalog/yora_lightsenior_12kg/videos/0e195e92805b1b063182b3e6a35811843dd37a259f66deaa223f0011161b1309/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "85f13d9288be012b2eca2b93a8295afa",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "85f13d9288be012b2eca2b93a8295afa",
+      "reviewId": "c347266980bf951320422892ab69ab65",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0e195e92805b1b063182b3e6a35811843dd37a259f66deaa223f0011161b1309",
+      "seconds": 4,
+      "source": {
+        "no": 169,
+        "folder": "yora_lightsenior_12kg",
+        "name": "요라 라이트 시니어 12kg 저칼로리 다이어트 곤충 사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_lightsenior_12kg/yora_lightsenior_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923168931",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_lightsenior_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_lightsenior_12kg/details/2.webp",
+          "/images/products/catalog/yora_lightsenior_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "dbfd1821879147fe8e3094b70806da58",
+        "sha256": "0e195e92805b1b063182b3e6a35811843dd37a259f66deaa223f0011161b1309"
+      },
+      "scopeId": "5ff923d669e3ea1f0d42f452e0cd043522db15fa2196f369781bede4e19b538c",
+      "scopeRegistrationSha256": "8e1cfb5d027f1312d8566488a6435584ae87e5bda5060a1c790cd32d620606a8",
+      "aiEvidenceSha256": "fae34682f75ff2015dd97c34564c21a23131a1212cf0a582ccc33a601b006afa",
+      "receiptSha256": "0c998df3c6a924bcac963c8abb36ebee5d503d80ba8a6d464325396da0ac11bc",
+      "eligibilitySha256": "75b43be65fa3375e723e8093d503343bc12374c23a5985bb0dca6e797c93bcfe",
+      "evidenceManifestSha256": "bd625b83dfa1d24d912f90d3219c4daeb4fd057bffabcee14654f5eb99e247a0"
+    },
+    "videoReviewSha256": "bcfac0168f961cbaed5c931ff5c82571f8a6af6eae68c023a105e2a8025e32a5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "efde75c0140f83b5462d7684eaba333752e93090"
+  },
   "yora_lightsenior_6kg": {
     "video": "/images/products/catalog/yora_lightsenior_6kg/videos/31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be/hover.mp4",
     "videoProvider": "ziewcraft",

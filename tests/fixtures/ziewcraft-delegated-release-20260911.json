@@ -886,5 +886,13 @@
   "yora_puppy_12kg": {
     "productId": "p_165",
     "sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be"
+  },
+  "yora_lightsenior_12kg": {
+    "productId": "p_169",
+    "sha256": "0e195e92805b1b063182b3e6a35811843dd37a259f66deaa223f0011161b1309"
+  },
+  "aff_carseat_sugarwing": {
+    "productId": "p_258",
+    "sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c"
   }
 }
