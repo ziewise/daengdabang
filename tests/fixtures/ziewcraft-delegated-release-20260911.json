@@ -910,5 +910,25 @@
   "aff_donut_original_gray": {
     "productId": "p_271",
     "sha256": "6f0c25b026f785a7e9d0f22eb200f32bb9708a474c173d611db84525d9bb57a2"
+  },
+  "iby_backpack_fc2106": {
+    "productId": "p_249",
+    "sha256": "7398e5c2b6140b61ba9390c48cafb6410525e34be5d1ef2d4bc0f111089d6ae6"
+  },
+  "yora_largebreed_12kg": {
+    "productId": "p_172",
+    "sha256": "b07a914b06c277b62d0099c98cbe3043b71dfd5822b3339455d4b55436bf2cda"
+  },
+  "aff_carseat_donutkit_l": {
+    "productId": "p_257",
+    "sha256": "a8752418c1790675a9167a5aa492e74d9e8184c9209628bb9f119005ce0ae6aa"
+  },
+  "yora_allbreed_2.5kg": {
+    "productId": "p_177",
+    "sha256": "6b9d4311a72224f2f2988eb944610f72abf4e0738efd4bf5708d275c6a2da523"
+  },
+  "rs_jsk_1000001341": {
+    "productId": "p_471",
+    "sha256": "6012644b7d7a680f2898b2d061e852229c03777f66911e346bb520f1f4043c36"
   }
 }

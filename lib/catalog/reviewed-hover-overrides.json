@@ -1,5 +1,54 @@
 {
-  "aff_carseat_donutkit_l": null,
+  "aff_carseat_donutkit_l": {
+    "video": "/images/products/catalog/aff_carseat_donutkit_l/videos/a8752418c1790675a9167a5aa492e74d9e8184c9209628bb9f119005ce0ae6aa/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "759448cb758a566421b3ed9d7064e555",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "759448cb758a566421b3ed9d7064e555",
+      "reviewId": "3d2e860d977bcd173f4a70b9ebd40b98",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a8752418c1790675a9167a5aa492e74d9e8184c9209628bb9f119005ce0ae6aa",
+      "seconds": 4,
+      "source": {
+        "no": 257,
+        "folder": "aff_carseat_donutkit_l",
+        "name": "아페토 펫카시트 도넛킷 3컬러 L사이즈 와인 카키 그레이",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_carseat_donutkit_l/aff_carseat_donutkit_l.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655277074",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_carseat_donutkit_l/details/2.webp",
+          "/images/products/catalog/aff_carseat_donutkit_l/details/3.webp",
+          "/images/products/catalog/aff_carseat_donutkit_l/details/4.webp",
+          "/images/products/catalog/aff_carseat_donutkit_l/details/5.webp",
+          "/images/products/catalog/aff_carseat_donutkit_l/details/6.webp",
+          "/images/products/catalog/aff_carseat_donutkit_l/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ebbaf1d982ed1bc08cacdb6070b8f5d8",
+        "sha256": "a8752418c1790675a9167a5aa492e74d9e8184c9209628bb9f119005ce0ae6aa"
+      },
+      "scopeId": "5b35508df5ca8afd98078f17aab8bc2cc948a4b27e487072e4eeacb225b7767c",
+      "scopeRegistrationSha256": "1ef07a3bda8c6e73eb3770381a66352d72767111c16155be581cb052d4cae501",
+      "aiEvidenceSha256": "6c2248b18a912917c15a3fa3b3845fcade0563d5a155a6f338bcd7f4e2718198",
+      "receiptSha256": "c1705f6ca6ef70028e372e23d9929d0da456474e790400ad10c59cb2fea5def3",
+      "eligibilitySha256": "7fc25e69bd92bafe8a02d02aa65833da47870c2e750e8009aed7bf5e573ec66d",
+      "evidenceManifestSha256": "cd9332f5340933678b5ff4a1677225f5d4b571ae576b53c2c96d714435cbcac0"
+    },
+    "videoReviewSha256": "f2c7e500f7e65b06229912ab4fddfe3abf0af6e037ae6addf269e1febc47cb7b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
+  },
   "aff_carseat_sugarwing": {
     "video": "/images/products/catalog/aff_carseat_sugarwing/videos/1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1683,11 +1732,54 @@
   "iby_backpack_fc1705": null,
   "iby_backpack_fc1752": null,
   "iby_backpack_fc2106": {
-    "video": "/images/products/catalog/iby_backpack_fc2106/videos/hover.mp4",
+    "video": "/images/products/catalog/iby_backpack_fc2106/videos/7398e5c2b6140b61ba9390c48cafb6410525e34be5d1ef2d4bc0f111089d6ae6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "5737ba543dba13bd58c6c6bd1d8c2e7b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5737ba543dba13bd58c6c6bd1d8c2e7b",
+      "reviewId": "a523841e2e83f37f9f50dcb3637b09cf",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7398e5c2b6140b61ba9390c48cafb6410525e34be5d1ef2d4bc0f111089d6ae6",
+      "seconds": 4,
+      "source": {
+        "no": 249,
+        "folder": "iby_backpack_fc2106",
+        "name": "이비야야 울트라라이트백팩2.0 FC2106",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_backpack_fc2106/iby_backpack_fc2106.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7662459394",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_backpack_fc2106/details/official-visual-01.webp",
+          "/images/products/catalog/iby_backpack_fc2106/details/3.webp",
+          "/images/products/catalog/iby_backpack_fc2106/details/4.webp",
+          "/images/products/catalog/iby_backpack_fc2106/details/5.webp",
+          "/images/products/catalog/iby_backpack_fc2106/details/6.webp",
+          "/images/products/catalog/iby_backpack_fc2106/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "daa82f7850efdddab14ce134034adc7c",
+        "sha256": "7398e5c2b6140b61ba9390c48cafb6410525e34be5d1ef2d4bc0f111089d6ae6"
+      },
+      "scopeId": "7238936119c585c536bc93a3873050caf6ea0083ea4ce68875b34999dd77936e",
+      "scopeRegistrationSha256": "531ba801f38e303940ce3dcfc5eae8df3d44ed3adea0c0a5f0b214001b2448f9",
+      "aiEvidenceSha256": "963e8dea819d2dea386d5be5cbe400e2b8aa88b9564165c6322bf991286ec244",
+      "receiptSha256": "b00b680d21f715d0ac9f9ea9f5f96e47f5ad422337849f600cb559bf2717ce11",
+      "eligibilitySha256": "e6229eb8175161e1449af2040524d92feeef33223e764a77aa728f5db44857d3",
+      "evidenceManifestSha256": "d4d08040d503f7b105fa9adf3f69befbd7e5a09321ad63cd46e8013005f25aed"
+    },
+    "videoReviewSha256": "422a8bcd4dd21ed5200b18a3f8bd61b0b18c6b22cd198e2c99b62e85664f02ef",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-103eb5c5fc80"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
   },
   "iby_backpack_fc2131": {
     "video": "/images/products/catalog/iby_backpack_fc2131/videos/e2258d21cd7277d12dec62565741008b1f469e845b8eab6eb463b68820d4d948/hover.mp4",
@@ -9631,7 +9723,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "1ccb21b9b63eb26ee4dc3a7b1a9e8f3374488c89"
   },
-  "yora_allbreed_2.5kg": null,
+  "yora_allbreed_2.5kg": {
+    "video": "/images/products/catalog/yora_allbreed_2.5kg/videos/6b9d4311a72224f2f2988eb944610f72abf4e0738efd4bf5708d275c6a2da523/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "0dd86b884a53a160665c85f87e4ef05f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0dd86b884a53a160665c85f87e4ef05f",
+      "reviewId": "9503b1840dc89e76d2c52980d00015ac",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6b9d4311a72224f2f2988eb944610f72abf4e0738efd4bf5708d275c6a2da523",
+      "seconds": 4,
+      "source": {
+        "no": 177,
+        "folder": "yora_allbreed_2.5kg",
+        "name": "요라 올브리드 2.5kg 전견종 성견용 (250G X 10개 소포장)",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_allbreed_2.5kg/yora_allbreed_2.5kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923025686",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_allbreed_2.5kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_allbreed_2.5kg/details/2.webp",
+          "/images/products/catalog/yora_allbreed_2.5kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "fb2cf8e810c0ca12c64d5d58cc019bed",
+        "sha256": "6b9d4311a72224f2f2988eb944610f72abf4e0738efd4bf5708d275c6a2da523"
+      },
+      "scopeId": "5af7a1a8787b7b6cf982a749a1e2c549e9473de19aed6c9813e70c5f86d246e6",
+      "scopeRegistrationSha256": "027c4af1bd435e8fda4725daace3b6772ba932c0dddb639718dd6f1df44c03a3",
+      "aiEvidenceSha256": "be63cd3652e1d58680fa7c68fbed8b10924e817fa763a9a89539707039f3aa43",
+      "receiptSha256": "71818a2a1a20c2d5c38d6ead1939f514db2faa4492014e7daae980159b86c2e1",
+      "eligibilitySha256": "a160f7d55f4c1dae333840c45839cca7cd347d42f8181e7f6f813bdade7f17c2",
+      "evidenceManifestSha256": "7b04ee894c8d1b1132a433f936565f0fdf9b617f00451c645b6fd08a53d109be"
+    },
+    "videoReviewSha256": "951cad5bc4d8f65cb82066d444cc9d579da7578d07befe9057f17497299403c1",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
+  },
   "yora_allbreed_6kg": {
     "video": "/images/products/catalog/yora_allbreed_6kg/videos/b3aac8ef9525ec4245533cbfc362633161334fca8328d53acabef8643f07fdc4/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -9826,7 +9964,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
   },
-  "yora_largebreed_12kg": null,
+  "yora_largebreed_12kg": {
+    "video": "/images/products/catalog/yora_largebreed_12kg/videos/b07a914b06c277b62d0099c98cbe3043b71dfd5822b3339455d4b55436bf2cda/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "1fb2d24b5d6128ff54787a6a4b0aeef2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1fb2d24b5d6128ff54787a6a4b0aeef2",
+      "reviewId": "2036296544a6eebb55e3bac27908c38c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b07a914b06c277b62d0099c98cbe3043b71dfd5822b3339455d4b55436bf2cda",
+      "seconds": 4,
+      "source": {
+        "no": 172,
+        "folder": "yora_largebreed_12kg",
+        "name": "요라 사료 YORA 라지브리드 12kg 인섹트 저알러지 눈물 강아지 곤충",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_largebreed_12kg/yora_largebreed_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923152579",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_largebreed_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_largebreed_12kg/details/2.webp",
+          "/images/products/catalog/yora_largebreed_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "24e87a32f4ffd9bdfd9bbd207dccee92",
+        "sha256": "b07a914b06c277b62d0099c98cbe3043b71dfd5822b3339455d4b55436bf2cda"
+      },
+      "scopeId": "57ae8232b06b621c606d0e56f4dcdf50778491595881e194b20472db9322623b",
+      "scopeRegistrationSha256": "f470f21e29a073d380ff20bbb2d02d34ec9b13384c14b82533dd8a354bd91fd7",
+      "aiEvidenceSha256": "9da92381fad73a6f8fbeba6d956215ac7cf205f71b873c7aaa92c9118a860299",
+      "receiptSha256": "cc5dad578dc0ff405fc92bc2d7fcb06b5296f5426a01b556d7d510615fac51f8",
+      "eligibilitySha256": "b6602626d4b7b1479af8c7103fc13689439097bb6fb3150426c0782ea7883939",
+      "evidenceManifestSha256": "8c15b89a199400da5dd5b2e1a6ed8ef4e8d0b6fda48fc71742455ecd10cd7b78"
+    },
+    "videoReviewSha256": "d1a713f414693e7bddc4f4ee0bf67b6ff2dcf276f61834ba8e14a02009bdcab2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
+  },
   "yora_lightsenior_12kg": {
     "video": "/images/products/catalog/yora_lightsenior_12kg/videos/0e195e92805b1b063182b3e6a35811843dd37a259f66deaa223f0011161b1309/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -14460,5 +14644,62 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4f08e42390eafdfc6cbc8b96a9bb3936e09045f3"
+  },
+  "rs_jsk_1000001341": {
+    "video": "/images/products/catalog/rs_jsk_1000001341/videos/6012644b7d7a680f2898b2d061e852229c03777f66911e346bb520f1f4043c36/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "74096d437b400bce235221dd4db4c481",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "74096d437b400bce235221dd4db4c481",
+      "reviewId": "7bbed1e95e9e58a5ccb900d63830dcf2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6012644b7d7a680f2898b2d061e852229c03777f66911e346bb520f1f4043c36",
+      "seconds": 8,
+      "source": {
+        "no": 471,
+        "folder": "rs_jsk_1000001341",
+        "name": "렉스스펙스 V2 포레스트 그린 한정판 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_047.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001341",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_113.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_287.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_33.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_459.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_522.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001341/image/detail/1000001341_detail_646.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260829/1c0e7f3990341370bd45a4b83fda3510_131138.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260829/413f8a7e808e7d35f1cc47c657f93f81_131159.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260602/b431616335dc0acbd034b164f436ee63_164624.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260602/efac9b4945580699e8b60c644b9b43dd_164640.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260602/63c5bfafd15770bf16a5cffa663b8ef7_164701.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6536b5e84980d90c7b736a5904b8cf4b",
+        "sha256": "6012644b7d7a680f2898b2d061e852229c03777f66911e346bb520f1f4043c36"
+      },
+      "scopeId": "9f7b5a26070fbb9d67011d52c5368cd1eb3c7dcce9499016ef7a1501f8c841d9",
+      "scopeRegistrationSha256": "80299cc87c17e6ba7de6b1d7a3befac3d18aa41229e208fc4bd1273e77820d94",
+      "aiEvidenceSha256": "e24265db2edbbc0ff00ea24bfa8fbf586e000d4e89006c9a07c39b03fc26363e",
+      "receiptSha256": "14cae1c030d49aa1add002cd3d16348af9d36070a97f328aca02f2dc66f3a44c",
+      "eligibilitySha256": "d5409185aba6ee6ef7c7ede7252003254b1fa434f6e73c1d8bb54f8e4ad36a76",
+      "evidenceManifestSha256": "60041fdeb587e7eb53415747a553f37ffed4914a6323967c681802bdb431ad88"
+    },
+    "videoReviewSha256": "d3560701bd68824b1ea36a838a0df003c3fb377c3367fab71263c21aad27586b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
   }
 }
