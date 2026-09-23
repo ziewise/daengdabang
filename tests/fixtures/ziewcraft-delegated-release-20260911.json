@@ -870,5 +870,21 @@
   "iby_bed_fb2292": {
     "productId": "p_241",
     "sha256": "fdc163d5d58fb50f342e612f807018e2d6f514c822387b94fa36fde194eaa8c4"
+  },
+  "iby_bed_fb2011": {
+    "productId": "p_240",
+    "sha256": "3a6cc8bfe5f60ffd33861e3da2da81ad17907c53a0f8d3f56796d69c20948827"
+  },
+  "yora_dreamer_treat": {
+    "productId": "p_135",
+    "sha256": "1b5bec5aab5c165652ce40de1cc58b3c5deb21a2459e186dd5e0f66d7dd848f1"
+  },
+  "yora_smallbreed_6kg": {
+    "productId": "p_163",
+    "sha256": "7582b8bb296cf1ccd270e80ee6355321be3fd468535f8c936eecdcfe1878d2e7"
+  },
+  "yora_puppy_12kg": {
+    "productId": "p_165",
+    "sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be"
   }
 }

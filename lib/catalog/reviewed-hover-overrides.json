@@ -1539,11 +1539,51 @@
     "videoJobId": "hover-photo-20260903-a11da77aa287"
   },
   "iby_bed_fb2011": {
-    "video": "/images/products/catalog/iby_bed_fb2011/videos/hover.mp4",
+    "video": "/images/products/catalog/iby_bed_fb2011/videos/3a6cc8bfe5f60ffd33861e3da2da81ad17907c53a0f8d3f56796d69c20948827/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "97edf9db29440395d35f0ff51b99114e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "97edf9db29440395d35f0ff51b99114e",
+      "reviewId": "77371f9e9a6cb33cd319ddf93aec52c5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3a6cc8bfe5f60ffd33861e3da2da81ad17907c53a0f8d3f56796d69c20948827",
+      "seconds": 4,
+      "source": {
+        "no": 240,
+        "folder": "iby_bed_fb2011",
+        "name": "이비야야 스너글러 펫누크방석 FB2011 2컬러 복숭아 더스티블루",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_bed_fb2011/iby_bed_fb2011.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7680903423",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_bed_fb2011/details/2.webp",
+          "/images/products/catalog/iby_bed_fb2011/details/3.webp",
+          "/images/products/catalog/iby_bed_fb2011/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3f5fac643ce22688836be89b01dbc779",
+        "sha256": "3a6cc8bfe5f60ffd33861e3da2da81ad17907c53a0f8d3f56796d69c20948827"
+      },
+      "scopeId": "e86ce140eb978feefe6264452f68c65e1a16554b847f703e47abc0d7c24714b4",
+      "scopeRegistrationSha256": "44fd96c852d88aa81eca436adbf83598cc9a05f5c3c9ecf466ec6c5e95b393a3",
+      "aiEvidenceSha256": "c145d229e428c10f5e6981fdfba17699ebb4bf91343e85e28ec3c41b99ba98e2",
+      "receiptSha256": "9806feff2ad55f3361201c4c43d21016828d4229d4c977f59d8914627320048d",
+      "eligibilitySha256": "2d9cc8ca8f55d4248114984d8ce0b016dfedc1c51ec046f3672eb117fba56cec",
+      "evidenceManifestSha256": "0de348a827473ad2dcbf48915e56529873e9128ff0a0f274cfb0df05a9a42b0f"
+    },
+    "videoReviewSha256": "2a0c395835252cfbe6baae9ffd94901b4dfa02495ef6cae8529b7eb4ad99f256",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-4d38bcd639f5"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
   },
   "iby_bed_fb2292": {
     "video": "/images/products/catalog/iby_bed_fb2292/videos/fdc163d5d58fb50f342e612f807018e2d6f514c822387b94fa36fde194eaa8c4/hover.mp4",
@@ -9485,7 +9525,59 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "84608e0080ab930cb94a98e2348075543fdb1fbf"
   },
-  "yora_dreamer_treat": null,
+  "yora_dreamer_treat": {
+    "video": "/images/products/catalog/yora_dreamer_treat/videos/1b5bec5aab5c165652ce40de1cc58b3c5deb21a2459e186dd5e0f66d7dd848f1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "aba6a34d695460ca6b9563db94fed0a3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "aba6a34d695460ca6b9563db94fed0a3",
+      "reviewId": "8a3dc18457326fa6b4971ab9fa2078fd",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1b5bec5aab5c165652ce40de1cc58b3c5deb21a2459e186dd5e0f66d7dd848f1",
+      "seconds": 4,
+      "source": {
+        "no": 135,
+        "folder": "yora_dreamer_treat",
+        "name": "요라 드리머 릴렉싱 허브 분리불안 숙면유도 반려견 인섹트간식 100g",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_dreamer_treat/yora_dreamer_treat.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182191076",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_dreamer_treat/details/2.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/3.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/4.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/5.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/6.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/7.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/8.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/9.webp",
+          "/images/products/catalog/yora_dreamer_treat/details/10.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c3a305f8694526b46900317ad37f4a7e",
+        "sha256": "1b5bec5aab5c165652ce40de1cc58b3c5deb21a2459e186dd5e0f66d7dd848f1"
+      },
+      "scopeId": "870b72ebfd3cb1e20978bcf273f4b429f4f959cef1f06d23aa368cfa1b3c615a",
+      "scopeRegistrationSha256": "12104212e3144dbe82e8120677a8aa01ee6eb91af49b06928538567b4e300454",
+      "aiEvidenceSha256": "07cd9422ba21015419e78bae972f94e1a4c39dd720aec1c5489cdb2abc69ee4a",
+      "receiptSha256": "1fe84437e4fb4592d0228a49c3ef8a6ff3c518dad965dc87fda848872c244a67",
+      "eligibilitySha256": "e6a5a8a07852cf015f7fbecde59fa07eeadec6d33f7e411e5662d55aaa42f87b",
+      "evidenceManifestSha256": "0701c30d1d60c280c228f3ead6e92d6484f6cbbfeef28ded286f911e28fcce94"
+    },
+    "videoReviewSha256": "75540c555c035655c6f3e934780b2d127e652fddf2bf6dc59a7604a91e74fe27",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
+  },
   "yora_largebreed_12kg": null,
   "yora_lightsenior_12kg": null,
   "yora_lightsenior_6kg": {
@@ -9535,7 +9627,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "43c5a0f9cd8811a680c232f8efbb48ff1d8662e6"
   },
-  "yora_puppy_12kg": null,
+  "yora_puppy_12kg": {
+    "video": "/images/products/catalog/yora_puppy_12kg/videos/1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "7d7b76e95acc029d6be77db6f453d9c1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7d7b76e95acc029d6be77db6f453d9c1",
+      "reviewId": "52dd122798ee1c06b90d3caaddfac68b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be",
+      "seconds": 4,
+      "source": {
+        "no": 165,
+        "folder": "yora_puppy_12kg",
+        "name": "요라 퍼피 12kg 동애등에 44% 곤충 사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_puppy_12kg/yora_puppy_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923198519",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_puppy_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_puppy_12kg/details/2.webp",
+          "/images/products/catalog/yora_puppy_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "cf330f4613c494fed2bb732323a1d564",
+        "sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be"
+      },
+      "scopeId": "909053699b33cb89db308088e1ca438a1996e314e597fd0fb213b0c5ea135a03",
+      "scopeRegistrationSha256": "5e8a245d3ac4566468c9be115da550d4ae054b223e25953b0cf5b6e8a7a24d56",
+      "aiEvidenceSha256": "924e0dc7539da1e8ea3408fb253ee584322f68937b5011400715010e89da3573",
+      "receiptSha256": "b160c7602f60de8da847abd92ea39117e9351c9885b6ef481191be74bd490333",
+      "eligibilitySha256": "6a900ff3e9256055ac37d7dc4a5e702dddf82285d714c8495fb65470ad5498e5",
+      "evidenceManifestSha256": "f8c8ba348400cadf3056231cf66305f7abf5b1060366ebcd9f37879089fa4e03"
+    },
+    "videoReviewSha256": "3340da2b516bc6c51900cd9fc4051138800626c7c126ef413b7d665f6ca63594",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
+  },
   "yora_puppy_2.5kg": null,
   "yora_reward_treat": {
     "video": "/images/products/catalog/yora_reward_treat/videos/a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3/hover.mp4",
@@ -9636,7 +9774,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "43c5a0f9cd8811a680c232f8efbb48ff1d8662e6"
   },
-  "yora_smallbreed_6kg": null,
+  "yora_smallbreed_6kg": {
+    "video": "/images/products/catalog/yora_smallbreed_6kg/videos/7582b8bb296cf1ccd270e80ee6355321be3fd468535f8c936eecdcfe1878d2e7/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "871b1a6ffcb1c1df548999993600c525",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "871b1a6ffcb1c1df548999993600c525",
+      "reviewId": "572ae9f53b2917dd6fcb880622ba02b6",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7582b8bb296cf1ccd270e80ee6355321be3fd468535f8c936eecdcfe1878d2e7",
+      "seconds": 4,
+      "source": {
+        "no": 163,
+        "folder": "yora_smallbreed_6kg",
+        "name": "요라 사료 YORA 스몰브리드 6kg 인섹트 저알러지 눈물예방 강아지 곤충 하이포알러제닉",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_smallbreed_6kg/yora_smallbreed_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923218266",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_smallbreed_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_smallbreed_6kg/details/2.webp",
+          "/images/products/catalog/yora_smallbreed_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "50ed686541f47bd10fd342715c6da84a",
+        "sha256": "7582b8bb296cf1ccd270e80ee6355321be3fd468535f8c936eecdcfe1878d2e7"
+      },
+      "scopeId": "96ee6853b4ffb8073f46316c0de80dbaf11b67f22d5ddcffcbb5b03d345730ec",
+      "scopeRegistrationSha256": "9c52e21dc788e7c87683f2dd985d30a3da07125939a1978558de1697e5d914ae",
+      "aiEvidenceSha256": "a60e51766da7487baa2547a238863887ab0c9a2212b5a2cdb8de02f391061c57",
+      "receiptSha256": "86a0ecdca48575e3c0989c8034e6137710a8f171f964554499a74c8cb4bf2ce0",
+      "eligibilitySha256": "bbc660db9bc9f152725c17709eaf554dc3bdbf35f9c8945ca018b12762c1f311",
+      "evidenceManifestSha256": "9be6e42b70f8f3287484dccc6964f9af19eb8f7b5c0e9eefb15c6fcc42083579"
+    },
+    "videoReviewSha256": "231517e97fb7c58c68a41fa0f5eefa03687fe31e682d1731c67cf30342f149c9",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
+  },
   "yora_stew_carrotpotato_390g": {
     "video": "/images/products/catalog/yora_stew_carrotpotato_390g/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
