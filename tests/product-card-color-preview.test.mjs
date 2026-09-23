@@ -11,6 +11,9 @@ const source = readFileSync(new URL("../components/products/ProductCard.tsx", im
 const compiled = ts.transpileModule(source, {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
 }).outputText;
+const hookCompiled = ts.transpileModule(readFileSync(new URL("../components/products/useProductVideo.ts", import.meta.url), "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+}).outputText;
 
 const nodes = value => {
     if (!value || typeof value !== "object") return [];
@@ -31,11 +34,17 @@ function card(overrides = {}) {
     };
     const state = [];
     let cursor = 0;
-    const video = { plays: 0, pauses: 0, currentTime: 3, play() { this.plays++; return Promise.resolve(); }, pause() { this.pauses++; } };
+    const refs = [];
+    let refCursor = 0;
+    const video = { plays: 0, pauses: 0, currentTime: 3, play() { this.plays++; this.onPlaying?.(); return Promise.resolve(); }, pause() { this.pauses++; } };
     const wished = [];
     const mocks = {
         react: {
-            useRef: () => ({ current: video }),
+            useRef: initial => {
+                const index = refCursor++;
+                return refs[index] ??= { current: index === 0 ? (product.video ? video : null) : initial };
+            },
+            useEffect: () => {},
             useState: initial => {
                 const index = cursor++;
                 if (!(index in state)) state[index] = initial;
@@ -57,13 +66,25 @@ function card(overrides = {}) {
         "@/lib/catalog/inventory": { productPurchaseState: () => ({ purchasable: true }), purchaseStateLabel: () => "" },
         "@/lib/catalog/live-inventory": { useLiveInventoryProduct: product => product },
     };
+    const hook = { exports: {} };
+    vm.runInNewContext(hookCompiled, {
+        module: hook, exports: hook.exports,
+        window: { matchMedia: () => ({ matches: false }) },
+        require: id => id === "react" ? mocks.react : { productVideoViewport: () => { throw new Error("Desktop fixture does not mount viewport effects"); } },
+    });
+    mocks["@/components/products/useProductVideo"] = hook.exports;
     const loaded = { exports: {} };
     vm.runInNewContext(compiled, { module: loaded, exports: loaded.exports, require: id => {
         assert.ok(Object.hasOwn(mocks, id), `Unexpected import ${id}`);
         return mocks[id];
     } });
     return {
-        render: () => { cursor = 0; return nodes(loaded.exports.default({ product })); },
+        render: () => {
+            cursor = 0; refCursor = 0;
+            const tree = nodes(loaded.exports.default({ product }));
+            video.onPlaying = tree.find(n => n.type === "video")?.props.onPlaying;
+            return tree;
+        },
         video, wished,
     };
 }
@@ -209,6 +230,29 @@ test("products without color options retain the existing image and do not acquir
     assert.equal(tree.some(n => n.type === "video"), false);
     media(tree).props.onMouseEnter();
     assert.equal(fixture.video.plays, 0);
+});
+
+test("re-entry waits for an in-flight reset seek before restarting the video", () => {
+    const fixture = card({ video: "/reviewed.mp4" });
+    const tree = fixture.render();
+    fixture.video.seeking = true;
+    media(tree).props.onMouseEnter();
+    assert.equal(fixture.video.plays, 0);
+    fixture.video.seeking = false;
+    tree.find(n => n.type === "video").props.onSeeked();
+    assert.equal(fixture.video.plays, 1);
+});
+
+test("a reset finishing after leaving the card does not restart playback", () => {
+    const fixture = card({ video: "/reviewed.mp4" });
+    const tree = fixture.render();
+    fixture.video.seeking = true;
+    media(tree).props.onMouseEnter();
+    media(tree).props.onMouseLeave();
+    fixture.video.seeking = false;
+    tree.find(n => n.type === "video").props.onSeeked();
+    assert.equal(fixture.video.plays, 0);
+    assert.match(thumbnail(fixture.render()).props.className, /opacity-100/);
 });
 
 test("same-image colors remain distinct and forward their own crop metadata", () => {

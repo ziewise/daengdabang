@@ -4,8 +4,8 @@
  * 사용처: 모든 페이지의 상품 카드 (메인 베스트/신상품, /products, /category, ...)
  *
  * 영상 호버:
- *   - p.video 있는 경우 mousemove 시 영상 페이드 인 + 자동 재생
- *   - 모바일(터치) → 이미지 탭으로 바로 상세 이동
+ *   - 데스크톱: 마우스 호버 시 영상 페이드 인 + 자동 재생
+ *   - 모바일: 스크롤 정지 후 보이는 영상 자동 재생, 탭하면 바로 상세 이동
  *   - 영상 없으면 정적 이미지만
  *
  * 영상 호버는 미래에 모든 상품이 영상 갖게 될 것을 전제로 일관 적용.
@@ -14,7 +14,7 @@
 "use client";
 import { reviewSellerLabel } from "@/lib/catalog/review-groups";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
@@ -25,6 +25,7 @@ import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 import ProductColorImage from "@/components/products/ProductColorImage";
+import { useProductVideo } from "@/components/products/useProductVideo";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 
@@ -65,8 +66,7 @@ export default function ProductCard({
     const thumbnail = selectedColor?.image || p.image;
 
     // ===== 영상 호버 로직 =====
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const [videoActive, setVideoActive] = useState(false);
+    const { videoRef, videoActive, activate, deactivate, previewColor, onPlaying, onSeeked, onError } = useProductVideo(p.video);
     const hasVideo = !!p.video;
     const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
         || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1"
@@ -74,20 +74,6 @@ export default function ProductCard({
         && p.raw.videoPlaybackMode === "once_hold_last_frame";
     const videoCaption = playOnce && p.folder === "hugo_icecream_salmon"
         ? (locale === "en" ? "Salmon flavour shown" : "연어 맛 사용 영상") : undefined;
-
-    const activate = () => {
-        if (!hasVideo) return;
-        setVideoActive(true);
-        videoRef.current?.play().catch(() => {});
-    };
-    const deactivate = () => {
-        if (!hasVideo) return;
-        setVideoActive(false);
-        const v = videoRef.current;
-        if (!v) return;
-        v.pause();
-        v.currentTime = 0;
-    };
 
     return (
         <article
@@ -132,6 +118,9 @@ export default function ProductCard({
                             loop={!playOnce}
                             playsInline
                             preload="metadata"
+                            onPlaying={onPlaying}
+                            onSeeked={onSeeked}
+                            onError={onError}
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />
                     )}
@@ -192,7 +181,7 @@ export default function ProductCard({
                                 aria-pressed={idx === colorIdx}
                                 title={color.name}
                                 onClick={() => {
-                                    deactivate();
+                                    previewColor();
                                     setColorIdx(current => current === idx ? null : idx);
                                 }}
                                 className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600"
