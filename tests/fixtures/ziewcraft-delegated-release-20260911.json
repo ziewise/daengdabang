@@ -838,5 +838,13 @@
   "rw_doubletrack_coupler": {
     "productId": "p_348",
     "sha256": "66c82f4ecf4e0a746f2da00ebab554ebeb548179f8871c40d7e6a5e369a4f69e"
+  },
+  "rs_jsk_1000001150": {
+    "productId": "p_423",
+    "sha256": "c934284ebb1b184817ce9714fcf8154473ab109fef5eb76cf79196e4b064b54a"
+  },
+  "rw_switchback_harness": {
+    "productId": "p_127",
+    "sha256": "6d17a69b007a43ebca8266c3bb8a33854cb0acea8ade80b02fdd1b5f1114ccc1"
   }
 }

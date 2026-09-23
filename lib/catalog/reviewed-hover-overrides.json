@@ -7212,7 +7212,64 @@
     }
   },
   "rw_swampcooler_zipvest_2": null,
-  "rw_switchback_harness": null,
+  "rw_switchback_harness": {
+    "video": "/images/products/catalog/rw_switchback_harness/videos/6d17a69b007a43ebca8266c3bb8a33854cb0acea8ade80b02fdd1b5f1114ccc1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "c6cc268d31e0cfe4391446303205615a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c6cc268d31e0cfe4391446303205615a",
+      "reviewId": "148e68f78e2bf56b7b64ab755fb0a07d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6d17a69b007a43ebca8266c3bb8a33854cb0acea8ade80b02fdd1b5f1114ccc1",
+      "seconds": 8,
+      "source": {
+        "no": 127,
+        "folder": "rw_switchback_harness",
+        "name": "러프웨어 스위치백 하네스(Switchbak™ Harness)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_096.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000767",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_158.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_254.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_379.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_422.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_525.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_677.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_726.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_814.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000767/image/detail/1000000767_detail_921.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220810/2021SS-Switchbak-Harness1_182629.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220314/2021SS-Switchbak-Harness2_234707.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220928/Switchbak-Harness3_122355.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220929/4f83738d1edfb0e581d173f0e5243da3_165054.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "065a0ffc4c609c2aed4ba8918be8800d",
+        "sha256": "6d17a69b007a43ebca8266c3bb8a33854cb0acea8ade80b02fdd1b5f1114ccc1"
+      },
+      "scopeId": "abb553f53f4730a912ab37108d4c62a7a04ade9c93634681ab8452187b357e48",
+      "scopeRegistrationSha256": "ac39d0b2d13777d3676ae042116dafc230d865eca9352b95614a286dc9451f6a",
+      "aiEvidenceSha256": "d03b458f16285f9bdc598332df686ec8071a90780d61e5ab635a251fe2f5ee34",
+      "receiptSha256": "2085c4b253cbf06bfdb1afede51a7f17253ba525bf99395a07942707c0a462a9",
+      "eligibilitySha256": "1730b65896f7a0b1c0b08daceae3b471f432928bab7afb0e7adc234bb806b668",
+      "evidenceManifestSha256": "a69ef607e6c69298ea2edf5039fa1f6d80ff344b9f06a294fc295b992e57ba06"
+    },
+    "videoReviewSha256": "160040832edc472e46d4ac50b61560ef4a3a17b80f041c00b56ee970cf18187a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "93d6eb7f86e73abe4692c00d2c82275f18582ec1"
+  },
   "rw_timberline_fuse_vest_26fw": {
     "video": "/images/products/catalog/rw_timberline_fuse_vest_26fw/videos/865ae5eb6b514fd1d214b610f788464a9bd388ed5e2be6664a3e4eea977b39f6/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -13593,5 +13650,57 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "5385c72c616fffb0b940037e6065014ff824efde"
+  },
+  "rs_jsk_1000001150": {
+    "video": "/images/products/catalog/rs_jsk_1000001150/videos/c934284ebb1b184817ce9714fcf8154473ab109fef5eb76cf79196e4b064b54a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "782acd6706542aff34a5f3137dfaa585",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "782acd6706542aff34a5f3137dfaa585",
+      "reviewId": "9c52c79e9bb517065ca11edd7ce574e7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c934284ebb1b184817ce9714fcf8154473ab109fef5eb76cf79196e4b064b54a",
+      "seconds": 8,
+      "source": {
+        "no": 423,
+        "folder": "rs_jsk_1000001150",
+        "name": "렉스스펙스 V2 코랄 리프 프레임 한정판 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001150/image/detail/1000001150_detail_064.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001150",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001150/image/detail/1000001150_detail_15.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230913/V2-Coral-Reef_1_121300.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230913/V2-Coral-Reef_2_122104.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_3_183055.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_051432.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_051448.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "76054c96d357ecd41b5bdac0018b28bf",
+        "sha256": "c934284ebb1b184817ce9714fcf8154473ab109fef5eb76cf79196e4b064b54a"
+      },
+      "scopeId": "6e5cb96d4bcb11bbde769577892222dfd2ede90636186ce9f5191a5acaae33e4",
+      "scopeRegistrationSha256": "682f61a32994e641353493ec00a85ced40de61760265dee7b60e0a35e2b75420",
+      "aiEvidenceSha256": "65be18c668088ce57b0618dbbaee3608b42cd841c8a8c2290d46fe71b5f5c682",
+      "receiptSha256": "b1dc8cafbde5af51f56fbb26e9c8d1769447f025e00d2a6f621d622ce79c8278",
+      "eligibilitySha256": "b3b264e330bb80d5a7c32dcc2d29c6b194909a9e69e62fc18afb1bf1b45c533d",
+      "evidenceManifestSha256": "55234f556ce5d799d4417a714cf67cad846ea65756ec2e80684db14a18c9b522"
+    },
+    "videoReviewSha256": "4f0c1507ea7a60a980100d2de9c60bebf01df55942e9973f5b437fb033f770aa",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "93d6eb7f86e73abe4692c00d2c82275f18582ec1"
   }
 }
