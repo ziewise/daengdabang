@@ -2648,11 +2648,54 @@
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
   "ot_bowl_foldable": {
-    "video": "/images/products/catalog/ot_bowl_foldable/videos/hover.mp4",
+    "video": "/images/products/catalog/ot_bowl_foldable/videos/5eb3f764edbf62b46f4e764cdda2860bf9abf16a2b1f5efb500d16ba922ec7c2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "c5124054d31fd3a8b97c3bb8e580a392",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c5124054d31fd3a8b97c3bb8e580a392",
+      "reviewId": "c2449c131b906d274b403539641fad0e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5eb3f764edbf62b46f4e764cdda2860bf9abf16a2b1f5efb500d16ba922ec7c2",
+      "seconds": 4,
+      "source": {
+        "no": 199,
+        "folder": "ot_bowl_foldable",
+        "name": "원티그리스 반려견 접이식 물그릇 식기 소형견 대형견 중형견 강아지 밥그릇",
+        "brandEn": "OneTigris",
+        "isFood": false,
+        "image": "/images/products/catalog/ot_bowl_foldable/ot_bowl_foldable.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8849173103",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ot_bowl_foldable/details/official-visual-01.webp",
+          "/images/products/catalog/ot_bowl_foldable/details/official-visual-02.webp",
+          "/images/products/catalog/ot_bowl_foldable/details/official-visual-03.webp",
+          "/images/products/catalog/ot_bowl_foldable/details/official-visual-04.webp",
+          "/images/products/catalog/ot_bowl_foldable/details/official-visual-05.webp",
+          "/images/products/catalog/ot_bowl_foldable/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9a525abb16c7b2c8465ad00b8a637a04",
+        "sha256": "5eb3f764edbf62b46f4e764cdda2860bf9abf16a2b1f5efb500d16ba922ec7c2"
+      },
+      "scopeId": "439e2d6efed0aa05a40ed7f15f994d7a1220a25545733fa4457580b3c3ff07e6",
+      "scopeRegistrationSha256": "2766d3cc28065c2b8eb20c1113f5ea4beed87cbf40f16b1f67091b449d704362",
+      "aiEvidenceSha256": "02bd8b74b101311258bf747af6a82a7fc2eec8d86206f7f326ddafe01674e726",
+      "receiptSha256": "63f8b9149346908acdd2ce0bdc94d547e4af01c8892c57b1f016cee12f9309c0",
+      "eligibilitySha256": "7f7e41fd7095c455945a901f7bbdcd1b8cdfbdbb10fa6753ed9f9d0846a3e884",
+      "evidenceManifestSha256": "bb8090862bbfd98a16a2a19526a4e648677e5188a83cc0f335645784e399c17c"
+    },
+    "videoReviewSha256": "7be5e9a2ea226e7c4ec1f2084433f93d7a44a5624fef4fd8ea229d403ca5b9c0",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-84ed4f96816f"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f08e42390eafdfc6cbc8b96a9bb3936e09045f3"
   },
   "ot_destroyer_harness": null,
   "ot_firewatcher_harness": null,
@@ -3577,11 +3620,54 @@
     "videoJobId": "hover-static72-20260903-1b0ac6a7378d"
   },
   "rs_lenslab_original": {
-    "video": "/images/products/catalog/rs_lenslab_original/videos/hover.mp4",
+    "video": "/images/products/catalog/rs_lenslab_original/videos/a7c5d3a8dc6a7b9892dcd2ca66469c0e2b134fb76c1237ff646a81d904f3edd8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "0df5dec1305b48817053f11ae65e0a9d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0df5dec1305b48817053f11ae65e0a9d",
+      "reviewId": "851d010f55e4473a9c9879eadf76dfb7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a7c5d3a8dc6a7b9892dcd2ca66469c0e2b134fb76c1237ff646a81d904f3edd8",
+      "seconds": 4,
+      "source": {
+        "no": 75,
+        "folder": "rs_lenslab_original",
+        "name": "렉스스펙스 렌즈랩 세트 (오리지널 전용)",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000919/image/detail/1000000919_detail_064.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000919",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000919/image/detail/1000000919_detail_141.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000919/image/detail/1000000919_detail_237.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000919/image/detail/1000000919_detail_343.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211126/Lens-Wraps-20211126_005853.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220930/7e021a9d8373a8dab6bccf775ccea914_151901.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9e5a2450a740121bc6ad86a03bb7e684",
+        "sha256": "a7c5d3a8dc6a7b9892dcd2ca66469c0e2b134fb76c1237ff646a81d904f3edd8"
+      },
+      "scopeId": "efe74a894ee07325732fa270555914d0bdce9d892c26fd075a4f4a30140535b8",
+      "scopeRegistrationSha256": "fbb3a50255cdae44dea52bb6369b9b8432dddc5553c8f94b3b925edc7297dbab",
+      "aiEvidenceSha256": "1e0c4a45329d5c2d9ca35328c3d52edf7ea556ef0e5c01484da4bc961100d0cc",
+      "receiptSha256": "360a7943bdce918d41d2de7d1b635e58d0e6d02124f9a686c4cee34c4cb26483",
+      "eligibilitySha256": "7b0383cf624fc19416760c0e674122c24c141bd55f217ab758fc8942f02e150d",
+      "evidenceManifestSha256": "28c08d86ffd6e632dcd7cfb9ed02651410c048164d354d3946e02b3d11802b6d"
+    },
+    "videoReviewSha256": "b59ef4971ebe67e2407c869a531c262bcbc6cc40ead495ebe5f387d0b9cc9ddd",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-d543688d2d62"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f08e42390eafdfc6cbc8b96a9bb3936e09045f3"
   },
   "rs_trailhead_collar": {
     "video": "/images/products/catalog/rs_trailhead_collar/videos/46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821/hover.mp4",
@@ -13751,5 +13837,55 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "93d6eb7f86e73abe4692c00d2c82275f18582ec1"
+  },
+  "rw_jsk_1000001211": {
+    "video": "/images/products/catalog/rw_jsk_1000001211/videos/6b7a1cb8e2240c15ffee7d7f29e4806383f88aeb756f289ddba0b5373c3c658b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "fcd0a3aac4134500970ae24f091f295a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "fcd0a3aac4134500970ae24f091f295a",
+      "reviewId": "b29a9c9f63c3a4b841934c20dfeb12e3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6b7a1cb8e2240c15ffee7d7f29e4806383f88aeb756f289ddba0b5373c3c658b",
+      "seconds": 4,
+      "source": {
+        "no": 439,
+        "folder": "rw_jsk_1000001211",
+        "name": "러프웨어 베이스캠프 반려견 베드 - S사이즈(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001211/image/detail/1000001211_detail_06.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001211",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001211/image/detail/1000001211_detail_197.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001211/image/detail/1000001211_detail_216.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/1f209b2cf141f55885a2a12fc4382c31_205000.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/02934b3b9c858aa8d07044e1fce1f19d_205000.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/396a6876838494473eb85b2e16e13b74_205001.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "25ff266ed84798d57a0b7e6ab3e326d2",
+        "sha256": "6b7a1cb8e2240c15ffee7d7f29e4806383f88aeb756f289ddba0b5373c3c658b"
+      },
+      "scopeId": "cdcc0b1af5b361f55bceb220859316d712c0bf1c46b0d3559cdf27d507086c36",
+      "scopeRegistrationSha256": "3f08bf9b9666392cc39e22db96e3dd5c4c67a7961af1bae4785073cf90bf5c5d",
+      "aiEvidenceSha256": "d37824bcd5ba61cd23ee746d10a09f3ca2ef7f679e6933d96bb81f998d1eeb29",
+      "receiptSha256": "760283d73e7fae443b353b66996b217112a61ec88bbd6ac44d52e6654fb78eb8",
+      "eligibilitySha256": "fc7480293f443696b512e62e309ff5b7507988aa75ecc7b7d7dd0c4b8ced4862",
+      "evidenceManifestSha256": "33878c0973707545d35e84d920683bab7ab8cb12fc80a040125b8b3db2c71c19"
+    },
+    "videoReviewSha256": "e6bd154f7bff03dae69d11abb07b254f1c81b21c5ec057519b4d992a4a8a0b01",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f08e42390eafdfc6cbc8b96a9bb3936e09045f3"
   }
 }

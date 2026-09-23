@@ -850,5 +850,17 @@
   "rw_everest_coat_25fw": {
     "productId": "p_23",
     "sha256": "52240ff6731c545843ccf4c2ef49b3745802021ac16f15ee2d3c8afa047a7fef"
+  },
+  "rw_jsk_1000001211": {
+    "productId": "p_439",
+    "sha256": "6b7a1cb8e2240c15ffee7d7f29e4806383f88aeb756f289ddba0b5373c3c658b"
+  },
+  "ot_bowl_foldable": {
+    "productId": "p_199",
+    "sha256": "5eb3f764edbf62b46f4e764cdda2860bf9abf16a2b1f5efb500d16ba922ec7c2"
+  },
+  "rs_lenslab_original": {
+    "productId": "p_75",
+    "sha256": "a7c5d3a8dc6a7b9892dcd2ca66469c0e2b134fb76c1237ff646a81d904f3edd8"
   }
 }
