@@ -954,5 +954,21 @@
   "yora_wet_appleparsnip_390g": {
     "productId": "p_168",
     "sha256": "3a91cf464e990d5f3edc660b13171d359d05fa8e59b008243fa7c698f0be71f8"
+  },
+  "id_treat_trout": {
+    "productId": "p_321",
+    "sha256": "d3a08262d6fb95d61de4ef81697a104399c2a976349db33a1971057e74495952"
+  },
+  "yora_puppy_2.5kg": {
+    "productId": "p_166",
+    "sha256": "dd363ab5d5aa1deef66649256dc040234253928944bb5fec77ead50e98e08cd8"
+  },
+  "rs_brachy_black": {
+    "productId": "p_84",
+    "sha256": "fe9ae13b04eaddbdf533a877e357a17324e74058013f6a554e2418eb696bd120"
+  },
+  "rw_highlands_sleepingbag_l": {
+    "productId": "p_339",
+    "sha256": "5e7b8300bcc6cff3baa146136cdcb7165f925e50faf914af25f8265ca82ac949"
   }
 }

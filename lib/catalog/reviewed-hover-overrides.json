@@ -2277,11 +2277,50 @@
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
   "id_treat_trout": {
-    "video": "/images/products/catalog/id_treat_trout/videos/hover.mp4",
+    "video": "/images/products/catalog/id_treat_trout/videos/d3a08262d6fb95d61de4ef81697a104399c2a976349db33a1971057e74495952/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "a430a1147af200b75c7a5a8f40562681",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a430a1147af200b75c7a5a8f40562681",
+      "reviewId": "2e55c54555bff1bd420a4c024dfd5a58",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d3a08262d6fb95d61de4ef81697a104399c2a976349db33a1971057e74495952",
+      "seconds": 4,
+      "source": {
+        "no": 321,
+        "folder": "id_treat_trout",
+        "name": "아임디퍼런트 동결건조 트릿 송어 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_trout/id_treat_trout.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6736150667",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_trout/details/2.webp",
+          "/images/products/catalog/id_treat_trout/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f1969d98a69389444826f35d15b4e65a",
+        "sha256": "d3a08262d6fb95d61de4ef81697a104399c2a976349db33a1971057e74495952"
+      },
+      "scopeId": "b71a8916016371d3e303c263d36c37de710629bea602479dbb25f1bbb05c220c",
+      "scopeRegistrationSha256": "844d61efaac99ff13dd943b05185f80a3bafc3ff7cc60e183b29902b6879ae59",
+      "aiEvidenceSha256": "be61b79689ef1de17f55b6b7a7a5ea1f0867a96c5128b4038ecb8c2506994c8c",
+      "receiptSha256": "24484852056ba289bd87f9dd474cd9ffcbe536cb88346f9b539fc910e671ac5c",
+      "eligibilitySha256": "c83bdf662f74ecd79cb73b2d1fff93436ffcf452f12bc6656545c07744ebfdf2",
+      "evidenceManifestSha256": "0a868ee0076fed1309737f13ae51de12eccfde0fdd6168b1abcd1b62905c0820"
+    },
+    "videoReviewSha256": "f863ba8f328bdfa0d13dd873fef17d04c4ac7245edc4b2bbcdc086f2a39fad1c",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-52eb866efe8e"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0104197b36a02b75cdde43aeb987c4109de659b6"
   },
   "id_treat_turkey": {
     "video": "/images/products/catalog/id_treat_turkey/videos/413ad31d0ec2ed204f93cddeb35b25c6e11331127c3c307f49f1b2369d2b3f78/hover.mp4",
@@ -4069,7 +4108,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "405356d071e3408e911eb3defe5fb77b546a0557"
   },
-  "rs_brachy_black": null,
+  "rs_brachy_black": {
+    "video": "/images/products/catalog/rs_brachy_black/videos/fe9ae13b04eaddbdf533a877e357a17324e74058013f6a554e2418eb696bd120/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "21256577be6f80c19f067fcbc6154ffa",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "21256577be6f80c19f067fcbc6154ffa",
+      "reviewId": "a5eb90afd8313a77b7148d1b99ba2c49",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fe9ae13b04eaddbdf533a877e357a17324e74058013f6a554e2418eb696bd120",
+      "seconds": 8,
+      "source": {
+        "no": 84,
+        "folder": "rs_brachy_black",
+        "name": "렉스스펙스 단두종 전용 블랙 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001124/image/detail/1000001124_detail_048.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001124",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001124/image/detail/1000001124_detail_138.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001124/image/detail/1000001124_detail_238.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Small-Wide_Black-2023_153932.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Small-Wide_Black2-2023_153946.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "689be4e73a014a7953f2ae178fd54c46",
+        "sha256": "fe9ae13b04eaddbdf533a877e357a17324e74058013f6a554e2418eb696bd120"
+      },
+      "scopeId": "e06e8c0cea5af971812bb4275b05fe759ba833eb73bca3f8b7698e11e68ee912",
+      "scopeRegistrationSha256": "14fd6a95237ac984e10f2d2419038876f75dd5c9e0e17daa2ab7455718be6e7f",
+      "aiEvidenceSha256": "67876a07066627aeba97febc1dd3c994aeb3d1dde643dca3496d5559b8e87c96",
+      "receiptSha256": "b37b5f140755cc9fb7012e64ec80fde5f4992c71d37f2f5d88ebd93d6a51735d",
+      "eligibilitySha256": "2710741f7112b599724f8b93bcccb1e33dc5268df1c12d7e9a58ec069a1eabac",
+      "evidenceManifestSha256": "39eaceb035f8c0a2e3c854bd6928c0fc5076a9d042b307019daf7c811a33b9b2"
+    },
+    "videoReviewSha256": "1ee0e75d0db686188f6a88dce6e2723993c8d60271fd826b8deef762d4a3c0c8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0104197b36a02b75cdde43aeb987c4109de659b6"
+  },
   "rs_brachy_lens": {
     "video": "/images/products/catalog/rs_brachy_lens/videos/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -6580,11 +6668,61 @@
     }
   },
   "rw_highlands_sleepingbag_l": {
-    "video": "/images/products/catalog/rw_highlands_sleepingbag_l/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_highlands_sleepingbag_l/videos/5e7b8300bcc6cff3baa146136cdcb7165f925e50faf914af25f8265ca82ac949/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "1046ac49eee7a91d87810e3a75bb235f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1046ac49eee7a91d87810e3a75bb235f",
+      "reviewId": "c7d129d49ce70ad5b6aae7ba0e016d77",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5e7b8300bcc6cff3baa146136cdcb7165f925e50faf914af25f8265ca82ac949",
+      "seconds": 4,
+      "source": {
+        "no": 339,
+        "folder": "rw_highlands_sleepingbag_l",
+        "name": "러프웨어 하이랜드 반려견 침낭(Highlands™ Sleeping Bag) - L사이즈",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_084.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000945",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_150.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_222.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_353.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_425.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_586.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_641.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_764.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_861.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000945/image/detail/1000000450_detail_954.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000945/b6bc1667d225ed000249f2f5220b7e1b.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000945/7351e8c4823f0805d1ee4f0ca64c2670.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000945/ca947f86aa818d2805dea69410d69675.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "150e4973e7062a0c1d41a7698e529a80",
+        "sha256": "5e7b8300bcc6cff3baa146136cdcb7165f925e50faf914af25f8265ca82ac949"
+      },
+      "scopeId": "2888c2154c39135fd002489a3f556d5d9d70f72ee67b3fa3b578368d11242684",
+      "scopeRegistrationSha256": "3c733ee3e9992dc08dc85cf7c0e0703e250d82d92ecad696b64b8ddd69ac8577",
+      "aiEvidenceSha256": "2186b92c9cdff62c7a73017015bc6f7c7d03317c384e96f8c7b2a51f08f6477a",
+      "receiptSha256": "2ddabd426d6cb11cb3335237eaf4703eb523214a010d5d53a230b8b562486617",
+      "eligibilitySha256": "b84480288ca7b2dbff79380df363b2f9e6032c2d8f7428ad84a5ce9c7e9334db",
+      "evidenceManifestSha256": "e12bddc8ca65c576e2e6f9ec2d5088b52c9ec9ece577a555d5d7d637ddc1206d"
+    },
+    "videoReviewSha256": "85045c09e40e371f2a8927c3a66fe3a51160dde178b48f626273a45b4bc7d94a",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-54540a405442"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0104197b36a02b75cdde43aeb987c4109de659b6"
   },
   "rw_highlands_sleepingbag_m": {
     "video": "/images/products/catalog/rw_highlands_sleepingbag_m/videos/d03a97a40e7f5d8674c3607dcb56e4e699259faf6736dfdda23713aff0a5c1ba/hover.mp4",
@@ -10249,7 +10387,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
   },
-  "yora_puppy_2.5kg": null,
+  "yora_puppy_2.5kg": {
+    "video": "/images/products/catalog/yora_puppy_2.5kg/videos/dd363ab5d5aa1deef66649256dc040234253928944bb5fec77ead50e98e08cd8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "2219178db57763f68f4a31b1917deac4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "2219178db57763f68f4a31b1917deac4",
+      "reviewId": "edb0f72449f88e877e6d55e91fc13b5f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "dd363ab5d5aa1deef66649256dc040234253928944bb5fec77ead50e98e08cd8",
+      "seconds": 4,
+      "source": {
+        "no": 166,
+        "folder": "yora_puppy_2.5kg",
+        "name": "요라 사료 YORA 퍼피 2.5kg 인섹트 저알러지 곤충 강아지 동에등에",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_puppy_2.5kg/yora_puppy_2.5kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923194439",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_puppy_2.5kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_puppy_2.5kg/details/2.webp",
+          "/images/products/catalog/yora_puppy_2.5kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2ac558e4218aaf85b92be015e05379a0",
+        "sha256": "dd363ab5d5aa1deef66649256dc040234253928944bb5fec77ead50e98e08cd8"
+      },
+      "scopeId": "77dc4847015c96e3ad0d3cf4780736f1f58b4e73e0aa5203338455a4495da8b5",
+      "scopeRegistrationSha256": "fe4e99563a35f8741245685da6bc5ad021c5b8d8e1260796ff31e1670467a43e",
+      "aiEvidenceSha256": "03c3bdee5fc27982995857b50f26a5ca834cdb1e69c5f67fbd65248429825530",
+      "receiptSha256": "75dde8606ee771a36f7ee6961e2bb303f46da5c0cfee9a6c621f1d286795420d",
+      "eligibilitySha256": "f6d7d11e1241c732b09f221f0459ad682835c907646c53f659aefe0de4d25811",
+      "evidenceManifestSha256": "09957251429f2e5a1c508cd8e3087f32afcdac161e0f2723d1fd14e2ef584d9c"
+    },
+    "videoReviewSha256": "ca2a067b56354f23092d35fa604433092da0bfc96ea820c85b4dd5e7575b6c45",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0104197b36a02b75cdde43aeb987c4109de659b6"
+  },
   "yora_reward_treat": {
     "video": "/images/products/catalog/yora_reward_treat/videos/a60c0a3ab11e61fe60c4f8c5c5e0dd3255c6b3c635d74346a9bc1361c14eaff3/hover.mp4",
     "videoProvider": "ziewcraft",
