@@ -6,6 +6,7 @@ import { productVideoViewport } from "@/lib/product-video-viewport";
 export function useProductVideo(src: string | undefined) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const requested = useRef(false);
+    const retryRewind = useRef(false);
     const registration = useRef<ReturnType<ReturnType<typeof productVideoViewport>["register"]> | null>(null);
     const [videoActive, setVideoActive] = useState(false);
 
@@ -27,6 +28,7 @@ export function useProductVideo(src: string | undefined) {
         requested.current = false;
         const video = videoRef.current;
         if (video) {
+            retryRewind.current = true;
             video.pause();
             video.currentTime = 0;
         }
@@ -61,7 +63,20 @@ export function useProductVideo(src: string | undefined) {
             if (requested.current) setVideoActive(true);
             else videoRef.current?.pause();
         },
-        onSeeked: () => { if (requested.current) play(); },
+        onSeeked: () => {
+            const video = videoRef.current;
+            if (!video) return;
+            // WebKit can finish a pause-time seek at its old decoder position.
+            // Retry that rewind once after the decoder has settled.
+            if (retryRewind.current) {
+                retryRewind.current = false;
+                if (video.currentTime > 0.05) {
+                    video.currentTime = 0;
+                    return;
+                }
+            }
+            if (requested.current) play();
+        },
         onError: () => setVideoActive(false),
     };
 }

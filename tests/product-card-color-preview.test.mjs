@@ -255,6 +255,35 @@ test("a reset finishing after leaving the card does not restart playback", () =>
     assert.match(thumbnail(fixture.render()).props.className, /opacity-100/);
 });
 
+test("a pause-time seek that lands at the old frame retries once before re-entry", () => {
+    const fixture = card({ video: "/reviewed.mp4" });
+    const tree = fixture.render();
+    media(tree).props.onMouseLeave();
+    fixture.video.seeking = true;
+    media(tree).props.onMouseEnter();
+    fixture.video.seeking = false;
+    fixture.video.currentTime = 1.55;
+    tree.find(n => n.type === "video").props.onSeeked();
+    assert.equal(fixture.video.currentTime, 0);
+    assert.equal(fixture.video.plays, 0);
+    tree.find(n => n.type === "video").props.onSeeked();
+    assert.equal(fixture.video.plays, 1);
+});
+
+test("rewind correction is bounded and never loops on an unsupported seek", () => {
+    const fixture = card({ video: "/reviewed.mp4" });
+    const tree = fixture.render();
+    media(tree).props.onMouseLeave();
+    const seeked = tree.find(n => n.type === "video").props.onSeeked;
+    fixture.video.currentTime = 1.55;
+    seeked();
+    assert.equal(fixture.video.currentTime, 0);
+    fixture.video.currentTime = 1.55;
+    seeked();
+    assert.equal(fixture.video.currentTime, 1.55);
+    assert.equal(fixture.video.plays, 0);
+});
+
 test("same-image colors remain distinct and forward their own crop metadata", () => {
     const colors = [
         { name: "Blue", image: "/both.jpg", chip: "/both.jpg", imageWidth: 500, imageHeight: 500, imageRegion: { x: 0, y: 0, width: 1, height: 0.5 } },
