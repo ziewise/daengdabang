@@ -894,5 +894,21 @@
   "aff_carseat_sugarwing": {
     "productId": "p_258",
     "sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c"
+  },
+  "aff_donut_chewisty_l_pinkgray": {
+    "productId": "p_126",
+    "sha256": "fbfd049ee144c221d7129b6f1c95e59f8b1a173838b657732ca90c174153b62f"
+  },
+  "aff_santa_pocket": {
+    "productId": "p_265",
+    "sha256": "52e30faedc0e92c817f636274fe420e9392247e384732793ae868a4664dc0b5e"
+  },
+  "rw_basecamp_bed_l": {
+    "productId": "p_345",
+    "sha256": "eb8636167544bb28edaae2705e8069d87a32dc16e813671c9abe3b31825451d8"
+  },
+  "aff_donut_original_gray": {
+    "productId": "p_271",
+    "sha256": "6f0c25b026f785a7e9d0f22eb200f32bb9708a474c173d611db84525d9bb57a2"
   }
 }

@@ -50,7 +50,62 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "efde75c0140f83b5462d7684eaba333752e93090"
   },
-  "aff_donut_chewisty_l_pinkgray": null,
+  "aff_donut_chewisty_l_pinkgray": {
+    "video": "/images/products/catalog/aff_donut_chewisty_l_pinkgray/videos/fbfd049ee144c221d7129b6f1c95e59f8b1a173838b657732ca90c174153b62f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "f05d7baee6c618f991f4f1ce9aaa7e0a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f05d7baee6c618f991f4f1ce9aaa7e0a",
+      "reviewId": "3f422b6a43a258fe32b06e4969597641",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fbfd049ee144c221d7129b6f1c95e59f8b1a173838b657732ca90c174153b62f",
+      "seconds": 4,
+      "source": {
+        "no": 126,
+        "folder": "aff_donut_chewisty_l_pinkgray",
+        "name": "아페토 오리지널 츄이스티 도넛방석 L (핑크그레이)",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_chewisty_l_pinkgray/aff_donut_chewisty_l_pinkgray.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10317701486",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/2.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/3.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/4.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/5.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/6.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/7.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/8.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/9.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/10.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/11.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/12.webp",
+          "/images/products/catalog/aff_donut_chewisty_l_pinkgray/details/13.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c578754c9399b5b0186083cfbfd060bd",
+        "sha256": "fbfd049ee144c221d7129b6f1c95e59f8b1a173838b657732ca90c174153b62f"
+      },
+      "scopeId": "c1ea32110432564a3e19f73ab5d3c5f43690497211c321c77e5bca68f1e37e76",
+      "scopeRegistrationSha256": "2490d1758477b135d2e2fc7295da1acb7966fa7877d6d619b5a287d717e37a06",
+      "aiEvidenceSha256": "d4843f94c093236c1d34d9c1459b806633a4dcf6de838a7ae259168f24fe307c",
+      "receiptSha256": "9f540f21971fcc2bb08e72d8a570359fa905077412236f1ae0712aad3ee4b6c1",
+      "eligibilitySha256": "84e3c76c458207a984a3018683b3994378ec1fe91bd42d2f9d03d7564f77afda",
+      "evidenceManifestSha256": "70408088447a1621f0d81fbabfac2e757ee3ed2cc71fecdfbf4765306cfd95de"
+    },
+    "videoReviewSha256": "2f3b4bcb5f2f2e317d4b65ab26ac9eb49a86cfc5f2b9b970e4e9e4d8211bbd9e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "99069fc4e2cac7d1a8439269991ccfdee95a0240"
+  },
   "aff_donut_luxury_l": {
     "video": "/images/products/catalog/aff_donut_luxury_l/videos/c8f662eb84eb326b9c6e5e07c5017f70ed101635274bea2c9669abf8e26c8f52/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -157,7 +212,57 @@
     "videoDeliveryCommit": "a1476a7fd595880a09ac37c45e5113f902210e38"
   },
   "aff_donut_original_brown": null,
-  "aff_donut_original_gray": null,
+  "aff_donut_original_gray": {
+    "video": "/images/products/catalog/aff_donut_original_gray/videos/6f0c25b026f785a7e9d0f22eb200f32bb9708a474c173d611db84525d9bb57a2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "d85e2649e6802e3511ba52608ba9b896",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d85e2649e6802e3511ba52608ba9b896",
+      "reviewId": "79d9d40aaa7225d05150ca47d4619d86",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6f0c25b026f785a7e9d0f22eb200f32bb9708a474c173d611db84525d9bb57a2",
+      "seconds": 4,
+      "source": {
+        "no": 271,
+        "folder": "aff_donut_original_gray",
+        "name": "아페토 일체형 오리지널 도넛방석 그레이 M L XL",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_original_gray/aff_donut_original_gray.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637574091",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_original_gray/details/2.webp",
+          "/images/products/catalog/aff_donut_original_gray/details/3.webp",
+          "/images/products/catalog/aff_donut_original_gray/details/4.webp",
+          "/images/products/catalog/aff_donut_original_gray/details/5.webp",
+          "/images/products/catalog/aff_donut_original_gray/details/6.webp",
+          "/images/products/catalog/aff_donut_original_gray/details/7.webp",
+          "/images/products/catalog/aff_donut_original_gray/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b3451fbfd8b378a0afaeb6dbeaab5584",
+        "sha256": "6f0c25b026f785a7e9d0f22eb200f32bb9708a474c173d611db84525d9bb57a2"
+      },
+      "scopeId": "dcaeb6e1da3d20982240d3760f97f8b3efaf07c663094c204ccd2d75fa30ee2e",
+      "scopeRegistrationSha256": "2ab2f587f0d3d3a3d3cbbac726a3f7bc4071bdaaea7e0be1a8e64b5f8edbfa81",
+      "aiEvidenceSha256": "28c0ac7938cb6ffe57f5a3b055c6ba699c317781caefa4efbe57aa63719f10ea",
+      "receiptSha256": "ec3b3cf0c2baac07fd97568f18566680b2e2c1ef0445169780e86a37f846cde5",
+      "eligibilitySha256": "c8c90e41c5068c1626b77a00e3df3a5923ab5225db10bb011196e7f479519044",
+      "evidenceManifestSha256": "b894cf27cda2b4c06a5ba218e7063e03e183042e72c82804963ed2718564bb4b"
+    },
+    "videoReviewSha256": "b2fa164891c0c8aa19d53c058bcf7a331618ea70e9084c761c6695fefe4f01e6",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "99069fc4e2cac7d1a8439269991ccfdee95a0240"
+  },
   "aff_donut_original_pink": {
     "video": "/images/products/catalog/aff_donut_original_pink/videos/7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -275,7 +380,58 @@
   "aff_pad_l_20_6": null,
   "aff_pad_s_50_1": null,
   "aff_pad_s_50_6": null,
-  "aff_santa_pocket": null,
+  "aff_santa_pocket": {
+    "video": "/images/products/catalog/aff_santa_pocket/videos/52e30faedc0e92c817f636274fe420e9392247e384732793ae868a4664dc0b5e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "cfc2615a5a11da426d25a91838a896b4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "cfc2615a5a11da426d25a91838a896b4",
+      "reviewId": "970e1bdff309a890b81bd322fd341e34",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "52e30faedc0e92c817f636274fe420e9392247e384732793ae868a4664dc0b5e",
+      "seconds": 4,
+      "source": {
+        "no": 265,
+        "folder": "aff_santa_pocket",
+        "name": "아페토 일체형 크리스마스 산타 포켓 방석",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_santa_pocket/aff_santa_pocket.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7638060607",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_santa_pocket/details/2.webp",
+          "/images/products/catalog/aff_santa_pocket/details/3.webp",
+          "/images/products/catalog/aff_santa_pocket/details/4.webp",
+          "/images/products/catalog/aff_santa_pocket/details/5.webp",
+          "/images/products/catalog/aff_santa_pocket/details/6.webp",
+          "/images/products/catalog/aff_santa_pocket/details/7.webp",
+          "/images/products/catalog/aff_santa_pocket/details/8.webp",
+          "/images/products/catalog/aff_santa_pocket/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "22a607846d282cf80f6afdc47bf3bd7d",
+        "sha256": "52e30faedc0e92c817f636274fe420e9392247e384732793ae868a4664dc0b5e"
+      },
+      "scopeId": "ba6e28abfed78bd9f4ad11157c3cc2c336278c4ff7ec1413bdcc8522e9c09ef0",
+      "scopeRegistrationSha256": "15fbe90e755c4f4f1da82ef6079f965332f9ae6cd9f65b420391282b0a63aa54",
+      "aiEvidenceSha256": "f30938bf4f66ca42fe310bcef897561d39b682fd5409c6daa9de09667e6cbba4",
+      "receiptSha256": "8b6212f357f0ef50b23bad74f2c0ffa5603b46110eb2d96fc99758353a481c74",
+      "eligibilitySha256": "3e4e02ccf6fc2a48ba45329389853156a3380e299af28014eb19afcf4b9cb5c4",
+      "evidenceManifestSha256": "1f8b51cdb60f9e0373fd3c819e4e9e6748e4dfa3440498b5522366bda3b2444c"
+    },
+    "videoReviewSha256": "52a41c1d792efb6e77cac1ff52d0661fcf24d7210905579583c11d5918cd8664",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "99069fc4e2cac7d1a8439269991ccfdee95a0240"
+  },
   "aff_stepbystep_3tier": null,
   "annapet_soju": {
     "video": "/images/products/catalog/annapet_soju/videos/hover.mp4",
@@ -4863,11 +5019,54 @@
     }
   },
   "rw_basecamp_bed_l": {
-    "video": "/images/products/catalog/rw_basecamp_bed_l/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_basecamp_bed_l/videos/eb8636167544bb28edaae2705e8069d87a32dc16e813671c9abe3b31825451d8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "7a8f3918442fe8a3bfe8fb1092098f48",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "7a8f3918442fe8a3bfe8fb1092098f48",
+      "reviewId": "02ee2c8315c3f58e9851bcf322635e6b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "eb8636167544bb28edaae2705e8069d87a32dc16e813671c9abe3b31825451d8",
+      "seconds": 4,
+      "source": {
+        "no": 345,
+        "folder": "rw_basecamp_bed_l",
+        "name": "러프웨어 베이스캠프 반려견 베드 - L사이즈(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001213/image/detail/1000001213_detail_024.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001213",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001213/image/detail/1000001213_detail_178.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001213/image/detail/1000001213_detail_22.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/1f209b2cf141f55885a2a12fc4382c31_204830.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/02934b3b9c858aa8d07044e1fce1f19d_204831.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/396a6876838494473eb85b2e16e13b74_204831.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b821c437c289ad942712d7fc204f8b0d",
+        "sha256": "eb8636167544bb28edaae2705e8069d87a32dc16e813671c9abe3b31825451d8"
+      },
+      "scopeId": "e7bedc0a3e2c726f6149d82996d947f8e882d2fe6248cf1d47a04d2d8a1784a8",
+      "scopeRegistrationSha256": "fd3032a29bf115d9622afe2d737dd7f7b6f8905a2e0b7b8c4b3c36c706788d2f",
+      "aiEvidenceSha256": "1f3997e6168d68e45bf495d58942c4a7ab8f9b51d75a94d629e37a46a750e20e",
+      "receiptSha256": "1c44d0d06cb5f75906f3154c5985d793f640a59f8873b0992e3a77fb892fa389",
+      "eligibilitySha256": "5453aa2f5ac76fad9fda69e03d92bcedd6e8770c7cfc29a5d30903923dde9d35",
+      "evidenceManifestSha256": "ae61948e34c1ea184e07da093216be7de7cef40209d6f3b3bd6e0cb0f6a7e2d9"
+    },
+    "videoReviewSha256": "213ceb38c7969265afaf1905b4afeca126ac21b5c5aa9404251ce8b575f038e0",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-ffd522866819"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "99069fc4e2cac7d1a8439269991ccfdee95a0240"
   },
   "rw_basecamp_bed_m": {
     "video": "/images/products/catalog/rw_basecamp_bed_m/videos/234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09/hover.mp4",
