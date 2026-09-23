@@ -1595,11 +1595,50 @@
     "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
   "fumble_shampoo_laurel": {
-    "video": "/images/products/catalog/fumble_shampoo_laurel/videos/hover.mp4",
+    "video": "/images/products/catalog/fumble_shampoo_laurel/videos/377914fda87cdb17973acb461f6ee7010f721c736dfbabf4c911f3864aa4be20/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "8ac368c5ef4773b50509733b2e38844d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8ac368c5ef4773b50509733b2e38844d",
+      "reviewId": "1124a38a8b5410e792722a5ef2e54117",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "377914fda87cdb17973acb461f6ee7010f721c736dfbabf4c911f3864aa4be20",
+      "seconds": 4,
+      "source": {
+        "no": 212,
+        "folder": "fumble_shampoo_laurel",
+        "name": "펌블펫솝_강아지샴푸 월계수 식물성오일베이스 민감피부 각질",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_shampoo_laurel/fumble_shampoo_laurel.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8843544246",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_shampoo_laurel/details/2.webp",
+          "/images/products/catalog/fumble_shampoo_laurel/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "433a44b726ad297bd75b62dfd406089e",
+        "sha256": "377914fda87cdb17973acb461f6ee7010f721c736dfbabf4c911f3864aa4be20"
+      },
+      "scopeId": "e6c5a8589fe04e3b365a627014e7fc63ac410d68d1718bb5318fa4f9471974d5",
+      "scopeRegistrationSha256": "51f5da258ca5c243b03d67c286ad94736747df4842b61d82fd901417c6b672d9",
+      "aiEvidenceSha256": "c7c7e789ce0b7797d6769c5b203680785b374d4f82c60d32d823758176314ca1",
+      "receiptSha256": "1083549fa4831d971105c5ae241bb0d0d595120b9ad3fc1c0a22b4565c3938a1",
+      "eligibilitySha256": "0d4bb21718e1d96cda7eb538d6b31d16640b7a21daba39b423c8d7cab71fa2fe",
+      "evidenceManifestSha256": "0935ce7d29ebb94b756bfef2ff02955c7f993b3613f58d2de42304891e9be556"
+    },
+    "videoReviewSha256": "981ec602cb8ee79219d75bf8844ba92de4a12fca387daa67720eaa8f6abfbd31",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-17aeabc69900"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f053a980fd01ae3e0221c994d7f2fc55c5fa7d38"
   },
   "fumble_shampoobar_camelrose": {
     "video": "/images/products/catalog/fumble_shampoobar_camelrose/videos/6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90/hover.mp4",
@@ -2225,11 +2264,50 @@
   },
   "iby_stroller_fs1616": null,
   "iby_stroller_fs1670": {
-    "video": "/images/products/catalog/iby_stroller_fs1670/videos/hover.mp4",
+    "video": "/images/products/catalog/iby_stroller_fs1670/videos/942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "db3ae3842411c21018a58974d741aea3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "db3ae3842411c21018a58974d741aea3",
+      "reviewId": "5dc7da423b735709dbf9b797a1815be3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72",
+      "seconds": 4,
+      "source": {
+        "no": 239,
+        "folder": "iby_stroller_fs1670",
+        "name": "이비야야 스피디폴드유모차 FS1670 2컬러 카무플라주 그레이데님, 스토리지백",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_stroller_fs1670/iby_stroller_fs1670.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7680974309",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_stroller_fs1670/details/2.webp",
+          "/images/products/catalog/iby_stroller_fs1670/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "50718387349a7ff38f0a7513427ed744",
+        "sha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72"
+      },
+      "scopeId": "c6da77c9d04c0c4d952ee027292f0c4ecf5b846405fd2eb68b356bb121b007df",
+      "scopeRegistrationSha256": "587b27fe0580631286be50098b0daaf7327964a3ada42371e935b9676fae4412",
+      "aiEvidenceSha256": "4a21c9c0d71a18e7edfea46492c4bc6d941f335ba23e780cc8aada6fc8027327",
+      "receiptSha256": "d6343fd888b7f0e135c5572f1fff0da42aaedb2f7000633ac4adec2da41f1c3e",
+      "eligibilitySha256": "4545963db66677556b2d27d61b5bb8475566ad6d004b56f57dae4e119283861e",
+      "evidenceManifestSha256": "8f188eb5c53c834c4b297dc36b0b66f3c3bb8c360dc38069808aeaa9d6452410"
+    },
+    "videoReviewSha256": "c51b095a0ce4cd93924c4cac4e9780ce3a3bd8fc67e4c575cd8019cb71d21cae",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-d0e73078e1e5"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f053a980fd01ae3e0221c994d7f2fc55c5fa7d38"
   },
   "iby_stroller_fs2011": null,
   "iby_stroller_fs2102": null,
@@ -2948,7 +3026,52 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-c78ae2f68688"
   },
-  "jjayo_icecream_mini_blueberry_50ml": null,
+  "jjayo_icecream_mini_blueberry_50ml": {
+    "video": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/videos/ab3e1dd417a8dfabb841eddafc1683a424c8d9dba7005445dea5857aecf1b676/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "14ef5abf5898eaad285381a4543ceb07",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "14ef5abf5898eaad285381a4543ceb07",
+      "reviewId": "b84981fa8bc9d683de4db519237e064f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ab3e1dd417a8dfabb841eddafc1683a424c8d9dba7005445dea5857aecf1b676",
+      "seconds": 4,
+      "source": {
+        "no": 327,
+        "folder": "jjayo_icecream_mini_blueberry_50ml",
+        "name": "짜요 미니 아이스크림 50ml 블루베리",
+        "brandEn": "Jjayo",
+        "isFood": true,
+        "image": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/jjayo_icecream_mini_blueberry_50ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6696352488",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/details/2.webp",
+          "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d4c8dbde088945aa42d6635fa370e7f5",
+        "sha256": "ab3e1dd417a8dfabb841eddafc1683a424c8d9dba7005445dea5857aecf1b676"
+      },
+      "scopeId": "e3170635c54f36a327d77d7850df9346f637424fc48902226e43e6e624548812",
+      "scopeRegistrationSha256": "5b6de1155d0e568d02f54776984bdfc946ed716cf700e345ad280e3e4a4fb833",
+      "aiEvidenceSha256": "735b42d07d419b6e696f7006aa5d27759ef080e640b8403a371fbc13294dabe1",
+      "receiptSha256": "3168352080ddff3b51f17807babdd276ef574d2422d1d6282e351307dd22869b",
+      "eligibilitySha256": "f3c26c6b75261dc2c175a26c4af1569e556bcab94aae090b3c2c151cb49a2dfd",
+      "evidenceManifestSha256": "4ec59c89c37e10f43cc181df3187ee22adca162f1bf1b8ba1609c01a5aa41353"
+    },
+    "videoReviewSha256": "470420ed1867ca146b06d88760a7d97b62e79e5321ea1d32df9e8da7c49df479",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f053a980fd01ae3e0221c994d7f2fc55c5fa7d38"
+  },
   "joaru_perfume_cashmere": null,
   "joaru_perfume_cotton": null,
   "joaru_perfume_daisy": {
@@ -3872,11 +3995,52 @@
     }
   },
   "perity_aloe_essence": {
-    "video": "/images/products/catalog/perity_aloe_essence/videos/hover.mp4",
+    "video": "/images/products/catalog/perity_aloe_essence/videos/1c0260814b1cfad6543d46c692dd6c53a6811a124952850c26c98ad8e15139cf/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "e1ce4aca00f131f735d8330749ac2570",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e1ce4aca00f131f735d8330749ac2570",
+      "reviewId": "d14197b49ca926eaffe2518b2d296df9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1c0260814b1cfad6543d46c692dd6c53a6811a124952850c26c98ad8e15139cf",
+      "seconds": 4,
+      "source": {
+        "no": 10,
+        "folder": "perity_aloe_essence",
+        "name": "페리티_알로에 수딩 앤 모이스처 펫 에센스",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_aloe_essence/perity_aloe_essence.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10149135994",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_aloe_essence/details/2.webp",
+          "/images/products/catalog/perity_aloe_essence/details/3.webp",
+          "/images/products/catalog/perity_aloe_essence/details/4.webp",
+          "/images/products/catalog/perity_aloe_essence/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "22ed6045ea295fc77ba66fa32ab027fa",
+        "sha256": "1c0260814b1cfad6543d46c692dd6c53a6811a124952850c26c98ad8e15139cf"
+      },
+      "scopeId": "b7092de875b77058914322c78cd6afcc6a476805e9217e455285aa2663439340",
+      "scopeRegistrationSha256": "5a173a1a3b2361fbaafa8988556f3dcd88315333d5b4131f447a5517cbd8bf96",
+      "aiEvidenceSha256": "557cb3cc2bc1f8dde36468863beaddf43163dd9bbb0f2ea76b601ee86d079422",
+      "receiptSha256": "27e6ada327a2bbfea9f46ba732fc2aba1336286331f50d0c5170189ae5e33a8c",
+      "eligibilitySha256": "0fd932e80a39b1296cf9b1405adb4fac298cc3d7b486616c2315b58576bf6745",
+      "evidenceManifestSha256": "83ec30a9a842efae2d09d6e574a79a10aad4ae6fcd2b40cac3682ff49d2a185c"
+    },
+    "videoReviewSha256": "5bc1e9034d3e4be23057f958f036ec81fbb3e0d9a35134d6a1c6a125b634daf1",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-cc417f1ac8e2"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f053a980fd01ae3e0221c994d7f2fc55c5fa7d38"
   },
   "perity_broccoli_mist": {
     "video": "/images/products/catalog/perity_broccoli_mist/videos/dbd4326d51ad15ba9f8eb67a729ed9b0d828aed696c884df395b741bc10e5e14/hover.mp4",

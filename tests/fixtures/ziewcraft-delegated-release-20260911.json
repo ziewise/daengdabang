@@ -1006,5 +1006,21 @@
   "perity_carrot_mist": {
     "productId": "p_208",
     "sha256": "5ef46b58365214d6088f1a1f98454cbc16da979b30ace5f82080ebc95b7d1e96"
+  },
+  "fumble_shampoo_laurel": {
+    "productId": "p_212",
+    "sha256": "377914fda87cdb17973acb461f6ee7010f721c736dfbabf4c911f3864aa4be20"
+  },
+  "iby_stroller_fs1670": {
+    "productId": "p_239",
+    "sha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72"
+  },
+  "jjayo_icecream_mini_blueberry_50ml": {
+    "productId": "p_327",
+    "sha256": "ab3e1dd417a8dfabb841eddafc1683a424c8d9dba7005445dea5857aecf1b676"
+  },
+  "perity_aloe_essence": {
+    "productId": "p_10",
+    "sha256": "1c0260814b1cfad6543d46c692dd6c53a6811a124952850c26c98ad8e15139cf"
   }
 }
