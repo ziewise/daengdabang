@@ -862,5 +862,13 @@
   "rs_lenslab_original": {
     "productId": "p_75",
     "sha256": "a7c5d3a8dc6a7b9892dcd2ca66469c0e2b134fb76c1237ff646a81d904f3edd8"
+  },
+  "aff_microbeads_cloud": {
+    "productId": "p_266",
+    "sha256": "2d40bdb61ace7821867e5fc35867c3e8671537f8d9267219710b3862c0b20af1"
+  },
+  "iby_bed_fb2292": {
+    "productId": "p_241",
+    "sha256": "fdc163d5d58fb50f342e612f807018e2d6f514c822387b94fa36fde194eaa8c4"
   }
 }

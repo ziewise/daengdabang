@@ -116,7 +116,56 @@
     "videoQuality": "approved_dog_using",
     "videoJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f"
   },
-  "aff_microbeads_cloud": null,
+  "aff_microbeads_cloud": {
+    "video": "/images/products/catalog/aff_microbeads_cloud/videos/2d40bdb61ace7821867e5fc35867c3e8671537f8d9267219710b3862c0b20af1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "37b86619f7da5fac06e56d89df25c206",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "37b86619f7da5fac06e56d89df25c206",
+      "reviewId": "af91439a5464877b275104b685e08257",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2d40bdb61ace7821867e5fc35867c3e8671537f8d9267219710b3862c0b20af1",
+      "seconds": 4,
+      "source": {
+        "no": 266,
+        "folder": "aff_microbeads_cloud",
+        "name": "아페토 커버분리형 마이크로 비즈 구름 방석 3컬러 핑크 그레이 네이비",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_microbeads_cloud/aff_microbeads_cloud.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637970343",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_microbeads_cloud/details/2.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/3.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/4.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/5.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/6.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d5ef2609759b45848f532ec8d78175c1",
+        "sha256": "2d40bdb61ace7821867e5fc35867c3e8671537f8d9267219710b3862c0b20af1"
+      },
+      "scopeId": "1f40e93e19d72f8c4c0e57c36ae58b2f55818bedd2103ff6b466501b0c7355ad",
+      "scopeRegistrationSha256": "9e9fb7ca5b968df22c233138ffe93e4bc6a3582e2d3d7a23e29cc177eb2982cf",
+      "aiEvidenceSha256": "1710cd7b24feaad65ec94cc920af86612ffa89fea3fc70ce9acdcc49e7b83c76",
+      "receiptSha256": "97986d55bfe86cebb3b05f7e3104e42601344fa4ce852882300711404793a377",
+      "eligibilitySha256": "9f5cf1e8803d816c077fe0167126d3be3dd64a12d9d9c85e08f075d75e9472da",
+      "evidenceManifestSha256": "a2e5c9deb761deaf0f00428855c9c3bb59e9ad5195b564d61c1297f189e309ed"
+    },
+    "videoReviewSha256": "feb0930361ebdc15948658f1eca8d855e4a4d04e0db29231fd6e9c307db5e4cf",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "95056b2eddc93f6150c3451b4ed0d6ec592547d2"
+  },
   "aff_microbeads_round": {
     "video": "/images/products/catalog/aff_microbeads_round/videos/c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1496,7 +1545,53 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-4d38bcd639f5"
   },
-  "iby_bed_fb2292": null,
+  "iby_bed_fb2292": {
+    "video": "/images/products/catalog/iby_bed_fb2292/videos/fdc163d5d58fb50f342e612f807018e2d6f514c822387b94fa36fde194eaa8c4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "0194a9ddad88c0a1eca796fb0048a300",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0194a9ddad88c0a1eca796fb0048a300",
+      "reviewId": "350b7004406810af90c7dcdd0c2f19f5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fdc163d5d58fb50f342e612f807018e2d6f514c822387b94fa36fde194eaa8c4",
+      "seconds": 4,
+      "source": {
+        "no": 241,
+        "folder": "iby_bed_fb2292",
+        "name": "이비야야 POE 딥슬립 펫베드 FB2292 3컬러 3사이즈 M L XL",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_bed_fb2292/iby_bed_fb2292.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7674835593",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_bed_fb2292/details/2.webp",
+          "/images/products/catalog/iby_bed_fb2292/details/3.webp",
+          "/images/products/catalog/iby_bed_fb2292/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "21ed69c0395f2d5e951141606a8d9ab3",
+        "sha256": "fdc163d5d58fb50f342e612f807018e2d6f514c822387b94fa36fde194eaa8c4"
+      },
+      "scopeId": "852d78817d2666adf17c756f3b608ab059ce302ccdb80edddf1218def6a97841",
+      "scopeRegistrationSha256": "26710186bed6e165f4282caf84fecd5e9be72780746683d19d47b903d4385279",
+      "aiEvidenceSha256": "4029548f9432364849cdabdfac606680f6cc63b03558a81241f9d1fe5caf3efc",
+      "receiptSha256": "c451bb0ea76cf6899be7e660f97d7eecbf511efb2dd80b1aedaeb6c86be93319",
+      "eligibilitySha256": "9a90bfb1d96bd0226632015803fc6584175235e02b2a2bbe1e7202f429e674a0",
+      "evidenceManifestSha256": "0f06164222e7152ef95205d64702bf690bdc6532433fde15b5d896824853bc95"
+    },
+    "videoReviewSha256": "c3fe431824446d6c3d78f1ab42e2329b8d7b771f1efa00567bbc5f260b7483ff",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "95056b2eddc93f6150c3451b4ed0d6ec592547d2"
+  },
   "iby_stroller_fs1616": null,
   "iby_stroller_fs1670": {
     "video": "/images/products/catalog/iby_stroller_fs1670/videos/hover.mp4",
