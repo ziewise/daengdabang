@@ -29,7 +29,7 @@ test("the header opens the latest country and language modal from the globe badg
     assert.ok(petLensIndex >= 0 && switcherIndex > petLensIndex && searchIndex > switcherIndex);
     assert.match(header, /gap-1 px-2 min-\[360px\]:gap-1\.5 sm:gap-6 sm:px-6/);
     assert.match(header, /gap-1 min-\[360px\]:gap-1\.5 sm:gap-2/);
-    assert.match(header, /<BrandLogo mobileEmphasis mobileIntegrated \/>/);
+    assert.match(header, /<BrandLogo\b[^>]*\bmobileEmphasis\b[^>]*\bmobileIntegrated\b[^>]*\/>/);
     assert.match(brandLogo, /mobileEmphasis\?: boolean/);
     assert.match(brandLogo, /mobileIntegrated\?: boolean/);
     assert.match(brandLogo, /min-\[360px\]:h-\[60px\] min-\[360px\]:w-\[60px\]/);

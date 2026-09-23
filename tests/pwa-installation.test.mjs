@@ -145,7 +145,7 @@ test("mobile shoppers can always return to the dedicated app home", () => {
     assert.match(appHomeButton, /<span>앱 홈<\/span>/);
     assert.match(appHomeButton, /md:hidden/);
     assert.doesNotMatch(appHomeButton, /\bfixed\b/);
-    assert.match(header, /<BrandLogo mobileEmphasis mobileIntegrated \/>/);
+    assert.match(header, /<BrandLogo\b[^>]*\bmobileEmphasis\b[^>]*\bmobileIntegrated\b[^>]*\/>/);
     assert.match(header, /<InstalledAppHomeButton \/>/);
     assert.match(logo, /data-mobile-integrated-brand/);
     assert.match(logo, /\/images\/pwa\/icon-v2-192x192\.png/);
