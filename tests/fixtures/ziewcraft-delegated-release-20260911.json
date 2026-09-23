@@ -934,5 +934,17 @@
   "aff_donut_original_brown": {
     "productId": "p_269",
     "sha256": "e03c4e649a1b27a12cf1c518f2a2a689d838e8a7e2a40cf02985ecc1047b4693"
+  },
+  "canagan_dog_chicken_2kg": {
+    "productId": "p_196",
+    "sha256": "2d6509883eeb69566e26cb17e75b9655ea308fd465be8366472a9bda5ff379ab"
+  },
+  "yora_wet_carrotpotato_390g": {
+    "productId": "p_130",
+    "sha256": "81e8a54f38954f6e1fba28f3c871e48bf42ced327b0e6b494043722baa239c20"
+  },
+  "yora_wet_appleparsnip_390g_2": {
+    "productId": "p_131",
+    "sha256": "e90e5e19c22e00e6cc6ae0ba120c67aaf3e9ab8fc824bf5dbb46cc9f3173f9c6"
   }
 }

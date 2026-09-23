@@ -681,7 +681,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "d5e0b4e3f28fd8c50bfa9a5b776862706705bd29"
   },
-  "canagan_dog_chicken_2kg": null,
+  "canagan_dog_chicken_2kg": {
+    "video": "/images/products/catalog/canagan_dog_chicken_2kg/videos/2d6509883eeb69566e26cb17e75b9655ea308fd465be8366472a9bda5ff379ab/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "ef446258776d97d097659c89a38d20e9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ef446258776d97d097659c89a38d20e9",
+      "reviewId": "874b5810018ac3c6e6e4cf9231f7685e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2d6509883eeb69566e26cb17e75b9655ea308fd465be8366472a9bda5ff379ab",
+      "seconds": 4,
+      "source": {
+        "no": 196,
+        "folder": "canagan_dog_chicken_2kg",
+        "name": "카나간 스몰브리드 프리레인지 치킨 포 독 2kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_chicken_2kg/canagan_dog_chicken_2kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922802996",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_chicken_2kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_chicken_2kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_chicken_2kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "dc7deb68d511704cbf3ca9fb50fda327",
+        "sha256": "2d6509883eeb69566e26cb17e75b9655ea308fd465be8366472a9bda5ff379ab"
+      },
+      "scopeId": "9423524020b6ce8f53db9ea35a99b4cfae3e07a8921e4cef1f707702aa36ba40",
+      "scopeRegistrationSha256": "76528dd540cda2e29cf4b63a95d532f9ecb0853404e37fc008559ea69aa16ac8",
+      "aiEvidenceSha256": "b8d1393ddca4d6c3375950afe9768ab0920f05850c9352c6d09ab081917a22a0",
+      "receiptSha256": "4ef99e4bfd333b34bb58142854b6d9f1401178984f469cb3722862290f648ffd",
+      "eligibilitySha256": "90f1389ee0241b9a288525613d4f6136c5b40079e126b7e412e3d0b652737503",
+      "evidenceManifestSha256": "36c39fc5a557bd40780fa76d7d1227350964cf5d940bf51c61321347d592264a"
+    },
+    "videoReviewSha256": "29fbdc76d068d2b2a029f515640cbea0c1b89f662a6917c860b40475ad108206",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "899dece6de72f2692f9758750de3aad725dbc3ce"
+  },
   "canagan_dog_dental_2kg": {
     "video": "/images/products/catalog/canagan_dog_dental_2kg/videos/a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -10365,11 +10411,53 @@
     "videoJobId": "hover-photo-20260903-39addd084896"
   },
   "yora_wet_appleparsnip_390g_2": {
-    "video": "/images/products/catalog/yora_wet_appleparsnip_390g_2/videos/hover.mp4",
+    "video": "/images/products/catalog/yora_wet_appleparsnip_390g_2/videos/e90e5e19c22e00e6cc6ae0ba120c67aaf3e9ab8fc824bf5dbb46cc9f3173f9c6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "8168d79b72b83809dfb71ba7313a5d3d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8168d79b72b83809dfb71ba7313a5d3d",
+      "reviewId": "d489177408eef9666cf5056cac1e047a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e90e5e19c22e00e6cc6ae0ba120c67aaf3e9ab8fc824bf5dbb46cc9f3173f9c6",
+      "seconds": 4,
+      "source": {
+        "no": 131,
+        "folder": "yora_wet_appleparsnip_390g_2",
+        "name": "요라 애플 & 파스닙 습식사료 390g 주식급여 동애등에 인섹트 습식사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_wet_appleparsnip_390g_2/yora_wet_appleparsnip_390g_2.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182291083",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/official-visual-01.webp",
+          "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/2.webp",
+          "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/3.webp",
+          "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/4.webp",
+          "/images/products/catalog/yora_wet_appleparsnip_390g_2/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2fa75758acecd1a662754d3a02015ee4",
+        "sha256": "e90e5e19c22e00e6cc6ae0ba120c67aaf3e9ab8fc824bf5dbb46cc9f3173f9c6"
+      },
+      "scopeId": "e4cc78adf0e4c494e6ce79f25da567f21ed4d8e9a2fab9e6fb3a2f1dd1f43586",
+      "scopeRegistrationSha256": "fec31b1ba0123698fb1e1afda61bad23e7558b5c89762381cc07d10e1c713355",
+      "aiEvidenceSha256": "69f464a297868748029643c542e3c55a76148f31cbf89e6756353418c93241ab",
+      "receiptSha256": "c674c040fcc32599772ab84fa30e3dd498784a0329974db227a2b2fc851a5b3f",
+      "eligibilitySha256": "4463e67497b819898f3b1438a824819b8ecd798316ad545f81fd636c74e56d0f",
+      "evidenceManifestSha256": "daed2f729c8e20a10c69ca6fa8ddb3db37c99a8657140004733c3c3302de0f46"
+    },
+    "videoReviewSha256": "13c1426040f01568642e058ce3b306af348a737c45a51cb378c1c330bddef03a",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-3d1ef27ef8fe"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "899dece6de72f2692f9758750de3aad725dbc3ce"
   },
   "yora_wet_beetrootswede_390g": {
     "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4/hover.mp4",
@@ -10421,11 +10509,53 @@
     "videoDeliveryCommit": "c50f4a38d3d3710c9238e8e27eb2f2d21084ceda"
   },
   "yora_wet_carrotpotato_390g": {
-    "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/hover.mp4",
+    "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/81e8a54f38954f6e1fba28f3c871e48bf42ced327b0e6b494043722baa239c20/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "488936407b0bf01ad1d17ed137eca9e4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "488936407b0bf01ad1d17ed137eca9e4",
+      "reviewId": "8291770ac2d74c87c5333ced27e1e875",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "81e8a54f38954f6e1fba28f3c871e48bf42ced327b0e6b494043722baa239c20",
+      "seconds": 4,
+      "source": {
+        "no": 130,
+        "folder": "yora_wet_carrotpotato_390g",
+        "name": "요라 캐롯 & 포테이토 습식사료 390g 주식급여 동애등에 인섹트 습식사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_wet_carrotpotato_390g/yora_wet_carrotpotato_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182295647",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_wet_carrotpotato_390g/details/official-visual-01.webp",
+          "/images/products/catalog/yora_wet_carrotpotato_390g/details/2.webp",
+          "/images/products/catalog/yora_wet_carrotpotato_390g/details/3.webp",
+          "/images/products/catalog/yora_wet_carrotpotato_390g/details/4.webp",
+          "/images/products/catalog/yora_wet_carrotpotato_390g/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7cd579866e0ce1a7e8af735ede352310",
+        "sha256": "81e8a54f38954f6e1fba28f3c871e48bf42ced327b0e6b494043722baa239c20"
+      },
+      "scopeId": "8b01ddacbd0f71f4712acf2c105042ca9775a53af6aa4ce5c67bd98c77e7ff53",
+      "scopeRegistrationSha256": "9dfa16369420c3d84967f0a953e8aa0eacfb4e14e6d196e0013c957278b0bb45",
+      "aiEvidenceSha256": "9f506754abe9770d4c356a3487a7994d5dd1d818403e89648f34740e809cec4a",
+      "receiptSha256": "b111a6fc16b0cd23fe6d3c346b95fb0463b7655b220a7519b13578673c420948",
+      "eligibilitySha256": "74897d30875f21bc596cf4792c62f8e157842508e9c4a965975850df5911bf23",
+      "evidenceManifestSha256": "0c9bf9748307407d00fe88990420889b82622a0cf3aa6d87d46009e3fbc061d0"
+    },
+    "videoReviewSha256": "cc92642cf19635274e058b82d9450ab0d20412434023dc40ec425d18dd4de046",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-c431e752a5af"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "899dece6de72f2692f9758750de3aad725dbc3ce"
   },
   "zs_alien": {
     "video": "/images/products/catalog/zs_alien/videos/30605f4ea71ad45b92a345dec2e77b1659c7845ad3a30d8e3feca81f561025be/hover.mp4",
