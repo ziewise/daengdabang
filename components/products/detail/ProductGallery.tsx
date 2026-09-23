@@ -58,7 +58,8 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
     return (
         <div className="space-y-3">
             <div
-                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm ${activeImage ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
+                data-product-gallery
+                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm max-md:rounded-none max-md:border-x-0 max-md:border-t-0 ${activeImage ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
                 onMouseEnter={activateVideo}
                 onMouseLeave={deactivateVideo}
                 onFocus={activateVideo}

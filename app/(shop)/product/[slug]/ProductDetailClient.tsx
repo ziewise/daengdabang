@@ -33,10 +33,12 @@ export default function ProductDetailClient({ product }: Props) {
     }, [product.brandEn, product.brandKo, product.category, product.id, product.name, product.subcategory]);
 
     return (
-        <main className="mx-auto max-w-[1280px] px-4 py-6 md:px-6 md:py-10">
+        <main data-product-detail-content className="mx-auto w-full max-w-[1280px] px-4 pb-6 md:px-6 md:py-10">
             <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
                 <div className="lg:sticky lg:top-[calc(var(--header-height)+24px)] lg:self-start">
-                    <ProductGallery product={product} selectedColor={selectedColor} />
+                    <div className="-mx-4 md:mx-0">
+                        <ProductGallery product={product} selectedColor={selectedColor} />
+                    </div>
                     {/* 모바일 전용 — 색상 칩을 이미지 바로 아래에(위아래로 오갈 필요 없게). PC 는 우측 구매정보에 표시 */}
                     <ColorSelect
                         colors={product.colors ?? []}

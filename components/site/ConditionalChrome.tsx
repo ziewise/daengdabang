@@ -42,7 +42,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
     return (
         <>
             <Header />
-            <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
+            <main className={`flex-1 flex flex-col ${pathname.startsWith("/product/") ? "pt-[env(safe-area-inset-top,0px)] md:pt-[var(--header-height)]" : "pt-[var(--header-height)]"}`}>{children}</main>
             <Footer />
             <FloatingDock />
             <PetCompanionGate />

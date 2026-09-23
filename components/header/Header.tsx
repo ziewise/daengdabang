@@ -8,7 +8,7 @@
  */
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -32,7 +32,9 @@ import headerStyles from "./Header.module.css";
 type DropKey = "shop" | "daily" | "lab" | "cs" | null;
 
 export default function Header() {
-    const isProductDetail = usePathname().startsWith("/product/");
+    const pathname = usePathname();
+    const isProductDetail = pathname.startsWith("/product/");
+    const [productScrolled, setProductScrolled] = useState(false);
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -42,7 +44,28 @@ export default function Header() {
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     // 펫렌즈는 /pet-lens 페이지 대신 모달로 띄운다 (협업자 PetLensClient 를 모달에 담음)
     const { open: openPetLens } = usePetLensModal();
-    const { t, menuLabel } = useI18n();
+    const { t, menuLabel, locale } = useI18n();
+
+    useEffect(() => {
+        if (!isProductDetail) return;
+        let frame = 0;
+        const update = () => {
+            frame = 0;
+            // A small dead zone prevents flicker near the reveal boundary.
+            setProductScrolled(previous => window.scrollY > (previous ? 64 : 96));
+        };
+        const schedule = () => {
+            if (!frame) frame = window.requestAnimationFrame(update);
+        };
+        schedule();
+        window.addEventListener("scroll", schedule, { passive: true });
+        window.addEventListener("pageshow", schedule);
+        return () => {
+            window.cancelAnimationFrame(frame);
+            window.removeEventListener("scroll", schedule);
+            window.removeEventListener("pageshow", schedule);
+        };
+    }, [isProductDetail, pathname]);
 
     const openPetLensFromHeader = () => {
         setMobilePetLensGuideArmed(false);
@@ -78,8 +101,9 @@ export default function Header() {
     return (
         <>
             <header
-                className="fixed inset-x-0 top-0 z-[1000] h-[var(--header-height)] backdrop-blur-xl bg-white/65 border-b border-white/60"
+                className={`fixed inset-x-0 top-0 z-[1000] h-[var(--header-height)] bg-white/65 border-b border-white/60 ${isProductDetail ? `${headerStyles.productDetailHeader} md:backdrop-blur-xl` : "backdrop-blur-xl"}`}
                 data-site-header
+                data-product-scrolled={isProductDetail && productScrolled ? "true" : "false"}
             >
                 <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between gap-1 px-2 min-[360px]:gap-1.5 sm:gap-6 sm:px-6">
 
@@ -87,8 +111,22 @@ export default function Header() {
                     <div className="flex min-w-0 shrink-0 items-center gap-1.5 min-[360px]:gap-2">
                         <ProductBackButton />
                         <BrandLogo mobileEmphasis mobileIntegrated className={isProductDetail ? "max-md:hidden" : ""} />
-                        <InstalledAppHomeButton />
+                        <div className={isProductDetail ? "max-md:hidden" : "contents"}><InstalledAppHomeButton /></div>
                     </div>
+
+                    {isProductDetail && (
+                        <button
+                            type="button"
+                            onClick={() => setSearchOpen(true)}
+                            aria-label={t("search")}
+                            aria-haspopup="dialog"
+                            data-product-search
+                            className={headerStyles.productSearch}
+                        >
+                            <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
+                            <span>{locale === "en" ? "Search DaengDaBang" : "댕다방에서 검색하세요"}</span>
+                        </button>
+                    )}
 
                     {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. */}
                     <nav className="hidden items-center gap-1 xl:flex">
@@ -225,7 +263,7 @@ export default function Header() {
                     {/* 우측 유틸리티
                         좁은 PC·모바일(<xl): 햄버거 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         넓은 데스크탑(xl+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
-                    <div className="flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2">
+                    <div className={`${isProductDetail ? "max-md:hidden" : ""} flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2`}>
                         {/* 유틸 순서: 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
