@@ -100,5 +100,29 @@
     "sha256": "d3a7b47b836b329d57147c2730afe30721faa18c9d9f343933607cda2cc90640",
     "reason": "Directly inspected the current published final frames 0..191 and child-native frames 0..96. The same image-left forepaw is raised, held and lowered three times at approximately 0.417..1.417s, 2.208..3.000s and 3.792..4.167s. The starts repeat at about 1.7-second intervals while the other feet and torso retain almost the same stance; the upward head gesture recurs with the paw cycle. The repeated foreleg choreography dominates the first four seconds and reads as mechanical pumping instead of one spontaneous small paw offering. The final 4.2..8.0s has a quieter planted stance with small head tilts, which does not remove the repeated first segment. Full-size frame95 confirms the third lifted-paw pose. Reject for the repeated gesture under the requested natural-motion standard, not merely for lifting one paw; no claim of a broken limb or exact playback-rate failure.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000000650": {
+    "productId": "p_382",
+    "sha256": "0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80",
+    "reason": "Directly inspected final frames 0..191. The first forepaw offer at 1.000..2.333s lifts, holds and lowers over a reasonably paced interval; that single gesture alone is not the rejection reason. At 4.500..4.875s the dog abruptly rolls its head down and sideways and back upward while lifting a tightly curled forepaw and keeping the trunk and supporting feet nearly fixed. A further rapid head side-roll at 5.500..5.750s flings the ears sideways and returns toward front in about a quarter second. The abrupt neck/ear excursions are inconsistent with the requested unhurried natural movement. Later planted stance does not repair these bursts. Reject naturalSpeed/noRepetitiveJerks on these specific intervals. Native segment has not been directly inspected in this task.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000000966": {
+    "productId": "p_396",
+    "sha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d",
+    "reason": "Directly inspected all final frames 0..191 plus full-resolution final frame032 (1.333s). During about0.667..1.500s the near foreleg extends upward toward the throat; by1.167..1.458s it forms an elongated continuous bent tube and the paw endpoint is lost against the underside of the neck. Full-resolution frame032 confirms the merged-looking paw/throat silhouette and implausible limb articulation while the trunk and three support legs remain almost fixed. The first lift lowers by2.25s. A second brief lift occurs around4.583..5.083s, but the rejection is the first lift anatomy, not the mere existence of a second gesture. The later planted stance does not repair the malformed limb. Native97 not inspected in this task.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001199": {
+    "productId": "p_433",
+    "sha256": "7a0dd8676e2cf5720b2116c281b2b8abeb63356e2227578a49a87831d3f11b7d",
+    "reason": "Directly inspected final0..191 and extracted original1080 frame25 at1.042s. At0.833..1.250s the raised near foreleg extends far toward image-left with its distal paw turned palm-up and the long forearm held horizontally; the elbow/forearm presentation is human-arm-like while the torso and supporting legs remain fixed. It then rotates the paw downward1.292..1.833s before settling2.167s. Reject anatomyAndBalance for this visibly distorted foreleg articulation, not for a single paw offer or for repetition. The paw lift is one gradual offering, not a rapid pumping cycle; later tail wag and grounded rest do not correct the earlier anatomy. Native segment not directly reviewed in this task.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001214": {
+    "productId": "p_440",
+    "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100",
+    "reason": "All final frames0..191 directly inspected, with original1080 frame030 at1.250s inspected full-size. During about0.833..1.958s the near foreleg extends sideways far from the chest; around1.25s its long forearm is almost horizontal and the paw rotates palm-up in a human-arm-like gesture. The full-size frame confirms the distorted shoulder/elbow/wrist presentation while the other three feet and torso remain planted. Reject for anatomy and balance, not for offering one paw or for a repeated cycle. Head and tail continue to move and later grounded stance does not repair the earlier distorted limb. Native97 and source references not reviewed for this early rejection.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }

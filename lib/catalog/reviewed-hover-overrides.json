@@ -12112,59 +12112,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
-  "rw_jsk_1000000650": {
-    "video": "/images/products/catalog/rw_jsk_1000000650/videos/0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_dog_wearing",
-    "videoJobId": "16ea0a2d0fb3c8f315da84fe9f13ed45",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "16ea0a2d0fb3c8f315da84fe9f13ed45",
-      "reviewId": "b9d702e3febd252c3fe0766f2d12fb2f",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80",
-      "seconds": 8,
-      "source": {
-        "no": 382,
-        "folder": "rw_jsk_1000000650",
-        "name": "러프웨어 클라이메이트 체인져 플리스(Climate Changer™ Fleece)",
-        "brandEn": "Ruffwear",
-        "isFood": false,
-        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_06.jpg",
-        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000650",
-        "gallery": [
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_192.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_270.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_344.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_480.jpg"
-        ],
-        "details": [
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer2021_1_025537.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer2021_2_025547.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Climate-Changer2021_3_184912.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/45e21a4c5eccb47809f5fdf965a29936_184921.jpg"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "7a7f884721f8600af0ecac4dc5ccf03d",
-        "sha256": "0532e0b897aa4a8315fe14937f4a11850cd44f0a9bdbadd874612b068227ec80"
-      },
-      "scopeId": "f6cfd36705ae6dcdf55e60175482a73bd1e8b3d700b5025e92bfeafa70d42ddc",
-      "scopeRegistrationSha256": "7a416861448cfdf57104237ae3213f5a8fcd96af99f69e6a904b7b1d83fcf72a",
-      "aiEvidenceSha256": "b7b156979eed07886ca724672cf1c9395004fba8a030784cfa10b61f70b81cb7",
-      "receiptSha256": "afaff7019425189b6f162d847559e1952aec69c606b0d00c13c4e36067d64179",
-      "eligibilitySha256": "d6de12adaf53b1b15330a952450e1390d1d599221f6b79a038299ebe15a27bb0",
-      "evidenceManifestSha256": "4406661be2c6354ba3e1d9a5e7e647f2c96459586ef78cbbdee55e3022255081"
-    },
-    "videoReviewSha256": "ff351ffa5262f7df44c0ad5d147c79d2771d8156adf93e4a22b6903eabc4c606",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null,
-    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
-  },
+  "rw_jsk_1000000650": null,
   "rw_jsk_1000000651": {
     "video": "/images/products/catalog/rw_jsk_1000000651/videos/0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -12270,60 +12218,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
-  "rw_jsk_1000000966": {
-    "video": "/images/products/catalog/rw_jsk_1000000966/videos/7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_dog_wearing",
-    "videoJobId": "680abbb98256b6d5af70629143c63f92",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "680abbb98256b6d5af70629143c63f92",
-      "reviewId": "7280de08ed1abda5677a1df7627a0462",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d",
-      "seconds": 8,
-      "source": {
-        "no": 396,
-        "folder": "rw_jsk_1000000966",
-        "name": "러프웨어 루멘글로우 하이 비스 재킷(Lumenglow™ High-Vis Jacket)",
-        "brandEn": "Ruffwear",
-        "isFood": false,
-        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_033.jpg",
-        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000966",
-        "gallery": [
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_133.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_264.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_352.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_423.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_593.jpg"
-        ],
-        "details": [
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220323/Lumenglow-High-vis-Jacket1_222518.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220323/Lumenglow-High-vis-Jacket2_222538.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/Lumenglow-High-vis-Jacket3_164238.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/5268f55755e41d295a2290ba73533f3e_164247.jpg"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "1f4810a71e07ec4d22661ba7941a5ef9",
-        "sha256": "7bcf70a59ce98454ed555e670037e2c50e8c41b4174ca84a282992b5b47d202d"
-      },
-      "scopeId": "28b76e5032e7fba3a287dc5d0955d4d0ad1f8eb3945ad749eea300fb628ff69f",
-      "scopeRegistrationSha256": "33a94f1abc00c21adebd14ef16fa77b4e5a428f3484431e15e4bb3ed1cf09365",
-      "aiEvidenceSha256": "149254d8603d4c24ca6029b440fa4ef5a07b8233862ce515d8f9dd97aae5a272",
-      "receiptSha256": "86115a63aebbaba22fccdd9b3050a178cbee3a76c1883c68a981d18502f3071d",
-      "eligibilitySha256": "43b03b64fcaf84ad3a571336c95340aa0b53cee342c1e0f16cfe905a3864915d",
-      "evidenceManifestSha256": "388eff87b171cad890a96fbc0213b4846b42270b16932c6308e67816da9fb400"
-    },
-    "videoReviewSha256": "002016c60a8cc7416d6f7c5fcb0245495c636f373b502f8ce122fe464bca6404",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null,
-    "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
-  },
+  "rw_jsk_1000000966": null,
   "rw_jsk_1000001343": {
     "video": "/images/products/catalog/rw_jsk_1000001343/videos/4aa1f36b8e607129bf3cd417cc1650295334debed9db79353dfd8715424aae6e/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -12433,57 +12328,7 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null
   },
-  "rw_jsk_1000001214": {
-    "video": "/images/products/catalog/rw_jsk_1000001214/videos/a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_dog_wearing",
-    "videoJobId": "a2d098d986e8e2146e3c86e5cb5c16ac",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "a2d098d986e8e2146e3c86e5cb5c16ac",
-      "reviewId": "47868bc3666d15dbe1eab8ca63324227",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100",
-      "seconds": 8,
-      "source": {
-        "no": 440,
-        "folder": "rw_jsk_1000001214",
-        "name": "러프웨어 선 샤워 레인재킷",
-        "brandEn": "Ruffwear",
-        "isFood": false,
-        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_079.jpg",
-        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001214",
-        "gallery": [
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_154.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_258.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001214/image/detail/1000001214_detail_350.jpg"
-        ],
-        "details": [
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/9a7b4b43407a4fec61b691b58b4bc517_203607.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/cd800eb061192c9b9237856678189914_203607.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/ba5725ce882cc4ff72670519a5dcc903_203608.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/dc2fe8367c587bdf77bbcadd87057996_203609.jpg"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "2d969fe0fe2400aa9c406880382568c5",
-        "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100"
-      },
-      "scopeId": "d5d1bef6b7ed5d337da199b6a69be77596a74515474fd7ca186efae844bd8f11",
-      "scopeRegistrationSha256": "19493ce729a4c4392817b71063c42f007bd3d55591251c22afbd71919f796898",
-      "aiEvidenceSha256": "fd33984a144cc9047a7c837245785fef8adf5154dc20a63cc2bc765bf4ea8704",
-      "receiptSha256": "a9673c07c33778e742b85e38837fd985b1b337138d6670dbd15c15976e6cc130",
-      "eligibilitySha256": "af69080f8a17951ec0b48fe22a01e32596ad0aa7b4416943c6a9f88d0010929c",
-      "evidenceManifestSha256": "75d363b891171fb95bdcca601036ae5a4852d99f795313c68f594e66d8c11fe7"
-    },
-    "videoReviewSha256": "745256cff3f0fc38ae30209817c1989c559f40af3d72e5b6dae64cacb046052c",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "same_origin",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null
-  },
+  "rw_jsk_1000001214": null,
   "rw_jsk_1000001245": {
     "video": "/images/products/catalog/rw_jsk_1000001245/videos/9370f2fa35c2bcf9e3d6e480f4d4ea056a79ca258a8f77bf3b6ec74ebd92be54/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -12646,58 +12491,7 @@
     "videoDeliveryCommit": "e48598c4627fbdd10e021b0c17895da17cc24863"
   },
   "rw_jsk_1000001354": null,
-  "rw_jsk_1000001199": {
-    "video": "/images/products/catalog/rw_jsk_1000001199/videos/7a0dd8676e2cf5720b2116c281b2b8abeb63356e2227578a49a87831d3f11b7d/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_dog_wearing",
-    "videoJobId": "9b28ac4f2375aca1ee4325622c6ea586",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "9b28ac4f2375aca1ee4325622c6ea586",
-      "reviewId": "ed1680d900d4577c4e6dd0b4709bce7a",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "7a0dd8676e2cf5720b2116c281b2b8abeb63356e2227578a49a87831d3f11b7d",
-      "seconds": 8,
-      "source": {
-        "no": 433,
-        "folder": "rw_jsk_1000001199",
-        "name": "러프웨어 탑 로프 목줄(2024FW)",
-        "brandEn": "Ruffwear",
-        "isFood": false,
-        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001199/image/detail/1000001199_detail_071.jpg",
-        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001199",
-        "gallery": [
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001199/image/detail/1000001199_detail_157.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001199/image/detail/1000001199_detail_26.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001199/image/detail/1000001199_detail_338.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001199/image/detail/1000001199_detail_448.jpg"
-        ],
-        "details": [
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/c9cd03ad3993af65204ffac9fe6a0b23_114034.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/4443704bacbe468bc511afdf53f40feb_114058.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/3bb9ac941f9a23baf67c9308e3c3d743_114118.jpg"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "6b46148309d1ece11947feeef4ce8276",
-        "sha256": "7a0dd8676e2cf5720b2116c281b2b8abeb63356e2227578a49a87831d3f11b7d"
-      },
-      "scopeId": "6f80f25921ab161079af2f4876671e1da059b0f2a2bed19e3e180102077d00f2",
-      "scopeRegistrationSha256": "a9bffd11712f8bb13e41a2fc22335e5ca57667fc5d5fb2b96030fb894c0cc840",
-      "aiEvidenceSha256": "9d067d59ce1e71147a4d5ccd2ad2736c4371f15fd412fd0bc17ededc05139178",
-      "receiptSha256": "b4a3dc13fed306ce67c51a69e41d2d37d0bb783fe6e6a6539fe0064025b0b945",
-      "eligibilitySha256": "95e70ed0fec909134c2cf36a923ded9e8a1cb2e99b36684e331faffbbd7b9d06",
-      "evidenceManifestSha256": "8cb2b86b1f977e570335a35236c16d7b944c8edb7f686b4fa67cfee32e03c06f"
-    },
-    "videoReviewSha256": "69436c15a1953e4189e815a6733929c9e8fb9fb2a555597866392cd32837f402",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null,
-    "videoDeliveryCommit": "5c0c8ef4aafc3a05215046541adac663c3308427"
-  },
+  "rw_jsk_1000001199": null,
   "rw_jsk_1000001210": {
     "video": "/images/products/catalog/rw_jsk_1000001210/videos/db9533f22c4e7d952b0882f0d01b7d9500709004e1307c9a2096782eacf497c0/hover.mp4",
     "videoProvider": "ziewcraft",
