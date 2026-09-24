@@ -40,5 +40,23 @@
     "sha256": "00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd",
     "reason": "Exact room, chocolate Labrador and Tropical Bloom collar match user screenshot. All 192 paired frames directly inspected. 0.0–1.5 seconds: repeated large muzzle-up head jerks separated by roughly 0.3 seconds; near forepaw rises at about 0.75 seconds and remains bent with repeated pumping until about 1.9 seconds. Additional paw lift 4.2–4.45 seconds. Neck oscillation reads as overexcited, artificially accelerated modeling. Replace both segments; keeping child would retain another paw lift.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_frontrangeflex_harness_26": {
+    "productId": "p_4",
+    "sha256": "fcf903c46aaf87e5d5620c5939fb23f71229f153fad568ee8624e392f60ee4ac",
+    "reason": "Directly inspected final frames0-47 (0-1.958s), enough to reject without claiming review of the remaining frames. The same foreleg repeatedly extends nearly horizontally around0.58-0.67s, lowers by0.83s, extends again1.00-1.12s, lowers1.25-1.33s, extends again1.50-1.71s and lowers1.79-1.88s. Three rapid extension/lowering pulses in roughly1.3s while the torso and other limbs stay rigid creates the mechanical one-leg pumping the user rejected. Replace with stable planted paws and gentle tail motion.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_ridgeline_harness_26": {
+    "productId": "p_6",
+    "sha256": "ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2",
+    "reason": "All192 final frames directly inspected. Around0.6-1.1s the neck stretches sharply upward, then around1.2-1.6s the head whips down with ear blur. Around1.79-1.96s one hind leg kicks straight backward while the lowered head and torso remain largely fixed, an abrupt unsupported-looking kick rather than a small balanced affectionate gesture. Later5.4-6.0s shows another long head dip. Replace the overlarge head excursion and sudden hind-leg kick with a quiet planted stance and gentle tail movement.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_trailhead_collar": {
+    "productId": "p_85",
+    "sha256": "46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821",
+    "reason": "All192 final frames directly inspected. First 0.5-1.8s raises one foreleg while stretching the neck steeply upward in a prolonged howling pose. Later around 4.67-5.13s the head sweeps left-to-right abruptly within about0.46s with blurred muzzle/ears and rigid planted torso, then settles. Replace the exaggerated howl and abrupt head sweep with the owner-requested calm cute movement. A single balanced paw lift alone is not treated as a defect.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
