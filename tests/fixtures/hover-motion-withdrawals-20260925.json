@@ -76,5 +76,11 @@
     "sha256": "6dec635a937d5b564bd8c00c95ef1132ca8488f499525c3d3075bc878d80f192",
     "reason": "Directly inspected final frames 0..95 (0.000..3.958s). A paw first rises and returns at 0.208..0.583s. The opposite foreleg lifts around 0.917s and pumps repeatedly while held off the floor: folded toward face around 1.083s, extended 1.208..1.333s, folded again 1.417..1.500s, extended 1.583..1.667s, then lowered by 1.917s. Another lifted forepaw repeats fast fold/extension pulses around 2.792..3.125s, 3.250..3.417s, 3.458..3.750s, and 3.833..3.958s while support legs stay rigid. This is the repetitive mechanical limb motion reported by the user. Reject on this inspected interval; remaining final and native frames were not reviewed.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_v2_gallatingray": {
+    "productId": "p_91",
+    "sha256": "8492e9dc69f27c8e720b59a57e5ea05c76364c219258766ba5e7cb2b77ca3f21",
+    "reason": "Directly inspected final frames 0..191 across this task and preserved prior checkpoint; native segment not inspected. The image-left foreleg folds at 0.208..0.542s then extends almost horizontally sideways at 0.583..0.792s, folds and holds, and repeats the same large sideways extension at 1.750..1.958s. Support legs and torso remain comparatively fixed. The extreme sideways sweep reads like a human arm gesture rather than a natural small canine paw offering. The paw finally lowers around 2.792..3.125s. Full-size frame 17 confirms the lateral extension. Reject the unnatural repeated foreleg gesture; this is not rejection for a single paw lift. The later planted stance does not repair the first segment.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
