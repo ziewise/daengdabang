@@ -1,3 +1,5 @@
+import { pathToFileURL } from "node:url";
+
 const devtoolsEndpoint = "http://127.0.0.1:9222/json";
 const expectedText = "댕다방 앱 홈";
 const expectedPath = "/app/index.html";
@@ -61,40 +63,65 @@ function evaluateDocument(socket) {
     });
 }
 
-let lastState;
-let lastError;
-
-for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
-    let socket;
+export function isAppHome(state) {
     try {
-        const targets = await fetch(devtoolsEndpoint).then((response) => {
-            if (!response.ok) throw new Error(`DevTools target request failed (${response.status}).`);
-            return response.json();
-        });
-        const target = targets.find(({ type, webSocketDebuggerUrl }) => type === "page" && webSocketDebuggerUrl);
-        if (!target) throw new Error("No debuggable Android WebView page was found.");
-
-        socket = await connect(target.webSocketDebuggerUrl);
-        lastState = await evaluateDocument(socket);
-        socket.close();
-
-        if (
-            lastState?.readyState === "complete"
-            && new URL(lastState.url).pathname === expectedPath
-            && lastState.title.includes("댕다방")
-            && lastState.text.includes(expectedText)
-        ) {
-            process.stdout.write(`${JSON.stringify(lastState, null, 2)}\n`);
-            process.exit(0);
-        }
-    } catch (error) {
-        socket?.close();
-        lastError = error;
+        const url = new URL(state?.url);
+        return url.origin === "https://localhost"
+            && url.pathname === expectedPath
+            && state.readyState === "complete"
+            && state.title?.includes("댕다방")
+            && state.text?.includes(expectedText);
+    } catch {
+        return false;
     }
-
-    await delay(1_000);
 }
 
-throw new Error(
-    `Android WebView did not render the app home. Last state: ${JSON.stringify(lastState)}. ${lastError?.message || ""}`,
-);
+export async function verifyWebView({
+    fetchTargets = async () => {
+        const response = await fetch(devtoolsEndpoint, { signal: AbortSignal.timeout(5_000) });
+        if (!response.ok) throw new Error(`DevTools target request failed (${response.status}).`);
+        return response.json();
+    },
+    readDocument = async (target) => {
+        const socket = await connect(target.webSocketDebuggerUrl);
+        try { return await evaluateDocument(socket); }
+        finally { socket.close(); }
+    },
+    wait = delay,
+    attempts = maximumAttempts,
+} = {}) {
+    let lastState = null;
+    let lastTargets = [];
+    let lastError = null;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            const targets = await fetchTargets();
+            if (!Array.isArray(targets)) throw new Error("DevTools target response was not an array.");
+            lastTargets = targets.map(({ id, type, url, title, description, webSocketDebuggerUrl }) => ({
+                id, type, url, title, description, debuggable: Boolean(webSocketDebuggerUrl),
+            }));
+            const pages = targets.filter(({ type, webSocketDebuggerUrl }) => type === "page" && webSocketDebuggerUrl);
+            const target = pages.find(({ url }) => {
+                try { return new URL(url).origin === "https://localhost" && new URL(url).pathname === expectedPath; }
+                catch { return false; }
+            }) || pages[0];
+            if (!target) throw new Error("No debuggable Android WebView page was found.");
+            lastState = await readDocument(target);
+            lastError = null;
+            if (isAppHome(lastState)) return { passed: true, attempt, state: lastState, targets: lastTargets };
+        } catch (error) {
+            lastError = error.message;
+        }
+        if (attempt < attempts) await wait(1_000);
+    }
+    return { passed: false, attempts, state: lastState, targets: lastTargets, error: lastError || "App home document did not satisfy the startup checks." };
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+    const result = await verifyWebView();
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    if (!result.passed) {
+        process.stderr.write(`Android WebView did not render the app home. ${result.error}\n`);
+        process.exitCode = 1;
+    }
+}

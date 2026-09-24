@@ -9,6 +9,22 @@ launch_log="$artifact_dir/app-debug-launch.txt"
 app_log="$artifact_dir/app-debug-logcat.txt"
 webview_state="$artifact_dir/app-debug-webview.json"
 
+capture_exit() {
+  result=$?
+  trap - EXIT
+  # Preserve the last screen/log even when the WebView check fails.
+  adb exec-out screencap -p > "$artifact_dir/app-debug-launch.png" || true
+  current_pid="$(adb shell pidof "$package_name" 2>/dev/null | tr -d '\r')"
+  if [ -n "$current_pid" ]; then
+    adb logcat -d -v threadtime --pid="$current_pid" > "$app_log" || true
+  else
+    adb logcat -d -v threadtime > "$app_log" || true
+  fi
+  adb forward --remove tcp:9222 >/dev/null 2>&1 || true
+  exit "$result"
+}
+trap capture_exit EXIT
+
 adb logcat -c
 adb install -r "$apk_path"
 adb shell am force-stop "$package_name"
@@ -33,10 +49,25 @@ if grep -F "FATAL EXCEPTION" "$app_log"; then
   exit 1
 fi
 
-devtools_socket="$(adb shell cat /proc/net/unix \
-  | awk '/webview_devtools_remote/ { value=$NF; sub(/^@/, "", value); print value; exit }' \
-  | tr -d '\r')"
-if [ -z "$devtools_socket" ]; then
+case "$app_pid" in
+  ''|*[!0-9]*) echo "Expected one app process, found: $app_pid" >&2; exit 1 ;;
+esac
+# WebView names this socket with its owning process PID. Never inspect another app.
+devtools_socket="webview_devtools_remote_$app_pid"
+socket_ready=false
+attempt=0
+while [ "$attempt" -lt 20 ]; do
+  if adb shell cat /proc/net/unix | tr -d '\r' \
+    | awk -v expected="@$devtools_socket" '$NF == expected { found=1 } END { exit !found }'; then
+    socket_ready=true
+    break
+  fi
+  attempt=$((attempt + 1))
+  sleep 1
+done
+printf 'App PID: %s; DevTools socket: %s; ready: %s\n' "$app_pid" "$devtools_socket" "$socket_ready" | tee -a "$launch_log"
+if [ "$socket_ready" != true ]; then
+  adb shell cat /proc/net/unix >> "$launch_log"
   cat "$app_log"
   exit 1
 fi

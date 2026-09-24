@@ -33,6 +33,9 @@ jobs:
       - name: Install web dependencies
         run: npm ci
 
+      - name: Test Android startup verification
+        run: node --test tests/android-startup-verification.test.mjs
+
       - name: Build and sync native assets
         run: npm run native:sync
 
