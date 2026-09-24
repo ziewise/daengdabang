@@ -58,5 +58,23 @@
     "sha256": "46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821",
     "reason": "All192 final frames directly inspected. First 0.5-1.8s raises one foreleg while stretching the neck steeply upward in a prolonged howling pose. Later around 4.67-5.13s the head sweeps left-to-right abruptly within about0.46s with blurred muzzle/ears and rigid planted torso, then settles. Replace the exaggerated howl and abrupt head sweep with the owner-requested calm cute movement. A single balanced paw lift alone is not treated as a defect.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_hiandlight_harness_26": {
+    "productId": "p_1",
+    "sha256": "920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17",
+    "reason": "Directly inspected final frames 0..95 (0.000..3.958s). The same forepaw extends and returns around 0.375..0.750s, immediately repeats around 0.833..1.250s, repeats around 2.458..2.875s and again around 2.917..3.333s. Four nearly identical short pulses in the first four seconds, including adjacent repeated cycles, while the other legs and body stay rigid, reproduce the mechanical one-leg pumping reported by the user. Tail also oscillates continuously; paw repetitions are the decisive rejection. Replace with a balanced planted stance and gentle unhurried tail movement. Remaining final frames and native segment were not reviewed in this decision.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_v2_neon_ltd": {
+    "productId": "p_82",
+    "sha256": "852e288f83b27ffd8c5fe90c7892d2b719fee90bc633aec92811b3a152f75d93",
+    "reason": "Directly inspected final frames 0..95 (0.000..3.958s). Front paws alternate through repeated lift/fold/lower cycles: image-left paw 0.333..1.208s, opposite paw about 1.583..1.958s, image-left paw again 2.208..2.667s, opposite paw again 3.083..3.500s, and another lift starts 3.792s. These repeat with alternating pronounced head rolls while the torso and hind feet stay almost fixed. Repeated synchronized paw-and-head gestures produce a programmed dance instead of a calm natural portrait. Reject on this inspected interval; remaining final and native frames were not reviewed.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_v2_pikepurple": {
+    "productId": "p_89",
+    "sha256": "6dec635a937d5b564bd8c00c95ef1132ca8488f499525c3d3075bc878d80f192",
+    "reason": "Directly inspected final frames 0..95 (0.000..3.958s). A paw first rises and returns at 0.208..0.583s. The opposite foreleg lifts around 0.917s and pumps repeatedly while held off the floor: folded toward face around 1.083s, extended 1.208..1.333s, folded again 1.417..1.500s, extended 1.583..1.667s, then lowered by 1.917s. Another lifted forepaw repeats fast fold/extension pulses around 2.792..3.125s, 3.250..3.417s, 3.458..3.750s, and 3.833..3.958s while support legs stay rigid. This is the repetitive mechanical limb motion reported by the user. Reject on this inspected interval; remaining final and native frames were not reviewed.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
