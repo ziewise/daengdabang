@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { motionWithdrawals, motionWithdrawnFolders } from './helpers/hover-motion-withdrawals.mjs';
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -106,7 +107,7 @@ test("the exact reviewed Flow products retain the remaining explicit hover quara
         value.videoProvider === "ddb_exact_product_renderer" && !Object.hasOwn(expected.approvedPhotoEdits, folder)
     ));
     const separatelyApproved = { ...read("./fixtures/ziewcraft-single-release-20260911.json"), ...read("./fixtures/ziewcraft-delegated-release-20260911.json") };
-    assert.deepEqual(held.map(([folder]) => folder).sort(), expected.heldOverrideFolders.filter(folder => !Object.hasOwn(separatelyApproved, folder)));
+    assert.deepEqual(held.map(([folder]) => folder).sort(), [...new Set([...expected.heldOverrideFolders.filter(folder => !Object.hasOwn(separatelyApproved, folder)), ...motionWithdrawnFolders])].sort());
     for (const [folder] of held) {
         const row = raw.find((item) => item.folder === folder);
         assert.ok(row, folder);

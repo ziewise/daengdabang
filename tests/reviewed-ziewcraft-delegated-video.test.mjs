@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { motionWithdrawals, motionWithdrawnFolders } from './helpers/hover-motion-withdrawals.mjs';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -88,8 +89,16 @@ test('actual owner-delegated AI receipts activate exact product video bytes with
     assert.ok(Object.keys(records).length);
     for (const [folder, record] of Object.entries(records)) {
         const f = fixture(folder);
-        assert.equal(valid(f.product, records), true, folder);
-        assert.equal(safeCatalogHoverVideo(f.product), record.video, folder);
+        const withdrawn = motionWithdrawnFolders.includes(folder);
+        if (withdrawn) {
+            assert.equal(record.productId, motionWithdrawals[folder].productId);
+            assert.equal(record.sha256, motionWithdrawals[folder].sha256);
+            for (const field of ['video', 'videoProvider', 'videoJobId', 'videoQuality', 'videoZiewcraftIdentity']) {
+                assert.equal(f.product.raw[field], undefined, `${folder}: withdrawn ${field}`);
+            }
+        }
+        assert.equal(valid(f.product, records), !withdrawn, folder);
+        assert.equal(safeCatalogHoverVideo(f.product), withdrawn ? undefined : record.video, folder);
         const bytes = readFileSync(new URL('../public' + record.video, import.meta.url));
         assert.equal(createHash('sha256').update(bytes).digest('hex'), record.sha256);
         assert.equal(record.delegatedReview.review_actor.kind, 'ai');

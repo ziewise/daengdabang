@@ -1,0 +1,44 @@
+{
+  "canagan_dog_dental_6kg": {
+    "productId": "p_123",
+    "sha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6",
+    "reason": "All native 97 frames inspected. Vertical/front-facing and further tipped scoop retains fixed ring kibble, especially around 0.5–1.5 seconds. Loose dry contents do not follow gravity. Original prompt combines tipping with every kibble staying in scoop. Replace scene and motion.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "canagan_dog_highland_6kg": {
+    "productId": "p_128",
+    "sha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c",
+    "reason": "All native 97 frames inspected. Strongly tilted scoop holds solid dry kibble fixed through motion across four seconds. Contents have no realistic gravity response. Replace scene and motion.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "canagan_dog_salmon_6kg": {
+    "productId": "p_129",
+    "sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b",
+    "reason": "All native97 frames inspected. Dark ring kibble remains fixed in near-vertical wooden scoop as the wrist tips it farther downward and returns it repeatedly. Around 0.5–1.4 seconds the cavity faces toward camera/down with contents glued in place. Same gravity failure as p123/p128.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "canagan_dog_salmon_2kg": {
+    "productId": "p_194",
+    "sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe",
+    "reason": "All native97 frames inspected. The shallow silver spoon tilts steeply toward the camera around 0.7-1.2 seconds while its stacked dark ring kibble remains fixed in exactly the same arrangement. It levels and tips again later. The high pile is not supported by the shallow rim at the steep display angle. Replace for gravity failure.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "canagan_dog_highland_2kg": {
+    "productId": "p_195",
+    "sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b",
+    "reason": "All native97 frames inspected. The shallow silver spoon rotates from an upward-facing opening to a steep front-facing opening around 0.7-1.5 seconds and again after 3 seconds; the complete stack of solid kibble stays rigidly attached despite the unsupported steep angle. No settling or falling under gravity. Replace the tilted-spoon choreography.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "canagan_dog_dental_2kg": {
+    "productId": "p_197",
+    "sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86",
+    "reason": "All native97 frames inspected. The shallow silver spoon rotates to a steep front-facing angle around 0.3-1.2 seconds, then levels and tips again around 3.3-3.9 seconds. Golden ring kibble remains a rigid stack attached to the spoon rather than settling or falling. Replace for gravity failure.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001354": {
+    "productId": "p_474",
+    "sha256": "00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd",
+    "reason": "Exact room, chocolate Labrador and Tropical Bloom collar match user screenshot. All 192 paired frames directly inspected. 0.0–1.5 seconds: repeated large muzzle-up head jerks separated by roughly 0.3 seconds; near forepaw rises at about 0.75 seconds and remains bent with repeated pumping until about 1.9 seconds. Additional paw lift 4.2–4.45 seconds. Neck oscillation reads as overexcited, artificially accelerated modeling. Replace both segments; keeping child would retain another paw lift.",
+    "reviewVersion": "natural-motion-20260925"
+  }
+}
