@@ -82,5 +82,23 @@
     "sha256": "8492e9dc69f27c8e720b59a57e5ea05c76364c219258766ba5e7cb2b77ca3f21",
     "reason": "Directly inspected final frames 0..191 across this task and preserved prior checkpoint; native segment not inspected. The image-left foreleg folds at 0.208..0.542s then extends almost horizontally sideways at 0.583..0.792s, folds and holds, and repeats the same large sideways extension at 1.750..1.958s. Support legs and torso remain comparatively fixed. The extreme sideways sweep reads like a human arm gesture rather than a natural small canine paw offering. The paw finally lowers around 2.792..3.125s. Full-size frame 17 confirms the lateral extension. Reject the unnatural repeated foreleg gesture; this is not rejection for a single paw lift. The later planted stance does not repair the first segment.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_v2_avalanchewhite": {
+    "productId": "p_103",
+    "sha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6",
+    "reason": "Directly inspected final frames 0..191 and full-size final frame24. From 0.167..0.667s the image-left foreleg swings out sideways. At 0.667..2.667s it is held nearly horizontal with the paw rotated upward, resembling an upturned human palm; the elbow/forearm projects laterally while the other legs and torso barely adjust. Full-size 1.000s confirms the long, almost straight outward forearm and upturned paw. It lowers at about 2.708..3.167s. This is a single gesture, so no repeated paw pumping is claimed. Reject the sustained unnatural lateral limb pose and rigid balance, rather than a mere paw lift. Later 3.2..8.0s planted stance does not repair the first segment. Native segment was not directly inspected in this review.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000000765": {
+    "productId": "p_385",
+    "sha256": "70515d7b34000544d573255357abcc7e71fb08bac0bdb29a8327d677fa7b945a",
+    "reason": "Directly inspected all final frames 0..191. The image-left forepaw rises at about 0.625s, curls up at 0.750..0.792s, swings down/out at 0.833..0.917s, curls upward again through 1.000..1.125s, then drops to the floor by 1.333s. These two quick paddling motions occur within about 0.7 seconds while the other paws and trunk remain almost fixed. The 0.750s and 1.083s raised poses are only about 0.333 seconds apart; the repeated fast flexion/extension looks mechanical rather than an unhurried paw offer. The head then lifts toward 1.625s and settles in the following second. Later 4..8s stays planted with small face and tail movement, but does not repair the initial rapid paw paddling. Reject unnatural speed/repetitive jerks; a single ordinary paw lift alone is not the rejection reason. Native segment was not inspected during this review.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_v2_rangerred": {
+    "productId": "p_92",
+    "sha256": "d3a7b47b836b329d57147c2730afe30721faa18c9d9f343933607cda2cc90640",
+    "reason": "Directly inspected the current published final frames 0..191 and child-native frames 0..96. The same image-left forepaw is raised, held and lowered three times at approximately 0.417..1.417s, 2.208..3.000s and 3.792..4.167s. The starts repeat at about 1.7-second intervals while the other feet and torso retain almost the same stance; the upward head gesture recurs with the paw cycle. The repeated foreleg choreography dominates the first four seconds and reads as mechanical pumping instead of one spontaneous small paw offering. The final 4.2..8.0s has a quieter planted stance with small head tilts, which does not remove the repeated first segment. Full-size frame95 confirms the third lifted-paw pose. Reject for the repeated gesture under the requested natural-motion standard, not merely for lifting one paw; no claim of a broken limb or exact playback-rate failure.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
