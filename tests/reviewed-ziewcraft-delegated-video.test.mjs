@@ -118,6 +118,29 @@ test('reviewed replacement-lens demonstrations survive the storefront goggles ca
     f.record.delegatedReview.server_technical_gate_passed = false;
     assert.equal(valid(f.product, f.records), false, 'accessory classification cannot waive technical QA');
 });
+test('JSK V2 replacement lenses use accessory duration while real goggles still require wearing footage', () => {
+    for (const no of [416, 417]) {
+        const catalog = rows.find(row => row.no === no);
+        assert.match(catalog.name, /교체 렌즈.*V2/);
+        // Rebind a test-only accepted accessory fixture to exercise product type.
+        const f = fixture('rs_lens_original');
+        f.product.id = f.record.productId = `p_${no}`;
+        f.product.raw.no = f.record.videoZiewcraftIdentity.source.no = no;
+        f.record.delegatedReview.product.product_id = `p_${no}`;
+        if (f.record.delegationScope) f.record.delegationScope.product.product_id = `p_${no}`;
+        sync(f);
+        f.product.subcategory = 'goggles';
+        assert.equal(valid(f.product, f.records), true);
+        f.record.delegatedReview.server_technical_gate_passed = false;
+        assert.equal(valid(f.product, f.records), false);
+        f.record.delegatedReview.server_technical_gate_passed = true;
+        f.record.delegatedReview.coverage.native_frames.pop();
+        assert.equal(valid(f.product, f.records), false);
+    }
+    const goggles = fixture('rw_stashbag_mini_2');
+    goggles.product.subcategory = 'goggles';
+    assert.equal(valid(goggles.product, goggles.records), false);
+});
 test('revoked eligibility, rejection, changed current receipt and fabricated human flags cannot publish', () => {
     for (const change of [
         f => f.record.currentEligibility.owner_delegated_shop_candidate_current = false,
