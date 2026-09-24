@@ -1062,53 +1062,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
-  "canagan_dog_dental_6kg": {
-    "video": "/images/products/catalog/canagan_dog_dental_6kg/videos/f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_product_contents",
-    "videoJobId": "65f1871211eeaef8319576ba2efb3df5",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "65f1871211eeaef8319576ba2efb3df5",
-      "reviewId": "81c8e2c9e28769b77cc7b00cc8982b0b",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6",
-      "seconds": 4,
-      "source": {
-        "no": 123,
-        "folder": "canagan_dog_dental_6kg",
-        "name": "카나간 스몰브리드 덴탈 플라그오프 포 독 6kg",
-        "brandEn": "Canagan",
-        "isFood": true,
-        "image": "/images/products/catalog/canagan_dog_dental_6kg/canagan_dog_dental_6kg.webp",
-        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10385635039",
-        "gallery": [],
-        "details": [
-          "/images/products/catalog/canagan_dog_dental_6kg/details/official-visual-01.webp",
-          "/images/products/catalog/canagan_dog_dental_6kg/details/2.webp",
-          "/images/products/catalog/canagan_dog_dental_6kg/details/3.webp"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "6838b935a3d41801ccad232fdb31f5c4",
-        "sha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6"
-      },
-      "scopeId": "d31fb73d162fabc808a583aaee73efd7b2f4eb2367b1d84c768422dbbdcedf5f",
-      "scopeRegistrationSha256": "7752b046b3edaebe331724b18b2e0051d1aad4467f1d19d9fe245f07a5deb2c1",
-      "aiEvidenceSha256": "8e33def9c34a3b87a6879be4b53c77168e7f2cd7b1dfe1be5b3cf775cb73c4e9",
-      "receiptSha256": "cfd56a1e8ea12bd2a0c53466806099e868583db800aae0b318a4483997ff7be2",
-      "eligibilitySha256": "dc7d45cc86ca117aff89167c1f8b18a16c2f25cc60ce49b8be59a2382d772b6c",
-      "evidenceManifestSha256": "0e3c632734a7e1502ab3c64b4ae2be637394ac5104a8663b35b70d94b0304972"
-    },
-    "videoReviewSha256": "39ae577449031b8992abef4f0731e801d84295313b39a649964c055a268557b6",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null,
-    "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
-  },
+  "canagan_dog_dental_6kg": null,
   "canagan_dog_highland_2kg": {
     "video": "/images/products/catalog/canagan_dog_highland_2kg/videos/53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1156,53 +1110,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4f66cfb9a65aa44560dc2969955e4741f205c298"
   },
-  "canagan_dog_highland_6kg": {
-    "video": "/images/products/catalog/canagan_dog_highland_6kg/videos/32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_product_contents",
-    "videoJobId": "1f119f1226ac974cede0792bacb9c175",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "1f119f1226ac974cede0792bacb9c175",
-      "reviewId": "cd785c777bbf51b0c0e8ef5ede8b56eb",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c",
-      "seconds": 4,
-      "source": {
-        "no": 128,
-        "folder": "canagan_dog_highland_6kg",
-        "name": "카나간 하이랜드 피스트 포 독 6kg",
-        "brandEn": "Canagan",
-        "isFood": true,
-        "image": "/images/products/catalog/canagan_dog_highland_6kg/canagan_dog_highland_6kg.webp",
-        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10202355147",
-        "gallery": [],
-        "details": [
-          "/images/products/catalog/canagan_dog_highland_6kg/details/official-visual-01.webp",
-          "/images/products/catalog/canagan_dog_highland_6kg/details/2.webp",
-          "/images/products/catalog/canagan_dog_highland_6kg/details/3.webp"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "667187897daa0e2912a7c32e4deba116",
-        "sha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c"
-      },
-      "scopeId": "0713f516f5a3adf6839ad9fc00a3db3380cf6591b5382e6d38b103d40a13816a",
-      "scopeRegistrationSha256": "5a9604ffa4ebb4924a7fb64cd2012ae6399cb5c49861b28063cc05ee412efda8",
-      "aiEvidenceSha256": "ccbcbeeb8c6ed1594c515b4048e172758b773272935078e84a49e5a932aa417a",
-      "receiptSha256": "f377d4295d8f39f12fab8b1630f871943583f2a5418c8ebaad6fe1f0b2c1b40f",
-      "eligibilitySha256": "a80de4ac17bc4f708c42e3fa89b56ab20fed14c0b3b639c0fef647b3bb9876bd",
-      "evidenceManifestSha256": "99da73e77d5b08ecaad269b54d851766eb6e4dd43850be6a4f4b9a546a97f8dd"
-    },
-    "videoReviewSha256": "6b0e187efc57a46e72fb79d83feb6c21b74038848c7b56aef0f314374ff87a39",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null,
-    "videoDeliveryCommit": "dfb3b77017e36f8b6e64269e4f4ad32a917ab88e"
-  },
+  "canagan_dog_highland_6kg": null,
   "canagan_dog_salmon_6kg": {
     "video": "/images/products/catalog/canagan_dog_salmon_6kg/videos/e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -13366,65 +13274,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "e48598c4627fbdd10e021b0c17895da17cc24863"
   },
-  "rw_jsk_1000001354": {
-    "video": "/images/products/catalog/rw_jsk_1000001354/videos/00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd/hover.mp4",
-    "videoProvider": "ziewcraft",
-    "videoQuality": "approved_dog_wearing",
-    "videoJobId": "d8762419ff89096c9ae5b184b27e1b03",
-    "videoZiewcraftIdentity": {
-      "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "d8762419ff89096c9ae5b184b27e1b03",
-      "reviewId": "4f6094ba48fcb8437ad937246ce93d9c",
-      "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd",
-      "seconds": 8,
-      "source": {
-        "no": 474,
-        "folder": "rw_jsk_1000001354",
-        "name": "러프웨어 크래그 목줄 (2026FW)",
-        "brandEn": "Ruffwear",
-        "isFood": false,
-        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_018.jpg",
-        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001354",
-        "gallery": [
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_14.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_211.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_328.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_481.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_523.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_616.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_78.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_810.jpg",
-          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001354/image/detail/1000001168_detail_943.jpg"
-        ],
-        "details": [
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260820/5a1c181c7be013749c9ee9f360839ff0_182035.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260820/f65b4877e43fcd5d2f4c73255fb54aa9_182751.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260820/72e5ccc405ec40ef5e27dc6748da4cc5_182807.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260820/edb4c03600de67cb28515c87a9e6709f_182259.jpg",
-          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/8f75b8286aec97d372d945e8968b9b98_104027.jpg"
-        ]
-      },
-      "artifact": {
-        "artifact_id": "69c60bce4b3efcf53bbc7e9c68ede218",
-        "sha256": "00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd"
-      },
-      "scopeId": "e338d36215b598791c9b87cf5b322d52eebf4157886017818bce46899a0e2032",
-      "scopeRegistrationSha256": "dd034199946edca73605f412c3963195ea4fd3f99972f60de74a3eadeff82a03",
-      "aiEvidenceSha256": "46de7671736a26fdadb39a5c64a4cb2ac0402692c85c5ecfd6824e35f7910270",
-      "receiptSha256": "7f7ba20119686f08ce752bec34f322488587e6da6fe2f02bed77f07d77fad0b4",
-      "eligibilitySha256": "ced1990a3ffed8fe67a9b9a8a526abbac38ed3ab7567db34857f2956063d2fbb",
-      "evidenceManifestSha256": "a20a6318adb69eb2506bb60bda69d90200580b5640af1634380728f7462d8c67"
-    },
-    "videoReviewSha256": "3902f4c5149df0619cd61d4ddc514f9b97095f2d8f664a57e475a0358433195b",
-    "videoPlaybackMode": "once_hold_last_frame",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoGenerationIdentity": null,
-    "videoEditIdentity": null,
-    "videoReviewClass": null,
-    "videoTrimIdentity": null,
-    "videoDeliveryCommit": "5c0c8ef4aafc3a05215046541adac663c3308427"
-  },
+  "rw_jsk_1000001354": null,
   "rw_jsk_1000001199": {
     "video": "/images/products/catalog/rw_jsk_1000001199/videos/7a0dd8676e2cf5720b2116c281b2b8abeb63356e2227578a49a87831d3f11b7d/hover.mp4",
     "videoProvider": "ziewcraft",

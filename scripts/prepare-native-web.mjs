@@ -85,7 +85,15 @@ async function copyRelative(relativePath) {
     const destination = path.join(nativeRoot, relativePath);
     await access(source);
     await mkdir(path.dirname(destination), { recursive: true });
-    await cp(source, destination, { recursive: true });
+    // The 2.3 MB icon master is an input to native:assets, not a runtime icon.
+    // Keep the generated PWA icons while excluding only this build-time source.
+    const iconMaster = path.join(
+        exportRoot, "images", "pwa", "daengdabang-black-poodle-app-icon-master-v3.png",
+    );
+    await cp(source, destination, {
+        recursive: true,
+        filter: (sourcePath) => sourcePath !== iconMaster,
+    });
 }
 
 async function collectTextFiles(directory) {
