@@ -124,5 +124,35 @@
     "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100",
     "reason": "All final frames0..191 directly inspected, with original1080 frame030 at1.250s inspected full-size. During about0.833..1.958s the near foreleg extends sideways far from the chest; around1.25s its long forearm is almost horizontal and the paw rotates palm-up in a human-arm-like gesture. The full-size frame confirms the distorted shoulder/elbow/wrist presentation while the other three feet and torso remain planted. Reject for anatomy and balance, not for offering one paw or for a repeated cycle. Head and tail continue to move and later grounded stance does not repair the earlier distorted limb. Native97 and source references not reviewed for this early rejection.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001220": {
+    "productId": "p_443",
+    "sha256": "f57c308f1b676e08d9aaf941ae1f32ad15d6e53a86485c50f5f02a80ab86cf96",
+    "reason": "Directly inspected all final frames0..191. The opening near forepaw rises sharply0.167..0.292s and lowers by0.833s. The opposite forepaw then extends1.500..1.833s and remains held out until4.125s. While that leg is held, the head turns image-right about1.583..1.833s, snaps forward2.000..2.125s, immediately turns right again2.458..2.583s and returns2.625..2.708s; another abrupt leftward head change occurs3.792..3.875s. In the second segment a paw offer5.083..5.583s is followed almost immediately by a separate short near-paw flick5.875..6.125s. The several short head reversals and adjacent paw gestures, with mostly rigid torso, have the busy jerking rhythm the user requested removed. Reject naturalSpeed/noRepetitiveJerks, not the presence of any single paw offer. Native segment and source still were not inspected for this rejection.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001229": {
+    "productId": "p_448",
+    "sha256": "bd64a1746d57112a6e3c64d5bf18345140f2503212352a06cdeb9b1a83faf950",
+    "reason": "Directly inspected all final frames 0..191 and enlarged original-frame crops 120..151. The first paw offer rises about0.250..0.417s, holds and lowers1.875..2.000s; that single offer is not the rejection reason. After a brief opposite-forepaw movement4.458..4.583s, the near forepaw rises5.000..5.083s. While held, its elbow/forearm repeatedly reverses: extended/up5.167s, back/down5.292s, up5.417s, forward/down5.500s, back/up5.625s, forward/down5.833s, back/up6.000s, then lowers6.250..6.333s. These are small repeated oscillations within one raised-paw hold, not four complete ground-to-raised kicks. Their roughly0.2..0.3s repetition against a nearly fixed torso gives the mechanical pumping rhythm the user asked removed. Reject noRepetitiveJerks/naturalSpeed on this interval. Tail wagging alone is not a rejection reason. Native segment and source imagery were not inspected for this rejection.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001241": {
+    "productId": "p_457",
+    "sha256": "53231be4d5833873865d6451121aaa657cf712be36b3f3eb82d3d325b08d46af",
+    "reason": "Directly inspected final frames0..95 only (0.000..3.958s). Same near forepaw lifts/offers and lowers0.375..0.833s, repeats2.000..2.417s, repeats3.083..3.667s; the third gesture extends horizontally outward3.333..3.458s. The opposite forepaw also rises0.917..1.458s and begins again3.792..3.958s. Head turns upward/side0.667..1.500s and abruptly repeats from3.708s. Several alternating short paw gestures and repeated head-up changes against the mostly planted torso have an excessively busy, repetitive rhythm. Rejected noRepetitiveJerks/naturalSpeed based on this observed range, not simply because one paw is lifted. Remaining final96..191, native frames and source imagery were not reviewed for this early rejection.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001243": {
+    "productId": "p_459",
+    "sha256": "43977ace3d6d4f1b014fbedb8d46a388af0fdc2391a34f68b4a43940c2be916a",
+    "reason": "Directly inspected all final frames0..191 plus original1080 frame030 at1.250s. The forepaw rises0.208..0.792s, then the forearm extends horizontally outward with upward-facing paw0.833..1.833s while the dog bends its muzzle toward it. Full-size frame030 confirms a long forearm, markedly outward upper-limb/elbow presentation and upturned paw held beside the muzzle, giving a human-arm-like gesture. It lowers continuously1.917..2.667s. This is one sustained gesture, not repetitive paw pumping. Reject anatomyAndBalance for the limb presentation; do not reject merely for a paw offer. Later four-foot stance and tail motion do not repair the earlier distorted pose. Native frames and source references were not inspected for this rejection.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001245": {
+    "productId": "p_461",
+    "sha256": "9370f2fa35c2bcf9e3d6e480f4d4ea056a79ca258a8f77bf3b6ec74ebd92be54",
+    "reason": "Directly inspected final frames0..95 (0.000..3.958s). The same near forepaw rises0.583..0.917s and lowers1.042..1.292s, immediately repeats1.458..1.833s and lowers1.917..2.167s, then repeats2.292..2.500s and lowers2.542..2.667s. Head lifts along with these repeated gestures while the other three feet and torso remain nearly fixed. Three similar short pulses, with minimal pause and a progressively shorter third pulse, create the repetitive mechanical forepaw pumping the user asked removed. Reject noRepetitiveJerks/naturalSpeed, not one paw offer. Remaining final96..191, native frames and source images were not inspected for this early rejection.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
