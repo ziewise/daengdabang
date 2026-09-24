@@ -154,5 +154,29 @@
     "sha256": "9370f2fa35c2bcf9e3d6e480f4d4ea056a79ca258a8f77bf3b6ec74ebd92be54",
     "reason": "Directly inspected final frames0..95 (0.000..3.958s). The same near forepaw rises0.583..0.917s and lowers1.042..1.292s, immediately repeats1.458..1.833s and lowers1.917..2.167s, then repeats2.292..2.500s and lowers2.542..2.667s. Head lifts along with these repeated gestures while the other three feet and torso remain nearly fixed. Three similar short pulses, with minimal pause and a progressively shorter third pulse, create the repetitive mechanical forepaw pumping the user asked removed. Reject noRepetitiveJerks/naturalSpeed, not one paw offer. Remaining final96..191, native frames and source images were not inspected for this early rejection.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_jsk_1000001250": {
+    "productId": "p_463",
+    "sha256": "02ea5ac94d1d202d82b74016d95d6206444f1307c52f5879a4a60fc043b7deca",
+    "reason": "The image-right forepaw lifts about0.333..0.750s. During1.000..1.458s the limb extends diagonally outward/up, with its elbow projecting sideways and the white forearm forming a long straight human-arm-like shape ending in an upturned paw. The full1080 frame28 at1.167s confirms this is limb geometry, not merely thumbnail blur. It lowers1.542..2.333s. This single gesture is not rejected for repetition or speed; its sideways rotated arm/paw anatomy is the reason. The later head turn4.292..5.250s and settled ending do not correct that interval. All192 final frames were inspected; native and product source were not.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_jsk_1000001262": {
+    "productId": "p_468",
+    "sha256": "2c422ac279d7d35011e59f6a0a62b60ab947583375e0afc693c2296636f94481",
+    "reason": "The image-left forelimb lifts0.208..0.958s and remains extended laterally around1.000..1.500s before lowering1.583..2.250s. Full1080 frame26 at1.083s shows an almost horizontal forearm extending sideways, an outward-projecting elbow, and a paw rotated upward like a hand, while the other three feet remain planted. Reject the artificial forelimb geometry, not the fact that a single paw is offered or the ordinary tail wag. Inspected final0..95 only; remaining final, native and source were not inspected.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rs_jsk_1000001340": {
+    "productId": "p_470",
+    "sha256": "c19865ffdf153206b9a72cdbfb87c27e7eb258d1b97fbbdbf5438d6e5bca94e8",
+    "reason": "After the initial image-left forepaw lift from0.542s, the already raised paw repeatedly changes extension: outward1.083..1.208s, down/back1.292..1.500s, outward again1.583..1.625s, down1.667..1.792s, then slightly forward/up again around2.000s before settling by2.292s. These are small repeated flexions during one raised-paw hold, not several complete ground-to-lift cycles. The short repeated reversals against a nearly fixed torso create the mechanical pumping the new criterion excludes. Inspected final0..95 only; remaining final, native and source were not inspected.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_jsk_1000001346": {
+    "productId": "p_473",
+    "sha256": "2247c8fc99ea7c6343f52e4aa021905798b43d458f56a562cef5212c11883f7e",
+    "reason": "The first offer0.542..2.500s is reasonably paced and is not the rejection reason. In the second gesture4.333..5.167s, the near forelimb rotates sideways under a nearly stationary shoulder: the white distal limb points forward/inward at4.500s but swings behind the elbow toward the belly at5.000s, with the paw turning downward and the forearm contour shortening into a hand-like shape. Full1080 frames108 and120 resolve the abnormal twist that is less clear in the contact sheets. This is a limb articulation/anatomy rejection, not a claim of extra legs, multiple rapid full kicks or a completely frozen body. Four planted feet return byabout5.500s and the ending remains stable. Directly inspected all192 final frames and all97 native child frames. Source/product-reference comparison was not needed for this rejection and was not performed.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
