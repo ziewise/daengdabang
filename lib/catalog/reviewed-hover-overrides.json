@@ -16267,5 +16267,56 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "794b1af20128d2550bea4f98a9698c2aadfe5565"
+  },
+  "rw_jsk_1000000230": {
+    "video": "/images/products/catalog/rw_jsk_1000000230/videos/15ad95011101896a11b3bf93f760ceeeceb76e19f8599e62cd4129e29307b0ba/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "5ef365f3f4a46b3e248da566d6b2eadd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5ef365f3f4a46b3e248da566d6b2eadd",
+      "reviewId": "2d67c5d7ac57c7c96ab8810c7c9d205e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "15ad95011101896a11b3bf93f760ceeeceb76e19f8599e62cd4129e29307b0ba",
+      "seconds": 8,
+      "source": {
+        "no": 376,
+        "folder": "rw_jsk_1000000230",
+        "name": "러프웨어 싱글트랙 팩 반려견 배낭(Singletrak™ Pack)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000230/image/detail/1000000230_detail_01.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000230",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000230/image/detail/1000000230_detail_129.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000230/image/detail/1000000230_detail_257.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220810/Singletrax-Pack1_183734.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220125/Singletrax-Pack2_110506.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220928/Singletrax-Pack3_150959.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220929/88fbf8dcf558645be3128cf2e276e806_164656.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ed234cc4214e483ee3a36d65625711e4",
+        "sha256": "15ad95011101896a11b3bf93f760ceeeceb76e19f8599e62cd4129e29307b0ba"
+      },
+      "scopeId": "268a145d9825924dd43e466bd7f6e8bd08e83b71db66c34026ee3132cc3a35e5",
+      "scopeRegistrationSha256": "57c20e494596c655effabb9767e439ee52ed35055776eb39ee0cafe072914d88",
+      "aiEvidenceSha256": "5e262fb35527bdd7c06897ed683b4224377f4c0f27c52f03668663beed73993b",
+      "receiptSha256": "a73aa48acbce9e202a78129db24372ee0aa947fe3bfd1ae0935d53c1f629e604",
+      "eligibilitySha256": "a02f7546c1afb46023b7c7dfa55a18e74bcda176daa74cf68df9e9ab26b5b6aa",
+      "evidenceManifestSha256": "943d0efc4afced24abcbff3d3efa3b3c7042f75274341596fc34443fa134f785"
+    },
+    "videoReviewSha256": "247d1d700bd592af707a32b727855e753d8435ed7ddda9404c6aeca0e3097000",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "fd29de2a0111696f339202925a28a7dcadf28a02"
   }
 }
