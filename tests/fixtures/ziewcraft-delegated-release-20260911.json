@@ -1022,5 +1022,105 @@
   "perity_aloe_essence": {
     "productId": "p_10",
     "sha256": "1c0260814b1cfad6543d46c692dd6c53a6811a124952850c26c98ad8e15139cf"
+  },
+  "perity_carrot_shampoo_250ml": {
+    "productId": "p_205",
+    "sha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509"
+  },
+  "joaru_perfume_lilac": {
+    "productId": "p_318",
+    "sha256": "a575d66633cb17443096c4b3368bdbcee09498a43875ff619cf35696ae5ee61e"
+  },
+  "annapet_soju": {
+    "productId": "p_246",
+    "sha256": "4ca1fafd346d915366a58cd2272e985f4ea873eaa78d44a7b807c121cbf482fa"
+  },
+  "joaru_perfume_cashmere": {
+    "productId": "p_317",
+    "sha256": "e7212d13d164b33e9ba53dfb4eb4284120ec2b75e874353ed7c5fa32977e4cc3"
+  },
+  "ip_trovbiz_flyingstick": {
+    "productId": "p_308",
+    "sha256": "6bf896b49a97e0843fcf82f8c5a67766c13f50c055e561216f2015125379f99c"
+  },
+  "iby_backpack_fc2297": {
+    "productId": "p_247",
+    "sha256": "898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70"
+  },
+  "ip_trovbiz_adventure": {
+    "productId": "p_303",
+    "sha256": "8a8d0b832442604dd88673c346f087d005dec0a37d55343f94e1b2cbb59a4494"
+  },
+  "ot_goliath_harness": {
+    "productId": "p_200",
+    "sha256": "572b113806c339ca9b2b034c76f88dbb1e00d6e6c74847ca9e41c56b91fa48f1"
+  },
+  "rw_campflyer_disc_26": {
+    "productId": "p_3",
+    "sha256": "a80307c1caf5323549194eeb0e39a56ce4ccb300e309abe070bbacf0064b3fbc"
+  },
+  "joaru_perfume_cotton": {
+    "productId": "p_319",
+    "sha256": "b2221c822c655063c77d3368fb4672c779f007588becd4628b6321dec3b3a72b"
+  },
+  "joaru_perfume_daisy": {
+    "productId": "p_320",
+    "sha256": "ef137ce9d4e2111b41243cf955cdb2fe5d9bb2ee4ba95b80ece4b296fdcb564b"
+  },
+  "rs_jsk_1000001109": {
+    "productId": "p_416",
+    "sha256": "2e93a51de114f950c7e27b2e18a0b83b9b6e9f15aab1859c645cdb4b8a445662"
+  },
+  "aff_stepbystep_3tier": {
+    "productId": "p_263",
+    "sha256": "5d2c6f6f6945e9d22f31c41ad66578e3a389d9caa813ecdc33b7d6247f760b43"
+  },
+  "rw_jsk_1000001132": {
+    "productId": "p_421",
+    "sha256": "42b5aec38e8fffe08764f8e1f642ce3dbcf1bfb8a288be4a37b4ad27760bf336"
+  },
+  "rw_jsk_1000000946": {
+    "productId": "p_390",
+    "sha256": "a302c4e4e0e7f1b1d0981ba2075750ec84fbd6fce894f2c1ee2283e60efddfca"
+  },
+  "rw_jsk_1000001234": {
+    "productId": "p_453",
+    "sha256": "2831366facfc882117655e4708348e511c280ad079142fc3a5ed87f7d7b07795"
+  },
+  "rw_jsk_1000001228": {
+    "productId": "p_447",
+    "sha256": "aea3bf8dcfdd570fc23f8329c252b8c8a5c2dd0ce5468c29d1bc58969dfcc004"
+  },
+  "rw_leash_trailrunner_23": {
+    "productId": "p_228",
+    "sha256": "9615e5c6684e586ef07b01cafecd86bb806e203de18fe5e4f66f1fe75406751f"
+  },
+  "rw_leash_flatout": {
+    "productId": "p_235",
+    "sha256": "c2ed4228a1793b9cf9296a0f9f5e15e2bd834da317ea4aaa0c832f41f4a55238"
+  },
+  "rw_jsk_1000000773": {
+    "productId": "p_387",
+    "sha256": "e19557771e482ed0b89a3560a53aea47d5b95625f937e9df5b459f7944c09dd1"
+  },
+  "rw_jsk_1000000962": {
+    "productId": "p_395",
+    "sha256": "4795c1626ecbec486a23bce312f01f2cb58bfa42142d91720c2149d15d594de2"
+  },
+  "rw_jsk_1000001194": {
+    "productId": "p_432",
+    "sha256": "dd1b03ee8b1390d33728e4bd1c244b2b0b7c49b3f4304fa6fadfabccbdfb8c7f"
+  },
+  "rw_jsk_1000000195": {
+    "productId": "p_373",
+    "sha256": "8d7aa0d2f186ab06dec49c3c423298ef702bdba08a195284de947aced8184ace"
+  },
+  "rw_jsk_1000000984": {
+    "productId": "p_402",
+    "sha256": "ae401efb632400ee2e712a388a244157114f0d215dc09cdc4e69c4885e250ecd"
+  },
+  "rw_jsk_1000000985": {
+    "productId": "p_403",
+    "sha256": "4ea16251799e2f3b69b35e7b229701d1f2943a3476ea652a25a31bdc4f1cfde4"
   }
 }
