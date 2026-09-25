@@ -1016,7 +1016,53 @@
     "videoDeliveryCommit": "899dece6de72f2692f9758750de3aad725dbc3ce"
   },
   "canagan_dog_dental_2kg": null,
-  "canagan_dog_dental_6kg": null,
+  "canagan_dog_dental_6kg": {
+    "video": "/images/products/catalog/canagan_dog_dental_6kg/videos/db88d0801f83abd5d7d0566ddd1f2be2878fde3b6ab6227e815361f5eadebd4d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "9576144bcbc1d50f9b4d6b64dfeb1cf4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9576144bcbc1d50f9b4d6b64dfeb1cf4",
+      "reviewId": "21cd7fc5757ff7feb8def62fcfda90a9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "db88d0801f83abd5d7d0566ddd1f2be2878fde3b6ab6227e815361f5eadebd4d",
+      "seconds": 4,
+      "source": {
+        "no": 123,
+        "folder": "canagan_dog_dental_6kg",
+        "name": "카나간 스몰브리드 덴탈 플라그오프 포 독 6kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_dental_6kg/canagan_dog_dental_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10385635039",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_dental_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_dental_6kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_dental_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5f0335b25113e4ecdd1426d6d7da9a30",
+        "sha256": "db88d0801f83abd5d7d0566ddd1f2be2878fde3b6ab6227e815361f5eadebd4d"
+      },
+      "scopeId": "e57694b88bb93e7248b60a60c21c62d0b7bbacc1f426d504b0bf43cb9e4ec1ba",
+      "scopeRegistrationSha256": "e9baaa80a84c93a5d8985173995309d4c8daaec4a03df9baca370470927abfa5",
+      "aiEvidenceSha256": "af59b76ee74c3bb0f4d9179c73c41e356cdab60df8b30ea639589373e3dbf1d1",
+      "receiptSha256": "313ebfee8f9cdfa7d2ccce085aca49c055c58ee0dd58bef8539c54e295c4588f",
+      "eligibilitySha256": "29f8d81c86dda895dc834cdba6a8d3fc70f73ce0d00e2d9dda1af8a199785d14",
+      "evidenceManifestSha256": "cdc2f610eb681403531bb8ece17b9e8f3efe810938242f2e3d67daae45727c7b"
+    },
+    "videoReviewSha256": "ed446b6033cbe2d7b8cd276f67d028234b7cbf40ba1c8615d085db47a77a236b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1b2f6d1f066852637e1acaf945788d6d6fc5fde2"
+  },
   "canagan_dog_highland_2kg": null,
   "canagan_dog_highland_6kg": null,
   "canagan_dog_salmon_6kg": null,
@@ -5516,7 +5562,59 @@
     "videoDeliveryCommit": "6d9cd314dd03a0b7451aa9bfa5d0481053620203"
   },
   "rs_v2_pikepurple": null,
-  "rs_v2_rangerred": null,
+  "rs_v2_rangerred": {
+    "video": "/images/products/catalog/rs_v2_rangerred/videos/2eddccd9a5c412ed758d43ecbe11a26be597e5f4dff45e9bbbd984764ba636c2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "1075fc185e86fdf25b23f944a893ef0d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1075fc185e86fdf25b23f944a893ef0d",
+      "reviewId": "68af1038e3a41ff7c948b62fd884c130",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2eddccd9a5c412ed758d43ecbe11a26be597e5f4dff45e9bbbd984764ba636c2",
+      "seconds": 8,
+      "source": {
+        "no": 92,
+        "folder": "rs_v2_rangerred",
+        "name": "렉스스펙스 V2 레인저 레드 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001147/image/detail/1000001147_detail_049.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001147",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001147/image/detail/1000001147_detail_196.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001147/image/detail/1000001147_detail_258.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001147/252c558fbf1f039d1ca697b65a8bb2e6.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001147/0056d0bc17b638b018dd01767cbd413b.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001147/c799948a70d7b0d4e1ea5d9f17571b3f.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001147/0f13f01603f048aaca1036f5e21b8f0a.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001147/b72947e5a6912b4293f0a07d24acf8fb.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001147/715123cb556aa9e61ce309530143dadf.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "17b042cbe10694fddd59a3edffdb0d06",
+        "sha256": "2eddccd9a5c412ed758d43ecbe11a26be597e5f4dff45e9bbbd984764ba636c2"
+      },
+      "scopeId": "a62ba686843baba6e2a6d7a888b7b4bf92dc62c48f0584702e90035584298ca7",
+      "scopeRegistrationSha256": "1a5fc6d15b27b773f247f909b9102c8669e2cce77a1ddf156e332836718324b5",
+      "aiEvidenceSha256": "ef029c4592eb21b2e9fbd9e632e3e984c2dc77a05fc777a719bfba7f0458a82c",
+      "receiptSha256": "1b5a7c968eb80f30f55c83c159410806104f831906e2a803a71b28da6a5402fd",
+      "eligibilitySha256": "fb515d59002eeffb396be3197dece8eb10d5e8c1c29448defea4f49cc80251bd",
+      "evidenceManifestSha256": "72674679f4498c5062d360672a6ce247013884e21f0915ae0e71e08b4cc6d50f"
+    },
+    "videoReviewSha256": "51bc6b8e622904ce9695ab47ad80cce5bf0eba35dfc06fd9ecec3becc9c8cf0d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1b2f6d1f066852637e1acaf945788d6d6fc5fde2"
+  },
   "rs_v2_tazerteal": {
     "video": "/images/products/catalog/rs_v2_tazerteal/videos/c6844e826589cbc904549ce01adfea0e4b613b177dbef423b4d1e6c0c60777c6/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -12647,7 +12745,67 @@
     "videoDeliveryCommit": "85c37cf9fe0d883e90fa95aa40317664f7fdff45"
   },
   "rw_jsk_1000001241": null,
-  "rw_jsk_1000000765": null,
+  "rw_jsk_1000000765": {
+    "video": "/images/products/catalog/rw_jsk_1000000765/videos/435ce7aea68640781b260df641e1473cb8583a1cc68c22b07ce5721c51f8af27/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "a66d81556967e6f34a8929eacd46aabe",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "a66d81556967e6f34a8929eacd46aabe",
+      "reviewId": "6a2fb638080648cb3392d2d6cbff1138",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "435ce7aea68640781b260df641e1473cb8583a1cc68c22b07ce5721c51f8af27",
+      "seconds": 8,
+      "source": {
+        "no": 385,
+        "folder": "rw_jsk_1000000765",
+        "name": "러프웨어 플랫 아웃 목줄(Flat Out™ Collar)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_089.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000765",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_114.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_26.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_353.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_456.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_571.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_630.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_734.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_854.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_910.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_1074.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_1180.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000765/image/detail/1000000765_detail_1211.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000765/225e79023a47a00648f1d8f0d8ad0087.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000765/849b007e4a21fa6481265e02e0954348.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000765/b03fd558312a410a576704d2d72d50fe.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000765/9eef1c24290beb8d926a3423405ec0ee.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4b90b65923a098432f68a1d271925b24",
+        "sha256": "435ce7aea68640781b260df641e1473cb8583a1cc68c22b07ce5721c51f8af27"
+      },
+      "scopeId": "dce3e39f3f345f9f273c501de2713e52691671d113964b4b3000c48773b2e775",
+      "scopeRegistrationSha256": "e1c5b1897e74576836a79296d25a6d9f732e4ee790ed48b6ea85f248a4da49eb",
+      "aiEvidenceSha256": "5b98ba9b620509ac7af513883a33342189f254f2c0a743846f49f8529cfc7399",
+      "receiptSha256": "1a4355ec927959e237d55d91ddee32664e8169a920ec3a297df65b77cec1adb4",
+      "eligibilitySha256": "2af4a5e75b559d059647565813a25baf38497bc17f7e9c60c8eca75dce610343",
+      "evidenceManifestSha256": "9f46d5d2f56fa74556523bd6a82281c02138eedd4b7fbd750129567301fee847"
+    },
+    "videoReviewSha256": "2d31da7eaca731517b41139b0ad3f2d46c96d91f7a16b516f933abf1bd6688bc",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "1b2f6d1f066852637e1acaf945788d6d6fc5fde2"
+  },
   "rw_jsk_1000000164": {
     "video": "/images/products/catalog/rw_jsk_1000000164/videos/f83c1a182109f81d653804b4683bcbe5f6d1147f210dbb330699b32beb9a37cc/hover.mp4",
     "videoProvider": "ziewcraft",

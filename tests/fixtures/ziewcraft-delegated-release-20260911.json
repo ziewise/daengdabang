@@ -221,11 +221,11 @@
   },
   "rs_v2_rangerred": {
     "productId": "p_92",
-    "sha256": "d3a7b47b836b329d57147c2730afe30721faa18c9d9f343933607cda2cc90640"
+    "sha256": "2eddccd9a5c412ed758d43ecbe11a26be597e5f4dff45e9bbbd984764ba636c2"
   },
   "rw_jsk_1000000765": {
     "productId": "p_385",
-    "sha256": "70515d7b34000544d573255357abcc7e71fb08bac0bdb29a8327d677fa7b945a"
+    "sha256": "435ce7aea68640781b260df641e1473cb8583a1cc68c22b07ce5721c51f8af27"
   },
   "rw_jsk_1000000164": {
     "productId": "p_367",
@@ -725,7 +725,7 @@
   },
   "canagan_dog_dental_6kg": {
     "productId": "p_123",
-    "sha256": "f877cd9fbf272cffea8beae21ac430f40277706dc7a86b29aa2921673c4f17c6"
+    "sha256": "db88d0801f83abd5d7d0566ddd1f2be2878fde3b6ab6227e815361f5eadebd4d"
   },
   "canagan_dog_salmon_6kg": {
     "productId": "p_129",
