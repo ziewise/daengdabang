@@ -69,7 +69,8 @@ for (const [folder, review] of Object.entries(reviews)) {
         const expectedActiveVideo = replacement
             ? `/images/products/catalog/${folder}/videos/${replacement.sha256}/hover.mp4`
             : trims[folder]?.video ?? review.video;
-        assert.equal(safeCatalogHoverVideo({ ...candidate, video: active.video, raw: active }), expectedActiveVideo);
+        assert.equal(safeCatalogHoverVideo({ ...candidate, video: active.video, raw: active }),
+            motionWithdrawnFolders.includes(folder) ? undefined : expectedActiveVideo);
         assert.equal(effective.videoProvider, "google_flow_web");
         assert.equal(effective.video, review.video);
         assert.equal(effective.videoJobId, review.videoJobId);

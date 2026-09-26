@@ -15,6 +15,22 @@ function fixture(folder = 'soopa_dental_bananapumpkin') {
     return { record, records: { [folder]: record }, product: { id: `p_${raw.no}`, folder, video: raw.video, raw } };
 }
 function sync(f) { f.product.raw.videoZiewcraftIdentity = structuredClone(f.record.videoZiewcraftIdentity); }
+function historicalFixture(folder) {
+    const f = fixture(folder);
+    if (motionWithdrawnFolders.includes(folder)) {
+        assert.equal(valid(f.product, f.records), false, 'withdrawn runtime media remains disabled');
+        assert.equal(safeCatalogHoverVideo(f.product), undefined);
+        for (const field of ['video', 'videoProvider', 'videoJobId', 'videoQuality', 'videoZiewcraftIdentity']) {
+            f.product.raw[field] = structuredClone(f.record[field]);
+        }
+        Object.assign(f.product.raw, {
+            videoProvider: 'ziewcraft', videoJobId: f.record.videoZiewcraftIdentity.jobId,
+            videoReviewSha256: f.record.publication.sha256, videoPlaybackMode: f.record.playbackMode,
+        });
+        f.product.video = f.record.video;
+    }
+    return f;
+}
 
 test('reviewed hand demonstrations are eligible for accessories without claiming a dog appears', () => {
     const treatBag=fixture('rw_treattrader_bag');
@@ -40,7 +56,7 @@ test('reviewed hand demonstrations are eligible for accessories without claiming
 });
 test('reviewed four-second leash demonstrations survive the storefront leash category', () => {
     for (const folder of ['rw_ridgeline_leash_26', 'rw_frontrangeflex_leash_26']) {
-        const f = fixture(folder);
+        const f = historicalFixture(folder);
         f.product.subcategory = 'leash';
         assert.equal(f.record.videoQuality, 'approved_product_interaction');
         assert.equal(f.record.videoZiewcraftIdentity.seconds, 4);
@@ -49,7 +65,7 @@ test('reviewed four-second leash demonstrations survive the storefront leash cat
         f.record.delegatedReview.server_technical_gate_passed = false;
         assert.equal(valid(f.product, f.records), false, 'leash classification cannot waive technical QA');
     }
-    const worn = fixture('rw_jsk_1000001172');
+    const worn = historicalFixture('rw_jsk_1000001172');
     worn.product.subcategory = 'leash';
     assert.equal(worn.record.videoZiewcraftIdentity.seconds, 8);
     assert.equal(valid(worn.product, worn.records), true);
@@ -58,7 +74,7 @@ test('reviewed four-second leash demonstrations survive the storefront leash cat
     assert.equal(valid(worn.product, worn.records), false, 'existing dog-worn leash video still requires both segments');
 });
 test('toothpaste uses its reviewed hand demonstration as oral care rather than edible treats', () => {
-    const f = fixture('fumble_toothpaste');
+    const f = historicalFixture('fumble_toothpaste');
     assert.equal(f.product.raw.isFood, false);
     assert.equal(f.product.raw.isHygiene, true);
     assert.equal(f.product.raw.useMain, '위생/미용');
