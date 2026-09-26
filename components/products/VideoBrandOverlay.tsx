@@ -1,7 +1,7 @@
 import { videoBrandingMode } from "@/lib/catalog/video-branding";
 
-export default function VideoBrandOverlay({ src }: { src: string | undefined }) {
-    if (videoBrandingMode(src) === "baked") return null;
+export default function VideoBrandOverlay({ src, forceOverlay = false }: { src: string | undefined; forceOverlay?: boolean }) {
+    if (!forceOverlay && videoBrandingMode(src) === "baked") return null;
     return (
         <div className="ddb-watermark-cover" aria-hidden="true">
             <div className="ddb-watermark-logo">

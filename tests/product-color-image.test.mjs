@@ -3,9 +3,11 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import test from "node:test";
 import ts from "typescript";
+import * as hoverVideoFraming from "../lib/catalog/hover-video-framing.ts";
 
 const require = createRequire(import.meta.url);
 function loadModule(relative, dependencies = {}, browser = {}) {
+    dependencies = { "@/lib/catalog/hover-video-framing": hoverVideoFraming, ...dependencies };
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
     });

@@ -24,6 +24,7 @@ import { useStore } from "@/lib/store";            // 운영 사이트 위시리
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 import ProductColorImage from "@/components/products/ProductColorImage";
 import { useProductVideo } from "@/components/products/useProductVideo";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
@@ -114,6 +115,8 @@ export default function ProductCard({
                         <video
                             ref={videoRef}
                             src={p.video}
+                            style={hoverVideoStyle(p.video)}
+                            data-hover-video-fit="cover"
                             muted
                             loop={!playOnce}
                             playsInline
@@ -124,7 +127,7 @@ export default function ProductCard({
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />
                     )}
-                    {hasVideo && videoActive && <VideoBrandOverlay src={p.video} />}
+                    {hasVideo && videoActive && <VideoBrandOverlay src={p.video} forceOverlay={hoverVideoFraming(p.video)?.restoreBrandOverlay} />}
                     {hasVideo && videoActive && videoCaption && (
                         <span className="pointer-events-none absolute bottom-2 left-2 rounded bg-white/95 px-2 py-1 text-[10px] text-neutral-700">{videoCaption}</span>
                     )}

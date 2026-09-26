@@ -53,3 +53,10 @@ test("reviewed baked videos do not acquire a second rendered logo", () => {
         assert.equal(renderToStaticMarkup(createElement(VideoBrandOverlay, { src })), "");
     }
 });
+
+test("a cropped footer restores one shop logo inside the filled viewport", () => {
+    const src = Object.keys(VIDEO_BRANDING_REVIEWS)[0];
+    const html = renderToStaticMarkup(createElement(VideoBrandOverlay, { src, forceOverlay: true }));
+    assert.equal((html.match(/class="ddb-watermark-cover"/g) || []).length, 1);
+    assert.equal((html.match(/class="ddb-watermark-symbol"/g) || []).length, 1);
+});

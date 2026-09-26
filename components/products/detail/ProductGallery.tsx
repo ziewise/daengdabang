@@ -6,6 +6,7 @@ import type { CatalogProduct, ProductColor } from "@/lib/catalog";
 import { productColorImageKey } from "@/lib/catalog/product-color-image";
 import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 import ProductColorImage from "@/components/products/ProductColorImage";
 
 interface Props {
@@ -84,6 +85,8 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                     <video
                         ref={videoRef}
                         src={p.video}
+                        style={hoverVideoStyle(p.video)}
+                        data-hover-video-fit="cover"
                         className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${isVideoVisible ? "opacity-100" : "opacity-0"}`}
                         muted
                         loop={!playOnce}
@@ -94,7 +97,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                     />
                 )}
 
-                {isVideoVisible && <VideoBrandOverlay src={p.video} />}
+                {isVideoVisible && <VideoBrandOverlay src={p.video} forceOverlay={hoverVideoFraming(p.video)?.restoreBrandOverlay} />}
                 {isVideoVisible && videoCaption && (
                     <span className="pointer-events-none absolute bottom-3 left-3 rounded bg-white/95 px-2 py-1 text-xs text-neutral-700">{videoCaption}</span>
                 )}

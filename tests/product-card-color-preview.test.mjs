@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import vm from "node:vm";
 import test from "node:test";
 import * as reviewGroups from "../lib/catalog/review-groups.ts";
+import * as hoverVideoFraming from "../lib/catalog/hover-video-framing.ts";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
@@ -56,6 +57,7 @@ function card(overrides = {}) {
         "next/link": "a",
         "@/lib/catalog": { getBestRank: () => null, isNewProduct: () => false },
         "@/lib/catalog/review-groups": reviewGroups,
+        "@/lib/catalog/hover-video-framing": hoverVideoFraming,
         "@/lib/catalog/price-badge": { catalogPriceBadgeClass: () => "", catalogPriceBadgeLabel: () => "정가" },
         "@/lib/shop": { productHref: () => "/product/fixture" },
         "@/lib/store": { useStore: () => ({ toggleWishlist: id => wished.push(id), isWished: () => false }) },

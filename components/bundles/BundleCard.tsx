@@ -6,6 +6,7 @@ import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
 import { bundleCustomerBadge, bundleHref, bundleImageCandidates, type Bundle } from "@/lib/bundles";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 
 type Props = {
     bundle: Bundle;
@@ -87,6 +88,8 @@ export default function BundleCard({ bundle, priority }: Props) {
                     <video
                         ref={videoRef}
                         src={bundle.video}
+                        style={hoverVideoStyle(bundle.video)}
+                        data-hover-video-fit="cover"
                         poster={candidates[0] || undefined}
                         muted
                         loop
@@ -99,7 +102,7 @@ export default function BundleCard({ bundle, priority }: Props) {
                 )}
                 {videoVisible && (
                     <div>
-                        <VideoBrandOverlay src={bundle.video} />
+                        <VideoBrandOverlay src={bundle.video} forceOverlay={hoverVideoFraming(bundle.video)?.restoreBrandOverlay} />
                     </div>
                 )}
                 <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-neutral-950/82 via-neutral-950/24 to-transparent p-3 text-white">
