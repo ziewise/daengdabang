@@ -1134,5 +1134,25 @@
   "rw_jsk_1000001230": {
     "productId": "p_449",
     "sha256": "255af90bdd23ea2328de85969134419401a9ac74cab1e833a54f18cbed09519a"
+  },
+  "rw_barknboot_liners": {
+    "productId": "p_340",
+    "sha256": "99af3a107928a3e0cedc04671e036596039faed335a4fa862927f9b04501760b"
+  },
+  "rw_rogue_longline_26fw": {
+    "productId": "p_360",
+    "sha256": "ee9e474c4e4bf30d4a15919034280cbad69a9eafbc2fc9fc2d09ead8ff65f325"
+  },
+  "rw_jsk_1000000897": {
+    "productId": "p_388",
+    "sha256": "fa3b19aeef2283d730600494fd3637043a9961cfa04346e0658430a029145fe8"
+  },
+  "rw_jsk_1000001129": {
+    "productId": "p_418",
+    "sha256": "8e2d94843008fb469d52c2220e16ea38f089b58cdb9ba8131b83f792a544749e"
+  },
+  "rw_jsk_1000001226": {
+    "productId": "p_446",
+    "sha256": "270e0cfece6140eaa19335ad4682b229cc7e5c03e1f9c6327ce872a85c52311b"
   }
 }
