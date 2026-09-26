@@ -7,6 +7,7 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {safeCatalogHoverVideo} from '../lib/pet-tryon-eligibility.ts';
 import {applyReviewedHoverOverride} from '../lib/catalog/reviewed-hover-overrides.ts';
+import {motionWithdrawnFolders} from './helpers/hover-motion-withdrawals.mjs';
 // Synthetic regression data, never provider evidence and never written to production registries.
 function fixture(food=true){
  const f=contentsReviewFixture('legacy_service_attestation'),r=f.record,i=r.videoZiewcraftIdentity;
@@ -56,6 +57,13 @@ test('the three actual human-approved release files activate only their exact cu
  for(const [folder,e] of Object.entries(expected)){
   const rows=raw.filter(r=>r.folder===folder);assert.equal(rows.length,1);
   const r=records[folder],effective=applyReviewedHoverOverride(rows[0]),product={id:`p_${effective.no}`,folder,raw:effective,video:effective.video};
+  if(motionWithdrawnFolders.includes(folder)){
+   assert.equal(valid(product,records),false);assert.equal(safeCatalogHoverVideo(product),undefined);
+   // Exercise the unchanged archival authority and substitution rules separately.
+   Object.assign(effective,{video:r.video,videoProvider:r.videoProvider,videoJobId:r.videoJobId,
+    videoQuality:r.videoQuality,videoPlaybackMode:r.playbackMode,videoReviewSha256:r.review.sha256,
+    videoZiewcraftIdentity:structuredClone(r.videoZiewcraftIdentity)});product.video=r.video;
+  }
   assert.equal(r.productId,e.productId);assert.equal(r.sha256,e.sha256);assert.equal(valid(product,records),true);
   assert.equal(safeCatalogHoverVideo(product),r.video);
   assert.equal(createHash('sha256').update(readFileSync(new URL(`../public${r.video}`,import.meta.url))).digest('hex'),e.sha256);

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
+import { motionWithdrawnFolders } from './helpers/hover-motion-withdrawals.mjs';
 import { getPetTryOnEligibility, safeDogWearingCatalogVideo, safeCatalogHoverVideo } from '../lib/pet-tryon-eligibility.ts';
 import { applyReviewedHoverOverride } from '../lib/catalog/reviewed-hover-overrides.ts';
 
@@ -16,15 +17,18 @@ const retained = [
   ['rw_coverall_snow_25fw', 39, '139fa44ad841c8a80fad7e549842c30e1ec3a5d1ff228d6b75761002dd22f7a8'],
   ['rs_v2_volcanored', 99, '5a2ac6a0e464e74a4bcb4ac65b02082b1ec979b453e2be572ddfb88c995acb62'],
 ];
-function candidate(row) {
-  const effective = applyReviewedHoverOverride(row);
+function candidate(row, historical = false) {
+  const effective = historical ? row : applyReviewedHoverOverride(row);
   return { id: `p_${row.no}`, folder: row.folder, name: effective.name, image: effective.image,
     subcategory: 'wear', video: effective.video, raw: effective };
 }
 
-test('only the three specifically retained legacy assets pass, with unchanged local bytes', () => {
+test('retained legacy bytes remain intact while current natural-motion withdrawals stay hidden', () => {
   for (const [folder, no, digest] of retained) {
-    const product = candidate(raw.find(row => row.folder === folder));
+    const row = raw.find(row => row.folder === folder);
+    const current = candidate(row);
+    assert.equal(Boolean(current.video), !motionWithdrawnFolders.includes(folder));
+    const product = candidate(row, true);
     assert.equal(product.id, `p_${no}`);
     assert.ok(product.video);
     assert.equal(safeDogWearingCatalogVideo(product), product.video);
@@ -33,13 +37,13 @@ test('only the three specifically retained legacy assets pass, with unchanged lo
     assert.equal(safeCatalogHoverVideo({ ...product, name: '상품명 변경', subcategory: 'unclassified' }), product.video,
       'retained publication depends on explicit asset identity, not mutable name/category');
   }
-  const legacyActive = raw.map(candidate).filter(product => safeDogWearingCatalogVideo(product));
-  assert.deepEqual(legacyActive.map(product => product.folder).sort(), retained.map(([folder]) => folder).sort());
+  const legacyActive = raw.map(row => candidate(row)).filter(product => safeDogWearingCatalogVideo(product));
+  assert.deepEqual(legacyActive.map(product => product.folder).sort(), retained.map(([folder]) => folder).filter(folder => !motionWithdrawnFolders.includes(folder)).sort());
 });
 
 test('retained product/path/provider/job/quality substitutions never grant approval', () => {
   for (const [folder] of retained) {
-    const product = candidate(raw.find(row => row.folder === folder));
+    const product = candidate(raw.find(row => row.folder === folder), true);
     for (const changed of [
       { ...product, id: 'p_9999' }, { ...product, folder: 'other' },
       { ...product, raw: { ...product.raw, folder: 'other' } },
@@ -83,7 +87,7 @@ test('each exact approved Flow manifest record still passes and substitutions st
       subcategory: flowSnapshot.expectedSubcategories[folder] };
     const replacement = delegated[folder];
     if (replacement) assert.equal(replacement.productId, active.id);
-    assert.equal(safeCatalogHoverVideo(active), replacement
+    assert.equal(safeCatalogHoverVideo(active), motionWithdrawnFolders.includes(folder) ? undefined : replacement
       ? `/images/products/catalog/${folder}/videos/${replacement.sha256}/hover.mp4`
       : trims[folder]?.video ?? review.video);
     // A current temporal edit has separate authority; keep testing the unchanged original approval itself.

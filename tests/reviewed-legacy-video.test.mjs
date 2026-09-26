@@ -6,12 +6,22 @@ import {safeCatalogHoverVideo, getPetTryOnEligibility} from '../lib/pet-tryon-el
 import {applyReviewedHoverOverride} from '../lib/catalog/reviewed-hover-overrides.ts';
 import {videoBrandingMode} from '../lib/catalog/video-branding.ts';
 import {matchesReviewedLegacyVideo} from '../lib/catalog/reviewed-legacy-video.mjs';
+import {motionWithdrawnFolders} from './helpers/hover-motion-withdrawals.mjs';
 
 const read=p=>JSON.parse(readFileSync(new URL(p,import.meta.url),'utf8'));
 const reviews=read('../lib/catalog/reviewed-legacy-videos.json');
 const expected=read('./fixtures/flow-publication-batch09.json');
 const previous=read('./fixtures/hover-publication-legacy-coyote.json');
 const raw=read('../lib/catalog/raw.json');
+// Preserve original identity/substitution tests on an archival fixture while
+// independently asserting that the current storefront withdrawal stays closed.
+function historicalEffective(row) {
+    const current=applyReviewedHoverOverride(row), review=reviews[row.folder];
+    if (!motionWithdrawnFolders.includes(row.folder)) return current;
+    assert.equal(safeCatalogHoverVideo({id:`p_${row.no}`,folder:row.folder,video:current.video,raw:current}),undefined);
+    return {...row,video:review.assetPath,videoProvider:'unknown',videoJobId:null,
+        videoQuality:review.quality,videoReviewClass:review.reviewClass,videoReviewSha256:review.reviewSha256};
+}
 
 test('the reviewed reuse list is exactly approved legacy four with prior Porcini and Coyote unchanged',()=>{
     assert.deepEqual(reviews,expected.approvedLegacy);
@@ -28,7 +38,7 @@ test('the reviewed reuse list is exactly approved legacy four with prior Porcini
 });
 
 test('Porcini exact reuse is available for hover while remaining excluded from Smart Fit',()=>{
-    const row=raw.find(x=>x.folder==='rw_porcini_toy'), effective=applyReviewedHoverOverride(row);
+    const row=raw.find(x=>x.folder==='rw_porcini_toy'), effective=historicalEffective(row);
     const product={id:`p_${row.no}`,folder:row.folder,video:effective.video,image:row.image,subcategory:'latex',raw:effective};
     const review=reviews[row.folder];
     assert.equal(safeCatalogHoverVideo(product),review.assetPath);
@@ -46,7 +56,7 @@ test('Porcini exact reuse is available for hover while remaining excluded from S
 });
 
 test('Coyote exact reviewed reuse preserves wearing quality, source bytes and independent Smart Fit rules',()=>{
-    const row=raw.find(x=>x.folder==='rs_v2_coyote'), effective=applyReviewedHoverOverride(row), review=reviews.rs_v2_coyote;
+    const row=raw.find(x=>x.folder==='rs_v2_coyote'), effective=historicalEffective(row), review=reviews.rs_v2_coyote;
     const product={id:'p_104',folder:row.folder,video:effective.video,image:row.image,subcategory:'goggles',raw:effective};
     assert.equal(safeCatalogHoverVideo(product),review.assetPath);
     assert.equal(review.quality,'approved_dog_wearing');
@@ -67,7 +77,7 @@ for(const [folder,quality,functionShown] of [
     ['rs_hardcase','approved_dog_interacting',false],
     ['rw_kibblecaddy','approved_dog_using',true],
 ]) test(`${folder} exact reviewed reuse retains truthful interaction and rejects changed identity or provenance`,()=>{
-    const row=raw.find(x=>x.folder===folder), effective=applyReviewedHoverOverride(row), review=reviews[folder];
+    const row=raw.find(x=>x.folder===folder), effective=historicalEffective(row), review=reviews[folder];
     const product={id:`p_${row.no}`,folder,video:effective.video,image:row.image,subcategory:expected.expectedLegacySubcategories[folder],raw:effective};
     assert.equal(review.quality,quality);
     assert.equal(review.demonstratedProductFunction,functionShown);
