@@ -9970,5 +9970,103 @@
     "videoDeliveryCommit": "fd29de2a0111696f339202925a28a7dcadf28a02"
   },
   "rw_coverall_snow_25fw": null,
-  "rs_v2_volcanored": null
+  "rs_v2_volcanored": null,
+  "rs_jsk_1000001117": {
+    "video": "/images/products/catalog/rs_jsk_1000001117/videos/0a2c0fc4c8080b0455083e2331f6b3d7c7722d49e5c129c61f5100bedaab99f7/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "d79f790520c2012169a23c9ab06b0cc0",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d79f790520c2012169a23c9ab06b0cc0",
+      "reviewId": "b0cf40a7a9887edf8311a485feb7cbca",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0a2c0fc4c8080b0455083e2331f6b3d7c7722d49e5c129c61f5100bedaab99f7",
+      "seconds": 4,
+      "source": {
+        "no": 417,
+        "folder": "rs_jsk_1000001117",
+        "name": "렉스스펙스 교체 렌즈 (V2 전용 )",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001117/image/detail/1000000932_detail_072.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001117",
+        "gallery": [],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001117/dd4065d48d58d747b05349d3530424f9.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001117/edc676354020a45c3a15a82b8c3393ee.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001117/7901e67cf7cc99a30b8da9ee5c3768c7.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0a6dd32b09caca5bd283e2a6b9e1b9cb",
+        "sha256": "0a2c0fc4c8080b0455083e2331f6b3d7c7722d49e5c129c61f5100bedaab99f7"
+      },
+      "scopeId": "5e4f25b6caaf5b18497cc9297ff66d45bb7e1a3065c2e5d1b8a30dd0ed8d8d9b",
+      "scopeRegistrationSha256": "d8f32dcf8e495605a5b3a3e40106f91603c8864ccd46cf631d8511466042003a",
+      "aiEvidenceSha256": "77eeebd957108a9094d8d6901ae37bb0d0e87b54b3bf297831db0f30db36c19a",
+      "receiptSha256": "413372b8b6ccca5cdf5989ddd2f44e88e642b38f0d859084fcbcb59ca50ac00e",
+      "eligibilitySha256": "11a8f8dc040ea1d15477557a7ff708bdf9b0900dc8bd97ac30c0ab784739e667",
+      "evidenceManifestSha256": "b1f34e48479cc010e1841a8fa51990e5a22d364635d0b9c69d7cb6c6fc8b4a1b"
+    },
+    "videoReviewSha256": "24af81122629e57d7c330d4607b5ca37e2538389619a9b07aaf39b706bf79177",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "7ccdcb955c29919a514897d29cd05a93b74cd149"
+  },
+  "rw_jsk_1000001230": {
+    "video": "/images/products/catalog/rw_jsk_1000001230/videos/255af90bdd23ea2328de85969134419401a9ac74cab1e833a54f18cbed09519a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "2b86ca8162ecd246dd6867cff1644ef1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "2b86ca8162ecd246dd6867cff1644ef1",
+      "reviewId": "e57eae0091e09477ee91fbea5fe1a413",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "255af90bdd23ea2328de85969134419401a9ac74cab1e833a54f18cbed09519a",
+      "seconds": 4,
+      "source": {
+        "no": 449,
+        "folder": "rw_jsk_1000001230",
+        "name": "러프웨어 낫 어 스틱 반려견 장난감(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001230/image/detail/1000001230_detail_087.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001230",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001230/image/detail/1000001230_detail_146.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001230/image/detail/1000001230_detail_269.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001230/image/detail/1000001230_detail_31.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260409/1e9de4add773a01bf3553182fcecdbe3_164746.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/98a58b5af3f2cef72118d8c677aed10e_102237.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/4f0403e5596e274ef4ef40a46baedf59_102238.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "478f5f2bd0b68a912643e1e082d49a66",
+        "sha256": "255af90bdd23ea2328de85969134419401a9ac74cab1e833a54f18cbed09519a"
+      },
+      "scopeId": "4ace052e61d049278499a965c26d1aa9cad2e170977f002bc2a62339fe52e336",
+      "scopeRegistrationSha256": "e1a87a1fcfbd006fb506806f732498427bea91009798c83701de19c9314dd393",
+      "aiEvidenceSha256": "9ca4ff13b270b0cfc1cc6e7b86b4ae6022a658fa1286dc65a5b2e2b2e22c7d79",
+      "receiptSha256": "f208e8386da66ccc0939a19d111d697f8bb189366ce910c627db876375f55c00",
+      "eligibilitySha256": "b816146e816e7079ca4ade7529b0b3bd0b4de9bb6b2f04126055ada6007c0ed1",
+      "evidenceManifestSha256": "c4f67ef76aecd5bd83502f57373284c09d6c231f2a745d3538e72ae55738d271"
+    },
+    "videoReviewSha256": "60ed14f38abb0d732dc16ecfe7b25b9619f540221111504611b4c9dadb6e1cb2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "7ccdcb955c29919a514897d29cd05a93b74cd149"
+  }
 }
