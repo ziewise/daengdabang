@@ -3258,7 +3258,60 @@
   },
   "rs_trailhead_collar": null,
   "rs_trailhead_leash_dual_24m": null,
-  "rs_trailhead_leash_single_18m": null,
+  "rs_trailhead_leash_single_18m": {
+    "video": "/images/products/catalog/rs_trailhead_leash_single_18m/videos/b0b6e48d37a294398c8e1990e9026239629166655882926de1fe70e07bdc45b1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "28dc2ece35cf1868c5fd9f9852ef0036",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "28dc2ece35cf1868c5fd9f9852ef0036",
+      "reviewId": "6adb7779efbf2a8d5af377602ab5c2fb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b0b6e48d37a294398c8e1990e9026239629166655882926de1fe70e07bdc45b1",
+      "seconds": 4,
+      "source": {
+        "no": 86,
+        "folder": "rs_trailhead_leash_single_18m",
+        "name": "렉스스펙스 트레일헤드 싱글 스냅 리드줄 (1.8M)",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_015.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001126",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_154.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_286.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_328.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_469.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001126/image/detail/1000001126_detail_540.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Single-Snap1-2023_155029.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Single-Snap2-2023_155030.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Single-Snap3-2023_155031.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/ce50939b7267aece200a424b5dac05ea_154748.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d7edee1c6cfc6b9524c82856dbb51660",
+        "sha256": "b0b6e48d37a294398c8e1990e9026239629166655882926de1fe70e07bdc45b1"
+      },
+      "scopeId": "b892220255763dd332668c995da6748d88c72bb1a8a119de80617e48fc014119",
+      "scopeRegistrationSha256": "d834c797186edc4a48ad67f67180fb67ebec578f7c2360e07e27c7d024a066a5",
+      "aiEvidenceSha256": "9259678ee1b965a3adf96be20894c23fcc462da2ae051eb7d5cb9b7b78c861c5",
+      "receiptSha256": "98ef86b67a57611140f5482775836de8750c64f70c0bb3e730eb70a1eea116bb",
+      "eligibilitySha256": "93b5e5fb73b230a41ef88350c26a664c0729666220800d000c571711c2f34da5",
+      "evidenceManifestSha256": "efd7d62fcf8ee2340df0480f2e100315d1de8b409b8f764d1bc9a53b6eece88f"
+    },
+    "videoReviewSha256": "795f68814b3e9bcc83ff2191484d0007d1535b8eee85e5e88dedaf7d554883ee",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "32aaff5628f5e1c1c410d809a4adc4b61dfdc99a"
+  },
   "rs_v2_2024ltd": null,
   "rs_v2_appalachianorange": null,
   "rs_v2_atlasblue": null,
