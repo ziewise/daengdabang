@@ -582,7 +582,51 @@
     "videoDeliveryCommit": "794b1af20128d2550bea4f98a9698c2aadfe5565"
   },
   "annapet_wine": null,
-  "bm_kibble_9kg": null,
+  "bm_kibble_9kg": {
+    "video": "/images/products/catalog/bm_kibble_9kg/videos/3fed4beadb8e07f62aac780dfe10434df7f54ce82f36295e7cee29462215da74/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "5588cbd05d32ea4e4c2a902fc8f1d393",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5588cbd05d32ea4e4c2a902fc8f1d393",
+      "reviewId": "bddbe129849c2cbb3966cfaf45435ddb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3fed4beadb8e07f62aac780dfe10434df7f54ce82f36295e7cee29462215da74",
+      "seconds": 4,
+      "source": {
+        "no": 140,
+        "folder": "bm_kibble_9kg",
+        "name": "빌리앤마것 독 키블 대용량 9kg",
+        "brandEn": "Billy + Margot",
+        "isFood": true,
+        "image": "/images/products/catalog/bm_kibble_9kg/bm_kibble_9kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10148197774",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/bm_kibble_9kg/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3e60835b6b48a29e9e59b913a27b9ec4",
+        "sha256": "3fed4beadb8e07f62aac780dfe10434df7f54ce82f36295e7cee29462215da74"
+      },
+      "scopeId": "9433b263441270ff2764c0727003e89320a7eab13f8974439e6ff7fc1a17bae9",
+      "scopeRegistrationSha256": "85c498155f949bb5021831e3fdcbcca4973f6c653392e14a6e9cdc4d26bf5b2f",
+      "aiEvidenceSha256": "768181d99d6ae5b47ff596075701f612971507eff29d48c6b00d3ec6cbaac8ea",
+      "receiptSha256": "8aa30ea015a6045cef30733c198896c3e234ddfb02b1774d7e1d1e74613adf39",
+      "eligibilitySha256": "1164e1523c82ea2581f67e49372a085642d1e99ff7a540460b4d5e1dd040ea6c",
+      "evidenceManifestSha256": "e71ac1de32c9b64302b00fa7d7e5671014bd6cdcecce89a7716eafd53d40cb9d"
+    },
+    "videoReviewSha256": "dd4a362c49d9430fe6646d952c8c89a15e1155cea39f956c9f067494fb88f016",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "38eeabb23b69447ac94f20ea93e3f5d021878300"
+  },
   "bm_wet_100g_3": {
     "video": "/images/products/catalog/bm_wet_100g_3/videos/1a784ef49009fe04b801f8ec0978f8e581b791e742536b1c1b63d313ebabd9cb/hover.mp4",
     "videoProvider": "ziewcraft",
