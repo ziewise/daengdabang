@@ -3755,7 +3755,56 @@
       "downloadEvidenceSha256": "ddc19215a2da828eb1735e7e25bd56f2dfb4c80f5c71034bb72ed351d37fbbf4"
     }
   },
-  "rw_basecamp_bed_l": null,
+  "rw_basecamp_bed_l": {
+    "video": "/images/products/catalog/rw_basecamp_bed_l/videos/2fd812ec84f3eb4049285405bdc022be920b959573afd98d70254e03b6a0f676/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "b734e82422e7e4377c48925aec90e956",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b734e82422e7e4377c48925aec90e956",
+      "reviewId": "58563b199bb1a74bc2a5da183bfe0cf9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2fd812ec84f3eb4049285405bdc022be920b959573afd98d70254e03b6a0f676",
+      "seconds": 4,
+      "source": {
+        "no": 345,
+        "folder": "rw_basecamp_bed_l",
+        "name": "러프웨어 베이스캠프 반려견 베드 - L사이즈(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001213/image/detail/1000001213_detail_024.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001213",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001213/image/detail/1000001213_detail_178.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001213/image/detail/1000001213_detail_22.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/1f209b2cf141f55885a2a12fc4382c31_204830.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/02934b3b9c858aa8d07044e1fce1f19d_204831.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240826/396a6876838494473eb85b2e16e13b74_204831.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3887f98d18433aa99ec16f1ef6214861",
+        "sha256": "2fd812ec84f3eb4049285405bdc022be920b959573afd98d70254e03b6a0f676"
+      },
+      "scopeId": "be099c6460b3b74b50e865f52068170789fc15af3e0572a870308d0e1b106981",
+      "scopeRegistrationSha256": "c794575bf2fd139e9ada4cb474e53a89b06c8cb9a805581b239a77d471d275fb",
+      "aiEvidenceSha256": "60b75f55e98539fa2b75e184764024ff2e0479611f206b27c974940cc78761bb",
+      "receiptSha256": "2d3f3b34979e021f2745c406c38e9f4343b58fbf5528720df4885a48edcd4fce",
+      "eligibilitySha256": "d36a231eaa3f1013722cbc816ac9e6556a0a8e3d60ec7c470043dc9cd2d4a7bb",
+      "evidenceManifestSha256": "7a1ec96a93a148e467ca11df6470fd40d28f39451d1a60236b64f7dfb2b7b21b"
+    },
+    "videoReviewSha256": "4f449664931daa2059ffadd284df89dabfa1bd21eb6429f2fa73db74004c8870",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "13ea2a9a2787349757e1f659d42ef758f719e722"
+  },
   "rw_basecamp_bed_m": {
     "video": "/images/products/catalog/rw_basecamp_bed_m/videos/234244969b71cf7e211932a88b54af719d51a395985dd53ef3c95bbdcc4d6c09/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -5606,7 +5655,63 @@
   "rw_shoes_hiandlight_23": null,
   "rw_sierracup_310": null,
   "rw_spokespup_tag": null,
-  "rw_stashbag_mini": null,
+  "rw_stashbag_mini": {
+    "video": "/images/products/catalog/rw_stashbag_mini/videos/21ff4885f8c4b199761c426994de16b6b3fc17f5e54725fc927d6d32ed06b0cd/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "75383539c989a3d3ac49a4d1843d2e0e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "75383539c989a3d3ac49a4d1843d2e0e",
+      "reviewId": "894bba36cf323d300c1e8f46a53c5d3b",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "21ff4885f8c4b199761c426994de16b6b3fc17f5e54725fc927d6d32ed06b0cd",
+      "seconds": 4,
+      "source": {
+        "no": 61,
+        "folder": "rw_stashbag_mini",
+        "name": "러프웨어 스테이쉬 백 미니 배변봉투 디스펜서 파우치(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_068.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001236",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_155.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_249.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_398.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_472.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_547.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_692.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_787.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001236/image/detail/1000001236_detail_85.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250226/a4b6c150c0077e25b4c44cb3b91c96e7_125419.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/51c536c4b8a264c279033ca6cfd9e88c_023854.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/3b4247ea33ce37e57742008c9bddb9ad_023855.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/61b55d0a56547ab7fa7c41dc67ee649b_023855.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d4abb1d20c3c477a26e6bad59159a8d5",
+        "sha256": "21ff4885f8c4b199761c426994de16b6b3fc17f5e54725fc927d6d32ed06b0cd"
+      },
+      "scopeId": "f4c39a47e6b506c313eb92ada8454e29c81483edc873068de546ef67d4468c15",
+      "scopeRegistrationSha256": "5f93ec1e7baf7c2c2a87d48276c435438c935009c1d6e9009b60609cd3c129f7",
+      "aiEvidenceSha256": "b129b65e796d9eb3549cc835a4e5da78a88524ee1ab210cef8e0d3c41ae66925",
+      "receiptSha256": "d258a0b41863f5c6fecc9d93bb343d8e9d43e3d79106fbdb07cb0d6e8314eca3",
+      "eligibilitySha256": "ad7423a342bdcefb8079e0ea97e66be93c6417b3fe6ffe17af919a4cc3b6ed69",
+      "evidenceManifestSha256": "60f38d92c4a9476fb5953a44f5bb958ab200cfd1f3d26f6e3748293526b80896"
+    },
+    "videoReviewSha256": "71aebfaec01ff2ef27d56a8267742f7f5f55a69e085ec3b11583f28da962bc9d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "13ea2a9a2787349757e1f659d42ef758f719e722"
+  },
   "rw_stashbag_mini_2": {
     "video": "/images/products/catalog/rw_stashbag_mini_2/videos/f37fe56be033cd380ee201e91949ea0cfeaabb7df1b85e9276afb1ee55eb08c1/hover.mp4",
     "videoProvider": "ziewcraft",
