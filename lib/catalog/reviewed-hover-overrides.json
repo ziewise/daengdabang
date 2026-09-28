@@ -11116,5 +11116,161 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "5dd9acebf4ef2e4ed130dccc705fc4e24b712a1e"
+  },
+  "rw_jsk_1000000031": {
+    "video": "/images/products/catalog/rw_jsk_1000000031/videos/57f1bd8491371d475dc49297ee911dbf067befb0b3e5c0f5a288de14643224a1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "cc85fc721d18a4f05eccc616ecd44913",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "cc85fc721d18a4f05eccc616ecd44913",
+      "reviewId": "4637d430c87fe25cfa8a149e5b616e1d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "57f1bd8491371d475dc49297ee911dbf067befb0b3e5c0f5a288de14643224a1",
+      "seconds": 8,
+      "source": {
+        "no": 365,
+        "folder": "rw_jsk_1000000031",
+        "name": "러프웨어 브러쉬 가드 가슴 보호대(트와일라이트 그레이)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000031/image/detail/1000000031_detail_089.png",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000031",
+        "gallery": [],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/b9_184024.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/brush-guard-20190402_184032.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/a69c64656a3fbda94205defb80baa747_184053.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d2e425d360a2ba7875da27c2057b821a",
+        "sha256": "57f1bd8491371d475dc49297ee911dbf067befb0b3e5c0f5a288de14643224a1"
+      },
+      "scopeId": "fb75160660e74dad0f1476bf05a6a21b28ea464a5f32cd0593b3e5cab2cc0dba",
+      "scopeRegistrationSha256": "08c9f099b35fb938b7c6fa4e7797f4b3a8a31302924696232dc76a1b7798b656",
+      "aiEvidenceSha256": "a403fc3b152f6d2f15e0078038d8e1ed709b27ca18166a677287c7c2a9005a3c",
+      "receiptSha256": "408185db35c9c8ec49fd13c15eafe997ad2deba4d8733b4b8104fb5a8f965f5b",
+      "eligibilitySha256": "a85a5962a85cdb301f1e478b20faaa80ff57c57b7bc7992c60b72380faa28b8c",
+      "evidenceManifestSha256": "1b9107ff339a542933c87128b104708f30a6ab61c2908172ac3fc7f00e335e93"
+    },
+    "videoReviewSha256": "32955be8fed532ac3535f027819d475cd4fb45485d5f969ce5929e1e6d669e8d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "956e9181c7102a3b41b90c5d3ce5236d862ca2f1"
+  },
+  "rw_jsk_1000001162": {
+    "video": "/images/products/catalog/rw_jsk_1000001162/videos/f28cbf2d9fc68ec7b50af1ad82817f1bc42681862dae867a72fd36a005156783/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "b5ccd826d317c3adb3ed2762f9a68578",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b5ccd826d317c3adb3ed2762f9a68578",
+      "reviewId": "ee1b7e03fcb2aeab69a34e0adc24b7ef",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f28cbf2d9fc68ec7b50af1ad82817f1bc42681862dae867a72fd36a005156783",
+      "seconds": 8,
+      "source": {
+        "no": 426,
+        "folder": "rw_jsk_1000001162",
+        "name": "러프웨어 폴라 트랙스 반려견 겨울 부츠(2족)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001162/image/detail/1000000701_detail_025.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001162",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001162/image/detail/1000000701_detail_150.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001162/image/detail/1000000701_detail_218.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001162/image/detail/1000000701_detail_314.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231126/Polar-Trex1_193217.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231126/Polar-Trex2_193229.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231126/Polar-Trex3_193243.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/e92d50a98f3f16bd5528118ab592d9d4_184545.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3cdf9053454041dfb0df33f231a207c7",
+        "sha256": "f28cbf2d9fc68ec7b50af1ad82817f1bc42681862dae867a72fd36a005156783"
+      },
+      "scopeId": "3a52ce37e752636cc6fc879ed31f98dd159a4e69524a3c1158897a8e35329c8a",
+      "scopeRegistrationSha256": "26c8439a648792f42f316bf4c2c246030b1caeafc88c94f0fb39e66e37b75068",
+      "aiEvidenceSha256": "10047a3560ae6537181e5ca0b3c8f2ba156846f549e525f75a71c80a203b21b6",
+      "receiptSha256": "cba6145961f1c864387b97ff9aa1a49023372876fad7cc815318251292b5292e",
+      "eligibilitySha256": "6ab1ce0907e293e7fa27dc5278efcf80e4a1d19e0a558019763f2b9d90c409c8",
+      "evidenceManifestSha256": "fc23b023e904ccbccbffdef5ff9ce90e7f86cbe03c56ac5fed01e0403ccfd152"
+    },
+    "videoReviewSha256": "f0d62a9df71b2c0597637f3c329aa82d34becd5c03d6ed6641a377ed17652d4a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "956e9181c7102a3b41b90c5d3ce5236d862ca2f1"
+  },
+  "rw_jsk_1000001176": {
+    "video": "/images/products/catalog/rw_jsk_1000001176/videos/b148304982e677db3be24350536b8cd5a9d751b14a94d0d315bc61208490e6c9/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "86411b4a0f60ab131acd902921144071",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "86411b4a0f60ab131acd902921144071",
+      "reviewId": "61d33b2c26e461dfbd7a5359b432a539",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b148304982e677db3be24350536b8cd5a9d751b14a94d0d315bc61208490e6c9",
+      "seconds": 8,
+      "source": {
+        "no": 430,
+        "folder": "rw_jsk_1000001176",
+        "name": "러프웨어 플레그라인 경량 하네스",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_039.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001176",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_198.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_252.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_391.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_498.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_528.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_6100.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001176/image/detail/1000001176_detail_763.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260223/0e830e32abb81c1685cb32d0af79158d_031413.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260223/0bb90b9e41c8af8be5b52699fe7ea2eb_031444.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260223/844eb21af244e69ed06b3520bde30e3b_031502.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260223/6a544e89e1ac175c4d1b7ebd25092a96_031520.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001176/f0af7649607baf7bf26b47b3b5d28090.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "13c40b69df1c7aec989ce6c3539f7384",
+        "sha256": "b148304982e677db3be24350536b8cd5a9d751b14a94d0d315bc61208490e6c9"
+      },
+      "scopeId": "e9067e39f60e57b60b009b8116594893d8750779fe190843550e501ee38cd054",
+      "scopeRegistrationSha256": "36768123473a837708876dc9636a5d7e75d0a6a8d769384c4bd53456e2983a6f",
+      "aiEvidenceSha256": "19e5d63ed1c752184149bc7841c8f33038e4efc194d46c7a179c0f0672c6f958",
+      "receiptSha256": "12353dafdc789a81c4af663f4468b391b3de545481df5d88c803cbed6b3877f9",
+      "eligibilitySha256": "bf1e5a698e209d47d7731507aa16b3c3db3393eb7228091f8d72a6ffeea86f0f",
+      "evidenceManifestSha256": "41ba513002539d12718208140709f3ac1890c736a9214beee1649aae81c4fdf2"
+    },
+    "videoReviewSha256": "ad94995f571e2af9c873292a96767ebb46365fb53793a5eab036e29a5ec19707",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "956e9181c7102a3b41b90c5d3ce5236d862ca2f1"
   }
 }

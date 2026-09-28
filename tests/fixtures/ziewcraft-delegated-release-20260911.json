@@ -1166,5 +1166,17 @@
   "ot_destroyer_harness": {
     "productId": "p_221",
     "sha256": "be52c2a7dbd2fa2e22fc824bd0e84ccb9299dd3ae2bd174f38ada8c79198db90"
+  },
+  "rw_jsk_1000000031": {
+    "productId": "p_365",
+    "sha256": "57f1bd8491371d475dc49297ee911dbf067befb0b3e5c0f5a288de14643224a1"
+  },
+  "rw_jsk_1000001162": {
+    "productId": "p_426",
+    "sha256": "f28cbf2d9fc68ec7b50af1ad82817f1bc42681862dae867a72fd36a005156783"
+  },
+  "rw_jsk_1000001176": {
+    "productId": "p_430",
+    "sha256": "b148304982e677db3be24350536b8cd5a9d751b14a94d0d315bc61208490e6c9"
   }
 }
