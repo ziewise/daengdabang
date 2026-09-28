@@ -5060,7 +5060,64 @@
       "downloadEvidenceSha256": "6cba5977749a9362ed9b85714529f5160d3ec13a8161a9aa49bf9705c91e4c36"
     }
   },
-  "rw_polartrex_boots_26fw": null,
+  "rw_polartrex_boots_26fw": {
+    "video": "/images/products/catalog/rw_polartrex_boots_26fw/videos/d84a1ebf4d6974028640ea145a30b52a98bee939629bf0bfeaa475d5fa2e0a30/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "ec58818aed4c8d5dbc6deb470fff50fc",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ec58818aed4c8d5dbc6deb470fff50fc",
+      "reviewId": "c8153aa55a0ef634d2c8558c97aa878d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d84a1ebf4d6974028640ea145a30b52a98bee939629bf0bfeaa475d5fa2e0a30",
+      "seconds": 8,
+      "source": {
+        "no": 359,
+        "folder": "rw_polartrex_boots_26fw",
+        "name": "러프웨어 폴라 트렉스 반려견 겨울 부츠 2026FW(2족)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_097.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001358",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_162.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_234.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_310.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_436.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_557.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_633.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_739.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_816.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001358/image/detail/1000001358_detail_999.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/e52e870aa683836131834b26277b5882_114023.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/12eabda911145efde03ce13cac25fef1_114042.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/c502c3284585693c35fb847dfed07e4e_114056.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260901/5277a2052ab9e71cba311625abfc3de8_114110.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7554396a8f00b0474d70d22e222941f2",
+        "sha256": "d84a1ebf4d6974028640ea145a30b52a98bee939629bf0bfeaa475d5fa2e0a30"
+      },
+      "scopeId": "f0338e2223368b1c955ae9be71c910507fabc7075b4211fcdd486e57a6476f2f",
+      "scopeRegistrationSha256": "57ce798f200076220d7d743f1a0cb241920ec70ae0765c8d3922d36279360604",
+      "aiEvidenceSha256": "05a338e6e6c86ce9b681da98de788912422a5bcac7588da622f79068e489988d",
+      "receiptSha256": "5ed5fd63fe1a7967ca9765e099b17458af2783d601d1c2dbc99f185b2a44206b",
+      "eligibilitySha256": "e09f042b9a1e2f0e2a7ad503bd7fdf4de74f110e5316dbe4d507b6ca38c339bc",
+      "evidenceManifestSha256": "73bbb307d1a204a6638035fa756927bc93108ef76831f2820d7afb265ba14478"
+    },
+    "videoReviewSha256": "159c008724f029187a15dbdd65a206d0f82dc82b75e0f9293c247064f4477b1d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "6ff17cc7a3bbbf1a6ad7358acff3c03b5a7b1f69"
+  },
   "rw_porcini_toy": null,
   "rw_powderhound_coverall_26fw": {
     "video": "/images/products/catalog/rw_powderhound_coverall_26fw/videos/f304467985e98ffae0d5648855310ad61340b549f768dba8e524331feb26e622/hover.mp4",
