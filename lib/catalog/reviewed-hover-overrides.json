@@ -3831,7 +3831,63 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-4622a11db0a6"
   },
-  "rw_campflyer_disc_26": null,
+  "rw_campflyer_disc_26": {
+    "video": "/images/products/catalog/rw_campflyer_disc_26/videos/24e7ddfd4ae1182c0b80c115fd0de2d5b8dbfe1a1c4bcfd14c0bdffa9e1f2ddf/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "36c222d65d932959e5a40ea869b6122a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "36c222d65d932959e5a40ea869b6122a",
+      "reviewId": "81a5d74278da7ea768f0a2b88d1bec00",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "24e7ddfd4ae1182c0b80c115fd0de2d5b8dbfe1a1c4bcfd14c0bdffa9e1f2ddf",
+      "seconds": 4,
+      "source": {
+        "no": 3,
+        "folder": "rw_campflyer_disc_26",
+        "name": "러프웨어 캠프 플라이어 반려견 원반 장난감(2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_055.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001314",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_179.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_270.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_346.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_472.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_53.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_676.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_773.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_884.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001314/image/detail/1000001314_detail_994.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/556f6803651b2fd23d540f66e40c529c_035805.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/6a6b4165c88932dbfd56535d0351bc50_035835.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/4c2cf60ddc16078f2a3d003bc4efe801_035858.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c0a801b332ecc7a6ac56dad077e7bb0f",
+        "sha256": "24e7ddfd4ae1182c0b80c115fd0de2d5b8dbfe1a1c4bcfd14c0bdffa9e1f2ddf"
+      },
+      "scopeId": "ad78bab0f51ba62ccfc9eaedb1216924de9f456c052aa82871bed933daf80a2a",
+      "scopeRegistrationSha256": "1cbd1e2d5ac274e950318dbbb9fa2bf0649cfb84ded3fd2277ba988c3acda5cb",
+      "aiEvidenceSha256": "b296f04a0139eef18507aa246f8aa9c23a150be367042acd93278d0072fc343b",
+      "receiptSha256": "bd4c24a0405d5daecc597ab4951502002c2f2165e57b827a92bec3fda8aec9fd",
+      "eligibilitySha256": "4605723e536bd44eb9f9a1b4ab909a0ad27ec5b93f8bb9228b0e047fbb7ed75d",
+      "evidenceManifestSha256": "cd3ab4297528746c71c348ef796b98fe872dae0079653f49b327123ef2ea614c"
+    },
+    "videoReviewSha256": "24e58ca429b76e5b8082305e3117e0ef965a9ddf8bb72994346eff56b1357c58",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "fbca8d4f501fee9243366e90e91170fa3e21e985"
+  },
   "rw_climatechanger_fleece": {
     "video": "/images/products/catalog/rw_climatechanger_fleece/videos/f5819a2b0f50a9eb0cb24daa8d647e78c2f925eb4ab3f7f70953413abfefa1fa/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
