@@ -637,9 +637,11 @@ export function customerApiErrorMessage(error: unknown) {
     return "회원 연결 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.";
 }
 
-export async function loadSocialProviders() {
+export async function loadSocialProviders(signal?: AbortSignal) {
     const data = await apiJson<{ providers: SocialProviderStatus[] }>("/api/v1/auth/social/providers", {
         method: "GET",
+        cache: "no-store",
+        signal,
     });
     return data?.providers || null;
 }

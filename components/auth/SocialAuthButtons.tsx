@@ -53,13 +53,16 @@ export default function SocialAuthButtons({
     const apiReady = useDdbApiReady();
     const [enabledByProvider, setEnabledByProvider] = useState<Record<SocialProvider, boolean> | null>(null);
     const [statusChecked, setStatusChecked] = useState(false);
+    const [retryKey, setRetryKey] = useState(0);
 
     useEffect(() => {
         let alive = true;
         if (apiReady !== true) {
             return;
         }
-        loadSocialProviders()
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 12000);
+        loadSocialProviders(controller.signal)
             .then((rows) => {
                 if (!alive) return;
                 if (!rows) {
@@ -77,12 +80,31 @@ export default function SocialAuthButtons({
                 if (alive) setEnabledByProvider(null);
             })
             .finally(() => {
+                window.clearTimeout(timeout);
                 if (alive) setStatusChecked(true);
             });
         return () => {
             alive = false;
+            window.clearTimeout(timeout);
+            controller.abort();
         };
-    }, [apiReady]);
+    }, [apiReady, retryKey]);
+
+    const retryProviders = () => {
+        setStatusChecked(false);
+        setEnabledByProvider(null);
+        setRetryKey((value) => value + 1);
+    };
+
+    useEffect(() => {
+        if (!statusChecked || enabledByProvider) return;
+        const retryWhenOnline = () => {
+            setStatusChecked(false);
+            setRetryKey((value) => value + 1);
+        };
+        window.addEventListener("online", retryWhenOnline);
+        return () => window.removeEventListener("online", retryWhenOnline);
+    }, [enabledByProvider, statusChecked]);
 
     const disabledCount = useMemo(() => {
         if (apiReady !== true || !enabledByProvider) return 0;
@@ -94,6 +116,15 @@ export default function SocialAuthButtons({
         && signupSecurity.termsVersion.trim()
         && signupSecurity.privacyVersion.trim()
     );
+    const connectionError = apiReady === true && statusChecked && !enabledByProvider;
+    const connectionNotice = connectionError ? (
+        <div role="status" className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-amber-800">
+            <span>로그인 연결을 확인하지 못했어요.</span>
+            <button type="button" onClick={retryProviders} className="rounded-md border border-amber-300 bg-white px-3 py-2 font-black">
+                연결 다시 확인
+            </button>
+        </div>
+    ) : null;
 
     const start = (provider: SocialProvider) => {
         if (
@@ -123,31 +154,34 @@ export default function SocialAuthButtons({
     // compact — 로그인 카드용 원형 아이콘(라벨 없음, 비활성은 흐리게)
     if (variant === "compact") {
         return (
-            <div className="flex items-center justify-center gap-3">
-                {PROVIDERS.map((provider) => {
-                    const disabled = (
-                        apiReady !== true
-                        || !statusChecked
-                        || enabledByProvider?.[provider.id] !== true
-                        || !signupSecurityReady
-                    );
-                    return (
-                        <button
-                            key={provider.id}
-                            type="button"
-                            disabled={disabled}
-                            onClick={() => start(provider.id)}
-                            aria-label={`${provider.label} ${mode === "signup" ? "간편가입" : "간편로그인"}`}
-                            title={provider.label}
-                            className={[
-                                "flex h-11 w-11 items-center justify-center rounded-full border text-base font-black shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50",
-                                provider.className,
-                            ].join(" ")}
-                        >
-                            {provider.icon === "N" ? <span>N</span> : <i className={provider.icon} />}
-                        </button>
-                    );
-                })}
+            <div className="grid gap-3">
+                <div className="flex items-center justify-center gap-3">
+                    {PROVIDERS.map((provider) => {
+                        const disabled = (
+                            apiReady !== true
+                            || !statusChecked
+                            || enabledByProvider?.[provider.id] !== true
+                            || !signupSecurityReady
+                        );
+                        return (
+                            <button
+                                key={provider.id}
+                                type="button"
+                                disabled={disabled}
+                                onClick={() => start(provider.id)}
+                                aria-label={`${provider.label} ${mode === "signup" ? "간편가입" : "간편로그인"}`}
+                                title={provider.label}
+                                className={[
+                                    "flex h-11 w-11 items-center justify-center rounded-full border text-base font-black shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50",
+                                    provider.className,
+                                ].join(" ")}
+                            >
+                                {provider.icon === "N" ? <span>N</span> : <i className={provider.icon} />}
+                            </button>
+                        );
+                    })}
+                </div>
+                {connectionNotice}
             </div>
         );
     }
@@ -160,15 +194,16 @@ export default function SocialAuthButtons({
                 </h2>
                 {apiReady === false && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
                 {apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
-                {apiReady === true && statusChecked && (!enabledByProvider || disabledCount > 0) && (
+                {apiReady === true && statusChecked && enabledByProvider && disabledCount > 0 && (
                     <span className="text-xs font-black text-amber-700">준비 중</span>
                 )}
             </div>
             {mode === "signup" && !signupSecurityReady && (
                 <p className="rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-5 text-amber-800">
-                    필수 약관 동의와 가입 보안 확인을 완료하면 간편가입을 이용할 수 있습니다.
+                    바로 위의 필수 동의와 보안 확인을 완료해 주세요. 간편가입은 아래 이메일·반려견 정보를 입력하지 않아도 됩니다.
                 </p>
             )}
+            {connectionNotice}
             <div className="grid gap-2 sm:grid-cols-3">
                 {PROVIDERS.map((provider) => {
                     const disabled = (
