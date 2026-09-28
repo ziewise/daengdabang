@@ -161,7 +161,7 @@
   },
   "rw_jsk_1000001210": {
     "productId": "p_438",
-    "sha256": "db9533f22c4e7d952b0882f0d01b7d9500709004e1307c9a2096782eacf497c0"
+    "sha256": "94de2b56726175714178299b0c09ff9696781e519bb4801e1c6becb74978903f"
   },
   "rs_v2_black": {
     "productId": "p_77",
@@ -1178,5 +1178,9 @@
   "rw_jsk_1000001176": {
     "productId": "p_430",
     "sha256": "b148304982e677db3be24350536b8cd5a9d751b14a94d0d315bc61208490e6c9"
+  },
+  "rw_jsk_1000001240": {
+    "productId": "p_456",
+    "sha256": "d7b02331c252e44ec65870e3f470e27bde465daf076d0471899fbe3b090c8d64"
   }
 }
