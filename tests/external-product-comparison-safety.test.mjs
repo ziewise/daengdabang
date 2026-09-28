@@ -363,6 +363,8 @@ test("live API results and local fallback both exclude partial model collisions"
     const comparison = await comparisonModule();
     const boot = { id: "boot", title: "Ruffwear Polar Trex 부츠", brand: "Ruffwear", keywords: ["polar", "trex"], rank: 1 };
     const goggles = { id: "goggle", title: "Rex Specs 고글", brand: "Rex Specs", keywords: ["rex", "specs"], rank: 99999 };
+    const leash = { id: "leash", title: "러프웨어 프론트레인지 리드줄", brand: "러프웨어", keywords: [], rank: 2 };
+    const coat = { id: "coat", title: "러프웨어 겨울 코트 2026FW", brand: "러프웨어", keywords: [], rank: 3 };
     const moduleRecord = { exports: {} };
     const compiled = ts.transpileModule(await source("lib/external-products/index.ts"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
@@ -372,18 +374,21 @@ test("live API results and local fallback both exclude partial model collisions"
         exports: moduleRecord.exports,
         require(specifier) {
             if (specifier === "./comparison") return comparison;
-            if (specifier === "./feed.json") return [goggles, boot];
+            if (specifier === "./feed.json") return [goggles, boot, leash, coat];
             if (specifier === "@/lib/customer-api") return { ddbApiBase: () => "https://api.example" };
             throw new Error(`Unexpected runtime import: ${specifier}`);
         },
         URLSearchParams,
-        fetch: async () => ({ ok: true, json: async () => ({ results: [goggles, boot] }) }),
+        fetch: async () => ({ ok: true, json: async () => ({ results: [goggles, boot, leash, coat] }) }),
     });
     new vm.Script(compiled).runInContext(context);
     const search = moduleRecord.exports;
     assert.equal(search.searchExternalProducts("Polar Trex").map((item) => item.id).join(","), "boot");
     assert.equal(search.searchExternalProducts("Rex").map((item) => item.id).join(","), "goggle");
     assert.equal((await search.loadExternalProducts("Polar Trex")).map((item) => item.id).join(","), "boot");
+    const seasonalQuery = "프런트 레인지 리드줄 (2026FW)";
+    assert.equal(search.searchExternalProducts(seasonalQuery).map((item) => item.id).join(","), "leash");
+    assert.equal((await search.loadExternalProducts(seasonalQuery)).map((item) => item.id).join(","), "leash");
 });
 
 test("ordinary English shopping words do not exclude a matching product", async () => {
@@ -402,4 +407,27 @@ test("English product and brand searches retain Korean catalog names", async () 
     assert.equal(comparison.matchesComparisonQuery(harness, "best dog harness"), true);
     assert.equal(comparison.matchesComparisonQuery(harness, "Ruffwear price"), true);
     assert.equal(comparison.matchesComparisonQuery(harness, "Polar Trex price"), false);
+});
+
+test("Korean product names remain relevant when a season suffix is included", async () => {
+    const comparison = await comparisonModule();
+    const leash = { title: "러프웨어 프론트레인지 리드줄", brand: "러프웨어" };
+    const coat = { title: "러프웨어 겨울 코트 2026FW", brand: "러프웨어" };
+    const query = "프런트 레인지 리드줄 (2026FW)";
+    assert.equal(comparison.matchesComparisonQuery(leash, query), true);
+    assert.equal(comparison.matchesComparisonQuery({ ...leash, title: `${leash.title} (2026FW)` }, query), true);
+    assert.equal(comparison.matchesComparisonQuery(coat, query), false);
+    assert.equal(comparison.matchesComparisonQuery(coat, "2026FW"), true, "season-only searches still work");
+    assert.equal(comparison.matchesComparisonQuery(leash, "2026FW"), false);
+    assert.equal(comparison.matchesComparisonQuery({ ...leash, title: "Ruffwear Front Range Leash" }, "강아지 리드줄 2026FW"), true);
+});
+
+test("mixed query relevance uses product evidence and preserves Korean-only related results", async () => {
+    const comparison = await comparisonModule();
+    assert.equal(comparison.matchesComparisonQuery({ title: "강아지 고구마 간식", brand: "수파" }, "강아지 간식"), true);
+    assert.equal(comparison.matchesComparisonQuery({ title: "강아지 리드줄", brand: "Example", keywords: ["간식"] }, "강아지 간식 2026"), false);
+    assert.equal(comparison.matchesComparisonQuery({ title: "강아지 덴탈껌", brand: "Example" }, "강아지 간식"), true);
+    assert.equal(comparison.matchesComparisonQuery({ title: "Front Range harness", brand: "Ruffwear" }, "러프웨어 2026"), true);
+    assert.equal(comparison.matchesComparisonQuery({ title: "Rex Specs goggles", brand: "Rex Specs" }, "러프웨어 2026"), false);
+    assert.equal(comparison.matchesExternalSearchTerm("Polar Trex", "렉스스펙스"), false);
 });

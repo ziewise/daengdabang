@@ -51,6 +51,7 @@ const SEARCH_STOP_WORDS = new Set([
     "me", "please", "show", "find", "buy", "shop", "best", "cheap", "affordable",
     "price", "prices", "cost", "compare", "comparison", "recommended",
     "dog", "dogs", "pet", "pets", "puppy", "puppies",
+    "강아지", "반려견", "애견", "반려동물", "가격", "추천", "비교", "검색", "구매",
 ]);
 const SEARCH_ALIASES: Record<string, string[]> = {
     ruffwear: ["러프웨어"],
@@ -72,7 +73,12 @@ export function matchesExternalSearchTerm(text: string, term: string): boolean {
     const needle = normalized(term);
     if (!needle) return false;
     if ((SEARCH_ALIASES[needle] || []).some((alias) => normalized(text).includes(alias))) return true;
-    if (!/^[a-z0-9]+$/.test(needle)) return normalized(text).includes(needle);
+    if (!/^[a-z0-9]+$/.test(needle)) {
+        if (normalized(text).includes(needle)) return true;
+        return Object.entries(SEARCH_ALIASES).some(([english, aliases]) => (
+            aliases.includes(needle) && matchesExternalSearchTerm(text, english)
+        ));
+    }
     const words = text.toLocaleLowerCase().match(/[a-z0-9]+/g) || [];
     for (let start = 0; start < words.length; start += 1) {
         let combined = "";
@@ -86,9 +92,16 @@ export function matchesExternalSearchTerm(text: string, term: string): boolean {
 }
 
 export function matchesComparisonQuery(product: ExternalProductResult, query: string): boolean {
-    const terms = query.split(/\s+/).map(normalized).filter((term) => (
-        /^[a-z0-9]+$/.test(term) && !SEARCH_STOP_WORDS.has(term)
+    const queryTerms = query.split(/\s+/).map(normalized).filter((term) => (
+        term.length > 0 && !SEARCH_STOP_WORDS.has(term)
     ));
+    // Preserve the API's related-product matching for Korean-only searches.
+    // The additional model-collision guard applies to queries with Latin tokens.
+    if (!queryTerms.some((term) => /^[a-z0-9]+$/.test(term))) return true;
+    // A season suffix is optional metadata when a product name is present.
+    // It must neither exclude an unlabelled listing nor admit unrelated gear.
+    const productTerms = queryTerms.filter((term) => !/^(?:19|20)\d{2}(?:ss|fw|aw)?$/.test(term));
+    const terms = productTerms.length > 0 ? productTerms : queryTerms;
     if (terms.length === 0) return true;
     // This is a relevance filter, not exact model verification. Natural
     // queries need a meaningful match, not every adjective or request word.
