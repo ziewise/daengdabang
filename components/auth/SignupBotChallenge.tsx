@@ -97,7 +97,8 @@ export default function SignupBotChallenge({
             sitekey: siteKey,
             action,
             appearance: "always",
-            size: "flexible",
+            // Flexible widgets still require 300px; nested mobile cards are narrower.
+            size: containerRef.current.clientWidth < 300 ? "compact" : "flexible",
             theme: "light",
             callback: (token) => {
                 onTokenChange(token);
@@ -154,7 +155,7 @@ export default function SignupBotChallenge({
                     {description}
                 </p>
             </div>
-            <div ref={containerRef} className="min-h-[65px] w-full overflow-hidden" />
+            <div ref={containerRef} className="flex min-h-[65px] w-full justify-center" />
             <div className="flex items-center justify-between gap-3" aria-live="polite">
                 <p className={[
                     "text-[11px] font-black leading-5",
