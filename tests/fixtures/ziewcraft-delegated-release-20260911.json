@@ -29,7 +29,7 @@
   },
   "rw_jsk_1000000651": {
     "productId": "p_383",
-    "sha256": "0aeca74f94a1b7abb507c02817b51a06ffe546f69c612550d805c1acb2c3655f"
+    "sha256": "79d4cfc95cfd7019909fe023fdb4443987eb9f812dfa426a9fe6740354254e6f"
   },
   "rw_jsk_1000001244": {
     "productId": "p_460",
@@ -461,7 +461,7 @@
   },
   "rs_jsk_1000001106": {
     "productId": "p_415",
-    "sha256": "b903a4c0c4b3359968017c75abf99d62b6576945f9f01b693f6159bb063ff6c7"
+    "sha256": "7fa307439a721286d05fff312a221d51c2b67848465890be204823793c238c28"
   },
   "sk_ft_working26_15kg": {
     "productId": "p_180",
@@ -1158,5 +1158,13 @@
   "rw_jsk_1000000978": {
     "productId": "p_401",
     "sha256": "6de21001a99a0ffbd3b469f08ea5f4d461560557819b772bf6548704ac552981"
+  },
+  "rs_earpro": {
+    "productId": "p_96",
+    "sha256": "c18419e9e83c0c12140135d8644b49c2752d883381a1d80629201abb2dda94ea"
+  },
+  "ot_destroyer_harness": {
+    "productId": "p_221",
+    "sha256": "be52c2a7dbd2fa2e22fc824bd0e84ccb9299dd3ae2bd174f38ada8c79198db90"
   }
 }

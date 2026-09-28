@@ -2330,7 +2330,58 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4f08e42390eafdfc6cbc8b96a9bb3936e09045f3"
   },
-  "ot_destroyer_harness": null,
+  "ot_destroyer_harness": {
+    "video": "/images/products/catalog/ot_destroyer_harness/videos/be52c2a7dbd2fa2e22fc824bd0e84ccb9299dd3ae2bd174f38ada8c79198db90/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "799e9ec2b7dc7ab61c9c77f1da609c19",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "799e9ec2b7dc7ab61c9c77f1da609c19",
+      "reviewId": "f07db46a87f34ef3930e31b164324ec1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "be52c2a7dbd2fa2e22fc824bd0e84ccb9299dd3ae2bd174f38ada8c79198db90",
+      "seconds": 8,
+      "source": {
+        "no": 221,
+        "folder": "ot_destroyer_harness",
+        "name": "원티그리스 X 디스트로이어 K9 하네스 (중대형견)",
+        "brandEn": "OneTigris",
+        "isFood": false,
+        "image": "/images/products/catalog/ot_destroyer_harness/ot_destroyer_harness.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8767219600",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ot_destroyer_harness/details/2.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/3.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/4.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/5.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/6.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/7.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/8.webp",
+          "/images/products/catalog/ot_destroyer_harness/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3cfb026d4cbb59d3f68a2d5e2c149a88",
+        "sha256": "be52c2a7dbd2fa2e22fc824bd0e84ccb9299dd3ae2bd174f38ada8c79198db90"
+      },
+      "scopeId": "76c53ff6a87f22b378b8106bb1eadf9c81346bb5054b3e16286138c9442e4682",
+      "scopeRegistrationSha256": "7e804db719dece6677f68d0a6a21dc85c093989c7d647404d40253f22bc0353c",
+      "aiEvidenceSha256": "e7a97588ebd1fc04c3c927f75fafa2f6b6e424ad06f7b49cecc2c9a6fe9feefc",
+      "receiptSha256": "c95adb430418d8f215837d9b9effbff4d2181e5743a35da72a6788a401a6beca",
+      "eligibilitySha256": "e8940bd976178b189504e4c71294e80401f73f97947a0bd31f2a9ad2b2ef8167",
+      "evidenceManifestSha256": "18381d398be899c2d5a91b9e1376e8174eb62a7f042036cad2e1dae230d2d057"
+    },
+    "videoReviewSha256": "4faaec04087b82261882ecc1923f500d3be7a8fb1a87e537f7bae94f4b9963ea",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c8e84f490d51df532230ffe68b8a40fbc2dcdb4b"
+  },
   "ot_firewatcher_harness": null,
   "ot_goliath_harness": {
     "video": "/images/products/catalog/ot_goliath_harness/videos/572b113806c339ca9b2b034c76f88dbb1e00d6e6c74847ca9e41c56b91fa48f1/hover.mp4",
@@ -3187,7 +3238,59 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-e03daa386c93"
   },
-  "rs_earpro": null,
+  "rs_earpro": {
+    "video": "/images/products/catalog/rs_earpro/videos/c18419e9e83c0c12140135d8644b49c2752d883381a1d80629201abb2dda94ea/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "fa8d9a4f64438b975912b544633cb8e6",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "fa8d9a4f64438b975912b544633cb8e6",
+      "reviewId": "bdafcb7ba68ce3f684076bc8f4c0747d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c18419e9e83c0c12140135d8644b49c2752d883381a1d80629201abb2dda94ea",
+      "seconds": 8,
+      "source": {
+        "no": 96,
+        "folder": "rs_earpro",
+        "name": "렉스스펙스 이어프로 청력보호 헤드기어",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001108/image/detail/1000001108_detail_076.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001108",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001108/image/detail/1000001108_detail_124.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001108/image/detail/1000001108_detail_291.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001108/image/detail/1000001108_detail_361.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001108/image/detail/1000001108_detail_433.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001108/image/detail/1000001108_detail_59.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241108/f9d5390db6848f12e639f3a55ca02c03_123956.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/241108/6d3326ff937c549c5772ee3201c4b19e_123957.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_021204.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a5f77fac1fc4cc30986acf0a64aaab60",
+        "sha256": "c18419e9e83c0c12140135d8644b49c2752d883381a1d80629201abb2dda94ea"
+      },
+      "scopeId": "3ee951724c54a9433ded5e53738b8170f6ae6b3f64fb2fd4246c70f910a89e19",
+      "scopeRegistrationSha256": "af9e9449faafdadc1f58e2621dc66964feae568e34114068293f09c1d900f683",
+      "aiEvidenceSha256": "42737415d7b37a4c0756585765a8763d1f360519c0fdc8834c8fe051cc6d15ff",
+      "receiptSha256": "6ef6a8f30c29bdabc329e791e9ab48116056d84e98c8e5b9bc8a2eeb9715be8f",
+      "eligibilitySha256": "3b895478bdb856c6f42bc853cd01df11ebd26c088dc10b2e3b8e687b62e554a6",
+      "evidenceManifestSha256": "6e712e8331f99fd5a5ffa66fc02bfa399343e92aa52b3cff215714d693b238be"
+    },
+    "videoReviewSha256": "89edb11ed17398a21c775a61428c4ee0d6be128fd33c6ebacb971af123b85be6",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c8e84f490d51df532230ffe68b8a40fbc2dcdb4b"
+  },
   "rs_hardcase": null,
   "rs_lens_original": {
     "video": "/images/products/catalog/rs_lens_original/videos/a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543/hover.mp4",
@@ -7846,7 +7949,59 @@
   "rw_jsk_1000001244": null,
   "rw_jsk_1000001229": null,
   "rw_jsk_1000000650": null,
-  "rw_jsk_1000000651": null,
+  "rw_jsk_1000000651": {
+    "video": "/images/products/catalog/rw_jsk_1000000651/videos/79d4cfc95cfd7019909fe023fdb4443987eb9f812dfa426a9fe6740354254e6f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "70ba9ee3424b83617c773bba2410e046",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "70ba9ee3424b83617c773bba2410e046",
+      "reviewId": "f4f767631704c406466c8884ce4243ca",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "79d4cfc95cfd7019909fe023fdb4443987eb9f812dfa426a9fe6740354254e6f",
+      "seconds": 8,
+      "source": {
+        "no": 383,
+        "folder": "rw_jsk_1000000651",
+        "name": "러프웨어 클라이메이트 체인져 플리스 풀오버(Climate Changer™ Fleece Pullover)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_030.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000651",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_172.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_2100.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_361.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000651/image/detail/1000000651_detail_48.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer-Pullover2021_1_123510.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer-Pullover2021_2_123548.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Climate-Changer-Pullover2021_3_184812.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/45e21a4c5eccb47809f5fdf965a29936_184820.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a06dadf1c472835f81eb3c9744fb1f13",
+        "sha256": "79d4cfc95cfd7019909fe023fdb4443987eb9f812dfa426a9fe6740354254e6f"
+      },
+      "scopeId": "c02f8c0a8e30b6fdd9cb54409e02d9d43a0d62557eae0524d05cd2d572461600",
+      "scopeRegistrationSha256": "19b5f035912be846cba2fffc7ef313684cfca8830823bd982c97affd11bb0f66",
+      "aiEvidenceSha256": "7519983cee3f9620e2abaabe45f8add7487d13ed26c9d83609bf1d0450d28f74",
+      "receiptSha256": "a994cb0ff1aba09bab5a824c3f6a1087c8a76582c25a24eaec980b12d46f5266",
+      "eligibilitySha256": "012a9e41d4d2e099e7178b96c83bbdfc246d3653f09460ffb04edf48e9da0db0",
+      "evidenceManifestSha256": "ba4bc439097f3a9abcd7cd3a1ad880ce940b523c07c548e94d2d90426a176cb3"
+    },
+    "videoReviewSha256": "b99ca65f6dc8c2dc073d200e6c9e61bc2edadcdb43e5356c362833395649a94f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c8e84f490d51df532230ffe68b8a40fbc2dcdb4b"
+  },
   "rw_jsk_1000000949": {
     "video": "/images/products/catalog/rw_jsk_1000000949/videos/bae8cc9ec53dc16be5506d77fe2a3f2f842b4a2ceda372745837c5278a0dc64f/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -9212,7 +9367,65 @@
   "yora_lightsenior_2.5kg": null,
   "yora_allbreed_12kg": null,
   "perity_aloe_shampoo": null,
-  "rs_jsk_1000001106": null,
+  "rs_jsk_1000001106": {
+    "video": "/images/products/catalog/rs_jsk_1000001106/videos/7fa307439a721286d05fff312a221d51c2b67848465890be204823793c238c28/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "8e2df2219810d90ec6b851abbb8becde",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8e2df2219810d90ec6b851abbb8becde",
+      "reviewId": "3d81c216c26ca2b541a10270cd795248",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7fa307439a721286d05fff312a221d51c2b67848465890be204823793c238c28",
+      "seconds": 8,
+      "source": {
+        "no": 415,
+        "folder": "rs_jsk_1000001106",
+        "name": "렉스스펙스 V2 카모 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_042.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001106",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_167.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_28.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_386.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_446.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_516.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_642.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_787.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001106/image/detail/1000001106_detail_844.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/V2-Camo-2023_024100.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/45bf00fc8a88712b45e75cce0fba8675_024101.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/7c97857fd082488519d861463f37a6a9_024101.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_053730.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_053741.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/ce50939b7267aece200a424b5dac05ea_024103.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4c44369eb805b3df46c32b88aae2ef62",
+        "sha256": "7fa307439a721286d05fff312a221d51c2b67848465890be204823793c238c28"
+      },
+      "scopeId": "dce37d5a8f51ae00bc0a9c5955dec554f11d3cab6990b733e2f75f04b6648eaf",
+      "scopeRegistrationSha256": "a67d602a756cb8016852b396362e9d4ba3a76682365330793505b244b84e915f",
+      "aiEvidenceSha256": "dd6dce945600b3e191a1c3c19a9d6fa8e5d4983c1aae51751c6dc172cceb9e2b",
+      "receiptSha256": "2a67823c9f36b4245476a4a433afc529f498bfe317da0f503e99809afc640149",
+      "eligibilitySha256": "f6c1d3d78260b4b2c32a3c229466371f9d5523bc745e61e736aead511138e0bb",
+      "evidenceManifestSha256": "7d830e72353139dd00bb1748a82aed2cd9797816d2f136b4569cfce392646869"
+    },
+    "videoReviewSha256": "53d073dc57c46693f513647e82c5c8bb1a57d737249a1005a47b931317be65e5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c8e84f490d51df532230ffe68b8a40fbc2dcdb4b"
+  },
   "rw_jsk_1000001243": null,
   "rw_jsk_1000000137": {
     "video": "/images/products/catalog/rw_jsk_1000000137/videos/0b245877e78463bf818b9c307a6d1dc7d834b39a41b6f1255d4146fd1e3d110b/hover.mp4",
