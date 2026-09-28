@@ -9300,7 +9300,58 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "1d236280396991065a2164967275b5f0f4348c68"
   },
-  "rs_jsk_1000001151": null,
+  "rs_jsk_1000001151": {
+    "video": "/images/products/catalog/rs_jsk_1000001151/videos/797cd52d7ff30ba5a405f2be30b1425ea053953cafe0fec93e30e5f94aa78fb8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6cb006f918ed437c7143df42279d3f5a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6cb006f918ed437c7143df42279d3f5a",
+      "reviewId": "26ea38b5c8948ced417cdb09798916c9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "797cd52d7ff30ba5a405f2be30b1425ea053953cafe0fec93e30e5f94aa78fb8",
+      "seconds": 8,
+      "source": {
+        "no": 424,
+        "folder": "rs_jsk_1000001151",
+        "name": "렉스스펙스 V2 파틀리 클라우디 프레임 한정판 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001151/image/detail/1000001151_detail_05.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001151",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001151/image/detail/1000001151_detail_193.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230913/V2-Coral-Reef_1_121300.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230913/V2-Coral-Reef_2_122104.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_3_183055.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_051157.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_051219.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4403a64aaca27e36f84face8f6f828ff",
+        "sha256": "797cd52d7ff30ba5a405f2be30b1425ea053953cafe0fec93e30e5f94aa78fb8"
+      },
+      "scopeId": "4c69fc28c7e11a1d76b4e2248668c2381dfc832e14bb7890db14483be0d5750e",
+      "scopeRegistrationSha256": "fa85b0f58fa370d7b02a3ac3e07e23b171767b84847b1312a4cad068c3d5e140",
+      "aiEvidenceSha256": "b912f89c45d0d5bad7709d0794e604ddd5e937e496a1e97a2ea171920aabd200",
+      "receiptSha256": "aa0fede2065f8eabcfe7d304111b12e3eee5f3690fc8fb4390c410f4d1d2cced",
+      "eligibilitySha256": "a2f0f7237cabd8ae64a13ad2e691e166529a7a0ffdd5390d2bd9c76a0fb3e7b7",
+      "evidenceManifestSha256": "ef8ba0783ef739e30cf720dd1423cbcbb2a21d1c23efb4db45559373abef3387"
+    },
+    "videoReviewSha256": "91d9005a9c8c92cdd2f114fb9d21e2188b71799dba3123c87b03dc8b3ab91aa1",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ecb1cd2ca16efb8392816ac6a38580fbb0d92dcf"
+  },
   "rw_jsk_1000000989": {
     "video": "/images/products/catalog/rw_jsk_1000000989/videos/04fbd0e021f49323cf4b97633947fe14d3f12b8cea9b674c5c396f8619016cf5/hover.mp4",
     "videoProvider": "ziewcraft",
