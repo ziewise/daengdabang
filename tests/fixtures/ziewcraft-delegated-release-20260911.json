@@ -501,7 +501,7 @@
   },
   "packt_endeavor_leash_1.5m": {
     "productId": "p_44",
-    "sha256": "977350ede22e76edad68c81d204de453f80ecc4333d1256a852718301387e7bb"
+    "sha256": "26329477b528c4fe408494f26ee832f1c43b398becc784f299a3c1763152d4cb"
   },
   "ip_slowdog": {
     "productId": "p_15",
@@ -1154,5 +1154,9 @@
   "rw_jsk_1000001226": {
     "productId": "p_446",
     "sha256": "270e0cfece6140eaa19335ad4682b229cc7e5c03e1f9c6327ce872a85c52311b"
+  },
+  "rw_jsk_1000000978": {
+    "productId": "p_401",
+    "sha256": "6de21001a99a0ffbd3b469f08ea5f4d461560557819b772bf6548704ac552981"
   }
 }

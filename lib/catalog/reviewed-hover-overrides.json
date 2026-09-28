@@ -2435,7 +2435,51 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "50f908ca411ff6e0a518da3f65998c0bd960ff97"
   },
-  "packt_endeavor_leash_1.5m": null,
+  "packt_endeavor_leash_1.5m": {
+    "video": "/images/products/catalog/packt_endeavor_leash_1.5m/videos/26329477b528c4fe408494f26ee832f1c43b398becc784f299a3c1763152d4cb/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "8c6ab89e137c003f1a2d7bcae93d5ced",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8c6ab89e137c003f1a2d7bcae93d5ced",
+      "reviewId": "cc644d5c58cbcacd57abedc3a23a10b4",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "26329477b528c4fe408494f26ee832f1c43b398becc784f299a3c1763152d4cb",
+      "seconds": 4,
+      "source": {
+        "no": 44,
+        "folder": "packt_endeavor_leash_1.5m",
+        "name": "팩트(PACKT) 1.5m 엔데버 올테란 방수리드줄",
+        "brandEn": "PACKT",
+        "isFood": false,
+        "image": "/images/products/catalog/packt_endeavor_leash_1.5m/packt_endeavor_leash_1.5m.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/12025260213",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/packt_endeavor_leash_1.5m/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "05dd510f5a9ca6bb90b99ab9bd65f1c7",
+        "sha256": "26329477b528c4fe408494f26ee832f1c43b398becc784f299a3c1763152d4cb"
+      },
+      "scopeId": "203e02b5f40a7152777237f7f2f093b9e5aba9bb57a8b3354eee7569a7be4b9b",
+      "scopeRegistrationSha256": "002a97c9e28f52f5a499645ca7195f66914430d108208c21dcd6d3bdfc7fa68e",
+      "aiEvidenceSha256": "8fc994dd1db0d5a147d5b8327ecb70e9556dc8cc15d0039e1826d34b447a4cd0",
+      "receiptSha256": "40baedee92f3215e9bcf32980a10674a8cfe223a1588650e2896cc58298cacbd",
+      "eligibilitySha256": "bdbaebe0be0ee9939a05812deea5b1b66bdad5e2dc0da2d3f7665a65dc6a931d",
+      "evidenceManifestSha256": "ae982b073021c85aac4b99f293bbbfb138b15a8c2d0fa75607d439ac105344a2"
+    },
+    "videoReviewSha256": "4449d22a3b5f001007a8d63c8137f1c0f656042fbee142c4710c2640f85d2d0a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5dd9acebf4ef2e4ed130dccc705fc4e24b712a1e"
+  },
   "pdh_lickingmat": {
     "video": "/images/products/catalog/pdh_lickingmat/videos/14ed7a13fbe38356d25603612ed5a7f84d2524a71e7429e65b4c0a75133a24b4/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -10802,5 +10846,62 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "0d4810e8e8c2b6db4f3ae033549621ce67e22dbd"
+  },
+  "rw_jsk_1000000978": {
+    "video": "/images/products/catalog/rw_jsk_1000000978/videos/6de21001a99a0ffbd3b469f08ea5f4d461560557819b772bf6548704ac552981/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "85807160d636425518a0749d5f0b176a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "85807160d636425518a0749d5f0b176a",
+      "reviewId": "935df724d60865ce71306aa9107b1efb",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6de21001a99a0ffbd3b469f08ea5f4d461560557819b772bf6548704ac552981",
+      "seconds": 8,
+      "source": {
+        "no": 401,
+        "folder": "rw_jsk_1000000978",
+        "name": "러프웨어 로머 리드줄(Roamer™ Leash)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_053.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000978",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_127.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_284.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_359.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_439.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_525.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_660.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_764.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000978/image/detail/1000000769_detail_863.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220329/2021SS-Roamer-Leash1_1_232956.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220329/2021SS-Roamer-Leash1_2_233010.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220928/2021SS-Roamer-Leash2_155511.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220929/91a0a1aa3ec07e1511c76c0c1f321f9f_170044.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9f741bbfe06e4447139996a6aeb44ddf",
+        "sha256": "6de21001a99a0ffbd3b469f08ea5f4d461560557819b772bf6548704ac552981"
+      },
+      "scopeId": "9fdd9c15be5b7e9b17d03cf44972578688f66bedcaed6a87a7ceb8801172accc",
+      "scopeRegistrationSha256": "2f9d0ef7faed704ae8e9feea643f1bb1606213d812ef739c82fde1caa1a2c2cb",
+      "aiEvidenceSha256": "9b112e6b5cc75b27fc4d1e92696a090c65d1c6fe8b674637c6010ff896354755",
+      "receiptSha256": "fc6d9d20b6812a16fe18432177b95117cb7872b1c7a125e0373b602aead550ba",
+      "eligibilitySha256": "3a4a76898d340530380a75c9dff7b1caae31c9e0cace10c01fba93dcbd008ef8",
+      "evidenceManifestSha256": "8607ffa54453dbbc0423ec927adaf27ffb63b79cd8db4130752f9410a8b2f9bb"
+    },
+    "videoReviewSha256": "3d2b4459ee102a4b0e4a2aea66b427db8401de0511f89be26b42303f2ca6012e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5dd9acebf4ef2e4ed130dccc705fc4e24b712a1e"
   }
 }
