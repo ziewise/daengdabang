@@ -79510,16 +79510,16 @@
     "publicationStatus": "approved",
     "productId": "p_267",
     "folder": "aff_microbeads_round",
-    "video": "/images/products/catalog/aff_microbeads_round/videos/c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2/hover.mp4",
-    "sha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2",
+    "video": "/images/products/catalog/aff_microbeads_round/videos/243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc/hover.mp4",
+    "sha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc",
     "videoQuality": "approved_dog_using",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "af0fba9af6df241a221ee1114577d495",
-      "reviewId": "5101d6dec37cd3fed1c8a8b2717ebd58",
+      "jobId": "ff62e14ac4675ee641ef6fb06f3369a7",
+      "reviewId": "d12db5ecaa4f8174222e619563220cc7",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2",
+      "finalSha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc",
       "seconds": 4,
       "source": {
         "no": 267,
@@ -79540,30 +79540,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "9ef31ab57f2bb4eda678ffbf3cfcf443",
-        "sha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2"
+        "artifact_id": "c8eb2f6277f2a02207284b9fcde097d9",
+        "sha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc"
       },
       "scopeId": "da04d53989dd3a67ec48fb705a7e239e5032734755ac31f9d74b88f2a27454b0",
-      "scopeRegistrationSha256": "865e8e3502512ae446aa9a15454450282756a6b07bd4ce093f545a923053d024",
-      "aiEvidenceSha256": "ca17d29f3a871ab8ba36cb7c593f289393b596eca9d8413bcce7c94b3f870f37",
-      "receiptSha256": "d29402e0724286300d2075d42d2f2f29345f56d6fd6158b896e3734775aa7af6",
-      "eligibilitySha256": "94d3cd7f4c220066e39ab47d3b2410580528562ba347f3ae06a42db35de05586",
-      "evidenceManifestSha256": "5d4b73ea11b904ec01c75ab2510bcea95dafd8a2fbcc0c2e794c20868053886f"
+      "scopeRegistrationSha256": "86742583ee2a6d346806882fb2c3a1603f6b9f7ab327c1884d131b94a8683bfd",
+      "aiEvidenceSha256": "e16c8eba219302f45d1dacb64e9a1599fae7d7cdcecfac10a062c22fbe0a80fd",
+      "receiptSha256": "aacc3cec03d079c9250550ee56d958df8f3ef3d580c030d0435256eb8f994b6d",
+      "eligibilitySha256": "d6250ab4e0bf29be01693d5e69c4e2e76d26461058c105c1536711c89ce3ce59",
+      "evidenceManifestSha256": "8da2003c74b0fdb6c65fe1595e43b0fdb926500b27c497c325c4f2070d4ab4f6"
     },
     "delegatedReview": {
-      "api_job_id": "af0fba9af6df241a221ee1114577d495",
+      "api_job_id": "ff62e14ac4675ee641ef6fb06f3369a7",
       "bindings": {
         "native_video": {
-          "artifact_id": "fd64c14ef1b64804a63fd2d90bb4eff2",
-          "sha256": "df525d5a815b418b23dffde47daa542e9e2b78d123cf7b45a1865e9cf8f21fa9"
+          "artifact_id": "6e3c54379ef044fd91ab67cd9e4bf2cd",
+          "sha256": "34273d7430d28485171d1b73ff194052238f3bba63ce1d80025acbeb24fee533"
         },
         "review_video": {
-          "artifact_id": "9ef31ab57f2bb4eda678ffbf3cfcf443",
-          "sha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2"
+          "artifact_id": "c8eb2f6277f2a02207284b9fcde097d9",
+          "sha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc"
         },
         "terminal": {
-          "artifact_id": "4ad18cf8c5ad915e71376a8981c59273",
-          "sha256": "d0959dc16d9471f66e0fa17fa6ee55715436c70c330b04d7bdeaa97bd6f4b9c9"
+          "artifact_id": "b3759859b092c0689c3defb5508d266a",
+          "sha256": "2837e0567517fd27350686950e04bb8bd8683bde919c0efeac00af7278d65861"
         }
       },
       "checks": {
@@ -79708,41 +79708,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_267-af0fba9af6df241a221ee1114577d495-all97-v1",
-        "evidence_sha256": "ca17d29f3a871ab8ba36cb7c593f289393b596eca9d8413bcce7c94b3f870f37",
+        "evidence_id": "ddb-ai-p_267-ff62e14ac4675ee641ef6fb06f3369a7-all97-v1",
+        "evidence_sha256": "e16c8eba219302f45d1dacb64e9a1599fae7d7cdcecfac10a062c22fbe0a80fd",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "5101d6dec37cd3fed1c8a8b2717ebd58",
-      "reviewed_at": "2026-09-15T23:00:50.439949Z",
+      "review_id": "d12db5ecaa4f8174222e619563220cc7",
+      "reviewed_at": "2026-09-29T18:07:14.099186Z",
       "schema_version": 1,
       "scope_id": "da04d53989dd3a67ec48fb705a7e239e5032734755ac31f9d74b88f2a27454b0",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "4ad18cf8c5ad915e71376a8981c59273",
+        "artifact_id": "b3759859b092c0689c3defb5508d266a",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "fd64c14ef1b64804a63fd2d90bb4eff2",
-        "native_artifact_sha256": "df525d5a815b418b23dffde47daa542e9e2b78d123cf7b45a1865e9cf8f21fa9",
+        "native_artifact_id": "6e3c54379ef044fd91ab67cd9e4bf2cd",
+        "native_artifact_sha256": "34273d7430d28485171d1b73ff194052238f3bba63ce1d80025acbeb24fee533",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "0651fa0a80aaee8f65b4d61529967d1263c6b4f4458df39586963f52e51af618",
+        "pixel_sha256": "15098d3db50f4e28ed41f102a0aa2ce551d72ca720a0edeb734c2505153b6184",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "d0959dc16d9471f66e0fa17fa6ee55715436c70c330b04d7bdeaa97bd6f4b9c9",
-        "source_artifact_id": "9ef31ab57f2bb4eda678ffbf3cfcf443",
-        "source_artifact_sha256": "c0d50f302c8acd0a1a7520080822b9b4aed9c79d9709bd03654ea5c34c31e9e2",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "2837e0567517fd27350686950e04bb8bd8683bde919c0efeac00af7278d65861",
+        "source_artifact_id": "c8eb2f6277f2a02207284b9fcde097d9",
+        "source_artifact_sha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Navy Affetto circular Microbeads Round L",
@@ -79766,15 +79769,12 @@
       "scene_sha256": "6964a498cd7bc63c8bc8ebc77fa2f2dcbdb2b042cef4b523200b2e76b8f1deeb",
       "schema_version": 1,
       "scope_id": "da04d53989dd3a67ec48fb705a7e239e5032734755ac31f9d74b88f2a27454b0",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "5101d6dec37cd3fed1c8a8b2717ebd58",
+      "reviewId": "d12db5ecaa4f8174222e619563220cc7",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "da04d53989dd3a67ec48fb705a7e239e5032734755ac31f9d74b88f2a27454b0",
       "human_approved": false,
@@ -79796,10 +79796,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "eee7215c2dd47b6859aa60d6cce7ea7b56b852f63a514ae4acb256b33163e6de",
-      "checkedAt": "2026-09-20T16:10:33.491749+00:00",
-      "sha256": "8cc9fb717f13e53e64f2bfa8c96313351e2e6d6c124382b8cf961de5efbcb96c"
+      "ownerInstructionSha256": "3d4fdfbf8254bf5756d94db2df775530a50aa9b8b6f62800c2483996f0642539",
+      "technicalProofSha256": "545add4a8740fb0dbddbc1574e3394ff2fb372e7e8b59f54cc086282e89774be",
+      "naturalMotionReviewSha256": "9c54210e2ee4933d2fa4b99644a5ab0df07dde32b5c707e17f31242dc9455de8",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T18:32:56.581253+00:00",
+      "sha256": "d8c40155916df0291ca11b6fcb6370a1ef3ade0a4aa3996c2cf28dfe6627b9f2"
     }
   },
   "pdh_spin_ufo": {

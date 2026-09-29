@@ -274,7 +274,56 @@
     "videoJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f"
   },
   "aff_microbeads_cloud": null,
-  "aff_microbeads_round": null,
+  "aff_microbeads_round": {
+    "video": "/images/products/catalog/aff_microbeads_round/videos/243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "ff62e14ac4675ee641ef6fb06f3369a7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ff62e14ac4675ee641ef6fb06f3369a7",
+      "reviewId": "d12db5ecaa4f8174222e619563220cc7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc",
+      "seconds": 4,
+      "source": {
+        "no": 267,
+        "folder": "aff_microbeads_round",
+        "name": "아페토 커버분리형 마이크로 비즈 원형 방석 3컬러 핑크 그레이 네이비",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_microbeads_round/aff_microbeads_round.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637930173",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_microbeads_round/details/2.webp",
+          "/images/products/catalog/aff_microbeads_round/details/3.webp",
+          "/images/products/catalog/aff_microbeads_round/details/4.webp",
+          "/images/products/catalog/aff_microbeads_round/details/5.webp",
+          "/images/products/catalog/aff_microbeads_round/details/6.webp",
+          "/images/products/catalog/aff_microbeads_round/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c8eb2f6277f2a02207284b9fcde097d9",
+        "sha256": "243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc"
+      },
+      "scopeId": "da04d53989dd3a67ec48fb705a7e239e5032734755ac31f9d74b88f2a27454b0",
+      "scopeRegistrationSha256": "86742583ee2a6d346806882fb2c3a1603f6b9f7ab327c1884d131b94a8683bfd",
+      "aiEvidenceSha256": "e16c8eba219302f45d1dacb64e9a1599fae7d7cdcecfac10a062c22fbe0a80fd",
+      "receiptSha256": "aacc3cec03d079c9250550ee56d958df8f3ef3d580c030d0435256eb8f994b6d",
+      "eligibilitySha256": "d6250ab4e0bf29be01693d5e69c4e2e76d26461058c105c1536711c89ce3ce59",
+      "evidenceManifestSha256": "8da2003c74b0fdb6c65fe1595e43b0fdb926500b27c497c325c4f2070d4ab4f6"
+    },
+    "videoReviewSha256": "d8c40155916df0291ca11b6fcb6370a1ef3ade0a4aa3996c2cf28dfe6627b9f2",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "81d5d3c35ef4a87a3454699d9f680a0cb50f89c2"
+  },
   "aff_pad_l_20_1": {
     "video": "/images/products/catalog/aff_pad_l_20_1/videos/9f8549ba6096aabedecfe680b43c421cbb63c9337ed41853c62bf05a3da0af18/hover.mp4",
     "videoProvider": "ziewcraft",
