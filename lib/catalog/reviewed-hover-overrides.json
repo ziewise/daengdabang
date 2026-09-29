@@ -7778,7 +7778,56 @@
     "videoQuality": "approved_dog_wearing",
     "videoJobId": "3d4e1704-1820-4dc2-aad9-d39d5f808358"
   },
-  "zs_rhino": null,
+  "zs_rhino": {
+    "video": "/images/products/catalog/zs_rhino/videos/f424244cc5e2e4dbda8e678b88818f42bb81fecdf1ef6cf5961cc5350c2f32bd/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "c67d2b9e9c86e004d0ba7d1799f1580e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c67d2b9e9c86e004d0ba7d1799f1580e",
+      "reviewId": "08a0daf552049cf08012a1ab096f1e2a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f424244cc5e2e4dbda8e678b88818f42bb81fecdf1ef6cf5961cc5350c2f32bd",
+      "seconds": 8,
+      "source": {
+        "no": 65,
+        "folder": "zs_rhino",
+        "name": "주스누드_라이노 (RHINO ZOO SNOOD)",
+        "brandEn": "Zoo Snoods",
+        "isFood": false,
+        "image": "/images/products/catalog/zs_rhino/zs_rhino.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/11251577949",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/zs_rhino/details/official-visual-01.webp",
+          "/images/products/catalog/zs_rhino/details/official-visual-02.webp",
+          "/images/products/catalog/zs_rhino/details/official-visual-03.webp",
+          "/images/products/catalog/zs_rhino/details/2.webp",
+          "/images/products/catalog/zs_rhino/details/3.webp",
+          "/images/products/catalog/zs_rhino/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f72820c5c3bd4285d9086b05901fe301",
+        "sha256": "f424244cc5e2e4dbda8e678b88818f42bb81fecdf1ef6cf5961cc5350c2f32bd"
+      },
+      "scopeId": "40020ec25a0946b249ff0ead32b1cb780cb9c485440a09c36d4df52a32e785f1",
+      "scopeRegistrationSha256": "dbd7557cd954844d941d2143056d2846622c776be82c435124eea8bb9f25188e",
+      "aiEvidenceSha256": "9fec3447b29054c0904743bb1dc983a9eb724b8a2850a374967adbfac3647709",
+      "receiptSha256": "0865c7cd8a86eca4e5f762f31326f49eae25982c4f5b164264417b45c8376adf",
+      "eligibilitySha256": "6508054fb0cf209320e649f9f696b74d914ab90b9b226e74a56e3b687bc37758",
+      "evidenceManifestSha256": "64330b466de91563c78340bbb1ba80e7fb9d5a0f8d932c0bc51943ca4907dc3c"
+    },
+    "videoReviewSha256": "b4dd9d414ca49b19aac377e4ba44c58aca359fc129457bacec57531891f47b2c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "8e43670c666c63370739fab027ea91ed0607d2c5"
+  },
   "zs_unicorn": {
     "video": "/images/products/catalog/zs_unicorn/videos/a0a635d9ce523d10519a58afe55e995c64d182b829760dfa5ecc5805d9fb3e56/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

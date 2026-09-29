@@ -1198,5 +1198,9 @@
   "rw_jsk_1000001231": {
     "productId": "p_450",
     "sha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436"
+  },
+  "zs_rhino": {
+    "productId": "p_65",
+    "sha256": "f424244cc5e2e4dbda8e678b88818f42bb81fecdf1ef6cf5961cc5350c2f32bd"
   }
 }
