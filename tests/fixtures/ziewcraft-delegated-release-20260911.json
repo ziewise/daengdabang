@@ -821,7 +821,7 @@
   },
   "perity_broccoli_mist": {
     "productId": "p_207",
-    "sha256": "dbd4326d51ad15ba9f8eb67a729ed9b0d828aed696c884df395b741bc10e5e14"
+    "sha256": "a6ec98a5aa873bc275919252e9774813eada2d305587480cd968b2d692e58aad"
   },
   "polkadog_henpenny_biscuit_142g": {
     "productId": "p_285",
@@ -1226,5 +1226,9 @@
   "iby_stroller_fs2191": {
     "productId": "p_254",
     "sha256": "4e0fa7e28481bd4dad5d7f34cd516bb4a73c174a58b8c7568699eb78020038fa"
+  },
+  "ot_firewatcher_harness": {
+    "productId": "p_225",
+    "sha256": "cdcf97774f3f94ddbdb7f001a432930185c5edb95b07c12a1c92e5864031b500"
   }
 }

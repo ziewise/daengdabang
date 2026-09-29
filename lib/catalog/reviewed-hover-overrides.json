@@ -3207,7 +3207,57 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c8e84f490d51df532230ffe68b8a40fbc2dcdb4b"
   },
-  "ot_firewatcher_harness": null,
+  "ot_firewatcher_harness": {
+    "video": "/images/products/catalog/ot_firewatcher_harness/videos/cdcf97774f3f94ddbdb7f001a432930185c5edb95b07c12a1c92e5864031b500/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "443e324a81e7558d53693b6338815200",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "443e324a81e7558d53693b6338815200",
+      "reviewId": "be05f8bbcfdb4e577b23b2ed282beec9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "cdcf97774f3f94ddbdb7f001a432930185c5edb95b07c12a1c92e5864031b500",
+      "seconds": 8,
+      "source": {
+        "no": 225,
+        "folder": "ot_firewatcher_harness",
+        "name": "원티그리스 파이어워쳐K9 하네스",
+        "brandEn": "OneTigris",
+        "isFood": false,
+        "image": "/images/products/catalog/ot_firewatcher_harness/ot_firewatcher_harness.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8693866223",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ot_firewatcher_harness/details/2.webp",
+          "/images/products/catalog/ot_firewatcher_harness/details/3.webp",
+          "/images/products/catalog/ot_firewatcher_harness/details/4.webp",
+          "/images/products/catalog/ot_firewatcher_harness/details/5.webp",
+          "/images/products/catalog/ot_firewatcher_harness/details/6.webp",
+          "/images/products/catalog/ot_firewatcher_harness/details/7.webp",
+          "/images/products/catalog/ot_firewatcher_harness/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6bcd4d2232c5986ce29f53577bbcc2f0",
+        "sha256": "cdcf97774f3f94ddbdb7f001a432930185c5edb95b07c12a1c92e5864031b500"
+      },
+      "scopeId": "965a47fd3a4886f146f7440f8befecc37ebd37f98b879f7a90ba12f043f5d5a4",
+      "scopeRegistrationSha256": "0d49c56a32b5936f0108640f5310143b3cdfc8260e1bdadc763dc5f2f7282ef7",
+      "aiEvidenceSha256": "561a83114d15c75ae0916240dff1a0c22b773987264d3a112a43b9160b080154",
+      "receiptSha256": "e7b39189e40ca8f8dbc366c13aae23a038ef203cec5efc63863cc726825e7bea",
+      "eligibilitySha256": "eb518678e81e3d251d338543b9aceb77d8801f37bbfba98526acfdb330479f74",
+      "evidenceManifestSha256": "062aa47be24f5c4f620b725077d3a72f629b4755fb4ae275dd92afe8e6c55d85"
+    },
+    "videoReviewSha256": "04a6d34cb17f4db4a1ad07f064f98ed205b8c00ec2731b2364c048bad14497d6",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f2dcce47f283834d698cc87711286607b9e0eb0c"
+  },
   "ot_goliath_harness": {
     "video": "/images/products/catalog/ot_goliath_harness/videos/572b113806c339ca9b2b034c76f88dbb1e00d6e6c74847ca9e41c56b91fa48f1/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3659,7 +3709,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "f053a980fd01ae3e0221c994d7f2fc55c5fa7d38"
   },
-  "perity_broccoli_mist": null,
+  "perity_broccoli_mist": {
+    "video": "/images/products/catalog/perity_broccoli_mist/videos/a6ec98a5aa873bc275919252e9774813eada2d305587480cd968b2d692e58aad/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "0e6c148a1a9bae59f6f0fd816d0bef2f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0e6c148a1a9bae59f6f0fd816d0bef2f",
+      "reviewId": "1f55a72936774d7f861da7a27bb5c769",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a6ec98a5aa873bc275919252e9774813eada2d305587480cd968b2d692e58aad",
+      "seconds": 4,
+      "source": {
+        "no": 207,
+        "folder": "perity_broccoli_mist",
+        "name": "페리티_제주 브로콜리 릴리프 펫 미스트",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_mist/perity_broccoli_mist.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848890864",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_mist/details/2.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/3.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/4.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/5.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/6.webp",
+          "/images/products/catalog/perity_broccoli_mist/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6618d7b924531d0b22b192c49901f57f",
+        "sha256": "a6ec98a5aa873bc275919252e9774813eada2d305587480cd968b2d692e58aad"
+      },
+      "scopeId": "94d0de56d713745dcdc1920dad90c7ffdf943d505de31169d8d54e4a96d92b27",
+      "scopeRegistrationSha256": "5c2342dfd88546a2297be286f6ef3d6c23fdfc162a1569e8c2fa6eb40a23cb5b",
+      "aiEvidenceSha256": "e0cee27fff15ad1d88eb13d90d1b55e50c4831ee44f839cf18909dfd12b6fcb6",
+      "receiptSha256": "19899c432aa92617c1fa5ead4e183962ff3c6efc132299c15c143363b5f464dd",
+      "eligibilitySha256": "420cb29109d14cc7ef59878ca534648e17dc3f1b17704d352372be3c2a99502b",
+      "evidenceManifestSha256": "defb816a61bd42d5fa8d54ee19bc2c50ebf55b7dfed1f3db076dc3c4f3ae3255"
+    },
+    "videoReviewSha256": "ae246ee3e1957f6088b7625ec5035d1de4168dc81f02686cc01af13c5f66c266",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f2dcce47f283834d698cc87711286607b9e0eb0c"
+  },
   "perity_broccoli_shampoo_250ml": {
     "video": "/images/products/catalog/perity_broccoli_shampoo_250ml/videos/e227e4c067f2ec82cc02a1bd2446020df86819a4168b4a6ff65bf7d6394eb473/hover.mp4",
     "videoProvider": "ziewcraft",
