@@ -3134,7 +3134,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "917f79a623393feb960d31c979877be69adf5017"
   },
-  "polkadog_henpenny_biscuit_142g": null,
+  "polkadog_henpenny_biscuit_142g": {
+    "video": "/images/products/catalog/polkadog_henpenny_biscuit_142g/videos/025adc27ff5318a9421020a57d37518eff57820b732811c4a6c62f4e63870502/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "94effc5032013e9ada2dc058900d8736",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "94effc5032013e9ada2dc058900d8736",
+      "reviewId": "6461a5bb0ed7600b5421416072c54dca",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "025adc27ff5318a9421020a57d37518eff57820b732811c4a6c62f4e63870502",
+      "seconds": 4,
+      "source": {
+        "no": 285,
+        "folder": "polkadog_henpenny_biscuit_142g",
+        "name": "폴카독베이커리_ALL 헤니페니 비스킷 (치킨&크랜베리) 142g",
+        "brandEn": "Polkadog Bakery",
+        "isFood": true,
+        "image": "/images/products/catalog/polkadog_henpenny_biscuit_142g/polkadog_henpenny_biscuit_142g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7118825999",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-01.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-02.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-03.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-04.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/official-visual-05.webp",
+          "/images/products/catalog/polkadog_henpenny_biscuit_142g/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d77012cd925521701e3116b86a6d8acd",
+        "sha256": "025adc27ff5318a9421020a57d37518eff57820b732811c4a6c62f4e63870502"
+      },
+      "scopeId": "83f782189734cd92fbb1c7766a1861f63c0350b6817562558045df28965b3b74",
+      "scopeRegistrationSha256": "24287371566b541e43119d0cbad8adce7f76af4c9113ed0bcec0595c913fd7b4",
+      "aiEvidenceSha256": "d307db00f3cf394c82967cc9c77c9007f0a9f9a757f27697f15c25b5bbd3eda4",
+      "receiptSha256": "9ab9ab779547c01e086b84e7bb1cc4100a6a719f92d3b474feb615e74462e6ac",
+      "eligibilitySha256": "b42574d4a767f459e5189bba9823c2788c1156cd52aa1c24272309f5977c6135",
+      "evidenceManifestSha256": "0d31a61d10a7a2740a7cf5db9aa8468141dd531d871e27f3b536743552d07c51"
+    },
+    "videoReviewSha256": "3a8baf2832f0f5dc9ede9ceb00fc91ff326914dbcea5c3c1c745de0f2dd8a96e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ee248c0f173f763db30502d1aa37e803c07ea22d"
+  },
   "rs_bowl": {
     "video": "/images/products/catalog/rs_bowl/videos/860188ede01f84d638816c0a8ea918b313c0d7c2e1fe92d0c874ebac575a3bf2/hover.mp4",
     "videoProvider": "ziewcraft",
