@@ -1210,5 +1210,13 @@
   "rw_jsk_1000000189": {
     "productId": "p_370",
     "sha256": "1496df906b3536677ae4c2c3102772f6dec69920bdf532ce802f40f6a40060e0"
+  },
+  "rw_hitchhiker_leash_26": {
+    "productId": "p_30",
+    "sha256": "df9048e0e03fcbfadd606e43ce51c8c0f0128512739c0772c02d624b39126278"
+  },
+  "jjayo_icecream_blueberry_100ml": {
+    "productId": "p_326",
+    "sha256": "c1b5c2cb7c8d5a148a256227eb092505bf2d6f85950cd39f01dd555a52f23476"
   }
 }

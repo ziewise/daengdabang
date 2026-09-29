@@ -2626,11 +2626,50 @@
     "videoDeliveryCommit": "d8a44e5b9562e9c9172f440c964909714a8c8c11"
   },
   "jjayo_icecream_blueberry_100ml": {
-    "video": "/images/products/catalog/jjayo_icecream_blueberry_100ml/videos/hover.mp4",
+    "video": "/images/products/catalog/jjayo_icecream_blueberry_100ml/videos/c1b5c2cb7c8d5a148a256227eb092505bf2d6f85950cd39f01dd555a52f23476/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "195629c124ab61c85de5bb494bbf8de8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "195629c124ab61c85de5bb494bbf8de8",
+      "reviewId": "5d681305ab55a303b051cf9af2a0bb5a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c1b5c2cb7c8d5a148a256227eb092505bf2d6f85950cd39f01dd555a52f23476",
+      "seconds": 4,
+      "source": {
+        "no": 326,
+        "folder": "jjayo_icecream_blueberry_100ml",
+        "name": "짜요 아이스크림 100ml 블루베리",
+        "brandEn": "Jjayo",
+        "isFood": true,
+        "image": "/images/products/catalog/jjayo_icecream_blueberry_100ml/jjayo_icecream_blueberry_100ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6696370856",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/jjayo_icecream_blueberry_100ml/details/2.webp",
+          "/images/products/catalog/jjayo_icecream_blueberry_100ml/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b96f10657c0e11a477ae15ac8f090ef6",
+        "sha256": "c1b5c2cb7c8d5a148a256227eb092505bf2d6f85950cd39f01dd555a52f23476"
+      },
+      "scopeId": "582ce614411eafc74900dc1089a711fc72c652b2239a9ebcd17026f29f01855d",
+      "scopeRegistrationSha256": "7d10a32efff9007020b93da7237bec7ab7e0c123a048c9646e919ed1bca66255",
+      "aiEvidenceSha256": "e292bb82caa1df21903132551b9f36ac3b29aa45a6cbf7b5745520f22b064cde",
+      "receiptSha256": "da94aab35bd91db5ab0eaf6895c9a5905c489f2b26c4ab41f0eb51a5b2106d07",
+      "eligibilitySha256": "04c2371b2c14ed0093b33d4a1df1fddcaf7cdebc2beaa4218c6c6be14874ec33",
+      "evidenceManifestSha256": "6dca26c826412824a56363ed88edbd7fe724ca748ba9237ca88eeeaa79a0c587"
+    },
+    "videoReviewSha256": "1b7da8cfe7c40dd21bbab682ecf533478edb52b3f2bcc776d56eaf57c8a24d90",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-c78ae2f68688"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a05b95f1291019f89a2b4e28983b0310ea576bf1"
   },
   "jjayo_icecream_mini_blueberry_50ml": null,
   "joaru_perfume_cashmere": {
@@ -5965,7 +6004,64 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-photo-20260903-ac785bd6868a"
   },
-  "rw_hitchhiker_leash_26": null,
+  "rw_hitchhiker_leash_26": {
+    "video": "/images/products/catalog/rw_hitchhiker_leash_26/videos/df9048e0e03fcbfadd606e43ce51c8c0f0128512739c0772c02d624b39126278/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "adbc38941f895d37990815279228a16a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "adbc38941f895d37990815279228a16a",
+      "reviewId": "047611dac949b0cf5fb4c10ea848165e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "df9048e0e03fcbfadd606e43ce51c8c0f0128512739c0772c02d624b39126278",
+      "seconds": 4,
+      "source": {
+        "no": 30,
+        "folder": "rw_hitchhiker_leash_26",
+        "name": "러프웨어 히치 하이커 리드줄(2026SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_028.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001313",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_146.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_254.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_398.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_482.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_546.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_674.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_710.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_822.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001313/image/detail/1000001313_detail_993.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/d6c1821917a08fecd12ec3b7e5111dee_035647.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/e4640a0002809c9671b23d1dec1ba3c8_035708.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/a6b321785deb6d341cc9d7adae68f13b_035722.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260219/8f75b8286aec97d372d945e8968b9b98_035739.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b9f6db0706e26ef4c6377570ed1e9cc8",
+        "sha256": "df9048e0e03fcbfadd606e43ce51c8c0f0128512739c0772c02d624b39126278"
+      },
+      "scopeId": "d1a392e652445fe60cf2d9063b7a370e457e32dd8a89babccbf23b67c5321dfd",
+      "scopeRegistrationSha256": "7bea1b01d8b1f1034f9c17caf291f0ff0c7cb2c61aedc4bbfdef9a9112c1628e",
+      "aiEvidenceSha256": "5433d2b3afac782b48d9c30473ab677a50c1f71e381c039e62e2c11a538cee2e",
+      "receiptSha256": "0121308cc0a1bc85b1fb0e0e4e3dd303d34706ca03f98d4a5be805bc09ee2c76",
+      "eligibilitySha256": "ab008ca86d04a2e939f89aed67deecd9a083389ad241ca68389975f60b39556c",
+      "evidenceManifestSha256": "3f9e4ab27f277fb5180b7369a6d12a641f09e728af1e62e692ee7deba6155730"
+    },
+    "videoReviewSha256": "fdf85709f34af4608f27f0d5cd869fa72d2c16367e4abaf3d9359782d58632d3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a05b95f1291019f89a2b4e28983b0310ea576bf1"
+  },
   "rw_hometrail_hippack": null,
   "rw_hookacone": {
     "video": "/images/products/catalog/rw_hookacone/videos/0fcfcd33abf0754b7d9dcfaf864a9b3acec6b8389b56927ba318adecd6f55026/hover.mp4",
