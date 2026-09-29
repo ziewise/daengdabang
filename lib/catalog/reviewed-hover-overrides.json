@@ -7299,7 +7299,56 @@
   "sk_ft_salmon_pate_390g": null,
   "sk_ft_working26_15kg": null,
   "sk_ft_working30_15kg": null,
-  "smoothie_rainbow_30ml_3": null,
+  "smoothie_rainbow_30ml_3": {
+    "video": "/images/products/catalog/smoothie_rainbow_30ml_3/videos/0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "964e727812961a598cced12e4966bb04",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "964e727812961a598cced12e4966bb04",
+      "reviewId": "9092fe60c0fd9e484effd11390d89cd2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2",
+      "seconds": 4,
+      "source": {
+        "no": 232,
+        "folder": "smoothie_rainbow_30ml_3",
+        "name": "수제 무지개 야채 스무디 100m, 30ml 3개",
+        "brandEn": "Handmade/Other",
+        "isFood": true,
+        "image": "/images/products/catalog/smoothie_rainbow_30ml_3/smoothie_rainbow_30ml_3.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8300042384",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/2.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/3.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/4.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/5.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/6.webp",
+          "/images/products/catalog/smoothie_rainbow_30ml_3/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2a23805a5563d68c2a731442c082ef31",
+        "sha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2"
+      },
+      "scopeId": "e9ee40e7e4c1e392208fe362d795c01922ee0c004956c190acbe18c52f63464b",
+      "scopeRegistrationSha256": "b31bef310bb5e8fa40104f996dc442b2e0906308133664dbd5645c70f8c3b23e",
+      "aiEvidenceSha256": "8ccd5e35460f6206df4a77b64e09676fbf33d2c66d7a7340f1a8ee6ad74049c8",
+      "receiptSha256": "084a4289753c961abcdab0f7e596e7506912b188fa446d23b45dd8557b457235",
+      "eligibilitySha256": "14812e63ed34a276ccdb5d72dd03e116fea5e8c6c541a72f5254b6925cd5915b",
+      "evidenceManifestSha256": "d65d1144393d1e4b13e4c856d7daa102cd40428dd4c2c9a5b0f40c1ac7f63bf2"
+    },
+    "videoReviewSha256": "8f030a448c045bd5a762fe58bad74ad2ab0cc1e152147d09a167f190f74d7a6e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "37beabbf055923ffe8f96d8e902401578ae4091a"
+  },
   "soopa_chew_3set": {
     "video": "/images/products/catalog/soopa_chew_3set/videos/f0692dd758da32a73f4170dc2b55b4c4972ff7aac4fef89dd91bf36315a4f3ca/hover.mp4",
     "videoProvider": "ziewcraft",

@@ -79181,16 +79181,16 @@
     "publicationStatus": "approved",
     "productId": "p_232",
     "folder": "smoothie_rainbow_30ml_3",
-    "video": "/images/products/catalog/smoothie_rainbow_30ml_3/videos/2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694/hover.mp4",
-    "sha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694",
+    "video": "/images/products/catalog/smoothie_rainbow_30ml_3/videos/0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2/hover.mp4",
+    "sha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "1d2f8a27fd8c86f29fb14256a460fa45",
-      "reviewId": "83d8ad5a54e801b222a920a539a3595a",
+      "jobId": "964e727812961a598cced12e4966bb04",
+      "reviewId": "9092fe60c0fd9e484effd11390d89cd2",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694",
+      "finalSha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2",
       "seconds": 4,
       "source": {
         "no": 232,
@@ -79211,30 +79211,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "01626eccf4868ab7fa1ed4216d290701",
-        "sha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694"
+        "artifact_id": "2a23805a5563d68c2a731442c082ef31",
+        "sha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2"
       },
-      "scopeId": "af683c2876c716bd39fdf35e0568cc5dfbf9417ccf41839c4f509aa5511ddded",
-      "scopeRegistrationSha256": "cd4fe44c5f7a1efc2ec1e3072e9e16708c58bfa92ab7fc3b7c10ebb47fbff040",
-      "aiEvidenceSha256": "11d1a7f6bbcc3d69ba1ea9f12ecb130ed89d0092fe77a56e5edce341af1600f7",
-      "receiptSha256": "07e76cedf45c71212b912ea5cbd185e0a72e8693d8c0e115f1ab86b1039b6fd1",
-      "eligibilitySha256": "7412ce617bb889410a965d69135a17fca96385368c54fee1830f1f86ed275302",
-      "evidenceManifestSha256": "9750334cfed329bf4f1babbacb61d382c9a3e0e66d00ba0f1177142b6d6f9cd0"
+      "scopeId": "e9ee40e7e4c1e392208fe362d795c01922ee0c004956c190acbe18c52f63464b",
+      "scopeRegistrationSha256": "b31bef310bb5e8fa40104f996dc442b2e0906308133664dbd5645c70f8c3b23e",
+      "aiEvidenceSha256": "8ccd5e35460f6206df4a77b64e09676fbf33d2c66d7a7340f1a8ee6ad74049c8",
+      "receiptSha256": "084a4289753c961abcdab0f7e596e7506912b188fa446d23b45dd8557b457235",
+      "eligibilitySha256": "14812e63ed34a276ccdb5d72dd03e116fea5e8c6c541a72f5254b6925cd5915b",
+      "evidenceManifestSha256": "d65d1144393d1e4b13e4c856d7daa102cd40428dd4c2c9a5b0f40c1ac7f63bf2"
     },
     "delegatedReview": {
-      "api_job_id": "1d2f8a27fd8c86f29fb14256a460fa45",
+      "api_job_id": "964e727812961a598cced12e4966bb04",
       "bindings": {
         "native_video": {
-          "artifact_id": "0c0e4c976e5949e89efb36ab36e41efa",
-          "sha256": "e450de9f55730cc91a20e996c4aad25bd753c62e506af0ebfcda32dbc671255d"
+          "artifact_id": "fe1bc25abbf540fb898dbe7077600163",
+          "sha256": "50aa27e231334ba2bfb4869e37ae912169567c3c7373ffd9e03bcd557cf1c49b"
         },
         "review_video": {
-          "artifact_id": "01626eccf4868ab7fa1ed4216d290701",
-          "sha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694"
+          "artifact_id": "2a23805a5563d68c2a731442c082ef31",
+          "sha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2"
         },
         "terminal": {
-          "artifact_id": "889da0c6fbd8aed303481b62ab688b2f",
-          "sha256": "2f5f7a65d125c65ec26448ac0889a88e04001290ad86320d243277cba963a92d"
+          "artifact_id": "cfb0f8f8c5c655dd53d2e4e90253fa33",
+          "sha256": "20933c03feac1e37f8324f82a7ccf4e4c4f6f72e25f9a46eb3b0c57bec4bf71c"
         }
       },
       "checks": {
@@ -79357,7 +79357,7 @@
       "previous_review_id": null,
       "private_only": true,
       "product": {
-        "color": "Three red, orange and green rainbow vegetable smoothie pouches; visible orange puree",
+        "color": "Orange vegetable smoothie contents in clear square tub; orange variant demonstrated, package quantity not depicted",
         "product_id": "p_232",
         "sku": "smoothie_rainbow_30ml_3"
       },
@@ -79394,36 +79394,36 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_232-1d2f8a27fd8c86f29fb14256a460fa45-all97-v1",
-        "evidence_sha256": "11d1a7f6bbcc3d69ba1ea9f12ecb130ed89d0092fe77a56e5edce341af1600f7",
+        "evidence_id": "ddb-ai-p_232-964e727812961a598cced12e4966bb04-all97-v1",
+        "evidence_sha256": "8ccd5e35460f6206df4a77b64e09676fbf33d2c66d7a7340f1a8ee6ad74049c8",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "83d8ad5a54e801b222a920a539a3595a",
-      "reviewed_at": "2026-09-16T17:54:05.688382Z",
+      "review_id": "9092fe60c0fd9e484effd11390d89cd2",
+      "reviewed_at": "2026-09-29T13:38:35.455334Z",
       "schema_version": 1,
-      "scope_id": "af683c2876c716bd39fdf35e0568cc5dfbf9417ccf41839c4f509aa5511ddded",
+      "scope_id": "e9ee40e7e4c1e392208fe362d795c01922ee0c004956c190acbe18c52f63464b",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "889da0c6fbd8aed303481b62ab688b2f",
+        "artifact_id": "cfb0f8f8c5c655dd53d2e4e90253fa33",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "0c0e4c976e5949e89efb36ab36e41efa",
-        "native_artifact_sha256": "e450de9f55730cc91a20e996c4aad25bd753c62e506af0ebfcda32dbc671255d",
+        "native_artifact_id": "fe1bc25abbf540fb898dbe7077600163",
+        "native_artifact_sha256": "50aa27e231334ba2bfb4869e37ae912169567c3c7373ffd9e03bcd557cf1c49b",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "a842460fd8430842dd10d0c31d7c02fac9c0106dd12fc8edd9736c749df3cb91",
+        "pixel_sha256": "c5612f9a2228192ce010c24b1cdbe5e2c70e24e26118f3307b62e1f51961d92c",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "2f5f7a65d125c65ec26448ac0889a88e04001290ad86320d243277cba963a92d",
-        "source_artifact_id": "01626eccf4868ab7fa1ed4216d290701",
-        "source_artifact_sha256": "2e2201496a47509cea3d9066d1caf2f968a32513ac20fb7ee795863618808694",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "20933c03feac1e37f8324f82a7ccf4e4c4f6f72e25f9a46eb3b0c57bec4bf71c",
+        "source_artifact_id": "2a23805a5563d68c2a731442c082ef31",
+        "source_artifact_sha256": "0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2",
         "source_rendition": "review",
         "width": 1080
       }
@@ -79431,7 +79431,7 @@
     "delegationScope": {
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
-        "color": "Three red, orange and green rainbow vegetable smoothie pouches; visible orange puree",
+        "color": "Orange vegetable smoothie contents in clear square tub; orange variant demonstrated, package quantity not depicted",
         "product_id": "p_232",
         "sku": "smoothie_rainbow_30ml_3"
       },
@@ -79463,10 +79463,10 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "eb2e17e213e2e18646472add44b34028",
-      "scene_sha256": "bd98800d1cb29e8efb5774dadfbc7c6083a68efcd875010a5f0e20db78a0407c",
+      "scene_asset_id": "9b8dcb27f07fac3ccfe20107f11a544b",
+      "scene_sha256": "a221321fbaf5592a4e6c018c798133b4aab0de65a36a11399f88dd2e19663717",
       "schema_version": 1,
-      "scope_id": "af683c2876c716bd39fdf35e0568cc5dfbf9417ccf41839c4f509aa5511ddded",
+      "scope_id": "e9ee40e7e4c1e392208fe362d795c01922ee0c004956c190acbe18c52f63464b",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -79475,9 +79475,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "83d8ad5a54e801b222a920a539a3595a",
+      "reviewId": "9092fe60c0fd9e484effd11390d89cd2",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "af683c2876c716bd39fdf35e0568cc5dfbf9417ccf41839c4f509aa5511ddded",
+      "scopeId": "e9ee40e7e4c1e392208fe362d795c01922ee0c004956c190acbe18c52f63464b",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -79497,10 +79497,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "465f7ffc314d4bd40f62027cea9e623be57aca4d935a21f42f1d7a5f65ebc641",
-      "checkedAt": "2026-09-20T16:10:31.603415+00:00",
-      "sha256": "74e79c027f0961070dc5188bf32acfbc2fff456db0a62d9951cab1e9d616719a"
+      "ownerInstructionSha256": "58a49a9f5d15f847795cb682fc42a5984068bd6e1fda9171b7d4c88b9c839f5b",
+      "technicalProofSha256": "a71ae28c282ce3132a895a5f2fee435adc7b0fdc3bd3e09be98669538313c5f4",
+      "naturalMotionReviewSha256": "a1eb57273244c2a35fba37faf40103a69221461d1937198de75647e043884755",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T13:39:43.342822+00:00",
+      "sha256": "8f030a448c045bd5a762fe58bad74ad2ab0cc1e152147d09a167f190f74d7a6e"
     }
   },
   "aff_microbeads_round": {
