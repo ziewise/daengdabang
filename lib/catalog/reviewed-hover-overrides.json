@@ -13310,5 +13310,58 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "e52200b2698b1c63f77977dce02caf658891c790"
+  },
+  "rw_jsk_1000000189": {
+    "video": "/images/products/catalog/rw_jsk_1000000189/videos/1496df906b3536677ae4c2c3102772f6dec69920bdf532ce802f40f6a40060e0/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "3d65864545b55710418a594c4a2b5e64",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3d65864545b55710418a594c4a2b5e64",
+      "reviewId": "7dd4bd8c3aee9bfc6d4fd5715f7eec09",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1496df906b3536677ae4c2c3102772f6dec69920bdf532ce802f40f6a40060e0",
+      "seconds": 4,
+      "source": {
+        "no": 370,
+        "folder": "rw_jsk_1000000189",
+        "name": "러프웨어 후카마 천연 라텍스 반려견 장난감(Huckama™ 2022SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000189/image/detail/1000000189_detail_029.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000189",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000189/image/detail/1000000189_detail_197.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000189/image/detail/1000000189_detail_277.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000189/image/detail/1000000189_detail_330.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000189/image/detail/1000000189_detail_427.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000189/image/detail/1000000189_detail_537.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000189/91b58c8f1c7bc81d173ab73cd4cfe192.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000189/5ae1016309877b7492908a404930af9c.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000000189/57e4b7b2ba617611a58b856c3a4015b9.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "57b01cefa7de91f714bb93c1e7fb4f24",
+        "sha256": "1496df906b3536677ae4c2c3102772f6dec69920bdf532ce802f40f6a40060e0"
+      },
+      "scopeId": "71a66c755430ed39181c4ee18f7c68c4a32b698f4eb39a5431adc8ced0fd0a11",
+      "scopeRegistrationSha256": "bc8efe3354a30d9fff6ad8bc044b18d106c9bff3380e5706fc168ebc6d3c4c9a",
+      "aiEvidenceSha256": "fc926e4db09a3b2b38a4eb8515d1e04b84f43f0ac270e20990c26c317e61f0db",
+      "receiptSha256": "b255d0e1de7be7ee25a1af6ea9a81a3723f4bacc7cdf7f3df7be77fe626c80f4",
+      "eligibilitySha256": "1444d65e1cf2fc97929c18e8da7d754bbd952b3bfd0b6065eedc565defa38f8a",
+      "evidenceManifestSha256": "bc56956cd09dd2138b12373ad82c27b2e54cd5a7288e6abe1033252ff41438a3"
+    },
+    "videoReviewSha256": "83b87ec16dcb67da0801cfa94196222b163b1a160082f7be87e22f4492720332",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "367cbceab3fb9d63d4822db4a4dcd1a795c19f3b"
   }
 }

@@ -1206,5 +1206,9 @@
   "rw_jsk_1000001166": {
     "productId": "p_428",
     "sha256": "f32bca9a9cad113ee7e5bd5b6f6bab2766673aa944770bdb14f27fd96fc0dc99"
+  },
+  "rw_jsk_1000000189": {
+    "productId": "p_370",
+    "sha256": "1496df906b3536677ae4c2c3102772f6dec69920bdf532ce802f40f6a40060e0"
   }
 }
