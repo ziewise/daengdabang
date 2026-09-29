@@ -1194,5 +1194,9 @@
   "rw_knotahitch": {
     "productId": "p_349",
     "sha256": "e89bbe4bf3b8891470da2df6bd595f0fb0ec54ec382680da33f0e3eb5aaa3255"
+  },
+  "rw_jsk_1000001231": {
+    "productId": "p_450",
+    "sha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436"
   }
 }

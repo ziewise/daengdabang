@@ -117502,5 +117502,306 @@
       "checkedAt": "2026-09-29T00:53:27.168269+00:00",
       "sha256": "12ed06ce4f406a10ca87ae4536800adbea20e6af4c1e766ab5efdf6d54b9a67e"
     }
+  },
+  "rw_jsk_1000001231": {
+    "schema": "ddb.ziewcraft-owner-delegated-hover.v1",
+    "publicationStatus": "approved",
+    "productId": "p_450",
+    "folder": "rw_jsk_1000001231",
+    "video": "/images/products/catalog/rw_jsk_1000001231/videos/fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436/hover.mp4",
+    "sha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436",
+    "videoQuality": "approved_dog_using",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f297dc95213a9e7ca96148ebda1ffa61",
+      "reviewId": "31212c4480db6531c80656f08edb642c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436",
+      "seconds": 4,
+      "source": {
+        "no": 450,
+        "folder": "rw_jsk_1000001231",
+        "name": "러프웨어 런커 반려견 장난감(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_046.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001231",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_111.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_260.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001231/image/detail/1000001231_detail_340.jpg",
+          "/images/products/catalog/rw_jsk_1000001231/references/85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/d14314ae23bb223489813d2da348ea9e_134215.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/78bb797f8917025e76658917f617f4f0_134216.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/043769762e47ac23b7f235bf80f2497d_134216.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "20440d286e263decf752dee6a33e3d86",
+        "sha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436"
+      },
+      "scopeId": "4e67584b6f775e630349777503eaf9050a2721459cfd02306577068c1689f235",
+      "scopeRegistrationSha256": "a0ba5f407a423738ca98e8333e97cea433b0efb6fa844dc7daa7cf389dc0ff62",
+      "aiEvidenceSha256": "9cb41874a701aef2154db365ddf508e53d36b9ffd65ce64a96515aaeb8491140",
+      "receiptSha256": "ffd90938f53a5ace839b505afb22cf0afe6220d5653539cdcbb2cfdf0aa72c92",
+      "eligibilitySha256": "a4a8f03be8bcfb469289aa1f68e76b2031fe4e99c057e5e986e7e0ca4ed2ebce",
+      "evidenceManifestSha256": "1f2cedae9a5cd9156b303bd1afd975aea0ed2f39dbddeae57191baaa5ea999ca"
+    },
+    "delegatedReview": {
+      "api_job_id": "f297dc95213a9e7ca96148ebda1ffa61",
+      "bindings": {
+        "native_video": {
+          "artifact_id": "2fa6e48f15ff41fabd73e33c4cc0e680",
+          "sha256": "6bc3f63a79393fecdb1341ec16bbd05aeec516a9f89e3c5a14df3900de21b534"
+        },
+        "review_video": {
+          "artifact_id": "20440d286e263decf752dee6a33e3d86",
+          "sha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436"
+        },
+        "terminal": {
+          "artifact_id": "1f8ef1053d6860aee9c04273893eeaf7",
+          "sha256": "c03a79e2e8c68012932ff25e642130d80b050fc910fb4418af1e2286cac17daa"
+        }
+      },
+      "checks": {
+        "anatomy_and_motion": true,
+        "camera_and_framing": true,
+        "no_prohibited_overlays": true,
+        "product_identity": true,
+        "temporal_stability": true
+      },
+      "complete_product": true,
+      "coverage": {
+        "native_frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96
+        ]
+      },
+      "evidence_bytes_verified": true,
+      "evidence_content_verified": false,
+      "human_approved": false,
+      "human_identity_verified": false,
+      "numeric_boundary_evidence": null,
+      "owner_delegated_shop_candidate": true,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "previous_review_id": null,
+      "private_only": true,
+      "product": {
+        "color": "Biolumin Blue / 바이오루민 블루",
+        "product_id": "p_450",
+        "sku": "rw_jsk_1000001231"
+      },
+      "product_reference_assets": [
+        {
+          "asset_id": "498724640509ad29cf14f958334ff59d",
+          "sha256": "85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5",
+          "source_sha256": "85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5"
+        },
+        {
+          "asset_id": "7cc2be202810161c183f285433260722",
+          "sha256": "a324017ebd21c29b09a5d2049f2acbf03f46f285b59128a2738db34aa18c3122",
+          "source_sha256": "a324017ebd21c29b09a5d2049f2acbf03f46f285b59128a2738db34aa18c3122"
+        }
+      ],
+      "production_eligible": false,
+      "publication_allowed": false,
+      "publication_authority": "shop_owner_separate_decision",
+      "required_final_seconds": 4,
+      "retry_reason": "",
+      "review_actor": {
+        "evidence_id": "ddb-ai-p_450-f297dc95213a9e7ca96148ebda1ffa61-all97-v1",
+        "evidence_sha256": "9cb41874a701aef2154db365ddf508e53d36b9ffd65ce64a96515aaeb8491140",
+        "full_segment_watched": false,
+        "kind": "ai"
+      },
+      "review_id": "31212c4480db6531c80656f08edb642c",
+      "reviewed_at": "2026-09-29T01:44:00.360501Z",
+      "schema_version": 1,
+      "scope_id": "4e67584b6f775e630349777503eaf9050a2721459cfd02306577068c1689f235",
+      "semantic_verified": false,
+      "server_technical_gate_passed": true,
+      "status": "accepted",
+      "terminal_provenance": {
+        "artifact_id": "1f8ef1053d6860aee9c04273893eeaf7",
+        "canonical_review": true,
+        "frame_count": 96,
+        "frame_index": 95,
+        "height": 1080,
+        "mime_type": "image/png",
+        "native_artifact_id": "2fa6e48f15ff41fabd73e33c4cc0e680",
+        "native_artifact_sha256": "6bc3f63a79393fecdb1341ec16bbd05aeec516a9f89e3c5a14df3900de21b534",
+        "origin": "server_decoded_terminal",
+        "pixel_encoding": "bgr24",
+        "pixel_sha256": "083abd85307fd1fb1bf3e9f76c466d20d255d7ef369a7d5920fce5394098ef87",
+        "png_compression": 3,
+        "producer": "ziewcraft-human-review-media-r49-v1",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "c03a79e2e8c68012932ff25e642130d80b050fc910fb4418af1e2286cac17daa",
+        "source_artifact_id": "20440d286e263decf752dee6a33e3d86",
+        "source_artifact_sha256": "fe39c5e0039a510a21dee30301b7e4e0c682c1f857fec2745586050dc8e15436",
+        "source_rendition": "review",
+        "width": 1080
+      }
+    },
+    "delegationScope": {
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "product": {
+        "color": "Biolumin Blue / 바이오루민 블루",
+        "product_id": "p_450",
+        "sku": "rw_jsk_1000001231"
+      },
+      "references": [
+        {
+          "asset_id": "498724640509ad29cf14f958334ff59d",
+          "sha256": "85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5",
+          "source_sha256": "85ea1fe7561ce707e704d72fcdf001206855d33ff345f4a94c9037163c041cd5"
+        },
+        {
+          "asset_id": "7cc2be202810161c183f285433260722",
+          "sha256": "a324017ebd21c29b09a5d2049f2acbf03f46f285b59128a2738db34aa18c3122",
+          "source_sha256": "a324017ebd21c29b09a5d2049f2acbf03f46f285b59128a2738db34aa18c3122"
+        }
+      ],
+      "required_final_seconds": 4,
+      "scene_asset_id": "c32dbdef3bd64ee3bf570d6a51434ea4",
+      "scene_sha256": "19d03f888533e5a18cc363027000c6df3f892397a672d113997c0cfd0363a35d",
+      "schema_version": 1,
+      "scope_id": "4e67584b6f775e630349777503eaf9050a2721459cfd02306577068c1689f235",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
+    },
+    "currentEligibility": {
+      "owner_delegated_shop_candidate_current": true,
+      "reason": null,
+      "reviewId": "31212c4480db6531c80656f08edb642c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "scopeId": "4e67584b6f775e630349777503eaf9050a2721459cfd02306577068c1689f235",
+      "human_approved": false,
+      "publication_allowed": false
+    },
+    "technical": {
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "codec": "avc1",
+      "pixelFormat": "yuv420p",
+      "fullDecode": true,
+      "audioStreams": 0,
+      "fastStart": true
+    },
+    "publication": {
+      "actor": "ai",
+      "ownerAuthorized": true,
+      "evidenceVerified": true,
+      "ownerInstructionSha256": "bee8eedfe7e573dc8347ad5d216e7981d8d12835e6c260a9a48ada8ee9bcd5e7",
+      "technicalProofSha256": "02ce1c519eb0f00487335c740a3562b9aa52ba88ed0868b7a21764c7389a1132",
+      "naturalMotionReviewSha256": "dc2649879d04dc466061461289275539e8da820aa3580f3368914b1c37c84d12",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T01:45:38.660122+00:00",
+      "sha256": "e1e42076820cf1aa012a2069d61fbb022cf9d65c5b21af4cf7c686340c78ed9a"
+    }
   }
 }
