@@ -2392,7 +2392,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "2926a8663e1345d26e6407aa2b896f833062cd79"
   },
-  "ip_trovbiz_flyingstick": null,
+  "ip_trovbiz_flyingstick": {
+    "video": "/images/products/catalog/ip_trovbiz_flyingstick/videos/6f6b42847061ead5a45c8a856cccff5eb5e6020f2b90801f94b681ea5099ce79/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "6a764ca4e16d29eb7392a8c25e79438a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6a764ca4e16d29eb7392a8c25e79438a",
+      "reviewId": "2c60d31b68799a9184aec3b89dfb1175",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6f6b42847061ead5a45c8a856cccff5eb5e6020f2b90801f94b681ea5099ce79",
+      "seconds": 4,
+      "source": {
+        "no": 308,
+        "folder": "ip_trovbiz_flyingstick",
+        "name": "인더스트리펫 트로비즈 플라잉스틱 볼런쳐",
+        "brandEn": "Industry Pet",
+        "isFood": false,
+        "image": "/images/products/catalog/ip_trovbiz_flyingstick/ip_trovbiz_flyingstick.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6825835071",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ip_trovbiz_flyingstick/details/2.webp",
+          "/images/products/catalog/ip_trovbiz_flyingstick/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4e1396b9d524c142bcbff013ded2f036",
+        "sha256": "6f6b42847061ead5a45c8a856cccff5eb5e6020f2b90801f94b681ea5099ce79"
+      },
+      "scopeId": "623575bbbccdd97acf5e798641e65d1c59076f2663ecd2ba86eb22d7b6d44712",
+      "scopeRegistrationSha256": "a639e304b5b215675418914052136c01a17c0290a22d7f72d6aa344d54618523",
+      "aiEvidenceSha256": "a3f6ff9c3655c54a869b8ddbd0daaf7b5b7e7e4ecd5a988c547310467b8bb90c",
+      "receiptSha256": "0f01902e569531d9b41c2af0ce84f5d953196f3709f02faa7c16be72157c3fb4",
+      "eligibilitySha256": "e38d465a385c27b137c617d27becd400cc851bd43a564c28ccabd99eca1f174a",
+      "evidenceManifestSha256": "f804717e4bc29f3d5515eb6a60cfbc1eed2f922259564be657c0f5010a357eef"
+    },
+    "videoReviewSha256": "d655d94704c1168e35a24fb090db3c4f01a4f10e6b6afa9ac343b187f6f9774b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e2250ba4b6273ebef8ec86e3c98e25b2c8e1a793"
+  },
   "ip_trovbiz_nightday": {
     "video": "/images/products/catalog/ip_trovbiz_nightday/videos/7c9250b955d04f7657a5ed5e766dbf11047e0603317bef84b632c09a84f50f6b/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -7329,7 +7374,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "e0a79391d00a77c549c52c7852fb37d929c381e2"
   },
-  "soopa_chew_sweetpotato": null,
+  "soopa_chew_sweetpotato": {
+    "video": "/images/products/catalog/soopa_chew_sweetpotato/videos/ffad74f20cd7da569ebcc1a566626fb33267999f485e37e07ccd15487fb66373/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "5082b3272d052d8cc7c47f76e785bba2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5082b3272d052d8cc7c47f76e785bba2",
+      "reviewId": "e26a35f150aaa7806273521c45290619",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ffad74f20cd7da569ebcc1a566626fb33267999f485e37e07ccd15487fb66373",
+      "seconds": 4,
+      "source": {
+        "no": 289,
+        "folder": "soopa_chew_sweetpotato",
+        "name": "수파 그레인프리 100%식물성 야채간식 비건간식 고구마츄 100g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_chew_sweetpotato/soopa_chew_sweetpotato.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107927018",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_chew_sweetpotato/details/official-visual-01.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/2.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/3.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/4.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/5.webp",
+          "/images/products/catalog/soopa_chew_sweetpotato/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "034f5e97b445e2f87f9c9f7bf5bea11e",
+        "sha256": "ffad74f20cd7da569ebcc1a566626fb33267999f485e37e07ccd15487fb66373"
+      },
+      "scopeId": "1f249db816ee8e8ce7ef867934fc5e391bf74fddeb2437f1129396f3189ef9fc",
+      "scopeRegistrationSha256": "65bfb0760ce3a04ff38e24883e4a8c96df3a0c21d5f8153c1163997fb1ed9fef",
+      "aiEvidenceSha256": "7abf28c6e9ed00a553cd4cca3c1354026ce2a130b514e8f7637d5dbbe007e24a",
+      "receiptSha256": "99faaa438ca1c955ff7493614212d8989404b97fa90e7db18464cd15710550b2",
+      "eligibilitySha256": "922892f9b23f4dd156eb96ec226de1fbe1a1f6d40e02ffc7c22210780369c303",
+      "evidenceManifestSha256": "90b69bb8261d14c955a3f9e049eecae4011425f3c6c6c5083d5adfa514050d88"
+    },
+    "videoReviewSha256": "06993732e9d9bdf88a67179a743bb3d38424ffed03e63d08bb437ea4a59ca123",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e2250ba4b6273ebef8ec86e3c98e25b2c8e1a793"
+  },
   "soopa_dental_6set": null,
   "soopa_dental_appleblueberry": {
     "video": "/images/products/catalog/soopa_dental_appleblueberry/videos/47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9/hover.mp4",
@@ -8036,7 +8130,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4d8ee580e28f41b7cb01413253b06e5cf1a6d077"
   },
-  "soopa_healthybites_kaleapple": null,
+  "soopa_healthybites_kaleapple": {
+    "video": "/images/products/catalog/soopa_healthybites_kaleapple/videos/12480b33ee26298c1d1982f987ac1fec0adfcaab1bd021388adffcf500d72136/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "f505d665de6b441496241ebc87ba8d58",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f505d665de6b441496241ebc87ba8d58",
+      "reviewId": "d3d426f0146f76698c643a7040dd4106",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "12480b33ee26298c1d1982f987ac1fec0adfcaab1bd021388adffcf500d72136",
+      "seconds": 4,
+      "source": {
+        "no": 297,
+        "folder": "soopa_healthybites_kaleapple",
+        "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 야채 케일&사과 50g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_healthybites_kaleapple/soopa_healthybites_kaleapple.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107664990",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/2.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/3.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/4.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/5.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/6.webp",
+          "/images/products/catalog/soopa_healthybites_kaleapple/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "89c0647ca984b6ef22076142e46b1254",
+        "sha256": "12480b33ee26298c1d1982f987ac1fec0adfcaab1bd021388adffcf500d72136"
+      },
+      "scopeId": "bbaf9d88cc197d76afe13a3e1866b6cedf636f8f667418776cac25af845949a7",
+      "scopeRegistrationSha256": "33325451ab99da244e4524e811e1cf6a05b34f5445f1de32dfee239077b4e79b",
+      "aiEvidenceSha256": "a628de3b9f5e079b4575c77cd410187b477044c71504b69ed49ff1087e5d585b",
+      "receiptSha256": "6a09032152feba7b9aeb22de23ab267c1f6a15b3a18a50b99ec8def4c9813e4c",
+      "eligibilitySha256": "f5360b30fca5875e8d274bc55f1bffe7973a4103603eba9e6b0cdd15e2444ea8",
+      "evidenceManifestSha256": "2c870a2b8fce093a3e34d9b1165c95a7c3b0da17739286cc1d3aabc6bc4f71fd"
+    },
+    "videoReviewSha256": "9f08466cbaba7ef2ad91ba917aa9115e9cd6a65588ec8d87074fe7f4e75af45f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e2250ba4b6273ebef8ec86e3c98e25b2c8e1a793"
+  },
   "sweetpet_icecream_strawberry": {
     "video": "/images/products/catalog/sweetpet_icecream_strawberry/videos/fdd65f2554b4209bd0d6ac77c34807879bec89ad5b441e4086542d783ccc6da1/hover.mp4",
     "videoProvider": "ziewcraft",
