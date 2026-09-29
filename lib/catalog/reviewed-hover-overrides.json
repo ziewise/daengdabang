@@ -2719,7 +2719,51 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "794b1af20128d2550bea4f98a9698c2aadfe5565"
   },
-  "joaru_perfume_lilac": null,
+  "joaru_perfume_lilac": {
+    "video": "/images/products/catalog/joaru_perfume_lilac/videos/62e5a2a3a53d646dc97d295d5be0fc808c4ee0a0e75660a82039329af8938f66/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "442c4d00687f7687260a2e4bda16c03f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "442c4d00687f7687260a2e4bda16c03f",
+      "reviewId": "f4cb4ca8705318b29b6c7074a299c5d2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "62e5a2a3a53d646dc97d295d5be0fc808c4ee0a0e75660a82039329af8938f66",
+      "seconds": 4,
+      "source": {
+        "no": 318,
+        "folder": "joaru_perfume_lilac",
+        "name": "조아루 반려동물 수제향수 - 아쿠아 라일락 향",
+        "brandEn": "Joaru",
+        "isFood": false,
+        "image": "/images/products/catalog/joaru_perfume_lilac/joaru_perfume_lilac.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6774359798",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/joaru_perfume_lilac/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "aeff9f749a6e8a68de07b7293ee2a5da",
+        "sha256": "62e5a2a3a53d646dc97d295d5be0fc808c4ee0a0e75660a82039329af8938f66"
+      },
+      "scopeId": "72e32c4e7dacdaeca2a40e232cc66c7b14d8ec06876c93a6e59f4049481448bd",
+      "scopeRegistrationSha256": "b4ee6709fe21ea7e56d0e67ce254fc08f110fe3e014aa33eecbe0386f3ca748a",
+      "aiEvidenceSha256": "579096286185cc15fb3df8959ec0e2b71ddf0275314e736aa674352c75b1b4d6",
+      "receiptSha256": "8e7758791d091c330802ebbc50d81f0d1069c51ff656366c27d9d24e12943728",
+      "eligibilitySha256": "e3cf7af790131fab23664cd2c0fb40ac513bc803017e07c19ca821fec291e02b",
+      "evidenceManifestSha256": "8cc8441285aa5f6b531e36641fe15c7f909e2b364a0163684069610ffb94fb4a"
+    },
+    "videoReviewSha256": "e335527d6413357fa5b304acd0701c40ee9a1f9007a9c3d50ae206d7c46413ba",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4d1d20576f0e2a8e5b8739efd62d1edb31916cb3"
+  },
   "mb_vegemix_100g_4": null,
   "mb_vegemix_475g": null,
   "nd_feelgood_c": {
