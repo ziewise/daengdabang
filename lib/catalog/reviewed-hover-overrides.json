@@ -3121,7 +3121,53 @@
     "videoDeliveryCommit": "f053a980fd01ae3e0221c994d7f2fc55c5fa7d38"
   },
   "perity_broccoli_mist": null,
-  "perity_broccoli_shampoo_250ml": null,
+  "perity_broccoli_shampoo_250ml": {
+    "video": "/images/products/catalog/perity_broccoli_shampoo_250ml/videos/e227e4c067f2ec82cc02a1bd2446020df86819a4168b4a6ff65bf7d6394eb473/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "f9ace60de1d43480c2439e5d41eda9df",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f9ace60de1d43480c2439e5d41eda9df",
+      "reviewId": "844de2680cd42c15c5711709f9f1aeca",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e227e4c067f2ec82cc02a1bd2446020df86819a4168b4a6ff65bf7d6394eb473",
+      "seconds": 4,
+      "source": {
+        "no": 206,
+        "folder": "perity_broccoli_shampoo_250ml",
+        "name": "페리티_제주 브로콜리 릴리프 펫 샴푸 250ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_shampoo_250ml/perity_broccoli_shampoo_250ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848911635",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_shampoo_250ml/details/2.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_250ml/details/3.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_250ml/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2a91296d0bda2a3494cbe06eb5def900",
+        "sha256": "e227e4c067f2ec82cc02a1bd2446020df86819a4168b4a6ff65bf7d6394eb473"
+      },
+      "scopeId": "eecfb5c26be5364665317a408861a3f16de1b34f3fd19c67be80e94c2174167f",
+      "scopeRegistrationSha256": "9ca22901788186fa4193b6bbf0bfbe5e4d681f73bf3197adeb5fbfcfb7a038a1",
+      "aiEvidenceSha256": "e369cc831ab3538307e6b5e54a65f0d984f46b4ab01011f6dacf1ff0a91dd795",
+      "receiptSha256": "58dc73802a7f0b8648da5b97f547e0a93192b7e55460d661447484b9e27f6cce",
+      "eligibilitySha256": "675945417fe0d56486f5dd6fd320a110fb799d589e270b4bc8226435a1d50ac2",
+      "evidenceManifestSha256": "7e10389fce8af38e8e95d5e922695830880931ce75dabc1cf541c04d534ebcfe"
+    },
+    "videoReviewSha256": "95cfbb89349a8cfdcdb47efd8e594cc776aeb33541a6878cfe161d41507e012c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "86d7996c4f8f92c937b88e7f0672c36ed1e21e4f"
+  },
   "perity_broccoli_shampoo_refill_500ml": {
     "video": "/images/products/catalog/perity_broccoli_shampoo_refill_500ml/videos/cf56989142884ac11a996fb979c4121587a23f8958cb97148753c0ab7a9ad858/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3169,7 +3215,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
-  "perity_broccoli_shampoo_set_750ml": null,
+  "perity_broccoli_shampoo_set_750ml": {
+    "video": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/videos/f47344803a3cc72f3de0ac5e92f2eeb8525f05ddeec02f2df3f86ef0f08d9a72/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "d7f9f91ea3afd5812dae328903bb50ca",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d7f9f91ea3afd5812dae328903bb50ca",
+      "reviewId": "4013f5dab4bbaa02304f0a1aba5733db",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f47344803a3cc72f3de0ac5e92f2eeb8525f05ddeec02f2df3f86ef0f08d9a72",
+      "seconds": 4,
+      "source": {
+        "no": 201,
+        "folder": "perity_broccoli_shampoo_set_750ml",
+        "name": "페리티_제주 브로콜리 릴리프 펫 샴푸 SET 750ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_broccoli_shampoo_set_750ml/perity_broccoli_shampoo_set_750ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848958220",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/2.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/3.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/4.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/5.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/6.webp",
+          "/images/products/catalog/perity_broccoli_shampoo_set_750ml/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2a2d5771d7e9a9c395a71ff6618a00e2",
+        "sha256": "f47344803a3cc72f3de0ac5e92f2eeb8525f05ddeec02f2df3f86ef0f08d9a72"
+      },
+      "scopeId": "f0ea75eca2e4303835fa857e75b397bd6cf46dd4074dce158416d3f33bfe00e7",
+      "scopeRegistrationSha256": "e1a2401d30f481ace93f2ff793a32d7a83d24f78294c1e79dd463fb2b882b1ee",
+      "aiEvidenceSha256": "045e173f0d9b578fe5929c5c799fbb901fce9b6fc293abd8be7c62a2d4c1f338",
+      "receiptSha256": "14d8fbe8f8d19189b4e24cde600347cbeb9b383f159f92353e6562903b3ae864",
+      "eligibilitySha256": "90e95133eaaccabaa684733299846e3d6f9a5be02d2f4733e59f1a15eb998682",
+      "evidenceManifestSha256": "8ed24c424856ccee310d9e8ba124c2c69c62da0dc996741f360ebb425de8c9fe"
+    },
+    "videoReviewSha256": "814f3e78535c861d8df2229cd7a13856cca1493fe678466bc2d3fd6804b3e853",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "86d7996c4f8f92c937b88e7f0672c36ed1e21e4f"
+  },
   "perity_carrot_mist": {
     "video": "/images/products/catalog/perity_carrot_mist/videos/5ef46b58365214d6088f1a1f98454cbc16da979b30ace5f82080ebc95b7d1e96/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -6705,8 +6800,98 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
-  "sk_ft_chickenrice_15kg": null,
-  "sk_ft_maintenance_15kg": null,
+  "sk_ft_chickenrice_15kg": {
+    "video": "/images/products/catalog/sk_ft_chickenrice_15kg/videos/76fb019319f9c87fe70cf5f8a408d3947a1a4018a07a19de504fbf0dd9242fec/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "634ee1419001d82ac9b837855bc61d13",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "634ee1419001d82ac9b837855bc61d13",
+      "reviewId": "7d477943126fe133edd2dfc9f67d1e3c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "76fb019319f9c87fe70cf5f8a408d3947a1a4018a07a19de504fbf0dd9242fec",
+      "seconds": 4,
+      "source": {
+        "no": 185,
+        "folder": "sk_ft_chickenrice_15kg",
+        "name": "스키너즈 필드 & 트라이얼 치킨 앤 라이스 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_chickenrice_15kg/sk_ft_chickenrice_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922934817",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_chickenrice_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_chickenrice_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "24b16f41f3911debf32119d8f7558ba7",
+        "sha256": "76fb019319f9c87fe70cf5f8a408d3947a1a4018a07a19de504fbf0dd9242fec"
+      },
+      "scopeId": "80a37caa88df626e9be9fb79fed969e38d8e03989b46dcf59ab4c51abc8ac1b2",
+      "scopeRegistrationSha256": "acdaedbf7d8015329c2bde7115199f1151acc1b0ffadd6b77a779858bdd65aeb",
+      "aiEvidenceSha256": "12985795d451b8a7886ca0000a6fa67d162fecd7bc80d1597e8ad002e57638cc",
+      "receiptSha256": "2d1ea0989dbc5c4924b1c834cb10e211e58434c681544b186f5d5bedbd2be2c4",
+      "eligibilitySha256": "98b4479351af4cfeb23d2c04e32b837c802b368fd22136532076966b33b38f93",
+      "evidenceManifestSha256": "f2f44ca6cc760313a111a23af34a4feae53ddf857be08357eab1f3a841cbf57c"
+    },
+    "videoReviewSha256": "803ba4314e89f910941de7cd3055df69232f1fbc3f0ef97ac4762faca2783bef",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "86d7996c4f8f92c937b88e7f0672c36ed1e21e4f"
+  },
+  "sk_ft_maintenance_15kg": {
+    "video": "/images/products/catalog/sk_ft_maintenance_15kg/videos/4a48d544d28883f6ed26d62d10bcabff1e674b54347d1b81beb472ec38eeb23d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "4c1d04f9055a8a5afe51511f96dc0068",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4c1d04f9055a8a5afe51511f96dc0068",
+      "reviewId": "1953d8d5380ca05c75b454e12f6e3546",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4a48d544d28883f6ed26d62d10bcabff1e674b54347d1b81beb472ec38eeb23d",
+      "seconds": 4,
+      "source": {
+        "no": 183,
+        "folder": "sk_ft_maintenance_15kg",
+        "name": "스키너즈 필드 & 트라이얼 메인터넌스 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_maintenance_15kg/sk_ft_maintenance_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922957697",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_maintenance_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_maintenance_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "bec9d0752ccc1c189bc54d682da90c54",
+        "sha256": "4a48d544d28883f6ed26d62d10bcabff1e674b54347d1b81beb472ec38eeb23d"
+      },
+      "scopeId": "f5fba9ae12a46f4d953ea2daf8a9afcf4def65bd3d623d30fb5fc69784bc6370",
+      "scopeRegistrationSha256": "db05159b1c17ab442b80e0a0132a4fa985096cd556561532d64b49863e0d2d7b",
+      "aiEvidenceSha256": "6bb79181107b79815126d39e87f46ff9c2a0990425889c84a7f234314814cd78",
+      "receiptSha256": "3a9593bc41228e8edfc2c4350ed2a1b431326c627a326c928c6f7041505fff79",
+      "eligibilitySha256": "3beb0bdd0de34938162b2d8f63afb9304c3faa6a4a4afff2df8ffb352b3a1eca",
+      "evidenceManifestSha256": "6ffaaa80b2ef55c8b51e1918de291fc4583fcce7d23a1bfbd344a5658a68525b"
+    },
+    "videoReviewSha256": "0b391d501e5cebd1fe70465d6f263ce7fdd64f7659f2861a6190aed53010e6c7",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "86d7996c4f8f92c937b88e7f0672c36ed1e21e4f"
+  },
   "sk_ft_puppy_pate_390g": null,
   "sk_ft_salmon_pate_390g": null,
   "sk_ft_working26_15kg": null,

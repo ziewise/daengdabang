@@ -469,11 +469,11 @@
   },
   "sk_ft_maintenance_15kg": {
     "productId": "p_183",
-    "sha256": "ccce69bebd4eca248b35937a0ae4cd729154f82292ee20853193dc21b3779d49"
+    "sha256": "4a48d544d28883f6ed26d62d10bcabff1e674b54347d1b81beb472ec38eeb23d"
   },
   "sk_ft_chickenrice_15kg": {
     "productId": "p_185",
-    "sha256": "fde7633636a88d11808b5d506d5e98ae030e9854902f11bef7d670137cb8c263"
+    "sha256": "76fb019319f9c87fe70cf5f8a408d3947a1a4018a07a19de504fbf0dd9242fec"
   },
   "nd_feelgood_wf": {
     "productId": "p_186",
@@ -537,7 +537,7 @@
   },
   "perity_broccoli_shampoo_250ml": {
     "productId": "p_206",
-    "sha256": "17e84560a4aaa402217e644192f8519bcb0c1f2d3ed4114c065709b95d1b3227"
+    "sha256": "e227e4c067f2ec82cc02a1bd2446020df86819a4168b4a6ff65bf7d6394eb473"
   },
   "bm_kibble_9kg": {
     "productId": "p_140",
@@ -993,7 +993,7 @@
   },
   "perity_broccoli_shampoo_set_750ml": {
     "productId": "p_201",
-    "sha256": "f9a4d66ea6d67cb42db176f649db4b9621e7bcd7c0646869cb7c96cebeddcf83"
+    "sha256": "f47344803a3cc72f3de0ac5e92f2eeb8525f05ddeec02f2df3f86ef0f08d9a72"
   },
   "perity_broccoli_shampoo_refill_500ml": {
     "productId": "p_202",
