@@ -80128,16 +80128,16 @@
     "publicationStatus": "approved",
     "productId": "p_287",
     "folder": "soopa_dental_6set",
-    "video": "/images/products/catalog/soopa_dental_6set/videos/794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95/hover.mp4",
-    "sha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95",
+    "video": "/images/products/catalog/soopa_dental_6set/videos/d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6/hover.mp4",
+    "sha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "b97c2f8dc3c1dd7121073b6bfbf647f0",
-      "reviewId": "f7c1071d8e3a01a2cd8169d52cc435bb",
+      "jobId": "27b3f6cd12a28890e2d73dcd452d9041",
+      "reviewId": "c94a9baad5bc3f92240be8f0665d59ad",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95",
+      "finalSha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6",
       "seconds": 4,
       "source": {
         "no": 287,
@@ -80157,30 +80157,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "d171f5fd6b76cc7b7f3f0c08d3f56080",
-        "sha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95"
+        "artifact_id": "a8f1fae4d722be9c3cd6019d7b41c837",
+        "sha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6"
       },
       "scopeId": "3c8ac99a5ecb1516aecaf178675bad4a8e5136d61a29007ac58547022e2ac756",
-      "scopeRegistrationSha256": "1936776cf19cb530e590324df122d3b520f82bcbf00573daa17343eb6ace143f",
-      "aiEvidenceSha256": "6898bd8344bc293b6ff4223e82da7e64d3ff1f39bb53985fc79461733598f44c",
-      "receiptSha256": "dc0f41696a7132ccf0eac482cfa077f0273264b7e5bd418417f46f7a1e48bf93",
-      "eligibilitySha256": "c81700797d7c17fc0351b95fb651fd3146e4e535db41eebdc2cb9997e6d7087e",
-      "evidenceManifestSha256": "a207b0dda33c9b717559830ef9024072d4affae7914ec7fb9f7c07bf4dcb817c"
+      "scopeRegistrationSha256": "2c8f5d7b53f27ff5d53f76213f99a6eae7b17b6d39027fef5b523c28431fc944",
+      "aiEvidenceSha256": "c1a151423f97ccef263a852feaa089d4f69c28f1ada5267f0af5b18ddb2bdf36",
+      "receiptSha256": "cdb2206c9e73878bc8d5fbf6e255e40bb2a9d0d43b19ce45d0fdc31097e8c518",
+      "eligibilitySha256": "1a1206cae90c46d5cf98dec6491ff2dc2a20aeb2a062df6ac85dec02bf781eee",
+      "evidenceManifestSha256": "dea2d06a537f5096fba416b6d6a21c7db97361bca21f769f568b1393e808f549"
     },
     "delegatedReview": {
-      "api_job_id": "b97c2f8dc3c1dd7121073b6bfbf647f0",
+      "api_job_id": "27b3f6cd12a28890e2d73dcd452d9041",
       "bindings": {
         "native_video": {
-          "artifact_id": "b4f0e7f265ab4e65be1cf082328cf503",
-          "sha256": "67d0b420b054f99fc2025c0ea48ebd6616361d3ca63151ef0a136b5f452858fa"
+          "artifact_id": "bc0bfa34f69f45339076b4626ecffc81",
+          "sha256": "6613eea3ab75f989e578d3f236b06958ed6b84f80a94a0eb211587356479f6c4"
         },
         "review_video": {
-          "artifact_id": "d171f5fd6b76cc7b7f3f0c08d3f56080",
-          "sha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95"
+          "artifact_id": "a8f1fae4d722be9c3cd6019d7b41c837",
+          "sha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6"
         },
         "terminal": {
-          "artifact_id": "eabe07d6a2b1b095ede9b498f46cf7bf",
-          "sha256": "30f132954c704a36dfe303ff1d488f3a2e910f81a440dac313fe51ad4d6b1c21"
+          "artifact_id": "a287f87f27bbcc85abce7f8ca190c39a",
+          "sha256": "0d73eb4001f2a5f63450b0d7fe96dd76a88b89050ccc665e42ca27cf864c1af8"
         }
       },
       "checks": {
@@ -80330,41 +80330,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_287-b97c2f8dc3c1dd7121073b6bfbf647f0-all97-v1",
-        "evidence_sha256": "6898bd8344bc293b6ff4223e82da7e64d3ff1f39bb53985fc79461733598f44c",
+        "evidence_id": "ddb-ai-p_287-27b3f6cd12a28890e2d73dcd452d9041-all97-v1",
+        "evidence_sha256": "c1a151423f97ccef263a852feaa089d4f69c28f1ada5267f0af5b18ddb2bdf36",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "f7c1071d8e3a01a2cd8169d52cc435bb",
-      "reviewed_at": "2026-09-16T13:57:14.059685Z",
+      "review_id": "c94a9baad5bc3f92240be8f0665d59ad",
+      "reviewed_at": "2026-09-29T15:29:12.543597Z",
       "schema_version": 1,
       "scope_id": "3c8ac99a5ecb1516aecaf178675bad4a8e5136d61a29007ac58547022e2ac756",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "eabe07d6a2b1b095ede9b498f46cf7bf",
+        "artifact_id": "a287f87f27bbcc85abce7f8ca190c39a",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "b4f0e7f265ab4e65be1cf082328cf503",
-        "native_artifact_sha256": "67d0b420b054f99fc2025c0ea48ebd6616361d3ca63151ef0a136b5f452858fa",
+        "native_artifact_id": "bc0bfa34f69f45339076b4626ecffc81",
+        "native_artifact_sha256": "6613eea3ab75f989e578d3f236b06958ed6b84f80a94a0eb211587356479f6c4",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "5e3030d473fba4d9dfc5870a147361102f6e8d30d251d82124185069d5cce667",
+        "pixel_sha256": "e07d1b303fb0d8c1451efe9c4923573812e55980b4e7511ae2f09330abe1d1b9",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "30f132954c704a36dfe303ff1d488f3a2e910f81a440dac313fe51ad4d6b1c21",
-        "source_artifact_id": "d171f5fd6b76cc7b7f3f0c08d3f56080",
-        "source_artifact_sha256": "794aa60d2741334e6aa0390c72eabdd354607640f0e3b5460f922eee2e525a95",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "0d73eb4001f2a5f63450b0d7fe96dd76a88b89050ccc665e42ca27cf864c1af8",
+        "source_artifact_id": "a8f1fae4d722be9c3cd6019d7b41c837",
+        "source_artifact_sha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Coconut&Chia dental sticks included in six-variety assortment; representative loose content demonstration, not box/count infographic",
@@ -80393,15 +80396,12 @@
       "scene_sha256": "ff938cc1be3b460c0db029c92c14d4741c0c9ca6b67f310198eb0418bfead83c",
       "schema_version": 1,
       "scope_id": "3c8ac99a5ecb1516aecaf178675bad4a8e5136d61a29007ac58547022e2ac756",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "f7c1071d8e3a01a2cd8169d52cc435bb",
+      "reviewId": "c94a9baad5bc3f92240be8f0665d59ad",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "3c8ac99a5ecb1516aecaf178675bad4a8e5136d61a29007ac58547022e2ac756",
       "human_approved": false,
@@ -80423,10 +80423,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "ae5997d0388679d31d51f2a1b6a21e79eef4c8ce780ebb3561d00ada7e5631c0",
-      "checkedAt": "2026-09-20T16:10:38.070836+00:00",
-      "sha256": "4caa08d0cbdb33ac4cea591b366ae7c7705ba5931c7a5e323d8bcccdc636bc13"
+      "ownerInstructionSha256": "b7061b0d5facbf22b18061c6dc0d74eba267472a9cc06cc3204cef66ddd6c04b",
+      "technicalProofSha256": "e83dbdfaa796655b2ad531a4895012f239af143011a7d02dcdf6425331797ba6",
+      "naturalMotionReviewSha256": "90cec140fb69ff1e0d87e53eea1a1d6825571cb39d5f9868f8eb604d952b85cb",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T15:29:54.027129+00:00",
+      "sha256": "e222fefca5af2c61d316e366df38f37984c3181c9e165bd633c076236825dbe8"
     }
   },
   "ip_trovbiz_nightday": {

@@ -7517,7 +7517,55 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "e2250ba4b6273ebef8ec86e3c98e25b2c8e1a793"
   },
-  "soopa_dental_6set": null,
+  "soopa_dental_6set": {
+    "video": "/images/products/catalog/soopa_dental_6set/videos/d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "27b3f6cd12a28890e2d73dcd452d9041",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "27b3f6cd12a28890e2d73dcd452d9041",
+      "reviewId": "c94a9baad5bc3f92240be8f0665d59ad",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6",
+      "seconds": 4,
+      "source": {
+        "no": 287,
+        "folder": "soopa_dental_6set",
+        "name": "수파 덴탈스틱 100g 6종 그레인프리 100%식물성 덴탈스틱 비건간식",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_dental_6set/soopa_dental_6set.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7114174547",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_dental_6set/details/2.webp",
+          "/images/products/catalog/soopa_dental_6set/details/3.webp",
+          "/images/products/catalog/soopa_dental_6set/details/4.webp",
+          "/images/products/catalog/soopa_dental_6set/details/5.webp",
+          "/images/products/catalog/soopa_dental_6set/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a8f1fae4d722be9c3cd6019d7b41c837",
+        "sha256": "d7df30d7e3a348f025952e0bfb307c304473f9da86e890dfb9916c21f4a245e6"
+      },
+      "scopeId": "3c8ac99a5ecb1516aecaf178675bad4a8e5136d61a29007ac58547022e2ac756",
+      "scopeRegistrationSha256": "2c8f5d7b53f27ff5d53f76213f99a6eae7b17b6d39027fef5b523c28431fc944",
+      "aiEvidenceSha256": "c1a151423f97ccef263a852feaa089d4f69c28f1ada5267f0af5b18ddb2bdf36",
+      "receiptSha256": "cdb2206c9e73878bc8d5fbf6e255e40bb2a9d0d43b19ce45d0fdc31097e8c518",
+      "eligibilitySha256": "1a1206cae90c46d5cf98dec6491ff2dc2a20aeb2a062df6ac85dec02bf781eee",
+      "evidenceManifestSha256": "dea2d06a537f5096fba416b6d6a21c7db97361bca21f769f568b1393e808f549"
+    },
+    "videoReviewSha256": "e222fefca5af2c61d316e366df38f37984c3181c9e165bd633c076236825dbe8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "9bed598f517e33913c51b01bf4c15c13bc5b23ac"
+  },
   "soopa_dental_appleblueberry": {
     "video": "/images/products/catalog/soopa_dental_appleblueberry/videos/47cd57a163547d3a18be998fb15a4f0400d14feaa62ad62179e0644865601fa9/hover.mp4",
     "videoProvider": "ziewcraft",
