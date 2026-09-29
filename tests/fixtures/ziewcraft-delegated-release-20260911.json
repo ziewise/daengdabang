@@ -129,7 +129,7 @@
   },
   "rs_jsk_1000001222": {
     "productId": "p_444",
-    "sha256": "52bf8afa18bcb36da2c14d2c5a950e8382b67857f043b7b7a03e37fafa0f2a66"
+    "sha256": "0ea62f4d0135f71c83927b7210fe59caf86d037999ce6cfc3f4f6565b216c9d2"
   },
   "rw_treattrader_bag": {
     "productId": "p_41",
@@ -369,7 +369,7 @@
   },
   "rs_jsk_1000001251": {
     "productId": "p_464",
-    "sha256": "7586e044477352d3372404da5cee21641c41deaffd9eb786ec19e91ea8d5246b"
+    "sha256": "c43d07d76acb89dceec5675db75cf3503ecf84a67e5c8943ba6fb8c1776bbd57"
   },
   "rw_jsk_1000001220": {
     "productId": "p_443",
@@ -1190,5 +1190,9 @@
   "rw_jsk_1000001209": {
     "productId": "p_437",
     "sha256": "be8ca3dc6864f3756c29d08b730859fec9f0a06549c5921658ef734dc13b1d63"
+  },
+  "rw_knotahitch": {
+    "productId": "p_349",
+    "sha256": "e89bbe4bf3b8891470da2df6bd595f0fb0ec54ec382680da33f0e3eb5aaa3255"
   }
 }
