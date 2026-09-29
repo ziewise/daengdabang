@@ -465,7 +465,7 @@
   },
   "sk_ft_working26_15kg": {
     "productId": "p_180",
-    "sha256": "084552f70142980fc41a3cb9cec3e3aa18220a517fb8b0c8fe3e6d8bf6932b7d"
+    "sha256": "1b0396bf84ad7ddfc7b0bc73d19a549447ca8c9dabd3a2e5fa3f2ef3688f2aab"
   },
   "sk_ft_maintenance_15kg": {
     "productId": "p_183",
@@ -737,11 +737,11 @@
   },
   "sk_ft_salmon_pate_390g": {
     "productId": "p_181",
-    "sha256": "468f6da8963d0c549a17b2de07d908a6ef762ce07e6b779a0ec7c9cf6531fd8d"
+    "sha256": "705523b523dd49513ecbc744b3cd64ec2e66daf436d5a7bf68fd3bc2c434051f"
   },
   "sk_ft_puppy_pate_390g": {
     "productId": "p_182",
-    "sha256": "21f529fb400291bd0d7e00f22dd838105051c010e737b160df82b37f2462a9f1"
+    "sha256": "7cf4670fbb84483811f0cdb642fb03ff42d5ae88a30512890687c1b96b20f47f"
   },
   "sk_ft_chicken_pate_390g": {
     "productId": "p_184",

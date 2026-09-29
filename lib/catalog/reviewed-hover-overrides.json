@@ -7344,9 +7344,144 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "86d7996c4f8f92c937b88e7f0672c36ed1e21e4f"
   },
-  "sk_ft_puppy_pate_390g": null,
-  "sk_ft_salmon_pate_390g": null,
-  "sk_ft_working26_15kg": null,
+  "sk_ft_puppy_pate_390g": {
+    "video": "/images/products/catalog/sk_ft_puppy_pate_390g/videos/7cf4670fbb84483811f0cdb642fb03ff42d5ae88a30512890687c1b96b20f47f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "84ce554f18eaadb8e68309e40ef6688e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "84ce554f18eaadb8e68309e40ef6688e",
+      "reviewId": "21a9d85fb612163f37f13cb94d29cc73",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7cf4670fbb84483811f0cdb642fb03ff42d5ae88a30512890687c1b96b20f47f",
+      "seconds": 4,
+      "source": {
+        "no": 182,
+        "folder": "sk_ft_puppy_pate_390g",
+        "name": "스키너즈 필드 & 트라이얼 퍼피 앤 주니어 치킨 & 가든 베지 습식 파테 390g",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_puppy_pate_390g/sk_ft_puppy_pate_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922967940",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_puppy_pate_390g/details/2.webp",
+          "/images/products/catalog/sk_ft_puppy_pate_390g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c1283c0823dd0e2fd12d1601898d8f50",
+        "sha256": "7cf4670fbb84483811f0cdb642fb03ff42d5ae88a30512890687c1b96b20f47f"
+      },
+      "scopeId": "fb2eb7b99d36c8eece7656b0105fe00acf447bbfd7abf08779839bfeda9a02ab",
+      "scopeRegistrationSha256": "89c68269bae9f6ff54fe9ab2a28b4068770f64feea2a5ae9503a6c24ec5cc903",
+      "aiEvidenceSha256": "49c84942d4380aaa6b43d9a2a3d67050e6af861eed5a4c597cd20101279e0dee",
+      "receiptSha256": "016dfa89eea9ce1b9944c183ba2a256223a1d4015f955cd3a83d51654ffae42a",
+      "eligibilitySha256": "81d0c2c039bdb016c4967db0fcbbc886d781d3032af429c22b7bb5fa87fda6c7",
+      "evidenceManifestSha256": "a5028569313e4c2ad53e9e3602bc44aae99ffa3a94e9518249b5846d58506ac4"
+    },
+    "videoReviewSha256": "4474c88df1cdc9e494e9091407cbebdfde6df0ed098c921174024d3b91e4a866",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "49addbb23d9d1ab5b4ef4e339237912d0fe2531a"
+  },
+  "sk_ft_salmon_pate_390g": {
+    "video": "/images/products/catalog/sk_ft_salmon_pate_390g/videos/705523b523dd49513ecbc744b3cd64ec2e66daf436d5a7bf68fd3bc2c434051f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "890aaf44264ce6aa6909c0f6445731e8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "890aaf44264ce6aa6909c0f6445731e8",
+      "reviewId": "4ece51a51b777d3c9445ec5486e2ec04",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "705523b523dd49513ecbc744b3cd64ec2e66daf436d5a7bf68fd3bc2c434051f",
+      "seconds": 4,
+      "source": {
+        "no": 181,
+        "folder": "sk_ft_salmon_pate_390g",
+        "name": "스키너즈 필드 & 트라이얼 살몬 위드 스팀 베지 습식 파테 390g",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_salmon_pate_390g/sk_ft_salmon_pate_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922973737",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_salmon_pate_390g/details/2.webp",
+          "/images/products/catalog/sk_ft_salmon_pate_390g/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "065418ff18338b4430a5fdde4cbb3fcf",
+        "sha256": "705523b523dd49513ecbc744b3cd64ec2e66daf436d5a7bf68fd3bc2c434051f"
+      },
+      "scopeId": "e72a2da4d04826075db9114fcea5502292a8cd8076b559f6eb6597244ea6c538",
+      "scopeRegistrationSha256": "b75ae59405b170208fa09101c8b50314c1442a6979b0fea63dbf46517cba9ee4",
+      "aiEvidenceSha256": "7f5725f241699285d7797dddcc6c0ee63d1216f9ab8bc999bc2bab085f62f3fc",
+      "receiptSha256": "62e1f5ea77a81c53f3da8e81a97a8d4e9b223269eb36e882fa474002add20120",
+      "eligibilitySha256": "afb08570c5bbfc7eb23ecc4ab5037627f675aa38d8045115452003d7f20934e6",
+      "evidenceManifestSha256": "ef122dc83cfbb8c3d71b8c94e3fa4afc53e485be7bf8797e49f8765ddbf6f9c0"
+    },
+    "videoReviewSha256": "6872822b1fc6f9aac0a296a0dc28be759cba54ec3d132eeed6478231dc6164da",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "49addbb23d9d1ab5b4ef4e339237912d0fe2531a"
+  },
+  "sk_ft_working26_15kg": {
+    "video": "/images/products/catalog/sk_ft_working26_15kg/videos/1b0396bf84ad7ddfc7b0bc73d19a549447ca8c9dabd3a2e5fa3f2ef3688f2aab/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "b8e85978b45cf97133aa92beb01610eb",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b8e85978b45cf97133aa92beb01610eb",
+      "reviewId": "33b688d731a1d64801e1c2b3c4a51c94",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1b0396bf84ad7ddfc7b0bc73d19a549447ca8c9dabd3a2e5fa3f2ef3688f2aab",
+      "seconds": 4,
+      "source": {
+        "no": 180,
+        "folder": "sk_ft_working26_15kg",
+        "name": "스키너즈 필드 & 트라이얼 워킹26 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_working26_15kg/sk_ft_working26_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922979579",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_working26_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_working26_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a2702bd6bca0ca968e86460d72125899",
+        "sha256": "1b0396bf84ad7ddfc7b0bc73d19a549447ca8c9dabd3a2e5fa3f2ef3688f2aab"
+      },
+      "scopeId": "1a528049f6c91548d0183fa1334eefe5378cc31385577d794c21899b57f86b70",
+      "scopeRegistrationSha256": "ca5dc70b780302a6c7e095408641430fc873c032b38948e6d95a7a35983e23a4",
+      "aiEvidenceSha256": "20fbc625f099cff43dd9345014f543d64ec203cb4a5c59f897cf47db2906ab66",
+      "receiptSha256": "a6f321f78a28ed00bc6eb1f7846d272f8bc3278e84da1acf35ca2d3972a8f29b",
+      "eligibilitySha256": "3534fd1baf2bc33f553c5c64835e6928f6dc7b3320c9dbe337d1284c8a2e2428",
+      "evidenceManifestSha256": "e3982fe8f60851c70f5a64182f20e532fe3784481a4881a162bfedfe610a8008"
+    },
+    "videoReviewSha256": "c8dddda117ef6616de1318f2363456e6093271503db51cab6f42994ed6651794",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "49addbb23d9d1ab5b4ef4e339237912d0fe2531a"
+  },
   "sk_ft_working30_15kg": null,
   "smoothie_rainbow_30ml_3": {
     "video": "/images/products/catalog/smoothie_rainbow_30ml_3/videos/0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2/hover.mp4",
