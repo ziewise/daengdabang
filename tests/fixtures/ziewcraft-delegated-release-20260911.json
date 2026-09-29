@@ -1218,5 +1218,9 @@
   "jjayo_icecream_blueberry_100ml": {
     "productId": "p_326",
     "sha256": "c1b5c2cb7c8d5a148a256227eb092505bf2d6f85950cd39f01dd555a52f23476"
+  },
+  "rs_trailhead_leash_dual_24m": {
+    "productId": "p_87",
+    "sha256": "8d852b6af9ed2f92c5bc436d1c48a3cbe128ab70a8312740e5b1509545c76e0d"
   }
 }

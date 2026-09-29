@@ -4325,7 +4325,60 @@
     "videoDeliveryCommit": "4f08e42390eafdfc6cbc8b96a9bb3936e09045f3"
   },
   "rs_trailhead_collar": null,
-  "rs_trailhead_leash_dual_24m": null,
+  "rs_trailhead_leash_dual_24m": {
+    "video": "/images/products/catalog/rs_trailhead_leash_dual_24m/videos/8d852b6af9ed2f92c5bc436d1c48a3cbe128ab70a8312740e5b1509545c76e0d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "f12bb819167bc1b35b0af86c239bd3d2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f12bb819167bc1b35b0af86c239bd3d2",
+      "reviewId": "70f850d43e37ed5e29412bff0a1d63af",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "8d852b6af9ed2f92c5bc436d1c48a3cbe128ab70a8312740e5b1509545c76e0d",
+      "seconds": 4,
+      "source": {
+        "no": 87,
+        "folder": "rs_trailhead_leash_dual_24m",
+        "name": "렉스스펙스 트레일헤드 듀얼 스냅 리드줄 (2.4M)",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001127/image/detail/1000001127_detail_056.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001127",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001127/image/detail/1000001127_detail_189.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001127/image/detail/1000001127_detail_21.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001127/image/detail/1000001127_detail_397.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001127/image/detail/1000001127_detail_416.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001127/image/detail/1000001127_detail_531.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Dual-Snap1-2023_155241.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Dual-Snap2-2023_155242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/Trailhead-Leash-Dual-Snap3-2023_155242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230209/ce50939b7267aece200a424b5dac05ea_154748.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "570b31f733f610906aa8da25f22437c5",
+        "sha256": "8d852b6af9ed2f92c5bc436d1c48a3cbe128ab70a8312740e5b1509545c76e0d"
+      },
+      "scopeId": "85dbfe02d39c9dc5d20d76d79c0ab7290fc38785808a99fe9e9dae2f64b7256a",
+      "scopeRegistrationSha256": "97c150e188415e495447d89a6ce01198e79f94321137f1a3143b36dc05e99e50",
+      "aiEvidenceSha256": "acc3e9d8e4dd05ff166121addd29ac0e3eccd992ff8e8f6008fdd8712bf9fb86",
+      "receiptSha256": "9372840a73aa60c29aa3eae2f684bcebc393b60a6aa0c63512829950e7a6ffa1",
+      "eligibilitySha256": "7a5e2ca26cfb504788ba6e9ac608d8fea3cd230056e082ee52d54c50816411c8",
+      "evidenceManifestSha256": "cf497a49617c6e5fedee92ca2b4ce4f1f8914e5a2f9794b2030b8b3fc1916fcc"
+    },
+    "videoReviewSha256": "7dce4b00b9faacd9b99d510389f855f357384bdcc19e20d3a691dc212d98b79f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0b9c90833e5306515a85809f6ab23f28ee34b95c"
+  },
   "rs_trailhead_leash_single_18m": {
     "video": "/images/products/catalog/rs_trailhead_leash_single_18m/videos/b0b6e48d37a294398c8e1990e9026239629166655882926de1fe70e07bdc45b1/hover.mp4",
     "videoProvider": "ziewcraft",
