@@ -1571,8 +1571,98 @@
     "videoJobId": "hover-static72-20260903-dd77d7b4a921"
   },
   "id_treat_chicken": null,
-  "id_treat_duck": null,
-  "id_treat_guineafowl": null,
+  "id_treat_duck": {
+    "video": "/images/products/catalog/id_treat_duck/videos/3116bc56da942ea9a5b1b5f41cceccb2ab2a1b2dcb3e483c9aa3938e6edc8aba/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "c9b79df24379016e0a6bb04a91fe1866",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c9b79df24379016e0a6bb04a91fe1866",
+      "reviewId": "87aec89cd04e0d81d304db9399b42bd5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3116bc56da942ea9a5b1b5f41cceccb2ab2a1b2dcb3e483c9aa3938e6edc8aba",
+      "seconds": 4,
+      "source": {
+        "no": 322,
+        "folder": "id_treat_duck",
+        "name": "아임디퍼런트 동결건조 트릿 오리 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_duck/id_treat_duck.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6736147861",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_duck/details/2.webp",
+          "/images/products/catalog/id_treat_duck/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "1b469e625b06dbcc8d4f5903ff1eaddc",
+        "sha256": "3116bc56da942ea9a5b1b5f41cceccb2ab2a1b2dcb3e483c9aa3938e6edc8aba"
+      },
+      "scopeId": "d4f3b78422dfa16711721e556fd7d6174c693cdd7e9f093f7a35508c9ee6df23",
+      "scopeRegistrationSha256": "6465cd13fe55e06447db1b792ced6aedbc58795dd7ff1b63fe6248c16be94896",
+      "aiEvidenceSha256": "26f34fc01e722a980b95c23db2f4856d1c8c68cb1dd5e6f6faafc1480f12a60b",
+      "receiptSha256": "78f40c16e5ab8cb84437dad9ac97340245baebfe8ba5239497bc0d45985304a2",
+      "eligibilitySha256": "e12f5a6ab10616057a0b8009f816d14124b07d0c2dc0ef94a84f8f095be0dba2",
+      "evidenceManifestSha256": "46182d830f9e83ae6a4e06c0e5c209fff614555930d8ebed4b3b1a34f8707b69"
+    },
+    "videoReviewSha256": "c8fa6ee576e08b78e43c9e7c62cf29947a1b73efe907171174807578a972acf4",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5e84acf21a4a69bd47e78673549bfc2b7ace901b"
+  },
+  "id_treat_guineafowl": {
+    "video": "/images/products/catalog/id_treat_guineafowl/videos/a281e65bd2510ef3bff4b071d962bd3dc96dbddf3169a7901cca9038131c1994/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "daada41f1b28d2a183940bd887be9d9b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "daada41f1b28d2a183940bd887be9d9b",
+      "reviewId": "2532d5702da580c03f2187e7a64ce8e5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a281e65bd2510ef3bff4b071d962bd3dc96dbddf3169a7901cca9038131c1994",
+      "seconds": 4,
+      "source": {
+        "no": 153,
+        "folder": "id_treat_guineafowl",
+        "name": "아임디퍼런트 동결건조 트릿 뿔닭 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_guineafowl/id_treat_guineafowl.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9216889218",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_guineafowl/details/2.webp",
+          "/images/products/catalog/id_treat_guineafowl/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e4ed1bc169f0961de05423cc1b287c6d",
+        "sha256": "a281e65bd2510ef3bff4b071d962bd3dc96dbddf3169a7901cca9038131c1994"
+      },
+      "scopeId": "2a589fba9447b1da61592f5ddba4f0a8910cf0632e35f836cba330d022ec5527",
+      "scopeRegistrationSha256": "b74fb115d32660cd1f414386605228b601ad5a0142a430b0ca33a3705aeb0f36",
+      "aiEvidenceSha256": "189913756f342d9899fac697ab1e8d614a5995c1f5a8fe434497fe4219ad0ed9",
+      "receiptSha256": "4b01535ad76bd09f7bb0b802c09b6a451e0a5f4c017332e8f9eee933592fb55b",
+      "eligibilitySha256": "b30851ebbe3da281c7e2011f75f8f221013eb51e33aa006bb6f7bd57daaac3f1",
+      "evidenceManifestSha256": "9e5593aca5713b21c5f833e566bdf845fb43e324c1b2362ed8047de7c0a50aa1"
+    },
+    "videoReviewSha256": "f7c9c0134022f2bd46e9f38298a5f1425277337016c4c90c68637a71af38d9fa",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5e84acf21a4a69bd47e78673549bfc2b7ace901b"
+  },
   "id_treat_sardine": null,
   "id_treat_sturgeon": {
     "video": "/images/products/catalog/id_treat_sturgeon/videos/93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd/hover.mp4",

@@ -65,7 +65,7 @@
   },
   "id_treat_guineafowl": {
     "productId": "p_153",
-    "sha256": "ec2170a7649697c1e05709572e61d7db370db5d512b999a66272f96e55dec348"
+    "sha256": "a281e65bd2510ef3bff4b071d962bd3dc96dbddf3169a7901cca9038131c1994"
   },
   "rw_trailrunner_vest": {
     "productId": "p_350",
@@ -677,7 +677,7 @@
   },
   "id_treat_duck": {
     "productId": "p_322",
-    "sha256": "e600c628502b584e0ff2b8634d3c906c69aee60ac67f60252cf02d22617d32bb"
+    "sha256": "3116bc56da942ea9a5b1b5f41cceccb2ab2a1b2dcb3e483c9aa3938e6edc8aba"
   },
   "id_treat_turkey": {
     "productId": "p_323",
