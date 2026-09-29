@@ -7607,7 +7607,53 @@
     "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
   },
   "yora_largebreed_12kg": null,
-  "yora_lightsenior_12kg": null,
+  "yora_lightsenior_12kg": {
+    "video": "/images/products/catalog/yora_lightsenior_12kg/videos/33b8b1d616f5833b0583bf349ccff49c02e00d33d35d4be0ba92aa1586d9a1c7/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "5c265db231d1bbdd48b9c9a1905587b4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5c265db231d1bbdd48b9c9a1905587b4",
+      "reviewId": "3320de3e7382e1a92978507d50ba3b99",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "33b8b1d616f5833b0583bf349ccff49c02e00d33d35d4be0ba92aa1586d9a1c7",
+      "seconds": 4,
+      "source": {
+        "no": 169,
+        "folder": "yora_lightsenior_12kg",
+        "name": "요라 라이트 시니어 12kg 저칼로리 다이어트 곤충 사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_lightsenior_12kg/yora_lightsenior_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923168931",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_lightsenior_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_lightsenior_12kg/details/2.webp",
+          "/images/products/catalog/yora_lightsenior_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "fd9a6cfcbd9cd5b5bb8144b579011bf7",
+        "sha256": "33b8b1d616f5833b0583bf349ccff49c02e00d33d35d4be0ba92aa1586d9a1c7"
+      },
+      "scopeId": "5ff923d669e3ea1f0d42f452e0cd043522db15fa2196f369781bede4e19b538c",
+      "scopeRegistrationSha256": "a3a172c440d57003acbe64ff56c274b5483c92a00bbee48976123dbfd8bcef85",
+      "aiEvidenceSha256": "3fd89bf6727d3889e07242c723b4b6515a851fb19df791bfc97e4f5c7fd68ed7",
+      "receiptSha256": "642def51f31a90e9da0228deca40c1adb6a19f03ef91c432ac085e1b09804561",
+      "eligibilitySha256": "258d68302fdff55756132a0f6f13f3e02e524a779101937fc8d4f202fb1db25d",
+      "evidenceManifestSha256": "719f29e8c523472ba18242fe35660ead12eb529e1aa74f053ad5606b8f114cc9"
+    },
+    "videoReviewSha256": "74b01c387aae7ae7826fcd7d3d859aad8ba689fe92cb5e0eddc254462aa5ed6b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "89360373206953372119691c7336bf66e031d48d"
+  },
   "yora_lightsenior_6kg": null,
   "yora_puppy_12kg": null,
   "yora_puppy_2.5kg": null,
