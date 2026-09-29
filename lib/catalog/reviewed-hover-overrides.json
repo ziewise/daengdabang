@@ -926,7 +926,51 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "252dc833709692269692d7a9f10b82923827c6a0"
   },
-  "fumble_brushingmist_perfume": null,
+  "fumble_brushingmist_perfume": {
+    "video": "/images/products/catalog/fumble_brushingmist_perfume/videos/36ca0a0262329257ef94018e0e540b36690a90f2ef0e46b43a310a95bf9ad8f8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "6e4af49148586338cfa9a3dbbd637b24",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6e4af49148586338cfa9a3dbbd637b24",
+      "reviewId": "cf3867b06524e6f59abbba735c8666c0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "36ca0a0262329257ef94018e0e540b36690a90f2ef0e46b43a310a95bf9ad8f8",
+      "seconds": 4,
+      "source": {
+        "no": 213,
+        "folder": "fumble_brushingmist_perfume",
+        "name": "펌블펫솝_브러싱 퍼퓸 수분 정전기 강아지미스트 모발영양 아로마향수",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_brushingmist_perfume/fumble_brushingmist_perfume.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8843538388",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_brushingmist_perfume/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3121ac77a643cdad022f65a0c4e68b69",
+        "sha256": "36ca0a0262329257ef94018e0e540b36690a90f2ef0e46b43a310a95bf9ad8f8"
+      },
+      "scopeId": "ede01b0444d3fa93cd399d3c5b6cb99e686b5a760e2a414b29b5b6a2d2e6775f",
+      "scopeRegistrationSha256": "5f9becaabc49b67326c485c7ea3e0e842cd963a090f2108d3938105e815c9d76",
+      "aiEvidenceSha256": "8fc4f621f1565ee43f0144ee0f2797aacfcaeec024c832b35512e19f6aa7c33f",
+      "receiptSha256": "1980e8d4be747345f45456f51715c72bb5b98d25325faafa94dfd6e368453e7c",
+      "eligibilitySha256": "11ca28ea9fccaa48d19edb58faa3b21cc8bab44e0bc1f0122ed84b03af9d7587",
+      "evidenceManifestSha256": "6b06812561461767ccb48cdc124655931b39108e3d1482a0f39f53addced36b6"
+    },
+    "videoReviewSha256": "e50b2b00aee11348e0df4897ab6474a1233b5289d0cbe1a2512b5d18ccc8df8d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e0a79391d00a77c549c52c7852fb37d929c381e2"
+  },
   "fumble_bugmist": {
     "video": "/images/products/catalog/fumble_bugmist/videos/1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1067,7 +1111,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
-  "fumble_footcleanser_set": null,
+  "fumble_footcleanser_set": {
+    "video": "/images/products/catalog/fumble_footcleanser_set/videos/94c132681a6dbc29ebad163587d34ec75461cb60e4632b743c96edf5ca70627f/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "175b67d5e280256235465018f7bd7e2f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "175b67d5e280256235465018f7bd7e2f",
+      "reviewId": "6a41ece5e2ff16a3f02e3d94d6db9b69",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "94c132681a6dbc29ebad163587d34ec75461cb60e4632b743c96edf5ca70627f",
+      "seconds": 4,
+      "source": {
+        "no": 220,
+        "folder": "fumble_footcleanser_set",
+        "name": "펌블펫솝_강아지발세정제 워터리스 클렌저 프리풋케어 2개 set",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_footcleanser_set/fumble_footcleanser_set.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8840794263",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_footcleanser_set/details/2.webp",
+          "/images/products/catalog/fumble_footcleanser_set/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a56a5fe256fa400e6d2117d97ef1ae84",
+        "sha256": "94c132681a6dbc29ebad163587d34ec75461cb60e4632b743c96edf5ca70627f"
+      },
+      "scopeId": "8bb35597edd7c0768917ae2863c3686c858e8943081de048eca670fa62977562",
+      "scopeRegistrationSha256": "07f9cc91141375daef1eea6f8cc1d7a9102c814ff697e503139d6d8d9c0dc85a",
+      "aiEvidenceSha256": "ca83152f4a2f8abccbfb7613263e6036ee2c05c3f44927896f19b9a9e9f7e7e9",
+      "receiptSha256": "7fbc769d16ffd9b84b5f0952d8c23144f2bdffe1a905b3ae875657c692dcf760",
+      "eligibilitySha256": "084cf21bcd44b4a889f04756c31a0ceacbd78a8f29519b192db99e1e31777ed9",
+      "evidenceManifestSha256": "6b06a10e99b27ac91c0db1df2f0564f347c4a1bbf5eb0543c62545b2196e9ff8"
+    },
+    "videoReviewSha256": "8058d2fddca5221201c05fcca1a433e4872aee3b0b208b8bbf55b1223474e8ed",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e0a79391d00a77c549c52c7852fb37d929c381e2"
+  },
   "fumble_footsoap_calamine_2": {
     "video": "/images/products/catalog/fumble_footsoap_calamine_2/videos/2ce32fb03e366c67d91a10e42461b56af2fc55057995875bf2b2d0ed6bdd83b6/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -1118,7 +1207,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "df9ca538d88c627c782010844d66e564e4d4b628"
   },
-  "fumble_shampoo_laurel": null,
+  "fumble_shampoo_laurel": {
+    "video": "/images/products/catalog/fumble_shampoo_laurel/videos/231826b23977b2836f806e40e926fb55c0890cd344427db8a8a6d96c2a163a4d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "6a8d456d1c278c568c1a8d8e5c63f0ec",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6a8d456d1c278c568c1a8d8e5c63f0ec",
+      "reviewId": "c8e81c9dc1866219bf6ca76783ff6863",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "231826b23977b2836f806e40e926fb55c0890cd344427db8a8a6d96c2a163a4d",
+      "seconds": 4,
+      "source": {
+        "no": 212,
+        "folder": "fumble_shampoo_laurel",
+        "name": "펌블펫솝_강아지샴푸 월계수 식물성오일베이스 민감피부 각질",
+        "brandEn": "Pumble Pet Soap",
+        "isFood": false,
+        "image": "/images/products/catalog/fumble_shampoo_laurel/fumble_shampoo_laurel.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8843544246",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/fumble_shampoo_laurel/details/2.webp",
+          "/images/products/catalog/fumble_shampoo_laurel/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "845f379df6fed3660fc0830aaa15945a",
+        "sha256": "231826b23977b2836f806e40e926fb55c0890cd344427db8a8a6d96c2a163a4d"
+      },
+      "scopeId": "e6c5a8589fe04e3b365a627014e7fc63ac410d68d1718bb5318fa4f9471974d5",
+      "scopeRegistrationSha256": "51f5da258ca5c243b03d67c286ad94736747df4842b61d82fd901417c6b672d9",
+      "aiEvidenceSha256": "2a509f0d68a1f198e709c6bc331a02658e67150abdda38774a05bb1486ed07b4",
+      "receiptSha256": "2c37098883e11f294976c568e9e630b78fea131cc5d713ee79426f8202ea8bda",
+      "eligibilitySha256": "3316b1db9c5e5dc21bfa953e3f6e9dc405ef3cddfad5031348fa5b84cfc209fd",
+      "evidenceManifestSha256": "36866c5e4eedfa02c956d4aa228562bf47b82b7984901573b0b804b3e9b08fc4"
+    },
+    "videoReviewSha256": "b76ad008ffbb368b73c196bd40920d1200db2c8e8b0b94a43d8fd6e8967d6ebf",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e0a79391d00a77c549c52c7852fb37d929c381e2"
+  },
   "fumble_shampoobar_camelrose": {
     "video": "/images/products/catalog/fumble_shampoobar_camelrose/videos/5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -7144,7 +7278,57 @@
       "downloadEvidenceSha256": "fe02c90460e25a9fb9ffa82f93f41de6a0f2b3b70e344adc7363be97c408f391"
     }
   },
-  "soopa_chew_papaya": null,
+  "soopa_chew_papaya": {
+    "video": "/images/products/catalog/soopa_chew_papaya/videos/f8828136e45e4ceed8bb8a214eda059147611f4471104581b150b40d188eccff/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "ebd257a2d080b4c8c333e020dca35186",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ebd257a2d080b4c8c333e020dca35186",
+      "reviewId": "94b28b16f1001c9e078c78a629b22d57",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f8828136e45e4ceed8bb8a214eda059147611f4471104581b150b40d188eccff",
+      "seconds": 4,
+      "source": {
+        "no": 290,
+        "folder": "soopa_chew_papaya",
+        "name": "수파 그레인프리 100%식물성 야채간식 비건간식 파파야츄 85g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_chew_papaya/soopa_chew_papaya.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107910260",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_chew_papaya/details/2.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/3.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/4.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/5.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/6.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/7.webp",
+          "/images/products/catalog/soopa_chew_papaya/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "68d521e8cbb382e8c67a4c327dbce83e",
+        "sha256": "f8828136e45e4ceed8bb8a214eda059147611f4471104581b150b40d188eccff"
+      },
+      "scopeId": "6d83cf69df8827f2159e5bc777500311e9afdeb330d7ca153c28eac41bbd19ba",
+      "scopeRegistrationSha256": "9ddda56a40dfc7e377f65157bd1b12f8462d85a3fcc83351b7d693b0df9373f8",
+      "aiEvidenceSha256": "92a69e94c49e5dcf42b39d8f3e66d4c51d2288269dcc90ee8a6b30688bb56287",
+      "receiptSha256": "fc40b0c9a189f0512a7e0693cbaa6472b840bbc76300256a3c75b7a120ae3751",
+      "eligibilitySha256": "d908db543ff3ee34404630b464779cbb14221627d7189ec35212e8c29f71c5fd",
+      "evidenceManifestSha256": "0dabef1f8b2a73beae7cb96e84807a8f66b9af235164783d44ea1096a6f4a646"
+    },
+    "videoReviewSha256": "b24e228926ae69b8c1984198d58220ed1fc89be96852d48a85441a6824924f5e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e0a79391d00a77c549c52c7852fb37d929c381e2"
+  },
   "soopa_chew_sweetpotato": null,
   "soopa_dental_6set": null,
   "soopa_dental_appleblueberry": {
