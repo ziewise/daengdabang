@@ -557,7 +557,7 @@
   },
   "fumble_toothpaste": {
     "productId": "p_209",
-    "sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b"
+    "sha256": "b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff"
   },
   "fumble_brushingmist": {
     "productId": "p_210",
@@ -577,7 +577,7 @@
   },
   "fumble_shampoobar_herbtea": {
     "productId": "p_215",
-    "sha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01"
+    "sha256": "0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421"
   },
   "fumble_shampoobar_turkeygreen": {
     "productId": "p_216",
@@ -585,7 +585,7 @@
   },
   "fumble_shampoobar_camelrose": {
     "productId": "p_217",
-    "sha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90"
+    "sha256": "5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa"
   },
   "fumble_footsoap_calamine_2": {
     "productId": "p_218",
@@ -593,7 +593,7 @@
   },
   "fumble_bugmist": {
     "productId": "p_219",
-    "sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d"
+    "sha256": "1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93"
   },
   "fumble_footcleanser_set": {
     "productId": "p_220",

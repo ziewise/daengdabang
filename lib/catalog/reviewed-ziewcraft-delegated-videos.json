@@ -63066,16 +63066,16 @@
     "publicationStatus": "approved",
     "productId": "p_209",
     "folder": "fumble_toothpaste",
-    "video": "/images/products/catalog/fumble_toothpaste/videos/715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b/hover.mp4",
-    "sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b",
+    "video": "/images/products/catalog/fumble_toothpaste/videos/b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff/hover.mp4",
+    "sha256": "b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff",
     "videoQuality": "approved_product_interaction",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "b0a19e9fcc5457b98ecec6432101d2de",
-      "reviewId": "e7fa79cc4713393ec2eb750c1ac5b880",
+      "jobId": "dac92d7f3fd6e4da4e09bb0fa04e5192",
+      "reviewId": "096b9a00fd50c707708bff9c30dc3ded",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b",
+      "finalSha256": "b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff",
       "seconds": 4,
       "source": {
         "no": 209,
@@ -63091,30 +63091,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "3074309a4db38ba4d448b4097ce29e36",
-        "sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b"
+        "artifact_id": "a2f89f2e229f5ff0185aebdb348a2d5d",
+        "sha256": "b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff"
       },
       "scopeId": "e30935dc9afc442c9c69a049a2a9608ac6a5117511b76a2c222ecc3205178637",
-      "scopeRegistrationSha256": "faa30c3e1e7690590925f40f8d0e47fdfa7d1273356400e78d6b34d230adac72",
-      "aiEvidenceSha256": "ecd0446075101b5af2bb6d06ca10e3547da6cdffc9172bd6d0c53336a7aab92b",
-      "receiptSha256": "a47cf2ed036e5857cc5788525255b294d9cc9aa7476427537994595b159339b4",
-      "eligibilitySha256": "4081e8c6c91feb249646581f76e57e8ef3e5f4389a9c7c500da5e0a4cacbacfd",
-      "evidenceManifestSha256": "d65f849779bc04edf4e64fe31410b9770a6337d57775bccce40dbc5dd9bdfb16"
+      "scopeRegistrationSha256": "39ecdcf38f4fbef582c650dd97d11f6eba8497f514a84d3dca33b2cf42c2f96f",
+      "aiEvidenceSha256": "e82a3b06359e3c6e70084d9a799039a807d4057e18b9533f20f88ff24a414391",
+      "receiptSha256": "825d56b21396c08b9f28367a846c22d9f37c676120b947898714a252bf37383b",
+      "eligibilitySha256": "fb8a9d933155d57ea0da117978b23630b84c50a5334007c951f984ff2ed6d3b5",
+      "evidenceManifestSha256": "bb5f158021dcf5caffab2d5050eae8987c242209789be295491473a55f9eb2e4"
     },
     "delegatedReview": {
-      "api_job_id": "b0a19e9fcc5457b98ecec6432101d2de",
+      "api_job_id": "dac92d7f3fd6e4da4e09bb0fa04e5192",
       "bindings": {
         "native_video": {
-          "artifact_id": "43c91852e73840ce96c2090750402ff0",
-          "sha256": "d5604d8205d8eac5c1e4d9162968c22f018b84246383137276909e95e796f52d"
+          "artifact_id": "0eeacb0305954a8a8b2aa844f1b79a32",
+          "sha256": "9c428da570dfa2399b860ad7a6c01e18873cffc3b4556c815f1b66bac673904a"
         },
         "review_video": {
-          "artifact_id": "3074309a4db38ba4d448b4097ce29e36",
-          "sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b"
+          "artifact_id": "a2f89f2e229f5ff0185aebdb348a2d5d",
+          "sha256": "b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff"
         },
         "terminal": {
-          "artifact_id": "7e58ac4916f2655ed4f75143b60bed2b",
-          "sha256": "b7870093fd11af6ba290587d75658e1406c5db3431272ed039e20df55896da51"
+          "artifact_id": "178f6133b8485a87ae1d923400eafbec",
+          "sha256": "298a15df6427929699d71d553b30470ab7dac2ccccb99aef838a01f49fa563cd"
         }
       },
       "checks": {
@@ -63254,41 +63254,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_209-b0a19e9fcc5457b98ecec6432101d2de-all97-v1",
-        "evidence_sha256": "ecd0446075101b5af2bb6d06ca10e3547da6cdffc9172bd6d0c53336a7aab92b",
+        "evidence_id": "ddb-ai-p_209-dac92d7f3fd6e4da4e09bb0fa04e5192-all97-v1",
+        "evidence_sha256": "e82a3b06359e3c6e70084d9a799039a807d4057e18b9533f20f88ff24a414391",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "e7fa79cc4713393ec2eb750c1ac5b880",
-      "reviewed_at": "2026-09-14T16:32:47.167403Z",
+      "review_id": "096b9a00fd50c707708bff9c30dc3ded",
+      "reviewed_at": "2026-09-29T09:58:31.428499Z",
       "schema_version": 1,
       "scope_id": "e30935dc9afc442c9c69a049a2a9608ac6a5117511b76a2c222ecc3205178637",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "7e58ac4916f2655ed4f75143b60bed2b",
+        "artifact_id": "178f6133b8485a87ae1d923400eafbec",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "43c91852e73840ce96c2090750402ff0",
-        "native_artifact_sha256": "d5604d8205d8eac5c1e4d9162968c22f018b84246383137276909e95e796f52d",
+        "native_artifact_id": "0eeacb0305954a8a8b2aa844f1b79a32",
+        "native_artifact_sha256": "9c428da570dfa2399b860ad7a6c01e18873cffc3b4556c815f1b66bac673904a",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "e2fdfa7a9542ae7ba9fb96b2e53144de73443dea7ecc4d0a4208529c6dee3ca9",
+        "pixel_sha256": "efbfb5d0a0302a179d987e18afd189065cf3e7696716c9f9fb9a42db04da0c9f",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "b7870093fd11af6ba290587d75658e1406c5db3431272ed039e20df55896da51",
-        "source_artifact_id": "3074309a4db38ba4d448b4097ce29e36",
-        "source_artifact_sha256": "715dd6c2fb8e753b223d988b01e70092397efd161f33a0ca6b71de14b1cc653b",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "298a15df6427929699d71d553b30470ab7dac2ccccb99aef838a01f49fa563cd",
+        "source_artifact_id": "a2f89f2e229f5ff0185aebdb348a2d5d",
+        "source_artifact_sha256": "b0cbf73aa98ea830f95d5a153ed9ab921418818257d66424f97520846554cfff",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Pet Dental Toothpaste, white dispenser from exact own detail photo",
@@ -63307,15 +63310,12 @@
       "scene_sha256": "e40225a919338ff4b4f2c23300ffefea2cf50045a555db37c6fa2ee97e5a1970",
       "schema_version": 1,
       "scope_id": "e30935dc9afc442c9c69a049a2a9608ac6a5117511b76a2c222ecc3205178637",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "e7fa79cc4713393ec2eb750c1ac5b880",
+      "reviewId": "096b9a00fd50c707708bff9c30dc3ded",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "e30935dc9afc442c9c69a049a2a9608ac6a5117511b76a2c222ecc3205178637",
       "human_approved": false,
@@ -63337,10 +63337,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "36e5c7447b9238ea85630060133c25652a74f45ba352b2ab1f695eb45f7b3dfb",
-      "checkedAt": "2026-09-14T16:55:20.237660+00:00",
-      "sha256": "cfa93e905b521d8e9f904eb7ed2009835801d528ddba5d1458fb5c65a2f8dd8b"
+      "ownerInstructionSha256": "28b46a3fee7feaa1b9593bf184ad56204b42603b3356b814a1bbf7ac7bf266fe",
+      "technicalProofSha256": "98aed376ca74f45675d578d694dcaa64f244cc4dcbe12821009c11d2e3a701e0",
+      "naturalMotionReviewSha256": "e4406166e2a6f49a218576f91b410487fa4ac2ebfee688ee461d9eea47824bfb",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T10:05:15.403821+00:00",
+      "sha256": "3a1cefbc6aa0976f0f79ac10dcf2d756b4cf2643e1e33ab27493712a1a877f18"
     }
   },
   "fumble_brushingmist": {
@@ -64495,16 +64497,16 @@
     "publicationStatus": "approved",
     "productId": "p_215",
     "folder": "fumble_shampoobar_herbtea",
-    "video": "/images/products/catalog/fumble_shampoobar_herbtea/videos/f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01/hover.mp4",
-    "sha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01",
+    "video": "/images/products/catalog/fumble_shampoobar_herbtea/videos/0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421/hover.mp4",
+    "sha256": "0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421",
     "videoQuality": "approved_product_interaction",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "4139a179d71d75439af77440b1ae9e12",
-      "reviewId": "112907c166880c5ae9c093b7c8360577",
+      "jobId": "9da76165b44ccc9d4a4e454ed5ea9677",
+      "reviewId": "4ccdeacd98c00929522d49562c42a2f7",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01",
+      "finalSha256": "0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421",
       "seconds": 4,
       "source": {
         "no": 215,
@@ -64520,30 +64522,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "eb541ff7bdae98eea8263a06c505551b",
-        "sha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01"
+        "artifact_id": "6a5d0ad24b02416e10a6626e20ddc082",
+        "sha256": "0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421"
       },
       "scopeId": "ab22facb460c993673035128adf00e9962220fc7d98c0afde2c24806f4705de8",
-      "scopeRegistrationSha256": "cc476ff8d0ee304a5c8b9425362602f5d0230818852bba2887ff6896d1b991c6",
-      "aiEvidenceSha256": "cc28d02ae6364edcb72e011e5ab693a5b9cbd12d274ae19a5c20f27c1abbd34f",
-      "receiptSha256": "b7ff933b55699c08f57b9a1613296418d6361f88ea8388cbf5a9304d76233683",
-      "eligibilitySha256": "c8f0586c17f146ce3cb045e18f67865dd3075eb896a5a655614686165fe8dd1d",
-      "evidenceManifestSha256": "a1079f7e4517cf5ec2d18a2899cc24df850141156f24acd033ebee8a182e37e0"
+      "scopeRegistrationSha256": "335bc477a1655033f9400f85e5943d3697815f58b24df85830a7e0346bc84b48",
+      "aiEvidenceSha256": "e22a34a8f6436dc2b953090c6f00c3d7f47660e9047daa0149cce003685016de",
+      "receiptSha256": "27e222eb6ee16463a61d778e03ba164939abb96d94c6a913de8adebaf8ca9c79",
+      "eligibilitySha256": "968aa343004a14928d69d93a0a81086fb156e67415676a291ebba9f529ddaf73",
+      "evidenceManifestSha256": "88e12236ab0c2bdca17b0eb27eb27081b4041db9d865407aae4d1a45713c277f"
     },
     "delegatedReview": {
-      "api_job_id": "4139a179d71d75439af77440b1ae9e12",
+      "api_job_id": "9da76165b44ccc9d4a4e454ed5ea9677",
       "bindings": {
         "native_video": {
-          "artifact_id": "364fac0ef589450ab3c9c0e2fe7bcf98",
-          "sha256": "a8c55c071cd0dd1235c3e79f427743e977aa7d7abcdbccfdb5be1fddad404673"
+          "artifact_id": "d962a01c52a142e4a6502118a8efbeb5",
+          "sha256": "10f9ab7b9849bcfcd113d3330a6d0feb30a00bddde4495fbce97a7f3dfec77bd"
         },
         "review_video": {
-          "artifact_id": "eb541ff7bdae98eea8263a06c505551b",
-          "sha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01"
+          "artifact_id": "6a5d0ad24b02416e10a6626e20ddc082",
+          "sha256": "0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421"
         },
         "terminal": {
-          "artifact_id": "dc98e972d4a970fcb1e6cc9a078a1641",
-          "sha256": "1b7fc45e021b24be083927c85f5f4a79153d6b60d05c294a76e23d576cc545d8"
+          "artifact_id": "498c29f513b5353fdc57534b318206f3",
+          "sha256": "7a973a3f135eb2b47d5189c2c2ecbb503a5454d7d8b562057dad799460ed5b0b"
         }
       },
       "checks": {
@@ -64683,41 +64685,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_215-4139a179d71d75439af77440b1ae9e12-all97-v1",
-        "evidence_sha256": "cc28d02ae6364edcb72e011e5ab693a5b9cbd12d274ae19a5c20f27c1abbd34f",
+        "evidence_id": "ddb-ai-p_215-9da76165b44ccc9d4a4e454ed5ea9677-all97-v1",
+        "evidence_sha256": "e22a34a8f6436dc2b953090c6f00c3d7f47660e9047daa0149cce003685016de",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "112907c166880c5ae9c093b7c8360577",
-      "reviewed_at": "2026-09-14T17:03:20.764194Z",
+      "review_id": "4ccdeacd98c00929522d49562c42a2f7",
+      "reviewed_at": "2026-09-29T09:58:34.200292Z",
       "schema_version": 1,
       "scope_id": "ab22facb460c993673035128adf00e9962220fc7d98c0afde2c24806f4705de8",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "dc98e972d4a970fcb1e6cc9a078a1641",
+        "artifact_id": "498c29f513b5353fdc57534b318206f3",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "364fac0ef589450ab3c9c0e2fe7bcf98",
-        "native_artifact_sha256": "a8c55c071cd0dd1235c3e79f427743e977aa7d7abcdbccfdb5be1fddad404673",
+        "native_artifact_id": "d962a01c52a142e4a6502118a8efbeb5",
+        "native_artifact_sha256": "10f9ab7b9849bcfcd113d3330a6d0feb30a00bddde4495fbce97a7f3dfec77bd",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "39b361a49a7b0b1294d32c94d856caee1bb2fc068512698e962ea49d75d8fafa",
+        "pixel_sha256": "077b19fc31bfd150878ec58e3aa33da5b369ed6b831debb52cbd9f9cc8f76ea8",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "1b7fc45e021b24be083927c85f5f4a79153d6b60d05c294a76e23d576cc545d8",
-        "source_artifact_id": "eb541ff7bdae98eea8263a06c505551b",
-        "source_artifact_sha256": "f4b4b617ca4ec8b26b4c06aa13747fb988ab0b3adcca30741c5306cda52e3a01",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "7a973a3f135eb2b47d5189c2c2ecbb503a5454d7d8b562057dad799460ed5b0b",
+        "source_artifact_id": "6a5d0ad24b02416e10a6626e20ddc082",
+        "source_artifact_sha256": "0b5b6032cf281971d1f608feb4ac00af5ad09bdfad3a37613053d477291ef421",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "HERB t.t soap, dark pumpkin bar and charcoal carton",
@@ -64736,15 +64741,12 @@
       "scene_sha256": "ee9a33e912c58d7753524565900e50c1d0a5e4cc156c8e1ac89bc765c10c996f",
       "schema_version": 1,
       "scope_id": "ab22facb460c993673035128adf00e9962220fc7d98c0afde2c24806f4705de8",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "112907c166880c5ae9c093b7c8360577",
+      "reviewId": "4ccdeacd98c00929522d49562c42a2f7",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "ab22facb460c993673035128adf00e9962220fc7d98c0afde2c24806f4705de8",
       "human_approved": false,
@@ -64766,10 +64768,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "b949a22b430d33e861897a4911023b62ba9f0739cd863bf26ca661b0ca16f4c1",
-      "checkedAt": "2026-09-14T17:20:36.720661+00:00",
-      "sha256": "0c8cd611191ccb0c78a0bbc3e309caf0dfa66aad987fde2956cdaa2c94e10929"
+      "ownerInstructionSha256": "28b46a3fee7feaa1b9593bf184ad56204b42603b3356b814a1bbf7ac7bf266fe",
+      "technicalProofSha256": "5811dea27528aed4aa5194f470f4e91345a825be60f04fbf123cf27450e274bc",
+      "naturalMotionReviewSha256": "d19ac126c349854d684041a3bf92b09919dcf00013744e8fff59db672c26a254",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T10:05:17.435601+00:00",
+      "sha256": "cdc396cd91008447f0333ebbfe0fe853819c07c4f5608f705577e8275ae4fbdd"
     }
   },
   "fumble_shampoobar_turkeygreen": {
@@ -65059,16 +65063,16 @@
     "publicationStatus": "approved",
     "productId": "p_217",
     "folder": "fumble_shampoobar_camelrose",
-    "video": "/images/products/catalog/fumble_shampoobar_camelrose/videos/6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90/hover.mp4",
-    "sha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90",
+    "video": "/images/products/catalog/fumble_shampoobar_camelrose/videos/5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa/hover.mp4",
+    "sha256": "5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa",
     "videoQuality": "approved_product_interaction",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "e4b609e62764423db671e1ce0e736dc2",
-      "reviewId": "b992d36da466ba0c244862f468992d9b",
+      "jobId": "30eb7347f003681bb8b65ce4909bc2d8",
+      "reviewId": "faccfa8bf2f3030bbfd2023f568abf0e",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90",
+      "finalSha256": "5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa",
       "seconds": 4,
       "source": {
         "no": 217,
@@ -65084,30 +65088,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "03563e02d8561f2f138f7add4aa55d0d",
-        "sha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90"
+        "artifact_id": "560ab074739e3a26f921147707dcc5a5",
+        "sha256": "5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa"
       },
       "scopeId": "38b81c509638b63643e6226892c185fbccc609cba01b3d210815221e2e1bb89a",
-      "scopeRegistrationSha256": "1a69ceb34ae90d4ebd481ce12fab8dc0553bd17cb5768ca3157a15cac36821a5",
-      "aiEvidenceSha256": "b1f21b712e13b5cf45031ee2532c39c5c828e4100d99618fe33fd0b465c40c38",
-      "receiptSha256": "c5b76afb4923722fdefb7d8cf63ae8318f5dd313f2bd0409b40415044acccc4f",
-      "eligibilitySha256": "ab5b7e9ff42b45105ca987d3f6da011a57faa08e1ee31646c759d9aebd5809e1",
-      "evidenceManifestSha256": "f4ba0fd94d48a770434d93ce95f10517ed14de97ab964b6c1ab0a1bd3795a7f3"
+      "scopeRegistrationSha256": "5bdf225955df5d2c73fdcc5db56d084bb5c86a33ed7f2a5edda9c4a84641da6f",
+      "aiEvidenceSha256": "387f0f0c68fbfe95d1e8fd45a3937725c540f060c902751bafecd756309f5942",
+      "receiptSha256": "e798b4b9ef2392d9600f479ec5e06328388be6e054fa0652a490840ea00cb1f7",
+      "eligibilitySha256": "06e7aa8ed2f7c4fa8e7c15fb29e2fd5744b64a044e2e75363546619c51be8e99",
+      "evidenceManifestSha256": "82451628709e45b6f70cbabb90677daa1cb68bfd36d7af64588f4df953c3baee"
     },
     "delegatedReview": {
-      "api_job_id": "e4b609e62764423db671e1ce0e736dc2",
+      "api_job_id": "30eb7347f003681bb8b65ce4909bc2d8",
       "bindings": {
         "native_video": {
-          "artifact_id": "4852cb2d49244ce98a1450dda401dff3",
-          "sha256": "90340d4b1d106dc365b7d1c091819974f673ef6d8687ceb03040716cb305a71b"
+          "artifact_id": "2c651df5ab144c72beb20b19f2a43e81",
+          "sha256": "00e1fedf1ca8e159b5e0e0da5b4be95a82632f5a6eb73376bea0f08da70739e7"
         },
         "review_video": {
-          "artifact_id": "03563e02d8561f2f138f7add4aa55d0d",
-          "sha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90"
+          "artifact_id": "560ab074739e3a26f921147707dcc5a5",
+          "sha256": "5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa"
         },
         "terminal": {
-          "artifact_id": "83f7d875424a35405387b672e1f47782",
-          "sha256": "81fb8bab175d2ec3899fb848fb273dda735cf0a61c0ce3ab183f9164e372e25d"
+          "artifact_id": "9088b4e3475a27a6de206d66eb5caea8",
+          "sha256": "2ca0c2fcc141581cab88f8140a070f414c2ae2e194902efba4148c52335de961"
         }
       },
       "checks": {
@@ -65247,41 +65251,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_217-e4b609e62764423db671e1ce0e736dc2-all97-v1",
-        "evidence_sha256": "b1f21b712e13b5cf45031ee2532c39c5c828e4100d99618fe33fd0b465c40c38",
+        "evidence_id": "ddb-ai-p_217-30eb7347f003681bb8b65ce4909bc2d8-all97-v1",
+        "evidence_sha256": "387f0f0c68fbfe95d1e8fd45a3937725c540f060c902751bafecd756309f5942",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "b992d36da466ba0c244862f468992d9b",
-      "reviewed_at": "2026-09-14T17:08:58.165198Z",
+      "review_id": "faccfa8bf2f3030bbfd2023f568abf0e",
+      "reviewed_at": "2026-09-29T09:58:38.002041Z",
       "schema_version": 1,
       "scope_id": "38b81c509638b63643e6226892c185fbccc609cba01b3d210815221e2e1bb89a",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "83f7d875424a35405387b672e1f47782",
+        "artifact_id": "9088b4e3475a27a6de206d66eb5caea8",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "4852cb2d49244ce98a1450dda401dff3",
-        "native_artifact_sha256": "90340d4b1d106dc365b7d1c091819974f673ef6d8687ceb03040716cb305a71b",
+        "native_artifact_id": "2c651df5ab144c72beb20b19f2a43e81",
+        "native_artifact_sha256": "00e1fedf1ca8e159b5e0e0da5b4be95a82632f5a6eb73376bea0f08da70739e7",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "faf7fbef5d13f68ceccf7707609ddaa77945bc6b32a346abdd08cca60b308963",
+        "pixel_sha256": "4afb0232f2f1b5bca49bab604bf6a4e6b4e438bc697da439f99ebbe1c4085695",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "81fb8bab175d2ec3899fb848fb273dda735cf0a61c0ce3ab183f9164e372e25d",
-        "source_artifact_id": "03563e02d8561f2f138f7add4aa55d0d",
-        "source_artifact_sha256": "6151bbcba988a5a1aba0b14dcfc724bd8392c0d7610c1f5b6259c2bf63338a90",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "2ca0c2fcc141581cab88f8140a070f414c2ae2e194902efba4148c52335de961",
+        "source_artifact_id": "560ab074739e3a26f921147707dcc5a5",
+        "source_artifact_sha256": "5084caad44a1e301b0cbd0123561fb61663744783cc130de593e731e667251fa",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "CAMELLROSE soap, ivory pumpkin bar and cream carton",
@@ -65300,15 +65307,12 @@
       "scene_sha256": "a9eafe35b24a6376340f5862a9601fbc27a4406761fec285a8326f3e8c51b400",
       "schema_version": 1,
       "scope_id": "38b81c509638b63643e6226892c185fbccc609cba01b3d210815221e2e1bb89a",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "b992d36da466ba0c244862f468992d9b",
+      "reviewId": "faccfa8bf2f3030bbfd2023f568abf0e",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "38b81c509638b63643e6226892c185fbccc609cba01b3d210815221e2e1bb89a",
       "human_approved": false,
@@ -65330,10 +65334,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "1d70afa547e0f0cd2e5c07fd470ad8d089eaaeae51e8f158a64328db65a8d85a",
-      "checkedAt": "2026-09-14T17:20:40.385709+00:00",
-      "sha256": "8723d4120fb6cd5706bd537a2cbdb016b2d17c7231b96175df5ecb9abb642453"
+      "ownerInstructionSha256": "28b46a3fee7feaa1b9593bf184ad56204b42603b3356b814a1bbf7ac7bf266fe",
+      "technicalProofSha256": "b9f4762abf67b81e1be0576d4bcac5e56bb3119841f21ad9d43c08c3a8ae8a78",
+      "naturalMotionReviewSha256": "07ec5fc3492f7d198e0d8166b4c8fd83be4ab137f5cbf2e2ddbb4c1a369092fb",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T10:05:19.552160+00:00",
+      "sha256": "de742d3c7cc5eb1bdf32d42943d964b89504206c4bd62defdfc4a25f4044326c"
     }
   },
   "fumble_footsoap_calamine_2": {
@@ -65628,16 +65634,16 @@
     "publicationStatus": "approved",
     "productId": "p_219",
     "folder": "fumble_bugmist",
-    "video": "/images/products/catalog/fumble_bugmist/videos/545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d/hover.mp4",
-    "sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d",
+    "video": "/images/products/catalog/fumble_bugmist/videos/1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93/hover.mp4",
+    "sha256": "1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93",
     "videoQuality": "approved_product_interaction",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "4982210622ac82b6f96653a5d8363f56",
-      "reviewId": "582fcb830eaf617270b75629e36fb099",
+      "jobId": "b7b0969b402e7f22a4ce345bdfc49f2e",
+      "reviewId": "6fa7e47da330c22d021d238e414c0b71",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d",
+      "finalSha256": "1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93",
       "seconds": 4,
       "source": {
         "no": 219,
@@ -65657,30 +65663,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "ddd576093a945a6b61b6453202d72bfc",
-        "sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d"
+        "artifact_id": "878ea1f7508f6ddbf5a513db5cf4b871",
+        "sha256": "1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93"
       },
       "scopeId": "39de52dce54535fe5b7c54d582287219be160de8275177305465bf82aaef713d",
-      "scopeRegistrationSha256": "c857a2f97fd32eedd75a7c859f11221e58259165b457cd71e81d8100178c13b2",
-      "aiEvidenceSha256": "a5a3f71ee63602f71e6ce42208f2e537ba12b5b3ce61a1e63fa18d67d2243882",
-      "receiptSha256": "1c17729cf608ef343cf07a0764b55282d24e6f78b2455fecbb5bda35344f86e4",
-      "eligibilitySha256": "12873beca1a18958dc4a62c129ef6dae5fc7924ec5f53c3913d67549f5b5622d",
-      "evidenceManifestSha256": "2398117c3169ae2f2de6520cbf5c1cb1e0b4ea192f83b5b66442f8bad90bc84e"
+      "scopeRegistrationSha256": "880390661897a16bb00c20c4e78f72838ae8d3979cb59bb90da6ab4e23106008",
+      "aiEvidenceSha256": "22f2b36a6112e1d21d4891e552a47682e66a86e2126c5517c26bf40701acf386",
+      "receiptSha256": "ae62c9645769e3531c343ae98b280f3d1f34413e050fa7b038056b7d21b6ab21",
+      "eligibilitySha256": "97dea1f3d77e501f9c4af04013a72d5127b040c54dd765872f58335da39ce0d1",
+      "evidenceManifestSha256": "bf5d6460ce46a811fda17997f360cae7a685bd4a0d3909009bf4117167373d68"
     },
     "delegatedReview": {
-      "api_job_id": "4982210622ac82b6f96653a5d8363f56",
+      "api_job_id": "b7b0969b402e7f22a4ce345bdfc49f2e",
       "bindings": {
         "native_video": {
-          "artifact_id": "e2c9a453f65d4e0186349b4580381f3a",
-          "sha256": "2f6c36a1b7f227a7ca1fb144bf7a372851e6cffd560a311f1b7d5f0d841efb02"
+          "artifact_id": "48eb476e438c4b6a9a6300978df0a2d4",
+          "sha256": "efc36f0a21e72dd28d2cc1d229d291b6ff9b925e31af98826951360e7f3332a8"
         },
         "review_video": {
-          "artifact_id": "ddd576093a945a6b61b6453202d72bfc",
-          "sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d"
+          "artifact_id": "878ea1f7508f6ddbf5a513db5cf4b871",
+          "sha256": "1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93"
         },
         "terminal": {
-          "artifact_id": "9772dfd5ac529a4f856d8c03c6287ade",
-          "sha256": "634f8a6eaeaa0a1672d5f330892ead43704843e7d65dba6373b0187d3228ac7c"
+          "artifact_id": "6a852042b74e0b3095d0b8584e127348",
+          "sha256": "0a1a46eba2bbedb1febf67cb8908ed9e7a8b672f23987e494e2bfd58509f1671"
         }
       },
       "checks": {
@@ -65820,41 +65826,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_219-4982210622ac82b6f96653a5d8363f56-all97-v1",
-        "evidence_sha256": "a5a3f71ee63602f71e6ce42208f2e537ba12b5b3ce61a1e63fa18d67d2243882",
+        "evidence_id": "ddb-ai-p_219-b7b0969b402e7f22a4ce345bdfc49f2e-all97-v1",
+        "evidence_sha256": "22f2b36a6112e1d21d4891e552a47682e66a86e2126c5517c26bf40701acf386",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "582fcb830eaf617270b75629e36fb099",
-      "reviewed_at": "2026-09-14T17:23:27.440427Z",
+      "review_id": "6fa7e47da330c22d021d238e414c0b71",
+      "reviewed_at": "2026-09-29T09:58:41.419655Z",
       "schema_version": 1,
       "scope_id": "39de52dce54535fe5b7c54d582287219be160de8275177305465bf82aaef713d",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "9772dfd5ac529a4f856d8c03c6287ade",
+        "artifact_id": "6a852042b74e0b3095d0b8584e127348",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "e2c9a453f65d4e0186349b4580381f3a",
-        "native_artifact_sha256": "2f6c36a1b7f227a7ca1fb144bf7a372851e6cffd560a311f1b7d5f0d841efb02",
+        "native_artifact_id": "48eb476e438c4b6a9a6300978df0a2d4",
+        "native_artifact_sha256": "efc36f0a21e72dd28d2cc1d229d291b6ff9b925e31af98826951360e7f3332a8",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "64f45b532fad68f9758d50ed07442cf46ea50e44db13cc46111d218553c5c3bb",
+        "pixel_sha256": "db80e871bc265361dc4874bce9f8fa51ae7ad8d3b33494e3e4cf8c36f12b9d20",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "634f8a6eaeaa0a1672d5f330892ead43704843e7d65dba6373b0187d3228ac7c",
-        "source_artifact_id": "ddd576093a945a6b61b6453202d72bfc",
-        "source_artifact_sha256": "545cf04e7910b21b5c93a863bd6a9c5e504a4238ebf91f50375d07bf3b8aa57d",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "0a1a46eba2bbedb1febf67cb8908ed9e7a8b672f23987e494e2bfd58509f1671",
+        "source_artifact_id": "878ea1f7508f6ddbf5a513db5cf4b871",
+        "source_artifact_sha256": "1558d718c9aadf897655e79543a68ce4908fd1a245503428394efcad0752fb93",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "BB Bye-Bug spray, PUMBLEPET own detail bottle",
@@ -65873,15 +65882,12 @@
       "scene_sha256": "e8934ee39225315df3526d75d51dee2dcbd6d74fb9069399ac6ad0fc1542c803",
       "schema_version": 1,
       "scope_id": "39de52dce54535fe5b7c54d582287219be160de8275177305465bf82aaef713d",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "582fcb830eaf617270b75629e36fb099",
+      "reviewId": "6fa7e47da330c22d021d238e414c0b71",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "39de52dce54535fe5b7c54d582287219be160de8275177305465bf82aaef713d",
       "human_approved": false,
@@ -65903,10 +65909,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "7ed89481995d38628cbfe384596618f11de7b309c5f620427bfa8edfae4a20aa",
-      "checkedAt": "2026-09-14T17:59:14.643613+00:00",
-      "sha256": "3384f4cfda7fc656034f975223dcdf9b977b6569557865087f71e78b8f041074"
+      "ownerInstructionSha256": "28b46a3fee7feaa1b9593bf184ad56204b42603b3356b814a1bbf7ac7bf266fe",
+      "technicalProofSha256": "f3fa970eb78936e23f089d97e2a52a73616d2cf49c11a6a0294f5a98c9dd9b68",
+      "naturalMotionReviewSha256": "ce5cf2b27d2f0868c6cf1b36b5ec5c3d3369dc22604fbf35aa313eccf5f9de67",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T10:05:21.773774+00:00",
+      "sha256": "c4aaa1e0d64bd64783fa4031c47df66667902b0b18d0d9a2bd733748f55383be"
     }
   },
   "fumble_footcleanser_set": {
