@@ -11793,5 +11793,61 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "b17315e511bc431dfa1e59376cb57944b387bdcd"
+  },
+  "rw_jsk_1000001166": {
+    "video": "/images/products/catalog/rw_jsk_1000001166/videos/f32bca9a9cad113ee7e5bd5b6f6bab2766673aa944770bdb14f27fd96fc0dc99/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e2716b91f62aaa2883a27358a7ec34f4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e2716b91f62aaa2883a27358a7ec34f4",
+      "reviewId": "2cb1df8c9f116efc54f7717ccfbb6a88",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f32bca9a9cad113ee7e5bd5b6f6bab2766673aa944770bdb14f27fd96fc0dc99",
+      "seconds": 8,
+      "source": {
+        "no": 428,
+        "folder": "rw_jsk_1000001166",
+        "name": "러프웨어 웹 마스터 하네스(기존형)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_011.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001166",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_173.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_276.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_319.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_417.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_512.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_648.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001166/image/detail/1000001166_detail_713.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240128/Web-Master-Harness1-2024_012805.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240128/Web-Master-Harness2-2024_012825.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240128/Web-Master-Harness3-2024_143256.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220929/4f83738d1edfb0e581d173f0e5243da3_165124.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "53857d8cc23895aaa3657975e19ddd29",
+        "sha256": "f32bca9a9cad113ee7e5bd5b6f6bab2766673aa944770bdb14f27fd96fc0dc99"
+      },
+      "scopeId": "81bb9696a4df1bdc133d5c2ab8a285debeb1a7fc741feabaecc24afd2f708410",
+      "scopeRegistrationSha256": "56ef0de8ff9dd6ad5a28a0ef73c8769d089a999bebb57b8319f37b732981174e",
+      "aiEvidenceSha256": "b7bb68b8b50e36f6f87ae3c8e62ab4586b1f9524b835074d5a89811da948add8",
+      "receiptSha256": "8c5c2ce6c3383d657509ae967803915e353173c4fbf6e5fb5be1285e89ff5984",
+      "eligibilitySha256": "ea5b39c3ef051ee1e9180b6ce69ecb2f00323bb4b6a816336680ec861ba90c01",
+      "evidenceManifestSha256": "175b285a7fba2bd495cf4d5c78f9168e25210edb5303a6ac101988c6985d604f"
+    },
+    "videoReviewSha256": "08393dd72678d5bfaa0fe711ee2d4bf461311eff071d75eecceb003050d19c63",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e52200b2698b1c63f77977dce02caf658891c790"
   }
 }

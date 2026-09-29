@@ -1202,5 +1202,9 @@
   "zs_rhino": {
     "productId": "p_65",
     "sha256": "f424244cc5e2e4dbda8e678b88818f42bb81fecdf1ef6cf5961cc5350c2f32bd"
+  },
+  "rw_jsk_1000001166": {
+    "productId": "p_428",
+    "sha256": "f32bca9a9cad113ee7e5bd5b6f6bab2766673aa944770bdb14f27fd96fc0dc99"
   }
 }
