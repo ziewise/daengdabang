@@ -1222,5 +1222,9 @@
   "rs_trailhead_leash_dual_24m": {
     "productId": "p_87",
     "sha256": "8d852b6af9ed2f92c5bc436d1c48a3cbe128ab70a8312740e5b1509545c76e0d"
+  },
+  "iby_stroller_fs2191": {
+    "productId": "p_254",
+    "sha256": "4e0fa7e28481bd4dad5d7f34cd516bb4a73c174a58b8c7568699eb78020038fa"
   }
 }

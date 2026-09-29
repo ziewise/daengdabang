@@ -1923,7 +1923,55 @@
   "iby_stroller_fs2011": null,
   "iby_stroller_fs2102": null,
   "iby_stroller_fs2180": null,
-  "iby_stroller_fs2191": null,
+  "iby_stroller_fs2191": {
+    "video": "/images/products/catalog/iby_stroller_fs2191/videos/4e0fa7e28481bd4dad5d7f34cd516bb4a73c174a58b8c7568699eb78020038fa/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "e5eaa1e569cb2bb33176114506072f9f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e5eaa1e569cb2bb33176114506072f9f",
+      "reviewId": "3d953e2955e99cefab10972a8a42ebfd",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4e0fa7e28481bd4dad5d7f34cd516bb4a73c174a58b8c7568699eb78020038fa",
+      "seconds": 4,
+      "source": {
+        "no": 254,
+        "folder": "iby_stroller_fs2191",
+        "name": "이비야야 클레오유모차2.0 FS2191 2컬러 데님블루 코랄핑크",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_stroller_fs2191/iby_stroller_fs2191.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655804611",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_stroller_fs2191/details/2.webp",
+          "/images/products/catalog/iby_stroller_fs2191/details/3.webp",
+          "/images/products/catalog/iby_stroller_fs2191/details/4.webp",
+          "/images/products/catalog/iby_stroller_fs2191/details/5.webp",
+          "/images/products/catalog/iby_stroller_fs2191/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "20b2574357ef615096800458ef1cfd60",
+        "sha256": "4e0fa7e28481bd4dad5d7f34cd516bb4a73c174a58b8c7568699eb78020038fa"
+      },
+      "scopeId": "e1c88f2c0c2db86e9264c11da7b19ed5e0a5796f70aa92b3e501b394bf152c37",
+      "scopeRegistrationSha256": "0cb37e988762acd5b94b403b7dc2db5cab4660cb04a446c35f1d42ea2dc955d4",
+      "aiEvidenceSha256": "1e8a0bb86d11999c91122e0441c454d7f71faca59a2dd97ea9d34ae75d1853ae",
+      "receiptSha256": "de073d7305e94c0a4040dc685d17974cce7915cd91efd9cb0ebb1ff1644de219",
+      "eligibilitySha256": "60c7c99f0dbf0b2071f93c34b8d854c6b5654a09acb75e8e051789167dd304af",
+      "evidenceManifestSha256": "66debce850ca695f24c08e9d7f090f48840411f2bd5aa0b7539f1d33157e2ed0"
+    },
+    "videoReviewSha256": "91e1c0b49b78e1a435461082e8e13e5c34db7b3826a244b5d7da867af64e3c6e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "001dee12b3c1a49070f9ddd5d3a9c5f6fcb1d57a"
+  },
   "iby_trailer_fs2080": null,
   "iby_wagon_fs1880": null,
   "icecream_realcheese": {
