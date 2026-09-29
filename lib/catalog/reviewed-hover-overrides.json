@@ -8732,7 +8732,53 @@
     "videoDeliveryCommit": "89360373206953372119691c7336bf66e031d48d"
   },
   "yora_lightsenior_6kg": null,
-  "yora_puppy_12kg": null,
+  "yora_puppy_12kg": {
+    "video": "/images/products/catalog/yora_puppy_12kg/videos/773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "f844da58d4856f67e550114a334be0f9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f844da58d4856f67e550114a334be0f9",
+      "reviewId": "a2a0456cd554327c287cc43e94b3c7b3",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd",
+      "seconds": 4,
+      "source": {
+        "no": 165,
+        "folder": "yora_puppy_12kg",
+        "name": "요라 퍼피 12kg 동애등에 44% 곤충 사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_puppy_12kg/yora_puppy_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923198519",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_puppy_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_puppy_12kg/details/2.webp",
+          "/images/products/catalog/yora_puppy_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "276486662b98f899fda50cbba8e8f3ed",
+        "sha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd"
+      },
+      "scopeId": "909053699b33cb89db308088e1ca438a1996e314e597fd0fb213b0c5ea135a03",
+      "scopeRegistrationSha256": "c913740268dc8d12f01f14f447b5ef572ed2da462130fc173d6df9c19195d2fb",
+      "aiEvidenceSha256": "efef50520bb6617f1d074fac16f7f056d472fd108167cdb7cb246ac759eb3a04",
+      "receiptSha256": "3661ac1d943fbd3dd0291b2350b2081336b64198ad2d535a1595f01584ce38b4",
+      "eligibilitySha256": "8ab7318a58858defe2c5bad8bbd47f82c4ecfd43ef0ac283c110f75c2595c3d0",
+      "evidenceManifestSha256": "e2423741c4c1cab9c5a5d4b373bc4b68d459bc23f7646752e9045b7384b35a20"
+    },
+    "videoReviewSha256": "1f082e6c5d0e96aca44b4708abec088eb479e4f2e7c6a9bed60d9d286d97ee18",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "781836d82ec2619545368fed907e53f55fc2a3bb"
+  },
   "yora_puppy_2.5kg": null,
   "yora_reward_treat": null,
   "yora_smallbreed_2.5kg": null,

@@ -88818,16 +88818,16 @@
     "publicationStatus": "approved",
     "productId": "p_165",
     "folder": "yora_puppy_12kg",
-    "video": "/images/products/catalog/yora_puppy_12kg/videos/1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be/hover.mp4",
-    "sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be",
+    "video": "/images/products/catalog/yora_puppy_12kg/videos/773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd/hover.mp4",
+    "sha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "7d7b76e95acc029d6be77db6f453d9c1",
-      "reviewId": "52dd122798ee1c06b90d3caaddfac68b",
+      "jobId": "f844da58d4856f67e550114a334be0f9",
+      "reviewId": "a2a0456cd554327c287cc43e94b3c7b3",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be",
+      "finalSha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd",
       "seconds": 4,
       "source": {
         "no": 165,
@@ -88845,30 +88845,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "cf330f4613c494fed2bb732323a1d564",
-        "sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be"
+        "artifact_id": "276486662b98f899fda50cbba8e8f3ed",
+        "sha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd"
       },
       "scopeId": "909053699b33cb89db308088e1ca438a1996e314e597fd0fb213b0c5ea135a03",
-      "scopeRegistrationSha256": "5e8a245d3ac4566468c9be115da550d4ae054b223e25953b0cf5b6e8a7a24d56",
-      "aiEvidenceSha256": "924e0dc7539da1e8ea3408fb253ee584322f68937b5011400715010e89da3573",
-      "receiptSha256": "b160c7602f60de8da847abd92ea39117e9351c9885b6ef481191be74bd490333",
-      "eligibilitySha256": "6a900ff3e9256055ac37d7dc4a5e702dddf82285d714c8495fb65470ad5498e5",
-      "evidenceManifestSha256": "f8c8ba348400cadf3056231cf66305f7abf5b1060366ebcd9f37879089fa4e03"
+      "scopeRegistrationSha256": "c913740268dc8d12f01f14f447b5ef572ed2da462130fc173d6df9c19195d2fb",
+      "aiEvidenceSha256": "efef50520bb6617f1d074fac16f7f056d472fd108167cdb7cb246ac759eb3a04",
+      "receiptSha256": "3661ac1d943fbd3dd0291b2350b2081336b64198ad2d535a1595f01584ce38b4",
+      "eligibilitySha256": "8ab7318a58858defe2c5bad8bbd47f82c4ecfd43ef0ac283c110f75c2595c3d0",
+      "evidenceManifestSha256": "e2423741c4c1cab9c5a5d4b373bc4b68d459bc23f7646752e9045b7384b35a20"
     },
     "delegatedReview": {
-      "api_job_id": "7d7b76e95acc029d6be77db6f453d9c1",
+      "api_job_id": "f844da58d4856f67e550114a334be0f9",
       "bindings": {
         "native_video": {
-          "artifact_id": "a11aeff708bc4b8496c1c8c62e60bb5c",
-          "sha256": "1176e056b72625e303456a6434c384b89eae0a5896f399881dea9fdfdf4c86d2"
+          "artifact_id": "039df1cf4bfa42a48473cae0eccc335b",
+          "sha256": "14228ac26db73b37ddd3f489b6448e9e4d727ff06f3391955fc1957400564808"
         },
         "review_video": {
-          "artifact_id": "cf330f4613c494fed2bb732323a1d564",
-          "sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be"
+          "artifact_id": "276486662b98f899fda50cbba8e8f3ed",
+          "sha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd"
         },
         "terminal": {
-          "artifact_id": "3e4e57c09bf1472b6b4b20f82bfc9656",
-          "sha256": "ed592874484ba1c1a5e3a237066d227afb621db635cacfb98f2a7aefb1b5a97a"
+          "artifact_id": "2a1f25b63745b76c1455c092630fc49b",
+          "sha256": "43d339fbe2c01da26ed0e8837dfe233bf18b24918b999b8279a78b27e7dca4b1"
         }
       },
       "checks": {
@@ -89008,41 +89008,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_165-7d7b76e95acc029d6be77db6f453d9c1-all97-v1",
-        "evidence_sha256": "924e0dc7539da1e8ea3408fb253ee584322f68937b5011400715010e89da3573",
+        "evidence_id": "ddb-ai-p_165-f844da58d4856f67e550114a334be0f9-all97-v1",
+        "evidence_sha256": "efef50520bb6617f1d074fac16f7f056d472fd108167cdb7cb246ac759eb3a04",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "52dd122798ee1c06b90d3caaddfac68b",
-      "reviewed_at": "2026-09-23T05:51:10.272655Z",
+      "review_id": "a2a0456cd554327c287cc43e94b3c7b3",
+      "reviewed_at": "2026-09-29T12:50:08.161696Z",
       "schema_version": 1,
       "scope_id": "909053699b33cb89db308088e1ca438a1996e314e597fd0fb213b0c5ea135a03",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "3e4e57c09bf1472b6b4b20f82bfc9656",
+        "artifact_id": "2a1f25b63745b76c1455c092630fc49b",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "a11aeff708bc4b8496c1c8c62e60bb5c",
-        "native_artifact_sha256": "1176e056b72625e303456a6434c384b89eae0a5896f399881dea9fdfdf4c86d2",
+        "native_artifact_id": "039df1cf4bfa42a48473cae0eccc335b",
+        "native_artifact_sha256": "14228ac26db73b37ddd3f489b6448e9e4d727ff06f3391955fc1957400564808",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "8fd8f63a57387d012cad3a3801cfed92700d26a4f01337e23abf15b220b105d3",
+        "pixel_sha256": "a66d3eb317d85a34e9940d700e8335eddf624e2543c4017b851ab102792bae72",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "ed592874484ba1c1a5e3a237066d227afb621db635cacfb98f2a7aefb1b5a97a",
-        "source_artifact_id": "cf330f4613c494fed2bb732323a1d564",
-        "source_artifact_sha256": "1aec319652c30d19bb6138ea852f9130c8fc781a3ca1836d13223a4fd82517be",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "43d339fbe2c01da26ed0e8837dfe233bf18b24918b999b8279a78b27e7dca4b1",
+        "source_artifact_id": "276486662b98f899fda50cbba8e8f3ed",
+        "source_artifact_sha256": "773840927565dbc7ff6a28d79184ed91fdec41649a24d9fe4cf6dcc41b7b52fd",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Puppy 12kg",
@@ -89061,15 +89064,12 @@
       "scene_sha256": "f2b0e4f86de15d3ed4407bae7ac4975d4d205da63de3257a4a03092f2fe49d2a",
       "schema_version": 1,
       "scope_id": "909053699b33cb89db308088e1ca438a1996e314e597fd0fb213b0c5ea135a03",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "52dd122798ee1c06b90d3caaddfac68b",
+      "reviewId": "a2a0456cd554327c287cc43e94b3c7b3",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "909053699b33cb89db308088e1ca438a1996e314e597fd0fb213b0c5ea135a03",
       "human_approved": false,
@@ -89091,10 +89091,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "43e9d5bb86238017afeadcf16af0695a9dba570e2f609617854d28e17696414b",
-      "technicalProofSha256": "866f345d01c0bd44bf8cf08b22da02c878c81b833973a189ffc1635e7b1ae1da",
-      "checkedAt": "2026-09-23T05:57:39.014829+00:00",
-      "sha256": "3340da2b516bc6c51900cd9fc4051138800626c7c126ef413b7d665f6ca63594"
+      "ownerInstructionSha256": "e43170598143a58e801fe0554a54fd003362debd6555518e883dfcc158eff36f",
+      "technicalProofSha256": "a903d488ad82d2a9ea4215b1effd9a3c73cb3c0b3dcc61a3798ddc07d6534cdb",
+      "naturalMotionReviewSha256": "ba332d1db4973a314e9d99bb92bbe6c42673c2261b1d3a4d6f37a1ea8aabcf30",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T12:50:38.201501+00:00",
+      "sha256": "1f082e6c5d0e96aca44b4708abec088eb479e4f2e7c6a9bed60d9d286d97ee18"
     }
   },
   "yora_lightsenior_12kg": {
