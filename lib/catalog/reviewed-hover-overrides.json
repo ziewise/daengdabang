@@ -7482,7 +7482,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "49addbb23d9d1ab5b4ef4e339237912d0fe2531a"
   },
-  "sk_ft_working30_15kg": null,
+  "sk_ft_working30_15kg": {
+    "video": "/images/products/catalog/sk_ft_working30_15kg/videos/f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "6f72fde6ae16f368cc7e1b764de6f784",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6f72fde6ae16f368cc7e1b764de6f784",
+      "reviewId": "609c62cd73186deea2a6d9a976e2968c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482",
+      "seconds": 4,
+      "source": {
+        "no": 179,
+        "folder": "sk_ft_working30_15kg",
+        "name": "스키너즈 필드 & 트라이얼 워킹30 중대형견용 15kg",
+        "brandEn": "Skinner's",
+        "isFood": true,
+        "image": "/images/products/catalog/sk_ft_working30_15kg/sk_ft_working30_15kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922985474",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/sk_ft_working30_15kg/details/2.webp",
+          "/images/products/catalog/sk_ft_working30_15kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "99beb0b0b999131063ca5a607a19cf09",
+        "sha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482"
+      },
+      "scopeId": "d52d313c7382d65b03c4f737d2aa43864cd1db44ef3b65196beb87bad558b9cf",
+      "scopeRegistrationSha256": "d4dd021f3479b406cf9ae716557e34c77d7d5719563930dcb1fe59c43fc23baf",
+      "aiEvidenceSha256": "fead64b3b1c6140fc678a08f4baa45af92c36ac5a59bc70b05766a1f982dd0ba",
+      "receiptSha256": "14200e767aada72dff098b1b6c7fd984fc7da5d94f1174961fc1d9788eeb5c37",
+      "eligibilitySha256": "021ed4df125bdf998a68efbb4eec4a4f76019460141b84be3e69760b48b7fa55",
+      "evidenceManifestSha256": "0b7b65e11460bb8e0d884d4710dca4efc3a61bacf8023b10f0a0410963e58671"
+    },
+    "videoReviewSha256": "2989c17e24f536fcf0623c01d9c477972a279afa971f804fd300a6a8749f87fc",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a6bc726841e0791dd4a96371a94902cbbca61ebf"
+  },
   "smoothie_rainbow_30ml_3": {
     "video": "/images/products/catalog/smoothie_rainbow_30ml_3/videos/0f2ef3052cd81555de98ee9475406c7f539fb4e3a3069ffa98da589c4dc2f6d2/hover.mp4",
     "videoProvider": "ziewcraft",

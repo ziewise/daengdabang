@@ -76300,16 +76300,16 @@
     "publicationStatus": "approved",
     "productId": "p_179",
     "folder": "sk_ft_working30_15kg",
-    "video": "/images/products/catalog/sk_ft_working30_15kg/videos/505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161/hover.mp4",
-    "sha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161",
+    "video": "/images/products/catalog/sk_ft_working30_15kg/videos/f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482/hover.mp4",
+    "sha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "67185c7bdff7776dea028fb0efe167e1",
-      "reviewId": "de59f82f1e4dc502f138486226eb818b",
+      "jobId": "6f72fde6ae16f368cc7e1b764de6f784",
+      "reviewId": "609c62cd73186deea2a6d9a976e2968c",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161",
+      "finalSha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482",
       "seconds": 4,
       "source": {
         "no": 179,
@@ -76326,30 +76326,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "1661200bed2b24aa0b41ac8a5675b8e0",
-        "sha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161"
+        "artifact_id": "99beb0b0b999131063ca5a607a19cf09",
+        "sha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482"
       },
       "scopeId": "d52d313c7382d65b03c4f737d2aa43864cd1db44ef3b65196beb87bad558b9cf",
-      "scopeRegistrationSha256": "96d74a32abe27fe8631dd8a4e25a0972b5e2b70ad2b7b4596f11704e46d46965",
-      "aiEvidenceSha256": "3fc66c9b0eb3f6836d4e8d11f888abf1201ac32d33b673f8210926ab0603f121",
-      "receiptSha256": "4772021dedbd9b193d291f87ab430b0e6d298c2e9e009e739dd2b07e60dfe233",
-      "eligibilitySha256": "2a931369d864c6433c6238c7e7e8b2ed32e8912378de2f2b34445f4e99bb19a0",
-      "evidenceManifestSha256": "63ad23941aff66b90c7a99c2f8e0757d1a2d3d7d04d15d2385693881e130137d"
+      "scopeRegistrationSha256": "d4dd021f3479b406cf9ae716557e34c77d7d5719563930dcb1fe59c43fc23baf",
+      "aiEvidenceSha256": "fead64b3b1c6140fc678a08f4baa45af92c36ac5a59bc70b05766a1f982dd0ba",
+      "receiptSha256": "14200e767aada72dff098b1b6c7fd984fc7da5d94f1174961fc1d9788eeb5c37",
+      "eligibilitySha256": "021ed4df125bdf998a68efbb4eec4a4f76019460141b84be3e69760b48b7fa55",
+      "evidenceManifestSha256": "0b7b65e11460bb8e0d884d4710dca4efc3a61bacf8023b10f0a0410963e58671"
     },
     "delegatedReview": {
-      "api_job_id": "67185c7bdff7776dea028fb0efe167e1",
+      "api_job_id": "6f72fde6ae16f368cc7e1b764de6f784",
       "bindings": {
         "native_video": {
-          "artifact_id": "0f19d41510b7499ea7d34d6cddd8abd9",
-          "sha256": "8724c242e66c3ba068cabb2c4681d6e3d5a060eef05b9baf68ddbdf9baef98a7"
+          "artifact_id": "f0ad755c5b5b42bd838edb0c22479038",
+          "sha256": "40c5b8523cc017287492fda54744e8485eab7c74ba4a6275598724c85f5a9cf5"
         },
         "review_video": {
-          "artifact_id": "1661200bed2b24aa0b41ac8a5675b8e0",
-          "sha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161"
+          "artifact_id": "99beb0b0b999131063ca5a607a19cf09",
+          "sha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482"
         },
         "terminal": {
-          "artifact_id": "69d3bb7b02865eafd5a47986343f71a3",
-          "sha256": "f89b7908583ea2ffe5f9519c81b8d1aaf33b1841022b12dbcd9becc7d4f26b35"
+          "artifact_id": "670aadda2a0ff3e37476d1cfadb2092f",
+          "sha256": "aa90859794853c8062d5bd8dc8e8b6c2a8330bc65ea0b7f547e4a7e57cdc6492"
         }
       },
       "checks": {
@@ -76489,41 +76489,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_179-67185c7bdff7776dea028fb0efe167e1-all97-v1",
-        "evidence_sha256": "3fc66c9b0eb3f6836d4e8d11f888abf1201ac32d33b673f8210926ab0603f121",
+        "evidence_id": "ddb-ai-p_179-6f72fde6ae16f368cc7e1b764de6f784-all97-v1",
+        "evidence_sha256": "fead64b3b1c6140fc678a08f4baa45af92c36ac5a59bc70b05766a1f982dd0ba",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "de59f82f1e4dc502f138486226eb818b",
-      "reviewed_at": "2026-09-16T18:07:30.057319Z",
+      "review_id": "609c62cd73186deea2a6d9a976e2968c",
+      "reviewed_at": "2026-09-29T19:02:43.473282Z",
       "schema_version": 1,
       "scope_id": "d52d313c7382d65b03c4f737d2aa43864cd1db44ef3b65196beb87bad558b9cf",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "69d3bb7b02865eafd5a47986343f71a3",
+        "artifact_id": "670aadda2a0ff3e37476d1cfadb2092f",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "0f19d41510b7499ea7d34d6cddd8abd9",
-        "native_artifact_sha256": "8724c242e66c3ba068cabb2c4681d6e3d5a060eef05b9baf68ddbdf9baef98a7",
+        "native_artifact_id": "f0ad755c5b5b42bd838edb0c22479038",
+        "native_artifact_sha256": "40c5b8523cc017287492fda54744e8485eab7c74ba4a6275598724c85f5a9cf5",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "33175a0c713d164833fbb45e2bfec523b1823e4a4e29c380ef781b8798d35982",
+        "pixel_sha256": "34d960f1def6db64931b2777107c6634960fc0fb7cee5c165ab21c743e29cedb",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "f89b7908583ea2ffe5f9519c81b8d1aaf33b1841022b12dbcd9becc7d4f26b35",
-        "source_artifact_id": "1661200bed2b24aa0b41ac8a5675b8e0",
-        "source_artifact_sha256": "505325a313922ebdf66189f28b5dad0dbf12a5fd7076e6690547da53c4746161",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "aa90859794853c8062d5bd8dc8e8b6c2a8330bc65ea0b7f547e4a7e57cdc6492",
+        "source_artifact_id": "99beb0b0b999131063ca5a607a19cf09",
+        "source_artifact_sha256": "f33148b3691056763048227d7b1bb76b44eb42e4aad613e470100f767f80d482",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Skinner's Field & Trial Working 30 15kg",
@@ -76542,15 +76545,12 @@
       "scene_sha256": "5158b7771c8f2b752bef94b99f9728e5d4330fb2c7ca23e1f65f1b76e9470936",
       "schema_version": 1,
       "scope_id": "d52d313c7382d65b03c4f737d2aa43864cd1db44ef3b65196beb87bad558b9cf",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "de59f82f1e4dc502f138486226eb818b",
+      "reviewId": "609c62cd73186deea2a6d9a976e2968c",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "d52d313c7382d65b03c4f737d2aa43864cd1db44ef3b65196beb87bad558b9cf",
       "human_approved": false,
@@ -76572,10 +76572,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "2b0a78ddc7633978af4a8731fb3e268b47206a3bfb0d5aa318fe2d6d1f85c50e",
-      "checkedAt": "2026-09-20T16:10:07.386074+00:00",
-      "sha256": "bd9cb2d8be792b7f56b2ba24b7e0666aa80105f72dc995ecf1c8356b94218c40"
+      "ownerInstructionSha256": "78d9f4ff5ed6fe09aac0be0817525374db16b35787f9526d32902f451d17619e",
+      "technicalProofSha256": "c8c767d13b0e0bffd82ea92faf44f20e96e654de3200202681fcf95b38572b47",
+      "naturalMotionReviewSha256": "a639eba7e882731b82302705a98e126dc284cf60913ac001df1b1a0cef235af6",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-29T19:19:39.071493+00:00",
+      "sha256": "2989c17e24f536fcf0623c01d9c477972a279afa971f804fd300a6a8749f87fc"
     }
   },
   "sk_ft_salmon_pate_390g": {
