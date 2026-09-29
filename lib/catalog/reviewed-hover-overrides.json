@@ -7970,7 +7970,57 @@
     "videoPlaybackMode": "once_hold_last_frame",
     "videoReviewSha256": "a29db32c828b386382e17f10a6dda9bf547aec7888949ef0f3eab7522124f03d"
   },
-  "soopa_dental_cranberrysweetpotato": null,
+  "soopa_dental_cranberrysweetpotato": {
+    "video": "/images/products/catalog/soopa_dental_cranberrysweetpotato/videos/b5b91254f30757ab02f8ca2d86ef8b6d7d89e7e23c82217ce4d359bd0732cb6a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "b6885d7791cd35096ba747440fbe61db",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b6885d7791cd35096ba747440fbe61db",
+      "reviewId": "e476f980b8df3155c551ac9f64f762fe",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b5b91254f30757ab02f8ca2d86ef8b6d7d89e7e23c82217ce4d359bd0732cb6a",
+      "seconds": 4,
+      "source": {
+        "no": 293,
+        "folder": "soopa_dental_cranberrysweetpotato",
+        "name": "수파 그레인프리 100%식물성 건강한 야채 덴탈스틱 크랜베리&고구마 100g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_dental_cranberrysweetpotato/soopa_dental_cranberrysweetpotato.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107754250",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/2.webp",
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/3.webp",
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/4.webp",
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/5.webp",
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/6.webp",
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/7.webp",
+          "/images/products/catalog/soopa_dental_cranberrysweetpotato/details/8.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "ee4c5320e37dd01e37c572c371c4d01d",
+        "sha256": "b5b91254f30757ab02f8ca2d86ef8b6d7d89e7e23c82217ce4d359bd0732cb6a"
+      },
+      "scopeId": "902da059d6cd73de9e44de4c27e5af6fb12fc71e4321e43e824aa0966e8f0f69",
+      "scopeRegistrationSha256": "2d8a3fa41d62ad36e11e9963323d57bb2561e20d2a19bbc73ceeef77fdfa9d07",
+      "aiEvidenceSha256": "480cc899573fe71cc294f8ce4ec262dcdc744d59f0d07d042ec80892655f976b",
+      "receiptSha256": "8cd0ac3baa03a854285b94cce87db5349318cdfd3fba87414c53676b56f2bae7",
+      "eligibilitySha256": "a121b73036360951604e07d4322d6d8afb92982f93eee900f49caa60b56920db",
+      "evidenceManifestSha256": "4768e7e28bd4b22c1458740b6455a58899766b95bfd180d1a810caf413256dd0"
+    },
+    "videoReviewSha256": "506b6e678fb681e3851e7eb524f7d70d9f0782b2ce39037e89ae2c3f5d6b3710",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "eae8622409ba876b94fc71a644356ff0c01be6b5"
+  },
   "soopa_dental_kaleapple": {
     "video": "/images/products/catalog/soopa_dental_kaleapple/videos/d0e4a4dfb0ee19af7536390ece812bb6c191d96a424d84ca42679fa3cca238b0/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
@@ -8122,7 +8172,56 @@
     "videoPlaybackMode": "once_hold_last_frame",
     "videoReviewSha256": "110f427f0c39c17596f3a10ced2721deba69bdd41d1e3cf406f56125284dd6b0"
   },
-  "soopa_healthybites_carrotpumpkin": null,
+  "soopa_healthybites_carrotpumpkin": {
+    "video": "/images/products/catalog/soopa_healthybites_carrotpumpkin/videos/03b7073d6697342c1541745461a5a1d6d282f74e2be1b3cc329f50bfa79ebb26/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "80c7282170989c652313906c26937b79",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "80c7282170989c652313906c26937b79",
+      "reviewId": "00c9029d9d19bb3f1fba14fe80f09dc9",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "03b7073d6697342c1541745461a5a1d6d282f74e2be1b3cc329f50bfa79ebb26",
+      "seconds": 4,
+      "source": {
+        "no": 296,
+        "folder": "soopa_healthybites_carrotpumpkin",
+        "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 야채 당근&호박 50g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_healthybites_carrotpumpkin/soopa_healthybites_carrotpumpkin.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7107679756",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/2.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/3.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/4.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/5.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/6.webp",
+          "/images/products/catalog/soopa_healthybites_carrotpumpkin/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "dd29f20f46ef0219495e0ce7fe88086f",
+        "sha256": "03b7073d6697342c1541745461a5a1d6d282f74e2be1b3cc329f50bfa79ebb26"
+      },
+      "scopeId": "d2b9ba6f9f02a305253ef3376ebf4894f3c50007b6439660a9866d6a32e70dec",
+      "scopeRegistrationSha256": "0f687242fb4187054be5486e191d8d5769af71e9966e89514e0266f68aae4f60",
+      "aiEvidenceSha256": "e77a81ced90804981a2d8d7dfd97be29945c48adba7d4367e7ecab6722799786",
+      "receiptSha256": "3687beb6433ea7d16a647a111e68ba62c1561e5bb10dfa8adb5fbe647e5343d5",
+      "eligibilitySha256": "bb31bb14dd971bf685365c8aabfe350bc305d315a774a3c88e6808fa8820c6ee",
+      "evidenceManifestSha256": "d317add7fcacf32ccdc481084ed27679fde5d85d29c6aeff5136a4f8ecff3ef0"
+    },
+    "videoReviewSha256": "62f6db08ba462ed0db6589991993eec5e5e9ad06a2cf8f907f60ad2bb61387da",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "eae8622409ba876b94fc71a644356ff0c01be6b5"
+  },
   "soopa_healthybites_cranberrysweetpotato": {
     "video": "/images/products/catalog/soopa_healthybites_cranberrysweetpotato/videos/9aec8beda0d45d033a87f510dc1371b1f2f2cb009f93c9b19f468d55c83d227f/hover.mp4",
     "videoProvider": "ziewcraft",
