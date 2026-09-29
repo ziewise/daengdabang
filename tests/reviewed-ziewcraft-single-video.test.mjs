@@ -8,6 +8,7 @@ import {createHash} from 'node:crypto';
 import {safeCatalogHoverVideo} from '../lib/pet-tryon-eligibility.ts';
 import {applyReviewedHoverOverride} from '../lib/catalog/reviewed-hover-overrides.ts';
 import {motionWithdrawnFolders} from './helpers/hover-motion-withdrawals.mjs';
+import {matchesReviewedZiewcraftDelegatedVideo} from '../lib/catalog/reviewed-ziewcraft-delegated-video.mjs';
 // Synthetic regression data, never provider evidence and never written to production registries.
 function fixture(food=true){
  const f=contentsReviewFixture('legacy_service_attestation'),r=f.record,i=r.videoZiewcraftIdentity;
@@ -53,12 +54,21 @@ test('current SKU source and delegated publication authority must bind independe
 test('the three actual human-approved release files activate only their exact current SKU and bytes',()=>{
  const read=p=>JSON.parse(readFileSync(new URL(p,import.meta.url),'utf8'));
  const expected=read('./fixtures/ziewcraft-single-release-20260911.json'),records=read('../lib/catalog/reviewed-ziewcraft-single-videos.json'),raw=read('../lib/catalog/raw.json');
+ const generated=read('../lib/catalog/reviewed-ziewcraft-delegated-videos.json');
  assert.deepEqual(Object.keys(records).sort(),Object.keys(expected).sort());
  for(const [folder,e] of Object.entries(expected)){
   const rows=raw.filter(r=>r.folder===folder);assert.equal(rows.length,1);
   const r=records[folder],effective=applyReviewedHoverOverride(rows[0]),product={id:`p_${effective.no}`,folder,raw:effective,video:effective.video};
-  if(motionWithdrawnFolders.includes(folder)){
+  const replacement=generated[folder];
+  if(replacement){
+   assert.equal(valid(product,records),false,'a new delegated clip cannot inherit the archival human approval');
+   assert.equal(matchesReviewedZiewcraftDelegatedVideo(product,generated),true);
+   assert.notEqual(replacement.sha256,r.sha256,'replacement must have its own reviewed video bytes');
+   assert.equal(safeCatalogHoverVideo(product),replacement.video);
+  } else if(motionWithdrawnFolders.includes(folder)){
    assert.equal(valid(product,records),false);assert.equal(safeCatalogHoverVideo(product),undefined);
+  }
+  if(replacement||motionWithdrawnFolders.includes(folder)){
    // Exercise the unchanged archival authority and substitution rules separately.
    Object.assign(effective,{video:r.video,videoProvider:r.videoProvider,videoJobId:r.videoJobId,
     videoQuality:r.videoQuality,videoPlaybackMode:r.playbackMode,videoReviewSha256:r.review.sha256,
