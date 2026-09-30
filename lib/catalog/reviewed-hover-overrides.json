@@ -11098,7 +11098,59 @@
     "videoDeliveryCommit": "06ed9a6d7fd270517cf822ff0a031b71c4ff6643"
   },
   "rw_jsk_1000001229": null,
-  "rw_jsk_1000000650": null,
+  "rw_jsk_1000000650": {
+    "video": "/images/products/catalog/rw_jsk_1000000650/videos/95886339983b48c8c825f98d7f5e736d1e6986e2664bcb6d75ceb54f03889f01/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "1f43617561a5571b32e6311204b9c96c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1f43617561a5571b32e6311204b9c96c",
+      "reviewId": "db4201e171cf3ff24c54da0eb194a83f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "95886339983b48c8c825f98d7f5e736d1e6986e2664bcb6d75ceb54f03889f01",
+      "seconds": 8,
+      "source": {
+        "no": 382,
+        "folder": "rw_jsk_1000000650",
+        "name": "러프웨어 클라이메이트 체인져 플리스(Climate Changer™ Fleece)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_06.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000650",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_192.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_270.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_344.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000650/image/detail/1000000650_detail_480.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer2021_1_025537.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/211118/Climate-Changer2021_2_025547.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/Climate-Changer2021_3_184912.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/45e21a4c5eccb47809f5fdf965a29936_184921.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "046a31bcc63fab5eb3f32627aab5693f",
+        "sha256": "95886339983b48c8c825f98d7f5e736d1e6986e2664bcb6d75ceb54f03889f01"
+      },
+      "scopeId": "f6cfd36705ae6dcdf55e60175482a73bd1e8b3d700b5025e92bfeafa70d42ddc",
+      "scopeRegistrationSha256": "b5de0a16973c4b7068c34225e2f988c4d570be6c7a67174651ca40256ba6a599",
+      "aiEvidenceSha256": "1ea2384263bdce248a54a2763f0d79635dd16a56e2c648ce79a51fa5a85a1f48",
+      "receiptSha256": "6b0f89ca868e903977e06340f9ffeba78b74b762e5d8907ab86721e7b455fbaf",
+      "eligibilitySha256": "a19b458567509e25b65d874747fcc802ec7dc757bf8ebbd67f7729353299c4f3",
+      "evidenceManifestSha256": "1955c7a414d7e3a58455f21cc029daa96c3e3e9f210b896f7d42b04de320cb36"
+    },
+    "videoReviewSha256": "b1847037e410317ac1383e9c0bf3332f09e4b2f0060264ec5a7e11f7fb80e165",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c5e60e3b0395e3433f0f181eb09f52a993dee5fb"
+  },
   "rw_jsk_1000000651": {
     "video": "/images/products/catalog/rw_jsk_1000000651/videos/79d4cfc95cfd7019909fe023fdb4443987eb9f812dfa426a9fe6740354254e6f/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -15316,5 +15368,64 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "57aa678a394f6560c1aca0384cfd205822b8e534"
+  },
+  "rw_jsk_1000001355": {
+    "video": "/images/products/catalog/rw_jsk_1000001355/videos/1de6d2e56d54c1f634e5e136bcfcabcecc1822af2f34d3ecb52c126992599cac/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "50ff376909865e9931d2a5d7c748a4e2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "50ff376909865e9931d2a5d7c748a4e2",
+      "reviewId": "ca1e40b800c50f66e90df99fd5f58359",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1de6d2e56d54c1f634e5e136bcfcabcecc1822af2f34d3ecb52c126992599cac",
+      "seconds": 8,
+      "source": {
+        "no": 475,
+        "folder": "rw_jsk_1000001355",
+        "name": "러프웨어 크래그 리드줄 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_08.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001355",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_114.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_234.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_327.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_425.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_513.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_668.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_767.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_879.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001355/image/detail/1000001169_detail_992.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260820/a8196c8b5e90749a0c81b89c4259f9ff_175345.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260820/01157791c2d162f990bda5811c0d1b5b_175418.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/fd53f14b1d92de97768c00e256c5f94f_110541.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/8e656942686cff01e6b805f0ceab75c2_110549.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/8f75b8286aec97d372d945e8968b9b98_110559.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6264850ef8022b5d127db3787d8c25fa",
+        "sha256": "1de6d2e56d54c1f634e5e136bcfcabcecc1822af2f34d3ecb52c126992599cac"
+      },
+      "scopeId": "bb874cdeeadff8f60d139354feab01410269ab1845c7c59019d33dc121bfd5bb",
+      "scopeRegistrationSha256": "03f3750f9da004d09e108a13eb6f684436eebffd9a3260ad2bd33608e4aefc7a",
+      "aiEvidenceSha256": "d5da6fd2e9c150f69af2712618dc18e092c34f1f502dff4b929778716c6ac5ee",
+      "receiptSha256": "df4e8d5c0842b5a67bef79e2de9f537d25e709df35e615bdd181660e67794680",
+      "eligibilitySha256": "a1adc0c2885fc09ca1f98459dfda8e0c8412f209397ee279049f41cc8a3d0cd1",
+      "evidenceManifestSha256": "988aacf02a3cff74d9a186d43e46e95e5f72a4bba383e41331865cbf6b0fb2f6"
+    },
+    "videoReviewSha256": "3301f301fd499b67b2514c5a5d0799e6dd97418466f8d262bb7acb2845011dea",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c5e60e3b0395e3433f0f181eb09f52a993dee5fb"
   }
 }
