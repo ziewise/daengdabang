@@ -757,7 +757,7 @@
   },
   "nd_purely_sw": {
     "productId": "p_192",
-    "sha256": "bd3e2244259b11f7af0781663953d918d59c1a6594d2a8d5071a720c20eab655"
+    "sha256": "d3838a80d5a22de5c83f011c84af1ad786077b7a19d134cef1adc773e54b91f3"
   },
   "nd_purely_bc": {
     "productId": "p_193",
@@ -1230,5 +1230,9 @@
   "ot_firewatcher_harness": {
     "productId": "p_225",
     "sha256": "cdcf97774f3f94ddbdb7f001a432930185c5edb95b07c12a1c92e5864031b500"
+  },
+  "rw_jsk_1000001200": {
+    "productId": "p_434",
+    "sha256": "010a72548003948a15bac47012817d1a28eaf31458136792538f13c6621a6819"
   }
 }

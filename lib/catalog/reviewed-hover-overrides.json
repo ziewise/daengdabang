@@ -3474,7 +3474,56 @@
   },
   "nd_feelgood_wf": null,
   "nd_purely_bc": null,
-  "nd_purely_sw": null,
+  "nd_purely_sw": {
+    "video": "/images/products/catalog/nd_purely_sw/videos/d3838a80d5a22de5c83f011c84af1ad786077b7a19d134cef1adc773e54b91f3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "11faecc951fd89cb9b9eed2abe54d396",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "11faecc951fd89cb9b9eed2abe54d396",
+      "reviewId": "b3b7e634c977ab5d19dcf40c5c0620c6",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d3838a80d5a22de5c83f011c84af1ad786077b7a19d134cef1adc773e54b91f3",
+      "seconds": 4,
+      "source": {
+        "no": 192,
+        "folder": "nd_purely_sw",
+        "name": "네이처다이어트 퓨얼리 살몬 앤 화이트 피쉬 92% 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_purely_sw/nd_purely_sw.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922876554",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_purely_sw/details/official-visual-01.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-02.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-03.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-04.webp",
+          "/images/products/catalog/nd_purely_sw/details/official-visual-05.webp",
+          "/images/products/catalog/nd_purely_sw/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "9b834719fe13df0d3753b67ca9d6623f",
+        "sha256": "d3838a80d5a22de5c83f011c84af1ad786077b7a19d134cef1adc773e54b91f3"
+      },
+      "scopeId": "3b5f1eaec0a72144b708499498410301fa45df1dd501361d956668585a1cfc73",
+      "scopeRegistrationSha256": "ffdb3128d353ade52a003df79232deb523cb11d3933f0edd25a198dd86e8ad17",
+      "aiEvidenceSha256": "797a712cb7a836da1738fcf649d1c1bc12a665b300f092cf9c237f8654214629",
+      "receiptSha256": "59cd1555428e9e5164fc8ff35b5a4a65d59fcc375eea744310c151197bbb4708",
+      "eligibilitySha256": "addc09d8f6802fa529490b44c50ba3912c33682e37fb7f257740b5233c2808c7",
+      "evidenceManifestSha256": "d01f43638b1c3dbcabf98f688e3a67ef2af75c17f921c1224d31e15b2c597642"
+    },
+    "videoReviewSha256": "d9208403c16f76a93a27adc1018e29f813ea964f8ed7347e312f15dc75d5f41d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c90338c74c320a35afd546eb9e14c811eddd5a3b"
+  },
   "ot_bowl_foldable": {
     "video": "/images/products/catalog/ot_bowl_foldable/videos/5eb3f764edbf62b46f4e764cdda2860bf9abf16a2b1f5efb500d16ba922ec7c2/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -14653,5 +14702,55 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "367cbceab3fb9d63d4822db4a4dcd1a795c19f3b"
+  },
+  "rw_jsk_1000001200": {
+    "video": "/images/products/catalog/rw_jsk_1000001200/videos/010a72548003948a15bac47012817d1a28eaf31458136792538f13c6621a6819/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "4b63a21abc711d6fdeb2fd315e033095",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4b63a21abc711d6fdeb2fd315e033095",
+      "reviewId": "c52d285387bef7e2fb1fe9c671f8ab45",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "010a72548003948a15bac47012817d1a28eaf31458136792538f13c6621a6819",
+      "seconds": 8,
+      "source": {
+        "no": 434,
+        "folder": "rw_jsk_1000001200",
+        "name": "러프웨어 바크앤 부츠 반려견 양말(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001200/image/detail/1000001200_detail_038.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001200",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001200/image/detail/1000001200_detail_121.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001200/image/detail/1000001200_detail_25.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/476c6021b9f23ae0539dc5375fc17c5a_032731.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/fca9244d6c026650a18453411420c746_032731.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/8cc06da98c0b99805da39e4a5ff36bcc_032732.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "eea962d0701f5c2703f6a6e6e3c9897d",
+        "sha256": "010a72548003948a15bac47012817d1a28eaf31458136792538f13c6621a6819"
+      },
+      "scopeId": "c931a05de8fd82b1a11c5721d824fa18519524e51eb56f7cf28f4f6b5762d7bf",
+      "scopeRegistrationSha256": "6cfb12554a21648d3b0848a7a486565edd4b5db4aad60891768ea88f9dad04a9",
+      "aiEvidenceSha256": "dfbc4f3183f61c31107fbc3043ec8913d9a6584850d5f136ad193ff990fde187",
+      "receiptSha256": "ebbb281726a31ba36bae994c181e03239bfd51e1e2f28abb10a6c1c9ffa6d4b7",
+      "eligibilitySha256": "1971ecc7b8db0b9e6ee58f287ca710552842b7b4c491e6a3cc41d919432d9e79",
+      "evidenceManifestSha256": "2669eeb99a5b8ed050d944014a87e8d9f5cdb4088a7f833df07e40eefa12d972"
+    },
+    "videoReviewSha256": "f9d54d7520669071fd593db0e36d6cf74f99b65c10ccb7f1fa82e15603126429",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c90338c74c320a35afd546eb9e14c811eddd5a3b"
   }
 }
