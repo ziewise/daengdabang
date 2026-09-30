@@ -761,7 +761,7 @@
   },
   "nd_purely_bc": {
     "productId": "p_193",
-    "sha256": "3c7ca75a65599c1cb867efd96b157e5d557313c1f62723ff2e323c88ec542230"
+    "sha256": "6c51800745a52dc81972a0014880745b4b1af82bc037b124178df9cf8f31789d"
   },
   "canagan_dog_dental_2kg": {
     "productId": "p_197",
@@ -1242,5 +1242,9 @@
   "rw_jsk_1000001208": {
     "productId": "p_436",
     "sha256": "90c5945fd8c7d6b8082fe1c807988425a5a2e7a04c6006e3c1db2bce70aac0ce"
+  },
+  "rw_jsk_1000001165": {
+    "productId": "p_427",
+    "sha256": "80a6915fc966854d0ff39412366b9d985e08a68c77925291c12f10427ab8beb4"
   }
 }

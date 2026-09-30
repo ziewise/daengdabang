@@ -3473,7 +3473,56 @@
     "videoDeliveryCommit": "c69673ca7a2ab8aaef2a873bead496492ce0de66"
   },
   "nd_feelgood_wf": null,
-  "nd_purely_bc": null,
+  "nd_purely_bc": {
+    "video": "/images/products/catalog/nd_purely_bc/videos/6c51800745a52dc81972a0014880745b4b1af82bc037b124178df9cf8f31789d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "48cf4cfef6386fc9055e5705ab13650c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "48cf4cfef6386fc9055e5705ab13650c",
+      "reviewId": "178f753f4bf505e939ec52b75a0f962c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6c51800745a52dc81972a0014880745b4b1af82bc037b124178df9cf8f31789d",
+      "seconds": 4,
+      "source": {
+        "no": 193,
+        "folder": "nd_purely_bc",
+        "name": "네이처다이어트 퓨얼리 브리티쉬 치킨 92% 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_purely_bc/nd_purely_bc.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922866697",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_purely_bc/details/official-visual-01.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-02.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-03.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-04.webp",
+          "/images/products/catalog/nd_purely_bc/details/official-visual-05.webp",
+          "/images/products/catalog/nd_purely_bc/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4a6dab85c9f9a0d7c4f61326e29d9d70",
+        "sha256": "6c51800745a52dc81972a0014880745b4b1af82bc037b124178df9cf8f31789d"
+      },
+      "scopeId": "9214df29b570ba9d396be021c05798a3236158e0835a6deeedebe246044a25f7",
+      "scopeRegistrationSha256": "4195d8d56449c237b80b25da8fe8a5edecdb32c9f1fd3b0df98dec3097b6a53f",
+      "aiEvidenceSha256": "b0df631104c097a79a3fee1ac69117a9ce2454c440d445092c446d679640977f",
+      "receiptSha256": "c48c65ff4288d4527f1e5d1d9665d8c41ec921cc6c58b816eed895082f25fc18",
+      "eligibilitySha256": "5ab138b377570dd9a73357c765349bb97805146838e54a8aaacd9705049fa3fe",
+      "evidenceManifestSha256": "1fc591bd51f42e414f6540146bcafdabff8768f37a385e8109c7c87eddac8249"
+    },
+    "videoReviewSha256": "cf97b4d77c7b0f40592d3d0bb5324814499e7b044a6f984532e711db8a238e6f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "57aa678a394f6560c1aca0384cfd205822b8e534"
+  },
   "nd_purely_sw": {
     "video": "/images/products/catalog/nd_purely_sw/videos/d3838a80d5a22de5c83f011c84af1ad786077b7a19d134cef1adc773e54b91f3/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -14855,5 +14904,59 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "134f2bb6a0cdc7af0ff6e5c034c597ccfd4ddc3d"
+  },
+  "rw_jsk_1000001165": {
+    "video": "/images/products/catalog/rw_jsk_1000001165/videos/80a6915fc966854d0ff39412366b9d985e08a68c77925291c12f10427ab8beb4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "bede2eb37e20d0a90f637f8d5ca736dd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "bede2eb37e20d0a90f637f8d5ca736dd",
+      "reviewId": "4a6aa68de6b5297fb022401ff84ebd93",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "80a6915fc966854d0ff39412366b9d985e08a68c77925291c12f10427ab8beb4",
+      "seconds": 8,
+      "source": {
+        "no": 427,
+        "folder": "rw_jsk_1000001165",
+        "name": "러프웨어 프런트 레인지 데이팩 반려견 배낭(Front Range™ Day Pack)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001165/image/detail/1000001165_detail_23.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001165",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001165/image/detail/1000001165_detail_73.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001165/image/detail/1000001165_detail_4.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001165/image/detail/1000001165_detail_54.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001165/image/detail/1000001165_detail_100.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001165/image/detail/1000001165_detail_80.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220810/2021SS-Front-Range-Day-Pack1_181958.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220327/2021SS-Front-Range-Day-Pack2_221921.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220928/Front-Range-day-Pack3_143043.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220929/88fbf8dcf558645be3128cf2e276e806_164532.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "06ff03d5552bc20c5950250994276070",
+        "sha256": "80a6915fc966854d0ff39412366b9d985e08a68c77925291c12f10427ab8beb4"
+      },
+      "scopeId": "0a9cdd7ce85108da05415196858fea95224f559d0df0e47497eaad04dcb716f3",
+      "scopeRegistrationSha256": "51309a4c7337d659776aa0befb6858c892d44f3d1cc40b9e944541c493de18c0",
+      "aiEvidenceSha256": "febca61aaedb41ee5a871297f8451eab9f37399b68becfb63473c63aa6e1ab0b",
+      "receiptSha256": "5958f1cc33c2d703fa02ac9a2b27e52c34bf202e3d396b71a91d4df346ec8e7f",
+      "eligibilitySha256": "12b6ce41655b6130f783a595061677db8c3669168ddddc4b4f3e290c09107178",
+      "evidenceManifestSha256": "3b134861d53f30cb8d44a7828e4c41be94cedaee6a25097d34c3cf543e46bd65"
+    },
+    "videoReviewSha256": "aa7c05b17dbd1ce938dea6acfa2c8bb5cdbee96dcc1325f4195f535b33623a9f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "57aa678a394f6560c1aca0384cfd205822b8e534"
   }
 }
