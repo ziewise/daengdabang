@@ -73,7 +73,7 @@
   },
   "rw_frontrangeflex_harness_26": {
     "productId": "p_4",
-    "sha256": "fcf903c46aaf87e5d5620c5939fb23f71229f153fad568ee8624e392f60ee4ac"
+    "sha256": "1225759af21358afc772a9e0486ea5b30ac2045206febfa5e6041075ae4a340f"
   },
   "rw_jsk_1000001343": {
     "productId": "p_472",
@@ -137,7 +137,7 @@
   },
   "rw_hiandlight_harness_26": {
     "productId": "p_1",
-    "sha256": "920f4082fdeda7e1d4beddffba092baadf031bcab929825c0b2ea95d5edf8d17"
+    "sha256": "824ae14a8adf0a2007653b80280568d118918a432b766bc2dec977952934bd5a"
   },
   "rw_jsk_1000001104": {
     "productId": "p_414",
@@ -213,7 +213,7 @@
   },
   "rs_trailhead_collar": {
     "productId": "p_85",
-    "sha256": "46db2754edd4adecb173aa997cfabdfae1b77028b562398266335827ca946821"
+    "sha256": "86dbe8d12082fe8080c97f52a31ae713e64005b3ae5bd2db79b228428e3334b0"
   },
   "rw_ridgeline_collar_26": {
     "productId": "p_34",
@@ -365,7 +365,7 @@
   },
   "rw_confluence_lifejacket": {
     "productId": "p_60",
-    "sha256": "dca30ba4e99d6cb6b3a21ce402015fb462f52724ac79f72b2dec417ca43a26f2"
+    "sha256": "192adb9c5b0ca2bed550e7d66455935d6d1fd675b28809c8d9d2bc92af29b9bc"
   },
   "rs_jsk_1000001251": {
     "productId": "p_464",
@@ -373,7 +373,7 @@
   },
   "rw_jsk_1000001220": {
     "productId": "p_443",
-    "sha256": "f57c308f1b676e08d9aaf941ae1f32ad15d6e53a86485c50f5f02a80ab86cf96"
+    "sha256": "eaadff7ac964ba8c83808b9b786c016c64a89a4a3673d2d3c6113540613ddfba"
   },
   "rs_jsk_1000001261": {
     "productId": "p_467",
@@ -413,7 +413,7 @@
   },
   "yora_lightsenior_6kg": {
     "productId": "p_170",
-    "sha256": "31c5acd382d0493156b211f27fd54af5602c574be02f62cabdc6107f6eef00be"
+    "sha256": "93b78895324f3b7da019209da6001c3fed1abe7d8c60e0c7f0d79b416515655e"
   },
   "rw_leash_switchback_24": {
     "productId": "p_144",
@@ -549,7 +549,7 @@
   },
   "nd_feelgood_sl": {
     "productId": "p_188",
-    "sha256": "02c322f85e109faa753ab96f4c28b1a7a1d2a9723c86bbcec73fa10db753f83e"
+    "sha256": "5dd6e95fa5fdf0c08b86cf96cedadd1d24a9c5993ae76a7240e5d42ba9f1d42c"
   },
   "perity_carrot_shampoo_refill_500ml": {
     "productId": "p_203",
@@ -781,7 +781,7 @@
   },
   "pdh_spin_ufo": {
     "productId": "p_273",
-    "sha256": "76b5e4cccbd95a2613dc7f6e7c0abbc03c897cd2a448965d5b60d8725ad7e493"
+    "sha256": "0a64eca3ddad06be8086d1803ed453a2aa11d3125f1268a60ff7e4066a50a514"
   },
   "soopa_dental_6set": {
     "productId": "p_287",
@@ -1250,5 +1250,13 @@
   "rw_jsk_1000001355": {
     "productId": "p_475",
     "sha256": "1de6d2e56d54c1f634e5e136bcfcabcecc1822af2f34d3ecb52c126992599cac"
+  },
+  "rw_jsk_1000001185": {
+    "productId": "p_431",
+    "sha256": "1fc4c3a45db5cf50075000d70ac626ce74d798f6f3352ce0d1034b52d1f4e1d6"
+  },
+  "rw_jsk_1000001207": {
+    "productId": "p_435",
+    "sha256": "ca8fb72b807cec8bf0a6614afd128ed2385d6b8fd159c6e0fcb2ea332f22443a"
   }
 }
