@@ -5797,7 +5797,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c50f4a38d3d3710c9238e8e27eb2f2d21084ceda"
   },
-  "rw_everest_coat_25fw": null,
+  "rw_everest_coat_25fw": {
+    "video": "/images/products/catalog/rw_everest_coat_25fw/videos/6a3c120cd9320f3edf957bd08435b2f7e158603976caac67535b95bc280b1b9d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "5a678ceb73624e34003a5fe0b876c5cf",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5a678ceb73624e34003a5fe0b876c5cf",
+      "reviewId": "75bbeae0c300fa4224bb2dd630055365",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6a3c120cd9320f3edf957bd08435b2f7e158603976caac67535b95bc280b1b9d",
+      "seconds": 8,
+      "source": {
+        "no": 23,
+        "folder": "rw_everest_coat_25fw",
+        "name": "러프웨어 마운틴 에베레스트 인슐레이티드 도그 코트 커버 (2025FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001287/image/detail/1000001287_detail_067.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001287",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001287/image/detail/1000001287_detail_11.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001287/image/detail/1000001287_detail_249.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/251027/53e782788486d00c48c5a8218626b8fb_221251.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/251027/bca9c9ad3df28b25982fea85636a1631_221305.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/251027/ff0618c35d9b984d8443c183698f2c82_221329.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f9f10bf1d1572fca369dec382da72489",
+        "sha256": "6a3c120cd9320f3edf957bd08435b2f7e158603976caac67535b95bc280b1b9d"
+      },
+      "scopeId": "c0ec59f0ac51018c9bb478794301bc437ca21de104a8191a62cd4b6d544ee4e4",
+      "scopeRegistrationSha256": "8be0ff768eb1557deb78962de52485cd8fd97cea2208ffd0edfed2474f19d558",
+      "aiEvidenceSha256": "2a6479f4a367a1e9e4bcfbef4823c946555bb24d62818f5ec421bf6c3c42b40c",
+      "receiptSha256": "e2e0c8185b6f89497b355f124fa174150036836cf628b1165e88b9bae63d43d7",
+      "eligibilitySha256": "403dff054c4b6376e75eedc88bf033bea047c941920a8730649f96298a52c3db",
+      "evidenceManifestSha256": "3ea8909f9fd09fac78f78e6e85cc0ed54d917131d933611070fe0a25cc77cf4b"
+    },
+    "videoReviewSha256": "48379ffcef394d368e896148ee40483fbebf459f80c4498bc795e87742eec4cf",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06ed9a6d7fd270517cf822ff0a031b71c4ff6643"
+  },
   "rw_floatcoat_lifejacket": null,
   "rw_frontrange_daypack_24": {
     "video": "/images/products/catalog/rw_frontrange_daypack_24/videos/59e6f70956ca5662da8576254d2561f63a745b81b14d159d7fb1312baf1e4fef/hover.mp4",
@@ -10546,7 +10595,59 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "1b1d8856c022fe12a704b9a7f9cd2ef7612dbc1b"
   },
-  "rw_jsk_1000001244": null,
+  "rw_jsk_1000001244": {
+    "video": "/images/products/catalog/rw_jsk_1000001244/videos/6e5b55acf3174a3d531cbec4299853a25ac6c0df43b689f491845e48bfe3b702/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "1abc51bc96b5c279fd3d5374db8c16ba",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "1abc51bc96b5c279fd3d5374db8c16ba",
+      "reviewId": "bc8f344104afe25684120b2211bc40bc",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6e5b55acf3174a3d531cbec4299853a25ac6c0df43b689f491845e48bfe3b702",
+      "seconds": 8,
+      "source": {
+        "no": 460,
+        "folder": "rw_jsk_1000001244",
+        "name": "러프웨어 스왐프 쿨러 집 베스트(2025SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_059.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001244",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_134.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_213.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_387.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001244/image/detail/1000001244_detail_43.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/cbea05c667aec09409972ec0c50bec30_090242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/5f853b35480f53501bec0673eeebdd39_090242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/2ac298b7b6d8c05fffd07054909cf395_090243.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250412/b5620deefcd866a9bcda0ce1a3b6883d_090244.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "1e2fb1c6af86bd42685297a938f2df55",
+        "sha256": "6e5b55acf3174a3d531cbec4299853a25ac6c0df43b689f491845e48bfe3b702"
+      },
+      "scopeId": "1564b90f3737780c862e1e9ade4f01e0224d1f1eace44b81120a989c10b1a618",
+      "scopeRegistrationSha256": "1f3df71058a17adc9f5b74a9ab4c5af307a651e14fd1360c31c4b40546fa1f87",
+      "aiEvidenceSha256": "acf415863d48ec34ba193e1add461dc13c3ef249fd1158f3ef65076a2fb6c650",
+      "receiptSha256": "73cf04b39f619a133da7256edff7bd2134814fea458060e99e5116b27bb1712b",
+      "eligibilitySha256": "729b76abaaecb4b208423b732b6f14b550e7b35167beb196d58608907b6e8a62",
+      "evidenceManifestSha256": "3c96e74a08f7325df3d73408970cca1976a017088295d2902457a2aadf962d5d"
+    },
+    "videoReviewSha256": "42346e06a83e97233b9a4b128d952d048c61465a8f116f384fdc3d8a915a291e",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06ed9a6d7fd270517cf822ff0a031b71c4ff6643"
+  },
   "rw_jsk_1000001229": null,
   "rw_jsk_1000000650": null,
   "rw_jsk_1000000651": {
@@ -12172,7 +12273,66 @@
   "rs_jsk_1000001261": null,
   "rs_jsk_1000001340": null,
   "rs_jsk_1000001262": null,
-  "rw_jsk_1000001346": null,
+  "rw_jsk_1000001346": {
+    "video": "/images/products/catalog/rw_jsk_1000001346/videos/fc1db6e042590706fa709a71efb78ef59166f92c2e64072cb41762ec4fb861f7/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "b8924a5069212f5f8fae5a2c8ef69a7c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b8924a5069212f5f8fae5a2c8ef69a7c",
+      "reviewId": "0e1588b5d911db4f2a2a29b8c6494aea",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fc1db6e042590706fa709a71efb78ef59166f92c2e64072cb41762ec4fb861f7",
+      "seconds": 8,
+      "source": {
+        "no": 473,
+        "folder": "rw_jsk_1000001346",
+        "name": "러프웨어 오버코트 퓨즈 보온 베스트 (2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_081.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001346",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_177.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_269.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_339.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_474.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_586.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_692.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_750.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_858.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_982.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001346/image/detail/1000001346_detail_1035.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/0658e2e9a37cd525b95b07b22a417102_180214.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/9d538ee96387644ab6a8224a0c515e52_180234.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/9511a72f57ee7dbe6d163965035cfab2_180253.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/545c81a5ef64e369ab5e1efad3235bf1_180310.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260818/8f75b8286aec97d372d945e8968b9b98_180327.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3c932547990f43a1822cdce5393dfb26",
+        "sha256": "fc1db6e042590706fa709a71efb78ef59166f92c2e64072cb41762ec4fb861f7"
+      },
+      "scopeId": "9aaedf651ae37f18feacd00a42614807e42d44c59dc27f63ee176217b2de9415",
+      "scopeRegistrationSha256": "b950ee908bb1d2fa8335bb4ae004a0a342c53d85d943635869a3fbaa527c7476",
+      "aiEvidenceSha256": "a1689cda0a39ab5e75ea3f8600635aa08c2432e7d15026f80ee37b489cd4ce36",
+      "receiptSha256": "859e29ecb07d5122263f0625442010c5045c235180a4f48a9155dfb61a8cb154",
+      "eligibilitySha256": "82cee4f0d8fb169ee36a2b44e134639a333ff8d4b7f90a53451deb1779882a8b",
+      "evidenceManifestSha256": "30d86511412b0f64793c6cbda72291dd8bb616362cc347339f64eb5b3aeca775"
+    },
+    "videoReviewSha256": "721cce9772b4b846bfec3dfdbb2b84ff91760ccbb0c08bce401b6c46a5c13fa6",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "06ed9a6d7fd270517cf822ff0a031b71c4ff6643"
+  },
   "yora_lightsenior_2.5kg": null,
   "yora_allbreed_12kg": null,
   "perity_aloe_shampoo": null,
