@@ -60500,16 +60500,16 @@
     "publicationStatus": "approved",
     "productId": "p_194",
     "folder": "canagan_dog_salmon_2kg",
-    "video": "/images/products/catalog/canagan_dog_salmon_2kg/videos/a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe/hover.mp4",
-    "sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe",
+    "video": "/images/products/catalog/canagan_dog_salmon_2kg/videos/a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c/hover.mp4",
+    "sha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "a7c59b860a203af8602522669385a68e",
-      "reviewId": "8f1f4af33bd1d8efb7ac47f1b6733622",
+      "jobId": "8cc4bae9f5ebefaac1753851dbd82bad",
+      "reviewId": "5917d2ab22340800428f6ca6d7de9455",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe",
+      "finalSha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c",
       "seconds": 4,
       "source": {
         "no": 194,
@@ -60527,30 +60527,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "8f53ec331e4549a9cd99e10331c1613d",
-        "sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe"
+        "artifact_id": "cbef328c4e415aa909354d09aaf7f873",
+        "sha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c"
       },
-      "scopeId": "1416d0c1fe36f7ee075c544c712ed525af4a3b4386c0fd9789ed4b2edfa70ad7",
-      "scopeRegistrationSha256": "41820bb73bb371d7e6e1f2e29cb465cf144a7db5c83150143e0b69d48ccbf105",
-      "aiEvidenceSha256": "df157b7958e61ea200bbbd6e372791856db5c02d86a44aaaef15d26ca249880d",
-      "receiptSha256": "4320df759c61b014c4d179d6d42be06273ce10694ac4cce831268d588db8656b",
-      "eligibilitySha256": "a0e747e1a7c96a29bc8bdac9769a9cdb22e625ffb7395d521f67120285f83e7e",
-      "evidenceManifestSha256": "007f7f687c9e0031e2069a49f0a6690cc5daebe29ff7dc395985ee73b1a9263f"
+      "scopeId": "cd2b7bc12a57eab9d5b4fa36522b89072915ed7003582b4664abadad49a77b82",
+      "scopeRegistrationSha256": "95716593037dc4a320ed1fc9ba2bb68c5f25a80db3fafaded0f2902f19a00aa5",
+      "aiEvidenceSha256": "40f4089cd11bbd5d3cc8b0cca9170191f9fd550d36ded61526ad1aebdd7b6b8c",
+      "receiptSha256": "654c21e64c3e23f546e4956000e52051ac68f53bb26d3d25606bcaa48f838321",
+      "eligibilitySha256": "ba8bd7e7af6027e4d47dabeecac283b08b9fa92611c3dd7b1d5e1c98daad0844",
+      "evidenceManifestSha256": "81b37565832690298ffa6a1349503b1f8b3c8f4afbf1f41b80768a92baa926ff"
     },
     "delegatedReview": {
-      "api_job_id": "a7c59b860a203af8602522669385a68e",
+      "api_job_id": "8cc4bae9f5ebefaac1753851dbd82bad",
       "bindings": {
         "native_video": {
-          "artifact_id": "e70adee056054a69b12e5da4885802bc",
-          "sha256": "df0dd8777b2b76fc275444d18a158550a9cad27a5023ea06c863f559aab347b0"
+          "artifact_id": "c6d9d66c5b8d489d9ab3236a965868c5",
+          "sha256": "7437f4f074959ab9bcce655dc1aaf741205e609678ce8f6b3f27961e5e09f9d9"
         },
         "review_video": {
-          "artifact_id": "8f53ec331e4549a9cd99e10331c1613d",
-          "sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe"
+          "artifact_id": "cbef328c4e415aa909354d09aaf7f873",
+          "sha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c"
         },
         "terminal": {
-          "artifact_id": "feddafdd4eec36cff8ccb80b60eb4dbf",
-          "sha256": "5c1eedf46b284716dff59bad11e72cb9d395930b4b81e922b68bc9ccd03cb798"
+          "artifact_id": "d85261c48c0ebb90a786fee9fa50c8d0",
+          "sha256": "28a55e11cc72b3afb05d3a90182314937b31f5a21fd32a03906d63edf307495b"
         }
       },
       "checks": {
@@ -60695,36 +60695,36 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_194-a7c59b860a203af8602522669385a68e-all97-v1",
-        "evidence_sha256": "df157b7958e61ea200bbbd6e372791856db5c02d86a44aaaef15d26ca249880d",
+        "evidence_id": "ddb-ai-p_194-8cc4bae9f5ebefaac1753851dbd82bad-all97-v1",
+        "evidence_sha256": "40f4089cd11bbd5d3cc8b0cca9170191f9fd550d36ded61526ad1aebdd7b6b8c",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "8f1f4af33bd1d8efb7ac47f1b6733622",
-      "reviewed_at": "2026-09-14T14:36:04.594341Z",
+      "review_id": "5917d2ab22340800428f6ca6d7de9455",
+      "reviewed_at": "2026-09-30T04:17:10.609630Z",
       "schema_version": 1,
-      "scope_id": "1416d0c1fe36f7ee075c544c712ed525af4a3b4386c0fd9789ed4b2edfa70ad7",
+      "scope_id": "cd2b7bc12a57eab9d5b4fa36522b89072915ed7003582b4664abadad49a77b82",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "feddafdd4eec36cff8ccb80b60eb4dbf",
+        "artifact_id": "d85261c48c0ebb90a786fee9fa50c8d0",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "e70adee056054a69b12e5da4885802bc",
-        "native_artifact_sha256": "df0dd8777b2b76fc275444d18a158550a9cad27a5023ea06c863f559aab347b0",
+        "native_artifact_id": "c6d9d66c5b8d489d9ab3236a965868c5",
+        "native_artifact_sha256": "7437f4f074959ab9bcce655dc1aaf741205e609678ce8f6b3f27961e5e09f9d9",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "c37068eafd2868286691d2383b8f35b6ef16a52a0af4ec71ee866e217b124a07",
+        "pixel_sha256": "f1132a3651b3cb8b7a343b1fae4a18c08639bd1071fb6f8590e4a06ee3841ea6",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "5c1eedf46b284716dff59bad11e72cb9d395930b4b81e922b68bc9ccd03cb798",
-        "source_artifact_id": "8f53ec331e4549a9cd99e10331c1613d",
-        "source_artifact_sha256": "a15118156af77e82fa3d0f88541a1aa3957999a3627fec7491580c785636a4fe",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "28a55e11cc72b3afb05d3a90182314937b31f5a21fd32a03906d63edf307495b",
+        "source_artifact_id": "cbef328c4e415aa909354d09aaf7f873",
+        "source_artifact_sha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c",
         "source_rendition": "review",
         "width": 1080
       }
@@ -60749,10 +60749,10 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "3a1cd514d2375747af937c2bb1931394",
-      "scene_sha256": "0169079d94fcae9b154f3ba686fadb9cf1e2087feef07d344370558d9180b068",
+      "scene_asset_id": "7a6855625e0b9d16274d96c7126f84d2",
+      "scene_sha256": "9a2ecca2bda4fba7595d9a1ed4892766d3c84e8005e3a0a020535e6e4ba93252",
       "schema_version": 1,
-      "scope_id": "1416d0c1fe36f7ee075c544c712ed525af4a3b4386c0fd9789ed4b2edfa70ad7",
+      "scope_id": "cd2b7bc12a57eab9d5b4fa36522b89072915ed7003582b4664abadad49a77b82",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -60761,9 +60761,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "8f1f4af33bd1d8efb7ac47f1b6733622",
+      "reviewId": "5917d2ab22340800428f6ca6d7de9455",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "1416d0c1fe36f7ee075c544c712ed525af4a3b4386c0fd9789ed4b2edfa70ad7",
+      "scopeId": "cd2b7bc12a57eab9d5b4fa36522b89072915ed7003582b4664abadad49a77b82",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -60783,10 +60783,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "9ec0acb35696b54a901de29f9ba2c1aa5dad9de121e86b35f8e9b6831b3aabf5",
-      "checkedAt": "2026-09-14T14:36:15.341571+00:00",
-      "sha256": "386824ecf0407e5543ce42d819f969e8c2388fc037c19bf3019beee6cbc13ce5"
+      "ownerInstructionSha256": "9add5449e4edf4ddf4d6417bbd23de8a5b396c57c6d0f3705d045b92707b7db0",
+      "technicalProofSha256": "67e3d90de122783425742e34a870bd192a72aa45d72563553fb679338847dfbf",
+      "naturalMotionReviewSha256": "1a04779bd33fb9856b5c032ed42fbcf19395c3757337e13b27f50a10a0864982",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-30T04:27:03.068761+00:00",
+      "sha256": "86fb8664f798c1444de1bc021e10355689c6ec040749035326348ccb3858f425"
     }
   },
   "canagan_dog_highland_2kg": {
@@ -60794,16 +60796,16 @@
     "publicationStatus": "approved",
     "productId": "p_195",
     "folder": "canagan_dog_highland_2kg",
-    "video": "/images/products/catalog/canagan_dog_highland_2kg/videos/53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b/hover.mp4",
-    "sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b",
+    "video": "/images/products/catalog/canagan_dog_highland_2kg/videos/c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844/hover.mp4",
+    "sha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "16fe3ec9668bc89d0716686e53120b34",
-      "reviewId": "a50d1fb857555179554c1fd6235217f4",
+      "jobId": "3e8cddfb21af40444f8ba19be805225b",
+      "reviewId": "8174cbfe090ea44b568f65f5e7f25f0a",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b",
+      "finalSha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844",
       "seconds": 4,
       "source": {
         "no": 195,
@@ -60821,30 +60823,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "88e8d2340f877a69ff5c5c1a796666a8",
-        "sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b"
+        "artifact_id": "e78c5366a5394d012863f023e166f8ae",
+        "sha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844"
       },
-      "scopeId": "513cca0ac59ae48a2b8b16ba0358c650c4a462e1912c5a54af447dab5eeb2ce1",
-      "scopeRegistrationSha256": "0e099fa8cc0c9de40feaa880f46d0c2731c7207c343bbfc50f64cb2cce67e8c7",
-      "aiEvidenceSha256": "1fa10bc709a4b40e96c0e92dadc16a6314bee93f3feae8952e4198624f1a5514",
-      "receiptSha256": "1b81e3eb701df124bb48e2ee37cb9f8210169dc14da60dd21ca5dc1cee9e1c18",
-      "eligibilitySha256": "cad16f075316e735eb5924fc51f46d1fa6377bd7e16da11975f1f976191299a0",
-      "evidenceManifestSha256": "fa6076cb8b53aee2bec97906e4e048177c6700212b7b60ad72215d36995d329d"
+      "scopeId": "fc31e1a193b1f6e4ebbd78dcfa67f11c9b977b95ddb7285a7d63a2cfba5e7403",
+      "scopeRegistrationSha256": "1f94e81a78879adb004d8381d1ec21ee9d7f2aed433a8429a82ec71b2bff6ce0",
+      "aiEvidenceSha256": "0d6a439518e5eef01c08886f4516fabedbec710c7d9571d04578ed4d070b019a",
+      "receiptSha256": "7730ccefdc7958aebccb35248b4b1616da4aa16ad3cdcf5c8c2bfbb3c3d957e1",
+      "eligibilitySha256": "b8d15ebf505d44a2322977832bda660d73fc6707eda416b0954fb9c05c9c8b17",
+      "evidenceManifestSha256": "d67fe7575e41e2b533a762378b770ae68c6364940397b6aa1cc0892c0b15e13a"
     },
     "delegatedReview": {
-      "api_job_id": "16fe3ec9668bc89d0716686e53120b34",
+      "api_job_id": "3e8cddfb21af40444f8ba19be805225b",
       "bindings": {
         "native_video": {
-          "artifact_id": "1e020dbba8a944128963bc0453c8df2e",
-          "sha256": "240a1981544851ea677098ee561bf17d3ebc0b754c91182b1637a5817d00de66"
+          "artifact_id": "c0ac495ff2bb4bdd9b635e52d4b60962",
+          "sha256": "67d15c968892e7551177f3ee6c04e6ff87799a223d1b5265a758905e5cf3e4d4"
         },
         "review_video": {
-          "artifact_id": "88e8d2340f877a69ff5c5c1a796666a8",
-          "sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b"
+          "artifact_id": "e78c5366a5394d012863f023e166f8ae",
+          "sha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844"
         },
         "terminal": {
-          "artifact_id": "8a3564fda2fc14333a546e0388db7c1e",
-          "sha256": "74a587ef7dba321aef214ad867697c8136139d91b2bea3ca7239db9013e4351f"
+          "artifact_id": "13bfe7d7437ec6686f1706dcee80a4a4",
+          "sha256": "9e7ef9c2a4238f10af2951f9c00eb036b58a32de64386a9892b072e564b0e652"
         }
       },
       "checks": {
@@ -60989,36 +60991,36 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_195-16fe3ec9668bc89d0716686e53120b34-all97-v1",
-        "evidence_sha256": "1fa10bc709a4b40e96c0e92dadc16a6314bee93f3feae8952e4198624f1a5514",
+        "evidence_id": "ddb-ai-p_195-3e8cddfb21af40444f8ba19be805225b-all97-v1",
+        "evidence_sha256": "0d6a439518e5eef01c08886f4516fabedbec710c7d9571d04578ed4d070b019a",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "a50d1fb857555179554c1fd6235217f4",
-      "reviewed_at": "2026-09-14T14:52:13.653893Z",
+      "review_id": "8174cbfe090ea44b568f65f5e7f25f0a",
+      "reviewed_at": "2026-09-30T04:24:30.989475Z",
       "schema_version": 1,
-      "scope_id": "513cca0ac59ae48a2b8b16ba0358c650c4a462e1912c5a54af447dab5eeb2ce1",
+      "scope_id": "fc31e1a193b1f6e4ebbd78dcfa67f11c9b977b95ddb7285a7d63a2cfba5e7403",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "8a3564fda2fc14333a546e0388db7c1e",
+        "artifact_id": "13bfe7d7437ec6686f1706dcee80a4a4",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "1e020dbba8a944128963bc0453c8df2e",
-        "native_artifact_sha256": "240a1981544851ea677098ee561bf17d3ebc0b754c91182b1637a5817d00de66",
+        "native_artifact_id": "c0ac495ff2bb4bdd9b635e52d4b60962",
+        "native_artifact_sha256": "67d15c968892e7551177f3ee6c04e6ff87799a223d1b5265a758905e5cf3e4d4",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "1299dc4e9c3260e5863656777eaea970fdaa87b15288df47ebc4224c316a4b1e",
+        "pixel_sha256": "7d3b5fc0efc1fc8951dc9abd8e0bfec0401d52ad70cdef920cafb73c80f86361",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "74a587ef7dba321aef214ad867697c8136139d91b2bea3ca7239db9013e4351f",
-        "source_artifact_id": "88e8d2340f877a69ff5c5c1a796666a8",
-        "source_artifact_sha256": "53c586dee0164632218254d9ed75f5f62656318440be0283252bb9f655a95d1b",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "9e7ef9c2a4238f10af2951f9c00eb036b58a32de64386a9892b072e564b0e652",
+        "source_artifact_id": "e78c5366a5394d012863f023e166f8ae",
+        "source_artifact_sha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844",
         "source_rendition": "review",
         "width": 1080
       }
@@ -61043,10 +61045,10 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "41e95c5417ac75e74f9b1564a70e4a4b",
-      "scene_sha256": "71ce260341da3a805f00468feac7a897925739c84cdcdb2ddb344444146aa4af",
+      "scene_asset_id": "5bd3478a94ddfcaf9ca7b4674d4eb399",
+      "scene_sha256": "ada5a372a87ae5719c137a9f51511c8f4295715ffa5992e41bef62c927b49f46",
       "schema_version": 1,
-      "scope_id": "513cca0ac59ae48a2b8b16ba0358c650c4a462e1912c5a54af447dab5eeb2ce1",
+      "scope_id": "fc31e1a193b1f6e4ebbd78dcfa67f11c9b977b95ddb7285a7d63a2cfba5e7403",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -61055,9 +61057,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "a50d1fb857555179554c1fd6235217f4",
+      "reviewId": "8174cbfe090ea44b568f65f5e7f25f0a",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "513cca0ac59ae48a2b8b16ba0358c650c4a462e1912c5a54af447dab5eeb2ce1",
+      "scopeId": "fc31e1a193b1f6e4ebbd78dcfa67f11c9b977b95ddb7285a7d63a2cfba5e7403",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -61077,10 +61079,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "93105a591eebebf7f11b5b0ef1cd7c3f45927396250a116576066bba97272cfb",
-      "checkedAt": "2026-09-14T15:13:07.216596+00:00",
-      "sha256": "f5bfc7ba0df1595195a9d75863f0f2d2d05a6e860c020b85e4f48ceae031bba0"
+      "ownerInstructionSha256": "9add5449e4edf4ddf4d6417bbd23de8a5b396c57c6d0f3705d045b92707b7db0",
+      "technicalProofSha256": "56e776b5e965705da75443d8b58b4d2d9fee14dc9d4b1becf9319a8b64c95c8f",
+      "naturalMotionReviewSha256": "c36aeeef4d0d03c1aebe2bf3c6081318aff282094cd610cc9cfbc5c1cb0b0dc7",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-30T04:27:05.371294+00:00",
+      "sha256": "abd53c3e598c791bda789aff2d1394c910520631772c8de79549ce7c7e503939"
     }
   },
   "rs_trailhead_leash_single_18m": {
@@ -76026,16 +76030,16 @@
     "publicationStatus": "approved",
     "productId": "p_129",
     "folder": "canagan_dog_salmon_6kg",
-    "video": "/images/products/catalog/canagan_dog_salmon_6kg/videos/e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b/hover.mp4",
-    "sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b",
+    "video": "/images/products/catalog/canagan_dog_salmon_6kg/videos/ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d/hover.mp4",
+    "sha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "3c3779bfeaa1faa740edcd73b746860e",
-      "reviewId": "504c0da4c742aef1ee468c3f46da52ee",
+      "jobId": "74c481de747a52d0a5c0dbdd8bf31cb9",
+      "reviewId": "681dd037761ebb16c89d94a53f979965",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b",
+      "finalSha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d",
       "seconds": 4,
       "source": {
         "no": 129,
@@ -76053,30 +76057,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "86c6e4990f2d38649ab489daff9af3d8",
-        "sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b"
+        "artifact_id": "42004df05187b2c43aa0b707f90d88cb",
+        "sha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d"
       },
-      "scopeId": "5d1111bb1d21b0e1aeb0e40613b2b496cd2ac1bb459e97f08f8c31b088fb303c",
-      "scopeRegistrationSha256": "41296f2f4a135bc1c5ca1509f91c4b90396053a58729b17c35ea715f88c78baa",
-      "aiEvidenceSha256": "c8dd4196363cf04d4c08604a56d4aaef0d0a4dd6d380a2dd7813db8c7e8bf138",
-      "receiptSha256": "6dc2f7a591a903c1ebdef5cd023fd7ab2e9e9968f577c0a6243406771fae37ba",
-      "eligibilitySha256": "8485d0f55476506cbcd11317cea0d23914e9186119a68bc6d752bc8f5fd4a8bb",
-      "evidenceManifestSha256": "a0f4f89c9fbcd8d46bd259f7a13b448f482e44425e12c209b77b247559f11542"
+      "scopeId": "79d366af628fc5abe6b85981ead17ba9f875806d15680e6bb571efe6863bb2ed",
+      "scopeRegistrationSha256": "b61dc19950182bb091e7471cffef1a902db6dfc22748d2cf308887568c35fc45",
+      "aiEvidenceSha256": "00e9c94e3ad1f4885c3b208cc7609a715d2dd2a5df9c9dcb247abbf0e7e89f5c",
+      "receiptSha256": "52d9b19c00d395272f43a2bbe58121b08d6bbd8d02cfa8e41c5c73bcc04781a2",
+      "eligibilitySha256": "ea9ae43868fd8f952168dbd141f8726e020e06f2ed2b802321389e4c8edc9faf",
+      "evidenceManifestSha256": "c8d32584dc3c3f71571093a3bf3db62b12ecdd295fec8cd6333de6ae42170b6c"
     },
     "delegatedReview": {
-      "api_job_id": "3c3779bfeaa1faa740edcd73b746860e",
+      "api_job_id": "74c481de747a52d0a5c0dbdd8bf31cb9",
       "bindings": {
         "native_video": {
-          "artifact_id": "a5e7f01242d24d3c9745cf8c0751aaa5",
-          "sha256": "839d9b975575454e1c9209dd39fd20afb20b85f0b740f425eed6630705d3df19"
+          "artifact_id": "d8292af075d24c6ebb31ff766f43416a",
+          "sha256": "eaa8abd269f5b481d9ba0a4392dc0675ba50b4f6a75db26463fb280c3f48969b"
         },
         "review_video": {
-          "artifact_id": "86c6e4990f2d38649ab489daff9af3d8",
-          "sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b"
+          "artifact_id": "42004df05187b2c43aa0b707f90d88cb",
+          "sha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d"
         },
         "terminal": {
-          "artifact_id": "13c7cff8f963d8c00af6c7448af77e84",
-          "sha256": "a9d9e21a9beb446be7dc7e7fe7e50e61485ca9d2d74dbfa4d07fea5434991915"
+          "artifact_id": "30c28062bd17f3bd9ab12220ed25e591",
+          "sha256": "d516100c5429ec8e5acc77f9417127ab088b54b92376c609179c0ce675b6e080"
         }
       },
       "checks": {
@@ -76216,36 +76220,36 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_129-3c3779bfeaa1faa740edcd73b746860e-all97-v1",
-        "evidence_sha256": "c8dd4196363cf04d4c08604a56d4aaef0d0a4dd6d380a2dd7813db8c7e8bf138",
+        "evidence_id": "ddb-ai-p_129-74c481de747a52d0a5c0dbdd8bf31cb9-all97-v1",
+        "evidence_sha256": "00e9c94e3ad1f4885c3b208cc7609a715d2dd2a5df9c9dcb247abbf0e7e89f5c",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "504c0da4c742aef1ee468c3f46da52ee",
-      "reviewed_at": "2026-09-16T07:54:24.447863Z",
+      "review_id": "681dd037761ebb16c89d94a53f979965",
+      "reviewed_at": "2026-09-30T04:13:15.607273Z",
       "schema_version": 1,
-      "scope_id": "5d1111bb1d21b0e1aeb0e40613b2b496cd2ac1bb459e97f08f8c31b088fb303c",
+      "scope_id": "79d366af628fc5abe6b85981ead17ba9f875806d15680e6bb571efe6863bb2ed",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "13c7cff8f963d8c00af6c7448af77e84",
+        "artifact_id": "30c28062bd17f3bd9ab12220ed25e591",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "a5e7f01242d24d3c9745cf8c0751aaa5",
-        "native_artifact_sha256": "839d9b975575454e1c9209dd39fd20afb20b85f0b740f425eed6630705d3df19",
+        "native_artifact_id": "d8292af075d24c6ebb31ff766f43416a",
+        "native_artifact_sha256": "eaa8abd269f5b481d9ba0a4392dc0675ba50b4f6a75db26463fb280c3f48969b",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "9faa10c5ba66f363d2f41bada9e0b4b31d47b517a0dbd3686a4a1ef83ac745b5",
+        "pixel_sha256": "36d099cf5379eaadc0774d02200bcf2852793d24280bcca64917c49a8ef33359",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "a9d9e21a9beb446be7dc7e7fe7e50e61485ca9d2d74dbfa4d07fea5434991915",
-        "source_artifact_id": "86c6e4990f2d38649ab489daff9af3d8",
-        "source_artifact_sha256": "e81087ce22a981c25d157aaf38661708f91598d527db82f33973d9e6a1b8b89b",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "d516100c5429ec8e5acc77f9417127ab088b54b92376c609179c0ce675b6e080",
+        "source_artifact_id": "42004df05187b2c43aa0b707f90d88cb",
+        "source_artifact_sha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d",
         "source_rendition": "review",
         "width": 1080
       }
@@ -76265,10 +76269,10 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "9f7fecab9979773fd73842e7d8c0443b",
-      "scene_sha256": "cf49c1f756972084ea8c3ba63305945fce076a1c939033dc6f6d3bfcbb4eba49",
+      "scene_asset_id": "7a6855625e0b9d16274d96c7126f84d2",
+      "scene_sha256": "9a2ecca2bda4fba7595d9a1ed4892766d3c84e8005e3a0a020535e6e4ba93252",
       "schema_version": 1,
-      "scope_id": "5d1111bb1d21b0e1aeb0e40613b2b496cd2ac1bb459e97f08f8c31b088fb303c",
+      "scope_id": "79d366af628fc5abe6b85981ead17ba9f875806d15680e6bb571efe6863bb2ed",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -76277,9 +76281,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "504c0da4c742aef1ee468c3f46da52ee",
+      "reviewId": "681dd037761ebb16c89d94a53f979965",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "5d1111bb1d21b0e1aeb0e40613b2b496cd2ac1bb459e97f08f8c31b088fb303c",
+      "scopeId": "79d366af628fc5abe6b85981ead17ba9f875806d15680e6bb571efe6863bb2ed",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -76299,10 +76303,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "06bae4d766377c3b183c875e914dfce32b4cb1571b2a0d6ff95769caacdc1da9",
-      "checkedAt": "2026-09-20T16:10:05.238140+00:00",
-      "sha256": "d5bdadad3f5563bf0320b83097173f939d42dc612636f8a4664547792dd958b1"
+      "ownerInstructionSha256": "9add5449e4edf4ddf4d6417bbd23de8a5b396c57c6d0f3705d045b92707b7db0",
+      "technicalProofSha256": "04cafeb9cdcd39ebceed5be7c1f79ae7c9eb0157f1ef3c61d7a1af89101720bc",
+      "naturalMotionReviewSha256": "2531eb38ae2c750322098e82200fde82105772c34575c4fc0aa9218cea1edd17",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-30T04:27:01.022796+00:00",
+      "sha256": "5766fdc44ab5acc115b54673cbc73bfcdc67b82ba3d4b5ab5af914965d830664"
     }
   },
   "sk_ft_working30_15kg": {
@@ -78600,16 +78606,16 @@
     "publicationStatus": "approved",
     "productId": "p_197",
     "folder": "canagan_dog_dental_2kg",
-    "video": "/images/products/catalog/canagan_dog_dental_2kg/videos/a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86/hover.mp4",
-    "sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86",
+    "video": "/images/products/catalog/canagan_dog_dental_2kg/videos/808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630/hover.mp4",
+    "sha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "f50658b5bb4d526e69f0851ba2063945",
-      "reviewId": "6b1400322fcc28d02b9c3084c5ac2045",
+      "jobId": "6509ba0c4bf84ceff8e896101c17978e",
+      "reviewId": "6e2b0ee712dd7d8acd9a974f0d6fd76e",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86",
+      "finalSha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630",
       "seconds": 4,
       "source": {
         "no": 197,
@@ -78627,30 +78633,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "0d27ef2b40c1187005e24f4c960ee945",
-        "sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86"
+        "artifact_id": "a104f7e2e1a4642b1409bdc2887b3351",
+        "sha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630"
       },
-      "scopeId": "e125468375e8fa62861df6f1efbab72518fd0152a324523578899a8931994a66",
-      "scopeRegistrationSha256": "23176981aaa0c778e64fc563a2ff674573fa44a2d72d190e3ff01d630fbc8821",
-      "aiEvidenceSha256": "f939b807059855df6d23298a88c6f9803fbb9acd9b1efef97d772f6a01c93f2e",
-      "receiptSha256": "4a754da2dd31e8070be36e33ac1e586d4b067d087f6c1d522fb8ef83a2ff696b",
-      "eligibilitySha256": "518d382f96dcc428f09f84de8e379108ef375b9a3762e1637426473092b55a58",
-      "evidenceManifestSha256": "43260debb5ba0da2a6255e0c0dd3dd69b7f3c376fc6ee48615c8f959377392a0"
+      "scopeId": "5ccb1060935ce488f7f2e8af02ae8c41d6a9dbbab32cd640b96a24ce02a36f14",
+      "scopeRegistrationSha256": "ced47d08369358fe480a0d0b0fc0ea2e7338d892419535639c38f380439a61a2",
+      "aiEvidenceSha256": "7fb9541aa1386e8516a5274dfb5d3940f3250a7001765d5fdc1a302db5bfbe66",
+      "receiptSha256": "5160e53d18786ed087b6c1f2888436307003a48b92bfb221fca4299e83293221",
+      "eligibilitySha256": "3b70defc49e72755b326fffb745f2e2b1341166fe4f49b4dea826bddcca0c2b2",
+      "evidenceManifestSha256": "c44307677391a278cf8f02559aa1244167aa66dda3bb47fd76da3de554a5fd27"
     },
     "delegatedReview": {
-      "api_job_id": "f50658b5bb4d526e69f0851ba2063945",
+      "api_job_id": "6509ba0c4bf84ceff8e896101c17978e",
       "bindings": {
         "native_video": {
-          "artifact_id": "2c8c816b099245f29079a33733b78b47",
-          "sha256": "e59cb70a7c66243439c7b434a6cf39dd6768cc24eb382b3f6a5cffcc4c395785"
+          "artifact_id": "68efbfb8da7b486c92110270c9a8397d",
+          "sha256": "7d8ccf2db0260cb1e3b272784b104664cbdbcb97d4d339cd9442e62388a367ad"
         },
         "review_video": {
-          "artifact_id": "0d27ef2b40c1187005e24f4c960ee945",
-          "sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86"
+          "artifact_id": "a104f7e2e1a4642b1409bdc2887b3351",
+          "sha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630"
         },
         "terminal": {
-          "artifact_id": "07df29c044db99a6130bb9848222022a",
-          "sha256": "1fe25de03e986317814d3a3ac3d4aff11daf5575b85ed714460ab8e3ed97603d"
+          "artifact_id": "8971ef402aa516d4f6cf93ac66d5ac19",
+          "sha256": "784095614f57456c3ec783111617c3baa979581f859aa16b92f0055e656b2481"
         }
       },
       "checks": {
@@ -78795,36 +78801,36 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_197-f50658b5bb4d526e69f0851ba2063945-all97-v1",
-        "evidence_sha256": "f939b807059855df6d23298a88c6f9803fbb9acd9b1efef97d772f6a01c93f2e",
+        "evidence_id": "ddb-ai-p_197-6509ba0c4bf84ceff8e896101c17978e-all97-v1",
+        "evidence_sha256": "7fb9541aa1386e8516a5274dfb5d3940f3250a7001765d5fdc1a302db5bfbe66",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "6b1400322fcc28d02b9c3084c5ac2045",
-      "reviewed_at": "2026-09-16T09:10:17.581614Z",
+      "review_id": "6e2b0ee712dd7d8acd9a974f0d6fd76e",
+      "reviewed_at": "2026-09-30T04:26:28.425008Z",
       "schema_version": 1,
-      "scope_id": "e125468375e8fa62861df6f1efbab72518fd0152a324523578899a8931994a66",
+      "scope_id": "5ccb1060935ce488f7f2e8af02ae8c41d6a9dbbab32cd640b96a24ce02a36f14",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "07df29c044db99a6130bb9848222022a",
+        "artifact_id": "8971ef402aa516d4f6cf93ac66d5ac19",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "2c8c816b099245f29079a33733b78b47",
-        "native_artifact_sha256": "e59cb70a7c66243439c7b434a6cf39dd6768cc24eb382b3f6a5cffcc4c395785",
+        "native_artifact_id": "68efbfb8da7b486c92110270c9a8397d",
+        "native_artifact_sha256": "7d8ccf2db0260cb1e3b272784b104664cbdbcb97d4d339cd9442e62388a367ad",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "fedf91b46c41fdf3e35b1fe9c735ea1ed58dfd544a352480908b977caf1c40d6",
+        "pixel_sha256": "7a0c4037205093a007e25a2f6bfb7f32bdc92a20394519bad28d7046b5d21f2e",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "1fe25de03e986317814d3a3ac3d4aff11daf5575b85ed714460ab8e3ed97603d",
-        "source_artifact_id": "0d27ef2b40c1187005e24f4c960ee945",
-        "source_artifact_sha256": "a2ceb29849a4c8433d609a44622c699ff9f388fccc922f606b702aaf65ddcc86",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "784095614f57456c3ec783111617c3baa979581f859aa16b92f0055e656b2481",
+        "source_artifact_id": "a104f7e2e1a4642b1409bdc2887b3351",
+        "source_artifact_sha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630",
         "source_rendition": "review",
         "width": 1080
       }
@@ -78849,10 +78855,10 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "6e069b3b866c6d78e0d2607c5dd19c18",
-      "scene_sha256": "fa4a7fc8a8381fc8c83b77f41777b62efa6e265b95e39da8eacb8eef9edc3476",
+      "scene_asset_id": "7a6855625e0b9d16274d96c7126f84d2",
+      "scene_sha256": "9a2ecca2bda4fba7595d9a1ed4892766d3c84e8005e3a0a020535e6e4ba93252",
       "schema_version": 1,
-      "scope_id": "e125468375e8fa62861df6f1efbab72518fd0152a324523578899a8931994a66",
+      "scope_id": "5ccb1060935ce488f7f2e8af02ae8c41d6a9dbbab32cd640b96a24ce02a36f14",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -78861,9 +78867,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "6b1400322fcc28d02b9c3084c5ac2045",
+      "reviewId": "6e2b0ee712dd7d8acd9a974f0d6fd76e",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "e125468375e8fa62861df6f1efbab72518fd0152a324523578899a8931994a66",
+      "scopeId": "5ccb1060935ce488f7f2e8af02ae8c41d6a9dbbab32cd640b96a24ce02a36f14",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -78883,10 +78889,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "adb8321a4d1a9582fd8a264ccc55a5e2018cc608404d08939dc17ff2d6e9c5e9",
-      "checkedAt": "2026-09-20T16:10:24.091661+00:00",
-      "sha256": "19dcd2134b2a7df670efe672f15442ff760e9b308803640a0e8e221476de7238"
+      "ownerInstructionSha256": "9add5449e4edf4ddf4d6417bbd23de8a5b396c57c6d0f3705d045b92707b7db0",
+      "technicalProofSha256": "4ad704cfcfe2b1cf78446954ee80a3182da8010724e871e74625074893f7b6db",
+      "naturalMotionReviewSha256": "b880ddfd1996c7d65db4f4d243e6b8520f6228b94b60f2bcc0b446bd6a76b73e",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-09-30T04:27:07.433956+00:00",
+      "sha256": "de6447612f61d1a788cb8acb4f36290d3eeb8181af2a7eaffd09df5ffb948222"
     }
   },
   "rw_trailrunner_belt_23": {

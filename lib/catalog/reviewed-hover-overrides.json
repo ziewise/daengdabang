@@ -819,7 +819,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "899dece6de72f2692f9758750de3aad725dbc3ce"
   },
-  "canagan_dog_dental_2kg": null,
+  "canagan_dog_dental_2kg": {
+    "video": "/images/products/catalog/canagan_dog_dental_2kg/videos/808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "6509ba0c4bf84ceff8e896101c17978e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6509ba0c4bf84ceff8e896101c17978e",
+      "reviewId": "6e2b0ee712dd7d8acd9a974f0d6fd76e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630",
+      "seconds": 4,
+      "source": {
+        "no": 197,
+        "folder": "canagan_dog_dental_2kg",
+        "name": "카나간 스몰브리드 덴탈 플라그오프 포 독 2kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_dental_2kg/canagan_dog_dental_2kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922737300",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_dental_2kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_dental_2kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_dental_2kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "a104f7e2e1a4642b1409bdc2887b3351",
+        "sha256": "808a62c239202db82c091221d71a8e638215330afaa86a2c349c2add6b361630"
+      },
+      "scopeId": "5ccb1060935ce488f7f2e8af02ae8c41d6a9dbbab32cd640b96a24ce02a36f14",
+      "scopeRegistrationSha256": "ced47d08369358fe480a0d0b0fc0ea2e7338d892419535639c38f380439a61a2",
+      "aiEvidenceSha256": "7fb9541aa1386e8516a5274dfb5d3940f3250a7001765d5fdc1a302db5bfbe66",
+      "receiptSha256": "5160e53d18786ed087b6c1f2888436307003a48b92bfb221fca4299e83293221",
+      "eligibilitySha256": "3b70defc49e72755b326fffb745f2e2b1341166fe4f49b4dea826bddcca0c2b2",
+      "evidenceManifestSha256": "c44307677391a278cf8f02559aa1244167aa66dda3bb47fd76da3de554a5fd27"
+    },
+    "videoReviewSha256": "de6447612f61d1a788cb8acb4f36290d3eeb8181af2a7eaffd09df5ffb948222",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d31333abdb33a1525c3b74bf01d88706a3acfe13"
+  },
   "canagan_dog_dental_6kg": {
     "video": "/images/products/catalog/canagan_dog_dental_6kg/videos/db88d0801f83abd5d7d0566ddd1f2be2878fde3b6ab6227e815361f5eadebd4d/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -867,9 +913,101 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "1b2f6d1f066852637e1acaf945788d6d6fc5fde2"
   },
-  "canagan_dog_highland_2kg": null,
+  "canagan_dog_highland_2kg": {
+    "video": "/images/products/catalog/canagan_dog_highland_2kg/videos/c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "3e8cddfb21af40444f8ba19be805225b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "3e8cddfb21af40444f8ba19be805225b",
+      "reviewId": "8174cbfe090ea44b568f65f5e7f25f0a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844",
+      "seconds": 4,
+      "source": {
+        "no": 195,
+        "folder": "canagan_dog_highland_2kg",
+        "name": "카나간 하이랜드 피스트 포 독 2kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_highland_2kg/canagan_dog_highland_2kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922818132",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_highland_2kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_highland_2kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_highland_2kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e78c5366a5394d012863f023e166f8ae",
+        "sha256": "c4651658cb6802047ef30b64bb78677b52e4179d525b074045b8ef36b415f844"
+      },
+      "scopeId": "fc31e1a193b1f6e4ebbd78dcfa67f11c9b977b95ddb7285a7d63a2cfba5e7403",
+      "scopeRegistrationSha256": "1f94e81a78879adb004d8381d1ec21ee9d7f2aed433a8429a82ec71b2bff6ce0",
+      "aiEvidenceSha256": "0d6a439518e5eef01c08886f4516fabedbec710c7d9571d04578ed4d070b019a",
+      "receiptSha256": "7730ccefdc7958aebccb35248b4b1616da4aa16ad3cdcf5c8c2bfbb3c3d957e1",
+      "eligibilitySha256": "b8d15ebf505d44a2322977832bda660d73fc6707eda416b0954fb9c05c9c8b17",
+      "evidenceManifestSha256": "d67fe7575e41e2b533a762378b770ae68c6364940397b6aa1cc0892c0b15e13a"
+    },
+    "videoReviewSha256": "abd53c3e598c791bda789aff2d1394c910520631772c8de79549ce7c7e503939",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d31333abdb33a1525c3b74bf01d88706a3acfe13"
+  },
   "canagan_dog_highland_6kg": null,
-  "canagan_dog_salmon_6kg": null,
+  "canagan_dog_salmon_6kg": {
+    "video": "/images/products/catalog/canagan_dog_salmon_6kg/videos/ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "74c481de747a52d0a5c0dbdd8bf31cb9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "74c481de747a52d0a5c0dbdd8bf31cb9",
+      "reviewId": "681dd037761ebb16c89d94a53f979965",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d",
+      "seconds": 4,
+      "source": {
+        "no": 129,
+        "folder": "canagan_dog_salmon_6kg",
+        "name": "카나간 스몰브리드 스코티쉬 살몬 포 독 6kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_salmon_6kg/canagan_dog_salmon_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10202314204",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_salmon_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_salmon_6kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_salmon_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "42004df05187b2c43aa0b707f90d88cb",
+        "sha256": "ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d"
+      },
+      "scopeId": "79d366af628fc5abe6b85981ead17ba9f875806d15680e6bb571efe6863bb2ed",
+      "scopeRegistrationSha256": "b61dc19950182bb091e7471cffef1a902db6dfc22748d2cf308887568c35fc45",
+      "aiEvidenceSha256": "00e9c94e3ad1f4885c3b208cc7609a715d2dd2a5df9c9dcb247abbf0e7e89f5c",
+      "receiptSha256": "52d9b19c00d395272f43a2bbe58121b08d6bbd8d02cfa8e41c5c73bcc04781a2",
+      "eligibilitySha256": "ea9ae43868fd8f952168dbd141f8726e020e06f2ed2b802321389e4c8edc9faf",
+      "evidenceManifestSha256": "c8d32584dc3c3f71571093a3bf3db62b12ecdd295fec8cd6333de6ae42170b6c"
+    },
+    "videoReviewSha256": "5766fdc44ab5acc115b54673cbc73bfcdc67b82ba3d4b5ab5af914965d830664",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d31333abdb33a1525c3b74bf01d88706a3acfe13"
+  },
   "dangcream_strawberry": {
     "video": "/images/products/catalog/dangcream_strawberry/videos/0428906e135c78cf4438c73f1afa652b7738048be69ac18aad8d055ccb395076/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -12052,7 +12190,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "538327ca15c6b395d889d3ae4d267f00ec6775d7"
   },
-  "canagan_dog_salmon_2kg": null,
+  "canagan_dog_salmon_2kg": {
+    "video": "/images/products/catalog/canagan_dog_salmon_2kg/videos/a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "8cc4bae9f5ebefaac1753851dbd82bad",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8cc4bae9f5ebefaac1753851dbd82bad",
+      "reviewId": "5917d2ab22340800428f6ca6d7de9455",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c",
+      "seconds": 4,
+      "source": {
+        "no": 194,
+        "folder": "canagan_dog_salmon_2kg",
+        "name": "카나간 스몰브리드 스코티쉬 살몬 포 독 2kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_salmon_2kg/canagan_dog_salmon_2kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922841076",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_salmon_2kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_salmon_2kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_salmon_2kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "cbef328c4e415aa909354d09aaf7f873",
+        "sha256": "a6c05860ff35c92b10ea8b831aa193d09f28d30061550016ff56d048b9d0313c"
+      },
+      "scopeId": "cd2b7bc12a57eab9d5b4fa36522b89072915ed7003582b4664abadad49a77b82",
+      "scopeRegistrationSha256": "95716593037dc4a320ed1fc9ba2bb68c5f25a80db3fafaded0f2902f19a00aa5",
+      "aiEvidenceSha256": "40f4089cd11bbd5d3cc8b0cca9170191f9fd550d36ded61526ad1aebdd7b6b8c",
+      "receiptSha256": "654c21e64c3e23f546e4956000e52051ac68f53bb26d3d25606bcaa48f838321",
+      "eligibilitySha256": "ba8bd7e7af6027e4d47dabeecac283b08b9fa92611c3dd7b1d5e1c98daad0844",
+      "evidenceManifestSha256": "81b37565832690298ffa6a1349503b1f8b3c8f4afbf1f41b80768a92baa926ff"
+    },
+    "videoReviewSha256": "86fb8664f798c1444de1bc021e10355689c6ec040749035326348ccb3858f425",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d31333abdb33a1525c3b74bf01d88706a3acfe13"
+  },
   "nd_feelgood_sl": null,
   "soopa_healthybites_bananapumpkin": {
     "video": "/images/products/catalog/soopa_healthybites_bananapumpkin/videos/1ef5be3ae221e4385f60e868e68913110bca7e33a31a15b252b966f00add5208/hover.mp4",
