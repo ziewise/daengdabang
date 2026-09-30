@@ -678,7 +678,54 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "794b1af20128d2550bea4f98a9698c2aadfe5565"
   },
-  "annapet_wine": null,
+  "annapet_wine": {
+    "video": "/images/products/catalog/annapet_wine/videos/2111135f3d5832815ab8cdc123f8e46f32db0b11d9f75e91b4d7414aa40a07fe/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4df695fdd01b54f6cecd061fda83d7e2",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4df695fdd01b54f6cecd061fda83d7e2",
+      "reviewId": "92be44f5e6f9ec608e855bb306d5d1aa",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2111135f3d5832815ab8cdc123f8e46f32db0b11d9f75e91b4d7414aa40a07fe",
+      "seconds": 4,
+      "source": {
+        "no": 245,
+        "folder": "annapet_wine",
+        "name": "애나펫 강아지 전용와인 댕와인",
+        "brandEn": "Anapet",
+        "isFood": false,
+        "image": "/images/products/catalog/annapet_wine/annapet_wine.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7663113469",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/annapet_wine/details/2.webp",
+          "/images/products/catalog/annapet_wine/details/3.webp",
+          "/images/products/catalog/annapet_wine/details/4.webp",
+          "/images/products/catalog/annapet_wine/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "193fbe014ca0aad911523ff1e785db47",
+        "sha256": "2111135f3d5832815ab8cdc123f8e46f32db0b11d9f75e91b4d7414aa40a07fe"
+      },
+      "scopeId": "4809eb062d611a3066c5d5aac82fd4d5e05b320f390231834434ae1bf0d7c6eb",
+      "scopeRegistrationSha256": "cba7276d209fe4067055c7369031f7dc39c59b7402de26b5559ff0dae7375feb",
+      "aiEvidenceSha256": "702214a6e20c99ee50b440a06e154eddf3c06daca77726affc1afa4a733772e2",
+      "receiptSha256": "5e66f97bb40c9c803e1e70bc0c0bd10bd6f1dd72c5dfa869229569b790a52805",
+      "eligibilitySha256": "6fbd925f14764c463028c27b8560c375ab64e9ccb1f1f1918614d5a965d6867b",
+      "evidenceManifestSha256": "291778569693bff937ad120c26442a0566283a9a51bf565345152db51917cb6f"
+    },
+    "videoReviewSha256": "55f4358a27246970f4d98a5cc1e8e5b0db1754e577af167896b7694ee96226b1",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "cd50ffbe50e0ba659d4780eef0a65efa101a1678"
+  },
   "bm_kibble_9kg": {
     "video": "/images/products/catalog/bm_kibble_9kg/videos/3fed4beadb8e07f62aac780dfe10434df7f54ce82f36295e7cee29462215da74/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -9724,7 +9771,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "781836d82ec2619545368fed907e53f55fc2a3bb"
   },
-  "yora_puppy_2.5kg": null,
+  "yora_puppy_2.5kg": {
+    "video": "/images/products/catalog/yora_puppy_2.5kg/videos/234b14d35a4228b437c1f1fad366bc5f5f244a52e1e77b36902852feb773fecc/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "99d89554d017a2bbf74ade454fe4c7cc",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "99d89554d017a2bbf74ade454fe4c7cc",
+      "reviewId": "f09d3f0bb62670dfae8e0f59b75874fa",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "234b14d35a4228b437c1f1fad366bc5f5f244a52e1e77b36902852feb773fecc",
+      "seconds": 4,
+      "source": {
+        "no": 166,
+        "folder": "yora_puppy_2.5kg",
+        "name": "요라 사료 YORA 퍼피 2.5kg 인섹트 저알러지 곤충 강아지 동에등에",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_puppy_2.5kg/yora_puppy_2.5kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923194439",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_puppy_2.5kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_puppy_2.5kg/details/2.webp",
+          "/images/products/catalog/yora_puppy_2.5kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "99c26c6107defcb927839dd76500c14e",
+        "sha256": "234b14d35a4228b437c1f1fad366bc5f5f244a52e1e77b36902852feb773fecc"
+      },
+      "scopeId": "77dc4847015c96e3ad0d3cf4780736f1f58b4e73e0aa5203338455a4495da8b5",
+      "scopeRegistrationSha256": "fe4e99563a35f8741245685da6bc5ad021c5b8d8e1260796ff31e1670467a43e",
+      "aiEvidenceSha256": "691c12001d695e5ad58fa3665dfdcd1f464329e0958a0ca7a02f2a8e92f23ab1",
+      "receiptSha256": "bb84b8036418e7f8da26fc11f841290e0131431605759473e5e78a5cf9eeee6f",
+      "eligibilitySha256": "948ccf11dcc977be41d983ea2c89b25c5708ce26bcb3bac3cf4df7755aff07fa",
+      "evidenceManifestSha256": "f30a8035966cf326b1f5d57545b1cfd2115eaaf6f640f9d952d07e3cc838e7d7"
+    },
+    "videoReviewSha256": "957d72fd56989dc076fac8e41f2308e16ff8b1341fca2b89b5332e6260484cbd",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "cd50ffbe50e0ba659d4780eef0a65efa101a1678"
+  },
   "yora_reward_treat": {
     "video": "/images/products/catalog/yora_reward_treat/videos/b53c3534577474a8fd503e85899fc5a6b50f8bb586279773124abe05a546bd88/hover.mp4",
     "videoProvider": "ziewcraft",
