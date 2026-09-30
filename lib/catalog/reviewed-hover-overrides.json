@@ -162,7 +162,55 @@
     "videoQuality": "approved_dog_using",
     "videoJobId": "6a6e5ab8-688c-494d-b313-334a6cde72d3"
   },
-  "aff_donut_luxury_xl": null,
+  "aff_donut_luxury_xl": {
+    "video": "/images/products/catalog/aff_donut_luxury_xl/videos/74f674cd4b8d05e1f69a0322bf159f7738b3d2c6b5f03d070bfc79bc2f89d26e/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "560de652e3b0e1dab6ceb4da5fde063d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "560de652e3b0e1dab6ceb4da5fde063d",
+      "reviewId": "f5753ada1ceacef5d2e1cfee3303f9d8",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "74f674cd4b8d05e1f69a0322bf159f7738b3d2c6b5f03d070bfc79bc2f89d26e",
+      "seconds": 4,
+      "source": {
+        "no": 124,
+        "folder": "aff_donut_luxury_xl",
+        "name": "아페토 커버분리형 럭셔리 도넛방석 XL - 아이보리 핑크 브라운 그레이",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_luxury_xl/aff_donut_luxury_xl.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10318407718",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_luxury_xl/details/2.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/3.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/4.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/5.webp",
+          "/images/products/catalog/aff_donut_luxury_xl/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "57bf8102334a31743567438835c1508b",
+        "sha256": "74f674cd4b8d05e1f69a0322bf159f7738b3d2c6b5f03d070bfc79bc2f89d26e"
+      },
+      "scopeId": "eabd39ac5b0c2630241adba4e8629794f068662fb6091e6d068480cae6c78260",
+      "scopeRegistrationSha256": "f302292b81661f5f204fc7d587d9e390e31acd1baf8977d8b893e088f318a8ce",
+      "aiEvidenceSha256": "26311779ec7c22d88d19086e049a20b20c69826b0ed5bcd2fb36e2acc8cba219",
+      "receiptSha256": "c2018281aa2ae786843d4c17a70629ce1009e92cb4d9e15e08c3d437c34ac848",
+      "eligibilitySha256": "d6cd453991f9cb3c9f0c6c8187f357b04eb9600d57861fdc528f95ae85c92040",
+      "evidenceManifestSha256": "798e76f7edd9523c7efe45821608822245f9ffedad031862602a34f9778e4ce4"
+    },
+    "videoReviewSha256": "bd7d1b6bde77c937d9422388d73cc0f1a9086d2411ec7c845b4eaae1c7b5b3eb",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b0861a13c22fd00ddf39012f292db69c6c5060a5"
+  },
   "aff_donut_original_brown": {
     "video": "/images/products/catalog/aff_donut_original_brown/videos/e03c4e649a1b27a12cf1c518f2a2a689d838e8a7e2a40cf02985ecc1047b4693/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -9539,7 +9587,58 @@
     "videoDeliveryCommit": "781836d82ec2619545368fed907e53f55fc2a3bb"
   },
   "yora_puppy_2.5kg": null,
-  "yora_reward_treat": null,
+  "yora_reward_treat": {
+    "video": "/images/products/catalog/yora_reward_treat/videos/b53c3534577474a8fd503e85899fc5a6b50f8bb586279773124abe05a546bd88/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "499d3f40ed6ce204081148fbcb9bbd0d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "499d3f40ed6ce204081148fbcb9bbd0d",
+      "reviewId": "fc19936bd6b0968cff03841ace587260",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b53c3534577474a8fd503e85899fc5a6b50f8bb586279773124abe05a546bd88",
+      "seconds": 4,
+      "source": {
+        "no": 134,
+        "folder": "yora_reward_treat",
+        "name": "요라 리워드 반려견 인섹트간식 100g 애플&캐롯, 피넛버터&바나나",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_reward_treat/yora_reward_treat.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182213506",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_reward_treat/details/2.webp",
+          "/images/products/catalog/yora_reward_treat/details/3.webp",
+          "/images/products/catalog/yora_reward_treat/details/4.webp",
+          "/images/products/catalog/yora_reward_treat/details/5.webp",
+          "/images/products/catalog/yora_reward_treat/details/6.webp",
+          "/images/products/catalog/yora_reward_treat/details/7.webp",
+          "/images/products/catalog/yora_reward_treat/details/8.webp",
+          "/images/products/catalog/yora_reward_treat/details/9.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0c9dc4d1125ab3b5321cb264b969ed4d",
+        "sha256": "b53c3534577474a8fd503e85899fc5a6b50f8bb586279773124abe05a546bd88"
+      },
+      "scopeId": "2e75500bf8919a1c9d0f57fb8b711ba627f8bfa1739c38ff0c61655064f1eb52",
+      "scopeRegistrationSha256": "d64039bfae58241d6b1feb093a33c0bcacdab59af91228e6c22134690373cadd",
+      "aiEvidenceSha256": "3f688b57d9ef6216f2befc9b992a5067cccc7e275123d0d53470afccf15a6ba3",
+      "receiptSha256": "0fccb6b88c184067e49444ba618c2e6d39364e1157e53412d223e9b803a0d057",
+      "eligibilitySha256": "c55a08fe1681a1f9152c155d94839efc05b007687fa1355e0033dbc825a7ad3d",
+      "evidenceManifestSha256": "6e24ee89474b06d9dfda2e5ea471a4d4dd764e2ba21de3d86b56b4c5d0071641"
+    },
+    "videoReviewSha256": "c5f4f22b33a38d729788d73c29ce359ed56ea66a33d23f26285c88096fa237eb",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b0861a13c22fd00ddf39012f292db69c6c5060a5"
+  },
   "yora_smallbreed_2.5kg": null,
   "yora_smallbreed_6kg": {
     "video": "/images/products/catalog/yora_smallbreed_6kg/videos/7582b8bb296cf1ccd270e80ee6355321be3fd468535f8c936eecdcfe1878d2e7/hover.mp4",
