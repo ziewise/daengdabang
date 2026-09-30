@@ -7248,15 +7248,7 @@
       "downloadEvidenceSha256": "7b5cba06efb7c899bb6ce6b38a0c62d785362884b7f01f5be34198ec0a16a1f0"
     }
   },
-  "rw_kibblecaddy": {
-    "video": "/images/products/catalog/rw_kibblecaddy/videos/9b1720c08b9a236404b1b7af3e7769aceb9a0da29e9c992472b732d05c40c68c/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "unknown",
-    "videoJobId": null,
-    "videoQuality": "approved_dog_using",
-    "videoReviewClass": "legacy_reviewed",
-    "videoReviewSha256": "13a04837d0eec3020166b6e9c62065479d49f0ed619d1e40bf77b85e63b0e36a"
-  },
+  "rw_kibblecaddy": null,
   "rw_knotahitch": {
     "video": "/images/products/catalog/rw_knotahitch/videos/e89bbe4bf3b8891470da2df6bd595f0fb0ec54ec382680da33f0e3eb5aaa3255/hover.mp4",
     "videoProvider": "ziewcraft",

@@ -962,5 +962,12 @@
     "video": "/images/products/catalog/rs_v2_volcanored/videos/hover.mp4",
     "reason": "Published final frames0..191 directly inspected with two supplier red-goggle photographs and full final0/95/191. The active video picture clips the dog at the lower chest throughout; paws and lower body never enter the picture, so the whole-animal framing requirement is not met and body support cannot be assessed. Replacement is required for this conclusive framing defect, although the visible head turn is gradual and not a mechanical or sped-up movement. Lower-right four-point white mark is also visible. No native or exact input was inspected; no claim that hidden paws pump or that playback is literally2x.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_kibblecaddy": {
+    "productId": "p_40",
+    "sha256": "9b1720c08b9a236404b1b7af3e7769aceb9a0da29e9c992472b732d05c40c68c",
+    "video": "/images/products/catalog/rw_kibblecaddy/videos/9b1720c08b9a236404b1b7af3e7769aceb9a0da29e9c992472b732d05c40c68c/hover.mp4",
+    "reason": "Actual current public playback at 0.560s expands the 720-square clip to 177.778 percent of the media box. The visible source window clips the standing dog torso, haunches, curled tail and hind legs at the left media edge while the bag remains visible. Whole-dog framing fails. Full 192-frame public and 192-frame legacy-source review is inherited from the exact immutable prior proof; historical provider/input identity remains unknown. Replacement is required for confirmed display cropping, not merely missing provenance or editorial cuts.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
