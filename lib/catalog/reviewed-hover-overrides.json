@@ -1981,7 +1981,51 @@
     "videoQuality": "approved_exact_product_images",
     "videoJobId": "hover-static72-20260903-dd77d7b4a921"
   },
-  "id_treat_chicken": null,
+  "id_treat_chicken": {
+    "video": "/images/products/catalog/id_treat_chicken/videos/b7728764096a4e44158486db878af94f6a004ff70a93f9bc537c68d3f46eb316/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "84f1454b169bb3eb3bace5b97f264d41",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "84f1454b169bb3eb3bace5b97f264d41",
+      "reviewId": "53dd5d928b3d1b6c17ec47773c861538",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b7728764096a4e44158486db878af94f6a004ff70a93f9bc537c68d3f46eb316",
+      "seconds": 4,
+      "source": {
+        "no": 324,
+        "folder": "id_treat_chicken",
+        "name": "아임디퍼런트 동결건조 트릿 치킨 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_chicken/id_treat_chicken.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6736134598",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_chicken/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "93a02eb733acf2d42d9ed55ec66a779e",
+        "sha256": "b7728764096a4e44158486db878af94f6a004ff70a93f9bc537c68d3f46eb316"
+      },
+      "scopeId": "530715da11fbcf3a936be899737cdac529a9fd04ba47fc8850c2320aea682c42",
+      "scopeRegistrationSha256": "e1e19161036939cd7ea7b9288d54215875e79642b4e25de10f16fc403fe1bd1f",
+      "aiEvidenceSha256": "cb9695b36bb712089751b99e3c6c496057a656ecbc024825c2b896945a45d854",
+      "receiptSha256": "fffbc1112f234cf193a6fd84452cfb2b769df501191f62f8d35b841417377e64",
+      "eligibilitySha256": "f32da13ac99616efe383545522f7f9caa7c6b7cdf49c1582038a53c4466ec3b2",
+      "evidenceManifestSha256": "0001fba0ce8bf4dd8bc6209ac391a3f9bfdc29a0837011468a1df153c4d8a975"
+    },
+    "videoReviewSha256": "672544492ce8ad5f05518dcd9bb352946018b2296adfc776e21f07adb0561f4f",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "379223237d4c698f856c1c9e93d75c214f714637"
+  },
   "id_treat_duck": {
     "video": "/images/products/catalog/id_treat_duck/videos/3116bc56da942ea9a5b1b5f41cceccb2ab2a1b2dcb3e483c9aa3938e6edc8aba/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -2074,7 +2118,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "5e84acf21a4a69bd47e78673549bfc2b7ace901b"
   },
-  "id_treat_sardine": null,
+  "id_treat_sardine": {
+    "video": "/images/products/catalog/id_treat_sardine/videos/9e11ddd9c87c06b2e4f95a78dc32c90536bfa4cdb2fb9fc375fc91fbed2eb973/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "b17501d518d3062f3c1bd687c543b865",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b17501d518d3062f3c1bd687c543b865",
+      "reviewId": "5bbf94a8d8d5f7ec499e8d1d89179451",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "9e11ddd9c87c06b2e4f95a78dc32c90536bfa4cdb2fb9fc375fc91fbed2eb973",
+      "seconds": 4,
+      "source": {
+        "no": 152,
+        "folder": "id_treat_sardine",
+        "name": "아임디퍼런트 동결건조 트릿 정어리 40g",
+        "brandEn": "I'm Different",
+        "isFood": true,
+        "image": "/images/products/catalog/id_treat_sardine/id_treat_sardine.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9216900106",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/id_treat_sardine/details/2.webp",
+          "/images/products/catalog/id_treat_sardine/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "0cb32740b545b40bebd9ed06a5b0f22e",
+        "sha256": "9e11ddd9c87c06b2e4f95a78dc32c90536bfa4cdb2fb9fc375fc91fbed2eb973"
+      },
+      "scopeId": "79f2b3807a3dd210be417e3b077c87322e51f0422e32515962520c00952cc7fd",
+      "scopeRegistrationSha256": "529f6948af7ca187e75b1c1f37cd81841068dcb17692934b1d6e97831acde50a",
+      "aiEvidenceSha256": "ae9c5df7d01f5463e8f98316c690600723ba3dedc22d4271e62e1faeb7779a55",
+      "receiptSha256": "e25586eaf381dde620e1f3c84ff750ab5614854eae94ede2591c5e977c9cf149",
+      "eligibilitySha256": "c0a84c54e5207e672589350384fb9afefe9542d5b1c7a0ec54dd526f960aaf4f",
+      "evidenceManifestSha256": "d4fe31b394ddc43a903faa3f017c59a69b30d8514260190ad55a3ea9f8b61eb0"
+    },
+    "videoReviewSha256": "345fabba4df375a38e9acaeb8595654dd27a42da0f7d7297e7187b79393e0c67",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "379223237d4c698f856c1c9e93d75c214f714637"
+  },
   "id_treat_sturgeon": {
     "video": "/images/products/catalog/id_treat_sturgeon/videos/93a74a0bbe9ab8393ceffcfd43a28208251bf4a1086e5b92336c7e1c526ddcfd/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -2900,7 +2989,55 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "4d1d20576f0e2a8e5b8739efd62d1edb31916cb3"
   },
-  "mb_vegemix_100g_4": null,
+  "mb_vegemix_100g_4": {
+    "video": "/images/products/catalog/mb_vegemix_100g_4/videos/97feea06d508486d799aab4c8ba07484d4c24c05c2182c29ae2d43cbf2970f56/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "dc7332d9437497b5366b54aae70a2feb",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "dc7332d9437497b5366b54aae70a2feb",
+      "reviewId": "82d72c42c3682bb4e018c398a5c648ea",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "97feea06d508486d799aab4c8ba07484d4c24c05c2182c29ae2d43cbf2970f56",
+      "seconds": 4,
+      "source": {
+        "no": 150,
+        "folder": "mb_vegemix_100g_4",
+        "name": "미티본 베지믹스 100g x 4개",
+        "brandEn": "Mittyborn",
+        "isFood": true,
+        "image": "/images/products/catalog/mb_vegemix_100g_4/mb_vegemix_100g_4.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/9241580514",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/mb_vegemix_100g_4/details/2.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/3.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/4.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/5.webp",
+          "/images/products/catalog/mb_vegemix_100g_4/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "460855ce7af1403b52093fa309cc0588",
+        "sha256": "97feea06d508486d799aab4c8ba07484d4c24c05c2182c29ae2d43cbf2970f56"
+      },
+      "scopeId": "594407879d2ee8fc091bfa7b44fd333202f40462b877e3aedf0263fac42dd77e",
+      "scopeRegistrationSha256": "8976c26b17b66dca0c3c531a22eecad4e1bb11e1e5dfeccc6ebb7c126a21dc48",
+      "aiEvidenceSha256": "bcf56060453718aaf84a225dfc005cfd9d495fdec50d0eb9a4115bb0ed2db75f",
+      "receiptSha256": "e37bd80f236b7bb67d01182b7b31fc082ffa7ad60495a5241184623584dce71e",
+      "eligibilitySha256": "8781c9d1b283b9345962d8e92df03c2f5b3a307a04e0eb8e68c2f9c9059006c3",
+      "evidenceManifestSha256": "96212bedb575ee4ae1f36f5f591d82554cc89e9caf5d09162179f0cea20b54fa"
+    },
+    "videoReviewSha256": "5edbc59f26e9feccbaf3fc8e2394ff81a8e1b706865c919a3718611d7fc422a3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "379223237d4c698f856c1c9e93d75c214f714637"
+  },
   "mb_vegemix_475g": null,
   "nd_feelgood_c": {
     "video": "/images/products/catalog/nd_feelgood_c/videos/e98137e8f8e705a08f71607ba5492c96dc8c5281e997b203e6c5f71f86c578d9/hover.mp4",

@@ -61,7 +61,7 @@
   },
   "id_treat_sardine": {
     "productId": "p_152",
-    "sha256": "8e27a6bd212f0808b2e8476b13de0f3220bda196c984f916b47680c271a1fbd6"
+    "sha256": "9e11ddd9c87c06b2e4f95a78dc32c90536bfa4cdb2fb9fc375fc91fbed2eb973"
   },
   "id_treat_guineafowl": {
     "productId": "p_153",
@@ -353,7 +353,7 @@
   },
   "mb_vegemix_100g_4": {
     "productId": "p_150",
-    "sha256": "d122b0c8148f11dd48efe9fa92048e780267fd77b79f59e087302c841f204d1a"
+    "sha256": "97feea06d508486d799aab4c8ba07484d4c24c05c2182c29ae2d43cbf2970f56"
   },
   "pdh_slowfeeder_paw": {
     "productId": "p_16",
@@ -685,7 +685,7 @@
   },
   "id_treat_chicken": {
     "productId": "p_324",
-    "sha256": "33404aabe5dbdbd2bd616ea647c9bb6a4ff6d49479d3fe352927bfae8aa42abd"
+    "sha256": "b7728764096a4e44158486db878af94f6a004ff70a93f9bc537c68d3f46eb316"
   },
   "rw_jsk_1000000188": {
     "productId": "p_369",
