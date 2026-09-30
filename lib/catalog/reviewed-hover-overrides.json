@@ -9724,7 +9724,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "b180da4e31680750ad9e3f8557dadbe0017b2936"
   },
-  "yora_largebreed_12kg": null,
+  "yora_largebreed_12kg": {
+    "video": "/images/products/catalog/yora_largebreed_12kg/videos/1b0b6252ac2329f6284636ff3f8451df88aaf4bb33952df9c2a9803992913db5/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "4ab5ab4ab4fb29f01585e071f4909272",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4ab5ab4ab4fb29f01585e071f4909272",
+      "reviewId": "28e449df9734b6b44279e1b4d13d4bfd",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1b0b6252ac2329f6284636ff3f8451df88aaf4bb33952df9c2a9803992913db5",
+      "seconds": 4,
+      "source": {
+        "no": 172,
+        "folder": "yora_largebreed_12kg",
+        "name": "요라 사료 YORA 라지브리드 12kg 인섹트 저알러지 눈물 강아지 곤충",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_largebreed_12kg/yora_largebreed_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923152579",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_largebreed_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_largebreed_12kg/details/2.webp",
+          "/images/products/catalog/yora_largebreed_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5351a718b0a432fb490aea121a787092",
+        "sha256": "1b0b6252ac2329f6284636ff3f8451df88aaf4bb33952df9c2a9803992913db5"
+      },
+      "scopeId": "8314d5f743ba843ff974a0af271633f4ea3df29a688a75845ce0efa7cc2ee283",
+      "scopeRegistrationSha256": "4173a08dfd104b52004bd50d5cf2a0ebba81aa7eb8359243e3cd74b33c084b71",
+      "aiEvidenceSha256": "f13208906d589f4c5f7c4a003a0aed9c7ddb77fbb484415159e7186a7901043f",
+      "receiptSha256": "baeecfb6c7e6847628207872ff77aaab3685c796fa28125d370a8a16fa2cd7bc",
+      "eligibilitySha256": "933336918f0a1f1eb397d481ed51e642434b65d4c93252fe57ee7cc4c285f623",
+      "evidenceManifestSha256": "cea4940e7a3d2d4e1c3c56544655a03b3440ea6395b29d97e0aad4053f5f49ac"
+    },
+    "videoReviewSha256": "276dd55b5fbdbf7d898939c15670d0b41fb1b2dcd7f77edea845431624b47a14",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ab65a712123abe537d09df7b22966c3793073c15"
+  },
   "yora_lightsenior_12kg": {
     "video": "/images/products/catalog/yora_lightsenior_12kg/videos/33b8b1d616f5833b0583bf349ccff49c02e00d33d35d4be0ba92aa1586d9a1c7/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -12333,7 +12379,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "06ed9a6d7fd270517cf822ff0a031b71c4ff6643"
   },
-  "yora_lightsenior_2.5kg": null,
+  "yora_lightsenior_2.5kg": {
+    "video": "/images/products/catalog/yora_lightsenior_2.5kg/videos/ff25c73f3cc949ccdbc076124c80c1068858926c4d317996c2a303f4733e7dc8/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "d7bc2e4e619c4044c88f6268a04a211a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d7bc2e4e619c4044c88f6268a04a211a",
+      "reviewId": "c3e2b377307bbb8e3857a001edd05c60",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ff25c73f3cc949ccdbc076124c80c1068858926c4d317996c2a303f4733e7dc8",
+      "seconds": 4,
+      "source": {
+        "no": 171,
+        "folder": "yora_lightsenior_2.5kg",
+        "name": "요라 라이트 시니어 2.5kg 저칼로리 다이어트",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_lightsenior_2.5kg/yora_lightsenior_2.5kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923162287",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_lightsenior_2.5kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_lightsenior_2.5kg/details/2.webp",
+          "/images/products/catalog/yora_lightsenior_2.5kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "973145637ba193ea4b1e3557df51f39b",
+        "sha256": "ff25c73f3cc949ccdbc076124c80c1068858926c4d317996c2a303f4733e7dc8"
+      },
+      "scopeId": "1f22753af0eb1e2267436ea781662df697a5666b27a387d1e225e706b4edb369",
+      "scopeRegistrationSha256": "9f86e72a00b07fa83eef71d01c69cf26048d11e370651b04300d386c66aff14d",
+      "aiEvidenceSha256": "516ac43c3a97b55d42c622d4a83e5eef55a238f43dd918dcdc70b8200f0f9ad1",
+      "receiptSha256": "dd5d8afde156a24c0ed51c1b7dbf00c2f93a17caba8d0d499a8c6737f73a8a82",
+      "eligibilitySha256": "25c17425ade55ae3e8cbb8cfda1bedb2f6b14ca7684965e6d5b8f19bf5886241",
+      "evidenceManifestSha256": "99ae07a738c5b04f58ae82399e8adef40d063941914890b40fc4d4ad64cc8691"
+    },
+    "videoReviewSha256": "3770dca6abf5fe04aa35dc2ece8ee20b156e43cbda9a4dd1133bba83874f9c72",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ab65a712123abe537d09df7b22966c3793073c15"
+  },
   "yora_allbreed_12kg": null,
   "perity_aloe_shampoo": null,
   "rs_jsk_1000001106": {
