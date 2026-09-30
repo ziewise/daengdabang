@@ -6123,11 +6123,62 @@
     }
   },
   "rw_griptrex_bootpairs": {
-    "video": "/images/products/catalog/rw_griptrex_bootpairs/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_griptrex_bootpairs/videos/e9bbeae7974999e0fdb917cae6203f79d2b289b0861c5d1f54c9be99712ea457/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "b10f38be9e9a92ee0d775852df7099f3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b10f38be9e9a92ee0d775852df7099f3",
+      "reviewId": "fa07fc591fc1c01a587cbf20966b6165",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e9bbeae7974999e0fdb917cae6203f79d2b289b0861c5d1f54c9be99712ea457",
+      "seconds": 8,
+      "source": {
+        "no": 341,
+        "folder": "rw_griptrex_bootpairs",
+        "name": "러프웨어 그립 트렉스 반려견 신발 (2족)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_038.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001163",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_17.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_215.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_390.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_463.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_565.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_623.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_774.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_847.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001163/image/detail/1000001006_detail_95.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231126/Grip-Trex1_193052.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231126/Grip-Trex2_193107.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231126/Grip-Trex3_193132.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221012/e92d50a98f3f16bd5528118ab592d9d4_184437.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "127fceb3d8e4d5b42a35fe0ca882d9ae",
+        "sha256": "e9bbeae7974999e0fdb917cae6203f79d2b289b0861c5d1f54c9be99712ea457"
+      },
+      "scopeId": "4d9039e38439c60eb0865c4ad7cfb5b755b4cf578cec61ff63803b8fe791af38",
+      "scopeRegistrationSha256": "6b701fcd4a9831dfa4db3f556757304198a6ffc62687a366eafebea47d10b61a",
+      "aiEvidenceSha256": "87045958c934332604d9e48954d0af6c9fa5b351f2430c91fa8ee830bbe6d7e3",
+      "receiptSha256": "88bffee658b49f3917efc2c78dce18054c8770f4500e2e0a2de41c39bfa649e0",
+      "eligibilitySha256": "421d9bafc785dad7c1862af3ba75bfd1b70e2e29fee0f2e0c5a86a5cd6dbd6d5",
+      "evidenceManifestSha256": "45e6cf8fbd6cd71fbf0f813707a45d728ecf44ca9df654cea0b2532c121713ea"
+    },
+    "videoReviewSha256": "57fb42131a7905835c129902d6c85a66c802616cbe4df3a499a04713576d3657",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-d43a2a555196"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "134f2bb6a0cdc7af0ff6e5c034c597ccfd4ddc3d"
   },
   "rw_headwater_collar": null,
   "rw_hemphound_sweater": {
@@ -14752,5 +14803,57 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c90338c74c320a35afd546eb9e14c811eddd5a3b"
+  },
+  "rw_jsk_1000001208": {
+    "video": "/images/products/catalog/rw_jsk_1000001208/videos/90c5945fd8c7d6b8082fe1c807988425a5a2e7a04c6006e3c1db2bce70aac0ce/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e79d0a5abe96a87ade2d1cf4bd554134",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e79d0a5abe96a87ade2d1cf4bd554134",
+      "reviewId": "af6e793609c76a37465180c245287a9d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "90c5945fd8c7d6b8082fe1c807988425a5a2e7a04c6006e3c1db2bce70aac0ce",
+      "seconds": 8,
+      "source": {
+        "no": 436,
+        "folder": "rw_jsk_1000001208",
+        "name": "러프웨어 저스트 어 신치 일체형 리드줄(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001208/image/detail/1000001208_detail_082.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001208",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001208/image/detail/1000001208_detail_131.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001208/image/detail/1000001208_detail_284.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001208/image/detail/1000001208_detail_369.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001208/image/detail/1000001208_detail_477.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/89a493fb1a5e811ff1a3b2afe26392a8_030115.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/735fac9facbf8b578a7565197a752732_030116.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/b678abcd171f3744bdf6b1a636cfcb38_030116.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "4573ae72c511a5a8b72dbff1be0c1e79",
+        "sha256": "90c5945fd8c7d6b8082fe1c807988425a5a2e7a04c6006e3c1db2bce70aac0ce"
+      },
+      "scopeId": "48892ce8d201aac7a61a145755190c688655329a9f7c71acc49c7a730133d960",
+      "scopeRegistrationSha256": "4d33dc6525f56c97a644fac9f7f62056117510628e2fd3243d9f0f5cd1d64ef1",
+      "aiEvidenceSha256": "2a6d89ef65aa7a2dd5ecc08c9088142332cb0146fb9a0f4184e77d7a094e08f3",
+      "receiptSha256": "41f6f52c742e0963883ef4cb4d6b48af8b1e7b0ca95f3ebc435b62c75925710a",
+      "eligibilitySha256": "f3bf70ef2b5d2db0340d51413b6c1eae9d1709d9996f0a2c9ffaff9a86395477",
+      "evidenceManifestSha256": "d9cb90a2773f4e359c12569ef2a49b347095e9958ec72418999348dbacd39c70"
+    },
+    "videoReviewSha256": "c5cdb019c5eedf1483ef07153fdaa92337b092f31393abeb266cf5850fac5693",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "134f2bb6a0cdc7af0ff6e5c034c597ccfd4ddc3d"
   }
 }
