@@ -93,7 +93,7 @@
   },
   "rw_jsk_1000001214": {
     "productId": "p_440",
-    "sha256": "a6fa0f36617b4c23291387b877dd29751b02bee81bf325c203a8929931480100"
+    "sha256": "043436eec559686534e559a056d529bf8a000b4a59e5103ed46ddc24acbd3657"
   },
   "rw_jsk_1000001245": {
     "productId": "p_461",
@@ -389,7 +389,7 @@
   },
   "rw_corecooler_pad": {
     "productId": "p_50",
-    "sha256": "a3583735295c76114335293830a8bf6866505442680bdc4f2a61e64c06b785c3"
+    "sha256": "ad1eaf089b546a2650dacc0f7aea94ddbf3c7b114454654332b5f4939a786f2f"
   },
   "rw_jsk_1000001346": {
     "productId": "p_473",
@@ -401,7 +401,7 @@
   },
   "rw_leash_cragex_23": {
     "productId": "p_149",
-    "sha256": "abf8c5a2a3e88362302e34061ec3e5f069c34f246f6dc06b15db858c8ff7d71c"
+    "sha256": "cd3f82aee9a6dd5c653237bc4586523e131bbd1770aa8cdd736c4a31d6211bea"
   },
   "rw_polartrex_boots_26fw": {
     "productId": "p_359",
@@ -409,7 +409,7 @@
   },
   "yora_smallbreed_2.5kg": {
     "productId": "p_164",
-    "sha256": "52e2dd21323cb73de714603e8bc7b8c8581b3eababc9f82b222c24c61784343e"
+    "sha256": "9be0717e0d830a6f4768e62c7352a3bc6e7e76974967f20566ecf78a447dda49"
   },
   "yora_lightsenior_6kg": {
     "productId": "p_170",
@@ -513,7 +513,7 @@
   },
   "rw_jsk_1000001243": {
     "productId": "p_459",
-    "sha256": "43977ace3d6d4f1b014fbedb8d46a388af0fdc2391a34f68b4a43940c2be916a"
+    "sha256": "2fb3933d26e7bef663542d5e6fe9d16bc4409d72797e8846981c4b9e27360ceb"
   },
   "rw_jsk_1000000137": {
     "productId": "p_366",
@@ -797,7 +797,7 @@
   },
   "mb_vegemix_475g": {
     "productId": "p_316",
-    "sha256": "d159110dbea1c6a5b6e942d7d9126de6b2b8467ac0e759d7b893adc2ba45a142"
+    "sha256": "2352f397a8f3cb065a65d7cf33f16d0d662c8a6c33b36b57f6ca43f3af4abaee"
   },
   "rw_remix_cactus_tug_26fw": {
     "productId": "p_361",
@@ -1093,7 +1093,7 @@
   },
   "rw_leash_trailrunner_23": {
     "productId": "p_228",
-    "sha256": "9615e5c6684e586ef07b01cafecd86bb806e203de18fe5e4f66f1fe75406751f"
+    "sha256": "c940a04f024cfd5e09144ddba9c86dacc8ea482867c743350b6089c43a7bd443"
   },
   "rw_leash_flatout": {
     "productId": "p_235",
