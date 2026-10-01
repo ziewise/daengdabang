@@ -21,7 +21,7 @@
   },
   "rw_jsk_1000001229": {
     "productId": "p_448",
-    "sha256": "bd64a1746d57112a6e3c64d5bf18345140f2503212352a06cdeb9b1a83faf950"
+    "sha256": "6bf2d4ae439122bfaa0a5c3eae7bff6f3ad4df77349e665a10df1f119bc6ccc9"
   },
   "rw_jsk_1000000650": {
     "productId": "p_382",
@@ -81,7 +81,7 @@
   },
   "rw_ridgeline_harness_26": {
     "productId": "p_6",
-    "sha256": "ed72afe76051dc1073f0a931b47a9921b60f6fce130ba35733a2214fa458e1a2"
+    "sha256": "8ee967bebdde60288202eced4411fc9a9ee5a5abece69f967fb93d335129bb47"
   },
   "rw_ridgeline_shoes_26": {
     "productId": "p_33",
@@ -97,7 +97,7 @@
   },
   "rw_jsk_1000001245": {
     "productId": "p_461",
-    "sha256": "9370f2fa35c2bcf9e3d6e480f4d4ea056a79ca258a8f77bf3b6ec74ebd92be54"
+    "sha256": "cc55960eedf2569975462e7197d8ff5c4275a5097605fe055ec7430881321893"
   },
   "rs_v2_banditorange": {
     "productId": "p_78",
@@ -153,7 +153,7 @@
   },
   "rw_jsk_1000001354": {
     "productId": "p_474",
-    "sha256": "00eb5a29e49ecf4a058b28b77807c2fb380ea1557b20772add771feecb628ebd"
+    "sha256": "7f520d6e4a3a493dd5453bb00640c4a080d3f86ad72257bfece6fd63a803e5eb"
   },
   "rw_jsk_1000001199": {
     "productId": "p_433",
@@ -1282,5 +1282,13 @@
   "ot_sleepingmat": {
     "productId": "p_198",
     "sha256": "e339cb738af1e8ceaa26dc4b8ba1dd2c2226019e54978fb528e6434baea1ebee"
+  },
+  "rw_remix_tugtoy_m_26": {
+    "productId": "p_27",
+    "sha256": "53066c66974d73526b94a019943c4c3d81f2ab1ab14153b3e80cf1320a3f0057"
+  },
+  "rw_jsk_1000001246": {
+    "productId": "p_462",
+    "sha256": "14667bf3b9b3e6f5d49a031828ee2e33d5a286ed408aed14d122768c73b5e79a"
   }
 }
