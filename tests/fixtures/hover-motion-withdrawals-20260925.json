@@ -969,5 +969,12 @@
     "video": "/images/products/catalog/rw_kibblecaddy/videos/9b1720c08b9a236404b1b7af3e7769aceb9a0da29e9c992472b732d05c40c68c/hover.mp4",
     "reason": "Actual current public playback at 0.560s expands the 720-square clip to 177.778 percent of the media box. The visible source window clips the standing dog torso, haunches, curled tail and hind legs at the left media edge while the bag remains visible. Whole-dog framing fails. Full 192-frame public and 192-frame legacy-source review is inherited from the exact immutable prior proof; historical provider/input identity remains unknown. Replacement is required for confirmed display cropping, not merely missing provenance or editorial cuts.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "hugo_icecream_salmon": {
+    "productId": "p_136",
+    "sha256": "163bf1566fc65091db86ad6dce2c1c425f014d74a905de5994541af51f5abef7",
+    "video": "/images/products/catalog/hugo_icecream_salmon/videos/163bf1566fc65091db86ad6dce2c1c425f014d74a905de5994541af51f5abef7/hover.mp4",
+    "reason": "The actual current product box enlarges the720-square encoded landscape trim to177.778 percent. At the finite-playback held ending, almost the entire curled tail and part of the seated rear/haunch are clipped at the left edge; the separate Slick Salmon lid is also clipped at the right edge. The main cup, face and forepaws remain visible. Exact prior full96-frame public review and full192-frame local archive review are preserved. Replacement is required only for confirmed whole-animal/product-lid display cropping; no new motion or historical-provider identity failure is inferred.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
