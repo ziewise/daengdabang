@@ -14010,7 +14010,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "ab65a712123abe537d09df7b22966c3793073c15"
   },
-  "yora_allbreed_12kg": null,
+  "yora_allbreed_12kg": {
+    "video": "/images/products/catalog/yora_allbreed_12kg/videos/fce13a192b7eac978f7f6420934e800c8e9cc73f382d94b572fae12bf3bcb67d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "e269ed0ef22bfdd9b5968383d17705ae",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e269ed0ef22bfdd9b5968383d17705ae",
+      "reviewId": "5621a3dbfbf0ff1c029c1d582e4dfccc",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fce13a192b7eac978f7f6420934e800c8e9cc73f382d94b572fae12bf3bcb67d",
+      "seconds": 4,
+      "source": {
+        "no": 175,
+        "folder": "yora_allbreed_12kg",
+        "name": "요라 올브리드 12kg 전견종 성견용 동애등에 단일단백질 40%",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_allbreed_12kg/yora_allbreed_12kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923056065",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_allbreed_12kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_allbreed_12kg/details/2.webp",
+          "/images/products/catalog/yora_allbreed_12kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d922a1aeaba9a9fcb457815a079e443b",
+        "sha256": "fce13a192b7eac978f7f6420934e800c8e9cc73f382d94b572fae12bf3bcb67d"
+      },
+      "scopeId": "67efd12433a68a6273eedce97c37fdd1b2e3037b35d923ba8de809a1d477af7b",
+      "scopeRegistrationSha256": "87b0ab9e7a614234d6616bca05c44bdcf759e1020cd7793e89846124efeaa54c",
+      "aiEvidenceSha256": "d5776bcde7a7291b2168cf9e265dd0e4b7ed96f0d48123d28a74819ad05cf64a",
+      "receiptSha256": "a555175c0346b2c886b9d1298a2a85f20f33caac5c89a867f17ea4099a1e7591",
+      "eligibilitySha256": "5f7d422b0ec957df81eb7973e24df39f7e88e035b8ad1e669ff3799f1d8ae4fd",
+      "evidenceManifestSha256": "f491c0b49527a86127ce7aca0111277d2e8c9f5e7dc4fce079d59d3b71c55120"
+    },
+    "videoReviewSha256": "0aa4f2ed8a811cdd9363e316ec306e4863ee3bc84ad64c2a0044583b000d77c4",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c97087d5b86d19fd233c78de6a62660f4c805d4e"
+  },
   "perity_aloe_shampoo": {
     "video": "/images/products/catalog/perity_aloe_shampoo/videos/1aa2882d97667aca55b3d7bc76103f565575670203bb1f5973f7e4e6886fd1ac/hover.mp4",
     "videoProvider": "ziewcraft",
