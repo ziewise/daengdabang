@@ -12,6 +12,8 @@ import { safeCatalogHoverVideo, getPetTryOnEligibility } from "../lib/pet-tryon-
 import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
 import { verifyVideoTrimEvidence } from "../lib/catalog/video-trim-evidence.mjs";
 import { applyReviewedHoverOverride } from "../lib/catalog/reviewed-hover-overrides.ts";
+import { motionWithdrawals, motionWithdrawnFolders } from "./helpers/hover-motion-withdrawals.mjs";
+import { matchesReviewedZiewcraftDelegatedVideo } from "../lib/catalog/reviewed-ziewcraft-delegated-video.mjs";
 const valid = f => matchesReviewedVideoTrim(f.product, f.records, f.flowReviews);
 function runtime(f) {
     const file = new URL("../lib/pet-tryon-eligibility.ts", import.meta.url), require = createRequire(file), module = { exports: {} };
@@ -35,10 +37,26 @@ test("an approved source time-trim retains original job or scene identity withou
 test("each registered trim matches the actual current SKU, source approval and immutable source/final files", () => {
     const read = name => JSON.parse(readFileSync(new URL(`../lib/catalog/${name}`, import.meta.url), "utf8"));
     const records = read("reviewed-video-trims.json"), flows = read("reviewed-flow-videos.json"), rows = read("raw.json");
+    const generated = read("reviewed-ziewcraft-delegated-videos.json");
     for (const record of Object.values(records)) {
         const original = rows.find(row => row.folder === record.folder); assert.ok(original);
         const raw = applyReviewedHoverOverride(original), product = { id: `p_${raw.no}`, folder: raw.folder, video: raw.video, raw };
-        assert.equal(matchesReviewedVideoTrim(product, records, flows), true, record.folder);
+        const preservedRaw = { ...original, ...record, videoReviewSha256: record.review.sha256,
+            videoGenerationIdentity: null, videoEditIdentity: null, videoZiewcraftIdentity: null, videoReviewClass: null };
+        const preservedProduct = { id: record.productId, folder: record.folder, video: record.video, raw: preservedRaw };
+        assert.equal(matchesReviewedVideoTrim(preservedProduct, records, flows), true, `${record.folder} original approval stays valid`);
+        const replacement = generated[record.folder], withdrawn = motionWithdrawnFolders.includes(record.folder);
+        assert.equal(matchesReviewedVideoTrim(product, records, flows), !withdrawn && !replacement, record.folder);
+        if(withdrawn) {
+            assert.equal(motionWithdrawals[record.folder].productId, record.productId);
+            assert.equal(motionWithdrawals[record.folder].sha256, record.sha256);
+            assert.equal(motionWithdrawals[record.folder].video, record.video);
+            assert.equal(safeCatalogHoverVideo(product), undefined, 'exact withdrawn trim stays absent');
+        } else if(replacement) {
+            assert.equal(matchesReviewedZiewcraftDelegatedVideo(product,generated), true);
+            assert.notEqual(replacement.sha256,record.sha256,'a separately accepted replacement cannot restore the withdrawn trim');
+            assert.equal(safeCatalogHoverVideo(product),replacement.video);
+        }
         for (const [file, expected] of [[record.video, record.sha256], [record.videoTrimIdentity.source.video, record.videoTrimIdentity.source.sha256],
             [raw.image, record.videoTrimIdentity.sku.imageSha256]]) {
             assert.ok(file.startsWith("/images/"), "this local trim batch requires archived public source images");
