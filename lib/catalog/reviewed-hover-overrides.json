@@ -314,13 +314,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "99069fc4e2cac7d1a8439269991ccfdee95a0240"
   },
-  "aff_donut_original_pink": {
-    "video": "/images/products/catalog/aff_donut_original_pink/videos/7de98ace911c1c0b94726a3deeac873bd6d559d502a3376d14f053808eca17c3/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "3e3b75e0-d759-4caf-bff7-0ecb4dd5673f"
-  },
+  "aff_donut_original_pink": null,
   "aff_microbeads_cloud": null,
   "aff_microbeads_round": {
     "video": "/images/products/catalog/aff_microbeads_round/videos/243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc/hover.mp4",
@@ -8315,13 +8309,7 @@
       "downloadEvidenceSha256": "f13f2fa4cdd430e9ced7f9f7297b10d9ccd9b70687cb094830d83a19a4560f5b"
     }
   },
-  "rw_toadstool_toy": {
-    "video": "/images/products/catalog/rw_toadstool_toy/videos/9f8ff342fbd82559836f23f999ef38aeca160584dd64d972d1475549697e3051/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "3f069ad3-b4ef-484d-b824-b8642d4acea1"
-  },
+  "rw_toadstool_toy": null,
   "rw_trailrunner_belt_23": {
     "video": "/images/products/catalog/rw_trailrunner_belt_23/videos/fa0975334bc12d5409ac54f38093e848967033aa620f2b799c783c45807e97b5/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -10890,13 +10878,7 @@
       "downloadEvidenceSha256": "46b89b686d732530e7cd654bbbdb9073a70bbceaba72e8f38bdb5edcd4c5a105"
     }
   },
-  "heyrex_taurus_1l": {
-    "video": "/images/products/catalog/heyrex_taurus_1l/videos/5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "d839f00a-1e1d-4e3f-8340-66873623a652"
-  },
+  "heyrex_taurus_1l": null,
   "soopa_healthybites_coconutchia": {
     "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/a48e4a5ec61185746d75398386d3b1306451827d532f89831b6fc0a61b403211/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",
