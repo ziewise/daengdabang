@@ -363,7 +363,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "f4cf8079e9209ea76d1a8489b4985a6576e7ad07"
   },
-  "aff_microbeads_cloud": null,
+  "aff_microbeads_cloud": {
+    "video": "/images/products/catalog/aff_microbeads_cloud/videos/5d5bcbedea070d41d9cd83ecae9fcef0399050c6164305844f72f9c1fe130da3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "49adbb42a97a6cd32fb8d0b23ca566b6",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "49adbb42a97a6cd32fb8d0b23ca566b6",
+      "reviewId": "aa73ae196f1de32220ec7c353d2fb3ed",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5d5bcbedea070d41d9cd83ecae9fcef0399050c6164305844f72f9c1fe130da3",
+      "seconds": 4,
+      "source": {
+        "no": 266,
+        "folder": "aff_microbeads_cloud",
+        "name": "아페토 커버분리형 마이크로 비즈 구름 방석 3컬러 핑크 그레이 네이비",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_microbeads_cloud/aff_microbeads_cloud.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637970343",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_microbeads_cloud/details/2.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/3.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/4.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/5.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/6.webp",
+          "/images/products/catalog/aff_microbeads_cloud/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "51832ae98d8e8d4bde714f472136d706",
+        "sha256": "5d5bcbedea070d41d9cd83ecae9fcef0399050c6164305844f72f9c1fe130da3"
+      },
+      "scopeId": "1f40e93e19d72f8c4c0e57c36ae58b2f55818bedd2103ff6b466501b0c7355ad",
+      "scopeRegistrationSha256": "9e9fb7ca5b968df22c233138ffe93e4bc6a3582e2d3d7a23e29cc177eb2982cf",
+      "aiEvidenceSha256": "19f1f669bbed3597ebd8f4aa0aea35524bc4a09b4b3efd6745ecefaf83ee4d01",
+      "receiptSha256": "4000f153b091d8db03930d1d31bb0ee4742141468b1a6cdef08ec3818831f3e5",
+      "eligibilitySha256": "e9c7c757ccc82d69ef40426d5885af16905e8cdb84de8c7d5b2780bd3da6ec12",
+      "evidenceManifestSha256": "b2e67fe60d4807c4461bf5a10b2d31f7c0f710ec1c8811f8f12a608c7c5da585"
+    },
+    "videoReviewSha256": "63bc467bbde474079dcaf0c0e532dd58ba1d10229891063b9fc97589f0453dc4",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "594313b2c35879fe67abb04c8937cd97f91385bc"
+  },
   "aff_microbeads_round": {
     "video": "/images/products/catalog/aff_microbeads_round/videos/243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -7315,7 +7364,68 @@
     "videoDeliveryCommit": "2ed53d320c50a8baf28c5d103a3600cf40be65b9"
   },
   "rw_leash_flagline_24": null,
-  "rw_leash_flatout": null,
+  "rw_leash_flatout": {
+    "video": "/images/products/catalog/rw_leash_flatout/videos/2d2387eb2f78214e1cac688ad31e8ca0062b6f05974a676fb26ee4627b1ca641/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "c5c0b6314e431f0a80ef76df37b1c6df",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c5c0b6314e431f0a80ef76df37b1c6df",
+      "reviewId": "833ca5e7c428e2bb51bb9c6ef24e3c27",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "2d2387eb2f78214e1cac688ad31e8ca0062b6f05974a676fb26ee4627b1ca641",
+      "seconds": 4,
+      "source": {
+        "no": 235,
+        "folder": "rw_leash_flatout",
+        "name": "러프웨어 플랫 아웃 리드줄(Flat Out™ Leash)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_04.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000974",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_177.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_275.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_310.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_48.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_534.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_670.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_744.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_886.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_940.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_105.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_1149.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000974/image/detail/1000000768_detail_1273.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220329/2021SS-Flat-Out-Leash1_1_020137.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220928/2021SS-Flat-Out-Leash1_2_153806.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220327/2021SS-Flat-Out-Leash2_234415.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220928/2021SS-Flat-Out-Leash3_153832.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220929/91a0a1aa3ec07e1511c76c0c1f321f9f_165403.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d82d8d191d090d964b26cd6c9eb4800e",
+        "sha256": "2d2387eb2f78214e1cac688ad31e8ca0062b6f05974a676fb26ee4627b1ca641"
+      },
+      "scopeId": "6c5250d4ee6bfe04a73c7af8a9d5523aed1d14aeca13441ee76c96ab738d1137",
+      "scopeRegistrationSha256": "88d91047432cd74488c74679f54eb84cd45fce906f715123514457a4a8897c19",
+      "aiEvidenceSha256": "c87ff438dbe669e7d5d76b8db36c9cb09e24345ef0182161ddeb59446c608f99",
+      "receiptSha256": "8a14a0ea8f11cb8e8e4b565471ce940d58a72bb2f8b87ed46646886febadb73d",
+      "eligibilitySha256": "381ea4fcdb1724f2cb0365c0fd28fd58d4968eb8e307a33e8b5bd0694e060c03",
+      "evidenceManifestSha256": "2e608cbd1fccc98d7efa9e2fa9dae8bfcfa58b86272a2182cf6891ffa47660ce"
+    },
+    "videoReviewSha256": "dbb122e1f73abe660b35971620c8058ef6c959428b7492c29f21fbcc2bdb6ee8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "594313b2c35879fe67abb04c8937cd97f91385bc"
+  },
   "rw_leash_frontrange_24": null,
   "rw_leash_frontrange_short_24": {
     "video": "/images/products/catalog/rw_leash_frontrange_short_24/videos/6181f13b8addfaf12a77292e00bc57be8bd35ee3faa0fa9cf26b9c06e6cc76c3/hover.mp4",
