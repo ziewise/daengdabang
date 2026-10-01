@@ -314,7 +314,55 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "99069fc4e2cac7d1a8439269991ccfdee95a0240"
   },
-  "aff_donut_original_pink": null,
+  "aff_donut_original_pink": {
+    "video": "/images/products/catalog/aff_donut_original_pink/videos/5b03c7aec7377bdc6fcf7daeca6645fee3a64fc6a3611fd0f83e404adea4feb4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "62e887fb8bb460dd8ccdb4fba98f0f3c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "62e887fb8bb460dd8ccdb4fba98f0f3c",
+      "reviewId": "074e46cf48895b3b3ae885c205dc352f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5b03c7aec7377bdc6fcf7daeca6645fee3a64fc6a3611fd0f83e404adea4feb4",
+      "seconds": 4,
+      "source": {
+        "no": 270,
+        "folder": "aff_donut_original_pink",
+        "name": "아페토 일체형 오리지널 도넛방석 핑크 M L XL",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_donut_original_pink/aff_donut_original_pink.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7637633348",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_donut_original_pink/details/2.webp",
+          "/images/products/catalog/aff_donut_original_pink/details/3.webp",
+          "/images/products/catalog/aff_donut_original_pink/details/4.webp",
+          "/images/products/catalog/aff_donut_original_pink/details/5.webp",
+          "/images/products/catalog/aff_donut_original_pink/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "78b8eb608bd3612a0a519456ee76ba21",
+        "sha256": "5b03c7aec7377bdc6fcf7daeca6645fee3a64fc6a3611fd0f83e404adea4feb4"
+      },
+      "scopeId": "4c484181463ec7f79c2fc9c2cb747401b6c959cf44ba242788dae29cf6867e67",
+      "scopeRegistrationSha256": "8f0ca29c313ad8b650fb67cb5553e6c34d78479c23a3e2bdd2654e7d9589d45d",
+      "aiEvidenceSha256": "cc97c333d83450da3b664ddb00a7db85df79f215fcc64a9fa4cc1ecca2914342",
+      "receiptSha256": "51fec7deae2ce423a1c6d24894cb918b75183a8bded170f6648308e43eed0cc9",
+      "eligibilitySha256": "9aa0f8d797563b685d1f43c3625f3660bd881b8b59a14ef49d5e510cd2bd9a73",
+      "evidenceManifestSha256": "0e9900cd36d90e6c0c94f4d207737914017c7ff8787f0482c03c8ebc50a47e79"
+    },
+    "videoReviewSha256": "7364d1f748e404221fcb13af9323e5495e56ca2f79b52fef62d4105469dc52e5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f4cf8079e9209ea76d1a8489b4985a6576e7ad07"
+  },
   "aff_microbeads_cloud": null,
   "aff_microbeads_round": {
     "video": "/images/products/catalog/aff_microbeads_round/videos/243e1e4e535dfff46686814816e55a855bc288b22396460ff89b1d0424efccfc/hover.mp4",
@@ -8309,7 +8357,59 @@
       "downloadEvidenceSha256": "f13f2fa4cdd430e9ced7f9f7297b10d9ccd9b70687cb094830d83a19a4560f5b"
     }
   },
-  "rw_toadstool_toy": null,
+  "rw_toadstool_toy": {
+    "video": "/images/products/catalog/rw_toadstool_toy/videos/abcd1bd2b4fe7ea15cd548c53fc8a6af303372a2cd4363fa3cb175f6dbdf9fa3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "403d763ad05b8e4a4fe6325917054b29",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "403d763ad05b8e4a4fe6325917054b29",
+      "reviewId": "50e69a38c0d620af40916826307196c7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "abcd1bd2b4fe7ea15cd548c53fc8a6af303372a2cd4363fa3cb175f6dbdf9fa3",
+      "seconds": 8,
+      "source": {
+        "no": 109,
+        "folder": "rw_toadstool_toy",
+        "name": "러프웨어 토드스툴 반려견 장난감(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001206/image/detail/1000001206_detail_084.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001206",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001206/image/detail/1000001206_detail_192.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001206/image/detail/1000001206_detail_27.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001206/image/detail/1000001206_detail_343.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001206/image/detail/1000001206_detail_417.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001206/image/detail/1000001206_detail_589.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240909/bfea14b1bfc6ad8af2b64786d43b2ef7_121050.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240909/b04bc5260f681a3b9adaa512d26a8294_121050.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/2da08794e7cb19a5a1370c48f5615af4_030319.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2f72ce171cf1e50145916afb58d8201c",
+        "sha256": "abcd1bd2b4fe7ea15cd548c53fc8a6af303372a2cd4363fa3cb175f6dbdf9fa3"
+      },
+      "scopeId": "85be5d1ede98e75cc9d58bbfd09f32615eaa73c1095367acb7d06b536611163d",
+      "scopeRegistrationSha256": "a243324e687ef9a243b83703c69dbe98dcccd6082f83c708000745b1c5554300",
+      "aiEvidenceSha256": "1102166da2b20fa3790616c44d2155c190719597d259888a654b407afddfc325",
+      "receiptSha256": "04425fbc18fc021a3b8d55ff6dd31cee16806b11b5bf100956e01101736c66df",
+      "eligibilitySha256": "7d575343228eb69735ff827cd045c43dbc879c1ce016b2c259bae778f5035289",
+      "evidenceManifestSha256": "c61255e0511b1ba573120a332f38bed6d40707b39433879461a1d0af9751d168"
+    },
+    "videoReviewSha256": "eb07dc6f3bacbea7796a196df640af003429efaa0106e7d7c9bd81fcee069327",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f4cf8079e9209ea76d1a8489b4985a6576e7ad07"
+  },
   "rw_trailrunner_belt_23": {
     "video": "/images/products/catalog/rw_trailrunner_belt_23/videos/fa0975334bc12d5409ac54f38093e848967033aa620f2b799c783c45807e97b5/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -10878,7 +10978,60 @@
       "downloadEvidenceSha256": "46b89b686d732530e7cd654bbbdb9073a70bbceaba72e8f38bdb5edcd4c5a105"
     }
   },
-  "heyrex_taurus_1l": null,
+  "heyrex_taurus_1l": {
+    "video": "/images/products/catalog/heyrex_taurus_1l/videos/dd25ee6c8e5a7c32ca1ba7416b550d6f4862d014aba4dbc7d8f3dbd106b5441a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "86e69419b0692c395bf24ccf23e93cb5",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "86e69419b0692c395bf24ccf23e93cb5",
+      "reviewId": "65ada38d5f8bbf74a15e91cb7cfa20f5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "dd25ee6c8e5a7c32ca1ba7416b550d6f4862d014aba4dbc7d8f3dbd106b5441a",
+      "seconds": 4,
+      "source": {
+        "no": 313,
+        "folder": "heyrex_taurus_1l",
+        "name": "헤이렉스 토러스 반려동물 정수기 1리터",
+        "brandEn": "Heyrex",
+        "isFood": false,
+        "image": "/images/products/catalog/heyrex_taurus_1l/heyrex_taurus_1l.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6822224510",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/heyrex_taurus_1l/details/2.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/3.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/4.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/5.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/6.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/7.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/8.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/9.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/10.webp",
+          "/images/products/catalog/heyrex_taurus_1l/details/11.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e3fbe7e330dc6e467a4c670a864e1962",
+        "sha256": "dd25ee6c8e5a7c32ca1ba7416b550d6f4862d014aba4dbc7d8f3dbd106b5441a"
+      },
+      "scopeId": "c9be865930bb973b7722718971625e65a6e5fef531c36f89fd6ffd46aa287aee",
+      "scopeRegistrationSha256": "df62e7f96572373b9ca6c26dc31c32da7f3c58f2ce69d5993ab1e6d51140eae8",
+      "aiEvidenceSha256": "b5c8298de13ce6706a04f4abc299856074f50c9fd71070f4a2dff015bcedf53c",
+      "receiptSha256": "7e0224a8d2bfa2bcd8c9ca2fc0c499486c9c864f34c5abfa1f0f0101ef289ac3",
+      "eligibilitySha256": "d2aa65a5782987d9236dc6e260066120e43e8a91a48e37aa614f3aa432ed665a",
+      "evidenceManifestSha256": "89a267e7d3ae7478355fb632def0ef14091c7ceb7293de5404780e4ce84de4b8"
+    },
+    "videoReviewSha256": "a866b2a9e59827a236c9b3acc4dd2ba2df35af5816a53ac4644a4986cad463ef",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "f4cf8079e9209ea76d1a8489b4985a6576e7ad07"
+  },
   "soopa_healthybites_coconutchia": {
     "video": "/images/products/catalog/soopa_healthybites_coconutchia/videos/a48e4a5ec61185746d75398386d3b1306451827d532f89831b6fc0a61b403211/hover.mp4",
     "videoDelivery": "jsdelivr_commit_cdn",

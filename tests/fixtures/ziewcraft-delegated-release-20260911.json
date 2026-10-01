@@ -1262,5 +1262,17 @@
   "hugo_icecream_salmon": {
     "productId": "p_136",
     "sha256": "fbf79d3bde245265f601f68fe0d714c7304d0a93cc0d5d2c9fac5f10a4d049de"
+  },
+  "rw_toadstool_toy": {
+    "productId": "p_109",
+    "sha256": "abcd1bd2b4fe7ea15cd548c53fc8a6af303372a2cd4363fa3cb175f6dbdf9fa3"
+  },
+  "aff_donut_original_pink": {
+    "productId": "p_270",
+    "sha256": "5b03c7aec7377bdc6fcf7daeca6645fee3a64fc6a3611fd0f83e404adea4feb4"
+  },
+  "heyrex_taurus_1l": {
+    "productId": "p_313",
+    "sha256": "dd25ee6c8e5a7c32ca1ba7416b550d6f4862d014aba4dbc7d8f3dbd106b5441a"
   }
 }
