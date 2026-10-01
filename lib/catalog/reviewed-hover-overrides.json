@@ -5385,7 +5385,65 @@
   },
   "rs_v2_2024ltd": null,
   "rs_v2_appalachianorange": null,
-  "rs_v2_atlasblue": null,
+  "rs_v2_atlasblue": {
+    "video": "/images/products/catalog/rs_v2_atlasblue/videos/7a5d985d30bcbf69017979391019377a03a9458b2eca0aec8d91bf833e42f0e4/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "b1a59310d3bc28aa64809b9f38f3e9f3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b1a59310d3bc28aa64809b9f38f3e9f3",
+      "reviewId": "9d5d5d37402ae73d11a0a3e94c7775dd",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7a5d985d30bcbf69017979391019377a03a9458b2eca0aec8d91bf833e42f0e4",
+      "seconds": 8,
+      "source": {
+        "no": 79,
+        "folder": "rs_v2_atlasblue",
+        "name": "렉스스펙스 V2 아틀라스 블루 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_056.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001110",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_137.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_294.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_39.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_499.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_593.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_648.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_7100.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001110/image/detail/1000001110_detail_825.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/V2-Atlas-Blue-2023_023858.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/45bf00fc8a88712b45e75cce0fba8675_023859.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/7c97857fd082488519d861463f37a6a9_023900.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_053536.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_053549.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/ce50939b7267aece200a424b5dac05ea_023901.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "645eedf969fe929afa2524f9c39fa9f2",
+        "sha256": "7a5d985d30bcbf69017979391019377a03a9458b2eca0aec8d91bf833e42f0e4"
+      },
+      "scopeId": "441303522af4c2ab22369422f02f4acf3212593c611556807f136cb7d6e5c114",
+      "scopeRegistrationSha256": "972bec1b1bb98d375e220ef3f72f24b2f808e82ecc332b9cbacdae7780b70450",
+      "aiEvidenceSha256": "6874b6d949dfe05ae3df04a611c4ddfd0be67b516376a09cb376c02aabef0fa5",
+      "receiptSha256": "885729709b795de981d18ba1f6ca8aec7aec05956d1d09157119ff9c10a5ed0d",
+      "eligibilitySha256": "aa6b79a3d8c13ea76ec2f0b802581a580ee6e6f4e9847b3e871b50f79e824a0b",
+      "evidenceManifestSha256": "111b5bacdfd0b9ffd66371e9e75920b2d8745a8b2d26d590593bc015428f42a5"
+    },
+    "videoReviewSha256": "605c00219374c9d9524aa4b05b55f041a2768793dfec58e8e5d837315ae6947b",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ae5e21393d263c40f66ff5cc44966008681b90d7"
+  },
   "rs_v2_avalanchewhite": null,
   "rs_v2_banditorange": null,
   "rs_v2_bighornblue": {
@@ -13953,7 +14011,53 @@
     "videoDeliveryCommit": "ab65a712123abe537d09df7b22966c3793073c15"
   },
   "yora_allbreed_12kg": null,
-  "perity_aloe_shampoo": null,
+  "perity_aloe_shampoo": {
+    "video": "/images/products/catalog/perity_aloe_shampoo/videos/1aa2882d97667aca55b3d7bc76103f565575670203bb1f5973f7e4e6886fd1ac/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "810041e0084d00af43a1ec4904e6c572",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "810041e0084d00af43a1ec4904e6c572",
+      "reviewId": "aa749b83139d54969786f84a3b2f6152",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "1aa2882d97667aca55b3d7bc76103f565575670203bb1f5973f7e4e6886fd1ac",
+      "seconds": 4,
+      "source": {
+        "no": 137,
+        "folder": "perity_aloe_shampoo",
+        "name": "페리티_알로에 수딩 앤 모이스처 펫 샴푸",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_aloe_shampoo/perity_aloe_shampoo.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10149123837",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_aloe_shampoo/details/2.webp",
+          "/images/products/catalog/perity_aloe_shampoo/details/3.webp",
+          "/images/products/catalog/perity_aloe_shampoo/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b1399f2a48400132e5735820ba764e19",
+        "sha256": "1aa2882d97667aca55b3d7bc76103f565575670203bb1f5973f7e4e6886fd1ac"
+      },
+      "scopeId": "d328eb2bfd580152464d53f62b838788261c7a22383c588a591d1d9743c89435",
+      "scopeRegistrationSha256": "f5ba5aa2cb040c06fb848919f81158573fcfd782e03f00c2f47142e55366dc3e",
+      "aiEvidenceSha256": "1018d7ab8d551401ecf03fcb28009c321496d6ba301c964dc27ef34db8346480",
+      "receiptSha256": "b81e50a83c43ede1275c0e0845f2dee12cbab340b088795d299772cda538671b",
+      "eligibilitySha256": "d5215f1e73758ca3ae7f665118791ba8c39ecc8811d549ee7640934e1ee13b7b",
+      "evidenceManifestSha256": "99347f3094a2510d5afb21b0a7e8cbbe670d69daca6cfd86ed9c1ced7d108539"
+    },
+    "videoReviewSha256": "1fb1a31df10686ec9d51da8683041501951bbb849bdc94c1a6c4efa6cd76056a",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ae5e21393d263c40f66ff5cc44966008681b90d7"
+  },
   "rs_jsk_1000001106": {
     "video": "/images/products/catalog/rs_jsk_1000001106/videos/7fa307439a721286d05fff312a221d51c2b67848465890be204823793c238c28/hover.mp4",
     "videoProvider": "ziewcraft",
