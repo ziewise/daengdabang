@@ -12754,7 +12754,63 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "85c37cf9fe0d883e90fa95aa40317664f7fdff45"
   },
-  "rw_jsk_1000001241": null,
+  "rw_jsk_1000001241": {
+    "video": "/images/products/catalog/rw_jsk_1000001241/videos/4380cf1053c85abd3afcd03fe7a6802ee25bb7967ef8298b805222e72bb687e1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "22ac95f2d1380f5e71790670d1ff4bf9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "22ac95f2d1380f5e71790670d1ff4bf9",
+      "reviewId": "a21be809a18ef812df18b9146287a467",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "4380cf1053c85abd3afcd03fe7a6802ee25bb7967ef8298b805222e72bb687e1",
+      "seconds": 8,
+      "source": {
+        "no": 457,
+        "folder": "rw_jsk_1000001241",
+        "name": "러프웨어 프런트 레인지 목줄(2026FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_045.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001241",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_158.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_234.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_332.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_419.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_558.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_674.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_748.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_869.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/b979ce0a9b55b2dee64650f113074773_104750.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/9d688ec91b405f379be06d8e3d5c2e8a_104758.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/5d1bb01ed6c5732bd5f79e51ddb7f57e_104809.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260819/8f75b8286aec97d372d945e8968b9b98_104822.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "953661b7a8e34291c0763c8770299895",
+        "sha256": "4380cf1053c85abd3afcd03fe7a6802ee25bb7967ef8298b805222e72bb687e1"
+      },
+      "scopeId": "5e8a4bf544a2806713c780be735be6600be4c03f1136404af6f5e1201aa87f36",
+      "scopeRegistrationSha256": "112bf8023c1f137a399bf39a0a4549c1d3c7a8b3f2f73156db8686710a9057d1",
+      "aiEvidenceSha256": "a127a551b2d64c41b490888f8bb96896734ad151f6afaa7bb0a5582efdfc1ea8",
+      "receiptSha256": "173e1a35083766a5379a1a6fc27f97769ef1106885590f723a54b8cd3c145e7d",
+      "eligibilitySha256": "966e95d38af17f969c5b66abc119e16f3af329530a28924eb9dafb9076103bf9",
+      "evidenceManifestSha256": "7be879138050bed93d4d0bb37ac39cd92d2c008eeddd47b66024602c9098b850"
+    },
+    "videoReviewSha256": "b9876e4b533292f00a81e19a5a8ce22f0190d1281383ff1a25f43b76659910e5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "ebf0cbb24edc174128b32bf86b60ef62bade093b"
+  },
   "rw_jsk_1000000765": {
     "video": "/images/products/catalog/rw_jsk_1000000765/videos/435ce7aea68640781b260df641e1473cb8583a1cc68c22b07ce5721c51f8af27/hover.mp4",
     "videoProvider": "ziewcraft",
