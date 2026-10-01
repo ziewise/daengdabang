@@ -3090,7 +3090,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "a05b95f1291019f89a2b4e28983b0310ea576bf1"
   },
-  "jjayo_icecream_mini_blueberry_50ml": null,
+  "jjayo_icecream_mini_blueberry_50ml": {
+    "video": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/videos/b692a80e5e11984e9c865948784b0c717953882521336a044f5d8b2711444818/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "fe949ea7c3f96ac7186cf4da1cb20a93",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "fe949ea7c3f96ac7186cf4da1cb20a93",
+      "reviewId": "d1079b57307e7c71e4dc48c5b609c0ea",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "b692a80e5e11984e9c865948784b0c717953882521336a044f5d8b2711444818",
+      "seconds": 4,
+      "source": {
+        "no": 327,
+        "folder": "jjayo_icecream_mini_blueberry_50ml",
+        "name": "짜요 미니 아이스크림 50ml 블루베리",
+        "brandEn": "Jjayo",
+        "isFood": true,
+        "image": "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/jjayo_icecream_mini_blueberry_50ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6696352488",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/details/2.webp",
+          "/images/products/catalog/jjayo_icecream_mini_blueberry_50ml/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8f3716d1fc2bbeedac61c8bec1f89d57",
+        "sha256": "b692a80e5e11984e9c865948784b0c717953882521336a044f5d8b2711444818"
+      },
+      "scopeId": "25be87ba7462e4bbb81c25cb40982a8215c020133c70b6da781703dfab0dc745",
+      "scopeRegistrationSha256": "244eff9621278cdc4001bc77331347019234b1980c21bbf3b70472acbdbcbdbc",
+      "aiEvidenceSha256": "513f8078ec6b7fc15a41a70f4f01c89c9848f74fa0688caddb93e11c0d65bb6b",
+      "receiptSha256": "28e7c727d174c52acc57dfea8c176c042401c51314d1f8289abfa8a1c6313c6e",
+      "eligibilitySha256": "0639931023cb55f699c94ce18d86c0bb0b19501f4946b27873f6bd452ff8de1c",
+      "evidenceManifestSha256": "1712acfc76ece08f45b82bf63837e30bf292375b3d51671982a227af2cca0f2c"
+    },
+    "videoReviewSha256": "186c61c4dd814df7fc0aeb9cfaae3d08b3d72df201b4c7a91d248959d5046599",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f612424ee16c0af8d8dacc6bd2d7c53b81ea66a"
+  },
   "joaru_perfume_cashmere": {
     "video": "/images/products/catalog/joaru_perfume_cashmere/videos/e7212d13d164b33e9ba53dfb4eb4284120ec2b75e874353ed7c5fa32977e4cc3/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -10552,7 +10597,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "14e110c5de02c6f388b550814e793a58e6542580"
   },
-  "yora_allbreed_6kg": null,
+  "yora_allbreed_6kg": {
+    "video": "/images/products/catalog/yora_allbreed_6kg/videos/3d8dc3769bcfef0a62803199f6603545a9d39357dd5f621b69389f61637fd77a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "03cdf59e9c66557e1f359c8037994e8e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "03cdf59e9c66557e1f359c8037994e8e",
+      "reviewId": "956248db43b9117875aec4179afddcd0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3d8dc3769bcfef0a62803199f6603545a9d39357dd5f621b69389f61637fd77a",
+      "seconds": 4,
+      "source": {
+        "no": 176,
+        "folder": "yora_allbreed_6kg",
+        "name": "요라 올브리드 6kg 전견종 성견용 (250G X 24개 소포장)",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_allbreed_6kg/yora_allbreed_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923050328",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_allbreed_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/yora_allbreed_6kg/details/2.webp",
+          "/images/products/catalog/yora_allbreed_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f183dbffcd294ba289f06dc018b87acf",
+        "sha256": "3d8dc3769bcfef0a62803199f6603545a9d39357dd5f621b69389f61637fd77a"
+      },
+      "scopeId": "55d02b1986b5f02201be2e52d4b51228c0af7d38cf056b12ab5c944ec44093c0",
+      "scopeRegistrationSha256": "1cd0d9bd32715842a36836150876a43bb058cab00e72256f1c72ef55246f3522",
+      "aiEvidenceSha256": "ecd6de7198152d1f087eac5594f54028ecbf3fdda0308bbf6658effcc40122ca",
+      "receiptSha256": "85f739c4517e89e6c831c769bbacedbca657da6af698351237d2d28345e83c51",
+      "eligibilitySha256": "623a8af747ff6210b10a94795fd095e40bb0cb50de379666992e3b12128452fe",
+      "evidenceManifestSha256": "af2827b25ff1fa8630b1f55e543a851ed49ff020eb69c3eb7313877a2114f60c"
+    },
+    "videoReviewSha256": "6520f8ff86f37cf424feb31f4f497fc29309cd78e72b04c25d6ef9cbea4c4735",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4f612424ee16c0af8d8dacc6bd2d7c53b81ea66a"
+  },
   "yora_dental_l_270g": {
     "video": "/images/products/catalog/yora_dental_l_270g/videos/75539048877765041420183616425aefbed4626f0cb014640b1604c1834ba952/hover.mp4",
     "videoProvider": "ziewcraft",
