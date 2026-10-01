@@ -1823,7 +1823,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "942db86918d6739f3b83a1c7028cfe04f18b64ec"
   },
-  "hugo_icecream_salmon": null,
+  "hugo_icecream_salmon": {
+    "video": "/images/products/catalog/hugo_icecream_salmon/videos/fbf79d3bde245265f601f68fe0d714c7304d0a93cc0d5d2c9fac5f10a4d049de/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "0bf8eec55c03817dbcaceaba44614ade",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0bf8eec55c03817dbcaceaba44614ade",
+      "reviewId": "b6623aa37bfcefd754d72e58f1e1236d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fbf79d3bde245265f601f68fe0d714c7304d0a93cc0d5d2c9fac5f10a4d049de",
+      "seconds": 4,
+      "source": {
+        "no": 136,
+        "folder": "hugo_icecream_salmon",
+        "name": "휴고앤샐린 아이스크림 강아지 연어맛",
+        "brandEn": "Hugo & Celine",
+        "isFood": true,
+        "image": "/images/products/catalog/hugo_icecream_salmon/hugo_icecream_salmon.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10181369049",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/hugo_icecream_salmon/details/official-visual-01.webp",
+          "/images/products/catalog/hugo_icecream_salmon/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "e255d956371706506ee6d06e10d35cce",
+        "sha256": "fbf79d3bde245265f601f68fe0d714c7304d0a93cc0d5d2c9fac5f10a4d049de"
+      },
+      "scopeId": "ecdd5017874e838b14133be58505482a5446e2b798099ae7aa41e3c099020631",
+      "scopeRegistrationSha256": "5913c5ea55a50c983aae968fe2386fac3dea6f333abd34e96b8b9a24be8fe74c",
+      "aiEvidenceSha256": "8d58b0c282270b1fe8a00cb8d69721d3437e9b53ee07d3c7c7d80e606b4d20d4",
+      "receiptSha256": "25c5d66a31dc68a82e464c10aacabf73f84d29e0ff8192351c415bd30a04f7c2",
+      "eligibilitySha256": "3640bf24dd2ace446221ec07ecb818ffc51825c33e785cbe906630f3b318be12",
+      "evidenceManifestSha256": "2d1c3ae962885dc45f7c396804433068c18d65c363a6990fb68042f12d15b5cb"
+    },
+    "videoReviewSha256": "4bde8a71af2a23d4b4aceab20e1c09ae17e1ca48b3ebee329518d78bb8f97f11",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "be5ab5090dacfb133d9c4324a31d8099903b4004"
+  },
   "iby_backpack_fc1705": null,
   "iby_backpack_fc1752": null,
   "iby_backpack_fc2106": {

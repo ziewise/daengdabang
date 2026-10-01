@@ -1258,5 +1258,9 @@
   "rw_jsk_1000001207": {
     "productId": "p_435",
     "sha256": "ca8fb72b807cec8bf0a6614afd128ed2385d6b8fd159c6e0fcb2ea332f22443a"
+  },
+  "hugo_icecream_salmon": {
+    "productId": "p_136",
+    "sha256": "fbf79d3bde245265f601f68fe0d714c7304d0a93cc0d5d2c9fac5f10a4d049de"
   }
 }
