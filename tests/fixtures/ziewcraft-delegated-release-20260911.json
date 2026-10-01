@@ -1025,7 +1025,7 @@
   },
   "perity_carrot_shampoo_250ml": {
     "productId": "p_205",
-    "sha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509"
+    "sha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0"
   },
   "joaru_perfume_lilac": {
     "productId": "p_318",
@@ -1274,5 +1274,9 @@
   "heyrex_taurus_1l": {
     "productId": "p_313",
     "sha256": "dd25ee6c8e5a7c32ca1ba7416b550d6f4862d014aba4dbc7d8f3dbd106b5441a"
+  },
+  "toplife_goatmilk_adult_200ml": {
+    "productId": "p_178",
+    "sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b"
   }
 }

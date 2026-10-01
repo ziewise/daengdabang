@@ -99661,16 +99661,16 @@
     "publicationStatus": "approved",
     "productId": "p_205",
     "folder": "perity_carrot_shampoo_250ml",
-    "video": "/images/products/catalog/perity_carrot_shampoo_250ml/videos/781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509/hover.mp4",
-    "sha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509",
+    "video": "/images/products/catalog/perity_carrot_shampoo_250ml/videos/c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0/hover.mp4",
+    "sha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0",
     "videoQuality": "approved_product_interaction",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "45a37173fc5c3318c6e22a38526675f3",
-      "reviewId": "ec618d6fe2a078a099f739f6f160221a",
+      "jobId": "4dc201813a93450446164d4f7aa26d9c",
+      "reviewId": "1dfdb00c91c1f1cfb19dce5127c05a0e",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509",
+      "finalSha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0",
       "seconds": 4,
       "source": {
         "no": 205,
@@ -99688,30 +99688,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "b836c1f976188e2f894bf73e78e80de7",
-        "sha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509"
+        "artifact_id": "7d1ec47ce48a4d498d4d4249209857eb",
+        "sha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0"
       },
       "scopeId": "13e67bf98f8c3f05b4e3754ea9d21b4b29422f79f4ccfef83403297138becd37",
-      "scopeRegistrationSha256": "b4a61c2f50389c614c823bd67237522df40ce76eff144830a16fcb4a2032fb5f",
-      "aiEvidenceSha256": "5ebb57b89fa669998dd194dd03ced3a38b698192e8da341c1884944dc5d08663",
-      "receiptSha256": "6ef602c35b110ad425474f6d0e502ccfcb6fe53adc719534629907acf4851ef3",
-      "eligibilitySha256": "9f30bb631e2580d5118fd652a95475b109a531728a30f029d4ed03d909977669",
-      "evidenceManifestSha256": "70e08a152a5d84dd2de78fc906a0603838153b22b2d1310d906abf0b7b165afd"
+      "scopeRegistrationSha256": "de96d555d486f230d206c042a36b56f002342ab4ea2d32c9b6953eb3a062daa4",
+      "aiEvidenceSha256": "6c14726af0a81a9a90c9c9ba26ad4d68d7034688938177be86b2b0d5fdf694e3",
+      "receiptSha256": "55cc2a2e85eaa22ede98b2d0e224add1874c9e81cdc23021b7b72a18ee196236",
+      "eligibilitySha256": "054dc8b0fa7fb20a0f8535ebe1175a01c2a878c61cad40428d6bc3d4dc631653",
+      "evidenceManifestSha256": "be0b10f7af7bc66a3ad782f090a6c30998c20b242d8017b64079b55c2a7eb9f0"
     },
     "delegatedReview": {
-      "api_job_id": "45a37173fc5c3318c6e22a38526675f3",
+      "api_job_id": "4dc201813a93450446164d4f7aa26d9c",
       "bindings": {
         "native_video": {
-          "artifact_id": "75099ed23e424082ac1ff2811ee6043c",
-          "sha256": "9c1578c166628236f287d3be0b342e73df4e0228b59026142cf5a6a394854c96"
+          "artifact_id": "3062ea94a0534c7aaf9dcf85744f58b9",
+          "sha256": "fc5e336fd6d6db8ca96e342d3d80f72431d1fab2833b2911ef7785fcf588d987"
         },
         "review_video": {
-          "artifact_id": "b836c1f976188e2f894bf73e78e80de7",
-          "sha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509"
+          "artifact_id": "7d1ec47ce48a4d498d4d4249209857eb",
+          "sha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0"
         },
         "terminal": {
-          "artifact_id": "231efa35712442153349c3a0d8b2c585",
-          "sha256": "c134c3f8f8d18f390fe0f4d963b3c68dca5bea1efe6a679958885807a514c9fe"
+          "artifact_id": "dd72f71ff6fd93e164691e9ab216e98b",
+          "sha256": "3a439e41837000381ca2c4ae4d2644d17b61ae27fbdd6fd5cd7ec807d79915c1"
         }
       },
       "checks": {
@@ -99851,41 +99851,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_205-45a37173fc5c3318c6e22a38526675f3-all97-v1",
-        "evidence_sha256": "5ebb57b89fa669998dd194dd03ced3a38b698192e8da341c1884944dc5d08663",
+        "evidence_id": "ddb-ai-p_205-4dc201813a93450446164d4f7aa26d9c-all97-v1",
+        "evidence_sha256": "6c14726af0a81a9a90c9c9ba26ad4d68d7034688938177be86b2b0d5fdf694e3",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "ec618d6fe2a078a099f739f6f160221a",
-      "reviewed_at": "2026-09-23T13:23:56.312789Z",
+      "review_id": "1dfdb00c91c1f1cfb19dce5127c05a0e",
+      "reviewed_at": "2026-10-01T14:55:56.367163Z",
       "schema_version": 1,
       "scope_id": "13e67bf98f8c3f05b4e3754ea9d21b4b29422f79f4ccfef83403297138becd37",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "231efa35712442153349c3a0d8b2c585",
+        "artifact_id": "dd72f71ff6fd93e164691e9ab216e98b",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "75099ed23e424082ac1ff2811ee6043c",
-        "native_artifact_sha256": "9c1578c166628236f287d3be0b342e73df4e0228b59026142cf5a6a394854c96",
+        "native_artifact_id": "3062ea94a0534c7aaf9dcf85744f58b9",
+        "native_artifact_sha256": "fc5e336fd6d6db8ca96e342d3d80f72431d1fab2833b2911ef7785fcf588d987",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "7bf9a05dcf2692f58b9a3521a10a39d7ccc76851f16830b3b22d9378325f8c55",
+        "pixel_sha256": "49221531819122b0a613c690d0e275280880f6826be26e6a0c780b1884ad5f94",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
         "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
-        "sha256": "c134c3f8f8d18f390fe0f4d963b3c68dca5bea1efe6a679958885807a514c9fe",
-        "source_artifact_id": "b836c1f976188e2f894bf73e78e80de7",
-        "source_artifact_sha256": "781e0d97a8c166d4958f9ce45604fa8b572a5087651923079bb8e34e3d8f6509",
+        "sha256": "3a439e41837000381ca2c4ae4d2644d17b61ae27fbdd6fd5cd7ec807d79915c1",
+        "source_artifact_id": "7d1ec47ce48a4d498d4d4249209857eb",
+        "source_artifact_sha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Carrot Voluming Pet Shampoo 250ml",
@@ -99904,15 +99907,12 @@
       "scene_sha256": "31bdf846e3a2034c9d4f7260e2f18f1a6af68113882fda56407ed11769b6f8c3",
       "schema_version": 1,
       "scope_id": "13e67bf98f8c3f05b4e3754ea9d21b4b29422f79f4ccfef83403297138becd37",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "ec618d6fe2a078a099f739f6f160221a",
+      "reviewId": "1dfdb00c91c1f1cfb19dce5127c05a0e",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "13e67bf98f8c3f05b4e3754ea9d21b4b29422f79f4ccfef83403297138becd37",
       "human_approved": false,
@@ -99934,10 +99934,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "43e9d5bb86238017afeadcf16af0695a9dba570e2f609617854d28e17696414b",
-      "technicalProofSha256": "a32682e6616f3fe5e816c7f73dfc10670068f007d025e7052096f0c0b71cf26d",
-      "checkedAt": "2026-09-24T14:57:00.947212+00:00",
-      "sha256": "1a674a8a00d9d6600f923004ab16fd2b8fa507a61c83c18eaa638dc5b24221f6"
+      "ownerInstructionSha256": "49bdc2f1824e42b7a269dd09cf2187cb25f4fde9db6293571e4ced3f8caa9689",
+      "technicalProofSha256": "75d82b4d3a73a310796ffe56d9c28698f19d737f8d038e9db2804ff58b1fb7a9",
+      "naturalMotionReviewSha256": "555f2bf66b59055fa59509426ec0d6c08a233bd540d9f31a2e9a7ae4e07cea05",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-01T15:57:48.601848+00:00",
+      "sha256": "0fefc5212bbe776592f59874ff3bf779e1276139d511de39f8a666b075142c15"
     }
   },
   "joaru_perfume_lilac": {
@@ -126460,6 +126462,300 @@
       "naturalMotionQualityVersion": "natural-motion-20260925",
       "checkedAt": "2026-10-01T02:13:43.355623+00:00",
       "sha256": "a866b2a9e59827a236c9b3acc4dd2ba2df35af5816a53ac4644a4986cad463ef"
+    }
+  },
+  "toplife_goatmilk_adult_200ml": {
+    "schema": "ddb.ziewcraft-owner-delegated-hover.v1",
+    "publicationStatus": "approved",
+    "productId": "p_178",
+    "folder": "toplife_goatmilk_adult_200ml",
+    "video": "/images/products/catalog/toplife_goatmilk_adult_200ml/videos/f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b/hover.mp4",
+    "sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b",
+    "videoQuality": "approved_product_contents",
+    "playbackMode": "once_hold_last_frame",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0798ada6d1339094c83491fb2e59dd95",
+      "reviewId": "bc3bd52b8bd1f081b06de25555d373c5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b",
+      "seconds": 4,
+      "source": {
+        "no": 178,
+        "folder": "toplife_goatmilk_adult_200ml",
+        "name": "탑라이프 산양유 어덜트 200ml",
+        "brandEn": "Tam Life",
+        "isFood": true,
+        "image": "/images/products/catalog/toplife_goatmilk_adult_200ml/toplife_goatmilk_adult_200ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923001956",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/toplife_goatmilk_adult_200ml/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "23c8fc15e6fdf9310ef040faa581b432",
+        "sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b"
+      },
+      "scopeId": "2ec1dd12ce88e2c1417eecd371e278377a831668fd752b25bf01363918044260",
+      "scopeRegistrationSha256": "6b80137f2f06e377262a34f919ee60c22182c83d4f99dfb016e69d7b731904e3",
+      "aiEvidenceSha256": "d674d5931e3c1b382ce342031142888b5f5bee9fb7b1186bbff33910ce394de6",
+      "receiptSha256": "0b38e6162a26169eb0b5b048ea5c3514e6e586b9678220d69c291197859b7d66",
+      "eligibilitySha256": "8e7a16f15db0ffcf340c597267fff1e87113966284639944e9616e5540f84e81",
+      "evidenceManifestSha256": "aedb0a016ec35bbbefa467562cfa472d8acb96d4a504f0b5a2f98ea43efd0627"
+    },
+    "delegatedReview": {
+      "api_job_id": "0798ada6d1339094c83491fb2e59dd95",
+      "bindings": {
+        "native_video": {
+          "artifact_id": "5850255e7e004ff3b8e5491d0789c567",
+          "sha256": "883966ea8a4816673d0a1fcb744b3e1a213720b50688c624449d1af01cc584df"
+        },
+        "review_video": {
+          "artifact_id": "23c8fc15e6fdf9310ef040faa581b432",
+          "sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b"
+        },
+        "terminal": {
+          "artifact_id": "e8ae9f91f6bbcf0e56fee47ff03c7cfd",
+          "sha256": "1acd4c53b166e1950eb43cefc9e5df886201c3e2b2cc668b4369cdbdfbdc2cca"
+        }
+      },
+      "checks": {
+        "anatomy_and_motion": true,
+        "camera_and_framing": true,
+        "no_prohibited_overlays": true,
+        "product_identity": true,
+        "temporal_stability": true
+      },
+      "complete_product": true,
+      "coverage": {
+        "native_frames": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96
+        ]
+      },
+      "evidence_bytes_verified": true,
+      "evidence_content_verified": false,
+      "human_approved": false,
+      "human_identity_verified": false,
+      "numeric_boundary_evidence": null,
+      "owner_delegated_shop_candidate": true,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "previous_review_id": null,
+      "private_only": true,
+      "product": {
+        "color": "Blue adult TopLife Formula Milk for Dogs 200ml; exact adult detail-panel packaging; one carton demonstration",
+        "product_id": "p_178",
+        "sku": "toplife_goatmilk_adult_200ml"
+      },
+      "product_reference_assets": [
+        {
+          "asset_id": "03e542c3a366c65c58d873849c30643d",
+          "sha256": "8b95598b339964bf8d01a4a8de058a5d56d639ef632afba1b591561607a2effb",
+          "source_sha256": "8b95598b339964bf8d01a4a8de058a5d56d639ef632afba1b591561607a2effb"
+        },
+        {
+          "asset_id": "eb28d4239710658eea756d3a765c6abe",
+          "sha256": "00c45241e104d92a37bc9dbbcbd0d0351705c67394139841a2fbe496c26f7a2d",
+          "source_sha256": "00c45241e104d92a37bc9dbbcbd0d0351705c67394139841a2fbe496c26f7a2d"
+        }
+      ],
+      "production_eligible": false,
+      "publication_allowed": false,
+      "publication_authority": "shop_owner_separate_decision",
+      "required_final_seconds": 4,
+      "retry_reason": "",
+      "review_actor": {
+        "evidence_id": "ddb-ai-p_178-0798ada6d1339094c83491fb2e59dd95-all97-v1",
+        "evidence_sha256": "d674d5931e3c1b382ce342031142888b5f5bee9fb7b1186bbff33910ce394de6",
+        "full_segment_watched": false,
+        "kind": "ai"
+      },
+      "review_id": "bc3bd52b8bd1f081b06de25555d373c5",
+      "reviewed_at": "2026-10-01T15:41:35.048139Z",
+      "schema_version": 1,
+      "scope_id": "2ec1dd12ce88e2c1417eecd371e278377a831668fd752b25bf01363918044260",
+      "semantic_verified": false,
+      "server_technical_gate_passed": true,
+      "status": "accepted",
+      "terminal_provenance": {
+        "artifact_id": "e8ae9f91f6bbcf0e56fee47ff03c7cfd",
+        "canonical_review": true,
+        "frame_count": 96,
+        "frame_index": 95,
+        "height": 1080,
+        "mime_type": "image/png",
+        "native_artifact_id": "5850255e7e004ff3b8e5491d0789c567",
+        "native_artifact_sha256": "883966ea8a4816673d0a1fcb744b3e1a213720b50688c624449d1af01cc584df",
+        "origin": "server_decoded_terminal",
+        "pixel_encoding": "bgr24",
+        "pixel_sha256": "699b857625c4f1e8ab97f1f72b5183a103e77ef192fe3271772e36dfd3152d61",
+        "png_compression": 3,
+        "producer": "ziewcraft-human-review-media-r49-v1",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "1acd4c53b166e1950eb43cefc9e5df886201c3e2b2cc668b4369cdbdfbdc2cca",
+        "source_artifact_id": "23c8fc15e6fdf9310ef040faa581b432",
+        "source_artifact_sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b",
+        "source_rendition": "review",
+        "width": 1080
+      }
+    },
+    "delegationScope": {
+      "policy_id": "ddb-owner-ai-qa-20260911-v1",
+      "product": {
+        "color": "Blue adult TopLife Formula Milk for Dogs 200ml; exact adult detail-panel packaging; one carton demonstration",
+        "product_id": "p_178",
+        "sku": "toplife_goatmilk_adult_200ml"
+      },
+      "references": [
+        {
+          "asset_id": "03e542c3a366c65c58d873849c30643d",
+          "sha256": "8b95598b339964bf8d01a4a8de058a5d56d639ef632afba1b591561607a2effb",
+          "source_sha256": "8b95598b339964bf8d01a4a8de058a5d56d639ef632afba1b591561607a2effb"
+        },
+        {
+          "asset_id": "eb28d4239710658eea756d3a765c6abe",
+          "sha256": "00c45241e104d92a37bc9dbbcbd0d0351705c67394139841a2fbe496c26f7a2d",
+          "source_sha256": "00c45241e104d92a37bc9dbbcbd0d0351705c67394139841a2fbe496c26f7a2d"
+        }
+      ],
+      "required_final_seconds": 4,
+      "scene_asset_id": "41aefa0059d27e7004de7c06acb51d1e",
+      "scene_sha256": "64e501c85a261bc8a240a3907ab61d8311055fe504eb4a2078d73cff23012c14",
+      "schema_version": 1,
+      "scope_id": "2ec1dd12ce88e2c1417eecd371e278377a831668fd752b25bf01363918044260",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
+    },
+    "currentEligibility": {
+      "owner_delegated_shop_candidate_current": true,
+      "reason": null,
+      "reviewId": "bc3bd52b8bd1f081b06de25555d373c5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "scopeId": "2ec1dd12ce88e2c1417eecd371e278377a831668fd752b25bf01363918044260",
+      "human_approved": false,
+      "publication_allowed": false
+    },
+    "technical": {
+      "width": 1080,
+      "height": 1080,
+      "fps": 24,
+      "frameCount": 96,
+      "durationSeconds": 4,
+      "codec": "avc1",
+      "pixelFormat": "yuv420p",
+      "fullDecode": true,
+      "audioStreams": 0,
+      "fastStart": true
+    },
+    "publication": {
+      "actor": "ai",
+      "ownerAuthorized": true,
+      "evidenceVerified": true,
+      "ownerInstructionSha256": "49bdc2f1824e42b7a269dd09cf2187cb25f4fde9db6293571e4ced3f8caa9689",
+      "technicalProofSha256": "b738395c801b479b94b69a690c321eabb4af0df108efffba53d0a1055568adeb",
+      "naturalMotionReviewSha256": "ebed4cd4585a680cf709240ae3b9a211c6cce4c689f1150d792be8f9bd160f33",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-01T15:57:46.476382+00:00",
+      "sha256": "9eab7d634ff0945c3809cfeb557e317eaa71ddd63f51361aac47ecbce06ea14d"
     }
   }
 }

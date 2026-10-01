@@ -4523,7 +4523,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "f0054c4fcf76ddeb6d406fcd46b1059a0fd9a1ec"
   },
-  "perity_carrot_shampoo_250ml": null,
+  "perity_carrot_shampoo_250ml": {
+    "video": "/images/products/catalog/perity_carrot_shampoo_250ml/videos/c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4dc201813a93450446164d4f7aa26d9c",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4dc201813a93450446164d4f7aa26d9c",
+      "reviewId": "1dfdb00c91c1f1cfb19dce5127c05a0e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0",
+      "seconds": 4,
+      "source": {
+        "no": 205,
+        "folder": "perity_carrot_shampoo_250ml",
+        "name": "페리티_제주 당근 볼류밍 펫 샴푸 250ml",
+        "brandEn": "PERITY",
+        "isFood": false,
+        "image": "/images/products/catalog/perity_carrot_shampoo_250ml/perity_carrot_shampoo_250ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8848926836",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/perity_carrot_shampoo_250ml/details/2.webp",
+          "/images/products/catalog/perity_carrot_shampoo_250ml/details/3.webp",
+          "/images/products/catalog/perity_carrot_shampoo_250ml/details/4.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "7d1ec47ce48a4d498d4d4249209857eb",
+        "sha256": "c5860c8caaf7a3cce2a4778d08ca386ce46a0b06e66b4e28e315ae3d0ad6abd0"
+      },
+      "scopeId": "13e67bf98f8c3f05b4e3754ea9d21b4b29422f79f4ccfef83403297138becd37",
+      "scopeRegistrationSha256": "de96d555d486f230d206c042a36b56f002342ab4ea2d32c9b6953eb3a062daa4",
+      "aiEvidenceSha256": "6c14726af0a81a9a90c9c9ba26ad4d68d7034688938177be86b2b0d5fdf694e3",
+      "receiptSha256": "55cc2a2e85eaa22ede98b2d0e224add1874c9e81cdc23021b7b72a18ee196236",
+      "eligibilitySha256": "054dc8b0fa7fb20a0f8535ebe1175a01c2a878c61cad40428d6bc3d4dc631653",
+      "evidenceManifestSha256": "be0b10f7af7bc66a3ad782f090a6c30998c20b242d8017b64079b55c2a7eb9f0"
+    },
+    "videoReviewSha256": "0fefc5212bbe776592f59874ff3bf779e1276139d511de39f8a666b075142c15",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4e93586c5831bfd23d195da8d9a6cb51681f438f"
+  },
   "perity_carrot_shampoo_refill_500ml": {
     "video": "/images/products/catalog/perity_carrot_shampoo_refill_500ml/videos/a6f0bbc2c888b2a836c7abed06798ca54dae9b382f8275f7e2aaad34576b61f5/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -10060,7 +10106,51 @@
     "videoDeliveryCommit": "d8a44e5b9562e9c9172f440c964909714a8c8c11"
   },
   "thule_courier_trailer": null,
-  "toplife_goatmilk_adult_200ml": null,
+  "toplife_goatmilk_adult_200ml": {
+    "video": "/images/products/catalog/toplife_goatmilk_adult_200ml/videos/f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "0798ada6d1339094c83491fb2e59dd95",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0798ada6d1339094c83491fb2e59dd95",
+      "reviewId": "bc3bd52b8bd1f081b06de25555d373c5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b",
+      "seconds": 4,
+      "source": {
+        "no": 178,
+        "folder": "toplife_goatmilk_adult_200ml",
+        "name": "탑라이프 산양유 어덜트 200ml",
+        "brandEn": "Tam Life",
+        "isFood": true,
+        "image": "/images/products/catalog/toplife_goatmilk_adult_200ml/toplife_goatmilk_adult_200ml.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8923001956",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/toplife_goatmilk_adult_200ml/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "23c8fc15e6fdf9310ef040faa581b432",
+        "sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b"
+      },
+      "scopeId": "2ec1dd12ce88e2c1417eecd371e278377a831668fd752b25bf01363918044260",
+      "scopeRegistrationSha256": "6b80137f2f06e377262a34f919ee60c22182c83d4f99dfb016e69d7b731904e3",
+      "aiEvidenceSha256": "d674d5931e3c1b382ce342031142888b5f5bee9fb7b1186bbff33910ce394de6",
+      "receiptSha256": "0b38e6162a26169eb0b5b048ea5c3514e6e586b9678220d69c291197859b7d66",
+      "eligibilitySha256": "8e7a16f15db0ffcf340c597267fff1e87113966284639944e9616e5540f84e81",
+      "evidenceManifestSha256": "aedb0a016ec35bbbefa467562cfa472d8acb96d4a504f0b5a2f98ea43efd0627"
+    },
+    "videoReviewSha256": "9eab7d634ff0945c3809cfeb557e317eaa71ddd63f51361aac47ecbce06ea14d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "4e93586c5831bfd23d195da8d9a6cb51681f438f"
+  },
   "wow_shoes_20": {
     "video": "/images/products/catalog/wow_shoes_20/videos/c372e5e280cbc671bd71f91e5f7e2065b5d5b76ec97894d80fb1d0cce5d46eef/hover.mp4",
     "videoProvider": "ziewcraft",
