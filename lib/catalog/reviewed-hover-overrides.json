@@ -7768,13 +7768,7 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
-  "rw_quencher_24": {
-    "video": "/images/products/catalog/rw_quencher_24/videos/672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "2e9dee08-5b2b-40ed-b0b6-207a26967596"
-  },
+  "rw_quencher_24": null,
   "rw_quinzee_jacket": null,
   "rw_quinzee_jacket_24": {
     "video": "/images/products/catalog/rw_quinzee_jacket_24/videos/bbc5236f1182f44ae65fd40e77ab65b241887037f4e1725eb58f48a050863990/hover.mp4",
@@ -8469,13 +8463,7 @@
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
   "rw_trailrunner_vest": null,
-  "rw_trailrunnerbowl": {
-    "video": "/images/products/catalog/rw_trailrunnerbowl/videos/9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3/hover.mp4",
-    "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "google_flow_web",
-    "videoQuality": "approved_dog_using",
-    "videoJobId": "6ec534ab-fe75-438b-9db1-9d05a851a62c"
-  },
+  "rw_trailrunnerbowl": null,
   "rw_treattrader_23": null,
   "rw_treattrader_bag": {
     "video": "/images/products/catalog/rw_treattrader_bag/videos/b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2/hover.mp4",

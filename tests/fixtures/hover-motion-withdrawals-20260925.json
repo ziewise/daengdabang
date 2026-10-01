@@ -1004,5 +1004,19 @@
     "video": "/images/products/catalog/heyrex_taurus_1l/videos/5a8d14bb9b894af3567fe1b21acd601e2b1286b2877219f907b7ce1b81e8a2cf/hover.mp4",
     "reason": "Current square display enlargement clips the Bichon rear body/tail and rear-leg region at the right edge. The bowl itself remains entirely visible. Whole-dog framing fails. Actual live playing display and exact archive ending were directly inspected. Prior full192native/192final visual review is inherited unchanged. No new historical provider identity or motion defect is inferred.",
     "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_quencher_24": {
+    "productId": "p_147",
+    "sha256": "672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49",
+    "video": "/images/products/catalog/rw_quencher_24/videos/672bba8e11e44d2e1ca9674d1066d52f7ff289cfefaf5bb9e8e8273e6258fc49/hover.mp4",
+    "reason": "Current enlarged square display cuts the Maltese rear/haunch, curled tail and part of hind-leg/paw region at the LEFT edge. Complete bowl and front body remain visible. Whole-dog framing fails. Exact archived ending and actual live playing display directly inspected. Prior complete192native/192final pixel review is inherited unchanged. No new motion defect or historical provider identity inferred.",
+    "reviewVersion": "natural-motion-20260925"
+  },
+  "rw_trailrunnerbowl": {
+    "productId": "p_161",
+    "sha256": "9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3",
+    "video": "/images/products/catalog/rw_trailrunnerbowl/videos/9e875fd8ec177463cdf266e20be67e548cdb7f01b3a11cd4a4006fc4700810b3/hover.mp4",
+    "reason": "Current enlarged square display cuts the Poodle rear/haunch, tail and part of hind-leg/paw region at the RIGHT edge. Complete blue bowl and front body remain visible. Whole-dog framing fails. Exact archived ending and actual live playing display directly inspected. Prior complete192native/192final pixel review is inherited unchanged. No new motion defect or historical provider identity inferred.",
+    "reviewVersion": "natural-motion-20260925"
   }
 }
