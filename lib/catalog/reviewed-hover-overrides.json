@@ -1098,7 +1098,53 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "d31333abdb33a1525c3b74bf01d88706a3acfe13"
   },
-  "canagan_dog_highland_6kg": null,
+  "canagan_dog_highland_6kg": {
+    "video": "/images/products/catalog/canagan_dog_highland_6kg/videos/8626807c2c427127c899507d2ec0c09d435f0b11be5645c8e23494140df52362/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "fe2dac4a5dfdae66986ca1dff221d3fe",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "fe2dac4a5dfdae66986ca1dff221d3fe",
+      "reviewId": "93aeb227736d1e5026e3af19cb32ee13",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "8626807c2c427127c899507d2ec0c09d435f0b11be5645c8e23494140df52362",
+      "seconds": 4,
+      "source": {
+        "no": 128,
+        "folder": "canagan_dog_highland_6kg",
+        "name": "카나간 하이랜드 피스트 포 독 6kg",
+        "brandEn": "Canagan",
+        "isFood": true,
+        "image": "/images/products/catalog/canagan_dog_highland_6kg/canagan_dog_highland_6kg.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10202355147",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/canagan_dog_highland_6kg/details/official-visual-01.webp",
+          "/images/products/catalog/canagan_dog_highland_6kg/details/2.webp",
+          "/images/products/catalog/canagan_dog_highland_6kg/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "cda0a25272e23464f3bfda5818f93226",
+        "sha256": "8626807c2c427127c899507d2ec0c09d435f0b11be5645c8e23494140df52362"
+      },
+      "scopeId": "8ec16fc18c7868a7b57eba457fc15e6e9b84e6ea72cf6c51b3f9c21620c6aa95",
+      "scopeRegistrationSha256": "15c268fa9c7cdaa0432fe4bf75f391f7c3f7046f8e3bcc318e8887c9557a9e8e",
+      "aiEvidenceSha256": "80f82dfb654f81a4a382bd9de8038a510450b7674f2883ccc274324b525b4c0a",
+      "receiptSha256": "60d91e0fbdab3e101a3d7eeff0c40bdad5891763c1b9f5a93a46cca05d5bf190",
+      "eligibilitySha256": "193034c37a9ac04f936343519b09a0fa771100243f7da93bf345e7814254989b",
+      "evidenceManifestSha256": "8865adc27027202063e24e26eab84639ba33eaaaa5c611ee6d711b1c044508c2"
+    },
+    "videoReviewSha256": "2f8aeb35663195bc67c9b84911422acb54e1c078f3f86e214c5630235c6d27cf",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c7e832ebf25521e2b2bad3a9d4816663adb4b36d"
+  },
   "canagan_dog_salmon_6kg": {
     "video": "/images/products/catalog/canagan_dog_salmon_6kg/videos/ac729cd59a53ec177e61018c6168b04f5abbb1822874214639d19e4ea651de0d/hover.mp4",
     "videoProvider": "ziewcraft",
@@ -3827,11 +3873,54 @@
     "videoDeliveryCommit": "794b1af20128d2550bea4f98a9698c2aadfe5565"
   },
   "ot_sleepingmat": {
-    "video": "/images/products/catalog/ot_sleepingmat/videos/hover.mp4",
+    "video": "/images/products/catalog/ot_sleepingmat/videos/e339cb738af1e8ceaa26dc4b8ba1dd2c2226019e54978fb528e6434baea1ebee/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "f6db94daf9ef3746670ee389e4dd88d7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "f6db94daf9ef3746670ee389e4dd88d7",
+      "reviewId": "b10ac95972bdc8e124fe280d419427c1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e339cb738af1e8ceaa26dc4b8ba1dd2c2226019e54978fb528e6434baea1ebee",
+      "seconds": 4,
+      "source": {
+        "no": 198,
+        "folder": "ot_sleepingmat",
+        "name": "원티그리스 강아지침낭매트 침대 반려견방석 이불 대형견 중형견 고양이이불 개방석 꿀잠 담요",
+        "brandEn": "OneTigris",
+        "isFood": false,
+        "image": "/images/products/catalog/ot_sleepingmat/ot_sleepingmat.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8849251105",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/ot_sleepingmat/details/official-visual-01.webp",
+          "/images/products/catalog/ot_sleepingmat/details/official-visual-02.webp",
+          "/images/products/catalog/ot_sleepingmat/details/2.webp",
+          "/images/products/catalog/ot_sleepingmat/details/3.webp",
+          "/images/products/catalog/ot_sleepingmat/details/4.webp",
+          "/images/products/catalog/ot_sleepingmat/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2e154f69dbeb83d0d1ac8836a7019526",
+        "sha256": "e339cb738af1e8ceaa26dc4b8ba1dd2c2226019e54978fb528e6434baea1ebee"
+      },
+      "scopeId": "299bc4cdf4adda33e0aadf61197b685a8550e530d6915abe30b788cec599c591",
+      "scopeRegistrationSha256": "a48ccafa13ff24f50266cabd4a4cf5bdfa7f6092b933427ae73c1fd367ac4da8",
+      "aiEvidenceSha256": "73c8faffd49739e6cd1dd17e3daf3606806bb6a6b0c729f289fc521198a6a52d",
+      "receiptSha256": "79326633b7ffa7b8fe6ad0878123f34a4be7ebaf4365fc6a9765f7e722e42886",
+      "eligibilitySha256": "60f7cf693225b45e962e6c4010a7b4abc0dccab0edde6a8d474fb2961f32779b",
+      "evidenceManifestSha256": "8470e67558a1247fb2be589e68dc971e25d9826d22a7267a71b272e6169b5af8"
+    },
+    "videoReviewSha256": "146869382da4fe4680dff07adc35e776e723d84b4fba31bee6fc902c61b5e01d",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-facb59633a6b"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c7e832ebf25521e2b2bad3a9d4816663adb4b36d"
   },
   "packt_endeavor_collar": {
     "video": "/images/products/catalog/packt_endeavor_collar/videos/9cea971160b1fba79706301b284d2aeeea15e26268132fd9546b61fb7395ce51/hover.mp4",
@@ -7535,7 +7624,60 @@
   "rw_leash_nota_long": null,
   "rw_leash_roamer": null,
   "rw_leash_roamer_long": null,
-  "rw_leash_switchback_24": null,
+  "rw_leash_switchback_24": {
+    "video": "/images/products/catalog/rw_leash_switchback_24/videos/27d843baaea382521c28804be76b3e2b777700e8cce3edf3e6a23186d7048149/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "cbfcecf422e9d66bd3553e3427261ce0",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "cbfcecf422e9d66bd3553e3427261ce0",
+      "reviewId": "9573efd70d5124747f3a03128a3876dd",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "27d843baaea382521c28804be76b3e2b777700e8cce3edf3e6a23186d7048149",
+      "seconds": 4,
+      "source": {
+        "no": 144,
+        "folder": "rw_leash_switchback_24",
+        "name": "러프웨어 스위치백 다기능 리드줄",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_038.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001181",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_151.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_264.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_389.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_483.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001181/image/detail/1000001181_detail_515.jpg"
+        ],
+        "details": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/4323ee042367e283bd7048fe629ed686.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/14ed37bb797d149ae628f37492e01548.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/d5d9b0cb42ad13cf09ae981670584c8d.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001181/f378aa9e56b6f7760e4dc18a3f51340b.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "06bccc14b4f1bc54dc218be33cd306e6",
+        "sha256": "27d843baaea382521c28804be76b3e2b777700e8cce3edf3e6a23186d7048149"
+      },
+      "scopeId": "4993b5f21dec15f01e687383dd3c33b6d96196124bca1ab4d6552076a0ef1ca7",
+      "scopeRegistrationSha256": "968bfcd6833c9c4603817e669b11d01e5e79e7ac8400e9d74c1607727a8314f0",
+      "aiEvidenceSha256": "ab4c445d4521704594ec15cc3df3c5ddee6d96bf82c1ee2471c21032aa82de69",
+      "receiptSha256": "5f2ea841e6a5be7315e2529506d73cf959157fde357f68c0974ca6f2fd3d619b",
+      "eligibilitySha256": "b10f324ad45afe1f9724e7853e1781c475290b5061079635f550237ec9091dcd",
+      "evidenceManifestSha256": "a91e43db777fede4545eb45e68745dc67c2d9f41c755aefea75d439056cbdee4"
+    },
+    "videoReviewSha256": "bf8ccbe1424fd97996b4b385e7826521ddfa5ff1d9dec76967030edd546ea152",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c7e832ebf25521e2b2bad3a9d4816663adb4b36d"
+  },
   "rw_leash_trailrunner_23": {
     "video": "/images/products/catalog/rw_leash_trailrunner_23/videos/c940a04f024cfd5e09144ddba9c86dacc8ea482867c743350b6089c43a7bd443/hover.mp4",
     "videoProvider": "ziewcraft",

@@ -417,7 +417,7 @@
   },
   "rw_leash_switchback_24": {
     "productId": "p_144",
-    "sha256": "395276626d4e597850763f98acfc6cfd0145d1b9211838f6044aca76431a9444"
+    "sha256": "27d843baaea382521c28804be76b3e2b777700e8cce3edf3e6a23186d7048149"
   },
   "yora_lightsenior_2.5kg": {
     "productId": "p_171",
@@ -717,7 +717,7 @@
   },
   "canagan_dog_highland_6kg": {
     "productId": "p_128",
-    "sha256": "32f6003a8cac473389b268c03bac143aa6bfd8299516307ad8d5ab043dba1d0c"
+    "sha256": "8626807c2c427127c899507d2ec0c09d435f0b11be5645c8e23494140df52362"
   },
   "rs_v2_avalanchewhite": {
     "productId": "p_103",
@@ -1278,5 +1278,9 @@
   "toplife_goatmilk_adult_200ml": {
     "productId": "p_178",
     "sha256": "f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b"
+  },
+  "ot_sleepingmat": {
+    "productId": "p_198",
+    "sha256": "e339cb738af1e8ceaa26dc4b8ba1dd2c2226019e54978fb528e6434baea1ebee"
   }
 }
