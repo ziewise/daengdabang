@@ -7317,7 +7317,56 @@
   "rw_leash_flagline_24": null,
   "rw_leash_flatout": null,
   "rw_leash_frontrange_24": null,
-  "rw_leash_frontrange_short_24": null,
+  "rw_leash_frontrange_short_24": {
+    "video": "/images/products/catalog/rw_leash_frontrange_short_24/videos/6181f13b8addfaf12a77292e00bc57be8bd35ee3faa0fa9cf26b9c06e6cc76c3/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "697f579c61d0c80167872786f72eafdd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "697f579c61d0c80167872786f72eafdd",
+      "reviewId": "d83e8d4ac94e25fd84c49aeaf902613e",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "6181f13b8addfaf12a77292e00bc57be8bd35ee3faa0fa9cf26b9c06e6cc76c3",
+      "seconds": 4,
+      "source": {
+        "no": 146,
+        "folder": "rw_leash_frontrange_short_24",
+        "name": "러프웨어 프런트 레인지 숏 리드줄 (2024SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001183/image/detail/1000001183_detail_018.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001183",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001183/image/detail/1000001183_detail_189.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001183/image/detail/1000001183_detail_28.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/Front-Range-Short-Leash1_033329.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/Front-Range-Short-Leash2_033329.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/b678abcd171f3744bdf6b1a636cfcb38_033330.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "20890193998a891eda0966ed0bae1afc",
+        "sha256": "6181f13b8addfaf12a77292e00bc57be8bd35ee3faa0fa9cf26b9c06e6cc76c3"
+      },
+      "scopeId": "679be21c66c1ca843b15e471e1092033fdf271cc04713752a9841813bddf5414",
+      "scopeRegistrationSha256": "25f79bfd15b33c0ea978adec5e64dd06293bd9e27c8743e5a8a9db68d4811b50",
+      "aiEvidenceSha256": "b3f78a057205ce2e165cc16dd28b4116c6a0e4a0b38225bf2d559a30c9f6e15b",
+      "receiptSha256": "f3a1263571e7e048194c95b6de0f0494b2d602e5a74b255c410a153d64b47a65",
+      "eligibilitySha256": "7676ff93cd65b25321a4fc39b75aec0a6c622bc99bf2c2d57b5997b1f5112a8b",
+      "evidenceManifestSha256": "d010273250f7807dc2939f716827ea54a71fc9980a3b15a1698a991cadbda09c"
+    },
+    "videoReviewSha256": "0b53007381311e3c4cf36336cab676bf35064cb381af23e9054a9cf2aed1adb0",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "3ddc82b64182e98e9dc792e46c3d4bc43a901967"
+  },
   "rw_leash_hiandlight_24": null,
   "rw_leash_justacinch": null,
   "rw_leash_nota": {
