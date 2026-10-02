@@ -14724,7 +14724,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "adf62d8b0b2bc089db15f58ad65e95787209340e"
   },
-  "rw_jsk_1000001149": null,
+  "rw_jsk_1000001149": {
+    "video": "/images/products/catalog/rw_jsk_1000001149/videos/72177226955770eaf2286b02cccde43955a458792be4204fbccd41cf87768f9d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_interaction",
+    "videoJobId": "4748187ca085ea537b5b03457922600b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4748187ca085ea537b5b03457922600b",
+      "reviewId": "b01ca995a76ef4dbd617b85003a778aa",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "72177226955770eaf2286b02cccde43955a458792be4204fbccd41cf87768f9d",
+      "seconds": 4,
+      "source": {
+        "no": 422,
+        "folder": "rw_jsk_1000001149",
+        "name": "러프웨어 날진 1L 물통",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001149/image/detail/1000001149_detail_066.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001149",
+        "gallery": [],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230813/2ada3e4702b238c28102ebb11e225d26_124707.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230813/839ad201252d91071f7d6236e36561a4_124736.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5451563615c2936388c6b53759f318b6",
+        "sha256": "72177226955770eaf2286b02cccde43955a458792be4204fbccd41cf87768f9d"
+      },
+      "scopeId": "ea8a2149d8cd0a8874be00c79f2af410e965dc10ecb764e02aa69fea8f23e390",
+      "scopeRegistrationSha256": "2fcf6670d8d3385b8e24755d1e819e978473f2eff72de7079f238c93086fe925",
+      "aiEvidenceSha256": "1bb5dccc50c003cca6f6744d9e941b29e5503b89cdd0261602d91890511deb75",
+      "receiptSha256": "55ed0e4746f499ffe7d9441d0aeb3a34491e395f071b958ae537a17e28ccf41e",
+      "eligibilitySha256": "a69233288ed443ab0b4b58a8892d03c76f5402bd88d050bd564410d6a8ad3e33",
+      "evidenceManifestSha256": "71ed31c18b7ede4ae0238c1477349bb4634a0ea7b96088fb6d5481dd20320891"
+    },
+    "videoReviewSha256": "00ae4e9cc7321b669cdfcacc58929ba381cac24dd4b8bcbd947d80f7bda297f0",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "abec22360087356eca44248275fc88204c282429"
+  },
   "rw_jsk_1000001232": {
     "video": "/images/products/catalog/rw_jsk_1000001232/videos/15679ca069f6767c394a067b9c5c52b74246496bf815656c4a2ad2c6cdb25a6e/hover.mp4",
     "videoProvider": "ziewcraft",
