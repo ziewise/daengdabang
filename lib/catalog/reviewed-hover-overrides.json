@@ -14051,7 +14051,62 @@
     "videoDeliveryCommit": "165215749842e670713c289ab50e2579b299c5a1"
   },
   "rs_jsk_1000001340": null,
-  "rs_jsk_1000001262": null,
+  "rs_jsk_1000001262": {
+    "video": "/images/products/catalog/rs_jsk_1000001262/videos/5fccdbe982e0b4e12c836b2356a49d6561a55eabcb58e115dffcadc8a6463b86/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "e0a3445500c87b529829ac5461e609b5",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e0a3445500c87b529829ac5461e609b5",
+      "reviewId": "c72ebb6713b55863f3636a8925332f65",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5fccdbe982e0b4e12c836b2356a49d6561a55eabcb58e115dffcadc8a6463b86",
+      "seconds": 8,
+      "source": {
+        "no": 468,
+        "folder": "rs_jsk_1000001262",
+        "name": "렉스스펙스 V2 허리케인 블루 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001262/image/detail/1000001262_detail_035.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001262",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001262/image/detail/1000001262_detail_149.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001262/image/detail/1000001262_detail_249.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001262/image/detail/1000001262_detail_356.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001262/image/detail/1000001262_detail_442.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001262/image/detail/1000001262_detail_554.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/6472d14dcddd2782c12d545461d305b3_180025.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/153ee315d9f89055c6fb67d45faff80a_180033.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/dd9b7bbe0345788fef6dccee2dd2821e_180035.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/b1f1bd856d3da33a091ac2b533256b03_180037.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/6ab2ee318c674f488acbaec8bf7756e3_180043.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "84d140665e9ae390bdd1985730bcb31d",
+        "sha256": "5fccdbe982e0b4e12c836b2356a49d6561a55eabcb58e115dffcadc8a6463b86"
+      },
+      "scopeId": "c19c942d94a6cb0b0092270d8f15db63f94bee4afcdbf7dbbfdf0fd43845e09b",
+      "scopeRegistrationSha256": "7d7390c5e7f04893275b07dc8c00cf0e1d0eb6309afd98ddbd4ccc15ef7a3bd2",
+      "aiEvidenceSha256": "5a26e0495e6ea890af20ece572d2fb280ef03d9b439795ef44b94c4b343a5363",
+      "receiptSha256": "e139bb7ece17a0425d30fac298c8fff6ad1ff04726c18d02e672c325c0122c1d",
+      "eligibilitySha256": "e8114720c5c5db6c30fbe56b3e3a332c3c98d48fd2825c7a6c43df572f27801d",
+      "evidenceManifestSha256": "b1c52ff012fe2a0ed0d87b7e94a183ff606fdb53be8dd8a49e69d72ec3805097"
+    },
+    "videoReviewSha256": "98130d0c0b52df97b54186d45456007a4bef329225c5c2040c0c12ccef4a4fa3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "731edbe05571fe90cb7219d1555c2fba85d09f06"
+  },
   "rw_jsk_1000001346": {
     "video": "/images/products/catalog/rw_jsk_1000001346/videos/fc1db6e042590706fa709a71efb78ef59166f92c2e64072cb41762ec4fb861f7/hover.mp4",
     "videoProvider": "ziewcraft",
