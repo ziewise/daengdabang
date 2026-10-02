@@ -9649,16 +9649,16 @@
     "publicationStatus": "approved",
     "productId": "p_33",
     "folder": "rw_ridgeline_shoes_26",
-    "video": "/images/products/catalog/rw_ridgeline_shoes_26/videos/ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f/hover.mp4",
-    "sha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f",
+    "video": "/images/products/catalog/rw_ridgeline_shoes_26/videos/62f7f589c313754f44bbf74c9c5aa8c366135d1bf81d8b943e6fc0c19625dfda/hover.mp4",
+    "sha256": "62f7f589c313754f44bbf74c9c5aa8c366135d1bf81d8b943e6fc0c19625dfda",
     "videoQuality": "approved_dog_wearing",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "563374dd5e895886119575822a2db3fe",
-      "reviewId": "dec2f3a9de4daaaaf78d4c58ad0ad458",
+      "jobId": "7747d9d8524d23b99bfd681a77c12b14",
+      "reviewId": "dabd541f03701a3ec88fea00eba4fdb3",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f",
+      "finalSha256": "62f7f589c313754f44bbf74c9c5aa8c366135d1bf81d8b943e6fc0c19625dfda",
       "seconds": 8,
       "source": {
         "no": 33,
@@ -9686,34 +9686,34 @@
         ]
       },
       "artifact": {
-        "artifact_id": "703f2e8715ccdb03469ff1c67d5f938e",
-        "sha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f"
+        "artifact_id": "51ea3828437e505495d6ebc878f2de71",
+        "sha256": "62f7f589c313754f44bbf74c9c5aa8c366135d1bf81d8b943e6fc0c19625dfda"
       },
       "scopeId": "82ff0589e299e4c62b0352795602addada86888aa9b7b88ebe3d75565824a9d2",
-      "scopeRegistrationSha256": "be8126fa9ceb05dcdbc186eb24d73cce2a77817ebae3c79b60ccf10cb27c4588",
-      "aiEvidenceSha256": "493fce3226e9df315d2d65783775c1c7aaaff8998fa409f61d7443a60d8f5efd",
-      "receiptSha256": "cfa82a58db3cfce1a73413acef2a53670702cd62de191f1df33a4072e3bcc851",
-      "eligibilitySha256": "2a14d2ad1563431127e56e01e15bd19de83f62737e0a797e1e3dd113c2868b7d",
-      "evidenceManifestSha256": "5fa4e9e6d2a73b747bce310e7c8f3d83ca6dcee10a38c278f9ea641274c53680"
+      "scopeRegistrationSha256": "4a95c3b2f1bde842343462fac10fa7ec91c12ce7edbf99e55e4f362662d7d368",
+      "aiEvidenceSha256": "4ba8d31538ce05b5b87c5677e463001b2fcfd37eb6d340cbe75bc205e264d008",
+      "receiptSha256": "c516146a6124f5a1b4fb6923d065b557c069172d3d94d45457941ee4c536fc6b",
+      "eligibilitySha256": "4b2fa37d393f7e5be8c24151698984cb06342439064ffbf1094e3dd783d9a361",
+      "evidenceManifestSha256": "d9aee4c603a8ed2d303d68bfecd8018d6cc76d35cdb1200b246978cdd172e863"
     },
     "delegatedReview": {
-      "api_job_id": "563374dd5e895886119575822a2db3fe",
+      "api_job_id": "7747d9d8524d23b99bfd681a77c12b14",
       "bindings": {
         "native_video": {
-          "artifact_id": "c16ca8b5b73649c88830f0a07735ba2d",
-          "sha256": "c82cac92925bbecb393b70a95927352b5c3fda3d4c520a4d9bdd86eb255bcf30"
+          "artifact_id": "62c591bbacf64f368309583c82ffcd62",
+          "sha256": "08bf90cc66f4fcad047fc436faf39cf2e62a9e5928f237cc7f20f8bcdd8e6a7f"
         },
         "pair_video": {
-          "artifact_id": "703f2e8715ccdb03469ff1c67d5f938e",
-          "sha256": "ab92107ef713fb2e13cbb0537d23591bfab41942334fb8be45ddc723bd164e2f"
+          "artifact_id": "51ea3828437e505495d6ebc878f2de71",
+          "sha256": "62f7f589c313754f44bbf74c9c5aa8c366135d1bf81d8b943e6fc0c19625dfda"
         },
         "review_video": {
-          "artifact_id": "ba888b3304f848e14f7ce35ecbb16ab8",
-          "sha256": "fa5083ea65d1210400b3ec8be4879c02342649dfeef3aa25d47778795aae595d"
+          "artifact_id": "97f4440ae7d6d5febee37456df7a93f9",
+          "sha256": "147b802d51c4dce5be1190da07bb7f5315dd23b506d41b8378282f1f5089c890"
         },
         "terminal": {
-          "artifact_id": "514b474d71a4fb1bca191fefef90ffc0",
-          "sha256": "53722f76fb566992976288f6fc2a4d556e6beb1971277b56099a36ef2fe7189e"
+          "artifact_id": "4a000ecd18199569e63975c05333145e",
+          "sha256": "688edec501da54eae2ce81bfb7ef660c5b0775b43fe7749bb633522ad2b34f32"
         }
       },
       "checks": {
@@ -10035,41 +10035,41 @@
       "human_identity_verified": false,
       "numeric_boundary_evidence": {
         "loop": {
-          "background_homography_jump": 0.0002958209042844828,
-          "boundary_camera_displacement": 0.00034750139457173645,
-          "homography_inlier_ratio": 0.7724550898203593,
+          "background_homography_jump": 0.0010856896624318324,
+          "boundary_camera_displacement": 0.0011010078014805913,
+          "homography_inlier_ratio": 0.9183673469387755,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.02564333565533161,
+          "mean_absolute_frame_difference": 0.047996826469898224,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0006522301118820906,
+          "optical_flow_discontinuity": 0.005057388450950384,
           "semantic_verified": false
         },
         "seam": {
-          "background_homography_jump": 0.00012137342400819762,
-          "boundary_camera_displacement": 0.0001345893688267097,
-          "homography_inlier_ratio": 0.9640102827763496,
+          "background_homography_jump": 0.0001522633701824816,
+          "boundary_camera_displacement": 0.00016455854347441345,
+          "homography_inlier_ratio": 0.9732620320855615,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.015132606029510498,
+          "mean_absolute_frame_difference": 0.011323714628815651,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0009639498894102871,
+          "optical_flow_discontinuity": 0.0005076887900941074,
           "semantic_verified": false
         },
         "seams": [
           {
-            "background_homography_jump": 0.00012137342400819762,
-            "boundary_camera_displacement": 0.0001345893688267097,
-            "homography_inlier_ratio": 0.9640102827763496,
+            "background_homography_jump": 0.0001522633701824816,
+            "boundary_camera_displacement": 0.00016455854347441345,
+            "homography_inlier_ratio": 0.9732620320855615,
             "homography_status": "measured_proxy",
             "left_frame": 95,
             "mad_limit": 0.08,
             "mad_passed": true,
-            "mean_absolute_frame_difference": 0.015132606029510498,
+            "mean_absolute_frame_difference": 0.011323714628815651,
             "measurement_only": true,
-            "optical_flow_discontinuity": 0.0009639498894102871,
+            "optical_flow_discontinuity": 0.0005076887900941074,
             "right_frame": 96,
             "semantic_verified": false
           }
@@ -10108,41 +10108,44 @@
       "required_final_seconds": 8,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_33-563374dd5e895886119575822a2db3fe-all97-v1",
-        "evidence_sha256": "493fce3226e9df315d2d65783775c1c7aaaff8998fa409f61d7443a60d8f5efd",
+        "evidence_id": "ddb-ai-p_33-7747d9d8524d23b99bfd681a77c12b14-all97-v1",
+        "evidence_sha256": "4ba8d31538ce05b5b87c5677e463001b2fcfd37eb6d340cbe75bc205e264d008",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "dec2f3a9de4daaaaf78d4c58ad0ad458",
-      "reviewed_at": "2026-09-12T05:12:49.353388Z",
+      "review_id": "dabd541f03701a3ec88fea00eba4fdb3",
+      "reviewed_at": "2026-10-02T19:00:52.363731Z",
       "schema_version": 1,
       "scope_id": "82ff0589e299e4c62b0352795602addada86888aa9b7b88ebe3d75565824a9d2",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "514b474d71a4fb1bca191fefef90ffc0",
+        "artifact_id": "4a000ecd18199569e63975c05333145e",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "c16ca8b5b73649c88830f0a07735ba2d",
-        "native_artifact_sha256": "c82cac92925bbecb393b70a95927352b5c3fda3d4c520a4d9bdd86eb255bcf30",
+        "native_artifact_id": "62c591bbacf64f368309583c82ffcd62",
+        "native_artifact_sha256": "08bf90cc66f4fcad047fc436faf39cf2e62a9e5928f237cc7f20f8bcdd8e6a7f",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "3cb95c4367c1fdb1578bd326fa1d04a0c252c3194f9e056af3c9545cb7d6e41c",
+        "pixel_sha256": "f146ef6ae32268ffc684e4dccedbb0c5ef67c7492f7de06dbae19e312ecadc48",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "53722f76fb566992976288f6fc2a4d556e6beb1971277b56099a36ef2fe7189e",
-        "source_artifact_id": "ba888b3304f848e14f7ce35ecbb16ab8",
-        "source_artifact_sha256": "fa5083ea65d1210400b3ec8be4879c02342649dfeef3aa25d47778795aae595d",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "688edec501da54eae2ce81bfb7ef660c5b0775b43fe7749bb633522ad2b34f32",
+        "source_artifact_id": "97f4440ae7d6d5febee37456df7a93f9",
+        "source_artifact_sha256": "147b802d51c4dce5be1190da07bb7f5315dd23b506d41b8378282f1f5089c890",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Black / 블랙",
@@ -10171,15 +10174,12 @@
       "scene_sha256": "232fc99a4f464bb666eade5e489f67ac11a8fbd47abf04d97b6753f72b037603",
       "schema_version": 1,
       "scope_id": "82ff0589e299e4c62b0352795602addada86888aa9b7b88ebe3d75565824a9d2",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "dec2f3a9de4daaaaf78d4c58ad0ad458",
+      "reviewId": "dabd541f03701a3ec88fea00eba4fdb3",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "82ff0589e299e4c62b0352795602addada86888aa9b7b88ebe3d75565824a9d2",
       "human_approved": false,
@@ -10202,10 +10202,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "12c95ec0016fc2589f5ff106bbdaee402cecf75df6810a1e4bce0796ed82699c",
-      "checkedAt": "2026-09-12T05:12:59.530048+00:00",
-      "sha256": "b69fd696688362c509762b2941e1f1a496e15b1d4a8a855e15fe8bd6612f01b1"
+      "ownerInstructionSha256": "6a16df06e5585d6f478b0279e4f7e19b3d36ec5a334033a8f2d2ee514994d0d8",
+      "technicalProofSha256": "034456a6568df5e52e79e21868734b9e595e8202166d33591cc09b7bb5ac4cf9",
+      "naturalMotionReviewSha256": "b33ba065dce074e7371c053cd252e4761d885a9f677a3186ef32dbaeb7a8055b",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-02T19:05:43.667905+00:00",
+      "sha256": "39647ec5192aee89ae53bb007f0eb2b45d4a0d4a2b0589b202275162c5764bd2"
     }
   },
   "rw_jsk_1000000988": {
@@ -12412,16 +12414,16 @@
     "publicationStatus": "approved",
     "productId": "p_100",
     "folder": "rs_v2_appalachianorange",
-    "video": "/images/products/catalog/rs_v2_appalachianorange/videos/c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314/hover.mp4",
-    "sha256": "c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314",
+    "video": "/images/products/catalog/rs_v2_appalachianorange/videos/b85ae506f2f8d9979342c1b445285bcad9dd21bb36f079abb6c70caabaf12d65/hover.mp4",
+    "sha256": "b85ae506f2f8d9979342c1b445285bcad9dd21bb36f079abb6c70caabaf12d65",
     "videoQuality": "approved_dog_wearing",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "061f5cc47780a08d0b6a444a21ca4f69",
-      "reviewId": "63accee64bef11587386d9c36d89ab53",
+      "jobId": "e8e3dbff0ae9122cd6de99b7e3dc99e4",
+      "reviewId": "f62d8dd13098f25a74c90c633073a397",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314",
+      "finalSha256": "b85ae506f2f8d9979342c1b445285bcad9dd21bb36f079abb6c70caabaf12d65",
       "seconds": 8,
       "source": {
         "no": 100,
@@ -12445,34 +12447,34 @@
         ]
       },
       "artifact": {
-        "artifact_id": "13c504561cc3b18f24e2723facfd881c",
-        "sha256": "c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314"
+        "artifact_id": "5b3d951fb21b3c096e1415947821f234",
+        "sha256": "b85ae506f2f8d9979342c1b445285bcad9dd21bb36f079abb6c70caabaf12d65"
       },
       "scopeId": "2e74905882dad9115dc787c4db87be10dd201505383385600062d363b75dd26e",
-      "scopeRegistrationSha256": "c0bbe269cb55d0b7c8545a9b3a77208e97ea7101575340cd8361aa918aa12c02",
-      "aiEvidenceSha256": "d3f63b3964978c89328deda5bd2fe2396955103e8148d13d10408bfa87173343",
-      "receiptSha256": "f3a68bd7dc2f5294a0b816f8bd4b765450934767d756442249e6a991ec325ea4",
-      "eligibilitySha256": "afaac0e31ac46394938dd0fc046942cae0faffde77457ee38b8a0cd306d66a8e",
-      "evidenceManifestSha256": "d959d125a2eecda50ff904d9d335149cfc8769a7c9a8c18c43e93f1bea367601"
+      "scopeRegistrationSha256": "6f42b5190fcf65501e62149f55b5868c699b17131ce6908f86d1eb31b72c5f8e",
+      "aiEvidenceSha256": "423fa92ea0ec186a9fe9229d25f60dbfd11f6996e29be688fb097a276b401ed8",
+      "receiptSha256": "81b97bfe3797967d515037217d759c4ac45bc2782836dbf33fe9b0b57f95d42e",
+      "eligibilitySha256": "2901997efec8a33ae0596d6a93837820ebfadd18f4311b2a05b9f912917e0a90",
+      "evidenceManifestSha256": "af87a425a08ecdd1dd03ed7b6eff5cfe4f88b587014e65034a6dbacc70742145"
     },
     "delegatedReview": {
-      "api_job_id": "061f5cc47780a08d0b6a444a21ca4f69",
+      "api_job_id": "e8e3dbff0ae9122cd6de99b7e3dc99e4",
       "bindings": {
         "native_video": {
-          "artifact_id": "0824cb9bc3414b6b9b9acca74bcf3258",
-          "sha256": "8bb47a311c064bdec3d16454304bddf37f4e87f83d960a3a06aeb29c9369d524"
+          "artifact_id": "ebdeddf16f9d4f99944e90466d0ad14f",
+          "sha256": "ef83f76eee0970b38dd9889cf197f3ee404aeb7dd2e9a198be2f9214b83333c1"
         },
         "pair_video": {
-          "artifact_id": "13c504561cc3b18f24e2723facfd881c",
-          "sha256": "c8353501153730cb44f869f82a52c91e83391c403cbb95e83a78e7730e4e4314"
+          "artifact_id": "5b3d951fb21b3c096e1415947821f234",
+          "sha256": "b85ae506f2f8d9979342c1b445285bcad9dd21bb36f079abb6c70caabaf12d65"
         },
         "review_video": {
-          "artifact_id": "277353f7b1c2bab66daa4b620703c9ff",
-          "sha256": "c0f56f2ff08b481892fe32a980ab1c7d0645be4032a828943976447211c87ed2"
+          "artifact_id": "354cb552328e987f03c5761a5ec6aa19",
+          "sha256": "4d4e3261d74206c96553fb045d0275d579e95864f3078febe047855562e77572"
         },
         "terminal": {
-          "artifact_id": "c28e2b5a20a960069d2bf4b3221d6a84",
-          "sha256": "797c1d49b6fcde661c1955344a96e9eda96ec124e8f0992a5d4c398af3787309"
+          "artifact_id": "5305e8d8e0e8120baf68f9d0f4c73b2f",
+          "sha256": "8ed9ff77e467ca4fdfb3a49c74648a78d56b38d3f3a21dfe7fe1f897f3e68260"
         }
       },
       "checks": {
@@ -12794,41 +12796,41 @@
       "human_identity_verified": false,
       "numeric_boundary_evidence": {
         "loop": {
-          "background_homography_jump": 0.00023145198065321892,
-          "boundary_camera_displacement": 0.00040183146484196186,
-          "homography_inlier_ratio": 0.9895833333333334,
-          "homography_status": "measured_proxy",
-          "mad_limit": 0.08,
-          "mad_passed": true,
-          "mean_absolute_frame_difference": 0.04321771115064621,
-          "measurement_only": true,
-          "optical_flow_discontinuity": 0.0009214935125783086,
-          "semantic_verified": false
-        },
-        "seam": {
-          "background_homography_jump": 0.00020381186641316162,
-          "boundary_camera_displacement": 0.00021780349197797477,
+          "background_homography_jump": 0.00017979969743464608,
+          "boundary_camera_displacement": 0.00019253598293289542,
           "homography_inlier_ratio": 1.0,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.013531512580811977,
+          "mean_absolute_frame_difference": 0.07738793641328812,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0006683008396066725,
+          "optical_flow_discontinuity": 0.007617393508553505,
+          "semantic_verified": false
+        },
+        "seam": {
+          "background_homography_jump": 0.0001295698989451921,
+          "boundary_camera_displacement": 0.0001357775181531906,
+          "homography_inlier_ratio": 1.0,
+          "homography_status": "measured_proxy",
+          "mad_limit": 0.08,
+          "mad_passed": true,
+          "mean_absolute_frame_difference": 0.017259148880839348,
+          "measurement_only": true,
+          "optical_flow_discontinuity": 0.0004922539228573442,
           "semantic_verified": false
         },
         "seams": [
           {
-            "background_homography_jump": 0.00020381186641316162,
-            "boundary_camera_displacement": 0.00021780349197797477,
+            "background_homography_jump": 0.0001295698989451921,
+            "boundary_camera_displacement": 0.0001357775181531906,
             "homography_inlier_ratio": 1.0,
             "homography_status": "measured_proxy",
             "left_frame": 95,
             "mad_limit": 0.08,
             "mad_passed": true,
-            "mean_absolute_frame_difference": 0.013531512580811977,
+            "mean_absolute_frame_difference": 0.017259148880839348,
             "measurement_only": true,
-            "optical_flow_discontinuity": 0.0006683008396066725,
+            "optical_flow_discontinuity": 0.0004922539228573442,
             "right_frame": 96,
             "semantic_verified": false
           }
@@ -12862,41 +12864,44 @@
       "required_final_seconds": 8,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_100-061f5cc47780a08d0b6a444a21ca4f69-all97-v1",
-        "evidence_sha256": "d3f63b3964978c89328deda5bd2fe2396955103e8148d13d10408bfa87173343",
+        "evidence_id": "ddb-ai-p_100-e8e3dbff0ae9122cd6de99b7e3dc99e4-all97-v1",
+        "evidence_sha256": "423fa92ea0ec186a9fe9229d25f60dbfd11f6996e29be688fb097a276b401ed8",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "63accee64bef11587386d9c36d89ab53",
-      "reviewed_at": "2026-09-12T13:07:26.361077Z",
+      "review_id": "f62d8dd13098f25a74c90c633073a397",
+      "reviewed_at": "2026-10-02T18:52:28.847232Z",
       "schema_version": 1,
       "scope_id": "2e74905882dad9115dc787c4db87be10dd201505383385600062d363b75dd26e",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "c28e2b5a20a960069d2bf4b3221d6a84",
+        "artifact_id": "5305e8d8e0e8120baf68f9d0f4c73b2f",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "0824cb9bc3414b6b9b9acca74bcf3258",
-        "native_artifact_sha256": "8bb47a311c064bdec3d16454304bddf37f4e87f83d960a3a06aeb29c9369d524",
+        "native_artifact_id": "ebdeddf16f9d4f99944e90466d0ad14f",
+        "native_artifact_sha256": "ef83f76eee0970b38dd9889cf197f3ee404aeb7dd2e9a198be2f9214b83333c1",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "e1d00f74a01328d96c12538d06be13ded16a7e9363295097ab40acebdf5b2e6c",
+        "pixel_sha256": "2b816ca34658d7006208be6e60fe75bc8c5632a31573e63a8903130b465ab2b5",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "797c1d49b6fcde661c1955344a96e9eda96ec124e8f0992a5d4c398af3787309",
-        "source_artifact_id": "277353f7b1c2bab66daa4b620703c9ff",
-        "source_artifact_sha256": "c0f56f2ff08b481892fe32a980ab1c7d0645be4032a828943976447211c87ed2",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "8ed9ff77e467ca4fdfb3a49c74648a78d56b38d3f3a21dfe7fe1f897f3e68260",
+        "source_artifact_id": "354cb552328e987f03c5761a5ec6aa19",
+        "source_artifact_sha256": "4d4e3261d74206c96553fb045d0275d579e95864f3078febe047855562e77572",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Appalachian Orange / Smoke lens",
@@ -12920,15 +12925,12 @@
       "scene_sha256": "27faf3272216dbbe0fefb8439bb50e4c5f9a5ababb1de6a615b08225233171f6",
       "schema_version": 1,
       "scope_id": "2e74905882dad9115dc787c4db87be10dd201505383385600062d363b75dd26e",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "63accee64bef11587386d9c36d89ab53",
+      "reviewId": "f62d8dd13098f25a74c90c633073a397",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "2e74905882dad9115dc787c4db87be10dd201505383385600062d363b75dd26e",
       "human_approved": false,
@@ -12951,10 +12953,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "01f46fee7ba3b05aa0dd5452ad5c614220249f1cc93033a0af8e30e89bfee1d3",
-      "checkedAt": "2026-09-12T13:09:50.561359+00:00",
-      "sha256": "53c27b9223806213ca33faea16892118ba86a38a049627d90bb473068a15e3a4"
+      "ownerInstructionSha256": "6a16df06e5585d6f478b0279e4f7e19b3d36ec5a334033a8f2d2ee514994d0d8",
+      "technicalProofSha256": "0c2435132252dac42e034257ba881a9c4f84beb9323e241989aecf47cd5138bd",
+      "naturalMotionReviewSha256": "d917dbb6ca0854498713a5016495502b6686550ca22a8c2833b3a36e332655a7",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-02T19:05:46.579052+00:00",
+      "sha256": "58d7a9ca952d51221fe3dbb90c445ac9bb78cbd3a116c9adc72c635bd3488a92"
     }
   },
   "rs_v2_atlasblue": {
@@ -38754,16 +38758,16 @@
     "publicationStatus": "approved",
     "productId": "p_102",
     "folder": "rs_v2_vulcanblue",
-    "video": "/images/products/catalog/rs_v2_vulcanblue/videos/53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2/hover.mp4",
-    "sha256": "53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2",
+    "video": "/images/products/catalog/rs_v2_vulcanblue/videos/b1120d7abd1770b41c13a09813da973d8c4ef559b6521cb91d34560ccc7ba68f/hover.mp4",
+    "sha256": "b1120d7abd1770b41c13a09813da973d8c4ef559b6521cb91d34560ccc7ba68f",
     "videoQuality": "approved_dog_wearing",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "8712a519fd0b5c3c122c88382a519d0f",
-      "reviewId": "30decf95b6b61ef9fa0af13239f64679",
+      "jobId": "d18e2932a0ed210605535502f2a8f847",
+      "reviewId": "6a12162fc55e53d24492662362d33dbf",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2",
+      "finalSha256": "b1120d7abd1770b41c13a09813da973d8c4ef559b6521cb91d34560ccc7ba68f",
       "seconds": 8,
       "source": {
         "no": 102,
@@ -38787,34 +38791,34 @@
         ]
       },
       "artifact": {
-        "artifact_id": "531eef459106815fca7aea1ee7a74bf6",
-        "sha256": "53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2"
+        "artifact_id": "fb186cfca03d3ae7a77c0f0600ca503e",
+        "sha256": "b1120d7abd1770b41c13a09813da973d8c4ef559b6521cb91d34560ccc7ba68f"
       },
       "scopeId": "9a808e23d6d509d5c4e3b314e050861d92942d2333ad5ffd6beb5650cff55ba2",
-      "scopeRegistrationSha256": "b36dc4a65ba33c4e1ceb1198482e5565bee469d31b17948c5639481ce9235438",
-      "aiEvidenceSha256": "e9e1aa24ad8768853aafceb50c23360c25adba480ec4bb25d1849284c7a099d7",
-      "receiptSha256": "f57b4353237a1257a8ac8b4784dedc70d4109afc56cbbb58117b50d1b95b978b",
-      "eligibilitySha256": "8b2e6d479c4450ccef51b380e0d9af7ec8134b7fbacdcbc1f04e73b821d20f5e",
-      "evidenceManifestSha256": "9a423d55685ae3dc94fa640b1fd0ca45a661ce0bd475edf2ae15a0cfbbdd8fc6"
+      "scopeRegistrationSha256": "9336656f70bffe295a368a25c334907e3b9b637ae1cf84d0fed1b186be12fd8d",
+      "aiEvidenceSha256": "94125ed20a374f50e9bf9bb69f13a556dcb07c0230c285cb20d33653a0ea2b5c",
+      "receiptSha256": "2f3fd9927fbf38d4996895b9525b035db2a4f00dbfafe4cacdb62d70cb2af2f3",
+      "eligibilitySha256": "674261047c77bf6640951284de95855595effdf2e8aecf5abb90cd153d8c2945",
+      "evidenceManifestSha256": "d4a24eaa42dd8f7144cb359a908be07cf8d7379649b9e5f98d14391576c66adf"
     },
     "delegatedReview": {
-      "api_job_id": "8712a519fd0b5c3c122c88382a519d0f",
+      "api_job_id": "d18e2932a0ed210605535502f2a8f847",
       "bindings": {
         "native_video": {
-          "artifact_id": "5bc34275ce3545519643c0bf8729701f",
-          "sha256": "3797ab9cb66bf8cb684f2c79f201e073e2cf3c9e0e1f2945561d046c62223bc6"
+          "artifact_id": "62f9933a410a4f7a92bd52e794470f2c",
+          "sha256": "a742648f730d9fcbc3a1bb66db6bff02ea4fbf6ebe4f751adda94b4e3d932334"
         },
         "pair_video": {
-          "artifact_id": "531eef459106815fca7aea1ee7a74bf6",
-          "sha256": "53afbc4990534be1bc7401b9a4a4cc8fb35c2a99e5fc5c5602f2d780874f50f2"
+          "artifact_id": "fb186cfca03d3ae7a77c0f0600ca503e",
+          "sha256": "b1120d7abd1770b41c13a09813da973d8c4ef559b6521cb91d34560ccc7ba68f"
         },
         "review_video": {
-          "artifact_id": "dc3aea7e3f330d81ce4bc8162b8282c4",
-          "sha256": "7a9ab9f587630f46ff2ab33111c0a5b15c19324797b1717b6167783157ebd10f"
+          "artifact_id": "d87de39ae56da140e3ac271acca2dc18",
+          "sha256": "5083a30020a0a21f84061dd66c95c724b7ae602e639027ab643e4416db127850"
         },
         "terminal": {
-          "artifact_id": "e57db17f1c79be102787fe04af809513",
-          "sha256": "02c4aaacec7afb12cc7379e8b06efb3a31fa18929ee7b0e721a582e57ed7918b"
+          "artifact_id": "eaa5fc3b59a28d3d952005f89132a07f",
+          "sha256": "6a93a1978479acb2f9bc5b6fe430c23036b00eae89895ab84d7c2775774974c9"
         }
       },
       "checks": {
@@ -39136,41 +39140,41 @@
       "human_identity_verified": false,
       "numeric_boundary_evidence": {
         "loop": {
-          "background_homography_jump": 0.00031221849349094555,
-          "boundary_camera_displacement": 0.00032928798464126885,
-          "homography_inlier_ratio": 0.9591836734693877,
+          "background_homography_jump": 0.00027693021274899365,
+          "boundary_camera_displacement": 0.0002817663480527699,
+          "homography_inlier_ratio": 0.9683257918552036,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.07411184161901474,
+          "mean_absolute_frame_difference": 0.07811843603849411,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0076964134350419044,
+          "optical_flow_discontinuity": 0.004525345284491777,
           "semantic_verified": false
         },
         "seam": {
-          "background_homography_jump": 0.00012483300815802068,
-          "boundary_camera_displacement": 0.00013340947043616325,
+          "background_homography_jump": 9.899014821712626e-05,
+          "boundary_camera_displacement": 0.00010286856559105217,
           "homography_inlier_ratio": 1.0,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.016155727207660675,
+          "mean_absolute_frame_difference": 0.018796294927597046,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0018735884223133326,
+          "optical_flow_discontinuity": 0.00045954191591590643,
           "semantic_verified": false
         },
         "seams": [
           {
-            "background_homography_jump": 0.00012483300815802068,
-            "boundary_camera_displacement": 0.00013340947043616325,
+            "background_homography_jump": 9.899014821712626e-05,
+            "boundary_camera_displacement": 0.00010286856559105217,
             "homography_inlier_ratio": 1.0,
             "homography_status": "measured_proxy",
             "left_frame": 95,
             "mad_limit": 0.08,
             "mad_passed": true,
-            "mean_absolute_frame_difference": 0.016155727207660675,
+            "mean_absolute_frame_difference": 0.018796294927597046,
             "measurement_only": true,
-            "optical_flow_discontinuity": 0.0018735884223133326,
+            "optical_flow_discontinuity": 0.00045954191591590643,
             "right_frame": 96,
             "semantic_verified": false
           }
@@ -39204,41 +39208,44 @@
       "required_final_seconds": 8,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_102-8712a519fd0b5c3c122c88382a519d0f-all97-v1",
-        "evidence_sha256": "e9e1aa24ad8768853aafceb50c23360c25adba480ec4bb25d1849284c7a099d7",
+        "evidence_id": "ddb-ai-p_102-d18e2932a0ed210605535502f2a8f847-all97-v1",
+        "evidence_sha256": "94125ed20a374f50e9bf9bb69f13a556dcb07c0230c285cb20d33653a0ea2b5c",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "30decf95b6b61ef9fa0af13239f64679",
-      "reviewed_at": "2026-09-12T23:31:00.952270Z",
+      "review_id": "6a12162fc55e53d24492662362d33dbf",
+      "reviewed_at": "2026-10-02T18:48:58.999444Z",
       "schema_version": 1,
       "scope_id": "9a808e23d6d509d5c4e3b314e050861d92942d2333ad5ffd6beb5650cff55ba2",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "e57db17f1c79be102787fe04af809513",
+        "artifact_id": "eaa5fc3b59a28d3d952005f89132a07f",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "5bc34275ce3545519643c0bf8729701f",
-        "native_artifact_sha256": "3797ab9cb66bf8cb684f2c79f201e073e2cf3c9e0e1f2945561d046c62223bc6",
+        "native_artifact_id": "62f9933a410a4f7a92bd52e794470f2c",
+        "native_artifact_sha256": "a742648f730d9fcbc3a1bb66db6bff02ea4fbf6ebe4f751adda94b4e3d932334",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "c591ee020bf539f1d0b52ed273cffc02cb88d275ef2451ad541ad220c3b81cf5",
+        "pixel_sha256": "7054a0d2ad25385efcf8a17c946236b710991550c9138504271740958110c3b7",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "02c4aaacec7afb12cc7379e8b06efb3a31fa18929ee7b0e721a582e57ed7918b",
-        "source_artifact_id": "dc3aea7e3f330d81ce4bc8162b8282c4",
-        "source_artifact_sha256": "7a9ab9f587630f46ff2ab33111c0a5b15c19324797b1717b6167783157ebd10f",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "6a93a1978479acb2f9bc5b6fe430c23036b00eae89895ab84d7c2775774974c9",
+        "source_artifact_id": "d87de39ae56da140e3ac271acca2dc18",
+        "source_artifact_sha256": "5083a30020a0a21f84061dd66c95c724b7ae602e639027ab643e4416db127850",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Balkan Blue (catalog Korean 발칸 블루) / Smoke lens",
@@ -39262,15 +39269,12 @@
       "scene_sha256": "6005a3cd31e4f39c34ea791c7aa94bf268c46ff1821978485da4c87b84452540",
       "schema_version": 1,
       "scope_id": "9a808e23d6d509d5c4e3b314e050861d92942d2333ad5ffd6beb5650cff55ba2",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "30decf95b6b61ef9fa0af13239f64679",
+      "reviewId": "6a12162fc55e53d24492662362d33dbf",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "9a808e23d6d509d5c4e3b314e050861d92942d2333ad5ffd6beb5650cff55ba2",
       "human_approved": false,
@@ -39293,10 +39297,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "dbbc1c01957edb7fde06a306f010b4fbbc5a7d6a26ed57b75e4ba256ca63a5b8",
-      "checkedAt": "2026-09-12T23:31:32.229974+00:00",
-      "sha256": "c818ed40396f1386ab558698a0a69910172d3b9947673a9d2bab6667c7001739"
+      "ownerInstructionSha256": "6a16df06e5585d6f478b0279e4f7e19b3d36ec5a334033a8f2d2ee514994d0d8",
+      "technicalProofSha256": "41ffd07f7151e768ae714e9a9df432c8f45d99c4ab8a5bc9e0e28f4dcaa3f92a",
+      "naturalMotionReviewSha256": "bbf372911605b4d6163b2d243cebcfee3d5dec7556fb744eec770861924d21a4",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-02T19:05:49.652546+00:00",
+      "sha256": "e6feccae65a04a28c127e9e4835b1e874dda702811bf38b2c710603427943491"
     }
   },
   "rs_v2_bighornblue": {
@@ -58340,16 +58346,16 @@
     "publicationStatus": "approved",
     "productId": "p_28",
     "folder": "rw_palisades_pack_26",
-    "video": "/images/products/catalog/rw_palisades_pack_26/videos/66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30/hover.mp4",
-    "sha256": "66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30",
+    "video": "/images/products/catalog/rw_palisades_pack_26/videos/eca2ec80de06a44400b9d5f9332af8979d4d1a1e5ec87f81464a60c729f847e5/hover.mp4",
+    "sha256": "eca2ec80de06a44400b9d5f9332af8979d4d1a1e5ec87f81464a60c729f847e5",
     "videoQuality": "approved_dog_wearing",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "8a77f68c674116cb588ef0c8fb55d70c",
-      "reviewId": "4ce36ff98cb14a3f4f03e5adc3f53099",
+      "jobId": "89f2f51a4fa20caac41bd3d5fe6054e3",
+      "reviewId": "f0f65bd9d372222c4b111a1c17b10499",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30",
+      "finalSha256": "eca2ec80de06a44400b9d5f9332af8979d4d1a1e5ec87f81464a60c729f847e5",
       "seconds": 8,
       "source": {
         "no": 28,
@@ -58379,34 +58385,34 @@
         ]
       },
       "artifact": {
-        "artifact_id": "a559e8db1d1ddfcf08a8c3001afe972d",
-        "sha256": "66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30"
+        "artifact_id": "73f51108ab47d4a10e11db3af1c0ee18",
+        "sha256": "eca2ec80de06a44400b9d5f9332af8979d4d1a1e5ec87f81464a60c729f847e5"
       },
       "scopeId": "33de3ad75a8c94ed77ea5dfad3ac84e3156546c34471c2028a625879c0da788c",
-      "scopeRegistrationSha256": "0f81fab0ad5939936a1e40b7bfc8875e64b734aadabf3818569732c008697d0d",
-      "aiEvidenceSha256": "24c18fedebd9fb9b7c579dcc5807dc8c522310a00da4a9a7c17e63034f6d288d",
-      "receiptSha256": "3ae529ceb4eaab309800798c4c0290f9bb0a1b868cfcd1ea80081438009b9b37",
-      "eligibilitySha256": "fbace1dc501743d13079aaea7e2caf42fce4b73fe6171f1efecd55da416437c0",
-      "evidenceManifestSha256": "13b565bad0599106059a62371d4940be96f08abfc24634d2d6365458e63aec0b"
+      "scopeRegistrationSha256": "f60e6d77c1cf2de875350212736ef4c00b3e6560a54154ef08cd5112ebdc94e7",
+      "aiEvidenceSha256": "13788c2a49717adf606f182982348fe145f68efcd1982ae84eeb72b074bb47a9",
+      "receiptSha256": "1349448c737520dd790d295ee977554cac8c21682a56f1b23eb3ea466374d8aa",
+      "eligibilitySha256": "cff1a9a04371c34a0bf52b586434f0c23ff901ba90970e9477119fa4a70d1d57",
+      "evidenceManifestSha256": "bb405be2b4d41651d1c39849d19edce5175f253a5558930dcd8b4525ef99590c"
     },
     "delegatedReview": {
-      "api_job_id": "8a77f68c674116cb588ef0c8fb55d70c",
+      "api_job_id": "89f2f51a4fa20caac41bd3d5fe6054e3",
       "bindings": {
         "native_video": {
-          "artifact_id": "1a21d6deb21b4251b257ecf5bc24d846",
-          "sha256": "43d784a6656970d511285b132226c2afe13425d548cbcb1fa1072fb14e5059b0"
+          "artifact_id": "9cb156bc08cf493aaa1b34439868259f",
+          "sha256": "8487923a9fc871cc18e00668172353acce64fc3cbf8992eefbc2c4be608b9d8f"
         },
         "pair_video": {
-          "artifact_id": "a559e8db1d1ddfcf08a8c3001afe972d",
-          "sha256": "66fbfbf4e0997ea3db590f5e715ab78b0985129129677fdddab8532afa2f9e30"
+          "artifact_id": "73f51108ab47d4a10e11db3af1c0ee18",
+          "sha256": "eca2ec80de06a44400b9d5f9332af8979d4d1a1e5ec87f81464a60c729f847e5"
         },
         "review_video": {
-          "artifact_id": "599c9751539fd467e72a04ae4211926f",
-          "sha256": "03ea014ece44311b2feba33339eab9df2b4fb15697ccbdb0677374d1b50d14e0"
+          "artifact_id": "8726843efd02cc1f098c583780a31e23",
+          "sha256": "8276c41a3816dd1b4212c78d8abaa4cf6d104d214e881f8b011a769c5248beec"
         },
         "terminal": {
-          "artifact_id": "9d90c3d72341f4df216775b0a3da40cb",
-          "sha256": "523ee67eaabf1f05e17f1f867d13a8d98fafb3936cc358919aac93dbc19fe9bc"
+          "artifact_id": "ca6083012e40e35d4541a754c8bd9b80",
+          "sha256": "429aba73fad65290823b1497ef63a7e782f2f99a947ef67a6fa3f721cdef3c0b"
         }
       },
       "checks": {
@@ -58728,41 +58734,41 @@
       "human_identity_verified": false,
       "numeric_boundary_evidence": {
         "loop": {
-          "background_homography_jump": 0.00015545851783826947,
-          "boundary_camera_displacement": 0.0001984622940653935,
-          "homography_inlier_ratio": 1.0,
+          "background_homography_jump": 0.00022195042765815742,
+          "boundary_camera_displacement": 0.00023414863971993327,
+          "homography_inlier_ratio": 0.9222797927461139,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.034126002341508865,
+          "mean_absolute_frame_difference": 0.06546904146671295,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.000816915649920702,
+          "optical_flow_discontinuity": 0.004500527400523424,
           "semantic_verified": false
         },
         "seam": {
-          "background_homography_jump": 0.00011820037434517872,
-          "boundary_camera_displacement": 0.000130633867229335,
+          "background_homography_jump": 8.832712956063915e-05,
+          "boundary_camera_displacement": 9.699757356429473e-05,
           "homography_inlier_ratio": 1.0,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.01531708613038063,
+          "mean_absolute_frame_difference": 0.034365735948085785,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.001004542806185782,
+          "optical_flow_discontinuity": 0.0006464749458245933,
           "semantic_verified": false
         },
         "seams": [
           {
-            "background_homography_jump": 0.00011820037434517872,
-            "boundary_camera_displacement": 0.000130633867229335,
+            "background_homography_jump": 8.832712956063915e-05,
+            "boundary_camera_displacement": 9.699757356429473e-05,
             "homography_inlier_ratio": 1.0,
             "homography_status": "measured_proxy",
             "left_frame": 95,
             "mad_limit": 0.08,
             "mad_passed": true,
-            "mean_absolute_frame_difference": 0.01531708613038063,
+            "mean_absolute_frame_difference": 0.034365735948085785,
             "measurement_only": true,
-            "optical_flow_discontinuity": 0.001004542806185782,
+            "optical_flow_discontinuity": 0.0006464749458245933,
             "right_frame": 96,
             "semantic_verified": false
           }
@@ -58811,41 +58817,44 @@
       "required_final_seconds": 8,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_28-8a77f68c674116cb588ef0c8fb55d70c-all97-v1",
-        "evidence_sha256": "24c18fedebd9fb9b7c579dcc5807dc8c522310a00da4a9a7c17e63034f6d288d",
+        "evidence_id": "ddb-ai-p_28-89f2f51a4fa20caac41bd3d5fe6054e3-all97-v1",
+        "evidence_sha256": "13788c2a49717adf606f182982348fe145f68efcd1982ae84eeb72b074bb47a9",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "4ce36ff98cb14a3f4f03e5adc3f53099",
-      "reviewed_at": "2026-09-14T13:16:47.901045Z",
+      "review_id": "f0f65bd9d372222c4b111a1c17b10499",
+      "reviewed_at": "2026-10-02T19:03:16.275664Z",
       "schema_version": 1,
       "scope_id": "33de3ad75a8c94ed77ea5dfad3ac84e3156546c34471c2028a625879c0da788c",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "9d90c3d72341f4df216775b0a3da40cb",
+        "artifact_id": "ca6083012e40e35d4541a754c8bd9b80",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "1a21d6deb21b4251b257ecf5bc24d846",
-        "native_artifact_sha256": "43d784a6656970d511285b132226c2afe13425d548cbcb1fa1072fb14e5059b0",
+        "native_artifact_id": "9cb156bc08cf493aaa1b34439868259f",
+        "native_artifact_sha256": "8487923a9fc871cc18e00668172353acce64fc3cbf8992eefbc2c4be608b9d8f",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "6cfc27612c7d08c14f63f82d279b4d7bf1e874548bdccfc976a1e67f5b00bd25",
+        "pixel_sha256": "af5872fd2845a35a9b06142b573ac1f545a2e576e57fda7ac324b6f82e12e811",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "523ee67eaabf1f05e17f1f867d13a8d98fafb3936cc358919aac93dbc19fe9bc",
-        "source_artifact_id": "599c9751539fd467e72a04ae4211926f",
-        "source_artifact_sha256": "03ea014ece44311b2feba33339eab9df2b4fb15697ccbdb0677374d1b50d14e0",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "429aba73fad65290823b1497ef63a7e782f2f99a947ef67a6fa3f721cdef3c0b",
+        "source_artifact_id": "8726843efd02cc1f098c583780a31e23",
+        "source_artifact_sha256": "8276c41a3816dd1b4212c78d8abaa4cf6d104d214e881f8b011a769c5248beec",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Glacier Lake",
@@ -58884,15 +58893,12 @@
       "scene_sha256": "5421dddadbbbda7fccce60f8741c1ac82f1951914f584541d398f6dcf6411b0c",
       "schema_version": 1,
       "scope_id": "33de3ad75a8c94ed77ea5dfad3ac84e3156546c34471c2028a625879c0da788c",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "4ce36ff98cb14a3f4f03e5adc3f53099",
+      "reviewId": "f0f65bd9d372222c4b111a1c17b10499",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
       "scopeId": "33de3ad75a8c94ed77ea5dfad3ac84e3156546c34471c2028a625879c0da788c",
       "human_approved": false,
@@ -58915,10 +58921,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "3ea6ab4fadd83ad30c88f8b6f12ed01284643abe12377bcd3a82fc3270134993",
-      "checkedAt": "2026-09-14T13:16:56.835352+00:00",
-      "sha256": "717fbd607851535dbbd9b6dce0e3865a648900a5d67a801940ea13c00bd64499"
+      "ownerInstructionSha256": "6a16df06e5585d6f478b0279e4f7e19b3d36ec5a334033a8f2d2ee514994d0d8",
+      "technicalProofSha256": "ff87239f3b7bcba71563dd387c4333c69efc6fc1ceeef79345b4722a684ee727",
+      "naturalMotionReviewSha256": "f4b0f2ba6d9b93aea0c1501ab1d0c2aa7d3e8b7d4f2babce982fd9ccc8cc9aeb",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-02T19:05:41.045441+00:00",
+      "sha256": "39fa23d69c9123d46ad4b46fe4bc69f32e128f44b444c4270f88feba567753d9"
     }
   },
   "rw_jsk_1000001243": {
