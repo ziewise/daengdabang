@@ -89508,16 +89508,16 @@
     "publicationStatus": "approved",
     "productId": "p_258",
     "folder": "aff_carseat_sugarwing",
-    "video": "/images/products/catalog/aff_carseat_sugarwing/videos/1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c/hover.mp4",
-    "sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c",
+    "video": "/images/products/catalog/aff_carseat_sugarwing/videos/210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886/hover.mp4",
+    "sha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886",
     "videoQuality": "approved_dog_using",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "06c032127535bdfac2006732ecfeb530",
-      "reviewId": "10d4eabae22cff725c08b8a025a93557",
+      "jobId": "bd469cd5dbbf5a323b4dc1ca8f6fe394",
+      "reviewId": "f744583cb9764c51a3c2b58aad8bd8a7",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c",
+      "finalSha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886",
       "seconds": 4,
       "source": {
         "no": 258,
@@ -89538,30 +89538,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "8a4fbbe5e84e5134cd19b9c8a7f0ca95",
-        "sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c"
+        "artifact_id": "b3eb06728a47dc95f609a57ee7131078",
+        "sha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886"
       },
-      "scopeId": "8b2feddd6b2fe83df8ce51c6bc50c08ca988759c2cfe124e5c41cf39b5382603",
-      "scopeRegistrationSha256": "e926d02a34a1ac6e1d3270ab016870fa3a753171fe6688cf3a42e74bdd9cfe8c",
-      "aiEvidenceSha256": "07f5a7047a5df4d6a05ba097870449020f1c417552e47951fcf01c8efa99d972",
-      "receiptSha256": "197760181e3dd46e5f58a523b2937f315bd91b1cef615da739cac52e6186e8f2",
-      "eligibilitySha256": "31a955d76a1abe7aae5af58aa5c603c6f54226f935f53cc4e5109e5da54aed3d",
-      "evidenceManifestSha256": "f05d9e122a88608926ea57a2f9c2fc6e645bd85902623d894f4ebf1efc08a9f5"
+      "scopeId": "65efd40d76dd77c71e4aa53dace0a866b6fd0fb00b9deaf03bcfdd663f462dd0",
+      "scopeRegistrationSha256": "fb840073998a77096f97ef34ea9b51cc9e19e12ff2dda49a1949dbd994d49427",
+      "aiEvidenceSha256": "641d54fb322226ae373c2472995f1d3acf5b05f1e50f2a3ec79256fd5bc2c70a",
+      "receiptSha256": "a6cb3f0b51b7393c417642d762e7b71c43ce5f4ea0c0fd7b6762925cea1fd621",
+      "eligibilitySha256": "9db37447e131482d40dec7dff1d2ee62c2bfce4f667311824116b9e7ba50de42",
+      "evidenceManifestSha256": "86caf863b49dc63f75beb81f73a768c502688b39907222e303b2188292452074"
     },
     "delegatedReview": {
-      "api_job_id": "06c032127535bdfac2006732ecfeb530",
+      "api_job_id": "bd469cd5dbbf5a323b4dc1ca8f6fe394",
       "bindings": {
         "native_video": {
-          "artifact_id": "122ff4245615498ea1ce5bbdfc204766",
-          "sha256": "7e63b4802e5314c632c0623c5abe7706f2d35656d55f6754a063735d4bca4f37"
+          "artifact_id": "49a1354d9a10442cb0d7eebe1826d829",
+          "sha256": "db5cfc63bb67571ada3acb60c39c81749f535f286da0c7f676ea716e82887c7d"
         },
         "review_video": {
-          "artifact_id": "8a4fbbe5e84e5134cd19b9c8a7f0ca95",
-          "sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c"
+          "artifact_id": "b3eb06728a47dc95f609a57ee7131078",
+          "sha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886"
         },
         "terminal": {
-          "artifact_id": "b5ab11304d82c4c6da34e3d00aaf258c",
-          "sha256": "76d9f5f96c37876b295060ad207492e2b10d9fa8b752e15e377b4fedb92fe22b"
+          "artifact_id": "6abfd4583d91618113e9b315d9eea43a",
+          "sha256": "ba7172f9393be00b62ff09c018c81de0735c663df1756583bfec62802a27d63a"
         }
       },
       "checks": {
@@ -89706,44 +89706,41 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_258-06c032127535bdfac2006732ecfeb530-all97-v1",
-        "evidence_sha256": "07f5a7047a5df4d6a05ba097870449020f1c417552e47951fcf01c8efa99d972",
+        "evidence_id": "ddb-ai-p_258-bd469cd5dbbf5a323b4dc1ca8f6fe394-all97-v1",
+        "evidence_sha256": "641d54fb322226ae373c2472995f1d3acf5b05f1e50f2a3ec79256fd5bc2c70a",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "10d4eabae22cff725c08b8a025a93557",
-      "reviewed_at": "2026-09-23T06:29:01.054245Z",
+      "review_id": "f744583cb9764c51a3c2b58aad8bd8a7",
+      "reviewed_at": "2026-10-02T19:59:57.750958Z",
       "schema_version": 1,
-      "scope_id": "8b2feddd6b2fe83df8ce51c6bc50c08ca988759c2cfe124e5c41cf39b5382603",
+      "scope_id": "65efd40d76dd77c71e4aa53dace0a866b6fd0fb00b9deaf03bcfdd663f462dd0",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "b5ab11304d82c4c6da34e3d00aaf258c",
+        "artifact_id": "6abfd4583d91618113e9b315d9eea43a",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "122ff4245615498ea1ce5bbdfc204766",
-        "native_artifact_sha256": "7e63b4802e5314c632c0623c5abe7706f2d35656d55f6754a063735d4bca4f37",
+        "native_artifact_id": "49a1354d9a10442cb0d7eebe1826d829",
+        "native_artifact_sha256": "db5cfc63bb67571ada3acb60c39c81749f535f286da0c7f676ea716e82887c7d",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "04c080c2dc25d6e7a81093e00850d4c80ca5add8cc79a142238c20db7a88aba5",
+        "pixel_sha256": "19499ea3bbc001df61f125645ceac047507328750b206d44f7007433cf3b7bc7",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "76d9f5f96c37876b295060ad207492e2b10d9fa8b752e15e377b4fedb92fe22b",
-        "source_artifact_id": "8a4fbbe5e84e5134cd19b9c8a7f0ca95",
-        "source_artifact_sha256": "1c2982818d0d509751c4eccbc82f2c01a784fbd6c948617acc7383947de4a17c",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "ba7172f9393be00b62ff09c018c81de0735c663df1756583bfec62802a27d63a",
+        "source_artifact_id": "b3eb06728a47dc95f609a57ee7131078",
+        "source_artifact_sha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
-      "approval_granted": false,
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Gray Affetto SugarWing XL used as floor cushion",
@@ -89763,18 +89760,21 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "6019ed33cc9739b1a1069ae2c85da2c8",
-      "scene_sha256": "a818f347627dbcff6813e3dd869b4eb054e7c39908f876fc7c0600dae4f3ed7b",
+      "scene_asset_id": "ae78fb9844e7bd33b615b65b5c42d1c6",
+      "scene_sha256": "f3a8a36e0cb131f39d9c9e4b5c9dbe0baaf1efeb7b93257c5c8b3a459ff3ea6b",
       "schema_version": 1,
-      "scope_id": "8b2feddd6b2fe83df8ce51c6bc50c08ca988759c2cfe124e5c41cf39b5382603",
-      "source_sha256_authority": "client_original_photo_declaration"
+      "scope_id": "65efd40d76dd77c71e4aa53dace0a866b6fd0fb00b9deaf03bcfdd663f462dd0",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "10d4eabae22cff725c08b8a025a93557",
+      "reviewId": "f744583cb9764c51a3c2b58aad8bd8a7",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "8b2feddd6b2fe83df8ce51c6bc50c08ca988759c2cfe124e5c41cf39b5382603",
+      "scopeId": "65efd40d76dd77c71e4aa53dace0a866b6fd0fb00b9deaf03bcfdd663f462dd0",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -89794,10 +89794,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "43e9d5bb86238017afeadcf16af0695a9dba570e2f609617854d28e17696414b",
-      "technicalProofSha256": "a13bd7e01297030763e9c6af4fb65a8b87a31246a512a36a38fc6c029f6cc785",
-      "checkedAt": "2026-09-23T06:30:52.647327+00:00",
-      "sha256": "11354086544ead32869154719be202a64603ec8b54c0fcfc1a037c20302ce985"
+      "ownerInstructionSha256": "fced297592ed0d98ce7b6d46eb6ffec3e4753fe129a4da9e8c2311d9d4753c0f",
+      "technicalProofSha256": "dba6a16f9e5ca891242a1d0b443585e3209eb4228ac3811e8ce64ccd45b3266a",
+      "naturalMotionReviewSha256": "006036cf9f88c82a99c82df866146bfc63a8d8b14672e338a5e0261f09dba286",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-02T20:13:27.622402+00:00",
+      "sha256": "0c1d79d570818b8c89ebd54f44b41256e06f0739c501b24e20e7d89d4fe7dfde"
     }
   },
   "aff_donut_chewisty_l_pinkgray": {

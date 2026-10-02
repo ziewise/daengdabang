@@ -49,7 +49,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c12aed27afc03ecfe419920a296ed8f9f7f629d4"
   },
-  "aff_carseat_sugarwing": null,
+  "aff_carseat_sugarwing": {
+    "video": "/images/products/catalog/aff_carseat_sugarwing/videos/210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "bd469cd5dbbf5a323b4dc1ca8f6fe394",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "bd469cd5dbbf5a323b4dc1ca8f6fe394",
+      "reviewId": "f744583cb9764c51a3c2b58aad8bd8a7",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886",
+      "seconds": 4,
+      "source": {
+        "no": 258,
+        "folder": "aff_carseat_sugarwing",
+        "name": "아페토 펫카시트 슈가윙 2컬러 2사이즈 핑크 그레이 SL XL",
+        "brandEn": "Affetto",
+        "isFood": false,
+        "image": "/images/products/catalog/aff_carseat_sugarwing/aff_carseat_sugarwing.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655193910",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/aff_carseat_sugarwing/details/2.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/3.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/4.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/5.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/6.webp",
+          "/images/products/catalog/aff_carseat_sugarwing/details/7.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b3eb06728a47dc95f609a57ee7131078",
+        "sha256": "210adaca550624c2cbd9f6bab69c44771dc0d126462341fd07619c4a15846886"
+      },
+      "scopeId": "65efd40d76dd77c71e4aa53dace0a866b6fd0fb00b9deaf03bcfdd663f462dd0",
+      "scopeRegistrationSha256": "fb840073998a77096f97ef34ea9b51cc9e19e12ff2dda49a1949dbd994d49427",
+      "aiEvidenceSha256": "641d54fb322226ae373c2472995f1d3acf5b05f1e50f2a3ec79256fd5bc2c70a",
+      "receiptSha256": "a6cb3f0b51b7393c417642d762e7b71c43ce5f4ea0c0fd7b6762925cea1fd621",
+      "eligibilitySha256": "9db37447e131482d40dec7dff1d2ee62c2bfce4f667311824116b9e7ba50de42",
+      "evidenceManifestSha256": "86caf863b49dc63f75beb81f73a768c502688b39907222e303b2188292452074"
+    },
+    "videoReviewSha256": "0c1d79d570818b8c89ebd54f44b41256e06f0739c501b24e20e7d89d4fe7dfde",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a642e4992c94d3ae45ae49d047f8337e7dc3840c"
+  },
   "aff_donut_chewisty_l_pinkgray": {
     "video": "/images/products/catalog/aff_donut_chewisty_l_pinkgray/videos/fbfd049ee144c221d7129b6f1c95e59f8b1a173838b657732ca90c174153b62f/hover.mp4",
     "videoProvider": "ziewcraft",
