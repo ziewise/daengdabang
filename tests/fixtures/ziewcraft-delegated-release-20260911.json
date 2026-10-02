@@ -1290,5 +1290,9 @@
   "rw_jsk_1000001246": {
     "productId": "p_462",
     "sha256": "14667bf3b9b3e6f5d49a031828ee2e33d5a286ed408aed14d122768c73b5e79a"
+  },
+  "icecream_realcheese": {
+    "productId": "p_325",
+    "sha256": "f48fb08d2ef5d94ee6bf9645d4f027dd569db3706c2c4a21c62ccc9bae21d8bc"
   }
 }

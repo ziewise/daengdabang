@@ -2257,11 +2257,49 @@
   "iby_trailer_fs2080": null,
   "iby_wagon_fs1880": null,
   "icecream_realcheese": {
-    "video": "/images/products/catalog/icecream_realcheese/videos/hover.mp4",
+    "video": "/images/products/catalog/icecream_realcheese/videos/f48fb08d2ef5d94ee6bf9645d4f027dd569db3706c2c4a21c62ccc9bae21d8bc/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "8408f592a3618e3f5a5259a27fd970d8",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8408f592a3618e3f5a5259a27fd970d8",
+      "reviewId": "d025fa433357e6a22178397ce4be7cf0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f48fb08d2ef5d94ee6bf9645d4f027dd569db3706c2c4a21c62ccc9bae21d8bc",
+      "seconds": 4,
+      "source": {
+        "no": 325,
+        "folder": "icecream_realcheese",
+        "name": "강아지 수제 아이스크림 리얼치즈 포켓",
+        "brandEn": "Handmade/Other",
+        "isFood": true,
+        "image": "/images/products/catalog/icecream_realcheese/icecream_realcheese.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/6725689141",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/icecream_realcheese/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "c66c6d7a73ac8389bcac07bd841f7cfa",
+        "sha256": "f48fb08d2ef5d94ee6bf9645d4f027dd569db3706c2c4a21c62ccc9bae21d8bc"
+      },
+      "scopeId": "baf189dceb49d4924e0974d10f9e27397377fc7a26ab22226a8b5d648ace5fd2",
+      "scopeRegistrationSha256": "634d5e071ff5d1d9afadc6b950d7a0ab3dc84f3c73549d4275035c2be0082168",
+      "aiEvidenceSha256": "c7f0541f35302ffa2123ee9258152ef647df46b7ef97d1e5b03ced54fa46a9ee",
+      "receiptSha256": "776ec8e05f70f885955cf954a73f20a4caa3ac5a6e49f8e0afe15dde01f697f1",
+      "eligibilitySha256": "063176cf11089e11082e4e3c0d0b022f2fdfc341979ec817a8e625e1cd71231c",
+      "evidenceManifestSha256": "a50d0b2a3060ecd4022cfbc67675e90b241da390c0cbbc0c7f5b9816b5ad3791"
+    },
+    "videoReviewSha256": "d00eba879877c59a425c37950a162bea566da2056f10e84a8623e1aace922883",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-static72-20260903-dd77d7b4a921"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "e24c41e9c2719bd4b9bebff15863aeeee096f931"
   },
   "id_treat_chicken": {
     "video": "/images/products/catalog/id_treat_chicken/videos/b7728764096a4e44158486db878af94f6a004ff70a93f9bc537c68d3f46eb316/hover.mp4",
