@@ -13994,7 +13994,62 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "5a3000da5def156422a90006662a9cb3609d857f"
   },
-  "rs_jsk_1000001261": null,
+  "rs_jsk_1000001261": {
+    "video": "/images/products/catalog/rs_jsk_1000001261/videos/299c601d4f249f3ffa0546af118d4f903810e7e163c51132b8f7addaef1daca9/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "c5bf65e9baa7acb07e9997520c5531d5",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c5bf65e9baa7acb07e9997520c5531d5",
+      "reviewId": "54e78577fe09632b82bbca60b8699210",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "299c601d4f249f3ffa0546af118d4f903810e7e163c51132b8f7addaef1daca9",
+      "seconds": 8,
+      "source": {
+        "no": 467,
+        "folder": "rs_jsk_1000001261",
+        "name": "렉스스펙스 V2 블레이즈 오렌지 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001261/image/detail/1000001261_detail_057.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001261",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001261/image/detail/1000001261_detail_190.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001261/image/detail/1000001261_detail_272.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001261/image/detail/1000001261_detail_321.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001261/image/detail/1000001261_detail_485.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001261/image/detail/1000001261_detail_573.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/6472d14dcddd2782c12d545461d305b3_180025.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/153ee315d9f89055c6fb67d45faff80a_180033.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/dd9b7bbe0345788fef6dccee2dd2821e_180035.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/b1f1bd856d3da33a091ac2b533256b03_180037.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250916/6ab2ee318c674f488acbaec8bf7756e3_180043.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "6c2a34e39a6ce7c9f9f63cc55c8d0024",
+        "sha256": "299c601d4f249f3ffa0546af118d4f903810e7e163c51132b8f7addaef1daca9"
+      },
+      "scopeId": "696c7295fd5f688bc82665df2ab78ba04dbdd0859e7278b43dd0050ae29dd0b8",
+      "scopeRegistrationSha256": "68a412bc2a5b3b52a4bb694ac2a6dd40ce7bcb011617ff77944e1d8a6f5dae00",
+      "aiEvidenceSha256": "f53a5c280186e086ec350d3ab9ffb2b81c04e971eb1050ee0b418d7053a932d6",
+      "receiptSha256": "2c21ddfec52c7148265fd564642ec20311830881beb27f9cc6e88210ad27af64",
+      "eligibilitySha256": "d64a968f4222d6bdeba994519e140032946d4670f54aab0c730aa889c0dd5021",
+      "evidenceManifestSha256": "c5bdf8940f5f2661bc79528bc2cc451a429c204ec61022ea504938ece8bc3d76"
+    },
+    "videoReviewSha256": "9651cc393128a8e99ec151f706164195c24d07cc3373f2aea6a53d670127e95d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "165215749842e670713c289ab50e2579b299c5a1"
+  },
   "rs_jsk_1000001340": null,
   "rs_jsk_1000001262": null,
   "rw_jsk_1000001346": {
