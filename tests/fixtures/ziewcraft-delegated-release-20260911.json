@@ -1294,5 +1294,9 @@
   "icecream_realcheese": {
     "productId": "p_325",
     "sha256": "f48fb08d2ef5d94ee6bf9645d4f027dd569db3706c2c4a21c62ccc9bae21d8bc"
+  },
+  "rw_coverall_snow_25fw": {
+    "productId": "p_39",
+    "sha256": "913a0afa9cd14f3f8c04f340b28f1f04cdd259691582257280c78933a9807304"
   }
 }

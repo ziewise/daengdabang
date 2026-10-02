@@ -1,25 +1,42 @@
-import assert from 'node:assert/strict';
+import assert from 'node:assert/strict';
+
 import { motionWithdrawals, motionWithdrawnFolders } from './helpers/hover-motion-withdrawals.mjs';
-import test from 'node:test';
-import { readFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
-import { matchesReviewedPhotoMotionVideo, PHOTO_MOTION_HASH_FIELDS } from '../lib/catalog/reviewed-photo-motion-video.mjs';
-import { safeCatalogHoverVideo, getPetTryOnEligibility } from '../lib/pet-tryon-eligibility.ts';
-import { applyReviewedHoverOverride } from '../lib/catalog/reviewed-hover-overrides.ts';
+import test from 'node:test';
+
+import { readFileSync } from 'node:fs';
+
+import { createHash } from 'node:crypto';
+
+import { matchesReviewedPhotoMotionVideo, PHOTO_MOTION_HASH_FIELDS } from '../lib/catalog/reviewed-photo-motion-video.mjs';
+
+import { safeCatalogHoverVideo, getPetTryOnEligibility } from '../lib/pet-tryon-eligibility.ts';
+
+import { applyReviewedHoverOverride } from '../lib/catalog/reviewed-hover-overrides.ts';
+
 import { videoBrandingMode } from '../lib/catalog/video-branding.ts';
 import { matchesReviewedZiewcraftDelegatedVideo } from '../lib/catalog/reviewed-ziewcraft-delegated-video.mjs';
-
-test('the three user-rejected photo edits stay withdrawn while exact source and assets are preserved', () => {
-    const read = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url),'utf8'));
-    const reviews=read('../lib/catalog/reviewed-photo-motion-videos.json');
-    const rows=read('../lib/catalog/raw.json');
-    const flow=read('../lib/catalog/reviewed-flow-videos.json');
-    const trims=read('../lib/catalog/reviewed-video-trims.json');
+
+
+test('the three user-rejected photo edits stay withdrawn while exact source and assets are preserved', () => {
+
+    const read = relative => JSON.parse(readFileSync(new URL(relative, import.meta.url),'utf8'));
+
+    const reviews=read('../lib/catalog/reviewed-photo-motion-videos.json');
+
+    const rows=read('../lib/catalog/raw.json');
+
+    const flow=read('../lib/catalog/reviewed-flow-videos.json');
+
+    const trims=read('../lib/catalog/reviewed-video-trims.json');
+
     const single=read('../lib/catalog/reviewed-ziewcraft-single-videos.json');
     const generated=read('../lib/catalog/reviewed-ziewcraft-delegated-videos.json');
-    assert.deepEqual(Object.keys(reviews).sort(),['soopa_dental_appleblueberry','soopa_dental_coconutchia','soopa_dental_kaleapple']);
-    for(const review of Object.values(reviews)) {
-        const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
+    assert.deepEqual(Object.keys(reviews).sort(),['soopa_dental_appleblueberry','soopa_dental_coconutchia','soopa_dental_kaleapple']);
+
+    for(const review of Object.values(reviews)) {
+
+        const raw=applyReviewedHoverOverride(rows.find(row=>row.folder===review.folder));
+
         const product={id:`p_${raw.no}`,folder:raw.folder,video:raw.video,image:raw.image,raw,subcategory:'treats'};
         const replacement=generated[review.folder];
         if(replacement) {
@@ -27,33 +44,59 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
             assert.notEqual(replacement.sha256,review.sha256,'new generation must not restore the withdrawn photo edit');
         }
         assert.equal(safeCatalogHoverVideo(product), replacement?.video ?? single[review.folder]?.video ?? flow[review.folder]?.video);
-        assert.equal(safeCatalogHoverVideo({...product,video:review.video}),undefined);
-        assert.equal(review.publicationStatus,'withdrawn_user_feedback');
-        assert.equal(review.withdrawal.reasonCode,'rejected_photo_zoom_motion');
-        assert.equal(getPetTryOnEligibility(product).eligible,false);
+        assert.equal(safeCatalogHoverVideo({...product,video:review.video}),undefined);
+
+        assert.equal(review.publicationStatus,'withdrawn_user_feedback');
+
+        assert.equal(review.withdrawal.reasonCode,'rejected_photo_zoom_motion');
+
+        assert.equal(getPetTryOnEligibility(product).eligible,false);
+
         assert.equal(raw.videoJobId,replacement?.videoZiewcraftIdentity.jobId ?? single[review.folder]?.videoJobId ?? (flow[review.folder] ? null : undefined));
-        assert.equal(raw.videoEditIdentity ?? null,null);
-        assert.equal(matchesReviewedPhotoMotionVideo({id:review.productId,folder:review.folder,video:review.video,raw:{...review}},reviews),false);
-        for(const [file,digest] of [[review.video,review.sha256],[review.sourceImagePath,review.videoEditIdentity.sourceImageSha256]]) {
-            assert.equal(createHash('sha256').update(readFileSync(new URL(`../public${file}`,import.meta.url))).digest('hex'),digest);
-        }
-        assert.equal(videoBrandingMode(review.video),'baked');
-        assert.equal(videoBrandingMode(`https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${'a'.repeat(40)}/public${review.video}`),'baked');
-    }
-    const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
-    const delegated=read("./fixtures/ziewcraft-delegated-release-20260911.json");
+        assert.equal(raw.videoEditIdentity ?? null,null);
+
+        assert.equal(matchesReviewedPhotoMotionVideo({id:review.productId,folder:review.folder,video:review.video,raw:{...review}},reviews),false);
+
+        for(const [file,digest] of [[review.video,review.sha256],[review.sourceImagePath,review.videoEditIdentity.sourceImageSha256]]) {
+
+            assert.equal(createHash('sha256').update(readFileSync(new URL(`../public${file}`,import.meta.url))).digest('hex'),digest);
+
+        }
+
+        assert.equal(videoBrandingMode(review.video),'baked');
+
+        assert.equal(videoBrandingMode(`https://cdn.jsdelivr.net/gh/ziewise/daengdabang@${'a'.repeat(40)}/public${review.video}`),'baked');
+
+    }
+
+    const active=rows.map(applyReviewedHoverOverride).filter(raw=>safeCatalogHoverVideo({id:`p_${raw.no}`,folder:raw.folder,video:raw.video,raw}));
+
+    const delegated=read("./fixtures/ziewcraft-delegated-release-20260911.json");
+
     const replacedFlow = Object.keys(delegated).filter(folder => Object.hasOwn(flow,folder));
-    const replacedSingle = Object.keys(delegated).filter(folder => Object.hasOwn(single,folder));
-    assert.equal(active.length,86+Object.keys(delegated).length-replacedFlow.length-replacedSingle.length-motionWithdrawnFolders.length,
-      'a separately approved replacement does not add another catalog product');
-    assert.deepEqual(active.filter(r=>r.videoZiewcraftIdentity?.kind==="ziewcraft_owner_delegated_ai.v1").map(r=>r.folder).sort(),Object.keys(delegated).filter(folder => !motionWithdrawnFolders.includes(folder)).sort());
+    const legacy = read('../lib/catalog/reviewed-legacy-videos.json');
+    const approvedBaselineFolders = new Set([
+      ...Object.keys(flow), ...Object.keys(single), ...Object.keys(legacy),
+      'rw_flagline_harness_24', 'rw_coverall_snow_25fw', 'rs_v2_volcanored',
+    ]);
+    assert.equal(approvedBaselineFolders.size,86,'the original approval inventory stays preserved');
+    const expectedActiveFolders = new Set(
+      [...approvedBaselineFolders,...Object.keys(delegated)]
+        .filter(folder => !motionWithdrawnFolders.includes(folder)),
+    );
+    assert.deepEqual(active.map(raw=>raw.folder).sort(),[...expectedActiveFolders].sort(),
+      'runtime contains exactly the reviewed products; replacements never add duplicates');
+    assert.deepEqual(active.filter(r=>r.videoZiewcraftIdentity?.kind==="ziewcraft_owner_delegated_ai.v1").map(r=>r.folder).sort(),Object.keys(delegated).filter(folder => !motionWithdrawnFolders.includes(folder)).sort());
+
     assert.equal(active.filter(r=>r.videoZiewcraftIdentity?.kind==='ziewcraft_human_review_single_4s.v1').length,
       3-Object.keys(single).filter(folder=>motionWithdrawnFolders.includes(folder)||Object.hasOwn(delegated,folder)).length);
-    assert.equal(Object.keys(flow).length,76,'all original Flow approvals remain preserved');
+    assert.equal(Object.keys(flow).length,76,'all original Flow approvals remain preserved');
+
     assert.equal(active.filter(r=>r.videoProvider==='google_flow_web').length,
       73-replacedFlow.filter(folder=>!Object.hasOwn(trims,folder)).length
       -Object.keys(flow).filter(folder=>!Object.hasOwn(delegated,folder)&&!Object.hasOwn(trims,folder)&&motionWithdrawnFolders.includes(folder)).length);
-    const derivatives=active.filter(r=>r.videoProvider==='ddb_original_video_editor');
+    const derivatives=active.filter(r=>r.videoProvider==='ddb_original_video_editor');
+
     const preservedTrimFolders=['hugo_icecream_salmon','soopa_healthybites_appleblueberry','soopa_healthybites_coconutchia'];
     assert.deepEqual(Object.keys(trims).sort(),preservedTrimFolders,'all original temporal edit approvals remain preserved');
     assert.deepEqual(derivatives.map(r=>r.folder).sort(),preservedTrimFolders.filter(folder=>!motionWithdrawnFolders.includes(folder)&&!Object.hasOwn(delegated,folder)));
@@ -61,59 +104,115 @@ test('the three user-rejected photo edits stay withdrawn while exact source and 
         assert.equal(motionWithdrawals[folder].sha256,trims[folder].sha256,'only the exact rejected trim may be withdrawn');
         assert.equal(motionWithdrawals[folder].video,trims[folder].video);
         assert.equal(active.some(raw=>raw.folder===folder),false,'the exact withdrawn trim is absent from runtime');
-    }
-    for(const raw of derivatives) {
-        assert.equal(raw.video,trims[raw.folder].video);
-        assert.equal(raw.videoPlaybackMode,'once_hold_last_frame');
-        assert.equal(trims[raw.folder].review.loopDecision,'hold');
-        assert.deepEqual(raw.videoTrimIdentity.source.approvedRecord,flow[raw.folder],'separate temporal edit retains exact original approval');
-        assert.equal(Object.hasOwn(reviews,raw.folder),false,'no withdrawn photo edit is restored by this source-video trim');
-    }
-});
-
-// Synthetic policy examples do not enter the production authority manifest.
-function fixture() {
-    const videoEditIdentity = {
-        method: 'source_photo_motion_edit', durationSeconds: 4,
-        sourceImageSha256: '1'.repeat(64), recipeSha256: '2'.repeat(64),
-        technicalReviewSha256: '3'.repeat(64), visualReviewSha256: '4'.repeat(64),
-    };
-    const review = {
-        productId: 'p_230', folder: 'soopa_dental_appleblueberry', sha256: 'a'.repeat(64),
-        video: `/images/products/catalog/soopa_dental_appleblueberry/videos/${'a'.repeat(64)}/hover.mp4`,
-        videoProvider: 'ddb_exact_product_renderer', videoQuality: 'approved_product_contents', videoJobId: null,
-        publicationStatus: 'approved', videoEditIdentity,
-        sourceImagePath: '/images/products/catalog/soopa_dental_appleblueberry/details/official-visual-01.webp',
-        reviewScope: 'verified_product_contents_without_live_dog',
-        width: 720, height: 720, durationSeconds: 4, frameCount: 96, fps: 24,
-        checks: Object.fromEntries(['sourceProvenance','contentsMatch','sourcePhotoOnly','branding','loop','fullDecode','noLiveDog','noNewProductGeometry'].map(k => [k, true])),
-    };
-    const raw = { folder: review.folder, video: review.video, videoProvider: review.videoProvider,
-        videoQuality: review.videoQuality, videoJobId: null, videoEditIdentity: { ...videoEditIdentity } };
-    return { review, product: { id: 'p_230', folder: review.folder, video: review.video, raw } };
-}
-
-test('a source-photo edit needs an exact trusted content review, independent of generated jobs', () => {
-    const { product, review } = fixture();
-    assert.equal(matchesReviewedPhotoMotionVideo(product, {}), false);
-    assert.equal(matchesReviewedPhotoMotionVideo(product, { [review.folder]: review }), true);
-    for (const patch of [
-        { id: 'p_231' }, { folder: 'another-flavour' }, { video: review.video + '?different=1' },
-        ...[{videoProvider:'ziewcraft'}, {videoJobId:'generated-job'}, {videoQuality:'approved_dog_wearing'},
-            {videoReviewClass:'legacy_reviewed'}, {videoGenerationIdentity:{providerSceneId:'scene'}},
-            {videoEditIdentity:undefined}, {folder:'another-flavour'}, {video:review.video+'?different=1'}]
-            .map(change => ({raw:{...product.raw,...change}})),
-        ...PHOTO_MOTION_HASH_FIELDS.map(key => ({raw:{...product.raw,videoEditIdentity:{...product.raw.videoEditIdentity,[key]:'f'.repeat(64)}}})),
-    ]) assert.equal(matchesReviewedPhotoMotionVideo({ ...product, ...patch }, { [review.folder]: review }), false);
-});
-
-test('wrong duration, dimensions, evidence or review scope never authorize an edit', () => {
-    const { product, review } = fixture();
-    for (const patch of [
-        {publicationStatus:'pending'}, {publicationStatus:'withdrawn_user_feedback'}, {durationSeconds:8}, {width:512}, {frameCount:97}, {fps:30},
-        {videoJobId:'fake-job'}, {reviewScope:'approved_dog_using'}, {sha256:'x'.repeat(64)},
-        {sourceImagePath:'/images/products/catalog/another-flavour/details/official-visual-01.webp'},
-        ...Object.keys(review.checks).map(key => ({checks:{...review.checks,[key]:false}})),
-        ...PHOTO_MOTION_HASH_FIELDS.map(key => ({videoEditIdentity:{...review.videoEditIdentity,[key]:undefined}})),
-    ]) assert.equal(matchesReviewedPhotoMotionVideo(product, { [review.folder]: { ...review, ...patch } }), false);
-});
+    }
+
+    for(const raw of derivatives) {
+
+        assert.equal(raw.video,trims[raw.folder].video);
+
+        assert.equal(raw.videoPlaybackMode,'once_hold_last_frame');
+
+        assert.equal(trims[raw.folder].review.loopDecision,'hold');
+
+        assert.deepEqual(raw.videoTrimIdentity.source.approvedRecord,flow[raw.folder],'separate temporal edit retains exact original approval');
+
+        assert.equal(Object.hasOwn(reviews,raw.folder),false,'no withdrawn photo edit is restored by this source-video trim');
+
+    }
+
+});
+
+
+
+// Synthetic policy examples do not enter the production authority manifest.
+
+function fixture() {
+
+    const videoEditIdentity = {
+
+        method: 'source_photo_motion_edit', durationSeconds: 4,
+
+        sourceImageSha256: '1'.repeat(64), recipeSha256: '2'.repeat(64),
+
+        technicalReviewSha256: '3'.repeat(64), visualReviewSha256: '4'.repeat(64),
+
+    };
+
+    const review = {
+
+        productId: 'p_230', folder: 'soopa_dental_appleblueberry', sha256: 'a'.repeat(64),
+
+        video: `/images/products/catalog/soopa_dental_appleblueberry/videos/${'a'.repeat(64)}/hover.mp4`,
+
+        videoProvider: 'ddb_exact_product_renderer', videoQuality: 'approved_product_contents', videoJobId: null,
+
+        publicationStatus: 'approved', videoEditIdentity,
+
+        sourceImagePath: '/images/products/catalog/soopa_dental_appleblueberry/details/official-visual-01.webp',
+
+        reviewScope: 'verified_product_contents_without_live_dog',
+
+        width: 720, height: 720, durationSeconds: 4, frameCount: 96, fps: 24,
+
+        checks: Object.fromEntries(['sourceProvenance','contentsMatch','sourcePhotoOnly','branding','loop','fullDecode','noLiveDog','noNewProductGeometry'].map(k => [k, true])),
+
+    };
+
+    const raw = { folder: review.folder, video: review.video, videoProvider: review.videoProvider,
+
+        videoQuality: review.videoQuality, videoJobId: null, videoEditIdentity: { ...videoEditIdentity } };
+
+    return { review, product: { id: 'p_230', folder: review.folder, video: review.video, raw } };
+
+}
+
+
+
+test('a source-photo edit needs an exact trusted content review, independent of generated jobs', () => {
+
+    const { product, review } = fixture();
+
+    assert.equal(matchesReviewedPhotoMotionVideo(product, {}), false);
+
+    assert.equal(matchesReviewedPhotoMotionVideo(product, { [review.folder]: review }), true);
+
+    for (const patch of [
+
+        { id: 'p_231' }, { folder: 'another-flavour' }, { video: review.video + '?different=1' },
+
+        ...[{videoProvider:'ziewcraft'}, {videoJobId:'generated-job'}, {videoQuality:'approved_dog_wearing'},
+
+            {videoReviewClass:'legacy_reviewed'}, {videoGenerationIdentity:{providerSceneId:'scene'}},
+
+            {videoEditIdentity:undefined}, {folder:'another-flavour'}, {video:review.video+'?different=1'}]
+
+            .map(change => ({raw:{...product.raw,...change}})),
+
+        ...PHOTO_MOTION_HASH_FIELDS.map(key => ({raw:{...product.raw,videoEditIdentity:{...product.raw.videoEditIdentity,[key]:'f'.repeat(64)}}})),
+
+    ]) assert.equal(matchesReviewedPhotoMotionVideo({ ...product, ...patch }, { [review.folder]: review }), false);
+
+});
+
+
+
+test('wrong duration, dimensions, evidence or review scope never authorize an edit', () => {
+
+    const { product, review } = fixture();
+
+    for (const patch of [
+
+        {publicationStatus:'pending'}, {publicationStatus:'withdrawn_user_feedback'}, {durationSeconds:8}, {width:512}, {frameCount:97}, {fps:30},
+
+        {videoJobId:'fake-job'}, {reviewScope:'approved_dog_using'}, {sha256:'x'.repeat(64)},
+
+        {sourceImagePath:'/images/products/catalog/another-flavour/details/official-visual-01.webp'},
+
+        ...Object.keys(review.checks).map(key => ({checks:{...review.checks,[key]:false}})),
+
+        ...PHOTO_MOTION_HASH_FIELDS.map(key => ({videoEditIdentity:{...review.videoEditIdentity,[key]:undefined}})),
+
+    ]) assert.equal(matchesReviewedPhotoMotionVideo(product, { [review.folder]: { ...review, ...patch } }), false);
+
+});
+

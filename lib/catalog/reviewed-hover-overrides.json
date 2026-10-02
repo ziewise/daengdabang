@@ -15821,7 +15821,60 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "fd29de2a0111696f339202925a28a7dcadf28a02"
   },
-  "rw_coverall_snow_25fw": null,
+  "rw_coverall_snow_25fw": {
+    "video": "/images/products/catalog/rw_coverall_snow_25fw/videos/913a0afa9cd14f3f8c04f340b28f1f04cdd259691582257280c78933a9807304/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "c94657dfbe0e4743707da4b445764d6e",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "c94657dfbe0e4743707da4b445764d6e",
+      "reviewId": "a82b2e8895389ca5fadaeccc3337ad6f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "913a0afa9cd14f3f8c04f340b28f1f04cdd259691582257280c78933a9807304",
+      "seconds": 8,
+      "source": {
+        "no": 39,
+        "folder": "rw_coverall_snow_25fw",
+        "name": "러프웨어 버트 커버올 스노우 슈트",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001258/image/detail/1000001258_detail_026.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001258",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001258/image/detail/1000001258_detail_141.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001258/image/detail/1000001258_detail_248.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001258/image/detail/1000001258_detail_322.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001258/image/detail/1000001258_detail_436.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001258/image/detail/1000001258_detail_524.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250902/92b693a4c5a0337c2ba5abb45b7afddf_151748.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250902/4dd369da3ca53f219c9b80abfc025275_151805.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250902/4395cf515118cab4d8f31a7d2e6075a5_151820.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250902/b666127c29f9508928ec4abd2933434c_151838.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5f33596a4088b8ff822ff3fa4675d2e5",
+        "sha256": "913a0afa9cd14f3f8c04f340b28f1f04cdd259691582257280c78933a9807304"
+      },
+      "scopeId": "0e024884922c310571158a63effa7a107dff2cb4f88114b4fe7601e7b3d4ca9f",
+      "scopeRegistrationSha256": "e0178a89081e51be9e3826f2a2bd2cdbaa10a7b4967b3e620f1797ba0aac7c18",
+      "aiEvidenceSha256": "8e3ed690830ed33540d7b9ddb4c1b3daf9cdd957f72515e8638cd32757ef8771",
+      "receiptSha256": "329d168b681b9a008f521c93262b38168858eec27a0f8dffcb6557f4d0064ca4",
+      "eligibilitySha256": "dc5e0cf6a77f48e54b6deb1126e7cafaadac36773073d2b0d1b8894a940a0e18",
+      "evidenceManifestSha256": "a04fee39280d9f84b99cc8bf7da9832b7d6dbddfd6a8a4994593752c1ea6d621"
+    },
+    "videoReviewSha256": "145efd06815b8b07ae1f2a2bdaa5db528d91e9406d1ba1ceada46a1220b05f86",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "745bcef71e0938dbf9bebadac9da96c7095df400"
+  },
   "rs_v2_volcanored": null,
   "rs_jsk_1000001117": {
     "video": "/images/products/catalog/rs_jsk_1000001117/videos/0a2c0fc4c8080b0455083e2331f6b3d7c7722d49e5c129c61f5100bedaab99f7/hover.mp4",
