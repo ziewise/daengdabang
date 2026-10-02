@@ -381,7 +381,7 @@
   },
   "rs_jsk_1000001340": {
     "productId": "p_470",
-    "sha256": "c19865ffdf153206b9a72cdbfb87c27e7eb258d1b97fbbdbf5438d6e5bca94e8"
+    "sha256": "152152c9300f2269c87cc393d90dd7f8b7e84dc4899cd8b5f862a4493ce2be4a"
   },
   "rs_jsk_1000001262": {
     "productId": "p_468",
@@ -1298,5 +1298,9 @@
   "rw_coverall_snow_25fw": {
     "productId": "p_39",
     "sha256": "913a0afa9cd14f3f8c04f340b28f1f04cdd259691582257280c78933a9807304"
+  },
+  "rw_jsk_1000001324": {
+    "productId": "p_469",
+    "sha256": "9a5555447e1ba56278516f4c8f39408dfe76d8e4cc48eccacc3c8636e58666b0"
   }
 }
