@@ -28,6 +28,13 @@ test('retained legacy bytes remain intact while current natural-motion withdrawa
     const row = raw.find(row => row.folder === folder);
     const current = candidate(row);
     assert.equal(Boolean(current.video), !motionWithdrawnFolders.includes(folder));
+    const replacement = delegated[folder];
+    if (replacement) {
+      assert.equal(replacement.productId, current.id);
+      assert.equal(safeCatalogHoverVideo(current), `/images/products/catalog/${folder}/videos/${replacement.sha256}/hover.mp4`);
+      assert.equal(safeDogWearingCatalogVideo(current), undefined, 'a reviewed replacement has its own authority');
+      assert.notEqual(current.video, row.video, 'the archival retained asset is preserved separately');
+    }
     const product = candidate(row, true);
     assert.equal(product.id, `p_${no}`);
     assert.ok(product.video);
@@ -38,7 +45,7 @@ test('retained legacy bytes remain intact while current natural-motion withdrawa
       'retained publication depends on explicit asset identity, not mutable name/category');
   }
   const legacyActive = raw.map(row => candidate(row)).filter(product => safeDogWearingCatalogVideo(product));
-  assert.deepEqual(legacyActive.map(product => product.folder).sort(), retained.map(([folder]) => folder).filter(folder => !motionWithdrawnFolders.includes(folder)).sort());
+  assert.deepEqual(legacyActive.map(product => product.folder).sort(), retained.map(([folder]) => folder).filter(folder => !motionWithdrawnFolders.includes(folder) && !delegated[folder]).sort());
 });
 
 test('retained product/path/provider/job/quality substitutions never grant approval', () => {
