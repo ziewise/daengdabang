@@ -7831,11 +7831,63 @@
     }
   },
   "rw_hitchhiker_carrier": {
-    "video": "/images/products/catalog/rw_hitchhiker_carrier/videos/hover.mp4",
+    "video": "/images/products/catalog/rw_hitchhiker_carrier/videos/7dba6190011f2badc0248c3ca5642788f1caf0fe6d6a807aae7891dc17c89808/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_using",
+    "videoJobId": "573e859b75d88b9cf51d81bab931300d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "573e859b75d88b9cf51d81bab931300d",
+      "reviewId": "12cea7f0ded8cd2ec497d3dd8f583751",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "7dba6190011f2badc0248c3ca5642788f1caf0fe6d6a807aae7891dc17c89808",
+      "seconds": 4,
+      "source": {
+        "no": 62,
+        "folder": "rw_hitchhiker_carrier",
+        "name": "러프웨어 히치 하이커 반려견 백팩 캐리어",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_037.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001238",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_118.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_291.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_330.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_416.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_557.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_623.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_794.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_829.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001238/image/detail/1000001238_detail_953.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/f506788f3e850001474419da7501d116_130150.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/0727d8339f37406f91996443c999959b_130152.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/b1600fef6b3350feeb8cdc8effe2afdc_130153.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250401/52863eadd136d2418e3693744601fa67_130459.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250225/b6f824d088e88cee3af76fe840b8f27d_130156.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "53d46f341eac8ea38ca73b25d0438853",
+        "sha256": "7dba6190011f2badc0248c3ca5642788f1caf0fe6d6a807aae7891dc17c89808"
+      },
+      "scopeId": "690d4f160024336b5fb851cb9b30db3dafb3dd3216e85a83f9744539cdd72582",
+      "scopeRegistrationSha256": "ea4f65908e14c863ae54228aec4b83161ac9bf41eb99c2948ed194a615eef3b8",
+      "aiEvidenceSha256": "cdf0a7c877d8b0aaf5eb49037ec7005e16273b6e51ebfa3e1303d0e9adc6a4e6",
+      "receiptSha256": "498b22b909a4c6c375a708e5c56bfe221f30107e40e95ae3aec89111dcd4c2be",
+      "eligibilitySha256": "b2c685d509f789b4630ae5fa292e35aa8dcd2e13095688e80066fb59e01909da",
+      "evidenceManifestSha256": "661722aa82e34022bfb8c71c8853d0c3ce16242f2bee6955c1c0cbad9f98d728"
+    },
+    "videoReviewSha256": "1dfef2ab0b05edba7436bd9fa083c61667f44abde2c80788b7d61c06dd5e4bf2",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-ac785bd6868a"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "a65eb94c68410ab2aac318c2799860b4058d2797"
   },
   "rw_hitchhiker_leash_26": {
     "video": "/images/products/catalog/rw_hitchhiker_leash_26/videos/df9048e0e03fcbfadd606e43ce51c8c0f0128512739c0772c02d624b39126278/hover.mp4",

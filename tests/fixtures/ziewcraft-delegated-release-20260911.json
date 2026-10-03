@@ -1314,5 +1314,9 @@
   "rw_quencher_24": {
     "productId": "p_147",
     "sha256": "61ccef5aeda0db4ccb8c90fbde40fb4ba0c040a29eeee476c9374e662c8c6d88"
+  },
+  "rw_hitchhiker_carrier": {
+    "productId": "p_62",
+    "sha256": "7dba6190011f2badc0248c3ca5642788f1caf0fe6d6a807aae7891dc17c89808"
   }
 }
