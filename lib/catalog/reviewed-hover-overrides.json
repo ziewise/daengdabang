@@ -9631,7 +9631,65 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "992887fc58e069591148a30661b2002382620858"
   },
-  "rw_trailrunner_vest": null,
+  "rw_trailrunner_vest": {
+    "video": "/images/products/catalog/rw_trailrunner_vest/videos/0b47efee56a9656b7aadc37da48ed3262042717bf3801807b1647db485f86fc0/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "5f52dcff283cf3ab628ad7307a7654bb",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "5f52dcff283cf3ab628ad7307a7654bb",
+      "reviewId": "2e916408be1c4a176b02c1a3d5469d72",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "0b47efee56a9656b7aadc37da48ed3262042717bf3801807b1647db485f86fc0",
+      "seconds": 8,
+      "source": {
+        "no": 350,
+        "folder": "rw_trailrunner_vest",
+        "name": "러프웨어 트레일 러너 러닝 베스트",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_08.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001167",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_185.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_272.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_318.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_454.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_518.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_678.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_774.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_816.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001167/image/detail/1000001167_detail_945.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/5665d5a71aa7c1afefe2f858fb93db81_112252.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/8fe45b61d56c9c57fc3c59a0984a93c5_112253.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/6408ce04f769574681c8e5e7088e8fe0_112253.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260905/76f0b3719db0e2206ee3466ed8ab289f_112254.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/19596345b397abd02783e62c9dd1aaba_161147.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "13078bfd9329e1045e9bfc9c3e16298f",
+        "sha256": "0b47efee56a9656b7aadc37da48ed3262042717bf3801807b1647db485f86fc0"
+      },
+      "scopeId": "c1661defbb9d7788f148c83f2c0d142e8667e3d1cefb6f03704d2deefc82f663",
+      "scopeRegistrationSha256": "1184a9867cf45b5611272025068f409bac9de395f250ef45b3963cb4ed92f03f",
+      "aiEvidenceSha256": "4ef92602d3dce22c3f1fdb419c58395a073326213f4b4e441da09e74a55d63e9",
+      "receiptSha256": "30ac1dbb8e2130e4d1dbf5c18ce16071e0aae0a3da6332609a71adc84ca9329c",
+      "eligibilitySha256": "5cfee80e9d348ca568b32c1a5f341519dc5644a06f63e8d3c08dbaeb2b36a5a3",
+      "evidenceManifestSha256": "f3779f5671ecd1d50f5827663c3579968c11ec18562197ec0f736a533a8c9d45"
+    },
+    "videoReviewSha256": "165efc002bd3d65df22770eb4eca5c6b27c6e7ca8652c602ac6c1ad93f06bd19",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5cc4232cbea3bb1ce1f1fe2bc866d20d63581c92"
+  },
   "rw_trailrunnerbowl": null,
   "rw_treattrader_23": null,
   "rw_treattrader_bag": {
@@ -12835,7 +12893,60 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
-  "rw_jsk_1000000966": null,
+  "rw_jsk_1000000966": {
+    "video": "/images/products/catalog/rw_jsk_1000000966/videos/61666b35358683bfa0093782ea570167f72613399c54821a5c04c2abd2df633d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_wearing",
+    "videoJobId": "6056bcf803b979312d3d15c58e65b419",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "6056bcf803b979312d3d15c58e65b419",
+      "reviewId": "8f0da4760bdf48d00cda516d240f2015",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "61666b35358683bfa0093782ea570167f72613399c54821a5c04c2abd2df633d",
+      "seconds": 8,
+      "source": {
+        "no": 396,
+        "folder": "rw_jsk_1000000966",
+        "name": "러프웨어 루멘글로우 하이 비스 재킷(Lumenglow™ High-Vis Jacket)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_033.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000000966",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_133.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_264.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_352.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_423.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000000966/image/detail/1000000898_detail_593.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220323/Lumenglow-High-vis-Jacket1_222518.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/220323/Lumenglow-High-vis-Jacket2_222538.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/Lumenglow-High-vis-Jacket3_164238.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/221014/5268f55755e41d295a2290ba73533f3e_164247.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "f92a7f515e966b2c4ab231c5272191ac",
+        "sha256": "61666b35358683bfa0093782ea570167f72613399c54821a5c04c2abd2df633d"
+      },
+      "scopeId": "e4f0e312edccd5a12bcf34c415e4b38fb7dd8754fbcc7c8a68c4f4c2d7537478",
+      "scopeRegistrationSha256": "f6e2d9a46915d70e32a3f9141a123c3028d7781d2183cdbf08cfa7c5280dd0b1",
+      "aiEvidenceSha256": "036e2174578acb88bd5bd6872393153dde23e62f9e1910f992d0eb8b1cf149a0",
+      "receiptSha256": "8127d0a880ac13125f799ac54540d648761596eff69d8f5ec23390453d4d3d21",
+      "eligibilitySha256": "eda96a7aca096df38f37d66da41b3c6f915757137731e4efa98051768e285e04",
+      "evidenceManifestSha256": "927f775cbd6c0f0de5341043e32b64d4bde787928a803e4039104d7844780375"
+    },
+    "videoReviewSha256": "ccebb36e002e67e92680c2dd3056c1e5354e052e8ab0e2a44c370929498b8419",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "5cc4232cbea3bb1ce1f1fe2bc866d20d63581c92"
+  },
   "rw_jsk_1000001343": {
     "video": "/images/products/catalog/rw_jsk_1000001343/videos/098fd47765d7008506c8ea76a2ce8becf0569736271e0cd9f1881367be41e902/hover.mp4",
     "videoProvider": "ziewcraft",
