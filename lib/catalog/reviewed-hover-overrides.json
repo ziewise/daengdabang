@@ -3700,7 +3700,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c69673ca7a2ab8aaef2a873bead496492ce0de66"
   },
-  "nd_feelgood_wf": null,
+  "nd_feelgood_wf": {
+    "video": "/images/products/catalog/nd_feelgood_wf/videos/32fbc5ed39942ef009b0fffa0072d553f8c6310318953f6e5cdb8af3d2e9d1d6/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "eebf3bb239f57f7a27792a6cdfdde7d6",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "eebf3bb239f57f7a27792a6cdfdde7d6",
+      "reviewId": "15267dc1586b6e506f79f993c79967b5",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "32fbc5ed39942ef009b0fffa0072d553f8c6310318953f6e5cdb8af3d2e9d1d6",
+      "seconds": 4,
+      "source": {
+        "no": 186,
+        "folder": "nd_feelgood_wf",
+        "name": "네이처다이어트 필 굿 화이트 피쉬 주식 습식사료 390g",
+        "brandEn": "Naturediet",
+        "isFood": true,
+        "image": "/images/products/catalog/nd_feelgood_wf/nd_feelgood_wf.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8922910711",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-01.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-02.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-03.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-04.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/official-visual-05.webp",
+          "/images/products/catalog/nd_feelgood_wf/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "da0c82039db119ef4e15771e7c04ddf6",
+        "sha256": "32fbc5ed39942ef009b0fffa0072d553f8c6310318953f6e5cdb8af3d2e9d1d6"
+      },
+      "scopeId": "842a8f774c4409dca3a8aef13ff72bbbfc8728141cd11bde0baf6a42e3671692",
+      "scopeRegistrationSha256": "7a47687b3c6fc034fc082bcb2dc840fd2515c2281dd899cba35bbf5b566ffd94",
+      "aiEvidenceSha256": "98c4f1c595257226b6eb91e671aec8c0fa939c7c727e3dedb772a68fe25d282a",
+      "receiptSha256": "d620c0665d1cad513e42436e7c8b28dfc15d28ac6718cc38e82fad92024e2ec2",
+      "eligibilitySha256": "e3244aa4d507c4371c06200612705690e71d1881adb8b6280ff35b0f0f48e10e",
+      "evidenceManifestSha256": "6a5d45d30e8922412980d8b8eddb641ff08407d9809c3102fea3db03e77ccc26"
+    },
+    "videoReviewSha256": "df47034bb048c04f4b403ea50425f79e2a241eefca112e079f6df348da4217eb",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "7e592493597caa187eb745647d8f444b05b1fd1d"
+  },
   "nd_purely_bc": {
     "video": "/images/products/catalog/nd_purely_bc/videos/6c51800745a52dc81972a0014880745b4b1af82bc037b124178df9cf8f31789d/hover.mp4",
     "videoProvider": "ziewcraft",
