@@ -101,7 +101,7 @@
   },
   "rs_v2_banditorange": {
     "productId": "p_78",
-    "sha256": "f94f0f3925f46aad22cca60f6313a58fc22d1860323b82cf53ade974bd4a109e"
+    "sha256": "47603d35a601864178dd747aa9ff9c40c50685da4f0cdf776af7b712b29fc331"
   },
   "rs_v2_appalachianorange": {
     "productId": "p_100",
@@ -177,7 +177,7 @@
   },
   "rs_jsk_1000001250": {
     "productId": "p_463",
-    "sha256": "02ea5ac94d1d202d82b74016d95d6206444f1307c52f5879a4a60fc043b7deca"
+    "sha256": "733af50b16a30c0a5f5f4b3e16d19e80bef4de235d7efb8e57554dbb615b86e2"
   },
   "rw_jsk_1000000951": {
     "productId": "p_392",
@@ -1001,7 +1001,7 @@
   },
   "perity_carrot_shampoo_set_750ml": {
     "productId": "p_204",
-    "sha256": "ab7ea6699de488fc63904a5cf4950b5287d466f45e839d769fa97912c64d1878"
+    "sha256": "44adcbca9684f9c3ca8107a06e321f1faf12ff6349deee693f841952df366e39"
   },
   "perity_carrot_mist": {
     "productId": "p_208",
@@ -1302,5 +1302,9 @@
   "rw_jsk_1000001324": {
     "productId": "p_469",
     "sha256": "9a5555447e1ba56278516f4c8f39408dfe76d8e4cc48eccacc3c8636e58666b0"
+  },
+  "rw_jsk_1000001239": {
+    "productId": "p_455",
+    "sha256": "782e200eed03161f8da3f591a64ba9113d248ee2335670d05a262217c96bb880"
   }
 }
