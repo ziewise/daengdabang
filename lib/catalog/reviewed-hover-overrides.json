@@ -12045,7 +12045,55 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "899dece6de72f2692f9758750de3aad725dbc3ce"
   },
-  "yora_wet_beetrootswede_390g": null,
+  "yora_wet_beetrootswede_390g": {
+    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "b5ea0d22d21b30f58d4201c80db8f3d3",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "b5ea0d22d21b30f58d4201c80db8f3d3",
+      "reviewId": "ea74bc0e61b7d7771b0abcea9d672ea1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893",
+      "seconds": 4,
+      "source": {
+        "no": 132,
+        "folder": "yora_wet_beetrootswede_390g",
+        "name": "요라 비트루트 & 스웨드 습식사료 390g 주식급여 동애등에 인섹트 반려견 습식사료",
+        "brandEn": "YORA",
+        "isFood": true,
+        "image": "/images/products/catalog/yora_wet_beetrootswede_390g/yora_wet_beetrootswede_390g.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10182278572",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/official-visual-01.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/2.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/3.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/4.webp",
+          "/images/products/catalog/yora_wet_beetrootswede_390g/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "37586fb06478ea582662be4ff6f6987a",
+        "sha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893"
+      },
+      "scopeId": "1d9c6ae3fbfedde0492c4e21e7ff7078ce99ce73a61950a59449b1e8b58dc048",
+      "scopeRegistrationSha256": "57f73f02c99222cd6d924fb304c428ce8170fb422cb8b123d55088f49d56ef4c",
+      "aiEvidenceSha256": "c900a17d26c26391476586d109eb568fbd1697e5188c11ec8117fde1c4d04d86",
+      "receiptSha256": "7bceb278091fcf8c621d75feffb897fa47b7a4f1c912653a31cee54bfa6c5b53",
+      "eligibilitySha256": "10a2756fb18d4fe1302b519850bdd17b34ebb524eb0de4725dd54fa4d148cc95",
+      "evidenceManifestSha256": "b5ae9a257bf7bc076f09fdbb90dd0072928d679103dac772732c3b8853b302e3"
+    },
+    "videoReviewSha256": "82d0c4eadf2d40f3fcbcb01f75eba8a7e4f9e4a2327daa443583a003609e1315",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "475f2f67dbd3a15c16e74f8c4d3d8e4afd859d3d"
+  },
   "yora_wet_carrotpotato_390g": {
     "video": "/images/products/catalog/yora_wet_carrotpotato_390g/videos/81e8a54f38954f6e1fba28f3c871e48bf42ced327b0e6b494043722baa239c20/hover.mp4",
     "videoProvider": "ziewcraft",

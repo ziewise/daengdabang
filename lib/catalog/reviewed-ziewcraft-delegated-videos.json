@@ -53843,16 +53843,16 @@
     "publicationStatus": "approved",
     "productId": "p_132",
     "folder": "yora_wet_beetrootswede_390g",
-    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4/hover.mp4",
-    "sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4",
+    "video": "/images/products/catalog/yora_wet_beetrootswede_390g/videos/d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893/hover.mp4",
+    "sha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893",
     "videoQuality": "approved_product_contents",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "144dfd2a8ca97f62df153b9abf68f821",
-      "reviewId": "1ce4657b0ce6cf5fa53c8c9236c501ac",
+      "jobId": "b5ea0d22d21b30f58d4201c80db8f3d3",
+      "reviewId": "ea74bc0e61b7d7771b0abcea9d672ea1",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4",
+      "finalSha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893",
       "seconds": 4,
       "source": {
         "no": 132,
@@ -53872,30 +53872,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "3fa1536b1a17489d8accc75501e2ce54",
-        "sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4"
+        "artifact_id": "37586fb06478ea582662be4ff6f6987a",
+        "sha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893"
       },
-      "scopeId": "0fc4004aeef20116fbf4e452bda25abde6d51bbd135672b7b29a4d321c89a4f4",
-      "scopeRegistrationSha256": "95d1f92fdb7143e9115a069eb2198dfe692d2f8c85ba774e5fe9d8f81038adbd",
-      "aiEvidenceSha256": "df5aa484d28097ae0571a448b0d66761a43a9103e4509e940217e4995d0b826e",
-      "receiptSha256": "a6266067ce5f9836638ff29bf32bfdcb0da9a15780a918de9eafae740a1237e0",
-      "eligibilitySha256": "18079004f9644e3497049aee555f0bf98847634bb0edd2cbf22108599e2ccc22",
-      "evidenceManifestSha256": "09e75b23664818efa283c3319fefa5cd5669834fa7bf2c22a9b2d36cc24eec6c"
+      "scopeId": "1d9c6ae3fbfedde0492c4e21e7ff7078ce99ce73a61950a59449b1e8b58dc048",
+      "scopeRegistrationSha256": "57f73f02c99222cd6d924fb304c428ce8170fb422cb8b123d55088f49d56ef4c",
+      "aiEvidenceSha256": "c900a17d26c26391476586d109eb568fbd1697e5188c11ec8117fde1c4d04d86",
+      "receiptSha256": "7bceb278091fcf8c621d75feffb897fa47b7a4f1c912653a31cee54bfa6c5b53",
+      "eligibilitySha256": "10a2756fb18d4fe1302b519850bdd17b34ebb524eb0de4725dd54fa4d148cc95",
+      "evidenceManifestSha256": "b5ae9a257bf7bc076f09fdbb90dd0072928d679103dac772732c3b8853b302e3"
     },
     "delegatedReview": {
-      "api_job_id": "144dfd2a8ca97f62df153b9abf68f821",
+      "api_job_id": "b5ea0d22d21b30f58d4201c80db8f3d3",
       "bindings": {
         "native_video": {
-          "artifact_id": "a9eb3b58d07048c398261c580b064a44",
-          "sha256": "06cc44ab14148238a44fa64ca671e5fa5dafdce337c31416731ed9395e794ada"
+          "artifact_id": "30d4d5db31694377aef4f58df79e111b",
+          "sha256": "e392009c318de46f6b94c6a32c4cae12a74a9b27e1defb3431bedbc83df292a8"
         },
         "review_video": {
-          "artifact_id": "3fa1536b1a17489d8accc75501e2ce54",
-          "sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4"
+          "artifact_id": "37586fb06478ea582662be4ff6f6987a",
+          "sha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893"
         },
         "terminal": {
-          "artifact_id": "6882e7810d4142dfc20868f0124ba2ce",
-          "sha256": "0fc19068d761faac9ca2b68c486aa4a6fb0137ab57187dd91967e1655b33ca87"
+          "artifact_id": "d1dda3dc71d72f86e0b20d34845e1fd4",
+          "sha256": "4360f5831f21f0742aa5c7aadd05c993972235c269a2de873889c094c19a0bfc"
         }
       },
       "checks": {
@@ -54045,41 +54045,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_132-144dfd2a8ca97f62df153b9abf68f821-all97-v1",
-        "evidence_sha256": "df5aa484d28097ae0571a448b0d66761a43a9103e4509e940217e4995d0b826e",
+        "evidence_id": "ddb-ai-p_132-b5ea0d22d21b30f58d4201c80db8f3d3-all97-v1",
+        "evidence_sha256": "c900a17d26c26391476586d109eb568fbd1697e5188c11ec8117fde1c4d04d86",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "1ce4657b0ce6cf5fa53c8c9236c501ac",
-      "reviewed_at": "2026-09-13T17:00:59.559706Z",
+      "review_id": "ea74bc0e61b7d7771b0abcea9d672ea1",
+      "reviewed_at": "2026-10-03T06:06:07.788566Z",
       "schema_version": 1,
-      "scope_id": "0fc4004aeef20116fbf4e452bda25abde6d51bbd135672b7b29a4d321c89a4f4",
+      "scope_id": "1d9c6ae3fbfedde0492c4e21e7ff7078ce99ce73a61950a59449b1e8b58dc048",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "6882e7810d4142dfc20868f0124ba2ce",
+        "artifact_id": "d1dda3dc71d72f86e0b20d34845e1fd4",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "a9eb3b58d07048c398261c580b064a44",
-        "native_artifact_sha256": "06cc44ab14148238a44fa64ca671e5fa5dafdce337c31416731ed9395e794ada",
+        "native_artifact_id": "30d4d5db31694377aef4f58df79e111b",
+        "native_artifact_sha256": "e392009c318de46f6b94c6a32c4cae12a74a9b27e1defb3431bedbc83df292a8",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "552f66723df267058d82a2698fcc74f2d2178c6a8913adfed1755c6f9de14b7e",
+        "pixel_sha256": "ff1bd6ff24576c6c2a4fee63a0a9bac5bd392a0e2ac4cc512d7562568aff0272",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "0fc19068d761faac9ca2b68c486aa4a6fb0137ab57187dd91967e1655b33ca87",
-        "source_artifact_id": "3fa1536b1a17489d8accc75501e2ce54",
-        "source_artifact_sha256": "78317cc0e5b640b62bbb853dff3b82c143e2d2f1eb73ac6f34ed5ede6f8671d4",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "4360f5831f21f0742aa5c7aadd05c993972235c269a2de873889c094c19a0bfc",
+        "source_artifact_id": "37586fb06478ea582662be4ff6f6987a",
+        "source_artifact_sha256": "d75ddc30cf55aa4252a4e5cdadee134ad7677c04b5491c092409fb4a9df2f893",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
+      "approval_granted": false,
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
         "color": "Yora beetroot and swede pate 390g",
@@ -54104,21 +54107,18 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "82998745848b8fde103fea28c8209ed5",
-      "scene_sha256": "c479abfc623d11a3099fd5ac96cecb656ca7fd6bb3fbf9436be713bce5c28d54",
+      "scene_asset_id": "6d808412535182453fba9918640d1357",
+      "scene_sha256": "b1ea3d99255f83edeac6cf584f615aaa4f0651bb6b43ac40603ea7428825e0c2",
       "schema_version": 1,
-      "scope_id": "0fc4004aeef20116fbf4e452bda25abde6d51bbd135672b7b29a4d321c89a4f4",
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
-      "source_sha256_authority": "client_original_photo_declaration",
-      "approval_granted": false
+      "scope_id": "1d9c6ae3fbfedde0492c4e21e7ff7078ce99ce73a61950a59449b1e8b58dc048",
+      "source_sha256_authority": "client_original_photo_declaration"
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "1ce4657b0ce6cf5fa53c8c9236c501ac",
+      "reviewId": "ea74bc0e61b7d7771b0abcea9d672ea1",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "0fc4004aeef20116fbf4e452bda25abde6d51bbd135672b7b29a4d321c89a4f4",
+      "scopeId": "1d9c6ae3fbfedde0492c4e21e7ff7078ce99ce73a61950a59449b1e8b58dc048",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -54138,10 +54138,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "3a433f906a21821d0a2714178fbb7f4cbfe83a9f0cb80ee4e57e7dd21785b9c5",
-      "checkedAt": "2026-09-13T17:01:09.381520+00:00",
-      "sha256": "45281b6ced036051a9c3b8fa6d912be629f2ed96a981fc18ef6ee26efa235f97"
+      "ownerInstructionSha256": "789e11d24d2f0c0cadf277a1c0976abb9f27c229eef47577affa7fa3ceaffa72",
+      "technicalProofSha256": "0913c3baf046d9841985ebab277ed53fff33f84d9808e97fe43180bc8e3cb185",
+      "naturalMotionReviewSha256": "60574e5a13bff453bafd17d801ee89bb2678ce2976c81d50f1ce7aa91002ff54",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-03T06:37:07.862035+00:00",
+      "sha256": "82d0c4eadf2d40f3fcbcb01f75eba8a7e4f9e4a2327daa443583a003609e1315"
     }
   },
   "rs_jsk_1000001106": {
