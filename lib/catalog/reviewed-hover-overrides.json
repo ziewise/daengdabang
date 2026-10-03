@@ -8726,7 +8726,57 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "993441e389461c2874ef234b07caae7e9e590ba7"
   },
-  "rw_quencher_24": null,
+  "rw_quencher_24": {
+    "video": "/images/products/catalog/rw_quencher_24/videos/61ccef5aeda0db4ccb8c90fbde40fb4ba0c040a29eeee476c9374e662c8c6d88/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "ca76382371b716d162cb59ce56abc2f1",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "ca76382371b716d162cb59ce56abc2f1",
+      "reviewId": "f4ee41d00c2492a42ef8b5a4090aaf4d",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "61ccef5aeda0db4ccb8c90fbde40fb4ba0c040a29eeee476c9374e662c8c6d88",
+      "seconds": 8,
+      "source": {
+        "no": 147,
+        "folder": "rw_quencher_24",
+        "name": "러프웨어 퀸쳐 접이식 휴대용 식기(2024SS)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001184/image/detail/1000001184_detail_057.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001184",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001184/image/detail/1000001184_detail_176.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001184/image/detail/1000001184_detail_263.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001184/image/detail/1000001184_detail_311.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/Quencher-Bowl1_043338.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/Quencher-Bowl2_043352.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240208/00cf1b4ce8f959cccaeab7bb22233939_043411.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "85bda2cadab2b7be78f88d40076c4aab",
+        "sha256": "61ccef5aeda0db4ccb8c90fbde40fb4ba0c040a29eeee476c9374e662c8c6d88"
+      },
+      "scopeId": "c4049f282f91c0f37c1e7fc3aa431f8985c4445892aab95404c8c6018ead4f29",
+      "scopeRegistrationSha256": "1ad88a7006b430b131d95ce1157738819be2a3929970e1dba2790a07d621a651",
+      "aiEvidenceSha256": "dfc398bccf434318484f112e4599efe291f7b11dab02b753508e37d743cd2a73",
+      "receiptSha256": "20fade6c230693acefc02d66791f36291d97ab1e14d06e570cfa4bcb48145f80",
+      "eligibilitySha256": "9d20c67da213690b9306bfd420c053bb7047cf23b749ef1700d1cf578a9f5fd0",
+      "evidenceManifestSha256": "33ab14c4ace0351036ae9baffe41f65eb239f2ce99967d307076268cde06ff21"
+    },
+    "videoReviewSha256": "8bd5dd8771001d3a13a68791e1938ccff0186a176ace8fff96a2d2a8d3ae99cd",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "3378e282d54a930bce8b1840e8063696e30ee5db"
+  },
   "rw_quinzee_jacket": null,
   "rw_quinzee_jacket_24": {
     "video": "/images/products/catalog/rw_quinzee_jacket_24/videos/bbc5236f1182f44ae65fd40e77ab65b241887037f4e1725eb58f48a050863990/hover.mp4",

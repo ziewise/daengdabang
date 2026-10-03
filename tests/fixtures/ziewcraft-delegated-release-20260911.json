@@ -1310,5 +1310,9 @@
   "rw_kibblecaddy": {
     "productId": "p_40",
     "sha256": "bafc93a8de7486e014fab4d9c3f1fa0c833565e78d7877415558d2f6a2de6090"
+  },
+  "rw_quencher_24": {
+    "productId": "p_147",
+    "sha256": "61ccef5aeda0db4ccb8c90fbde40fb4ba0c040a29eeee476c9374e662c8c6d88"
   }
 }
