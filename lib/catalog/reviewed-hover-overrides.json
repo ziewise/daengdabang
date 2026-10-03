@@ -7888,7 +7888,58 @@
       "downloadEvidenceSha256": "7b5cba06efb7c899bb6ce6b38a0c62d785362884b7f01f5be34198ec0a16a1f0"
     }
   },
-  "rw_kibblecaddy": null,
+  "rw_kibblecaddy": {
+    "video": "/images/products/catalog/rw_kibblecaddy/videos/bafc93a8de7486e014fab4d9c3f1fa0c833565e78d7877415558d2f6a2de6090/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "331eec2e441fd0682119e1d1fb8468d9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "331eec2e441fd0682119e1d1fb8468d9",
+      "reviewId": "5830c17329b026d8addad80c3ae3817a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "bafc93a8de7486e014fab4d9c3f1fa0c833565e78d7877415558d2f6a2de6090",
+      "seconds": 8,
+      "source": {
+        "no": 40,
+        "folder": "rw_kibblecaddy",
+        "name": "러프웨어 키블 캐디 휴대용 사료가방 (2025FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001254/image/detail/1000001254_detail_021.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001254",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001254/image/detail/1000001254_detail_172.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001254/image/detail/1000001254_detail_237.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001254/image/detail/1000001254_detail_351.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001254/image/detail/1000001254_detail_483.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/4ae5bfaf2b1d7426680ce3218d4bab99_094833.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/52827c7b2c89e46a724c523c541199f0_094840.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/250827/4bd382f0c8676989bf72f59287c5f7a2_094840.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d68850ab376b264f53de6af0f1c3fba0",
+        "sha256": "bafc93a8de7486e014fab4d9c3f1fa0c833565e78d7877415558d2f6a2de6090"
+      },
+      "scopeId": "0937cba0fd118e302f480b385c02f8f13dd794ea845183af459dfce913569639",
+      "scopeRegistrationSha256": "aa6f79575ca9acca8e3f6ff3d982c34027540afdbcf42084c5ef57051e5383cd",
+      "aiEvidenceSha256": "e4e420ec681da1a27535046c529e5c6108a30965a0e65174eea845e8d642a8eb",
+      "receiptSha256": "98b18b4f7acc840b2d2ab93d427d14bd6063c60566e39817c422bd7b7655e3b8",
+      "eligibilitySha256": "e41950ffab57897d969c322d05ab1ed02ff545724f574f8c405add6275756647",
+      "evidenceManifestSha256": "9572db4a94aeabfe9049273e3b74196a6f25b6ec321cf3377f980a615334e049"
+    },
+    "videoReviewSha256": "5f463dd737011951a5336e5fe8fb4f2a62b682e28d0b813d6c46b8007ec903b5",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c4c47bc72eac3990152a2175c7acdbe30f598916"
+  },
   "rw_knotahitch": {
     "video": "/images/products/catalog/rw_knotahitch/videos/e89bbe4bf3b8891470da2df6bd595f0fb0ec54ec382680da33f0e3eb5aaa3255/hover.mp4",
     "videoProvider": "ziewcraft",

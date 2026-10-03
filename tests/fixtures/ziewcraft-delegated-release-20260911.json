@@ -1306,5 +1306,9 @@
   "rw_jsk_1000001239": {
     "productId": "p_455",
     "sha256": "782e200eed03161f8da3f591a64ba9113d248ee2335670d05a262217c96bb880"
+  },
+  "rw_kibblecaddy": {
+    "productId": "p_40",
+    "sha256": "bafc93a8de7486e014fab4d9c3f1fa0c833565e78d7877415558d2f6a2de6090"
   }
 }
