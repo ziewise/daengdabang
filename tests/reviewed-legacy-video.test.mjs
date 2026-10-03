@@ -14,11 +14,12 @@ const expected=read('./fixtures/flow-publication-batch09.json');
 const previous=read('./fixtures/hover-publication-legacy-coyote.json');
 const raw=read('../lib/catalog/raw.json');
 // Preserve original identity/substitution tests on an archival fixture while
-// independently asserting that the current storefront withdrawal stays closed.
+// independently asserting current withdrawals and accepted replacements below.
 function historicalEffective(row) {
     const current=applyReviewedHoverOverride(row), review=reviews[row.folder];
-    if (!motionWithdrawnFolders.includes(row.folder)) return current;
-    assert.equal(safeCatalogHoverVideo({id:`p_${row.no}`,folder:row.folder,video:current.video,raw:current}),undefined);
+    if (motionWithdrawnFolders.includes(row.folder)) {
+        assert.equal(safeCatalogHoverVideo({id:`p_${row.no}`,folder:row.folder,video:current.video,raw:current}),undefined);
+    }
     return {...row,video:review.assetPath,videoProvider:'unknown',videoJobId:null,
         videoQuality:review.quality,videoReviewClass:review.reviewClass,videoReviewSha256:review.reviewSha256};
 }
@@ -95,4 +96,24 @@ for(const [folder,quality,functionShown] of [
         {assetSha256:'0'.repeat(64)},{reviewSha256:'0'.repeat(64)},
         ...['productIdentity','scale','motion','branding','providerMarkPreserved'].map(k=>({checks:{...review.checks,[k]:false}})),
     ]) assert.equal(matchesReviewedLegacyVideo(product,{[folder]:{...review,...change}}),false);
+});
+
+
+test('current accepted replacements stay distinct from archival legacy provenance',()=>{
+    const replacements=read('../lib/catalog/reviewed-ziewcraft-delegated-videos.json');
+    for(const [folder,review] of Object.entries(reviews)) {
+        const row=raw.find(item=>item.folder===folder), current=applyReviewedHoverOverride(row);
+        const product={id:`p_${row.no}`,folder,video:current.video,image:row.image,raw:current};
+        if (motionWithdrawnFolders.includes(folder)) {
+            assert.equal(safeCatalogHoverVideo(product),undefined);
+        } else if (replacements[folder]) {
+            assert.equal(safeCatalogHoverVideo(product),replacements[folder].video);
+            assert.notEqual(current.video,review.assetPath);
+            assert.equal(matchesReviewedLegacyVideo(product,reviews),false);
+            assert.equal(current.videoZiewcraftIdentity.jobId,replacements[folder].videoZiewcraftIdentity.jobId);
+            assert.equal(current.videoZiewcraftIdentity.finalSha256,replacements[folder].sha256);
+        } else {
+            assert.equal(safeCatalogHoverVideo(product),review.assetPath);
+        }
+    }
 });
