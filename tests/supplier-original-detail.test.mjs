@@ -9,6 +9,7 @@ import * as reviewGroups from "../lib/catalog/review-groups.ts";
 import * as reviewRefresh from "../lib/catalog/review-refresh.ts";
 import * as productLookup from "../lib/catalog/product-lookup.ts";
 import * as hoverVideoFraming from "../lib/catalog/hover-video-framing.ts";
+import { applyLiveInventory } from "../lib/catalog/live-inventory-state.ts";
 
 const require = createRequire(import.meta.url);
 
@@ -168,6 +169,7 @@ test("catalog projects public supplier metadata, exact names, and both relative 
     const shop = loadModule("lib/shop.ts", {
         "@/lib/catalog": { ...catalogModule, CATEGORY_LABEL: {} },
         "./catalog/inventory": loadModule("lib/catalog/inventory.ts"),
+        "./catalog/live-inventory-state": { applyLiveInventory },
     });
     const historicalCart = shop.cartProducts([{ productId: "p_1003", qty: 3 }]);
     assert.equal(historicalCart.length, 1);
