@@ -18382,5 +18382,51 @@
     "videoReviewClass": null,
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "d3a02422ebbd0f9b8878c3e88adaf09c0c3de1d7"
+  },
+  "iby_stroller_fs1617": {
+    "video": "/images/products/catalog/iby_stroller_fs1617/videos/636bc20887038d18dd1568b54cf1feebce0b02ad9af14b21329a6d3ba1bc903a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "854b348fa44a56975860d9609fef7351",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "854b348fa44a56975860d9609fef7351",
+      "reviewId": "331678956286b20342de76148e51db05",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "636bc20887038d18dd1568b54cf1feebce0b02ad9af14b21329a6d3ba1bc903a",
+      "seconds": 4,
+      "source": {
+        "no": 237,
+        "folder": "iby_stroller_fs1617",
+        "name": "이비야야 이지스트롤링유모차 FS1617 2컬러 그레이 레드",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_stroller_fs1617/iby_stroller_fs1617.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7681124045",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_stroller_fs1617/details/2.webp",
+          "/images/products/catalog/iby_stroller_fs1617/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "72b2f853e9e668b1cb532be5bd0f4ff1",
+        "sha256": "636bc20887038d18dd1568b54cf1feebce0b02ad9af14b21329a6d3ba1bc903a"
+      },
+      "scopeId": "d49638e29f3b2560ce931a7c0d1e405114ed2c08c8a87bac21be24a9efb8003c",
+      "scopeRegistrationSha256": "05ad509b00119758535a3e2469c34214b5ec3a3e98acd4838ca3e998f95e5775",
+      "aiEvidenceSha256": "827e83994da5b820834b3d31789cc903ba4f0d823c0638be8c0b9ab406549217",
+      "receiptSha256": "49341fdd36603f20e0fc791a12bf85731f0ea8549d3d346bdc315eb538ea3b92",
+      "eligibilitySha256": "8c15db2502a485f09455d4011c4d57dc55c96477ce18ae03b02b85952e1c637a",
+      "evidenceManifestSha256": "d8e77d93f5fe958e9d186ca6cdca8e29d61d6ccb7f55d11c440de99a2a1b481a"
+    },
+    "videoReviewSha256": "021e9eee4a4e6dcab58107c404e5f42a03e093800ceb0666a29f033138389bf3",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "d512ce6ed830a6a8af5b32e1b8c5d9e7972c3949"
   }
 }

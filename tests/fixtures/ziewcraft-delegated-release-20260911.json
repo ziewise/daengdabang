@@ -1318,5 +1318,9 @@
   "rw_hitchhiker_carrier": {
     "productId": "p_62",
     "sha256": "7dba6190011f2badc0248c3ca5642788f1caf0fe6d6a807aae7891dc17c89808"
+  },
+  "iby_stroller_fs1617": {
+    "productId": "p_237",
+    "sha256": "636bc20887038d18dd1568b54cf1feebce0b02ad9af14b21329a6d3ba1bc903a"
   }
 }
