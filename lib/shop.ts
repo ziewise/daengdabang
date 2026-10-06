@@ -75,14 +75,9 @@ export function cartTotal(lines: Array<{ productId: string; qty: number; color?:
     return cartProducts(lines).reduce((sum, line) => sum + line.subtotal, 0);
 }
 
-/** 도착 예정일 텍스트 — 무료배송 1~2일 내 출고 기준(오늘 +2일). 예: "7/4(토) 도착 예정" */
+/** 확정되지 않은 도착 날짜 대신 주문 확인 후 배송 일정 안내를 표시한다. */
 export function arrivalDateText(locale: "ko" | "en" = "ko"): string {
-    const d = new Date();
-    d.setDate(d.getDate() + 2);
-    if (locale === "en") {
-        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        return `Arrives ${d.getMonth() + 1}/${d.getDate()} (${days[d.getDay()]})`;
-    }
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
-    return `${d.getMonth() + 1}/${d.getDate()}(${days[d.getDay()]}) 도착 예정`;
+    return locale === "en"
+        ? "Delivery timing will be provided after order confirmation."
+        : "배송 일정은 주문 확인 후 안내합니다.";
 }

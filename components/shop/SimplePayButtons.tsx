@@ -78,8 +78,8 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
             </div>
             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-400">
                 {locale === "en"
-                    ? "Your selection is carried to checkout. Payment is completed only after provider approval."
-                    : "선택한 수단은 주문서로 이어지며, 실제 결제는 결제사 승인 후 완료됩니다."}
+                    ? "Your selection is carried to the test checkout. No real charge or shipment will occur."
+                    : "선택한 수단은 테스트 주문서로 이어지며, 실제 출금·상품 배송은 진행되지 않습니다."}
             </p>
         </div>
     );
