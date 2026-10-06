@@ -38,7 +38,7 @@ export default function NewsletterForm() {
     }
     if (!user) {
         return (
-            <Link href="/auth/login/?return_to=%2F" className="inline-flex h-10 items-center rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo px-5 text-xs font-black text-white">
+            <Link href="/auth/login/?redirect=%2F" className="inline-flex h-10 items-center rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo px-5 text-xs font-black text-white">
                 {locale === "en" ? "Sign in to subscribe" : "로그인하고 소식 받기"}
             </Link>
         );

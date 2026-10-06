@@ -190,9 +190,10 @@ test("server generation remains an explicit action after local protection or fai
         source("lib/pet-tryon.ts"),
     ]);
 
-    assert.match(modal, /사진은 전송되지 않았습니다/);
-    assert.match(modal, /사진은 이 기기에만 보관 중/);
-    assert.match(modal, /온라인으로 착용 모습을 만들려는 경우에만/);
+    assert.match(modal, /이 미리보기에서 추가 사진 전송은 없었어요/);
+    assert.match(modal, /이 기기에서 사진 준비 완료/);
+    assert.match(modal, /온라인 착용 이미지를 만들려면 아래 버튼/);
+    assert.match(modal, /!resultImage && !loading && !result && !localTryOnPending/);
     assert.match(modal, /우리 아이 착용 모습 만들기/);
     assert.match(modal, /onClick=\{\(\) => void generate\(/);
     assert.match(client, /if \(options\.confirmPreciseGeneration !== true\) return failure/);

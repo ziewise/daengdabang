@@ -66,14 +66,14 @@ export default function LoginPage() {
             setError("지금은 회원 로그인을 사용할 수 없습니다. 잠시 후 다시 이용해 주세요.");
             return;
         }
-        if (!email.trim() || !password.trim()) {
+        if (!email.trim() || !password) {
             setError("이메일과 비밀번호를 입력해 주세요.");
             return;
         }
 
         setLoading(true);
         try {
-            const token = await loginCustomer({ email: email.trim(), password: password.trim() });
+            const token = await loginCustomer({ email: email.trim(), password });
             const apiAccessToken = token.access_token;
             setCustomerToken(apiAccessToken);
 

@@ -193,7 +193,9 @@ function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en"
             life_jacket: "부력 패널이 목·가슴·갈비뼈·배를 감싸고 구조 손잡이와 스트랩이 유지됐는지, 모든 다리·사타구니·꼬리는 열려 있는지 확인해 주세요.",
             neckwear: "하나의 닫힌 천 고리가 양쪽 귀 아래와 양쪽 어깨 위의 목만 감싸고 머리·얼굴·가슴·몸통을 덮지 않는지 확인해 주세요.",
         };
-    return descriptions[kind];
+    return descriptions[kind] + (locale === "en"
+        ? " Also compare colors and patterns with the product photo; AI fitting details can differ."
+        : " 색상·무늬도 상품 사진과 비교해 주세요. AI 착용 이미지의 세부 표현은 실제 상품과 다를 수 있어요.");
 }
 
 function geometryCorrectionTitle(kind: PetTryOnReviewKind, locale: "ko" | "en") {
@@ -1031,39 +1033,39 @@ export default function PetTryOnPreview({
                                 className="absolute inset-0 h-full w-full object-contain"
                             />
 
-                            {!displayResultImage && localPetPreview?.preprocessed && (
+                            {!displayResultImage && !loading && !result && localPetPreview?.preprocessed && (
                                 <div className="absolute left-3 top-3 rounded-full border border-emerald-200 bg-white/90 px-3 py-1.5 text-[10px] font-black text-emerald-800 shadow-sm backdrop-blur">
                                     <i className="fa-solid fa-mobile-screen-button mr-1.5" />
-                                    {locale === "en" ? "Photo stays on this device" : "사진은 이 기기에만 보관 중"}
+                                    {locale === "en" ? "Photo prepared on this device" : "이 기기에서 사진 준비 완료"}
                                 </div>
                             )}
 
-                            {localTryOnPending && !resultImage && (
+                            {localTryOnPending && !resultImage && !loading && !result && (
                                 <div className="absolute left-3 top-3 rounded-full border border-indigo-200 bg-white/92 px-3 py-1.5 text-[10px] font-black text-indigo-800 shadow-sm backdrop-blur" role="status">
                                     <i className="fa-solid fa-microchip fa-pulse mr-1.5" />
                                     {locale === "en" ? "Creating a private on-device preview" : "사진을 보내지 않고 기기에서 입혀보는 중"}
                                 </div>
                             )}
 
-                            {showingLocalResult && localTryOn?.provider && (
+                            {showingLocalResult && !loading && !result && localTryOn?.provider && (
                                 <div className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] rounded-xl border border-emerald-200 bg-white/94 px-3 py-2 text-[10px] font-black leading-4 text-emerald-900 shadow-sm backdrop-blur" role="status">
                                     <i className="fa-solid fa-shield-halved mr-1.5" />
                                     {locale === "en"
-                                        ? `Private preview · ${localTryOn.provider.toUpperCase()} · photo not uploaded`
-                                        : `기기 내 비공개 미리보기 · ${localTryOn.provider.toUpperCase()} · 사진 미전송`}
+                                        ? `On-device preview · ${localTryOn.provider.toUpperCase()} · no additional photo upload for this preview`
+                                        : `기기 내 미리보기 · ${localTryOn.provider.toUpperCase()} · 이 미리보기의 추가 사진 전송 없음`}
                                 </div>
                             )}
 
-                            {!resultImage && !localTryOnPending && localTryOn && localTryOn.status !== "ready" && (
+                            {!resultImage && !loading && !result && !localTryOnPending && localTryOn && localTryOn.status !== "ready" && (
                                 <div className="absolute inset-x-3 bottom-3 rounded-xl border border-amber-200 bg-white/94 px-3 py-2 text-[10px] font-bold leading-4 text-amber-950 shadow-sm backdrop-blur" role="status">
                                     <i className="fa-solid fa-battery-quarter mr-1.5" />
                                     {locale === "en"
                                         ? localTryOn.reason === "quality_gate_failed"
-                                            ? "The current on-device preview did not meet our visual-quality standard, so it was not shown. Your photo was not uploaded. Use the button below only if you want to send the photo securely and create a fitting image online."
-                                            : "This device could not create a private local preview. Your photo was not uploaded. Use the button below only if you want to send it securely and create a fitting image online."
+                                            ? "The on-device preview did not meet our visual-quality standard, so it was not shown. This preview did not upload an additional photo. Use the button below to create a fitting image online."
+                                            : "This device could not create a local preview. This preview did not upload an additional photo. Use the button below to create a fitting image online."
                                         : localTryOn.reason === "quality_gate_failed"
-                                            ? "현재 기기 내 미리보기는 시각 품질 기준을 통과하지 못해 결과를 보여드리지 않았어요. 사진은 전송되지 않았습니다. 온라인으로 착용 모습을 만들려는 경우에만 아래 버튼을 눌러 주세요."
-                                            : "이 기기에서는 비공개 미리보기를 만들기 어려웠어요. 사진은 전송되지 않았습니다. 온라인으로 착용 모습을 만들려는 경우에만 아래 버튼을 눌러 주세요."}
+                                            ? "기기 내 미리보기가 시각 품질 기준을 통과하지 못해 표시하지 않았어요. 이 미리보기에서 추가 사진 전송은 없었어요. 온라인 착용 이미지를 만들려면 아래 버튼을 눌러 주세요."
+                                            : "이 기기에서는 미리보기를 만들기 어려웠어요. 이 미리보기에서 추가 사진 전송은 없었어요. 온라인 착용 이미지를 만들려면 아래 버튼을 눌러 주세요."}
                                 </div>
                             )}
 

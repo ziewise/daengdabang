@@ -1713,11 +1713,11 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             seenBreedLabels.add(key);
             breedCandidates.push({
                 label: cleanLabel,
-                confidenceLabel: confidence !== undefined && confidence >= 0.8
-                    ? "근거 충분"
-                    : confidence !== undefined && confidence >= PETLENS_BREED_CONFIDENCE_MIN
-                        ? "가까운 후보"
-                        : "비교 필요",
+                // Model probabilities rank visual candidates; they do not
+                // establish a verified breed or calibrated certainty.
+                confidenceLabel: confidence !== undefined && confidence >= PETLENS_BREED_CONFIDENCE_MIN
+                    ? "가까운 후보"
+                    : "비교 필요",
                 ...(reason?.trim() ? { reason: reason.trim().slice(0, 180) } : {}),
             });
         };
@@ -1760,11 +1760,9 @@ export async function analyzePetLensSmart(input: PetLensInput, imageFile?: File 
             : visibleFeatures.length > 0
                 ? "review"
                 : "retake";
-        const statusLabel: PetLensResultDetails["statusLabel"] = status === "ready"
-            ? "근거 충분"
-            : status === "review"
-                ? "후보 비교 필요"
-                : "사진 보완 필요";
+        const statusLabel: PetLensResultDetails["statusLabel"] = status === "ready" || status === "review"
+            ? "후보 비교 필요"
+            : "사진 보완 필요";
         const title = status === "ready" && canonicalBreed
             ? `${profile.name}에게서 ${canonicalBreed} 계열과 가까운 외형이 보여요`
             : status === "review" && reviewOnlyBreed
