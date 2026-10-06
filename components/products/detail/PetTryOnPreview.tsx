@@ -194,8 +194,8 @@ function geometryReviewDescription(kind: PetTryOnReviewKind, locale: "ko" | "en"
             neckwear: "하나의 닫힌 천 고리가 양쪽 귀 아래와 양쪽 어깨 위의 목만 감싸고 머리·얼굴·가슴·몸통을 덮지 않는지 확인해 주세요.",
         };
     return descriptions[kind] + (locale === "en"
-        ? " Also compare colors and patterns with the product photo; AI fitting details can differ."
-        : " 색상·무늬도 상품 사진과 비교해 주세요. AI 착용 이미지의 세부 표현은 실제 상품과 다를 수 있어요.");
+        ? " Also compare colors and patterns with the product photo; generated fitting details can differ."
+        : " 색상·무늬도 상품 사진과 비교해 주세요. 생성된 착용 이미지의 세부 표현은 실제 상품과 다를 수 있어요.");
 }
 
 function geometryCorrectionTitle(kind: PetTryOnReviewKind, locale: "ko" | "en") {
