@@ -1322,5 +1322,9 @@
   "iby_stroller_fs1617": {
     "productId": "p_237",
     "sha256": "636bc20887038d18dd1568b54cf1feebce0b02ad9af14b21329a6d3ba1bc903a"
+  },
+  "soopa_healthybites_appleblueberry": {
+    "productId": "p_231",
+    "sha256": "81f14c44af3c61afbf294434f3dce96901caadb95094571a022ebd7a9481ea39"
   }
 }

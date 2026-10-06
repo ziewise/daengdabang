@@ -11071,7 +11071,56 @@
       "downloadEvidenceSha256": "204993ff9f88fe45e6a3f1dbb611ecc84dc7d86c3ab9f134937efdebba15a808"
     }
   },
-  "soopa_healthybites_appleblueberry": null,
+  "soopa_healthybites_appleblueberry": {
+    "video": "/images/products/catalog/soopa_healthybites_appleblueberry/videos/81f14c44af3c61afbf294434f3dce96901caadb95094571a022ebd7a9481ea39/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_product_contents",
+    "videoJobId": "d96257a1e6d1cbe1eb4261cb41f1be6b",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d96257a1e6d1cbe1eb4261cb41f1be6b",
+      "reviewId": "b625e499244f7f589007c6058a677fe0",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "81f14c44af3c61afbf294434f3dce96901caadb95094571a022ebd7a9481ea39",
+      "seconds": 4,
+      "source": {
+        "no": 231,
+        "folder": "soopa_healthybites_appleblueberry",
+        "name": "수파 그레인프리 100%식물성 헬시바이트 비건간식 야채 사과&블루베리 50g",
+        "brandEn": "Soopa",
+        "isFood": true,
+        "image": "/images/products/catalog/soopa_healthybites_appleblueberry/soopa_healthybites_appleblueberry.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/8336348493",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/soopa_healthybites_appleblueberry/details/official-visual-01.webp",
+          "/images/products/catalog/soopa_healthybites_appleblueberry/details/2.webp",
+          "/images/products/catalog/soopa_healthybites_appleblueberry/details/3.webp",
+          "/images/products/catalog/soopa_healthybites_appleblueberry/details/4.webp",
+          "/images/products/catalog/soopa_healthybites_appleblueberry/details/5.webp",
+          "/images/products/catalog/soopa_healthybites_appleblueberry/details/6.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "8f52686da5945239e53b8776fb648641",
+        "sha256": "81f14c44af3c61afbf294434f3dce96901caadb95094571a022ebd7a9481ea39"
+      },
+      "scopeId": "573d7485ee1c0e70a577012b475afb4a646c24154a9862ea5039bf70c3d6dbbf",
+      "scopeRegistrationSha256": "dd0e0bf56e42a67b34689b35192ae635bfca4e1f520206600d9f63e4f3438727",
+      "aiEvidenceSha256": "fd7cb2aacff1afa8f55ed491f172f9dd52dac9927d060bfc0ff877f16e1e3702",
+      "receiptSha256": "dc52148584df0bfab587a921b6acf8753bd3f275e0165ad19efdc5bd0f9f3c1f",
+      "eligibilitySha256": "7bb97c8b0f08e6daedf3dabb2203fc7ee4cebbc7442e6ad9035ed31a9d17780d",
+      "evidenceManifestSha256": "b1f7e3ff77529f0303520fda09d0e9df08f02f4ad6b81cf670b19cbd171db808"
+    },
+    "videoReviewSha256": "88398083f2f97128638b6dd55f3d44ce5e334d13ff2484867215dd4e0a88e9b8",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b500246574bc9f975a10e6c4981ad4cd3cba80bc"
+  },
   "soopa_healthybites_carrotpumpkin": {
     "video": "/images/products/catalog/soopa_healthybites_carrotpumpkin/videos/03b7073d6697342c1541745461a5a1d6d282f74e2be1b3cc329f50bfa79ebb26/hover.mp4",
     "videoProvider": "ziewcraft",
