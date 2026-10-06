@@ -365,6 +365,9 @@ test("live API results and local fallback both exclude partial model collisions"
     const goggles = { id: "goggle", title: "Rex Specs 고글", brand: "Rex Specs", keywords: ["rex", "specs"], rank: 99999 };
     const leash = { id: "leash", title: "러프웨어 프론트레인지 리드줄", brand: "러프웨어", keywords: [], rank: 2 };
     const coat = { id: "coat", title: "러프웨어 겨울 코트 2026FW", brand: "러프웨어", keywords: [], rank: 3 };
+    const food = { id: "food", title: "누터스가든 하이포알러제닉 강아지 사료", brand: "NAVER", keywords: ["하이"], rank: 100 };
+    const bed = { id: "bed", title: "러프웨어 하이랜드 반려견 침낭", brand: "러프웨어", keywords: [], rank: 99 };
+    const results = [goggles, boot, leash, coat, food, bed];
     const moduleRecord = { exports: {} };
     const compiled = ts.transpileModule(await source("lib/external-products/index.ts"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
@@ -374,12 +377,12 @@ test("live API results and local fallback both exclude partial model collisions"
         exports: moduleRecord.exports,
         require(specifier) {
             if (specifier === "./comparison") return comparison;
-            if (specifier === "./feed.json") return [goggles, boot, leash, coat];
+            if (specifier === "./feed.json") return results;
             if (specifier === "@/lib/customer-api") return { ddbApiBase: () => "https://api.example" };
             throw new Error(`Unexpected runtime import: ${specifier}`);
         },
         URLSearchParams,
-        fetch: async () => ({ ok: true, json: async () => ({ results: [goggles, boot, leash, coat] }) }),
+        fetch: async () => ({ ok: true, json: async () => ({ results }) }),
     });
     new vm.Script(compiled).runInContext(context);
     const search = moduleRecord.exports;
@@ -389,6 +392,9 @@ test("live API results and local fallback both exclude partial model collisions"
     const seasonalQuery = "프런트 레인지 리드줄 (2026FW)";
     assert.equal(search.searchExternalProducts(seasonalQuery).map((item) => item.id).join(","), "leash");
     assert.equal((await search.loadExternalProducts(seasonalQuery)).map((item) => item.id).join(","), "leash");
+    const observedQuery = "러프웨어 하이 앤 라이트 리드줄 (2026SS)";
+    assert.equal(search.searchExternalProducts(observedQuery).map((item) => item.id).join(","), "leash");
+    assert.equal((await search.loadExternalProducts(observedQuery)).map((item) => item.id).join(","), "leash");
 });
 
 test("ordinary English shopping words do not exclude a matching product", async () => {
@@ -430,4 +436,54 @@ test("mixed query relevance uses product evidence and preserves Korean-only rela
     assert.equal(comparison.matchesComparisonQuery({ title: "Front Range harness", brand: "Ruffwear" }, "러프웨어 2026"), true);
     assert.equal(comparison.matchesComparisonQuery({ title: "Rex Specs goggles", brand: "Rex Specs" }, "러프웨어 2026"), false);
     assert.equal(comparison.matchesExternalSearchTerm("Polar Trex", "렉스스펙스"), false);
+});
+
+test("a Korean leash query rejects food and bedding even when a brand or short model token matches", async () => {
+    const comparison = await comparisonModule();
+    const query = "러프웨어 하이 앤 라이트 리드줄 (2026SS)";
+    const products = [
+        { title: "[L포인트] 누터스가든 강아지 사료 하이포알러제닉", brand: "NAVER", category: "outdoor", subcategory: "leash" },
+        { title: "로얄캐닌 하이포알러제닉 사료", brand: "NAVER" },
+        { title: "러프웨어 하이랜즈 강아지 침낭", brand: "러프웨어" },
+        { title: "러프웨어 강아지 베드", brand: "러프웨어", keywords: ["리드줄"] },
+        { title: "러프웨어 하이 앤 라이트 하네스", brand: "러프웨어" },
+    ];
+    for (const product of products) {
+        assert.equal(comparison.matchesComparisonQuery(product, query), false, product.title);
+        assert.equal(comparison.matchesComparisonQuery(product, "러프웨어 하이 앤 라이트 리드줄"), false, product.title);
+    }
+    for (const title of [
+        "러프웨어 하이 앤 라이트 리드줄 1.4M 2026SS",
+        "러프웨어 프런트 레인지 리드줄",
+        "Ruffwear Hi & Light Leash",
+        "러프웨어 강아지 리쉬",
+    ]) assert.equal(comparison.matchesComparisonQuery({ title, brand: "Ruffwear" }, query), true, title);
+});
+
+test("Korean related-product families keep synonyms and do not require an exact model", async () => {
+    const comparison = await comparisonModule();
+    const cases = [
+        ["강아지 리드줄", "강아지 산책줄", true],
+        ["강아지 리드줄", "강아지 리쉬", true],
+        ["강아지 가슴줄", "Front Range dog harness", true],
+        ["강아지 신발", "Polar Trex winter boots", true],
+        ["강아지 간식", "강아지 덴탈껌", true],
+        ["강아지 간식", "강아지 소고기 육포", true],
+        ["강아지 간식", "강아지 닭고기 사료", false],
+        ["강아지 사료", "강아지 덴탈껌", false],
+        ["강아지 식기", "Slow feeder bowl", true],
+        ["강아지 하네스", "강아지 리드줄", false],
+    ];
+    for (const [query, title, expected] of cases) {
+        assert.equal(comparison.matchesComparisonQuery({ title, brand: "Example" }, query), expected, `${query}: ${title}`);
+    }
+});
+
+test("product-family guards preserve English related searches and mixed-family requests", async () => {
+    const comparison = await comparisonModule();
+    assert.equal(comparison.matchesComparisonQuery({ title: "Ruffwear dog bed", brand: "Ruffwear" }, "Ruffwear leash price"), false);
+    assert.equal(comparison.matchesComparisonQuery({ title: "Ruffwear Front Range Leash", brand: "Ruffwear" }, "Ruffwear Hi Light leash price"), true);
+    assert.equal(comparison.matchesComparisonQuery({ title: "강아지 하네스", brand: "Example" }, "하네스 리드줄 비교"), true);
+    assert.equal(comparison.matchesComparisonQuery({ title: "강아지 리드줄", brand: "Example" }, "하네스 리드줄 비교"), true);
+    assert.equal(comparison.matchesComparisonQuery({ title: "강아지 방석", brand: "Example" }, "하네스 리드줄 비교"), false);
 });

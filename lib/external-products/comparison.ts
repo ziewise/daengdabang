@@ -69,6 +69,22 @@ const SEARCH_ALIASES: Record<string, string[]> = {
     treats: ["간식", "트릿"],
 };
 
+const SEARCH_PRODUCT_FAMILIES: Array<[string, RegExp]> = [
+    ["footwear", /부츠|신발|슈즈|\bboots?\b|\bshoes?\b/i],
+    ["goggles", /고글|안경|\bgoggles?\b/i],
+    ["harness", /하네스|가슴줄|\bharness(?:es)?\b/i],
+    ["leash", /리드줄|리쉬|산책줄|\bleash(?:es)?\b/i],
+    ["apparel", /재킷|자켓|조끼|플리스|레인코트|우비|\bjacket\b|\bvest\b|\bfleece\b|\braincoat\b/i],
+    ["food", /사료|\bkibble\b|\bdog\s*food\b/i],
+    ["treats", /간식|트릿|덴탈껌|덴탈\s*츄|저키|져키|육포|\btreats?\b|\bchews?\b|\bjerky\b/i],
+    ["bedding", /방석|침대|침낭|베드|\bdog\s*bed\b|\bsleeping\s*bag\b/i],
+    ["bowl", /식기|밥그릇|물그릇|급식기|급수기|\bbowls?\b|\bfeeders?\b/i],
+];
+
+function searchProductFamilies(text: string): string[] {
+    return SEARCH_PRODUCT_FAMILIES.filter(([, pattern]) => pattern.test(text)).map(([family]) => family);
+}
+
 export function matchesExternalSearchTerm(text: string, term: string): boolean {
     const needle = normalized(term);
     if (!needle) return false;
@@ -92,11 +108,19 @@ export function matchesExternalSearchTerm(text: string, term: string): boolean {
 }
 
 export function matchesComparisonQuery(product: ExternalProductResult, query: string): boolean {
+    const requestedFamilies = searchProductFamilies(query);
+    if (requestedFamilies.length > 0) {
+        // The actual title must support the requested product type. A brand,
+        // short model fragment, keyword tag, or imported category cannot turn
+        // food or bedding into a related leash comparison.
+        const productFamilies = searchProductFamilies(product.title);
+        if (!requestedFamilies.some((family) => productFamilies.includes(family))) return false;
+    }
     const queryTerms = query.split(/\s+/).map(normalized).filter((term) => (
         term.length > 0 && !SEARCH_STOP_WORDS.has(term)
     ));
-    // Preserve the API's related-product matching for Korean-only searches.
-    // The additional model-collision guard applies to queries with Latin tokens.
+    // Preserve the API's related-product matching within the requested family
+    // for Korean-only searches. Latin model collisions retain their word guard.
     if (!queryTerms.some((term) => /^[a-z0-9]+$/.test(term))) return true;
     // A season suffix is optional metadata when a product name is present.
     // It must neither exclude an unlabelled listing nor admit unrelated gear.
