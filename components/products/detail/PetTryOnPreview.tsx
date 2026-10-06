@@ -1083,7 +1083,7 @@ export default function PetTryOnPreview({
                                                 <p className="text-xs font-black text-neutral-500">
                                                     {result?.queuePosition
                                                         ? locale === "en" ? `Waiting #${result.queuePosition}` : `대기 ${result.queuePosition}번`
-                                                        : locale === "en" ? "Average 1–2 min" : "평균 1~2분"}
+                                                        : locale === "en" ? "May take a few minutes" : "완료까지 몇 분 걸릴 수 있어요"}
                                                 </p>
                                                 <p className="mt-0.5 font-mono text-sm font-black text-indigo-700">{formatElapsed(elapsed)}</p>
                                             </div>
