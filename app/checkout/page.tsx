@@ -5,6 +5,7 @@ import Link from "next/link";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
 import { cartProducts } from "@/lib/shop";
+import { useLiveInventorySnapshot } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import {
@@ -98,7 +99,8 @@ export default function CheckoutPage() {
     const cart = useCart();
     const { user } = useAuth();
     const { t, locale, formatPrice, productName } = useI18n();
-    const evaluatedCartLines = cartProducts(cart.lines);
+    const liveInventory = useLiveInventorySnapshot();
+    const evaluatedCartLines = cartProducts(cart.lines, liveInventory);
     const inventoryBlocked = evaluatedCartLines.some(line => line.selectionBlocked);
     const lines = evaluatedCartLines.filter((line) => line.selected);
     const total = lines.reduce((sum, line) => sum + line.subtotal, 0);

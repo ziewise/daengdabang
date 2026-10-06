@@ -1,6 +1,7 @@
 import { CATALOG, CATEGORY_LABEL, findById, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
 import { optionPurchaseState, type PurchaseState } from "./catalog/inventory";
+import { applyLiveInventory, type LiveInventory } from "./catalog/live-inventory-state";
 
 export const CATEGORY_ORDER: CategorySlug[] = ["outdoor", "food", "life", "toy", "care"];
 export const PRODUCT_IMAGE_VERSION = "20260614-representative";
@@ -37,11 +38,15 @@ export function categoryTiles() {
     }));
 }
 
-export function cartProducts(lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment }>) {
+export function cartProducts(
+    lines: Array<{ productId: string; qty: number; color?: string; size?: string; selected?: boolean; petAssignment?: CartPetAssignment }>,
+    liveInventory?: LiveInventory | null,
+) {
     return lines
         .map((line) => {
-            const product = findProduct(line.productId);
-            if (!product) return null;
+            const catalogProduct = findProduct(line.productId);
+            if (!catalogProduct) return null;
+            const product = liveInventory === undefined ? catalogProduct : applyLiveInventory(catalogProduct, liveInventory);
             // 색상 옵션이 있으면 그 색상 이미지를 장바구니 썸네일로(없으면 기본 이미지)
             const colorImage = line.color ? product.colors?.find((c) => c.name === line.color)?.image : undefined;
             // 사이즈 증감액을 반영한 단가(없으면 기본가)

@@ -309,6 +309,12 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     </button>
                 )}
 
+                <p data-checkout-contract="test-only" className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-xs font-bold leading-5 text-sky-900">
+                    {locale === "en"
+                        ? "The current checkout supports test payments only. No real charge, shipment, or rewards will be issued."
+                        : "현재 주문서는 테스트 결제 전용입니다. 실제 출금·상품 배송·적립금 지급은 진행되지 않습니다."}
+                </p>
+
                 {/* 메인 액션 — 누르면 옵션 시트. 이 영역이 화면 밖이면 하단 바 노출 */}
                 <div ref={actionRef} data-pet-guide-target="product-actions" className="grid grid-cols-[56px_1fr_1fr] gap-2">
                     <button
@@ -340,7 +346,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                     >
                         <i className="fa-solid fa-credit-card shrink-0 text-sm" />
-                        <span className="break-keep whitespace-normal text-center leading-tight">{t("buyNow")}</span>
+                        <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Test checkout" : "테스트 주문서"}</span>
                     </button>
                 </div>
             </div>
@@ -384,7 +390,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         data-pet-guide-target="product-actions"
                         className="h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >
-                        {t("buyNow")}
+                        {locale === "en" ? "Test checkout" : "테스트 주문서"}
                     </button>
                 </div>
             </div>

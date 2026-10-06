@@ -53,7 +53,10 @@ export function liveInventoryProduct(product: CatalogProduct): CatalogProduct {
     return applyLiveInventory(product, snapshot);
 }
 
+export function useLiveInventorySnapshot(): LiveInventory | null {
+    return useSyncExternalStore(subscribe, () => snapshot, () => null);
+}
+
 export function useLiveInventoryProduct(product: CatalogProduct): CatalogProduct {
-    const current = useSyncExternalStore(subscribe, () => snapshot, () => null);
-    return applyLiveInventory(product, current);
+    return applyLiveInventory(product, useLiveInventorySnapshot());
 }

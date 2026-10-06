@@ -24,6 +24,7 @@ import { checkoutHref, type QuickPaymentMethod } from "@/lib/payment-methods";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import { baseShippingFee } from "@/lib/shipping-policy";
 import { purchaseStateLabel } from "@/lib/catalog/inventory";
+import { useLiveInventorySnapshot } from "@/lib/catalog/live-inventory";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
 function CheckBtn({ checked, onToggle, label, disabled = false }: { checked: boolean; onToggle: () => void; label: string; disabled?: boolean }) {
@@ -52,7 +53,8 @@ export default function CartPage() {
     const { user } = useAuth();
     const { pets: profilePets } = usePets();
     const { t, locale, formatPrice, productName } = useI18n();
-    const lines = cartProducts(cart.lines);
+    const liveInventory = useLiveInventorySnapshot();
+    const lines = cartProducts(cart.lines, liveInventory);
     const petOptions = cartPetOptions(user?.pets ?? [], profilePets);
     const hasPets = petOptions.length > 0;
 
@@ -291,6 +293,11 @@ export default function CartPage() {
                         <span className="font-black">{t("paymentDue")}</span>
                         <b className="text-2xl font-black text-indigo-700">{formatPrice(selectedTotal + estimatedBaseShippingFee)}</b>
                     </div>
+                    <p data-checkout-contract="test-only" className="mt-4 rounded-lg border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
+                        {locale === "en"
+                            ? "The current checkout supports test payments only. No real charge, shipment, or rewards will be issued."
+                            : "현재 주문서는 테스트 결제 전용입니다. 실제 출금·상품 배송·적립금 지급은 진행되지 않습니다."}
+                    </p>
                     <button
                         type="button"
                         onClick={() => goCheckout("card")}
@@ -299,7 +306,7 @@ export default function CartPage() {
                     >
                         {selectedLines.length === 0
                             ? t("selectProducts")
-                            : `${t("checkout")} (${countText(selectedLines.length)})`}
+                            : `${locale === "en" ? "Test checkout" : "테스트 주문서"} (${countText(selectedLines.length)})`}
                     </button>
                     {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
                     <SimplePayButtons disabled={selectedLines.length === 0 || inventoryBlocked} onSelect={goCheckout} />

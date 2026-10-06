@@ -47,6 +47,8 @@ import {
 import { createOnDeviceColorPreview } from "@/lib/on-device-color-preview";
 import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
+import { productHref } from "@/lib/shop";
+import { petLensAuthHref } from "@/lib/petlens-routing";
 import ColorSelect from "./ColorSelect";
 
 function petOptionLabel(pet: PetProfile) {
@@ -306,6 +308,7 @@ export default function PetTryOnPreview({
 }) {
     const { user, hydrated } = useAuth();
     const { locale, productName } = useI18n();
+    const returnToProduct = productHref(product);
     const {
         notificationEnabled,
         start,
@@ -994,7 +997,7 @@ export default function PetTryOnPreview({
                             </p>
                             <div className="mt-5 flex flex-col justify-center gap-2 sm:flex-row">
                                 <Link
-                                    href={user ? "/pet-lens" : "/auth/signup"}
+                                    href={user ? "/pet-lens" : petLensAuthHref("signup", returnToProduct)}
                                     className="inline-flex h-11 items-center justify-center rounded-md bg-indigo-600 px-5 text-sm font-black text-white hover:bg-indigo-700"
                                 >
                                     {locale === "en"
@@ -1003,7 +1006,7 @@ export default function PetTryOnPreview({
                                 </Link>
                                 {!user && (
                                     <Link
-                                        href="/auth/login"
+                                        href={petLensAuthHref("login", returnToProduct)}
                                         className="inline-flex h-11 items-center justify-center rounded-md border border-neutral-200 bg-white px-5 text-sm font-black text-neutral-700 hover:border-indigo-300 hover:text-indigo-700"
                                     >
                                         {locale === "en" ? "I already have an account" : "이미 회원이면 로그인"}
@@ -1391,7 +1394,7 @@ export default function PetTryOnPreview({
                                     </p>
                                     {displayedErrorCode === "login_required" && (
                                         <Link
-                                            href="/auth/login"
+                                            href={petLensAuthHref("login", returnToProduct)}
                                             className="mt-3 inline-flex h-9 items-center justify-center rounded-md bg-indigo-600 px-4 text-xs font-black text-white hover:bg-indigo-700"
                                         >
                                             {locale === "en" ? "Sign in again" : "다시 로그인"}
