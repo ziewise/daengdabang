@@ -62,11 +62,15 @@ class Clock {
     }
 }
 
-function client({ fetch, cache = new Map(), persistent = true, page, clock, token = "owner-a-session", fileReader = TestFileReader } = {}) {
+function client({ fetch, cache = new Map(), persistent = true, page, clock, token = "owner-a-session", fileReader = TestFileReader,
+    budget = { memoryBytes: 16 * 1024 * 1024, singleEntryBytes: 8 * 1024 * 1024 },
+} = {}) {
     let credential = token;
     const requests = [];
     const keys = [];
     const stubs = {
+        "@/lib/on-device-budget": { onDeviceCacheBudget: () => budget },
+        "@/lib/pet-tryon-metrics": { recordPetTryOnMetric: () => undefined },
         "@/lib/customer-api": { ddbApiBase: () => base, getCustomerToken: () => credential },
         "@/lib/on-device-ai": {
             privateCacheKey: async (parts) => {
@@ -81,7 +85,7 @@ function client({ fetch, cache = new Map(), persistent = true, page, clock, toke
     class ControlledDate extends Date { static now() { return clock.now; } }
     const context = vm.createContext({
         fetch: async (url, options) => { requests.push({ url, options }); return fetch(url, options); },
-        URL, URLSearchParams, Headers, Response, Blob, AbortController, AbortSignal,
+        URL, URLSearchParams, Headers, Response, Blob, AbortController, AbortSignal, performance,
         DOMException, Error, FileReader: fileReader, document: page,
         setTimeout: clock?.setTimeout || setTimeout, clearTimeout: clock?.clearTimeout || clearTimeout,
         Date: clock ? ControlledDate : Date,
@@ -379,4 +383,16 @@ test("aborting a hidden polling wait removes its visibility listener and leaves 
     await assert.rejects(pending, { name: "AbortError" });
     page.visibility("visible");
     assert.equal(clock.timers.size, 0);
+});
+
+test("memory cache evicts by total bytes before reaching its image-count limit", async () => {
+    const h = client({ persistent: false, budget: { memoryBytes: 200, singleEntryBytes: 150 },
+        fetch: async (url) => url.endsWith('/image') ? image() : json(metadata(new URL(url).pathname.split('/').at(-1))),
+    });
+    for (const id of ['byte-1', 'byte-2', 'byte-3']) assert.equal((await h.api.getPetTryOnJob(id)).ok, true);
+    assert.equal(h.requests.filter(({ url }) => url.endsWith('/image')).length, 3);
+    await h.api.getPetTryOnJob('byte-3');
+    assert.equal(h.requests.filter(({ url }) => url.endsWith('/image')).length, 3);
+    await h.api.getPetTryOnJob('byte-1');
+    assert.equal(h.requests.filter(({ url }) => url.endsWith('/image')).length, 4);
 });

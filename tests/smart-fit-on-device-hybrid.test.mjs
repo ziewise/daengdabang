@@ -207,10 +207,11 @@ test("an approved fit master is recolored locally before an explicitly requested
         source("lib/pet-tryon.ts"),
     ]);
 
-    assert.match(localPreview, /MAX_ENHANCED_EDGE = 1600/);
-    assert.match(localPreview, /MAX_STANDARD_EDGE = 1280/);
+    assert.match(localPreview, /onDeviceCacheBudget\(\)\.colorEdge/);
+    assert.match(localPreview, /await yieldLocalWork\(signal\)/);
     assert.match(localPreview, /imageSmoothingQuality = "high"/);
-    assert.match(localPreview, /canvas\.toDataURL\("image\/webp", 0\.93\)/);
+    assert.match(localPreview, /canvas\.toBlob/);
+    assert.match(localPreview, /"image\/webp", 0\.93/);
     assert.match(localPreview, /MIN_CONFIDENCE = 0\.76/);
     assert.match(localPreview, /changedRatio < 0\.018 \|\| changedRatio > 0\.52/);
     assert.match(localPreview, /processing: "on_device"/);

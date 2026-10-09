@@ -7,11 +7,12 @@ import {
     readOnDeviceCache,
     writeOnDeviceCache,
 } from "@/lib/on-device-ai";
+import { onDeviceCacheBudget } from "@/lib/on-device-budget";
+import { assertLocalWorkActive, yieldLocalWork } from "@/lib/on-device-work";
+import { recordPetTryOnMetric } from "@/lib/pet-tryon-metrics";
 
-const CACHE_SCHEMA = "ddb.local-fit-master-recolor/v1";
+const CACHE_SCHEMA = "ddb.local-fit-master-recolor/v2";
 const SAMPLE_EDGE = 160;
-const MAX_ENHANCED_EDGE = 1600;
-const MAX_STANDARD_EDGE = 1280;
 const MIN_CONFIDENCE = 0.76;
 
 type Rgb = { red: number; green: number; blue: number };
@@ -35,7 +36,7 @@ export type OnDeviceColorPreviewOutcome =
     | { status: "ready"; value: OnDeviceColorPreview }
     | { status: "unavailable"; reason: "capability" | "unsafe_color_mask" | "decode_failed" | "aborted" };
 
-type DecodedImage = ImageBitmap | HTMLImageElement;
+type DecodedImage = ImageBitmap | HTMLImageElement | HTMLCanvasElement;
 
 function dimensions(image: DecodedImage) {
     return "naturalWidth" in image
@@ -48,6 +49,7 @@ function closeDecoded(image: DecodedImage) {
 }
 
 function dataUrlBlob(source: string) {
+    if (source.length > 32 * 1024 * 1024) throw new Error("decode_failed");
     const [header, payload] = source.split(",", 2);
     if (!header?.startsWith("data:image/") || !payload) throw new Error("decode_failed");
     const binary = atob(payload);
@@ -56,8 +58,8 @@ function dataUrlBlob(source: string) {
     return new Blob([bytes], { type: header.slice(5).split(";", 1)[0] || "image/webp" });
 }
 
-async function decode(source: string, signal?: AbortSignal): Promise<DecodedImage> {
-    if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
+async function decode(source: string, maximumEdge: number, signal?: AbortSignal): Promise<DecodedImage> {
+    assertLocalWorkActive(signal);
     const blob = source.startsWith("data:image/")
         ? dataUrlBlob(source)
         : await fetch(source, {
@@ -69,13 +71,56 @@ async function decode(source: string, signal?: AbortSignal): Promise<DecodedImag
             if (!response.ok) throw new Error("decode_failed");
             return response.blob();
         });
-    if (typeof createImageBitmap === "function") return createImageBitmap(blob);
-    return new Promise<HTMLImageElement>((resolve, reject) => {
+    if (blob.size > 24 * 1024 * 1024) throw new Error("decode_failed");
+    assertLocalWorkActive(signal);
+    const decoded = typeof createImageBitmap === "function" ? await createImageBitmap(blob)
+        : await new Promise<HTMLImageElement>((resolve, reject) => {
         const image = new Image();
         const url = URL.createObjectURL(blob);
-        image.onload = () => { URL.revokeObjectURL(url); resolve(image); };
-        image.onerror = () => { URL.revokeObjectURL(url); reject(new Error("decode_failed")); };
+        const cleanup = () => { URL.revokeObjectURL(url); signal?.removeEventListener("abort", abort); };
+        const abort = () => { cleanup(); image.src = ""; reject(new DOMException("Aborted", "AbortError")); };
+        signal?.addEventListener("abort", abort, { once: true });
+        image.onload = () => { cleanup(); resolve(image); };
+        image.onerror = () => { cleanup(); reject(new Error("decode_failed")); };
         image.src = url;
+    });
+    try {
+        assertLocalWorkActive(signal);
+        const { width, height } = dimensions(decoded);
+        if (!width || !height) throw new Error("decode_failed");
+        const scale = Math.min(1, maximumEdge / Math.max(width, height));
+        if (scale === 1) return decoded;
+        const resized = document.createElement("canvas");
+        resized.width = Math.max(1, Math.round(width * scale));
+        resized.height = Math.max(1, Math.round(height * scale));
+        const context = resized.getContext("2d");
+        if (!context) throw new Error("decode_failed");
+        context.drawImage(decoded, 0, 0, resized.width, resized.height);
+        closeDecoded(decoded);
+        return resized;
+    } catch (error) { closeDecoded(decoded); throw error; }
+}
+
+async function encode(canvas: HTMLCanvasElement, signal: AbortSignal): Promise<string> {
+    assertLocalWorkActive(signal);
+    return new Promise((resolve, reject) => {
+        let reader: FileReader | undefined;
+        const cleanup = () => signal.removeEventListener("abort", abort);
+        const fail = () => { cleanup(); reject(new Error("decode_failed")); };
+        const abort = () => { cleanup(); reader?.abort(); reject(new DOMException("Aborted", "AbortError")); };
+        signal.addEventListener("abort", abort, { once: true });
+        try {
+            canvas.toBlob((blob) => {
+                if (signal.aborted) { abort(); return; }
+                if (!blob) { fail(); return; }
+                try {
+                    reader = new FileReader();
+                    reader.onload = () => { cleanup(); resolve(String(reader?.result || "")); };
+                    reader.onerror = fail;
+                    reader.readAsDataURL(blob);
+                } catch { fail(); }
+            }, "image/webp", 0.93);
+        } catch { fail(); }
     });
 }
 
@@ -163,11 +208,12 @@ function dominantColor(pixels: Uint8ClampedArray) {
     };
 }
 
-function renderRecolor(
+async function renderRecolor(
     master: DecodedImage,
     source: NonNullable<ReturnType<typeof dominantColor>>,
     target: NonNullable<ReturnType<typeof dominantColor>>,
     maximumEdge: number,
+    signal: AbortSignal,
 ) {
     const size = dimensions(master);
     const scale = Math.min(1, maximumEdge / Math.max(size.width, size.height));
@@ -187,6 +233,7 @@ function renderRecolor(
     const lightnessShift = Math.max(-0.18, Math.min(0.18, target.lightness - source.lightness));
     const saturationRatio = Math.max(0.45, Math.min(1.75, target.saturation / Math.max(0.12, source.saturation)));
     for (let offset = 0; offset < frame.data.length; offset += 4) {
+        if (offset % (8192 * 4) === 0) await yieldLocalWork(signal);
         const original = rgbToHsl({
             red: frame.data[offset],
             green: frame.data[offset + 1],
@@ -212,20 +259,23 @@ function renderRecolor(
     if (changedRatio < 0.018 || changedRatio > 0.52) return null;
     context.putImageData(frame, 0, 0);
     return {
-        imageDataUrl: canvas.toDataURL("image/webp", 0.93),
+        imageDataUrl: await encode(canvas, signal),
         width,
         height,
         changedRatio,
     };
 }
 
-export async function createOnDeviceColorPreview(input: {
+type ColorPreviewInput = {
     sourceJobId: string;
     sourceImageDataUrl: string;
     sourceProductImage: string;
     targetProductImage: string;
     signal?: AbortSignal;
-}): Promise<OnDeviceColorPreviewOutcome> {
+};
+
+async function createPreview(input: ColorPreviewInput & { signal: AbortSignal }): Promise<OnDeviceColorPreviewOutcome> {
+    assertLocalWorkActive(input.signal);
     const capabilities = probeOnDeviceCapabilities();
     if (!capabilities.canvas || capabilities.tier === "fallback" || capabilities.saveData) {
         return { status: "unavailable", reason: "capability" };
@@ -235,8 +285,10 @@ export async function createOnDeviceColorPreview(input: {
         input.sourceJobId,
         input.sourceProductImage,
         input.targetProductImage,
+        String(onDeviceCacheBudget().colorEdge),
     ]);
     const cached = await readOnDeviceCache<OnDeviceColorPreview>(cacheKey);
+    assertLocalWorkActive(input.signal);
     if (
         cached?.processing === "on_device"
         && cached.sourceJobId === input.sourceJobId
@@ -249,11 +301,10 @@ export async function createOnDeviceColorPreview(input: {
     let sourceProduct: DecodedImage | null = null;
     let targetProduct: DecodedImage | null = null;
     try {
-        [master, sourceProduct, targetProduct] = await Promise.all([
-            decode(input.sourceImageDataUrl, input.signal),
-            decode(input.sourceProductImage, input.signal),
-            decode(input.targetProductImage, input.signal),
-        ]);
+        const maximumEdge = onDeviceCacheBudget().colorEdge;
+        master = await decode(input.sourceImageDataUrl, maximumEdge, input.signal);
+        sourceProduct = await decode(input.sourceProductImage, SAMPLE_EDGE, input.signal);
+        targetProduct = await decode(input.targetProductImage, SAMPLE_EDGE, input.signal);
         if (input.signal?.aborted) return { status: "unavailable", reason: "aborted" };
         const sourceColor = dominantColor(samplePixels(sourceProduct));
         const targetColor = dominantColor(samplePixels(targetProduct));
@@ -263,11 +314,12 @@ export async function createOnDeviceColorPreview(input: {
         if (hueDistance(sourceColor.hue, targetColor.hue) < 5) {
             return { status: "unavailable", reason: "unsafe_color_mask" };
         }
-        const rendered = renderRecolor(
+        const rendered = await renderRecolor(
             master,
             sourceColor,
             targetColor,
-            capabilities.tier === "enhanced" ? MAX_ENHANCED_EDGE : MAX_STANDARD_EDGE,
+            maximumEdge,
+            input.signal,
         );
         if (!rendered) return { status: "unavailable", reason: "unsafe_color_mask" };
         const confidence = Math.min(0.94, 0.74
@@ -289,6 +341,7 @@ export async function createOnDeviceColorPreview(input: {
             fromCache: false,
         };
         await writeOnDeviceCache(cacheKey, value);
+        assertLocalWorkActive(input.signal);
         return { status: "ready", value };
     } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -300,4 +353,26 @@ export async function createOnDeviceColorPreview(input: {
         if (sourceProduct) closeDecoded(sourceProduct);
         if (targetProduct) closeDecoded(targetProduct);
     }
+}
+
+export async function createOnDeviceColorPreview(input: ColorPreviewInput): Promise<OnDeviceColorPreviewOutcome> {
+    const started = performance.now();
+    const controller = new AbortController();
+    const abort = () => controller.abort();
+    input.signal?.addEventListener("abort", abort, { once: true });
+    if (input.signal?.aborted) abort();
+    const timeout = setTimeout(abort, 10_000);
+    let outcome: OnDeviceColorPreviewOutcome;
+    try {
+        outcome = await createPreview({ ...input, signal: controller.signal });
+    } catch (error) {
+        outcome = { status: "unavailable", reason: error instanceof DOMException && error.name === "AbortError" ? "aborted" : "decode_failed" };
+    } finally {
+        clearTimeout(timeout);
+        input.signal?.removeEventListener("abort", abort);
+    }
+    recordPetTryOnMetric(outcome.status === "ready" ? "local_color_ready"
+        : outcome.reason === "aborted" ? "local_color_aborted" : "local_color_unavailable", performance.now() - started);
+    if (outcome.status === "ready" && outcome.value.fromCache) recordPetTryOnMetric("local_color_cache_hit");
+    return outcome;
 }

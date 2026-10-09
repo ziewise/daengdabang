@@ -1,5 +1,7 @@
 "use client";
 
+import { cacheEntryBytes, cacheEvictions, onDeviceCacheBudget } from "@/lib/on-device-budget";
+
 export const ON_DEVICE_PIPELINE_VERSION = "ddb-hybrid-tryon-v2-20260830";
 
 export type OnDeviceExecutionTier = "enhanced" | "standard" | "fallback";
@@ -30,6 +32,7 @@ type CachedValue<T> = {
 
 const CACHE_DB = "ddb-on-device-ai";
 const CACHE_STORE = "tryon-results";
+const CACHE_INDEX = "tryon-result-sizes";
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const CACHE_MAX_ENTRIES = 12;
 
@@ -180,15 +183,33 @@ export async function prepareImageOnDevice(
 function openCache(): Promise<IDBDatabase | null> {
     if (typeof indexedDB === "undefined") return Promise.resolve(null);
     return new Promise((resolve) => {
-        const request = indexedDB.open(CACHE_DB, 1);
+        let settled = false;
+        const finish = (database: IDBDatabase | null) => {
+            if (settled) { database?.close(); return; }
+            settled = true;
+            globalThis.clearTimeout(timer);
+            resolve(database);
+        };
+        const timer = globalThis.setTimeout(() => finish(null), 750);
+        let request: IDBOpenDBRequest;
+        try { request = indexedDB.open(CACHE_DB, 2); }
+        catch { finish(null); return; }
         request.onupgradeneeded = () => {
             if (!request.result.objectStoreNames.contains(CACHE_STORE)) {
                 request.result.createObjectStore(CACHE_STORE, { keyPath: "key" });
             }
+            if (!request.result.objectStoreNames.contains(CACHE_INDEX)) {
+                // Old derived images have no size ledger. Rebuild this disposable cache.
+                request.transaction?.objectStore(CACHE_STORE).clear();
+                request.result.createObjectStore(CACHE_INDEX, { keyPath: "key" });
+            }
         };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => resolve(null);
-        request.onblocked = () => resolve(null);
+        request.onsuccess = () => {
+            request.result.onversionchange = () => request.result.close();
+            finish(request.result);
+        };
+        request.onerror = () => finish(null);
+        request.onblocked = () => finish(null);
     });
 }
 
@@ -196,53 +217,82 @@ export async function readOnDeviceCache<T>(key: string): Promise<T | null> {
     const database = await openCache();
     if (!database) return null;
     return new Promise((resolve) => {
-        const transaction = database.transaction(CACHE_STORE, "readonly");
-        const request = transaction.objectStore(CACHE_STORE).get(key);
+        let transaction: IDBTransaction;
+        let resolved = false;
+        const finish = (value: T | null) => {
+            if (resolved) return;
+            resolved = true;
+            globalThis.clearTimeout(timer);
+            resolve(value);
+        };
+        const timer = globalThis.setTimeout(() => { finish(null); try { transaction?.abort(); } catch {} database.close(); }, 750);
+        try { transaction = database.transaction([CACHE_STORE, CACHE_INDEX], "readonly"); }
+        catch { finish(null); database.close(); return; }
+        const index = transaction.objectStore(CACHE_INDEX).get(key);
+        index.onsuccess = () => {
+            const entry = index.result as { bytes?: number; updatedAt?: number } | undefined;
+            if (!entry || !Number.isFinite(entry.bytes) || Number(entry.bytes) <= 0 || Number(entry.bytes) > onDeviceCacheBudget().singleEntryBytes
+                || !entry.updatedAt || Date.now() - entry.updatedAt > CACHE_TTL_MS || entry.updatedAt > Date.now()) { finish(null); return; }
+            const request = transaction.objectStore(CACHE_STORE).get(key);
         request.onsuccess = () => {
             const cached = request.result as CachedValue<T> | undefined;
             const fresh = cached
                 && cached.pipelineVersion === ON_DEVICE_PIPELINE_VERSION
                 && Date.now() - cached.updatedAt <= CACHE_TTL_MS;
-            resolve(fresh ? cached.value : null);
+            finish(fresh ? cached.value : null);
         };
-        request.onerror = () => resolve(null);
+            request.onerror = () => finish(null);
+        };
+        index.onerror = () => finish(null);
         transaction.oncomplete = () => database.close();
-        transaction.onerror = () => database.close();
+        transaction.onerror = transaction.onabort = () => { finish(null); database.close(); };
     });
 }
 
 export async function writeOnDeviceCache<T>(key: string, value: T): Promise<void> {
+    const budget = onDeviceCacheBudget();
+    const bytes = cacheEntryBytes(value, budget.singleEntryBytes);
+    if (bytes > budget.singleEntryBytes) return;
     const database = await openCache();
     if (!database) return;
     await new Promise<void>((resolve) => {
-        const transaction = database.transaction(CACHE_STORE, "readwrite");
+        let transaction: IDBTransaction;
+        const finish = () => { globalThis.clearTimeout(timer); resolve(); };
+        const timer = globalThis.setTimeout(() => { try { transaction?.abort(); } catch {} finish(); }, 750);
+        try { transaction = database.transaction([CACHE_STORE, CACHE_INDEX], "readwrite"); }
+        catch { finish(); return; }
         const store = transaction.objectStore(CACHE_STORE);
-        store.put({
+        const index = transaction.objectStore(CACHE_INDEX);
+        const updatedAt = Date.now();
+        try {
+            store.put({
             key,
             value,
-            updatedAt: Date.now(),
+            updatedAt,
             pipelineVersion: ON_DEVICE_PIPELINE_VERSION,
         } satisfies CachedValue<T>);
-        const entries: Array<{ key: string; updatedAt: number }> = [];
-        const cursorRequest = store.openCursor();
+            index.put({ key, updatedAt, bytes });
+        } catch { transaction.abort(); finish(); return; }
+        const entries: Array<{ key: string; updatedAt: number; bytes: number }> = [];
+        const cursorRequest = index.openCursor();
         cursorRequest.onsuccess = () => {
             const cursor = cursorRequest.result;
             if (cursor) {
-                const row = cursor.value as Partial<CachedValue<unknown>>;
+                const row = cursor.value as { key?: string; updatedAt?: number; bytes?: number };
                 if (typeof row.key === "string") {
-                    entries.push({ key: row.key, updatedAt: Number(row.updatedAt || 0) });
+                    entries.push({ key: row.key, updatedAt: Number(row.updatedAt || 0), bytes: Number(row.bytes || 0) });
                 }
                 cursor.continue();
                 return;
             }
-            entries
-                .sort((left, right) => right.updatedAt - left.updatedAt)
-                .slice(CACHE_MAX_ENTRIES)
-                .forEach((entry) => store.delete(entry.key));
+            for (const entry of cacheEvictions(entries, budget.storageBytes, CACHE_MAX_ENTRIES, updatedAt, CACHE_TTL_MS)) {
+                store.delete(entry);
+                index.delete(entry);
+            }
         };
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => resolve();
-        transaction.onabort = () => resolve();
+        transaction.oncomplete = finish;
+        transaction.onerror = finish;
+        transaction.onabort = finish;
     });
     database.close();
 }

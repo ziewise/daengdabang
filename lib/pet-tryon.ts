@@ -1,4 +1,6 @@
 import type { CatalogProduct } from "@/lib/catalog";
+import { onDeviceCacheBudget } from "@/lib/on-device-budget";
+import { recordPetTryOnMetric } from "@/lib/pet-tryon-metrics";
 import { ddbApiBase, getCustomerToken } from "@/lib/customer-api";
 import {
     privateCacheKey,
@@ -424,8 +426,11 @@ async function sharePetTryOnRead<T>(
 
 function rememberResultImage(key: string, imageDataUrl: string) {
     resultImages.delete(key);
+    const budget = onDeviceCacheBudget();
+    if (imageDataUrl.length * 2 > budget.singleEntryBytes) return;
     resultImages.set(key, { imageDataUrl, expiresAt: Date.now() + RESULT_IMAGE_CACHE_TTL_MS });
-    while (resultImages.size > RESULT_IMAGE_CACHE_LIMIT) {
+    while (resultImages.size > RESULT_IMAGE_CACHE_LIMIT
+        || Array.from(resultImages.values()).reduce((bytes, item) => bytes + item.imageDataUrl.length * 2, 0) > budget.memoryBytes) {
         resultImages.delete(resultImages.keys().next().value as string);
     }
 }
@@ -476,15 +481,21 @@ async function hydratePetTryOnResult(
         }
         if (result.imagePath !== expectedPath) return failure("invalid_response", false);
         const memory = resultImages.get(localKey);
-        if (memory && memory.expiresAt > Date.now()) return success(memory.imageDataUrl);
+        if (memory && memory.expiresAt > Date.now()) {
+            recordPetTryOnMetric("result_image_cache_hit");
+            return success(memory.imageDataUrl);
+        }
         resultImages.delete(localKey);
         const cached = await readOnDeviceCache<{ jobId: string; imageDataUrl: string }>(localKey);
         if (cached?.jobId === result.jobId && cached.imageDataUrl?.startsWith("data:image/")) {
             rememberResultImage(localKey, cached.imageDataUrl);
+            recordPetTryOnMetric("result_image_cache_hit");
             return success(cached.imageDataUrl);
         }
         if (imageSignal.aborted) throw new PetTryOnTransportError("aborted");
         if (!isCurrentSession()) return failure("login_required", false);
+        const downloadStarted = performance.now();
+        let downloadedBytes = 0;
         const downloaded = await fetchWithTimeout(`${base}${expectedPath}`, {
             method: "GET",
             headers: { authorization: headers.authorization },
@@ -494,6 +505,7 @@ async function hydratePetTryOnResult(
         }, imageSignal, STATUS_REQUEST_TIMEOUT_MS, async (response, downloadSignal) => {
             if (!response.ok) return responseFailure(response);
             const blob = await response.blob();
+            downloadedBytes = blob.size;
             if (!/^image\/(png|jpeg|webp)$/.test(blob.type) || !blob.size || blob.size > MAX_RESULT_IMAGE_BYTES) {
                 return failure("invalid_response", false);
             }
@@ -502,6 +514,7 @@ async function hydratePetTryOnResult(
         if (!downloaded.ok) return downloaded;
         const imageDataUrl = downloaded.value;
         if (!isCurrentSession()) return failure("login_required", false);
+        recordPetTryOnMetric("result_image_download", performance.now() - downloadStarted, downloadedBytes);
         rememberResultImage(localKey, imageDataUrl);
         await writeOnDeviceCache(localKey, { jobId: result.jobId, imageDataUrl });
         return success(imageDataUrl);
@@ -911,6 +924,7 @@ export async function requestPetTryOnColorPreview(
     if (!sourceJobId || !productImage) return failure("invalid_request", false);
     if (!base) return failure("temporarily_unavailable", true);
     if (!headers) return failure("login_required", false);
+    recordPetTryOnMetric("server_color_requested");
     try {
         const response = await fetchWithTimeout(
             `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(sourceJobId)}/color-preview`,
