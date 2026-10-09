@@ -90,7 +90,8 @@ export function normalizeShopChatSources(value: unknown): ShopChatSource[] {
     for (const item of value.slice(0, 24)) {
         if (!item || typeof item !== "object" || Array.isArray(item)) continue;
         const record = item as Record<string, unknown>;
-        const name = boundedText(record.name, MAX_SOURCE_NAME_LENGTH);
+        const name = boundedText(record.name, MAX_SOURCE_NAME_LENGTH)
+            || boundedText(record.title, MAX_SOURCE_NAME_LENGTH);
         const url = normalizedHttpsUrl(record.url);
         if (!name || !url || seenUrls.has(url)) continue;
         seenUrls.add(url);

@@ -53,8 +53,18 @@ const BLOOD_IN_VOMIT = new RegExp(
 );
 const EYE_CLOUDINESS_SYMPTOM = /(?:(?:눈(?!에\s*띄|\s*(?:모양|디자인|무늬|패턴))|눈동자|동공|각막|안구)[^.!?\n]{0,30}(?:하얀\s*(?:막(?!대)|빛|점|부분)|흰\s*(?:막(?!대)|빛|점|부분|필름)|백색|회백색|우윳빛|뿌연|뿌예|뿌옇|흐려|혼탁|탁해|파랗|푸르스름|안개\s*낀|반투명\s*막(?!대)|막(?:이|가)?\s*(?:보|끼|올라|덮|생기|생겼|생겨|나타나)|필름|하얗(?:게|고|어))|(?:하얀\s*막(?!대)|흰\s*막(?!대)|우윳빛|뿌연|혼탁|반투명\s*막(?!대))[^.!?\n]{0,24}(?:눈|눈동자|동공|각막|안구))/i;
 const EYE_INJURY_SYMPTOM = /(?:(?:눈|안구)[^.!?\n]{0,24}(?:찔|다쳤|외상|부딪|튀어나|피가|출혈)|(?:찔|다쳤|외상|부딪)[^.!?\n]{0,24}(?:눈|안구))/i;
+const GAGGING_SYMPTOM = /(?:켁\s*켁|캑\s*캑|컥\s*컥|헛구역|삼키[^.!?\n]{0,12}(?:못|힘들)|목[^.!?\n]{0,12}(?:걸린|걸렸|막힌|막혔|끼인))/i;
+const ACTUAL_GAGGING_SYMPTOM = /(?:(?:켁\s*켁|캑\s*캑|컥\s*컥)[~～\s-]*(?:거리|거려|거렸|대|댄|하|해|했)|헛구역(?:질)?(?:을|이|만)?\s*(?:하|해|했|반복)|삼키[^.!?\n]{0,12}(?:못|힘들)|목[^.!?\n]{0,12}(?:걸린|걸렸|막힌|막혔|끼인))/i;
+const FISH_INGESTION = /(?:(?:생선(?:\s*가시)?|생선뼈|물고기|fish(?:\s*bone)?)[^.!?\n]{0,32}(?:먹었|먹은|먹고|삼켰|삼킨|삼키|섭취)|(?:먹었|먹은|먹고|삼켰|삼킨|삼키|섭취)[^.!?\n]{0,24}(?:생선(?:\s*가시)?|생선뼈|물고기|fish(?:\s*bone)?))/i;
+
+export function isFishIngestionWithGagging(message: string): boolean {
+    const swallowedOrStuck = FISH_INGESTION.test(message)
+        || /(?:생선\s*가시|생선뼈|fish\s*bone)[^.!?\n]{0,24}(?:목|식도)[^.!?\n]{0,12}(?:걸|끼)/i.test(message);
+    return swallowedOrStuck && GAGGING_SYMPTOM.test(message);
+}
 
 const MEDICAL_SIGNAL_PATTERNS = [
+    GAGGING_SYMPTOM,
     EYE_CLOUDINESS_SYMPTOM,
     EYE_INJURY_SYMPTOM,
     /(?:아파|아픈|아픔|아프다|아프대|아프다고|아프니까|아프면|아프네|아프지)/i,
@@ -92,6 +102,7 @@ const SHOPPING_INTENT = /(?:추천|찾아|찾아줘|보여|구매|사고\s*싶|�
 const PRODUCT_MERCHANDISING_DESCRIPTOR = /(?:차\s*안에서\s*쓰|예방용?|방지|반사|편하게|편안|누르지\s*않|부담\s*덜|숨구멍|잘\s*쉬어지는|통기|건강용?|마사지|얼룩|순한|색(?:상)?|빛깔|브라운|모양|여행용|보호용|어울리는|문구|레드|메쉬|보온)/i;
 const MEDICAL_TREATMENT_PRODUCT_CLAIM = /(?:치료|치유|완치|낫게|고쳐|약효|백내장|녹내장|질환|질병)/i;
 const ACTUAL_SYMPTOM_PATTERNS = [
+    ACTUAL_GAGGING_SYMPTOM,
     EYE_CLOUDINESS_SYMPTOM,
     EYE_INJURY_SYMPTOM,
     /(?:아파|아프|통증(?:이|을)\s*(?:있|심|보)|다쳤|상처(?:가|를)|절뚝|무기력|축\s*늘어)/i,
@@ -103,6 +114,7 @@ const ACTUAL_SYMPTOM_PATTERNS = [
 
 function hasActualMedicalEvent(text: string, toxinExposure: boolean): boolean {
     return toxinExposure
+        || isFishIngestionWithGagging(text)
         || EMERGENCY_SIGNAL_PATTERNS.some((pattern) => pattern.test(text))
         || ACTUAL_SYMPTOM_PATTERNS.some((pattern) => pattern.test(text));
 }
@@ -126,7 +138,8 @@ export function classifyChatMedicalSafety(message: string): ChatMedicalSafety {
     if (!text) return null;
 
     const toxinExposure = rawToxinExposure || ACTUAL_TOXIN_EXPOSURE.test(text);
-    const emergency = toxinExposure || EMERGENCY_SIGNAL_PATTERNS.some((pattern) => pattern.test(text));
+    const emergency = toxinExposure || isFishIngestionWithGagging(text)
+        || EMERGENCY_SIGNAL_PATTERNS.some((pattern) => pattern.test(text));
     if (emergency) return "emergency";
 
     const medical = toxinExposure
@@ -134,6 +147,54 @@ export function classifyChatMedicalSafety(message: string): ChatMedicalSafety {
         || MEDICAL_SIGNAL_PATTERNS.some((pattern) => pattern.test(text));
     if (!medical) return null;
     return "general_health";
+}
+
+export type ChatHealthAction = "water" | "food" | "induce_vomiting";
+type HealthHistoryTurn = { role: "user" | "assistant"; content: string };
+
+const HEALTH_SUBJECT_SWITCH = /(?:고양이|토끼|햄스터|앵무새|거북이|도마뱀|사람|아기|아이에게|아이한테|내가|나는|다른\s*(?:강아지|반려견)|둘째|첫째|\b(?:cat|rabbit|human)\b)/i;
+const HEALTH_TOPIC_SWITCH = /(?:다른\s*(?:질문|얘기|이야기)|새\s*질문|말고|배송|주문|환불|교환|상품|추천|날씨|요리|레시피|대화\s*(?:초기화|그만|끝)|잊어)/i;
+const HEALTH_ACTION_VERB = "(?:먹여|먹이|먹였|먹인|줘(?:도|야|요)?|주면|줄까|주고|줬|주었|마시게|부어|급여)";
+const WATER_ACTION = new RegExp(`(?<![가-힣])(?:물(?:을|은|도)?|식수|우유|꿀물)\\s*.{0,20}${HEALTH_ACTION_VERB}`, "i");
+const FOOD_ACTION = new RegExp(`(?:밥|사료|간식|빵|음식|먹이)(?:을|를|은|는|도)?\\s*.{0,20}${HEALTH_ACTION_VERB}`, "i");
+const EMESIS_ACTION = /(?:토하게|구토(?:를)?\s*유도|구토\s*시키|과산화수소|소금물)/i;
+const HEALTH_CONTINUATION = /(?:병원|진료|수의사|지켜|관찰|기다려|괜찮|계속|지속|반복|좋아졌|심해졌|악화|침|삼키|호흡|숨|식욕|활력|기력|통증|\d+\s*(?:살|개월|kg|킬로|분|시간|일|번|개|조각)|오늘부터|어제부터)/i;
+
+function withoutProductQuestionPrefix(message: string) {
+    return message.replace(/^\s*[^:\n]{1,80}?\s*상품\s*문의\s*:\s*/, "");
+}
+
+export function healthActionFollowUpKind(message: string): ChatHealthAction | null {
+    const text = withoutProductQuestionPrefix(message.split("후속 정보:").at(-1)?.trim() || "");
+    if (!text || HEALTH_SUBJECT_SWITCH.test(text) || HEALTH_TOPIC_SWITCH.test(text)) return null;
+    if (EMESIS_ACTION.test(text)) return "induce_vomiting";
+    if (WATER_ACTION.test(text)) return "water";
+    if (FOOD_ACTION.test(text)) return "food";
+    return null;
+}
+
+/** Use user observations from the latest uninterrupted health exchange only. */
+export function resolveChatHealthActionContext(message: string, history: HealthHistoryTurn[]) {
+    const kind = healthActionFollowUpKind(message);
+    if (!kind) return null;
+    const currentSafety = classifyChatMedicalSafety(message);
+    if (currentSafety && /(?:강아지|반려견|댕댕|우리\s*개|\b(?:dog|puppy|canine)\b)/i.test(message)) {
+        return { kind, anchor: message, safety: currentSafety, turnsUsed: 1 };
+    }
+    const boundedHistory = history.slice(-12);
+    let turnsUsed = 1;
+    for (let index = boundedHistory.length - 1; index >= 0; index -= 1) {
+        const turn = boundedHistory[index];
+        if (turn.role !== "user") continue;
+        const content = withoutProductQuestionPrefix(turn.content.trim().slice(0, 500));
+        if (!content) continue;
+        if (HEALTH_SUBJECT_SWITCH.test(content) || HEALTH_TOPIC_SWITCH.test(content)) break;
+        const safety = classifyChatMedicalSafety(content);
+        if (safety) return { kind, anchor: content, safety, turnsUsed: turnsUsed + 1 };
+        if (!healthActionFollowUpKind(content) && !HEALTH_CONTINUATION.test(content)) break;
+        turnsUsed += 1;
+    }
+    return currentSafety ? { kind, anchor: message, safety: currentSafety, turnsUsed: 1 } : null;
 }
 
 /**

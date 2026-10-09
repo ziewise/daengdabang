@@ -2,6 +2,8 @@ import { CATALOG, applySort, getBestProducts, searchCatalog, type CatalogProduct
 import { ddbApiBase } from "@/lib/customer-api";
 import {
     classifyChatMedicalSafety,
+    isFishIngestionWithGagging,
+    resolveChatHealthActionContext,
     resolveSuccessfulApiMedical,
     shouldPreferProtectedMedicalFallback,
 } from "@/lib/chat-medical-safety";
@@ -669,6 +671,11 @@ const HEALTH_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "Merck Veterinary Manual pet emergencies", url: "https://www.merckvetmanual.com/special-pet-topics/emergencies/what-to-do-in-a-dog-or-cat-emergency" },
 ];
 
+const INGESTION_SOURCE_FALLBACK: ShopChatSource[] = [
+    { name: "Merck Veterinary Manual esophageal foreign bodies", url: "https://www.merckvetmanual.com/digestive-system/diseases-of-the-esophagus-in-small-animals/esophageal-foreign-bodies-in-small-animals" },
+    { name: "AVMA pet first aid (2025)", url: "https://ebusiness.avma.org/files/ProductDownloads/mcm-client-brochures-pet-first-aid-2025.pdf" },
+];
+
 const HEARTWORM_SOURCE_FALLBACK: ShopChatSource[] = [
     { name: "American Heartworm Society", url: "https://www.heartwormsociety.org/pet-owner-resources/heartworm-basics" },
     { name: "AHS preventives", url: "https://www.heartwormsociety.org/preventives" },
@@ -1068,6 +1075,8 @@ function heartwormPreventionFallback(message: string): ShopChatAnswer | null {
 }
 
 function medicalSafetyFallback(message: string): ShopChatAnswer | null {
+    const fishFallback = fishIngestionFallback(message);
+    if (fishFallback) return fishFallback;
     const classification = classifyChatMedicalSafety(message);
     if (!classification) return null;
     if (classification === "emergency") {
@@ -1139,10 +1148,78 @@ function medicalSafetyFallback(message: string): ShopChatAnswer | null {
     };
 }
 
+function fishIngestionFallback(message: string): ShopChatAnswer | null {
+    if (!isFishIngestionWithGagging(message)) return null;
+    const result = healthRuleAnswer(
+        "생선을 먹은 뒤 켁켁거리면 생선 가시나 다른 이물이 목·식도에 걸렸을 가능성을 확인해야 해요. 지금 동물병원에 연락해 진료 안내를 받으세요. 숨을 못 쉬거나 잇몸이 파랗거나 창백하고 쓰러지면 즉시 응급병원으로 이동하세요.\n\n물·밥·빵으로 밀어내려 하거나 억지로 먹이지 마세요. 입 깊숙이 손을 넣거나 가시를 직접 뽑으려 하지 말고, 임의로 토하게 하지 마세요. 지금 숨은 편하게 쉬고 침을 삼킬 수 있나요?",
+        "foreign_body_or_bone_ingestion",
+        "생선 섭취 뒤 켁켁거림·이물 의심",
+        {
+            triage: "emergency",
+            followUpQuestions: ["지금 숨을 편하게 쉬고 침을 삼킬 수 있나요?", "언제 무엇을 먹었고 가시가 있는 생선이었나요?"],
+            redFlags: ["숨을 못 쉼, 잇몸이 파랗거나 창백함, 쓰러짐", "침을 삼키지 못함, 심한 침 흘림, 반복 헛구역질"],
+            firstSteps: ["지금 동물병원에 전화해 먹은 것과 증상을 알리세요.", "물·음식으로 밀어내거나 토하게 하지 마세요."],
+            careWindow: "지금 동물병원에 연락해 진료 시점을 안내받으세요. 호흡 곤란이나 쓰러짐은 즉시 응급 진료가 필요합니다.",
+        },
+    );
+    return { ...result, sources: INGESTION_SOURCE_FALLBACK, research: { mode: "static-health-guidance", sourceCount: INGESTION_SOURCE_FALLBACK.length } };
+}
+
+function healthActionFollowUpFallback(message: string, history: ShopChatHistoryTurn[]): ShopChatAnswer | null {
+    const context = resolveChatHealthActionContext(message, history);
+    if (!context) return null;
+    const { kind, anchor } = context;
+    const emergency = context.safety === "emergency" || classifyChatMedicalSafety(message) === "emergency";
+    const airwayRisk = isFishIngestionWithGagging(anchor)
+        || /(?:켁\s*켁|캑\s*캑|컥\s*컥|헛구역|호흡|숨|의식|발작|경련|삼켰|삼킨|이물)/i.test(`${anchor} ${message}`);
+    const toxinRisk = /(?:초콜릿|자일리톨|포도|건포도|양파|마늘|사람\s*약|진통제|쥐약|살충제|부동액|독성|중독)/i.test(anchor);
+    const sources = airwayRisk ? INGESTION_SOURCE_FALLBACK : [INGESTION_SOURCE_FALLBACK[1]];
+    const performed = /(?:먹였|먹인|줬|주었|부었|마시게\s*했|토하게\s*했|유도했)/i.test(message);
+    let answer: string;
+    if (kind === "induce_vomiting") {
+        answer = performed
+            ? "이미 토하게 했다면 더 시도하지 말고, 사용한 물질·양·시각과 현재 증상을 병원에 알려 주세요."
+            : "집에서 임의로 토하게 하지 마세요.";
+        answer += " 소금물·과산화수소를 먹이거나 목을 자극하지 말고 수의사의 지시를 먼저 받으세요.";
+    } else if (airwayRisk) {
+        const noun = kind === "water" ? "물" : "음식";
+        answer = performed
+            ? `이미 ${noun}을 먹였다면 더 먹이지 말고, 먹인 시각과 이후 기침·구토·호흡 변화를 병원에 알려 주세요.`
+            : `지금은 ${noun}을 먹여 밀어내려 하지 마세요.`;
+        answer += " 켁켁거림이나 삼킴 곤란이 있으면 물·음식이 기도로 들어갈 위험이 있어요. 억지로 먹이거나 토하게 하지 말고 입 깊숙이 손을 넣지 마세요.";
+    } else if (toxinRisk) {
+        answer = "물·우유·음식으로 먹은 물질을 희석하려 하지 마세요. 억지로 먹이거나 토하게 하지 말고, 먹은 물질·양·시각을 알려 수의사의 지시를 받으세요.";
+    } else if (kind === "water") {
+        answer = "호흡과 의식이 정상이고 스스로 편하게 삼킨다면 소량의 물을 스스로 마시게 할 수 있어요. 주사기나 컵으로 억지로 붓지 마세요. 마실 때 켁켁거리거나 토하면 중단하고 병원에 연락하세요.";
+    } else {
+        answer = "억지로 먹이거나 음식으로 무언가를 밀어내려 하지 마세요. 구토·켁켁거림·삼킴 곤란이 있으면 급여를 멈추고 병원에 문의하세요. 그런 증상이 없고 평소처럼 삼킨다면 평소 먹던 음식을 소량만 주고 상태를 확인하세요.";
+    }
+    answer += emergency
+        ? "\n\n앞서 말씀하신 상황 때문에 지금 동물병원에 연락해 진료 안내를 받으세요. 숨을 못 쉬거나 잇몸이 파랗거나 창백하고 쓰러지면 즉시 응급병원으로 이동하세요."
+        : "\n\n증상이 지속되거나 악화되면 동물병원에 연락하세요. 호흡 곤란이나 의식 저하가 있으면 즉시 응급 진료를 받으세요.";
+    if (airwayRisk) answer += " 지금 숨은 편하게 쉬고 침을 삼킬 수 있나요?";
+    return {
+        answer,
+        products: [],
+        medical: {
+            mode: true,
+            triage: emergency ? "emergency" : "general_health",
+            topic: isFishIngestionWithGagging(anchor) ? "foreign_body_or_bone_ingestion" : "health_action_follow_up",
+            firstSteps: [answer.split("\n\n", 1)[0]],
+            disclaimer: "일반 안전 안내이며 진단·처방이 아닙니다. 수의사의 진료와 지시를 우선하세요.",
+        },
+        sources,
+        research: { mode: "static-health-guidance", sourceCount: sources.length },
+        conversation: { continued: context.turnsUsed > 1, anchorKind: "health", turnsUsed: context.turnsUsed },
+    };
+}
+
 function medicalDecisionFollowUpFallback(
     message: string,
     history: ShopChatHistoryTurn[],
 ): ShopChatAnswer | null {
+    const actionFallback = healthActionFollowUpFallback(message, history);
+    if (actionFallback) return actionFallback;
     const asksWhetherToSeekCare = /(?:병원|진료|수의사).{0,16}(?:가야|가봐|가볼|가보|갈까|봐야|필요|받아|연락|전화|상담)/i.test(message)
         || /(?:가야|가봐|가볼|가보|갈까|봐야).{0,10}(?:병원|진료)/i.test(message);
     if (!asksWhetherToSeekCare || !hasRecentCanineHealthContext(history)) return null;
@@ -2125,6 +2202,17 @@ type ShopChatPreparedFallbacks = {
     unavailableFallback: ShopChatAnswer;
 };
 
+function preparedShopChatErrorAnswer(
+    fallbacks: ShopChatPreparedFallbacks,
+    reason: ShopChatDelivery["reason"],
+    retryAfter?: number,
+): ShopChatAnswer {
+    if (!fallbacks.medicalFallback?.medical?.mode) return transientShopChatAnswer(reason, retryAfter);
+    const result = withDegradedDelivery(fallbacks.medicalFallback, reason);
+    if (result.delivery && retryAfter !== undefined) result.delivery.retryAfterSeconds = retryAfter;
+    return result;
+}
+
 function emitShopChatProgress(context: ShopQuestionContext | undefined, stage: ShopChatStreamStage) {
     try {
         context?.onProgress?.({ stage });
@@ -2149,6 +2237,9 @@ function normalizeShopChatApiAnswer(
 ): ShopChatAnswer {
     const data = asRecord(value) || {};
     const { medicalFallback, unavailableFallback } = fallbacks;
+    if (typeof data.answer !== "string" || !data.answer.trim()) {
+        return preparedShopChatErrorAnswer(fallbacks, "invalid_response");
+    }
     const apiReturnedProducts = Array.isArray(data.products);
     const rawProducts: unknown[] | undefined = apiReturnedProducts
         ? data.products as unknown[]
@@ -2167,6 +2258,7 @@ function normalizeShopChatApiAnswer(
     const apiSources = normalizeShopChatSources(data.sources);
     const actions = normalizeActions(data.actions);
     const research = normalizeShopChatResearch(data.research);
+    if (research) research.sourceCount = apiSources.length;
     const locationRequest = asRecord(data.locationRequest);
     const locationRequestCtas = normalizeLocationRequestCtas(locationRequest);
     const normalizedApiCtas = normalizeCtas(data.ctas);
@@ -2230,12 +2322,12 @@ function normalizeShopChatApiAnswer(
     };
 }
 
-function shopChatErrorAnswer(response: Response, references: ShopChatReferenceInput[]) {
+function shopChatErrorAnswer(response: Response, references: ShopChatReferenceInput[], fallbacks: ShopChatPreparedFallbacks) {
     if (references.length) throw shopChatReferenceError(response.status);
     const retryAfter = retryAfterSeconds(response.headers.get("retry-after"));
-    if (response.status === 429) return transientShopChatAnswer("rate_limited", retryAfter);
-    if (response.status === 503 || response.status === 504) return transientShopChatAnswer("service_busy", retryAfter);
-    return transientShopChatAnswer(response.status >= 500 ? "service_busy" : "invalid_response", retryAfter);
+    if (response.status === 429) return preparedShopChatErrorAnswer(fallbacks, "rate_limited", retryAfter);
+    if (response.status === 503 || response.status === 504) return preparedShopChatErrorAnswer(fallbacks, "service_busy", retryAfter);
+    return preparedShopChatErrorAnswer(fallbacks, response.status >= 500 ? "service_busy" : "invalid_response", retryAfter);
 }
 
 function shopChatConversationNotFoundAnswer(): ShopChatAnswer {
@@ -2284,7 +2376,7 @@ async function answerShopQuestionPost(
         signal,
     });
     onTransportActivity?.();
-    if (!response.ok) return shopChatErrorAnswer(response, references);
+    if (!response.ok) return shopChatErrorAnswer(response, references, fallbacks);
     emitShopChatProgress(context, "answering");
     return normalizeShopChatApiAnswer(await response.json(), response.headers, fallbacks);
 }
@@ -2325,7 +2417,7 @@ async function answerShopQuestionStream(
         accepted: false,
         errorCode: responseErrorCode,
     })) return { kind: "fallback" };
-    if (!response.ok) return { kind: "answer", answer: shopChatErrorAnswer(response, references) };
+    if (!response.ok) return { kind: "answer", answer: shopChatErrorAnswer(response, references, fallbacks) };
 
     const contentType = response.headers.get("content-type")?.toLowerCase() || "";
     if (contentType.includes("application/json")) {
@@ -2335,7 +2427,7 @@ async function answerShopQuestionStream(
         };
     }
     if (!contentType.includes("text/event-stream") || !response.body) {
-        return { kind: "answer", answer: transientShopChatAnswer("invalid_response") };
+        return { kind: "answer", answer: preparedShopChatErrorAnswer(fallbacks, "invalid_response") };
     }
 
     const reader = response.body.getReader();
@@ -2385,7 +2477,8 @@ async function answerShopQuestionStream(
             });
             if (!fallbackAllowed) {
                 const code = typeof data.code === "string" ? data.code : "service_busy";
-                completedAnswer = transientShopChatAnswer(
+                completedAnswer = preparedShopChatErrorAnswer(
+                    fallbacks,
                     code === "rate_limited" ? "rate_limited" : code === "timeout" ? "timeout" : "service_busy",
                 );
             }
@@ -2408,8 +2501,8 @@ async function answerShopQuestionStream(
     }
     if (completedAnswer) return { kind: "answer", answer: completedAnswer };
     // An accepted or partially emitted stream must never be repeated through
-    // POST. Surface a retry state instead of risking a duplicate model call.
-    return { kind: "answer", answer: transientShopChatAnswer("service_busy") };
+    // POST. Keep prepared safety guidance or a retry state without another call.
+    return { kind: "answer", answer: preparedShopChatErrorAnswer(fallbacks, "service_busy") };
 }
 
 export async function answerShopQuestionSmart(message: string, context?: ShopQuestionContext): Promise<ShopChatAnswer> {
@@ -2427,6 +2520,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const medicalDecisionFallback = medicalDecisionFollowUpFallback(message, history);
     const medicalFallback = wildlifeBiteRoute || rareFallback || heartwormFallback || medicalDecisionFallback || medicalSafetyFallback(message);
     const unavailableFallback = generalVerificationUnavailableAnswer(message);
+    const fallbacks = { medicalFallback, unavailableFallback };
     const offlineFallback = () => {
         return supportFallback || medicalFallback || generationFallback || unavailableFallback;
     };
@@ -2465,7 +2559,6 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ...(conversationId ? { conversationId } : {}),
             ...(references.length ? { references } : {}),
         };
-        const fallbacks = { medicalFallback, unavailableFallback };
         const streamed = await answerShopQuestionStream(
             base,
             headers,
@@ -2495,7 +2588,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
         if (reason instanceof ShopChatReferenceRequestError) throw reason;
         if (timeoutGuard.timeoutReason() || (reason instanceof Error && reason.name === "TimeoutError")) {
-            return transientShopChatAnswer("timeout");
+            return preparedShopChatErrorAnswer(fallbacks, "timeout");
         }
         if (references.length) {
             throw new ShopChatReferenceRequestError("참고사진과 함께 요청을 보내지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.");
