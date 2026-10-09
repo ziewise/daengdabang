@@ -73,7 +73,19 @@ async function decode(source: string, maximumEdge: number, signal?: AbortSignal)
         });
     if (blob.size > 24 * 1024 * 1024) throw new Error("decode_failed");
     assertLocalWorkActive(signal);
-    const decoded = typeof createImageBitmap === "function" ? await createImageBitmap(blob)
+    const decoded = typeof createImageBitmap === "function" ? await new Promise<ImageBitmap>((resolve, reject) => {
+        // Native decoding cannot be cancelled, but the UI can stop waiting immediately.
+        const cleanup = () => signal?.removeEventListener("abort", abort);
+        const abort = () => { cleanup(); reject(new DOMException("Aborted", "AbortError")); };
+        signal?.addEventListener("abort", abort, { once: true });
+        try {
+            void createImageBitmap(blob).then((bitmap) => {
+                cleanup();
+                if (signal?.aborted) { bitmap.close(); abort(); }
+                else resolve(bitmap);
+            }, (error) => { cleanup(); reject(error); });
+        } catch (error) { cleanup(); reject(error); }
+    })
         : await new Promise<HTMLImageElement>((resolve, reject) => {
         const image = new Image();
         const url = URL.createObjectURL(blob);

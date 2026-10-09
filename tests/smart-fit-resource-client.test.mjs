@@ -103,12 +103,13 @@ test("blocked or unavailable IndexedDB resolves without stalling fitting", async
     assert.equal(await pending, null);
 });
 
-function colorHarness({ abortDuringWork = false, rejectTarget = false } = {}) {
+function colorHarness({ abortDuringWork = false, rejectTarget = false, stalledDecode = false } = {}) {
     let yields = 0;
     const closed = [];
     const metrics = [];
     const saved = new Map();
     const controller = new AbortController();
+    let releaseDecode;
     class Canvas {
         width = 0; height = 0; tag = "";
         getContext() { return {
@@ -134,7 +135,12 @@ function colorHarness({ abortDuringWork = false, rejectTarget = false } = {}) {
     const api = load("on-device-color-preview", {
         document, FileReader: Reader,
         fetch: async (source) => { if (rejectTarget && source === "target") throw new Error("decode"); return new Response(new Blob([source])); },
-        createImageBitmap: async (blob) => { const tag = await blob.text(); return { tag, width: 128, height: 128, close: () => closed.push(tag) }; },
+        createImageBitmap: async (blob) => {
+            const tag = await blob.text();
+            const bitmap = { tag, width: 128, height: 128, close: () => closed.push(tag) };
+            if (stalledDecode) return new Promise((resolve) => { releaseDecode = () => resolve(bitmap); });
+            return bitmap;
+        },
     }, {
         "@/lib/on-device-ai": {
             ON_DEVICE_PIPELINE_VERSION: "test", privateCacheKey: async (parts) => parts.join("|"),
@@ -146,7 +152,9 @@ function colorHarness({ abortDuringWork = false, rejectTarget = false } = {}) {
         "@/lib/pet-tryon-metrics": { recordPetTryOnMetric: (...args) => metrics.push(args) },
     });
     const input = { sourceJobId: "job", sourceImageDataUrl: "data:image/png;base64,bWFzdGVy", sourceProductImage: "source", targetProductImage: "target", signal: controller.signal };
-    return { run: () => api.createOnDeviceColorPreview(input), metrics, saved, closed, yields: () => yields };
+    return { run: () => api.createOnDeviceColorPreview(input), metrics, saved, closed, yields: () => yields,
+        abort: () => controller.abort(), releaseDecode: () => releaseDecode(),
+    };
 }
 
 test("color conversion produces a bounded local result with cooperative yields and reuses it", async () => {
@@ -172,4 +180,17 @@ test("cancelling pixel work or partial decode failure releases decoded images an
     assert.equal((await failed.run()).reason, "decode_failed");
     assert.deepEqual(failed.closed, ["master", "source"]);
     assert.equal(failed.saved.size, 0);
+});
+
+test("cancellation returns before native decoding finishes and closes its late result", async () => {
+    const h = colorHarness({ stalledDecode: true });
+    const pending = h.run();
+    await new Promise(setImmediate);
+    h.abort();
+    assert.equal((await pending).reason, "aborted");
+    assert.equal(h.saved.size, 0);
+    assert.equal(h.closed.length, 0);
+    h.releaseDecode();
+    await new Promise(setImmediate);
+    assert.deepEqual(h.closed, ["master"]);
 });
