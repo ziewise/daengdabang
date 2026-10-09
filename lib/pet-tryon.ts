@@ -49,6 +49,7 @@ export type PetTryOnResult = {
     status: PetTryOnStage;
     jobId: string;
     imageDataUrl?: string;
+    imagePath?: string;
     renderer: string;
     cacheKey: string;
     pollAfterSeconds: number;
@@ -143,6 +144,7 @@ const RESULT_EMAIL_IDEMPOTENCY_KEY_RE = /^[A-Za-z0-9][A-Za-z0-9._:-]{15,127}$/;
 const RESULT_EMAIL_DELIVERY_ID_RE = /^[a-f0-9]{32}$/;
 const RESULT_EMAIL_VERIFICATION_ID_RE = /^[a-f0-9]{32}$/;
 const RESULT_EMAIL_VERIFICATION_CODE_RE = /^[0-9]{6}$/;
+const PET_TRY_ON_JOB_ID_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/;
 const RESULT_EMAIL_STATUSES = new Set<PetTryOnEmailDeliveryStatus>([
     "scheduled",
     "sent",
@@ -331,6 +333,20 @@ async function fetchWithTimeout(
     init: RequestInit,
     externalSignal: AbortSignal | undefined,
     timeoutMs: number,
+): Promise<Response>;
+async function fetchWithTimeout<T>(
+    input: RequestInfo | URL,
+    init: RequestInit,
+    externalSignal: AbortSignal | undefined,
+    timeoutMs: number,
+    consume: (response: Response, signal: AbortSignal) => Promise<T>,
+): Promise<T>;
+async function fetchWithTimeout<T>(
+    input: RequestInfo | URL,
+    init: RequestInit,
+    externalSignal: AbortSignal | undefined,
+    timeoutMs: number,
+    consume?: (response: Response, signal: AbortSignal) => Promise<T>,
 ) {
     const controller = new AbortController();
     let callerAborted = Boolean(externalSignal?.aborted);
@@ -346,7 +362,8 @@ async function fetchWithTimeout(
         controller.abort();
     }, timeoutMs);
     try {
-        return await fetch(input, { ...init, signal: controller.signal });
+        const response = await fetch(input, { ...init, signal: controller.signal });
+        return consume ? await consume(response, controller.signal) : response;
     } catch {
         if (callerAborted) throw new PetTryOnTransportError("aborted");
         if (timedOut) throw new PetTryOnTransportError("timeout");
@@ -355,6 +372,142 @@ async function fetchWithTimeout(
         globalThis.clearTimeout(timeout);
         externalSignal?.removeEventListener("abort", abortFromCaller);
     }
+}
+
+type SharedPetTryOnRead = {
+    promise: Promise<unknown>;
+    controller: AbortController;
+    readers: number;
+};
+const pendingPetTryOnReads = new Map<string, SharedPetTryOnRead>();
+const resultImages = new Map<string, { imageDataUrl: string; expiresAt: number }>();
+const RESULT_IMAGE_CACHE_LIMIT = 12;
+const RESULT_IMAGE_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const MAX_RESULT_IMAGE_BYTES = 24 * 1024 * 1024;
+
+// Each caller can cancel independently. The shared request stops when no caller needs it.
+async function sharePetTryOnRead<T>(
+    key: string,
+    read: (signal: AbortSignal) => Promise<T>,
+    signal?: AbortSignal,
+): Promise<T> {
+    if (signal?.aborted) throw new PetTryOnTransportError("aborted");
+    let entry = pendingPetTryOnReads.get(key);
+    if (!entry) {
+        const controller = new AbortController();
+        entry = { controller, readers: 0, promise: Promise.resolve().then(() => read(controller.signal)) };
+        pendingPetTryOnReads.set(key, entry);
+        const created = entry;
+        const release = () => {
+            if (pendingPetTryOnReads.get(key) === created) pendingPetTryOnReads.delete(key);
+        };
+        void entry.promise.then(release, release);
+    }
+    const shared = entry;
+    shared.readers += 1;
+    let onAbort: (() => void) | undefined;
+    try {
+        return await new Promise<T>((resolve, reject) => {
+            onAbort = () => reject(new PetTryOnTransportError("aborted"));
+            signal?.addEventListener("abort", onAbort, { once: true });
+            void shared.promise.then((value) => resolve(value as T), reject);
+        });
+    } finally {
+        if (onAbort) signal?.removeEventListener("abort", onAbort);
+        shared.readers -= 1;
+        if (!shared.readers && pendingPetTryOnReads.get(key) === shared) {
+            pendingPetTryOnReads.delete(key);
+            shared.controller.abort();
+        }
+    }
+}
+
+function rememberResultImage(key: string, imageDataUrl: string) {
+    resultImages.delete(key);
+    resultImages.set(key, { imageDataUrl, expiresAt: Date.now() + RESULT_IMAGE_CACHE_TTL_MS });
+    while (resultImages.size > RESULT_IMAGE_CACHE_LIMIT) {
+        resultImages.delete(resultImages.keys().next().value as string);
+    }
+}
+
+function imageBlobDataUrl(blob: Blob, signal: AbortSignal) {
+    return new Promise<string>((resolve, reject) => {
+        if (signal.aborted) {
+            reject(new PetTryOnTransportError("aborted"));
+            return;
+        }
+        const reader = new FileReader();
+        const cleanup = () => signal.removeEventListener("abort", onAbort);
+        const onAbort = () => {
+            reader.abort();
+            cleanup();
+            reject(new PetTryOnTransportError("aborted"));
+        };
+        reader.onload = () => { cleanup(); resolve(String(reader.result || "")); };
+        reader.onerror = () => { cleanup(); reject(new PetTryOnTransportError("network")); };
+        signal.addEventListener("abort", onAbort, { once: true });
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function resultImageCacheKey(base: string, authorization: string, jobId: string) {
+    // Credential-scoped keys cannot reuse another account's image, including after logout.
+    return privateCacheKey(["pet-tryon-image-v1", base, authorization, jobId]);
+}
+
+async function hydratePetTryOnResult(
+    result: PetTryOnResult,
+    base: string,
+    headers: NonNullable<ReturnType<typeof authHeaders>>,
+    signal?: AbortSignal,
+): Promise<PetTryOnApiOutcome<PetTryOnResult>> {
+    const isCurrentSession = () => authHeaders()?.authorization === headers.authorization;
+    if (!isCurrentSession()) return failure("login_required", false);
+    if (result.status !== "ready") return success({ ...result, imageDataUrl: undefined });
+    if (!PET_TRY_ON_JOB_ID_RE.test(result.jobId)) return failure("invalid_response", false);
+    const expectedPath = `/api/v1/pet-tryon/jobs/${encodeURIComponent(result.jobId)}/image`;
+    if (result.imagePath && result.imagePath !== expectedPath) return failure("invalid_response", false);
+    const localKey = await resultImageCacheKey(base, headers.authorization, result.jobId);
+    const loaded = await sharePetTryOnRead(`image:${localKey}`, async (imageSignal) => {
+        if (result.imageDataUrl?.startsWith("data:image/")) {
+            rememberResultImage(localKey, result.imageDataUrl);
+            await writeOnDeviceCache(localKey, { jobId: result.jobId, imageDataUrl: result.imageDataUrl });
+            return success(result.imageDataUrl);
+        }
+        if (result.imagePath !== expectedPath) return failure("invalid_response", false);
+        const memory = resultImages.get(localKey);
+        if (memory && memory.expiresAt > Date.now()) return success(memory.imageDataUrl);
+        resultImages.delete(localKey);
+        const cached = await readOnDeviceCache<{ jobId: string; imageDataUrl: string }>(localKey);
+        if (cached?.jobId === result.jobId && cached.imageDataUrl?.startsWith("data:image/")) {
+            rememberResultImage(localKey, cached.imageDataUrl);
+            return success(cached.imageDataUrl);
+        }
+        if (imageSignal.aborted) throw new PetTryOnTransportError("aborted");
+        if (!isCurrentSession()) return failure("login_required", false);
+        const downloaded = await fetchWithTimeout(`${base}${expectedPath}`, {
+            method: "GET",
+            headers: { authorization: headers.authorization },
+            cache: "no-store",
+            credentials: "omit",
+            redirect: "error",
+        }, imageSignal, STATUS_REQUEST_TIMEOUT_MS, async (response, downloadSignal) => {
+            if (!response.ok) return responseFailure(response);
+            const blob = await response.blob();
+            if (!/^image\/(png|jpeg|webp)$/.test(blob.type) || !blob.size || blob.size > MAX_RESULT_IMAGE_BYTES) {
+                return failure("invalid_response", false);
+            }
+            return success(await imageBlobDataUrl(blob, downloadSignal));
+        });
+        if (!downloaded.ok) return downloaded;
+        const imageDataUrl = downloaded.value;
+        if (!isCurrentSession()) return failure("login_required", false);
+        rememberResultImage(localKey, imageDataUrl);
+        await writeOnDeviceCache(localKey, { jobId: result.jobId, imageDataUrl });
+        return success(imageDataUrl);
+    }, signal);
+    if (!isCurrentSession()) return failure("login_required", false);
+    return loaded.ok ? success({ ...result, imageDataUrl: loaded.value }) : loaded;
 }
 
 export function clearPetTryOnSessionCache() {
@@ -386,6 +539,7 @@ function parseResult(data: Record<string, unknown>): PetTryOnResult {
         status,
         jobId: String(data.job_id || ""),
         imageDataUrl: typeof data.image_data_url === "string" ? data.image_data_url : undefined,
+        imagePath: typeof data.image_path === "string" ? data.image_path : undefined,
         renderer: String(data.renderer || "ddb-smart-fit"),
         cacheKey: String(data.cache_key || ""),
         pollAfterSeconds: Math.max(1, Math.min(900, Number(data.poll_after_seconds || 3))),
@@ -457,7 +611,9 @@ export async function startPetTryOn(
         }, signal, START_REQUEST_TIMEOUT_MS);
         if (!response.ok) return responseFailure(response);
         const result = parseResult(await response.json());
-        return result.jobId ? success(result) : failure("invalid_response", true);
+        return result.jobId
+            ? await hydratePetTryOnResult(result, base, headers, signal)
+            : failure("invalid_response", true);
     } catch (error) {
         return caughtFailure(error);
     }
@@ -482,11 +638,12 @@ export async function getLatestPetTryOnMaster(
     const params = new URLSearchParams({
         pet_profile_id: String(petProfileId),
         product_id: productId,
+        include_image: "false",
     });
     try {
         const response = await fetchWithTimeout(
             `${base}/api/v1/pet-tryon/masters/latest?${params.toString()}`,
-            { method: "GET", headers },
+            { method: "GET", headers, cache: "no-store", redirect: "error" },
             signal,
             STATUS_REQUEST_TIMEOUT_MS,
         );
@@ -508,10 +665,13 @@ export async function getLatestPetTryOnMaster(
         const result = parseResult(rawResult);
         const sourceJobId = String(data.source_job_id || result.jobId || "");
         const productImage = String(data.product_image || result.productImage || "");
-        if (!sourceJobId || !productImage || result.status !== "ready" || !result.imageDataUrl) {
+        if (!sourceJobId || sourceJobId !== result.jobId || !productImage || result.status !== "ready") {
             return { status: "error", error: failure("invalid_response", true).error };
         }
-        return { status: "found", sourceJobId, productImage, result };
+        const hydrated = await hydratePetTryOnResult(result, base, headers, signal);
+        return hydrated.ok
+            ? { status: "found", sourceJobId, productImage, result: hydrated.value }
+            : { status: "error", error: hydrated.error };
     } catch (error) {
         return { status: "error", error: caughtFailure(error).error };
     }
@@ -523,28 +683,23 @@ export async function getPetTryOnJob(
 ): Promise<PetTryOnApiOutcome<PetTryOnResult>> {
     const base = apiBase().replace(/\/$/, "");
     const headers = authHeaders();
-    if (!jobId) return failure("invalid_request", false);
+    if (!PET_TRY_ON_JOB_ID_RE.test(jobId)) return failure("invalid_request", false);
     if (!base) return failure("temporarily_unavailable", true);
     if (!headers) return failure("login_required", false);
     try {
-        const localKey = await privateCacheKey(["pet-tryon-job", jobId]);
-        const cached = await readOnDeviceCache<PetTryOnResult>(localKey);
-        if (cached?.status === "ready" && cached.jobId === jobId && cached.imageDataUrl) {
-            return success(cached);
-        }
-        const response = await fetchWithTimeout(
-            `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(jobId)}`,
-            { method: "GET", headers },
-            signal,
-            STATUS_REQUEST_TIMEOUT_MS,
-        );
-        if (!response.ok) return responseFailure(response);
-        const result = parseResult(await response.json());
-        if (result.jobId !== jobId) return failure("invalid_response", true);
-        if (result.status === "ready" && result.imageDataUrl) {
-            await writeOnDeviceCache(localKey, result);
-        }
-        return success(result);
+        const localKey = await resultImageCacheKey(base, headers.authorization, jobId);
+        return await sharePetTryOnRead(`job:${localKey}`, async (sharedSignal) => {
+            const response = await fetchWithTimeout(
+                `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(jobId)}?include_image=false`,
+                { method: "GET", headers, cache: "no-store", redirect: "error" },
+                sharedSignal,
+                STATUS_REQUEST_TIMEOUT_MS,
+            );
+            if (!response.ok) return responseFailure(response);
+            const result = parseResult(await response.json());
+            if (result.jobId !== jobId) return failure("invalid_response", true);
+            return hydratePetTryOnResult(result, base, headers, sharedSignal);
+        }, signal);
     } catch (error) {
         return caughtFailure(error);
     }
@@ -727,7 +882,7 @@ export async function reviewPetTryOnGeometry(
     if (!headers) return failure("login_required", false);
     try {
         const response = await fetchWithTimeout(
-            `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(jobId)}/geometry-review`,
+            `${base}/api/v1/pet-tryon/jobs/${encodeURIComponent(jobId)}/geometry-review?include_image=false`,
             {
                 method: "POST",
                 headers,
@@ -800,21 +955,47 @@ export async function requestPetTryOnColorPreview(
     }
 }
 
-async function wait(ms: number, signal?: AbortSignal) {
+export async function waitForPetTryOnPoll(ms: number, signal?: AbortSignal) {
     await new Promise<void>((resolve, reject) => {
         if (signal?.aborted) {
             reject(new DOMException("Aborted", "AbortError"));
             return;
         }
+        const page = typeof document === "undefined" ? null : document;
+        let remaining = Math.max(0, ms);
+        let startedAt = 0;
+        let timer: ReturnType<typeof globalThis.setTimeout> | undefined;
+        const cleanup = () => {
+            if (timer !== undefined) globalThis.clearTimeout(timer);
+            signal?.removeEventListener("abort", onAbort);
+            page?.removeEventListener("visibilitychange", onVisibilityChange);
+        };
         const onAbort = () => {
-            globalThis.clearTimeout(timer);
+            cleanup();
             reject(new DOMException("Aborted", "AbortError"));
         };
-        const timer = globalThis.setTimeout(() => {
-            signal?.removeEventListener("abort", onAbort);
-            resolve();
-        }, ms);
+        const onVisibilityChange = () => {
+            if (page && page.visibilityState !== "visible") {
+                if (timer !== undefined) {
+                    globalThis.clearTimeout(timer);
+                    timer = undefined;
+                    remaining = Math.max(0, remaining - (Date.now() - startedAt));
+                }
+                return;
+            }
+            if (timer !== undefined) return;
+            startedAt = Date.now();
+            timer = globalThis.setTimeout(() => {
+                timer = undefined;
+                remaining = 0;
+                if (page && page.visibilityState !== "visible") return;
+                cleanup();
+                resolve();
+            }, remaining);
+        };
         signal?.addEventListener("abort", onAbort, { once: true });
+        page?.addEventListener("visibilitychange", onVisibilityChange);
+        onVisibilityChange();
     });
 }
 
@@ -837,7 +1018,7 @@ export async function requestPetTryOn(
 
         while (["queued", "running"].includes(result.status) && result.jobId) {
             const retryBackoffSeconds = Math.min(120, 2 ** Math.min(7, transientFailures + 1));
-            await wait(Math.max(
+            await waitForPetTryOnPoll(Math.max(
                 result.pollAfterSeconds,
                 retryBackoffSeconds,
                 minimumRetryDelaySeconds,

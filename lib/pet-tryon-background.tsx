@@ -27,6 +27,7 @@ import {
     schedulePetTryOnResultEmail,
     startPetTryOnRecipientVerification,
     startPetTryOn,
+    waitForPetTryOnPoll,
     type PetTryOnApiError,
     type PetTryOnApiErrorCode,
     type PetTryOnCorrectionIssue,
@@ -674,7 +675,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                         minimumRetryDelaySeconds,
                     ),
                 );
-                await delay(nextPollSeconds * 1000, controller.signal);
+                await waitForPetTryOnPoll(nextPollSeconds * 1000, controller.signal);
                 minimumRetryDelaySeconds = 0;
                 const polled = await getPetTryOnJob(jobId, controller.signal);
                 if (
@@ -1201,6 +1202,11 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                 void (async () => {
                     let restoreFailures = 0;
                     while (!cancelled && !restoreController.signal.aborted) {
+                        try {
+                            await waitForPetTryOnPoll(0, restoreController.signal);
+                        } catch {
+                            return;
+                        }
                         const fresh = await getPetTryOnJob(jobId, restoreController.signal);
                         if (
                             cancelled
@@ -1242,7 +1248,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                                     fresh.error.retryAfterSeconds || 0,
                                 ));
                                 try {
-                                    await delay(retrySeconds * 1000, restoreController.signal);
+                                    await waitForPetTryOnPoll(retrySeconds * 1000, restoreController.signal);
                                 } catch {
                                     return;
                                 }

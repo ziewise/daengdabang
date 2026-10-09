@@ -48,7 +48,8 @@ test("color changes reuse the saved fitting until the customer explicitly reques
 
     assert.match(client, /pet-tryon\/jobs\/\$\{encodeURIComponent\(sourceJobId\)\}\/color-preview/);
     assert.match(client, /body: JSON\.stringify\(\{ product_image: productImage \}\)/);
-    assert.match(modal, /requestPetTryOnColorPreview\(sourceFit\.jobId, tryOnProduct\.image/);
+    assert.match(modal, /requestPetTryOnColorPreview\(\s*sourceFit\.jobId,\s*tryOnProduct\.image/);
+    assert.match(modal, /onClick=\{\(\) => void requestServerColorPreview\(\)\}/);
     assert.match(modal, /zeroAiColorPreviewEnabled = eligibility\.zeroAiColorPreview === "server_verified"/);
     assert.match(modal, /readPetTryOnFitMasterWithLegacy/);
     assert.match(modal, /getPetTryOnJob\(saved\.jobId/);
@@ -72,7 +73,7 @@ test("color changes reuse the saved fitting until the customer explicitly reques
     assert.doesNotMatch(modal, /onColorChange\(index\)[\s\S]{0,120}generate\(/);
 });
 
-test("every wearable color switch tries the saved-fit preview before optional regeneration", async () => {
+test("every wearable color switch tries locally before an optional saved-fit comparison or regeneration", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
     const eligibility = await source("lib/pet-tryon-eligibility.ts");
@@ -85,9 +86,10 @@ test("every wearable color switch tries the saved-fit preview before optional re
     assert.match(modal, /zeroAiColorPreviewEnabled = eligibility\.zeroAiColorPreview === "server_verified"/);
     assert.match(
         modal,
-        /const shouldRequestFastPreview = Boolean\([\s\S]*?zeroAiColorPreviewEnabled[\s\S]*?if \(!shouldRequestFastPreview[\s\S]*?requestPetTryOnColorPreview\(sourceFit\.jobId, tryOnProduct\.image/,
+        /const shouldRequestFastPreview = Boolean\([\s\S]*?zeroAiColorPreviewEnabled[\s\S]*?if \(!shouldRequestFastPreview[\s\S]*?createOnDeviceColorPreview/,
     );
-    assert.match(modal, /다른 색상은 색상 원만 누르면 자동으로 비교돼요\. 새 착용 이미지는 만들지 않습니다/);
+    assert.match(modal, /다른 색상을 누르면 이 기기에서 비교해요/);
+    assert.match(modal, /저장된 결과로 이 색상 비교/);
     assert.match(modal, /저장된 착용 결과에서 이 색상을 비교하고 있어요\. 새 이미지는 생성하지 않습니다/);
     assert.match(modal, /다른 착용 모습이 필요하신가요/);
     assert.match(modal, /위 색상 변경은 새 이미지를 만들지 않습니다/);

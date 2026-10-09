@@ -90,8 +90,8 @@ test("local photo/result cache stays device-private, versioned, bounded, and rea
     assert.match(runtime, /privacy: "local_only"/);
     assert.match(runtime, /cached\?\.status === "ready" && cached\.imageDataUrl/);
     assert.match(runtime, /writeOnDeviceCache/);
-    assert.match(client, /privateCacheKey\(\["pet-tryon-job", jobId\]\)/);
-    assert.match(client, /if \(result\.status === "ready" && result\.imageDataUrl\)/);
+    assert.match(client, /privateCacheKey\(\["pet-tryon-image-v1", base, authorization, jobId\]\)/);
+    assert.match(client, /if \(result\.status !== "ready"\) return success\(\{ \.\.\.result, imageDataUrl: undefined \}\)/);
 
     const profileStart = base.indexOf("export function serverClientProfile");
     const profileEnd = base.indexOf("function dataUrlToBlob", profileStart);
@@ -200,7 +200,7 @@ test("server generation remains an explicit action after local protection or fai
     assert.doesNotMatch(modal, /localTryOnPending[\s\S]{0,220}void generate\(/);
 });
 
-test("an approved fit master is recolored locally at high resolution before the photo-free server fallback", async () => {
+test("an approved fit master is recolored locally before an explicitly requested photo-free server comparison", async () => {
     const [localPreview, modal, client] = await Promise.all([
         source("lib/on-device-color-preview.ts"),
         source("components/products/detail/PetTryOnPreview.tsx"),
@@ -220,15 +220,16 @@ test("an approved fit master is recolored locally at high resolution before the 
 
     const previewEffect = modal.slice(
         modal.indexOf("void createOnDeviceColorPreview"),
-        modal.indexOf("const generate = useCallback", modal.indexOf("void createOnDeviceColorPreview")),
+        modal.indexOf("const requestServerColorPreview", modal.indexOf("void createOnDeviceColorPreview")),
     );
     assert.match(previewEffect, /sourceImageDataUrl: sourceFit\.imageDataUrl/);
     assert.match(previewEffect, /if \(localOutcome\.status === "ready"\)/);
-    assert.match(previewEffect, /return requestPetTryOnColorPreview/);
-    assert.ok(
-        previewEffect.indexOf("createOnDeviceColorPreview") < previewEffect.indexOf("requestPetTryOnColorPreview"),
-        "local processing must run before server fallback",
-    );
+    assert.match(previewEffect, /setFastPreviewUnavailableKey\(selectedFastKey\)/);
+    assert.doesNotMatch(previewEffect, /requestPetTryOnColorPreview/);
+    const serverAction = modal.slice(modal.indexOf("const requestServerColorPreview"), modal.indexOf("const generate = useCallback"));
+    assert.match(serverAction, /sourceFit\.geometryVerified !== true/);
+    assert.match(serverAction, /await requestPetTryOnColorPreview/);
+    assert.match(modal, /onClick=\{\(\) => void requestServerColorPreview\(\)\}/);
 
     const serverFallback = client.slice(
         client.indexOf("export async function requestPetTryOnColorPreview"),

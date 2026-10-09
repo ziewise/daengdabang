@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
@@ -329,9 +329,8 @@ export default function PetTryOnPreview({
     const productShapeCorrectionOptions = PRODUCT_SHAPE_CORRECTION_OPTIONS[reviewKind];
     const eligibility = getPetTryOnEligibility(tryOnProduct);
     const eligible = eligibility.eligible;
-    // Every wearable asks the authenticated saved-fit preview endpoint first.
-    // The server remains the authority and fails closed when a particular
-    // product/photo pair cannot be recolored without touching the dog.
+    // Try the approved fitting locally. A photo-free server comparison is
+    // optional and starts only when the member explicitly requests it.
     const zeroAiColorPreviewEnabled = eligibility.zeroAiColorPreview === "server_verified";
     const pets = useMemo(() => (user?.pets ?? []).filter(hasVerifiedPetPhoto), [user]);
     const [selected, setSelected] = useState(0);
@@ -341,6 +340,7 @@ export default function PetTryOnPreview({
     const [preciseFits, setPreciseFits] = useState<Record<string, ReadyFit>>({});
     const [fastPreviews, setFastPreviews] = useState<Record<string, PetTryOnColorPreview>>({});
     const [fastPreviewUnavailableKey, setFastPreviewUnavailableKey] = useState("");
+    const [serverColorPreviewPendingKey, setServerColorPreviewPendingKey] = useState("");
     const [mismatchOpen, setMismatchOpen] = useState(false);
     const [correctionIssues, setCorrectionIssues] = useState<PetTryOnCorrectionIssue[]>([]);
     const [preciseRegenerationOpen, setPreciseRegenerationOpen] = useState(false);
@@ -355,6 +355,11 @@ export default function PetTryOnPreview({
     const [localTryOnPending, setLocalTryOnPending] = useState(false);
     const generationRequestPendingRef = useRef(false);
     const geometryReviewPendingRef = useRef(false);
+    const fastPreviewContextRef = useRef({ key: "", allowed: false });
+    const serverColorPreviewRequestRef = useRef<{
+        key: string;
+        controller: AbortController;
+    } | null>(null);
 
     const pet = pets[selected] ?? pets[0];
     const petReferenceImage = pet ? petTryOnReferencePhoto(tryOnProduct, pet) : undefined;
@@ -453,7 +458,10 @@ export default function PetTryOnPreview({
     const isOnDeviceFastPreview = selectedFastPreview?.processing === "on_device";
     const geometryReviewNeeded = Boolean(sourceFit && sourceFit.geometryVerified !== true);
     const shouldRequestFastPreview = Boolean(
-        !explicitColorRequired
+        eligible
+        && !loading
+        && !fitMasterRestorePending
+        && !explicitColorRequired
         && zeroAiColorPreviewEnabled
         && sourceFit
         && sourceFit.geometryVerified === true
@@ -465,7 +473,30 @@ export default function PetTryOnPreview({
     );
     const isFastPreviewLoading = Boolean(
         shouldRequestFastPreview
-        && fastPreviewUnavailableKey !== selectedFastKey,
+        && (
+            fastPreviewUnavailableKey !== selectedFastKey
+            || serverColorPreviewPendingKey === selectedFastKey
+        ),
+    );
+    const fastPreviewContextKey = fitMasterIdentity && selectedFastKey
+        ? `${fitMasterIdentity.ownerKey}:${fitMasterIdentity.petProfileId}:${fitMasterIdentity.productId}:${fitMasterIdentity.petReferenceKey}:${selectedFastKey}`
+        : "";
+    useLayoutEffect(() => {
+        fastPreviewContextRef.current = { key: fastPreviewContextKey, allowed: shouldRequestFastPreview };
+        return () => {
+            fastPreviewContextRef.current.allowed = false;
+            const request = serverColorPreviewRequestRef.current;
+            if (request) {
+                request.controller.abort();
+                serverColorPreviewRequestRef.current = null;
+                setServerColorPreviewPendingKey("");
+            }
+        };
+    }, [fastPreviewContextKey, shouldRequestFastPreview]);
+    const serverColorPreviewAvailable = Boolean(
+        shouldRequestFastPreview
+        && fastPreviewContextKey
+        && fastPreviewUnavailableKey === selectedFastKey,
     );
     const geometryDecisionPending = Boolean(geometryReviewNeeded && correctionIssues.length === 0);
     const confirmedRegenerationRequired = Boolean(
@@ -681,40 +712,97 @@ export default function PetTryOnPreview({
             sourceProductImage: sourceFit.productImage,
             targetProductImage: tryOnProduct.image,
             signal: controller.signal,
-        }).then(async (localOutcome) => {
+        }).then((localOutcome) => {
+            if (
+                !active
+                || controller.signal.aborted
+                || fastPreviewContextRef.current.key !== fastPreviewContextKey
+                || !fastPreviewContextRef.current.allowed
+            ) return;
             if (localOutcome.status === "ready") {
-                return { ok: true as const, value: localOutcome.value };
-            }
-            if (localOutcome.reason === "aborted") return null;
-            // The server receives only the approved job id and public catalog
-            // image URL. The member photo and local master pixels stay private.
-            return requestPetTryOnColorPreview(sourceFit.jobId, tryOnProduct.image!, controller.signal);
-        }).then((previewOutcome) => {
-                if (!active || controller.signal.aborted) return;
-                if (!previewOutcome) return;
-                if (!previewOutcome.ok) {
-                    setFastPreviewUnavailableKey(selectedFastKey);
-                    if (previewOutcome.error.code === "login_required") {
-                        setErrorCode(previewOutcome.error.code);
-                        setError(apiErrorMessage(previewOutcome.error.code, locale));
-                    }
-                    return;
-                }
-                const preview = previewOutcome.value;
-                setFastPreviews((previous) => ({ ...previous, [selectedFastKey]: preview }));
+                setFastPreviews((previous) => ({ ...previous, [selectedFastKey]: localOutcome.value }));
                 setFastPreviewUnavailableKey("");
-            });
+                return;
+            }
+            if (localOutcome.reason !== "aborted") setFastPreviewUnavailableKey(selectedFastKey);
+        }).catch(() => {
+            if (
+                active
+                && !controller.signal.aborted
+                && fastPreviewContextRef.current.key === fastPreviewContextKey
+                && fastPreviewContextRef.current.allowed
+            ) setFastPreviewUnavailableKey(selectedFastKey);
+        });
         return () => {
             active = false;
             controller.abort();
         };
     }, [
         selectedFastKey,
-        locale,
+        fastPreviewContextKey,
         shouldRequestFastPreview,
         sourceFit,
         tryOnProduct.image,
     ]);
+
+    const cancelServerColorPreview = () => {
+        fastPreviewContextRef.current.allowed = false;
+        serverColorPreviewRequestRef.current?.controller.abort();
+        serverColorPreviewRequestRef.current = null;
+        setServerColorPreviewPendingKey("");
+    };
+
+    const requestServerColorPreview = async () => {
+        if (
+            !serverColorPreviewAvailable
+            || !sourceFit
+            || sourceFit.geometryVerified !== true
+            || !tryOnProduct.image
+            || !fastPreviewContextRef.current.allowed
+            || fastPreviewContextRef.current.key !== fastPreviewContextKey
+            || serverColorPreviewRequestRef.current
+        ) return;
+        const request = { key: fastPreviewContextKey, controller: new AbortController() };
+        serverColorPreviewRequestRef.current = request;
+        setServerColorPreviewPendingKey(selectedFastKey);
+        try {
+            // Only the approved job identity and exact catalog color are sent.
+            // Neither the member photo nor local master pixels leave the device.
+            const previewOutcome = await requestPetTryOnColorPreview(
+                sourceFit.jobId,
+                tryOnProduct.image,
+                request.controller.signal,
+            );
+            if (
+                request.controller.signal.aborted
+                || serverColorPreviewRequestRef.current !== request
+                || fastPreviewContextRef.current.key !== request.key
+                || !fastPreviewContextRef.current.allowed
+            ) return;
+            if (!previewOutcome.ok) {
+                setFastPreviewUnavailableKey(selectedFastKey);
+                if (previewOutcome.error.code === "login_required") {
+                    setErrorCode(previewOutcome.error.code);
+                    setError(apiErrorMessage(previewOutcome.error.code, locale));
+                }
+                return;
+            }
+            setFastPreviews((previous) => ({ ...previous, [selectedFastKey]: previewOutcome.value }));
+            setFastPreviewUnavailableKey("");
+        } catch {
+            if (
+                !request.controller.signal.aborted
+                && serverColorPreviewRequestRef.current === request
+                && fastPreviewContextRef.current.key === request.key
+                && fastPreviewContextRef.current.allowed
+            ) setFastPreviewUnavailableKey(selectedFastKey);
+        } finally {
+            if (serverColorPreviewRequestRef.current === request) {
+                serverColorPreviewRequestRef.current = null;
+                setServerColorPreviewPendingKey("");
+            }
+        }
+    };
 
     const generate = useCallback(async (applyCorrections = false) => {
         if (!eligible || !pet || !tryOnProduct.image) return;
@@ -813,7 +901,8 @@ export default function PetTryOnPreview({
     }, [onClose]);
 
     const handlePetChange = (index: number) => {
-        if (loading) return;
+        if (loading || index === selected) return;
+        cancelServerColorPreview();
         setSelected(index);
         setError("");
         setErrorCode(null);
@@ -842,6 +931,7 @@ export default function PetTryOnPreview({
             ]),
         ));
         if (!verified) {
+            cancelServerColorPreview();
             setFastPreviews((previews) => Object.fromEntries(
                 Object.entries(previews).filter(([key]) => !key.startsWith(`${jobId}:`)),
             ));
@@ -1232,6 +1322,8 @@ export default function PetTryOnPreview({
                                         colors={product.colors || []}
                                         colorIdx={colorIdx}
                                          onColorChange={loading ? undefined : (index) => {
+                                             if (index === colorIdx) return;
+                                             cancelServerColorPreview();
                                              setError("");
                                              setErrorCode(null);
                                              setMismatchOpen(false);
@@ -1250,8 +1342,8 @@ export default function PetTryOnPreview({
                                                 : "먼저 실제 상품 색상을 골라 주세요. 대표 이미지만 보고 색상을 임의로 정하지 않아요."
                                             : sourceFit
                                                 ? locale === "en"
-                                                    ? "Tap another color to compare it automatically. No new fitting image is created."
-                                                    : "다른 색상은 색상 원만 누르면 자동으로 비교돼요. 새 착용 이미지는 만들지 않습니다."
+                                                    ? "Tap another color to compare it on this device. If unavailable, you can request a saved-result comparison below. No new fitting image is created."
+                                                    : "다른 색상을 누르면 이 기기에서 비교해요. 어려운 색상은 아래 버튼으로 저장된 결과를 활용해 비교할 수 있어요. 새 착용 이미지는 만들지 않습니다."
                                                 : locale === "en"
                                                     ? "The first precise fitting uses the exact color you selected."
                                                     : "처음 착용 모습을 만들 때는 지금 고른 실제 색상 사진을 사용해요."}
@@ -1344,6 +1436,32 @@ export default function PetTryOnPreview({
                                             {geometryReviewError}
                                         </p>
                                     )}
+                                </div>
+                            )}
+
+                            {serverColorPreviewAvailable && (
+                                <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+                                    <p className="text-xs font-bold leading-5 text-indigo-950">
+                                        {locale === "en"
+                                            ? "This device could not compare the selected color safely. Your original fitting is still shown. Compare with the product's color photo, or request a color comparison from the approved saved result."
+                                            : "이 기기에서 선택한 색상을 안전하게 비교하지 못해 원래 착용 이미지를 유지하고 있어요. 상품 색상 사진과 비교하거나, 승인한 저장 결과로 색상 비교를 요청할 수 있어요."}
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={() => void requestServerColorPreview()}
+                                        disabled={serverColorPreviewPendingKey === selectedFastKey}
+                                        className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-xs font-black text-white hover:bg-indigo-700 disabled:cursor-wait disabled:bg-indigo-400"
+                                    >
+                                        <i className={`fa-solid ${serverColorPreviewPendingKey === selectedFastKey ? "fa-spinner fa-spin" : "fa-palette"}`} />
+                                        {serverColorPreviewPendingKey === selectedFastKey
+                                            ? locale === "en" ? "Comparing saved result…" : "저장된 결과로 비교 중…"
+                                            : locale === "en" ? "Compare this color from saved result" : "저장된 결과로 이 색상 비교"}
+                                    </button>
+                                    <p className="mt-2 text-[10px] font-bold leading-4 text-indigo-900/75">
+                                        {locale === "en"
+                                            ? "Only the approved fitting ID and selected product color are sent. Your dog's photo is not sent again, and no new fitting image is generated."
+                                            : "승인한 착용 결과 번호와 선택 상품 색상만 전송해요. 반려견 사진을 다시 보내거나 새 착용 이미지를 만들지 않습니다."}
+                                    </p>
                                 </div>
                             )}
 

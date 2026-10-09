@@ -34,12 +34,15 @@ test("unsafe or low-confidence color previews never replace the original fitting
 
     const previewRequest = modal.slice(
         modal.indexOf("void createOnDeviceColorPreview"),
-        modal.indexOf("const generate = useCallback"),
+        modal.indexOf("const requestServerColorPreview"),
     );
     assert.match(previewRequest, /if \(localOutcome\.status === "ready"\)/);
-    assert.match(previewRequest, /return requestPetTryOnColorPreview/);
-    assert.match(previewRequest, /if \(!previewOutcome\.ok\)[\s\S]*setFastPreviewUnavailableKey/);
+    assert.match(previewRequest, /setFastPreviewUnavailableKey\(selectedFastKey\)/);
+    assert.doesNotMatch(previewRequest, /requestPetTryOnColorPreview/);
     assert.doesNotMatch(previewRequest, /\bstart\(|generate\(/);
+    const explicitRequest = modal.slice(modal.indexOf("const requestServerColorPreview"), modal.indexOf("const generate = useCallback"));
+    assert.match(explicitRequest, /if \(!previewOutcome\.ok\)[\s\S]*setFastPreviewUnavailableKey/);
+    assert.doesNotMatch(explicitRequest, /\bstart\(|generate\(/);
 });
 
 test("product-shape correction is separate from color and requires explicit new-image confirmation", async () => {
