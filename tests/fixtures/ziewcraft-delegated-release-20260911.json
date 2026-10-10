@@ -901,7 +901,7 @@
   },
   "aff_santa_pocket": {
     "productId": "p_265",
-    "sha256": "52e30faedc0e92c817f636274fe420e9392247e384732793ae868a4664dc0b5e"
+    "sha256": "d22620a28613fc291d1e0a4788acf7f6df67be638d5a885c53ceb4f73c51c962"
   },
   "rw_basecamp_bed_l": {
     "productId": "p_345",
@@ -1326,5 +1326,25 @@
   "soopa_healthybites_appleblueberry": {
     "productId": "p_231",
     "sha256": "81f14c44af3c61afbf294434f3dce96901caadb95094571a022ebd7a9481ea39"
+  },
+  "iby_stroller_fs1616": {
+    "productId": "p_238",
+    "sha256": "fee51d77a0fdfd412ce4043cf15ccec5c5020f6c741ee989169b57b23b4dd803"
+  },
+  "iby_trailer_fs2080": {
+    "productId": "p_251",
+    "sha256": "3f8c18621e9aa9e547cd141e65773cf0b5099e30cfbdb5d8c607354dffe16d37"
+  },
+  "rs_v2_volcanored": {
+    "productId": "p_99",
+    "sha256": "c18b62bcbf631d6a005c8303c01503d082c965a39cb35cfe0d7f6ee9fe0873f6"
+  },
+  "iby_wagon_fs1880": {
+    "productId": "p_255",
+    "sha256": "61656e8cff54a2c37ce3157b1cbd147abe8878e0e0f88d53a35b00564c167648"
+  },
+  "iby_stroller_fs2102": {
+    "productId": "p_256",
+    "sha256": "8c523a7f5585b76aeb89ff0aa4f02bfd08d0ed5b0fbd35a4d88bd6979cf11905"
   }
 }
