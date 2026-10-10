@@ -98917,16 +98917,16 @@
     "publicationStatus": "approved",
     "productId": "p_239",
     "folder": "iby_stroller_fs1670",
-    "video": "/images/products/catalog/iby_stroller_fs1670/videos/942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72/hover.mp4",
-    "sha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72",
-    "videoQuality": "approved_product_interaction",
+    "video": "/images/products/catalog/iby_stroller_fs1670/videos/db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb/hover.mp4",
+    "sha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb",
+    "videoQuality": "approved_dog_interacting",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "db3ae3842411c21018a58974d741aea3",
-      "reviewId": "5dc7da423b735709dbf9b797a1815be3",
+      "jobId": "d1c5da81a8ac95c0b62e71f992b027cd",
+      "reviewId": "e83539fd0ca58dde52912e02b6fe7235",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72",
+      "finalSha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb",
       "seconds": 4,
       "source": {
         "no": 239,
@@ -98943,30 +98943,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "50718387349a7ff38f0a7513427ed744",
-        "sha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72"
+        "artifact_id": "2e94ffa118fca84bae7b5880575730ef",
+        "sha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb"
       },
-      "scopeId": "c6da77c9d04c0c4d952ee027292f0c4ecf5b846405fd2eb68b356bb121b007df",
-      "scopeRegistrationSha256": "587b27fe0580631286be50098b0daaf7327964a3ada42371e935b9676fae4412",
-      "aiEvidenceSha256": "4a21c9c0d71a18e7edfea46492c4bc6d941f335ba23e780cc8aada6fc8027327",
-      "receiptSha256": "d6343fd888b7f0e135c5572f1fff0da42aaedb2f7000633ac4adec2da41f1c3e",
-      "eligibilitySha256": "4545963db66677556b2d27d61b5bb8475566ad6d004b56f57dae4e119283861e",
-      "evidenceManifestSha256": "8f188eb5c53c834c4b297dc36b0b66f3c3bb8c360dc38069808aeaa9d6452410"
+      "scopeId": "c555c94ccf824896d44ab71f2214f1b429e36749f442726fe866d0815a538bbc",
+      "scopeRegistrationSha256": "84f017b5ebe3fc7262f3406a01b16359d11732dfa64b06b3e11a74a21574c0cc",
+      "aiEvidenceSha256": "362e48f6559648125c7a78720b4335d8371e231974dcecea84e8078d41dcba5f",
+      "receiptSha256": "3a607eb2a4f5c3b09985f8c799220a057c15f8381e03782e5fcf22629097362c",
+      "eligibilitySha256": "7e92f91f8fa9a95bd23a0cdc787a7d7b5ed18aabe1609e41a63709fbad8f9c6b",
+      "evidenceManifestSha256": "b903d8c4836d381e92cebe84b236e85e818ef060fad8ab1f2f2f1488771519b2"
     },
     "delegatedReview": {
-      "api_job_id": "db3ae3842411c21018a58974d741aea3",
+      "api_job_id": "d1c5da81a8ac95c0b62e71f992b027cd",
       "bindings": {
         "native_video": {
-          "artifact_id": "ce14985fcb7b44cca2d3a000b8324fc6",
-          "sha256": "e40f38dc87588ccf31149b0ce7c509534295e20596c4366f801a3664698c748b"
+          "artifact_id": "03710b366edb4d9ea651ae09f8199c24",
+          "sha256": "bf28d5e613db8b5e8cfe4eec4142d04ff61bc8f10174d932ad51f5210995bff6"
         },
         "review_video": {
-          "artifact_id": "50718387349a7ff38f0a7513427ed744",
-          "sha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72"
+          "artifact_id": "2e94ffa118fca84bae7b5880575730ef",
+          "sha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb"
         },
         "terminal": {
-          "artifact_id": "759cd2b5e5954072f2d02be7f3ca6331",
-          "sha256": "292bf2f9ae7aa6622dc2a09251948ed1848d4a7efe99e3dac538cc3cd950b102"
+          "artifact_id": "bcf670d75023a101e780db069a84a9a0",
+          "sha256": "d949ac403c316d9437e4241022f4d656ae7b65bc23438a009bc467eea9153841"
         }
       },
       "checks": {
@@ -99089,11 +99089,16 @@
       "previous_review_id": null,
       "private_only": true,
       "product": {
-        "color": "Speedy Fold FS1670 plain gray denim with brown piping",
+        "color": "FS1670 Gray Jeans empty raised-canopy stroller; external seated Yorkshire Terrier on right for single supported forepaw gesture",
         "product_id": "p_239",
         "sku": "iby_stroller_fs1670"
       },
       "product_reference_assets": [
+        {
+          "asset_id": "b5124ce6574bbb7f73f81f03d6971479",
+          "sha256": "731c651a93169e892515ab648ffc75eecd7bf6acd156306e37284302c0c07cdb",
+          "source_sha256": "731c651a93169e892515ab648ffc75eecd7bf6acd156306e37284302c0c07cdb"
+        },
         {
           "asset_id": "3146163b79c153755453ada618c4265c",
           "sha256": "364c6d63cb04f8a4ff945cf7e296d88c7d54ee7164d77e0747eb09f06b44f9c4",
@@ -99106,51 +99111,53 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_239-db3ae3842411c21018a58974d741aea3-all97-v1",
-        "evidence_sha256": "4a21c9c0d71a18e7edfea46492c4bc6d941f335ba23e780cc8aada6fc8027327",
+        "evidence_id": "ddb-ai-p_239-d1c5da81a8ac95c0b62e71f992b027cd-all97-v1",
+        "evidence_sha256": "362e48f6559648125c7a78720b4335d8371e231974dcecea84e8078d41dcba5f",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "5dc7da423b735709dbf9b797a1815be3",
-      "reviewed_at": "2026-09-23T12:46:35.893299Z",
+      "review_id": "e83539fd0ca58dde52912e02b6fe7235",
+      "reviewed_at": "2026-10-10T20:46:49.880869Z",
       "schema_version": 1,
-      "scope_id": "c6da77c9d04c0c4d952ee027292f0c4ecf5b846405fd2eb68b356bb121b007df",
+      "scope_id": "c555c94ccf824896d44ab71f2214f1b429e36749f442726fe866d0815a538bbc",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "759cd2b5e5954072f2d02be7f3ca6331",
+        "artifact_id": "bcf670d75023a101e780db069a84a9a0",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "ce14985fcb7b44cca2d3a000b8324fc6",
-        "native_artifact_sha256": "e40f38dc87588ccf31149b0ce7c509534295e20596c4366f801a3664698c748b",
+        "native_artifact_id": "03710b366edb4d9ea651ae09f8199c24",
+        "native_artifact_sha256": "bf28d5e613db8b5e8cfe4eec4142d04ff61bc8f10174d932ad51f5210995bff6",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "fe0e566730c090ca9208c3fa3b21d8b56092667d6304132d51a33bc66fb6cf08",
+        "pixel_sha256": "a26fe6b16a6eaae3f7d163675733d20231974aafb2f8d499e185dfbb7354169e",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
         "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
-        "sha256": "292bf2f9ae7aa6622dc2a09251948ed1848d4a7efe99e3dac538cc3cd950b102",
-        "source_artifact_id": "50718387349a7ff38f0a7513427ed744",
-        "source_artifact_sha256": "942a14dc945956e3775240602adeea394c57eb65aabc5ec61981c518dffb9a72",
+        "sha256": "d949ac403c316d9437e4241022f4d656ae7b65bc23438a009bc467eea9153841",
+        "source_artifact_id": "2e94ffa118fca84bae7b5880575730ef",
+        "source_artifact_sha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
-      "approval_granted": false,
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
-        "color": "Speedy Fold FS1670 plain gray denim with brown piping",
+        "color": "FS1670 Gray Jeans empty raised-canopy stroller; external seated Yorkshire Terrier on right for single supported forepaw gesture",
         "product_id": "p_239",
         "sku": "iby_stroller_fs1670"
       },
       "references": [
+        {
+          "asset_id": "b5124ce6574bbb7f73f81f03d6971479",
+          "sha256": "731c651a93169e892515ab648ffc75eecd7bf6acd156306e37284302c0c07cdb",
+          "source_sha256": "731c651a93169e892515ab648ffc75eecd7bf6acd156306e37284302c0c07cdb"
+        },
         {
           "asset_id": "3146163b79c153755453ada618c4265c",
           "sha256": "364c6d63cb04f8a4ff945cf7e296d88c7d54ee7164d77e0747eb09f06b44f9c4",
@@ -99158,18 +99165,21 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "181472616080b5d44d50d2b8898b4285",
-      "scene_sha256": "44515827682bd137ff7991ab9bc9c32bd16f8bf529183a322664fcdbdbde6523",
+      "scene_asset_id": "c517cc6bbbaa246a0222b8638328be7d",
+      "scene_sha256": "53655da66cb52200b8ad8bd4376cca2f3688c1e38822621d18366f621ad3b2ba",
       "schema_version": 1,
-      "scope_id": "c6da77c9d04c0c4d952ee027292f0c4ecf5b846405fd2eb68b356bb121b007df",
-      "source_sha256_authority": "client_original_photo_declaration"
+      "scope_id": "c555c94ccf824896d44ab71f2214f1b429e36749f442726fe866d0815a538bbc",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "5dc7da423b735709dbf9b797a1815be3",
+      "reviewId": "e83539fd0ca58dde52912e02b6fe7235",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "c6da77c9d04c0c4d952ee027292f0c4ecf5b846405fd2eb68b356bb121b007df",
+      "scopeId": "c555c94ccf824896d44ab71f2214f1b429e36749f442726fe866d0815a538bbc",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -99189,10 +99199,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "43e9d5bb86238017afeadcf16af0695a9dba570e2f609617854d28e17696414b",
-      "technicalProofSha256": "aee781b7590a2d8377f61a8f57901eba04aa6cb3e3296d59e1288c7d3171e9cb",
-      "checkedAt": "2026-09-23T12:55:44.055489+00:00",
-      "sha256": "c51b095a0ce4cd93924c4cac4e9780ce3a3bd8fc67e4c575cd8019cb71d21cae"
+      "ownerInstructionSha256": "235b032877777740d099e647f3c62ac0e5e297131f19a69b51819e96b956d561",
+      "technicalProofSha256": "319a7fb44887f3110388045a84061033c5245e8ec2b6d06ce3673f661566a068",
+      "naturalMotionReviewSha256": "4c300d329eafe363192106eb16d0e2b24b6fc617d67a18c0b4639409b4a79ef2",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-10T20:47:26.686734+00:00",
+      "sha256": "aeb1739e8d743f44b8d620d02782cdd44b6034a00aa334178456d1472d9162ed"
     }
   },
   "jjayo_icecream_mini_blueberry_50ml": {

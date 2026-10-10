@@ -2396,7 +2396,52 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "981e5d62e212d7e1b8820052ce977e25a8571c07"
   },
-  "iby_stroller_fs1670": null,
+  "iby_stroller_fs1670": {
+    "video": "/images/products/catalog/iby_stroller_fs1670/videos/db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "d1c5da81a8ac95c0b62e71f992b027cd",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d1c5da81a8ac95c0b62e71f992b027cd",
+      "reviewId": "e83539fd0ca58dde52912e02b6fe7235",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb",
+      "seconds": 4,
+      "source": {
+        "no": 239,
+        "folder": "iby_stroller_fs1670",
+        "name": "이비야야 스피디폴드유모차 FS1670 2컬러 카무플라주 그레이데님, 스토리지백",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_stroller_fs1670/iby_stroller_fs1670.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7680974309",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_stroller_fs1670/details/2.webp",
+          "/images/products/catalog/iby_stroller_fs1670/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "2e94ffa118fca84bae7b5880575730ef",
+        "sha256": "db9074f7eaa0ba77224e4de6f1d449743aaf2b768b80138b4f6268b7e33c9ccb"
+      },
+      "scopeId": "c555c94ccf824896d44ab71f2214f1b429e36749f442726fe866d0815a538bbc",
+      "scopeRegistrationSha256": "84f017b5ebe3fc7262f3406a01b16359d11732dfa64b06b3e11a74a21574c0cc",
+      "aiEvidenceSha256": "362e48f6559648125c7a78720b4335d8371e231974dcecea84e8078d41dcba5f",
+      "receiptSha256": "3a607eb2a4f5c3b09985f8c799220a057c15f8381e03782e5fcf22629097362c",
+      "eligibilitySha256": "7e92f91f8fa9a95bd23a0cdc787a7d7b5ed18aabe1609e41a63709fbad8f9c6b",
+      "evidenceManifestSha256": "b903d8c4836d381e92cebe84b236e85e818ef060fad8ab1f2f2f1488771519b2"
+    },
+    "videoReviewSha256": "aeb1739e8d743f44b8d620d02782cdd44b6034a00aa334178456d1472d9162ed",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "0e57301681de25f9df150ff0820d0d240c723e2e"
+  },
   "iby_stroller_fs2011": {
     "video": "/images/products/catalog/iby_stroller_fs2011/videos/a42939ffafad1f61bb34d526375acb4574dcd8a8aa3beb05cb619a7cea32243c/hover.mp4",
     "videoProvider": "ziewcraft",
