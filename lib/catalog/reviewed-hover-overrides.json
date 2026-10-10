@@ -2205,7 +2205,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "05593de39c1586e6df7b200d4ab6513e04432399"
   },
-  "iby_backpack_fc2297": null,
+  "iby_backpack_fc2297": {
+    "video": "/images/products/catalog/iby_backpack_fc2297/videos/fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "0fe4ef8603e8e10260d7d0cb0ac15ce9",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "0fe4ef8603e8e10260d7d0cb0ac15ce9",
+      "reviewId": "934a13f551720faa5b1905bd9066aa65",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c",
+      "seconds": 4,
+      "source": {
+        "no": 247,
+        "folder": "iby_backpack_fc2297",
+        "name": "이비야야 어드벤처백팩 FC2297",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_backpack_fc2297/iby_backpack_fc2297.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7662607459",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_backpack_fc2297/details/official-visual-01.webp",
+          "/images/products/catalog/iby_backpack_fc2297/details/official-visual-02.webp",
+          "/images/products/catalog/iby_backpack_fc2297/details/official-visual-03.webp",
+          "/images/products/catalog/iby_backpack_fc2297/details/official-visual-04.webp",
+          "/images/products/catalog/iby_backpack_fc2297/details/2.webp",
+          "/images/products/catalog/iby_backpack_fc2297/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d23f80e7c4512b3aa9d188d1d5d0869f",
+        "sha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c"
+      },
+      "scopeId": "4259ab349eb8878abb51d1ae0b89fcc229dc65b8f41e891b0ac09ffec799e9cd",
+      "scopeRegistrationSha256": "ffe07124e7c3f13ae5c431a7bf8dbb421561fb66fc085d266a0893df6854818b",
+      "aiEvidenceSha256": "93ba0e89b0f4a2f23439f07f834c1db69945d90cb71810a0590b572c189d5b1f",
+      "receiptSha256": "151800bde6fca91fa32eb2bb0400dcb0272b4fc33b0ea904ede28d2fdb067b73",
+      "eligibilitySha256": "323d31c96fde3a018824da11c89701dfb3a6a148ab445a3cded8aa0fb8a10d83",
+      "evidenceManifestSha256": "c3f2ba3ea387e9cb4bb8b4731cb1045e9e23c110996166a949b49a643da1d0cf"
+    },
+    "videoReviewSha256": "35c38e708631a7218b85ecd80afd6648257f37da13380d50e7ddbab3535b1603",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "8d67717d8b3a997f846ab3bce1dd24e15747af57"
+  },
   "iby_bed_fb2011": {
     "video": "/images/products/catalog/iby_bed_fb2011/videos/3a6cc8bfe5f60ffd33861e3da2da81ad17907c53a0f8d3f56796d69c20948827/hover.mp4",
     "videoProvider": "ziewcraft",

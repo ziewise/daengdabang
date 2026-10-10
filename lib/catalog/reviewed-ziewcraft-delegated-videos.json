@@ -101242,16 +101242,16 @@
     "publicationStatus": "approved",
     "productId": "p_247",
     "folder": "iby_backpack_fc2297",
-    "video": "/images/products/catalog/iby_backpack_fc2297/videos/898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70/hover.mp4",
-    "sha256": "898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70",
-    "videoQuality": "approved_product_interaction",
+    "video": "/images/products/catalog/iby_backpack_fc2297/videos/fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c/hover.mp4",
+    "sha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c",
+    "videoQuality": "approved_dog_interacting",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "0b771871e487884b4f0b9983f9ef9e71",
-      "reviewId": "34b87ad796218b7839ff2a56551d2902",
+      "jobId": "0fe4ef8603e8e10260d7d0cb0ac15ce9",
+      "reviewId": "934a13f551720faa5b1905bd9066aa65",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70",
+      "finalSha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c",
       "seconds": 4,
       "source": {
         "no": 247,
@@ -101272,30 +101272,30 @@
         ]
       },
       "artifact": {
-        "artifact_id": "abf75153217862b4e1939f8b50136501",
-        "sha256": "898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70"
+        "artifact_id": "d23f80e7c4512b3aa9d188d1d5d0869f",
+        "sha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c"
       },
-      "scopeId": "df4d225cd7a7f04d95db6f1b917b1d0fa495c58691bb47e21aaeb17c0c6ad686",
-      "scopeRegistrationSha256": "cbb9f2d5088d17147c9b89d0f0c9484fa88d059df86d7780cb966730309cc88b",
-      "aiEvidenceSha256": "284b5bb67eb88ab3d0937b6aae843af5feb316c0f33fe811178eb57af0fc7bbb",
-      "receiptSha256": "84d89c581d9a6e6d7cb3f91db238c15929838cd47966900999050407fd32c047",
-      "eligibilitySha256": "c8b7127d51d47653f005cd725bbdb2cdcc5d6fa67160d8736e4bf839084162d1",
-      "evidenceManifestSha256": "eaca4b2452100d07f6bb370c6368598405ee0296ae19cc021ac77c82c85d51fe"
+      "scopeId": "4259ab349eb8878abb51d1ae0b89fcc229dc65b8f41e891b0ac09ffec799e9cd",
+      "scopeRegistrationSha256": "ffe07124e7c3f13ae5c431a7bf8dbb421561fb66fc085d266a0893df6854818b",
+      "aiEvidenceSha256": "93ba0e89b0f4a2f23439f07f834c1db69945d90cb71810a0590b572c189d5b1f",
+      "receiptSha256": "151800bde6fca91fa32eb2bb0400dcb0272b4fc33b0ea904ede28d2fdb067b73",
+      "eligibilitySha256": "323d31c96fde3a018824da11c89701dfb3a6a148ab445a3cded8aa0fb8a10d83",
+      "evidenceManifestSha256": "c3f2ba3ea387e9cb4bb8b4731cb1045e9e23c110996166a949b49a643da1d0cf"
     },
     "delegatedReview": {
-      "api_job_id": "0b771871e487884b4f0b9983f9ef9e71",
+      "api_job_id": "0fe4ef8603e8e10260d7d0cb0ac15ce9",
       "bindings": {
         "native_video": {
-          "artifact_id": "20c758959d3747449f9a8a28a300a2c5",
-          "sha256": "056a9fe0bd29f5aa651977a9bbd0f0300797d7a83b41a879127bde8f4c1cf9de"
+          "artifact_id": "b06b737172334f798f9a406cc7384e6d",
+          "sha256": "fa12d801418182551c2563dbbae889a5c8d8188d8894c6e758661c28fbb5ebac"
         },
         "review_video": {
-          "artifact_id": "abf75153217862b4e1939f8b50136501",
-          "sha256": "898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70"
+          "artifact_id": "d23f80e7c4512b3aa9d188d1d5d0869f",
+          "sha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c"
         },
         "terminal": {
-          "artifact_id": "c0c968845abe130088ca5765635c9487",
-          "sha256": "5657f70bdf3fae24b7e218b57022ccc80e3fe6ff2e32220e92f4829f1a10728e"
+          "artifact_id": "642867deb6794063aab081bcaeaa0c5f",
+          "sha256": "65b9dfc27bc78210ca521cf59776039a3ffc6e9127d6bc04c5a5755494f60203"
         }
       },
       "checks": {
@@ -101418,7 +101418,7 @@
       "previous_review_id": null,
       "private_only": true,
       "product": {
-        "color": "Sage gray Adventure FC2297 backpack with small Maltese dog",
+        "color": "Gray FC2297 Adventure Backpack, closed front mesh, complete empty upright pack; external bare white seated Maltese with one supported forepaw gesture",
         "product_id": "p_247",
         "sku": "iby_backpack_fc2297"
       },
@@ -101440,47 +101440,44 @@
       "required_final_seconds": 4,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_247-0b771871e487884b4f0b9983f9ef9e71-all97-v1",
-        "evidence_sha256": "284b5bb67eb88ab3d0937b6aae843af5feb316c0f33fe811178eb57af0fc7bbb",
+        "evidence_id": "ddb-ai-p_247-0fe4ef8603e8e10260d7d0cb0ac15ce9-all97-v1",
+        "evidence_sha256": "93ba0e89b0f4a2f23439f07f834c1db69945d90cb71810a0590b572c189d5b1f",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "34b87ad796218b7839ff2a56551d2902",
-      "reviewed_at": "2026-09-24T09:07:34.985131Z",
+      "review_id": "934a13f551720faa5b1905bd9066aa65",
+      "reviewed_at": "2026-10-10T20:21:53.964091Z",
       "schema_version": 1,
-      "scope_id": "df4d225cd7a7f04d95db6f1b917b1d0fa495c58691bb47e21aaeb17c0c6ad686",
+      "scope_id": "4259ab349eb8878abb51d1ae0b89fcc229dc65b8f41e891b0ac09ffec799e9cd",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "c0c968845abe130088ca5765635c9487",
+        "artifact_id": "642867deb6794063aab081bcaeaa0c5f",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "20c758959d3747449f9a8a28a300a2c5",
-        "native_artifact_sha256": "056a9fe0bd29f5aa651977a9bbd0f0300797d7a83b41a879127bde8f4c1cf9de",
+        "native_artifact_id": "b06b737172334f798f9a406cc7384e6d",
+        "native_artifact_sha256": "fa12d801418182551c2563dbbae889a5c8d8188d8894c6e758661c28fbb5ebac",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "a8a3feedeae59da1006ee353429027ec679562a8f132428d4c12cd7f93b93469",
+        "pixel_sha256": "97dc117bd70ad56ab5e2cc815c38fdebeef862c9fdb3c250b9273d38415f684a",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
         "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
-        "sha256": "5657f70bdf3fae24b7e218b57022ccc80e3fe6ff2e32220e92f4829f1a10728e",
-        "source_artifact_id": "abf75153217862b4e1939f8b50136501",
-        "source_artifact_sha256": "898122a732b7ccbecd09167688622f9a287e5720478bb462e4659105fd367d70",
+        "sha256": "65b9dfc27bc78210ca521cf59776039a3ffc6e9127d6bc04c5a5755494f60203",
+        "source_artifact_id": "d23f80e7c4512b3aa9d188d1d5d0869f",
+        "source_artifact_sha256": "fc7f4ac86ab6791097fd4e06b15399f44f9fd84449953efd11cacb01e0431c9c",
         "source_rendition": "review",
         "width": 1080
       }
     },
     "delegationScope": {
-      "approval_granted": false,
-      "max_continuation_seconds": 60,
-      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
-        "color": "Sage gray Adventure FC2297 backpack with small Maltese dog",
+        "color": "Gray FC2297 Adventure Backpack, closed front mesh, complete empty upright pack; external bare white seated Maltese with one supported forepaw gesture",
         "product_id": "p_247",
         "sku": "iby_backpack_fc2297"
       },
@@ -101497,18 +101494,21 @@
         }
       ],
       "required_final_seconds": 4,
-      "scene_asset_id": "fffceadb5750b328d0a7bf22fb20a5b2",
-      "scene_sha256": "9ea9b06c22385d0c5af9341a5e730b726941c08cb62d9146c133b2f66aceda33",
+      "scene_asset_id": "1df654f9b5ccff9525fcbc86bc317ab3",
+      "scene_sha256": "f7bf66448dedb7c630ca44e1acac27354dc8b839961e7e6d4fc3917ea2a638b2",
       "schema_version": 1,
-      "scope_id": "df4d225cd7a7f04d95db6f1b917b1d0fa495c58691bb47e21aaeb17c0c6ad686",
-      "source_sha256_authority": "client_original_photo_declaration"
+      "scope_id": "4259ab349eb8878abb51d1ae0b89fcc229dc65b8f41e891b0ac09ffec799e9cd",
+      "max_continuation_seconds": 60,
+      "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
+      "source_sha256_authority": "client_original_photo_declaration",
+      "approval_granted": false
     },
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "34b87ad796218b7839ff2a56551d2902",
+      "reviewId": "934a13f551720faa5b1905bd9066aa65",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "df4d225cd7a7f04d95db6f1b917b1d0fa495c58691bb47e21aaeb17c0c6ad686",
+      "scopeId": "4259ab349eb8878abb51d1ae0b89fcc229dc65b8f41e891b0ac09ffec799e9cd",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -101528,10 +101528,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "43e9d5bb86238017afeadcf16af0695a9dba570e2f609617854d28e17696414b",
-      "technicalProofSha256": "11bcad43767e1bcdcda2f58a7f72ebbee3f2e42722d3c42675cf9eec1ab42aa7",
-      "checkedAt": "2026-09-24T14:57:15.864354+00:00",
-      "sha256": "7fb1e8cb5b4fdcdbd585ea774ffa28e3b0532599d08cde0e9558d78acfca226c"
+      "ownerInstructionSha256": "432b78e385a1207316b7f5d4a6649d0d18f48e1f5ec33793c0ae855b01e1fd7b",
+      "technicalProofSha256": "ed20adf9d6000d767115c5466601315a361c2fbe9a47fff9b85040ecb811c34e",
+      "naturalMotionReviewSha256": "5175ae8857894c5cd82bf70ba6a4ea35933b00dc0f9e670b98e22f834f3b0dd8",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-10T20:22:47.265529+00:00",
+      "sha256": "35c38e708631a7218b85ecd80afd6648257f37da13380d50e7ddbab3535b1603"
     }
   },
   "ip_trovbiz_adventure": {
