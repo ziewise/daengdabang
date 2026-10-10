@@ -1346,5 +1346,9 @@
   "iby_stroller_fs2102": {
     "productId": "p_256",
     "sha256": "8c523a7f5585b76aeb89ff0aa4f02bfd08d0ed5b0fbd35a4d88bd6979cf11905"
+  },
+  "iby_stroller_fs2011": {
+    "productId": "p_253",
+    "sha256": "a42939ffafad1f61bb34d526375acb4574dcd8a8aa3beb05cb619a7cea32243c"
   }
 }

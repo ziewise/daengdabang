@@ -2348,7 +2348,56 @@
     "videoDeliveryCommit": "981e5d62e212d7e1b8820052ce977e25a8571c07"
   },
   "iby_stroller_fs1670": null,
-  "iby_stroller_fs2011": null,
+  "iby_stroller_fs2011": {
+    "video": "/images/products/catalog/iby_stroller_fs2011/videos/a42939ffafad1f61bb34d526375acb4574dcd8a8aa3beb05cb619a7cea32243c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "132f5ee4701484228fe403efd270461f",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "132f5ee4701484228fe403efd270461f",
+      "reviewId": "81bb41682232fa249714bdba0be2f177",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "a42939ffafad1f61bb34d526375acb4574dcd8a8aa3beb05cb619a7cea32243c",
+      "seconds": 4,
+      "source": {
+        "no": 253,
+        "folder": "iby_stroller_fs2011",
+        "name": "이비야야 시스템유모차 FS2011 2컬러 민트,그레이",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_stroller_fs2011/iby_stroller_fs2011.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7655974118",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_stroller_fs2011/details/official-visual-01.webp",
+          "/images/products/catalog/iby_stroller_fs2011/details/3.webp",
+          "/images/products/catalog/iby_stroller_fs2011/details/4.webp",
+          "/images/products/catalog/iby_stroller_fs2011/details/5.webp",
+          "/images/products/catalog/iby_stroller_fs2011/details/6.webp",
+          "/images/products/catalog/iby_stroller_fs2011/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d2d22e47701ce6e559addd349e66a78c",
+        "sha256": "a42939ffafad1f61bb34d526375acb4574dcd8a8aa3beb05cb619a7cea32243c"
+      },
+      "scopeId": "d2456657fe7ccd687facd072a37e174f0df1e8ab4c9c0aa102657ba59c4cf913",
+      "scopeRegistrationSha256": "c59d84ddd7323b3c71ca3ffb9a2b032b6007fbfa09544b9ae69007c2b6ee48c9",
+      "aiEvidenceSha256": "608054d92f22b7f4b102211dbce50431b9f22ce1cddf79d493d5da419dbb943d",
+      "receiptSha256": "beeed4e9774bfcdba3619933795b3fe3a45a45a4b0baec64865feb1e3586bdcd",
+      "eligibilitySha256": "c56ee95d9390da0296fb5b516a287d95bc0972548406893d677a9d48cb4c7de8",
+      "evidenceManifestSha256": "4dc44e153e996dd032e60c91c0ec547d66c24df86d116b65aafae8e01194c311"
+    },
+    "videoReviewSha256": "10158d3058914df21b46c46f56af1e82e9d2cbc4de7a4282892114ec8d29affc",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b983021b89e06b6c79ee51b0dae83f455eb594b5"
+  },
   "iby_stroller_fs2102": {
     "video": "/images/products/catalog/iby_stroller_fs2102/videos/8c523a7f5585b76aeb89ff0aa4f02bfd08d0ed5b0fbd35a4d88bd6979cf11905/hover.mp4",
     "videoProvider": "ziewcraft",
