@@ -9351,7 +9351,58 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "6ff17cc7a3bbbf1a6ad7358acff3c03b5a7b1f69"
   },
-  "rw_porcini_toy": null,
+  "rw_porcini_toy": {
+    "video": "/images/products/catalog/rw_porcini_toy/videos/3d89ba7790bb61f6b0c450efdb39f9fcef802341eb64d4893362033e355d415a/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "8070881be718536c1bd15448b4413dc7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "8070881be718536c1bd15448b4413dc7",
+      "reviewId": "d64be3cc45bbe76395b0dee024c8f20f",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "3d89ba7790bb61f6b0c450efdb39f9fcef802341eb64d4893362033e355d415a",
+      "seconds": 8,
+      "source": {
+        "no": 107,
+        "folder": "rw_porcini_toy",
+        "name": "러프웨어 포시니 반려견 장난감(2024FW)",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001204/image/detail/1000001204_detail_027.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001204",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001204/image/detail/1000001204_detail_181.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001204/image/detail/1000001204_detail_280.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001204/image/detail/1000001204_detail_313.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001204/image/detail/1000001204_detail_474.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240909/8054e04d52f6141e4e3e27857c55debe_121243.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240909/d3907fb80e87d31a5aea7be07822563c_121244.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240828/2da08794e7cb19a5a1370c48f5615af4_031758.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b5406119d7e0e047a662814988801b2e",
+        "sha256": "3d89ba7790bb61f6b0c450efdb39f9fcef802341eb64d4893362033e355d415a"
+      },
+      "scopeId": "59a46d18d2b60fd8452d3d4d4c00bb2b53ac5e748d044b1af0891eb8890046ea",
+      "scopeRegistrationSha256": "b6c626a7e7112a08c195ea5c5c2cf360fdd80cf4391b7af9fea656689c9f31c6",
+      "aiEvidenceSha256": "b53ff6aa31d05e64672fdd39aac1dd25d14b1782e617f2c0ab25485ff7b35219",
+      "receiptSha256": "6dc3fe1820c62a8519f9dd389352c85340fde246d50051e25feee68d8d1ad24e",
+      "eligibilitySha256": "1b06c22d84a57cb26d7aeb8fb353db1b0deee8bc4f7a6983e4818af55fbbb611",
+      "evidenceManifestSha256": "3341301634dea6fe7765f7aebea61fa4e67ec368d95e58b20d3e290e6cc35a9d"
+    },
+    "videoReviewSha256": "c1bee705e4455d1c0648afaa3ff35180aa51150e38d3b522c2dd400a6ad3f37d",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "7513e3907244c9e46f646b737bce7fe5f83ab416"
+  },
   "rw_powderhound_coverall_26fw": {
     "video": "/images/products/catalog/rw_powderhound_coverall_26fw/videos/f304467985e98ffae0d5648855310ad61340b549f768dba8e524331feb26e622/hover.mp4",
     "videoProvider": "ziewcraft",

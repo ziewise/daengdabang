@@ -1366,5 +1366,9 @@
   "rw_trailrunnerbowl": {
     "productId": "p_161",
     "sha256": "e8592261d553b199edb2ab5455259e857e9984eb3fa8eff34b144fe64fa31c5b"
+  },
+  "rw_porcini_toy": {
+    "productId": "p_107",
+    "sha256": "3d89ba7790bb61f6b0c450efdb39f9fcef802341eb64d4893362033e355d415a"
   }
 }
