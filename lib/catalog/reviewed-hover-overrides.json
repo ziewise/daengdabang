@@ -5821,7 +5821,57 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "c8e84f490d51df532230ffe68b8a40fbc2dcdb4b"
   },
-  "rs_hardcase": null,
+  "rs_hardcase": {
+    "video": "/images/products/catalog/rs_hardcase/videos/203f9cc968856fadc6287909e4d67f3cc9f0ccd05d86482792f5e9a6f2a258e1/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "9234dfdda1b4ec87a1d15f65f65524a7",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "9234dfdda1b4ec87a1d15f65f65524a7",
+      "reviewId": "40643da82aeda5fd20d59688cbe8d0f2",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "203f9cc968856fadc6287909e4d67f3cc9f0ccd05d86482792f5e9a6f2a258e1",
+      "seconds": 8,
+      "source": {
+        "no": 83,
+        "folder": "rs_hardcase",
+        "name": "렉스스펙스 고글 하드케이스",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001107/image/detail/1000001107_detail_018.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001107",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001107/image/detail/1000001107_detail_13.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001107/image/detail/1000001107_detail_231.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001107/image/detail/1000001107_detail_377.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001107/image/detail/1000001107_detail_47.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230113/Hard-Case-2023_162242.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230113/6b2d4ac6d75ed50b1ab9a3a2514b043b_162253.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5b13df2e2602eb962645f230e4c250e6",
+        "sha256": "203f9cc968856fadc6287909e4d67f3cc9f0ccd05d86482792f5e9a6f2a258e1"
+      },
+      "scopeId": "9a2fe24494ab46f4ad55630d7d4a43811f22bc8418c75689d24fe735609a523d",
+      "scopeRegistrationSha256": "bd373420e21f3f90b06e5c92a858df6563f82f743e4707bab36fa5ef89a61c49",
+      "aiEvidenceSha256": "cbf3663ff7d2e68dab334de8c4b35535f75ba58264319f101859b73fb76de3f5",
+      "receiptSha256": "9413953baad7ac561a097d894c2ed6370cc3e261ebac87bbf2ee83a74dab4208",
+      "eligibilitySha256": "12e4438e0905229ed422c838739013589f91164bba3fd96c3aa5253f1c49650c",
+      "evidenceManifestSha256": "d230ff84c7524c6ae47e0b5c56ebb8f3ffb96887cd12e143ae769a4614dc88d7"
+    },
+    "videoReviewSha256": "62b4e3eaa0816d31b413837cbf867b99ba97e99626ee1b65701825e613010592",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "9860b24a10aa853cd618c1fa6f5096ba09ad1532"
+  },
   "rs_lens_original": {
     "video": "/images/products/catalog/rs_lens_original/videos/a0cac84a29fa240a9786b374e3fbdbfea477f1ea0584e7663c37882386620543/hover.mp4",
     "videoProvider": "ziewcraft",

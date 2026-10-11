@@ -1378,5 +1378,9 @@
   "iby_stroller_fs2180": {
     "productId": "p_252",
     "sha256": "f186c9d3e6be58b99e06310257fb5f1c4e94c0d3f0cbb58554c114b80f76aab9"
+  },
+  "rs_hardcase": {
+    "productId": "p_83",
+    "sha256": "203f9cc968856fadc6287909e4d67f3cc9f0ccd05d86482792f5e9a6f2a258e1"
   }
 }
