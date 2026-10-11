@@ -14426,16 +14426,16 @@
     "publicationStatus": "approved",
     "productId": "p_81",
     "folder": "rs_v2_yazberry",
-    "video": "/images/products/catalog/rs_v2_yazberry/videos/b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a/hover.mp4",
-    "sha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a",
-    "videoQuality": "approved_dog_wearing",
+    "video": "/images/products/catalog/rs_v2_yazberry/videos/d8ac50161c746c1e2bef0f6354f6f902219076b39cd2665feb3ca243778255fd/hover.mp4",
+    "sha256": "d8ac50161c746c1e2bef0f6354f6f902219076b39cd2665feb3ca243778255fd",
+    "videoQuality": "approved_dog_interacting",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "6fc11087ffd915a5cf116acb0f74eec8",
-      "reviewId": "0600d11d671ed1045309c2eaf3c801e7",
+      "jobId": "379663715245888beb80721f540c4ac2",
+      "reviewId": "6f426ea9a7206315e3ad5092b525e179",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a",
+      "finalSha256": "d8ac50161c746c1e2bef0f6354f6f902219076b39cd2665feb3ca243778255fd",
       "seconds": 8,
       "source": {
         "no": 81,
@@ -14465,34 +14465,34 @@
         ]
       },
       "artifact": {
-        "artifact_id": "caa4890fc2374ea9d8f3cf3022578a15",
-        "sha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a"
+        "artifact_id": "6524b998147e9c0ef5dca093b8327e6c",
+        "sha256": "d8ac50161c746c1e2bef0f6354f6f902219076b39cd2665feb3ca243778255fd"
       },
-      "scopeId": "d9cd83885392a0c33bd5756e39270250cd7b29f3a5841208eae7f73b84e28f99",
-      "scopeRegistrationSha256": "4edfb2b2123f9d35c5566e790df4ad912ee777815e9229e23a821ea8c5e15630",
-      "aiEvidenceSha256": "697bc4d90144ad3cf478c3b7bf79a0adc78851bf648d955dbcb009d025dcbd8d",
-      "receiptSha256": "07e74a430a218c853ff0ddda1f728a25fa32e557aacbfa7cdd1f21bd3fa85b30",
-      "eligibilitySha256": "61ae927fe081f10337af1d4a8ca7fd3e4686596296682ebaa4b2850a2c79cca2",
-      "evidenceManifestSha256": "77c668364ad245aac7cdc76d5f0580c208ca8e0cb5d495ae53d405e16e23e43a"
+      "scopeId": "825a1b7eb904b3e84e894c702925d10650d90012a9aee0270e2f146171835588",
+      "scopeRegistrationSha256": "f437962cd50d30062e66f4cb78f10320ffc67afabfb0e2a0876a774fe9cf0930",
+      "aiEvidenceSha256": "6f1bbe88e56e61fbbbcd1a671b7b9cb336c3454613a79bc207e2e1da719ff253",
+      "receiptSha256": "a5ca55ee61e6b7282e3f7fb0edc233d11ab6f8c311ad1d28b3b188d52ba04483",
+      "eligibilitySha256": "d31da5fb303eb144eee33b0bcd634731aa1ff5072300d766e019a6daee52bd3a",
+      "evidenceManifestSha256": "6167821a02f7f33a2db0c142e776ed1e223f754fd4890930ef46617f8f5bc6b3"
     },
     "delegatedReview": {
-      "api_job_id": "6fc11087ffd915a5cf116acb0f74eec8",
+      "api_job_id": "379663715245888beb80721f540c4ac2",
       "bindings": {
         "native_video": {
-          "artifact_id": "f2fb34fbb0f64125baaaa38c2ebd96cc",
-          "sha256": "10210f05031ca7fbc63594d26fa464f76dddf2160723133fe344df77c47255ed"
+          "artifact_id": "9dc4e6e35ce24bcebaabf4b2c995955e",
+          "sha256": "b317bd0782459d28cb6bd7050a028ff55210c9e6284624c13df860fce64fa4bb"
         },
         "pair_video": {
-          "artifact_id": "caa4890fc2374ea9d8f3cf3022578a15",
-          "sha256": "b371f15e0a345cd1662982287be961e09351e0538e25ef3865069124924a3b7a"
+          "artifact_id": "6524b998147e9c0ef5dca093b8327e6c",
+          "sha256": "d8ac50161c746c1e2bef0f6354f6f902219076b39cd2665feb3ca243778255fd"
         },
         "review_video": {
-          "artifact_id": "7355885f773d0b733678a053f0ce553f",
-          "sha256": "0280abb04533f5a411a724ca29061cb5b392ae6d672a5dcfed083a3e77e022d5"
+          "artifact_id": "cb7c2fde175666b280ec49aca68bd20e",
+          "sha256": "5710e4517b21d33bc11368998d62723824f28f762e586a3b947bb8b02dbe779e"
         },
         "terminal": {
-          "artifact_id": "e4f878b243256f8d38a37b6789d7c1a5",
-          "sha256": "cd1e3f5f09e0055ae70317a8b03db555d175732956d868d7c8732661a8047183"
+          "artifact_id": "0904bea3165344485faa3eba853b04a7",
+          "sha256": "46679cb507bf4dbde46c69b333ac8e5be70e586019fad431d46cf2a495471fb4"
         }
       },
       "checks": {
@@ -14814,41 +14814,41 @@
       "human_identity_verified": false,
       "numeric_boundary_evidence": {
         "loop": {
-          "background_homography_jump": 0.0001004183359327726,
-          "boundary_camera_displacement": 8.973902004072443e-05,
-          "homography_inlier_ratio": 0.9669421487603306,
+          "background_homography_jump": 0.00022427473186326097,
+          "boundary_camera_displacement": 0.00022750395874027163,
+          "homography_inlier_ratio": 0.8767123287671232,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.042213160544633865,
+          "mean_absolute_frame_difference": 0.04757779464125633,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0009501893073320389,
+          "optical_flow_discontinuity": 0.00361894560046494,
           "semantic_verified": false
         },
         "seam": {
-          "background_homography_jump": 0.00015665746286686044,
-          "boundary_camera_displacement": 0.00018436128448229283,
+          "background_homography_jump": 5.8552825066726655e-05,
+          "boundary_camera_displacement": 6.352546188281849e-05,
           "homography_inlier_ratio": 1.0,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.015407507307827473,
+          "mean_absolute_frame_difference": 0.013135639019310474,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0010945943649858236,
+          "optical_flow_discontinuity": 0.00044206168968230486,
           "semantic_verified": false
         },
         "seams": [
           {
-            "background_homography_jump": 0.00015665746286686044,
-            "boundary_camera_displacement": 0.00018436128448229283,
+            "background_homography_jump": 5.8552825066726655e-05,
+            "boundary_camera_displacement": 6.352546188281849e-05,
             "homography_inlier_ratio": 1.0,
             "homography_status": "measured_proxy",
             "left_frame": 95,
             "mad_limit": 0.08,
             "mad_passed": true,
-            "mean_absolute_frame_difference": 0.015407507307827473,
+            "mean_absolute_frame_difference": 0.013135639019310474,
             "measurement_only": true,
-            "optical_flow_discontinuity": 0.0010945943649858236,
+            "optical_flow_discontinuity": 0.00044206168968230486,
             "right_frame": 96,
             "semantic_verified": false
           }
@@ -14860,7 +14860,7 @@
       "previous_review_id": null,
       "private_only": true,
       "product": {
-        "color": "Yazberry / Smoke lens",
+        "color": "Rex Specs V2 Yazberry / Smoke",
         "product_id": "p_81",
         "sku": "rs_v2_yazberry"
       },
@@ -14882,36 +14882,36 @@
       "required_final_seconds": 8,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_81-6fc11087ffd915a5cf116acb0f74eec8-all97-v1",
-        "evidence_sha256": "697bc4d90144ad3cf478c3b7bf79a0adc78851bf648d955dbcb009d025dcbd8d",
+        "evidence_id": "ddb-ai-p_81-379663715245888beb80721f540c4ac2-all97-v1",
+        "evidence_sha256": "6f1bbe88e56e61fbbbcd1a671b7b9cb336c3454613a79bc207e2e1da719ff253",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "0600d11d671ed1045309c2eaf3c801e7",
-      "reviewed_at": "2026-09-12T14:03:14.386662Z",
+      "review_id": "6f426ea9a7206315e3ad5092b525e179",
+      "reviewed_at": "2026-10-11T10:24:20.569338Z",
       "schema_version": 1,
-      "scope_id": "d9cd83885392a0c33bd5756e39270250cd7b29f3a5841208eae7f73b84e28f99",
+      "scope_id": "825a1b7eb904b3e84e894c702925d10650d90012a9aee0270e2f146171835588",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "e4f878b243256f8d38a37b6789d7c1a5",
+        "artifact_id": "0904bea3165344485faa3eba853b04a7",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "f2fb34fbb0f64125baaaa38c2ebd96cc",
-        "native_artifact_sha256": "10210f05031ca7fbc63594d26fa464f76dddf2160723133fe344df77c47255ed",
+        "native_artifact_id": "9dc4e6e35ce24bcebaabf4b2c995955e",
+        "native_artifact_sha256": "b317bd0782459d28cb6bd7050a028ff55210c9e6284624c13df860fce64fa4bb",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "0693af730b2fbf7bf7a5a027acd83219e29b499ce311924ffb8697ae698fb56b",
+        "pixel_sha256": "080a1862df3f7979e2e260039403ef433f77e983e69ea7513f54fefedcfd8d50",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "cd1e3f5f09e0055ae70317a8b03db555d175732956d868d7c8732661a8047183",
-        "source_artifact_id": "7355885f773d0b733678a053f0ce553f",
-        "source_artifact_sha256": "0280abb04533f5a411a724ca29061cb5b392ae6d672a5dcfed083a3e77e022d5",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "46679cb507bf4dbde46c69b333ac8e5be70e586019fad431d46cf2a495471fb4",
+        "source_artifact_id": "cb7c2fde175666b280ec49aca68bd20e",
+        "source_artifact_sha256": "5710e4517b21d33bc11368998d62723824f28f762e586a3b947bb8b02dbe779e",
         "source_rendition": "review",
         "width": 1080
       }
@@ -14919,7 +14919,7 @@
     "delegationScope": {
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
-        "color": "Yazberry / Smoke lens",
+        "color": "Rex Specs V2 Yazberry / Smoke",
         "product_id": "p_81",
         "sku": "rs_v2_yazberry"
       },
@@ -14936,10 +14936,10 @@
         }
       ],
       "required_final_seconds": 8,
-      "scene_asset_id": "7065258f3571dfbc97d7b5b21ac799de",
-      "scene_sha256": "3f6ed2e0aa7d17327adcbe0822a21977f40f7d8fc32afce3949c5850c33c7df9",
+      "scene_asset_id": "51cfa8a5e8f332b94ee67b7fe5673e47",
+      "scene_sha256": "d10b33f19e903c8d5c5af887cb9f72725dfd4ab16f89fbc7d9c19e576b2cf4ef",
       "schema_version": 1,
-      "scope_id": "d9cd83885392a0c33bd5756e39270250cd7b29f3a5841208eae7f73b84e28f99",
+      "scope_id": "825a1b7eb904b3e84e894c702925d10650d90012a9aee0270e2f146171835588",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -14948,9 +14948,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "0600d11d671ed1045309c2eaf3c801e7",
+      "reviewId": "6f426ea9a7206315e3ad5092b525e179",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "d9cd83885392a0c33bd5756e39270250cd7b29f3a5841208eae7f73b84e28f99",
+      "scopeId": "825a1b7eb904b3e84e894c702925d10650d90012a9aee0270e2f146171835588",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -14971,10 +14971,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "a8828f0d5b5da7e3c251ec3ed40b3671c204a9c2f473c2aed15bb40c3975ea07",
-      "technicalProofSha256": "8562bbf894c26d73b2c1e65809356cf127f5fe343b075558ae8db98d9b71a654",
-      "checkedAt": "2026-09-12T14:03:23.569205+00:00",
-      "sha256": "d08ce9355c368884696a75487436e2be90284198654b26d409338c6f45e597ad"
+      "ownerInstructionSha256": "496f2df89521a95e5e695f9245f9e12ff9fb6a86c2a750288ce94f1f643c55be",
+      "technicalProofSha256": "0f659d6299ccd67f093203165461b8e1294b61cb6b2d3c1ad156edff9a32cc0a",
+      "naturalMotionReviewSha256": "b0aa40c5aabd07323ed40d68dfeebd789f56c6ead5994cf61d0e3fcea4b32ae8",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-11T10:24:41.652475+00:00",
+      "sha256": "a6f7ae85ee1e5ffd8196af1bb96d3e7ccda7b77d990d77c284823e386e2fd2a3"
     }
   },
   "rw_stashbag_mini_2": {
