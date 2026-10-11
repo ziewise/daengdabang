@@ -6,15 +6,25 @@ type ChatThinkingProgressProps = {
     compact?: boolean;
     hasHistory?: boolean;
     stage?: ShopChatStreamStage;
+    message?: string;
 };
 
 export default function ChatThinkingProgress({
     compact = false,
     hasHistory = false,
+    stage = "answering",
+    message,
 }: ChatThinkingProgressProps) {
-    const progressMessage = hasHistory
+    const defaultMessage = hasHistory
         ? "앞 대화도 함께 살펴보며 답변을 정리하고 있어요"
         : "답변을 정리하고 있어요";
+    const stageMessages: Record<string, string> = {
+        queued: "답변을 준비하고 있어요",
+        planning: "질문 내용을 살펴보고 있어요",
+        searching: "필요한 자료를 확인하고 있어요",
+        answering: defaultMessage,
+    };
+    const progressMessage = message || stageMessages[stage] || defaultMessage;
     return (
         <div
             role="status"

@@ -529,7 +529,7 @@ export type ShopQuestionContext = {
     references?: ShopChatReferenceInput[];
     accessToken?: string;
     conversationId?: string;
-    onProgress?: (progress: { stage: ShopChatStreamStage }) => void;
+    onProgress?: (progress: { stage: ShopChatStreamStage; message?: string }) => void;
     onDelta?: (text: string) => void;
     signal?: AbortSignal;
     /** Optional extension; values below the server-aware minimum never shorten a valid request. */
@@ -2213,9 +2213,9 @@ function preparedShopChatErrorAnswer(
     return result;
 }
 
-function emitShopChatProgress(context: ShopQuestionContext | undefined, stage: ShopChatStreamStage) {
+function emitShopChatProgress(context: ShopQuestionContext | undefined, stage: ShopChatStreamStage, message?: string) {
     try {
-        context?.onProgress?.({ stage });
+        context?.onProgress?.({ stage, ...(message ? { message: message.slice(0, 240) } : {}) });
     } catch {
         // Rendering progress is optional and must never fail the chat request.
     }
@@ -2451,7 +2451,7 @@ async function answerShopQuestionStream(
             const stage = typeof data.stage === "string" && data.stage.trim()
                 ? data.stage.trim().slice(0, 40) as ShopChatStreamStage
                 : "planning";
-            emitShopChatProgress(context, stage);
+            emitShopChatProgress(context, stage, typeof data.message === "string" ? data.message : undefined);
             return;
         }
         if (event.event === "delta") {

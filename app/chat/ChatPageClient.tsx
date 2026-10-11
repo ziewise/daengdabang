@@ -91,6 +91,7 @@ export default function ChatPageClient() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [requestNotice, setRequestNotice] = useState("");
     const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
+    const [streamMessage, setStreamMessage] = useState("");
     const [streamedAnswer, setStreamedAnswer] = useState("");
     const conversationIdRef = useRef("");
     const conversationOwnerRef = useRef<string | null>(null);
@@ -238,6 +239,7 @@ export default function ChatPageClient() {
         setInput("");
         setLoading(true);
         setStreamStage("queued");
+        setStreamMessage("");
         setStreamedAnswer("");
         setRequestNotice("");
         trackStorefrontEvent("chat_message_sent", {
@@ -257,8 +259,10 @@ export default function ChatPageClient() {
                 references: readyReferences,
                 accessToken: user?.apiAccessToken,
                 conversationId: conversationIdRef.current || undefined,
-                onProgress: ({ stage }) => {
-                    if (requestSequence === requestSequenceRef.current) setStreamStage(stage);
+                onProgress: ({ stage, message }) => {
+                    if (requestSequence !== requestSequenceRef.current) return;
+                    setStreamStage(stage);
+                    setStreamMessage(message || "");
                 },
                 onDelta: (delta) => {
                     if (requestSequence !== requestSequenceRef.current || !delta) return;
@@ -596,7 +600,7 @@ export default function ChatPageClient() {
                         {loading ? (
                             <div className="text-left">
                                 <div className="inline-block max-w-[92%] rounded-2xl rounded-bl-md border border-indigo-100 bg-white/95 px-4 py-4 shadow-sm sm:max-w-[86%]">
-                                    <ChatThinkingProgress hasHistory={messages.length > 1} stage={streamStage} />
+                                    <ChatThinkingProgress hasHistory={messages.length > 1} stage={streamStage} message={streamMessage} />
                                     {streamedAnswer ? (
                                         <p className="mt-3 whitespace-pre-line border-t border-neutral-200 pt-3 text-sm font-bold leading-6 text-neutral-800">
                                             {customerVisibleChatAnswer(streamedAnswer, false)}

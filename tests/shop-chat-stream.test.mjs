@@ -64,7 +64,7 @@ test("browser stream deadlines outlive the API queue and processing bounds", () 
         idleTimeoutMs: SHOP_CHAT_STREAM_IDLE_TIMEOUT_MS,
         overallTimeoutMs: SHOP_CHAT_STREAM_OVERALL_TIMEOUT_MS,
     });
-    assert.equal(resolveShopChatStreamTimeouts(150_000).overallTimeoutMs, 150_000);
+    assert.equal(resolveShopChatStreamTimeouts(150_000).overallTimeoutMs, SHOP_CHAT_STREAM_OVERALL_TIMEOUT_MS);
 });
 
 test("stream activity resets idle timeout while overall timeout remains bounded", async () => {

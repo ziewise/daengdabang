@@ -21,16 +21,16 @@ const SHOP_CHAT_STREAM_UNSUPPORTED_CODES = new Set([
     "shop_chat_stream_endpoint_unsupported",
 ]);
 
-// Keep these bounds aligned with the API defaults:
-//   shop_chat_public_max_wait_seconds=8
-//   shop_chat_public_total_timeout_seconds=75
-// The browser adds transport headroom and must never end a valid request before
-// the server has exhausted both its admission queue and processing budget.
-export const SHOP_CHAT_SERVER_QUEUE_BOUND_MS = 8_000;
-export const SHOP_CHAT_SERVER_PROCESSING_BOUND_MS = 75_000;
-export const SHOP_CHAT_STREAM_IDLE_TIMEOUT_MS = 90_000;
-export const SHOP_CHAT_STREAM_OVERALL_TIMEOUT_MS = 100_000;
-export const SHOP_CHAT_STREAM_MAX_OVERALL_TIMEOUT_MS = 180_000;
+// Keep these bounds aligned with the production dialogue configuration:
+//   shop_chat_public_max_wait_seconds=120
+//   shop_chat_public_total_timeout_seconds=240
+// The server's 240-second total includes admission, with at most 120 seconds
+// queued and a bounded answer budget. Add transport headroom in the browser.
+export const SHOP_CHAT_SERVER_QUEUE_BOUND_MS = 120_000;
+export const SHOP_CHAT_SERVER_PROCESSING_BOUND_MS = 120_000;
+export const SHOP_CHAT_STREAM_IDLE_TIMEOUT_MS = 245_000;
+export const SHOP_CHAT_STREAM_OVERALL_TIMEOUT_MS = 300_000;
+export const SHOP_CHAT_STREAM_MAX_OVERALL_TIMEOUT_MS = 300_000;
 
 export function resolveShopChatStreamTimeouts(requestedOverallMs?: number) {
     const finiteRequest = typeof requestedOverallMs === "number" && Number.isFinite(requestedOverallMs)

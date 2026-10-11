@@ -96,6 +96,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const activeQuestionRef = useRef("");
     const [requestNotice, setRequestNotice] = useState("");
     const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
+    const [streamMessage, setStreamMessage] = useState("");
     const [streamedAnswer, setStreamedAnswer] = useState("");
     const conversationIdRef = useRef("");
     const conversationOwnerRef = useRef<string | null>(null);
@@ -266,6 +267,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         setInput("");
         setLoading(true);
         setStreamStage("queued");
+        setStreamMessage("");
         setStreamedAnswer("");
         setRequestNotice("");
         const analyticsSurface = isMobile ? "mobile_widget" : "desktop_widget";
@@ -287,8 +289,10 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 references: readyReferences,
                 accessToken: user?.apiAccessToken,
                 conversationId: conversationIdRef.current || undefined,
-                onProgress: ({ stage }) => {
-                    if (requestSequence === requestSequenceRef.current) setStreamStage(stage);
+                onProgress: ({ stage, message }) => {
+                    if (requestSequence !== requestSequenceRef.current) return;
+                    setStreamStage(stage);
+                    setStreamMessage(message || "");
                 },
                 onDelta: (delta) => {
                     if (requestSequence !== requestSequenceRef.current || !delta) return;
@@ -556,7 +560,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         {loading && (
                             <div className="text-left">
                                 <div className={`${styles.loadingBubble} inline-block max-w-[90%] border-2 px-3 py-3`}>
-                                    <ChatThinkingProgress compact hasHistory={messages.length > 1} stage={streamStage} />
+                                    <ChatThinkingProgress compact hasHistory={messages.length > 1} stage={streamStage} message={streamMessage} />
                                     {streamedAnswer ? (
                                         <p className="mt-3 whitespace-pre-line border-t border-neutral-200 pt-3 text-[12px] font-bold leading-5 text-neutral-800">
                                             {customerVisibleChatAnswer(streamedAnswer, false)}
