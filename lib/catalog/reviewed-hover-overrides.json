@@ -6332,7 +6332,59 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "004b34fd9149a684507c62378327dee6b213a6d4"
   },
-  "rs_v2_gallatingray": null,
+  "rs_v2_gallatingray": {
+    "video": "/images/products/catalog/rs_v2_gallatingray/videos/5f48d521227bb2468fbb9a27dd714f8cfba3fa1d8529fdc5ad2d153e47c35ed5/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "d7e816b3a389578874d9854081e835ba",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "d7e816b3a389578874d9854081e835ba",
+      "reviewId": "c076c36a730138c18201c764c5fa263a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "5f48d521227bb2468fbb9a27dd714f8cfba3fa1d8529fdc5ad2d153e47c35ed5",
+      "seconds": 8,
+      "source": {
+        "no": 91,
+        "folder": "rs_v2_gallatingray",
+        "name": "렉스스펙스 V2 갤러틴 그레이 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001146/image/detail/1000001146_detail_032.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001146",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001146/image/detail/1000001146_detail_114.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001146/image/detail/1000001146_detail_22.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_1_183053.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_2_183054.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230511/V2-2023_3_183055.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/6877a86fc43efe40f6c8d37a0bd2b6ef_052006.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/231005/b5c77b69ac0a638a914e3d8b7e80b1fc_052018.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230112/6b2d4ac6d75ed50b1ab9a3a2514b043b_023221.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "5ab83e236c696733c2cb8b593a82791a",
+        "sha256": "5f48d521227bb2468fbb9a27dd714f8cfba3fa1d8529fdc5ad2d153e47c35ed5"
+      },
+      "scopeId": "cfcf530af3e9b2a32105b5c4869c2bc7a0b79dfe709d690f0908b4ba5e772ec7",
+      "scopeRegistrationSha256": "d3af7f79a814c81402f5c790ef86413676ec12cc4f9bee23b2a224ccf2d6ae4c",
+      "aiEvidenceSha256": "6786c4ece00f75f5b74a24b6f6505c20da886a4371c0233e74e4a73e36d7c671",
+      "receiptSha256": "76aa6982bb1310ebebe301c7cbf925ef5404c16a0252bd1e508a9fb95188125d",
+      "eligibilitySha256": "57e7c7f72f724a104a1432b1a5f505bf1462dced3aaf1344564d2fa5e60fa0de",
+      "evidenceManifestSha256": "540577f596b1898cd07896db30c5fdbc2f41d3b97fcb1da0789dedf39225e3de"
+    },
+    "videoReviewSha256": "caf717674984bc7dfd73c626f0c73cd2a7a7ba9b4c18ce1ddbc966701773a904",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "71a7979cde29f956421949e8ddf0238a476c018d"
+  },
   "rs_v2_himalayapink": {
     "video": "/images/products/catalog/rs_v2_himalayapink/videos/1292d71152f89dc82ef3b427f36af8084c2152ac1a4b4e8e163f56db193813a3/hover.mp4",
     "videoProvider": "ziewcraft",
