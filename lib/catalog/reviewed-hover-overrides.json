@@ -10483,7 +10483,62 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "5cc4232cbea3bb1ce1f1fe2bc866d20d63581c92"
   },
-  "rw_trailrunnerbowl": null,
+  "rw_trailrunnerbowl": {
+    "video": "/images/products/catalog/rw_trailrunnerbowl/videos/e8592261d553b199edb2ab5455259e857e9984eb3fa8eff34b144fe64fa31c5b/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "010e4d57c6f8b52d33824f2d0b15e7a6",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "010e4d57c6f8b52d33824f2d0b15e7a6",
+      "reviewId": "3def5fde581efdd78dc3d35a8f843c8c",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "e8592261d553b199edb2ab5455259e857e9984eb3fa8eff34b144fe64fa31c5b",
+      "seconds": 8,
+      "source": {
+        "no": 161,
+        "folder": "rw_trailrunnerbowl",
+        "name": "러프웨어 트레일 러너 보울 휴대용 식기",
+        "brandEn": "Ruffwear",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_043.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001138",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_183.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_260.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_395.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_411.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_556.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_626.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_759.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001138/image/detail/1000001138_detail_879.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240225/Trail-Runner-Bowl1_201655.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/240225/Trail-Runner-Bowl2_201712.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/230420/839ad201252d91071f7d6236e36561a4_155826.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "b1111359f2d6ec5b7285f909c5919087",
+        "sha256": "e8592261d553b199edb2ab5455259e857e9984eb3fa8eff34b144fe64fa31c5b"
+      },
+      "scopeId": "5a906fdecaf75a36292392335846b34dab447c9e29483c9770ca651727c2c4e1",
+      "scopeRegistrationSha256": "9a18b2d06c7ddb1900b5ad92de505bee832ec98b4167b36cc6bd294462812217",
+      "aiEvidenceSha256": "a5c8c9fa79a1186cc007ea3fc1d273d387827d33d2aa1dd8a4f4aef5ac4a6729",
+      "receiptSha256": "7f5bedc35c938d072d9fbef8310d1d40996a28814f6410a79effddb1375c0f42",
+      "eligibilitySha256": "e32cc55d22f21b4b7743052a00f4f74f4bff18ebe668538196a0a572f7826a71",
+      "evidenceManifestSha256": "ce50954dc7cec29053d14ee1e3ed7c53add8f7a2fe47be6486f6132efe340cfb"
+    },
+    "videoReviewSha256": "6a730a4127b525f1a98c963314ac5f91eed786f1c03c224d6b2f20db5aaa911c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "65f2687ba5d1b82431c17ac678539b6b13cd6c6e"
+  },
   "rw_treattrader_23": null,
   "rw_treattrader_bag": {
     "video": "/images/products/catalog/rw_treattrader_bag/videos/b7cf2585f2f5d8e780f0ccdd4cdf6044348886cd42d4be2f9685aa3922f4d6a2/hover.mp4",

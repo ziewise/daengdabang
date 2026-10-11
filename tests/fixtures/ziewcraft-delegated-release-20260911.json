@@ -1362,5 +1362,9 @@
   "thule_courier_trailer": {
     "productId": "p_122",
     "sha256": "56b9fd135f098bc75070eb8280d8a96ad60c98ee2e26f9e086189abf161dad1c"
+  },
+  "rw_trailrunnerbowl": {
+    "productId": "p_161",
+    "sha256": "e8592261d553b199edb2ab5455259e857e9984eb3fa8eff34b144fe64fa31c5b"
   }
 }
