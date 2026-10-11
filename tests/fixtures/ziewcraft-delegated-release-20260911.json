@@ -1358,5 +1358,9 @@
   "iby_backpack_fc1752": {
     "productId": "p_242",
     "sha256": "ea7b4a0f0df0f5f70d60ba36268fddb694afdfba9484f6a9d3fac465e8ad1e1c"
+  },
+  "thule_courier_trailer": {
+    "productId": "p_122",
+    "sha256": "56b9fd135f098bc75070eb8280d8a96ad60c98ee2e26f9e086189abf161dad1c"
   }
 }

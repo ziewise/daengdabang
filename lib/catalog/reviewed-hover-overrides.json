@@ -11969,7 +11969,59 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "d8a44e5b9562e9c9172f440c964909714a8c8c11"
   },
-  "thule_courier_trailer": null,
+  "thule_courier_trailer": {
+    "video": "/images/products/catalog/thule_courier_trailer/videos/56b9fd135f098bc75070eb8280d8a96ad60c98ee2e26f9e086189abf161dad1c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "4054bd5905f5c862ed7aff9ebbfc9022",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "4054bd5905f5c862ed7aff9ebbfc9022",
+      "reviewId": "6da880ee18a8f57d6ebe680d695a9732",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "56b9fd135f098bc75070eb8280d8a96ad60c98ee2e26f9e086189abf161dad1c",
+      "seconds": 4,
+      "source": {
+        "no": 122,
+        "folder": "thule_courier_trailer",
+        "name": "툴레 쿠리어 반려견 캐리어 트레일러 (키트포함)",
+        "brandEn": "Thule",
+        "isFood": false,
+        "image": "/images/products/catalog/thule_courier_trailer/thule_courier_trailer.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/10389967915",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/thule_courier_trailer/details/2.webp",
+          "/images/products/catalog/thule_courier_trailer/details/3.webp",
+          "/images/products/catalog/thule_courier_trailer/details/4.webp",
+          "/images/products/catalog/thule_courier_trailer/details/5.webp",
+          "/images/products/catalog/thule_courier_trailer/details/6.webp",
+          "/images/products/catalog/thule_courier_trailer/details/7.webp",
+          "/images/products/catalog/thule_courier_trailer/details/8.webp",
+          "/images/products/catalog/thule_courier_trailer/details/9.webp",
+          "/images/products/catalog/thule_courier_trailer/details/10.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "bcb5f8d8c356b624a9821d9769d26bf1",
+        "sha256": "56b9fd135f098bc75070eb8280d8a96ad60c98ee2e26f9e086189abf161dad1c"
+      },
+      "scopeId": "a51d209463468f4b0e1edf7304cb654ff875b22edb49be8c22490eab2ad5b256",
+      "scopeRegistrationSha256": "d3830f7ba9304912160a18548a1593f1ee2aa3b5005f48afaff8ff36b70b2c6a",
+      "aiEvidenceSha256": "1bb1e750b4fda2093e6d8abb00d9246aa3113f3c636800904c1f18acdb832361",
+      "receiptSha256": "767b505ff4f37a9c9f1f41a4547755125ac3f979ec5bad0e3939a0e60c690564",
+      "eligibilitySha256": "20c0a29ab8959fa34bb7b6243ea887998813437bad95b45254ba9509d48ce843",
+      "evidenceManifestSha256": "ff2c6e4af1a3bb3a8e69168c9454a12deff37cf2efad5d965529f83d4a470664"
+    },
+    "videoReviewSha256": "77735d689d25e7880301a277ee0c2107b17bf05614aca0ed9bfe370df9f02c78",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "b3cf1f89c09fb9b69dbe73e2e7ddc819c7fbf386"
+  },
   "toplife_goatmilk_adult_200ml": {
     "video": "/images/products/catalog/toplife_goatmilk_adult_200ml/videos/f214b2015457a9215e702d078ad446ee6e5e1d50905e9b657587a357d7b9832b/hover.mp4",
     "videoProvider": "ziewcraft",
