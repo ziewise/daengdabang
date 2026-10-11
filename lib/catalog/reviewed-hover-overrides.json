@@ -2107,7 +2107,52 @@
     "videoDeliveryCommit": "be5ab5090dacfb133d9c4324a31d8099903b4004"
   },
   "iby_backpack_fc1705": null,
-  "iby_backpack_fc1752": null,
+  "iby_backpack_fc1752": {
+    "video": "/images/products/catalog/iby_backpack_fc1752/videos/ea7b4a0f0df0f5f70d60ba36268fddb694afdfba9484f6a9d3fac465e8ad1e1c/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "767a2c11df372ff7e0d6ca00e054a1ce",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "767a2c11df372ff7e0d6ca00e054a1ce",
+      "reviewId": "f92a30046daac2f8a8878f304cd80620",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "ea7b4a0f0df0f5f70d60ba36268fddb694afdfba9484f6a9d3fac465e8ad1e1c",
+      "seconds": 4,
+      "source": {
+        "no": 242,
+        "folder": "iby_backpack_fc1752",
+        "name": "이비야야 에어라인 캐리어백팩 FC1752 그레이",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_backpack_fc1752/iby_backpack_fc1752.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7669910719",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_backpack_fc1752/details/2.webp",
+          "/images/products/catalog/iby_backpack_fc1752/details/3.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "3f68e435c3ba8b92b8521f9058f26847",
+        "sha256": "ea7b4a0f0df0f5f70d60ba36268fddb694afdfba9484f6a9d3fac465e8ad1e1c"
+      },
+      "scopeId": "46a31d1b593394e11276c8f79bdb707ef8288e3acaa1ac7993917724e179ffbf",
+      "scopeRegistrationSha256": "2feae57bd37cd14adf0ac3f6d296430e41e40fe4cb616983189a47299770927c",
+      "aiEvidenceSha256": "bb0f50b7d6b464396cf92acf7aa532f6cda9b6a498ca445e749f91f2a6a95d3b",
+      "receiptSha256": "63a93d601cfb964135947db443fc8bace4ce0e334a7d394480a0de8584326252",
+      "eligibilitySha256": "77c988e4303a0e2f09b03748e3d01401f5fb33450ad6e086e13ffa343dc50510",
+      "evidenceManifestSha256": "a767354cb758a343b0ce0891f7218260baa8a2f4140527b9b8c8a88180e71886"
+    },
+    "videoReviewSha256": "dfda08800f4e846b8f9f6dc84e0b077280990b812bbe91d0946eb55fbdf82066",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "48ef5b9455e465aecb49115328bf73451a1c671f"
+  },
   "iby_backpack_fc2106": {
     "video": "/images/products/catalog/iby_backpack_fc2106/videos/7398e5c2b6140b61ba9390c48cafb6410525e34be5d1ef2d4bc0f111089d6ae6/hover.mp4",
     "videoProvider": "ziewcraft",

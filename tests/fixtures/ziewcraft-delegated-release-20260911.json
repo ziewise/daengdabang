@@ -1354,5 +1354,9 @@
   "rs_v2_coyote": {
     "productId": "p_104",
     "sha256": "1659a914cdfa32ec059e924229c7c570d8ebf4af672ac55ddbe02205ea282da2"
+  },
+  "iby_backpack_fc1752": {
+    "productId": "p_242",
+    "sha256": "ea7b4a0f0df0f5f70d60ba36268fddb694afdfba9484f6a9d3fac465e8ad1e1c"
   }
 }
