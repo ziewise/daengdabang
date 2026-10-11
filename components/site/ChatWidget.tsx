@@ -45,7 +45,6 @@ import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage"
 import ChatAnswerControls from "@/components/site/ChatAnswerControls";
 import {
     clearShopChatConversationId,
-    loadShopChatConversationId,
     saveShopChatConversationId,
     shopChatConversationOwnerKey,
 } from "@/lib/shop-chat-conversation";
@@ -186,7 +185,11 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     useEffect(() => {
         const previousOwner = conversationOwnerRef.current;
         conversationOwnerRef.current = conversationOwnerKey;
-        conversationIdRef.current = loadShopChatConversationId(conversationOwner);
+        if (previousOwner === conversationOwnerKey) return;
+        // There is no visible transcript restoration. A blank widget must
+        // never silently resume an old server-side medical conversation.
+        conversationIdRef.current = "";
+        clearShopChatConversationId(conversationOwner);
         if (previousOwner === null || previousOwner === conversationOwnerKey) return;
         activeRequestRef.current?.abort();
         activeRequestRef.current = null;

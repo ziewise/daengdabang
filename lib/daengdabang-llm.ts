@@ -2318,7 +2318,9 @@ function normalizeShopChatApiAnswer(
         traceId,
         conversationId,
         quality,
-        delivery: { status: "live", transient: false },
+        delivery: data.answerCompleted === false
+            ? { status: "retry", reason: "incomplete_answer", transient: true, message: "답변을 완료하지 못했어요. 다시 시도해 주세요." }
+            : { status: "live", transient: false },
     };
 }
 

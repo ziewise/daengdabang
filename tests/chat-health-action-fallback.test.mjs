@@ -196,6 +196,19 @@ test("successful API replies stay authoritative and count only normalized source
     assert.equal(result.research.sourceCount, 1);
 });
 
+test("an incomplete HTTP 200 answer remains retryable rather than a successful conversation", async () => {
+    const chat = loadChat({ fetch: async () => new Response(JSON.stringify({
+        answer: "답변을 완료하지 못했어요.",
+        answerCompleted: false,
+        products: [],
+        medical: { mode: false, triage: "temporarily_unavailable" },
+    }), { headers: { "content-type": "application/json" } }) });
+    const result = await chat.answerShopQuestionSmart("우리 강아지 삶은계란 먹어도되나?");
+    assert.equal(result.delivery.status, "retry");
+    assert.equal(result.delivery.reason, "incomplete_answer");
+    assert.equal(result.medical.mode, false);
+});
+
 test("source titles fill missing names while all strict URL and count gates remain", () => {
     const sources = normalizeShopChatSources([
         { title: "  Clinical\nsource ", url: "https://example.com/clinical" },

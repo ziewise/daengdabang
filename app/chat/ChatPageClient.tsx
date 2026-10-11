@@ -39,7 +39,6 @@ import { chatFontModeStorage, snapshots, subscribeStorage } from "@/lib/storage"
 import ChatAnswerControls from "@/components/site/ChatAnswerControls";
 import {
     clearShopChatConversationId,
-    loadShopChatConversationId,
     saveShopChatConversationId,
     shopChatConversationOwnerKey,
 } from "@/lib/shop-chat-conversation";
@@ -132,7 +131,10 @@ export default function ChatPageClient() {
         if (!hydrated) return;
         const previousOwner = conversationOwnerRef.current;
         conversationOwnerRef.current = conversationOwnerKey;
-        conversationIdRef.current = loadShopChatConversationId(conversationOwner);
+        if (previousOwner === conversationOwnerKey) return;
+        // Only the visible transcript may carry context into this surface.
+        conversationIdRef.current = "";
+        clearShopChatConversationId(conversationOwner);
         if (previousOwner === null || previousOwner === conversationOwnerKey) return;
         const interruptedQuestion = activeQuestionRef.current;
         activeRequestRef.current?.abort();

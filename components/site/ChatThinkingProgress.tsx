@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { ShopChatStreamStage } from "@/lib/shop-chat-stream";
 
 type ChatThinkingProgressProps = {
@@ -15,6 +16,12 @@ export default function ChatThinkingProgress({
     stage = "answering",
     message,
 }: ChatThinkingProgressProps) {
+    const [elapsed, setElapsed] = useState(0);
+    useEffect(() => {
+        const started = Date.now();
+        const timer = window.setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 1000);
+        return () => window.clearInterval(timer);
+    }, []);
     const defaultMessage = hasHistory
         ? "앞 대화도 함께 살펴보며 답변을 정리하고 있어요"
         : "답변을 정리하고 있어요";
@@ -23,6 +30,7 @@ export default function ChatThinkingProgress({
         planning: "질문 내용을 살펴보고 있어요",
         searching: "필요한 자료를 확인하고 있어요",
         answering: defaultMessage,
+        reviewing: "질문에 맞는 답인지 검토하고 있어요",
     };
     const progressMessage = message || stageMessages[stage] || defaultMessage;
     return (
@@ -36,6 +44,9 @@ export default function ChatThinkingProgress({
                 <span className="h-3 w-3 shrink-0 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
                 <span>{progressMessage}</span>
             </div>
+            <p className="mt-2 text-[11px] font-medium text-neutral-500" aria-live="off">
+                {elapsed}초 경과{elapsed >= 20 ? " · 답변을 확인하는 데 시간이 걸리고 있어요. 멈추기로 취소할 수 있어요." : ""}
+            </p>
         </div>
     );
 }
