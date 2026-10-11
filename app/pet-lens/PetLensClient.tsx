@@ -171,7 +171,7 @@ export default function PetLensClient() {
     const observationRequestId = cleanPetLensObservationRequestId(rawObservationRequestId);
     const observationReturnTo = observationRequestId
         ? petLensObservationHref(observationRequestId)
-        : undefined;
+        : mode === "observation" ? "/pet-lens?mode=observation" : undefined;
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
