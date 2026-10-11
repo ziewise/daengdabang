@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PetLensClient from "./PetLensClient";
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function PetLensPage() {
-    return <PetLensClient />;
+    return (
+        <Suspense fallback={<main className="p-8 text-center" role="status">연구소를 불러오고 있어요.</main>}>
+            <PetLensClient />
+        </Suspense>
+    );
 }

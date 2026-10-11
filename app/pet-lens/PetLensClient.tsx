@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
     analyzePetLensSmart,
     reconcilePetLensResultWithConfirmedProfile,
@@ -137,6 +138,7 @@ function clearObservationDeepLink() {
 type Result = PetLensAnalysisResult;
 
 export default function PetLensClient() {
+    const queryString = useSearchParams().toString();
     const { user, upsertPet } = useAuth();
     const { hydrated } = useStore();
     const [name, setName] = useState("");
@@ -185,7 +187,7 @@ export default function PetLensClient() {
         const modeSyncId = window.setTimeout(() => setMode(initialMode), 0);
         trackStorefrontEvent("petlens_opened", { mode: initialMode, surface: "page" });
         return () => window.clearTimeout(modeSyncId);
-    }, []);
+    }, [queryString]);
 
     useEffect(() => {
         const ownerKey = user?.apiUserId ? `id:${user.apiUserId}` : user?.email || "";
