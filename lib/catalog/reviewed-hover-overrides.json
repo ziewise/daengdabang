@@ -2106,7 +2106,59 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "be5ab5090dacfb133d9c4324a31d8099903b4004"
   },
-  "iby_backpack_fc1705": null,
+  "iby_backpack_fc1705": {
+    "video": "/images/products/catalog/iby_backpack_fc1705/videos/70c481f602b0fd49b6b70271f7eb7ae697a227c1a7de2dd0280a3522b9bbc52d/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "e85ae18ff0d91f1e3b67f8b8b2e57a2d",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "e85ae18ff0d91f1e3b67f8b8b2e57a2d",
+      "reviewId": "f332815d0223953bfb9bc508cf4bc211",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "70c481f602b0fd49b6b70271f7eb7ae697a227c1a7de2dd0280a3522b9bbc52d",
+      "seconds": 8,
+      "source": {
+        "no": 250,
+        "folder": "iby_backpack_fc1705",
+        "name": "이비야야 리소평행캐리어백팩 FC1705 2컬러 그레이 브라운",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_backpack_fc1705/iby_backpack_fc1705.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7662374843",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_backpack_fc1705/details/2.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/3.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/4.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/5.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/6.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/7.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/8.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/9.webp",
+          "/images/products/catalog/iby_backpack_fc1705/details/10.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d6714c49703b0a255c0fa07b4eb90f9c",
+        "sha256": "70c481f602b0fd49b6b70271f7eb7ae697a227c1a7de2dd0280a3522b9bbc52d"
+      },
+      "scopeId": "402aea9111f96a343b9f8757097eea41673f1db1c7e0ecc83a48560ebae78cf6",
+      "scopeRegistrationSha256": "9723c6b7c6ea01e78ea92ce6b948f861c2df58568fd4d369189d88aa7c579398",
+      "aiEvidenceSha256": "dcde1d5909eb901cf03d8248c81b3d3ee46788ff9c0cbf640587b3775dc7211c",
+      "receiptSha256": "6c7734bc7dc985c574fb1bdf97fffa20bdc2543dcb6396e76e45c97e4cea8cdd",
+      "eligibilitySha256": "50c34238047eb8eecab5e8153e777136236d95d0887a36b4df07b4e797175426",
+      "evidenceManifestSha256": "52e138b51e493584b9c10496106b53f985c1ae7895b6a836e71689386e73b27b"
+    },
+    "videoReviewSha256": "8df5358a9fb30dd5b84bb250b7551f79724bc010ff2cd58b3050ce60ec93056c",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "47cd50c94512e643808c3fcad73652e3c7e1564c"
+  },
   "iby_backpack_fc1752": {
     "video": "/images/products/catalog/iby_backpack_fc1752/videos/ea7b4a0f0df0f5f70d60ba36268fddb694afdfba9484f6a9d3fac465e8ad1e1c/hover.mp4",
     "videoProvider": "ziewcraft",

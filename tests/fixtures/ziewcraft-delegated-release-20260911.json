@@ -1370,5 +1370,9 @@
   "rw_porcini_toy": {
     "productId": "p_107",
     "sha256": "3d89ba7790bb61f6b0c450efdb39f9fcef802341eb64d4893362033e355d415a"
+  },
+  "iby_backpack_fc1705": {
+    "productId": "p_250",
+    "sha256": "70c481f602b0fd49b6b70271f7eb7ae697a227c1a7de2dd0280a3522b9bbc52d"
   }
 }
