@@ -2636,7 +2636,56 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "981e5d62e212d7e1b8820052ce977e25a8571c07"
   },
-  "iby_stroller_fs2180": null,
+  "iby_stroller_fs2180": {
+    "video": "/images/products/catalog/iby_stroller_fs2180/videos/f186c9d3e6be58b99e06310257fb5f1c4e94c0d3f0cbb58554c114b80f76aab9/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "67861d97d68e0a4ff3b5cccb639ce7f4",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "67861d97d68e0a4ff3b5cccb639ce7f4",
+      "reviewId": "9a8ea0b316e59124031b4999e2a1b131",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "f186c9d3e6be58b99e06310257fb5f1c4e94c0d3f0cbb58554c114b80f76aab9",
+      "seconds": 4,
+      "source": {
+        "no": 252,
+        "folder": "iby_stroller_fs2180",
+        "name": "이비야야 헤라클레스2.0 대형유모차 FS2180+에어펌프",
+        "brandEn": "Ibiyaya",
+        "isFood": false,
+        "image": "/images/products/catalog/iby_stroller_fs2180/iby_stroller_fs2180.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7662198614",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/iby_stroller_fs2180/details/official-visual-01.webp",
+          "/images/products/catalog/iby_stroller_fs2180/details/3.webp",
+          "/images/products/catalog/iby_stroller_fs2180/details/4.webp",
+          "/images/products/catalog/iby_stroller_fs2180/details/5.webp",
+          "/images/products/catalog/iby_stroller_fs2180/details/6.webp",
+          "/images/products/catalog/iby_stroller_fs2180/details/2.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "72b7747fb338ef05964daad0708d17b4",
+        "sha256": "f186c9d3e6be58b99e06310257fb5f1c4e94c0d3f0cbb58554c114b80f76aab9"
+      },
+      "scopeId": "502551ac72a527756601057d2e3d059407340946d00e7c34a1fe815c7d3c8967",
+      "scopeRegistrationSha256": "f85b2f3640fb8a263d617acef7bbb94ba9e0e589f277852916c5a1048e13113d",
+      "aiEvidenceSha256": "b8430ca8b9e9b174b1ebcdcd4accb52a55f418b61b761eaa03b2e00783393498",
+      "receiptSha256": "5208d5c73d9c917eb6b8f5c5df4b63317c3fb63422e681e1b0a3b6b6915b5e4c",
+      "eligibilitySha256": "e58688de695a65394d62b500db5f37a4492329f8025fcb8880d905c8919293ed",
+      "evidenceManifestSha256": "fbf79a979bec8d54102bae6e81e0c55126e4848f25349a7e0bbd6ba6b54dca49"
+    },
+    "videoReviewSha256": "8c08ed512afba60277db487eb7c7d94c8bc201ce644170ed1d8e8ba6ff51f932",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "2196edb92decc07953c2b6aeb10996594788fe91"
+  },
   "iby_stroller_fs2191": {
     "video": "/images/products/catalog/iby_stroller_fs2191/videos/4e0fa7e28481bd4dad5d7f34cd516bb4a73c174a58b8c7568699eb78020038fa/hover.mp4",
     "videoProvider": "ziewcraft",

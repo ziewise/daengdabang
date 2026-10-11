@@ -1374,5 +1374,9 @@
   "iby_backpack_fc1705": {
     "productId": "p_250",
     "sha256": "70c481f602b0fd49b6b70271f7eb7ae697a227c1a7de2dd0280a3522b9bbc52d"
+  },
+  "iby_stroller_fs2180": {
+    "productId": "p_252",
+    "sha256": "f186c9d3e6be58b99e06310257fb5f1c4e94c0d3f0cbb58554c114b80f76aab9"
   }
 }
