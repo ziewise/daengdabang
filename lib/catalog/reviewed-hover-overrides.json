@@ -12373,11 +12373,52 @@
     "videoDeliveryCommit": "5385c72c616fffb0b940037e6065014ff824efde"
   },
   "wow_shoes_80": {
-    "video": "/images/products/catalog/wow_shoes_80/videos/hover.mp4",
+    "video": "/images/products/catalog/wow_shoes_80/videos/58ae3678de4abdfe86229ac951b1c04382262595801158c1649babc51de1afaf/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "42badbd565c3a284e08f0f5a812b0585",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "42badbd565c3a284e08f0f5a812b0585",
+      "reviewId": "e81c8d934b45388fc12c9e36eb352af1",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "58ae3678de4abdfe86229ac951b1c04382262595801158c1649babc51de1afaf",
+      "seconds": 8,
+      "source": {
+        "no": 243,
+        "folder": "wow_shoes_80",
+        "name": "와우 신나라슈즈 일회용신발 소형 중형 80매(20일세트)",
+        "brandEn": "WOW",
+        "isFood": false,
+        "image": "/images/products/catalog/wow_shoes_80/wow_shoes_80.webp",
+        "sourceUrl": "https://smartstore.naver.com/daengdabang/products/7669171487",
+        "gallery": [],
+        "details": [
+          "/images/products/catalog/wow_shoes_80/details/2.webp",
+          "/images/products/catalog/wow_shoes_80/details/3.webp",
+          "/images/products/catalog/wow_shoes_80/details/4.webp",
+          "/images/products/catalog/wow_shoes_80/details/5.webp"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "137a25512023a571dd36d5b44c4b2047",
+        "sha256": "58ae3678de4abdfe86229ac951b1c04382262595801158c1649babc51de1afaf"
+      },
+      "scopeId": "4913deb0c0de56203c020a94b89ddecf232de90ac16ca1183e116fb38a42e0cd",
+      "scopeRegistrationSha256": "cfd83ebcf75672e7de2a2b2578715ebc7da6163ae51a579a12f827df5d703281",
+      "aiEvidenceSha256": "4db001e3b7491b2cb6797f127baef490d3e620f82c5c9ef666b35946d049fd97",
+      "receiptSha256": "a2c7b264a2a061728ad96fa178a527fc421e0c3f4247e27ce99029916b68a0d0",
+      "eligibilitySha256": "eaa8f68ba922c90c04e741b436c0fe73aca24c39992937f6918974954ba485e5",
+      "evidenceManifestSha256": "10d8297ec0029e8d0d75e5680120c5259e293e789f46e86c06d23299ab5075b6"
+    },
+    "videoReviewSha256": "f37597c6234a78d386c01a4dd2630653aa5587e8b32daf66c750f160459786ee",
+    "videoPlaybackMode": "once_hold_last_frame",
     "videoDelivery": "jsdelivr_commit_cdn",
-    "videoProvider": "ddb_exact_product_renderer",
-    "videoQuality": "approved_exact_product_images",
-    "videoJobId": "hover-photo-20260903-34f3c9848102"
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "9fe2bcc86334c9fd66babcf2875483e7245cb48e"
   },
   "yora_activebar_35g_12": {
     "video": "/images/products/catalog/yora_activebar_35g_12/videos/a87b14f5641b0efa345d7398ddfa2434a2285f6c0ea05d8c5a93e01029cae9b4/hover.mp4",

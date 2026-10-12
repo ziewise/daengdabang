@@ -1382,5 +1382,9 @@
   "rs_hardcase": {
     "productId": "p_83",
     "sha256": "203f9cc968856fadc6287909e4d67f3cc9f0ccd05d86482792f5e9a6f2a258e1"
+  },
+  "wow_shoes_80": {
+    "productId": "p_243",
+    "sha256": "58ae3678de4abdfe86229ac951b1c04382262595801158c1649babc51de1afaf"
   }
 }
