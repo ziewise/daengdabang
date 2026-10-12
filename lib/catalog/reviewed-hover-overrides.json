@@ -6257,7 +6257,65 @@
     "videoTrimIdentity": null,
     "videoDeliveryCommit": "ae5e21393d263c40f66ff5cc44966008681b90d7"
   },
-  "rs_v2_avalanchewhite": null,
+  "rs_v2_avalanchewhite": {
+    "video": "/images/products/catalog/rs_v2_avalanchewhite/videos/25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484/hover.mp4",
+    "videoProvider": "ziewcraft",
+    "videoQuality": "approved_dog_interacting",
+    "videoJobId": "867190ab3f6e310d8f2d6582cf98eb9a",
+    "videoZiewcraftIdentity": {
+      "kind": "ziewcraft_owner_delegated_ai.v1",
+      "jobId": "867190ab3f6e310d8f2d6582cf98eb9a",
+      "reviewId": "3de5dfdec6d887085df899df6eeaea4a",
+      "policyId": "ddb-owner-ai-qa-20260911-v1",
+      "finalSha256": "25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484",
+      "seconds": 8,
+      "source": {
+        "no": 103,
+        "folder": "rs_v2_avalanchewhite",
+        "name": "렉스스펙스 V2 아발란체 화이트 프레임 반려견 고글",
+        "brandEn": "Rex Specs",
+        "isFood": false,
+        "image": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_03.jpg",
+        "sourceUrl": "http://www.jskglobalbiz.co.kr/goods/goods_view.php?goodsNo=1000001190",
+        "gallery": [
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_148.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_219.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_334.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_453.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_580.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_675.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_75.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_828.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001190/image/detail/1000001190_detail_931.jpg"
+        ],
+        "details": [
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/7713b6091d2d275fff7d2fb3a253418d_102328.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/d75237cf4192cc36c4a141bb47baef57_102344.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/e59a016bf263080e4b5568187eb2a41d_102357.jpg",
+          "https://cdn-saas-web-223-244.cdn-nhncommerce.com/jsk2015_godomall_com/data/editor/goods/260414/22f6ce8e07c260ce642d49abe6c6dbb9_102413.jpg",
+          "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/editor/goods/1000001190/94ddf4edbc93265ead138823eb7f6643.jpg"
+        ]
+      },
+      "artifact": {
+        "artifact_id": "d38048b2370f5d7422065f08610f5ede",
+        "sha256": "25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484"
+      },
+      "scopeId": "2b5215932ccee3d151a3777ff37b13a836823c5184439c6b20594314f79f45c2",
+      "scopeRegistrationSha256": "a807e05ea36d5b097647433fa5cdbfcf4b31d9a281b3224b9a01140760b0ebf9",
+      "aiEvidenceSha256": "97d143c66d440b4e64337e8ad0b05c2d96264ae57bee4c4677b755bdda936f07",
+      "receiptSha256": "8c964a32eb88c4a9cda0b33d37b082e00ddbc19bdef7895459f930fa5f79bdb2",
+      "eligibilitySha256": "0b38faa4e126cfb87367ba9084c155e49d922bb96cfd021a4355a830add3ba9e",
+      "evidenceManifestSha256": "6e4ae7558fbed2ac5847beac9a34c42cb646f28c490abeb1176452ba6d9e7764"
+    },
+    "videoReviewSha256": "7de95bcb929405ff5820d4e5ad0f86b075689445518ffb10c1b9b487a3b560c7",
+    "videoPlaybackMode": "once_hold_last_frame",
+    "videoDelivery": "jsdelivr_commit_cdn",
+    "videoGenerationIdentity": null,
+    "videoEditIdentity": null,
+    "videoReviewClass": null,
+    "videoTrimIdentity": null,
+    "videoDeliveryCommit": "c110ab8e5ce851818d7bd3adfef2b3c5a0eb0e78"
+  },
   "rs_v2_banditorange": {
     "video": "/images/products/catalog/rs_v2_banditorange/videos/47603d35a601864178dd747aa9ff9c40c50685da4f0cdf776af7b712b29fc331/hover.mp4",
     "videoProvider": "ziewcraft",

@@ -75339,16 +75339,16 @@
     "publicationStatus": "approved",
     "productId": "p_103",
     "folder": "rs_v2_avalanchewhite",
-    "video": "/images/products/catalog/rs_v2_avalanchewhite/videos/bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6/hover.mp4",
-    "sha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6",
-    "videoQuality": "approved_dog_wearing",
+    "video": "/images/products/catalog/rs_v2_avalanchewhite/videos/25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484/hover.mp4",
+    "sha256": "25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484",
+    "videoQuality": "approved_dog_interacting",
     "playbackMode": "once_hold_last_frame",
     "videoZiewcraftIdentity": {
       "kind": "ziewcraft_owner_delegated_ai.v1",
-      "jobId": "ffad87bcac981b9bddad42c5cb29e09d",
-      "reviewId": "9d3a7ec1bf433371181e0e687fd55e1c",
+      "jobId": "867190ab3f6e310d8f2d6582cf98eb9a",
+      "reviewId": "3de5dfdec6d887085df899df6eeaea4a",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "finalSha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6",
+      "finalSha256": "25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484",
       "seconds": 8,
       "source": {
         "no": 103,
@@ -75378,34 +75378,34 @@
         ]
       },
       "artifact": {
-        "artifact_id": "e02bc96a52b64e486ad9eb335133e94a",
-        "sha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6"
+        "artifact_id": "d38048b2370f5d7422065f08610f5ede",
+        "sha256": "25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484"
       },
-      "scopeId": "ba1ea4fcb7276a912529829da041a19ddd874fbe9eb8a96e8b06dc0696d76d2b",
-      "scopeRegistrationSha256": "2530dad14a301d89f0abf430c2fbc7da1516683ed080be67f5d1d59c5226d4aa",
-      "aiEvidenceSha256": "e8c662355b6060fe4273ae1d8f50cc3583240701480afc74d22011225b127247",
-      "receiptSha256": "7fb897f25914011a48af8482ca6bfad12323302ff82b95da6143cce56e4b1e1b",
-      "eligibilitySha256": "b0117f1838ab9c0126bec81dbdfb420b906c61b0c49eebf8a2a9bbc0bc53836a",
-      "evidenceManifestSha256": "e30fbe1790be0512ff25db0b492ef67575bf8669684a92ab157d7364832f2e9d"
+      "scopeId": "2b5215932ccee3d151a3777ff37b13a836823c5184439c6b20594314f79f45c2",
+      "scopeRegistrationSha256": "a807e05ea36d5b097647433fa5cdbfcf4b31d9a281b3224b9a01140760b0ebf9",
+      "aiEvidenceSha256": "97d143c66d440b4e64337e8ad0b05c2d96264ae57bee4c4677b755bdda936f07",
+      "receiptSha256": "8c964a32eb88c4a9cda0b33d37b082e00ddbc19bdef7895459f930fa5f79bdb2",
+      "eligibilitySha256": "0b38faa4e126cfb87367ba9084c155e49d922bb96cfd021a4355a830add3ba9e",
+      "evidenceManifestSha256": "6e4ae7558fbed2ac5847beac9a34c42cb646f28c490abeb1176452ba6d9e7764"
     },
     "delegatedReview": {
-      "api_job_id": "ffad87bcac981b9bddad42c5cb29e09d",
+      "api_job_id": "867190ab3f6e310d8f2d6582cf98eb9a",
       "bindings": {
         "native_video": {
-          "artifact_id": "d0c30d217e0e45a79f7d0f2306975a30",
-          "sha256": "8bd2d189a2c7daf276ee6758dcaa5b210eaf3304baffb4d41b1c113d288cce91"
+          "artifact_id": "e35707a53c594923835cf9ebc6dc3afd",
+          "sha256": "5af32578061dff960641a742c226ca5666d2d26c745bdd232d0794fd5461bba3"
         },
         "pair_video": {
-          "artifact_id": "e02bc96a52b64e486ad9eb335133e94a",
-          "sha256": "bb7a01b681653920cae1ab8f806159a4b0c8969b7cf0c62db00ced66f28a9be6"
+          "artifact_id": "d38048b2370f5d7422065f08610f5ede",
+          "sha256": "25aa82c93bfc234670260980357177c0d6022b93a529c90772b60e083eb5a484"
         },
         "review_video": {
-          "artifact_id": "22f7f39bdcedff4b7b16d208dce696b8",
-          "sha256": "de8beacb0dc429bb2b6342a21f07a4340b37441f5f2ac85c3e2ff798c3ffc356"
+          "artifact_id": "3a4493d28ea6ac03dea2b3fe0cbc51b9",
+          "sha256": "f5833bdbd2a89a2253832d2d5311fff319486733301111cadf50c0dc07f43e32"
         },
         "terminal": {
-          "artifact_id": "24dce6c1fb2e17f3c072a2326d98e7db",
-          "sha256": "aa9a58c24f36046597ae8538eaefac511d1be0607e6539866c3c0c3a11640be0"
+          "artifact_id": "61f395445d36660f3020f08ddca3a62b",
+          "sha256": "1eb36bdc63ca5e6a488ee2b519465d2365bc70fc5cf231e5d0f08f494b7043b3"
         }
       },
       "checks": {
@@ -75727,41 +75727,41 @@
       "human_identity_verified": false,
       "numeric_boundary_evidence": {
         "loop": {
-          "background_homography_jump": 0.00025391933013452217,
-          "boundary_camera_displacement": 0.00030631257686764,
-          "homography_inlier_ratio": 0.9919354838709677,
+          "background_homography_jump": 0.00020979310102120508,
+          "boundary_camera_displacement": 0.00023676503042224795,
+          "homography_inlier_ratio": 0.8544776119402985,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.038143422454595566,
+          "mean_absolute_frame_difference": 0.061077821999788284,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0008969217888079584,
+          "optical_flow_discontinuity": 0.003007755149155855,
           "semantic_verified": false
         },
         "seam": {
-          "background_homography_jump": 0.00017608823327464052,
-          "boundary_camera_displacement": 0.00022803814499638975,
+          "background_homography_jump": 6.0074922657804564e-05,
+          "boundary_camera_displacement": 8.07399264886044e-05,
           "homography_inlier_ratio": 1.0,
           "homography_status": "measured_proxy",
           "mad_limit": 0.08,
           "mad_passed": true,
-          "mean_absolute_frame_difference": 0.016704639419913292,
+          "mean_absolute_frame_difference": 0.027096379548311234,
           "measurement_only": true,
-          "optical_flow_discontinuity": 0.0006957728764973581,
+          "optical_flow_discontinuity": 0.0008125155000016093,
           "semantic_verified": false
         },
         "seams": [
           {
-            "background_homography_jump": 0.00017608823327464052,
-            "boundary_camera_displacement": 0.00022803814499638975,
+            "background_homography_jump": 6.0074922657804564e-05,
+            "boundary_camera_displacement": 8.07399264886044e-05,
             "homography_inlier_ratio": 1.0,
             "homography_status": "measured_proxy",
             "left_frame": 95,
             "mad_limit": 0.08,
             "mad_passed": true,
-            "mean_absolute_frame_difference": 0.016704639419913292,
+            "mean_absolute_frame_difference": 0.027096379548311234,
             "measurement_only": true,
-            "optical_flow_discontinuity": 0.0006957728764973581,
+            "optical_flow_discontinuity": 0.0008125155000016093,
             "right_frame": 96,
             "semantic_verified": false
           }
@@ -75773,7 +75773,7 @@
       "previous_review_id": null,
       "private_only": true,
       "product": {
-        "color": "Avalanche White / Smoke lens",
+        "color": "Rex Specs V2 Avalanche White frame with Smoke single visor",
         "product_id": "p_103",
         "sku": "rs_v2_avalanchewhite"
       },
@@ -75795,36 +75795,36 @@
       "required_final_seconds": 8,
       "retry_reason": "",
       "review_actor": {
-        "evidence_id": "ddb-ai-p_103-ffad87bcac981b9bddad42c5cb29e09d-all97-v1",
-        "evidence_sha256": "e8c662355b6060fe4273ae1d8f50cc3583240701480afc74d22011225b127247",
+        "evidence_id": "ddb-ai-p_103-867190ab3f6e310d8f2d6582cf98eb9a-all97-v1",
+        "evidence_sha256": "97d143c66d440b4e64337e8ad0b05c2d96264ae57bee4c4677b755bdda936f07",
         "full_segment_watched": false,
         "kind": "ai"
       },
-      "review_id": "9d3a7ec1bf433371181e0e687fd55e1c",
-      "reviewed_at": "2026-09-16T17:57:15.334754Z",
+      "review_id": "3de5dfdec6d887085df899df6eeaea4a",
+      "reviewed_at": "2026-10-12T07:11:49.878429Z",
       "schema_version": 1,
-      "scope_id": "ba1ea4fcb7276a912529829da041a19ddd874fbe9eb8a96e8b06dc0696d76d2b",
+      "scope_id": "2b5215932ccee3d151a3777ff37b13a836823c5184439c6b20594314f79f45c2",
       "semantic_verified": false,
       "server_technical_gate_passed": true,
       "status": "accepted",
       "terminal_provenance": {
-        "artifact_id": "24dce6c1fb2e17f3c072a2326d98e7db",
+        "artifact_id": "61f395445d36660f3020f08ddca3a62b",
         "canonical_review": true,
         "frame_count": 96,
         "frame_index": 95,
         "height": 1080,
         "mime_type": "image/png",
-        "native_artifact_id": "d0c30d217e0e45a79f7d0f2306975a30",
-        "native_artifact_sha256": "8bd2d189a2c7daf276ee6758dcaa5b210eaf3304baffb4d41b1c113d288cce91",
+        "native_artifact_id": "e35707a53c594923835cf9ebc6dc3afd",
+        "native_artifact_sha256": "5af32578061dff960641a742c226ca5666d2d26c745bdd232d0794fd5461bba3",
         "origin": "server_decoded_terminal",
         "pixel_encoding": "bgr24",
-        "pixel_sha256": "13b3701a1c281ea21e653880d31a471845bc1f13f6ca51976bd427be9d4a09a1",
+        "pixel_sha256": "cb8712262e492a6edad5dbff66756599133e5e3f3e915971363e51e27fccc3f7",
         "png_compression": 3,
         "producer": "ziewcraft-human-review-media-r49-v1",
-        "recipe_sha256": "35d27ba2a56313a06507295531033ae2f10655c4548ade242941247d7deccfaf",
-        "sha256": "aa9a58c24f36046597ae8538eaefac511d1be0607e6539866c3c0c3a11640be0",
-        "source_artifact_id": "22f7f39bdcedff4b7b16d208dce696b8",
-        "source_artifact_sha256": "de8beacb0dc429bb2b6342a21f07a4340b37441f5f2ac85c3e2ff798c3ffc356",
+        "recipe_sha256": "23a61cc9d8f7f300a42d2a0bbdf9d9e2429a32ba34dc95b2e6117e1d3a62670c",
+        "sha256": "1eb36bdc63ca5e6a488ee2b519465d2365bc70fc5cf231e5d0f08f494b7043b3",
+        "source_artifact_id": "3a4493d28ea6ac03dea2b3fe0cbc51b9",
+        "source_artifact_sha256": "f5833bdbd2a89a2253832d2d5311fff319486733301111cadf50c0dc07f43e32",
         "source_rendition": "review",
         "width": 1080
       }
@@ -75832,7 +75832,7 @@
     "delegationScope": {
       "policy_id": "ddb-owner-ai-qa-20260911-v1",
       "product": {
-        "color": "Avalanche White / Smoke lens",
+        "color": "Rex Specs V2 Avalanche White frame with Smoke single visor",
         "product_id": "p_103",
         "sku": "rs_v2_avalanchewhite"
       },
@@ -75849,10 +75849,10 @@
         }
       ],
       "required_final_seconds": 8,
-      "scene_asset_id": "8f2670512b33bb7f909f7e6f79ed7416",
-      "scene_sha256": "7489628f8220f08ae06e285ad06055f171677e071d86c1e0bf3fb7f163e0ec83",
+      "scene_asset_id": "2075b621403506159f0faa990bbf958f",
+      "scene_sha256": "4a0283eb5cd45bbd762c7b334e7b8187fbe21a538cba38a5bcf03bd8c05e8394",
       "schema_version": 1,
-      "scope_id": "ba1ea4fcb7276a912529829da041a19ddd874fbe9eb8a96e8b06dc0696d76d2b",
+      "scope_id": "2b5215932ccee3d151a3777ff37b13a836823c5184439c6b20594314f79f45c2",
       "max_continuation_seconds": 60,
       "policy_evidence_sha256": "9621aa5545d100187b1be321c1823494e13372fa25a07475d067435bac6f0d5c",
       "source_sha256_authority": "client_original_photo_declaration",
@@ -75861,9 +75861,9 @@
     "currentEligibility": {
       "owner_delegated_shop_candidate_current": true,
       "reason": null,
-      "reviewId": "9d3a7ec1bf433371181e0e687fd55e1c",
+      "reviewId": "3de5dfdec6d887085df899df6eeaea4a",
       "policyId": "ddb-owner-ai-qa-20260911-v1",
-      "scopeId": "ba1ea4fcb7276a912529829da041a19ddd874fbe9eb8a96e8b06dc0696d76d2b",
+      "scopeId": "2b5215932ccee3d151a3777ff37b13a836823c5184439c6b20594314f79f45c2",
       "human_approved": false,
       "publication_allowed": false
     },
@@ -75884,10 +75884,12 @@
       "actor": "ai",
       "ownerAuthorized": true,
       "evidenceVerified": true,
-      "ownerInstructionSha256": "c6bb4ca5010537d8bf794280fb331ed56f03897ef2b43a3cabfa0d376635c0f5",
-      "technicalProofSha256": "33e9ebe4c92c04d6b21edffedd8f1d3878a89cd3d3163f7b5fef945353af6c03",
-      "checkedAt": "2026-09-20T16:10:00.365570+00:00",
-      "sha256": "517cee0d17a2e141cbace1c3380edc35d83cd815736de36922e9e1e52e6d5af9"
+      "ownerInstructionSha256": "b33c34abc1c54e4eccdbc0f13442d6d7d32606c113c711a91499a7fe9b8da2a8",
+      "technicalProofSha256": "72f8adf7c63359ea9874a86aea41657e407a9d77d3127ba10d2af8fc6486fb35",
+      "naturalMotionReviewSha256": "39407e6de16db54c9a4ff28e0a50abc9ad96e0af1d974d85d80898d8bc422d06",
+      "naturalMotionQualityVersion": "natural-motion-20260925",
+      "checkedAt": "2026-10-12T07:13:05.689598+00:00",
+      "sha256": "7de95bcb929405ff5820d4e5ad0f86b075689445518ffb10c1b9b487a3b560c7"
     }
   },
   "canagan_dog_dental_6kg": {
