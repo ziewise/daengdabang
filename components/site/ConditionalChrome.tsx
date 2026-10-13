@@ -13,6 +13,7 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import FloatingDock from "@/components/site/FloatingDock";
 import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
+import PrelaunchNotice from "@/components/site/PrelaunchNotice";
 
 // 헤더/푸터/도크 없이 풀스크린으로 띄울 경로(정확 일치 또는 하위 경로)
 const BARE_PATHS = ["/auth/login"];
@@ -46,6 +47,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
             <Footer />
             <FloatingDock />
             <PetCompanionGate />
+            <PrelaunchNotice />
         </>
     );
 }
