@@ -70,7 +70,7 @@ test("local pet-care requests add four practical actions without showing a gener
     assert.match(extras, /fetchNearbyLocalCarePlaces\([\s\S]{0,180}category,[\s\S]{0,80}label,[\s\S]{0,80}query/);
     assert.match(extras, /openExternal\(buildNaverMapUrl\(item\.query\)\)/);
     assert.match(extras, /현재 위치에서 가까운 후보를 이 화면에 보여드려요/);
-    assert.match(extras, /현재 위치 기준 가까운 \{state\.label\} 후보/);
+    assert.match(extras, /현재 위치 기준 가까운 \$?\{state\.label\} 후보/);
     assert.match(extras, /!localCareIntent \? \([\s\S]{0,120}<ResearchEvidence sources=\{sources\} research=\{research\} compact=\{compact\} \/>/);
     assert.doesNotMatch(extras, /근거 부족|확인 가능한 웹 출처 없음/);
     assert.match(extras, /NON_EVIDENCE_RESEARCH_MODES\.has\(researchMode\) && visibleSources\.length === 0/);

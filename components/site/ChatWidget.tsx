@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useChatWindow } from "@/hooks/useChatWindow";
+import { CHAT_RESIZE_EDGES } from "@/lib/chat-window-geometry";
 import {
     answerShopQuestion,
     answerShopQuestionSmart,
@@ -466,11 +467,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         </div>
                     </header>
                     {chatWindow.desktop ? (
-                        <div className={styles.windowToolbar}>
-                            <span>제목을 끌어 이동</span>
-                            <button type="button" onClick={() => chatWindow.resize(-80)} aria-label="채팅 창 축소">− 축소</button>
-                            <button type="button" onClick={() => chatWindow.resize(80)} aria-label="채팅 창 확대">＋ 확대</button>
-                            <button type="button" onClick={chatWindow.reset} aria-label="채팅 창 크기와 위치 초기화">기본</button>
+                        <div className={styles.windowHint}>
+                            제목을 끌어 이동 · 가장자리나 모서리를 끌어 크기 조절
                         </div>
                     ) : null}
                     {productContext ? (
@@ -647,7 +645,13 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             )}
                         </div>
                     </form>
-                    {chatWindow.desktop ? <button type="button" {...chatWindow.resizeHandlers} className={styles.resizeHandle} aria-label="채팅 창 크기 조절" title="드래그 또는 방향키로 크기 조절"><span aria-hidden="true">◢</span></button> : null}
+                    {chatWindow.desktop ? CHAT_RESIZE_EDGES.map(edge => (
+                        <div key={edge} {...chatWindow.resizeHandlers(edge)} className={styles.resizeHandle}
+                            data-resize-edge={edge} role="group" tabIndex={edge === "se" ? 0 : -1}
+                            aria-label="채팅 창 크기 조절" title="가장자리를 끌어 크기 조절 · 방향키 사용 가능">
+                            {edge === "se" ? <span aria-hidden="true">◢</span> : null}
+                        </div>
+                    )) : null}
                 </section>
             )}
 

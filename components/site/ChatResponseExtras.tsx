@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
 import { placeMapLinks } from "@/lib/place-map-links";
+import { localVetQuery, needsVetHoursCheck } from "@/lib/local-vet-query";
 import { ddbApiBase } from "@/lib/customer-api";
 import type {
     ShopChatCta,
@@ -139,6 +140,7 @@ type LocalCarePlace = {
     address: string;
     phone?: string;
     openingHours?: string;
+    open24HoursVerified?: boolean;
     distanceMeters: number;
     lat: number;
     lon: number;
@@ -150,7 +152,7 @@ type LocalCarePlace = {
 type LocalCareSearchState =
     | { status: "idle" }
     | { status: "loading"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string }
-    | { status: "done"; category: LocalCareCategory; label: string; places: LocalCarePlace[]; fallbackUrl: string }
+    | { status: "done"; category: LocalCareCategory; label: string; places: LocalCarePlace[]; fallbackUrl: string; requiresOpeningHoursVerification: boolean }
     | { status: "error"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string };
 
 function buildNaverMapUrl(...parts: Array<string | undefined>) {
@@ -389,6 +391,7 @@ async function fetchDaengDaBangLocalCarePlaces(
 
     const params = new URLSearchParams({
         category,
+        query,
         lat: String(latitude),
         lon: String(longitude),
         limit: "5",
@@ -402,6 +405,7 @@ async function fetchDaengDaBangLocalCarePlaces(
         status?: "ready" | "degraded" | "unavailable";
         error?: string;
         fallbackMapUrl?: string;
+        requiresOpeningHoursVerification?: boolean;
         places?: Array<{
             id?: string;
             name?: string;
@@ -414,6 +418,7 @@ async function fetchDaengDaBangLocalCarePlaces(
             source?: string;
             mapProvider?: string;
             openingHours?: string;
+            open24HoursVerified?: boolean;
         }>;
     };
     if (!Array.isArray(data.places)) return null;
@@ -430,6 +435,7 @@ async function fetchDaengDaBangLocalCarePlaces(
             address: String(place.address || "").trim(),
             phone: place.phone ? String(place.phone) : undefined,
             openingHours: place.openingHours ? String(place.openingHours) : undefined,
+            open24HoursVerified: place.open24HoursVerified === true,
             lat,
             lon,
             distanceMeters: typeof place.distanceMeters === "number"
@@ -448,6 +454,7 @@ async function fetchDaengDaBangLocalCarePlaces(
             : "";
     return {
         fallbackUrl: safeNaverMapFallback(data.fallbackMapUrl, query),
+        requiresOpeningHoursVerification: category === "veterinary" && (data.requiresOpeningHoursVerification === true || needsVetHoursCheck(query)),
         places,
         message,
     };
@@ -710,14 +717,16 @@ const LOCAL_CARE_SHORTCUTS = [
     { category: "daycare", label: "데이케어·유치원", query: "반려견 데이케어 유치원", icon: "fa-dog" },
 ] as const;
 
-type LocalCareShortcut = (typeof LOCAL_CARE_SHORTCUTS)[number];
+type LocalCareShortcut = { category: LocalCareCategory; label: string; query: string; icon: string };
 
 function LocalCareQuickActions({
     onFindLocalCare,
     loadingCategory,
+    veterinaryQuery,
 }: {
     onFindLocalCare: (item: LocalCareShortcut) => void;
     loadingCategory?: LocalCareCategory;
+    veterinaryQuery: string;
 }) {
     return (
         <div
@@ -736,7 +745,7 @@ function LocalCareQuickActions({
                 </div>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2">
-                {LOCAL_CARE_SHORTCUTS.map((item) => (
+                {LOCAL_CARE_SHORTCUTS.map(item => item.category === "veterinary" ? { ...item, label: veterinaryQuery, query: veterinaryQuery } : item).map((item) => (
                     <div key={item.category} className="overflow-hidden rounded-lg border border-indigo-100 bg-white">
                         <button
                             type="button"
@@ -818,12 +827,20 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
     return (
         <div className="mt-2 space-y-2 rounded-lg border border-indigo-100 bg-white p-2.5 text-left shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-1.5">
-                <p className="text-[11px] font-black text-indigo-800">현재 위치 기준 가까운 {state.label} 후보</p>
+                <p className="text-[11px] font-black text-indigo-800">{state.requiresOpeningHoursVerification ? `${state.label} 검색 · 운영시간 확인 필요` : `현재 위치 기준 가까운 ${state.label} 후보`}</p>
                 <span className="rounded-full bg-[#e9fff1] px-2 py-1 text-[10px] font-black text-[#087b39]">
                     지도 선택 가능
                 </span>
             </div>
-            {state.places.map((place, index) => (
+            {state.requiresOpeningHoursVerification ? (
+                <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-[11px] font-bold leading-5 text-amber-950">
+                    {state.places.some(place => place.open24HoursVerified)
+                        ? "공개 운영시간에 24시간으로 등록된 병원을 먼저 표시합니다. 현재 진료·응급 수용 여부는 전화로 확인해 주세요."
+                        : "요청하신 시간에 진료하는 병원을 확인하지 못했어요. 아래는 운영시간이 미확인된 주변 동물병원 후보입니다."}
+                    <button type="button" onClick={() => openExternal(state.fallbackUrl)} className="mt-1 block underline">요청한 조건으로 네이버지도에서 확인</button>
+                </div>
+            ) : null}
+            {[...state.places].sort((a, b) => state.requiresOpeningHoursVerification ? Number(b.open24HoursVerified) - Number(a.open24HoursVerified) : 0).map((place, index) => (
                 <div key={place.id} className="rounded-md border border-neutral-200 bg-neutral-50 p-2.5">
                     <div className="flex items-start gap-2">
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-black text-white">
@@ -831,6 +848,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                         </span>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-black leading-5 text-neutral-950">{place.name}</p>
+                            {state.requiresOpeningHoursVerification ? <p className="text-[11px] font-black text-amber-800">{place.open24HoursVerified ? "공개 운영시간: 24시간 · 현재 진료는 전화 확인" : "야간·24시간 진료 미확인"}</p> : null}
                             <p className="mt-0.5 text-[10px] font-black text-indigo-700">
                                 {place.source === "naver" ? "네이버 지역검색 결과" : "공개 위치 데이터 결과"}
                             </p>
@@ -941,6 +959,7 @@ export default function ChatResponseExtras({
                 category,
                 label,
                 places: result.places,
+                requiresOpeningHoursVerification: result.requiresOpeningHoursVerification,
                 fallbackUrl: result.fallbackUrl,
             });
         } catch (error) {
@@ -1027,6 +1046,7 @@ export default function ChatResponseExtras({
             {localCareIntent ? (
                 <div className={`mt-2 ${widthClass}`}>
                     <LocalCareQuickActions
+                        veterinaryQuery={localVetQuery(questionContext || "", geoSearchCta?.query)}
                         loadingCategory={localCareSearch.status === "loading" ? localCareSearch.category : undefined}
                         onFindLocalCare={(item) => void runLocalCareSearch(item)}
                     />
