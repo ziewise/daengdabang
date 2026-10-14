@@ -8,6 +8,7 @@
 
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
+import { openChatWidget } from "@/lib/chat-widget-events";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { searchRecent } from "@/lib/storage";
@@ -312,7 +313,13 @@ function SubLink({
     return (
         <Link
             href={href}
-            onClick={onClick}
+            onClick={(event) => {
+                onClick();
+                if (href !== "/chat/" || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                if (!document.querySelector("[data-chat-widget-open]")) return;
+                event.preventDefault();
+                openChatWidget();
+            }}
             className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-neutral-600 hover:text-aurora-indigo rounded-lg"
         >
             {icon && <i className={`fa-solid ${icon} text-neutral-400 w-3 text-center text-[10px]`} />}

@@ -4,13 +4,24 @@ export const CHAT_WIDGET_VISIBILITY_EVENT = "ddb:chat-widget-visibility";
 
 export type ChatWidgetOpenDetail = {
     productName?: string;
+    initialQuestion?: string;
 };
 
 export type ChatWidgetVisibilityDetail = {
     open: boolean;
 };
 
+let pendingOpen: ChatWidgetOpenDetail | undefined;
+
+export function consumeChatWidgetOpen() {
+    const detail = pendingOpen;
+    pendingOpen = undefined;
+    return detail;
+}
+
 export function openChatWidget(detail: ChatWidgetOpenDetail = {}) {
     if (typeof window === "undefined") return;
+    // Preserve requests made before the global widget's effect is mounted.
+    pendingOpen = detail;
     window.dispatchEvent(new CustomEvent<ChatWidgetOpenDetail>(CHAT_WIDGET_OPEN_EVENT, { detail }));
 }

@@ -12,6 +12,7 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     let index = 0;
     let effects = [];
     const sent = [];
+    const listeners = new Map();
     const clear = () => {};
     const member = { apiUserId: 42, email: "test@example.invalid", pets: [] };
     const depsEqual = (a, b) => a && b && a.length === b.length && a.every((value, i) => Object.is(value, b[i]));
@@ -37,6 +38,8 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     const jsx = (type, props) => ({ type, props });
     const stubs = {
         react,
+        "@/hooks/useChatWindow": { useChatWindow: () => ({ desktop: false }) },
+        "@/lib/chat-widget-events": { CHAT_WIDGET_OPEN_EVENT: "open-chat", consumeChatWidgetOpen: () => undefined },
         "react/jsx-runtime": { jsx, jsxs: jsx, Fragment: "fragment" },
         "next/link": { default: "a" },
         "@/lib/store": { useAuth: () => ({ user: member }) },
@@ -60,7 +63,7 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     };
     const context = vm.createContext({
         AbortController, CustomEvent: class {},
-        window: { addEventListener() {}, removeEventListener() {}, requestAnimationFrame() { return 0; }, cancelAnimationFrame() {}, dispatchEvent() {} },
+        window: { addEventListener(name, fn) { listeners.set(name, fn); }, removeEventListener(name) { listeners.delete(name); }, requestAnimationFrame() { return 0; }, cancelAnimationFrame() {}, dispatchEvent() {} },
     });
     const code = ts.transpileModule(readFileSync(new URL("../components/site/ChatWidget.tsx", import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
@@ -97,8 +100,16 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     assert.equal(sent[1].conversationId, "new-visible-conversation");
     assert.equal(sent[1].history.length, 2);
     tree = render();
+    find(tree, node => node.type === "input").props.onChange({ target: { value: "작성 중인 문의" } });
+    listeners.get("open-chat")({ detail: {} });
+    tree = render();
+    assert.equal(find(tree, node => node.type === "input").props.value, "작성 중인 문의");
+    await ask("같은 대화 계속");
+    assert.equal(sent[2].conversationId, "new-visible-conversation");
+    assert.equal(sent[2].history.length, 4);
+    tree = render();
     find(tree, node => node.type === "button" && node.props.title === "새 대화").props.onClick();
     await ask("강아지 바나나 먹어도 돼?");
-    assert.equal(sent[2].conversationId, undefined);
-    assert.equal(sent[2].history.length, 0);
+    assert.equal(sent[3].conversationId, undefined);
+    assert.equal(sent[3].history.length, 0);
 });

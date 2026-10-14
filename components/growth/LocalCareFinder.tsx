@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ddbApiBase } from "@/lib/customer-api";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
+import { placeMapLinks } from "@/lib/place-map-links";
 
 type LocalCareCategory = "veterinary" | "grooming" | "hotel" | "daycare";
 
@@ -23,6 +25,8 @@ type LocalCarePlace = {
     phone?: string;
     distanceMeters?: number | null;
     mapUrl: string;
+    lat?: number;
+    lon?: number;
 };
 
 type Coordinates = { latitude: number; longitude: number };
@@ -119,7 +123,9 @@ function safePlaces(value: unknown, category: CategoryOption): LocalCarePlace[] 
             address,
             phone: phone || undefined,
             distanceMeters,
-            mapUrl: buildNaverMapUrl(name, address),
+            lat: typeof place.lat === "number" ? place.lat : undefined,
+            lon: typeof place.lon === "number" ? place.lon : undefined,
+            mapUrl: placeMapLinks({ name, address }).kakao,
         }];
     }).slice(0, 5);
 }
@@ -306,11 +312,11 @@ export default function LocalCareFinder() {
                                                         <h4 className="truncate text-sm font-black text-neutral-950">{place.name}</h4>
                                                         <span className="shrink-0 rounded-full bg-cyan-50 px-2 py-1 text-[9px] font-black text-cyan-800">{formatDistance(place.distanceMeters)}</span>
                                                     </div>
-                                                    <p className="mt-1 truncate pl-8 text-[10px] font-bold text-neutral-500">{place.address || "주소는 지도에서 확인해 주세요"}</p>
+                                                    <p className="mt-1 pl-8 text-[11px] font-bold leading-5 text-neutral-500"><PlaceAddressLink place={place} /></p>
                                                 </div>
-                                                <div className="flex shrink-0 gap-2 pl-8 sm:pl-0">
+                                                <div className="flex flex-wrap gap-2 pl-8 sm:pl-0">
                                                     {place.phone ? <a href={`tel:${place.phone}`} className="ddb-motion-lift inline-flex min-h-9 items-center rounded-full border border-neutral-200 px-3 text-[10px] font-black text-neutral-700">전화</a> : null}
-                                                    <a href={place.mapUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift inline-flex min-h-9 items-center rounded-full bg-indigo-700 px-3 text-[10px] font-black text-white">지도 보기</a>
+                                                    <PlaceMapLinks place={place} />
                                                 </div>
                                             </article>
                                         ))}
@@ -330,6 +336,7 @@ export default function LocalCareFinder() {
                     </div>
 
                     <footer className="border-t border-neutral-200 bg-white/75 px-4 py-3 text-[10px] font-bold leading-5 text-neutral-500 sm:px-6">
+                        주소나 지도 이름을 누르면 업체를 검색할 수 있어요. 검색 결과에서 업체를 선택하면 상세 정보를 볼 수 있고, 결과가 없으면 다른 지도를 선택해 주세요. 위치 보기는 공개 데이터의 좌표를 표시합니다.<br />
                         표시된 곳은 공개 지도에서 찾은 후보이며 댕다방 제휴·예약 가능 업체라는 뜻이 아닙니다. 영업시간, 진료·미용·숙박·등원 가능 여부와 비용은 방문 전에 업체에 직접 확인해 주세요.
                     </footer>
                 </div>

@@ -10,6 +10,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { openChatWidget } from "@/lib/chat-widget-events";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
@@ -246,6 +247,13 @@ export default function Header() {
                                     <li key={href}>
                                         <Link
                                             href={href}
+                                            onClick={(event) => {
+                                                if (href !== "/chat/" || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                                                if (!document.querySelector("[data-chat-widget-open]")) return;
+                                                event.preventDefault();
+                                                setOpenDrop(null);
+                                                openChatWidget();
+                                            }}
                                             className="flex items-center gap-3 rounded-xl p-3 text-sm font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
                                         >
                                             <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" data-crayon-tone={tone}>

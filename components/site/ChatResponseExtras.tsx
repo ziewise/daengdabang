@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
+import { placeMapLinks } from "@/lib/place-map-links";
 import { ddbApiBase } from "@/lib/customer-api";
 import type {
     ShopChatCta,
@@ -142,7 +144,7 @@ type LocalCarePlace = {
     lon: number;
     mapUrl: string;
     source?: "naver" | "openstreetmap";
-    mapProvider: "naver";
+    mapProvider: "kakao";
 };
 
 type LocalCareSearchState =
@@ -433,11 +435,9 @@ async function fetchDaengDaBangLocalCarePlaces(
             distanceMeters: typeof place.distanceMeters === "number"
                 ? place.distanceMeters
                 : distanceMeters({ latitude, longitude }, { latitude: lat, longitude: lon }),
-            // Candidate data may come from a bounded public-data fallback, but
-            // every customer-facing map destination is intentionally NAVER Map.
-            mapUrl: buildNaverMapUrl(name, String(place.address || "").trim()),
+            mapUrl: placeMapLinks({ name, address: String(place.address || "").trim() }).kakao,
             source: place.source === "naver" ? "naver" : "openstreetmap",
-            mapProvider: "naver",
+            mapProvider: "kakao",
         }];
     });
 
@@ -820,7 +820,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
             <div className="flex flex-wrap items-center justify-between gap-1.5">
                 <p className="text-[11px] font-black text-indigo-800">현재 위치 기준 가까운 {state.label} 후보</p>
                 <span className="rounded-full bg-[#e9fff1] px-2 py-1 text-[10px] font-black text-[#087b39]">
-                    지도: 네이버지도
+                    지도 선택 가능
                 </span>
             </div>
             {state.places.map((place, index) => (
@@ -836,7 +836,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                             </p>
                             <p className="mt-0.5 text-[11px] font-bold leading-4 text-neutral-600">
                                 {formatDistance(place.distanceMeters)}
-                                {place.address ? ` · ${place.address}` : " · 주소는 지도에서 확인"}
+                                {" · "}<PlaceAddressLink place={place} />
                             </p>
                             {place.phone ? (
                                 <a href={`tel:${place.phone}`} className="mt-1 inline-block text-[11px] font-black text-indigo-700">
@@ -849,15 +849,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                         </div>
                     </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
-                        <button
-                            type="button"
-                            onClick={() => openExternal(place.mapUrl)}
-                            aria-label={`${place.name} 네이버지도에서 보기`}
-                            className="inline-flex min-h-9 items-center rounded-full border border-[#03a94f] bg-[#03c75a] px-2.5 py-1 text-[11px] font-black text-white hover:bg-[#02b351]"
-                        >
-                            <span aria-hidden="true" className="mr-1">N</span>
-                            네이버지도에서 보기
-                        </button>
+                        <PlaceMapLinks place={place} />
                         {place.phone ? (
                             <a
                                 href={`tel:${place.phone}`}
@@ -870,7 +862,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                 </div>
             ))}
             <p className="text-[10px] font-bold leading-4 text-neutral-500">
-                후보 정보는 네이버 지역검색을 우선하며, 모든 지도 버튼은 네이버지도로 열립니다. {state.category === "veterinary"
+                주소나 지도 이름을 누르고 검색 결과에서 업체를 선택하면 상세 정보를 볼 수 있어요. 결과가 없으면 다른 지도를 선택해 주세요. 위치 보기는 공개 데이터의 좌표를 표시합니다. {state.category === "veterinary"
                     ? "실제 진료 가능 여부와 야간·응급 운영은 전화로 확인해 주세요."
                     : "실제 영업·예약 가능 여부와 반려견 이용 조건은 업체에 확인해 주세요."}
             </p>

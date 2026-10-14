@@ -60,6 +60,41 @@
     z-index: 1;
 }
 
+.panel[data-chat-desktop="true"] > header {
+    cursor: move;
+    touch-action: none;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.windowToolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-bottom: 1px solid #dedaf4;
+    background: #faf8ff;
+    font: 600 11px var(--font-wanted-sans), sans-serif;
+}
+.windowToolbar span { flex: 1; color: #656079; }
+.windowToolbar button { padding: 4px 7px; border: 1px solid #d8d3ee; border-radius: 8px; background: white; }
+.windowToolbar button:focus-visible, .resizeHandle:focus-visible { outline: 2px solid #5b5bd6; outline-offset: -2px; }
+.panel > .resizeHandle {
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    bottom: 0;
+    width: 22px;
+    height: 22px;
+    cursor: nwse-resize;
+    touch-action: none;
+    color: #5b5bd6;
+    background: #fffaf3;
+    border-radius: 5px 0 12px 0;
+    font-size: 16px;
+}
+
 .header {
     position: relative;
     min-height: 72px;

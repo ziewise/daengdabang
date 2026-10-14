@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useChatWindow } from "@/hooks/useChatWindow";
 import {
     answerShopQuestion,
     answerShopQuestionSmart,
@@ -24,6 +25,7 @@ import { useAuth } from "@/lib/store";
 import {
     CHAT_WIDGET_OPEN_EVENT,
     CHAT_WIDGET_VISIBILITY_EVENT,
+    consumeChatWidgetOpen,
     type ChatWidgetOpenDetail,
     type ChatWidgetVisibilityDetail,
 } from "@/lib/chat-widget-events";
@@ -79,8 +81,11 @@ const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_F
 const getServerChatFontMode = () => "readable" as const;
 
 export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange }: Props = {}) {
-    const { user } = useAuth();
+    const { user, hydrated } = useAuth();
     const [open, setOpen] = useState(false);
+    const chatWindow = useChatWindow(open);
+    const [initialQuestion, setInitialQuestion] = useState<{ text: string } | null>(null);
+    const consumedInitialQuestion = useRef<{ text: string } | null>(null);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -170,13 +175,16 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     }, [isMobile, onOpenChange, open, productContext]);
 
     useEffect(() => {
-        const openFromPage = (event: Event) => {
-            const detail = (event as CustomEvent<ChatWidgetOpenDetail>).detail;
-            setProductContext(typeof detail?.productName === "string" ? detail.productName.trim() : "");
-            setInput("");
+        const applyOpen = (detail?: ChatWidgetOpenDetail) => {
+            if (typeof detail?.productName === "string") setProductContext(detail.productName.trim());
+            // Ordinary menu opens preserve the draft and the current conversation.
+            if (detail?.initialQuestion) setInitialQuestion({ text: detail.initialQuestion });
             setOpen(true);
         };
+        const openFromPage = (event: Event) => applyOpen(consumeChatWidgetOpen() ?? (event as CustomEvent<ChatWidgetOpenDetail>).detail);
         window.addEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
+        const pending = consumeChatWidgetOpen();
+        if (pending) applyOpen(pending);
         return () => window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
     }, []);
 
@@ -387,6 +395,14 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         }
     };
 
+    useEffect(() => {
+        if (!hydrated || loading || !initialQuestion || consumedInitialQuestion.current === initialQuestion) return;
+        consumedInitialQuestion.current = initialQuestion;
+        void ask(initialQuestion.text);
+        // ask uses the hydrated owner and current transcript; identity guard prevents a second send.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hydrated, loading, initialQuestion]);
+
     const submit = (event: FormEvent) => {
         event.preventDefault();
         void ask(input);
@@ -401,9 +417,11 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     role="dialog"
                     aria-label="댕다방 케어톡"
                     data-chat-font-mode={chatFontMode}
+                    data-chat-desktop={chatWindow.desktop ? "true" : "false"}
+                    style={chatWindow.style}
                     className={`${styles.panel} absolute bottom-[calc(100%+12px)] z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden`}
                 >
-                    <header className={`${styles.header} flex items-center justify-between px-4`}>
+                    <header {...chatWindow.dragHandlers} className={`${styles.header} flex items-center justify-between px-4`} title={chatWindow.desktop ? "제목을 잡고 끌어 창 이동" : undefined}>
                         <div className={styles.titleGroup}>
                             <span className={styles.noteEyebrow}>CRAYON CARE NOTE</span>
                             <b className={styles.title}>댕다방 케어톡</b>
@@ -447,6 +465,14 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             </button>
                         </div>
                     </header>
+                    {chatWindow.desktop ? (
+                        <div className={styles.windowToolbar}>
+                            <span>제목을 끌어 이동</span>
+                            <button type="button" onClick={() => chatWindow.resize(-80)} aria-label="채팅 창 축소">− 축소</button>
+                            <button type="button" onClick={() => chatWindow.resize(80)} aria-label="채팅 창 확대">＋ 확대</button>
+                            <button type="button" onClick={chatWindow.reset} aria-label="채팅 창 크기와 위치 초기화">기본</button>
+                        </div>
+                    ) : null}
                     {productContext ? (
                         <div className={`${styles.contextBar} flex shrink-0 items-center gap-2 px-3 py-2 text-[11px] font-bold`}>
                             <span className={`${styles.contextTag} shrink-0 px-2 py-0.5 text-[11px] font-black`}>상품 문의</span>
@@ -621,6 +647,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             )}
                         </div>
                     </form>
+                    {chatWindow.desktop ? <button type="button" {...chatWindow.resizeHandlers} className={styles.resizeHandle} aria-label="채팅 창 크기 조절" title="드래그 또는 방향키로 크기 조절"><span aria-hidden="true">◢</span></button> : null}
                 </section>
             )}
 

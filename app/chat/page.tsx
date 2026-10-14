@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import ChatPageClient from "./ChatPageClient";
+import ChatLaunchClient from "./ChatLaunchClient";
 
 export const metadata: Metadata = {
     title: "챗봇 | 댕다방",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ChatPage() {
     return (
         <Suspense fallback={<div className="mx-auto max-w-[1280px] px-4 py-10 text-sm font-black">챗봇을 불러오는 중입니다.</div>}>
-            <ChatPageClient />
+            <ChatLaunchClient />
         </Suspense>
     );
 }

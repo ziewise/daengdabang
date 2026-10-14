@@ -41,10 +41,12 @@ test("all local pet-care providers stay behind the DaengDaBang API", async () =>
     assert.doesNotMatch(extras, /overpass\.kumi|overpass-api\.de|nominatim\.openstreetmap/);
     assert.match(extras, /if \(place\.lat == null \|\| place\.lon == null\) return \[\]/);
     assert.match(extras, /data\.status === "unavailable"/);
-    assert.match(extras, /mapUrl: buildNaverMapUrl\(name, String\(place\.address \|\| ""\)\.trim\(\)\)/);
+    assert.match(extras, /mapUrl: placeMapLinks\(/);
+    assert.match(extras, /<PlaceAddressLink place=\{place\}/);
+    assert.match(extras, /<PlaceMapLinks place=\{place\}/);
     assert.match(extras, /safeNaverMapFallback\(data\.fallbackMapUrl, query\)/);
     assert.match(extras, /parsed\.hostname !== "map\.naver\.com"/);
-    assert.match(extras, /네이버지도에서 보기/);
+    assert.match(extras, /<PlaceMapLinks place=\{place\}/);
     assert.doesNotMatch(extras, /google\.com\/maps|map\.kakao\.com|openstreetmap\.org/);
 });
 
@@ -102,7 +104,7 @@ test("full CareTalk keeps pet identity stable and resets context when that ident
     assert.doesNotMatch(page, /selectedPetIndex/);
 });
 
-test("every customer-facing veterinary map route is NAVER Map", async () => {
+test("generic veterinary searches retain Naver while candidate cards offer other maps", async () => {
     const [helper, extras, petLens] = await Promise.all([
         source("lib/daengdabang-llm.ts"),
         source("components/site/ChatResponseExtras.tsx"),
@@ -113,7 +115,7 @@ test("every customer-facing veterinary map route is NAVER Map", async () => {
         assert.match(content, /https:\/\/map\.naver\.com\/p\/search\//);
         assert.doesNotMatch(content, /https:\/\/(?:map\.kakao\.com|www\.google\.com\/maps|www\.openstreetmap\.org)/);
     }
-    assert.match(extras, /지도: 네이버지도/);
+    assert.match(extras, /지도 선택 가능/);
     assert.match(petLens, /네이버지도에서 가까운 24시 동물병원 찾기/);
 });
 
