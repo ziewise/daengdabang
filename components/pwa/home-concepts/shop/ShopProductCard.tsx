@@ -109,9 +109,9 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
 
             {/* 정보 — 웹 카드와 같은 항목 */}
             <Link href={href} className="mt-1.5 flex flex-1 flex-col">
-                <span className="ah-display block truncate text-[10.5px] uppercase tracking-wide text-[#8b6fd6]">{p.brandEn || p.brandKo}</span>
+                <span className="ah-light block truncate text-[10.5px] uppercase tracking-wide text-[#8b6fd6]">{p.brandEn || p.brandKo}</span>
                 <span className="ah-light mt-0.5 line-clamp-2 min-h-[2.5em] text-[12px] leading-snug text-[#3d2f2a]">{name}</span>
-                {!purchase.purchasable ? <span data-inventory-state={purchase.state} className="ah-display mt-1 text-[11px] text-[#c2413b]">{purchaseStateLabel(purchase, locale)}</span> : null}
+                {!purchase.purchasable ? <span data-inventory-state={purchase.state} className="ah-light mt-1 text-[11px] text-[#c2413b]">{purchaseStateLabel(purchase, locale)}</span> : null}
                 {/* 가격표 태그 — 할인 · 가격 배지 · 가격 */}
                 <span className="mt-auto flex flex-col items-end pt-1.5">
                     {hasDiscount && p.originalPrice ? (

@@ -7,7 +7,7 @@
  *  - 엔진 그대로: 날씨(Open-Meteo) · 계절 · 시간 감지(lib/hero-assets · hero-weather) → 영상 선택(lib/hero-summer-video)
  *    지역 선택은 웹과 같은 저장 키라 웹 · 앱이 같은 지역을 기억
  *  - 순서: 브랜드 문구(맨 위, 제목 테이프 대신) → 폴라로이드 영상(위에 글자 없음) → 사진 설명 자리에 날씨 칩 4개
- *    (장면 · 계절 시간 · 지역(톡 → 아래에서 올라오는 지역 고르기) · 날씨 요약)
+ *    (장면 · 계절 시간 · 지역(톡 → 아래에서 올라오는 지역 고르기) · 날씨 요약) — 작은 글씨는 잘 읽히는 나눔스퀘어라운드
  *  - 견종 얼굴 배지(그 영상 속 강아지 얼굴 영상): 폴라로이드 모서리에 걸친 동그란 스티커 + "저를 콕 눌러 분석하기!" 말풍선
  *    → 앱에서는 연구소로(웹은 펫렌즈 창)
  */
@@ -122,18 +122,18 @@ export default function ShopHero() {
                 </div>
                 {/* 사진 설명 자리 — 날씨 칩 4개 */}
                 <div className="mt-2.5 flex flex-wrap justify-center gap-1.5">
-                    <span className="shp-chip ah-display">{scene.label}</span>
-                    <span className="shp-chip ah-display">{`${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}`}</span>
+                    <span className="shp-chip ah-light">{scene.label}</span>
+                    <span className="shp-chip ah-light">{`${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}`}</span>
                     <button type="button" disabled={!ready} onClick={() => { haptic("light"); setRegionOpen(true); }} aria-label={`날씨 지역 바꾸기 · 지금 ${regionName}`}
-                        className="shp-chip is-btn ah-display inline-flex items-center gap-1"><i aria-hidden="true" className="fa-solid fa-location-dot text-[9px]" />{regionName}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></button>
-                    {summary ? <span className="shp-chip ah-display">{summary}</span> : null}
+                        className="shp-chip is-btn ah-light inline-flex items-center gap-1"><i aria-hidden="true" className="fa-solid fa-location-dot text-[9px]" />{regionName}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></button>
+                    {summary ? <span className="shp-chip ah-light">{summary}</span> : null}
                 </div>
 
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
                 <Link href="/app/sticker/lab/" aria-label="저를 콕 눌러 분석하기 — 연구소로" onClick={() => haptic("light")}
                     className="shp-badge absolute -right-2.5 bottom-[4.2rem] z-10 block h-[4.4rem] w-[4.4rem] rounded-full">
                     <video key={breedVideo} src={breedVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" />
-                    <span aria-hidden="true" className={`shp-cue ah-display ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
+                    <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
                 </Link>
             </div>
 
@@ -143,7 +143,7 @@ export default function ShopHero() {
                     {[{ id: HERO_AUTO_REGION_ID, name: "현재 위치" }, ...KR_REGIONS].map((r) => (
                         <button key={r.id} type="button" aria-pressed={region === r.id}
                             onClick={() => { haptic("light"); writeRegion(r.id); setRegionOpen(false); }}
-                            className={`shp-region ah-display rounded-full py-2 text-[13px] ${region === r.id ? "is-on" : ""}`}>{r.name}</button>
+                            className={`shp-region ah-light rounded-full py-2 text-[13px] ${region === r.id ? "is-on" : ""}`}>{r.name}</button>
                     ))}
                 </div>
             </Sheet>

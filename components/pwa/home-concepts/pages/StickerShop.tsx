@@ -6,7 +6,7 @@
  * 웹 첫 페이지(app/page.tsx)를 그대로 줄인 게 아니라 앱 쇼핑 탭으로 다시 구성(정보 · 데이터는 웹과 같음).
  *  ① 히어로(ShopHero) — 브랜드 문구가 맨 위(쇼핑 제목 테이프 없음) · 폴라로이드 영상 · 날씨 칩 · 견종 얼굴 배지
  *  ② 상품군 5개 스티커 — 웹 상단 메뉴(lib/menu-data CATEGORY_GROUPS) 그대로, 누르면 상품군 화면
- *     (그림은 상품군 3D 이미지가 준비될 때까지 그 상품군 첫 상품 사진)
+ *     그림은 사용자가 만든 3D 이미지(public/images/ui/stickers/cat-*.webp)
  *  ③ "{반려견}를 위한 추천" — 회원만(비회원은 자리 없음, 웹과 같음). 협업자 추천 엔진 · 문구 · 상황별 안내 그대로
  *     로그인 전 시연(로그인 후(예시))에서는 편집 추천 상품으로 모양만 보여 줌
  *  ④ 추천 셀렉트 · 신상품 — 색인 탭 2개로 한 섹션(웹 BestSection 4개 · NewArrivalsSection 8개 그대로)
@@ -20,7 +20,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getBestProducts, getNewProducts } from "@/lib/catalog";
-import { byCategory } from "@/lib/catalog/queries";
 import type { CategorySlug } from "@/lib/catalog/types";
 import { CATEGORY_GROUPS, PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
 import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
@@ -60,8 +59,15 @@ const BRANDS = [
 const INSTA = PUBLIC_SOCIAL_CHANNELS.find((c) => c.key === "instagram");
 const INSTA_URL = INSTA?.href || "https://www.instagram.com/daengdabang/";
 const INSTA_HANDLE = INSTA?.handle || "@daengdabang";
-/* 상품군 스티커 바탕색 */
+/* 상품군 스티커 — 바탕색 · 사용자가 만든 3D 그림 */
 const CAT_TONES = ["#dcf3e6", "#fff1c4", "#ece6ff", "#ffe1ea", "#ffe8dc"];
+const CAT_IMAGES: Record<CategorySlug, string> = {
+    outdoor: "/images/ui/stickers/cat-outdoor.webp",
+    food: "/images/ui/stickers/cat-food.webp",
+    life: "/images/ui/stickers/cat-life.webp",
+    toy: "/images/ui/stickers/cat-toy.webp",
+    care: "/images/ui/stickers/cat-care.webp",
+};
 /* 추천 근거 — 협업자 RecommendationProductCard 와 같은 이름 */
 const SOURCE_LABEL: Record<RecommendationSourceGroup, string> = {
     profile: "등록한 반려견 프로필",
@@ -75,10 +81,10 @@ export default function StickerShop() {
     const [shelf, setShelf] = useState<0 | 1>(0); // 0 추천 셀렉트 · 1 신상품
     const best = useMemo(() => getBestProducts(4), []);
     const fresh = useMemo(() => getNewProducts().slice(0, 8), []);
-    // 상품군 스티커 그림 — 3D 이미지 준비 전까지 그 상품군 첫 상품 사진
+    // 상품군 스티커 — 웹 메뉴 순서 · 이름 그대로 + 3D 그림
     const cats = useMemo(() => CATEGORY_GROUPS.map((g, i) => {
         const slug = g.href.split("/").filter(Boolean)[1] as CategorySlug;
-        return { ...g, slug, tone: CAT_TONES[i % CAT_TONES.length], image: byCategory(slug).find((p) => p.image)?.image };
+        return { ...g, slug, tone: CAT_TONES[i % CAT_TONES.length], image: CAT_IMAGES[slug] };
     }), []);
 
     return (
@@ -96,9 +102,9 @@ export default function StickerShop() {
                     {cats.map((c, i) => (
                         <Link key={c.href} href={c.href} onClick={() => haptic("light")} className="shp-cat flex w-[19%] flex-col items-center text-center">
                             <span className="shp-cat-sticker relative block aspect-square w-full max-w-[3.6rem] overflow-hidden rounded-full" style={{ background: c.tone, rotate: `${[-4, 3, -2, 4, -3][i]}deg` }}>
-                                {c.image ? <Image src={c.image} alt="" fill sizes="58px" className="object-contain p-1.5" /> : null}
+                                <Image src={c.image} alt="" fill sizes="64px" className="object-contain p-1" />
                             </span>
-                            <span className="ah-display mt-1.5 text-[11.5px] leading-tight">{c.title.split("/").map((t, k) => <span key={k} className="block">{t}</span>)}</span>
+                            <span className="ah-light mt-1.5 text-[12px] leading-tight">{c.title.split("/").map((t, k) => <span key={k} className="block">{t}</span>)}</span>
                         </Link>
                     ))}
                 </nav>
@@ -119,7 +125,7 @@ export default function StickerShop() {
                             <>
                                 <p className="ah-display text-[15px]">댕다방 추천 셀렉트</p>
                                 <p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>상품 용도와 브랜드 구성을 살펴 고른 편집 추천</p>
-                                <span className="ah-display mt-2 inline-block rounded-full bg-[#e3f6fb] px-2.5 py-1 text-[10.5px] text-[#1f6f8f]">판매량 순위 아님 · 상품 탐색용</span>
+                                <span className="ah-light mt-2 inline-block rounded-full bg-[#e3f6fb] px-2.5 py-1 text-[11px] text-[#1f6f8f]">판매량 순위 아님 · 상품 탐색용</span>
                                 <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-5">{best.map((p, i) => <ShopProductCard key={p.id} product={p} index={i} />)}</div>
                                 <div className="mt-5"><Patch href="/best/" tone="cream" small>추천 셀렉트 더 보기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
                             </>
