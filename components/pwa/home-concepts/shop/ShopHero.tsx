@@ -6,15 +6,15 @@
  * 협업자 히어로(components/home/HeroSection)와 같은 엔진 · 같은 정보를 앱 모양으로.
  *  - 엔진 그대로: 날씨(Open-Meteo) · 계절 · 시간 감지(lib/hero-assets · hero-weather) → 영상 선택(lib/hero-summer-video)
  *    지역 선택은 웹과 같은 저장 키라 웹 · 앱이 같은 지역을 기억
- *  - 순서: 브랜드 문구(맨 위, 제목 테이프 대신 · 영문 꼬리표 없이) → 폴라로이드 영상(위에 글자 없음) → 사진 설명 자리에 날씨 칩 4개
- *    (장면 · 계절 시간 · 지역(톡 → 아래에서 올라오는 지역 고르기) · 날씨 요약) — 작은 글씨는 잘 읽히는 나눔스퀘어라운드
+ *  - 순서: 브랜드 문구(맨 위, 제목 테이프 대신 · 영문 꼬리표 없이) → 폴라로이드 영상(위에 글자 없음) → 사진 설명 자리에 날씨 칩
+ *    (왼쪽 끝: 지역 고르기(톡 → 아래에서 올라오는 지역 고르기) / 오른쪽 끝: 지역 · 온도 + 계절 시간) — 작은 글씨는 나눔스퀘어라운드
  *  - 견종 얼굴 배지(그 영상 속 강아지 얼굴 영상): 폴라로이드 모서리에 걸친 동그란 스티커 + "저를 콕 눌러 분석하기!" 말풍선
  *    → 앱에서는 연구소로(웹은 펫렌즈 창)
  */
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { fallbackHeroWeather, getHeroSeason, getHeroTimeBucket, normalizeHeroWeather, resolveHeroScene, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { fallbackHeroWeather, getHeroSeason, getHeroTimeBucket, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
 import { HERO_AUTO_REGION_ID, HERO_WEATHER_REGION_OPTIONS, fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
 import { pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
 import { haptic } from "../gestures";
@@ -99,7 +99,6 @@ export default function ShopHero() {
         return () => { window.clearTimeout(t1); window.clearTimeout(t2); window.clearInterval(iv); };
     }, []);
 
-    const scene = useMemo(() => resolveHeroScene(context), [context]);
     const video = pickHeroVideo(context.weather, context.timeBucket, true); // 앱 = 세로(모바일) 영상
     const breedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
     const summary = heroWeatherSummary(report, "ko");
@@ -119,13 +118,14 @@ export default function ShopHero() {
                     <video key={video} src={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true"
                         className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />
                 </div>
-                {/* 사진 설명 자리 — 날씨 칩 4개 */}
-                <div className="mt-2.5 flex flex-wrap justify-center gap-1.5">
-                    <span className="shp-chip ah-light">{scene.label}</span>
-                    <span className="shp-chip ah-light">{`${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}`}</span>
+                {/* 사진 설명 자리 — 왼쪽 끝: 지역 고르기 / 오른쪽 끝: 지역 · 온도 + 계절 시간 */}
+                <div className="mt-2.5 flex items-center justify-between gap-1.5">
                     <button type="button" disabled={!ready} onClick={() => { haptic("light"); setRegionOpen(true); }} aria-label={`날씨 지역 바꾸기 · 지금 ${regionName}`}
-                        className="shp-chip is-btn ah-light inline-flex items-center gap-1"><i aria-hidden="true" className="fa-solid fa-location-dot text-[9px]" />{regionName}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></button>
-                    {summary ? <span className="shp-chip ah-light">{summary}</span> : null}
+                        className="shp-chip is-btn ah-light inline-flex shrink-0 items-center gap-1"><i aria-hidden="true" className="fa-solid fa-location-dot text-[9px]" />{regionName}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></button>
+                    <span className="flex min-w-0 items-center justify-end gap-1.5">
+                        {summary ? <span className="shp-chip ah-light truncate">{summary}</span> : null}
+                        <span className="shp-chip ah-light shrink-0">{`${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}`}</span>
+                    </span>
                 </div>
 
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
