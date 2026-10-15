@@ -1,7 +1,13 @@
-# 댕다방 앱 스티커북 시안 — 서버 이전 인계 (2026-10-15)
+# 앱 스티커북 시안·서버 이전 (2026-10-15)
 
-> 이 문서는 사용자(smlee)의 로컬 PC에서 진행한 **앱 UI 시안**을 서버(협업자 작업 컴퓨터 `C:\DaengDaBang`)로 옮겨 이어서 작업하기 위한 인계다.
-> 새 창의 Claude는 **이 문서를 처음부터 끝까지 읽고** 시작한다.
+> 파일 이름은 서버 인계 규칙 `HANDOFF_YYYYMMDD_<주제>_<상태>.md`를 따른다(상태: CURRENT = 현재 최신 상태).
+> 사용자(smlee)의 로컬 PC에서 진행한 **앱 UI 시안**을 서버로 옮겨 이어서 작업하기 위한 인계다. 새 창은 **이 문서를 처음부터 끝까지 읽고** 시작한다.
+
+## 사용자 요청과 배경
+
+- 앱(네이티브 앱 · 설치 앱)에서 보이는 화면을 **스티커북 다이어리 콘셉트**로 새로 입힌다. 웹 화면은 바꾸지 않는다.
+- 협업자와 **아직 협의 전**이라, 사용자가 시안을 만들어 보여 주기 위한 작업이다. 커밋은 로컬 전용 브랜치에만 하고 푸시·배포하지 않는다.
+- 2026-10-15 사용자가 서버에 Claude Desktop을 설치해 서버에서 이어서 작업하기로 했다.
 
 ---
 
@@ -32,7 +38,7 @@
 
 ---
 
-## 1. 지금까지 한 일 요약
+## 구현 및 소스 — 1. 지금까지 한 일 요약
 - 앱 모드(네이티브 앱 · 설치 앱 · `/app/` 진입)에서만 보이는 **스티커북(다이어리) 콘셉트 UI**를 만들었다. **웹 화면은 그대로**다.
 - 커밋: 로컬 브랜치 `local/sticker-mockup` (기준 GitHub main `91b9e4ab3`) 위 16개 이상 커밋, 첫 체크포인트 이름표 `시안-1015`.
 - 미리보기: `npm run dev`(포트 4000) → `http://localhost:4000/app/home-1/`
@@ -82,7 +88,7 @@ git fetch <번들경로> local/sticker-mockup:local/sticker-mockup
 git fetch <번들경로> "refs/tags/*:refs/tags/*"
 git switch local/sticker-mockup
 ```
-번들은 GitHub main `91b9e4ab3` 이후 커밋만 담고 있다. clone 직후라면 그 커밋이 이미 있어서 그대로 들어온다.
+번들은 GitHub main `91b9e4ab3` 이후 커밋만 담고 있다(이름표 `시안-1015`, `시안-1015-이전` 포함). clone 직후라면 그 커밋이 이미 있어서 그대로 들어온다.
 
 ### 2-3. 협업자 최신 코드 받기 (작업 전 매번)
 ```
@@ -183,6 +189,13 @@ git config user.email "smlee@ziewise.com"
 
 ---
 
+## 검증 (로컬, 2026-10-15)
+
+- 각 단계마다 TypeScript(`tsc --noEmit`) · ESLint 통과, 휴대폰 폭(375px) 미리보기로 화면·동작 확인 후 로컬 브랜치에 커밋.
+- 시안 브랜치를 GitHub main과 대조: 바뀐 협업자 파일은 6장의 9개뿐. `lib` · `hooks` · API 경로 · `scripts` · `capacitor.config` · `android` · `ios` · `next.config` · `package.json` · `.github` 변경 없음.
+- 번들(`daengdabang-sticker-mockup.bundle`)을 임시 clone에 풀어 시안 브랜치·인계 문서·스크립트가 정상으로 들어오는 것 확인.
+- 미검증: 서버 환경에서의 설치·실행, 실제 APK 안에서의 동작.
+
 ## 6. 협업자 파일을 고친 곳 (UI 연결용 최소 수정, 9개)
 | 파일 | 고친 내용 |
 |---|---|
@@ -196,6 +209,12 @@ git config user.email "smlee@ziewise.com"
 | `app/treasure-mine/page.tsx` | 앱에서는 새 앱 화면(`components/daily-life/DailyLifeSwitch`), 웹에서는 기존 `GrowthHub` 그대로 |
 | `components/home/IntroSplash.tsx` | 앱 모드에서는 인트로 영상 없이 바로 시작 |
 
+### 앱 모드 판별 범위 (협의 필요)
+"앱으로 볼 때" = ① 네이티브 앱 ② 홈 화면 설치 웹앱 ③ **브라우저에서 `/app/` 주소에 한 번 들어온 뒤의 같은 탭**(sessionStorage). ③ 때문에 배포 후에는 운영 웹의 `/app/`(앱처럼 열기 안내)로 들어온 웹 방문자에게도 그 탭에서 앱 틀이 보인다. 기능 변경은 아니지만 협업자와 범위를 정해야 한다.
+
+### 협업자 최신 변경과 겹치는 곳 (확인 필요)
+- 협업자가 2026-10-14 케어톡을 단일 창(`ChatLaunchClient`)으로 바꾸면서 활성 화면에서 `ChatPageClient`를 더 이상 쓰지 않는다(서버 `HANDOFF_20261014_CHAT_WINDOW_MAPS_CURRENT.md`). 앱 케어톡 서랍(`CareTalkDrawer`)은 아직 `ChatPageClient`를 쓴다. 최신 main을 합친 뒤 서랍을 새 창 방식에 맞출지 사용자에게 먼저 확인한다(기능은 협업자 것 그대로).
+
 ## 7. 운영 서버와 주고받는 곳 (모두 읽기 전용)
 - 댕자랑 공개 피드 읽기(`components/pwa/home-concepts/show-feed.ts`, `GET /api/v1/showcase/posts`) — 쓰기·응원·신고는 서버로 보내지 않는다.
 - 협업자 기능을 그대로 불러 쓰는 곳: 히어로 날씨(Open-Meteo), 상품 재고 조회, 추천 엔진(회원일 때), 로그인·회원가입(웹과 같은 함수).
@@ -207,7 +226,7 @@ git config user.email "smlee@ziewise.com"
 - 탭바 아이콘: `tools/sticker-assets/tab_icon_webp.py`(192px, 파일 이름 매핑은 스크립트 안)
 - 원본 PNG와 webp를 함께 커밋한다.
 
-## 9. 서버 환경 메모 (읽기 전용으로 확인한 사실)
+## 9. 운영 유지 및 이전 인계 — 서버 환경 메모 (읽기 전용으로 확인한 사실)
 - 공유 `\\192.168.50.103\ddbcode` = 서버 `C:\DaengDaBang`(코드 작업 폴더), `\\192.168.50.103\ddb` = 데이터 폴더(생성물 · 상품 미디어 · API DB · 모델).
 - 협업자 저장소 원본: `C:\DaengDaBang\.codex\storefront-remote-audit-20260827`. 작업마다 새 작업 공간(worktree)을 만들어 작업하고 main에 푸시한다(25개쯤 쌓여 있음).
 - APK는 GitHub 코드로 빌드한다(`npm run native:sync` → `native/www` → Android). 앱 안에 넣지 않은 화면(쇼핑 등)은 앱에서 운영 사이트를 불러온다. 서버의 테스트 APK는 8월 말 것(`\\…\ddb\outputs\mobile_app_release`, `apk-test`).
