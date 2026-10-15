@@ -318,24 +318,20 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
     );
 }
 
-/* ───────── 대표 브랜드 스티커 — 웹 슬라이더처럼 4.5초마다 그 브랜드의 두 장이 바뀜 ───────── */
+/* ───────── 대표 브랜드 스티커 — 웹 슬라이더처럼 4.5초마다 그 브랜드의 두 장이 바뀜 · 글자는 브랜드 이름만 ───────── */
 function BrandSticker({ brand, i }: { brand: (typeof BRANDS)[number]; i: number }) {
     const [k, setK] = useState(0);
     useEffect(() => {
         const t = window.setInterval(() => setK((v) => (v + 1) % brand.slides.length), 4500);
         return () => window.clearInterval(t);
     }, [brand.slides.length]);
-    const s = brand.slides[k];
     return (
-        <Link href={brand.href} onClick={() => haptic("light")} className="shp-brand relative block rounded-[12px] bg-white p-1.5 pb-2.5" style={{ rotate: `${i ? 0.8 : -0.8}deg` }}>
+        <Link href={brand.href} aria-label={`${brand.name} ${brand.cta}`} onClick={() => haptic("light")} className="shp-brand relative block rounded-[12px] bg-white p-1.5 pb-2.5" style={{ rotate: `${i ? 0.8 : -0.8}deg` }}>
             <span className="relative block aspect-[4/3] overflow-hidden rounded-[8px] bg-[#f6efe8]">
                 {brand.slides.map((sl, n) => <Image key={sl.image} src={sl.image} alt="" fill sizes="45vw" className={`object-cover transition-opacity duration-700 ${n === k ? "opacity-100" : "opacity-0"}`} />)}
             </span>
-            <span className="block px-1 pt-2">
-                <span className="ah-display block text-[14px]">{brand.name}</span>
-                <span className="ah-light mt-0.5 block min-h-[2.6em] text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{s.desc}</span>
-                <span className="ah-display mt-1 inline-flex items-center gap-1 text-[11.5px] text-[#e0557f]">{brand.cta} <i aria-hidden="true" className="fa-solid fa-arrow-right text-[9px]" /></span>
-            </span>
+            {/* 브랜드 이름만(설명 · 버튼 문구 없이) — 카드 전체가 브랜드 화면 링크 */}
+            <span className="ah-display block px-1 pt-2 text-center text-[14.5px]">{brand.name}</span>
         </Link>
     );
 }
