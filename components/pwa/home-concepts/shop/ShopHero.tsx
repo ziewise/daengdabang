@@ -10,10 +10,11 @@
  *    (왼쪽 끝: 지역 고르기(톡 → 아래에서 올라오는 지역 고르기) / 오른쪽 끝: 지역 · 온도 + 계절 시간) — 작은 글씨는 나눔스퀘어라운드
  *  - 견종 얼굴 배지(그 영상 속 강아지 얼굴 영상): 폴라로이드 모서리에 걸친 동그란 스티커 + "저를 콕 눌러 분석하기!" 말풍선
  *    → 앱에서는 연구소로(웹은 펫렌즈 창)
+ *  - 산책 친구는 히어로 위로 오지 않음(충돌 회피 표시) · 히어로가 화면에 크게 보이는 동안은 숨었다가 내려가면 나타남
  */
 
 import Link from "next/link";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { fallbackHeroWeather, getHeroSeason, getHeroTimeBucket, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
 import { HERO_AUTO_REGION_ID, HERO_WEATHER_REGION_OPTIONS, fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
 import { pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
@@ -90,6 +91,21 @@ export default function ShopHero() {
         return () => { active = false; };
     }, [ready, region]);
 
+    // 산책 친구는 히어로가 화면에 크게 보이는 동안 숨김 — <html data-shop-hero="on"> (AppShell CSS 가 강아지를 감춤)
+    const heroRef = useRef<HTMLElement>(null);
+    useEffect(() => {
+        const el = heroRef.current;
+        if (!el) return;
+        const html = document.documentElement;
+        const io = new IntersectionObserver(([e]) => {
+            // 히어로가 화면 높이의 35% 이상을 차지하면 "보이는 중"
+            const shown = e.isIntersecting && e.intersectionRect.height >= window.innerHeight * 0.35;
+            html.dataset.shopHero = shown ? "on" : "off";
+        }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
+        io.observe(el);
+        return () => { io.disconnect(); delete html.dataset.shopHero; };
+    }, []);
+
     // 말풍선: 3초 뒤 나타나 4초 머물고, 10초마다 다시
     useEffect(() => {
         let t2 = 0;
@@ -105,7 +121,8 @@ export default function ShopHero() {
     const regionName = region === HERO_AUTO_REGION_ID ? "현재 위치" : KR_REGIONS.find((r) => r.id === region)?.name ?? "현재 위치";
 
     return (
-        <section aria-label="오늘의 댕다방" className="relative">
+        // data-pet-companion-avoid: 산책 친구(협업자 충돌 회피)가 히어로(제목 · 영상 · 날씨 칩) 위로는 오지 않게
+        <section ref={heroRef} aria-label="오늘의 댕다방" className="relative" data-pet-companion-avoid="true">
             {/* 브랜드 문구 — 페이지 맨 위(제목 테이프 대신) */}
             <h1 className="ah-display text-[25px] leading-[1.18]">
                 매일이 더 특별한<br /><span className="text-[#ef5f8f]">댕댕이의 일상</span>

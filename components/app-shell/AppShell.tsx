@@ -517,6 +517,8 @@ html.ddb-app-mode:not(.ddb-app-web-header) { --header-height: var(--app-topbar-h
  * 강아지 집은 화면 가장자리에 반쯤 걸친 탭 대신, 탭바 바로 위 오른쪽 아래의 오려 붙인 3D 집 스티커
  * (사용자가 만든 그림 companion-house.webp · 흰 테두리 · 살짝 기울임). 집에 들어가 있으면 문 앞이 살짝 빛남 */
 html.ddb-app-mode button[data-pet-companion-settings] { display: none !important; }
+/* 쇼핑 히어로가 화면에 크게 보이는 동안 산책 친구(걷는 강아지)는 숨김 — 내려가면 다시 나타남 */
+html.ddb-app-mode[data-shop-hero="on"] [data-pet-motion-source] { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity .25s, visibility 0s .25s; }
 html.ddb-app-mode button[data-pet-companion-home] { right: 12px !important; bottom: calc(var(--app-tabbar-h) + 8px) !important; width: 52px !important; height: 52px !important;
   border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; rotate: -5deg; }
 html.ddb-app-mode button[data-pet-companion-home]::before { content: ""; position: absolute; inset: 0; background: url("/images/ui/stickers/companion-house.webp") center / contain no-repeat;
