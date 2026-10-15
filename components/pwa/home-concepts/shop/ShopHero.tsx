@@ -113,12 +113,12 @@ export default function ShopHero() {
                 매일이 더 특별한<br /><span className="text-[#ef5f8f]">댕댕이의 일상</span>
             </h1>
 
-            {/* 폴라로이드 영상 — 위에 글자 없음 */}
+            {/* 폴라로이드 영상 — 위에 글자 없음 · 세로 영상을 정사각으로 — 아래쪽(워터마크 쪽)과 빈 하늘을 잘라 강아지가 있는 가운데를 보여 줌 */}
             <div className="shp-pol relative mt-4 bg-white p-2 pb-3">
                 <Tape className="-top-2 left-1/2 z-10 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" style={{ rotate: "-3deg" }} />
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[3px] bg-[#f3ede6]">
+                <div className="relative aspect-square overflow-hidden rounded-[3px] bg-[#f3ede6]">
                     <video key={video} src={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true"
-                        className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 78%" }} />
+                        className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />
                 </div>
                 {/* 사진 설명 자리 — 날씨 칩 4개 */}
                 <div className="mt-2.5 flex flex-wrap justify-center gap-1.5">
