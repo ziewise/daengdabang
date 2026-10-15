@@ -4,6 +4,7 @@
  * 스티커북 시안 — 쇼핑 첫 화면(/app/sticker/shop) · 로컬 시안 전용, 배포 X
  * ---------------------------------------------------------------------
  * 웹 첫 페이지(app/page.tsx)를 그대로 줄인 게 아니라 앱 쇼핑 탭으로 다시 구성(정보 · 데이터는 웹과 같음).
+ * 배경: 다른 시안 화면과 같은 점 무늬 다이어리 속지 3장(① ② ③ / ④ 색인 탭 / ⑤ ⑥).
  *  ① 히어로(ShopHero) — 브랜드 문구가 맨 위(쇼핑 제목 테이프 없음) · 폴라로이드 영상 · 날씨 칩 · 견종 얼굴 배지
  *  ② 상품군 5개 스티커 — 웹 상단 메뉴(lib/menu-data CATEGORY_GROUPS) 그대로, 누르면 상품군 화면
  *     그림은 사용자가 만든 3D 이미지(public/images/ui/stickers/cat-*.webp)
@@ -40,7 +41,7 @@ import { haptic } from "../gestures";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { PET } from "../page-data";
 import { ConceptBar, HC_CSS, useDemoSession } from "../shared";
-import { PARTS_CSS, SectionLabel } from "../sticker-parts";
+import { DiaryBody, DiaryTabs, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
 import ShopHero, { SHOP_HERO_CSS } from "../shop/ShopHero";
 import ShopProductCard, { SHOP_CARD_CSS } from "../shop/ShopProductCard";
@@ -60,6 +61,11 @@ const BRANDS = [
 const INSTA = PUBLIC_SOCIAL_CHANNELS.find((c) => c.key === "instagram");
 const INSTA_URL = INSTA?.href || "https://www.instagram.com/daengdabang/";
 const INSTA_HANDLE = INSTA?.handle || "@daengdabang";
+/* ④ 색인 탭 — 다른 화면과 같은 다이어리 탭 */
+const SHELF_TABS = [
+    { label: "추천 셀렉트", color: "#ffe7c2" },
+    { label: "신상품", color: "#dcf3e6" },
+];
 /* 상품군 스티커 — 바탕색 · 사용자가 만든 3D 그림 */
 const CAT_TONES = ["#dcf3e6", "#fff1c4", "#ece6ff", "#ffe1ea", "#ffe8dc"];
 const CAT_IMAGES: Record<CategorySlug, string> = {
@@ -95,33 +101,31 @@ export default function StickerShop() {
             <div className="mx-auto w-full max-w-md">
                 <ConceptBar session={session} onSession={setSession} />
 
-                {/* ① 히어로 */}
-                <div className="mt-1"><ShopHero /></div>
+                {/* 속지 1 — ① 히어로 · ② 상품군 · ③ 맞춤 추천 (점 무늬 다이어리 속지 + 왼쪽 링 구멍) */}
+                <DiaryBody pageKey="shop-1" dir={1} className="!pl-8 !pr-3">
+                    <ShopHero />
 
-                {/* ② 상품군 5개 */}
-                <nav aria-label="상품군" className="mt-6 flex justify-between gap-1">
-                    {cats.map((c, i) => (
-                        <Link key={c.href} href={c.href} onClick={() => haptic("light")} className="shp-cat flex w-[19%] flex-col items-center text-center">
-                            <span className="shp-cat-sticker relative block aspect-square w-full max-w-[3.6rem] overflow-hidden rounded-full" style={{ background: c.tone, rotate: `${[-4, 3, -2, 4, -3][i]}deg` }}>
-                                <Image src={c.image} alt="" fill sizes="64px" className="object-contain p-1" />
-                            </span>
-                            <span className="ah-light mt-1.5 text-[12px] leading-tight">{c.title.split("/").map((t, k) => <span key={k} className="block">{t}</span>)}</span>
-                        </Link>
-                    ))}
-                </nav>
-
-                {/* ③ 맞춤 추천 — 회원만 */}
-                <ShopRecommend demoMember={demoMember} />
-
-                {/* ④ 추천 셀렉트 · 신상품 — 색인 탭 */}
-                <section aria-label="추천 셀렉트와 신상품" className="mt-8">
-                    <div role="tablist" className="relative z-[1] -mb-px flex gap-1 pl-2">
-                        {[{ label: "추천 셀렉트", tone: "#fff" }, { label: "신상품", tone: "#dcf3e6" }].map((t, i) => (
-                            <button key={t.label} role="tab" type="button" aria-selected={shelf === i} onClick={() => { haptic("light"); setShelf(i as 0 | 1); }}
-                                className={`shp-tab ah-display px-4 pb-2 pt-2.5 text-[13.5px] ${shelf === i ? "is-on" : ""}`} style={{ background: shelf === i ? "#fffdf9" : t.tone }}>{t.label}</button>
+                    {/* ② 상품군 5개 */}
+                    <nav aria-label="상품군" className="mt-6 flex justify-between gap-1">
+                        {cats.map((c, i) => (
+                            <Link key={c.href} href={c.href} onClick={() => haptic("light")} className="shp-cat flex w-[19%] flex-col items-center text-center">
+                                <span className="shp-cat-sticker relative block aspect-square w-full max-w-[3.6rem] overflow-hidden rounded-full" style={{ background: c.tone, rotate: `${[-4, 3, -2, 4, -3][i]}deg` }}>
+                                    <Image src={c.image} alt="" fill sizes="64px" className="object-contain p-1" />
+                                </span>
+                                <span className="ah-light mt-1.5 text-[12px] leading-tight">{c.title.split("/").map((t, k) => <span key={k} className="block">{t}</span>)}</span>
+                            </Link>
                         ))}
-                    </div>
-                    <div className="shp-sheet rounded-[0_16px_16px_16px] px-3 pb-4 pt-4">
+                    </nav>
+
+                    {/* ③ 맞춤 추천 — 회원만 */}
+                    <ShopRecommend demoMember={demoMember} />
+                </DiaryBody>
+
+                {/* 속지 2 — ④ 추천 셀렉트 · 신상품: 다른 화면과 같은 색인 탭, 옆으로 밀면 넘어감 */}
+                <section aria-label="추천 셀렉트와 신상품" className="mt-7">
+                    <DiaryTabs tabs={SHELF_TABS} active={shelf} onPick={(i) => setShelf(i as 0 | 1)} />
+                    <DiaryBody pageKey={`shelf-${shelf}`} dir={shelf === 0 ? -1 : 1} className="!pl-8 !pr-3"
+                        onSwipe={(st) => { const n = shelf + st; if (n === 0 || n === 1) { haptic("light"); setShelf(n); } }}>
                         {shelf === 0 ? (
                             <>
                                 <p className="ah-display text-[15px]">댕다방 추천 셀렉트</p>
@@ -138,31 +142,35 @@ export default function StickerShop() {
                                 <div className="mt-5"><Patch href="/new/" tone="mint" small>신상품 보기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
                             </>
                         )}
-                    </div>
+                    </DiaryBody>
                 </section>
 
-                {/* ⑤ 기획전 + 대표 브랜드 */}
-                <section aria-label="기획전" className="mt-9">
-                    <SectionLabel icon="fa-scissors">기획전</SectionLabel>
-                    <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>우리 댕댕이에게 딱 맞는 큐레이션</p>
-                    <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-4">
-                        {PROMO_CARDS.map((t, i) => <PromoSticker key={t.href} tile={t} i={i} />)}
-                    </div>
+                {/* 속지 3 — ⑤ 기획전 · 대표 브랜드 · ⑥ 인스타 */}
+                <DiaryBody pageKey="shop-3" dir={1} className="mt-7 !pl-8 !pr-3">
+                    <section aria-label="기획전">
+                        <SectionLabel icon="fa-scissors">기획전</SectionLabel>
+                        <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>우리 댕댕이에게 딱 맞는 큐레이션</p>
+                        <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-4">
+                            {PROMO_CARDS.map((t, i) => <PromoSticker key={t.href} tile={t} i={i} />)}
+                        </div>
+                    </section>
 
                     {/* 대표 브랜드 — 기획전과 같은 제목 줄(형광펜 + 점선 + 아이콘) */}
-                    <SectionLabel className="mt-9" icon="fa-tag">대표 브랜드</SectionLabel>
-                    <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
-                    <div className="mt-3.5 grid grid-cols-2 gap-3">
-                        {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
-                    </div>
-                </section>
+                    <section aria-label="대표 브랜드">
+                        <SectionLabel className="mt-9" icon="fa-tag">대표 브랜드</SectionLabel>
+                        <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
+                        <div className="mt-3.5 grid grid-cols-2 gap-3">
+                            {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
+                        </div>
+                    </section>
 
-                {/* ⑥ 인스타 — 작은 링크 */}
-                <a href={INSTA_URL} target="_blank" rel="noopener noreferrer" aria-label={`${INSTA_HANDLE} 인스타그램 프로필 열기 (새 창)`}
-                    className="shp-insta mx-auto mt-10 flex w-fit items-center gap-2.5 rounded-full py-2 pl-2.5 pr-4">
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-[#ffe1ea] text-[15px] text-[#d6457a]"><i aria-hidden="true" className="fa-brands fa-instagram" /></span>
-                    <span className="ah-display text-[12.5px]">{INSTA_HANDLE} · 팔로우 하러가기</span>
-                </a>
+                    {/* ⑥ 인스타 — 작은 링크 */}
+                    <a href={INSTA_URL} target="_blank" rel="noopener noreferrer" aria-label={`${INSTA_HANDLE} 인스타그램 프로필 열기 (새 창)`}
+                        className="shp-insta mx-auto mt-10 flex w-fit items-center gap-2.5 rounded-full py-2 pl-2.5 pr-4">
+                        <span className="grid h-8 w-8 place-items-center rounded-full bg-[#ffe1ea] text-[15px] text-[#d6457a]"><i aria-hidden="true" className="fa-brands fa-instagram" /></span>
+                        <span className="ah-display text-[12.5px]">{INSTA_HANDLE} · 팔로우 하러가기</span>
+                    </a>
+                </DiaryBody>
             </div>
         </div>
     );
@@ -249,7 +257,7 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
 
             {/* 가로 선반 — 상품 카드 + 추천 이유 메모 */}
             {items.length > 0 ? (
-                <ul className="shp-shelf -mx-3.5 mt-3.5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-3.5 pb-3 pt-2.5" data-recommendation-run={real ? analytics.runId : undefined}>
+                <ul className="shp-shelf -mr-3 mt-3.5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-3 pt-2.5" data-recommendation-run={real ? analytics.runId : undefined}>
                     {items.map((it, i) => (
                         <li key={it.product.id} className="w-[10.4rem] shrink-0 snap-start" data-recommendation-product={it.product.id}
                             onClickCapture={(e) => { const a = (e.target as Element).closest?.("a[href]"); if (real && a?.getAttribute("href")?.startsWith("/product/")) analytics.trackProductClick(it.product.id); }}>
@@ -337,10 +345,6 @@ const SHOP_CSS = `
 .shp-cat { -webkit-tap-highlight-color: transparent; }
 .shp-cat-sticker { box-shadow: 0 0 0 3px #fff, 0 7px 12px -7px rgba(90,60,50,.5); transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
 .shp-cat:active .shp-cat-sticker { transform: scale(.9) rotate(4deg); }
-/* 색인 탭 + 종이 */
-.shp-tab { border-radius: 12px 12px 0 0; color: #8f7a70; box-shadow: inset 0 1.5px 0 #f1e3da, inset 1.5px 0 0 #f1e3da, inset -1.5px 0 0 #f1e3da; -webkit-tap-highlight-color: transparent; }
-.shp-tab.is-on { color: ${TEXT}; position: relative; }
-.shp-sheet { background: #fffdf9; box-shadow: inset 0 0 0 1.5px #f1e3da, 0 14px 24px -18px rgba(110,70,55,.5); }
 /* 추천 선반 · 이유 메모 · 반려견 이름표 */
 .shp-shelf { scrollbar-width: none; }
 .shp-shelf::-webkit-scrollbar { display: none; }
