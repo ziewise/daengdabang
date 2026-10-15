@@ -149,8 +149,9 @@ export default function StickerShop() {
                         {PROMO_CARDS.map((t, i) => <PromoSticker key={t.href} tile={t} i={i} />)}
                     </div>
 
-                    <p className="ah-display mt-8 text-[15px]">대표 브랜드</p>
-                    <p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
+                    {/* 대표 브랜드 — 기획전과 같은 제목 줄(형광펜 + 점선 + 아이콘) */}
+                    <SectionLabel className="mt-9" icon="fa-tag">대표 브랜드</SectionLabel>
+                    <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
                     <div className="mt-3.5 grid grid-cols-2 gap-3">
                         {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
                     </div>
