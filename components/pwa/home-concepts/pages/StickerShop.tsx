@@ -331,6 +331,8 @@ function BrandSticker({ brand, i }: { brand: (typeof BRANDS)[number]; i: number 
     }, [brand.slides.length]);
     return (
         <Link href={brand.href} aria-label={`${brand.name} ${brand.cta}`} onClick={() => haptic("light")} className="shp-brand relative block rounded-[12px] bg-white p-1.5 pb-2.5" style={{ rotate: `${i ? 0.8 : -0.8}deg` }}>
+            {/* 기획전 카드처럼 위에 마스킹테이프 */}
+            <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={i ? "rgba(255,226,150,.9)" : "rgba(200,240,215,.9)"} style={{ rotate: `${i ? 4 : -4}deg` }} />
             <span className="relative block aspect-[4/3] overflow-hidden rounded-[8px] bg-[#f6efe8]">
                 {brand.slides.map((sl, n) => <Image key={sl.image} src={sl.image} alt="" fill sizes="45vw" className={`object-cover transition-opacity duration-700 ${n === k ? "opacity-100" : "opacity-0"}`} />)}
             </span>
