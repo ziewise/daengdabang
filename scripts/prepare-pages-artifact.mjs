@@ -25,11 +25,12 @@ const DEPLOYMENT_OMIT_PATHS = new Set([
 ]);
 const DEPLOYMENT_OMIT_PREFIXES = [
     // Keep original, uneven-speed walking clips as source evidence in Git.
-    // The active manifest exclusively uses images/hero/steady-walk-v2/.
+    // The active manifest exclusively uses images/hero/steady-walk-v3/.
     "images/hero/summer_",
     // Superseded DIS interpolation and unused legacy weather backgrounds.
     // Preserve the source files in Git; spend delivery bytes on current quality.
     "images/hero/steady-walk-v1/",
+    "images/hero/steady-walk-v2/",
     "images/hero/weather-",
     // Source/reference exports used to prepare marketplace content. The
     // storefront catalog does not reference these trees at runtime.

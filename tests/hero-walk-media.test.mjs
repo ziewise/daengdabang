@@ -11,7 +11,7 @@ test("every desktop and mobile weather scene serves its reviewed retimed media",
     assert.equal(new Set(paths).size, 24);
     assert.equal(review.videos.length, 24);
     for (const path of paths) {
-        assert.ok(path.startsWith("/images/hero/steady-walk-v2/"));
+        assert.ok(path.startsWith("/images/hero/steady-walk-v3/"));
         const row = review.videos.find((entry) => entry.path === path);
         assert.ok(row, `Missing review: ${path}`);
         const bytes = await readFile(new URL(`../public${path}`, import.meta.url));
@@ -21,7 +21,7 @@ test("every desktop and mobile weather scene serves its reviewed retimed media",
         assert.ok(row.duration > 8);
         assert.equal(row.duration, row.previousDuration, `Approved pace changed: ${path}`);
         assert.equal(row.timingPreserved, true);
-        assert.equal(row.interpolation, "rife-v4.6-full-resolution-exact-time");
+        assert.equal(row.interpolation, "rife-v4.6-exact-time-early-ensemble");
         assert.equal(row.encode, "h264-slow-crf21-single-pass-no-vbv");
         // A single fixed slow playback multiplier does not fix source ramps.
         assert.ok(row.rateMin < row.rateMax && row.rateMax <= 0.8);

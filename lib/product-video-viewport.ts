@@ -1,5 +1,11 @@
 export type VideoAction = "play" | "pause" | "reset";
 
+const TOUCH_MEDIA = "(hover: none), (pointer: coarse)";
+export function isProductVideoTouch(win: Window) {
+    return win.matchMedia(TOUCH_MEDIA).matches
+        || ((win.navigator?.maxTouchPoints ?? 0) > 0 && win.innerWidth <= 1024);
+}
+
 type Entry = {
     element: HTMLElement;
     update: (action: VideoAction) => void;
@@ -10,14 +16,14 @@ type Entry = {
 /** One observer and scroll listener for every product grid on the page. */
 export function createProductVideoViewport(win: Window, doc: Document) {
     const entries = new Map<HTMLElement, Entry>();
-    const mobile = win.matchMedia("(hover: none) and (pointer: coarse)");
+    const mobile = win.matchMedia(TOUCH_MEDIA);
     let timer: ReturnType<typeof setTimeout> | undefined;
     let scrolling = false;
     let touching = false;
     let mounted = false;
 
-    const send = (entry: Entry, action: VideoAction) => {
-        if (entry.action === action) return;
+    const send = (entry: Entry, action: VideoAction, retry = false) => {
+        if (entry.action === action && !retry) return;
         entry.action = action;
         entry.update(action);
     };
@@ -29,17 +35,18 @@ export function createProductVideoViewport(win: Window, doc: Document) {
         const width = Math.max(0, Math.min(rect.right, win.innerWidth) - Math.max(rect.left, 0));
         return rect.width > 0 && rect.height > 0 && width * height >= rect.width * rect.height * 0.5;
     };
-    const update = () => {
+    const update = (retry = false) => {
+        const touch = isProductVideoTouch(win);
         for (const entry of entries.values()) {
-            if (!mobile.matches || doc.hidden || !visible(entry.element)) {
+            if (!touch || doc.hidden || !visible(entry.element)) {
                 // Leave desktop hover playback to the card.
-                if (mobile.matches || entry.action !== "reset") send(entry, "reset");
+                if (touch || entry.action !== "reset") send(entry, "reset");
             } else if (entry.preview) {
                 send(entry, "reset");
             } else if (scrolling) {
                 if (entry.action === "play") send(entry, "pause");
             } else {
-                send(entry, "play");
+                send(entry, "play", retry);
             }
         }
     };
@@ -52,7 +59,7 @@ export function createProductVideoViewport(win: Window, doc: Document) {
         }, 160);
     };
     const onScroll = () => {
-        if (!mobile.matches) return;
+        if (!isProductVideoTouch(win)) return;
         scrolling = true;
         for (const entry of entries.values()) entry.preview = false;
         update();
@@ -64,14 +71,20 @@ export function createProductVideoViewport(win: Window, doc: Document) {
     const onPointerUp = () => {
         touching = false;
         if (scrolling) settle();
+        else if (isProductVideoTouch(win) && !doc.hidden) {
+            // Retry a browser-blocked initial play inside a real touch gesture.
+            for (const entry of entries.values()) {
+                if (!entry.preview && visible(entry.element)) send(entry, "play", true);
+            }
+        }
     };
     const onVisibility = () => {
         touching = false;
         scrolling = false;
         clearTimeout(timer);
-        update();
+        update(true);
     };
-    const observer = new IntersectionObserver(update, { threshold: [0, 0.5, 1] });
+    const observer = new IntersectionObserver(() => update(), { threshold: [0, 0.5, 1] });
     const mount = () => {
         if (mounted) return;
         mounted = true;

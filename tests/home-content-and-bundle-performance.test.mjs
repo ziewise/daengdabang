@@ -53,7 +53,8 @@ test("bundle media ships compact WebP assets and keeps posters visible until vid
     const totalBytes = [...assets].reduce((sum, href) => sum + statSync(new URL(href)).size, 0);
     assert.equal(assets.size, 24);
     assert.ok(totalBytes < 4_000_000, `optimized bundle images are ${totalBytes} bytes`);
-    assert.match(bundleCard, /videoReady && videoActive && videoLoaded/);
+    assert.match(bundleCard, /videoReady && videoActive/);
+    assert.match(bundleCard, /useProductVideo\(videoReady \? bundle.video : undefined\)/);
     assert.match(bundleCard, /ddb-crayon-price/);
     assert.match(detail, /DeferredBundleHeroVideo/);
     assert.match(detail, /loading="eager"/);

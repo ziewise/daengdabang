@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import type { CatalogProduct, ProductColor } from "@/lib/catalog";
 import { productColorImageKey } from "@/lib/catalog/product-color-image";
@@ -8,6 +8,7 @@ import bestStyles from "@/components/main/best.module.css";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 import ProductColorImage from "@/components/products/ProductColorImage";
+import { useProductVideo } from "@/components/products/useProductVideo";
 
 interface Props {
     product: CatalogProduct;
@@ -21,50 +22,27 @@ export default function ProductGallery(props: Props) {
 
 function ProductGalleryImages({ product: p, selectedColor }: Props) {
     const images = [p.image, ...(p.gallery ?? [])].filter(Boolean) as string[];
-    const videoRef = useRef<HTMLVideoElement>(null);
+    const { videoRef, videoActive, activate, deactivate, previewColor, ...videoEvents } = useProductVideo(p.video);
     const [activeIdx, setActiveIdx] = useState<number | null>(null);
-    const [showVideo, setShowVideo] = useState(false);
-    const [videoReady, setVideoReady] = useState(false);
     const activeColor = activeIdx === null ? selectedColor : undefined;
     const activeImage = activeColor?.image || images[activeIdx ?? 0];
-    const isVideoVisible = Boolean(p.video && showVideo && videoReady);
+    const isVideoVisible = Boolean(p.video && videoActive);
     const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
         || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1"
         || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_owner_delegated_ai.v1")
         && p.raw.videoPlaybackMode === "once_hold_last_frame";
     const videoCaption = playOnce && p.folder === "hugo_icecream_salmon" ? "연어 맛 사용 영상" : undefined;
 
-    const activateVideo = () => {
-        if (!p.video) return;
-        const video = videoRef.current;
-        setShowVideo(true);
-        if (!video) return;
-        video.preload = "auto";
-        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-            setVideoReady(true);
-        } else {
-            video.load();
-        }
-        window.requestAnimationFrame(() => video.play().catch(() => {}));
-    };
-
-    const deactivateVideo = () => {
-        setShowVideo(false);
-        const video = videoRef.current;
-        if (!video) return;
-        video.pause();
-        video.currentTime = 0;
-    };
-
     return (
         <div className="space-y-3">
             <div
                 data-product-gallery
                 className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm max-md:rounded-none max-md:border-x-0 max-md:border-t-0 ${activeImage ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
-                onMouseEnter={activateVideo}
-                onMouseLeave={deactivateVideo}
-                onFocus={activateVideo}
-                onBlur={deactivateVideo}
+                onMouseEnter={activate}
+                onMouseLeave={deactivate}
+                onFocus={activate}
+                onBlur={deactivate}
+                tabIndex={p.video ? 0 : undefined}
             >
                 {activeImage ? (
                     <ProductColorImage
@@ -89,11 +67,10 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                         data-hover-video-fit="cover"
                         className={`absolute inset-0 h-full w-full bg-[#f7f2e8] object-cover transition-opacity duration-100 ${isVideoVisible ? "opacity-100" : "opacity-0"}`}
                         muted
-                        loop={!playOnce}
+                        loop={false}
                         playsInline
-                        preload="auto"
-                        onLoadedData={() => setVideoReady(true)}
-                        onCanPlay={() => setVideoReady(true)}
+                        preload="metadata"
+                        {...videoEvents}
                     />
                 )}
 
@@ -111,8 +88,8 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                             <button
                                 key={`${img}-${index}`}
                                 type="button"
-                                onClick={() => setActiveIdx(index)}
-                                onMouseEnter={() => setActiveIdx(index)}
+                                onClick={() => { previewColor(); setActiveIdx(index); }}
+                                onMouseEnter={() => { previewColor(); setActiveIdx(index); }}
                                 aria-label={`상품 이미지 ${index + 1}`}
                                 aria-current={active}
                                 className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-white transition md:h-20 md:w-20 ${

@@ -67,7 +67,7 @@ export default function ProductCard({
     const thumbnail = selectedColor?.image || p.image;
 
     // ===== 영상 호버 로직 =====
-    const { videoRef, videoActive, activate, deactivate, previewColor, onPlaying, onSeeked, onError } = useProductVideo(p.video);
+    const { videoRef, videoActive, activate, deactivate, previewColor, ...videoEvents } = useProductVideo(p.video);
     const hasVideo = !!p.video;
     const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
         || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1"
@@ -89,6 +89,8 @@ export default function ProductCard({
             <div
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
+                onFocus={activate}
+                onBlur={deactivate}
                 className={`relative aspect-square overflow-hidden ${thumbnail ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
             >
                 <Link
@@ -118,12 +120,10 @@ export default function ProductCard({
                             style={hoverVideoStyle(p.video)}
                             data-hover-video-fit="cover"
                             muted
-                            loop={!playOnce}
+                            loop={false}
                             playsInline
                             preload="metadata"
-                            onPlaying={onPlaying}
-                            onSeeked={onSeeked}
-                            onError={onError}
+                            {...videoEvents}
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />
                     )}

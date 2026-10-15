@@ -14,7 +14,7 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     const withdrawn = [1, 3, 6].map(id => `videos/intro-random-${id}-clean-v1.mp4`);
     withdrawn.push('images/hero/summer_afternoon_sunny_poodle_pc.mp4');
     withdrawn.push('images/hero/steady-walk-v1/summer_afternoon_sunny_poodle_pc.mp4');
-    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/steady-walk-v2/summer_afternoon_sunny_poodle_pc.mp4'];
+    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/steady-walk-v3/summer_afternoon_sunny_poodle_pc.mp4'];
     for (const asset of [...withdrawn, ...approved]) {
         await write(root, `public/${asset}`, 'source');
         await write(root, `out/${asset}`, 'published');
