@@ -5,7 +5,7 @@ import path from "node:path";
 import test from "node:test";
 
 import { preparePagesArtifact } from "../scripts/prepare-pages-artifact.mjs";
-import { HERO_WEATHERS, HERO_TIME_BUCKETS, resolveHeroScene } from "../lib/hero-assets.ts";
+import { HERO_VIDEO_MANIFEST } from "../lib/hero-video-manifest.ts";
 
 const COMMIT_SHA = "a".repeat(40);
 
@@ -13,7 +13,8 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     const root = await fixture(t);
     const withdrawn = [1, 3, 6].map(id => `videos/intro-random-${id}-clean-v1.mp4`);
     withdrawn.push('images/hero/summer_afternoon_sunny_poodle_pc.mp4');
-    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/steady-walk-v1/summer_afternoon_sunny_poodle_pc.mp4'];
+    withdrawn.push('images/hero/steady-walk-v1/summer_afternoon_sunny_poodle_pc.mp4');
+    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/steady-walk-v2/summer_afternoon_sunny_poodle_pc.mp4'];
     for (const asset of [...withdrawn, ...approved]) {
         await write(root, `public/${asset}`, 'source');
         await write(root, `out/${asset}`, 'published');
@@ -26,30 +27,27 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     for (const asset of approved) assert.equal(await fs.readFile(path.join(root, `out/${asset}`), 'utf8'), 'published');
 });
 
-test('Pages omits superseded previews while retaining every selectable weather video and source bytes', async t => {
+test('Pages omits legacy backgrounds while retaining all 24 current hero videos and source bytes', async t => {
     const root = await fixture(t);
     await write(root, 'public/images/hero/snow.mp4', 'preserved-original');
     await write(root, 'out/images/hero/snow.mp4', 'superseded-preview');
     const obsolete = 'weather-clear-evening-ltr-v1.mp4';
     await write(root, `public/images/hero/${obsolete}`, 'preserved-evening-source');
     await write(root, `out/images/hero/${obsolete}`, 'superseded-evening');
-    const current = new Set();
-    for (const weather of HERO_WEATHERS) {
-        for (const timeBucket of HERO_TIME_BUCKETS) {
-            for (const season of ['spring', 'summer', 'autumn', 'winter']) {
-                current.add(path.basename(resolveHeroScene({ weather, timeBucket, season }).video.split('?')[0]));
-            }
-        }
-    }
-    assert.equal(current.has(obsolete), false);
-    for (const name of current) await write(root, `out/images/hero/${name}`, name);
+    await write(root, 'out/images/hero/default.mp4', 'legacy-fallback');
+    await write(root, 'out/images/hero/weather-rain-day-v2.mp4', 'legacy-weather');
+    const current = Object.values(HERO_VIDEO_MANIFEST).flatMap(({ pc, m }) => [pc, m]);
+    assert.equal(new Set(current).size, 24);
+    for (const asset of current) await write(root, `out${asset}`, asset);
     const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
-    assert.equal(result.omittedLegacyAssetCount, 3);
+    assert.equal(result.omittedLegacyAssetCount, 4);
     await assert.rejects(fs.access(path.join(root, 'out/images/hero/snow.mp4')));
     await assert.rejects(fs.access(path.join(root, `out/images/hero/${obsolete}`)));
     assert.equal(await fs.readFile(path.join(root, 'public/images/hero/snow.mp4'), 'utf8'), 'preserved-original');
     assert.equal(await fs.readFile(path.join(root, `public/images/hero/${obsolete}`), 'utf8'), 'preserved-evening-source');
-    for (const name of current) assert.equal(await fs.readFile(path.join(root, `out/images/hero/${name}`), 'utf8'), name);
+    await assert.rejects(fs.access(path.join(root, 'out/images/hero/default.mp4')));
+    await assert.rejects(fs.access(path.join(root, 'out/images/hero/weather-rain-day-v2.mp4')));
+    for (const asset of current) assert.equal(await fs.readFile(path.join(root, `out${asset}`), 'utf8'), asset);
 });
 
 test('Pages accepts only the exact per-video CDN revision, independently of a newer site build', async t => {

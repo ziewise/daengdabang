@@ -7,7 +7,7 @@
  *   2) pickHeroBreedVideo : 그 영상 속 강아지 견종의 얼굴 배지 영상
  *
  * 영상·견종 매핑은 lib/hero-video-manifest.ts(자동 생성)에서 가져온다.
- *   · 매니페스트는 public/images/hero/steady-walk-v1 의 구간별 속도 보정본을 스캔해 생성.
+ *   · 매니페스트는 public/images/hero/steady-walk-v2 의 구간별 속도 보정본을 스캔해 생성.
  *   · 파일명 규칙: {season}_{time}_{weather}_{breed}_{device}.mp4
  *     (breed = breeds 폴더 파일명: poodle / englishbulldog / welshcorgi …)
  *   · 즉 영상을 추가/교체할 때 "파일명만 규칙대로" 두면 코드 수정 없이 반영된다.
