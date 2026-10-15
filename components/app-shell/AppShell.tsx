@@ -514,15 +514,19 @@ html.ddb-app-mode:not(.ddb-app-web-header) { --header-height: var(--app-topbar-h
 
 /* 산책 친구 버튼(협업자 PetCompanionGate) — 앱에서만 덮어씀(웹은 그대로)
  * 발바닥(설정) 버튼은 숨김 — 설정은 강아지를 누르면 나오는 빠른 메뉴 "설정하기"로.
- * 강아지 집은 화면 가장자리에 반쯤 걸친 탭 대신, 탭바 바로 위 오른쪽 아래의 오려 붙인 집 스티커(흰 테두리 · 살짝 기울임). */
+ * 강아지 집은 화면 가장자리에 반쯤 걸친 탭 대신, 탭바 바로 위 오른쪽 아래의 오려 붙인 3D 집 스티커
+ * (사용자가 만든 그림 companion-house.webp · 흰 테두리 · 살짝 기울임). 집에 들어가 있으면 문 앞이 살짝 빛남 */
 html.ddb-app-mode button[data-pet-companion-settings] { display: none !important; }
-html.ddb-app-mode button[data-pet-companion-home] { right: 14px !important; bottom: calc(var(--app-tabbar-h) + 10px) !important; width: 46px !important; height: 46px !important;
-  border: 0 !important; border-radius: 15px !important; background: #fff3e2 !important; rotate: -6deg;
-  box-shadow: 0 0 0 3px #fff, 0 0 0 4px rgba(214,150,110,.25), 0 9px 14px -8px rgba(110,60,30,.55) !important; }
-html.ddb-app-mode button[data-pet-companion-home][data-home-occupied="true"] { background: #ffe8bf !important; }
+html.ddb-app-mode button[data-pet-companion-home] { right: 12px !important; bottom: calc(var(--app-tabbar-h) + 8px) !important; width: 52px !important; height: 52px !important;
+  border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; rotate: -5deg; }
+html.ddb-app-mode button[data-pet-companion-home]::before { content: ""; position: absolute; inset: 0; background: url("/images/ui/stickers/companion-house.webp") center / contain no-repeat;
+  filter: drop-shadow(1.6px 0 0 #fff) drop-shadow(-1.6px 0 0 #fff) drop-shadow(0 1.6px 0 #fff) drop-shadow(0 -1.6px 0 #fff) drop-shadow(0 7px 7px rgba(110,60,30,.38)); }
+html.ddb-app-mode button[data-pet-companion-home] > span[aria-hidden="true"]:last-child { display: none !important; }
+html.ddb-app-mode button[data-pet-companion-home][data-home-occupied="true"]::after { content: ""; position: absolute; left: 34%; right: 34%; bottom: 14%; height: 26%; border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(255,226,140,.75), transparent); animation: app-house-glow 2.8s ease-in-out infinite; pointer-events: none; }
+@keyframes app-house-glow { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 html.ddb-app-mode button[data-pet-companion-home][data-buybar="true"] { bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
-html.ddb-app-mode button[data-pet-companion-home] > span[aria-hidden="true"]:last-child { transform: scale(1.05) !important; }
-html.ddb-app-mode button[data-pet-companion-home]:active { transform: scale(.9) !important; }
+html.ddb-app-mode button[data-pet-companion-home]:active { transform: scale(.88) !important; }
 html.ddb-app-mode button[data-pet-companion-home][data-mobile-hidden="true"] { transform: translateY(12px) scale(.8) !important; }
 
 /* 누를 때 살짝 눌림 */
