@@ -37,6 +37,15 @@ const LOGO_INKS = ["#0aa3b8", "#ec1c45", "#ff8a00"]; // 로고 "댕다방" 글�
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
  * 고르지 않은 탭은 CSS 로 제 색을 옅게, 고른 탭은 또렷하게.
  */
+/* 시안 탭바 아이콘 — 사용자가 만든 3D 클레이 그림(public/images/ui/stickers/tab-*.webp) */
+const TAB_IMAGES: Partial<Record<AppTabKey, string>> = {
+    home: "/images/ui/stickers/tab-home.webp",
+    lab: "/images/ui/stickers/tab-lab.webp",
+    shop: "/images/ui/stickers/tab-shop.webp",
+    dang: "/images/ui/stickers/tab-dang.webp",
+    my: "/images/ui/stickers/tab-my.webp",
+};
+
 function TabIcon({ tab }: { tab: AppTab }) {
     const gid = `ddb-tab-grad-${tab.key}`;
     const fill = `url(#${gid})`;
@@ -406,7 +415,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                     >
                                         {/* 고른 탭 — 아이콘 뒤 파스텔 젤리 판(탭 색)이 통 튀어나옴 */}
                                         <span className="app-tab-icon" style={{ ["--pad" as string]: t.bubble, ["--rim" as string]: t.rim }}>
-                                            <TabIcon tab={t} />
+                                            {concept && TAB_IMAGES[t.key] ? (
+                                                <Image src={TAB_IMAGES[t.key]!} alt="" width={64} height={64} className="app-tab-svg app-tab-img h-[30px] w-[30px] shrink-0 object-contain" />
+                                            ) : (
+                                                <TabIcon tab={t} />
+                                            )}
                                         </span>
                                         <span className="app-tab-label" style={{ color: on ? t.ink : undefined }}>
                                             {t.label}
@@ -491,7 +504,9 @@ html.ddb-app-mode:not(.ddb-app-web-header) { --header-height: var(--app-topbar-h
 .app-tab.is-hero .app-tab-icon { width: 58px; height: 58px; margin-top: -30px; }
 .app-tab.is-hero .app-tab-icon::before { border-radius: 999px; transform: scale(1); opacity: 1;
   box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px var(--rim), inset 0 -4px 0 var(--rim), 0 12px 18px -10px rgba(236,106,28,.55); }
-.app-tab.is-hero .app-tab-svg { width: 36px; height: 36px; filter: drop-shadow(0 2px 2px rgba(150,70,20,.25)); }
+.app-tab.is-hero .app-tab-svg { width: 38px; height: 38px; filter: drop-shadow(0 2px 2px rgba(150,70,20,.25)); }
+/* 3D 그림 아이콘: 고르지 않은 탭은 살짝 옅게(색은 유지), 고른 탭은 또렷하게 */
+.app-tab-img { filter: saturate(.85) opacity(.72); }
 .app-tab.is-hero .app-tab-label { color: #cf5f19; }
 .app-tab.is-hero.is-on .app-tab-icon { transform: translateY(-4px); }
 .app-tab.is-hero.is-on .app-tab-icon::before { box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px #f3a56a, inset 0 -4px 0 var(--rim), 0 14px 22px -10px rgba(236,106,28,.7); }
