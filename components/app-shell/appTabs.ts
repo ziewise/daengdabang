@@ -109,7 +109,7 @@ export function conceptTabs(c: Concept): AppTab[] {
             grad: ["#f5be4a", "#e0951c"], bubble: "linear-gradient(165deg, #fff8e0 0%, #ffecb8 100%)", rim: "#f4d68c", ink: "#a8720f",
         },
         { ...dang, href: `/app/${c}/show/` },
-        shop,
+        { ...shop, href: `/app/${c}/shop/` }, // 앱 전용 쇼핑 첫 화면(웹 첫 페이지 대신)
         {
             key: "my", label: "마이", href: `/app/${c}/my/`,
             grad: ["#5cb6f2", "#2f86d6"], bubble: "linear-gradient(165deg, #eaf6ff 0%, #d3ebff 100%)", rim: "#b5d8f7", ink: "#1f6fbf",
@@ -124,6 +124,7 @@ export function conceptTabForPath(pathname: string, c: Concept, previous: AppTab
         { tab: "home", paths: ["/app/home-1", `/app/${c}/daily`, `/app/${c}/care`, "/treasure-mine", "/growth", "/challenge"] },
         { tab: "lab", paths: [`/app/${c}/lab`, `/app/${c}/report`, "/pet-lens", "/petlens", "/my-pet"] },
         { tab: "dang", paths: [`/app/${c}/show`, "/daeng-showcase", "/goods-contest"] },
+        { tab: "shop", paths: [`/app/${c}/shop`] },
         { tab: "my", paths: [`/app/${c}/my`, "/mypage", "/auth", "/faq", "/notice", "/inquiry", "/return", "/legal", "/terms", "/privacy", "/social"] },
     ];
     for (const rule of rules) if (rule.paths.some((p) => matches(pathname, p))) return rule.tab;

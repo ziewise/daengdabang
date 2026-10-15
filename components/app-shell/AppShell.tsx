@@ -20,6 +20,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
 import Header from "@/components/header/Header";
 import SearchModal from "@/components/header/SearchModal";
 import { CHAT_WIDGET_OPEN_EVENT } from "@/lib/chat-widget-events";
@@ -259,9 +260,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const subTitle = concept ? conceptSubTitle(pathname) : null;
     const careTalk = isCareTalkPath(pathname);
     // 상단바 아래 화면 제목 — 탭 첫 화면은 탭 이름(홈 제외), 하위 화면은 시안 하위 제목(매일 댕생활 · 로그인 등)이 있을 때만
-    const pageTitle = careTalk || activeKey === "home" && root ? null : root ? active.label : subTitle;
-    // 쇼핑 탭 — 휴대폰으로 웹을 볼 때처럼 사이트 상단바(Header). 상품 상세는 웹과 같이 사진이 맨 위까지 올라간다
-    const webHeader = activeKey === "shop";
+    // 홈 · 쇼핑 첫 화면은 제목 테이프 없이(홈은 인사말, 쇼핑은 브랜드 문구로 시작)
+    const pageTitle = careTalk || (activeKey === "home" || activeKey === "shop") && root ? null : root ? active.label : subTitle;
+    // 쇼핑 탭 — 앱 전용 쇼핑 화면(/app/…)은 앱 상단바, 그 밖의 웹 쇼핑 화면(상품 상세 · 장바구니 · 결제)은
+    // 휴대폰으로 웹을 볼 때처럼 사이트 상단바(Header). 상품 상세는 웹과 같이 사진이 맨 위까지 올라간다
+    const webHeader = activeKey === "shop" && !pathname.startsWith("/app/");
     const productDetail = pathname.startsWith("/product/");
 
     // 앱 모드 표시 — 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨긴다
@@ -381,11 +384,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {children}
             </main>
 
+            {/* ── 산책 친구 — 쇼핑 탭 화면에서만(협업자 PetCompanionGate 그대로 · 장바구니 · 결제에서는 스스로 숨음) ── */}
+            {activeKey === "shop" ? <PetCompanionGate /> : null}
+
             {/* ── 아래 탭바 — 크림 종이 판. 아이콘은 헤더와 같은 젤리 그림, 고른 탭은 파스텔 젤리 판 위로 통 + 카페24 이름 ── */}
             {showTabBar && (
                 <nav
                     className="fixed inset-x-0 bottom-0 z-[2150] px-3 pb-[calc(8px+env(safe-area-inset-bottom,0px))]"
                     aria-label="앱 메뉴"
+                    data-pet-companion-avoid="true"
                 >
                     <ul className="app-tabbar mx-auto grid h-[68px] w-full max-w-[440px] grid-cols-5 px-1.5">
                         {tabs.map((t) => {
