@@ -15,7 +15,7 @@ type ShareNotice = {
     fallbackUrl?: string;
 };
 
-async function copyText(value: string): Promise<boolean> {
+export async function copyText(value: string): Promise<boolean> {
     try {
         if (navigator.clipboard?.writeText) {
             await navigator.clipboard.writeText(value);

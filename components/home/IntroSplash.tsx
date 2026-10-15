@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { isAppModeNow } from "@/components/app-shell/useAppMode";
 import styles from "@/app/intro.module.css";
 
 const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
@@ -47,6 +48,8 @@ export default function IntroSplash() {
         try {
             const introMode = new URLSearchParams(window.location.search).get("intro");
             if (introMode === "0") return;
+            // 앱(앱 틀)에서 쇼핑 탭으로 들어올 때는 인트로 영상 없이 바로 쇼핑 화면 (로컬 시안)
+            if (introMode !== "1" && isAppModeNow()) return;
             if (introMode === "1") {
                 show();
                 return;

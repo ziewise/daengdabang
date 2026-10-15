@@ -6,9 +6,9 @@ import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
 import { placeMapLinks } from "@/lib/place-map-links";
 
-type LocalCareCategory = "veterinary" | "grooming" | "hotel" | "daycare";
+export type LocalCareCategory = "veterinary" | "grooming" | "hotel" | "daycare";
 
-type CategoryOption = {
+export type CategoryOption = {
     id: LocalCareCategory;
     label: string;
     shortLabel: string;
@@ -18,7 +18,7 @@ type CategoryOption = {
     tone: "coral" | "teal" | "orange";
 };
 
-type LocalCarePlace = {
+export type LocalCarePlace = {
     id: string;
     name: string;
     address: string;
@@ -29,15 +29,15 @@ type LocalCarePlace = {
     lon?: number;
 };
 
-type Coordinates = { latitude: number; longitude: number };
+export type Coordinates = { latitude: number; longitude: number };
 
-type SearchState =
+export type SearchState =
     | { status: "idle" }
     | { status: "loading"; category: LocalCareCategory }
     | { status: "done"; category: LocalCareCategory; places: LocalCarePlace[]; fallbackUrl: string }
     | { status: "error"; category: LocalCareCategory; message: string; fallbackUrl: string };
 
-const CATEGORIES: readonly CategoryOption[] = [
+export const CATEGORIES: readonly CategoryOption[] = [
     {
         id: "veterinary",
         label: "동물병원",
@@ -76,7 +76,7 @@ const CATEGORIES: readonly CategoryOption[] = [
     },
 ] as const;
 
-function buildNaverMapUrl(...parts: Array<string | undefined>) {
+export function buildNaverMapUrl(...parts: Array<string | undefined>) {
     const searchText = parts
         .map((part) => String(part || "").trim())
         .filter(Boolean)
@@ -85,13 +85,13 @@ function buildNaverMapUrl(...parts: Array<string | undefined>) {
     return `https://map.naver.com/p/search/${encodeURIComponent(searchText)}`;
 }
 
-function formatDistance(value?: number | null) {
+export function formatDistance(value?: number | null) {
     if (typeof value !== "number" || !Number.isFinite(value) || value < 0) return "거리 확인";
     if (value < 1000) return `${Math.round(value)}m`;
     return `${(value / 1000).toFixed(value < 10000 ? 1 : 0)}km`;
 }
 
-function currentPosition(): Promise<Coordinates> {
+export function currentPosition(): Promise<Coordinates> {
     if (!("geolocation" in navigator)) {
         return Promise.reject(new Error("location-unavailable"));
     }
@@ -107,7 +107,7 @@ function currentPosition(): Promise<Coordinates> {
     });
 }
 
-function safePlaces(value: unknown, category: CategoryOption): LocalCarePlace[] {
+export function safePlaces(value: unknown, category: CategoryOption): LocalCarePlace[] {
     if (!Array.isArray(value)) return [];
     return value.flatMap((raw, index): LocalCarePlace[] => {
         if (!raw || typeof raw !== "object") return [];

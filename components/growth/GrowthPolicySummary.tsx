@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
-const POLICIES = [
+export const POLICIES = [
     {
         icon: "fa-circle-play",
         tone: "orange",

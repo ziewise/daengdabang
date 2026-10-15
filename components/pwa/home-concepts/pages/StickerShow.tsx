@@ -1,0 +1,597 @@
+"use client";
+
+/**
+ * 스티커북 시안 — 댕다방(댕자랑 · 굿즈 공모전) (/app/sticker/show) · 로컬 시안 전용, 배포 X
+ * ---------------------------------------------------------------------
+ * 다이어리 속지 + 색인 탭 2개(댕자랑 · 굿즈 공모전), 옆으로 밀면 쪽이 넘어간다. ?tab=1 이면 굿즈 공모전부터.
+ *  - 댕자랑(협업자 /daeng-showcase 와 같은 기능 · 문구, 시안은 화면 안에서만 동작):
+ *    오늘의 댕주제 포스트잇 — 진행 중(기간 · D-day · 참여 중 도장 · 이 주제로 올리기 · 주제 공유카드) / 주제 없음(자유 주제로 올리기)
+ *    운영자 선정 대표 댕자랑(주제 카드 안 작은 폴라로이드 + 글 두 줄 · 톡 하면 상세) — 서버가 주제와 함께 내려줄 때만
+ *    오늘의 한 장 올리기 = 아래에서 올라오는 속지(show-parts ShowComposer) — 오른쪽 아래 카메라 스티커 버튼으로도 열림
+ *    전체 / 팔로잉 · 폴라로이드 벽(2열: 사진 · 작성자 · 응원 수) — 운영 공개 피드를 읽기 전용으로 불러옴(show-feed, 실패하면 예시 게시물)
+ *    쪽 넘김 — 한 쪽 12장 · 이전 / 쪽 번호 스티커 / 다음(웹 댕자랑처럼 서버 커서로, 쪽 번호는 넘겨 보며 확인된 쪽까지) · 실패하면 "다시 불러오기"
+ *    사진 한 번 톡 = 그 자리에서 상세가 펼쳐짐(큰 사진 · 글 전체 · 작성자 · 팔로우 · 응원 · 공유 · 신고 / 내 글은 삭제)
+ *    사진 두 번 톡 = 크레파스 뼈다귀 응원 · 작성자 → 프로필 속지(게시물 · 팔로워 · 받은 응원 · 최근 12장)
+ *    로그인 전: 구경은 누구나, 올리기 · 응원 · 팔로우 · 신고 · 팔로잉은 앱 로그인으로
+ *  - 굿즈 공모전: 영상 티켓 머리(기간 · D-day · 참여 조건) · 굿즈 스크랩 카드(테이프 · 오려 붙인 사진 · 가격표 태그 ·
+ *    예상 펀딩가 · 한 줄 소개 · 발도장 스탬프판 10칸 = 50명씩 · {n}/500명 · 남은 수) · 21개 전부(8개씩 더 보기) ·
+ *    이 굿즈 선택 / 선택 취소(협업자 문구) · 비회원 "내 선택 다시 확인하기" · 선택 단계 안전 안내(펼치는 편지)) · 고르기(와펜) — 회원은 바로, 비회원은 속지에서 '로그인하고 바로 고르기' 또는 이메일 1회 확인 후 고르기(고르면 PICK 도장 + 한 명 더)
+ * 데이터: 예시 게시물(견종 그림) · 실제 굿즈 목록. 누르는 동작은 화면 안에서만 바뀐다(서버 요청 없음).
+ */
+
+import { appLoginHref } from "@/components/app-shell/appTabs";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Peek, haptic } from "../gestures";
+import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
+import { GOODS, POSTS, type Post } from "../page-data";
+import { ConceptBar, HC_CSS, SAMPLE, useDemoSession, useInitialTab, useNow } from "../shared";
+import { DEFAULT_GROWTH_GOODS_CONTENT } from "@/lib/growth-content";
+import { BoneBurst, DiaryBody, DiaryTabs, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
+import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
+import { GuestPickSheet, PostDetail, PostPhoto, ProfileSheet, ReportSheet, SHOW_PARTS_CSS, ShareSheet, ShowComposer, AuthorDot, type ComposerResult } from "../show-parts";
+import { PET } from "../page-data";
+import { loadLiveFeed } from "../show-feed";
+
+const TABS = [
+    { label: "댕자랑", color: "#ffd6e2" },
+    { label: "굿즈 공모전", color: "#fff1b8" },
+];
+const REDIRECT = "/app/sticker/show/";
+const login = (tab = 0) => appLoginHref(tab ? `${REDIRECT}?tab=${tab}` : REDIRECT);
+const PAGE = 6; // 폴라로이드 붙는 효과 순서(6장 단위)
+const FEED_PAGE = 12; // 피드 한 쪽 = 12장(2열 × 6줄)
+/* 운영자 선정 대표 댕자랑 — 협업자 주제 카드(ShowcaseTopicCard)의 featuredPost 자리. 서버가 주제와 함께 내려줄 때만 보임(시안은 예시 게시물 하나) */
+const FEATURED_ID: string | null = "p5";
+/* 굿즈 공모전 문구 · 기간 — 협업자 기본 내용(lib/growth-content)과 진행 4단계(components/growth/GoodsContest 와 같은 문구) */
+const GOODS_CONTENT = DEFAULT_GROWTH_GOODS_CONTENT;
+const CONTEST_STEPS = [
+    { n: "01", title: "선택", desc: "마음에 드는 굿즈를 선택해요." },
+    { n: "02", title: "500명", desc: "상품별 선택이 500명에 도달하는지 확인해요." },
+    { n: "03", title: "최종 조건 + 결제", desc: "사양과 가격 등을 다시 확인한 뒤 별도로 결제해요." },
+    { n: "04", title: "제작·배송", desc: "최종 동의를 마친 주문만 제작과 배송을 시작해요." },
+];
+/** "M월 D일" (한국 시간) */
+const fmtDay = (iso: string) => new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", timeZone: "Asia/Seoul" }).format(new Date(iso));
+
+export default function StickerShow() {
+    const [session, setSession] = useDemoSession();
+    const initialTab = useInitialTab(TABS.length);
+    const member = session === "member";
+
+    // 처음 쪽: 주소 ?tab= 그대로(처음 그릴 때부터)
+    const [tab, setTab] = useState(() => initialTab);
+    const [dir, setDir] = useState(1);
+    const go = (i: number) => {
+        setDir(i > tab ? 1 : -1);
+        setTab(i);
+    };
+
+    const [toast, setToast] = useState<string | null>(null);
+    const clearToast = useCallback(() => setToast(null), []);
+    const needLogin = (what: string) => {
+        haptic("light");
+        setToast(`로그인하면 ${what} 할 수 있어요`);
+    };
+
+    /* 댕자랑 — 응원 · 팔로우 · 피드 · 상세 · 프로필 · 공유 · 신고 · 올리기 */
+    const router = useRouter();
+    const [posts, setPosts] = useState<Post[]>([]); // 실제 피드를 불러오면 채움(실패하면 예시 게시물)
+    // 실제 피드 상태 — on: 운영 피드 사용 중 · next: 다음 쪽 커서 · loading · error(다음 쪽 실패)
+    const [live, setLive] = useState<{ on: boolean; next?: string; loading: boolean; error: boolean }>({ on: false, loading: true, error: false });
+    const [boned, setBoned] = useState<Record<string, boolean>>({});
+    const [feed, setFeed] = useState<"all" | "following">("all");
+    /* 쪽 넘김 — pageNo: 지금 쪽 · cursors[n-1] = n쪽을 부르는 서버 커서(확인된 쪽까지) */
+    const [pageNo, setPageNo] = useState(1);
+    const [cursors, setCursors] = useState<string[]>([""]);
+    const published = useRef<Post[]>([]); // 시연으로 올린 글 — 1쪽 맨 앞에 유지
+    const lastTry = useRef<[number, string]>([1, ""]); // 실패했을 때 다시 부를 쪽
+    const loadPage = useCallback((n: number, cursor: string) => {
+        lastTry.current = [n, cursor];
+        setLive((l) => ({ ...l, loading: true, error: false }));
+        loadLiveFeed(cursor || undefined, undefined, FEED_PAGE)
+            .then((r) => {
+                setPosts([...(n === 1 ? published.current : []), ...r.posts]);
+                setPageNo(n);
+                setCursors((c) => {
+                    if (!r.next) return c.slice(0, n); // 마지막 쪽
+                    const x = [...c];
+                    x[n] = r.next;
+                    return x;
+                });
+                setLive({ on: true, next: r.next, loading: false, error: false });
+            })
+            .catch(() => setLive((l) => ({ ...l, loading: false, error: true })));
+    }, []);
+    const [burst, setBurst] = useState<{ id: string; x: number; y: number; k: number } | null>(null);
+    const [fresh, setFresh] = useState<string | null>(null); // 방금 올린 글(붙는 효과)
+    const [topicOn, setTopicOn] = useState(true); // 시연: 댕주제 진행 중 / 없음
+    const [composer, setComposer] = useState<{ open: boolean; topic: boolean }>({ open: false, topic: true });
+    const [detail, setDetail] = useState<{ id: string; rect: DOMRect } | null>(null);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [profileOf, setProfileOf] = useState<Post | null>(null);
+    const [shareOf, setShareOf] = useState<{ kind: "post" | "topic"; id: string; img?: string; text: string } | null>(null);
+    const [reportOf, setReportOf] = useState<string | null>(null);
+    const [reported, setReported] = useState<Record<string, boolean>>({});
+    const lastTap = useRef<{ id: string; t: number } | null>(null);
+    const tapTimer = useRef<number | null>(null);
+    const goLogin = () => router.push(login());
+
+    const cheer = (id: string, on: boolean) => {
+        setBoned((b) => ({ ...b, [id]: on }));
+        setPosts((ps) => ps.map((p) => (p.id === id ? { ...p, bones: p.bones + (on ? 1 : -1) } : p)));
+    };
+    // 사진 톡: 한 번 = 상세 펼침(두 번 톡을 기다렸다가) · 두 번 = 뼈다귀 응원
+    const onPhotoTap = (p: Post, e: React.MouseEvent<HTMLElement>) => {
+        const now = e.timeStamp;
+        const prev = lastTap.current;
+        const el = e.currentTarget;
+        if (prev && prev.id === p.id && now - prev.t <= 300) {
+            lastTap.current = null;
+            if (tapTimer.current) { window.clearTimeout(tapTimer.current); tapTimer.current = null; }
+            if (!member) return needLogin("응원");
+            const r = el.getBoundingClientRect();
+            setBurst({ id: p.id, x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100, k: now });
+            haptic("medium");
+            if (!boned[p.id]) cheer(p.id, true);
+            return;
+        }
+        lastTap.current = { id: p.id, t: now };
+        if (tapTimer.current) window.clearTimeout(tapTimer.current);
+        tapTimer.current = window.setTimeout(() => {
+            tapTimer.current = null;
+            haptic("light");
+            setConfirmDelete(false);
+            setDetail({ id: p.id, rect: el.getBoundingClientRect() });
+        }, 300);
+    };
+    const toggleFollow = (authorId: string) => {
+        if (!member) return needLogin("팔로우");
+        haptic("light");
+        setPosts((ps) => {
+            const next = !ps.find((p) => p.authorId === authorId)?.followed;
+            return ps.map((p) => (p.authorId === authorId ? { ...p, followed: next, followers: p.followers + (next ? 1 : -1) } : p));
+        });
+        setProfileOf((a) => (a && a.authorId === authorId ? { ...a, followed: !a.followed, followers: a.followers + (a.followed ? -1 : 1) } : a));
+    };
+    const openComposer = (withTopic: boolean) => {
+        if (!member) return goLogin();
+        haptic("light");
+        setComposer({ open: true, topic: withTopic });
+    };
+    const publish = (r: ComposerResult) => {
+        const id = `p_new_${published.current.length + 1}`;
+        const post: Post = { id, authorId: "a_me", author: r.name, followers: 0, date: "방금 전", pet: r.pet?.name, breed: r.pet?.breed, img: r.img, text: r.text, bones: 0, followed: false, mine: true, topic: r.topic };
+        published.current = [post, ...published.current];
+        if (pageNo !== 1 && live.on) loadPage(1, ""); // 1쪽 맨 앞에서 보이게
+        else { setPageNo(1); setPosts((ps) => [post, ...ps]); }
+        setComposer((c) => ({ ...c, open: false }));
+        setFeed("all");
+        setFresh(id);
+        haptic("medium");
+        setToast("댕자랑을 공개했어요. 피드 맨 앞에서 확인해 보세요.");
+        window.setTimeout(() => document.getElementById("sh-wall")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    };
+    const remove = (id: string) => {
+        published.current = published.current.filter((p) => p.id !== id);
+        setPosts((ps) => ps.filter((p) => p.id !== id));
+        setDetail(null);
+        setConfirmDelete(false);
+        setToast("게시물을 삭제했어요.");
+    };
+    const submitReport = (id: string) => {
+        setReportOf(null);
+        setDetail(null);
+        setToast(reported[id] ? "이미 접수된 게시물이에요." : "신고를 접수했어요. 운영자가 확인하겠습니다.");
+        setReported((r) => ({ ...r, [id]: true }));
+    };
+    const list = feed === "following" ? posts.filter((p) => p.followed || p.mine) : posts;
+    // 실제 피드는 서버가 쪽을 나눠 주고, 예시 게시물은 화면에서 12장씩 나눔
+    const shown = live.on ? list : list.slice((pageNo - 1) * FEED_PAGE, pageNo * FEED_PAGE);
+    const hasNext = live.on ? Boolean(live.next) : list.length > pageNo * FEED_PAGE;
+    const knownPages = live.on ? cursors.length : Math.max(1, Math.ceil(list.length / FEED_PAGE));
+    // 쪽 번호: 지금 쪽 앞뒤 3개 + 멀어지면 "1 …" (첫 쪽으로 바로)
+    const pageNums = (() => {
+        const from = Math.max(1, Math.min(pageNo - 1, knownPages - 2));
+        return Array.from({ length: Math.min(3, knownPages) }, (_, k) => from + k);
+    })();
+    const goPage = (n: number) => {
+        if (n < 1 || n > knownPages || n === pageNo || live.loading) return;
+        haptic("light");
+        if (live.on) loadPage(n, cursors[n - 1] ?? "");
+        else setPageNo(n);
+        window.setTimeout(() => document.getElementById("sh-wall")?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    };
+
+    /* 실제 댕자랑 피드(읽기 전용) — 첫 쪽: 화면을 그린 뒤 불러오고, 실패하면 예시 게시물로 */
+    useEffect(() => {
+        const ac = new AbortController();
+        loadLiveFeed(undefined, ac.signal, FEED_PAGE)
+            .then((r) => {
+                setPosts((ps) => [...ps.filter((p) => p.id.startsWith("p_new_")), ...r.posts]); // 방금 올린 시연 글은 맨 앞에 유지
+                if (r.next) setCursors(["", r.next]);
+                setLive({ on: true, next: r.next, loading: false, error: false });
+            })
+            .catch(() => {
+                if (ac.signal.aborted) return;
+                setPosts((ps) => [...ps.filter((p) => p.id.startsWith("p_new_")), ...POSTS]);
+                setLive({ on: false, loading: false, error: false });
+            });
+        return () => ac.abort();
+    }, []);
+    const featured = FEATURED_ID ? posts.find((p) => p.id === FEATURED_ID) ?? POSTS.find((p) => p.id === FEATURED_ID) ?? null : null; // 실제 피드에 없으면 예시
+    const open = detail ? posts.find((p) => p.id === detail.id) ?? (featured?.id === detail.id ? featured : null) : null;
+
+    /* 굿즈 고르기 */
+    const [picked, setPicked] = useState<Record<string, boolean>>({});
+    // 공모 종료까지 남은 날(D-day) — 화면을 그린 뒤 지금 시각으로 계산
+    const now = useNow(60_000);
+    const goodsDday = now ? Math.max(0, Math.ceil((new Date(GOODS_CONTENT.campaign.endsAt).getTime() - now.getTime()) / 86_400_000)) : null;
+    const [guestVerified, setGuestVerified] = useState(false); // 비회원 이메일 1회 확인 완료(시안)
+    const [guestPickFor, setGuestPickFor] = useState<string | null>(null); // 고를 굿즈 id · "" = 내 선택 다시 확인(굿즈 없이)
+    const [goodsLimit, setGoodsLimit] = useState(8); // 굿즈 8개씩 더 보기
+    const [safetyOpen, setSafetyOpen] = useState(false);
+    // 고르기 — 회원 · 이메일 확인한 비회원은 바로, 아니면 로그인 / 이메일 확인 속지
+    const tryPick = (id: string) => {
+        if (member || guestVerified) return pick(id);
+        haptic("light");
+        setGuestPickFor(id);
+    };
+    const pick = (id: string) => {
+        const on = !picked[id];
+        setPicked((s) => ({ ...s, [id]: on }));
+        haptic(on ? "medium" : "light");
+        setToast(on ? "선택을 저장했어요. 주문·예약·결제는 발생하지 않았습니다." : "선택을 취소했어요. 공모 기간 안에는 다시 선택할 수 있습니다.");
+    };
+
+    return (
+        <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-12 pt-4" style={{ color: TEXT }}>
+            <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + SHOW_PARTS_CSS + SHOW_CSS}</style>
+            <div aria-hidden="true" className="ah-bg pointer-events-none fixed inset-0 -z-10" />
+            <div className="mx-auto w-full max-w-md">
+                <ConceptBar session={session} onSession={setSession} />
+
+                <DiaryTabs tabs={TABS} active={tab} onPick={go} />
+                <DiaryBody pageKey={`${tab}-${session}`} dir={dir} onSwipe={(s) => { const n = tab + s; if (n >= 0 && n < TABS.length) { haptic("light"); go(n); } }}>
+                    {tab === 0 ? (
+                        <>
+                            {/* 오늘의 댕주제 — 진행 중 / 주제 없음(협업자 문구) */}
+                            <div className="st-postit relative px-4 pb-4 pt-4" style={{ background: "#ffe6ee", rotate: "-0.8deg" }}>
+                                <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" />
+                                {topicOn ? (
+                                    <>
+                                        <span className="flex items-center justify-between">
+                                            <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제 · 10월 13일–10월 19일</span>
+                                            <InkStamp rot={10} className="!py-1 text-[12px]">D-{SAMPLE.topic.dday}</InkStamp>
+                                        </span>
+                                        <p className="ah-display mt-1 text-[19px]">&lsquo;{SAMPLE.topic.title}&rsquo;</p>
+                                        <p className="ah-light mt-0.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다.</p>
+                                        {/* 올리기 : 공유카드 = 약 6 : 4 — 공유카드 글자가 와펜 안에 넉넉히 들어가게 */}
+                                        <div className="mt-3 grid grid-cols-[1.5fr_1fr] gap-2">
+                                            <Patch small onClick={() => openComposer(true)}>{member ? "이 주제로 올리기" : "로그인하고 참여하기"}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch>
+                                            <Patch tone="cream" small onClick={() => { haptic("light"); setShareOf({ kind: "topic", id: "dst_today", text: `오늘의 댕주제 · ${SAMPLE.topic.title}` }); }}>공유카드<i aria-hidden="true" className="fa-solid fa-share-nodes text-[11px]" /></Patch>
+                                        </div>
+                                        {/* 운영자 선정 대표 댕자랑 — 작은 폴라로이드 + 글 두 줄, 톡 하면 게시물이 펼쳐짐(있을 때만) */}
+                                        {featured ? (
+                                            <button type="button" aria-label={`운영자 선정 대표 댕자랑 · ${featured.author} — 톡하면 자세히`}
+                                                onClick={(e) => { haptic("light"); setConfirmDelete(false); setDetail({ id: featured.id, rect: (e.currentTarget.querySelector(".sh-feat-photo") ?? e.currentTarget).getBoundingClientRect() }); }}
+                                                className="sh-feat mt-4 flex w-full items-center gap-3 rounded-[12px] bg-white/80 p-2.5 text-left">
+                                                <span className="sh-feat-pol relative shrink-0 bg-white p-1 pb-2.5">
+                                                    <Tape className="-top-1.5 left-1/2 z-10 h-3 w-9 -translate-x-1/2" color="rgba(255,226,150,.9)" style={{ rotate: "-5deg" }} />
+                                                    <span className="sh-feat-photo relative block h-[4.6rem] w-[4.6rem] overflow-hidden bg-[#fff3e8]"><PostPhoto src={featured.img} sizes="80px" /></span>
+                                                </span>
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="ah-display inline-flex items-center gap-1 rounded-full bg-[#fff1c4] px-2 py-0.5 text-[10.5px] text-[#a8720f]"><i aria-hidden="true" className="fa-solid fa-crown text-[9px]" />대표 댕자랑</span>
+                                                    <span className="ah-display mt-1 block truncate text-[13px]">{featured.author}{featured.pet ? ` · ${featured.pet}` : ""}</span>
+                                                    <span className="ah-light line-clamp-2 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{featured.text}</span>
+                                                </span>
+                                                <i aria-hidden="true" className="fa-solid fa-chevron-right shrink-0 text-[10px] text-[#d3a3b4]" />
+                                            </button>
+                                        ) : null}
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제</span>
+                                        <p className="ah-display mt-1 text-[16px] leading-snug">새 주제를 준비하고 있어요</p>
+                                        <p className="ah-light mt-0.5 text-[12.5px]" style={{ color: TEXT_SOFT }}>그동안 자유로운 오늘의 한 장을 들려주세요.</p>
+                                        <div className="mt-3"><Patch small onClick={() => openComposer(false)}>{member ? "자유 주제로 올리기" : "로그인하고 올리기"}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch></div>
+                                    </>
+                                )}
+                            </div>
+                            {/* 시연 전용: 주제 있을 때 / 없을 때 */}
+                            <p className="mt-2 text-right"><button type="button" onClick={() => setTopicOn((v) => !v)} className="ah-light text-[10.5px] text-[#c9a8b4] underline decoration-dashed underline-offset-2">(시연) 주제 {topicOn ? "없을 때" : "있을 때"} 보기</button></p>
+
+                            {/* 전체 / 팔로잉 — 형광펜 */}
+                            <div id="sh-wall" className="mt-4 flex scroll-mt-28 items-center gap-4">
+                                {(["all", "following"] as const).map((f) => (
+                                    <button key={f} type="button" onClick={() => (f === "following" && !member ? needLogin("팔로잉 피드를") : (haptic("light"), setFeed(f)))}
+                                        className={`ah-display text-[15px] ${feed === f ? "st-marker" : "text-[#b7a9a1]"}`}>
+                                        {f === "all" ? "오늘 올라온 댕자랑" : "팔로잉"}
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>사진 톡 = 자세히 · 두 번 톡 = 뼈다귀 응원</p>
+                            {live.on ? <p className="ah-light mt-0.5 text-[10.5px] text-[#c9a8b4]">(시연) 운영 중인 실제 댕자랑을 불러왔어요 · 응원·팔로우·신고는 저장되지 않아요</p> : null}
+
+                            {!member ? (
+                                <PostIt color="#fff3a6" rot={-1} className="!static mt-3 !block w-full !px-3 !py-2 !text-left !text-[12.5px]">
+                                    구경은 누구나! 로그인하면 사진을 올리고 응원 · 팔로우할 수 있어요{" "}
+                                    <Link href={login()} className="ah-display ml-1 text-[#e0557f]">로그인</Link>
+                                </PostIt>
+                            ) : null}
+
+                            {/* 폴라로이드 벽 — 사진 · 작성자 · 응원 수 (첫 쪽을 불러오는 동안 빈 폴라로이드) */}
+                            <ul className={`mt-4 grid grid-cols-2 gap-x-3 gap-y-5 transition-opacity ${live.loading && posts.length > 0 ? "opacity-40" : ""}`} aria-busy={live.loading}>
+                                {live.loading && posts.length === 0 ? [0, 1, 2, 3].map((k) => (
+                                    <li key={`ghost-${k}`} aria-hidden="true" className="sh-pol relative bg-white p-1.5 pb-2" style={{ rotate: `${[-1.5, 1.2, 1, -1.2][k]}deg` }}>
+                                        <span className="sh-ghost block aspect-square" />
+                                        <span className="sh-ghost mt-2 block h-3 w-2/3 rounded-full" />
+                                    </li>
+                                )) : null}
+                                {shown.map((p, i) => {
+                                    const on = Boolean(boned[p.id]);
+                                    const r = [-1.5, 1.2, 1, -1.2, -0.8, 1.4][i % 6];
+                                    return (
+                                        <li key={p.id} className={`sh-pol st-place relative bg-white p-1.5 pb-2 ${fresh === p.id ? "is-fresh" : ""}`} style={{ ["--r" as string]: `${r}deg`, ["--d" as string]: `${(i % PAGE) * 60}ms`, rotate: `${r}deg` }}>
+                                            <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,218,.85)", "rgba(190,224,255,.85)", "rgba(255,232,170,.9)"][i % 3]} style={{ rotate: `${i % 2 ? 6 : -6}deg` }} />
+                                            <div role="button" tabIndex={0} aria-label={`${p.author}의 댕자랑 — 톡하면 자세히, 두 번 톡하면 응원`} onClick={(e) => onPhotoTap(p, e)}
+                                                className="sh-photo relative block aspect-square overflow-hidden bg-[#fff3e8]">
+                                                <PostPhoto src={p.img} sizes="45vw" />
+                                                {p.topic ? <span className="ah-display absolute left-1.5 top-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] text-[#e0557f]">댕주제</span> : null}
+                                                {p.mine ? <span className="ah-display absolute right-1.5 top-1.5 rounded-full bg-[#e0557f] px-2 py-0.5 text-[10px] text-white">나</span> : null}
+                                                {burst?.id === p.id ? <BoneBurst key={burst.k} x={burst.x} y={burst.y} /> : null}
+                                            </div>
+                                            <div className="mt-1.5 flex items-center gap-1.5 px-0.5">
+                                                <AuthorDot name={p.author} official={p.official} size="h-6 w-6 text-[10.5px]" />
+                                                <span className="ah-display min-w-0 flex-1 truncate text-[12.5px]">{p.author}</span>
+                                                <button type="button" aria-pressed={on} aria-label={`응원 ${p.bones}`} onClick={() => (member ? (haptic("light"), cheer(p.id, !on)) : needLogin("응원"))}
+                                                    className={`ah-display flex shrink-0 items-center gap-1 text-[12px] ${on ? "text-[#e0557f]" : "text-[#9c8f88]"}`}>
+                                                    <i aria-hidden="true" className={`fa-solid fa-bone ${on ? "hc-pop" : ""}`} />{p.bones}
+                                                </button>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                            {list.length === 0 && !live.loading ? (
+                                <div className="mt-4 text-center">
+                                    <p className="ah-light text-[13px]" style={{ color: TEXT_SOFT }}>{feed === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요"}</p>
+                                    {feed === "following" ? <button type="button" onClick={() => setFeed("all")} className="ah-display mt-2 text-[13px] text-[#e0557f]">전체 피드 보기</button> : null}
+                                </div>
+                            ) : null}
+                            {/* 쪽 넘김 — 이전 · 쪽 번호 스티커 · 다음 (전체 피드, 두 쪽 이상일 때) */}
+                            {feed === "all" && knownPages > 1 ? (
+                                <nav aria-label="댕자랑 쪽 넘기기" className="mt-7 flex items-center justify-center gap-1.5">
+                                    <button type="button" onClick={() => goPage(pageNo - 1)} disabled={pageNo === 1 || live.loading} aria-label="이전 쪽" className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" /></button>
+                                    {pageNums[0] > 1 ? (
+                                        <>
+                                            <button type="button" onClick={() => goPage(1)} disabled={live.loading} aria-label="1쪽" className="sh-pg ah-display text-[13px]" style={{ rotate: "2deg" }}>1</button>
+                                            {pageNums[0] > 2 ? <span aria-hidden="true" className="ah-display px-0.5 text-[13px] text-[#c9a8b4]">…</span> : null}
+                                        </>
+                                    ) : null}
+                                    {pageNums.map((n, k) => (
+                                        <button key={n} type="button" onClick={() => goPage(n)} disabled={live.loading} aria-current={n === pageNo ? "page" : undefined} aria-label={`${n}쪽`}
+                                            className={`sh-pg ah-display text-[13px] ${n === pageNo ? "is-on" : ""}`} style={{ rotate: `${n === pageNo ? -6 : [-2, 2, -1, 2, -2][k]}deg` }}>{n}</button>
+                                    ))}
+                                    <button type="button" onClick={() => goPage(pageNo + 1)} disabled={!hasNext || live.loading} aria-label="다음 쪽" className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></button>
+                                </nav>
+                            ) : null}
+                            <div className="mt-3 min-h-5 text-center" role="status">
+                                {live.loading && posts.length > 0 ? (
+                                    <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw sh-paw-spin text-[12px] text-[#f0a3bb]" />댕자랑을 불러오고 있어요</p>
+                                ) : live.error ? (
+                                    <span className="inline-flex flex-col items-center gap-2">
+                                        <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>댕자랑을 불러오지 못했어요</span>
+                                        <Patch tone="cream" small onClick={() => { haptic("light"); loadPage(...lastTry.current); }}>다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch>
+                                    </span>
+                                ) : feed === "all" && knownPages > 1 && !hasNext ? (
+                                    <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw text-[11px] text-[#f0a3bb]" />마지막 쪽이에요</p>
+                                ) : null}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            {/* 굿즈 공모전 머리 티켓 — 위: 기간 안내 · 가운데: 공모전 영상(글자 없이 깨끗하게, 웹 공모전과 같은 모바일 영상, 소리 없이 반복)
+                                · 아래: 제목 → 절취선 너머 안내. D-day 도장은 영상 오른쪽 위 모서리에 살짝 걸쳐 찍힘. 양옆 반달 홈은 절취선 높이에 맞춰 붙임 */}
+                            <div className="st-ticket sh-vticket px-2.5 pt-3" style={{ rotate: "-1deg" }}>
+                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(GOODS_CONTENT.campaign.startsAt)} – {fmtDay(GOODS_CONTENT.campaign.endsAt)} · 회원·비회원 모두 참여</p>
+                                <div className="relative">
+                                    <div className="sh-vwin relative aspect-video overflow-hidden rounded-[13px] bg-[#f3e2b8]">
+                                        <video autoPlay muted loop playsInline preload="auto" poster="/images/goods/goods-hero-lifestyle.webp" aria-label="댕다방 굿즈 공모전 상품 미리보기 영상" className="absolute inset-0 h-full w-full object-cover">
+                                            <source src="/videos/goods-contest-hero-mobile.mp4" type="video/mp4" />
+                                        </video>
+                                    </div>
+                                    <InkStamp rot={10} color="#d9822b" className="absolute -top-5 right-1 z-[1] bg-[#fff8e6] !py-1 text-[12px]">D-{goodsDday ?? SAMPLE.goods.dday}</InkStamp>
+                                </div>
+                                <p className="ah-display mt-2.5 break-keep px-1.5 text-[18px] leading-snug">{GOODS_CONTENT.title}</p>
+                                <p className="ah-light mt-1 break-keep px-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{GOODS_CONTENT.description}</p>
+                                <span className="st-ticket-cut sh-vcut relative mt-3 block px-1.5 pb-3 pt-2.5 text-[12px]">
+                                    <span aria-hidden="true" className="sh-notch left-[-21px]" /><span aria-hidden="true" className="sh-notch right-[-21px]" />
+                                    <span className="ah-display flex items-start gap-1.5 text-[#a8560f]"><i aria-hidden="true" className="fa-solid fa-circle-info mt-0.5 text-[11px]" />선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.</span>
+                                </span>
+                            </div>
+
+                            {/* 진행 4단계 — 메모지 2×2(협업자 문구), 지금 단계(선택)에 "지금" 테이프 */}
+                            <SectionLabel className="mt-6" icon="fa-shoe-prints">이렇게 진행돼요</SectionLabel>
+                            <ol className="mt-3 grid grid-cols-2 gap-x-2.5 gap-y-3">
+                                {CONTEST_STEPS.map((st, i) => (
+                                    <li key={st.n} className={`sh-step relative rounded-[10px] px-3 pb-2.5 pt-3 ${i === 0 ? "is-now" : ""}`} style={{ rotate: `${[-0.6, 0.5, 0.5, -0.6][i]}deg` }}>
+                                        {i === 0 ? <span className="st-tape ah-display absolute -top-2 right-2.5 px-2 py-px text-[10px] text-[#c4456f]" style={{ background: "rgba(255,200,215,.9)", rotate: "4deg" }}>지금</span> : null}
+                                        <span className="flex items-center gap-1.5">
+                                            <span className="sh-step-no ah-display grid h-6 w-6 shrink-0 place-items-center rounded-full text-[10.5px]">{st.n}</span>
+                                            <span className="ah-display text-[13.5px] leading-tight">{st.title}</span>
+                                        </span>
+                                        <span className="ah-light mt-1.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{st.desc}</span>
+                                    </li>
+                                ))}
+                            </ol>
+
+                            <SectionLabel className="mt-7" icon="fa-scissors">마음에 드는 굿즈를 골라요</SectionLabel>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>선택 수는 상품별로 집계되며 공모 기간 안에는 취소할 수 있어요.</p>
+                            {!member && !guestVerified ? (
+                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setGuestPickFor(""); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">내 선택 다시 확인하기</button></p>
+                            ) : null}
+                            <ul className="mt-3 grid grid-cols-2 gap-3">
+                                {GOODS.slice(0, goodsLimit).map((g, i) => {
+                                    const on = Boolean(picked[g.id]);
+                                    const joined = g.joined + (on ? 1 : 0); // 내가 고르면 한 명 더
+                                    const stamps = Math.min(10, Math.floor(joined / 50)); // 발도장 10칸 · 한 칸 = 50명
+                                    const r = [-0.8, 0.7, 0.6, -0.7][i % 4];
+                                    return (
+                                        <li key={g.id} className={`sh-scrap relative px-2 pb-2.5 pt-2 ${on ? "is-on" : ""}`} style={{ rotate: `${r}deg` }}>
+                                            {/* 마스킹테이프 */}
+                                            <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,232,170,.9)", "rgba(255,200,218,.85)", "rgba(190,224,255,.85)", "rgba(200,236,214,.9)"][i % 4]} style={{ rotate: `${i % 2 ? 5 : -5}deg` }} />
+                                            {/* 오려 붙인 사진 + PICK 도장 */}
+                                            <span className="sh-scrap-photo relative block aspect-square overflow-hidden rounded-[4px] bg-[#fff8ee]">
+                                                <Image src={g.imageSrc} alt="" fill sizes="45vw" className="object-cover" />
+                                                {on ? <InkStamp rot={-14} className="hc-slam absolute bottom-2 left-2 bg-white/80 text-[12px]">PICK</InkStamp> : null}
+                                            </span>
+                                            {/* 가격표 태그 — 사진 오른쪽 위 모서리에 걸침 */}
+                                            <span className="sh-tag absolute right-0.5 top-4 z-10 py-1 pl-4 pr-2 text-right leading-tight">
+                                                <span className="ah-light block text-[9.5px]">예상 펀딩가</span>
+                                                <span className="ah-display block text-[12px]">{g.defaultExpectedPriceKrw.toLocaleString("ko-KR")}원</span>
+                                            </span>
+                                            <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{g.defaultName}</p>
+                                            <p className="ah-light line-clamp-2 min-h-[2.4em] px-0.5 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{g.defaultSummary}</p>
+                                            {/* 발도장 스탬프판 — 모인 만큼 찍힘 */}
+                                            <span className="sh-stamps mt-1.5 grid grid-cols-5 gap-x-1 gap-y-0.5 rounded-[8px] px-1.5 py-1.5" aria-label={`${joined}/500명 참여`}>
+                                                {Array.from({ length: 10 }, (_, k) => (
+                                                    <i key={k} aria-hidden="true" className={`fa-solid fa-paw text-center text-[11px] ${k < stamps ? "is-in" : ""}`} style={{ rotate: `${(k * 37) % 30 - 15}deg`, ["--d" as string]: `${k * 40}ms` }} />
+                                                ))}
+                                            </span>
+                                            <p className="ah-light mt-1 px-0.5 text-[11px]" style={{ color: TEXT_SOFT }}><b className="ah-display text-[#c98a12]">{joined}</b>/500명 · {Math.max(0, 500 - joined)}명 남음</p>
+                                            <div className="mt-2">
+                                                <Patch tone={on ? "pink" : "cream"} small onClick={() => tryPick(g.id)}>{on ? "선택 취소" : "이 굿즈 선택"}<i aria-hidden="true" className={`fa-solid ${on ? "fa-rotate-left" : "fa-hand-pointer"} text-[11px]`} /></Patch>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                            {GOODS.length > goodsLimit ? (
+                                <div className="mt-6"><Patch tone="cream" small onClick={() => { haptic("light"); setGoodsLimit((n) => n + 8); }}>굿즈 더 보기 · {GOODS.length - goodsLimit}개<i aria-hidden="true" className="fa-solid fa-chevron-down text-[11px]" /></Patch></div>
+                            ) : null}
+
+                            {/* 선택 단계 안전 안내 — 협업자 공모전 안내 그대로, 톡 하면 펼쳐지는 편지 */}
+                            <div className="sh-safe relative mt-7 rounded-[1.1rem] px-4 pb-4 pt-5">
+                                <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "-2deg" }} />
+                                <button type="button" onClick={() => { setSafetyOpen((v) => !v); haptic("light"); }} aria-expanded={safetyOpen} className="flex w-full items-center gap-2 text-left">
+                                    <i aria-hidden="true" className="fa-solid fa-shield-heart text-[14px] text-[#5a7fe0]" />
+                                    <span className="ah-display flex-1 text-[14.5px]">선택 단계 안전 안내</span>
+                                    <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[11px] text-[#9fb2d8] transition-transform ${safetyOpen ? "rotate-180" : ""}`} />
+                                </button>
+                                <p className="ah-light mt-2 text-[12.5px] leading-relaxed">선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
+                                <div className="sh-fold space-y-2 text-[12px] leading-relaxed" data-open={safetyOpen} style={{ color: TEXT_SOFT }}>
+                                    <p className="ah-light">상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>
+                                    <p className="flex flex-wrap gap-1.5">
+                                        {["현금 결제", "적립금 + 댕코인 일부 사용", "적립금·댕코인 전액 결제"].map((m) => <span key={m} className="ah-display rounded-full bg-white px-2.5 py-0.5 text-[11px] text-[#4a6bc4]">{m}</span>)}
+                                    </p>
+                                    <p className="ah-light">최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
+                                    <p className="ah-light">에스크로는 향후 별도 결제 단계에서 구매자를 보호하기 위한 제도이며, 현재 선택 단계에는 적용되지 않습니다.</p>
+                                    <p className="ah-light">표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.</p>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </DiaryBody>
+            </div>
+            {/* 오늘의 한 장 올리기 — 오른쪽 아래 카메라 스티커(댕자랑 쪽에서만) */}
+            {tab === 0 ? (
+                <button type="button" onClick={() => openComposer(topicOn)} aria-label="오늘의 한 장 올리기" className="sh-fab fixed right-4 z-[2100] grid h-14 w-14 place-items-center rounded-full text-[20px] text-white"
+                    style={{ bottom: "calc(var(--app-tabbar-h, 88px) + 12px)" }}>
+                    <i aria-hidden="true" className="fa-solid fa-camera" />
+                </button>
+            ) : null}
+            <ShowComposer open={composer.open} onClose={() => setComposer((c) => ({ ...c, open: false }))} onPublish={publish}
+                topicTitle={topicOn ? SAMPLE.topic.title : null} defaultTopic={composer.topic} defaultName={SAMPLE.guardian} pets={[{ name: PET.name, breed: PET.breed }]} />
+            {/* 게시물 상세 — 누른 사진 자리에서 펼쳐짐 */}
+            {open && detail ? (
+                <Peek from={detail.rect} bg="#fffdf8" onClose={() => { setDetail(null); setConfirmDelete(false); }}>
+                    <PostDetail post={open} boned={Boolean(boned[open.id])} member={member} confirmDelete={confirmDelete}
+                        onBone={() => (member ? (haptic("light"), cheer(open.id, !boned[open.id])) : goLogin())}
+                        onFollow={() => (member ? toggleFollow(open.authorId) : goLogin())}
+                        onAuthor={() => { haptic("light"); setProfileOf(open); }}
+                        onShare={() => { haptic("light"); setShareOf({ kind: "post", id: open.id, img: open.img, text: open.text }); }}
+                        onReport={() => (member ? setReportOf(open.id) : goLogin())}
+                        onDelete={() => remove(open.id)} onConfirmDelete={setConfirmDelete} />
+                </Peek>
+            ) : null}
+            <ProfileSheet open={Boolean(profileOf)} onClose={() => setProfileOf(null)} author={profileOf} posts={posts}
+                onFollow={() => profileOf && (member ? toggleFollow(profileOf.authorId) : goLogin())}
+                onOpenPost={(p, el) => { setProfileOf(null); setConfirmDelete(false); setDetail({ id: p.id, rect: el.getBoundingClientRect() }); }} />
+            <ShareSheet open={Boolean(shareOf)} onClose={() => setShareOf(null)} target={shareOf} />
+            <GuestPickSheet open={guestPickFor !== null} onClose={() => setGuestPickFor(null)} loginHref={login(1)}
+                goodsName={GOODS.find((g) => g.id === guestPickFor)?.defaultName ?? "내 선택 다시 확인하기"}
+                onVerified={() => {
+                    const id = guestPickFor;
+                    setGuestVerified(true);
+                    if (id) { setPicked((m) => ({ ...m, [id]: true })); haptic("medium"); }
+                    setToast(id ? "이메일 확인과 굿즈 선택을 완료했어요. 결제는 발생하지 않았습니다." : "이메일 확인을 완료했어요. 이제 원하는 굿즈를 선택해 주세요.");
+                }} />
+            <ReportSheet open={Boolean(reportOf)} onClose={() => setReportOf(null)} onSubmit={() => reportOf && submitReport(reportOf)} />
+            {toast ? <NoteToast text={toast} onDone={clearToast} /> : null}
+        </div>
+    );
+}
+
+/* 댕자랑 · 굿즈 화면 CSS */
+const SHOW_CSS = `
+/* 영상 티켓: 높이가 화면 폭 따라 바뀌니 마스크 홈 대신 절취선 양끝에 종이색 반달을 붙임 */
+.sh-vticket { -webkit-mask: none; mask: none; }
+.sh-vwin { box-shadow: 0 0 0 2px rgba(255,255,255,.75), inset 0 0 0 1px rgba(150,100,30,.12); }
+/* 영상 모서리에 걸친 D-day 도장: 곱하기 섞기를 끄고 종이색 바탕을 깔아 또렷하게 */
+.sh-vticket .ink-stamp { mix-blend-mode: normal; opacity: 1; }
+.sh-notch { position: absolute; top: -11px; width: 20px; height: 20px; border-radius: 999px; background: #fffdf8; box-shadow: inset 0 1px 2px rgba(150,100,30,.18); }
+/* 선택 단계 안전 안내: 하늘빛 편지지(줄 없음) · 톡 하면 펼침 */
+.sh-safe { background: radial-gradient(120% 70% at 100% 0%, rgba(214,232,255,.7), transparent 60%), #fbfdff; box-shadow: inset 0 0 0 1.5px #dde8f8, 0 12px 20px -14px rgba(70,100,160,.4); rotate: .5deg; }
+.sh-fold { interpolate-size: allow-keywords; height: 0; overflow: hidden; opacity: 0; transition: height .4s cubic-bezier(.2,.9,.2,1), opacity .3s, margin .3s; }
+.sh-fold[data-open="true"] { height: auto; opacity: 1; margin-top: 8px; }
+/* 진행 4단계 메모지 — 지금 단계는 분홍 빛 */
+.sh-step { background: #fffaf0; box-shadow: inset 0 0 0 1.5px #f3e6d6, 0 8px 12px -10px rgba(110,80,40,.45); }
+.sh-step.is-now { background: #fff0f4; box-shadow: inset 0 0 0 1.5px #f6c3d2, 0 8px 12px -10px rgba(200,80,120,.45); }
+.sh-step-no { background: #fff; color: #c98a12; box-shadow: 0 0 0 1.5px #f0d9a8; }
+.sh-step.is-now .sh-step-no { background: #f47aa0; color: #fff; box-shadow: 0 0 0 2px #fff; }
+/* 쪽 번호: 동그란 스티커 — 지금 쪽은 분홍 · 누르면 꾹 */
+.sh-pg { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 9999px; background: #fff; color: #8f7a70; box-shadow: 0 0 0 1.5px #f3e3da, 0 5px 9px -6px rgba(110,70,55,.45); transition: transform .3s cubic-bezier(.3,1.6,.5,1); -webkit-tap-highlight-color: transparent; }
+.sh-pg:active:not(:disabled) { transform: scale(.9); }
+.sh-pg.is-on { background: radial-gradient(circle at 35% 30%, #ffb3c8, #f47aa0 70%); color: #fff; box-shadow: 0 0 0 2.5px #fff, 0 6px 10px -5px rgba(200,70,110,.55); }
+.sh-pg-arrow { background: #fffaf3; color: #c4567a; }
+.sh-pg:disabled:not(.is-on) { opacity: .35; }
+/* 피드 불러오는 동안 빈 폴라로이드 · 발바닥 흔들 */
+.sh-ghost { background: linear-gradient(100deg, #fbefe7 30%, #fff8f3 50%, #fbefe7 70%); background-size: 250% 100%; animation: sh-ghost 1.3s ease-in-out infinite; }
+@keyframes sh-ghost { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+.sh-paw-spin { animation: sh-paw 1s ease-in-out infinite; }
+@keyframes sh-paw { 0%,100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg) scale(1.1); } }
+@media (prefers-reduced-motion: reduce) { .sh-ghost, .sh-paw-spin { animation: none; } }
+/* 대표 댕자랑: 주제 메모 안의 작은 폴라로이드 줄 · 누르면 살짝 눌림 */
+.sh-feat { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.9), 0 8px 14px -12px rgba(160,60,90,.5); transition: transform .35s cubic-bezier(.3,1.6,.5,1); -webkit-tap-highlight-color: transparent; }
+.sh-feat:active { transform: scale(.98); }
+.sh-feat-pol { rotate: -3deg; box-shadow: 0 6px 10px -6px rgba(90,60,50,.45); }
+/* 폴라로이드(댕자랑) */
+.sh-pol { box-shadow: 0 10px 18px -12px rgba(90,60,50,.5), 0 1px 2px rgba(90,60,50,.12); -webkit-tap-highlight-color: transparent; }
+/* 굿즈 스크랩 카드: 크림 종이 · 오려 붙인 사진 · 고르면 분홍 빛 테두리 */
+.sh-scrap { background: #fffaf0; border-radius: 6px; box-shadow: inset 0 0 0 1.5px #f3e6d6, 0 10px 18px -12px rgba(110,80,40,.5); transition: box-shadow .3s; }
+.sh-scrap.is-on { box-shadow: inset 0 0 0 2px #f6a9bf, 0 10px 18px -12px rgba(200,80,120,.55); }
+.sh-scrap-photo { box-shadow: 0 0 0 3px #fff, 0 4px 8px -5px rgba(90,60,50,.4); }
+/* 가격표 태그: 왼쪽이 뾰족한 이름표 + 끈 구멍 · 살짝 기울어 걸침 */
+.sh-tag { background: #fff3a6; color: #8f5e12; rotate: 6deg; transform-origin: 0 50%;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); box-shadow: 0 4px 6px -4px rgba(110,80,40,.5); }
+.sh-tag::before { content: ""; position: absolute; left: 7px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 999px; background: #fffaf0; box-shadow: inset 0 0 0 1px rgba(170,120,40,.35); }
+/* 발도장 스탬프판: 빈 칸은 옅은 점선 발바닥, 모인 칸은 주황 잉크로 쾅 */
+.sh-stamps { background: #fff; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+.sh-stamps i { color: #efe3d6; }
+.sh-stamps i.is-in { color: #e9a23b; animation: hc-pop .4s cubic-bezier(.3,1.6,.5,1) both; animation-delay: var(--d, 0ms); }
+@media (prefers-reduced-motion: reduce) { .sh-stamps i.is-in { animation: none; } }
+/* 방금 올린 글: 위에서 톡 붙고 분홍 빛이 한 번 */
+.sh-pol.is-fresh { animation: sh-stick .7s cubic-bezier(.25,1.4,.45,1) both; box-shadow: 0 0 0 3px #ffd6e2, 0 10px 18px -12px rgba(90,60,50,.5); }
+@keyframes sh-stick { from { opacity: 0; transform: translateY(-24px) scale(1.12) rotate(6deg); } }
+/* 올리기 카메라 스티커: 분홍 와펜 동그라미 + 흰 칼선 · 누르면 꾹 */
+.sh-fab { border: 4px solid transparent; background: linear-gradient(#f2789d, #f2789d) padding-box, repeating-linear-gradient(72deg, #d9547d 0 2px, #ea6d93 2px 3.4px) border-box;
+  outline: 1.5px dashed rgba(255,255,255,.8); outline-offset: -8px; box-shadow: 0 0 0 3px #fff, 0 10px 18px -8px rgba(200,80,120,.6); -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.sh-fab:active { transform: scale(.9); }
+@media (prefers-reduced-motion: reduce) { .sh-pol.is-fresh { animation: none; } }
+/* 사진: 두 번 톡 확대 막기 · 누르면 살짝 눌림 */
+.sh-photo { touch-action: manipulation; -webkit-touch-callout: none; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.sh-photo:active { transform: scale(.97); transition-duration: .1s; }
+`;

@@ -6,6 +6,8 @@
  * 로그인 등 "풀스크린" 페이지(BARE_PATHS)에서는 헤더/푸터/도크 없이 children 만
  * 렌더해 페이지가 화면 전체를 쓰게 한다. 그 외 일반 페이지는 기존처럼
  * 헤더(fixed) + 본문(상단 여백) + 푸터 + 도크를 모두 보여준다.
+ * 앱으로 볼 때(useAppMode — 네이티브 · 설치 앱 · /app/ 진입 후)는 사이트 크롬 대신 앱 틀(AppShell:
+ * 상단바 + 탭바)을 씌운다. 앱에서 웹 로그인(/auth/login)으로 오면 앱 로그인 화면으로 바꿔 보낸다. (로컬 시안 — 배포 X)
  */
 
 import { usePathname } from "next/navigation";
@@ -14,29 +16,30 @@ import Footer from "@/components/footer/Footer";
 import FloatingDock from "@/components/site/FloatingDock";
 import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
 import PrelaunchNotice from "@/components/site/PrelaunchNotice";
+import AppShell from "@/components/app-shell/AppShell";
+import { useAppMode } from "@/components/app-shell/useAppMode";
 
 // 헤더/푸터/도크 없이 풀스크린으로 띄울 경로(정확 일치 또는 하위 경로)
 const BARE_PATHS = ["/auth/login"];
-const APP_SHELL_PATHS = ["/app"];
 
 export default function ConditionalChrome({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const bare = BARE_PATHS.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
-    const appShell = APP_SHELL_PATHS.some((p) => pathname === p || pathname?.startsWith(`${p}/`));
+    const appMode = useAppMode(pathname);
+
+    // 앱에서 웹 로그인 주소로 오면 웹 로그인 화면을 그리지 않고 앱 틀만 — 앱 틀이 앱 로그인 화면으로 바꿔 보냄(화면 깜빡임 없이)
+    if (bare && appMode) {
+        return <AppShell>{null}</AppShell>;
+    }
 
     // 풀스크린 — 크롬(헤더/푸터/도크) 없이 페이지만
     if (bare) {
         return <>{children}</>;
     }
 
-    // 설치형 앱 홈은 핵심 기능을 가리지 않도록 쇼핑 푸터와 플로팅 도구를 제외한다.
-    if (appShell) {
-        return (
-            <>
-                <Header />
-                <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
-            </>
-        );
+    // 앱 — 상단바 + 탭바 앱 틀 (사이트 헤더 · 푸터 · 챗봇 버튼 · 산책 강아지 없이)
+    if (appMode) {
+        return <AppShell>{children}</AppShell>;
     }
 
     // 일반 — 헤더(fixed) + 본문 여백 + 푸터 + 도크

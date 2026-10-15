@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-type ExpansionCard = {
+export type ExpansionCard = {
     step: string;
     eyebrow: string;
     title: string;
@@ -15,7 +15,7 @@ type ExpansionCard = {
     activeFeature?: string;
 };
 
-const EXPANSION_CARDS: readonly ExpansionCard[] = [
+export const EXPANSION_CARDS: readonly ExpansionCard[] = [
     {
         step: "01",
         eyebrow: "COMMUNITY",

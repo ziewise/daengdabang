@@ -18,7 +18,7 @@ import {
     type GrowthHubPublishedContent,
 } from "@/lib/growth-content";
 
-const GUEST_STEPS = [
+export const GUEST_STEPS = [
     {
         label: "01",
         title: "출근도장",
@@ -42,7 +42,7 @@ const GUEST_STEPS = [
     },
 ] as const;
 
-function hasShareableAiRecord(pet: PetProfile): boolean {
+export function hasShareableAiRecord(pet: PetProfile): boolean {
     if (pet.lastAnalyzedAt) return true;
     const raw = pet.rawAnalysis;
     if (!raw) return false;

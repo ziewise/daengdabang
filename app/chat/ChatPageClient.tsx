@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { FormEvent, type ComponentType, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     answerShopQuestionSmart,
@@ -71,7 +71,12 @@ function chatPetKey(pet: PetProfile) {
 const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_FONT_MODE", callback);
 const getServerChatFontMode = () => "readable" as const;
 
-export default function ChatPageClient() {
+// 앱 틀에서 아래 드로어 안에 띄울 때(로컬 시안): embedded — 드로어 높이에 꽉 차게, onClose — 닫기 버튼이 드로어를 닫음
+// skin — 앱 시안 꾸밈(있을 때만): avatar 머리 왼쪽 그림 · title 머리 제목 · Empty 첫 화면(빠른 질문을 누르면 ask 로 바로 질문). 모양은 data-chat-* 로 드로어 CSS 가 입힘
+type ChatSkin = { avatar?: ReactNode; title?: string; Empty?: ComponentType<{ ask: (question: string) => void }> };
+type ChatPageClientProps = { embedded?: boolean; onClose?: () => void; skin?: ChatSkin };
+
+export default function ChatPageClient({ embedded = false, onClose, skin }: ChatPageClientProps = {}) {
     const navigation = useRouter();
     const params = useSearchParams();
     const { user, hydrated } = useAuth();
@@ -403,6 +408,10 @@ export default function ChatPageClient() {
     };
 
     const closeChat = () => {
+        if (onClose) {
+            onClose();
+            return;
+        }
         if (window.history.length > 1) {
             navigation.back();
             return;
@@ -415,13 +424,19 @@ export default function ChatPageClient() {
         void ask(input);
     };
 
+    // 앱 시안 첫 화면(빠른 질문) — 누르면 바로 질문
+    const SkinEmpty = skin?.Empty;
+    const askFromSkin = (question: string) => {
+        void ask(question);
+    };
+
     const latestProducts = [...messages].reverse().find((message) => message.products && message.products.length > 0)?.products ?? [];
 
     return (
-        <main className="mx-auto flex w-full max-w-[1080px] px-2 py-2 sm:px-4 sm:py-4 lg:px-6">
+        <main data-chat-skin={skin ? "sticker" : undefined} className={embedded ? "flex h-full min-h-0 w-full" : "mx-auto flex w-full max-w-[1080px] px-2 py-2 sm:px-4 sm:py-4 lg:px-6"}>
             <div
                 data-chat-frame
-                className="h-[min(43rem,calc(100dvh-9rem))] max-h-[calc(100dvh-9rem)] min-h-0 w-full rounded-[1.75rem] border-2 border-dashed border-[#f2a48f] bg-[#fff7e8] p-1 shadow-[0_18px_50px_rgba(67,56,202,0.13)] sm:p-1.5"
+                className={`${embedded ? "h-full" : "h-[min(43rem,calc(100dvh-9rem))] max-h-[calc(100dvh-9rem)]"} min-h-0 w-full rounded-[1.75rem] border-2 border-dashed border-[#f2a48f] bg-[#fff7e8] p-1 shadow-[0_18px_50px_rgba(67,56,202,0.13)] sm:p-1.5`}
             >
                 <section
                     data-chat-shell
@@ -438,16 +453,19 @@ export default function ChatPageClient() {
                         className="sticky top-0 z-20 shrink-0 border-b-2 border-dashed border-[#f2b29f] bg-[#fff9ed] px-3 py-2.5 sm:px-5 sm:py-3"
                     >
                         <div className="flex items-start justify-between gap-3">
+                            <div className="flex min-w-0 items-center gap-2.5">
+                            {skin?.avatar}
                             <div className="min-w-0">
-                                <p className="bg-gradient-to-r from-rose-500 via-amber-500 to-cyan-600 bg-clip-text text-[10px] font-black tracking-[0.22em] text-transparent">
+                                <p data-chat-eyebrow className="bg-gradient-to-r from-rose-500 via-amber-500 to-cyan-600 bg-clip-text text-[10px] font-black tracking-[0.22em] text-transparent">
                                     CRAYON CARE NOTE
                                 </p>
                                 <div className="mt-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                                    <h1 className="text-xl font-black tracking-tight text-[#171b36] sm:text-2xl">댕다방 케어 톡</h1>
+                                    <h1 className="text-xl font-black tracking-tight text-[#171b36] sm:text-2xl">{skin?.title ?? "댕다방 케어 톡"}</h1>
                                     <span className="text-[11px] font-bold text-neutral-500">
                                         대화 {messages.length}개
                                     </span>
                                 </div>
+                            </div>
                             </div>
                             <div className="flex shrink-0 items-center gap-1.5">
                                 <button
@@ -518,7 +536,8 @@ export default function ChatPageClient() {
                             backgroundImage: "repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(99, 102, 241, 0.10) 32px)",
                         }}
                     >
-                        {messages.length === 0 && !loading ? (
+                        {messages.length === 0 && !loading && SkinEmpty ? <SkinEmpty ask={askFromSkin} /> : null}
+                        {messages.length === 0 && !loading && !SkinEmpty ? (
                             <div data-chat-empty-note className="mx-auto mt-3 max-w-lg rounded-2xl border-2 border-dashed border-indigo-200 bg-white/90 px-5 py-5 text-center shadow-sm">
                                 <i className="fa-solid fa-paw text-xl text-indigo-500" aria-hidden="true" />
                                 <p className="mt-2 text-sm font-black text-neutral-900">우리 아이 이야기를 편하게 들려주세요</p>
@@ -543,9 +562,11 @@ export default function ChatPageClient() {
                                 <div
                                     key={`${message.role}-${index}`}
                                     data-chat-message-index={index}
+                                    data-chat-role={message.role}
                                     className={message.role === "user" ? "text-right" : "text-left"}
                                 >
                                     <div
+                                        data-chat-bubble
                                         className={`inline-block max-w-[92%] whitespace-pre-line rounded-2xl px-4 py-3 font-bold sm:max-w-[84%] ${messageFontClass} ${
                                             message.role === "user"
                                                 ? "rounded-br-md bg-indigo-700 text-white shadow-sm"
@@ -600,8 +621,8 @@ export default function ChatPageClient() {
                         })}
 
                         {loading ? (
-                            <div className="text-left">
-                                <div className="inline-block max-w-[92%] rounded-2xl rounded-bl-md border border-indigo-100 bg-white/95 px-4 py-4 shadow-sm sm:max-w-[86%]">
+                            <div className="text-left" data-chat-role="assistant">
+                                <div data-chat-bubble className="inline-block max-w-[92%] rounded-2xl rounded-bl-md border border-indigo-100 bg-white/95 px-4 py-4 shadow-sm sm:max-w-[86%]">
                                     <ChatThinkingProgress hasHistory={messages.length > 1} stage={streamStage} message={streamMessage} />
                                     {streamedAnswer ? (
                                         <p className="mt-3 whitespace-pre-line border-t border-neutral-200 pt-3 text-sm font-bold leading-6 text-neutral-800">
