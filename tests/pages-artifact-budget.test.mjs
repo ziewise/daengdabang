@@ -9,6 +9,23 @@ import { HERO_WEATHERS, HERO_TIME_BUCKETS, resolveHeroScene } from "../lib/hero-
 
 const COMMIT_SHA = "a".repeat(40);
 
+test('Pages excludes malformed intros and uneven walking originals but retains reviewed replacements', async t => {
+    const root = await fixture(t);
+    const withdrawn = [1, 3, 6].map(id => `videos/intro-random-${id}-clean-v1.mp4`);
+    withdrawn.push('images/hero/summer_afternoon_sunny_poodle_pc.mp4');
+    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/steady-walk-v1/summer_afternoon_sunny_poodle_pc.mp4'];
+    for (const asset of [...withdrawn, ...approved]) {
+        await write(root, `public/${asset}`, 'source');
+        await write(root, `out/${asset}`, 'published');
+    }
+    await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
+    for (const asset of withdrawn) {
+        await assert.rejects(fs.access(path.join(root, `out/${asset}`)));
+        assert.equal(await fs.readFile(path.join(root, `public/${asset}`), 'utf8'), 'source');
+    }
+    for (const asset of approved) assert.equal(await fs.readFile(path.join(root, `out/${asset}`), 'utf8'), 'published');
+});
+
 test('Pages omits superseded previews while retaining every selectable weather video and source bytes', async t => {
     const root = await fixture(t);
     await write(root, 'public/images/hero/snow.mp4', 'preserved-original');

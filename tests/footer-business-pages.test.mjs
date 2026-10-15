@@ -60,17 +60,23 @@ test("brand story explains the real selection standard and uses an accessible vi
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
-test("home intro randomly selects six cleaned videos and never crops the mobile frame", async () => {
+test("home intro only selects reviewed videos and never crops the mobile frame", async () => {
     const [intro, introCss] = await Promise.all([
         source("components/home/IntroSplash.tsx"),
         source("app/intro.module.css"),
     ]);
 
-    for (let index = 1; index <= 6; index += 1) {
-        const version = index === 6 ? "20260812" : "20260811";
-        assert.match(intro, new RegExp(`/videos/intro-random-${index}-clean-v1\\.mp4\\?v=${version}`));
+    const { INTRO_VIDEOS, pickIntroVideo } = await import("../lib/intro-videos.ts");
+    assert.deepEqual(INTRO_VIDEOS.map(({ id }) => id), [2, 4, 5]);
+    for (const { id, src } of INTRO_VIDEOS) {
+        assert.equal(pickIntroVideo(String(id)), src);
     }
-    assert.match(intro, /Math\.floor\(Math\.random\(\) \* INTRO_VIDEO_SOURCES\.length\)/);
+    // Withdrawn or malformed QA links must never resurrect a rejected clip.
+    for (const requested of [null, "1", "3", "6", "0", "7", "2.5", "invalid"]) {
+        const selected = pickIntroVideo(requested);
+        assert.ok(INTRO_VIDEOS.some(({ src }) => src === selected));
+    }
+    assert.match(intro, /pickIntroVideo/);
     assert.match(intro, /introVideo/);
     assert.match(introCss, /object-fit: contain/);
     assert.doesNotMatch(introCss, /object-fit: cover/);
@@ -90,8 +96,8 @@ test("home intro randomly selects six cleaned videos and never crops the mobile 
     assert.doesNotMatch(intro, /onTouchEnd=/);
     assert.match(intro, /<span className=\{styles\.skipText\}>/);
     const introSizes = await Promise.all(
-        Array.from({ length: 6 }, (_, index) =>
-            stat(new URL(`public/videos/intro-random-${index + 1}-clean-v1.mp4`, root))
+        INTRO_VIDEOS.map(({ src }) =>
+            stat(new URL(`public${src.split("?")[0]}`, root))
                 .then(({ size }) => size)
         )
     );

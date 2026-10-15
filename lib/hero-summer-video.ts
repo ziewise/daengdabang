@@ -7,7 +7,7 @@
  *   2) pickHeroBreedVideo : 그 영상 속 강아지 견종의 얼굴 배지 영상
  *
  * 영상·견종 매핑은 lib/hero-video-manifest.ts(자동 생성)에서 가져온다.
- *   · 매니페스트는 scripts/gen-hero-manifest.mjs 가 public/images/hero 를 스캔해 생성.
+ *   · 매니페스트는 public/images/hero/steady-walk-v1 의 구간별 속도 보정본을 스캔해 생성.
  *   · 파일명 규칙: {season}_{time}_{weather}_{breed}_{device}.mp4
  *     (breed = breeds 폴더 파일명: poodle / englishbulldog / welshcorgi …)
  *   · 즉 영상을 추가/교체할 때 "파일명만 규칙대로" 두면 코드 수정 없이 반영된다.
@@ -22,7 +22,7 @@ type HeroSceneEntry = { breed: string; pc: string; m: string };
 const MANIFEST = HERO_VIDEO_MANIFEST as Record<string, HeroSceneEntry>;
 
 // 해당 장면 영상/견종이 없을 때의 기본값
-const FALLBACK_VIDEO = "/images/hero/default.mp4"; // 협업자 기본 배경
+const FALLBACK_SCENE = MANIFEST.afternoon_sunny;
 const FALLBACK_BREED = "poodle"; // 기본 견종 배지
 
 // 날씨 8종 → 영상 3종(sunny/rain/cloudy)으로 묶음
@@ -49,9 +49,8 @@ export function pickHeroVideo(
     timeBucket: HeroTimeBucket,
     isMobile: boolean,
 ): string {
-    const entry = MANIFEST[sceneKey(weather, timeBucket)];
-    if (!entry) return FALLBACK_VIDEO;
-    return (isMobile ? entry.m : entry.pc) ?? FALLBACK_VIDEO;
+    const entry = MANIFEST[sceneKey(weather, timeBucket)] ?? FALLBACK_SCENE;
+    return (isMobile ? entry.m : entry.pc) ?? (isMobile ? FALLBACK_SCENE.m : FALLBACK_SCENE.pc);
 }
 
 /** 협업자 날씨/시간 → 그 영상 속 강아지 견종 ID */
