@@ -11,7 +11,8 @@
  *     로그인 전 시연(로그인 후(예시))에서는 편집 추천 상품으로 모양만 보여 줌
  *  ④ 추천 셀렉트 · 신상품 — 색인 탭 2개로 한 섹션(웹 BestSection 4개 · NewArrivalsSection 8개 그대로)
  *  ⑤ 기획전 — 웹 PromoSection 5개(큰 카드 1 + 작은 카드 4) 그대로, 글자는 사진 아래 · 바로 아래 대표 브랜드 2장
- *  ⑥ 인스타 — 맨 아래 작은 링크
+ *  ⑥ 인스타 — 맨 아래 작은 링크(핸들 · 팔로우 하러가기 한 줄)
+ *  영문 꼬리표(COLLECTION · FEATURED …)와 보조 설명 줄은 빼서 깔끔하게
  *  빠진 것: 인트로 · 앱 설치 띠 · 보물광산 소개(앱엔 홈 · 매일 댕생활이 따로 있음) · 인스타 사진 벽
  *  상품을 누르면 웹 상품 상세 · 장바구니 · 결제 그대로. 산책 친구는 AppShell 이 쇼핑 화면에서만 띄움.
  */
@@ -148,8 +149,7 @@ export default function StickerShop() {
                         {PROMO_CARDS.map((t, i) => <PromoSticker key={t.href} tile={t} i={i} />)}
                     </div>
 
-                    <p className="ah-light mt-8 text-[10.5px] uppercase tracking-[.2em] text-[#b39a8e]">FEATURED BRAND</p>
-                    <p className="ah-display mt-0.5 text-[15px]">대표 브랜드</p>
+                    <p className="ah-display mt-8 text-[15px]">대표 브랜드</p>
                     <p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
                     <div className="mt-3.5 grid grid-cols-2 gap-3">
                         {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
@@ -160,10 +160,7 @@ export default function StickerShop() {
                 <a href={INSTA_URL} target="_blank" rel="noopener noreferrer" aria-label={`${INSTA_HANDLE} 인스타그램 프로필 열기 (새 창)`}
                     className="shp-insta mx-auto mt-10 flex w-fit items-center gap-2.5 rounded-full py-2 pl-2.5 pr-4">
                     <span className="grid h-8 w-8 place-items-center rounded-full bg-[#ffe1ea] text-[15px] text-[#d6457a]"><i aria-hidden="true" className="fa-brands fa-instagram" /></span>
-                    <span className="leading-tight">
-                        <span className="ah-display block text-[12.5px]">{INSTA_HANDLE} · 팔로우 하러가기</span>
-                        <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>댕다방의 일상을 인스타에서 만나보세요</span>
-                    </span>
+                    <span className="ah-display text-[12.5px]">{INSTA_HANDLE} · 팔로우 하러가기</span>
                 </a>
             </div>
         </div>
@@ -309,7 +306,6 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
                             : <i aria-hidden="true" className={`fa-solid ${tile.icon} absolute inset-0 grid place-items-center text-4xl text-[#e8c9b8]`} />}
             </span>
             <span className="block px-1 pt-2">
-                {tile.eyebrow ? <span className="ah-light block text-[10px] uppercase tracking-[.2em] text-[#b39a8e]">{tile.eyebrow}</span> : null}
                 {/* 제목만(설명 · 컬렉션 보기 버튼 없이) — 카드 전체가 기획전 링크 */}
                 <span className={`ah-display block truncate leading-snug ${featured ? "text-[17px]" : "text-[13.5px]"}`}>{title}</span>
             </span>

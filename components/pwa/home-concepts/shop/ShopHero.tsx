@@ -6,7 +6,7 @@
  * 협업자 히어로(components/home/HeroSection)와 같은 엔진 · 같은 정보를 앱 모양으로.
  *  - 엔진 그대로: 날씨(Open-Meteo) · 계절 · 시간 감지(lib/hero-assets · hero-weather) → 영상 선택(lib/hero-summer-video)
  *    지역 선택은 웹과 같은 저장 키라 웹 · 앱이 같은 지역을 기억
- *  - 순서: 브랜드 문구(맨 위, 제목 테이프 대신) → 폴라로이드 영상(위에 글자 없음) → 사진 설명 자리에 날씨 칩 4개
+ *  - 순서: 브랜드 문구(맨 위, 제목 테이프 대신 · 영문 꼬리표 없이) → 폴라로이드 영상(위에 글자 없음) → 사진 설명 자리에 날씨 칩 4개
  *    (장면 · 계절 시간 · 지역(톡 → 아래에서 올라오는 지역 고르기) · 날씨 요약) — 작은 글씨는 잘 읽히는 나눔스퀘어라운드
  *  - 견종 얼굴 배지(그 영상 속 강아지 얼굴 영상): 폴라로이드 모서리에 걸친 동그란 스티커 + "저를 콕 눌러 분석하기!" 말풍선
  *    → 앱에서는 연구소로(웹은 펫렌즈 창)
@@ -108,8 +108,7 @@ export default function ShopHero() {
     return (
         <section aria-label="오늘의 댕다방" className="relative">
             {/* 브랜드 문구 — 페이지 맨 위(제목 테이프 대신) */}
-            <p className="ah-light text-[11px] uppercase tracking-[.22em] text-[#b39a8e]">DAENGDABANG · COLLECTION</p>
-            <h1 className="ah-display mt-1 text-[25px] leading-[1.18]">
+            <h1 className="ah-display text-[25px] leading-[1.18]">
                 매일이 더 특별한<br /><span className="text-[#ef5f8f]">댕댕이의 일상</span>
             </h1>
 
