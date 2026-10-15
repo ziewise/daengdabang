@@ -99,7 +99,7 @@ export function conceptOf(pathname: string): Concept | null {
     return null;
 }
 
-/** 시안 탭 5칸 — 홈 · 연구소 · 댕다방 · 쇼핑 · 마이 */
+/** 시안 탭 5칸 — 홈 · 연구소 · 쇼핑(가운데 강조) · 댕다방 · 마이 */
 export function conceptTabs(c: Concept): AppTab[] {
     const [home, , dang, shop] = APP_TABS;
     return [
@@ -108,8 +108,9 @@ export function conceptTabs(c: Concept): AppTab[] {
             key: "lab", label: "연구소", href: `/app/${c}/lab/`,
             grad: ["#f5be4a", "#e0951c"], bubble: "linear-gradient(165deg, #fff8e0 0%, #ffecb8 100%)", rim: "#f4d68c", ink: "#a8720f",
         },
-        { ...dang, href: `/app/${c}/show/` },
+        // 쇼핑을 가운데(강조 탭) — 홈 · 연구소 · 쇼핑 · 댕다방 · 마이
         { ...shop, href: `/app/${c}/shop/` }, // 앱 전용 쇼핑 첫 화면(웹 첫 페이지 대신)
+        { ...dang, href: `/app/${c}/show/` },
         {
             key: "my", label: "마이", href: `/app/${c}/my/`,
             grad: ["#5cb6f2", "#2f86d6"], bubble: "linear-gradient(165deg, #eaf6ff 0%, #d3ebff 100%)", rim: "#b5d8f7", ink: "#1f6fbf",

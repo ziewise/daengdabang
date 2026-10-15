@@ -401,7 +401,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                 <li key={t.key} className="flex">
                                     <Link
                                         href={t.href}
-                                        className={`app-tab app-press ${on ? "is-on" : ""}`}
+                                        className={`app-tab app-press ${on ? "is-on" : ""} ${concept && t.key === "shop" ? "is-hero" : ""}`}
                                         aria-current={on ? "page" : undefined}
                                     >
                                         {/* 고른 탭 — 아이콘 뒤 파스텔 젤리 판(탭 색)이 통 튀어나옴 */}
@@ -487,6 +487,14 @@ html.ddb-app-mode:not(.ddb-app-web-header) { --header-height: var(--app-topbar-h
 .app-tab:active .app-tab-svg { transform: scale(.88); transition-duration: .1s; }
 /* 이름: 카페24 · 고른 탭은 탭 색 */
 .app-tab-label { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; transition: color .3s ease; }
+/* 쇼핑 강조 탭(가운데) — 늘 떠 있는 큰 동그라미 젤리 판 · 또렷한 그림 · 주황 이름. 고르면 살짝 더 솟고 빛남 */
+.app-tab.is-hero .app-tab-icon { width: 58px; height: 58px; margin-top: -30px; }
+.app-tab.is-hero .app-tab-icon::before { border-radius: 999px; transform: scale(1); opacity: 1;
+  box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px var(--rim), inset 0 -4px 0 var(--rim), 0 12px 18px -10px rgba(236,106,28,.55); }
+.app-tab.is-hero .app-tab-svg { width: 36px; height: 36px; filter: drop-shadow(0 2px 2px rgba(150,70,20,.25)); }
+.app-tab.is-hero .app-tab-label { color: #cf5f19; }
+.app-tab.is-hero.is-on .app-tab-icon { transform: translateY(-4px); }
+.app-tab.is-hero.is-on .app-tab-icon::before { box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px #f3a56a, inset 0 -4px 0 var(--rim), 0 14px 22px -10px rgba(236,106,28,.7); }
 @media (prefers-reduced-motion: reduce) { .app-tab-icon, .app-tab-icon::before, .app-tab-svg { transition: none; animation: none; } }
 
 /* 누를 때 살짝 눌림 */
