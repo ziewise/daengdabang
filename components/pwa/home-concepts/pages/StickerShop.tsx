@@ -287,7 +287,7 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
     );
 }
 
-/* ───────── ⑤ 기획전 카드 — 사진(영상)은 위, 글자는 아래 ───────── */
+/* ───────── ⑤ 기획전 카드 — 사진(영상)은 위, 아래는 제목만(큰 카드도 한 줄) ───────── */
 function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
     const featured = Boolean(tile.featured);
     const [idx, setIdx] = useState(0);
@@ -297,9 +297,9 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
         const t = window.setInterval(() => setIdx((v) => (v + 1) % n), 3000); // 웹과 같이 3초마다 바뀜
         return () => window.clearInterval(t);
     }, [tile.images]);
-    const title = featured ? tile.titleFull ?? tile.title : tile.title;
+    const title = featured ? (tile.titleFull ?? tile.title).replace(/\s*\n\s*/g, " ") : tile.title; // 큰 카드 제목도 한 줄
     return (
-        <Link href={tile.href} onClick={() => haptic("light")} className={`shp-promo relative block bg-white p-1.5 pb-2.5 ${featured ? "col-span-2" : ""}`}
+        <Link href={tile.href} aria-label={`${title} — ${tile.desc}`} onClick={() => haptic("light")} className={`shp-promo relative block bg-white p-1.5 pb-2.5 ${featured ? "col-span-2" : ""}`}
             style={{ rotate: `${featured ? -0.6 : [0, 0.9, -0.8, 0.7, -0.9][i % 5]}deg` }}>
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,215,.9)", "rgba(190,224,255,.85)", "rgba(220,205,255,.9)", "rgba(200,240,215,.9)", "rgba(255,232,170,.9)"][i % 5]} />
             <span className={`relative block overflow-hidden rounded-[3px] ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`} style={{ background: "#f6efe8" }}>
@@ -310,9 +310,8 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
             </span>
             <span className="block px-1 pt-2">
                 {tile.eyebrow ? <span className="ah-light block text-[10px] uppercase tracking-[.2em] text-[#b39a8e]">{tile.eyebrow}</span> : null}
-                <span className={`ah-display block whitespace-pre-line leading-snug ${featured ? "text-[17px]" : "text-[13.5px]"}`}>{title}</span>
-                <span className={`ah-light mt-0.5 block leading-snug ${featured ? "text-[12px]" : "line-clamp-2 text-[11px]"}`} style={{ color: TEXT_SOFT }}>{tile.desc}</span>
-                {featured ? <span className="ah-display mt-2 inline-flex items-center gap-1 rounded-full bg-[#ffe1ea] px-3 py-1 text-[11.5px] text-[#c23d6c]">컬렉션 보기 <i aria-hidden="true" className="fa-solid fa-arrow-right text-[9px]" /></span> : null}
+                {/* 제목만(설명 · 컬렉션 보기 버튼 없이) — 카드 전체가 기획전 링크 */}
+                <span className={`ah-display block truncate leading-snug ${featured ? "text-[17px]" : "text-[13.5px]"}`}>{title}</span>
             </span>
         </Link>
     );
