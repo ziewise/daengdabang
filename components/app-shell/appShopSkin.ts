@@ -49,6 +49,8 @@ const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
 /* 마이 탭 웹 화면 */
 const MYW = "html.ddb-app-mode.ddb-app-my-web";
+/* 그림으로 바꿔 끼우는 아이콘 칸(동그라미 · 네모) */
+const ICONBOX = `${MYW} main :is(span[class*="h-11"][class*="rounded-full"]:has(> i.fa-envelope), span[class*="h-11"][class*="rounded-full"]:has(> i.fa-headset), span[class*="h-9"][class*="rounded-full"]:has(> i:is(.fa-circle-question, .fa-box, .fa-rotate-left)), :is(span, div)[class*="rounded"]:has(> i.fa-credit-card), span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock))`;
 /* 숨은 창들(협업자 모달) — 앱 모드 어디서나 · 입혀보기 창 */
 const TRYON = 'html.ddb-app-mode section[role="dialog"][aria-labelledby="pet-tryon-title"]';
 const DLG = `html.ddb-app-mode :is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"])`;
@@ -874,5 +876,29 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button span
 
 /* 가운데 정렬 안내 화면(로그인 필요 등)의 제목 테이프는 아이콘 옆이 아니라 아래 줄 가운데에 */
 ${MYW} main main.text-center > h1, ${S} main main.text-center > h1 { display: table; margin-left: auto; margin-right: auto; }
+
+/* ── 27) 사용자 3D 그림 아이콘(2026-10-16) — 글자 아이콘 자리에 그림만 바꿔 끼움(버튼 · 링크 · 동작 그대로).
+   동그라미 칸은 바탕 없이 그림 · 글자 아이콘은 숨김 / 낱개 글자 아이콘은 그 자리에 그림 ── */
+${ICONBOX} { background-color: transparent; background-image: none; background-position: center; background-size: contain; background-repeat: no-repeat; box-shadow: none; color: transparent;
+  filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .22)); }
+${ICONBOX} > i { visibility: hidden; }
+/* 1:1 문의 — 이메일 문의 · 전화 문의 */
+${MYW} main span[class*="h-11"][class*="rounded-full"]:has(> i.fa-envelope) { width: 3.4rem; height: 3.4rem; background-image: url("/images/ui/stickers/inquiry-email.webp"); }
+${MYW} main span[class*="h-11"][class*="rounded-full"]:has(> i.fa-headset) { width: 3.4rem; height: 3.4rem; background-image: url("/images/ui/stickers/inquiry-phone.webp"); }
+/* 1:1 문의 바로가기 3줄 — 자주 묻는 질문 · 주문·배송 조회 · 교환·반품 */
+${MYW} main span[class*="h-9"][class*="rounded-full"]:has(> i.fa-circle-question) { width: 2.6rem; height: 2.6rem; background-image: url("/images/ui/stickers/inquiry-faq.webp"); }
+${MYW} main span[class*="h-9"][class*="rounded-full"]:has(> i.fa-box) { width: 2.6rem; height: 2.6rem; background-image: url("/images/ui/stickers/inquiry-orders.webp"); }
+${MYW} main span[class*="h-9"][class*="rounded-full"]:has(> i.fa-rotate-left) { width: 2.6rem; height: 2.6rem; background-image: url("/images/ui/stickers/inquiry-return.webp"); }
+/* 결제수단 없음 */
+${MYW} main span[class*="rounded-2xl"][class*="place-items-center"]:has(> i.fa-credit-card) { background-image: url("/images/ui/stickers/payments-empty.webp"); }
+/* 로그인 필요(주문 내역) — 큰 자물쇠 글자 아이콘 자리에 그림 */
+${MYW} main main.text-center > i.fa-lock { display: inline-block; width: 4.5rem; height: 4.5rem; background: url("/images/ui/stickers/login-lock.webp") center / contain no-repeat;
+  filter: drop-shadow(0 5px 5px rgba(120, 70, 50, .22)); }
+${MYW} main main.text-center > i.fa-lock::before { content: ""; }
+/* 마이페이지 로그인 안내(MypageLoginGate)의 자물쇠 동그라미 */
+${MYW} main span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock) { background-image: url("/images/ui/stickers/login-lock.webp"); }
+/* 검색 결과 없음 */
+${SEARCH} i.fa-circle-question { display: inline-block; width: 3.4rem; height: 3.4rem; background: url("/images/ui/stickers/search-empty.webp") center / contain no-repeat; filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .2)); }
+${SEARCH} i.fa-circle-question::before { content: ""; }
 
 `;

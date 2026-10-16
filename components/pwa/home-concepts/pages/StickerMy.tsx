@@ -26,14 +26,24 @@ const REDIRECT = "/app/sticker/my/";
 /** 로그아웃 뒤 가는 앱 홈(탭바 "홈"과 같은 주소) */
 const APP_HOME = "/app/home-1/";
 
-/** 줄 노트 메뉴 */
+/** 메뉴 3D 그림(사용자 그림, 2026-10-16) — 메뉴 이름 → 그림. 없으면 글자 아이콘 */
+const MENU_IMG: Record<string, string> = {
+    "주문 내역": "my-orders", "반려견 관리": "my-pets", "배송지 관리": "my-address", "결제수단": "my-payments", "추천 설정": "my-recommend", "정보 수정": "my-profile",
+    "공지사항": "cs-notice", "자주 묻는 질문": "cs-faq", "1:1 문의": "cs-inquiry", "교환 · 반품": "cs-return", "이용약관": "cs-terms", "개인정보처리방침": "cs-privacy",
+};
+
+/** 메뉴 목록 (흰 메모 카드 · 줄 없음) */
 function LinedMenu({ items }: { items: readonly { icon: string; title: string; href: string }[] }) {
     return (
         <ul className="st-lined mt-2">
             {items.map((m) => (
                 <li key={m.title}>
                     <Link href={m.href} className="flex items-center gap-3 py-2.5 active:opacity-60">
-                        <i aria-hidden="true" className={`fa-solid ${m.icon} w-5 text-center text-[14px] text-[#f48fac]`} />
+                        {MENU_IMG[m.title] ? (
+                            <Image src={`/images/ui/stickers/${MENU_IMG[m.title]}.webp`} alt="" width={64} height={64} className="h-8 w-8 shrink-0 object-contain drop-shadow-[0_2px_2px_rgba(120,70,50,.2)]" />
+                        ) : (
+                            <i aria-hidden="true" className={`fa-solid ${m.icon} w-5 text-center text-[14px] text-[#f48fac]`} />
+                        )}
                         <span className="ah-display flex-1 text-[14.5px]">{m.title}</span>
                         <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9b4a8]" />
                     </Link>
