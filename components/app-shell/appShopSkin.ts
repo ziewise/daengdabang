@@ -69,6 +69,7 @@ const patch = (fill: string, edge: string, edge2: string, stitch: string, ink: s
 const PATCH_PINK = patch("#f2789d", "#d9547d", "#ea6d93", "rgba(255,255,255,.75)", "#fff");
 const PATCH_CREAM = patch("#fff6ee", "#f4a9bf", "#f8c3d2", "rgba(226,107,145,.55)", "#c4456f", false);
 const PATCH_LAVENDER = patch("#a68ff0", "#7f66d8", "#957de6", "rgba(255,255,255,.75)", "#fff");
+const PATCH_MINT = patch("#7fcfa9", "#4fae84", "#68c299", "rgba(255,255,255,.75)", "#fff");
 
 /* 자수 아이콘(상세 버튼 속 장바구니 · 하트) — 와펜 버튼과 같은 결: 실 결(사선 무늬) + 새틴 테두리 실 + 안쪽 바느질 땀(점선).
    글자 아이콘(Font Awesome) 자리에 배경 그림으로만 바꿔 끼운다(버튼 · 동작 그대로) */
@@ -697,5 +698,42 @@ ${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] a[class*
 ${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] a[class*="bg-neutral-950"]:active { transform: scale(.96); }
 /* 외부 결과 없음 — 점선 메모 */
 ${LIST} main main > section[class*="rounded-lg"] div[class*="border-dashed"] { border-color: #ecd5c8; border-radius: 6px 6px 16px 6px; background: #fffbea; }
+
+/* ── 22) 외부 가격 비교 2차(사용자 2026-10-16 "앱 화면에서 보기 좋게") — 제목은 민트 테이프 이름표 · 기준상품 고르기는 와펜(고른 것 민트) ·
+   점수 칸은 메모 + 테이프 줄무늬 막대 · 비교 카드 가격은 꼬리표(댕다방 기준상품 = 노랑, 외부 = 민트) · 사진 위 판매처 글자는 모서리 도장 ·
+   상태 꼬리표 · 개수는 흰 칼선 스티커. 점수 · 가격 · 링크 그대로 ── */
+/* 제목 — 민트 마스킹테이프 이름표(외부 영역 표시) */
+${LIST} main main > section[class*="rounded-lg"] > div:first-child h2, ${LIST} main main > section[class*="rounded-lg"] h3[class*="text-base"]:not(section[class*="border-emerald-200"] h3) {
+  display: inline-block; width: fit-content; padding: 5px 16px 4px; rotate: -1deg; text-decoration: none; line-height: 1.1; color: #1d6b4c;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  background: repeating-linear-gradient(90deg, rgba(186,236,206,.95) 0 8px, rgba(214,245,226,.95) 8px 16px); filter: drop-shadow(0 5px 4px rgba(40, 90, 60, .15)); }
+/* 개수 · 상태 꼬리표 — 흰 칼선 스티커(민트 글씨) */
+${LIST} main main > section[class*="rounded-lg"] span[class*="rounded-full"]:is([class*="bg-amber-50"], [class*="bg-emerald-700"]) { background: #fff; color: #1f9e75;
+  box-shadow: 0 0 0 1.5px #bfe6d1, 0 0 0 3.5px #fff, 0 4px 7px -4px rgba(40, 110, 80, .4); }
+${LIST} main article.group:not([data-pet-product]) div.p-3 > span[class*="rounded-full"] { border-radius: 999px; box-shadow: 0 0 0 2px #fff, 0 3px 6px -4px rgba(90, 60, 50, .4);
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+/* 기준상품 고르기 — 작은 와펜(고른 것 민트 · 나머지 크림) */
+${LIST} main [aria-label*="기준상품"] > button { ${PATCH_CREAM} border-width: 2px; outline-width: 1.5px; outline-offset: -5px; padding: 8px 14px 7px; font-size: 12px; line-height: 1; }
+${LIST} main [aria-label*="기준상품"] > button[class*="bg-emerald-700"] { ${PATCH_MINT} border-width: 2px; outline-width: 1.5px; outline-offset: -5px; padding: 8px 14px 7px; font-size: 12px; line-height: 1; }
+${LIST} main [aria-label*="기준상품"] > button:active { transform: scale(.95); }
+/* 점수 칸 — 흰 메모 + 테이프 줄무늬 막대 */
+${LIST} main [aria-label*="점수 기준"] > div { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+${LIST} main [aria-label*="점수 기준"] div[class*="h-1.5"] { height: 7px; background: #eaf3ee; box-shadow: inset 0 0 0 1px #d6eadf; }
+${LIST} main [aria-label*="점수 기준"] div[class*="bg-emerald-600"] { background: repeating-linear-gradient(90deg, #68c299 0 6px, #8fd8b4 6px 12px); }
+/* 휴대폰 비교 카드 — 점수는 카페24 민트 · 가격은 꼬리표(기준상품 노랑 · 외부 민트) */
+${LIST} main [role="list"][aria-label*="비교 카드"] > article strong[class*="text-base"] { color: #1d6b4c; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${LIST} main [role="list"][aria-label*="비교 카드"] > article div[class*="text-base"][class*="font-black"] { position: relative; width: fit-content; padding: 3px 9px 3px 16px;
+  background: #d9f5e6; color: #1d6b4c; border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${LIST} main [role="list"][aria-label*="비교 카드"] > article[class*="bg-emerald-50"] div[class*="text-base"][class*="font-black"] { background: #fff3a6; color: #6b4708; }
+${LIST} main [role="list"][aria-label*="비교 카드"] > article div[class*="text-amber-700"] { margin-top: 3px; }
+/* 외부 상품 카드 사진 위 판매처 — 글자 띠 대신 모서리에 살짝 걸친 민트 잉크 도장 */
+${LIST} main article.group:not([data-pet-product]) > a:first-child > div[class*="bottom-2"][class*="right-2"] { background: rgba(255, 255, 255, .92); color: #1f9e75; border-radius: 4px;
+  box-shadow: inset 0 0 0 1.5px #1f9e75; rotate: -6deg; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 외부 상품 카드 브랜드 · 판매처 줄 — 둥근 글씨 */
+${LIST} main article.group:not([data-pet-product]) div.p-3 > div:first-of-type { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${LIST} main article.group:not([data-pet-product]) div.p-3 > div:first-of-type span.uppercase { color: #1f9e75; }
+${LIST} main article.group:not([data-pet-product]) a[class*="bg-neutral-950"] { font-size: 13px; outline-offset: -6px; }
 
 `;
