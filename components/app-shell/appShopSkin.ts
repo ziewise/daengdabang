@@ -194,13 +194,12 @@ ${S} [data-app-detail-fold-toggle] { display: flex; }
 ${S} [data-app-detail-fold-toggle] button { ${PATCH_CREAM} }
 ${S} [data-app-detail-fold-toggle] button:active { transform: scale(.96); transition-duration: .12s; }
 
-/* 상품 문의(Q&A) — 편지지 카드 + 테이프, 아이콘 동그라미는 케어톡 캐릭터 스티커, "챗봇에 문의"는 분홍 와펜(누르면 케어톡 그대로) */
+/* 상품 문의(Q&A) — 편지지 카드 + 테이프, "챗봇에 문의"는 분홍 와펜(누르면 케어톡 그대로) */
 ${S} #tab-qna > div[class*="border"] { position: relative; border-color: #f3e6d6; border-radius: 6px 6px 18px 6px; background: #fffdf6;
   box-shadow: 0 10px 18px -14px rgba(110, 80, 40, .5); }
 ${S} #tab-qna > div[class*="border"]::before { ${TAPE} top: -7px; left: 50%; width: 60px; margin-left: -30px; rotate: -2deg; }
-${S} #tab-qna > div > div[class*="rounded-full"] { background: #fff url("/images/ui/stickers/caretalk-avatar.webp") center / 86% no-repeat;
-  box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f6c9d6, 0 6px 10px -6px rgba(110, 80, 40, .5); }
-${S} #tab-qna > div > div[class*="rounded-full"] > i { visibility: hidden; }
+/* 아이콘 동그라미(말풍선)는 빼기로(사용자 결정 2026-10-16) — 꾸밈 그림만 숨김, 제목 · 설명 · 버튼은 그대로 */
+${S} #tab-qna > div > div[class*="rounded-full"] { display: none; }
 ${S} #tab-qna > div > button { ${PATCH_PINK} }
 ${S} #tab-qna > div > button:active { transform: scale(.96); transition-duration: .12s; }
 

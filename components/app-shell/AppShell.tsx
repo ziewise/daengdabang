@@ -50,10 +50,9 @@ const CARE_QUICK = [
 function CareEmpty({ ask }: { ask: (question: string) => void }) {
     return (
         <div className="ct-empty pt-2">
-            {/* 캐릭터 스티커 + 첫 인사 */}
+            {/* 첫 인사(캐릭터 그림은 빼기로 — 사용자 결정 2026-10-16) */}
             <div className="flex flex-col items-center text-center">
-                <Image src="/images/ui/stickers/caretalk-avatar.webp" alt="" width={192} height={192} className="ct-hero h-[5.5rem] w-[5.5rem]" />
-                <p className="ct-say app-font mt-3 text-[17px] leading-snug text-[#3d2f2a]" style={{ ["--d" as string]: "120ms" }}>
+                <p className="ct-say app-font mt-4 text-[17px] leading-snug text-[#3d2f2a]" style={{ ["--d" as string]: "120ms" }}>
                     안녕하세요! <span className="ct-mark">우리 아이 이야기</span>를<br />편하게 들려주세요
                 </p>
                 <p className="ct-say ct-sub mt-1.5 text-[12.5px] leading-relaxed" style={{ ["--d" as string]: "380ms" }}>
@@ -642,10 +641,7 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="ass
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-button] { border: 0 !important; border-radius: 999px !important; background: #fff !important; color: #c4567a !important;
   box-shadow: 0 0 0 1.5px #f1dccf, 0 3px 6px -3px rgba(110,70,55,.35) !important; }
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-privacy-notice] { font-size: 11px !important; line-height: 1.5 !important; color: #9c8a80 !important; font-weight: 600 !important; }
-/* 첫 화면(대화 없음) — 캐릭터 · 인사 · 예시 질문 메모지 */
-.ct-hero { rotate: -6deg; filter: drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(0 8px 8px rgba(120,70,60,.3));
-  animation: ct-pop .6s cubic-bezier(.25,1.4,.45,1) both; }
-@keyframes ct-pop { from { opacity: 0; transform: translateY(10px) scale(.8) rotate(8deg); } }
+/* 첫 화면(대화 없음) — 인사 · 예시 질문 메모지 */
 .ct-mark { background: linear-gradient(transparent 58%, rgba(255,214,228,.95) 58%, rgba(255,214,228,.95) 92%, transparent 92%); padding: 0 .1em; }
 .ct-sub { color: #8f7a70; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
 .ct-say { animation: ct-say .5s cubic-bezier(.25,1.4,.45,1) both; animation-delay: var(--d, 0ms); }
@@ -655,7 +651,7 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-ref
   transition: transform .35s cubic-bezier(.3,1.6,.5,1), box-shadow .35s; -webkit-tap-highlight-color: transparent; }
 .ct-quick:active { transform: translateY(-4px) scale(1.04); box-shadow: 0 14px 16px -10px rgba(110,70,55,.45), inset 0 0 0 1px rgba(255,255,255,.6); transition-duration: .12s; }
 .ct-tape { border-radius: 2px; box-shadow: 0 1px 2px rgba(90,60,50,.12); }
-@media (prefers-reduced-motion: reduce) { .ct-hero, .ct-say, .ct-quick { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .ct-say, .ct-quick { animation: none; } }
 
 /* 산책 친구 버튼(협업자 PetCompanionGate) — 앱에서만 덮어씀(웹은 그대로)
  * 발바닥(설정) 버튼은 숨김 — 설정은 강아지를 누르면 나오는 빠른 메뉴 "설정하기"로.
