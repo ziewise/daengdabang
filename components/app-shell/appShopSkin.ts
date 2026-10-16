@@ -47,6 +47,11 @@ const PG = `${P} > div > div:nth-child(2)`;
 /* 장바구니 화면(AppShell이 html[data-app-page] 표시) · 검색 창 */
 const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
+/* 세트 상품 목록 · 세트 상세 · 세트 카드 */
+const BUNDLES = `${S}[data-app-page="bundles"]`;
+const BUNDLE = `${S}[data-app-page="bundle"]`;
+const BUNDLE_ANY = `${S}:is([data-app-page="bundles"], [data-app-page="bundle"])`;
+const BUNDLE_CARD = `${S}[data-app-page="bundles"] main main article.group`;
 /* 마이 탭 웹 화면 */
 const MYW = "html.ddb-app-mode.ddb-app-my-web";
 /* 그림으로 바꿔 끼우는 아이콘 칸(동그라미 · 네모) */
@@ -900,5 +905,61 @@ ${MYW} main span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock) { backgr
 /* 검색 결과 없음 */
 ${SEARCH} i.fa-circle-question { display: inline-block; width: 3.4rem; height: 3.4rem; background: url("/images/ui/stickers/search-empty.webp") center / contain no-repeat; filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .2)); }
 ${SEARCH} i.fa-circle-question::before { content: ""; }
+
+/* ── 28) 세트 상품 목록(/bundles) · 세트 상세(/bundle/…) — 사용자 2026-10-16 "우리 컨셉에 맞추자"
+   영문 꼬리표 숨김 · 제목 테이프 이름표 · 세트 카드는 테이프 붙인 스크랩 카드 + 흰 테두리 사진 · 사진 위 글자(영상 미리보기 · n종 세트)는
+   모서리 잉크 도장으로 · 가격은 노란 가격표. 세트 상세 맨 위는 "사진 위 글자 금지" 규칙대로 사진(폴라로이드)을 위에, 제목 · 설명 · 가격 메모를
+   그 아래 종이 위로 내린다. 담기 · 다른 세트 보기 · 영상 재생 동작은 그대로 ── */
+/* 목록 머리 */
+${BUNDLES} main main > p:first-child { display: none; }
+${BUNDLES} main main h1 { display: inline-block; width: fit-content; padding: 7px 20px 6px; rotate: -1deg; text-decoration: none; font-size: 1.55rem; line-height: 1.1; color: #a8480f;
+  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
+  background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); filter: drop-shadow(0 6px 5px rgba(110, 60, 50, .18)); }
+${BUNDLES} main main h1 + p { margin-top: 10px; color: #8a766c; }
+${BUNDLES} main main .surface { border: 0; border-radius: 999px; padding: 6px 14px; background: #fff; box-shadow: 0 0 0 1.5px #f6c9d6, 0 4px 7px -4px rgba(110, 80, 40, .4); }
+${BUNDLES} main main .surface p { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #d4447a; }
+/* 세트 카드 — 스크랩 카드(테이프 · 흰 테두리 사진 · 살짝 기울기) */
+${BUNDLE_CARD} { position: relative; overflow: visible; border: 0; border-radius: 10px; background: #fffaf2; rotate: -.6deg;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .55); }
+${BUNDLES} main main :nth-child(even of article.group) { rotate: .6deg; }
+${BUNDLE_CARD}::before { ${TAPE} top: -6px; left: 50%; width: 54px; margin-left: -27px; rotate: -2deg; }
+${BUNDLE_CARD} > a:first-child { margin: 8px 8px 0; border-radius: 6px; box-shadow: 0 0 0 3px #fff, 0 5px 9px -6px rgba(90, 60, 50, .45); }
+/* 사진 위 글자 띠 → 모서리 잉크 도장(그라데이션 띠 없이) */
+${BUNDLE_CARD} > a:first-child > div[class*="bottom-0"][class*="bg-gradient-to-t"] { background: none; padding: 8px; }
+${BUNDLE_CARD} > a:first-child > div[class*="bottom-0"] span { background: rgba(255, 255, 255, .92); color: #d4447a; border-radius: 4px; box-shadow: inset 0 0 0 1.5px #d4447a; rotate: -4deg;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${BUNDLE_CARD} > a:first-child > div[class*="bottom-0"] span + span { color: #8a5a0c; box-shadow: inset 0 0 0 1.5px #c9962e; rotate: 3deg; }
+${BUNDLE_CARD} p.uppercase { display: none; }
+${BUNDLE_CARD} h3 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 세트 가격 — 노란 가격표(세트가 꼬리표 이름은 작은 글씨) */
+${BUNDLE_ANY} .ddb-sale-label { min-height: 0; border: 0; background: none; box-shadow: none; transform: none; color: #d4447a; padding: 0;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${BUNDLE_ANY} .ddb-sale-label::after { display: none; }
+${BUNDLE_ANY} p.ddb-crayon-price { position: relative; display: inline-block; padding: 3px 10px 3px 17px; background: #fff3a6; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
+  border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 세트 상세 맨 위 — 사진(폴라로이드)을 위에, 글 · 가격은 아래 종이로(사진 위 글자 금지) */
+${BUNDLE} main main > section:first-child { overflow: visible; background: transparent; color: #3d2f2a; }
+${BUNDLE} main main > section:first-child > div.absolute:first-child { position: relative; inset: auto; height: min(64vw, 360px); margin: 14px 16px 0; border-radius: 6px; overflow: hidden;
+  box-shadow: 0 0 0 6px #fff, 0 0 0 7px #f0e2d6, 0 16px 24px -16px rgba(110, 80, 40, .55); }
+${BUNDLE} main main > section:first-child > div.absolute:first-child > div[class*="bg-gradient"] { display: none; }
+${BUNDLE} main main > section:first-child > div.absolute:first-child img, ${BUNDLE} main main > section:first-child > div.absolute:first-child video[class*="opacity-78"] { opacity: 1; }
+${BUNDLE} main main > section:first-child::after { ${TAPE} top: 4px; left: 50%; width: 72px; height: 16px; margin-left: -36px; rotate: -2deg; z-index: 12; }
+${BUNDLE} main main > section:first-child > div.relative { min-height: 0; padding-top: 18px; padding-bottom: 8px; }
+${BUNDLE} main main > section:first-child > div.relative > div:first-child span[class*="rounded-full"] { background: #fff; color: #7d6a61; box-shadow: 0 0 0 1.5px #f1e3da, 0 3px 6px -4px rgba(110, 80, 40, .4); }
+${BUNDLE} main main > section:first-child h1 { font-size: 1.7rem; color: #3d2f2a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${BUNDLE} main main > section:first-child h1 + p { margin-top: 10px; font-size: 14px; line-height: 1.7; color: #5c4a42; }
+${BUNDLE} main main > section:first-child aside { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fffbea; backdrop-filter: none;
+  box-shadow: 0 0 0 1.5px #f3e6c8, 0 12px 20px -14px rgba(110, 80, 40, .55); }
+${BUNDLE} main main > section:first-child aside::before { ${TAPE} top: -7px; left: 22px; width: 46px; rotate: -4deg; background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+${BUNDLE} main main > section:first-child aside span[class*="bg-rose-600"] { box-shadow: 0 0 0 2px #fff; }
+/* 추천 이유 — 메모 카드 + 테이프 이름표 · 쇼룸 사진은 폴라로이드 */
+${BUNDLE} main main aside.surface { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${BUNDLE} main main aside.surface::before { ${TAPE} top: -7px; left: 50%; width: 56px; margin-left: -28px; rotate: 2deg; }
+${BUNDLE} main main aside.surface > p:first-child { display: inline-block; padding: 2px 10px 1px; color: #9c2f54; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 7px, rgba(255,222,232,.95) 7px 14px); rotate: -1deg; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] { border: 0; border-radius: 4px; box-shadow: 0 0 0 5px #fff, 0 0 0 6px #f0e2d6, 0 12px 18px -12px rgba(110, 80, 40, .5); rotate: -.8deg; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(even) { rotate: .8deg; }
+${BUNDLE} main main div.grid:has(> div[class*="aspect-[4/3]"]) { gap: 18px; padding: 6px; }
 
 `;
