@@ -47,15 +47,16 @@ import ShopProductCard, { SHOP_CARD_CSS } from "../shop/ShopProductCard";
 import { SHOW_PARTS_CSS, Sheet } from "../show-parts";
 import { useI18n } from "@/lib/i18n";
 
-/* 브랜드 — 웹 BrandSlider 와 같은 내용(브랜드마다 2장) */
+/* 브랜드 — 웹 BrandSlider 와 같은 내용(브랜드마다 2장).
+   pos: 가로로 긴 웹 배너를 4:3 칸에 채울 때 보일 위치(object-position) — 강아지가 한쪽에 있는 사진은 강아지 쪽으로(사용자 2026-10-17) */
 const BRANDS = [
     { name: "Ruffwear", cta: "브랜드 둘러보기", href: "/brand/ruffwear", slides: [
         { desc: "활동견을 위한 프리미엄 아웃도어 기어", image: "/images/brands/Ruffwear01.png" },
         { desc: "Front Range · Roamer · Cloud Chaser — 베스트셀러 라인", image: "/images/brands/Ruffwear02.png" },
     ] },
     { name: "Rex Specs", cta: "고글 라인업", href: "/brand/rex-specs", slides: [
-        { desc: "강아지 눈 보호 전문 아이웨어 솔루션", image: "/images/brands/Rexspecs01.png" },
-        { desc: "V2 · Air · Sun Visor — 활동량과 날씨에 맞춰", image: "/images/brands/Rexspecs02.png" },
+        { desc: "강아지 눈 보호 전문 아이웨어 솔루션", image: "/images/brands/Rexspecs01.png", pos: "80% 50%" },
+        { desc: "V2 · Air · Sun Visor — 활동량과 날씨에 맞춰", image: "/images/brands/Rexspecs02.png", pos: "93% 50%" },
     ] },
 ];
 const INSTA = PUBLIC_SOCIAL_CHANNELS.find((c) => c.key === "instagram");
@@ -374,7 +375,7 @@ function BrandSticker({ brand, i }: { brand: (typeof BRANDS)[number]; i: number 
             {/* 기획전 카드처럼 위에 마스킹테이프 */}
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={i ? "rgba(255,226,150,.9)" : "rgba(200,240,215,.9)"} style={{ rotate: `${i ? 4 : -4}deg` }} />
             <span className="relative block aspect-[4/3] overflow-hidden rounded-[8px] bg-[#f6efe8]">
-                {brand.slides.map((sl, n) => <Image key={sl.image} src={sl.image} alt="" fill sizes="45vw" className={`object-cover transition-opacity duration-700 ${n === k ? "opacity-100" : "opacity-0"}`} />)}
+                {brand.slides.map((sl, n) => <Image key={sl.image} src={sl.image} alt="" fill sizes="45vw" style={{ objectPosition: "pos" in sl ? sl.pos : undefined }} className={`object-cover transition-opacity duration-700 ${n === k ? "opacity-100" : "opacity-0"}`} />)}
             </span>
             {/* 브랜드 이름만(설명 · 버튼 문구 없이) — 카드 전체가 브랜드 화면 링크 */}
             <span className="ah-display block px-1 pt-2 text-center text-[14.5px]">{brand.name}</span>
