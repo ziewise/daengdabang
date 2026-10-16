@@ -256,8 +256,9 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
             {/* 추천 기준 · 반려견 고르기(여러 마리) · 추천 전체 보기 · 맞춤 추천 켜기 */}
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 {items.length > 0 ? (
-                    <button type="button" onClick={openBasis} className="shp-basis ah-light inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px]">
-                        <i aria-hidden="true" className="fa-solid fa-circle-info text-[10px]" />추천 기준
+                    <button type="button" onClick={openBasis} className="shp-basis ah-display relative px-3 pb-1 pt-1.5 text-[12px]">
+                        <span aria-hidden="true" className="st-tape absolute -top-1.5 left-1/2 h-2.5 w-7 -translate-x-1/2" style={{ background: "rgba(255,200,215,.9)", rotate: "-6deg" }} />
+                        추천 기준 보기
                     </button>
                 ) : null}
                 {real && personalizationEnabled && prefs && selectedPet && pets.length > 1 ? pets.map((p) => (
@@ -297,30 +298,45 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
             )}
 
             {/* 추천 기준 속지 — 웹 카드의 "왜 추천했나요"(사용한 정보 · 주의 · 추천 데이터 관리)와 상품별 이유 · 관심 없음을 한곳에 */}
-            <Sheet open={basisOpen} onClose={() => setBasisOpen(false)} label="추천 기준" title="추천 기준">
-                <p className="ah-light text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{helper}</p>
-                <p className="ah-display mt-4 text-[13px]">사용한 정보</p>
-                <ul className="mt-1.5 flex flex-wrap gap-1.5">
-                    {usedSources.map((src) => <li key={src} className="ah-light rounded-full bg-[#f3efff] px-2.5 py-1 text-[11.5px] text-[#5b46b0]">{SOURCE_LABEL[src]}</li>)}
+            <Sheet open={basisOpen} onClose={() => setBasisOpen(false)} label="추천 기준"
+                title={<span className="ah-display st-marker text-[18px]">{petName}를 위한 추천 기준</span>}>
+                {/* 반영 기준 — 테이프 붙인 노란 메모지 */}
+                <div className="shp-memo relative mt-2 px-4 pb-3 pt-4" style={{ rotate: "-0.8deg" }}>
+                    <span aria-hidden="true" className="st-tape absolute -top-2 left-6 h-3.5 w-12" style={{ background: "rgba(200,226,255,.9)", rotate: "-4deg" }} />
+                    <p className="ah-light text-[13px] leading-relaxed text-[#5a4a1c]">{helper}</p>
+                </div>
+
+                {/* 사용한 정보 — 오려 붙인 스티커 */}
+                <SectionLabel className="mt-6" icon="fa-paw">사용한 정보</SectionLabel>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                    {usedSources.map((src, i) => (
+                        <li key={src} className="shp-src ah-display px-3 py-1.5 text-[12px]" style={{ background: ["#efe8ff", "#e1f4ea", "#ffe4ec"][i % 3], rotate: `${[-1.5, 1.2, -0.8][i % 3]}deg` }}>{SOURCE_LABEL[src]}</li>
+                    ))}
                 </ul>
-                {cautions.map((c) => <p key={c} className="ah-light mt-2 rounded-[10px] bg-[#fff4dc] px-3 py-2 text-[11.5px] text-[#8a5a0c]">{c}</p>)}
-                <p className="ah-display mt-5 text-[13px]">상품별 추천 이유</p>
-                <ul className="mt-2 space-y-2 pb-1">
-                    {items.map((it) => (
-                        <li key={it.product.id} className="shp-why-row flex items-start gap-2.5 rounded-[12px] px-3 py-2.5">
-                            <span className="min-w-0 flex-1">
-                                <span className="ah-display line-clamp-1 block text-[12.5px]">{productName(it.product)}</span>
-                                <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{it.reasonLabel}</span>
+                {cautions.map((c) => <p key={c} className="shp-caution ah-light mt-3 px-3 py-2 text-[11.5px] leading-snug">{c}</p>)}
+
+                {/* 상품별 추천 이유 — 작은 폴라로이드 + 메모 · 관심 없음 와펜 */}
+                <SectionLabel className="mt-7" icon="fa-pen">상품별 추천 이유</SectionLabel>
+                <ul className="mt-4 space-y-4 pb-1">
+                    {items.map((it, i) => (
+                        <li key={it.product.id} className="flex items-start gap-3">
+                            <span className="shp-mini-pol relative block w-[3.6rem] shrink-0 bg-white p-1 pb-2" style={{ rotate: `${i % 2 ? 3 : -3}deg` }}>
+                                <span aria-hidden="true" className="st-tape absolute -top-1.5 left-1/2 z-[1] h-2.5 w-7 -translate-x-1/2" style={{ background: ["rgba(255,200,215,.9)", "rgba(190,224,255,.9)", "rgba(255,232,170,.95)"][i % 3] }} />
+                                <span className="relative block aspect-square overflow-hidden bg-[#fff8ee]">{it.product.image ? <Image src={it.product.image} alt="" fill sizes="56px" className="object-contain" /> : null}</span>
                             </span>
-                            <button type="button" onClick={() => hide(it.product.id)} className="ah-light shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] text-[#9c8a80] shadow-[0_0_0_1.5px_#f1e3da]">관심 없음</button>
+                            <span className="min-w-0 flex-1 pt-0.5">
+                                <span className="ah-display line-clamp-2 block text-[12.5px] leading-snug">{productName(it.product)}</span>
+                                <span className="ah-light mt-1 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{it.reasonLabel}</span>
+                            </span>
+                            <span className="w-[5.2rem] shrink-0 pt-0.5"><Patch tone="cream" small onClick={() => hide(it.product.id)}>관심 없음</Patch></span>
                         </li>
                     ))}
                 </ul>
                 {items.length === 0 && allItems.length > 0 ? (
-                    <button type="button" onClick={unhide} className="ah-display mt-1 text-[12.5px] text-[#e0557f]">숨긴 상품 다시 보기</button>
+                    <div className="mt-3"><Patch tone="cream" small onClick={unhide}>숨긴 상품 다시 보기</Patch></div>
                 ) : null}
                 {RECOMMENDATION_FEATURE_FLAGS.preferences ? (
-                    <Link href="/mypage/recommendations/" onClick={() => setBasisOpen(false)} className="ah-display mt-4 inline-flex items-center gap-1 text-[12.5px] text-[#5a6fe0]">추천 데이터 관리 <i aria-hidden="true" className="fa-solid fa-arrow-right text-[10px]" /></Link>
+                    <div className="mt-6"><Patch href="/mypage/recommendations/" tone="lavender" small>추천 데이터 관리<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
                 ) : null}
             </Sheet>
         </section>
@@ -386,8 +402,14 @@ const SHOP_CSS = `
 .shp-shelf::-webkit-scrollbar { display: none; }
 .shp-pet { background: #fff; color: #8f7a70; box-shadow: inset 0 0 0 1.5px #f1e3da; }
 .shp-pet.is-on { background: #ffe1ea; color: #c23d6c; box-shadow: inset 0 0 0 1.5px #f6a9bf; }
-.shp-basis { background: #fff; color: #6a52c4; box-shadow: inset 0 0 0 1.5px #e6defb; -webkit-tap-highlight-color: transparent; }
-.shp-why-row { background: #fbf8ff; box-shadow: inset 0 0 0 1.5px #ece6fb; }
+/* 추천 기준 — 노란 포스트잇 꼬리표 버튼 · 속지 안 메모지 · 오린 스티커 · 작은 폴라로이드 */
+.shp-basis { background: #fff3a6; color: #8f5e12; border-radius: 3px 3px 8px 3px; rotate: -2deg; box-shadow: 0 6px 9px -6px rgba(110,80,40,.5);
+  -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.shp-basis:active { transform: translateY(-2px) scale(1.06); }
+.shp-memo { background: #fff6c9; border-radius: 4px 4px 12px 4px; box-shadow: 0 8px 12px -9px rgba(110,80,40,.5); }
+.shp-src { color: #5a4038; border-radius: 999px; box-shadow: 0 0 0 2.5px #fff, 0 5px 8px -5px rgba(90,60,50,.4); }
+.shp-caution { background: #fff0e0; color: #8a5a0c; border-radius: 4px 10px 10px 10px; box-shadow: inset 0 0 0 1.5px #f6dcc0; }
+.shp-mini-pol { box-shadow: 0 6px 10px -6px rgba(90,60,50,.5), 0 1px 2px rgba(90,60,50,.12); }
 .shp-empty { background: #fffaf2; border: 2px dashed #f1dccf; }
 /* 기획전 · 브랜드 · 인스타 */
 .shp-promo, .shp-brand { border-radius: 4px; box-shadow: 0 12px 20px -14px rgba(90,60,50,.55), 0 1px 2px rgba(90,60,50,.12); -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
