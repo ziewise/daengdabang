@@ -5,18 +5,30 @@
  * ---------------------------------------------------------------------
  * 스티커북 시안(홈 · 매일 댕생활 · 댕다방 · 연구소 · 마이)이 함께 쓰는 것들 (그림체 부품은 kit.tsx).
  *  - SAMPLE: 로그인 후 예시 데이터 (로컬엔 API 주소가 없어 회원 데이터를 못 받음 → 실제 서버 값 이름에 맞춘 예시)
- *  - useDemoSession: 로그인 전/후 시연 전환 (세션 저장 → 시안을 바꿔도 유지)
- *  - useTodayDemo: 출근도장 · 오늘 할 일 상태 (화면 안에서만 바뀜, 서버 요청 없음)
+ *  - useDemoSession: 실제 로그인 상태(useAuth) — 시연 전환은 없앰(배포 전 연결 2026-10-16)
+ *  - useMember: 실제 회원 이름 · 첫 반려견
+ *  - useTodayDemo: 실제 출근도장 · 오늘 할 일 · 코인 · XP · 레벨(협업자 MemberAiDashboard 와 같은 함수)
  *  - useLiveWeather: 실제 날씨 (기존 lib/hero-weather 의 공개 날씨 API, 로그인 불필요) + 실패 시 예시 날씨
  *  - SkyLayer: 시간대(아침·낮·저녁·밤) × 날씨(비·눈·구름·안개)를 코드로 그린 하늘 (영상 없음)
- *  - ConceptBar: 로그인 전/후 시연 전환 줄
+ *  - ConceptBar: (없앰 — 아무것도 그리지 않음)
  *  - flyCoin: 코인이 버튼에서 코인 칩으로 날아가는 모션
  *  - HC_CSS: 폰트 · 공통 애니메이션
  */
 
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchHeroWeatherReport } from "@/lib/hero-weather";
+import { useAuth } from "@/lib/store";
+import { loadShowcaseTopic, type ShowcaseTopic } from "@/lib/daeng-showcase";
+import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
+import {
+    claimDaengLabAttendance,
+    completeDaengLabCareTask,
+    loadDaengLabAttendance,
+    loadDaengLabEngagement,
+    type DaengLabAttendance,
+    type DaengLabEngagement,
+} from "@/lib/customer-api";
 import { getHeroTimeBucket, type HeroTimeBucket, type HeroWeather } from "@/lib/hero-assets";
 
 /* ── 예시 데이터: 이름은 서버 응답(출근 · 할 일 · 지갑 · 주간 기록 · 댕자랑)에 맞춤 ── */
@@ -66,91 +78,205 @@ export const STEP_IMG = {
 /** 오늘이 월~일 중 몇 번째인지 (0 = 월) */
 export const todayIndex = (d = new Date()) => (d.getDay() + 6) % 7;
 
-/* ── 로그인 전/후 시연 전환: 세션에 저장해 시안을 오가도 유지 ── */
-const SESSION_KEY = "ddb.homeConcept.session.v1";
+/* ── 로그인 상태: 협업자 useAuth 그대로(시안 "로그인 전/후(예시)" 토글 대신 실제 상태 — 배포 전 연결 2026-10-16).
+   이름은 기존 화면들이 그대로 쓰도록 유지. 두 번째 값(바꾸기)은 더 이상 쓰지 않음 ── */
 export function useDemoSession(): [Session, (s: Session) => void] {
-    const [session, setSession] = useState<Session>("member");
-    useEffect(() => {
-        // 저장값은 화면이 뜬 뒤 읽는다 (서버 렌더와 첫 화면을 맞추기 위해 한 박자 늦춤)
-        const id = window.setTimeout(() => {
-            try {
-                const saved = window.sessionStorage.getItem(SESSION_KEY);
-                if (saved === "guest" || saved === "member") setSession(saved);
-            } catch {
-                /* 저장소를 못 쓰는 환경이면 기본값 유지 */
-            }
-        }, 0);
-        return () => window.clearTimeout(id);
-    }, []);
-    const update = useCallback((next: Session) => {
-        setSession(next);
-        try {
-            window.sessionStorage.setItem(SESSION_KEY, next);
-        } catch {
-            /* 무시 */
-        }
-    }, []);
-    return [session, update];
+    const { user, hydrated } = useAuth();
+    return [hydrated && user ? "member" : "guest", () => {}];
 }
 
-/* ── 오늘 상태 (출근 · 할 일): 화면 안에서만 바뀌는 시연 상태 ── */
-const TODAY_KEY = "ddb.homeConcept.today.v1";
-type TodayState = { stamped: boolean; done: Record<TaskId, boolean>; coins: number; xp: number };
-const freshToday = (): TodayState => ({ stamped: false, done: { walk_20: false, eye_check: false }, coins: SAMPLE.coins, xp: SAMPLE.xp });
-
-/**
- * 오늘 상태(출근 · 할 일 · 코인 · XP) — 화면 안에서만 바뀌는 시연 상태.
- * 홈 → 매일 댕생활 → 연구소처럼 화면을 오가도 이어지게 세션에 저장(로그인 전/후마다 따로).
- */
-export function useTodayDemo(session: Session) {
-    const [st, setSt] = useState<TodayState>(freshToday);
-    const loaded = useRef<Session | null>(null);
-
-    // 로그인 전/후가 정해지면(바뀌면) 그 상태의 저장값을 불러옴
-    useEffect(() => {
-        const id = window.setTimeout(() => {
-            let next = freshToday();
-            try {
-                const raw = window.sessionStorage.getItem(`${TODAY_KEY}.${session}`);
-                if (raw) next = { ...next, ...(JSON.parse(raw) as Partial<TodayState>) };
-            } catch {
-                /* 저장값이 없거나 깨졌으면 처음 상태 */
-            }
-            loaded.current = session;
-            setSt(next);
-        }, 0);
-        return () => window.clearTimeout(id);
-    }, [session]);
-    // 바뀔 때마다 저장
-    useEffect(() => {
-        if (loaded.current !== session) return;
-        try {
-            window.sessionStorage.setItem(`${TODAY_KEY}.${session}`, JSON.stringify(st));
-        } catch {
-            /* 무시 */
-        }
-    }, [st, session]);
-
-    const stamp = useCallback(() => {
-        setSt((s) => (s.stamped ? s : { ...s, stamped: true, coins: s.coins + SAMPLE.dailyRewardCoins }));
-    }, []);
-    const complete = useCallback((id: TaskId) => {
-        const task = SAMPLE.tasks.find((t) => t.taskId === id);
-        setSt((s) => (s.done[id] ? s : { ...s, done: { ...s.done, [id]: true }, xp: s.xp + (task?.xp ?? 0) }));
-    }, []);
-    // 코인 바꾸기 등 다른 화면에서 코인을 더할 때
-    const addCoins = useCallback((n: number) => setSt((s) => ({ ...s, coins: s.coins + n })), []);
-    // 처음 상태로 (시안 확인용)
-    const reset = useCallback(() => setSt(freshToday()), []);
-
-    const { stamped, done, coins, xp } = st;
-    const doneCount = (stamped ? 1 : 0) + (done.walk_20 ? 1 : 0) + (done.eye_check ? 1 : 0);
-    const nextTask = SAMPLE.tasks.find((t) => !done[t.taskId]) ?? null;
+/** 실제 회원 정보(이름 · 첫 반려견) — 홈 · 매일 댕생활 · 연구소 인사말 등에서 */
+export function useMember() {
+    const { user } = useAuth();
+    const pet = user?.pets?.[0];
     return {
-        stamped, done, coins, xp, doneCount, nextTask, stamp, complete, addCoins, reset,
-        allDone: doneCount === 3,
-        streak: SAMPLE.currentStreak + (stamped ? 1 : 0),
+        user,
+        guardian: user?.name ?? "",
+        pet,
+        petName: pet?.name ?? "우리 아이",
+        lastAnalyzedAt: pet?.lastAnalyzedAt,
+        concerns: pet?.concerns ?? [],
     };
+}
+
+/* ── 오늘 상태(출근 · 할 일 · 코인 · XP · 레벨 · 연속 출근) — 실제 서버 값.
+   협업자 MemberAiDashboard(/treasure-mine)와 같은 함수 · 같은 순서:
+   불러오기 = loadDaengLabAttendance + loadDaengLabEngagement, 출근 = claimDaengLabAttendance 뒤 engagement 다시 불러오기 + 지갑 알림,
+   할 일 = completeDaengLabCareTask. 코인은 출근 응답 · 지갑 알림(ddb:daenglab-wallet)으로 갱신 ── */
+type Today = {
+    ready: boolean;
+    error: string;
+    stamped: boolean;
+    streak: number;
+    recentDays: { businessDate: string; claimed: boolean }[];
+    businessDate: string;
+    dailyRewardCoins: number;
+    coins: number;
+    analysisCoinCost: number;
+    xp: number;
+    level: number;
+    nextLevelXp: number;
+    weeklyAttendanceProgress: number;
+    weeklyAttendanceTarget: number;
+    monthlyAnalysisProgress: number;
+    monthlyAnalysisTarget: number;
+    tasks: { taskId: TaskId; title: string; description: string; xp: number; completed: boolean }[];
+    done: Record<TaskId, boolean>;
+    doneCount: number;
+    allDone: boolean;
+    nextTask: { taskId: TaskId; title: string; xp: number } | null;
+    savingTask: TaskId | null;
+    stamp: () => Promise<boolean>;
+    complete: (id: TaskId) => Promise<void>;
+};
+
+export function useTodayDemo(session: Session): Today {
+    const { user, hydrated } = useAuth();
+    const token = user?.apiAccessToken || "";
+    const member = session === "member" && Boolean(token);
+    const [attendance, setAttendance] = useState<DaengLabAttendance | null>(null);
+    const [engagement, setEngagement] = useState<DaengLabEngagement | null>(null);
+    const [coins, setCoins] = useState<number | null>(null);
+    const [analysisCoinCost, setAnalysisCoinCost] = useState(10);
+    const [error, setError] = useState("");
+    const [savingTask, setSavingTask] = useState<TaskId | null>(null);
+
+    // 불러오기 — 협업자 대시보드 refresh 와 같음
+    useEffect(() => {
+        if (!hydrated || !member) return;
+        let active = true;
+        const timer = window.setTimeout(() => {
+            setError("");
+            Promise.all([loadDaengLabAttendance(token), loadDaengLabEngagement(token)])
+                .then(([nextAttendance, nextEngagement]) => {
+                    if (!active) return;
+                    setAttendance(nextAttendance);
+                    setEngagement(nextEngagement);
+                    setCoins(nextAttendance.wallet.daengLabCoins);
+                    setAnalysisCoinCost(nextAttendance.wallet.analysisCoinCost);
+                })
+                .catch((reason) => {
+                    if (active) setError(reason instanceof Error ? reason.message : "오늘의 기록을 불러오지 못했습니다.");
+                });
+        }, 0);
+        return () => {
+            active = false;
+            window.clearTimeout(timer);
+        };
+    }, [hydrated, member, token]);
+
+    // 다른 곳(마이 · 출근 · 분석)에서 지갑이 바뀌면 코인도 같이
+    useEffect(() => {
+        const onWallet = (event: Event) => {
+            const detail = (event as CustomEvent<{ daengLabCoins?: number; analysisCoinCost?: number }>).detail;
+            if (typeof detail?.daengLabCoins === "number") setCoins(detail.daengLabCoins);
+            if (typeof detail?.analysisCoinCost === "number") setAnalysisCoinCost(detail.analysisCoinCost);
+        };
+        window.addEventListener("ddb:daenglab-wallet", onWallet);
+        return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
+    }, []);
+
+    // 출근 — 협업자 대시보드 claimAttendance 와 같음(성공하면 새로 찍혔는지 돌려줌)
+    const stamp = useCallback(async () => {
+        if (!token) return false;
+        try {
+            setError("");
+            const next = await claimDaengLabAttendance(token);
+            setAttendance(next);
+            setCoins(next.wallet.daengLabCoins);
+            window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next.wallet }));
+            const nextEngagement = await loadDaengLabEngagement(token);
+            setEngagement(nextEngagement);
+            return next.newlyClaimed;
+        } catch (reason) {
+            setError(reason instanceof Error ? reason.message : "출근도장을 찍지 못했습니다.");
+            return false;
+        }
+    }, [token]);
+
+    // 오늘 할 일 완료 — 협업자 대시보드 completeTask 와 같음
+    const complete = useCallback(async (taskId: TaskId) => {
+        if (!token || savingTask) return;
+        setSavingTask(taskId);
+        setError("");
+        try {
+            const next = await completeDaengLabCareTask(taskId, token);
+            setEngagement(next);
+        } catch (reason) {
+            setError(reason instanceof Error ? reason.message : "오늘의 돌봄 기록을 저장하지 못했습니다.");
+        } finally {
+            setSavingTask(null);
+        }
+    }, [token, savingTask]);
+
+    const tasks = (engagement?.todayTasks ?? []) as Today["tasks"];
+    const done = { walk_20: false, eye_check: false } as Record<TaskId, boolean>;
+    for (const t of tasks) done[t.taskId] = t.completed;
+    const stamped = Boolean(attendance?.claimedToday);
+    const doneCount = (stamped ? 1 : 0) + tasks.filter((t) => t.completed).length;
+    const next = tasks.find((t) => !t.completed);
+    return {
+        ready: Boolean(attendance && engagement),
+        error,
+        stamped,
+        streak: attendance?.currentStreak ?? 0,
+        recentDays: attendance?.recentDays ?? [],
+        businessDate: attendance?.businessDate ?? engagement?.businessDate ?? "",
+        dailyRewardCoins: attendance?.dailyRewardDaengLabCoins ?? 2,
+        coins: coins ?? 0,
+        analysisCoinCost,
+        xp: engagement?.xp ?? 0,
+        level: engagement?.level ?? 1,
+        nextLevelXp: engagement?.nextLevelXp ?? 100,
+        weeklyAttendanceProgress: engagement?.weeklyAttendanceProgress ?? 0,
+        weeklyAttendanceTarget: engagement?.weeklyAttendanceTarget ?? 7,
+        monthlyAnalysisProgress: engagement?.monthlyAnalysisProgress ?? 0,
+        monthlyAnalysisTarget: engagement?.monthlyAnalysisTarget ?? 5,
+        tasks,
+        done,
+        doneCount,
+        allDone: Boolean(attendance && engagement) && stamped && tasks.length > 0 && tasks.every((t) => t.completed),
+        nextTask: next ? { taskId: next.taskId, title: next.title, xp: next.xp } : null,
+        savingTask,
+        stamp,
+        complete,
+    };
+}
+
+/** 진행 중인 댕주제 — 협업자 loadShowcaseTopic 그대로(로그인 없이도 읽기). 없으면 null, 마감까지 남은 날 */
+export function useShowcaseTopic() {
+    const [state, setState] = useState<{ topic: ShowcaseTopic | null | undefined; dday: number | null }>({ topic: undefined, dday: null });
+    useEffect(() => {
+        const controller = new AbortController();
+        loadShowcaseTopic({ signal: controller.signal })
+            .then((t) => {
+                const topic = t && t.isActive ? t : null;
+                // 마감까지 남은 날 — 받아온 순간 한 번 계산
+                const dday = topic?.endsAt ? Math.max(0, Math.ceil((new Date(topic.endsAt).getTime() - Date.now()) / 86_400_000)) : null;
+                setState({ topic, dday });
+            })
+            .catch(() => { if (!controller.signal.aborted) setState({ topic: null, dday: null }); });
+        return () => controller.abort();
+    }, []);
+    return { topic: state.topic, dday: state.dday, loading: state.topic === undefined };
+}
+
+/** 첫 반려견의 주간 사진 기록 — 협업자 loadWeeklyPhotoAnalyses 그대로(최근 기록 먼저) */
+export function useWeeklyRecords(limit = 6) {
+    const { user } = useAuth();
+    const petProfileId = user?.pets?.[0]?.apiProfileId;
+    const token = user?.apiAccessToken || "";
+    const [records, setRecords] = useState<WeeklyPhotoAnalysisRecord[] | null>(null);
+    const [error, setError] = useState("");
+    useEffect(() => {
+        if (!petProfileId || !token) return;
+        let active = true;
+        loadWeeklyPhotoAnalyses({ petProfileId, accessToken: token, limit })
+            .then((list) => { if (active) setRecords(list); })
+            .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : "주간 기록을 불러오지 못했습니다."); });
+        return () => { active = false; };
+    }, [petProfileId, token, limit]);
+    return { records, error, hasPetProfile: Boolean(petProfileId) };
 }
 
 /**
@@ -271,19 +397,10 @@ export function SkyLayer({ w, className = "" }: { w: LiveWeather; className?: st
 }
 
 /* ── 시연 전환 줄: 로그인 전/후 ── */
-export function ConceptBar({ session, onSession }: { session: Session; onSession: (s: Session) => void }) {
-    return (
-        <div className="relative z-20 mx-auto mb-3 flex w-full max-w-md items-center justify-between gap-2 text-[11.5px]">
-            <div className="flex rounded-full bg-white/80 p-0.5 shadow-[0_1px_6px_rgba(40,30,60,0.12)] backdrop-blur" role="tablist" aria-label="로그인 상태 시연">
-                {(["guest", "member"] as const).map((s) => (
-                    <button key={s} type="button" role="tab" aria-selected={session === s} onClick={() => onSession(s)}
-                        className={`rounded-full px-2.5 py-1 transition ${session === s ? "bg-[#ea4c7c] text-white" : "text-[#7a6a63]"}`}>
-                        {s === "guest" ? "로그인 전" : "로그인 후(예시)"}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
+/** (예전 "로그인 전/후(예시)" 시연 전환 줄) — 실제 로그인 상태를 쓰므로 아무것도 그리지 않음. 화면 코드 호환용 */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function ConceptBar(_props: { session: Session; onSession: (s: Session) => void }) {
+    return null;
 }
 
 /* ── 코인 비행: from 요소에서 to 요소까지 포물선으로 날아간 뒤 사라짐 ── */

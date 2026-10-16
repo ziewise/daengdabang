@@ -187,8 +187,8 @@ git config user.email "smlee@ziewise.com"
 
 | 화면 | 시연 동작 · 예시 데이터 | 연결할 기존 기능 |
 |---|---|---|
-| 홈 · 매일 댕생활 | 출근 스티커 붙이기, 오늘 할 일(20분 산책·눈 상태 확인) 완료, 코인 · XP · 레벨 · 연속 출석 · 루틴 점수 표시 (`useTodayDemo`, `SAMPLE`) | 협업자 출근도장 · 할 일 완료 · 참여 현황 함수(`MemberAiDashboard`가 쓰는 `lib/customer-api` 함수 그대로) |
-| 매일 댕생활 › 혜택 | 관심 등록 · 동의 | 협업자 성장 프로그램 관심 등록(`GrowthHub`/`GrowthPrograms`가 쓰는 함수) |
+| ~~홈 · 매일 댕생활~~ ✅ 연결 · 실제 테스트 완료(2026-10-16) | 출근(`claimDaengLabAttendance`) · 할 일(`completeDaengLabCareTask`) · 코인 · XP · 레벨 · 연속 · 이번 주 출근(`loadDaengLabAttendance` · `loadDaengLabEngagement`, 협업자 MemberAiDashboard와 같은 순서), 이번 주 칸 = 서버 출근 기록, 반려견 · 최근 분석(`useAuth`), 굿즈 남은 날(`loadGoodsContestSummary`) | 테스트: 앱에서 출근 → 웹 4/7 · 1일 연속 · +2코인 일치, 할 일 2개 → XP 10→20 · 웹 완료 일치. 홈 포스트잇 "새 응원 n개"는 서버에 내 응원 수 조회가 없어 "이번 주 출근 n/7"로 바꿈 |
+| ~~매일 댕생활 › 혜택~~ ✅ 연결 · 실제 테스트 완료 | 관심 등록(`submitGrowthInterest`, 동의 필수) · 취소(`cancelGrowthInterest`) · 불러오기(`loadGrowthInterests`) | 테스트: 동의 없이 → 경고만(요청 없음), 동의 후 등록 → 서버 "관심 등록이 완료되었습니다." · 웹에 반영, 앱에서 취소 → 웹에서도 사라짐 |
 | 연구소 · 리포트 | 우리 아이 정보 · 사진 기록 · 행동·소리 기록 · 주간 리포트가 예시 데이터, "새 주간 분석 시작"은 안내 문구만 | 반려견 프로필 · 주간 사진 분석(`loadWeeklyPhotoAnalyses`) · 관찰 기록, 촬영은 `WeeklyPhotoComparison` |
 | 댕다방 › 댕자랑 | 피드 읽기는 실제. 올리기 · 응원 · 팔로우 · 신고 · 삭제 · 작성자 프로필, 오늘의 주제 · 대표 댕자랑은 시연 | `lib/daeng-showcase`의 `createShowcasePost` · `setShowcaseBone` · `setShowcaseFollow` · `reportShowcasePost` · `deleteShowcasePost` · `loadShowcaseAuthorProfile` · `loadShowcaseTopic` |
 | 댕다방 › 굿즈 공모전 | 굿즈 선택 · 취소, 비회원 이메일 인증, 참여 수 | 협업자 `GoodsContest`가 쓰는 선택 · 인증 함수와 집계 |

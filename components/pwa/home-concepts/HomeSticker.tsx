@@ -14,7 +14,7 @@
  *  - 로그인 전: 편지지 같은 '로그인 초대 카드'(할 수 있는 것 펜 체크 — 쇼핑 포함 + 로그인하고 댕다방 즐기기).
  *  - 모바일 손가락 동작(hover 없음): 스티커를 집으면 모서리가 들리고 진동 · 출근 칸을 옆으로 밀면 속지가 넘어가 지난주 기록 ·
  *    카드 스티커는 누르면 테이프째 들리고, 톡 = 화면 가득 커지며 이동, 꾹 = 그 자리에서 미리보기.
- * 데이터: 로그인 후는 예시(SAMPLE), 날씨는 실제. 누르는 동작은 화면 안에서만 바뀐다(서버 요청 없음).
+ * 데이터: 실제(회원 이름 · 반려견 · 출근 · 코인 · 할 일 — 협업자 함수, 배포 전 연결 2026-10-16), 날씨도 실제.
  */
 
 import Image from "next/image";
@@ -25,7 +25,8 @@ import { LoginInvite, PostIt, STICKER_CSS, Tape } from "./sticker-kit";
 import { COVERS, CoinChip, CoverArt, CoverWindow, KIT_CSS, TEXT, TEXT_SOFT, TriTitle, recentDays, type Cover } from "./kit";
 import SectionNow from "./SectionNow";
 import { coverHref } from "./page-data";
-import { ConceptBar, HC_CSS, SAMPLE, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useLiveWeather, useNow, useTodayDemo, walkAdvice } from "./shared";
+import { ConceptBar, HC_CSS, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useLiveWeather, useMember, useNow, useTodayDemo, walkAdvice } from "./shared";
+import { hasVerifiedPetPhoto } from "@/lib/store";
 
 const toneBg = (c: Cover) => `linear-gradient(180deg, ${c.tone.from} 0%, ${c.tone.to} 100%)`;
 const NOTE_COLORS = ["#fff3a6", "#ffd6e2", "#d9ecff"];
@@ -58,6 +59,8 @@ export default function HomeSticker() {
     const [session, setSession] = useDemoSession();
     const member = session === "member";
     const today = useTodayDemo(session);
+    // 실제 회원 이름 · 첫 반려견(배포 전 연결 2026-10-16)
+    const { guardian, pet, petName } = useMember();
     const w = useLiveWeather();
     const now = useNow();
     const wd = todayIndex(now ?? undefined);
@@ -66,12 +69,14 @@ export default function HomeSticker() {
     const { go, overlay } = useExpandNav();
     const [peek, setPeek] = useState<{ cover: Cover; rect: DOMRect } | null>(null);
     const days = now ? recentDays() : Array.from({ length: 7 }, () => "");
-    const past = member ? [false, true, true, true, true, true] : Array(6).fill(false);
+    // 지난 6일 출근 — 서버 출근 기록(recentDays, 오늘 제외)
+    const pastDays = today.recentDays.filter((d) => d.businessDate !== today.businessDate).slice(-6).map((d) => d.claimed);
+    const past = member ? [...Array(Math.max(0, 6 - pastDays.length)).fill(false), ...pastDays] : Array(6).fill(false);
 
     const date = now ? `${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEK[wd].ko}요일` : "";
     // 카드 스티커 위 포스트잇
     const notes = member
-        ? [`${today.streak}일 연속!`, `새 응원 ${SAMPLE.newBones}개!`, `${today.coins}C · 분석 ${Math.floor(today.coins / SAMPLE.analysisCoinCost)}회`]
+        ? [`${today.streak}일 연속!`, `이번 주 출근 ${today.weeklyAttendanceProgress}/${today.weeklyAttendanceTarget}`, `${today.coins}C · 분석 ${Math.floor(today.coins / Math.max(1, today.analysisCoinCost))}회`]
         : ["매일 출근 스티커", "누구나 구경 OK", "예시 결과 보기"];
 
     return (
@@ -98,18 +103,22 @@ export default function HomeSticker() {
                     <div className="relative flex min-h-[8.2rem] items-start">
                         <div className="relative z-[1] w-[60%] pt-2">
                             <span className="st-place block" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "140ms" }}>
-                                <TriTitle text={member ? `${SAMPLE.pet.name}야, 안녕!` : "어서 와요!"} className="text-[1.6rem]" />
+                                <TriTitle text={member ? `${petName}, 안녕!` : "어서 와요!"} className="text-[1.6rem]" />
                             </span>
-                            <p className="ah-display mt-2 whitespace-nowrap text-[14px]">{member ? `${SAMPLE.guardian}님, ${greeting(w.bucket)}` : "댕다방에 오신 걸 환영해요"}</p>
+                            <p className="ah-display mt-2 whitespace-nowrap text-[14px]">{member ? `${guardian}님, ${greeting(w.bucket)}` : "댕다방에 오신 걸 환영해요"}</p>
                             <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{walkAdvice(w)}</p>
                         </div>
                         {/* 폴라로이드: 우리 아이(회원) / 검정 푸들(비회원) */}
                         <span className="st-place st-polaroid absolute right-0 top-0 block w-[7.4rem] bg-white p-1.5 pb-6" style={{ ["--r" as string]: "5deg", ["--d" as string]: "220ms", rotate: "5deg" }}>
                             <Tape className="-top-2 left-1/2 h-4 w-12 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "-6deg" }} />
                             <span className="relative block aspect-square overflow-hidden bg-[#fff3e8]">
-                                <Image src={member ? "/images/pet-companion/cute-v4-breeds/toy-poodle-poster.webp" : "/images/logo-black-poodle-v2.png"} alt={member ? `${SAMPLE.pet.name} 사진` : "댕다방 검정 푸들"} fill sizes="120px" className="object-cover" />
+                                {member && pet && hasVerifiedPetPhoto(pet)
+                                    // 실제 우리 아이 사진(서버가 확인한 사진만 — 웹 마이페이지와 같은 기준)
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    ? <img src={pet.photoDataUrl} alt={`${petName} 사진`} className="absolute inset-0 h-full w-full object-cover" />
+                                    : <Image src="/images/logo-black-poodle-v2.png" alt="댕다방 검정 푸들" fill sizes="120px" className="object-cover" />}
                             </span>
-                            <span className="ah-display absolute inset-x-0 bottom-1 text-center text-[13px]" style={{ color: "#ea4c7c" }}>{member ? SAMPLE.pet.name : "댕다방"}</span>
+                            <span className="ah-display absolute inset-x-0 bottom-1 text-center text-[13px]" style={{ color: "#ea4c7c" }}>{member ? petName : "댕다방"}</span>
                         </span>
                         {/* 동그란 날씨 스티커 */}
                         <span className="st-place st-diecut ah-display absolute -right-1.5 top-[7rem] z-[2] grid h-[3.3rem] w-[3.3rem] place-items-center rounded-full text-center text-[11px] leading-[1.05]"
@@ -138,7 +147,7 @@ export default function HomeSticker() {
                         <span className="hm-card relative flex items-center gap-3 rounded-[20px] py-3.5 pl-[5.6rem] pr-3.5" style={{ background: "linear-gradient(165deg, #fff3e8 0%, #ffe0c7 100%)", color: "#a8480f" }}>
                             <span className="min-w-0 flex-1">
                                 <span className="ah-display block text-[16px]">쇼핑하러 가기</span>
-                                <span className="ah-light mt-0.5 block text-[11.5px] leading-snug opacity-80">{member ? `${SAMPLE.pet.name}에게 맞는 용품 · 먹거리` : "산책 · 먹거리 · 생활 · 장난감 · 케어"}</span>
+                                <span className="ah-light mt-0.5 block text-[11.5px] leading-snug opacity-80">{member ? `${petName}에게 맞는 용품 · 먹거리` : "산책 · 먹거리 · 생활 · 장난감 · 케어"}</span>
                             </span>
                             <span className="hm-go grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/85 text-[11px] text-[#cf5f19]"><i aria-hidden="true" className="fa-solid fa-arrow-right" /></span>
                         </span>
@@ -165,7 +174,7 @@ export default function HomeSticker() {
                         <Link href="/chat/" className="hm-short st-place relative block" style={{ ["--r" as string]: "-2deg", ["--d" as string]: "820ms", rotate: "-2deg" }}>
                             <span className="hm-card relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#ece4ff", color: "#563fa8" }}>
                                 <span className="ah-display text-[14.5px]">케어톡에 물어보기</span>
-                                <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">{member ? `${SAMPLE.pet.name} 산책 몇 분이 좋을까?` : "무엇이든 편하게 물어보세요"}</span>
+                                <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">{member ? `${petName} 산책 몇 분이 좋을까?` : "무엇이든 편하게 물어보세요"}</span>
                                 <span className="hm-go mt-2 grid h-7 w-7 place-items-center self-end rounded-full bg-white/85 text-[10px] text-[#7457d8]"><i aria-hidden="true" className="fa-solid fa-chevron-right" /></span>
                             </span>
                             <Image src="/images/ui/stickers/home-caretalk.webp" alt="" width={140} height={140} className="hm-icon absolute -top-9 left-1.5 h-[4.4rem] w-[4.4rem]" style={{ ["--ir" as string]: "-8deg" }} />
@@ -190,7 +199,7 @@ export default function HomeSticker() {
                     <div className="relative h-[150px] overflow-hidden"><CoverWindow cover={peek.cover} /></div>
                     <div className="pk-body px-4 pb-2 pt-4">
                         <SectionNow cover={peek.cover} member={member} today={today} days={days} past={past} now={now}
-                            onStamp={() => { today.stamp(); haptic("medium"); if (member) flyCoin(peekStampRef.current, coinRef.current, 2); }}
+                            onStamp={() => { void today.stamp().then((newly) => { if (newly) { haptic("medium"); flyCoin(peekStampRef.current, coinRef.current, 2); } }); }}
                             stampRef={peekStampRef} signupRedirect="/app/home-1/" base="/app/sticker" />
                     </div>
                 </Peek>

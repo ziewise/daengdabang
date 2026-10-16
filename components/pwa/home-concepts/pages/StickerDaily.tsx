@@ -20,12 +20,14 @@
 import { appLoginHref } from "@/components/app-shell/appTabs";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GROWTH_PROGRAM_CARDS, growthSharePayload, type GrowthProgramCard, type GrowthShareKind } from "@/lib/growth-programs";
 import { Peek, haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
-import { EXPANSION_CARDS, GUEST_STEPS, POLICIES, PROGRESS, pageHref } from "../page-data";
-import { ConceptBar, HC_CSS, SAMPLE, WEEK, flyCoin, todayIndex, untilTomorrow, useDemoSession, useInitialTab, useNow, useTodayDemo, type TaskId } from "../shared";
+import { EXPANSION_CARDS, GUEST_STEPS, POLICIES, pageHref } from "../page-data";
+import { ConceptBar, HC_CSS, WEEK, flyCoin, todayIndex, untilTomorrow, useDemoSession, useInitialTab, useMember, useNow, useTodayDemo, type TaskId } from "../shared";
+import { cancelGrowthInterest, loadGoodsContestSummary, loadGrowthInterests, submitGrowthInterest, type GrowthProgramId } from "@/lib/customer-api";
+import { useAuth } from "@/lib/store";
 import { DiaryBody, DiaryTabs, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { LoginInvite, STICKER_CSS, Tape, Patch } from "../sticker-kit";
 import { Sparkle } from "../kit";
@@ -63,24 +65,40 @@ export default function StickerDaily() {
     /* 오늘 할 일 — 홈과 같은 상태(어디서 하든 이어짐) */
     const [gain, setGain] = useState<{ key: string; text: string; n: number } | null>(null); // 포스트잇 위로 떠오르는 +XP · +코인
     // from: 코인이 날아갈 출발점(누른 칸) · t: 누른 시각(떠오르는 숫자를 매번 새로)
+    // 출근 — 협업자 claimDaengLabAttendance(useTodayDemo.stamp). 새로 찍혔을 때만 +코인 · 코인 비행
     const stamp = (from: HTMLElement | null, t: number) => {
         if (today.stamped) return;
-        today.stamp();
-        haptic("medium");
-        setGain({ key: "stamp", text: `+${SAMPLE.dailyRewardCoins}코인`, n: t });
-        window.setTimeout(() => flyCoin(from, coinRef.current, 2), 200);
+        void today.stamp().then((newly) => {
+            if (!newly) return;
+            haptic("medium");
+            setGain({ key: "stamp", text: `+${today.dailyRewardCoins}코인`, n: t });
+            window.setTimeout(() => flyCoin(from, coinRef.current, 2), 200);
+        });
     };
+    // 오늘 할 일 — 협업자 completeDaengLabCareTask(useTodayDemo.complete)
     const doTask = (id: TaskId, t: number) => {
-        if (today.done[id]) return;
-        today.complete(id);
-        haptic("medium");
-        const task = SAMPLE.tasks.find((x) => x.taskId === id);
-        setGain({ key: id, text: `+${task?.xp ?? 0}XP`, n: t });
+        if (today.done[id] || today.savingTask) return;
+        const task = today.tasks.find((x) => x.taskId === id);
+        void today.complete(id).then(() => {
+            haptic("medium");
+            setGain({ key: id, text: `+${task?.xp ?? 0}XP`, n: t });
+        });
     };
     const onTodo = (key: string, el: HTMLElement, t: number) => (key === "stamp" ? stamp(el, t) : doTask(key as TaskId, t));
 
-    /* 준비 중 혜택 관심등록(화면 안에서만) */
+    /* 준비 중 혜택 관심등록 — 협업자 GrowthPrograms 와 같은 함수(불러오기 loadGrowthInterests · 등록 submitGrowthInterest · 취소 cancelGrowthInterest) */
+    const { user } = useAuth();
+    const accessToken = user?.apiAccessToken || "";
     const [interest, setInterest] = useState<Record<string, boolean>>({});
+    const [interestBusy, setInterestBusy] = useState(false);
+    useEffect(() => {
+        if (!accessToken) return;
+        let active = true;
+        loadGrowthInterests(accessToken)
+            .then((list) => { if (active) setInterest(Object.fromEntries(list.map((r) => [r.programId, true]))); })
+            .catch(() => { /* 불러오기 실패면 빈 상태 — 등록 시 서버가 이미 등록됨을 알려 줌 */ });
+        return () => { active = false; };
+    }, [accessToken]);
     const [openCard, setOpenCard] = useState<{ card: GrowthProgramCard; rect: DOMRect; i: number } | null>(null);
     const [consent, setConsent] = useState(false);
     const [consentMore, setConsentMore] = useState(false);
@@ -99,26 +117,55 @@ export default function StickerDaily() {
             haptic("light");
             return;
         }
+        if (interestBusy) return;
         const on = !interest[id];
-        setInterest((s) => ({ ...s, [id]: on }));
-        haptic(on ? "medium" : "light");
-        setToast(on ? "관심등록을 저장했어요 · 소식이 나오면 이메일로 알려 드려요" : "관심등록을 취소했어요");
+        setInterestBusy(true);
+        const request = on
+            ? submitGrowthInterest({ programId: id as GrowthProgramId, consentToContact: consent }, accessToken).then((r) => r.message || "관심등록을 저장했어요 · 소식이 나오면 이메일로 알려 드려요")
+            : cancelGrowthInterest(id as GrowthProgramId, accessToken).then(() => "관심등록을 취소했어요");
+        void request
+            .then((message) => {
+                setInterest((s) => ({ ...s, [id]: on }));
+                haptic(on ? "medium" : "light");
+                setToast(message);
+            })
+            .catch((reason) => setToast(reason instanceof Error ? reason.message : "관심등록을 처리하지 못했어요. 잠시 후 다시 시도해 주세요."))
+            .finally(() => setInterestBusy(false));
     };
+
+    /* 굿즈 공모 남은 날 — 협업자 loadGoodsContestSummary.daysRemaining */
+    const [goodsDday, setGoodsDday] = useState<number | null>(null);
+    useEffect(() => {
+        const controller = new AbortController();
+        loadGoodsContestSummary(controller.signal).then((g) => setGoodsDday(g.selectionOpen ? g.daysRemaining : null)).catch(() => {});
+        return () => controller.abort();
+    }, []);
 
     /* 운영 기준 펼침 */
     const [openPolicy, setOpenPolicy] = useState<number | null>(null);
 
     /* 운영 회원 대시보드(MemberAiDashboard)와 같은 계산 */
-    const attendNow = wd + (today.stamped ? 1 : 0); // 출근 스티커 줄과 같은 수(오늘 전날까지 붙음 + 오늘 붙이면 +1)
+    // 이번 주 출근 — 서버 값(weeklyAttendanceProgress / Target)
+    const attendNow = today.weeklyAttendanceProgress;
+    // 이번 주 칸마다 출근 여부 — 서버 출근 기록(recentDays)을 날짜로 맞춤
+    const claimedByDate = new Map(today.recentDays.map((d) => [d.businessDate, d.claimed]));
+    const weekDate = (i: number) => {
+        if (!today.businessDate) return "";
+        const base = new Date(`${today.businessDate}T00:00:00Z`);
+        base.setUTCDate(base.getUTCDate() - (wd - i));
+        return base.toISOString().slice(0, 10);
+    };
+    // 실제 반려견(최근 분석 · 관심 케어)
+    const { pet } = useMember();
     const todayKey = now ? new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(now) : "";
-    const analyzedToday = Boolean(todayKey) && new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(SAMPLE.lastAnalyzedAt)) === todayKey;
+    const analyzedToday = Boolean(todayKey) && new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(pet?.lastAnalyzedAt || 0)) === todayKey && Boolean(pet?.lastAnalyzedAt);
     const doneCount = (today.stamped ? 1 : 0) + (today.done.walk_20 ? 1 : 0) + (today.done.eye_check ? 1 : 0) + (analyzedToday ? 1 : 0);
     const careScore = Math.min(100, 52 + doneCount * 12); // 의료 점수가 아닌 오늘 돌봄 완료율
-    const prevLevelXp = (SAMPLE.level - 1) * 100;
-    const xpPct = Math.max(0, Math.min(100, Math.round(((today.xp - prevLevelXp) / Math.max(1, SAMPLE.nextLevelXp - prevLevelXp)) * 100)));
-    const levelName = SAMPLE.level < 3 ? "건강 새싹" : "우리 아이 지킴이";
+    const prevLevelXp = (today.level - 1) * 100;
+    const xpPct = Math.max(0, Math.min(100, Math.round(((today.xp - prevLevelXp) / Math.max(1, today.nextLevelXp - prevLevelXp)) * 100)));
+    const levelName = today.level < 3 ? "건강 새싹" : "우리 아이 지킴이";
     const ratio = (v: number, t: number) => Math.max(0, Math.min(100, Math.round((v / Math.max(1, t)) * 100)));
-    const recommend = /피부|발바닥|털|케어/.test(SAMPLE.concerns.join(" ")) ? "피부·발바닥 케어 관심을 반영한 관리용품" : "프로필과 최근 분석을 반영한 맞춤 상품";
+    const recommend = /피부|발바닥|털|케어/.test((pet?.concerns ?? []).join(" ")) ? "피부·발바닥 케어 관심을 반영한 관리용품" : "프로필과 최근 분석을 반영한 맞춤 상품";
 
     /* 안전 공유 — 건강 상세 없이 돌봄 습관만(운영 공유 문구 · 정식 주소) */
     const [shareNote, setShareNote] = useState<string | null>(null);
@@ -158,7 +205,7 @@ export default function StickerDaily() {
                                 <ol className="mt-3 grid grid-cols-7 gap-1">
                                     {WEEK.map((d, i) => {
                                         const isToday = i === wd;
-                                        const on = i < wd || (isToday && today.stamped);
+                                        const on = isToday ? today.stamped : Boolean(claimedByDate.get(weekDate(i)));
                                         return (
                                             <li key={d.ko} className="flex flex-col items-center gap-1">
                                                 {isToday && !on ? (
@@ -176,15 +223,15 @@ export default function StickerDaily() {
                                     })}
                                 </ol>
                                 <p className="ah-light mt-2 text-center text-[12px]" style={{ color: TEXT_SOFT }}>
-                                    {today.stamped ? `출근 완료! ${today.streak}일 연속 · 이번 주 ${attendNow}일` : `오늘 칸을 톡 눌러 붙여요 · +${SAMPLE.dailyRewardCoins}코인`}
+                                    {today.stamped ? `출근 완료! ${today.streak}일 연속 · 이번 주 ${attendNow}일` : `오늘 칸을 톡 눌러 붙여요 · +${today.dailyRewardCoins}코인`}
                                 </p>
 
                                 {/* 오늘 돌봄 한눈에 — 운영 대시보드 네 칸(같은 계산 · 문구), 작은 메모 스티커 2×2 */}
                                 <div className="mt-5 grid grid-cols-2 gap-2">
                                     {[
                                         { label: "오늘 건강 루틴 점수", value: `${careScore}점`, helper: "의료 점수가 아닌 오늘 돌봄 완료율", icon: "fa-heart-pulse", tone: "#ffe1ea", ink: "#d2457a" },
-                                        { label: "오늘 AI 분석", value: analyzedToday ? "완료" : "아직", helper: `최근 ${new Date(SAMPLE.lastAnalyzedAt).toLocaleDateString("ko-KR")}`, icon: "fa-camera-retro", tone: "#dcf3e6", ink: "#1f9e75" },
-                                        { label: "이번 주 출석 챌린지", value: `${attendNow} / ${PROGRESS.attendTarget}`, helper: `${ratio(attendNow, PROGRESS.attendTarget)}% 진행`, icon: "fa-calendar-check", tone: "#fff1c4", ink: "#c98a12" },
+                                        { label: "오늘 AI 분석", value: analyzedToday ? "완료" : "아직", helper: pet?.lastAnalyzedAt ? `최근 ${new Date(pet.lastAnalyzedAt).toLocaleDateString("ko-KR")}` : "첫 사진 분석을 시작해 보세요", icon: "fa-camera-retro", tone: "#dcf3e6", ink: "#1f9e75" },
+                                        { label: "이번 주 출석 챌린지", value: `${attendNow} / ${today.weeklyAttendanceTarget}`, helper: `${ratio(attendNow, today.weeklyAttendanceTarget)}% 진행`, icon: "fa-calendar-check", tone: "#fff1c4", ink: "#c98a12" },
                                         { label: "오늘 산책", value: today.done.walk_20 ? "20분 완료" : "기록 전", helper: today.done.walk_20 ? "오늘의 산책 XP가 반영됐어요" : "무리하지 않는 범위에서 시작하세요", icon: "fa-person-walking", tone: "#e3efff", ink: "#3d74c9" },
                                     ].map((m, i) => (
                                         <div key={m.label} className="dl-metric rounded-[12px] px-3 pb-2.5 pt-2.5" style={{ background: m.tone, rotate: `${[-0.6, 0.5, 0.5, -0.6][i]}deg` }}>
@@ -197,14 +244,14 @@ export default function StickerDaily() {
 
                                 {/* 레벨 도장 + 형광펜 XP */}
                                 <div className="mt-5 flex items-center gap-4">
-                                    <InkStamp rot={-10} className="h-[4.6rem] w-[4.6rem] text-[12px]">LEVEL<br />{SAMPLE.level}</InkStamp>
+                                    <InkStamp rot={-10} className="h-[4.6rem] w-[4.6rem] text-[12px]">LEVEL<br />{today.level}</InkStamp>
                                     <div className="min-w-0 flex-1">
                                         <p className="ah-display text-[16px]">{levelName}</p>
-                                        <p className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>다음 레벨까지 {Math.max(0, SAMPLE.nextLevelXp - today.xp)}XP</p>
+                                        <p className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>다음 레벨까지 {Math.max(0, today.nextLevelXp - today.xp)}XP</p>
                                         <span className="mt-2 block h-3 overflow-hidden rounded-full bg-[#f5ece6]">
                                             <span className="block h-full rounded-full transition-[width] duration-700" style={{ width: `${xpPct}%`, background: "linear-gradient(90deg, rgba(255,214,228,.95), rgba(255,236,150,.95))" }} />
                                         </span>
-                                        <p className="ah-light mt-1 flex justify-between text-[11px]" style={{ color: TEXT_SOFT }}><span>{today.xp} XP · 연속 {today.streak}일</span><span>다음 레벨 {SAMPLE.nextLevelXp} XP</span></p>
+                                        <p className="ah-light mt-1 flex justify-between text-[11px]" style={{ color: TEXT_SOFT }}><span>{today.xp} XP · 연속 {today.streak}일</span><span>다음 레벨 {today.nextLevelXp} XP</span></p>
                                     </div>
                                 </div>
                                 {/* 최근 건강 변화 · AI 추천 — 운영 대시보드와 같은 문구 */}
@@ -223,9 +270,9 @@ export default function StickerDaily() {
                                 <SectionLabel className="mt-6" icon="fa-pen">오늘 해야 할 일 <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>{doneCount}/4</span></SectionLabel>
                                 <div className="mt-3 grid grid-cols-2 gap-x-2.5 gap-y-3">
                                     {[
-                                        { key: "stamp", icon: "fa-calendar-check", title: "출근도장", body: `하루 한 번 · ${SAMPLE.dailyRewardCoins}코인`, done: today.stamped },
-                                        { key: "walk_20", icon: "fa-person-walking", title: SAMPLE.tasks[0].title, body: `오늘 할 일 · +${SAMPLE.tasks[0].xp}XP`, done: today.done.walk_20 },
-                                        { key: "eye_check", icon: "fa-eye", title: SAMPLE.tasks[1].title, body: `오늘 할 일 · +${SAMPLE.tasks[1].xp}XP`, done: today.done.eye_check },
+                                        { key: "stamp", icon: "fa-calendar-check", title: "출근도장", body: `하루 한 번 · ${today.dailyRewardCoins}코인`, done: today.stamped },
+                                        // 오늘 할 일 — 서버가 주는 할 일 목록 그대로(이름 · XP)
+                                        ...today.tasks.map((t) => ({ key: t.taskId, icon: t.taskId === "walk_20" ? "fa-person-walking" : "fa-eye", title: t.title, body: `오늘 할 일 · +${t.xp}XP`, done: t.completed })),
                                     ].map((x, i) => (
                                         <button key={x.key} type="button" onClick={(e) => onTodo(x.key, e.currentTarget, e.timeStamp)} disabled={x.done} aria-label={`${x.title} ${x.done ? "완료" : "완료하기"}`}
                                             className={`st-postit dl-todo relative block px-2 pb-2.5 pt-2 text-center ${x.done ? "is-done" : ""}`}
@@ -310,7 +357,7 @@ export default function StickerDaily() {
                                 <Image src="/images/ui/stickers/goods-contest.webp" alt="" width={96} height={96} className="dl-art -my-1.5 h-12 w-12 shrink-0" style={{ rotate: "-6deg" }} />
                                 <span className="min-w-0 flex-1">
                                     <span className="ah-display block text-[14px]">굿즈 500명 공모전</span>
-                                    <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>댕다방에서 참여해요 · D-{SAMPLE.goods.dday}</span>
+                                    <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>댕다방에서 참여해요{goodsDday !== null ? ` · D-${goodsDday}` : ""}</span>
                                 </span>
                                 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9b4a8]" />
                             </Link>
