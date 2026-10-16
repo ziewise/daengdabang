@@ -179,7 +179,7 @@ ${S} [data-product-gallery]::after { content: ""; position: absolute; inset: 12p
 /* 영상 안내 글씨는 액자 위로 */
 ${S} [data-product-gallery] > span.absolute { z-index: 3; }
 ${S} div:has(> [data-product-gallery]) { position: relative; }
-${S} div:has(> [data-product-gallery])::before { ${TAPE} top: 5px; left: 50%; width: 72px; height: 16px; margin-left: -36px; z-index: 4; rotate: -2deg; }
+${S} div:has(> [data-product-gallery])::before { ${TAPE} top: 0px; left: 50%; width: 72px; height: 16px; margin-left: -36px; z-index: 4; rotate: -2deg; }
 /* 사진 넘김 작은 사진 — 흰 테두리 미니 폴라로이드(고른 표시 테두리는 그대로) */
 ${S} [data-product-detail-content] button[aria-label^="상품 이미지"] { border: 3px solid #fff; border-radius: 6px; filter: drop-shadow(0 3px 3px rgba(90, 60, 50, .28)); }
 /* 고른 사진 표시 — 바깥 테두리(ring)는 옆으로 넘기는 줄에서 위가 잘려서, 같은 표시를 안쪽 테두리(분홍)로 그린다 */
@@ -208,8 +208,8 @@ ${S} nav[aria-label="상세정보"] a { font-family: "Cafe24Ssurround", var(--fo
 ${S} nav[aria-label="상세정보"] a > span.absolute { height: 5px; border-radius: 1px; background: repeating-linear-gradient(90deg, #f9a8c0 0 6px, #fdcbd9 6px 12px); }
 /* 상품 원본 상세 이미지 — 다이어리에 붙인 사진 종이(흰 여백 + 양쪽 위 테이프) */
 ${S} [data-supplier-original-detail] { position: relative; border-radius: 3px; box-shadow: 0 0 0 7px #fff, 0 0 0 8px #f0e2d6, 0 16px 24px -16px rgba(110, 80, 40, .55); }
-${S} [data-supplier-original-detail]::before { ${TAPE} top: -12px; left: -6px; width: 58px; height: 16px; rotate: -12deg; }
-${S} [data-supplier-original-detail]::after { ${TAPE} top: -12px; right: -6px; width: 58px; height: 16px; rotate: 10deg; background: repeating-linear-gradient(90deg, rgba(190,224,255,.92) 0 7px, rgba(215,236,255,.92) 7px 14px); }
+${S} [data-supplier-original-detail]::before { ${TAPE} top: -20px; left: -6px; width: 58px; height: 16px; rotate: -12deg; }
+${S} [data-supplier-original-detail]::after { ${TAPE} top: -20px; right: -6px; width: 58px; height: 16px; rotate: 10deg; background: repeating-linear-gradient(90deg, rgba(190,224,255,.92) 0 7px, rgba(215,236,255,.92) 7px 14px); }
 /* 상세 안 카드(후기 · 문의) — 종이 카드 */
 ${S} main section:is([class*="rounded-2xl"], [class*="rounded-xl"])[class*="border"]:not([class*="ring-"]) { border-color: #f3e6d6; box-shadow: 0 10px 18px -14px rgba(110, 80, 40, .5); }
 /* 배송 및 반품 안내 — 편지지(줄 없음) + 위 항공우편 줄무늬 + 테이프 */
@@ -267,7 +267,9 @@ ${S} main p[class*="bg-neutral-50"] { border-radius: 6px 6px 16px 6px; backgroun
 
 /* ── 6) 상품 카드(목록 · 관련 상품 · 베스트 · 신상품 · 카테고리 · 검색 결과) — 크래프트 종이 스크랩 ── */
 ${S} article[data-pet-product="true"] { position: relative; background: #fffaf2; border-radius: 10px; }
-${S} article[data-pet-product="true"]::after { ${TAPE} top: 0; left: 50%; width: 46px; margin-left: -23px; border-radius: 0 0 2px 2px; }
+/* 카드 테이프 — 카드 위 가장자리에 걸치게(카드 안 · 사진 위 아님). 카드가 테이프를 자르지 않게 overflow 보이게(사진 칸은 자체로 둥글게 잘림) */
+${S} article[data-pet-product="true"] { overflow: visible; }
+${S} article[data-pet-product="true"]::after { ${TAPE} top: -7px; left: 50%; width: 46px; margin-left: -23px; rotate: -2deg; }
 
 /* ── 7) 장바구니 · 결제 — 종이 카드(색 · 모서리만, 결제 수단 고유색 · 안내 문구는 그대로) ── */
 ${S} main :is(div, section, li, form)[class*="rounded"][class*="border-neutral-200"][class*="bg-white"]:not([class*="ring-"]) { border-color: #f3e6d6; box-shadow: 0 10px 18px -14px rgba(110, 80, 40, .45); }
@@ -938,13 +940,13 @@ ${BUNDLE_ANY} .ddb-sale-label::after { display: none; }
 ${BUNDLE_ANY} p.ddb-crayon-price { position: relative; display: inline-block; padding: 3px 10px 3px 17px; background: #fff3a6; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
   border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 /* 세트 상세 맨 위 — 사진(폴라로이드)을 위에, 글 · 가격은 아래 종이로(사진 위 글자 금지) */
-${BUNDLE} main main > section:first-child { overflow: visible; background: transparent; color: #3d2f2a; }
+${BUNDLE} main main > section:first-child { display: flow-root; overflow: visible; background: transparent; color: #3d2f2a; } /* flow-root: 사진 액자의 위 여백이 바깥으로 새지 않게(테이프 위치 기준 유지) */
 ${BUNDLE} main main > section:first-child > div.absolute:first-child { position: relative; inset: auto; height: min(70vw, 390px); margin: 18px 16px 0; overflow: hidden;
   border: 9px solid #fff; border-bottom-width: 30px; border-radius: 3px; rotate: -.6deg;
   box-shadow: 0 0 0 1px #f0e2d6, 0 16px 24px -16px rgba(110, 80, 40, .55); }
 ${BUNDLE} main main > section:first-child > div.absolute:first-child > div[class*="bg-gradient"] { display: none; }
 ${BUNDLE} main main > section:first-child > div.absolute:first-child img, ${BUNDLE} main main > section:first-child > div.absolute:first-child video[class*="opacity-78"] { opacity: 1; }
-${BUNDLE} main main > section:first-child::after { ${TAPE} top: 8px; left: 50%; width: 76px; height: 17px; margin-left: -38px; rotate: -2deg; z-index: 12; }
+${BUNDLE} main main > section:first-child::after { ${TAPE} top: 5px; left: 50%; width: 76px; height: 15px; margin-left: -38px; rotate: -1deg; z-index: 12; }
 ${BUNDLE} main main > section:first-child > div.relative { min-height: 0; padding-top: 18px; padding-bottom: 8px; }
 ${BUNDLE} main main > section:first-child > div.relative > div:first-child span[class*="rounded-full"] { background: #fff; color: #7d6a61; box-shadow: 0 0 0 1.5px #f1e3da, 0 3px 6px -4px rgba(110, 80, 40, .4); }
 ${BUNDLE} main main > section:first-child h1 { font-size: 1.7rem; color: #3d2f2a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
@@ -959,13 +961,14 @@ ${BUNDLE} main main aside.surface::before { ${TAPE} top: -7px; left: 50%; width:
 ${BUNDLE} main main aside.surface > p:first-child { display: inline-block; padding: 2px 10px 1px; color: #9c2f54; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
   clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
   background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 7px, rgba(255,222,232,.95) 7px 14px); rotate: -1deg; }
+/* 테이프는 사진(영상) 위가 아니라 흰 테두리 위에만(사진 위에 아무것도 얹지 않음 — 사용자 2026-10-16) */
 /* 쇼룸 사진 — 사진을 그대로 두지 않고 폴라로이드(두꺼운 흰 테두리 · 아래는 더 넓게) + 테이프 한 조각 */
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] { border: 8px solid #fff; border-bottom-width: 26px; border-radius: 3px; overflow: visible;
   box-shadow: 0 0 0 1px #f0e2d6, 0 14px 20px -12px rgba(110, 80, 40, .55); rotate: -1deg; }
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] > img { border-radius: 1px; }
 /* 위 종이 카드 공통 규칙(테두리 크림색)보다 우선 — 폴라로이드 테두리는 흰색 */
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"][class*="border-neutral-200"][class*="bg-white"]:not([class*="ring-"]) { border-color: #fff; }
-${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]::after { ${TAPE} top: -15px; left: 50%; width: 64px; height: 16px; margin-left: -32px; rotate: 3deg; z-index: 2; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]::after { ${TAPE} top: -21px; left: 50%; width: 64px; height: 16px; margin-left: -32px; rotate: 3deg; z-index: 2; }
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(3n+2)::after { background: repeating-linear-gradient(90deg, rgba(190,224,255,.92) 0 7px, rgba(215,236,255,.92) 7px 14px); rotate: -4deg; }
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(3n+3)::after { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 7px, rgba(255,239,190,.95) 7px 14px); }
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(even) { rotate: 1deg; }
