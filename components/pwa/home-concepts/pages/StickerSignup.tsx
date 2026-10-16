@@ -15,6 +15,7 @@
  *   동의 = 손글씨 체크 스티커 · 자세히 보기는 접는 메모 · 입력칸 = 라벨 스티커 · 사진 = 점선 폴라로이드 4칸 · 버튼 = 자수 와펜.
  */
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
@@ -568,7 +569,9 @@ export default function StickerSignup() {
         return frame(
             <DiaryBody pageKey={`verify-${pendingVerification.kind}-${pendingVerification.kind === "activation" && pendingVerification.verified}`} dir={1}>
                 <div className="flex flex-col items-center text-center">
-                    <span className="su-mail grid h-16 w-16 place-items-center rounded-full text-[26px] text-white"><i aria-hidden="true" className={`fa-solid ${pendingVerification.kind === "bonus" ? "fa-gift" : "fa-envelope-open-text"}`} /></span>
+                    {pendingVerification.kind === "bonus"
+                        ? <span className="su-mail grid h-16 w-16 place-items-center rounded-full text-[26px] text-white"><i aria-hidden="true" className="fa-solid fa-gift" /></span>
+                        : <Image src="/images/ui/stickers/inquiry-email.webp" alt="" width={72} height={72} className="su-mail-img h-[4.5rem] w-[4.5rem]" />}
                     <h1 className="ah-display mt-3 text-[20px]"><span className="st-marker">{verifyTitle}</span></h1>
                     <p className="ah-light mt-2 text-[13px] leading-relaxed" style={{ color: TEXT_SOFT }}>{verifyBody}</p>
                 </div>
@@ -850,5 +853,7 @@ const SIGNUP_CSS = `
 .su-social a, .su-social button { box-shadow: 0 0 0 3px #fff, 0 6px 10px -6px rgba(90,60,50,.4); }
 /* 이메일 인증 화면 머리 아이콘 */
 .su-mail { background: radial-gradient(circle at 35% 30%, #ffb3c8, #e9628c 70%); box-shadow: 0 0 0 4px #fff, 0 10px 16px -8px rgba(200,80,120,.55); rotate: -6deg; animation: hc-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
-@media (prefers-reduced-motion: reduce) { .su-note, .su-mail { animation: none; } }
+/* 인증 메일 그림(사용자 3D 이메일 아이콘) — 동그라미와 같이 살짝 기울여 톡 */
+.su-mail-img { rotate: -6deg; filter: drop-shadow(0 8px 8px rgba(200,80,120,.3)); animation: hc-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
+@media (prefers-reduced-motion: reduce) { .su-note, .su-mail, .su-mail-img { animation: none; } }
 `;

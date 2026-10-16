@@ -790,11 +790,11 @@ export default function StickerShow() {
                     )}
                 </DiaryBody>
             </div>
-            {/* 오늘의 한 장 올리기 — 오른쪽 아래 카메라 스티커(댕자랑 쪽에서만) */}
+            {/* 오늘의 한 장 올리기 — 오른쪽 아래 카메라 스티커(댕자랑 쪽에서만) · 그림은 사용자 3D 사진첨부 아이콘 */}
             {tab === 0 ? (
                 <button type="button" onClick={() => openComposer(topicOn)} aria-label="오늘의 한 장 올리기" className="sh-fab fixed right-4 z-[2100] grid h-14 w-14 place-items-center rounded-full text-[20px] text-white"
                     style={{ bottom: "calc(var(--app-tabbar-h, 88px) + 12px)" }}>
-                    <i aria-hidden="true" className="fa-solid fa-camera" />
+                    <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={38} height={38} className="h-[38px] w-[38px]" />
                 </button>
             ) : null}
             <ShowComposer open={composer.open} onClose={() => setComposer((c) => ({ ...c, open: false }))} onPublish={publish}
@@ -875,9 +875,9 @@ const SHOW_CSS = `
 /* 방금 올린 글: 위에서 톡 붙고 분홍 빛이 한 번 */
 .sh-pol.is-fresh { animation: sh-stick .7s cubic-bezier(.25,1.4,.45,1) both; box-shadow: 0 0 0 3px #ffd6e2, 0 10px 18px -12px rgba(90,60,50,.5); }
 @keyframes sh-stick { from { opacity: 0; transform: translateY(-24px) scale(1.12) rotate(6deg); } }
-/* 올리기 카메라 스티커: 분홍 와펜 동그라미 + 흰 칼선 · 누르면 꾹 */
-.sh-fab { border: 4px solid transparent; background: linear-gradient(#f2789d, #f2789d) padding-box, repeating-linear-gradient(72deg, #d9547d 0 2px, #ea6d93 2px 3.4px) border-box;
-  outline: 1.5px dashed rgba(255,255,255,.8); outline-offset: -8px; box-shadow: 0 0 0 3px #fff, 0 10px 18px -8px rgba(200,80,120,.6); -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+/* 올리기 카메라 스티커: 크림 와펜 동그라미(분홍 새틴 테두리 + 분홍 바느질) — 안의 3D 사진 그림이 묻히지 않게 · 누르면 꾹 */
+.sh-fab { border: 4px solid transparent; background: linear-gradient(#fff6ee, #fff6ee) padding-box, repeating-linear-gradient(72deg, #f4a9bf 0 2px, #f8c3d2 2px 3.4px) border-box;
+  outline: 1.5px dashed rgba(226,107,145,.55); outline-offset: -8px; box-shadow: 0 0 0 3px #fff, 0 10px 18px -8px rgba(200,80,120,.6); -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
 .sh-fab:active { transform: scale(.9); }
 @media (prefers-reduced-motion: reduce) { .sh-pol.is-fresh { animation: none; } }
 /* 사진: 두 번 톡 확대 막기 · 누르면 살짝 눌림 */

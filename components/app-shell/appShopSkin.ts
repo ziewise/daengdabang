@@ -1167,6 +1167,12 @@ ${WK} [data-weekly-photo-thumbnails] > button small { font-size: 10.5px; }
 ${WK} div[class*="border-violet-200"] p[class*="text-xs"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; }
 ${WK} div[class*="border-violet-200"] p[class*="text-[10px]"], ${WK} p[class*="text-center"][class*="text-[10px]"], ${WK} [data-weekly-upload-progress] div[class*="text-[10px]"] { font-size: 11px; }
 ${WK} [data-weekly-analysis-complete] :is(p, span)[class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 카메라 자리 → 사용자 3D 사진첨부 그림(카메라 칸 · 방향별 빈 칸 · 입혀보기 사진 없음 안내). 글자 그림(아이콘 글꼴)만 숨김 */
+${WK} [data-weekly-live-camera] i.fa-camera, ${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro, ${TRYON} div[class*="h-14"][class*="rounded-full"] > i.fa-camera {
+    display: inline-block; width: 3.6rem; height: 3.6rem; vertical-align: middle; background: url("/images/ui/stickers/caretalk-photo.webp") center / contain no-repeat; }
+${WK} [data-weekly-live-camera] i.fa-camera::before, ${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro::before, ${TRYON} div[class*="h-14"][class*="rounded-full"] > i.fa-camera::before { content: none; }
+${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro { width: 2.4rem; height: 2.4rem; }
+${TRYON} div[class*="h-14"][class*="rounded-full"]:has(> i.fa-camera) { width: 4rem; height: 4rem; background: transparent; box-shadow: none; }
 /* 촬영 즉시 자동 추가 · 결과 카드 — 테이프 붙은 메모지 */
 ${WK} div[class*="rounded-[24px]"][class*="bg-white"], ${WK} [data-weekly-analysis-complete] article { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6;
     box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }

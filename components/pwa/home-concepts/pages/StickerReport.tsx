@@ -16,6 +16,7 @@
  * 로그인 전: 앱 로그인 초대(웹도 회원 전용 화면).
  */
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { ConceptBar, HC_CSS, useDemoSession, useMember, useNow } from "../shared";
@@ -118,7 +119,7 @@ export default function StickerReport() {
                                     </>
                                 ) : (
                                     <div className="rp-empty mt-3 rounded-[12px] px-4 py-5 text-center">
-                                        <i aria-hidden="true" className="fa-solid fa-camera text-[22px] text-[#3aa6c4]" />
+                                        <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={44} height={44} className="mx-auto h-11 w-11" />
                                         <p className="ah-display mt-2 text-[13.5px]">실시간 카메라로 이번 주 첫 사진을 남겨 보세요.</p>
                                         <p className="ah-light mt-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>촬영 화면, 방향별 썸네일, 업로드 진행률을 직접 확인할 수 있어요.</p>
                                     </div>

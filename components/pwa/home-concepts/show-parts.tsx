@@ -107,7 +107,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
     const [photo, setPhoto] = useState<string>(""); // 미리보기(blob 주소)
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState("");
-    const [name, setName] = useState(defaultName);
+    const [name, setName] = useState(""); // 비어 있으면 아래 shownName 이 기본 이름(로그인 정보가 늦게 와도 맞게)
     const [pet, setPet] = useState<number>(-1); // -1 = 표시하지 않기
     const [joinTopic, setJoinTopic] = useState(defaultTopic);
     const [agree, setAgree] = useState(false);
@@ -160,7 +160,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
                     <span className={`relative grid aspect-square place-items-center overflow-hidden rounded-[4px] ${photo ? "" : "sp-hole"}`}>
                         {photo ? <PostPhoto src={photo} sizes="60vw" /> : (
                             <span className="flex flex-col items-center gap-1.5 text-center">
-                                <i aria-hidden="true" className="fa-solid fa-camera text-[26px] text-[#f08eae]" />
+                                <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={48} height={48} className="h-12 w-12" />
                                 <span className="ah-display text-[13px] text-[#c4567a]">사진을 선택해 주세요</span>
                                 <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>JPG · PNG · WebP / 최대 8MB</span>
                             </span>
