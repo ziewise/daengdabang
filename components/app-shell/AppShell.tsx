@@ -32,7 +32,6 @@ import {
 } from "./appTabs";
 import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
 
-const LOGO_INKS = ["#0aa3b8", "#ec1c45", "#ff8a00"]; // 로고 "댕다방" 글자색 (청록 · 빨강 · 주황)
 
 /**
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
@@ -385,14 +384,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* ── 상단바 — 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
             <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
                     <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2.5 px-3.5">
-                        {/* 왼쪽: 언제나 로고(검정 푸들 + 삼색 댕다방). 뒤로 가기는 상단바 아래(제목 줄 왼쪽 또는 뒤로 가기 줄) */}
-                        <Link href={tabs[0].href} className="relative flex items-center gap-1.5" aria-label="댕다방 홈">
-                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className="h-[38px] w-[38px]" priority />
-                            <span className="app-font text-[1.4rem] leading-none">
-                                {"댕다방".split("").map((ch, i) => (
-                                    <span key={i} style={{ color: LOGO_INKS[i] }}>{ch}</span>
-                                ))}
-                            </span>
+                        {/* 왼쪽: 언제나 로고 — 사용자가 만든 3D 앱 로고(검정 푸들 + 젤리 삼색 댕다방, 아이콘들과 같은 결 · 2026-10-16).
+                            원본 public/images/앱로고.png → 투명 여백 정리 · 높이 132px webp. 뒤로 가기는 상단바 아래(제목 줄 왼쪽 또는 뒤로 가기 줄) */}
+                        <Link href={tabs[0].href} className="relative flex items-center" aria-label="댕다방 홈">
+                            <Image src="/images/ui/stickers/app-logo.webp" alt="" width={512} height={132} className="h-[30px] w-auto" priority />
                         </Link>
 
                         <div className="ml-auto flex items-center gap-2">
