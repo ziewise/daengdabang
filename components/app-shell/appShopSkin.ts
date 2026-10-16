@@ -196,6 +196,8 @@ ${S} [data-review-panel] span[class*="rounded-md"][class*="bg-white"] { border-r
 ${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-body] { position: relative; max-height: 836px; overflow: hidden; padding: 16px 12px 0; margin: -16px -12px 0; }
 ${S} [data-app-detail-fold-fade] { display: block; z-index: 5; }
 ${S} [data-app-detail-fold-toggle] { display: flex; }
+/* 접힌 상태에선 버튼을 상세 이미지 아래 끝(흐림 위)에 걸쳐 놓아 "이어지는 내용"이 있다는 걸 바로 알게 — 펼치면 원래 자리 */
+${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-toggle] { position: relative; z-index: 6; margin-top: -38px; }
 ${S} [data-app-detail-fold-toggle] button { ${PATCH_CREAM} }
 ${S} [data-app-detail-fold-toggle] button:active { transform: scale(.96); transition-duration: .12s; }
 
