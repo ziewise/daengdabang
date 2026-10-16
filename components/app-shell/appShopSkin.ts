@@ -782,4 +782,30 @@ ${MYW} main main span[class*="rounded-full"][class*="place-items-center"]:is([cl
 /* 작은 분류 꼬리표(안내 · 배송 · 이벤트 · 주문/결제 등) — 둥근 스티커 */
 ${MYW} main main span[class*="rounded-full"][class*="text-[10px]"], ${MYW} main main span[class*="rounded-full"][class*="text-[11px]"] { box-shadow: 0 0 0 1.5px #fff, 0 2px 4px -2px rgba(110, 80, 40, .35); }
 
+/* ── 24) 마이페이지 대시보드 — 연구소 지갑은 앱 마이 첫 화면의 "코인 봉투"와 같은 결(크래프트 봉투 머리 · 동그란 코인 스티커 ·
+   바꾸기 칸은 노란 메모 · 지급 기준은 접힌 메모 · 지갑 내역은 영수증 점선) · 이름 아래 이메일은 둥근 글씨. 값 · 새로고침 · 바꾸기 동작 그대로 ── */
+${MYW} [data-daenglab-wallet] { border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .55); overflow: visible; position: relative; }
+${MYW} [data-daenglab-wallet]::before { ${TAPE} top: -7px; left: 50%; width: 58px; margin-left: -29px; rotate: -2deg; background: repeating-linear-gradient(90deg, rgba(244,214,140,.95) 0 7px, rgba(255,236,184,.95) 7px 14px); }
+/* 봉투 머리 — 크래프트 종이 + 아래 지그재그 대신 점선 */
+${MYW} [data-daenglab-wallet] > div:first-child { background: #f6e7cf; border-radius: 8px 8px 0 0; border-bottom: 2px dashed #e6cfa8; }
+${MYW} [data-daenglab-wallet] > div:first-child p:first-child { color: #8a5a0c; letter-spacing: .02em; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${MYW} [data-daenglab-wallet] > div:first-child h2 { text-decoration: none; }
+${MYW} [data-daenglab-wallet] > div:first-child button { ${PATCH_CREAM} border-width: 2px; outline-width: 1.5px; outline-offset: -5px; padding: 7px 13px 6px; line-height: 1; font-size: 12px; }
+/* 적립금 · 코인 · 분석 가능 — 동그란 코인 스티커(흰 칼선) */
+${MYW} [data-daenglab-wallet] div.grid > div[class*="rounded-xl"] { border-radius: 18px; box-shadow: 0 0 0 2.5px #fff, 0 6px 10px -7px rgba(110, 80, 40, .45); }
+${MYW} [data-daenglab-wallet] div.grid > div[class*="rounded-xl"] strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 적립금 → 코인 바꾸기 — 노란 메모 · 지급 기준 — 접힌 분홍 메모 · 최근 내역 — 영수증 점선 */
+${MYW} [data-daenglab-wallet] form { border: 0; border-radius: 4px 4px 14px 4px; background: #fff6c9; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .45); }
+${MYW} [data-daenglab-wallet] details { border: 0; border-radius: 4px 4px 14px 4px; background: #fff3f6; box-shadow: 0 0 0 1.5px #f6c9d6; }
+${MYW} [data-daenglab-wallet] details > summary { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${MYW} [data-daenglab-wallet] div[class*="border-t"] { border-top: 2px dashed #ecd5c8; }
+${MYW} main main h1 + p[class*="text-sm"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #8a766c; margin-top: 8px; }
+
+/* 이메일 인증 보너스 카드(지갑 안) — 분홍 편지 메모 + 테이프 · 혜택 꼬리표 스티커 */
+${MYW} [data-signup-email-verification] { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fff7f9; box-shadow: 0 0 0 1.5px #f6d3de, 0 10px 16px -12px rgba(160, 70, 100, .4); }
+${MYW} [data-signup-email-verification]::before { ${TAPE} top: -6px; left: 22px; width: 42px; height: 12px; rotate: -5deg; }
+${MYW} [data-signup-email-verification] h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; text-decoration: none; }
+${MYW} [data-signup-email-verification] span[class*="rounded-full"] { box-shadow: 0 0 0 1.5px #f6c9d6; }
+${MYW} [data-signup-email-verification] div[class*="rounded-xl"][class*="border"] { border: 0; border-radius: 4px 4px 14px 4px; box-shadow: 0 0 0 1.5px #f3e6d6; }
+
 `;
