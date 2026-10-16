@@ -170,6 +170,11 @@ export default function MypageProfilePage() {
             description="현재 로그인한 회원의 기본 정보를 확인하고 이름을 안전하게 변경할 수 있습니다."
         >
             <ProfileEditor user={user} onSaved={updateMemberName} />
+            {/* 앱 전용(로컬 시안): 앱에서는 마이페이지 메뉴를 숨기므로 회원 탈퇴를 정보 수정 맨 아래 작은 글씨로 둔다.
+                웹은 기존처럼 메뉴에 있으니 hidden — 앱 겉모양 CSS(appShopSkin.ts)에서만 보임. 기존 탈퇴 화면으로 연결 */}
+            <p className="mt-6 hidden text-center" data-app-only-withdrawal="">
+                <Link href="/mypage/withdrawal/" className="text-xs font-bold text-neutral-400 underline underline-offset-2">회원 탈퇴</Link>
+            </p>
         </MypageSectionLayout>
     );
 }

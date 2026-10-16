@@ -811,5 +811,8 @@ ${MYW} [data-signup-email-verification] div[class*="rounded-xl"][class*="border"
 /* 마이페이지 하위 화면의 웹 메뉴(MypageSidebar) — 앱에서는 숨김(사용자 결정 2026-10-16). 같은 메뉴는 앱 마이 첫 화면에 있고,
    거기에 없던 로그아웃(실제 기능) · 회원 탈퇴를 마이 첫 화면에 옮겨 연결함. 웹은 그대로 */
 ${MYW} aside:has(> nav[aria-label="마이페이지 메뉴"]) { display: none; }
+/* 회원 탈퇴 — 앱에서는 정보 수정 화면 맨 아래 작은 글씨(협업자 profile 화면에 hidden 으로 넣어 둔 것을 앱에서만 보이게) */
+${MYW} [data-app-only-withdrawal] { display: block; }
+${MYW} [data-app-only-withdrawal] a { color: #b3a49b; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
 
 `;

@@ -150,17 +150,11 @@ export default function StickerMy() {
                             <LinedMenu items={MY_MENUS} />
                             <SectionLabel className="mt-6" icon="fa-headset">고객센터</SectionLabel>
                             <LinedMenu items={CS_MENUS} />
-                            {/* 로그아웃 · 회원 탈퇴 — 웹 마이페이지 메뉴(앱에서는 숨김)에만 있던 두 가지를 여기로.
-                                로그아웃은 웹 메뉴와 같은 기능(확인 → logout()) 뒤 앱 홈으로, 회원 탈퇴는 기존 탈퇴 화면으로 */}
-                            <div className="mt-5 flex items-center justify-center gap-4 text-[13px] text-[#9c8f88]">
-                                <button type="button" onClick={() => { haptic("light"); handleLogout(); }} className="ah-display underline decoration-dashed underline-offset-4">
-                                    로그아웃
-                                </button>
-                                <span aria-hidden="true" className="h-3 w-px bg-[#e3d3c8]" />
-                                <Link href="/mypage/withdrawal/" className="ah-display underline decoration-dashed underline-offset-4">
-                                    회원 탈퇴
-                                </Link>
-                            </div>
+                            {/* 로그아웃 — 웹 마이페이지 메뉴(앱에서는 숨김)에 있던 것을 여기로. 웹 메뉴와 같은 기능(확인 → logout()) 뒤 앱 홈으로.
+                                회원 탈퇴는 눈에 덜 띄게 "정보 수정" 화면 맨 아래로(사용자 결정 2026-10-16) */}
+                            <button type="button" onClick={() => { haptic("light"); handleLogout(); }} className="ah-display mt-5 w-full text-center text-[13px] text-[#9c8f88] underline decoration-dashed underline-offset-4">
+                                로그아웃
+                            </button>
                         </>
                     ) : (
                         <>
