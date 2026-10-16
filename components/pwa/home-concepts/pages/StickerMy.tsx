@@ -4,7 +4,7 @@
  * 스티커북 시안 — 마이(/app/sticker/my) · 로컬 시안 전용, 배포 X
  * ---------------------------------------------------------------------
  * 다이어리 첫 장(내 정보 쪽).
- *  - 회원: "HELLO my name is" 이름표 스티커 · 코인 봉투(코인 · 적립금 · 1,000P → 10코인 바꾸기, 코인이 날아감) ·
+ *  - 회원: 다이어리 주인 칸(테이프 붙인 메모 · 이름 형광펜 · 회원 도장) · 코인 봉투(코인 · 적립금 · 1,000P → 10코인 바꾸기, 코인이 날아감) ·
  *          우리 아이 폴라로이드(+ 아이 추가) · 최근 주문 영수증 · 내 정보 메뉴(줄 노트) · 고객센터 · 로그아웃
  *  - 로그인 전: 로그인 초대(주문 · 아이 프로필 · 코인 지갑) + 고객센터 · 약관(로그인 없이)
  * 세부 화면(주문 상세 · 배송지 · 결제수단 · 추천 설정 · 정보 수정 · 탈퇴 등)은 기존 마이페이지로 이어진다.
@@ -95,17 +95,14 @@ export default function StickerMy() {
                 <DiaryBody pageKey={session} dir={1}>
                     {member ? (
                         <>
-                            {/* 이름표 스티커 */}
-                            <div className="my-tag relative mx-auto w-[88%] overflow-hidden rounded-[14px] text-center" style={{ rotate: "-2deg" }}>
-                                <div className="bg-[#ef5b84] pb-1.5 pt-2 text-white">
-                                    <p className="ah-display text-[17px] leading-none tracking-[0.04em]">HELLO</p>
-                                    <p className="ah-light text-[10.5px]">my name is</p>
-                                </div>
-                                <div className="bg-white px-4 pb-3 pt-2">
-                                    <p className="ah-display text-[26px] leading-tight">{SAMPLE.guardian}</p>
-                                    <p className="ah-light text-[11.5px]" style={{ color: TEXT_SOFT }}>demo@daengdabang.test · 댕다방 회원</p>
-                                </div>
-                                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-[#ef5b84]" />
+                            {/* 다이어리 주인 칸 — 메모지에 테이프로 붙인 이름 카드(사용자 2026-10-16: 영문 "HELLO my name is" 행사 명찰은 컨셉과 안 맞음)
+                                작은 테이프 이름표 "이 다이어리 주인" · 이름(형광펜) · 이메일 · 회원 잉크 도장 */}
+                            <div className="my-tag relative mx-auto w-[92%] rounded-[6px_6px_18px_6px] px-5 pb-4 pt-5" style={{ rotate: "-1deg" }}>
+                                <Tape className="-top-2 left-5 h-4 w-14" color="repeating-linear-gradient(90deg, rgba(255,200,215,.92) 0 7px, rgba(255,226,234,.92) 7px 14px)" style={{ rotate: "-4deg" }} />
+                                <span className="my-tag-label ah-display inline-block px-2.5 py-0.5 text-[11.5px]">이 다이어리 주인</span>
+                                <p className="ah-display mt-2 text-[26px] leading-tight"><span className="st-marker">{SAMPLE.guardian}</span><span className="text-[17px]"> 님</span></p>
+                                <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>demo@daengdabang.test</p>
+                                <InkStamp rot={-10} color="#ea4c7c" className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[12px]">댕다방 회원</InkStamp>
                             </div>
 
                             {/* 코인 봉투 */}
@@ -216,7 +213,9 @@ function LogoutConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfir
 /* 마이 화면 CSS */
 const MY_CSS = `
 /* 이름표 스티커 */
-.my-tag { box-shadow: 0 0 0 3px #fff, 0 12px 20px -12px rgba(150,60,90,.55); }
+.my-tag { background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110,80,40,.55); }
+.my-tag-label { color: #9c2f54; rotate: -1.5deg; clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 7px, rgba(255,222,232,.95) 7px 14px); }
 /* 코인 봉투: 버터색 봉투 + 위 덮개 */
 .my-pocket { background: linear-gradient(170deg, #fff6d6, #ffe4a6); box-shadow: 0 14px 24px -16px rgba(160,110,20,.6), inset 0 0 0 1.5px rgba(255,255,255,.7); overflow: hidden; }
 .my-flap { position: absolute; inset: 0 0 auto 0; height: 46px; background: linear-gradient(180deg, rgba(255,236,170,.9), rgba(255,226,150,.6)); clip-path: polygon(0 0, 100% 0, 50% 100%); }
