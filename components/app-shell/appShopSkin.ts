@@ -239,6 +239,21 @@ ${S} main :is(div, section, li, form)[class*="rounded"][class*="border-neutral-2
 ${S} main :is(input, select, textarea) { background-color: #fff; }
 ${S} main :is(input, select, textarea):focus { border-color: #f283a3; }
 
+/* ── 9) 산책 친구 빠른 메뉴(강아지를 누르면 뜨는 창, 협업자 PetCompanionLayer) — 점 무늬 속지 + 테이프 · 카페24 제목 ·
+   크림 자수 와펜 카드 버튼 · 우리 3D 그림(집 = companion-house, 설정 = companion-settings). 누르는 동작 · 창 위치는 그대로 ── */
+html.ddb-app-mode #pet-companion-quick-actions { ${DOT_PAPER} border: 0; border-radius: 22px; padding-top: 16px;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 22px 44px -20px rgba(110, 70, 55, .55); }
+html.ddb-app-mode #pet-companion-quick-actions::before { ${TAPE} top: -6px; left: 50%; width: 58px; margin-left: -29px; rotate: -2deg; }
+html.ddb-app-mode #pet-companion-quick-actions > h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 15px; color: #3d2f2a; letter-spacing: -0.02em; }
+html.ddb-app-mode #pet-companion-quick-actions button[aria-label="빠른 메뉴 닫기"] { color: #b39b90; }
+html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action] { ${PATCH_CREAM} border-radius: 18px; outline-offset: -6px; min-height: 84px; gap: 4px; padding: 8px 6px 9px; font-size: 13px; }
+html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action]:active { transform: scale(.95); transition-duration: .12s; }
+/* 이모지(🏠 🐾) 자리에 우리 그림 — 글자는 0 크기로 숨기고 그림만 */
+html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action] > span:first-child { display: block; width: 38px; height: 38px; font-size: 0; line-height: 0;
+  background: center / contain no-repeat; filter: drop-shadow(0 3px 3px rgba(120, 70, 50, .25)); }
+html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action="home"] > span:first-child { background-image: url("/images/ui/stickers/companion-house.webp"); }
+html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action="settings"] > span:first-child { background-image: url("/images/ui/stickers/companion-settings.webp"); }
+
 /* ── 8) 검색 창(앱 모드 어디서나) — 점 무늬 속지 + 테이프 · 검색칸은 흰 둥근 종이 ── */
 html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] { ${DOT_PAPER} color: #3d2f2a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
   box-shadow: 0 0 0 1.5px #f1e3da, 0 24px 48px -22px rgba(110, 70, 55, .55); }

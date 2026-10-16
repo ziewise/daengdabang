@@ -406,7 +406,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* ── 본문 — 위는 상단바, 아래는 탭바만큼 비워 둔다 ── */}
             <main
                 className={`flex flex-1 flex-col ${webHeader ? "pt-[var(--header-height)]" : "pt-[var(--app-topbar-h)]"}`}
-                style={{ paddingBottom: showTabBar ? "var(--app-tabbar-h)" : undefined }}
+                // 아래 여백 — 탭바 높이, 상품 상세는 탭바 대신 아래 고정 구매 바 높이 + 여유(마지막 상품이 구매 바에 가리지 않게)
+                style={{ paddingBottom: showTabBar ? "var(--app-tabbar-h)" : productDetail ? "calc(104px + env(safe-area-inset-bottom, 0px))" : undefined }}
             >
                 {/* 상품 상세 — 뒤로 가기는 상단바가 아니라 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
                 {productDetail ? (
