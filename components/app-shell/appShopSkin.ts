@@ -45,6 +45,7 @@ const P = 'html.ddb-app-mode section[aria-labelledby="pet-companion-title"]';
 const PG = `${P} > div > div:nth-child(2)`;
 /* 장바구니 화면(AppShell이 html[data-app-page] 표시) · 검색 창 */
 const CART = `${S}[data-app-page="cart"]`;
+const CHECKOUT = `${S}[data-app-page="checkout"]`;
 const SEARCH = 'html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"]';
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
@@ -397,5 +398,30 @@ ${SEARCH} ul button:active { background: rgba(255, 233, 240, .6); }
 /* 전체 결과 보기 — 크림 와펜 */
 ${SEARCH} ul + button { ${PATCH_CREAM} }
 ${SEARCH} ul + button:active { transform: scale(.97); }
+
+/* ── 13) 장바구니 2차(사용자 "진행" 2026-10-16) — 제목 테이프 이름표 · 안내 포스트잇 · 전체선택 메모 띠 · 적립 스티커 꼬리표 ·
+   빠른 결제 버튼 둥글게(결제 업체 색은 그대로) · 빈 장바구니 메모 카드. 문구 · 버튼 동작은 그대로 ── */
+/* 화면 제목(장바구니 · 주문/결제) — 쇼핑 탭 색 마스킹테이프 이름표(양 끝 지그재그 · 살짝 기울기) */
+${CART} main main:not(.text-center) > h1, ${CHECKOUT} main main:not(.text-center) > h1 {
+  display: inline-block; width: fit-content; padding: 7px 20px 6px; rotate: -1deg; text-decoration: none; font-size: 1.55rem; line-height: 1; color: #a8480f;
+  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
+  background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px);
+  filter: drop-shadow(0 6px 5px rgba(110, 60, 50, .18)); }
+/* 구매할 수 없는 옵션 안내 — 테이프 붙인 노란 포스트잇 */
+${CART} main main > p[role="alert"] { position: relative; border-radius: 4px 4px 16px 4px; background: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${CART} main main > p[role="alert"]::before { ${TAPE} top: -6px; left: 22px; width: 46px; rotate: -4deg; background: repeating-linear-gradient(90deg, rgba(255,214,140,.92) 0 7px, rgba(255,232,180,.92) 7px 14px); }
+/* 전체선택 줄 — 메모지 띠(왼쪽 분홍 테이프) */
+${CART} main main > div > section > div:first-child { position: relative; background: #fffbea; border-radius: 4px 4px 14px 4px; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .45); }
+${CART} main main > div > section > div:first-child::before { ${TAPE} top: 50%; left: -7px; width: 16px; height: 26px; margin-top: -13px; rotate: -6deg; }
+/* 회원 적립 예상 — 바느질 점선 테두리 스티커 꼬리표 */
+${CART} main aside.surface div[class*="border-indigo-100"] { border: 0; border-radius: 14px; background: #fff3f6; outline: 1.5px dashed #f2a3bd; outline-offset: -5px; box-shadow: 0 0 0 2px #fff, 0 6px 10px -8px rgba(110, 80, 40, .45); }
+/* 빠른 결제(토스 · 휴대폰 · 네이버페이 · 카카오페이) — 결제 업체 색 그대로, 모양만 둥근 알약 + 종이 그림자 */
+${CART} main aside.surface .grid > button { border-radius: 999px; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .5); }
+/* 빈 장바구니 — 테이프 붙인 메모 카드(자수 장바구니 · 와펜 버튼) */
+${CART} main main.text-center { position: relative; margin: 10px 16px 0; padding: 34px 18px 30px; border-radius: 6px 6px 20px 6px; background: #fffdf6;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 14px 22px -16px rgba(110, 80, 40, .55); }
+html.ddb-app-mode .app-backrow + main.text-center { padding-top: 34px; }
+${CART} main main.text-center::before { ${TAPE} top: -7px; left: 50%; width: 66px; margin-left: -33px; rotate: -2deg; }
+${CART} main main.text-center > h1 { font-size: 1.15rem; text-decoration: none; }
 
 `;
