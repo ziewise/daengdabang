@@ -4,19 +4,24 @@
  * 스티커북 시안 — 댕다방(댕자랑 · 굿즈 공모전) (/app/sticker/show) · 로컬 시안 전용, 배포 X
  * ---------------------------------------------------------------------
  * 다이어리 속지 + 색인 탭 2개(댕자랑 · 굿즈 공모전), 옆으로 밀면 쪽이 넘어간다. ?tab=1 이면 굿즈 공모전부터.
- *  - 댕자랑(협업자 /daeng-showcase 와 같은 기능 · 문구, 시안은 화면 안에서만 동작):
+ *  - 댕자랑(협업자 /daeng-showcase 와 같은 기능 · 문구 · 같은 함수 — 배포 전 연결 2026-10-16):
+ *    피드 loadShowcaseFeed · 주제 loadShowcaseTopic · 올리기 createShowcasePost · 응원 setShowcaseBone · 팔로우 setShowcaseFollow ·
+ *    신고 reportShowcasePost · 삭제 deleteShowcasePost · 프로필 loadShowcaseAuthorProfile (show-feed · lib/daeng-showcase)
  *    오늘의 댕주제 포스트잇 — 진행 중(기간 · D-day · 참여 중 도장 · 이 주제로 올리기 · 주제 공유카드) / 주제 없음(자유 주제로 올리기)
- *    운영자 선정 대표 댕자랑(주제 카드 안 작은 폴라로이드 + 글 두 줄 · 톡 하면 상세) — 서버가 주제와 함께 내려줄 때만
+ *    운영자 선정 대표 댕자랑(주제 카드 안 작은 폴라로이드 + 글 두 줄 · 톡 하면 상세) — 서버가 주제와 함께 내려줄 때만(topic.featuredPost)
  *    오늘의 한 장 올리기 = 아래에서 올라오는 속지(show-parts ShowComposer) — 오른쪽 아래 카메라 스티커 버튼으로도 열림
- *    전체 / 팔로잉 · 폴라로이드 벽(2열: 사진 · 작성자 · 응원 수) — 운영 공개 피드를 읽기 전용으로 불러옴(show-feed, 실패하면 예시 게시물)
+ *    전체 / 팔로잉 · 폴라로이드 벽(2열: 사진 · 작성자 · 응원 수) — 서버 피드(팔로잉은 로그인), 실패하면 "다시 불러오기"
  *    쪽 넘김 — 한 쪽 12장 · 이전 / 쪽 번호 스티커 / 다음(웹 댕자랑처럼 서버 커서로, 쪽 번호는 넘겨 보며 확인된 쪽까지) · 실패하면 "다시 불러오기"
  *    사진 한 번 톡 = 그 자리에서 상세가 펼쳐짐(큰 사진 · 글 전체 · 작성자 · 팔로우 · 응원 · 공유 · 신고 / 내 글은 삭제)
  *    사진 두 번 톡 = 크레파스 뼈다귀 응원 · 작성자 → 프로필 속지(게시물 · 팔로워 · 받은 응원 · 최근 12장)
  *    로그인 전: 구경은 누구나, 올리기 · 응원 · 팔로우 · 신고 · 팔로잉은 앱 로그인으로
  *  - 굿즈 공모전: 영상 티켓 머리(기간 · D-day · 참여 조건) · 굿즈 스크랩 카드(테이프 · 오려 붙인 사진 · 가격표 태그 ·
  *    예상 펀딩가 · 한 줄 소개 · 발도장 스탬프판 10칸 = 50명씩 · {n}/500명 · 남은 수) · 21개 전부(8개씩 더 보기) ·
- *    이 굿즈 선택 / 선택 취소(협업자 문구) · 비회원 "내 선택 다시 확인하기" · 선택 단계 안전 안내(펼치는 편지)) · 고르기(와펜) — 회원은 바로, 비회원은 속지에서 '로그인하고 바로 고르기' 또는 이메일 1회 확인 후 고르기(고르면 PICK 도장 + 한 명 더)
- * 데이터: 예시 게시물(견종 그림) · 실제 굿즈 목록. 누르는 동작은 화면 안에서만 바뀐다(서버 요청 없음).
+ *    이 굿즈 선택 / 선택 취소(협업자 문구) · 비회원 "내 선택 다시 확인하기" · 선택 단계 안전 안내(펼치는 편지)) · 고르기(와펜) — 회원은 바로, 비회원은 속지에서 '로그인하고 바로 고르기' 또는 이메일 1회 확인 후 고르기
+ *    협업자 GoodsContest 와 같은 함수(배포 전 연결 2026-10-16): 문구 loadPublishedGrowthContent · 집계 loadGoodsContestSummary ·
+ *    내 선택 loadMyGoodsContestSelections / loadGuestGoodsContestSelections · 고르기 select / cancel(회원 · 비회원) ·
+ *    비회원 이메일 확인 requestGoodsContestGuestVerification → confirmGoodsContestGuestVerification(비회원 토큰 저장)
+ * 데이터: 댕자랑 · 굿즈 공모전 모두 실제 서버.
  */
 
 import { appLoginHref } from "@/components/app-shell/appTabs";
@@ -26,14 +31,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Peek, haptic } from "../gestures";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
-import { GOODS, POSTS, type Post } from "../page-data";
-import { ConceptBar, HC_CSS, SAMPLE, useDemoSession, useInitialTab, useNow } from "../shared";
-import { DEFAULT_GROWTH_GOODS_CONTENT } from "@/lib/growth-content";
+import { type Post } from "../page-data";
+import { ConceptBar, HC_CSS, useDemoSession, useInitialTab, useNow } from "../shared";
+import { GOODS_CONTEST_CATALOG, type GoodsContestItemId } from "@/lib/goods-contest";
+import {
+    DdbApiError, cancelGoodsContestItemSelection, cancelGuestGoodsContestItemSelection, confirmGoodsContestGuestVerification, getGoodsContestGuestToken,
+    loadGoodsContestSummary, loadGuestGoodsContestSelections, loadMyGoodsContestSelections, requestGoodsContestGuestVerification,
+    selectGoodsContestItem, selectGuestGoodsContestItem, setGoodsContestGuestToken, type GoodsContestItemSummary, type GoodsContestSummary,
+} from "@/lib/customer-api";
+import { useAuth } from "@/lib/store";
+import { ShowcaseApiError, createShowcasePost, deleteShowcasePost, loadShowcaseTopic, reportShowcasePost, setShowcaseBone, setShowcaseFollow, type ShowcaseTopic } from "@/lib/daeng-showcase";
+import { DEFAULT_GROWTH_GOODS_CONTENT, loadPublishedGrowthContent } from "@/lib/growth-content";
 import { BoneBurst, DiaryBody, DiaryTabs, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
-import { GuestPickSheet, PostDetail, PostPhoto, ProfileSheet, ReportSheet, SHOW_PARTS_CSS, ShareSheet, ShowComposer, AuthorDot, type ComposerResult } from "../show-parts";
-import { PET } from "../page-data";
-import { loadLiveFeed } from "../show-feed";
+import { GuestPickSheet, PostDetail, PostPhoto, ProfileSheet, ReportSheet, SHOW_PARTS_CSS, ShareSheet, ShowComposer, AuthorDot, type ComposerResult, type ReportReason } from "../show-parts";
+import { loadLiveFeed, loadProfile, toPost, type ProfileView } from "../show-feed";
 
 const TABS = [
     { label: "댕자랑", color: "#ffd6e2" },
@@ -43,10 +55,21 @@ const REDIRECT = "/app/sticker/show/";
 const login = (tab = 0) => appLoginHref(tab ? `${REDIRECT}?tab=${tab}` : REDIRECT);
 const PAGE = 6; // 폴라로이드 붙는 효과 순서(6장 단위)
 const FEED_PAGE = 12; // 피드 한 쪽 = 12장(2열 × 6줄)
-/* 운영자 선정 대표 댕자랑 — 협업자 주제 카드(ShowcaseTopicCard)의 featuredPost 자리. 서버가 주제와 함께 내려줄 때만 보임(시안은 예시 게시물 하나) */
-const FEATURED_ID: string | null = "p5";
-/* 굿즈 공모전 문구 · 기간 — 협업자 기본 내용(lib/growth-content)과 진행 4단계(components/growth/GoodsContest 와 같은 문구) */
-const GOODS_CONTENT = DEFAULT_GROWTH_GOODS_CONTENT;
+/** 주제 기간 — 협업자 ShowcaseTopicCard 와 같은 표기(한국 시간) */
+function topicPeriod(startsAt: string, endsAt: string) {
+    const f = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "short", day: "numeric" });
+    const start = new Date(startsAt);
+    const end = new Date(endsAt);
+    if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime())) return "이번 주";
+    return `${f.format(start)}–${f.format(end)}`;
+}
+/** 피드에 보일 기본 이름 — 협업자 DaengShowcaseClient.memberDisplayName 과 같음 */
+function memberDisplayName(value: string) {
+    const clean = value.trim().replace(/\s+/g, " ").slice(0, 30);
+    if (clean.includes("@") || clean.includes("://")) return "댕다방 친구";
+    return clean.length >= 2 ? clean : "댕다방 친구";
+}
+/* 굿즈 공모전 진행 4단계 — components/growth/GoodsContest 와 같은 문구(문구 · 기간은 운영 게시 내용을 불러옴) */
 const CONTEST_STEPS = [
     { n: "01", title: "선택", desc: "마음에 드는 굿즈를 선택해요." },
     { n: "02", title: "500명", desc: "상품별 선택이 500명에 도달하는지 확인해요." },
@@ -55,6 +78,30 @@ const CONTEST_STEPS = [
 ];
 /** "M월 D일" (한국 시간) */
 const fmtDay = (iso: string) => new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", timeZone: "Asia/Seoul" }).format(new Date(iso));
+/** 굿즈 공모전 오류 문구 — 협업자 GoodsContest.contestErrorMessage 와 같음 */
+function contestErrorMessage(error: unknown, action: "load" | "select" | "cancel") {
+    if (error instanceof DdbApiError) {
+        if (error.apiCode === "goods_contest_closed") return "공모가 종료되어 최종 선택 집계를 보존하고 있어요.";
+        if (error.apiCode === "existing_member_login_required") return "가입된 이메일이에요. 회원 로그인 후 기존 선택과 함께 이용해 주세요.";
+        if (error.status === 401) return "로그인 시간이 끝났어요. 다시 로그인한 뒤 선택을 이어가 주세요.";
+        if (error.status === 429) return "요청이 많아 잠시 보호 중이에요. 잠시 후 다시 시도해 주세요.";
+        if (error.code === "missing_api_base") return "지금은 굿즈 공모전 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요.";
+    }
+    if (action === "cancel") return "선택을 취소하지 못했어요. 잠시 후 다시 시도해 주세요.";
+    if (action === "select") return "선택을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.";
+    return "굿즈 공모전 현황을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.";
+}
+/** 고른 굿즈 집계 한 줄을 바꿔 끼움 — 협업자 replaceSummaryItem 과 같음 */
+function replaceSummaryItem(current: GoodsContestSummary | null, next: GoodsContestItemSummary) {
+    if (!current) return current;
+    const previous = current.items.find((item) => item.itemId === next.itemId);
+    if (!previous) return current;
+    return {
+        ...current,
+        totalSelectionCount: Math.max(0, current.totalSelectionCount - previous.selectionCount + next.selectionCount),
+        items: current.items.map((item) => (item.itemId === next.itemId ? { itemId: next.itemId, selectionCount: next.selectionCount, goal: next.goal, remainingCount: next.remainingCount, productionEligible: next.productionEligible } : item)),
+    };
+}
 
 export default function StickerShow() {
     const [session, setSession] = useDemoSession();
@@ -76,52 +123,96 @@ export default function StickerShow() {
         setToast(`로그인하면 ${what} 할 수 있어요`);
     };
 
-    /* 댕자랑 — 응원 · 팔로우 · 피드 · 상세 · 프로필 · 공유 · 신고 · 올리기 */
+    /* 댕자랑 — 응원 · 팔로우 · 피드 · 상세 · 프로필 · 공유 · 신고 · 올리기 (협업자 함수 그대로 · 같은 순서) */
     const router = useRouter();
-    const [posts, setPosts] = useState<Post[]>([]); // 실제 피드를 불러오면 채움(실패하면 예시 게시물)
-    // 실제 피드 상태 — on: 운영 피드 사용 중 · next: 다음 쪽 커서 · loading · error(다음 쪽 실패)
-    const [live, setLive] = useState<{ on: boolean; next?: string; loading: boolean; error: boolean }>({ on: false, loading: true, error: false });
-    const [boned, setBoned] = useState<Record<string, boolean>>({});
+    const { user } = useAuth();
+    const token = user?.apiAccessToken || "";
+    const [posts, setPosts] = useState<Post[]>([]);
+    // 피드 상태 — next: 다음 쪽 커서 · loading · error(불러오기 실패)
+    const [live, setLive] = useState<{ next?: string; loading: boolean; error: boolean }>({ loading: true, error: false });
     const [feed, setFeed] = useState<"all" | "following">("all");
     /* 쪽 넘김 — pageNo: 지금 쪽 · cursors[n-1] = n쪽을 부르는 서버 커서(확인된 쪽까지) */
     const [pageNo, setPageNo] = useState(1);
     const [cursors, setCursors] = useState<string[]>([""]);
-    const published = useRef<Post[]>([]); // 시연으로 올린 글 — 1쪽 맨 앞에 유지
+    const created = useRef<Post[]>([]); // 방금 올린 글 — 1쪽 맨 앞에 유지(서버 피드와 겹치면 한 번만)
     const lastTry = useRef<[number, string]>([1, ""]); // 실패했을 때 다시 부를 쪽
-    const loadPage = useCallback((n: number, cursor: string) => {
+    const feedAbort = useRef<AbortController | null>(null);
+    const loadPage = useCallback((n: number, cursor: string, scope: "all" | "following") => {
         lastTry.current = [n, cursor];
+        feedAbort.current?.abort();
+        const ac = new AbortController();
+        feedAbort.current = ac;
         setLive((l) => ({ ...l, loading: true, error: false }));
-        loadLiveFeed(cursor || undefined, undefined, FEED_PAGE)
+        loadLiveFeed(scope, cursor || undefined, token, ac.signal, FEED_PAGE)
             .then((r) => {
-                setPosts([...(n === 1 ? published.current : []), ...r.posts]);
+                const head = n === 1 && scope === "all" ? created.current.filter((c) => !r.posts.some((p) => p.id === c.id)) : [];
+                setPosts([...head, ...r.posts]);
                 setPageNo(n);
                 setCursors((c) => {
-                    if (!r.next) return c.slice(0, n); // 마지막 쪽
-                    const x = [...c];
-                    x[n] = r.next;
+                    const x = n === 1 ? [""] : c.slice(0, n);
+                    if (r.next) x[n] = r.next; // 다음 쪽 커서
                     return x;
                 });
-                setLive({ on: true, next: r.next, loading: false, error: false });
+                setLive({ next: r.next, loading: false, error: false });
             })
-            .catch(() => setLive((l) => ({ ...l, loading: false, error: true })));
-    }, []);
+            .catch((reason) => {
+                if (ac.signal.aborted) return;
+                setLive((l) => ({ ...l, loading: false, error: true }));
+                if (reason instanceof ShowcaseApiError && reason.status === 401) setToast("팔로잉 피드는 로그인 후 볼 수 있어요.");
+            });
+    }, [token]);
     const [burst, setBurst] = useState<{ id: string; x: number; y: number; k: number } | null>(null);
     const [fresh, setFresh] = useState<string | null>(null); // 방금 올린 글(붙는 효과)
-    const [topicOn, setTopicOn] = useState(true); // 시연: 댕주제 진행 중 / 없음
+    /* 오늘의 댕주제 — 협업자 loadShowcaseTopic(주제 없음 = null) */
+    const [topic, setTopic] = useState<ShowcaseTopic | null>(null);
+    const [topicState, setTopicState] = useState<{ loading: boolean; error: string }>({ loading: true, error: "" });
+    const [topicKey, setTopicKey] = useState(0);
+    const topicOn = Boolean(topic?.isActive); // 지금 참여할 수 있는 주제
     const [composer, setComposer] = useState<{ open: boolean; topic: boolean }>({ open: false, topic: true });
     const [detail, setDetail] = useState<{ id: string; rect: DOMRect } | null>(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const [profileOf, setProfileOf] = useState<Post | null>(null);
+    /* 작성자 프로필 — 협업자 loadShowcaseAuthorProfile */
+    const [profileHead, setProfileHead] = useState<{ authorId: string; name: string; official?: boolean } | null>(null);
+    const [profile, setProfile] = useState<ProfileView | null>(null);
+    const [profileError, setProfileError] = useState("");
     const [shareOf, setShareOf] = useState<{ kind: "post" | "topic"; id: string; img?: string; text: string } | null>(null);
     const [reportOf, setReportOf] = useState<string | null>(null);
-    const [reported, setReported] = useState<Record<string, boolean>>({});
+    const busy = useRef<Set<string>>(new Set()); // 같은 글 · 작성자에 겹쳐 보내지 않게
     const lastTap = useRef<{ id: string; t: number } | null>(null);
     const tapTimer = useRef<number | null>(null);
     const goLogin = () => router.push(login());
 
+    // 대표 댕자랑 — 서버가 주제와 함께 준 글
+    const [featured, setFeatured] = useState<Post | null>(null);
+    // 같은 글 · 작성자를 피드 · 대표 · 프로필에서 함께 고침
+    const patchPost = (id: string, fn: (p: Post) => Post) => {
+        setPosts((ps) => ps.map((p) => (p.id === id ? fn(p) : p)));
+        setFeatured((f) => (f && f.id === id ? fn(f) : f));
+        setProfile((pr) => (pr ? { ...pr, posts: pr.posts.map((p) => (p.id === id ? fn(p) : p)) } : pr));
+    };
+    const patchAuthor = (authorId: string, followed: boolean, followers: number) => {
+        const fn = (p: Post) => (p.authorId === authorId ? { ...p, followed, followers } : p);
+        setPosts((ps) => ps.map(fn));
+        setFeatured((f) => (f ? fn(f) : f));
+        setProfile((pr) => (pr && pr.authorId === authorId ? { ...pr, followed, followers, posts: pr.posts.map(fn) } : pr ? { ...pr, posts: pr.posts.map(fn) } : pr));
+    };
+    const findPost = (id: string) => posts.find((p) => p.id === id) ?? (featured?.id === id ? featured : null) ?? profile?.posts.find((p) => p.id === id) ?? null;
+    const failed = (reason: unknown, fallback: string) => {
+        if (reason instanceof ShowcaseApiError && reason.status === 401) return goLogin();
+        setToast(reason instanceof Error ? reason.message : fallback);
+    };
+
+    // 뼈다귀 응원 — 협업자 ShowcaseCard.toggleBone: 먼저 화면에 반영 → setShowcaseBone → 서버 값으로 맞춤 · 실패하면 되돌림
     const cheer = (id: string, on: boolean) => {
-        setBoned((b) => ({ ...b, [id]: on }));
-        setPosts((ps) => ps.map((p) => (p.id === id ? { ...p, bones: p.bones + (on ? 1 : -1) } : p)));
+        const post = findPost(id);
+        if (!post || busy.current.has(`b:${id}`)) return;
+        const prev = { boned: Boolean(post.boned), bones: post.bones };
+        busy.current.add(`b:${id}`);
+        patchPost(id, (p) => ({ ...p, boned: on, bones: Math.max(0, prev.bones + (on ? 1 : -1)) }));
+        setShowcaseBone(id, on, token)
+            .then((r) => patchPost(r.postId, (p) => ({ ...p, boned: r.boned, bones: r.boneCount })))
+            .catch((reason) => { patchPost(id, (p) => ({ ...p, ...prev })); failed(reason, "뼈다귀 응원을 남기지 못했어요."); })
+            .finally(() => busy.current.delete(`b:${id}`));
     };
     // 사진 톡: 한 번 = 상세 펼침(두 번 톡을 기다렸다가) · 두 번 = 뼈다귀 응원
     const onPhotoTap = (p: Post, e: React.MouseEvent<HTMLElement>) => {
@@ -135,7 +226,7 @@ export default function StickerShow() {
             const r = el.getBoundingClientRect();
             setBurst({ id: p.id, x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100, k: now });
             haptic("medium");
-            if (!boned[p.id]) cheer(p.id, true);
+            if (!p.boned) cheer(p.id, true);
             return;
         }
         lastTap.current = { id: p.id, t: now };
@@ -147,51 +238,105 @@ export default function StickerShow() {
             setDetail({ id: p.id, rect: el.getBoundingClientRect() });
         }, 300);
     };
+    // 팔로우 — 협업자 ShowcaseCard.toggleFollow 와 같음(내 글은 팔로우 없음)
     const toggleFollow = (authorId: string) => {
         if (!member) return needLogin("팔로우");
+        const sample = posts.find((p) => p.authorId === authorId) ?? (featured?.authorId === authorId ? featured : null) ?? profile?.posts.find((p) => p.authorId === authorId);
+        const prev = profile && profile.authorId === authorId ? { followed: profile.followed, followers: profile.followers } : sample ? { followed: sample.followed, followers: sample.followers } : null;
+        if (!prev || busy.current.has(`f:${authorId}`) || (profile?.authorId === authorId && profile.isMe) || sample?.mine) return;
+        const next = !prev.followed;
         haptic("light");
-        setPosts((ps) => {
-            const next = !ps.find((p) => p.authorId === authorId)?.followed;
-            return ps.map((p) => (p.authorId === authorId ? { ...p, followed: next, followers: p.followers + (next ? 1 : -1) } : p));
-        });
-        setProfileOf((a) => (a && a.authorId === authorId ? { ...a, followed: !a.followed, followers: a.followers + (a.followed ? -1 : 1) } : a));
+        busy.current.add(`f:${authorId}`);
+        patchAuthor(authorId, next, Math.max(0, prev.followers + (next ? 1 : -1)));
+        setShowcaseFollow(authorId, next, token)
+            .then((r) => patchAuthor(r.authorId, r.followed, r.followerCount))
+            .catch((reason) => { patchAuthor(authorId, prev.followed, prev.followers); failed(reason, "팔로우 상태를 바꾸지 못했어요."); })
+            .finally(() => busy.current.delete(`f:${authorId}`));
     };
     const openComposer = (withTopic: boolean) => {
         if (!member) return goLogin();
         haptic("light");
         setComposer({ open: true, topic: withTopic });
     };
-    const publish = (r: ComposerResult) => {
-        const id = `p_new_${published.current.length + 1}`;
-        const post: Post = { id, authorId: "a_me", author: r.name, followers: 0, date: "방금 전", pet: r.pet?.name, breed: r.pet?.breed, img: r.img, text: r.text, bones: 0, followed: false, mine: true, topic: r.topic };
-        published.current = [post, ...published.current];
-        if (pageNo !== 1 && live.on) loadPage(1, ""); // 1쪽 맨 앞에서 보이게
-        else { setPageNo(1); setPosts((ps) => [post, ...ps]); }
+    // 올리기 — 협업자 ShowcaseComposer.submit 과 같은 값으로 createShowcasePost(진행률 그대로) → 피드 맨 앞
+    const publish = async (r: ComposerResult, onProgress: (n: number) => void) => {
+        let receipt;
+        try {
+            receipt = await createShowcasePost({
+                file: r.file,
+                caption: r.text,
+                displayName: r.name,
+                publicDisplayConsent: r.consent,
+                petProfileId: r.petProfileId,
+                officialChannelOptIn: r.channel,
+                topicId: r.topic && topic?.isActive ? topic.topicId : undefined,
+            }, token, onProgress);
+        } catch (reason) {
+            throw new Error(reason instanceof ShowcaseApiError ? reason.message : "사진을 올리지 못했어요. 잠시 후 다시 시도해 주세요.");
+        }
+        const { conversionReceipt: _receipt, ...publishedPost } = receipt;
+        void _receipt;
+        const post = toPost(publishedPost);
+        created.current = [post, ...created.current.filter((c) => c.id !== post.id)];
         setComposer((c) => ({ ...c, open: false }));
         setFeed("all");
-        setFresh(id);
+        setPageNo(1);
+        setPosts((ps) => [post, ...ps.filter((p) => p.id !== post.id)]);
+        setFresh(post.id);
         haptic("medium");
         setToast("댕자랑을 공개했어요. 피드 맨 앞에서 확인해 보세요.");
         window.setTimeout(() => document.getElementById("sh-wall")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
     };
+    // 삭제 — 협업자 ShowcaseCard.removePost(확인은 우리 메모 카드) → deleteShowcasePost
     const remove = (id: string) => {
-        published.current = published.current.filter((p) => p.id !== id);
-        setPosts((ps) => ps.filter((p) => p.id !== id));
-        setDetail(null);
-        setConfirmDelete(false);
-        setToast("게시물을 삭제했어요.");
+        if (busy.current.has(`d:${id}`)) return;
+        busy.current.add(`d:${id}`);
+        deleteShowcasePost(id, token)
+            .then(() => {
+                created.current = created.current.filter((p) => p.id !== id);
+                setPosts((ps) => ps.filter((p) => p.id !== id));
+                setProfile((pr) => (pr ? { ...pr, postCount: Math.max(0, pr.postCount - 1), posts: pr.posts.filter((p) => p.id !== id) } : pr));
+                setDetail(null);
+                setConfirmDelete(false);
+                setToast("게시물을 삭제했어요.");
+            })
+            .catch((reason) => failed(reason, "게시물을 삭제하지 못했어요."))
+            .finally(() => busy.current.delete(`d:${id}`));
     };
-    const submitReport = (id: string) => {
-        setReportOf(null);
-        setDetail(null);
-        setToast(reported[id] ? "이미 접수된 게시물이에요." : "신고를 접수했어요. 운영자가 확인하겠습니다.");
-        setReported((r) => ({ ...r, [id]: true }));
+    // 신고 — 협업자 ShowcaseCard.submitReport → reportShowcasePost(실패 문구는 신고 속지 안에)
+    const submitReport = async (id: string, reason: ReportReason, text: string) => {
+        try {
+            const r = await reportShowcasePost(id, reason, text, token);
+            setReportOf(null);
+            setDetail(null);
+            setToast(r.alreadyReported ? "이미 접수된 게시물이에요." : "신고를 접수했어요. 운영자가 확인하겠습니다.");
+        } catch (reason_) {
+            if (reason_ instanceof ShowcaseApiError && reason_.status === 401) { setReportOf(null); goLogin(); return; }
+            throw reason_ instanceof Error ? reason_ : new Error("신고를 접수하지 못했어요.");
+        }
     };
-    const list = feed === "following" ? posts.filter((p) => p.followed || p.mine) : posts;
-    // 실제 피드는 서버가 쪽을 나눠 주고, 예시 게시물은 화면에서 12장씩 나눔
-    const shown = live.on ? list : list.slice((pageNo - 1) * FEED_PAGE, pageNo * FEED_PAGE);
-    const hasNext = live.on ? Boolean(live.next) : list.length > pageNo * FEED_PAGE;
-    const knownPages = live.on ? cursors.length : Math.max(1, Math.ceil(list.length / FEED_PAGE));
+    // 작성자 프로필 열기 — 이름은 바로, 숫자 · 최근 글은 서버에서
+    const openProfile = (p: Post) => {
+        haptic("light");
+        setProfileHead({ authorId: p.authorId, name: p.author, official: p.official });
+        setProfile(null);
+        setProfileError("");
+        loadProfile(p.authorId, token)
+            .then(setProfile)
+            .catch((reason) => setProfileError(reason instanceof Error ? reason.message : "프로필을 불러오지 못했어요."));
+    };
+    // 피드 고르기 — 팔로잉은 로그인 후(협업자 chooseScope 와 같음)
+    const chooseFeed = (f: "all" | "following") => {
+        if (f === "following" && !member) return needLogin("팔로잉 피드를");
+        if (f === feed) return;
+        haptic("light");
+        setFeed(f);
+        setCursors([""]);
+        loadPage(1, "", f);
+    };
+    const shown = posts;
+    const hasNext = Boolean(live.next);
+    const knownPages = cursors.length;
     // 쪽 번호: 지금 쪽 앞뒤 3개 + 멀어지면 "1 …" (첫 쪽으로 바로)
     const pageNums = (() => {
         const from = Math.max(1, Math.min(pageNo - 1, knownPages - 2));
@@ -200,50 +345,169 @@ export default function StickerShow() {
     const goPage = (n: number) => {
         if (n < 1 || n > knownPages || n === pageNo || live.loading) return;
         haptic("light");
-        if (live.on) loadPage(n, cursors[n - 1] ?? "");
-        else setPageNo(n);
+        loadPage(n, cursors[n - 1] ?? "", feed);
         window.setTimeout(() => document.getElementById("sh-wall")?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
     };
 
-    /* 실제 댕자랑 피드(읽기 전용) — 첫 쪽: 화면을 그린 뒤 불러오고, 실패하면 예시 게시물로 */
+    /* 첫 쪽 · 주제 — 화면을 그린 뒤, 로그인 상태가 바뀌면 다시(응원 · 팔로우 표시가 회원 기준으로) */
+    useEffect(() => {
+        const id = window.setTimeout(() => loadPage(1, "", "all"), 0);
+        return () => { window.clearTimeout(id); feedAbort.current?.abort(); };
+    }, [loadPage]);
     useEffect(() => {
         const ac = new AbortController();
-        loadLiveFeed(undefined, ac.signal, FEED_PAGE)
-            .then((r) => {
-                setPosts((ps) => [...ps.filter((p) => p.id.startsWith("p_new_")), ...r.posts]); // 방금 올린 시연 글은 맨 앞에 유지
-                if (r.next) setCursors(["", r.next]);
-                setLive({ on: true, next: r.next, loading: false, error: false });
-            })
-            .catch(() => {
-                if (ac.signal.aborted) return;
-                setPosts((ps) => [...ps.filter((p) => p.id.startsWith("p_new_")), ...POSTS]);
-                setLive({ on: false, loading: false, error: false });
-            });
-        return () => ac.abort();
-    }, []);
-    const featured = FEATURED_ID ? posts.find((p) => p.id === FEATURED_ID) ?? POSTS.find((p) => p.id === FEATURED_ID) ?? null : null; // 실제 피드에 없으면 예시
-    const open = detail ? posts.find((p) => p.id === detail.id) ?? (featured?.id === detail.id ? featured : null) : null;
+        const id = window.setTimeout(() => {
+            setTopicState({ loading: true, error: "" });
+            loadShowcaseTopic({ token: token || undefined, signal: ac.signal })
+                .then((t) => { setTopic(t); setFeatured(t?.featuredPost ? toPost(t.featuredPost) : null); setTopicState({ loading: false, error: "" }); })
+                .catch((reason) => {
+                    if (ac.signal.aborted) return;
+                    setTopic(null);
+                    setFeatured(null);
+                    setTopicState({ loading: false, error: reason instanceof Error ? reason.message : "오늘의 댕주제를 불러오지 못했어요." });
+                });
+        }, 0);
+        return () => { window.clearTimeout(id); ac.abort(); };
+    }, [token, topicKey]);
+    // 주제 남은 날(D-day) — 지금 시각으로 계산
+    const nowTick = useNow(60_000);
+    const topicDday = topic && nowTick ? Math.max(0, Math.ceil((new Date(topic.endsAt).getTime() - nowTick.getTime()) / 86_400_000)) : null;
+    const open = detail ? findPost(detail.id) : null;
+    // 올리기에 쓰는 반려견 — 서버 등록된 반려견만(협업자 serverPets 와 같음)
+    const serverPets = (user?.pets || [])
+        .filter((pet): pet is typeof pet & { apiProfileId: number } => Number.isInteger(pet.apiProfileId))
+        .map((pet) => ({ id: pet.apiProfileId, name: pet.name, breed: pet.breed }));
 
-    /* 굿즈 고르기 */
-    const [picked, setPicked] = useState<Record<string, boolean>>({});
-    // 공모 종료까지 남은 날(D-day) — 화면을 그린 뒤 지금 시각으로 계산
-    const now = useNow(60_000);
-    const goodsDday = now ? Math.max(0, Math.ceil((new Date(GOODS_CONTENT.campaign.endsAt).getTime() - now.getTime()) / 86_400_000)) : null;
-    const [guestVerified, setGuestVerified] = useState(false); // 비회원 이메일 1회 확인 완료(시안)
-    const [guestPickFor, setGuestPickFor] = useState<string | null>(null); // 고를 굿즈 id · "" = 내 선택 다시 확인(굿즈 없이)
+    /* 굿즈 공모전 — 협업자 GoodsContest 와 같은 함수 · 같은 순서 */
+    const [goodsContent, setGoodsContent] = useState(DEFAULT_GROWTH_GOODS_CONTENT);
+    const [contentReady, setContentReady] = useState(false);
+    const [summary, setSummary] = useState<GoodsContestSummary | null>(null);
+    const [summaryState, setSummaryState] = useState<"loading" | "ready" | "error">("loading");
+    const [summaryRetry, setSummaryRetry] = useState(0);
+    // 비회원 토큰(이메일 확인 후 저장된 것) — 화면을 그린 뒤 읽음
+    const [guestToken, setGuestToken] = useState("");
+    const [guestTokenReady, setGuestTokenReady] = useState(false);
+    const identityKey = token ? `member:${token}` : guestToken ? `guest:${guestToken}` : "anonymous";
+    const [selection, setSelection] = useState<{ owner: string; state: "loading" | "ready" | "error"; ids: GoodsContestItemId[] }>({ owner: "", state: "loading", ids: [] });
+    const [selectionRetry, setSelectionRetry] = useState(0);
+    const [pendingItem, setPendingItem] = useState<GoodsContestItemId | null>(null);
+    const [guestPickFor, setGuestPickFor] = useState<GoodsContestItemId | "" | null>(null); // 고를 굿즈 · "" = 굿즈 없이 이메일 확인
     const [goodsLimit, setGoodsLimit] = useState(8); // 굿즈 8개씩 더 보기
     const [safetyOpen, setSafetyOpen] = useState(false);
-    // 고르기 — 회원 · 이메일 확인한 비회원은 바로, 아니면 로그인 / 이메일 확인 속지
-    const tryPick = (id: string) => {
-        if (member || guestVerified) return pick(id);
+    useEffect(() => {
+        const ac = new AbortController();
+        loadPublishedGrowthContent(ac.signal).then((published) => {
+            if (ac.signal.aborted) return;
+            if (published) setGoodsContent(published.content.goods);
+            setContentReady(true);
+        });
+        return () => ac.abort();
+    }, []);
+    useEffect(() => {
+        const id = window.setTimeout(() => { setGuestToken(getGoodsContestGuestToken()); setGuestTokenReady(true); }, 0);
+        return () => window.clearTimeout(id);
+    }, []);
+    useEffect(() => {
+        const ac = new AbortController();
+        loadGoodsContestSummary(ac.signal)
+            .then((v) => { if (!ac.signal.aborted) { setSummary(v); setSummaryState("ready"); } })
+            .catch((error) => {
+                if (ac.signal.aborted) return;
+                setSummary(null);
+                setSummaryState("error");
+                setToast(contestErrorMessage(error, "load"));
+            });
+        return () => ac.abort();
+    }, [summaryRetry]);
+    useEffect(() => {
+        if (!guestTokenReady || identityKey === "anonymous") return;
+        const ac = new AbortController();
+        (token ? loadMyGoodsContestSelections(token, ac.signal) : loadGuestGoodsContestSelections(guestToken, ac.signal))
+            .then((v) => { if (!ac.signal.aborted) setSelection({ owner: identityKey, state: "ready", ids: v.selectedItemIds }); })
+            .catch((error) => {
+                if (ac.signal.aborted) return;
+                if (!token && error instanceof DdbApiError && error.status === 401) { setGoodsContestGuestToken(); setGuestToken(""); return; }
+                setSelection({ owner: identityKey, state: "error", ids: [] });
+                setToast(contestErrorMessage(error, "load"));
+            });
+        return () => ac.abort();
+    }, [guestTokenReady, identityKey, token, guestToken, selectionRetry]);
+    const selectionState = !guestTokenReady ? "loading" : identityKey === "anonymous" ? "anonymous" : selection.owner === identityKey ? selection.state : "loading";
+    const selectedSet = new Set(selection.owner === identityKey && selection.state === "ready" ? selection.ids : []);
+    const itemSummaries = new Map(summary?.items.map((item) => [item.itemId, item]) ?? []);
+    const selectionOpen = summary?.selectionOpen ?? true;
+    const campaignClosed = summaryState === "ready" && !selectionOpen;
+    // 머리 도장 — 협업자 campaignStatusLabel 과 같은 규칙
+    const campaignStatusLabel = summary?.status === "expired" ? "기간 종료" : summary?.status === "ended" ? "운영자 종료"
+        : summary?.daysRemaining != null ? `D-${summary.daysRemaining}` : "90일 공모 진행 중";
+    // 고르기 · 취소 — 회원은 회원 함수, 이메일 확인한 비회원은 비회원 함수(협업자 toggleSelection 과 같음)
+    const toggleSelection = async (itemId: GoodsContestItemId) => {
+        if (identityKey === "anonymous" || pendingItem || summaryState !== "ready" || selectionState !== "ready" || !selectionOpen || !contentReady) return;
+        const wasSelected = selectedSet.has(itemId);
+        if (!goodsContent.items[itemId].active && !wasSelected) return;
+        setPendingItem(itemId);
+        haptic("light");
+        try {
+            const next = token
+                ? wasSelected ? await cancelGoodsContestItemSelection(itemId, token) : await selectGoodsContestItem(itemId, token)
+                : wasSelected ? await cancelGuestGoodsContestItemSelection(itemId, guestToken) : await selectGuestGoodsContestItem(itemId, guestToken);
+            setSummary((current) => replaceSummaryItem(current, next));
+            setSelection((cur) => (cur.owner !== identityKey ? cur : { ...cur, ids: wasSelected ? cur.ids.filter((x) => x !== itemId) : cur.ids.includes(itemId) ? cur.ids : [...cur.ids, itemId] }));
+            haptic(wasSelected ? "light" : "medium");
+            setToast(wasSelected ? "선택을 취소했어요. 공모 기간 안에는 다시 선택할 수 있습니다." : "선택을 저장했어요. 주문·예약·결제는 발생하지 않았습니다.");
+        } catch (error) {
+            setToast(contestErrorMessage(error, wasSelected ? "cancel" : "select"));
+            if (!token && error instanceof DdbApiError && error.status === 401) { setGoodsContestGuestToken(); setGuestToken(""); }
+        } finally {
+            setPendingItem(null);
+        }
+    };
+    // 비회원 이메일 확인 — 협업자 requestGuestCode · confirmGuestCode 와 같음(인증 뒤 고르려던 굿즈를 바로 선택)
+    const sendGuestCode = async (email: string) => {
+        try {
+            const r = await requestGoodsContestGuestVerification(email);
+            return { verificationId: r.verificationId, maskedEmail: r.maskedEmail };
+        } catch (error) {
+            throw new Error(contestErrorMessage(error, "load"));
+        }
+    };
+    const confirmGuestCode = async (verificationId: string, email: string, code: string) => {
+        let session;
+        try {
+            session = await confirmGoodsContestGuestVerification(verificationId, email, code);
+        } catch (error) {
+            throw new Error(contestErrorMessage(error, "load"));
+        }
+        let ids = session.selectedItemIds;
+        let selectedSummary: GoodsContestItemSummary | null = null;
+        let selectionFailed = false;
+        const intended = guestPickFor || null;
+        if (intended && selectionOpen && goodsContent.items[intended].active && !ids.includes(intended)) {
+            try {
+                selectedSummary = await selectGuestGoodsContestItem(intended, session.guestToken);
+                ids = [...ids, intended];
+            } catch (error) {
+                selectionFailed = true;
+                setToast(contestErrorMessage(error, "select"));
+            }
+        }
+        setGoodsContestGuestToken(session.guestToken, session.expiresAt);
+        setGuestToken(session.guestToken);
+        setSelection({ owner: `guest:${session.guestToken}`, state: "ready", ids });
+        if (selectedSummary) {
+            const next = selectedSummary;
+            setSummary((current) => replaceSummaryItem(current, next));
+            haptic("medium");
+            setToast("이메일 확인과 굿즈 선택을 완료했어요. 결제는 발생하지 않았습니다.");
+        } else if (!selectionFailed) {
+            setToast("이메일 확인을 완료했어요. 이제 원하는 굿즈를 선택해 주세요.");
+        }
+    };
+    // 굿즈 고르기 버튼 — 확인 전이면 이메일 확인 속지
+    const tryPick = (id: GoodsContestItemId) => {
+        if (identityKey !== "anonymous") return void toggleSelection(id);
         haptic("light");
         setGuestPickFor(id);
-    };
-    const pick = (id: string) => {
-        const on = !picked[id];
-        setPicked((s) => ({ ...s, [id]: on }));
-        haptic(on ? "medium" : "light");
-        setToast(on ? "선택을 저장했어요. 주문·예약·결제는 발생하지 않았습니다." : "선택을 취소했어요. 공모 기간 안에는 다시 선택할 수 있습니다.");
     };
 
     return (
@@ -260,18 +524,31 @@ export default function StickerShow() {
                             {/* 오늘의 댕주제 — 진행 중 / 주제 없음(협업자 문구) */}
                             <div className="st-postit relative px-4 pb-4 pt-4" style={{ background: "#ffe6ee", rotate: "-0.8deg" }}>
                                 <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" />
-                                {topicOn ? (
+                                {topicState.loading ? (
                                     <>
-                                        <span className="flex items-center justify-between">
-                                            <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제 · 10월 13일–10월 19일</span>
-                                            <InkStamp rot={10} className="!py-1 text-[12px]">D-{SAMPLE.topic.dday}</InkStamp>
+                                        <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제</span>
+                                        <p className="ah-light mt-1 flex items-center gap-1.5 text-[12.5px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw sh-paw-spin text-[12px] text-[#f0a3bb]" />주제를 불러오고 있어요</p>
+                                    </>
+                                ) : topicState.error ? (
+                                    <>
+                                        <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제</span>
+                                        <p role="status" className="ah-light mt-1 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{topicState.error}</p>
+                                        <div className="mt-3"><Patch tone="cream" small onClick={() => { haptic("light"); setTopicKey((k) => k + 1); }}>주제 다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
+                                    </>
+                                ) : topic ? (
+                                    <>
+                                        <span className="flex items-center justify-between gap-2">
+                                            <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제 · {topicPeriod(topic.startsAt, topic.endsAt)}</span>
+                                            {topic.isActive ? (topicDday !== null ? <InkStamp rot={10} className="!py-1 text-[12px]">D-{topicDday}</InkStamp> : null)
+                                                : <InkStamp rot={-6} color="#9c8a80" className="!py-1 text-[11px]">지난 주제</InkStamp>}
                                         </span>
-                                        <p className="ah-display mt-1 text-[19px]">&lsquo;{SAMPLE.topic.title}&rsquo;</p>
-                                        <p className="ah-light mt-0.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다.</p>
-                                        {/* 올리기 : 공유카드 = 약 6 : 4 — 공유카드 글자가 와펜 안에 넉넉히 들어가게 */}
-                                        <div className="mt-3 grid grid-cols-[1.5fr_1fr] gap-2">
-                                            <Patch small onClick={() => openComposer(true)}>{member ? "이 주제로 올리기" : "로그인하고 참여하기"}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch>
-                                            <Patch tone="cream" small onClick={() => { haptic("light"); setShareOf({ kind: "topic", id: "dst_today", text: `오늘의 댕주제 · ${SAMPLE.topic.title}` }); }}>공유카드<i aria-hidden="true" className="fa-solid fa-share-nodes text-[11px]" /></Patch>
+                                        <p className="ah-display mt-1 text-[19px]">&lsquo;{topic.title}&rsquo;</p>
+                                        {topic.prompt ? <p className="ah-light mt-1 whitespace-pre-wrap text-[13px] leading-relaxed">{topic.prompt}</p> : null}
+                                        <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{topic.isActive ? "주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다." : "주제 참여 기간이 끝났어요. 공개된 게시물과 대표 댕자랑은 그대로 볼 수 있습니다."}</p>
+                                        {/* 올리기 : 공유카드 = 약 6 : 4 — 지난 주제면 공유카드만 */}
+                                        <div className={`mt-3 grid gap-2 ${topic.isActive ? "grid-cols-[1.5fr_1fr]" : "grid-cols-1"}`}>
+                                            {topic.isActive ? <Patch small onClick={() => openComposer(true)}>{member ? "이 주제로 올리기" : "로그인하고 참여하기"}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch> : null}
+                                            <Patch tone="cream" small onClick={() => { haptic("light"); setShareOf({ kind: "topic", id: topic.topicId, text: `오늘의 댕주제 · ${topic.title}` }); }}>공유카드<i aria-hidden="true" className="fa-solid fa-share-nodes text-[11px]" /></Patch>
                                         </div>
                                         {/* 운영자 선정 대표 댕자랑 — 작은 폴라로이드 + 글 두 줄, 톡 하면 게시물이 펼쳐짐(있을 때만) */}
                                         {featured ? (
@@ -300,20 +577,17 @@ export default function StickerShow() {
                                     </>
                                 )}
                             </div>
-                            {/* 시연 전용: 주제 있을 때 / 없을 때 */}
-                            <p className="mt-2 text-right"><button type="button" onClick={() => setTopicOn((v) => !v)} className="ah-light text-[10.5px] text-[#c9a8b4] underline decoration-dashed underline-offset-2">(시연) 주제 {topicOn ? "없을 때" : "있을 때"} 보기</button></p>
 
                             {/* 전체 / 팔로잉 — 형광펜 */}
                             <div id="sh-wall" className="mt-4 flex scroll-mt-28 items-center gap-4">
                                 {(["all", "following"] as const).map((f) => (
-                                    <button key={f} type="button" onClick={() => (f === "following" && !member ? needLogin("팔로잉 피드를") : (haptic("light"), setFeed(f)))}
+                                    <button key={f} type="button" onClick={() => chooseFeed(f)} aria-pressed={feed === f}
                                         className={`ah-display text-[15px] ${feed === f ? "st-marker" : "text-[#b7a9a1]"}`}>
                                         {f === "all" ? "오늘 올라온 댕자랑" : "팔로잉"}
                                     </button>
                                 ))}
                             </div>
                             <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>사진 톡 = 자세히 · 두 번 톡 = 뼈다귀 응원</p>
-                            {live.on ? <p className="ah-light mt-0.5 text-[10.5px] text-[#c9a8b4]">(시연) 운영 중인 실제 댕자랑을 불러왔어요 · 응원·팔로우·신고는 저장되지 않아요</p> : null}
 
                             {!member ? (
                                 <PostIt color="#fff3a6" rot={-1} className="!static mt-3 !block w-full !px-3 !py-2 !text-left !text-[12.5px]">
@@ -331,7 +605,7 @@ export default function StickerShow() {
                                     </li>
                                 )) : null}
                                 {shown.map((p, i) => {
-                                    const on = Boolean(boned[p.id]);
+                                    const on = Boolean(p.boned);
                                     const r = [-1.5, 1.2, 1, -1.2, -0.8, 1.4][i % 6];
                                     return (
                                         <li key={p.id} className={`sh-pol st-place relative bg-white p-1.5 pb-2 ${fresh === p.id ? "is-fresh" : ""}`} style={{ ["--r" as string]: `${r}deg`, ["--d" as string]: `${(i % PAGE) * 60}ms`, rotate: `${r}deg` }}>
@@ -355,14 +629,14 @@ export default function StickerShow() {
                                     );
                                 })}
                             </ul>
-                            {list.length === 0 && !live.loading ? (
+                            {posts.length === 0 && !live.loading && !live.error ? (
                                 <div className="mt-4 text-center">
                                     <p className="ah-light text-[13px]" style={{ color: TEXT_SOFT }}>{feed === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요"}</p>
-                                    {feed === "following" ? <button type="button" onClick={() => setFeed("all")} className="ah-display mt-2 text-[13px] text-[#e0557f]">전체 피드 보기</button> : null}
+                                    {feed === "following" ? <button type="button" onClick={() => chooseFeed("all")} className="ah-display mt-2 text-[13px] text-[#e0557f]">전체 피드 보기</button> : null}
                                 </div>
                             ) : null}
                             {/* 쪽 넘김 — 이전 · 쪽 번호 스티커 · 다음 (전체 피드, 두 쪽 이상일 때) */}
-                            {feed === "all" && knownPages > 1 ? (
+                            {knownPages > 1 ? (
                                 <nav aria-label="댕자랑 쪽 넘기기" className="mt-7 flex items-center justify-center gap-1.5">
                                     <button type="button" onClick={() => goPage(pageNo - 1)} disabled={pageNo === 1 || live.loading} aria-label="이전 쪽" className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" /></button>
                                     {pageNums[0] > 1 ? (
@@ -384,9 +658,9 @@ export default function StickerShow() {
                                 ) : live.error ? (
                                     <span className="inline-flex flex-col items-center gap-2">
                                         <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>댕자랑을 불러오지 못했어요</span>
-                                        <Patch tone="cream" small onClick={() => { haptic("light"); loadPage(...lastTry.current); }}>다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch>
+                                        <Patch tone="cream" small onClick={() => { haptic("light"); loadPage(...lastTry.current, feed); }}>다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch>
                                     </span>
-                                ) : feed === "all" && knownPages > 1 && !hasNext ? (
+                                ) : knownPages > 1 && !hasNext ? (
                                     <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw text-[11px] text-[#f0a3bb]" />마지막 쪽이에요</p>
                                 ) : null}
                             </div>
@@ -396,17 +670,17 @@ export default function StickerShow() {
                             {/* 굿즈 공모전 머리 티켓 — 위: 기간 안내 · 가운데: 공모전 영상(글자 없이 깨끗하게, 웹 공모전과 같은 모바일 영상, 소리 없이 반복)
                                 · 아래: 제목 → 절취선 너머 안내. D-day 도장은 영상 오른쪽 위 모서리에 살짝 걸쳐 찍힘. 양옆 반달 홈은 절취선 높이에 맞춰 붙임 */}
                             <div className="st-ticket sh-vticket px-2.5 pt-3" style={{ rotate: "-1deg" }}>
-                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(GOODS_CONTENT.campaign.startsAt)} – {fmtDay(GOODS_CONTENT.campaign.endsAt)} · 회원·비회원 모두 참여</p>
+                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(summary?.startsAt || goodsContent.campaign.startsAt)} – {fmtDay(summary?.endsAt || goodsContent.campaign.endsAt)} · 회원·비회원 모두 참여</p>
                                 <div className="relative">
                                     <div className="sh-vwin relative aspect-video overflow-hidden rounded-[13px] bg-[#f3e2b8]">
                                         <video autoPlay muted loop playsInline preload="auto" poster="/images/goods/goods-hero-lifestyle.webp" aria-label="댕다방 굿즈 공모전 상품 미리보기 영상" className="absolute inset-0 h-full w-full object-cover">
                                             <source src="/videos/goods-contest-hero-mobile.mp4" type="video/mp4" />
                                         </video>
                                     </div>
-                                    <InkStamp rot={10} color="#d9822b" className="absolute -top-5 right-1 z-[1] bg-[#fff8e6] !py-1 text-[12px]">D-{goodsDday ?? SAMPLE.goods.dday}</InkStamp>
+                                    <InkStamp rot={10} color={campaignClosed ? "#9c8a80" : "#d9822b"} className="absolute -top-5 right-1 z-[1] bg-[#fff8e6] !py-1 text-[12px]">{campaignStatusLabel}</InkStamp>
                                 </div>
-                                <p className="ah-display mt-2.5 break-keep px-1.5 text-[18px] leading-snug">{GOODS_CONTENT.title}</p>
-                                <p className="ah-light mt-1 break-keep px-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{GOODS_CONTENT.description}</p>
+                                <p className="ah-display mt-2.5 break-keep px-1.5 text-[18px] leading-snug">{goodsContent.title}</p>
+                                <p className="ah-light mt-1 break-keep px-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{goodsContent.description}</p>
                                 <span className="st-ticket-cut sh-vcut relative mt-3 block px-1.5 pb-3 pt-2.5 text-[12px]">
                                     <span aria-hidden="true" className="sh-notch left-[-21px]" /><span aria-hidden="true" className="sh-notch right-[-21px]" />
                                     <span className="ah-display flex items-start gap-1.5 text-[#a8560f]"><i aria-hidden="true" className="fa-solid fa-circle-info mt-0.5 text-[11px]" />선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.</span>
@@ -429,15 +703,26 @@ export default function StickerShow() {
                             </ol>
 
                             <SectionLabel className="mt-7" icon="fa-scissors">마음에 드는 굿즈를 골라요</SectionLabel>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>선택 수는 상품별로 집계되며 공모 기간 안에는 취소할 수 있어요.</p>
-                            {!member && !guestVerified ? (
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{campaignClosed ? "공모가 종료되어 최종 선택 수를 보존하고 있어요." : "선택 수는 상품별로 집계되며 공모 기간 안에는 취소할 수 있어요."}</p>
+                            {/* 비회원: 이메일 확인으로 내 선택 다시 보기 · 불러오기 실패: 다시 불러오기(협업자와 같은 버튼 문구) */}
+                            {selectionState === "anonymous" && !campaignClosed ? (
                                 <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setGuestPickFor(""); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">내 선택 다시 확인하기</button></p>
                             ) : null}
+                            {summaryState === "error" ? (
+                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setSummaryState("loading"); setSummaryRetry((v) => v + 1); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">집계 다시 불러오기</button></p>
+                            ) : null}
+                            {selectionState === "error" ? (
+                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setSelection({ owner: identityKey, state: "loading", ids: [] }); setSelectionRetry((v) => v + 1); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">내 선택 다시 확인하기</button></p>
+                            ) : null}
                             <ul className="mt-3 grid grid-cols-2 gap-3">
-                                {GOODS.slice(0, goodsLimit).map((g, i) => {
-                                    const on = Boolean(picked[g.id]);
-                                    const joined = g.joined + (on ? 1 : 0); // 내가 고르면 한 명 더
-                                    const stamps = Math.min(10, Math.floor(joined / 50)); // 발도장 10칸 · 한 칸 = 50명
+                                {GOODS_CONTEST_CATALOG.slice(0, goodsLimit).map((g, i) => {
+                                    const item = goodsContent.items[g.id]; // 운영 게시 문구(이름 · 소개 · 예상가 · 선택 받는 중)
+                                    const sum = itemSummaries.get(g.id); // 서버 집계
+                                    const on = selectedSet.has(g.id);
+                                    const goal = sum?.goal ?? 500;
+                                    const joined = sum?.selectionCount ?? 0;
+                                    const stamps = Math.min(10, Math.floor((joined / goal) * 10)); // 발도장 10칸 · 한 칸 = 목표의 10%
+                                    const pending = pendingItem === g.id;
                                     const r = [-0.8, 0.7, 0.6, -0.7][i % 4];
                                     return (
                                         <li key={g.id} className={`sh-scrap relative px-2 pb-2.5 pt-2 ${on ? "is-on" : ""}`} style={{ rotate: `${r}deg` }}>
@@ -451,26 +736,35 @@ export default function StickerShow() {
                                             {/* 가격표 태그 — 사진 오른쪽 위 모서리에 걸침 */}
                                             <span className="sh-tag absolute right-0.5 top-4 z-10 py-1 pl-4 pr-2 text-right leading-tight">
                                                 <span className="ah-light block text-[9.5px]">예상 펀딩가</span>
-                                                <span className="ah-display block text-[12px]">{g.defaultExpectedPriceKrw.toLocaleString("ko-KR")}원</span>
+                                                <span className="ah-display block text-[12px]">{item.expectedPriceKrw.toLocaleString("ko-KR")}원</span>
                                             </span>
-                                            <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{g.defaultName}</p>
-                                            <p className="ah-light line-clamp-2 min-h-[2.4em] px-0.5 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{g.defaultSummary}</p>
+                                            <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{item.name}</p>
+                                            <p className="ah-light line-clamp-2 min-h-[2.4em] px-0.5 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{item.summary}</p>
                                             {/* 발도장 스탬프판 — 모인 만큼 찍힘 */}
-                                            <span className="sh-stamps mt-1.5 grid grid-cols-5 gap-x-1 gap-y-0.5 rounded-[8px] px-1.5 py-1.5" aria-label={`${joined}/500명 참여`}>
+                                            <span className="sh-stamps mt-1.5 grid grid-cols-5 gap-x-1 gap-y-0.5 rounded-[8px] px-1.5 py-1.5" aria-label={sum ? `${joined}/${goal}명 선택` : "선택 수 확인 중"}>
                                                 {Array.from({ length: 10 }, (_, k) => (
                                                     <i key={k} aria-hidden="true" className={`fa-solid fa-paw text-center text-[11px] ${k < stamps ? "is-in" : ""}`} style={{ rotate: `${(k * 37) % 30 - 15}deg`, ["--d" as string]: `${k * 40}ms` }} />
                                                 ))}
                                             </span>
-                                            <p className="ah-light mt-1 px-0.5 text-[11px]" style={{ color: TEXT_SOFT }}><b className="ah-display text-[#c98a12]">{joined}</b>/500명 · {Math.max(0, 500 - joined)}명 남음</p>
+                                            <p className="ah-light mt-1 px-0.5 text-[11px]" style={{ color: TEXT_SOFT }}>
+                                                {sum ? <><b className="ah-display text-[#c98a12]">{joined.toLocaleString("ko-KR")}</b>/{goal.toLocaleString("ko-KR")}명 · {sum.productionEligible ? <b className="ah-display text-[#1f9e75]">500명 달성</b> : `${sum.remainingCount.toLocaleString("ko-KR")}명 남음`}</>
+                                                    : summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중"}
+                                            </p>
+                                            {/* 고르기 버튼 — 협업자와 같은 상태 순서(설정 확인 중 → 공모 종료 → 선택 안 받음 → 비회원 → 회원) */}
                                             <div className="mt-2">
-                                                <Patch tone={on ? "pink" : "cream"} small onClick={() => tryPick(g.id)}>{on ? "선택 취소" : "이 굿즈 선택"}<i aria-hidden="true" className={`fa-solid ${on ? "fa-rotate-left" : "fa-hand-pointer"} text-[11px]`} /></Patch>
+                                                {!contentReady ? <Patch tone="cream" small disabled>확인 중</Patch>
+                                                    : campaignClosed ? <Patch tone="cream" small disabled>{on ? "최종 선택 완료" : "공모 종료"}</Patch>
+                                                    : !item.active && !on ? <Patch tone="cream" small disabled>현재 선택을 받지 않아요</Patch>
+                                                    : <Patch tone={on ? "pink" : "cream"} small disabled={selectionState !== "anonymous" && (pendingItem !== null || summaryState !== "ready" || selectionState !== "ready")} onClick={() => tryPick(g.id)}>
+                                                        {pending ? "처리 중…" : on ? "선택 취소" : "이 굿즈 선택"}<i aria-hidden="true" className={`fa-solid ${pending ? "fa-circle-notch fa-spin" : on ? "fa-rotate-left" : "fa-hand-pointer"} text-[11px]`} />
+                                                    </Patch>}
                                             </div>
                                         </li>
                                     );
                                 })}
                             </ul>
-                            {GOODS.length > goodsLimit ? (
-                                <div className="mt-6"><Patch tone="cream" small onClick={() => { haptic("light"); setGoodsLimit((n) => n + 8); }}>굿즈 더 보기 · {GOODS.length - goodsLimit}개<i aria-hidden="true" className="fa-solid fa-chevron-down text-[11px]" /></Patch></div>
+                            {GOODS_CONTEST_CATALOG.length > goodsLimit ? (
+                                <div className="mt-6"><Patch tone="cream" small onClick={() => { haptic("light"); setGoodsLimit((n) => n + 8); }}>굿즈 더 보기 · {GOODS_CONTEST_CATALOG.length - goodsLimit}개<i aria-hidden="true" className="fa-solid fa-chevron-down text-[11px]" /></Patch></div>
                             ) : null}
 
                             {/* 선택 단계 안전 안내 — 협업자 공모전 안내 그대로, 톡 하면 펼쳐지는 편지 */}
@@ -488,7 +782,7 @@ export default function StickerShow() {
                                         {["현금 결제", "적립금 + 댕코인 일부 사용", "적립금·댕코인 전액 결제"].map((m) => <span key={m} className="ah-display rounded-full bg-white px-2.5 py-0.5 text-[11px] text-[#4a6bc4]">{m}</span>)}
                                     </p>
                                     <p className="ah-light">최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
-                                    <p className="ah-light">에스크로는 향후 별도 결제 단계에서 구매자를 보호하기 위한 제도이며, 현재 선택 단계에는 적용되지 않습니다.</p>
+                                    <p className="ah-light">{goodsContent.escrowNotice}</p>
                                     <p className="ah-light">표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.</p>
                                 </div>
                             </div>
@@ -504,32 +798,27 @@ export default function StickerShow() {
                 </button>
             ) : null}
             <ShowComposer open={composer.open} onClose={() => setComposer((c) => ({ ...c, open: false }))} onPublish={publish}
-                topicTitle={topicOn ? SAMPLE.topic.title : null} defaultTopic={composer.topic} defaultName={SAMPLE.guardian} pets={[{ name: PET.name, breed: PET.breed }]} />
+                topicTitle={topicOn && topic ? topic.title : null} defaultTopic={composer.topic} defaultName={memberDisplayName(user?.name || "")} pets={serverPets} />
             {/* 게시물 상세 — 누른 사진 자리에서 펼쳐짐 */}
             {open && detail ? (
                 <Peek from={detail.rect} bg="#fffdf8" onClose={() => { setDetail(null); setConfirmDelete(false); }}>
-                    <PostDetail post={open} boned={Boolean(boned[open.id])} member={member} confirmDelete={confirmDelete}
-                        onBone={() => (member ? (haptic("light"), cheer(open.id, !boned[open.id])) : goLogin())}
+                    <PostDetail post={open} boned={Boolean(open.boned)} member={member} confirmDelete={confirmDelete}
+                        onBone={() => (member ? (haptic("light"), cheer(open.id, !open.boned)) : goLogin())}
                         onFollow={() => (member ? toggleFollow(open.authorId) : goLogin())}
-                        onAuthor={() => { haptic("light"); setProfileOf(open); }}
+                        onAuthor={() => openProfile(open)}
                         onShare={() => { haptic("light"); setShareOf({ kind: "post", id: open.id, img: open.img, text: open.text }); }}
-                        onReport={() => (member ? setReportOf(open.id) : goLogin())}
+                        onReport={() => (member ? (open.mine ? undefined : setReportOf(open.id)) : goLogin())}
                         onDelete={() => remove(open.id)} onConfirmDelete={setConfirmDelete} />
                 </Peek>
             ) : null}
-            <ProfileSheet open={Boolean(profileOf)} onClose={() => setProfileOf(null)} author={profileOf} posts={posts}
-                onFollow={() => profileOf && (member ? toggleFollow(profileOf.authorId) : goLogin())}
-                onOpenPost={(p, el) => { setProfileOf(null); setConfirmDelete(false); setDetail({ id: p.id, rect: el.getBoundingClientRect() }); }} />
+            <ProfileSheet open={Boolean(profileHead)} onClose={() => setProfileHead(null)} head={profileHead} profile={profile} error={profileError}
+                onFollow={() => profileHead && (member ? toggleFollow(profileHead.authorId) : goLogin())}
+                onOpenPost={(p, el) => { setProfileHead(null); setConfirmDelete(false); setDetail({ id: p.id, rect: el.getBoundingClientRect() }); }} />
             <ShareSheet open={Boolean(shareOf)} onClose={() => setShareOf(null)} target={shareOf} />
             <GuestPickSheet open={guestPickFor !== null} onClose={() => setGuestPickFor(null)} loginHref={login(1)}
-                goodsName={GOODS.find((g) => g.id === guestPickFor)?.defaultName ?? "내 선택 다시 확인하기"}
-                onVerified={() => {
-                    const id = guestPickFor;
-                    setGuestVerified(true);
-                    if (id) { setPicked((m) => ({ ...m, [id]: true })); haptic("medium"); }
-                    setToast(id ? "이메일 확인과 굿즈 선택을 완료했어요. 결제는 발생하지 않았습니다." : "이메일 확인을 완료했어요. 이제 원하는 굿즈를 선택해 주세요.");
-                }} />
-            <ReportSheet open={Boolean(reportOf)} onClose={() => setReportOf(null)} onSubmit={() => reportOf && submitReport(reportOf)} />
+                goodsName={guestPickFor ? goodsContent.items[guestPickFor].name : "내 선택 다시 확인하기"}
+                onSendCode={sendGuestCode} onConfirm={confirmGuestCode} />
+            <ReportSheet open={Boolean(reportOf)} onClose={() => setReportOf(null)} onSubmit={(reason, text) => (reportOf ? submitReport(reportOf, reason, text) : Promise.resolve())} />
             {toast ? <NoteToast text={toast} onDone={clearToast} /> : null}
         </div>
     );

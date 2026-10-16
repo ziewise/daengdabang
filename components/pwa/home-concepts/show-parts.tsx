@@ -7,7 +7,7 @@
  *  - 사진 1장 JPG · PNG · WebP · 8MB 이하(validateShowcaseImage) · 이야기 2~500자 · 공개 이름 2~30자 · 필수 공개 게시 동의 · 선택 공식 채널 소개 동의
  *  - 신고 이유 5가지 + 상세(선택, 300자) · 공유 = 공유 창 열기 / 링크 복사(utm 붙은 정확한 주소)
  * 굿즈 공모전 비회원 고르기 속지(회원 로그인 / 이메일 1회 확인)도 여기.
- * 시안에서는 서버로 보내지 않고 화면 안에서만 바뀐다(올리기 = 진행 막대 뒤 피드 맨 앞에 붙음).
+ * 실제 연결(2026-10-16): 올리기는 부모가 협업자 createShowcasePost 로 보내고(진행률 그대로), 프로필은 loadShowcaseAuthorProfile 결과를 받는다.
  * 모양: 다이어리 속지(점 모눈, 줄 없음) · 마스킹테이프 손잡이 · 폴라로이드 · 메모지 · 라벨 스티커 · 체크 스티커 · 자수 와펜 버튼.
  */
 
@@ -18,6 +18,7 @@ import { validateShowcaseImage } from "@/lib/daeng-showcase";
 import { haptic } from "./gestures";
 import { TEXT, TEXT_SOFT } from "./kit";
 import type { Post } from "./page-data";
+import type { ProfileView } from "./show-feed";
 import { Patch, Tape } from "./sticker-kit";
 
 /* 공개 게시 · 공식 채널 동의 문구(협업자 작성 칸과 같음) */
@@ -95,12 +96,16 @@ function CheckSticker({ checked, onChange, children }: { checked: boolean; onCha
 }
 
 /* ───────── 오늘의 한 장 올리기 ───────── */
-export type ComposerResult = { img: string; text: string; name: string; pet?: { name: string; breed: string }; topic: boolean };
+/** 올리기 값 — 협업자 CreateShowcasePostInput 과 같은 칸(사진 파일 · 글 · 공개 이름 · 반려견 · 동의 · 주제 참여) */
+export type ComposerResult = { file: File; text: string; name: string; petProfileId?: number; consent: boolean; channel: boolean; topic: boolean };
 export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopic, defaultName, pets }: {
-    open: boolean; onClose: () => void; onPublish: (r: ComposerResult) => void;
-    topicTitle: string | null; defaultTopic: boolean; defaultName: string; pets: { name: string; breed: string }[];
+    open: boolean; onClose: () => void;
+    /** 부모가 서버로 보냄 — 진행률(1~100)을 알려 주고, 실패하면 오류 문구를 담아 throw */
+    onPublish: (r: ComposerResult, onProgress: (percent: number) => void) => Promise<void>;
+    topicTitle: string | null; defaultTopic: boolean; defaultName: string; pets: { id: number; name: string; breed?: string }[];
 }) {
-    const [photo, setPhoto] = useState<string>("");
+    const [photo, setPhoto] = useState<string>(""); // 미리보기(blob 주소)
+    const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState("");
     const [name, setName] = useState(defaultName);
     const [pet, setPet] = useState<number>(-1); // -1 = 표시하지 않기
@@ -110,42 +115,39 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
     const [error, setError] = useState("");
     const [progress, setProgress] = useState<number | null>(null);
     const fileRef = useRef<HTMLInputElement>(null);
-    const timer = useRef<number | null>(null);
-    useEffect(() => () => { if (timer.current) window.clearInterval(timer.current); }, []);
+    // 기본 이름 — 로그인 정보가 늦게 오면 그때 채움(사용자가 이미 고쳤으면 그대로)
+    const [nameTouched, setNameTouched] = useState(false);
+    const shownName = nameTouched ? name : name || defaultName;
 
     const pickPhoto = (file?: File) => {
         setError("");
         if (!file) return;
         const bad = validateShowcaseImage(file);
         if (bad) { setError(bad); haptic("light"); return; }
+        if (photo) URL.revokeObjectURL(photo);
         setPhoto(URL.createObjectURL(file));
+        setFile(file);
         haptic("medium");
     };
-    const reset = () => { setPhoto(""); setText(""); setPet(-1); setAgree(false); setChannel(false); setError(""); setProgress(null); };
-    const submit = () => {
+    const clearPhoto = () => { if (photo) URL.revokeObjectURL(photo); setPhoto(""); setFile(null); };
+    const reset = () => { clearPhoto(); setText(""); setPet(-1); setAgree(false); setChannel(false); setError(""); setProgress(null); };
+    // 공개하기 — 협업자 작성 칸과 같은 검사 · 같은 문구, 통과하면 부모가 createShowcasePost 로 보냄
+    const submit = async () => {
         setError("");
         const caption = text.trim();
-        const display = name.trim();
-        if (!photo) return setError("자랑할 사진 한 장을 선택해 주세요.");
+        const display = shownName.trim();
+        if (!file) return setError("자랑할 사진 한 장을 선택해 주세요.");
         if (caption.length < 2 || caption.length > 500) return setError("글은 2자 이상 500자 이하로 적어 주세요.");
         if (display.length < 2 || display.length > 30) return setError("공개 이름은 2자 이상 30자 이하로 적어 주세요.");
         if (!agree) return setError("사진과 글의 공개 게시 동의를 확인해 주세요.");
-        // 시안: 진행 막대만 채우고(서버 없음) 피드 맨 앞에 붙임
-        setProgress(0);
-        timer.current = window.setInterval(() => {
-            setProgress((p) => {
-                const n = Math.min(100, (p ?? 0) + 14);
-                if (n >= 100 && timer.current) {
-                    window.clearInterval(timer.current);
-                    timer.current = null;
-                    window.setTimeout(() => {
-                        onPublish({ img: photo, text: caption, name: display, pet: pet >= 0 ? pets[pet] : undefined, topic: Boolean(topicTitle && joinTopic) });
-                        reset();
-                    }, 250);
-                }
-                return n;
-            });
-        }, 110);
+        setProgress(1);
+        try {
+            await onPublish({ file, text: caption, name: display, petProfileId: pet >= 0 ? pets[pet]?.id : undefined, consent: agree, channel, topic: Boolean(topicTitle && joinTopic) }, setProgress);
+            reset();
+        } catch (reason) {
+            setError(reason instanceof Error ? reason.message : "사진을 올리지 못했어요. 잠시 후 다시 시도해 주세요.");
+            setProgress(null);
+        }
     };
 
     return (
@@ -168,7 +170,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
                     <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" disabled={progress !== null} onChange={(e) => { pickPhoto(e.target.files?.[0]); e.currentTarget.value = ""; }} />
                 </label>
             </div>
-            {photo ? <p className="mt-2 text-center"><button type="button" onClick={() => setPhoto("")} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">선택한 사진 지우기</button></p> : null}
+            {photo ? <p className="mt-2 text-center"><button type="button" onClick={clearPhoto} disabled={progress !== null} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">선택한 사진 지우기</button></p> : null}
 
             {/* 오늘의 이야기 — 메모지 */}
             <label className="sp-memo relative mt-5 block rounded-[12px] px-3.5 pb-2 pt-3" style={{ rotate: "0.4deg" }}>
@@ -181,7 +183,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
             {/* 피드에 보일 이름 — 라벨 스티커 */}
             <label className="sp-label mt-3 flex h-[48px] items-stretch">
                 <span className="sp-stub grid w-24 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">피드 이름</span></span>
-                <input value={name} onChange={(e) => setName(e.target.value.slice(0, 30))} maxLength={30} placeholder="피드에 보일 이름" className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
+                <input value={shownName} onChange={(e) => { setNameTouched(true); setName(e.target.value.slice(0, 30)); }} maxLength={30} placeholder="피드에 보일 이름" className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
             </label>
 
             {/* 함께 나온 반려견 — 스티커 고르기 */}
@@ -189,8 +191,8 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
             <div className="mt-2 flex flex-wrap gap-2">
                 <button type="button" onClick={() => setPet(-1)} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === -1 ? "is-on" : ""}`}>표시하지 않기</button>
                 {pets.map((p, i) => (
-                    <button key={p.name} type="button" onClick={() => { setPet(i); haptic("light"); }} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === i ? "is-on" : ""}`}>
-                        <i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[10px]" />{p.name} · {p.breed}
+                    <button key={p.id} type="button" onClick={() => { setPet(i); haptic("light"); }} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === i ? "is-on" : ""}`}>
+                        <i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[10px]" />{p.name}{p.breed ? ` · ${p.breed}` : ""}
                     </button>
                 ))}
             </div>
@@ -210,7 +212,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
                 </div>
             ) : null}
             <div className="mt-4">
-                <Patch onClick={submit} disabled={progress !== null}>{progress !== null ? "댕자랑 올리는 중" : "오늘의 댕자랑 공개하기"}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
+                <Patch onClick={() => void submit()} disabled={progress !== null}>{progress !== null ? "댕자랑 올리는 중" : "오늘의 댕자랑 공개하기"}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
             </div>
         </Sheet>
     );
@@ -257,13 +259,13 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
                 </button>
                 <button type="button" onClick={onShare} className="sp-ghost ah-display flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px]"><i aria-hidden="true" className="fa-solid fa-share-nodes text-[12px]" />공유</button>
                 <span className="flex-1" />
-                {post.mine ? (
+                {post.canDelete ?? post.mine ? (
                     <button type="button" onClick={() => onConfirmDelete(true)} className="ah-light text-[12px] text-[#a8968d] underline decoration-dashed underline-offset-2">삭제</button>
                 ) : (
                     <button type="button" onClick={onReport} className="ah-light text-[12px] text-[#a8968d] underline decoration-dashed underline-offset-2">신고</button>
                 )}
             </div>
-            {post.mine && confirmDelete ? (
+            {(post.canDelete ?? post.mine) && confirmDelete ? (
                 <div className="st-postit mt-3 px-3.5 pb-3 pt-3" style={{ background: "#ffe1ea", rotate: "-0.5deg" }}>
                     <p className="ah-light text-[12.5px] text-[#c4456f]">이 댕자랑을 삭제할까요? 삭제하면 되돌릴 수 없습니다.</p>
                     <div className="mt-2.5 grid grid-cols-2 gap-2">
@@ -277,29 +279,36 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
     );
 }
 
-/* ───────── 작성자 프로필 ───────── */
-export function ProfileSheet({ open, onClose, author, posts, onFollow, onOpenPost }: {
-    open: boolean; onClose: () => void; author: Post | null; posts: Post[]; onFollow: () => void; onOpenPost: (p: Post, el: HTMLElement) => void;
+/* ───────── 작성자 프로필 ─────────
+   협업자 loadShowcaseAuthorProfile 결과(게시물 수 · 팔로워 · 받은 응원 · 최근 12장) — 불러오는 동안은 이름만 */
+export function ProfileSheet({ open, onClose, head, profile, error, onFollow, onOpenPost }: {
+    open: boolean; onClose: () => void;
+    head: { name: string; official?: boolean } | null; profile: ProfileView | null; error: string;
+    onFollow: () => void; onOpenPost: (p: Post, el: HTMLElement) => void;
 }) {
-    if (!author) return null;
-    const mine = posts.filter((p) => p.authorId === author.authorId);
-    const received = mine.reduce((n, p) => n + p.bones, 0);
+    if (!head) return null;
+    const stats: [string, number | null][] = [["게시물", profile?.postCount ?? null], ["팔로워", profile?.followers ?? null], ["받은 응원", profile?.received ?? null]];
     return (
         <Sheet open={open} onClose={onClose} label="작성자 프로필"
-            title={<div className="flex items-center gap-2.5"><AuthorDot name={author.author} official={author.official} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{author.author}{author.official ? <span className="ml-1.5 rounded-full bg-[#ffe1ea] px-1.5 py-px align-middle text-[10px] text-[#e0557f]">공식</span> : null}</p></div>}>
+            title={<div className="flex items-center gap-2.5"><AuthorDot name={head.name} official={head.official} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{head.name}{head.official ? <span className="ml-1.5 rounded-full bg-[#ffe1ea] px-1.5 py-px align-middle text-[10px] text-[#e0557f]">공식</span> : null}</p></div>}>
             <div className="mt-1 grid grid-cols-3 gap-2 text-center">
-                {[["게시물", mine.length], ["팔로워", author.followers], ["받은 응원", received]].map(([k, v]) => (
-                    <span key={k} className="sp-stat rounded-[12px] px-2 py-2.5"><span className="ah-display block text-[17px]">{Number(v).toLocaleString("ko-KR")}</span><span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{k}</span></span>
+                {stats.map(([k, v]) => (
+                    <span key={k} className="sp-stat rounded-[12px] px-2 py-2.5"><span className="ah-display block text-[17px]">{v === null ? "·" : v.toLocaleString("ko-KR")}</span><span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{k}</span></span>
                 ))}
             </div>
-            <div className="mt-3">
-                {author.mine ? <p className="ah-display text-center text-[13px] text-[#e0557f]">내 프로필</p> : (
-                    <Patch tone={author.followed ? "cream" : "pink"} small onClick={onFollow}>{author.followed ? "팔로잉" : "팔로우"}</Patch>
-                )}
-            </div>
+            {error ? <p role="alert" className="ah-light mt-3 text-center text-[12px] text-[#c4456f]">{error}</p> : null}
+            {profile ? (
+                <div className="mt-3">
+                    {profile.isMe ? <p className="ah-display text-center text-[13px] text-[#e0557f]">내 프로필</p> : (
+                        <Patch tone={profile.followed ? "cream" : "pink"} small onClick={onFollow}>{profile.followed ? "팔로잉" : "팔로우"}</Patch>
+                    )}
+                </div>
+            ) : null}
             <p className="ah-display mt-5 text-[13px] text-[#b07a8a]">최근 댕자랑</p>
+            {profile && profile.posts.length === 0 ? <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>아직 공개한 댕자랑이 없어요.</p> : null}
+            {!profile && !error ? <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>프로필을 불러오고 있어요.</p> : null}
             <ul className="mt-2 grid grid-cols-3 gap-2">
-                {mine.slice(0, 12).map((p, i) => (
+                {(profile?.posts ?? []).slice(0, 12).map((p, i) => (
                     <li key={p.id}>
                         <button type="button" onClick={(e) => onOpenPost(p, e.currentTarget)} className="st-polaroid block w-full bg-white p-1 pb-1.5 text-left" style={{ rotate: `${[-1, 0.8, -0.6][i % 3]}deg` }}>
                             <span className="relative block aspect-square overflow-hidden rounded-[3px] bg-[#fff3e8]"><PostPhoto src={p.img} sizes="30vw" /></span>
@@ -350,9 +359,22 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
 }
 
 /* ───────── 신고 ───────── */
-export function ReportSheet({ open, onClose, onSubmit }: { open: boolean; onClose: () => void; onSubmit: (reason: string, detail: string) => void }) {
-    const [reason, setReason] = useState<string>("spam");
+export type ReportReason = (typeof REPORT_REASONS)[number]["value"];
+export function ReportSheet({ open, onClose, onSubmit }: { open: boolean; onClose: () => void; onSubmit: (reason: ReportReason, detail: string) => Promise<void> }) {
+    const [reason, setReason] = useState<ReportReason>("spam");
     const [detail, setDetail] = useState("");
+    const [busy, setBusy] = useState(false);
+    const [error, setError] = useState("");
+    // 신고 접수 — 부모가 협업자 reportShowcasePost 로 보냄. 실패하면 속지 안에 오류 문구(협업자와 같음)
+    const send = () => {
+        if (busy) return;
+        setBusy(true);
+        setError("");
+        onSubmit(reason, detail)
+            .then(() => setDetail(""))
+            .catch((failure) => setError(failure instanceof Error ? failure.message : "신고를 접수하지 못했어요."))
+            .finally(() => setBusy(false));
+    };
     return (
         <Sheet open={open} onClose={onClose} label="게시물 신고" title={<p className="ah-display text-[18px]"><span className="st-marker">게시물 신고</span></p>}>
             <p className="ah-display mt-1 text-[13px] text-[#b07a8a]">신고 이유</p>
@@ -366,29 +388,47 @@ export function ReportSheet({ open, onClose, onSubmit }: { open: boolean; onClos
                 <textarea value={detail} onChange={(e) => setDetail(e.target.value.slice(0, 300))} rows={4} maxLength={300} className="ah-light mt-1.5 w-full resize-none bg-transparent text-[14px] leading-relaxed outline-none" />
             </label>
             <p className="ah-light mt-2 text-[11.5px]" style={{ color: TEXT_SOFT }}>신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다.</p>
-            <div className="mt-4"><Patch onClick={() => { onSubmit(reason, detail); setDetail(""); }}>신고 접수<i aria-hidden="true" className="fa-solid fa-flag text-[12px]" /></Patch></div>
+            {error ? <p role="alert" className="ah-light mt-2 text-[12px] text-[#c4456f]">{error}</p> : null}
+            <div className="mt-4"><Patch onClick={send} disabled={busy}>{busy ? "접수 중" : "신고 접수"}<i aria-hidden="true" className="fa-solid fa-flag text-[12px]" /></Patch></div>
         </Sheet>
     );
 }
 
 /* ───────── 굿즈 공모전 · 비회원 고르기(회원 로그인 또는 이메일 1회 확인) ─────────
-   협업자 굿즈 공모전의 "비회원 이메일 확인" 창과 같은 흐름 · 문구. 시안은 메일을 보내지 않고 아무 6자리나 통과 */
-export function GuestPickSheet({ open, onClose, goodsName, loginHref, onVerified }: { open: boolean; onClose: () => void; goodsName: string; loginHref: string; onVerified: () => void }) {
+   협업자 굿즈 공모전의 "비회원 이메일 확인" 창과 같은 흐름 · 문구. 실제 연결(2026-10-16): 부모가
+   requestGoodsContestGuestVerification(인증번호 메일) → confirmGoodsContestGuestVerification(확인 + 고르려던 굿즈 선택)으로 보냄 */
+export function GuestPickSheet({ open, onClose, goodsName, loginHref, onSendCode, onConfirm }: {
+    open: boolean; onClose: () => void; goodsName: string; loginHref: string;
+    onSendCode: (email: string) => Promise<{ verificationId: string; maskedEmail: string }>;
+    onConfirm: (verificationId: string, email: string, code: string) => Promise<void>;
+}) {
     const [stage, setStage] = useState<"email" | "code">("email");
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
-    const close = () => { setStage("email"); setCode(""); setError(""); onClose(); };
+    const [sent, setSent] = useState<{ verificationId: string; maskedEmail: string } | null>(null);
+    const close = () => { if (busy) return; setStage("email"); setCode(""); setError(""); setSent(null); onClose(); };
+    // 인증번호 받기 — 협업자 requestGuestCode 와 같은 검사 · 문구
     const send = () => {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("이메일 주소를 정확히 입력해 주세요."); haptic("light"); return; }
+        if (busy) return;
+        if (!/^\S+@\S+\.\S+$/.test(email.trim())) { setError("이메일 주소를 정확히 입력해 주세요."); haptic("light"); return; }
         setBusy(true);
-        window.setTimeout(() => { setBusy(false); setStage("code"); setError(""); }, 700);
+        setError("");
+        onSendCode(email.trim())
+            .then((r) => { setSent(r); setStage("code"); })
+            .catch((failure) => setError(failure instanceof Error ? failure.message : "인증번호를 보내지 못했어요."))
+            .finally(() => setBusy(false));
     };
+    // 확인하고 고르기 — 협업자 confirmGuestCode 와 같은 검사 · 문구
     const confirm = () => {
-        if (!/^\d{6}$/.test(code)) { setError("인증번호 6자리를 입력해 주세요."); haptic("light"); return; }
+        if (busy || !sent) return;
+        if (!/^\d{6}$/.test(code.trim())) { setError("인증번호 6자리를 입력해 주세요."); haptic("light"); return; }
         setBusy(true);
-        window.setTimeout(() => { setBusy(false); onVerified(); close(); }, 700);
+        setError("");
+        onConfirm(sent.verificationId, email.trim(), code.trim())
+            .then(() => { setBusy(false); setStage("email"); setCode(""); setSent(null); onClose(); })
+            .catch((failure) => { setBusy(false); setError(failure instanceof Error ? failure.message : "인증을 확인하지 못했어요."); });
     };
     return (
         <Sheet open={open} onClose={close} label="비회원 이메일 확인"
@@ -411,13 +451,13 @@ export function GuestPickSheet({ open, onClose, goodsName, loginHref, onVerified
                     </>
                 ) : (
                     <>
-                        <p className="ah-display mt-3 text-[12.5px]">{email.trim()}<span className="ah-light">로 보낸 6자리 번호를 입력해 주세요.</span></p>
+                        <p className="ah-display mt-3 text-[12.5px]">{sent?.maskedEmail || email.trim()}<span className="ah-light">로 보낸 6자리 번호를 입력해 주세요.</span></p>
                         <label className="sp-label mt-2.5 flex h-[48px] items-stretch">
                             <span className="sp-stub grid w-16 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">인증번호</span></span>
                             <input inputMode="numeric" autoComplete="one-time-code" value={code} onChange={(e) => { setCode(e.target.value.replace(/\D/g, "").slice(0, 6)); setError(""); }} placeholder="000000" className="ah-display min-w-0 flex-1 bg-transparent px-3.5 text-[16px] tracking-[0.3em] outline-none" />
                         </label>
                         <div className="mt-3"><Patch small onClick={confirm} disabled={busy}>{busy ? "확인 중…" : "확인하고 이 굿즈 선택"}<i aria-hidden="true" className="fa-solid fa-check text-[11px]" /></Patch></div>
-                        <p className="mt-2 text-center"><button type="button" onClick={() => { setStage("email"); setCode(""); setError(""); }} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">이메일 다시 입력</button></p>
+                        <p className="mt-2 text-center"><button type="button" disabled={busy} onClick={() => { setStage("email"); setCode(""); setError(""); setSent(null); }} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">이메일 다시 입력</button></p>
                     </>
                 )}
                 {error ? <p role="alert" className="ah-light mt-2.5 text-[12px] text-[#c4456f]">{error}</p> : null}

@@ -58,6 +58,7 @@ const POSTER = (b: string) => `/images/pet-companion/cute-v4-breeds/${b}-poster.
 export type Post = {
     id: string; authorId: string; author: string; official?: boolean; followers: number; date: string;
     pet?: string; breed?: string; img: string; text: string; bones: number; followed: boolean; mine?: boolean; topic?: boolean;
+    boned?: boolean; canDelete?: boolean; // 실제 피드: 내가 응원했는지 · 내가 지울 수 있는지(서버 값)
 };
 export const POSTS: Post[] = [
     { id: "p1", authorId: "a_me", author: "지은", followers: 12, date: "10월 15일 오전 9:12", pet: "몽이", breed: "토이 푸들", img: POSTER("toy-poodle"), text: "최애 장난감 오리 인형을 물고 집 안을 세 바퀴나 돌았어요. 꽥꽥 소리가 날 때마다 꼬리가 더 빨라져요.", bones: 24, followed: false, mine: true, topic: true },
