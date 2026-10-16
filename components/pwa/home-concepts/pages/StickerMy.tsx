@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store";
+import { GRADES } from "@/lib/grades";
 import { haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { CS_MENUS, MY_MENUS, ORDERS, PET, WALLET } from "../page-data";
@@ -23,6 +24,8 @@ import { DiaryBody, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../stic
 import { LoginInvite, Patch, STICKER_CSS, Tape } from "../sticker-kit";
 
 const REDIRECT = "/app/sticker/my/";
+/** 회원 등급 — 실제 산정 전까지 첫 등급(댕린이)으로 통일 */
+const FIRST_GRADE = GRADES[0];
 /** 로그아웃 뒤 가는 앱 홈(탭바 "홈"과 같은 주소) */
 const APP_HOME = "/app/home-1/";
 
@@ -96,12 +99,14 @@ export default function StickerMy() {
                     {member ? (
                         <>
                             {/* 이름 카드 — 메모지에 테이프로 붙인 이름 카드(사용자 2026-10-16: 영문 "HELLO my name is" 행사 명찰은 컨셉과 안 맞음)
-                                이름(형광펜) · 이메일 · 회원 잉크 도장 */}
+                                이름(형광펜) · 이메일 · 회원 등급 잉크 도장 */}
                             <div className="my-tag relative mx-auto w-[92%] rounded-[6px_6px_18px_6px] px-5 pb-4 pt-5" style={{ rotate: "-1deg" }}>
                                 <Tape className="-top-2 left-5 h-4 w-14" color="repeating-linear-gradient(90deg, rgba(255,200,215,.92) 0 7px, rgba(255,226,234,.92) 7px 14px)" style={{ rotate: "-4deg" }} />
                                 <p className="ah-display mt-1 text-[26px] leading-tight"><span className="st-marker">{SAMPLE.guardian}</span><span className="text-[17px]"> 님</span></p>
                                 <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>demo@daengdabang.test</p>
-                                <InkStamp rot={-10} color="#ea4c7c" className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[12px]">댕다방 회원</InkStamp>
+                                {/* 회원 등급 도장 — 협업자 등급 정의(lib/grades) 첫 단계 이름. 실제 등급 산정(서버 결제액 · 활동 점수)이 아직 연결되지 않아
+                                    모두 첫 등급으로 통일(사용자 결정 2026-10-16). 연결되면 그 회원의 등급으로 바꾼다 */}
+                                <InkStamp rot={-10} color={FIRST_GRADE.color} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[13px]">{FIRST_GRADE.name}</InkStamp>
                             </div>
 
                             {/* 코인 봉투 */}
