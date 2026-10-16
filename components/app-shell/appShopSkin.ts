@@ -295,6 +295,12 @@ ${P} > div > div:first-child { background: radial-gradient(circle, rgba(196,160,
   border-radius: 6px; box-shadow: inset 0 0 0 7px #fff, inset 0 0 0 8px #f1e3da, 0 10px 16px -12px rgba(110, 80, 40, .5); }
 ${P} > div > div:first-child::after { height: 0; background: none; border-top: 2px dashed rgba(196, 150, 130, .45); }
 ${P} > div > div:first-child span { color: #9c8a80; }
+/* 미리보기 스티커 표시 — 위 테이프 · 강아지는 흰 칼선으로 오려 붙인 스티커 · 이름은 테이프 이름표 */
+${P} > div > div:first-child::before { ${TAPE} top: 3px; left: 50%; width: 70px; height: 15px; margin-left: -35px; rotate: -2deg; }
+${P} > div > div:first-child > :first-child { filter: drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(0 6px 6px rgba(120, 70, 60, .28)); }
+${P} > div > div:first-child strong { display: inline-block; width: fit-content; justify-self: end; padding: 3px 12px 2px; rotate: -2deg; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #5c3f36;
+  clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 8px, rgba(255,222,232,.95) 8px 16px); }
 /* 항목 이름 — 마스킹테이프 이름표(양 끝 지그재그 · 살짝 기울기) */
 ${PG} > label:nth-child(1) > span:first-child, ${PG} > div:nth-child(2) > label:first-child, ${PG} > fieldset legend, ${PG} > div:nth-child(4) > label > span:first-child {
   display: inline-block; width: fit-content; padding: 3px 12px 2px; rotate: -1deg; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; color: #5c3f36;
