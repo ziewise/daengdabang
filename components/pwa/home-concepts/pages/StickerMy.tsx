@@ -14,18 +14,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
+import { convertRewardPointsToDaengLabCoins, getCustomerToken, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
+import { ddbApiBase } from "@/lib/ddb-api-base";
+import { formatOrderAmount, loadTossOrderHistory, orderDateLabel, orderStatusLabel, type TossOrderHistoryItem } from "@/lib/toss-order-history";
+import { memberAccountDisplay } from "@/lib/member-account-display";
 import { GRADES } from "@/lib/grades";
 import { haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
-import { CS_MENUS, MY_MENUS, ORDERS, PET, WALLET } from "../page-data";
-import { ConceptBar, HC_CSS, SAMPLE, flyCoin, useDemoSession, useTodayDemo } from "../shared";
+import { CS_MENUS, MY_MENUS } from "../page-data";
+import { HC_CSS, flyCoin } from "../shared";
 import { DiaryBody, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { LoginInvite, Patch, STICKER_CSS, Tape } from "../sticker-kit";
 
 const REDIRECT = "/app/sticker/my/";
 /** 회원 등급 — 실제 산정 전까지 첫 등급(댕린이)으로 통일 */
 const FIRST_GRADE = GRADES[0];
+/** 적립금 전환 요청 키 — 웹 지갑 카드(DaengLabWalletCard)의 requestKey 와 같은 규칙(같은 전환을 다시 보내도 한 번만 처리) */
+function requestKey() {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+    return `wallet-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+}
+
 /** 로그아웃 뒤 가는 앱 홈(탭바 "홈"과 같은 주소) */
 const APP_HOME = "/app/home-1/";
 
@@ -57,16 +67,15 @@ function LinedMenu({ items }: { items: readonly { icon: string; title: string; h
 }
 
 export default function StickerMy() {
-    const [session, setSession] = useDemoSession();
-    const member = session === "member";
-    const today = useTodayDemo(session);
+    // 로그인 상태 — 협업자 useAuth 그대로(시안 "로그인 전/후" 토글 대신 실제 상태, 배포 전 연결 2026-10-16)
+    const { user, hydrated, logout } = useAuth();
+    const member = hydrated && Boolean(user);
+    const accessToken = user?.apiAccessToken || "";
     const coinRef = useRef<HTMLSpanElement>(null);
     const convertRef = useRef<HTMLButtonElement>(null);
-    const [points, setPoints] = useState(WALLET.points);
     const [toast, setToast] = useState<string | null>(null);
     const clearToast = useCallback(() => setToast(null), []);
     const router = useRouter();
-    const { logout } = useAuth();
 
     // 로그아웃 — 웹 마이페이지 메뉴(MypageSidebar)와 같은 기능(확인 → 실제 logout()).
     // 확인은 휴대폰 기본 창 대신 우리 확인 카드(같은 문구 · 취소 = 아무것도 안 함, 로그아웃 = 진행).
@@ -79,31 +88,90 @@ export default function StickerMy() {
         router.push(APP_HOME);
     };
 
-    // 적립금 1,000P → 10코인 (되돌릴 수 없음)
-    const convert = () => {
-        if (points < WALLET.pointUnit) return;
-        setPoints((p) => p - WALLET.pointUnit);
-        today.addCoins(WALLET.coinUnit);
-        haptic("medium");
-        flyCoin(convertRef.current, coinRef.current, 3);
-        setToast(`적립금 ${WALLET.pointUnit.toLocaleString("ko-KR")}P를 ${WALLET.coinUnit}코인으로 바꿨어요`);
+    // 연구소 지갑(코인 · 적립금) — 웹 마이페이지 DaengLabWalletCard 와 같은 loadDaengLabWallet(accessToken)
+    const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
+    const [walletError, setWalletError] = useState("");
+    useEffect(() => {
+        if (!member) return;
+        let active = true;
+        const timer = window.setTimeout(() => {
+            setWalletError("");
+            void loadDaengLabWallet(accessToken)
+                .then((next) => {
+                    if (!active) return;
+                    setWallet(next);
+                    // 웹 지갑 카드와 같은 알림(다른 화면의 코인 표시가 함께 갱신되도록)
+                    window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next }));
+                })
+                .catch((reason) => {
+                    if (active) setWalletError(reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.");
+                });
+        }, 0);
+        return () => {
+            active = false;
+            window.clearTimeout(timer);
+        };
+    }, [member, accessToken]);
+
+    // 적립금 → 코인 바꾸기 — 웹 지갑 카드의 submitConversion 과 같은 조건 · 같은 함수 · 같은 재시도 키 규칙.
+    // 웹은 바꿀 적립금을 입력하지만(기본값 = 전환 단위), 앱은 한 번에 전환 단위만큼(되돌릴 수 없음 안내 그대로)
+    const [converting, setConverting] = useState(false);
+    const retryKeyRef = useRef<{ points: number; key: string } | null>(null);
+    const canConvert = Boolean(wallet && wallet.rewardPointsDebt === 0 && wallet.pointConversionUnit <= wallet.rewardPoints);
+    const convert = async () => {
+        if (!wallet || converting || !canConvert) return;
+        const points = wallet.pointConversionUnit;
+        const retry = retryKeyRef.current;
+        const key = retry?.points === points ? retry.key : requestKey();
+        retryKeyRef.current = { points, key };
+        setConverting(true);
+        try {
+            const converted = await convertRewardPointsToDaengLabCoins(points, key, accessToken);
+            retryKeyRef.current = null;
+            setWallet(converted.wallet);
+            window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: converted.wallet }));
+            haptic("medium");
+            flyCoin(convertRef.current, coinRef.current, 3);
+            setToast(`${converted.convertedRewardPoints.toLocaleString("ko-KR")}P를 ${converted.grantedDaengLabCoins}C로 전환했습니다.`);
+        } catch (reason) {
+            setToast(reason instanceof Error ? reason.message : "적립금 전환을 완료하지 못했습니다.");
+        } finally {
+            setConverting(false);
+        }
     };
+
+    // 최근 주문 2개 — 웹 주문 내역 화면과 같은 loadTossOrderHistory(같은 주소 · 토큰), 상태 · 날짜 · 금액 표시 함수도 같은 것
+    const [orders, setOrders] = useState<TossOrderHistoryItem[] | null>(null);
+    const [ordersError, setOrdersError] = useState(false);
+    useEffect(() => {
+        if (!member) return;
+        const token = user?.apiAccessToken || getCustomerToken();
+        if (!token) return;
+        const controller = new AbortController();
+        loadTossOrderHistory({ baseUrl: ddbApiBase(), accessToken: token, signal: controller.signal, limit: 2, offset: 0 })
+            .then((page) => setOrders(page.orders))
+            .catch(() => {
+                if (!controller.signal.aborted) setOrdersError(true);
+            });
+        return () => controller.abort();
+    }, [member, user?.apiAccessToken]);
+
+    const pets = user?.pets ?? [];
 
     return (
         <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-12 pt-4" style={{ color: TEXT }}>
             <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + MY_CSS}</style>
             <div aria-hidden="true" className="ah-bg pointer-events-none fixed inset-0 -z-10" />
             <div className="mx-auto w-full max-w-md">
-                <ConceptBar session={session} onSession={setSession} />
-                <DiaryBody pageKey={session} dir={1}>
+                <DiaryBody pageKey={member ? "member" : "guest"} dir={1}>
                     {member ? (
                         <>
                             {/* 이름 카드 — 메모지에 테이프로 붙인 이름 카드(사용자 2026-10-16: 영문 "HELLO my name is" 행사 명찰은 컨셉과 안 맞음)
                                 이름(형광펜) · 이메일 · 회원 등급 잉크 도장 */}
                             <div className="my-tag relative mx-auto w-[92%] rounded-[6px_6px_18px_6px] px-5 pb-4 pt-5" style={{ rotate: "-1deg" }}>
                                 <Tape className="-top-2 left-5 h-4 w-14" color="repeating-linear-gradient(90deg, rgba(255,200,215,.92) 0 7px, rgba(255,226,234,.92) 7px 14px)" style={{ rotate: "-4deg" }} />
-                                <p className="ah-display mt-1 text-[26px] leading-tight"><span className="st-marker">{SAMPLE.guardian}</span><span className="text-[17px]"> 님</span></p>
-                                <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>demo@daengdabang.test</p>
+                                <p className="ah-display mt-1 text-[26px] leading-tight"><span className="st-marker">{user?.name}</span><span className="text-[17px]"> 님</span></p>
+                                <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>{memberAccountDisplay(user?.email, user?.authProvider)}</p>
                                 {/* 회원 등급 도장 — 협업자 등급 정의(lib/grades) 첫 단계 이름. 실제 등급 산정(서버 결제액 · 활동 점수)이 아직 연결되지 않아
                                     모두 첫 등급으로 통일(사용자 결정 2026-10-16). 연결되면 그 회원의 등급으로 바꾼다 */}
                                 <InkStamp rot={-10} color={FIRST_GRADE.color} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[13px]">{FIRST_GRADE.name}</InkStamp>
@@ -115,28 +183,37 @@ export default function StickerMy() {
                                 <div className="relative flex items-center justify-between">
                                     <span>
                                         <span className="ah-light block text-[11.5px] text-[#8f5e12]">댕다방 연구소 코인</span>
-                                        <span className="mt-1 inline-block"><CoinChip ref={coinRef} coins={today.coins} /></span>
+                                        <span className="mt-1 inline-block"><CoinChip ref={coinRef} coins={wallet?.daengLabCoins ?? 0} /></span>
                                     </span>
                                     <span className="text-right">
                                         <span className="ah-light block text-[11.5px] text-[#8f5e12]">적립금</span>
-                                        <span className="ah-display block text-[18px] tabular-nums">{points.toLocaleString("ko-KR")}P</span>
+                                        <span className="ah-display block text-[18px] tabular-nums">{wallet ? `${wallet.rewardPoints.toLocaleString("ko-KR")}P` : "—"}</span>
                                     </span>
                                 </div>
-                                <button ref={convertRef} type="button" onClick={convert} disabled={points < WALLET.pointUnit}
+                                <button ref={convertRef} type="button" onClick={() => void convert()} disabled={!canConvert || converting}
                                     className="ah-display relative mt-3 w-full rounded-full bg-white/90 py-2.5 text-[13px] text-[#c4560f] shadow-[0_6px_12px_-8px_rgba(150,100,30,.6)] disabled:opacity-50">
-                                    적립금 {WALLET.pointUnit.toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {WALLET.coinUnit}코인 바꾸기
+                                    {converting ? "바꾸는 중…" : (<>적립금 {(wallet?.pointConversionUnit ?? 1000).toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {wallet?.coinConversionUnit ?? 10}코인 바꾸기</>)}
                                 </button>
-                                <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">바꾼 코인은 되돌릴 수 없어요 · 행동 · 소리 분석 1회 {SAMPLE.analysisCoinCost}코인</p>
+                                <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">바꾼 코인은 되돌릴 수 없어요{wallet ? ` · 행동 · 소리 분석 1회 ${wallet.analysisCoinCost}코인` : ""}</p>
+                                {walletError ? <p className="ah-light relative mt-1 text-center text-[11px] text-[#c2413b]">{walletError}</p> : null}
                             </div>
 
                             {/* 우리 아이 */}
                             <SectionLabel className="mt-6" icon="fa-paw">우리 아이</SectionLabel>
-                            <div className="mt-3 flex items-start gap-3">
-                                <span className="st-polaroid relative block w-[5.6rem] bg-white p-1.5 pb-5" style={{ rotate: "-3deg" }}>
-                                    <Tape className="-top-2 left-1/2 h-3 w-9 -translate-x-1/2" color="rgba(255,200,215,.85)" />
-                                    <span className="relative block aspect-square overflow-hidden bg-[#fff3e8]"><Image src={PET.photo} alt={`${PET.name} 사진`} fill sizes="90px" className="object-cover" /></span>
-                                    <span className="ah-display absolute inset-x-0 bottom-0.5 text-center text-[12px] text-[#e0557f]">{PET.name}</span>
-                                </span>
+                            <div className="mt-3 flex flex-wrap items-start gap-3">
+                                {/* 실제 반려견 프로필(useAuth) — 서버가 확인한 사진만 보여 줌(웹 마이페이지와 같은 hasVerifiedPetPhoto 기준) */}
+                                {pets.map((pet, i) => (
+                                    <span key={`${pet.apiProfileId ?? pet.name}-${i}`} className="st-polaroid relative block w-[5.6rem] bg-white p-1.5 pb-5" style={{ rotate: `${i % 2 ? 2 : -3}deg` }}>
+                                        <Tape className="-top-2 left-1/2 h-3 w-9 -translate-x-1/2" color="rgba(255,200,215,.85)" />
+                                        <span className="relative grid aspect-square place-items-center overflow-hidden bg-[#fff3e8]">
+                                            {hasVerifiedPetPhoto(pet)
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                ? <img src={pet.photoDataUrl} alt={`${pet.name} 사진`} className="h-full w-full object-cover" />
+                                                : <i aria-hidden="true" className="fa-solid fa-paw text-[22px] text-[#f4b9ca]" />}
+                                        </span>
+                                        <span className="ah-display absolute inset-x-0 bottom-0.5 truncate px-1 text-center text-[12px] text-[#e0557f]">{pet.name}</span>
+                                    </span>
+                                ))}
                                 <Link href="/mypage/?petProfile=required#pet-profiles" className="grid aspect-[5/6] w-[5.6rem] place-items-center rounded-[6px] border-2 border-dashed border-[#f4c3d3] text-center" style={{ rotate: "2deg" }}>
                                     <span>
                                         <i aria-hidden="true" className="fa-solid fa-plus text-[16px] text-[#f48fac]" />
@@ -147,18 +224,24 @@ export default function StickerMy() {
 
                             {/* 최근 주문 영수증 */}
                             <SectionLabel className="mt-6" icon="fa-receipt">최근 주문</SectionLabel>
-                            <div className="mt-3 grid grid-cols-2 gap-3">
-                                {ORDERS.map((o, i) => (
-                                    <Link key={o.id} href={`/mypage/orders/?orderId=${o.id}`} className="st-receipt block px-3 pt-3" style={{ rotate: `${i ? 1.5 : -1.5}deg` }}>
-                                        <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>{o.date} · {o.id}</span>
-                                        <span className="ah-display mt-1 block text-[13px] leading-snug">{o.title}</span>
-                                        <span className="mt-2 flex items-center justify-between border-t border-dashed border-[#e7d9d1] pt-1.5">
-                                            <span className="ah-display text-[12.5px]">{o.price.toLocaleString("ko-KR")}원</span>
-                                            <InkStamp rot={-8} color={o.status === "배송 중" ? "#5a7fe0" : "#1f9e75"} className="!px-1.5 !py-0.5 text-[10px]">{o.status}</InkStamp>
-                                        </span>
-                                    </Link>
-                                ))}
-                            </div>
+                            {orders && orders.length > 0 ? (
+                                <div className="mt-3 grid grid-cols-2 gap-3">
+                                    {orders.map((o, i) => (
+                                        <Link key={o.orderId} href={`/mypage/orders/?orderId=${encodeURIComponent(o.orderId)}`} className="st-receipt block px-3 pt-3" style={{ rotate: `${i ? 1.5 : -1.5}deg` }}>
+                                            <span className="ah-light block truncate text-[10.5px]" style={{ color: TEXT_SOFT }}>{orderDateLabel(o.createdAt || o.approvedAt)}</span>
+                                            <span className="ah-display mt-1 block text-[13px] leading-snug line-clamp-2">{o.orderName}</span>
+                                            <span className="mt-2 flex items-center justify-between gap-1 border-t border-dashed border-[#e7d9d1] pt-1.5">
+                                                <span className="ah-display text-[12.5px]">{formatOrderAmount(o.amount)}</span>
+                                                <InkStamp rot={-8} color="#1f9e75" className="!px-1.5 !py-0.5 text-[10px]">{orderStatusLabel(o)}</InkStamp>
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            ) : (
+                                <Link href="/mypage/orders/" className="ah-light mt-3 block rounded-[4px_4px_14px_4px] bg-[#fffbea] px-4 py-3 text-[12.5px] shadow-[0_6px_10px_-8px_rgba(110,80,40,.45)]" style={{ color: TEXT_SOFT }}>
+                                    {ordersError ? "주문 내역을 불러오지 못했어요. 주문 내역에서 다시 확인해 주세요." : orders ? "아직 주문이 없어요." : "주문 내역을 확인하고 있어요."}
+                                </Link>
+                            )}
 
                             <SectionLabel className="mt-6" icon="fa-user">내 정보</SectionLabel>
                             <LinedMenu items={MY_MENUS} />

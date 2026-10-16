@@ -53,7 +53,7 @@
 | `/app/sticker/report/` | 건강 변화 리포트(마이펫 주간 리포트와 같은 정보) | 연구소 |
 | `/app/sticker/shop/` | **쇼핑 첫 화면**(1단계 완료) | 쇼핑 |
 | `/app/sticker/show/` | 댕다방(댕자랑 실제 피드 · 굿즈 공모전) | 댕다방 |
-| `/app/sticker/my/` | 마이(시안) | 마이 |
+| `/app/sticker/my/` | 마이(시안) | ~~마이~~ ✅ 연결 완료(2026-10-16) | 이름 · 계정(`useAuth` · `memberAccountDisplay`), 지갑(`loadDaengLabWallet`), 적립금 → 코인(`convertRewardPointsToDaengLabCoins`, 웹 지갑 카드와 같은 조건 · 재시도 키 · 알림 이벤트, 한 번에 전환 단위만큼), 반려견(`user.pets` · `hasVerifiedPetPhoto`), 최근 주문 2개(`loadTossOrderHistory` · `orderStatusLabel`), 로그아웃(`logout`) | 로그인 상태는 실제 `useAuth`(이 화면 토글 제거). 회원 등급은 "댕린이" 고정(등급 산정 미연결) |
 | `/app/sticker/login/`, `/app/sticker/signup/` | 앱 전용 로그인 · 회원가입(로직은 웹과 동일) | — |
 | `/app/sticker/buttons/` | 버튼 시안 모음(참고용) | — |
 
