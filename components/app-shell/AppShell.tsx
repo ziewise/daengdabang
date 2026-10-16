@@ -518,9 +518,9 @@ html.ddb-app-mode section[role="dialog"][aria-label="댕다방 케어톡"] { bor
   background-color: #fffdf8 !important; background-image: radial-gradient(circle, rgba(196,160,140,.26) 1px, transparent 1.3px) !important; background-size: 15px 15px !important;
   box-shadow: 0 0 0 1.5px #f1e3da, 0 24px 48px -22px rgba(110,70,55,.55) !important; }
 html.ddb-app-mode section[aria-label="댕다방 케어톡"]::before { display: none !important; }
-/* 크기 · 자리: 휴대폰 전체 화면 대신 탭바 바로 위에서 올라오는 창(화면 높이의 약 2/3, 최대 560px) — 상단바 · 탭바는 보임 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"][data-chat-desktop="false"] { position: fixed !important; top: auto !important; right: 10px !important; left: 10px !important;
-  bottom: calc(var(--app-tabbar-h) + 6px) !important; width: auto !important; height: min(560px, 66dvh) !important; max-height: calc(100dvh - var(--app-topbar-h) - var(--app-tabbar-h) - 20px) !important;
+/* 크기 · 자리(고정): 상단바 바로 아래부터 탭바 바로 위까지 내용 영역을 꽉 채움 — 상단바 · 탭바는 보임, 크기 변화 없음 */
+html.ddb-app-mode section[aria-label="댕다방 케어톡"][data-chat-desktop="false"] { position: fixed !important; top: calc(var(--app-topbar-h) + 6px) !important; right: 10px !important; left: 10px !important;
+  bottom: calc(var(--app-tabbar-h) + 6px) !important; width: auto !important; height: auto !important; max-height: none !important;
   transform-origin: 85% 100%; animation: app-care-pop .35s cubic-bezier(.3,1.4,.5,1); }
 @keyframes app-care-pop { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { html.ddb-app-mode section[aria-label="댕다방 케어톡"] { animation: none !important; } }
