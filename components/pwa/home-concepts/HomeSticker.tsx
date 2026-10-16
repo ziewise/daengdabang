@@ -6,13 +6,12 @@
  * 원래 시안 3의 재료 그대로(구름 제목 · 우리 아이/검정 푸들 · 카드 그림 3장 · 출근 스티커 · 말랑한 버튼 · 파스텔).
  * 달라진 점 — 홈 한 장이 다이어리 속지다(요즘 20~30대의 '다꾸' 감성).
  *  - 점 모눈 종이 · 왼쪽 링 구멍 · 마스킹테이프 날짜 · 폴라로이드로 붙인 우리 아이 · 동그란 날씨 스티커.
- *  - 오늘의 출근 스티커를 손가락으로 떼어(들리며 기울어짐) 오늘 칸에 끌어다 붙인다.
- *    가까이 가면 자석처럼 빨려 들어가 쾅 → 코인이 코인 칩으로. 그냥 톡 눌러도 날아가 붙는다.
- *  - 붙이고 나면 같은 자리에 손글씨 체크리스트(오늘 할 일)가 생기고, 체크 표시가 펜으로 그려진다.
+ *  - 출근(스티커 붙이기)은 홈에서 빼고 매일 댕생활에서만(사용자 결정 2026-10-16). 로그인 후 홈에는 그곳으로 가는 포스트잇 + 코인 칩.
+ *  - 쇼핑하러 가기 카드(앱 쇼핑 첫 화면으로) — 로그인 전 · 후 모두.
  *  - 카드 그림 3장은 테이프로 붙인 스티커처럼 살짝 비뚤게, 위에는 포스트잇 소식(연속 출근 · 새 응원 · 코인).
  *    누르면 스티커가 들렸다 붙는다.
  *  - 처음 들어오면 테이프 · 사진 · 스티커가 하나씩 손으로 놓이듯 내려앉는다.
- *  - 로그인 전: 출근 칸 · 스티커 떼기 체험은 없고, 그 자리에 편지지 같은 '로그인 초대 카드'(할 수 있는 것 펜 체크 + 로그인하고 출근하기).
+ *  - 로그인 전: 편지지 같은 '로그인 초대 카드'(할 수 있는 것 펜 체크 — 쇼핑 포함 + 로그인하고 댕다방 즐기기).
  *  - 모바일 손가락 동작(hover 없음): 스티커를 집으면 모서리가 들리고 진동 · 출근 칸을 옆으로 밀면 속지가 넘어가 지난주 기록 ·
  *    카드 스티커는 누르면 테이프째 들리고, 톡 = 화면 가득 커지며 이동, 꾹 = 그 자리에서 미리보기.
  * 데이터: 로그인 후는 예시(SAMPLE), 날씨는 실제. 누르는 동작은 화면 안에서만 바뀐다(서버 요청 없음).
@@ -26,13 +25,18 @@ import { LoginInvite, PostIt, STICKER_CSS, Tape } from "./sticker-kit";
 import { COVERS, CoinChip, CoverArt, CoverWindow, KIT_CSS, TEXT, TEXT_SOFT, TriTitle, recentDays, type Cover } from "./kit";
 import SectionNow from "./SectionNow";
 import { coverHref } from "./page-data";
-import { ConceptBar, HC_CSS, SAMPLE, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, untilTomorrow, useDemoSession, useLiveWeather, useNow, useTodayDemo, walkAdvice } from "./shared";
+import { ConceptBar, HC_CSS, SAMPLE, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useLiveWeather, useNow, useTodayDemo, walkAdvice } from "./shared";
 
 const toneBg = (c: Cover) => `linear-gradient(180deg, ${c.tone.from} 0%, ${c.tone.to} 100%)`;
 const NOTE_COLORS = ["#fff3a6", "#ffd6e2", "#d9ecff"];
 const TAPE_COLORS = ["rgba(190,224,255,.85)", "rgba(255,200,218,.85)", "rgba(255,232,170,.9)"];
-// 지난주 출근 예시(회원) — 실제로는 출근 기록(recentDays)에서
-const LAST_WEEK = [true, true, false, true, true, true, true];
+/** 로그인 전 초대 카드 — 홈 전용 문구(사용자 2026-10-16: 버튼 "로그인하고 댕다방 즐기기", 쇼핑 문구 추가) */
+const HOME_INVITE = [
+    { icon: "fa-bag-shopping", text: "우리 아이 맞춤 추천 상품 · 주문 · 배송 한눈에" },
+    { icon: "fa-calendar-check", text: "매일 댕생활에서 출근 스티커 붙이고 코인 받기" },
+    { icon: "fa-camera", text: "우리 아이 사진 기록 · 연구소 분석" },
+    { icon: "fa-heart", text: "댕자랑에서 응원 주고받기" },
+];
 
 /** 테이프로 붙인 카드 스티커 — 누르면 테이프째 들림 · 톡 = 이동 · 꾹 = 미리보기 */
 function StickerCard({ cover, i, note, onTap, onLongPress }: { cover: Cover; i: number; note: string; onTap: (el: HTMLElement) => void; onLongPress: (el: HTMLElement) => void }) {
@@ -58,88 +62,11 @@ export default function HomeSticker() {
     const now = useNow();
     const wd = todayIndex(now ?? undefined);
     const coinRef = useRef<HTMLSpanElement>(null);
-    const slotRef = useRef<HTMLSpanElement>(null);
-    const stickerRef = useRef<HTMLButtonElement>(null);
     const peekStampRef = useRef<HTMLButtonElement>(null);
     const { go, overlay } = useExpandNav();
     const [peek, setPeek] = useState<{ cover: Cover; rect: DOMRect } | null>(null);
     const days = now ? recentDays() : Array.from({ length: 7 }, () => "");
     const past = member ? [false, true, true, true, true, true] : Array(6).fill(false);
-
-    /* ── 출근 칸 속지 넘기기: 0 = 이번 주, 1 = 지난주 (옆으로 밀기) ── */
-    const [weekPage, setWeekPage] = useState<0 | 1>(0);
-    const [flip, setFlip] = useState<null | "out" | "in">(null);
-    const swipeX = useRef<number | null>(null);
-    const turnTo = (page: 0 | 1) => {
-        if (page === weekPage || flip) return;
-        haptic("light");
-        setFlip("out");
-        window.setTimeout(() => {
-            setWeekPage(page);
-            setFlip("in");
-            window.setTimeout(() => setFlip(null), 320);
-        }, 220);
-    };
-
-    /* ── 스티커 떼어 붙이기 ── */
-    const drag = useRef<{ x: number; y: number; moved: boolean } | null>(null);
-    const [lifted, setLifted] = useState(false);
-    const [offset, setOffset] = useState({ x: 0, y: 0, r: 0 });
-    // 오늘 칸까지 거리
-    const slotDelta = () => {
-        const s = slotRef.current?.getBoundingClientRect();
-        const k = stickerRef.current?.getBoundingClientRect();
-        if (!s || !k) return null;
-        return { dx: s.left + s.width / 2 - (k.left + k.width / 2) + offset.x, dy: s.top + s.height / 2 - (k.top + k.height / 2) + offset.y };
-    };
-    // 오늘 칸으로 빨려 들어가 붙음
-    const stickToSlot = () => {
-        const d = slotDelta();
-        const el = stickerRef.current;
-        if (d && el && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-            const anim = el.animate(
-                [{ transform: `translate(${offset.x}px, ${offset.y}px) rotate(${offset.r}deg) scale(1.15)` }, { transform: `translate(${d.dx}px, ${d.dy}px) rotate(0deg) scale(.5)` }],
-                { duration: 380, easing: "cubic-bezier(.5,0,.3,1)", fill: "forwards" },
-            );
-            anim.onfinish = () => finishStick();
-        } else finishStick();
-    };
-    const finishStick = () => {
-        today.stamp();
-        haptic("medium");
-        setLifted(false);
-        setOffset({ x: 0, y: 0, r: 0 });
-        if (member) window.setTimeout(() => flyCoin(slotRef.current, coinRef.current, 2), 280);
-    };
-    const onDown = (e: React.PointerEvent<HTMLButtonElement>) => {
-        if (today.stamped) return;
-        e.currentTarget.setPointerCapture(e.pointerId);
-        drag.current = { x: e.clientX, y: e.clientY, moved: false };
-        setLifted(true);
-        haptic("light");
-        // 지난주를 보고 있었으면 붙일 자리가 보이게 이번 주로 넘김
-        if (weekPage === 1) turnTo(0);
-    };
-    const onMoveDrag = (e: React.PointerEvent<HTMLButtonElement>) => {
-        const d = drag.current;
-        if (!d) return;
-        const x = e.clientX - d.x;
-        const y = e.clientY - d.y;
-        if (Math.abs(x) + Math.abs(y) > 6) d.moved = true;
-        setOffset({ x, y, r: Math.max(-14, Math.min(14, x / 8)) });
-    };
-    const onUp = () => {
-        const d = drag.current;
-        drag.current = null;
-        if (!d) return;
-        const near = slotDelta();
-        // 톡 누름이거나 오늘 칸 가까이(80px) 놓으면 붙고, 아니면 제자리로
-        if (!d.moved || (near && Math.hypot(near.dx - offset.x, near.dy - offset.y) < 80)) stickToSlot();
-        else {
-            setLifted(false);
-            setOffset({ x: 0, y: 0, r: 0 });
-        }
-    };
 
     const date = now ? `${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEK[wd].ko}요일` : "";
     // 카드 스티커 위 포스트잇
@@ -191,91 +118,30 @@ export default function HomeSticker() {
                         </span>
                     </div>
 
-                    {/* ── 출근 스티커 칸 — 옆으로 밀면 속지가 넘어가 지난주 (회원만) ── */}
-                    {member ? (
-                    <section className="st-place mt-3 touch-pan-y select-none" style={{ ["--r" as string]: "0deg", ["--d" as string]: "380ms" }} aria-label="출근 스티커"
-                        onPointerDown={(e) => { swipeX.current = e.clientX; }}
-                        onPointerUp={(e) => {
-                            if (swipeX.current === null) return;
-                            const dx = e.clientX - swipeX.current;
-                            swipeX.current = null;
-                            if (dx > 50) turnTo(1);
-                            else if (dx < -50) turnTo(0);
-                        }}
-                        onPointerCancel={() => { swipeX.current = null; }}>
-                        <div className="flex items-center justify-between">
-                            <span className="ah-display st-marker text-[15px]">
-                                {weekPage === 0 ? "이번 주 출근 스티커" : `지난주 출근 스티커${member ? ` · ${LAST_WEEK.filter(Boolean).length}/7` : ""}`}
-                            </span>
-                            {member ? <CoinChip ref={coinRef} coins={today.coins} /> : null}
-                        </div>
-                        <div className={`st-week ${flip === "out" ? "is-out" : flip === "in" ? "is-in" : ""}`}>
-                            <ol className={`mt-2.5 grid grid-cols-7 gap-1 ${today.stamped && weekPage === 0 ? "hc-thud" : ""}`}>
-                                {WEEK.map((d, i) => {
-                                    const isToday = weekPage === 0 && i === wd;
-                                    const on = weekPage === 0 ? (member && i < wd) || (isToday && today.stamped) : member && LAST_WEEK[i];
-                                    return (
-                                        <li key={d.ko} className="flex flex-col items-center gap-1">
-                                            <span ref={isToday ? slotRef : undefined} className={`relative grid aspect-square w-full place-items-center rounded-full ${on ? "" : "st-slot"} ${isToday && !on ? "is-today" : ""}`}>
-                                                {on ? <Image src={d.img} alt="" width={44} height={44} className={`st-stuck h-full w-full object-contain ${isToday ? "hc-slam" : ""}`} style={{ ["--rot" as string]: `${((i * 37) % 13) - 6}deg` }} /> : null}
-                                            </span>
-                                            <span className={`ah-display text-[12px] ${isToday ? "text-[#ea4c7c]" : "text-[#b7a9a1]"}`}>{d.ko}</span>
-                                        </li>
-                                    );
-                                })}
-                            </ol>
-                            {weekPage === 1 && !member ? <p className="ah-light mt-1.5 text-center text-[12px]" style={{ color: TEXT_SOFT }}>로그인하면 지난 스티커가 모두 남아요</p> : null}
-                        </div>
-                        {/* 속지 표시 · 밀기 안내 */}
-                        <div className="mt-2 flex items-center justify-center gap-1.5">
-                            {([1, 0] as const).map((pg) => (
-                                <button key={pg} type="button" onClick={() => turnTo(pg)} aria-label={pg === 0 ? "이번 주 보기" : "지난주 보기"}
-                                    className="h-1.5 rounded-full transition-all duration-300" style={{ width: weekPage === pg ? 18 : 6, background: weekPage === pg ? "#f48fac" : "#ecd8cf" }} />
-                            ))}
-                            <span className="ah-light ml-1 text-[11px]" style={{ color: "#b7a9a1" }}>{weekPage === 0 ? "→ 밀면 지난주" : "← 밀면 이번 주"}</span>
-                        </div>
-                    </section>
-                    ) : null}
-
-                    {/* ── 오늘의 스티커 받침(떼어 붙이기) → 붙인 뒤엔 손글씨 체크리스트 ── */}
+                    {/* ── 로그인 전: 초대 카드 / 로그인 후: 홈에는 출근 칸을 두지 않고 매일 댕생활에서(사용자 결정 2026-10-16) ── */}
                     {!member ? (
-                        <LoginInvite />
-                    ) : !today.stamped ? (
-                        <div className="st-place st-sheet relative mt-4 flex items-center gap-3 rounded-[1.1rem] px-3 py-2.5" style={{ ["--r" as string]: "0deg", ["--d" as string]: "460ms" }}>
-                            <button ref={stickerRef} type="button" aria-label="오늘 출근 스티커 붙이기" onPointerDown={onDown} onPointerMove={onMoveDrag} onPointerUp={onUp} onPointerCancel={onUp}
-                                className={`st-peel relative h-[4.4rem] w-[4.4rem] shrink-0 touch-none ${lifted ? "is-lifted" : ""}`}
-                                style={{ transform: `translate(${offset.x}px, ${offset.y}px) rotate(${offset.r}deg)` }}>
-                                <Image src={WEEK[wd].img} alt="" fill sizes="72px" className="st-diecut-img object-contain" draggable={false} />
-                            </button>
-                            <span className="min-w-0 flex-1">
-                                <span className="ah-display block text-[14px]">오늘의 {WEEK[wd].ko}요일 스티커</span>
-                                <span className="ah-light block text-[12px]" style={{ color: TEXT_SOFT }}>
-                                    떼어서 오늘 칸에 붙여요 · +{SAMPLE.dailyRewardCoins}코인
-                                </span>
-                            </span>
-                            <i aria-hidden="true" className="fa-solid fa-hand-pointer st-hint text-[16px] text-[#f4a9bd]" />
-                        </div>
+                        <LoginInvite redirect="/app/home-1/" title={["로그인하고", "댕다방을 함께 즐겨요!"]} items={HOME_INVITE} cta="로그인하고 댕다방 즐기기" />
                     ) : (
-                        <ul className="mt-4 space-y-1">
-                            {SAMPLE.tasks.map((t, i) => {
-                                const on = today.done[t.taskId];
-                                return (
-                                    <li key={t.taskId} className="hc-in" style={{ ["--d" as string]: `${i * 90}ms` }}>
-                                        <button type="button" disabled={on} onClick={() => { today.complete(t.taskId); haptic("light"); }} className="flex w-full items-center gap-2.5 py-1.5 text-left">
-                                            {/* 펜으로 그린 네모 + 체크 */}
-                                            <svg viewBox="0 0 28 28" className="h-7 w-7 shrink-0" aria-hidden="true">
-                                                <path d="M5 6 Q4 4 7 4 L22 5 Q24 5 24 8 L23 22 Q23 24 20 24 L6 23 Q4 23 4 20 Z" fill="none" stroke="#c9b4a8" strokeWidth="1.6" strokeLinejoin="round" />
-                                                {on ? <path d="M7 14 L12 19 L23 6" fill="none" stroke="#ea4c7c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="st-check" /> : null}
-                                            </svg>
-                                            <span className={`ah-display flex-1 text-[15px] ${on ? "st-strike" : ""}`}>{t.title}</span>
-                                            <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>+{t.xp}XP</span>
-                                        </button>
-                                    </li>
-                                );
-                            })}
-                            {today.allDone ? <li className="ah-display hc-pop pt-1 text-[13px] text-[#ea4c7c]">오늘 완료! 내일 새 스티커까지 {untilTomorrow(now)}</li> : null}
-                        </ul>
+                        <div className="st-place mt-4 flex items-center gap-2.5" style={{ ["--r" as string]: "0deg", ["--d" as string]: "380ms" }}>
+                            <Link href="/app/sticker/daily/" className="hm-note relative flex-1 rounded-[4px_4px_14px_4px] px-3.5 py-2.5 active:scale-[.98]" style={{ rotate: "-1deg" }}>
+                                <span className="ah-display block text-[13.5px]">오늘 출근 스티커는 매일 댕생활에서!</span>
+                                <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>출근하고 코인 받기 · 연속 출근 확인 <i aria-hidden="true" className="fa-solid fa-arrow-right text-[9px]" /></span>
+                            </Link>
+                            <CoinChip ref={coinRef} coins={today.coins} />
+                        </div>
                     )}
+
+                    {/* ── 쇼핑하러 가기 — 앱 쇼핑 첫 화면(탭바 "쇼핑"과 같은 곳). 쇼핑 탭 색 카드 + 3D 그림이 카드 위로 튀어나옴 ── */}
+                    <Link href="/app/sticker/shop/" className="hm-short hm-shop st-place relative mt-14 block" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "520ms", rotate: "-1deg" }}>
+                        <span className="hm-card relative flex items-center gap-3 rounded-[20px] py-3.5 pl-[5.6rem] pr-3.5" style={{ background: "linear-gradient(165deg, #fff3e8 0%, #ffe0c7 100%)", color: "#a8480f" }}>
+                            <span className="min-w-0 flex-1">
+                                <span className="ah-display block text-[16px]">쇼핑하러 가기</span>
+                                <span className="ah-light mt-0.5 block text-[11.5px] leading-snug opacity-80">{member ? `${SAMPLE.pet.name}에게 맞는 용품 · 먹거리` : "산책 · 먹거리 · 생활 · 장난감 · 케어"}</span>
+                            </span>
+                            <span className="hm-go grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/85 text-[11px] text-[#cf5f19]"><i aria-hidden="true" className="fa-solid fa-arrow-right" /></span>
+                        </span>
+                        <Image src="/images/ui/stickers/tab-shop.webp" alt="" width={160} height={160} className="hm-icon absolute -top-7 left-2 h-[4.8rem] w-[4.8rem]" style={{ rotate: "-6deg" }} />
+                    </Link>
 
                     {/* ── 댕다방 즐기기: 테이프로 붙인 카드 스티커 ── */}
                     <div className="mt-6 flex items-center gap-2">
@@ -352,4 +218,6 @@ const HOME_CSS = `
 .hm-go { transition: transform .3s; }
 .hm-short:active .hm-go { transform: translateX(3px); }
 @media (prefers-reduced-motion: reduce) { .hm-short, .hm-icon { transition: none; } }
+/* 로그인 후 "오늘 출근은 매일 댕생활에서" — 노란 포스트잇 */
+.hm-note { background: #fff3a6; color: #6b4708; box-shadow: 0 8px 12px -9px rgba(110,80,40,.5); -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
 `;
