@@ -576,6 +576,17 @@ ${LIST} main main > section.surface::before { ${TAPE} top: -7px; left: 50%; widt
 ${LIST} main main > section.surface label > span { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 12.5px; color: #8a6a3a; }
 ${LIST} main main > section.surface .input { border-color: transparent; border-radius: 14px; background-color: #fff; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
 ${LIST} main main > section.surface .input:focus { box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+/* 앱 상품 목록 검색 묶음 — 검색칸 + "필터" 버튼(AppProductFilter) 한 줄만(사용자 결정 2026-10-17).
+   카테고리 · 세부 · 정렬 칸은 숨김(정렬 · 전체 상품의 카테고리는 필터 속지에서 같은 함수로) · 목록을 내려도 상단바 아래 붙어 있음 */
+${LIST} main main > section[data-products-filter] { position: sticky; top: calc(var(--header-height, 56px) + 8px); z-index: 30; display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 12px; }
+${LIST} main main > section[data-products-filter] > label { display: none; }
+${LIST} main main > section[data-products-filter] > label:first-of-type { display: block; flex: 1; min-width: 0; }
+${LIST} main main > section[data-products-filter] > label:first-of-type > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+${LIST} main main > section[data-products-filter] > label:first-of-type > .input { height: 44px; padding-left: 38px;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a493' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5 20 20'/%3E%3C/svg%3E") 13px center / 17px no-repeat; }
+${LIST} main main > section[data-products-filter] > [data-app-product-filter] { display: block; flex-shrink: 0; }
+html.ddb-app-mode .apf-btn { ${PATCH_CREAM} display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; font-size: 13px; }
+html.ddb-app-mode .apf-btn:active { transform: scale(.95); }
 /* 상품 카드(웹 공용 ProductCard) — 앱 쇼핑 카드와 같게: 색상 미리보기 칩 · "n가지 색상" 숨김, 살짝 기울기(±1도), 흰 테두리 사진 */
 ${S} article[data-pet-product="true"] > div:has(> [role="group"]) { display: none; }
 ${LIST} main article[data-pet-product="true"] { rotate: -.8deg; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -12px rgba(110, 80, 40, .5); }

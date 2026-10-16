@@ -27,6 +27,7 @@ import { useI18n } from "@/lib/i18n";
 import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
 import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
+import AppProductFilter from "@/components/app-shell/AppProductFilter";
 
 type Props = {
     initialCategory?: CategorySlug;
@@ -191,7 +192,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                 </h1>
             </header>
 
-            <section className="surface mb-6 grid gap-3 p-4 md:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]">
+            <section className="surface mb-6 grid gap-3 p-4 md:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]" data-products-filter>
                 <label className="block">
                     <span className="mb-1 block text-xs font-black text-neutral-500">{t("search")}</span>
                     <input
@@ -235,6 +236,18 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                         ))}
                     </select>
                 </label>
+                {/* 앱 전용 필터 버튼 + 속지(웹은 hidden) — 위 정렬 · 카테고리와 같은 함수를 부름 */}
+                <AppProductFilter
+                    sort={sort}
+                    sortOptions={SORT_OPTIONS.map((slug) => ({ value: slug, label: menuLabel(SORT_LABEL[slug]) }))}
+                    onSort={(value) => setSort(value as SortKey)}
+                    category={initialCategory ? undefined : category}
+                    categoryOptions={initialCategory ? undefined : [{ value: "all", label: t("all") }, ...CATEGORY_ORDER.map((slug) => ({ value: slug, label: categoryLabel(slug, CATEGORY_LABEL[slug]) }))]}
+                    onCategory={initialCategory ? undefined : (value) => {
+                        setCategory(value as CategoryFilter);
+                        setSubcategory("all");
+                    }}
+                />
             </section>
 
             {products.length > 0 && (

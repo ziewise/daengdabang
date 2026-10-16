@@ -254,6 +254,7 @@ git config user.email "smlee@ziewise.com"
 | `components/home/IntroSplash.tsx` | 앱 모드에서는 인트로 영상 없이 바로 시작 |
 | `components/products/detail/ProductTabs.tsx` | 공급사 원본 · 편집 상세를 `AppDetailFold` 틀로 감쌈(기존 기본 상세의 접기와 같은 방식 · 같은 문구). 버튼 · 흐림은 `hidden`이라 웹은 그대로, 앱 CSS(`appShopSkin.ts`)에서만 820px 접기 · 버튼 표시 |
 | `app/mypage/profile/page.tsx` | 맨 아래 "회원 탈퇴" 작은 링크(기존 /mypage/withdrawal) 추가 — `hidden`이라 웹은 그대로(웹은 마이페이지 메뉴에 있음), 앱 CSS에서만 보임(앱은 메뉴를 숨겨서) |
+| `app/products/ProductsClient.tsx` | 검색 묶음 `section`에 `data-products-filter` 표시 + 앱 전용 `AppProductFilter`(필터 버튼 · 속지, 뿌리가 `hidden`이라 웹은 그대로) 추가. 앱 CSS에서만 검색칸 + 필터 버튼 한 줄(카테고리 · 세부 · 정렬 칸 숨김, 위로 붙음). 속지에서 고르면 같은 `setSort` · 카테고리 바꾸기(`setCategory` + `setSubcategory("all")`)를 부름. 세부 분류는 앱에서 쓰지 않음(사용자 결정 2026-10-17) |
 
 ### 앱 모드 판별 범위 (협의 필요)
 "앱으로 볼 때" = ① 네이티브 앱 ② 홈 화면 설치 웹앱 ③ **브라우저에서 `/app/` 주소에 한 번 들어온 뒤의 같은 탭**(sessionStorage). ③ 때문에 배포 후에는 운영 웹의 `/app/`(앱처럼 열기 안내)로 들어온 웹 방문자에게도 그 탭에서 앱 틀이 보인다. 기능 변경은 아니지만 협업자와 범위를 정해야 한다.
