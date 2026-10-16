@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import ProductReviewPanel from "./ProductReviewPanel";
 import Image from "next/image";
@@ -115,7 +115,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     const cautionItems = [...(content?.cautions ?? []), ...(content?.safety ? [content.safety] : [])];
 
     if (supplierOriginal) {
-        return <SupplierDetailContent product={p} />;
+        return <AppDetailFold><SupplierDetailContent product={p} /></AppDetailFold>;
     }
 
     if (details.length === 0 && !content) {
@@ -144,6 +144,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
         const remainingDetails = details.filter((_, index) => !usedVisualIndices.has(index));
 
         return (
+            <AppDetailFold>
             <article className="mx-auto max-w-5xl overflow-hidden bg-white" data-product-detail-copy data-visual-story>
                 <header className="grid min-h-[520px] md:grid-cols-[1.08fr_0.92fr]">
                     <div className="flex min-h-[360px] items-center justify-center bg-neutral-100 p-6 md:min-h-[520px] md:p-10">
@@ -256,6 +257,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     </section>
                 )}
             </article>
+            </AppDetailFold>
         );
     }
 
@@ -294,6 +296,42 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     <i className={`fa-solid ${expanded ? "fa-chevron-up" : "fa-chevron-down"} text-[10px]`} />
                 </button>
             </div>}
+        </div>
+    );
+}
+
+/**
+ * 앱 전용 상세 접기(로컬 시안) — 공급사 원본 · 편집 상세도 아래 기본 상세처럼 820px에서 접고 "상세정보 더보기 / 접기".
+ * 접기 · 흐림 · 버튼은 앱 모드 CSS(html.ddb-app-mode, components/app-shell/appShopSkin.ts)에서만 켜진다.
+ * 웹은 지금처럼 전부 펼쳐 보이고 버튼 · 흐림은 hidden(화면 · 읽기 프로그램 모두 없음).
+ */
+function AppDetailFold({ children }: { children: ReactNode }) {
+    const [expanded, setExpanded] = useState(false);
+    const { t } = useI18n();
+    return (
+        <div data-app-detail-fold={expanded ? "open" : "closed"}>
+            <div data-app-detail-fold-body="">
+                {children}
+                {!expanded && (
+                    <div
+                        data-app-detail-fold-fade=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-40"
+                        style={{ background: "linear-gradient(to top, var(--background) 0%, rgba(255,255,255,0) 100%)" }}
+                    />
+                )}
+            </div>
+            <div data-app-detail-fold-toggle="" className="mt-4 hidden justify-center">
+                <button
+                    type="button"
+                    onClick={() => setExpanded((value) => !value)}
+                    aria-expanded={expanded}
+                    className="inline-flex h-11 items-center gap-2 rounded-md border border-neutral-200 bg-white px-5 text-sm font-black shadow-sm transition"
+                >
+                    {expanded ? t("fold") : t("moreDetail")}
+                    <i className={`fa-solid ${expanded ? "fa-chevron-up" : "fa-chevron-down"} text-[10px]`} />
+                </button>
+            </div>
         </div>
     );
 }

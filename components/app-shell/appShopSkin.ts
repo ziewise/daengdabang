@@ -58,6 +58,32 @@ const PATCH_PINK = patch("#f2789d", "#d9547d", "#ea6d93", "rgba(255,255,255,.75)
 const PATCH_CREAM = patch("#fff6ee", "#f4a9bf", "#f8c3d2", "rgba(226,107,145,.55)", "#c4456f", false);
 const PATCH_LAVENDER = patch("#a68ff0", "#7f66d8", "#957de6", "rgba(255,255,255,.75)", "#fff");
 
+/* 자수 아이콘(상세 버튼 속 장바구니 · 하트) — 와펜 버튼과 같은 결: 실 결(사선 무늬) + 새틴 테두리 실 + 안쪽 바느질 땀(점선).
+   글자 아이콘(Font Awesome) 자리에 배경 그림으로만 바꿔 끼운다(버튼 · 동작 그대로) */
+const svgUrl = (svg: string) => `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+/* 실 결 — 가는 사선 무늬 */
+const THREAD = `<pattern id="t" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(55)"><rect width="1" height="2.4" fill="#000" fill-opacity=".1"/></pattern>`;
+const BAG_BODY = "M8.5 14 h23 a2 2 0 0 1 2 2.2 l-1.3 15.6 a3.6 3.6 0 0 1 -3.6 3.3 h-17.2 a3.6 3.6 0 0 1 -3.6 -3.3 l-1.3 -15.6 a2 2 0 0 1 2 -2.2 z";
+const EMB_BAG = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs>${THREAD}</defs>
+<path d="M14 14.5 V11.8 a6 6 0 0 1 12 0 V14.5" fill="none" stroke="#d9547d" stroke-width="3.2" stroke-linecap="round"/>
+<path d="${BAG_BODY}" fill="#f2789d" stroke="#d9547d" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="${BAG_BODY}" fill="url(#t)"/>
+<path d="${BAG_BODY}" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.3" stroke-dasharray="2.2 1.6" transform="translate(20 24.5) scale(.78) translate(-20 -24.5)"/>
+<g fill="#fff"><ellipse cx="20" cy="27.2" rx="3.4" ry="2.8"/><circle cx="16.2" cy="23.3" r="1.4"/><circle cx="18.8" cy="21.4" r="1.4"/><circle cx="21.2" cy="21.4" r="1.4"/><circle cx="23.8" cy="23.3" r="1.4"/></g>
+</svg>`);
+const HEART = "M20 34 C 9.5 27.3 4 21.4 4 14.8 C 4 9.9 7.8 6.2 12.4 6.2 C 15.7 6.2 18.4 8 20 10.8 C 21.6 8 24.3 6.2 27.6 6.2 C 32.2 6.2 36 9.9 36 14.8 C 36 21.4 30.5 27.3 20 34 Z";
+const STITCH_HEART = (color: string) => `<path d="${HEART}" fill="none" stroke="${color}" stroke-width="1.6" stroke-dasharray="2.2 1.7" transform="translate(20 19.5) scale(.72) translate(-20 -19.5)"/>`;
+/* 찜한 상태(분홍 와펜 위) — 흰 실로 꽉 채운 하트 */
+const HEART_ON = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs>${THREAD}</defs>
+<path d="${HEART}" fill="#fffaf6" stroke="#ffe0ea" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="${HEART}" fill="url(#t)"/>${STITCH_HEART("#f2789d")}
+</svg>`);
+/* 찜 전(크림 와펜 위) — 분홍 새틴 실 테두리만 수놓은 빈 하트 */
+const HEART_OFF = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+<path d="${HEART}" fill="none" stroke="#e8628e" stroke-width="3.4" stroke-linejoin="round"/>
+<path d="${HEART}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1" stroke-dasharray="1 1.4" stroke-linejoin="round"/>${STITCH_HEART("#f6a9bf")}
+</svg>`);
+
 export const APP_SHOP_SKIN_CSS = `
 /* 앱 글꼴 — 본문 나눔스퀘어라운드(굵게) · 제목 카페24 써라운드 (우리 사이트 public/fonts, 외부 서버 없이) */
 @font-face { font-family: "NanumSquareRound"; font-weight: 400; src: url("/fonts/NanumSquareRoundR.woff2") format("woff2"); font-display: swap; }
@@ -92,6 +118,14 @@ ${S} [data-pet-guide-target="try-on"] > span[class*="h-11"] { border-radius: 999
 ${S} main :is(.bg-indigo-600, .btn-primary, .btn-secondary, [data-add-option], [data-pet-guide-target="try-on"], [data-pet-guide-target="product-actions"] > button):disabled { opacity: .55; }
 ${S} main :is(button, a):is(.bg-indigo-600, .btn-primary, .btn-secondary, [data-add-option], [data-pet-guide-target="try-on"], [aria-label="찜하기"], [aria-label="찜 해제"]):not(:disabled):active,
 ${S} [data-product-detail-content] .fixed.bottom-0 button:not(:disabled):active { transform: scale(.96); transition-duration: .12s; }
+/* 버튼 속 장바구니 · 하트 — 글자 아이콘 대신 자수 그림(찜하면 흰 실로 채운 하트, 찜 전은 테두리만 수놓은 하트) */
+${S} [data-product-detail-content] button i.fa-bag-shopping, ${S} [data-product-detail-content] button i.fa-heart {
+  display: inline-block; width: 1.7rem; height: 1.7rem; vertical-align: middle; background: ${EMB_BAG} center / contain no-repeat;
+  filter: drop-shadow(0 1px 1px rgba(120, 60, 60, .22)); }
+${S} [data-product-detail-content] button i.fa-heart { width: 1.9rem; height: 1.9rem; background-image: ${HEART_OFF}; }
+${S} [data-product-detail-content] button i.fa-heart.fa-solid { background-image: ${HEART_ON}; }
+${S} [data-product-detail-content] button :is(i.fa-bag-shopping, i.fa-heart)::before { content: ""; }
+
 /* 링크 복사 · 공유 — 흰 칼선 동그라미 스티커 */
 ${S} main button:is([aria-label="링크 복사"], [aria-label="공유"]) { border-radius: 999px; border-color: #fff; border-width: 2px; background: #fff; color: #c4456f;
   box-shadow: 0 0 0 1.5px #f3e1d6, 0 5px 9px -5px rgba(110, 80, 40, .5); }
@@ -147,6 +181,14 @@ ${S} #delivery-return-policy li::marker { color: #f283a3; }
 /* 후기 — 후기 한 장 한 장은 메모 카드, 요약 키워드는 동그란 스티커 */
 ${S} [data-review-panel] article[class*="border"] { border-color: #f3e6d6; background: #fffefb; border-radius: 6px 6px 16px 6px; box-shadow: 0 8px 14px -12px rgba(110, 80, 40, .45); }
 ${S} [data-review-panel] span[class*="rounded-md"][class*="bg-white"] { border-radius: 999px; box-shadow: 0 0 0 1.5px #f6c9d6, 0 3px 5px -3px rgba(110, 80, 40, .35); }
+
+/* 상세 접기(앱 전용, ProductTabs AppDetailFold) — 공급사 원본 · 편집 상세를 820px에서 접고 아래 흐림 + "상세정보 더보기" 크림 와펜.
+   overflow 대신 clip-path로 아래만 잘라, 위 · 양옆의 테이프와 흰 사진 여백은 그대로 보인다(잘린 부분은 눌리지도 않음) */
+${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-body] { position: relative; max-height: 820px; clip-path: inset(-30px -30px 0 -30px); }
+${S} [data-app-detail-fold-fade] { display: block; z-index: 5; }
+${S} [data-app-detail-fold-toggle] { display: flex; }
+${S} [data-app-detail-fold-toggle] button { ${PATCH_CREAM} }
+${S} [data-app-detail-fold-toggle] button:active { transform: scale(.96); transition-duration: .12s; }
 
 /* ── 5) 옵션 고르기 판(장바구니 담기 · 바로 구매) — 점 무늬 속지 + 위 테이프 ── */
 ${S} [data-purchase-option-sheet] { ${DOT_PAPER} border-radius: 24px 24px 0 0; box-shadow: 0 -10px 30px -12px rgba(110, 70, 55, .45); }
