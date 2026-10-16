@@ -655,4 +655,47 @@ ${S} [data-product-detail-content] .fixed.bottom-0 p.ddb-crayon-price { font-siz
   ${S} [data-product-detail-content] div:not(.fixed *) > p.ddb-crayon-price { font-size: 28px; }
 }
 
+/* ── 21) 외부 가격 비교(전체 상품 · 상품군 화면에서 검색어가 있을 때, 협업자 ExternalProductCard · ExternalProductComparisonTable) ──
+   지금은 외부 결과가 없어 안 보이지만 미리 입혀 둠. 외부 = 민트(초록) 결로 우리 상품(분홍 · 노랑)과 구분 ·
+   영문 꼬리표 숨김 · 비교 상자는 민트 메모 · 외부 상품 카드는 스크랩 카드 + 민트 가격표 · 판매처 버튼은 와펜. 점수 · 가격 · 링크(새 창)는 그대로 ── */
+/* 칸 머리 개수 표시 — 동그란 스티커 */
+${LIST} main main > section[class*="rounded-lg"] > div:first-child span[class*="rounded-full"] { background: #fff; color: #7d6a61; box-shadow: 0 0 0 1.5px #f1e3da; }
+/* 비교 상자 — 민트 메모 카드 + 테이프 · 머리는 투명 + 점선 · 영문 꼬리표 숨김 */
+${LIST} main section[class*="border-emerald-200"] { position: relative; overflow: visible; border: 0; border-radius: 8px 8px 20px 8px; background: #f2fbf6;
+  box-shadow: 0 0 0 1.5px #cdeedb, 0 12px 20px -14px rgba(40, 110, 80, .45); }
+${LIST} main section[class*="border-emerald-200"]::before { ${TAPE} top: -7px; left: 50%; width: 58px; margin-left: -29px; rotate: -2deg; background: repeating-linear-gradient(90deg, rgba(186,236,206,.95) 0 7px, rgba(214,245,226,.95) 7px 14px); }
+${LIST} main section[class*="border-emerald-200"] > div:first-child { background: transparent; border-bottom: 2px dashed #cdeedb; border-radius: 8px 8px 0 0; }
+${LIST} main section[class*="border-emerald-200"] p.uppercase { display: none; }
+${LIST} main section[class*="border-emerald-200"] h3 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${LIST} main section[class*="border-emerald-200"] span[class*="bg-emerald-700"] { border-radius: 999px; box-shadow: 0 0 0 2px #fff, 0 4px 7px -4px rgba(40, 110, 80, .5); }
+/* 기준상품 고르기 · 사실 칩 · 점수 칸 — 둥근 스티커 · 작은 메모 */
+${LIST} main section[class*="border-emerald-200"] [aria-label*="기준상품"] > button { border-radius: 999px; box-shadow: 0 3px 6px -4px rgba(40, 110, 80, .45); }
+${LIST} main section[class*="border-emerald-200"] span[class*="rounded-md"][class*="border-emerald-200"] { border-radius: 999px; }
+${LIST} main section[class*="border-emerald-200"] [aria-label*="점수 기준"] > div { border: 0; border-radius: 4px 4px 12px 4px; background: #fff; box-shadow: 0 0 0 1.5px #e3efe8, 0 5px 8px -7px rgba(40, 110, 80, .4); }
+${LIST} main section[class*="border-emerald-200"] div[class*="border-emerald-200"][class*="bg-emerald-50"] { border: 0; border-radius: 4px 4px 14px 4px; background: #e6f7ee; box-shadow: 0 6px 10px -8px rgba(40, 110, 80, .45); }
+/* 휴대폰 비교 카드 — 종이 카드 · 사진 흰 테두리 · 순위는 민트 도장 · 보기는 작은 분홍 와펜(새 창 그대로) */
+${LIST} main [role="list"][aria-label*="비교 카드"] { background: transparent; }
+${LIST} main [role="list"][aria-label*="비교 카드"] > article { border: 0; border-radius: 8px 8px 16px 8px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 14px -11px rgba(110, 80, 40, .45); }
+${LIST} main [role="list"][aria-label*="비교 카드"] > article[class*="bg-emerald-50"] { background: #f2fbf6; box-shadow: 0 0 0 2px #9fdcbc, 0 8px 14px -11px rgba(40, 110, 80, .45); }
+${LIST} main [role="list"][aria-label*="비교 카드"] img { box-shadow: 0 0 0 3px #fff, 0 4px 7px -4px rgba(90, 60, 50, .4); }
+${LIST} main [role="list"][aria-label*="비교 카드"] span[class*="bg-emerald-700"] { background: rgba(255,255,255,.95); color: #1f9e75; box-shadow: inset 0 0 0 1.5px #1f9e75; rotate: -6deg;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${LIST} main [role="list"][aria-label*="비교 카드"] h4 { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${LIST} main [role="list"][aria-label*="비교 카드"] div[class*="rounded-md"][class*="bg-neutral-50"] { background: #f6f0e8; border-radius: 999px; }
+${LIST} main [role="list"][aria-label*="비교 카드"] a[class*="bg-neutral-950"] { ${PATCH_PINK} display: inline-block; border-width: 2px; outline: none; padding: 7px 14px 6px; line-height: 1;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 12.5px; text-shadow: none; }
+/* 외부 상품 카드 — 우리 카드와 같은 스크랩 결(테이프 · 흰 테두리 사진 · 살짝 기울기) + 가격은 민트 꼬리표(외부 판매가라 우리 노란 가격표와 구분) */
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] { position: relative; overflow: visible; border: 0; border-radius: 10px; background: #f7fcf9; rotate: .6deg;
+  box-shadow: 0 0 0 1.5px #d9efe2, 0 10px 18px -12px rgba(40, 110, 80, .45); }
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"]::before { ${TAPE} top: -5px; left: 50%; width: 44px; margin-left: -22px; background: repeating-linear-gradient(90deg, rgba(186,236,206,.95) 0 7px, rgba(214,245,226,.95) 7px 14px); }
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] > a:first-child { margin: 6px 6px 0; border-radius: 6px; box-shadow: 0 0 0 3px #fff, 0 4px 8px -5px rgba(90, 60, 50, .4); }
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] h3 { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #3d2f2a; }
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] p[class*="text-xl"] { position: relative; width: fit-content; margin-left: auto; padding: 3px 9px 3px 16px;
+  background: #d9f5e6; color: #1d6b4c; border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 16px; }
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] a[class*="bg-neutral-950"] { ${PATCH_CREAM} }
+${LIST} main article.group:not([data-pet-product])[class*="rounded-lg"] a[class*="bg-neutral-950"]:active { transform: scale(.96); }
+/* 외부 결과 없음 — 점선 메모 */
+${LIST} main main > section[class*="rounded-lg"] div[class*="border-dashed"] { border-color: #ecd5c8; border-radius: 6px 6px 16px 6px; background: #fffbea; }
+
 `;
