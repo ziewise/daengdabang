@@ -489,4 +489,35 @@ ${CHECKOUT} main [data-payment-mode="test"]::before { ${TAPE} top: -6px; left: 2
 ${CHECKOUT} main aside.surface [class*="border-t"] { border-top: 2px dashed #ecd5c8; }
 ${CHECKOUT} main aside.surface :is(b, strong)[class*="text-2xl"], ${CHECKOUT} main aside.surface [class*="text-2xl"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 
+/* ── 16) 주문/결제 2차(사용자 2026-10-16) — 칸 머리 3D 그림(배송지 · 배송요청 · 예상도착일) · 안내 상자 메모지 + 테이프 ·
+   로그인하기 작은 와펜 · 작은 글씨는 또렷한 둥근 글꼴 · 결제수단 아이콘은 7개 모두 선 아이콘 그대로 색만 맞춤. 문구 · 색 · 동작 그대로 ── */
+/* 칸 머리 아이콘 — 글자 아이콘 대신 사용자 3D 그림(동그라미 바탕 없이) */
+${CHECKOUT} main section.surface span[class*="h-9"][class*="w-9"][class*="rounded-full"] { width: 46px; height: 46px; background-color: transparent; background-position: center; background-size: contain; background-repeat: no-repeat; box-shadow: none;
+  filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .22)); }
+${CHECKOUT} main section.surface span[class*="h-9"][class*="w-9"][class*="rounded-full"] > i { visibility: hidden; }
+${CHECKOUT} main section[aria-labelledby$="-address-title"] span[class*="h-9"][class*="w-9"] { background-image: url("/images/ui/stickers/checkout-address.webp"); }
+${CHECKOUT} main section[aria-labelledby$="-request-title"] span[class*="h-9"][class*="w-9"] { background-image: url("/images/ui/stickers/checkout-request.webp"); }
+${CHECKOUT} main section[aria-labelledby="checkout-delivery-estimate-title"] span[class*="h-9"][class*="w-9"] { background-image: url("/images/ui/stickers/checkout-arrival.webp"); }
+/* 안내 상자 — 하늘 메모 · 노란 포스트잇 · 빨간 경고 메모 + 위 테이프(문구 · 색 그대로) */
+${CHECKOUT} main :is(div, p):is([class*="bg-sky-50"], [class*="bg-amber-50"], [class*="bg-red-50"]):not([data-payment-mode]) { position: relative; border-width: 0; border-radius: 4px 4px 16px 4px; }
+${CHECKOUT} main :is(div, p)[class*="bg-sky-50"]:not([data-payment-mode]) { box-shadow: 0 0 0 1.5px #c7e4f8, 0 8px 12px -10px rgba(60, 110, 150, .45); }
+${CHECKOUT} main :is(div, p)[class*="bg-amber-50"] { background-color: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${CHECKOUT} main :is(div, p)[class*="bg-red-50"] { box-shadow: 0 0 0 1.5px #f6c6c6, 0 8px 12px -10px rgba(150, 60, 60, .4); }
+${CHECKOUT} main :is(div, p):is([class*="bg-sky-50"], [class*="bg-amber-50"], [class*="bg-red-50"]):not([data-payment-mode])::before { ${TAPE} top: -6px; left: 20px; width: 40px; height: 12px; rotate: -4deg; }
+${CHECKOUT} main :is(div, p)[class*="bg-sky-50"]:not([data-payment-mode])::before { background: repeating-linear-gradient(90deg, rgba(190,224,255,.95) 0 7px, rgba(215,236,255,.95) 7px 14px); }
+${CHECKOUT} main :is(div, p)[class*="bg-amber-50"]:not([data-payment-mode])::before { background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+/* 로그인하기 — 작은 분홍 와펜(같은 로그인 주소) */
+${CHECKOUT} main [role="alert"] > a[class*="underline"] { ${PATCH_PINK} display: inline-block; border-width: 2px; outline: none; text-decoration: none; padding: 7px 16px 6px; margin-top: 10px;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13px; line-height: 1; letter-spacing: 0; text-shadow: none;
+  background: linear-gradient(#e0557f, #e0557f) padding-box, repeating-linear-gradient(72deg, #c23d6c 0 2px, #d4447a 2px 3.4px) border-box; }
+/* 작은 글씨 — 또렷한 둥근 본문 글꼴(입력칸 이름 · 칸 설명 · 결제수단 설명) */
+${CHECKOUT} main label[class*="text-xs"][class*="font-black"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13px; color: #5c4a42; }
+${CHECKOUT} main section.surface > div[class*="border-b"] p, ${CHECKOUT} main button[data-payment-method] > span:last-child { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${CHECKOUT} main button[data-payment-method] > span:last-child { font-size: 11px; color: #8a766c; }
+/* 결제수단 아이콘 — 7개 모두 선 아이콘 그대로, 색만(고른 것 분홍 · 나머지 갈색) */
+${CHECKOUT} main button[data-payment-method] i { color: #b39b90; }
+${CHECKOUT} main button[data-payment-method][aria-checked="true"] i { color: #e8628e; }
+/* 저장된 배송지 고르기(회원) — 같은 종이 카드 + 흰 종이 선택칸(위 공통 규칙), 테이프만 노랑 */
+${CHECKOUT} main section.surface[aria-label="저장된 배송지 선택"]::before { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 7px, rgba(255,239,190,.95) 7px 14px); }
+
 `;
