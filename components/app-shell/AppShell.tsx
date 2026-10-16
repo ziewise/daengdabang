@@ -5,7 +5,8 @@
  * ---------------------------------------------------------------------
  * 앱으로 볼 때(useAppMode) 사이트 헤더 · 푸터 · 챗봇 버튼 대신 이 틀을 씌운다.
  *  - 상단바: 언제나 로고(하위 화면은 앞에 뒤로 가기). 화면 제목은 상단바 아래 제목 줄(탭 젤리 아이콘 + 제목). 오른쪽은 케어톡 · 검색 · 장바구니(개수).
- *  - 케어톡: 페이지 이동 없이 아래에서 올라오는 드로어(CareTalkDrawer). 앱 안의 /chat 링크 · 상담 이벤트도 드로어로 연다.
+ *  - 케어톡: 협업자 전역 상담 창(ChatWidget) 그대로 — 상단바 버튼은 웹 상단바와 같은 openChatWidget(), /chat 링크 · 상품 상담 버튼도
+ *    협업자 동작 그대로(/chat 화면이 창을 엶 · 상담 이벤트는 ChatWidget 이 직접 받음). 앱은 창이 놓이는 자리(탭바 위)만 정함.
  *    쇼핑 탭은 휴대폰으로 웹을 볼 때와 같은 사이트 상단바(Header)를 그대로 쓴다.
  *  - 댕다방 탭: 댕자랑 · 댕다방 연구소를 상단바 아래 버튼 줄로 오간다.
  *  - 탭바: 홈 · 댕생활 · 댕다방 · 쇼핑 · 마이. 상품 상세 · 결제 · 로그인 · 케어톡 화면에서는 숨긴다.
@@ -19,13 +20,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
 import Header from "@/components/header/Header";
 import SearchModal from "@/components/header/SearchModal";
-import { CHAT_WIDGET_OPEN_EVENT } from "@/lib/chat-widget-events";
+import { openChatWidget } from "@/lib/chat-widget-events";
+import ChatWidget from "@/components/site/ChatWidget";
 import { useAuth, useCart } from "@/lib/store";
-import CareTalkDrawer from "./CareTalkDrawer";
 import {
     APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
@@ -190,10 +191,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
-    const [careOpen, setCareOpen] = useState(false); // 케어톡 드로어
-    const closeCare = useCallback(() => setCareOpen(false), []);
+    const [chatOpen, setChatOpen] = useState(false); // 협업자 상담 창이 열려 있는가(창 자리 z 순서용)
 
-    // 케어톡 열기 — 앱 안의 /chat 링크(홈 "AI 상담" 등)를 누르거나, 상품 화면의 상담 버튼(openChatWidget)이 오면 드로어로
     // 로그인 — 웹 로그인 링크(/auth/login · /login)는 같은 ?redirect= 를 들고 앱 로그인 화면으로
     useEffect(() => {
         const onClick = (event: MouseEvent) => {
@@ -208,17 +207,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 router.push(isWebSignupPath(url.pathname) ? appSignupHref(to) : appLoginHref(to));
                 return;
             }
-            if (!/^\/chat(\/|$)/.test(url.pathname)) return;
-            event.preventDefault();
-            setCareOpen(true);
         };
-        const onOpenEvent = () => setCareOpen(true);
         document.addEventListener("click", onClick, true);
-        window.addEventListener(CHAT_WIDGET_OPEN_EVENT, onOpenEvent);
-        return () => {
-            document.removeEventListener("click", onClick, true);
-            window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, onOpenEvent);
-        };
+        return () => document.removeEventListener("click", onClick, true);
     }, [router]);
 
     // 로그인 통일 — ① 코드로 웹 로그인 주소로 넘어온 경우(장바구니 → 주문 등) ② 로그인 전에 회원 전용 화면에 들어온 경우 → 앱 로그인
@@ -331,7 +322,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         <div className="ml-auto flex items-center gap-2">
                             {/* 케어톡 — 어느 탭에서든 AI 상담 (홈 바로 가기와 같은 말풍선 그림 + 살아 있다는 점) */}
                             {!careTalk && (
-                                <button type="button" onClick={() => setCareOpen(true)} className="app-icon-btn app-care-btn app-press relative" aria-label="케어톡 AI 상담 열기" aria-haspopup="dialog" aria-expanded={careOpen}>
+                                <button type="button" onClick={() => openChatWidget()} className="app-icon-btn app-care-btn app-press relative" aria-label="케어톡 AI 상담 열기" aria-haspopup="dialog" aria-expanded={chatOpen}>
                                     <Image src="/images/ui/stickers/home-caretalk.webp" alt="" width={72} height={72} className="app-care-img h-[29px] w-[29px]" />
                                     <span className="app-care-dot" aria-hidden="true" />
                                 </button>
@@ -434,7 +425,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
             <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
             {/* 케어톡 — 어느 화면에서든 아래에서 올라오는 판 */}
-            <CareTalkDrawer open={careOpen} onClose={closeCare} />
+            {/* 케어톡 — 협업자 전역 상담 창(ChatWidget) 그대로. 떠 있는 버튼은 숨기고(상단바 버튼이 대신) 창은 탭바 위에서 열림 */}
+            <div
+                className={`pointer-events-none fixed right-3 ${chatOpen ? "z-[2221]" : "z-[2200]"}`}
+                style={{ bottom: showTabBar ? "calc(var(--app-tabbar-h) + 8px)" : "calc(16px + env(safe-area-inset-bottom, 0px))" }}
+                data-pet-companion-avoid="true"
+            >
+                <div className="pointer-events-auto">
+                    <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} />
+                </div>
+            </div>
         </>
     );
 }

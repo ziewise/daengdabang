@@ -181,6 +181,14 @@ git config user.email "smlee@ziewise.com"
 
 이미 실제 기능에 연결된 것: 로그인 · 회원가입, 케어톡 대화, 쇼핑 상품 카드(찜 · 색상 · 상세 이동 · 영상), 매일 댕생활 안전 공유, 히어로 날씨 · 지역, 링크 이동 전부.
 
+## 4-2. 푸시 전 확인 목록
+1. **GitHub 최종본 확인**: `git fetch origin` 후 main 최신 커밋을 합치고, 협업자가 바꾼 파일과 우리 수정이 겹치는지 확인한다.
+2. **협업자 인계 문서 확인**: 서버 `C:\DaengDaBang`(공유 `V:\`)에 새로 추가된 `HANDOFF_*` 파일과 `NEXT_WINDOW_START_HERE.md` 맨 위 항목을 읽고, 앱 · 케어톡 · 상단바 · 버튼 동작에 바뀐 점이 있는지 확인한다.
+3. **버튼 대조표**: 앱 화면의 모든 동작 버튼이 GitHub 최종본의 같은 버튼과 같은 함수 · 같은 값 · 같은 목적지(4-1, 6장 예외만 허용)인지 한 줄씩 확인. 시연 동작 0개.
+4. **운영 빌드**(`npm run build`, static export)와 린트 · 타입 검사 · 협업자 테스트(`npm test`) 통과.
+5. **테스트 APK**를 만들어 탭 이동, 앱 안 화면 / 브라우저 창으로 열리는 화면, 케어톡 · 펫렌즈 창을 실제로 확인. 아이폰 설치 앱도 확인.
+6. 협업자와 협의 완료 + 사용자 지시가 있을 때만 푸시.
+
 ## 5. GitHub 정보 (푸시는 0-2 규칙대로 금지)
 - 운영 저장소: `ziewise/daengdabang`. **main에 푸시하면 운영 배포**(Cloudflare/GitHub Pages).
 - 백업 저장소: `ziewisemin/daengdabang`
@@ -214,11 +222,10 @@ git config user.email "smlee@ziewise.com"
 - 번들(`daengdabang-sticker-mockup.bundle`)을 임시 clone에 풀어 시안 브랜치·인계 문서·스크립트가 정상으로 들어오는 것 확인.
 - 미검증: 서버 환경에서의 설치·실행, 실제 APK 안에서의 동작.
 
-## 6. 협업자 파일을 고친 곳 (UI 연결용 최소 수정, 9개)
+## 6. 협업자 파일을 고친 곳 (UI 연결용 최소 수정, 8개)
 | 파일 | 고친 내용 |
 |---|---|
-| `components/site/ConditionalChrome.tsx` | 앱 모드면 웹 상단바·푸터 대신 `AppShell`을 씌움. 앱에서 웹 로그인 주소로 오면 앱 틀만(앱 로그인으로 보냄) |
-| `app/chat/ChatPageClient.tsx` | 케어톡 서랍에서 쓰려고 `embedded` · `onClose` · `skin`(아바타 · 제목 · 빈 화면) prop과 모양용 data 속성 추가. 대화 기능은 그대로 |
+| `components/site/ConditionalChrome.tsx` | 앱 모드(네이티브 앱 · 설치 앱)면 웹 상단바·푸터 대신 `AppShell`. 앱에서 웹 로그인 주소로 오면 앱 틀만(앱 로그인으로 보냄). 브라우저의 `/app`은 협업자 규칙(웹 상단바만) 그대로 |
 | `components/growth/LocalCareFinder.tsx` | 종류·장소 타입과 목록·지도 링크 함수 내보내기 |
 | `components/growth/GrowthHub.tsx` | `GUEST_STEPS` · `hasShareableAiRecord` 내보내기 |
 | `components/growth/GrowthPolicySummary.tsx` | `POLICIES` 내보내기 |
@@ -230,8 +237,11 @@ git config user.email "smlee@ziewise.com"
 ### 앱 모드 판별 범위 (협의 필요)
 "앱으로 볼 때" = ① 네이티브 앱 ② 홈 화면 설치 웹앱 ③ **브라우저에서 `/app/` 주소에 한 번 들어온 뒤의 같은 탭**(sessionStorage). ③ 때문에 배포 후에는 운영 웹의 `/app/`(앱처럼 열기 안내)로 들어온 웹 방문자에게도 그 탭에서 앱 틀이 보인다. 기능 변경은 아니지만 협업자와 범위를 정해야 한다.
 
-### 협업자 최신 변경과 겹치는 곳 (확인 필요)
-- 협업자가 2026-10-14 케어톡을 단일 창(`ChatLaunchClient`)으로 바꾸면서 활성 화면에서 `ChatPageClient`를 더 이상 쓰지 않는다(서버 `HANDOFF_20261014_CHAT_WINDOW_MAPS_CURRENT.md`). 앱 케어톡 서랍(`CareTalkDrawer`)은 아직 `ChatPageClient`를 쓴다. 최신 main을 합친 뒤 서랍을 새 창 방식에 맞출지 사용자에게 먼저 확인한다(기능은 협업자 것 그대로).
+### 원칙 맞춤 (2026-10-16): 버튼은 GitHub와 같은 기능을 부른다
+- **케어톡**: 앱 전용 서랍(`CareTalkDrawer` + 예전 `ChatPageClient`)을 없애고, 협업자 전역 상담 창 `ChatWidget`을 그대로 띄운다. 상단바 버튼은 웹 상단바와 같은 `openChatWidget()`, `/chat` 링크는 가로채지 않고 협업자 `/chat`(ChatLaunchClient)이 창을 연다. 앱은 창 자리(탭바 위)만 정한다. `ChatPageClient`는 GitHub 원본으로 되돌렸다. **남은 일**: 상담 창 겉모양을 앱 전용 CSS로 스티커북에 맞추기(기능 코드는 그대로).
+- **쇼핑 히어로 견종 배지**: 연구소 이동 → 웹 히어로와 같은 펫렌즈 창 열기(`usePetLensModal().open`).
+- **앱 모드 판별**: 배포에서는 네이티브 앱 · 설치 앱만. 브라우저 `/app`은 협업자 규칙 그대로. 개발 서버에서만 시안 확인용 규칙.
+- 링크 목적지가 GitHub와 다른 곳은 사용자가 정한 "같은 기능의 앱 전용 화면"뿐이다: 앱 로그인 · 회원가입(같은 함수), 회원 전용 화면의 비회원 → 앱 로그인, 주간 리포트 → 앱 리포트 화면(데이터 연결은 4-1 목록).
 
 ## 7. 운영 서버와 주고받는 곳 (모두 읽기 전용)
 - 댕자랑 공개 피드 읽기(`components/pwa/home-concepts/show-feed.ts`, `GET /api/v1/showcase/posts`) — 쓰기·응원·신고는 서버로 보내지 않는다.
