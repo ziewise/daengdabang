@@ -451,4 +451,42 @@ ${SHEET} > div:last-child > div:first-child > span { font-family: "Cafe24Ssurrou
 ${SHEET} > div:last-child b[class*="text-2xl"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 ${SHEET} [data-daenglab-coin-estimate] { border-radius: 14px; background: #fff3f6; outline: 1.5px dashed #f2a3bd; outline-offset: -5px; box-shadow: 0 0 0 2px #fff, 0 6px 10px -8px rgba(110, 80, 40, .45); }
 
+/* ── 15) 주문/결제(/checkout) — 테이프 붙인 종이 카드 · 흰 칼선 아이콘 스티커 · 테이프 이름표 칸 제목 · 종이 입력칸 ·
+   결제수단은 스티커 카드(고른 것 분홍) · 주문 상품은 영수증. 결제 · 테스트 · 개인정보 안내 문구와 색, 토스 결제창, 입력 오류 표시는 그대로 ── */
+/* 칸(배송지 · 배송 요청사항 · 예상 도착일 · 결제수단 · 저장된 배송지) — 테이프 붙인 종이 카드 */
+${CHECKOUT} main section.surface, ${CHECKOUT} main aside.surface { position: relative; overflow: visible; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${CHECKOUT} main section.surface::before, ${CHECKOUT} main aside.surface::before { ${TAPE} top: -7px; left: 50%; width: 56px; margin-left: -28px; rotate: -2deg; }
+${CHECKOUT} main [data-checkout-delivery-section] > section.surface:nth-of-type(2)::before { background: repeating-linear-gradient(90deg, rgba(190,224,255,.92) 0 7px, rgba(215,236,255,.92) 7px 14px); rotate: 2deg; }
+${CHECKOUT} main section.surface[aria-labelledby="checkout-delivery-estimate-title"]::before { background: repeating-linear-gradient(90deg, rgba(186,236,206,.92) 0 7px, rgba(214,245,226,.92) 7px 14px); }
+${CHECKOUT} main section.surface[aria-labelledby="checkout-payment-method-title"]::before { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 7px, rgba(255,239,190,.95) 7px 14px); rotate: 1.5deg; }
+/* 칸 머리 — 회색 띠 대신 투명 + 바느질 점선 · 아이콘 동그라미는 흰 칼선 스티커 */
+${CHECKOUT} main section.surface > div[class*="border-b"] { background: transparent; border-bottom: 2px dashed #f0d9cf; border-radius: 8px 8px 0 0; }
+${CHECKOUT} main section.surface span[class*="h-9"][class*="w-9"][class*="rounded-full"] { box-shadow: 0 0 0 2.5px #fff, 0 4px 7px -4px rgba(110, 80, 40, .45); }
+${CHECKOUT} main :is(section.surface h2, legend#checkout-payment-method-title) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  text-decoration: underline; text-decoration-color: rgba(255, 196, 216, .75); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
+/* 입력칸 이름 · 입력칸 — 둥근 글씨 이름 + 테두리 없는 흰 종이(입력 오류 빨간 테두리는 그대로 보이게 제외) */
+${CHECKOUT} main label[class*="text-xs"][class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #5c4a42; }
+${CHECKOUT} main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]) {
+  border-color: transparent; background-color: #fff; border-radius: 14px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+${CHECKOUT} main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]):focus { box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+${CHECKOUT} main input[type="checkbox"] { accent-color: #e8628e; }
+/* 우편번호 찾기 — 크림 와펜 */
+${CHECKOUT} main button[class*="border-indigo-200"] { ${PATCH_CREAM} }
+${CHECKOUT} main button[class*="border-indigo-200"]:active { transform: scale(.96); }
+/* 결제수단 — 스티커 카드(고른 것은 분홍 테두리 + 분홍 종이 · 쓸 수 없는 것은 그대로 흐리게) */
+${CHECKOUT} main button[data-payment-method] { border-radius: 16px; border-color: transparent; background: #fff; box-shadow: 0 0 0 1.5px #f1e3da, 0 5px 9px -7px rgba(110, 80, 40, .45); }
+${CHECKOUT} main button[data-payment-method][aria-checked="true"] { background: #fff3f6; box-shadow: 0 0 0 2px #e8628e, 0 0 0 5px #fde3ec, 0 5px 9px -7px rgba(110, 80, 40, .45); }
+${CHECKOUT} main button[data-payment-method]:disabled { background: #f7f0ea; box-shadow: 0 0 0 1.5px #efe4da; }
+${CHECKOUT} main button[data-payment-method] > span:first-child > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${CHECKOUT} main button[data-payment-method]:not(:disabled):active { transform: scale(.97); }
+/* 간편결제 약관 동의 — 노란 메모(문구 그대로) */
+${CHECKOUT} main label:has(> input[type="checkbox"])[class*="bg-neutral-50"] { border: 0; border-radius: 4px 4px 14px 4px; background: #fffbea; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .45); }
+/* 테스트 모드 안내 — 하늘 메모 + 핀 테이프(문구 · 색 그대로) */
+${CHECKOUT} main [data-payment-mode="test"] { position: relative; border-width: 0; border-radius: 6px 6px 18px 6px; box-shadow: 0 0 0 1.5px #bfe0f7, 0 10px 16px -12px rgba(60, 110, 150, .45); }
+${CHECKOUT} main [data-payment-mode="test"]::before { ${TAPE} top: -6px; left: 24px; width: 44px; rotate: -4deg; background: repeating-linear-gradient(90deg, rgba(190,224,255,.95) 0 7px, rgba(215,236,255,.95) 7px 14px); }
+/* 주문 상품 — 영수증(점선 구분선 · 총 결제 카페24) */
+${CHECKOUT} main aside.surface [class*="border-t"] { border-top: 2px dashed #ecd5c8; }
+${CHECKOUT} main aside.surface :is(b, strong)[class*="text-2xl"], ${CHECKOUT} main aside.surface [class*="text-2xl"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
 `;
