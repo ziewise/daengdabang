@@ -406,7 +406,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             >
                 {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) — 뒤로 가기는 상단바가 아니라 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
                 {backBelow ? (
-                    <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">
+                    <div className="app-backrow relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">
                         <button type="button" onClick={goBack} className="app-back-patch" aria-label="뒤로 가기">
                             <StitchBackIcon />
                         </button>

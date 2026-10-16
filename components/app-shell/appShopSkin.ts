@@ -138,6 +138,8 @@ ${S} [data-product-detail-content] article[data-pet-product] button i.fa-heart {
 /* 상품 상세 뒤로 가기(AppShell, 상단바 바로 아래) — 크림 자수 와펜 동그라미 */
 html.ddb-app-mode .app-back-patch { ${PATCH_CREAM} display: grid; place-items: center; width: 44px; height: 44px; outline-offset: -6px; }
 html.ddb-app-mode .app-back-patch:active { transform: scale(.92); transition-duration: .12s; }
+/* 뒤로 가기 줄 바로 다음 화면은 자기 위 여백을 줄여 버튼과 제목 사이가 벌어지지 않게(뒤로 가기 줄이 그 자리를 대신함) */
+html.ddb-app-mode .app-backrow + main { padding-top: 6px; }
 
 /* 링크 복사 · 공유 — 흰 칼선 동그라미 스티커 */
 ${S} main button:is([aria-label="링크 복사"], [aria-label="공유"]) { border-radius: 999px; border-color: #fff; border-width: 2px; background: #fff; color: #c4456f;
@@ -356,6 +358,9 @@ ${CART} main article.surface div[class*="inline-flex"][class*="h-9"][class*="bor
 ${CART} main article.surface div[class*="inline-flex"][class*="h-9"] button { color: #e8628e; }
 /* "누구를 위한 상품인가요?" — 분홍 메모, 등록 버튼은 작은 분홍 와펜 */
 ${CART} main article.surface a[class*="bg-neutral-950"] { ${PATCH_PINK} display: inline-block; border-width: 2px; outline: none; padding: 7px 16px 6px; font-size: 12.5px; line-height: 1; }
+/* 작은 글씨라 카페24는 흐려 보여서(사용자 2026-10-16) — 또렷한 둥근 본문 글꼴(굵게) · 그림자 없이 · 한 톤 진한 분홍 바탕 */
+${CART} main article.surface a[class*="bg-neutral-950"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 0; text-shadow: none;
+  background: linear-gradient(#e0557f, #e0557f) padding-box, repeating-linear-gradient(72deg, #c23d6c 0 2px, #d4447a 2px 3.4px) border-box; }
 /* 주문 합계 — 영수증 메모(위 테이프 · 점선 구분선) */
 ${CART} main aside.surface { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
 ${CART} main aside.surface::before { ${TAPE} top: -6px; left: 50%; width: 60px; margin-left: -30px; rotate: 2deg; }
