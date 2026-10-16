@@ -48,6 +48,8 @@ const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
 /* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
 const SHEET = `${S} [data-purchase-option-sheet]`;
+/* 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품) */
+const LIST = `${S}:is([data-app-page="category"], [data-app-page="best"], [data-app-page="new"], [data-app-page="promo"], [data-app-page="brands"], [data-app-page="brand"], [data-app-page="products"])`;
 const SEARCH = 'html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"]';
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
@@ -92,6 +94,11 @@ const HEART_ON = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40
 const HEART_OFF = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
 <path d="${HEART}" fill="none" stroke="#e8628e" stroke-width="3.4" stroke-linejoin="round"/>
 <path d="${HEART}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1" stroke-dasharray="1 1.4" stroke-linejoin="round"/>${STITCH_HEART("#f6a9bf")}
+</svg>`);
+/* 목록 카드의 작은 흰 찜 버튼 위 — 찜한 하트는 분홍 실로 채움(흰 버튼 위라 흰 하트는 안 보임) */
+const HEART_ON_CARD = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs>${THREAD}</defs>
+<path d="${HEART}" fill="#f2789d" stroke="#d9547d" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="${HEART}" fill="url(#t)"/>${STITCH_HEART("#fff")}
 </svg>`);
 
 export const APP_SHOP_SKIN_CSS = `
@@ -519,5 +526,59 @@ ${CHECKOUT} main button[data-payment-method] i { color: #b39b90; }
 ${CHECKOUT} main button[data-payment-method][aria-checked="true"] i { color: #e8628e; }
 /* 저장된 배송지 고르기(회원) — 같은 종이 카드 + 흰 종이 선택칸(위 공통 규칙), 테이프만 노랑 */
 ${CHECKOUT} main section.surface[aria-label="저장된 배송지 선택"]::before { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 7px, rgba(255,239,190,.95) 7px 14px); }
+
+/* ── 17) 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품/검색 결과, 사용자 2026-10-16 "완벽하게") ──
+   제목 테이프 이름표 · 영문 꼬리표 숨김 · 필터는 테이프 붙인 메모 카드 · 상품 카드는 앱 쇼핑 카드와 같은 스크랩 결
+   (색상 칩 숨김 · 살짝 기울기 · 흰 테두리 사진 · BEST/NEW 잉크 도장) · 페이지 번호는 동그란 스티커. 정렬 · 필터 · 이동 동작 그대로 ── */
+/* 화면 제목 — 쇼핑 탭 색 마스킹테이프 이름표(장바구니 제목과 같음) */
+${LIST} main main > h1, ${LIST} main main > header > h1 {
+  display: inline-block; width: fit-content; padding: 7px 20px 6px; rotate: -1deg; text-decoration: none; font-size: 1.55rem; line-height: 1.1; color: #a8480f;
+  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
+  background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); filter: drop-shadow(0 6px 5px rgba(110, 60, 50, .18)); }
+/* 영문 꼬리표(CURATED PICKS · NEW · PROMO · BRANDS) — 앱에서는 숨김(앱 쇼핑 첫 화면과 같은 기준) */
+${LIST}:is([data-app-page="best"], [data-app-page="new"], [data-app-page="promo"], [data-app-page="brands"], [data-app-page="brand"]) main main > p:first-child { display: none; }
+/* 상품 수(상품 179개) — 작은 분홍 스티커 */
+${LIST} main main > header > p:first-child { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #fff; color: #d4447a; font-size: 12px;
+  box-shadow: 0 0 0 1.5px #f6c9d6, 0 3px 6px -4px rgba(110, 80, 40, .4); }
+${LIST} main main > header > p:first-child + h1 { margin-top: 10px; }
+/* 화면 설명 문장 — 둥근 글씨 갈색 */
+${LIST} main main > h1 + p { color: #8a766c; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+/* 필터(검색 · 카테고리 · 세부 · 정렬) — 테이프 붙인 메모 카드 · 항목 이름은 둥근 글씨 · 입력칸 흰 종이 */
+${LIST} main main > section.surface { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fffbea; box-shadow: 0 10px 16px -12px rgba(110, 80, 40, .5); }
+${LIST} main main > section.surface::before { ${TAPE} top: -7px; left: 50%; width: 58px; margin-left: -29px; rotate: -2deg; }
+${LIST} main main > section.surface label > span { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 12.5px; color: #8a6a3a; }
+${LIST} main main > section.surface .input { border-color: transparent; border-radius: 14px; background-color: #fff; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+${LIST} main main > section.surface .input:focus { box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+/* 상품 카드(웹 공용 ProductCard) — 앱 쇼핑 카드와 같게: 색상 미리보기 칩 · "n가지 색상" 숨김, 살짝 기울기(±1도), 흰 테두리 사진 */
+${S} article[data-pet-product="true"] > div:has(> [role="group"]) { display: none; }
+${LIST} main article[data-pet-product="true"] { rotate: -.8deg; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -12px rgba(110, 80, 40, .5); }
+${LIST} main :nth-child(even of article[data-pet-product="true"]) { rotate: .7deg; }
+${LIST} main article[data-pet-product="true"] > div:first-child { margin: 6px 6px 0; border-radius: 6px; box-shadow: 0 0 0 3px #fff, 0 4px 8px -5px rgba(90, 60, 50, .4); }
+/* 순위 · NEW · 기획 꼬리표 — 잉크 도장(흰 바탕 + 색 테두리) */
+${LIST} main article[data-pet-product="true"] > div:first-child > div[class*="top-2"][class*="left-2"] > span > span,
+${LIST} main article[data-pet-product="true"] > div:first-child > div[class*="top-2"][class*="left-2"] > span {
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 찜 하트 — 흰 칼선 동그라미 스티커 + 자수 하트 */
+${LIST} main article[data-pet-product="true"] button[aria-label^="찜"] { box-shadow: 0 0 0 1.5px #fff, 0 3px 6px -3px rgba(90, 60, 50, .45); }
+${LIST} main article[data-pet-product="true"] button i.fa-heart { display: inline-block; width: 1.15rem; height: 1.15rem; background: ${HEART_OFF} center / contain no-repeat; }
+${LIST} main article[data-pet-product="true"] button i.fa-heart.fa-solid { background-image: ${HEART_ON_CARD}; }
+${LIST} main article[data-pet-product="true"] button i.fa-heart::before { content: ""; }
+/* 상품명 · 브랜드 — 둥근 글씨 */
+${LIST} main article[data-pet-product="true"] p[class*="line-clamp-2"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #3d2f2a; }
+/* 페이지 번호 — 동그란 스티커(지금 페이지는 분홍), 이전 · 다음은 크림 알약 */
+${LIST} main nav[aria-label="페이지 이동"] button { border-color: transparent; border-radius: 999px; background: #fff; color: #7d6a61; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${LIST} main nav[aria-label="페이지 이동"] button[aria-current="page"] { background: #e8628e; color: #fff; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f6a9bf, 0 5px 8px -5px rgba(200, 70, 110, .55); font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${LIST} main nav[aria-label="페이지 이동"] button:not(:disabled):active { transform: scale(.92); }
+/* 상품 없음 — 메모 카드 */
+${LIST} main main > div.surface { border: 0; border-radius: 6px 6px 18px 6px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+/* 브랜드 목록(/brands) — 브랜드 카드는 테이프 붙인 종이, 개수는 분홍 동그라미 스티커 */
+${S}[data-app-page="brands"] main main a[class*="rounded-lg"][class*="border"] { position: relative; border: 0; border-radius: 10px; background: #fffaf2; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -12px rgba(110, 80, 40, .5); overflow: visible; }
+${S}[data-app-page="brands"] main main a[class*="rounded-lg"][class*="border"]::before { ${TAPE} top: -5px; left: 24px; width: 40px; height: 12px; rotate: -6deg; }
+${S}[data-app-page="brands"] main main a[class*="rounded-lg"] h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; text-decoration: none; }
+${S}[data-app-page="brands"] main main a[class*="rounded-lg"] span[class*="rounded-full"] { background: #fff3f6; color: #d4447a; box-shadow: 0 0 0 1.5px #f6c9d6; }
+/* 외부 가격 비교 칸(전체 상품) — 종이 카드 · 영문 꼬리표 숨김 · 더 보기는 크림 와펜 */
+${LIST} main main > section[class*="rounded-lg"][class*="border"] { border: 0; border-radius: 6px 6px 18px 6px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${LIST} main main > section[class*="rounded-lg"][class*="border"] p.uppercase { display: none; }
+${LIST} main main > section[class*="rounded-lg"] button[aria-label*="더 보기"] { ${PATCH_CREAM} }
 
 `;
