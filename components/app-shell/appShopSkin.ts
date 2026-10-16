@@ -601,4 +601,58 @@ ${S} article[data-pet-product="true"] div[class*="top-2"][class*="left-2"] > spa
   backdrop-filter: none; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: .04em; rotate: -8deg; }
 ${S} article[data-pet-product="true"] div[class*="top-2"][class*="left-2"] > span[class*="from-aurora-indigo"] { --c: #1f9e75; rotate: 6deg; }
 
+/* ── 20) 상품 카드 마무리(사용자 2026-10-16 "가격표 통일 · 완벽하게") — 웹 공용 카드(ProductCard)를 앱 쇼핑 카드(ShopProductCard)와 같게:
+   가격은 노란 가격표 꼬리표(구멍 뚫린 태그) 안에 가격 배지 이름 + 가격 · 브랜드는 보라 둥근 글씨 · 구매 상태는 빨간 작은 글씨 ·
+   외부 판매점 후기는 옅은 갈색 작은 글씨 · 사진 흰 테두리와 살짝 기울기는 목록 · 같이 보면 좋은 상품 모두. 값 · 링크는 그대로 ── */
+${S} article[data-pet-product="true"] { rotate: -.8deg; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -12px rgba(110, 80, 40, .5); }
+${S} main :nth-child(even of article[data-pet-product="true"]) { rotate: .7deg; }
+${S} article[data-pet-product="true"] > div:first-child { margin: 6px 6px 0; border-radius: 6px; box-shadow: 0 0 0 3px #fff, 0 4px 8px -5px rgba(90, 60, 50, .4); }
+${S} article[data-pet-product="true"] p[class*="text-aurora-indigo"][class*="uppercase"] { color: #8b6fd6; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; letter-spacing: .03em; }
+${S} article[data-pet-product="true"] p[class*="line-clamp-2"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #3d2f2a; }
+${S} article[data-pet-product="true"] p[data-inventory-state] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 11px; color: #c2413b; }
+/* 가격표 — 노란 꼬리표(왼쪽 뾰족 + 구멍) · 가격 배지는 꼬리표 안 작은 글씨 · 가격은 카페24 갈색 */
+${S} article[data-pet-product="true"] div:has(> p.ddb-crayon-price) { position: relative; width: fit-content; min-height: 0; margin-left: auto; padding: 3px 9px 3px 16px; gap: 1px;
+  flex-direction: column; align-items: flex-end; background: #fff3a6; color: #6b4708; border-radius: 3px 6px 6px 3px;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); }
+${S} article[data-pet-product="true"] div:has(> p.ddb-crayon-price)::before { content: ""; position: absolute; left: 7px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 999px;
+  background: #fffaf2; box-shadow: inset 0 0 0 1px rgba(170, 120, 40, .35); }
+${S} article[data-pet-product="true"] div:has(> p.ddb-crayon-price) > .ddb-price-badge { min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; rotate: none;
+  color: #8a6a2a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 9.5px; }
+${S} article[data-pet-product="true"] div:has(> p.ddb-crayon-price) > .ddb-price-badge::after { display: none; }
+${S} article[data-pet-product="true"] p.ddb-crayon-price { background: none; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 15px; letter-spacing: -0.01em; }
+/* 할인 줄 — 할인율 분홍 카페24 · 원래 가격 옅게 */
+${S} article[data-pet-product="true"] div.text-right > div:first-child span[class*="text-danger"] { color: #e0455f; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${S} article[data-pet-product="true"] div.text-right > div:first-child span[class*="line-through"] { color: #b5a49b; }
+/* 외부 판매점 후기 — 옅은 갈색 둥근 작은 글씨 */
+${S} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] { color: #9c8a80; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${S} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] span[class*="font-bold"] { color: #5c4a42; font-weight: 700; }
+/* 검색 창 결과 줄도 같은 가격표 */
+${SEARCH} ul button .ddb-crayon-price { position: relative; padding: 2px 8px 2px 15px; background: #fff3a6; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
+  border-radius: 3px 6px 6px 3px; clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%);
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; }
+${SEARCH} ul button .ddb-price-badge { min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; color: #8a6a2a;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 9.5px; }
+${SEARCH} ul button .ddb-price-badge::after { display: none; }
+${SEARCH} ul button p[class*="text-aurora-indigo"] { color: #8b6fd6; }
+
+/* 상품 상세 가격 · 아래 구매 바 가격도 같은 노란 가격표(크기만 큼) — 가격 배지 이름은 꼬리표 안 작은 글씨 */
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price) { position: relative; width: fit-content; padding: 6px 14px 6px 24px; background: #fff3a6; color: #6b4708;
+  border-radius: 4px 10px 10px 4px; clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%); }
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price)::before { content: ""; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 999px;
+  background: #fffdf8; box-shadow: inset 0 0 0 1px rgba(170, 120, 40, .35); }
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price) > .ddb-price-badge { min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; color: #8a6a2a;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 11px; }
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price) > .ddb-price-badge::after { display: none; }
+${S} [data-product-detail-content] p.ddb-crayon-price { background: none; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.01em; }
+${S} [data-product-detail-content] .fixed.bottom-0 div:has(> p.ddb-crayon-price) { padding: 3px 9px 3px 16px; border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); }
+${S} [data-product-detail-content] .fixed.bottom-0 div:has(> p.ddb-crayon-price)::before { left: 7px; width: 4px; height: 4px; margin-top: -2px; }
+${S} [data-product-detail-content] .fixed.bottom-0 p.ddb-crayon-price { font-size: 16px; }
+/* 상세 가격표가 링크 복사 · 공유 버튼을 다음 줄로 밀지 않게 — 휴대폰 폭에서 가격 글씨만 조금 작게, 배지와 가격은 위아래로 */
+@media (max-width: 767px) {
+  ${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(.fixed *) { flex-direction: column; align-items: flex-start; gap: 2px; padding: 5px 12px 6px 22px; }
+  ${S} [data-product-detail-content] div:not(.fixed *) > p.ddb-crayon-price { font-size: 28px; }
+}
+
 `;

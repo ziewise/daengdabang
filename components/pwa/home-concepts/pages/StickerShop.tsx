@@ -164,6 +164,10 @@ export default function StickerShop() {
                         <div className="mt-3.5 grid grid-cols-2 gap-3">
                             {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
                         </div>
+                        {/* 브랜드 전체 보기 — 웹 상단바 메뉴 · 푸터의 "브랜드"와 같은 기존 브랜드 목록(/brands/)으로 (앱엔 그 메뉴가 없어서) */}
+                        <div className="mx-auto mt-4 w-[190px]">
+                            <Patch href="/brands/" small tone="cream">브랜드 전체 보기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch>
+                        </div>
                     </section>
 
                     {/* ⑥ 인스타 — 작은 링크 */}
