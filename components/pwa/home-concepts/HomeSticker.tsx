@@ -120,9 +120,11 @@ export default function HomeSticker() {
 
                     {/* ── 로그인 전: 초대 카드 / 로그인 후: 홈에는 출근 칸을 두지 않고 매일 댕생활에서(사용자 결정 2026-10-16) ── */}
                     {!member ? (
-                        <LoginInvite redirect="/app/home-1/" title={["로그인하고", "댕다방을 함께 즐겨요!"]} items={HOME_INVITE} cta="로그인하고 댕다방 즐기기" />
+                        // 날씨 스티커(오른쪽 위)와 붙지 않게 아래로 조금 띄움
+                        <div className="mt-8"><LoginInvite redirect="/app/home-1/" title={["로그인하고", "댕다방을 함께 즐겨요!"]} items={HOME_INVITE} cta="로그인하고 댕다방 즐기기" /></div>
                     ) : (
-                        <div className="st-place mt-4 flex items-center gap-2.5" style={{ ["--r" as string]: "0deg", ["--d" as string]: "380ms" }}>
+                        // 날씨 스티커(오른쪽 위)와 붙지 않게 아래로 띄움
+                        <div className="st-place mt-11 flex items-center gap-2.5" style={{ ["--r" as string]: "0deg", ["--d" as string]: "380ms" }}>
                             <Link href="/app/sticker/daily/" className="hm-note relative flex-1 rounded-[4px_4px_14px_4px] px-3.5 py-2.5 active:scale-[.98]" style={{ rotate: "-1deg" }}>
                                 <span className="ah-display block text-[13.5px]">오늘 출근 스티커는 매일 댕생활에서!</span>
                                 <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>출근하고 코인 받기 · 연속 출근 확인 <i aria-hidden="true" className="fa-solid fa-arrow-right text-[9px]" /></span>
