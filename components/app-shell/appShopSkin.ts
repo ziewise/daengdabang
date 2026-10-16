@@ -46,6 +46,8 @@ const PG = `${P} > div > div:nth-child(2)`;
 /* 장바구니 화면(AppShell이 html[data-app-page] 표시) · 검색 창 */
 const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
+/* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
+const SHEET = `${S} [data-purchase-option-sheet]`;
 const SEARCH = 'html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"]';
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
@@ -423,5 +425,30 @@ ${CART} main main.text-center { position: relative; margin: 10px 16px 0; padding
 html.ddb-app-mode .app-backrow + main.text-center { padding-top: 34px; }
 ${CART} main main.text-center::before { ${TAPE} top: -7px; left: 50%; width: 66px; margin-left: -33px; rotate: -2deg; }
 ${CART} main main.text-center > h1 { font-size: 1.15rem; text-decoration: none; }
+
+/* ── 14) 옵션 고르기 판 2차(장바구니 담기 · 바로 구매, 사용자 2026-10-16 "살짝 부족") — 제목 테이프 이름표 · 닫기 스티커 ·
+   바느질 점선 구분선 · 사진 폴라로이드 + 작은 테이프 · 수량 알약 스티커 · 고른 옵션 메모 · 합계 영수증 · 적립 꼬리표. 동작 그대로 ── */
+${SHEET} > div:first-child { border-bottom: 2px dashed #f0d9cf; }
+${SHEET} > div:first-child h2 { display: inline-block; width: fit-content; padding: 5px 16px 4px; rotate: -1.5deg; text-decoration: none; font-size: 1.15rem; line-height: 1; color: #9c2f54;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 9px, rgba(255,222,232,.95) 9px 18px); filter: drop-shadow(0 5px 4px rgba(110, 60, 50, .16)); }
+${SHEET} button[aria-label="닫기"] { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; background: #fff; color: #b39b90;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 8px -5px rgba(110, 80, 40, .45); }
+/* 사진 — 폴라로이드 위 작은 테이프 */
+${SHEET} div[class*="h-24"][class*="w-24"] { position: relative; overflow: visible; rotate: -1deg; }
+${SHEET} div[class*="h-24"][class*="w-24"]::after { ${TAPE} top: -9px; left: 50%; width: 38px; height: 12px; margin-left: -19px; rotate: 4deg; }
+${SHEET} div[class*="h-24"][class*="w-24"] > * { border-radius: 2px; overflow: hidden; }
+${SHEET} p[class*="line-clamp-2"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 15px; color: #3d2f2a; }
+/* 옵션 이름표(필수) · 고른 옵션 줄 — 메모 */
+${SHEET} :is(label, p)[class*="text-xs"][class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #5c4a42; }
+${SHEET} ul > li[class*="bg-neutral-50"] { background: #fffbea; border-radius: 4px 4px 12px 4px; box-shadow: 0 5px 8px -7px rgba(110, 80, 40, .5); }
+/* 수량 — 알약 스티커 */
+${SHEET} div[class*="inline-flex"][class*="h-11"][class*="border"] { border-color: transparent; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${SHEET} div[class*="inline-flex"][class*="h-11"] button { color: #e8628e; }
+/* 아래 합계 — 크림 영수증(점선 위 줄) · 금액 카페24 · 적립 예상은 바느질 꼬리표 */
+${SHEET} > div:last-child { background: rgba(255, 252, 245, .97); border-top: 2px dashed #f0d9cf; }
+${SHEET} > div:last-child > div:first-child > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${SHEET} > div:last-child b[class*="text-2xl"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${SHEET} [data-daenglab-coin-estimate] { border-radius: 14px; background: #fff3f6; outline: 1.5px dashed #f2a3bd; outline-offset: -5px; box-shadow: 0 0 0 2px #fff, 0 6px 10px -8px rgba(110, 80, 40, .45); }
 
 `;
