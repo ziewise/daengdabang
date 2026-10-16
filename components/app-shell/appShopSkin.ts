@@ -39,6 +39,8 @@ const PALETTE = `
 
 /* 쇼핑 탭 웹 화면 범위(앱 모드에서만) */
 const S = "html.ddb-app-mode.ddb-app-shop-web";
+/* 산책 친구 설정 창(협업자 PetCompanionLayer) — 앱 모드 어디서나 */
+const P = 'html.ddb-app-mode section[aria-labelledby="pet-companion-title"]';
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
 /* 마스킹테이프 한 조각(꾸밈 · 눌리지 않음) */
@@ -253,6 +255,38 @@ html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action] > span:fi
   background: center / contain no-repeat; filter: drop-shadow(0 3px 3px rgba(120, 70, 50, .25)); }
 html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action="home"] > span:first-child { background-image: url("/images/ui/stickers/companion-house.webp"); }
 html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action="settings"] > span:first-child { background-image: url("/images/ui/stickers/companion-settings.webp"); }
+
+/* ── 10) 산책 친구 설정 창(빠른 메뉴 "설정하기") — 점 무늬 속지 · 테이프 · 카페24 제목(영문 꼬리표 숨김) · 흰 둥근 입력칸 ·
+   고른 털색은 분홍 스티커 · 아래 버튼은 자수 와펜(취소 = 크림, 저장 = 분홍). 입력 · 저장 동작은 협업자 것 그대로 ── */
+/* 창이 산책 친구 층 안에 있어 앱 탭바(z 2150)에 아래 버튼이 가려짐 → 창이 열려 있는 동안만 탭바를 숨김(닫으면 다시 보임) */
+html.ddb-app-mode body:has(section[aria-labelledby="pet-companion-title"]) nav[aria-label="앱 메뉴"] { visibility: hidden; }
+${P} { ${DOT_PAPER} border: 0; border-radius: 24px; box-shadow: 0 0 0 1.5px #f1e3da, 0 26px 50px -22px rgba(110, 70, 55, .6); }
+${P}::before { ${TAPE} top: -6px; left: 50%; width: 64px; margin-left: -32px; rotate: -2deg; }
+${P} > header { background: transparent; border-bottom: 2px dashed #f0d9cf; }
+${P} > header > div > span:first-child { display: none; }
+${P} h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #3d2f2a;
+  text-decoration: underline; text-decoration-color: rgba(255, 196, 216, .75); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
+${P} button[aria-label="설정 닫기"] { border: 0; border-radius: 999px; background: #fff; color: #b39b90; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 8px -5px rgba(110, 80, 40, .45); }
+${P} > div > div:first-child { border-radius: 18px; background-color: #fff6ee; box-shadow: inset 0 0 0 2px #fff, 0 8px 14px -12px rgba(110, 80, 40, .5); }
+${P} > div > div:first-child strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${P} :is(label, fieldset) > span:first-child, ${P} legend { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #5c4a42; }
+${P} :is(input:not([type="checkbox"]):not([type="radio"]), select) { border-radius: 14px; border-color: #efdfd2; background-color: #fff; color: #3d2f2a; }
+${P} :is(input:not([type="checkbox"]):not([type="radio"]), select):focus { border-color: #f283a3; outline: none; box-shadow: 0 0 0 3px rgba(242, 131, 163, .18); }
+${P} input[type="checkbox"] { accent-color: #e8628e; }
+${P} button[data-selected] { border-radius: 999px; border-color: #f1e3da; background: #fff; }
+${P} button[data-selected="true"] { border-color: #e8628e; background: #fff3f6; color: #c4456f; box-shadow: 0 0 0 2px #fde3ec; }
+${P} label:has(> input[type="checkbox"]) { border-color: #f3e6d6; border-radius: 6px 6px 14px 6px; background: #fffaf2; }
+${P} small { color: #9c8a80; }
+${P} small a, ${P} [role="status"] b { color: #d4447a; }
+${P} > footer { background: rgba(255, 253, 248, .96); border-top: 2px dashed #f0d9cf; }
+${P} > footer > button:last-of-type { ${PATCH_PINK} }
+${P} > footer > button:nth-last-of-type(2) { ${PATCH_CREAM} }
+${P} > footer > button:active { transform: scale(.96); transition-duration: .12s; }
+/* 비회원 저장 안내(가입 권유) — 메모지 + 와펜 버튼 */
+html.ddb-app-mode [data-pet-companion-guest-save-alert] { ${DOT_PAPER} border: 0; border-radius: 20px; box-shadow: 0 0 0 1.5px #f1e3da, 0 18px 36px -18px rgba(110, 70, 55, .55); }
+html.ddb-app-mode [data-pet-companion-guest-save-alert] h3 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode [data-pet-companion-guest-save-alert] [data-pet-companion-signup-cta] { ${PATCH_PINK} }
+html.ddb-app-mode [data-pet-companion-guest-save-alert] button:not([data-pet-companion-signup-cta]) { ${PATCH_CREAM} }
 
 /* ── 8) 검색 창(앱 모드 어디서나) — 점 무늬 속지 + 테이프 · 검색칸은 흰 둥근 종이 ── */
 html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] { ${DOT_PAPER} color: #3d2f2a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
