@@ -939,11 +939,12 @@ ${BUNDLE_ANY} p.ddb-crayon-price { position: relative; display: inline-block; pa
   border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 /* 세트 상세 맨 위 — 사진(폴라로이드)을 위에, 글 · 가격은 아래 종이로(사진 위 글자 금지) */
 ${BUNDLE} main main > section:first-child { overflow: visible; background: transparent; color: #3d2f2a; }
-${BUNDLE} main main > section:first-child > div.absolute:first-child { position: relative; inset: auto; height: min(64vw, 360px); margin: 14px 16px 0; border-radius: 6px; overflow: hidden;
-  box-shadow: 0 0 0 6px #fff, 0 0 0 7px #f0e2d6, 0 16px 24px -16px rgba(110, 80, 40, .55); }
+${BUNDLE} main main > section:first-child > div.absolute:first-child { position: relative; inset: auto; height: min(70vw, 390px); margin: 18px 16px 0; overflow: hidden;
+  border: 9px solid #fff; border-bottom-width: 30px; border-radius: 3px; rotate: -.6deg;
+  box-shadow: 0 0 0 1px #f0e2d6, 0 16px 24px -16px rgba(110, 80, 40, .55); }
 ${BUNDLE} main main > section:first-child > div.absolute:first-child > div[class*="bg-gradient"] { display: none; }
 ${BUNDLE} main main > section:first-child > div.absolute:first-child img, ${BUNDLE} main main > section:first-child > div.absolute:first-child video[class*="opacity-78"] { opacity: 1; }
-${BUNDLE} main main > section:first-child::after { ${TAPE} top: 4px; left: 50%; width: 72px; height: 16px; margin-left: -36px; rotate: -2deg; z-index: 12; }
+${BUNDLE} main main > section:first-child::after { ${TAPE} top: 8px; left: 50%; width: 76px; height: 17px; margin-left: -38px; rotate: -2deg; z-index: 12; }
 ${BUNDLE} main main > section:first-child > div.relative { min-height: 0; padding-top: 18px; padding-bottom: 8px; }
 ${BUNDLE} main main > section:first-child > div.relative > div:first-child span[class*="rounded-full"] { background: #fff; color: #7d6a61; box-shadow: 0 0 0 1.5px #f1e3da, 0 3px 6px -4px rgba(110, 80, 40, .4); }
 ${BUNDLE} main main > section:first-child h1 { font-size: 1.7rem; color: #3d2f2a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
@@ -958,8 +959,16 @@ ${BUNDLE} main main aside.surface::before { ${TAPE} top: -7px; left: 50%; width:
 ${BUNDLE} main main aside.surface > p:first-child { display: inline-block; padding: 2px 10px 1px; color: #9c2f54; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
   clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
   background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 7px, rgba(255,222,232,.95) 7px 14px); rotate: -1deg; }
-${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] { border: 0; border-radius: 4px; box-shadow: 0 0 0 5px #fff, 0 0 0 6px #f0e2d6, 0 12px 18px -12px rgba(110, 80, 40, .5); rotate: -.8deg; }
-${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(even) { rotate: .8deg; }
-${BUNDLE} main main div.grid:has(> div[class*="aspect-[4/3]"]) { gap: 18px; padding: 6px; }
+/* 쇼룸 사진 — 사진을 그대로 두지 않고 폴라로이드(두꺼운 흰 테두리 · 아래는 더 넓게) + 테이프 한 조각 */
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] { border: 8px solid #fff; border-bottom-width: 26px; border-radius: 3px; overflow: visible;
+  box-shadow: 0 0 0 1px #f0e2d6, 0 14px 20px -12px rgba(110, 80, 40, .55); rotate: -1deg; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] > img { border-radius: 1px; }
+/* 위 종이 카드 공통 규칙(테두리 크림색)보다 우선 — 폴라로이드 테두리는 흰색 */
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"][class*="border-neutral-200"][class*="bg-white"]:not([class*="ring-"]) { border-color: #fff; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]::after { ${TAPE} top: -15px; left: 50%; width: 64px; height: 16px; margin-left: -32px; rotate: 3deg; z-index: 2; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(3n+2)::after { background: repeating-linear-gradient(90deg, rgba(190,224,255,.92) 0 7px, rgba(215,236,255,.92) 7px 14px); rotate: -4deg; }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(3n+3)::after { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 7px, rgba(255,239,190,.95) 7px 14px); }
+${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(even) { rotate: 1deg; }
+${BUNDLE} main main div.grid:has(> div[class*="aspect-[4/3]"]) { gap: 30px; padding: 14px 8px 6px; }
 
 `;
