@@ -2,7 +2,7 @@
  * 앱 쇼핑 화면 스티커북 껍데기 — 앱 전용 CSS (로컬 시안, 배포 X)
  * ---------------------------------------------------------------------
  * 앱 틀 안에서 여는 웹 쇼핑 화면(상품 상세 · 장바구니 · 결제 · 목록 · 검색)에 "보이는 겉모양"만 입힌다.
- *  - 범위: html.ddb-app-mode.ddb-app-web-header (= 앱 모드 + 쇼핑 탭의 웹 화면) · 검색 창은 앱 모드 어디서나
+ *  - 범위: html.ddb-app-mode.ddb-app-shop-web (= 앱 모드 + 쇼핑 탭의 웹 화면, AppShell이 붙임) · 검색 창은 앱 모드 어디서나
  *    → 일반 브라우저(웹)에는 하나도 적용되지 않는다
  *  - 바꾸는 것: 색(Tailwind 색 변수) · 모서리 둥글기 · 종이 바탕 · 그림자 · 제목 글꼴 · 테이프 같은 꾸밈
  *  - 바꾸지 않는 것: 위치 · 크기 · 순서 · 숨김(꾸밈용 크레파스 배경만 종이 바탕으로 대신) · 버튼 · 링크 · 입력 동작 ·
@@ -38,7 +38,7 @@ const PALETTE = `
 `;
 
 /* 쇼핑 탭 웹 화면 범위(앱 모드에서만) */
-const S = "html.ddb-app-mode.ddb-app-web-header";
+const S = "html.ddb-app-mode.ddb-app-shop-web";
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
 /* 마스킹테이프 한 조각(꾸밈 · 눌리지 않음) */
@@ -126,6 +126,10 @@ ${S} [data-product-detail-content] button i.fa-heart { width: 1.9rem; height: 1.
 ${S} [data-product-detail-content] button i.fa-heart.fa-solid { background-image: ${HEART_ON}; }
 ${S} [data-product-detail-content] button :is(i.fa-bag-shopping, i.fa-heart)::before { content: ""; }
 
+/* 상품 상세 뒤로 가기(AppShell, 상단바 바로 아래) — 크림 자수 와펜 동그라미 */
+html.ddb-app-mode .app-back-patch { ${PATCH_CREAM} display: grid; place-items: center; width: 44px; height: 44px; outline-offset: -6px; }
+html.ddb-app-mode .app-back-patch:active { transform: scale(.92); transition-duration: .12s; }
+
 /* 링크 복사 · 공유 — 흰 칼선 동그라미 스티커 */
 ${S} main button:is([aria-label="링크 복사"], [aria-label="공유"]) { border-radius: 999px; border-color: #fff; border-width: 2px; background: #fff; color: #c4456f;
   box-shadow: 0 0 0 1.5px #f3e1d6, 0 5px 9px -5px rgba(110, 80, 40, .5); }
@@ -189,6 +193,16 @@ ${S} [data-app-detail-fold-fade] { display: block; z-index: 5; }
 ${S} [data-app-detail-fold-toggle] { display: flex; }
 ${S} [data-app-detail-fold-toggle] button { ${PATCH_CREAM} }
 ${S} [data-app-detail-fold-toggle] button:active { transform: scale(.96); transition-duration: .12s; }
+
+/* 상품 문의(Q&A) — 편지지 카드 + 테이프, 아이콘 동그라미는 케어톡 캐릭터 스티커, "챗봇에 문의"는 분홍 와펜(누르면 케어톡 그대로) */
+${S} #tab-qna > div[class*="border"] { position: relative; border-color: #f3e6d6; border-radius: 6px 6px 18px 6px; background: #fffdf6;
+  box-shadow: 0 10px 18px -14px rgba(110, 80, 40, .5); }
+${S} #tab-qna > div[class*="border"]::before { ${TAPE} top: -7px; left: 50%; width: 60px; margin-left: -30px; rotate: -2deg; }
+${S} #tab-qna > div > div[class*="rounded-full"] { background: #fff url("/images/ui/stickers/caretalk-avatar.webp") center / 86% no-repeat;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f6c9d6, 0 6px 10px -6px rgba(110, 80, 40, .5); }
+${S} #tab-qna > div > div[class*="rounded-full"] > i { visibility: hidden; }
+${S} #tab-qna > div > button { ${PATCH_PINK} }
+${S} #tab-qna > div > button:active { transform: scale(.96); transition-duration: .12s; }
 
 /* ── 5) 옵션 고르기 판(장바구니 담기 · 바로 구매) — 점 무늬 속지 + 위 테이프 ── */
 ${S} [data-purchase-option-sheet] { ${DOT_PAPER} border-radius: 24px 24px 0 0; box-shadow: 0 -10px 30px -12px rgba(110, 70, 55, .45); }

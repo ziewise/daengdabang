@@ -212,6 +212,16 @@ function JellyIcon({ k }: { k: "search" | "bag" }) {
     );
 }
 
+/** 자수 뒤로 가기 화살표 — 분홍 새틴 실(굵은 선) + 실 결(흰 점선) · 와펜 버튼과 같은 결 */
+function StitchBackIcon() {
+    return (
+        <svg viewBox="0 0 24 24" className="h-[20px] w-[20px]" aria-hidden="true">
+            <path d="M14.8 5 7.8 12l7 7" fill="none" stroke="#e8628e" strokeWidth={3.6} strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M14.8 5 7.8 12l7 7" fill="none" stroke="#fff" strokeOpacity={0.45} strokeWidth={1} strokeDasharray="1 1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+}
+
 function BarIcon({ k }: { k: "search" | "bag" | "back" | "chat" }) {
     const line = { fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
     return (
@@ -303,10 +313,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // 상단바 아래 화면 제목 — 탭 첫 화면은 탭 이름(홈 제외), 하위 화면은 시안 하위 제목(매일 댕생활 · 로그인 등)이 있을 때만
     // 홈 · 쇼핑 첫 화면은 제목 테이프 없이(홈은 인사말, 쇼핑은 브랜드 문구로 시작)
     const pageTitle = careTalk || (activeKey === "home" || activeKey === "shop") && root ? null : root ? active.label : subTitle;
-    // 쇼핑 탭 — 앱 전용 쇼핑 화면(/app/…)은 앱 상단바, 그 밖의 웹 쇼핑 화면(상품 상세 · 장바구니 · 결제)은
-    // 휴대폰으로 웹을 볼 때처럼 사이트 상단바(Header). 상품 상세는 웹과 같이 사진이 맨 위까지 올라간다
-    const webHeader = activeKey === "shop" && !pathname.startsWith("/app/");
+    // 쇼핑 탭의 웹 화면(상품 상세 · 장바구니 · 결제 · 목록) — 앱 전용 스티커북 겉모양(appShopSkin.ts)을 입히는 범위
+    const shopWeb = activeKey === "shop" && !pathname.startsWith("/app/");
     const productDetail = pathname.startsWith("/product/");
+    // 상단바 — 앱 전용 쇼핑 화면(/app/…)과 상품 상세는 앱 상단바(뒤로 가기 · 케어톡 · 검색 · 장바구니, 사용자 결정 2026-10-16),
+    // 그 밖의 웹 쇼핑 화면(장바구니 · 결제 · 목록)은 휴대폰으로 웹을 볼 때처럼 사이트 상단바(Header)
+    const webHeader = shopWeb && !productDetail;
 
     // 앱 모드 표시 — 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨긴다
     useEffect(() => {
@@ -329,6 +341,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         return () => html.classList.remove("ddb-app-web-header");
     }, [webHeader]);
 
+    // 쇼핑 탭 웹 화면 표시 — 앱 전용 쇼핑 겉모양 CSS 범위
+    useEffect(() => {
+        const html = document.documentElement;
+        html.classList.toggle("ddb-app-shop-web", shopWeb);
+        return () => html.classList.remove("ddb-app-shop-web");
+    }, [shopWeb]);
+
     // 뒤로 가기 — 들어온 기록이 없으면(주소로 바로 연 경우) 지금 탭 첫 화면으로
     const goBack = () => {
         if (window.history.length > 1) router.back();
@@ -348,14 +367,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
                     <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2.5 px-3.5">
                         {/* 왼쪽: 하위 화면이면 뒤로 가기 + 언제나 로고(검정 푸들 + 삼색 댕다방) — 화면 제목은 상단바 아래 제목 줄에 */}
-                        {!root ? (
+                        {!root && !productDetail ? (
                             <button type="button" onClick={goBack} className="app-icon-btn app-press -mr-1" aria-label="뒤로 가기">
                                 <BarIcon k="back" />
                             </button>
                         ) : null}
                         <Link href={tabs[0].href} className="relative flex items-center gap-1.5" aria-label="댕다방 홈">
-                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className={root ? "h-[38px] w-[38px]" : "h-[32px] w-[32px]"} priority />
-                            <span className={`app-font leading-none ${root ? "text-[1.4rem]" : "text-[1.2rem]"}`}>
+                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className={root || productDetail ? "h-[38px] w-[38px]" : "h-[32px] w-[32px]"} priority />
+                            <span className={`app-font leading-none ${root || productDetail ? "text-[1.4rem]" : "text-[1.2rem]"}`}>
                                 {"댕다방".split("").map((ch, i) => (
                                     <span key={i} style={{ color: LOGO_INKS[i] }}>{ch}</span>
                                 ))}
@@ -387,11 +406,17 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
             {/* ── 본문 — 위는 상단바, 아래는 탭바만큼 비워 둔다 ── */}
             <main
-                className={`flex flex-1 flex-col ${webHeader
-                    ? productDetail ? "pt-[env(safe-area-inset-top,0px)] md:pt-[var(--header-height)]" : "pt-[var(--header-height)]"
-                    : "pt-[var(--app-topbar-h)]"}`}
+                className={`flex flex-1 flex-col ${webHeader ? "pt-[var(--header-height)]" : "pt-[var(--app-topbar-h)]"}`}
                 style={{ paddingBottom: showTabBar ? "var(--app-tabbar-h)" : undefined }}
             >
+                {/* 상품 상세 — 뒤로 가기는 상단바가 아니라 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
+                {productDetail ? (
+                    <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">
+                        <button type="button" onClick={goBack} className="app-back-patch" aria-label="뒤로 가기">
+                            <StitchBackIcon />
+                        </button>
+                    </div>
+                ) : null}
                 {/* 화면 제목 줄 — 다꾸 이름표: 탭 색 마스킹테이프 위 제목(아이콘 없이 깔끔하게).
                     상단바 아래, 본문과 함께 스크롤. 홈 · 쇼핑(웹 상단바) · 케어톡 · 제목 없는 하위 화면은 없음 */}
                 {pageTitle ? (
