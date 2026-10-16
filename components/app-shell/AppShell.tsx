@@ -31,6 +31,7 @@ import {
     APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
+import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
 
 const LOGO_INKS = ["#0aa3b8", "#ec1c45", "#ff8a00"]; // 로고 "댕다방" 글자색 (청록 · 빨강 · 주황)
 
@@ -337,6 +338,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
         <>
             <style dangerouslySetInnerHTML={{ __html: CSS }} />
+            {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts) */}
+            <style dangerouslySetInnerHTML={{ __html: APP_SHOP_SKIN_CSS }} />
 
             {/* ── 상단바 — 쇼핑 탭은 웹 상단바, 그 밖은 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
             {webHeader ? (
