@@ -41,6 +41,8 @@ const PALETTE = `
 const S = "html.ddb-app-mode.ddb-app-shop-web";
 /* 산책 친구 설정 창(협업자 PetCompanionLayer) — 앱 모드 어디서나 */
 const P = 'html.ddb-app-mode section[aria-labelledby="pet-companion-title"]';
+/* 설정 창 안 항목 묶음(이름 · 견종 · 털 색상 · 속도와 체크) */
+const PG = `${P} > div > div:nth-child(2)`;
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
 /* 마스킹테이프 한 조각(꾸밈 · 눌리지 않음) */
@@ -284,6 +286,35 @@ ${P} > footer { background: rgba(255, 253, 248, .96); border-top: 2px dashed #f0
 ${P} > footer > button:last-of-type { ${PATCH_PINK} }
 ${P} > footer > button:nth-last-of-type(2) { ${PATCH_CREAM} }
 ${P} > footer > button:active { transform: scale(.96); transition-duration: .12s; }
+/* 설정 창 2차 — 양식 느낌을 다이어리 느낌으로(사용자 2026-10-16 "아직 컨셉과 안 맞음")
+   본문 글꼴 · 미리보기 폴라로이드 + 점선 산책길 · 항목 이름은 색 마스킹테이프 이름표 · 입력칸은 테두리 없는 흰 종이 ·
+   털 색상은 흰 칼선 동그라미 스티커 · 체크 두 줄은 노랑 · 민트 포스트잇 */
+${P} { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #3d2f2a; }
+${P} > header p { color: #8a766c; }
+${P} > div > div:first-child { background: radial-gradient(circle, rgba(196,160,140,.22) 1px, transparent 1.3px) 0 0 / 14px 14px, linear-gradient(170deg, #fff8ee, #fdeee6);
+  border-radius: 6px; box-shadow: inset 0 0 0 7px #fff, inset 0 0 0 8px #f1e3da, 0 10px 16px -12px rgba(110, 80, 40, .5); }
+${P} > div > div:first-child::after { height: 0; background: none; border-top: 2px dashed rgba(196, 150, 130, .45); }
+${P} > div > div:first-child span { color: #9c8a80; }
+/* 항목 이름 — 마스킹테이프 이름표(양 끝 지그재그 · 살짝 기울기) */
+${PG} > label:nth-child(1) > span:first-child, ${PG} > div:nth-child(2) > label:first-child, ${PG} > fieldset legend, ${PG} > div:nth-child(4) > label > span:first-child {
+  display: inline-block; width: fit-content; padding: 3px 12px 2px; rotate: -1deg; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; color: #5c3f36;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 8px, rgba(255,222,232,.95) 8px 16px); }
+${PG} > div:nth-child(2) > label:first-child { background: repeating-linear-gradient(90deg, rgba(190,224,255,.95) 0 8px, rgba(214,236,255,.95) 8px 16px); rotate: .8deg; }
+${PG} > fieldset legend { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 8px, rgba(255,239,190,.95) 8px 16px); }
+${PG} > div:nth-child(4) > label > span:first-child { background: repeating-linear-gradient(90deg, rgba(186,236,206,.95) 0 8px, rgba(214,245,226,.95) 8px 16px); rotate: .8deg; }
+/* 입력칸 — 테두리 대신 종이 그림자 */
+${P} :is(input:not([type="checkbox"]):not([type="radio"]), select) { border-color: transparent; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+/* 견종 검색 결과 · 털 색상 — 흰 칼선 동그라미 스티커 */
+${P} button[data-selected] { border-color: transparent; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${P} button[data-selected="true"] { box-shadow: 0 0 0 2px #e8628e, 0 0 0 5px #fde3ec, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${P} button[data-selected] > span[style] { box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(110, 80, 40, .15); }
+/* 체크 두 줄 — 포스트잇 */
+${P} label:has(> input[type="checkbox"]) { border: 0; border-radius: 4px 4px 14px 4px; background: #fff6c9; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .5); }
+${P} label:has(> input[type="checkbox"]) + label:has(> input[type="checkbox"]) { background: #e9f8ef; }
+${P} label:has(> input[type="checkbox"]) > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${P} > footer > button { font-size: 14px; }
+
 /* 비회원 저장 안내(가입 권유) — 메모지 + 와펜 버튼 */
 html.ddb-app-mode [data-pet-companion-guest-save-alert] { ${DOT_PAPER} border: 0; border-radius: 20px; box-shadow: 0 0 0 1.5px #f1e3da, 0 18px 36px -18px rgba(110, 70, 55, .55); }
 html.ddb-app-mode [data-pet-companion-guest-save-alert] h3 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
