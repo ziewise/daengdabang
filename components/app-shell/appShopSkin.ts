@@ -38,7 +38,8 @@ const PALETTE = `
 `;
 
 /* 쇼핑 탭 웹 화면 범위(앱 모드에서만) */
-const S = "html.ddb-app-mode.ddb-app-shop-web";
+/* 앱 겉모양 범위 — 쇼핑 탭 웹 화면 + 마이 탭 웹 화면(AppShell이 html 에 표시) */
+const S = "html.ddb-app-mode:is(.ddb-app-shop-web, .ddb-app-my-web)";
 /* 산책 친구 설정 창(협업자 PetCompanionLayer) — 앱 모드 어디서나 */
 const P = 'html.ddb-app-mode section[aria-labelledby="pet-companion-title"]';
 /* 설정 창 안 항목 묶음(이름 · 견종 · 털 색상 · 속도와 체크) */
@@ -46,6 +47,8 @@ const PG = `${P} > div > div:nth-child(2)`;
 /* 장바구니 화면(AppShell이 html[data-app-page] 표시) · 검색 창 */
 const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
+/* 마이 탭 웹 화면 */
+const MYW = "html.ddb-app-mode.ddb-app-my-web";
 /* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
 const SHEET = `${S} [data-purchase-option-sheet]`;
 /* 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품) */
@@ -735,5 +738,48 @@ ${LIST} main article.group:not([data-pet-product]) > a:first-child > div[class*=
 ${LIST} main article.group:not([data-pet-product]) div.p-3 > div:first-of-type { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
 ${LIST} main article.group:not([data-pet-product]) div.p-3 > div:first-of-type span.uppercase { color: #1f9e75; }
 ${LIST} main article.group:not([data-pet-product]) a[class*="bg-neutral-950"] { font-size: 13px; outline-offset: -6px; }
+
+/* ── 23) 마이 탭 웹 화면(마이페이지 · 주문 · 배송지 · 결제수단 · 추천 설정 · 정보 수정 · 탈퇴 · 공지 · FAQ · 문의 · 교환/반품 · 약관 · 개인정보) ──
+   공통 겉모양(색 · 종이 · 와펜 · 메모)은 위 규칙이 그대로 적용되고, 여기서는 마이 화면만의 것: 영문 꼬리표 숨김 · 제목은 마이 탭 색(버터)
+   테이프 이름표 · 마이페이지 메뉴는 테이프 붙인 메모 카드 + 스티커 칩 · 입력칸 흰 종이. 문구(약관 · 개인정보 포함) · 링크 · 로그아웃 동작 그대로 ── */
+/* 영문 꼬리표(NOTICE · FAQ · CONTACT · Legal · Privacy · MY 정보 등 제목 위 작은 글씨) — 앱에서는 숨김 */
+${MYW} main main :is(main, header, div) > p:first-child:has(+ h1) { display: none; }
+/* 화면 제목 — 마이 탭 색 마스킹테이프 이름표 */
+${MYW} main main h1 {
+  display: inline-block; width: fit-content; padding: 7px 20px 6px; rotate: -1deg; text-decoration: none; font-size: 1.5rem; line-height: 1.1; color: #8a5a0c;
+  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
+  background: repeating-linear-gradient(90deg, rgba(244,214,140,.92) 0 9px, rgba(255,236,184,.92) 9px 18px); filter: drop-shadow(0 6px 5px rgba(110, 80, 30, .16)); }
+${MYW} main main h1 + p { color: #8a766c; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+/* 마이페이지 메뉴 — 테이프 붙인 크림 메모 카드 · 묶음 이름은 작은 테이프 · 항목은 흰 스티커 칩 · 지금 화면은 분홍 와펜 */
+${MYW} nav[aria-label="마이페이지 메뉴"] { position: relative; border-radius: 6px 6px 18px 6px; background: #fffbea; box-shadow: 0 10px 16px -12px rgba(110, 80, 40, .5); }
+${MYW} nav[aria-label="마이페이지 메뉴"]::before { ${TAPE} top: -7px; left: 50%; width: 56px; margin-left: -28px; rotate: -2deg; }
+${MYW} nav[aria-label="마이페이지 메뉴"] section + section, ${MYW} nav[aria-label="마이페이지 메뉴"] > div:last-child { border-top: 2px dashed #f0dcc0; }
+${MYW} nav[aria-label="마이페이지 메뉴"] h2 { display: inline-block; width: fit-content; padding: 2px 10px 1px; letter-spacing: 0; text-decoration: none; color: #8a5a0c;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; rotate: -1deg;
+  clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
+  background: repeating-linear-gradient(90deg, rgba(244,214,140,.92) 0 7px, rgba(255,236,184,.92) 7px 14px); }
+${MYW} nav[aria-label="마이페이지 메뉴"] li > a { background: #fff; border-radius: 999px; color: #5c4a42; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${MYW} nav[aria-label="마이페이지 메뉴"] li > a i { color: #f48fac; }
+${MYW} nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"] { ${PATCH_PINK} border-width: 2px; outline-width: 1.5px; outline-offset: -5px; background-image: none;
+  background: linear-gradient(#f2789d, #f2789d) padding-box, repeating-linear-gradient(72deg, #d9547d 0 2px, #ea6d93 2px 3.4px) border-box; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; text-shadow: none; }
+${MYW} nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"] i { color: #fff; }
+${MYW} nav[aria-label="마이페이지 메뉴"] li > a:active { transform: scale(.96); }
+${MYW} nav[aria-label="마이페이지 메뉴"] > div:last-child button { border-radius: 999px; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+/* 입력칸 — 흰 종이(오류 빨간 테두리는 제외) · 이름은 둥근 글씨 */
+${MYW} main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]) {
+  border-color: transparent; background-color: #fff; border-radius: 14px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+${MYW} main :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]):focus { box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+${MYW} main label[class*="text-xs"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #5c4a42; }
+${MYW} main input[type="checkbox"], ${MYW} main input[type="radio"] { accent-color: #e8628e; }
+/* 카드(마이페이지 칸 · 공지 · FAQ · 문의 · 약관 목차) — 종이 카드(테두리 대신 종이 그림자) */
+${MYW} main main :is(section, article, div, details)[class*="rounded-2xl"][class*="border"]:not([class*="ring-"]),
+${MYW} main main :is(section, article, details)[class*="rounded-xl"][class*="border"]:not([class*="ring-"]) {
+  border-color: transparent; background-color: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -14px rgba(110, 80, 40, .5); }
+${MYW} main main .surface { border-color: transparent; border-radius: 8px 8px 18px 8px; background: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -14px rgba(110, 80, 40, .5); }
+/* 아이콘 동그라미 — 흰 칼선 스티커 */
+${MYW} main main span[class*="rounded-full"][class*="place-items-center"]:is([class*="h-10"], [class*="h-11"], [class*="h-12"], [class*="h-14"], [class*="h-16"]) { box-shadow: 0 0 0 3px #fff, 0 5px 9px -5px rgba(110, 80, 40, .45); }
+/* 작은 분류 꼬리표(안내 · 배송 · 이벤트 · 주문/결제 등) — 둥근 스티커 */
+${MYW} main main span[class*="rounded-full"][class*="text-[10px]"], ${MYW} main main span[class*="rounded-full"][class*="text-[11px]"] { box-shadow: 0 0 0 1.5px #fff, 0 2px 4px -2px rgba(110, 80, 40, .35); }
 
 `;

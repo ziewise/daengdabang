@@ -136,7 +136,8 @@ export const PARTS_CSS = `
 .st-receipt { background: #fff; padding-bottom: 14px; box-shadow: 0 8px 14px -10px rgba(90,60,50,.4);
   -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px 6px repeat-x, linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat;
           mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px 6px repeat-x, linear-gradient(#000 0 0) top / 100% calc(100% - 6px) no-repeat; }
-/* 줄 노트 목록 */
-.st-lined > * { border-bottom: 1px solid rgba(170,200,230,.55); }
+/* 메뉴 목록 — 종이에 줄(괘선) 없이(사용자 규칙): 흰 메모 카드 안에 한 줄씩, 사이는 간격만 */
+.st-lined { padding: 4px 12px; border-radius: 6px 6px 16px 6px; background: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 14px -11px rgba(110,80,40,.45); }
+.st-lined > * + * { margin-top: 1px; }
 @media (prefers-reduced-motion: reduce) { .dt-in-next, .dt-in-prev, .bone-burst, .note-toast { animation-duration: .01ms; } .dt-tab { transition: none; } }
 `;

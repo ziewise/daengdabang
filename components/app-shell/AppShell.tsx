@@ -313,10 +313,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const pageTitle = careTalk || (activeKey === "home" || activeKey === "shop") && root ? null : root ? active.label : subTitle;
     // 쇼핑 탭의 웹 화면(상품 상세 · 장바구니 · 결제 · 목록) — 앱 전용 스티커북 겉모양(appShopSkin.ts)을 입히는 범위
     const shopWeb = activeKey === "shop" && !pathname.startsWith("/app/");
+    // 마이 탭의 웹 화면(마이페이지 · 주문 · 배송지 · 결제수단 · 추천 설정 · 정보 수정 · 공지 · FAQ · 문의 · 교환/반품 · 약관) — 같은 앱 겉모양 범위.
+    // 로그인 · 가입(/auth)은 앱 로그인 화면이 대신하므로 제외
+    const myWeb = activeKey === "my" && !pathname.startsWith("/app/") && !pathname.startsWith("/auth");
     const productDetail = pathname.startsWith("/product/");
     // 상단바 — 앱에서는 어느 화면이든 앱 상단바(로고 · 케어톡 · 검색 · 장바구니). 쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도
     // 앱 전용 화면이라 웹 상단바를 쓰지 않는다(사용자 결정 2026-10-16). 이 화면들의 뒤로 가기는 상단바 바로 아래 줄에
-    const backBelow = shopWeb && !root;
+    const backBelow = (shopWeb || myWeb) && !root;
 
     // 앱 모드 표시 — 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨긴다
     useEffect(() => {
@@ -345,6 +348,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         html.classList.toggle("ddb-app-shop-web", shopWeb);
         return () => html.classList.remove("ddb-app-shop-web");
     }, [shopWeb]);
+
+    // 마이 탭 웹 화면 표시 — 같은 앱 겉모양 CSS 범위(appShopSkin.ts)
+    useEffect(() => {
+        const html = document.documentElement;
+        html.classList.toggle("ddb-app-my-web", myWeb);
+        return () => html.classList.remove("ddb-app-my-web");
+    }, [myWeb]);
 
     // 뒤로 가기 — 들어온 기록이 없으면(주소로 바로 연 경우) 지금 탭 첫 화면으로
     const goBack = () => {
