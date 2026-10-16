@@ -569,9 +569,7 @@ export default function StickerSignup() {
         return frame(
             <DiaryBody pageKey={`verify-${pendingVerification.kind}-${pendingVerification.kind === "activation" && pendingVerification.verified}`} dir={1}>
                 <div className="flex flex-col items-center text-center">
-                    {pendingVerification.kind === "bonus"
-                        ? <span className="su-mail grid h-16 w-16 place-items-center rounded-full text-[26px] text-white"><i aria-hidden="true" className="fa-solid fa-gift" /></span>
-                        : <Image src="/images/ui/stickers/inquiry-email.webp" alt="" width={72} height={72} className="su-mail-img h-[4.5rem] w-[4.5rem]" />}
+                    <Image src={pendingVerification.kind === "bonus" ? "/images/ui/stickers/signup-gift.webp" : "/images/ui/stickers/inquiry-email.webp"} alt="" width={72} height={72} className="su-mail-img h-[4.5rem] w-[4.5rem]" />
                     <h1 className="ah-display mt-3 text-[20px]"><span className="st-marker">{verifyTitle}</span></h1>
                     <p className="ah-light mt-2 text-[13px] leading-relaxed" style={{ color: TEXT_SOFT }}>{verifyBody}</p>
                 </div>

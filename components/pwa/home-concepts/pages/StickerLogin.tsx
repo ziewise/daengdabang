@@ -186,7 +186,7 @@ export default function StickerLogin() {
                     {/* 처음이라면 — 가입 선물 포스트잇(가입 화면으로) */}
                     <Link href={signupHref} className="lg-gift st-postit relative mt-6 flex items-center gap-3 px-3.5 pb-3 pt-3.5" style={{ background: "#fff3a6", rotate: "0.8deg" }}>
                         <Tape className="-top-2 left-1/2 h-3.5 w-12 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "3deg" }} />
-                        <i aria-hidden="true" className="fa-solid fa-gift text-[18px] text-[#e0951c]" />
+                        <Image src="/images/ui/stickers/signup-gift.webp" alt="" width={44} height={44} className="h-11 w-11 shrink-0" />
                         <span className="min-w-0 flex-1">
                             <span className="ah-display block text-[14px]">처음이에요</span>
                             <span className="ah-light block text-[12px] text-[#8f5e12]">회원가입하면 {SAMPLE.signupBonus}코인 선물</span>

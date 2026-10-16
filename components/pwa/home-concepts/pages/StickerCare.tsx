@@ -11,6 +11,7 @@
  *  - 고른 분류는 주소 ?cat= 으로도 열 수 있음(예: ?cat=grooming).
  */
 
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +24,14 @@ import { placeAddress, placeMapLinks } from "@/lib/place-map-links";
 import { ConceptBar, HC_CSS, useDemoSession } from "../shared";
 import { DiaryBody, PARTS_CSS } from "../sticker-parts";
 import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
+
+/* 분류 그림 — 사용자가 만든 3D 배지(public/images/병원 · 미용 · 호텔 · 데이케어.png → ui/stickers/care-*.webp) */
+const CARE_ICONS: Record<LocalCareCategory, string> = {
+    veterinary: "/images/ui/stickers/care-vet.webp",
+    grooming: "/images/ui/stickers/care-grooming.webp",
+    hotel: "/images/ui/stickers/care-hotel.webp",
+    daycare: "/images/ui/stickers/care-daycare.webp",
+};
 
 export default function StickerCare() {
     const [session, setSession] = useDemoSession();
@@ -84,15 +93,15 @@ export default function StickerCare() {
                     <p className="ah-display text-[18px] leading-snug">우리 동네에서<br /><span className="st-marker">돌봄 장소를 찾아요</span></p>
                     <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>내 위치 근처 5곳 · 로그인 없이 쓸 수 있어요</p>
 
-                    {/* 분류 스티커 — 고른 스티커는 들려 있음 */}
+                    {/* 분류 스티커 — 3D 배지 그림, 고른 스티커는 들려 있고 초록 테두리 · 안 고른 건 살짝 흐리게 */}
                     <div className="mt-5 grid grid-cols-4 gap-2">
                         {CATEGORIES.map((c) => {
                             const on = c.id === cat;
                             return (
                                 <button key={c.id} type="button" onClick={() => pick(c.id)} aria-pressed={on}
                                     className={`flex flex-col items-center gap-1.5 transition-transform duration-300 ${on ? "-translate-y-1" : ""}`}>
-                                    <span className={`st-diecut grid h-14 w-14 place-items-center rounded-full ${on ? "ring-4 ring-[#c4ecd6]" : ""}`} style={{ background: on ? "linear-gradient(160deg,#fff,#e6f6ec)" : "#fff" }}>
-                                        <i aria-hidden="true" className={`fa-solid ${c.icon} text-[19px] ${on ? "text-[#1f7a59]" : "text-[#b7a9a1]"}`} />
+                                    <span className={`relative block h-[3.9rem] w-[3.9rem] rounded-full transition-[filter,opacity] duration-300 ${on ? "ring-4 ring-[#c4ecd6]" : "opacity-80 saturate-[.8]"}`}>
+                                        <Image src={CARE_ICONS[c.id]} alt="" fill sizes="64px" className="object-contain" />
                                     </span>
                                     <span className={`ah-display text-[12.5px] ${on ? "" : "text-[#9c8f88]"}`}>{c.shortLabel}</span>
                                 </button>

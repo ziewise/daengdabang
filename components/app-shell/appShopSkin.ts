@@ -1167,12 +1167,12 @@ ${WK} [data-weekly-photo-thumbnails] > button small { font-size: 10.5px; }
 ${WK} div[class*="border-violet-200"] p[class*="text-xs"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; }
 ${WK} div[class*="border-violet-200"] p[class*="text-[10px]"], ${WK} p[class*="text-center"][class*="text-[10px]"], ${WK} [data-weekly-upload-progress] div[class*="text-[10px]"] { font-size: 11px; }
 ${WK} [data-weekly-analysis-complete] :is(p, span)[class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
-/* 카메라 자리 → 사용자 3D 사진첨부 그림(카메라 칸 · 방향별 빈 칸 · 입혀보기 사진 없음 안내). 글자 그림(아이콘 글꼴)만 숨김 */
-${WK} [data-weekly-live-camera] i.fa-camera, ${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro, ${TRYON} div[class*="h-14"][class*="rounded-full"] > i.fa-camera {
-    display: inline-block; width: 3.6rem; height: 3.6rem; vertical-align: middle; background: url("/images/ui/stickers/caretalk-photo.webp") center / contain no-repeat; }
-${WK} [data-weekly-live-camera] i.fa-camera::before, ${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro::before, ${TRYON} div[class*="h-14"][class*="rounded-full"] > i.fa-camera::before { content: none; }
-${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro { width: 2.4rem; height: 2.4rem; }
-${TRYON} div[class*="h-14"][class*="rounded-full"]:has(> i.fa-camera) { width: 4rem; height: 4rem; background: transparent; box-shadow: none; }
+/* 카메라 자리 — 방향별 빈 칸은 사용자 3D 사진첨부 그림, 카메라 칸 · 입혀보기 "사진 없음" 안내의 아이콘은 빼고 글만(사용자 결정 2026-10-16) */
+${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro {
+    display: inline-block; width: 2.4rem; height: 2.4rem; vertical-align: middle; background: url("/images/ui/stickers/caretalk-photo.webp") center / contain no-repeat; }
+${WK} [data-weekly-photo-thumbnails] > button i.fa-camera-retro::before { content: none; }
+${WK} [data-weekly-live-camera] i.fa-camera, ${TRYON} div[class*="h-14"][class*="rounded-full"]:has(> i.fa-camera) { display: none; }
+${WK} [data-weekly-live-camera] i.fa-camera + p { margin-top: 0; }
 /* 촬영 즉시 자동 추가 · 결과 카드 — 테이프 붙은 메모지 */
 ${WK} div[class*="rounded-[24px]"][class*="bg-white"], ${WK} [data-weekly-analysis-complete] article { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6;
     box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
@@ -1192,7 +1192,9 @@ ${WK} [data-weekly-photo-thumbnails] > button strong { font-family: "Cafe24Ssurr
 ${WK} [data-weekly-photo-thumbnails] > button > span[class*="bottom-2"] { border-radius: 4px; background: rgba(212, 68, 122, .88); }
 /* 최초 등록 기준 사진 보존 — 노란 포스트잇 */
 ${WK} div[class*="border-violet-200"] { border: 0; border-radius: 4px 4px 16px 4px; background: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
-${WK} div[class*="border-violet-200"] span[class*="rounded-2xl"] { border-radius: 999px; color: #c4456f; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f6c9a0; }
+/* 사진 보존 — 사용자 3D 최초등록 그림(방패 아이콘 글꼴은 숨김) */
+${WK} div[class*="border-violet-200"] span[class*="rounded-2xl"] { width: 3rem; height: 3rem; border-radius: 0; background: url("/images/ui/stickers/photo-keep.webp") center / contain no-repeat; box-shadow: none; }
+${WK} div[class*="border-violet-200"] span[class*="rounded-2xl"] > i { display: none; }
 ${WK} div[class*="border-violet-200"] p { color: #6b5420; }
 /* 업로드 · 분석 중 — 민트 메모 */
 ${WK} [data-weekly-upload-progress] { border: 0; border-radius: 4px 4px 14px 4px; background: #e9f8f0; box-shadow: 0 0 0 1.5px #c9ead8; }
