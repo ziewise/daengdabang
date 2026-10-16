@@ -4,16 +4,16 @@
  * 스티커북 시안 — 쇼핑 상품 카드 (로컬 시안 전용, 배포 X)
  * ---------------------------------------------------------------------
  * 협업자 공용 상품 카드(components/products/ProductCard)와 "같은 정보 · 같은 동작"을 스크랩 카드 모양으로.
- *  - 정보: 사진/영상 · BEST/NEW · 찜 · 색상 미리보기(n가지 색상) · 브랜드 · 상품명 · 구매 상태 · 할인 · 가격표(가격 배지 + 가격) ·
+ *  - 정보: 사진/영상 · BEST/NEW · 찜 · 브랜드 · 상품명 · 구매 상태 · 할인 · 가격표(가격 배지 + 가격) ·
  *          외부 판매점 후기(별점 · 수 · 판매처)
  *  - 영상: 협업자 useProductVideo 그대로 — 휴대폰에서 절반 이상 보이면 사진 → 영상 자동 전환, 스크롤 중엔 멈춤,
- *          화면 밖이면 되감기, 색상을 누르면 영상 멈추고 그 색상 사진
+ *          화면 밖이면 되감기
+ *  - 색상 미리보기 칩은 앱 카드에서 뺐다(사용자 결정, 웹 카드는 그대로). 색상 선택은 상품 상세에서
  *  - 산책 친구 안내용 표시(data-pet-*)도 웹 카드와 같게 붙임
  * 모양: 테이프 붙인 크래프트 종이 · 사진은 흰 테두리로 오려 붙임 · 가격은 노란 가격표 태그 · 기울기 ±1도.
  */
 
 import Link from "next/link";
-import { useState } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
 import { catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
@@ -42,13 +42,10 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
     const isNew = isNewProduct(p);
     const purchase = productPurchaseState(p);
     const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
-    const colors = p.colors ?? [];
-    const [colorIdx, setColorIdx] = useState<number | null>(null);
-    const color = colorIdx === null ? undefined : colors[colorIdx];
-    const thumb = color?.image || p.image;
+    const thumb = p.image;
 
     // 영상 — 협업자 훅 그대로(휴대폰 자동 재생 · 스크롤 멈춤 · 색상 미리보기 시 정지)
-    const { videoRef, videoActive, previewColor, onPlaying, onSeeked, onError } = useProductVideo(p.video);
+    const { videoRef, videoActive, onPlaying, onSeeked, onError } = useProductVideo(p.video);
     const hasVideo = Boolean(p.video);
     const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
         || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1"
@@ -65,7 +62,7 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
             <div className="sp-photo relative aspect-square overflow-hidden rounded-[4px] bg-white">
                 <Link href={href} aria-label={`${name} 상세 보기`} className="absolute inset-0 flex items-center justify-center">
                     {thumb ? (
-                        <ProductColorImage src={thumb} color={color} alt={color ? `${name} · ${color.name}` : name} sizes="170px"
+                        <ProductColorImage src={thumb} alt={name} sizes="170px"
                             className={`object-contain transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`} />
                     ) : (
                         <i aria-hidden="true" className={`fa-solid ${p.icon} text-4xl text-[#e8c9b8]`} />
@@ -91,21 +88,7 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
                 </button>
             </div>
 
-            {/* 색상 미리보기 — 작은 동그라미 칩 · 고른 색 이름(없으면 n가지 색상) */}
-            {colors.length > 0 ? (
-                <div className="mt-1.5">
-                    <div role="group" aria-label={`${name} 색상 미리보기`} className="sp-chips -mx-0.5 flex gap-1 overflow-x-auto px-0.5 pb-0.5">
-                        {colors.map((c, i) => (
-                            <button key={`${c.name}-${i}`} type="button" aria-label={`${c.name} 미리보기`} aria-pressed={i === colorIdx}
-                                onClick={() => { previewColor(); setColorIdx((cur) => (cur === i ? null : i)); }}
-                                className={`sp-chip relative block h-6 w-6 shrink-0 overflow-hidden rounded-full ${i === colorIdx ? "is-on" : ""}`}>
-                                <ProductColorImage src={c.chip || c.image} color={c} alt="" sizes="24px" className="object-cover" />
-                            </button>
-                        ))}
-                    </div>
-                    <p aria-live="polite" className="ah-light mt-0.5 text-[10.5px] text-[#9c8a80]">{color?.name ?? `${colors.length}가지 색상`}</p>
-                </div>
-            ) : null}
+            {/* 색상 미리보기 칩은 앱 쇼핑 카드에서 뺌(사용자 결정) — 색상 선택은 상품 상세에서 그대로 */}
 
             {/* 정보 — 웹 카드와 같은 항목 */}
             <Link href={href} className="mt-1.5 flex flex-1 flex-col">
@@ -144,9 +127,6 @@ export const SHOP_CARD_CSS = `
 .sp-stamp { font-size: 10px; line-height: 1; padding: 3px 5px 2px; border-radius: 4px; color: var(--c); background: rgba(255,255,255,.88); box-shadow: inset 0 0 0 1.5px var(--c); letter-spacing: .04em; }
 .sp-heart { background: rgba(255,255,255,.95); box-shadow: 0 0 0 1.5px #fff, 0 3px 6px -3px rgba(90,60,50,.45); transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
 .sp-heart:active { transform: scale(.85); }
-.sp-chips { scrollbar-width: none; }
-.sp-chip { box-shadow: 0 0 0 1px #eadbd2; }
-.sp-chip.is-on { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f47aa0; }
 /* 가격표: 노란 꼬리표(구멍 뚫린 태그) */
 .sp-price { background: #fff3a6; color: #6b4708; border-radius: 3px 6px 6px 3px; clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%); }
 .sp-price::before { content: ""; position: absolute; left: 6px; top: 50%; width: 4px; height: 4px; margin-top: -2px; border-radius: 999px; background: #fffaf2; box-shadow: inset 0 0 0 1px rgba(170,120,40,.35); }

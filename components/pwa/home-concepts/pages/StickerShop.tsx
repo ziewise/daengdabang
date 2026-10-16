@@ -8,7 +8,7 @@
  *  ① 히어로(ShopHero) — 브랜드 문구가 맨 위(쇼핑 제목 테이프 없음) · 폴라로이드 영상 · 날씨 칩 · 견종 얼굴 배지
  *  ② 상품군 5개 스티커 — 웹 상단 메뉴(lib/menu-data CATEGORY_GROUPS) 그대로, 누르면 상품군 화면
  *     그림은 사용자가 만든 3D 이미지(public/images/ui/stickers/cat-*.webp)
- *  ③ "{반려견}를 위한 추천" — 회원만(비회원은 자리 없음, 웹과 같음). 협업자 추천 엔진 · 문구 · 상황별 안내 그대로
+ *  ③ "{반려견}를 위한 추천" — 회원만(비회원은 자리 없음, 웹과 같음). 협업자 추천 엔진 · 상황별 안내 그대로(카드 아래 추천 이유 메모는 앱에서 뺌)
  *     로그인 전 시연(로그인 후(예시))에서는 편집 추천 상품으로 모양만 보여 줌
  *  ④ 추천 셀렉트 · 신상품 — 색인 탭 2개로 한 섹션(웹 BestSection 4개 · NewArrivalsSection 8개 그대로)
  *  ⑤ 기획전 — 웹 PromoSection 5개(큰 카드 1 + 작은 카드 4) 그대로, 글자는 사진 아래 · 바로 아래 대표 브랜드 2장
@@ -35,7 +35,6 @@ import {
     resolveSelectedRecommendationPet,
     runMemberRecommendation,
     type RecommendationItem,
-    type RecommendationSourceGroup,
 } from "@/lib/recommendation";
 import { haptic } from "../gestures";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
@@ -74,12 +73,6 @@ const CAT_IMAGES: Record<CategorySlug, string> = {
     life: "/images/ui/stickers/cat-life.webp",
     toy: "/images/ui/stickers/cat-toy.webp",
     care: "/images/ui/stickers/cat-care.webp",
-};
-/* 추천 근거 — 협업자 RecommendationProductCard 와 같은 이름 */
-const SOURCE_LABEL: Record<RecommendationSourceGroup, string> = {
-    profile: "등록한 반려견 프로필",
-    petlens: "동의한 펫렌즈 케어 신호",
-    editorial: "댕다방 편집 추천",
 };
 
 export default function StickerShop() {
@@ -194,8 +187,6 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
         items: baseItems,
         ready: hydrated && Boolean(user) && (!personalizationEnabled || !prefState.isLoading),
     });
-    // 시연(로그인 안 된 로컬)용 숨기기 — 실제 회원은 협업자 훅이 기억
-    const [demoHidden, setDemoHidden] = useState<Record<string, boolean>>({});
     // 시연 상품 — 편집 추천(판매 가능 상품만)이 비어 있으면(출시 전 · 재고 확인 필요) 추천 셀렉트 상품으로 모양만 보여 줌
     const demoItems = useMemo<RecommendationItem[]>(() => {
         const items = editorialRecommendationItems(6);
@@ -209,7 +200,7 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
     if (!real && !demoMember) return null; // 비회원 — 자리 없음(웹과 같음)
 
     const petName = real ? selectedPet?.name?.trim() || "우리 아이" : PET.name;
-    const items = real ? analytics.visibleItems : demoItems.filter((it) => !demoHidden[it.product.id]);
+    const items = real ? analytics.visibleItems : demoItems;
     const allItems = real ? baseItems : demoItems;
     const titleText = real
         ? (personalizationEnabled && selectedPet && prefs?.enabled ? `${petName}를 위한 추천` : "상품 용도와 브랜드를 살펴 골랐어요")
@@ -222,8 +213,8 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
                     : !prefs.enabled ? "맞춤 추천이 꺼져 있어 회원 정보가 아닌 편집 추천만 보여드려요."
                         : personalized?.mode === "personalized" ? "등록한 프로필과 사용에 동의한 펫렌즈 케어 신호를 함께 반영했어요." : "등록한 체형·활동량·관심 케어 프로필만 반영했어요.";
     const kicker = real && editorial ? "댕다방 추천 셀렉트" : "우리 아이 맞춤 추천";
-    const hide = (id: string) => { haptic("light"); if (real) analytics.hideProduct(id); else setDemoHidden((h) => ({ ...h, [id]: true })); };
-    const unhide = () => { if (real) analytics.resetHidden(); else setDemoHidden({}); };
+    // 예전에 숨긴 상품이 있을 때(웹 추천에서 "관심 없음") 다시 보기 — 협업자 훅 그대로
+    const unhide = () => { if (real) analytics.resetHidden(); };
     const pets = (user?.pets ?? []).filter((p): p is typeof p & { apiProfileId: number } => typeof p.apiProfileId === "number");
 
     return (
@@ -262,19 +253,7 @@ function ShopRecommend({ demoMember }: { demoMember: boolean }) {
                         <li key={it.product.id} className="w-[10.4rem] shrink-0 snap-start" data-recommendation-product={it.product.id}
                             onClickCapture={(e) => { const a = (e.target as Element).closest?.("a[href]"); if (real && a?.getAttribute("href")?.startsWith("/product/")) analytics.trackProductClick(it.product.id); }}>
                             <ShopProductCard product={it.product} index={i} />
-                            <div className="shp-why mt-2.5 rounded-[10px] px-2.5 pb-2 pt-2">
-                                <p className="ah-display text-[11.5px] leading-snug text-[#4a3a8c]">{it.reasonLabel}</p>
-                                <details className="mt-1" onToggle={(e) => { if (real && e.currentTarget.open) analytics.trackReasonOpened(it.product.id); }}>
-                                    <summary className="ah-display cursor-pointer list-none text-[11px] text-[#6a52c4]">왜 추천했나요? <i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></summary>
-                                    <div className="ah-light mt-1.5 text-[10.5px] leading-snug" style={{ color: TEXT_SOFT }}>
-                                        <p>사용한 정보</p>
-                                        <ul className="mt-0.5 list-inside list-disc">{it.sourceGroups.map((s) => <li key={s}>{SOURCE_LABEL[s]}</li>)}</ul>
-                                        {it.cautionLabels.map((c) => <p key={c} className="mt-1 text-[#8a5a0c]">{c}</p>)}
-                                        {RECOMMENDATION_FEATURE_FLAGS.preferences ? <Link href="/mypage/recommendations/" className="ah-display mt-1 inline-block text-[#6a52c4]">추천 데이터 관리</Link> : null}
-                                    </div>
-                                </details>
-                                <button type="button" onClick={() => hide(it.product.id)} className="ah-display mt-1.5 text-[11px] text-[#9c8a80]">관심 없음</button>
-                            </div>
+                            {/* 추천 이유 · 왜 추천했나요 · 관심 없음 메모는 앱 쇼핑 카드에서 뺌(사용자 결정, 웹 추천 섹션은 그대로) */}
                         </li>
                     ))}
                 </ul>
@@ -350,7 +329,6 @@ const SHOP_CSS = `
 /* 추천 선반 · 이유 메모 · 반려견 이름표 */
 .shp-shelf { scrollbar-width: none; }
 .shp-shelf::-webkit-scrollbar { display: none; }
-.shp-why { background: #f6f2ff; box-shadow: inset 0 0 0 1.5px #e6defb; }
 .shp-pet { background: #fff; color: #8f7a70; box-shadow: inset 0 0 0 1.5px #f1e3da; }
 .shp-pet.is-on { background: #ffe1ea; color: #c23d6c; box-shadow: inset 0 0 0 1.5px #f6a9bf; }
 .shp-empty { background: #fffaf2; border: 2px dashed #f1dccf; }
