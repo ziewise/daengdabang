@@ -28,7 +28,7 @@ import { openChatWidget } from "@/lib/chat-widget-events";
 import ChatWidget from "@/components/site/ChatWidget";
 import { useAuth, useCart } from "@/lib/store";
 import {
-    APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
+    APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
 
@@ -229,6 +229,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
     const [chatOpen, setChatOpen] = useState(false); // 협업자 상담 창이 열려 있는가(창 자리 z 순서용)
+    // 로그인 · 회원가입 화면에서는 상담 창을 내림 — 웹(FloatingDock 이 /auth 에서 사라짐)과 같은 규칙.
+    // 사진 첨부의 "로그인하기"처럼 상담 창 안에서 로그인으로 갈 때 창이 로그인 화면을 가리지 않게
+    const chatHidden = pathname.startsWith("/auth") || pathname.startsWith(APP_LOGIN.slice(0, -1)) || pathname.startsWith(APP_SIGNUP.slice(0, -1));
 
     // 로그인 — 웹 로그인 링크(/auth/login · /login)는 같은 ?redirect= 를 들고 앱 로그인 화면으로
     useEffect(() => {
@@ -462,8 +465,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
             <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
             {/* 케어톡 — 어느 화면에서든 아래에서 올라오는 판 */}
-            {/* 케어톡 — 협업자 전역 상담 창(ChatWidget) 그대로. 떠 있는 버튼은 숨기고(상단바 버튼이 대신) 창은 탭바 위에서 열림 */}
-            <div
+            {/* 케어톡 — 협업자 전역 상담 창(ChatWidget) 그대로. 떠 있는 버튼은 숨기고(상단바 버튼이 대신) 창은 탭바 위에서 열림 · 로그인 화면에선 없음 */}
+            {chatHidden ? null : <div
                 className={`pointer-events-none fixed right-3 ${chatOpen ? "z-[2221]" : "z-[2200]"}`}
                 style={{ bottom: showTabBar ? "calc(var(--app-tabbar-h) + 8px)" : "calc(16px + env(safe-area-inset-bottom, 0px))" }}
                 data-pet-companion-avoid="true"
@@ -471,7 +474,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 <div className="pointer-events-auto">
                     <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} empty={CareEmpty} />
                 </div>
-            </div>
+            </div>}
         </>
     );
 }
