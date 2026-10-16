@@ -43,6 +43,9 @@ const S = "html.ddb-app-mode.ddb-app-shop-web";
 const P = 'html.ddb-app-mode section[aria-labelledby="pet-companion-title"]';
 /* 설정 창 안 항목 묶음(이름 · 견종 · 털 색상 · 속도와 체크) */
 const PG = `${P} > div > div:nth-child(2)`;
+/* 장바구니 화면(AppShell이 html[data-app-page] 표시) · 검색 창 */
+const CART = `${S}[data-app-page="cart"]`;
+const SEARCH = 'html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"]';
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
 /* 마스킹테이프 한 조각(꾸밈 · 눌리지 않음) */
@@ -335,4 +338,59 @@ html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] input { bac
 html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] h3 { color: #b07f6b; }
 html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] :is(a, button)[class*="rounded-full"][class*="bg-neutral-100"],
 html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] span[class*="rounded-full"][class*="bg-neutral-100"] { background: #fff; box-shadow: 0 0 0 1.5px #f3e6d6; }
+/* ── 11) 장바구니(/cart) — 스크랩 카드 · 폴라로이드 사진 · 스티커 버튼 · 영수증 메모 (버튼 · 링크 · 수량 동작은 그대로) ── */
+/* 전체 선택 줄 — 크림 종이 띠 */
+${CART} main main > div > section > div:first-child { background: #fffdf6; border-radius: 14px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 6px 10px -8px rgba(110, 80, 40, .45); }
+/* 고르기 동그라미(체크) — 와펜 대신 작은 분홍 스티커 동그라미 */
+${CART} main button.h-5.w-5 { border-radius: 999px; outline: none; box-shadow: 0 0 0 2px #fff, 0 2px 4px -2px rgba(110, 80, 40, .4); }
+${CART} main button.h-5.w-5.bg-indigo-600 { border: 2px solid #e8628e; background: #e8628e; font-family: inherit; text-shadow: none; }
+/* 상품 한 줄 — 크래프트 스크랩 카드 + 위 테이프 · 사진은 흰 테두리 폴라로이드 */
+${CART} main article.surface { background: #fffaf2; border: 0; border-radius: 10px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -12px rgba(110, 80, 40, .5); }
+${CART} main article.surface::before { ${TAPE} top: -6px; left: 50%; width: 52px; margin-left: -26px; rotate: -2deg; }
+${CART} main article.surface > a:first-of-type, ${CART} main article.surface > div[class*="h-24"] { border: 4px solid #fff; border-radius: 6px; filter: drop-shadow(0 4px 4px rgba(90, 60, 50, .28)); }
+${CART} main article.surface :is(p, a)[class*="font-black"][class*="text-sm"], ${CART} main article.surface p.text-lg { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 삭제 — 크림 동그란 스티커 */
+${CART} main article.surface > button[class*="absolute"] { border-color: #fff; border-radius: 999px; background: #fff; color: #b39b90; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+/* 수량 — 동그란 알약 스티커 */
+${CART} main article.surface div[class*="inline-flex"][class*="h-9"][class*="border"] { border-color: transparent; border-radius: 999px; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${CART} main article.surface div[class*="inline-flex"][class*="h-9"] button { color: #e8628e; }
+/* "누구를 위한 상품인가요?" — 분홍 메모, 등록 버튼은 작은 분홍 와펜 */
+${CART} main article.surface a[class*="bg-neutral-950"] { ${PATCH_PINK} display: inline-block; border-width: 2px; outline: none; padding: 7px 16px 6px; font-size: 12.5px; line-height: 1; }
+/* 주문 합계 — 영수증 메모(위 테이프 · 점선 구분선) */
+${CART} main aside.surface { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${CART} main aside.surface::before { ${TAPE} top: -6px; left: 50%; width: 60px; margin-left: -30px; rotate: 2deg; }
+${CART} main aside.surface [class*="border-t"] { border-top: 2px dashed #ecd5c8; }
+${CART} main aside.surface b[class*="text-2xl"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 빈 장바구니 — 큰 아이콘 대신 같은 자리에 자수 장바구니 */
+${CART} main main > i.fa-bag-shopping { display: inline-block; width: 3.5rem; height: 3.5rem; background: ${EMB_BAG} center / contain no-repeat; }
+${CART} main main > i.fa-bag-shopping::before { content: ""; }
+
+/* ── 12) 검색 창 2차 — 테이프 이름표 제목 · 파스텔 스티커 키워드 · 폴라로이드 결과 사진 · 와펜 "전체 결과" (검색 · 이동 동작 그대로) ── */
+${SEARCH}::before { ${TAPE} top: 4px; left: 50%; width: 64px; margin-left: -32px; rotate: -2deg; z-index: 20; }
+${SEARCH} { border-radius: 24px; }
+${SEARCH} form i.fa-magnifying-glass { color: #e8628e; }
+${SEARCH} form input { border-radius: 999px; border-color: transparent; }
+${SEARCH} form input:focus { border-color: #f6a9bf; box-shadow: 0 0 0 3px rgba(242, 131, 163, .15); }
+${SEARCH} form button[aria-label] { background: #fff; color: #b39b90; box-shadow: 0 0 0 1.5px #f1e3da; }
+/* 칸 제목(검색 결과 · 인기 검색어 · 최근 검색어) — 마스킹테이프 이름표 */
+${SEARCH} h3 { display: inline-block; width: fit-content; padding: 3px 11px 2px; rotate: -1deg; letter-spacing: 0; font-size: 12px; color: #5c3f36;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 8px, rgba(255,222,232,.95) 8px 16px); }
+${SEARCH} section + section h3, ${SEARCH} section:nth-of-type(2) h3 { background: repeating-linear-gradient(90deg, rgba(190,224,255,.95) 0 8px, rgba(214,236,255,.95) 8px 16px); }
+/* 인기 검색어 — 파스텔 스티커(돌아가며 색) */
+${SEARCH} section .flex-wrap > button[class*="rounded-full"] { background: #ffe9f0; box-shadow: 0 0 0 2px #fff, 0 3px 6px -3px rgba(110, 80, 40, .4); font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${SEARCH} section .flex-wrap > button[class*="rounded-full"]:nth-child(4n+2) { background: #e6f3ff; }
+${SEARCH} section .flex-wrap > button[class*="rounded-full"]:nth-child(4n+3) { background: #fff4c7; }
+${SEARCH} section .flex-wrap > button[class*="rounded-full"]:nth-child(4n+4) { background: #e5f7ec; }
+${SEARCH} section .flex-wrap > button[class*="rounded-full"] span { color: #d4447a; }
+/* 최근 검색어 — 점선 테두리 흰 스티커 */
+${SEARCH} section .flex-wrap > span[class*="rounded-full"] { background: #fff; box-shadow: none; outline: 1.5px dashed #f2b6c8; outline-offset: -1.5px; }
+/* 검색 결과 줄 — 사진은 흰 테두리 미니 폴라로이드, 상품명은 둥근 글씨 */
+${SEARCH} ul button > div:first-child { border: 3px solid #fff; border-radius: 6px; filter: drop-shadow(0 3px 3px rgba(90, 60, 50, .28)); }
+${SEARCH} ul button:active { background: rgba(255, 233, 240, .6); }
+/* 전체 결과 보기 — 크림 와펜 */
+${SEARCH} ul + button { ${PATCH_CREAM} }
+${SEARCH} ul + button:active { transform: scale(.97); }
+
 `;

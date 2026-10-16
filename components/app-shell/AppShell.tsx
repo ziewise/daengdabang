@@ -340,6 +340,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         return () => html.classList.remove("ddb-app-web-header");
     }, [webHeader]);
 
+    // 지금 화면 이름(주소 첫 마디: cart · product · checkout …) — 화면별 앱 겉모양 CSS 범위(html[data-app-page])
+    useEffect(() => {
+        const html = document.documentElement;
+        html.dataset.appPage = pathname.split("/")[1] || "root";
+        return () => { delete html.dataset.appPage; };
+    }, [pathname]);
+
     // 쇼핑 탭 웹 화면 표시 — 앱 전용 쇼핑 겉모양 CSS 범위
     useEffect(() => {
         const html = document.documentElement;
