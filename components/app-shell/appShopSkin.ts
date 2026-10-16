@@ -39,7 +39,7 @@ const PALETTE = `
 
 /* 쇼핑 탭 웹 화면 범위(앱 모드에서만) */
 /* 앱 겉모양 범위 — 쇼핑 탭 웹 화면 + 마이 탭 웹 화면(AppShell이 html 에 표시) */
-const S = "html.ddb-app-mode:is(.ddb-app-shop-web, .ddb-app-my-web)";
+const S = "html.ddb-app-mode:is(.ddb-app-shop-web, .ddb-app-my-web, .ddb-app-lab-web)";
 /* 산책 친구 설정 창(협업자 PetCompanionLayer) — 앱 모드 어디서나 */
 const P = 'html.ddb-app-mode section[aria-labelledby="pet-companion-title"]';
 /* 설정 창 안 항목 묶음(이름 · 견종 · 털 색상 · 속도와 체크) */
@@ -53,7 +53,8 @@ const BUNDLE = `${S}[data-app-page="bundle"]`;
 const BUNDLE_ANY = `${S}:is([data-app-page="bundles"], [data-app-page="bundle"])`;
 const BUNDLE_CARD = `${S}[data-app-page="bundles"] main main article.group`;
 /* 마이 탭 웹 화면 */
-const MYW = "html.ddb-app-mode.ddb-app-my-web";
+/* 마이 · 연구소 탭 웹 화면(제목 테이프 · 영문 꼬리표 숨김 · 종이 카드 · 입력칸 공통) */
+const MYW = "html.ddb-app-mode:is(.ddb-app-my-web, .ddb-app-lab-web)";
 /* 그림으로 바꿔 끼우는 아이콘 칸(동그라미 · 네모) */
 const ICONBOX = `${MYW} main :is(span[class*="h-11"][class*="rounded-full"]:has(> i.fa-envelope), span[class*="h-11"][class*="rounded-full"]:has(> i.fa-headset), span[class*="h-9"][class*="rounded-full"]:has(> i:is(.fa-circle-question, .fa-box, .fa-rotate-left)), :is(span, div)[class*="rounded"]:has(> i.fa-credit-card), span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock))`;
 /* 숨은 창들(협업자 모달) — 앱 모드 어디서나 · 입혀보기 창 */
@@ -62,7 +63,7 @@ const DLG = `html.ddb-app-mode :is([role="dialog"][aria-labelledby="pw-modal-tit
 /* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
 const SHEET = `${S} [data-purchase-option-sheet]`;
 /* 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품) */
-const LIST = `${S}:is([data-app-page="category"], [data-app-page="best"], [data-app-page="new"], [data-app-page="promo"], [data-app-page="brands"], [data-app-page="brand"], [data-app-page="products"])`;
+const LIST = `${S}:is([data-app-page="category"], [data-app-page="best"], [data-app-page="new"], [data-app-page="promo"], [data-app-page="brands"], [data-app-page="brand"], [data-app-page="products"], [data-app-page="reviews"], [data-app-page="partner"])`;
 const SEARCH = 'html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"]';
 /* 점 무늬 다이어리 속지 — 앱 쇼핑 첫 화면 · 케어톡과 같은 종이(괘선 없음) */
 const DOT_PAPER = "background-color: #fffdf8; background-image: radial-gradient(circle, rgba(196,160,140,.24) 1px, transparent 1.3px); background-size: 15px 15px;";
@@ -552,7 +553,7 @@ ${LIST} main main > h1, ${LIST} main main > header > h1 {
   clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
   background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); filter: drop-shadow(0 6px 5px rgba(110, 60, 50, .18)); }
 /* 영문 꼬리표(CURATED PICKS · NEW · PROMO · BRANDS) — 앱에서는 숨김(앱 쇼핑 첫 화면과 같은 기준) */
-${LIST}:is([data-app-page="best"], [data-app-page="new"], [data-app-page="promo"], [data-app-page="brands"], [data-app-page="brand"]) main main > p:first-child { display: none; }
+${LIST}:is([data-app-page="best"], [data-app-page="new"], [data-app-page="promo"], [data-app-page="brands"], [data-app-page="brand"], [data-app-page="reviews"]) main main > p:first-child { display: none; }
 /* 상품 수(상품 179개) — 작은 분홍 스티커 */
 ${LIST} main main > header > p:first-child { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #fff; color: #d4447a; font-size: 12px;
   box-shadow: 0 0 0 1.5px #f6c9d6, 0 3px 6px -4px rgba(110, 80, 40, .4); }
@@ -785,7 +786,7 @@ ${MYW} main :is(input:not([type="checkbox"]):not([type="radio"]), select, textar
 ${MYW} main label[class*="text-xs"] { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #5c4a42; }
 ${MYW} main input[type="checkbox"], ${MYW} main input[type="radio"] { accent-color: #e8628e; }
 /* 카드(마이페이지 칸 · 공지 · FAQ · 문의 · 약관 목차) — 종이 카드(테두리 대신 종이 그림자) */
-${MYW} main main :is(section, article, div, details)[class*="rounded-2xl"][class*="border"]:not([class*="ring-"]),
+${MYW} main main :is(section, article, div, details)[class*="rounded-2xl"][class*="border"]:not([class*="ring-"]):not([class*="bg-neutral-9"]):not([class*="bg-black"]),
 ${MYW} main main :is(section, article, details)[class*="rounded-xl"][class*="border"]:not([class*="ring-"]) {
   border-color: transparent; background-color: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -14px rgba(110, 80, 40, .5); }
 ${MYW} main main .surface { border-color: transparent; border-radius: 8px 8px 18px 8px; background: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 18px -14px rgba(110, 80, 40, .5); }
@@ -976,5 +977,18 @@ ${BUNDLE} main main div.grid:has(> div[class*="aspect-[4/3]"]) { gap: 30px; padd
 
 /* 세트 상세 "다른 세트 보기" — 앱에서는 숨김(사용자 2026-10-16: 상단바 아래 뒤로 가기와 겹치고, 담기 버튼이 덜 또렷해짐). 웹은 그대로 */
 ${BUNDLE} main main > section:first-child aside a:is([href="/bundles"], [href="/bundles/"]) { display: none; }
+
+/* ── 29) 연구소 탭 웹 화면(펫렌즈 · 행동·소리 분석 · 우리 아이 기록) 마무리 ──
+   카메라 미리보기(어두운 화면)는 그대로 어둡게 두고 흰 폴라로이드 테두리만 · 크레파스 꼬리표(ddb-crayon-kicker)는 카페24 분홍 작은 글씨 ·
+   "댕다방 연구소" 로고 글씨는 브랜드 표기라 그대로. 촬영 · 업로드 · 분석 동작은 그대로 ── */
+${MYW} main :is([data-weekly-live-camera], div[class*="bg-neutral-950"][class*="rounded-2xl"]) { border: 0; box-shadow: 0 0 0 6px #fff, 0 0 0 7px #f0e2d6, 0 14px 22px -14px rgba(110, 80, 40, .55); }
+${MYW} main .ddb-crayon-kicker { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #d4447a; letter-spacing: 0; }
+${MYW} main button[class*="rounded-full"]:not([class*="bg-indigo"]):not(.btn) { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+/* 파트너 문의(/partner) — 영문 꼬리표 숨김 · 제목 테이프 */
+${S}[data-app-page="partner"] main p:is([class*="uppercase"], [class*="tracking-[0.2"]) { display: none; }
+${S}[data-app-page="partner"] main h1 { display: inline-block; width: fit-content; padding: 7px 18px 6px; rotate: -1deg; text-decoration: none; font-size: 1.45rem; line-height: 1.25; color: #a8480f;
+  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
+  background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); }
+${S}[data-app-page="partner"] main section:first-of-type { background: transparent; box-shadow: none; }
 
 `;

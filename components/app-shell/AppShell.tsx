@@ -305,6 +305,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // 마이 탭의 웹 화면(마이페이지 · 주문 · 배송지 · 결제수단 · 추천 설정 · 정보 수정 · 공지 · FAQ · 문의 · 교환/반품 · 약관) — 같은 앱 겉모양 범위.
     // 로그인 · 가입(/auth)은 앱 로그인 화면이 대신하므로 제외
     const myWeb = activeKey === "my" && !pathname.startsWith("/app/") && !pathname.startsWith("/auth");
+    // 연구소 탭의 웹 화면(펫렌즈 사진 분석 · 행동·소리 분석 · 우리 아이 기록) — 같은 앱 겉모양 범위
+    const labWeb = activeKey === "lab" && !pathname.startsWith("/app/");
     const productDetail = pathname.startsWith("/product/");
     // 상단바 — 앱에서는 어느 화면이든 앱 상단바(로고 · 케어톡 · 검색 · 장바구니). 쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도
     // 앱 전용 화면이라 웹 상단바를 쓰지 않는다(사용자 결정 2026-10-16).
@@ -345,6 +347,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         html.classList.toggle("ddb-app-my-web", myWeb);
         return () => html.classList.remove("ddb-app-my-web");
     }, [myWeb]);
+
+    // 연구소 탭 웹 화면 표시 — 같은 앱 겉모양 CSS 범위(appShopSkin.ts)
+    useEffect(() => {
+        const html = document.documentElement;
+        html.classList.toggle("ddb-app-lab-web", labWeb);
+        return () => html.classList.remove("ddb-app-lab-web");
+    }, [labWeb]);
 
     // 뒤로 가기 — 들어온 기록이 없으면(주소로 바로 연 경우) 지금 탭 첫 화면으로
     const goBack = () => {
