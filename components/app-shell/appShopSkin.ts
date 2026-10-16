@@ -1081,8 +1081,10 @@ ${PT} main > div > section:first-of-type::before { ${TAPE} top: -7px; left: 50%;
 ${PT} main > div > section:first-of-type > div[class*="blur-3xl"] { display: none; }
 ${PT} main > div > section:first-of-type h1 { margin-top: 0; }
 ${PT} main > div > section:first-of-type h1 + p { margin-top: 14px; font-size: 13.5px; line-height: 1.7; color: #5c4a42; }
-${PT} main > div > section:first-of-type a[class*="bg-neutral-950"] { ${PATCH_PINK} min-height: 48px; padding: 0 20px; }
-${PT} main > div > section:first-of-type a[class*="border-neutral-300"] { ${PATCH_CREAM} min-height: 48px; padding: 0 20px; }
+/* 버튼 두 개는 한 줄에(작게 · 반반) */
+${PT} main > div > section:first-of-type div:has(> a[class*="bg-neutral-950"]) { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+${PT} main > div > section:first-of-type a[class*="bg-neutral-950"] { ${PATCH_PINK} justify-content: center; min-height: 40px; padding: 0 8px; gap: 4px; font-size: 12.5px; white-space: nowrap; outline-offset: -5px; outline-width: 1.5px; }
+${PT} main > div > section:first-of-type a[class*="border-neutral-300"] { ${PATCH_CREAM} justify-content: center; min-height: 40px; padding: 0 8px; font-size: 12.5px; white-space: nowrap; outline-offset: -5px; outline-width: 1.5px; }
 /* 칸 제목 — 형광펜 · 이런 제안을 기다립니다 3장은 3D 그림 대신 작은 스티커 동그라미 + 메모 카드(살짝 기울기) */
 ${PT} main h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.35rem;
   text-decoration: underline; text-decoration-color: rgba(255, 196, 216, .75); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
