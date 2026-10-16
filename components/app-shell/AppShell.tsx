@@ -221,6 +221,10 @@ function StitchBackIcon() {
 }
 
 
+/** 우리 아이 기록(웹) → 앱 건강 변화 리포트(같은 정보 · 앱 화면) */
+const APP_REPORT = "/app/sticker/report/";
+const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
@@ -245,6 +249,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 router.push(isWebSignupPath(url.pathname) ? appSignupHref(to) : appLoginHref(to));
                 return;
             }
+            // 우리 아이 기록(/my-pet) — 같은 정보를 담은 앱 리포트 화면으로(사용자 결정 2026-10-16 "같은 기능의 앱 화면")
+            if (isMyPetPath(url.pathname)) {
+                event.preventDefault();
+                router.push(APP_REPORT);
+                return;
+            }
         };
         document.addEventListener("click", onClick, true);
         return () => document.removeEventListener("click", onClick, true);
@@ -256,6 +266,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         if (isWebLoginPath(pathname) || isWebSignupPath(pathname)) {
             const to = new URLSearchParams(window.location.search).get("redirect");
             router.replace(isWebSignupPath(pathname) ? appSignupHref(to) : appLoginHref(to));
+            return;
+        }
+        // 코드나 주소로 /my-pet 에 들어온 경우도 앱 리포트로
+        if (isMyPetPath(pathname)) {
+            router.replace(APP_REPORT);
             return;
         }
         if (authHydrated && !user && MEMBER_ONLY_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {

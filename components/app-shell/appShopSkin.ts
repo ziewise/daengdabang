@@ -55,6 +55,8 @@ const BUNDLE_CARD = `${S}[data-app-page="bundles"] main main article.group`;
 /* 마이 탭 웹 화면 */
 /* 마이 · 연구소 탭 웹 화면(제목 테이프 · 영문 꼬리표 숨김 · 종이 카드 · 입력칸 공통) */
 const MYW = "html.ddb-app-mode:is(.ddb-app-my-web, .ddb-app-lab-web)";
+/* 펫렌즈(사진 · 프로필 분석 · 행동 · 소리 분석) */
+const PLX = `html.ddb-app-mode.ddb-app-lab-web:is([data-app-page="pet-lens"], [data-app-page="petlens"])`;
 /* 그림으로 바꿔 끼우는 아이콘 칸(동그라미 · 네모) */
 const ICONBOX = `${MYW} main :is(span[class*="h-11"][class*="rounded-full"]:has(> i.fa-envelope), span[class*="h-11"][class*="rounded-full"]:has(> i.fa-headset), span[class*="h-9"][class*="rounded-full"]:has(> i:is(.fa-circle-question, .fa-box, .fa-rotate-left)), :is(span, div)[class*="rounded"]:has(> i.fa-credit-card), span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock))`;
 /* 숨은 창들(협업자 모달) — 앱 모드 어디서나 · 입혀보기 창 */
@@ -990,5 +992,77 @@ ${S}[data-app-page="partner"] main h1 { display: inline-block; width: fit-conten
   clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
   background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); }
 ${S}[data-app-page="partner"] main section:first-of-type { background: transparent; box-shadow: none; }
+
+/* ── 30) 펫렌즈(사진 · 프로필 분석) · 행동 · 소리 분석 — 앱 카드 구성으로 다시 짬(사용자 2026-10-16 "카드 크기 · 구성까지").
+   CSS만: 배치 · 크기 · 모양. 촬영 · 업로드 · 분석 · 동의 체크 · 버튼 동작과 응급 · 개인정보 안내 문구는 그대로(숨기지 않음) ── */
+/* 제목 — 로고 글씨가 든 제목은 테이프 대신 형광펜(두 줄 테이프가 무거워서) */
+${PLX} main main h1:has([data-daenglab-service-title]) { display: block; padding: 0; rotate: none; clip-path: none; background: none; filter: none; font-size: 1.3rem; }
+${PLX} main main h1:has([data-daenglab-service-title]) span[class*="text-3xl"] { font-size: 1.45rem; line-height: 1.25;
+  text-decoration: underline; text-decoration-color: rgba(255, 196, 216, .8); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
+${PLX} main main header p[class*="max-w-2xl"] { font-size: 13px; line-height: 1.6; color: #8a766c; }
+/* 두 분석 고르기 — 다이어리 색인 탭(고른 쪽 = 흰 종이 탭 · 분홍 글씨, 다른 쪽 = 버터 탭) */
+${PLX} [data-petlens-mode-tabs] { background: transparent; border: 0; padding: 0 4px; gap: 6px; border-bottom: 2px dashed #f0d9cf; border-radius: 0; }
+${PLX} [data-petlens-mode-tabs] > button { min-height: 46px; border-radius: 14px 14px 4px 4px; background: #ffecb8; color: #8a5a0c; box-shadow: none;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${PLX} [data-petlens-mode-tabs] > button[class*="bg-white"] { background: #fffdf8; color: #c4456f; box-shadow: 0 -2px 0 #f6a9bf inset, 0 -6px 10px -8px rgba(110, 80, 40, .4); }
+
+/* ── 사진 · 프로필 분석 ── */
+${PLX} main main form.surface { gap: 18px; }
+/* 사진 4칸 — 2×2 폴라로이드(흰 테두리 · 아래 넓게 · 번갈아 살짝 기울기) · 빈 칸은 점선 종이 */
+${PLX} [data-petlens-page-multiview-upload] > div.grid { gap: 14px 12px; padding: 4px 2px; }
+${PLX} [data-petlens-photo-view] > span:first-child { margin-bottom: 4px; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #8a5a0c; }
+${PLX} [data-petlens-photo-view] > span:last-of-type { border: 6px solid #fff; border-bottom-width: 18px; border-radius: 3px; background: #fff8ee;
+  box-shadow: 0 0 0 1px #f0e2d6, 0 10px 16px -10px rgba(110, 80, 40, .5); rotate: -1deg; }
+${PLX} [data-petlens-photo-view]:nth-child(even) > span:last-of-type { rotate: 1deg; }
+${PLX} [data-petlens-photo-view] > span:last-of-type:not(:has(img)) { background: repeating-linear-gradient(135deg, #fffaf2 0 8px, #fff3e6 8px 16px); color: #c9a493; }
+${PLX} [data-petlens-page-multiview-upload] > p { padding: 8px 10px; border-radius: 4px 4px 12px 4px; background: #fff6c9; color: #7a5a20; }
+/* 이름 · 나이 2열, 크기 · 모질 · 활동량 3열 — 촘촘한 메모 한 장처럼 */
+${PLX} main main form.surface > div.grid:has(> label > input.input) { grid-template-columns: 1fr 1fr; gap: 10px; }
+${PLX} main main form.surface > div.grid:has(> label > select.input) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+${PLX} main main form.surface label > span:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+${PLX} main main form.surface :is(input.input, select.input) { height: 42px; padding-left: 12px; padding-right: 8px; font-size: 14px; }
+/* 관심 포인트 — 체크박스 대신 고르는 스티커 칩(누르면 분홍 · 체크 동작은 그대로) */
+${PLX} main main form.surface label[class*="inline-flex"]:has(> input[type="checkbox"]) { position: relative; height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: #fff; color: #7d6a61;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${PLX} main main form.surface label[class*="inline-flex"]:has(> input[type="checkbox"]:checked) { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2px #f283a3, 0 4px 7px -5px rgba(200, 70, 110, .5); }
+${PLX} main main form.surface label[class*="inline-flex"] > input[type="checkbox"] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+${PLX} main main form.surface label[class*="inline-flex"]:has(> input:focus-visible) { outline: 2px solid #f283a3; outline-offset: 2px; }
+/* 결과 자리 — 점선 메모 */
+${PLX} main main section > div.surface.text-center { border: 2px dashed #ecd5c8; background: #fffbea; box-shadow: none; padding: 24px 18px; }
+${PLX} main main section > div.surface.text-center h2 { font-size: 1.05rem; text-decoration: none; }
+
+/* ── 행동 · 소리 분석 ── */
+${PLX} [data-petlens-observation-experience] { gap: 18px; }
+/* 소개 카드 — 테이프 붙인 종이 · 설명 글은 작은 메모 · 숫자 3칸은 동그란 스티커 */
+${PLX} [data-petlens-observation-experience] > div:first-child { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); padding: 18px 16px; }
+${PLX} [data-petlens-observation-experience] > div:first-child::before { ${TAPE} top: -7px; left: 50%; width: 58px; margin-left: -29px; rotate: -2deg; }
+${PLX} [data-petlens-observation-experience] > div:first-child h2 { font-size: 1.05rem; line-height: 1.45; }
+${PLX} [data-daenglab-service-description] { border: 0; border-radius: 4px 4px 12px 4px; background: #fff6c9; color: #6b5420; box-shadow: none; }
+${PLX} [data-daenglab-observation-limits] { gap: 10px; justify-items: center; margin-top: 16px; margin-bottom: 6px; }
+${PLX} [data-daenglab-observation-limits] > div { display: grid; place-content: center; width: 74px; height: 74px; padding: 0; border-radius: 999px; background: #fff; color: #5c4a42;
+  box-shadow: 0 0 0 2.5px #fff, 0 0 0 4px #f1e3da, 0 6px 10px -6px rgba(110, 80, 40, .5); }
+${PLX} [data-daenglab-observation-limits] > div:first-child { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2.5px #fff, 0 0 0 4px #f6a9bf, 0 6px 10px -6px rgba(200, 70, 110, .5); }
+${PLX} [data-daenglab-observation-limits] > div > span { color: inherit; opacity: .75; }
+${PLX} [data-daenglab-observation-limits] > div > strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 15px; }
+${PLX} [data-daenglab-on-device-policy], ${PLX} [data-petlens-observation-experience] > div:first-child > p[class*="bg-cyan-50"] { border: 0; border-radius: 4px 4px 12px 4px; box-shadow: 0 0 0 1.5px #d6ecf8; }
+/* 연결 확인 안내 · 응급 안내 — 포스트잇 · 빨간 메모(문구 그대로) */
+${PLX} [data-daenglab-observation-engine-warning] { position: relative; border: 0; border-radius: 4px 4px 16px 4px; background: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${PLX} [data-daenglab-observation-engine-warning]::before { ${TAPE} top: -6px; left: 20px; width: 40px; height: 12px; rotate: -4deg; background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+${PLX} [data-petlens-emergency-preflight] { position: relative; border: 0; border-radius: 4px 4px 16px 4px; box-shadow: 0 0 0 1.5px #f6c6c6, 0 8px 12px -10px rgba(150, 60, 60, .4); }
+${PLX} [data-petlens-emergency-preflight] > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; }
+/* 코인 지갑 · 최근 분석 — 작은 봉투 · 영수증 메모 */
+${PLX} [data-daenglab-analysis-wallet] { border: 0; border-radius: 8px 8px 18px 8px; background: #fff6d6; box-shadow: 0 0 0 1.5px #f3e1b0, 0 10px 16px -12px rgba(160, 110, 20, .5); }
+${PLX} [data-petlens-observation-history] { border: 0; border-radius: 6px; background: #fff; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 14px -11px rgba(110, 80, 40, .45); }
+${PLX} [data-petlens-observation-history] > p { background: #fffaf2; border: 2px dashed #f0dcc0; }
+/* 오른쪽(아래) 입력 카드 — 종이 · 대상견 고르기는 포스트잇 + 스티커 칩 · "한 마리만 보여요"는 민트 와펜 · 동의는 분홍 메모 */
+${PLX} [data-petlens-observation-experience] div.grid > div[class*="h-fit"][class*="border"] { border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-observation-experience] label > span[class*="text-xs"][class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+${PLX} [data-daenglab-target-anchor-picker] { border: 0; border-radius: 4px 4px 16px 4px; background: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${PLX} [data-daenglab-target-anchor-action], ${PLX} [data-daenglab-clear-target-anchor] { border: 0; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1.5px #f1e3da, 0 3px 6px -4px rgba(110, 80, 40, .4); }
+${PLX} [data-daenglab-single-dog-auto] { ${PATCH_MINT} border-width: 2px; outline-width: 1.5px; outline-offset: -5px; font-size: 12px; }
+${PLX} [data-petlens-observation-experience] label:has(> input[type="checkbox"]) { border: 0; border-radius: 4px 4px 14px 4px; background: #fff3f6; box-shadow: 0 0 0 1.5px #f6c9d6; }
+${PLX} [data-petlens-capture-controls] { gap: 10px; }
+${PLX} [data-petlens-orientation-status] { border: 0; border-radius: 4px 4px 12px 4px; background: #fffaf2; box-shadow: 0 0 0 1.5px #f3e6d6; }
 
 `;
