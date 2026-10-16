@@ -581,4 +581,24 @@ ${LIST} main main > section[class*="rounded-lg"][class*="border"] { border: 0; b
 ${LIST} main main > section[class*="rounded-lg"][class*="border"] p.uppercase { display: none; }
 ${LIST} main main > section[class*="rounded-lg"] button[aria-label*="더 보기"] { ${PATCH_CREAM} }
 
+/* ── 18) 산책 강아지 말풍선(추천 · 안내, 협업자 PetCompanionLayer) — 흰 칼선 메모 말풍선 · 이름은 테이프 이름표 ·
+   "보러 가기/메뉴 열기" 같은 버튼은 작은 분홍 알약 · 닫기는 동그란 스티커. 말풍선 자리 · 문구 · 누르는 동작은 그대로 ── */
+html.ddb-app-mode [data-pet-companion-speech] { border: 0; background: #fffdf6; color: #4a3a33; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700;
+  box-shadow: 0 0 0 2.5px #fff, 0 0 0 4px #f3d9cf, 0 14px 26px -12px rgba(110, 70, 55, .5); }
+html.ddb-app-mode [data-pet-companion-speech] > span:first-child { width: fit-content; max-width: 100%; padding: 2px 9px 1px; margin-bottom: 3px; rotate: -1.5deg; color: #9c2f54;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px;
+  clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 7px, rgba(255,222,232,.95) 7px 14px); }
+html.ddb-app-mode [data-pet-companion-speech] > :is(a, button:not([aria-label])) { margin-top: 7px; padding: 5px 12px 4px; border-radius: 999px; background: #e8628e; color: #fff;
+  text-decoration: none; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; box-shadow: 0 0 0 2px #fff, 0 4px 7px -4px rgba(200, 70, 110, .55); }
+html.ddb-app-mode [data-pet-companion-speech] > :is(a, button:not([aria-label])):active { transform: scale(.95); }
+html.ddb-app-mode [data-pet-companion-speech] > button[aria-label$="닫기"] { background: #fff; color: #b39b90; font-size: 15px; box-shadow: 0 0 0 1.5px #f1e3da; }
+
+/* ── 19) 목록 2차 — 상품군 이름은 왼쪽 끝 · 상품 수는 오른쪽 끝(사용자 2026-10-16) · BEST/순위 · NEW 꼬리표는 잉크 도장 ── */
+${LIST} main main > header:has(> p:first-child + h1) { display: flex; flex-direction: row-reverse; align-items: center; justify-content: space-between; gap: 10px; }
+${LIST} main main > header > p:first-child + h1 { margin-top: 0; }
+${S} article[data-pet-product="true"] div[class*="top-2"][class*="left-2"] > span { --c: #e0557f; background: rgba(255, 255, 255, .92); color: var(--c); border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--c);
+  backdrop-filter: none; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: .04em; rotate: -8deg; }
+${S} article[data-pet-product="true"] div[class*="top-2"][class*="left-2"] > span[class*="from-aurora-indigo"] { --c: #1f9e75; rotate: 6deg; }
+
 `;
