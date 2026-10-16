@@ -47,6 +47,9 @@ const PG = `${P} > div > div:nth-child(2)`;
 /* 장바구니 화면(AppShell이 html[data-app-page] 표시) · 검색 창 */
 const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
+/* 외부 판매점 후기 · 파트너 문의 */
+const RV = `${S}[data-app-page="reviews"]`;
+const PT = `${S}[data-app-page="partner"]`;
 /* 세트 상품 목록 · 세트 상세 · 세트 카드 */
 const BUNDLES = `${S}[data-app-page="bundles"]`;
 const BUNDLE = `${S}[data-app-page="bundle"]`;
@@ -991,7 +994,6 @@ ${S}[data-app-page="partner"] main p:is([class*="uppercase"], [class*="tracking-
 ${S}[data-app-page="partner"] main h1 { display: inline-block; width: fit-content; padding: 7px 18px 6px; rotate: -1deg; text-decoration: none; font-size: 1.45rem; line-height: 1.25; color: #a8480f;
   clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
   background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); }
-${S}[data-app-page="partner"] main section:first-of-type { background: transparent; box-shadow: none; }
 
 /* ── 30) 펫렌즈(사진 · 프로필 분석) · 행동 · 소리 분석 — 앱 카드 구성으로 다시 짬(사용자 2026-10-16 "카드 크기 · 구성까지").
    CSS만: 배치 · 크기 · 모양. 촬영 · 업로드 · 분석 · 동의 체크 · 버튼 동작과 응급 · 개인정보 안내 문구는 그대로(숨기지 않음) ── */
@@ -1064,5 +1066,57 @@ ${PLX} [data-daenglab-single-dog-auto] { ${PATCH_MINT} border-width: 2px; outlin
 ${PLX} [data-petlens-observation-experience] label:has(> input[type="checkbox"]) { border: 0; border-radius: 4px 4px 14px 4px; background: #fff3f6; box-shadow: 0 0 0 1.5px #f6c9d6; }
 ${PLX} [data-petlens-capture-controls] { gap: 10px; }
 ${PLX} [data-petlens-orientation-status] { border: 0; border-radius: 4px 4px 12px 4px; background: #fffaf2; box-shadow: 0 0 0 1.5px #f3e6d6; }
+
+/* ── 31) 외부 판매점 후기(/reviews) · 파트너 문의(/partner) — 앱에서 드물게 가도 다른 화면과 같은 완성도로(사용자 2026-10-16) ──
+   문구 · 링크 · 제출 · 개인정보 동의 동작은 그대로 */
+/* 후기 화면 — 출처 안내는 노란 메모, 이 화면은 "후기 많은 상품"이 주제라 카드의 외부 판매점 후기 줄을 다시 보이게(작은 메모 글씨) */
+${RV} main main > h1 + p { padding: 10px 12px; border-radius: 4px 4px 14px 4px; background: #fff6c9; color: #7a5a20; font-size: 12px; line-height: 1.6; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .45); }
+${RV} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] { display: flex; margin-top: 6px; padding-top: 6px; border-top: 1.5px dashed #ecd5c8; color: #9c8a80;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+${RV} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] span[class*="font-bold"] { color: #5c4a42; }
+
+/* 파트너 문의 — 머리(그라데이션 · 흐린 빛 동그라미)는 테이프 붙인 종이 카드로 */
+${PT} main > div > section:first-of-type { position: relative; overflow: visible; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); padding: 26px 18px 22px; }
+${PT} main > div > section:first-of-type::before { ${TAPE} top: -7px; left: 50%; width: 62px; margin-left: -31px; rotate: -2deg; }
+${PT} main > div > section:first-of-type > div[class*="blur-3xl"] { display: none; }
+${PT} main > div > section:first-of-type h1 { margin-top: 0; }
+${PT} main > div > section:first-of-type h1 + p { margin-top: 14px; font-size: 13.5px; line-height: 1.7; color: #5c4a42; }
+${PT} main > div > section:first-of-type a[class*="bg-neutral-950"] { ${PATCH_PINK} min-height: 48px; padding: 0 20px; }
+${PT} main > div > section:first-of-type a[class*="border-neutral-300"] { ${PATCH_CREAM} min-height: 48px; padding: 0 20px; }
+/* 칸 제목 — 형광펜 · 이런 제안을 기다립니다 3장은 3D 그림 대신 작은 스티커 동그라미 + 메모 카드(살짝 기울기) */
+${PT} main h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.35rem;
+  text-decoration: underline; text-decoration-color: rgba(255, 196, 216, .75); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
+${PT} main > div > section:nth-of-type(2) article { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #fffdf6; backdrop-filter: none; padding: 18px 16px 16px 72px; min-height: 0;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -12px rgba(110, 80, 40, .5); rotate: -.6deg; }
+${PT} main > div > section:nth-of-type(2) article:nth-child(even) { rotate: .6deg; }
+${PT} main > div > section:nth-of-type(2) article > span:first-child { position: absolute; left: 16px; top: 18px; border-radius: 999px; background: #ffe1ea; color: #d4447a; box-shadow: 0 0 0 3px #fff, 0 4px 8px -4px rgba(110, 80, 40, .45); }
+${PT} main > div > section:nth-of-type(2) article:nth-child(2) > span:first-child { background: #e6f3ff; color: #2f86d6; }
+${PT} main > div > section:nth-of-type(2) article:nth-child(3) > span:first-child { background: #e5f7ec; color: #1f9e75; }
+${PT} main > div > section:nth-of-type(2) article h3 { margin-top: 0; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 16px; }
+${PT} main > div > section:nth-of-type(2) article p { margin-top: 4px; font-size: 13px; line-height: 1.6; }
+/* 검토 흐름 — 바깥 상자는 투명 · 안내는 포스트잇 · 4단계는 번호 도장 + 메모(점선 산책길로 이어짐) */
+${PT} main > div > section:nth-of-type(3) { border: 0; background: transparent; box-shadow: none; padding: 0; backdrop-filter: none; }
+${PT} main > div > section:nth-of-type(3) div[class*="bg-amber-50"] { position: relative; border: 0; border-radius: 4px 4px 16px 4px; background: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${PT} main > div > section:nth-of-type(3) div[class*="bg-amber-50"]::before { ${TAPE} top: -6px; left: 20px; width: 40px; height: 12px; rotate: -4deg; background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+${PT} main > div > section:nth-of-type(3) ol { gap: 12px; padding-left: 22px; border-left: 2.5px dashed #ecd5c8; margin-left: 12px; }
+${PT} main > div > section:nth-of-type(3) ol > li { position: relative; border: 0; border-radius: 6px 6px 16px 6px; background: #fffdf6; padding: 14px 16px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 14px -11px rgba(110, 80, 40, .45); }
+${PT} main > div > section:nth-of-type(3) ol > li > span:first-child { position: absolute; left: -40px; top: 12px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; letter-spacing: 0;
+  background: #fff; color: #d4447a; box-shadow: inset 0 0 0 2px #f283a3, 0 0 0 3px #fff; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; rotate: -6deg; }
+${PT} main > div > section:nth-of-type(3) ol > li h3 { margin-top: 0; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${PT} main > div > section:nth-of-type(3) ol > li p { margin-top: 4px; font-size: 13px; }
+/* 제안서 — 편지지 카드(위 항공우편 줄무늬 · 테이프) · 입력칸 흰 종이 · 보내기는 분홍 와펜 · 개인정보 동의는 분홍 메모(문구 그대로) */
+${PT} #partner-form > section { position: relative; overflow: visible; border: 0; border-radius: 8px 8px 20px 8px; backdrop-filter: none;
+  background: repeating-linear-gradient(135deg, #f6a9bf 0 8px, #fff 8px 16px, #a9d3f6 16px 24px, #fff 24px 32px) top / 100% 6px no-repeat, #fffdf6;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 14px 22px -16px rgba(110, 80, 40, .55); }
+${PT} #partner-form > section::before { ${TAPE} top: -7px; left: 50%; width: 62px; margin-left: -31px; rotate: 2deg; }
+${PT} #partner-form > section > div:first-child { background: transparent; border-bottom: 2px dashed #f0d9cf; }
+${PT} #partner-form label[class*="grid"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+${PT} #partner-form :is(input:not([type="checkbox"]), select, textarea) { border-color: transparent; background: #fff; border-radius: 14px; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+${PT} #partner-form :is(input, select, textarea):focus { box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+${PT} #partner-form label:has(> input[type="checkbox"]) { border: 0; border-radius: 4px 4px 14px 4px; background: #fff3f6; box-shadow: 0 0 0 1.5px #f6c9d6; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+${PT} #partner-form input[type="checkbox"] { accent-color: #e8628e; }
+${PT} #partner-form button[type="submit"] { ${PATCH_PINK} min-height: 50px; padding: 0 24px; }
+${PT} #partner-form button[type="submit"]:active, ${PT} main > div > section:first-of-type a:active { transform: scale(.96); }
 
 `;
