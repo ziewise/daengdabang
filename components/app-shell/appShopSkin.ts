@@ -64,7 +64,9 @@ const PLX = `html.ddb-app-mode.ddb-app-lab-web:is([data-app-page="pet-lens"], [d
 const ICONBOX = `${MYW} main :is(span[class*="h-11"][class*="rounded-full"]:has(> i.fa-envelope), span[class*="h-11"][class*="rounded-full"]:has(> i.fa-headset), span[class*="h-9"][class*="rounded-full"]:has(> i:is(.fa-circle-question, .fa-box, .fa-rotate-left)), :is(span, div)[class*="rounded"]:has(> i.fa-credit-card), span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock))`;
 /* 숨은 창들(협업자 모달) — 앱 모드 어디서나 · 입혀보기 창 */
 const TRYON = 'html.ddb-app-mode section[role="dialog"][aria-labelledby="pet-tryon-title"]';
-const DLG = `html.ddb-app-mode :is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"])`;
+/* 주간 사진 비교 창(협업자 WeeklyPhotoComparison) */
+const WK = "html.ddb-app-mode [data-weekly-photo-comparison]";
+const DLG = `html.ddb-app-mode :is([data-weekly-photo-comparison], [role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"])`;
 /* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
 const SHEET = `${S} [data-purchase-option-sheet]`;
 /* 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품) */
@@ -89,6 +91,9 @@ const PATCH_PINK = patch("#f2789d", "#d9547d", "#ea6d93", "rgba(255,255,255,.75)
 const PATCH_CREAM = patch("#fff6ee", "#f4a9bf", "#f8c3d2", "rgba(226,107,145,.55)", "#c4456f", false);
 const PATCH_LAVENDER = patch("#a68ff0", "#7f66d8", "#957de6", "rgba(255,255,255,.75)", "#fff");
 const PATCH_MINT = patch("#7fcfa9", "#4fae84", "#68c299", "rgba(255,255,255,.75)", "#fff");
+/* 협업자 전역 .ddb-crayon-link 는 !important(점선 하늘 테두리) — 그 버튼에만 와펜을 !important 로 덮음 */
+const important = (css: string) => css.replace(/;/g, " !important;");
+const PATCH_PINK_IMP = important(PATCH_PINK);
 
 /* 자수 아이콘(상세 버튼 속 장바구니 · 하트) — 와펜 버튼과 같은 결: 실 결(사선 무늬) + 새틴 테두리 실 + 안쪽 바느질 땀(점선).
    글자 아이콘(Font Awesome) 자리에 배경 그림으로만 바꿔 끼운다(버튼 · 동작 그대로) */
@@ -1120,5 +1125,75 @@ ${PT} #partner-form label:has(> input[type="checkbox"]) { border: 0; border-radi
 ${PT} #partner-form input[type="checkbox"] { accent-color: #e8628e; }
 ${PT} #partner-form button[type="submit"] { ${PATCH_PINK} min-height: 50px; padding: 0 24px; }
 ${PT} #partner-form button[type="submit"]:active, ${PT} main > div > section:first-of-type a:active { transform: scale(.96); }
+
+/* 주간 사진 분석(협업자 WeeklyPhotoComparison) — 앱 리포트의 "새 주간 분석 시작" 버튼은 분홍 와펜, 창은 위 숨은 창 공통 모양.
+   영문 꼬리표(WEEKLY LIVE PHOTO CHECK) 숨김 */
+html.ddb-app-mode [data-weekly-photo-analysis-launcher] { ${PATCH_PINK_IMP} min-height: 46px; padding: 0 22px; gap: 8px; font-size: 14px; }
+html.ddb-app-mode [data-weekly-photo-analysis-launcher]:active { transform: scale(.96); }
+html.ddb-app-mode [data-weekly-photo-comparison] .ddb-crayon-kicker { display: none; }
+html.ddb-app-mode [data-weekly-photo-comparison] h2#weekly-photo-title { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode body:has([data-weekly-photo-comparison]) nav[aria-label="앱 메뉴"] { visibility: hidden; }
+/* 창 안 — 단계 메모 · 폴라로이드 카메라(테이프로 붙임) · 와펜 버튼 · 메모지 카드 · 폴라로이드 썸네일 · 포스트잇 안내.
+   위치 · 순서 · 문구 · 동작은 그대로. 경고(빨강)는 그대로 */
+/* 단계(1 실시간 촬영 · 2 자동 업로드 · 3 변화 분석) — 메모 조각, 지금 단계는 분홍 + 테이프 */
+${WK} ol[aria-label="주간 분석 단계"] { gap: 8px; padding-top: 6px; }
+${WK} ol[aria-label="주간 분석 단계"] > li { position: relative; border: 0; border-radius: 4px 4px 12px 4px; background: #fffaf2; color: #a08a7e; rotate: -1deg;
+    box-shadow: 0 0 0 1.5px #f1e3da, 0 6px 10px -8px rgba(110, 80, 40, .45); font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; }
+${WK} ol[aria-label="주간 분석 단계"] > li:nth-child(even) { rotate: 1deg; }
+${WK} ol[aria-label="주간 분석 단계"] > li[class*="border-cyan-400"] { background: #ffe1ea; color: #c4456f; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+    box-shadow: 0 0 0 2px #f6a9bf, 0 8px 12px -8px rgba(200, 70, 110, .5); }
+${WK} ol[aria-label="주간 분석 단계"] > li[class*="border-cyan-400"]::before { ${TAPE} top: -7px; left: 50%; width: 34px; margin-left: -17px; rotate: 3deg; }
+${WK} ol[aria-label="주간 분석 단계"] > li > span { background: #fff; border: 1.5px dashed currentColor; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 카메라 칸 — 흰 폴라로이드 테두리(아래 두껍게) + 위쪽 모서리를 테두리와 종이에 걸친 테이프. 화면 자체는 기울이지 않음(맞춰 찍어야 하므로) */
+${WK} div:has(> [data-weekly-live-camera]) { position: relative; }
+${WK} div:has(> [data-weekly-live-camera])::before { ${TAPE} top: -7px; left: 14px; width: 56px; rotate: -8deg; z-index: 6; }
+${WK} div:has(> [data-weekly-live-camera])::after { ${TAPE} top: -7px; right: 14px; width: 56px; rotate: 7deg; z-index: 6;
+    background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+${WK} [data-weekly-live-camera] { border: 8px solid #fff; border-bottom-width: 24px; border-radius: 4px; background: #2e2622;
+    box-shadow: 0 0 0 1px #f0e2d6, 0 16px 24px -16px rgba(110, 80, 40, .6); }
+${WK} [data-weekly-live-camera] p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; }
+${WK} [data-weekly-live-camera] button { ${PATCH_CREAM} min-height: 44px; padding: 0 20px; }
+${WK} [data-weekly-live-camera] div[class*="bottom-3"][class*="rounded-2xl"] { border-radius: 4px 4px 12px 4px; background: rgba(255, 246, 201, .92); color: #6b5420; backdrop-filter: none; }
+/* 버튼 — 주 버튼은 분홍 와펜, 보조(흰 버튼)는 크림 와펜 */
+${WK} button.ddb-crayon-link { ${PATCH_PINK_IMP} }
+${WK} button[class*="rounded-full"][class*="border"][class*="bg-white"]:not([aria-label]) { ${PATCH_CREAM} }
+${WK} button:is(.ddb-crayon-link, [class*="bg-white"]):disabled { opacity: .45; }
+${WK} button i[class*="text-violet"] { color: inherit; }
+/* 안내 · 오류 문구 — 색은 그대로, 모양만 메모 */
+${WK} p[role="alert"] { border-radius: 4px 4px 14px 4px; }
+/* 글꼴 — 이름표 · 꼬리표 · 메모 제목은 카페24 써라운드, 설명은 나눔스퀘어라운드. 9~10px 작은 설명은 읽히게 조금 키움 */
+${WK} [data-weekly-photo-thumbnails] > button > span[class*="bottom-2"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 10.5px; }
+${WK} [data-weekly-photo-thumbnails] > button small { font-size: 10.5px; }
+${WK} div[class*="border-violet-200"] p[class*="text-xs"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; }
+${WK} div[class*="border-violet-200"] p[class*="text-[10px]"], ${WK} p[class*="text-center"][class*="text-[10px]"], ${WK} [data-weekly-upload-progress] div[class*="text-[10px]"] { font-size: 11px; }
+${WK} [data-weekly-analysis-complete] :is(p, span)[class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 촬영 즉시 자동 추가 · 결과 카드 — 테이프 붙은 메모지 */
+${WK} div[class*="rounded-[24px]"][class*="bg-white"], ${WK} [data-weekly-analysis-complete] article { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6;
+    box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${WK} div[class*="rounded-[24px]"][class*="bg-white"]::before { ${TAPE} top: -7px; left: 50%; width: 54px; margin-left: -27px; rotate: -2deg; }
+${WK} div[class*="rounded-[24px]"][class*="bg-white"] p[class*="text-sm"][class*="font-black"], ${WK} [data-weekly-analysis-complete] :is(h3, h4) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #3d2f2a; }
+/* 0 / 4 — 노란 가격표 같은 꼬리표 */
+${WK} div[class*="rounded-[24px]"][class*="bg-white"] span[class*="bg-cyan-50"] { border-radius: 4px; background: #ffe58a; color: #8a5a0c; rotate: 3deg; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+    box-shadow: 0 4px 6px -4px rgba(140, 100, 20, .5); }
+/* 방향별 썸네일 — 작은 폴라로이드(±1도), 고른 칸은 분홍 테두리 */
+${WK} [data-weekly-photo-thumbnails] { gap: 12px 10px; padding: 2px; }
+${WK} [data-weekly-photo-thumbnails] > button { border: 6px solid #fff; border-bottom-width: 16px; border-radius: 3px; rotate: -1deg; background: #fff8ee;
+    box-shadow: 0 0 0 1px #f0e2d6, 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${WK} [data-weekly-photo-thumbnails] > button:nth-child(even) { rotate: 1deg; }
+${WK} [data-weekly-photo-thumbnails] > button[class*="border-cyan-500"] { box-shadow: 0 0 0 2.5px #f283a3, 0 8px 12px -8px rgba(200, 70, 110, .5); }
+${WK} [data-weekly-photo-thumbnails] > button > span[class*="bg-neutral-50"] { background: repeating-linear-gradient(135deg, #fffaf2 0 8px, #fff3e6 8px 16px); color: #c9a493; }
+${WK} [data-weekly-photo-thumbnails] > button strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+${WK} [data-weekly-photo-thumbnails] > button > span[class*="bottom-2"] { border-radius: 4px; background: rgba(212, 68, 122, .88); }
+/* 최초 등록 기준 사진 보존 — 노란 포스트잇 */
+${WK} div[class*="border-violet-200"] { border: 0; border-radius: 4px 4px 16px 4px; background: #fff3b8; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${WK} div[class*="border-violet-200"] span[class*="rounded-2xl"] { border-radius: 999px; color: #c4456f; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f6c9a0; }
+${WK} div[class*="border-violet-200"] p { color: #6b5420; }
+/* 업로드 · 분석 중 — 민트 메모 */
+${WK} [data-weekly-upload-progress] { border: 0; border-radius: 4px 4px 14px 4px; background: #e9f8f0; box-shadow: 0 0 0 1.5px #c9ead8; }
+${WK} [data-weekly-upload-progress] :is(div, span, strong) { color: #2f7a57; }
+/* 분석 완료 — 민트 종이 + 테이프 */
+${WK} [data-weekly-analysis-complete] > div:first-child { position: relative; border: 0; border-radius: 8px 8px 22px 8px; background: #effaf4; box-shadow: 0 0 0 1.5px #c9ead8, 0 12px 20px -14px rgba(40, 110, 80, .5); }
+${WK} [data-weekly-analysis-complete] > div:first-child::before { ${TAPE} top: -7px; left: 50%; width: 62px; margin-left: -31px; rotate: -2deg; }
+${WK} [data-weekly-analysis-complete] > div:first-child > span { box-shadow: 0 0 0 4px #fff, 0 8px 12px -6px rgba(40, 110, 80, .5); }
 
 `;

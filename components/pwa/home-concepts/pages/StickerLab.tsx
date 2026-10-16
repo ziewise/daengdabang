@@ -17,13 +17,15 @@
  * 문구: 사진 방향 · 코인 · 긴급도 · 응급 안내는 협업자 연구소 화면 문구(docs/07 03-댕다방연구소.md). 그 밖 짧은 안내는 시안용.
  */
 
-import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
-import { LAB_EXAMPLE, OBSERVATIONS, PET, WEEKLY_RECORDS, pageHref } from "../page-data";
-import { ConceptBar, HC_CSS, SAMPLE, useDemoSession, useTodayDemo, useInitialTab } from "../shared";
+import { LAB_EXAMPLE, WEEKLY_RECORDS, pageHref } from "../page-data";
+import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
+import { loadPetObservationHistory, type PetObservationHistoryItem } from "@/lib/petlens-observation";
+import type { WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
+import { ConceptBar, HC_CSS, useDemoSession, useMember, useTodayDemo, useWeeklyRecords, useInitialTab } from "../shared";
 import { DiaryBody, DiaryTabs, InkStamp, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { LoginInvite, STICKER_CSS, Tape, Patch } from "../sticker-kit";
 
@@ -42,6 +44,47 @@ const SHOTS = [
 ];
 
 /* 긴급도 → 테이프 이름표 색(협업자 긴급도 4단계) */
+/** 실제 주간 기록 → 사진첩 칸(주차 · 날짜 · 한 줄 비교 · 새로 보임 · 안 보임) */
+function toWeekCard(r: WeeklyPhotoAnalysisRecord) {
+    const d = new Date(r.analyzedAt);
+    const valid = !Number.isNaN(d.getTime());
+    return {
+        week: valid ? `${d.getMonth() + 1}월 ${Math.ceil(d.getDate() / 7)}주` : r.weekKey,
+        date: valid ? `${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}` : "",
+        headline: r.comparison.headline || r.title,
+        added: r.comparison.newObservations.slice(0, 2),
+        gone: r.comparison.notObservedNow.slice(0, 2),
+    };
+}
+
+/** 협업자 PetLensObservationHistory 와 같은 긴급도 이름 */
+const URGENCY_LABEL = { emergency: "즉시 병원 연락", same_day: "오늘 병원 문의", observe: "평소와 비교 관찰", unclear: "판단 어려움" } as const;
+function toObservationCard(item: PetObservationHistoryItem) {
+    const d = new Date(item.createdAt);
+    return {
+        key: item.id,
+        date: Number.isNaN(d.getTime()) ? "" : `${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`,
+        urgency: URGENCY_LABEL[item.result.urgency.level] ?? "판단 어려움",
+        summary: item.result.urgency.headline || item.result.summary,
+    };
+}
+
+/** 최근 행동 · 소리 분석 기록 — 협업자 loadPetObservationHistory 그대로 */
+function useObservationHistory(petProfileId?: number) {
+    const { user } = useAuth();
+    const token = user?.apiAccessToken || "";
+    const [items, setItems] = useState<PetObservationHistoryItem[] | null>(null);
+    useEffect(() => {
+        if (!petProfileId || !token) return;
+        const controller = new AbortController();
+        loadPetObservationHistory({ petProfileId, accessToken: token, limit: 4, signal: controller.signal })
+            .then(setItems)
+            .catch(() => { if (!controller.signal.aborted) setItems([]); });
+        return () => controller.abort();
+    }, [petProfileId, token]);
+    return items;
+}
+
 const URGENCY_TAPE: Record<string, { tape: string; ink: string }> = {
     "즉시 병원 연락": { tape: "rgba(255,170,170,.9)", ink: "#b3261e" },
     "오늘 병원 문의": { tape: "rgba(255,206,150,.9)", ink: "#a8560f" },
@@ -88,13 +131,18 @@ export default function StickerLab() {
     const initialTab = useInitialTab(TABS.length);
     const member = session === "member";
     const today = useTodayDemo(session);
+    // 실제 데이터(배포 전 연결 2026-10-16)
+    const { pet, petName } = useMember();
+    const weekly = useWeeklyRecords(6);
+    const records = (weekly.records ?? []).map(toWeekCard);
+    const observations = useObservationHistory(pet?.apiProfileId);
     const coinRef = useRef<HTMLSpanElement>(null);
     // 처음 쪽: 주소 ?tab= 그대로(처음 그릴 때부터)
     const [tab, setTab] = useState(() => initialTab);
     const [dir, setDir] = useState(1);
     const [sosOpen, setSosOpen] = useState(false); // 응급 증상 메모 펼침
     const go = (i: number) => { setDir(i > tab ? 1 : -1); setTab(i); };
-    const times = Math.floor(today.coins / SAMPLE.analysisCoinCost);
+    const times = Math.floor(today.coins / Math.max(1, today.analysisCoinCost));
 
     return (
         <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-12 pt-4" style={{ color: TEXT }}>
@@ -136,17 +184,22 @@ export default function StickerLab() {
                             <div className="flex items-center gap-3.5">
                                 <span className="st-polaroid relative block w-[6.2rem] shrink-0 bg-white p-1.5 pb-5" style={{ rotate: "-3deg" }}>
                                     <Tape className="-top-2 left-1/2 h-3.5 w-10 -translate-x-1/2" color="rgba(200,226,255,.85)" />
-                                    <span className="relative block aspect-square overflow-hidden bg-[#fff3e8]"><Image src={PET.photo} alt={`${PET.name} 사진`} fill sizes="100px" className="object-cover" /></span>
-                                    <span className="ah-display absolute inset-x-0 bottom-0.5 text-center text-[12px] text-[#e0557f]">{PET.name}</span>
+                                    <span className="relative grid aspect-square place-items-center overflow-hidden bg-[#fff3e8]">
+                                        {pet && hasVerifiedPetPhoto(pet)
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            ? <img src={pet.photoDataUrl} alt={`${petName} 사진`} className="h-full w-full object-cover" />
+                                            : <i aria-hidden="true" className="fa-solid fa-paw text-[24px] text-[#f4b9ca]" />}
+                                    </span>
+                                    <span className="ah-display absolute inset-x-0 bottom-0.5 truncate px-1 text-center text-[12px] text-[#e0557f]">{petName}</span>
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="ah-display flex items-center justify-between gap-2 text-[19px]"><span className="st-marker">{PET.name}</span><CoinChip ref={coinRef} coins={today.coins} /></p>
+                                    <p className="ah-display flex items-center justify-between gap-2 text-[19px]"><span className="st-marker">{petName}</span><CoinChip ref={coinRef} coins={today.coins} /></p>
                                     <p className="mt-1.5 flex items-center gap-2">
-                                        <span className="ah-light text-[13px]">{PET.breed}</span>
-                                        <InkStamp rot={-8} color="#1f9e75" className="!px-1.5 !py-0.5 text-[9.5px]">견종 확인</InkStamp>
+                                        <span className="ah-light text-[13px]">{pet?.breed || "견종 미등록"}</span>
+                                        {pet?.breed ? <InkStamp rot={-8} color="#1f9e75" className="!px-1.5 !py-0.5 text-[9.5px]">견종 확인</InkStamp> : null}
                                     </p>
                                     <p className="mt-2 flex flex-wrap gap-1.5">
-                                        {[PET.age, PET.weight].map((t) => <span key={t} className="lb-tag ah-display text-[11.5px]">{t}</span>)}
+                                        {[pet?.age, pet?.weightKg ? `${pet.weightKg}kg` : ""].filter(Boolean).map((t) => <span key={t} className="lb-tag ah-display text-[11.5px]">{t}</span>)}
                                     </p>
                                 </div>
                             </div>
@@ -165,8 +218,8 @@ export default function StickerLab() {
                             </Link>
                             {/* 지난 기록 — 메모지 한 장 */}
                             <div className="lb-memo relative mt-3.5 rounded-[10px] px-3.5 pb-2.5 pt-3" style={{ rotate: "-0.6deg" }}>
-                                <span className="ah-display block text-[11px] text-[#8f5e12]">지난 기록 · {WEEKLY_RECORDS[0].week}</span>
-                                <span className="ah-display mt-0.5 block text-[13.5px] leading-snug">{SAMPLE.lastReport}</span>
+                                <span className="ah-display block text-[11px] text-[#8f5e12]">{records[0] ? `지난 기록 · ${records[0].week}` : "지난 기록"}</span>
+                                <span className="ah-display mt-0.5 block text-[13.5px] leading-snug">{records[0] ? records[0].headline : weekly.records ? "아직 주간 기록이 없어요. 이번 주 첫 사진을 남겨 보세요." : "기록을 확인하고 있어요"}</span>
                             </div>
 
                             {/* 분석 두 가지 — 젤리 그림 카드 */}
@@ -182,7 +235,7 @@ export default function StickerLab() {
                                     <LabArt k="sound" />
                                     <span className="ah-display mt-2 block text-[14px] leading-snug">행동 · 소리 분석</span>
                                     <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>15초 영상으로 행동 · 소리 · 건강 신호</span>
-                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#a8560f]" style={{ background: "rgba(255,226,150,.9)", rotate: "-4deg" }}>1회 {SAMPLE.analysisCoinCost}C</span>
+                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#a8560f]" style={{ background: "rgba(255,226,150,.9)", rotate: "-4deg" }}>1회 {today.analysisCoinCost}C</span>
                                 </Link>
                             </div>
                             {/* 행동·소리 분석은 별개 기능 — 운영 연구소 문구 */}
@@ -225,7 +278,8 @@ export default function StickerLab() {
                             <SectionLabel icon="fa-images">주간 기록</SectionLabel>
                             <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>옆으로 넘겨 지난 기록을 봐요</p>
                             <ol className="lb-album -mr-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-4 pt-2">
-                                {WEEKLY_RECORDS.map((r, i) => (
+                                {records.length === 0 ? <li className="ah-light w-full py-3 text-[12.5px]" style={{ color: TEXT_SOFT }}>{weekly.records ? "아직 주간 기록이 없어요." : "기록을 확인하고 있어요."}</li> : null}
+                                {records.map((r, i) => (
                                     <li key={r.week} className="lb-page flex w-[11.5rem] shrink-0 snap-start">
                                         {/* 사진첩 칸 높이를 같게(h-full) */}
                                         <div className="st-polaroid relative h-full w-full bg-white px-3 pb-3 pt-3" style={{ rotate: `${[-1, 0.8, -0.6][i % 3]}deg` }}>
@@ -246,10 +300,11 @@ export default function StickerLab() {
                             {/* 행동 · 소리 분석 기록 — 메모지(긴급도는 테이프 이름표) */}
                             <SectionLabel className="mt-5" icon="fa-wave-square">행동 · 소리 분석 기록</SectionLabel>
                             <ul className="mt-4 space-y-4">
-                                {OBSERVATIONS.map((o, i) => {
+                                {observations && observations.length === 0 ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>아직 행동 · 소리 분석 기록이 없어요.</li> : null}
+                                {(observations ?? []).map(toObservationCard).map((o, i) => {
                                     const u = URGENCY_TAPE[o.urgency] ?? URGENCY_TAPE["판단 어려움"];
                                     return (
-                                        <li key={o.date}>
+                                        <li key={o.key}>
                                             <Link href="/pet-lens/?mode=observation" className="lb-obs relative flex items-center gap-3 rounded-[12px] bg-white px-3.5 pb-3 pt-4" style={{ rotate: `${i % 2 ? 0.6 : -0.6}deg` }}>
                                                 <span className="st-tape ah-display absolute -top-2.5 left-3 px-2.5 py-0.5 text-[10.5px]" style={{ background: u.tape, color: u.ink, rotate: `${i % 2 ? 3 : -3}deg` }}>{o.urgency}</span>
                                                 <span className="min-w-0 flex-1">
