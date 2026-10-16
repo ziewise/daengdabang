@@ -7,7 +7,7 @@
  *  - 상단바: 언제나 로고(하위 화면은 앞에 뒤로 가기). 화면 제목은 상단바 아래 제목 줄(탭 젤리 아이콘 + 제목). 오른쪽은 케어톡 · 검색 · 장바구니(개수).
  *  - 케어톡: 협업자 전역 상담 창(ChatWidget) 그대로 — 상단바 버튼은 웹 상단바와 같은 openChatWidget(), /chat 링크 · 상품 상담 버튼도
  *    협업자 동작 그대로(/chat 화면이 창을 엶 · 상담 이벤트는 ChatWidget 이 직접 받음). 앱은 창이 놓이는 자리(탭바 위)만 정함.
- *    쇼핑 탭은 휴대폰으로 웹을 볼 때와 같은 사이트 상단바(Header)를 그대로 쓴다.
+ *    쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도 앱 전용 화면이라 앱 상단바 + 상단바 바로 아래 뒤로 가기(자수 와펜).
  *  - 댕다방 탭: 댕자랑 · 댕다방 연구소를 상단바 아래 버튼 줄로 오간다.
  *  - 탭바: 홈 · 댕생활 · 댕다방 · 쇼핑 · 마이. 상품 상세 · 결제 · 로그인 · 케어톡 화면에서는 숨긴다.
  *  - 높이는 CSS 변수로 내보낸다: --app-topbar-h(= 기존 --header-height 대체) · --app-tabbar-h
@@ -22,7 +22,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
-import Header from "@/components/header/Header";
 import SearchModal from "@/components/header/SearchModal";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import ChatWidget from "@/components/site/ChatWidget";
@@ -315,9 +314,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // 쇼핑 탭의 웹 화면(상품 상세 · 장바구니 · 결제 · 목록) — 앱 전용 스티커북 겉모양(appShopSkin.ts)을 입히는 범위
     const shopWeb = activeKey === "shop" && !pathname.startsWith("/app/");
     const productDetail = pathname.startsWith("/product/");
-    // 상단바 — 앱 전용 쇼핑 화면(/app/…)과 상품 상세는 앱 상단바(뒤로 가기 · 케어톡 · 검색 · 장바구니, 사용자 결정 2026-10-16),
-    // 그 밖의 웹 쇼핑 화면(장바구니 · 결제 · 목록)은 휴대폰으로 웹을 볼 때처럼 사이트 상단바(Header)
-    const webHeader = shopWeb && !productDetail;
+    // 상단바 — 앱에서는 어느 화면이든 앱 상단바(로고 · 케어톡 · 검색 · 장바구니). 쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도
+    // 앱 전용 화면이라 웹 상단바를 쓰지 않는다(사용자 결정 2026-10-16). 이 화면들의 뒤로 가기는 상단바 바로 아래 줄에
+    const backBelow = shopWeb && !root;
 
     // 앱 모드 표시 — 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨긴다
     useEffect(() => {
@@ -332,13 +331,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         html.classList.toggle("ddb-app-subrow", showDangRow);
         return () => html.classList.remove("ddb-app-subrow");
     }, [showDangRow]);
-
-    // 쇼핑 탭에서는 --header-height 를 웹 상단바 높이(기본 72px) 그대로 둔다
-    useEffect(() => {
-        const html = document.documentElement;
-        html.classList.toggle("ddb-app-web-header", webHeader);
-        return () => html.classList.remove("ddb-app-web-header");
-    }, [webHeader]);
 
     // 지금 화면 이름(주소 첫 마디: cart · product · checkout …) — 화면별 앱 겉모양 CSS 범위(html[data-app-page])
     useEffect(() => {
@@ -366,21 +358,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts) */}
             <style dangerouslySetInnerHTML={{ __html: APP_SHOP_SKIN_CSS }} />
 
-            {/* ── 상단바 — 쇼핑 탭은 웹 상단바, 그 밖은 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
-            {webHeader ? (
-                <Header />
-            ) : (
-                <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
+            {/* ── 상단바 — 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
+            <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
                     <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2.5 px-3.5">
                         {/* 왼쪽: 하위 화면이면 뒤로 가기 + 언제나 로고(검정 푸들 + 삼색 댕다방) — 화면 제목은 상단바 아래 제목 줄에 */}
-                        {!root && !productDetail ? (
+                        {!root && !backBelow ? (
                             <button type="button" onClick={goBack} className="app-icon-btn app-press -mr-1" aria-label="뒤로 가기">
                                 <BarIcon k="back" />
                             </button>
                         ) : null}
                         <Link href={tabs[0].href} className="relative flex items-center gap-1.5" aria-label="댕다방 홈">
-                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className={root || productDetail ? "h-[38px] w-[38px]" : "h-[32px] w-[32px]"} priority />
-                            <span className={`app-font leading-none ${root || productDetail ? "text-[1.4rem]" : "text-[1.2rem]"}`}>
+                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className={root || backBelow ? "h-[38px] w-[38px]" : "h-[32px] w-[32px]"} priority />
+                            <span className={`app-font leading-none ${root || backBelow ? "text-[1.4rem]" : "text-[1.2rem]"}`}>
                                 {"댕다방".split("").map((ch, i) => (
                                     <span key={i} style={{ color: LOGO_INKS[i] }}>{ch}</span>
                                 ))}
@@ -408,16 +397,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </div>
                     </div>
                 </header>
-            )}
 
             {/* ── 본문 — 위는 상단바, 아래는 탭바만큼 비워 둔다 ── */}
             <main
-                className={`flex flex-1 flex-col ${webHeader ? "pt-[var(--header-height)]" : "pt-[var(--app-topbar-h)]"}`}
+                className="flex flex-1 flex-col pt-[var(--app-topbar-h)]"
                 // 아래 여백 — 탭바 높이, 상품 상세는 탭바 대신 아래 고정 구매 바 높이 + 여유(마지막 상품이 구매 바에 가리지 않게)
                 style={{ paddingBottom: showTabBar ? "var(--app-tabbar-h)" : productDetail ? "calc(104px + env(safe-area-inset-bottom, 0px))" : undefined }}
             >
-                {/* 상품 상세 — 뒤로 가기는 상단바가 아니라 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
-                {productDetail ? (
+                {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) — 뒤로 가기는 상단바가 아니라 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
+                {backBelow ? (
                     <div className="relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">
                         <button type="button" onClick={goBack} className="app-back-patch" aria-label="뒤로 가기">
                             <StitchBackIcon />
@@ -526,8 +514,8 @@ html.ddb-app-mode {
     --app-subbar-h: 0px; /* 상단바 아래 버튼 줄 높이 — 그 밑에 붙는 페이지 안 탭 위치 계산용 */
 }
 html.ddb-app-mode.ddb-app-subrow { --app-subbar-h: 50px; }
-/* 앱 상단바를 쓰는 탭만 — 쇼핑 탭(웹 상단바)은 사이트 기본 높이 그대로 */
-html.ddb-app-mode:not(.ddb-app-web-header) { --header-height: var(--app-topbar-h); }
+/* 앱에서는 모든 화면이 앱 상단바 — 페이지들이 쓰는 --header-height 도 앱 상단바 높이 */
+html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 
 /* 상단바 · 버튼 줄 — 흰 반투명 + 흐림, 아래는 머리카락 같은 선 */
 .app-bar { background: rgba(250, 247, 244, 0.86); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); box-shadow: inset 0 -1px 0 rgba(31, 26, 24, 0.06); }
