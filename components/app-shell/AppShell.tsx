@@ -512,6 +512,43 @@ html.ddb-app-mode:not(.ddb-app-web-header) { --header-height: var(--app-topbar-h
 .app-tab.is-hero.is-on .app-tab-icon::before { box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px #f3a56a, inset 0 -4px 0 var(--rim), 0 14px 22px -10px rgba(236,106,28,.7); }
 @media (prefers-reduced-motion: reduce) { .app-tab-icon, .app-tab-icon::before, .app-tab-svg { transition: none; animation: none; } }
 
+/* 케어톡 상담 창(협업자 ChatWidget) — 앱에서만 겉모양을 스티커북으로(기능 · 문구 · 글꼴 전환은 협업자 것 그대로)
+ * 다이어리 속지(점 무늬 · 줄 없음) · 케어톡 캐릭터 이름표 · 메모지 말풍선 · 둥근 스티커 버튼. 영문 꼬리표(CRAYON CARE NOTE)는 숨김 */
+html.ddb-app-mode section[role="dialog"][aria-label="댕다방 케어톡"] { border: 0 !important; outline: 0 !important; border-radius: 24px !important;
+  background-color: #fffdf8 !important; background-image: radial-gradient(circle, rgba(196,160,140,.26) 1px, transparent 1.3px) !important; background-size: 15px 15px !important;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 24px 48px -22px rgba(110,70,55,.55) !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"]::before { display: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header { min-height: 64px !important; border-bottom: 2px dashed #f0d9cf !important; background: rgba(255,250,244,.92) !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header::before { display: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header::after { top: -6px !important; left: 50% !important; width: 64px !important; height: 15px !important; background: rgba(255,200,215,.9) !important; opacity: 1 !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child { padding-left: 48px; min-height: 42px; align-content: center; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child::before { content: ""; position: absolute; left: 0; top: 50%; width: 40px; height: 40px; margin-top: -20px; border-radius: 999px;
+  background: #fff3e2 url("/images/ui/stickers/caretalk-avatar.webp") center / 112% no-repeat; box-shadow: 0 0 0 2.5px #fff, 0 4px 8px -4px rgba(110,70,55,.5); }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child > span:first-child { display: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif !important; font-weight: 400 !important; font-size: 1.3rem !important; color: #3d2f2a !important; transform: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b::after { right: -3px !important; bottom: 1px !important; left: -3px !important; height: 9px !important; border-radius: 3px !important; background: rgba(255,182,206,.6) !important; z-index: -1; transform: rotate(-1deg) !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button { border: 0 !important; border-radius: 999px !important; background: #fff !important; color: #8f7a70 !important;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 3px 6px -3px rgba(110,70,55,.4) !important; transform: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button[data-active="true"] { background: #ffe1ea !important; color: #c23d6c !important; box-shadow: 0 0 0 1.5px #f6a9bf !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button:active { transform: scale(.9) !important; }
+/* 대화 영역: 노트 줄 · 여백선 없이 점 무늬 속지 */
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] [role="log"] { background: transparent !important; padding-left: 12px !important; }
+/* 말풍선: 케어톡 = 흰 메모지(왼쪽 꼬리), 나 = 분홍 스티커(오른쪽 꼬리) */
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="assistant"] > div:first-child,
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] [role="log"] > .text-left > div:first-child { border: 0 !important; outline: 0 !important; border-radius: 16px 16px 16px 5px !important;
+  background: #fff !important; color: #3d2f2a !important; box-shadow: 0 0 0 1.5px #f3e6dc, 0 6px 12px -8px rgba(110,70,55,.45) !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="user"] > div:first-child { border: 0 !important; outline: 0 !important; border-radius: 16px 16px 5px 16px !important;
+  background: #ffe1ea !important; color: #8a2f52 !important; box-shadow: 0 0 0 1.5px #ffc9d9, 0 6px 12px -8px rgba(200,80,120,.45) !important; }
+/* 입력줄: 테이프 붙은 종이 띠 · 둥근 입력칸 · 분홍 보내기 스티커 */
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form { border-top: 2px dashed #f0d9cf !important; background: rgba(255,250,244,.95) !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form input[aria-label="채팅 질문"] { border: 0 !important; border-radius: 999px !important; background: #fff !important; padding-left: 16px !important;
+  box-shadow: 0 0 0 1.5px #f1dccf !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form input[aria-label="채팅 질문"]:focus { box-shadow: 0 0 0 2px #f6a9bf !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[type="submit"],
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[aria-label="답변 생성 멈추기"] { border: 0 !important; border-radius: 999px !important; background: radial-gradient(circle at 35% 30%, #ffb3c8, #f06a96 75%) !important;
+  box-shadow: 0 0 0 2.5px #fff, 0 6px 10px -5px rgba(200,70,110,.55) !important; color: #fff !important; transform: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[type="submit"]:active { transform: scale(.9) !important; }
+
 /* 산책 친구 버튼(협업자 PetCompanionGate) — 앱에서만 덮어씀(웹은 그대로)
  * 발바닥(설정) 버튼은 숨김 — 설정은 강아지를 누르면 나오는 빠른 메뉴 "설정하기"로.
  * 강아지 집은 화면 가장자리에 반쯤 걸친 탭 대신, 탭바 바로 위 오른쪽 아래의 오려 붙인 3D 집 스티커
