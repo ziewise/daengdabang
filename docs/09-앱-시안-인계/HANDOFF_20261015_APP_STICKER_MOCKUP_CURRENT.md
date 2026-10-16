@@ -163,6 +163,24 @@ git config user.email "smlee@ziewise.com"
 
 ---
 
+## 4-1. 배포 전 반드시 실제 기능에 연결할 "시연 동작" (2026-10-16 점검)
+
+원칙(사용자): **껍데기만 바꾸고, 버튼을 누르면 무조건 기존 기능에 그대로 연결.** 아래는 지금 화면 안에서만 바뀌는 시연용 동작·예시 데이터다. 배포 전에 하나도 남기지 않고 협업자 함수에 연결한다(함수 동작은 수정하지 않음).
+
+| 화면 | 시연 동작 · 예시 데이터 | 연결할 기존 기능 |
+|---|---|---|
+| 홈 · 매일 댕생활 | 출근 스티커 붙이기, 오늘 할 일(20분 산책·눈 상태 확인) 완료, 코인 · XP · 레벨 · 연속 출석 · 루틴 점수 표시 (`useTodayDemo`, `SAMPLE`) | 협업자 출근도장 · 할 일 완료 · 참여 현황 함수(`MemberAiDashboard`가 쓰는 `lib/customer-api` 함수 그대로) |
+| 매일 댕생활 › 혜택 | 관심 등록 · 동의 | 협업자 성장 프로그램 관심 등록(`GrowthHub`/`GrowthPrograms`가 쓰는 함수) |
+| 연구소 · 리포트 | 우리 아이 정보 · 사진 기록 · 행동·소리 기록 · 주간 리포트가 예시 데이터, "새 주간 분석 시작"은 안내 문구만 | 반려견 프로필 · 주간 사진 분석(`loadWeeklyPhotoAnalyses`) · 관찰 기록, 촬영은 `WeeklyPhotoComparison` |
+| 댕다방 › 댕자랑 | 피드 읽기는 실제. 올리기 · 응원 · 팔로우 · 신고 · 삭제 · 작성자 프로필, 오늘의 주제 · 대표 댕자랑은 시연 | `lib/daeng-showcase`의 `createShowcasePost` · `setShowcaseBone` · `setShowcaseFollow` · `reportShowcasePost` · `deleteShowcasePost` · `loadShowcaseAuthorProfile` · `loadShowcaseTopic` |
+| 댕다방 › 굿즈 공모전 | 굿즈 선택 · 취소, 비회원 이메일 인증, 참여 수 | 협업자 `GoodsContest`가 쓰는 선택 · 인증 함수와 집계 |
+| 동네 돌봄 찾기 | 검색 결과가 예시(`CARE_SAMPLE`) | `LocalCareFinder`의 위치 검색 그대로 |
+| 마이 | 회원 정보 · 주문 · 적립금 · 코인 바꾸기가 예시 | 협업자 마이페이지 함수 |
+| 쇼핑 › 맞춤 추천 | 로그인 안 된 시연에서만 예시 상품(실제 회원은 협업자 추천 엔진) | 그대로 — 시연 분기만 제거 |
+| 공통 | 페이지 위 "로그인 전 / 로그인 후(예시)" 토글, "(시연)" 버튼·문구 | 실제 로그인 상태(`useAuth`)로 바꾸고 토글 제거 |
+
+이미 실제 기능에 연결된 것: 로그인 · 회원가입, 케어톡 대화, 쇼핑 상품 카드(찜 · 색상 · 상세 이동 · 영상), 매일 댕생활 안전 공유, 히어로 날씨 · 지역, 링크 이동 전부.
+
 ## 5. GitHub 정보 (푸시는 0-2 규칙대로 금지)
 - 운영 저장소: `ziewise/daengdabang`. **main에 푸시하면 운영 배포**(Cloudflare/GitHub Pages).
 - 백업 저장소: `ziewisemin/daengdabang`
