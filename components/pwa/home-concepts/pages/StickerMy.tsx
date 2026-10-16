@@ -23,6 +23,8 @@ import { DiaryBody, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../stic
 import { LoginInvite, STICKER_CSS, Tape } from "../sticker-kit";
 
 const REDIRECT = "/app/sticker/my/";
+/** 로그아웃 뒤 가는 앱 홈(탭바 "홈"과 같은 주소) */
+const APP_HOME = "/app/home-1/";
 
 /** 줄 노트 메뉴 */
 function LinedMenu({ items }: { items: readonly { icon: string; title: string; href: string }[] }) {
@@ -53,11 +55,12 @@ export default function StickerMy() {
     const router = useRouter();
     const { logout } = useAuth();
 
-    // 로그아웃 — 웹 마이페이지 메뉴(MypageSidebar)와 같은 동작: 확인 → 실제 로그아웃 → /main
+    // 로그아웃 — 웹 마이페이지 메뉴(MypageSidebar)와 같은 기능(확인 → 실제 logout()).
+    // 끝난 뒤 가는 곳만 앱 홈(웹은 /main) — 사용자 결정 2026-10-16 "같은 기능의 앱 화면"
     const handleLogout = () => {
         if (!confirm("로그아웃 하시겠어요?")) return;
         logout();
-        router.push("/main");
+        router.push(APP_HOME);
     };
 
     // 적립금 1,000P → 10코인 (되돌릴 수 없음)
@@ -148,7 +151,7 @@ export default function StickerMy() {
                             <SectionLabel className="mt-6" icon="fa-headset">고객센터</SectionLabel>
                             <LinedMenu items={CS_MENUS} />
                             {/* 로그아웃 · 회원 탈퇴 — 웹 마이페이지 메뉴(앱에서는 숨김)에만 있던 두 가지를 여기로.
-                                로그아웃은 웹 메뉴와 같은 동작(확인 → logout() → /main), 회원 탈퇴는 기존 탈퇴 화면으로 */}
+                                로그아웃은 웹 메뉴와 같은 기능(확인 → logout()) 뒤 앱 홈으로, 회원 탈퇴는 기존 탈퇴 화면으로 */}
                             <div className="mt-5 flex items-center justify-center gap-4 text-[13px] text-[#9c8f88]">
                                 <button type="button" onClick={() => { haptic("light"); handleLogout(); }} className="ah-display underline decoration-dashed underline-offset-4">
                                     로그아웃
