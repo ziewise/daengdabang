@@ -808,4 +808,8 @@ ${MYW} [data-signup-email-verification] h2 { font-family: "Cafe24Ssurround", var
 ${MYW} [data-signup-email-verification] span[class*="rounded-full"] { box-shadow: 0 0 0 1.5px #f6c9d6; }
 ${MYW} [data-signup-email-verification] div[class*="rounded-xl"][class*="border"] { border: 0; border-radius: 4px 4px 14px 4px; box-shadow: 0 0 0 1.5px #f3e6d6; }
 
+/* 마이페이지 하위 화면의 웹 메뉴(MypageSidebar) — 앱에서는 숨김(사용자 결정 2026-10-16). 같은 메뉴는 앱 마이 첫 화면에 있고,
+   거기에 없던 로그아웃(실제 기능) · 회원 탈퇴를 마이 첫 화면에 옮겨 연결함. 웹은 그대로 */
+${MYW} aside:has(> nav[aria-label="마이페이지 메뉴"]) { display: none; }
+
 `;

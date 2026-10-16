@@ -13,6 +13,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/store";
 import { haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { CS_MENUS, MY_MENUS, ORDERS, PET, WALLET } from "../page-data";
@@ -48,6 +50,15 @@ export default function StickerMy() {
     const [points, setPoints] = useState(WALLET.points);
     const [toast, setToast] = useState<string | null>(null);
     const clearToast = useCallback(() => setToast(null), []);
+    const router = useRouter();
+    const { logout } = useAuth();
+
+    // 로그아웃 — 웹 마이페이지 메뉴(MypageSidebar)와 같은 동작: 확인 → 실제 로그아웃 → /main
+    const handleLogout = () => {
+        if (!confirm("로그아웃 하시겠어요?")) return;
+        logout();
+        router.push("/main");
+    };
 
     // 적립금 1,000P → 10코인 (되돌릴 수 없음)
     const convert = () => {
@@ -136,9 +147,17 @@ export default function StickerMy() {
                             <LinedMenu items={MY_MENUS} />
                             <SectionLabel className="mt-6" icon="fa-headset">고객센터</SectionLabel>
                             <LinedMenu items={CS_MENUS} />
-                            <button type="button" onClick={() => { setSession("guest"); haptic("light"); }} className="ah-display mt-5 w-full text-center text-[13px] text-[#9c8f88] underline decoration-dashed underline-offset-4">
-                                로그아웃
-                            </button>
+                            {/* 로그아웃 · 회원 탈퇴 — 웹 마이페이지 메뉴(앱에서는 숨김)에만 있던 두 가지를 여기로.
+                                로그아웃은 웹 메뉴와 같은 동작(확인 → logout() → /main), 회원 탈퇴는 기존 탈퇴 화면으로 */}
+                            <div className="mt-5 flex items-center justify-center gap-4 text-[13px] text-[#9c8f88]">
+                                <button type="button" onClick={() => { haptic("light"); handleLogout(); }} className="ah-display underline decoration-dashed underline-offset-4">
+                                    로그아웃
+                                </button>
+                                <span aria-hidden="true" className="h-3 w-px bg-[#e3d3c8]" />
+                                <Link href="/mypage/withdrawal/" className="ah-display underline decoration-dashed underline-offset-4">
+                                    회원 탈퇴
+                                </Link>
+                            </div>
                         </>
                     ) : (
                         <>
