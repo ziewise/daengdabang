@@ -125,6 +125,8 @@ ${S} [data-product-detail-content] button i.fa-bag-shopping, ${S} [data-product-
 ${S} [data-product-detail-content] button i.fa-heart { width: 1.9rem; height: 1.9rem; background-image: ${HEART_OFF}; }
 ${S} [data-product-detail-content] button i.fa-heart.fa-solid { background-image: ${HEART_ON}; }
 ${S} [data-product-detail-content] button :is(i.fa-bag-shopping, i.fa-heart)::before { content: ""; }
+/* 같이 보면 좋은 상품 카드의 작은 찜 버튼 — 같은 자수 하트를 작게 */
+${S} [data-product-detail-content] article[data-pet-product] button i.fa-heart { width: 1.15rem; height: 1.15rem; }
 
 /* 상품 상세 뒤로 가기(AppShell, 상단바 바로 아래) — 크림 자수 와펜 동그라미 */
 html.ddb-app-mode .app-back-patch { ${PATCH_CREAM} display: grid; place-items: center; width: 44px; height: 44px; outline-offset: -6px; }
@@ -202,6 +204,15 @@ ${S} #tab-qna > div[class*="border"]::before { ${TAPE} top: -7px; left: 50%; wid
 ${S} #tab-qna > div > div[class*="rounded-full"] { display: none; }
 ${S} #tab-qna > div > button { ${PATCH_PINK} }
 ${S} #tab-qna > div > button:active { transform: scale(.96); transition-duration: .12s; }
+
+/* 같이 보면 좋은 상품(상세 맨 아래) — 작은 카드 한 줄을 옆으로 밀어서 넘기기(사용자 결정 2026-10-16).
+   카드 속 색상 미리보기 칩 · "n가지 색상"은 여기서만 숨김(색상은 상세에서 고름 · 앱 쇼핑 카드와 같게) */
+${S} main:has([data-product-detail-content]) section:has(> header + div > article[data-pet-product="true"]) > div {
+  display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+  margin: 0 -16px; padding: 6px 16px 14px; scroll-padding-left: 16px; scrollbar-width: none; }
+${S} main:has([data-product-detail-content]) section:has(> header + div > article[data-pet-product="true"]) > div::-webkit-scrollbar { display: none; }
+${S} main:has([data-product-detail-content]) section:has(> header + div > article[data-pet-product="true"]) > div > article { flex: 0 0 42%; max-width: 180px; scroll-snap-align: start; }
+${S} main:has([data-product-detail-content]) section:has(> header + div > article[data-pet-product="true"]) article > div:has(> [role="group"]) { display: none; }
 
 /* ── 5) 옵션 고르기 판(장바구니 담기 · 바로 구매) — 점 무늬 속지 + 위 테이프 ── */
 ${S} [data-purchase-option-sheet] { ${DOT_PAPER} border-radius: 24px 24px 0 0; box-shadow: 0 -10px 30px -12px rgba(110, 70, 55, .45); }
