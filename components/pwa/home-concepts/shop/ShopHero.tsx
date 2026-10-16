@@ -9,15 +9,15 @@
  *  - 순서: 브랜드 문구(맨 위, 제목 테이프 대신 · 영문 꼬리표 없이) → 폴라로이드 영상(위에 글자 없음) → 사진 설명 자리에 날씨 칩
  *    (왼쪽 끝: 지역 고르기(톡 → 아래에서 올라오는 지역 고르기) / 오른쪽 끝: 지역 · 온도 + 계절 시간) — 작은 글씨는 나눔스퀘어라운드
  *  - 견종 얼굴 배지(그 영상 속 강아지 얼굴 영상): 폴라로이드 모서리에 걸친 동그란 스티커 + "저를 콕 눌러 분석하기!" 말풍선
- *    → 누르면 웹 히어로와 같은 펫렌즈 창 열기(usePetLensModal().open) — 기능은 협업자 것 그대로
+ *    → 앱에서는 연구소 탭으로 이동(경로만 넘김 — 연구소의 사진·외형 / 행동·소리 분석이 같은 펫렌즈 화면으로 이어짐, 웹은 펫렌즈 창)
  *  - 산책 친구는 히어로 위로 오지 않음(충돌 회피 표시) · 히어로가 화면에 크게 보이는 동안은 숨었다가 내려가면 나타남
  */
 
+import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { fallbackHeroWeather, getHeroSeason, getHeroTimeBucket, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
 import { HERO_AUTO_REGION_ID, HERO_WEATHER_REGION_OPTIONS, fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
 import { pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
-import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import { haptic } from "../gestures";
 import { Tape } from "../sticker-kit";
 import { Sheet } from "../show-parts";
@@ -70,8 +70,6 @@ export default function ShopHero() {
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [report, setReport] = useState<HeroWeatherReport | null>(null);
     const [regionOpen, setRegionOpen] = useState(false);
-    // 견종 얼굴 배지 — 웹 히어로와 같은 펫렌즈 창 열기
-    const { open: openPetLens } = usePetLensModal();
     const [cue, setCue] = useState(false); // "저를 콕 눌러 분석하기!" 말풍선 — 잠깐씩 떠오름
 
     // 날씨 — 협업자 히어로와 같은 순서(수동 날씨 → 지역 날씨)
@@ -148,11 +146,11 @@ export default function ShopHero() {
                 </div>
 
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
-                <button type="button" aria-label="저를 콕 눌러 분석하기 — 펫렌즈 열기" onClick={() => { haptic("light"); openPetLens(); }}
+                <Link href="/app/sticker/lab/" aria-label="저를 콕 눌러 분석하기 — 연구소로" onClick={() => haptic("light")}
                     className="shp-badge absolute -right-2.5 bottom-[4.2rem] z-10 block h-[4.4rem] w-[4.4rem] rounded-full">
                     <video key={breedVideo} src={breedVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" />
                     <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
-                </button>
+                </Link>
             </div>
 
             {/* 지역 고르기 — 아래에서 올라오는 속지 */}
