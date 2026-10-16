@@ -189,8 +189,9 @@ ${S} [data-review-panel] article[class*="border"] { border-color: #f3e6d6; backg
 ${S} [data-review-panel] span[class*="rounded-md"][class*="bg-white"] { border-radius: 999px; box-shadow: 0 0 0 1.5px #f6c9d6, 0 3px 5px -3px rgba(110, 80, 40, .35); }
 
 /* 상세 접기(앱 전용, ProductTabs AppDetailFold) — 공급사 원본 · 편집 상세를 820px에서 접고 아래 흐림 + "상세정보 더보기" 크림 와펜.
-   overflow 대신 clip-path로 아래만 잘라, 위 · 양옆의 테이프와 흰 사진 여백은 그대로 보인다(잘린 부분은 눌리지도 않음) */
-${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-body] { position: relative; max-height: 820px; clip-path: inset(-30px -30px 0 -30px); }
+   overflow: hidden으로 실제로 잘라 페이지 길이도 줄인다(clip-path만 쓰면 숨은 부분 길이만큼 빈 화면이 계속 내려감).
+   위 · 양옆 테이프와 흰 사진 여백이 잘리지 않게 안쪽 여백 + 같은 크기 바깥 음수 여백(위치 변화 없음) */
+${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-body] { position: relative; max-height: 836px; overflow: hidden; padding: 16px 12px 0; margin: -16px -12px 0; }
 ${S} [data-app-detail-fold-fade] { display: block; z-index: 5; }
 ${S} [data-app-detail-fold-toggle] { display: flex; }
 ${S} [data-app-detail-fold-toggle] button { ${PATCH_CREAM} }
