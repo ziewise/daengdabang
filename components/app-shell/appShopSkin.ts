@@ -961,7 +961,7 @@ ${BUNDLE} main main aside.surface::before { ${TAPE} top: -7px; left: 50%; width:
 ${BUNDLE} main main aside.surface > p:first-child { display: inline-block; padding: 2px 10px 1px; color: #9c2f54; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
   clip-path: polygon(0 0, 100% 0, 95% 25%, 100% 50%, 95% 75%, 100% 100%, 0 100%, 5% 75%, 0 50%, 5% 25%);
   background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 7px, rgba(255,222,232,.95) 7px 14px); rotate: -1deg; }
-/* 테이프는 사진(영상) 위가 아니라 흰 테두리 위에만(사진 위에 아무것도 얹지 않음 — 사용자 2026-10-16) */
+/* 테이프는 사진을 종이에 "붙이는" 것 — 사진(액자) 가장자리에 걸쳐 한쪽은 사진 테두리, 한쪽은 종이 위에(사진 한가운데에만 올라가 있으면 붙인 느낌이 아님 — 사용자 2026-10-16) */
 /* 쇼룸 사진 — 사진을 그대로 두지 않고 폴라로이드(두꺼운 흰 테두리 · 아래는 더 넓게) + 테이프 한 조각 */
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"] { border: 8px solid #fff; border-bottom-width: 26px; border-radius: 3px; overflow: visible;
   box-shadow: 0 0 0 1px #f0e2d6, 0 14px 20px -12px rgba(110, 80, 40, .55); rotate: -1deg; }
@@ -973,5 +973,8 @@ ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(3n
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(3n+3)::after { background: repeating-linear-gradient(90deg, rgba(255,226,140,.95) 0 7px, rgba(255,239,190,.95) 7px 14px); }
 ${BUNDLE} main main div[class*="aspect-[4/3]"][class*="rounded-lg"]:nth-child(even) { rotate: 1deg; }
 ${BUNDLE} main main div.grid:has(> div[class*="aspect-[4/3]"]) { gap: 30px; padding: 14px 8px 6px; }
+
+/* 세트 상세 "다른 세트 보기" — 앱에서는 숨김(사용자 2026-10-16: 상단바 아래 뒤로 가기와 겹치고, 담기 버튼이 덜 또렷해짐). 웹은 그대로 */
+${BUNDLE} main main > section:first-child aside a:is([href="/bundles"], [href="/bundles/"]) { display: none; }
 
 `;
