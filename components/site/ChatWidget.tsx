@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useChatWindow } from "@/hooks/useChatWindow";
 import { CHAT_RESIZE_EDGES } from "@/lib/chat-window-geometry";
@@ -76,12 +76,14 @@ type Props = {
     isMobile?: boolean;
     launcherHidden?: boolean;
     onOpenChange?: (open: boolean) => void;
+    // 앱 틀(로컬 시안)에서만: 대화가 비어 있을 때 보여 줄 첫 화면 — 예시 질문을 누르면 아래 ask(같은 질문 보내기)로 보냄. 안 넘기면(웹) 기존과 같음
+    empty?: ComponentType<{ ask: (question: string) => void }>;
 };
 
 const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_FONT_MODE", callback);
 const getServerChatFontMode = () => "readable" as const;
 
-export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange }: Props = {}) {
+export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange, empty: Empty }: Props = {}) {
     const { user, hydrated } = useAuth();
     const [open, setOpen] = useState(false);
     const chatWindow = useChatWindow(open);
@@ -493,6 +495,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         aria-busy={loading}
                         className={`${styles.messageList} min-h-0 flex-1 space-y-3 overflow-y-auto p-3 overscroll-contain`}
                     >
+                        {Empty && messages.length === 0 && !loading ? <Empty ask={(question) => void ask(question)} /> : null}
                         {messages.map((message, index) => {
                             const questionContext = [...messages.slice(0, index)]
                                 .reverse()
