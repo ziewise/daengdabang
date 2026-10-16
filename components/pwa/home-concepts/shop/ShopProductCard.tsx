@@ -4,8 +4,8 @@
  * 스티커북 시안 — 쇼핑 상품 카드 (로컬 시안 전용, 배포 X)
  * ---------------------------------------------------------------------
  * 협업자 공용 상품 카드(components/products/ProductCard)와 "같은 정보 · 같은 동작"을 스크랩 카드 모양으로.
- *  - 정보: 사진/영상 · BEST/NEW · 찜 · 브랜드 · 상품명 · 구매 상태 · 할인 · 가격표(가격 배지 + 가격) ·
- *          외부 판매점 후기(별점 · 수 · 판매처)
+ *  - 정보: 사진/영상 · BEST/NEW · 찜 · 브랜드 · 상품명 · 구매 상태 · 할인 · 가격표(가격 배지 + 가격)
+ *    (외부 판매점 후기는 앱 카드에서 뺌 — 사용자 결정 2026-10-16, 상품 상세에 출처와 함께 그대로)
  *  - 영상: 협업자 useProductVideo 그대로 — 휴대폰에서 절반 이상 보이면 사진 → 영상 자동 전환, 스크롤 중엔 멈춤,
  *          화면 밖이면 되감기
  *  - 색상 미리보기 칩은 앱 카드에서 뺐다(사용자 결정, 웹 카드는 그대로). 색상 선택은 상품 상세에서
@@ -17,7 +17,6 @@ import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
 import { catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
-import { reviewSellerLabel } from "@/lib/catalog/review-groups";
 import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
@@ -108,13 +107,7 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
                         <span className="ah-display text-[14px]">{formatPrice(p.price)}</span>
                     </span>
                 </span>
-                {/* 외부 판매점 후기 */}
-                {(p.externalReviewCount ?? 0) > 0 ? (
-                    <span className="ah-light mt-1 text-right text-[10px] leading-snug text-[#9c8a80]">
-                        외부 판매점 후기 <i aria-hidden="true" className="fa-solid fa-star text-[9px] text-[#f5b82e]" /> <b className="font-normal text-[#5c4a42]">{p.externalReviewAverage?.toFixed(1) ?? "—"}</b> ({p.externalReviewCount})
-                        <span className="block">{reviewSellerLabel(p.externalReviewUrl)}</span>
-                    </span>
-                ) : null}
+                {/* 외부 판매점 후기는 앱 카드에서 뺐다(사용자 결정 2026-10-16) — 카드를 작게, 후기는 상품 상세에 출처와 함께 그대로 */}
             </Link>
         </article>
     );

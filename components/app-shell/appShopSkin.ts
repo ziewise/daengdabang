@@ -631,9 +631,9 @@ ${S} article[data-pet-product="true"] p.ddb-crayon-price { background: none; -we
 /* 할인 줄 — 할인율 분홍 카페24 · 원래 가격 옅게 */
 ${S} article[data-pet-product="true"] div.text-right > div:first-child span[class*="text-danger"] { color: #e0455f; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 ${S} article[data-pet-product="true"] div.text-right > div:first-child span[class*="line-through"] { color: #b5a49b; }
-/* 외부 판매점 후기 — 옅은 갈색 둥근 작은 글씨 */
-${S} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] { color: #9c8a80; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
-${S} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] span[class*="font-bold"] { color: #5c4a42; font-weight: 700; }
+/* 외부 판매점 후기 — 앱 카드에서는 숨김(사용자 결정 2026-10-16: 카드를 작게 · 별점만 남기면 우리 후기로 오해될 수 있어 통째로).
+   후기는 상품 상세에 출처와 함께 그대로. 후기가 없는 상품도 비워 두던 자리까지 함께 사라짐 */
+${S} article[data-pet-product="true"] div[class*="min-h-8"][class*="justify-end"] { display: none; }
 /* 검색 창 결과 줄도 같은 가격표 */
 ${SEARCH} ul button .ddb-crayon-price { position: relative; padding: 2px 8px 2px 15px; background: #fff3a6; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
   border-radius: 3px 6px 6px 3px; clip-path: polygon(9px 0, 100% 0, 100% 100%, 9px 100%, 0 50%);
