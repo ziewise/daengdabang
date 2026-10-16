@@ -49,6 +49,9 @@ const CART = `${S}[data-app-page="cart"]`;
 const CHECKOUT = `${S}[data-app-page="checkout"]`;
 /* 마이 탭 웹 화면 */
 const MYW = "html.ddb-app-mode.ddb-app-my-web";
+/* 숨은 창들(협업자 모달) — 앱 모드 어디서나 · 입혀보기 창 */
+const TRYON = 'html.ddb-app-mode section[role="dialog"][aria-labelledby="pet-tryon-title"]';
+const DLG = `html.ddb-app-mode :is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"])`;
 /* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
 const SHEET = `${S} [data-purchase-option-sheet]`;
 /* 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품) */
@@ -814,5 +817,46 @@ ${MYW} aside:has(> nav[aria-label="마이페이지 메뉴"]) { display: none; }
 /* 회원 탈퇴 — 앱에서는 정보 수정 화면 맨 아래 작은 글씨(협업자 profile 화면에 hidden 으로 넣어 둔 것을 앱에서만 보이게) */
 ${MYW} [data-app-only-withdrawal] { display: block; }
 ${MYW} [data-app-only-withdrawal] a { color: #b3a49b; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+
+/* ── 25) 숨은 창(버튼을 눌러야 열리는 협업자 창) — 비밀번호 변경 · 반려견 등록 · 교환/반품 안내 · 구매 증빙 · 로그인 창 · 입혀보기 ──
+   점 무늬 속지 + 테이프 · 머리는 바느질 점선 · 제목은 테이프 이름표 · 닫기는 흰 스티커 · 주 버튼 분홍 와펜(입혀보기는 보라) · 보조 버튼 크림 와펜 ·
+   입력칸 흰 종이 · 안쪽 칸은 메모. 창 위치 · 문구 · 입력 · 저장 동작은 그대로 ── */
+${DLG} { ${DOT_PAPER} border: 0; border-radius: 24px; color: #3d2f2a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 26px 50px -22px rgba(110, 70, 55, .6); }
+${DLG}::before { ${TAPE} top: 4px; left: 50%; width: 62px; margin-left: -31px; rotate: -2deg; z-index: 5; }
+${DLG} > :is(header, div):first-child { background: transparent; border-bottom: 2px dashed #f0d9cf; }
+${DLG} :is(h2, h3)[id] { display: inline-flex; width: fit-content; padding: 5px 14px 4px; rotate: -1deg; color: #9c2f54; text-decoration: none;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 8px, rgba(255,222,232,.95) 8px 16px); }
+${DLG} :is(h2, h3)[id] i { color: #d4447a; }
+${DLG} button[aria-label*="닫기"] { background: #fff; color: #b39b90; border-radius: 999px; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 8px -5px rgba(110, 80, 40, .45); }
+${DLG} :is(button, a):is([class*="bg-gradient-to-r"], .bg-indigo-600, [class*="bg-neutral-900"], [class*="bg-neutral-950"], .btn-primary) { ${PATCH_PINK} }
+${DLG} :is(button, a):is([class*="border-neutral-200"], [class*="border-2"]):is([class*="bg-white"], .btn-secondary):not([aria-label]) { ${PATCH_CREAM} }
+${DLG} :is(button, a):not(:disabled):active { transform: scale(.96); }
+${DLG} button[class*="bg-foreground"] { border-radius: 999px; background: #e8628e; box-shadow: 0 0 0 2px #fff; }
+${DLG} :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]) {
+  border-color: transparent; background-color: #fff; border-radius: 14px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+${DLG} :is(input, select, textarea):focus { outline: none; box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+${DLG} label { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+${DLG} input[type="checkbox"], ${DLG} input[type="radio"] { accent-color: #e8628e; }
+${DLG} :is(div, section, article, p)[class*="rounded-xl"][class*="border"], ${DLG} :is(div, section, article)[class*="rounded-lg"][class*="border"] {
+  border-color: transparent; border-radius: 6px 6px 16px 6px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 6px 10px -8px rgba(110, 80, 40, .4); }
+${DLG} div[class*="rounded-full"][class*="place-items-center"], ${DLG} div[class*="rounded-full"][class*="items-center"][class*="justify-center"]:is([class*="h-14"], [class*="h-16"]) { box-shadow: 0 0 0 3px #fff, 0 5px 9px -5px rgba(110, 80, 40, .45); }
+/* 입혀보기 — 보라 테이프 제목 · 보라 와펜 · 영문 꼬리표(DDB SMART FIT) 숨김 */
+${TRYON} :is(h2, h3)[id] { color: #5b3fbf; background: repeating-linear-gradient(90deg, rgba(207,193,250,.95) 0 8px, rgba(227,217,255,.95) 8px 16px); }
+${TRYON}::before { background: repeating-linear-gradient(90deg, rgba(207,193,250,.95) 0 7px, rgba(227,217,255,.95) 7px 14px); }
+${TRYON} :is(button, a):is([class*="bg-gradient-to-r"], .bg-indigo-600, [class*="bg-neutral-900"], [class*="bg-neutral-950"], .btn-primary) { ${PATCH_LAVENDER} }
+${TRYON} > header span[class*="rounded-full"][class*="text-[10px]"] { display: none; }
+${TRYON} > header p[class*="text-xs"] { color: #8b6fd6; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 짧은 알림(장바구니에 담았어요 등, 상품 상세 아래) — 흰 메모 스티커 + 분홍 칼선 */
+${S} [data-product-detail-content] div.fixed[class*="left-1/2"][class*="rounded-full"] { background: #fffdf6; color: #3d2f2a; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f6a9bf, 0 12px 20px -10px rgba(110, 70, 55, .5);
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+
+/* 숨은 창 2차 — 영문 꼬리표(DDB SHOPPING POLICY 등) 숨김 · 긴 입혀보기 제목은 테이프 대신 보라 형광펜 · 창이 열린 동안 탭바 숨김(어두운 바탕 위로 떠 있지 않게) */
+${DLG} > header p[class*="uppercase"] { display: none; }
+${TRYON} h2#pet-tryon-title { display: block; padding: 0; rotate: none; clip-path: none; background: none; color: #3d2f2a;
+  text-decoration: underline; text-decoration-color: rgba(207, 193, 250, .9); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
+html.ddb-app-mode body:has(:is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"], [role="alertdialog"][aria-labelledby="my-logout-title"])) nav[aria-label="앱 메뉴"] { visibility: hidden; }
 
 `;

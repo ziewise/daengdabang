@@ -12,7 +12,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store";
 import { haptic } from "../gestures";
@@ -20,7 +20,7 @@ import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { CS_MENUS, MY_MENUS, ORDERS, PET, WALLET } from "../page-data";
 import { ConceptBar, HC_CSS, SAMPLE, flyCoin, useDemoSession, useTodayDemo } from "../shared";
 import { DiaryBody, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
-import { LoginInvite, STICKER_CSS, Tape } from "../sticker-kit";
+import { LoginInvite, Patch, STICKER_CSS, Tape } from "../sticker-kit";
 
 const REDIRECT = "/app/sticker/my/";
 /** 로그아웃 뒤 가는 앱 홈(탭바 "홈"과 같은 주소) */
@@ -56,9 +56,12 @@ export default function StickerMy() {
     const { logout } = useAuth();
 
     // 로그아웃 — 웹 마이페이지 메뉴(MypageSidebar)와 같은 기능(확인 → 실제 logout()).
+    // 확인은 휴대폰 기본 창 대신 우리 확인 카드(같은 문구 · 취소 = 아무것도 안 함, 로그아웃 = 진행).
     // 끝난 뒤 가는 곳만 앱 홈(웹은 /main) — 사용자 결정 2026-10-16 "같은 기능의 앱 화면"
-    const handleLogout = () => {
-        if (!confirm("로그아웃 하시겠어요?")) return;
+    const [logoutAsk, setLogoutAsk] = useState(false);
+    const handleLogout = () => setLogoutAsk(true);
+    const confirmLogout = () => {
+        setLogoutAsk(false);
         logout();
         router.push(APP_HOME);
     };
@@ -172,6 +175,30 @@ export default function StickerMy() {
                 </DiaryBody>
             </div>
             {toast ? <NoteToast text={toast} onDone={clearToast} /> : null}
+            {logoutAsk ? <LogoutConfirm onCancel={() => setLogoutAsk(false)} onConfirm={confirmLogout} /> : null}
+        </div>
+    );
+}
+
+/** 로그아웃 확인 카드 — 테이프 붙인 메모 + 와펜 두 개(취소 · 로그아웃). 바깥을 누르거나 Esc 면 취소 */
+function LogoutConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+    // Esc = 취소 (휴대폰 기본 확인창과 같게)
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onCancel(); };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [onCancel]);
+    return (
+        <div className="fixed inset-0 z-[2600] grid place-items-center bg-[rgba(61,47,42,.32)] px-6" onClick={onCancel}>
+            <div role="alertdialog" aria-modal="true" aria-labelledby="my-logout-title" onClick={(e) => e.stopPropagation()}
+                className="st-page relative w-full max-w-[300px] rounded-[18px] px-5 pb-5 pt-7 text-center">
+                <Tape className="-top-2.5 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.9) 0 8px, rgba(255,226,234,.9) 8px 16px)" style={{ rotate: "-2deg" }} />
+                <p id="my-logout-title" className="ah-display text-[17px]" style={{ color: TEXT }}>로그아웃 하시겠어요?</p>
+                <div className="mt-5 grid grid-cols-2 gap-2.5">
+                    <Patch small tone="cream" onClick={onCancel}>취소</Patch>
+                    <Patch small onClick={onConfirm}>로그아웃</Patch>
+                </div>
+            </div>
         </div>
     );
 }
