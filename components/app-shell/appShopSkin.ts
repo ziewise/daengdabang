@@ -859,4 +859,17 @@ ${TRYON} h2#pet-tryon-title { display: block; padding: 0; rotate: none; clip-pat
   text-decoration: underline; text-decoration-color: rgba(207, 193, 250, .9); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
 html.ddb-app-mode body:has(:is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"], [role="alertdialog"][aria-labelledby="my-logout-title"])) nav[aria-label="앱 메뉴"] { visibility: hidden; }
 
+/* ── 26) 글꼴 마무리(전 화면 글꼴 점검 결과) — 산책 강아지 이름표 · 빠른 메뉴 닫기는 카페24 ·
+   케어톡 "읽기 편한 글꼴" 모드는 앱에서 나눔스퀘어라운드(크레파스 모드와 전환 버튼의 크레파스 견본은 그대로) ·
+   댕다방 연구소 코인 표시(로고 글씨)는 브랜드 표기라 그대로 ── */
+html.ddb-app-mode button[aria-label*="산책 친구. 드래그"] span, html.ddb-app-mode #pet-companion-quick-actions button[aria-label="빠른 메뉴 닫기"] {
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-font-mode="readable"],
+html.ddb-app-mode section[aria-label="댕다방 케어톡"][data-chat-font-mode="readable"],
+html.ddb-app-mode section[aria-label="댕다방 케어톡"]:has([data-chat-font-mode="readable"]) :is(p, div, span, li, input, textarea):not(span[aria-hidden="true"] > span:first-child) {
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+
+/* 글꼴 전환 버튼의 "읽기 편한" 견본 글자도 앱에서 실제로 바뀌는 글꼴(나눔스퀘어라운드)로 */
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button span[aria-hidden="true"] > span:last-child { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
+
 `;
