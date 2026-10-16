@@ -109,6 +109,9 @@ ${S} div:has(> [data-product-gallery]) { position: relative; }
 ${S} div:has(> [data-product-gallery])::before { ${TAPE} top: 5px; left: 50%; width: 72px; height: 16px; margin-left: -36px; z-index: 4; rotate: -2deg; }
 /* 사진 넘김 작은 사진 — 흰 테두리 미니 폴라로이드(고른 표시 테두리는 그대로) */
 ${S} [data-product-detail-content] button[aria-label^="상품 이미지"] { border: 3px solid #fff; border-radius: 6px; filter: drop-shadow(0 3px 3px rgba(90, 60, 50, .28)); }
+/* 고른 사진 표시 — 바깥 테두리(ring)는 옆으로 넘기는 줄에서 위가 잘려서, 같은 표시를 안쪽 테두리(분홍)로 그린다 */
+${S} [data-product-detail-content] button[aria-label^="상품 이미지"][class*="ring-"] { box-shadow: none; }
+${S} [data-product-detail-content] button[aria-label^="상품 이미지"][class*="ring-2"] { border-color: #e8628e; }
 /* 색상 고르기 칸 — 노란 메모지 + 테이프, 색 동그라미는 흰 칼선 스티커 */
 ${S} [data-pet-guide-target="color"] { position: relative; border-color: transparent; background: #fffbea; border-radius: 6px 6px 16px 6px; box-shadow: 0 8px 14px -12px rgba(110, 80, 40, .5); }
 ${S} [data-pet-guide-target="color"]::before { ${TAPE} top: -6px; left: 50%; width: 52px; margin-left: -26px; rotate: -3deg; }
