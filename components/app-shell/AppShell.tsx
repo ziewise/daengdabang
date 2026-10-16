@@ -220,17 +220,6 @@ function StitchBackIcon() {
     );
 }
 
-function BarIcon({ k }: { k: "search" | "bag" | "back" | "chat" }) {
-    const line = { fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-    return (
-        <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" aria-hidden="true">
-            {k === "search" && <g {...line}><circle cx="11" cy="11" r="6.2" /><path d="m15.6 15.6 4 4" /></g>}
-            {k === "bag" && <g {...line}><path d="M5.4 8.2h13.2l-.9 11.1a1.6 1.6 0 0 1-1.6 1.5H7.9a1.6 1.6 0 0 1-1.6-1.5z" /><path d="M9 8.2V7a3 3 0 0 1 6 0v1.2" /></g>}
-            {k === "back" && <path {...line} d="M14.5 5.5 8 12l6.5 6.5" strokeWidth={2.3} />}
-            {k === "chat" && <g {...line}><path d="M12 4.6c4.4 0 7.9 2.9 7.9 6.4s-3.5 6.4-7.9 6.4c-.9 0-1.7-.1-2.5-.3L5.6 19l1-3.2C5 14.6 4.1 12.9 4.1 11c0-3.5 3.5-6.4 7.9-6.4z" /><path d="M8.8 11.1h.01M12 11.1h.01M15.2 11.1h.01" strokeWidth={2.6} /></g>}
-        </svg>
-    );
-}
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -318,8 +307,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const myWeb = activeKey === "my" && !pathname.startsWith("/app/") && !pathname.startsWith("/auth");
     const productDetail = pathname.startsWith("/product/");
     // 상단바 — 앱에서는 어느 화면이든 앱 상단바(로고 · 케어톡 · 검색 · 장바구니). 쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도
-    // 앱 전용 화면이라 웹 상단바를 쓰지 않는다(사용자 결정 2026-10-16). 이 화면들의 뒤로 가기는 상단바 바로 아래 줄에
-    const backBelow = (shopWeb || myWeb) && !root;
+    // 앱 전용 화면이라 웹 상단바를 쓰지 않는다(사용자 결정 2026-10-16).
+    // 뒤로 가기는 앱 전체에서 상단바가 아니라 그 아래(사용자 결정 2026-10-16): 화면 제목 테이프가 있으면 그 줄 왼쪽, 없으면 상단바 바로 아래 줄
+    const backBelow = !root;
 
     // 앱 모드 표시 — 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨긴다
     useEffect(() => {
@@ -371,15 +361,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* ── 상단바 — 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
             <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
                     <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2.5 px-3.5">
-                        {/* 왼쪽: 하위 화면이면 뒤로 가기 + 언제나 로고(검정 푸들 + 삼색 댕다방) — 화면 제목은 상단바 아래 제목 줄에 */}
-                        {!root && !backBelow ? (
-                            <button type="button" onClick={goBack} className="app-icon-btn app-press -mr-1" aria-label="뒤로 가기">
-                                <BarIcon k="back" />
-                            </button>
-                        ) : null}
+                        {/* 왼쪽: 언제나 로고(검정 푸들 + 삼색 댕다방). 뒤로 가기는 상단바 아래(제목 줄 왼쪽 또는 뒤로 가기 줄) */}
                         <Link href={tabs[0].href} className="relative flex items-center gap-1.5" aria-label="댕다방 홈">
-                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className={root || backBelow ? "h-[38px] w-[38px]" : "h-[32px] w-[32px]"} priority />
-                            <span className={`app-font leading-none ${root || backBelow ? "text-[1.4rem]" : "text-[1.2rem]"}`}>
+                            <Image src="/images/logo-black-poodle-v2.png" alt="" width={38} height={38} className="h-[38px] w-[38px]" priority />
+                            <span className="app-font text-[1.4rem] leading-none">
                                 {"댕다방".split("").map((ch, i) => (
                                     <span key={i} style={{ color: LOGO_INKS[i] }}>{ch}</span>
                                 ))}
@@ -414,8 +399,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 // 아래 여백 — 탭바 높이, 상품 상세는 탭바 대신 아래 고정 구매 바 높이 + 여유(마지막 상품이 구매 바에 가리지 않게)
                 style={{ paddingBottom: showTabBar ? "var(--app-tabbar-h)" : productDetail ? "calc(104px + env(safe-area-inset-bottom, 0px))" : undefined }}
             >
-                {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) — 뒤로 가기는 상단바가 아니라 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
-                {backBelow ? (
+                {/* 하위 화면 — 제목 테이프가 없으면 뒤로 가기는 상단바 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
+                {backBelow && !pageTitle ? (
                     <div className="app-backrow relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">
                         <button type="button" onClick={goBack} className="app-back-patch" aria-label="뒤로 가기">
                             <StitchBackIcon />
@@ -425,7 +410,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {/* 화면 제목 줄 — 다꾸 이름표: 탭 색 마스킹테이프 위 제목(아이콘 없이 깔끔하게).
                     상단바 아래, 본문과 함께 스크롤. 홈 · 쇼핑(웹 상단바) · 케어톡 · 제목 없는 하위 화면은 없음 */}
                 {pageTitle ? (
-                    <div key={pageTitle} className="app-pagetitle relative z-10 mx-auto flex w-full max-w-md items-center px-4 pb-1 pt-4">
+                    <div key={pageTitle} className="app-pagetitle relative z-10 mx-auto flex w-full max-w-md items-center gap-3 px-4 pb-1 pt-4">
+                        {/* 하위 화면이면 제목 테이프 왼쪽에 뒤로 가기(같은 goBack) */}
+                        {backBelow ? (
+                            <button type="button" onClick={goBack} className="app-back-patch shrink-0" aria-label="뒤로 가기">
+                                <StitchBackIcon />
+                            </button>
+                        ) : null}
                         <span className="app-pt-tape py-1.5 pl-4 pr-5" style={{ ["--tape" as string]: active.rim, ["--ink" as string]: active.ink }}>
                             <h1 className="app-font text-[1.3rem] leading-none">{pageTitle}</h1>
                         </span>
