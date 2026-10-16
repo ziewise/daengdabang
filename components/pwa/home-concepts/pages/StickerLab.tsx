@@ -11,7 +11,7 @@
  *              분석 두 가지 젤리 카드(사진·외형 무료 / 행동·소리 10코인 · 남은 횟수) ·
  *              행동·소리 분석 별개 기능 안내 · 코인이 모자라면 매일 댕생활(출근도장)로 가는 길 · 자동 환급 안내 ·
  *              응급 안내 메모(톡 하면 응급 증상 목록 — 협업자 문구)
- *    기록: 주간 사진첩(가로로 넘기는 폴라로이드 · 새로 보임/이번엔 안 보임) · 행동·소리 분석 메모(긴급도 = 테이프 이름표) ·
+  *    기록: 주간 기록(가로로 넘기는 메모 카드 · 새로 보임/이번엔 안 보임, 실제 기록처럼 사진 없음) · 행동·소리 분석 메모(긴급도 = 테이프 이름표) ·
  *          진단 아님 안내 · 주간 리포트 전체 보기(와펜 → 앱 전용 건강 변화 리포트 /app/sticker/report)
  *  - 로그인 전: 지난주 · 이번 주 예시 비교 폴라로이드(예시 도장) + 로그인 초대
  * 문구: 사진 방향 · 코인 · 긴급도 · 응급 안내는 협업자 연구소 화면 문구(docs/07 03-댕다방연구소.md). 그 밖 짧은 안내는 시안용.
@@ -107,24 +107,20 @@ export default function StickerLab() {
                 <DiaryBody pageKey={`${tab}-${session}`} dir={dir} onSwipe={member ? (s) => { const n = tab + s; if (n >= 0 && n < TABS.length) { haptic("light"); go(n); } } : undefined}>
                     {!member ? (
                         <>
-                            {/* ───────── 로그인 전: 지난주 · 이번 주 예시 비교 ───────── */}
-                            <p className="ah-display text-[18px] leading-snug">사진 한 장으로<br /><span className="st-marker">우리 아이를 기록해요</span></p>
-                            <div className="lb-compare relative mt-5 rounded-[16px] bg-white px-3.5 pb-3.5 pt-5">
+                            {/* ───────── 로그인 전: 주간 기록 예시 — 실제 기록과 같은 모양(사용자 2026-10-16 "실제와 같아야 오해가 없다")
+                                주간 분석 기록엔 사진이 남지 않아(서버는 촬영 방향 · 분석 글만 저장) 사진 나란히 비교는 넣지 않는다.
+                                실제로 나오는 것: 주차 · 한 줄 비교(comparison.headline) · 새로 보임(newObservations) · 이번엔 안 보임(notObservedNow) ───────── */}
+                            <p className="ah-display text-[18px] leading-snug">매주 사진을 찍으면<br /><span className="st-marker">달라진 점을 글로 정리해요</span></p>
+                            <div className="lb-compare relative mt-5 rounded-[16px] bg-white px-4 pb-4 pt-5">
                                 <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,226,150,.9)" style={{ rotate: "-3deg" }} />
                                 <InkStamp rot={12} color="#5a7fe0" className="absolute -right-2 -top-3 z-[1] bg-white/90 text-[11px]">예시</InkStamp>
-                                <div className="flex items-end justify-center gap-3">
-                                    {[{ label: "지난주", f: "saturate(.75) brightness(.97)", r: -4 }, { label: "이번 주", f: "none", r: 3 }].map((p) => (
-                                        <span key={p.label} className="st-polaroid relative block w-[42%] bg-white p-1.5 pb-6" style={{ rotate: `${p.r}deg` }}>
-                                            <span className="relative block aspect-square overflow-hidden bg-[#fff3e8]"><Image src="/images/pet-companion/cute-v4-breeds/maltese-dog-poster.webp" alt="" fill sizes="140px" className="object-cover" style={{ filter: p.f }} /></span>
-                                            <span className="ah-display absolute inset-x-0 bottom-1 text-center text-[12px] text-[#8f5e12]">{p.label}</span>
-                                        </span>
-                                    ))}
-                                </div>
-                                <p className="ah-display mt-3 text-center text-[14px] leading-snug">{LAB_EXAMPLE.headline}</p>
-                                <p className="mt-2 flex flex-wrap justify-center gap-1.5">
+                                <span className="st-tape ah-display inline-block px-2 py-0.5 text-[11px] text-[#563fa8]" style={{ background: "rgba(220,205,255,.92)", rotate: "-2deg" }}>{WEEKLY_RECORDS[0].week} 기록</span>
+                                <p className="ah-display mt-2.5 text-[15px] leading-snug">{LAB_EXAMPLE.headline}</p>
+                                <p className="mt-2.5 flex flex-wrap gap-1.5">
                                     <span className="ah-display rounded-full bg-[#ddf5ea] px-2.5 py-0.5 text-[11px] text-[#1f7a59]">새로 보임 · {LAB_EXAMPLE.added[0]}</span>
                                     <span className="ah-display rounded-full bg-[#f1ece9] px-2.5 py-0.5 text-[11px] text-[#7a6a63]">이번엔 안 보임 · {LAB_EXAMPLE.gone[0]}</span>
                                 </p>
+                                <p className="ah-light mt-3 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>찍은 사진은 분석에만 쓰이고, 기록에는 달라진 점만 글로 남아요.</p>
                             </div>
                             <LoginInvite redirect={REDIRECT} title={["로그인하고", "우리 아이 기록 시작"]} cta="로그인하고 기록하기"
                                 items={[
@@ -224,19 +220,17 @@ export default function StickerLab() {
                     ) : (
                         <>
                             {/* ───────── 기록 ───────── */}
-                            {/* 주간 사진첩 — 가로로 넘기는 폴라로이드(주차 테이프 · 한 줄 비교 · 새로 보임/안 보임) */}
-                            <SectionLabel icon="fa-images">주간 사진첩</SectionLabel>
+                            {/* 주간 기록 — 가로로 넘기는 메모 카드(주차 테이프 · 한 줄 비교 · 새로 보임/안 보임).
+                                실제 기록엔 사진이 없어서 사진칸을 뺐다(사용자 2026-10-16 "실제와 같게"). 실제 데이터는 loadWeeklyPhotoAnalyses */}
+                            <SectionLabel icon="fa-images">주간 기록</SectionLabel>
                             <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>옆으로 넘겨 지난 기록을 봐요</p>
                             <ol className="lb-album -mr-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-4 pt-2">
                                 {WEEKLY_RECORDS.map((r, i) => (
                                     <li key={r.week} className="lb-page flex w-[11.5rem] shrink-0 snap-start">
                                         {/* 사진첩 칸 높이를 같게(h-full) */}
-                                        <div className="st-polaroid relative h-full w-full bg-white p-2 pb-3" style={{ rotate: `${[-1, 0.8, -0.6][i % 3]}deg` }}>
+                                        <div className="st-polaroid relative h-full w-full bg-white px-3 pb-3 pt-3" style={{ rotate: `${[-1, 0.8, -0.6][i % 3]}deg` }}>
                                             <span className="st-tape ah-display absolute -top-2 left-3 z-[1] px-2 py-0.5 text-[10.5px] text-[#563fa8]" style={{ background: "rgba(220,205,255,.92)", rotate: "-3deg" }}>{r.week}</span>
-                                            <span className="relative block aspect-[4/3] overflow-hidden rounded-[3px] bg-[#fff3e8]">
-                                                <Image src={PET.photo} alt="" fill sizes="190px" className="object-cover" style={{ filter: `saturate(${1 - i * 0.15})` }} />
-                                            </span>
-                                            <span className="ah-light mt-2 block text-[10.5px]" style={{ color: TEXT_SOFT }}>{r.date}</span>
+                                            <span className="ah-light mt-3 block text-[10.5px]" style={{ color: TEXT_SOFT }}>{r.date}</span>
                                             <span className="ah-display block text-[12.5px] leading-snug">{r.headline}</span>
                                             {r.added.length || r.gone.length ? (
                                                 <span className="mt-1.5 flex flex-wrap gap-1">
@@ -308,7 +302,7 @@ const LAB_CSS = `
 .lb-alert { background: #ffeee6; color: #b4532a; }
 .lb-fold { interpolate-size: allow-keywords; height: 0; overflow: hidden; opacity: 0; transition: height .4s cubic-bezier(.2,.9,.2,1), opacity .3s, margin .3s; }
 .lb-fold[data-open="true"] { height: auto; opacity: 1; margin-top: 8px; }
-/* 주간 사진첩: 가로로 넘기기(속지 넘김 밀기와 겹치지 않게 가로 스크롤은 사진첩이 가져감) · 스크롤 막대 숨김 */
+/* 주간 기록: 가로로 넘기기(속지 넘김 밀기와 겹치지 않게 가로 스크롤은 사진첩이 가져감) · 스크롤 막대 숨김 */
 .lb-album { touch-action: pan-x pan-y; scrollbar-width: none; overscroll-behavior-x: contain; }
 .lb-album::-webkit-scrollbar { display: none; }
 /* 분석 기록 메모 · 진단 아님 안내 */
