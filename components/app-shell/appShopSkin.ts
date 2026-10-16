@@ -872,4 +872,7 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"]:has([data-chat-font-
 /* 글꼴 전환 버튼의 "읽기 편한" 견본 글자도 앱에서 실제로 바뀌는 글꼴(나눔스퀘어라운드)로 */
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button span[aria-hidden="true"] > span:last-child { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
 
+/* 가운데 정렬 안내 화면(로그인 필요 등)의 제목 테이프는 아이콘 옆이 아니라 아래 줄 가운데에 */
+${MYW} main main.text-center > h1, ${S} main main.text-center > h1 { display: table; margin-left: auto; margin-right: auto; }
+
 `;
