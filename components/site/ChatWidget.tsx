@@ -92,6 +92,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    const completedExchanges = messages.filter((message) => message.role === "assistant" && message.delivery?.status === "live").length;
+    const sessionComplete = completedExchanges >= 3;
     const [productContext, setProductContext] = useState("");
     const messagesRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -261,6 +263,10 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
 
     const ask = async (question: string) => {
         const trimmed = question.trim();
+        if (sessionComplete) {
+            setRequestNotice("답변 3회를 마쳤어요. 내용을 확인한 뒤 새 상담을 시작해 주세요.");
+            return false;
+        }
         if (referencesUploading) {
             showReferenceNotice("사진을 올리는 중이에요. 첨부가 끝난 뒤 보내 주세요.");
             return false;
@@ -615,9 +621,16 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         <div aria-hidden="true" className="h-px" />
                     </div>
                     <form onSubmit={submit} className={`${styles.composer} flex flex-col p-3`}>
+                        {sessionComplete ? (
+                            <div role="status" className="mb-2 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-neutral-900">
+                                <p className="font-bold">이번 상담의 답변 3회를 마쳤어요.</p>
+                                <p>답변을 확인한 뒤 새 상담을 시작해 주세요. 현재 화면의 대화가 비워지고, 이전 대화는 다음 답변에 이어지지 않아요.</p>
+                                <button type="button" onClick={clearChat} className="mt-2 rounded-lg bg-neutral-900 px-4 py-2 font-bold text-white">새 상담 시작</button>
+                            </div>
+                        ) : <p className="mb-2 text-xs text-neutral-600">답변 {completedExchanges}/3 · 3회 후 안내에 따라 새 상담을 시작해요.</p>}
                         <GenerationReferenceTray controller={generationReferences} compact />
                         <div className="flex gap-2">
-                            <GenerationReferencePhotoButton controller={generationReferences} disabled={loading} compact />
+                            <GenerationReferencePhotoButton controller={generationReferences} disabled={loading || sessionComplete} compact />
                             <input
                                 ref={inputRef}
                                 value={input}
@@ -625,6 +638,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 className={`${styles.input} h-10 flex-1 px-3`}
                                 placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "메시지를 입력하세요"}
                                 aria-label="채팅 질문"
+                                disabled={sessionComplete}
                             />
                             {loading ? (
                                 <button
@@ -639,7 +653,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             ) : (
                                 <button
                                     type="submit"
-                                    disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                    disabled={loading || sessionComplete || generationReferences.isUploading || generationReferences.hasUploadErrors}
                                     className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
                                     aria-label="전송"
                                 >

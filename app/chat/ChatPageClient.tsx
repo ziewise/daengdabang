@@ -88,6 +88,8 @@ export default function ChatPageClient() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    const completedExchanges = messages.filter((message) => message.role === "assistant" && message.delivery?.status === "live").length;
+    const sessionComplete = completedExchanges >= 3;
     const [requestNotice, setRequestNotice] = useState("");
     const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
     const [streamMessage, setStreamMessage] = useState("");
@@ -230,6 +232,10 @@ export default function ChatPageClient() {
         }
         if (hasUploadErrors) {
             showReferenceNotice("올리지 못한 사진을 다시 시도하거나 삭제한 뒤 보내 주세요.");
+            return false;
+        }
+        if (sessionComplete) {
+            setRequestNotice("답변 3회를 마쳤어요. 내용을 확인한 뒤 새 상담을 시작해 주세요.");
             return false;
         }
         if (!trimmed || inFlightRef.current) return false;
@@ -644,15 +650,23 @@ export default function ChatPageClient() {
                         onSubmit={submit}
                         className="sticky bottom-0 z-20 flex shrink-0 flex-col border-t-2 border-dashed border-[#f2b29f] bg-[#fff9ed] p-2.5 sm:p-3"
                     >
+                        {sessionComplete ? (
+                            <div role="status" className="mb-2 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-neutral-900">
+                                <p className="font-bold">이번 상담의 답변 3회를 마쳤어요.</p>
+                                <p>답변을 확인한 뒤 새 상담을 시작해 주세요. 현재 화면의 대화가 비워지고, 이전 대화는 다음 답변에 이어지지 않아요.</p>
+                                <button type="button" onClick={clearChat} className="mt-2 rounded-lg bg-neutral-900 px-4 py-2 font-bold text-white">새 상담 시작</button>
+                            </div>
+                        ) : <p className="mb-2 text-xs text-neutral-600">답변 {completedExchanges}/3 · 3회 후 안내에 따라 새 상담을 시작해요.</p>}
                         <GenerationReferenceTray controller={generationReferences} />
                         <div className="flex min-w-0 gap-2">
-                            <GenerationReferencePhotoButton controller={generationReferences} disabled={loading} />
+                            <GenerationReferencePhotoButton controller={generationReferences} disabled={loading || sessionComplete} />
                             <input
                                 value={input}
                                 onChange={(event) => setInput(event.target.value)}
                                 className={`input h-11 min-w-0 flex-1 bg-white sm:h-12 ${readableFontEnabled ? "text-base" : "text-[15px]"}`}
                                 placeholder="메시지를 입력하세요"
                                 aria-label="채팅 질문"
+                                disabled={sessionComplete}
                             />
                             {loading ? (
                                 <button
@@ -667,7 +681,7 @@ export default function ChatPageClient() {
                             ) : (
                                 <button
                                     type="submit"
-                                    disabled={loading || generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                    disabled={loading || sessionComplete || generationReferences.isUploading || generationReferences.hasUploadErrors}
                                     className="btn btn-primary h-11 shrink-0 px-3 disabled:opacity-50 sm:h-12"
                                     aria-label="메시지 전송"
                                 >

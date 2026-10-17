@@ -107,8 +107,12 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     await ask("같은 대화 계속");
     assert.equal(sent[2].conversationId, "new-visible-conversation");
     assert.equal(sent[2].history.length, 4);
+    await ask("초기화 전 네 번째 질문");
+    assert.equal(sent.length, 3, "a fourth exchange must wait for an explicit reset");
     tree = render();
-    find(tree, node => node.type === "button" && node.props.title === "새 대화").props.onClick();
+    assert.equal(find(tree, node => node.type === "input").props.disabled, true);
+    assert.ok(find(tree, node => node.type === "button" && node.props.children === "새 상담 시작"));
+    find(tree, node => node.type === "button" && node.props.children === "새 상담 시작").props.onClick();
     await ask("강아지 바나나 먹어도 돼?");
     assert.equal(sent[3].conversationId, undefined);
     assert.equal(sent[3].history.length, 0);
