@@ -40,7 +40,8 @@ import {
     selectGoodsContestItem, selectGuestGoodsContestItem, setGoodsContestGuestToken, type GoodsContestItemSummary, type GoodsContestSummary,
 } from "@/lib/customer-api";
 import { useAuth } from "@/lib/store";
-import { ShowcaseApiError, createShowcasePost, deleteShowcasePost, loadShowcaseTopic, reportShowcasePost, setShowcaseBone, setShowcaseFollow, type ShowcaseTopic } from "@/lib/daeng-showcase";
+import { ShowcaseApiError, createShowcasePost, deleteShowcasePost, loadShowcasePost, loadShowcaseTopic, reportShowcasePost, setShowcaseBone, setShowcaseFollow, type ShowcaseTopic } from "@/lib/daeng-showcase";
+import { SHOWCASE_AUTHOR_ID_PATTERN, SHOWCASE_POST_ID_PATTERN, SHOWCASE_TOPIC_ID_PATTERN } from "@/lib/daeng-showcase-share";
 import { DEFAULT_GROWTH_GOODS_CONTENT, loadPublishedGrowthContent } from "@/lib/growth-content";
 import { BoneBurst, DiaryBody, DiaryTabs, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
@@ -125,7 +126,7 @@ export default function StickerShow() {
 
     /* 댕자랑 — 응원 · 팔로우 · 피드 · 상세 · 프로필 · 공유 · 신고 · 올리기 (협업자 함수 그대로 · 같은 순서) */
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, hydrated: authHydrated } = useAuth();
     const token = user?.apiAccessToken || "";
     const [posts, setPosts] = useState<Post[]>([]);
     // 피드 상태 — next: 다음 쪽 커서 · loading · error(불러오기 실패)
@@ -135,6 +136,7 @@ export default function StickerShow() {
     const [pageNo, setPageNo] = useState(1);
     const [cursors, setCursors] = useState<string[]>([""]);
     const created = useRef<Post[]>([]); // 방금 올린 글 — 1쪽 맨 앞에 유지(서버 피드와 겹치면 한 번만)
+    const linked = useRef<Post[]>([]); // 공유 링크(?post=)로 연 게시물 — 웹처럼 1쪽 맨 앞에(협업자 mergeUniquePosts 와 같음)
     const lastTry = useRef<[number, string]>([1, ""]); // 실패했을 때 다시 부를 쪽
     const feedAbort = useRef<AbortController | null>(null);
     const loadPage = useCallback((n: number, cursor: string, scope: "all" | "following") => {
@@ -145,7 +147,7 @@ export default function StickerShow() {
         setLive((l) => ({ ...l, loading: true, error: false }));
         loadLiveFeed(scope, cursor || undefined, token, ac.signal, FEED_PAGE)
             .then((r) => {
-                const head = n === 1 && scope === "all" ? created.current.filter((c) => !r.posts.some((p) => p.id === c.id)) : [];
+                const head = n === 1 && scope === "all" ? [...linked.current, ...created.current].filter((c, i, all) => !r.posts.some((p) => p.id === c.id) && all.findIndex((x) => x.id === c.id) === i) : [];
                 setPosts([...head, ...r.posts]);
                 setPageNo(n);
                 setCursors((c) => {
@@ -325,6 +327,15 @@ export default function StickerShow() {
             .then(setProfile)
             .catch((reason) => setProfileError(reason instanceof Error ? reason.message : "프로필을 불러오지 못했어요."));
     };
+    // 공유 링크(?author=)로 작성자 프로필 열기 — 이름도 서버 프로필에서
+    const openProfileById = (authorId: string) => {
+        setProfileHead({ authorId, name: "작성자" });
+        setProfile(null);
+        setProfileError("");
+        loadProfile(authorId, token)
+            .then((pr) => { setProfile(pr); setProfileHead({ authorId: pr.authorId, name: pr.name, official: pr.official }); })
+            .catch((reason) => setProfileError(reason instanceof Error ? reason.message : "프로필을 불러오지 못했어요."));
+    };
     // 피드 고르기 — 팔로잉은 로그인 후(협업자 chooseScope 와 같음)
     const chooseFeed = (f: "all" | "following") => {
         if (f === "following" && !member) return needLogin("팔로잉 피드를");
@@ -358,7 +369,8 @@ export default function StickerShow() {
         const ac = new AbortController();
         const id = window.setTimeout(() => {
             setTopicState({ loading: true, error: "" });
-            loadShowcaseTopic({ token: token || undefined, signal: ac.signal })
+            const topicId = new URLSearchParams(window.location.search).get("topic") || "";
+            loadShowcaseTopic({ topicId: SHOWCASE_TOPIC_ID_PATTERN.test(topicId) ? topicId : undefined, token: token || undefined, signal: ac.signal })
                 .then((t) => { setTopic(t); setFeatured(t?.featuredPost ? toPost(t.featuredPost) : null); setTopicState({ loading: false, error: "" }); })
                 .catch((reason) => {
                     if (ac.signal.aborted) return;
@@ -369,6 +381,35 @@ export default function StickerShow() {
         }, 0);
         return () => { window.clearTimeout(id); ac.abort(); };
     }, [token, topicKey]);
+    /* 공유 링크(?post= · ?author=) — 협업자 DaengShowcaseClient 처럼 그 게시물을 피드 맨 앞에 넣고 바로 펼침 · 작성자 프로필을 엶.
+       한 번만(처음 그릴 때). 못 찾으면 협업자와 같은 안내 */
+    const deepLinkDone = useRef(false);
+    useEffect(() => {
+        if (!authHydrated || deepLinkDone.current) return; // 로그인 정보가 준비된 뒤 한 번만(응원 · 팔로우 표시가 회원 기준이 되게)
+        const q = new URLSearchParams(window.location.search);
+        const postId = q.get("post") || "";
+        const authorId = q.get("author") || "";
+        const id = window.setTimeout(() => {
+            // 실제로 실행될 때 "한 번 함" 표시(개발 모드의 두 번 그리기에서 예약이 취소돼도 다시 예약되게)
+            if (deepLinkDone.current) return;
+            deepLinkDone.current = true;
+            if (SHOWCASE_POST_ID_PATTERN.test(postId)) {
+                loadShowcasePost(postId, { token: token || undefined })
+                    .then((raw) => {
+                        const post = toPost(raw);
+                        linked.current = [post];
+                        setPosts((ps) => [post, ...ps.filter((p) => p.id !== post.id)]);
+                        const w = window.innerWidth, h = window.innerHeight;
+                        setDetail({ id: post.id, rect: new DOMRect(w / 2 - 60, h / 2 - 60, 120, 120) });
+                    })
+                    .catch(() => setToast("공유된 게시물을 찾지 못했지만 최신 댕자랑은 계속 볼 수 있어요."));
+            } else if (SHOWCASE_AUTHOR_ID_PATTERN.test(authorId)) {
+                openProfileById(authorId);
+            }
+        }, 0);
+        return () => window.clearTimeout(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- 공유 링크는 처음 한 번만 처리(token · 함수는 그 시점 값)
+    }, [authHydrated]);
     // 주제 남은 날(D-day) — 지금 시각으로 계산
     const nowTick = useNow(60_000);
     const topicDday = topic && nowTick ? Math.max(0, Math.ceil((new Date(topic.endsAt).getTime() - nowTick.getTime()) / 86_400_000)) : null;

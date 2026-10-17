@@ -224,6 +224,32 @@ function StitchBackIcon() {
 const APP_REPORT = "/app/sticker/report/";
 const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
 
+/**
+ * 앱에서는 앱으로(사용자 결정 2026-10-17 "앱에서 웹으로 갈 수는 없잖아") — 앱 화면이 따로 있는 웹 주소는 같은 기능의 앱 화면으로.
+ *  - 웹 첫 페이지(/ · /main) → 앱 쇼핑 첫 화면
+ *  - 매일 댕생활(/treasure-mine · /growth · /challenge, 설치 앱 바로가기 · 공유 링크) → 앱 매일 댕생활
+ *  - 굿즈 공모전(/goods-contest) → 댕다방 굿즈 공모전 쪽
+ *  - 댕자랑(/daeng-showcase) → 댕다방 댕자랑 쪽(공유 링크의 ?post · ?author · ?topic 은 그대로 넘겨 앱에서 그 게시물 · 프로필을 엶)
+ * 우리 아이 기록(/my-pet)은 위 APP_REPORT. 찾지 못하면 null(그 주소 그대로).
+ */
+function appScreenFor(pathname: string, search: string): string | null {
+    if (isMyPetPath(pathname)) return APP_REPORT;
+    if (pathname === "/" || /^\/main(\/|$)/.test(pathname)) return "/app/sticker/shop/";
+    if (/^\/(treasure-mine|growth|challenge)(\/|$)/.test(pathname)) return "/app/sticker/daily/";
+    if (/^\/goods-contest(\/|$)/.test(pathname)) return "/app/sticker/show/?tab=1";
+    if (/^\/daeng-showcase(\/|$)/.test(pathname)) {
+        const from = new URLSearchParams(search);
+        const keep = new URLSearchParams();
+        for (const key of ["post", "author", "topic"]) {
+            const value = from.get(key);
+            if (value) keep.set(key, value);
+        }
+        const query = keep.toString();
+        return `/app/sticker/show/${query ? `?${query}` : ""}`;
+    }
+    return null;
+}
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
@@ -248,10 +274,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 router.push(isWebSignupPath(url.pathname) ? appSignupHref(to) : appLoginHref(to));
                 return;
             }
-            // 우리 아이 기록(/my-pet) — 같은 정보를 담은 앱 리포트 화면으로(사용자 결정 2026-10-16 "같은 기능의 앱 화면")
-            if (isMyPetPath(url.pathname)) {
+            // 앱 화면이 있는 웹 주소(우리 아이 기록 · 첫 페이지 · 매일 댕생활 · 굿즈 · 댕자랑) — 같은 기능의 앱 화면으로
+            const appScreen = appScreenFor(url.pathname, url.search);
+            if (appScreen) {
                 event.preventDefault();
-                router.push(APP_REPORT);
+                router.push(appScreen);
                 return;
             }
         };
@@ -267,9 +294,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             router.replace(isWebSignupPath(pathname) ? appSignupHref(to) : appLoginHref(to));
             return;
         }
-        // 코드나 주소로 /my-pet 에 들어온 경우도 앱 리포트로
-        if (isMyPetPath(pathname)) {
-            router.replace(APP_REPORT);
+        // 코드나 주소(설치 앱 바로가기 · 공유 링크 · 로그아웃 뒤 이동 등)로 들어온 경우도 같은 앱 화면으로
+        const appScreen = appScreenFor(pathname, window.location.search);
+        if (appScreen) {
+            router.replace(appScreen);
             return;
         }
         if (authHydrated && !user && MEMBER_ONLY_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {

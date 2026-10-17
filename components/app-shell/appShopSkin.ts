@@ -129,6 +129,10 @@ const HEART_ON_CARD = svgUrl(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0
 </svg>`);
 
 export const APP_SHOP_SKIN_CSS = `
+/* 스크롤바 숨김 — 앱에서는 어느 화면 · 가로 넘김 줄 · 속지 · 창이든 스크롤바를 그리지 않음(스크롤 동작은 그대로, 사용자 2026-10-17 "앱이잖아") */
+html.ddb-app-mode, html.ddb-app-mode * { scrollbar-width: none; }
+html.ddb-app-mode::-webkit-scrollbar, html.ddb-app-mode *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
 /* 앱 글꼴 — 본문 나눔스퀘어라운드(굵게) · 제목 카페24 써라운드 (우리 사이트 public/fonts, 외부 서버 없이) */
 @font-face { font-family: "NanumSquareRound"; font-weight: 400; src: url("/fonts/NanumSquareRoundR.woff2") format("woff2"); font-display: swap; }
 @font-face { font-family: "NanumSquareRound"; font-weight: 700; src: url("/fonts/NanumSquareRoundB.woff2") format("woff2"); font-display: swap; }
