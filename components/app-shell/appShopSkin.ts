@@ -1156,29 +1156,31 @@ html.ddb-app-mode [data-petlens-capture-viewport] :is([data-petlens-viewport-swi
     font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 8px -5px rgba(110, 80, 40, .45); }
 html.ddb-app-mode [data-petlens-capture-viewport] :is([data-petlens-viewport-switch-camera], [data-petlens-close-capture-viewport]):active { transform: scale(.94); }
 /* 카메라 칸 — 흰 폴라로이드 테두리(아래 두껍게) + 위 양쪽 테이프. 화면은 기울이지 않음(맞춰 찍어야 하므로) */
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] { overflow: visible; margin-top: 8px; border: 8px solid #fff; border-bottom-width: 24px; border-radius: 4px; background: #2e2622;
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] { overflow: visible; margin-top: 10px; border: 8px solid #fff; border-bottom-width: 24px; border-radius: 4px; background: #2e2622;
     box-shadow: 0 0 0 1px #efe2d6, 0 16px 26px -16px rgba(110, 70, 55, .65); }
 /* 폴라로이드 칸을 카메라 비율에 맞춤(세로 3:4 · 가로 16:9 — 협업자 촬영 칸과 같은 비율) → 영상 둘레 빈 공간(어두운 띠) 없앰.
    그래도 남는 틈은 밝은 종이색. 연결 기다리는 동안 안내 글자는 진한 색 */
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] { background: #f6efe6; justify-self: center; align-self: center; }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera][data-camera-orientation="portrait"] { height: 100%; width: auto; max-width: 100%; aspect-ratio: 3 / 4; }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera][data-camera-orientation="landscape"] { width: 100%; height: auto; max-height: 100%; aspect-ratio: 16 / 9; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] > div[class*="inset-0"][class*="place-items-center"] { color: #6b5a52; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] > div[class*="inset-0"][class*="place-items-center"] :is(i, p + p) { color: #b0a096; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera]::before { ${TAPE} top: -15px; left: 10px; width: 56px; rotate: -8deg; z-index: 30; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera]::after { ${TAPE} top: -15px; right: 10px; width: 56px; rotate: 7deg; z-index: 30;
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] > div[class*="inset-0"][class*="place-items-center"] { color: #6b5a52; }
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] > div[class*="inset-0"][class*="place-items-center"] :is(i, p + p) { color: #b0a096; }
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera]::before { ${TAPE} top: -15px; left: 10px; width: 56px; rotate: -8deg; z-index: 30; }
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera]::after { ${TAPE} top: -15px; right: 10px; width: 56px; rotate: 7deg; z-index: 30;
     background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
 /* 화면 위 안내 — 콕 찍기 안내는 노란 포스트잇 · 기기 스캔은 민트(주의 = 노랑, 막힘 = 분홍) · 녹화 중은 분홍 이름표 */
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-target-anchor-guide] { border-radius: 4px 4px 14px 4px; background: rgba(255, 243, 184, .94); color: #6b5420; box-shadow: 0 8px 12px -9px rgba(60, 40, 20, .6); }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-target-anchor-guide] p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-target-anchor-guide] p + p { color: #7a6332; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-on-device-scan] { border: 0; border-radius: 4px 4px 14px 4px; background: rgba(233, 248, 240, .94); color: #2f6b52; backdrop-filter: none; box-shadow: 0 8px 12px -9px rgba(40, 60, 50, .6); }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-on-device-scan="attention"] { background: rgba(255, 243, 184, .94); color: #6b5420; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-on-device-scan="blocked"] { background: rgba(255, 225, 234, .95); color: #9c2f54; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-on-device-scan] p { color: inherit; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-daenglab-on-device-scan] p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] > div[role="status"][class*="rounded-full"] { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2px #fff, 0 6px 10px -6px rgba(200, 70, 110, .6); }
-html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] > div[role="status"][class*="rounded-full"] * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-target-anchor-guide] { border-radius: 4px 4px 14px 4px; background: rgba(255, 243, 184, .94); color: #6b5420; box-shadow: 0 8px 12px -9px rgba(60, 40, 20, .6); }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-target-anchor-guide] p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-target-anchor-guide] p + p { color: #7a6332; }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-on-device-scan] { border: 0; border-radius: 4px 4px 14px 4px; background: rgba(233, 248, 240, .94); color: #2f6b52; backdrop-filter: none; box-shadow: 0 8px 12px -9px rgba(40, 60, 50, .6); }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-on-device-scan="attention"] { background: rgba(255, 243, 184, .94); color: #6b5420; }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-on-device-scan="blocked"] { background: rgba(255, 225, 234, .95); color: #9c2f54; }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-on-device-scan] p { color: inherit; }
+html.ddb-app-mode [data-petlens-capture-stage] [data-daenglab-on-device-scan] p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] > div[role="status"][class*="rounded-full"] { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2px #fff, 0 6px 10px -6px rgba(200, 70, 110, .6); }
+html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] > div[role="status"][class*="rounded-full"] * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 녹화 뒤 영상 확인 칸(페이지 안) — 같은 폴라로이드. 세로 영상은 폭을 줄여 가운데(아래 분석 · 다시 촬영 버튼이 함께 보이게) */
+${PLX} [data-petlens-capture-stage][data-capture-viewport-active="false"] > [data-petlens-live-camera][data-camera-orientation="portrait"] { max-width: 300px; margin-left: auto; margin-right: auto; }
 /* 아래 버튼 — 시작(주 버튼) 분홍 와펜, 끊기 · 중단 크림 와펜 */
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-capture-controls] .btn-primary { ${PATCH_PINK} }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-capture-controls] .btn-secondary { ${PATCH_CREAM} }
