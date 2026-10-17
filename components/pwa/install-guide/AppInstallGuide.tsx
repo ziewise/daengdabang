@@ -5,7 +5,6 @@
  * ---------------------------------------------------------------------
  * 협업자 MobileAppHome(/app/)이 이 부품들로 화면을 그린다. 기능은 협업자 것 그대로:
  *  - 설치 버튼 = PwaInstallProvider 의 requestInstall()(안드로이드 크롬은 설치 창, 그 밖은 설치 안내 창)
- *  - 링크 · 로그인 · AI 케어 요약은 MobileAppHome 그대로
  * 여기는 겉모양만: 앱 화면 미리보기(폴라로이드 3장) · 휴대폰별 설치 순서 · 앱에서 좋은 점 · 섹션 제목.
  * 미리보기 사진(public/images/app-install/*.webp)은 화면이 브라우저에서 시작된 뒤에만 넣는다(useShopMedia) —
  * /app/ HTML 은 네이티브 앱 묶음에도 들어가는데, 묶음에 없는 사진 주소가 HTML 에 있으면 묶음 검사가 막기 때문.
@@ -137,8 +136,4 @@ export const APP_INSTALL_CSS = `
 .ig-card { background: #fffdf8; border-radius: 14px; box-shadow: 0 8px 14px -10px rgba(120,80,60,.45), 0 0 0 1px rgba(196,160,140,.18); }
 .ig-soft { color: #8a7566; }
 .ig-icon { border-radius: 20px; box-shadow: 0 0 0 3px #fff, 0 8px 14px -8px rgba(90,60,50,.55); }
-.ig-link { background: #fffdf8; border-radius: 14px; box-shadow: 0 6px 12px -10px rgba(120,80,60,.45), 0 0 0 1px rgba(196,160,140,.2); -webkit-tap-highlight-color: transparent; transition: transform .15s ease; }
-.ig-link:active { transform: scale(.97); }
-.ig-chip { background: #fff; border-radius: 999px; box-shadow: 0 0 0 1.5px #f3d9cf; }
-@media (prefers-reduced-motion: reduce) { .ig-link { transition: none; } }
 `;

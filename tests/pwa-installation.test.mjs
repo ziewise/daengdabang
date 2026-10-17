@@ -95,7 +95,10 @@ test("install UI handles native prompts, iOS instructions, and in-app browsers",
     assert.match(homeStrip, /바로 설치/);
 });
 
-test("mobile app home links members to all requested services and preserves login return", () => {
+// 2026-10-18: 설치한 앱은 /app/ 을 열면 새 앱 홈(/app/home-1, AppShell)으로 가므로 /app/ 은 브라우저 설치 안내 전용이 됐다.
+// 예전 "앱 홈" 시절의 서비스 링크 · 로그인 · AI 케어 요약 검사는 /app/ 페이지에서 뺐다(웹 방문자는 메뉴 · 헤더 · 첫 화면으로 같은 곳에 간다).
+// 설치 안내 페이지가 기존 설치 기능을 그대로 부르는지와, AI 케어 요약 부품 자체의 안전 검사는 그대로 둔다.
+test("mobile app route keeps the install guide while the AI care overview keeps its safety checks", () => {
     const page = read("../components/pwa/MobileAppHome.tsx");
     const aiCare = read("../components/pwa/AppAiCareOverview.tsx");
     const myPet = read("../components/my-pet/MyPetHub.tsx");
@@ -103,15 +106,12 @@ test("mobile app home links members to all requested services and preserves logi
     const sitemap = read("../app/sitemap.ts");
     const chrome = read("../components/site/ConditionalChrome.tsx");
 
-    assert.match(page, /\/auth\/login\?redirect=%2Fapp%2F/);
-    for (const routePath of ["/treasure-mine/", "/daeng-showcase/", "/pet-lens/", "/my-pet/", "/chat/"]) {
-        assert.match(page, new RegExp(routePath.replaceAll("/", "\\/")));
-    }
+    assert.match(page, /usePwaInstall\(\)/);
+    assert.match(page, /requestInstall\(\)/);
     assert.match(route, /alternates: \{ canonical: "\/app\/" \}/);
     assert.match(sitemap, /"\/app"/);
     assert.match(chrome, /APP_SHELL_PATHS = \["\/app"\]/);
     assert.match(chrome, /if \(appShell\)/);
-    assert.match(page, /<AppAiCareOverview \/>/);
     assert.match(aiCare, /loadWeeklyPhotoAnalyses/);
     assert.match(aiCare, /loadPetObservationHistory/);
     assert.match(aiCare, /loadPetObservationEngineStatus/);

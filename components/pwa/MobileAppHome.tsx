@@ -2,50 +2,19 @@
 
 /**
  * /app/ — 모바일 브라우저의 "댕다방 앱" 설치 안내 페이지(설치한 앱은 AppShell 이 앱 홈으로 보냄)
- * 2026-10-18 스티커북 모양으로 정리(UI만): 앱 소개 · 앱 화면 미리보기 · 설치 버튼 → 설치 순서 → 앱에서 좋은 점
- * → 로그인 안내 · AI 케어 요약 → 설치 없이 웹에서 쓰기(기존 링크 그대로). 부품은 components/pwa/install-guide.
- * 설치 버튼 · 링크 · 로그인 돌아올 주소 · AI 케어 요약은 기존 기능 그대로.
+ * 2026-10-18 스티커북 모양으로 정리(UI만): 앱 소개 · 앱 화면 미리보기 · 설치 버튼 → 설치 순서 → 앱에서 좋은 점.
+ * 예전 "앱 홈" 시절의 로그인 안내 · AI 케어 요약 · 서비스 링크는 뺐다(사용자 결정 2026-10-18) —
+ * 설치한 앱은 새 앱 홈(/app/home-1)이 그 역할을 하고, 웹 방문자는 메뉴 · 헤더 · 첫 화면에서 같은 곳으로 간다.
+ * 설치 버튼은 기존 requestInstall 그대로. 부품은 components/pwa/install-guide.
  */
 
 import Image from "next/image";
-import Link from "next/link";
-import { useAuth } from "@/lib/store";
-import AppAiCareOverview from "./AppAiCareOverview";
 import { usePwaInstall } from "./PwaInstallProvider";
 import { KIT_CSS } from "./home-concepts/kit";
 import { Patch, STICKER_CSS, Tape } from "./home-concepts/sticker-kit";
 import { APP_INSTALL_CSS, InstallBenefits, InstallLabel, InstallPreview, InstallSteps } from "./install-guide/AppInstallGuide";
 
-const PRIMARY_LINKS = [
-    {
-        href: "/treasure-mine/",
-        title: "매일 댕생활",
-        description: "출근도장과 오늘의 돌봄 루틴을 이어가요",
-        image: "/images/ui/card-daily.webp",
-    },
-    {
-        href: "/daeng-showcase/",
-        title: "댕자랑",
-        description: "우리 아이의 귀여운 순간을 함께 나눠요",
-        image: "/images/ui/card-showcase.webp",
-    },
-    {
-        href: "/pet-lens/",
-        title: "댕다방 연구소",
-        description: "사진·울음소리·생활 기록을 살펴봐요",
-        image: "/images/ui/card-lab.webp",
-    },
-] as const;
-
-const QUICK_LINKS = [
-    { href: "/my-pet/", label: "우리 아이", image: "/images/ui/stickers/my-pets.webp" },
-    { href: "/chat/", label: "AI 상담", image: "/images/ui/stickers/home-caretalk.webp" },
-    { href: "/mypage/", label: "마이페이지", image: "/images/ui/stickers/my-profile.webp" },
-    { href: "/", label: "쇼핑", image: "/images/ui/stickers/tab-shop.webp" },
-] as const;
-
 export default function MobileAppHome() {
-    const { hydrated, user } = useAuth();
     const { canPrompt, isInAppBrowser, isNativeApp, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
 
     // 설치 버튼 — 안드로이드 크롬 등은 설치 창, 아이폰 · 그 밖은 설치 안내 창(requestInstall 그대로)
@@ -73,9 +42,7 @@ export default function MobileAppHome() {
                             style={{ rotate: "-4deg" }}
                         />
                         <div className="min-w-0">
-                            <p className="ah-light text-[13px] text-[#ef5f8f]">
-                                {hydrated && user ? `${user.name}님, 반가워요` : "댕다방 앱"}
-                            </p>
+                            <p className="ah-light text-[13px] text-[#ef5f8f]">댕다방 앱</p>
                             <h1 id="app-install-title" className="ah-display mt-0.5 text-[24px] leading-[1.22]">
                                 앱에서 더 편하게<br />즐겨보세요 <i aria-hidden="true" className="fa-solid fa-paw text-[19px] text-[#ef5f8f]" />
                             </h1>
@@ -119,64 +86,6 @@ export default function MobileAppHome() {
                 <section className="mt-8" aria-label="앱에서 좋은 점">
                     <InstallLabel icon="fa-star">앱에서는 이렇게 좋아요</InstallLabel>
                     <InstallBenefits />
-                </section>
-
-                {/* ④ 로그인 안내(비회원) — 돌아올 주소는 이 페이지 그대로 */}
-                {hydrated && !user && (
-                    <section className="ig-note relative mt-8 px-4 py-4" style={{ rotate: "-0.5deg" }} aria-label="로그인 안내">
-                        <Tape className="-top-2 right-6 h-3.5 w-11" color="rgba(200,240,215,.9)" style={{ rotate: "5deg" }} />
-                        <p className="ah-display text-[15.5px]">회원으로 이어서 이용해 보세요</p>
-                        <p className="ah-light mt-1 text-[13px] leading-relaxed text-[#7a6a63]">기록과 우리 아이 정보를 안전하게 이어갈 수 있어요.</p>
-                        <div className="mt-3">
-                            <Patch href="/auth/login?redirect=%2Fapp%2F" small tone="cream">
-                                로그인<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" />
-                            </Patch>
-                        </div>
-                    </section>
-                )}
-
-                {/* AI 케어 요약(회원) — 협업자 화면 그대로 */}
-                <AppAiCareOverview />
-
-                {/* ⑤ 설치 없이 웹에서 바로 쓰기 — 기존 링크 그대로 */}
-                <section className="mt-9" aria-labelledby="app-main-services">
-                    <InstallLabel icon="fa-globe"><span id="app-main-services">설치 없이 웹에서 쓰기</span></InstallLabel>
-                    <div className="mt-4 space-y-3">
-                        {PRIMARY_LINKS.map((item, i) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="ig-link flex items-center gap-3 p-2.5 pr-4"
-                                style={{ rotate: `${[-0.5, 0.5, -0.4][i]}deg` }}
-                            >
-                                <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[10px] bg-[#f6efe8]">
-                                    <Image src={item.image} alt="" fill sizes="64px" className="object-cover" />
-                                </span>
-                                <span className="min-w-0 flex-1">
-                                    <strong className="ah-display block text-[16px] font-normal">{item.title}</strong>
-                                    <span className="ah-light mt-0.5 block text-[12.5px] leading-snug text-[#7a6a63]">{item.description}</span>
-                                </span>
-                                <i className="fa-solid fa-chevron-right text-[12px] text-[#d7b9aa]" aria-hidden="true" />
-                            </Link>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="mt-7" aria-labelledby="app-quick-links">
-                    <h2 id="app-quick-links" className="ah-display px-1 text-[14px] text-[#7a6a63]">내 메뉴</h2>
-                    <div className="mt-3 grid grid-cols-4 gap-2">
-                        {QUICK_LINKS.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                data-native-external={item.href === "/" ? "true" : undefined}
-                                className="ig-link flex min-h-24 flex-col items-center justify-center gap-1.5 px-1 text-center"
-                            >
-                                <Image src={item.image} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
-                                <span className="ah-display text-[12.5px]">{item.label}</span>
-                            </Link>
-                        ))}
-                    </div>
                 </section>
             </div>
         </div>

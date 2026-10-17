@@ -95,3 +95,17 @@
 - 작업 전에 `git fetch` 로 main 최신을 받아 주세요(이번 반영으로 main 이 앞으로 나갔습니다).
 - 다음에 GitHub 코드로 APK 를 만들면 앱 화면(스티커북)이 들어갑니다(`npm run native:sync`).
 - 문제가 있으면: Cloudflare 대시보드에서 이전 배포로 되돌리기가 가장 빠릅니다. GitHub main 을 강제로 되돌리는 건 서로 상의 후에 해 주세요.
+
+## 8. 추가 변경 (2026-10-18, 다음 배포에 함께 올라갈 예정)
+
+**① APK 묶음 검사(Native package validation) 실패 — 원인 하나는 수정, 하나는 상의 필요**
+- 10-17 반영 뒤 Android · iOS 패키지 검사가 `npm run native:sync`(`scripts/prepare-native-web.mjs`)에서 실패했습니다. 웹 배포(Cloudflare)는 정상입니다.
+- 수정한 것: 앱 쇼핑 화면 HTML 에 앱 묶음 밖 사진 주소(브랜드 · 기획전 · 상품 · 히어로 영상)가 들어가 "없는 파일" 오류. → 우리 파일만 고침(`components/pwa/home-concepts/shop/useShopMedia.ts`): 화면이 시작된 뒤에만 사진 주소를 넣고, 네이티브 앱에서는 `https://www.daengdabang.com` 의 같은 파일을 씁니다. 웹 · PWA 는 그대로.
+- **상의 필요**: 묶음 크기 43.3MB 로 한도 40MB 초과. 앱 화면 · 그림 · 글꼴 추가분(약 3.5MB)이 원래 한도 가까이였던 묶음을 넘겼습니다. 한도를 올릴지, `public/images/ui` 의 2MB PNG 원본 5개(`pet-video.png` · `pet-photo.png` · `pet-lens.png` · `pet-clothes.png` · `lang-globe.png`, 옆에 webp 있음)를 묶음에서 뺄지 정해 주세요. 스크립트는 손대지 않았습니다.
+
+**② `/app/` 을 "앱 설치 안내" 페이지로 바꿈 (협업자 파일 `components/pwa/MobileAppHome.tsx`, 17번째)**
+- 이유: `/app/` 은 원래 설치한 앱의 첫 화면(PWA start_url · APK 시작 경로)이라 모든 서비스 · 로그인 · AI 케어 요약을 모아 두었는데, 지금은 설치한 앱이 `/app/` 을 열면 앱 틀(`AppShell`)이 새 앱 홈(`/app/home-1`)으로 보냅니다. 그래서 이 페이지는 **설치 안 한 모바일 브라우저 방문자만** 봅니다(스토어 제출 문서의 "일반 모바일 웹 `/app/` 에서는 설치 안내 유지"와 같은 방향).
+- 화면: 앱 소개 · 실제 앱 화면 미리보기 · 설치 버튼(기존 `requestInstall()` 그대로) → 기기별 설치 순서(기존 `PwaInstallProvider` 의 platform · 인앱 브라우저 판별 그대로) → 앱에서 좋은 점. 부품은 새 파일 `components/pwa/install-guide/AppInstallGuide.tsx`.
+- **뺀 것**: 로그인 안내 · AI 케어 요약(`<AppAiCareOverview />`) · 서비스 링크(매일 댕생활 · 댕자랑 · 연구소) · 내 메뉴(우리 아이 · AI 상담 · 마이페이지 · 쇼핑). 비회원도 설치할 수 있고, 웹 방문자는 메뉴 · 헤더 · 첫 화면 · 푸터에서 같은 기능으로 갑니다. `AppAiCareOverview.tsx` 파일은 그대로 남겨 두었습니다(지금은 쓰는 곳 없음).
+- **점검표 수정**: `tests/pwa-installation.test.mjs` 의 "mobile app home links members to all requested services and preserves login return" → "mobile app route keeps the install guide while the AI care overview keeps its safety checks". `/app/` 페이지에 링크 · 로그인 · AI 요약이 있어야 한다는 줄만 빼고 설치 기능(`usePwaInstall()` · `requestInstall()`) 확인으로 바꿨습니다. 나머지(주소 · 사이트맵 · 앱 틀 · AI 케어 요약 부품의 안전 검사)는 그대로입니다. 테스트 902/902 통과.
+- 함께 정할 것: 우리 앱에 "AI 케어 한눈에(사진 · 주간 비교 · 행동·소리 기록)" 화면을 어디에 둘지 — `AppAiCareOverview` 를 다시 쓸지, 지울지.
