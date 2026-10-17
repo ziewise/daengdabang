@@ -23,6 +23,9 @@ import { useAppMode } from "@/components/app-shell/useAppMode";
 const BARE_PATHS = ["/auth/login"];
 // 협업자 규칙 그대로: 브라우저에서 /app(앱 홈)은 웹 상단바만, 푸터 · 플로팅 도구 없이
 const APP_SHELL_PATHS = ["/app"];
+// 앱 전용 화면(스티커북 앱 홈 · 앱 화면들) — 미리 만든 HTML 부터 앱 틀로 그려 설치한 앱을 열 때 웹 헤더 · 웹 배경이 잠깐 보이지 않게(2026-10-18).
+// 브라우저에서 이 주소를 직접 열어도 앱 틀(사용자 결정). /app/ 자체는 브라우저 설치 안내라 해당 없음.
+const isAppOnlyScreen = (pathname: string) => /^\/app\/(home-1|sticker)(\/|$)/.test(pathname);
 
 export default function ConditionalChrome({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -40,8 +43,8 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
         return <>{children}</>;
     }
 
-    // 앱 — 상단바 + 탭바 앱 틀 (사이트 헤더 · 푸터 · 챗봇 버튼 · 산책 강아지 없이)
-    if (appMode) {
+    // 앱 — 상단바 + 탭바 앱 틀 (사이트 헤더 · 푸터 · 챗봇 버튼 · 산책 강아지 없이). 앱 전용 화면은 앱 모드 판별 전(미리 만든 HTML)부터 앱 틀
+    if (appMode || isAppOnlyScreen(pathname)) {
         return <AppShell>{children}</AppShell>;
     }
 

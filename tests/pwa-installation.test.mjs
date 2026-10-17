@@ -10,7 +10,8 @@ test("manifest defines a standalone app home, branded icons, and the three membe
 
     assert.match(manifest, /export const dynamic = "force-static"/);
     assert.match(manifest, /id: "\/app\/"/);
-    assert.match(manifest, /start_url: "\/app\/\?source=pwa&shell=4"/);
+    // 2026-10-18: 홈 화면 앱은 앱 홈에서 바로 시작(/app/ 은 브라우저 설치 안내) — 앱 구분 id 는 그대로
+    assert.match(manifest, /start_url: "\/app\/home-1\/\?source=pwa&shell=4"/);
     assert.match(manifest, /scope: "\/"/);
     assert.match(manifest, /display: "standalone"/);
     assert.match(manifest, /theme_color: "#07849e"/);

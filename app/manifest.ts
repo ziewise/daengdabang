@@ -8,7 +8,9 @@ export default function manifest(): MetadataRoute.Manifest {
         name: "댕다방 – 매일 댕생활",
         short_name: "댕다방",
         description: "매일 댕생활, 댕자랑, 댕다방 연구소를 홈 화면에서 바로 만나는 반려견 생활 앱",
-        start_url: "/app/?source=pwa&shell=4",
+        // 2026-10-18: 홈 화면 앱은 앱 홈(/app/home-1/)에서 바로 시작 — /app/ 은 브라우저 설치 안내 페이지라 거쳐 가면 깜빡임.
+        // 앱 구분용 id 는 그대로("/app/") 두어 이미 설치한 앱과 같은 앱으로 인식. 예전 설치(/app/ 시작)는 앱 틀이 앱 홈으로 보냄.
+        start_url: "/app/home-1/?source=pwa&shell=4",
         scope: "/",
         display: "standalone",
         background_color: "#fffaf0",

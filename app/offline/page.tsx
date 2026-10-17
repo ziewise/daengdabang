@@ -18,7 +18,8 @@ export default function OfflinePage() {
                 <p className="mt-4 text-sm leading-7 text-slate-600">
                     연결이 돌아오면 매일 댕생활과 댕다방 연구소를 다시 이용할 수 있어요.
                 </p>
-                <Link href="/app/" className="ddb-crayon-link mt-7 inline-flex min-h-12 items-center justify-center rounded-2xl px-6">
+                {/* 앱 홈 — 설치한 앱의 홈(/app/home-1/)으로 바로(2026-10-18, /app/ 은 브라우저 설치 안내) */}
+                <Link href="/app/home-1/" className="ddb-crayon-link mt-7 inline-flex min-h-12 items-center justify-center rounded-2xl px-6">
                     앱 홈 다시 열기
                 </Link>
             </div>

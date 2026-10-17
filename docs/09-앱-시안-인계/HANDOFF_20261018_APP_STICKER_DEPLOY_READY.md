@@ -100,7 +100,7 @@
 
 ## 8. 추가 변경 (2026-10-18)
 
-운영 반영: ①의 사진 수정 · ② · ③ · ⑤ 는 10-18 `1951212e` 로 반영. ①의 크기 · ④ · ⑥ 은 그다음 반영분.
+운영 반영: ①의 사진 수정 · ② · ③ · ⑤ 는 10-18 `1951212e`, ①의 크기 · ④ · ⑥ 은 `818f8752`, ⑦ 은 그다음 반영분.
 
 **① APK 묶음 검사(Native package validation) 실패 — 두 원인 모두 수정**
 - 10-17 반영 뒤 Android · iOS 패키지 검사가 `npm run native:sync`(`scripts/prepare-native-web.mjs`)에서 실패했습니다. 웹 배포(Cloudflare)는 정상입니다.
@@ -133,6 +133,14 @@
 - 검사 쪽: `scripts/verify-android-webview.mjs` 가 예전 앱 홈(주소 `/app/index.html` · 글자 "댕다방 앱 홈")을 기다림 → 기대값을 새 앱 홈으로: `expectedPath = "/app/home-1/"`, `expectedText = "댕다방에 오신 걸 환영해요"`(새 앱 홈의 비회원 인사 — 에뮬레이터는 로그인 전). 나머지(제목에 "댕다방" · 문서 로드 완료 · 20번 재시도)는 그대로. `tests/smart-fit-on-device-hybrid.test.mjs` 의 같은 두 줄도 맞춤.
 - 확인 범위: 로컬에 안드로이드 에뮬레이터가 없어 **이 실행 확인 단계는 돌려 보지 못했습니다.** 운영 빌드 결과물의 `/app/home-1/index.html` 에 그 문구가 들어 있는 것만 확인. GitHub Native package validation 결과로 최종 확인 — 실패하면 알려 주세요.
 
-**⑥ 설치한 앱(PWA)을 열 때 설치 안내가 잠깐 보이던 것 (`components/pwa/MobileAppHome.tsx`)**
-- 홈 화면 앱은 `/app/` 으로 시작 → 미리 만든 HTML(웹 헤더 + 설치 안내)이 먼저 그려지고 자바스크립트가 앱 틀을 켠 뒤 새 앱 홈으로 이동해서, 그 사이 설치 안내가 잠깐 보였습니다(사용자 아이폰에서 확인).
-- 고침: 이 페이지에 `<style href precedence>`(React 19 — `<head>` 로 끌어올려 첫 그림부터 적용)로 `@media (display-mode: standalone)` 이면 앱 틀이 켜지기 전까지 크림색 바탕만, 앱 틀이 켜진 뒤(`html.ddb-app-mode`)에는 설치 안내만 숨김. 일반 브라우저는 영향 없음(확인). 네이티브 APK 는 이 미디어 조건에 해당하지 않지만 시작 때 네이티브 스플래시(1.8초)가 덮고, ④ 의 시작 주소 규칙으로 곧 새 앱 홈으로 갑니다.
+**⑥ 설치한 앱(PWA)을 열 때 설치 안내 · 웹 배경이 잠깐 보이던 것 → ⑦ 로 근본 수정**
+- `818f8752` 에서는 설치 안내 페이지를 CSS 로 가리는 방식이었으나(그 뒤에도 웹 배경이 잠깐 보임), 가리는 방식은 ⑦ 에서 지웠습니다.
+
+**⑦ 홈 화면 앱 시작을 앱 홈에서 바로 · 앱 화면은 처음부터 앱 틀 (사용자 결정 2026-10-18)**
+- 원인 1: PWA 시작 주소(`start_url`)가 `/app/`(브라우저 설치 안내)라 켤 때마다 설치 안내 → 앱 틀 → 앱 홈으로 돌아 감. → `app/manifest.ts` `start_url` 을 `/app/home-1/?source=pwa&shell=4` 로. **앱 구분 `id: "/app/"` 는 그대로**(다른 앱으로 인식되지 않음). `?source=pwa&shell=4` 는 코드에서 읽는 곳 없음. `tests/pwa-installation.test.mjs` 의 start_url 확인 한 줄 맞춤.
+  - 아이폰은 홈 화면에 추가하는 순간의 시작 주소를 저장하므로 **이미 설치한 앱은 한 번 지우고 다시 추가**해야 새 주소로 시작. 지우지 않아도 `/app/` → 앱 홈 이동 규칙이 남아 있어 계속 열림. 안드로이드 크롬은 자동 갱신.
+  - 네이티브 APK 는 이 설정을 쓰지 않음(capacitor `appStartPath` 그대로) — 변경 없음.
+- 원인 2: 미리 만든 HTML 은 앱인지 모르니 앱 전용 화면도 웹 헤더 · 웹 배경으로 그려졌다가 자바스크립트 뒤 앱 틀로 바뀜. → `components/site/ConditionalChrome.tsx` 에서 앱 전용 화면(`/app/home-1` · `/app/sticker/…`)은 앱 모드 판별 전부터 `AppShell`. 브라우저에서 이 주소를 직접 열어도 앱 틀(사용자 결정). `APP_SHELL_PATHS` · `/app/`(설치 안내)는 그대로.
+  - 그 결과 앱 틀 안의 큰 스티커북 CSS(`appShopSkin.ts`, 약 36만 자)가 화면 HTML 마다 복사돼 APK 묶음이 39.6MB 가 되어 → 정적 파일 하나로: 새 파일 `app/app/skin.css/route.ts`(force-static 라우트, 내용은 `APP_SHOP_SKIN_CSS` 그대로) → `out/app/skin.css`(`/app` 폴더라 네이티브 묶음 포함), `AppShell.tsx` 는 `<link rel="stylesheet" href="/app/skin.css?v=…" precedence="default">`(React 19 가 `<head>` 로 올림, `?v=` 는 내용 해시). 앱 화면 HTML 478KB → 89KB, 묶음 36.24MB. sw.js 는 이 파일을 캐시하지 않음.
+- 오프라인 화면(`app/offline/page.tsx`) "앱 홈 다시 열기" `/app/` → `/app/home-1/`.
+- 확인: 테스트 902/902 · 타입 · 이미지 예산 · 펫 프레임 · 운영 빌드 · 묶음 검사 통과. 운영 빌드 결과물에서 앱 홈 HTML 에 웹 헤더 없음 · 앱 상단바 있음 · 스킨 링크가 `<head>` 안, 브라우저 `/products/` · `/app/` 은 웹 그대로(스킨 안 붙음), 앱 안 상품 목록은 스킨 적용(규칙 1,013개), 태블릿 · PC 폭은 가운데 앱 화면 · 넘침 없음.

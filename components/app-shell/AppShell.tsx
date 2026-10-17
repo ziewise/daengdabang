@@ -32,6 +32,13 @@ import {
 } from "./appTabs";
 import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
 
+// 앱 겉모양 CSS 판 번호 — 내용으로 만든 짧은 값(내용이 바뀌면 주소가 바뀌어 예전 파일을 쓰지 않음)
+const APP_SKIN_VERSION = (() => {
+    let hash = 5381;
+    for (let i = 0; i < APP_SHOP_SKIN_CSS.length; i += 1) hash = ((hash << 5) + hash + APP_SHOP_SKIN_CSS.charCodeAt(i)) | 0;
+    return (hash >>> 0).toString(36);
+})();
+
 
 /**
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
@@ -471,8 +478,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
         <>
             <style dangerouslySetInnerHTML={{ __html: CSS }} />
-            {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts) */}
-            <style dangerouslySetInnerHTML={{ __html: APP_SHOP_SKIN_CSS }} />
+            {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts).
+                화면 파일마다 복사되지 않게 정적 파일 /app/skin.css 하나로(app/app/skin.css/route.ts) — <head> 로 올라가 첫 그림 전에 적용(React 19).
+                ?v= 는 내용이 바뀌면 바뀌는 값(예전 파일을 붙잡지 않게) */}
+            <link rel="stylesheet" href={`/app/skin.css?v=${APP_SKIN_VERSION}`} precedence="default" />
 
             {/* ── 상단바 — 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
             <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
