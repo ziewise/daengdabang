@@ -207,6 +207,7 @@ test("a selected color starts the gallery while an explicit thumbnail remains se
         "@/components/main/best.module.css": {},
         "@/components/products/VideoBrandOverlay": () => null,
         "@/components/products/ProductColorImage": imageStub,
+        "@/components/products/useProductVideo": { useProductVideo: () => ({ videoRef: { current: null }, videoActive: false, previewColor() {} }) },
         "@/lib/catalog/product-color-image": loadModule("lib/catalog/product-color-image.ts"),
     });
     const props = { product: { ...baseProduct, gallery: ["/side.jpg"] }, selectedColor: { name: "Blue", image: "/color.jpg" } };

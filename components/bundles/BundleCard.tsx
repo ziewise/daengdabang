@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
 import { bundleCustomerBadge, bundleHref, bundleImageCandidates, type Bundle } from "@/lib/bundles";
 import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
 import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
+import { useProductVideo } from "@/components/products/useProductVideo";
 
 type Props = {
     bundle: Bundle;
@@ -14,42 +14,14 @@ type Props = {
 };
 
 export default function BundleCard({ bundle, priority }: Props) {
-    const mediaRef = useRef<HTMLAnchorElement>(null);
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const [videoActive, setVideoActive] = useState(false);
-    const [videoLoaded, setVideoLoaded] = useState(false);
     const candidates = bundleImageCandidates(bundle).slice(0, 4);
     const videoReady = bundle.assetStatus === "ready" && Boolean(bundle.video);
-    const videoVisible = videoReady && videoActive && videoLoaded;
-
-    const activate = () => {
-        if (!videoReady) return;
-        const video = videoRef.current;
-        setVideoActive(true);
-        if (!video) return;
-        video.dataset.ddbWarm = "1";
-        video.preload = "auto";
-        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-            setVideoLoaded(true);
-        } else {
-            video.load();
-        }
-        window.requestAnimationFrame(() => video.play().catch(() => {}));
-    };
-
-    const deactivate = () => {
-        if (!videoReady) return;
-        setVideoActive(false);
-        const video = videoRef.current;
-        if (!video) return;
-        video.pause();
-        video.currentTime = 0;
-    };
+    const { videoRef, videoActive, activate, deactivate, onPlaying, onSeeked, onEnded, onCanPlay, onLoadedData, onPause, onError } = useProductVideo(videoReady ? bundle.video : undefined);
+    const videoVisible = videoReady && videoActive;
 
     return (
         <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <Link
-                ref={mediaRef}
                 href={bundleHref(bundle)}
                 className="relative block aspect-square overflow-hidden bg-[#f7f2e8]"
                 onMouseEnter={activate}
@@ -92,11 +64,16 @@ export default function BundleCard({ bundle, priority }: Props) {
                         data-hover-video-fit="cover"
                         poster={candidates[0] || undefined}
                         muted
-                        loop
+                        loop={false}
                         playsInline
                         preload="none"
-                        onLoadedData={() => setVideoLoaded(true)}
-                        onCanPlay={() => setVideoLoaded(true)}
+                        onPlaying={onPlaying}
+                        onSeeked={onSeeked}
+                        onEnded={onEnded}
+                        onCanPlay={onCanPlay}
+                        onLoadedData={onLoadedData}
+                        onPause={onPause}
+                        onError={onError}
                         className="absolute inset-0 z-0 h-full w-full bg-[#f7f2e8] object-cover opacity-100"
                     />
                 )}

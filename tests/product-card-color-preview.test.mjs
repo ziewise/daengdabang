@@ -5,15 +5,13 @@ import vm from "node:vm";
 import test from "node:test";
 import * as reviewGroups from "../lib/catalog/review-groups.ts";
 import * as hoverVideoFraming from "../lib/catalog/hover-video-framing.ts";
+import { productVideoHook } from "./helpers/product-video-hook.mjs";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
 const source = readFileSync(new URL("../components/products/ProductCard.tsx", import.meta.url), "utf8");
 const compiled = ts.transpileModule(source, {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
-}).outputText;
-const hookCompiled = ts.transpileModule(readFileSync(new URL("../components/products/useProductVideo.ts", import.meta.url), "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText;
 
 const nodes = value => {
@@ -37,7 +35,7 @@ function card(overrides = {}) {
     let cursor = 0;
     const refs = [];
     let refCursor = 0;
-    const video = { plays: 0, pauses: 0, currentTime: 3, play() { this.plays++; this.onPlaying?.(); return Promise.resolve(); }, pause() { this.pauses++; } };
+    const video = { readyState: 2, plays: 0, pauses: 0, currentTime: 3, play() { this.plays++; this.onPlaying?.(); return Promise.resolve(); }, pause() { this.pauses++; } };
     const wished = [];
     const mocks = {
         react: {
@@ -68,13 +66,7 @@ function card(overrides = {}) {
         "@/lib/catalog/inventory": { productPurchaseState: () => ({ purchasable: true }), purchaseStateLabel: () => "" },
         "@/lib/catalog/live-inventory": { useLiveInventoryProduct: product => product },
     };
-    const hook = { exports: {} };
-    vm.runInNewContext(hookCompiled, {
-        module: hook, exports: hook.exports,
-        window: { matchMedia: () => ({ matches: false }) },
-        require: id => id === "react" ? mocks.react : { productVideoViewport: () => { throw new Error("Desktop fixture does not mount viewport effects"); } },
-    });
-    mocks["@/components/products/useProductVideo"] = hook.exports;
+    mocks["@/components/products/useProductVideo"] = productVideoHook(mocks.react);
     const loaded = { exports: {} };
     vm.runInNewContext(compiled, { module: loaded, exports: loaded.exports, require: id => {
         assert.ok(Object.hasOwn(mocks, id), `Unexpected import ${id}`);
@@ -104,7 +96,8 @@ test('external review stars and counts always identify the seller and never use 
     assert.doesNotMatch(text, /999/);
 });
 
-test("reviewed four-second edits hold their last frame and replay on the next hover", () => {
+test("reviewed edits return to the selected photo and replay while still hovered", t => {
+    t.mock.timers.enable({ apis: ["setTimeout"] });
     const fixture = card({ video: "/trim.mp4", raw: { videoProvider: "ddb_original_video_editor", videoPlaybackMode: "once_hold_last_frame" } });
     let tree = fixture.render();
     button(tree, "Red 미리보기").props.onClick();
@@ -113,22 +106,27 @@ test("reviewed four-second edits hold their last frame and replay on the next ho
     tree = fixture.render();
     const player = tree.find(n => n.type === "video");
     assert.equal(player.props.loop, false);
-    assert.equal(player.props.onEnded, undefined, "native ended retains the last frame until hover ends");
+    assert.equal(typeof player.props.onEnded, "function");
     assert.match(player.props.className, /opacity-100/);
     assert.equal(fixture.video.currentTime, 4);
+    player.props.onEnded();
+    assert.match(thumbnail(fixture.render()).props.className, /opacity-100/);
+    t.mock.timers.tick(2000);
+    assert.equal(fixture.video.plays, 2);
     media(tree).props.onMouseLeave();
     tree = fixture.render();
     assert.equal(fixture.video.currentTime, 0);
     assert.equal(thumbnail(tree).props.src, "/red.jpg");
     assert.match(thumbnail(tree).props.className, /opacity-100/);
     media(tree).props.onMouseEnter();
-    assert.equal(fixture.video.plays, 2);
+    assert.equal(fixture.video.plays, 3);
 });
 
-test("one-shot metadata does not change playback for other providers", () => {
+test("all approved providers use the same photo and video cycle", () => {
     for (const raw of [{}, { videoProvider: "google_flow_web", videoPlaybackMode: "once_hold_last_frame" }, { videoProvider: "ddb_original_video_editor" }]) {
         const tree = card({ video: "/existing.mp4", raw }).render();
-        assert.equal(tree.find(n => n.type === "video").props.loop, true);
+        assert.equal(tree.find(n => n.type === "video").props.loop, false);
+        assert.equal(typeof tree.find(n => n.type === "video").props.onEnded, "function");
     }
 });
 

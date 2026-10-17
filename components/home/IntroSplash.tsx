@@ -3,17 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { isAppModeNow } from "@/components/app-shell/useAppMode";
 import styles from "@/app/intro.module.css";
+import { pickIntroVideo } from "@/lib/intro-videos";
 
 const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
 const MIN_INTRO_MS = 2200;
-const INTRO_VIDEO_SOURCES = [
-    "/videos/intro-random-1-clean-v1.mp4?v=20260811",
-    "/videos/intro-random-2-clean-v1.mp4?v=20260811",
-    "/videos/intro-random-3-clean-v1.mp4?v=20260811",
-    "/videos/intro-random-4-clean-v1.mp4?v=20260811",
-    "/videos/intro-random-5-clean-v1.mp4?v=20260811",
-    "/videos/intro-random-6-clean-v1.mp4?v=20260812",
-] as const;
 
 export default function IntroSplash() {
     const [visible, setVisible] = useState(false);
@@ -32,15 +25,7 @@ export default function IntroSplash() {
         introMobileRef.current = mobile;
 
         const show = () => {
-            const requestedVideo = Number(
-                new URLSearchParams(window.location.search).get("introVideo")
-            );
-            const selectedIndex = Number.isInteger(requestedVideo)
-                && requestedVideo >= 1
-                && requestedVideo <= INTRO_VIDEO_SOURCES.length
-                ? requestedVideo - 1
-                : Math.floor(Math.random() * INTRO_VIDEO_SOURCES.length);
-            setIntroVideoSrc(INTRO_VIDEO_SOURCES[selectedIndex]);
+            setIntroVideoSrc(pickIntroVideo(new URLSearchParams(window.location.search).get("introVideo")));
             shownAtRef.current = Date.now();
             setVisible(true);
         };

@@ -12,14 +12,26 @@ const COMMIT_SHA_RE = /^[0-9a-f]{40}$/i;
 const TEXT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".txt", ".xml"]);
 const SOURCE_EXTENSIONS = new Set([".css", ".js", ".json", ".mjs", ".ts", ".tsx"]);
 const DEPLOYMENT_OMIT_PATHS = new Set([
-    // Legacy storefront copy. The current app uses /images/hero/default.mp4.
+    // Withdrawn intros: extra retriever legs (1, 6) or an extra waving arm (3).
+    "videos/intro-random-1-clean-v1.mp4",
+    "videos/intro-random-3-clean-v1.mp4",
+    "videos/intro-random-6-clean-v1.mp4",
+    // HeroSection now selects all backgrounds from HERO_VIDEO_MANIFEST.
     "videos/hero.mp4",
-    // Superseded snow preview. Runtime weather scenes use weather-snow-*.mp4.
+    "images/hero/default.mp4",
+    // Superseded preview exports retained only as source evidence.
     "images/hero/snow.mp4",
-    // Superseded evening clip. resolveHeroScene uses ltr-v2 or rtl.
     "images/hero/weather-clear-evening-ltr-v1.mp4",
 ]);
 const DEPLOYMENT_OMIT_PREFIXES = [
+    // Keep original, uneven-speed walking clips as source evidence in Git.
+    // The active manifest exclusively uses images/hero/steady-walk-v3/.
+    "images/hero/summer_",
+    // Superseded DIS interpolation and unused legacy weather backgrounds.
+    // Preserve the source files in Git; spend delivery bytes on current quality.
+    "images/hero/steady-walk-v1/",
+    "images/hero/steady-walk-v2/",
+    "images/hero/weather-",
     // Source/reference exports used to prepare marketplace content. The
     // storefront catalog does not reference these trees at runtime.
     "images/naver-import/",

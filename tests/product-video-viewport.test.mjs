@@ -96,3 +96,24 @@ test("unmount cancels pending playback and supports a fresh list after navigatio
     const b = s.card(100); s.settle();
     assert.deepEqual(b.events, ["play"]);
 });
+
+test("Android touch screens still autoplay when a browser reports hover or fine pointer", t => {
+    const s = setup(t, false);
+    s.win.navigator = { maxTouchPoints: 5 };
+    const a = s.card(100); s.settle();
+    assert.deepEqual(a.events, ["play"]);
+});
+
+test("touch release retries an interrupted initial play without overriding color previews", t => {
+    const s = setup(t), a = s.card(100), b = s.card(350);
+    s.settle(); b.control.preview();
+    s.doc.dispatchEvent(new Event("pointerup"));
+    assert.deepEqual(a.events, ["play", "play"]);
+    assert.deepEqual(b.events, ["play", "reset"]);
+});
+
+test("restoring a mobile browser page retries a decoder paused by the back-forward cache", t => {
+    const s = setup(t), a = s.card(100);
+    s.settle(); s.win.dispatchEvent(new Event("pageshow"));
+    assert.deepEqual(a.events, ["play", "play"]);
+});

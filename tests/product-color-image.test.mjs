@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import test from "node:test";
 import ts from "typescript";
 import * as hoverVideoFraming from "../lib/catalog/hover-video-framing.ts";
+import { productVideoHook } from "./helpers/product-video-hook.mjs";
 
 const require = createRequire(import.meta.url);
 function loadModule(relative, dependencies = {}, browser = {}) {
@@ -27,17 +28,23 @@ const colors = [
 function hooks(refCurrent = null) {
     let state = [];
     let cursor = 0;
+    let refCursor = 0;
+    let refs = [];
     return {
         react: {
-            useRef: () => ({ current: refCurrent }),
+            useRef: initial => {
+                const index = refCursor++;
+                return refs[index] ??= { current: index === 0 ? refCurrent : initial };
+            },
+            useEffect: () => {},
             useState(initial) {
                 const slot = cursor++;
                 if (!(slot in state)) state[slot] = initial;
                 return [state[slot], next => { state[slot] = typeof next === "function" ? next(state[slot]) : next; }];
             },
         },
-        render(Component, props) { cursor = 0; return Component(props); },
-        reset() { state = []; },
+        render(Component, props) { cursor = 0; refCursor = 0; return Component(props); },
+        reset() { state = []; refs = []; },
     };
 }
 
@@ -52,6 +59,7 @@ function loadGallery(state, browser = {}) {
         react: state.react, "next/image": "img", "@/lib/catalog": { isNewProduct: () => false },
         "@/components/main/best.module.css": {}, "@/components/products/VideoBrandOverlay": "video-overlay",
         "@/components/products/ProductColorImage": "color-image", "@/lib/catalog/product-color-image": geometry,
+        "@/components/products/useProductVideo": productVideoHook(state.react),
     }, browser).default;
 }
 
@@ -72,7 +80,8 @@ const galleryMedia = tree => tree.find(node => node.props?.onMouseEnter && node.
 const galleryImage = tree => tree.find(node => node.type === "color-image");
 const renderedVideo = tree => tree.find(node => node.type === "video");
 
-test("the detail gallery holds a reviewed trim's last frame and replays after leaving", () => {
+test("the detail gallery returns to its selected photo and repeats a reviewed video", t => {
+    t.mock.timers.enable({ apis: ["setTimeout"] });
     const video = galleryVideo();
     const state = hooks(video);
     const Gallery = loadGallery(state, mediaBrowser);
@@ -83,16 +92,20 @@ test("the detail gallery holds a reviewed trim's last frame and replays after le
     video.currentTime = 4;
     let tree = render();
     assert.equal(renderedVideo(tree).props.loop, false);
-    assert.equal(renderedVideo(tree).props.onEnded, undefined);
+    assert.equal(typeof renderedVideo(tree).props.onEnded, "function");
     assert.match(renderedVideo(tree).props.className, /opacity-100/);
     assert.equal(video.currentTime, 4);
+    renderedVideo(tree).props.onEnded();
+    assert.match(renderedVideo(render()).props.className, /opacity-0/);
+    t.mock.timers.tick(2000);
+    assert.equal(video.plays, 2);
     galleryMedia(tree).props.onMouseLeave();
     tree = render();
     assert.equal(video.currentTime, 0);
     assert.equal(galleryImage(tree).props.color, colors[1]);
     assert.match(renderedVideo(tree).props.className, /opacity-0/);
     galleryMedia(tree).props.onMouseEnter();
-    assert.equal(video.plays, 2);
+    assert.equal(video.plays, 3);
 });
 
 test("crop coordinates are clipped to the original image and invalid regions are rejected", () => {
@@ -244,9 +257,10 @@ test("a loading gallery video keeps the selected crop visible and a late ready e
     galleryMedia(tree).props.onMouseEnter();
     tree = render();
     assert.equal(video.plays, 1);
-    assert.equal(video.loads, 1);
+    assert.equal(video.loads, 0, "play requests data without aborting the decoder with load()");
     assert.match(renderedVideo(tree).props.className, /opacity-0/);
     assert.equal(galleryImage(tree).props.color, selectedColor);
+    video.readyState = 2;
     renderedVideo(tree).props.onLoadedData();
     tree = render();
     assert.match(renderedVideo(tree).props.className, /opacity-100/);
