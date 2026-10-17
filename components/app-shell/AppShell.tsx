@@ -406,6 +406,36 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         return () => html.classList.remove("ddb-app-lab-web");
     }, [labWeb]);
 
+    /* 펫렌즈 행동·소리 — 녹화가 끝나 전체 화면 촬영 창(협업자 data-petlens-capture-viewport, body 바로 아래에 붙음)이 저절로 닫히면
+       녹화된 영상 칸이 보이는 위치로 화면을 옮긴다(사용자 2026-10-17). 앱 전용 · 스크롤만 — 협업자 녹화 · 분석 동작은 그대로.
+       영상이 없을 때(닫기 · 중단으로 닫음)는 움직이지 않음 */
+    const petLensPage = pathname.startsWith("/pet-lens") || pathname.startsWith("/petlens");
+    useEffect(() => {
+        if (!petLensPage) return;
+        let captureOpen = Boolean(document.querySelector("[data-petlens-capture-viewport]"));
+        const onBodyChange = () => {
+            const open = Boolean(document.querySelector("[data-petlens-capture-viewport]"));
+            const justClosed = captureOpen && !open;
+            captureOpen = open;
+            if (!justClosed) return;
+            // 영상 주소가 같은 순간에 안 붙을 수 있어 몇 프레임 기다려 봄
+            let tries = 0;
+            const goToClip = () => {
+                const camera = document.querySelector<HTMLElement>('[data-petlens-capture-stage][data-capture-viewport-active="false"] > [data-petlens-live-camera]');
+                if (camera?.querySelector("video[src]")) {
+                    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                    camera.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }); // 상단바 아래 여백은 CSS scroll-margin-top
+                    return;
+                }
+                if (++tries < 10) window.requestAnimationFrame(goToClip);
+            };
+            window.requestAnimationFrame(goToClip);
+        };
+        const observer = new MutationObserver(onBodyChange);
+        observer.observe(document.body, { childList: true }); // 촬영 창은 body 바로 아래 — 깊은 곳은 보지 않음
+        return () => observer.disconnect();
+    }, [petLensPage]);
+
     // 뒤로 가기 — 들어온 기록이 없으면(주소로 바로 연 경우) 지금 탭 첫 화면으로
     const goBack = () => {
         if (window.history.length > 1) router.back();

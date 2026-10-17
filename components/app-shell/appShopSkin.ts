@@ -1181,6 +1181,8 @@ html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] > di
 html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] > div[role="status"][class*="rounded-full"] * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 /* 녹화 뒤 영상 확인 칸(페이지 안) — 같은 폴라로이드. 세로 영상은 폭을 줄여 가운데(아래 분석 · 다시 촬영 버튼이 함께 보이게) */
 ${PLX} [data-petlens-capture-stage][data-capture-viewport-active="false"] > [data-petlens-live-camera][data-camera-orientation="portrait"] { max-width: 300px; margin-left: auto; margin-right: auto; }
+/* 녹화 뒤 이 칸으로 화면을 옮길 때(AppShell) 상단바 + 테이프 자리만큼 띄움 */
+${PLX} [data-petlens-capture-stage][data-capture-viewport-active="false"] > [data-petlens-live-camera] { scroll-margin-top: calc(var(--header-height, 72px) + 24px); }
 /* 아래 버튼 — 시작(주 버튼) 분홍 와펜, 끊기 · 중단 크림 와펜 */
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-capture-controls] .btn-primary { ${PATCH_PINK} }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-capture-controls] .btn-secondary { ${PATCH_CREAM} }
