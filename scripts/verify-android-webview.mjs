@@ -1,6 +1,8 @@
 const devtoolsEndpoint = "http://127.0.0.1:9222/json";
-const expectedText = "댕다방 앱 홈";
-const expectedPath = "/app/index.html";
+// 2026-10-18: 앱은 /app/index.html 로 시작한 뒤 앱 틀(AppShell)이 새 앱 홈(/app/home-1/)으로 보낸다.
+// 예전 "댕다방 앱 홈"(/app/) 화면은 브라우저 설치 안내 페이지가 되어, 확인 기준을 새 앱 홈(비회원 인사 문구)으로 바꿈.
+const expectedText = "댕다방에 오신 걸 환영해요";
+const expectedPath = "/app/home-1/";
 const maximumAttempts = 20;
 
 const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));

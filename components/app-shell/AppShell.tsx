@@ -242,7 +242,8 @@ function appScreenFor(pathname: string, search: string): string | null {
     }
     // 설치한 앱의 시작 주소(PWA start_url · 안드로이드 appStartPath = /app/)와 예전 시안 홈 → 지금 앱 홈
     // (브라우저의 /app/ 설치 안내 페이지는 앱 틀이 아니어서 이 규칙이 닿지 않음 — 그대로)
-    if (/^\/app\/?$/.test(pathname) || /^\/app\/mockup-c(\/|$)/.test(pathname)) return "/app/home-1/";
+    // 네이티브 앱은 /app/index.html 로 시작하고 주소가 그대로 남으므로(capacitor.config appStartPath) 그 주소도 같은 시작 주소로 본다(2026-10-18)
+    if (/^\/app(\/(index(\.html)?)?)?$/.test(pathname) || /^\/app\/mockup-c(\/|$)/.test(pathname)) return "/app/home-1/";
     if (pathname === "/" || /^\/main(\/|$)/.test(pathname)) return "/app/sticker/shop/";
     if (/^\/(treasure-mine|growth|challenge)(\/|$)/.test(pathname)) return "/app/sticker/daily/";
     if (/^\/goods-contest(\/|$)/.test(pathname)) return "/app/sticker/show/?tab=1";

@@ -96,12 +96,18 @@
 - 다음에 GitHub 코드로 APK 를 만들면 앱 화면(스티커북)이 들어갑니다(`npm run native:sync`).
 - 문제가 있으면: Cloudflare 대시보드에서 이전 배포로 되돌리기가 가장 빠릅니다. GitHub main 을 강제로 되돌리는 건 서로 상의 후에 해 주세요.
 
-## 8. 추가 변경 (2026-10-18, 다음 배포에 함께 올라갈 예정)
+## 8. 추가 변경 (2026-10-18)
 
-**① APK 묶음 검사(Native package validation) 실패 — 원인 하나는 수정, 하나는 상의 필요**
+운영 반영: ①의 사진 수정 · ② · ③ · ⑤ 는 10-18 `1951212e` 로 반영. ①의 크기 · ④ · ⑥ 은 그다음 반영분.
+
+**① APK 묶음 검사(Native package validation) 실패 — 두 원인 모두 수정**
 - 10-17 반영 뒤 Android · iOS 패키지 검사가 `npm run native:sync`(`scripts/prepare-native-web.mjs`)에서 실패했습니다. 웹 배포(Cloudflare)는 정상입니다.
 - 수정한 것: 앱 쇼핑 화면 HTML 에 앱 묶음 밖 사진 주소(브랜드 · 기획전 · 상품 · 히어로 영상)가 들어가 "없는 파일" 오류. → 우리 파일만 고침(`components/pwa/home-concepts/shop/useShopMedia.ts`): 화면이 시작된 뒤에만 사진 주소를 넣고, 네이티브 앱에서는 `https://www.daengdabang.com` 의 같은 파일을 씁니다. 웹 · PWA 는 그대로.
-- **상의 필요**: 묶음 크기 43.3MB 로 한도 40MB 초과. 앱 화면 · 그림 · 글꼴 추가분(약 3.5MB)이 원래 한도 가까이였던 묶음을 넘겼습니다. 한도를 올릴지, `public/images/ui` 의 2MB PNG 원본 5개(`pet-video.png` · `pet-photo.png` · `pet-lens.png` · `pet-clothes.png` · `lang-globe.png`, 옆에 webp 있음)를 묶음에서 뺄지 정해 주세요. 스크립트는 손대지 않았습니다.
+- 묶음 크기 43.3MB(한도 40MB 초과) → **35.7MB** 로 해결(사용자 결정, 한도 숫자 · `prepare-native-web.mjs` 는 그대로):
+  - `public/images/ui` 의 1.4~1.8MB PNG 원본 5개를 묶음 밖 `tools/sticker-assets/originals/` 로 옮김(지우지 않고 보관). 3개(`pet-video.png` · `pet-lens.png` · `lang-globe.png`)는 코드에서 쓰는 곳이 없었습니다.
+  - 나머지 2개는 코드가 큰 PNG 를 작은 아이콘에 그대로 쓰고 있어 128px webp 로 바꿈(웹에서도 가벼워짐): `components/petlens/PetLensModalLauncher.tsx`(펫렌즈 창 사진 분석 아이콘) `pet-photo.png` → `pet-photo-128.webp`, `components/products/detail/ProductInfo.tsx`(상품 상세 입혀보기 아이콘) `pet-clothes.png` → `pet-clothes-128.webp`. 각각 그림 주소 한 줄만(ProductInfo 는 원래 줄바꿈 CRLF 그대로 저장).
+  - 로컬에서 같은 묶음 검사(없는 파일 · 크기) 통과.
+- 참고: 10-18 반영 때 새 펫렌즈 · 지구본 그림을 192px 로 넣어 `tools/verify_goods_image_budget.py`(헤더 아이콘 128px 이하)가 실패 → GitHub `build` 실패 · `deploy` 건너뜀(Cloudflare 운영 반영은 정상). 128px 로 다시 만들어 통과 확인.
 
 **② `/app/` 을 "앱 설치 안내" 페이지로 바꿈 (협업자 파일 `components/pwa/MobileAppHome.tsx`, 17번째)**
 - 이유: `/app/` 은 원래 설치한 앱의 첫 화면(PWA start_url · APK 시작 경로)이라 모든 서비스 · 로그인 · AI 케어 요약을 모아 두었는데, 지금은 설치한 앱이 `/app/` 을 열면 앱 틀(`AppShell`)이 새 앱 홈(`/app/home-1`)으로 보냅니다. 그래서 이 페이지는 **설치 안 한 모바일 브라우저 방문자만** 봅니다(스토어 제출 문서의 "일반 모바일 웹 `/app/` 에서는 설치 안내 유지"와 같은 방향).
@@ -120,5 +126,11 @@
 **⑤ 설치 안내 창 스티커북 모양 (`components/pwa/PwaInstallProvider.tsx`)**
 - 창 그리는 부분만 `components/pwa/install-guide/InstallHelpSheet.tsx` 로(창이 열릴 때만 `next/dynamic` 으로 불러옴). 여는 법 · 닫는 법(배경 · × · Esc) · 스크롤 잠금 · 인앱 브라우저 판별 · 앱 주소 복사 함수는 그대로입니다. 쓰지 않게 된 `InstallStep` 함수만 지웠습니다.
 
-**④ ⚠ 확인 부탁 — APK 실행 확인 스크립트**
-- `scripts/verify-android-webview.mjs` 는 APK 를 켠 뒤 주소 `/app/index.html` 과 글자 "댕다방 앱 홈"을 기다립니다. 10-17 반영부터 설치한 앱은 `/app/` 에서 새 앱 홈(`/app/home-1/`)으로 가므로, 묶음 크기 문제를 풀면 이 단계에서 실패할 것입니다. 기대값(주소 · 글자, `tests/smart-fit-on-device-hybrid.test.mjs` 의 같은 문구 확인 포함)을 새 앱 홈에 맞춰 주세요. 스크립트는 손대지 않았습니다.
+**④ APK 실행 확인 스크립트 · 앱 시작 화면 (수정함, 사용자 결정 2026-10-18)**
+- 앱 쪽 문제: 네이티브 앱은 `/app/index.html` 로 시작하고 주소가 그대로 남는데(capacitor `appStartPath`), 앱 틀의 "시작 주소 → 새 앱 홈" 규칙이 `/app/` 만 알아봐서 **APK 가 새 앱 홈 대신 `/app/` 페이지(지금은 설치 안내)를 보여 줄 수 있었습니다.** → `components/app-shell/AppShell.tsx` 규칙이 `/app/index.html` · `/app/index` 도 시작 주소로 보게 고침.
+- 검사 쪽: `scripts/verify-android-webview.mjs` 가 예전 앱 홈(주소 `/app/index.html` · 글자 "댕다방 앱 홈")을 기다림 → 기대값을 새 앱 홈으로: `expectedPath = "/app/home-1/"`, `expectedText = "댕다방에 오신 걸 환영해요"`(새 앱 홈의 비회원 인사 — 에뮬레이터는 로그인 전). 나머지(제목에 "댕다방" · 문서 로드 완료 · 20번 재시도)는 그대로. `tests/smart-fit-on-device-hybrid.test.mjs` 의 같은 두 줄도 맞춤.
+- 확인 범위: 로컬에 안드로이드 에뮬레이터가 없어 **이 실행 확인 단계는 돌려 보지 못했습니다.** 운영 빌드 결과물의 `/app/home-1/index.html` 에 그 문구가 들어 있는 것만 확인. GitHub Native package validation 결과로 최종 확인 — 실패하면 알려 주세요.
+
+**⑥ 설치한 앱(PWA)을 열 때 설치 안내가 잠깐 보이던 것 (`components/pwa/MobileAppHome.tsx`)**
+- 홈 화면 앱은 `/app/` 으로 시작 → 미리 만든 HTML(웹 헤더 + 설치 안내)이 먼저 그려지고 자바스크립트가 앱 틀을 켠 뒤 새 앱 홈으로 이동해서, 그 사이 설치 안내가 잠깐 보였습니다(사용자 아이폰에서 확인).
+- 고침: 이 페이지에 `<style href precedence>`(React 19 — `<head>` 로 끌어올려 첫 그림부터 적용)로 `@media (display-mode: standalone)` 이면 앱 틀이 켜지기 전까지 크림색 바탕만, 앱 틀이 켜진 뒤(`html.ddb-app-mode`)에는 설치 안내만 숨김. 일반 브라우저는 영향 없음(확인). 네이티브 APK 는 이 미디어 조건에 해당하지 않지만 시작 때 네이티브 스플래시(1.8초)가 덮고, ④ 의 시작 주소 규칙으로 곧 새 앱 홈으로 갑니다.

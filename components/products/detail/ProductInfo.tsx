@@ -297,7 +297,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         />
                         {/* pet-clothes 아이콘 — 각진 사각 대신 둥근 모서리 흰 타일 */}
                         <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl bg-white shadow-inner ring-1 ring-white/50 transition group-hover:scale-105 motion-reduce:transform-none">
-                            <Image src="/images/ui/pet-clothes.png" alt="" fill sizes="44px" className="object-cover" />
+                            <Image src="/images/ui/pet-clothes-128.webp" alt="" fill sizes="44px" className="object-cover" />
                         </span>
                         <span className="relative min-w-0">
                             <span className="block text-[11px] font-bold tracking-wide text-indigo-100">

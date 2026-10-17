@@ -188,7 +188,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                         >
                                             <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-neutral-100">
                                                 {/* 사진 분석 아이콘 — 모서리 둥근 네모 타일 */}
-                                                <Image src="/images/ui/pet-photo.png" alt="" fill sizes="64px" loading="eager" className="object-cover" />
+                                                <Image src="/images/ui/pet-photo-128.webp" alt="" fill sizes="64px" loading="eager" className="object-cover" />
                                             </span>
                                             <span className="min-w-0 flex-1">
                                                 <span className="block text-[15px] font-black text-neutral-950">

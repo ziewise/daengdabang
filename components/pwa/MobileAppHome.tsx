@@ -14,6 +14,17 @@ import { KIT_CSS } from "./home-concepts/kit";
 import { Patch, STICKER_CSS, Tape } from "./home-concepts/sticker-kit";
 import { APP_INSTALL_CSS, InstallBenefits, InstallLabel, InstallPreview, InstallSteps } from "./install-guide/AppInstallGuide";
 
+/**
+ * 설치한 앱으로 열렸을 때의 첫 화면 가림
+ *  - 홈 화면 앱(display-mode: standalone)은 자바스크립트가 돌기 전 첫 그림부터 크림색 바탕만(웹 헤더 · 설치 안내 숨김)
+ *  - 앱 틀이 켜지면(html.ddb-app-mode) 앱 틀은 보이고 이 설치 안내만 계속 숨김 → 곧 앱 홈(/app/home-1)으로 이동
+ * 브라우저(설치 전)에는 해당 없음 — 설치 안내 그대로.
+ */
+const APP_START_CSS = `
+@media (display-mode: standalone) { html:not(.ddb-app-mode) body { background: #fffaf0; } html:not(.ddb-app-mode) body > * { visibility: hidden; } }
+html.ddb-app-mode [data-app-install-page] { visibility: hidden; }
+`;
+
 export default function MobileAppHome() {
     const { canPrompt, isInAppBrowser, isNativeApp, isReady, isStandalone, platform, requestInstall } = usePwaInstall();
 
@@ -25,7 +36,9 @@ export default function MobileAppHome() {
             : "설치 방법 크게 보기";
 
     return (
-        <div className="relative min-h-[calc(100vh-var(--header-height))] break-keep px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 text-[#3a2f2c] sm:px-6 sm:pt-8">
+        <div data-app-install-page className="relative min-h-[calc(100vh-var(--header-height))] break-keep px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-5 text-[#3a2f2c] sm:px-6 sm:pt-8">
+            {/* 설치한 앱(PWA)으로 /app/ 을 열 때 앱 홈으로 가기 전 설치 안내가 잠깐 보이지 않게 — <head> 로 올라가 첫 화면부터 적용(React 19 style 끌어올림) */}
+            <style href="ddb-app-install-start" precedence="high">{APP_START_CSS}</style>
             <style>{KIT_CSS + STICKER_CSS + APP_INSTALL_CSS}</style>
             <div className="mx-auto w-full max-w-md">
                 {/* ① 앱 소개 — 다이어리 속지 + 앱 아이콘 스티커 + 앱 화면 미리보기 + 설치 버튼 */}

@@ -168,8 +168,9 @@ test("native validation publishes an installable Android test APK", async () => 
             < startupCheck.lastIndexOf("adb exec-out screencap -p"),
         "the final screenshot must be captured after the rendered DOM check",
     );
-    assert.match(webviewCheck, /expectedText = "댕다방 앱 홈"/);
-    assert.match(webviewCheck, /expectedPath = "\/app\/index\.html"/);
+    // 2026-10-18: 앱 시작(/app/index.html) 뒤 새 앱 홈(/app/home-1/)으로 가므로 확인 기준도 새 앱 홈
+    assert.match(webviewCheck, /expectedText = "댕다방에 오신 걸 환영해요"/);
+    assert.match(webviewCheck, /expectedPath = "\/app\/home-1\/"/);
     assert.match(webviewCheck, /lastState\.text\.includes\(expectedText\)/);
     assert.match(startupCheck, /adb exec-out screencap -p/);
     assert.match(startupCheck, /adb logcat -d -v threadtime --pid="\$app_pid"/);
