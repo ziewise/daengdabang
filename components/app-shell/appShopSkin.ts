@@ -1102,6 +1102,8 @@ ${PLX} main [data-petlens-observation-experience] p[class*="bg-cyan-50"][class*=
 /* ③ 코인 카드(:not(#ddb-none)은 마이·연구소 공통 종이 카드 규칙보다 우선하려는 표시일 뿐 — 그런 id 는 없음) — 노란 코인 봉투(앱 마이의 코인 봉투와 같은 결): 남은 코인은 카페24 큰 분홍 숫자, 분석 가능 횟수는 흰 이름표 */
 ${PLX} main [data-daenglab-analysis-wallet]:not(#ddb-none) { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fff6d6;
     box-shadow: 0 0 0 1.5px #f3e1b0, 0 10px 16px -12px rgba(160, 110, 20, .5); }
+/* 코인 봉투는 행동·소리 분석 맨 앞(탭 바로 아래)으로 — 분석 전에 남은 코인을 먼저 보게(사용자 2026-10-17). 화면 순서만 바꿈(order), 코드 순서 · 동작 그대로 */
+${PLX} [data-petlens-observation-experience] > [data-daenglab-analysis-wallet] { order: -1; }
 ${PLX} main [data-daenglab-analysis-wallet]:not(#ddb-none)::before { ${TAPE} top: -7px; left: 50%; width: 52px; margin-left: -26px; rotate: -2deg;
     background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
 ${PLX} main [data-daenglab-analysis-wallet] strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 26px; line-height: 1.1; color: #c4456f; }

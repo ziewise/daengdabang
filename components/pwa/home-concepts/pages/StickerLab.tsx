@@ -286,26 +286,7 @@ export default function StickerLab() {
 
                             {/* 분석 두 가지 — 젤리 그림 카드 */}
                             <SectionLabel className="mt-7" icon="fa-lightbulb">궁금할 땐 분석해요</SectionLabel>
-                            <div className="mt-3 grid grid-cols-2 gap-2.5">
-                                <Link href={photoHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#fff8e3", rotate: "-0.8deg" }}>
-                                    <LabArt k="photo" />
-                                    <span className="ah-display mt-2 block text-[14px] leading-snug">사진 · 외형 분석</span>
-                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>털 · 체형 · 케어 포인트와 맞춤 상품</span>
-                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#1f7a59]" style={{ background: "rgba(170,230,200,.9)", rotate: "4deg" }}>무료</span>
-                                </Link>
-                                <Link href={observationHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#f3eeff", rotate: "0.8deg" }}>
-                                    <LabArt k="sound" />
-                                    <span className="ah-display mt-2 block text-[14px] leading-snug">행동 · 소리 분석</span>
-                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>15초 영상으로 행동 · 소리 · 건강 신호</span>
-                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#a8560f]" style={{ background: "rgba(255,226,150,.9)", rotate: "-4deg" }}>1회 {today.analysisCoinCost}C</span>
-                                </Link>
-                            </div>
-                            {/* 행동·소리 분석은 별개 기능 — 운영 연구소 문구 */}
-                            <p className="ah-light mt-3 flex items-start gap-1.5 px-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>
-                                <i aria-hidden="true" className="fa-solid fa-circle-info mt-[3px] text-[10px] text-[#8a74d6]" />
-                                <span><b className="ah-display font-normal text-[#5b46b0]">행동·소리 분석은 등록한 우리 아이와 별개예요.</b> 궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.</span>
-                            </p>
-                            {/* 코인 — 남은 횟수 · 모자라면 매일 댕생활(출근도장)로. 출근 보상 코인은 서버 값(today.dailyRewardCoins).
+                            {/* 코인 — 분석 카드 위(분석 전에 남은 코인을 먼저 보게, 사용자 2026-10-17) · 남은 횟수 · 모자라면 매일 댕생활(출근도장)로. 출근 보상 코인은 서버 값(today.dailyRewardCoins).
                                 웹 연구소의 코인 부족 버튼은 /mypage#daenglab-wallet(적립금 → 코인 전환)로 가지만, 앱은 코인 모으는 곳 = 출근 화면이라 /app/sticker/daily/ 유지 */}
                             <Link href={pageHref("sticker", "daily")} className="lb-coin mt-3 flex items-center gap-2.5 rounded-full py-2 pl-2.5 pr-3.5">
                                 <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[11px] text-[#7a4b00] ah-display">C</span>
@@ -326,6 +307,25 @@ export default function StickerLab() {
                                 </Link>
                             ) : null}
                             <p className="ah-light mt-1.5 px-2 text-[11px]" style={{ color: TEXT_SOFT }}>분석 실패·반려견 미검출·고객용 후보 0건 결과는 코인이 자동 환급돼요.</p>
+                            <div className="mt-4 grid grid-cols-2 gap-2.5">
+                                <Link href={photoHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#fff8e3", rotate: "-0.8deg" }}>
+                                    <LabArt k="photo" />
+                                    <span className="ah-display mt-2 block text-[14px] leading-snug">사진 · 외형 분석</span>
+                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>털 · 체형 · 케어 포인트와 맞춤 상품</span>
+                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#1f7a59]" style={{ background: "rgba(170,230,200,.9)", rotate: "4deg" }}>무료</span>
+                                </Link>
+                                <Link href={observationHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#f3eeff", rotate: "0.8deg" }}>
+                                    <LabArt k="sound" />
+                                    <span className="ah-display mt-2 block text-[14px] leading-snug">행동 · 소리 분석</span>
+                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>15초 영상으로 행동 · 소리 · 건강 신호</span>
+                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#a8560f]" style={{ background: "rgba(255,226,150,.9)", rotate: "-4deg" }}>1회 {today.analysisCoinCost}C</span>
+                                </Link>
+                            </div>
+                            {/* 행동·소리 분석은 별개 기능 — 운영 연구소 문구 */}
+                            <p className="ah-light mt-3 flex items-start gap-1.5 px-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>
+                                <i aria-hidden="true" className="fa-solid fa-circle-info mt-[3px] text-[10px] text-[#8a74d6]" />
+                                <span><b className="ah-display font-normal text-[#5b46b0]">행동·소리 분석은 등록한 우리 아이와 별개예요.</b> 궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.</span>
+                            </p>
                             {/* 응급 안내 — 톡 하면 증상 목록이 펼쳐지는 메모(운영 연구소 문구) */}
                             <div className="lb-alert mt-4 rounded-[10px] px-3 py-2.5">
                                 <button type="button" onClick={() => { setSosOpen((v) => !v); haptic("light"); }} aria-expanded={sosOpen} className="ah-display flex w-full items-center gap-2 text-left text-[12.5px]">
