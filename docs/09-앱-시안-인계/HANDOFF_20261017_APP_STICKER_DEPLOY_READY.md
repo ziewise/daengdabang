@@ -111,7 +111,8 @@
 - 함께 정할 것: 우리 앱에 "AI 케어 한눈에(사진 · 주간 비교 · 행동·소리 기록)" 화면을 어디에 둘지 — `AppAiCareOverview` 를 다시 쓸지, 지울지.
 
 **③ 헤더 아이콘 (모바일 웹)**
-- 로고 옆 검은 "앱 홈" 알약 → 펫렌즈 버튼 **왼쪽** 동그라미 "앱 설치" 그림 아이콘(`components/pwa/InstalledAppHomeButton.tsx`, `components/header/Header.tsx` 는 자리만 옮김). 가는 곳은 전과 같은 `/app/`. 가끔(한 방문 최대 3번, 장바구니 · 결제 · 로그인 화면 제외) 아이콘 아래로 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾".
+- 로고 옆 검은 "앱 홈" 알약 → 펫렌즈 버튼 **왼쪽** 동그라미 "앱 설치" 그림 아이콘(`components/pwa/InstalledAppHomeButton.tsx`, `components/header/Header.tsx` 는 자리만 옮김). 가는 곳은 전과 같은 `/app/`. 아이콘 아래로 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾"(3초 뒤 처음 · 20초마다, "오늘 안 보기" 버튼, 장바구니 · 결제 · 로그인 화면과 다른 창 — "정식 오픈 준비 중" 안내 · 메뉴 — 이 열려 있을 때는 건너뜀).
+- `/app/` 탭 제목 "모바일 앱 홈" → "댕다방 앱 설치 안내"(`app/app/page.tsx`, 주소 그대로).
 - 휴대폰 폭(md 미만)에서는 헤더의 지구본(언어)을 숨겼습니다(`Header.tsx` `max-md:hidden`) — 메뉴(☰) 맨 위에 같은 언어 버튼이 있습니다. 태블릿 · PC 는 그대로.
 - 펫렌즈 · 지구본 아이콘은 그림 파일만 새 그림으로 교체(`public/images/ui/pet-lens-128.webp` · `lang-globe-128.webp`, 파일 이름 그대로) — 펫렌즈 창 · 홈 워터마크 배지 · 국가/언어 창도 같은 새 그림.
 - 점검표: `tests/pwa-installation.test.mjs` 의 `<span>앱 홈</span>` 확인 한 줄을 `<span className="sr-only">앱 설치 안내</span>` 로.

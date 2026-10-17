@@ -51,6 +51,9 @@ export function isAppModeNow(): boolean {
 }
 
 export const isAppPath = (pathname: string) => pathname === "/app" || pathname.startsWith("/app/");
+// /app/ 자체는 브라우저 앱 설치 안내 페이지(2026-10-18) — 개발 서버에서도 운영처럼 웹 화면으로 보이게 시안 규칙에서 뺀다
+const isInstallGuidePath = (pathname: string) => pathname === "/app" || pathname === "/app/";
+const isDevAppPath = (pathname: string) => isAppPath(pathname) && !isInstallGuidePath(pathname);
 
 export function useAppMode(pathname: string): boolean {
     const { isStandalone, isNativeApp } = usePwaInstall();
@@ -62,11 +65,11 @@ export function useAppMode(pathname: string): boolean {
         if (!DEV_PREVIEW) return;
         const param = new URLSearchParams(window.location.search).get("app");
         if (param === "0") writeFlag(false);
-        else if (param === "1" || isAppPath(pathname)) {
+        else if (param === "1" || isDevAppPath(pathname)) {
             if (!readFlag()) writeFlag(true);
         }
     }, [pathname]);
 
     // 배포: 네이티브 앱 · 설치 앱만 / 개발 서버: 시안 확인용으로 /app/ 화면 · 저장값도
-    return isNativeApp || isStandalone || (DEV_PREVIEW && (stored || isAppPath(pathname)));
+    return isNativeApp || isStandalone || (DEV_PREVIEW && !isInstallGuidePath(pathname) && (stored || isDevAppPath(pathname)));
 }
