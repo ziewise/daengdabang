@@ -1376,7 +1376,10 @@ ${PLX} [data-petlens-observation-quality] > p:first-child, ${PLX} [data-petlens-
     font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; color: #8a5a0c; }
 ${PLX} [data-petlens-observation-quality] span[class*="rounded-full"] { background: #fff; color: #6b5a52; font-size: 11.5px; box-shadow: 0 0 0 1.5px #f1e3da; }
 ${PLX} [data-petlens-observation-evidence] li { border-radius: 4px 4px 12px 4px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
-${PLX} [data-petlens-observation-evidence] li > span:first-child { background: #ffe1ea; color: #c4456f; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: 0 0 0 1.5px #f6a9bf; }
+${PLX} [data-petlens-observation-evidence] li { align-items: center; }
+/* 시간 스티커 — 줄 높이만큼 늘어나 글자가 위로 붙던 것(사용자 2026-10-17) → 글자 크기 알약 · 줄 가운데 */
+${PLX} [data-petlens-observation-evidence] li > span:first-child { align-self: center; display: inline-grid; place-items: center; min-width: 52px; height: 28px; margin-top: 0; padding: 0 10px; line-height: 1;
+    background: #ffe1ea; color: #c4456f; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; box-shadow: 0 0 0 1.5px #f6a9bf; }
 ${PLX} [data-petlens-observation-evidence] li p + p { font-size: 13px; color: #4a3a33; }
 ${PLX} [data-petlens-observation-result] > [data-app-fold] > [data-app-fold-body] > [data-petlens-observation-behavior]:not(#ddb-none) { padding: 0; background: transparent; box-shadow: none; }
 
