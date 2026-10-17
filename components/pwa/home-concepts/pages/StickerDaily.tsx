@@ -644,9 +644,9 @@ export default function StickerDaily() {
                                         <span className="bn-in -my-2 -ml-1 shrink-0" style={{ rotate: "-8deg", ["--d" as string]: "80ms" }}>
                                             <Image src={CARD_IMAGES[c.id]} alt="" width={176} height={176} priority className="bn-art h-[4.6rem] w-[4.6rem]" />
                                         </span>
-                                        <div className="min-w-0 pt-0.5">
-                                            <p className="bn-in ah-light text-[10.5px] tracking-[0.08em]" style={{ color: ink, ["--d" as string]: "140ms" }}>{c.eyebrow}</p>
-                                            <p className="bn-in ah-display mt-0.5 text-[21px] leading-snug" style={{ ["--d" as string]: "200ms" }}><span className="st-marker">{c.title}</span></p>
+                                        {/* 영문 꼬리표(c.eyebrow · MEMBERSHIP BETA 등)는 앱에서 쓰지 않음 — 다른 화면의 영문 꼬리표 숨김과 같게(2026-10-17 화면 점검) */}
+                                        <div className="min-w-0 pt-1.5">
+                                            <p className="bn-in ah-display text-[21px] leading-snug" style={{ ["--d" as string]: "200ms" }}><span className="st-marker">{c.title}</span></p>
                                         </div>
                                     </div>
                                 </div>

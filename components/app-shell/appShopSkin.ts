@@ -134,6 +134,12 @@ export const APP_SHOP_SKIN_CSS = `
 /* 스크롤바 숨김 — 앱에서는 어느 화면 · 가로 넘김 줄 · 속지 · 창이든 스크롤바를 그리지 않음(스크롤 동작은 그대로, 사용자 2026-10-17 "앱이잖아") */
 html.ddb-app-mode, html.ddb-app-mode * { scrollbar-width: none; }
 html.ddb-app-mode::-webkit-scrollbar, html.ddb-app-mode *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* 본문 폭 — 앱 본문(AppShell main, 세로 flex) 안에서 가운데 정렬(mx-auto)한 웹 화면 칸은 내용 폭만큼 늘어나 버림
+   (개인정보처리방침의 760px 표 → 칸 792px → 오른쪽 글자가 화면 밖에서 잘림, 2026-10-17 화면 점검). 칸은 화면 폭까지만, 넓은 표는 원래 가로 넘김 칸 안에서 밀어 봄 */
+html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; min-width: 0; }
+/* 한글 줄바꿈 — 낱말 중간에서 끊기지 않게("보여/요" · "베/타" · "있어/요.", 2026-10-17 화면 점검). 앱 전체(창 · 속지 포함, body 에서 물려받음).
+   띄어쓰기 없는 긴 글자(이메일 · 주소)만 칸 끝에서 끊음. break-all 같은 개별 지정은 그대로 우선 */
+html.ddb-app-mode body { word-break: keep-all; overflow-wrap: break-word; }
 
 /* 앱 글꼴 — 본문 나눔스퀘어라운드(굵게) · 제목 카페24 써라운드 (우리 사이트 public/fonts, 외부 서버 없이) */
 @font-face { font-family: "NanumSquareRound"; font-weight: 400; src: url("/fonts/NanumSquareRoundR.woff2") format("woff2"); font-display: swap; }
@@ -684,22 +690,23 @@ ${SEARCH} ul button .ddb-price-badge::after { display: none; }
 ${SEARCH} ul button p[class*="text-aurora-indigo"] { color: #8b6fd6; }
 
 /* 상품 상세 가격 · 아래 구매 바 가격도 같은 노란 가격표(크기만 큼) — 가격 배지 이름은 꼬리표 안 작은 글씨 */
-${S} [data-product-detail-content] div:has(> p.ddb-crayon-price) { position: relative; width: fit-content; padding: 6px 14px 6px 24px; background: #fff3a6; color: #6b4708;
+/* (상세 안 "같이 보면 좋은 상품" 카드 가격은 제외 — 상세 큰 가격 규칙이 카드에도 걸려 28px 가격표가 카드 밖 · 화면 밖으로 넘치던 것, 2026-10-17 화면 점검) */
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(article[data-pet-product] *) { position: relative; width: fit-content; padding: 6px 14px 6px 24px; background: #fff3a6; color: #6b4708;
   border-radius: 4px 10px 10px 4px; clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%); }
-${S} [data-product-detail-content] div:has(> p.ddb-crayon-price)::before { content: ""; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 999px;
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(article[data-pet-product] *)::before { content: ""; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 999px;
   background: #fffdf8; box-shadow: inset 0 0 0 1px rgba(170, 120, 40, .35); }
-${S} [data-product-detail-content] div:has(> p.ddb-crayon-price) > .ddb-price-badge { min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; color: #8a6a2a;
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(article[data-pet-product] *) > .ddb-price-badge { min-height: 0; padding: 0; border: 0; background: none; box-shadow: none; transform: none; color: #8a6a2a;
   font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 11px; }
-${S} [data-product-detail-content] div:has(> p.ddb-crayon-price) > .ddb-price-badge::after { display: none; }
-${S} [data-product-detail-content] p.ddb-crayon-price { background: none; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
+${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(article[data-pet-product] *) > .ddb-price-badge::after { display: none; }
+${S} [data-product-detail-content] p.ddb-crayon-price:not(article[data-pet-product] *) { background: none; -webkit-text-fill-color: currentColor; color: #6b4708; filter: none;
   font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.01em; }
-${S} [data-product-detail-content] .fixed.bottom-0 div:has(> p.ddb-crayon-price) { padding: 3px 9px 3px 16px; border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); }
-${S} [data-product-detail-content] .fixed.bottom-0 div:has(> p.ddb-crayon-price)::before { left: 7px; width: 4px; height: 4px; margin-top: -2px; }
-${S} [data-product-detail-content] .fixed.bottom-0 p.ddb-crayon-price { font-size: 16px; }
+${S} [data-product-detail-content] .fixed.bottom-0 div:has(> p.ddb-crayon-price):not(article[data-pet-product] *) { padding: 3px 9px 3px 16px; border-radius: 3px 6px 6px 3px; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); }
+${S} [data-product-detail-content] .fixed.bottom-0 div:has(> p.ddb-crayon-price):not(article[data-pet-product] *)::before { left: 7px; width: 4px; height: 4px; margin-top: -2px; }
+${S} [data-product-detail-content] .fixed.bottom-0 p.ddb-crayon-price:not(article[data-pet-product] *) { font-size: 16px; }
 /* 상세 가격표가 링크 복사 · 공유 버튼을 다음 줄로 밀지 않게 — 휴대폰 폭에서 가격 글씨만 조금 작게, 배지와 가격은 위아래로 */
 @media (max-width: 767px) {
-  ${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(.fixed *) { flex-direction: column; align-items: flex-start; gap: 2px; padding: 5px 12px 6px 22px; }
-  ${S} [data-product-detail-content] div:not(.fixed *) > p.ddb-crayon-price { font-size: 28px; }
+  ${S} [data-product-detail-content] div:has(> p.ddb-crayon-price):not(article[data-pet-product] *):not(.fixed *) { flex-direction: column; align-items: flex-start; gap: 2px; padding: 5px 12px 6px 22px; }
+  ${S} [data-product-detail-content] div:not(.fixed *) > p.ddb-crayon-price:not(article[data-pet-product] *) { font-size: 28px; }
 }
 
 /* ── 21) 외부 가격 비교(전체 상품 · 상품군 화면에서 검색어가 있을 때, 협업자 ExternalProductCard · ExternalProductComparisonTable) ──

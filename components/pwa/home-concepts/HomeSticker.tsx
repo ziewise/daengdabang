@@ -51,7 +51,8 @@ function StickerCard({ cover, i, note, onTap, onLongPress }: { cover: Cover; i: 
             <span className="st-diecut-card block rounded-[11%/5.6%] bg-white p-[4px]">
                 <CoverArt cover={cover} sizes="33vw" className="rounded-[9.5%/4.9%]" />
             </span>
-            <PostIt color={NOTE_COLORS[i]} rot={i === 1 ? 5 : -5} className="-bottom-5 left-1/2 max-w-[94%] -translate-x-1/2 whitespace-nowrap">{note}</PostIt>
+            {/* 메모 — 사진보다 조금 넓게까지(112%) 한 줄, 그래도 길면 두 줄(한 줄 고정이면 "10008C · 분석 1000회"처럼 긴 값이 메모 밖으로 넘침, 2026-10-17 화면 점검) */}
+            <PostIt color={NOTE_COLORS[i]} rot={i === 1 ? 5 : -5} className="-bottom-5 left-1/2 w-max max-w-[112%] -translate-x-1/2">{note}</PostIt>
         </div>
     );
 }
