@@ -112,6 +112,7 @@
 
 **③ 헤더 아이콘 (모바일 웹)**
 - 로고 옆 검은 "앱 홈" 알약 → 펫렌즈 버튼 **왼쪽** 동그라미 "앱 설치" 그림 아이콘(`components/pwa/InstalledAppHomeButton.tsx`, `components/header/Header.tsx` 는 자리만 옮김). 가는 곳은 전과 같은 `/app/`. 가끔(한 방문 최대 3번, 장바구니 · 결제 · 로그인 화면 제외) 아이콘 아래로 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾".
+- 휴대폰 폭(md 미만)에서는 헤더의 지구본(언어)을 숨겼습니다(`Header.tsx` `max-md:hidden`) — 메뉴(☰) 맨 위에 같은 언어 버튼이 있습니다. 태블릿 · PC 는 그대로.
 - 펫렌즈 · 지구본 아이콘은 그림 파일만 새 그림으로 교체(`public/images/ui/pet-lens-128.webp` · `lang-globe-128.webp`, 파일 이름 그대로) — 펫렌즈 창 · 홈 워터마크 배지 · 국가/언어 창도 같은 새 그림.
 - 점검표: `tests/pwa-installation.test.mjs` 의 `<span>앱 홈</span>` 확인 한 줄을 `<span className="sr-only">앱 설치 안내</span>` 로.
 

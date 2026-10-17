@@ -294,8 +294,8 @@ export default function Header() {
                                 priority
                             />
                         </button>
-                        {/* 지구본 배지 — 펫렌즈 우측(모바일에서도 노출: 펫렌즈→지구본→햄버거) */}
-                        <div className="flex items-center">
+                        {/* 지구본 배지 — 펫렌즈 우측. 휴대폰 폭(md 미만)에서는 숨김 — 메뉴(☰) 맨 위에 같은 언어 버튼이 있음(사용자 결정 2026-10-18) */}
+                        <div className="flex items-center max-md:hidden">
                             <LanguageSwitcher />
                         </div>
                         <button
