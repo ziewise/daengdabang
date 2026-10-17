@@ -14,6 +14,8 @@
   *    기록: 주간 기록(가로로 넘기는 메모 카드 · 새로 보임/이번엔 안 보임, 실제 기록처럼 사진 없음) · 행동·소리 분석 메모(긴급도 = 테이프 이름표) ·
  *          진단 아님 안내 · 주간 리포트 전체 보기(와펜 → 앱 전용 건강 변화 리포트 /app/sticker/report)
  *  - 로그인 전: 지난주 · 이번 주 예시 비교 폴라로이드(예시 도장) + 로그인 초대
+ *  - 반려견 = 서버 프로필(apiProfileId)이 있는 첫 마리(웹 AppAiCareOverview), 없으면 반려견 등록하기 와펜 · 불러오는 중 / 실패(분홍 메모) / 없음을 나눔
+ *  - 분석 카드 주소 = 웹 AppAiCareOverview 와 같은 profile 주소, 분석 기록 메모 = 그 기록 결과(협업자 ?observation= 딥링크)
  * 문구: 사진 방향 · 코인 · 긴급도 · 응급 안내는 협업자 연구소 화면 문구(docs/07 03-댕다방연구소.md). 그 밖 짧은 안내는 시안용.
  */
 
@@ -22,10 +24,11 @@ import { useEffect, useRef, useState } from "react";
 import { haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { LAB_EXAMPLE, WEEKLY_RECORDS, pageHref } from "../page-data";
-import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth, type PetProfile } from "@/lib/store";
 import { loadPetObservationHistory, type PetObservationHistoryItem } from "@/lib/petlens-observation";
-import type { WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
-import { ConceptBar, HC_CSS, useDemoSession, useMember, useTodayDemo, useWeeklyRecords, useInitialTab } from "../shared";
+import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
+import { PETLENS_PROFILE_SETUP_HREF, petLensObservationHref, petLensProfileHref } from "@/lib/petlens-routing";
+import { ConceptBar, HC_CSS, useDemoSession, useTodayDemo, useInitialTab } from "../shared";
 import { DiaryBody, DiaryTabs, InkStamp, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { LoginInvite, STICKER_CSS, Tape, Patch } from "../sticker-kit";
 
@@ -65,24 +68,73 @@ function toObservationCard(item: PetObservationHistoryItem) {
         key: item.id,
         date: Number.isNaN(d.getTime()) ? "" : `${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`,
         urgency: URGENCY_LABEL[item.result.urgency.level] ?? "판단 어려움",
-        summary: item.result.urgency.headline || item.result.summary,
+        // 웹 기록 목록(PetLensObservationHistory)과 같은 글 = result.summary
+        summary: item.result.summary,
+        // 누르면 그 기록의 결과 — 웹은 목록에서 openHistoryResult(item) 로 result 를 바로 띄우고,
+        // 앱은 협업자 딥링크(/pet-lens/?observation=requestId → loadPetObservationJobStatus → 완료 결과를 같은 setResult 로 띄움)로 같은 결과를 엶.
+        // 기록 id 가 곧 requestId(parsePetObservationHistoryItem), 형식이 틀리면 협업자 함수가 ?mode=observation 으로 돌려줌
+        href: petLensObservationHref(item.requestId),
     };
 }
 
-/** 최근 행동 · 소리 분석 기록 — 협업자 loadPetObservationHistory 그대로 */
+/** 연구소에서 쓸 반려견 — 웹 AppAiCareOverview availablePets 와 같은 기준(apiProfileId 가 양의 정수) */
+function availablePets(pets: PetProfile[]) {
+    return pets.filter((p): p is PetProfile & { apiProfileId: number } => Number.isInteger(p.apiProfileId) && Number(p.apiProfileId) > 0);
+}
+
+/** 웹 마이펫 불러오기 실패 문구(MyPetHub weeklyState.error) 그대로 */
+const WEEKLY_ERROR = "주간 사진 기록을 불러오지 못했습니다. 잠시 후 다시 확인해 주세요.";
+
+/** 주간 기록 — 협업자 loadWeeklyPhotoAnalyses(웹 마이펫과 같은 함수)를 위 반려견 기준으로. 불러오는 중(null) · 실패(error) · 없음([])을 나눔 */
+function useLabWeekly(petProfileId: number | undefined, limit = 6) {
+    const { user } = useAuth();
+    const token = user?.apiAccessToken || "";
+    const [state, setState] = useState<{ profileId?: number; records: WeeklyPhotoAnalysisRecord[] | null; error: string }>({ records: null, error: "" });
+    useEffect(() => {
+        if (!petProfileId || !token) return;
+        let active = true;
+        loadWeeklyPhotoAnalyses({ petProfileId, accessToken: token, limit })
+            .then((list) => { if (active) setState({ profileId: petProfileId, records: list, error: "" }); })
+            .catch(() => { if (active) setState({ profileId: petProfileId, records: [], error: WEEKLY_ERROR }); });
+        return () => { active = false; };
+    }, [petProfileId, token, limit]);
+    // 로그인 토큰이 없으면 웹처럼 불러오지 않음 → 기록 없음
+    if (!petProfileId || !token) return { records: [] as WeeklyPhotoAnalysisRecord[], error: "" };
+    return state.profileId === petProfileId ? state : { records: null, error: "" };
+}
+
+/** 최근 행동 · 소리 분석 기록 — 협업자 loadPetObservationHistory 그대로(웹 기록 목록 refreshHistory 와 같은 8개 · 실패하면 빈 목록) */
 function useObservationHistory(petProfileId?: number) {
     const { user } = useAuth();
     const token = user?.apiAccessToken || "";
-    const [items, setItems] = useState<PetObservationHistoryItem[] | null>(null);
+    const [state, setState] = useState<{ profileId?: number; items: PetObservationHistoryItem[] }>({ items: [] });
     useEffect(() => {
         if (!petProfileId || !token) return;
         const controller = new AbortController();
-        loadPetObservationHistory({ petProfileId, accessToken: token, limit: 4, signal: controller.signal })
-            .then(setItems)
-            .catch(() => { if (!controller.signal.aborted) setItems([]); });
+        loadPetObservationHistory({ petProfileId, accessToken: token, limit: 8, signal: controller.signal })
+            .then((items) => setState({ profileId: petProfileId, items }))
+            .catch(() => { if (!controller.signal.aborted) setState({ profileId: petProfileId, items: [] }); });
         return () => controller.abort();
     }, [petProfileId, token]);
-    return items;
+    if (!petProfileId || !token) return [] as PetObservationHistoryItem[];
+    return state.profileId === petProfileId ? state.items : null; // null = 불러오는 중
+}
+
+/** 반려견이 없을 때 안내 — 웹 MyPetHub "먼저 우리 아이를 등록해 주세요"(반려견은 있는데 서버 프로필이 없으면 AppAiCareOverview "우리 아이부터 연결해 주세요")
+ *  + 반려견 등록하기 와펜(협업자 PETLENS_PROFILE_SETUP_HREF — 마이페이지가 읽는 petProfile=required) */
+function PetSetupMemo({ hasPets, className = "" }: { hasPets: boolean; className?: string }) {
+    return (
+        <div className={`lb-memo relative rounded-[10px] px-3.5 pb-3.5 pt-3 ${className}`} style={{ rotate: "-0.6deg" }}>
+            <span className="ah-display block text-[13.5px] leading-snug">{hasPets ? "우리 아이부터 연결해 주세요" : "먼저 우리 아이를 등록해 주세요"}</span>
+            <span className="ah-light mt-1 block text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.</span>
+            <Patch href={PETLENS_PROFILE_SETUP_HREF} small className="mt-3">반려견 등록하기<i aria-hidden="true" className="fa-solid fa-paw text-[12px]" /></Patch>
+        </div>
+    );
+}
+
+/** 불러오기 실패 — 분홍 메모지(웹 MyPetHub 빨간 안내 줄과 같은 문구) */
+function ErrorMemo({ message, className = "" }: { message: string; className?: string }) {
+    return <p role="alert" className={`st-postit ah-light relative px-3.5 pb-2.5 pt-3 text-[12px] ${className}`} style={{ background: "#ffd6e2", rotate: "0.8deg" }}>{message}</p>;
 }
 
 const URGENCY_TAPE: Record<string, { tape: string; ink: string }> = {
@@ -131,11 +183,18 @@ export default function StickerLab() {
     const initialTab = useInitialTab(TABS.length);
     const member = session === "member";
     const today = useTodayDemo(session);
-    // 실제 데이터(배포 전 연결 2026-10-16)
-    const { pet, petName } = useMember();
-    const weekly = useWeeklyRecords(6);
+    // 실제 데이터(배포 전 연결 2026-10-16) — 반려견은 pets[0] 이 아니라 서버 프로필(apiProfileId)이 있는 첫 마리(웹 AppAiCareOverview 와 같음)
+    const { user } = useAuth();
+    const allPets = user?.pets ?? [];
+    const pet = availablePets(allPets)[0];
+    const petName = pet?.name ?? "우리 아이";
+    const petId = pet?.apiProfileId;
+    const weekly = useLabWeekly(petId, 6);
     const records = (weekly.records ?? []).map(toWeekCard);
-    const observations = useObservationHistory(pet?.apiProfileId);
+    const observations = useObservationHistory(petId);
+    // 분석 카드 주소 — 웹 AppAiCareOverview photoHref · observationHref 와 같음(아이가 없으면 같은 협업자 함수의 기본 주소)
+    const photoHref = petLensProfileHref(petId);
+    const observationHref = petId ? `/pet-lens/?profile=${petId}&mode=observation#observation` : "/pet-lens/?mode=observation#observation";
     const coinRef = useRef<HTMLSpanElement>(null);
     // 처음 쪽: 주소 ?tab= 그대로(처음 그릴 때부터)
     const [tab, setTab] = useState(() => initialTab);
@@ -217,21 +276,24 @@ export default function StickerLab() {
                                 ))}
                             </Link>
                             {/* 지난 기록 — 메모지 한 장 */}
-                            <div className="lb-memo relative mt-3.5 rounded-[10px] px-3.5 pb-2.5 pt-3" style={{ rotate: "-0.6deg" }}>
-                                <span className="ah-display block text-[11px] text-[#8f5e12]">{records[0] ? `지난 기록 · ${records[0].week}` : "지난 기록"}</span>
-                                <span className="ah-display mt-0.5 block text-[13.5px] leading-snug">{records[0] ? records[0].headline : weekly.records ? "아직 주간 기록이 없어요. 이번 주 첫 사진을 남겨 보세요." : "기록을 확인하고 있어요"}</span>
-                            </div>
+                            {/* 반려견(서버 프로필)이 없으면 끝없는 "확인 중" 대신 등록 안내 · 불러오기 실패는 분홍 메모 */}
+                            {!pet ? <PetSetupMemo hasPets={allPets.length > 0} className="mt-3.5" /> : weekly.error ? <ErrorMemo message={weekly.error} className="mt-3.5" /> : (
+                                <div className="lb-memo relative mt-3.5 rounded-[10px] px-3.5 pb-2.5 pt-3" style={{ rotate: "-0.6deg" }}>
+                                    <span className="ah-display block text-[11px] text-[#8f5e12]">{records[0] ? `지난 기록 · ${records[0].week}` : "지난 기록"}</span>
+                                    <span className="ah-display mt-0.5 block text-[13.5px] leading-snug">{records[0] ? records[0].headline : weekly.records ? "아직 주간 기록이 없어요. 이번 주 첫 사진을 남겨 보세요." : "기록을 확인하고 있어요"}</span>
+                                </div>
+                            )}
 
                             {/* 분석 두 가지 — 젤리 그림 카드 */}
                             <SectionLabel className="mt-7" icon="fa-lightbulb">궁금할 땐 분석해요</SectionLabel>
                             <div className="mt-3 grid grid-cols-2 gap-2.5">
-                                <Link href="/pet-lens/?profile=1" className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#fff8e3", rotate: "-0.8deg" }}>
+                                <Link href={photoHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#fff8e3", rotate: "-0.8deg" }}>
                                     <LabArt k="photo" />
                                     <span className="ah-display mt-2 block text-[14px] leading-snug">사진 · 외형 분석</span>
                                     <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>털 · 체형 · 케어 포인트와 맞춤 상품</span>
                                     <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#1f7a59]" style={{ background: "rgba(170,230,200,.9)", rotate: "4deg" }}>무료</span>
                                 </Link>
-                                <Link href="/pet-lens/?profile=1&mode=observation" className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#f3eeff", rotate: "0.8deg" }}>
+                                <Link href={observationHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#f3eeff", rotate: "0.8deg" }}>
                                     <LabArt k="sound" />
                                     <span className="ah-display mt-2 block text-[14px] leading-snug">행동 · 소리 분석</span>
                                     <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>15초 영상으로 행동 · 소리 · 건강 신호</span>
@@ -243,15 +305,26 @@ export default function StickerLab() {
                                 <i aria-hidden="true" className="fa-solid fa-circle-info mt-[3px] text-[10px] text-[#8a74d6]" />
                                 <span><b className="ah-display font-normal text-[#5b46b0]">행동·소리 분석은 등록한 우리 아이와 별개예요.</b> 궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.</span>
                             </p>
-                            {/* 코인 — 남은 횟수 · 모자라면 매일 댕생활(출근도장)로 */}
+                            {/* 코인 — 남은 횟수 · 모자라면 매일 댕생활(출근도장)로. 출근 보상 코인은 서버 값(today.dailyRewardCoins).
+                                웹 연구소의 코인 부족 버튼은 /mypage#daenglab-wallet(적립금 → 코인 전환)로 가지만, 앱은 코인 모으는 곳 = 출근 화면이라 /app/sticker/daily/ 유지 */}
                             <Link href={pageHref("sticker", "daily")} className="lb-coin mt-3 flex items-center gap-2.5 rounded-full py-2 pl-2.5 pr-3.5">
                                 <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[11px] text-[#7a4b00] ah-display">C</span>
                                 <span className="ah-display flex-1 text-[12.5px]">
-                                    {times > 0 ? <>행동 · 소리 분석 <b className="text-[#e0557f]">{times}회</b> 가능해요</> : <>코인이 부족해요 · <b className="text-[#e0557f]">매일 출근하면 2코인씩</b></>}
+                                    {/* 지갑을 아직 못 불러왔으면 "부족해요" 대신 확인 중(불러오기 실패면 그 문구) */}
+                                    {!today.ready ? <span style={{ color: TEXT_SOFT }}>{today.error || "코인을 확인하고 있어요"}</span>
+                                        : times > 0 ? <>행동 · 소리 분석 <b className="text-[#e0557f]">{times}회</b> 가능해요</>
+                                            : <>코인이 부족해요 · <b className="text-[#e0557f]">매일 출근하면 {today.dailyRewardCoins}코인씩</b></>}
                                 </span>
                                 <span className="ah-light text-[11.5px] text-[#c4567a]">코인 모으기</span>
                                 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[9px] text-[#c4567a]" />
                             </Link>
+                            {/* 코인이 모자랄 때 적립금 전환 — 웹 연구소 "전환하러 가기"(/mypage#daenglab-wallet) 자리.
+                                앱의 적립금 → 코인 바꾸기는 앱 마이 화면 코인 봉투(웹 DaengLabWalletCard 와 같은 함수)에 있어서 /app/sticker/my/ 로 */}
+                            {today.ready && times === 0 ? (
+                                <Link href={pageHref("sticker", "my")} className="ah-display ml-auto mt-1.5 flex w-fit items-center gap-1 px-2 text-[11.5px] text-[#5b46b0]">
+                                    적립금을 코인으로 바꾸기<i aria-hidden="true" className="fa-solid fa-chevron-right text-[9px]" />
+                                </Link>
+                            ) : null}
                             <p className="ah-light mt-1.5 px-2 text-[11px]" style={{ color: TEXT_SOFT }}>분석 실패·반려견 미검출·고객용 후보 0건 결과는 코인이 자동 환급돼요.</p>
                             {/* 응급 안내 — 톡 하면 증상 목록이 펼쳐지는 메모(운영 연구소 문구) */}
                             <div className="lb-alert mt-4 rounded-[10px] px-3 py-2.5">
@@ -277,8 +350,10 @@ export default function StickerLab() {
                                 실제 기록엔 사진이 없어서 사진칸을 뺐다(사용자 2026-10-16 "실제와 같게"). 실제 데이터는 loadWeeklyPhotoAnalyses */}
                             <SectionLabel icon="fa-images">주간 기록</SectionLabel>
                             <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>옆으로 넘겨 지난 기록을 봐요</p>
+                            {/* 반려견(서버 프로필)이 없으면 등록 안내 · 실패면 분홍 메모 · 불러오는 중 / 없음은 아래 글 */}
+                            {!pet ? <PetSetupMemo hasPets={allPets.length > 0} className="mt-3" /> : weekly.error ? <ErrorMemo message={weekly.error} className="mt-3" /> : null}
                             <ol className="lb-album -mr-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-4 pt-2">
-                                {records.length === 0 ? <li className="ah-light w-full py-3 text-[12.5px]" style={{ color: TEXT_SOFT }}>{weekly.records ? "아직 주간 기록이 없어요." : "기록을 확인하고 있어요."}</li> : null}
+                                {pet && !weekly.error && records.length === 0 ? <li className="ah-light w-full py-3 text-[12.5px]" style={{ color: TEXT_SOFT }}>{weekly.records ? "아직 주간 기록이 없어요." : "기록을 확인하고 있어요."}</li> : null}
                                 {records.map((r, i) => (
                                     <li key={r.week} className="lb-page flex w-[11.5rem] shrink-0 snap-start">
                                         {/* 사진첩 칸 높이를 같게(h-full) */}
@@ -300,12 +375,14 @@ export default function StickerLab() {
                             {/* 행동 · 소리 분석 기록 — 메모지(긴급도는 테이프 이름표) */}
                             <SectionLabel className="mt-5" icon="fa-wave-square">행동 · 소리 분석 기록</SectionLabel>
                             <ul className="mt-4 space-y-4">
-                                {observations && observations.length === 0 ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>아직 행동 · 소리 분석 기록이 없어요.</li> : null}
+                                {/* 불러오는 중(null) · 없음([]) — 웹 기록 목록처럼 실패도 빈 목록 */}
+                                {pet && observations === null ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>기록을 확인하고 있어요.</li> : null}
+                                {pet && observations && observations.length === 0 ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>아직 행동 · 소리 분석 기록이 없어요.</li> : null}
                                 {(observations ?? []).map(toObservationCard).map((o, i) => {
                                     const u = URGENCY_TAPE[o.urgency] ?? URGENCY_TAPE["판단 어려움"];
                                     return (
                                         <li key={o.key}>
-                                            <Link href="/pet-lens/?mode=observation" className="lb-obs relative flex items-center gap-3 rounded-[12px] bg-white px-3.5 pb-3 pt-4" style={{ rotate: `${i % 2 ? 0.6 : -0.6}deg` }}>
+                                            <Link href={o.href} className="lb-obs relative flex items-center gap-3 rounded-[12px] bg-white px-3.5 pb-3 pt-4" style={{ rotate: `${i % 2 ? 0.6 : -0.6}deg` }}>
                                                 <span className="st-tape ah-display absolute -top-2.5 left-3 px-2.5 py-0.5 text-[10.5px]" style={{ background: u.tape, color: u.ink, rotate: `${i % 2 ? 3 : -3}deg` }}>{o.urgency}</span>
                                                 <span className="min-w-0 flex-1">
                                                     <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>{o.date}</span>

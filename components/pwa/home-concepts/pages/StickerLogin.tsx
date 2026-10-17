@@ -10,7 +10,7 @@
  *    redirect 가 없으면 앱 홈(/app/home-1/)
  *  - 간편 로그인(네이버 · 카카오 · 구글)은 웹과 같은 SocialAuthButtons, 돌아올 곳도 같은 규칙
  *  - 구매 흐름(?redirect=/checkout…)으로 왔을 때만 비회원 주문서 미리보기
- *  - 이미 로그인돼 있으면 바로 돌아갈 곳으로
+ *  - 화면을 열 때 이미 로그인돼 있으면 바로 돌아갈 곳으로(이 화면에서 로그인한 경우는 위 로그인 뒤 주소가 우선)
  * 모양(스티커북 다이어리 한 쪽): 색인 탭(로그인 · 회원가입) · 링 구멍 난 점 모눈 속지 ·
  *   머리 = 간결(댕다방 글자 로고 + 한 줄, 2026-10-15 확정) · 입력칸 = 왼쪽 색 칸 + 절취선 라벨 스티커 ·
  *   알림 = 테이프 붙인 포스트잇 · 자수 와펜 로그인 · 간편 로그인 = 스티커 받침지 위 동그란 스티커 3장 · 가입 선물 포스트잇
@@ -21,7 +21,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { appSignupHref } from "@/components/app-shell/appTabs";
-import { useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import { customerApiErrorMessage, ddbApiReady, loadCurrentCustomer, loadPetProfilesSmart, loginCustomer, setCustomerToken } from "@/lib/customer-api";
@@ -30,11 +30,15 @@ import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { haptic } from "../gestures";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
-import { HC_CSS, SAMPLE } from "../shared";
+import { HC_CSS } from "../shared";
 import { DiaryBody, DiaryTabs, PARTS_CSS } from "../sticker-parts";
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
 
 const APP_HOME = "/app/home-1/";
+/** 가입 선물 코인 — 웹 가입 화면 문구("신규 가입 혜택 · 20C", app/auth/signup/page.tsx ~:853 · lib/signup-agreements.ts)와 같은 값 */
+const SIGNUP_BONUS_COINS = 20;
+/** 이메일 형식 — 웹 로그인 입력칸(type="email" required)의 브라우저 검사와 같은 규칙(HTML 표준 이메일 형식, 앞뒤 공백 제외) */
+const EMAIL_PATTERN = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 /* 색인 탭 — 로그인(지금 쪽) · 회원가입(가입 화면으로) */
 const TABS = [
     { label: "로그인", color: "#ffd6e2" },
@@ -65,13 +69,23 @@ export default function StickerLogin() {
     const back = redirect || APP_HOME;
     const signupHref = appSignupHref(back);
 
-    // 이미 로그인돼 있으면 바로 돌아갈 곳으로
+    // 화면을 열 때(로그인 정보 불러오기 끝난 첫 순간) 이미 로그인돼 있었으면 바로 돌아갈 곳으로.
+    // 이 화면에서 로그인을 누른 뒤에는 건너뜀 — 로그인 뒤 주소(petLensPostAuthDestination)를 덮어쓰지 않게
+    const openedAsMemberRef = useRef<boolean | null>(null);
+    const submittedRef = useRef(false);
     useEffect(() => {
-        if (hydrated && user && !loading) router.replace(back);
-    }, [hydrated, user, loading, back, router]);
+        if (!hydrated) return;
+        if (openedAsMemberRef.current === null) openedAsMemberRef.current = Boolean(user);
+        if (openedAsMemberRef.current && user && !submittedRef.current) router.replace(back);
+    }, [hydrated, user, back, router]);
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
+        // 웹 로그인 이메일 칸(type="email" required) 검사 — 웹은 브라우저가 로그인 처리 전에 막으므로 같은 순서로 맨 먼저.
+        // (비밀번호는 웹도 required 가 없어 아래 "이메일과 비밀번호를 입력해 주세요." 검사로 막음)
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail) { setError("이메일을 입력해 주세요."); haptic("light"); return; }
+        if (!EMAIL_PATTERN.test(trimmedEmail)) { setError("이메일 주소 형식을 확인해 주세요. (예: hello@example.com)"); haptic("light"); return; }
         setError("");
         if (!ddbApiReady()) {
             setCustomerToken();
@@ -83,6 +97,7 @@ export default function StickerLogin() {
             haptic("light");
             return;
         }
+        submittedRef.current = true;
         setLoading(true);
         try {
             const token = await loginCustomer({ email: email.trim(), password });
@@ -189,7 +204,7 @@ export default function StickerLogin() {
                         <Image src="/images/ui/stickers/signup-gift.webp" alt="" width={44} height={44} className="h-11 w-11 shrink-0" />
                         <span className="min-w-0 flex-1">
                             <span className="ah-display block text-[14px]">처음이에요</span>
-                            <span className="ah-light block text-[12px] text-[#8f5e12]">회원가입하면 {SAMPLE.signupBonus}코인 선물</span>
+                            <span className="ah-light block text-[12px] text-[#8f5e12]">회원가입하면 {SIGNUP_BONUS_COINS}코인 선물</span>
                         </span>
                         <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9a64a]" />
                     </Link>

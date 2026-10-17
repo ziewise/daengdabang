@@ -14,7 +14,7 @@ import Link from "next/link";
 import { forwardRef, useState, type CSSProperties, type ReactNode } from "react";
 import { appLoginHref, appSignupHref } from "@/components/app-shell/appTabs";
 import { haptic } from "./gestures";
-import { SAMPLE } from "./shared";
+import { SIGNUP_BONUS_COINS } from "./shared";
 
 /** 마스킹테이프 조각 */
 export function Tape({ className = "", color = "rgba(255,190,210,.75)", style }: { className?: string; color?: string; style?: CSSProperties }) {
@@ -97,7 +97,7 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
             </ul>
             <Patch href={appLoginHref(redirect)} className="mt-4">{cta}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
             <Link href={appSignupHref(redirect)} className="ah-display mt-3 block text-center text-[13px]" style={{ color: "#ea4c7c" }}>
-                처음이에요 · 가입하면 {SAMPLE.signupBonus}코인 선물
+                처음이에요 · 가입하면 {SIGNUP_BONUS_COINS}코인 선물
             </Link>
         </div>
     );

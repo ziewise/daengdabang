@@ -15,6 +15,7 @@
  *  - 모바일 손가락 동작(hover 없음): 스티커를 집으면 모서리가 들리고 진동 · 출근 칸을 옆으로 밀면 속지가 넘어가 지난주 기록 ·
  *    카드 스티커는 누르면 테이프째 들리고, 톡 = 화면 가득 커지며 이동, 꾹 = 그 자리에서 미리보기.
  * 데이터: 실제(회원 이름 · 반려견 · 출근 · 코인 · 할 일 — 협업자 함수, 배포 전 연결 2026-10-16), 날씨도 실제.
+ *  - 동네 돌봄 찾기 바로 가기는 관리자 공개 설정(웹 GrowthHub visibility.localCare)이 꺼지면 숨김.
  */
 
 import Image from "next/image";
@@ -25,7 +26,7 @@ import { LoginInvite, PostIt, STICKER_CSS, Tape } from "./sticker-kit";
 import { COVERS, CoinChip, CoverArt, CoverWindow, KIT_CSS, TEXT, TEXT_SOFT, TriTitle, recentDays, type Cover } from "./kit";
 import SectionNow from "./SectionNow";
 import { coverHref } from "./page-data";
-import { ConceptBar, HC_CSS, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useLiveWeather, useMember, useNow, useTodayDemo, walkAdvice } from "./shared";
+import { ConceptBar, HC_CSS, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useGrowthVisibility, useLiveWeather, useMember, useNow, useTodayDemo, walkAdvice } from "./shared";
 import { hasVerifiedPetPhoto } from "@/lib/store";
 
 const toneBg = (c: Cover) => `linear-gradient(180deg, ${c.tone.from} 0%, ${c.tone.to} 100%)`;
@@ -62,6 +63,8 @@ export default function HomeSticker() {
     // 실제 회원 이름 · 첫 반려견(배포 전 연결 2026-10-16)
     const { guardian, pet, petName } = useMember();
     const w = useLiveWeather();
+    // 관리자 공개 설정 — 웹 GrowthHub 처럼 visibility.localCare 가 false 면 "동네 돌봄 찾기"를 숨김
+    const visibility = useGrowthVisibility();
     const now = useNow();
     const wd = todayIndex(now ?? undefined);
     const coinRef = useRef<HTMLSpanElement>(null);
@@ -170,7 +173,7 @@ export default function HomeSticker() {
 
                     {/* 바로 가기 스티커 두 장 — 케어톡(라벤더) · 동네 돌봄 찾기(민트 접힌 지도, 전용 화면 /app/sticker/care)
                         그림 스티커가 카드 위로 튀어나오고, 카드 · 그림을 한 장으로 둘러싼 흰 칼선(다이컷) */}
-                    <div className="mb-2 mt-[4.5rem] grid grid-cols-2 gap-3">
+                    <div className={`mb-2 mt-[4.5rem] grid gap-3 ${visibility.localCare ? "grid-cols-2" : "grid-cols-1"}`}> {/* 동네 돌봄을 숨기면 케어톡 한 장이 한 줄 전체 */}
                         <Link href="/chat/" className="hm-short st-place relative block" style={{ ["--r" as string]: "-2deg", ["--d" as string]: "820ms", rotate: "-2deg" }}>
                             <span className="hm-card relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#ece4ff", color: "#563fa8" }}>
                                 <span className="ah-display text-[14.5px]">케어톡에 물어보기</span>
@@ -179,16 +182,19 @@ export default function HomeSticker() {
                             </span>
                             <Image src="/images/ui/stickers/home-caretalk.webp" alt="" width={140} height={140} className="hm-icon absolute -top-9 left-1.5 h-[4.4rem] w-[4.4rem]" style={{ ["--ir" as string]: "-8deg" }} />
                         </Link>
-                        <Link href="/app/sticker/care/" className="hm-short st-place relative block" style={{ ["--r" as string]: "2deg", ["--d" as string]: "900ms", rotate: "2deg" }}>
-                            <span className="hm-card hm-fold relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#d9f2e4", color: "#1f7a59" }}>
-                                <span className="ah-display text-[14.5px]">동네 돌봄 찾기</span>
-                                <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">근처 병원 · 미용<br />호텔 · 데이케어</span>
-                                {/* 지도 위 발자국 점선 */}
-                                <svg aria-hidden="true" viewBox="0 0 60 22" className="absolute bottom-3 left-3.5 h-[22px] w-[60px]"><path d="M2 18 C 16 4, 30 22, 46 8" fill="none" stroke="#7cc9a2" strokeWidth="2" strokeDasharray="3 4" strokeLinecap="round" /><circle cx="52" cy="6" r="3.2" fill="#3fb381" /></svg>
-                                <span className="hm-go mt-2 grid h-7 w-7 place-items-center self-end rounded-full bg-white/85 text-[10px] text-[#1f9e75]"><i aria-hidden="true" className="fa-solid fa-chevron-right" /></span>
-                            </span>
-                            <Image src="/images/ui/stickers/home-care.webp" alt="" width={140} height={140} className="hm-icon absolute -top-9 left-1.5 h-[4.4rem] w-[4.4rem]" style={{ ["--ir" as string]: "6deg" }} />
-                        </Link>
+                        {/* 동네 돌봄 찾기 — 관리자가 숨기면(웹 GrowthHub visibility.localCare) 그리지 않음 */}
+                        {visibility.localCare ? (
+                            <Link href="/app/sticker/care/" className="hm-short st-place relative block" style={{ ["--r" as string]: "2deg", ["--d" as string]: "900ms", rotate: "2deg" }}>
+                                <span className="hm-card hm-fold relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#d9f2e4", color: "#1f7a59" }}>
+                                    <span className="ah-display text-[14.5px]">동네 돌봄 찾기</span>
+                                    <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">근처 병원 · 미용<br />호텔 · 데이케어</span>
+                                    {/* 지도 위 발자국 점선 */}
+                                    <svg aria-hidden="true" viewBox="0 0 60 22" className="absolute bottom-3 left-3.5 h-[22px] w-[60px]"><path d="M2 18 C 16 4, 30 22, 46 8" fill="none" stroke="#7cc9a2" strokeWidth="2" strokeDasharray="3 4" strokeLinecap="round" /><circle cx="52" cy="6" r="3.2" fill="#3fb381" /></svg>
+                                    <span className="hm-go mt-2 grid h-7 w-7 place-items-center self-end rounded-full bg-white/85 text-[10px] text-[#1f9e75]"><i aria-hidden="true" className="fa-solid fa-chevron-right" /></span>
+                                </span>
+                                <Image src="/images/ui/stickers/home-care.webp" alt="" width={140} height={140} className="hm-icon absolute -top-9 left-1.5 h-[4.4rem] w-[4.4rem]" style={{ ["--ir" as string]: "6deg" }} />
+                            </Link>
+                        ) : null}
                     </div>
                 </article>
             </div>
@@ -200,7 +206,7 @@ export default function HomeSticker() {
                     <div className="pk-body px-4 pb-2 pt-4">
                         <SectionNow cover={peek.cover} member={member} today={today} days={days} past={past} now={now}
                             onStamp={() => { void today.stamp().then((newly) => { if (newly) { haptic("medium"); flyCoin(peekStampRef.current, coinRef.current, 2); } }); }}
-                            stampRef={peekStampRef} signupRedirect="/app/home-1/" base="/app/sticker" />
+                            stampRef={peekStampRef} signupRedirect="/app/sticker/daily/" base="/app/sticker" /> {/* 가입 뒤 매일 댕생활로 — 웹 /treasure-mine 가입 redirect 와 같음 */}
                     </div>
                 </Peek>
             ) : null}

@@ -234,7 +234,12 @@ const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
  * 우리 아이 기록(/my-pet)은 위 APP_REPORT. 찾지 못하면 null(그 주소 그대로).
  */
 function appScreenFor(pathname: string, search: string): string | null {
-    if (isMyPetPath(pathname)) return APP_REPORT;
+    if (isMyPetPath(pathname)) {
+        // 웹 /my-pet/?profile=N(AppAiCareOverview 주간 비교 보기 등) — 앱 리포트도 같은 아이를 먼저 고르게 profile 만 이어 줌
+        // (검사 기준 = 협업자 cleanPetLensProfileId: 양의 안전 정수만)
+        const profileId = Number((new URLSearchParams(search).get("profile") || "").trim());
+        return Number.isSafeInteger(profileId) && profileId > 0 ? `${APP_REPORT}?profile=${profileId}` : APP_REPORT;
+    }
     // 설치한 앱의 시작 주소(PWA start_url · 안드로이드 appStartPath = /app/)와 예전 시안 홈 → 지금 앱 홈
     // (브라우저의 /app/ 설치 안내 페이지는 앱 틀이 아니어서 이 규칙이 닿지 않음 — 그대로)
     if (/^\/app\/?$/.test(pathname) || /^\/app\/mockup-c(\/|$)/.test(pathname)) return "/app/home-1/";

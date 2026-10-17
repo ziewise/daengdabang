@@ -5,7 +5,7 @@
  * ---------------------------------------------------------------------
  * 문구 · 검사 규칙은 협업자 댕자랑(components/daeng-showcase · lib/daeng-showcase)과 같다:
  *  - 사진 1장 JPG · PNG · WebP · 8MB 이하(validateShowcaseImage) · 이야기 2~500자 · 공개 이름 2~30자 · 필수 공개 게시 동의 · 선택 공식 채널 소개 동의
- *  - 신고 이유 5가지 + 상세(선택, 300자) · 공유 = 공유 창 열기 / 링크 복사(utm 붙은 정확한 주소)
+ *  - 신고 이유 5가지 + 상세(선택, 300자) · 공유 = 공유 창 열기 / 링크 복사(협업자 buildShowcaseDeepLink · shareCopy · copyText 와 같은 주소 · 제목 · 복사)
  * 굿즈 공모전 비회원 고르기 속지(회원 로그인 / 이메일 1회 확인)도 여기.
  * 실제 연결(2026-10-16): 올리기는 부모가 협업자 createShowcasePost 로 보내고(진행률 그대로), 프로필은 loadShowcaseAuthorProfile 결과를 받는다.
  * 모양: 다이어리 속지(점 모눈, 줄 없음) · 마스킹테이프 손잡이 · 폴라로이드 · 메모지 · 라벨 스티커 · 체크 스티커 · 자수 와펜 버튼.
@@ -14,7 +14,9 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { copyText } from "@/components/growth/GrowthShareCard";
 import { validateShowcaseImage } from "@/lib/daeng-showcase";
+import { buildShowcaseDeepLink, showcaseMemberShareCampaign } from "@/lib/daeng-showcase-share";
 import { haptic } from "./gestures";
 import { TEXT, TEXT_SOFT } from "./kit";
 import type { Post } from "./page-data";
@@ -32,9 +34,26 @@ export const REPORT_REASONS = [
     { value: "other", label: "기타" },
 ] as const;
 
-/** 정확한 공유 주소(협업자 공유카드와 같은 규칙) */
-export const shareUrl = (kind: "post" | "topic", id: string) =>
-    `https://www.daengdabang.com/daeng-showcase/?${kind}=${encodeURIComponent(id)}&utm_source=member_share&utm_medium=referral&utm_campaign=daeng_showcase&utm_content=${kind}_${encodeURIComponent(id)}`;
+/** 공유할 것 — 게시물(주제 id · 이름 포함) 또는 오늘의 댕주제(서버 공유 주소 · 안내 글 포함) */
+export type ShareTarget = {
+    kind: "post" | "topic"; id: string; img?: string; text: string;
+    topicId?: string; topicTitle?: string; // 게시물: 연결된 주제 · 댕주제: 주제 이름
+    prompt?: string; shareUrl?: string; // 댕주제만: 안내 글 · 서버가 준 공유 주소(topic.shareUrl)
+};
+/** 정확한 공유 주소 — 웹 ShowcaseShareModal.shareUrl 과 같은 함수 · 같은 값(buildShowcaseDeepLink + showcaseMemberShareCampaign).
+ *  author 는 비움: 웹은 프로필을 닫을 때 주소에서 author 를 지워 공유 링크에 남지 않음 → 같은 결과 */
+function shareLinkOf(target: ShareTarget) {
+    const currentUrl = typeof window === "undefined" ? "https://www.daengdabang.com/daeng-showcase/" : window.location.href;
+    if (target.kind === "topic") {
+        return buildShowcaseDeepLink({ baseUrl: target.shareUrl || currentUrl, topicId: target.id, postId: "", authorId: "", campaign: showcaseMemberShareCampaign(`topic_${target.id}`) });
+    }
+    return buildShowcaseDeepLink({ baseUrl: currentUrl, postId: target.id, topicId: target.topicId || "", authorId: "", campaign: showcaseMemberShareCampaign(`post_${target.id}`) });
+}
+/** 공유 창 제목 · 글 — 웹 ShowcaseShareModal.shareCopy 와 같음 */
+function shareCopyOf(target: ShareTarget) {
+    if (target.kind === "topic") return { title: `${target.topicTitle || ""} | 오늘의 댕주제`, text: target.prompt || "" };
+    return { title: target.topicTitle ? `${target.topicTitle} | 오늘의 댕자랑` : "오늘의 댕자랑", text: "댕다방에서 이 댕자랑을 함께 봐요." };
+}
 
 /** 게시물 사진 — 방금 올린 사진(blob 주소)은 img, 나머지는 next/image */
 export function PostPhoto({ src, sizes, className = "" }: { src: string; sizes: string; className?: string }) {
@@ -43,9 +62,9 @@ export function PostPhoto({ src, sizes, className = "" }: { src: string; sizes: 
     return <Image src={src} alt="" fill sizes={sizes} className={`object-cover ${className}`} draggable={false} />;
 }
 
-/** 작성자 동그라미(이름 첫 글자) — 공식은 분홍, 그 밖은 크림 */
-export function AuthorDot({ name, official, size = "h-9 w-9 text-[14px]" }: { name: string; official?: boolean; size?: string }) {
-    return <span className={`ah-display grid shrink-0 place-items-center rounded-full ${size} ${official ? "bg-[#ffd6e2] text-[#c4456f]" : "bg-[#fff1c4] text-[#a8720f]"}`} style={{ boxShadow: "0 0 0 2px #fff, 0 3px 6px -3px rgba(90,60,50,.4)" }}>{name.slice(0, 1)}</span>;
+/** 작성자 동그라미(이름 첫 글자) — 모두 같은 크림(웹 댕자랑에는 공식 배지가 없음) */
+export function AuthorDot({ name, size = "h-9 w-9 text-[14px]" }: { name: string; size?: string }) {
+    return <span className={`ah-display grid shrink-0 place-items-center rounded-full ${size} bg-[#fff1c4] text-[#a8720f]`} style={{ boxShadow: "0 0 0 2px #fff, 0 3px 6px -3px rgba(90,60,50,.4)" }}>{name.slice(0, 1)}</span>;
 }
 
 /** 아래에서 올라오는 다이어리 속지 — 바깥 · 닫기 · Esc 로 닫힘, 열린 동안 뒤 화면 스크롤 잠금 */
@@ -82,11 +101,11 @@ export function Sheet({ open, onClose, title, children, label }: { open: boolean
     );
 }
 
-/** 체크 스티커 줄(동의) */
-function CheckSticker({ checked, onChange, children }: { checked: boolean; onChange: (v: boolean) => void; children: ReactNode }) {
+/** 체크 스티커 줄(동의) — disabled: 올리는 중엔 잠금(웹 작성 칸 disabled={submitting} 과 같음) */
+function CheckSticker({ checked, onChange, children, disabled = false }: { checked: boolean; onChange: (v: boolean) => void; children: ReactNode; disabled?: boolean }) {
     return (
-        <label className="flex cursor-pointer items-start gap-2.5">
-            <input type="checkbox" checked={checked} onChange={(e) => { onChange(e.target.checked); haptic("light"); }} className="sr-only" />
+        <label className={`flex items-start gap-2.5 ${disabled ? "opacity-60" : "cursor-pointer"}`}>
+            <input type="checkbox" checked={checked} disabled={disabled} onChange={(e) => { onChange(e.target.checked); haptic("light"); }} className="sr-only" />
             <span aria-hidden="true" className={`sp-check mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-[7px] ${checked ? "is-on" : ""}`}>
                 {checked ? <svg viewBox="0 0 28 28" className="h-5 w-5"><path d="M7 14 L12 19 L23 6" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" className="st-check" /></svg> : null}
             </span>
@@ -109,7 +128,10 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
     const [text, setText] = useState("");
     const [name, setName] = useState(""); // 비어 있으면 아래 shownName 이 기본 이름(로그인 정보가 늦게 와도 맞게)
     const [pet, setPet] = useState<number>(-1); // -1 = 표시하지 않기
-    const [joinTopic, setJoinTopic] = useState(defaultTopic);
+    // 주제 참여 — 웹 ShowcaseComposer.topicChoice 와 같음: 직접 고르기 전(null)은 기본값(주제가 있으면 참여), 고른 값은 그 주제에만
+    const [topicChoice, setTopicChoice] = useState<{ topic: string; joined: boolean } | null>(null);
+    const joinTopic = topicTitle ? (topicChoice && topicChoice.topic === topicTitle ? topicChoice.joined : defaultTopic) : false;
+    const setJoinTopic = (joined: boolean) => { if (topicTitle) setTopicChoice({ topic: topicTitle, joined }); };
     const [agree, setAgree] = useState(false);
     const [channel, setChannel] = useState(false);
     const [error, setError] = useState("");
@@ -130,7 +152,9 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
         haptic("medium");
     };
     const clearPhoto = () => { if (photo) URL.revokeObjectURL(photo); setPhoto(""); setFile(null); };
-    const reset = () => { clearPhoto(); setText(""); setPet(-1); setAgree(false); setChannel(false); setError(""); setProgress(null); };
+    // 올린 뒤 비우기 — 웹 submit 성공 뒤와 같음(주제 참여도 기본값으로: setTopicChoice(null))
+    const reset = () => { clearPhoto(); setText(""); setPet(-1); setAgree(false); setChannel(false); setTopicChoice(null); setError(""); setProgress(null); };
+    const locked = progress !== null; // 올리는 중 — 웹 disabled={submitting} 처럼 모든 칸 잠금
     // 공개하기 — 협업자 작성 칸과 같은 검사 · 같은 문구, 통과하면 부모가 createShowcasePost 로 보냄
     const submit = async () => {
         setError("");
@@ -175,7 +199,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
             {/* 오늘의 이야기 — 메모지 */}
             <label className="sp-memo relative mt-5 block rounded-[12px] px-3.5 pb-2 pt-3" style={{ rotate: "0.4deg" }}>
                 <span className="ah-display flex items-center justify-between text-[13px] text-[#8f5e12]">오늘의 이야기<span className="ah-light text-[11px]">{text.length}/500</span></span>
-                <textarea value={text} onChange={(e) => setText(e.target.value.slice(0, 500))} rows={4} maxLength={500}
+                <textarea value={text} onChange={(e) => setText(e.target.value.slice(0, 500))} rows={4} maxLength={500} disabled={locked}
                     placeholder="산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요."
                     className="ah-light mt-1.5 w-full resize-none bg-transparent text-[14px] leading-relaxed outline-none placeholder:text-[#c9b48a]" />
             </label>
@@ -183,15 +207,15 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
             {/* 피드에 보일 이름 — 라벨 스티커 */}
             <label className="sp-label mt-3 flex h-[48px] items-stretch">
                 <span className="sp-stub grid w-24 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">피드 이름</span></span>
-                <input value={shownName} onChange={(e) => { setNameTouched(true); setName(e.target.value.slice(0, 30)); }} maxLength={30} placeholder="피드에 보일 이름" className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
+                <input value={shownName} onChange={(e) => { setNameTouched(true); setName(e.target.value.slice(0, 30)); }} maxLength={30} disabled={locked} placeholder="피드에 보일 이름" className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
             </label>
 
             {/* 함께 나온 반려견 — 스티커 고르기 */}
             <p className="ah-display mt-4 text-[13px] text-[#b07a8a]">함께 나온 반려견 <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>선택</span></p>
             <div className="mt-2 flex flex-wrap gap-2">
-                <button type="button" onClick={() => setPet(-1)} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === -1 ? "is-on" : ""}`}>표시하지 않기</button>
+                <button type="button" onClick={() => setPet(-1)} disabled={locked} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === -1 ? "is-on" : ""}`}>표시하지 않기</button>
                 {pets.map((p, i) => (
-                    <button key={p.id} type="button" onClick={() => { setPet(i); haptic("light"); }} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === i ? "is-on" : ""}`}>
+                    <button key={p.id} type="button" onClick={() => { setPet(i); haptic("light"); }} disabled={locked} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === i ? "is-on" : ""}`}>
                         <i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[10px]" />{p.name}{p.breed ? ` · ${p.breed}` : ""}
                     </button>
                 ))}
@@ -199,9 +223,9 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
 
             {/* 동의 — 댕주제 참여(주제 있을 때) · 필수 공개 게시 · 선택 공식 채널 */}
             <div className="sp-paper mt-4 space-y-3 rounded-[14px] px-3.5 py-3.5">
-                {topicTitle ? <CheckSticker checked={joinTopic} onChange={setJoinTopic}><b className="ah-display">오늘의 댕주제 참여</b> · &lsquo;{topicTitle}&rsquo;</CheckSticker> : null}
-                <CheckSticker checked={agree} onChange={setAgree}><b className="ah-display text-[#e0557f]">필수</b> {CONSENT_PUBLIC} <a href="/privacy/" className="ah-display text-[#e0557f] underline underline-offset-2">개인정보처리방침</a></CheckSticker>
-                <CheckSticker checked={channel} onChange={setChannel}><b className="ah-display">선택 · 기본 해제</b> {CONSENT_CHANNEL}</CheckSticker>
+                {topicTitle ? <CheckSticker checked={joinTopic} onChange={setJoinTopic} disabled={locked}><b className="ah-display">오늘의 댕주제 참여</b> · &lsquo;{topicTitle}&rsquo;</CheckSticker> : null}
+                <CheckSticker checked={agree} onChange={setAgree} disabled={locked}><b className="ah-display text-[#e0557f]">필수</b> {CONSENT_PUBLIC} <a href="/privacy/" className="ah-display text-[#e0557f] underline underline-offset-2">개인정보처리방침</a></CheckSticker>
+                <CheckSticker checked={channel} onChange={setChannel} disabled={locked}><b className="ah-display">선택 · 기본 해제</b> {CONSENT_CHANNEL}</CheckSticker>
             </div>
 
             {error ? <p role="alert" className="sp-err st-postit ah-light mt-4 px-3.5 py-2.5 text-[12.5px]" style={{ background: "#ffd6e2", color: "#c4456f" }}>{error}</p> : null}
@@ -228,9 +252,9 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
             {/* 작성자 줄 */}
             <div className="flex items-center gap-2.5">
                 <button type="button" onClick={onAuthor} className="flex min-w-0 flex-1 items-center gap-2.5 text-left" aria-label={`${post.author} 프로필 보기`}>
-                    <AuthorDot name={post.author} official={post.official} />
+                    <AuthorDot name={post.author} />
                     <span className="min-w-0">
-                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{post.author}{post.official ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">공식</span> : null}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">나</span> : null}</span>
+                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{post.author}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">나</span> : null}</span>
                         <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>팔로워 {post.followers.toLocaleString("ko-KR")}명 · {post.date}</span>
                     </span>
                 </button>
@@ -281,22 +305,30 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
 
 /* ───────── 작성자 프로필 ─────────
    협업자 loadShowcaseAuthorProfile 결과(게시물 수 · 팔로워 · 받은 응원 · 최근 12장) — 불러오는 동안은 이름만 */
-export function ProfileSheet({ open, onClose, head, profile, error, onFollow, onOpenPost }: {
+export function ProfileSheet({ open, onClose, head, profile, error, onFollow, onOpenPost, onRetry }: {
     open: boolean; onClose: () => void;
-    head: { name: string; official?: boolean } | null; profile: ProfileView | null; error: string;
+    head: { name: string } | null; profile: ProfileView | null; error: string;
     onFollow: () => void; onOpenPost: (p: Post, el: HTMLElement) => void;
+    /** 불러오기 실패 뒤 다시 — 웹 ShowcaseAuthorProfileModal "다시 불러오기"(retryKey) 와 같음 */
+    onRetry: () => void;
 }) {
     if (!head) return null;
     const stats: [string, number | null][] = [["게시물", profile?.postCount ?? null], ["팔로워", profile?.followers ?? null], ["받은 응원", profile?.received ?? null]];
     return (
         <Sheet open={open} onClose={onClose} label="작성자 프로필"
-            title={<div className="flex items-center gap-2.5"><AuthorDot name={head.name} official={head.official} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{head.name}{head.official ? <span className="ml-1.5 rounded-full bg-[#ffe1ea] px-1.5 py-px align-middle text-[10px] text-[#e0557f]">공식</span> : null}</p></div>}>
+            title={<div className="flex items-center gap-2.5"><AuthorDot name={head.name} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{head.name}</p></div>}>
             <div className="mt-1 grid grid-cols-3 gap-2 text-center">
                 {stats.map(([k, v]) => (
                     <span key={k} className="sp-stat rounded-[12px] px-2 py-2.5"><span className="ah-display block text-[17px]">{v === null ? "·" : v.toLocaleString("ko-KR")}</span><span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{k}</span></span>
                 ))}
             </div>
-            {error ? <p role="alert" className="ah-light mt-3 text-center text-[12px] text-[#c4456f]">{error}</p> : null}
+            {error ? (
+                <>
+                    <p role="alert" className="ah-light mt-3 text-center text-[12px] text-[#c4456f]">{error}</p>
+                    {/* 웹 프로필 창과 같은 "다시 불러오기" */}
+                    <div className="mx-auto mt-2 w-fit"><Patch tone="cream" small onClick={onRetry}>다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
+                </>
+            ) : null}
             {profile ? (
                 <div className="mt-3">
                     {profile.isMe ? <p className="ah-display text-center text-[13px] text-[#e0557f]">내 프로필</p> : (
@@ -322,25 +354,39 @@ export function ProfileSheet({ open, onClose, head, profile, error, onFollow, on
 }
 
 /* ───────── 공유 ───────── */
-export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: () => void; target: { kind: "post" | "topic"; id: string; img?: string; text: string } | null }) {
+export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: () => void; target: ShareTarget | null }) {
     const [notice, setNotice] = useState<{ tone: "ok" | "info" | "err"; text: string } | null>(null);
+    const [busy, setBusy] = useState<"native" | "copy" | "">(""); // 웹 ShowcaseShareModal busy 와 같음 — 공유 · 복사 겹쳐 누르지 않게
     if (!target) return null;
-    const url = shareUrl(target.kind, target.id);
+    const url = shareLinkOf(target);
+    const copyOf = shareCopyOf(target);
+    // 공유 창 열기 — 웹 nativeShare 와 같은 순서 · 문구
     const native = async () => {
-        if (!navigator.share) return setNotice({ tone: "info", text: "이 브라우저에서는 링크 복사를 이용해 주세요." });
+        if (busy) return;
+        if (typeof navigator.share !== "function") return setNotice({ tone: "info", text: "이 브라우저에서는 링크 복사를 이용해 주세요." });
+        setBusy("native");
+        setNotice(null);
         try {
-            await navigator.share({ title: target.kind === "topic" ? "오늘의 댕주제" : "오늘의 댕자랑", text: "댕다방에서 이 댕자랑을 함께 봐요.", url });
+            await navigator.share({ title: copyOf.title, text: copyOf.text, url });
             setNotice({ tone: "ok", text: "공유 창에 정확한 댕자랑 링크를 보냈어요." });
         } catch (e) {
             setNotice(e instanceof DOMException && e.name === "AbortError" ? { tone: "info", text: "공유를 취소했어요." } : { tone: "err", text: "공유 창을 열지 못했어요. 링크 복사를 이용해 주세요." });
+        } finally {
+            setBusy("");
         }
     };
+    // 링크 복사 — 웹 copyLink 와 같음(협업자 copyText: 클립보드 → 막히면 선택 복사)
     const copy = async () => {
-        try { await navigator.clipboard.writeText(url); setNotice({ tone: "ok", text: "정확한 댕자랑 링크를 복사했어요." }); haptic("light"); }
-        catch { setNotice({ tone: "err", text: "자동 복사가 막혀 있어요. 아래 주소를 길게 눌러 복사해 주세요." }); }
+        if (busy) return;
+        setBusy("copy");
+        setNotice(null);
+        const copied = await copyText(url);
+        setNotice(copied ? { tone: "ok", text: "정확한 댕자랑 링크를 복사했어요." } : { tone: "err", text: "자동 복사가 막혀 있어요. 아래 주소를 길게 눌러 복사해 주세요." });
+        if (copied) haptic("light");
+        setBusy("");
     };
     return (
-        <Sheet open={open} onClose={() => { setNotice(null); onClose(); }} label="댕자랑 공유카드"
+        <Sheet open={open} onClose={() => { if (busy) return; setNotice(null); onClose(); }} label="댕자랑 공유카드"
             title={<p className="ah-display text-[18px]"><span className="st-marker">댕자랑 공유카드</span></p>}>
             {/* 미리보기 카드 */}
             <div className="sp-paper mt-1 flex items-center gap-3 rounded-[14px] p-3" style={{ rotate: "-0.5deg" }}>
@@ -349,8 +395,8 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
                 <p className="ah-light line-clamp-3 text-[12.5px] leading-snug">{target.text}</p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2.5">
-                <Patch small onClick={() => void native()}>공유 창 열기<i aria-hidden="true" className="fa-solid fa-share-nodes text-[12px]" /></Patch>
-                <Patch tone="cream" small onClick={() => void copy()}>링크 복사<i aria-hidden="true" className="fa-solid fa-link text-[12px]" /></Patch>
+                <Patch small onClick={() => void native()} disabled={Boolean(busy)}>공유 창 열기<i aria-hidden="true" className={`fa-solid ${busy === "native" ? "fa-circle-notch fa-spin" : "fa-share-nodes"} text-[12px]`} /></Patch>
+                <Patch tone="cream" small onClick={() => void copy()} disabled={Boolean(busy)}>링크 복사<i aria-hidden="true" className={`fa-solid ${busy === "copy" ? "fa-circle-notch fa-spin" : "fa-link"} text-[12px]`} /></Patch>
             </div>
             {notice ? <p role="status" className={`ah-light mt-3 text-center text-[12px] ${notice.tone === "err" ? "text-[#c4456f]" : notice.tone === "ok" ? "text-[#1f7a59]" : "text-[#7a6a63]"}`}>{notice.text}</p> : null}
             <input readOnly value={url} aria-label="공유할 정확한 댕자랑 링크" className="sp-url ah-light mt-3 w-full rounded-[10px] px-3 py-2 text-[11px]" onFocus={(e) => e.currentTarget.select()} />
@@ -397,8 +443,10 @@ export function ReportSheet({ open, onClose, onSubmit }: { open: boolean; onClos
 /* ───────── 굿즈 공모전 · 비회원 고르기(회원 로그인 또는 이메일 1회 확인) ─────────
    협업자 굿즈 공모전의 "비회원 이메일 확인" 창과 같은 흐름 · 문구. 실제 연결(2026-10-16): 부모가
    requestGoodsContestGuestVerification(인증번호 메일) → confirmGoodsContestGuestVerification(확인 + 고르려던 굿즈 선택)으로 보냄 */
-export function GuestPickSheet({ open, onClose, goodsName, loginHref, onSendCode, onConfirm }: {
+export function GuestPickSheet({ open, onClose, goodsName, withGoods, loginHref, onSendCode, onConfirm }: {
     open: boolean; onClose: () => void; goodsName: string; loginHref: string;
+    /** 고를 굿즈가 있는가 — 없으면("내 선택 다시 확인하기") 확인 버튼은 "확인하기" */
+    withGoods: boolean;
     onSendCode: (email: string) => Promise<{ verificationId: string; maskedEmail: string }>;
     onConfirm: (verificationId: string, email: string, code: string) => Promise<void>;
 }) {
@@ -408,7 +456,8 @@ export function GuestPickSheet({ open, onClose, goodsName, loginHref, onSendCode
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
     const [sent, setSent] = useState<{ verificationId: string; maskedEmail: string } | null>(null);
-    const close = () => { if (busy) return; setStage("email"); setCode(""); setError(""); setSent(null); onClose(); };
+    // 닫을 때 처음 상태로(이메일도) — 웹 openGuestVerification 이 열 때마다 INITIAL_GUEST_VERIFICATION 으로 비우는 것과 같은 결과
+    const close = () => { if (busy) return; setStage("email"); setEmail(""); setCode(""); setError(""); setSent(null); onClose(); };
     // 인증번호 받기 — 협업자 requestGuestCode 와 같은 검사 · 문구
     const send = () => {
         if (busy) return;
@@ -427,7 +476,7 @@ export function GuestPickSheet({ open, onClose, goodsName, loginHref, onSendCode
         setBusy(true);
         setError("");
         onConfirm(sent.verificationId, email.trim(), code.trim())
-            .then(() => { setBusy(false); setStage("email"); setCode(""); setSent(null); onClose(); })
+            .then(() => { setBusy(false); setStage("email"); setEmail(""); setCode(""); setSent(null); onClose(); })
             .catch((failure) => { setBusy(false); setError(failure instanceof Error ? failure.message : "인증을 확인하지 못했어요."); });
     };
     return (
@@ -456,7 +505,7 @@ export function GuestPickSheet({ open, onClose, goodsName, loginHref, onSendCode
                             <span className="sp-stub grid w-16 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">인증번호</span></span>
                             <input inputMode="numeric" autoComplete="one-time-code" value={code} onChange={(e) => { setCode(e.target.value.replace(/\D/g, "").slice(0, 6)); setError(""); }} placeholder="000000" className="ah-display min-w-0 flex-1 bg-transparent px-3.5 text-[16px] tracking-[0.3em] outline-none" />
                         </label>
-                        <div className="mt-3"><Patch small onClick={confirm} disabled={busy}>{busy ? "확인 중…" : "확인하고 이 굿즈 선택"}<i aria-hidden="true" className="fa-solid fa-check text-[11px]" /></Patch></div>
+                        <div className="mt-3"><Patch small onClick={confirm} disabled={busy}>{busy ? "확인 중…" : withGoods ? "확인하고 이 굿즈 선택" : "확인하기"}<i aria-hidden="true" className="fa-solid fa-check text-[11px]" /></Patch></div>
                         <p className="mt-2 text-center"><button type="button" disabled={busy} onClick={() => { setStage("email"); setCode(""); setError(""); setSent(null); }} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">이메일 다시 입력</button></p>
                     </>
                 )}

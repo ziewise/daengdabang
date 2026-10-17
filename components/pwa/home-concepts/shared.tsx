@@ -4,10 +4,11 @@
  * 스티커북 시안 공통 부품 (로컬 시안 전용, 배포 X)
  * ---------------------------------------------------------------------
  * 스티커북 시안(홈 · 매일 댕생활 · 댕다방 · 연구소 · 마이)이 함께 쓰는 것들 (그림체 부품은 kit.tsx).
- *  - SAMPLE: 로그인 후 예시 데이터 (로컬엔 API 주소가 없어 회원 데이터를 못 받음 → 실제 서버 값 이름에 맞춘 예시)
+ *  - SIGNUP_BONUS_COINS: 가입 축하 코인 표시값(웹 문구와 같은 20C) — 예시 데이터(SAMPLE)는 버튼 대조 정리 때 삭제(2026-10-17)
  *  - useDemoSession: 실제 로그인 상태(useAuth) — 시연 전환은 없앰(배포 전 연결 2026-10-16)
  *  - useMember: 실제 회원 이름 · 첫 반려견
- *  - useTodayDemo: 실제 출근도장 · 오늘 할 일 · 코인 · XP · 레벨(협업자 MemberAiDashboard 와 같은 함수)
+ *  - useTodayDemo: 실제 출근도장 · 오늘 할 일 · 코인 · XP · 레벨(협업자 MemberAiDashboard 와 같은 함수) · 오류 다시 불러오기(reload)
+ *  - useGrowthVisibility: 관리자 공개 설정(협업자 GrowthHub 의 loadPublishedGrowthContent → visibility) — 혜택 · 동네 돌봄 · 운영 기준 숨김
  *  - useLiveWeather: 실제 날씨 (기존 lib/hero-weather 의 공개 날씨 API, 로그인 불필요) + 실패 시 예시 날씨
  *  - SkyLayer: 시간대(아침·낮·저녁·밤) × 날씨(비·눈·구름·안개)를 코드로 그린 하늘 (영상 없음)
  *  - ConceptBar: (없앰 — 아무것도 그리지 않음)
@@ -16,8 +17,9 @@
  */
 
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchHeroWeatherReport } from "@/lib/hero-weather";
+import { DEFAULT_GROWTH_HUB_CONTENT, loadPublishedGrowthContent } from "@/lib/growth-content";
 import { useAuth } from "@/lib/store";
 import { loadShowcaseTopic, type ShowcaseTopic } from "@/lib/daeng-showcase";
 import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
@@ -27,36 +29,15 @@ import {
     loadDaengLabAttendance,
     loadDaengLabEngagement,
     type DaengLabAttendance,
+    type DaengLabCareTaskId,
     type DaengLabEngagement,
 } from "@/lib/customer-api";
 import { getHeroTimeBucket, type HeroTimeBucket, type HeroWeather } from "@/lib/hero-assets";
 
-/* ── 예시 데이터: 이름은 서버 응답(출근 · 할 일 · 지갑 · 주간 기록 · 댕자랑)에 맞춤 ── */
-export const SAMPLE = {
-    guardian: "지은",
-    pet: { name: "몽이", breed: "토이 푸들" },
-    currentStreak: 5,
-    dailyRewardCoins: 2, // dailyRewardDaengLabCoins (서버 값, 기본 2)
-    coins: 12,
-    analysisCoinCost: 10,
-    level: 3,
-    xp: 260,
-    nextLevelXp: 300,
-    tasks: [
-        { taskId: "walk_20", title: "20분 산책", xp: 5 },
-        { taskId: "eye_check", title: "눈 상태 확인", xp: 5 },
-    ] as const,
-    weeklyRecordDone: false, // 이번 주(weekKey) 사진 기록 여부
-    lastReport: "지난주보다 눈가가 한결 깨끗해 보여요", // comparison.headline 예시
-    lastAnalyzedAt: "2026-10-14T09:20:00+09:00", // 반려견 프로필 lastAnalyzedAt 예시(오늘 분석 여부 · 최근 날짜)
-    concerns: ["피부/발바닥 케어"], // 반려견 관심 케어(AI 추천 문구)
-    newBones: 3, // 내 댕자랑에 새로 받은 응원 (receivedBoneCount 증가분)
-    topic: { title: "우리 아이 최애 장난감", dday: 3 },
-    goods: { dday: 12, joined: 412, goal: 500 },
-    signupBonus: 20,
-};
+/** 가입 축하 코인 — 웹 가입 화면 문구(app/auth/signup)와 개인정보처리방침의 20C 와 같은 값(표시용) */
+export const SIGNUP_BONUS_COINS = 20;
 
-export type TaskId = (typeof SAMPLE.tasks)[number]["taskId"];
+export type TaskId = DaengLabCareTaskId; // 오늘 할 일 — 서버 타입(walk_20 · eye_check) 그대로
 export type Session = "guest" | "member";
 
 /* 요일 (월요일 시작) — 출근 스티커 그림은 요일마다 다름 */
@@ -105,6 +86,8 @@ export function useMember() {
    할 일 = completeDaengLabCareTask. 코인은 출근 응답 · 지갑 알림(ddb:daenglab-wallet)으로 갱신 ── */
 type Today = {
     ready: boolean;
+    loading: boolean; // 불러오는 중 — 웹 MemberAiDashboard loading 과 같음
+    claiming: boolean; // 출근도장 찍는 중 — 웹 AttendanceStampCard claiming 과 같음
     error: string;
     stamped: boolean;
     streak: number;
@@ -127,7 +110,8 @@ type Today = {
     nextTask: { taskId: TaskId; title: string; xp: number } | null;
     savingTask: TaskId | null;
     stamp: () => Promise<boolean>;
-    complete: (id: TaskId) => Promise<void>;
+    complete: (id: TaskId) => Promise<boolean>; // 서버 저장이 성공했을 때만 true(+XP · 진동은 성공일 때만)
+    reload: () => void; // 다시 불러오기 — 웹 MemberAiDashboard refresh("다시 시도")와 같은 함수
 };
 
 export function useTodayDemo(session: Session): Today {
@@ -140,30 +124,40 @@ export function useTodayDemo(session: Session): Today {
     const [analysisCoinCost, setAnalysisCoinCost] = useState(10);
     const [error, setError] = useState("");
     const [savingTask, setSavingTask] = useState<TaskId | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [claiming, setClaiming] = useState(false);
+    const claimingRef = useRef(false); // 빠른 두 번 톡도 막도록(상태 반영 전) — 찍는 중 표시는 claiming
+    const loadSeq = useRef(0); // 늦게 도착한 옛 응답(로그아웃 · 다른 계정)은 버림
 
-    // 불러오기 — 협업자 대시보드 refresh 와 같음
+    // 불러오기 — 협업자 대시보드 refresh 와 같음(같은 두 함수 · 같은 순서). "다시 시도"도 이 함수
+    const reload = useCallback(async () => {
+        if (!token) return;
+        const seq = ++loadSeq.current;
+        setLoading(true);
+        setError("");
+        try {
+            const [nextAttendance, nextEngagement] = await Promise.all([loadDaengLabAttendance(token), loadDaengLabEngagement(token)]);
+            if (seq !== loadSeq.current) return;
+            setAttendance(nextAttendance);
+            setEngagement(nextEngagement);
+            setCoins(nextAttendance.wallet.daengLabCoins);
+            setAnalysisCoinCost(nextAttendance.wallet.analysisCoinCost);
+        } catch (reason) {
+            if (seq === loadSeq.current) setError(reason instanceof Error ? reason.message : "오늘의 기록을 불러오지 못했습니다.");
+        } finally {
+            if (seq === loadSeq.current) setLoading(false);
+        }
+    }, [token]);
+
+    // 처음 · 로그인 바뀔 때 불러오기 — 웹과 같이 다음 틱에
     useEffect(() => {
         if (!hydrated || !member) return;
-        let active = true;
-        const timer = window.setTimeout(() => {
-            setError("");
-            Promise.all([loadDaengLabAttendance(token), loadDaengLabEngagement(token)])
-                .then(([nextAttendance, nextEngagement]) => {
-                    if (!active) return;
-                    setAttendance(nextAttendance);
-                    setEngagement(nextEngagement);
-                    setCoins(nextAttendance.wallet.daengLabCoins);
-                    setAnalysisCoinCost(nextAttendance.wallet.analysisCoinCost);
-                })
-                .catch((reason) => {
-                    if (active) setError(reason instanceof Error ? reason.message : "오늘의 기록을 불러오지 못했습니다.");
-                });
-        }, 0);
+        const timer = window.setTimeout(() => void reload(), 0);
         return () => {
-            active = false;
             window.clearTimeout(timer);
+            loadSeq.current += 1; // 이 화면을 떠나면 진행 중 응답은 무시
         };
-    }, [hydrated, member, token]);
+    }, [hydrated, member, reload]);
 
     // 다른 곳(마이 · 출근 · 분석)에서 지갑이 바뀌면 코인도 같이
     useEffect(() => {
@@ -176,9 +170,13 @@ export function useTodayDemo(session: Session): Today {
         return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
     }, []);
 
+    const ready = Boolean(attendance && engagement);
     // 출근 — 협업자 대시보드 claimAttendance 와 같음(성공하면 새로 찍혔는지 돌려줌)
+    // 웹 AttendanceStampCard 처럼 찍는 중 · 불러오기 전(준비 전 · 불러오는 중)에는 무시(두 번 톡 방지)
     const stamp = useCallback(async () => {
-        if (!token) return false;
+        if (!token || claimingRef.current || !ready || loading) return false;
+        claimingRef.current = true;
+        setClaiming(true);
         try {
             setError("");
             const next = await claimDaengLabAttendance(token);
@@ -191,19 +189,24 @@ export function useTodayDemo(session: Session): Today {
         } catch (reason) {
             setError(reason instanceof Error ? reason.message : "출근도장을 찍지 못했습니다.");
             return false;
+        } finally {
+            claimingRef.current = false;
+            setClaiming(false);
         }
-    }, [token]);
+    }, [token, ready, loading]);
 
-    // 오늘 할 일 완료 — 협업자 대시보드 completeTask 와 같음
+    // 오늘 할 일 완료 — 협업자 대시보드 completeTask 와 같음. 성공했는지 돌려줌(실패면 +XP 표시 안 함)
     const complete = useCallback(async (taskId: TaskId) => {
-        if (!token || savingTask) return;
+        if (!token || savingTask) return false;
         setSavingTask(taskId);
         setError("");
         try {
             const next = await completeDaengLabCareTask(taskId, token);
             setEngagement(next);
+            return true;
         } catch (reason) {
             setError(reason instanceof Error ? reason.message : "오늘의 돌봄 기록을 저장하지 못했습니다.");
+            return false;
         } finally {
             setSavingTask(null);
         }
@@ -216,7 +219,9 @@ export function useTodayDemo(session: Session): Today {
     const doneCount = (stamped ? 1 : 0) + tasks.filter((t) => t.completed).length;
     const next = tasks.find((t) => !t.completed);
     return {
-        ready: Boolean(attendance && engagement),
+        ready,
+        loading,
+        claiming,
         error,
         stamped,
         streak: attendance?.currentStreak ?? 0,
@@ -235,12 +240,31 @@ export function useTodayDemo(session: Session): Today {
         tasks,
         done,
         doneCount,
-        allDone: Boolean(attendance && engagement) && stamped && tasks.length > 0 && tasks.every((t) => t.completed),
+        allDone: ready && stamped && tasks.length > 0 && tasks.every((t) => t.completed),
         nextTask: next ? { taskId: next.taskId, title: next.title, xp: next.xp } : null,
         savingTask,
         stamp,
         complete,
+        reload: () => void reload(),
     };
+}
+
+/**
+ * 관리자 공개 설정 — 협업자 GrowthHub 와 같은 함수(loadPublishedGrowthContent) · 같은 기본값(DEFAULT_GROWTH_HUB_CONTENT).
+ * visibility.programs(준비 중 혜택) · localCare(동네 돌봄 찾기) · policy(운영 기준)가 false 면 그 칸을 숨긴다.
+ * 불러오기 실패(null)면 웹처럼 기본값(모두 보임) 그대로.
+ */
+export function useGrowthVisibility() {
+    const [visibility, setVisibility] = useState(DEFAULT_GROWTH_HUB_CONTENT.visibility);
+    useEffect(() => {
+        const controller = new AbortController();
+        loadPublishedGrowthContent(controller.signal).then((published) => {
+            if (controller.signal.aborted) return;
+            if (published) setVisibility(published.content.visibility);
+        });
+        return () => controller.abort();
+    }, []);
+    return visibility;
 }
 
 /** 진행 중인 댕주제 — 협업자 loadShowcaseTopic 그대로(로그인 없이도 읽기). 없으면 null, 마감까지 남은 날 */

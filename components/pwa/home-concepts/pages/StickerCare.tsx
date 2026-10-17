@@ -8,6 +8,7 @@
  *  - 로그인 없이 쓸 수 있음. 협업자 LocalCareFinder 와 같은 순서(배포 전 연결 2026-10-16):
  *    현재 위치(currentPosition) → 서버 /api/v1/local/pet-care(분류 · 위도 · 경도 · 5곳) → safePlaces 로 정리 → 명함(거리 · 주소 · 전화 · 지도 4종)
  *    위치를 한 번 얻으면 분류를 바꿀 때 그 위치로 바로 다시 찾음. 실패 · 결과 없음은 네이버지도로 이어 줌(협업자 문구)
+ *    성공 · 실패 기록(local_care_search_completed / _failed)도 협업자와 같은 값으로 남김
  *  - 고른 분류는 주소 ?cat= 으로도 열 수 있음(예: ?cat=grooming).
  */
 
@@ -20,6 +21,7 @@ import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { CATEGORIES, buildNaverMapUrl } from "../page-data";
 import { currentPosition, formatDistance, safePlaces, type Coordinates, type LocalCareCategory, type SearchState } from "@/components/growth/LocalCareFinder";
 import { ddbApiBase } from "@/lib/customer-api";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { placeAddress, placeMapLinks } from "@/lib/place-map-links";
 import { ConceptBar, HC_CSS, useDemoSession } from "../shared";
 import { DiaryBody, PARTS_CSS } from "../sticker-parts";
@@ -61,7 +63,14 @@ export default function StickerCare() {
             const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/local/pet-care?${params}`, { headers: { Accept: "application/json" }, signal: controller.signal });
             if (!response.ok) throw new Error("service-unavailable");
             const data = await response.json() as { places?: unknown };
-            setSearchState({ status: "done", category: category.id, places: safePlaces(data.places, category), fallbackUrl });
+            const places = safePlaces(data.places, category);
+            setSearchState({ status: "done", category: category.id, places, fallbackUrl });
+            // 찾기 성공 기록 — 협업자 LocalCareFinder 와 같은 이벤트 · 같은 값(surface "treasure_mine" · 분류 · 결과 수)
+            trackStorefrontEvent("local_care_search_completed", {
+                surface: "treasure_mine",
+                category: category.id,
+                resultCount: places.length,
+            });
             haptic("medium");
         } catch (caught) {
             if (controller.signal.aborted) return;
@@ -70,6 +79,12 @@ export default function StickerCare() {
                 ? "위치 권한이 꺼져 있어요. 권한을 허용한 뒤 다시 찾거나 네이버지도에서 바로 확인해 주세요."
                 : "주변 후보를 바로 불러오지 못했어요. 잠시 후 다시 찾거나 네이버지도에서 확인할 수 있어요.";
             setSearchState({ status: "error", category: category.id, message, fallbackUrl });
+            // 찾기 실패 기록 — 협업자 LocalCareFinder 와 같음(위치 권한 거부 · 그 밖은 제공처 문제)
+            trackStorefrontEvent("local_care_search_failed", {
+                surface: "treasure_mine",
+                category: category.id,
+                reason: code === 1 ? "permission_denied" : "provider_unavailable",
+            });
         }
     };
     const find = () => { haptic("light"); void search(cat, null); };

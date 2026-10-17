@@ -37,11 +37,15 @@ import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { trackSignupCompleted } from "@/lib/storefront-analytics";
 import { haptic } from "../gestures";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
-import { HC_CSS, SAMPLE } from "../shared";
+import { HC_CSS } from "../shared";
 import { DiaryBody, DiaryTabs, PARTS_CSS } from "../sticker-parts";
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
 
 const APP_HOME = "/app/home-1/";
+/** 가입 선물 코인 — 웹 가입 화면 문구("신규 가입 혜택 · 20C", app/auth/signup/page.tsx ~:853 · lib/signup-agreements.ts)와 같은 값 */
+const SIGNUP_BONUS_COINS = 20;
+/** 이메일 형식 — 웹 가입 이메일 칸(type="email" required)의 브라우저 검사와 같은 규칙(HTML 표준 이메일 형식, 앞뒤 공백 제외) */
+const EMAIL_PATTERN = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 /* 색인 탭 = 가입 단계(약속 → 계정 → 우리 아이) — 카페24 글꼴에 동그라미 숫자가 없어 글자만 */
 const STEPS = [
     { label: "약속", color: "#ffd6e2" },
@@ -72,6 +76,8 @@ type PendingBonusVerification = { kind: "bonus"; member: User; destination: stri
 type PendingAccountActivation = {
     kind: "activation"; apiUserId: number; name: string; email: string; destination: string; pets: PetProfile[];
     verified: boolean; activationToken?: string; activationExpiresAt?: number;
+    /** "우리 아이는 나중에 등록"으로 가입 — 펫렌즈 임시 저장(초안)을 지우지 않고 남겨 둠(앱 전용 버튼) */
+    keepPetLensDraft?: boolean;
 };
 type PendingVerification = PendingBonusVerification | PendingAccountActivation;
 const PET_PHOTO_VIEW_LABELS = PET_PHOTO_VIEWS.reduce((acc, view) => { acc[view.id] = view.label; return acc; }, {} as Record<PetPhotoViewId, string>);
@@ -195,7 +201,8 @@ export default function StickerSignup() {
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
     const back = redirect || APP_HOME;
     const [step, setStep] = useState(0);
-    const [dir, setDir] = useState(1);
+    // 쪽 넘김 방향 — 0 = 처음 연 쪽(속지 전체가 이미 넘겨지며 나타나므로 단계 내용은 따로 움직이지 않음)
+    const [dir, setDir] = useState(0);
     const goStep = (i: number) => { setDir(i > step ? 1 : -1); setStep(i); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
     /* 웹 가입 화면과 같은 상태 */
@@ -386,22 +393,34 @@ export default function StickerSignup() {
         if (!botToken) { setError("가입 보안 확인을 완료해 주세요."); haptic("light"); return; }
         goStep(1);
     };
+    /* 계정 칸 검사 — 웹 가입 화면의 이름(required) · 이메일(type="email" required) · 비밀번호(8자 · 72바이트) 검사와 같은 조건.
+       "다음" 버튼과 실제 가입(submit) 둘 다 이 검사를 씀(색인 탭으로 계정 쪽을 건너뛸 수 있어서) */
+    const accountProblem = () => {
+        if (!name.trim() || !email.trim()) return "이름과 이메일을 입력해 주세요.";
+        if (!EMAIL_PATTERN.test(email.trim())) return "이메일 주소 형식을 확인해 주세요. (예: hello@example.com)";
+        if (password.length < 8 || passwordUtf8Bytes(password) > 72) return "비밀번호는 8자 이상, 최대 72바이트로 입력해 주세요.";
+        return "";
+    };
     const nextFromAccount = () => {
         setError("");
-        if (!name.trim() || !email.trim()) { setError("이름과 이메일을 입력해 주세요."); haptic("light"); return; }
-        if (password.length < 8 || passwordUtf8Bytes(password) > 72) { setError("비밀번호는 8자 이상, 최대 72바이트로 입력해 주세요."); haptic("light"); return; }
+        const problem = accountProblem();
+        if (problem) { setError(problem); haptic("light"); return; }
         goStep(2);
     };
 
     /* 가입 — withPet=false 면 반려견 정보 없이(건너뛰기). 그 밖 검사 · 흐름은 웹 가입 화면과 같음 */
     const submit = async (withPet: boolean) => {
         setError("");
+        // 웹은 이름 · 이메일 칸(required · type="email")을 브라우저가 가입 처리 전에 먼저 막음 → 같은 순서로 맨 먼저 검사, 문제면 계정 쪽으로
+        // (비밀번호는 웹과 같이 아래 서버 준비 확인 다음 순서에서 검사)
+        if (!name.trim() || !email.trim() || !EMAIL_PATTERN.test(email.trim())) { setError(accountProblem()); haptic("light"); goStep(1); return; }
         if (!ddbApiReady()) { setCustomerToken(); setError("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요."); return; }
         const passwordBytes = passwordUtf8Bytes(password);
         if (password.length < 8 || passwordBytes > 72) { setError("비밀번호는 8자 이상, 최대 72바이트로 입력해 주세요."); goStep(1); return; }
         if (!agreeTerms || !agreePrivacy) { setError("필수 약관과 개인정보 수집·이용에 동의해 주세요."); goStep(0); return; }
         if (!botChallengeConfigured) { setError("가입 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요."); return; }
-        if (!botToken) { setError("가입 보안 확인을 완료해 주세요."); goStep(0); return; }
+        // 보안 확인 토큰이 비었으면(시간 만료 · 미완료) 약속 쪽으로 — 위젯은 쪽을 넘겨도 계속 살아 있어 만료되면 토큰이 비워짐(웹과 같은 문구)
+        if (!botToken) { setError("가입 보안 확인을 완료해 주세요."); haptic("light"); goStep(0); return; }
         const weightText = withPet ? petWeightKg.trim() : "";
         const confirmedWeightKg = weightText ? Number(weightText) : undefined;
         if (confirmedWeightKg !== undefined && (!Number.isFinite(confirmedWeightKg) || confirmedWeightKg < 0.1 || confirmedWeightKg > 120)) {
@@ -456,8 +475,11 @@ export default function StickerSignup() {
                 if (activationToken.length < 20 || activationExpiresIn <= 0) throw new Error("Signup activation grant is missing.");
                 const createdAt = Date.now();
                 const activationExpiresAt = createdAt + activationExpiresIn * 1_000;
-                clearPetLensSignupDraft();
-                if (pets[0]) savePetLensSignupDraft(pets[0]);
+                // 웹과 같음(초안 지우고 이번 반려견을 대기 저장). "나중에 등록"이면 펫렌즈 초안을 그대로 남김
+                if (withPet) {
+                    clearPetLensSignupDraft();
+                    if (pets[0]) savePetLensSignupDraft(pets[0]);
+                }
                 setCustomerToken();
                 clearSignupEmailResume();
                 saveSignupActivationResume({
@@ -466,7 +488,7 @@ export default function StickerSignup() {
                 });
                 setPendingVerification({
                     kind: "activation", apiUserId: apiUser.id, name: apiUser.name || name.trim() || "댕다방 회원", email: apiUser.email,
-                    destination, pets, verified: false, activationToken, activationExpiresAt,
+                    destination, pets, verified: false, activationToken, activationExpiresAt, keepPetLensDraft: !withPet,
                 });
                 return;
             }
@@ -482,7 +504,8 @@ export default function StickerSignup() {
             const confirmedDestination = petLensPostAuthDestination(back, savedPets);
             login(member);
             trackSignupCompleted("email");
-            clearPetLensSignupDraft();
+            // 웹과 같음(가입 + 반려견 저장 뒤 초안 지움). "나중에 등록"이면 반려견을 저장하지 않았으니 펫렌즈 초안을 남김
+            if (withPet) clearPetLensSignupDraft();
             clearSignupActivationResume();
             saveSignupEmailResume({ source: "email", returnTo: confirmedDestination });
             haptic("medium");
@@ -521,7 +544,8 @@ export default function StickerSignup() {
             trackSignupCompleted("email");
             clearSignupActivationResume();
             clearSignupEmailResume();
-            clearPetLensSignupDraft();
+            // 웹과 같음. 단 "나중에 등록"으로 가입했으면 펫렌즈 초안을 남김
+            if (!activation.keepPetLensDraft) clearPetLensSignupDraft();
             setPendingVerification(null);
             router.push(activation.destination);
         } catch (reason) {
@@ -603,9 +627,14 @@ export default function StickerSignup() {
     }
 
     /* ───────── 가입 단계 ───────── */
+    // 단계 내용 쪽 넘김 애니메이션(속지 DiaryBody 와 같은 dt-in-next / dt-in-prev) — 처음 연 쪽(dir 0)은 속지가 이미 움직이므로 없음
+    const turnClass = dir > 0 ? "dt-in-next" : dir < 0 ? "dt-in-prev" : "";
+    // 속지는 단계마다 새로 만들지 않음(pageKey 고정) — 보안 확인 위젯이 단계를 넘겨도 사라지지 않고 만료를 계속 감지하도록.
+    // 단계 내용만 key={step} 으로 바꿔 쪽 넘김
     return frame(
-        <DiaryBody pageKey={step} dir={dir}>
+        <DiaryBody pageKey="signup-steps" dir={dir}>
             <h1 className="sr-only">회원가입</h1>
+            <div key={`step-${step}`} className={turnClass}>
             {apiReady === false ? <div className="mb-4"><Note tone="warn">지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.</Note></div> : null}
             {error ? <div className="mb-4"><Note tone="error">{error}</Note></div> : null}
 
@@ -618,7 +647,7 @@ export default function StickerSignup() {
                         <Tape className="-top-2 left-1/2 h-3.5 w-12 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "3deg" }} />
                         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[13px] text-[#7a4b00] ah-display">C</span>
                         <span className="min-w-0 flex-1">
-                            <span className="ah-display block text-[14px]">신규 가입 혜택 · {SAMPLE.signupBonus}C <span className="ah-light text-[11.5px] text-[#8f5e12]">행동·소리 분석 2회</span></span>
+                            <span className="ah-display block text-[14px]">신규 가입 혜택 · {SIGNUP_BONUS_COINS}C <span className="ah-light text-[11.5px] text-[#8f5e12]">행동·소리 분석 2회</span></span>
                             <span className="ah-light mt-0.5 block text-[11px] leading-snug text-[#8f5e12]">가입 이메일 인증 완료 후 자동 지급됩니다. 반복 가입 등 부정 수령이 확인되면 코인이 회수되거나 이용이 제한될 수 있습니다.</span>
                         </span>
                     </div>
@@ -649,12 +678,7 @@ export default function StickerSignup() {
                             </div>
                         </div>
                     </div>
-                    <div className="su-bot mt-4">
-                        <SignupBotChallenge onTokenChange={setBotToken} resetKey={botResetKey} />
-                    </div>
-                    <div className="mt-5">
-                        <Patch onClick={nextFromAgree} disabled={!requiredConsentsAccepted}>다음 · 가입 방법 고르기<i aria-hidden="true" className="fa-solid fa-chevron-right text-[12px]" /></Patch>
-                    </div>
+                    {/* 보안 확인 위젯 · 다음 버튼은 아래(단계 밖)에 — 위젯은 한 번만 붙이고 이 쪽에서만 보임 */}
                 </>
             ) : step === 1 ? (
                 <>
@@ -804,11 +828,24 @@ export default function StickerSignup() {
                         </Patch>
                         <div className="grid grid-cols-[auto_1fr] gap-2.5">
                             <Patch tone="cream" small onClick={() => goStep(1)}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
-                            <Patch tone="cream" small onClick={() => void submit(false)} disabled={loading || apiReady !== true || !signupSecurityReady}>우리 아이는 나중에 등록</Patch>
+                            {/* 사진 분석 중에는 잠금 — 웹 가입 버튼과 같은 조건(photoLoading 포함) */}
+                            <Patch tone="cream" small onClick={() => void submit(false)} disabled={photoLoading || loading || apiReady !== true || !signupSecurityReady}>우리 아이는 나중에 등록</Patch>
                         </div>
                     </div>
                 </>
             )}
+            </div>
+
+            {/* 가입 보안 확인(협업자 SignupBotChallenge, 웹과 같은 값) — 가입이 끝날 때까지 계속 붙여 둠.
+                약속 쪽에서만 보이고 다른 쪽에선 hidden 으로 숨김 → 다른 쪽에 있어도 expired-callback 이 토큰을 비움 */}
+            <div className={`su-bot mt-4 ${turnClass}`} hidden={step !== 0}>
+                <SignupBotChallenge onTokenChange={setBotToken} resetKey={botResetKey} />
+            </div>
+            {step === 0 ? (
+                <div key="step-0-next" className={`mt-5 ${turnClass}`}>
+                    <Patch onClick={nextFromAgree} disabled={!requiredConsentsAccepted}>다음 · 가입 방법 고르기<i aria-hidden="true" className="fa-solid fa-chevron-right text-[12px]" /></Patch>
+                </div>
+            ) : null}
 
             <p className="ah-light mt-6 text-center text-[12.5px]" style={{ color: TEXT_SOFT }}>
                 이미 계정이 있다면 <Link href={appLoginHref(redirect)} className="ah-display text-[#e0557f] underline underline-offset-4">로그인</Link>

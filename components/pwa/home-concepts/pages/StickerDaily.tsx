@@ -15,18 +15,26 @@
  *  - 안내: 확장 계획 = 산책길 지도(정류장 스티커 · 발자국 · 상태는 마스킹테이프 이름표) ·
  *          운영 기준 = 테이프로 붙인 약속 편지(도장 그림 · 톡 하면 펼침 · 댕다방 드림)
  * 로그인 전 이번 주: 체험 없이 로그인 초대 + 이용 순서. 문구는 협업자 화면의 실제 문구.
+ * 웹과 같은 동작(2026-10-17 맞춤): 오류 메모 + "다시 시도" · 출근 두 번 톡 방지 · 실패 시 +XP 없음 · 실제 반려견 사진 분석 주소 ·
+ *   최근 건강 변화/AI 추천 규칙 · AI 기록 있을 때만 공유(실패하면 복사) · 관심등록 오류 문구 · 개인정보처리방침 링크 ·
+ *   관리자 공개 설정(혜택 · 동네 돌봄 · 운영 기준 숨김) · 웹과 같은 이용 기록(trackStorefrontEvent).
  */
 
 import { appLoginHref } from "@/components/app-shell/appTabs";
+import { hasShareableAiRecord } from "@/components/growth/GrowthHub";
+import { copyText } from "@/components/growth/GrowthShareCard";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GROWTH_PROGRAM_CARDS, growthSharePayload, type GrowthProgramCard, type GrowthShareKind } from "@/lib/growth-programs";
+import { petLensProfileHref } from "@/lib/petlens-routing";
+import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { growthInterestLabel } from "@/lib/growth-programs";
 import { Peek, haptic } from "../gestures";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { EXPANSION_CARDS, GUEST_STEPS, POLICIES, pageHref } from "../page-data";
-import { ConceptBar, HC_CSS, WEEK, flyCoin, todayIndex, untilTomorrow, useDemoSession, useInitialTab, useMember, useNow, useTodayDemo, type TaskId } from "../shared";
-import { cancelGrowthInterest, loadGoodsContestSummary, loadGrowthInterests, submitGrowthInterest, type GrowthProgramId } from "@/lib/customer-api";
+import { ConceptBar, HC_CSS, WEEK, flyCoin, todayIndex, untilTomorrow, useDemoSession, useGrowthVisibility, useInitialTab, useMember, useNow, useTodayDemo, type TaskId } from "../shared";
+import { cancelGrowthInterest, DdbApiError, loadGoodsContestSummary, loadGrowthInterests, submitGrowthInterest, type GrowthProgramId } from "@/lib/customer-api";
 import { useAuth } from "@/lib/store";
 import { DiaryBody, DiaryTabs, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { LoginInvite, STICKER_CSS, Tape, Patch } from "../sticker-kit";
@@ -38,6 +46,36 @@ const TABS = [
     { label: "안내", color: "#e3ecff" },
 ];
 const REDIRECT = "/app/sticker/daily/";
+
+/* 웹 MemberAiDashboard.analysisStatus 와 같은 규칙(복사) — 최근 건강 변화 문구(협업자 파일은 고치지 않음) */
+function analysisStatus(rawAnalysis: unknown) {
+    if (!rawAnalysis || typeof rawAnalysis !== "object") return "첫 분석을 기다리고 있어요";
+    const row = rawAnalysis as Record<string, unknown>;
+    const details = row.details && typeof row.details === "object" ? row.details as Record<string, unknown> : null;
+    const status = typeof details?.statusLabel === "string" ? details.statusLabel : "사진 분석 저장 완료";
+    return status.slice(0, 34);
+}
+
+/* 웹 MemberAiDashboard.recommendationCopy 와 같은 규칙(복사) — AI 추천 문구 5가지 */
+function recommendationCopy(concerns: string[]) {
+    const text = concerns.join(" ");
+    if (/눈|고글|자외선/.test(text)) return "눈 보호 관심을 반영한 산책 안전용품";
+    if (/피부|발바닥|털|케어/.test(text)) return "피부·발바닥 케어 관심을 반영한 관리용품";
+    if (/체중|식단|알러지|사료/.test(text)) return "식단·체중 관심을 반영한 먹거리";
+    if (/놀이|분리불안/.test(text)) return "활동량과 놀이 성향을 반영한 장난감";
+    return "프로필과 최근 분석을 반영한 맞춤 상품";
+}
+
+/* 웹 GrowthPrograms.interestErrorMessage 와 같은 규칙(복사) — 관심등록 오류 문구(401 · 422 · 429 · 서버 주소 없음) */
+function interestErrorMessage(error: unknown): string {
+    if (error instanceof DdbApiError) {
+        if (error.status === 401) return "로그인 시간이 끝났어요. 다시 로그인한 뒤 관심등록을 이어가 주세요.";
+        if (error.status === 422) return "동의 항목을 다시 확인해 주세요.";
+        if (error.status === 429) return "요청이 많아 잠시 보호 중이에요. 잠시 후 다시 시도해 주세요.";
+        if (error.code === "missing_api_base") return "지금은 관심등록 서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요.";
+    }
+    return "관심등록 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요.";
+}
 
 export default function StickerDaily() {
     const [session, setSession] = useDemoSession();
@@ -67,7 +105,8 @@ export default function StickerDaily() {
     // from: 코인이 날아갈 출발점(누른 칸) · t: 누른 시각(떠오르는 숫자를 매번 새로)
     // 출근 — 협업자 claimDaengLabAttendance(useTodayDemo.stamp). 새로 찍혔을 때만 +코인 · 코인 비행
     const stamp = (from: HTMLElement | null, t: number) => {
-        if (today.stamped) return;
+        // 웹 AttendanceStampCard 처럼 불러오기 전 · 찍는 중에는 무시(두 번 톡 방지)
+        if (today.stamped || !today.ready || today.claiming) return;
         void today.stamp().then((newly) => {
             if (!newly) return;
             haptic("medium");
@@ -79,7 +118,8 @@ export default function StickerDaily() {
     const doTask = (id: TaskId, t: number) => {
         if (today.done[id] || today.savingTask) return;
         const task = today.tasks.find((x) => x.taskId === id);
-        void today.complete(id).then(() => {
+        void today.complete(id).then((ok) => {
+            if (!ok) return; // 저장 실패면 +XP · 진동 없음(오류 메모가 대신 보임)
             haptic("medium");
             setGain({ key: id, text: `+${task?.xp ?? 0}XP`, n: t });
         });
@@ -87,16 +127,45 @@ export default function StickerDaily() {
     const onTodo = (key: string, el: HTMLElement, t: number) => (key === "stamp" ? stamp(el, t) : doTask(key as TaskId, t));
 
     /* 준비 중 혜택 관심등록 — 협업자 GrowthPrograms 와 같은 함수(불러오기 loadGrowthInterests · 등록 submitGrowthInterest · 취소 cancelGrowthInterest) */
-    const { user } = useAuth();
+    const { user, hydrated: authHydrated } = useAuth();
     const accessToken = user?.apiAccessToken || "";
+    // 화면 진입 기록 — 웹 GrowthHub 의 growth_hub_viewed 와 같음(로그인 정보 확인 뒤 한 번)
+    const viewTracked = useRef(false);
+    useEffect(() => {
+        if (!authHydrated || viewTracked.current) return;
+        viewTracked.current = true;
+        trackStorefrontEvent("growth_hub_viewed", { surface: "treasure_mine", audience: user ? "member" : "guest" });
+    }, [authHydrated, user]);
     const [interest, setInterest] = useState<Record<string, boolean>>({});
     const [interestBusy, setInterestBusy] = useState(false);
+    // 불러오기 끝난 로그인(토큰) — 웹 GrowthPrograms registrationsReady 와 같음(끝나기 전엔 "등록 상태 확인 중")
+    const [interestLoadedFor, setInterestLoadedFor] = useState("");
+    const interestReady = !accessToken || interestLoadedFor === accessToken;
+    // 불러오기 실패 안내 — 웹 GrowthPrograms programNotice 와 같은 문구
+    const [interestLoadFailed, setInterestLoadFailed] = useState(false);
+    // 관심등록 · 취소 오류(팝업 안) — 웹 GrowthPrograms error 처럼 "로그인" 오류면 다시 로그인 링크
+    const [interestErr, setInterestErr] = useState("");
     useEffect(() => {
         if (!accessToken) return;
         let active = true;
         loadGrowthInterests(accessToken)
-            .then((list) => { if (active) setInterest(Object.fromEntries(list.map((r) => [r.programId, true]))); })
-            .catch(() => { /* 불러오기 실패면 빈 상태 — 등록 시 서버가 이미 등록됨을 알려 줌 */ });
+            .then((list) => {
+                if (!active) return;
+                setInterest(Object.fromEntries(list.map((r) => [r.programId, true])));
+                setInterestLoadFailed(false);
+                setInterestLoadedFor(accessToken);
+            })
+            .catch(() => {
+                if (!active) return;
+                // 웹과 같이: 빈 상태로 두고 안내 문구 + 실패 기록(새 등록은 서버가 중복 없이 처리)
+                setInterest({});
+                setInterestLoadedFor(accessToken);
+                setInterestLoadFailed(true);
+                trackStorefrontEvent("growth_program_interest_failed", {
+                    surface: "treasure_mine",
+                    stage: "load",
+                });
+            });
         return () => { active = false; };
     }, [accessToken]);
     const [openCard, setOpenCard] = useState<{ card: GrowthProgramCard; rect: DOMRect; i: number } | null>(null);
@@ -108,6 +177,7 @@ export default function StickerDaily() {
         setConsent(false);
         setConsentMore(false);
         setConsentErr(false);
+        setInterestErr("");
         setOpenCard({ card, rect: el.getBoundingClientRect(), i });
     };
     const toggleInterest = (id: string) => {
@@ -117,19 +187,58 @@ export default function StickerDaily() {
             haptic("light");
             return;
         }
-        if (interestBusy) return;
+        if (interestBusy || !interestReady) return;
+        const programId = id as GrowthProgramId;
         const on = !interest[id];
         setInterestBusy(true);
-        const request = on
-            ? submitGrowthInterest({ programId: id as GrowthProgramId, consentToContact: consent }, accessToken).then((r) => r.message || "관심등록을 저장했어요 · 소식이 나오면 이메일로 알려 드려요")
-            : cancelGrowthInterest(id as GrowthProgramId, accessToken).then(() => "관심등록을 취소했어요");
-        void request
-            .then((message) => {
-                setInterest((s) => ({ ...s, [id]: on }));
-                haptic(on ? "medium" : "light");
-                setToast(message);
+        setInterestErr("");
+        if (on) {
+            // 앱은 고르기와 저장이 한 번의 톡 — 웹 selectProgram(관심등록 열기) 기록을 저장 직전에 같은 값으로
+            trackStorefrontEvent("growth_program_interest_opened", {
+                surface: "treasure_mine",
+                programId,
+            });
+            void submitGrowthInterest({ programId, consentToContact: consent }, accessToken)
+                .then((next) => {
+                    setInterest((s) => ({ ...s, [next.programId]: true }));
+                    haptic("medium");
+                    // 이미 등록돼 있으면 웹 GrowthPrograms 와 같은 문구
+                    setToast(next.alreadyRegistered ? "이미 관심을 남겨두셨어요 · 중복 신청을 만들지 않고 기존 등록을 확인했습니다." : `관심등록을 저장했어요 · ${growthInterestLabel(next.programId)} 준비 소식이 확정되면 안내할게요.`); // 웹 GrowthPrograms 접수 문구와 같음
+                    // 웹 GrowthPrograms submit 성공 기록과 같음
+                    trackStorefrontEvent("growth_program_interest_submitted", {
+                        surface: "treasure_mine",
+                        programId: next.programId,
+                        alreadyRegistered: next.alreadyRegistered,
+                        outcome: "completed",
+                    });
+                })
+                .catch((caught) => {
+                    // 웹 interestErrorMessage 와 같은 문구 · 같은 실패 기록
+                    setInterestErr(interestErrorMessage(caught));
+                    trackStorefrontEvent("growth_program_interest_failed", {
+                        surface: "treasure_mine",
+                        programId,
+                        stage: "submit",
+                    });
+                })
+                .finally(() => setInterestBusy(false));
+            return;
+        }
+        void cancelGrowthInterest(programId, accessToken)
+            .then(() => {
+                setInterest((s) => ({ ...s, [id]: false }));
+                haptic("light");
+                setToast("관심등록을 취소했어요");
             })
-            .catch((reason) => setToast(reason instanceof Error ? reason.message : "관심등록을 처리하지 못했어요. 잠시 후 다시 시도해 주세요."))
+            .catch(() => {
+                // 웹 GrowthPrograms cancelRegistration 실패와 같은 문구 · 같은 실패 기록
+                setInterestErr("관심등록을 취소하지 못했어요. 잠시 후 다시 시도해 주세요.");
+                trackStorefrontEvent("growth_program_interest_failed", {
+                    surface: "treasure_mine",
+                    programId,
+                    stage: "cancel",
+                });
+            })
             .finally(() => setInterestBusy(false));
     };
 
@@ -143,6 +252,16 @@ export default function StickerDaily() {
 
     /* 운영 기준 펼침 */
     const [openPolicy, setOpenPolicy] = useState<number | null>(null);
+    const togglePolicy = (i: number) => {
+        const on = openPolicy === i;
+        // 접혀 있던 운영 기준을 펼칠 때 — 웹 GrowthPolicySummary(details 열림)와 같은 기록
+        if (!on && openPolicy === null) trackStorefrontEvent("growth_policy_opened", { surface: "treasure_mine" });
+        setOpenPolicy(on ? null : i);
+        haptic("light");
+    };
+
+    /* 관리자 공개 설정 — 웹 GrowthHub 처럼 혜택(programs) · 동네 돌봄(localCare) · 운영 기준(policy)을 숨김 */
+    const visibility = useGrowthVisibility();
 
     /* 운영 회원 대시보드(MemberAiDashboard)와 같은 계산 */
     // 이번 주 출근 — 서버 값(weeklyAttendanceProgress / Target)
@@ -165,23 +284,53 @@ export default function StickerDaily() {
     const xpPct = Math.max(0, Math.min(100, Math.round(((today.xp - prevLevelXp) / Math.max(1, today.nextLevelXp - prevLevelXp)) * 100)));
     const levelName = today.level < 3 ? "건강 새싹" : "우리 아이 지킴이";
     const ratio = (v: number, t: number) => Math.max(0, Math.min(100, Math.round((v / Math.max(1, t)) * 100)));
-    const recommend = /피부|발바닥|털|케어/.test((pet?.concerns ?? []).join(" ")) ? "피부·발바닥 케어 관심을 반영한 관리용품" : "프로필과 최근 분석을 반영한 맞춤 상품";
+    // AI 추천 — 웹 MemberAiDashboard 와 같음: 반려견이 있으면 맞춤 추천(5가지 문구), 없으면 프로필 등록으로
+    // 앱에선 "/" 가 앱 쇼핑 화면으로 넘어가며 #recommend 가 사라지므로 앱 쇼핑 화면의 추천 칸(id="recommend")으로 바로
+    const recommend = pet ? recommendationCopy(pet.concerns || []) : "프로필 등록 후 맞춤 추천 받기";
+    const recommendHref = pet ? "/app/sticker/shop/#recommend" : "/mypage/?profile=required#pet-profiles";
 
-    /* 안전 공유 — 건강 상세 없이 돌봄 습관만(운영 공유 문구 · 정식 주소) */
+    /* 안전 공유 — 웹 GrowthShareCard 와 같은 흐름(공유 창 → 실패하면 복사 → 막히면 직접 복사 링크) · 같은 기록 */
+    // AI 기록 공유는 공유할 AI 기록이 있을 때만 — 웹 GrowthHub 와 같은 값(user.pets.some(hasShareableAiRecord))
+    const canShareAiRecord = Boolean(user?.pets.some(hasShareableAiRecord));
     const [shareNote, setShareNote] = useState<string | null>(null);
+    const [shareFallback, setShareFallback] = useState(""); // 자동 복사가 막혔을 때 직접 복사할 링크(웹 fallbackUrl)
+    const [shareBusy, setShareBusy] = useState<GrowthShareKind | null>(null); // 두 번 톡 방지 — 웹 busy 와 같음
     const share = async (kind: GrowthShareKind) => {
+        if (shareBusy) return;
+        setShareBusy(kind);
+        setShareNote(null);
+        setShareFallback("");
+        // 웹은 window.location.origin 을 쓰지만, 앱은 네이티브 출처(앱 껍데기)에서 돌아 그 주소가 사이트 주소가 아님 → 정식 주소 고정
         const payload = growthSharePayload(kind, "https://www.daengdabang.com");
+        const eventName = kind === "care_result" ? "growth_result_shared" : "growth_invite_shared";
         haptic("light");
         try {
-            if (navigator.share) {
-                await navigator.share(payload);
-                setShareNote("공유 창으로 안전한 문구를 보냈어요.");
-                return;
+            if (typeof navigator.share === "function") {
+                try {
+                    await navigator.share(payload);
+                    setShareNote("공유 창으로 안전한 문구를 보냈어요.");
+                    trackStorefrontEvent(eventName, { surface: "treasure_mine", shareKind: kind, method: "web_share", outcome: "completed" });
+                    return;
+                } catch (error) {
+                    if (error instanceof DOMException && error.name === "AbortError") {
+                        setShareNote("공유를 취소했어요.");
+                        trackStorefrontEvent(eventName, { surface: "treasure_mine", shareKind: kind, method: "web_share", outcome: "cancelled" });
+                        return;
+                    }
+                    // 공유 창이 막힌 경우(앱 안 화면 등) — 웹과 같이 아래 복사로 넘어감
+                }
             }
-            await navigator.clipboard.writeText(`${payload.text} ${payload.url}`);
-            setShareNote("개인정보 없는 문구와 초대 링크를 복사했어요.");
-        } catch (e) {
-            setShareNote(e instanceof DOMException && e.name === "AbortError" ? "공유를 취소했어요." : "자동 복사가 막혀 있어요. 잠시 후 다시 시도해 주세요.");
+            const copied = await copyText(`${payload.text}\n${payload.url}`);
+            if (copied) {
+                setShareNote("개인정보 없는 문구와 초대 링크를 복사했어요.");
+                trackStorefrontEvent(eventName, { surface: "treasure_mine", shareKind: kind, method: "clipboard", outcome: "completed" });
+            } else {
+                setShareNote("자동 복사가 막혀 있어요. 아래 링크를 길게 눌러 복사해 주세요.");
+                setShareFallback(payload.url);
+                trackStorefrontEvent(eventName, { surface: "treasure_mine", shareKind: kind, method: "manual_copy", outcome: "fallback_shown" });
+            }
+        } finally {
+            setShareBusy(null);
         }
     };
 
@@ -209,7 +358,8 @@ export default function StickerDaily() {
                                         return (
                                             <li key={d.ko} className="flex flex-col items-center gap-1">
                                                 {isToday && !on ? (
-                                                    <button type="button" onClick={(e) => stamp(e.currentTarget, e.timeStamp)} aria-label="오늘 출근 스티커 붙이기" className="st-slot is-today grid aspect-square w-full place-items-center rounded-full">
+                                                    // 웹 AttendanceStampCard 처럼 불러오기 전 · 붙이는 중에는 잠김
+                                                    <button type="button" onClick={(e) => stamp(e.currentTarget, e.timeStamp)} disabled={!today.ready || today.claiming} aria-label="오늘 출근 스티커 붙이기" className="st-slot is-today grid aspect-square w-full place-items-center rounded-full disabled:opacity-60">
                                                         <span className="ah-display text-[10px] text-[#e0557f]">붙이기</span>
                                                     </button>
                                                 ) : (
@@ -225,6 +375,13 @@ export default function StickerDaily() {
                                 <p className="ah-light mt-2 text-center text-[12px]" style={{ color: TEXT_SOFT }}>
                                     {today.stamped ? `출근 완료! ${today.streak}일 연속 · 이번 주 ${attendNow}일` : `오늘 칸을 톡 눌러 붙여요 · +${today.dailyRewardCoins}코인`}
                                 </p>
+                                {/* 불러오기 · 저장 오류 — 웹 MemberAiDashboard 처럼 오류 문구 + "다시 시도"(같은 불러오기 함수) */}
+                                {today.error ? (
+                                    <div role="alert" className="st-postit mt-3 px-3 py-2.5" style={{ background: "#ffd6e2", rotate: "-0.6deg" }}>
+                                        <p className="ah-light text-[12px] leading-snug">{today.error}</p>
+                                        <Patch tone="cream" small onClick={today.reload} disabled={today.loading} className="mt-2">다시 시도</Patch>
+                                    </div>
+                                ) : null}
 
                                 {/* 오늘 돌봄 한눈에 — 운영 대시보드 네 칸(같은 계산 · 문구), 작은 메모 스티커 2×2 */}
                                 <div className="mt-5 grid grid-cols-2 gap-2">
@@ -258,9 +415,10 @@ export default function StickerDaily() {
                                 <div className="mt-3 grid grid-cols-2 gap-2">
                                     <div className="dl-note rounded-[10px] px-3 py-2.5">
                                         <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>최근 건강 변화</span>
-                                        <span className="ah-display mt-0.5 block text-[12.5px] leading-snug">사진 분석 저장 완료</span>
+                                        {/* 웹 MemberAiDashboard 와 같음: 반려견 분석 결과의 상태 문구(없으면 "첫 분석을 기다리고 있어요") */}
+                                        <span className="ah-display mt-0.5 block text-[12.5px] leading-snug">{analysisStatus(pet?.rawAnalysis)}</span>
                                     </div>
-                                    <Link href="/#recommend" className="dl-note dl-press rounded-[10px] px-3 py-2.5">
+                                    <Link href={recommendHref} className="dl-note dl-press rounded-[10px] px-3 py-2.5">
                                         <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>AI 추천</span>
                                         <span className="ah-display mt-0.5 block text-[12.5px] leading-snug text-[#c4567a]">{recommend}</span>
                                     </Link>
@@ -274,7 +432,8 @@ export default function StickerDaily() {
                                         // 오늘 할 일 — 서버가 주는 할 일 목록 그대로(이름 · XP)
                                         ...today.tasks.map((t) => ({ key: t.taskId, icon: t.taskId === "walk_20" ? "fa-person-walking" : "fa-eye", title: t.title, body: `오늘 할 일 · +${t.xp}XP`, done: t.completed })),
                                     ].map((x, i) => (
-                                        <button key={x.key} type="button" onClick={(e) => onTodo(x.key, e.currentTarget, e.timeStamp)} disabled={x.done} aria-label={`${x.title} ${x.done ? "완료" : "완료하기"}`}
+                                        // 출근도장 포스트잇은 불러오기 전 · 찍는 중 잠김(웹 AttendanceStampCard 와 같음)
+                                        <button key={x.key} type="button" onClick={(e) => onTodo(x.key, e.currentTarget, e.timeStamp)} disabled={x.done || (x.key === "stamp" && (!today.ready || today.claiming))} aria-label={`${x.title} ${x.done ? "완료" : "완료하기"}`}
                                             className={`st-postit dl-todo relative block px-2 pb-2.5 pt-2 text-center ${x.done ? "is-done" : ""}`}
                                             style={{ background: ["#fff3a6", "#ffd6e2", "#d9ecff"][i], rotate: `${[-1, 0.8, 0.8][i]}deg` }}>
                                             <i aria-hidden="true" className={`fa-solid ${x.icon} text-[15px] text-[#e0557f]`} />
@@ -286,7 +445,8 @@ export default function StickerDaily() {
                                         </button>
                                     ))}
                                     {/* 넷째: 사진 건강 분석 — 연구소 사진 분석으로 이어짐(오늘 분석하면 완료) */}
-                                    <Link href="/pet-lens/?profile=1" aria-label={`사진 건강 분석 ${analyzedToday ? "완료" : "하러 가기"}`}
+                                    {/* 실제 첫 반려견 프로필로 — 웹 MemberAiDashboard 와 같은 petLensProfileHref(없으면 /pet-lens) */}
+                                    <Link href={petLensProfileHref(pet?.apiProfileId)} aria-label={`사진 건강 분석 ${analyzedToday ? "완료" : "하러 가기"}`}
                                         className={`st-postit dl-todo relative block px-2 pb-2.5 pt-2 text-center ${analyzedToday ? "is-done" : ""}`} style={{ background: "#dcf3e6", rotate: "-0.8deg" }}>
                                         <i aria-hidden="true" className="fa-solid fa-camera text-[15px] text-[#1f9e75]" />
                                         <span className={`ah-display mt-1 block text-[12.5px] ${analyzedToday ? "st-strike" : ""}`}>사진 건강 분석</span>
@@ -304,10 +464,20 @@ export default function StickerDaily() {
                                     <span className="ah-display mt-1.5 block text-[15px]">건강 상세는 빼고, 돌봄 습관만 나눠요</span>
                                     <p className="ah-light mt-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>공유 문구에는 반려견 이름·사진·증상·AI 건강 결과가 들어가지 않습니다. 링크에는 유입 경로를 확인하는 캠페인 값만 붙어요.</p>
                                     <div className="mt-3 grid gap-2.5">
-                                        <Patch tone="mint" small onClick={() => void share("care_result")}>AI 기록 안전 공유<i aria-hidden="true" className="fa-solid fa-wand-magic-sparkles text-[11px]" /></Patch>
-                                        <Patch tone="butter" small onClick={() => void share("friend_invite")}>친구에게 보물광산 초대<i aria-hidden="true" className="fa-solid fa-paper-plane text-[11px]" /></Patch>
+                                        {/* 공유할 AI 기록이 있을 때만 공유, 없으면 기록 만들러 — 웹 GrowthShareCard 와 같음 */}
+                                        {canShareAiRecord ? (
+                                            <Patch tone="mint" small disabled={shareBusy !== null} onClick={() => void share("care_result")}>AI 기록 안전 공유<i aria-hidden="true" className="fa-solid fa-wand-magic-sparkles text-[11px]" /></Patch>
+                                        ) : (
+                                            <Patch tone="mint" small href="/pet-lens/">AI 기록 만들고 공유<i aria-hidden="true" className="fa-solid fa-camera-retro text-[11px]" /></Patch>
+                                        )}
+                                        <Patch tone="butter" small disabled={shareBusy !== null} onClick={() => void share("friend_invite")}>친구에게 보물광산 초대<i aria-hidden="true" className="fa-solid fa-paper-plane text-[11px]" /></Patch>
                                     </div>
                                     {shareNote ? <p role="status" className="ah-light mt-2 text-center text-[11.5px] text-[#1f7a59]">{shareNote}</p> : null}
+                                    {/* 자동 복사가 막혔을 때 직접 복사할 링크 — 웹 GrowthShareCard fallbackUrl 과 같음 */}
+                                    {shareFallback ? (
+                                        <input aria-label="직접 복사할 보물광산 링크" readOnly value={shareFallback} onFocus={(e) => e.currentTarget.select()}
+                                            className="ah-light mt-2 h-9 w-full rounded-[10px] bg-white px-3 text-[11.5px] shadow-[inset_0_0_0_1.5px_#dcefe4] outline-none" />
+                                    ) : null}
                                 </div>
                             </>
                         ) : (
@@ -332,25 +502,34 @@ export default function StickerDaily() {
                     {/* ───────── 혜택 ───────── */}
                     {tab === 1 ? (
                         <>
-                            <span className="ah-display st-marker text-[15px]">준비 중인 혜택</span>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>관심을 남기면 열릴 때 가장 먼저 알려 드려요 · 결제 없음</p>
-                            <div className="mt-4 grid grid-cols-2 gap-x-2.5 gap-y-4">
-                                {GROWTH_PROGRAM_CARDS.map((c, i) => {
-                                    const on = c.interestOptions.some((o) => interest[o.programId]);
-                                    return (
-                                        <button key={c.id} type="button" onClick={(e) => openProgram(c, i, e.currentTarget)} aria-haspopup="dialog" aria-label={`${c.title} 자세히 보기`}
-                                            className="st-postit dl-card relative px-3 pb-3 pt-3 text-left" style={{ background: CARD_COLORS[i], rotate: `${[-2, 2, 1.5, -1.5][i]}deg` }}>
-                                            <Tape className="-top-2 left-1/2 h-3.5 w-10 -translate-x-1/2" color="rgba(255,255,255,.7)" />
-                                            {/* 혜택 그림 스티커 — 누르면 카드와 함께 살짝 통통 */}
-                                            <Image src={CARD_IMAGES[c.id]} alt="" width={80} height={80} className="dl-art -ml-0.5 h-[2.5rem] w-[2.5rem]" style={{ rotate: `${[-6, 5, -4, 6][i]}deg` }} />
-                                            <span className="ah-display mt-2.5 block text-[13px] leading-snug">{c.title}</span>
-                                            <span className="ah-light block text-[11px]">{c.status}</span>
-                                            <span className="ah-display mt-2 inline-flex items-center gap-1 text-[11px] text-[#e0557f]">톡 해서 자세히 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" /></span>
-                                            {on ? <InkStamp rot={-14} className="hc-slam absolute -right-1 top-1 text-[11px]">신청<br />완료</InkStamp> : null}
-                                        </button>
-                                    );
-                                })}
-                            </div>
+                            {/* 준비 중인 혜택 — 관리자가 숨기면(웹 GrowthHub visibility.programs) 그리지 않음. 굿즈 공모전 안내는 웹처럼 그대로 */}
+                            {visibility.programs ? (
+                                <>
+                                    <span className="ah-display st-marker text-[15px]">준비 중인 혜택</span>
+                                    <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>관심을 남기면 열릴 때 가장 먼저 알려 드려요 · 결제 없음</p>
+                                    <div className="mt-4 grid grid-cols-2 gap-x-2.5 gap-y-4">
+                                        {GROWTH_PROGRAM_CARDS.map((c, i) => {
+                                            const on = c.interestOptions.some((o) => interest[o.programId]);
+                                            return (
+                                                <button key={c.id} type="button" onClick={(e) => openProgram(c, i, e.currentTarget)} aria-haspopup="dialog" aria-label={`${c.title} 자세히 보기`}
+                                                    className="st-postit dl-card relative px-3 pb-3 pt-3 text-left" style={{ background: CARD_COLORS[i], rotate: `${[-2, 2, 1.5, -1.5][i]}deg` }}>
+                                                    <Tape className="-top-2 left-1/2 h-3.5 w-10 -translate-x-1/2" color="rgba(255,255,255,.7)" />
+                                                    {/* 혜택 그림 스티커 — 누르면 카드와 함께 살짝 통통 */}
+                                                    <Image src={CARD_IMAGES[c.id]} alt="" width={80} height={80} className="dl-art -ml-0.5 h-[2.5rem] w-[2.5rem]" style={{ rotate: `${[-6, 5, -4, 6][i]}deg` }} />
+                                                    <span className="ah-display mt-2.5 block text-[13px] leading-snug">{c.title}</span>
+                                                    <span className="ah-light block text-[11px]">{c.status}</span>
+                                                    <span className="ah-display mt-2 inline-flex items-center gap-1 text-[11px] text-[#e0557f]">톡 해서 자세히 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" /></span>
+                                                    {on ? <InkStamp rot={-14} className="hc-slam absolute -right-1 top-1 text-[11px]">신청<br />완료</InkStamp> : null}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    {/* 등록 상태 불러오기 실패 — 웹 GrowthPrograms 와 같은 안내 문구(분홍 메모) */}
+                                    {member && interestLoadFailed ? (
+                                        <p role="alert" className="st-postit ah-light mt-4 px-3 py-2.5 text-[12px] leading-snug" style={{ background: "#ffd6e2", rotate: "0.6deg" }}>관심등록 상태를 불러오지 못했어요. 새 등록은 중복 없이 안전하게 처리됩니다.</p>
+                                    ) : null}
+                                </>
+                            ) : null}
                             {/* 굿즈 공모전은 댕다방 한 곳에서 */}
                             <Link href={`${pageHref("sticker", "show")}?tab=1`} className="mt-6 flex items-center gap-3 rounded-[10px] bg-white px-3.5 py-3 shadow-[0_8px_14px_-10px_rgba(90,60,50,.45)]" style={{ rotate: "-0.8deg" }}>
                                 {/* 굿즈 그림 스티커(텀블러 · 키링 · 강아지 인형) */}
@@ -408,33 +587,38 @@ export default function StickerDaily() {
                                 })}
                             </ol>
 
-                            {/* 운영 기준 — 테이프로 붙인 약속 편지: 도장 그림 + 제목, 톡 하면 그 줄이 펼쳐짐 · 끝에 서명 */}
-                            <div className="gd-letter relative mt-4 rounded-[1.2rem] px-4 pb-4 pt-6">
-                                <Tape className="-top-2 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.85) 0 8px, rgba(255,226,234,.85) 8px 16px)" style={{ rotate: "-2deg" }} />
-                                <span className="ah-display st-marker text-[15px]">안심하고 이용하세요</span>
-                                <ul className="mt-3 space-y-2">
-                                    {POLICIES.map((p, i) => {
-                                        const on = openPolicy === i;
-                                        const seal = ["#f5b445", "#f2789d", "#7fb4f0"][i];
-                                        return (
-                                            <li key={p.title}>
-                                                <button type="button" onClick={() => { setOpenPolicy(on ? null : i); haptic("light"); }} aria-expanded={on}
-                                                    className={`gd-row w-full rounded-[14px] px-2.5 py-2 text-left ${on ? "is-open" : ""}`} style={{ ["--seal" as string]: seal }}>
-                                                    <span className="flex items-center gap-3">
-                                                        <Image src={POLICY_IMAGES[i]} alt="" width={88} height={88} className="gd-seal h-10 w-10 shrink-0" />
-                                                        <span className="ah-display flex-1 text-[14px] leading-snug">{p.title}</span>
-                                                        <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[11px] text-[#c9a99c] transition-transform ${on ? "rotate-180" : ""}`} />
-                                                    </span>
-                                                    <span className="dt-fold ah-light block pl-12 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }} data-open={on}>{p.body}</span>
-                                                </button>
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                                <p className="ah-display mt-3 flex items-center justify-end gap-1.5 text-[12.5px] text-[#c4567a]">
-                                    댕다방 드림 <i aria-hidden="true" className="fa-solid fa-paw text-[11px]" />
-                                </p>
-                            </div>
+                            {/* 운영 기준 — 테이프로 붙인 약속 편지: 도장 그림 + 제목, 톡 하면 그 줄이 펼쳐짐 · 끝에 서명
+                                관리자가 숨기면(웹 GrowthHub visibility.policy) 그리지 않음 */}
+                            {visibility.policy ? (
+                                <div className="gd-letter relative mt-4 rounded-[1.2rem] px-4 pb-4 pt-6">
+                                    <Tape className="-top-2 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.85) 0 8px, rgba(255,226,234,.85) 8px 16px)" style={{ rotate: "-2deg" }} />
+                                    <span className="ah-display st-marker text-[15px]">안심하고 이용하세요</span>
+                                    <ul className="mt-3 space-y-2">
+                                        {POLICIES.map((p, i) => {
+                                            const on = openPolicy === i;
+                                            const seal = ["#f5b445", "#f2789d", "#7fb4f0"][i];
+                                            return (
+                                                <li key={p.title}>
+                                                    <button type="button" onClick={() => togglePolicy(i)} aria-expanded={on}
+                                                        className={`gd-row w-full rounded-[14px] px-2.5 py-2 text-left ${on ? "is-open" : ""}`} style={{ ["--seal" as string]: seal }}>
+                                                        <span className="flex items-center gap-3">
+                                                            <Image src={POLICY_IMAGES[i]} alt="" width={88} height={88} className="gd-seal h-10 w-10 shrink-0" />
+                                                            <span className="ah-display flex-1 text-[14px] leading-snug">{p.title}</span>
+                                                            <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[11px] text-[#c9a99c] transition-transform ${on ? "rotate-180" : ""}`} />
+                                                        </span>
+                                                        <span className="dt-fold ah-light block pl-12 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }} data-open={on}>{p.body}</span>
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                    <p className="ah-display mt-3 flex items-center justify-end gap-1.5 text-[12.5px] text-[#c4567a]">
+                                        {/* 개인정보처리방침 — 웹 GrowthPolicySummary 끝의 링크와 같은 자리 */}
+                                        <Link href="/privacy/" className="ah-display mr-auto text-[11px] text-[#9c8f88] underline underline-offset-2">개인정보처리방침</Link>
+                                        댕다방 드림 <i aria-hidden="true" className="fa-solid fa-paw text-[11px]" />
+                                    </p>
+                                </div>
+                            ) : null}
                         </>
                     ) : null}
                 </DiaryBody>
@@ -485,7 +669,8 @@ export default function StickerDaily() {
                                         ))}
                                     </ul>
 
-                                    {c.existingFeature ? (
+                                    {/* 동네 돌봄 바로 가기 — 웹은 #local-care-finder 로 가는데, 관리자가 동네 돌봄을 숨기면(visibility.localCare) 갈 곳이 없으므로 숨김 */}
+                                    {c.existingFeature && visibility.localCare ? (
                                         <Link href="/app/sticker/care/" className="bn-in st-postit mt-3 flex items-center gap-2 px-3 py-2.5 text-[13px] text-[#1f7a59]" style={{ background: "#d9f2e4", rotate: "-1deg", ["--d" as string]: "620ms" }}>
                                             <i aria-hidden="true" className="fa-solid fa-location-dot" />
                                             <span className="ah-display flex-1">지금 바로 {c.existingFeature.label}</span>
@@ -513,22 +698,36 @@ export default function StickerDaily() {
                                                 <div><dt className="ah-display inline">보유 기간</dt><dd className="inline"> · 관심등록 취소 시 즉시 삭제 또는 회원 탈퇴 시까지</dd></div>
                                                 <div className="pb-2"><dt className="ah-display inline">거부 안내</dt><dd className="inline"> · 동의를 거부할 수 있으며 관심등록만 제한됩니다. 쇼핑과 기본 돌봄 기능에는 영향이 없습니다.</dd></div>
                                             </dl>
+                                            {/* 개인정보처리방침 — 웹 GrowthPrograms 동의 칸 아래와 같은 문구(웹처럼 접지 않고 늘 보임) */}
+                                            <p className="ah-light mt-1.5 text-[11px] text-[#7a6a63]">자세한 내용은 <Link href="/privacy/" className="ah-display text-[#c4456f] underline underline-offset-2">개인정보처리방침</Link>에서 확인할 수 있습니다.</p>
                                             {consentErr ? <p className="ah-display hc-pop mt-1.5 text-[12px] text-[#e0557f]">소식을 받으려면 위 동의 칸에 체크해 주세요</p> : null}
 
                                             <div className="mt-3 space-y-2.5">
                                                 {c.interestOptions.map((o) => {
+                                                    // 등록 상태를 불러오기 전 — 웹 GrowthPrograms 처럼 "등록 상태 확인 중"(버튼 대신)
+                                                    if (!interestReady) {
+                                                        return <span key={o.programId} className="ah-display grid h-11 place-items-center rounded-full bg-[#faf5f1] text-[11px] text-[#9c8f88]">등록 상태 확인 중</span>;
+                                                    }
                                                     const on = Boolean(interest[o.programId]);
                                                     return on ? (
                                                         <div key={o.programId} className="bn-done flex items-center gap-2.5 rounded-[14px] px-3 py-2.5">
                                                             <InkStamp rot={-10} className="hc-slam shrink-0 bg-white/70 text-[11px]">신청<br />완료</InkStamp>
                                                             <span className="ah-light flex-1 text-[12px] leading-snug" style={{ color: TEXT_SOFT }}><b className="ah-display" style={{ color: TEXT }}>{o.label}</b><br />소식이 나오면 이메일로 알려 드려요</span>
-                                                            <button type="button" onClick={() => toggleInterest(o.programId)} className="ah-display rounded-full bg-white px-2.5 py-1 text-[11.5px] text-[#9c8f88]">취소</button>
+                                                            {/* 처리 중엔 잠금 — 웹 GrowthPrograms(취소 중 · 저장 중 disabled)와 같음 */}
+                                                            <button type="button" onClick={() => toggleInterest(o.programId)} disabled={interestBusy} className="ah-display rounded-full bg-white px-2.5 py-1 text-[11.5px] text-[#9c8f88] disabled:opacity-60">취소</button>
                                                         </div>
                                                     ) : (
-                                                        <Patch key={o.programId} onClick={() => toggleInterest(o.programId)} small><span className="relative">{o.label}</span><i aria-hidden="true" className="fa-solid fa-envelope relative text-[12px]" /></Patch>
+                                                        <Patch key={o.programId} onClick={() => toggleInterest(o.programId)} disabled={interestBusy} small><span className="relative">{o.label}</span><i aria-hidden="true" className="fa-solid fa-envelope relative text-[12px]" /></Patch>
                                                     );
                                                 })}
                                             </div>
+                                            {/* 관심등록 · 취소 오류 — 웹 GrowthPrograms 와 같은 문구, "로그인" 오류(401)면 앱 로그인으로(돌아오면 혜택 쪽) */}
+                                            {interestErr ? (
+                                                <p role="alert" className="st-postit ah-light mt-3 px-3 py-2.5 text-[12px] leading-snug" style={{ background: "#ffd6e2", rotate: "-0.6deg" }}>
+                                                    {interestErr}
+                                                    {interestErr.includes("로그인") ? <Link href={appLoginHref("/app/sticker/daily/?tab=1")} className="ah-display ml-1.5 text-[#c4456f] underline underline-offset-2">다시 로그인</Link> : null}
+                                                </p>
+                                            ) : null}
                                         </>
                                     ) : (
                                         <Patch href={appLoginHref(`${REDIRECT}?tab=1`)} className="mt-4"><span className="relative">로그인하고 소식 받기</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>

@@ -9,7 +9,7 @@
  *  ② 상품군 5개 스티커 — 웹 상단 메뉴(lib/menu-data CATEGORY_GROUPS) 그대로, 누르면 상품군 화면
  *     그림은 사용자가 만든 3D 이미지(public/images/ui/stickers/cat-*.webp)
  *  ③ "{반려견}를 위한 추천" — 회원만(비회원은 자리 없음, 웹과 같음). 협업자 추천 엔진 · 상황별 안내 그대로.
- *     카드 아래 추천 이유 메모 대신 "추천 기준" 버튼 → 속지(사용한 정보 · 주의 · 상품별 이유 · 관심 없음 · 추천 데이터 관리)
+ *     카드 아래 추천 이유 메모 대신 "추천 기준" 버튼 → 속지(사용한 정보 · 주의 · 상품별 이유 + 접힌 "왜 추천했나요?" · 관심 없음 · 추천 데이터 관리)
  *     이름표 사진은 실제 반려견 사진(확인된 사진만, 없으면 강아지 그림) — 시연 분기 제거(배포 전 연결 2026-10-16)
  *  ④ 추천 셀렉트 · 신상품 — 색인 탭 2개로 한 섹션(웹 BestSection 4개 · NewArrivalsSection 8개 그대로)
  *  ⑤ 기획전 — 웹 PromoSection 5개(큰 카드 1 + 작은 카드 4) 그대로, 글자는 사진 아래 · 바로 아래 대표 브랜드 2장
@@ -200,6 +200,7 @@ function ShopRecommend() {
     });
     const { productName } = useI18n();
     const [basisOpen, setBasisOpen] = useState(false); // 추천 기준 속지
+    const [openReasons, setOpenReasons] = useState<ReadonlySet<string>>(() => new Set()); // 속지 안에서 "왜 추천했나요?"를 펼친 상품
     if (!hydrated || !user) return null; // 비회원 — 자리 없음(웹과 같음)
 
     const petName = selectedPet?.name?.trim() || "우리 아이";
@@ -217,15 +218,39 @@ function ShopRecommend() {
     // 관심 없음 · 다시 보기 — 실제 회원은 협업자 훅(hideProduct · resetHidden) 그대로
     const hide = (id: string) => { haptic("light"); analytics.hideProduct(id); };
     const unhide = () => analytics.resetHidden();
-    // 추천 기준 속지 열기 — 보이는 상품의 추천 이유를 함께 보여 주므로 웹의 "왜 추천했나요" 펼침과 같은 기록(trackReasonOpened)
+    // 추천 기준 속지 열기 — 여는 것만으로는 기록하지 않음(웹은 상품별 "왜 추천했나요?"를 펼칠 때만 기록)
     const openBasis = () => {
         haptic("light");
         setBasisOpen(true);
-        items.forEach((it) => analytics.trackReasonOpened(it.product.id));
+    };
+    // 속지 닫기 — 다음에 열 때 상품별 이유는 다시 접힌 상태(웹 details 기본값과 같음)
+    const closeBasis = () => {
+        setBasisOpen(false);
+        setOpenReasons(new Set());
+    };
+    // 상품별 "왜 추천했나요?" 펼침 · 접기 — 웹 RecommendationProductCard 의 details onToggle 처럼 펼칠 때마다 trackReasonOpened
+    const toggleReason = (id: string) => {
+        haptic("light");
+        const opening = !openReasons.has(id);
+        setOpenReasons((cur) => {
+            const next = new Set(cur);
+            if (next.has(id)) next.delete(id); else next.add(id);
+            return next;
+        });
+        if (opening) analytics.trackReasonOpened(id);
     };
     const usedSources = Array.from(new Set(items.flatMap((it) => it.sourceGroups)));
     const cautions = Array.from(new Set(items.flatMap((it) => it.cautionLabels)));
-    const pets = (user?.pets ?? []).filter((p): p is typeof p & { apiProfileId: number } => typeof p.apiProfileId === "number");
+    // 고를 수 있는 반려견 — 웹 RecommendationPetSelector 와 같은 조건(서버 프로필 번호가 1 이상의 정수)
+    const pets = (user?.pets ?? []).filter((p): p is typeof p & { apiProfileId: number } => Number.isInteger(p.apiProfileId) && Number(p.apiProfileId) > 0);
+    // 지금 고른 반려견 — 웹 선택 상자와 같게, 목록에 없으면 첫 번째 아이
+    const selectedPetId = pets.some((p) => p.apiProfileId === selectedPet?.apiProfileId) ? Number(selectedPet?.apiProfileId) : pets[0]?.apiProfileId;
+    // 반려견 고르기 — 웹 선택 상자는 값이 바뀔 때만 저장하므로 이미 고른 아이를 다시 눌러도 저장하지 않음
+    const pickPet = (profileId: number) => {
+        if (profileId === selectedPetId) return;
+        haptic("light");
+        void prefState.save({ selectedPetProfileId: profileId }).catch(() => undefined);
+    };
 
     return (
         <section id="recommend" aria-label={titleText} className="mt-8">
@@ -253,9 +278,12 @@ function ShopRecommend() {
                     </button>
                 ) : null}
                 {personalizationEnabled && prefs && selectedPet && pets.length > 1 ? pets.map((p) => (
-                    <button key={p.apiProfileId} type="button" disabled={!prefState.isReady || prefState.isSaving} aria-pressed={selectedPet.apiProfileId === p.apiProfileId}
-                        onClick={() => { haptic("light"); void prefState.save({ selectedPetProfileId: p.apiProfileId }).catch(() => undefined); }}
-                        className={`shp-pet ah-display rounded-full px-3 py-1 text-[12px] ${selectedPet.apiProfileId === p.apiProfileId ? "is-on" : ""}`}>{p.name}</button>
+                    <button key={p.apiProfileId} type="button" disabled={!prefState.isReady || prefState.isSaving} aria-pressed={selectedPetId === p.apiProfileId}
+                        onClick={() => pickPet(p.apiProfileId)}
+                        className={`shp-pet ah-display rounded-full px-3 py-1 text-[12px] ${selectedPetId === p.apiProfileId ? "is-on" : ""}`}>
+                        {/* 이름표 — 웹 선택 상자와 같은 글자(이름이 없으면 "우리 아이", 견종이 있으면 " · 견종") */}
+                        {p.name || "우리 아이"}{p.breed ? ` · ${p.breed}` : ""}
+                    </button>
                 )) : null}
                 <Link href={personalizationEnabled && !selectedPet ? "/mypage/#pet-profiles" : "/recommendations/"} className="ah-display ml-auto text-[12px] text-[#e0557f]">
                     {personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기"} <i aria-hidden="true" className="fa-solid fa-arrow-right text-[10px]" />
@@ -289,7 +317,7 @@ function ShopRecommend() {
             )}
 
             {/* 추천 기준 속지 — 웹 카드의 "왜 추천했나요"(사용한 정보 · 주의 · 추천 데이터 관리)와 상품별 이유 · 관심 없음을 한곳에 */}
-            <Sheet open={basisOpen} onClose={() => setBasisOpen(false)} label="추천 기준"
+            <Sheet open={basisOpen} onClose={closeBasis} label="추천 기준"
                 title={<span className="ah-display st-marker text-[18px]">{petName}를 위한 추천 기준</span>}>
                 {/* 반영 기준 — 테이프 붙인 노란 메모지 */}
                 <div className="shp-memo relative mt-2 px-4 pb-3 pt-4" style={{ rotate: "-0.8deg" }}>
@@ -318,6 +346,18 @@ function ShopRecommend() {
                             <span className="min-w-0 flex-1 pt-0.5">
                                 <span className="ah-display line-clamp-2 block text-[12.5px] leading-snug">{productName(it.product)}</span>
                                 <span className="ah-light mt-1 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{it.reasonLabel}</span>
+                                {/* 왜 추천했나요? — 웹 카드처럼 접혀 있다가 누르면 이 상품에 쓴 정보 · 주의 문구를 펼침 */}
+                                <button type="button" onClick={() => toggleReason(it.product.id)} aria-expanded={openReasons.has(it.product.id)} aria-controls={`shp-why-${it.product.id}`}
+                                    className="shp-why ah-display mt-1.5 inline-flex items-center gap-1 text-[11.5px] text-[#5a6fe0]">
+                                    왜 추천했나요?<i aria-hidden="true" className={`fa-solid fa-chevron-down text-[9px] transition-transform duration-300 ${openReasons.has(it.product.id) ? "rotate-180" : ""}`} />
+                                </button>
+                                {openReasons.has(it.product.id) ? (
+                                    <span id={`shp-why-${it.product.id}`} className="shp-why-memo ah-light mt-1.5 block px-2.5 py-2 text-[11px] leading-snug">
+                                        <span className="block">사용한 정보</span>
+                                        {it.sourceGroups.map((src) => <span key={src} className="block">· {SOURCE_LABEL[src]}</span>)}
+                                        {it.cautionLabels.map((c) => <span key={c} className="mt-1 block text-[#8a5a0c]">{c}</span>)}
+                                    </span>
+                                ) : null}
                             </span>
                             <span className="w-[5.2rem] shrink-0 pt-0.5"><Patch tone="cream" small onClick={() => hide(it.product.id)}>관심 없음</Patch></span>
                         </li>
@@ -400,6 +440,10 @@ const SHOP_CSS = `
 .shp-memo { background: #fff6c9; border-radius: 4px 4px 12px 4px; box-shadow: 0 8px 12px -9px rgba(110,80,40,.5); }
 .shp-src { color: #5a4038; border-radius: 999px; box-shadow: 0 0 0 2.5px #fff, 0 5px 8px -5px rgba(90,60,50,.4); }
 .shp-caution { background: #fff0e0; color: #8a5a0c; border-radius: 4px 10px 10px 10px; box-shadow: inset 0 0 0 1.5px #f6dcc0; }
+/* 상품별 "왜 추천했나요?" — 눌러 펼치는 작은 글자 버튼 · 펼친 내용은 연보라 쪽지 */
+.shp-why { -webkit-tap-highlight-color: transparent; }
+.shp-why:active { transform: scale(.96); }
+.shp-why-memo { background: #f3efff; color: #5a4a6e; border-radius: 4px 10px 10px 10px; box-shadow: inset 0 0 0 1.5px #e4dcff; }
 .shp-mini-pol { box-shadow: 0 6px 10px -6px rgba(90,60,50,.5), 0 1px 2px rgba(90,60,50,.12); }
 .shp-empty { background: #fffaf2; border: 2px dashed #f1dccf; }
 /* 기획전 · 브랜드 · 인스타 */

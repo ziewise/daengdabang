@@ -105,21 +105,6 @@ export function Poodle({ className = "" }: { className?: string }) {
     );
 }
 
-/** 우리 아이 동그라미 사진 + 이름표 (로그인 후) */
-export const PET = { name: "몽이", photo: "/images/pet-companion/cute-v4-breeds/toy-poodle-poster.webp" };
-export function PetFace({ className = "" }: { className?: string }) {
-    return (
-        <span className={`relative block ${className}`}>
-            <span className="block h-full w-full overflow-hidden rounded-full border-[4px] border-white bg-[#fff3e8] shadow-[0_10px_20px_-10px_rgba(220,80,120,0.6)]">
-                <Image src={PET.photo} alt={`${PET.name} 사진`} width={106} height={106} className="h-full w-full scale-[1.12] object-cover" />
-            </span>
-            <span className="ah-display absolute -bottom-1.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-3 py-0.5 text-[13px] shadow-[0_3px_8px_-4px_rgba(60,40,30,0.4)]" style={{ color: "#ea4c7c" }}>
-                {PET.name}
-            </span>
-        </span>
-    );
-}
-
 /**
  * 카드 그림 한 장 — 그림 + 구름 속 제목 + 아래 판 두 줄
  *  - lines 를 넘기면 아래 판 글을 실시간 문구로 바꾼다

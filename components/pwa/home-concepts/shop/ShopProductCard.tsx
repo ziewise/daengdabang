@@ -7,7 +7,7 @@
  *  - 정보: 사진/영상 · BEST/NEW · 찜 · 브랜드 · 상품명 · 구매 상태 · 할인 · 가격표(가격 배지 + 가격)
  *    (외부 판매점 후기는 앱 카드에서 뺌 — 사용자 결정 2026-10-16, 상품 상세에 출처와 함께 그대로)
  *  - 영상: 협업자 useProductVideo 그대로 — 휴대폰에서 절반 이상 보이면 사진 → 영상 자동 전환, 스크롤 중엔 멈춤,
- *          화면 밖이면 되감기
+ *          화면 밖이면 되감기 · 웹과 같은 영상 안내 문구(예: 연어 맛 사용 영상)는 재생 중에만 구석 도장으로
  *  - 색상 미리보기 칩은 앱 카드에서 뺐다(사용자 결정, 웹 카드는 그대로). 색상 선택은 상품 상세에서
  *  - 산책 친구 안내용 표시(data-pet-*)도 웹 카드와 같게 붙임
  * 모양: 테이프 붙인 크래프트 종이 · 사진은 흰 테두리로 오려 붙임 · 가격은 노란 가격표 태그 · 기울기 ±1도.
@@ -48,6 +48,13 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
     const { videoRef, videoActive, activate: _activate, deactivate: _deactivate, previewColor: _previewColor, ...videoEvents } = useProductVideo(p.video);
     void _activate; void _deactivate; void _previewColor; // 앱 카드는 마우스 올림 · 색상 미리보기가 없음(휴대폰 자동 재생만)
     const hasVideo = Boolean(p.video);
+    // 영상 안내 문구 — 협업자 ProductCard 와 같은 조건 · 문구(한 번 재생 후 마지막 장면 유지 영상 + 연어 맛 상품만)
+    const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
+        || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1"
+        || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_owner_delegated_ai.v1")
+        && p.raw.videoPlaybackMode === "once_hold_last_frame";
+    const videoCaption = playOnce && p.folder === "hugo_icecream_salmon"
+        ? (locale === "en" ? "Salmon flavour shown" : "연어 맛 사용 영상") : undefined;
     const rot = [-1, 0.8, 0.6, -0.8][index % 4];
 
     return (
@@ -70,6 +77,10 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
                             className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`} />
                     ) : null}
                     {hasVideo && videoActive ? <VideoBrandOverlay src={p.video} forceOverlay={hoverVideoFraming(p.video)?.restoreBrandOverlay} /> : null}
+                    {/* 영상 안내 — 웹처럼 영상 재생 중에만 왼쪽 아래 구석에 작은 도장(영상 가운데는 가리지 않음) */}
+                    {hasVideo && videoActive && videoCaption ? (
+                        <span className="sp-vcap ah-light pointer-events-none absolute bottom-1.5 left-1.5 z-[1]">{videoCaption}</span>
+                    ) : null}
                 </Link>
                 {/* BEST · NEW — 잉크 도장 */}
                 {rank !== null || isNew ? (
@@ -116,6 +127,8 @@ export const SHOP_CARD_CSS = `
 .sp-card { background: #fffaf2; border-radius: 6px; box-shadow: inset 0 0 0 1.5px #f3e6d6, 0 10px 18px -12px rgba(110,80,40,.5); -webkit-tap-highlight-color: transparent; }
 .sp-photo { box-shadow: 0 0 0 3px #fff, 0 4px 8px -5px rgba(90,60,50,.4); }
 .sp-stamp { font-size: 10px; line-height: 1; padding: 3px 5px 2px; border-radius: 4px; color: var(--c); background: rgba(255,255,255,.88); box-shadow: inset 0 0 0 1.5px var(--c); letter-spacing: .04em; }
+/* 영상 안내 도장: 사진 구석에 붙인 작은 흰 라벨 */
+.sp-vcap { font-size: 9.5px; line-height: 1; padding: 3px 5px 2px; border-radius: 4px; color: #6b5a52; background: rgba(255,255,255,.92); box-shadow: inset 0 0 0 1px #f1e3da; rotate: -3deg; }
 .sp-heart { background: rgba(255,255,255,.95); box-shadow: 0 0 0 1.5px #fff, 0 3px 6px -3px rgba(90,60,50,.45); transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
 .sp-heart:active { transform: scale(.85); }
 /* 가격표: 노란 꼬리표(구멍 뚫린 태그) */

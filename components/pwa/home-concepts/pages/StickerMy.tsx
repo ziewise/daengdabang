@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
+import SignupEmailVerification from "@/components/auth/SignupEmailVerification";
 import { convertRewardPointsToDaengLabCoins, getCustomerToken, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { formatOrderAmount, loadTossOrderHistory, orderDateLabel, orderStatusLabel, type TossOrderHistoryItem } from "@/lib/toss-order-history";
@@ -68,7 +69,7 @@ function LinedMenu({ items }: { items: readonly { icon: string; title: string; h
 
 export default function StickerMy() {
     // 로그인 상태 — 협업자 useAuth 그대로(시안 "로그인 전/후" 토글 대신 실제 상태, 배포 전 연결 2026-10-16)
-    const { user, hydrated, logout } = useAuth();
+    const { user, hydrated, logout, updateMemberEmail } = useAuth();
     const member = hydrated && Boolean(user);
     const accessToken = user?.apiAccessToken || "";
     const coinRef = useRef<HTMLSpanElement>(null);
@@ -91,6 +92,11 @@ export default function StickerMy() {
     // 연구소 지갑(코인 · 적립금) — 웹 마이페이지 DaengLabWalletCard 와 같은 loadDaengLabWallet(accessToken)
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [walletError, setWalletError] = useState("");
+    // 지갑 반영 + 알림 — 웹 지갑 카드의 publishWallet 과 같음(다른 화면의 코인 표시도 함께 갱신)
+    const publishWallet = useCallback((next: DaengLabWallet) => {
+        setWallet(next);
+        window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next }));
+    }, []);
     useEffect(() => {
         if (!member) return;
         let active = true;
@@ -98,10 +104,7 @@ export default function StickerMy() {
             setWalletError("");
             void loadDaengLabWallet(accessToken)
                 .then((next) => {
-                    if (!active) return;
-                    setWallet(next);
-                    // 웹 지갑 카드와 같은 알림(다른 화면의 코인 표시가 함께 갱신되도록)
-                    window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next }));
+                    if (active) publishWallet(next);
                 })
                 .catch((reason) => {
                     if (active) setWalletError(reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.");
@@ -111,7 +114,7 @@ export default function StickerMy() {
             active = false;
             window.clearTimeout(timer);
         };
-    }, [member, accessToken]);
+    }, [member, accessToken, publishWallet]);
 
     // 적립금 → 코인 바꾸기 — 웹 지갑 카드의 submitConversion 과 같은 조건 · 같은 함수 · 같은 재시도 키 규칙.
     // 웹은 바꿀 적립금을 입력하지만(기본값 = 전환 단위), 앱은 한 번에 전환 단위만큼(되돌릴 수 없음 안내 그대로)
@@ -128,8 +131,7 @@ export default function StickerMy() {
         try {
             const converted = await convertRewardPointsToDaengLabCoins(points, key, accessToken);
             retryKeyRef.current = null;
-            setWallet(converted.wallet);
-            window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: converted.wallet }));
+            publishWallet(converted.wallet);
             haptic("medium");
             flyCoin(convertRef.current, coinRef.current, 3);
             setToast(`${converted.convertedRewardPoints.toLocaleString("ko-KR")}P를 ${converted.grantedDaengLabCoins}C로 전환했습니다.`);
@@ -177,13 +179,35 @@ export default function StickerMy() {
                                 <InkStamp rot={-10} color={FIRST_GRADE.color} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[13px]">{FIRST_GRADE.name}</InkStamp>
                             </div>
 
+                            {/* 이메일 인증하고 20C 받기 — 웹 지갑 카드(DaengLabWalletCard)와 같은 협업자 부품 · 같은 값(accessToken · accountEmail · hideWhenSettled).
+                                인증을 건너뛴 회원에게만 보이고, 지급이 끝났거나 대상이 아니면 부품이 스스로 사라짐(그때는 메모 카드도 :has 로 숨김) */}
+                            <div className="my-verify st-postit relative mt-6 px-3 pb-3 pt-4" style={{ rotate: "0.6deg" }}>
+                                <Tape className="-top-2 left-1/2 h-3.5 w-12 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "-3deg" }} />
+                                <SignupEmailVerification
+                                    accessToken={accessToken}
+                                    accountEmail={user?.email}
+                                    hideWhenSettled
+                                    onComplete={(result) => {
+                                        // 웹 지갑 카드 onComplete 와 같음: 인증된 이메일 반영 → 받은 지갑으로 갱신 → 같은 안내 문구(앱은 쪽지 알림)
+                                        if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
+                                        publishWallet(result.wallet);
+                                        setToast(result.awardedDaengLabCoins > 0
+                                            ? `가입 축하 코인 ${result.awardedDaengLabCoins}C가 지급되었습니다.`
+                                            : "이메일 인증과 가입 혜택 지급 여부를 확인했습니다.");
+                                    }}
+                                />
+                            </div>
+
                             {/* 코인 봉투 */}
                             <div className="my-pocket relative mt-6 rounded-[16px] px-4 pb-4 pt-5">
                                 <span aria-hidden="true" className="my-flap" />
                                 <div className="relative flex items-center justify-between">
                                     <span>
                                         <span className="ah-light block text-[11.5px] text-[#8f5e12]">댕다방 연구소 코인</span>
-                                        <span className="mt-1 inline-block"><CoinChip ref={coinRef} coins={wallet?.daengLabCoins ?? 0} /></span>
+                                        {/* 불러오는 중 · 실패면 0 대신 "—"(적립금과 같게 · 웹은 불러온 뒤에만 숫자 표시) */}
+                                        {wallet
+                                            ? <span className="mt-1 inline-block"><CoinChip ref={coinRef} coins={wallet.daengLabCoins} /></span>
+                                            : <span className="ah-display mt-1 block text-[18px] tabular-nums">—</span>}
                                     </span>
                                     <span className="text-right">
                                         <span className="ah-light block text-[11.5px] text-[#8f5e12]">적립금</span>
@@ -195,6 +219,14 @@ export default function StickerMy() {
                                     {converting ? "바꾸는 중…" : (<>적립금 {(wallet?.pointConversionUnit ?? 1000).toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {wallet?.coinConversionUnit ?? 10}코인 바꾸기</>)}
                                 </button>
                                 <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">바꾼 코인은 되돌릴 수 없어요{wallet ? ` · 행동 · 소리 분석 1회 ${wallet.analysisCoinCost}코인` : ""}</p>
+                                {/* 빚 안내 — 웹 지갑 카드와 같은 조건(적립금 · 코인 빚이 있을 때) · 같은 문구. 빚이 있으면 바꾸기 버튼이 잠기는 이유 */}
+                                {wallet && (wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0) ? (
+                                    <p className="ah-light relative mt-2 rounded-[4px_4px_12px_4px] bg-[#ffe1ea] px-3 py-2 text-[11px] leading-relaxed text-[#b23a5e]" style={{ rotate: "-0.5deg" }}>
+                                        취소·환불된 주문의 사용 완료 혜택이 있어 다음 적립분에서 먼저 정산됩니다.
+                                        {wallet.rewardPointsDebt > 0 ? ` 적립금 ${wallet.rewardPointsDebt.toLocaleString("ko-KR")}P` : ""}
+                                        {wallet.daengLabCoinsDebt > 0 ? ` · 코인 ${wallet.daengLabCoinsDebt}C` : ""}
+                                    </p>
+                                ) : null}
                                 {walletError ? <p className="ah-light relative mt-1 text-center text-[11px] text-[#c2413b]">{walletError}</p> : null}
                             </div>
 
@@ -303,5 +335,11 @@ const MY_CSS = `
 .my-tag { background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110,80,40,.55); }
 /* 코인 봉투: 버터색 봉투 + 위 덮개 */
 .my-pocket { background: linear-gradient(170deg, #fff6d6, #ffe4a6); box-shadow: 0 14px 24px -16px rgba(160,110,20,.6), inset 0 0 0 1.5px rgba(255,255,255,.7); overflow: hidden; }
+/* 이메일 인증 메모(협업자 SignupEmailVerification) — 부품이 사라지면(지급 끝 · 대상 아님) 메모 카드도 숨김 */
+.my-verify { background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110,80,40,.55); }
+.my-verify:not(:has([data-signup-email-verification])) { display: none; }
+/* 부품 안 글자 — 글꼴 두 가지 규칙(제목 · 버튼 = 써라운드, 본문 · 입력 = 나눔스퀘어라운드) */
+.my-verify :is(p, span, label, input) { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+.my-verify :is(h2, button) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 .my-flap { position: absolute; inset: 0 0 auto 0; height: 46px; background: linear-gradient(180deg, rgba(255,236,170,.9), rgba(255,226,150,.6)); clip-path: polygon(0 0, 100% 0, 50% 100%); }
 `;
