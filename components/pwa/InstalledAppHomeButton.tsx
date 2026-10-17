@@ -3,7 +3,7 @@
 /**
  * 헤더 "앱 설치" 동그라미 아이콘 (모바일 웹 · 설치 전) — 누르면 앱 설치 안내 페이지(/app/)
  * ---------------------------------------------------------------------
- * 2026-10-18 사용자 결정: 로고 옆 검은 "앱 홈" 알약 → 펫렌즈(사진기 강아지) 버튼 왼쪽 3D 그림 아이콘.
+ * 2026-10-18 사용자 결정: 로고 옆 검은 "앱 홈" 알약 → 펫렌즈(사진기 강아지) 버튼 왼쪽 3D 그림 아이콘(42px — 로고보다 작게).
  * 가는 곳은 전과 같은 /app/ (지금은 설치 안내 페이지). 설치한 앱 · 네이티브 앱은 웹 헤더 대신 앱 틀이라 안 보임.
  * 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾" — 아이콘 아래로 가끔 열림(스티커북 메모지 모양):
  *  - 들어오고 3초 뒤 처음, 4초 보였다가 닫히고 30초마다 다시 · 한 번 방문(탭)에 최대 3번 · 아이콘을 누르면 그 방문 동안 그만
@@ -80,12 +80,12 @@ export default function InstalledAppHomeButton() {
             href="/app/"
             data-installed-app-home-button
             onClick={() => writeCount(BUBBLE_MAX)}
-            className="group relative inline-flex h-[50px] w-[50px] shrink-0 items-center justify-center transition hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 md:hidden"
+            className="group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center transition hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 md:hidden"
             aria-label="댕다방 앱 설치 안내"
         >
             <style>{APP_INSTALL_BUBBLE_CSS}</style>
             {/* 앱 설치 아이콘 — 원형 배지 그림(자체 원/테두리 포함, 사용자 3D 그림) */}
-            <Image src="/images/ui/header-app-install.webp" alt="" fill sizes="50px" className="object-contain" />
+            <Image src="/images/ui/header-app-install.webp" alt="" fill sizes="42px" className="object-contain" />
             <span className="sr-only">앱 설치 안내</span>
             {bubble ? (
                 <span aria-hidden="true" className={`ddb-aib ${bubble === "out" ? "is-out" : ""}`}>
@@ -106,7 +106,7 @@ const APP_INSTALL_BUBBLE_CSS = `
   box-shadow: 0 10px 16px -10px rgba(120,90,40,.55), 0 0 0 1px rgba(232,206,120,.55); rotate: -1deg;
   animation: ddb-aib-in .35s cubic-bezier(.3,1.4,.5,1) both; }
 .ddb-aib b { color: #d6457a; font-weight: 700; }
-.ddb-aib::before { content: ""; position: absolute; top: -6px; right: 68px; width: 12px; height: 12px; background: #fff6c9; rotate: 45deg;
+.ddb-aib::before { content: ""; position: absolute; top: -6px; right: 73px; width: 12px; height: 12px; background: #fff6c9; rotate: 45deg;
   box-shadow: -1px -1px 0 0 rgba(232,206,120,.55); }
 .ddb-aib-tape { position: absolute; top: -6px; left: 14px; width: 34px; height: 11px; background: rgba(255,190,210,.85); rotate: -4deg; }
 .ddb-aib.is-out { animation: ddb-aib-out .35s ease both; }

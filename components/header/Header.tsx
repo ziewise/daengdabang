@@ -280,11 +280,11 @@ export default function Header() {
                             onClick={handlePetLensButtonClick}
                             data-pet-guide-target="pet-lens"
                             data-mobile-petlens-guide-armed={mobilePetLensGuideArmed ? "true" : "false"}
-                            className="group relative inline-flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px"
+                            className="group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px md:h-[50px] md:w-[50px]"
                             aria-label="PetLens"
                             title="PetLens"
                         >
-                            {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함) */}
+                            {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함). 휴대폰 42px(로고보다 작게, 2026-10-18) · md 이상 50px */}
                             <Image
                                 src="/images/ui/pet-lens-128.webp"
                                 alt=""

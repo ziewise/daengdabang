@@ -304,6 +304,7 @@ git config user.email "smlee@ziewise.com"
 3. **헤더 아이콘 3개(사용자 3D 그림, 2026-10-18)** — 원본 `public/images/앱설치.png` · `펫렌즈.png` · `언어.png`.
    - **앱 설치 아이콘(새로)**: 협업자 파일 `components/pwa/InstalledAppHomeButton.tsx`(18번째) — 로고 옆 검은 "앱 홈" 알약을 펫렌즈(사진기 강아지) 버튼 **왼쪽** 동그라미 그림 아이콘으로(`public/images/ui/header-app-install.webp` 192px). `components/header/Header.tsx`(19번째)에서 자리만 옮김. 가는 곳은 전과 같은 `/app/`(지금은 설치 안내 페이지), 모바일 웹(md 미만)에서만 · `/app/` 화면에서는 숨김(전과 같음).
    - **말풍선**: "댕다방, 앱에서 더 편하게 즐겨보세요 🐾" — 노란 메모지 · 분홍 테이프, 아이콘 아래로. 들어오고 3초 뒤 4초 보임 → 30초마다 다시, 한 번 방문(sessionStorage `ddb.appInstallBubble.v1`)에 최대 3번, 아이콘을 누르면 그 방문 동안 그만. 장바구니 · 결제 · 로그인 · 가입 · 비밀번호 화면에서는 안 열림. 휴대폰 폭에서만, 움직임 줄이기면 움직임 없이. 말풍선을 누르면 아이콘과 같이 `/app/`.
+   - **크기**: 휴대폰에서 앱 설치 · 펫렌즈 아이콘 42px(로고 60px 보다 작게, 사용자 2026-10-18) · md 이상 펫렌즈는 50px 그대로.
    - **언어 아이콘 모바일 숨김**: 휴대폰 폭(md 미만)에서 헤더의 지구본을 숨김(`Header.tsx` 의 감싸는 div 에 `max-md:hidden`) — 메뉴(☰) 맨 위에 같은 언어 버튼이 있음(사용자 결정 2026-10-18). 태블릿 · PC 는 그대로. 모바일 헤더: 로고 · 앱 설치 · 펫렌즈 · ☰.
    - **펫렌즈 · 언어 아이콘**: 그림 파일 자체를 교체(`public/images/ui/pet-lens-128.webp` · `lang-globe-128.webp`, 이름은 그대로 · 크기 192px) — 같은 그림을 쓰는 펫렌즈 창 · 홈 워터마크 배지 · 국가/언어 창도 함께 새 그림. 코드 변경 없음.
    - **협업자 점검표**: `tests/pwa-installation.test.mjs` 의 `<span>앱 홈</span>` 확인 → `<span className="sr-only">앱 설치 안내</span>`(한 줄). 나머지(주소 /app/ · data-installed-app-home-button · md:hidden · 헤더에 있음)는 그대로. 902/902 통과.
