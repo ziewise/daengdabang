@@ -211,6 +211,8 @@ const LOGIN_CSS = `
 .lg-note { animation: hc-pop .35s cubic-bezier(.3,1.6,.5,1) both; }
 /* 간편 로그인(웹 공용 부품): 받침지 위 동그란 스티커처럼 흰 칼선 + 살짝 기울기 */
 .lg-social a, .lg-social button { box-shadow: 0 0 0 3px #fff, 0 6px 10px -6px rgba(90,60,50,.4); }
+/* 네이버 "N" 글자(협업자 SocialAuthButtons) — 앱 글꼴(카페24 써라운드)로 */
+.lg-social span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 .lg-social a:nth-child(odd), .lg-social button:nth-child(odd) { rotate: -4deg; }
 .lg-social a:nth-child(even), .lg-social button:nth-child(even) { rotate: 4deg; }
 /* 가입 선물 포스트잇: 누르면 들렸다 붙음 */

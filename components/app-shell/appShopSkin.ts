@@ -1140,6 +1140,15 @@ ${PT} #partner-form input[type="checkbox"] { accent-color: #e8628e; }
 ${PT} #partner-form button[type="submit"] { ${PATCH_PINK} min-height: 50px; padding: 0 24px; }
 ${PT} #partner-form button[type="submit"]:active, ${PT} main > div > section:first-of-type a:active { transform: scale(.96); }
 
+/* 케어톡 주소(/chat)의 바탕 안내(협업자 ChatLaunchClient) — 케어톡 창이 열리는 동안 잠깐 비쳐 보여서 글꼴 · 버튼만 앱에 맞춤(동작 그대로) */
+html.ddb-app-mode[data-app-page="chat"] main > h1 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #3d2f2a; }
+html.ddb-app-mode[data-app-page="chat"] main > p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; color: #7d6a61; }
+html.ddb-app-mode[data-app-page="chat"] main > div > button { ${PATCH_LAVENDER} }
+html.ddb-app-mode[data-app-page="chat"] main > div > a { ${PATCH_CREAM} }
+
+/* 댕다방 연구소 코인 표시(협업자 .ddb-daenglab-coin-mark, 상품 정보 · 장바구니 담기 판 · 마이 등) — 크레파스 글꼴 → 카페24 써라운드(모양 · 색은 그대로, 글꼴 두 가지 규칙 2026-10-17) */
+html.ddb-app-mode .ddb-daenglab-coin-mark, html.ddb-app-mode .ddb-daenglab-coin-mark * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
 /* 주간 사진 분석(협업자 WeeklyPhotoComparison) — 앱 리포트의 "새 주간 분석 시작" 버튼은 분홍 와펜, 창은 위 숨은 창 공통 모양.
    영문 꼬리표(WEEKLY LIVE PHOTO CHECK) 숨김 */
 html.ddb-app-mode [data-weekly-photo-analysis-launcher] { ${PATCH_PINK_IMP} min-height: 46px; padding: 0 22px; gap: 8px; font-size: 14px; }

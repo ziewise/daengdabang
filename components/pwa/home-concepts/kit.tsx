@@ -242,8 +242,8 @@ export const KIT_CSS = `
 @font-face { font-family: "NanumSquareRound"; font-weight: 700; src: url("/fonts/NanumSquareRoundB.woff2") format("woff2"); font-display: swap; }
 .ah-light { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; letter-spacing: -0.01em; }
 .ah-card-desc { font-family: "NanumSquareRound", "Cafe24Ssurround", sans-serif; font-weight: 700; font-size: 9.4cqw; line-height: 1.3; letter-spacing: -0.03em; color: #4f413c; }
-/* 써라운드 글꼴엔 '°'가 없어 본문 글꼴로 */
-.ah-deg { font-family: var(--font-wanted-sans), sans-serif; }
+/* 온도 '°' — 써라운드 글꼴의 '°'는 모양이 어색해 둥근 본문 글꼴(나눔스퀘어라운드)로. 원티드 산스는 쓰지 않음(글꼴 두 가지 규칙, 2026-10-17) */
+.ah-deg { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; }
 
 /* 스쿼클 모서리 — 지원 브라우저(크롬 139+)에선 더 매끈한 곡선, 아니면 일반 둥근 모서리 */
 @supports (corner-shape: squircle) { .ah-sq { corner-shape: squircle; } }

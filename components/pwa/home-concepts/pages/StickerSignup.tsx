@@ -616,7 +616,7 @@ export default function StickerSignup() {
                     <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>두 가지 필수 동의와 보안 확인 후 가입 방법을 선택해 주세요.</p>
                     <div className="su-gift st-postit relative mt-4 flex items-center gap-3 px-3.5 pb-3 pt-3.5" style={{ background: "#fff3a6", rotate: "-0.6deg" }}>
                         <Tape className="-top-2 left-1/2 h-3.5 w-12 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "3deg" }} />
-                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[13px] font-black text-[#7a4b00]">C</span>
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[13px] text-[#7a4b00] ah-display">C</span>
                         <span className="min-w-0 flex-1">
                             <span className="ah-display block text-[14px]">신규 가입 혜택 · {SAMPLE.signupBonus}C <span className="ah-light text-[11.5px] text-[#8f5e12]">행동·소리 분석 2회</span></span>
                             <span className="ah-light mt-0.5 block text-[11px] leading-snug text-[#8f5e12]">가입 이메일 인증 완료 후 자동 지급됩니다. 반복 가입 등 부정 수령이 확인되면 코인이 회수되거나 이용이 제한될 수 있습니다.</span>
@@ -849,8 +849,12 @@ const SIGNUP_CSS = `
 .su-note { animation: hc-pop .35s cubic-bezier(.3,1.6,.5,1) both; }
 /* 간편 가입(웹 공용 부품): 받침지 위 동그란 스티커처럼 흰 칼선 */
 .su-social a, .su-social button { box-shadow: 0 0 0 3px #fff, 0 6px 10px -6px rgba(90,60,50,.4); }
+/* 네이버 "N" 글자(협업자 SocialAuthButtons) — 앱 글꼴(카페24 써라운드)로 */
+.su-social span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 /* 이메일 인증 화면 머리 아이콘 */
 .su-mail { background: radial-gradient(circle at 35% 30%, #ffb3c8, #e9628c 70%); box-shadow: 0 0 0 4px #fff, 0 10px 16px -8px rgba(200,80,120,.55); rotate: -6deg; animation: hc-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
+/* 가입 보안 확인(협업자 SignupBotChallenge) 안내 · 위젯 글자 — 둥근 본문 글꼴(글꼴 두 가지 규칙) */
+.su-bot :is(p, span, label, button) { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
 /* 인증 메일 그림(사용자 3D 이메일 아이콘) — 동그라미와 같이 살짝 기울여 톡 */
 .su-mail-img { rotate: -6deg; filter: drop-shadow(0 8px 8px rgba(200,80,120,.3)); animation: hc-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
 @media (prefers-reduced-motion: reduce) { .su-note, .su-mail, .su-mail-img { animation: none; } }
