@@ -226,6 +226,7 @@ const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
 
 /**
  * 앱에서는 앱으로(사용자 결정 2026-10-17 "앱에서 웹으로 갈 수는 없잖아") — 앱 화면이 따로 있는 웹 주소는 같은 기능의 앱 화면으로.
+ *  - 설치한 앱 시작 주소(/app/) · 예전 시안 홈(/app/mockup-c) → 앱 홈(/app/home-1)
  *  - 웹 첫 페이지(/ · /main) → 앱 쇼핑 첫 화면
  *  - 매일 댕생활(/treasure-mine · /growth · /challenge, 설치 앱 바로가기 · 공유 링크) → 앱 매일 댕생활
  *  - 굿즈 공모전(/goods-contest) → 댕다방 굿즈 공모전 쪽
@@ -234,6 +235,9 @@ const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
  */
 function appScreenFor(pathname: string, search: string): string | null {
     if (isMyPetPath(pathname)) return APP_REPORT;
+    // 설치한 앱의 시작 주소(PWA start_url · 안드로이드 appStartPath = /app/)와 예전 시안 홈 → 지금 앱 홈
+    // (브라우저의 /app/ 설치 안내 페이지는 앱 틀이 아니어서 이 규칙이 닿지 않음 — 그대로)
+    if (/^\/app\/?$/.test(pathname) || /^\/app\/mockup-c(\/|$)/.test(pathname)) return "/app/home-1/";
     if (pathname === "/" || /^\/main(\/|$)/.test(pathname)) return "/app/sticker/shop/";
     if (/^\/(treasure-mine|growth|challenge)(\/|$)/.test(pathname)) return "/app/sticker/daily/";
     if (/^\/goods-contest(\/|$)/.test(pathname)) return "/app/sticker/show/?tab=1";
