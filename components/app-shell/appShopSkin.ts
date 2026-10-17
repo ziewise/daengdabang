@@ -1158,6 +1158,13 @@ html.ddb-app-mode [data-petlens-capture-viewport] :is([data-petlens-viewport-swi
 /* 카메라 칸 — 흰 폴라로이드 테두리(아래 두껍게) + 위 양쪽 테이프. 화면은 기울이지 않음(맞춰 찍어야 하므로) */
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] { overflow: visible; margin-top: 8px; border: 8px solid #fff; border-bottom-width: 24px; border-radius: 4px; background: #2e2622;
     box-shadow: 0 0 0 1px #efe2d6, 0 16px 26px -16px rgba(110, 70, 55, .65); }
+/* 폴라로이드 칸을 카메라 비율에 맞춤(세로 3:4 · 가로 16:9 — 협업자 촬영 칸과 같은 비율) → 영상 둘레 빈 공간(어두운 띠) 없앰.
+   그래도 남는 틈은 밝은 종이색. 연결 기다리는 동안 안내 글자는 진한 색 */
+html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] { background: #f6efe6; justify-self: center; align-self: center; }
+html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera][data-camera-orientation="portrait"] { height: 100%; width: auto; max-width: 100%; aspect-ratio: 3 / 4; }
+html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera][data-camera-orientation="landscape"] { width: 100%; height: auto; max-height: 100%; aspect-ratio: 16 / 9; }
+html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] > div[class*="inset-0"][class*="place-items-center"] { color: #6b5a52; }
+html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] > div[class*="inset-0"][class*="place-items-center"] :is(i, p + p) { color: #b0a096; }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera]::before { ${TAPE} top: -15px; left: 10px; width: 56px; rotate: -8deg; z-index: 30; }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera]::after { ${TAPE} top: -15px; right: 10px; width: 56px; rotate: 7deg; z-index: 30;
     background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
