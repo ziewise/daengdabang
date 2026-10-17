@@ -71,7 +71,7 @@ export default function ProductTabs({ product: p }: Props) {
 
             <section id="tab-detail" className="scroll-mt-32 pt-10">
                 <SectionTitle title={t("detailInfo")} />
-                <DetailContent product={p} />
+                <AppDetailFold><DetailContent product={p} /></AppDetailFold>
                 <ProductDeliveryReturnPolicy />
             </section>
 
@@ -115,7 +115,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     const cautionItems = [...(content?.cautions ?? []), ...(content?.safety ? [content.safety] : [])];
 
     if (supplierOriginal) {
-        return <AppDetailFold><SupplierDetailContent product={p} /></AppDetailFold>;
+        return <SupplierDetailContent product={p} />;
     }
 
     if (details.length === 0 && !content) {
@@ -144,7 +144,6 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
         const remainingDetails = details.filter((_, index) => !usedVisualIndices.has(index));
 
         return (
-            <AppDetailFold>
             <article className="mx-auto max-w-5xl overflow-hidden bg-white" data-product-detail-copy data-visual-story>
                 <header className="grid min-h-[520px] md:grid-cols-[1.08fr_0.92fr]">
                     <div className="flex min-h-[360px] items-center justify-center bg-neutral-100 p-6 md:min-h-[520px] md:p-10">
@@ -257,7 +256,6 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     </section>
                 )}
             </article>
-            </AppDetailFold>
         );
     }
 
@@ -302,7 +300,9 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
 
 /**
  * 앱 전용 상세 접기(로컬 시안) — 공급사 원본 · 편집 상세도 아래 기본 상세처럼 820px에서 접고 "상세정보 더보기 / 접기".
- * 접기 · 흐림 · 버튼은 앱 모드 CSS(html.ddb-app-mode, components/app-shell/appShopSkin.ts)에서만 켜진다.
+ * 상세 내용(DetailContent) 바깥에서 감싼다(상세 내용의 결과 구조는 협업자 원래 그대로 — 테스트가 그 구조를 확인함).
+ * 접기 · 흐림 · 버튼은 앱 모드 CSS(html.ddb-app-mode, components/app-shell/appShopSkin.ts)에서만, 그것도 공급사 원본 · 편집 상세가
+ * 들어 있을 때만 켜진다(기본 상세는 자체 접기가 있어 이 틀은 아무 일도 안 함).
  * 웹은 지금처럼 전부 펼쳐 보이고 버튼 · 흐림은 hidden(화면 · 읽기 프로그램 모두 없음).
  */
 function AppDetailFold({ children }: { children: ReactNode }) {

@@ -63,6 +63,8 @@ const PLX = `html.ddb-app-mode.ddb-app-lab-web:is([data-app-page="pet-lens"], [d
 /* 그림으로 바꿔 끼우는 아이콘 칸(동그라미 · 네모) */
 const ICONBOX = `${MYW} main :is(span[class*="h-11"][class*="rounded-full"]:has(> i.fa-envelope), span[class*="h-11"][class*="rounded-full"]:has(> i.fa-headset), span[class*="h-9"][class*="rounded-full"]:has(> i:is(.fa-circle-question, .fa-box, .fa-rotate-left)), :is(span, div)[class*="rounded"]:has(> i.fa-credit-card), span[class*="h-16"][class*="rounded-full"]:has(> i.fa-lock))`;
 /* 숨은 창들(협업자 모달) — 앱 모드 어디서나 · 입혀보기 창 */
+/* 앱 상세 접기 — 공급사 원본 · 편집 상세가 들어 있는 틀만(기본 상세는 자체 접기) */
+const FOLD = `${S} [data-app-detail-fold]:has([data-supplier-original-detail], [data-product-detail-copy])`;
 const TRYON = 'html.ddb-app-mode section[role="dialog"][aria-labelledby="pet-tryon-title"]';
 /* 주간 사진 비교 창(협업자 WeeklyPhotoComparison) */
 const WK = "html.ddb-app-mode [data-weekly-photo-comparison]";
@@ -233,13 +235,14 @@ ${S} [data-review-panel] article[class*="border"] { border-color: #f3e6d6; backg
 ${S} [data-review-panel] span[class*="rounded-md"][class*="bg-white"] { border-radius: 999px; box-shadow: 0 0 0 1.5px #f6c9d6, 0 3px 5px -3px rgba(110, 80, 40, .35); }
 
 /* 상세 접기(앱 전용, ProductTabs AppDetailFold) — 공급사 원본 · 편집 상세를 820px에서 접고 아래 흐림 + "상세정보 더보기" 크림 와펜.
+   틀은 상세 내용 전체를 감싸므로, 공급사 원본(data-supplier-original-detail) · 편집 상세(data-product-detail-copy)가 들어 있을 때만 켠다(FOLD).
    overflow: hidden으로 실제로 잘라 페이지 길이도 줄인다(clip-path만 쓰면 숨은 부분 길이만큼 빈 화면이 계속 내려감).
    위 · 양옆 테이프와 흰 사진 여백이 잘리지 않게 안쪽 여백 + 같은 크기 바깥 음수 여백(위치 변화 없음) */
-${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-body] { position: relative; max-height: 836px; overflow: hidden; padding: 16px 12px 0; margin: -16px -12px 0; }
-${S} [data-app-detail-fold-fade] { display: block; z-index: 5; }
-${S} [data-app-detail-fold-toggle] { display: flex; }
+${FOLD}[data-app-detail-fold="closed"] > [data-app-detail-fold-body] { position: relative; max-height: 836px; overflow: hidden; padding: 16px 12px 0; margin: -16px -12px 0; }
+${FOLD} > [data-app-detail-fold-body] > [data-app-detail-fold-fade] { display: block; z-index: 5; }
+${FOLD} > [data-app-detail-fold-toggle] { display: flex; }
 /* 접힌 상태에선 버튼을 상세 이미지 아래 끝(흐림 위)에 걸쳐 놓아 "이어지는 내용"이 있다는 걸 바로 알게 — 펼치면 원래 자리 */
-${S} [data-app-detail-fold="closed"] > [data-app-detail-fold-toggle] { position: relative; z-index: 6; margin-top: -38px; }
+${FOLD}[data-app-detail-fold="closed"] > [data-app-detail-fold-toggle] { position: relative; z-index: 6; margin-top: -38px; }
 ${S} [data-app-detail-fold-toggle] button { ${PATCH_CREAM} }
 ${S} [data-app-detail-fold-toggle] button:active { transform: scale(.96); transition-duration: .12s; }
 

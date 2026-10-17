@@ -199,6 +199,11 @@ git config user.email "smlee@ziewise.com"
 
 이미 실제 기능에 연결된 것: 로그인 · 회원가입, 케어톡 대화, 쇼핑 상품 카드(찜 · 색상 · 상세 이동 · 영상), 매일 댕생활 안전 공유, 히어로 날씨 · 지역, 링크 이동 전부.
 
+## 4-1-1. 운영 main 합치기 기록
+- 2026-10-17: 운영 main `a19a732f`(히어로 걷기 영상 재조정 · 상품 영상 사진 순환, 3커밋)를 시안 브랜치에 합침(충돌 없음, 겹친 파일 `IntroSplash.tsx`는 서로 다른 줄).
+  - 협업자 `useProductVideo`가 새 신호(`onEnded` · `onCanPlay` · `onLoadedData` · `onPause`)를 쓰게 바뀌어, 앱 상품 카드(`ShopProductCard`)도 협업자 `ProductCard`와 같게 `loop={false}` + 신호 전부 연결. 휴대폰 환경에서 웹 카드와 같은 "영상 8초 → 사진 2초 → 영상" 확인.
+  - 협업자 테스트 902개 전부 통과(합치기 전부터 깨져 있던 러프웨어 상세 테스트 1개는 우리 상세 접기 위치를 바꿔 해결) · 타입 검사 통과.
+
 ## 4-2. 푸시 전 확인 목록
 1. **GitHub 최종본 확인**: `git fetch origin` 후 main 최신 커밋을 합치고, 협업자가 바꾼 파일과 우리 수정이 겹치는지 확인한다.
 2. **협업자 인계 문서 확인**: 서버 `C:\DaengDaBang`(공유 `V:\`)에 새로 추가된 `HANDOFF_*` 파일과 `NEXT_WINDOW_START_HERE.md` 맨 위 항목을 읽고, 앱 · 케어톡 · 상단바 · 버튼 동작에 바뀐 점이 있는지 확인한다.
@@ -252,7 +257,7 @@ git config user.email "smlee@ziewise.com"
 | `components/growth/CommerceCommunityExpansion.tsx` | `EXPANSION_CARDS` 내보내기 |
 | `app/treasure-mine/page.tsx` | 앱에서는 새 앱 화면(`components/daily-life/DailyLifeSwitch`), 웹에서는 기존 `GrowthHub` 그대로 |
 | `components/home/IntroSplash.tsx` | 앱 모드에서는 인트로 영상 없이 바로 시작 |
-| `components/products/detail/ProductTabs.tsx` | 공급사 원본 · 편집 상세를 `AppDetailFold` 틀로 감쌈(기존 기본 상세의 접기와 같은 방식 · 같은 문구). 버튼 · 흐림은 `hidden`이라 웹은 그대로, 앱 CSS(`appShopSkin.ts`)에서만 820px 접기 · 버튼 표시 |
+| `components/products/detail/ProductTabs.tsx` | 상세 내용(`DetailContent`) **바깥**을 `AppDetailFold` 틀로 감쌈(2026-10-17 위치 수정 — 상세 내용 결과 구조는 협업자 원래 그대로라 `tests/ruffwear-2026fw-detail-content` 통과). 버튼 · 흐림은 `hidden`이라 웹은 그대로, 앱 CSS(`appShopSkin.ts`)에서만 공급사 원본 · 편집 상세가 들어 있을 때 820px 접기 · 버튼(기본 상세는 자체 접기라 이 틀은 꺼짐) |
 | `app/mypage/profile/page.tsx` | 맨 아래 "회원 탈퇴" 작은 링크(기존 /mypage/withdrawal) 추가 — `hidden`이라 웹은 그대로(웹은 마이페이지 메뉴에 있음), 앱 CSS에서만 보임(앱은 메뉴를 숨겨서) |
 | `app/products/ProductsClient.tsx` | 검색 묶음 `section`에 `data-products-filter` 표시 + 앱 전용 `AppProductFilter`(필터 버튼 · 속지, 뿌리가 `hidden`이라 웹은 그대로) 추가. 앱 CSS에서만 검색칸 + 필터 버튼 한 줄(카테고리 · 세부 · 정렬 칸 숨김, 위로 붙음). 속지에서 고르면 같은 `setSort` · 카테고리 바꾸기(`setCategory` + `setSubcategory("all")`)를 부름. 세부 분류는 앱에서 쓰지 않음(사용자 결정 2026-10-17) |
 

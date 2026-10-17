@@ -43,13 +43,11 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
     const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
     const thumb = p.image;
 
-    // 영상 — 협업자 훅 그대로(휴대폰 자동 재생 · 스크롤 멈춤 · 색상 미리보기 시 정지)
-    const { videoRef, videoActive, onPlaying, onSeeked, onError } = useProductVideo(p.video);
+    // 영상 — 협업자 훅 그대로(휴대폰 자동 재생 · 스크롤 멈춤 · 영상 끝나면 사진과 번갈아 · 색상 미리보기 시 정지).
+    // 협업자 ProductCard 와 같게 영상 신호(재생 · 멈춤 · 끝 · 준비 · 오류)를 모두 훅에 넘긴다(운영 a19a732f 맞춤)
+    const { videoRef, videoActive, activate: _activate, deactivate: _deactivate, previewColor: _previewColor, ...videoEvents } = useProductVideo(p.video);
+    void _activate; void _deactivate; void _previewColor; // 앱 카드는 마우스 올림 · 색상 미리보기가 없음(휴대폰 자동 재생만)
     const hasVideo = Boolean(p.video);
-    const playOnce = (p.raw?.videoProvider === "ddb_original_video_editor"
-        || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_human_review_single_4s.v1"
-        || p.raw?.videoZiewcraftIdentity?.kind === "ziewcraft_owner_delegated_ai.v1")
-        && p.raw.videoPlaybackMode === "once_hold_last_frame";
     const rot = [-1, 0.8, 0.6, -0.8][index % 4];
 
     return (
@@ -67,8 +65,8 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
                         <i aria-hidden="true" className={`fa-solid ${p.icon} text-4xl text-[#e8c9b8]`} />
                     )}
                     {hasVideo ? (
-                        <video ref={videoRef} src={p.video} style={hoverVideoStyle(p.video)} data-hover-video-fit="cover" muted loop={!playOnce} playsInline preload="metadata"
-                            onPlaying={onPlaying} onSeeked={onSeeked} onError={onError}
+                        <video ref={videoRef} src={p.video} style={hoverVideoStyle(p.video)} data-hover-video-fit="cover" muted loop={false} playsInline preload="metadata"
+                            {...videoEvents}
                             className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`} />
                     ) : null}
                     {hasVideo && videoActive ? <VideoBrandOverlay src={p.video} forceOverlay={hoverVideoFraming(p.video)?.restoreBrandOverlay} /> : null}
