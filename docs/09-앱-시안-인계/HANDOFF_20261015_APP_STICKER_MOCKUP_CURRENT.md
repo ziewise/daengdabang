@@ -55,7 +55,7 @@
 | `/app/sticker/show/` | 댕다방(댕자랑 실제 피드 · 굿즈 공모전) | 댕다방 |
 | `/app/sticker/my/` | 마이(시안) | ~~마이~~ ✅ 연결 완료(2026-10-16) | 이름 · 계정(`useAuth` · `memberAccountDisplay`), 지갑(`loadDaengLabWallet`), 적립금 → 코인(`convertRewardPointsToDaengLabCoins`, 웹 지갑 카드와 같은 조건 · 재시도 키 · 알림 이벤트, 한 번에 전환 단위만큼), 반려견(`user.pets` · `hasVerifiedPetPhoto`), 최근 주문 2개(`loadTossOrderHistory` · `orderStatusLabel`), 로그아웃(`logout`) | 로그인 상태는 실제 `useAuth`(이 화면 토글 제거). 회원 등급은 "댕린이" 고정(등급 산정 미연결) |
 | `/app/sticker/login/`, `/app/sticker/signup/` | 앱 전용 로그인 · 회원가입(로직은 웹과 동일) | — |
-| `/app/sticker/buttons/` | 버튼 시안 모음(참고용) | — |
+| ~~`/app/sticker/buttons/`~~ | 버튼 시안 모음 — 배포 전 삭제 완료(2026-10-17, 예전 홈 시안 `/app/mockup-c` 도 삭제) | — |
 
 탭바 순서: **홈 · 연구소 · 쇼핑(가운데 강조) · 댕다방 · 마이**
 
@@ -216,7 +216,7 @@ git config user.email "smlee@ziewise.com"
 3. **버튼 대조표**: 앱 화면의 모든 동작 버튼이 GitHub 최종본의 같은 버튼과 같은 함수 · 같은 값 · 같은 목적지(4-1, 6장 예외만 허용)인지 한 줄씩 확인. 시연 동작 0개.
 4. **운영 빌드**(`npm run build`, static export)와 린트 · 타입 검사 · 협업자 테스트(`npm test`) 통과.
 5. **테스트 APK**를 만들어 탭 이동, 앱 안 화면 / 브라우저 창으로 열리는 화면, 케어톡 · 펫렌즈 창을 실제로 확인. 아이폰 설치 앱도 확인.
-6. **버튼 시안 화면 삭제**: `/app/sticker/buttons`(StickerButtons, 동작 없는 시안 버튼 모음 — 로컬 참고용)는 배포 전에 뺀다(사용자 결정 2026-10-17).
+6. **버튼 시안 화면 삭제**: `/app/sticker/buttons`(StickerButtons, 동작 없는 시안 버튼 모음 — 로컬 참고용)는 배포 전에 뺀다(사용자 결정 2026-10-17). → **완료(2026-10-17)**
 7. **버튼 대조표**(`docs/09-앱-시안-인계/버튼대조표_20261017.md`)의 "다름" 0건 확인.
 8. 협업자와 협의 완료 + 사용자 지시가 있을 때만 푸시.
 

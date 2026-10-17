@@ -26,7 +26,7 @@ export type AppTab = {
 
 export const APP_TABS: AppTab[] = [
     {
-        key: "home", label: "홈", href: "/app/mockup-c/",
+        key: "home", label: "홈", href: "/app/home-1/", // 예전 시안 홈(/app/mockup-c)은 배포 전 삭제 — 앱 홈으로(2026-10-17)
         grad: ["#ff8eab", "#e8507a"], bubble: "linear-gradient(165deg, #fff0f4 0%, #ffd8e3 100%)", rim: "#f6bccd", ink: "#d23f6b",
     },
     {
@@ -146,7 +146,6 @@ export function conceptSubTitle(pathname: string): string | null {
     if (/^\/app\/sticker\/daily/.test(pathname)) return "매일 댕생활";
     if (/^\/app\/sticker\/care/.test(pathname)) return "동네 돌봄 찾기";
     if (/^\/app\/sticker\/report/.test(pathname)) return "건강 변화 리포트";
-    if (/^\/app\/sticker\/buttons/.test(pathname)) return "버튼 시안";
     if (/^\/app\/sticker\/login/.test(pathname)) return "로그인";
     if (/^\/app\/sticker\/signup/.test(pathname)) return "회원가입";
     return null;
