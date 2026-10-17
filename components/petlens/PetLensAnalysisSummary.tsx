@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import type { PetLensResultDetails } from "@/lib/daengdabang-llm";
 import type { PetProfile } from "@/lib/store";
 
@@ -30,9 +31,19 @@ function InsightList({ items, icon = "fa-check" }: { items: string[]; icon?: str
 }
 
 export default function PetLensAnalysisSummary({ profile, details }: Props) {
+    // 앱 전용 "자세히 보기"(로컬 시안) — 웹에서는 버튼이 hidden · 감싼 틀이 display:contents 라 지금과 똑같이 전부 보임
+    const [appMoreOpen, setAppMoreOpen] = useState(false);
+    const hasAppMore = Boolean(
+        details.confirmedBreed ||
+        details.breedCandidates.length > 0 ||
+        details.profileNotice ||
+        details.profileCandidates.length > 0 ||
+        details.ownerChecks.length > 0 ||
+        details.recommendationSignals.length > 0,
+    );
     return (
-        <div className="grid gap-3" data-petlens-trust-result>
-            <section className={`rounded-2xl border p-4 sm:p-5 ${STATUS_STYLES[details.status]}`}>
+        <div className="grid gap-3" data-petlens-trust-result data-status={details.status} data-app-more-open={appMoreOpen ? "true" : "false"}>
+            <section className={`rounded-2xl border p-4 sm:p-5 ${STATUS_STYLES[details.status]}`} data-petlens-result-hero>
                 <div className="flex items-start gap-4">
                     <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2 text-[11px] font-black">
@@ -63,14 +74,15 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             </section>
 
             {details.observations.length > 0 && (
-                <section className="rounded-2xl border border-neutral-200 bg-white p-4">
+                <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-result-observations>
                     <p className="mb-3 text-xs font-black text-neutral-500">사진에서 직접 확인한 특징</p>
                     <InsightList items={details.observations} />
                 </section>
             )}
 
+            <div className="contents" data-app-more>
             {details.confirmedBreed && (
-                <section className="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4">
+                <section className="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4" data-petlens-result-confirmed-breed>
                     <p className="text-xs font-black text-indigo-700">회원이 확인한 등록 견종</p>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                         <strong className="text-base font-black text-neutral-950">{details.confirmedBreed}</strong>
@@ -83,7 +95,7 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             )}
 
             {details.breedCandidates.length > 0 && (
-                <section className="rounded-2xl border border-neutral-200 bg-white p-4">
+                <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-result-breed-candidates>
                     <div className="mb-3 flex items-end justify-between gap-3">
                         <p className="text-xs font-black text-neutral-500">사진에서 본 가까운 견종 후보</p>
                         <span className="text-[10px] font-bold text-neutral-400">등록 견종을 자동으로 바꾸지 않아요</span>
@@ -106,13 +118,13 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             )}
 
             {details.profileNotice && (
-                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
+                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4" data-petlens-result-profile-notice>
                     <p className="text-sm font-bold leading-6 text-sky-900">{details.profileNotice}</p>
                 </section>
             )}
 
             {(details.profileCandidates.length > 0 || details.ownerChecks.length > 0) && (
-                <section className="rounded-2xl border border-neutral-200 bg-white p-4">
+                <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-result-owner-checks>
                     <p className="mb-3 text-xs font-black text-neutral-500">보호자가 확인해 주세요</p>
                     {details.profileCandidates.length > 0 && (
                         <div className="mb-3 flex flex-wrap gap-2">
@@ -126,26 +138,41 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                     <InsightList items={details.ownerChecks} icon="fa-pen" />
                 </section>
             )}
+            </div>
 
             {details.retakeReasons.length > 0 && (
-                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
+                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4" data-petlens-result-retake>
                     <p className="mb-3 text-xs font-black text-sky-800">다음 촬영에서 보완할 점</p>
                     <InsightList items={details.retakeReasons} icon="fa-camera" />
                 </section>
             )}
 
             {details.careActions.length > 0 && (
-                <section className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4">
+                <section className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4" data-petlens-result-care>
                     <p className="mb-3 text-xs font-black text-emerald-800">지금 도움이 되는 케어</p>
                     <InsightList items={details.careActions} icon="fa-heart" />
                 </section>
             )}
 
+            <div className="contents" data-app-more>
             {details.recommendationSignals.length > 0 && (
-                <section className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4">
+                <section className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4" data-petlens-result-signals>
                     <p className="mb-3 text-xs font-black text-indigo-700">상품을 고른 기준</p>
                     <InsightList items={details.recommendationSignals} icon="fa-paw" />
                 </section>
+            )}
+            </div>
+            {hasAppMore && (
+                <button
+                    type="button"
+                    className="hidden"
+                    data-app-more-toggle
+                    aria-expanded={appMoreOpen}
+                    onClick={() => setAppMoreOpen((value) => !value)}
+                >
+                    <span>{appMoreOpen ? "자세히 접기" : "견종 후보 · 확인할 점 자세히 보기"}</span>
+                    <i className={`fa-solid ${appMoreOpen ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+                </button>
             )}
         </div>
     );

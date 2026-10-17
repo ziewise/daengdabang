@@ -433,7 +433,32 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         };
         const observer = new MutationObserver(onBodyChange);
         observer.observe(document.body, { childList: true }); // 촬영 창은 body 바로 아래 — 깊은 곳은 보지 않음
-        return () => observer.disconnect();
+
+        /* 분석 결과가 새로 나타나면 결과 맨 위로 화면을 옮긴다(사용자 2026-10-17 — "추천 받기"를 눌러도 입력칸에 머물러 결과가 안 보였음).
+           사진 분석 = data-petlens-trust-result, 행동·소리 분석 = data-petlens-observation-result(그 화면 맨 위부터).
+           결과가 없다가 생길 때만 한 번 — 결과 안에서 접기 · 펼치기 등으로 다시 그려져도 움직이지 않음 */
+        const RESULT = "[data-petlens-trust-result], [data-petlens-observation-result]";
+        let resultShown = Boolean(document.querySelector(RESULT));
+        const onResultChange = () => {
+            const result = document.querySelector<HTMLElement>(RESULT);
+            const justShown = !resultShown && Boolean(result);
+            resultShown = Boolean(result);
+            if (!justShown || !result) return;
+            const target = result.matches("[data-petlens-observation-result]")
+                ? result.closest<HTMLElement>("[data-petlens-observation-experience]") ?? result
+                : result;
+            window.requestAnimationFrame(() => {
+                const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" }); // 상단바 아래 여백은 CSS scroll-margin-top
+            });
+        };
+        const main = document.querySelector("main");
+        const resultObserver = new MutationObserver(onResultChange);
+        if (main) resultObserver.observe(main, { childList: true, subtree: true });
+        return () => {
+            observer.disconnect();
+            resultObserver.disconnect();
+        };
     }, [petLensPage]);
 
     // 뒤로 가기 — 들어온 기록이 없으면(주소로 바로 연 경우) 지금 탭 첫 화면으로

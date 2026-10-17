@@ -1086,9 +1086,120 @@ ${PLX} main main form.surface label[class*="inline-flex"] > input[type="checkbox
 ${PLX} main main form.surface label[class*="inline-flex"]:has(> input:focus-visible) { outline: 2px solid #f283a3; outline-offset: 2px; }
 /* 결과 전 빈 자리("추천 결과가 여기에 표시됩니다") — 앱에서는 숨김(사용자 2026-10-17). 결과가 나오면 협업자 결과 화면이 그 자리에 그대로 나옴 */
 ${PLX} main main section > div.surface.text-center:has(> i.fa-camera-retro) { display: none; }
+/* ── 사진 분석 결과(협업자 PetLensAnalysisSummary · PetLensClient 결과 칸) — 스티커북으로 다시 짬(사용자 2026-10-17 "우리 스타일에 딱 맞게").
+   요약 = 테이프 붙인 종이 + 폴라로이드 사진 · 사진 특징 = 노란 포스트잇 · 케어 = 크림 종이 · 다시 촬영 = 하늘 메모 ·
+   (자세히 보기 안) 등록 견종 = 분홍 이름표 · 견종 후보 = 폴라로이드 카드 · 보호자 확인 = 민트 메모 · 상품 기준 = 보라 메모.
+   글꼴 2종(제목 카페24 · 본문 나눔스퀘어라운드). 문구 · 링크 · 저장 동작은 그대로.
+   카드 배경 규칙의 :not(#ddb-none)은 마이 · 연구소 공통 종이 카드 규칙(:not 3개)보다 우선하려는 표시일 뿐(그런 id 없음) ── */
+/* 바깥 흰 카드는 걷어 내고(카드 안 카드가 되지 않게) 메모들이 점 무늬 종이 위에 바로 붙게 */
+${PLX} main main section > div.grid > div.surface:has(> [data-petlens-trust-result]):not(#ddb-none) { padding: 0; border: 0; background: transparent; box-shadow: none; }
+${PLX} [data-petlens-trust-result] { gap: 18px; scroll-margin-top: calc(var(--header-height, 72px) + 24px); color: #3d2f2a; word-break: keep-all; overflow-wrap: anywhere; } /* 한글 낱말 단위 줄바꿈("보여/요" 방지) */
+${PLX} [data-petlens-trust-result] > section:not(#ddb-none), ${PLX} [data-petlens-trust-result] > [data-app-more] > section:not(#ddb-none) { position: relative; border: 0; border-radius: 4px 4px 16px 4px; padding: 16px;
+    box-shadow: 0 8px 14px -10px rgba(110, 80, 40, .5); }
+/* 카드 제목 — 카페24 */
+${PLX} [data-petlens-trust-result] section > p:first-child, ${PLX} [data-petlens-trust-result] section > div:first-child > p:first-child {
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; letter-spacing: 0; }
+/* 목록 — 나눔스퀘어라운드, 아이콘은 카드 색 */
+${PLX} [data-petlens-trust-result] ul { gap: 7px; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13.5px; line-height: 1.6; color: #4a3a33; }
+${PLX} [data-petlens-trust-result] ul > li > i { margin-top: 6px; font-size: 11px; }
+
+/* ① 요약 — 테이프 붙인 종이 · 상태 칩은 스티커(상태마다 색) · 사진은 폴라로이드(테이프) */
+${PLX} [data-petlens-trust-result] > [data-petlens-result-hero]:not(#ddb-none) { padding: 20px 16px 18px; border-radius: 8px 8px 20px 8px; background: #fffdf6;
+    box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-result-hero]::before { ${TAPE} top: -7px; left: 50%; width: 58px; margin-left: -29px; rotate: -2deg; }
+${PLX} [data-petlens-result-hero] span[class*="rounded-full"] { padding: 4px 10px 3px; background: #fff; color: #8a766c; box-shadow: 0 0 0 1.5px #f1e3da;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; }
+${PLX} [data-petlens-trust-result][data-status="review"] [data-petlens-result-hero] span[class*="rounded-full"]:first-child { background: #fff3b8; color: #8a5a0c; box-shadow: 0 0 0 1.5px #f1d77e; }
+${PLX} [data-petlens-trust-result][data-status="ready"] [data-petlens-result-hero] span[class*="rounded-full"]:first-child { background: #e9f8f0; color: #2f6b52; box-shadow: 0 0 0 1.5px #a9dcc2; }
+${PLX} [data-petlens-trust-result][data-status="confirmed"] [data-petlens-result-hero] span[class*="rounded-full"]:first-child { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 1.5px #f6a9bf; }
+${PLX} [data-petlens-trust-result][data-status="retake"] [data-petlens-result-hero] span[class*="rounded-full"]:first-child { background: #e6f3ff; color: #2f5f8a; box-shadow: 0 0 0 1.5px #b5d5f2; }
+${PLX} [data-petlens-result-hero] h3 { margin-top: 12px; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.12rem; line-height: 1.5; color: #3d2f2a; }
+${PLX} [data-petlens-result-hero] h3 + p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13px; line-height: 1.65; color: #7a6a62; }
+${PLX} [data-petlens-result-hero] div[class*="h-20"][class*="w-20"] { overflow: visible; width: 82px; height: 96px; margin-top: 30px; border: 5px solid #fff; border-bottom-width: 16px; border-radius: 3px; background: #fff; rotate: 3deg;
+    box-shadow: 0 0 0 1px #efe2d6, 0 10px 14px -9px rgba(110, 70, 55, .6); }
+${PLX} [data-petlens-result-hero] div[class*="h-20"][class*="w-20"]::after { ${TAPE} top: -11px; left: 50%; width: 38px; height: 12px; margin-left: -19px; rotate: -6deg; }
+
+/* ② 사진에서 직접 확인한 특징 — 노란 포스트잇 + 테이프 */
+${PLX} [data-petlens-trust-result] > [data-petlens-result-observations]:not(#ddb-none) { background: #fff3b8; rotate: -.4deg; }
+${PLX} [data-petlens-result-observations]::before { ${TAPE} top: -7px; left: 22px; width: 44px; height: 12px; rotate: -4deg;
+    background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+${PLX} [data-petlens-result-observations] > p:first-child { color: #8a5a0c; }
+${PLX} [data-petlens-result-observations] ul > li > i { color: #d99a2b; }
+
+/* ③ 다음 촬영에서 보완할 점 — 하늘 메모 */
+${PLX} [data-petlens-trust-result] > [data-petlens-result-retake]:not(#ddb-none) { background: #e6f3ff; }
+${PLX} [data-petlens-result-retake] > p:first-child { color: #2f5f8a; }
+${PLX} [data-petlens-result-retake] ul > li > i { color: #5b8fc7; }
+
+/* ④ 지금 도움이 되는 케어 — 크림 종이 + 분홍 테이프 · 하트 */
+${PLX} [data-petlens-trust-result] > [data-petlens-result-care]:not(#ddb-none) { background: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -12px rgba(110, 80, 40, .5); rotate: .3deg; }
+${PLX} [data-petlens-result-care]::before { ${TAPE} top: -7px; right: 24px; width: 44px; height: 12px; rotate: 4deg; }
+${PLX} [data-petlens-result-care] > p:first-child { color: #c4456f; }
+${PLX} [data-petlens-result-care] ul > li > i { color: #e8628e; }
+
+/* "자세히 보기" — 작은 노란 이름표. 접혀 있으면 아래 카드 숨김 · 펼치면 버튼 아래로(order). 웹은 버튼 hidden · 틀 display:contents · 원래 순서 */
+${PLX} [data-petlens-trust-result] > [data-app-more-toggle] { order: 1; justify-self: center; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 16px; border-radius: 999px;
+    background: #fff6c9; color: #8a5a0c; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12.5px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 0 0 1.5px #f3e1b0, 0 4px 8px -6px rgba(160, 110, 20, .5); } /* 작은 노란 이름표(촬영 방법 보기와 같은 결) — 아래 "내 아이 기록" 와펜과 큰 버튼 두 개가 연달아 보이지 않게 */
+${PLX} [data-petlens-trust-result] > [data-app-more-toggle] i { font-size: 10px; }
+${PLX} [data-petlens-trust-result] > [data-app-more-toggle]:active { transform: scale(.97); }
+${PLX} [data-petlens-trust-result] > [data-app-more] > section { order: 2; }
+${PLX} [data-petlens-trust-result][data-app-more-open="false"] > [data-app-more] { display: none; }
+
+/* ⑤ 회원이 확인한 등록 견종 — 분홍 이름표 */
+${PLX} [data-petlens-trust-result] > [data-app-more] > [data-petlens-result-confirmed-breed]:not(#ddb-none) { background: #ffe1ea; box-shadow: 0 0 0 1.5px #f6a9bf, 0 8px 14px -10px rgba(200, 70, 110, .45); }
+${PLX} [data-petlens-result-confirmed-breed] > p:first-child { color: #c4456f; }
+${PLX} [data-petlens-result-confirmed-breed] strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 17px; color: #9c2f54; }
+${PLX} [data-petlens-result-confirmed-breed] span[class*="rounded-full"] { background: #fff; color: #c4456f; box-shadow: 0 0 0 1.5px #f6a9bf; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11px; }
+${PLX} [data-petlens-result-confirmed-breed] > p:last-child { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 12px; color: #9a6a78; }
+
+/* ⑥ 사진에서 본 가까운 견종 후보 — 흰 종이 위 폴라로이드 카드(번갈아 ±1도) */
+${PLX} [data-petlens-trust-result] > [data-app-more] > [data-petlens-result-breed-candidates]:not(#ddb-none) { background: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -12px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-result-breed-candidates] > div:first-child > p:first-child { color: #8a5a0c; }
+${PLX} [data-petlens-result-breed-candidates] > div:first-child > span { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 11px; color: #b0a096; }
+${PLX} [data-petlens-result-breed-candidates] article:not(#ddb-none) { border: 0; border-radius: 3px; background: #fff; padding: 12px 12px 14px; rotate: -1deg;
+    box-shadow: 0 0 0 1.5px #f1e3da, 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-result-breed-candidates] article:nth-child(even):not(#ddb-none) { rotate: 1deg; }
+${PLX} [data-petlens-result-breed-candidates] article > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11px; color: #d4447a; }
+${PLX} [data-petlens-result-breed-candidates] article > p:nth-child(2) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 16px; color: #3d2f2a; }
+${PLX} [data-petlens-result-breed-candidates] article > span { background: #fff3b8; color: #8a5a0c; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11px; }
+${PLX} [data-petlens-result-breed-candidates] article > p:last-child:not(:nth-child(2)) { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 12px; color: #7a6a62; }
+
+/* ⑦ 안내(등록 견종 적용 등) — 하늘 메모 */
+${PLX} [data-petlens-trust-result] > [data-app-more] > [data-petlens-result-profile-notice]:not(#ddb-none) { background: #e6f3ff; }
+${PLX} [data-petlens-trust-result] [data-petlens-result-profile-notice] > p:first-child { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13px; line-height: 1.65; color: #2f5f8a; }
+
+/* ⑧ 보호자가 확인해 주세요 — 민트 메모 · 후보 칩은 흰 스티커 */
+${PLX} [data-petlens-trust-result] > [data-app-more] > [data-petlens-result-owner-checks]:not(#ddb-none) { background: #e9f8f0; }
+${PLX} [data-petlens-result-owner-checks] > p:first-child { color: #2f6b52; }
+${PLX} [data-petlens-result-owner-checks] span[class*="rounded-full"] { background: #fff; color: #2f6b52; box-shadow: 0 0 0 1.5px #a9dcc2; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; }
+${PLX} [data-petlens-result-owner-checks] ul > li > i { color: #4fae84; }
+
+/* ⑨ 상품을 고른 기준 — 보라 메모 · 발바닥 */
+${PLX} [data-petlens-trust-result] > [data-app-more] > [data-petlens-result-signals]:not(#ddb-none) { background: #f1ecff; }
+${PLX} [data-petlens-result-signals] > p:first-child { color: #6a4fc4; }
+${PLX} [data-petlens-result-signals] ul > li > i { color: #8b6fd6; }
+
+/* 결과 아래 — "내 아이 기록에서 결과 보기"(크림 와펜, 꽉 차게) · 상품 제목 카페24 · 상품 없음 안내 = 노란 포스트잇 */
+${PLX} main main [data-petlens-result-profile-cta] { width: 100%; margin-top: 18px; }
+${PLX} main main section > div.grid > section > div:first-child > h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.1rem; color: #3d2f2a; }
+${PLX} main main section > div.grid > section > div:first-child > p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 12.5px; color: #8a766c; }
+${PLX} main main section > div.grid > div[class*="border-amber-200"]:not(#ddb-none) { position: relative; border: 0; border-radius: 4px 4px 16px 4px; background: #fff3b8; rotate: -.4deg; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${PLX} main main section > div.grid > div[class*="border-amber-200"]::before { ${TAPE} top: -7px; left: 50%; width: 46px; height: 12px; margin-left: -23px; rotate: 3deg; }
+${PLX} main main section > div.grid > div[class*="border-amber-200"] > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; color: #8a5a0c; }
+${PLX} main main section > div.grid > div[class*="border-amber-200"] > p + p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #7a5a20; }
+/* 추천 상품 카드 — 쇼핑 카드 규칙(S: 가격표 · 흰 테두리 사진 · 기울기)은 이미 적용, 찜 하트 스티커만 목록(LIST)과 같게 · 카드 사이 여백 */
+${PLX} main main section > div.grid > section > div.grid:has(> article[data-pet-product="true"]) { gap: 16px 12px; padding: 4px 2px; }
+${PLX} main article[data-pet-product="true"] button[aria-label^="찜"] { box-shadow: 0 0 0 1.5px #fff, 0 3px 6px -3px rgba(90, 60, 50, .45); }
+${PLX} main article[data-pet-product="true"] button i.fa-heart { display: inline-block; width: 1.15rem; height: 1.15rem; background: ${HEART_OFF} center / contain no-repeat; }
+${PLX} main article[data-pet-product="true"] button i.fa-heart.fa-solid { background-image: ${HEART_ON_CARD}; }
+${PLX} main article[data-pet-product="true"] button i.fa-heart::before { content: ""; }
+/* 분석 오류 · 저장 실패 안내(폼 아래) — 분홍 메모 */
+${PLX} main main form.surface > p[class*="border-rose-200"] { border: 0; border-radius: 4px 4px 14px 4px; background: #fff0f3; color: #b23a5e; box-shadow: 0 0 0 1.5px #f6c6d2;
+    font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 13px; }
 
 /* ── 행동 · 소리 분석 ── */
-${PLX} [data-petlens-observation-experience] { gap: 18px; }
+${PLX} [data-petlens-observation-experience] { gap: 18px; scroll-margin-top: calc(var(--header-height, 72px) + 16px); } /* 결과가 나오면 AppShell 이 이 화면 맨 위로 옮김 — 상단바 아래 여백 */
 /* 소개 카드 — 테이프 붙인 종이 · 설명 글은 작은 메모 · 숫자 3칸은 동그란 스티커 */
 ${PLX} [data-petlens-observation-experience] > div:first-child { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fffdf6;
   box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); padding: 18px 16px; }
