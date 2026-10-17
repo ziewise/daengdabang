@@ -203,6 +203,8 @@ git config user.email "smlee@ziewise.com"
 - 2026-10-17: 운영 main `a19a732f`(히어로 걷기 영상 재조정 · 상품 영상 사진 순환, 3커밋)를 시안 브랜치에 합침(충돌 없음, 겹친 파일 `IntroSplash.tsx`는 서로 다른 줄).
   - 협업자 `useProductVideo`가 새 신호(`onEnded` · `onCanPlay` · `onLoadedData` · `onPause`)를 쓰게 바뀌어, 앱 상품 카드(`ShopProductCard`)도 협업자 `ProductCard`와 같게 `loop={false}` + 신호 전부 연결. 휴대폰 환경에서 웹 카드와 같은 "영상 8초 → 사진 2초 → 영상" 확인.
   - 협업자 테스트 902개 전부 통과(합치기 전부터 깨져 있던 러프웨어 상세 테스트 1개는 우리 상세 접기 위치를 바꿔 해결) · 타입 검사 통과.
+  - 운영 빌드(`npm run build`, static export) 성공: 빌드 전 확인 스크립트(히어로 영상 목록 · 산책 친구 그림 · 입혀보기 모델) 통과, 정적 페이지 594개, 경고 없음, 추적 파일 변화 없음. 앱 화면(`/app/sticker/*` · `/app/home-1`)이 모두 `out/`에 생성됨.
+  - 전체 린트(`npx eslint .`): 문제 37개(오류 21 · 경고 16) 모두 우리가 손대지 않은 협업자 파일(운영 main과 같은 파일)의 기존 문제 — 우리가 만들거나 고친 파일은 0개. 협업자 코드라 고치지 않음(협의 시 공유).
 
 ## 4-2. 푸시 전 확인 목록
 1. **GitHub 최종본 확인**: `git fetch origin` 후 main 최신 커밋을 합치고, 협업자가 바꾼 파일과 우리 수정이 겹치는지 확인한다.
