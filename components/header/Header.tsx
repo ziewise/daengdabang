@@ -112,7 +112,6 @@ export default function Header() {
                     <div className="flex min-w-0 shrink-0 items-center gap-1.5 min-[360px]:gap-2">
                         <ProductBackButton />
                         <BrandLogo mobileEmphasis mobileIntegrated className={isProductDetail ? "max-md:hidden" : ""} />
-                        <div className={isProductDetail ? "max-md:hidden" : "contents"}><InstalledAppHomeButton /></div>
                     </div>
 
                     {isProductDetail && (
@@ -272,7 +271,9 @@ export default function Header() {
                         좁은 PC·모바일(<xl): 햄버거 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         넓은 데스크탑(xl+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
                     <div className={`${isProductDetail ? "max-md:hidden" : ""} flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2`}>
-                        {/* 유틸 순서: 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
+                        {/* 유틸 순서: (모바일) 앱 설치 → 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
+                        {/* 앱 설치 동그라미 아이콘 + 가끔 말풍선 — 모바일 웹에서만, 누르면 /app/ 설치 안내(2026-10-18 로고 옆 "앱 홈" 알약에서 옮김) */}
+                        <InstalledAppHomeButton />
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
                             type="button"

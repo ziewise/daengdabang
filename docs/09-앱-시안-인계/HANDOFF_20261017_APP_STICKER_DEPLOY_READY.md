@@ -109,3 +109,11 @@
 - **뺀 것**: 로그인 안내 · AI 케어 요약(`<AppAiCareOverview />`) · 서비스 링크(매일 댕생활 · 댕자랑 · 연구소) · 내 메뉴(우리 아이 · AI 상담 · 마이페이지 · 쇼핑). 비회원도 설치할 수 있고, 웹 방문자는 메뉴 · 헤더 · 첫 화면 · 푸터에서 같은 기능으로 갑니다. `AppAiCareOverview.tsx` 파일은 그대로 남겨 두었습니다(지금은 쓰는 곳 없음).
 - **점검표 수정**: `tests/pwa-installation.test.mjs` 의 "mobile app home links members to all requested services and preserves login return" → "mobile app route keeps the install guide while the AI care overview keeps its safety checks". `/app/` 페이지에 링크 · 로그인 · AI 요약이 있어야 한다는 줄만 빼고 설치 기능(`usePwaInstall()` · `requestInstall()`) 확인으로 바꿨습니다. 나머지(주소 · 사이트맵 · 앱 틀 · AI 케어 요약 부품의 안전 검사)는 그대로입니다. 테스트 902/902 통과.
 - 함께 정할 것: 우리 앱에 "AI 케어 한눈에(사진 · 주간 비교 · 행동·소리 기록)" 화면을 어디에 둘지 — `AppAiCareOverview` 를 다시 쓸지, 지울지.
+
+**③ 헤더 아이콘 (모바일 웹)**
+- 로고 옆 검은 "앱 홈" 알약 → 펫렌즈 버튼 **왼쪽** 동그라미 "앱 설치" 그림 아이콘(`components/pwa/InstalledAppHomeButton.tsx`, `components/header/Header.tsx` 는 자리만 옮김). 가는 곳은 전과 같은 `/app/`. 가끔(한 방문 최대 3번, 장바구니 · 결제 · 로그인 화면 제외) 아이콘 아래로 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾".
+- 펫렌즈 · 지구본 아이콘은 그림 파일만 새 그림으로 교체(`public/images/ui/pet-lens-128.webp` · `lang-globe-128.webp`, 파일 이름 그대로) — 펫렌즈 창 · 홈 워터마크 배지 · 국가/언어 창도 같은 새 그림.
+- 점검표: `tests/pwa-installation.test.mjs` 의 `<span>앱 홈</span>` 확인 한 줄을 `<span className="sr-only">앱 설치 안내</span>` 로.
+
+**④ ⚠ 확인 부탁 — APK 실행 확인 스크립트**
+- `scripts/verify-android-webview.mjs` 는 APK 를 켠 뒤 주소 `/app/index.html` 과 글자 "댕다방 앱 홈"을 기다립니다. 10-17 반영부터 설치한 앱은 `/app/` 에서 새 앱 홈(`/app/home-1/`)으로 가므로, 묶음 크기 문제를 풀면 이 단계에서 실패할 것입니다. 기대값(주소 · 글자, `tests/smart-fit-on-device-hybrid.test.mjs` 의 같은 문구 확인 포함)을 새 앱 홈에 맞춰 주세요. 스크립트는 손대지 않았습니다.
