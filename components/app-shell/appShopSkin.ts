@@ -1103,7 +1103,31 @@ ${PLX} main [data-petlens-observation-experience] p[class*="bg-cyan-50"][class*=
 ${PLX} main [data-daenglab-analysis-wallet]:not(#ddb-none) { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fff6d6;
     box-shadow: 0 0 0 1.5px #f3e1b0, 0 10px 16px -12px rgba(160, 110, 20, .5); }
 /* 코인 봉투는 행동·소리 분석 맨 앞(탭 바로 아래)으로 — 분석 전에 남은 코인을 먼저 보게(사용자 2026-10-17). 화면 순서만 바꿈(order), 코드 순서 · 동작 그대로 */
-${PLX} [data-petlens-observation-experience] > [data-daenglab-analysis-wallet] { order: -1; }
+/* 행동·소리 분석 정리(사용자 2026-10-17 "뒤죽박죽") — 화면 순서만: 코인 → 응급 안내 → 분석 소개(+촬영 방법 이름표) → 촬영 → 촬영 정보 · 동의 → 최근 분석 결과 보기 */
+${PLX} [data-petlens-observation-experience] > [data-daenglab-analysis-wallet] { order: -3; }
+${PLX} [data-petlens-observation-experience] > [data-petlens-emergency-preflight] { order: -2; }
+/* 앱 전용 접기(협업자 PetLensObservationExperience 의 AppFold — 웹은 display:contents · 버튼 hidden 이라 그대로) */
+${PLX} [data-app-fold] { display: block; }
+${PLX} [data-app-fold] > [data-app-fold-toggle] { ${PATCH_CREAM} display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 46px; font-size: 14px; }
+${PLX} [data-app-fold] > [data-app-fold-toggle] i { font-size: 11px; }
+${PLX} [data-app-fold] > [data-app-fold-toggle]:active { transform: scale(.97); }
+/* "촬영 방법 보기"는 소개 카드 안 작은 이름표(큰 버튼 두 개가 연달아 보이지 않게 — 사용자 2026-10-17) */
+${PLX} [data-app-fold="guide"] > [data-app-fold-toggle] { all: unset; box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; min-height: 34px; padding: 0 14px;
+    border-radius: 999px; background: #fff6c9; color: #8a5a0c; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 12.5px; cursor: pointer;
+    box-shadow: 0 0 0 1.5px #f3e1b0, 0 4px 8px -6px rgba(160, 110, 20, .5); -webkit-tap-highlight-color: transparent; }
+${PLX} [data-app-fold="guide"] > [data-app-fold-toggle]:active { transform: scale(.95); }
+${PLX} [data-app-fold][data-app-fold-open="false"] > [data-app-fold-body] { display: none; }
+${PLX} [data-app-fold][data-app-fold-open="true"] > [data-app-fold-body] { display: block; }
+/* "최근 분석 결과 보기"는 맨 아래(촬영 · 동의 다음)로 — 할 일 먼저, 지난 결과는 끝에. 화면 순서만(order) */
+${PLX} [data-petlens-observation-experience] > [data-app-fold="history"] { order: 1; }
+${PLX} [data-app-fold="history"][data-app-fold-open="true"] > [data-app-fold-body] { margin-top: 12px; }
+/* 촬영 — 연결 전 빈 검은 미리보기 칸은 앱에서 숨김(연결하면 협업자 전체 화면 촬영 창이 뜸 · 녹화 뒤 영상 확인 칸은 그대로).
+   같은 때 "세로 화면용 미리보기예요" 안내도 숨김. 버튼 2개(카메라 연결 · 영상 선택)는 나란히 큰 타일 */
+${PLX} [data-petlens-capture-stage][data-capture-viewport-active="false"] > [data-petlens-live-camera]:has(> video:not([src])) { display: none; }
+${PLX} div.grid:has(> [data-petlens-capture-stage] > [data-petlens-live-camera] > video:not([src])) > [data-petlens-orientation-status] { display: none; }
+${PLX} [data-petlens-capture-controls]:has(> [data-petlens-connect-camera]) { grid-template-columns: 1fr 1fr; }
+${PLX} [data-petlens-capture-controls]:has(> [data-petlens-connect-camera]) > button { flex-direction: column; gap: 8px; min-height: 96px; padding: 12px 8px; font-size: 13.5px; line-height: 1.3; white-space: normal; }
+${PLX} [data-petlens-capture-controls]:has(> [data-petlens-connect-camera]) > button > i { margin: 0; font-size: 24px; }
 ${PLX} main [data-daenglab-analysis-wallet]:not(#ddb-none)::before { ${TAPE} top: -7px; left: 50%; width: 52px; margin-left: -26px; rotate: -2deg;
     background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
 ${PLX} main [data-daenglab-analysis-wallet] strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 26px; line-height: 1.1; color: #c4456f; }

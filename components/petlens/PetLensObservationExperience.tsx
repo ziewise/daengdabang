@@ -1663,6 +1663,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </p>
                     </div>
                 </div>
+                <AppFold label="촬영 방법 보기" foldKey="guide">
                 <p
                     className="mt-4 rounded-xl border border-white/90 bg-white/75 px-3.5 py-3 text-xs font-bold leading-5 text-neutral-600 shadow-sm"
                     data-daenglab-service-description
@@ -1700,6 +1701,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 <p className="mt-2 rounded-xl border border-cyan-100 bg-cyan-50 px-3 py-2 text-[10px] font-black leading-4 text-cyan-900">
                     여러 강아지가 함께 있으면 아래 메모에 “화면 왼쪽 빨간 목줄 갈색 푸들”처럼 분석할 아이의 위치와 특징을 적어 주세요. 구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요.
                 </p>
+                </AppFold>
             </div>
 
             {engineState === "unavailable" && (
@@ -1750,11 +1752,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 )}
             </div>
 
-            <PetLensObservationHistory
-                items={history}
-                loading={historyLoading}
-                onOpen={openHistoryResult}
-            />
+            <AppFold label={`최근 분석 결과 보기${history.length ? ` · ${history.length}` : ""}`} foldKey="history">
+                <PetLensObservationHistory
+                    items={history}
+                    loading={historyLoading}
+                    onOpen={openHistoryResult}
+                />
+            </AppFold>
 
             <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4" data-petlens-emergency-preflight>
                 <p className="text-xs font-black text-rose-900">이럴 때는 촬영보다 병원 연락이 먼저예요</p>
@@ -2036,5 +2040,23 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 </div>
             </div>
         </section>
+    );
+}
+
+/**
+ * 앱 전용 접기(로컬 시안) — 행동·소리 분석 화면의 "촬영 방법" · "최근 분석 결과"를 앱에서만 버튼으로 접고 펼친다(사용자 결정 2026-10-17).
+ * 웹: 틀은 display:contents(화면에 없는 것과 같음) · 버튼은 hidden → 지금과 똑같이 전부 펼쳐 보임.
+ * 앱: components/app-shell/appShopSkin.ts 에서만 버튼을 보이고, 접힌 동안 안쪽을 숨긴다. 안쪽 내용 · 동작은 그대로.
+ */
+function AppFold({ label, foldKey, children }: { label: string; foldKey: string; children: React.ReactNode }) {
+    const [open, setOpen] = useState(false);
+    return (
+        <div className="contents" data-app-fold={foldKey} data-app-fold-open={open ? "true" : "false"}>
+            <button type="button" className="hidden" data-app-fold-toggle aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+                <span>{open ? label.replace("보기", "접기") : label}</span>
+                <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+            </button>
+            <div className="contents" data-app-fold-body>{children}</div>
+        </div>
     );
 }
