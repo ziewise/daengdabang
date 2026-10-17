@@ -20,6 +20,7 @@ import { HERO_AUTO_REGION_ID, HERO_WEATHER_REGION_OPTIONS, fetchHeroWeatherRepor
 import { pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
 import { haptic } from "../gestures";
 import { Tape } from "../sticker-kit";
+import { useShopMedia } from "./useShopMedia";
 import { Sheet } from "../show-parts";
 
 /* ── 협업자 히어로와 같은 지역 저장(같은 키 · 같은 이벤트) ── */
@@ -115,8 +116,10 @@ export default function ShopHero() {
         return () => { window.clearTimeout(t1); window.clearTimeout(t2); window.clearInterval(iv); };
     }, []);
 
-    const video = pickHeroVideo(context.weather, context.timeBucket, true); // 앱 = 세로(모바일) 영상
-    const breedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
+    // 영상 주소 — 네이티브 앱은 운영 사이트 파일, 화면 준비 전엔 빈 사진 자리(useShopMedia)
+    const media = useShopMedia();
+    const video = media?.(pickHeroVideo(context.weather, context.timeBucket, true)); // 앱 = 세로(모바일) 영상
+    const breedVideo = media?.(pickHeroBreedVideo(context.weather, context.timeBucket));
     const summary = heroWeatherSummary(report, "ko");
     const regionName = region === HERO_AUTO_REGION_ID ? "현재 위치" : KR_REGIONS.find((r) => r.id === region)?.name ?? "현재 위치";
 
@@ -132,8 +135,8 @@ export default function ShopHero() {
             <div className="shp-pol relative mt-4 bg-white p-2 pb-3">
                 <Tape className="-top-2 left-1/2 z-10 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" style={{ rotate: "-3deg" }} />
                 <div className="relative aspect-square overflow-hidden rounded-[3px] bg-[#f3ede6]">
-                    <video key={video} src={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true"
-                        className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />
+                    {video ? <video key={video} src={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} /> : null}
                 </div>
                 {/* 사진 설명 자리 — 왼쪽 끝: 지역 고르기 / 오른쪽 끝: 지역 · 온도 + 계절 시간 */}
                 <div className="mt-2.5 flex items-center justify-between gap-1.5">
@@ -148,7 +151,7 @@ export default function ShopHero() {
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
                 <Link href="/app/sticker/lab/" aria-label="저를 콕 눌러 분석하기 — 연구소로" onClick={() => haptic("light")}
                     className="shp-badge absolute -right-2.5 bottom-[4.2rem] z-10 block h-[4.4rem] w-[4.4rem] rounded-full">
-                    <video key={breedVideo} src={breedVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" />
+                    {breedVideo ? <video key={breedVideo} src={breedVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" /> : null}
                     <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
                 </Link>
             </div>

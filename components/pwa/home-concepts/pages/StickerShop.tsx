@@ -44,6 +44,7 @@ import { DiaryBody, DiaryTabs, PARTS_CSS, SectionLabel } from "../sticker-parts"
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
 import ShopHero, { SHOP_HERO_CSS } from "../shop/ShopHero";
 import ShopProductCard, { SHOP_CARD_CSS } from "../shop/ShopProductCard";
+import { useShopMedia } from "../shop/useShopMedia";
 import { SHOW_PARTS_CSS, Sheet } from "../show-parts";
 import { useI18n } from "@/lib/i18n";
 
@@ -201,6 +202,7 @@ function ShopRecommend() {
     const { productName } = useI18n();
     const [basisOpen, setBasisOpen] = useState(false); // 추천 기준 속지
     const [openReasons, setOpenReasons] = useState<ReadonlySet<string>>(() => new Set()); // 속지 안에서 "왜 추천했나요?"를 펼친 상품
+    const media = useShopMedia(); // 추천 상품 사진 주소(네이티브 앱은 운영 사이트 파일)
     if (!hydrated || !user) return null; // 비회원 — 자리 없음(웹과 같음)
 
     const petName = selectedPet?.name?.trim() || "우리 아이";
@@ -341,7 +343,7 @@ function ShopRecommend() {
                         <li key={it.product.id} className="flex items-start gap-3">
                             <span className="shp-mini-pol relative block w-[3.6rem] shrink-0 bg-white p-1 pb-2" style={{ rotate: `${i % 2 ? 3 : -3}deg` }}>
                                 <span aria-hidden="true" className="st-tape absolute -top-1.5 left-1/2 z-[1] h-2.5 w-7 -translate-x-1/2" style={{ background: ["rgba(255,200,215,.9)", "rgba(190,224,255,.9)", "rgba(255,232,170,.95)"][i % 3] }} />
-                                <span className="relative block aspect-square overflow-hidden bg-[#fff8ee]">{it.product.image ? <Image src={it.product.image} alt="" fill sizes="56px" className="object-contain" /> : null}</span>
+                                <span className="relative block aspect-square overflow-hidden bg-[#fff8ee]">{media && it.product.image ? <Image src={media(it.product.image) ?? it.product.image} alt="" fill sizes="56px" className="object-contain" /> : null}</span>
                             </span>
                             <span className="min-w-0 flex-1 pt-0.5">
                                 <span className="ah-display line-clamp-2 block text-[12.5px] leading-snug">{productName(it.product)}</span>
@@ -385,14 +387,16 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
         return () => window.clearInterval(t);
     }, [tile.images]);
     const title = featured ? (tile.titleFull ?? tile.title).replace(/\s*\n\s*/g, " ") : tile.title; // 큰 카드 제목도 한 줄
+    const media = useShopMedia(); // 사진 · 영상 주소(네이티브 앱은 운영 사이트 파일) — 준비 전엔 빈 사진 자리
     return (
         <Link href={tile.href} aria-label={`${title} — ${tile.desc}`} onClick={() => haptic("light")} className={`shp-promo relative block bg-white p-1.5 pb-2.5 ${featured ? "col-span-2" : ""}`}
             style={{ rotate: `${featured ? -0.6 : [0, 0.9, -0.8, 0.7, -0.9][i % 5]}deg` }}>
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,215,.9)", "rgba(190,224,255,.85)", "rgba(220,205,255,.9)", "rgba(200,240,215,.9)", "rgba(255,232,170,.9)"][i % 5]} />
             <span className={`relative block overflow-hidden rounded-[3px] ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`} style={{ background: "#f6efe8" }}>
-                {tile.video ? <video src={tile.video} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-                    : tile.images?.length ? tile.images.map((src, k) => <Image key={src} src={src} alt="" fill sizes="50vw" className={`object-cover transition-opacity duration-700 ${k === idx ? "opacity-100" : "opacity-0"}`} />)
-                        : tile.image ? <Image src={tile.image} alt="" fill sizes={featured ? "90vw" : "45vw"} className="object-cover" />
+                {!media ? null
+                    : tile.video ? <video src={media(tile.video)} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+                    : tile.images?.length ? tile.images.map((src, k) => <Image key={src} src={media(src) ?? src} alt="" fill sizes="50vw" className={`object-cover transition-opacity duration-700 ${k === idx ? "opacity-100" : "opacity-0"}`} />)
+                        : tile.image ? <Image src={media(tile.image) ?? tile.image} alt="" fill sizes={featured ? "90vw" : "45vw"} className="object-cover" />
                             : <i aria-hidden="true" className={`fa-solid ${tile.icon} absolute inset-0 grid place-items-center text-4xl text-[#e8c9b8]`} />}
             </span>
             <span className="block px-1 pt-2">
@@ -410,12 +414,13 @@ function BrandSticker({ brand, i }: { brand: (typeof BRANDS)[number]; i: number 
         const t = window.setInterval(() => setK((v) => (v + 1) % brand.slides.length), 4500);
         return () => window.clearInterval(t);
     }, [brand.slides.length]);
+    const media = useShopMedia(); // 브랜드 사진 주소(네이티브 앱은 운영 사이트 파일)
     return (
         <Link href={brand.href} aria-label={`${brand.name} ${brand.cta}`} onClick={() => haptic("light")} className="shp-brand relative block rounded-[12px] bg-white p-1.5 pb-2.5" style={{ rotate: `${i ? 0.8 : -0.8}deg` }}>
             {/* 기획전 카드처럼 위에 마스킹테이프 */}
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={i ? "rgba(255,226,150,.9)" : "rgba(200,240,215,.9)"} style={{ rotate: `${i ? 4 : -4}deg` }} />
             <span className="relative block aspect-[4/3] overflow-hidden rounded-[8px] bg-[#f6efe8]">
-                {brand.slides.map((sl, n) => <Image key={sl.image} src={sl.image} alt="" fill sizes="45vw" style={{ objectPosition: "pos" in sl ? sl.pos : undefined }} className={`object-cover transition-opacity duration-700 ${n === k ? "opacity-100" : "opacity-0"}`} />)}
+                {media && brand.slides.map((sl, n) => <Image key={sl.image} src={media(sl.image) ?? sl.image}alt="" fill sizes="45vw" style={{ objectPosition: "pos" in sl ? sl.pos : undefined }} className={`object-cover transition-opacity duration-700 ${n === k ? "opacity-100" : "opacity-0"}`} />)}
             </span>
             {/* 브랜드 이름만(설명 · 버튼 문구 없이) — 카드 전체가 브랜드 화면 링크 */}
             <span className="ah-display block px-1 pt-2 text-center text-[14.5px]">{brand.name}</span>

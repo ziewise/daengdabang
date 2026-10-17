@@ -18,6 +18,7 @@ import { GOODS_CONTEST_CATALOG, GOODS_CONTEST_GOAL } from "@/lib/goods-contest";
 import { loadGoodsContestSummary, type GoodsContestSummary } from "@/lib/customer-api";
 import type { GrowthHubPublishedContent } from "@/lib/growth-content";
 import { GROWTH_PROGRAM_CARDS, type GrowthProgramCard } from "@/lib/growth-programs";
+import { useShopMedia } from "@/components/pwa/home-concepts/shop/useShopMedia";
 import { BottomSheet, IconDot, Pill, PROGRAMS_LOGIN_HREF, Reveal, SectionHead, TEXT, TONES, toneOf } from "./ui";
 
 type Props = {
@@ -49,6 +50,7 @@ function statusLabel(summary: GoodsContestSummary) {
 function GoodsContestCard({ goods, contentReady }: { goods: GrowthHubPublishedContent["goods"]; contentReady: boolean }) {
     // 실시간 진행 — 실패하면 조용히 소개만 보여 준다
     const [summary, setSummary] = useState<GoodsContestSummary | null>(null);
+    const media = useShopMedia(); // 굿즈 사진 주소(네이티브 앱은 운영 사이트 파일)
     useEffect(() => {
         const controller = new AbortController();
         loadGoodsContestSummary(controller.signal).then(setSummary).catch(() => undefined);
@@ -70,7 +72,7 @@ function GoodsContestCard({ goods, contentReady }: { goods: GrowthHubPublishedCo
                 {/* 굿즈 사진 — 천천히 다가오는 움직임 */}
                 <Link href="/goods-contest/" className="relative block h-[214px] overflow-hidden bg-[#f6efe6]" aria-label="굿즈 공모전 전체 이미지와 상품 보기">
                     <span className="pv-kenburns absolute inset-0 block">
-                        <Image src="/images/goods/goods-hero-lineup.webp" alt="댕다방 굿즈 공모전 전체 구성" fill sizes="(max-width: 480px) 100vw, 448px" className="object-cover" />
+                        {media && <Image src={media("/images/goods/goods-hero-lineup.webp") ?? "/images/goods/goods-hero-lineup.webp"} alt="댕다방 굿즈 공모전 전체 구성" fill sizes="(max-width: 480px) 100vw, 448px" className="object-cover" />}
                     </span>
                     <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(31,26,24,0)_45%,rgba(31,26,24,0.55)_100%)]" aria-hidden="true" />
                     {/* 실시간 마감 — 불러왔을 때만 크게 */}
