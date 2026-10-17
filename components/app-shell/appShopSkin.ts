@@ -1089,6 +1089,33 @@ ${PLX} [data-daenglab-single-dog-auto] { ${PATCH_MINT} border-width: 2px; outlin
 ${PLX} [data-petlens-observation-experience] label:has(> input[type="checkbox"]) { border: 0; border-radius: 4px 4px 14px 4px; background: #fff3f6; box-shadow: 0 0 0 1.5px #f6c9d6; }
 ${PLX} [data-petlens-capture-controls] { gap: 10px; }
 ${PLX} [data-petlens-orientation-status] { border: 0; border-radius: 4px 4px 12px 4px; background: #fffaf2; box-shadow: 0 0 0 1.5px #f3e6d6; }
+/* 펫렌즈 다듬기(사용자 결정 2026-10-17) — 겉모양만, 동작 · 문구 그대로
+   ① "댕다방 연구소" 무지개 글자 · "신규서비스"는 맨 위 제목에만(분석 고르기 탭 · 행동·소리 첫 카드에서는 숨김 — 같은 글자가 세 번 반복돼 복잡) */
+${PLX} [data-petlens-observation-tab] :is(.ddb-daenglab-wordmark, .ddb-daenglab-new-service),
+${PLX} [data-petlens-observation-experience] :is(.ddb-daenglab-wordmark, .ddb-daenglab-new-service) { display: none; }
+/* ② 안내 상자 — 온디바이스 스캔 = 민트 포스트잇, 여러 강아지 메모 = 노란 포스트잇 + 테이프(색만 바꾼 웹 상자 → 종이 메모) */
+${PLX} main [data-petlens-observation-experience] p[data-daenglab-on-device-policy] { border: 0; border-radius: 4px 4px 14px 4px; background: #e9f8f0; color: #2f6b52;
+    box-shadow: 0 6px 10px -8px rgba(40, 110, 80, .45); rotate: -.4deg; }
+${PLX} main [data-petlens-observation-experience] p[class*="bg-cyan-50"][class*="border-cyan-100"] { position: relative; margin-top: 14px; border: 0; border-radius: 4px 4px 14px 4px;
+    background: #fff3b8; color: #6b5420; box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); rotate: .4deg; }
+${PLX} main [data-petlens-observation-experience] p[class*="bg-cyan-50"][class*="border-cyan-100"]::before { ${TAPE} top: -7px; left: 22px; width: 40px; height: 12px; rotate: -4deg; }
+/* ③ 코인 카드(:not(#ddb-none)은 마이·연구소 공통 종이 카드 규칙보다 우선하려는 표시일 뿐 — 그런 id 는 없음) — 노란 코인 봉투(앱 마이의 코인 봉투와 같은 결): 남은 코인은 카페24 큰 분홍 숫자, 분석 가능 횟수는 흰 이름표 */
+${PLX} main [data-daenglab-analysis-wallet]:not(#ddb-none) { position: relative; border: 0; border-radius: 8px 8px 20px 8px; background: #fff6d6;
+    box-shadow: 0 0 0 1.5px #f3e1b0, 0 10px 16px -12px rgba(160, 110, 20, .5); }
+${PLX} main [data-daenglab-analysis-wallet]:not(#ddb-none)::before { ${TAPE} top: -7px; left: 50%; width: 52px; margin-left: -26px; rotate: -2deg;
+    background: repeating-linear-gradient(90deg, rgba(255,214,140,.95) 0 7px, rgba(255,232,180,.95) 7px 14px); }
+${PLX} main [data-daenglab-analysis-wallet] strong { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 26px; line-height: 1.1; color: #c4456f; }
+${PLX} main [data-daenglab-analysis-wallet] strong + span { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: 999px; background: #fff; color: #8a5a0c;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; box-shadow: 0 0 0 1.5px #f3e1b0; }
+/* ④ 동의 체크칸 — 기본 네모 대신 체크 스티커(댕자랑 올리기 창과 같은 모양 · 같은 input 그대로) */
+${PLX} [data-petlens-observation-experience] label:has(> input[type="checkbox"]) > input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; margin: 0;
+    flex-shrink: 0; border-radius: 7px; background: #fff; box-shadow: inset 0 0 0 2px #f4a9bf; cursor: pointer; transition: background-color .2s, box-shadow .2s; }
+${PLX} [data-petlens-observation-experience] label:has(> input[type="checkbox"]) > input[type="checkbox"]:checked { background: #e8628e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 7'/%3E%3C/svg%3E") center / 16px no-repeat;
+    box-shadow: inset 0 0 0 2px #e8628e, 0 3px 6px -3px rgba(200, 70, 110, .6); }
+${PLX} [data-petlens-observation-experience] label:has(> input[type="checkbox"]) > input[type="checkbox"]:focus-visible { outline: 2px solid #f283a3; outline-offset: 2px; }
+/* ⑤ 대상 지정 다시 하기 — 크림 와펜(누를 수 없을 땐 흐리게) */
+${PLX} main [data-daenglab-clear-target-anchor][data-daenglab-clear-target-anchor] { ${PATCH_CREAM} min-height: 40px; font-size: 13px; }
+${PLX} main [data-daenglab-clear-target-anchor]:disabled { opacity: .45; }
 
 /* ── 31) 외부 판매점 후기(/reviews) · 파트너 문의(/partner) — 앱에서 드물게 가도 다른 화면과 같은 완성도로(사용자 2026-10-16) ──
    문구 · 링크 · 제출 · 개인정보 동의 동작은 그대로 */
