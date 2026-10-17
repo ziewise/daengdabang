@@ -568,6 +568,7 @@ export default function PetLensClient() {
                         {photoLoading && <p className="mt-2 text-xs font-black text-indigo-700">사진 준비 중</p>}
                     </div>
 
+                    <AppPetInfoFold name={name} age={age} size={size} coat={coat} activity={activity}>
                     <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-1">
                         <label>
                             <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
@@ -605,6 +606,7 @@ export default function PetLensClient() {
                             </select>
                         </label>
                     </div>
+                    </AppPetInfoFold>
 
                     <div>
                         <span className="mb-2 block text-xs font-black text-neutral-500">관심 포인트</span>
@@ -684,5 +686,40 @@ export default function PetLensClient() {
             </div>
             )}
         </main>
+    );
+}
+
+/**
+ * 앱 전용 반려견 정보 접기(로컬 시안) — 사진 분석의 이름 · 나이 · 크기 · 모질 · 활동량은 등록 프로필에서 채워져 있어
+ * 앱에서만 "코스 · 성견 · 중형 · 보통 · 높음 · 수정" 한 줄로 접고, 누르면 같은 입력칸이 펼쳐진다(사용자 결정 2026-10-17).
+ * 웹: 틀은 display:contents(화면에 없는 것과 같음) · 버튼은 hidden → 지금과 똑같이 전부 펼쳐 보임.
+ * 앱: components/app-shell/appShopSkin.ts 에서만 버튼을 보이고, 접힌 동안 안쪽을 숨긴다. 입력칸 · 값 · 저장 동작은 그대로.
+ */
+function AppPetInfoFold({ name, age, size, coat, activity, children }: {
+    name: string;
+    age: string;
+    size: PetProfile["size"];
+    coat: PetProfile["coat"];
+    activity: PetProfile["activity"];
+    children: React.ReactNode;
+}) {
+    const [open, setOpen] = useState(false);
+    // 요약 글자 — 아래 select 의 보이는 이름과 같음
+    const sizeLabel = { small: "소형", medium: "중형", large: "대형" }[size];
+    const coatLabel = { short: "단모", medium: "보통 털", long: "장모" }[coat];
+    const activityLabel = { low: "활동 낮음", normal: "활동 보통", high: "활동 높음" }[activity];
+    const summary = [name.trim() || "이름 없음", age.trim(), sizeLabel, coatLabel, activityLabel].filter(Boolean).join(" · ");
+    return (
+        <div className="contents" data-app-fold="pet-info" data-app-fold-open={open ? "true" : "false"}>
+            <button type="button" className="hidden" data-app-fold-toggle aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+                <span data-app-fold-title>반려견 정보</span>
+                <span data-app-fold-summary>{summary}</span>
+                <span data-app-fold-action>
+                    {open ? "접기" : "수정"}
+                    <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+                </span>
+            </button>
+            <div className="contents" data-app-fold-body>{children}</div>
+        </div>
     );
 }

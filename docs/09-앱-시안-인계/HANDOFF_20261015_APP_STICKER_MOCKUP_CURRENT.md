@@ -253,7 +253,7 @@ git config user.email "smlee@ziewise.com"
 - 번들(`daengdabang-sticker-mockup.bundle`)을 임시 clone에 풀어 시안 브랜치·인계 문서·스크립트가 정상으로 들어오는 것 확인.
 - 미검증: 서버 환경에서의 설치·실행, 실제 APK 안에서의 동작.
 
-## 6. 협업자 파일을 고친 곳 (UI 연결용 최소 수정, 12개)
+## 6. 협업자 파일을 고친 곳 (UI 연결용 최소 수정, 13개)
 | 파일 | 고친 내용 |
 |---|---|
 | `components/site/ConditionalChrome.tsx` | 앱 모드(네이티브 앱 · 설치 앱)면 웹 상단바·푸터 대신 `AppShell`. 앱에서 웹 로그인 주소로 오면 앱 틀만(앱 로그인으로 보냄). 브라우저의 `/app`은 협업자 규칙(웹 상단바만) 그대로 |
@@ -269,6 +269,7 @@ git config user.email "smlee@ziewise.com"
 | `app/mypage/profile/page.tsx` | 맨 아래 "회원 탈퇴" 작은 링크(기존 /mypage/withdrawal) 추가 — `hidden`이라 웹은 그대로(웹은 마이페이지 메뉴에 있음), 앱 CSS에서만 보임(앱은 메뉴를 숨겨서) |
 | `app/products/ProductsClient.tsx` | 검색 묶음 `section`에 `data-products-filter` 표시 + 앱 전용 `AppProductFilter`(필터 버튼 · 속지, 뿌리가 `hidden`이라 웹은 그대로) 추가. 앱 CSS에서만 검색칸 + 필터 버튼 한 줄(카테고리 · 세부 · 정렬 칸 숨김, 위로 붙음). 속지에서 고르면 같은 `setSort` · 카테고리 바꾸기(`setCategory` + `setSubcategory("all")`)를 부름. 세부 분류는 앱에서 쓰지 않음(사용자 결정 2026-10-17) |
 | `components/petlens/PetLensObservationExperience.tsx` | 행동·소리 분석 첫 화면의 소개 카드 안내 글(설명 · 숫자 3칸 · 촬영 팁 · 온디바이스 · 여러 강아지 메모)과 최근 분석 기록을 앱 전용 `AppFold` 틀로 감쌈(파일 맨 아래). 틀은 `display:contents` · 버튼 `hidden`이라 웹은 그대로(확인: `?app=0`에서 버튼 숨김 · 전부 펼침 · 원래 순서). 앱 CSS에서만 "촬영 방법 보기" 작은 이름표 · "최근 분석 결과 보기" 버튼(맨 아래)으로 접고, 화면 순서를 코인 → 응급 안내 → 소개 → 촬영 → 정보 · 동의 → 최근 결과로(order). 연결 전 빈 검은 미리보기 칸은 앱에서 숨김 — 연결하면 협업자 전체 화면 촬영 창(`data-petlens-capture-viewport`)이 그대로 뜸(사용자 2026-10-17) |
+| `app/pet-lens/PetLensClient.tsx` | 사진 분석의 반려견 정보 입력칸(이름 · 나이 · 크기 · 모질 · 활동량)을 앱 전용 `AppPetInfoFold` 틀로 감쌈(파일 맨 아래). 틀은 `display:contents` · 버튼 `hidden`이라 웹은 그대로(확인: `?app=0`에서 버튼 숨김 · 입력칸 그대로). 앱 CSS에서만 "반려견 정보 · 코스 · 성견 · 중형 … · 수정" 한 줄로 접고 누르면 같은 입력칸이 펼쳐짐. 같은 날 앱 CSS만: 사진 4칸 16:10으로 낮춤, 결과 전 빈 안내 상자 숨김, "사진" · "관심 포인트" 제목 글꼴 통일(사용자 2026-10-17) |
 
 ### 앱 모드 판별 범위 (협의 필요)
 "앱으로 볼 때" = ① 네이티브 앱 ② 홈 화면 설치 웹앱 ③ **브라우저에서 `/app/` 주소에 한 번 들어온 뒤의 같은 탭**(sessionStorage). ③ 때문에 배포 후에는 운영 웹의 `/app/`(앱처럼 열기 안내)로 들어온 웹 방문자에게도 그 탭에서 앱 틀이 보인다. 기능 변경은 아니지만 협업자와 범위를 정해야 한다.

@@ -1055,12 +1055,28 @@ ${PLX} [data-petlens-photo-view] > span:first-child { margin-bottom: 4px; font-f
 ${PLX} [data-petlens-photo-view] > span:last-of-type { border: 6px solid #fff; border-bottom-width: 18px; border-radius: 3px; background: #fff8ee;
   box-shadow: 0 0 0 1px #f0e2d6, 0 10px 16px -10px rgba(110, 80, 40, .5); rotate: -1deg; }
 ${PLX} [data-petlens-photo-view]:nth-child(even) > span:last-of-type { rotate: 1deg; }
+/* 사진 칸 높이 줄임(정사각 → 16:10, 사용자 2026-10-17) — 빈 칸 4개가 한 화면 반을 차지하지 않게. 찍은 사진은 칸에 맞춰 보임(보내는 사진은 원본 그대로) */
+${PLX} [data-petlens-photo-view] > span:last-of-type { aspect-ratio: 16 / 10; }
 ${PLX} [data-petlens-photo-view] > span:last-of-type:not(:has(img)) { background: repeating-linear-gradient(135deg, #fffaf2 0 8px, #fff3e6 8px 16px); color: #c9a493; }
 ${PLX} [data-petlens-page-multiview-upload] > p { padding: 8px 10px; border-radius: 4px 4px 12px 4px; background: #fff6c9; color: #7a5a20; }
 /* 이름 · 나이 2열, 크기 · 모질 · 활동량 3열 — 촘촘한 메모 한 장처럼 */
-${PLX} main main form.surface > div.grid:has(> label > input.input) { grid-template-columns: 1fr 1fr; gap: 10px; }
-${PLX} main main form.surface > div.grid:has(> label > select.input) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+${PLX} main main form.surface div.grid:has(> label > input.input) { grid-template-columns: 1fr 1fr; gap: 10px; }
+${PLX} main main form.surface div.grid:has(> label > select.input) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 ${PLX} main main form.surface label > span:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+/* "사진" · "관심 포인트" 제목도 다른 칸 제목(정면 · 이름 · 크기)과 같은 카페24 갈색(전에는 회색 작은 글씨) */
+${PLX} main main form.surface > div > span[class*="font-black"]:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; color: #8a5a0c; }
+/* 반려견 정보 접기(협업자 PetLensClient 의 AppPetInfoFold — 웹은 display:contents · 버튼 hidden 이라 그대로).
+   접힘: 크림 와펜 한 줄 "반려견 정보 | 코스 · 성견 · 중형 … | 수정 ▾" · 펼침: 같은 입력칸 */
+${PLX} [data-app-fold="pet-info"] { display: block; }
+${PLX} form [data-app-fold="pet-info"] > [data-app-fold-toggle] { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 52px; padding: 8px 10px 8px 16px; text-align: left; -webkit-tap-highlight-color: transparent; } /* 모양은 공통 접기 버튼(크림 와펜), 안쪽만 3칸 배치 */
+${PLX} [data-app-fold="pet-info"] > [data-app-fold-toggle]:active { transform: scale(.98); }
+${PLX} [data-app-fold="pet-info"] [data-app-fold-title] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px; color: #8a5a0c; }
+${PLX} [data-app-fold="pet-info"] [data-app-fold-summary] { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 13px; color: #5c4a42; }
+${PLX} [data-app-fold="pet-info"] [data-app-fold-action] { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; border-radius: 999px; background: #ffe1ea; color: #c4456f;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; box-shadow: 0 0 0 1.5px #f6a9bf; }
+${PLX} [data-app-fold="pet-info"] [data-app-fold-action] i { font-size: 9px; }
+${PLX} [data-app-fold="pet-info"][data-app-fold-open="false"] > [data-app-fold-body] { display: none; }
+${PLX} form [data-app-fold="pet-info"][data-app-fold-open="true"] > [data-app-fold-body] { display: grid; gap: 12px; margin-top: 14px; } /* form — 공통 접기 규칙(display:block)보다 우선 */
 ${PLX} main main form.surface :is(input.input, select.input) { height: 42px; padding-left: 12px; padding-right: 8px; font-size: 14px; }
 /* 관심 포인트 — 체크박스 대신 고르는 스티커 칩(누르면 분홍 · 체크 동작은 그대로) */
 ${PLX} main main form.surface label[class*="inline-flex"]:has(> input[type="checkbox"]) { position: relative; height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: #fff; color: #7d6a61;
@@ -1068,9 +1084,8 @@ ${PLX} main main form.surface label[class*="inline-flex"]:has(> input[type="chec
 ${PLX} main main form.surface label[class*="inline-flex"]:has(> input[type="checkbox"]:checked) { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2px #f283a3, 0 4px 7px -5px rgba(200, 70, 110, .5); }
 ${PLX} main main form.surface label[class*="inline-flex"] > input[type="checkbox"] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 ${PLX} main main form.surface label[class*="inline-flex"]:has(> input:focus-visible) { outline: 2px solid #f283a3; outline-offset: 2px; }
-/* 결과 자리 — 점선 메모 */
-${PLX} main main section > div.surface.text-center { border: 2px dashed #ecd5c8; background: #fffbea; box-shadow: none; padding: 24px 18px; }
-${PLX} main main section > div.surface.text-center h2 { font-size: 1.05rem; text-decoration: none; }
+/* 결과 전 빈 자리("추천 결과가 여기에 표시됩니다") — 앱에서는 숨김(사용자 2026-10-17). 결과가 나오면 협업자 결과 화면이 그 자리에 그대로 나옴 */
+${PLX} main main section > div.surface.text-center:has(> i.fa-camera-retro) { display: none; }
 
 /* ── 행동 · 소리 분석 ── */
 ${PLX} [data-petlens-observation-experience] { gap: 18px; }
