@@ -68,7 +68,9 @@ const FOLD = `${S} [data-app-detail-fold]:has([data-supplier-original-detail], [
 const TRYON = 'html.ddb-app-mode section[role="dialog"][aria-labelledby="pet-tryon-title"]';
 /* 주간 사진 비교 창(협업자 WeeklyPhotoComparison) */
 const WK = "html.ddb-app-mode [data-weekly-photo-comparison]";
-const DLG = `html.ddb-app-mode :is([data-weekly-photo-comparison], [role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"])`;
+const DLG = `html.ddb-app-mode :is([data-weekly-photo-comparison], [role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"], [role="alertdialog"][aria-labelledby="daenglab-consent-prompt-title"], [role="alertdialog"][aria-labelledby="daenglab-deferred-choice-title"])`;
+/* 펫렌즈 행동·소리 분석의 확인 창 2개(동의 먼저 확인 · 분석 완료 이메일 알림) — 위 DLG 공통 스티커북 창에 포함 */
+const PL_ALERT = 'html.ddb-app-mode [role="alertdialog"]:is([aria-labelledby="daenglab-consent-prompt-title"], [aria-labelledby="daenglab-deferred-choice-title"])';
 /* 옵션 고르기 판(장바구니 담기 · 바로 구매) */
 const SHEET = `${S} [data-purchase-option-sheet]`;
 /* 상품 목록 화면(상품군 · 추천 셀렉트 · 신상품 · 기획전 · 브랜드 · 전체 상품) */
@@ -881,6 +883,20 @@ ${DLG} input[type="checkbox"], ${DLG} input[type="radio"] { accent-color: #e8628
 ${DLG} :is(div, section, article, p)[class*="rounded-xl"][class*="border"], ${DLG} :is(div, section, article)[class*="rounded-lg"][class*="border"] {
   border-color: transparent; border-radius: 6px 6px 16px 6px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 6px 10px -8px rgba(110, 80, 40, .4); }
 ${DLG} div[class*="rounded-full"][class*="place-items-center"], ${DLG} div[class*="rounded-full"][class*="items-center"][class*="justify-center"]:is([class*="h-14"], [class*="h-16"]) { box-shadow: 0 0 0 3px #fff, 0 5px 9px -5px rgba(110, 80, 40, .45); }
+/* 펫렌즈 확인 창 — 맨 위 아이콘은 분홍 동그란 스티커, 보조 버튼(닫기 · 아니오)은 크림 와펜, 본문 글꼴 나눔스퀘어라운드.
+   "분석 완료 알림" 창은 짧은 이름(p#title)이 테이프 이름표, 긴 질문(h2)은 카페24 일반 글자. 문구 · 버튼 동작 그대로 */
+${PL_ALERT} { position: relative; padding-top: 26px; } /* relative — 위 테이프가 창에 붙게 */
+html.ddb-app-mode :is([data-daenglab-consent-prompt], [data-daenglab-deferred-choice]) { display: grid; place-items: center; } /* 휴대폰에서도 화면 가운데(웹은 위에 붙음) */
+${PL_ALERT} > span[aria-hidden="true"]:first-child { border-radius: 999px; background: #ffe1ea; color: #d4447a; box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f6a9bf, 0 6px 10px -6px rgba(200, 70, 110, .5); }
+${PL_ALERT} :is(button, a).btn-secondary { ${PATCH_CREAM} }
+${PL_ALERT} p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #6b5a52; }
+${PL_ALERT} p#daenglab-deferred-choice-title { display: inline-flex; width: fit-content; padding: 5px 14px 4px; rotate: -1deg; color: #9c2f54; letter-spacing: 0;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 13px;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 8px, rgba(255,222,232,.95) 8px 16px); }
+${PL_ALERT} h2#daenglab-deferred-choice-description { display: block; width: auto; padding: 0; rotate: 0deg; clip-path: none; background: none; color: #3d2f2a;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.05rem; }
+${PL_ALERT} p[role="alert"] { border: 0; border-radius: 4px 4px 14px 4px; box-shadow: 0 0 0 1.5px #f6c6c6; }
 /* 입혀보기 — 보라 테이프 제목 · 보라 와펜 · 영문 꼬리표(DDB SMART FIT) 숨김 */
 ${TRYON} :is(h2, h3)[id] { color: #5b3fbf; background: repeating-linear-gradient(90deg, rgba(207,193,250,.95) 0 8px, rgba(227,217,255,.95) 8px 16px); }
 ${TRYON}::before { background: repeating-linear-gradient(90deg, rgba(207,193,250,.95) 0 7px, rgba(227,217,255,.95) 7px 14px); }
