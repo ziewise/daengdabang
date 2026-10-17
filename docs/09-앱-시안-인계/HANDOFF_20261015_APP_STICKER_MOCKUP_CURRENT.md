@@ -261,6 +261,18 @@ git config user.email "smlee@ziewise.com"
 - 못 본 것: 비밀번호 변경 창(이 계정 화면에 버튼 없음) · 비회원 굿즈 선택 창 · 케어톡 대화 말풍선(질문을 보내야 함) · 실제 상품 추천 카드(로컬 추천 0개) · 실기기 글꼴 1~2px 차이.
 
 ## 6. 협업자 파일을 고친 곳 (UI 연결용 최소 수정, 16개 — 2026-10-17 GitHub main 과 대조해 표의 16개와 정확히 일치 확인)
+
+**한눈에 보기(사용자 확인 2026-10-17)** — 기능 · 서버 · 결제 · DB 는 바꾸지 않음. 16개는 네 가지 성격뿐이다.
+- **앱에서만 보이는 틀 추가(7개)**: 접기 버튼 등 — 웹에서는 `hidden` · `display:contents` 라 화면 그대로. 펫렌즈 4개(`PetLensObservationExperience` · `PetLensObservationResult` · `PetLensAnalysisSummary` · `app/pet-lens/PetLensClient`), 상품 상세(`ProductTabs`), 상품 목록 필터(`ProductsClient`), 회원 탈퇴 링크(`app/mypage/profile`).
+- **목록 · 함수 내보내기(5개)**: 앱 화면에서 같이 쓰려고 `export` 만 붙임, 내용 그대로 — `LocalCareFinder` · `GrowthHub` · `GrowthPolicySummary` · `GrowthShareCard` · `CommerceCommunityExpansion`.
+- **앱일 때만 다른 화면 보여 주기(3개)**: 앱이면 웹 상단바 대신 앱 틀(`ConditionalChrome`) · 매일 댕생활은 앱 화면(`app/treasure-mine/page`) · 인트로 영상 건너뛰기(`IntroSplash`). 웹에서는 전과 같음.
+- **선택 항목 추가(1개)**: 상담 창 첫 화면 자리(`ChatWidget` 의 선택 prop `empty`) — 넘기지 않으면(웹) 전과 같음.
+- 덧붙임: 앱에서의 화면 이동(웹 로그인 주소 → 앱 로그인, 앱 화면이 있는 웹 주소 → 앱 화면, 결과로 화면 이동)은 협업자 파일이 아니라 우리 앱 틀(`components/app-shell/AppShell.tsx`)에 있다. 웹 방문자에게는 동작하지 않음.
+
+**협업자와 함께 정할 것(사용자 결정 2026-10-17 — 배포를 막지 않음)**
+1. **코인 테스트 지급**: 시험 계정에 행동·소리 분석용 코인을 넣어 줄지 · 얼마나.
+2. **회원 등급**: 앱 마이에 "댕린이" 같은 등급 이름이 보이는데(사용자 결정 표시), 실제 등급 기준 · 이름을 정할지.
+(그 밖의 항목 — 앱 모양 범위는 "설치한 앱에서만"으로 운영 중, APK 일정 · 웹 쪽 오류 2건 · 지난 기록 서버 응답은 배포 후 확인하거나 나중에 공유.)
 | 파일 | 고친 내용 |
 |---|---|
 | `components/site/ConditionalChrome.tsx` | 앱 모드(네이티브 앱 · 설치 앱)면 웹 상단바·푸터 대신 `AppShell`. 앱에서 웹 로그인 주소로 오면 앱 틀만(앱 로그인으로 보냄). 브라우저의 `/app`은 협업자 규칙(웹 상단바만) 그대로 |
