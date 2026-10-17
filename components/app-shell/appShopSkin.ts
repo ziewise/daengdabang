@@ -136,7 +136,7 @@ html.ddb-app-mode, html.ddb-app-mode * { scrollbar-width: none; }
 html.ddb-app-mode::-webkit-scrollbar, html.ddb-app-mode *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 /* 본문 폭 — 앱 본문(AppShell main, 세로 flex) 안에서 가운데 정렬(mx-auto)한 웹 화면 칸은 내용 폭만큼 늘어나 버림
    (개인정보처리방침의 760px 표 → 칸 792px → 오른쪽 글자가 화면 밖에서 잘림, 2026-10-17 화면 점검). 칸은 화면 폭까지만, 넓은 표는 원래 가로 넘김 칸 안에서 밀어 봄 */
-html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; min-width: 0; }
+html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; width: -webkit-fill-available; width: stretch; min-width: 0; } /* 바깥 여백(빈 장바구니 카드 좌우 16px 등)을 뺀 폭 — 100% 고정이면 여백만큼 화면 밖으로 넘침 */
 /* 한글 줄바꿈 — 낱말 중간에서 끊기지 않게("보여/요" · "베/타" · "있어/요.", 2026-10-17 화면 점검). 앱 전체(창 · 속지 포함, body 에서 물려받음).
    띄어쓰기 없는 긴 글자(이메일 · 주소)만 칸 끝에서 끊음. break-all 같은 개별 지정은 그대로 우선 */
 html.ddb-app-mode body { word-break: keep-all; overflow-wrap: break-word; }
@@ -1441,6 +1441,26 @@ ${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="rounded-full"] 
 ${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="bg-indigo-600"] { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2px #f283a3, 0 4px 7px -5px rgba(200, 70, 110, .5); }
 ${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="rounded-full"]:active { transform: scale(.95); }
 ${PLX} [data-daenglab-guardian-follow-up] fieldset label > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+
+/* ── 비밀번호 재설정(/forgot-password, 앱 로그인의 "비밀번호를 잊으셨나요?") — 앱 로그인과 같은 결(2026-10-17 로그아웃 점검).
+   웹 로고 줄은 숨김(앱 상단바에 로고) · 카드 = 테이프 종이 · 열쇠 = 자물쇠 그림 · 안내 = 노란 포스트잇 · 버튼 = 분홍 와펜. 입력 · 버튼 동작 그대로 ── */
+${S}[data-app-page="forgot-password"] main div.min-h-screen { min-height: 0; padding-top: 18px; }
+${S}[data-app-page="forgot-password"] main div.min-h-screen > a:first-child { display: none; }
+${S}[data-app-page="forgot-password"] main div.min-h-screen > div[class*="max-w-md"]:not(#ddb-none) { position: relative; border-radius: 8px 8px 22px 8px; background: #fffdf6;
+    box-shadow: 0 0 0 1.5px #f3e6d6, 0 14px 24px -16px rgba(110, 80, 40, .55); }
+${S}[data-app-page="forgot-password"] main div.min-h-screen > div[class*="max-w-md"]::before { ${TAPE} top: -7px; left: 50%; width: 60px; margin-left: -30px; rotate: -2deg; }
+${S}[data-app-page="forgot-password"] main div[class*="max-w-md"] > div:first-child:has(> i.fa-key) { width: 4.4rem; height: 4.4rem; background: url("/images/ui/stickers/login-lock.webp") center / contain no-repeat;
+    box-shadow: none; filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .22)); }
+${S}[data-app-page="forgot-password"] main div[class*="max-w-md"] > div:first-child > i.fa-key { visibility: hidden; }
+${S}[data-app-page="forgot-password"] main div[class*="max-w-md"] h1 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.45rem; color: #3d2f2a; }
+${S}[data-app-page="forgot-password"] main div[class*="max-w-md"] h1 + p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #7a6a62; }
+${S}[data-app-page="forgot-password"] main form > label { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+${S}[data-app-page="forgot-password"] main form > section[class*="border-amber"]:not(#ddb-none) { position: relative; border: 0; border-radius: 4px 4px 14px 4px; background: #fff3b8; rotate: -.4deg;
+    box-shadow: 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${S}[data-app-page="forgot-password"] main form > section[class*="border-amber"] p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #7a5a20; }
+${S}[data-app-page="forgot-password"] main form > button[class*="from-amber"] { ${PATCH_PINK} height: 50px; }
+${S}[data-app-page="forgot-password"] main form > button[class*="from-amber"]:disabled { opacity: .55; }
+${S}[data-app-page="forgot-password"] main div[class*="max-w-md"] > a:last-child { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #a08a7e; text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── 연구소(펫렌즈) 3D 그림 아이콘(사용자 2026-10-17 업로드 · 기존 자물쇠 · 이메일 그림 재사용) — 글자 아이콘 자리에 그림만 바꿔 끼움.
    ① 카메라·마이크 연결 · ② 촬영한 영상 선택 · ③ 전체 총평 · ④~⑦ 그래프 행동 · 소리 · 건강 · 우선 확인 · ⑧ 코인 환급 ·
