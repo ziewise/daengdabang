@@ -1442,6 +1442,51 @@ ${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="bg-indigo-600"]
 ${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="rounded-full"]:active { transform: scale(.95); }
 ${PLX} [data-daenglab-guardian-follow-up] fieldset label > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
 
+/* ── 연구소(펫렌즈) 3D 그림 아이콘(사용자 2026-10-17 업로드 · 기존 자물쇠 · 이메일 그림 재사용) — 글자 아이콘 자리에 그림만 바꿔 끼움.
+   ① 카메라·마이크 연결 · ② 촬영한 영상 선택 · ③ 전체 총평 · ④~⑦ 그래프 행동 · 소리 · 건강 · 우선 확인 · ⑧ 코인 환급 ·
+   기존 그림: 동의 확인 창 · 원본 보관 안내 = 자물쇠(login-lock), 이메일로 받기 · 분석 완료 알림 창 = 이메일(inquiry-email).
+   버튼 · 문구 · 동작 그대로. :not(#ddb-none)은 앞의 동그라미 스티커 규칙보다 우선하려는 표시(그런 id 없음) ── */
+/* ①② 촬영 타일 — 큰 그림 */
+${PLX} :is([data-petlens-connect-camera], [data-petlens-select-recorded-video]) > i:not(#ddb-none) { display: inline-block; width: 50px; height: 50px; margin: 0; border-radius: 999px;
+    background: #fff center / 80% no-repeat; box-shadow: 0 0 0 2px rgba(255, 255, 255, .7), 0 4px 8px -4px rgba(120, 70, 50, .4); } /* 분홍 타일 위에서 분홍 그림이 묻히지 않게 흰 동그라미 스티커 바탕 */
+${PLX} :is([data-petlens-connect-camera], [data-petlens-select-recorded-video]) > i::before { content: none; }
+${PLX} [data-petlens-connect-camera] > i:not(#ddb-none) { background-image: url("/images/ui/stickers/lab-camera.webp"); }
+${PLX} [data-petlens-select-recorded-video] > i:not(#ddb-none) { background-image: url("/images/ui/stickers/lab-video.webp"); }
+/* ③ 전체 총평 — 분홍 동그라미 대신 그림 */
+${PLX} [data-daenglab-overall-summary] span[class*="h-11"][class*="w-11"]:not(#ddb-none) { width: 54px; height: 54px; border-radius: 0; background: url("/images/ui/stickers/lab-summary.webp") center / contain no-repeat;
+    box-shadow: none; filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .22)); }
+${PLX} [data-daenglab-overall-summary] span[class*="h-11"][class*="w-11"] > i { visibility: hidden; }
+/* ④~⑦ 그래프 제목 앞 그림 · 신호 없는 칸 그림 */
+${PLX} [data-daenglab-inference-line-graph] h4 > i:not(#ddb-none) { display: inline-block; width: 38px; height: 38px; margin-right: 6px; vertical-align: -11px;
+    background: center / contain no-repeat; filter: drop-shadow(0 3px 3px rgba(120, 70, 50, .2)); }
+${PLX} [data-daenglab-inference-line-graph] h4 > i::before { content: none; }
+${PLX} [data-daenglab-inference-empty-state] > div > span:first-child:not(#ddb-none) { width: 46px; height: 46px; border-radius: 0; background: center / contain no-repeat; box-shadow: none;
+    filter: drop-shadow(0 3px 3px rgba(120, 70, 50, .2)); }
+${PLX} [data-daenglab-inference-empty-state] > div > span:first-child > i { visibility: hidden; }
+${PLX} :is([data-daenglab-inference-line-graph="behavior"] h4 > i, [data-daenglab-inference-empty-state="behavior"] > div > span:first-child):not(#ddb-none) { background-image: url("/images/ui/stickers/lab-behavior.webp"); }
+${PLX} :is([data-daenglab-inference-line-graph="sound"] h4 > i, [data-daenglab-inference-empty-state="sound"] > div > span:first-child):not(#ddb-none) { background-image: url("/images/ui/stickers/lab-sound.webp"); }
+${PLX} :is([data-daenglab-inference-line-graph="health"] h4 > i, [data-daenglab-inference-empty-state="health"] > div > span:first-child):not(#ddb-none) { background-image: url("/images/ui/stickers/lab-health.webp"); }
+${PLX} :is([data-daenglab-inference-line-graph="priority"] h4 > i, [data-daenglab-inference-empty-state="priority"] > div > span:first-child):not(#ddb-none) { background-image: url("/images/ui/stickers/lab-priority.webp"); }
+/* ⑧ 코인 환급 — 결과 맨 위 환급 안내(동그라미 대신 그림) · 촬영 화면 환급 안내(글자 앞 작은 그림) */
+${PLX} [data-petlens-observation-experience] > [data-daenglab-refund-notice] > span:first-child:not(#ddb-none) { width: 48px; height: 48px; border-radius: 0;
+    background: url("/images/ui/stickers/lab-refund.webp") center / contain no-repeat; box-shadow: none; filter: drop-shadow(0 4px 4px rgba(40, 110, 80, .22)); }
+${PLX} [data-petlens-observation-experience] > [data-daenglab-refund-notice] > span:first-child > i { visibility: hidden; }
+${PLX} [data-daenglab-refund-notice] p > i.fa-rotate-left:not(#ddb-none) { display: inline-block; width: 24px; height: 24px; margin-right: 6px; vertical-align: -6px;
+    background: url("/images/ui/stickers/lab-refund.webp") center / contain no-repeat; }
+${PLX} [data-daenglab-refund-notice] p > i.fa-rotate-left::before { content: none; }
+/* 기존 그림 — 자물쇠(동의 확인 창 · 원본 보관 안내) · 이메일(분석 완료 알림 창 · 이메일로 받기) */
+html.ddb-app-mode [role="alertdialog"]:is([aria-labelledby="daenglab-consent-prompt-title"], [aria-labelledby="daenglab-deferred-choice-title"]) > span[aria-hidden="true"]:first-child:not(#ddb-none) {
+    width: 60px; height: 60px; border-radius: 0; background: center / contain no-repeat; box-shadow: none; filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .22)); }
+html.ddb-app-mode [role="alertdialog"]:is([aria-labelledby="daenglab-consent-prompt-title"], [aria-labelledby="daenglab-deferred-choice-title"]) > span[aria-hidden="true"]:first-child > i { visibility: hidden; }
+html.ddb-app-mode [role="alertdialog"][aria-labelledby="daenglab-consent-prompt-title"] > span[aria-hidden="true"]:first-child:not(#ddb-none) { background-image: url("/images/ui/stickers/login-lock.webp"); }
+html.ddb-app-mode [role="alertdialog"][aria-labelledby="daenglab-deferred-choice-title"] > span[aria-hidden="true"]:first-child:not(#ddb-none) { background-image: url("/images/ui/stickers/inquiry-email.webp"); }
+${PLX} [data-daenglab-video-retention-notice] span[class*="h-8"]:not(#ddb-none) { width: 36px; height: 36px; background: url("/images/ui/stickers/login-lock.webp") center / contain no-repeat; box-shadow: none;
+    filter: drop-shadow(0 3px 3px rgba(120, 70, 50, .2)); }
+${PLX} [data-daenglab-video-retention-notice] span[class*="h-8"] > i { visibility: hidden; }
+${PLX} [data-petlens-observation-email] > div:first-child > span:first-child:not(#ddb-none) { width: 50px; height: 50px; background: url("/images/ui/stickers/inquiry-email.webp") center / contain no-repeat; box-shadow: none;
+    filter: drop-shadow(0 4px 4px rgba(120, 70, 50, .22)); }
+${PLX} [data-petlens-observation-email] > div:first-child > span:first-child > i { visibility: hidden; }
+
 /* ── 행동 · 소리 분석 ── */
 ${PLX} [data-petlens-observation-experience] { gap: 18px; scroll-margin-top: calc(var(--header-height, 72px) + 16px); } /* 결과가 나오면 AppShell 이 이 화면 맨 위로 옮김 — 상단바 아래 여백 */
 /* 소개 카드 — 테이프 붙인 종이 · 설명 글은 작은 메모 · 숫자 3칸은 동그란 스티커 */
