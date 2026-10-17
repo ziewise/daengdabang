@@ -1172,6 +1172,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         onUnauthorized={logout}
                     />
                 )}
+                <AppFold label="보호자 답변 메모 남기기" foldKey="memo">
                 <PetLensObservationFollowUp
                     result={result}
                     requestId={resultRequestId}
@@ -1182,6 +1183,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         void refreshHistory();
                     }}
                 />
+                </AppFold>
             </section>
         );
     }

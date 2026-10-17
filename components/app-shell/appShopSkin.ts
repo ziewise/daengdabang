@@ -1198,6 +1198,240 @@ ${PLX} main article[data-pet-product="true"] button i.fa-heart::before { content
 ${PLX} main main form.surface > p[class*="border-rose-200"] { border: 0; border-radius: 4px 4px 14px 4px; background: #fff0f3; color: #b23a5e; box-shadow: 0 0 0 1.5px #f6c6d2;
     font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 13px; }
 
+/* ── 행동·소리 분석 결과(협업자 PetLensObservationResult · Experience 결과 화면) — 스티커북으로 다시 짬(사용자 2026-10-17 "다 진행해. 완벽하게").
+   순서(order, 화면만): 총평 → 긴급도 → 증상 신호 → 다시 촬영 팁 → 분석 대상 → 짖음 맥락 번역 → [시간별 그래프 보기] → 영양 제안 → [관찰 근거 자세히 보기] → 원본 보관 안내.
+   긴급(응급 · 당일)이면 긴급도가 맨 위(협업자 순서 그대로). 접기는 협업자 파일의 앱 전용 틀(AppResultFold · AppFold, 웹은 display:contents · 버튼 hidden).
+   카드: 총평 = 테이프 종이 · 긴급도 = 상태색 메모(관찰 민트 · 당일 노랑 · 응급 분홍 · 판단 어려움 하늘) · 분석 대상 = 민트 테이프 종이 ·
+   맥락 번역 = 하늘 메모 + 폴라로이드 후보 · 그래프 = 종이 위 점선 모눈 · 영양 = 민트 테이프 종이 · 이메일 = 하늘 편지 · 보호자 메모 = 보라 메모.
+   문구 · 점수 · 그래프 데이터 · 링크 · 저장 · 발송 동작은 그대로. 같은 총평 문장이 긴급도 카드에 한 번 더 나오던 것만 앱에서 숨김.
+   :not(#ddb-none)은 마이 · 연구소 공통 종이 카드 규칙(:not 3개)보다 우선하려는 표시일 뿐(그런 id 없음) ── */
+${PLX} [data-petlens-observation-result] { gap: 18px; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; word-break: keep-all; overflow-wrap: anywhere; }
+${PLX} [data-petlens-observation-result] :is(h2, h3, h4, h5) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: 0; color: #3d2f2a; }
+${PLX} [data-petlens-observation-result] p[class*="tracking-"] { letter-spacing: 0; }
+
+/* 화면 순서 */
+${PLX} [data-petlens-observation-result] > [data-daenglab-urgency-priority="high"] { order: -1; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-overall-summary] { order: 0; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-urgency-priority="routine"] { order: 1; }
+${PLX} [data-petlens-observation-result] > [data-petlens-observation-symptoms] { order: 2; }
+${PLX} [data-petlens-observation-result] > [data-petlens-observation-retake] { order: 3; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-target-attribution] { order: 4; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-bark-context-translator] { order: 5; }
+${PLX} [data-petlens-observation-result] > [data-app-fold="flow"] { order: 6; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-nutrition-recommendations] { order: 7; }
+${PLX} [data-petlens-observation-result] > [data-app-fold="evidence"] { order: 8; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-video-retention-notice] { order: 9; }
+
+/* 공통 — 결과 카드는 그라데이션 · 큰 그림자 대신 종이 메모(모서리 한쪽만 둥글게) */
+${PLX} [data-petlens-observation-result] section:not(#ddb-none) { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background-image: none; }
+${PLX} [data-petlens-observation-result] > section:not(#ddb-none), ${PLX} [data-petlens-observation-result] > [data-app-fold] > [data-app-fold-body] > section:not(#ddb-none) {
+    padding: 18px 16px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110, 80, 40, .5); background-color: #fffdf6; }
+/* 칩 — 흰 칼선 스티커 */
+${PLX} [data-petlens-observation-result] span[class*="rounded-full"]:not([class*="h-"]) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
+/* ① 전체 총평 — 테이프 종이 · 아이콘은 분홍 동그란 스티커 · 분야별 핵심은 색 스티커 */
+${PLX} [data-petlens-observation-result] > [data-daenglab-overall-summary]:not(#ddb-none) { overflow: visible; }
+${PLX} [data-daenglab-overall-summary]::before { ${TAPE} top: -7px; left: 50%; width: 60px; margin-left: -30px; rotate: -2deg; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-overall-summary][class*="border-rose"]:not(#ddb-none) { background-color: #fff3f6; box-shadow: 0 0 0 1.5px #f6c6d2, 0 12px 20px -14px rgba(200, 70, 110, .45); }
+${PLX} [data-daenglab-overall-summary] span[class*="h-11"][class*="w-11"] { border-radius: 999px; background: #f2789d; box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f6a9bf, 0 6px 10px -6px rgba(200, 70, 110, .55); }
+${PLX} [data-daenglab-overall-summary] p[class*="tracking-"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #d4447a; }
+${PLX} [data-daenglab-overall-summary] h2 { font-size: 1.15rem; }
+${PLX} [data-daenglab-overall-summary] > p { font-size: 14px; line-height: 1.75; color: #4a3a33; }
+${PLX} [data-daenglab-overall-summary-highlights] { border-top: 2px dashed #f0dccf; }
+${PLX} [data-daenglab-overall-summary-highlights] > p { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; color: #a08a7e; }
+${PLX} [data-daenglab-overall-summary-highlights] li { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; box-shadow: 0 0 0 1.5px color-mix(in srgb, currentColor 30%, transparent); }
+${PLX} [data-daenglab-overall-summary-highlights] li[class*="bg-indigo"] { background: #f1ecff; color: #6a4fc4; }
+${PLX} [data-daenglab-overall-summary-highlights] li[class*="bg-cyan"] { background: #e6f3ff; color: #2f5f8a; }
+${PLX} [data-daenglab-overall-summary-highlights] li[class*="bg-amber"] { background: #fff3b8; color: #8a5a0c; }
+${PLX} [data-daenglab-overall-summary-highlights] li[class*="bg-rose"] { background: #ffe1ea; color: #c4456f; }
+
+/* ② 긴급도 — 상태색 메모. 총평과 같은 문장(h3 다음 p)은 바로 위 총평에 있어 앱에서만 숨김 */
+${PLX} [data-petlens-observation-result] > [data-observation-urgency]:not(#ddb-none) { box-shadow: 0 8px 14px -10px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-observation-result] > [data-observation-urgency="observe"]:not(#ddb-none) { background-color: #e9f8f0; color: #2f6b52; }
+${PLX} [data-petlens-observation-result] > [data-observation-urgency="same_day"]:not(#ddb-none) { background-color: #fff3b8; color: #7a5a20; }
+${PLX} [data-petlens-observation-result] > [data-observation-urgency="emergency"]:not(#ddb-none) { background-color: #ffe1ea; color: #9c2f54; box-shadow: 0 0 0 2px #f283a3, 0 10px 16px -10px rgba(200, 70, 110, .55); }
+${PLX} [data-petlens-observation-result] > [data-observation-urgency="unclear"]:not(#ddb-none) { background-color: #e6f3ff; color: #2f5f8a; }
+${PLX} [data-observation-urgency]::before { ${TAPE} top: -7px; left: 22px; width: 44px; height: 12px; rotate: -4deg; }
+${PLX} [data-observation-urgency] h3 { color: inherit; font-size: 1.1rem; }
+${PLX} [data-observation-urgency] > h3 + p { display: none; }
+${PLX} [data-observation-urgency] span[class*="rounded-full"] { background: #fff; color: inherit; font-size: 11.5px; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .06); }
+${PLX} [data-observation-urgency] span[class*="rounded-full"]:first-child { box-shadow: 0 0 0 1.5px currentColor; }
+${PLX} [data-observation-urgency] ul { font-size: 13px; }
+${PLX} [data-observation-urgency] > div[class*="rounded-xl"] { border-radius: 4px 4px 12px 4px; background: #fff; color: #4a3a33; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; font-size: 13px;
+    box-shadow: 0 4px 8px -6px rgba(110, 80, 40, .45); rotate: -.3deg; }
+${PLX} [data-observation-urgency] > a[href*="map.naver.com"] { ${PATCH_PINK} display: flex; width: 100%; }
+${PLX} [data-observation-urgency] > p:last-child { border-top: 2px dashed currentColor; border-top-color: color-mix(in srgb, currentColor 22%, transparent); font-size: 11px; }
+
+/* ③ 증상 신호 — 노란 메모(안쪽 흰 쪽지) · ④ 다시 촬영 팁 — 하늘 메모 */
+${PLX} [data-petlens-observation-result] > [data-petlens-observation-symptoms]:not(#ddb-none) { background-color: #fff3b8; box-shadow: 0 8px 14px -10px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-observation-symptoms] > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; color: #8a5a0c; }
+${PLX} [data-petlens-observation-symptoms] article { border-radius: 4px 4px 12px 4px; background: #fff; box-shadow: 0 4px 8px -6px rgba(110, 80, 40, .45); }
+${PLX} [data-petlens-observation-result] > [data-petlens-observation-retake]:not(#ddb-none) { background-color: #e6f3ff; box-shadow: 0 8px 14px -10px rgba(40, 70, 110, .45); }
+${PLX} [data-petlens-observation-retake] > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; color: #2f5f8a; }
+${PLX} [data-petlens-observation-retake] > p + p { font-size: 13px; color: #2f5f8a; }
+
+/* ⑤ 분석 대상 — 흰 종이 + 민트 테이프 · 구분 근거는 민트 스티커 · 발성 시점은 하늘 스티커 */
+${PLX} [data-petlens-observation-result] > [data-daenglab-target-attribution]:not(#ddb-none) { background-color: #fffdf8; }
+${PLX} [data-petlens-observation-result] > [data-daenglab-target-attribution="ambiguous"]:not(#ddb-none),
+${PLX} [data-petlens-observation-result] > [data-daenglab-target-attribution="not_visible"]:not(#ddb-none) { background-color: #fff3b8; }
+${PLX} [data-daenglab-target-attribution]::before { ${TAPE} top: -7px; right: 26px; width: 46px; height: 12px; rotate: 4deg;
+    background: repeating-linear-gradient(90deg, rgba(186,236,206,.92) 0 7px, rgba(214,245,226,.92) 7px 14px); }
+${PLX} [data-daenglab-target-attribution] p[class*="tracking-"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #2f8a63; }
+${PLX} [data-daenglab-target-attribution] h3 { font-size: 1.1rem; }
+${PLX} [data-daenglab-target-attribution] span[class*="rounded-full"] { background: #fff; color: #6b5a52; font-size: 11.5px; box-shadow: 0 0 0 1.5px #f1e3da; }
+${PLX} [data-daenglab-target-attribution] > div:first-child > span[class*="rounded-full"] { background: #e9f8f0; color: #2f6b52; box-shadow: 0 0 0 1.5px #a9dcc2; }
+${PLX} [data-daenglab-target-attribution] div[class*="border-t"] { border-top: 2px dashed #cfeadb; }
+${PLX} [data-daenglab-target-attribution] div[class*="border-t"] > p { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; color: #2f6b52; }
+${PLX} [data-daenglab-target-attribution] div[class*="border-t"] span[class*="rounded-full"] { background: #e6f3ff; color: #2f5f8a; box-shadow: 0 0 0 1.5px #b5d5f2; }
+${PLX} [data-daenglab-target-attribution] > p { font-size: 13px; color: #5c4a42; }
+
+/* ⑥ 짖음·발성 맥락 번역 — 하늘 메모 · 후보는 흰 폴라로이드 쪽지(순위 분홍 스티커 · 근거 % 노란 스티커 · 시간 분홍 글씨) */
+${PLX} [data-petlens-observation-result] > [data-daenglab-bark-context-translator]:not(#ddb-none) { background-color: #e6f3ff; box-shadow: 0 8px 14px -10px rgba(40, 70, 110, .45); }
+${PLX} [data-daenglab-bark-context-translator] p[class*="tracking-"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #2f5f8a; }
+${PLX} [data-daenglab-bark-context-translator] > div:first-child > span { background: #fff; color: #2f5f8a; font-size: 11px; box-shadow: 0 0 0 1.5px #b5d5f2; }
+${PLX} [data-daenglab-bark-context-translator] > p { font-size: 12.5px; color: #4a5f72; }
+${PLX} [data-daenglab-bark-context-translator] > div[class*="border-amber"] { border: 0; border-radius: 4px 4px 12px 4px; background: #fff3b8; color: #7a5a20; }
+/* 후보 카드(맥락 번역 · 행동 패턴 후보 공통 CandidateCards) */
+${PLX} [data-petlens-observation-result] :is([data-daenglab-bark-context-translator], [data-petlens-observation-behavior]) article:not(#ddb-none) { border: 0; border-radius: 3px; background: #fff; padding: 14px; rotate: -.6deg;
+    box-shadow: 0 0 0 1.5px #f1e3da, 0 8px 12px -9px rgba(110, 80, 40, .5); }
+${PLX} [data-petlens-observation-result] :is([data-daenglab-bark-context-translator], [data-petlens-observation-behavior]) article:nth-child(even):not(#ddb-none) { rotate: .6deg; }
+${PLX} [data-petlens-observation-result] article span[class*="bg-cyan-600"] { background: #f2789d; color: #fff; padding: 3px 9px 2px; box-shadow: 0 0 0 2px #fff, 0 3px 6px -3px rgba(200, 70, 110, .55); font-size: 11px; }
+${PLX} [data-petlens-observation-result] article > div:first-child > span[class*="bg-indigo-50"] { background: #fff3b8; color: #8a5a0c; font-size: 11.5px; }
+${PLX} [data-petlens-observation-result] article > div:first-child p[class*="text-sm"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 15px; color: #3d2f2a; }
+${PLX} [data-petlens-observation-result] article ul { font-size: 12.5px; color: #5c4a42; }
+${PLX} [data-petlens-observation-result] article ul span[class*="text-indigo-600"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #d4447a; }
+${PLX} [data-petlens-observation-result] article > p[class*="bg-neutral-50"] { border-radius: 4px 4px 12px 4px; background: #fffaf2; color: #8a766c; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+
+/* [시간별 그래프 보기] · [관찰 근거 자세히 보기] — 크림 와펜 / 작은 노란 이름표(큰 버튼이 연달아 보이지 않게) */
+${PLX} [data-petlens-observation-result] > [data-app-fold="evidence"] > [data-app-fold-toggle] { all: unset; box-sizing: border-box; display: flex; width: fit-content; margin: 0 auto; align-items: center; gap: 6px;
+    min-height: 36px; padding: 0 16px; border-radius: 999px; background: #fff6c9; color: #8a5a0c; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 12.5px; box-shadow: 0 0 0 1.5px #f3e1b0, 0 4px 8px -6px rgba(160, 110, 20, .5); }
+${PLX} [data-petlens-observation-result] > [data-app-fold="evidence"] > [data-app-fold-toggle]:active { transform: scale(.95); }
+${PLX} [data-petlens-observation-result] > [data-app-fold][data-app-fold-open="true"] > [data-app-fold-body] { display: grid; gap: 18px; margin-top: 14px; }
+
+/* ⑦ 시간별 그래프(펼치면) — 종이 · 분석 범위는 상태 스티커 · 그래프 판은 흰 종이 + 점선 모눈 · 한 줄 설명은 노란 포스트잇 */
+${PLX} [data-daenglab-inference-confidence] { overflow: visible; }
+${PLX} [data-daenglab-inference-confidence] > div:first-child p[class*="tracking-"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #d4447a; }
+${PLX} [data-daenglab-inference-confidence] > div:first-child h3 { font-size: 1.15rem; }
+${PLX} [data-daenglab-inference-confidence] > div:first-child > span { background: #fff3b8; color: #8a5a0c; border: 0; font-size: 11px; box-shadow: 0 0 0 1.5px #f1d77e; }
+${PLX} [data-daenglab-inference-confidence] > p { font-size: 12.5px; color: #7a6a62; }
+${PLX} [data-daenglab-overall-inference-state]:not(#ddb-none) { border: 0; border-radius: 4px 4px 14px 4px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-daenglab-overall-inference-state] > p { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; color: #a08a7e; }
+${PLX} [data-daenglab-overall-inference-state] div[class*="from-indigo-600"] { background: #e9f8f0; color: #2f6b52; box-shadow: 0 0 0 1.5px #a9dcc2; }
+${PLX} [data-daenglab-overall-inference-state] div[class*="from-rose-600"] { background: #ffe1ea; color: #9c2f54; box-shadow: 0 0 0 1.5px #f6a9bf; }
+${PLX} [data-daenglab-overall-inference-state] div[class*="from-"] p:first-child { color: inherit; opacity: .75; }
+${PLX} [data-daenglab-overall-inference-state] div[class*="from-"] p + p { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; }
+${PLX} [data-daenglab-overall-inference-state] div[class*="bg-neutral-100"] { background: #fff; box-shadow: 0 0 0 1.5px #f1e3da; }
+/* 그래프 판 · 빈 칸 판 */
+${PLX} :is([data-daenglab-inference-line-graph], [data-daenglab-inference-empty-state]):not(#ddb-none) { border: 0; border-radius: 6px 6px 16px 6px; background: #fffdf8; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 14px -10px rgba(110, 80, 40, .45); }
+${PLX} [data-daenglab-inference-line-graph] > div:first-child p[class*="text-xs"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11.5px; }
+${PLX} [data-daenglab-inference-line-graph] > div:first-child h4 { font-size: 1.05rem; }
+${PLX} [data-daenglab-inference-line-graph] > div:first-child > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11px; box-shadow: 0 0 0 1.5px color-mix(in srgb, currentColor 30%, transparent); }
+${PLX} [data-daenglab-inference-line-graph] svg text { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+${PLX} [data-daenglab-inference-line-graph] svg text:is([fill="#64748b"], [fill="#334155"], [fill="#475569"]) { fill: #a08a7e; }
+${PLX} [data-daenglab-inference-line-graph] svg line[stroke-dasharray] { stroke: #f0dccf; }
+${PLX} [data-daenglab-inference-line-graph] svg line[stroke="#64748b"] { stroke: #c9b0a0; }
+${PLX} [data-daenglab-inference-series-legend] > li { border-radius: 999px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-daenglab-inference-series-legend] > li > span:nth-child(2) { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; color: #4a3a33; }
+${PLX} [data-daenglab-inference-series-legend] > li > span:last-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${PLX} [data-daenglab-inference-line-graph] > p[class*="text-xs"]:not([data-daenglab-inference-missing-timeline]):not([role="alert"]) { font-size: 12px; color: #8a766c; }
+${PLX} [data-daenglab-inference-comment]:not(#ddb-none) { border: 0; border-radius: 4px 4px 14px 4px; background: #fff3b8; rotate: -.4deg; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .5); }
+${PLX} [data-daenglab-inference-comment] > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #8a5a0c; }
+${PLX} [data-daenglab-inference-comment] > p + p { color: #5c4a2a; }
+${PLX} :is([data-daenglab-inference-missing-timeline], [data-daenglab-inference-static-summary], [data-daenglab-inference-legacy]):not(#ddb-none) { border: 0; border-radius: 4px 4px 12px 4px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-daenglab-health-nutrition-guidance]:not(#ddb-none) { border: 0; border-radius: 4px 4px 12px 4px; font-size: 11.5px; }
+${PLX} [data-daenglab-health-nutrition-guidance][class*="emerald"] { background: #e9f8f0; color: #2f6b52; }
+${PLX} [data-daenglab-health-nutrition-guidance][class*="amber"] { background: #fff3b8; color: #7a5a20; }
+/* 결과표(휴대폰 카드형) — 크림 종이 · 1위는 분홍 스티커 · 추론 %는 노란 스티커 */
+${PLX} [data-daenglab-inference-result-cards]:not(#ddb-none) { border: 0; border-radius: 4px 4px 14px 4px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-daenglab-inference-result-cards] h5 { font-size: 14px; }
+${PLX} [data-daenglab-inference-result-cards] article { border-radius: 4px 4px 12px 4px; background: #fff; box-shadow: 0 4px 8px -6px rgba(110, 80, 40, .45); }
+${PLX} [data-daenglab-inference-result-cards] article span[class*="h-8"][class*="w-8"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; background: #fffaf2; color: #a08a7e; box-shadow: 0 0 0 1.5px #f1e3da; }
+${PLX} [data-daenglab-inference-result-cards] article span[class*="h-8"][class*="w-8"][class*="text-white"] { background: #f2789d; color: #fff; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f6a9bf; }
+${PLX} [data-daenglab-inference-result-cards] article span[class*="rounded-lg"] { border-radius: 999px; background: #fff3b8; color: #8a5a0c; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${PLX} [data-daenglab-inference-result-cards] article p[class*="text-[13px]"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; }
+${PLX} [data-daenglab-inference-empty-state] span[class*="h-10"] { border-radius: 999px; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f1e3da; }
+${PLX} [data-daenglab-target-hold-report]:not(#ddb-none) { border: 0; border-radius: 6px 6px 18px 6px; background: #fff3b8; box-shadow: 0 8px 14px -10px rgba(110, 80, 40, .5); }
+
+/* ⑧ 영양 제안 — 흰 종이 + 민트 테이프 · 상품은 폴라로이드 사진 · 비교하기는 분홍 와펜 */
+${PLX} [data-petlens-observation-result] > [data-daenglab-nutrition-recommendations]:not(#ddb-none) { overflow: visible; background-color: #fffdf8; }
+${PLX} [data-daenglab-nutrition-recommendations]::before { ${TAPE} top: -7px; left: 26px; width: 46px; height: 12px; rotate: -4deg;
+    background: repeating-linear-gradient(90deg, rgba(186,236,206,.92) 0 7px, rgba(214,245,226,.92) 7px 14px); }
+${PLX} [data-daenglab-nutrition-recommendations] > div:first-child p[class*="tracking-"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; color: #2f8a63; }
+${PLX} [data-daenglab-nutrition-recommendations] > div:first-child > span { border: 0; background: #e9f8f0; color: #2f6b52; font-size: 11px; box-shadow: 0 0 0 1.5px #a9dcc2; }
+${PLX} [data-daenglab-nutrition-recommendations] > p { font-size: 12.5px; color: #7a6a62; }
+${PLX} [data-daenglab-nutrition-recommendations] article:not(#ddb-none) { border: 0; border-radius: 4px 4px 14px 4px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-daenglab-nutrition-recommendations] article span[class*="bg-emerald-50"] { background: #e9f8f0; color: #2f6b52; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 11px; }
+${PLX} [data-daenglab-nutrition-recommendations] article h4 { font-size: 15px; }
+${PLX} [data-daenglab-nutrition-recommendations] article div[class*="border-neutral-100"]:not(#ddb-none) { border: 0; border-radius: 4px; background: #fff; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .45); }
+${PLX} [data-daenglab-nutrition-recommendations] article div[class*="h-24"][class*="w-24"] { border-radius: 3px; box-shadow: 0 0 0 4px #fff, 0 0 0 5px #efe2d6; rotate: -1.5deg; }
+${PLX} [data-daenglab-nutrition-recommendations] article span[class*="text-emerald-700"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #2f8a63; }
+${PLX} [data-daenglab-nutrition-recommendations] article span[class*="text-sm"][class*="font-black"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 15px; color: #6b4708; }
+${PLX} [data-daenglab-nutrition-recommendations] a[class*="bg-emerald-700"] { ${PATCH_PINK} min-height: 36px; padding: 0 14px; font-size: 12px; }
+${PLX} [data-daenglab-nutrition-recommendations] a[href="/category/food"] { ${PATCH_CREAM} }
+${PLX} [data-daenglab-nutrition-recommendations] > p:last-child { border: 0; border-radius: 4px 4px 12px 4px; background: #fff3b8; color: #7a5a20; font-size: 11.5px; }
+
+/* ⑨ 관찰 근거(펼치면) — 촬영 품질 칩 · 관찰 쪽지(시간은 분홍 스티커) · 행동 패턴 후보 */
+${PLX} [data-petlens-observation-quality] > p:first-child, ${PLX} [data-petlens-observation-evidence] > div:first-child > p:first-child, ${PLX} [data-petlens-observation-behavior] > p:first-child {
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; color: #8a5a0c; }
+${PLX} [data-petlens-observation-quality] span[class*="rounded-full"] { background: #fff; color: #6b5a52; font-size: 11.5px; box-shadow: 0 0 0 1.5px #f1e3da; }
+${PLX} [data-petlens-observation-evidence] li { border-radius: 4px 4px 12px 4px; background: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-petlens-observation-evidence] li > span:first-child { background: #ffe1ea; color: #c4456f; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: 0 0 0 1.5px #f6a9bf; }
+${PLX} [data-petlens-observation-evidence] li p + p { font-size: 13px; color: #4a3a33; }
+${PLX} [data-petlens-observation-result] > [data-app-fold] > [data-app-fold-body] > [data-petlens-observation-behavior]:not(#ddb-none) { padding: 0; background: transparent; box-shadow: none; }
+
+/* ⑩ 원본 보관 안내 — 작은 크림 쪽지(바로 아래 이메일 하늘 편지와 색이 겹치지 않게) · 방패는 흰 동그란 스티커 */
+${PLX} [data-petlens-observation-result] > [data-daenglab-video-retention-notice]:not(#ddb-none) { padding: 14px; background-color: #fffaf2; box-shadow: inset 0 0 0 1.5px #f3e6d6; }
+${PLX} [data-daenglab-video-retention-notice] span[class*="h-8"] { color: #8a766c; box-shadow: 0 0 0 1.5px #f1e3da; }
+${PLX} [data-daenglab-video-retention-notice] p { color: #7a6a62; }
+
+/* 결과 화면 맨 위(새로 관찰 · 코인 사용) · 환급 안내 — 민트 메모 */
+${PLX} [data-petlens-observation-experience] > [data-daenglab-refund-notice]:not(#ddb-none) { border: 0; border-radius: 4px 4px 16px 4px; background: #e9f8f0; color: #2f6b52; box-shadow: 0 8px 14px -10px rgba(40, 110, 80, .45); }
+${PLX} [data-petlens-observation-experience] > [data-daenglab-refund-notice] > span:first-child { background: #4fae84; box-shadow: 0 0 0 3px #fff; }
+${PLX} [data-petlens-observation-experience] > [data-daenglab-refund-notice] p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
+/* 분석 보내는 중 · 자동으로 계속되는 중(대기) · 기록 주소로 연 결과 확인 안내 — 하늘 메모(진행) · 노랑(취소) · 분홍(오류), 제목 카페24 */
+${PLX} :is([data-daenglab-observation-submitting], [data-daenglab-observation-deferred]):not(#ddb-none) { border: 0; border-radius: 6px 6px 16px 6px; background: #e6f3ff; background-image: none; color: #2f5f8a;
+    box-shadow: 0 8px 14px -10px rgba(40, 70, 110, .45); }
+${PLX} :is([data-daenglab-observation-submitting], [data-daenglab-observation-deferred]) > p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #2f5f8a; }
+${PLX} :is([data-daenglab-observation-submitting], [data-daenglab-observation-deferred]) > p:first-child > i { color: #5b8fc7; }
+${PLX} :is([data-daenglab-observation-submitting], [data-daenglab-observation-deferred]) > p + p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #4a5f72; }
+${PLX} main [data-petlens-observation-deep-link]:not(#ddb-none) { border: 0; border-radius: 6px 6px 16px 6px; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; box-shadow: 0 8px 14px -10px rgba(110, 80, 40, .45); }
+${PLX} main [data-petlens-observation-deep-link]:is([data-petlens-observation-deep-link="resolving"], [data-petlens-observation-deep-link="processing"]) { background: #e6f3ff; color: #2f5f8a; }
+${PLX} main [data-petlens-observation-deep-link="cancelled"] { background: #fff3b8; color: #7a5a20; }
+${PLX} main [data-petlens-observation-deep-link]:not([data-petlens-observation-deep-link="resolving"]):not([data-petlens-observation-deep-link="processing"]):not([data-petlens-observation-deep-link="cancelled"]) { background: #ffe1ea; color: #9c2f54; }
+${PLX} main [data-petlens-observation-deep-link] > span:first-child { background: #fff; box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .06); }
+${PLX} main [data-petlens-observation-deep-link] p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${PLX} main [data-petlens-observation-deep-link] a { ${PATCH_CREAM} }
+
+/* ⑪ 이메일로 받기 — 하늘 편지 · 봉투는 분홍 동그란 스티커 · 등록 이메일은 흰 쪽지 */
+${PLX} [data-petlens-observation-experience] > [data-petlens-observation-email]:not(#ddb-none) { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #eef6ff; background-image: none;
+    box-shadow: 0 0 0 1.5px #d3e6f7, 0 12px 20px -14px rgba(40, 70, 110, .45); }
+${PLX} [data-petlens-observation-email]::before { ${TAPE} top: -7px; left: 50%; width: 52px; margin-left: -26px; rotate: 2deg; }
+${PLX} [data-petlens-observation-email] > div:first-child > span:first-child { background: #f2789d; box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f6a9bf; }
+${PLX} [data-petlens-observation-email] h3 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 1.02rem; color: #3d2f2a; }
+${PLX} [data-petlens-observation-email] p { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+${PLX} [data-petlens-observation-email] form > div[class*="rounded-xl"][class*="border"]:not(#ddb-none),
+${PLX} [data-petlens-observation-email] [data-result-email-verification]:not(#ddb-none),
+${PLX} [data-petlens-observation-email] form > label[class*="rounded-xl"]:not(#ddb-none) { border: 0; border-radius: 4px 4px 12px 4px; background: #fff; box-shadow: 0 4px 8px -6px rgba(40, 70, 110, .4); }
+${PLX} [data-petlens-observation-email] form > div[class*="rounded-xl"] > p:nth-child(2) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #2f5f8a; }
+${PLX} [data-petlens-observation-email] [data-petlens-observation-email-submit] { width: 100%; }
+
+/* ⑫ 보호자 답변 메모(접기 안) — 보라 메모 · 질문은 흰 쪽지 · 예/아니오/잘 모르겠어요는 고르는 스티커(고르면 분홍) */
+${PLX} [data-petlens-observation-experience] > [data-app-fold="memo"]:not(:has([data-daenglab-guardian-follow-up])) { display: none; }
+${PLX} [data-app-fold="memo"][data-app-fold-open="true"] > [data-app-fold-body] { margin-top: 14px; }
+${PLX} [data-daenglab-guardian-follow-up]:not(#ddb-none) { position: relative; border: 0; border-radius: 6px 6px 18px 6px; background: #f1ecff; box-shadow: 0 8px 14px -10px rgba(90, 70, 160, .45); }
+${PLX} [data-daenglab-guardian-follow-up] > div:first-child p:first-child { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; color: #6a4fc4; }
+${PLX} [data-daenglab-guardian-follow-up] > div:first-child p + p { color: #7a6aa0; }
+${PLX} [data-daenglab-guardian-follow-up] > div:first-child > span { background: #fff; color: #6a4fc4; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: 0 0 0 1.5px #cfc2f5; }
+${PLX} [data-daenglab-guardian-follow-up] fieldset:not(#ddb-none) { border: 0; border-radius: 4px 4px 12px 4px; background: #fff; box-shadow: 0 4px 8px -6px rgba(90, 70, 160, .4); }
+${PLX} [data-daenglab-guardian-follow-up] legend { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; font-size: 13px; color: #3d2f2a; }
+${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="rounded-full"] { border: 0; background: #fff; color: #7d6a61; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; font-size: 12px;
+    box-shadow: 0 0 0 1.5px #f1e3da, 0 4px 7px -5px rgba(110, 80, 40, .45); }
+${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="bg-indigo-600"] { background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 2px #f283a3, 0 4px 7px -5px rgba(200, 70, 110, .5); }
+${PLX} [data-daenglab-guardian-follow-up] fieldset label[class*="rounded-full"]:active { transform: scale(.95); }
+${PLX} [data-daenglab-guardian-follow-up] fieldset label > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #8a5a0c; }
+
 /* ── 행동 · 소리 분석 ── */
 ${PLX} [data-petlens-observation-experience] { gap: 18px; scroll-margin-top: calc(var(--header-height, 72px) + 16px); } /* 결과가 나오면 AppShell 이 이 화면 맨 위로 옮김 — 상단바 아래 여백 */
 /* 소개 카드 — 테이프 붙인 종이 · 설명 글은 작은 메모 · 숫자 3칸은 동그란 스티커 */

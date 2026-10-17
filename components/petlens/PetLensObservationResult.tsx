@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type CSSProperties } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import type {
     PetObservationCandidate,
     PetObservationResult,
@@ -1550,6 +1550,8 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
         result.urgency.level === "emergency"
         || result.urgency.level === "same_day"
     );
+    // 앱 전용 접기 — 대상견 구분 보류 리포트는 그래프 칸 안에 있어 접지 않고 펼친 채로 시작
+    const appTargetAmbiguous = result.analysisContractVersion >= 2 && result.quality.targetStatus === "ambiguous";
 
     return (
         <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result>
@@ -1557,7 +1559,9 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             <OverallObservationSummary result={result} />
             <TargetAttributionPanel result={result} />
             <BarkContextTranslator result={result} />
+            <AppResultFold label="시간별 그래프 보기" foldKey="flow" defaultOpen={appTargetAmbiguous}>
             <InferenceConfidenceOverview result={result} />
+            </AppResultFold>
 
             {!highPriorityUrgency && <UrgencyGuidance result={result} highPriority={false} />}
 
@@ -1582,7 +1586,8 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                 </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-200 bg-white p-4">
+            <AppResultFold label="관찰 근거 자세히 보기" foldKey="evidence">
+            <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-observation-quality>
                 <p className="text-xs font-black text-neutral-500">촬영 품질</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-black">
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
@@ -1611,7 +1616,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             </section>
 
             {result.observations.length > 0 && (
-                <section className="rounded-2xl border border-neutral-200 bg-white p-4">
+                <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-observation-evidence>
                     <div className="mb-3">
                         <p className="text-xs font-black text-neutral-500">영상에서 포착된 관찰 근거</p>
                         <p className="mt-1 text-[11px] font-bold text-neutral-400">화면·소리에서 잡힌 내용과 자동 분석 확신도를 함께 표시합니다.</p>
@@ -1635,14 +1640,15 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             )}
 
             {result.behaviorCandidates.length > 0 && (
-                <section>
+                <section data-petlens-observation-behavior>
                     <p className="mb-3 text-sm font-black text-neutral-950">행동 패턴 후보</p>
                     <CandidateCards items={result.behaviorCandidates} observations={result.observations} />
                 </section>
             )}
+            </AppResultFold>
 
             {result.symptomSignals.length > 0 && (
-                <section className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4">
+                <section className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4" data-petlens-observation-symptoms>
                     <p className="text-sm font-black text-amber-950">증상으로 이어질 수 있어 확인할 신호</p>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-amber-800">질병 진단이 아니라 영상에서 보이거나 들린 신호입니다.</p>
                     <div className="mt-3 grid gap-2">
@@ -1674,12 +1680,35 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             )}
 
             {result.retakeGuidance.length > 0 && (
-                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
+                <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4" data-petlens-observation-retake>
                     <p className="mb-2 text-xs font-black text-sky-900">다시 촬영하면 좋아지는 점</p>
                     <p className="text-xs font-bold leading-5 text-sky-800">{result.retakeGuidance.join(" · ")}</p>
                 </section>
             )}
 
+        </div>
+    );
+}
+
+/**
+ * 앱 전용 접기(로컬 시안) — 행동·소리 분석 결과의 "시간별 그래프" · "관찰 근거"를 앱에서만 버튼으로 접고 펼친다(사용자 결정 2026-10-17).
+ * 웹: 틀은 display:contents(화면에 없는 것과 같음) · 버튼은 hidden → 지금과 똑같이 전부 펼쳐 보임.
+ * 앱: components/app-shell/appShopSkin.ts 에서만 버튼을 보이고, 접힌 동안 안쪽을 숨긴다. 안쪽 내용 · 점수 · 그래프는 그대로.
+ */
+function AppResultFold({ label, foldKey, defaultOpen = false, children }: {
+    label: string;
+    foldKey: string;
+    defaultOpen?: boolean;
+    children: React.ReactNode;
+}) {
+    const [open, setOpen] = useState(defaultOpen);
+    return (
+        <div className="contents" data-app-fold={foldKey} data-app-fold-open={open ? "true" : "false"}>
+            <button type="button" className="hidden" data-app-fold-toggle aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+                <span>{open ? label.replace("보기", "접기") : label}</span>
+                <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+            </button>
+            <div className="contents" data-app-fold-body>{children}</div>
         </div>
     );
 }
