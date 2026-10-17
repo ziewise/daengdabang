@@ -245,7 +245,7 @@ export default function StickerLab() {
                             </p>
                             {/* 코인 — 남은 횟수 · 모자라면 매일 댕생활(출근도장)로 */}
                             <Link href={pageHref("sticker", "daily")} className="lb-coin mt-3 flex items-center gap-2.5 rounded-full py-2 pl-2.5 pr-3.5">
-                                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[11px] font-black text-[#7a4b00]">C</span>
+                                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[11px] text-[#7a4b00] ah-display">C</span>
                                 <span className="ah-display flex-1 text-[12.5px]">
                                     {times > 0 ? <>행동 · 소리 분석 <b className="text-[#e0557f]">{times}회</b> 가능해요</> : <>코인이 부족해요 · <b className="text-[#e0557f]">매일 출근하면 2코인씩</b></>}
                                 </span>

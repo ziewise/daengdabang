@@ -1152,6 +1152,8 @@ html.ddb-app-mode[data-app-page="chat"] main > div > a { ${PATCH_CREAM} }
 
 /* 댕다방 연구소 코인 표시(협업자 .ddb-daenglab-coin-mark, 상품 정보 · 장바구니 담기 판 · 마이 등) — 크레파스 글꼴 → 카페24 써라운드(모양 · 색은 그대로, 글꼴 두 가지 규칙 2026-10-17) */
 html.ddb-app-mode .ddb-daenglab-coin-mark, html.ddb-app-mode .ddb-daenglab-coin-mark * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* "댕다방 연구소" 글자 로고 · "신규서비스" 표시(협업자, 펫렌즈 제목 · 분석 고르기 탭) — 같은 이유로 카페24 써라운드(색 · 크기 그대로) */
+html.ddb-app-mode :is(.ddb-daenglab-wordmark, .ddb-daenglab-new-service), html.ddb-app-mode :is(.ddb-daenglab-wordmark, .ddb-daenglab-new-service) * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 
 /* 주간 사진 분석(협업자 WeeklyPhotoComparison) — 앱 리포트의 "새 주간 분석 시작" 버튼은 분홍 와펜, 창은 위 숨은 창 공통 모양.
    영문 꼬리표(WEEKLY LIVE PHOTO CHECK) 숨김 */

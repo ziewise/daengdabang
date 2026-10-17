@@ -221,7 +221,7 @@ export const Squishy = forwardRef<HTMLButtonElement, { children: ReactNode; onCl
 export const CoinChip = forwardRef<HTMLSpanElement, { coins: number }>(function CoinChip({ coins }, ref) {
     return (
         <span ref={ref} className="ah-display flex items-center gap-1 rounded-full bg-white/90 py-1 pl-1 pr-2.5 text-[13px] shadow-[0_4px_12px_-6px_rgba(200,80,120,0.5)]" style={{ color: TEXT }}>
-            <span className="grid h-5 w-5 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[10px] text-[#7a4b00]">C</span>
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#fff3b0,#ffc93d_55%,#e9a514)] text-[10px] text-[#7a4b00] ah-display">C</span>
             <span className="tabular-nums">{coins}</span>
         </span>
     );
