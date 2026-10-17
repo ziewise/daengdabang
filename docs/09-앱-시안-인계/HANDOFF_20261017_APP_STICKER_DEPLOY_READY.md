@@ -117,5 +117,8 @@
 - 펫렌즈 · 지구본 아이콘은 그림 파일만 새 그림으로 교체(`public/images/ui/pet-lens-128.webp` · `lang-globe-128.webp`, 파일 이름 그대로) — 펫렌즈 창 · 홈 워터마크 배지 · 국가/언어 창도 같은 새 그림.
 - 점검표: `tests/pwa-installation.test.mjs` 의 `<span>앱 홈</span>` 확인 한 줄을 `<span className="sr-only">앱 설치 안내</span>` 로.
 
+**⑤ 설치 안내 창 스티커북 모양 (`components/pwa/PwaInstallProvider.tsx`)**
+- 창 그리는 부분만 `components/pwa/install-guide/InstallHelpSheet.tsx` 로(창이 열릴 때만 `next/dynamic` 으로 불러옴). 여는 법 · 닫는 법(배경 · × · Esc) · 스크롤 잠금 · 인앱 브라우저 판별 · 앱 주소 복사 함수는 그대로입니다. 쓰지 않게 된 `InstallStep` 함수만 지웠습니다.
+
 **④ ⚠ 확인 부탁 — APK 실행 확인 스크립트**
 - `scripts/verify-android-webview.mjs` 는 APK 를 켠 뒤 주소 `/app/index.html` 과 글자 "댕다방 앱 홈"을 기다립니다. 10-17 반영부터 설치한 앱은 `/app/` 에서 새 앱 홈(`/app/home-1/`)으로 가므로, 묶음 크기 문제를 풀면 이 단계에서 실패할 것입니다. 기대값(주소 · 글자, `tests/smart-fit-on-device-hybrid.test.mjs` 의 같은 문구 확인 포함)을 새 앱 홈에 맞춰 주세요. 스크립트는 손대지 않았습니다.
