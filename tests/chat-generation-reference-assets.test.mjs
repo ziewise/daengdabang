@@ -69,7 +69,7 @@ test("both CareTalk composers send only ready opaque references and block early 
         assert.match(surface, /if \(referencesUploading\)/);
         assert.match(surface, /if \(hasUploadErrors\)/);
         assert.match(surface, /사진을 올리는 중이에요\. 첨부가 끝난 뒤 보내 주세요\./);
-        assert.match(surface, /disabled=\{loading \|\| generationReferences\.isUploading \|\| generationReferences\.hasUploadErrors\}/);
+        assert.match(surface, /disabled=\{loading \|\| sessionComplete \|\| generationReferences\.isUploading \|\| generationReferences\.hasUploadErrors\}/);
         assert.match(surface, /generationReferences\.clear\(\)/);
         assert.match(surface, /reason instanceof ShopChatReferenceRequestError/);
         assert.match(surface, /reason\.status === 401/);
