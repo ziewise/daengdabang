@@ -67,7 +67,7 @@ const DEFAULT_GROWTH_GOODS_ITEMS = Object.fromEntries(
 export const DEFAULT_GROWTH_GOODS_CONTENT: GrowthGoodsContent = {
     kicker: "DAENGDABANG GOODS CONTEST",
     title: "500명의 선택으로 다음 굿즈를 함께 정해요",
-    description: "마음에 드는 굿즈를 선택해 주세요. 각 상품이 500명의 선택을 모으면 최종 제작 조건을 다시 안내합니다.",
+    description: "좋은 소재와 꼼꼼한 마감을 지향하는 소량 제작 굿즈를 준비합니다. 표시 금액은 샘플 제작·검수·포장 비용을 고려한 예상 펀딩가입니다. 각 상품이 500명의 선택을 모으면 최종 사양·구성·가격을 다시 안내합니다.",
     escrowNotice: "에스크로는 향후 별도 결제 단계에서 구매자를 보호하기 위한 제도이며, 현재 선택 단계에는 적용되지 않습니다.",
     campaign: {
         startsAt: "2026-08-09T20:53:01+09:00",

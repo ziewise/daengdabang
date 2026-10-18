@@ -112,7 +112,7 @@ test("a valid approved payload is normalized for the customer layout", async () 
     assert.equal(result.content.commerce.secondaryCtaHref, "/best/");
     assert.equal(result.content.goods.title, "함께 고르는 여름 굿즈");
     assert.equal(result.content.goods.items.acrylic_keyring.expectedPriceKrw, 9500);
-    assert.equal(result.content.goods.items.sticker_set.expectedPriceKrw, 6900);
+    assert.equal(result.content.goods.items.sticker_set.expectedPriceKrw, 12000);
     assert.equal(result.content.goods.items.sticker_set.active, false);
     assert.equal(Object.keys(result.content.goods.items).length, 21);
 });
@@ -127,7 +127,7 @@ test("legacy published content without goods uses the complete fixed catalog fal
     }));
 
     const result = await growthModule.loadPublishedGrowthContent();
-    assert.equal(result.content.goods.items.wood_sign.expectedPriceKrw, 39900);
+    assert.equal(result.content.goods.items.wood_sign.expectedPriceKrw, 69000);
     assert.equal(result.content.goods.items.phone_case.active, true);
     assert.match(result.content.goods.escrowNotice, /현재 선택 단계에는 적용되지 않습니다/);
 });

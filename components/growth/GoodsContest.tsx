@@ -538,7 +538,13 @@ export default function GoodsContest({
                     </div>
                 ) : null}
 
-                <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <aside className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-4 text-xs font-bold leading-6 text-neutral-700" aria-label="소량 제작 예상 펀딩가 안내">
+                    <p className="text-sm font-black text-neutral-900">좋은 소재와 꼼꼼한 마감을 위한 소량 제작</p>
+                    <p className="mt-1">예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.</p>
+                    <p className="mt-1">세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.</p>
+                </aside>
+
+                <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {GOODS_CONTEST_CATALOG.map((catalogItem) => {
                         const itemContent = content.items[catalogItem.id];
                         const itemSummary = itemSummaries.get(catalogItem.id);
@@ -562,7 +568,7 @@ export default function GoodsContest({
                                         className="aspect-square h-auto w-full bg-[#f4e8d3] object-cover transition duration-300 hover:scale-[1.02]"
                                     />
                                     <span className="absolute left-3 top-3 rounded-full border border-white/80 bg-white/90 px-2.5 py-1 text-[10px] font-black text-neutral-700 shadow-sm">
-                                        예상 펀딩가 {itemContent.expectedPriceKrw.toLocaleString("ko-KR")}원
+                                        예상 펀딩가 {itemContent.expectedPriceKrw.toLocaleString("ko-KR")}원 · {catalogItem.priceUnit}
                                     </span>
                                     {contentReady && !itemContent.active ? (
                                         <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white">선택 준비 중</span>

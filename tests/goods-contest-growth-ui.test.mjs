@@ -17,8 +17,8 @@ const EXPECTED_IDS = [
     "character_cushion", "pin_badge_set", "postcard_set", "memo_pad", "wood_sign",
 ];
 const EXPECTED_PRICES = [
-    8900, 6900, 18900, 24900, 15900, 27900, 9900, 14900, 12900, 29900, 14900,
-    16900, 12900, 19900, 9900, 24900, 34900, 18900, 7900, 12900, 39900,
+    15000, 12000, 35000, 45000, 25000, 45000, 18000, 22000, 19000, 49000, 22000,
+    25000, 22000, 29000, 19000, 49000, 59000, 39000, 15000, 18000, 69000,
 ];
 
 test("the goods contest catalog has the fixed 21 IDs, prices, and kebab image paths", () => {
