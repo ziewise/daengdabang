@@ -152,3 +152,19 @@
 - **와펜 버튼** (`components/pwa/home-concepts/sticker-kit.tsx`): 높이 고정 → 최소 높이(글자에 맞춰 늘어남).
 - **PC 헤더 메뉴 글자 14px → 16px** (`components/header/Header.tsx`, `desktopNavItem` 두 곳 `text-sm` → `text-base`). 1280px 에서 한 줄 · 겹침 없음 확인.
 - **굿즈 공모전(앱)** — 협업자 `9bee8285`(가격 조정)에 맞춤: 앱 댕다방 굿즈 탭 가격표에 기준 단위(`priceUnit` · 1개/1세트) · 웹과 같은 "소량 제작 예상 펀딩가 안내" 문구를 노란 메모로(`StickerShow.tsx`).
+
+**⑨ 상품 상세 버튼 글자 · 회원가입 링크 · APK 시작을 새 앱 홈에서 바로 (2026-10-18 저녁, 사용자 결정)**
+- **상품 상세 "장바구니 담기" · "오픈 준비 중"** (`components/app-shell/appShopSkin.ts`, 앱 스킨만): 갤럭시 384 등에서 두 줄로 꺾이고 아이폰에서도 바느질선에 붙던 것 → 앱에서만 글자 13px · 한 줄 · 장바구니 자수 그림 27→20px. 버튼 크기 · 위치 · 협업자 `ProductInfo.tsx` 그대로.
+- **회원가입 동의 링크** (`StickerSignup.tsx`, 우리 파일): "처리방침 보기" 가 좁은 폰에서 "처리방침 / 보기" 로 갈라지던 것 → 한 덩어리로 줄바꿈. 앱 화면 21개 × 폭 6가지(320 · 360 · 384 · 390 · 412 · 430) + 옵션 창 132곳 버튼 글자 점검(두 줄 · 넘침 · 바느질선 붙음)에서 이것 하나만 나옴.
+- **APK 실행 확인(Native package validation) 절반 실패 조사**: 실패한 #416 결과물(APK · 로그)을 받아 확인 — 앱은 정상으로 앱 틀까지 불렀고(스킨 · 앱 로고 요청 기록), 확인 도중 앱과의 연결이 끊김(`fetch failed`, 앱 프로세스가 사라짐). 같은 APK 를 로컬 에뮬레이터에서 17번 켜서 1번 같은 증상 재현. 검사용 에뮬레이터가 매우 느린 상태(103프레임 건너뜀 · 메모리 정리 3초)에서 **APK 가 `/app/index.html` → 새 앱 홈으로 두 번 불러오는 부담**이 겹친 것으로 판단. 7a091a1 부터 7번 중 4번 실패(작성자 무관).
+- **근본 수정 — APK 를 새 앱 홈에서 바로 시작** (협업자 영역, 사용자 허락):
+  - `capacitor.config.ts` `appStartPath`: `/app/index.html` → **`/app/home-1/index.html`**.
+  - `scripts/prepare-native-web.mjs`: 네이티브 시작 문서(`native/www/index.html`, 다시 불러오기 · 확장자 없는 주소가 오는 곳)도 `location.replace('/app/home-1/index.html')`, 빌드에 `app/home-1/index.html` 이 있는지 확인 한 줄 추가.
+  - `scripts/verify-android-webview.mjs`: 주소 비교 때 끝의 `index.html` 을 떼고 비교(`expectedPath = "/app/home-1/"` 그대로).
+  - `tests/pwa-installation.test.mjs`: 위 두 값 확인 두 줄 맞춤.
+- **안전장치 — 그리기 전 시작 화면 바로잡기** (`app/layout.tsx` `<head>` 맨 앞 인라인 스크립트 `ddb-app-start-route`, 우리 쪽):
+  - 설치한 앱(PWA standalone · 아이폰 `navigator.standalone` · APK `DDBNative`)이 예전 시작 주소(`/app/` · `/app/index.html`)로 열리면 **화면을 그리기 전에** 새 앱 홈으로 `location.replace`(PWA 는 `?source=…` 유지, APK 는 `/app/home-1/index.html`). 예전에 홈 화면에 추가한 아이폰은 저장된 `/app/` 로 열려 웹 설치 안내가 잠깐 보이던 것. **브라우저로 `/app/` 에 온 사람은 그대로 설치 안내.**
+  - APK 에서 주소 끝이 `/index.html` 이면 화면 코드가 주소를 읽기 전에 `history.replaceState` 로 `/…/` 로 정리 — 탭 · 첫 화면 판별(`appTabs.ts isTabRoot` 등)이 웹앱과 같은 주소로 맞음.
+  - 기존 `AppShell` 의 "`/app/` → 앱 홈" 규칙은 그대로 둠(이중 안전장치).
+- **확인**: 로컬에서 APK 직접 빌드(`native:sync` 와 같은 순서 + `gradlew assembleDebug`) → 에뮬레이터(API 36.1)에서 6번 냉시작 모두 새 앱 홈 바로 도착(주소 `/app/home-1/` · 앱 틀 · 웹 헤더 없음 · 홈 탭 켜짐), 쇼핑 탭 ↔ 홈 탭 · 뒤로 · 다시 불러오기(→ 앱 홈) 정상, **실제 `scripts/verify-android-apk-startup.sh` 로컬 실행 통과**. 헤드리스 크롬: 브라우저 `/app/` 은 설치 안내 그대로, 홈 화면 앱(아이폰 방식)으로 `/app/?source=pwa` 를 열면 새 앱 홈. 테스트 907/907 · 타입 · 빌드 · 이미지 예산 · 펫 프레임 · 묶음 36.79MB 통과. iOS 는 로컬 실행 불가 — GitHub iOS 시뮬레이터 빌드로 확인.
+- 이미 설치한 APK 는 새 APK 를 설치해야 바뀜(홈 화면 앱은 자동).

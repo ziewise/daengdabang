@@ -178,8 +178,9 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.match(read("../components/header/MobilePanel.tsx"), /www\.daengdabang\.com\/products\//);
     assert.match(capacitorConfig, /appId: "com\.daengdabang\.app"/);
     assert.match(capacitorConfig, /webDir: "native\/www"/);
-    assert.match(capacitorConfig, /appStartPath: "\/app\/index\.html"/);
-    assert.match(nativeBuilder, /location\.replace\('\/app\/index\.html'\)/);
+    // 2026-10-18: 앱은 새 앱 홈에서 바로 시작(예전 /app/index.html 을 거치지 않음)
+    assert.match(capacitorConfig, /appStartPath: "\/app\/home-1\/index\.html"/);
+    assert.match(nativeBuilder, /location\.replace\('\/app\/home-1\/index\.html'\)/);
     assert.doesNotMatch(nativeBuilder, /location\.replace\('\/app\/'\)/);
     assert.match(nativeBuilder, /maximumMegabytes = 40/);
     assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero|images\/pet-companion/);

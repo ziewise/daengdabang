@@ -82,7 +82,8 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
 
         if (
             lastState?.readyState === "complete"
-            && new URL(lastState.url).pathname === expectedPath
+            // 끝에 index.html 이 붙은 시작 주소(/app/home-1/index.html)도 같은 앱 홈으로 본다(2026-10-18)
+            && new URL(lastState.url).pathname.replace(/index\.html$/, "") === expectedPath
             && lastState.title.includes("댕다방")
             && lastState.text.includes(expectedText)
         ) {

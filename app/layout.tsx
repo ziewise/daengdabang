@@ -42,6 +42,31 @@ const androidAppearanceBootstrap = `
   } catch {}
 })();`;
 
+// 설치한 앱의 시작 화면 바로잡기(2026-10-18) — 화면을 그리기 전에(가장 먼저) 실행
+//  1) 설치한 앱(홈 화면 앱 · APK)이 예전 시작 주소(/app/ · /app/index.html)로 열리면 그리기 전에 새 앱 홈으로 바로 이동.
+//     예전에 설치한 아이폰 홈 화면 앱은 설치 때 저장한 /app/ 로 열리고 우리가 바꿀 수 없어서, 웹 설치 안내 화면이 잠깐 보이던 것.
+//     브라우저로 /app/ 에 온 사람은 그대로 설치 안내를 본다(설치한 앱일 때만).
+//  2) APK 는 /app/home-1/index.html 처럼 끝에 index.html 이 붙은 주소로 열리므로, 화면 코드가 주소를 읽기 전에 /app/home-1/ 로 정리
+//     (탭 · 첫 화면 판별이 웹앱과 같은 주소로 맞게). 다시 불러오기 때는 네이티브 시작 문서가 새 앱 홈으로 다시 보낸다.
+const appStartRoute = `
+(() => {
+  try {
+    var nav = window.navigator;
+    var native = /DDBNative/.test(nav.userAgent);
+    var installed = native || nav.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+    var path = location.pathname;
+    if (installed && /^\\/app(\\/(index\\.html)?)?$/.test(path)) {
+      // 떠나는 화면은 그리지 않음(이동하는 동안 빈 바탕)
+      document.documentElement.style.visibility = "hidden";
+      location.replace(native ? "/app/home-1/index.html" : "/app/home-1/" + location.search);
+      return;
+    }
+    if (native && /\\/index\\.html$/.test(path)) {
+      history.replaceState(history.state, "", path.replace(/index\\.html$/, "") + location.search + location.hash);
+    }
+  } catch (e) {}
+})();`;
+
 // 앱 화면 폭 맞춤(2026-10-18) — 설치한 앱(PWA · APK) · 앱 전용 화면에서, 세로로 든 폭 380px 미만 폰(아이폰 디스플레이 확대 320 ·
 // 갤럭시 폴드 접은 화면 344 · 작은 갤럭시 360)은 기준 폭 390 으로 그린 뒤 브라우저가 화면에 맞게 통째로 줄인다(배치 · 위치 그대로).
 // zoom 과 달리 전체 화면 높이(dvh) · 고정 위치 · 터치 좌표가 그대로 맞는다. 380px 이상 · 가로 · 태블릿 · 펼친 폴드 · 웹 화면은 그대로.
@@ -140,6 +165,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             suppressHydrationWarning
         >
             <head>
+                {/* 설치한 앱 시작 화면 바로잡기 — 가장 먼저(위 appStartRoute 설명) */}
+                <script id="ddb-app-start-route" dangerouslySetInnerHTML={{ __html: appStartRoute }} />
                 {/* 앱 화면 폭 맞춤 — 첫 그림 전에 실행(위 appViewportFit 설명) */}
                 <script id="ddb-app-viewport-fit" dangerouslySetInnerHTML={{ __html: appViewportFit }} />
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />

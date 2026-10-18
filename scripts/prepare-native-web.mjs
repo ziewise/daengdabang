@@ -68,7 +68,8 @@ const launchDocument = `<!doctype html>
     <img class="mark" src="/images/pwa/icon-v2-192x192.png" alt="">
     <p>댕다방을 여는 중이에요</p>
   </div>
-  <script>location.replace('/app/index.html');</script>
+  <!-- 2026-10-18: 새 앱 홈으로 바로(다시 불러오기 · 확장자 없는 주소도 여기로 와서 새 앱 홈으로) -->
+  <script>location.replace('/app/home-1/index.html');</script>
 </body>
 </html>
 `;
@@ -156,6 +157,8 @@ async function directorySize(directory) {
 }
 
 await access(path.join(exportRoot, "app", "index.html"));
+// 앱 시작 화면(새 앱 홈)이 빌드에 있어야 함(2026-10-18)
+await access(path.join(exportRoot, "app", "home-1", "index.html"));
 assertSafeOutputDirectory(nativeRoot);
 await rm(nativeRoot, { recursive: true, force: true });
 await mkdir(nativeRoot, { recursive: true });
