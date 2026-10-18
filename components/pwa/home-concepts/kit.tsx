@@ -236,8 +236,11 @@ export const KIT_CSS = `
 @keyframes ah-stamp { 0% { transform: scale(1.9) rotate(-18deg); opacity: 0; } 55% { transform: scale(.88) rotate(4deg); opacity: 1; } 100% { transform: none; opacity: 1; } }
 .ah-stamp { animation: ah-stamp .45s cubic-bezier(.3,1.3,.5,1) both; }
 /* 아직 안 찍은 오늘 칸 — 숨쉬듯 */
-@keyframes ah-wait { 50% { transform: scale(1.1); box-shadow: 0 0 0 5px rgba(244,169,189,.25); } }
-.ah-wait { animation: ah-wait 1.8s ease-in-out infinite; }
+/* 분홍 고리는 고리 조각의 투명도만 바꿈 — 그림자 크기를 매 장면 다시 그리던 것 대신(같은 모양, 2026-10-18 앱 속도). 오늘 도장 칸(.st-slot.is-today)도 같은 숨쉬기 */
+@keyframes ah-wait { 50% { transform: scale(1.1); } }
+@keyframes ah-wait-ring { 50% { opacity: 1; } }
+.ah-wait { position: relative; animation: ah-wait 1.8s ease-in-out infinite; }
+.ah-wait::after, .st-slot.is-today::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 5px rgba(244,169,189,.25); opacity: 0; animation: ah-wait-ring 1.8s ease-in-out infinite; pointer-events: none; }
 .ah-badge { box-shadow: 0 4px 10px -4px rgba(200,90,30,.6), inset 0 0 0 1.5px rgba(255,255,255,.6); }
 
 .ah-sparkle { clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
@@ -254,5 +257,5 @@ export const KIT_CSS = `
 
 .ah-press { -webkit-tap-highlight-color: transparent; transition: transform .15s ease; }
 .ah-press:active { transform: scale(.97); }
-@media (prefers-reduced-motion: reduce) { .ah-twinkle, .ah-shine, .ah-wait { animation: none; } .ah-shine { display: none; } }
+@media (prefers-reduced-motion: reduce) { .ah-twinkle, .ah-shine, .ah-wait, .ah-wait::after, .st-slot.is-today::after { animation: none; } .ah-shine { display: none; } }
 `;

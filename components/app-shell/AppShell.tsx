@@ -21,7 +21,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events";
 // 2026-10-18 앱 속도: 검색창 · 케어톡 창은 상품 데이터(6MB)를 쓰는 큰 코드라 처음 열 때만 불러온다(앱 첫 화면 · 탭 전환을 가볍게).
 // 케어톡은 열기 요청을 창이 뜨기 전에도 기억해 두는 협업자 장치(lib/chat-widget-events pendingOpen)가 있어 동작 그대로.
@@ -383,47 +383,30 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // 뒤로 가기는 앱 전체에서 상단바가 아니라 그 아래(사용자 결정 2026-10-16): 화면 제목 테이프가 있으면 그 줄 왼쪽, 없으면 상단바 바로 아래 줄
     const backBelow = !root;
 
-    // 앱 모드 표시 — 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨긴다
-    useEffect(() => {
+    // 앱 겉모양 표시(html 클래스 · data-app-page) — 2026-10-18 앱 속도: 예전에는 표시 6개를 각각 useEffect 로 "그린 뒤에" 붙였다 떼어
+    // 화면이 바뀔 때마다 새 화면을 한 번 그린 다음 꾸밈(앱 스킨 CSS 1,000여 규칙)을 처음부터 다시 계산해 또 그렸다(탭마다 0.6~1.3초).
+    // 이제 한 번에, 그리기 전에(useLayoutEffect) 바뀐 값만 맞춘다 — 값이 같으면 건드리지 않아 다시 계산이 생기지 않음. 뜻은 그대로:
+    //  - ddb-app-mode: 페이지들이 쓰는 --header-height 를 상단바 높이로 바꾸고, 사이트용 요소를 숨김
+    //  - ddb-app-subrow: 버튼 줄이 있을 때만 --app-subbar-h(50px) — 그 밑에 붙는 페이지 안 탭 위치 계산용
+    //  - data-app-page: 지금 화면 이름(주소 첫 마디: cart · product · checkout …) — 화면별 앱 겉모양 CSS 범위
+    //  - ddb-app-shop-web · ddb-app-my-web · ddb-app-lab-web: 쇼핑 · 마이 · 연구소 탭의 웹 화면 — 앱 전용 겉모양 CSS 범위(appShopSkin.ts)
+    const appPage = pathname.split("/")[1] || "root";
+    useLayoutEffect(() => {
         const html = document.documentElement;
-        html.classList.add("ddb-app-mode");
-        return () => html.classList.remove("ddb-app-mode");
+        const set = (name: string, on: boolean) => { if (html.classList.contains(name) !== on) html.classList.toggle(name, on); };
+        set("ddb-app-mode", true);
+        set("ddb-app-subrow", showDangRow);
+        set("ddb-app-shop-web", shopWeb);
+        set("ddb-app-my-web", myWeb);
+        set("ddb-app-lab-web", labWeb);
+        if (html.dataset.appPage !== appPage) html.dataset.appPage = appPage;
+    }, [showDangRow, shopWeb, myWeb, labWeb, appPage]);
+    // 앱 틀이 사라질 때(웹 화면으로 나갈 때)만 모두 지움
+    useLayoutEffect(() => () => {
+        const html = document.documentElement;
+        html.classList.remove("ddb-app-mode", "ddb-app-subrow", "ddb-app-shop-web", "ddb-app-my-web", "ddb-app-lab-web");
+        delete html.dataset.appPage;
     }, []);
-
-    // 버튼 줄이 있을 때만 --app-subbar-h(50px) — 그 밑에 붙는 페이지 안 탭 위치 계산용
-    useEffect(() => {
-        const html = document.documentElement;
-        html.classList.toggle("ddb-app-subrow", showDangRow);
-        return () => html.classList.remove("ddb-app-subrow");
-    }, [showDangRow]);
-
-    // 지금 화면 이름(주소 첫 마디: cart · product · checkout …) — 화면별 앱 겉모양 CSS 범위(html[data-app-page])
-    useEffect(() => {
-        const html = document.documentElement;
-        html.dataset.appPage = pathname.split("/")[1] || "root";
-        return () => { delete html.dataset.appPage; };
-    }, [pathname]);
-
-    // 쇼핑 탭 웹 화면 표시 — 앱 전용 쇼핑 겉모양 CSS 범위
-    useEffect(() => {
-        const html = document.documentElement;
-        html.classList.toggle("ddb-app-shop-web", shopWeb);
-        return () => html.classList.remove("ddb-app-shop-web");
-    }, [shopWeb]);
-
-    // 마이 탭 웹 화면 표시 — 같은 앱 겉모양 CSS 범위(appShopSkin.ts)
-    useEffect(() => {
-        const html = document.documentElement;
-        html.classList.toggle("ddb-app-my-web", myWeb);
-        return () => html.classList.remove("ddb-app-my-web");
-    }, [myWeb]);
-
-    // 연구소 탭 웹 화면 표시 — 같은 앱 겉모양 CSS 범위(appShopSkin.ts)
-    useEffect(() => {
-        const html = document.documentElement;
-        html.classList.toggle("ddb-app-lab-web", labWeb);
-        return () => html.classList.remove("ddb-app-lab-web");
-    }, [labWeb]);
 
     /* 펫렌즈 행동·소리 — 녹화가 끝나 전체 화면 촬영 창(협업자 data-petlens-capture-viewport, body 바로 아래에 붙음)이 저절로 닫히면
        녹화된 영상 칸이 보이는 위치로 화면을 옮긴다(사용자 2026-10-17). 앱 전용 · 스크롤만 — 협업자 녹화 · 분석 동작은 그대로.
@@ -651,7 +634,8 @@ html.ddb-app-mode.ddb-app-subrow { --app-subbar-h: 50px; }
 html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 
 /* 상단바 · 버튼 줄 — 흰 반투명 + 흐림, 아래는 머리카락 같은 선 */
-.app-bar { background: rgba(250, 247, 244, 0.86); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); box-shadow: inset 0 -1px 0 rgba(31, 26, 24, 0.06); }
+/* 2026-10-18 앱 속도: 뒤를 흐리게 비치는 효과(blur) 대신 같은 색 불투명 바탕 — 원래도 86% 불투명이라 보기엔 거의 같고, 스크롤 · 화면 변화 때마다 다시 흐리게 그리던 일이 없어짐 */
+.app-bar { background: #faf7f4; box-shadow: inset 0 -1px 0 rgba(31, 26, 24, 0.06); }
 .app-subbar { box-shadow: inset 0 -1px 0 rgba(31, 26, 24, 0.06); }
 /* 상단바 버튼 — 옅은 무채색 동그라미 */
 .app-icon-btn { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; color: #3b322f; background: rgba(31, 26, 24, 0.05); transition: background .2s ease; }
@@ -667,8 +651,10 @@ html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 .app-care-btn:active { background: transparent; }
 .app-care-img { filter: drop-shadow(0 3px 4px rgba(110,80,200,.25)); transition: transform .35s cubic-bezier(.3,1.8,.5,1); }
 .app-care-btn:active .app-care-img { transform: scale(.88); transition-duration: .1s; }
-@keyframes app-care-ping { 0% { box-shadow: 0 0 0 0 rgba(52,199,120,.5); } 100% { box-shadow: 0 0 0 6px rgba(52,199,120,0); } }
-.app-care-dot { position: absolute; top: 5px; right: 4px; border: 1.5px solid #fff; width: 7px; height: 7px; border-radius: 999px; background: #34c778; box-shadow: 0 0 0 0 rgba(52,199,120,.5); animation: app-care-ping 1.8s ease-out infinite; }
+/* 케어톡 초록 점 퍼지는 고리 — 그림자 크기를 매 장면 다시 그리던 것 대신 고리 조각의 크기 · 투명도만 바꿈(같은 모양, 다시 그리기 없음, 2026-10-18 앱 속도) */
+@keyframes app-care-ping { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.6); opacity: 0; } }
+.app-care-dot { position: absolute; top: 5px; right: 4px; border: 1.5px solid #fff; width: 7px; height: 7px; border-radius: 999px; background: #34c778; }
+.app-care-dot::after { content: ""; position: absolute; inset: -1.5px; border-radius: inherit; background: #34c778; animation: app-care-ping 1.8s ease-out infinite; pointer-events: none; }
 
 /* 화면 제목 줄 — 다꾸 이름표 */
 /* 마스킹테이프 이름표: 탭 색 줄무늬 반투명 띠 · 양 끝 지그재그로 찢김 · 아주 살짝 기울기 */
@@ -680,7 +666,7 @@ html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 @media (prefers-reduced-motion: reduce) { .app-pt-tape { animation: none; } }
 
 /* 탭바 — 떠 있는 크림 종이 판(살짝 반투명 + 흐림) + 흰 테두리 + 부드러운 그림자 */
-.app-tabbar { background: rgba(255, 253, 248, 0.9); backdrop-filter: blur(22px) saturate(170%); -webkit-backdrop-filter: blur(22px) saturate(170%); border-radius: 28px;
+.app-tabbar { background: #fffdf8; border-radius: 28px;
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 0 0 2.5px rgba(200, 160, 140, 0.14), 0 16px 30px -18px rgba(120, 70, 50, 0.45); }
 .app-tab { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #a8998f; -webkit-tap-highlight-color: transparent; }
 /* 아이콘 칸: 고른 탭만 뒤에 젤리 판(탭 색 그라데이션 + 아랫면 두께) */

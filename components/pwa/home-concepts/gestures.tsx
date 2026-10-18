@@ -102,6 +102,9 @@ export function useExpandNav() {
     const ref = useRef<HTMLDivElement>(null);
     const go = useCallback((el: HTMLElement, href: string, bg: string, face?: ReactNode) => {
         if (reduced()) return router.push(href);
+        // 누르는 순간 다음 화면을 미리 받기 시작 — 0.43초 펼침이 끝나 이동할 때 이미 준비돼 바로 넘어감(2026-10-18 앱 속도).
+        // 이동 자체는 펼침이 끝난 뒤 그대로(도중에 이동하면 덮개가 갑자기 사라짐)
+        router.prefetch(href);
         setState({ rect: el.getBoundingClientRect(), href, bg, face });
     }, [router]);
     useLayoutEffect(() => {
