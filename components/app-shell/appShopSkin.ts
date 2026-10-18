@@ -165,6 +165,14 @@ ${S} main :is(button, a).bg-indigo-600, ${S} main .btn-primary { ${PATCH_PINK} }
 ${S} [data-pet-guide-target="product-actions"] > button:not(.bg-indigo-600):not([aria-label="찜 해제"]),
 ${S} [data-product-detail-content] .fixed.bottom-0 button[class*="border-2"],
 ${S} [data-purchase-option-sheet] button[data-add-option], ${S} main .btn-secondary { ${PATCH_CREAM} }
+/* 상품 상세 담기 · 구매 와펜 글자(2026-10-18) — 16px 굵은 글씨 + 와펜 테두리로 좁은 폰(갤럭시 384 등)에서 "장바구니 담기"가 두 줄로 꺾이고
+   아이폰에서도 여백이 빠듯했다 → 13px · 한 줄 고정 · 아이콘 간격 조금 좁게(버튼 크기 · 위치는 그대로) */
+${S} [data-pet-guide-target="product-actions"] > button:not([aria-label]) { font-size: 13px; line-height: 1.2; gap: 5px; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
+/* 아래 고정 바(이미 14px) — 줄바꿈만 막음 */
+${S} [data-product-detail-content] .fixed.bottom-0 button { white-space: nowrap; }
+${S} [data-pet-guide-target="product-actions"] > button:not([aria-label]) > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+${S} [data-pet-guide-target="product-actions"] > button:not([aria-label]) > i { font-size: 13px; }
+${S} [data-pet-guide-target="product-actions"] > button:not([aria-label]) > i.fa-bag-shopping { width: 20px; height: 20px; }
 /* 찜 해제(찜한 상태) — 분홍 와펜으로 찜한 것이 바로 보이게 */
 ${S} main button[aria-label="찜 해제"] { ${PATCH_PINK} }
 /* 입혀보기 — 보라 와펜(안쪽 그림 칸은 동그란 스티커) */
