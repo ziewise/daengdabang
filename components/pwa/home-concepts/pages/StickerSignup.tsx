@@ -655,7 +655,7 @@ export default function StickerSignup() {
                     <div className="su-paper mt-5 space-y-3 rounded-[16px] px-4 py-4">
                         <div>
                             <CheckRow checked={agreeTerms} onChange={setAgreeTerms}>
-                                {SIGNUP_TERMS_AGREEMENT.title} <Link href={SIGNUP_TERMS_AGREEMENT.href} className="ah-light text-[12px] text-[#e0557f] underline underline-offset-2">전체보기</Link>
+                                {SIGNUP_TERMS_AGREEMENT.title} <Link href={SIGNUP_TERMS_AGREEMENT.href} className="ah-light whitespace-nowrap text-[12px] text-[#e0557f] underline underline-offset-2">전체보기</Link>
                             </CheckRow>
                             <button type="button" onClick={() => setOpenTerms((v) => !v)} className="ah-light ml-[34px] mt-1 text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">주요 내용 {openTerms ? "접기" : "보기"}</button>
                             <ul className="dt-fold ah-light ml-[34px] space-y-1 text-[11.5px] leading-relaxed" data-open={openTerms} style={{ color: TEXT_SOFT }}>
@@ -664,7 +664,8 @@ export default function StickerSignup() {
                         </div>
                         <div>
                             <CheckRow checked={agreePrivacy} onChange={setAgreePrivacy}>
-                                {SIGNUP_REQUIRED_PRIVACY_CONSENT.title} <Link href={SIGNUP_REQUIRED_PRIVACY_CONSENT.href} className="ah-light text-[12px] text-[#e0557f] underline underline-offset-2">처리방침 보기</Link>
+                                {/* 링크 글자는 한 덩어리로 줄바꿈(좁은 폰에서 "처리방침 / 보기"로 갈라지던 것, 2026-10-18 버튼 점검) */}
+                                {SIGNUP_REQUIRED_PRIVACY_CONSENT.title} <Link href={SIGNUP_REQUIRED_PRIVACY_CONSENT.href} className="ah-light whitespace-nowrap text-[12px] text-[#e0557f] underline underline-offset-2">처리방침 보기</Link>
                             </CheckRow>
                             <button type="button" onClick={() => setOpenPrivacy((v) => !v)} className="ah-light ml-[34px] mt-1 text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">수집 항목·이용 목적·보유기간 {openPrivacy ? "접기" : "보기"}</button>
                             <div className="dt-fold ml-[34px] space-y-1.5 text-[11.5px]" data-open={openPrivacy}>
