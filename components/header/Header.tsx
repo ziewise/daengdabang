@@ -205,7 +205,7 @@ export default function Header() {
                         </NavDropdown>
                         <Link
                             href="/daeng-showcase/"
-                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
+                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3`}
                         >
                             댕자랑
                         </Link>
@@ -417,7 +417,7 @@ function NavDropdown({
                     if (open) onLeave();
                     else onEnter();
                 }}
-                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-sm font-bold text-foreground transition xl:px-3`}
+                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3`}
                 data-nav-open={open ? "true" : "false"}
             >
                 {label}
