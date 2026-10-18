@@ -1603,6 +1603,10 @@ html.ddb-app-mode [data-petlens-capture-stage] > [data-petlens-live-camera] { ov
     box-shadow: 0 0 0 1px #efe2d6, 0 16px 26px -16px rgba(110, 70, 55, .65); }
 /* 폴라로이드 칸을 카메라 비율에 맞춤(세로 3:4 · 가로 16:9 — 협업자 촬영 칸과 같은 비율) → 영상 둘레 빈 공간(어두운 띠) 없앰.
    그래도 남는 틈은 밝은 종이색. 연결 기다리는 동안 안내 글자는 진한 색 */
+/* 촬영 화면 틀 폭은 화면 폭까지만(2026-10-18 아이폰 제보) — 세로 카메라 칸(높이 100% · 3:4)이 내용 폭으로 커지면 틀 전체가 화면보다 넓어져
+   윗줄 닫기 버튼 · 아래 "관찰 시작" · "연결 끊기" 버튼 오른쪽이 잘렸다(393×852 에서 카메라 칸 453px · 버튼 끝 461px). 칸은 화면 폭 안에서
+   영상 비율대로 다 보이게(협업자 영상 object-contain), 남는 틈은 종이색. 콕 찍기 위치는 협업자 코드가 칸 크기 · 영상 비율로 계산해 그대로 맞음 */
+html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-capture-stage] { grid-template-columns: minmax(0, 1fr); }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera] { background: #f6efe6; justify-self: center; align-self: center; }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera][data-camera-orientation="portrait"] { height: 100%; width: auto; max-width: 100%; aspect-ratio: 3 / 4; }
 html.ddb-app-mode [data-petlens-capture-viewport] [data-petlens-live-camera][data-camera-orientation="landscape"] { width: 100%; height: auto; max-height: 100%; aspect-ratio: 16 / 9; }
