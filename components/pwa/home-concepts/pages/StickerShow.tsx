@@ -862,7 +862,14 @@ export default function StickerShow() {
                             {contestLoginNotice ? (
                                 <p className="mt-1"><Link href={login(here, 1)} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">다시 로그인</Link></p>
                             ) : null}
-                            <ul className="mt-3 grid grid-cols-2 gap-3">
+                            {/* 소량 제작 예상 펀딩가 안내 — 웹 굿즈 공모전과 같은 문구(협업자 2026-10-18), 노란 메모지 */}
+                            <aside className="st-postit ah-light relative mt-4 block px-3.5 pb-3 pt-3.5 text-[11.5px] leading-relaxed" style={{ background: "#fff6c9", rotate: "-0.5deg" }} aria-label="소량 제작 예상 펀딩가 안내">
+                                <Tape className="-top-2 left-5 h-3.5 w-11" color="rgba(255,200,215,.9)" style={{ rotate: "-4deg" }} />
+                                <p className="ah-display text-[13px] text-[#8f5e12]">좋은 소재와 꼼꼼한 마감을 위한 소량 제작</p>
+                                <p className="mt-1">예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.</p>
+                                <p className="mt-1">세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.</p>
+                            </aside>
+                            <ul className="mt-5 grid grid-cols-2 gap-3">
                                 {GOODS_CONTEST_CATALOG.slice(0, goodsLimit).map((g, i) => {
                                     const item = goodsContent.items[g.id]; // 운영 게시 문구(이름 · 소개 · 예상가 · 선택 받는 중)
                                     const sum = itemSummaries.get(g.id); // 서버 집계
@@ -883,7 +890,8 @@ export default function StickerShow() {
                                             </span>
                                             {/* 가격표 태그 — 사진 오른쪽 위 모서리에 걸침 */}
                                             <span className="sh-tag absolute right-0.5 top-4 z-10 py-1 pl-4 pr-2 text-right leading-tight">
-                                                <span className="ah-light block text-[9.5px]">예상 펀딩가</span>
+                                                {/* 기준 단위(1개 · 1세트) — 웹 굿즈 공모전과 같게(협업자 2026-10-18 가격 조정) */}
+                                                <span className="ah-light block text-[9.5px]">예상 펀딩가 · {g.priceUnit}</span>
                                                 <span className="ah-display block text-[12px]">{item.expectedPriceKrw.toLocaleString("ko-KR")}원</span>
                                             </span>
                                             <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{item.name}</p>
