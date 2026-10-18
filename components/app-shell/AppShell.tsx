@@ -616,7 +616,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 style={{ bottom: showTabBar ? "calc(var(--app-tabbar-h) + 8px)" : "calc(16px + env(safe-area-inset-bottom, 0px))" }}
                 data-pet-companion-avoid="true"
             >
-                <div className="pointer-events-auto">
+                {/* 닫혀 있을 땐 터치를 받지 않음 — 숨긴 떠 있는 버튼(56×56) 자리가 아래 버튼(댕자랑 올리기 등)의 터치를 가로채던 문제(2026-10-18) */}
+                <div className={chatOpen ? "pointer-events-auto" : "pointer-events-none"}>
                     <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} empty={CareEmpty} />
                 </div>
             </div>}
