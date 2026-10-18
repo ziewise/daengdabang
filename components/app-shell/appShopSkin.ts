@@ -151,7 +151,7 @@ html.ddb-app-mode [role="dialog"][data-pet-companion-allow="search"] { ${PALETTE
 
 /* ── 2) 바탕 — 크레파스 배경 대신 점 무늬 속지(꾸밈 배경만 교체, 내용은 그대로) ── */
 ${S} body { ${DOT_PAPER} background-attachment: fixed; }
-${S} .global-aurora { opacity: 0; }
+${S} .global-aurora { display: none; } /* 투명 대신 아예 안 그림 — 안 보이는 웹 배경 그림을 메모리에 풀지 않게(2026-10-18 앱 속도) */
 /* 본문 글꼴 — 앱 시안 본문과 같은 둥근 글씨 / 제목은 카페24 */
 ${S} main { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; color: #3d2f2a; }
 ${S} main :is(h1, h2, h3) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.02em; }

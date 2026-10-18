@@ -41,7 +41,9 @@ import {
     petTryOnReferenceKey,
     savePetTryOnFitMaster,
 } from "@/lib/pet-tryon-fit-master";
-import { findProduct, productHref as storefrontProductHref } from "@/lib/shop";
+// 2026-10-18 앱 속도: lib/shop 을 바로 import 하면 상품 데이터 6MB 가 모든 화면(이 Provider 는 layout 전역)에 딸려 옴 →
+// 상품 주소는 lib/shop productHref 와 같은 규칙(/product/{folder || id})으로 여기서 만들고, findProduct 는 "다시 시도" 때만 불러온다.
+const storefrontProductHref = (product: CatalogProduct): string => `/product/${product.folder || product.id}`;
 import { useStore, type PetProfile, type User } from "@/lib/store";
 
 const STORAGE_KEY = "ddb.tryon.background.v2";
@@ -910,6 +912,7 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
         failedTask: BackgroundPetTryOnTask,
     ): Promise<PetTryOnStartOutcome> => {
         if (isActive(failedTask)) return { status: "existing" };
+        const { findProduct } = await import("@/lib/shop");
         const catalogProduct = findProduct(failedTask.productId);
         const pet = userRef.current?.pets.find(
             (item) => item.apiProfileId === failedTask.petProfileId,

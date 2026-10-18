@@ -10,13 +10,18 @@
  * 상단바 + 탭바)을 씌운다. 앱에서 웹 로그인(/auth/login)으로 오면 앱 로그인 화면으로 바꿔 보낸다. (로컬 시안 — 배포 X)
  */
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
-import FloatingDock from "@/components/site/FloatingDock";
-import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
-import PrelaunchNotice from "@/components/site/PrelaunchNotice";
 import AppShell from "@/components/app-shell/AppShell";
+
+// 2026-10-18 앱 속도: 웹 화면 부품(헤더 · 푸터 · 떠 있는 상담 버튼 · 산책 친구 · 오픈 준비 안내)은 웹 화면에서만 불러온다.
+// 예전에는 앱 화면에서도 코드가 함께 내려와(헤더 검색창 · 상담 창이 상품 데이터 6MB 를 끌고 옴) 앱을 열 때 폰이 멈췄다.
+// next/dynamic 기본값(ssr: true)이라 웹 화면은 미리 만든 HTML 에 그대로 그려지고 모양 · 동작은 같다.
+const Header = dynamic(() => import("@/components/header/Header"));
+const Footer = dynamic(() => import("@/components/footer/Footer"));
+const FloatingDock = dynamic(() => import("@/components/site/FloatingDock"));
+const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"));
+const PrelaunchNotice = dynamic(() => import("@/components/site/PrelaunchNotice"));
 import { useAppMode } from "@/components/app-shell/useAppMode";
 
 // 헤더/푸터/도크 없이 풀스크린으로 띄울 경로(정확 일치 또는 하위 경로)

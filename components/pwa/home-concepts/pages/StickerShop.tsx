@@ -47,6 +47,8 @@ import ShopProductCard, { SHOP_CARD_CSS } from "../shop/ShopProductCard";
 import { useShopMedia } from "../shop/useShopMedia";
 import { SHOW_PARTS_CSS, Sheet } from "../show-parts";
 import { useI18n } from "@/lib/i18n";
+// 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
+import InViewVideo from "../InViewVideo";
 
 /* 브랜드 — 웹 BrandSlider 와 같은 내용(브랜드마다 2장).
    pos: 가로로 긴 웹 배너를 4:3 칸에 채울 때 보일 위치(object-position) — 강아지가 한쪽에 있는 사진은 강아지 쪽으로(사용자 2026-10-17) */
@@ -394,7 +396,7 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,215,.9)", "rgba(190,224,255,.85)", "rgba(220,205,255,.9)", "rgba(200,240,215,.9)", "rgba(255,232,170,.9)"][i % 5]} />
             <span className={`relative block overflow-hidden rounded-[3px] ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`} style={{ background: "#f6efe8" }}>
                 {!media ? null
-                    : tile.video ? <video src={media(tile.video)} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+                    : tile.video ? <InViewVideo src={media(tile.video)} muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
                     : tile.images?.length ? tile.images.map((src, k) => <Image key={src} src={media(src) ?? src} alt="" fill sizes="50vw" className={`object-cover transition-opacity duration-700 ${k === idx ? "opacity-100" : "opacity-0"}`} />)
                         : tile.image ? <Image src={media(tile.image) ?? tile.image} alt="" fill sizes={featured ? "90vw" : "45vw"} className="object-cover" />
                             : <i aria-hidden="true" className={`fa-solid ${tile.icon} absolute inset-0 grid place-items-center text-4xl text-[#e8c9b8]`} />}

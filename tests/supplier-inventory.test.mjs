@@ -181,7 +181,8 @@ test('cart display revalidates restored lines without deleting data or silently 
     assert.equal(excluded.selectionBlocked,false);assert.equal(excluded.qty,2);assert.equal(excluded.selected,false);
 });
 test('cart reducer rejects unavailable direct additions and increases but permits removal',()=>{
-    const p=product();const mocks={'@/lib/catalog':{findById:id=>id===p.id?p:undefined},'@/lib/storage':{},'@/lib/customer-api':{},'@/lib/cart-payment-reconciliation':{removePaidLineQuantities:()=>[]}};
+    // 2026-10-18: store 는 상품 데이터를 lib/catalog-lookup 으로 필요할 때 불러옴(앱 속도) — 같은 findById 를 그쪽으로 넣음
+    const p=product();const mocks={'@/lib/catalog-lookup':{findById:id=>id===p.id?p:undefined,ensureCatalogLookup:()=>Promise.resolve()},'@/lib/storage':{},'@/lib/customer-api':{},'@/lib/cart-payment-reconciliation':{removePaidLineQuantities:()=>[]}};
     const {auditReducer}=loadModule('lib/store.tsx',mocks,'\nexports.auditReducer = reducer;');
     const initial={cart:[],wishlist:[],orders:[],user:null};
     const added=auditReducer(initial,{type:'ADD_TO_CART',productId:p.id,qty:9,color:'Blue',size:'S'});

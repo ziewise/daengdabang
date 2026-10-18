@@ -17,14 +17,16 @@
  * 모양: 흰 반투명 판 · 머리카락 같은 테두리 · 무채색 버튼, 고른 탭은 강조색 아이콘 + 작은 점. 큰 제목만 카페24 써라운드.
  */
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import PetCompanionGate from "@/components/pet-companion/PetCompanionGate";
-import SearchModal from "@/components/header/SearchModal";
-import { openChatWidget } from "@/lib/chat-widget-events";
-import ChatWidget from "@/components/site/ChatWidget";
+import { CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events";
+// 2026-10-18 앱 속도: 검색창 · 케어톡 창은 상품 데이터(6MB)를 쓰는 큰 코드라 처음 열 때만 불러온다(앱 첫 화면 · 탭 전환을 가볍게).
+// 케어톡은 열기 요청을 창이 뜨기 전에도 기억해 두는 협업자 장치(lib/chat-widget-events pendingOpen)가 있어 동작 그대로.
+const SearchModal = dynamic(() => import("@/components/header/SearchModal"), { ssr: false });
+const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: false });
 import { useAuth, useCart } from "@/lib/store";
 import {
     APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
@@ -272,6 +274,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
+    // 검색창 · 케어톡 창은 처음 열 때부터 붙여 둠(닫힘 애니메이션 · 대화 내용 유지를 위해 한 번 붙이면 계속)
+    const [searchMounted, setSearchMounted] = useState(false);
+    const [chatMounted, setChatMounted] = useState(false);
+    useEffect(() => { if (searchOpen) setSearchMounted(true); }, [searchOpen]);
+    useEffect(() => {
+        const mountChat = () => setChatMounted(true);
+        window.addEventListener(CHAT_WIDGET_OPEN_EVENT, mountChat);
+        return () => window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, mountChat);
+    }, []);
     const [chatOpen, setChatOpen] = useState(false); // 협업자 상담 창이 열려 있는가(창 자리 z 순서용)
     // 로그인 · 회원가입 화면에서는 상담 창을 내림 — 웹(FloatingDock 이 /auth 에서 사라짐)과 같은 규칙.
     // 사진 첨부의 "로그인하기"처럼 상담 창 안에서 로그인으로 갈 때 창이 로그인 화면을 가리지 않게
@@ -569,8 +580,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {children}
             </main>
 
-            {/* ── 산책 친구 — 쇼핑 탭 화면에서만(협업자 PetCompanionGate 그대로 · 장바구니 · 결제에서는 스스로 숨음) ── */}
-            {activeKey === "shop" ? <PetCompanionGate /> : null}
+            {/* ── 산책 친구 — 앱에서는 쓰지 않음(2026-10-18 사용자 결정: 계속 도는 애니메이션 · 화면 감시가 앱 반응을 느리게 함). 웹은 그대로 ── */}
 
             {/* ── 아래 탭바 — 크림 종이 판. 아이콘은 헤더와 같은 젤리 그림, 고른 탭은 파스텔 젤리 판 위로 통 + 카페24 이름 ── */}
             {showTabBar && (
@@ -608,7 +618,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </nav>
             )}
 
-            <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+            {searchMounted ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} /> : null}
             {/* 케어톡 — 어느 화면에서든 아래에서 올라오는 판 */}
             {/* 케어톡 — 협업자 전역 상담 창(ChatWidget) 그대로. 떠 있는 버튼은 숨기고(상단바 버튼이 대신) 창은 탭바 위에서 열림 · 로그인 화면에선 없음 */}
             {chatHidden ? null : <div
@@ -618,7 +628,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             >
                 {/* 닫혀 있을 땐 터치를 받지 않음 — 숨긴 떠 있는 버튼(56×56) 자리가 아래 버튼(댕자랑 올리기 등)의 터치를 가로채던 문제(2026-10-18) */}
                 <div className={chatOpen ? "pointer-events-auto" : "pointer-events-none"}>
-                    <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} empty={CareEmpty} />
+                    {chatMounted ? <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} empty={CareEmpty} /> : null}
                 </div>
             </div>}
         </>

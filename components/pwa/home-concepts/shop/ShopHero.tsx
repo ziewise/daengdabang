@@ -22,6 +22,8 @@ import { haptic } from "../gestures";
 import { Tape } from "../sticker-kit";
 import { useShopMedia } from "./useShopMedia";
 import { Sheet } from "../show-parts";
+// 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
+import InViewVideo from "../InViewVideo";
 
 /* ── 협업자 히어로와 같은 지역 저장(같은 키 · 같은 이벤트) ── */
 const DEFAULT_CONTEXT: HeroContext = { weather: "clear", season: "summer", timeBucket: "day" };
@@ -135,7 +137,7 @@ export default function ShopHero() {
             <div className="shp-pol relative mt-4 bg-white p-2 pb-3">
                 <Tape className="-top-2 left-1/2 z-10 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" style={{ rotate: "-3deg" }} />
                 <div className="relative aspect-square overflow-hidden rounded-[3px] bg-[#f3ede6]">
-                    {video ? <video key={video} src={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true"
+                    {video ? <InViewVideo key={video} src={video} muted loop playsInline preload="auto" aria-hidden="true"
                         className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} /> : null}
                 </div>
                 {/* 사진 설명 자리 — 왼쪽 끝: 지역 고르기 / 오른쪽 끝: 지역 · 온도 + 계절 시간 */}
@@ -151,7 +153,7 @@ export default function ShopHero() {
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
                 <Link href="/app/sticker/lab/" aria-label="저를 콕 눌러 분석하기 — 연구소로" onClick={() => haptic("light")}
                     className="shp-badge absolute -right-2.5 bottom-[4.2rem] z-10 block h-[4.4rem] w-[4.4rem] rounded-full">
-                    {breedVideo ? <video key={breedVideo} src={breedVideo} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" /> : null}
+                    {breedVideo ? <InViewVideo key={breedVideo} src={breedVideo} muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" /> : null}
                     <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
                 </Link>
             </div>

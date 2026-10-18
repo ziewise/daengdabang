@@ -48,6 +48,8 @@ import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
 import { GuestPickSheet, PostDetail, PostPhoto, ProfileSheet, ReportSheet, SHOW_PARTS_CSS, ShareSheet, ShowComposer, AuthorDot, type ComposerResult, type ReportReason, type ShareTarget } from "../show-parts";
 import { loadLiveFeed, loadProfile, toPost, type ProfileView, type ShowPost } from "../show-feed";
 import { useShopMedia } from "../shop/useShopMedia";
+// 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
+import InViewVideo from "../InViewVideo";
 
 const TABS = [
     { label: "댕자랑", color: "#ffd6e2" },
@@ -817,9 +819,9 @@ export default function StickerShow() {
                                 <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(summary?.startsAt || goodsContent.campaign.startsAt)} – {fmtDay(summary?.endsAt || goodsContent.campaign.endsAt)} · 회원·비회원 모두 참여</p>
                                 <div className="relative">
                                     <div className="sh-vwin relative aspect-video overflow-hidden rounded-[13px] bg-[#f3e2b8]">
-                                        {media ? <video autoPlay muted loop playsInline preload="auto" poster={media("/images/goods/goods-hero-lifestyle.webp")} aria-label="댕다방 굿즈 공모전 상품 미리보기 영상" className="absolute inset-0 h-full w-full object-cover">
+                                        {media ? <InViewVideo muted loop playsInline preload="auto" poster={media("/images/goods/goods-hero-lifestyle.webp")} aria-label="댕다방 굿즈 공모전 상품 미리보기 영상" className="absolute inset-0 h-full w-full object-cover">
                                             <source src={media("/videos/goods-contest-hero-mobile.mp4")} type="video/mp4" />
-                                        </video> : null}
+                                        </InViewVideo> : null}
                                     </div>
                                     <InkStamp rot={10} color={campaignClosed ? "#9c8a80" : "#d9822b"} className="absolute -top-5 right-1 z-[1] bg-[#fff8e6] !py-1 text-[12px]">{campaignStatusLabel}</InkStamp>
                                 </div>

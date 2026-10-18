@@ -16,7 +16,8 @@ import { DdbApiError, loadPetProfilesSmart } from "@/lib/customer-api";
 import type { CartPetAssignment } from "@/lib/pet-attribution";
 import type { AuthProvider } from "@/lib/types";
 import { removePaidLineQuantities } from "@/lib/cart-payment-reconciliation";
-import { findById } from "@/lib/catalog";
+// 상품 데이터(6MB)는 담기 · 수량 변경 때만 불러온다 — 모든 화면이 처음부터 내려받지 않게(2026-10-18 앱 속도, lib/catalog-lookup.ts 설명)
+import { ensureCatalogLookup, findById } from "@/lib/catalog-lookup";
 import { optionPurchaseState } from "./catalog/inventory";
 import { liveInventoryProduct } from "./catalog/live-inventory";
 
@@ -415,8 +416,17 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         () => ({
             state,
             hydrated,
-            addToCart: (productId, qty = 1, color, size) => dispatch({ type: "ADD_TO_CART", productId, qty, color, size }),
-            setQty: (productId, qty, color, size) => dispatch({ type: "SET_QTY", productId, qty, color, size }),
+            // 담기 · 수량 변경은 상품 데이터를 불러온 뒤 같은 검사(살 수 없는 옵션 막기)를 거쳐 반영 — 상품 화면에서는 이미 불러온 상태라 바로 반영
+            // (불러오기 실패 시에는 예전에 상품을 못 찾았을 때처럼 담지 않음)
+            addToCart: (productId, qty = 1, color, size) => {
+                void ensureCatalogLookup().then(() => dispatch({ type: "ADD_TO_CART", productId, qty, color, size }), () => undefined);
+            },
+            setQty: (productId, qty, color, size) => {
+                // 줄이기 · 빼기는 검사가 필요 없어 바로(오프라인이어도 됨), 늘리기만 상품 데이터를 불러온 뒤
+                const current = state.cart.find((line) => sameLine(line, productId, color, size))?.qty || 0;
+                if (qty <= current) { dispatch({ type: "SET_QTY", productId, qty, color, size }); return; }
+                void ensureCatalogLookup().then(() => dispatch({ type: "SET_QTY", productId, qty, color, size }), () => undefined);
+            },
             removeFromCart: (productId, color, size) => dispatch({ type: "REMOVE_FROM_CART", productId, color, size }),
             removePaidLines: (lines) => dispatch({ type: "REMOVE_PAID_LINES", lines }),
             setSelected: (productId, selected, color, size) => dispatch({ type: "SET_SELECTED", productId, color, size, selected }),
