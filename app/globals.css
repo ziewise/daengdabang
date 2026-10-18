@@ -402,28 +402,32 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     z-index: -1;
     pointer-events: none;
     overflow: hidden;
-    /* 2026-10-18 강아지 장난감 벽지(사용자 그림 9종 · 사용자 결정): 카드를 피하지 않고 화면 전체에 고르게 깔리는 무늬 한 장을 반복.
-       - 무늬 한 장(web-toy-wallpaper.webp, 3000px · 약 49KB)에 장난감 29개 — 크기 0.85~1.35배 · 기울기 ±40° · 절반 좌우 뒤집기,
-         같은 장난감끼리 멀리, 이음매 없이 이어지게 만들고 바탕색(#f7f8fb)과 장난감 60% 농도를 미리 합침
-       - PC 2000px 간격으로 반복(한 화면 안에서 같은 그림이 똑같이 반복되지 않게), 휴대폰은 1600px(장난감이 너무 작지 않게)
-       - 예전 크레파스 색 덩어리 36개 배경은 이 벽지로 바꿈(원본 그림 · 만드는 스크립트는 tools/sticker-assets 에 보관) */
+    /* 바탕색만 — 장난감 벽지는 내용과 함께 스크롤되는 .toy-wallpaper(components/site/ToyWallpaper.tsx)가 그린다(2026-10-18) */
     background-color: #f7f8fb;
-    background-image: url("/images/ui/web-toy-wallpaper.webp");
-    background-repeat: repeat;
-    background-position: 0 0;
-    background-size: 2000px 2000px;
+}
+
+/* 강아지 장난감 벽지(사용자 그림 9종 · 웹 전용) — 페이지 길이만큼 스티커를 흩뿌린 층, 내용과 함께 스크롤. 바탕색 층(.global-aurora) 위 · 내용 아래 */
+.toy-wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+.toy-wallpaper img {
+    position: absolute;
+    object-fit: contain;
+    user-select: none;
 }
 
 /* Android 브라우저/PWA의 강제 다크 처리는 실제 OS 상태와 prefers-color-scheme 보고값이
    어긋날 수 있다. Android에서는 배경 자체를 먼저 낮추고 암막까지 더해 흰 글자를 보호한다. */
-@media (max-width: 639px) {
-    .global-aurora { background-size: 1600px 1600px; }
-}
-
-/* 안드로이드 강제 다크: 장난감은 어둡게 눌리면 탁한 얼룩처럼 보여 숨기고, 아래 어두운 바탕 · 암막(협업자 글자 보호)은 그대로(2026-10-18 사용자 결정) */
+/* 안드로이드 강제 다크: 장난감 벽지는 어둡게 눌리면 탁한 얼룩처럼 보여 숨기고, 아래 어두운 바탕 · 암막(협업자 글자 보호)은 그대로(2026-10-18 사용자 결정) */
+html[data-ddb-android-dark="true"] .toy-wallpaper { display: none; }
 html[data-ddb-android-dark="true"] .global-aurora {
     background-color: #02040a;
-    background-image: none;
     filter: brightness(0.3) saturate(0.62);
 }
 

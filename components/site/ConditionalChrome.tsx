@@ -22,6 +22,8 @@ const Footer = dynamic(() => import("@/components/footer/Footer"));
 const FloatingDock = dynamic(() => import("@/components/site/FloatingDock"));
 const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"));
 const PrelaunchNotice = dynamic(() => import("@/components/site/PrelaunchNotice"));
+// 웹 배경 장난감 벽지 — 웹 화면에서만, 화면에서만 그림(ssr: false — 페이지 길이를 알아야 해서). 앱 화면은 쓰지 않음
+const ToyWallpaper = dynamic(() => import("@/components/site/ToyWallpaper"), { ssr: false });
 import { useAppMode } from "@/components/app-shell/useAppMode";
 
 // 헤더/푸터/도크 없이 풀스크린으로 띄울 경로(정확 일치 또는 하위 경로)
@@ -57,6 +59,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
     if (appShell) {
         return (
             <>
+                <ToyWallpaper />
                 <Header />
                 <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
             </>
@@ -66,6 +69,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
     // 일반 — 헤더(fixed) + 본문 여백 + 푸터 + 도크
     return (
         <>
+            <ToyWallpaper />
             <Header />
             <main className={`flex-1 flex flex-col ${pathname.startsWith("/product/") ? "pt-[env(safe-area-inset-top,0px)] md:pt-[var(--header-height)]" : "pt-[var(--header-height)]"}`}>{children}</main>
             <Footer />
