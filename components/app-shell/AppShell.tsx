@@ -686,12 +686,12 @@ html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 /* 이름: 카페24 · 고른 탭은 탭 색 */
 .app-tab-label { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; transition: color .3s ease; }
 /* 쇼핑 강조 탭(가운데) — 늘 떠 있는 큰 동그라미 젤리 판 · 또렷한 그림 · 주황 이름. 고르면 살짝 더 솟고 빛남 */
-/* 가운데 쇼핑 — 58px → 50px(2026-10-18 사용자), 둥근 테두리(약 5px)가 이름을 가리지 않게 이름과 사이를 띄움 */
+/* 가운데 쇼핑 — 56px(2026-10-18 사용자: 이름이 가려지지 않는 한도까지). 아래 끝은 그대로 두고 위로만 키워 둥근 테두리(약 5px)가 '쇼핑' 이름을 가리지 않음 */
 .app-tab.is-hero { gap: 10px; }
-.app-tab.is-hero .app-tab-icon { width: 50px; height: 50px; margin-top: -24px; }
+.app-tab.is-hero .app-tab-icon { width: 56px; height: 56px; margin-top: -30px; }
 .app-tab.is-hero .app-tab-icon::before { border-radius: 999px; transform: scale(1); opacity: 1;
   box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px var(--rim), inset 0 -4px 0 var(--rim), 0 12px 18px -10px rgba(236,106,28,.55); }
-.app-tab.is-hero .app-tab-svg { width: 33px; height: 33px; filter: drop-shadow(0 2px 2px rgba(150,70,20,.25)); }
+.app-tab.is-hero .app-tab-svg { width: 37px; height: 37px; filter: drop-shadow(0 2px 2px rgba(150,70,20,.25)); }
 /* 3D 그림 아이콘: 고르지 않은 탭은 살짝 옅게(색은 유지), 고른 탭은 또렷하게 */
 .app-tab-img { filter: saturate(.85) opacity(.72); }
 .app-tab.is-hero .app-tab-label { color: #cf5f19; }
