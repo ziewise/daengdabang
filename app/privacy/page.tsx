@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO } from "@/lib/legal";
 
-const PRIVACY_UPDATED_AT = "2026-08-06";
+const PRIVACY_UPDATED_AT = "2026-10-18";
 const DAENGLAB_OBSERVATION_PRIVACY_NOTICE_VERSION = "daenglab-observation-privacy-20260806-v3";
 
 export const metadata: Metadata = {
@@ -121,6 +121,7 @@ const consentRows = [
 ];
 
 const outsourcingRows = [
+    ["케어톡 AI 상담", "Google LLC", "AI 상담 질문과 대화 맥락을 이용한 답변 생성"],
     ["결제대행·간편결제", "PG사 및 간편결제 사업자", "결제 승인, 취소, 환불, 현금영수증 처리"],
     ["배송", "계약 택배사 및 배송 대행사", "상품 배송, 반품 회수, 배송 안내"],
     ["호스팅·보안·CDN", BUSINESS_INFO.hostingProvider, "웹사이트 제공, 트래픽 처리, 보안, 장애 대응"],
@@ -130,6 +131,15 @@ const outsourcingRows = [
 ];
 
 const overseasRows = [
+    [
+        "Google LLC (개인정보 문의: https://policies.google.com/privacy?hl=ko)",
+        "미국 등 Google이 서비스를 운영하는 국가·지역",
+        "케어톡 질문, 이전 대화 맥락 및 상담에 필요한 반려견 정보",
+        "이용자가 AI 상담을 요청할 때 암호화된 HTTPS 통신으로 이전",
+        "AI 상담 답변 생성",
+        "Gemini 임시 채팅은 Google 계정에 72시간 보관되며 AI 모델 학습에 사용되지 않음. 서비스 제공·보안 목적의 처리는 Google 정책에 따름. 댕다방 화면 초기화는 Google 기록의 즉시 삭제를 뜻하지 않음",
+        "전송을 원하지 않으면 케어톡 AI 상담을 이용하지 않을 수 있으며 일반 쇼핑과 고객 문의는 계속 이용할 수 있음",
+    ],
     [
         "Google LLC (개인정보 문의: https://policies.google.com/privacy?hl=ko)",
         "미국 등 Google이 서비스를 운영하는 국가·지역",

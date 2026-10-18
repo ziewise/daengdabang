@@ -49,6 +49,7 @@ export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
 export type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 export type { ShopChatResearch, ShopChatSource } from "@/lib/shop-chat-evidence";
 export type { ShopChatStreamStage } from "@/lib/shop-chat-stream";
+import { awaitShopChatJob } from "@/lib/shop-chat-jobs";
 
 type PetLensInput = {
     name: string;
@@ -2542,7 +2543,6 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     const abortFromCaller = () => requestController.abort();
     if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
     context?.signal?.addEventListener("abort", abortFromCaller, { once: true });
-    timeoutGuard.start();
 
     try {
         const headers: Record<string, string> = { "Content-Type": "application/json" };
@@ -2561,6 +2561,13 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ...(conversationId ? { conversationId } : {}),
             ...(references.length ? { references } : {}),
         };
+        const job = await awaitShopChatJob({
+            base, headers, payload: { ...payload, clientRequestId }, signal: requestController.signal,
+            onProgress: (stage, progressMessage) => emitShopChatProgress(context, stage, progressMessage),
+        });
+        if (job.kind === "result") return normalizeShopChatApiAnswer(job.result, new Headers(), fallbacks);
+        if (job.kind === "failed") return preparedShopChatErrorAnswer(fallbacks, "service_busy");
+        timeoutGuard.start();
         const streamed = await answerShopQuestionStream(
             base,
             headers,

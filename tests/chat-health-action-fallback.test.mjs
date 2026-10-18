@@ -20,7 +20,7 @@ const history = [
 ];
 const compiled = new Map();
 
-function loadChat({ fetch, base = "https://api.example.test" }) {
+function loadChat({ fetch, base = "https://api.example.test", resumable = false }) {
     const modules = new Map();
     const stubs = {
         "@/lib/catalog": { CATALOG: [] },
@@ -34,7 +34,9 @@ function loadChat({ fetch, base = "https://api.example.test" }) {
         "@/lib/shop-chat-client-contract": { projectShopChatPetProfile: () => null },
     };
     const context = vm.createContext({
-        fetch, URL, Headers, Response, AbortController, AbortSignal, Error, TypeError,
+        fetch: (url, init) => !resumable && url.includes("/shop-chat/jobs")
+            ? Promise.resolve(new Response("{}", { status: 501 })) : fetch(url, init),
+        URL, Headers, Response, AbortController, AbortSignal, Error, TypeError,
         TextDecoder, TextEncoder, setTimeout, clearTimeout,
     });
     const load = (name) => {

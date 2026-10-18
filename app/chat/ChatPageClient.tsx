@@ -374,6 +374,7 @@ export default function ChatPageClient() {
         referencesUploading,
         conversationOwner,
         selectedPet,
+        sessionComplete,
         showReferenceLoginNotice,
         showReferenceNotice,
         user,
@@ -657,6 +658,7 @@ export default function ChatPageClient() {
                                 <button type="button" onClick={clearChat} className="mt-2 rounded-lg bg-neutral-900 px-4 py-2 font-bold text-white">새 상담 시작</button>
                             </div>
                         ) : <p className="mb-2 text-xs text-neutral-600">답변 {completedExchanges}/3 · 3회 후 안내에 따라 새 상담을 시작해요.</p>}
+                        <p className="mb-2 text-xs leading-5 text-neutral-500">질문·대화 맥락은 Google Gemini에 전달될 수 있어요. 연락처·주소 등 개인정보는 입력하지 마세요. <a href="/privacy/#overseas" className="underline">처리 안내</a></p>
                         <GenerationReferenceTray controller={generationReferences} />
                         <div className="flex min-w-0 gap-2">
                             <GenerationReferencePhotoButton controller={generationReferences} disabled={loading || sessionComplete} />

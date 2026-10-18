@@ -44,7 +44,7 @@ test("the privacy page restores the June source details without removing newer P
     assert.match(privacy, /제13조 AI 분석 및 자동화된 결정/);
     assert.match(privacy, /댕다방 연구소 행동·소리 분석\(PetLens 관찰 기능\)/);
     assert.match(privacy, /가입 혜택 중복 방지/);
-    assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-08-06"/);
+    assert.match(privacy, /const PRIVACY_UPDATED_AT = "2026-10-18"/);
     assert.match(privacy, /개인정보처리방침 버전: v1\.5/);
 });
 
@@ -52,7 +52,8 @@ test("the privacy page discloses the live behavior and sound processing boundary
     const privacy = await source("app/privacy/page.tsx");
 
     assert.doesNotMatch(privacy, /상시적으로 국외 이전하지 않습니다/);
-    assert.doesNotMatch(privacy, /Gemini/);
+    assert.match(privacy, /Gemini 임시 채팅은 Google 계정에 72시간 보관/);
+    assert.match(privacy, /케어톡 질문, 이전 대화 맥락/);
     assert.match(privacy, /Google LLC \(개인정보 문의: https:\/\/policies\.google\.com\/privacy\?hl=ko\)/);
     assert.match(privacy, /명시적으로 동의하고 분석을 실행할 때 암호화된 HTTPS 통신으로 이전/);
     assert.match(privacy, /분석 기능 운영을 위한 임시 처리는 최대 24시간/);
