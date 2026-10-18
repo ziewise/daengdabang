@@ -33,9 +33,19 @@ if grep -F "FATAL EXCEPTION" "$app_log"; then
   exit 1
 fi
 
-devtools_socket="$(adb shell cat /proc/net/unix \
-  | awk '/webview_devtools_remote/ { value=$NF; sub(/^@/, "", value); print value; exit }' \
-  | tr -d '\r')"
+# 2026-10-18: 우리 앱(app_pid)의 WebView 디버그 통로만 고른다. 예전에는 처음 보이는 통로를 골라
+# 에뮬레이터의 다른 앱(구글 앱 등) 통로에 붙으면 "No debuggable Android WebView page" 로 실패했다.
+# 통로가 늦게 생길 수 있어 최대 30초 기다린다. adb 출력의 \r 은 비교 전에 지운다.
+devtools_socket=""
+socket_attempt=0
+while [ "$socket_attempt" -lt 30 ]; do
+  devtools_socket="$(adb shell cat /proc/net/unix \
+    | tr -d '\r' \
+    | awk -v name="webview_devtools_remote_$app_pid" '{ value=$NF; sub(/^@/, "", value); if (value == name) { print value; exit } }')"
+  [ -n "$devtools_socket" ] && break
+  socket_attempt=$((socket_attempt + 1))
+  sleep 1
+done
 if [ -z "$devtools_socket" ]; then
   cat "$app_log"
   exit 1
