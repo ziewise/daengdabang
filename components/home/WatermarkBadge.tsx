@@ -234,15 +234,15 @@ export default function WatermarkBadge({
                             <div className={`pointer-events-none absolute inset-0 transition-opacity duration-300 ${
                                 mobilePetLensCue ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                             }`}>
-                                {/* pet-lens.png 의 원(불투명 영역)은 프레임의 ~84%라 투명 여백이 있다.
-                                    scale-[1.2] 로 키워 원이 배지 흰 테두리에 딱 닿게 채운다(이중 링 제거). */}
+                                {/* 2026-10-18: 헤더와 같은 새 펫렌즈 그림(사용자 그림). 새 그림은 원이 프레임을 꽉 채워(여백 없음)
+                                    예전 그림(원 ~84%)처럼 1.2배로 키우지 않고 그대로 — 키우면 바깥 테두리가 잘림. 배지가 커서(173px) 256px 그림. */}
                                 <Image
-                                    src="/images/ui/pet-lens-128.webp"
+                                    src="/images/ui/pet-lens-v2-256.webp"
                                     alt=""
                                     fill
                                     sizes="120px"
                                     loading="eager"
-                                    className="scale-[1.2] object-cover"
+                                    className="object-cover"
                                 />
                             </div>
                         )}

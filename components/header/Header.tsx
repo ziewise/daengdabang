@@ -128,7 +128,7 @@ export default function Header() {
                         </button>
                     )}
 
-                    {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. */}
+                    {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. 메뉴 글자 18px(xl:text-lg, 2026-10-18 사용자 조정: 14 → 16 → 18) */}
                     <nav className="hidden items-center gap-1 xl:flex">
                         <NavDropdown
                             label={t("shop")}
@@ -205,7 +205,7 @@ export default function Header() {
                         </NavDropdown>
                         <Link
                             href="/daeng-showcase/"
-                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3`}
+                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-lg`}
                         >
                             댕자랑
                         </Link>
@@ -270,8 +270,8 @@ export default function Header() {
                     {/* 우측 유틸리티
                         좁은 PC·모바일(<xl): 햄버거 노출 — 검색·장바구니·로그인은 MobilePanel 내부에서 처리
                         넓은 데스크탑(xl+): 검색·장바구니·로그인/마이페이지 인라인 노출 */}
-                    <div className={`${isProductDetail ? "max-md:hidden" : ""} flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2`}>
-                        {/* 유틸 순서: (모바일) 앱 설치 → 펫렌즈 → 지구본 → 검색 → 장바구니 → 마이페이지 */}
+                    <div className={`${isProductDetail ? "max-md:hidden" : ""} flex items-center gap-1 min-[360px]:gap-1.5 sm:gap-2 xl:gap-3.5`}>
+                        {/* 유틸 순서: (모바일) 앱 설치 → 펫렌즈 → 검색 → 장바구니 → 로그인/마이페이지 → 한/영 → (좁은 화면) ☰ */}
                         {/* 앱 설치 동그라미 아이콘 + 가끔 말풍선 — 모바일 웹에서만, 누르면 /app/ 설치 안내(2026-10-18 로고 옆 "앱 홈" 알약에서 옮김) */}
                         <InstalledAppHomeButton />
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
@@ -280,13 +280,13 @@ export default function Header() {
                             onClick={handlePetLensButtonClick}
                             data-pet-guide-target="pet-lens"
                             data-mobile-petlens-guide-armed={mobilePetLensGuideArmed ? "true" : "false"}
-                            className="group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px md:h-[50px] md:w-[50px]"
+                            className="group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px md:h-[42px] md:w-[42px]"
                             aria-label="PetLens"
                             title="PetLens"
                         >
-                            {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함). 휴대폰 42px(로고보다 작게, 2026-10-18) · md 이상 50px */}
+                            {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함, 2026-10-18 헤더 전용 새 그림). 휴대폰 · md 이상 모두 42px(2026-10-18 사용자 조정) */}
                             <Image
-                                src="/images/ui/pet-lens-128.webp"
+                                src="/images/ui/header-petlens-128.webp"
                                 alt=""
                                 fill
                                 sizes="50px"
@@ -294,24 +294,23 @@ export default function Header() {
                                 priority
                             />
                         </button>
-                        {/* 지구본 배지 — 펫렌즈 우측. 휴대폰 폭(md 미만)에서는 숨김 — 메뉴(☰) 맨 위에 같은 언어 버튼이 있음(사용자 결정 2026-10-18) */}
-                        <div className="flex items-center max-md:hidden">
-                            <LanguageSwitcher />
-                        </div>
+                        {/* 검색 · 장바구니 · 마이페이지 — 3D 그림 아이콘(2026-10-18 사용자 그림). 동그라미 테두리가 없어 펫렌즈(42px)보다 작은 32px 로 같은 크기감, 넓은 화면 간격 14px(2026-10-18 사용자 조정). 넓은 데스크탑(xl+)에서만 */}
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
-                            className="hidden xl:flex w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                             aria-label={t("search")}
+                            title={t("search")}
                         >
-                            <i className="fa-solid fa-magnifying-glass" />
+                            <Image src="/images/ui/header-search-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                         </button>
                         <Link
                             href="/cart"
-                            className="hidden xl:flex relative w-10 h-10 rounded-full items-center justify-center text-foreground hover:bg-white/80 transition"
+                            className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                             aria-label={t("cart")}
+                            title={t("cart")}
                         >
-                            <i className="fa-solid fa-bag-shopping" />
+                            <Image src="/images/ui/header-cart-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                             {/* 담긴 수량 배지 — 0이면 숨김, 99 초과는 99+ */}
                             {cartHydrated && cartCount > 0 && (
                                 <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-danger text-white text-[10px] font-bold flex items-center justify-center">
@@ -320,18 +319,35 @@ export default function Header() {
                             )}
                         </Link>
 
-                        {/* 로그인/마이페이지 — hydrate 전엔 placeholder (깜빡임 방지) */}
-                        {hydrated && (
+                        {/* 마이페이지(로그인 상태) — 3D 그림 아이콘. 로그아웃 상태는 아래 로그인 아이콘(가입 안내 대상) */}
+                        {hydrated && isLoggedIn && (
                             <Link
-                                href={isLoggedIn ? "/mypage" : "/auth/login"}
-                                data-pet-guide-target={isLoggedIn ? undefined : "signup"}
-                                className={`ddb-crayon-link ${headerStyles.loginLink} hidden h-10 items-center justify-center gap-2 rounded-full px-4 text-sm font-bold transition hover:-translate-y-px xl:inline-flex`}
-                                aria-label={isLoggedIn ? t("mypage") : t("login")}
+                                href="/mypage"
+                                className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
+                                aria-label={t("mypage")}
+                                title={t("mypage")}
                             >
-                                <i className={`fa-solid ${isLoggedIn ? "fa-user" : "fa-right-to-bracket"}`} />
-                                <span>{isLoggedIn ? t("mypage") : t("login")}</span>
+                                <Image src="/images/ui/header-mypage-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                             </Link>
                         )}
+                        {/* 로그인(로그아웃 상태) — 마이페이지와 같은 32px 3D 그림 아이콘(2026-10-18 사용자 그림, "로그인" 알약 대신). hydrate 전엔 그리지 않음(깜빡임 방지) */}
+                        {hydrated && !isLoggedIn && (
+                            <Link
+                                href="/auth/login"
+                                data-pet-guide-target="signup"
+                                className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
+                                aria-label={t("login")}
+                                title={t("login")}
+                            >
+                                <Image src="/images/ui/header-login-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
+                            </Link>
+                        )}
+
+                        {/* 한/영 배지(언어 선택) — 맨 끝(로그인 · 마이페이지 오른쪽, 2026-10-18 사용자 결정: 자주 쓰는 검색 · 장바구니 · 계정 뒤).
+                            태블릿 폭은 검색 · 장바구니 · 로그인이 메뉴 안이라 "펫렌즈 → 한/영 → ☰" 그대로. 휴대폰 폭(md 미만)은 숨김 — 메뉴(☰) 맨 위에 같은 언어 버튼 */}
+                        <div className="flex items-center max-md:hidden">
+                            <LanguageSwitcher />
+                        </div>
 
                         <button
                             type="button"
@@ -417,7 +433,7 @@ function NavDropdown({
                     if (open) onLeave();
                     else onEnter();
                 }}
-                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3`}
+                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-lg`}
                 data-nav-open={open ? "true" : "false"}
             >
                 {label}

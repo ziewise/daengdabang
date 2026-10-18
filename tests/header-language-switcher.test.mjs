@@ -17,7 +17,8 @@ test("the header opens the latest country and language modal from the globe badg
     ]);
 
     assert.match(switcher, /import RegionModal from "\.\/RegionModal"/);
-    assert.match(switcher, /src="\/images\/ui\/lang-globe-128\.webp"/);
+    // 2026-10-18: 헤더 언어 버튼 그림을 지구본 → 한/영 배지로(사용자 그림)
+    assert.match(switcher, /src="\/images\/ui\/header-lang-128\.webp"/);
     assert.match(switcher, /onClick=\{\(\) => setOpen\(true\)\}/);
     assert.match(switcher, /aria-haspopup="dialog"/);
     assert.match(switcher, /aria-expanded=\{open\}/);
@@ -26,7 +27,8 @@ test("the header opens the latest country and language modal from the globe badg
     const petLensIndex = header.indexOf("data-pet-guide-target=\"pet-lens\"");
     const switcherIndex = header.indexOf("<LanguageSwitcher />", petLensIndex);
     const searchIndex = header.indexOf("setSearchOpen(true)", petLensIndex);
-    assert.ok(petLensIndex >= 0 && switcherIndex > petLensIndex && searchIndex > switcherIndex);
+    // 2026-10-18 사용자 결정: 한/영은 검색 · 장바구니 · 로그인 뒤 맨 끝(펫렌즈 → 검색 → … → 한/영)
+    assert.ok(petLensIndex >= 0 && searchIndex > petLensIndex && switcherIndex > searchIndex);
     assert.match(header, /gap-1 px-2 min-\[360px\]:gap-1\.5 sm:gap-6 sm:px-6/);
     assert.match(header, /gap-1 min-\[360px\]:gap-1\.5 sm:gap-2/);
     assert.match(header, /<BrandLogo\b[^>]*\bmobileEmphasis\b[^>]*\bmobileIntegrated\b[^>]*\/>/);
