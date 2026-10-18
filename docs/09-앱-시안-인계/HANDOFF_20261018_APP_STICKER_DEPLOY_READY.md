@@ -195,3 +195,9 @@
 - 증상: 카메라 연결 뒤 전체 화면 촬영 창에서 윗줄 닫기(×) · 아래 "15초 관찰 시작" · "연결 끊기" 버튼 오른쪽이 화면 밖으로 잘림.
 - 원인: 앱 스킨이 세로 카메라 칸을 `height:100%; width:auto; aspect-ratio:3/4` 로 키우는데, 협업자 촬영 틀(`data-petlens-capture-stage`, grid)의 열 폭이 내용에 맞춰져 카메라 칸 폭(393×852 화면에서 453px)만큼 틀 전체가 넓어짐. 같은 구조를 떼어 낸 재현에서 버튼 끝 461px(화면 393px).
 - 수정: `appShopSkin.ts` 에 `[data-petlens-capture-viewport] [data-petlens-capture-stage] { grid-template-columns: minmax(0, 1fr); }` — 틀 폭은 화면 폭까지. 재현에서 버튼 끝 385px. 영상은 협업자 `object-contain` 그대로 다 보이고 남는 틈은 종이색, 콕 찍기 위치는 협업자 코드(`handleTargetAnchorPointer`)가 칸 크기 · 영상 비율로 계산해 그대로 맞음.
+
+**⑬ 보류 — 펫렌즈 사진 · 외형 분석(/pet-lens) 사진 칸 (2026-10-18 사용자 확인, 아직 손대지 않음)**
+- 지금 구성(협업자 `app/pet-lens/PetLensClient.tsx` · `lib/petlens-multiview.ts`): 사진 칸 4개(정면 얼굴·가슴 / 왼쪽 옆선·다리 / 오른쪽 반대 옆선 / 뒷면 등선·꼬리)를 **하나씩 누르면 휴대폰 카메라가 바로 열림**(`capture="environment"` · `data-petlens-mobile-camera-capture`). 최소 1장(정면 권장)이면 분석 가능, 4장이면 더 꼼꼼히 비교. 협업자 테스트 3곳(`petlens-multiview-main` · `member-profile-navigation-mobile-ux` · `petlens-signup-draft`)이 카메라로 열리는 것을 확인 — 카메라 우선은 협업자 의도로 보임.
+- 사용자 피드백 1(겉모양): 점선 상자 + 작은 카메라 아이콘이라 **사진이 이미 등록된 칸 · 올리는 칸처럼 보여 "눌러서 찍는 곳"인 줄 몰랐음.** 개선안(우리 앱 스킨만, 동작 그대로): 칸마다 순서 번호 ①~④ · 큰 카메라 스티커 · "눌러서 찍기" 문구, 위에 "📷 정면부터 찍어 주세요" 와펜(아직 안 찍은 첫 칸을 여는 기존 동작), 찍은 칸 "✓ 찍음" · 진행 2/4 표시, 다음 칸 은은하게 반짝임.
+- 사용자 피드백 2(기능): 휴대폰에서는 **찍기만 되고 앨범 사진 첨부가 안 됨**(PC 는 파일 창). 헤더 펫렌즈 창(`PetlensUpload`)은 찍기 / 사진 선택 둘 다 있어 화면마다 다름. 안: 카메라 칸은 그대로 두고 "앨범에서 고르기" 버튼을 더해 같은 `handleFile` 로 연결(협업자 테스트 그대로 통과). **카메라만 쓰게 한 협업자 의도와 맞는지 함께 정할 것.**
+- 상태: 사용자 결정으로 보류(기록만). 진행 시 시안 먼저.
