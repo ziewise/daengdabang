@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
+import ChatProductCards from "@/components/site/ChatProductCards";
+import type { ChatExternalProduct } from "@/lib/chat-products";
 import { useChatWindow } from "@/hooks/useChatWindow";
 import { CHAT_RESIZE_EDGES } from "@/lib/chat-window-geometry";
 import {
@@ -21,7 +22,6 @@ import {
     type ShopChatQuality,
     type ShopChatStreamStage,
 } from "@/lib/daengdabang-llm";
-import { productHref } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
 import {
     CHAT_WIDGET_OPEN_EVENT,
@@ -57,6 +57,7 @@ type Message = {
     role: "user" | "assistant";
     text: string;
     products?: ReturnType<typeof answerShopQuestion>["products"];
+    externalProducts?: ChatExternalProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     research?: ShopChatResearch;
@@ -336,6 +337,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     role: "assistant",
                     text: result.answer,
                     products: result.products,
+                    externalProducts: result.externalProducts,
                     medical: result.medical,
                     sources: result.sources,
                     research: result.research,
@@ -577,19 +579,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                         앞 대화와 연결한 답변
                                     </div>
                                 )}
-                                {message.products && message.products.length > 0 && (
-                                    <div className="mt-2 grid gap-2">
-                                        {message.products.slice(0, 3).map((product) => (
-                                            <Link
-                                                key={product.id}
-                                                href={productHref(product)}
-                                                className={`${styles.productLink} block px-3 py-2 text-left text-xs font-extrabold text-neutral-800`}
-                                            >
-                                                {product.name}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
+                                <ChatProductCards products={message.products} externalProducts={message.externalProducts} />
                             </div>
                             );
                         })}

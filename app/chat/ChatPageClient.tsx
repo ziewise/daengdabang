@@ -19,7 +19,8 @@ import {
     type ShopChatStreamStage,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
-import ProductCard from "@/components/products/ProductCard";
+import ChatProductCards from "@/components/site/ChatProductCards";
+import type { ChatExternalProduct } from "@/lib/chat-products";
 import { useAuth, type PetProfile } from "@/lib/store";
 import ChatResponseExtras, {
     customerFriendlyLocalCareAnswer,
@@ -47,6 +48,7 @@ type Message = {
     role: "user" | "assistant";
     text: string;
     products?: CatalogProduct[];
+    externalProducts?: ChatExternalProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     research?: ShopChatResearch;
@@ -294,6 +296,7 @@ export default function ChatPageClient() {
                     role: "assistant",
                     text: result.answer,
                     products: result.products,
+                    externalProducts: result.externalProducts,
                     medical: result.medical,
                     sources: result.sources,
                     research: result.research,
@@ -422,7 +425,7 @@ export default function ChatPageClient() {
         void ask(input);
     };
 
-    const latestProducts = [...messages].reverse().find((message) => message.products && message.products.length > 0)?.products ?? [];
+    const latestRecommendation = [...messages].reverse().find((message) => message.role === "assistant");
 
     return (
         <main className="mx-auto flex w-full max-w-[1080px] px-2 py-2 sm:px-4 sm:py-4 lg:px-6">
@@ -633,16 +636,7 @@ export default function ChatPageClient() {
                             </div>
                         ) : null}
 
-                        {latestProducts.length > 0 ? (
-                            <section data-chat-product-suggestions className="rounded-2xl border border-amber-200 bg-[#fffdf7]/95 p-3 text-left shadow-sm">
-                                <h2 className="mb-3 text-sm font-black text-neutral-950">함께 살펴볼 상품</h2>
-                                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                                    {latestProducts.slice(0, 4).map((product) => (
-                                        <ProductCard key={product.id} product={product} />
-                                    ))}
-                                </div>
-                            </section>
-                        ) : null}
+                        <ChatProductCards products={latestRecommendation?.products} externalProducts={latestRecommendation?.externalProducts} />
                         <div aria-hidden="true" className="h-px" />
                     </div>
 

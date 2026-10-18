@@ -1,3 +1,4 @@
+import { isExcludedExternalMerchant } from "./policy";
 import { ddbApiBase } from "@/lib/customer-api";
 import type { CategorySlug, SortKey, SubcategorySlug } from "@/lib/catalog";
 import feed from "./feed.json";
@@ -151,6 +152,7 @@ export function searchExternalProducts(query: string, filter: ExternalFilter = {
     const matches = FEED
         .map((item) => ({ item, score: scoreResult(item, tokens) }))
         .filter(({ item, score }) => {
+            if (isExcludedExternalMerchant(item)) return false;
             if (filter.category && item.category !== filter.category) return false;
             if (filter.subcategory && item.subcategory !== filter.subcategory) return false;
             return score > item.rank && matchesComparisonQuery(item, query);
@@ -186,7 +188,7 @@ export async function loadExternalProducts(
         if (!response.ok) return fallback;
         const data = (await response.json()) as ExternalApiResponse;
         return Array.isArray(data.results) && data.results.length > 0
-            ? data.results.filter((product) => matchesComparisonQuery(product, query))
+            ? data.results.filter((product) => !isExcludedExternalMerchant(product) && matchesComparisonQuery(product, query))
             : fallback;
     } catch {
         return fallback;

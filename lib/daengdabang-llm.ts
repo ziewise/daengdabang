@@ -1,3 +1,4 @@
+import { normalizeChatExternalProducts, type ChatExternalProduct } from "@/lib/chat-products";
 import { CATALOG, applySort, getBestProducts, searchCatalog, type CatalogProduct } from "@/lib/catalog";
 import { ddbApiBase } from "@/lib/customer-api";
 import {
@@ -628,6 +629,7 @@ export type ShopChatCta = {
 export type ShopChatAnswer = {
     answer: string;
     products: CatalogProduct[];
+    externalProducts?: ChatExternalProduct[];
     medical?: ShopChatMedical;
     sources?: ShopChatSource[];
     actions?: ShopChatAction[];
@@ -2301,6 +2303,8 @@ function normalizeShopChatApiAnswer(
         products: preferProtectedMedicalFallback
             ? []
             : apiReturnedProducts ? unique(apiProducts).slice(0, 6) : [],
+        externalProducts: preferProtectedMedicalFallback || medicalMode || data.answerCompleted === false
+            ? [] : normalizeChatExternalProducts(data.externalProducts),
         medical: apiMedical,
         sources: preferProtectedMedicalFallback
             ? medicalFallback?.sources

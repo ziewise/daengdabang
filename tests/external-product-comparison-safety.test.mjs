@@ -1,3 +1,4 @@
+import { isExcludedExternalMerchant } from "../lib/external-products/policy.ts";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -367,7 +368,7 @@ test("live API results and local fallback both exclude partial model collisions"
     const coat = { id: "coat", title: "러프웨어 겨울 코트 2026FW", brand: "러프웨어", keywords: [], rank: 3 };
     const food = { id: "food", title: "누터스가든 하이포알러제닉 강아지 사료", brand: "NAVER", keywords: ["하이"], rank: 100 };
     const bed = { id: "bed", title: "러프웨어 하이랜드 반려견 침낭", brand: "러프웨어", keywords: [], rank: 99 };
-    const results = [goggles, boot, leash, coat, food, bed];
+    const results = [goggles, boot, leash, coat, food, bed, { ...boot, id: "naver-boot", sourceName: "네이버쇼핑", purchaseUrl: "https://smartstore.naver.com/store/products/1" }];
     const moduleRecord = { exports: {} };
     const compiled = ts.transpileModule(await source("lib/external-products/index.ts"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
@@ -376,6 +377,7 @@ test("live API results and local fallback both exclude partial model collisions"
         module: moduleRecord,
         exports: moduleRecord.exports,
         require(specifier) {
+            if (specifier === "./policy") return { isExcludedExternalMerchant };
             if (specifier === "./comparison") return comparison;
             if (specifier === "./feed.json") return results;
             if (specifier === "@/lib/customer-api") return { ddbApiBase: () => "https://api.example" };
