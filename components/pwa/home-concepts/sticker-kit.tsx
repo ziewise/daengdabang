@@ -105,12 +105,13 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
 
 /* 스티커북 결 공통 CSS */
 export const STICKER_CSS = `
-/* 자수 와펜 버튼 — 바깥(새틴 실 테두리 사선 결) + 안쪽 천(가로세로 결) + 바느질 땀(점선) */
+/* 자수 와펜 버튼 — 바깥(새틴 실 테두리 사선 결) + 안쪽 천(가로세로 결) + 바느질 땀(점선)
+   높이는 최소값만(2026-10-18) — 폰 글자가 커지거나 좁은 화면이어도 글자가 버튼 밖으로 넘치지 않고 버튼이 늘어남 */
 .st-patch { display: block; width: 100%; padding: 4px; border-radius: 999px;
   background: repeating-linear-gradient(72deg, var(--edge) 0 2px, var(--edge2) 2px 3.4px);
   box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 7px 9px -6px rgba(110,60,60,.45), inset 0 1px 0 rgba(255,255,255,.35);
   transition: transform .45s cubic-bezier(.3,1.6,.5,1), box-shadow .25s; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
-.st-patch-face { position: relative; display: flex; height: 46px; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; color: var(--ink); font-size: 16.5px;
+.st-patch-face { position: relative; display: flex; min-height: 46px; padding: 6px 20px; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; color: var(--ink); font-size: 16.5px; line-height: 1.2; text-align: center;
   text-shadow: 0 1px 0 rgba(0,0,0,.13);
   background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, transparent 1px 3px),
               repeating-linear-gradient(90deg, rgba(0,0,0,.035) 0 1px, transparent 1px 3px), var(--fill);
@@ -118,7 +119,7 @@ export const STICKER_CSS = `
 /* 바느질 땀 — 테두리 안쪽을 따라 한 바퀴 */
 .st-patch-face::after { content: ""; position: absolute; inset: 4px; border-radius: 999px; border: 2px dashed var(--stitch); pointer-events: none; }
 .st-patch.is-small { padding: 3px; }
-.st-patch.is-small .st-patch-face { height: 38px; font-size: 14px; gap: 6px; }
+.st-patch.is-small .st-patch-face { min-height: 38px; padding: 5px 16px; font-size: 14px; gap: 6px; }
 .st-patch.is-small .st-patch-face::after { inset: 3px; border-width: 1.5px; }
 /* 천이라 누르면 폭신하게 꺼짐 — 작아지고 안쪽 그늘 */
 .st-patch.is-down { transform: scale(.96); transition-duration: .12s; box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 3px 4px -3px rgba(110,60,60,.45); }

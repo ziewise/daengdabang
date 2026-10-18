@@ -42,6 +42,48 @@ const androidAppearanceBootstrap = `
   } catch {}
 })();`;
 
+// 앱 화면 폭 맞춤(2026-10-18) — 설치한 앱(PWA · APK) · 앱 전용 화면에서, 세로로 든 폭 380px 미만 폰(아이폰 디스플레이 확대 320 ·
+// 갤럭시 폴드 접은 화면 344 · 작은 갤럭시 360)은 기준 폭 390 으로 그린 뒤 브라우저가 화면에 맞게 통째로 줄인다(배치 · 위치 그대로).
+// zoom 과 달리 전체 화면 높이(dvh) · 고정 위치 · 터치 좌표가 그대로 맞는다. 380px 이상 · 가로 · 태블릿 · 펼친 폴드 · 웹 화면은 그대로.
+// 첫 그림 전에 적용되도록 <head> 안 인라인 스크립트로 두고, 접기 · 펴기 · 회전 때 다시 계산한다.
+const appViewportFit = `
+(() => {
+  try {
+    var DEFAULT = "width=device-width, initial-scale=1";
+    var BASE = 390, LIMIT = 380;
+    var nav = window.navigator;
+    var isApp = function () {
+      var devAppMode = false;
+      try { devAppMode = window.sessionStorage.getItem("ddb.appMode.v1") === "1"; } catch (e) {}
+      // devAppMode: 개발 서버의 시안 앱 모드 저장값(useAppMode, 운영에서는 쓰이지 않음) — 로컬 점검도 실제 앱처럼
+      return window.matchMedia("(display-mode: standalone)").matches || nav.standalone === true
+        || /DDBNative/.test(nav.userAgent) || /^\\/app\\/(home-1|sticker)(\\/|$)/.test(location.pathname) || devAppMode;
+    };
+    var apply = function () {
+      var portrait = window.matchMedia("(orientation: portrait)").matches;
+      var width = portrait ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
+      var next = isApp() && portrait && width > 0 && width < LIMIT ? "width=" + BASE : DEFAULT;
+      // Next 가 하이드레이션 뒤 viewport meta 를 하나 더 넣으므로(마지막 것이 적용됨) 모든 viewport meta 에 같은 값
+      var metas = document.querySelectorAll('meta[name="viewport"]');
+      for (var i = 0; i < metas.length; i += 1) {
+        if (metas[i].getAttribute("content") !== next) metas[i].setAttribute("content", next);
+      }
+      document.documentElement.dataset.ddbViewportFit = next === DEFAULT ? "device" : "base";
+    };
+    apply();
+    window.addEventListener("orientationchange", apply);
+    window.addEventListener("resize", function () { window.setTimeout(apply, 60); });
+    // 화면 이동(주소 바뀜) 때도 다시 계산 — 브라우저에서 앱 화면 ↔ 웹 화면으로 오갈 때
+    ["pushState", "replaceState"].forEach(function (name) {
+      var original = history[name];
+      history[name] = function () { var result = original.apply(this, arguments); window.setTimeout(apply, 0); return result; };
+    });
+    window.addEventListener("popstate", apply);
+    // 새 viewport meta 가 붙거나 내용이 바뀌면 다시 맞춤(값이 같으면 건드리지 않아 반복 없음)
+    new MutationObserver(apply).observe(document.head, { childList: true, subtree: true, attributes: true, attributeFilter: ["content"] });
+  } catch (e) {}
+})();`;
+
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.daengdabang.com"),
     title: "댕다방",
@@ -98,6 +140,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             suppressHydrationWarning
         >
             <head>
+                {/* 앱 화면 폭 맞춤 — 첫 그림 전에 실행(위 appViewportFit 설명) */}
+                <script id="ddb-app-viewport-fit" dangerouslySetInnerHTML={{ __html: appViewportFit }} />
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
             </head>
