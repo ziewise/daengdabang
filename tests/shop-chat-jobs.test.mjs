@@ -1,10 +1,70 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { awaitShopChatJob, CHAT_VIEW_DETACHED, pendingChatKey, rememberPendingChat, readPendingChat, forgetPendingChat } from "../lib/shop-chat-jobs.ts";
+import { awaitShopChatJob, chatQueueMessage, CHAT_VIEW_DETACHED, pendingChatKey, rememberPendingChat, readPendingChat, forgetPendingChat } from "../lib/shop-chat-jobs.ts";
 
 const reply = (state, extra = {}) => Response.json({ state, ...extra });
 const options = () => ({base: "https://example.test", headers: {}, payload: {clientRequestId: "same-request"},
     signal: new AbortController().signal, onProgress() {}, pollMs: 1, requestTimeoutMs: 10});
+
+const queue = (updates = {}) => ({waitingCount: 24, activeCount: 10, aheadCount: 12, position: 13,
+    estimatedWaitSeconds: {min: 80, max: 180}, estimateBasis: "recent", pollAfterSeconds: 5, busy: true, ...updates});
+
+test("queue message shows real position, total and a changing estimated range without promising completion", () => {
+    const first = chatQueueMessage(queue());
+    assert.match(first, /내 앞 대기 12건 · 전체 대기 24건/);
+    assert.match(first, /예상 대기 약 2~3분/);
+    assert.match(first, /처리 상황에 따라 달라질/);
+    const later = chatQueueMessage(queue({aheadCount: 0, estimatedWaitSeconds: {min: 4, max: 30}}));
+    assert.match(later, /내 앞 대기 0건/);
+    assert.match(later, /1분 이내/);
+    assert.match(chatQueueMessage(queue({estimateBasis: "initial"})), /초기 추정/);
+    assert.equal(chatQueueMessage({waitingCount: -1}), undefined);
+    assert.equal(chatQueueMessage({waitingCount: "fake"}), undefined);
+    assert.doesNotMatch(chatQueueMessage(queue({aheadCount: null})), /아직 접수 전/);
+    assert.doesNotMatch(first, /장애|다시 시도|재시도/);
+});
+
+test("full waiting room explains unaccepted state and retries same ID until admitted", async () => {
+    const calls = [], notices = [];
+    const value = await awaitShopChatJob({...options(), onProgress: (stage, message) => notices.push([stage, message]),
+        fetcher: async (_url, init) => {
+            calls.push(init);
+            if (calls.length === 1) return Response.json({detail: {code: "chat_queue_full", queue: queue({waitingCount: 1000, aheadCount: null})}},
+                {status: 503, headers: {"Retry-After": "15"}});
+            if (calls.length === 2) return reply("pending", {stage: "queued", queue: queue({aheadCount: 999})});
+            return reply("completed", {result: {answer: "queued answer"}});
+        }});
+    assert.equal(value.result.answer, "queued answer");
+    assert.deepEqual(calls.map(c => c.method), ["POST", "POST", "GET"]);
+    assert.equal(calls[0].body, calls[1].body);
+    assert.match(notices[0][1], /현재 대기 1,000건 · 아직 접수 전/);
+    assert.match(notices[1][1], /내 앞 대기 999건/);
+    assert.ok(notices.every(([stage]) => stage === "queued"));
+});
+
+test("ambiguous service failure checks receipt before resubmitting and progress clears on admission", async () => {
+    const calls = [], notices = [];
+    await awaitShopChatJob({...options(), onProgress: (...progress) => notices.push(progress), fetcher: async (_url, init) => {
+        calls.push(init.method);
+        if (calls.length === 1) return Response.json({}, {status: 503});
+        if (calls.length === 2) return reply("pending", {stage: "queued", queue: queue()});
+        if (calls.length === 3) return reply("pending", {stage: "answering"});
+        return reply("completed", {result: {answer: "once"}});
+    }});
+    assert.deepEqual(calls, ["POST", "GET", "GET", "GET"]);
+    assert.match(notices[1][1], /내 앞 대기 12건/);
+    assert.deepEqual(notices[2], ["answering", undefined]);
+});
+
+test("refresh recovery continues showing queue position without a new submission", async () => {
+    const notices = [], methods = [];
+    await awaitShopChatJob({...options(), resumeOnly: true, onProgress: (stage, message) => notices.push(message), fetcher: async (_url, init) => {
+        methods.push(init.method);
+        return methods.length === 1 ? reply("pending", {stage: "queued", queue: queue()}) : reply("completed", {result: {answer: "recovered"}});
+    }});
+    assert.deepEqual(methods, ["GET", "GET"]);
+    assert.match(notices[0], /내 앞 대기 12건/);
+});
 
 test("slow answer and repeated connection losses poll same job without duplicate POST", async () => {
     const calls = [];

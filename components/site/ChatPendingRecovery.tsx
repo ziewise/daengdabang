@@ -27,7 +27,8 @@ export default function ChatPendingRecovery({ scope, accessToken, busy, onPendin
             onPendingChange(true);
             setNotice("이전 요청의 답변을 이어서 기다리고 있어요.");
             try {
-                const result = await resumeShopChatQuestion(scope, {accessToken, signal: controller.signal});
+                const result = await resumeShopChatQuestion(scope, {accessToken, signal: controller.signal,
+                    onProgress: ({message}) => { if (active) setNotice(message || "이전 요청의 답변을 준비하고 있어요."); }});
                 if (!active) return;
                 setAnswer(result);
                 setNotice(result ? "이전 요청의 답변이에요. 아래에서 새 상담을 시작할 수 있어요." : "이전 요청을 확인할 수 없어요.");
@@ -45,7 +46,7 @@ export default function ChatPendingRecovery({ scope, accessToken, busy, onPendin
     }, [scope, accessToken, busy, onPendingChange]);
     if (!notice) return null;
     return <section aria-label="이전 요청 이어보기" className="rounded-xl border border-teal-200 bg-white p-3 text-sm leading-6">
-        <p role="status" className="font-bold text-teal-900">{notice}</p>
+        <p role="status" className="whitespace-pre-line font-bold text-teal-900">{notice}</p>
         {pending ? <button type="button" className="mt-2 rounded-lg border px-3 py-1" onClick={() => controllerRef.current?.abort()}>이전 요청 멈추기</button> : null}
         {answer ? <>
             <p className="mt-3 whitespace-pre-wrap">{customerVisibleChatAnswer(answer.answer, Boolean(answer.sources?.length))}</p>

@@ -42,10 +42,12 @@ export default function ChatThinkingProgress({
         >
             <div className="flex items-center gap-2">
                 <span className="h-3 w-3 shrink-0 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
-                <span>{progressMessage}</span>
+                <span className="whitespace-pre-line leading-relaxed">{progressMessage}</span>
             </div>
             <p className="mt-2 text-[11px] font-medium text-neutral-500" aria-live="off">
-                {elapsed}초 경과{elapsed >= 20 ? " · 답변을 확인하는 데 시간이 걸리고 있어요. 멈추기로 취소할 수 있어요." : ""}
+                {elapsed < 60 ? `${elapsed}초` : `${Math.floor(elapsed / 60)}분 ${elapsed % 60}초`} 경과
+                {stage === "queued" ? " · 다시 보내지 않아도 자동으로 순서를 확인해요. 멈추기로 취소할 수 있어요."
+                    : elapsed >= 20 ? " · 답변을 확인하는 데 시간이 걸리고 있어요. 멈추기로 취소할 수 있어요." : ""}
             </p>
         </div>
     );
