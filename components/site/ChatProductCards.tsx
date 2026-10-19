@@ -38,7 +38,8 @@ export default function ChatProductCards({ products = [], externalProducts = [] 
                 {cards.map((product) => (
                     <Link key={`${product.external ? "external" : "store"}:${product.id}`} href={product.href}
                         data-chat-product-card={product.external ? "external" : "store"}
-                        rel={product.external ? "sponsored" : undefined}
+                        target={product.external ? "_blank" : undefined}
+                        rel={product.external ? "sponsored noopener noreferrer" : undefined}
                         className="flex min-w-0 items-center gap-3 rounded-2xl border-2 border-[#b5e5d6] bg-white p-3 text-neutral-900 shadow-sm transition hover:border-teal-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-700">
                         <ProductPhoto src={product.thumbnail} name={product.title} />
                         <span className="min-w-0 flex-1">

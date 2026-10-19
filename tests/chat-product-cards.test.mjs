@@ -72,7 +72,8 @@ test("chat cards render real photos, prices, vendor labels and accessible links"
     assert.match(html, /8,000원/);
     assert.match(html, /12,000원/);
     assert.match(html, /외부 판매처 · 판매처/);
-    assert.match(html, /rel="sponsored"/);
+    assert.match(html, /data-chat-product-card="external" target="_blank" rel="sponsored noopener noreferrer"/);
+    assert.doesNotMatch(html, /data-chat-product-card="store" target="_blank"/);
     assert.match(html, /data-chat-product-card="store"/);
     assert.match(html, /data-chat-product-card="external"/);
     assert.match(html, /수수료를 받을 수 있습니다/);
