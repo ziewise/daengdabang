@@ -50,7 +50,7 @@ export { getPetLensReviewOnlyBreedCandidate } from "@/lib/petlens-review-breed";
 export type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 export type { ShopChatResearch, ShopChatSource } from "@/lib/shop-chat-evidence";
 export type { ShopChatStreamStage } from "@/lib/shop-chat-stream";
-import { awaitShopChatJob } from "@/lib/shop-chat-jobs";
+import { awaitShopChatJob, CHAT_VIEW_DETACHED, pendingChatKey, readPendingChat, rememberPendingChat, forgetPendingChat } from "@/lib/shop-chat-jobs";
 
 type PetLensInput = {
     name: string;
@@ -526,6 +526,7 @@ export type ShopChatHistoryTurn = {
 };
 
 export type ShopQuestionContext = {
+    recoveryScope?: string;
     pet?: ShopChatPetProfile | Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
     history?: ShopChatHistoryTurn[];
     references?: ShopChatReferenceInput[];
@@ -2544,7 +2545,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         streamTimeouts.idleTimeoutMs,
         streamTimeouts.overallTimeoutMs,
     );
-    const abortFromCaller = () => requestController.abort();
+    const abortFromCaller = () => requestController.abort(context?.signal?.reason);
     if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
     context?.signal?.addEventListener("abort", abortFromCaller, { once: true });
 
@@ -2565,10 +2566,18 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             ...(conversationId ? { conversationId } : {}),
             ...(references.length ? { references } : {}),
         };
-        const job = await awaitShopChatJob({
-            base, headers, payload: { ...payload, clientRequestId }, signal: requestController.signal,
-            onProgress: (stage, progressMessage) => emitShopChatProgress(context, stage, progressMessage),
-        });
+        const pendingKey = context?.recoveryScope ? await pendingChatKey(context.recoveryScope) : "";
+        requestController.signal.throwIfAborted();
+        if (pendingKey) rememberPendingChat(pendingKey, clientRequestId);
+        let job;
+        try {
+            job = await awaitShopChatJob({
+                base, headers, payload: { ...payload, clientRequestId }, signal: requestController.signal,
+                onProgress: (stage, progressMessage) => emitShopChatProgress(context, stage, progressMessage),
+            });
+        } finally {
+            if (pendingKey && requestController.signal.reason !== CHAT_VIEW_DETACHED) forgetPendingChat(pendingKey, clientRequestId);
+        }
         if (job.kind === "result") return normalizeShopChatApiAnswer(job.result, new Headers(), fallbacks);
         if (job.kind === "failed") return preparedShopChatErrorAnswer(fallbacks, "service_busy");
         timeoutGuard.start();
@@ -2636,5 +2645,24 @@ export async function submitShopChatFeedback(input: ShopChatFeedbackInput): Prom
         if (!response.ok) throw new Error(`shop-chat-feedback ${response.status}`);
     } finally {
         clearTimeout(timeoutHandle);
+    }
+}
+
+/** GET-only recovery: a missing/expired job can never enter POST/stream fallback. */
+export async function resumeShopChatQuestion(scope: string, context: ShopQuestionContext): Promise<ShopChatAnswer | null> {
+    const key = await pendingChatKey(scope);
+    const id = readPendingChat(key);
+    if (!id || !apiBase()) return null;
+    const headers: Record<string, string> = {};
+    if (context.accessToken) headers.Authorization = `Bearer ${context.accessToken}`;
+    const signal = context.signal ?? new AbortController().signal;
+    try {
+        const job = await awaitShopChatJob({base: apiBase(), headers, payload: {clientRequestId: id}, signal,
+            resumeOnly: true, onProgress: (stage, message) => emitShopChatProgress(context, stage, message)});
+        if (job.kind !== "result") throw new Error("previous_chat_unavailable");
+        return normalizeShopChatApiAnswer(job.result, new Headers(), {
+            unavailableFallback: generalVerificationUnavailableAnswer("")});
+    } finally {
+        if (signal.reason !== CHAT_VIEW_DETACHED) forgetPendingChat(key, id);
     }
 }

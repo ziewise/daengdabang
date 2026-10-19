@@ -50,7 +50,8 @@ export default function ChatProductCards({ products = [], externalProducts = [] 
                     </Link>
                 ))}
             </div>
-            {externalProducts.length > 0 ? <p className="mt-2 text-xs leading-relaxed text-neutral-500">외부 상품의 가격·배송비는 판매처에서 확인해 주세요. 일부 링크를 통한 구매 시 댕다방이 수수료를 받을 수 있습니다.</p> : null}
+            <p className="mt-2 text-xs leading-relaxed text-neutral-500">표시 가격의 판매 단위·묶음 수량·배송비는 상품 상세페이지에서 확인해 주세요.</p>
+            {externalProducts.length > 0 ? <p className="mt-1 text-xs leading-relaxed text-neutral-500">일부 링크를 통한 구매 시 댕다방이 수수료를 받을 수 있습니다.</p> : null}
         </section>
     );
 }

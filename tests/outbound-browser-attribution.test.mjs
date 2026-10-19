@@ -6,6 +6,21 @@ import ts from "typescript";
 
 const root = new URL("../", import.meta.url);
 
+test("CareTalk survives final merchant attribution without replacing approved campaign bytes", async () => {
+    const { attributedOutboundVisit } = await loadOutboundModule();
+    const url = "https://www.urhey.co.kr/item?affiliate=approved%2Bcode#detail";
+    const visit = attributedOutboundVisit(url, { surface: "caretalk" });
+    assert.equal(new URL(visit.targetUrl).searchParams.get("utm_content"), "caretalk");
+    assert.ok(visit.targetUrl.includes("affiliate=approved%2Bcode"));
+    const approved = "https://inclear.co.kr/item?utm_source=existing&utm_content=approved%2Bplacement";
+    assert.equal(attributedOutboundVisit(approved, { surface: "caretalk" }).targetUrl, approved);
+    const marketplace = "https://www.lotteon.com/p/product/LO123?affiliate=existing";
+    const ordinary = attributedOutboundVisit(marketplace, { surface: "caretalk" });
+    assert.equal(ordinary.targetUrl, marketplace);
+    assert.equal(ordinary.attributionMode, "referrer");
+    assert.equal(ordinary.partnerId, "");
+});
+
 async function loadOutboundModule() {
     const source = await readFile(new URL("lib/outbound.ts", root), "utf8");
     const compiled = ts.transpileModule(source, {

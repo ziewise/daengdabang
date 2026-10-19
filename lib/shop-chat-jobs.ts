@@ -1,6 +1,35 @@
 type JobReply = { state?: string; stage?: string; result?: unknown };
 type JobOutcome = { kind: "result"; result: unknown } | { kind: "unsupported" } | { kind: "failed" };
 
+export const CHAT_VIEW_DETACHED = "chat_view_detached";
+
+/** Only opaque IDs live in tab storage; never prompts, answers or credentials. */
+export async function pendingChatKey(scope: string): Promise<string> {
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(scope));
+    return `ddb:pending-chat:v1:${Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2, "0")).join("")}`;
+}
+
+export function readPendingChat(key: string): string | null {
+    try {
+        const row = JSON.parse(sessionStorage.getItem(key) || "null");
+        return row && typeof row.id === "string" && /^[A-Za-z0-9_-]{16,80}$/.test(row.id)
+            && Number.isFinite(row.created) && Date.now() - row.created < 86400_000 ? row.id : null;
+    } catch { return null; }
+}
+
+export function rememberPendingChat(key: string, id: string): void {
+    const previous = readPendingChat(key);
+    if (previous && previous !== id) throw new Error("pending_chat_requires_recovery");
+    try { sessionStorage.setItem(key, JSON.stringify({ id, created: Date.now() })); } catch { /* polling still works */ }
+}
+
+export function forgetPendingChat(key: string, id: string): void {
+    // A late result must not erase a newer request's recovery receipt.
+    if (readPendingChat(key) === id) {
+        try { sessionStorage.removeItem(key); } catch { /* storage may be disabled */ }
+    }
+}
+
 /** A transport timeout only reconnects to the same server-owned request. */
 export async function awaitShopChatJob(input: {
     base: string;
@@ -11,12 +40,13 @@ export async function awaitShopChatJob(input: {
     fetcher?: typeof fetch;
     pollMs?: number;
     requestTimeoutMs?: number;
+    resumeOnly?: boolean;
 }): Promise<JobOutcome> {
     const fetcher = input.fetcher ?? fetch;
     const root = `${input.base.replace(/\/$/, "")}/api/v1/shop-chat/jobs`;
     const url = `${root}/${encodeURIComponent(input.payload.clientRequestId)}`;
-    let accepted = false;
-    let submit = true;
+    let accepted = Boolean(input.resumeOnly);
+    let submit = !input.resumeOnly;
     let attempted = false;
     let retry = 0;
     const checkCancelled = () => input.signal.throwIfAborted();
@@ -87,7 +117,7 @@ export async function awaitShopChatJob(input: {
             await delay();
         }
     } finally {
-        if (input.signal.aborted && attempted) {
+        if (input.signal.aborted && input.signal.reason !== CHAT_VIEW_DETACHED && attempted) {
             // Separate from the aborted polling signal; the server cancels the
             // provider task and retains a tombstone against a delayed POST.
             void fetcher(url, { method: "DELETE", headers: input.headers,

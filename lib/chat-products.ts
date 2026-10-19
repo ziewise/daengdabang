@@ -8,6 +8,7 @@ export type ChatExternalProduct = {
     priceText: string;
     thumbnail: string;
     href: string;
+    commissionStatus: "unverified";
 };
 
 export function chatProductImage(value: unknown): string {
@@ -36,13 +37,18 @@ export function normalizeChatExternalProducts(value: unknown): ChatExternalProdu
         const price = item.basePrice ?? item.totalPrice;
         const displayPrice = typeof priceText === "string" && priceText.trim()
             ? priceText : typeof price === "number" && price > 0 ? `${price.toLocaleString("ko-KR")}원` : "가격 확인 필요";
+        // Outbound analytics calls this field totalPrice. Do not pair a base
+        // price label with a shipping-inclusive value or infer unknown freight.
+        const total = item.shippingFeeKnown === true && typeof item.totalPrice === "number" && item.totalPrice > 0
+            ? item.totalPrice : null;
         return [{
             id: String(item.id || purchaseUrl), title, sourceName, priceText: displayPrice,
+            commissionStatus: "unverified",
             thumbnail: chatProductImage(item.thumbnail),
             href: outboundHref(purchaseUrl, {
                 source: sourceName, product: title, productId: String(item.id || ""),
                 offerId: item.offerId, seller: item.sellerName, kind: item.sourceKind,
-                price: item.totalPrice ?? item.basePrice, priceText: displayPrice,
+                price: total, priceText: total === null ? "" : `${total.toLocaleString("ko-KR")}원 (배송비 포함)`,
                 hasThumbnail: Boolean(chatProductImage(item.thumbnail)), surface: "caretalk",
                 category: item.category, subcategory: item.subcategory,
             }, { affiliateTrail: true }),

@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import ChatPendingRecovery from "@/components/site/ChatPendingRecovery";
+import { CHAT_VIEW_DETACHED } from "@/lib/shop-chat-jobs";
 import ChatProductCards from "@/components/site/ChatProductCards";
 import type { ChatExternalProduct } from "@/lib/chat-products";
 import { useChatWindow } from "@/hooks/useChatWindow";
@@ -105,6 +107,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const activeRequestRef = useRef<AbortController | null>(null);
     const activeQuestionRef = useRef("");
     const [requestNotice, setRequestNotice] = useState("");
+    const [recovering, setRecovering] = useState(false);
     const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
     const [streamMessage, setStreamMessage] = useState("");
     const [streamedAnswer, setStreamedAnswer] = useState("");
@@ -115,6 +118,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         email: user.email,
     } : null, [user]);
     const conversationOwnerKey = shopChatConversationOwnerKey(conversationOwner);
+    const recoveryScope = `widget:${conversationOwnerKey}`;
     const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
     const {
         hasUploadErrors,
@@ -194,7 +198,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         return () => window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, openFromPage);
     }, []);
 
-    useEffect(() => () => activeRequestRef.current?.abort(), []);
+    useEffect(() => () => activeRequestRef.current?.abort(CHAT_VIEW_DETACHED), []);
 
     useEffect(() => {
         const previousOwner = conversationOwnerRef.current;
@@ -276,6 +280,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             showReferenceNotice("올리지 못한 사진을 다시 시도하거나 삭제한 뒤 보내 주세요.");
             return false;
         }
+        if (recovering) { setRequestNotice("이전 요청의 답변을 기다리거나 먼저 멈춰 주세요."); return false; }
         if (!trimmed || inFlightRef.current) return false;
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
@@ -309,6 +314,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 history,
                 references: readyReferences,
                 accessToken: user?.apiAccessToken,
+                recoveryScope,
                 conversationId: conversationIdRef.current || undefined,
                 onProgress: ({ stage, message }) => {
                     if (requestSequence !== requestSequenceRef.current) return;
@@ -603,6 +609,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 </div>
                             </div>
                         )}
+                        {hydrated ? <ChatPendingRecovery key={recoveryScope} scope={recoveryScope} accessToken={user?.apiAccessToken} busy={loading} onPendingChange={setRecovering} /> : null}
                         {!loading && requestNotice ? (
                             <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[11px] font-bold leading-4 text-neutral-600" role="status">
                                 {requestNotice}

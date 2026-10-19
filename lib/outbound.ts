@@ -17,6 +17,7 @@ function hostMatches(host: string, domain: string): boolean {
 }
 
 function stableSurface(value: string | undefined): string {
+    if (value === "caretalk") return "caretalk";
     if (value === "card") return "product_card";
     if (value === "exact-comparison") return "price_compare";
     return "external_search";

@@ -19,6 +19,8 @@ import {
     type ShopChatStreamStage,
 } from "@/lib/daengdabang-llm";
 import type { CatalogProduct } from "@/lib/catalog";
+import ChatPendingRecovery from "@/components/site/ChatPendingRecovery";
+import { CHAT_VIEW_DETACHED } from "@/lib/shop-chat-jobs";
 import ChatProductCards from "@/components/site/ChatProductCards";
 import type { ChatExternalProduct } from "@/lib/chat-products";
 import { useAuth, type PetProfile } from "@/lib/store";
@@ -93,6 +95,7 @@ export default function ChatPageClient() {
     const completedExchanges = messages.filter((message) => message.role === "assistant" && message.delivery?.status === "live").length;
     const sessionComplete = completedExchanges >= 5;
     const [requestNotice, setRequestNotice] = useState("");
+    const [recovering, setRecovering] = useState(false);
     const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
     const [streamMessage, setStreamMessage] = useState("");
     const [streamedAnswer, setStreamedAnswer] = useState("");
@@ -103,6 +106,7 @@ export default function ChatPageClient() {
         email: user.email,
     } : null, [user]);
     const conversationOwnerKey = shopChatConversationOwnerKey(conversationOwner);
+    const recoveryScope = `page:${conversationOwnerKey}`;
     const generationReferences = useGenerationReferenceAttachments({ accessToken: user?.apiAccessToken });
     const {
         hasUploadErrors,
@@ -128,7 +132,7 @@ export default function ChatPageClient() {
 
     useEffect(() => {
         trackStorefrontEvent("chat_opened", { surface: "chat_page" });
-        return () => activeRequestRef.current?.abort();
+        return () => activeRequestRef.current?.abort(CHAT_VIEW_DETACHED);
     }, []);
 
     useEffect(() => {
@@ -240,6 +244,7 @@ export default function ChatPageClient() {
             setRequestNotice("답변 5회를 마쳤어요. 내용을 확인한 뒤 새 상담을 시작해 주세요.");
             return false;
         }
+        if (recovering) { setRequestNotice("이전 요청의 답변을 기다리거나 먼저 멈춰 주세요."); return false; }
         if (!trimmed || inFlightRef.current) return false;
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
@@ -268,6 +273,7 @@ export default function ChatPageClient() {
                 history,
                 references: readyReferences,
                 accessToken: user?.apiAccessToken,
+                recoveryScope,
                 conversationId: conversationIdRef.current || undefined,
                 onProgress: ({ stage, message }) => {
                     if (requestSequence !== requestSequenceRef.current) return;
@@ -378,6 +384,8 @@ export default function ChatPageClient() {
         conversationOwner,
         selectedPet,
         sessionComplete,
+        recovering,
+        recoveryScope,
         showReferenceLoginNotice,
         showReferenceNotice,
         user,
@@ -630,6 +638,7 @@ export default function ChatPageClient() {
                             </div>
                         ) : null}
 
+                        {hydrated ? <ChatPendingRecovery key={recoveryScope} scope={recoveryScope} accessToken={user?.apiAccessToken} busy={loading} onPendingChange={setRecovering} /> : null}
                         {!loading && requestNotice ? (
                             <div className="rounded-xl border border-neutral-200 bg-white/95 px-3 py-2 text-xs font-bold text-neutral-600" role="status">
                                 {requestNotice}

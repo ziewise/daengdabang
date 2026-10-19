@@ -84,3 +84,14 @@ test("missing catalog image renders a neutral placeholder instead of an invented
     assert.match(html, /사진 준비 중/);
     assert.doesNotMatch(html, /<img/);
 });
+
+test("card base price and outbound delivered total keep their distinct meanings", () => {
+    const [known] = normalizeChatExternalProducts([offer({basePrice: 12000, totalPrice: 15000, shippingFee: 3000, shippingFeeKnown: true})]);
+    assert.equal(known.priceText, "12,000원");
+    assert.equal(known.commissionStatus, "unverified");
+    const tracking = new URL(known.href, "https://www.daengdabang.com").searchParams;
+    assert.equal(tracking.get("price"), "15000");
+    assert.equal(tracking.get("priceText"), "15,000원 (배송비 포함)");
+    const [unknown] = normalizeChatExternalProducts([offer({basePrice: 12000, totalPrice: 12000, shippingFeeKnown: false})]);
+    assert.equal(new URL(unknown.href, "https://www.daengdabang.com").searchParams.has("price"), false);
+});
