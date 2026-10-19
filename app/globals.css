@@ -2240,6 +2240,36 @@ header + main .hero-shell {
     80% { opacity: 0.35; transform: scale(0.82); }
 }
 
+/* 댕다방 핫픽(웹 메인 첫 상품 섹션) — 제품군 카드 뒤집기. 두 면을 같은 칸에 겹치고 뒷면은 180도 돌려 둔다 */
+.ddb-hotpick-inner {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.75s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.ddb-hotpick-face {
+    grid-area: 1 / 1;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.ddb-hotpick-back {
+    transform: rotateY(180deg);
+}
+
+/* 제품군 이름은 제목 글꼴(Cafe24 써라운드, 한 굵기) */
+.ddb-hotpick-group {
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+    font-weight: 400;
+}
+
+/* 움직임 줄이기 설정 — 돌지 않고 바로 바뀜 */
+@media (prefers-reduced-motion: reduce) {
+    .ddb-hotpick-inner {
+        transition: none;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .ddb-motion-lift,
     .ddb-attention-cta {

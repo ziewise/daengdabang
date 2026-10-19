@@ -10,7 +10,7 @@ test("home exposes one compact daily entry and keeps the full engagement hub off
     const sentinel = home.indexOf('id="fab-reveal-sentinel"');
     const dailyMine = home.indexOf("<DailyMineTeaser");
     const recommendations = home.indexOf("<RecommendSection");
-    const best = home.indexOf("<BestSection");
+    const best = home.indexOf("<HotPickSection"); // 2026-10-19 첫 상품 섹션: 추천 셀렉트 → 댕다방 핫픽
     const brands = home.indexOf("<BrandSlider");
     const promo = home.indexOf("<PromoSection");
     const newArrivals = home.indexOf("<NewArrivalsSection");

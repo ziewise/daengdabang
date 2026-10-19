@@ -11,7 +11,7 @@
  *
  * [우리 구성 — 메인 섹션]
  *   - RecommendSection  : 로그인 회원 + 등록 펫 기반 맞춤 추천 (비로그인 시 미노출)
- *   - BestSection       : 댕다방 추천 셀렉트
+ *   - HotPickSection    : 댕다방 핫픽(제품군별 1~3위 카드 뒤집기)
  *   - BrandSlider       : 대표 브랜드 자동 페이드
  *   - PromoSection      : 기획전 (1 featured + 4 small)
  *   - NewArrivalsSection: 신상품 무한 캐러셀
@@ -24,7 +24,7 @@ import { getBestProducts } from "@/lib/catalog";
 import IntroSplash from "@/components/home/IntroSplash";
 import HeroSection from "@/components/home/HeroSection";
 import RecommendSection from "@/components/main/RecommendSection";
-import BestSection from "@/components/main/BestSection";
+import HotPickSection from "@/components/main/HotPickSection";
 import BrandSlider from "@/components/main/BrandSlider";
 import PromoSection from "@/components/main/PromoSection";
 import NewArrivalsSection from "@/components/main/NewArrivalsSection";
@@ -50,7 +50,8 @@ export default function HomePage() {
 
             {/* 회원의 반려견 데이터를 반영한 추천 상품은 히어로 바로 아래에 노출한다. */}
             <RecommendSection />
-            <BestSection />
+            {/* 2026-10-19 웹 시안: 추천 셀렉트 → 댕다방 핫픽(제품군 5장 · 1~3위 카드 뒤집기). 앱은 그대로 */}
+            <HotPickSection />
             <BrandSlider />
             <PromoSection />
 
