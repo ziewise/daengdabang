@@ -22,13 +22,13 @@ import ProductColorImage from "@/components/products/ProductColorImage";
 import { productHref } from "@/lib/shop";
 import { useI18n } from "@/lib/i18n";
 
-// 제품군 5개 — 이름 · 카테고리 주소 · 사용자 3D 제품군 그림(앱 쇼핑과 같은 그림)
+// 제품군 5개 — 이름 · 카테고리 주소 · 사용자 핫픽 제품군 그림(2026-10-19, 원본 tools/sticker-assets/originals/hotpick-*.png)
 const GROUPS: { slug: CategorySlug; ko: string; en: string; icon: string }[] = [
-    { slug: "outdoor", ko: "산책/아웃도어", en: "Walk & Outdoor", icon: "/images/ui/stickers/cat-outdoor.webp" },
-    { slug: "food", ko: "먹거리", en: "Food", icon: "/images/ui/stickers/cat-food.webp" },
-    { slug: "life", ko: "생활용품", en: "Living", icon: "/images/ui/stickers/cat-life.webp" },
-    { slug: "toy", ko: "장난감/놀이", en: "Toys & Play", icon: "/images/ui/stickers/cat-toy.webp" },
-    { slug: "care", ko: "케어", en: "Care", icon: "/images/ui/stickers/cat-care.webp" },
+    { slug: "outdoor", ko: "산책/아웃도어", en: "Walk & Outdoor", icon: "/images/ui/hotpick-outdoor-128.webp" },
+    { slug: "food", ko: "먹거리", en: "Food", icon: "/images/ui/hotpick-food-128.webp" },
+    { slug: "life", ko: "생활용품", en: "Living", icon: "/images/ui/hotpick-life-128.webp" },
+    { slug: "toy", ko: "장난감/놀이", en: "Toys & Play", icon: "/images/ui/hotpick-toy-128.webp" },
+    { slug: "care", ko: "케어", en: "Care", icon: "/images/ui/hotpick-care-128.webp" },
 ];
 
 const RANKS = 3;            // 제품군마다 1~3위
@@ -135,7 +135,7 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
         >
             {/* 제품군 이름 — 누르면 그 제품군 전체 보기 */}
             <Link href={`/category/${group.slug}`} className="mb-2.5 flex min-w-0 items-center gap-1.5 px-1 md:gap-2">
-                <Image src={group.icon} alt="" width={36} height={36} className="h-7 w-7 shrink-0 object-contain md:h-9 md:w-9" />
+                <Image src={group.icon} alt="" width={44} height={44} className="h-8 w-8 shrink-0 object-contain md:h-11 md:w-11" />
                 {/* 휴대폰 좁은 칸에서도 한 줄(산책/아웃도어) */}
                 <span className="ddb-hotpick-group truncate text-[13px] tracking-tight text-neutral-900 md:text-base">{locale === "en" ? group.en : group.ko}</span>
                 <i className="fa-solid fa-chevron-right ml-auto text-[10px] text-neutral-400" aria-hidden="true" />
