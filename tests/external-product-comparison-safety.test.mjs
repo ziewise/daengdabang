@@ -35,6 +35,7 @@ async function comparisonModule() {
         module: moduleRecord,
         exports: moduleRecord.exports,
         require(specifier) {
+            if (specifier === "@/lib/external-products/policy") return { isExcludedExternalMerchant };
             if (specifier === "@/lib/outbound") {
                 return {
                     outboundHref: (target) => `/outbound/?to=${encodeURIComponent(target)}`,

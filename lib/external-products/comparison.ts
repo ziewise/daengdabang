@@ -1,4 +1,5 @@
 import { outboundHref, safeOutboundTarget } from "@/lib/outbound";
+import { isExcludedExternalMerchant } from "@/lib/external-products/policy";
 import type { ExternalProductResult } from "@/lib/external-products";
 
 export type ProductComparisonStatus =
@@ -488,6 +489,7 @@ export function hasActualProductImage(product: ExternalProductResult): boolean {
 }
 
 export function isDisplayableExternalProduct(product: ExternalProductResult): boolean {
+    if (isExcludedExternalMerchant(product)) return false;
     if (product.crawlSource === "marketplace-search-bridge") return false;
     if (isMarketEstimate(product)) return false;
     if (product.linkKind === "search" || isGenericSearchUrl(product.purchaseUrl || "")) return false;
@@ -583,10 +585,15 @@ export function statusLabel(product: ExternalProductResult, locale: "ko" | "en")
 }
 
 export function externalProductHref(product: ExternalProductResult, query: string, surface: string): string {
+    if (isExcludedExternalMerchant(product)) return "";
     const target = safeReferenceTarget(product.purchaseUrl || "");
     const fallbackTarget = safeReferenceTarget(product.outboundUrl || "");
     const chosenTarget = target || fallbackTarget;
     if (!chosenTarget) return "";
+    // The redirect records totalPrice. Only send a confirmed delivered total,
+    // with a matching label, from every product surface (including CareTalk).
+    const total = hasExplicitShippingEvidence(product) && product.priceComparable !== false
+        && positiveNumber(product.totalPrice) ? product.totalPrice : null;
     return outboundHref(chosenTarget, {
         source: product.sourceName,
         product: product.title,
@@ -595,8 +602,8 @@ export function externalProductHref(product: ExternalProductResult, query: strin
         offerId: product.offerId,
         seller: product.sellerName,
         kind: product.sourceKind,
-        price: product.totalPrice ?? product.basePrice ?? product.priceLow ?? null,
-        priceText: product.priceText,
+        price: total,
+        priceText: total === null ? "" : `${total.toLocaleString("ko-KR")}원 (배송비 포함)`,
         hasThumbnail: Boolean(product.thumbnail),
         rank: product.rank,
         surface,

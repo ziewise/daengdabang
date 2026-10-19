@@ -25,6 +25,8 @@ function load(path) {
 }
 const { normalizeChatExternalProducts, chatProductImage } = load("lib/chat-products.ts");
 const { isExcludedExternalMerchant } = load("lib/external-products/policy.ts");
+const { externalProductHref, isDisplayableExternalProduct } = load("lib/external-products/comparison.ts");
+const { attributedOutboundVisit } = load("lib/outbound.ts");
 const offer = (changes = {}) => ({
     id: "outside-1", title: "강아지 칠면조 간식 100g", sourceName: "판매처", priceText: "12,000원",
     thumbnail: "https://merchant.example/photo.jpg", linkKind: "product",
@@ -94,4 +96,75 @@ test("card base price and outbound delivered total keep their distinct meanings"
     assert.equal(tracking.get("priceText"), "15,000원 (배송비 포함)");
     const [unknown] = normalizeChatExternalProducts([offer({basePrice: 12000, totalPrice: 12000, shippingFeeKnown: false})]);
     assert.equal(new URL(unknown.href, "https://www.daengdabang.com").searchParams.has("price"), false);
+});
+
+test("search, comparison and chat share destination, offer identity and visit attribution", () => {
+    for (const purchaseUrl of [
+        "https://www.lotteon.com/p/product/123?sitmNo=456&mall_no=1&affiliate=keep%2Fexact",
+        "https://urhey.co.kr/product/123?utm_source=approved%20partner&utm_campaign=existing#option",
+        "https://inclear.co.kr/product/123?affiliate=existing",
+    ]) {
+        const item = offer({ purchaseUrl, offerId: "offer-1", sellerName: "seller", sourceKind: "merchant",
+            basePrice: 12000, totalPrice: 15000, shippingFee: 3000, shippingEvidence: "explicit_fee",
+            category: "food", subcategory: "treats", rank: 2 });
+        const [chat] = normalizeChatExternalProducts([item]);
+        const chatUrl = new URL(chat.href, "https://www.daengdabang.com");
+        assert.equal(chat.href, externalProductHref(item, "", "caretalk"));
+        for (const surface of ["card", "exact-comparison", "smart-comparison", "smart-comparison-mobile"]) {
+            const searchUrl = new URL(externalProductHref(item, "간식", surface), "https://www.daengdabang.com");
+            assert.equal(searchUrl.pathname, chatUrl.pathname);
+            for (const key of ["to", "source", "product", "productId", "offerId", "seller", "kind", "price", "priceText", "via", "rank", "category", "subcategory"]) {
+                assert.equal(chatUrl.searchParams.get(key), searchUrl.searchParams.get(key), key);
+            }
+            const searchVisit = attributedOutboundVisit(searchUrl.searchParams.get("to"), { surface });
+            const chatVisit = attributedOutboundVisit(chatUrl.searchParams.get("to"), { surface: "caretalk" });
+            assert.equal(chatVisit.partnerId, searchVisit.partnerId);
+            assert.equal(chatVisit.attributionMode, searchVisit.attributionMode);
+            const searchTarget = new URL(searchVisit.targetUrl);
+            const chatTarget = new URL(chatVisit.targetUrl);
+            // Only the originating screen differs; existing merchant params survive.
+            searchTarget.searchParams.delete("utm_content");
+            chatTarget.searchParams.delete("utm_content");
+            assert.equal(chatTarget.toString(), searchTarget.toString());
+        }
+        assert.equal(chatUrl.searchParams.get("to"), purchaseUrl);
+        assert.equal(chatUrl.searchParams.has("query"), false);
+    }
+});
+
+test("all external surfaces exclude Naver at the final link and display boundaries", () => {
+    for (const changes of [
+        { purchaseUrl: "https://smartstore.naver.com/other/products/1" },
+        { purchaseUrl: "https://brand.naver.com/shop/products/1" },
+        { purchaseUrl: "https://naver.me/a" },
+        { purchaseUrl: "https://merchant.example/go?to=https%3A%2F%2Fnaver.me%2Fa" },
+        { outboundUrl: "https://www.daengdabang.com/outbound/?to=https%3A%2F%2Fsmartstore.naver.com%2Fshop%2F1" },
+        { sourceName: "네이버쇼핑" },
+    ]) {
+        const item = offer({ basePrice: 12000, ...changes });
+        assert.equal(isDisplayableExternalProduct(item), false);
+        assert.equal(normalizeChatExternalProducts([item]).length, 0);
+        for (const surface of ["card", "exact-comparison", "caretalk"]) {
+            assert.equal(externalProductHref(item, "", surface), "");
+        }
+    }
+});
+
+test("all product surfaces omit uncertain totals and agree on confirmed free shipping", () => {
+    for (const facts of [
+        { shippingFeeKnown: false },
+        { shippingFeeKnown: true, shippingFee: 0 },
+        { shippingEvidence: "unknown", shippingFeeKnown: true, shippingFee: 3000 },
+        { shippingEvidence: "explicit_fee", priceComparable: false },
+        { shippingEvidence: "explicit_fee", totalPrice: Number.POSITIVE_INFINITY },
+    ]) {
+        const item = offer({ totalPrice: 12000, ...facts });
+        for (const surface of ["card", "caretalk"]) {
+            const params = new URL(externalProductHref(item, "", surface), "https://www.daengdabang.com").searchParams;
+            assert.equal(params.has("price"), false);
+            assert.equal(params.has("priceText"), false);
+        }
+    }
+    const [chat] = normalizeChatExternalProducts([offer({ totalPrice: 12000, shippingEvidence: "explicit_free" })]);
+    assert.equal(new URL(chat.href, "https://www.daengdabang.com").searchParams.get("price"), "12000");
 });
