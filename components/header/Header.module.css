@@ -76,9 +76,10 @@
     position: relative;
     isolation: isolate;
     overflow: visible;
-    font-family: var(--font-wanted-sans), Arial, sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.025em;
+    /* 메뉴 글자는 앱 제목 글꼴(Cafe24 써라운드, globals.css에서 불러옴) — 한 굵기뿐이라 400 */
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
     transform-origin: 50% 72%;
     white-space: nowrap;
 }
