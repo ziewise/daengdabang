@@ -1959,6 +1959,21 @@ header + main .hero-shell {
     transform: rotate(-0.6deg) translateY(-1px);
 }
 
+/* 메인 "매일 댕생활" 띠(DailyMineTeaser, 2026-10-19 B안) — 같은 버튼 이름표(ddb-crayon-link · 반짝임 ddb-attention-cta)는 두고
+   모양만 웹 섹션 버튼처럼 검정 알약(크레파스 점선 · 손글씨 대신) */
+[data-daily-mine-teaser] .ddb-crayon-link {
+    border: 0 !important;
+    background: #17171c !important;
+    color: #fff !important;
+    box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.45) !important;
+    font-family: var(--font-wanted-sans), sans-serif;
+    font-weight: 800;
+}
+[data-daily-mine-teaser] .ddb-crayon-link:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
 .ddb-crayon-chip {
     border: 1px dashed rgba(239, 71, 111, 0.38);
     background: repeating-linear-gradient(174deg, rgba(255, 228, 230, 0.98) 0 5px, rgba(255, 247, 237, 0.98) 5px 9px);
