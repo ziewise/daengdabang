@@ -1,6 +1,6 @@
 # 웹 배경 "강아지 장난감 벽지" 스티커 만들기(2026-10-18) — 장난감 그림 9장(originals/web-toys) → 작은 스티커 18장
 # - 장난감마다 방향이 다른 2장(a: 기울기, b: 좌우 뒤집기 + 다른 기울기) — 같은 장난감도 매번 다른 방향으로 보이게
-# - 농도 60%(사용자 결정)를 그림에 미리 넣음 — 화면에서 투명도 처리를 따로 하지 않아도 되게(가벼움)
+# - 농도 42%(2026-10-19 사용자 "좀더 연하게" · 처음 60%)를 그림에 미리 넣음 — 화면에서 투명도 처리를 따로 하지 않아도 되게(가벼움)
 # - 크기는 화면 최대 약 110px × 2배 선명도 = 긴 변 220px 안. 한 장 수 KB · 18장 합쳐도 폰 메모리 2MB 안팎
 #   (예전 무늬 한 장 3000px 은 메모리 약 36MB)
 # 사용: python tools/sticker-assets/build_web_toy_stickers.py
@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "originals", "web-toys", "toy-{}.webp")
 OUT = os.path.join(HERE, "..", "..", "public", "images", "ui", "toys")
 MAX = 220          # 긴 변(px)
-OPACITY = 0.6      # 농도 60%
+OPACITY = 0.42     # 농도 42%(처음 60% → 2026-10-19 더 연하게)
 os.makedirs(OUT, exist_ok=True)
 rnd = random.Random(2026_10_18)
 for i in range(1, 10):
