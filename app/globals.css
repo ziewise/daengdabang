@@ -2240,6 +2240,12 @@ header + main .hero-shell {
     80% { opacity: 0.35; transform: scale(0.82); }
 }
 
+/* 상품 카드(공용 ProductCard) — 웹에서도 카드 속 색상 미리보기 칩 · "n가지 색상" 줄 숨김(2026-10-19 사용자 요청).
+   색상은 상품 상세에서 고른다. 앱(appShopSkin)은 이미 같은 방식으로 숨기고 있음 */
+article[data-pet-product="true"] > div:has(> [role="group"]) {
+    display: none;
+}
+
 /* 댕다방 핫픽(웹 메인 첫 상품 섹션) — 제품군 카드 뒤집기. 두 면을 같은 칸에 겹치고 뒷면은 180도 돌려 둔다 */
 .ddb-hotpick-inner {
     display: grid;
