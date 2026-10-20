@@ -687,7 +687,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 ref={triggerRef}
                 type="button"
                 onClick={() => setOpen((value) => !value)}
-                className={`${styles.trigger} flex h-14 w-14 items-center justify-center rounded-full text-white ${
+                className={`${styles.trigger} ddb-header-tip ddb-tip-left flex h-14 w-14 items-center justify-center rounded-full text-white ${
                     hideTrigger ? "invisible pointer-events-none opacity-0" : "visible opacity-100"
                 }`}
                 data-chat-open={open ? "true" : "false"}
@@ -697,7 +697,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 aria-hidden={hideTrigger ? "true" : undefined}
                 tabIndex={hideTrigger ? -1 : undefined}
                 aria-label={open ? "채팅 닫기" : "채팅 열기"}
-                title={open ? "채팅 닫기" : "채팅 열기"}
+                // 마우스를 올리면 왼쪽에 이름 말풍선(globals.css .ddb-header-tip.ddb-tip-left, 2026-10-20 사용자 — 예전 기본 title "채팅 열기" 대신 "케어톡")
+                data-header-tip={open ? "닫기" : "케어톡"}
             >
                 <i className={`fa-solid ${open ? "fa-xmark" : "fa-comments"} text-lg`} />
             </button>

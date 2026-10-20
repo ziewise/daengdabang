@@ -2301,6 +2301,51 @@ header + main .hero-shell {
     }
 }
 
+/* 화면 오른쪽 가장자리 버튼(케어톡 · 산책 친구 집 · 설정)은 이름 말풍선을 버튼 왼쪽에(아래로 띄우면 화면 밖 · 버튼에 가림). 꼬리는 오른쪽 */
+.ddb-header-tip.ddb-tip-left::after {
+    top: 50%;
+    right: calc(100% + 10px);
+    left: auto;
+    transform: translate(4px, -50%);
+}
+
+.ddb-header-tip.ddb-tip-left::before {
+    top: 50%;
+    right: calc(100% + 6px);
+    left: auto;
+    border: 0;
+    border-top: 1px solid #f4cfdb;
+    border-right: 1px solid #f4cfdb;
+    border-radius: 0 2px 0 0;
+    transform: translate(4px, -50%) rotate(45deg);
+}
+
+@media (hover: hover) {
+    .ddb-header-tip.ddb-tip-left:hover::after,
+    .ddb-header-tip.ddb-tip-left:focus-visible::after {
+        transform: translate(0, -50%);
+    }
+
+    .ddb-header-tip.ddb-tip-left:hover::before,
+    .ddb-header-tip.ddb-tip-left:focus-visible::before {
+        transform: translate(0, -50%) rotate(45deg);
+    }
+}
+
+/* 웹 케어톡 떠 있는 버튼(협업자 ChatWidget) — 닫혀 있을 때 크레파스 동그라미 대신 사용자 케어톡 그림(2026-10-20, 원본 originals/caretalk-web.png).
+   열려 있을 때(닫기 X)는 기존 모양 그대로 */
+button[data-mobile-chat-trigger][data-chat-open="false"] {
+    border: 0 !important;
+    outline: 0 !important;
+    background: url("/images/ui/caretalk-web-128.webp") center / contain no-repeat !important;
+    box-shadow: none !important;
+    filter: drop-shadow(0 8px 12px rgb(110 80 200 / 30%));
+}
+
+button[data-mobile-chat-trigger][data-chat-open="false"] > i {
+    display: none;
+}
+
 /* 산책 친구 집 · 설정 버튼(오른쪽 가장자리 탭, 협업자 PetCompanionGate) — 안의 그림만 사용자 그림으로(2026-10-20).
    집: CSS 로 그린 지붕 · 몸 · 문 대신 pet-home-96.webp, 설정: 🐾 글자 대신 pet-settings-96.webp. 탭 모양 · 위치 · 동작 · 집에 있을 때 말풍선은 그대로 */
 button[data-pet-companion-home] > span[aria-hidden="true"] {

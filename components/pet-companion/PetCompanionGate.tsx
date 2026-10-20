@@ -347,12 +347,13 @@ export default function PetCompanionGate() {
                 <button
                     ref={homeLaunchRef}
                     type="button"
-                    className={styles.homeLaunch}
+                    className={`${styles.homeLaunch} ddb-header-tip ddb-tip-left`}
                     onClick={handleHomeToggle}
                     onPointerEnter={() => requestControlGuide("home")}
                     onFocus={() => requestControlGuide("home")}
                     aria-label={homeLaunchLabel}
-                    title={homeLaunchLabel}
+                    // 마우스를 올리면 왼쪽에 이름 말풍선 — 강아지를 집에 들여보낼 때 하는 말 “하우스”(2026-10-20 사용자). 집에 있을 땐 "집에서 쉬는 중" 말풍선이 이미 있어 생략
+                    data-header-tip={companionEnabled ? "“하우스”" : undefined}
                     aria-pressed={!companionEnabled}
                     aria-hidden={floatingControlsHidden ? "true" : undefined}
                     inert={floatingControlsHidden ? true : undefined}
@@ -384,12 +385,13 @@ export default function PetCompanionGate() {
             <button
                 ref={settingsLaunchRef}
                 type="button"
-                className={styles.settingsLaunch}
+                className={`${styles.settingsLaunch} ddb-header-tip ddb-tip-left`}
                 onClick={handleSettingsLaunch}
                 onPointerEnter={() => requestControlGuide("settings")}
                 onFocus={() => requestControlGuide("settings")}
                 aria-label={settingsLaunchLabel}
-                title={settingsLaunchLabel}
+                // 마우스를 올리면 왼쪽에 이름 말풍선(2026-10-20 사용자)
+                data-header-tip="산책 친구 설정"
                 aria-haspopup="dialog"
                 aria-hidden={floatingControlsHidden ? "true" : undefined}
                 inert={floatingControlsHidden ? true : undefined}
