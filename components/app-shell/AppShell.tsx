@@ -434,7 +434,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     /* 화면 이동은 맨 위부터(2026-10-20 사용자 — 버튼으로 들어간 화면이 중간부터 보였음). Next 는 새 화면의 본문 첫 줄만 화면 안으로 옮겨
        상단바 아래 제목 줄 · 뒤로 가기 줄 · 화면 위쪽이 112px 가량 가려졌다. 앞으로 이동이면 맨 위로(스르륵 없이 바로).
-       뒤로 · 앞으로 가기(popstate)는 보던 자리 그대로, 주소에 #(특정 위치)가 있으면 그 위치 그대로 */
+       뒤로 · 앞으로 가기(popstate)는 보던 자리 그대로. 다른 화면으로 가는 주소에 #(특정 위치)가 있어도 맨 위부터(2026-10-20 사용자 —
+       마이 "반려견 관리"(/mypage/#pet-profiles)가 중간부터 보였음. 문의 양식 · 개인정보 해외 이전 · 건강 리포트 등도 같게).
+       같은 화면 안에서 # 로 옮겨 가는 것(상세정보 · 후기 탭 등)은 주소(pathname)가 그대로라 여기 오지 않아 그대로 */
     const historyMoveRef = useRef(false);
     useEffect(() => {
         const onPop = () => { historyMoveRef.current = true; };
@@ -443,8 +445,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     }, []);
     useEffect(() => {
         if (historyMoveRef.current) { historyMoveRef.current = false; return; }
-        if (window.location.hash) return;
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        // Next 가 # 위치로 옮기는 것이 그림 뒤 한 장면 늦게 올 수 있어 한 번 더
+        const frame = window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
+        return () => window.cancelAnimationFrame(frame);
     }, [pathname]);
 
     /* 펫렌즈 행동·소리 — 녹화가 끝나 전체 화면 촬영 창(협업자 data-petlens-capture-viewport, body 바로 아래에 붙음)이 저절로 닫히면
