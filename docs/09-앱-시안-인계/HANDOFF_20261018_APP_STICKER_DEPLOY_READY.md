@@ -224,3 +224,7 @@
   - 고르기 칸 허용 목록에 `image/heic,image/heif` 추가(안드로이드 사진 고르기가 고효율 사진을 숨기지 않게) — `tests/chat-generation-reference-assets.test.mjs` 의 accept 확인 한 줄을 같이 고침.
   - 크롬 시험: 이름표 없는 JPEG → `IMG_0001.jpg image/jpeg` 원본 크기, `image/jpg` → `image/jpeg`, HEIC(이름표 있음 · 없음) → JPEG 0.1~0.2초, 13MB PNG → 3.7MB JPEG, GIF → JPEG, 글자 파일 → 그대로(기존 안내).
 - 확인: 테스트 923/923 · 타입 · 빌드 · 펫 프레임 · 이미지 예산 · APK 묶음 38.45MB(40MB 안 — 여유가 줄었음).
+
+**⑯ 앱 1:1 문의도 맨 위부터 (2026-10-20 사용자 "무조건 맨 위부터")**
+- ⑮ 의 예외였던 1:1 문의: 다른 화면에서 버튼(교환 문의 · 1:1 문의하기 — 주소의 `category` · `#inquiry-form`)으로 들어오면 협업자 `CustomerInquiryPanel` 이 양식을 펼치고 그 자리로 옮겼음(앱에서 662px 아래).
+- 수정(앱만): 같은 effect 에서 "이 화면 안에서 문의하기를 누른 경우(`focusOnOpenRef`)"가 아니고 앱(`html.ddb-app-mode`)이면 옮기지 않음 — 양식은 펼친 채 화면은 맨 위부터. 화면 안에서 누르면 그대로 양식으로, 웹은 그대로. 측정: 0px · 양식 펼침.
