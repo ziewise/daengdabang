@@ -336,7 +336,7 @@ export function findPetGuidePrompt({
                 id,
                 target,
                 placement,
-                name: "댕다방 챗봇",
+                name: "케어톡", // 2026-10-20 사용자 — 떠 있는 버튼 이름(케어톡)과 같게(예전 "댕다방 챗봇")
                 message: "궁금하신 점은 여기서 무엇이든 물어보세요. 상품부터 생활 정보까지 함께 찾아드릴게요!",
                 actionLabel: "질문하기",
                 activatesTarget: true,
