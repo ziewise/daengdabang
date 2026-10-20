@@ -32,6 +32,14 @@ import headerStyles from "./Header.module.css";
 
 type DropKey = "shop" | "daily" | "lab" | "cs" | null;
 
+// 고객센터 하위 메뉴 그림 — CS_LINKS 주소별 사용자 그림(public/images/ui/menu-cs-*-128.webp, 2026-10-20)
+const CS_MENU_ICON: Record<string, string> = {
+    "/notice": "notice",
+    "/faq": "faq",
+    "/inquiry": "inquiry",
+    "/return": "return",
+};
+
 export default function Header() {
     const pathname = usePathname();
     const isProductDetail = pathname.startsWith("/product/");
@@ -137,37 +145,36 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                             wide
                         >
-                            <div className="min-w-[680px] p-6">
-                                <div className="mb-5 grid grid-cols-5 gap-2 border-b border-neutral-100 pb-5">
+                            {/* 쇼핑 하위 메뉴(2026-10-20 사용자 시안 C) — 크레파스 종이 판 위에 바로가기 알약 5개 + 제품군 카드 5장(작은 메뉴는 칩).
+                                그림: 바로가기 = 사용자 웹 쇼핑 메뉴 그림(shop-menu-*), 제품군 = 댕다방 핫픽과 같은 제품군 그림(hotpick-*). 항목 · 주소는 그대로,
+                                이름만 추천 셀렉트 → 댕다방 핫픽, 이벤트 → 세트상품(사용자 결정) */}
+                            <div className="ddb-menu-paper w-[920px] p-6">
+                                <div className="mb-4 grid grid-cols-5 gap-2.5">
                                     {[
-                                        ["/products", t("allProducts"), "fa-store"],
-                                        ["/best", t("best"), "fa-trophy"],
-                                        ["/new", t("new"), "fa-sparkles"],
-                                        ["/brands", t("brand"), "fa-tags"],
-                                        ["/bundles", t("event"), "fa-gift"],
-                                    ].map(([href, label, icon]) => (
-                                        <Link key={href} href={href} className="rounded-xl bg-neutral-50 px-3 py-3 text-center text-xs font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700">
-                                            <i className={`fa-solid ${icon} mr-1.5 text-indigo-500`} aria-hidden="true" />
-                                            {label}
+                                        ["/products", t("allProducts"), "all"],
+                                        ["/best", locale === "en" ? "Hot Picks" : "댕다방 핫픽", "hotpick"],
+                                        ["/new", t("new"), "new"],
+                                        ["/brands", t("brand"), "brand"],
+                                        ["/bundles", locale === "en" ? "Bundles" : "세트상품", "set"],
+                                    ].map(([href, label, key]) => (
+                                        <Link key={href} href={href} className="ddb-menu-pill">
+                                            <Image src={`/images/ui/shop-menu-${key}-128.webp`} alt="" width={38} height={38} className="h-[38px] w-[38px] shrink-0 object-contain" />
+                                            <span>{label}</span>
                                         </Link>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-5 gap-6">
+                                <div className="grid grid-cols-5 gap-2.5">
                                     {CATEGORY_GROUPS.map((g) => (
-                                        <div key={g.title}>
-                                            <Link
-                                                href={g.href}
-                                                className="block mb-3 text-sm font-bold text-foreground hover:text-aurora-indigo"
-                                            >
-                                                {menuLabel(g.title)}
+                                        <div key={g.title} className="ddb-menu-card">
+                                            <Link href={g.href} className="ddb-menu-card-title">
+                                                {/* 제품군 주소 끝(outdoor · food · life · toy · care)으로 그림 고르기 */}
+                                                <Image src={`/images/ui/hotpick-${g.href.split("/").pop()}-128.webp`} alt="" width={56} height={56} className="h-14 w-14 object-contain" />
+                                                <span>{menuLabel(g.title)}</span>
                                             </Link>
-                                            <ul className="space-y-1.5">
+                                            <ul className="flex flex-wrap justify-center gap-1.5">
                                                 {g.items.map((it) => (
                                                     <li key={it.label}>
-                                                        <Link
-                                                            href={it.href}
-                                                            className="text-xs text-neutral-500 hover:text-aurora-indigo block py-0.5"
-                                                        >
+                                                        <Link href={it.href} className="ddb-menu-chip">
                                                             {menuLabel(it.label)}
                                                         </Link>
                                                     </li>
@@ -185,18 +192,17 @@ export default function Header() {
                             onEnter={() => setOpenDrop("daily")}
                             onLeave={() => setOpenDrop(null)}
                         >
-                            <ul className="min-w-[270px] p-3">
+                            {/* 매일 댕생활 하위 메뉴 — 쇼핑과 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-daily-*, 2026-10-20). 항목 · 주소 그대로 */}
+                            <ul className="ddb-menu-paper grid min-w-[300px] gap-2 p-3">
                                 {[
-                                    ["/treasure-mine/", "보물광산 · 오늘의 루틴", "fa-gem", "orange"],
-                                    ["/goods-contest/", "굿즈 500명 공모전 · 진행 중", "fa-gift", "coral"],
-                                    ["/my-pet/", "우리 아이 기록", "fa-dog", "coral"],
-                                    ["/community/", "커뮤니티", "fa-people-group", "teal"],
-                                ].map(([href, label, icon, tone]) => (
+                                    ["/treasure-mine/", "보물광산 · 오늘의 루틴", "daily-treasure"],
+                                    ["/goods-contest/", "굿즈 500명 공모전 · 진행 중", "daily-goods"],
+                                    ["/my-pet/", "우리 아이 기록", "daily-mypet"],
+                                    ["/community/", "커뮤니티", "daily-community"],
+                                ].map(([href, label, key]) => (
                                     <li key={href}>
-                                        <Link href={href} className="flex items-center gap-3 rounded-xl p-3 text-sm font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700">
-                                            <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" data-crayon-tone={tone}>
-                                                <i className={`fa-solid ${icon}`} aria-hidden="true" />
-                                            </span>
+                                        <Link href={href} className="ddb-menu-row">
+                                            <Image src={`/images/ui/menu-${key}-128.webp`} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
                                     </li>
@@ -215,14 +221,12 @@ export default function Header() {
                             onEnter={() => setOpenDrop("cs")}
                             onLeave={() => setOpenDrop(null)}
                         >
-                            <ul className="min-w-[230px] p-3">
+                            {/* 고객센터 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-cs-*, 2026-10-20). 항목 · 주소(CS_LINKS) 그대로, 그림은 주소로 고름 */}
+                            <ul className="ddb-menu-paper grid min-w-[250px] gap-2 p-3">
                                 {CS_LINKS.map((item) => (
                                     <li key={item.href}>
-                                        <Link
-                                            href={item.href}
-                                            className="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
-                                        >
-                                            <i className={`fa-solid ${item.icon} w-5 text-center text-indigo-500`} aria-hidden="true" />
+                                        <Link href={item.href} className="ddb-menu-row">
+                                            <Image src={`/images/ui/menu-cs-${CS_MENU_ICON[item.href] ?? "notice"}-128.webp`} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
                                             <span>{menuLabel(item.label)}</span>
                                         </Link>
                                     </li>
@@ -236,13 +240,15 @@ export default function Header() {
                             onEnter={() => setOpenDrop("lab")}
                             onLeave={() => setOpenDrop(null)}
                         >
-                            <ul className="min-w-[300px] p-3">
+                            {/* 댕다방 연구소 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(2026-10-20). 그림: 사진 분석 = 헤더 펫렌즈, 행동 · 리포트 = 사용자 그림(menu-lab-*),
+                                AI 상담 = 웹 케어톡 그림. 항목 · 주소 · AI 상담 열기 동작 그대로 */}
+                            <ul className="ddb-menu-paper grid min-w-[300px] gap-2 p-3">
                                 {[
-                                    ["/pet-lens/", "사진 건강 분석", "fa-camera-retro", "teal"],
-                                    ["/pet-lens/?mode=observation", "울음소리·행동 분석", "fa-wave-square", "coral"],
-                                    ["/my-pet/#health-report", "건강 변화 리포트", "fa-chart-line", "orange"],
-                                    ["/chat/", "AI 상담", "fa-comment-dots", "teal"],
-                                ].map(([href, label, icon, tone]) => (
+                                    ["/pet-lens/", "사진 건강 분석", "/images/ui/header-petlens-128.webp"],
+                                    ["/pet-lens/?mode=observation", "울음소리·행동 분석", "/images/ui/menu-lab-observation-128.webp"],
+                                    ["/my-pet/#health-report", "건강 변화 리포트", "/images/ui/menu-lab-report-128.webp"],
+                                    ["/chat/", "AI 상담", "/images/ui/caretalk-web-128.webp"],
+                                ].map(([href, label, icon]) => (
                                     <li key={href}>
                                         <Link
                                             href={href}
@@ -253,11 +259,9 @@ export default function Header() {
                                                 setOpenDrop(null);
                                                 openChatWidget();
                                             }}
-                                            className="flex items-center gap-3 rounded-xl p-3 text-sm font-black text-neutral-700 transition hover:bg-indigo-50 hover:text-indigo-700"
+                                            className="ddb-menu-row"
                                         >
-                                            <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white" data-crayon-tone={tone}>
-                                                <i className={`fa-solid ${icon}`} aria-hidden="true" />
-                                            </span>
+                                            <Image src={icon} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
                                     </li>
