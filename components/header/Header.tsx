@@ -148,8 +148,8 @@ export default function Header() {
                             {/* 쇼핑 하위 메뉴(2026-10-20 사용자 시안 C) — 크레파스 종이 판 위에 바로가기 알약 5개 + 제품군 카드 5장(작은 메뉴는 칩).
                                 그림: 바로가기 = 사용자 웹 쇼핑 메뉴 그림(shop-menu-*), 제품군 = 댕다방 핫픽과 같은 제품군 그림(hotpick-*). 항목 · 주소는 그대로,
                                 이름만 추천 셀렉트 → 댕다방 핫픽, 이벤트 → 세트상품(사용자 결정) */}
-                            <div className="ddb-menu-paper w-[920px] p-6">
-                                <div className="mb-4 grid grid-cols-5 gap-2.5">
+                            <div className="ddb-menu-paper w-[780px] p-4">
+                                <div className="mb-3 grid grid-cols-5 gap-2">
                                     {[
                                         ["/products", t("allProducts"), "all"],
                                         ["/best", locale === "en" ? "Hot Picks" : "댕다방 핫픽", "hotpick"],
@@ -158,20 +158,20 @@ export default function Header() {
                                         ["/bundles", locale === "en" ? "Bundles" : "세트상품", "set"],
                                     ].map(([href, label, key]) => (
                                         <Link key={href} href={href} className="ddb-menu-pill">
-                                            <Image src={`/images/ui/shop-menu-${key}-128.webp`} alt="" width={38} height={38} className="h-[38px] w-[38px] shrink-0 object-contain" />
+                                            <Image src={`/images/ui/shop-menu-${key}-128.webp`} alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-5 gap-2.5">
+                                <div className="grid grid-cols-5 gap-2">
                                     {CATEGORY_GROUPS.map((g) => (
                                         <div key={g.title} className="ddb-menu-card">
                                             <Link href={g.href} className="ddb-menu-card-title">
                                                 {/* 제품군 주소 끝(outdoor · food · life · toy · care)으로 그림 고르기 */}
-                                                <Image src={`/images/ui/hotpick-${g.href.split("/").pop()}-128.webp`} alt="" width={56} height={56} className="h-14 w-14 object-contain" />
+                                                <Image src={`/images/ui/hotpick-${g.href.split("/").pop()}-128.webp`} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
                                                 <span>{menuLabel(g.title)}</span>
                                             </Link>
-                                            <ul className="flex flex-wrap justify-center gap-1.5">
+                                            <ul className="flex flex-wrap justify-center gap-1">
                                                 {g.items.map((it) => (
                                                     <li key={it.label}>
                                                         <Link href={it.href} className="ddb-menu-chip">
@@ -193,7 +193,7 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                         >
                             {/* 매일 댕생활 하위 메뉴 — 쇼핑과 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-daily-*, 2026-10-20). 항목 · 주소 그대로 */}
-                            <ul className="ddb-menu-paper grid min-w-[300px] gap-2 p-3">
+                            <ul className="ddb-menu-paper grid min-w-[250px] gap-1.5 p-2.5">
                                 {[
                                     ["/treasure-mine/", "보물광산 · 오늘의 루틴", "daily-treasure"],
                                     ["/goods-contest/", "굿즈 500명 공모전 · 진행 중", "daily-goods"],
@@ -202,7 +202,7 @@ export default function Header() {
                                 ].map(([href, label, key]) => (
                                     <li key={href}>
                                         <Link href={href} className="ddb-menu-row">
-                                            <Image src={`/images/ui/menu-${key}-128.webp`} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
+                                            <Image src={`/images/ui/menu-${key}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
                                     </li>
@@ -222,11 +222,11 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                         >
                             {/* 고객센터 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-cs-*, 2026-10-20). 항목 · 주소(CS_LINKS) 그대로, 그림은 주소로 고름 */}
-                            <ul className="ddb-menu-paper grid min-w-[250px] gap-2 p-3">
+                            <ul className="ddb-menu-paper grid min-w-[210px] gap-1.5 p-2.5">
                                 {CS_LINKS.map((item) => (
                                     <li key={item.href}>
                                         <Link href={item.href} className="ddb-menu-row">
-                                            <Image src={`/images/ui/menu-cs-${CS_MENU_ICON[item.href] ?? "notice"}-128.webp`} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
+                                            <Image src={`/images/ui/menu-cs-${CS_MENU_ICON[item.href] ?? "notice"}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
                                             <span>{menuLabel(item.label)}</span>
                                         </Link>
                                     </li>
@@ -242,7 +242,7 @@ export default function Header() {
                         >
                             {/* 댕다방 연구소 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(2026-10-20). 그림: 사진 분석 = 헤더 펫렌즈, 행동 · 리포트 = 사용자 그림(menu-lab-*),
                                 AI 상담 = 웹 케어톡 그림. 항목 · 주소 · AI 상담 열기 동작 그대로 */}
-                            <ul className="ddb-menu-paper grid min-w-[300px] gap-2 p-3">
+                            <ul className="ddb-menu-paper grid min-w-[250px] gap-1.5 p-2.5">
                                 {[
                                     ["/pet-lens/", "사진 건강 분석", "/images/ui/header-petlens-128.webp"],
                                     ["/pet-lens/?mode=observation", "울음소리·행동 분석", "/images/ui/menu-lab-observation-128.webp"],
@@ -261,7 +261,7 @@ export default function Header() {
                                             }}
                                             className="ddb-menu-row"
                                         >
-                                            <Image src={icon} alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
+                                            <Image src={icon} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
                                     </li>
