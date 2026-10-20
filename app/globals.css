@@ -2400,37 +2400,39 @@ div[data-pet-companion-speech] > span:first-child::after {
     transform: rotate(-0.8deg) skewX(-7deg);
 }
 
-/* 바로 가기(링크 · 버튼) — 크레파스 점선 알약(손글씨) */
+/* 바로 가기(링크 · 버튼) — 분홍 알약(2026-10-20 사용자 "웹 스타일에 어울리는 이쁜 버튼": 메인 "매일 댕생활"의 오늘 둘러보기 버튼과 같은 결 —
+   채운 분홍 · 흰 굵은 글씨 · 분홍 그림자, 올리면 살짝 떠오름. 처음 크레파스 점선 알약은 안 어울려 바꿈) */
 div[data-pet-companion-speech] > a,
 div[data-pet-companion-speech] > button:not([aria-label$="닫기"]) {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    margin-top: 9px;
-    padding: 4px 13px 5px;
-    border: 2px dashed rgb(8 145 178 / 34%);
+    gap: 5px;
+    margin-top: 10px;
+    padding: 7px 15px 8px;
+    border: 0;
     border-radius: 999px;
-    background: #fffdf8;
-    color: #087b91;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-    font-size: 15px;
-    font-weight: 700;
+    background: #e9789a;
+    color: #fff;
+    font-family: var(--font-wanted-sans), sans-serif;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
     text-decoration: none;
-    box-shadow: 2px 3px 0 rgb(239 71 111 / 12%);
-    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    box-shadow: 0 8px 16px -9px rgb(200 80 120 / 60%);
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 div[data-pet-companion-speech] > a::after,
 div[data-pet-companion-speech] > button:not([aria-label$="닫기"])::after {
     content: "→";
-    font-size: 13px;
+    font-size: 12px;
 }
 
 div[data-pet-companion-speech] > a:hover,
 div[data-pet-companion-speech] > button:not([aria-label$="닫기"]):hover {
-    border-color: rgb(239 71 111 / 50%);
-    color: #c83259;
-    transform: rotate(-1.2deg) translateY(-1px);
+    background: #e26690;
+    box-shadow: 0 10px 18px -9px rgb(200 80 120 / 70%);
+    transform: translateY(-1px);
 }
 
 /* 닫기 — 옅은 회색 × , 올리면 분홍 */
@@ -2447,6 +2449,110 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"] {
 div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
     color: #ef476f;
     transform: rotate(8deg);
+}
+
+/* 산책 친구 빠른 메뉴(협업자 PetCompanionLayer quickActions — 강아지를 누르면 "○○에게 무엇을 할까요?") — 웹 크레파스 결로(2026-10-20 사용자).
+   창 = 말풍선과 같은 크레파스 종이(점선 테두리 · 크림 종이 결 · 청록/분홍 엇갈린 그림자), 제목 = 손글씨 + 세 색 크레파스 밑줄,
+   두 버튼 = 흰 종이 칸 + 사용자 그림(집 = pet-home, 설정 = pet-settings — 오른쪽 가장자리 탭과 같은 그림), 올리면 분홍 테두리 · 살짝 떠오름. 동작은 그대로 */
+#pet-companion-quick-actions {
+    width: min(264px, calc(100vw - 24px));
+    padding: 16px 14px 14px;
+    border: 1.5px dashed rgb(51 65 85 / 22%);
+    border-radius: 20px;
+    background-color: rgb(255 253 248 / 99%);
+    background-image:
+        linear-gradient(112deg, rgb(8 145 178 / 4.5%), transparent 30%, rgb(239 71 111 / 4%) 64%, rgb(245 158 11 / 5.5%)),
+        repeating-linear-gradient(176deg, rgb(71 85 105 / 2.6%) 0 1px, transparent 1px 5px);
+    color: #475569;
+    box-shadow:
+        3px 4px 0 rgb(8 145 178 / 12%),
+        -2px -2px 0 rgb(239 71 111 / 7%),
+        0 20px 44px rgb(15 23 42 / 18%);
+}
+
+/* 제목 — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
+#pet-companion-quick-actions > h2 {
+    position: relative;
+    isolation: isolate;
+    width: fit-content;
+    max-width: calc(100% - 34px);
+    margin: 0 0 14px 2px;
+    color: #172033;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
+}
+
+#pet-companion-quick-actions > h2::after {
+    position: absolute;
+    right: 1%;
+    bottom: -0.1em;
+    left: 0;
+    z-index: -1;
+    height: 0.24em;
+    border-radius: 999px 70% 999px 60%;
+    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    content: "";
+    opacity: 0.6;
+    transform: rotate(-0.8deg) skewX(-7deg);
+}
+
+/* 닫기 — 옅은 회색 × , 올리면 분홍 */
+#pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"] {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    color: #94a3b8;
+    font-size: 20px;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+#pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"]:hover {
+    color: #ef476f;
+    transform: rotate(8deg);
+}
+
+/* 두 버튼 — 흰 종이 칸, 그림 위 · 이름 아래 */
+#pet-companion-quick-actions [data-pet-quick-action] {
+    min-height: 92px;
+    gap: 6px;
+    padding: 12px 6px 10px;
+    border: 1.5px solid #f1e6dc;
+    border-radius: 16px;
+    background: #fff;
+    color: #334155;
+    font-family: var(--font-wanted-sans), sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 6px 14px -10px rgb(120 70 50 / 40%);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+#pet-companion-quick-actions [data-pet-quick-action]:hover {
+    border-color: #f4b8cb;
+    box-shadow: 0 10px 18px -10px rgb(200 80 120 / 45%);
+    transform: translateY(-2px);
+}
+
+/* 그림 — 이모지 대신 사용자 집 · 설정 그림 */
+#pet-companion-quick-actions [data-pet-quick-action] > span:first-child {
+    display: block;
+    width: 44px;
+    height: 44px;
+    font-size: 0;
+    background: center / contain no-repeat;
+    filter: drop-shadow(0 3px 3px rgb(150 80 40 / 18%));
+}
+
+#pet-companion-quick-actions [data-pet-quick-action="home"] > span:first-child {
+    background-image: url("/images/ui/pet-home-96.webp");
+}
+
+#pet-companion-quick-actions [data-pet-quick-action="settings"] > span:first-child {
+    background-image: url("/images/ui/pet-settings-96.webp");
 }
 
 /* 산책 친구 집 · 설정 버튼(오른쪽 가장자리 탭, 협업자 PetCompanionGate) — 안의 그림만 사용자 그림으로(2026-10-20).
