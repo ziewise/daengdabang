@@ -94,7 +94,8 @@ test("mobile header PetLens reveals the hero lens cue before opening on the next
     assert.match(css, /@keyframes petlens-hero-cue-crayon-wiggle/);
     assert.match(css, /@keyframes petlens-hero-cue-kok-pop/);
     assert.match(css, /prefers-reduced-motion: reduce/);
-    assert.match(guide, /크레파스로 콕, 펫렌즈 열기/);
+    // 2026-10-20 사용자 결정: 안내 버튼 문구를 뜻이 바로 보이게
+    assert.match(guide, /actionLabel: "펫렌즈 열기"/);
 });
 
 
