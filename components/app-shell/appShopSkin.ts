@@ -1799,8 +1799,11 @@ html.ddb-app-mode i:is(.fa-xmark, .fa-trash-can, .fa-trash)::before { content: "
   background: center / contain no-repeat; }
 html.ddb-app-mode i.fa-xmark::before { background-image: url("/images/ui/stickers/icon-close.webp"); }
 html.ddb-app-mode i:is(.fa-trash-can, .fa-trash)::before { background-image: url("/images/ui/stickers/icon-trash.webp"); }
-/* 케어톡 머리의 비우기(휴지통) · 닫기 — 흰 동그라미 대신 그림 자체가 버튼(32px) */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button:has(> i:is(.fa-xmark, .fa-trash-can)) { background: transparent !important; box-shadow: none !important; }
+/* 아이콘만 있는 닫기 · 휴지통 버튼 — 그림 자체가 동그란 버튼이라 뒤의 흰 동그라미 · 테두리 · 그림자를 뺌(겹쳐 보이지 않게, 앱 전체) */
+html.ddb-app-mode :is(button, a):has(> i:is(.fa-xmark, .fa-trash-can, .fa-trash):only-child) { background: transparent !important; border-color: transparent !important; box-shadow: none !important; outline-color: transparent; }
+html.ddb-app-mode :is(button, a):has(> i:is(.fa-xmark, .fa-trash-can, .fa-trash):only-child)::before,
+html.ddb-app-mode :is(button, a):has(> i:is(.fa-xmark, .fa-trash-can, .fa-trash):only-child)::after { display: none !important; }
+/* 케어톡 머리의 비우기(휴지통) · 닫기 — 그림 32px */
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button > i:is(.fa-xmark, .fa-trash-can) { font-size: 19px !important; }
 
 `;
