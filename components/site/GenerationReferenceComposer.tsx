@@ -9,9 +9,11 @@ import {
     useRef,
     useState,
 } from "react";
+import { prepareUploadImage } from "@/lib/upload-image";
 import {
     deleteGenerationReferenceAsset,
     GENERATION_REFERENCE_KINDS,
+    GENERATION_REFERENCE_MAX_BYTES,
     GENERATION_REFERENCE_MAX_COUNT,
     type GenerationReferenceAsset,
     type GenerationReferenceKind,
@@ -337,17 +339,19 @@ export function GenerationReferencePhotoButton({
     const openPicker = () => {
         if (controller.preparePicker()) inputRef.current?.click();
     };
-    const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files ?? []);
         event.target.value = "";
-        controller.addFiles(files);
+        // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
+        const prepared = await Promise.all(files.map((file) => prepareUploadImage(file, { maxBytes: GENERATION_REFERENCE_MAX_BYTES })));
+        controller.addFiles(prepared);
     };
     return (
         <>
             <input
                 ref={inputRef}
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
                 multiple
                 hidden
                 tabIndex={-1}

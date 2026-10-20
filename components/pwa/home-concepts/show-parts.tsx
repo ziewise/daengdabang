@@ -15,7 +15,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { copyText } from "@/components/growth/GrowthShareCard";
-import { validateShowcaseImage } from "@/lib/daeng-showcase";
+import { SHOWCASE_MAX_UPLOAD_BYTES, validateShowcaseImage } from "@/lib/daeng-showcase";
+import { prepareUploadImage } from "@/lib/upload-image";
 import { buildShowcaseDeepLink, showcaseMemberShareCampaign } from "@/lib/daeng-showcase-share";
 import { haptic } from "./gestures";
 import { TEXT, TEXT_SOFT } from "./kit";
@@ -141,9 +142,11 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
     const [nameTouched, setNameTouched] = useState(false);
     const shownName = nameTouched ? name : name || defaultName;
 
-    const pickPhoto = (file?: File) => {
+    const pickPhoto = async (picked?: File) => {
         setError("");
-        if (!file) return;
+        if (!picked) return;
+        // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
+        const file = await prepareUploadImage(picked, { maxBytes: SHOWCASE_MAX_UPLOAD_BYTES });
         const bad = validateShowcaseImage(file);
         if (bad) { setError(bad); haptic("light"); return; }
         if (photo) URL.revokeObjectURL(photo);
@@ -191,7 +194,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
                         )}
                     </span>
                     <span className="ah-display absolute inset-x-0 bottom-1.5 text-center text-[12px] text-[#e0557f]">{photo ? "다른 사진 고르기" : "눌러서 고르기"}</span>
-                    <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" disabled={progress !== null} onChange={(e) => { pickPhoto(e.target.files?.[0]); e.currentTarget.value = ""; }} />
+                    <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" className="hidden" disabled={progress !== null} onChange={(e) => { void pickPhoto(e.target.files?.[0]); e.currentTarget.value = ""; }} />
                 </label>
             </div>
             {photo ? <p className="mt-2 text-center"><button type="button" onClick={clearPhoto} disabled={progress !== null} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">선택한 사진 지우기</button></p> : null}

@@ -6,11 +6,13 @@ import {
     createShowcasePost,
     ShowcaseApiError,
     SHOWCASE_ACCEPTED_IMAGE_TYPES,
+    SHOWCASE_MAX_UPLOAD_BYTES,
     validateShowcaseImage,
     type ShowcasePost,
     type ShowcaseTopicSummary,
 } from "@/lib/daeng-showcase";
 import { inboundCampaignFields, trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { prepareUploadImage } from "@/lib/upload-image";
 
 type PetOption = {
     id: number;
@@ -64,10 +66,12 @@ export default function ShowcaseComposer({
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
-    const selectPhoto = (nextFile?: File) => {
+    const selectPhoto = async (pickedFile?: File) => {
         setError("");
         setSuccess("");
-        if (!nextFile) return;
+        if (!pickedFile) return;
+        // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
+        const nextFile = await prepareUploadImage(pickedFile, { maxBytes: SHOWCASE_MAX_UPLOAD_BYTES });
         const validationError = validateShowcaseImage(nextFile);
         if (validationError) {
             setError(validationError);
@@ -188,9 +192,10 @@ export default function ShowcaseComposer({
                         ref={fileInputRef}
                         id="showcase-photo"
                         type="file"
-                        accept={SHOWCASE_ACCEPTED_IMAGE_TYPES.join(",")}
+                        // HEIC · HEIF 도 고를 수 있게(안드로이드 고효율 사진) — 고른 뒤 prepareUploadImage 가 JPEG 로 바꿈
+                        accept={[...SHOWCASE_ACCEPTED_IMAGE_TYPES, "image/heic", "image/heif"].join(",")}
                         className="sr-only"
-                        onChange={(event) => selectPhoto(event.target.files?.[0])}
+                        onChange={(event) => void selectPhoto(event.target.files?.[0])}
                         disabled={submitting}
                     />
                     {previewUrl ? (

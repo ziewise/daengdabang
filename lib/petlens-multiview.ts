@@ -1,4 +1,5 @@
 import { resizePetPhoto } from "@/lib/pet-photo";
+import { prepareUploadImage } from "@/lib/upload-image";
 
 export const PETLENS_PHOTO_VIEWS = [
     { id: "front", label: "정면", helper: "얼굴·가슴" },
@@ -41,7 +42,9 @@ function fileToDataUrl(file: File) {
     });
 }
 
-export async function preparePetLensPhotoCapture(file: File): Promise<PetLensPhotoCapture> {
+export async function preparePetLensPhotoCapture(picked: File): Promise<PetLensPhotoCapture> {
+    // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
+    const file = await prepareUploadImage(picked, { maxBytes: 10 * 1024 * 1024 });
     let dataUrl: string;
     try {
         dataUrl = await resizePetPhoto(file);

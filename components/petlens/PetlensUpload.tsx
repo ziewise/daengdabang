@@ -12,6 +12,7 @@
  */
 "use client";
 
+import { prepareUploadImage } from "@/lib/upload-image";
 import { useRef, useState, useEffect } from "react";
 import type { PetlensInputMode, PetlensSlot } from "@/lib/types";
 import { compressDataUrl } from "@/lib/image-compress";
@@ -199,16 +200,19 @@ export default function PetlensUpload({
     };
 
     /** 파일 input change — 곧장 저장하지 않고 조정 모드로 진입 */
-    const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target;
+        const picked = input.files?.[0];
+        input.value = "";
+        if (!picked) return;
+        // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 열 수 있게 맞춤 — lib/upload-image(2026-10-20)
+        const file = await prepareUploadImage(picked, { maxBytes: 20 * 1024 * 1024 });
         const reader = new FileReader();
         reader.onload = (ev) => {
             setEditingImage(ev.target?.result as string);
             setTransform({ x: 0, y: 0, scale: 1 });   // 초기 transform 리셋
         };
         reader.readAsDataURL(file);
-        e.target.value = "";
     };
 
     /** 드래그 시작 — pointer capture 로 stage 밖으로 나가도 추적 유지 */

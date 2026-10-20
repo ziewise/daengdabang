@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePets } from "@/hooks/usePets";
 import { MOCK_PETS } from "@/lib/mypage-data";
 import { compressDataUrl } from "@/lib/image-compress";
+import { prepareUploadImage } from "@/lib/upload-image";
 import type { PetProfile } from "@/lib/types";
 
 interface Props {
@@ -88,9 +89,13 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
         }
     }, [open, pet]);
 
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target;
+        const picked = input.files?.[0];
+        input.value = "";
+        if (!picked) return;
+        // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
+        const file = await prepareUploadImage(picked, { maxBytes: 10 * 1024 * 1024 });
         const reader = new FileReader();
         reader.onload = async (ev) => {
             const raw = ev.target?.result as string;
@@ -99,7 +104,6 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
             setAvatar(compressed);
         };
         reader.readAsDataURL(file);
-        e.target.value = "";
     };
 
     const submit = (e: React.FormEvent) => {

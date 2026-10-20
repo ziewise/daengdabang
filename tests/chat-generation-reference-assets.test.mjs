@@ -33,7 +33,8 @@ test("reference asset client keeps the authenticated multipart contract private"
 test("reference attachment UI supports consent notice, progress, retry, kinds, removal, and cleanup", async () => {
     const composer = await source("components/site/GenerationReferenceComposer.tsx");
 
-    assert.match(composer, /accept="image\/jpeg,image\/png,image\/webp"/);
+    // 2026-10-20: HEIC · HEIF 도 고를 수 있게(고른 뒤 lib/upload-image 가 JPEG 로 바꿔 올림)
+    assert.match(composer, /accept="image\/jpeg,image\/png,image\/webp,image\/heic,image\/heif"/);
     assert.match(composer, /multiple/);
     assert.match(composer, /hidden/);
     assert.match(composer, /if \(!tokenRef\.current\)/);

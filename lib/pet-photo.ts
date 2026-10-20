@@ -1,4 +1,8 @@
-export function resizePetPhoto(file: File): Promise<string> {
+import { prepareUploadImage } from "@/lib/upload-image";
+
+export async function resizePetPhoto(picked: File): Promise<string> {
+    // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 열 수 있게 맞춤 — lib/upload-image(2026-10-20)
+    const file = await prepareUploadImage(picked, { maxBytes: 20 * 1024 * 1024 });
     return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const image = new window.Image();
