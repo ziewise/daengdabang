@@ -135,7 +135,11 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
 
     useEffect(() => {
         if (!expanded || (!focusOnOpenRef.current && !requestedOpen)) return;
+        const openedHere = focusOnOpenRef.current;
         focusOnOpenRef.current = false;
+        // 앱: 다른 화면에서 버튼으로 들어오면(주소의 category · #inquiry-form) 양식은 펼친 채 화면은 맨 위부터(2026-10-20 사용자 "무조건 맨 위부터").
+        // 이 화면 안에서 "문의하기"를 누른 경우만 양식으로 옮김. 웹은 그대로
+        if (!openedHere && document.documentElement.classList.contains("ddb-app-mode")) return;
         const frame = window.requestAnimationFrame(focusForm);
         return () => window.cancelAnimationFrame(frame);
     }, [expanded, focusForm, requestedOpen]);
