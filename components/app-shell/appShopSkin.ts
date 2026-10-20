@@ -431,7 +431,8 @@ ${CART} main main > i.fa-bag-shopping { display: inline-block; width: 3.5rem; he
 ${CART} main main > i.fa-bag-shopping::before { content: ""; }
 
 /* ── 12) 검색 창 2차 — 테이프 이름표 제목 · 파스텔 스티커 키워드 · 폴라로이드 결과 사진 · 와펜 "전체 결과" (검색 · 이동 동작 그대로) ── */
-${SEARCH}::before { ${TAPE} top: 4px; left: 50%; width: 64px; margin-left: -32px; rotate: -2deg; z-index: 20; }
+/* 검색창 위 마스킹테이프는 뺌(2026-10-20 사용자 — 검색창은 깔끔하게) */
+${SEARCH}::before { display: none; }
 ${SEARCH} { border-radius: 24px; }
 ${SEARCH} form i.fa-magnifying-glass { color: #e8628e; }
 ${SEARCH} form input { border-radius: 999px; border-color: transparent; }
