@@ -2241,7 +2241,8 @@ header + main .hero-shell {
 }
 
 /* 헤더 아이콘 이름 말풍선(2026-10-20 사용자 요청) — 펫렌즈 · 검색 · 장바구니 · 로그인/마이페이지 · 언어 변경.
-   마우스를 올리거나(키보드로 고르면) 아이콘 바로 아래에 짙은 알약 말풍선 + 작은 꼬리. 터치 화면(hover 없음)에서는 띄우지 않음 */
+   마우스를 올리거나(키보드로 고르면) 아이콘 바로 아래에 흰 알약 말풍선(연분홍 테두리 · 부드러운 그림자, 사이트 흰 카드 · 파스텔 알약과 같은 결 —
+   처음 검정 바탕은 사이트와 안 어울려 바꿈) + 작은 꼬리. 터치 화면(hover 없음)에서는 띄우지 않음 */
 .ddb-header-tip::before,
 .ddb-header-tip::after {
     position: absolute;
@@ -2256,17 +2257,19 @@ header + main .hero-shell {
 .ddb-header-tip::after {
     content: attr(data-header-tip);
     top: calc(100% + 10px);
-    padding: 5px 10px 6px;
+    padding: 5px 11px 6px;
+    border: 1px solid #f4cfdb;
     border-radius: 999px;
-    background: #2b2730;
-    color: #fff;
-    font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", sans-serif;
-    font-size: 12px;
-    font-weight: 700;
+    background: #fff;
+    color: #4a3a40;
+    /* 글씨는 헤더 메뉴와 같은 Cafe24 써라운드(한 굵기라 400) */
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+    font-size: 13px;
+    font-weight: 400;
     line-height: 1.2;
     letter-spacing: -0.01em;
     white-space: nowrap;
-    box-shadow: 0 6px 14px -6px rgba(30, 20, 40, 0.45);
+    box-shadow: 0 8px 18px -10px rgba(170, 90, 120, 0.45);
     transform: translate(-50%, -4px);
 }
 
@@ -2274,10 +2277,13 @@ header + main .hero-shell {
 .ddb-header-tip::before {
     content: "";
     top: calc(100% + 6px);
+    z-index: 61; /* 알약 테두리 위로 겹쳐 꼬리와 알약이 이어져 보이게 */
     width: 8px;
     height: 8px;
-    border-radius: 2px;
-    background: #2b2730;
+    border-top: 1px solid #f4cfdb;
+    border-left: 1px solid #f4cfdb;
+    border-radius: 2px 0 0 0;
+    background: #fff;
     transform: translate(-50%, -4px) rotate(45deg);
 }
 
