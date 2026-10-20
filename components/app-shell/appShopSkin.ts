@@ -437,6 +437,10 @@ ${SEARCH} form i.fa-magnifying-glass { color: #e8628e; }
 ${SEARCH} form input { border-radius: 999px; border-color: transparent; }
 ${SEARCH} form input:focus { border-color: #f6a9bf; box-shadow: 0 0 0 3px rgba(242, 131, 163, .15); }
 ${SEARCH} form button[aria-label] { background: #fff; color: #b39b90; box-shadow: 0 0 0 1.5px #f1e3da; }
+/* 닫기(검색창 닫기)는 입력칸 안이 아니라 오른쪽 바깥에 — 칸 안의 X 는 "글자 지우기"로 읽혀 헷갈림(2026-10-20). 입력칸을 닫기 자리만큼 줄임 */
+${SEARCH} form input { width: calc(100% - 50px); padding-right: 16px; }
+${SEARCH} form > button[aria-label] { right: 0; width: 42px; height: 42px; }
+${SEARCH} form > button[aria-label] > i { font-size: 18px; }
 /* 칸 제목(검색 결과 · 인기 검색어 · 최근 검색어) — 마스킹테이프 이름표 */
 ${SEARCH} h3 { display: inline-block; width: fit-content; padding: 3px 11px 2px; rotate: -1deg; letter-spacing: 0; font-size: 12px; color: #5c3f36;
   font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;

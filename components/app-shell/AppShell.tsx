@@ -633,7 +633,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </nav>
             )}
 
-            {searchMounted ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} /> : null}
+            {/* 검색창 — 앱은 안내 문구를 "어떤 상품을 찾으세요?" 만(웹 문구는 좁은 칸에서 괄호 뒤가 잘려 보였음 · 2026-10-20 사용자 결정) */}
+            {searchMounted ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} placeholder="어떤 상품을 찾으세요?" /> : null}
             {/* 케어톡 버튼 — 오른쪽 아래 떠 있는 동그라미(사용자 그림 tools/sticker-assets/originals/caretalk-fab.png). 탭바 · 구매 바 위에 놓이고,
                 창이 열려 있을 때 · 케어톡 화면 · 로그인 화면 · 검색창이 열려 있을 때는 숨김. 누르면 웹과 같은 openChatWidget() */}
             {!chatHidden && !careTalk && !chatOpen && !searchOpen && (

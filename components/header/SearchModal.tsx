@@ -22,11 +22,13 @@ import bestStyles from "@/components/main/best.module.css";
 interface Props {
     open: boolean;
     onClose: () => void;
+    // 앱 틀에서만(2026-10-20): 좁은 휴대폰 입력칸에 맞는 짧은 안내 문구. 안 넘기면(웹) 기존 문구
+    placeholder?: string;
 }
 
 const PREVIEW_LIMIT = 6;
 
-export default function SearchModal({ open, onClose }: Props) {
+export default function SearchModal({ open, onClose, placeholder }: Props) {
     const router = useRouter();
     const [recent, setRecent] = useState<string[]>([]);
     const [term, setTerm] = useState("");
@@ -119,7 +121,7 @@ export default function SearchModal({ open, onClose }: Props) {
                             type="search"
                             value={term}
                             onChange={(e) => setTerm(e.target.value)}
-                            placeholder={locale === "en" ? "Search products (e.g. harness, food, Ruffwear)" : "어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)"}
+                            placeholder={placeholder ?? (locale === "en" ? "Search products (e.g. harness, food, Ruffwear)" : "어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)")}
                             className="w-full pl-12 pr-12 h-12 bg-neutral-50 border-2 border-transparent rounded-xl text-sm font-medium focus:outline-none focus:border-aurora-indigo focus:bg-white transition"
                         />
                         <button
