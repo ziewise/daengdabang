@@ -4,12 +4,14 @@
  * AppShell — 댕다방 앱 틀: 위 상단바 + (오늘 탭) 작은 버튼 줄 + 본문 + 아래 탭바 5칸 (로컬 시안, 배포 X)
  * ---------------------------------------------------------------------
  * 앱으로 볼 때(useAppMode) 사이트 헤더 · 푸터 · 챗봇 버튼 대신 이 틀을 씌운다.
- *  - 상단바: 언제나 로고(하위 화면은 앞에 뒤로 가기). 화면 제목은 상단바 아래 제목 줄(탭 젤리 아이콘 + 제목). 오른쪽은 케어톡 · 검색 · 장바구니(개수).
- *  - 케어톡: 협업자 전역 상담 창(ChatWidget) 그대로 — 상단바 버튼은 웹 상단바와 같은 openChatWidget(), /chat 링크 · 상품 상담 버튼도
+ *  - 상단바: 언제나 로고(하위 화면은 앞에 뒤로 가기). 화면 제목은 상단바 아래 제목 줄(탭 젤리 아이콘 + 제목). 오른쪽은 검색 · 장바구니(개수).
+ *  - 케어톡: 협업자 전역 상담 창(ChatWidget) 그대로 — 오른쪽 아래 떠 있는 동그란 버튼(2026-10-20, 예전 상단바 버튼 자리 이동)이 웹과 같은 openChatWidget(), /chat 링크 · 상품 상담 버튼도
  *    협업자 동작 그대로(/chat 화면이 창을 엶 · 상담 이벤트는 ChatWidget 이 직접 받음). 앱은 창이 놓이는 자리(탭바 위)만 정함.
  *    쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도 앱 전용 화면이라 앱 상단바 + 상단바 바로 아래 뒤로 가기(자수 와펜).
  *  - 댕다방 탭: 댕자랑 · 댕다방 연구소를 상단바 아래 버튼 줄로 오간다.
  *  - 탭바: 홈 · 댕생활 · 댕다방 · 쇼핑 · 마이. 상품 상세 · 결제 · 로그인 · 케어톡 화면에서는 숨긴다.
+ *    글자 입력 중(휴대폰 키보드가 올라와 있을 때)에도 숨긴다 — 키보드가 탭바까지 밀어 올리지 않고 입력하는 화면(케어톡 등)만 올라오게.
+ *  - 화면 이동: 버튼 · 링크로 다른 화면에 들어가면 그 화면 맨 위부터(뒤로 가기는 보던 자리 그대로).
  *  - 높이는 CSS 변수로 내보낸다: --app-topbar-h(= 기존 --header-height 대체) · --app-tabbar-h
  *  - 로그인 통일: 앱 안에서 로그인 · 가입을 요구하면 모두 앱 로그인(/app/sticker/login) · 앱 회원가입(/app/sticker/signup)으로 —
  *    웹 로그인 · 가입 링크(/auth/login · /login · /auth/signup)를 누르거나 그 주소로 이동하면 같은 ?redirect= 를 들고 앱 화면으로 바꿔 보내고,
@@ -21,7 +23,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events";
 // 2026-10-18 앱 속도: 검색창 · 케어톡 창은 상품 데이터(6MB)를 쓰는 큰 코드라 처음 열 때만 불러온다(앱 첫 화면 · 탭 전환을 가볍게).
 // 케어톡은 열기 요청을 창이 뜨기 전에도 기억해 두는 협업자 장치(lib/chat-widget-events pendingOpen)가 있어 동작 그대로.
@@ -408,6 +410,43 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         delete html.dataset.appPage;
     }, []);
 
+    /* 글자 입력 중 표시(html.ddb-app-typing) — 휴대폰 키보드가 올라오면 화면 높이가 줄어 아래에 붙은 탭바까지 키보드 위로 따라 올라왔다(2026-10-20).
+       입력칸에 초점이 있는 동안은 탭바를 숨기고, 케어톡 창은 탭바 자리까지 내려 키보드가 창만 밀어 올리게(CSS 는 아래 CSS · appShopSkin) */
+    useEffect(() => {
+        const html = document.documentElement;
+        const isTextField = (el: Element | null) => {
+            if (!el) return false;
+            if (el instanceof HTMLTextAreaElement) return true;
+            if (el instanceof HTMLElement && el.isContentEditable) return true;
+            return el instanceof HTMLInputElement && ["text", "search", "email", "tel", "url", "password", "number", ""].includes(el.type);
+        };
+        const sync = () => html.classList.toggle("ddb-app-typing", isTextField(document.activeElement));
+        // 초점이 다른 입력칸으로 옮겨 가는 사이(잠깐 body)에 깜빡이지 않게 한 장면 뒤에 확인
+        const onFocusOut = () => window.requestAnimationFrame(sync);
+        document.addEventListener("focusin", sync);
+        document.addEventListener("focusout", onFocusOut);
+        return () => {
+            document.removeEventListener("focusin", sync);
+            document.removeEventListener("focusout", onFocusOut);
+            html.classList.remove("ddb-app-typing");
+        };
+    }, []);
+
+    /* 화면 이동은 맨 위부터(2026-10-20 사용자 — 버튼으로 들어간 화면이 중간부터 보였음). Next 는 새 화면의 본문 첫 줄만 화면 안으로 옮겨
+       상단바 아래 제목 줄 · 뒤로 가기 줄 · 화면 위쪽이 112px 가량 가려졌다. 앞으로 이동이면 맨 위로(스르륵 없이 바로).
+       뒤로 · 앞으로 가기(popstate)는 보던 자리 그대로, 주소에 #(특정 위치)가 있으면 그 위치 그대로 */
+    const historyMoveRef = useRef(false);
+    useEffect(() => {
+        const onPop = () => { historyMoveRef.current = true; };
+        window.addEventListener("popstate", onPop);
+        return () => window.removeEventListener("popstate", onPop);
+    }, []);
+    useEffect(() => {
+        if (historyMoveRef.current) { historyMoveRef.current = false; return; }
+        if (window.location.hash) return;
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }, [pathname]);
+
     /* 펫렌즈 행동·소리 — 녹화가 끝나 전체 화면 촬영 창(협업자 data-petlens-capture-viewport, body 바로 아래에 붙음)이 저절로 닫히면
        녹화된 영상 칸이 보이는 위치로 화면을 옮긴다(사용자 2026-10-17). 앱 전용 · 스크롤만 — 협업자 녹화 · 분석 동작은 그대로.
        영상이 없을 때(닫기 · 중단으로 닫음)는 움직이지 않음 */
@@ -487,13 +526,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </Link>
 
                         <div className="ml-auto flex items-center gap-2">
-                            {/* 케어톡 — 어느 탭에서든 AI 상담 (홈 바로 가기와 같은 말풍선 그림 + 살아 있다는 점) */}
-                            {!careTalk && (
-                                <button type="button" onClick={() => openChatWidget()} className="app-icon-btn app-care-btn app-press relative" aria-label="케어톡 AI 상담 열기" aria-haspopup="dialog" aria-expanded={chatOpen}>
-                                    <Image src="/images/ui/stickers/home-caretalk.webp" alt="" width={72} height={72} className="app-care-img h-[29px] w-[29px]" />
-                                    <span className="app-care-dot" aria-hidden="true" />
-                                </button>
-                            )}
                             <button type="button" onClick={() => setSearchOpen(true)} className="app-icon-btn app-jelly-btn app-press" aria-label="검색">
                                 <JellyIcon k="search" />
                             </button>
@@ -602,6 +634,23 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             )}
 
             {searchMounted ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} /> : null}
+            {/* 케어톡 버튼 — 오른쪽 아래 떠 있는 동그라미(사용자 그림 tools/sticker-assets/originals/caretalk-fab.png). 탭바 · 구매 바 위에 놓이고,
+                창이 열려 있을 때 · 케어톡 화면 · 로그인 화면 · 검색창이 열려 있을 때는 숨김. 누르면 웹과 같은 openChatWidget() */}
+            {!chatHidden && !careTalk && !chatOpen && !searchOpen && (
+                <button
+                    type="button"
+                    onClick={() => openChatWidget()}
+                    className="app-care-fab app-press fixed right-3 z-[2190]"
+                    style={{ bottom: showTabBar ? "calc(var(--app-tabbar-h) + 4px)" : productDetail ? "calc(112px + env(safe-area-inset-bottom, 0px))" : "calc(16px + env(safe-area-inset-bottom, 0px))" }}
+                    aria-label="케어톡 AI 상담 열기"
+                    aria-haspopup="dialog"
+                    aria-expanded={chatOpen}
+                    data-pet-companion-avoid="true"
+                >
+                    <Image src="/images/ui/stickers/caretalk-fab.webp" alt="" width={176} height={176} className="app-care-img h-[60px] w-[60px]" />
+                    <span className="app-care-dot" aria-hidden="true" />
+                </button>
+            )}
             {/* 케어톡 — 어느 화면에서든 아래에서 올라오는 판 */}
             {/* 케어톡 — 협업자 전역 상담 창(ChatWidget) 그대로. 떠 있는 버튼은 숨기고(상단바 버튼이 대신) 창은 탭바 위에서 열림 · 로그인 화면에선 없음 */}
             {chatHidden ? null : <div
@@ -611,7 +660,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             >
                 {/* 닫혀 있을 땐 터치를 받지 않음 — 숨긴 떠 있는 버튼(56×56) 자리가 아래 버튼(댕자랑 올리기 등)의 터치를 가로채던 문제(2026-10-18) */}
                 <div className={chatOpen ? "pointer-events-auto" : "pointer-events-none"}>
-                    {chatMounted ? <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} empty={CareEmpty} /> : null}
+                    {/* 글꼴은 정자체(앱: 나눔스퀘어라운드) 하나로 고정 · 열 때 키보드를 바로 띄우지 않음(입력칸을 누르면 올라옴) — 2026-10-20 사용자 결정 */}
+                    {chatMounted ? <ChatWidget isMobile launcherHidden onOpenChange={setChatOpen} empty={CareEmpty} fixedFontMode="readable" focusInputOnOpen={false} /> : null}
                 </div>
             </div>}
         </>
@@ -655,6 +705,14 @@ html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 @keyframes app-care-ping { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.6); opacity: 0; } }
 .app-care-dot { position: absolute; top: 5px; right: 4px; border: 1.5px solid #fff; width: 7px; height: 7px; border-radius: 999px; background: #34c778; }
 .app-care-dot::after { content: ""; position: absolute; inset: -1.5px; border-radius: inherit; background: #34c778; animation: app-care-ping 1.8s ease-out infinite; pointer-events: none; }
+
+/* 케어톡 떠 있는 버튼 — 동그란 그림(배경 없이) + 그림자 + 오른쪽 위 초록 점(바로 상담 가능) · 누르면 통 */
+.app-care-fab { display: grid; place-items: center; width: 64px; height: 64px; padding: 0; border: 0; border-radius: 999px; background: transparent; }
+.app-care-fab .app-care-img { filter: drop-shadow(0 6px 10px rgba(110, 80, 200, .35)); }
+.app-care-fab:active .app-care-img { transform: scale(.88); transition-duration: .1s; }
+.app-care-fab .app-care-dot { top: 6px; right: 6px; width: 11px; height: 11px; border-width: 2px; }
+/* 글자 입력 중(키보드가 올라와 있을 때) — 탭바 · 떠 있는 케어톡 버튼 숨김(키보드 위로 따라 올라오지 않게) */
+html.ddb-app-typing nav[aria-label="앱 메뉴"], html.ddb-app-typing .app-care-fab { display: none; }
 
 /* 화면 제목 줄 — 다꾸 이름표 */
 /* 마스킹테이프 이름표: 탭 색 줄무늬 반투명 띠 · 양 끝 지그재그로 찢김 · 아주 살짝 기울기 */
@@ -708,6 +766,9 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"][data-chat-desktop="f
   transform-origin: 85% 100%; animation: app-care-pop .35s cubic-bezier(.3,1.4,.5,1); }
 @keyframes app-care-pop { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { html.ddb-app-mode section[aria-label="댕다방 케어톡"] { animation: none !important; } }
+/* 글자 입력 중(키보드가 올라와 있을 때 · html.ddb-app-typing) — 탭바가 숨으니 케어톡 창 아래를 탭바 자리까지 내림.
+   키보드가 화면 높이를 줄이면 창 아래만 키보드 위로 올라옴(탭바는 따라 올라오지 않음, 2026-10-20) */
+html.ddb-app-mode.ddb-app-typing section[aria-label="댕다방 케어톡"][data-chat-desktop="false"] { bottom: calc(6px + env(safe-area-inset-bottom, 0px)) !important; }
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header { min-height: 64px !important; border-bottom: 2px dashed #f0d9cf !important; background: rgba(255,250,244,.92) !important; }
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header::before { display: none !important; }
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header::after { top: -6px !important; left: 50% !important; width: 64px !important; height: 15px !important; background: rgba(255,200,215,.9) !important; opacity: 1 !important; }

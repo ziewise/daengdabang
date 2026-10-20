@@ -328,7 +328,7 @@ html.ddb-app-mode #pet-companion-quick-actions [data-pet-quick-action="settings"
 /* ── 10) 산책 친구 설정 창(빠른 메뉴 "설정하기") — 점 무늬 속지 · 테이프 · 카페24 제목(영문 꼬리표 숨김) · 흰 둥근 입력칸 ·
    고른 털색은 분홍 스티커 · 아래 버튼은 자수 와펜(취소 = 크림, 저장 = 분홍). 입력 · 저장 동작은 협업자 것 그대로 ── */
 /* 창이 산책 친구 층 안에 있어 앱 탭바(z 2150)에 아래 버튼이 가려짐 → 창이 열려 있는 동안만 탭바를 숨김(닫으면 다시 보임) */
-html.ddb-app-mode body:has(section[aria-labelledby="pet-companion-title"]) nav[aria-label="앱 메뉴"] { visibility: hidden; }
+html.ddb-app-mode body:has(section[aria-labelledby="pet-companion-title"]) :is(nav[aria-label="앱 메뉴"], .app-care-fab) { visibility: hidden; }
 ${P} { ${DOT_PAPER} border: 0; border-radius: 24px; box-shadow: 0 0 0 1.5px #f1e3da, 0 26px 50px -22px rgba(110, 70, 55, .6); }
 ${P}::before { ${TAPE} top: -6px; left: 50%; width: 64px; margin-left: -32px; rotate: -2deg; }
 ${P} > header { background: transparent; border-bottom: 2px dashed #f0d9cf; }
@@ -926,7 +926,7 @@ ${S} [data-product-detail-content] div.fixed[class*="left-1/2"][class*="rounded-
 ${DLG} > header p[class*="uppercase"] { display: none; }
 ${TRYON} h2#pet-tryon-title { display: block; padding: 0; rotate: none; clip-path: none; background: none; color: #3d2f2a;
   text-decoration: underline; text-decoration-color: rgba(207, 193, 250, .9); text-decoration-thickness: .38em; text-underline-offset: -.22em; text-decoration-skip-ink: none; }
-html.ddb-app-mode body:has(:is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"], [role="alertdialog"][aria-labelledby="my-logout-title"])) nav[aria-label="앱 메뉴"] { visibility: hidden; }
+html.ddb-app-mode body:has(:is([role="dialog"][aria-labelledby="pw-modal-title"], [role="dialog"][aria-label="댕댕이 등록"], [role="dialog"][aria-labelledby="return-policy-dialog-title"], [data-purchase-evidence-dialog], [role="dialog"][aria-labelledby="petlens-login-title"], section[role="dialog"][aria-labelledby="pet-tryon-title"], [role="alertdialog"][aria-labelledby="my-logout-title"])) :is(nav[aria-label="앱 메뉴"], .app-care-fab) { visibility: hidden; }
 
 /* ── 26) 글꼴 마무리(전 화면 글꼴 점검 결과) — 산책 강아지 이름표 · 빠른 메뉴 닫기는 카페24 ·
    케어톡 "읽기 편한 글꼴" 모드는 앱에서 나눔스퀘어라운드(크레파스 모드와 전환 버튼의 크레파스 견본은 그대로) ·
@@ -1721,7 +1721,7 @@ html.ddb-app-mode [data-weekly-photo-analysis-launcher] { ${PATCH_PINK_IMP} min-
 html.ddb-app-mode [data-weekly-photo-analysis-launcher]:active { transform: scale(.96); }
 html.ddb-app-mode [data-weekly-photo-comparison] .ddb-crayon-kicker { display: none; }
 html.ddb-app-mode [data-weekly-photo-comparison] h2#weekly-photo-title { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
-html.ddb-app-mode body:has([data-weekly-photo-comparison]) nav[aria-label="앱 메뉴"] { visibility: hidden; }
+html.ddb-app-mode body:has([data-weekly-photo-comparison]) :is(nav[aria-label="앱 메뉴"], .app-care-fab) { visibility: hidden; }
 /* 창 안 — 단계 메모 · 폴라로이드 카메라(테이프로 붙임) · 와펜 버튼 · 메모지 카드 · 폴라로이드 썸네일 · 포스트잇 안내.
    위치 · 순서 · 문구 · 동작은 그대로. 경고(빨강)는 그대로 */
 /* 단계(1 실시간 촬영 · 2 자동 업로드 · 3 변화 분석) — 메모 조각, 지금 단계는 분홍 + 테이프 */

@@ -81,12 +81,17 @@ type Props = {
     onOpenChange?: (open: boolean) => void;
     // 앱 틀(로컬 시안)에서만: 대화가 비어 있을 때 보여 줄 첫 화면 — 예시 질문을 누르면 아래 ask(같은 질문 보내기)로 보냄. 안 넘기면(웹) 기존과 같음
     empty?: ComponentType<{ ask: (question: string) => void }>;
+    // 앱 틀에서만(2026-10-20 사용자 결정): 글꼴을 정자체 하나로 고정하고 글꼴 전환 버튼을 뺌. 안 넘기면(웹) 기존과 같음
+    fixedFontMode?: "readable";
+    // 앱 틀에서만: 창을 열 때 입력칸에 바로 커서를 두지 않음(휴대폰 키보드가 바로 올라오지 않게 — 입력칸을 눌러야 올라옴).
+    // 이때는 창 자체로 초점을 옮겨 화면 읽기 사용자도 창 안에서 시작. 안 넘기면(웹) 기존처럼 입력칸으로
+    focusInputOnOpen?: boolean;
 };
 
 const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_FONT_MODE", callback);
 const getServerChatFontMode = () => "readable" as const;
 
-export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange, empty: Empty }: Props = {}) {
+export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange, empty: Empty, fixedFontMode, focusInputOnOpen = true }: Props = {}) {
     const { user, hydrated } = useAuth();
     const [open, setOpen] = useState(false);
     const chatWindow = useChatWindow(open);
@@ -100,6 +105,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const [productContext, setProductContext] = useState("");
     const messagesRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const panelRef = useRef<HTMLElement>(null); // 입력칸 대신 창 자체에 초점을 둘 때(focusInputOnOpen=false)
     const triggerRef = useRef<HTMLButtonElement>(null);
     const previouslyOpenRef = useRef(false);
     const inFlightRef = useRef(false);
@@ -133,7 +139,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         snapshots.chatFontMode,
         getServerChatFontMode,
     );
-    const chatFontMode = storedChatFontMode === "crayon" ? "crayon" : "readable";
+    const chatFontMode = fixedFontMode ?? (storedChatFontMode === "crayon" ? "crayon" : "readable");
     const readableFontEnabled = chatFontMode === "readable";
     const fontToggleLabel = readableFontEnabled
         ? "기존 손글씨체로 보기"
@@ -178,11 +184,13 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             });
         }
         const focusFrame = window.requestAnimationFrame(() => {
-            if (open) inputRef.current?.focus();
+            // 앱(focusInputOnOpen=false): 키보드가 바로 뜨지 않게 입력칸 대신 창 자체에 초점
+            if (open && !focusInputOnOpen) panelRef.current?.focus();
+            else if (open) inputRef.current?.focus();
             else triggerRef.current?.focus();
         });
         return () => window.cancelAnimationFrame(focusFrame);
-    }, [isMobile, onOpenChange, open, productContext]);
+    }, [isMobile, onOpenChange, open, productContext, focusInputOnOpen]);
 
     useEffect(() => {
         const applyOpen = (detail?: ChatWidgetOpenDetail) => {
@@ -431,6 +439,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         <div className={`${styles.root} relative z-50`} data-chat-widget-open={open ? "true" : "false"}>
             {open && (
                 <section
+                    ref={panelRef}
+                    tabIndex={-1}
                     role="dialog"
                     aria-label="댕다방 케어톡"
                     data-chat-font-mode={chatFontMode}
@@ -444,22 +454,25 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <b className={styles.title}>댕다방 케어톡</b>
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
-                            <button
-                                type="button"
-                                onClick={() => chatFontModeStorage.set(readableFontEnabled ? "crayon" : "readable")}
-                                className={`${styles.headerIconButton} flex h-10 w-12 items-center justify-center rounded-full`}
-                                data-chat-font-toggle
-                                data-active={readableFontEnabled ? "true" : "false"}
-                                aria-label={fontToggleLabel}
-                                aria-pressed={readableFontEnabled}
-                                title={fontToggleLabel}
-                            >
-                                <span className={styles.fontModeGlyph} aria-hidden="true">
-                                    <span className={styles.fontModeCrayonSample}>가</span>
-                                    <span className={styles.fontModeDivider} />
-                                    <span className={styles.fontModeReadableSample}>가</span>
-                                </span>
-                            </button>
+                            {/* 글꼴 전환(손글씨체 ↔ 정자체) — 글꼴을 고정한 앱에서는 뺌 */}
+                            {!fixedFontMode && (
+                                <button
+                                    type="button"
+                                    onClick={() => chatFontModeStorage.set(readableFontEnabled ? "crayon" : "readable")}
+                                    className={`${styles.headerIconButton} flex h-10 w-12 items-center justify-center rounded-full`}
+                                    data-chat-font-toggle
+                                    data-active={readableFontEnabled ? "true" : "false"}
+                                    aria-label={fontToggleLabel}
+                                    aria-pressed={readableFontEnabled}
+                                    title={fontToggleLabel}
+                                >
+                                    <span className={styles.fontModeGlyph} aria-hidden="true">
+                                        <span className={styles.fontModeCrayonSample}>가</span>
+                                        <span className={styles.fontModeDivider} />
+                                        <span className={styles.fontModeReadableSample}>가</span>
+                                    </span>
+                                </button>
+                            )}
                             <button
                                 type="button"
                                 onClick={clearChat}
