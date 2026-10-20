@@ -2240,6 +2240,61 @@ header + main .hero-shell {
     80% { opacity: 0.35; transform: scale(0.82); }
 }
 
+/* 헤더 아이콘 이름 말풍선(2026-10-20 사용자 요청) — 펫렌즈 · 검색 · 장바구니 · 로그인/마이페이지 · 언어 변경.
+   마우스를 올리거나(키보드로 고르면) 아이콘 바로 아래에 짙은 알약 말풍선 + 작은 꼬리. 터치 화면(hover 없음)에서는 띄우지 않음 */
+.ddb-header-tip::before,
+.ddb-header-tip::after {
+    position: absolute;
+    left: 50%;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* 이름 알약 */
+.ddb-header-tip::after {
+    content: attr(data-header-tip);
+    top: calc(100% + 10px);
+    padding: 5px 10px 6px;
+    border-radius: 999px;
+    background: #2b2730;
+    color: #fff;
+    font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    box-shadow: 0 6px 14px -6px rgba(30, 20, 40, 0.45);
+    transform: translate(-50%, -4px);
+}
+
+/* 위쪽 작은 꼬리(아이콘을 가리킴) */
+.ddb-header-tip::before {
+    content: "";
+    top: calc(100% + 6px);
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: #2b2730;
+    transform: translate(-50%, -4px) rotate(45deg);
+}
+
+@media (hover: hover) {
+    .ddb-header-tip:hover::after,
+    .ddb-header-tip:focus-visible::after {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    .ddb-header-tip:hover::before,
+    .ddb-header-tip:focus-visible::before {
+        opacity: 1;
+        transform: translate(-50%, 0) rotate(45deg);
+    }
+}
+
 /* 상품 카드(공용 ProductCard) — 웹에서도 카드 속 색상 미리보기 칩 · "n가지 색상" 줄 숨김(2026-10-19 사용자 요청).
    색상은 상품 상세에서 고른다. 앱(appShopSkin)은 이미 같은 방식으로 숨기고 있음 */
 article[data-pet-product="true"] > div:has(> [role="group"]) {

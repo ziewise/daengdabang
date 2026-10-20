@@ -4,7 +4,7 @@
  * 제품군 5개(산책/아웃도어 · 먹거리 · 생활용품 · 장난감/놀이 · 케어)를 카드 한 장씩 한 줄로 두고,
  * 카드마다 그 제품군 1~3위 상품이 "카드 뒤집기"로 번갈아 보인다(사용자가 고른 움직임).
  *  - 다섯 장이 같은 효과로, 왼쪽부터 조금씩 늦게(물결) 뒤집힌다.
- *  - 카드 아래 점 1·2·3 을 누르면 그 순위로 바로 뒤집힌다(기존 상품 상세 링크만 쓰고 새 기능은 없음).
+ *  - 카드 아래 순위 점은 두지 않는다(2026-10-20 사용자) — 순위는 카드 속 1위 · 2위 · 3위 배지로 보인다.
  *  - 마우스를 올린 카드 · 화면 밖 · 다른 탭일 때는 멈추고, 움직임 줄이기 설정이면 자동으로 돌지 않는다.
  *
  * ⚠ 순위 자료: 실제 제품군별 판매 순위(주문 데이터)가 아직 연결되지 않아 지금은 운영자 추천 셀렉트 순서
@@ -98,15 +98,6 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
     // a = 앞면 순위, b = 뒷면 순위, flipped = 뒷면이 보이는 중, deg = 누적 회전(항상 같은 방향으로 돎)
     const [state, setState] = useState({ a: 0, b: 1, flipped: false, deg: 0 });
     const hovered = useRef(false);
-    const visible = state.flipped ? state.b : state.a;
-
-    const flipTo = (target: number) => setState((s) => {
-        const now = s.flipped ? s.b : s.a;
-        if (target === now) return s;
-        return s.flipped
-            ? { ...s, a: target, flipped: false, deg: s.deg + 180 }
-            : { ...s, b: target, flipped: true, deg: s.deg + 180 };
-    });
 
     // 섹션 시계가 한 번 갈 때마다 왼쪽부터 물결처럼 늦게 다음 순위로
     useEffect(() => {
@@ -149,19 +140,7 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
                 </div>
             </div>
 
-            {/* 순위 점 — 지금 순위 표시 · 누르면 그 순위로 뒤집기 */}
-            <div className="mt-2.5 flex justify-center gap-1.5" role="group" aria-label={locale === "en" ? "Rank" : "순위 보기"}>
-                {items.map((_, r) => (
-                    <button
-                        key={r}
-                        type="button"
-                        onClick={() => flipTo(r)}
-                        aria-label={locale === "en" ? `Show No.${r + 1}` : `${r + 1}위 보기`}
-                        aria-pressed={visible === r}
-                        className={`h-2 rounded-full transition-all ${visible === r ? "w-5 bg-neutral-800" : "w-2 bg-neutral-300 hover:bg-neutral-400"}`}
-                    />
-                ))}
-            </div>
+            {/* 카드 아래 순위 점(●●▬)은 뺌(2026-10-20 사용자) — 순위는 카드 속 1위 · 2위 · 3위 배지로 */}
         </div>
     );
 }

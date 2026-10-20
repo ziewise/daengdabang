@@ -13,7 +13,7 @@ import { useI18n } from "@/lib/i18n";
 import RegionModal from "./RegionModal";
 
 export default function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
     const [open, setOpen] = useState(false);
 
     return (
@@ -25,7 +25,9 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
                 aria-haspopup="dialog"
                 aria-expanded={open}
                 aria-label={t("language")}
-                className={`group relative inline-flex shrink-0 items-center justify-center transition hover:-translate-y-px ${
+                // 헤더(compact 아님)에서만 마우스를 올리면 아이콘 아래 이름 말풍선(globals.css .ddb-header-tip)
+                data-header-tip={compact ? undefined : locale === "en" ? "Language" : "언어 변경"}
+                className={`${compact ? "" : "ddb-header-tip "}group relative inline-flex shrink-0 items-center justify-center transition hover:-translate-y-px ${
                     compact ? "h-11 w-11" : "h-8 w-8"
                 }`}
             >

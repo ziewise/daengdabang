@@ -280,9 +280,9 @@ export default function Header() {
                             onClick={handlePetLensButtonClick}
                             data-pet-guide-target="pet-lens"
                             data-mobile-petlens-guide-armed={mobilePetLensGuideArmed ? "true" : "false"}
-                            className="group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px md:h-[42px] md:w-[42px]"
+                            className="ddb-header-tip group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px md:h-[42px] md:w-[42px]"
                             aria-label="PetLens"
-                            title="PetLens"
+                            data-header-tip={locale === "en" ? "PetLens" : "펫렌즈"}
                         >
                             {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함, 2026-10-18 헤더 전용 새 그림). 휴대폰 · md 이상 모두 42px(2026-10-18 사용자 조정) */}
                             <Image
@@ -294,21 +294,23 @@ export default function Header() {
                                 priority
                             />
                         </button>
+                        {/* 아이콘 이름 말풍선(2026-10-20 사용자 요청) — 마우스를 올리거나 키보드로 고르면 아이콘 아래에 이름(ddb-header-tip · data-header-tip, globals.css).
+                            브라우저 기본 title 은 1초 늦게 작은 회색 글씨로 떠서 뺌(이름은 aria-label 그대로) */}
                         {/* 검색 · 장바구니 · 마이페이지 — 3D 그림 아이콘(2026-10-18 사용자 그림). 동그라미 테두리가 없어 펫렌즈(42px)보다 작은 32px 로 같은 크기감, 넓은 화면 간격 14px(2026-10-18 사용자 조정). 넓은 데스크탑(xl+)에서만 */}
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
-                            className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
+                            className="ddb-header-tip group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                             aria-label={t("search")}
-                            title={t("search")}
+                            data-header-tip={t("search")}
                         >
                             <Image src="/images/ui/header-search-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                         </button>
                         <Link
                             href="/cart"
-                            className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
+                            className="ddb-header-tip group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                             aria-label={t("cart")}
-                            title={t("cart")}
+                            data-header-tip={t("cart")}
                         >
                             <Image src="/images/ui/header-cart-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                             {/* 담긴 수량 배지 — 0이면 숨김, 99 초과는 99+ */}
@@ -323,9 +325,9 @@ export default function Header() {
                         {hydrated && isLoggedIn && (
                             <Link
                                 href="/mypage"
-                                className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
+                                className="ddb-header-tip group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                                 aria-label={t("mypage")}
-                                title={t("mypage")}
+                                data-header-tip={t("mypage")}
                             >
                                 <Image src="/images/ui/header-mypage-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                             </Link>
@@ -335,9 +337,9 @@ export default function Header() {
                             <Link
                                 href="/auth/login"
                                 data-pet-guide-target="signup"
-                                className="group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
+                                className="ddb-header-tip group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                                 aria-label={t("login")}
-                                title={t("login")}
+                                data-header-tip={t("login")}
                             >
                                 <Image src="/images/ui/header-login-128.webp" alt="" fill sizes="32px" className="object-contain transition-transform group-hover:scale-105" />
                             </Link>
