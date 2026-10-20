@@ -128,7 +128,7 @@ export default function Header() {
                         </button>
                     )}
 
-                    {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. 메뉴 글자 18px(xl:text-lg, 2026-10-18 사용자 조정: 14 → 16 → 18) */}
+                    {/* 넓은 화면에는 핵심 목적형 메뉴만 두고, 좁은 화면은 모바일 패널을 사용한다. 메뉴 글자 17px(xl:text-[17px], 사용자 조정: 14 → 16 → 18(10-18) → 17(10-20 "조금만 줄이자")) */}
                     <nav className="hidden items-center gap-1 xl:flex">
                         <NavDropdown
                             label={t("shop")}
@@ -205,7 +205,7 @@ export default function Header() {
                         </NavDropdown>
                         <Link
                             href="/daeng-showcase/"
-                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-lg`}
+                            className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-[17px]`}
                         >
                             댕자랑
                         </Link>
@@ -435,7 +435,7 @@ function NavDropdown({
                     if (open) onLeave();
                     else onEnter();
                 }}
-                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-lg`}
+                className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-[17px]`}
                 data-nav-open={open ? "true" : "false"}
             >
                 {label}
