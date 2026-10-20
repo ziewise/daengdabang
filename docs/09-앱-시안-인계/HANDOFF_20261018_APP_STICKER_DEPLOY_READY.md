@@ -212,3 +212,15 @@
 - **검색창(앱)**: 협업자 `components/header/SearchModal.tsx` 에 선택 속성 `placeholder?: string` 추가 — 앱은 "어떤 상품을 찾으세요?" 만(웹 문구는 좁은 칸에서 괄호 뒤가 잘림). 닫기 버튼은 앱 스킨에서 입력칸 오른쪽 바깥으로(칸 안의 X 는 "글자 지우기"로 읽혀 헷갈림), 검색창 위 테이프 제거.
 - **케어톡 제목 테이프**: 제목 칸이 줄 폭(210px)만큼 늘어나 분홍 바탕이 길게 이어지던 것 → 글자 폭만큼.
 - 확인: 테스트 907/907 · 타입 · 빌드 · 펫 프레임 · 이미지 예산 · APK 묶음. 헤드리스 크롬(안드로이드 휴대폰 흉내)으로 위 동작 확인. 실제 키보드가 올라올 때 모양은 휴대폰에서 확인 필요.
+
+**⑮ 앱 화면 맨 위 · 떠 있는 버튼 겹침 · 사진 올리기 (2026-10-20 사용자 결정)**
+- **다른 화면으로 가는 `#` 주소도 맨 위부터(앱)**: ⑭ 에서 `#` 주소는 그 위치로 두었더니 마이 "반려견 관리"(`/mypage/#pet-profiles`)가 중간부터 보였음. 이제 다른 화면으로 가면 `#` 이 있어도 맨 위부터(`AppShell.tsx`, Next 가 한 장면 늦게 옮기는 것까지 한 번 더). 같은 화면 안 `#` 이동 · 뒤로 가기는 그대로. 해당: `/mypage#pet-profiles` · `/mypage#daenglab-wallet` · `/my-pet#health-report` · `/privacy#overseas` · `/pet-lens#observation`. 측정: `/privacy/#overseas` 4980 → 0.
+  - 예외(그대로 둠): 1:1 문의(`CustomerInquiryPanel`)는 문의 양식을 열고 그 자리로 직접 옮김(협업자 기능 — 바로 쓰게). 사용자 확인 중.
+- **떠 있는 버튼 겹침(앱)**: 화면에 자기 떠 있는 버튼이 있으면(`data-app-fab`, 지금은 댕자랑 "오늘의 한 장 올리기") 케어톡 버튼이 자동으로 그 바로 위로(AppShell CSS `body:has([data-app-fab])`). 사진 올리기 버튼은 케어톡과 같은 52px · 같은 오른쪽 줄. 앱 안의 오른쪽 아래 떠 있는 버튼은 이 둘뿐(예전 `ChatbotFab` · `PetlensFab` 은 Provider 를 쓰는 곳이 없어 화면에 안 나옴).
+- **사진 올리기 — 어떤 휴대폰 사진이든(앱 · 웹 공통, 협업자 파일 포함 · 사용자 허락)**:
+  - 증상: 진짜 JPEG 인데 "JPG, PNG, WebP 사진만" 안내. 원인 = 검사가 휴대폰이 붙이는 `file.type` 만 봄 — 이름표가 비었거나(`""`) `image/jpg` 로 오는 휴대폰 · 갤러리 앱, 아이폰 HEIC · 삼성 고효율(HEIF), 8MB 넘는 원본.
+  - 새 파일 `lib/upload-image.ts` `prepareUploadImage(file, { maxBytes })`: 파일 앞 바이트로 실제 형식 판별 → JPEG · PNG · WebP 면 이름표만 바로잡아 원본 그대로(화질 그대로), HEIC · HEIF · AVIF · GIF · BMP 는 JPEG 로(브라우저가 HEIC 를 못 열면 `heic2any`(MIT, 새 의존성 `package.json`) — **그런 사진이 들어올 때만 동적 import**, 1.3MB 별도 파일), 용량 넘으면 긴 변 4096px 안에서 JPEG 로 줄임, 못 열면 원래 파일(기존 검사 · 문구 그대로). 서버 · 검사 규칙(`validateShowcaseImage` · `validateGenerationReferenceFile`)은 그대로.
+  - 연결한 곳: 댕자랑 웹 `ShowcaseComposer.selectPhoto` · 앱 `show-parts pickPhoto`, 케어톡 참고사진 `GenerationReferenceComposer`(input onChange 에서 맞춘 뒤 `addFiles`), 펫렌즈 · 주간 비교 `preparePetLensPhotoCapture`, 반려견 사진 `resizePetPhoto`(가입 웹 · 앱), `PetRegisterModal`, `PetlensUpload`. 협업자 테스트가 보는 줄(`await preparePetLensPhotoCapture(file)` · `await resizePetPhoto(file)`)은 그대로.
+  - 고르기 칸 허용 목록에 `image/heic,image/heif` 추가(안드로이드 사진 고르기가 고효율 사진을 숨기지 않게) — `tests/chat-generation-reference-assets.test.mjs` 의 accept 확인 한 줄을 같이 고침.
+  - 크롬 시험: 이름표 없는 JPEG → `IMG_0001.jpg image/jpeg` 원본 크기, `image/jpg` → `image/jpeg`, HEIC(이름표 있음 · 없음) → JPEG 0.1~0.2초, 13MB PNG → 3.7MB JPEG, GIF → JPEG, 글자 파일 → 그대로(기존 안내).
+- 확인: 테스트 923/923 · 타입 · 빌드 · 펫 프레임 · 이미지 예산 · APK 묶음 38.45MB(40MB 안 — 여유가 줄었음).
