@@ -1793,4 +1793,14 @@ ${WK} [data-weekly-analysis-complete] > div:first-child { position: relative; bo
 ${WK} [data-weekly-analysis-complete] > div:first-child::before { ${TAPE} top: -7px; left: 50%; width: 62px; margin-left: -31px; rotate: -2deg; }
 ${WK} [data-weekly-analysis-complete] > div:first-child > span { box-shadow: 0 0 0 4px #fff, 0 8px 12px -6px rgba(40, 110, 80, .5); }
 
+/* ── 휴지통 · 닫기 아이콘(2026-10-20 사용자 그림, 원본 tools/sticker-assets/originals/icon-*.png) — 앱 어디서나 글꼴 아이콘(fa-trash-can · fa-trash · fa-xmark)을
+   말랑한 그림으로 바꿔 끼움(버튼 · 동작은 그대로, 그림만). 크기는 원래 아이콘 글자 크기의 1.7배 ── */
+html.ddb-app-mode i:is(.fa-xmark, .fa-trash-can, .fa-trash)::before { content: "" !important; display: inline-block; width: 1.7em; height: 1.7em; vertical-align: -0.45em;
+  background: center / contain no-repeat; }
+html.ddb-app-mode i.fa-xmark::before { background-image: url("/images/ui/stickers/icon-close.webp"); }
+html.ddb-app-mode i:is(.fa-trash-can, .fa-trash)::before { background-image: url("/images/ui/stickers/icon-trash.webp"); }
+/* 케어톡 머리의 비우기(휴지통) · 닫기 — 흰 동그라미 대신 그림 자체가 버튼(32px) */
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button:has(> i:is(.fa-xmark, .fa-trash-can)) { background: transparent !important; box-shadow: none !important; }
+html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button > i:is(.fa-xmark, .fa-trash-can) { font-size: 19px !important; }
+
 `;
