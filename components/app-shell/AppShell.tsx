@@ -716,6 +716,9 @@ html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 .app-care-fab .app-care-img { filter: drop-shadow(0 6px 10px rgba(110, 80, 200, .35)); }
 .app-care-fab:active .app-care-img { transform: scale(.88); transition-duration: .1s; }
 .app-care-fab .app-care-dot { top: 4px; right: 4px; width: 9px; height: 9px; border-width: 2px; }
+/* 화면에 자기 떠 있는 버튼(data-app-fab, 예: 댕자랑 "오늘의 한 장 올리기")이 있으면 케어톡 버튼은 자동으로 그 바로 위로(겹치지 않게, 2026-10-20).
+   화면 버튼은 탭바 위 4px · 52px, 케어톡은 그 위 12px 간격. 새 화면 버튼도 data-app-fab 만 붙이면 같은 규칙 */
+html.ddb-app-mode body:has([data-app-fab]) .app-care-fab { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
 /* 글자 입력 중(키보드가 올라와 있을 때) — 탭바 · 떠 있는 케어톡 버튼 숨김(키보드 위로 따라 올라오지 않게) */
 html.ddb-app-typing nav[aria-label="앱 메뉴"], html.ddb-app-typing .app-care-fab { display: none; }
 
