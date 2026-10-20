@@ -2346,76 +2346,107 @@ button[data-mobile-chat-trigger][data-chat-open="false"] > i {
     display: none;
 }
 
-/* 산책 친구 안내 · 추천 말풍선(협업자 PetCompanionLayer .speech) — 웹 분위기로(2026-10-20 사용자): 웹 상품 카드와 같은 흰 카드 · 옅은 테두리 · 카드 그림자,
-   제목은 웹 본문 굵은 글씨, 설명은 회색(섹션 제목 + 회색 부제와 같은 결), 바로 가기는 웹 "더 보기" 알약(흰 바탕 · 회색 테두리 · → , 올리면 남색).
-   앱 스티커 요소(형광펜 · 분홍 알약 · 스티커 X)는 쓰지 않음. 문구 · 위치 · 동작은 그대로 */
+/* 산책 친구 안내 · 추천 말풍선(협업자 PetCompanionLayer .speech) — 웹 크레파스 언어로 귀엽게(2026-10-20 사용자 "웹 컨셉은 크레파스 · 귀엽게").
+   웹에 이미 있는 크레파스 표현만 씀(앱 스티커 요소 X): 바탕 = .ddb-crayon-paper(점선 테두리 · 크림 종이 결 · 청록/분홍 엇갈린 그림자),
+   제목 = .ddb-crayon-title 손글씨(개구) + .ddb-crayon-underline 세 색 크레파스 밑줄, 바로 가기 = .ddb-crayon-link(청록 점선 알약 · 손글씨, 올리면 분홍 · 살짝 기울기).
+   문구 · 위치 · 동작은 그대로 */
 div[data-pet-companion-speech] {
-    width: min(248px, calc(100vw - 32px));
+    width: min(250px, calc(100vw - 32px));
     gap: 3px;
-    padding: 14px 36px 14px 16px;
-    border: 1px solid rgb(15 23 42 / 8%);
-    background: #fff;
-    color: #6b7280;
-    box-shadow: var(--shadow-card);
+    padding: 13px 36px 14px 16px;
+    border: 1.5px dashed rgb(51 65 85 / 22%);
+    background-color: rgb(255 253 248 / 98%);
+    background-image:
+        linear-gradient(112deg, rgb(8 145 178 / 4.5%), transparent 30%, rgb(239 71 111 / 4%) 64%, rgb(245 158 11 / 5.5%)),
+        repeating-linear-gradient(176deg, rgb(71 85 105 / 2.6%) 0 1px, transparent 1px 5px);
+    color: #475569;
+    box-shadow:
+        3px 4px 0 rgb(8 145 178 / 12%),
+        -2px -2px 0 rgb(239 71 111 / 7%),
+        0 16px 34px rgb(15 23 42 / 10%);
     font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", sans-serif;
     font-size: 13px;
     line-height: 1.55;
 }
 
-/* 제목(첫 줄) */
+/* 제목(첫 줄) — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
 div[data-pet-companion-speech] > span:first-child {
-    margin-bottom: 1px;
-    color: #111827;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
+    position: relative;
+    isolation: isolate;
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 4px;
+    overflow: visible;
+    color: #172033;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
 }
 
-/* 바로 가기(링크 · 버튼) — 웹 "더 보기" 알약 */
+div[data-pet-companion-speech] > span:first-child::after {
+    position: absolute;
+    right: 1%;
+    bottom: -0.12em;
+    left: 0;
+    z-index: -1;
+    height: 0.24em;
+    border-radius: 999px 70% 999px 60%;
+    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    content: "";
+    opacity: 0.6;
+    transform: rotate(-0.8deg) skewX(-7deg);
+}
+
+/* 바로 가기(링크 · 버튼) — 크레파스 점선 알약(손글씨) */
 div[data-pet-companion-speech] > a,
 div[data-pet-companion-speech] > button:not([aria-label$="닫기"]) {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    margin-top: 8px;
-    padding: 6px 13px;
-    border: 1px solid #e5e5e5;
+    gap: 4px;
+    margin-top: 9px;
+    padding: 4px 13px 5px;
+    border: 2px dashed rgb(8 145 178 / 34%);
     border-radius: 999px;
-    background: #fff;
-    color: #111827;
-    font-size: 12px;
-    font-weight: 800;
+    background: #fffdf8;
+    color: #087b91;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 15px;
+    font-weight: 700;
     text-decoration: none;
-    box-shadow: var(--shadow-card);
-    transition: border-color 0.15s ease, color 0.15s ease;
+    box-shadow: 2px 3px 0 rgb(239 71 111 / 12%);
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 div[data-pet-companion-speech] > a::after,
 div[data-pet-companion-speech] > button:not([aria-label$="닫기"])::after {
     content: "→";
-    font-size: 11px;
+    font-size: 13px;
 }
 
 div[data-pet-companion-speech] > a:hover,
 div[data-pet-companion-speech] > button:not([aria-label$="닫기"]):hover {
-    border-color: var(--color-aurora-indigo);
-    color: var(--color-aurora-indigo);
+    border-color: rgb(239 71 111 / 50%);
+    color: #c83259;
+    transform: rotate(-1.2deg) translateY(-1px);
 }
 
-/* 닫기 — 회색 × , 올리면 옅은 회색 동그라미 */
+/* 닫기 — 옅은 회색 × , 올리면 분홍 */
 div[data-pet-companion-speech] > button[aria-label$="닫기"] {
-    top: 9px;
-    right: 9px;
+    top: 8px;
+    right: 8px;
     width: 24px;
     height: 24px;
-    color: #9ca3af;
-    font-size: 18px;
-    transition: background 0.15s ease, color 0.15s ease;
+    color: #94a3b8;
+    font-size: 19px;
+    transition: color 0.15s ease, transform 0.15s ease;
 }
 
 div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
-    background: #f3f4f6;
-    color: #4b5563;
+    color: #ef476f;
+    transform: rotate(8deg);
 }
 
 /* 산책 친구 집 · 설정 버튼(오른쪽 가장자리 탭, 협업자 PetCompanionGate) — 안의 그림만 사용자 그림으로(2026-10-20).
