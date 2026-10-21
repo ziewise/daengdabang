@@ -21,6 +21,7 @@ import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-fr
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 import { productHref } from "@/lib/shop";
+import { productCardImage } from "@/lib/catalog/card-image";
 import { useStore } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import ProductColorImage from "@/components/products/ProductColorImage";
@@ -44,7 +45,8 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
     const hasDiscount = p.discountRate > 0 && p.originalPrice !== null;
     // 사진 · 영상 주소 — 네이티브 앱은 운영 사이트 파일, 화면 준비 전엔 빈 사진 자리(useShopMedia)
     const media = useShopMedia();
-    const thumb = media ? media(p.image) : undefined;
+    // 카드용 크림 사진이 있으면 그걸, 없으면 대표 사진(productCardImage)
+    const thumb = media ? media(productCardImage(p)) : undefined;
     const video = media ? media(p.video) : undefined;
 
     // 영상 — 협업자 훅 그대로(휴대폰 자동 재생 · 스크롤 멈춤 · 영상 끝나면 사진과 번갈아 · 색상 미리보기 시 정지).

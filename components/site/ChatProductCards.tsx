@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { CatalogProduct } from "@/lib/catalog";
 import { productHref } from "@/lib/shop";
+import { productCardImage } from "@/lib/catalog/card-image";
 import { chatProductImage, type ChatExternalProduct } from "@/lib/chat-products";
 
 function ProductPhoto({ src, name }: { src: string; name: string }) {
@@ -25,7 +26,7 @@ export default function ChatProductCards({ products = [], externalProducts = [] 
     externalProducts?: ChatExternalProduct[];
 }) {
     const own = products.slice(0, 3).map((product) => ({
-        id: product.id, title: product.name, thumbnail: chatProductImage(product.image),
+        id: product.id, title: product.name, thumbnail: chatProductImage(productCardImage(product)), // 카드용 크림 사진 우선(2026-10-21)
         priceText: product.priceText || (product.price > 0 ? `${product.price.toLocaleString("ko-KR")}원` : "가격 확인 필요"),
         href: productHref(product), sourceName: "댕다방", external: false,
     }));

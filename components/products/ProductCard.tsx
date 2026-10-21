@@ -20,6 +20,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
 import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { productHref } from "@/lib/shop";          // 운영 사이트 라우트 호환
+import { productCardImage } from "@/lib/catalog/card-image";
 import { useStore } from "@/lib/store";            // 운영 사이트 위시리스트 기능
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
@@ -64,7 +65,8 @@ export default function ProductCard({
     const colors = p.colors ?? [];
     const [colorIdx, setColorIdx] = useState<number | null>(null);
     const selectedColor = colorIdx === null ? undefined : colors[colorIdx];
-    const thumbnail = selectedColor?.image || p.image;
+    // 카드 사진: 고른 색상 사진 → 카드용 크림 사진(productCardImage — 없으면 대표 사진)
+    const thumbnail = selectedColor?.image || productCardImage(p);
 
     // ===== 영상 호버 로직 =====
     const { videoRef, videoActive, activate, deactivate, previewColor, ...videoEvents } = useProductVideo(p.video);

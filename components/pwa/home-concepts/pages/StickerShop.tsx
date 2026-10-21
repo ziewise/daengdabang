@@ -23,6 +23,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getBestProducts, getNewProducts } from "@/lib/catalog";
+import { productCardImage } from "@/lib/catalog/card-image";
 import type { CategorySlug } from "@/lib/catalog/types";
 import { CATEGORY_GROUPS, PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
 import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
@@ -345,7 +346,7 @@ function ShopRecommend() {
                         <li key={it.product.id} className="flex items-start gap-3">
                             <span className="shp-mini-pol relative block w-[3.6rem] shrink-0 bg-white p-1 pb-2" style={{ rotate: `${i % 2 ? 3 : -3}deg` }}>
                                 <span aria-hidden="true" className="st-tape absolute -top-1.5 left-1/2 z-[1] h-2.5 w-7 -translate-x-1/2" style={{ background: ["rgba(255,200,215,.9)", "rgba(190,224,255,.9)", "rgba(255,232,170,.95)"][i % 3] }} />
-                                <span className="relative block aspect-square overflow-hidden bg-[#fff8ee]">{media && it.product.image ? <Image src={media(it.product.image) ?? it.product.image} alt="" fill sizes="56px" className="object-contain" /> : null}</span>
+                                <span className="relative block aspect-square overflow-hidden bg-[#fff8ee]">{media && productCardImage(it.product) ? <Image src={media(productCardImage(it.product)) ?? productCardImage(it.product)!} alt="" fill sizes="56px" className="object-contain" /> : null}</span>
                             </span>
                             <span className="min-w-0 flex-1 pt-0.5">
                                 <span className="ah-display line-clamp-2 block text-[12.5px] leading-snug">{productName(it.product)}</span>

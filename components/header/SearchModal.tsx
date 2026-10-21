@@ -9,6 +9,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { productCardImage } from "@/lib/catalog/card-image";
 import Image from "next/image";
 import { POPULAR_KEYWORDS } from "@/lib/menu-data";
 import { searchRecent } from "@/lib/storage";
@@ -172,9 +173,10 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
                                                 >
                                                     {/* 썸네일 — image 있으면 사진, 없으면 ph + 아이콘 */}
                                                     <div className={`relative w-12 h-12 rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0 ${p.image ? "bg-[#F7F2E8]" : bestStyles[`ph${p.ph}`]}`}>
-                                                        {p.image ? (
+                                                        {/* 카드용 크림 사진이 있으면 그걸, 없으면 대표 사진(productCardImage) */}
+                                                        {productCardImage(p) ? (
                                                             <Image
-                                                                src={p.image}
+                                                                src={productCardImage(p)!}
                                                                 alt={productName(p)}
                                                                 fill
                                                                 sizes="48px"
