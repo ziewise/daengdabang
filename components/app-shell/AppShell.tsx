@@ -29,6 +29,8 @@ import { CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events
 // 케어톡은 열기 요청을 창이 뜨기 전에도 기억해 두는 협업자 장치(lib/chat-widget-events pendingOpen)가 있어 동작 그대로.
 const SearchModal = dynamic(() => import("@/components/header/SearchModal"), { ssr: false });
 const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: false });
+// 산책 친구(협업자 PetCompanionGate) — 쇼핑 탭에서만, 쇼핑 탭에 들어갈 때 처음 불러옴(다른 탭은 받지 않아 가벼움 · 2026-10-21 사용자 "쇼핑에서 다시 보이게")
+const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"), { ssr: false });
 import { useAuth, useCart } from "@/lib/store";
 import {
     APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
@@ -599,7 +601,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {children}
             </main>
 
-            {/* ── 산책 친구 — 앱에서는 쓰지 않음(2026-10-18 사용자 결정: 계속 도는 애니메이션 · 화면 감시가 앱 반응을 느리게 함). 웹은 그대로 ── */}
+            {/* ── 산책 친구 — 쇼핑 탭 화면에서만(2026-10-21 사용자 결정 — 10-18 에 앱 전체에서 껐다가 쇼핑만 다시). 협업자 PetCompanionGate 그대로 ·
+                장바구니 · 결제에서는 스스로 숨음. 다른 탭(홈 · 연구소 · 댕다방 · 마이)은 계속 도는 애니메이션 · 화면 감시가 없게 그대로 꺼 둠 ── */}
+            {activeKey === "shop" ? <PetCompanionGate /> : null}
 
             {/* ── 아래 탭바 — 크림 종이 판. 아이콘은 헤더와 같은 젤리 그림, 고른 탭은 파스텔 젤리 판 위로 통 + 카페24 이름 ── */}
             {showTabBar && (
@@ -856,7 +860,7 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-ref
 html.ddb-app-mode button[data-pet-companion-settings] { display: none !important; }
 /* 쇼핑 히어로가 화면에 크게 보이는 동안 산책 친구(걷는 강아지)는 숨김 — 내려가면 다시 나타남 */
 html.ddb-app-mode[data-shop-hero="on"] [data-pet-motion-source] { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity .25s, visibility 0s .25s; }
-html.ddb-app-mode button[data-pet-companion-home] { right: 12px !important; bottom: calc(var(--app-tabbar-h) + 8px) !important; width: 52px !important; height: 52px !important;
+html.ddb-app-mode button[data-pet-companion-home] { right: 12px !important; bottom: calc(var(--app-tabbar-h) + 4px) !important; width: 52px !important; height: 52px !important;
   border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; rotate: -5deg; }
 html.ddb-app-mode button[data-pet-companion-home]::before { content: ""; position: absolute; inset: 0; background: url("/images/ui/stickers/companion-house.webp") center / contain no-repeat;
   filter: drop-shadow(1.6px 0 0 #fff) drop-shadow(-1.6px 0 0 #fff) drop-shadow(0 1.6px 0 #fff) drop-shadow(0 -1.6px 0 #fff) drop-shadow(0 7px 7px rgba(110,60,30,.38)); }
@@ -864,7 +868,10 @@ html.ddb-app-mode button[data-pet-companion-home] > span[aria-hidden="true"]:las
 html.ddb-app-mode button[data-pet-companion-home][data-home-occupied="true"]::after { content: ""; position: absolute; left: 34%; right: 34%; bottom: 14%; height: 26%; border-radius: 999px;
   background: radial-gradient(closest-side, rgba(255,226,140,.75), transparent); animation: app-house-glow 2.8s ease-in-out infinite; pointer-events: none; }
 @keyframes app-house-glow { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-html.ddb-app-mode button[data-pet-companion-home][data-buybar="true"] { bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+html.ddb-app-mode button[data-pet-companion-home][data-buybar="true"] { bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; }
+/* 강아지 집과 케어톡 버튼이 겹치지 않게(2026-10-21) — 집은 케어톡 자리(오른쪽 아래)에, 케어톡은 그 바로 위로(12px 간격) */
+html.ddb-app-mode body:has(button[data-pet-companion-home]) .app-care-fab { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
+html.ddb-app-mode body:has(button[data-pet-companion-home][data-buybar="true"]) .app-care-fab { bottom: calc(112px + 52px + 12px + env(safe-area-inset-bottom, 0px)) !important; }
 html.ddb-app-mode button[data-pet-companion-home]:active { transform: scale(.88) !important; }
 html.ddb-app-mode button[data-pet-companion-home][data-mobile-hidden="true"] { transform: translateY(12px) scale(.8) !important; }
 
