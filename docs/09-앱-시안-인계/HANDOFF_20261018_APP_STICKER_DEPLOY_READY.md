@@ -241,3 +241,21 @@
 - **댕자랑 사진 깨끗한 JPEG**: 최신 앱에서도 안드로이드 앨범 사진이 "JPG · PNG · WebP 만"으로 막힌다는 제보. 앱 쪽 검사는 ⑮ 에서 고쳤으므로 **서버가 일부 휴대폰 사진(삼성 움직이는 사진 = JPEG 뒤에 영상, 여러 장 JPEG(MPO) 등)을 거절하는 것으로 추정.** `prepareUploadImage(file, { cleanJpeg: true })`(댕자랑 웹 · 앱만) — 열 수 있는 사진이면 형식과 상관없이 긴 변 2560px · 화질 0.92 JPEG 로 다시 그림(EXIF 방향 반영, 붙은 영상 · 메타데이터 제거). 크롬 시험: JPEG+영상 꼬리 → 깨끗한 JPEG(FFD8…FFD9), HEIC → JPEG, 13MB → 3.2MB. **서버가 어떤 사진을 거절하는지(오류 문구) 확인 부탁.**
 - **안드로이드 앱 구조 참고(협업자와 의논)**: APK 는 `/app` · 로그인 · 펫렌즈 · 마이페이지 등만 앱 안 파일이고, 상품 상세(475개 · 101MB) · 카테고리 · 장바구니 · 결제 · 공지 등은 `NativeAppBridge` 가 **크롬 브라우저 창(Browser.open)으로 운영 사이트**를 엶 → 느리고, 브라우저 창은 앱과 저장 공간이 달라 로그인 · 장바구니가 따로 놂. 제안: `/app` 아래 "상품 상세 틀" 한 장(기존 `ProductDetailClient` 재사용)으로 앱 안에서 열기 + 장바구니 앱 묶음 추가, 결제는 토스 돌아오는 주소 확인 후. (`NativeAppBridge` 에 "이미 처리된 누름은 그대로" 한 줄 필요)
 - 확인: 테스트 · 타입 · 빌드 · 펫 프레임 · 이미지 예산 · APK 묶음. **안드로이드는 배포 뒤 새 APK 설치해야 반영**(웹앱은 바로 반영).
+
+**⑱ 앱 안 상품 상세 · 장바구니 앱 묶음 (2026-10-21 사용자 결정 · 협업자 파일 2개는 사용자 허락)**
+- ⑰ 의 제안대로: 앱(APK)에서 상품을 누르면 크롬 브라우저 창 대신 **앱 안 상품 상세 틀 `/app/sticker/item/?p={상품 주소}`** 로 엶. 새 파일 `app/app/sticker/item/page.tsx` + `components/app-shell/AppProductDetail.tsx` — 주소의 p 로 `findProduct` 해 협업자 `ProductDetailClient` 를 그대로 그림(옵션 · 장바구니 · 찜 · 후기 · 영상 · 입혀보기 동작 그대로). 못 찾으면 "쇼핑으로 가기".
+- `AppShell.tsx`: `/product/{주소}` → 앱 상품 상세로 바꿔 보냄(`appScreenFor`), 앱 상품 상세는 상품 상세와 같은 겉모양(탭바 숨김 · 구매 바 자리 · `data-app-page=product` · `ddb-app-shop-web`). 네이티브 앱에서 앱 묶음에 없는 사진 · 영상(`/images/products` 등)은 화면에 붙을 때 운영 사이트 주소로 바꿔 받음(MutationObserver, 주소 속성만).
+- 협업자 `components/native/NativeAppBridge.tsx`: `/cart` 를 앱 안 경로에 추가, `/product` 는 앱 틀이 바꿔 보내므로 브라우저 창으로 열지 않음(`APP_SHELL_ROUTED_PREFIXES`), 밖에서 연 상품 주소(카톡 공유 등)도 앱 상품 상세로.
+- 협업자 `scripts/prepare-native-web.mjs`: 앱 묶음에 `cart` 추가(약 1MB). 결제(토스)는 그대로 브라우저 창 — 돌아오는 주소 확인 후 의논.
+- 산책 친구는 상품 상세에도 나옴(쇼핑 탭 화면이라, 사용자 결정 "우선은 나오게").
+
+**⑲ 앱 속도 (2026-10-22 사용자 "모든 메뉴 · 페이지가 느리다")**
+- 측정: 헤드리스 크롬, 안드로이드 휴대폰 흉내, CPU 4배 느리게(중간급 폰) · 앱처럼 파일은 기기 안. 앱을 켠 뒤 1.5초 안에 화면이 멈춘 시간 약 1.0초 → 0.1~0.2초, 첫 화면 글자 배치 0.60 → 0.30초(6배), 웹 · 설치 앱(4G 흉내) 다 뜨기 4.0~4.4 → 1.8~1.9초. 탭 이동은 그대로(0.22~0.36초), 쇼핑 첫 진입 0.9~1.0초 그대로.
+- **앱 표시 미리**(`app/layout.tsx` head 스크립트): `ddb-app-mode` · `data-app-page` 를 그리기 전에 붙임(네이티브 앱 전체 · `/app/home-1` · `/app/sticker`). 예전엔 앱 틀이 붙을 때(화면 코드를 다 받은 뒤) 붙어서 미리 만든 화면을 웹 꾸밈으로 한 번 그린 뒤 다시 계산했음. 값은 AppShell 과 같음.
+- **앱에서 원티드 산스 안 받기**: 앱 글자는 카페24 · 나눔스퀘어라운드인데 대체 글꼴로 적힌 원티드 산스(1.26MB)를 앞 글꼴을 받는 동안 같이 받아 풀었음. 앱 모드에서만 `--font-wanted-sans` 를 나눔스퀘어라운드로(layout `<style id="ddb-app-font">`), 공급처 원본 상세(`[data-supplier-original-detail]`)만 원래 글꼴.
+- **글꼴 선언 한 곳**: 화면마다 넣는 CSS(KIT_CSS · HC_CSS · 앱 겉모양)에 `@font-face` 가 있어 탭을 옮길 때마다 선언이 빠졌다 들어오며 글자 전체를 다시 배치했음. 나눔스퀘어라운드 → `app/globals.css`, 카페24 → 앱 틀(AppShell) CSS(앱에서 늘 붙어 있음) + 웹 설치 안내 `APP_INSTALL_CSS`(웹 모양 그대로). **앞으로 화면 CSS 에 `@font-face` 를 다시 넣지 말아 주세요.** AppShell 이 두 글꼴을 미리 받기(preload).
+- **무거운 미리받기 늦추기**: 탭바 쇼핑 · 상단 장바구니 링크가 화면에 보이자마자 상품 자료 스크립트(6.6MB, 그중 4.4MB 가 `lib/catalog/reviewed-ziewcraft-delegated-videos.json`)를 받아 풀어 앱 홈이 뜰 때 약 1초 멈췄음 → 두 링크 `prefetch={false}`, 앱을 켜고 2.5초 뒤 한가할 때 `router.prefetch`(산책 친구 코드 · CSS 도 그때). 누르면 그대로 열림.
+- **가벼운 그림(앱)**: 홈 로고 1254px PNG 1.4MB → `ui/logo-poodle-384.webp` 41KB(웹 헤더 · 워터마크는 협업자 테스트대로 원본 PNG 그대로), 홈 카드 660px → `ui/card-*-400.webp`, 앱 쇼핑 기획전 사진 1499px PNG 장당 2MB대(앱 묶음 밖이라 매번 인터넷) → `ui/promo/*-480.webp`(앱 묶음 · 장당 20KB대). 웹 메인 기획전은 원본 그대로.
+- 같은 값 다시 적기 막기: `html[data-ddb-viewport-fit]`(layout) · `html[data-shop-hero]`(`ShopHero`).
+- **협업자께 제안(손대지 않음)**: ① 상품 자료 중 영상 JSON 4.4MB 를 실제 쓰는 항목만 남기면 쇼핑 · 장바구니가 가장 크게 빨라짐 ② `hooks/useMobileFloatingVisibility.ts` 가 body 전체의 style · class 변화를 지켜보다 `getComputedStyle` · `getBoundingClientRect` 로 쇼핑 진입 때 화면 전체를 4~6번 강제 계산 ③ 산책 친구 애니메이션이 쇼핑 화면을 가만히 둬도 CPU 를 씀.
+- 확인: 테스트 923/923 · 타입 · 빌드 · 펫 프레임 · 이미지 예산 · APK 묶음 38.86MB(12개 경로 묶음, 누락 없음). 운영과 나란히 찍은 홈 · 쇼핑 · 마이 · 상품 상세 · 웹 설치 안내 화면 같음. **안드로이드는 배포 뒤 새 APK 설치해야 반영.**
