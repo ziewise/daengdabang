@@ -20,6 +20,7 @@ import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/pr
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import ProductColorImage from "@/components/products/ProductColorImage";
 import { productHref } from "@/lib/shop";
+import { productCardImage } from "@/lib/catalog/card-image";
 import { useI18n } from "@/lib/i18n";
 
 // 제품군 5개 — 이름 · 카테고리 주소 · 사용자 핫픽 제품군 그림(2026-10-19, 원본 tools/sticker-assets/originals/hotpick-*.png)
@@ -70,7 +71,7 @@ function Face({ p, rank, back, shown }: { p: CatalogProduct; rank: number; back?
             className={`ddb-hotpick-face flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ${back ? "ddb-hotpick-back" : ""}`}
         >
             <span className="relative block aspect-square bg-white">
-                {p.image && <ProductColorImage src={p.image} alt={name} sizes="(max-width: 1024px) 46vw, 260px" className="object-contain p-2" />}
+                {productCardImage(p) && <ProductColorImage src={productCardImage(p)!} alt={name} sizes="(max-width: 1024px) 46vw, 260px" className="object-contain p-2" />}
             </span>
             <span className="block border-t border-neutral-100 p-3 md:p-4">
                 {/* 순위 배지는 사진 밖(사진 왼쪽 위에 브랜드 로고가 찍힌 상품이 많아 가리지 않게) — 브랜드 줄 앞 */}
