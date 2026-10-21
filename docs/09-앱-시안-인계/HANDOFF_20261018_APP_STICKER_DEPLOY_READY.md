@@ -228,3 +228,16 @@
 **⑯ 앱 1:1 문의도 맨 위부터 (2026-10-20 사용자 "무조건 맨 위부터")**
 - ⑮ 의 예외였던 1:1 문의: 다른 화면에서 버튼(교환 문의 · 1:1 문의하기 — 주소의 `category` · `#inquiry-form`)으로 들어오면 협업자 `CustomerInquiryPanel` 이 양식을 펼치고 그 자리로 옮겼음(앱에서 662px 아래).
 - 수정(앱만): 같은 effect 에서 "이 화면 안에서 문의하기를 누른 경우(`focusOnOpenRef`)"가 아니고 앱(`html.ddb-app-mode`)이면 옮기지 않음 — 양식은 펼친 채 화면은 맨 위부터. 화면 안에서 누르면 그대로 양식으로, 웹은 그대로. 측정: 0px · 양식 펼침.
+
+**⑰ 카드 크림 사진 · 앱 쇼핑 카드 · 쇼핑 산책 친구 · 댕자랑 사진 깨끗한 JPEG (2026-10-21 사용자 결정)**
+- **카드에서만 크림 배경 사진**: 9-08 공급처 동기화로 러프웨어 · 렉스스펙스 220개 상품의 대표 사진(image)이 공급처 쇼핑몰(godomall) 하얀 배경 원본이 되어, 다른 상품의 크림 배경 사진과 카드에서 섞여 보였음.
+  - 카드용 크림 사진 220장 `public/images/products/card/{folder}.webp`(640px · 평균 17KB, 공급처 원본 평균 98KB) — 기존 크림 사진 + 공급처 사진 배경을 크림(#F9F4EB)으로 바꾼 것 + 투명 그림을 크림 바탕에 얹은 것.
+  - 새 파일 `lib/catalog/card-image.ts` `productCardImage(p)` — 목록(CARD_IMAGE_FOLDERS)에 있으면 카드 사진, 없으면 image. **raw.json · data.ts · image · 상세 · 색상 사진 · 입혀보기 · 카드 영상은 그대로.** 다른 파일을 불러오지 않음(협업자 카드 테스트의 가짜 모듈 방식과 맞게).
+  - 쓰는 곳: 웹 `ProductCard`(색상 사진 → 카드 사진 → image), `SearchModal`, `ChatProductCards`, 앱 `ShopProductCard`, `StickerShop` 추천 미니 사진. 웹 상품 카드도 같은 부품이라 웹 카드도 크림으로 보임.
+  - `tests/product-card-color-preview.test.mjs` 가짜 모듈 목록에 `@/lib/catalog/card-image` 한 줄 추가(시험에서는 image 그대로).
+  - 새 크림 사진을 넣을 때: `card/{folder}.webp` 를 넣고 `card-image.ts` 목록에 주소 추가. 원본 크림 PNG 는 `D:\Daengdabang\products_cream`.
+- **앱 쇼핑 카드 바탕 흰색**(`ShopProductCard` `.sp-card` #fffaf2 → #fff) — 크림 사진이 흰 폴라로이드 안에 든 것처럼.
+- **앱 쇼핑 탭 산책 친구 다시**: ⑩ 에서 앱 전체에서 껐던 `PetCompanionGate` 를 쇼핑 탭에서만 `next/dynamic` 으로(쇼핑 들어갈 때 처음 불러옴, 다른 탭은 그대로 꺼 둠). 강아지 집은 케어톡 버튼 자리(오른쪽 아래 · 탭바 위 4px · 상품 상세는 구매 바 위 112px), 케어톡 버튼은 `body:has(button[data-pet-companion-home])` 일 때 그 바로 위(12px 간격).
+- **댕자랑 사진 깨끗한 JPEG**: 최신 앱에서도 안드로이드 앨범 사진이 "JPG · PNG · WebP 만"으로 막힌다는 제보. 앱 쪽 검사는 ⑮ 에서 고쳤으므로 **서버가 일부 휴대폰 사진(삼성 움직이는 사진 = JPEG 뒤에 영상, 여러 장 JPEG(MPO) 등)을 거절하는 것으로 추정.** `prepareUploadImage(file, { cleanJpeg: true })`(댕자랑 웹 · 앱만) — 열 수 있는 사진이면 형식과 상관없이 긴 변 2560px · 화질 0.92 JPEG 로 다시 그림(EXIF 방향 반영, 붙은 영상 · 메타데이터 제거). 크롬 시험: JPEG+영상 꼬리 → 깨끗한 JPEG(FFD8…FFD9), HEIC → JPEG, 13MB → 3.2MB. **서버가 어떤 사진을 거절하는지(오류 문구) 확인 부탁.**
+- **안드로이드 앱 구조 참고(협업자와 의논)**: APK 는 `/app` · 로그인 · 펫렌즈 · 마이페이지 등만 앱 안 파일이고, 상품 상세(475개 · 101MB) · 카테고리 · 장바구니 · 결제 · 공지 등은 `NativeAppBridge` 가 **크롬 브라우저 창(Browser.open)으로 운영 사이트**를 엶 → 느리고, 브라우저 창은 앱과 저장 공간이 달라 로그인 · 장바구니가 따로 놂. 제안: `/app` 아래 "상품 상세 틀" 한 장(기존 `ProductDetailClient` 재사용)으로 앱 안에서 열기 + 장바구니 앱 묶음 추가, 결제는 토스 돌아오는 주소 확인 후. (`NativeAppBridge` 에 "이미 처리된 누름은 그대로" 한 줄 필요)
+- 확인: 테스트 · 타입 · 빌드 · 펫 프레임 · 이미지 예산 · APK 묶음. **안드로이드는 배포 뒤 새 APK 설치해야 반영**(웹앱은 바로 반영).
