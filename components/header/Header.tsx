@@ -399,18 +399,27 @@ function NavDropdown({
     const panelId = useId();
     const buttonRef = useRef<HTMLButtonElement>(null);
     const activationPointerTypeRef = useRef("");
-    // 하위 메뉴는 모두 자기 메뉴 자리(왼쪽 끝)부터 엶(2026-10-21 사용자 — 쇼핑도 매일 댕생활처럼).
-    // 넓은 판(쇼핑 780px)이 좁은 창에서 화면 오른쪽을 넘으면 넘친 만큼만 왼쪽으로 당김(오른쪽 여백 16px)
+    // 하위 메뉴는 모두 자기 메뉴 자리부터 엶(2026-10-21 사용자 — 쇼핑도 매일 댕생활처럼).
+    // 판을 왼쪽으로 조금 당겨, 판 안 첫 알약 · 카드 · 줄의 왼쪽 끝이 메뉴 글자(쇼핑 등) 시작과 같은 선에 오게 함(같은 날 사용자).
+    // 넓은 판(쇼핑 780px)이 좁은 창에서 화면 오른쪽을 넘으면 넘친 만큼만 더 왼쪽으로(오른쪽 여백 16px, 왼쪽은 화면 밖으로 안 나가게)
     const panelRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
         if (!open) return;
         const fit = () => {
             const panel = panelRef.current;
-            if (!panel) return;
-            const parentLeft = panel.parentElement?.getBoundingClientRect().left ?? 0;
-            const overflow = parentLeft + panel.offsetWidth - (window.innerWidth - 16);
+            const button = buttonRef.current;
+            if (!panel || !button) return;
+            panel.style.marginLeft = "";
+            const panelLeft = panel.getBoundingClientRect().left;
+            // 메뉴 글자 시작 = 버튼 왼쪽 + 버튼 안쪽 여백, 판 안 내용 시작 = 판 안 첫 링크의 왼쪽
+            const textLeft = button.getBoundingClientRect().left + parseFloat(getComputedStyle(button).paddingLeft || "0");
+            const firstItem = panel.querySelector("a");
+            let shift = firstItem ? firstItem.getBoundingClientRect().left - textLeft : 0;
+            const overflow = panelLeft - shift + panel.offsetWidth - (window.innerWidth - 16);
+            if (overflow > 0) shift += overflow;
+            shift = Math.min(shift, panelLeft - 16);
             // 화면 그리기 전에 판 자리만 바로 옮김(상태값 없이 — 다시 그리기 없음)
-            panel.style.marginLeft = overflow > 0 ? `${-Math.min(overflow, parentLeft - 16)}px` : "";
+            panel.style.marginLeft = Math.round(shift) !== 0 ? `${-shift}px` : "";
         };
         fit();
         window.addEventListener("resize", fit);
