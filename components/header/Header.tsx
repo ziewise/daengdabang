@@ -414,7 +414,8 @@ function NavDropdown({
             // 메뉴 글자 시작 = 버튼 왼쪽 + 버튼 안쪽 여백, 판 안 내용 시작 = 판 안 첫 링크의 왼쪽
             const textLeft = button.getBoundingClientRect().left + parseFloat(getComputedStyle(button).paddingLeft || "0");
             const firstItem = panel.querySelector("a");
-            let shift = firstItem ? firstItem.getBoundingClientRect().left - textLeft : 0;
+            // 넓은 판(쇼핑)은 글자 선보다 20px 더 왼쪽으로(2026-10-21 사용자 "20px만 더 왼쪽으로"), 작은 판은 글자 선 그대로
+            let shift = (firstItem ? firstItem.getBoundingClientRect().left - textLeft : 0) + (wide ? 20 : 0);
             const overflow = panelLeft - shift + panel.offsetWidth - (window.innerWidth - 16);
             if (overflow > 0) shift += overflow;
             shift = Math.min(shift, panelLeft - 16);
@@ -424,7 +425,7 @@ function NavDropdown({
         fit();
         window.addEventListener("resize", fit);
         return () => window.removeEventListener("resize", fit);
-    }, [open]);
+    }, [open, wide]);
 
     return (
         <div
