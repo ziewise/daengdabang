@@ -146,7 +146,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
         setError("");
         if (!picked) return;
         // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
-        const file = await prepareUploadImage(picked, { maxBytes: SHOWCASE_MAX_UPLOAD_BYTES });
+        const file = await prepareUploadImage(picked, { maxBytes: SHOWCASE_MAX_UPLOAD_BYTES, cleanJpeg: true });
         const bad = validateShowcaseImage(file);
         if (bad) { setError(bad); haptic("light"); return; }
         if (photo) URL.revokeObjectURL(photo);

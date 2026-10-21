@@ -12,6 +12,9 @@
  *     안드로이드처럼 HEIC 를 못 여는 브라우저는 heic2any(MIT)로 바꿈 — 그런 사진이 들어올 때만 불러옴(평소엔 받지 않음)
  *  3) 용량 제한보다 크면 긴 변 4096px 안에서 JPEG 로 줄임(화질 0.9 부터 차례로)
  *  4) 끝내 열 수 없는 파일이면 원래 파일 그대로 돌려줌 → 기존 검사가 기존 안내 문구를 보여 줌
+ * 5) cleanJpeg(댕자랑): 형식이 맞아도 늘 새 JPEG 로 다시 그림(긴 변 2560px) — 삼성 "움직이는 사진"(JPEG 뒤에 영상이 붙음) ·
+ *    여러 장 JPEG(MPO) · 큰 메타데이터처럼 이름표는 JPEG 인데 서버가 거절하는 휴대폰 사진까지 깨끗한 JPEG 로(2026-10-21 —
+ *    최신 앱에서도 안드로이드 앨범 사진이 "JPG · PNG · WebP 만" 으로 막힘). 사진 방향(EXIF)은 그릴 때 반영
  * 쓰는 곳: 댕자랑 올리기(웹 ShowcaseComposer · 앱 show-parts), 케어톡 참고사진(GenerationReferenceComposer),
  *          펫렌즈 · 주간 사진 비교(preparePetLensPhotoCapture), 반려견 등록 사진(PetRegisterModal)
  */
@@ -21,6 +24,8 @@ type UploadImageType = (typeof UPLOAD_IMAGE_TYPES)[number];
 
 /** 줄일 때 긴 변 최대 픽셀 — 분석 · 게시에 충분하고 휴대폰 메모리에 무리 없는 크기 */
 const MAX_SIDE = 4096;
+/** 깨끗한 JPEG(댕자랑) 긴 변 — 피드 · 상세에 충분, 올리는 시간도 짧게 */
+const CLEAN_MAX_SIDE = 2560;
 
 type SniffedKind = UploadImageType | "heic" | "other-image" | "unknown";
 
@@ -84,11 +89,11 @@ async function decode(blob: Blob): Promise<ImageBitmap | HTMLImageElement | null
 }
 
 /** 연 사진을 긴 변 maxSide 안에서 JPEG 로(용량 제한 안에 들 때까지 화질 · 크기 차례로 낮춤). 못 하면 null */
-async function encodeJpeg(image: ImageBitmap | HTMLImageElement, maxBytes: number): Promise<Blob | null> {
+async function encodeJpeg(image: ImageBitmap | HTMLImageElement, maxBytes: number, maxSide = MAX_SIDE): Promise<Blob | null> {
     const width = "naturalWidth" in image ? image.naturalWidth : image.width;
     const height = "naturalHeight" in image ? image.naturalHeight : image.height;
     if (!width || !height) return null;
-    let scale = Math.min(1, MAX_SIDE / Math.max(width, height));
+    let scale = Math.min(1, maxSide / Math.max(width, height));
     const qualities = [0.9, 0.82, 0.74];
     for (let round = 0; round < 6; round += 1) {
         const canvas = document.createElement("canvas");
@@ -113,9 +118,29 @@ async function encodeJpeg(image: ImageBitmap | HTMLImageElement, maxBytes: numbe
  * 올리기 전에 사진을 맞춤 — 받을 수 있는 형식(JPEG · PNG · WebP) · 용량 제한 안의 파일로.
  * 맞출 수 없으면 원래 파일을 그대로 돌려줌(기존 검사 · 안내 문구가 그대로 처리).
  */
-export async function prepareUploadImage(file: File, options: { maxBytes: number }): Promise<File> {
+export async function prepareUploadImage(file: File, options: { maxBytes: number; cleanJpeg?: boolean }): Promise<File> {
     if (typeof window === "undefined" || !file || file.size <= 0) return file;
     const kind = await sniffImageKind(file);
+
+    // 0) 깨끗한 JPEG 로 다시 그리기(댕자랑) — 열 수 있는 사진이면 형식과 상관없이. 못 열면 아래 순서대로
+    if (options.cleanJpeg && kind !== "unknown") {
+        let image = await decode(file);
+        if (!image && kind === "heic") {
+            try {
+                const { default: heic2any } = await import("heic2any");
+                const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 });
+                const jpeg = Array.isArray(converted) ? converted[0] : converted;
+                image = jpeg ? await decode(jpeg) : null;
+            } catch {
+                image = null;
+            }
+        }
+        if (image) {
+            const blob = await encodeJpeg(image, options.maxBytes, CLEAN_MAX_SIDE);
+            if ("close" in image) image.close();
+            if (blob) return relabel(blob, file.name, "image/jpeg");
+        }
+    }
 
     // 1) 이미 받을 수 있는 형식 — 이름표만 바로잡고, 용량 안이면 원본 그대로(화질 손실 없음)
     if (kind === "image/jpeg" || kind === "image/png" || kind === "image/webp") {

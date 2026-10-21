@@ -71,7 +71,7 @@ export default function ShowcaseComposer({
         setSuccess("");
         if (!pickedFile) return;
         // 어떤 휴대폰 사진이든(이름표가 비었거나 다른 JPEG · HEIC 등 · 너무 큰 사진) 올릴 수 있게 맞춤 — lib/upload-image(2026-10-20)
-        const nextFile = await prepareUploadImage(pickedFile, { maxBytes: SHOWCASE_MAX_UPLOAD_BYTES });
+        const nextFile = await prepareUploadImage(pickedFile, { maxBytes: SHOWCASE_MAX_UPLOAD_BYTES, cleanJpeg: true });
         const validationError = validateShowcaseImage(nextFile);
         if (validationError) {
             setError(validationError);
