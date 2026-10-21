@@ -8,7 +8,7 @@
  */
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import Image from "next/image";
@@ -399,6 +399,23 @@ function NavDropdown({
     const panelId = useId();
     const buttonRef = useRef<HTMLButtonElement>(null);
     const activationPointerTypeRef = useRef("");
+    // 하위 메뉴는 모두 자기 메뉴 자리(왼쪽 끝)부터 엶(2026-10-21 사용자 — 쇼핑도 매일 댕생활처럼).
+    // 넓은 판(쇼핑 780px)이 좁은 창에서 화면 오른쪽을 넘으면 넘친 만큼만 왼쪽으로 당김(오른쪽 여백 16px)
+    const panelRef = useRef<HTMLDivElement>(null);
+    useLayoutEffect(() => {
+        if (!open) return;
+        const fit = () => {
+            const panel = panelRef.current;
+            if (!panel) return;
+            const parentLeft = panel.parentElement?.getBoundingClientRect().left ?? 0;
+            const overflow = parentLeft + panel.offsetWidth - (window.innerWidth - 16);
+            // 화면 그리기 전에 판 자리만 바로 옮김(상태값 없이 — 다시 그리기 없음)
+            panel.style.marginLeft = overflow > 0 ? `${-Math.min(overflow, parentLeft - 16)}px` : "";
+        };
+        fit();
+        window.addEventListener("resize", fit);
+        return () => window.removeEventListener("resize", fit);
+    }, [open]);
 
     return (
         <div
@@ -446,8 +463,9 @@ function NavDropdown({
             </button>
             {open && (
                 <div
+                    ref={panelRef}
                     id={panelId}
-                    className={`absolute top-full ${wide ? "left-1/2 -translate-x-1/2" : "left-0"} pt-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150`}
+                    className={`absolute top-full left-0 pt-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 ${wide ? "w-max" : ""}`}
                 >
                     <div
                         className="glass-card rounded-2xl overflow-hidden"
