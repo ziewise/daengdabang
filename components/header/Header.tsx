@@ -193,7 +193,7 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                         >
                             {/* 매일 댕생활 하위 메뉴 — 쇼핑과 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-daily-*, 2026-10-20). 항목 · 주소 그대로 */}
-                            <ul className="ddb-menu-paper grid min-w-[250px] gap-1.5 p-2.5">
+                            <ul className="ddb-menu-paper grid w-max gap-1.5 p-2.5">
                                 {[
                                     ["/treasure-mine/", "보물광산 · 오늘의 루틴", "daily-treasure"],
                                     ["/goods-contest/", "굿즈 500명 공모전 · 진행 중", "daily-goods"],
@@ -222,7 +222,7 @@ export default function Header() {
                             onLeave={() => setOpenDrop(null)}
                         >
                             {/* 고객센터 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-cs-*, 2026-10-20). 항목 · 주소(CS_LINKS) 그대로, 그림은 주소로 고름 */}
-                            <ul className="ddb-menu-paper grid min-w-[210px] gap-1.5 p-2.5">
+                            <ul className="ddb-menu-paper grid w-max gap-1.5 p-2.5">
                                 {CS_LINKS.map((item) => (
                                     <li key={item.href}>
                                         <Link href={item.href} className="ddb-menu-row">
@@ -242,7 +242,7 @@ export default function Header() {
                         >
                             {/* 댕다방 연구소 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(2026-10-20). 그림: 사진 분석 = 헤더 펫렌즈, 행동 · 리포트 = 사용자 그림(menu-lab-*),
                                 AI 상담 = 웹 케어톡 그림. 항목 · 주소 · AI 상담 열기 동작 그대로 */}
-                            <ul className="ddb-menu-paper grid min-w-[250px] gap-1.5 p-2.5">
+                            <ul className="ddb-menu-paper grid w-max gap-1.5 p-2.5">
                                 {[
                                     ["/pet-lens/", "사진 건강 분석", "/images/ui/header-petlens-128.webp"],
                                     ["/pet-lens/?mode=observation", "울음소리·행동 분석", "/images/ui/menu-lab-observation-128.webp"],
@@ -399,9 +399,8 @@ function NavDropdown({
     const panelId = useId();
     const buttonRef = useRef<HTMLButtonElement>(null);
     const activationPointerTypeRef = useRef("");
-    // 하위 메뉴는 모두 자기 메뉴 자리부터 엶(2026-10-21 사용자 — 쇼핑도 매일 댕생활처럼).
-    // 판을 왼쪽으로 조금 당겨, 판 안 첫 알약 · 카드 · 줄의 왼쪽 끝이 메뉴 글자(쇼핑 등) 시작과 같은 선에 오게 함(같은 날 사용자).
-    // 넓은 판(쇼핑 780px)이 좁은 창에서 화면 오른쪽을 넘으면 넘친 만큼만 더 왼쪽으로(오른쪽 여백 16px, 왼쪽은 화면 밖으로 안 나가게)
+    // 하위 메뉴 자리(2026-10-21 사용자 확정): 넓은 판(쇼핑) = 화면 가운데, 작은 판(매일 댕생활 · 고객센터 · 연구소) = 자기 메뉴 가운데.
+    // 어느 쪽이든 화면 밖으로 넘치면 넘친 만큼만 안쪽으로(양쪽 여백 16px)
     const panelRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
         if (!open) return;
@@ -411,16 +410,15 @@ function NavDropdown({
             if (!panel || !button) return;
             panel.style.marginLeft = "";
             const panelLeft = panel.getBoundingClientRect().left;
-            // 메뉴 글자 시작 = 버튼 왼쪽 + 버튼 안쪽 여백, 판 안 내용 시작 = 판 안 첫 링크의 왼쪽
-            const textLeft = button.getBoundingClientRect().left + parseFloat(getComputedStyle(button).paddingLeft || "0");
-            const firstItem = panel.querySelector("a");
-            // 넓은 판(쇼핑)은 글자 선보다 20px 더 왼쪽으로(2026-10-21 사용자 "20px만 더 왼쪽으로"), 작은 판은 글자 선 그대로
-            let shift = (firstItem ? firstItem.getBoundingClientRect().left - textLeft : 0) + (wide ? 20 : 0);
-            const overflow = panelLeft - shift + panel.offsetWidth - (window.innerWidth - 16);
-            if (overflow > 0) shift += overflow;
-            shift = Math.min(shift, panelLeft - 16);
+            const width = panel.offsetWidth;
+            const buttonBox = button.getBoundingClientRect();
+            const center = wide ? window.innerWidth / 2 : buttonBox.left + buttonBox.width / 2;
+            let left = center - width / 2;
+            left = Math.min(left, window.innerWidth - 16 - width);
+            left = Math.max(left, 16);
             // 화면 그리기 전에 판 자리만 바로 옮김(상태값 없이 — 다시 그리기 없음)
-            panel.style.marginLeft = Math.round(shift) !== 0 ? `${-shift}px` : "";
+            const shift = left - panelLeft;
+            panel.style.marginLeft = Math.round(shift) !== 0 ? `${shift}px` : "";
         };
         fit();
         window.addEventListener("resize", fit);

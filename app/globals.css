@@ -2275,9 +2275,9 @@ header + main .hero-shell {
     padding: 6px 8px;
 }
 
-/* 세로 줄(매일 댕생활 · 고객센터 · 연구소) — 그림 + 이름 왼쪽부터 */
+/* 세로 줄(매일 댕생활 · 고객센터 · 연구소) — 그림 + 이름 왼쪽부터. 판 폭은 가장 긴 항목에 맞춤(2026-10-21 사용자 시안 ①) */
 .ddb-menu-row {
-    padding: 5px 14px 5px 6px;
+    padding: 5px 16px 5px 6px;
 }
 
 .ddb-menu-pill:hover,
