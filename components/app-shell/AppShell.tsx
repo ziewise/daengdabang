@@ -30,10 +30,13 @@ import { CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events
 const SearchModal = dynamic(() => import("@/components/header/SearchModal"), { ssr: false });
 const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: false });
 // 산책 친구(협업자 PetCompanionGate) — 쇼핑 탭에서만, 쇼핑 탭에 들어갈 때 처음 불러옴(다른 탭은 받지 않아 가벼움 · 2026-10-21 사용자 "쇼핑에서 다시 보이게")
+// 앱(APK · iOS)에서 앱 묶음에 없는 사진 · 영상을 받을 운영 사이트 주소
+const NATIVE_WEB_ORIGIN = "https://www.daengdabang.com";
 const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"), { ssr: false });
+import { Capacitor } from "@capacitor/core";
 import { useAuth, useCart } from "@/lib/store";
 import {
-    APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
+    APP_ITEM, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
 import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
@@ -247,6 +250,10 @@ const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
  * 우리 아이 기록(/my-pet)은 위 APP_REPORT. 찾지 못하면 null(그 주소 그대로).
  */
 function appScreenFor(pathname: string, search: string): string | null {
+    // 상품 상세(/product/{주소}) → 앱 안 상품 상세 틀(2026-10-21) — 앱(APK)은 상품 상세가 앱 묶음에 없어 브라우저 창으로 열렸음.
+    // 앱 안에서 같은 부품으로 그려 빠르고, 로그인 · 장바구니 · 찜이 앱과 이어짐
+    const productMatch = /^\/product\/([^/]+)\/?$/.exec(pathname);
+    if (productMatch) return `${APP_ITEM}?p=${encodeURIComponent(decodeURIComponent(productMatch[1]))}`;
     if (isMyPetPath(pathname)) {
         // 웹 /my-pet/?profile=N(AppAiCareOverview 주간 비교 보기 등) — 앱 리포트도 같은 아이를 먼저 고르게 profile 만 이어 줌
         // (검사 기준 = 협업자 cleanPetLensProfileId: 양의 안전 정수만)
@@ -318,6 +325,44 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         return () => document.removeEventListener("click", onClick, true);
     }, [router]);
 
+    /* 앱(APK · iOS) 사진 · 영상 주소 — 앱 묶음에 없는 파일(상품 사진 · 상세 이미지 · 카드 사진 등 /images/products · /images/promo …)은
+       운영 사이트 주소로 바꿔 받는다(2026-10-21, 앱 안 상품 상세를 위해). 협업자 부품(갤러리 · 색상 · 상세 · 관련 상품)이 그리는
+       <img · video · source> 의 주소 속성만 화면에서 바꿈 — 상품 자료 · 입혀보기에 넘기는 주소는 그대로(앱 쇼핑 useShopMedia 와 같은 규칙).
+       웹 · 설치 앱(PWA)은 같은 사이트라 그대로 */
+    useEffect(() => {
+        if (!Capacitor.isNativePlatform()) return;
+        const BUNDLED = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/_next/", "/ai/", "/videos/login.mp4",
+            "/images/logo-black-poodle-v2.png", "/images/wordmark.png", "/images/og-ai-platform-"];
+        const remote = (value: string | null) => Boolean(value && value.startsWith("/") && !value.startsWith("//") && !BUNDLED.some((b) => value.startsWith(b)));
+        const fix = (el: Element) => {
+            for (const attr of ["src", "poster"]) {
+                const value = el.getAttribute(attr);
+                if (remote(value)) el.setAttribute(attr, `${NATIVE_WEB_ORIGIN}${value}`);
+            }
+            const srcset = el.getAttribute("srcset");
+            if (srcset && (srcset.startsWith("/") || srcset.includes(" /"))) {
+                el.setAttribute("srcset", srcset.split(",").map((part) => {
+                    const [url, ...rest] = part.trim().split(/\s+/);
+                    return [remote(url) ? `${NATIVE_WEB_ORIGIN}${url}` : url, ...rest].join(" ");
+                }).join(", "));
+            }
+        };
+        const scan = (root: ParentNode) => root.querySelectorAll("img, video, source").forEach(fix);
+        scan(document);
+        const observer = new MutationObserver((records) => {
+            for (const record of records) {
+                if (record.type === "attributes") fix(record.target as Element);
+                else record.addedNodes.forEach((node) => {
+                    if (!(node instanceof Element)) return;
+                    if (node.matches("img, video, source")) fix(node);
+                    scan(node);
+                });
+            }
+        });
+        observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["src", "srcset", "poster"] });
+        return () => observer.disconnect();
+    }, []);
+
     // 로그인 통일 — ① 코드로 웹 로그인 주소로 넘어온 경우(장바구니 → 주문 등) ② 로그인 전에 회원 전용 화면에 들어온 경우 → 앱 로그인
     const { user, hydrated: authHydrated } = useAuth();
     useEffect(() => {
@@ -375,13 +420,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // 홈 · 쇼핑 첫 화면은 제목 테이프 없이(홈은 인사말, 쇼핑은 브랜드 문구로 시작)
     const pageTitle = careTalk || (activeKey === "home" || activeKey === "shop") && root ? null : root ? active.label : subTitle;
     // 쇼핑 탭의 웹 화면(상품 상세 · 장바구니 · 결제 · 목록) — 앱 전용 스티커북 겉모양(appShopSkin.ts)을 입히는 범위
-    const shopWeb = activeKey === "shop" && !pathname.startsWith("/app/");
+    const appItem = pathname.startsWith(APP_ITEM); // 앱 안 상품 상세(2026-10-21) — 웹 상품 상세와 같은 겉모양 · 자리
+    const shopWeb = activeKey === "shop" && (!pathname.startsWith("/app/") || appItem);
     // 마이 탭의 웹 화면(마이페이지 · 주문 · 배송지 · 결제수단 · 추천 설정 · 정보 수정 · 공지 · FAQ · 문의 · 교환/반품 · 약관) — 같은 앱 겉모양 범위.
     // 로그인 · 가입(/auth)은 앱 로그인 화면이 대신하므로 제외
     const myWeb = activeKey === "my" && !pathname.startsWith("/app/") && !pathname.startsWith("/auth");
     // 연구소 탭의 웹 화면(펫렌즈 사진 분석 · 행동·소리 분석 · 우리 아이 기록) — 같은 앱 겉모양 범위
     const labWeb = activeKey === "lab" && !pathname.startsWith("/app/");
-    const productDetail = pathname.startsWith("/product/");
+    const productDetail = pathname.startsWith("/product/") || appItem;
     // 상단바 — 앱에서는 어느 화면이든 앱 상단바(로고 · 케어톡 · 검색 · 장바구니). 쇼핑 탭의 웹 화면(상세 · 장바구니 · 결제 · 목록)도
     // 앱 전용 화면이라 웹 상단바를 쓰지 않는다(사용자 결정 2026-10-16).
     // 뒤로 가기는 앱 전체에서 상단바가 아니라 그 아래(사용자 결정 2026-10-16): 화면 제목 테이프가 있으면 그 줄 왼쪽, 없으면 상단바 바로 아래 줄
@@ -394,7 +440,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     //  - ddb-app-subrow: 버튼 줄이 있을 때만 --app-subbar-h(50px) — 그 밑에 붙는 페이지 안 탭 위치 계산용
     //  - data-app-page: 지금 화면 이름(주소 첫 마디: cart · product · checkout …) — 화면별 앱 겉모양 CSS 범위
     //  - ddb-app-shop-web · ddb-app-my-web · ddb-app-lab-web: 쇼핑 · 마이 · 연구소 탭의 웹 화면 — 앱 전용 겉모양 CSS 범위(appShopSkin.ts)
-    const appPage = pathname.split("/")[1] || "root";
+    const appPage = appItem ? "product" : pathname.split("/")[1] || "root";
     useLayoutEffect(() => {
         const html = document.documentElement;
         const set = (name: string, on: boolean) => { if (html.classList.contains(name) !== on) html.classList.toggle(name, on); };

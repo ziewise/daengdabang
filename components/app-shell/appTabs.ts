@@ -125,7 +125,7 @@ export function conceptTabForPath(pathname: string, c: Concept, previous: AppTab
         { tab: "home", paths: ["/app/home-1", `/app/${c}/daily`, `/app/${c}/care`, "/treasure-mine", "/growth", "/challenge"] },
         { tab: "lab", paths: [`/app/${c}/lab`, `/app/${c}/report`, "/pet-lens", "/petlens", "/my-pet"] },
         { tab: "dang", paths: [`/app/${c}/show`, "/daeng-showcase", "/goods-contest"] },
-        { tab: "shop", paths: [`/app/${c}/shop`] },
+        { tab: "shop", paths: [`/app/${c}/shop`, `/app/${c}/item`] }, // 앱 안 상품 상세(2026-10-21)도 쇼핑
         // 비밀번호 재설정(/forgot-password, 앱 로그인의 "비밀번호를 잊으셨나요?")도 마이 — 규칙에 없어 쇼핑 탭으로 보이던 것(2026-10-17 점검)
         { tab: "my", paths: [`/app/${c}/my`, "/mypage", "/auth", "/forgot-password", "/faq", "/notice", "/inquiry", "/return", "/legal", "/terms", "/privacy", "/social"] },
     ];
@@ -152,11 +152,14 @@ export function conceptSubTitle(pathname: string): string | null {
 }
 
 /** 아래 탭바를 숨길 화면 — 화면 아래에 구매 바 · 입력창이 붙거나 결제 · 로그인에 집중해야 하는 곳 */
-const HIDE_TABBAR_PATHS = ["/product", "/checkout", "/auth", "/forgot-password", "/chat", "/app/sticker/login", "/app/sticker/signup"]; // 비밀번호 재설정도 로그인처럼 입력에 집중
+const HIDE_TABBAR_PATHS = ["/product", "/app/sticker/item", "/checkout", "/auth", "/forgot-password", "/chat", "/app/sticker/login", "/app/sticker/signup"]; // 비밀번호 재설정도 로그인처럼 입력에 집중
 
 export function hidesTabBar(pathname: string): boolean {
     return HIDE_TABBAR_PATHS.some((p) => matches(pathname, p));
 }
+
+/** 앱 안 상품 상세 틀(2026-10-21) — /product/{주소} 를 앱 안에서 이 화면(?p=주소)으로 연다 */
+export const APP_ITEM = "/app/sticker/item/";
 
 /* ───────── 앱 로그인 · 회원가입 — 앱 안에서 로그인 · 가입을 요구하는 곳은 모두 이 화면들로 ───────── */
 export const APP_LOGIN = "/app/sticker/login/";

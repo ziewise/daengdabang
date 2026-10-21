@@ -22,7 +22,13 @@ const NATIVE_ROUTE_PREFIXES = [
     "/petlens",
     "/privacy",
     "/terms",
+    "/cart", // 2026-10-21: 장바구니도 앱 안(앱 상품 상세에서 담은 상품이 그대로 보이게) — prepare-native-web 묶음에 추가
 ] as const;
+// 앱 틀(AppShell)이 같은 기능의 앱 화면으로 바꿔 보내는 주소 — 브라우저 창으로 열지 않고 그대로 둔다(2026-10-21: 상품 상세 → 앱 상품 상세)
+const APP_SHELL_ROUTED_PREFIXES = ["/product"] as const;
+function isAppShellRoutedRoute(pathname: string) {
+    return APP_SHELL_ROUTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
 const NATIVE_TRYON_ROUTE_PREFIXES = ["/products"] as const;
 
 function isBundledNativeRoute(pathname: string) {
@@ -75,7 +81,7 @@ export default function NativeAppBridge() {
             const url = new URL(anchor.href, window.location.href);
             const isLocal = url.origin === window.location.origin;
             const staysInApp = isLocal
-                && isBundledNativeRoute(url.pathname)
+                && (isBundledNativeRoute(url.pathname) || isAppShellRoutedRoute(url.pathname))
                 && anchor.dataset.nativeExternal === undefined;
 
             void Haptics.impact({ style: ImpactStyle.Light }).catch(() => undefined);
@@ -108,6 +114,12 @@ export default function NativeAppBridge() {
                 }
                 const isDaengdabang = incoming.hostname === "daengdabang.com"
                     || incoming.hostname === "www.daengdabang.com";
+                // 밖에서 누른 상품 주소(카톡 공유 등)도 앱 안 상품 상세로(2026-10-21)
+                const productMatch = isDaengdabang ? /^\/product\/([^/]+)\/?$/.exec(incoming.pathname) : null;
+                if (productMatch) {
+                    router.push(`/app/sticker/item/?p=${encodeURIComponent(decodeURIComponent(productMatch[1]))}`);
+                    return;
+                }
                 if (isDaengdabang && isBundledNativeRoute(incoming.pathname)) {
                     router.push(`${incoming.pathname}${incoming.search}${incoming.hash}`);
                     return;

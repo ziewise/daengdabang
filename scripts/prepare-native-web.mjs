@@ -19,6 +19,7 @@ const nativeRoot = path.join(projectRoot, "native", "www");
 const bundledRoutes = [
     "app",
     "auth",
+    "cart", // 2026-10-21: 앱 안 상품 상세에서 담은 상품이 보이게 장바구니도 앱 안(약 1MB)
     "chat",
     "legal",
     "my-pet",
