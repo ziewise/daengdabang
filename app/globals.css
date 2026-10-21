@@ -2494,18 +2494,28 @@ html:not(.ddb-app-mode) div[data-pet-companion-speech] {
 }
 
 /* 제목(첫 줄) — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
+/* 긴 제목(상품명)은 말풍선 안에서 두 줄까지 줄바꿈, 더 길면 끝을 … 로(2026-10-22 사용자 "말풍선을 벗어나는 제품명").
+   예전엔 밑줄을 보이려고 overflow: visible 로 두어, 협업자의 한 줄 고정(nowrap)과 겹쳐 글자가 말풍선 밖으로 나갔음.
+   밑줄은 줄 높이 안 글자 아래쪽에 그려(여백을 두면 셋째 줄 윗부분이 비침) 잘리지 않게 */
 html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child {
     position: relative;
     isolation: isolate;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     width: fit-content;
+    min-width: 0;
     max-width: 100%;
     margin-bottom: 4px;
-    overflow: visible;
+    overflow: hidden;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
     color: #172033;
     font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
     font-size: 18px;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.25;
     letter-spacing: -0.02em;
     filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
 }
@@ -2513,10 +2523,10 @@ html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child {
 html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child::after {
     position: absolute;
     right: 1%;
-    bottom: -0.12em;
+    bottom: 0;
     left: 0;
     z-index: -1;
-    height: 0.24em;
+    height: 0.2em;
     border-radius: 999px 70% 999px 60%;
     background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
     content: "";
