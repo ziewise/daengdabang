@@ -2365,10 +2365,10 @@ header + main .hero-shell {
 }
 
 /* 헤더 아이콘 이름 말풍선(2026-10-20 사용자 요청) — 펫렌즈 · 검색 · 장바구니 · 로그인/마이페이지 · 언어 변경.
-   마우스를 올리거나(키보드로 고르면) 아이콘 바로 아래에 흰 알약 말풍선(연분홍 테두리 · 부드러운 그림자, 사이트 흰 카드 · 파스텔 알약과 같은 결 —
+   웹에서만(html:not(.ddb-app-mode) — 앱의 강아지 집 그림(::before)을 가리지 않게, 2026-10-21). 마우스를 올리거나(키보드로 고르면) 아이콘 바로 아래에 흰 알약 말풍선(연분홍 테두리 · 부드러운 그림자, 사이트 흰 카드 · 파스텔 알약과 같은 결 —
    처음 검정 바탕은 사이트와 안 어울려 바꿈) + 작은 꼬리. 터치 화면(hover 없음)에서는 띄우지 않음 */
-.ddb-header-tip::before,
-.ddb-header-tip::after {
+html:not(.ddb-app-mode) .ddb-header-tip::before,
+html:not(.ddb-app-mode) .ddb-header-tip::after {
     position: absolute;
     left: 50%;
     z-index: 60;
@@ -2378,7 +2378,7 @@ header + main .hero-shell {
 }
 
 /* 이름 알약 */
-.ddb-header-tip::after {
+html:not(.ddb-app-mode) .ddb-header-tip::after {
     content: attr(data-header-tip);
     top: calc(100% + 10px);
     padding: 5px 11px 6px;
@@ -2398,7 +2398,7 @@ header + main .hero-shell {
 }
 
 /* 위쪽 작은 꼬리(아이콘을 가리킴) */
-.ddb-header-tip::before {
+html:not(.ddb-app-mode) .ddb-header-tip::before {
     content: "";
     top: calc(100% + 6px);
     z-index: 61; /* 알약 테두리 위로 겹쳐 꼬리와 알약이 이어져 보이게 */
@@ -2412,28 +2412,28 @@ header + main .hero-shell {
 }
 
 @media (hover: hover) {
-    .ddb-header-tip:hover::after,
-    .ddb-header-tip:focus-visible::after {
+    html:not(.ddb-app-mode) .ddb-header-tip:hover::after,
+    html:not(.ddb-app-mode) .ddb-header-tip:focus-visible::after {
         opacity: 1;
         transform: translate(-50%, 0);
     }
 
-    .ddb-header-tip:hover::before,
-    .ddb-header-tip:focus-visible::before {
+    html:not(.ddb-app-mode) .ddb-header-tip:hover::before,
+    html:not(.ddb-app-mode) .ddb-header-tip:focus-visible::before {
         opacity: 1;
         transform: translate(-50%, 0) rotate(45deg);
     }
 }
 
 /* 화면 오른쪽 가장자리 버튼(케어톡 · 산책 친구 집 · 설정)은 이름 말풍선을 버튼 왼쪽에(아래로 띄우면 화면 밖 · 버튼에 가림). 꼬리는 오른쪽 */
-.ddb-header-tip.ddb-tip-left::after {
+html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left::after {
     top: 50%;
     right: calc(100% + 10px);
     left: auto;
     transform: translate(4px, -50%);
 }
 
-.ddb-header-tip.ddb-tip-left::before {
+html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left::before {
     top: 50%;
     right: calc(100% + 6px);
     left: auto;
@@ -2445,20 +2445,20 @@ header + main .hero-shell {
 }
 
 @media (hover: hover) {
-    .ddb-header-tip.ddb-tip-left:hover::after,
-    .ddb-header-tip.ddb-tip-left:focus-visible::after {
+    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:hover::after,
+    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:focus-visible::after {
         transform: translate(0, -50%);
     }
 
-    .ddb-header-tip.ddb-tip-left:hover::before,
-    .ddb-header-tip.ddb-tip-left:focus-visible::before {
+    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:hover::before,
+    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:focus-visible::before {
         transform: translate(0, -50%) rotate(45deg);
     }
 }
 
 /* 웹 케어톡 떠 있는 버튼(협업자 ChatWidget) — 닫혀 있을 때 크레파스 동그라미 대신 사용자 케어톡 그림(2026-10-20, 원본 originals/caretalk-web.png).
    열려 있을 때(닫기 X)는 기존 모양 그대로 */
-button[data-mobile-chat-trigger][data-chat-open="false"] {
+html:not(.ddb-app-mode) button[data-mobile-chat-trigger][data-chat-open="false"] {
     border: 0 !important;
     outline: 0 !important;
     background: url("/images/ui/caretalk-web-128.webp") center / contain no-repeat !important;
@@ -2466,7 +2466,7 @@ button[data-mobile-chat-trigger][data-chat-open="false"] {
     filter: drop-shadow(0 8px 12px rgb(110 80 200 / 30%));
 }
 
-button[data-mobile-chat-trigger][data-chat-open="false"] > i {
+html:not(.ddb-app-mode) button[data-mobile-chat-trigger][data-chat-open="false"] > i {
     display: none;
 }
 
@@ -2474,7 +2474,7 @@ button[data-mobile-chat-trigger][data-chat-open="false"] > i {
    웹에 이미 있는 크레파스 표현만 씀(앱 스티커 요소 X): 바탕 = .ddb-crayon-paper(점선 테두리 · 크림 종이 결 · 청록/분홍 엇갈린 그림자),
    제목 = .ddb-crayon-title 손글씨(개구) + .ddb-crayon-underline 세 색 크레파스 밑줄, 바로 가기 = .ddb-crayon-link(청록 점선 알약 · 손글씨, 올리면 분홍 · 살짝 기울기).
    문구 · 위치 · 동작은 그대로 */
-div[data-pet-companion-speech] {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] {
     width: min(250px, calc(100vw - 32px));
     gap: 3px;
     padding: 13px 36px 14px 16px;
@@ -2494,7 +2494,7 @@ div[data-pet-companion-speech] {
 }
 
 /* 제목(첫 줄) — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
-div[data-pet-companion-speech] > span:first-child {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child {
     position: relative;
     isolation: isolate;
     width: fit-content;
@@ -2510,7 +2510,7 @@ div[data-pet-companion-speech] > span:first-child {
     filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
 }
 
-div[data-pet-companion-speech] > span:first-child::after {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child::after {
     position: absolute;
     right: 1%;
     bottom: -0.12em;
@@ -2526,8 +2526,8 @@ div[data-pet-companion-speech] > span:first-child::after {
 
 /* 바로 가기(링크 · 버튼) — 분홍 알약(2026-10-20 사용자 "웹 스타일에 어울리는 이쁜 버튼": 메인 "매일 댕생활"의 오늘 둘러보기 버튼과 같은 결 —
    채운 분홍 · 흰 굵은 글씨 · 분홍 그림자, 올리면 살짝 떠오름. 처음 크레파스 점선 알약은 안 어울려 바꿈) */
-div[data-pet-companion-speech] > a,
-div[data-pet-companion-speech] > button:not([aria-label$="닫기"]) {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > a,
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > button:not([aria-label$="닫기"]) {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -2546,21 +2546,21 @@ div[data-pet-companion-speech] > button:not([aria-label$="닫기"]) {
     transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
-div[data-pet-companion-speech] > a::after,
-div[data-pet-companion-speech] > button:not([aria-label$="닫기"])::after {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > a::after,
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > button:not([aria-label$="닫기"])::after {
     content: "→";
     font-size: 12px;
 }
 
-div[data-pet-companion-speech] > a:hover,
-div[data-pet-companion-speech] > button:not([aria-label$="닫기"]):hover {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > a:hover,
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > button:not([aria-label$="닫기"]):hover {
     background: #e26690;
     box-shadow: 0 10px 18px -9px rgb(200 80 120 / 70%);
     transform: translateY(-1px);
 }
 
 /* 닫기 — 옅은 회색 × , 올리면 분홍 */
-div[data-pet-companion-speech] > button[aria-label$="닫기"] {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > button[aria-label$="닫기"] {
     top: 8px;
     right: 8px;
     width: 24px;
@@ -2570,7 +2570,7 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"] {
     transition: color 0.15s ease, transform 0.15s ease;
 }
 
-div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
+html:not(.ddb-app-mode) div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
     color: #ef476f;
     transform: rotate(8deg);
 }
@@ -2578,7 +2578,7 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
 /* 산책 친구 빠른 메뉴(협업자 PetCompanionLayer quickActions — 강아지를 누르면 "○○에게 무엇을 할까요?") — 웹 크레파스 결로(2026-10-20 사용자).
    창 = 말풍선과 같은 크레파스 종이(점선 테두리 · 크림 종이 결 · 청록/분홍 엇갈린 그림자), 제목 = 손글씨 + 세 색 크레파스 밑줄,
    두 버튼 = 흰 종이 칸 + 사용자 그림(집 = pet-home, 설정 = pet-settings — 오른쪽 가장자리 탭과 같은 그림), 올리면 분홍 테두리 · 살짝 떠오름. 동작은 그대로 */
-#pet-companion-quick-actions {
+html:not(.ddb-app-mode) #pet-companion-quick-actions {
     width: min(264px, calc(100vw - 24px));
     padding: 16px 14px 14px;
     border: 1.5px dashed rgb(51 65 85 / 22%);
@@ -2595,7 +2595,7 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
 }
 
 /* 제목 — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
-#pet-companion-quick-actions > h2 {
+html:not(.ddb-app-mode) #pet-companion-quick-actions > h2 {
     position: relative;
     isolation: isolate;
     width: fit-content;
@@ -2609,7 +2609,7 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
     filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
 }
 
-#pet-companion-quick-actions > h2::after {
+html:not(.ddb-app-mode) #pet-companion-quick-actions > h2::after {
     position: absolute;
     right: 1%;
     bottom: -0.1em;
@@ -2624,7 +2624,7 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
 }
 
 /* 닫기 — 옅은 회색 × , 올리면 분홍 */
-#pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"] {
+html:not(.ddb-app-mode) #pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"] {
     top: 8px;
     right: 8px;
     width: 32px;
@@ -2634,13 +2634,13 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
     transition: color 0.15s ease, transform 0.15s ease;
 }
 
-#pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"]:hover {
+html:not(.ddb-app-mode) #pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"]:hover {
     color: #ef476f;
     transform: rotate(8deg);
 }
 
 /* 두 버튼 — 흰 종이 칸, 그림 위 · 이름 아래 */
-#pet-companion-quick-actions [data-pet-quick-action] {
+html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action] {
     min-height: 92px;
     gap: 6px;
     padding: 12px 6px 10px;
@@ -2655,14 +2655,14 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
     transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-#pet-companion-quick-actions [data-pet-quick-action]:hover {
+html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action]:hover {
     border-color: #f4b8cb;
     box-shadow: 0 10px 18px -10px rgb(200 80 120 / 45%);
     transform: translateY(-2px);
 }
 
 /* 그림 — 이모지 대신 사용자 집 · 설정 그림 */
-#pet-companion-quick-actions [data-pet-quick-action] > span:first-child {
+html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action] > span:first-child {
     display: block;
     width: 44px;
     height: 44px;
@@ -2671,17 +2671,17 @@ div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
     filter: drop-shadow(0 3px 3px rgb(150 80 40 / 18%));
 }
 
-#pet-companion-quick-actions [data-pet-quick-action="home"] > span:first-child {
+html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action="home"] > span:first-child {
     background-image: url("/images/ui/pet-home-96.webp");
 }
 
-#pet-companion-quick-actions [data-pet-quick-action="settings"] > span:first-child {
+html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action="settings"] > span:first-child {
     background-image: url("/images/ui/pet-settings-96.webp");
 }
 
 /* 산책 친구 집 · 설정 버튼(오른쪽 가장자리 탭, 협업자 PetCompanionGate) — 안의 그림만 사용자 그림으로(2026-10-20).
    집: CSS 로 그린 지붕 · 몸 · 문 대신 pet-home-96.webp, 설정: 🐾 글자 대신 pet-settings-96.webp. 탭 모양 · 위치 · 동작 · 집에 있을 때 말풍선은 그대로 */
-button[data-pet-companion-home] > span[aria-hidden="true"] {
+html:not(.ddb-app-mode) button[data-pet-companion-home] > span[aria-hidden="true"] {
     width: 30px;
     height: 30px;
     background: url("/images/ui/pet-home-96.webp") center / contain no-repeat;
@@ -2690,16 +2690,16 @@ button[data-pet-companion-home] > span[aria-hidden="true"] {
     transition: transform 0.2s ease;
 }
 
-button[data-pet-companion-home]:hover > span[aria-hidden="true"] {
+html:not(.ddb-app-mode) button[data-pet-companion-home]:hover > span[aria-hidden="true"] {
     transform: scale(1.08) !important;
 }
 
 /* 그림 파일로 바꿨으니 CSS 로 그린 지붕 · 몸 · 문은 숨김 */
-button[data-pet-companion-home] > span[aria-hidden="true"] > span {
+html:not(.ddb-app-mode) button[data-pet-companion-home] > span[aria-hidden="true"] > span {
     display: none;
 }
 
-button[data-pet-companion-settings] > span[aria-hidden="true"] {
+html:not(.ddb-app-mode) button[data-pet-companion-settings] > span[aria-hidden="true"] {
     display: block;
     width: 27px;
     height: 27px;
