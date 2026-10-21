@@ -129,7 +129,7 @@ export default function InstalledAppHomeButton() {
 
 /** 말풍선 — 노란 메모지 · 분홍 마스킹테이프 · 아이콘 쪽 꼬리, 위에서 살짝 내려오며 열림. 아래 줄 오른쪽에 "오늘 안 보기" */
 const APP_INSTALL_BUBBLE_CSS = `
-@font-face { font-family: "NanumSquareRound"; font-weight: 700; src: url("/fonts/NanumSquareRoundB.woff2") format("woff2"); font-display: swap; }
+/* 나눔스퀘어라운드 글꼴 선언은 app/globals.css 한 곳(2026-10-21) */
 .ddb-aib { position: absolute; top: calc(100% + 9px); right: -58px; z-index: 5; display: flex; flex-direction: column; align-items: flex-end; gap: 3px;
   width: max-content; padding: 9px 12px 6px; white-space: nowrap;
   background: #fff6c9; border-radius: 6px 6px 14px 6px; color: #5a4038; font-family: "NanumSquareRound", sans-serif; font-weight: 700;

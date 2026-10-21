@@ -64,6 +64,16 @@ const appStartRoute = `
     if (native && /\\/index\\.html$/.test(path)) {
       history.replaceState(history.state, "", path.replace(/index\\.html$/, "") + location.search + location.hash);
     }
+    // 3) 앱 화면 표시(ddb-app-mode · data-app-page)를 그리기 전에(2026-10-21 앱 속도) — 예전에는 화면 코드가 다 받아진 뒤(앱 틀이 붙을 때)
+    //    붙어서, 미리 만든 화면을 웹 글꼴 · 웹 꾸밈으로 한 번 그린 다음 앱 꾸밈으로 글자 · 배치를 전부 다시 계산했다(느린 폰 1초 가까이).
+    //    앱 틀이 반드시 붙는 곳만: 네이티브 앱 전체 · 앱 전용 화면(/app/home-1 · /app/sticker). 값은 앱 틀(AppShell)이 붙이는 값과 같고 앱 틀이 이어받는다
+    if (native || /^\\/app\\/(home-1|sticker)(\\/|$)/.test(path)) {
+      var root = document.documentElement;
+      var item = /^\\/app\\/sticker\\/item(\\/|$)/.test(path);
+      root.classList.add("ddb-app-mode");
+      if (item) root.classList.add("ddb-app-shop-web");
+      root.setAttribute("data-app-page", item ? "product" : (path.split("/")[1] || "root"));
+    }
   } catch (e) {}
 })();`;
 
@@ -93,7 +103,9 @@ const appViewportFit = `
       for (var i = 0; i < metas.length; i += 1) {
         if (metas[i].getAttribute("content") !== next) metas[i].setAttribute("content", next);
       }
-      document.documentElement.dataset.ddbViewportFit = next === DEFAULT ? "device" : "base";
+      // 값이 바뀔 때만 적음(2026-10-21 앱 속도) — 화면을 옮길 때 <head> 가 바뀔 때마다 같은 값을 여러 번 다시 적던 것
+      var fit = next === DEFAULT ? "device" : "base";
+      if (document.documentElement.dataset.ddbViewportFit !== fit) document.documentElement.dataset.ddbViewportFit = fit;
     };
     apply();
     window.addEventListener("orientationchange", apply);
@@ -169,6 +181,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <script id="ddb-app-start-route" dangerouslySetInnerHTML={{ __html: appStartRoute }} />
                 {/* 앱 화면 폭 맞춤 — 첫 그림 전에 실행(위 appViewportFit 설명) */}
                 <script id="ddb-app-viewport-fit" dangerouslySetInnerHTML={{ __html: appViewportFit }} />
+                {/* 앱 화면에서는 원티드 산스(1.26MB)를 받지 않음(2026-10-21 앱 속도) — 앱 글자는 카페24 · 나눔스퀘어라운드로 그려지고 원티드 산스는
+                    대체 글꼴로만 적혀 있는데, 앞 글꼴을 받는 동안 브라우저가 대체 글꼴까지 받아 풀었다. 앱 모드에서는 대체 글꼴 자리를 나눔스퀘어라운드로.
+                    상품 상세의 공급처 원본 상세(웹과 같은 글꼴로 보여야 하는 곳)만 원래 원티드 산스 */}
+                <style id="ddb-app-font" dangerouslySetInnerHTML={{ __html: `html.ddb-app-mode{--font-wanted-sans:"NanumSquareRound","Apple SD Gothic Neo","Noto Sans KR",sans-serif}html.ddb-app-mode [data-supplier-original-detail]{--font-wanted-sans:${wantedSans.style.fontFamily}}` }} />
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
             </head>

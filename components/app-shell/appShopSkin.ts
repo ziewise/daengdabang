@@ -141,9 +141,7 @@ html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; width: -
    띄어쓰기 없는 긴 글자(이메일 · 주소)만 칸 끝에서 끊음. break-all 같은 개별 지정은 그대로 우선 */
 html.ddb-app-mode body { word-break: keep-all; overflow-wrap: break-word; }
 
-/* 앱 글꼴 — 본문 나눔스퀘어라운드(굵게) · 제목 카페24 써라운드 (우리 사이트 public/fonts, 외부 서버 없이) */
-@font-face { font-family: "NanumSquareRound"; font-weight: 400; src: url("/fonts/NanumSquareRoundR.woff2") format("woff2"); font-display: swap; }
-@font-face { font-family: "NanumSquareRound"; font-weight: 700; src: url("/fonts/NanumSquareRoundB.woff2") format("woff2"); font-display: swap; }
+/* 앱 글꼴 — 본문 나눔스퀘어라운드(굵게) · 제목 카페24 써라운드 (우리 사이트 public/fonts, 외부 서버 없이). 글꼴 선언은 app/globals.css 한 곳(2026-10-21) */
 
 /* ── 1) 색 · 모서리 · 그림자 변수 — 쇼핑 탭 웹 화면 전체 + 검색 창 ── */
 ${S} { ${PALETTE} }

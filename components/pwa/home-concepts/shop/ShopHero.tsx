@@ -103,7 +103,9 @@ export default function ShopHero() {
         const io = new IntersectionObserver(([e]) => {
             // 히어로가 화면 높이의 35% 이상을 차지하면 "보이는 중"
             const shown = e.isIntersecting && e.intersectionRect.height >= window.innerHeight * 0.35;
-            html.dataset.shopHero = shown ? "on" : "off";
+            // 값이 바뀔 때만 적음 — 스크롤마다(기준선 11개) 같은 값을 다시 적어 화면 꾸밈을 다시 확인하던 것(2026-10-21 앱 속도)
+            const next = shown ? "on" : "off";
+            if (html.dataset.shopHero !== next) html.dataset.shopHero = next;
         }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
         io.observe(el);
         return () => { io.disconnect(); delete html.dataset.shopHero; };

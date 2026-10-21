@@ -379,6 +379,17 @@ function ShopRecommend() {
     );
 }
 
+/* 기획전 사진 — 원본(1499px PNG 장당 2MB대, 앱 묶음 밖이라 앱은 매번 인터넷으로 받음 · 화면엔 140px)을
+   같은 그림 480px webp(장당 20KB대, 앱 묶음 images/ui/promo)로(2026-10-21 속도). 웹 메인 기획전은 원본 그대로 */
+const APP_PROMO_IMG: Record<string, string> = {
+    "/images/promo/rain.png": "/images/ui/promo/rain-480.webp",
+    "/images/promo/eye.png": "/images/ui/promo/eye-480.webp",
+    "/images/promo/food1.png": "/images/ui/promo/food1-480.webp",
+    "/images/promo/food2.png": "/images/ui/promo/food2-480.webp",
+    "/images/promo/bundles.png": "/images/ui/promo/bundles-480.webp",
+};
+const promoSrc = (src: string) => APP_PROMO_IMG[src] ?? src;
+
 /* ───────── ⑤ 기획전 카드 — 사진(영상)은 위, 아래는 제목만(큰 카드도 한 줄) ───────── */
 function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
     const featured = Boolean(tile.featured);
@@ -398,8 +409,8 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
             <span className={`relative block overflow-hidden rounded-[3px] ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`} style={{ background: "#f6efe8" }}>
                 {!media ? null
                     : tile.video ? <InViewVideo src={media(tile.video)} muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-                    : tile.images?.length ? tile.images.map((src, k) => <Image key={src} src={media(src) ?? src} alt="" fill sizes="50vw" className={`object-cover transition-opacity duration-700 ${k === idx ? "opacity-100" : "opacity-0"}`} />)
-                        : tile.image ? <Image src={media(tile.image) ?? tile.image} alt="" fill sizes={featured ? "90vw" : "45vw"} className="object-cover" />
+                    : tile.images?.length ? tile.images.map((src, k) => <Image key={src} src={media(promoSrc(src)) ?? promoSrc(src)} alt="" fill sizes="50vw" className={`object-cover transition-opacity duration-700 ${k === idx ? "opacity-100" : "opacity-0"}`} />)
+                        : tile.image ? <Image src={media(promoSrc(tile.image)) ?? promoSrc(tile.image)} alt="" fill sizes={featured ? "90vw" : "45vw"} className="object-cover" />
                             : <i aria-hidden="true" className={`fa-solid ${tile.icon} absolute inset-0 grid place-items-center text-4xl text-[#e8c9b8]`} />}
             </span>
             <span className="block px-1 pt-2">

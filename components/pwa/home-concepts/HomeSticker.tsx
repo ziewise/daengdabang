@@ -120,7 +120,7 @@ export default function HomeSticker() {
                                     // 실제 우리 아이 사진(서버가 확인한 사진만 — 웹 마이페이지와 같은 기준)
                                     // eslint-disable-next-line @next/next/no-img-element
                                     ? <img src={pet.photoDataUrl} alt={`${petName} 사진`} className="absolute inset-0 h-full w-full object-cover" />
-                                    : <Image src="/images/logo-black-poodle-v2.png" alt="댕다방 검정 푸들" fill sizes="120px" className="object-cover" />}
+                                    : <Image src="/images/ui/logo-poodle-384.webp" alt="댕다방 검정 푸들" fill sizes="120px" className="object-cover" />}
                             </span>
                             <span className="ah-display absolute inset-x-0 bottom-1 text-center text-[13px]" style={{ color: "#ea4c7c" }}>{member ? petName : "댕다방"}</span>
                         </span>

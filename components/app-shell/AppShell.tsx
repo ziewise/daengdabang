@@ -24,6 +24,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events";
 // 2026-10-18 앱 속도: 검색창 · 케어톡 창은 상품 데이터(6MB)를 쓰는 큰 코드라 처음 열 때만 불러온다(앱 첫 화면 · 탭 전환을 가볍게).
 // 케어톡은 열기 요청을 창이 뜨기 전에도 기억해 두는 협업자 장치(lib/chat-widget-events pendingOpen)가 있어 동작 그대로.
@@ -48,6 +49,11 @@ const APP_SKIN_VERSION = (() => {
     return (hash >>> 0).toString(36);
 })();
 
+/* 무거운 화면 미리 받기 늦추기(2026-10-21 앱 속도) — 쇼핑 · 장바구니 화면은 상품 자료(6.6MB 스크립트)를 쓴다.
+   링크가 화면에 보이면 바로 미리 받던 것(Next 기본)을, 앱 홈이 막 뜬 순간 폰이 1초 가까이 멈추는 원인이라
+   첫 화면이 다 뜨고 한가할 때(2.5초 뒤 · 쉬는 틈)로 미룬다. 누르면 그대로 열리고, 미리 받은 뒤에는 예전처럼 빠르게 열림 */
+const HEAVY_PREFETCH = ["/app/sticker/shop", "/cart"];
+const isHeavyPrefetch = (href: string) => HEAVY_PREFETCH.some((p) => href === p || href.startsWith(`${p}/`) || href.startsWith(`${p}?`));
 
 /**
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
@@ -281,8 +287,33 @@ function appScreenFor(pathname: string, search: string): string | null {
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+    // 앱 글꼴 미리 받기(2026-10-21 앱 속도) — 제목 카페24 · 본문 나눔스퀘어라운드 굵게. 미리 만든 HTML 의 <head> 에 들어가
+    // 첫 그림 전에 글꼴이 준비되면, 임시 글꼴(폰 기본 한글 글꼴)로 한 번 그렸다가 글꼴이 오면 글자 전체를 다시 배치하는 일이 줄어든다
+    preload("/fonts/Cafe24Ssurround.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+    preload("/fonts/NanumSquareRoundB.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
     const pathname = usePathname();
     const router = useRouter();
+    // 쇼핑 · 장바구니 미리 받기 — 앱을 연 뒤 한가할 때 한 번(위 HEAVY_PREFETCH 설명). 앱 틀은 탭을 옮겨도 그대로라 앱을 켤 때 한 번만
+    useEffect(() => {
+        let idle = 0;
+        const run = () => {
+            for (const href of ["/app/sticker/shop/", "/cart/"]) router.prefetch(href);
+            // 쇼핑에서만 나오는 산책 친구의 코드 · 꾸밈(CSS 51KB)도 미리 — 처음 쇼핑에 들어갈 때 꾸밈 파일이 새로 붙으며
+            // 화면 전체 꾸밈을 다시 계산하던 것을 한가할 때로(불러오기만, 그리지는 않음 — 화면에 붙는 건 그대로 쇼핑 탭에서만)
+            void import("@/components/pet-companion/PetCompanionGate").catch(() => undefined);
+        };
+        const timer = window.setTimeout(() => {
+            const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
+            if (w.requestIdleCallback) idle = w.requestIdleCallback(run, { timeout: 3000 });
+            else run();
+        }, 2500);
+        return () => {
+            window.clearTimeout(timer);
+            const w = window as Window & { cancelIdleCallback?: (id: number) => void };
+            if (idle && w.cancelIdleCallback) w.cancelIdleCallback(idle);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- 앱을 켤 때 한 번만(router 는 바뀌지 않음)
+    }, []);
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
     // 검색창 · 케어톡 창은 처음 열 때부터 붙여 둠(닫힘 애니메이션 · 대화 내용 유지를 위해 한 번 붙이면 계속)
@@ -581,7 +612,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                             <button type="button" onClick={() => setSearchOpen(true)} className="app-icon-btn app-jelly-btn app-press" aria-label="검색">
                                 <JellyIcon k="search" />
                             </button>
-                            <Link href="/cart/" className="app-icon-btn app-jelly-btn app-press relative" aria-label="장바구니">
+                            <Link href="/cart/" prefetch={false} className="app-icon-btn app-jelly-btn app-press relative" aria-label="장바구니">
                                 <JellyIcon k="bag" />
                                 {/* 담긴 수량 — 0이면 숨김, 99 초과는 99+ */}
                                 {cartHydrated && cartCount > 0 && (
@@ -665,6 +696,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                 <li key={t.key} className="flex">
                                     <Link
                                         href={t.href}
+                                        prefetch={isHeavyPrefetch(t.href) ? false : undefined}
                                         className={`app-tab app-press ${on ? "is-on" : ""} ${concept && t.key === "shop" ? "is-hero" : ""}`}
                                         aria-current={on ? "page" : undefined}
                                     >
@@ -724,7 +756,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 const CSS = `
-/* 카페24 써라운드 — 앱 홈 시안과 같은 글씨 (우리 사이트 public/fonts 에서 직접 불러옴 · 외부 글꼴 서버 없이) */
+/* 카페24 써라운드 — 앱 홈 시안과 같은 글씨. 앱에서 늘 붙어 있는 앱 틀 CSS 한 곳에만 선언(2026-10-22 속도: 화면마다 선언이 다시 들어와 글자 전체를 다시 배치하던 것).
+   웹 화면은 이 선언이 없어 웹 모양 그대로 */
 @font-face { font-family: "Cafe24Ssurround"; src: url("/fonts/Cafe24Ssurround.woff2") format("woff2"); font-display: swap; }
 .app-font { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.02em; }
 

@@ -22,22 +22,23 @@ export const TEXT_SOFT = "#7a6a63";
 // 로고 "댕다방" 크레파스 색 — 청록 · 빨강 · 주황
 export const LOGO_INKS = ["#0aa3b8", "#ec1c45", "#ff8a00"] as const;
 
-/* 카드 그림 3장 — 원래 시안과 같은 그림 · 구름 위치(측정값) · 팔레트 */
+/* 카드 그림 3장 — 원래 시안과 같은 그림 · 구름 위치(측정값) · 팔레트.
+   imgSm: 같은 그림 400px(홈 카드처럼 작게 보이는 곳 — 원본 660px 을 풀면 장당 0.9MP, 2026-10-21 앱 속도) */
 export const COVERS = [
     {
-        key: "daily", href: "/treasure-mine/", title: "매일 댕생활", img: "/images/ui/card-daily.webp",
+        key: "daily", href: "/treasure-mine/", title: "매일 댕생활", img: "/images/ui/card-daily.webp", imgSm: "/images/ui/card-daily-400.webp",
         heads: [{ t: "매일", c: "#2f8fe2" }, { t: "댕생활", c: "#1766b5" }], cloud: { x: 45, y: 20, size: 17 },
         paw: "#5cb2fd", lines: ["출근도장 찍고", "돌봄 루틴 채우기!"],
         tone: { from: "#eaf6ff", to: "#cfe7ff", ink: "#1f5f99", deep: "#2f86d6", glow: "rgba(92,178,253,.45)" },
     },
     {
-        key: "show", href: "/daeng-showcase/", title: "댕자랑", img: "/images/ui/card-showcase.webp",
+        key: "show", href: "/daeng-showcase/", title: "댕자랑", img: "/images/ui/card-showcase.webp", imgSm: "/images/ui/card-showcase-400.webp",
         heads: [{ t: "댕자랑", c: "#e0285f" }], cloud: { x: 47, y: 18, size: 19.5 },
         paw: "#fe6b8d", lines: ["우리 아이", "귀여운 순간 자랑!"],
         tone: { from: "#fff0f4", to: "#ffd3e0", ink: "#b23a5e", deep: "#e8507a", glow: "rgba(254,107,141,.45)" },
     },
     {
-        key: "lab", href: "/pet-lens/", title: "댕다방 연구소", img: "/images/ui/card-lab.webp",
+        key: "lab", href: "/pet-lens/", title: "댕다방 연구소", img: "/images/ui/card-lab.webp", imgSm: "/images/ui/card-lab-400.webp",
         heads: [{ t: "댕다방", c: "#6b4532" }, { t: "연구소", c: "#e2681c" }], cloud: { x: 40.5, y: 17.5, size: 15 },
         paw: "#feae3e", lines: ["행복한 반려생활", "함께 연구해요!"],
         tone: { from: "#fff8e0", to: "#ffe7a8", ink: "#8f5e12", deep: "#e0951c", glow: "rgba(254,174,62,.45)" },
@@ -98,7 +99,8 @@ export function Poodle({ className = "" }: { className?: string }) {
     return (
         <span className={`relative block ${className}`}>
             <span aria-hidden="true" className="absolute bottom-[21%] left-1/2 h-3.5 w-[66%] -translate-x-1/2 rounded-[50%] bg-[#e98fab]/40 blur-[3px]" />
-            <Image src="/images/logo-black-poodle-v2.png" alt="댕다방 검정 푸들" fill sizes="132px" priority className="object-contain" />
+            {/* 같은 그림을 화면 크기에 맞춘 384px webp(원본 1254px PNG 1.4MB → 41KB, 2026-10-21 속도) */}
+            <Image src="/images/ui/logo-poodle-384.webp" alt="댕다방 검정 푸들" fill sizes="132px" priority className="object-contain" />
             <span aria-hidden="true" className={`ah-lid ${blink ? "is-shut" : ""}`} style={{ left: "35.1%", top: "45.6%" }} />
             <span aria-hidden="true" className={`ah-lid ${blink ? "is-shut" : ""}`} style={{ left: "57.5%", top: "43.6%" }} />
         </span>
@@ -116,7 +118,8 @@ export function CoverArt({ cover, lines, className = "", children, sizes = "45vw
     const l = lines ?? cover.lines;
     return (
         <span className={`relative block aspect-[51/100] w-full overflow-hidden [container-type:inline-size] ${className}`}>
-            <Image src={cover.img} alt="" fill sizes={sizes} loading="eager" className="object-cover" />
+            {/* 홈 카드처럼 작게(화면 폭 1/3) 보이는 곳이라 400px 그림 — 큰 화면(CoverWindow)은 원본 */}
+            <Image src={cover.imgSm} alt="" fill sizes={sizes} loading="eager" className="object-cover" />
             <span className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center" style={{ left: `${cover.cloud.x}%`, top: `${cover.cloud.y}%` }}>
                 {cover.heads.map((h) => (
                     <span key={h.t} className="ah-display block whitespace-nowrap leading-[1.08] tracking-[-0.03em]" style={{ color: h.c, fontSize: `${cover.cloud.size}cqw` }}>{h.t}</span>
@@ -219,12 +222,10 @@ export const KIT_CSS = `
   radial-gradient(60% 35% at 100% 45%, rgba(214,236,255,0.6) 0%, rgba(214,236,255,0) 70%),
   radial-gradient(70% 35% at 10% 100%, rgba(255,240,196,0.55) 0%, rgba(255,240,196,0) 70%),
   #fffaf5; }
-@font-face { font-family: "Cafe24Ssurround"; src: url("/fonts/Cafe24Ssurround.woff2") format("woff2"); font-display: swap; }
+/* 글꼴 선언(카페24 · 나눔스퀘어라운드)은 app/globals.css 한 곳 — 2026-10-21 속도: 탭마다 선언이 빠졌다 들어오며 글자 전체를 다시 배치하던 것 */
 .ah-display { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.02em; }
 /* 본문 · 설명 · 안내 · 입력칸 — 나눔스퀘어라운드(굵게, 2026-10-15 확정).
    제목 · 버튼 · 이름표는 .ah-display(카페24 써라운드). 끝이 둥근 글꼴끼리라 결이 맞고, 얇은 카페24 에어보다 작은 글씨가 또렷함 */
-@font-face { font-family: "NanumSquareRound"; font-weight: 400; src: url("/fonts/NanumSquareRoundR.woff2") format("woff2"); font-display: swap; }
-@font-face { font-family: "NanumSquareRound"; font-weight: 700; src: url("/fonts/NanumSquareRoundB.woff2") format("woff2"); font-display: swap; }
 .ah-light { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; letter-spacing: -0.01em; }
 .ah-card-desc { font-family: "NanumSquareRound", "Cafe24Ssurround", sans-serif; font-weight: 700; font-size: 9.4cqw; line-height: 1.3; letter-spacing: -0.03em; color: #4f413c; }
 /* 온도 '°' — 써라운드 글꼴의 '°'는 모양이 어색해 둥근 본문 글꼴(나눔스퀘어라운드)로. 원티드 산스는 쓰지 않음(글꼴 두 가지 규칙, 2026-10-17) */

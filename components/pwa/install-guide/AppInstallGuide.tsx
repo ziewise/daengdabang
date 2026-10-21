@@ -127,6 +127,8 @@ export function InstallBenefits() {
 
 /** 이 페이지 전용 겉모양 — 종이 · 폴라로이드 · 번호 스티커 · 메모지 (KIT_CSS · STICKER_CSS 와 함께 씀) */
 export const APP_INSTALL_CSS = `
+/* 브라우저 앱 설치 안내(웹 화면, 앱 틀 없음) — 앱 제목 글꼴 카페24 선언(2026-10-22: 앱 화면 CSS 의 글꼴 선언을 앱 틀 한 곳으로 옮겨 여기 따로) */
+@font-face { font-family: "Cafe24Ssurround"; src: url("/fonts/Cafe24Ssurround.woff2") format("woff2"); font-display: swap; }
 .ig-sheet { position: relative; border-radius: 18px; padding: 20px; }
 .ig-polaroid { border-radius: 6px; box-shadow: 0 10px 18px -12px rgba(110,70,60,.55), 0 0 0 1px rgba(150,110,90,.08); }
 .ig-shots { scrollbar-width: none; -webkit-overflow-scrolling: touch; }

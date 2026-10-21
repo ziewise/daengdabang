@@ -463,7 +463,7 @@ export function flyCoin(from: Element | null, to: Element | null, count = 1) {
 
 /* ── 공통 CSS: 폰트 · 하늘 효과 · 쾅 · 등장 · 코인 ── */
 export const HC_CSS = `
-@font-face { font-family: "Cafe24Ssurround"; src: url("/fonts/Cafe24Ssurround.woff2") format("woff2"); font-display: swap; }
+/* 글꼴 선언은 app/globals.css 한 곳(2026-10-21 속도) */
 .hc-display { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; letter-spacing: -0.025em; }
 .hc-air { font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; letter-spacing: -0.01em; } /* 본문 글씨 — 나눔스퀘어라운드(굵게) */
 

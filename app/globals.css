@@ -111,6 +111,22 @@ body {
     font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
+/* 앱 본문 글꼴 나눔스퀘어라운드(보통 · 굵게) — 2026-10-22 앱 속도: 예전에는 앱 화면마다 넣는 CSS(KIT_CSS · 앱 겉모양 · 설치 말풍선)에
+   글꼴 선언이 들어 있어, 탭을 옮길 때마다 선언이 빠졌다 다시 들어오며 브라우저가 화면 글자 전체를 다시 계산 · 배치했다.
+   글꼴 선언은 늘 있는 이 파일 한 곳에(쓰는 화면에서만 파일을 받으므로 웹은 받지 않음). 카페24 써라운드는 앱 틀(AppShell) CSS 에 */
+@font-face {
+    font-family: "NanumSquareRound";
+    font-weight: 400;
+    src: url("/fonts/NanumSquareRoundR.woff2") format("woff2");
+    font-display: swap;
+}
+@font-face {
+    font-family: "NanumSquareRound";
+    font-weight: 700;
+    src: url("/fonts/NanumSquareRoundB.woff2") format("woff2");
+    font-display: swap;
+}
+
 body[data-petlens-capture-active="true"] [data-site-header] {
     opacity: 0;
     pointer-events: none;
