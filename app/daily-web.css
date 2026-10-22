@@ -4698,3 +4698,77 @@ html:not(.ddb-app-mode) [data-daily-web] {
         object-fit: contain;
     }
 }
+
+/* ── 다음 보물 카드 그림(2026-10-22 사용자) — 흰 동그라미 · 그림자 없이 카드 바탕 위에 그림만 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-pc-icon.dw-pc-art {
+        width: 104px;
+        height: 104px;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    & .dw-pc-art img {
+        width: 104px;
+        height: 104px;
+        object-fit: contain;
+    }
+}
+
+/* ── 다음 보물 "전 프로그램 준비 중" — 노란 쿠션 알약 + 보물 캐는 장면(보물상자 그림 · 크레파스 발바닥 · 별 둘), 움직임은 globals.css 그대로 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .ddb-treasure-prep-scene.dw-prep {
+        gap: 14px;
+        padding: 10px 22px 10px 12px;
+        border: 0 !important;
+        border-radius: 999px;
+        background: #fff6e3;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), inset 0 -8px 14px rgb(217 127 14 / 6%), 0 14px 24px -18px rgb(140 90 20 / 45%);
+    }
+
+    & .ddb-treasure-prep-scene.dw-prep strong {
+        color: #7c4a03;
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    & .dw-prep-art {
+        width: 88px;
+        height: 60px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 6px 12px -9px rgb(140 90 20 / 45%);
+    }
+
+    /* 보물상자 — 가운데 아래 */
+    & .dw-prep-art img.ddb-treasure-coin {
+        left: 50%;
+        right: auto;
+        bottom: 4px;
+        width: 50px;
+        height: 50px;
+        margin-left: -25px;
+        object-fit: contain;
+        filter: none;
+    }
+
+    /* 크레파스 발바닥 — 왼쪽에서 톡톡 파는 모양 */
+    & .dw-prep-art .ddb-treasure-pick {
+        left: 2px;
+        bottom: 6px;
+        width: 27px;
+        height: 27px;
+        color: #ec7fa2;
+    }
+
+    /* 크레파스 별 둘 — 오른쪽 위에서 반짝 */
+    & .dw-prep-art .ddb-treasure-spark {
+        width: 17px;
+        height: 17px;
+        color: #f5b021;
+    }
+
+    & .dw-prep-art .ddb-treasure-spark:nth-of-type(2) { top: 4px; right: 10px; }
+    & .dw-prep-art .ddb-treasure-spark:nth-of-type(3) { top: 22px; right: 2px; width: 11px; height: 11px; }
+}

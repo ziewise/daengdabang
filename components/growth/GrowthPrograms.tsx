@@ -1,7 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { CrayonDoodle } from "@/components/daily/CrayonArt";
 import {
     cancelGrowthInterest,
     DdbApiError,
@@ -38,6 +40,14 @@ function sessionFingerprint(token: string | undefined): number {
     }
     return (hash >>> 0) || 1;
 }
+
+// 다음 보물 카드 그림(2026-10-22 사용자 그림 "다음보물아이콘" 을 넷으로 나눔) — 흰 동그라미 없이 카드 바탕 위에
+const PROGRAM_ART: Record<string, string> = {
+    membership: "/images/ui/next-membership-256.webp",
+    brand: "/images/ui/next-brand-256.webp",
+    goods: "/images/ui/next-goods-256.webp",
+    local: "/images/ui/next-local-256.webp",
+};
 
 export default function GrowthPrograms() {
     const { hydrated, user } = useAuth();
@@ -193,11 +203,12 @@ export default function GrowthPrograms() {
                         data-treasure-preparing-visual
                         aria-label="전 프로그램 준비 중"
                     >
-                        <span className="ddb-treasure-prep-icons" aria-hidden="true">
-                            <i className="fa-solid fa-hammer ddb-treasure-pick" />
-                            <i className="fa-solid fa-coins ddb-treasure-coin" />
-                            <i className="fa-solid fa-sparkles ddb-treasure-spark" />
-                            <i className="fa-solid fa-sparkles ddb-treasure-spark" />
+                        {/* 보물 캐는 장면(꾸밈) — 통통 튀는 보물상자 · 땅 파는 크레파스 발바닥 · 반짝이는 크레파스 별 둘(2026-10-22) */}
+                        <span className="ddb-treasure-prep-icons dw-prep-art" aria-hidden="true">
+                            <Image src="/images/ui/menu-daily-treasure-128.webp" alt="" width={52} height={52} className="ddb-treasure-coin" />
+                            <CrayonDoodle kind="paw" className="ddb-treasure-pick" />
+                            <CrayonDoodle kind="star" className="ddb-treasure-spark" />
+                            <CrayonDoodle kind="star" className="ddb-treasure-spark" />
                         </span>
                         <span className="min-w-0">
                             <strong className="block text-xs font-black text-amber-950">전 프로그램 준비 중</strong>
@@ -213,8 +224,8 @@ export default function GrowthPrograms() {
                     {GROWTH_PROGRAM_CARDS.map((program, index) => (
                         <article key={program.id} className={`dw-program ${["dw-tint-pink", "dw-tint-sky", "dw-tint-mint", "dw-tint-yellow"][index % 4]} relative flex h-full flex-col items-center rounded-[30px] px-5 pb-6 pt-9 text-center`}>
                             <span className="ddb-preparing-chip dw-soon">준비 중</span>
-                            <span className="dw-pc-icon" data-crayon-tone={program.tone}>
-                                <i className={`fa-solid ${program.icon}`} aria-hidden="true" />
+                            <span className="dw-pc-icon dw-pc-art" data-crayon-tone={program.tone}>
+                                <Image src={PROGRAM_ART[program.id]} alt="" width={104} height={104} aria-hidden="true" />
                             </span>
                             <p className="ddb-crayon-kicker dw-kicker mt-3">{program.eyebrow}</p>
                             <h3 className="ddb-crayon-title dw-h3 mt-1">{program.title}</h3>
