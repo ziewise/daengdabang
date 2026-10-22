@@ -314,6 +314,14 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                 {/* 민트 쿠션 판 — 왼쪽 하루 원판 · 오른쪽 분홍 "지금 할 일" */}
                 <div className="dw-csheet is-mint dw-tguest dw-tmember">
                     <div className="dw-dial-wrap">
+                        {/* 불러오는 중 · 실패 — 반쯤 빈 원판 대신 원판 테두리만(불러오는 중에는 숨쉬기) */}
+                        {!ready ? (
+                            <div className={`dw-dial dw-dial-idle ${loading ? "is-loading" : ""}`} aria-hidden="true">
+                                <span className="dw-dial-ring" style={{ "--dw-score": 0 } as CSSProperties} />
+                                <span className="dw-dial-ring-in" />
+                                <span className="dw-dial-center"><i className="fa-solid fa-paw" /></span>
+                            </div>
+                        ) : (
                         <TreasureDial
                             slices={slices}
                             selected={selected}
@@ -333,14 +341,15 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                 </>
                             )}
                         />
-                        <p className="dw-dial-hint">조각을 눌러 보세요</p>
+                        )}
+                        {ready ? <p className="dw-dial-hint">조각을 눌러 보세요</p> : null}
                     </div>
 
                     <div className="dw-csheet is-pink dw-tlogin dw-dial-card" aria-live="polite">
                         {!ready ? (
                             <div className="dw-dial-card-in">
                                 <i className={`fa-solid ${loading ? "fa-circle-notch fa-spin" : "fa-paw"} text-3xl text-pink-300`} aria-hidden="true" />
-                                <p className="dw-tlogin-body">{loading ? "오늘의 보물을 준비하는 중" : "출근도장을 불러오지 못했어요"}</p>
+                                <p className="dw-tlogin-body">{loading ? "오늘의 보물을 준비하는 중이에요" : "오늘의 보물을 불러오지 못했어요. 잠시 뒤 다시 불러와 주세요."}</p>
                                 {!loading && <button type="button" onClick={() => void refresh()} className="ddb-motion-lift dw-pill dw-pill-sm mt-3">다시 불러오기</button>}
                             </div>
                         ) : (
@@ -384,7 +393,8 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                     </div>
                 </div>
 
-                {/* 아래 쿠션 둘 — 노랑: 이번 주 출석 · 보라: 레벨 · 최근 변화 · AI 추천 */}
+                {/* 아래 쿠션 둘 — 노랑: 이번 주 출석 · 보라: 레벨 · 최근 변화 · AI 추천(불러온 뒤에만 — 빈 칸 · 0 XP 가 보이지 않게) */}
+                {ready ? (
                 <div className="dw-pair dw-tpair dw-dial-pair">
                     <div className="dw-csheet is-yellow dw-dial-week">
                         {/* 머리 줄 — 제목 왼쪽 · 연속 출근 · 코인 칩 오른쪽(위아래 무게를 맞춰 스티커 줄이 판 한가운데 오게) */}
@@ -449,6 +459,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                         <Link href="/my-pet/" className="ddb-motion-lift dw-pill dw-pill-sm mt-4">우리 아이 기록 보기</Link>
                     </div>
                 </div>
+                ) : null}
 
                 {error && (
                     <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold text-rose-800">
