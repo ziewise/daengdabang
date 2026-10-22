@@ -4767,3 +4767,10 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-prep-art .dw-prep-star:nth-of-type(2) { top: 6px; right: 10px; }
     & .dw-prep-art .dw-prep-star:nth-of-type(3) { top: 20px; right: 3px; width: 10px; height: 10px; }
 }
+
+/* ── 운영 기준 세 칸 그림(2026-10-22 사용자 그림) ── */
+html:not(.ddb-app-mode) [data-daily-web] .dw-policy-art {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
@@ -23,6 +24,13 @@ export const POLICIES = [
         title: "AI 기록은 의료 진단이 아닌 참고 정보",
         body: "평소와 달라진 점을 기록하고 돌봄 결정을 돕는 참고 정보이며 의료 진단을 대신하지 않아요. 걱정되는 변화가 계속되거나 심해지면 동물병원에 확인해 주세요.",
     },
+] as const;
+
+// 운영 기준 세 칸 그림(2026-10-22 사용자 그림 웹노광고 · 웹보상 · 웹정보 → webp) — POLICIES 순서대로
+const POLICY_ART = [
+    "/images/ui/policy-noad-192.webp",
+    "/images/ui/policy-reward-192.webp",
+    "/images/ui/policy-info-192.webp",
 ] as const;
 
 export default function GrowthPolicySummary() {
@@ -55,11 +63,9 @@ export default function GrowthPolicySummary() {
                     </summary>
                     <div className="border-t border-neutral-200">
                         <div className="grid divide-y divide-neutral-200 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
-                            {POLICIES.map((policy) => (
+                            {POLICIES.map((policy, index) => (
                                 <article key={policy.title} className="p-5 sm:p-6">
-                                    <span className="ddb-crayon-icon grid h-10 w-10 place-items-center rounded-xl text-sm" data-crayon-tone={policy.tone}>
-                                        <i className={`fa-solid ${policy.icon}`} aria-hidden="true" />
-                                    </span>
+                                    <Image src={POLICY_ART[index]} alt="" width={56} height={56} className="dw-policy-art" aria-hidden="true" />
                                     <h3 className="mt-3 text-sm font-black text-neutral-950">{policy.title}</h3>
                                     <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{policy.body}</p>
                                 </article>
