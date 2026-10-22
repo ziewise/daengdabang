@@ -23,7 +23,7 @@ type I18nContextValue = {
 
 const STRINGS = {
     ko: {
-        best: "추천 셀렉트",
+        best: "댕다방 핫픽",
         new: "신상품",
         category: "카테고리",
         brand: "브랜드",
@@ -130,7 +130,7 @@ const STRINGS = {
         videoStop: "영상 정지",
     },
     en: {
-        best: "Curated Picks",
+        best: "Hot Picks",
         new: "New",
         category: "Categories",
         brand: "Brands",
