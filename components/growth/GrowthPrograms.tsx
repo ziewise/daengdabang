@@ -208,28 +208,23 @@ export default function GrowthPrograms() {
                     </div>
                 </div>
 
-                <div className="mt-7 grid gap-4 lg:grid-cols-2">
+                {/* 네 장 한 줄 세로 카드(2026-10-22 사용자 선택 P1) — 가운데 정렬, 큰 흰 동그라미 아이콘, 동그란 체크 쪽지, 아래 버튼 */}
+                <div className="mt-7 grid gap-4 dw-programs sm:grid-cols-2 xl:grid-cols-4">
                     {GROWTH_PROGRAM_CARDS.map((program, index) => (
-                        <article key={program.id} className={`dw-program ${["dw-tint-pink", "dw-tint-sky", "dw-tint-mint", "dw-tint-yellow"][index % 4]} flex h-full flex-col rounded-[30px] p-5 sm:p-7`}>
-                            <div className="flex items-start gap-4">
-                                <span className="ddb-crayon-icon dw-icon-lg grid shrink-0 place-items-center text-xl" data-crayon-tone={program.tone}>
-                                    <i className={`fa-solid ${program.icon}`} aria-hidden="true" />
-                                </span>
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center justify-between gap-2">
-                                        <p className="ddb-crayon-kicker text-[10px]">{program.eyebrow}</p>
-                                        <span className="ddb-preparing-chip rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[10px] font-black text-amber-900">준비 중</span>
-                                    </div>
-                                    <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{program.title}</h3>
-                                    <p className="mt-1 text-xs font-black text-indigo-700">{program.status}</p>
-                                </div>
-                            </div>
+                        <article key={program.id} className={`dw-program ${["dw-tint-pink", "dw-tint-sky", "dw-tint-mint", "dw-tint-yellow"][index % 4]} relative flex h-full flex-col items-center rounded-[30px] px-5 pb-6 pt-9 text-center`}>
+                            <span className="ddb-preparing-chip dw-soon">준비 중</span>
+                            <span className="dw-pc-icon" data-crayon-tone={program.tone}>
+                                <i className={`fa-solid ${program.icon}`} aria-hidden="true" />
+                            </span>
+                            <p className="ddb-crayon-kicker dw-kicker mt-3">{program.eyebrow}</p>
+                            <h3 className="ddb-crayon-title dw-h3 mt-1">{program.title}</h3>
+                            <p className="mt-1.5 text-[12.5px] font-black text-[#5b45b0]">{program.status}</p>
 
-                            <p className="mt-4 text-sm font-bold leading-6 text-neutral-650">{program.description}</p>
-                            <ul className="mt-4 grid gap-2 text-xs font-bold leading-5 text-neutral-600">
+                            <p className="dw-card-body min-h-[44px]">{program.description}</p>
+                            <ul className="dw-checks">
                                 {program.details.map((detail) => (
-                                    <li key={detail} className="flex gap-2">
-                                        <i className="fa-solid fa-check mt-1 text-[9px] text-emerald-600" aria-hidden="true" />
+                                    <li key={detail}>
+                                        <i className="fa-solid fa-check" aria-hidden="true" />
                                         <span>{detail}</span>
                                     </li>
                                 ))}
@@ -245,7 +240,7 @@ export default function GrowthPrograms() {
                                 </div>
                             ) : null}
 
-                            <div className="mt-auto grid gap-2 pt-5 sm:grid-cols-2">
+                            <div className="mt-auto grid w-full gap-2 pt-5">
                                 {program.interestOptions.map((option) => {
                                     if (!hydrated) {
                                         return <span key={option.programId} className="h-11 animate-pulse rounded-full bg-neutral-100" aria-label="회원 상태 확인 중" />;

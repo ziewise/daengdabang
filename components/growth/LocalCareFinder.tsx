@@ -218,8 +218,10 @@ export default function LocalCareFinder() {
                     </div>
                 </div>
 
-                <div className="ddb-crayon-paper dw-local overflow-hidden rounded-[32px] border" data-local-care-panel>
-                    <div className="dw-local-tabs grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4" role="tablist" aria-label="동네 돌봄 종류">
+                {/* 동네 지도 판(2026-10-22 사용자 선택 L2) — 연민트 크레파스 칠 위 하얀 길 그림, 위쪽 지도 핀 탭, 아래 찾기 카드 · 결과 카드 */}
+                <div className="dw-map dw-tint-mint" data-local-care-panel>
+                    <span className="dw-map-roads" aria-hidden="true" />
+                    <div className="dw-pin-tabs" role="tablist" aria-label="동네 돌봄 종류">
                         {CATEGORIES.map((category) => {
                             const active = category.id === selected.id;
                             return (
@@ -229,9 +231,9 @@ export default function LocalCareFinder() {
                                     role="tab"
                                     aria-selected={active}
                                     onClick={() => selectCategory(category.id)}
-                                    className={`ddb-motion-lift dw-local-tab ${active ? "is-on" : ""}`}
+                                    className={`ddb-motion-lift dw-pin-tab ${active ? "is-on" : ""}`}
                                 >
-                                    <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-sm" data-crayon-tone={category.tone}>
+                                    <span className="dw-pin" data-crayon-tone={category.tone}>
                                         <i className={`fa-solid ${category.icon}`} aria-hidden="true" />
                                     </span>
                                     <span className="min-w-0">
@@ -243,9 +245,9 @@ export default function LocalCareFinder() {
                         })}
                     </div>
 
-                    <div className="grid gap-5 p-4 sm:p-6 lg:grid-cols-[minmax(280px,0.72fr)_minmax(0,1.28fr)] lg:p-7">
-                        <div className="dw-local-side dw-tint-sky rounded-[26px] p-5">
-                            <span className="ddb-crayon-icon grid h-12 w-12 place-items-center rounded-2xl text-lg" data-crayon-tone={selected.tone}>
+                    <div className="dw-map-inner grid gap-5 lg:grid-cols-[380px_minmax(0,1fr)]">
+                        <div className="dw-map-card text-center">
+                            <span className="dw-bigpin" data-crayon-tone={selected.tone}>
                                 <i className={`fa-solid ${selected.icon}`} aria-hidden="true" />
                             </span>
                             <p className="ddb-crayon-kicker mt-4 text-[10px]">CURRENT LOCATION</p>
@@ -263,18 +265,19 @@ export default function LocalCareFinder() {
                                     <><i className="fa-solid fa-location-crosshairs mr-2" aria-hidden="true" />현재 위치로 찾기</>
                                 )}
                             </button>
-                            <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-neutral-300 bg-white px-4 text-xs font-black text-neutral-700">
+                            <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift dw-pill mt-2 w-full">
                                 네이버지도에서 바로 보기 <i className="fa-solid fa-arrow-up-right-from-square ml-2 text-[9px]" aria-hidden="true" />
                             </a>
                         </div>
 
-                        <div className="min-w-0" aria-live="polite">
+                        <div className="dw-map-result min-w-0" aria-live="polite">
                             {stateForSelection.status === "idle" ? (
                                 <div className="grid min-h-64 place-items-center rounded-[26px] border-2 border-dashed border-cyan-200 bg-white/65 px-5 text-center">
                                     <div>
-                                        <i className="fa-solid fa-map-location-dot text-3xl text-cyan-600" aria-hidden="true" />
+                                        <span className="dw-paw-pins" aria-hidden="true"><span /><span /><span /></span>
                                         <h3 className="ddb-crayon-title mt-3 text-2xl text-neutral-950">{selected.label} 후보를 준비할게요</h3>
                                         <p className="mt-2 text-xs font-bold leading-5 text-neutral-500">현재 위치 버튼을 누르면 가까운 순으로 최대 5곳을 보여드려요.</p>
+                                        <span className="dw-five" aria-hidden="true">{[1, 2, 3, 4, 5].map((n) => <span key={n}>{n}</span>)}</span>
                                     </div>
                                 </div>
                             ) : stateForSelection.status === "loading" ? (
@@ -334,7 +337,7 @@ export default function LocalCareFinder() {
                         </div>
                     </div>
 
-                    <footer className="border-t border-neutral-200 bg-white/75 px-4 py-3 text-[10px] font-bold leading-5 text-neutral-500 sm:px-6">
+                    <footer className="dw-map-foot">
                         주소나 지도 이름을 누르면 업체를 검색할 수 있어요. 검색 결과에서 업체를 선택하면 상세 정보를 볼 수 있고, 결과가 없으면 다른 지도를 선택해 주세요. 위치 보기는 공개 데이터의 좌표를 표시합니다.<br />
                         표시된 곳은 공개 지도에서 찾은 후보이며 댕다방 제휴·예약 가능 업체라는 뜻이 아닙니다. 영업시간, 진료·미용·숙박·등원 가능 여부와 비용은 방문 전에 업체에 직접 확인해 주세요.
                     </footer>
