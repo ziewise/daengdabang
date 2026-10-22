@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ddbApiBase } from "@/lib/customer-api";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
@@ -75,6 +76,14 @@ export const CATEGORIES: readonly CategoryOption[] = [
         tone: "teal",
     },
 ] as const;
+
+// 돌봄 종류 그림(2026-10-22 사용자 그림 웹돌봄병원 · 미용 · 호텔 · 케어 → webp). 물방울 핀 대신 동그라미 안에 그림만
+const CATEGORY_ART: Record<string, string> = {
+    veterinary: "/images/ui/care-vet-256.webp",
+    grooming: "/images/ui/care-grooming-256.webp",
+    hotel: "/images/ui/care-hotel-256.webp",
+    daycare: "/images/ui/care-daycare-256.webp",
+};
 
 export function buildNaverMapUrl(...parts: Array<string | undefined>) {
     const searchText = parts
@@ -233,8 +242,8 @@ export default function LocalCareFinder() {
                                     onClick={() => selectCategory(category.id)}
                                     className={`ddb-motion-lift dw-pin-tab ${active ? "is-on" : ""}`}
                                 >
-                                    <span className="dw-pin" data-crayon-tone={category.tone}>
-                                        <i className={`fa-solid ${category.icon}`} aria-hidden="true" />
+                                    <span className="dw-pin-art" aria-hidden="true">
+                                        <Image src={CATEGORY_ART[category.id]} alt="" width={48} height={48} />
                                     </span>
                                     <span className="min-w-0">
                                         <strong className="block text-sm font-black">{category.shortLabel}</strong>
@@ -247,8 +256,8 @@ export default function LocalCareFinder() {
 
                     <div className="dw-map-inner grid gap-5 lg:grid-cols-[380px_minmax(0,1fr)]">
                         <div className="dw-map-card text-center">
-                            <span className="dw-bigpin" data-crayon-tone={selected.tone}>
-                                <i className={`fa-solid ${selected.icon}`} aria-hidden="true" />
+                            <span className="dw-bigpin-art" aria-hidden="true">
+                                <Image src={CATEGORY_ART[selected.id]} alt="" width={120} height={120} />
                             </span>
                             <p className="ddb-crayon-kicker mt-4 text-[10px]">CURRENT LOCATION</p>
                             <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">내 주변 {selected.label}</h3>
@@ -274,8 +283,7 @@ export default function LocalCareFinder() {
                             {stateForSelection.status === "idle" ? (
                                 <div className="grid min-h-64 place-items-center rounded-[26px] border-2 border-dashed border-cyan-200 bg-white/65 px-5 text-center">
                                     <div>
-                                        <span className="dw-paw-pins" aria-hidden="true"><span /><span /><span /></span>
-                                        <h3 className="ddb-crayon-title mt-3 text-2xl text-neutral-950">{selected.label} 후보를 준비할게요</h3>
+                                        <h3 className="ddb-crayon-title text-2xl text-neutral-950">{selected.label} 후보를 준비할게요</h3>
                                         <p className="mt-2 text-xs font-bold leading-5 text-neutral-500">현재 위치 버튼을 누르면 가까운 순으로 최대 5곳을 보여드려요.</p>
                                         <span className="dw-five" aria-hidden="true">{[1, 2, 3, 4, 5].map((n) => <span key={n}>{n}</span>)}</span>
                                     </div>

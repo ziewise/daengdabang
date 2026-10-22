@@ -4562,3 +4562,36 @@ html:not(.ddb-app-mode) [data-daily-web] {
         content: "";
     }
 }
+
+/* ── 동네 돌봄 — 물방울 핀 빼고 사용자 그림을 동그라미 안에(2026-10-22 사용자) ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 종류 탭 — 흰 동그라미 안 그림 */
+    & .dw-pin-art {
+        display: grid;
+        width: 50px;
+        height: 50px;
+        flex: none;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 6px 12px -8px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-pin-art img {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+    }
+
+    /* 찾기 카드 큰 그림 — 파스텔 쿠션 동그라미 */
+    & .dw-bigpin-art {
+        display: inline-grid;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff1f5;
+        box-shadow: inset 0 4px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 4%), 0 16px 26px -18px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-bigpin-art { display: grid; width: 132px; height: 132px; margin: 0 auto; }
+    & .dw-bigpin-art img { width: 100px; height: 100px; object-fit: contain; }
+}
