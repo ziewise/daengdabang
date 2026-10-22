@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import PetLensClient from "./PetLensClient";
+// 웹 연구소 꾸밈(2026-10-23) — 기록 결 공용(daily-web) + 연구소 전용(lab-web), 둘 다 웹 data-lab-web 범위만
+import "../daily-web.css";
+import "../lab-web.css";
 
 export const metadata: Metadata = {
     title: "펫렌즈 | 댕다방",

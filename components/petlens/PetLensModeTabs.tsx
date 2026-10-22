@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import { useI18n } from "@/lib/i18n";
 
@@ -19,8 +20,13 @@ export default function PetLensModeTabs({ mode, onChange }: { mode: PetLensMode;
                     mode === "photo" ? "bg-white text-indigo-700 shadow-sm" : "text-neutral-500 hover:text-neutral-800"
                 }`}
             >
-                <i className="fa-solid fa-camera mr-1.5" aria-hidden="true" />
-                {en ? "Photo & profile" : "사진·프로필 분석"}
+                {/* 웹 연구소 페이지에서만 보이는 그림 · 짧은 설명(app/lab-web.css) — 펫렌즈 창 · 앱에서는 숨김 */}
+                <Image src="/images/ui/lab-tab-photo-160.webp" alt="" width={52} height={52} className="lab-tab-art hidden" aria-hidden="true" />
+                <span className="lab-tab-text">
+                    <i className="fa-solid fa-camera mr-1.5" aria-hidden="true" />
+                    {en ? "Photo & profile" : "사진·프로필 분석"}
+                    <small className="lab-tab-help hidden">{en ? "Four-angle photos" : "네 방향 사진 · 외형 · 체형 · 털"}</small>
+                </span>
             </button>
             <button
                 type="button"
@@ -31,7 +37,8 @@ export default function PetLensModeTabs({ mode, onChange }: { mode: PetLensMode;
                 }`}
                 data-petlens-observation-tab
             >
-                <span className="inline-flex min-w-0 items-start justify-center gap-1">
+                <Image src="/images/ui/lab-tab-observation-160.webp" alt="" width={52} height={52} className="lab-tab-art hidden" aria-hidden="true" />
+                <span className="lab-tab-text inline-flex min-w-0 items-start justify-center gap-1">
                     <i className="fa-solid fa-wave-square mt-0.5 shrink-0" aria-hidden="true" />
                     <DaengLabServiceTitle
                         en={en}
@@ -40,6 +47,7 @@ export default function PetLensModeTabs({ mode, onChange }: { mode: PetLensMode;
                         suffixClassName="break-keep text-[11px] font-black leading-[1.15] sm:text-xs"
                         className="justify-center"
                     />
+                    <small className="lab-tab-help hidden">{en ? "Camera + microphone" : "카메라 · 마이크 · 행동 · 소리"}</small>
                 </span>
             </button>
         </div>

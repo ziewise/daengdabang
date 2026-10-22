@@ -31,6 +31,7 @@ import PetLensObservationExperience from "@/components/petlens/PetLensObservatio
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
+import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import {
     loadPetObservationJobStatus,
@@ -136,6 +137,67 @@ function clearObservationDeepLink() {
 }
 
 type Result = PetLensAnalysisResult;
+
+// 웹 연구소 페이지 틀(2026-10-23) — 기록 결 꾸밈 범위(data-daily-web · data-lab-web, 앱에서는 꾸밈 없음) + 크레파스 결 필터.
+// 꾸밈 CSS 는 app/daily-web.css(공용 기록 결) · app/lab-web.css(연구소 전용)
+function LabMain({ children }: { children: React.ReactNode }) {
+    return (
+        <main className="mx-auto w-full max-w-[1280px] px-4 py-8 md:px-6" data-daily-web data-lab-web>
+            <CrayonGrainFilter />
+            {children}
+        </main>
+    );
+}
+
+// 사진 칸 그림(우리 아이 기록 카메라와 같은 방향 그림) — 웹 연구소에서만 보이고 앱에서는 숨김(lab-web.css)
+const LAB_VIEW_ART = {
+    front: "/images/ui/mypet-view-front-160.webp",
+    left: "/images/ui/mypet-view-left-160.webp",
+    right: "/images/ui/mypet-view-right-160.webp",
+    back: "/images/ui/mypet-view-back-160.webp",
+} as const;
+
+// 연구소 머리 판 — 사진 분석 = 연보라 쿠션 + 카메라 그림, 행동·소리 = 하늘 쿠션 + 연구하는 강아지 그림(무지개 고리).
+// 웹에서만 보이고 앱에서는 아래 원래 머리글(lab-legacy-head)이 보인다.
+function LabHero({ mode }: { mode: PetLensMode }) {
+    const observation = mode === "observation";
+    return (
+        <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero lab-hero hidden`} aria-labelledby="lab-hero-title">
+            <div className="min-w-0">
+                <p className="ddb-crayon-kicker dw-kicker">{observation ? "DAENGDABANG LAB · BEHAVIOR & SOUND" : "DAENGDABANG LAB · PETLENS"}</p>
+                <h1 id="lab-hero-title" className="ddb-crayon-title dw-h1">
+                    {observation ? (
+                        <>행동 · 소리로 읽는<br /><span className="ddb-crayon-underline">우리 아이 신호</span></>
+                    ) : (
+                        <>네 방향 사진으로 보는<br /><span className="ddb-crayon-underline">우리 아이 오늘</span></>
+                    )}
+                </h1>
+                <p className="dw-lead">
+                    {observation
+                        ? "카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다."
+                        : "회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다."}
+                </p>
+                <ul className="lab-hero-chips">
+                    {(observation
+                        ? ["카메라 + 마이크", "아이별 개별 분석", "행동 · 소리 · 건강 신호"]
+                        : ["정면 · 왼쪽 · 오른쪽 · 뒷면", "회원 견종 기준", "외형 · 체형 · 털 상태"]
+                    ).map((chip) => <li key={chip} className="dw-chip">{chip}</li>)}
+                </ul>
+            </div>
+            <span className={`dw-rring dw-chero-ring ${observation ? "lab-ring-photo" : ""}`} aria-hidden="true">
+                <span>
+                    <Image
+                        src={observation ? "/images/ui/lab-researcher-384.webp" : "/images/ui/mypet-analysis-camera-384.webp"}
+                        alt=""
+                        width={230}
+                        height={230}
+                        priority
+                    />
+                </span>
+            </span>
+        </section>
+    );
+}
 
 export default function PetLensClient() {
     const queryString = useSearchParams().toString();
@@ -436,46 +498,55 @@ export default function PetLensClient() {
         ? petLensAuthHref("login", observationReturnTo)
         : undefined;
     if (!hydrated) {
-        return <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6"><PetLensMemberGate reason="loading" service={gateService} /></main>;
+        return <LabMain><PetLensMemberGate reason="loading" service={gateService} /></LabMain>;
     }
     if (!user) {
         return (
-            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+            <LabMain>
+                <LabHero mode={gateService === "daenglab" ? "observation" : "photo"} />
+                <PawTrail />
                 <PetLensMemberGate reason="login" service={gateService} returnTo={observationReturnTo} />
-            </main>
+            </LabMain>
         );
     }
     if (observationDeepLinkPending || observationDeepLinkHasError) {
         return (
-            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+            <LabMain>
                 <ObservationDeepLinkNotice
                     state={observationDeepLinkPending ? "resolving" : observationDeepLinkState}
                     message={observationDeepLinkMessage || "이 계정의 분석 기록을 안전하게 확인하고 있어요."}
                     recoveryHref={observationRecoveryHref}
                 />
-            </main>
+            </LabMain>
         );
     }
     if (!selectedPet?.apiProfileId) {
         return (
-            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+            <LabMain>
+                <LabHero mode={gateService === "daenglab" ? "observation" : "photo"} />
+                <PawTrail />
                 <PetLensPetSelector pets={user.pets} selectedPetProfileId={editingPetProfileId} onChange={selectPetProfile} />
                 <PetLensMemberGate reason="profile" service={gateService} />
-            </main>
+            </LabMain>
         );
     }
     if (!selectedPet.breed?.trim() && !observationDeepLinkJob) {
         return (
-            <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+            <LabMain>
+                <LabHero mode={gateService === "daenglab" ? "observation" : "photo"} />
+                <PawTrail />
                 <PetLensPetSelector pets={user.pets} selectedPetProfileId={editingPetProfileId} onChange={selectPetProfile} />
                 <PetLensMemberGate reason="breed" service={gateService} />
-            </main>
+            </LabMain>
         );
     }
 
     return (
-        <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
-            <header className="mb-6">
+        <LabMain>
+            <LabHero mode={mode} />
+            <PawTrail />
+            {/* 원래 머리글 — 앱에서 보이고, 웹 연구소에서는 위 머리 판이 대신(lab-web.css) */}
+            <header className="lab-legacy-head mb-6">
                 {mode === "observation" ? (
                     <>
                         <div className="flex items-center gap-3">
@@ -526,8 +597,8 @@ export default function PetLensClient() {
                     />
                 )
             ) : (
-            <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
-                <form onSubmit={submit} className="surface grid h-fit gap-4 p-5">
+            <div className="lab-photo-grid grid gap-6 lg:grid-cols-[420px_1fr]">
+                <form onSubmit={submit} className="surface lab-form grid h-fit gap-4 p-5">
                     <div data-petlens-page-multiview-upload>
                         <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
                         <div className="grid grid-cols-2 gap-2">
@@ -536,12 +607,13 @@ export default function PetLensClient() {
                                 return (
                                     <label key={view.id} className="block" data-petlens-photo-view={view.id}>
                                         <span className="mb-1 block text-[11px] font-black text-neutral-500">{view.label}</span>
-                                        <span className="relative grid aspect-square cursor-pointer place-items-center overflow-hidden rounded-lg border border-dashed border-neutral-300 bg-white text-neutral-400 hover:border-indigo-300">
+                                        <span className="lab-slot relative grid aspect-square cursor-pointer place-items-center overflow-hidden rounded-lg border border-dashed border-neutral-300 bg-white text-neutral-400 hover:border-indigo-300">
                                             {photo ? (
                                                 <Image src={photo.dataUrl} alt={`${view.label} 반려견 사진`} fill sizes="190px" className="object-cover" unoptimized />
                                             ) : (
                                                 <span className="grid place-items-center gap-1 text-center">
-                                                    <i className="fa-solid fa-camera text-xl" />
+                                                    <Image src={LAB_VIEW_ART[view.id]} alt="" width={80} height={80} className="lab-slot-art hidden" aria-hidden="true" />
+                                                    <i className="fa-solid fa-camera text-xl lab-slot-icon" />
                                                     <span className="text-[10px] font-black">{view.helper}</span>
                                                 </span>
                                             )}
@@ -610,7 +682,7 @@ export default function PetLensClient() {
 
                     <div>
                         <span className="mb-2 block text-xs font-black text-neutral-500">관심 포인트</span>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="lab-concerns flex flex-wrap gap-2">
                             {CONCERN_OPTIONS.map((option) => (
                                 <label key={option} className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-black ${
                                     concerns.includes(option)
@@ -640,10 +712,10 @@ export default function PetLensClient() {
                     )}
                 </form>
 
-                <section>
+                <section className="lab-result">
                     {result ? (
                         <div className="grid gap-5">
-                            <div className="surface p-5">
+                            <div className="surface lab-result-card p-5">
                                 <PetLensAnalysisSummary profile={result.profile} details={result.details} />
                                 <Link
                                     href="/my-pet/#health-report"
@@ -655,7 +727,7 @@ export default function PetLensClient() {
                                 </Link>
                             </div>
                             {result.products.length > 0 ? (
-                                <section>
+                                <section className="lab-products">
                                     <div className="mb-3">
                                         <h2 className="text-lg font-black text-neutral-950">확인된 정보로 골라본 상품</h2>
                                         <p className="mt-1 text-xs font-bold text-neutral-500">사진 근거와 입력한 생활 정보를 함께 반영했습니다.</p>
@@ -674,8 +746,9 @@ export default function PetLensClient() {
                             )}
                         </div>
                     ) : (
-                        <div className="surface p-8 text-center">
-                            <i className="fa-solid fa-camera-retro text-4xl text-neutral-300" />
+                        <div className="surface lab-empty p-8 text-center">
+                            <Image src="/images/ui/lab-summary-256.webp" alt="" width={120} height={120} className="lab-empty-art hidden" aria-hidden="true" />
+                            <i className="fa-solid fa-camera-retro text-4xl text-neutral-300 lab-empty-icon" />
                             <h2 className="mt-4 text-xl font-black text-neutral-950">추천 결과가 여기에 표시됩니다.</h2>
                             <p className="mt-2 text-sm font-bold text-neutral-600">
                                 정보를 입력하고 추천 받기를 눌러 주세요.
@@ -685,7 +758,7 @@ export default function PetLensClient() {
                 </section>
             </div>
             )}
-        </main>
+        </LabMain>
     );
 }
 

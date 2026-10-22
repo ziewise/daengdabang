@@ -1,0 +1,180 @@
+/*
+ * lab-web.css — 웹 "댕다방 연구소"(펫렌즈 사진 분석 · 행동·소리 분석 · AI 상담) 꾸밈(2026-10-23)
+ * ---------------------------------------------------------------------
+ * 매일 댕생활 페이지들과 같은 "기록 결"(app/daily-web.css 의 쿠션 판 · 무지개 고리 · 알약 버튼 · 주아 제목)을 연구소에도 입힌다.
+ *  - 범위: <main data-lab-web>(펫렌즈 페이지 · AI 상담 페이지) 안에서만, 그리고 웹에서만(html:not(.ddb-app-mode)).
+ *    펫렌즈 창(헤더 버튼으로 여는 모달) · 앱 화면은 건드리지 않는다.
+ *  - 1부: 페이지 뼈대(머리 판 · 분석 고르기 · 사진 칸 · 입력 판 · 결과 자리 · 로그인 안내)
+ *  - 2부: 공용 스킨 — 분석 과정 · 결과 · 추가 질문 · 메일 · 기록 등 "눌러야 보이는 화면"까지 같은 결로
+ *    (흰 상자+회색 테 → 쿠션 판, 남색 네모 버튼 → 분홍 알약, 점선 → 없앰, 제목 → 주아)
+ * 기능 · 문구 · 구조는 그대로 두고 보이는 모양만 바꾼다.
+ */
+
+/* 앱에서는 웹 전용 발자국 · 그림을 숨김(펫렌즈 페이지는 앱에서도 쓰임) */
+html.ddb-app-mode [data-lab-web] .dw-paw-trail { display: none; }
+
+/* ───────── 1부 · 페이지 뼈대 ───────── */
+html:not(.ddb-app-mode) [data-lab-web] {
+    --lab-ink: #1e293b;
+    --lab-soft: #64748b;
+    --lab-pink: #e9789a;
+    --lab-pink-deep: #e2557a;
+    --lab-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 20px 34px -24px rgb(15 23 42 / 32%);
+
+    /* 머리 판 — 웹에서만 보이고 원래 머리글은 숨김 */
+    & .lab-hero { display: grid !important; margin-bottom: 0; }
+    & .lab-legacy-head { display: none; }
+    & .lab-hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+    & .lab-ring-photo img { width: 100% !important; height: 100% !important; object-fit: cover; }
+
+    /* 분석 고르기(사진 · 행동·소리) — 그림 알약 두 개, 고른 쪽은 분홍 테 */
+    & [data-petlens-mode-tabs] {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        max-width: 760px;
+        margin: 0 auto 28px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+    & [data-petlens-mode-tabs] > button {
+        display: flex;
+        min-height: 84px;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 22px 12px 14px;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--lab-ink);
+        text-align: left;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 90%), 0 12px 22px -16px rgb(15 23 42 / 40%);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    & [data-petlens-mode-tabs] > button:hover { transform: translateY(-2px); }
+    & [data-petlens-mode-tabs] > button[aria-pressed="true"] {
+        background: #fff1f5;
+        box-shadow: 0 0 0 3px #f7a8bf, 0 14px 24px -16px rgb(200 80 120 / 55%);
+    }
+    & .lab-tab-art { display: block !important; width: 56px; height: 56px; flex: none; object-fit: contain; }
+    & .lab-tab-text { display: flex !important; min-width: 0; flex-direction: column; align-items: flex-start !important; gap: 2px !important; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; line-height: 1.25; }
+    & .lab-tab-text > i { display: none; }
+    & .lab-tab-help { display: block !important; color: var(--lab-soft); font-family: var(--font-wanted-sans), sans-serif; font-size: 12px; font-weight: 700; }
+
+    /* 분석할 반려견 고르기 — 민트 쿠션 줄 */
+    & [data-petlens-pet-selector] {
+        max-width: 760px;
+        margin: 0 auto 20px;
+        padding: 18px 22px;
+        border: 0;
+        border-radius: 28px;
+        background: #e9f8f1;
+        box-shadow: var(--lab-cushion);
+    }
+    & [data-petlens-pet-selector] > span:first-child { color: #047857; font-family: var(--font-jua), sans-serif; font-size: 15px; font-weight: 400; }
+    & [data-petlens-pet-selector] > span:last-child { color: #3f8f73; }
+
+    /* 사진 분석 — 왼쪽 입력 판(흰 쿠션) · 오른쪽 결과 자리 */
+    & .lab-photo-grid { gap: 26px; }
+    & .lab-form { padding: 26px 24px !important; border-radius: 36px !important; }
+    & .lab-slot { border: 0 !important; border-radius: 24px !important; background: #fff8f0 !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(120 80 40 / 6%); transition: transform 0.18s ease; }
+    & .lab-slot:hover { transform: translateY(-2px); }
+    & .lab-slot-art { display: block !important; width: 64px; height: 64px; object-fit: contain; }
+    & .lab-slot-icon { display: none; }
+    & .lab-concerns label {
+        height: 40px;
+        padding: 0 16px;
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: #fff;
+        color: #475569;
+        box-shadow: 0 8px 14px -12px rgb(15 23 42 / 45%), inset 0 0 0 1.5px #eef0f4;
+        cursor: pointer;
+    }
+    & .lab-concerns label:has(input:checked) { background: #fff1f5; color: var(--lab-pink-deep); box-shadow: inset 0 0 0 2px #f7a8bf, 0 8px 14px -12px rgb(200 80 120 / 55%); }
+    & .lab-concerns input { accent-color: var(--lab-pink); }
+    & .lab-empty { display: flex; min-height: 360px; flex-direction: column; align-items: center; justify-content: center; padding: 40px 30px !important; border-radius: 40px !important; background: #f3f0fe !important; }
+    & .lab-empty-art { display: block !important; width: 120px; height: 120px; margin-bottom: 6px; object-fit: contain; }
+    & .lab-empty-icon { display: none; }
+    & .lab-result-card { border-radius: 36px !important; }
+
+    /* 로그인 · 프로필 안내 — 분홍 쿠션 + 무지개 고리 그림 */
+    & [data-petlens-member-gate] { min-height: 0 !important; padding: 0 !important; }
+    & [data-petlens-member-gate] > div {
+        max-width: 520px;
+        padding: 34px 32px 30px;
+        border: 0 !important;
+        border-radius: 42px !important;
+        background: #ffeef3 !important;
+        box-shadow: var(--lab-cushion) !important;
+    }
+    & .lab-gate-ring { --dw-ring: 132px; display: grid !important; margin: 0 auto; padding: 9px; }
+    & .lab-gate-icon { display: none !important; }
+    & [data-petlens-member-gate] h2 { margin-top: 14px; font-size: 22px; }
+}
+
+/* ───────── 2부 · 공용 스킨(눌러야 보이는 화면까지) ───────── */
+html:not(.ddb-app-mode) [data-lab-web] {
+    /* 제목은 주아(사이트 제목 글꼴) */
+    & :is(h2, h3, h4) { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400 !important; color: var(--lab-ink); }
+
+    /* 흰 판(.surface)과 테 두른 상자 → 폭신한 쿠션 판(테 없음 · 위 빛 · 아래 그림자) */
+    & .surface { border: 0 !important; border-radius: 32px !important; background: #fff !important; box-shadow: var(--lab-cushion) !important; }
+    & :is(.rounded-xl, .rounded-2xl, .rounded-3xl).border:not(.input):not(input):not(select):not(textarea) {
+        border-color: transparent !important;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 80%), 0 10px 20px -16px rgb(15 23 42 / 35%);
+    }
+    & .rounded-2xl:not(button):not(a) { border-radius: 26px !important; }
+    & .rounded-3xl:not(button):not(a) { border-radius: 34px !important; }
+
+    /* 점선 테는 쓰지 않음 */
+    & .border-dashed { border-style: solid !important; border-color: transparent !important; }
+
+    /* 버튼 — 진한 남색 네모 → 분홍 알약, 흰 네모 → 흰 알약 */
+    & :is(.btn-primary, button.bg-indigo-600, a.bg-indigo-600, button.bg-indigo-700, a.bg-indigo-700) {
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: var(--lab-pink) !important;
+        color: #fff !important;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 30%), 0 12px 20px -12px rgb(200 80 120 / 65%) !important;
+    }
+    & :is(.btn-primary, button.bg-indigo-600, a.bg-indigo-600):hover { background: var(--lab-pink-deep) !important; }
+    /* 고른 칸 표시(남색 칠한 칸) → 분홍 칸 */
+    & :is(div, span, li, p).bg-indigo-600 { background: var(--lab-pink) !important; }
+    & :is(div, span, li, p).bg-indigo-50 { background: #fff1f5 !important; }
+    & .btn-secondary,
+    & :is(button, a):is(.rounded-xl, .rounded-lg, .rounded-md).bg-white {
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: #fff !important;
+        box-shadow: inset 0 0 0 1.5px #eef0f4, 0 8px 16px -12px rgb(15 23 42 / 40%) !important;
+    }
+    & :is(button, a):is(.rounded-xl, .rounded-lg, .rounded-md):not(.bg-white) { border-radius: 999px !important; }
+
+    /* 입력칸 — 둥근 칸 + 분홍 초점 */
+    & .input,
+    & :is(input[type="text"], input[type="email"], input:not([type]), select, textarea):not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+        border: 1.5px solid #ece6f5;
+        border-radius: 16px;
+        background-color: #fff;
+    }
+    & :is(.input, input, select, textarea):focus-visible { border-color: #f7a8bf; outline: 3px solid rgb(247 168 191 / 35%); outline-offset: 1px; }
+    & :is(input[type="checkbox"], input[type="radio"]) { accent-color: var(--lab-pink); }
+
+    /* 영상 · 카메라 미리보기(검은 판)도 둥글게 */
+    & :is(.bg-black, .bg-neutral-950, .bg-neutral-900).rounded-2xl,
+    & :is(.bg-black, .bg-neutral-950, .bg-neutral-900).rounded-3xl { border-radius: 32px !important; }
+}
+
+/* 휴대폰 */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-lab-web] {
+        & [data-petlens-mode-tabs] { gap: 8px; }
+        & [data-petlens-mode-tabs] > button { min-height: 72px; flex-direction: column; justify-content: center; gap: 4px; padding: 12px 8px; border-radius: 28px; text-align: center; }
+        & .lab-tab-art { width: 44px; height: 44px; }
+        & .lab-tab-text { align-items: center !important; font-size: 14.5px; }
+        & .lab-tab-help { display: none !important; }
+        & .lab-form { padding: 20px 16px !important; border-radius: 30px !important; }
+        & [data-petlens-member-gate] > div { padding: 28px 20px 24px; border-radius: 34px !important; }
+    }
+}
