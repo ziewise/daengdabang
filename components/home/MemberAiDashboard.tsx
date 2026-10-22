@@ -1,9 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+/**
+ * MemberAiDashboard — 보물광산 "오늘의 보물" 로그인 후 화면
+ * ---------------------------------------------------------------------
+ * 2026-10-22 사용자 선택 "하루 원판"(웹 기록 결): 기능 · 계산은 그대로 두고 보이는 모양만 바꿈.
+ *  - 민트 쿠션 판(비회원 화면 .dw-tguest 와 같은 판): 왼쪽 하루 원판(TreasureDial) · 오른쪽 분홍 판(.dw-tlogin, "지금 할 일")
+ *    원판 조각 = 출근 도장 + 서버가 주는 오늘 할 일 + 사진 건강 분석. 조각을 고르면 분홍 판이 그 할 일로 바뀌고,
+ *    분홍 판 버튼이 기존 함수(claimDaengLabAttendance · completeDaengLabCareTask · PetLens 이동)를 그대로 부른다.
+ *  - 아래 쿠션 둘(.dw-tpair): 노랑 = 이번 주 출석(.dw-dsteps 동그라미) · 보라 = 레벨 · 최근 변화 · AI 추천
+ * 꾸밈 CSS 는 app/daily-web.css 의 "하루 원판" 묶음.
+ */
+
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import AttendanceStampCard from "@/components/engagement/AttendanceStampCard";
+import TreasureDial, { type DialSlice } from "@/components/growth/TreasureDial";
 import {
     claimDaengLabAttendance,
     completeDaengLabCareTask,
@@ -15,6 +26,7 @@ import {
 } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { petLensProfileHref } from "@/lib/petlens-routing";
+import { getPetBreedVisual, resolvePetBreedId } from "@/lib/pet-companion-breeds";
 
 type Props = {
     variant?: "home" | "full";
@@ -57,6 +69,39 @@ function dashboardPetKey(pet: PetProfile, index: number) {
     return pet.apiProfileId ? `profile:${pet.apiProfileId}` : `local:${index}:${pet.name}`;
 }
 
+// 요일 한 글자(한국 시간) — AttendanceStampCard 와 같은 규칙
+function weekday(value: string) {
+    const date = new Date(`${value}T12:00:00+09:00`);
+    if (Number.isNaN(date.getTime())) return "·";
+    return new Intl.DateTimeFormat("ko-KR", { weekday: "short", timeZone: "Asia/Seoul" }).format(date);
+}
+
+// 원판 조각 색(연한 바탕 · 끝냈을 때 진한 색 · 고른 테) — 순서대로 돌려 씀
+const SLICE_TONES = [
+    { pale: "#fff0f4", strong: "#f8c2d3", ring: "#e9789a" },
+    { pale: "#ecf9f3", strong: "#bde9d4", ring: "#2fb58a" },
+    { pale: "#eff7fc", strong: "#c7e3f5", ring: "#3f9fd3" },
+    { pale: "#f5f2fe", strong: "#dcd2fa", ring: "#8a6fe0" },
+    { pale: "#fff7e6", strong: "#fbe0a6", ring: "#e0a020" },
+];
+// 할 일 그림(서버 할 일 id 별, 모르는 id 는 돌봄 그림)
+const TASK_ART: Partial<Record<DaengLabCareTaskId, string>> = {
+    walk_20: "/images/ui/daily-care-256.webp",
+    eye_check: "/images/ui/mypet-view-front-160.webp",
+};
+const ART_STAMP = "/images/ui/daily-checkin-256.webp";
+const ART_ANALYSIS = "/images/ui/mypet-shutter-384.webp";
+const ART_CARE = "/images/ui/daily-care-256.webp";
+// 견종 그림(반려견 친구 기능과 같은 그림 · 같은 판번호)
+const BREED_ART_ROOT = "/images/pet-companion/cute-v4-breeds";
+const BREED_ART_VERSION = "20260730-1";
+
+// 원판 조각 하나가 가리키는 할 일
+type Slot =
+    | { kind: "attendance" }
+    | { kind: "task"; taskId: DaengLabCareTaskId; title: string; description: string; xp: number; completed: boolean }
+    | { kind: "analysis" };
+
 export default function MemberAiDashboard({ variant = "home" }: Props) {
     const { hydrated, user } = useAuth();
     const [attendance, setAttendance] = useState<DaengLabAttendance | null>(null);
@@ -65,6 +110,11 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
     const [savingTask, setSavingTask] = useState<DaengLabCareTaskId | null>(null);
     const [error, setError] = useState("");
     const [selectedPetKey, setSelectedPetKey] = useState("");
+    // 원판에서 고른 조각(null = 아직 안 끝낸 첫 조각을 자동으로)
+    const [pickedSlot, setPickedSlot] = useState<number | null>(null);
+    const [claiming, setClaiming] = useState(false);
+    const [notice, setNotice] = useState("");
+    const [burst, setBurst] = useState<{ key: number; text: string } | null>(null);
     const accessToken = user?.apiAccessToken;
 
     const refresh = useCallback(async () => {
@@ -91,12 +141,18 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
         return () => window.clearTimeout(timer);
     }, [accessToken, hydrated, refresh]);
 
+    // 코인 표시는 1.3초 뒤 사라짐
+    useEffect(() => {
+        if (!burst) return;
+        const timer = window.setTimeout(() => setBurst(null), 1_300);
+        return () => window.clearTimeout(timer);
+    }, [burst]);
+
     const pets = user?.pets || [];
     const selectedPetIndex = pets.findIndex((candidate, index) => dashboardPetKey(candidate, index) === selectedPetKey);
     const pet = pets[selectedPetIndex >= 0 ? selectedPetIndex : 0];
     const today = attendance?.businessDate || engagement?.businessDate || "";
     const analyzedToday = Boolean(pet?.lastAnalyzedAt && seoulDate(pet.lastAnalyzedAt) === today);
-    const walkTask = engagement?.todayTasks.find((task) => task.taskId === "walk_20");
     const completedRoutineCount = (engagement?.todayTasks.filter((task) => task.completed).length || 0)
         + (attendance?.claimedToday ? 1 : 0)
         + (analyzedToday ? 1 : 0);
@@ -108,36 +164,30 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
         ? ratio(Math.max(0, engagement.xp - previousLevelXp), Math.max(1, engagement.nextLevelXp - previousLevelXp))
         : 0;
 
-    const metrics = [
-        {
-            label: "오늘 건강 루틴 점수",
-            value: careScore === null ? "—" : `${careScore}점`,
-            helper: "의료 점수가 아닌 오늘 돌봄 완료율",
-            icon: "fa-heart-pulse",
-            tone: "coral",
-        },
-        {
-            label: "오늘 AI 분석",
-            value: analyzedToday ? "완료" : "아직",
-            helper: pet?.lastAnalyzedAt ? `최근 ${new Date(pet.lastAnalyzedAt).toLocaleDateString("ko-KR")}` : "첫 사진 분석을 시작해 보세요",
-            icon: "fa-camera-retro",
-            tone: "teal",
-        },
-        {
-            label: "이번 주 출석 챌린지",
-            value: engagement ? `${engagement.weeklyAttendanceProgress} / ${engagement.weeklyAttendanceTarget}` : "- / -",
-            helper: `${engagement ? ratio(engagement.weeklyAttendanceProgress, engagement.weeklyAttendanceTarget) : 0}% 진행`,
-            icon: "fa-calendar-check",
-            tone: "orange",
-        },
-        {
-            label: "오늘 산책",
-            value: walkTask?.completed ? "20분 완료" : "기록 전",
-            helper: walkTask?.completed ? "오늘의 산책 XP가 반영됐어요" : "무리하지 않는 범위에서 시작하세요",
-            icon: "fa-person-walking",
-            tone: "teal",
-        },
+    // 원판 조각 = 출근 도장 + 오늘 할 일 + 사진 분석
+    const slots: Slot[] = [
+        { kind: "attendance" },
+        ...(engagement?.todayTasks || []).map((task) => ({ kind: "task" as const, ...task })),
+        { kind: "analysis" },
     ];
+    const slotDone = (slot: Slot) => slot.kind === "attendance" ? Boolean(attendance?.claimedToday) : slot.kind === "task" ? slot.completed : analyzedToday;
+    const firstOpen = Math.max(0, slots.findIndex((slot) => !slotDone(slot)));
+    const selected = Math.min(pickedSlot ?? firstOpen, slots.length - 1);
+    const slot = slots[selected];
+    const slices: DialSlice[] = slots.map((item, index) => ({
+        id: item.kind === "task" ? item.taskId : item.kind,
+        label: item.kind === "attendance" ? "출근 도장" : item.kind === "task" ? item.title : "사진 건강 분석",
+        art: item.kind === "attendance" ? ART_STAMP : item.kind === "task" ? TASK_ART[item.taskId] || ART_CARE : ART_ANALYSIS,
+        done: slotDone(item),
+        ...SLICE_TONES[index % SLICE_TONES.length],
+    }));
+    // 끝낸 뒤 다음 안 끝낸 조각으로(원판이 돌아감)
+    const goNextOpen = (from: number, doneNow: boolean[]) => {
+        for (let step = 1; step <= slots.length; step += 1) {
+            const next = (from + step) % slots.length;
+            if (!doneNow[next]) { window.setTimeout(() => setPickedSlot(next), 1_100); return; }
+        }
+    };
 
     if (!hydrated) return variant === "home" ? null : <DashboardLoading />;
     if (!user) {
@@ -171,189 +221,212 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
     };
 
     const completeTask = async (taskId: DaengLabCareTaskId) => {
-        if (!user.apiAccessToken || savingTask) return;
+        if (!user.apiAccessToken || savingTask) return false;
         setSavingTask(taskId);
         setError("");
         try {
             const next = await completeDaengLabCareTask(taskId, user.apiAccessToken);
             setEngagement(next);
+            return true;
         } catch (reason) {
             setError(reason instanceof Error ? reason.message : "돌봄 기록을 저장하지 못했습니다.");
+            return false;
         } finally {
             setSavingTask(null);
         }
     };
 
+    // 분홍 판 버튼 — 출근 도장(코인 표시 · 안내 문구) / 할 일 완료, 끝나면 원판이 다음 조각으로
+    const doneList = slots.map(slotDone);
+    const onStamp = async () => {
+        if (!attendance || attendance.claimedToday || claiming || loading) return;
+        setClaiming(true);
+        setNotice("");
+        try {
+            const credited = await claimAttendance();
+            if (credited) {
+                setBurst({ key: Date.now(), text: `+${attendance.dailyRewardDaengLabCoins} 코인` });
+                setNotice(`출근 완료! 댕다방 연구소 코인 ${attendance.dailyRewardDaengLabCoins}개가 지급됐어요.`);
+                goNextOpen(selected, doneList.map((done, index) => done || index === selected));
+            } else {
+                setNotice("오늘 출근도장은 이미 찍혀 있어요. 내일 다시 만나요!");
+            }
+        } finally {
+            setClaiming(false);
+        }
+    };
+    const onTask = async (taskId: DaengLabCareTaskId) => {
+        if (await completeTask(taskId)) goNextOpen(selected, doneList.map((done, index) => done || index === selected));
+    };
+
+    const breedId = resolvePetBreedId(pet?.breed || "");
+    const breedArt = `${BREED_ART_ROOT}/${getPetBreedVisual(breedId).assetId}-core.webp?v=${BREED_ART_VERSION}`;
+    const ready = Boolean(attendance && engagement);
+    const slotArt = slices[selected]?.art || ART_STAMP;
+
     return (
         <section id="ai-dashboard" className={variant === "home" ? "py-10 md:py-14" : "py-8"} aria-labelledby="ai-dashboard-title" data-member-ai-dashboard data-growth-motion-scope>
-            <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-                <div className="ddb-crayon-paper overflow-hidden rounded-[34px] border">
-                    <header className="ddb-crayon-banner relative overflow-hidden px-5 py-6 md:px-8 md:py-8">
-                        <div className="absolute -right-10 top-5 h-2 w-44 rotate-[-7deg] rounded-full bg-cyan-500/20 shadow-[0_8px_0_rgba(239,71,111,0.14),0_16px_0_rgba(245,158,11,0.16)]" aria-hidden="true" />
-                        <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                            <div className="flex min-w-0 items-center gap-4">
-                                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-3xl border-4 border-dashed border-cyan-700/30 bg-white shadow-[3px_4px_0_rgba(239,71,111,0.12)]">
-                                    {pet?.photoDataUrl ? (
-                                        <Image src={pet.photoDataUrl} alt={`${pet.name} 프로필`} fill sizes="64px" className="object-cover" unoptimized />
+            <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
+                {/* 화면 읽기용 제목(보이는 제목은 위 "오늘 바로 할 수 있는 돌봄부터") */}
+                <h2 id="ai-dashboard-title" className="sr-only">PERSONAL AI DASHBOARD · {pet ? `${pet.name}와 오늘 뭐 하지?` : `${user.name}님, 오늘 뭐 하지?`}</h2>
+
+                {/* 아이가 둘 이상이면 고르기 */}
+                {pets.length > 1 ? (
+                    <div className="dw-dial-pets" role="tablist" aria-label="보물광산에서 볼 강아지 선택" data-treasure-pet-selector>
+                        {pets.map((candidate, index) => {
+                            const key = dashboardPetKey(candidate, index);
+                            const active = candidate === pet;
+                            return (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={active}
+                                    onClick={() => setSelectedPetKey(key)}
+                                    className={`ddb-motion-lift dw-pill dw-pill-sm ${active ? "ddb-crayon-link dw-pill-main" : ""}`}
+                                >
+                                    {candidate.photoDataUrl ? (
+                                        <span className="relative mr-1.5 h-6 w-6 overflow-hidden rounded-full bg-neutral-100">
+                                            <Image src={candidate.photoDataUrl} alt="" fill sizes="24px" className="object-cover" unoptimized />
+                                        </span>
                                     ) : (
-                                        <span className="grid h-full place-items-center text-2xl"><i className="fa-solid fa-dog" aria-hidden="true" /></span>
+                                        <i className="fa-solid fa-dog mr-1.5 text-[11px]" aria-hidden="true" />
                                     )}
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="ddb-crayon-kicker text-xs">PERSONAL AI DASHBOARD</p>
-                                    <h2 id="ai-dashboard-title" className="ddb-crayon-title mt-1 truncate text-3xl md:text-4xl">
-                                        <span className="ddb-crayon-underline">{pet ? `${pet.name}와 오늘 뭐 하지?` : `${user.name}님, 오늘 뭐 하지?`}</span>
-                                    </h2>
-                                    <p className="mt-2 text-xs font-bold text-neutral-600">출근도장부터 산책·분석·추천까지 한 번에 이어가세요.</p>
-                                </div>
-                            </div>
-                            <Link href="/my-pet/" className="ddb-crayon-link ddb-motion-lift inline-flex h-11 items-center justify-center rounded-full px-5 text-sm">
-                                내 아이 리포트 <i className="fa-solid fa-arrow-right ml-2 text-xs" aria-hidden="true" />
-                            </Link>
-                        </div>
-                    </header>
+                                    {candidate.name}
+                                </button>
+                            );
+                        })}
+                    </div>
+                ) : null}
 
-                    {pets.length > 1 ? (
-                        <div className="flex items-center gap-2 overflow-x-auto border-b border-neutral-200 bg-white/70 px-4 py-3 sm:px-6 xl:px-8" role="tablist" aria-label="보물광산에서 볼 강아지 선택" data-treasure-pet-selector>
-                            <span className="mr-1 shrink-0 text-[10px] font-black text-neutral-500">아이별 보기</span>
-                            {pets.map((candidate, index) => {
-                                const key = dashboardPetKey(candidate, index);
-                                const active = candidate === pet;
-                                return (
-                                    <button
-                                        key={key}
-                                        type="button"
-                                        role="tab"
-                                        aria-selected={active}
-                                        onClick={() => setSelectedPetKey(key)}
-                                        className={`ddb-motion-lift inline-flex min-h-9 shrink-0 items-center gap-2 rounded-full border px-3 text-[11px] font-black transition ${active ? "border-indigo-400 bg-indigo-50 text-indigo-900" : "border-neutral-200 bg-white text-neutral-600 hover:border-cyan-300"}`}
-                                    >
-                                        {candidate.photoDataUrl ? (
-                                            <span className="relative h-6 w-6 overflow-hidden rounded-full bg-neutral-100">
-                                                <Image src={candidate.photoDataUrl} alt="" fill sizes="24px" className="object-cover" unoptimized />
-                                            </span>
-                                        ) : (
-                                            <i className="fa-solid fa-dog text-[10px] text-cyan-700" aria-hidden="true" />
-                                        )}
-                                        {candidate.name}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    ) : null}
-
-                    <div className="grid gap-6 p-4 sm:p-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(330px,0.65fr)] xl:p-8">
-                        <div className="min-w-0">
-                            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                                {metrics.map((metric) => (
-                                    <article key={metric.label} className="ddb-crayon-paper rounded-3xl border p-4">
-                                        <span className="ddb-crayon-icon grid h-9 w-9 place-items-center rounded-xl text-sm" data-crayon-tone={metric.tone}><i className={`fa-solid ${metric.icon}`} aria-hidden="true" /></span>
-                                        <p className="mt-3 text-[10px] font-black text-neutral-500">{metric.label}</p>
-                                        <strong className="mt-1 block text-lg font-black text-neutral-950">{loading && !engagement ? "…" : metric.value}</strong>
-                                        <span className="mt-1 block text-[10px] font-bold leading-4 text-neutral-400">{metric.helper}</span>
-                                    </article>
-                                ))}
-                            </div>
-
-                            <div className="mt-5 grid gap-4 lg:grid-cols-2">
-                                <article className="ddb-crayon-paper rounded-[26px] border p-5">
-                                    <div className="flex items-center justify-between gap-3">
-                                        <div>
-                                            <p className="ddb-crayon-kicker text-xs">오늘 해야 할 일</p>
-                                            <h3 className="ddb-crayon-title mt-1 text-2xl">작게 하나씩 완료해요</h3>
-                                        </div>
-                                        <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-600">{completedRoutineCount}/4</span>
-                                    </div>
-                                    <div className="mt-4 grid gap-2">
-                                        {(engagement?.todayTasks || []).map((task) => (
-                                            <button key={task.taskId} type="button" disabled={task.completed || savingTask !== null} onClick={() => void completeTask(task.taskId)} className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-left text-sm font-black transition ${task.completed ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "ddb-motion-lift border-neutral-200 bg-white text-neutral-700 hover:border-indigo-300"}`}>
-                                                <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${task.completed ? "bg-emerald-500 text-white" : "border-2 border-neutral-200 text-transparent"}`}><i className="fa-solid fa-check text-[10px]" /></span>
-                                                <span className="min-w-0 flex-1">{task.title}</span>
-                                                <span className="text-[10px] text-indigo-600">+{task.xp}XP</span>
-                                            </button>
-                                        ))}
-                                        <Link href={petLensProfileHref(pet?.apiProfileId)} className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-sm font-black ${analyzedToday ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "ddb-motion-lift border-neutral-200 bg-white text-neutral-700 hover:border-indigo-300"}`}>
-                                            <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${analyzedToday ? "bg-emerald-500 text-white" : "border-2 border-neutral-200 text-neutral-300"}`}><i className={`fa-solid ${analyzedToday ? "fa-check" : "fa-camera"} text-[10px]`} /></span>
-                                            <span className="min-w-0 flex-1">사진 건강 분석</span>
-                                            <i className="fa-solid fa-chevron-right text-[10px] text-neutral-300" />
-                                        </Link>
-                                    </div>
-                                </article>
-
-                                <article className="ddb-crayon-paper rounded-[26px] border p-5">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div>
-                                            <p className="ddb-crayon-kicker text-xs">LEVEL {engagement?.level || 1}</p>
-                                            <h3 className="ddb-crayon-title mt-1 text-2xl">{(engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이"}</h3>
-                                        </div>
-                                        <span className="ddb-crayon-icon grid h-12 w-12 place-items-center rounded-2xl text-xl" data-crayon-tone="orange"><i className="fa-solid fa-medal" /></span>
-                                    </div>
-                                    <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">
-                                        <div className="ddb-crayon-meter h-full rounded-full transition-[width] duration-700" style={{ width: `${levelProgress}%` }} />
-                                    </div>
-                                    <div className="mt-2 flex items-center justify-between text-[10px] font-black text-neutral-500">
-                                        <span>{engagement?.xp || 0} XP</span>
-                                        <span>다음 레벨 {engagement?.nextLevelXp || 100} XP</span>
-                                    </div>
-                                    <div className="mt-4 grid grid-cols-2 gap-2">
-                                        <div className="rounded-2xl bg-white/80 p-3"><span className="text-[10px] font-black text-neutral-500">최근 건강 변화</span><strong className="mt-1 block text-xs font-black leading-5 text-neutral-900">{analysisStatus(pet?.rawAnalysis)}</strong></div>
-                                        <Link href={pet ? (variant === "home" ? "#recommend" : "/#recommend") : "/mypage/?profile=required#pet-profiles"} className="ddb-motion-lift rounded-2xl bg-white/80 p-3 transition hover:bg-white"><span className="text-[10px] font-black text-neutral-500">AI 추천</span><strong className="mt-1 block text-xs font-black leading-5 text-indigo-700">{pet ? recommendationCopy(pet.concerns || []) : "프로필 등록 후 맞춤 추천 받기"}</strong></Link>
-                                    </div>
-                                </article>
-                            </div>
-
-                            <div className="mt-4 grid grid-cols-2 gap-3">
-                                <ProgressCard label="이번 주 출석" value={engagement?.weeklyAttendanceProgress || 0} target={engagement?.weeklyAttendanceTarget || 7} tone="ddb-crayon-meter" />
-                                <ProgressCard label="이번 달 AI 체크" value={engagement?.monthlyAnalysisProgress || 0} target={engagement?.monthlyAnalysisTarget || 5} tone="ddb-crayon-meter ddb-crayon-meter--teal" />
-                            </div>
-                        </div>
-
-                        <div className="min-w-0">
-                            {attendance ? (
-                                <AttendanceStampCard
-                                    claimedToday={attendance.claimedToday}
-                                    currentStreak={attendance.currentStreak}
-                                    dailyReward={attendance.dailyRewardDaengLabCoins}
-                                    coinBalance={attendance.wallet.daengLabCoins}
-                                    recentDays={attendance.recentDays.map((day) => ({ date: day.businessDate, claimed: day.claimed }))}
-                                    disabled={loading}
-                                    onClaim={claimAttendance}
-                                />
-                            ) : (
-                                <div className="ddb-crayon-paper grid min-h-[330px] place-items-center rounded-[28px] border p-6 text-center">
-                                    <div>
-                                        <i className={`fa-solid ${loading ? "fa-circle-notch fa-spin" : "fa-paw"} text-3xl text-indigo-300`} />
-                                        <p className="mt-3 text-sm font-black text-neutral-600">{loading ? "출근도장을 준비하는 중" : "출근도장을 불러오지 못했어요"}</p>
-                                        {!loading && <button type="button" onClick={() => void refresh()} className="btn btn-secondary ddb-motion-lift mt-4">다시 불러오기</button>}
-                                    </div>
-                                </div>
+                {/* 민트 쿠션 판 — 왼쪽 하루 원판 · 오른쪽 분홍 "지금 할 일" */}
+                <div className="dw-csheet is-mint dw-tguest dw-tmember">
+                    <div className="dw-dial-wrap">
+                        <TreasureDial
+                            slices={slices}
+                            selected={selected}
+                            onSelect={setPickedSlot}
+                            score={careScore}
+                            burst={burst}
+                            center={(
+                                <>
+                                    <span className="dw-dial-pet" style={{ backgroundImage: `url("${breedArt}")` } as CSSProperties} aria-hidden="true" />
+                                    <small>오늘 루틴</small>
+                                    <b>{careScore === null ? "—" : careScore}</b>
+                                    <small>{completedRoutineCount}/{slots.length} 완료</small>
+                                </>
                             )}
-                            <div className="ddb-crayon-paper mt-3 rounded-2xl border p-4 text-xs font-bold leading-5 text-neutral-500">
-                                <i className="fa-solid fa-shield-heart mr-2 text-indigo-500" aria-hidden="true" />
-                                도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.
-                            </div>
-                        </div>
+                        />
+                        <p className="dw-dial-hint">조각을 누르거나 옆으로 밀면 원판이 돌아가요 · 테두리는 오늘 루틴 점수(의료 점수가 아닌 오늘 돌봄 완료율)</p>
                     </div>
 
-                    {error && (
-                        <div className="mx-4 mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold text-rose-800 sm:mx-6 xl:mx-8">
-                            <span role="alert">{error}</span>
-                            <button type="button" onClick={() => void refresh()} className="font-black underline">다시 시도</button>
-                        </div>
-                    )}
+                    <div className="dw-csheet is-pink dw-tlogin dw-dial-card" aria-live="polite">
+                        {!ready ? (
+                            <div className="dw-dial-card-in">
+                                <i className={`fa-solid ${loading ? "fa-circle-notch fa-spin" : "fa-paw"} text-3xl text-pink-300`} aria-hidden="true" />
+                                <p className="dw-tlogin-body">{loading ? "오늘의 보물을 준비하는 중" : "출근도장을 불러오지 못했어요"}</p>
+                                {!loading && <button type="button" onClick={() => void refresh()} className="ddb-motion-lift dw-pill dw-pill-sm mt-3">다시 불러오기</button>}
+                            </div>
+                        ) : (
+                            <div key={selected} className="dw-dial-card-in">
+                                <p className="ddb-crayon-kicker dw-kicker">지금 할 일 · {selected + 1}/{slots.length}</p>
+                                <span className="dw-rring dw-tlogin-ring" aria-hidden="true"><span><Image src={slotArt} alt="" width={96} height={96} /></span></span>
+                                {slot.kind === "attendance" ? (
+                                    <>
+                                        <h3 className="dw-tlogin-title">출근 도장 찍기</h3>
+                                        <p className="dw-tlogin-body">하루 한 번 도장을 찍으면 코인 {attendance!.dailyRewardDaengLabCoins}개가 지갑에 바로 들어와요.</p>
+                                    </>
+                                ) : slot.kind === "task" ? (
+                                    <>
+                                        <h3 className="dw-tlogin-title">{slot.title}</h3>
+                                        <p className="dw-tlogin-body">{slot.description}</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h3 className="dw-tlogin-title">사진 건강 분석</h3>
+                                        <p className="dw-tlogin-body">{analyzedToday ? "오늘 사진 분석을 마쳤어요. 결과는 우리 아이 기록에서 볼 수 있어요." : "정면 · 옆 · 뒤 사진으로 지난 기록과 달라진 점을 살펴봐요."}</p>
+                                    </>
+                                )}
+                                <div className="mt-auto grid w-full gap-2 pt-4">
+                                    {slot.kind === "attendance" ? (
+                                        attendance!.claimedToday
+                                            ? <span className="dw-pill dw-pill-sm dw-dial-done"><i className="fa-solid fa-check mr-1.5" aria-hidden="true" />오늘 출근 완료</span>
+                                            : <button type="button" onClick={() => void onStamp()} disabled={claiming || loading} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">{claiming ? "꾹…" : `도장 꾹! 코인 ${attendance!.dailyRewardDaengLabCoins}개 받기`}</button>
+                                    ) : slot.kind === "task" ? (
+                                        slot.completed
+                                            ? <span className="dw-pill dw-pill-sm dw-dial-done"><i className="fa-solid fa-check mr-1.5" aria-hidden="true" />완료 · +{slot.xp}XP</span>
+                                            : <button type="button" onClick={() => void onTask(slot.taskId)} disabled={savingTask !== null} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">{savingTask === slot.taskId ? "저장 중…" : `했어요 · +${slot.xp}XP`}</button>
+                                    ) : (
+                                        <Link href={petLensProfileHref(pet?.apiProfileId)} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">
+                                            <i className={`fa-solid ${analyzedToday ? "fa-check" : "fa-camera"} mr-1.5`} aria-hidden="true" />{analyzedToday ? "사진 분석 다시 보기" : "사진 찍으러 가기"}
+                                        </Link>
+                                    )}
+                                    <button type="button" onClick={() => setPickedSlot((selected + 1) % slots.length)} className="ddb-motion-lift dw-pill dw-pill-sm">다음 할 일 보기</button>
+                                </div>
+                                {notice && slot.kind === "attendance" ? <p className="dw-dial-notice" role="status">{notice}</p> : null}
+                            </div>
+                        )}
+                    </div>
                 </div>
+
+                {/* 아래 쿠션 둘 — 노랑: 이번 주 출석 · 보라: 레벨 · 최근 변화 · AI 추천 */}
+                <div className="dw-pair dw-tpair dw-dial-pair">
+                    <div className="dw-csheet is-yellow dw-dial-week">
+                        <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
+                        <h3 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress || 0}/{engagement?.weeklyAttendanceTarget || 7}</h3>
+                        <ol className="dw-dsteps" aria-label="최근 7일 출근도장">
+                            {(attendance?.recentDays || []).map((day) => {
+                                const isToday = day.businessDate === today;
+                                return (
+                                    <li key={day.businessDate} className={`${day.claimed ? "is-mint is-claimed" : ""} ${isToday ? "is-pink is-today" : ""}`}>
+                                        <span className="dw-dstep-art">
+                                            <i className={`fa-solid ${day.claimed ? "fa-paw" : isToday ? "fa-stamp" : "fa-minus"}`} aria-hidden="true" />
+                                            {day.claimed ? <span className="dw-dstep-no" aria-hidden="true"><i className="fa-solid fa-check" /></span> : null}
+                                        </span>
+                                        <span className="dw-dstep-title">{isToday ? "오늘" : weekday(day.businessDate)}</span>
+                                        <span className="sr-only">{day.claimed ? "도장 찍음" : "도장 없음"}</span>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+                        <div className="dw-dial-chips">
+                            <span className="dw-chip">{attendance?.currentStreak || 0}일 연속 출근</span>
+                            <span className="dw-chip">{attendance ? `${attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유` : "지갑 확인 중"}</span>
+                            <span className="dw-chip">하루 도장 코인 {attendance?.dailyRewardDaengLabCoins ?? 2}개</span>
+                        </div>
+                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.</p>
+                    </div>
+
+                    <div className="dw-csheet is-lav dw-dial-level">
+                        <div className="dw-dial-level-head">
+                            <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/daily-hero-treasure-384.webp" alt="" width={72} height={72} /></span></span>
+                            <div>
+                                <p className="ddb-crayon-kicker dw-kicker">LEVEL {engagement?.level || 1}</p>
+                                <h3 className="dw-tlogin-title">{(engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이"}</h3>
+                            </div>
+                        </div>
+                        <div className="dw-dial-meter"><span className="ddb-crayon-meter" style={{ width: `${levelProgress}%` }} /></div>
+                        <div className="dw-dial-xp"><span>{engagement?.xp || 0} XP</span><span>다음 레벨 {engagement?.nextLevelXp || 100} XP</span></div>
+                        <dl className="dw-dial-facts">
+                            <div><dt>최근 건강 변화</dt><dd>{analysisStatus(pet?.rawAnalysis)}</dd></div>
+                            <div><dt>이번 달 AI 체크</dt><dd>{engagement?.monthlyAnalysisProgress || 0}/{engagement?.monthlyAnalysisTarget || 5}</dd></div>
+                            <div>
+                                <dt>AI 추천</dt>
+                                <dd><Link href={pet ? (variant === "home" ? "#recommend" : "/#recommend") : "/mypage/?profile=required#pet-profiles"} className="ddb-motion-lift dw-dial-link">{pet ? recommendationCopy(pet.concerns || []) : "프로필 등록 후 맞춤 추천 받기"} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link></dd>
+                            </div>
+                        </dl>
+                        <Link href="/my-pet/" className="ddb-motion-lift dw-pill dw-pill-sm mt-4">우리 아이 기록 보기</Link>
+                    </div>
+                </div>
+
+                {error && (
+                    <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold text-rose-800">
+                        <span role="alert">{error}</span>
+                        <button type="button" onClick={() => void refresh()} className="font-black underline">다시 시도</button>
+                    </div>
+                )}
             </div>
         </section>
-    );
-}
-
-function ProgressCard({ label, value, target, tone }: { label: string; value: number; target: number; tone: string }) {
-    const progress = ratio(value, target);
-    return (
-        <article className="ddb-crayon-paper rounded-2xl border p-3">
-            <div className="flex items-center justify-between gap-2 text-[10px] font-black text-neutral-500"><span>{label}</span><span>{value}/{target}</span></div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-neutral-100"><div className={`h-full rounded-full ${tone}`} style={{ width: `${progress}%` }} /></div>
-        </article>
     );
 }
 
